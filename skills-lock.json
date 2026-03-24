@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "skills": {
+    "changelog-generator": {
+      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\changelog-generator",
+      "sourceType": "local",
+      "computedHash": "86770c9254012f62e77cd69c94220e0f05d7d46fab9b705fc5f700a7ae20e849"
+    },
+    "competitive-brief": {
+      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\competitive-brief",
+      "sourceType": "local",
+      "computedHash": "d48a5e206e45a353ca88c525ee8042798a3c177d7f1383abf91d4ba08b557c69"
+    },
+    "competitive-intelligence": {
+      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\competitive-intelligence",
+      "sourceType": "local",
+      "computedHash": "3a2d08ca62ee9f0c03f06411bf2621be25d9755235cb7de6c2794ced292b1d47"
+    },
+    "github-reader": {
+      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\github-reader",
+      "sourceType": "local",
+      "computedHash": "a16f48328b18013bdd9363c0fed55bf0e52e99dfc7e81d37c5b9af1d2bded2e4"
+    },
+    "idea-to-spec": {
+      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\idea-to-spec",
+      "sourceType": "local",
+      "computedHash": "9bd64c6ea6524ba06f31234ddbae6b0b6627377cab1bbafd714f26e59e2f940a"
+    },
+    "release-notes-generator": {
+      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\release-notes-generator",
+      "sourceType": "local",
+      "computedHash": "c7701a40d0197f14968e1fdf6c9982292b2395fa5928075556e138c6bf1e9055"
+    },
+    "roadmap-generator": {
+      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\roadmap-generator",
+      "sourceType": "local",
+      "computedHash": "6f5dc0a46f687f150617f620e19645008084741df2f7e1bf35fdab9243c52f15"
+    }
+  }
+}

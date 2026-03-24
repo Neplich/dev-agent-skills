@@ -1,0 +1,37 @@
+{
+  "eval_id": 3,
+  "eval_name": "library-release-notes",
+  "prompt": "给 fastapi/fastapi 的 0.135.0 版本写一份 release notes，输出到 workspace/eval-3-library-release/with_skill/outputs/release-notes-0.135.0.md",
+  "assertions": [
+    {
+      "id": "file_exists",
+      "description": "Output file exists and is non-empty",
+      "check": "file release-notes-0.135.0.md exists and size > 0"
+    },
+    {
+      "id": "version_present",
+      "description": "Version 0.135.0 appears in the document",
+      "check": "text contains '0.135.0'"
+    },
+    {
+      "id": "has_whats_new",
+      "description": "Has a What's New section",
+      "check": "text contains '✨ What' or '## What'"
+    },
+    {
+      "id": "upgrade_command",
+      "description": "Contains pip install command for fastapi 0.135.0",
+      "check": "text contains 'pip install fastapi' near '0.135.0'"
+    },
+    {
+      "id": "pr_links_format",
+      "description": "PR links follow correct github.com/fastapi/fastapi format",
+      "check": "any PR link matches pattern [#\\d+](https://github.com/fastapi/fastapi/pull/\\d+)"
+    },
+    {
+      "id": "user_perspective_tone",
+      "description": "Feature descriptions avoid pure implementation language — no bullet lines beginning with 'Implemented', 'Refactored', 'Added support for' as the only description",
+      "check": "fewer than 30% of feature bullet points start with 'Implemented' or 'Refactored'"
+    }
+  ]
+}

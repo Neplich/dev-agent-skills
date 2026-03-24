@@ -1,0 +1,69 @@
+{
+  "skill_name": "github-reader",
+  "evals": [
+    {
+      "id": 1,
+      "name": "full-status",
+      "prompt": "帮我看一下 anthropics/anthropic-sdk-python 现在的项目状态，包括 milestone 进度、open issue 数量和 PR 队列情况",
+      "expected_output": "结构化的项目状态报告，包含 Milestone 进度表、Open Issues 分组、PR 队列（待 review / 草稿 / 近期合并），以及健康摘要",
+      "assertions": [
+        {
+          "name": "包含 Milestone 表格",
+          "text": "输出包含 Milestone 进度表（有标题、进度百分比）"
+        },
+        {
+          "name": "包含 PR 队列",
+          "text": "输出包含 PR 队列部分，区分待 review 和已合并"
+        },
+        {
+          "name": "包含健康摘要",
+          "text": "输出末尾有一段数字化的健康摘要"
+        },
+        {
+          "name": "PR 链接格式正确",
+          "text": "PR 条目带有 GitHub 链接，格式为 [#NUMBER](URL)"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "focused-pr-query",
+      "prompt": "我在 cli/cli 这个仓库里工作，现在有哪些 PR 还在等待 review？按等待时间排序",
+      "expected_output": "聚焦 PR 的输出，列出 awaiting review 的 PR 并按等待时间排序，不需要输出 issue 和 milestone 数据",
+      "assertions": [
+        {
+          "name": "聚焦 PR 不冗余",
+          "text": "输出主要聚焦在 PR 信息上，没有输出大量无关的 issue 列表"
+        },
+        {
+          "name": "包含等待时间",
+          "text": "每条 PR 包含作者和等待天数或创建时间信息"
+        },
+        {
+          "name": "有排序",
+          "text": "PR 列表按时间排序（最旧的在前或有明确说明）"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "milestone-focused",
+      "prompt": "看一下 facebook/react 最近的 milestone，哪个进度最慢或者已经逾期了？",
+      "expected_output": "Milestone 状态报告，识别出进度最慢或逾期的 milestone，给出具体数据支撑",
+      "assertions": [
+        {
+          "name": "有逾期或慢速判断",
+          "text": "输出明确指出哪个 milestone 逾期或进度最慢，不只是列表"
+        },
+        {
+          "name": "有完成率数据",
+          "text": "每个 milestone 有具体的 open/closed issue 数量或完成百分比"
+        },
+        {
+          "name": "状态图例一致",
+          "text": "使用 emoji 状态标识（✅🟢🟡🔴⚪ 之一）"
+        }
+      ]
+    }
+  ]
+}

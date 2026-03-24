@@ -1,0 +1,48 @@
+{
+  "skill_name": "changelog-generator",
+  "evals": [
+    {
+      "id": 1,
+      "name": "unreleased-mode",
+      "prompt": "我在 https://github.com/anthropics/anthropic-sdk-python 这个仓库里工作。帮我生成 Unreleased 章节 —— 也就是最新 release tag 之后合并的所有 PR，写成 Keep a Changelog 格式，输出到 docs/changelog.md。",
+      "expected_output": "生成 ## [Unreleased] 章节，包含最新 release 之后的 PR 列表，按 Added/Changed/Fixed 分组，每条带 PR 链接，写入 docs/changelog.md",
+      "assertions": [
+        "输出包含 ## [Unreleased] 标题",
+        "每个条目包含 PR 链接，格式为 (#数字)",
+        "跳过了 bot PR（dependabot 等）",
+        "不包含 chore/ci/test 等内部变更",
+        "输出写入了 docs/changelog.md 文件"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "single-version-mode",
+      "prompt": "在 https://github.com/anthropics/anthropic-sdk-python 仓库，帮我生成最新 release 版本的 changelog 条目，使用 Keep a Changelog 格式，包含该版本对应的所有 PR 引用。",
+      "expected_output": "生成最新 release tag 的版本块，格式为 ## [x.y.z] - YYYY-MM-DD，包含该版本窗口内的 PR，分组写入，每条带 PR 链接",
+      "assertions": [
+        "输出包含版本号和日期，格式 ## [x.y.z] - YYYY-MM-DD",
+        "版本号与实际 release tag 匹配",
+        "PR 条目标题经过清洗（去掉 conventional commit 前缀）",
+        "Breaking change 如有则带 ⚠️ BREAKING 前缀",
+        "有内容的 section 才出现在输出中"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "prefix-classification",
+      "prompt": "以下是一批 PR 标题，帮我把它们分类到 Keep a Changelog 的各个章节（Added/Changed/Fixed/Deprecated/Removed/Security），并按格式输出，跳过不需要出现在 changelog 的条目：\n\n- feat(auth): add OAuth2 login support (#101)\n- fix: resolve crash when token expires (#102)\n- chore(deps): bump requests from 2.28 to 2.31 (#103)\n- perf: reduce API response time by caching (#104)\n- feat!: redesign plugin configuration API (#105)\n- docs: update README with new examples (#106)\n- fix(ui): correct button alignment on mobile (#107)\n- ci: add GitHub Actions workflow (#108)\n- remove: drop Python 3.7 support (#109)\n- security: patch XSS vulnerability in template renderer (#110)",
+      "expected_output": "Added: feat items; Changed: perf/refactor; Fixed: fix items; Removed: remove items; Security: security items. 跳过 chore/docs/ci。Breaking change (#105) 带 ⚠️ BREAKING 前缀。",
+      "assertions": [
+        "feat(auth) → Added 章节，标题清洗为 Add OAuth2 login support",
+        "fix → Fixed 章节",
+        "chore(deps) → 跳过，不出现在输出",
+        "perf → Changed 章节",
+        "feat! → Added 章节，带 ⚠️ BREAKING 前缀",
+        "docs → 跳过",
+        "ci → 跳过",
+        "remove → Removed 章节",
+        "security → Security 章节"
+      ]
+    }
+  ]
+}

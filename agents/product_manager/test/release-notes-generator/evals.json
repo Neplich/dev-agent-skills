@@ -1,0 +1,23 @@
+{
+  "skill_name": "release-notes-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我给 cli/cli 的 v2.88.0 版本生成 release notes，输出到 workspace/eval-1-cli-feature/with_skill/outputs/release-notes-v2.88.0.md",
+      "expected_output": "用户友好的 release notes，包含高亮功能、bug fixes 摘要、正确的 PR 链接，语气面向终端用户",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "为 anthropics/anthropic-sdk-python 的 v0.86.0 生成 release notes，输出到 workspace/eval-2-sdk-release/with_skill/outputs/release-notes-v0.86.0.md",
+      "expected_output": "技术受众的 release notes，正确识别并突出 breaking changes（如有），highlights 聚焦 API 变化的用户价值",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "给 fastapi/fastapi 的 0.135.0 版本写一份 release notes，输出到 workspace/eval-3-library-release/with_skill/outputs/release-notes-0.135.0.md",
+      "expected_output": "库发版说明，features 和 fixes 正确区分，升级指引清晰",
+      "files": []
+    }
+  ]
+}

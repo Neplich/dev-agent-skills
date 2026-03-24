@@ -1,0 +1,47 @@
+{
+  "eval_id": 1,
+  "eval_name": "cli-feature-release",
+  "prompt": "帮我给 cli/cli 的 v2.88.0 版本生成 release notes，输出到 workspace/eval-1-cli-feature/with_skill/outputs/release-notes-v2.88.0.md",
+  "assertions": [
+    {
+      "id": "file_exists",
+      "description": "Output file exists and is non-empty",
+      "check": "file release-notes-v2.88.0.md exists and size > 0"
+    },
+    {
+      "id": "version_present",
+      "description": "Version v2.88.0 appears in the document",
+      "check": "text contains 'v2.88.0'"
+    },
+    {
+      "id": "has_whats_new",
+      "description": "Has a What's New section with at least one feature",
+      "check": "text contains '## ✨ What' and at least one ### subheading under it"
+    },
+    {
+      "id": "has_fixes_or_improvements",
+      "description": "Has Bug Fixes or Other Improvements section",
+      "check": "text contains '🐛 Bug Fix' OR '🔧 Other Improvements'"
+    },
+    {
+      "id": "pr_links_format",
+      "description": "PR links follow format [#N](https://github.com/cli/cli/pull/N)",
+      "check": "text contains at least one link matching pattern [#\\d+](https://github.com/cli/cli/pull/\\d+)"
+    },
+    {
+      "id": "no_bot_content",
+      "description": "No bot PR content (dependabot/renovate) in release notes body",
+      "check": "text does not contain 'dependabot' or 'renovate[bot]'"
+    },
+    {
+      "id": "has_upgrade_section",
+      "description": "Has an Upgrading section",
+      "check": "text contains '⬆️ Upgrading' or '## Upgrading'"
+    },
+    {
+      "id": "no_raw_cc_prefix",
+      "description": "No raw conventional commit prefixes in body (feat:, fix: etc.)",
+      "check": "text does not contain bullet lines starting with 'feat:' or 'fix:' or 'chore:'"
+    }
+  ]
+}
