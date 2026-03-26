@@ -1,0 +1,45 @@
+{
+  "skill_name": "codebase-analyzer",
+  "evals": [
+    {
+      "id": 1,
+      "name": "analyze-nodejs-project",
+      "prompt": "分析这个 Node.js 项目的代码库结构、技术栈和编码规范",
+      "expected_output": "结构化的 Project Profile，包含技术栈识别、目录结构、编码规范、依赖分析、架构模式",
+      "assertions": [
+        {
+          "name": "识别技术栈",
+          "text": "输出包含 language、framework、package_manager 等技术栈信息"
+        },
+        {
+          "name": "目录结构分析",
+          "text": "输出包含 source_dirs 和 test_dirs 的识别"
+        },
+        {
+          "name": "编码规范检测",
+          "text": "输出包含 linter 和 formatter 配置信息"
+        },
+        {
+          "name": "输出 YAML 格式",
+          "text": "Project Profile 使用 YAML 格式输出"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "detect-monorepo",
+      "prompt": "这个项目是 monorepo 吗？如果是，列出所有子项目",
+      "expected_output": "Monorepo 判断结果，如果是则列出 packages/apps 子项目",
+      "assertions": [
+        {
+          "name": "明确判断",
+          "text": "输出明确说明是否为 monorepo"
+        },
+        {
+          "name": "子项目列表",
+          "text": "如果是 monorepo，列出所有子项目路径"
+        }
+      ]
+    }
+  ]
+}

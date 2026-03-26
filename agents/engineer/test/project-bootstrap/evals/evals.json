@@ -1,0 +1,25 @@
+{
+  "skill_name": "project-bootstrap",
+  "evals": [
+    {
+      "id": 1,
+      "name": "bootstrap-nextjs-project",
+      "prompt": "根据 docs/trd.md 初始化一个 Next.js 项目",
+      "expected_output": "项目初始化完成 + 配置完成 + 验证通过",
+      "assertions": [
+        {
+          "name": "使用官方 CLI",
+          "text": "使用 create-next-app 初始化项目"
+        },
+        {
+          "name": "配置基础设施",
+          "text": "配置 lint、format、CI"
+        },
+        {
+          "name": "验证可运行",
+          "text": "build、lint、test 命令都能成功运行"
+        }
+      ]
+    }
+  ]
+}

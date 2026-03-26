@@ -1,0 +1,25 @@
+{
+  "skill_name": "test-writer",
+  "evals": [
+    {
+      "id": 1,
+      "name": "write-tests-from-spec",
+      "prompt": "根据 docs/test-spec.md 为 NotificationService 编写测试",
+      "expected_output": "测试文件 + 测试运行结果",
+      "assertions": [
+        {
+          "name": "测试覆盖 Test Spec",
+          "text": "输出的测试用例覆盖 Test Spec 中的所有场景"
+        },
+        {
+          "name": "测试通过",
+          "text": "运行测试并报告通过状态"
+        },
+        {
+          "name": "遵循项目测试规范",
+          "text": "测试文件命名和结构符合项目现有测试模式"
+        }
+      ]
+    }
+  ]
+}

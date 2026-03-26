@@ -1,0 +1,29 @@
+{
+  "skill_name": "delivery",
+  "evals": [
+    {
+      "id": 1,
+      "name": "create-pr-with-commits",
+      "prompt": "代码已完成，创建 PR 并关联 Issue #123",
+      "expected_output": "分支创建 + 提交 + PR 创建 + CI 检查",
+      "assertions": [
+        {
+          "name": "创建功能分支",
+          "text": "创建符合项目命名规范的功能分支"
+        },
+        {
+          "name": "有意义的提交",
+          "text": "commit message 遵循 Conventional Commits 或项目规范"
+        },
+        {
+          "name": "PR 包含必要信息",
+          "text": "PR 包含摘要、PM 文档引用、测试状态"
+        },
+        {
+          "name": "检查 CI 状态",
+          "text": "创建 PR 后检查 CI 运行状态"
+        }
+      ]
+    }
+  ]
+}

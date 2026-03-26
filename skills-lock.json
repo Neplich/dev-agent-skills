@@ -35,6 +35,36 @@
       "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\roadmap-generator",
       "sourceType": "local",
       "computedHash": "6f5dc0a46f687f150617f620e19645008084741df2f7e1bf35fdab9243c52f15"
+    },
+    "codebase-analyzer": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/codebase-analyzer",
+      "sourceType": "local",
+      "computedHash": "01a092525f4afa75b4a9d4292b3e20a73da997cd6eb6f17ad8b4ab5b3b12c844"
+    },
+    "project-bootstrap": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/project-bootstrap",
+      "sourceType": "local",
+      "computedHash": "3251b6100595dcd54d13f8e3621a6c29db5e14efd5af9cc421061eb9203e744a"
+    },
+    "feature-implementor": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/feature-implementor",
+      "sourceType": "local",
+      "computedHash": "bf33dce1a5a562677aa69a956015df29dd525596bd47f7adaa669c0893e5ac07"
+    },
+    "test-writer": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/test-writer",
+      "sourceType": "local",
+      "computedHash": "e8d299abf1252054f982cb0d3162a03cff134ca0b688dad4769a88a47ec7aeba"
+    },
+    "debugger": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/debugger",
+      "sourceType": "local",
+      "computedHash": "2306521d81476bd6525cce13d15b6577a24915eee312368bac869064348b832b"
+    },
+    "delivery": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/delivery",
+      "sourceType": "local",
+      "computedHash": "63adb33be41fa9045dc180e2b35fd68d82f1fc2efdb9a179b3dd32274980f544"
     }
   }
 }
