@@ -65,6 +65,26 @@
       "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/delivery",
       "sourceType": "local",
       "computedHash": "63adb33be41fa9045dc180e2b35fd68d82f1fc2efdb9a179b3dd32274980f544"
+    },
+    "exploratory-tester": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/qa/skills/exploratory-tester",
+      "sourceType": "local",
+      "computedHash": "c7ba55a389483a54e80e35900efeba26643ea8cce8e04626c6475508216abf9e"
+    },
+    "spec-based-tester": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/qa/skills/spec-based-tester",
+      "sourceType": "local",
+      "computedHash": "7cd64fb64d6ecde07e2826c2b5bbc429657738b6756f7dc0e711e5d27c90c3fb"
+    },
+    "bug-analyzer": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/qa/skills/bug-analyzer",
+      "sourceType": "local",
+      "computedHash": "06533157e07fffdeffbf76668b1a11b4bfe5e5e8b5ff5f5c893104250e3b9957"
+    },
+    "regression-suite": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/qa/skills/regression-suite",
+      "sourceType": "local",
+      "computedHash": "59ba3967523dd25011f2f821c4b1a4a6074397ac756e214266dd655fdb1c8171"
     }
   }
 }
