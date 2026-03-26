@@ -1,0 +1,29 @@
+{
+  "skill_name": "bug-analyzer",
+  "evals": [
+    {
+      "id": 1,
+      "name": "analyze-test-failure",
+      "prompt": "分析测试失败：登录表单提交后返回 500 错误，生成 Bug 报告",
+      "expected_output": "详细 Bug 报告，包含复现步骤、严重程度、环境信息",
+      "assertions": [
+        {
+          "name": "收集信息",
+          "text": "收集错误消息、堆栈跟踪、截图等失败信息"
+        },
+        {
+          "name": "判断严重程度",
+          "text": "根据影响范围分配 Critical/High/Medium/Low 严重程度"
+        },
+        {
+          "name": "生成报告",
+          "text": "输出包含复现步骤、预期/实际结果、环境信息的完整 Bug 报告"
+        },
+        {
+          "name": "输出方式",
+          "text": "自动检测项目类型，选择 Markdown 文件或 GitHub Issue"
+        }
+      ]
+    }
+  ]
+}

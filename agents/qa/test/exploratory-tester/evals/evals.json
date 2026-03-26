@@ -1,0 +1,41 @@
+{
+  "skill_name": "exploratory-tester",
+  "evals": [
+    {
+      "id": 1,
+      "name": "explore-web-app",
+      "prompt": "对 http://localhost:3000 进行探索测试，发现潜在问题",
+      "expected_output": "探索测试报告，包含发现的问题列表和复现路径",
+      "assertions": [
+        {
+          "name": "环境检测",
+          "text": "输出包含应用健康检查结果"
+        },
+        {
+          "name": "执行探索",
+          "text": "使用 Playwright 模拟随机用户操作（点击、输入、滚动）"
+        },
+        {
+          "name": "生成报告",
+          "text": "输出包含探索测试报告，记录发现的问题和探索路径"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "explore-with-custom-duration",
+      "prompt": "对 http://localhost:5173 进行 5 分钟探索测试",
+      "expected_output": "5 分钟探索测试报告",
+      "assertions": [
+        {
+          "name": "自定义配置",
+          "text": "使用用户指定的 URL 和时长"
+        },
+        {
+          "name": "异常记录",
+          "text": "记录 console errors、网络错误、页面崩溃等异常"
+        }
+      ]
+    }
+  ]
+}

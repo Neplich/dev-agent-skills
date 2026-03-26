@@ -1,0 +1,45 @@
+{
+  "skill_name": "spec-based-tester",
+  "evals": [
+    {
+      "id": 1,
+      "name": "test-from-spec",
+      "prompt": "根据 docs/test-spec.md 执行规范测试",
+      "expected_output": "测试报告，包含通过/失败统计和失败用例详情",
+      "assertions": [
+        {
+          "name": "读取规范文档",
+          "text": "读取 test-spec.md、prd.md、trd.md 提取测试场景"
+        },
+        {
+          "name": "生成测试用例",
+          "text": "生成 UI 交互测试和边界测试用例"
+        },
+        {
+          "name": "执行测试",
+          "text": "使用 Playwright 执行测试并记录结果"
+        },
+        {
+          "name": "生成报告",
+          "text": "输出包含统计数据、失败用例和改进建议的测试报告"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "boundary-test-generation",
+      "prompt": "对登录表单执行边界测试，测试空值、超长字符串、特殊字符",
+      "expected_output": "边界测试报告，包含各类异常输入的测试结果",
+      "assertions": [
+        {
+          "name": "边界数据生成",
+          "text": "自动生成边界测试数据（空值、超长字符串、特殊字符、负数）"
+        },
+        {
+          "name": "失败分析",
+          "text": "对每个失败用例调用 bug-analyzer 生成详细报告"
+        }
+      ]
+    }
+  ]
+}

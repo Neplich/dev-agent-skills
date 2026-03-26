@@ -1,0 +1,29 @@
+{
+  "skill_name": "regression-suite",
+  "evals": [
+    {
+      "id": 1,
+      "name": "verify-bug-fix",
+      "prompt": "验证 Bug #001 的修复，执行回归测试",
+      "expected_output": "回归测试报告，确认修复有效且无新回归问题",
+      "assertions": [
+        {
+          "name": "读取 Bug 报告",
+          "text": "读取原始 Bug 报告获取复现步骤和预期行为"
+        },
+        {
+          "name": "验证修复",
+          "text": "按照复现步骤验证 Bug 已被修复"
+        },
+        {
+          "name": "回归检查",
+          "text": "检查相关功能是否引入新问题"
+        },
+        {
+          "name": "生成报告",
+          "text": "输出回归测试报告，包含修复验证结果和回归检查结果"
+        }
+      ]
+    }
+  ]
+}
