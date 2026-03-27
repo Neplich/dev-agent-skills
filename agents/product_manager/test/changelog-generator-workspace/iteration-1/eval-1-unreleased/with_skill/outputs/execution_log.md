@@ -3,7 +3,7 @@
 ## Steps Taken
 
 ### 1. Read skill file
-Loaded skill instructions from `agents/product_manager/skills/changelog-generator/skill.md`.
+Loaded skill instructions from `agents/product_manager/skills/changelog-generator/SKILL.md`.
 Mode selected: **Unreleased** (PRs merged since latest release tag).
 
 ### 2. Fetched release list
