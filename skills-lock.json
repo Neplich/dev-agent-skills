@@ -85,6 +85,26 @@
       "source": "/Users/neplich/dev/neplich-skills/agents/qa/skills/regression-suite",
       "sourceType": "local",
       "computedHash": "59ba3967523dd25011f2f821c4b1a4a6074397ac756e214266dd655fdb1c8171"
+    },
+    "deployment-planner": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/platform/skills/deployment-planner",
+      "sourceType": "local",
+      "computedHash": "e3ddde6357c1fe93cf7f9f03f45c5542930de58fcea0a4bf9a19df24fca0fb37"
+    },
+    "cicd-bootstrap": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/platform/skills/cicd-bootstrap",
+      "sourceType": "local",
+      "computedHash": "9570f6274ce32df538a7b88cb7eabf0b2a882544e9bad2b4b942acad0fcde3cc"
+    },
+    "env-config-auditor": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/platform/skills/env-config-auditor",
+      "sourceType": "local",
+      "computedHash": "d95eacfa823b33a4f697fa5187415a58501758fcf14f8d248389b61c646a1140"
+    },
+    "incident-playbook-writer": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/platform/skills/incident-playbook-writer",
+      "sourceType": "local",
+      "computedHash": "25c143c446ec4cb28a12eab2c553b85dc154b4b2d20e8236a85b0e66834531fe"
     }
   }
 }
