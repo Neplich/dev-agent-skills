@@ -71,6 +71,43 @@ After initialization, verify the project structure:
 ls -la
 ```
 
+## Step 3.5 — Create standardized directory structure
+
+Create the following standard directories with README files:
+
+```bash
+mkdir -p frontend backend docs deploy tmp
+```
+
+Create README.md for each directory:
+
+- **frontend/README.md**: Frontend application code and assets
+- **backend/README.md**: Backend services and APIs
+- **docs/README.md**: Project documentation and planning materials
+- **deploy/README.md**: Deployment scripts and configurations
+- **tmp/README.md**: Temporary files and test outputs (add to .gitignore)
+
+### Directory usage rules
+
+- **frontend/**: All frontend code (web, mobile, desktop UI)
+- **backend/**: All backend services, APIs, databases
+- **docs/**: PRD, TRD, ADR, API specs, planning documents
+- **deploy/**: Docker files, k8s configs, deployment scripts
+- **tmp/**: Test outputs, build artifacts, temporary files (gitignored)
+
+### Subdirectory README requirement
+
+Every subdirectory created under these top-level directories MUST have its own README.md explaining:
+- Purpose of the subdirectory
+- Key files and their roles
+- How to work with code in this directory
+
+Update `.gitignore` to exclude tmp/:
+
+```bash
+echo "tmp/" >> .gitignore
+```
+
 ## Step 4 — Configure project infrastructure
 
 Based on TRD requirements and detected tech stack, set up:
