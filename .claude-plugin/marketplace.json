@@ -4,7 +4,7 @@
     "name": "neplich"
   },
   "metadata": {
-    "description": "Agent skills for Product Manager, Engineer, and QA workflows",
+    "description": "Agent skills for Product Manager, Engineer, QA and DevOps workflows",
     "version": "1.0.0"
   },
   "plugins": [
@@ -47,6 +47,18 @@
         "./agents/qa/skills/spec-based-tester",
         "./agents/qa/skills/bug-analyzer",
         "./agents/qa/skills/regression-suite"
+      ]
+    },
+    {
+      "name": "devops-agent",
+      "description": "DevOps skills: deployment planning, CI/CD setup, environment config auditing, and incident playbook generation",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./agents/devops/skills/deployment-planner",
+        "./agents/devops/skills/cicd-bootstrap",
+        "./agents/devops/skills/env-config-auditor",
+        "./agents/devops/skills/incident-playbook-writer"
       ]
     }
   ]

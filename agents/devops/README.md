@@ -1,4 +1,4 @@
-# Platform Agent
+# DevOps Agent
 
 负责环境管理、CI/CD 搭建和部署自动化的 Agent，将代码从开发环境推送到生产环境。
 
@@ -14,7 +14,7 @@
 
 ## Skill 清单
 
-> 所有 skill 源文件统一在 `agents/platform/skills/` 下自管理，通过 `npx skills add ./agents/platform/skills/<name>` 安装到项目运行时。
+> 所有 skill 源文件统一在 `agents/devops/skills/` 下自管理，通过 `npx skills add ./agents/devops/skills/<name>` 安装到项目运行时。
 
 | Skill | 目录 | 主要用途 | 阶段 |
 |-------|------|---------|------|
@@ -27,7 +27,7 @@
 
 ## 部署方案设计
 
-Platform Agent 生成三种部署方案，存放在 `deploy/` 目录：
+DevOps Agent 生成三种部署方案，存放在 `deploy/` 目录：
 
 ### 1. Local 方案 (`deploy/local/`)
 - **用途**：本地开发调试
