@@ -5,8 +5,8 @@
 面向软件交付全流程的 AI Agent 技能市场
 
 [![Agents](https://img.shields.io/badge/agents-6-blue)](#包含的-agent)
-[![Skills](https://img.shields.io/badge/skills-27-green)](#包含的-agent)
-[![License](https://img.shields.io/badge/license-MIT-orange)](LICENSE)
+[![Skills](https://img.shields.io/badge/skills-33-green)](#包含的-agent)
+[![License](https://img.shields.io/badge/license-Apache%202.0-orange)](LICENSE)
 
 通过一个仓库统一发布 6 个可安装 Agent：
 `pm-agent` • `engineer-agent` • `qa-agent` • `devops-agent` • `designer-agent` • `security-agent`
