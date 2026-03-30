@@ -14,6 +14,7 @@
       "source": "./",
       "strict": false,
       "skills": [
+        "./agents/product_manager/skills/pm-agent",
         "./agents/product_manager/skills/idea-to-spec",
         "./agents/product_manager/skills/competitive-brief",
         "./agents/product_manager/skills/competitive-intelligence",
@@ -29,6 +30,7 @@
       "source": "./",
       "strict": false,
       "skills": [
+        "./agents/engineer/skills/engineer-agent",
         "./agents/engineer/skills/codebase-analyzer",
         "./agents/engineer/skills/project-bootstrap",
         "./agents/engineer/skills/feature-implementor",
@@ -43,6 +45,7 @@
       "source": "./",
       "strict": false,
       "skills": [
+        "./agents/qa/skills/qa-agent",
         "./agents/qa/skills/exploratory-tester",
         "./agents/qa/skills/spec-based-tester",
         "./agents/qa/skills/bug-analyzer",
@@ -55,6 +58,7 @@
       "source": "./",
       "strict": false,
       "skills": [
+        "./agents/devops/skills/devops-agent",
         "./agents/devops/skills/deployment-planner",
         "./agents/devops/skills/cicd-bootstrap",
         "./agents/devops/skills/env-config-auditor",
@@ -67,6 +71,7 @@
       "source": "./",
       "strict": false,
       "skills": [
+        "./agents/designer/skills/designer-agent",
         "./agents/designer/skills/ui-ux-design",
         "./agents/designer/skills/visual-design"
       ]
@@ -77,6 +82,7 @@
       "source": "./",
       "strict": false,
       "skills": [
+        "./agents/security/skills/security-agent",
         "./agents/security/skills/appsec-checklist",
         "./agents/security/skills/authz-reviewer",
         "./agents/security/skills/dependency-risk-auditor",

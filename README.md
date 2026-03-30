@@ -48,7 +48,21 @@ Neplich Agent Skills 是一个**多 Agent 协作市场**，为软件交付流程
 | **designer-agent** | UI/UX 设计、视觉系统、界面原型 | 2 | [查看详情](./agents/designer/README.md) |
 | **security-agent** | 安全审查、权限检查、依赖审计、隐私合规 | 4 | [查看详情](./agents/security/README.md) |
 
-**总计：6 个 Agent，27 个 Skills**
+**总计：6 个 Agent，33 个 Skills**
+
+### Agent 入口 Skills
+
+每个 Agent 都提供了智能入口 skill，自动分析用户意图并调用合适的子 skills：
+
+- `/pm-agent` - PM Agent 智能入口
+- `/engineer-agent` - Engineer Agent 智能入口
+- `/qa-agent` - QA Agent 智能入口
+- `/devops-agent` - DevOps Agent 智能入口
+- `/designer-agent` - Designer Agent 智能入口
+- `/security-agent` - Security Agent 智能入口
+
+> [!TIP]
+> 推荐使用 Agent 入口 skills（如 `/pm-agent`），让 AI 自动选择合适的子 skills 执行。
 
 ## 协作流程
 
@@ -95,25 +109,34 @@ graph LR
 
 ### 使用示例
 
-安装后，可以直接调用各 Agent 的 skills：
+**推荐方式：使用 Agent 入口**
 
 ```bash
-# PM Agent - 生成产品需求文档
+# PM Agent - 自动判断并执行 PM 任务
+/pm-agent "我想做一个任务管理应用"
+
+# Engineer Agent - 自动选择工程任务
+/engineer-agent "实现用户登录功能"
+
+# QA Agent - 自动选择测试方式
+/qa-agent "测试登录功能"
+
+# DevOps Agent - 自动规划部署
+/devops-agent "配置 CI/CD"
+
+# Designer Agent - 自动设计流程
+/designer-agent "设计用户登录界面"
+
+# Security Agent - 自动安全审查
+/security-agent "进行安全审查"
+```
+
+**直接调用具体 Skill（高级用法）**
+
+```bash
+# 直接调用特定 skill
 /idea-to-spec
-
-# Designer Agent - 设计 UI/UX
-/ui-ux-design
-
-# Engineer Agent - 实现功能
 /feature-implementor
-
-# QA Agent - 执行测试
-/spec-based-tester
-
-# DevOps Agent - 规划部署
-/deployment-planner
-
-# Security Agent - 安全检查
 /appsec-checklist
 ```
 

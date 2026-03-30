@@ -135,6 +135,36 @@
       "source": "/Users/neplich/dev/neplich-skills/agents/security/skills/privacy-surface-mapper",
       "sourceType": "local",
       "computedHash": "placeholder6"
+    },
+    "pm-agent": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/product_manager/skills/pm-agent",
+      "sourceType": "local",
+      "computedHash": "placeholder7"
+    },
+    "engineer-agent": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/engineer-agent",
+      "sourceType": "local",
+      "computedHash": "placeholder8"
+    },
+    "qa-agent": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/qa/skills/qa-agent",
+      "sourceType": "local",
+      "computedHash": "placeholder9"
+    },
+    "devops-agent": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/devops/skills/devops-agent",
+      "sourceType": "local",
+      "computedHash": "placeholder10"
+    },
+    "designer-agent": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/designer/skills/designer-agent",
+      "sourceType": "local",
+      "computedHash": "placeholder11"
+    },
+    "security-agent": {
+      "source": "/Users/neplich/dev/neplich-skills/agents/security/skills/security-agent",
+      "sourceType": "local",
+      "computedHash": "placeholder12"
     }
   }
 }
