@@ -1,9 +1,19 @@
 {
+  "skill_name": "incident-playbook-writer",
   "evals": [
     {
-      "name": "rollback-playbook",
-      "description": "Generate incident response and rollback procedures",
-      "prompt": "Create operational runbooks for incident response and rollback procedures"
+      "id": 1,
+      "name": "docker-rollback",
+      "prompt": "我的项目使用 Docker 部署，帮我生成故障处理和回滚手册。",
+      "expected_output": "生成运维手册，包含回滚、故障响应、排查指南",
+      "assertions": [
+        "deploy/ROLLBACK.md 存在",
+        "ROLLBACK.md 包含 docker 回滚命令",
+        "deploy/INCIDENT_RESPONSE.md 存在",
+        "INCIDENT_RESPONSE.md 包含常见故障场景",
+        "deploy/TROUBLESHOOTING.md 存在",
+        "deploy/ON_CALL.md 存在"
+      ]
     }
   ]
 }

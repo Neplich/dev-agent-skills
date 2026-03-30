@@ -1,9 +1,17 @@
 {
+  "skill_name": "env-config-auditor",
   "evals": [
     {
-      "name": "config-audit",
-      "description": "Audit environment variables across all deployment configs",
-      "prompt": "Check if all environment variables are properly configured across local, docker, and helm deployments"
+      "id": 1,
+      "name": "missing-variables",
+      "prompt": "检查我的项目环境配置是否完整，代码中使用了 DATABASE_URL、API_KEY、REDIS_URL，但只有 local 配置文件定义了它们。",
+      "expected_output": "生成审计报告，指出 docker 和 helm 配置缺失这些变量",
+      "assertions": [
+        "tmp/config-audit-report.md 存在",
+        "报告包含 Missing Variables 章节",
+        "列出 API_KEY 在 docker 和 helm 中缺失",
+        "报告包含 Recommendations 章节"
+      ]
     }
   ]
 }

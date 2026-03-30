@@ -1,9 +1,32 @@
 {
+  "skill_name": "deployment-planner",
   "evals": [
     {
-      "name": "vercel-style-web-app",
-      "description": "Generate deployment configs for a simple Next.js web app",
-      "prompt": "Create deployment configurations for a Next.js web application with PostgreSQL database"
+      "id": 1,
+      "name": "nextjs-web-app",
+      "prompt": "我有一个 Next.js 项目，使用 PostgreSQL 数据库和 Redis 缓存。帮我生成 local、docker、helm 三种部署配置。",
+      "expected_output": "在 deploy/ 目录下生成三个子目录，每个包含 README.md 和相应的配置文件",
+      "assertions": [
+        "deploy/local/README.md 存在",
+        "deploy/local/.env.example 包含 DATABASE_URL 和 REDIS_URL",
+        "deploy/local/start.sh 可执行",
+        "deploy/docker/Dockerfile 存在",
+        "deploy/docker/docker-compose.yml 包含 app、postgres、redis 三个服务",
+        "deploy/helm/Chart.yaml 存在",
+        "deploy/helm/values.yaml 包含 replicaCount 配置",
+        "deploy/helm/templates/deployment.yaml 存在"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "python-api-only",
+      "prompt": "我有一个 FastAPI 项目，只需要 API 服务，不需要数据库。生成部署配置。",
+      "expected_output": "生成简化的部署配置，不包含数据库相关内容",
+      "assertions": [
+        "deploy/local/.env.example 不包含 DATABASE_URL",
+        "deploy/docker/docker-compose.yml 只有 app 服务",
+        "deploy/local/start.sh 不包含数据库初始化步骤"
+      ]
     }
   ]
 }

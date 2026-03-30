@@ -1,9 +1,18 @@
 {
+  "skill_name": "cicd-bootstrap",
   "evals": [
     {
-      "name": "github-actions-setup",
-      "description": "Set up GitHub Actions CI/CD for Docker deployment",
-      "prompt": "Create GitHub Actions workflows for automated testing and Docker deployment"
+      "id": 1,
+      "name": "github-actions-docker",
+      "prompt": "我的项目在 GitHub，使用 Docker 部署。帮我搭建 CI/CD 流程：PR 时运行测试，main 分支合并后自动部署到 staging。",
+      "expected_output": "生成 GitHub Actions workflows，包含 CI 和 staging 部署",
+      "assertions": [
+        ".github/workflows/ci.yml 存在",
+        "ci.yml 包含 lint、test、build 步骤",
+        ".github/workflows/deploy-staging.yml 存在",
+        "deploy-staging.yml 触发条件是 push to main",
+        "deploy/SECRETS.md 文档存在，列出需要的 secrets"
+      ]
     }
   ]
 }
