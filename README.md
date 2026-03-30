@@ -107,6 +107,18 @@ graph LR
 /plugin install security-agent@neplich-agent-skills
 ```
 
+### 更新
+
+当 GitHub 仓库更新后，使用以下命令更新已安装的 Agent：
+
+```bash
+# 更新特定 Agent
+/plugin update pm-agent@neplich-agent-skills
+
+# 或更新所有插件
+/plugin update
+```
+
 ### 使用示例
 
 **推荐方式：使用 Agent 入口**
