@@ -35,7 +35,7 @@ Neplich Agent Skills 是一个**多 Agent 协作市场**，为软件交付流程
 - 需要标准化的软件交付流程和质量保障
 
 > [!NOTE]
-> 该仓库本身是 marketplace 源。用户需先添加 marketplace，再按需安装 Agent。
+> Claude Code 通过 marketplace 安装；Codex 通过原生 skill discovery 安装。两种方式见下文。
 
 ## 包含的 Agent
 
@@ -92,7 +92,7 @@ graph LR
 
 ## 使用方式
 
-### 安装
+### Claude Code 安装
 
 ```bash
 # 1. 添加 marketplace
@@ -107,21 +107,44 @@ graph LR
 /plugin install security-agent@dev-agent-skills
 ```
 
+### Codex 安装
+
+在 Codex 中输入：
+
+```text
+Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/heads/main/.codex/INSTALL.md
+```
+
+Codex 会先询问：
+
+- 安装在 `personal` 还是 `project` 层级
+- 安装 `all` agents，还是从多个 agents 中选择安装
+
+完整说明见 [docs/README.codex.md](./docs/README.codex.md)。
+
 ### 更新
 
-当 GitHub 仓库更新后，使用以下命令更新已安装的 Agent：
+当 GitHub 仓库更新后，按使用环境分别更新：
 
 ```bash
-# 更新特定 Agent
+# Claude Code：更新特定 Agent
 /plugin update pm-agent@dev-agent-skills
 
-# 或更新所有插件
+# Claude Code：或更新所有插件
 /plugin update
+
+# Codex（personal）
+git -C "$HOME/.codex/dev-agent-skills" pull --ff-only
+
+# Codex（project）
+git -C "$PWD/.codex/dev-agent-skills" pull --ff-only
 ```
 
 ### 使用示例
 
 **推荐方式：使用 Agent 入口**
+
+安装完成后，在 Claude Code 或 Codex 中都可以这样使用：
 
 ```bash
 # PM Agent - 自动判断并执行 PM 任务
@@ -156,6 +179,8 @@ graph LR
 
 ```text
 neplich-skills/
+├── .codex/
+│   └── INSTALL.md           # Codex 安装指令
 ├── .claude-plugin/
 │   └── marketplace.json      # Marketplace 配置
 ├── agents/
@@ -165,6 +190,8 @@ neplich-skills/
 │   ├── devops/               # DevOps Agent
 │   ├── designer/             # Designer Agent
 │   └── security/             # Security Agent
+├── docs/
+│   └── README.codex.md       # Codex 使用与安装说明
 ├── skills-lock.json          # Skills 锁定信息
 └── CLAUDE.md                 # 仓库开发指南
 ```

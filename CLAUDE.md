@@ -20,7 +20,7 @@
 - Skills 使用 YAML frontmatter 存储元数据
 
 **文档组织：**
-- `docs/` 目录被 gitignore（仅工作文档）
+- `docs/superpowers/` 目录被 gitignore（仅工作文档）
 - 生产文档使用基于功能的结构：`docs/{agent}/{feature-name}/`
 - 文档 frontmatter 包含：`feature`、`version`、`date`、`last_updated`
 - 版本历史通过 git 跟踪，不创建多个文件
@@ -101,7 +101,7 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 **不应该做：**
 - 创建基于日期的子目录
 - 创建多个版本文件（PRD-v1.md、PRD-v2.md）
-- 将 docs/ 提交到 git（已被 gitignore）
+- 将 `docs/superpowers/` 下的工作文档提交到 git（该目录已被 gitignore）
 
 ## 当前状态
 
@@ -128,4 +128,3 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 - `agents/{agent}/README.md` - Agent 文档
 - `docs/superpowers/plans/` - 实现计划（gitignored 但重要）
 - `docs/superpowers/specs/` - 设计规范（gitignored 但重要）
-
