@@ -2,103 +2,92 @@
 
 # Dev Agent Skills
 
-面向软件交付全流程的 AI Agent 技能市场
+面向软件交付全流程的多 Agent 技能市场。
 
-[![Agents](https://img.shields.io/badge/agents-6-blue)](#包含的-agent)
-[![Skills](https://img.shields.io/badge/skills-33-green)](#包含的-agent)
+[![Agents](https://img.shields.io/badge/agents-6-blue)](#agents)
+[![Skills](https://img.shields.io/badge/skills-33-green)](#agents)
 [![License](https://img.shields.io/badge/license-Apache%202.0-orange)](LICENSE)
 
-通过一个仓库统一发布 6 个可安装 Agent：
 `pm-agent` • `engineer-agent` • `qa-agent` • `devops-agent` • `designer-agent` • `security-agent`
 
-[快速开始](#使用方式) • [Agent 列表](#包含的-agent) • [架构说明](#协作流程) • [开发指南](#开发说明)
+[快速开始](#快速开始) • [Agents](#agents) • [协作方式](#协作方式) • [仓库结构](#仓库结构)
 
 </div>
 
----
-
 ## 概览
 
-Neplich Agent Skills 是一个**多 Agent 协作市场**，为软件交付流程提供端到端的 AI 能力支持。从产品需求到安全审查，6 个专业 Agent 覆盖完整的开发生命周期。
+这个仓库把 6 个按角色划分的 Agent 集中发布在同一个 marketplace/source 里，用来覆盖一条完整的软件交付链：需求、设计、实现、测试、部署和安全审查。
 
-### 核心特性
+你可以把它理解成一套可安装、可组合的工作流技能包：
 
-- **角色化分工** - 每个 Agent 专注一个领域，避免能力混杂
-- **文档驱动** - Agent 之间通过标准化文档协作，而非紧耦合
-- **独立安装** - 按需安装所需 Agent，无需全量引入
-- **可扩展架构** - 标准化的 Skill 结构，易于添加新能力
-
-### 适用场景
-
-- 小团队需要 AI 辅助完成产品开发全流程
-- 个人开发者希望系统化管理项目文档和代码
-- 需要标准化的软件交付流程和质量保障
+- 6 个 Agent dispatcher skills
+- 27 个专业子 skills
+- 文档驱动的 Agent 协作方式
+- 同时支持 Claude Code 和 Codex
 
 > [!NOTE]
-> Claude Code 通过 marketplace 安装；Codex 通过原生 skill discovery 安装。两种方式见下文。
+> Claude Code 通过 marketplace 安装；Codex 通过原生 skill discovery 安装。
 
-## 包含的 Agent
+## Agents
 
-| Agent | 职责范围 | Skills | 文档 |
-| --- | --- | :---: | --- |
-| **pm-agent** | 产品需求、竞品分析、路线图规划、版本管理 | 7 | [查看详情](./agents/product_manager/README.md) |
-| **engineer-agent** | 代码分析、项目搭建、功能实现、测试、调试 | 6 | [查看详情](./agents/engineer/README.md) |
-| **qa-agent** | 探索测试、规范测试、Bug 分析、回归验证 | 4 | [查看详情](./agents/qa/README.md) |
-| **devops-agent** | 部署规划、CI/CD 搭建、环境审计、故障处理 | 4 | [查看详情](./agents/devops/README.md) |
-| **designer-agent** | UI/UX 设计、视觉系统、界面原型 | 2 | [查看详情](./agents/designer/README.md) |
-| **security-agent** | 安全审查、权限检查、依赖审计、隐私合规 | 4 | [查看详情](./agents/security/README.md) |
-
-**总计：6 个 Agent，33 个 Skills**
-
-### Agent 入口 Skills
-
-每个 Agent 都提供了智能入口 skill，自动分析用户意图并调用合适的子 skills：
-
-- `/pm-agent` - PM Agent 智能入口
-- `/engineer-agent` - Engineer Agent 智能入口
-- `/qa-agent` - QA Agent 智能入口
-- `/devops-agent` - DevOps Agent 智能入口
-- `/designer-agent` - Designer Agent 智能入口
-- `/security-agent` - Security Agent 智能入口
+| Agent | 关注范围 | Skills | 入口 | 文档 |
+| --- | --- | :---: | --- | --- |
+| `pm-agent` | 创意到规格、路线图、版本日志、发布说明、GitHub 项目状态 | 8 (`1 + 7`) | `/pm-agent` | [product_manager](./agents/product_manager/README.md) |
+| `engineer-agent` | 代码分析、项目搭建、功能实现、测试、调试、交付 | 7 (`1 + 6`) | `/engineer-agent` | [engineer](./agents/engineer/README.md) |
+| `qa-agent` | 规范测试、探索测试、Bug 报告、回归验证 | 5 (`1 + 4`) | `/qa-agent` | [qa](./agents/qa/README.md) |
+| `devops-agent` | 部署规划、CI/CD、环境配置审计、故障手册 | 5 (`1 + 4`) | `/devops-agent` | [devops](./agents/devops/README.md) |
+| `designer-agent` | UI/UX 设计、视觉系统设计 | 3 (`1 + 2`) | `/designer-agent` | [designer](./agents/designer/README.md) |
+| `security-agent` | 应用安全、授权审查、依赖风险、隐私合规 | 5 (`1 + 4`) | `/security-agent` | [security](./agents/security/README.md) |
 
 > [!TIP]
-> 推荐使用 Agent 入口 skills（如 `/pm-agent`），让 AI 自动选择合适的子 skills 执行。
+> 推荐优先使用 Agent 入口命令，例如 `/pm-agent` 或 `/engineer-agent`。入口 skill 会先判断意图，再选择合适的子 skill。
 
-## 协作流程
+## Skill 组织
 
-Agent 之间通过文档进行协作，形成完整的软件交付链：
+每个 Agent skill 组都包含两层：
+
+- 一个同名 dispatcher skill，例如 `pm-agent`、`engineer-agent`
+- 多个可直接调用的 specialist skills，例如 `idea-to-spec`、`feature-implementor`、`spec-based-tester`
+
+这让你既可以用入口命令做高层调度，也可以在你已经知道目标能力时直接调用子 skill。
+
+## 协作方式
+
+这些 Agent 不依赖共享状态机，而是通过文档协作：
 
 ```mermaid
 graph LR
-    PM[PM Agent] --> Designer[Designer Agent]
-    PM --> Engineer[Engineer Agent]
+    PM["PM Agent"] --> Designer["Designer Agent"]
+    PM --> Engineer["Engineer Agent"]
     Designer --> Engineer
-    Engineer --> QA[QA Agent]
+    Engineer --> QA["QA Agent"]
     QA --> Engineer
-    Engineer --> DevOps[DevOps Agent]
-    DevOps --> Security[Security Agent]
+    QA -. "反馈 / 需求澄清" .-> PM
+    Engineer --> DevOps["DevOps Agent"]
+    Engineer --> Security["Security Agent"]
     Security --> Engineer
-    QA -.反馈.-> PM
 ```
 
-**典型工作流：**
+一条典型链路是：
 
-1. **PM Agent** 产出 PRD、BRD、TRD 等需求文档
-2. **Designer Agent** 基于需求设计 UI/UX 和视觉系统
-3. **Engineer Agent** 根据文档和设计实现功能
-4. **QA Agent** 执行测试并反馈问题
-5. **DevOps Agent** 配置部署环境和 CI/CD
-6. **Security Agent** 进行安全审查和合规检查
+1. `pm-agent` 产出 PRD、BRD、TRD、路线图或版本文档。
+2. `designer-agent` 基于需求文档产出 UI/UX 和视觉规范。
+3. `engineer-agent` 读取文档并实现代码、测试和交付动作。
+4. `qa-agent` 补充探索测试、规范测试和回归验证。
+5. `devops-agent` 生成部署方案、CI/CD 和运维手册。
+6. `security-agent` 在发布前进行安全与合规审查。
 
-## 使用方式
+如果 QA 在测试中发现的是需求缺口、验收标准问题或优先级变化，而不是单纯实现缺陷，反馈会回到 `pm-agent`，形成产品闭环。
 
-### Claude Code 安装
+## 快速开始
+
+### Claude Code
 
 ```bash
-# 1. 添加 marketplace
+# 添加 marketplace
 /plugin marketplace add Neplich/dev-agent-skills
 
-# 2. 安装所需的 Agent
+# 安装所需 Agent
 /plugin install pm-agent@dev-agent-skills
 /plugin install engineer-agent@dev-agent-skills
 /plugin install qa-agent@dev-agent-skills
@@ -107,7 +96,7 @@ graph LR
 /plugin install security-agent@dev-agent-skills
 ```
 
-### Codex 安装
+### Codex
 
 在 Codex 中输入：
 
@@ -115,132 +104,96 @@ graph LR
 Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/heads/main/.codex/INSTALL.md
 ```
 
-Codex 会先询问：
+安装流程会先确认两件事：
 
-- 安装在 `personal` 还是 `project` 层级
-- 安装 `all` agents，还是从多个 agents 中选择安装
+- 安装到 `personal` 还是 `project` 层级
+- 安装 `all` agents，还是从多个 agents 中选择
 
 完整说明见 [docs/README.codex.md](./docs/README.codex.md)。
 
-### 更新
+## 使用示例
 
-当 GitHub 仓库更新后，按使用环境分别更新：
+```text
+/pm-agent "我想做一个任务管理应用"
+/designer-agent "设计用户登录界面"
+/engineer-agent "实现用户登录功能"
+/qa-agent "测试登录功能"
+/devops-agent "配置 CI/CD"
+/security-agent "做一轮发布前安全审查"
+```
+
+如果你已经明确知道要调用哪个子 skill，也可以直接使用：
+
+```text
+/idea-to-spec
+/github-reader
+/feature-implementor
+/ui-ux-design
+/regression-suite
+/deployment-planner
+/appsec-checklist
+```
+
+## 更新
 
 ```bash
-# Claude Code：更新特定 Agent
+# Claude Code
 /plugin update pm-agent@dev-agent-skills
-
-# Claude Code：或更新所有插件
 /plugin update
 
-# Codex（personal）
+# Codex (personal)
 git -C "$HOME/.codex/dev-agent-skills" pull --ff-only
 
-# Codex（project）
+# Codex (project)
 git -C "$PWD/.codex/dev-agent-skills" pull --ff-only
-```
-
-### 使用示例
-
-**推荐方式：使用 Agent 入口**
-
-安装完成后，在 Claude Code 或 Codex 中都可以这样使用：
-
-```bash
-# PM Agent - 自动判断并执行 PM 任务
-/pm-agent "我想做一个任务管理应用"
-
-# Engineer Agent - 自动选择工程任务
-/engineer-agent "实现用户登录功能"
-
-# QA Agent - 自动选择测试方式
-/qa-agent "测试登录功能"
-
-# DevOps Agent - 自动规划部署
-/devops-agent "配置 CI/CD"
-
-# Designer Agent - 自动设计流程
-/designer-agent "设计用户登录界面"
-
-# Security Agent - 自动安全审查
-/security-agent "进行安全审查"
-```
-
-**直接调用具体 Skill（高级用法）**
-
-```bash
-# 直接调用特定 skill
-/idea-to-spec
-/feature-implementor
-/appsec-checklist
 ```
 
 ## 仓库结构
 
 ```text
 neplich-skills/
-├── .codex/
-│   └── INSTALL.md           # Codex 安装指令
-├── .claude-plugin/
-│   └── marketplace.json      # Marketplace 配置
-├── agents/
-│   ├── product_manager/      # PM Agent
-│   ├── engineer/             # Engineer Agent
-│   ├── qa/                   # QA Agent
-│   ├── devops/               # DevOps Agent
-│   ├── designer/             # Designer Agent
-│   └── security/             # Security Agent
-├── docs/
-│   └── README.codex.md       # Codex 使用与安装说明
-├── skills-lock.json          # Skills 锁定信息
-├── CLAUDE.md                 # Claude Code 仓库开发指南
-└── AGENTS.md                 # AGENTS 通用仓库开发指南（需与 CLAUDE.md 保持一致）
+├── .claude-plugin/          # Claude Code marketplace 配置
+├── .codex/                  # Codex 安装入口
+├── agents/                  # 6 个 Agent 及其 skills
+├── docs/                    # 对外文档
+├── skills-lock.json         # skill 元数据锁文件
+├── CLAUDE.md                # Claude Code 仓库说明
+└── AGENTS.md                # 通用 Agent 仓库说明
 ```
 
-每个 Agent 的目录结构：
+单个 Agent 的结构遵循统一约定：
 
 ```text
-agents/{agent-name}/
-├── README.md                 # Agent 说明文档
-├── skills/                   # Skills 实现
-│   └── {skill-name}/
-│       ├── SKILL.md          # Skill 公开文档
+agents/{agent}/
+├── README.md
+├── skills/
+│   └── {skill}/
+│       ├── SKILL.md
 │       └── _internal/
-│           └── INSTRUCTIONS.md  # AI 实现指南
-└── test/                     # 评估测试
-    └── {skill-name}/
+│           └── INSTRUCTIONS.md
+└── test/
+    └── {skill}/
         └── evals/
-            └── evals.json    # 测试用例
+            └── evals.json
 ```
 
-## 开发说明
+## 适合什么场景
 
-### 添加新 Skill
+- 想把需求、设计、实现、测试、部署和安全审查串成一条标准交付链
+- 需要按角色安装 AI skills，而不是引入一大包混杂能力
+- 希望 Agent 之间通过可审阅的 Markdown 文档协作
+- 想在 Claude Code 和 Codex 里复用同一套 Agent 资产
 
-1. 在对应 Agent 的 `skills/` 目录下创建新 skill
-2. 编写 `SKILL.md`（用户文档）和 `_internal/INSTRUCTIONS.md`（AI 指南）
-3. 在 `test/` 目录添加评估测试
-4. 更新 `.claude-plugin/marketplace.json` 注册 skill
-5. 运行测试验证效果
+## 维护说明
 
-### 添加新 Agent
+如果你要继续扩展这个仓库：
 
-参考 `CLAUDE.md` 和 `AGENTS.md` 中的详细指南，包含完整的 Agent 创建流程。
-
-> [!IMPORTANT]
-> `CLAUDE.md` 和 `AGENTS.md` 需要保持内容一致。修改其中任一文件时，必须同步更新另一份。
-
-### 设计原则
-
-- **文档驱动** - Skills 消费和产出 Markdown 文档
-- **技术栈无关** - 不绑定特定框架或工具
-- **最小化职责** - 每个 Skill 专注一个明确任务
-- **独立可用** - Skills 可单独使用，也可组合使用
-
----
+- 新增 Agent 或 skill 时，优先遵循现有 `agents/*` 目录结构
+- `CLAUDE.md` 与 `AGENTS.md` 需要保持一致
+- `docs/superpowers/` 只用于工作文档，不纳入版本控制
 
 <div align="center">
 
-**[查看 CLAUDE.md](./CLAUDE.md)** • **[查看 AGENTS.md](./AGENTS.md)** • **[贡献指南](./CONTRIBUTING.md)** • **[问题反馈](../../issues)**
+[Claude Guide](./CLAUDE.md) • [Agents Guide](./AGENTS.md) • [Codex Guide](./docs/README.codex.md)
 
 </div>
