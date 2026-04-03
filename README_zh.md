@@ -15,7 +15,7 @@
 </div>
 
 > [!NOTE]
-> English version: [README.md](./README.md)
+> 其他语言：[English](./README.md)
 
 ## 概览
 

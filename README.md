@@ -15,7 +15,7 @@ Multi-agent skills for the full software delivery lifecycle.
 </div>
 
 > [!NOTE]
-> Chinese version: [README_zh.md](./README_zh.md)
+> Other Languages: [中文](./README_zh.md)
 
 ## Overview
 
