@@ -30,11 +30,11 @@ Generate structured API documentation following the standardized API schema.
 
 ## Conventions
 
-Follow `skills/product-dev/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow, failure handling, and safety boundaries.
+Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow, failure handling, and safety boundaries.
 
-- **Schema**: `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/api-schema.md`
+- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/api-schema.md`
 - **Metadata**: `type: API`, version `1.0.0`
-- **Naming**: `api-<service-name>-v1.0.0.md`
+- **Naming**: `docs/engineer/<feature-name>/API.md`
 
 ## Workflow Details
 

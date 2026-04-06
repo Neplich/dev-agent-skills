@@ -1,0 +1,10 @@
+{
+  "name": "taggable-apps-portal",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Existing web app workspace for idea-to-spec feature design eval",
+  "scripts": {
+    "dev": "next dev",
+    "test": "echo \"No tests for eval workspace\""
+  }
+}

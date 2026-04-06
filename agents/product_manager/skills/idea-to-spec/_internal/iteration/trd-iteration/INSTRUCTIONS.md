@@ -50,7 +50,7 @@ history, and cross-document consistency.
    - If PRD assumptions are contradicted, flag that `prd-iteration` may also be
      required
 5. **Bump version**: Use
-`skills/product-dev/idea-to-spec/_internal/_shared/output-conventions.md`.
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md`.
 6. **Update changelog**: Add a frontmatter entry and inline changelog entry.
 7. **Run inline validation**: Apply `trd-validator` checks to the updated doc.
 8. **Present**: Show a diff summary, validation result, and the updated TRD.

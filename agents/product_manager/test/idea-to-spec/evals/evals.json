@@ -1,0 +1,77 @@
+{
+  "skill_name": "idea-to-spec",
+  "evals": [
+    {
+      "id": 1,
+      "name": "existing-project-feature-design",
+      "prompt": "我们在一个已有的 Web 应用里，要新增应用标签系统。请先看项目上下文，再和我一起把方案收敛下来，最终沉淀成 PM 设计文档。",
+      "expected_output": "先给出项目上下文摘要，然后按单决策点推进设计；在关键点提供 2-3 个方案和 trade-off；按 section 逐段确认；把已确认内容沉淀到 docs/pm/{feature}/DECISIONS.md 与相关 PM 文档。",
+      "assertions": [
+        {
+          "name": "先做上下文检测",
+          "text": "输出开始于项目上下文或现状摘要，而不是直接给完整方案"
+        },
+        {
+          "name": "单决策点推进",
+          "text": "每个回合只推进一个待确认问题，不并行展开多个未确认议题"
+        },
+        {
+          "name": "关键点有选项比较",
+          "text": "在数据模型、查询语义或交互方案等关键设计点给出 2-3 个选项和 trade-off"
+        },
+        {
+          "name": "按 section 推进",
+          "text": "设计内容按 section 展开，并要求用户确认当前 section"
+        },
+        {
+          "name": "文档作为记忆源",
+          "text": "明确提到 DECISIONS.md 或 feature 文档作为持久记忆和沉淀位置"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "existing-project-update",
+      "prompt": "当前系统已经有一版通知中心的 PRD/TRD，现在要把提醒策略从轮询改成事件驱动。请分析影响范围，更新设计思路，并告诉我应该改哪些文档。",
+      "expected_output": "识别为 existing-project-update；先总结 delta 和影响范围；优先走 change-impactor / iteration 思路而不是整份重写；明确受影响文档和后续迭代路径。",
+      "assertions": [
+        {
+          "name": "识别 update 场景",
+          "text": "输出将请求识别为已有设计更新，而不是从零开始做新方案"
+        },
+        {
+          "name": "先做 delta 与 blast radius 分析",
+          "text": "先总结变更点、影响范围、受影响行为或文档，再进入更新建议"
+        },
+        {
+          "name": "优先迭代而非重写",
+          "text": "优先推荐 change-impactor 或对应 iteration 技能，而不是默认全量重写"
+        },
+        {
+          "name": "文档路径明确",
+          "text": "能明确指出需要更新的 feature 文档及其路径或类型"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "greenfield-discovery",
+      "prompt": "我想做一个团队知识问答产品，现在只有一个模糊想法。你先不要直接写完整 PRD，先帮我把方向收敛。",
+      "expected_output": "保持在 greenfield-discovery；不直接产出整份 PRD；通过单决策点问题和关键方案比较逐步收敛；在方向稳定后再建议下一步文档化。",
+      "assertions": [
+        {
+          "name": "不直接生成完整文档",
+          "text": "不会在第一轮直接输出整份 PRD 或 TRD"
+        },
+        {
+          "name": "使用探索式协议",
+          "text": "通过单决策点提问来收敛问题、用户、目标和范围"
+        },
+        {
+          "name": "方向稳定后再建议文档化",
+          "text": "在设计稳定后再推荐 PRD 或其他下游文档动作"
+        }
+      ]
+    }
+  ]
+}

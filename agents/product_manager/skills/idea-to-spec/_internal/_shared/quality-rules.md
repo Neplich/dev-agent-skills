@@ -121,7 +121,7 @@ Validators MUST check document length and flag violations:
 | Total document lines | > 500 lines | CRITICAL | Must split into multiple documents (L2) or compress sections (L1) |
 | Single section without sub-headings | > 80 lines | WARNING | Should split into sub-sections or move details to Appendix |
 | Table rows in a single table | > 20 rows | WARNING | Should summarize + move full table to Appendix |
-| Multi-doc main missing `parts:` field | When sub-docs exist | CRITICAL | Main document must list all sub-documents |
+| Supporting docs missing from `related_docs` | When sibling docs exist | CRITICAL | Main document must reference supporting docs via stable paths |
 
 ## Issue Severity Definitions
 

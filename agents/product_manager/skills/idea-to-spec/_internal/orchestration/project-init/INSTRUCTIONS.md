@@ -36,7 +36,7 @@ empty workspace needs durable documentation scaffolding.
 
 ## Shared Routing Contract
 
-Read `skills/product-dev/idea-to-spec/_internal/_shared/skill-map.md` before
+Read `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` before
 finalizing doc types,
 schema sources, or recommended next steps.
 
@@ -79,17 +79,17 @@ Use it to:
 
    | Doc Type | Shared Schema |
    | --- | --- |
-   | BRD | `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/brd-schema.md` |
-   | PRD | `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md` |
-   | TRD | `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/trd-schema.md` |
-   | ADR | `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/adr-schema.md` |
-   | API | `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/api-schema.md` |
-   | TEST_SPEC | `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md` |
+   | BRD | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/brd-schema.md` |
+   | PRD | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md` |
+   | TRD | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/trd-schema.md` |
+   | ADR | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/adr-schema.md` |
+   | API | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/api-schema.md` |
+   | TEST_SPEC | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md` |
 4. **Create index file**: Generate `docs/README.md` with:
    - Project overview
    - Document inventory table
    - Workflow guide aligned to
-     `skills/product-dev/idea-to-spec/_internal/_shared/skill-map.md`
+     `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
 5. **Present**: Summary of created files and suggested next steps.
 
 ## Output Contract
@@ -125,24 +125,32 @@ Created project documentation structure:
 
 docs/
 ├─ README.md                              (Project index)
-├─ brd/
-│  └─ brd-smart-checkout-v0.1.0.md        (BRD stub)
-├─ prd/
-│  └─ prd-smart-checkout-v0.1.0.md        (PRD stub)
-├─ trd/
-│  └─ trd-smart-checkout-v0.1.0.md        (TRD stub)
-├─ adr/
-│  └─ README.md                           (ADR usage note / template index)
-├─ api/
-│  └─ api-smart-checkout-v0.1.0.md        (API doc stub)
-├─ test-specs/
-│  └─ tspecs-smart-checkout-v0.1.0.md     (TEST_SPEC stub)
-└─ reports/
-   └─ (empty - for validation reports)
+├─ pm/
+│  └─ smart-checkout/
+│     ├─ DECISIONS.md                     (decision log stub)
+│     ├─ BRD.md                           (BRD stub)
+│     └─ PRD.md                           (PRD stub)
+├─ engineer/
+│  └─ smart-checkout/
+│     ├─ TRD.md                           (TRD stub)
+│     ├─ API.md                           (API doc stub)
+│     └─ ADR-001-initial-architecture.md  (ADR stub)
+├─ qa/
+│  └─ smart-checkout/
+│     └─ TEST_SPEC.md                     (TEST_SPEC stub)
+├─ design/
+│  └─ smart-checkout/
+│     └─ UI_UX_SPEC.md                    (UI/UX spec stub)
+├─ devops/
+│  └─ smart-checkout/
+│     └─ RELEASE_PLAN.md                  (release plan stub)
+└─ security/
+   └─ smart-checkout/
+      └─ SECURITY_REVIEW.md               (security review stub)
 
 Suggested next steps:
-1. Run `brd-gen` to flesh out the BRD
-2. Run `prd-gen` to define product requirements
-3. Run `trd-gen` to create technical design
-4. Run `tspecs-gen` to generate test cases
+1. Run `brd-gen` to flesh out `docs/pm/smart-checkout/BRD.md`
+2. Run `prd-gen` to define `docs/pm/smart-checkout/PRD.md`
+3. Update `docs/pm/smart-checkout/DECISIONS.md` as decisions are confirmed
+4. Run `trd-gen` and `tspecs-gen` to populate downstream docs
 ```

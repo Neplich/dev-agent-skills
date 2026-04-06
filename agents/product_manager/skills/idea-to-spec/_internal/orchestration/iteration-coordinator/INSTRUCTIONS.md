@@ -39,7 +39,7 @@ likely broader than a single artifact.
 ## Shared Routing Contract
 
 Before selecting per-document iteration or validator skills, read
-`skills/product-dev/idea-to-spec/_internal/_shared/skill-map.md`.
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
 
 Use it to:
 
@@ -139,6 +139,6 @@ Step 2/5: Updating PRD auth requirements...
 
 ## References
 
-- `skills/product-dev/idea-to-spec/_internal/_shared/output-conventions.md` -> Version bump rules
-- `skills/product-dev/idea-to-spec/_internal/_shared/quality-rules.md` -> Validation scoring
-- `skills/product-dev/idea-to-spec/_internal/_shared/skill-map.md` -> Routing and lifecycle coverage
+- `agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md` -> Version bump rules
+- `agents/product_manager/skills/idea-to-spec/_internal/_shared/quality-rules.md` -> Validation scoring
+- `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` -> Routing and lifecycle coverage

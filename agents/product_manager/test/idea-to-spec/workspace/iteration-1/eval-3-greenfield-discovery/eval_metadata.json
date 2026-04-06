@@ -1,0 +1,57 @@
+{
+  "eval_id": 3,
+  "eval_name": "greenfield-discovery",
+  "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-3-greenfield-discovery",
+  "prompt": "我想做一个团队知识问答产品，现在只有一个模糊想法。你先不要直接写完整 PRD，先帮我把方向收敛。",
+  "with_skill_outputs": [
+    "with_skill/outputs/transcript.md"
+  ],
+  "without_skill_outputs": [
+    "without_skill/outputs/transcript.md"
+  ],
+  "assertions": [
+    {
+      "id": "stays_in_discovery",
+      "description": "Stays in discovery rather than immediately producing a full PRD",
+      "target": "with_skill/outputs/transcript.md",
+      "all_of": [
+        "Suggested lane: `greenfield-discovery`"
+      ],
+      "none_of": [
+        "# Product Requirements Document",
+        "## 产品定位"
+      ]
+    },
+    {
+      "id": "decision_point_questions",
+      "description": "Uses controlled decision-point questions",
+      "target": "with_skill/outputs/transcript.md",
+      "all_of": [
+        "## Decision Point 1",
+        "## Decision Point 2",
+        "Option A:",
+        "Recommended default:"
+      ]
+    },
+    {
+      "id": "doc_recommendation_deferred",
+      "description": "Defers formal document generation until the direction stabilizes",
+      "target": "with_skill/outputs/transcript.md",
+      "all_of": [
+        "Recommended next step:",
+        "Do not write a full PRD yet"
+      ]
+    },
+    {
+      "id": "confirmation_discipline",
+      "description": "Discovery decisions are treated as checkpoints that should be confirmed before widening scope",
+      "target": "with_skill/outputs/transcript.md",
+      "count_at_least": [
+        {
+          "text": "Confirmed for this eval run:",
+          "count": 2
+        }
+      ]
+    }
+  ]
+}

@@ -33,12 +33,12 @@ after the lane is already classified as an end-to-end workflow request.
   - `validate`: Run validators after each gen step (default: true)
   - `handoff_packet`: Stabilized context from `idea-to-spec` or another
     upstream skill, following
-    `skills/product-dev/idea-to-spec/_internal/_shared/skill-map.md`
+    `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
 
 ## Shared Routing Contract
 
 Before resolving validators, iteration paths, or checkpoint recommendations,
-read `skills/product-dev/idea-to-spec/_internal/_shared/skill-map.md`.
+read `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
 
 Use it to:
 
@@ -93,7 +93,7 @@ Architecture decision:
 
 1. **Resolve workflow**: Load the predefined workflow from
    `references/workflows/` or parse the custom step list, then load
-   `skills/product-dev/idea-to-spec/_internal/_shared/skill-map.md` for
+   `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` for
    lifecycle lookups.
 2. **Initialize context**: Set up the shared context object that flows between
    steps. Prefer the `handoff_packet` if available so downstream skills reuse

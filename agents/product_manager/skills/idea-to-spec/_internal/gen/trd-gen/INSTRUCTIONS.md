@@ -12,7 +12,7 @@ Generate a comprehensive Technical Requirements Document following the standardi
 - Translating product requirements (PRD) into a technical design
 - Documenting architecture decisions, data models, and API contracts
 - Need a technical blueprint before implementation
-- **Differs from** `idea-to-spec`: idea-to-spec produces PRD+TRD combined through dialogue; trd-gen focuses solely on the technical layer
+- **Differs from** `idea-to-spec`: idea-to-spec runs the design conversation and routes to the right documents; trd-gen focuses solely on the technical layer
 - **Complements** `prd-gen`: Use prd-gen first for requirements, then trd-gen for technical design
 
 ## Inputs
@@ -27,11 +27,11 @@ Generate a comprehensive Technical Requirements Document following the standardi
 
 ## Conventions
 
-Follow `skills/product-dev/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow, failure handling, and safety boundaries.
+Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow, failure handling, and safety boundaries.
 
-- **Schema**: `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/trd-schema.md`
+- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/trd-schema.md`
 - **Metadata**: `type: TRD`, version `1.0.0`, status `Draft`
-- **Naming**: `trd-<system-name>-v1.0.0.md`
+- **Naming**: `docs/engineer/<feature-name>/TRD.md`
 
 ## Workflow Details
 

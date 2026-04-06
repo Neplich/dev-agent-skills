@@ -26,11 +26,11 @@ Generate an Architecture Decision Record following the standardized ADR schema.
 
 ## Conventions
 
-Follow `skills/product-dev/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow, failure handling, and safety boundaries.
+Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow, failure handling, and safety boundaries.
 
-- **Schema**: `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/adr-schema.md`
+- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/adr-schema.md`
 - **Metadata**: `type: ADR`, version `1.0.0`, status `Proposed`
-- **Naming**: `adr-<NNN>-<decision-title>-v1.0.0.md`
+- **Naming**: `docs/engineer/<feature-name>/ADR-<NNN>-<decision-title>.md`
 
 ## Workflow Details
 

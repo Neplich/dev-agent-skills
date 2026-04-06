@@ -1,0 +1,68 @@
+{
+  "eval_id": 1,
+  "eval_name": "existing-project-feature-design",
+  "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-1-existing-project-feature",
+  "prompt": "我们在一个已有的 Web 应用里，要新增应用标签系统。请先看项目上下文，再和我一起把方案收敛下来，最终沉淀成 PM 设计文档。",
+  "with_skill_outputs": [
+    "with_skill/outputs/transcript.md",
+    "docs/pm/app-tags/DECISIONS.md",
+    [
+      "docs/pm/app-tags/design.md",
+      "docs/pm/app-tags/PRD.md"
+    ]
+  ],
+  "without_skill_outputs": [
+    "without_skill/outputs/transcript.md"
+  ],
+  "assertions": [
+    {
+      "id": "context_summary_first",
+      "description": "Starts from workspace or project context instead of a full final solution",
+      "target": "with_skill/outputs/transcript.md",
+      "all_of": [
+        "## Project Context",
+        "Suggested lane: `existing-project-feature`"
+      ]
+    },
+    {
+      "id": "single_decision_point",
+      "description": "Advances one unresolved decision at a time",
+      "target": "with_skill/outputs/transcript.md",
+      "all_of": [
+        "Decision point:",
+        "Confirmed by evaluator for this run:"
+      ]
+    },
+    {
+      "id": "options_with_tradeoffs",
+      "description": "Provides 2-3 options with trade-offs on key design decisions",
+      "target": "with_skill/outputs/transcript.md",
+      "all_of": [
+        "Option A:",
+        "Option B:",
+        "Trade-off:",
+        "Recommended default:"
+      ]
+    },
+    {
+      "id": "section_progression",
+      "description": "Uses section-based progression",
+      "target": "with_skill/outputs/transcript.md",
+      "all_of": [
+        "## Section 1: Scope And Goals",
+        "## Section 2: Data Model And Query Semantics",
+        "## Section 3: Interaction Shape"
+      ]
+    },
+    {
+      "id": "decision_log_created",
+      "description": "Creates or updates PM decision log",
+      "target": "docs/pm/app-tags/DECISIONS.md",
+      "all_of": [
+        "# Confirmed Decisions",
+        "Portal-owned concept",
+        "normalized_name"
+      ]
+    }
+  ]
+}

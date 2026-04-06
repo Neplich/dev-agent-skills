@@ -1,101 +1,123 @@
 # Gen Skill Conventions
 
-> Standard workflow, safety, and failure handling rules shared by all document generation skills under `gen/`.
-> Each gen skill MUST follow these conventions unless explicitly overridden.
+> Standard workflow, safety, and failure handling rules shared by all document
+> generation skills under `gen/`. Each gen skill MUST follow these conventions
+> unless explicitly overridden.
 
 ## Standard Workflow
 
-Every gen skill follows this 5-step workflow:
+Every gen skill follows this 6-step workflow:
 
-1. **Collect context**: Read provided inputs. If the primary input is thin, ask up to 5 clarifying questions (fewer for simpler document types). Do not ask more than 2 rounds of questions.
+1. **Collect context**: Read provided inputs plus any active feature docs. If
+   `docs/pm/{feature-name}/DECISIONS.md` exists, treat it as the source of
+   truth for confirmed decisions, open questions, assumptions, and rejected
+   options.
 
-2. **Load schema**: Reference the corresponding schema in
-`skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/`. Use the canonical filenames:
-   `brd-schema.md`, `prd-schema.md`, `trd-schema.md`, `adr-schema.md`,
-   `api-schema.md`, and `test-spec-schema.md`. Skip this step for utility
-   skills (mermaid-gen, weekly-report-gen) that have no formal schema.
+2. **Clarify one decision point at a time**: If the primary input is thin, ask
+   the smallest question needed to unblock the current document. Do not bundle
+   unrelated questions into one turn. Do not exceed 2 rounds of clarification.
 
-3. **Generate document**: Produce all required sections per the loaded schema. Follow `skills/product-dev/idea-to-spec/_internal/_shared/output-conventions.md` for versioning, naming, and frontmatter format.
+3. **Load schema**: Reference the corresponding schema in
+   `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/`.
+   Use the canonical filenames: `brd-schema.md`, `prd-schema.md`,
+   `trd-schema.md`, `adr-schema.md`, `api-schema.md`, and
+   `test-spec-schema.md`. Skip this step for utility skills
+   (`mermaid-gen`, `weekly-report-gen`) that have no formal schema.
 
-4. **Self-check**: Validate the generated output against `skills/product-dev/idea-to-spec/_internal/_shared/quality-rules.md` scoring dimensions (Completeness, Consistency, Clarity, Testability). Target overall score ≥ 3.5 before presenting.
+4. **Generate or update the target document**: Produce all required sections per
+   the loaded schema. Follow
+   `agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md`
+   for naming, directory layout, and frontmatter format.
 
-5. **Present**: Output the document with YAML frontmatter metadata (type, version `1.0.0`, status `Draft`, date, changelog). For utility skills without formal document structure, skip frontmatter.
+5. **Consolidate**: Rewrite any process notes, tentative correction phrasing, or
+   chat-like fragments into stable document prose. The document body should
+   state the current design directly.
+
+6. **Self-check**: Validate the output against
+   `agents/product_manager/skills/idea-to-spec/_internal/_shared/quality-rules.md`
+   scoring dimensions. Target overall score `>= 3.5` before presenting.
 
 ## Output Standards
 
-- **Format**: Markdown with YAML frontmatter (formal docs) or plain Markdown (utility skills)
-- **File naming**: `<type-lowercase>-<name>-v<version>.md` per output-conventions.md
-- **Line limit**: Keep output under 500 lines (including frontmatter); move detailed content to appendix
-- **Section limit**: Keep each section under 80 lines; split into sub-sections or move to appendix if exceeded
-- **Section count**: When total sections > 10, consider splitting into multiple documents
+- **Format**: Markdown with YAML frontmatter for formal docs, plain Markdown
+  for utility skills
+- **Directory layout**: Use the short-path feature directory convention from
+  `output-conventions.md`
+- **Memory sync**: When a generation step locks a new decision, ensure the
+  corresponding `DECISIONS.md` is updated in the same feature folder
+- **Line limit**: Keep output under 500 lines, including frontmatter
+- **Section limit**: Keep each section under 80 lines; split or compress if
+  exceeded
+- **Section count**: When total sections exceed 10, consider splitting into
+  multiple documents or using a working `design.md`
 
-### Document Chunking Strategy
+## Document Chunking Strategy
 
-When a document risks exceeding the line limit, apply the appropriate chunking level:
+When a document risks exceeding the line limit, apply the appropriate chunking
+level:
 
 | Level | Trigger | Action |
-|-------|---------|--------|
-| L1: Section compression | Single section > 80 lines | Keep summary in-place + move details to Appendix with anchor links |
-| L2: Multi-document split | Total > 500 lines OR ≥ 3 independent functional domains | Split into main doc + sub-docs; main doc contains index table |
-| L3: Incremental output | Extremely complex requirements (e.g., full-platform PRD) | Output skeleton first, then expand module by module on request |
+| --- | --- | --- |
+| L1: Section compression | Single section > 80 lines | Keep summary in place and move details to an appendix or sibling doc |
+| L2: Multi-document split | Total > 500 lines OR `>= 3` independent domains | Split into feature-scoped sibling docs in the same folder |
+| L3: Incremental output | Extremely complex requirements | Use `design.md` or staged docs, then expand section by section |
 
-#### L1 — Section Compression Rules
+### L1: Section Compression Rules
 
-Apply when a single section exceeds 80 lines:
+- Tables with more than 20 rows -> keep a summary table and move the full list
+  to an appendix or sibling file
+- Code or schema examples over 30 lines -> summarize inline and move the full
+  example to an appendix
+- Mermaid diagrams over 40 lines -> keep a simplified diagram inline and move
+  the full version to an appendix
 
-- **Tables > 20 rows** → Keep top 5 rows + "Full list in Appendix §X"
-- **Code/schema examples > 30 lines** → Summary + "See Appendix §X for full example"
-- **Mermaid diagrams > 40 lines** → Simplified diagram inline + full diagram in Appendix
+### L2: Multi-Document Split Rules
 
-#### L2 — Multi-Document Split Rules
+- Keep the files in the same feature folder
+- Use fixed filenames for canonical docs, not versioned filenames
+- Use sibling supporting docs only when the main doc would otherwise become
+  unreadable
+- Record supporting doc links in the main document frontmatter `related_docs`
+  field
 
-Apply when total output exceeds 500 lines or the subject covers ≥ 3 independent domains:
+### L3: Incremental Output Rules
 
-- **Main document** contains: metadata, executive summary, sub-document index table, global constraints (NFRs, risks, timeline)
-- **Sub-documents** split by: functional domain / user story group / service boundary
-- **Naming**: `<type>-<project>-<module>-v<ver>.md` (e.g., `prd-checkout-payment-v1.0.0.md`)
-- **Main document frontmatter** MUST include a `parts:` field listing all sub-documents:
-  ```yaml
-  parts:
-    - prd-checkout-payment-v1.0.0.md
-    - prd-checkout-shipping-v1.0.0.md
-    - prd-checkout-inventory-v1.0.0.md
-  ```
-- Each sub-document frontmatter MUST include `parent:` referencing the main document filename
+1. Start with a working document where each major section has a short summary
+2. Expand one section at a time after the user confirms the current direction
+3. Consolidate the working draft before treating it as the final doc
 
-#### L3 — Incremental Output Rules
+Use these markers only when needed:
 
-Apply when requirements are too complex for a single generation pass:
-
-1. **Step 1**: Output a skeleton document — each section contains only 2-3 line summary, marked with `[EXPAND]`
-2. **Step 2**: Present the skeleton and ask the user which modules to expand
-3. **Step 3**: Generate detailed content for selected modules one at a time
-
-- **Placeholders**: When information is unavailable, use these markers:
-  - `[PLACEHOLDER]` — section needs user input
-  - `[ASSUMED]` — reasonable default applied, needs confirmation
-  - `[ESTIMATE]` — rough figure, not verified
-  - `[DEFAULT]` — industry standard default applied
-  - `[DERIVED]` — inferred from context
-  - `[INFERRED]` — inferred from limited information
-  - `[PROPOSED]` — suggested by skill, awaiting approval
-  - `[RESEARCHED]` — based on domain knowledge, not verified data
+- `[PLACEHOLDER]` - section needs user input
+- `[ASSUMED]` - reasonable default applied, needs confirmation
+- `[ESTIMATE]` - rough figure, not verified
+- `[DEFAULT]` - common default applied
+- `[DERIVED]` - inferred from context
+- `[INFERRED]` - inferred from limited information
+- `[PROPOSED]` - suggested by the skill, awaiting approval
+- `[RESEARCHED]` - based on domain knowledge, not verified data
 
 ## Failure Handling
 
-All gen skills handle failures gracefully:
-
-- **Vague input after 2 rounds of questions** → Produce a partial document with `[PLACEHOLDER]` markers for incomplete sections. List what information is still needed.
-- **Cannot estimate a value** → Include the field with a note explaining what data points are needed.
-- **Input too complex for single document** → Recommend splitting and provide skeleton for each part.
-- **Missing optional context** → Use reasonable defaults, clearly marked with appropriate placeholder tags.
+- **Vague input after 2 rounds of questions** -> produce a partial document with
+  explicit markers for incomplete sections and list the missing information
+- **Cannot estimate a value** -> include the field with a note explaining what
+  data points are still needed
+- **Input too complex for one document** -> recommend splitting and establish
+  the feature folder structure first
+- **Missing optional context** -> use reasonable defaults, clearly marked with
+  placeholder tags
 
 ## Safety Boundaries
 
-All gen skills observe these rules:
-
-1. **No fabrication** — Do not invent data, metrics, benchmarks, or research findings. Mark estimates and assumptions with appropriate placeholder tags.
-2. **No external access** — Do not access external URLs or APIs.
-3. **No file modification** — Do not modify existing files unless the user explicitly instructs.
-4. **No command execution** — Do not run commands unless the skill's workflow specifically requires it (e.g., weekly-report-gen reading git log).
-5. **No sensitive data** — Do not include real credentials, tokens, internal IPs, or PII in examples.
+1. **No fabrication**: Do not invent data, metrics, benchmarks, or research
+   findings. Mark estimates and assumptions clearly.
+2. **No external access by default**: Do not access external URLs or APIs
+   unless the task explicitly requires it and the environment allows it.
+3. **No silent memory drift**: If the generated document changes a previously
+   confirmed decision, surface the conflict explicitly instead of silently
+   overwriting it.
+4. **No directory drift**: Keep PM docs under `docs/pm/{feature-name}/` and do
+   not invent alternate feature doc roots.
+5. **No sensitive data**: Do not include real credentials, tokens, internal
+   IPs, or PII in examples.

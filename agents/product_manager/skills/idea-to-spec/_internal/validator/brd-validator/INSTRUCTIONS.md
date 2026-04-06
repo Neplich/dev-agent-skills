@@ -23,9 +23,9 @@ Validate a BRD document against the standardized schema and quality rules.
 
 ## Conventions
 
-Follow `skills/product-dev/idea-to-spec/_internal/_shared/validator-conventions.md` for standard workflow, output format, failure handling, and safety boundaries.
+Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/validator-conventions.md` for standard workflow, output format, failure handling, and safety boundaries.
 
-- **Schema**: `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/brd-schema.md`
+- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/brd-schema.md`
 
 ## BRD-Specific Checks
 
@@ -52,7 +52,7 @@ In addition to generic quality rules:
 
 ```markdown
 ## Validation Report
-- Document: brd-checkout-redesign-v1.0.0.md
+- Document: docs/pm/checkout-redesign/BRD.md
 - Type: BRD
 - Overall Score: 3.6 / 5
 - Status: NEEDS_WORK

@@ -27,11 +27,11 @@ Generate a comprehensive Product Requirements Document following the standardize
 
 ## Conventions
 
-Follow `skills/product-dev/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow, failure handling, and safety boundaries.
+Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow, failure handling, and safety boundaries.
 
-- **Schema**: `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md`
+- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md`
 - **Metadata**: `type: PRD`, version `1.0.0`, status `Draft`
-- **Naming**: `prd-<feature-name>-v1.0.0.md`
+- **Naming**: `docs/pm/<feature-name>/PRD.md`
 
 ## Workflow Details
 

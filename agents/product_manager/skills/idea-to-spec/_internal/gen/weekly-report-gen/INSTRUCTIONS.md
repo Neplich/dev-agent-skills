@@ -73,7 +73,7 @@ Generate a structured weekly progress report from various inputs.
 
 ## Conventions
 
-This is a **utility skill** (no formal document schema). Follow `skills/product-dev/idea-to-spec/_internal/_shared/gen-conventions.md` for safety boundaries. No YAML frontmatter in output.
+This is a **utility skill** (no formal document schema). Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` for safety boundaries. No YAML frontmatter in output.
 
 ## Failure Handling
 

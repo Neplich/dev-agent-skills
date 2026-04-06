@@ -1,9 +1,9 @@
 ---
 name: idea-to-spec
-description: "Use this as the public entry skill for the idea-to-spec skill group whenever the user wants to turn an idea, an existing project feature request, or a spec change into actionable product and technical documents. It handles greenfield discovery, existing-project feature planning, and existing-doc updates, then loads the narrowest internal idea-to-spec skill only when the next step is clear."
+description: "Use this when the user wants to turn a product idea, an existing-project feature request, or a spec change into structured product or technical design output."
 ---
 
-# Idea to Spec - Public Entry for the Idea-to-Spec Skill Group
+# Idea to Spec
 
 Use this as the single public entry skill for the `idea-to-spec` skill group.
 
@@ -11,13 +11,38 @@ It owns:
 
 - workspace and document context detection
 - request lane selection
-- clarification and design framing
+- design conversation control
+- section-by-section requirement shaping
 - handoff packet assembly
 - progressive loading of internal instruction resources under
-  `skills/product-dev/idea-to-spec/_internal/`
+  `agents/product_manager/skills/idea-to-spec/_internal/`
 
-Do not expose or recommend the full internal instruction tree up front. Keep the user
-interacting with `idea-to-spec` until the narrowest useful next step is clear.
+Do not expose or recommend the full internal instruction tree up front. Keep
+the user interacting with `idea-to-spec` until the narrowest useful next step
+is clear.
+
+## Non-Negotiable Protocol
+
+For feature design and spec-change requests, follow these rules:
+
+1. Read workspace and document context before proposing a formal design.
+2. Advance one decision point per turn. Do not push multiple unresolved topics
+   in parallel.
+3. For meaningful design trade-offs, present `2-3` viable options, state the
+   trade-off for each, and recommend one default.
+4. Use section-based progression. Finish the current section before moving to
+   the next one.
+5. After the user confirms a decision, record it in the feature decision log.
+6. After a section is stable, write or update the corresponding PM document
+   instead of relying only on chat history.
+7. After each major stage, consolidate the written docs into clean,
+   declarative language. Do not leave "not X but Y" correction prose in the
+   body text.
+8. Do not recommend downstream generation until scope, users, constraints, and
+   current-state understanding are either confirmed or explicitly captured as
+   assumptions.
+9. Do not regenerate existing documents by habit. Prefer delta-oriented
+   iteration.
 
 ## Operating Modes
 
@@ -25,10 +50,12 @@ Choose the conversation style first:
 
 - **Explore mode** (default): Dialogue-driven, best for vague requests or
   unstable scope.
-- **Fast mode**: Generate a solid v1 immediately when the user already gave
-  goals, users, scope, constraints, and likely implementation boundaries.
+- **Fast mode**: Use when the user already gave goals, users, scope,
+  constraints, and likely implementation boundaries.
 
 If the user already supplied enough detail, switch to fast mode automatically.
+Fast mode does not skip the non-negotiable protocol; it only compresses the
+number of turns.
 
 ## Execution Lanes
 
@@ -74,9 +101,10 @@ Do not use this for:
 
 ## Internal Routing Contract
 
-Before loading any internal instruction resource or building a handoff packet, read:
+Before loading any internal instruction resource or building a handoff packet,
+read:
 
-`skills/product-dev/idea-to-spec/_internal/_shared/skill-map.md`
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
 
 Treat that file as the source of truth for:
 
@@ -84,6 +112,7 @@ Treat that file as the source of truth for:
 - progressive disclosure
 - handoff packet fields
 - generator / validator / iteration routing
+- documentation memory rules
 - existing-project update policy
 - fallback behavior
 
@@ -91,23 +120,43 @@ Load only the narrowest internal `INSTRUCTIONS.md` needed for the next step.
 
 ## Core Principles
 
-- **Entry first**: `idea-to-spec` is the front door, not just a greenfield
-  brainstormer.
+- **Entry first**: `idea-to-spec` is the front door for design work, not just a
+  greenfield brainstormer.
 - **Context before output**: Read repo and doc context before proposing formal
   artifacts.
-- **Delta-oriented on existing projects**: When the project already exists,
-  describe what changes relative to the current system, not just the target end
-  state.
+- **Protocol before prose**: Manage design conversations through explicit
+  decision points, not open-ended brainstorming.
+- **Delta-oriented on existing projects**: Describe what changes relative to the
+  current system, not just the target end state.
 - **Progressive disclosure**: Offer one recommended next step plus one optional
   alternative by default.
-- **Reuse settled context**: Downstream internal instruction resources should inherit confirmed
-  facts instead of re-asking the basics.
+- **Reuse settled context**: Downstream internal instruction resources should
+  inherit confirmed facts instead of re-asking the basics.
+- **Document as memory**: Use feature docs as durable working memory for large
+  designs.
 - **Do not regenerate by habit**: Prefer targeted iteration when the artifact
   already exists and is good enough to update in place.
 - **Never fabricate**: Mark uncertain business rules, metrics, or technical
   constraints as `Assumption - needs confirmation`.
-- **Output Markdown by default**: Only write files when the user explicitly
-  agrees.
+
+## Feature Document Memory
+
+For ongoing feature design, use the short-path document layout:
+
+- `docs/pm/{feature-name}/DECISIONS.md`
+- `docs/pm/{feature-name}/PRD.md`
+- `docs/pm/{feature-name}/BRD.md`
+- `docs/pm/{feature-name}/design.md` as a temporary PM working draft when the
+  design has not yet split into formal docs
+
+Treat `DECISIONS.md` as the source of truth for:
+
+- confirmed decisions
+- open questions
+- assumptions
+- rejected options
+
+When the design spans many turns, re-read the feature docs before continuing.
 
 ## Phase 0: Workspace and Doc Detection
 
@@ -121,8 +170,8 @@ Check for:
 - stack markers: `package.json`, `pnpm-lock.yaml`, `go.mod`, `Cargo.toml`,
   `pyproject.toml`, `pom.xml`
 - architecture markers: `src/`, `apps/`, `packages/`, `services/`, `infra/`
-- documentation markers: BRD / PRD / TRD / ADR / API / TEST_SPEC files,
-  validation reports, doc indexes
+- documentation markers: BRD / PRD / TRD / ADR / API / TEST_SPEC /
+  DECISIONS files, validation reports, doc indexes
 
 ### Classify the current state
 
@@ -229,7 +278,7 @@ implementation.
 Goal: determine what to build or change, why it matters now, and where the
 scope should stop.
 
-In **explore mode**, ask one or two focused questions at a time.
+In **explore mode**, advance one decision point at a time.
 
 Always resolve:
 
@@ -247,7 +296,7 @@ For existing projects, also resolve:
 - whether the request adds capability or revises existing behavior
 
 In **fast mode**, extract these items directly and fill sensible defaults for
-missing details.
+missing details, but still mark assumptions explicitly.
 
 ### Phase 1 Output
 
@@ -267,7 +316,8 @@ Here's my understanding:
 - Top risks: [top 3]
 ```
 
-Then ask for confirmation or correction.
+Then ask for confirmation or correction. Once confirmed, update the feature
+decision log.
 
 ## Phase 2: Validate the Bet (Optional)
 
@@ -285,15 +335,23 @@ If the user has already committed to implementation, skip this phase.
 
 Goal: make requirements testable and scoped.
 
-Work through:
+Use section-based progression. For PM design work, the default section order is:
 
-- user flows, including failure and empty states
-- requirement tables with acceptance criteria
-- priorities: P0 / P1 / P2
-- non-goals
-- UX states when relevant
+1. Scope and goals
+2. Core objects and data model
+3. Interfaces and query/write semantics
+4. Frontend interaction shape
+5. Error and edge-case handling
+6. Phasing and test coverage
 
-Use a requirements table:
+For each section:
+
+- resolve one decision point at a time
+- present options when the section contains a real trade-off
+- wait for confirmation before moving on
+- update the feature docs once the section is stable
+
+Use a requirements table when requirements stabilize:
 
 | ID | User Story | Requirement | Acceptance Criteria | Priority | Notes |
 | --- | --- | --- | --- | --- | --- |
@@ -309,6 +367,9 @@ For existing projects, explicitly capture:
 ## Phase 4: Shape the Technical Design
 
 Goal: surface trade-offs and make implementation planning real.
+
+For major technical decisions, present `2-3` viable options with trade-offs and
+recommend one default.
 
 Recommended order:
 
@@ -343,14 +404,20 @@ For existing-project updates, also include:
 
 ## Deliverable Shapes
 
-Default to a single Markdown artifact unless the user wants a split:
+Default to feature-scoped docs under `docs/pm/{feature-name}/`.
 
-- single file: `design-doc.md`
-- split set:
-  - `00-validation-brief.md`
-  - `10-prd.md`
-  - `20-tech-design.md`
-  - `30-delivery-plan.md`
+- `DECISIONS.md` for the decision ledger
+- `PRD.md` for product requirements
+- `BRD.md` for business framing when needed
+- `design.md` for an intermediate PM draft before the final split
+
+Downstream docs should use the short-path agent structure:
+
+- `docs/design/{feature-name}/...`
+- `docs/engineer/{feature-name}/...`
+- `docs/qa/{feature-name}/...`
+- `docs/devops/{feature-name}/...`
+- `docs/security/{feature-name}/...`
 
 ## Handoff Behavior
 
@@ -382,7 +449,7 @@ Rules:
 
 Before delivery, validate against:
 
-- `skills/product-dev/idea-to-spec/_internal/_shared/quality-rules.md`
+- `agents/product_manager/skills/idea-to-spec/_internal/_shared/quality-rules.md`
 
 Additionally confirm:
 
@@ -393,6 +460,9 @@ Additionally confirm:
 4. NFRs contain concrete numbers, assumptions, or a validation plan.
 5. Existing-project changes describe compatibility, migration, and rollback.
 6. All assumptions and unknowns are captured explicitly.
+7. Confirmed decisions are reflected in `DECISIONS.md`.
+8. Section docs have been consolidated into stable prose, not chat-like
+   corrections.
 
 ## Failure Handling
 
@@ -410,10 +480,11 @@ Additionally confirm:
 ## Safety Boundaries
 
 - Only perform local, read-only inspection during Phase 0 unless the user
-  explicitly asks for file output.
+  explicitly asks for file output or the conversation is already in document
+  authoring mode.
 - Do not access external URLs or APIs.
 - Do not fabricate business constraints or technical facts.
-- Do not write files unless the user explicitly agrees.
+- Do not silently reopen confirmed decisions.
 
 ## Examples
 
@@ -425,7 +496,7 @@ Additionally confirm:
 
 - detects repo and doc context
 - stays in `greenfield-discovery`
-- shapes the idea through clarify / requirements / architecture
+- shapes the idea through controlled decision points
 - recommends `prd-gen` once requirements stabilize
 
 ### Example 2: Existing project, new feature
@@ -438,7 +509,7 @@ current comments module if possible."
 - detects an existing repo and current modules
 - chooses `existing-project-feature`
 - writes a delta brief anchored in current architecture
-- clarifies requirements and rollout constraints
+- progresses section by section and records confirmed decisions
 - recommends `prd-gen`, then `trd-gen`
 
 ### Example 3: Existing docs need revision
@@ -451,4 +522,5 @@ docs and tell me what changes."
 - chooses `existing-project-update`
 - loads `change-impactor`
 - routes to `iteration-coordinator` if several docs are affected
+- records updated decisions and consolidates the revised docs
 - recommends validators and `trace-check` after the updates

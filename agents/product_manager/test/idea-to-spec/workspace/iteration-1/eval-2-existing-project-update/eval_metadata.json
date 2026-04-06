@@ -1,0 +1,66 @@
+{
+  "eval_id": 2,
+  "eval_name": "existing-project-update",
+  "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update",
+  "prompt": "当前系统已经有一版通知中心的 PRD/TRD，现在要把提醒策略从轮询改成事件驱动。请分析影响范围，更新设计思路，并告诉我应该改哪些文档。",
+  "with_skill_outputs": [
+    "with_skill/outputs/transcript.md",
+    "docs/pm/notification-center/DECISIONS.md",
+    "docs/pm/notification-center/PRD.md",
+    "docs/engineer/notification-center/TRD.md"
+  ],
+  "without_skill_outputs": [
+    "without_skill/outputs/transcript.md"
+  ],
+  "assertions": [
+    {
+      "id": "recognized_as_update",
+      "description": "Recognizes the request as an existing-project update instead of a greenfield design",
+      "target": "with_skill/outputs/transcript.md",
+      "all_of": [
+        "Suggested lane: `existing-project-update`",
+        "This is an update to approved design behavior"
+      ]
+    },
+    {
+      "id": "delta_first",
+      "description": "Starts with delta and blast-radius analysis",
+      "target": "with_skill/outputs/transcript.md",
+      "all_of": [
+        "## Delta Summary",
+        "## Blast Radius"
+      ]
+    },
+    {
+      "id": "iteration_preferred",
+      "description": "Prefers targeted iteration over regeneration",
+      "target": "with_skill/outputs/transcript.md",
+      "all_of": [
+        "Use `change-impactor` logic first",
+        "coordinated iteration is more appropriate than regeneration"
+      ]
+    },
+    {
+      "id": "doc_targets_named",
+      "description": "Names the documents that should be updated",
+      "target": "with_skill/outputs/transcript.md",
+      "all_of": [
+        "docs/pm/notification-center/DECISIONS.md",
+        "docs/pm/notification-center/PRD.md",
+        "docs/engineer/notification-center/TRD.md"
+      ]
+    },
+    {
+      "id": "decision_history_handled",
+      "description": "When updating an approved design, the old confirmed decision is revised or explicitly retired rather than silently ignored",
+      "target": "docs/pm/notification-center/DECISIONS.md",
+      "all_of": [
+        "hybrid transition",
+        "Permanent polling-only delivery for the next phase"
+      ],
+      "none_of": [
+        "Start with polling instead of websocket delivery for v1"
+      ]
+    }
+  ]
+}

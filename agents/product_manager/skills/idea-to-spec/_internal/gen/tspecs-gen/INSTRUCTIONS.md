@@ -27,12 +27,12 @@ documents.
 
 ## Conventions
 
-Follow `skills/product-dev/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow,
+Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow,
 failure handling, and safety boundaries.
 
-- **Schema**: `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md`
+- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md`
 - **Metadata**: `type: TEST_SPEC`, version `1.0.0`
-- **Naming**: `tspecs-<feature-name>-v1.0.0.md`
+- **Naming**: `docs/qa/<feature-name>/TEST_SPEC.md`
 
 ## Workflow Details
 

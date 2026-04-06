@@ -23,9 +23,9 @@ Validate API documentation against the standardized schema and quality rules.
 
 ## Conventions
 
-Follow `skills/product-dev/idea-to-spec/_internal/_shared/validator-conventions.md` for standard workflow, output format, failure handling, and safety boundaries.
+Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/validator-conventions.md` for standard workflow, output format, failure handling, and safety boundaries.
 
-- **Schema**: `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/api-schema.md`
+- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/api-schema.md`
 - **Cross-check**: If source code provided, verify all routes are documented.
 
 ## API-Specific Checks

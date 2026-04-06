@@ -23,9 +23,9 @@ Validate a TRD document against the standardized schema and quality rules.
 
 ## Conventions
 
-Follow `skills/product-dev/idea-to-spec/_internal/_shared/validator-conventions.md` for standard workflow, output format, failure handling, and safety boundaries.
+Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/validator-conventions.md` for standard workflow, output format, failure handling, and safety boundaries.
 
-- **Schema**: `skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/trd-schema.md`
+- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/trd-schema.md`
 - **Cross-check**: If PRD provided, verify all PRD endpoints appear in TRD.
 
 ## TRD-Specific Checks

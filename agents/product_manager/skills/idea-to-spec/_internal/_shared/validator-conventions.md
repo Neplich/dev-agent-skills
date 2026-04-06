@@ -8,10 +8,10 @@
 Every validator skill follows this workflow:
 
 1. **Load references**: Read the corresponding schema from
-`skills/product-dev/idea-to-spec/_internal/_shared/doc-schemas/`. Use the canonical filenames:
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/`. Use the canonical filenames:
    `brd-schema.md`, `prd-schema.md`, `trd-schema.md`, `adr-schema.md`,
    `api-schema.md`, and `test-spec-schema.md`. Also load
-`skills/product-dev/idea-to-spec/_internal/_shared/quality-rules.md`.
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/quality-rules.md`.
 
 2. **Parse document**: Extract all sections and metadata from the input document.
 
