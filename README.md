@@ -94,7 +94,7 @@ When QA finds a requirement gap, acceptance issue, or prioritization problem ins
 # Add the marketplace
 /plugin marketplace add Neplich/dev-agent-skills
 
-# Install the agents you want
+# Install only the agents you need
 /plugin install pm-agent@dev-agent-skills
 /plugin install engineer-agent@dev-agent-skills
 /plugin install qa-agent@dev-agent-skills
@@ -102,6 +102,8 @@ When QA finds a requirement gap, acceptance issue, or prioritization problem ins
 /plugin install designer-agent@dev-agent-skills
 /plugin install security-agent@dev-agent-skills
 ```
+
+Claude Code scans installed plugins by plugin root. This marketplace now scopes each plugin to its own agent directory so `/agents` does not inherit the whole repository, but you should still install a subset instead of all six unless you actively need the full chain.
 
 ### Codex
 

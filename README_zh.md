@@ -94,7 +94,7 @@ graph LR
 # 添加 marketplace
 /plugin marketplace add Neplich/dev-agent-skills
 
-# 安装所需 Agent
+# 只安装当前需要的 Agent
 /plugin install pm-agent@dev-agent-skills
 /plugin install engineer-agent@dev-agent-skills
 /plugin install qa-agent@dev-agent-skills
@@ -102,6 +102,8 @@ graph LR
 /plugin install designer-agent@dev-agent-skills
 /plugin install security-agent@dev-agent-skills
 ```
+
+Claude Code 会按 plugin root 扫描已安装插件。这里已经把每个 plugin 收敛到各自的 agent 子目录，避免 `/agents` 继承整个仓库，但仍然建议按需安装，不要默认把 6 个 agent 一次性全装上。
 
 ### Codex
 
