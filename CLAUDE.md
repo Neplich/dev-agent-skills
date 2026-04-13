@@ -105,6 +105,15 @@ Each skill should include:
 - `test/{skill-name}/evals/workspace/eval-{id}/` for evaluation workspaces
 - comparison results for using the skill vs. not using the skill
 
+**Eval runner constraints**
+
+- Baseline outputs remain required. Do not weaken evals by making `without_skill` optional just to hide transcript-generation failures.
+- When generating Claude transcripts for evals, prefer structured output such as `claude -p --output-format json` and extract the final `result` field, rather than relying on plain text stdout.
+- Generate transcripts in an isolated temporary workspace, not directly in the committed eval fixture. Historical outputs or generated PM docs can contaminate empty-workspace routing and other context-sensitive cases.
+- Use `execution_cleanup` in `eval_metadata.json` for paths that must be removed from the temporary workspace before each run, such as stale `PRD.md`, `docs/pm/`, or prior output folders.
+- Persist run diagnostics such as command, cwd, timeout, return code, and stdout length so infra failures can be separated from assertion failures.
+- Prefer semantic assertions over brittle exact-string checks when behavior can legitimately vary in language or formatting. For example, treat localized or equivalent PM-first lane labels as acceptable if they preserve the intended routing behavior.
+
 ### Documentation Versioning
 
 **Do**
