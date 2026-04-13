@@ -49,6 +49,7 @@ agents/product_manager/test/idea-to-spec/
 
 - `target`: 要检查的文件路径，默认 `with_skill/outputs/transcript.md`
 - `all_of`: 必须全部出现的文本片段
+- `all_of_any`: 分组 OR；每组里命中任一文本即可，但所有分组都必须至少命中一个
 - `any_of`: 至少出现一个的文本片段
 - `none_of`: 不允许出现的文本片段
 - `count_at_least`: 某段文本最少出现多少次
@@ -80,12 +81,10 @@ agents/product_manager/test/idea-to-spec/
 
 1. 进入某个 eval workspace 根目录。
 2. 读取该目录下的 `eval_metadata.json`。
-3. 用 metadata 里的 `prompt` 运行一次 with-skill 版本。
-4. 将输出写入 `with_skill/outputs/`。
-5. 再运行一次 without-skill 版本。
-6. 将输出写入 `without_skill/outputs/`。
-7. 根据 `assertions` 做人工或脚本检查。
-8. 如有需要，在该 eval 目录下补 `comparison.md` 记录对比结论。
+3. 运行 `run_eval.py`；它会先生成 fresh 的 with-skill / without-skill transcript，再执行断言检查。
+4. 查看 `with_skill/outputs/` 与 `without_skill/outputs/` 下的 transcript 和 `run_status.json`。
+5. 根据 `assertions` 做人工或脚本检查。
+6. 如有需要，在该 eval 目录下补 `comparison.md` 记录对比结论。
 
 建议区分两类报告：
 
@@ -121,6 +120,13 @@ agents/product_manager/test/idea-to-spec/
 如果某个 eval 允许阶段性产物，可以在 metadata 中把输出写成数组，例如：
 
 - `["docs/pm/app-tags/design.md", "docs/pm/app-tags/PRD.md"]`
+
+`eval_metadata.json` 还支持 `execution_cleanup` 字段，用来声明“这些路径是历史运行残留，不应该进入本轮临时工作区”。这主要用于：
+
+- 空工作区 case 里误留下来的 `PRD.md`、`docs/pm/`
+- 旧 with-skill 运行留下来的 PM 文档产物
+
+`run_eval.py` 会在临时执行目录里先清掉这些路径，再调用 Claude，避免 fixture 被历史产物污染。
 
 ## 断言类型
 
