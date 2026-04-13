@@ -4,6 +4,8 @@ import json
 import sys
 from pathlib import Path
 
+from transcript_runner import generate_eval_outputs
+
 
 def load_metadata(path: Path) -> dict:
     return json.loads(path.read_text())
@@ -53,11 +55,12 @@ def evaluate_assertion(root: Path, assertion: dict) -> dict:
     text = read_targets(root, target)
 
     all_of = assertion.get("all_of", [])
+    all_of_any = assertion.get("all_of_any", [])
     any_of = assertion.get("any_of", [])
     none_of = assertion.get("none_of", [])
     count_at_least = assertion.get("count_at_least", [])
 
-    if not any([all_of, any_of, none_of, count_at_least]):
+    if not any([all_of, all_of_any, any_of, none_of, count_at_least]):
         return {
             "id": assertion["id"],
             "description": assertion["description"],
@@ -70,6 +73,14 @@ def evaluate_assertion(root: Path, assertion: dict) -> dict:
         missing = [item for item in all_of if item not in text]
         if missing:
             failures.append(f"Missing required text: {missing}")
+
+    if all_of_any:
+        grouped_missing = []
+        for group in all_of_any:
+            if not any(item in text for item in group):
+                grouped_missing.append(group)
+        if grouped_missing:
+            failures.append(f"Missing required any-of groups: {grouped_missing}")
 
     if any_of and not any(item in text for item in any_of):
         failures.append(f"Missing any-of text: {any_of}")
@@ -147,13 +158,17 @@ def render_report(
 
 
 def main() -> int:
-    if len(sys.argv) != 2:
-        print("Usage: run_eval.py <path-to-eval_metadata.json>")
+    if len(sys.argv) not in (2, 3):
+        print("Usage: run_eval.py <path-to-eval_metadata.json> [--skip-generate]")
         return 2
 
     metadata_path = Path(sys.argv[1]).resolve()
+    should_generate = "--skip-generate" not in sys.argv[2:]
     root = metadata_path.parent
     meta = load_metadata(metadata_path)
+
+    if should_generate:
+        generate_eval_outputs(metadata_path)
 
     with_results = check_outputs(root, meta.get("with_skill_outputs", []))
     without_results = check_outputs(root, meta.get("without_skill_outputs", []))

@@ -2,6 +2,9 @@
   "eval_id": 1,
   "eval_name": "existing-project-feature-design",
   "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-1-existing-project-feature",
+  "execution_cleanup": [
+    "docs/pm/app-tags"
+  ],
   "prompt": "我们在一个已有的 Web 应用里，要新增应用标签系统。请先看项目上下文，再和我一起把方案收敛下来，最终沉淀成 PM 设计文档。",
   "with_skill_outputs": [
     "with_skill/outputs/transcript.md",
