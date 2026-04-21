@@ -10,11 +10,27 @@
 - **输出形式**：面向 Engineer、PM、release owner 的结构化证据
 - **测试范围**：围绕变更相关风险，覆盖交互、边界、失败复现与回归确认
 
+## QA 文档与用例持久化约定
+
+QA 独立使用时必须先复用既有测试用例，而不是每次 E2E 都从零阅读整个项目。
+
+- 约定目录：`docs/qa/{feature-name}/`
+- 套件索引：`TEST_SPEC.md`
+- E2E 用例目录：`test-cases/`
+- 每个 E2E 测试用例单独存储为
+  `test-cases/TC-NNN-<short-slug>.md`
+- 文件探索记录：`FILE_EXPLORATION.md`
+- 执行报告：`reports/`
+
+当 PM 没有提供 PRD / TRD 中的具体测试用例时，QA 流程应先读取
+`TEST_SPEC.md` 与 `test-cases/*.md`，然后询问用户是否有新功能更新、是否需要探索项目文件来扩充测试用例。只有在用户需要扩充时，才进行有目标的文件探索，并把探索记录写入 `FILE_EXPLORATION.md`，把新增 E2E 用例补充为独立文件。后续执行应依据这些用例文件进行。
+
 ## QA 协议基线
 
 所有 QA specialist skills 共享以下公共约定：
 
 - context-first：先看上下文，再选验证类型
+- case-memory-first：独立 QA / E2E 请求先读取 `docs/qa/{feature}/` 下的既有用例，再决定是否探索项目补充用例
 - evidence-aware：每个 skill 都要明确标注已确认结果、未决不确定性和被阻塞项，但具体状态词汇遵循该 skill 的协议
 - structured output：结果必须是可追溯的结构化产物，但产物形态由所选 QA skill 决定，例如验证矩阵、探索报告、缺陷报告或回归结论
 - handoff-ready：说明证据缺口、未完成项和下一步

@@ -27,6 +27,10 @@ This repository is a multi-agent skill marketplace. It publishes 6 role-based ag
 - Public project documentation should follow `docs/{agent}/{feature-name}/`
 - Document frontmatter should include `feature`, `version`, `date`, and `last_updated`
 - Version history should be tracked in git rather than separate versioned files
+- QA feature documentation lives under `docs/qa/{feature-name}/`; `TEST_SPEC.md`
+  is the suite index, `test-cases/` stores reusable cases, `FILE_EXPLORATION.md`
+  records file discovery used to expand coverage, and `reports/` stores QA
+  execution artifacts
 
 **Marketplace registration**
 
@@ -47,6 +51,8 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 
 - Engineer reads `docs/pm/{feature}/` and `docs/design/{feature}/`
 - QA reads `docs/pm/{feature}/` and the implementation
+- QA first reads existing `docs/qa/{feature}/TEST_SPEC.md` and
+  `docs/qa/{feature}/test-cases/*.md` before broad project exploration
 - DevOps reads `docs/pm/{feature}/TRD.md`
 - Designer reads `docs/pm/{feature}/PRD.md` and `docs/pm/{feature}/BRD.md`
 - Security reads `docs/pm/{feature}/` and the codebase
@@ -96,6 +102,22 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 - **Minimal and focused**: each skill should have a single clear responsibility
 - **Independently triggerable**: skills should work on their own, not only as part of a chain
 - **Business-friendly**: prioritize clarity for non-technical users when possible
+
+### QA Test Case Persistence
+
+Standalone QA usage must reuse durable test-case memory before re-exploring a
+project:
+
+- Read `docs/qa/{feature}/TEST_SPEC.md` and
+  `docs/qa/{feature}/test-cases/*.md` first.
+- Ask whether there are new feature changes and whether project file
+  exploration should expand the test cases.
+- If exploration is needed, write the explored files, findings, and coverage
+  implications to `docs/qa/{feature}/FILE_EXPLORATION.md`.
+- Store every E2E test case as a separate Markdown file under
+  `docs/qa/{feature}/test-cases/` using `TC-NNN-<short-slug>.md`.
+- Execute E2E validation from those case files, and add only newly discovered
+  cases instead of rediscovering the whole project each run.
 
 ### Testing Skills
 
