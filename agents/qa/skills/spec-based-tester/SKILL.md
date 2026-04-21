@@ -1,227 +1,199 @@
 ---
 name: spec-based-tester
-description: "Execute standard test cases based on Test Spec. Reads Test Spec + PRD + TRD to generate UI interaction and boundary tests using Playwright. Use when you need to verify documented requirements and edge cases."
+description: "QA validation protocol for spec-backed requirements. Reads PM docs, implementation context, and repo instructions before choosing the safest executable test path."
 ---
 
 # Spec-Based Tester
 
-Execute standard test cases based on Test Spec documentation. This skill generates and runs UI interaction tests and boundary tests using Playwright.
+Validate documented requirements against the implementation using the best available repository harness, then fall back to manual or browser-based checks only when the repo does not provide a stronger path.
 
-## When to Use
+This is a QA validation protocol, not a router and not a generic execution script. It stays within QA boundaries: read the spec and implementation context, choose an execution path, collect evidence, and report confirmed results, blocked items, and handoff risks.
 
-- After Engineer completes implementation
-- To verify documented requirements from Test Spec
-- When user asks to "执行规范测试", "基于 Test Spec 测试", or "验证需求"
-- Before releasing features to production
+## Top-Level Contract
 
-## Step 1 — Read specifications
+Before running anything, gather repository evidence and confirm what is in scope.
 
-Read the following documents to understand test requirements:
+- Read the PM/spec documents that define the expected behavior.
+- Read implementation context for the changed area, including changed files, engineer notes, release notes, or handoff notes if they exist.
+- Read existing repository instructions for how tests are normally run in this project.
+- Prefer the repo’s documented acceptance, e2e, integration, or manual QA harness over inventing a new runner.
+- Only use targeted browser automation when no better harness or documented script exists.
+- Do not assume a fixed localhost port.
+- Do not assume Playwright is the only valid tool.
+- Do not install dependencies globally or add new tooling unless the repository conventions explicitly require it.
 
-```bash
-# Check if required documents exist
-test -f docs/test-spec.md && echo "Test Spec found"
-test -f docs/prd.md && echo "PRD found"
-test -f docs/trd.md && echo "TRD found"
-```
+## Preflight
 
-Read each document to extract:
-- Test scenarios from Test Spec
-- User stories and acceptance criteria from PRD
-- Technical constraints from TRD
+Complete preflight before any execution step.
 
-## Step 2 — Detect environment
+### 1) Gather scope sources
 
-Check if the application is already running:
+Read whatever is available from the following sources, in this order of usefulness:
 
-```bash
-curl -s -o /dev/null -w "%{http_code}" http://localhost:3000
-```
+- Test Spec or equivalent QA acceptance doc
+- PRD or product spec
+- TRD or technical design doc
+- Release notes, changelog, migration notes, or rollout notes
+- Acceptance checklist, QA checklist, or handoff checklist
+- Implementation context such as changed files, PR diff, engineer notes, or commit summary
+- Existing test commands, local setup instructions, environment notes, and known prerequisites
 
-If response is not 200, proceed to start the application.
+If a source does not exist, note it as absent rather than inventing a substitute.
 
-## Step 3 — Start application
+### 2) Record the validation frame
 
-Try to start the application using these methods in order:
+Before execution starts, capture:
 
-1. Check `deploy/local.md` for startup commands
-2. Try common commands:
-   - `npm run dev`
-   - `npm start`
-   - `yarn dev`
-   - `pnpm dev`
-   - `docker-compose up -d`
+- What is being validated
+- Which requirement IDs, acceptance points, or checklist items are in scope
+- Which implementation areas are affected
+- Which environment assumptions are confirmed
+- Which assumptions are still unknown
+- Which checks are blocked and why
 
-Wait for health check (max 60 seconds, check every 2 seconds):
+### 3) Confirm execution prerequisites
 
-```bash
-for i in {1..30}; do
-  if curl -s http://localhost:3000 > /dev/null; then
-    echo "App ready"
-    break
-  fi
-  sleep 2
-done
-```
+Look for:
 
-## Step 4 — Install dependencies
+- Repo-specific test commands or scripts
+- Required environment variables or services
+- Auth or test-user requirements
+- Seed data or fixtures
+- Whether a build or local server must be started first
 
-Install Playwright if not already installed:
+If the repo already defines a harness, use that harness. If there are multiple harnesses, choose the narrowest one that covers the scoped requirements.
 
-```bash
-npm install -D playwright
-npx playwright install chromium
-```
+## Environment Decision Protocol
 
-## Step 5 — Generate test cases
+Choose the least-assumptive executable path that still proves the requirement.
 
-Create test file at `tests/spec-based.test.js`:
+1. Existing repo acceptance/e2e command
+   - Use a documented acceptance, e2e, smoke, or scenario command if it exists.
+   - Prefer commands that already encode project conventions, setup, and teardown.
 
-```javascript
-const { chromium } = require('playwright');
+2. Existing integration or manual QA script
+   - Use a repository-provided integration script, scenario runner, or QA checklist automation if that is the standard path.
+   - Prefer scripts that validate the changed area directly over broad end-to-end runs.
 
-const testResults = {
-  total: 0,
-  passed: 0,
-  failed: 0,
-  failures: []
-};
+3. Targeted browser automation
+   - Use browser automation only if the repo has no better harness for the requirement.
+   - Keep it scoped to the changed flows and documented acceptance points.
 
-async function runTest(name, testFn) {
-  testResults.total++;
-  try {
-    await testFn();
-    testResults.passed++;
-    console.log(`✓ ${name}`);
-  } catch (error) {
-    testResults.failed++;
-    testResults.failures.push({ name, error: error.message });
-    console.log(`✗ ${name}: ${error.message}`);
-  }
-}
+4. Custom ad hoc execution
+   - Only as a last resort, and only if it is consistent with repository conventions.
 
-(async () => {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
-  const page = await context.newPage();
+Do not guess the server port. Do not hardcode `3000`. Discover the running app, configured host, or documented launch path from the repository context.
 
-  await page.goto('http://localhost:3000');
+Do not assume Playwright. If browser automation is needed, use whatever browser tooling the repository already documents or the project conventions support.
 
-  // Generate tests based on Test Spec scenarios
-  // UI interaction tests
-  await runTest('User can navigate to login page', async () => {
-    await page.click('a[href="/login"]');
-    await page.waitForURL('**/login');
-  });
+Do not install browser tooling globally. If dependencies or browsers are missing, first check project scripts, lockfiles, package manager conventions, and repo instructions.
 
-  // Boundary tests
-  await runTest('Empty form submission shows validation', async () => {
-    await page.click('button[type="submit"]');
-    const error = await page.locator('.error-message').textContent();
-    if (!error) throw new Error('No validation error shown');
-  });
+## Execution
 
-  await browser.close();
+Execute only the tests that are justified by the preflight scope.
 
-  // Output results
-  console.log(JSON.stringify(testResults, null, 2));
-})();
-```
+- Prefer targeted validation for the changed files and scoped requirements.
+- Use environment-specific setup only when the repository documentation calls for it.
+- Capture the exact command or tool path used.
+- Capture any fixture, data, auth, or environment prerequisites that were necessary.
+- If a prerequisite is missing, stop and mark the related checks as blocked instead of guessing.
 
-Generate test cases for:
+During execution, distinguish:
 
-1. **UI Interaction Tests**: User flows from Test Spec
-2. **Boundary Tests**: Empty values, max length, special characters, negative numbers
+- Confirmed behavior
+- Confirmed failure with evidence
+- Blocked check due to missing environment, missing access, or missing harness
+- Assumption that could not be verified
 
-## Step 6 — Execute tests
+## Evidence Contract
 
-Run the generated test suite:
+Produce a validation artifact that is useful for handoff and traceable back to the spec.
 
-```bash
-node tests/spec-based.test.js > test-output.json 2>&1
-```
+Recommended artifact path:
 
-Capture:
-- Test results (pass/fail)
-- Screenshots on failure
-- Console errors
-- Network failures
+`docs/qa-reports/YYYY-MM-DD-<feature>-spec-validation.md`
 
-## Step 7 — Generate test report
+The report should include:
 
-Create test report at `docs/qa-reports/YYYY-MM-DD-test-report.md`:
+### 1) Validation summary
 
-```markdown
-# 测试报告 - YYYY-MM-DD
+- Scope
+- Environment
+- Execution path used
+- What was validated
+- What was not validated
 
-**执行时间**: YYYY-MM-DD HH:MM - HH:MM
-**测试类型**: 规范测试
+### 2) Requirement matrix
 
-## 统计
-- 总用例数: N
-- 通过: N
-- 失败: N
-- 跳过: 0
+For each in-scope requirement or acceptance point, record:
 
-## 失败用例
-1. [Bug #001](../bugs/bug-001.md) - [描述]
-2. [Bug #002](../bugs/bug-002.md) - [描述]
+- Requirement ID or acceptance label
+- Status: pass, fail, blocked, or assumed
+- Evidence
+- Notes
 
-## 测试覆盖
-- UI 交互测试: N/N
-- 边界测试: N/N
+### 3) Confirmed failures only
 
-## 建议
-- [改进建议]
-```
+List only failures that were directly reproduced and evidenced.
 
-For each failure, create a detailed bug report using the `bug-analyzer` skill.
+- Include the repro path, observed behavior, and supporting evidence.
+- Do not turn blocked checks into bugs.
+- Do not turn assumptions into bugs.
+- Do not escalate flaky or ambiguous observations as confirmed defects unless you explicitly call out the uncertainty and why the result is not stable.
 
-## Step 8 — Cleanup
+### 4) Blocked items
 
-Close browser and stop application if it was started by this skill:
+List blocked checks separately with the exact blocker.
 
-```bash
-# Kill the process if started in Step 3
-kill $APP_PID 2>/dev/null
-```
+### 5) Release or implementation risks
 
-## Step 9 — Commit results
+Call out any risks that need handoff even if they are not confirmed bugs, such as:
 
-Commit the test report:
+- Uncovered environments
+- Missing prerequisites
+- Spec gaps
+- Implementation mismatches that need follow-up
 
-```bash
-git add docs/qa-reports/ tests/
-git commit -m "Add spec-based test report - $(date +%Y-%m-%d)
+## Bug-Analyzer Handoff
 
-Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
-```
+Hand off to bug-analyzer only when there is a confirmed, reproducible failure with evidence.
 
-## Configuration
+Do not auto-file bugs for:
 
-Default settings (can be overridden by user):
+- Blocked checks
+- Unverified assumptions
+- Flaky or inconsistent observations
+- Missing environment access
 
-- Target URL: http://localhost:3000
-- Browser: Chrome (headless)
-- Test timeout: 30 seconds per test
-- Screenshot on failure: enabled
-- Test data location: `test-data/`
+If you are unsure whether a failure is reproducible, keep it in the report as uncertain and blocked from bug filing.
 
-## Boundary Test Data
+## Role Boundary
 
-Generate these test cases automatically:
+This skill validates documented behavior against implementation. It does not:
 
-- **Empty values**: "", null, undefined
-- **Max length**: 255 characters, 1000 characters
-- **Special characters**: `<script>`, `'; DROP TABLE--`, `../../../etc/passwd`
-- **Negative numbers**: -1, -999999
-- **Zero values**: 0, 0.0
-- **Extreme dates**: 1900-01-01, 2099-12-31
+- Route work to other agents
+- Invent a generic test harness
+- Rewrite the implementation plan
+- Commit code or self-mutate the repository
 
-## Edge Cases
+Its job ends at evidence-backed QA validation and a clear handoff report.
 
-- **Missing Test Spec**: Report error and ask user to create Test Spec first
-- **App won't start**: Report error and ask user to start manually
-- **Authentication required**: Ask user for login credentials or test URL
-- **All tests pass**: Generate report with success summary
-- **No test scenarios found**: Report warning and suggest adding test cases to Test Spec
+## Practical Workflow
+
+1. Read spec and context
+2. Build the preflight record
+3. Choose the execution path using the environment decision protocol
+4. Run the narrowest useful validation
+5. Collect evidence and classify each result
+6. Write the validation report
+7. Hand off only confirmed reproducible failures
+
+## Expected Outcome
+
+A good run ends with:
+
+- A scoped validation summary
+- A requirement matrix tied to the spec
+- Confirmed failures only where evidence exists
+- Blocked items called out explicitly
+- Risks and handoff notes for QA or engineering follow-up

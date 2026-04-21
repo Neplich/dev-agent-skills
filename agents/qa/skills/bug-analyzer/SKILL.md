@@ -1,195 +1,155 @@
 ---
 name: bug-analyzer
-description: "Analyze test failures and generate detailed bug reports. Automatically detects project type and creates either Markdown files or GitHub Issues. Use when tests fail or unexpected behavior is discovered."
+description: "Analyze failing scenarios with an evidence-first intake, classify defect confidence, and produce a durable bug artifact for QA handoff."
 ---
 
 # Bug Analyzer
 
-Analyze test failures and generate detailed bug reports with reproduction steps, screenshots, logs, and environment information.
+Turn a failing scenario into a defect artifact only when the evidence crosses a useful threshold. This skill is about judging defect quality, not filling a template.
 
 ## When to Use
 
-- After test failures in exploratory-tester or spec-based-tester
-- When unexpected behavior is discovered during manual testing
-- To document bugs before Engineer fixes them
+- A test, manual check, or exploratory pass fails and needs triage
+- A user reports broken behavior and the report needs validation
+- QA needs a defect record that can survive handoff to engineering or release review
 
-## Step 1 — Collect failure information
+## Core Principle
 
-Gather all available information about the failure:
+Do not treat every failure as a confirmed bug. First collect evidence, then classify the report, then choose the output path that fits the repo context.
 
-```bash
-# If from test output, capture the failure details
-# Expected: test name, error message, stack trace
+## Step 1 — Intake evidence
+
+Collect the minimum evidence needed to judge the report:
+
+- Failing scenario or symptom
+- Source evidence from QA notes, user report, logs, screenshots, traces, console output, network output, or test output
+- Environment and build context such as branch, commit, build number, release channel, feature flag state, browser or device, and runtime version
+
+If evidence is missing, ask for it or record the gap explicitly. Do not guess.
+
+## Step 2 — Classify the report
+
+Classify the intake using evidence-confidence vocabulary:
+
+- `confirmed and reproducible` - the failure is observed more than once or is deterministically replayable
+- `confirmed but environment-sensitive` - the defect is real, but depends on environment, build, data, timing, permissions, feature flags, or state
+- `suspected / needs more evidence` - the report is plausible but not yet strong enough to confirm
+
+Keep the axes separate: evidence status describes reproducibility or sensitivity, while confidence describes how complete and strong the supporting proof is. A report can be `confirmed and reproducible` with medium confidence if the evidence is partial, or `suspected / needs more evidence` with low confidence if the proof is thin; do not collapse the two into one label.
+
+Use the classification to decide whether the artifact should read like a defect report, a scoped investigation note, or an evidence request.
+
+## Step 3 — Assess severity and confidence
+
+Separate impact from certainty.
+
+- Severity describes user or system impact
+- Confidence describes how strongly the evidence supports the defect claim
+
+Severity should include a rationale, not just a label. A low-confidence report can still be high severity if the potential impact is serious.
+
+## Step 4 — Build the defect artifact
+
+The defect artifact must include:
+
+- Title
+- Severity with rationale
+- Reproduction steps
+- Expected behavior
+- Actual behavior
+- Evidence attachments or references
+- Confidence statement
+- Implementation impact or release impact
+
+Keep reproduction steps grounded in the observed evidence. If the failure is not fully reproducible, say what part is deterministic and what part is not.
+
+## Step 5 — Choose the output path
+
+Pick the durable output that matches the repo workflow and the user request.
+
+- Use a local Markdown artifact when the work is being tracked in-repo, when the repo does not require GitHub workflow, or when the user asked for a file-based handoff
+- Use a GitHub issue only when the repository workflow explicitly wants issue tracking or the user requested an issue
+
+Do not assume GitHub issue creation is the primary output. Do not mutate code, commit changes, or invent a delivery workflow as part of this skill.
+
+## Step 6 — Write the report
+
+### Local Markdown artifact
+
+Write the defect report to the repo's documented QA or bug-tracking location. If the repo already has a bug or QA report directory, use that convention. If not, use a clear Markdown file path agreed with the repo context.
+
+Suggested content structure:
+
+```markdown
+# Defect: [short title]
+
+## Classification
+- Evidence status: confirmed and reproducible / confirmed but environment-sensitive / suspected / needs more evidence
+- Severity: [severity] - [rationale]
+- Confidence: [high / medium / low] with a short explanation
+
+## Scenario
+[failing scenario or symptom]
+
+## Environment and Build Context
+- Branch:
+- Commit:
+- Build / release:
+- Platform:
+- Browser / device / runtime:
+- Flags / data / permissions:
+
+## Reproduction Steps
+1. ...
+2. ...
+3. ...
+
+## Expected
+[expected behavior]
+
+## Actual
+[actual behavior]
+
+## Evidence
+- [log / screenshot / trace / test output reference]
+- [link or file path]
+
+## Impact
+[implementation or release impact]
 ```
 
-Required information:
-- Test name or scenario
-- Error message
-- Stack trace (if available)
-- Timestamp
+### GitHub issue
 
-## Step 2 — Capture screenshots and logs
+Create an issue only when the repo workflow or user request calls for issue tracking. The issue body should preserve the same defect contract as the Markdown artifact and should link back to supporting evidence where possible.
 
-If the bug involves UI:
+## Step 7 — Handle weak evidence
 
-```bash
-# Screenshots should be saved during test execution
-# Check for: screenshots/*.png in test output directory
-```
+If the report is `suspected / needs more evidence`, keep the artifact honest:
 
-Collect:
-- Screenshot of failure state
-- Browser console logs
-- Network request logs
-- Application logs (if accessible)
+- State what is missing
+- Mark the current confidence level clearly
+- List the next evidence needed to confirm or rule out the defect
+- Avoid overstating reproducibility
 
-## Step 3 — Determine severity
+## Step 8 — Final check
 
-Analyze impact and assign severity:
+Before returning the artifact, verify that the report answers these questions:
 
-- **Critical**: Application crash, data loss, security vulnerability
-- **High**: Major feature broken, blocking user workflow
-- **Medium**: Feature partially broken, workaround exists
-- **Low**: Minor issue, cosmetic problem
-
-## Step 4 — Generate reproduction steps
-
-Create clear, numbered steps to reproduce:
-
-1. Start from a known state (e.g., "Open homepage")
-2. List each action (click, input, navigate)
-3. Include specific data used
-4. Note the expected vs actual result
-
-## Step 5 — Detect project type
-
-Check if project is connected to GitHub:
-
-```bash
-gh repo view 2>/dev/null
-if [ $? -eq 0 ]; then
-  echo "GitHub project detected"
-  PROJECT_TYPE="github"
-else
-  echo "Local project"
-  PROJECT_TYPE="local"
-fi
-```
-
-## Step 6 — Generate bug report
-
-### For Local Projects
-
-Create Markdown file in `docs/bugs/`:
-
-```bash
-# Get next bug number
-LAST_BUG=$(ls docs/bugs/bug-*.md 2>/dev/null | tail -1 | grep -o '[0-9]*' || echo "0")
-BUG_NUM=$(printf "%03d" $((LAST_BUG + 1)))
-
-# Create bug report
-cat > docs/bugs/bug-${BUG_NUM}.md << 'BUGEOF'
-# Bug #${BUG_NUM}: [标题]
-
-**严重程度**: Critical / High / Medium / Low
-**发现时间**: $(date +"%Y-%m-%d %H:%M")
-**复现率**: 100% / 偶现
-
-## 复现步骤
-1. [步骤1]
-2. [步骤2]
-3. [步骤3]
-
-## 预期结果
-[描述预期行为]
-
-## 实际结果
-[描述实际行为]
-
-## 环境信息
-- 浏览器: Chrome $(google-chrome --version 2>/dev/null | grep -o '[0-9.]*' | head -1)
-- 操作系统: $(uname -s) $(uname -r)
-- 应用版本: [从 package.json 或 git tag 获取]
-
-## 相关日志
-\`\`\`
-[错误堆栈或日志]
-\`\`\`
-
-## 截图
-![screenshot](../../screenshots/bug-${BUG_NUM}.png)
-
-## 关联文档
-- Test Spec: docs/test-spec.md#[section]
-- PRD: docs/prd.md#[feature]
-BUGEOF
-```
-
-### For GitHub Projects
-
-Create GitHub Issue:
-
-```bash
-gh issue create \
-  --title "Bug: [标题]" \
-  --label "bug" \
-  --body "$(cat << 'ISSUEEOF'
-**严重程度**: Critical / High / Medium / Low
-**复现率**: 100% / 偶现
-
-## 复现步骤
-1. [步骤1]
-2. [步骤2]
-
-## 预期结果
-[描述预期行为]
-
-## 实际结果
-[描述实际行为]
-
-## 环境信息
-- 浏览器: Chrome [version]
-- 操作系统: [OS]
-- 应用版本: [version]
-
-## 相关日志
-\`\`\`
-[错误堆栈]
-\`\`\`
-
-## 关联文档
-- Test Spec: docs/test-spec.md
-- PRD: docs/prd.md
-ISSUEEOF
-)"
-```
-
-## Step 7 — Output summary
-
-Print bug report location:
-
-```bash
-if [ "$PROJECT_TYPE" = "github" ]; then
-  echo "Bug reported: $(gh issue list --limit 1 --json number,url --jq '.[0].url')"
-else
-  echo "Bug report created: docs/bugs/bug-${BUG_NUM}.md"
-fi
-```
+- What failed?
+- How strong is the evidence?
+- How severe is the impact?
+- What proof supports the claim?
+- Where should the durable record live?
 
 ## Configuration
 
-Default severity mapping:
-- Application crash → Critical
-- Feature completely broken → High
-- Partial functionality loss → Medium
-- UI glitch, typo → Low
+- Evidence first, template second
+- Confidence language must be explicit
+- Default output is a Markdown artifact unless the repository workflow or user request requires GitHub issue tracking
 
 ## Edge Cases
 
-**No screenshots available**: Include note in report, describe visual issue in text
-
-**Cannot determine severity**: Default to Medium, let Engineer adjust
-
-**GitHub CLI not authenticated**: Fall back to local Markdown even if .git exists
-
-**Duplicate bug**: Check existing bugs/issues before creating new one
+- **No reproducible failure yet**: classify as `suspected / needs more evidence`
+- **Environment-specific failure**: keep the defect confirmed, but note the sensitivity in the classification and impact
+- **Multiple symptoms from one root cause**: document the primary failure and list secondary symptoms as supporting evidence
+- **Evidence conflicts**: prefer direct runtime evidence over summaries, and record the conflict rather than hiding it

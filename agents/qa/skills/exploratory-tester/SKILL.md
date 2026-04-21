@@ -1,242 +1,126 @@
 ---
 name: exploratory-tester
-description: "Automatically explore UI to discover undocumented issues. Simulates random user actions (clicks, inputs, scrolling) to find crashes, errors, and performance problems. Use when you need to test beyond documented specs or discover edge cases."
+description: "Discovery-driven exploratory QA that uses an exploration charter to examine changed product surfaces, environmental risks, and nearby failure modes with flexible tooling."
 ---
 
 # Exploratory Tester
 
-Automatically explore a web application UI to discover issues not covered by documentation. This skill simulates random user behavior to find crashes, errors, and unexpected behaviors.
+Use this skill to discover defects through guided exploration, not to generate random UI actions. The exploration strategy is chosen only after reading the product context, implementation changes, and environment instructions. The output is an exploratory QA report plus, when warranted, a defect-ready escalation path.
 
 ## When to Use
 
-- After implementing new features to discover edge cases
-- When Test Spec coverage is incomplete
-- To find UI issues before formal testing
-- When user asks to "探索测试", "自动测试UI", or "发现潜在问题"
+- After implementation changes when you need discovery beyond scripted coverage
+- When the team wants exploratory QA against a changed surface or risky workflow
+- When prior QA reports, known bugs, or environment notes suggest adjacent risk
+- When the user asks for exploratory testing, discovery testing, or broad defect hunting
 
-## Step 1 — Detect environment
+## Role Boundary
 
-Check if the application is already running:
+- This skill performs exploratory discovery, not spec validation
+- This skill does not write bug tickets itself
+- This skill does not dump generic browser-script output without interpretation
 
-```bash
-curl -s -o /dev/null -w "%{http_code}" http://localhost:3000
-```
+## Exploration Preflight
 
-If response is not 200, proceed to start the application.
+Before any testing action, gather the context needed to choose an exploration charter:
 
-## Step 2 — Start application
+1. Read the PM or release context for the feature, scope, and intended user value.
+2. Read implementation notes, changed files, or the equivalent change summary to identify the exact surface that moved.
+3. Read known bugs, risk notes, and prior QA reports so exploration can target realistic failure modes.
+4. Read environment instructions that affect how the app should be exercised, including setup, auth, feature flags, test accounts, or required services.
 
-Try to start the application using these methods in order:
+If any of the above is missing, note the gap and make the smallest safe assumption needed to continue.
 
-1. Check `deploy/local.md` for startup commands
-2. Try common commands:
-   - `npm run dev`
-   - `npm start`
-   - `yarn dev`
-   - `pnpm dev`
-   - `docker-compose up -d`
+## Exploration Charter
 
-Wait for health check (max 60 seconds, check every 2 seconds):
+Define a short charter before interacting with the app. The charter must include:
 
-```bash
-for i in {1..30}; do
-  if curl -s http://localhost:3000 > /dev/null; then
-    echo "App ready"
-    break
-  fi
-  sleep 2
-done
-```
+- Surface to explore: the specific screen, flow, API-backed interaction, or change area
+- Timebox: chosen from the context, not a fixed skill default
+- Heuristics: what kinds of failures matter most for this pass
+- Escalation signals: what observations are strong enough to become a bug report candidate
 
-## Step 3 — Install dependencies
+Charter heuristics should be specific to the change and typically include:
 
-Install Playwright if not already installed:
+- Changed-path smoke coverage
+- Navigation and routing edges
+- Validation and form-handling edges
+- Empty states and data absence
+- Permissions and access boundaries
+- Interruptions, retries, cancellations, refreshes, and partial completion
+- Nearby risk surfaces that are plausibly coupled to the changed area
 
-```bash
-npm install -D playwright
-npx playwright install chromium
-```
+## Exploration Strategy
 
-## Step 4 — Initialize Playwright
+Choose the exploration path after preflight and chartering, in this order:
 
-Create a minimal test script to initialize Playwright:
+1. Smoke the changed surface end to end to confirm the basic path still works.
+2. Probe edge cases around navigation, validation, empty states, permissions, and interruptions.
+3. Expand into nearby risk areas only if the first two steps reveal coupling, instability, or suspicious signals.
 
-```javascript
-// exploratory-test.js
-const { chromium } = require('playwright');
+Randomized action generation is optional and should only be used as a supplement when it helps coverage. It is not the default contract and should never replace chartered exploration.
 
-(async () => {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
-  const page = await context.newPage();
+## Execution Methods
 
-  await page.goto('http://localhost:3000');
-  await explore(page);
-  await browser.close();
-})();
-```
+Use whichever tools best fit the charter and environment:
 
-## Step 5 — Random exploration
+- Browser automation for repeatable UI traversal
+- Manual walkthroughs when judgment, visual inspection, or auth handling matters
+- Console and network inspection when client or backend signals need confirmation
+- Existing QA scripts when they already target the relevant path
+- Targeted randomized inputs or action variations only when they support a specific heuristic
 
-Implement exploration logic (default 10 minutes):
+Prefer the least brittle method that still produces clear evidence.
 
-```javascript
-const issues = [];
-const visited = new Set();
+## Exploration Procedure
 
-function generateRandomInput() {
-  const types = [
-    () => Math.random().toString(36).substring(7),
-    () => Math.floor(Math.random() * 10000).toString(),
-    () => new Date().toISOString().split('T')[0],
-    () => 'test@example.com'
-  ];
-  return types[Math.floor(Math.random() * types.length)]();
-}
+1. Record the charter and the context used to derive it.
+2. Execute the smoke path over the changed surface.
+3. Probe the prioritized edge cases from the charter.
+4. Branch into nearby risk exploration only when the observed behavior justifies it.
+5. Track what was covered, what was intentionally skipped, and what still needs follow-up.
 
-async function explore(page, duration = 600000) {
-  const startTime = Date.now();
+During exploration, capture:
 
-  while (Date.now() - startTime < duration) {
-    try {
-      // Random action selection
-      const action = Math.random();
+- Exact steps or script paths used
+- Visible UI behavior
+- Console errors and warnings relevant to the issue
+- Network failures, abnormal responses, or suspicious timing
+- Reproduction consistency
+- Any conditions that make the result ambiguous or environment-dependent
 
-      if (action < 0.4) {
-        // Click random clickable element
-        const elements = await page.$$('button, a, [role="button"]');
-        if (elements.length > 0) {
-          const el = elements[Math.floor(Math.random() * elements.length)];
-          await el.click();
-        }
-      } else if (action < 0.7) {
-        // Input random text
-        const inputs = await page.$$('input, textarea');
-        if (inputs.length > 0) {
-          const input = inputs[Math.floor(Math.random() * inputs.length)];
-          await input.fill(generateRandomInput());
-        }
-      } else {
-        // Scroll
-        await page.evaluate(() => window.scrollBy(0, Math.random() * 500 - 250));
-      }
+## Bug Escalation Rules
 
-      await page.waitForTimeout(1000);
+Escalate to bug-analyzer only when the exploration finds a reproducible failure with enough evidence for a defect report.
 
-    } catch (error) {
-      // Record exception
-      issues.push({
-        type: 'error',
-        message: error.message,
-        url: page.url(),
-        timestamp: new Date().toISOString()
-      });
-    }
-  }
-}
-```
+Escalation-quality evidence usually includes:
 
-## Step 6 — Record exceptions
+- Clear reproduction steps
+- The affected surface and scenario
+- Observable wrong behavior
+- Supporting console, network, or log evidence when available
+- Notes on frequency and any environment dependencies
 
-Monitor for these issue types:
+Keep unconfirmed anomalies in the exploratory report. Do not promote them as defects unless reproduction or evidence quality crosses the threshold above.
 
-- Console errors (error level)
-- Network failures (4xx, 5xx)
-- Unhandled promise rejections
-- Page crashes
-- Slow responses (> 3 seconds)
+## Evidence Output
 
-```javascript
-page.on('console', msg => {
-  if (msg.type() === 'error') {
-    issues.push({
-      type: 'console_error',
-      message: msg.text(),
-      url: page.url(),
-      timestamp: new Date().toISOString()
-    });
-  }
-});
+Write the exploratory report to `docs/qa-reports/YYYY-MM-DD-<feature>-exploratory-report.md`.
 
-page.on('response', response => {
-  if (response.status() >= 400) {
-    issues.push({
-      type: 'network_error',
-      status: response.status(),
-      url: response.url(),
-      timestamp: new Date().toISOString()
-    });
-  }
-});
-```
+The report must be concise, handoff-ready, and clearly separate these sections:
 
-## Step 7 — Generate report
+- Observed issues: confirmed failures and reproducible defects
+- Suspicious but unconfirmed signals: anomalies worth watching, but not yet defect-ready
+- Exploration path covered: what was actually tested
+- Gaps not explored: what remains untested and why
+- Recommended next actions: follow-up QA, engineering checks, or escalation candidates
 
-Create exploration report at `docs/qa-reports/YYYY-MM-DD-exploratory-report.md`:
+The report should also record the charter, timebox, and the evidence used to reach conclusions.
 
-```markdown
-# 探索测试报告 - YYYY-MM-DD
+## Out of Scope
 
-**执行时间**: YYYY-MM-DD HH:MM - HH:MM
-**探索时长**: 10 分钟
-**访问页面数**: N
-
-## 发现的问题
-
-### 严重问题 (N)
-1. [描述] - 复现路径
-2. ...
-
-### 一般问题 (N)
-1. [描述] - 复现路径
-2. ...
-
-## 探索路径
-- 页面 A → 页面 B → 页面 C
-- ...
-
-## 建议
-- [改进建议]
-```
-
-## Step 8 — Cleanup
-
-Close browser and stop application if it was started by this skill:
-
-```javascript
-await browser.close();
-```
-
-If application was started by this skill:
-
-```bash
-# Kill the process started in Step 2
-kill $APP_PID
-```
-
-## Step 9 — Commit results
-
-Commit the exploration report:
-
-```bash
-git add docs/qa-reports/
-git commit -m "Add exploratory test report - $(date +%Y-%m-%d)
-
-Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
-```
-
-## Configuration
-
-Default settings (can be overridden by user):
-
-- Exploration duration: 10 minutes
-- Target URL: http://localhost:3000
-- Browser: Chrome (headless)
-- Action delay: 1 second between actions
-
-## Edge Cases
-
-- **App won't start**: Report error and ask user to start manually
-- **No clickable elements**: Focus on navigation and scrolling
-- **Authentication required**: Ask user for login credentials or test URL
-- **No issues found**: Report successful exploration with no issues
+- Random UI clicking without a charter
+- Pure spec conformance checking
+- Writing bug tickets as the primary artifact
+- Hardcoded environment assumptions such as a fixed local URL
+- Self-mutating workflow instructions such as committing results from the skill contract

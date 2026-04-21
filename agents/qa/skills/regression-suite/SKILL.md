@@ -1,235 +1,137 @@
 ---
 name: regression-suite
-description: "Manage regression test suites. Re-run tests after bug fixes to verify fixes and ensure no new regressions. Use when Engineer completes a bug fix and you need to validate the fix works correctly."
+description: "Verify fixes with evidence reuse, adjacent-risk review, and clear pass/fail/blocked reporting for QA handoff."
 ---
 
 # Regression Suite
 
-Manage and execute regression tests after bug fixes. Verify that fixes work correctly and no new issues were introduced.
+Verify that a fix actually resolves the original failure and that nearby surfaces still behave correctly. This skill is about fix verification plus adjacent risk review, not replaying one bug in isolation.
 
 ## When to Use
 
-- After Engineer fixes a bug and submits code
-- When user asks to "回归测试", "验证修复", or "regression test"
-- Before releasing a hotfix
-- To re-validate previously discovered issues
+- After a fix, patch, or hotfix is available for QA verification
+- When a user asks to verify a defect closure or release readiness
+- When a previous bug report needs to be rechecked against new code or a new build
 
-## Step 1 — Identify regression scope
+## Core Principle
 
-Determine which bugs need regression testing:
+Reuse the original evidence instead of re-deriving the scope from scratch. The regression run should confirm the fix, test the nearby surfaces that could break, and report whether the scope is ready to release.
 
-```bash
-# Check for bug reports
-ls docs/bugs/bug-*.md 2>/dev/null
+## Step 1 — Regression preflight
 
-# Or check GitHub issues with bug label
-gh issue list --label "bug" --state open 2>/dev/null
-```
+Read the evidence before executing anything:
 
-If a specific Bug ID or PR is provided, focus on that bug's test cases.
+- Original bug report or failing test evidence
+- Fix context such as changed files, PR notes, implementation notes, or release notes
+- Related areas likely to regress because they share code, state, data, UI flow, API surface, permissions, or configuration
 
-## Step 2 — Read bug report
+If the original evidence is missing or too thin, mark the run as `blocked` until the missing material is available.
 
-Read the original bug report to understand:
-- Reproduction steps
-- Expected vs actual behavior
-- Environment information
-- Related test scenarios
+## Step 2 — Define the verification scope
 
-```bash
-# Read specific bug report
-cat docs/bugs/bug-NNN.md
+The regression scope must cover three questions:
 
-# Or read GitHub issue
-gh issue view NNN 2>/dev/null
-```
+- Does the original failure still reproduce?
+- Does the expected fixed behavior now work?
+- Do adjacent surfaces impacted by the fix still behave correctly?
 
-## Step 3 — Detect environment
+Use the original evidence to keep the scope tight, but expand to nearby risk areas when the fix touches shared logic, state transitions, or user-visible flow.
 
-Check if the application is already running:
+## Step 3 — Prepare the environment
 
-```bash
-curl -s -o /dev/null -w "%{http_code}" http://localhost:3000
-```
+Use the repo's documented runtime and test instructions. Do not assume a fixed local port, fixed host, or a single app layout.
 
-If response is not 200, proceed to start the application.
+If the environment is not ready:
 
-## Step 4 — Start application
+- Mark the verification as `blocked`
+- Record what is missing
+- Avoid fabricating a pass from incomplete setup
 
-Try to start the application using these methods in order:
+## Step 4 — Execute regression checks
 
-1. Check `deploy/local.md` for startup commands
-2. Try common commands:
-   - `npm run dev`
-   - `npm start`
-   - `yarn dev`
-   - `pnpm dev`
-   - `docker-compose up -d`
+Run checks that map to the scope:
 
-Wait for health check (max 60 seconds, check every 2 seconds):
+- Reproduce the original failure path against the fixed build
+- Verify the expected behavior now succeeds
+- Exercise adjacent or nearby surfaces that could regress
 
-```bash
-for i in {1..30}; do
-  if curl -s http://localhost:3000 > /dev/null; then
-    echo "App ready"
-    break
-  fi
-  sleep 2
-done
-```
+Capture evidence from runtime output, screenshots, traces, logs, or test output as needed. Keep run status separate from evidence strength: `pass`, `fail`, and `blocked` are the regression run outcomes, while evidence confidence is a secondary note about how strong and complete the supporting proof is.
 
-## Step 5 — Install dependencies
+## Step 5 — Judge adjacent risk
 
-Install Playwright if not already installed:
+For each nearby surface, answer whether it is still healthy. Include both direct and indirect risks, such as:
 
-```bash
-npm install -D playwright
-npx playwright install chromium
-```
+- Shared components or helpers
+- Nearby flows that use the same data shape
+- Permission or state-dependent branches
+- Error handling and recovery paths
+- Release-sensitive areas touched by the fix
 
-## Step 6 — Execute regression tests
+## Step 6 — Produce the regression artifact
 
-Reproduce the original bug's steps to verify the fix:
+The regression artifact must include:
 
-```javascript
-const { chromium } = require('playwright');
+- Fix verification status: `pass`, `fail`, or `blocked`
+- Original failure recheck result
+- Expected fixed behavior result
+- Adjacent regression checks
+- New issues discovered, if any
+- Release recommendation for this scope
 
-const regressionResults = {
-  bugId: 'NNN',
-  total: 0,
-  passed: 0,
-  failed: 0,
-  tests: []
-};
+The report should make it obvious whether the fix is safe to release, needs more work, or cannot yet be judged.
 
-async function runRegressionTest(name, testFn) {
-  regressionResults.total++;
-  const result = { name, status: 'passed', error: null };
-  try {
-    await testFn();
-    regressionResults.passed++;
-    console.log(`✓ [Regression] ${name}`);
-  } catch (error) {
-    regressionResults.failed++;
-    result.status = 'failed';
-    result.error = error.message;
-    console.log(`✗ [Regression] ${name}: ${error.message}`);
-  }
-  regressionResults.tests.push(result);
-}
-
-(async () => {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
-  const page = await context.newPage();
-
-  await page.goto('http://localhost:3000');
-
-  // Test 1: Verify the original bug is fixed
-  await runRegressionTest('Original bug fix verification', async () => {
-    // Follow reproduction steps from bug report
-    // Assert expected behavior now works
-  });
-
-  // Test 2: Verify related functionality still works
-  await runRegressionTest('Related feature regression check', async () => {
-    // Test nearby features that might be affected
-  });
-
-  await browser.close();
-
-  console.log(JSON.stringify(regressionResults, null, 2));
-})();
-```
-
-## Step 7 — Check for new regressions
-
-Run broader tests around the fixed area:
-
-- Related UI flows
-- Adjacent features
-- Edge cases of the fixed functionality
-
-Monitor for:
-- Console errors
-- Network failures
-- Visual regressions
-- Performance degradation
-
-## Step 8 — Generate regression report
-
-Create regression report at `docs/qa-reports/YYYY-MM-DD-regression-report.md`:
+Suggested content structure:
 
 ```markdown
-# 回归测试报告 - YYYY-MM-DD
+# Regression Verification: [short title]
 
-**执行时间**: YYYY-MM-DD HH:MM - HH:MM
-**测试类型**: 回归测试
-**关联 Bug**: Bug #NNN / PR #NNN
+## Scope
+- Original defect:
+- Fix context:
+- Related risk areas:
 
-## 修复验证
-- Bug #NNN: ✓ 已修复 / ✗ 未修复
+## Fix Verification
+- Status: pass / fail / blocked
+- Original failure:
+- Fixed behavior:
+- Evidence confidence: [high / medium / low] with a short explanation
 
-## 回归检查
-- 总用例数: N
-- 通过: N
-- 失败: N
-- 新问题: N
+## Adjacent Regression Checks
+- [surface] - pass / fail / blocked - note
+- [surface] - pass / fail / blocked - note
 
-## 新发现的问题
-1. [Bug #NNN](../bugs/bug-NNN.md) - [描述]
+## New Issues
+- [issue or none]
 
-## 结论
-- ✓ 修复有效，无新回归问题
-- ✗ 修复无效 / 发现新回归问题
+## Release Recommendation
+- [safe to release / hold release / needs more verification]
 ```
 
-## Step 9 — Update bug status
+## Step 7 — Handle failures and gaps
 
-If the fix is verified:
+If the original failure still reproduces, report `fail` and name the evidence. If the environment prevents a clean judgment, report `blocked`. If the fix works but evidence is thin, keep the report honest and call out what remains uncertain.
 
-```bash
-# For local bugs
-# Add "已验证" status to bug report header
+## Step 8 — Choose the output path
 
-# For GitHub issues
-gh issue comment NNN --body "回归测试通过，修复已验证。详见 docs/qa-reports/YYYY-MM-DD-regression-report.md"
-```
+Use a durable output path that matches repo context.
 
-If the fix failed:
+- Use a local Markdown artifact when the repo tracks QA verification in files or when the user asked for a document
+- Use a GitHub issue only when the repo workflow or user request explicitly wants issue tracking
 
-```bash
-# For GitHub issues
-gh issue comment NNN --body "回归测试失败，Bug 仍可复现。详见 docs/qa-reports/YYYY-MM-DD-regression-report.md"
-```
-
-## Step 10 — Cleanup
-
-Close browser and stop application if it was started by this skill.
-
-## Step 11 — Commit results
-
-Commit the regression report:
-
-```bash
-git add docs/qa-reports/
-git commit -m "Add regression test report - $(date +%Y-%m-%d)
-
-Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
-```
+Do not commit changes, do not mutate code, and do not assume a GitHub-first workflow.
 
 ## Configuration
 
-Default settings (can be overridden by user):
-
-- Target URL: http://localhost:3000
-- Browser: Chrome (headless)
-- Test timeout: 30 seconds per test
+- Evidence reuse is required
+- Adjacent-risk review is required
+- No hardcoded runtime host or port
+- No self-mutating behavior
+- Run status and evidence confidence must stay explicit and separate
+- Run status is `pass`, `fail`, or `blocked`; confidence is separate
 
 ## Edge Cases
 
-- **Bug report not found**: Ask user for Bug ID or reproduction steps
-- **App won't start**: Report error and ask user to start manually
-- **Fix not deployed**: Ask user to deploy the fix first
-- **Multiple bugs to verify**: Run regression for each bug sequentially
-- **Original bug cannot be reproduced on old code**: Note in report, may be environment-specific
+- **Original bug report missing**: `blocked` until evidence is provided
+- **Fix not deployed to the verification environment**: `blocked`
+- **Fix verified but a nearby surface fails**: `fail` with the adjacent regression called out
+- **Original failure cannot be reproduced on baseline**: treat as an evidence problem and note the uncertainty, not as a false pass

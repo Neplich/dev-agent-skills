@@ -1,14 +1,23 @@
 # QA Agent
 
-面向验证与证据输出的 QA dispatcher 型 Agent。它负责识别请求是规范验收、探索测试、缺陷分析还是修复后的回归验证，并把请求路由到最合适的 QA skill。
+面向证据输出的 QA dispatcher 型 Agent。它先看 PM 文档、实现上下文和变更范围，再判断当前请求是文档化验收、探索式发现、失败复现还是修复验证，并把工作路由到最合适的 QA skill。QA 的目标不是“多测一点”，而是为 Engineer、PM 和发布负责人产出可追溯的结构化证据。
 
 ## Agent 定位
 
-- **使用者**：个人使用（手动触发）
-- **核心场景**：规范验收、UI 交互测试、边界测试、探索测试、Bug 复现与分析、回归验证、发布前测试把关
-- **输入来源**：PM Agent 的 Test Spec + PRD + TRD
-- **输出形式**：测试报告（简洁版）+ Bug 报告（详细版，Markdown 或 GitHub Issue）
-- **测试范围**：UI 交互测试 + 边界测试（补充 Engineer 未覆盖的场景）
+- **使用者**：个人使用，手动触发
+- **核心场景**：基于 PM 文档、实现上下文和变更范围，选择相应的验证类型
+- **输入来源**：PM Agent 的 PRD / TRD / Test Spec，代码变更、PR 描述、失败日志、截图、录屏与运行上下文
+- **输出形式**：面向 Engineer、PM、release owner 的结构化证据
+- **测试范围**：围绕变更相关风险，覆盖交互、边界、失败复现与回归确认
+
+## QA 协议基线
+
+所有 QA specialist skills 共享以下公共约定：
+
+- context-first：先看上下文，再选验证类型
+- evidence-aware：每个 skill 都要明确标注已确认结果、未决不确定性和被阻塞项，但具体状态词汇遵循该 skill 的协议
+- structured output：结果必须是可追溯的结构化产物，但产物形态由所选 QA skill 决定，例如验证矩阵、探索报告、缺陷报告或回归结论
+- handoff-ready：说明证据缺口、未完成项和下一步
 
 ---
 
@@ -16,12 +25,12 @@
 
 > 所有 skill 源文件统一在 `agents/qa/skills/` 下自管理，通过 `npx skills add ./agents/qa/skills/<name>` 安装到项目运行时。
 
-| Skill | 目录 | 主要用途 | 阶段 |
-|-------|------|---------|------|
-| `exploratory-tester` | `skills/exploratory-tester/` | 自动探索 UI，发现文档未覆盖的问题 | 1. 探索 |
-| `spec-based-tester` | `skills/spec-based-tester/` | 基于 Test Spec 执行标准测试用例（UI 交互 + 边界测试） | 2. 规范测试 |
-| `bug-analyzer` | `skills/bug-analyzer/` | 分析测试失败，生成详细 Bug 报告（Markdown 或 GitHub Issue） | 3. Bug 分析 |
-| `regression-suite` | `skills/regression-suite/` | 管理回归测试套件，验证 Bug 修复效果 | 4. 回归验证 |
+| Skill | 目录 | ownership 边界 | 输出契约 |
+|-------|------|----------------|----------|
+| `spec-based-tester` | `skills/spec-based-tester/` | 只负责文档化验收和规范验证，不扩展到无关探索 | 测试摘要、通过/失败判定、覆盖缺口、证据 |
+| `exploratory-tester` | `skills/exploratory-tester/` | 只负责探索式发现、冒烟与边界发现，不伪装成全量验收 | 探索记录、异常发现、风险点、待确认事项 |
+| `bug-analyzer` | `skills/bug-analyzer/` | 只负责失败复现、缺陷写作和归因整理，不替代修复实现 | 复现步骤、失败证据、缺陷矩阵、影响评估 |
+| `regression-suite` | `skills/regression-suite/` | 只负责修复验证、回归扫测和已知问题复核，不扩大到新功能探索 | 回归结果、修复确认、回归范围、残余风险 |
 
 ---
 
@@ -31,41 +40,39 @@
 
 | PM 文档 | QA 消费内容 |
 |---------|------------|
-| Test Spec | 测试场景、测试数据、覆盖要求 |
-| PRD | 功能需求、用户故事、验收标准 |
-| TRD | 技术实现细节、架构约束 |
+| Test Spec | 验收场景、测试数据、覆盖要求、预期证据 |
+| PRD | 功能需求、用户故事、验收标准、变更目标 |
+| TRD | 技术实现细节、架构约束、环境依赖、已知风险 |
 
-### 与 Engineer Agent 的协作流程
+### 与 Engineer Agent 的协作接口
 
-1. **Engineer 实现完成** → 提交代码
-2. **QA 手动触发测试** → 执行 `spec-based-tester` + `exploratory-tester`
-3. **发现 Bug** → 使用 `bug-analyzer` 生成报告
-4. **Engineer 修复** → 提交修复代码
-5. **QA 回归验证** → 使用 `regression-suite` 验证修复
+- Engineer 提供代码变更、实现说明和相关上下文
+- QA 读取上下文后选择最合适的 QA skill
+- QA 输出结构化证据，供 Engineer、PM 或 release owner 使用
+- 如需修复或回归，后续由相应角色基于证据继续处理
 
 ## 入口路由策略
 
-QA Agent 按验证目标来路由：
+QA Agent 按验证目标和期望证据来路由：
 
-- 基于 PRD / TRD / Test Spec 的规范验证、验收测试 -> `spec-based-tester`
-- 冒烟测试、探索性测试、UI 边界探索 -> `exploratory-tester`
-- bug 复现、失败归因、详细缺陷报告 -> `bug-analyzer`
-- 修复后的复测、回归集验证、发布前已知问题复核 -> `regression-suite`
+- 文档化验收、规范验证 -> `spec-based-tester`
+- 探索式发现、冒烟、边界发现 -> `exploratory-tester`
+- 失败复现、缺陷写作、归因整理 -> `bug-analyzer`
+- 修复验证、回归扫测、已知问题复核 -> `regression-suite`
 
 默认兜底规则：
 
-- 有明确 spec 或验收目标时优先 `spec-based-tester`
-- 没有稳定 spec 但用户要“走一遍看看”时优先 `exploratory-tester`
-- 从失败现象或缺陷单开始时优先 `bug-analyzer`
-- 从“这个修复好了没有”开始时优先 `regression-suite`
+- 如果用户要的是文档化验收，优先 `spec-based-tester`
+- 如果用户要的是探索式发现，优先 `exploratory-tester`
+- 如果用户要的是失败复现，优先 `bug-analyzer`
+- 如果用户要的是修复验证，优先 `regression-suite`
 
 ---
 
 ## 设计原则
 
-1. **探索优先** — 不局限于 Test Spec，主动发现潜在问题
-2. **环境自适应** — 自动检测和启动测试环境
-3. **详细可追溯** — Bug 报告包含完整复现信息
-4. **补充而非重复** — 关注 Engineer 覆盖不到的场景（UI 交互、边界条件）
-5. **Chrome 优先** — 先保证主流浏览器支持
-6. **手动触发** — 不做自动化监听，保持简单
+1. **证据优先** — 先看上下文，再输出结构化证据
+2. **路由克制** — 只选择最贴合目标的 QA skill
+3. **补充而非重复** — 关注 Engineer 覆盖不到的场景和风险
+4. **结构化输出** — 让结论、缺口、风险和回归状态一眼可读
+5. **手动触发** — 不做自动化监听，保持简单
