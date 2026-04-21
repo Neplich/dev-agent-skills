@@ -85,7 +85,8 @@ docs/<agent-short>/<feature-name>/<DOC>.md
 
 - Design: `UI_UX_SPEC.md`
 - Engineer: `TRD.md`, `API.md`, `ADR-001-<title>.md`
-- QA: `TEST_SPEC.md`
+- QA: `TEST_SPEC.md`, `FILE_EXPLORATION.md`,
+  `test-cases/TC-NNN-<short-slug>.md`, `reports/YYYY-MM-DD-<report>.md`
 - DevOps: `RELEASE_PLAN.md`
 - Security: `SECURITY_REVIEW.md`
 
@@ -94,6 +95,11 @@ docs/<agent-short>/<feature-name>/<DOC>.md
 - Use stable filenames for primary docs
 - Keep versioning in frontmatter and git history, not in filenames
 - Use uppercase canonical filenames for the main artifact in each feature folder
+- Store each E2E test case in one file under
+  `docs/qa/<feature-name>/test-cases/`; keep `TEST_SPEC.md` as the index and
+  traceability summary
+- Use `FILE_EXPLORATION.md` to persist source-file exploration that expands QA
+  coverage
 - Keep related docs in the same feature folder for that agent unless there is a
   clear reason to split further
 

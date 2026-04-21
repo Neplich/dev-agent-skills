@@ -33,6 +33,12 @@ workflow, output format, failure handling, and safety boundaries.
 - **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md`
 - **Cross-check**: If related docs are provided, verify that requirement IDs,
   endpoint coverage, and NFR tests stay aligned.
+- **Case files**: Validate that every E2E test case in `TEST_SPEC.md` links to
+  exactly one file under `docs/qa/<feature-name>/test-cases/`, and that each
+  file contains one matching `TC-NNN` case.
+- **File exploration**: When test coverage was derived from project file
+  exploration, validate that `FILE_EXPLORATION.md` exists and lists inspected
+  files plus coverage implications.
 
 ## TEST_SPEC-Specific Checks
 
@@ -41,7 +47,9 @@ workflow, output format, failure handling, and safety boundaries.
 | Coverage summary | CRITICAL | Every P0 requirement must map to at least one test case |
 | Traceability matrix | CRITICAL | Must exist and reconcile uncovered items explicitly |
 | Test case completeness | CRITICAL | Every test case must have ID, Preconditions, Steps, and Expected Result |
+| E2E case file split | CRITICAL | Every E2E test case must have exactly one linked case file under `test-cases/` |
 | Negative / boundary coverage | CRITICAL | Each P0 requirement needs positive coverage plus a negative or boundary test |
+| File exploration memory | WARNING | Project-file-derived coverage should be backed by `FILE_EXPLORATION.md` |
 | Environment & data | WARNING | Must describe execution environment and required fixtures / roles |
 | NFR coverage | WARNING | Quantified PRD / TRD NFRs should map to operational tests |
 | Regression / smoke pack | WARNING | Must identify release smoke or regression scope |

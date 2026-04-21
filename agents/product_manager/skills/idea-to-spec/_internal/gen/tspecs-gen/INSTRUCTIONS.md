@@ -33,6 +33,12 @@ failure handling, and safety boundaries.
 - **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md`
 - **Metadata**: `type: TEST_SPEC`, version `1.0.0`
 - **Naming**: `docs/qa/<feature-name>/TEST_SPEC.md`
+- **Case files**: every E2E test case must also be written as a separate
+  Markdown file under `docs/qa/<feature-name>/test-cases/` using
+  `TC-NNN-<short-slug>.md`
+- **File exploration memory**: if test cases are derived from project file
+  exploration rather than only PRD / TRD / API docs, write
+  `docs/qa/<feature-name>/FILE_EXPLORATION.md`
 
 ## Workflow Details
 
@@ -46,6 +52,10 @@ failure handling, and safety boundaries.
 4. **Generate test cases**: For each requirement or endpoint include Test Case
    ID (`TC-NNN`), Title, Requirement Links, Priority, Level, Category,
    Preconditions, Steps, Expected Result, and Notes.
+   - Keep `TEST_SPEC.md` as the index and coverage summary.
+   - For every E2E case, create one case file under `test-cases/` and link it
+     from the `TEST_SPEC.md` test case table.
+   - Non-E2E cases may remain inline unless the user requests per-case files.
 5. **Add operational coverage**: Include NFR, reliability, security, or other
    operational checks when the source doc defines measurable targets.
 6. **Close traceability**: Produce Coverage Summary plus Traceability Matrix
@@ -59,7 +69,9 @@ failure handling, and safety boundaries.
 | Requirement ID | Test Cases | Status |
 ### Test Environment & Data
 ### Test Cases
-| TC-001 | Title | Preconditions | Steps | Expected | Priority | Level |
+| TC-001 | Title | Case File | Preconditions | Steps | Expected | Priority | Level |
+### E2E Case Files
+- `test-cases/TC-001-<short-slug>.md`
 ### Non-Functional & Operational Tests
 ### Regression & Smoke Pack
 ### Traceability Matrix
@@ -70,6 +82,7 @@ failure handling, and safety boundaries.
 - Every P0 requirement has at least one mapped test case
 - Every P0 requirement has positive coverage plus a negative or boundary test
 - Every test case has Preconditions, Steps, and Expected Result
+- Every E2E test case has exactly one linked case file under `test-cases/`
 - Coverage Summary and Traceability Matrix must stay synchronized
 
 **Tspecs-specific failure handling**:
@@ -93,9 +106,15 @@ failure handling, and safety boundaries.
 
 **Expected Output**:
 
-| ID | Title | Preconditions | Steps | Expected | Priority | Level |
-|----|-------|---------------|-------|----------|----------|-------|
-| TC-001 | Password reset email sent | User exists with verified email | 1. Go to login 2. Click "Forgot password" 3. Enter email 4. Submit | Reset email received within 30s | P0 | E2E |
-| TC-002 | Reset link expiration | Reset email received > 24h ago | 1. Click reset link after 24h | Error: "Link expired, request a new one" | P0 | E2E |
-| TC-003 | Weak password rejected | Valid reset link clicked | 1. Enter "123" as new password 2. Submit | Error: password strength requirements shown | P0 | Integration |
-| TC-004 | Non-existent email | No account with email | 1. Enter unknown email 2. Submit | Same success message (no user enumeration) | P0 | E2E |
+| ID | Title | Case File | Preconditions | Steps | Expected | Priority | Level |
+|----|-------|-----------|---------------|-------|----------|----------|-------|
+| TC-001 | Password reset email sent | `test-cases/TC-001-password-reset-email-sent.md` | User exists with verified email | 1. Go to login 2. Click "Forgot password" 3. Enter email 4. Submit | Reset email received within 30s | P0 | E2E |
+| TC-002 | Reset link expiration | `test-cases/TC-002-reset-link-expiration.md` | Reset email received > 24h ago | 1. Click reset link after 24h | Error: "Link expired, request a new one" | P0 | E2E |
+| TC-003 | Weak password rejected | N/A | Valid reset link clicked | 1. Enter "123" as new password 2. Submit | Error: password strength requirements shown | P0 | Integration |
+| TC-004 | Non-existent email | `test-cases/TC-004-non-existent-email.md` | No account with email | 1. Enter unknown email 2. Submit | Same success message (no user enumeration) | P0 | E2E |
+
+Generated E2E case files:
+
+- `docs/qa/password-reset/test-cases/TC-001-password-reset-email-sent.md`
+- `docs/qa/password-reset/test-cases/TC-002-reset-link-expiration.md`
+- `docs/qa/password-reset/test-cases/TC-004-non-existent-email.md`

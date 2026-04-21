@@ -16,6 +16,8 @@ date: <YYYY-MM-DD>
 related_prd: <filename or "N/A">
 related_trd: <filename or "N/A">
 related_api: <filename or "N/A">
+case_directory: docs/qa/<feature-name>/test-cases
+file_exploration: docs/qa/<feature-name>/FILE_EXPLORATION.md | "N/A"
 ```
 
 ### 2. Test Scope & Objectives
@@ -57,6 +59,7 @@ Each test case must capture:
 | --- | --- |
 | ID | Stable test case ID such as `TC-001` |
 | Title | Short scenario title |
+| Case File | Required for E2E cases, e.g. `test-cases/TC-001-login-success.md` |
 | Requirement Links | Requirement IDs or endpoint references |
 | Priority | P0 / P1 / P2 |
 | Level | Unit / Integration / E2E / Regression / Performance |
@@ -68,6 +71,51 @@ Each test case must capture:
 
 - **Quality**: Each test case must have Preconditions, Steps, and Expected
   Result.
+- **Quality**: Every E2E test case must have exactly one linked Markdown case
+  file under `docs/qa/<feature-name>/test-cases/`.
+
+### E2E Case File Format
+
+Each file in `docs/qa/<feature-name>/test-cases/` must contain exactly one E2E
+case and use the same stable ID as `TEST_SPEC.md`.
+
+```markdown
+# TC-NNN: <title>
+
+## Metadata
+- Level: E2E
+- Priority: P0 / P1 / P2
+- Category: Positive / Negative / Boundary / Security / Reliability
+- Requirement Links:
+- Source: PRD / TRD / API / FILE_EXPLORATION / QA exploration
+
+## Preconditions
+
+## Steps
+1. ...
+
+## Expected Result
+
+## Test Data & Environment
+
+## Automation Hint
+
+## Evidence Notes
+```
+
+### File Exploration Memory
+
+When test cases are derived from source, config, route, fixture, harness, or
+environment file discovery, record the exploration in
+`docs/qa/<feature-name>/FILE_EXPLORATION.md`.
+
+The file must include:
+
+- Exploration purpose and date
+- Files or directories inspected
+- Relevant surfaces, routes, commands, fixtures, and dependencies found
+- Coverage implications and added / updated test case IDs
+- Open questions or assumptions
 
 ### 7. Non-Functional & Operational Tests
 

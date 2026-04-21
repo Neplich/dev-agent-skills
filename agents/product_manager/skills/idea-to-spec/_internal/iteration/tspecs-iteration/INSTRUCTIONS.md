@@ -33,7 +33,8 @@ history, traceability, and versioning.
 ## Workflow
 
 1. **Read current document**: Parse metadata, coverage summary, test cases,
-   traceability matrix, and changelog.
+   traceability matrix, linked E2E case files, `FILE_EXPLORATION.md`, and
+   changelog.
 2. **Classify the requested change**:
    - Coverage gap fix
    - Requirement propagation
@@ -41,6 +42,12 @@ history, traceability, and versioning.
    - Test case retirement or replacement
 3. **Update coverage deliberately**:
    - Add or revise test cases for changed requirements
+   - For every added or revised E2E case, create or update exactly one
+     `docs/qa/<feature-name>/test-cases/TC-NNN-<short-slug>.md` file and link
+     it from `TEST_SPEC.md`
+   - If the change request requires project file exploration, update
+     `docs/qa/<feature-name>/FILE_EXPLORATION.md` with inspected files and
+     coverage implications
    - Maintain positive, negative, and boundary coverage for P0 items
    - Update NFR, regression, and smoke-pack sections when release criteria
      change
@@ -59,6 +66,10 @@ history, traceability, and versioning.
 ## Output Contract
 
 - **Format**: Updated Markdown TEST_SPEC with bumped version
+- **Case files**: Added or changed E2E cases as individual Markdown files under
+  `test-cases/`
+- **File exploration**: Updated `FILE_EXPLORATION.md` when file discovery was
+  used to expand coverage
 - **Diff summary**: Coverage-level summary plus test case adds / updates /
   retirements
 - **Validation result**: Inline `tspecs-validator` score and remaining issues
@@ -75,6 +86,7 @@ history, traceability, and versioning.
 ## Safety Boundaries
 
 - Preserve unchanged test cases exactly
+- Preserve unchanged E2E case files exactly
 - Never silently drop coverage for a requirement, endpoint, or NFR
 - Confirm with the user before MAJOR version bumps or broad test-case
   retirements
