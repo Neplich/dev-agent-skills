@@ -12,6 +12,10 @@
           "text": "先读取原始 bug 报告、失败证据和修复上下文，沿用复现步骤与期望行为来界定回归范围"
         },
         {
+          "name": "QA 用例复用",
+          "text": "回归执行前应读取 docs/qa/{feature}/test-cases/*.md 和 FILE_EXPLORATION.md；如需新增 E2E 回归覆盖，必须询问是否有新功能更新、是否需要探索项目文件，并将新增用例单独存为文件"
+        },
+        {
           "name": "修复验证",
           "text": "按原始场景验证修复后行为，并把 original failure、fixed behavior 和 verification result 明确标成 pass、fail 或 blocked"
         },

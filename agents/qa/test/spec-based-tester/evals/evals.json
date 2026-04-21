@@ -12,6 +12,10 @@
           "text": "在执行前读取 test-spec.md、prd.md、trd.md、变更说明和测试命令，先记录范围、环境假设、未知项和被阻塞的检查"
         },
         {
+          "name": "独立用例复用",
+          "text": "当 PM 未提供具体 E2E 用例时，必须先读取 docs/qa/{feature}/TEST_SPEC.md 和 test-cases/*.md；执行前询问是否有新功能更新、是否需要探索项目文件扩充用例，避免每次从零阅读全项目"
+        },
+        {
           "name": "执行路径选择",
           "text": "依据仓库上下文选择最窄且可证明要求的执行路径，优先使用现有 acceptance、e2e、集成或手动 QA harness，而不是固定模板或默认浏览器流程"
         },
@@ -22,6 +26,10 @@
         {
           "name": "结构化证据",
           "text": "输出包含 requirement matrix、execution path、evidence references 和 risk notes 的结构化验证报告，并保留每个需求项的 status 和 notes"
+        },
+        {
+          "name": "E2E 单文件约束",
+          "text": "新增或补充的每个 E2E 测试用例必须作为单独 Markdown 文件写入 docs/qa/{feature}/test-cases/，并在 TEST_SPEC 或验证报告中引用对应文件"
         },
         {
           "name": "交接边界",
@@ -38,6 +46,10 @@
         {
           "name": "范围与假设",
           "text": "基于 PRD、TRD、实现变更说明和环境说明定义边界范围，先记录输入约束、未知依赖、环境假设和 blocked 条件，再开始执行"
+        },
+        {
+          "name": "用例目录优先",
+          "text": "边界验证前必须优先读取 docs/qa/{feature}/TEST_SPEC.md、test-cases/*.md 和 FILE_EXPLORATION.md；只有用户确认需要时才探索项目文件扩充测试用例"
         },
         {
           "name": "边界执行",

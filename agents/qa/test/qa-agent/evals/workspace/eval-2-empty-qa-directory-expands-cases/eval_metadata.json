@@ -1,0 +1,35 @@
+{
+  "eval_id": 2,
+  "eval_name": "empty-qa-directory-expands-cases",
+  "workspace_root": "agents/qa/test/qa-agent/evals/workspace/eval-2-empty-qa-directory-expands-cases",
+  "validation_method": "fresh_codex_subagent",
+  "skill_availability_goal": "Verify that qa-agent handles an empty QA case directory by routing to targeted file exploration, test-case creation, and case-based execution when the user has authorized exploration.",
+  "prompt": "用户说：请对 profile-settings 做一次 E2E QA。docs/qa/profile-settings/ 目录已经存在，但 TEST_SPEC.md 和 test-cases/ 里没有任何测试用例。我确认这个功能有新更新，请主动探索项目文件来补充测试用例，然后基于新建的用例执行验证。先做 QA 路由和执行协议说明。",
+  "fixture_context": [
+    "docs/qa/profile-settings/",
+    "docs/qa/profile-settings/test-cases/",
+    "src/routes/profile-settings.md",
+    "src/pages/ProfileSettingsPage.tsx",
+    "src/components/ProfileSettingsForm.tsx",
+    "environment/qa-env.md",
+    "package.json"
+  ],
+  "with_skill_outputs": [
+    "with_skill/outputs/subagent-verdict.md"
+  ],
+  "without_skill_outputs": [
+    "without_skill/outputs/subagent-verdict.md"
+  ],
+  "run_diagnostics": [
+    "diagnostics/run.json"
+  ],
+  "execution_cleanup": [
+    "docs/qa/profile-settings/TEST_SPEC.md",
+    "docs/qa/profile-settings/FILE_EXPLORATION.md",
+    "docs/qa/profile-settings/reports",
+    "docs/qa/profile-settings/test-cases/TC-*.md",
+    "with_skill/outputs",
+    "without_skill/outputs",
+    "diagnostics"
+  ]
+}

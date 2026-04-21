@@ -24,6 +24,10 @@
           "text": "根据 repo workflow 和用户请求选择 durable output path，优先写入本地 Markdown artifact，只有在明确需要时才创建 GitHub issue"
         },
         {
+          "name": "可复用回归用例",
+          "text": "如果确认的 E2E 复现场景应沉淀为回归覆盖，必须在 docs/qa/{feature}/test-cases/ 下为该场景创建或引用单独 Markdown 用例文件"
+        },
+        {
           "name": "影响说明",
           "text": "报告要包含 implementation impact 或 release impact，并保留 evidence references 以便后续追踪"
         }
