@@ -1,0 +1,76 @@
+{
+  "eval_id": 2,
+  "eval_name": "reference-driven-design-system",
+  "workspace_root": "agents/designer/test/visual-design/workspace/eval-2-reference-design-system",
+  "prompt": "Create a visual design system for an enterprise analytics platform. Target users are operations leaders and analysts. The output should use local Design System Data to choose product pattern, style direction, color system, typography, UX quality rules, and anti-patterns. Stop at design handoff and do not produce implementation code.",
+  "with_skill_outputs": [
+    "with_skill/outputs/design-system-search.md",
+    "with_skill/docs/design/enterprise-analytics-platform/visual-system.md"
+  ],
+  "without_skill_outputs": [
+    "without_skill/outputs/design-notes.md"
+  ],
+  "assertions": [
+    {
+      "id": "with_skill_uses_local_design_system_data",
+      "description": "With skill records a real Design System Data query output from the local database",
+      "target": "with_skill/outputs/design-system-search.md",
+      "all_of": [
+        "## Design System: Enterprise Analytics Platform",
+        "### Pattern",
+        "### Style",
+        "**Name:** Data-Dense Dashboard",
+        "### Colors",
+        "### Typography",
+        "### Avoid (Anti-patterns)"
+      ]
+    },
+    {
+      "id": "with_skill_uses_reference_driven_system",
+      "description": "With skill output includes reference-backed product, style, color, typography, UX, and anti-pattern reasoning",
+      "target": "with_skill/docs/design/enterprise-analytics-platform/visual-system.md",
+      "all_of": [
+        "# Visual Design System",
+        "## 1. Reference-Driven Design System",
+        "Product category: Enterprise Analytics Dashboard",
+        "Recommended pattern: Data-Dense Dashboard",
+        "Style direction: Data-Dense + Minimal Trust",
+        "Source references: Design System Data",
+        "## 3. Typography",
+        "## 6. UX Quality Rules",
+        "## 7. Anti-patterns to Avoid"
+      ]
+    },
+    {
+      "id": "with_skill_stops_at_handoff",
+      "description": "With skill output remains design-only and routes implementation to Engineer",
+      "target": "with_skill/docs/design/enterprise-analytics-platform/visual-system.md",
+      "all_of": [
+        "Designer stops here.",
+        "Next role: `engineer-agent`."
+      ],
+      "none_of": [
+        "tailwind.config",
+        "npx shadcn",
+        "```tsx",
+        "```css",
+        "Run `npm",
+        "Implement the component",
+        "git add"
+      ]
+    },
+    {
+      "id": "without_skill_stays_generic",
+      "description": "Baseline output lacks reference-driven design system reasoning",
+      "target": "without_skill/outputs/design-notes.md",
+      "all_of": [
+        "Use a clean professional style."
+      ],
+      "none_of": [
+        "Reference-Driven Design System",
+        "Product category: Enterprise Analytics Dashboard",
+        "Anti-patterns to Avoid"
+      ]
+    }
+  ]
+}

@@ -67,7 +67,7 @@
     },
     {
       "name": "designer-agent",
-      "description": "Dispatcher for UX flows, UI structure, wireframes, reference-pattern analysis, and visual design systems.",
+      "description": "Dispatcher for UX flows, UI structure, wireframes, reference-pattern analysis, and reference-backed visual design systems.",
       "source": "./agents/designer",
       "strict": false,
       "skills": [

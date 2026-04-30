@@ -25,19 +25,19 @@
     },
     {
       "id": "eval-2-playful",
-      "name": "Playful Design System",
-      "description": "Create a playful design system for a consumer app",
-      "prompt": "Create a visual design system for a social recipe sharing app. Target: home cooks, casual and fun tone.",
-      "workspace": "workspace/eval-2-playful",
-      "expected_output": "面向消费者产品的视觉系统文档，风格鲜明、包含完整规范，并在设计交接处停止",
+      "name": "Reference-Driven Design System",
+      "description": "Create a design system using local Design System Data plus local design-only boundary references",
+      "prompt": "Create a visual design system for an enterprise analytics platform. Target users are operations leaders and analysts. The output should use local Design System Data to choose product pattern, style direction, color system, typography, UX quality rules, and anti-patterns. Stop at design handoff and do not produce implementation code.",
+      "workspace": "workspace/eval-2-reference-design-system",
+      "expected_output": "基于本地 Design System Data 的视觉系统文档，包含产品类型推理、风格/配色/字体推荐、UX 质量规则和反模式，并在设计交接处停止",
       "assertions": [
         {
-          "name": "匹配品牌语气",
-          "text": "输出体现 playful 风格，并给出与目标用户匹配的色彩和文案方向"
+          "name": "引用本地 Design System Data 形成设计系统",
+          "text": "输出包含 Design System Data 查询结果、reference-driven design system、产品类型、推荐模式、风格方向、配色、字体、UX 质量规则和反模式"
         },
         {
-          "name": "不继续实现",
-          "text": "输出完成视觉系统文档后停止，不继续生成前端代码或实现方案"
+          "name": "不生成代码",
+          "text": "输出完成视觉系统文档后停止，不包含 CSS/Tailwind/React/shadcn 实现代码、安装命令或工程任务拆解"
         }
       ]
     },

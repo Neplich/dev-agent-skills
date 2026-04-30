@@ -36,7 +36,7 @@ and direct the next step to `engineer-agent`.
 ## Available Skills
 
 - `designer-agent:ui-ux-design` - UX flows, page structure, IA, layouts, wireframes, interaction notes
-- `designer-agent:visual-design` - Visual language, components, typography, color, copy style
+- `designer-agent:visual-design` - Reference-backed visual design system, components, typography, color, UX quality rules, copy style
 
 ## Routing Signals
 
@@ -46,8 +46,9 @@ Route by the design outcome the user wants.
   wireframes, information architecture, redesigning a workflow, reference-site
   interaction patterns, "流程怎么设计", "页面怎么拆", "做 wireframe"
   -> `ui-ux-design`
-- Visual direction, aesthetic system, color, typography, component styling,
-  tone of voice, brand feel, "风格怎么定", "视觉系统", "组件视觉规范"
+- Visual direction, aesthetic system, product-appropriate style, color,
+  typography, component styling, UX quality rules, anti-patterns, tone of
+  voice, brand feel, "风格怎么定", "视觉系统", "组件视觉规范"
   -> `visual-design`
 
 ## Default Routes
@@ -55,7 +56,7 @@ Route by the design outcome the user wants.
 | Design Outcome | Primary Skill |
 | --- | --- |
 | UX 流程、页面结构、信息架构、线框、交互规范 | `ui-ux-design` |
-| 视觉风格、设计系统、颜色、字体、组件规范、文案语气 | `visual-design` |
+| 视觉风格、设计系统、颜色、字体、组件规范、UX 质量规则、反模式、文案语气 | `visual-design` |
 | 需求模糊但明显是设计问题 | `ui-ux-design` |
 
 If the request is design-shaped but underspecified, default to

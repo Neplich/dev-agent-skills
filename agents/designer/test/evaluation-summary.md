@@ -14,6 +14,11 @@
 - Without skill: Generic suggestions (Inter/Roboto), vague colors, incomplete
 - **Impact: HIGH** - Skill avoids AI clichés, provides professional system
 
+**Eval 2: Reference-Driven Design System**
+- With skill: Local Design System Data lookup plus product category, pattern, style direction, colors, typography, UX quality rules, and anti-patterns
+- Without skill: Generic professional notes without reference-backed reasoning
+- **Impact: HIGH** - Skill turns visual system generation into product-aware design reasoning backed by the local design database while preserving design-only handoff
+
 ## Key Strengths
 
 1. **ASCII Prototypes** - Visual layout representation works well
@@ -21,6 +26,7 @@
 3. **Structured Output** - Consistent format, easy to follow
 4. **Distinctive Design** - Avoids generic AI aesthetics (Inter/Roboto)
 5. **Accessibility** - WCAG compliance built in
+6. **Reference-Driven Reasoning** - Local Design System Data plus local boundary references shape visual systems
 
 
 ## Optimization Recommendations
@@ -34,12 +40,12 @@ Minor improvements:
 3. Add edge case handling (empty states, errors) to checklist
 
 ### visual-design Skill
-**Current Status: GOOD** - Working as intended
+**Current Status: GOOD** - Reference-driven design system generation is covered
 
 Minor improvements:
-1. Add more font pairing suggestions beyond SF Pro
-2. Include dark mode color variants
-3. Add icon style guidelines
+1. Add more product categories as real usage requires
+2. Add page-level visual-system overrides if repeated features need them
+3. Expand chart and dense-table guidance for analytics-heavy products
 
 ## Overall Assessment
 
