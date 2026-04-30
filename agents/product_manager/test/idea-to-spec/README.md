@@ -33,7 +33,7 @@ agents/product_manager/test/idea-to-spec/
       └─ eval-4-greenfield-bootstrap-routing/
 ```
 
-每个 eval workspace 建议包含：
+每个 eval workspace 包含：
 
 - 最小项目上下文文件，例如 `README.md`、`package.json`、`docs/...`
 - `with_skill/outputs/` 目录
@@ -84,20 +84,20 @@ agents/product_manager/test/idea-to-spec/
 3. 运行 `run_eval.py`；它会先生成 fresh 的 with-skill / without-skill transcript，再执行断言检查。
 4. 查看 `with_skill/outputs/` 与 `without_skill/outputs/` 下的 transcript 和 `run_status.json`。
 5. 根据 `assertions` 做人工或脚本检查。
-6. 如有需要，在该 eval 目录下补 `comparison.md` 记录对比结论。
+6. 需要人工分析时，在该 eval 目录下补 `comparison.md` 记录对比结论。
 
-建议区分两类报告：
+报告分为两类：
 
 - `comparison.auto.md`：由 helper 自动生成，记录输出存在性和断言清单
 - `comparison.md`：人工补充的质量分析与结论
 
-建议使用共享模板：
+共享模板：
 
-- [COMPARISON_TEMPLATE.md](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/COMPARISON_TEMPLATE.md)
+- [COMPARISON_TEMPLATE.md](./COMPARISON_TEMPLATE.md)
 
-建议在每轮主要评测后更新总览：
+每轮主要评测后更新总览：
 
-- [SUMMARY.md](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/SUMMARY.md)
+- [SUMMARY.md](./SUMMARY.md)
 
 ## 输出约定
 
@@ -106,12 +106,12 @@ agents/product_manager/test/idea-to-spec/
 - 对话式输出记录
 - 写入 workspace 内 feature 文档后的文件产物
 
-建议至少保留以下一种：
+至少保留以下一种：
 
 - `with_skill/outputs/transcript.md`
 - `without_skill/outputs/transcript.md`
 
-如果产物写入了 workspace 内的 `docs/`，建议在 transcript 里记录：
+如果产物写入了 workspace 内的 `docs/`，transcript 记录：
 
 - 写入了哪些路径
 - 哪些 decision 被确认
@@ -156,11 +156,3 @@ agents/product_manager/test/idea-to-spec/
 4. 对比上一轮结论是否退化
 
 不要直接覆盖上一轮 workspace，避免失去回归基线。
-
-## 建议补充物
-
-后续如果要进一步自动化，建议补：
-
-- 一个统一的 `comparison.md` 模板
-- 一个简单的断言执行脚本
-- transcript 命名约定和保存格式

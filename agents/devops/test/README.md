@@ -1,8 +1,8 @@
 # DevOps Skill Evals
 
-最小 DevOps eval 基线目录。
+DevOps eval 基线目录。
 
-当前先覆盖 `env-config-auditor`，用于验证：
+`env-config-auditor` eval 用于验证：
 
 - skill 是否把环境审计结果写到 durable artifact，而不是 `tmp/`
 - 报告是否能同时检查 `deploy/` 和 CI/CD 配置

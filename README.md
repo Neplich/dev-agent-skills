@@ -167,7 +167,7 @@ Designer Agent's `visual-design` skill includes reference-backed design system c
 - Data coverage: product types, style patterns, colors, typography, UX guidelines, charts, landing patterns, icons, and stack guidelines
 - Usage boundary: design reasoning and design-system documentation only; it must not generate application code, install commands, or engineering task lists
 
-The data design references ui ux pro max's organization model, while paths, documentation, and license management are maintained under this repository's own structure.
+The data design follows ui ux pro max's organization model and is maintained under this repository's own paths and documentation.
 
 ## Local Validation
 

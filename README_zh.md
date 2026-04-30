@@ -161,13 +161,13 @@ agents/{agent}/
 
 ## 设计系统数据
 
-Designer Agent 的 `visual-design` 已内置 reference-backed design system 能力：
+Designer Agent 的 `visual-design` 包含 reference-backed design system 能力：
 
 - 本地路径：`agents/designer/skills/visual-design/references/design-system-data/`
 - 数据范围：产品类型、风格模式、颜色、字体、UX guidelines、charts、landing patterns、icons、stack guidelines
 - 使用边界：只用于设计推理和设计系统文档，不生成应用代码、安装命令或工程任务清单
 
-该数据设计参考了 ui ux pro max 的组织方式，但路径、文档和授权管理均按本仓库自己的结构维护。
+该数据设计参考了 ui ux pro max 的组织方式，并按本仓库自己的路径和文档结构维护。
 
 ## 本地验证
 

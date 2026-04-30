@@ -53,7 +53,7 @@ flowchart TD
   F3 --> F4["section 逐段收敛并落档"]
   F4 --> F5["稳定后路由到 prd-gen，必要时再到 trd-gen"]
 
-  G --> G1["总结本次变更 delta"]
+  G --> G1["总结需求变更 delta"]
   G1 --> G2["若影响范围不清晰，先加载 change-impactor"]
   G2 --> G3{"受影响的核心文档数量"}
   G3 -->|一个| G4["路由到对应的 *-iteration"]

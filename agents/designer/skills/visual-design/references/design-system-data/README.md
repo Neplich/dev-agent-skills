@@ -4,8 +4,6 @@ This directory stores the local design database and design-system lookup scripts
 
 The data design references ui ux pro max: product categories, style patterns, color palettes, typography pairings, UX guidelines, charts, landing patterns, icons, and stack guideline dimensions are organized here under this repository's own path.
 
-This directory does not carry a separate license file. License management follows the repository root `LICENSE`.
-
 ## Included
 
 - `data/` - CSV design database, including product types, colors, styles, typography, UX guidelines, charts, landing patterns, icons, and stack guideline data.
