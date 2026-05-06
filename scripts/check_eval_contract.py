@@ -22,6 +22,16 @@ VALID_AGENTS = {
 }
 EVAL_ID_RE = re.compile(r"^eval-\d{3}-[a-z0-9]+(?:-[a-z0-9]+)*$")
 ASSERTION_ID_RE = re.compile(r"^[a-z][a-z0-9_]*$")
+PATH_LIST_FIELDS = (
+    "fixture_context",
+    "with_skill_outputs",
+    "without_skill_outputs",
+    "baseline_outputs",
+    "baseline_output",
+    "baseline_skill_outputs",
+    "execution_cleanup",
+    "run_diagnostics",
+)
 
 
 @dataclass
@@ -62,6 +72,109 @@ def load_json(path: Path, errors: list[ContractError]) -> dict[str, Any] | None:
         return None
 
     return payload
+
+
+def is_safe_relative_path(value: str) -> bool:
+    if not value.strip():
+        return False
+    path = Path(value)
+    return not path.is_absolute() and ".." not in path.parts
+
+
+def resolve_workspace_root(
+    evals_path: Path,
+    skill_test_dir: Path,
+    workspace: str,
+) -> Path:
+    direct = skill_test_dir / workspace
+    if direct.exists():
+        return direct
+    return evals_path.parent / workspace
+
+
+def flatten_path_specs(value: Any) -> list[str] | None:
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, list):
+        paths: list[str] = []
+        for item in value:
+            flattened = flatten_path_specs(item)
+            if flattened is None:
+                return None
+            paths.extend(flattened)
+        return paths
+    return None
+
+
+def validate_paths_stay_in_workspace(
+    metadata_path: Path,
+    workspace_root: Path,
+    field: str,
+    value: Any,
+    errors: list[ContractError],
+) -> None:
+    paths = flatten_path_specs(value)
+    if paths is None:
+        add_error(errors, metadata_path, f"{field} must be a string or nested array of strings")
+        return
+
+    workspace_root = workspace_root.resolve()
+    for rel in paths:
+        if not is_safe_relative_path(rel):
+            add_error(errors, metadata_path, f"{field} contains unsafe path {rel!r}")
+            continue
+        target = (workspace_root / rel).resolve()
+        if target != workspace_root and workspace_root not in target.parents:
+            add_error(errors, metadata_path, f"{field} escapes eval workspace: {rel!r}")
+
+
+def validate_metadata(
+    evals_path: Path,
+    skill_test_dir: Path,
+    eval_index: int,
+    item: dict[str, Any],
+    errors: list[ContractError],
+) -> None:
+    eval_id = item.get("id")
+    workspace = item.get("workspace")
+    if not isinstance(eval_id, str) or not isinstance(workspace, str):
+        return
+
+    workspace_root = resolve_workspace_root(evals_path, skill_test_dir, workspace)
+    metadata_path = workspace_root / "eval_metadata.json"
+    comparison_path = workspace_root / "comparison.md"
+
+    if not metadata_path.exists():
+        add_error(errors, evals_path, f"evals[{eval_index}] workspace is missing eval_metadata.json")
+        return
+    if not comparison_path.exists():
+        add_error(errors, evals_path, f"evals[{eval_index}] workspace is missing durable comparison.md")
+
+    metadata = load_json(metadata_path, errors)
+    if metadata is None:
+        return
+
+    if metadata.get("eval_id") != eval_id:
+        add_error(errors, metadata_path, f"eval_id must match evals.json id {eval_id!r}")
+
+    metadata_workspace_root = metadata.get("workspace_root")
+    if metadata_workspace_root is not None:
+        if not isinstance(metadata_workspace_root, str) or not is_safe_relative_path(metadata_workspace_root):
+            add_error(errors, metadata_path, "workspace_root must be a safe relative path")
+        else:
+            resolved = (evals_path.parents[5] / metadata_workspace_root).resolve()
+            if resolved != workspace_root.resolve():
+                add_error(errors, metadata_path, "workspace_root must point to the eval workspace")
+
+    for field in PATH_LIST_FIELDS:
+        if field in metadata:
+            validate_paths_stay_in_workspace(
+                metadata_path,
+                workspace_root,
+                field,
+                metadata[field],
+                errors,
+            )
 
 
 def validate_assertions(
@@ -137,6 +250,7 @@ def validate_eval_item(
                 add_error(errors, path, f"evals[{eval_index}].workspace does not exist: {workspace}")
 
     validate_assertions(path, eval_index, item.get("assertions"), errors)
+    validate_metadata(path, skill_test_dir, eval_index, item, errors)
 
 
 def validate_file(root: Path, path: Path) -> list[ContractError]:

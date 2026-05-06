@@ -1,5 +1,5 @@
 {
-  "eval_id": 1,
+  "eval_id": "eval-001-saas-dashboard",
   "eval_name": "saas-dashboard-design-structure",
   "workspace_root": "agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard",
   "prompt": "Design the UI/UX for a project management dashboard. Users need to view projects, tasks, team members, and activity timeline. Target audience: small teams (5-20 people).",
