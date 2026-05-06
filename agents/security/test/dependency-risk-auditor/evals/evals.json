@@ -1,25 +1,97 @@
 {
+  "schema_version": "1.0",
+  "agent": "security",
+  "skill_name": "dependency-risk-auditor",
   "evals": [
     {
-      "id": "eval-1-npm-audit",
+      "id": "eval-001-npm-audit",
       "name": "NPM Dependency Audit",
       "description": "Test audit of Node.js project with vulnerable dependencies",
       "prompt": "Audit the dependencies for security vulnerabilities.",
-      "workspace": "workspace/eval-1-npm-audit"
+      "workspace": null,
+      "expected_output": "Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.",
+      "assertions": [
+        {
+          "id": "dependency_inventory",
+          "description": "识别依赖生态、关键包和风险来源",
+          "text": "识别依赖生态、关键包和风险来源"
+        },
+        {
+          "id": "risk_classification",
+          "description": "区分漏洞、废弃、过期或供应链风险并说明严重度",
+          "text": "区分漏洞、废弃、过期或供应链风险并说明严重度"
+        },
+        {
+          "id": "evidence",
+          "description": "引用依赖文件、版本或已知风险作为证据",
+          "text": "引用依赖文件、版本或已知风险作为证据"
+        },
+        {
+          "id": "upgrade_plan",
+          "description": "给出升级、替换或缓解建议",
+          "text": "给出升级、替换或缓解建议"
+        }
+      ]
     },
     {
-      "id": "eval-2-abandoned",
+      "id": "eval-002-abandoned",
       "name": "Abandoned Packages",
       "description": "Test detection of abandoned/outdated packages",
       "prompt": "Check for abandoned or outdated dependencies.",
-      "workspace": "workspace/eval-2-abandoned"
+      "workspace": null,
+      "expected_output": "Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.",
+      "assertions": [
+        {
+          "id": "dependency_inventory",
+          "description": "识别依赖生态、关键包和风险来源",
+          "text": "识别依赖生态、关键包和风险来源"
+        },
+        {
+          "id": "risk_classification",
+          "description": "区分漏洞、废弃、过期或供应链风险并说明严重度",
+          "text": "区分漏洞、废弃、过期或供应链风险并说明严重度"
+        },
+        {
+          "id": "evidence",
+          "description": "引用依赖文件、版本或已知风险作为证据",
+          "text": "引用依赖文件、版本或已知风险作为证据"
+        },
+        {
+          "id": "upgrade_plan",
+          "description": "给出升级、替换或缓解建议",
+          "text": "给出升级、替换或缓解建议"
+        }
+      ]
     },
     {
-      "id": "eval-3-python",
+      "id": "eval-003-python",
       "name": "Python Dependency Audit",
       "description": "Test audit of Python project dependencies",
       "prompt": "Review Python dependencies for security issues.",
-      "workspace": "workspace/eval-3-python"
+      "workspace": null,
+      "expected_output": "Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.",
+      "assertions": [
+        {
+          "id": "dependency_inventory",
+          "description": "识别依赖生态、关键包和风险来源",
+          "text": "识别依赖生态、关键包和风险来源"
+        },
+        {
+          "id": "risk_classification",
+          "description": "区分漏洞、废弃、过期或供应链风险并说明严重度",
+          "text": "区分漏洞、废弃、过期或供应链风险并说明严重度"
+        },
+        {
+          "id": "evidence",
+          "description": "引用依赖文件、版本或已知风险作为证据",
+          "text": "引用依赖文件、版本或已知风险作为证据"
+        },
+        {
+          "id": "upgrade_plan",
+          "description": "给出升级、替换或缓解建议",
+          "text": "给出升级、替换或缓解建议"
+        }
+      ]
     }
   ]
 }

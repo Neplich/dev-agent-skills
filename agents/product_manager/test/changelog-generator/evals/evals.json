@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0",
+  "agent": "product_manager",
+  "skill_name": "changelog-generator",
+  "evals": [
+    {
+      "id": "eval-001-unreleased-mode",
+      "name": "unreleased-mode",
+      "description": "Verifies that changelog-generator handles unreleased-mode and produces the expected role-specific artifact.",
+      "prompt": "我在 https://github.com/anthropics/anthropic-sdk-python 这个仓库里工作。帮我生成 Unreleased 章节 —— 也就是最新 release tag 之后合并的所有 PR，写成 Keep a Changelog 格式，输出到 docs/changelog.md。",
+      "workspace": null,
+      "expected_output": "生成 ## [Unreleased] 章节，包含最新 release 之后的 PR 列表，按 Added/Changed/Fixed 分组，每条带 PR 链接，写入 docs/changelog.md",
+      "assertions": [
+        {
+          "id": "unreleased",
+          "description": "输出包含 ## [Unreleased] 标题",
+          "text": "输出包含 ## [Unreleased] 标题"
+        },
+        {
+          "id": "pr",
+          "description": "每个条目包含 PR 链接，格式为 (#数字)",
+          "text": "每个条目包含 PR 链接，格式为 (#数字)"
+        },
+        {
+          "id": "bot_pr_dependabot",
+          "description": "跳过了 bot PR（dependabot 等）",
+          "text": "跳过了 bot PR（dependabot 等）"
+        },
+        {
+          "id": "chore_ci_test",
+          "description": "不包含 chore/ci/test 等内部变更",
+          "text": "不包含 chore/ci/test 等内部变更"
+        },
+        {
+          "id": "docs_changelog_md",
+          "description": "输出写入了 docs/changelog.md 文件",
+          "text": "输出写入了 docs/changelog.md 文件"
+        }
+      ]
+    },
+    {
+      "id": "eval-002-single-version-mode",
+      "name": "single-version-mode",
+      "description": "Verifies that changelog-generator handles single-version-mode and produces the expected role-specific artifact.",
+      "prompt": "在 https://github.com/anthropics/anthropic-sdk-python 仓库，帮我生成最新 release 版本的 changelog 条目，使用 Keep a Changelog 格式，包含该版本对应的所有 PR 引用。",
+      "workspace": null,
+      "expected_output": "生成最新 release tag 的版本块，格式为 ## [x.y.z] - YYYY-MM-DD，包含该版本窗口内的 PR，分组写入，每条带 PR 链接",
+      "assertions": [
+        {
+          "id": "x_y_z_yyyy_mm_dd",
+          "description": "输出包含版本号和日期，格式 ## [x.y.z] - YYYY-MM-DD",
+          "text": "输出包含版本号和日期，格式 ## [x.y.z] - YYYY-MM-DD"
+        },
+        {
+          "id": "release_tag",
+          "description": "版本号与实际 release tag 匹配",
+          "text": "版本号与实际 release tag 匹配"
+        },
+        {
+          "id": "pr_conventional_commit",
+          "description": "PR 条目标题经过清洗（去掉 conventional commit 前缀）",
+          "text": "PR 条目标题经过清洗（去掉 conventional commit 前缀）"
+        },
+        {
+          "id": "breaking_change_breaking",
+          "description": "Breaking change 如有则带 ⚠️ BREAKING 前缀",
+          "text": "Breaking change 如有则带 ⚠️ BREAKING 前缀"
+        },
+        {
+          "id": "section",
+          "description": "有内容的 section 才出现在输出中",
+          "text": "有内容的 section 才出现在输出中"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-prefix-classification",
+      "name": "prefix-classification",
+      "description": "Verifies that changelog-generator handles prefix-classification and produces the expected role-specific artifact.",
+      "prompt": "以下是一批 PR 标题，帮我把它们分类到 Keep a Changelog 的各个章节（Added/Changed/Fixed/Deprecated/Removed/Security），并按格式输出，跳过不需要出现在 changelog 的条目：\n\n- feat(auth): add OAuth2 login support (#101)\n- fix: resolve crash when token expires (#102)\n- chore(deps): bump requests from 2.28 to 2.31 (#103)\n- perf: reduce API response time by caching (#104)\n- feat!: redesign plugin configuration API (#105)\n- docs: update README with new examples (#106)\n- fix(ui): correct button alignment on mobile (#107)\n- ci: add GitHub Actions workflow (#108)\n- remove: drop Python 3.7 support (#109)\n- security: patch XSS vulnerability in template renderer (#110)",
+      "workspace": null,
+      "expected_output": "Added: feat items; Changed: perf/refactor; Fixed: fix items; Removed: remove items; Security: security items. 跳过 chore/docs/ci。Breaking change (#105) 带 ⚠️ BREAKING 前缀。",
+      "assertions": [
+        {
+          "id": "feat_auth_added_add_oauth2_login_support",
+          "description": "feat(auth) → Added 章节，标题清洗为 Add OAuth2 login support",
+          "text": "feat(auth) → Added 章节，标题清洗为 Add OAuth2 login support"
+        },
+        {
+          "id": "fix_fixed",
+          "description": "fix → Fixed 章节",
+          "text": "fix → Fixed 章节"
+        },
+        {
+          "id": "chore_deps",
+          "description": "chore(deps) → 跳过，不出现在输出",
+          "text": "chore(deps) → 跳过，不出现在输出"
+        },
+        {
+          "id": "perf_changed",
+          "description": "perf → Changed 章节",
+          "text": "perf → Changed 章节"
+        },
+        {
+          "id": "feat_added_breaking",
+          "description": "feat! → Added 章节，带 ⚠️ BREAKING 前缀",
+          "text": "feat! → Added 章节，带 ⚠️ BREAKING 前缀"
+        },
+        {
+          "id": "docs",
+          "description": "docs → 跳过",
+          "text": "docs → 跳过"
+        },
+        {
+          "id": "ci",
+          "description": "ci → 跳过",
+          "text": "ci → 跳过"
+        },
+        {
+          "id": "remove_removed",
+          "description": "remove → Removed 章节",
+          "text": "remove → Removed 章节"
+        },
+        {
+          "id": "security_security",
+          "description": "security → Security 章节",
+          "text": "security → Security 章节"
+        }
+      ]
+    }
+  ]
+}

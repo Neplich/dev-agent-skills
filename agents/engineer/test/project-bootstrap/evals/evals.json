@@ -1,42 +1,54 @@
 {
+  "schema_version": "1.0",
+  "agent": "engineer",
   "skill_name": "project-bootstrap",
   "evals": [
     {
-      "id": 1,
+      "id": "eval-001-bootstrap-nextjs-project",
       "name": "bootstrap-nextjs-project",
+      "description": "Verifies that project-bootstrap handles bootstrap-nextjs-project and produces the expected role-specific artifact.",
       "prompt": "根据 docs/trd.md 初始化一个 Next.js 项目",
+      "workspace": null,
       "expected_output": "项目初始化完成 + 配置完成 + 验证通过",
       "assertions": [
         {
-          "name": "使用官方 CLI",
+          "id": "cli",
+          "description": "使用官方 CLI",
           "text": "使用 create-next-app 初始化项目"
         },
         {
-          "name": "配置基础设施",
+          "id": "assertion_2",
+          "description": "配置基础设施",
           "text": "配置 lint、format、CI"
         },
         {
-          "name": "验证可运行",
+          "id": "assertion_3",
+          "description": "验证可运行",
           "text": "build、lint、test 命令都能成功运行"
         }
       ]
     },
     {
-      "id": 2,
+      "id": "eval-002-defer-bootstrap-without-spec",
       "name": "defer-bootstrap-without-spec",
+      "description": "Verifies that project-bootstrap handles defer-bootstrap-without-spec and produces the expected role-specific artifact.",
       "prompt": "这是一个空目录。我想做一个 AI 对话助手，左侧是会话列表，右侧是聊天区。",
+      "workspace": null,
       "expected_output": "识别到缺少 TRD 或已确认 spec；不要直接脚手架；要求先补 PM/idea-to-spec 文档收敛，或仅在用户明确要求跳过 PM 时才继续 bootstrap。",
       "assertions": [
         {
-          "name": "缺少规格时不应直接初始化",
+          "id": "assertion_1",
+          "description": "缺少规格时不应直接初始化",
           "text": "明确说明当前缺少 TRD、PRD 或其他已确认需求，不能默认直接开始 scaffold"
         },
         {
-          "name": "回指 PM 路径",
+          "id": "pm",
+          "description": "回指 PM 路径",
           "text": "将需求收敛和文档化回指到 pm-agent 或 idea-to-spec，而不是立刻选择框架并运行初始化命令"
         },
         {
-          "name": "保留显式 override 例外",
+          "id": "override",
+          "description": "保留显式 override 例外",
           "text": "只有在用户明确说跳过 PM、直接搭骨架时，才允许继续 bootstrap"
         }
       ]

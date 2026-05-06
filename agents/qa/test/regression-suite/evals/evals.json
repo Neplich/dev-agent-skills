@@ -1,54 +1,69 @@
 {
+  "schema_version": "1.0",
+  "agent": "qa",
   "skill_name": "regression-suite",
   "evals": [
     {
-      "id": 1,
+      "id": "eval-001-verify-bug-fix",
       "name": "verify-bug-fix",
+      "description": "Verifies that regression-suite handles verify-bug-fix and produces the expected role-specific artifact.",
       "prompt": "验证 Bug #001 的修复，执行回归测试",
+      "workspace": "workspace/eval-1-verify-bug-fix",
       "expected_output": "回归验证报告，明确 original failure recheck、fixed behavior、adjacent regression checks 和 release recommendation",
       "assertions": [
         {
-          "name": "证据复用",
+          "id": "assertion_1",
+          "description": "证据复用",
           "text": "先读取原始 bug 报告、失败证据和修复上下文，沿用复现步骤与期望行为来界定回归范围"
         },
         {
-          "name": "QA 用例复用",
+          "id": "qa",
+          "description": "QA 用例复用",
           "text": "回归执行前应读取 docs/qa/{feature}/test-cases/*.md 和 FILE_EXPLORATION.md；如需新增 E2E 回归覆盖，必须询问是否有新功能更新、是否需要探索项目文件，并将新增用例单独存为文件"
         },
         {
-          "name": "修复验证",
+          "id": "assertion_3",
+          "description": "修复验证",
           "text": "按原始场景验证修复后行为，并把 original failure、fixed behavior 和 verification result 明确标成 pass、fail 或 blocked"
         },
         {
-          "name": "邻近回归",
+          "id": "assertion_4",
+          "description": "邻近回归",
           "text": "检查共享组件、相邻流程和相关状态分支是否出现 adjacent regression，并为每个 surface 记录结果与说明"
         },
         {
-          "name": "发布建议",
+          "id": "assertion_5",
+          "description": "发布建议",
           "text": "输出包含 release recommendation 的回归报告，同时区分 run status 和 evidence confidence，避免因为证据薄弱而误判为已就绪"
         }
       ]
     },
     {
-      "id": 2,
+      "id": "eval-002-blocked-without-original-bug-context",
       "name": "blocked-without-original-bug-context",
+      "description": "Verifies that regression-suite handles blocked-without-original-bug-context and produces the expected role-specific artifact.",
       "prompt": "复测上周修过的支付按钮问题，但仓库里找不到原始 bug 报告、失败证据、修复 PR 或可用测试环境。请给出回归验证结论。",
+      "workspace": "workspace/eval-2-blocked-without-original-bug-context",
       "expected_output": "blocked 回归验证报告，说明缺失上下文、无法复核 original failure、不能给 release ready 结论，并列出恢复验证所需证据",
       "assertions": [
         {
-          "name": "原始证据缺失",
+          "id": "assertion_1",
+          "description": "原始证据缺失",
           "text": "必须先指出缺少原始 bug 报告、失败证据、修复上下文或测试环境，不能直接执行泛化回归"
         },
         {
-          "name": "blocked 状态",
+          "id": "blocked",
+          "description": "blocked 状态",
           "text": "original failure recheck、fixed behavior 和 adjacent regression checks 必须标记为 blocked 或 not executed，而不是 pass"
         },
         {
-          "name": "结构化输出",
+          "id": "assertion_3",
+          "description": "结构化输出",
           "text": "输出必须包含 original failure recheck、fixed behavior、adjacent regression checks、release recommendation 和 evidence confidence"
         },
         {
-          "name": "发布边界",
+          "id": "assertion_4",
+          "description": "发布边界",
           "text": "release recommendation 必须是 needs more verification 或 blocked，不能因为没有发现失败就建议 release ready"
         }
       ]

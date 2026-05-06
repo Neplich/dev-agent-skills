@@ -1,5 +1,5 @@
 {
-  "eval_id": 2,
+  "eval_id": "eval-002-boundary-test-generation",
   "eval_name": "boundary-test-generation",
   "workspace_root": "agents/qa/test/spec-based-tester/evals/workspace/eval-2-boundary-test-generation",
   "validation_method": "fresh_codex_subagent",

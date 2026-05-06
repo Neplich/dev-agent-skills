@@ -1,5 +1,5 @@
 {
-  "eval_id": 5,
+  "eval_id": "eval-005-pm-agent-direct-delegation",
   "eval_name": "pm-agent-direct-delegation",
   "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-2/eval-5-pm-agent-direct-delegation",
   "entry_command": "/pm-agent",

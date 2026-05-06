@@ -187,8 +187,10 @@ uv run --with pytest pytest \
   agents/qa/test/test_qa_run_eval.py \
   agents/designer/test/test_designer_run_eval.py \
   agents/devops/test/test_devops_run_eval.py \
-  agents/engineer/test/test_engineer_eval_contract.py \
-  agents/security/test/test_security_eval_contract.py
+  agents/test_eval_contract.py
+
+# Eval definition contract check
+uv run scripts/check_eval_contract.py
 
 # Eval runtime artifact check
 uv run scripts/check_eval_artifacts.py
@@ -204,6 +206,7 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 - Keep `AGENTS.md` as the only edited guidance source; `CLAUDE.md` must remain a symlink to it.
 - Restrictive repository permissions default to the sole administrator; add maintainers or bots explicitly when needed.
 - Skill evals should verify role boundaries, context reading, execution-path selection, and structured artifacts instead of generic answer quality alone.
+- All skill eval definitions use the shared `evals.json` schema v1.0; do not add agent-specific schema exceptions.
 
 ### Eval maintenance flow
 
@@ -216,6 +219,8 @@ When adding or updating a skill eval, keep the repository as the source of eval 
 5. Commit only eval definitions, metadata, fixtures, README files, and `comparison.md`.
 
 Do not commit `with_skill/`, `without_skill/`, `baseline/`, `iteration2/`, `outputs/`, `comparison.auto.md`, transcripts, candidate outputs, subagent verdicts, timing files, run status files, or diagnostics directories. Metadata fields such as `with_skill_outputs`, `without_skill_outputs`, and baseline outputs describe runner expectations; they do not mean those runtime files belong in git. Manual or scheduled model eval workflows may upload transcripts, verdicts, timing, and diagnostics as short-lived CI artifacts for debugging, but the durable repository result remains `comparison.md`.
+
+Every `evals.json` must live at `agents/{agent}/test/{skill-name}/evals/evals.json` and declare `schema_version: "1.0"`, `agent`, `skill_name`, and non-empty `evals`. Each eval item must include `id`, `name`, `description`, `prompt`, explicit `workspace`, `expected_output`, and object assertions with lower snake_case `id`, `description`, and semantic `text`. Use `workspace: null` for prompt-only evals. Run `uv run scripts/check_eval_contract.py` with eval definition changes.
 
 New eval runners should write runtime files to a system temp directory or `tmp/eval-runs/...`, then copy only the confirmed `comparison.md` back to the eval workspace. New metadata schemas should make the split explicit with runtime-output fields and a durable-result field. Keep Python test module names unique across test roots, such as `test_pm_run_eval.py` and `test_qa_run_eval.py`, so pytest can collect all deterministic tests in one process.
 

@@ -1,5 +1,5 @@
 {
-  "eval_id": 2,
+  "eval_id": "eval-002-explore-with-custom-duration",
   "eval_name": "explore-with-custom-duration",
   "workspace_root": "agents/qa/test/exploratory-tester/evals/workspace/eval-2-explore-with-custom-duration",
   "validation_method": "fresh_codex_subagent",

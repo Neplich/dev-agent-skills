@@ -1,62 +1,79 @@
 {
+  "schema_version": "1.0",
+  "agent": "qa",
   "skill_name": "qa-agent",
   "evals": [
     {
-      "id": 1,
+      "id": "eval-001-route-mixed-qa-request",
       "name": "route-mixed-qa-request",
+      "description": "Verifies that qa-agent handles route-mixed-qa-request and produces the expected role-specific artifact.",
       "prompt": "用户说：这个登录重构已经按 docs/pm/login-refresh/PRD.md 实现了，但 CI 里有一个 intermittent 失败，同时 PM 想知道是否可以进入验收。请先做 QA 路由，不要直接执行测试。",
+      "workspace": "workspace/eval-1-route-mixed-qa-request",
       "expected_output": "QA 路由决策，明确选择最窄的下游 QA skill、选择理由、需要读取的上下文和预期 evidence artifact",
       "assertions": [
         {
-          "name": "路由选择",
+          "id": "assertion_1",
+          "description": "路由选择",
           "text": "必须在 spec-based-tester、exploratory-tester、bug-analyzer、regression-suite 中选择一个主 route，并说明为什么它比其他 QA skill 更窄、更适合当前 evidence outcome"
         },
         {
-          "name": "上下文传递",
+          "id": "assertion_2",
+          "description": "上下文传递",
           "text": "必须列出下游 skill 需要先读取的 PM/spec、实现变更、CI 失败信息、环境说明和测试命令，而不是直接假设浏览器或端口"
         },
         {
-          "name": "QA 用例记忆",
+          "id": "qa",
+          "description": "QA 用例记忆",
           "text": "如果是独立 QA 或 E2E 请求，必须要求下游先读取 docs/qa/{feature}/TEST_SPEC.md 和 test-cases/*.md；如需扩充覆盖，应先询问用户是否有新功能更新、是否需要探索项目文件，并把探索记录写入 FILE_EXPLORATION.md"
         },
         {
-          "name": "结构化产物",
+          "id": "assertion_4",
+          "description": "结构化产物",
           "text": "必须声明预期输出 artifact 的结构，例如 requirement matrix、execution path、evidence references、risk notes 或 defect handoff notes"
         },
         {
-          "name": "边界控制",
+          "id": "assertion_5",
+          "description": "边界控制",
           "text": "不能同时执行多个下游 skill；如果 CI intermittent failure 证据不足，应把它作为 risk note 或 potential bug-analyzer follow-up，而不是直接写 confirmed bug"
         }
       ]
     },
     {
-      "id": 2,
+      "id": "eval-002-empty-qa-directory-expands-cases",
       "name": "empty-qa-directory-expands-cases",
+      "description": "Verifies that qa-agent handles empty-qa-directory-expands-cases and produces the expected role-specific artifact.",
       "prompt": "用户说：请对 profile-settings 做一次 E2E QA。docs/qa/profile-settings/ 目录已经存在，但 TEST_SPEC.md 和 test-cases/ 里没有任何测试用例。我确认这个功能有新更新，请主动探索项目文件来补充测试用例，然后基于新建的用例执行验证。先做 QA 路由和执行协议说明。",
+      "workspace": "workspace/eval-2-empty-qa-directory-expands-cases",
       "expected_output": "QA 路由决策与执行协议，明确空 QA 用例目录需要触发目标文件探索、创建 FILE_EXPLORATION.md、创建独立 E2E 测试用例文件，并要求后续验证基于这些用例执行",
       "assertions": [
         {
-          "name": "空目录识别",
+          "id": "assertion_1",
+          "description": "空目录识别",
           "text": "必须识别 docs/qa/profile-settings/ 已存在但缺少 TEST_SPEC.md，且 test-cases/ 没有可执行测试用例；不能把空目录当作已有覆盖"
         },
         {
-          "name": "授权后主动探索",
+          "id": "assertion_2",
+          "description": "授权后主动探索",
           "text": "因为用户已确认有新功能更新并授权探索，必须要求下游主动读取目标项目文件、环境说明和测试命令来扩充用例，而不是再次询问是否可以探索或直接返回 blocked"
         },
         {
-          "name": "探索记录沉淀",
+          "id": "assertion_3",
+          "description": "探索记录沉淀",
           "text": "必须要求创建或更新 docs/qa/profile-settings/FILE_EXPLORATION.md，记录探索过的文件、发现的路由/表单/命令、覆盖含义和待确认假设"
         },
         {
-          "name": "E2E 用例创建",
+          "id": "e2e",
+          "description": "E2E 用例创建",
           "text": "必须要求为 profile-settings 创建 TEST_SPEC.md 或更新套件索引，并将每个新增 E2E 测试用例单独保存为 docs/qa/profile-settings/test-cases/TC-NNN-<short-slug>.md"
         },
         {
-          "name": "用例驱动执行",
+          "id": "assertion_5",
+          "description": "用例驱动执行",
           "text": "必须声明执行验证要基于新建的用例文件和仓库提供的 E2E 命令，不应每次重新全量阅读项目，也不应跳过用例文件直接做临时探索"
         },
         {
-          "name": "路由边界",
+          "id": "assertion_6",
+          "description": "路由边界",
           "text": "必须选择一个最窄主 route；可说明 spec-based-tester 或 exploratory-tester 如何接手，但不能同时执行多个 QA skill 或把 QA 路由扩展成实现修复"
         }
       ]

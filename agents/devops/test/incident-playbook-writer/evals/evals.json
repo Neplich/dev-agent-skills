@@ -1,18 +1,46 @@
 {
+  "schema_version": "1.0",
+  "agent": "devops",
   "skill_name": "incident-playbook-writer",
   "evals": [
     {
-      "id": 1,
+      "id": "eval-001-docker-rollback",
       "name": "docker-rollback",
+      "description": "Verifies that incident-playbook-writer handles docker-rollback and produces the expected role-specific artifact.",
       "prompt": "我的项目使用 Docker 部署，帮我生成故障处理和回滚手册。",
+      "workspace": null,
       "expected_output": "生成运维手册，包含回滚、故障响应、排查指南",
       "assertions": [
-        "deploy/ROLLBACK.md 存在",
-        "ROLLBACK.md 包含 docker 回滚命令",
-        "deploy/INCIDENT_RESPONSE.md 存在",
-        "INCIDENT_RESPONSE.md 包含常见故障场景",
-        "deploy/TROUBLESHOOTING.md 存在",
-        "deploy/ON_CALL.md 存在"
+        {
+          "id": "deploy_rollback_md",
+          "description": "deploy/ROLLBACK.md 存在",
+          "text": "deploy/ROLLBACK.md 存在"
+        },
+        {
+          "id": "rollback_md_docker",
+          "description": "ROLLBACK.md 包含 docker 回滚命令",
+          "text": "ROLLBACK.md 包含 docker 回滚命令"
+        },
+        {
+          "id": "deploy_incident_response_md",
+          "description": "deploy/INCIDENT_RESPONSE.md 存在",
+          "text": "deploy/INCIDENT_RESPONSE.md 存在"
+        },
+        {
+          "id": "incident_response_md",
+          "description": "INCIDENT_RESPONSE.md 包含常见故障场景",
+          "text": "INCIDENT_RESPONSE.md 包含常见故障场景"
+        },
+        {
+          "id": "deploy_troubleshooting_md",
+          "description": "deploy/TROUBLESHOOTING.md 存在",
+          "text": "deploy/TROUBLESHOOTING.md 存在"
+        },
+        {
+          "id": "deploy_on_call_md",
+          "description": "deploy/ON_CALL.md 存在",
+          "text": "deploy/ON_CALL.md 存在"
+        }
       ]
     }
   ]

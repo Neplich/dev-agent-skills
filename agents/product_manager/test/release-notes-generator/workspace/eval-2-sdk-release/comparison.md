@@ -4,7 +4,7 @@
 
 - Skill: `release-notes-generator`
 - Test case: `anthropic-sdk-python v0.86.0` release notes
-- Test set: `agents/product_manager/test/release-notes-generator/evals.json`
+- Test set: `agents/product_manager/test/release-notes-generator/evals/evals.json`
 - Entry: workspace `eval-2-sdk-release`
 - Latest result: PASS
 

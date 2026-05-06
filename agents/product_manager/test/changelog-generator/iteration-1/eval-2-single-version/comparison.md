@@ -4,7 +4,7 @@
 
 - Skill: `changelog-generator`
 - Test case: latest released version changelog entry
-- Test set: `agents/product_manager/test/changelog-generator-workspace/evals/evals.json`
+- Test set: `agents/product_manager/test/changelog-generator/evals/evals.json`
 - Entry: workspace `iteration-1/eval-2-single-version`
 - Latest result: PASS
 

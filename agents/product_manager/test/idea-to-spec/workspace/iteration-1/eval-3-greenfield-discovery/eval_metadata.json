@@ -1,5 +1,5 @@
 {
-  "eval_id": 3,
+  "eval_id": "eval-003-greenfield-discovery",
   "eval_name": "greenfield-discovery",
   "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-3-greenfield-discovery",
   "prompt": "我想做一个团队知识问答产品，现在只有一个模糊想法。你先不要直接写完整 PRD，先帮我把方向收敛。",

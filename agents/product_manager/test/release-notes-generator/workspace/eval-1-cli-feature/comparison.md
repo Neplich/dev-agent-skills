@@ -4,7 +4,7 @@
 
 - Skill: `release-notes-generator`
 - Test case: GitHub CLI `v2.88.0` release notes
-- Test set: `agents/product_manager/test/release-notes-generator/evals.json`
+- Test set: `agents/product_manager/test/release-notes-generator/evals/evals.json`
 - Entry: workspace `eval-1-cli-feature`
 - Latest result: PASS
 

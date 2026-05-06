@@ -4,7 +4,7 @@
 
 - Skill: `release-notes-generator`
 - Test case: `fastapi 0.135.0` library release notes
-- Test set: `agents/product_manager/test/release-notes-generator/evals.json`
+- Test set: `agents/product_manager/test/release-notes-generator/evals/evals.json`
 - Entry: workspace `eval-3-library-release`
 - Latest result: PASS
 

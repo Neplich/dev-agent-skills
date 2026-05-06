@@ -4,7 +4,7 @@
 
 - Skill: `changelog-generator`
 - Test case: latest release has no unreleased user-facing changes
-- Test set: `agents/product_manager/test/changelog-generator-workspace/evals/evals.json`
+- Test set: `agents/product_manager/test/changelog-generator/evals/evals.json`
 - Entry: workspace `iteration-1/eval-1-unreleased`
 - Latest result: PASS
 

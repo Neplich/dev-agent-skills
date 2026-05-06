@@ -132,6 +132,14 @@ Each skill should include:
 
 Skill evals are availability tests for the agent skill. They must verify that the skill can be triggered, that its protocol is executable, and that it produces the expected structured artifact for the role. Eval assertions should check skill-specific behavior such as context reading, execution-path selection, evidence handling, blocked assumptions, and handoff boundaries instead of only checking generic model answer quality.
 
+**Eval definition contract**
+
+- All agent skill eval definitions must use the shared `evals.json` schema version `1.0`; agent-specific schema exceptions are not allowed.
+- Each `evals.json` must live at `agents/{agent}/test/{skill-name}/evals/evals.json`, set top-level `schema_version`, `agent`, `skill_name`, and non-empty `evals`, and keep `skill_name` aligned with `agents/{agent}/skills/{skill-name}/SKILL.md`.
+- Each eval item must include string `id` in `eval-NNN-short-slug` form, non-empty `name`, `description`, `prompt`, `expected_output`, explicit `workspace` as `workspace/...` or `null`, and non-empty object assertions.
+- Each assertion must include lower snake_case `id`, non-empty `description`, and non-empty semantic `text`; string-only assertions are not allowed.
+- Run `uv run scripts/check_eval_contract.py` before submitting eval definition changes.
+
 **Eval artifact policy**
 
 - Commit eval definitions, metadata, fixtures, README files, and the latest `comparison.md`; do not commit runtime artifacts such as `with_skill/`, `without_skill/`, `baseline/`, `iteration2/`, `outputs/`, `comparison.auto.md`, `transcript.md`, `candidate-output.md`, `subagent-verdict.md`, `timing.json`, `run_status.json`, or diagnostics directories.

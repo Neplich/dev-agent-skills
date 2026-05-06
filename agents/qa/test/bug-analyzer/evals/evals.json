@@ -1,58 +1,74 @@
 {
+  "schema_version": "1.0",
+  "agent": "qa",
   "skill_name": "bug-analyzer",
   "evals": [
     {
-      "id": 1,
+      "id": "eval-001-analyze-test-failure",
       "name": "analyze-test-failure",
+      "description": "Verifies that bug-analyzer handles analyze-test-failure and produces the expected role-specific artifact.",
       "prompt": "分析测试失败：登录表单提交后返回 500 错误，生成 Bug 报告",
+      "workspace": "workspace/eval-1-analyze-test-failure",
       "expected_output": "详细 Bug 报告，明确 evidence status、confidence statement 和 severity rationale，并包含 impact framing、复现步骤、环境信息和 evidence references",
       "assertions": [
         {
-          "name": "证据摄取",
+          "id": "assertion_1",
+          "description": "证据摄取",
           "text": "先收集 failing scenario、错误消息、堆栈跟踪、截图、trace、console output、network output 和环境/构建上下文，再进行分类"
         },
         {
-          "name": "分类分离",
+          "id": "assertion_2",
+          "description": "分类分离",
           "text": "使用 confirmed and reproducible、confirmed but environment-sensitive、suspected / needs more evidence 的分类，并把 evidence status 和 confidence 分开记录"
         },
         {
-          "name": "严重度与置信度",
+          "id": "assertion_3",
+          "description": "严重度与置信度",
           "text": "给出 severity 并附上 rationale，同时明确 confidence statement，避免把严重度和证据强度混为一谈"
         },
         {
-          "name": "持久输出路径",
+          "id": "assertion_4",
+          "description": "持久输出路径",
           "text": "根据 repo workflow 和用户请求选择 durable output path，优先写入本地 Markdown artifact，只有在明确需要时才创建 GitHub issue"
         },
         {
-          "name": "可复用回归用例",
+          "id": "assertion_5",
+          "description": "可复用回归用例",
           "text": "如果确认的 E2E 复现场景应沉淀为回归覆盖，必须在 docs/qa/{feature}/test-cases/ 下为该场景创建或引用单独 Markdown 用例文件"
         },
         {
-          "name": "影响说明",
+          "id": "assertion_6",
+          "description": "影响说明",
           "text": "报告要包含 implementation impact 或 release impact，并保留 evidence references 以便后续追踪"
         }
       ]
     },
     {
-      "id": 2,
+      "id": "eval-002-thin-evidence-suspected-bug",
       "name": "thin-evidence-suspected-bug",
+      "description": "Verifies that bug-analyzer handles thin-evidence-suspected-bug and produces the expected role-specific artifact.",
       "prompt": "用户只提供一句反馈：偶尔点击保存后页面好像没反应，没有截图、日志、复现步骤、环境信息或版本号。请分析是否能生成 Bug 报告。",
+      "workspace": "workspace/eval-2-thin-evidence-suspected-bug",
       "expected_output": "证据不足的缺陷分析，明确 suspected / needs more evidence、缺失证据、下一步收集计划，并避免创建 confirmed bug",
       "assertions": [
         {
-          "name": "薄证据分类",
+          "id": "assertion_1",
+          "description": "薄证据分类",
           "text": "必须把该问题分类为 suspected / needs more evidence，不能写成 confirmed and reproducible 或 confirmed but environment-sensitive"
         },
         {
-          "name": "缺失证据",
+          "id": "assertion_2",
+          "description": "缺失证据",
           "text": "必须列出缺失的 failing scenario、复现步骤、环境/版本、console/network output、截图或 trace 等 evidence gaps"
         },
         {
-          "name": "结构化输出",
+          "id": "assertion_3",
+          "description": "结构化输出",
           "text": "输出必须包含 classification、evidence status、confidence statement、missing evidence、recommended next evidence 这些段落"
         },
         {
-          "name": "持久化边界",
+          "id": "assertion_4",
+          "description": "持久化边界",
           "text": "不能创建 GitHub issue 或 confirmed bug artifact；只能建议本地调查 note 或待补证据清单"
         }
       ]

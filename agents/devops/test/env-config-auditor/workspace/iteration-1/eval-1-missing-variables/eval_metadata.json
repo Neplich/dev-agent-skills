@@ -1,5 +1,5 @@
 {
-  "eval_id": 1,
+  "eval_id": "eval-001-missing-variables",
   "eval_name": "missing-variables",
   "prompt": "检查我的项目环境配置是否完整。代码里使用了 DATABASE_URL、API_KEY、REDIS_URL、STRIPE_SECRET_KEY，但当前只有 local 和部分 docker 配置定义了它们。",
   "with_skill_outputs": [

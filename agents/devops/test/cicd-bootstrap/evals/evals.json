@@ -1,17 +1,41 @@
 {
+  "schema_version": "1.0",
+  "agent": "devops",
   "skill_name": "cicd-bootstrap",
   "evals": [
     {
-      "id": 1,
+      "id": "eval-001-github-actions-docker",
       "name": "github-actions-docker",
+      "description": "Verifies that cicd-bootstrap handles github-actions-docker and produces the expected role-specific artifact.",
       "prompt": "我的项目在 GitHub，使用 Docker 部署。帮我搭建 CI/CD 流程：PR 时运行测试，main 分支合并后自动部署到 staging。",
+      "workspace": null,
       "expected_output": "生成 GitHub Actions workflows，包含 CI 和 staging 部署",
       "assertions": [
-        ".github/workflows/ci.yml 存在",
-        "ci.yml 包含 lint、test、build 步骤",
-        ".github/workflows/deploy-staging.yml 存在",
-        "deploy-staging.yml 触发条件是 push to main",
-        "deploy/SECRETS.md 文档存在，列出需要的 secrets"
+        {
+          "id": "github_workflows_ci_yml",
+          "description": ".github/workflows/ci.yml 存在",
+          "text": ".github/workflows/ci.yml 存在"
+        },
+        {
+          "id": "ci_yml_lint_test_build",
+          "description": "ci.yml 包含 lint、test、build 步骤",
+          "text": "ci.yml 包含 lint、test、build 步骤"
+        },
+        {
+          "id": "github_workflows_deploy_staging_yml",
+          "description": ".github/workflows/deploy-staging.yml 存在",
+          "text": ".github/workflows/deploy-staging.yml 存在"
+        },
+        {
+          "id": "deploy_staging_yml_push_to_main",
+          "description": "deploy-staging.yml 触发条件是 push to main",
+          "text": "deploy-staging.yml 触发条件是 push to main"
+        },
+        {
+          "id": "deploy_secrets_md_secrets",
+          "description": "deploy/SECRETS.md 文档存在，列出需要的 secrets",
+          "text": "deploy/SECRETS.md 文档存在，列出需要的 secrets"
+        }
       ]
     }
   ]
