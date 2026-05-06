@@ -196,16 +196,16 @@ uv run --with pytest pytest \
 Additional local model evals are manual quality checks, not first-version PR required checks:
 
 ```bash
-# Designer eval
+# Designer eval diagnostics
 uv run agents/designer/test/run_all_evals.py
 
-# QA eval
+# QA model eval
 uv run agents/qa/test/run_all_evals.py
 ```
 
 For changes that affect skill behavior, routing, eval fixtures, or release readiness, an administrator should run the manual model eval workflow before merging and use the result as merge evidence. Model evals are not required status checks because model output, runtime, and environment can vary.
 
-The same manual checks are available from GitHub Actions: open `Manual Evals`, choose `Run workflow`, and review the uploaded short-lived runtime artifacts. The QA eval job requires the `OPENAI_API_KEY` repository secret because it calls `codex exec`.
+The same manual checks are available from GitHub Actions: open `Manual Evals`, choose `Run workflow`, select `all`, `designer`, or `qa`, and review the uploaded short-lived runtime artifacts. The QA eval job requires the `OPENAI_API_KEY` repository secret because it calls `codex exec`; `designer` can be run independently without that secret and reports runtime-output gaps as warnings for artifact review.
 
 Extra static format checks:
 
