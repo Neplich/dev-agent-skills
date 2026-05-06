@@ -23,7 +23,6 @@ This repository is a multi-agent skill marketplace. It publishes 6 role-based ag
 
 **Documentation organization**
 
-- `docs/superpowers/` is gitignored and reserved for working docs
 - Public project documentation should follow `docs/{agent}/{feature-name}/`
 - Document frontmatter should include `feature`, `version`, `date`, and `last_updated`
 - Version history should be tracked in git rather than separate versioned files
@@ -67,6 +66,10 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 
 > [!IMPORTANT]
 > Every time `CLAUDE.md` is updated, `AGENTS.md` must be updated as well. Every time `AGENTS.md` is updated, `CLAUDE.md` must be updated as well. The two files must stay identical.
+
+### Repository Governance
+
+- Branch, tag, release, bypass, and repository settings permissions default to the sole administrator only; add maintainers or bots explicitly when needed.
 
 ### Adding a New Agent
 
@@ -153,7 +156,6 @@ Skill evals are availability tests for the agent skill. They must verify that th
 
 - Create date-based subdirectories
 - Create multiple versioned files such as `PRD-v1.md` and `PRD-v2.md`
-- Commit working docs from `docs/superpowers/` to git
 
 ## Current Status
 
@@ -173,8 +175,6 @@ Skill evals are availability tests for the agent skill. They must verify that th
 - `growth_ops` (P1) - analytics, funnel analysis, feedback synthesis
 - `orchestrator` (P2) - request routing, project status summarization
 
-See `docs/superpowers/plans/2026-03-27-team-agent-expansion.md` for the expansion roadmap.
-
 ## Important Files
 
 - `.claude-plugin/marketplace.json` - agent and skill registry
@@ -182,5 +182,3 @@ See `docs/superpowers/plans/2026-03-27-team-agent-expansion.md` for the expansio
 - `CLAUDE.md` - repository guidance for Claude Code, must be kept in sync with `AGENTS.md`
 - `AGENTS.md` - shared repository guidance, must be kept in sync with `CLAUDE.md`
 - `agents/{agent}/README.md` - agent-level documentation
-- `docs/superpowers/plans/` - implementation plans, gitignored but important
-- `docs/superpowers/specs/` - design specs, gitignored but important

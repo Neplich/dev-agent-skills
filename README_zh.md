@@ -193,7 +193,7 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 
 - 新增 Agent 或 skill 时，优先遵循现有 `agents/*` 结构。
 - `CLAUDE.md` 与 `AGENTS.md` 必须保持一致。
-- `docs/superpowers/` 是工作文档区，不作为公开版本化文档入口。
+- 仓库限制性权限默认只授予唯一管理员；后续需要维护者或机器人时再显式添加。
 - Skill eval 应验证角色边界、上下文读取、执行路径和结构化产物，而不是只检查泛化回答质量。
 
 <div align="center">

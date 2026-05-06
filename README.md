@@ -193,7 +193,7 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 
 - Follow the existing `agents/*` structure when adding a new agent or skill.
 - Keep `CLAUDE.md` and `AGENTS.md` identical.
-- Treat `docs/superpowers/` as working docs, not as a public versioned docs entrypoint.
+- Restrictive repository permissions default to the sole administrator; add maintainers or bots explicitly when needed.
 - Skill evals should verify role boundaries, context reading, execution-path selection, and structured artifacts instead of generic answer quality alone.
 
 <div align="center">

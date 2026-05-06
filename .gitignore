@@ -12,10 +12,9 @@ Icon?
 .Spotlight-V100
 .Trashes
 
-# superpowers
-docs/superpowers/
 docs/pm/
 docs/product_manager/
 
 # temp
+.pytest_cache/
 tmp
