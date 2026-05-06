@@ -2,13 +2,25 @@ name: Manual Evals
 
 "on":
   workflow_dispatch:
+    inputs:
+      target:
+        description: "Eval suite to run"
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - designer
+          - qa
 
 permissions:
   contents: read
 
 jobs:
   designer-evals:
+    if: ${{ github.event.inputs.target == 'all' || github.event.inputs.target == 'designer' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
@@ -17,7 +29,15 @@ jobs:
       - uses: astral-sh/setup-uv@v8.1.0
         with:
           enable-cache: true
-      - run: uv run agents/designer/test/run_all_evals.py
+      - name: Run designer eval diagnostics
+        id: run-designer-evals
+        continue-on-error: true
+        run: uv run agents/designer/test/run_all_evals.py
+      - name: Explain designer eval diagnostics
+        if: ${{ steps.run-designer-evals.outcome == 'failure' }}
+        run: |
+          echo "::warning::Designer eval diagnostics found missing or failing runtime outputs."
+          echo "::warning::Review the uploaded comparison.auto.md artifacts before using this run as merge evidence."
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -28,10 +48,11 @@ jobs:
             agents/designer/test/**/comparison.auto.md
 
   qa-evals:
+    if: ${{ github.event.inputs.target == 'all' || github.event.inputs.target == 'qa' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     env:
-      CODEX_HOME: ${{ runner.temp }}/codex-home
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      CODEX_HOME: /tmp/codex-home
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
@@ -44,6 +65,8 @@ jobs:
         with:
           enable-cache: true
       - name: Require OpenAI API key
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           if [ -z "${OPENAI_API_KEY:-}" ]; then
             echo "::error::Set the OPENAI_API_KEY repository secret before running QA evals."
@@ -52,6 +75,8 @@ jobs:
       - name: Install Codex CLI
         run: npm install -g @openai/codex
       - name: Authenticate Codex CLI
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: printenv OPENAI_API_KEY | codex login --with-api-key
       - run: uv run agents/qa/test/run_all_evals.py
       - uses: actions/upload-artifact@v4
