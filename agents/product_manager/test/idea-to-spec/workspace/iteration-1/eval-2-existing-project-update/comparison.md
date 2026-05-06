@@ -1,5 +1,7 @@
 # Eval 2: existing-project-update
 
+> This file is the durable eval result. Runtime output files are intentionally not committed.
+
 ## Prompt
 
 当前系统已经有一版通知中心的 PRD/TRD，现在要把提醒策略从轮询改成事件驱动。请分析影响范围，更新设计思路，并告诉我应该改哪些文档。

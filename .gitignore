@@ -17,4 +17,19 @@ docs/product_manager/
 
 # temp
 .pytest_cache/
+__pycache__/
+*.pyc
 tmp
+
+# eval runtime artifacts
+agents/**/test/**/workspace/**/with_skill/
+agents/**/test/**/workspace/**/without_skill/
+agents/**/test/**/workspace/**/baseline/
+agents/**/test/**/workspace/**/iteration2/
+agents/**/test/**/workspace/**/diagnostics/
+agents/**/test/**/workspace/**/comparison.auto.md
+agents/**/test/**/workspace/**/timing.json
+agents/**/test/**/workspace/**/run_status.json
+agents/**/test/**/workspace/**/candidate-output.md
+agents/**/test/**/workspace/**/subagent-verdict.md
+agents/**/test/**/workspace/**/transcript.md

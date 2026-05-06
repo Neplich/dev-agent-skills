@@ -1,5 +1,7 @@
 # Eval 1: existing-project-feature-design
 
+> This file is the durable eval result. Runtime output files are intentionally not committed.
+
 ## Prompt
 
 我们在一个已有的 Web 应用里，要新增应用标签系统。请先看项目上下文，再和我一起把方案收敛下来，最终沉淀成 PM 设计文档。
