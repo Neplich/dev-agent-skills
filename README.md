@@ -139,8 +139,8 @@ dev-agent-skills/
 ├── agents/                  # 6 agents with skills and evals
 ├── docs/                    # Public docs and historical design notes
 ├── skills-lock.json         # Skill metadata lock file
-├── CLAUDE.md                # Claude Code repository guidance
-└── AGENTS.md                # Shared agent repository guidance
+├── AGENTS.md                # Single source of repository guidance
+└── CLAUDE.md                # Symlink to AGENTS.md for Claude Code compatibility
 ```
 
 Each agent follows the same basic shape:
@@ -192,7 +192,7 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 ## Maintenance Notes
 
 - Follow the existing `agents/*` structure when adding a new agent or skill.
-- Keep `CLAUDE.md` and `AGENTS.md` identical.
+- Keep `AGENTS.md` as the only edited guidance source; `CLAUDE.md` must remain a symlink to it.
 - Restrictive repository permissions default to the sole administrator; add maintainers or bots explicitly when needed.
 - Skill evals should verify role boundaries, context reading, execution-path selection, and structured artifacts instead of generic answer quality alone.
 

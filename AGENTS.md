@@ -65,7 +65,7 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 ## Development Workflow
 
 > [!IMPORTANT]
-> Every time `CLAUDE.md` is updated, `AGENTS.md` must be updated as well. Every time `AGENTS.md` is updated, `CLAUDE.md` must be updated as well. The two files must stay identical.
+> `AGENTS.md` is the single source of repository guidance. `CLAUDE.md` must remain a relative symlink to `AGENTS.md`, not a separately edited file.
 
 ### Repository Governance
 
@@ -179,6 +179,6 @@ Skill evals are availability tests for the agent skill. They must verify that th
 
 - `.claude-plugin/marketplace.json` - agent and skill registry
 - `skills-lock.json` - installed skill metadata
-- `CLAUDE.md` - repository guidance for Claude Code, must be kept in sync with `AGENTS.md`
-- `AGENTS.md` - shared repository guidance, must be kept in sync with `CLAUDE.md`
+- `AGENTS.md` - single source of repository guidance
+- `CLAUDE.md` - relative symlink to `AGENTS.md` for Claude Code compatibility
 - `agents/{agent}/README.md` - agent-level documentation

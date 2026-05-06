@@ -139,8 +139,8 @@ dev-agent-skills/
 ├── agents/                  # 6 个 Agent 及其 skills / evals
 ├── docs/                    # 对外文档和历史设计说明
 ├── skills-lock.json         # skill 元数据锁文件
-├── CLAUDE.md                # Claude Code 仓库说明
-└── AGENTS.md                # 通用 Agent 仓库说明
+├── AGENTS.md                # 仓库指导的唯一事实源
+└── CLAUDE.md                # 指向 AGENTS.md 的软链接，用于兼容 Claude Code
 ```
 
 单个 Agent 的结构：
@@ -192,7 +192,7 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 ## 维护约定
 
 - 新增 Agent 或 skill 时，优先遵循现有 `agents/*` 结构。
-- `CLAUDE.md` 与 `AGENTS.md` 必须保持一致。
+- `AGENTS.md` 是唯一编辑源；`CLAUDE.md` 必须保持为指向它的软链接。
 - 仓库限制性权限默认只授予唯一管理员；后续需要维护者或机器人时再显式添加。
 - Skill eval 应验证角色边界、上下文读取、执行路径和结构化产物，而不是只检查泛化回答质量。
 
