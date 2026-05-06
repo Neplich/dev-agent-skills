@@ -1,0 +1,54 @@
+name: CI
+
+"on":
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  repository-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v8
+        with:
+          enable-cache: true
+      - run: uv run scripts/check_repository_contract.py
+
+  eval-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v8
+        with:
+          enable-cache: true
+      - run: uv run scripts/check_eval_contract.py
+      - run: uv run scripts/check_eval_artifacts.py
+
+  python-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v8
+        with:
+          enable-cache: true
+      - run: |
+          uv run --with pytest pytest \
+            agents/product_manager/test/idea-to-spec \
+            agents/qa/test/test_qa_run_eval.py \
+            agents/designer/test/test_designer_run_eval.py \
+            agents/devops/test/test_devops_run_eval.py \
+            agents/test_eval_contract.py
