@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "agent": "product_manager",
+  "skill_name": "release-notes-generator",
+  "evals": [
+    {
+      "id": "eval-001-cli-feature-release",
+      "name": "cli-feature-release",
+      "description": "Verifies that release-notes-generator handles cli-feature-release and produces the expected role-specific artifact.",
+      "prompt": "帮我给 cli/cli 的 v2.88.0 版本生成 release notes，输出到 workspace/eval-1-cli-feature/with_skill/outputs/release-notes-v2.88.0.md",
+      "workspace": "workspace/eval-1-cli-feature",
+      "expected_output": "用户友好的 release notes，包含高亮功能、bug fixes 摘要、正确的 PR 链接，语气面向终端用户",
+      "assertions": [
+        {
+          "id": "audience_value",
+          "description": "面向目标用户说明发布价值，而不是只罗列提交或 PR",
+          "text": "面向目标用户说明发布价值，而不是只罗列提交或 PR"
+        },
+        {
+          "id": "change_grouping",
+          "description": "按 features、fixes、breaking changes 或等价分组组织变更",
+          "text": "按 features、fixes、breaking changes 或等价分组组织变更"
+        },
+        {
+          "id": "source_links",
+          "description": "保留正确版本、仓库和 PR 或 release 相关链接",
+          "text": "保留正确版本、仓库和 PR 或 release 相关链接"
+        },
+        {
+          "id": "requested_output",
+          "description": "按用户要求写入或明确给出目标 release notes 产物",
+          "text": "按用户要求写入或明确给出目标 release notes 产物"
+        }
+      ],
+      "files": []
+    },
+    {
+      "id": "eval-002-sdk-breaking-changes",
+      "name": "sdk-breaking-changes",
+      "description": "Verifies that release-notes-generator handles sdk-breaking-changes and produces the expected role-specific artifact.",
+      "prompt": "为 anthropics/anthropic-sdk-python 的 v0.86.0 生成 release notes，输出到 workspace/eval-2-sdk-release/with_skill/outputs/release-notes-v0.86.0.md",
+      "workspace": "workspace/eval-2-sdk-release",
+      "expected_output": "技术受众的 release notes，正确识别并突出 breaking changes（如有），highlights 聚焦 API 变化的用户价值",
+      "assertions": [
+        {
+          "id": "audience_value",
+          "description": "面向目标用户说明发布价值，而不是只罗列提交或 PR",
+          "text": "面向目标用户说明发布价值，而不是只罗列提交或 PR"
+        },
+        {
+          "id": "change_grouping",
+          "description": "按 features、fixes、breaking changes 或等价分组组织变更",
+          "text": "按 features、fixes、breaking changes 或等价分组组织变更"
+        },
+        {
+          "id": "source_links",
+          "description": "保留正确版本、仓库和 PR 或 release 相关链接",
+          "text": "保留正确版本、仓库和 PR 或 release 相关链接"
+        },
+        {
+          "id": "requested_output",
+          "description": "按用户要求写入或明确给出目标 release notes 产物",
+          "text": "按用户要求写入或明确给出目标 release notes 产物"
+        }
+      ],
+      "files": []
+    },
+    {
+      "id": "eval-003-library-release-notes",
+      "name": "library-release-notes",
+      "description": "Verifies that release-notes-generator handles library-release-notes and produces the expected role-specific artifact.",
+      "prompt": "给 fastapi/fastapi 的 0.135.0 版本写一份 release notes，输出到 workspace/eval-3-library-release/with_skill/outputs/release-notes-0.135.0.md",
+      "workspace": "workspace/eval-3-library-release",
+      "expected_output": "库发版说明，features 和 fixes 正确区分，升级指引清晰",
+      "assertions": [
+        {
+          "id": "audience_value",
+          "description": "面向目标用户说明发布价值，而不是只罗列提交或 PR",
+          "text": "面向目标用户说明发布价值，而不是只罗列提交或 PR"
+        },
+        {
+          "id": "change_grouping",
+          "description": "按 features、fixes、breaking changes 或等价分组组织变更",
+          "text": "按 features、fixes、breaking changes 或等价分组组织变更"
+        },
+        {
+          "id": "source_links",
+          "description": "保留正确版本、仓库和 PR 或 release 相关链接",
+          "text": "保留正确版本、仓库和 PR 或 release 相关链接"
+        },
+        {
+          "id": "requested_output",
+          "description": "按用户要求写入或明确给出目标 release notes 产物",
+          "text": "按用户要求写入或明确给出目标 release notes 产物"
+        }
+      ],
+      "files": []
+    }
+  ]
+}

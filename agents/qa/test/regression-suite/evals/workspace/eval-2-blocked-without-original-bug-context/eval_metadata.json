@@ -1,5 +1,5 @@
 {
-  "eval_id": 2,
+  "eval_id": "eval-002-blocked-without-original-bug-context",
   "eval_name": "blocked-without-original-bug-context",
   "workspace_root": "agents/qa/test/regression-suite/evals/workspace/eval-2-blocked-without-original-bug-context",
   "validation_method": "fresh_codex_subagent",

@@ -1,5 +1,7 @@
 # Visual Design Eval 1 - Comparison
 
+> This file is the durable eval result. Runtime output files are intentionally not committed.
+
 ## With Skill
 - ✅ Complete color system with hex codes
 - ✅ WCAG accessibility noted

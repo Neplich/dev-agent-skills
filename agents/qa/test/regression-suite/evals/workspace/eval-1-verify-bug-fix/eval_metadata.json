@@ -1,5 +1,5 @@
 {
-  "eval_id": 1,
+  "eval_id": "eval-001-verify-bug-fix",
   "eval_name": "verify-bug-fix",
   "workspace_root": "agents/qa/test/regression-suite/evals/workspace/eval-1-verify-bug-fix",
   "validation_method": "fresh_codex_subagent",

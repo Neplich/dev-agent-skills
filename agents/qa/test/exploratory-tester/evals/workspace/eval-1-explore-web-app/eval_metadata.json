@@ -1,5 +1,5 @@
 {
-  "eval_id": 1,
+  "eval_id": "eval-001-explore-web-app",
   "eval_name": "explore-web-app",
   "workspace_root": "agents/qa/test/exploratory-tester/evals/workspace/eval-1-explore-web-app",
   "validation_method": "fresh_codex_subagent",

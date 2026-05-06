@@ -1,5 +1,5 @@
 {
-  "eval_id": 2,
+  "eval_id": "eval-002-existing-project-update",
   "eval_name": "existing-project-update",
   "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update",
   "prompt": "当前系统已经有一版通知中心的 PRD/TRD，现在要把提醒策略从轮询改成事件驱动。请分析影响范围，更新设计思路，并告诉我应该改哪些文档。",

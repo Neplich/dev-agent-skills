@@ -1,5 +1,5 @@
 {
-  "eval_id": 1,
+  "eval_id": "eval-001-analyze-test-failure",
   "eval_name": "analyze-test-failure",
   "workspace_root": "agents/qa/test/bug-analyzer/evals/workspace/eval-1-analyze-test-failure",
   "validation_method": "fresh_codex_subagent",

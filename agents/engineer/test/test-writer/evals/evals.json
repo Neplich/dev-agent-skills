@@ -1,22 +1,29 @@
 {
+  "schema_version": "1.0",
+  "agent": "engineer",
   "skill_name": "test-writer",
   "evals": [
     {
-      "id": 1,
+      "id": "eval-001-write-tests-from-spec",
       "name": "write-tests-from-spec",
+      "description": "Verifies that test-writer handles write-tests-from-spec and produces the expected role-specific artifact.",
       "prompt": "根据 docs/test-spec.md 为 NotificationService 编写测试",
+      "workspace": null,
       "expected_output": "测试文件 + 测试运行结果",
       "assertions": [
         {
-          "name": "测试覆盖 Test Spec",
+          "id": "test_spec",
+          "description": "测试覆盖 Test Spec",
           "text": "输出的测试用例覆盖 Test Spec 中的所有场景"
         },
         {
-          "name": "测试通过",
+          "id": "assertion_2",
+          "description": "测试通过",
           "text": "运行测试并报告通过状态"
         },
         {
-          "name": "遵循项目测试规范",
+          "id": "assertion_3",
+          "description": "遵循项目测试规范",
           "text": "测试文件命名和结构符合项目现有测试模式"
         }
       ]

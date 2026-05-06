@@ -1,5 +1,5 @@
 {
-  "eval_id": 4,
+  "eval_id": "eval-004-greenfield-bootstrap-routing",
   "eval_name": "greenfield-bootstrap-routing",
   "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-2/eval-4-greenfield-bootstrap-routing",
   "execution_cleanup": [

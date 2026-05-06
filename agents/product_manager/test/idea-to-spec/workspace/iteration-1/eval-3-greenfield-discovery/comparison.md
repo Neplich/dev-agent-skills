@@ -1,5 +1,7 @@
 # Eval 3: greenfield-discovery
 
+> This file is the durable eval result. Runtime output files are intentionally not committed.
+
 ## Prompt
 
 我想做一个团队知识问答产品，现在只有一个模糊想法。你先不要直接写完整 PRD，先帮我把方向收敛。

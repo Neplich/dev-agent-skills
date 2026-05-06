@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "agent": "product_manager",
+  "skill_name": "roadmap-generator",
+  "evals": [
+    {
+      "id": "eval-001-timeline",
+      "name": "timeline",
+      "description": "Verifies roadmap-generator timeline and Gantt classification for milestones with due dates.",
+      "prompt": "请为 flutter/flutter 生成一份完整的项目路线图，写入 docs/roadmap.md。",
+      "workspace": "workspace/eval-1-timeline",
+      "expected_output": "路线图按 milestone 截止日期分入当前冲刺、近期、远期和未排期，包含进度、issue 链接、已完成 milestone 和 Mermaid Gantt。",
+      "assertions": [
+        {
+          "id": "phase_classification",
+          "description": "按日期阶段分类",
+          "text": "有截止日期的 milestone 按时间分入当前冲刺、近期计划或远期规划"
+        },
+        {
+          "id": "unscheduled",
+          "description": "无日期 milestone 归入未排期",
+          "text": "无截止日期 milestone 归入未排期，不捏造日期"
+        },
+        {
+          "id": "roadmap_artifacts",
+          "description": "保留路线图证据",
+          "text": "输出包含进度条、Mermaid Gantt、issue 状态和 GitHub 链接"
+        }
+      ]
+    },
+    {
+      "id": "eval-002-phase-classification",
+      "name": "phase-classification",
+      "description": "Verifies roadmap-generator phase classification and large backlog compression.",
+      "prompt": "请为 microsoft/vscode 生成项目路线图，写入 docs/roadmap.md。",
+      "workspace": "workspace/eval-2-phase-classification",
+      "expected_output": "路线图正确分类 open/closed milestone，压缩超大 backlog，按标签分组 issue，并保留 assignee 与更新时间。",
+      "assertions": [
+        {
+          "id": "open_closed",
+          "description": "区分 open 和 closed milestone",
+          "text": "open milestone 进入规划阶段，closed milestone 进入已完成区域"
+        },
+        {
+          "id": "large_backlog",
+          "description": "压缩大 backlog",
+          "text": "超大 backlog 不逐条展开，使用截断或摘要保持可读"
+        },
+        {
+          "id": "issue_details",
+          "description": "保留 issue 分类细节",
+          "text": "issue 按标签或类型分组，并保留 assignee 和链接"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-no-dates",
+      "name": "no-dates",
+      "description": "Verifies roadmap-generator semantic inference when milestones do not have due dates.",
+      "prompt": "请为 golang/go 生成项目路线图，写入 docs/roadmap.md。",
+      "workspace": "workspace/eval-3-no-dates",
+      "expected_output": "当 milestone 没有截止日期时，不生成日期型 Gantt；基于版本语义区分当前补丁、下一版本、远期规划、工具生态和未排期。",
+      "assertions": [
+        {
+          "id": "semantic_classification",
+          "description": "使用语义分类",
+          "text": "根据版本名或项目名前缀区分当前补丁、下一版本、远期规划和工具生态"
+        },
+        {
+          "id": "no_fake_dates",
+          "description": "不伪造日期",
+          "text": "无日期数据时不生成 Mermaid Gantt 或虚构排期"
+        },
+        {
+          "id": "release_blockers",
+          "description": "突出发布阻塞项",
+          "text": "release-blocker issue 作为发布阻塞项突出显示"
+        }
+      ]
+    }
+  ]
+}

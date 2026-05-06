@@ -1,22 +1,29 @@
 {
+  "schema_version": "1.0",
+  "agent": "engineer",
   "skill_name": "feature-implementor",
   "evals": [
     {
-      "id": 1,
+      "id": "eval-001-implement-from-prd-trd",
       "name": "implement-from-prd-trd",
+      "description": "Verifies that feature-implementor handles implement-from-prd-trd and produces the expected role-specific artifact.",
       "prompt": "根据 docs/prd.md 和 docs/trd.md 实现用户通知功能",
+      "workspace": null,
       "expected_output": "实现计划 + 代码文件创建/修改 + 自检报告",
       "assertions": [
         {
-          "name": "生成实现计划",
+          "id": "assertion_1",
+          "description": "生成实现计划",
           "text": "输出包含文件变更清单和实现顺序"
         },
         {
-          "name": "代码符合 TRD",
+          "id": "trd",
+          "description": "代码符合 TRD",
           "text": "实现的代码结构符合 TRD 描述的架构"
         },
         {
-          "name": "自检通过",
+          "id": "assertion_3",
+          "description": "自检通过",
           "text": "输出包含自检结果，检查 TRD/API/PRD 符合度"
         }
       ]

@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "agent": "product_manager",
+  "skill_name": "competitive-intelligence",
+  "evals": [
+    {
+      "id": "eval-001-interactive-battlecard",
+      "name": "interactive-battlecard",
+      "description": "Verifies that competitive-intelligence creates an evidence-aware interactive battlecard plan.",
+      "prompt": "帮我调研 Notion、Coda、Airtable 三个竞品，输出可用于销售沟通的 battlecard，包含功能对比、定价信号、近期发布和 objection handling。",
+      "workspace": null,
+      "expected_output": "面向销售的 battlecard 输出，包含竞品卡片、功能/定价/定位对比、近期变化、反驳话术和证据来源说明。",
+      "assertions": [
+        {
+          "id": "battlecard",
+          "description": "形成 battlecard 结构",
+          "text": "输出包含每个竞品的卡片式摘要和横向对比矩阵"
+        },
+        {
+          "id": "sales_context",
+          "description": "面向销售场景",
+          "text": "输出包含 objection handling、竞争威胁或销售沟通建议"
+        },
+        {
+          "id": "freshness",
+          "description": "处理近期变化",
+          "text": "对近期发布、定价或市场变化给出时间范围，并说明需要基于最新公开信息验证"
+        }
+      ]
+    }
+  ]
+}

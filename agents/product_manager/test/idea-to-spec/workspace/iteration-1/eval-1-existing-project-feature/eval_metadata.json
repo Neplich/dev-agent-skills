@@ -1,5 +1,5 @@
 {
-  "eval_id": 1,
+  "eval_id": "eval-001-existing-project-feature-design",
   "eval_name": "existing-project-feature-design",
   "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-1-existing-project-feature",
   "execution_cleanup": [

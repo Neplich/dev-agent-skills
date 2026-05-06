@@ -1,26 +1,34 @@
 {
+  "schema_version": "1.0",
+  "agent": "engineer",
   "skill_name": "debugger",
   "evals": [
     {
-      "id": 1,
+      "id": "eval-001-fix-failing-test",
       "name": "fix-failing-test",
+      "description": "Verifies that debugger handles fix-failing-test and produces the expected role-specific artifact.",
       "prompt": "测试 test/api/notifications.test.ts 失败了，帮我修复",
+      "workspace": null,
       "expected_output": "复现 → 根因分析 → 最小修复 → 验证通过",
       "assertions": [
         {
-          "name": "复现问题",
+          "id": "assertion_1",
+          "description": "复现问题",
           "text": "输出包含问题复现步骤和错误信息"
         },
         {
-          "name": "根因分析",
+          "id": "assertion_2",
+          "description": "根因分析",
           "text": "输出明确的根因分析，不是猜测"
         },
         {
-          "name": "最小修复",
+          "id": "assertion_3",
+          "description": "最小修复",
           "text": "修复只改必要的代码，不做额外重构"
         },
         {
-          "name": "验证通过",
+          "id": "assertion_4",
+          "description": "验证通过",
           "text": "重新运行测试并确认通过"
         }
       ]

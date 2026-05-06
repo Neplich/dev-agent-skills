@@ -89,7 +89,10 @@ def assertion_list(defn: EvalDefinition) -> str:
     assertions = defn.eval_item.get("assertions", [])
     if not assertions:
         return "- None"
-    return "\n".join(f"- {item['name']}: {item['text']}" for item in assertions)
+    return "\n".join(
+        f"- {item.get('description', item['id'])}: {item['text']}"
+        for item in assertions
+    )
 
 
 def build_candidate_prompt(defn: EvalDefinition, label: str) -> str:
@@ -319,7 +322,7 @@ def render_report(defn: EvalDefinition, results: list[dict]) -> str:
 
     lines.extend(["## Expected Assertions", ""])
     for item in defn.eval_item.get("assertions", []):
-        lines.append(f"- `{item['name']}`: {item['text']}")
+        lines.append(f"- `{item.get('description', item['id'])}`: {item['text']}")
 
     lines.extend(
         [

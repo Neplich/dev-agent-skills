@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "agent": "product_manager",
+  "skill_name": "competitive-brief",
+  "evals": [
+    {
+      "id": "eval-001-positioning-gap-brief",
+      "name": "positioning-gap-brief",
+      "description": "Verifies that competitive-brief produces a structured positioning brief with evidence boundaries.",
+      "prompt": "请对 Linear 和 Jira 做一份竞品 brief，重点比较项目协作场景里的定位、目标用户、关键卖点和我们可以切入的 messaging gap。",
+      "workspace": null,
+      "expected_output": "结构化竞品 brief，包含竞品定位、目标用户、核心卖点、内容空白、机会、威胁和证据边界。",
+      "assertions": [
+        {
+          "id": "positioning",
+          "description": "覆盖定位与目标用户",
+          "text": "输出分别说明主要竞品的定位、目标用户和核心卖点"
+        },
+        {
+          "id": "messaging_gap",
+          "description": "提炼 messaging gap",
+          "text": "输出识别 competitors 未充分占领的 messaging gap 或内容机会"
+        },
+        {
+          "id": "evidence_boundary",
+          "description": "标注证据与假设边界",
+          "text": "对无法确认的信息标记为假设或需要进一步验证，而不是编造确定结论"
+        }
+      ]
+    }
+  ]
+}

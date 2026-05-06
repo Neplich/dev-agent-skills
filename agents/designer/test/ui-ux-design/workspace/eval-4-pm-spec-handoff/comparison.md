@@ -1,5 +1,7 @@
 # Eval 4: PM Spec Handoff Stops Before Implementation
 
+> This file is the durable eval result. Runtime output files are intentionally not committed.
+
 ## Test Case
 
 Designer reads a complete PM handoff plus existing UI code context for billing

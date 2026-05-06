@@ -1,16 +1,36 @@
 {
+  "schema_version": "1.0",
+  "agent": "devops",
   "skill_name": "env-config-auditor",
   "evals": [
     {
-      "id": 1,
+      "id": "eval-001-missing-variables",
       "name": "missing-variables",
+      "description": "Verifies that env-config-auditor handles missing-variables and produces the expected role-specific artifact.",
       "prompt": "检查我的项目环境配置是否完整，代码中使用了 DATABASE_URL、API_KEY、REDIS_URL，但只有 local 配置文件定义了它们。",
+      "workspace": "workspace/iteration-1/eval-1-missing-variables",
       "expected_output": "生成 durable 审计报告，指出 deploy 和 CI/CD 配置中缺失的变量",
       "assertions": [
-        "deploy/ENV_AUDIT.md 或 docs/devops/{feature}/ENV_AUDIT.md 存在",
-        "报告包含 Missing Variables 章节",
-        "列出 API_KEY 或 STRIPE_SECRET_KEY 在 deploy/CI-CD 中缺失",
-        "报告包含 Recommendations 章节"
+        {
+          "id": "deploy_env_audit_md_docs_devops_feature_env_audit_md",
+          "description": "deploy/ENV_AUDIT.md 或 docs/devops/{feature}/ENV_AUDIT.md 存在",
+          "text": "deploy/ENV_AUDIT.md 或 docs/devops/{feature}/ENV_AUDIT.md 存在"
+        },
+        {
+          "id": "missing_variables",
+          "description": "报告包含 Missing Variables 章节",
+          "text": "报告包含 Missing Variables 章节"
+        },
+        {
+          "id": "api_key_stripe_secret_key_deploy_ci_cd",
+          "description": "列出 API_KEY 或 STRIPE_SECRET_KEY 在 deploy/CI-CD 中缺失",
+          "text": "列出 API_KEY 或 STRIPE_SECRET_KEY 在 deploy/CI-CD 中缺失"
+        },
+        {
+          "id": "recommendations",
+          "description": "报告包含 Recommendations 章节",
+          "text": "报告包含 Recommendations 章节"
+        }
       ]
     }
   ]

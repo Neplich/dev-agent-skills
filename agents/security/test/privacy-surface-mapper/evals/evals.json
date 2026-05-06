@@ -1,25 +1,97 @@
 {
+  "schema_version": "1.0",
+  "agent": "security",
+  "skill_name": "privacy-surface-mapper",
   "evals": [
     {
-      "id": "eval-1-gdpr",
+      "id": "eval-001-gdpr",
       "name": "GDPR Compliance Check",
       "description": "Test privacy mapping for user data collection",
       "prompt": "Map the personal data collection and check GDPR compliance.",
-      "workspace": "workspace/eval-1-gdpr"
+      "workspace": null,
+      "expected_output": "Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.",
+      "assertions": [
+        {
+          "id": "data_inventory",
+          "description": "识别个人数据类型、收集入口和处理目的",
+          "text": "识别个人数据类型、收集入口和处理目的"
+        },
+        {
+          "id": "sharing_and_retention",
+          "description": "识别第三方共享、存储或保留相关风险",
+          "text": "识别第三方共享、存储或保留相关风险"
+        },
+        {
+          "id": "user_rights",
+          "description": "检查访问、删除、导出或同意等用户权利支持情况",
+          "text": "检查访问、删除、导出或同意等用户权利支持情况"
+        },
+        {
+          "id": "compliance_gaps",
+          "description": "给出隐私合规缺口和改进建议",
+          "text": "给出隐私合规缺口和改进建议"
+        }
+      ]
     },
     {
-      "id": "eval-2-user-rights",
+      "id": "eval-002-user-rights",
       "name": "User Rights Implementation",
       "description": "Test checking of user data rights implementation",
       "prompt": "Check if user rights (access, deletion, export) are implemented.",
-      "workspace": "workspace/eval-2-user-rights"
+      "workspace": null,
+      "expected_output": "Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.",
+      "assertions": [
+        {
+          "id": "data_inventory",
+          "description": "识别个人数据类型、收集入口和处理目的",
+          "text": "识别个人数据类型、收集入口和处理目的"
+        },
+        {
+          "id": "sharing_and_retention",
+          "description": "识别第三方共享、存储或保留相关风险",
+          "text": "识别第三方共享、存储或保留相关风险"
+        },
+        {
+          "id": "user_rights",
+          "description": "检查访问、删除、导出或同意等用户权利支持情况",
+          "text": "检查访问、删除、导出或同意等用户权利支持情况"
+        },
+        {
+          "id": "compliance_gaps",
+          "description": "给出隐私合规缺口和改进建议",
+          "text": "给出隐私合规缺口和改进建议"
+        }
+      ]
     },
     {
-      "id": "eval-3-third-party",
+      "id": "eval-003-third-party",
       "name": "Third-Party Data Sharing",
       "description": "Test mapping of third-party data sharing",
       "prompt": "Identify all third-party services receiving user data.",
-      "workspace": "workspace/eval-3-third-party"
+      "workspace": null,
+      "expected_output": "Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.",
+      "assertions": [
+        {
+          "id": "data_inventory",
+          "description": "识别个人数据类型、收集入口和处理目的",
+          "text": "识别个人数据类型、收集入口和处理目的"
+        },
+        {
+          "id": "sharing_and_retention",
+          "description": "识别第三方共享、存储或保留相关风险",
+          "text": "识别第三方共享、存储或保留相关风险"
+        },
+        {
+          "id": "user_rights",
+          "description": "检查访问、删除、导出或同意等用户权利支持情况",
+          "text": "检查访问、删除、导出或同意等用户权利支持情况"
+        },
+        {
+          "id": "compliance_gaps",
+          "description": "给出隐私合规缺口和改进建议",
+          "text": "给出隐私合规缺口和改进建议"
+        }
+      ]
     }
   ]
 }

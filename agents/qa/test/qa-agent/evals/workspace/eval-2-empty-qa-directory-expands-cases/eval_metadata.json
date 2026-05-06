@@ -1,5 +1,5 @@
 {
-  "eval_id": 2,
+  "eval_id": "eval-002-empty-qa-directory-expands-cases",
   "eval_name": "empty-qa-directory-expands-cases",
   "workspace_root": "agents/qa/test/qa-agent/evals/workspace/eval-2-empty-qa-directory-expands-cases",
   "validation_method": "fresh_codex_subagent",

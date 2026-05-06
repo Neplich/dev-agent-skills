@@ -1,5 +1,5 @@
 {
-  "eval_id": 2,
+  "eval_id": "eval-002-playful",
   "eval_name": "reference-driven-design-system",
   "workspace_root": "agents/designer/test/visual-design/workspace/eval-2-reference-design-system",
   "prompt": "Create a visual design system for an enterprise analytics platform. Target users are operations leaders and analysts. The output should use local Design System Data to choose product pattern, style direction, color system, typography, UX quality rules, and anti-patterns. Stop at design handoff and do not produce implementation code.",

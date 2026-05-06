@@ -82,14 +82,14 @@ agents/product_manager/test/idea-to-spec/
 1. 进入某个 eval workspace 根目录。
 2. 读取该目录下的 `eval_metadata.json`。
 3. 运行 `run_eval.py`；它会先生成 fresh 的 with-skill / without-skill transcript，再执行断言检查。
-4. 查看 `with_skill/outputs/` 与 `without_skill/outputs/` 下的 transcript 和 `run_status.json`。
+4. 查看临时运行目录里的 transcript 和 `run_status.json`。
 5. 根据 `assertions` 做人工或脚本检查。
 6. 需要人工分析时，在该 eval 目录下补 `comparison.md` 记录对比结论。
 
 报告分为两类：
 
-- `comparison.auto.md`：由 helper 自动生成，记录输出存在性和断言清单
-- `comparison.md`：人工补充的质量分析与结论
+- `comparison.auto.md`：由 helper 自动生成的运行期临时报告，不作为 durable result 提交
+- `comparison.md`：长期保留的最新质量分析与结论
 
 共享模板：
 

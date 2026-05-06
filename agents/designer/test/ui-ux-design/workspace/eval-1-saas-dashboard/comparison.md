@@ -1,5 +1,7 @@
 # Eval 1: SaaS Dashboard Design - Comparison
 
+> This file is the durable eval result. Runtime output files are intentionally not committed.
+
 ## Test Case
 Design UI/UX for a project management SaaS dashboard for small teams.
 

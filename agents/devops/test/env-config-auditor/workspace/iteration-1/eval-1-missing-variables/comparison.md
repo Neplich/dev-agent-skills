@@ -1,5 +1,7 @@
 # Qualitative Comparison
 
+> This file is the durable eval result. Runtime output files are intentionally not committed.
+
 ## With Skill
 
 - Writes a durable audit artifact under `deploy/ENV_AUDIT.md`

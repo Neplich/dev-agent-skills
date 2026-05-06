@@ -1,5 +1,5 @@
 {
-  "eval_id": 1,
+  "eval_id": "eval-001-cli-feature-release",
   "eval_name": "cli-feature-release",
   "prompt": "帮我给 cli/cli 的 v2.88.0 版本生成 release notes，输出到 workspace/eval-1-cli-feature/with_skill/outputs/release-notes-v2.88.0.md",
   "assertions": [

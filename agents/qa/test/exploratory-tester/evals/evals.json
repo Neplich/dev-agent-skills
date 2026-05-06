@@ -1,62 +1,79 @@
 {
+  "schema_version": "1.0",
+  "agent": "qa",
   "skill_name": "exploratory-tester",
   "evals": [
     {
-      "id": 1,
+      "id": "eval-001-explore-web-app",
       "name": "explore-web-app",
+      "description": "Verifies that exploratory-tester handles explore-web-app and produces the expected role-specific artifact.",
       "prompt": "对当前可访问的目标应用进行探索测试，基于产品上下文、变更范围和环境说明发现潜在问题并验证探索协议",
+      "workspace": "workspace/eval-1-explore-web-app",
       "expected_output": "探索测试报告，包含发现的问题列表和复现路径",
       "assertions": [
         {
-          "name": "探索章程",
+          "id": "assertion_1",
+          "description": "探索章程",
           "text": "先基于产品上下文、变更范围、已知风险和环境说明写出 exploration charter，明确 surface、timebox、heuristics 和 escalation signals"
         },
         {
-          "name": "探索记忆沉淀",
+          "id": "assertion_2",
+          "description": "探索记忆沉淀",
           "text": "如果通过项目文件探索来扩充覆盖，必须写入 docs/qa/{feature}/FILE_EXPLORATION.md，并把新增 E2E 场景按每个用例一个文件保存到 docs/qa/{feature}/test-cases/"
         },
         {
-          "name": "范围与时限",
+          "id": "assertion_3",
+          "description": "范围与时限",
           "text": "timebox 必须来自上下文而不是固定默认值，并优先围绕 changed surface 和 nearby risk areas 组织探索"
         },
         {
-          "name": "证据分层",
+          "id": "assertion_4",
+          "description": "证据分层",
           "text": "在报告中分开记录 observed issues、suspicious but unconfirmed signals 和 gaps not explored，不把未确认信号写成缺陷"
         },
         {
-          "name": "探索方法",
+          "id": "assertion_5",
+          "description": "探索方法",
           "text": "以 chartered exploration 为主，随机化操作只能作为补充；输出要体现实际覆盖的路径、边界和证据，而不是随机点击日志"
         },
         {
-          "name": "可交接产物",
+          "id": "assertion_6",
+          "description": "可交接产物",
           "text": "报告必须包含 charter、timebox、exploration path covered、evidence used 和 recommended next actions，方便后续 defect escalation"
         }
       ]
     },
     {
-      "id": 2,
+      "id": "eval-002-explore-with-custom-duration",
       "name": "explore-with-custom-duration",
+      "description": "Verifies that exploratory-tester handles explore-with-custom-duration and produces the expected role-specific artifact.",
       "prompt": "对用户指定的目标应用进行 5 分钟探索测试，按探索章程验证 changed surface、相邻风险和证据分层",
+      "workspace": "workspace/eval-2-explore-with-custom-duration",
       "expected_output": "5 分钟探索测试报告",
       "assertions": [
         {
-          "name": "上下文驱动范围",
+          "id": "assertion_1",
+          "description": "上下文驱动范围",
           "text": "根据用户指定的 URL 和时长建立探索章程，同时记录当前改动面、可用环境信息和未验证的前提"
         },
         {
-          "name": "独立探索确认",
+          "id": "assertion_2",
+          "description": "独立探索确认",
           "text": "独立 E2E 探索前应先读取既有 QA 用例目录，并询问用户是否有新功能更新、是否需要探索项目文件扩充测试用例；如果扩充，应更新 FILE_EXPLORATION.md 和独立用例文件"
         },
         {
-          "name": "异常分层",
+          "id": "assertion_3",
+          "description": "异常分层",
           "text": "记录 console errors、网络错误、页面崩溃等异常时，区分 confirmed issue、unconfirmed signal 和 uncovered area"
         },
         {
-          "name": "证据输出",
+          "id": "assertion_4",
+          "description": "证据输出",
           "text": "输出应包含实际执行路径和 evidence references，而不是仅给出随机化操作清单"
         },
         {
-          "name": "风险交接",
+          "id": "assertion_5",
+          "description": "风险交接",
           "text": "对需要跟进的区域写清风险 notes 和下一步建议，便于后续 QA 或 bug-analyzer 接手"
         }
       ]

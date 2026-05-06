@@ -65,7 +65,7 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 ## Development Workflow
 
 > [!IMPORTANT]
-> Every time `CLAUDE.md` is updated, `AGENTS.md` must be updated as well. Every time `AGENTS.md` is updated, `CLAUDE.md` must be updated as well. The two files must stay identical.
+> `AGENTS.md` is the single source of repository guidance. `CLAUDE.md` must remain a relative symlink to `AGENTS.md`, not a separately edited file.
 
 ### Repository Governance
 
@@ -128,9 +128,26 @@ Each skill should include:
 
 - `test/{skill-name}/evals/evals.json` for evaluation case definitions
 - `test/{skill-name}/evals/workspace/eval-{id}/` for evaluation workspaces
-- comparison results for using the skill vs. not using the skill
+- `comparison.md` as the durable latest comparison result for using the skill vs. not using the skill
 
 Skill evals are availability tests for the agent skill. They must verify that the skill can be triggered, that its protocol is executable, and that it produces the expected structured artifact for the role. Eval assertions should check skill-specific behavior such as context reading, execution-path selection, evidence handling, blocked assumptions, and handoff boundaries instead of only checking generic model answer quality.
+
+**Eval definition contract**
+
+- All agent skill eval definitions must use the shared `evals.json` schema version `1.0`; agent-specific schema exceptions are not allowed.
+- Each `evals.json` must live at `agents/{agent}/test/{skill-name}/evals/evals.json`, set top-level `schema_version`, `agent`, `skill_name`, and non-empty `evals`, and keep `skill_name` aligned with `agents/{agent}/skills/{skill-name}/SKILL.md`.
+- Each eval item must include string `id` in `eval-NNN-short-slug` form, non-empty `name`, `description`, `prompt`, `expected_output`, explicit `workspace` as `workspace/...` or `null`, and non-empty object assertions.
+- Each assertion must include lower snake_case `id`, non-empty `description`, and non-empty semantic `text`; string-only assertions are not allowed.
+- Run `uv run scripts/check_eval_contract.py` before submitting eval definition changes.
+
+**Eval artifact policy**
+
+- Commit eval definitions, metadata, fixtures, README files, and the latest `comparison.md`; do not commit runtime artifacts such as `with_skill/`, `without_skill/`, `baseline/`, `iteration2/`, `outputs/`, `comparison.auto.md`, `transcript.md`, `candidate-output.md`, `subagent-verdict.md`, `timing.json`, `run_status.json`, or diagnostics directories.
+- Treat `with_skill_outputs`, `without_skill_outputs`, and baseline output metadata as runtime expectations for the runner, not as files that must exist in the committed workspace. The durable committed result is `comparison.md`; new metadata schemas should make this split explicit with runtime-output and durable-result fields.
+- Generate eval runtime files in an isolated temporary or scratch workspace, such as a system temp directory or `tmp/eval-runs/...`, then summarize the latest result back into `comparison.md`. Model eval transcripts, verdicts, timing data, and diagnostics may be uploaded as short-lived CI artifacts for debugging, but they must not be committed to git.
+- `comparison.md` should include the evaluation target, test set or fixture version, latest result, with-skill behavior, without-skill or baseline behavior, failures, next steps, and the runtime artifact policy.
+- Python eval tests must not depend on a previous eval run's runtime output. Use temporary directories or minimal fixtures, avoid duplicate test module basenames across test roots so pytest can collect them in one process, and run `uv run scripts/check_eval_artifacts.py` before submitting eval changes.
+- PR required validation order is `repository-contract -> eval-contract -> python-tests`; run `uv run scripts/check_repository_contract.py`, then `uv run scripts/check_eval_contract.py`, then the deterministic pytest command.
 
 **Eval runner constraints**
 
@@ -179,6 +196,6 @@ Skill evals are availability tests for the agent skill. They must verify that th
 
 - `.claude-plugin/marketplace.json` - agent and skill registry
 - `skills-lock.json` - installed skill metadata
-- `CLAUDE.md` - repository guidance for Claude Code, must be kept in sync with `AGENTS.md`
-- `AGENTS.md` - shared repository guidance, must be kept in sync with `CLAUDE.md`
+- `AGENTS.md` - single source of repository guidance
+- `CLAUDE.md` - relative symlink to `AGENTS.md` for Claude Code compatibility
 - `agents/{agent}/README.md` - agent-level documentation

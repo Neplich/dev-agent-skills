@@ -1,5 +1,5 @@
 {
-  "eval_id": 2,
+  "eval_id": "eval-002-thin-evidence-suspected-bug",
   "eval_name": "thin-evidence-suspected-bug",
   "workspace_root": "agents/qa/test/bug-analyzer/evals/workspace/eval-2-thin-evidence-suspected-bug",
   "validation_method": "fresh_codex_subagent",

@@ -1,5 +1,5 @@
 {
-  "eval_id": 3,
+  "eval_id": "eval-003-library-release-notes",
   "eval_name": "library-release-notes",
   "prompt": "给 fastapi/fastapi 的 0.135.0 版本写一份 release notes，输出到 workspace/eval-3-library-release/with_skill/outputs/release-notes-0.135.0.md",
   "assertions": [
