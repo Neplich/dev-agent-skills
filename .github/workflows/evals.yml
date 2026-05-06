@@ -1,0 +1,67 @@
+name: Manual Evals
+
+"on":
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  designer-evals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v8.1.0
+        with:
+          enable-cache: true
+      - run: uv run agents/designer/test/run_all_evals.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: designer-eval-runtime-artifacts
+          if-no-files-found: ignore
+          retention-days: 7
+          path: |
+            agents/designer/test/**/comparison.auto.md
+
+  qa-evals:
+    runs-on: ubuntu-latest
+    env:
+      CODEX_HOME: ${{ runner.temp }}/codex-home
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - uses: astral-sh/setup-uv@v8.1.0
+        with:
+          enable-cache: true
+      - name: Require OpenAI API key
+        run: |
+          if [ -z "${OPENAI_API_KEY:-}" ]; then
+            echo "::error::Set the OPENAI_API_KEY repository secret before running QA evals."
+            exit 1
+          fi
+      - name: Install Codex CLI
+        run: npm install -g @openai/codex
+      - name: Authenticate Codex CLI
+        run: printenv OPENAI_API_KEY | codex login --with-api-key
+      - run: uv run agents/qa/test/run_all_evals.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa-eval-runtime-artifacts
+          if-no-files-found: ignore
+          retention-days: 7
+          path: |
+            agents/qa/test/**/comparison.auto.md
+            agents/qa/test/**/with_skill/outputs/**
+            agents/qa/test/**/without_skill/outputs/**
+            agents/qa/test/**/diagnostics/**

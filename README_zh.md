@@ -205,6 +205,8 @@ uv run agents/qa/test/run_all_evals.py
 
 涉及 skill 行为、routing、eval fixture 或 release 前变更时，管理员应在合并前运行手动模型 eval workflow，并把结果作为 merge 判断依据。模型 eval 不作为 required status check，因为模型输出、运行耗时和环境都可能波动。
 
+同一组手动检查也可在 GitHub Actions 中触发：打开 `Manual Evals`，点击 `Run workflow`，再查看上传的短期运行 artifact。QA eval job 会调用 `codex exec`，因此需要仓库 secret `OPENAI_API_KEY`。
+
 额外静态格式检查：
 
 ```bash

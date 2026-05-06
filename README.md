@@ -205,6 +205,8 @@ uv run agents/qa/test/run_all_evals.py
 
 For changes that affect skill behavior, routing, eval fixtures, or release readiness, an administrator should run the manual model eval workflow before merging and use the result as merge evidence. Model evals are not required status checks because model output, runtime, and environment can vary.
 
+The same manual checks are available from GitHub Actions: open `Manual Evals`, choose `Run workflow`, and review the uploaded short-lived runtime artifacts. The QA eval job requires the `OPENAI_API_KEY` repository secret because it calls `codex exec`.
+
 Extra static format checks:
 
 ```bash
