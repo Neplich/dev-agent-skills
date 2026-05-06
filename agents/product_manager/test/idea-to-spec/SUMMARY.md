@@ -1,6 +1,6 @@
 # idea-to-spec Eval Summary
 
-本文件汇总 `idea-to-spec` 当前 4 个核心 eval case 的状态、主要发现和后续待补点。
+本文件汇总 `idea-to-spec` 当前 5 个核心 eval case 的状态、主要发现和后续待补点。
 
 ## Case Overview
 
@@ -10,6 +10,7 @@
 | Eval 2 | Existing project update | Reviewed + Auto-checked | Skill update lane 有效；自动断言已覆盖 decision history 更新 | 可继续增强 blast-radius 细粒度检查 |
 | Eval 3 | Greenfield discovery | Reviewed + Auto-checked | Skill discovery mode 有效；自动断言已覆盖确认 checkpoint | 可继续增强“延后文档化”的文本信号检查 |
 | Eval 4 | Empty-workspace PM-first bootstrap routing | Reviewed + Auto-checked | fresh baseline 已可自动生成；断言已放宽到 PM-first discovery/bootstrap lane 语义 | 可继续观察后续 prompt 演化是否仍稳定 |
+| Eval 5 | PM agent direct delegation | Reviewed | Dispatcher request 应转交 `idea-to-spec`，而不是直接产出完整 PM 文档 | 可继续增强 dispatcher handoff 断言 |
 
 ## Key Conclusions
 
@@ -17,6 +18,7 @@
 - 目前暴露的问题主要在 eval 定义精度，而不是主 prompt 方向
 - Eval 1 / 2 / 3 当前都已有基础机器断言覆盖，不再只依赖文件存在性检查
 - Eval 4 新增了空工作区 PM-first 守门场景，用于回归“不要直接初始化项目”
+- Eval 5 覆盖 PM dispatcher 直接委托边界，用于回归“dispatcher 不直接替 specialist 完成产物”
 - `run_eval.py` 现在会先生成 fresh transcript，再执行断言；baseline 仍然是硬性必需产物
 - 最新一次真实回归里，Eval 4 的 with-skill / without-skill transcript 都已成功生成，并且机器断言已全部通过
 - `idea-to-spec` 的新协议已经形成可回归的最小基线：
@@ -29,35 +31,38 @@
 
 ## Linked Artifacts
 
-- 总体运行说明: [README.md](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/README.md)
-- 人工对比模板: [COMPARISON_TEMPLATE.md](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/COMPARISON_TEMPLATE.md)
-- Eval definitions: [evals.json](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/evals/evals.json)
+- 总体运行说明: [README.md](README.md)
+- 人工对比模板: [COMPARISON_TEMPLATE.md](COMPARISON_TEMPLATE.md)
+- Eval definitions: [evals.json](evals/evals.json)
 
 ### Eval 1
 
-- Metadata: [eval_metadata.json](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-1-existing-project-feature/eval_metadata.json)
-- Auto report: [comparison.auto.md](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-1-existing-project-feature/comparison.auto.md)
-- Review: [comparison.md](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-1-existing-project-feature/comparison.md)
+- Metadata: [eval_metadata.json](workspace/iteration-1/eval-1-existing-project-feature/eval_metadata.json)
+- Review: [comparison.md](workspace/iteration-1/eval-1-existing-project-feature/comparison.md)
 
 ### Eval 2
 
-- Metadata: [eval_metadata.json](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update/eval_metadata.json)
-- Auto report: [comparison.auto.md](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update/comparison.auto.md)
-- Review: [comparison.md](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update/comparison.md)
+- Metadata: [eval_metadata.json](workspace/iteration-1/eval-2-existing-project-update/eval_metadata.json)
+- Review: [comparison.md](workspace/iteration-1/eval-2-existing-project-update/comparison.md)
 
 ### Eval 3
 
-- Metadata: [eval_metadata.json](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-3-greenfield-discovery/eval_metadata.json)
-- Auto report: [comparison.auto.md](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-3-greenfield-discovery/comparison.auto.md)
-- Review: [comparison.md](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-3-greenfield-discovery/comparison.md)
+- Metadata: [eval_metadata.json](workspace/iteration-1/eval-3-greenfield-discovery/eval_metadata.json)
+- Review: [comparison.md](workspace/iteration-1/eval-3-greenfield-discovery/comparison.md)
 
 ### Eval 4
 
-- Metadata: [eval_metadata.json](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/workspace/iteration-2/eval-4-greenfield-bootstrap-routing/eval_metadata.json)
-- Fixture: [README.md](/Users/neplich/dev/neplich-skills/agents/product_manager/test/idea-to-spec/workspace/iteration-2/eval-4-greenfield-bootstrap-routing/README.md)
+- Metadata: [eval_metadata.json](workspace/iteration-2/eval-4-greenfield-bootstrap-routing/eval_metadata.json)
+- Fixture: [README.md](workspace/iteration-2/eval-4-greenfield-bootstrap-routing/README.md)
+- Review: [comparison.md](workspace/iteration-2/eval-4-greenfield-bootstrap-routing/comparison.md)
+
+### Eval 5
+
+- Metadata: [eval_metadata.json](workspace/iteration-2/eval-5-pm-agent-direct-delegation/eval_metadata.json)
+- Fixture: [README.md](workspace/iteration-2/eval-5-pm-agent-direct-delegation/README.md)
+- Review: [comparison.md](workspace/iteration-2/eval-5-pm-agent-direct-delegation/comparison.md)
 
 ## Next Improvements
 
-1. Run and review Eval 4 with and without skill to confirm the new PM-first guardrail holds in practice.
-2. Add stronger automated checks for behavioral assertions instead of relying mostly on manual review.
-3. Standardize transcript format so turn-by-turn confirmation discipline is easier to verify.
+1. Add stronger automated checks for behavioral assertions instead of relying mostly on manual review.
+2. Standardize transcript format so turn-by-turn confirmation discipline is easier to verify.

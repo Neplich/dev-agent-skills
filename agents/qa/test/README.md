@@ -13,19 +13,19 @@ The semantic pass/fail decision comes from the fresh judge verdict.
 ## Run One Eval
 
 ```bash
-python3 agents/qa/test/run_eval.py \
+uv run agents/qa/test/run_eval.py \
   agents/qa/test/qa-agent/evals/workspace/eval-2-empty-qa-directory-expands-cases/eval_metadata.json
 ```
 
 ## Run All QA Evals
 
 ```bash
-python3 agents/qa/test/run_all_evals.py
+uv run agents/qa/test/run_all_evals.py
 ```
 
 ## Outputs
 
-Each eval workspace receives:
+Each eval run may create runtime-only files such as:
 
 - `with_skill/outputs/candidate-output.md`
 - `with_skill/outputs/subagent-verdict.md`
@@ -33,6 +33,9 @@ Each eval workspace receives:
 - `without_skill/outputs/subagent-verdict.md`
 - `diagnostics/run.json`
 - `comparison.auto.md`
+
+Do not commit these runtime files. The durable latest result for a workspace is
+`comparison.md`.
 
 Runner failure is based on the `with_skill` path:
 

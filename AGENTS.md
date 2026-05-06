@@ -147,6 +147,7 @@ Skill evals are availability tests for the agent skill. They must verify that th
 - Generate eval runtime files in an isolated temporary or scratch workspace, such as a system temp directory or `tmp/eval-runs/...`, then summarize the latest result back into `comparison.md`. Model eval transcripts, verdicts, timing data, and diagnostics may be uploaded as short-lived CI artifacts for debugging, but they must not be committed to git.
 - `comparison.md` should include the evaluation target, test set or fixture version, latest result, with-skill behavior, without-skill or baseline behavior, failures, next steps, and the runtime artifact policy.
 - Python eval tests must not depend on a previous eval run's runtime output. Use temporary directories or minimal fixtures, avoid duplicate test module basenames across test roots so pytest can collect them in one process, and run `uv run scripts/check_eval_artifacts.py` before submitting eval changes.
+- PR required validation order is `repository-contract -> eval-contract -> python-tests`; run `uv run scripts/check_repository_contract.py`, then `uv run scripts/check_eval_contract.py`, then the deterministic pytest command.
 
 **Eval runner constraints**
 

@@ -175,22 +175,27 @@ The data design follows ui ux pro max's organization model and is maintained und
 > Use `uv run ...` for Python-based validation scripts and eval runners in this repository.
 
 ```bash
+# PR required order: repository-contract -> eval-contract -> python-tests
+
+# Repository contract check
+uv run scripts/check_repository_contract.py
+
+# Eval definition contract check
+uv run scripts/check_eval_contract.py
+
 # Designer eval
 uv run agents/designer/test/run_all_evals.py
 
 # QA eval
 uv run agents/qa/test/run_all_evals.py
 
-# Deterministic pytest coverage for all agents
+# Deterministic pytest and shared contract coverage
 uv run --with pytest pytest \
   agents/product_manager/test/idea-to-spec \
   agents/qa/test/test_qa_run_eval.py \
   agents/designer/test/test_designer_run_eval.py \
   agents/devops/test/test_devops_run_eval.py \
   agents/test_eval_contract.py
-
-# Eval definition contract check
-uv run scripts/check_eval_contract.py
 
 # Eval runtime artifact check
 uv run scripts/check_eval_artifacts.py

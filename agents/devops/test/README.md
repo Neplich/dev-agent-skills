@@ -15,4 +15,4 @@ uv run agents/devops/test/run_eval.py \
   agents/devops/test/env-config-auditor/workspace/iteration-1/eval-1-missing-variables/eval_metadata.json
 ```
 
-自动报告会生成到对应 eval 目录下的 `comparison.auto.md`。
+自动报告可作为运行期临时产物生成到对应 eval 目录下的 `comparison.auto.md`；长期提交的最新结果只保留 `comparison.md`。
