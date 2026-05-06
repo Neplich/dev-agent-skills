@@ -184,6 +184,12 @@ uv run agents/qa/test/run_all_evals.py
 # PM idea-to-spec 测试
 uv run --with pytest pytest agents/product_manager/test/idea-to-spec
 
+# QA runner 测试
+uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py
+
+# Eval 过程产物检查
+uv run scripts/check_eval_artifacts.py
+
 # JSON 格式检查示例
 uv run python -m json.tool .claude-plugin/marketplace.json >/tmp/marketplace.json.out
 uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
@@ -195,6 +201,35 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 - `AGENTS.md` 是唯一编辑源；`CLAUDE.md` 必须保持为指向它的软链接。
 - 仓库限制性权限默认只授予唯一管理员；后续需要维护者或机器人时再显式添加。
 - Skill eval 应验证角色边界、上下文读取、执行路径和结构化产物，而不是只检查泛化回答质量。
+
+### Eval 维护流程
+
+新增或更新 skill eval 时，仓库只作为评测定义和最新结论的事实源，不作为运行日志归档：
+
+1. 新建或更新 skill 与 eval fixture。
+2. 在临时目录或 scratch workspace 使用已有或更新后的测试集进行评测。
+3. 将最新评测比对结果写入 `comparison.md`。
+4. 提交 PR 前删除运行过程文件。
+5. 只提交 eval 定义、metadata、fixture、README 和 `comparison.md`。
+
+不要提交 `with_skill/`、`without_skill/`、`baseline/`、`iteration2/`、`outputs/`、`comparison.auto.md`、transcript、candidate output、subagent verdict、timing、run status 或 diagnostics 目录。`with_skill_outputs`、`without_skill_outputs`、baseline outputs 等 metadata 字段只描述 runner 的运行期预期，不代表这些过程文件需要进入 git。手动或定时模型 eval workflow 可以把 transcript、verdict、timing 和 diagnostics 作为短期 CI artifact 上传用于排查，但仓库里长期保留的结果仍然是 `comparison.md`。
+
+新的 eval runner 应将运行期文件写入系统临时目录或 `tmp/eval-runs/...`，再只把确认后的 `comparison.md` 同步回 eval workspace。新的 metadata schema 应显式区分 runtime output 字段和 durable result 字段。Python 测试文件名需要跨测试目录保持唯一，例如 `test_pm_run_eval.py` 和 `test_qa_run_eval.py`，确保 pytest 能在同一个进程里收集所有确定性测试。
+
+`comparison.md` 使用以下结构：
+
+```markdown
+# Eval Result: <eval-name>
+
+## Evaluation Target
+## Test Set / Fixture Version
+## Latest Result
+## With Skill
+## Without Skill / Baseline
+## Failures
+## Next Steps
+## Runtime Artifacts Policy
+```
 
 <div align="center">
 

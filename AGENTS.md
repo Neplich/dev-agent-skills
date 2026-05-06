@@ -128,9 +128,17 @@ Each skill should include:
 
 - `test/{skill-name}/evals/evals.json` for evaluation case definitions
 - `test/{skill-name}/evals/workspace/eval-{id}/` for evaluation workspaces
-- comparison results for using the skill vs. not using the skill
+- `comparison.md` as the durable latest comparison result for using the skill vs. not using the skill
 
 Skill evals are availability tests for the agent skill. They must verify that the skill can be triggered, that its protocol is executable, and that it produces the expected structured artifact for the role. Eval assertions should check skill-specific behavior such as context reading, execution-path selection, evidence handling, blocked assumptions, and handoff boundaries instead of only checking generic model answer quality.
+
+**Eval artifact policy**
+
+- Commit eval definitions, metadata, fixtures, README files, and the latest `comparison.md`; do not commit runtime artifacts such as `with_skill/`, `without_skill/`, `baseline/`, `iteration2/`, `outputs/`, `comparison.auto.md`, `transcript.md`, `candidate-output.md`, `subagent-verdict.md`, `timing.json`, `run_status.json`, or diagnostics directories.
+- Treat `with_skill_outputs`, `without_skill_outputs`, and baseline output metadata as runtime expectations for the runner, not as files that must exist in the committed workspace. The durable committed result is `comparison.md`; new metadata schemas should make this split explicit with runtime-output and durable-result fields.
+- Generate eval runtime files in an isolated temporary or scratch workspace, such as a system temp directory or `tmp/eval-runs/...`, then summarize the latest result back into `comparison.md`. Model eval transcripts, verdicts, timing data, and diagnostics may be uploaded as short-lived CI artifacts for debugging, but they must not be committed to git.
+- `comparison.md` should include the evaluation target, test set or fixture version, latest result, with-skill behavior, without-skill or baseline behavior, failures, next steps, and the runtime artifact policy.
+- Python eval tests must not depend on a previous eval run's runtime output. Use temporary directories or minimal fixtures, avoid duplicate test module basenames across test roots so pytest can collect them in one process, and run `uv run scripts/check_eval_artifacts.py` before submitting eval changes.
 
 **Eval runner constraints**
 
