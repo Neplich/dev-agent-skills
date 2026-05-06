@@ -181,11 +181,14 @@ uv run agents/designer/test/run_all_evals.py
 # QA eval
 uv run agents/qa/test/run_all_evals.py
 
-# PM idea-to-spec 测试
-uv run --with pytest pytest agents/product_manager/test/idea-to-spec
-
-# QA runner 测试
-uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py
+# 覆盖所有 agent 的确定性 pytest
+uv run --with pytest pytest \
+  agents/product_manager/test/idea-to-spec \
+  agents/qa/test/test_qa_run_eval.py \
+  agents/designer/test/test_designer_run_eval.py \
+  agents/devops/test/test_devops_run_eval.py \
+  agents/engineer/test/test_engineer_eval_contract.py \
+  agents/security/test/test_security_eval_contract.py
 
 # Eval 过程产物检查
 uv run scripts/check_eval_artifacts.py
