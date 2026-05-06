@@ -15,7 +15,7 @@
 | Entry skill | `designer-agent` |
 | Specialist skills | 2 |
 | Main inputs | `docs/pm/{feature}/PRD.md`, `BRD.md`, `DECISIONS.md`, `TRD.md`, reference sites, brand cues |
-| Main outputs | `docs/design/{feature}/UI_UX_SPEC.md`, `VISUAL_SYSTEM.md` |
+| Main outputs | `docs/design/{feature}/ui-ux-spec.md`, `visual-system.md` |
 | Core boundary | Design documents only; no code, tests, scripts, or deployment config |
 
 ## Skills
@@ -23,8 +23,8 @@
 | Skill | When to use | Main output |
 | --- | --- | --- |
 | `designer-agent` | Design request routing | Specialist selection and execution path |
-| `ui-ux-design` | UX flows, information architecture, page structure, wireframes, interaction states, reference-site analysis | `UI_UX_SPEC.md` |
-| `visual-design` | Visual systems, product-type reasoning, style direction, color, typography, component rules, UX quality rules, anti-patterns, copy tone | `VISUAL_SYSTEM.md` |
+| `ui-ux-design` | UX flows, information architecture, page structure, wireframes, interaction states, reference-site analysis | `ui-ux-spec.md` |
+| `visual-design` | Visual systems, product-type reasoning, style direction, color, typography, component rules, UX quality rules, anti-patterns, copy tone | `visual-system.md` |
 
 ## Routing Rules
 
@@ -49,8 +49,8 @@ flowchart LR
 docs/
 └── design/
     └── {feature-name}/
-        ├── UI_UX_SPEC.md
-        └── VISUAL_SYSTEM.md
+        ├── ui-ux-spec.md
+        └── visual-system.md
 ```
 
 ## Visual Design References

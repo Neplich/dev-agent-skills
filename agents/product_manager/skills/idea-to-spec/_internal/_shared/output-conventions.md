@@ -83,7 +83,7 @@ docs/<agent-short>/<feature-name>/<DOC>.md
 
 ### Canonical Downstream Filenames
 
-- Design: `UI_UX_SPEC.md`
+- Design: `ui-ux-spec.md`, `visual-system.md`
 - Engineer: `TRD.md`, `API.md`, `ADR-001-<title>.md`
 - QA: `TEST_SPEC.md`, `FILE_EXPLORATION.md`,
   `test-cases/TC-NNN-<short-slug>.md`, `reports/YYYY-MM-DD-<report>.md`
@@ -94,7 +94,9 @@ docs/<agent-short>/<feature-name>/<DOC>.md
 
 - Use stable filenames for primary docs
 - Keep versioning in frontmatter and git history, not in filenames
-- Use uppercase canonical filenames for the main artifact in each feature folder
+- Use the canonical filename for each artifact; PM, QA, DevOps, and Security
+  artifacts use uppercase names, while Designer artifacts use
+  `ui-ux-spec.md` and `visual-system.md`
 - Store each E2E test case in one file under
   `docs/qa/<feature-name>/test-cases/`; keep `TEST_SPEC.md` as the index and
   traceability summary

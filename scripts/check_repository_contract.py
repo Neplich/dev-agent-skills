@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import subprocess
@@ -13,6 +14,7 @@ from typing import Any
 
 
 SKILL_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+LOCK_HASH_RE = re.compile(r"^[0-9a-f]{64}$")
 BLOCKED_TRACKED_PATTERNS = (
     re.compile(r"(^|/)\.DS_Store$"),
     re.compile(r"(^|/)\.pytest_cache(/|$)"),
@@ -51,6 +53,13 @@ def load_json(path: Path, errors: list[ContractError]) -> Any | None:
     except OSError as exc:
         add_error(errors, path, f"cannot read JSON: {exc}")
     return None
+
+
+def is_safe_relative_path(value: str) -> bool:
+    if not value.strip():
+        return False
+    path = Path(value)
+    return not path.is_absolute() and ".." not in path.parts
 
 
 def validate_claude_symlink(root: Path, errors: list[ContractError]) -> None:
@@ -162,11 +171,115 @@ def validate_marketplace(root: Path, errors: list[ContractError]) -> None:
             validate_skill(root, skill_dir, errors)
 
 
+def marketplace_skill_sources(root: Path, errors: list[ContractError]) -> dict[str, str]:
+    path = root / ".claude-plugin" / "marketplace.json"
+    payload = load_json(path, errors)
+    if not isinstance(payload, dict):
+        return {}
+
+    plugins = payload.get("plugins")
+    if not isinstance(plugins, list):
+        return {}
+
+    sources: dict[str, str] = {}
+    for plugin in plugins:
+        if not isinstance(plugin, dict):
+            continue
+
+        source = plugin.get("source")
+        skills = plugin.get("skills")
+        if not isinstance(source, str) or not isinstance(skills, list):
+            continue
+
+        for skill in skills:
+            if not isinstance(skill, str):
+                continue
+            skill_dir = (root / source / skill).resolve()
+            try:
+                rel = skill_dir.relative_to(root).as_posix()
+            except ValueError:
+                continue
+            sources[skill_dir.name] = rel
+
+    return sources
+
+
+def tracked_files_under(root: Path, rel_dir: str) -> list[str]:
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--", rel_dir],
+        cwd=root,
+        check=True,
+        stdout=subprocess.PIPE,
+    )
+    return [path for path in result.stdout.decode("utf-8").split("\0") if path]
+
+
+def compute_tracked_directory_hash(root: Path, rel_dir: str) -> str:
+    digest = hashlib.sha256()
+    prefix = f"{rel_dir.rstrip('/')}/"
+
+    for rel_path in sorted(tracked_files_under(root, rel_dir)):
+        if not rel_path.startswith(prefix):
+            continue
+        local_rel = rel_path[len(prefix):]
+        digest.update(local_rel.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update((root / rel_path).read_bytes())
+        digest.update(b"\0")
+
+    return digest.hexdigest()
+
+
 def validate_skills_lock(root: Path, errors: list[ContractError]) -> None:
     path = root / "skills-lock.json"
     payload = load_json(path, errors)
     if not isinstance(payload, dict):
         add_error(errors, path, "top-level payload must be an object")
+        return
+
+    skills = payload.get("skills")
+    if not isinstance(skills, dict):
+        add_error(errors, path, "skills must be an object")
+        return
+
+    expected_sources = marketplace_skill_sources(root, errors)
+    expected_names = set(expected_sources)
+    actual_names = set(skills)
+
+    for missing in sorted(expected_names - actual_names):
+        add_error(errors, path, f"missing lock entry for skill {missing!r}")
+
+    for extra in sorted(actual_names - expected_names):
+        add_error(errors, path, f"lock entry has no marketplace skill {extra!r}")
+
+    for name in sorted(expected_names & actual_names):
+        entry = skills[name]
+        if not isinstance(entry, dict):
+            add_error(errors, path, f"skills[{name!r}] must be an object")
+            continue
+
+        source = entry.get("source")
+        if not isinstance(source, str) or not is_safe_relative_path(source):
+            add_error(errors, path, f"skills[{name!r}].source must be a safe relative path")
+        elif source != expected_sources[name]:
+            add_error(
+                errors,
+                path,
+                f"skills[{name!r}].source must be {expected_sources[name]!r}",
+            )
+        elif not (root / source).exists():
+            add_error(errors, root / source, f"skills[{name!r}].source does not exist")
+
+        if entry.get("sourceType") != "local":
+            add_error(errors, path, f"skills[{name!r}].sourceType must be 'local'")
+
+        computed_hash = entry.get("computedHash")
+        if not isinstance(computed_hash, str) or not LOCK_HASH_RE.fullmatch(computed_hash):
+            add_error(errors, path, f"skills[{name!r}].computedHash must be a lowercase sha256")
+        elif isinstance(source, str) and is_safe_relative_path(source):
+            expected_hash = compute_tracked_directory_hash(root, source)
+            if computed_hash != expected_hash:
+                add_error(errors, path, f"skills[{name!r}].computedHash is stale")
 
 
 def tracked_files(root: Path) -> list[str]:

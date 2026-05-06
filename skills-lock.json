@@ -1,170 +1,170 @@
 {
   "version": 1,
   "skills": {
-    "changelog-generator": {
-      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\changelog-generator",
+    "pm-agent": {
+      "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "86770c9254012f62e77cd69c94220e0f05d7d46fab9b705fc5f700a7ae20e849"
-    },
-    "competitive-brief": {
-      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\competitive-brief",
-      "sourceType": "local",
-      "computedHash": "d48a5e206e45a353ca88c525ee8042798a3c177d7f1383abf91d4ba08b557c69"
-    },
-    "competitive-intelligence": {
-      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\competitive-intelligence",
-      "sourceType": "local",
-      "computedHash": "3a2d08ca62ee9f0c03f06411bf2621be25d9755235cb7de6c2794ced292b1d47"
-    },
-    "github-reader": {
-      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\github-reader",
-      "sourceType": "local",
-      "computedHash": "a16f48328b18013bdd9363c0fed55bf0e52e99dfc7e81d37c5b9af1d2bded2e4"
+      "computedHash": "e89ca6d7d954003c23b812cfc54e1a9618304dd37f9fdb065ac42f5097e8e465"
     },
     "idea-to-spec": {
-      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\idea-to-spec",
+      "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "9bd64c6ea6524ba06f31234ddbae6b0b6627377cab1bbafd714f26e59e2f940a"
+      "computedHash": "2982cf6d2c484120ca006bac1e89fde8d2b472ac51a565ca3a411ef35f778e4e"
+    },
+    "competitive-brief": {
+      "source": "agents/product_manager/skills/competitive-brief",
+      "sourceType": "local",
+      "computedHash": "45e7d6b097dc935967a1aac717e987bb862d887a80723ec124c44a83fb369970"
+    },
+    "competitive-intelligence": {
+      "source": "agents/product_manager/skills/competitive-intelligence",
+      "sourceType": "local",
+      "computedHash": "c133ad3f1918d767c379eb32e22f0890300b87ed1882c2a853d0e63ecd5cb539"
+    },
+    "changelog-generator": {
+      "source": "agents/product_manager/skills/changelog-generator",
+      "sourceType": "local",
+      "computedHash": "b42db364146fe450afdccd819bdf13c20dfc8c4997d4d17cafbba0b1c4ae973a"
     },
     "release-notes-generator": {
-      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\release-notes-generator",
+      "source": "agents/product_manager/skills/release-notes-generator",
       "sourceType": "local",
-      "computedHash": "c7701a40d0197f14968e1fdf6c9982292b2395fa5928075556e138c6bf1e9055"
+      "computedHash": "52f3bd48b2a392ae96c5dbe13fc5aa5fb2c49ec5b14f5d803b5968a4317f6306"
     },
     "roadmap-generator": {
-      "source": "D:\\AI\\Dev\\neplich-skills\\agents\\product_manager\\skills\\roadmap-generator",
+      "source": "agents/product_manager/skills/roadmap-generator",
       "sourceType": "local",
-      "computedHash": "6f5dc0a46f687f150617f620e19645008084741df2f7e1bf35fdab9243c52f15"
+      "computedHash": "63f0a11840df2ee6bd764dfaaab8bc11df4678727bf6c05f9f1f3512cb2d3189"
     },
-    "codebase-analyzer": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/codebase-analyzer",
+    "github-reader": {
+      "source": "agents/product_manager/skills/github-reader",
       "sourceType": "local",
-      "computedHash": "01a092525f4afa75b4a9d4292b3e20a73da997cd6eb6f17ad8b4ab5b3b12c844"
-    },
-    "project-bootstrap": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/project-bootstrap",
-      "sourceType": "local",
-      "computedHash": "3251b6100595dcd54d13f8e3621a6c29db5e14efd5af9cc421061eb9203e744a"
-    },
-    "feature-implementor": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/feature-implementor",
-      "sourceType": "local",
-      "computedHash": "bf33dce1a5a562677aa69a956015df29dd525596bd47f7adaa669c0893e5ac07"
-    },
-    "test-writer": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/test-writer",
-      "sourceType": "local",
-      "computedHash": "e8d299abf1252054f982cb0d3162a03cff134ca0b688dad4769a88a47ec7aeba"
-    },
-    "debugger": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/debugger",
-      "sourceType": "local",
-      "computedHash": "2306521d81476bd6525cce13d15b6577a24915eee312368bac869064348b832b"
-    },
-    "delivery": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/delivery",
-      "sourceType": "local",
-      "computedHash": "63adb33be41fa9045dc180e2b35fd68d82f1fc2efdb9a179b3dd32274980f544"
-    },
-    "exploratory-tester": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/qa/skills/exploratory-tester",
-      "sourceType": "local",
-      "computedHash": "c7ba55a389483a54e80e35900efeba26643ea8cce8e04626c6475508216abf9e"
-    },
-    "spec-based-tester": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/qa/skills/spec-based-tester",
-      "sourceType": "local",
-      "computedHash": "7cd64fb64d6ecde07e2826c2b5bbc429657738b6756f7dc0e711e5d27c90c3fb"
-    },
-    "bug-analyzer": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/qa/skills/bug-analyzer",
-      "sourceType": "local",
-      "computedHash": "06533157e07fffdeffbf76668b1a11b4bfe5e5e8b5ff5f5c893104250e3b9957"
-    },
-    "regression-suite": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/qa/skills/regression-suite",
-      "sourceType": "local",
-      "computedHash": "59ba3967523dd25011f2f821c4b1a4a6074397ac756e214266dd655fdb1c8171"
-    },
-    "deployment-planner": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/devops/skills/deployment-planner",
-      "sourceType": "local",
-      "computedHash": "e3ddde6357c1fe93cf7f9f03f45c5542930de58fcea0a4bf9a19df24fca0fb37"
-    },
-    "cicd-bootstrap": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/devops/skills/cicd-bootstrap",
-      "sourceType": "local",
-      "computedHash": "9570f6274ce32df538a7b88cb7eabf0b2a882544e9bad2b4b942acad0fcde3cc"
-    },
-    "env-config-auditor": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/devops/skills/env-config-auditor",
-      "sourceType": "local",
-      "computedHash": "d95eacfa823b33a4f697fa5187415a58501758fcf14f8d248389b61c646a1140"
-    },
-    "incident-playbook-writer": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/devops/skills/incident-playbook-writer",
-      "sourceType": "local",
-      "computedHash": "25c143c446ec4cb28a12eab2c553b85dc154b4b2d20e8236a85b0e66834531fe"
-    },
-    "ui-ux-design": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/designer/skills/ui-ux-design",
-      "sourceType": "local",
-      "computedHash": "placeholder1"
-    },
-    "visual-design": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/designer/skills/visual-design",
-      "sourceType": "local",
-      "computedHash": "placeholder2"
-    },
-    "appsec-checklist": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/security/skills/appsec-checklist",
-      "sourceType": "local",
-      "computedHash": "placeholder3"
-    },
-    "authz-reviewer": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/security/skills/authz-reviewer",
-      "sourceType": "local",
-      "computedHash": "placeholder4"
-    },
-    "dependency-risk-auditor": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/security/skills/dependency-risk-auditor",
-      "sourceType": "local",
-      "computedHash": "placeholder5"
-    },
-    "privacy-surface-mapper": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/security/skills/privacy-surface-mapper",
-      "sourceType": "local",
-      "computedHash": "placeholder6"
-    },
-    "pm-agent": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/product_manager/skills/pm-agent",
-      "sourceType": "local",
-      "computedHash": "placeholder7"
+      "computedHash": "b46508002418ccfd2067f2c3723290c26015f745ccd637dc7324019fe6b97317"
     },
     "engineer-agent": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/engineer/skills/engineer-agent",
+      "source": "agents/engineer/skills/engineer-agent",
       "sourceType": "local",
-      "computedHash": "placeholder8"
+      "computedHash": "e9748a5e4c9194eb9f67954772d0a21f2a5b33b3dd46bfa000fda850993a5e23"
+    },
+    "codebase-analyzer": {
+      "source": "agents/engineer/skills/codebase-analyzer",
+      "sourceType": "local",
+      "computedHash": "59e673c3e6807d951e80d9396ae85dc0aff8af135f1996f62a85f643d5307fb2"
+    },
+    "project-bootstrap": {
+      "source": "agents/engineer/skills/project-bootstrap",
+      "sourceType": "local",
+      "computedHash": "06ad8846c793232f16c533296d2746ee54d2006b9578c993c945fde136427551"
+    },
+    "feature-implementor": {
+      "source": "agents/engineer/skills/feature-implementor",
+      "sourceType": "local",
+      "computedHash": "4d8cb95a48fff1ae2bc62a3f128d87ebb2934de991ac01a52ad6a7d3bc3529f9"
+    },
+    "test-writer": {
+      "source": "agents/engineer/skills/test-writer",
+      "sourceType": "local",
+      "computedHash": "6bd2bf030719128aacf967dd09bfbd1faed9fe9231431809f0bc77214f31e279"
+    },
+    "debugger": {
+      "source": "agents/engineer/skills/debugger",
+      "sourceType": "local",
+      "computedHash": "bf9e9851f664da0e3017ab51a348e95ff94c35b96d908f156735c72b1f624145"
+    },
+    "delivery": {
+      "source": "agents/engineer/skills/delivery",
+      "sourceType": "local",
+      "computedHash": "7a8730093acb8aa84f5fb47268683a3ec51e0fe723e16426f85903b46603f576"
     },
     "qa-agent": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/qa/skills/qa-agent",
+      "source": "agents/qa/skills/qa-agent",
       "sourceType": "local",
-      "computedHash": "placeholder9"
+      "computedHash": "6e63002b5a324061ec5517024757604ea643b9b06e009bd50451a96583d80364"
+    },
+    "exploratory-tester": {
+      "source": "agents/qa/skills/exploratory-tester",
+      "sourceType": "local",
+      "computedHash": "35b754a3270f747ef0d8f9b7448a9ee1c2e53983b0bff57205b0a7802877b9e9"
+    },
+    "spec-based-tester": {
+      "source": "agents/qa/skills/spec-based-tester",
+      "sourceType": "local",
+      "computedHash": "c370d47981f4559e6c6b47b45d462f78352660948ccbadc62f7de02747b88339"
+    },
+    "bug-analyzer": {
+      "source": "agents/qa/skills/bug-analyzer",
+      "sourceType": "local",
+      "computedHash": "f8df5a16d92757cbeb29cac317c4282319d1ecf0d2319afed801f2c347fdfc69"
+    },
+    "regression-suite": {
+      "source": "agents/qa/skills/regression-suite",
+      "sourceType": "local",
+      "computedHash": "291ebf63af62cd6371461e22e540355bbd15762916a159b3a601a3a8d55de6b4"
     },
     "devops-agent": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/devops/skills/devops-agent",
+      "source": "agents/devops/skills/devops-agent",
       "sourceType": "local",
-      "computedHash": "placeholder10"
+      "computedHash": "04faaa97d4edb0445a34b18fdf0bb2922e86694092567ddd9cf07fd4ee8fb2ed"
+    },
+    "deployment-planner": {
+      "source": "agents/devops/skills/deployment-planner",
+      "sourceType": "local",
+      "computedHash": "95e07abc9e41b0c1974c13e87a0069cd72c3a5d1d8152abd25dbcd59d59adb3e"
+    },
+    "cicd-bootstrap": {
+      "source": "agents/devops/skills/cicd-bootstrap",
+      "sourceType": "local",
+      "computedHash": "91681ccdc057b6141df3a88319ad54363c4255668154a429a97178a50ae1ea0c"
+    },
+    "env-config-auditor": {
+      "source": "agents/devops/skills/env-config-auditor",
+      "sourceType": "local",
+      "computedHash": "3a5a2bcc028726dd66cba0e2d144eab4e4237cd8883426a3bf268594a1e78ad9"
+    },
+    "incident-playbook-writer": {
+      "source": "agents/devops/skills/incident-playbook-writer",
+      "sourceType": "local",
+      "computedHash": "2f653a03592457abaf248672f29008749238e5c7c17cd61c3142bbbad9f8c876"
     },
     "designer-agent": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/designer/skills/designer-agent",
+      "source": "agents/designer/skills/designer-agent",
       "sourceType": "local",
-      "computedHash": "placeholder11"
+      "computedHash": "17be8155c9abba9bc4d1273c908543578f550ae7d624cad5363ab2646b494379"
+    },
+    "ui-ux-design": {
+      "source": "agents/designer/skills/ui-ux-design",
+      "sourceType": "local",
+      "computedHash": "c53edac36015e2f631e9b2dda1311f68e45bc83e10e91a1dee863897b9395cf0"
+    },
+    "visual-design": {
+      "source": "agents/designer/skills/visual-design",
+      "sourceType": "local",
+      "computedHash": "b89c2cc31890f913a822a32be8ab3a9a41c8afc375c5f774ad953635a1964484"
     },
     "security-agent": {
-      "source": "/Users/neplich/dev/neplich-skills/agents/security/skills/security-agent",
+      "source": "agents/security/skills/security-agent",
       "sourceType": "local",
-      "computedHash": "placeholder12"
+      "computedHash": "59a52f0b1d791da3153ef8a40347755c992e99a65b85d8b1b1e2c993e969c1bf"
+    },
+    "appsec-checklist": {
+      "source": "agents/security/skills/appsec-checklist",
+      "sourceType": "local",
+      "computedHash": "5ca215fc626744b538786275216308526af8cd18dd8a260b6f9af75f7b6eef1f"
+    },
+    "authz-reviewer": {
+      "source": "agents/security/skills/authz-reviewer",
+      "sourceType": "local",
+      "computedHash": "3b93640230c50614b2578029bd9808feb87b92b0570b5c61d7ba56dde19abd16"
+    },
+    "dependency-risk-auditor": {
+      "source": "agents/security/skills/dependency-risk-auditor",
+      "sourceType": "local",
+      "computedHash": "0f0292b56e39b8394fd7ea013172bcc975d71d773642a623850da1a8ea36e632"
+    },
+    "privacy-surface-mapper": {
+      "source": "agents/security/skills/privacy-surface-mapper",
+      "sourceType": "local",
+      "computedHash": "ef079951ef72f3f622885cb62ab4a949d5f46c5b695d035194bda5de604d850b"
     }
   }
 }

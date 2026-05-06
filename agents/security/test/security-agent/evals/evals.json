@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "agent": "security",
+  "skill_name": "security-agent",
+  "evals": [
+    {
+      "id": "eval-001-route-auth-release-risk",
+      "name": "route-auth-release-risk",
+      "description": "Verifies that security-agent routes a release security request to the narrowest security specialist.",
+      "prompt": "用户说：登录和权限模型重构准备上线，重点担心 admin 越权，同时也想知道依赖有没有漏洞。先做安全路由，不要直接写修复方案。",
+      "workspace": "workspace/eval-1-route-auth-release-risk",
+      "expected_output": "安全路由决策，明确 authz-reviewer 是当前主 route，dependency-risk-auditor 是后续，并保持证据型安全输出边界。",
+      "assertions": [
+        {
+          "id": "routes_primary_to_authz",
+          "description": "权限主 route",
+          "text": "必须选择 `authz-reviewer` 作为当前主 route，因为用户重点担心登录、角色和 admin 越权风险。"
+        },
+        {
+          "id": "names_dependency_followup",
+          "description": "依赖后续 route",
+          "text": "必须把依赖漏洞问题作为 `dependency-risk-auditor` 后续，而不是忽略或混入权限审查。"
+        },
+        {
+          "id": "collects_security_context",
+          "description": "安全上下文",
+          "text": "必须说明下游需要读取认证流程、角色权限矩阵、敏感路由、测试证据和依赖清单。"
+        },
+        {
+          "id": "structured_risk_output",
+          "description": "结构化风险产物",
+          "text": "必须声明预期输出是结构化 review、风险矩阵、证据和修复建议，而不是直接代码补丁。"
+        },
+        {
+          "id": "hands_off_remediation",
+          "description": "修复 handoff",
+          "text": "必须说明如果发现修复项，应交给 `engineer-agent` 或 `devops-agent` 处理 remediation。"
+        }
+      ]
+    }
+  ]
+}

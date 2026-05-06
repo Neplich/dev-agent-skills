@@ -15,7 +15,7 @@
 | 入口 skill | `designer-agent` |
 | Specialist skills | 2 个 |
 | 主要输入 | `docs/pm/{feature}/PRD.md`、`BRD.md`、`DECISIONS.md`、`TRD.md`、参考网站或品牌线索 |
-| 主要输出 | `docs/design/{feature}/UI_UX_SPEC.md`、`VISUAL_SYSTEM.md` |
+| 主要输出 | `docs/design/{feature}/ui-ux-spec.md`、`visual-system.md` |
 | 核心边界 | 只做设计文档，不生成代码、测试、脚本、部署配置 |
 
 ## Skill 清单
@@ -23,8 +23,8 @@
 | Skill | 适用场景 | 主要产物 |
 | --- | --- | --- |
 | `designer-agent` | 设计请求入口与路由 | 下游 skill 选择与执行路径 |
-| `ui-ux-design` | UX 流程、信息架构、页面结构、线框、交互状态、参考网站分析 | `UI_UX_SPEC.md` |
-| `visual-design` | 视觉系统、产品类型推理、风格方向、配色、字体、组件规范、UX 质量规则、反模式、文案语气 | `VISUAL_SYSTEM.md` |
+| `ui-ux-design` | UX 流程、信息架构、页面结构、线框、交互状态、参考网站分析 | `ui-ux-spec.md` |
+| `visual-design` | 视觉系统、产品类型推理、风格方向、配色、字体、组件规范、UX 质量规则、反模式、文案语气 | `visual-system.md` |
 
 ## 路由规则
 
@@ -49,8 +49,8 @@ flowchart LR
 docs/
 └── design/
     └── {feature-name}/
-        ├── UI_UX_SPEC.md
-        └── VISUAL_SYSTEM.md
+        ├── ui-ux-spec.md
+        └── visual-system.md
 ```
 
 ## Visual Design References

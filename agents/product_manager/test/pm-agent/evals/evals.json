@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "agent": "product_manager",
+  "skill_name": "pm-agent",
+  "evals": [
+    {
+      "id": "eval-001-route-greenfield-product-request",
+      "name": "route-greenfield-product-request",
+      "description": "Verifies that pm-agent routes a greenfield product request to the narrowest PM specialist before engineering starts.",
+      "prompt": "用户说：这是一个空目录，我想做一个 AI 对话助手，左侧是会话历史，右侧是聊天区。先不要写代码，帮我判断应该走哪个 PM skill 和后续交接路径。",
+      "workspace": "workspace/eval-1-route-greenfield-product-request",
+      "expected_output": "PM 路由决策，明确选择 idea-to-spec，说明空目录产品想法必须先收敛需求，并给出后续 handoff 边界。",
+      "assertions": [
+        {
+          "id": "route_to_idea_to_spec",
+          "description": "选择最窄 PM route",
+          "text": "必须选择 `idea-to-spec` 作为主 route，并说明它负责产品发现、范围收敛和 spec 创建。"
+        },
+        {
+          "id": "pm_first_guardrail",
+          "description": "空目录 PM-first 边界",
+          "text": "必须识别空目录里的产品想法不能直接进入 `engineer-agent` 或项目脚手架，除非用户明确要求跳过 PM。"
+        },
+        {
+          "id": "context_to_collect",
+          "description": "下游上下文",
+          "text": "必须说明下游需要收集用户目标、核心流程、范围边界、验收标准和关键未决问题。"
+        },
+        {
+          "id": "expected_pm_artifacts",
+          "description": "预期 PM 产物",
+          "text": "必须声明预期输出为 PRD、BRD、DECISIONS 或 TRD 等 PM 文档，而不是代码、测试或部署配置。"
+        },
+        {
+          "id": "handoff_boundary",
+          "description": "后续交接边界",
+          "text": "必须说明只有需求稳定后才 handoff 给 `designer-agent` 或 `engineer-agent`。"
+        }
+      ]
+    }
+  ]
+}

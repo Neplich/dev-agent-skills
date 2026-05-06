@@ -1,0 +1,27 @@
+{
+  "eval_id": "eval-001-route-implementation-chain",
+  "eval_name": "route-implementation-chain",
+  "workspace_root": "agents/engineer/test/engineer-agent/evals/workspace/eval-1-route-implementation-chain",
+  "validation_method": "fresh_codex_subagent",
+  "skill_availability_goal": "Verify that engineer-agent routes an implementation request through analysis, implementation, test, and delivery specialists without executing immediately.",
+  "prompt": "用户说：请接手这个仓库，按 docs/pm/billing-webhook/TRD.md 实现 webhook 重试逻辑，补测试，最后提交 PR。先做工程路由，不要直接改代码。",
+  "fixture_context": [
+    "README.md",
+    "docs/pm/billing-webhook/TRD.md",
+    "src/billing-webhook.md"
+  ],
+  "with_skill_outputs": [
+    "with_skill/outputs/subagent-verdict.md"
+  ],
+  "without_skill_outputs": [
+    "without_skill/outputs/subagent-verdict.md"
+  ],
+  "run_diagnostics": [
+    "diagnostics/run.json"
+  ],
+  "execution_cleanup": [
+    "with_skill/outputs",
+    "without_skill/outputs",
+    "diagnostics"
+  ]
+}

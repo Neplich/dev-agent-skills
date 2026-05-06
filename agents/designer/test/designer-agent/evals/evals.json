@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "agent": "designer",
+  "skill_name": "designer-agent",
+  "evals": [
+    {
+      "id": "eval-001-route-design-handoff",
+      "name": "route-design-handoff",
+      "description": "Verifies that designer-agent routes design work while stopping before engineering implementation.",
+      "prompt": "用户说：根据 docs/pm/billing-notifications/PRD.md 设计设置页流程和视觉风格，顺手把 React 组件也写了。先做设计路由，不要进入实现。",
+      "workspace": "workspace/eval-1-route-design-handoff",
+      "expected_output": "设计路由决策，明确 ui-ux-design 和 visual-design 的顺序，使用真实设计产物文件名，并停在 engineer-agent handoff 前。",
+      "assertions": [
+        {
+          "id": "routes_ux_first",
+          "description": "UX route",
+          "text": "必须先选择 `ui-ux-design` 处理流程、页面结构、信息架构、线框和交互状态。"
+        },
+        {
+          "id": "routes_visual_followup",
+          "description": "视觉 route",
+          "text": "必须把视觉风格、组件规范、颜色、字体和文案语气交给 `visual-design`，作为后续或第二步。"
+        },
+        {
+          "id": "uses_real_output_filenames",
+          "description": "真实输出文件名",
+          "text": "必须使用 `docs/design/{feature}/ui-ux-spec.md` 和 `docs/design/{feature}/visual-system.md` 作为设计交付文件名。"
+        },
+        {
+          "id": "stops_before_code",
+          "description": "设计边界",
+          "text": "必须拒绝在 Designer 阶段编写 React 组件、测试、脚本或部署配置。"
+        },
+        {
+          "id": "hands_off_to_engineer",
+          "description": "工程 handoff",
+          "text": "必须说明实现应在设计完成后交给 `engineer-agent`。"
+        }
+      ]
+    }
+  ]
+}

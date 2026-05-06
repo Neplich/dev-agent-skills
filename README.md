@@ -174,32 +174,38 @@ The data design follows ui ux pro max's organization model and is maintained und
 > [!NOTE]
 > Use `uv run ...` for Python-based validation scripts and eval runners in this repository.
 
-```bash
-# PR required order: repository-contract -> eval-contract -> python-tests
+PR CI uses three required checks in this order:
 
-# Repository contract check
+```bash
+# repository-contract
 uv run scripts/check_repository_contract.py
 
-# Eval definition contract check
+# eval-contract
 uv run scripts/check_eval_contract.py
+uv run scripts/check_eval_artifacts.py
 
-# Designer eval
-uv run agents/designer/test/run_all_evals.py
-
-# QA eval
-uv run agents/qa/test/run_all_evals.py
-
-# Deterministic pytest and shared contract coverage
+# python-tests
 uv run --with pytest pytest \
   agents/product_manager/test/idea-to-spec \
   agents/qa/test/test_qa_run_eval.py \
   agents/designer/test/test_designer_run_eval.py \
   agents/devops/test/test_devops_run_eval.py \
   agents/test_eval_contract.py
+```
 
-# Eval runtime artifact check
-uv run scripts/check_eval_artifacts.py
+Additional local model evals are manual quality checks, not first-version PR required checks:
 
+```bash
+# Designer eval
+uv run agents/designer/test/run_all_evals.py
+
+# QA eval
+uv run agents/qa/test/run_all_evals.py
+```
+
+Extra static format checks:
+
+```bash
 # JSON format checks
 uv run python -m json.tool .claude-plugin/marketplace.json >/tmp/marketplace.json.out
 uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
@@ -209,6 +215,7 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 
 - Follow the existing `agents/*` structure when adding a new agent or skill.
 - Keep `AGENTS.md` as the only edited guidance source; `CLAUDE.md` must remain a symlink to it.
+- Update root [`CHANGELOG.md`](./CHANGELOG.md) for release-facing, user-facing, or developer-facing changes; keep README focused on the current project state.
 - Restrictive repository permissions default to the sole administrator; add maintainers or bots explicitly when needed.
 - Skill evals should verify role boundaries, context reading, execution-path selection, and structured artifacts instead of generic answer quality alone.
 - All skill eval definitions use the shared `evals.json` schema v1.0; do not add agent-specific schema exceptions.
@@ -218,16 +225,16 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 When adding or updating a skill eval, keep the repository as the source of eval definitions and latest conclusions, not a log archive:
 
 1. Create or update the skill and its eval fixture.
-2. Run the existing or updated test set from a temporary or scratch workspace.
+2. Run the existing or updated test set. Use a temporary or scratch workspace when the runner supports it.
 3. Write the latest comparison in `comparison.md`.
 4. Delete runtime files before opening a PR.
 5. Commit only eval definitions, metadata, fixtures, README files, and `comparison.md`.
 
-Do not commit `with_skill/`, `without_skill/`, `baseline/`, `iteration2/`, `outputs/`, `comparison.auto.md`, transcripts, candidate outputs, subagent verdicts, timing files, run status files, or diagnostics directories. Metadata fields such as `with_skill_outputs`, `without_skill_outputs`, and baseline outputs describe runner expectations; they do not mean those runtime files belong in git. Manual or scheduled model eval workflows may upload transcripts, verdicts, timing, and diagnostics as short-lived CI artifacts for debugging, but the durable repository result remains `comparison.md`.
+Do not commit `with_skill/`, `without_skill/`, `baseline/`, `iteration2/`, `outputs/`, `comparison.auto.md`, transcripts, candidate outputs, subagent verdicts, timing files, run status files, or diagnostics directories. Some existing runners may generate these files under eval fixtures during local runs; they are temporary and must be removed before commit. Metadata fields such as `with_skill_outputs`, `without_skill_outputs`, and baseline outputs describe runner expectations; they do not mean those runtime files belong in git. Manual or scheduled model eval workflows may upload transcripts, verdicts, timing, and diagnostics as short-lived CI artifacts for debugging, but the durable repository result remains `comparison.md`.
 
 Every `evals.json` must live at `agents/{agent}/test/{skill-name}/evals/evals.json` and declare `schema_version: "1.0"`, `agent`, `skill_name`, and non-empty `evals`. Each eval item must include `id`, `name`, `description`, `prompt`, explicit `workspace`, `expected_output`, and object assertions with lower snake_case `id`, `description`, and semantic `text`. Use `workspace: null` for prompt-only evals. Run `uv run scripts/check_eval_contract.py` with eval definition changes.
 
-New eval runners should write runtime files to a system temp directory or `tmp/eval-runs/...`, then copy only the confirmed `comparison.md` back to the eval workspace. New metadata schemas should make the split explicit with runtime-output fields and a durable-result field. Keep Python test module names unique across test roots, such as `test_pm_run_eval.py` and `test_qa_run_eval.py`, so pytest can collect all deterministic tests in one process.
+New eval runners should write runtime files to a system temp directory or `tmp/eval-runs/...`, then copy only the confirmed `comparison.md` back to the eval workspace. Existing runners that write runtime files into fixtures must be followed by `uv run scripts/check_eval_artifacts.py` before submitting. New metadata schemas should make the split explicit with runtime-output fields and a durable-result field. Keep Python test module names unique across test roots, such as `test_pm_run_eval.py` and `test_qa_run_eval.py`, so pytest can collect all deterministic tests in one process.
 
 Use this `comparison.md` shape for durable results:
 

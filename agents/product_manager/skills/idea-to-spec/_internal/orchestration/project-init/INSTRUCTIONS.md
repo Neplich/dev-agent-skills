@@ -140,7 +140,7 @@ docs/
 │     └─ TEST_SPEC.md                     (TEST_SPEC stub)
 ├─ design/
 │  └─ smart-checkout/
-│     └─ UI_UX_SPEC.md                    (UI/UX spec stub)
+│     └─ ui-ux-spec.md                    (UI/UX spec stub)
 ├─ devops/
 │  └─ smart-checkout/
 │     └─ RELEASE_PLAN.md                  (release plan stub)
