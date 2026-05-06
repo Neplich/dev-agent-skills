@@ -203,6 +203,8 @@ uv run agents/designer/test/run_all_evals.py
 uv run agents/qa/test/run_all_evals.py
 ```
 
+涉及 skill 行为、routing、eval fixture 或 release 前变更时，管理员应在合并前运行手动模型 eval workflow，并把结果作为 merge 判断依据。模型 eval 不作为 required status check，因为模型输出、运行耗时和环境都可能波动。
+
 额外静态格式检查：
 
 ```bash

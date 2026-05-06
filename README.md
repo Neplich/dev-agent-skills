@@ -203,6 +203,8 @@ uv run agents/designer/test/run_all_evals.py
 uv run agents/qa/test/run_all_evals.py
 ```
 
+For changes that affect skill behavior, routing, eval fixtures, or release readiness, an administrator should run the manual model eval workflow before merging and use the result as merge evidence. Model evals are not required status checks because model output, runtime, and environment can vary.
+
 Extra static format checks:
 
 ```bash
