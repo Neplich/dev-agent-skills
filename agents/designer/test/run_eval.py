@@ -4,6 +4,12 @@ import json
 import sys
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.eval_runtime import copy_fixture_to_runtime, display_path, eval_runtime_root
+
 
 def load_metadata(path: Path) -> dict:
     return json.loads(path.read_text())
@@ -136,7 +142,9 @@ def main() -> int:
         return 2
 
     metadata_path = Path(sys.argv[1]).resolve()
-    root = metadata_path.parent
+    fixture_root = metadata_path.parent
+    root = eval_runtime_root(metadata_path, "designer")
+    copy_fixture_to_runtime(fixture_root, root)
     meta = load_metadata(metadata_path)
 
     with_results = check_outputs(root, meta.get("with_skill_outputs", []))
@@ -151,7 +159,7 @@ def main() -> int:
     failed = any(not ok for _, ok in with_results + without_results) or any(
         result["status"] == "FAIL" for result in assertion_results
     )
-    print(report_path)
+    print(display_path(report_path))
     return 1 if failed else 0
 
 

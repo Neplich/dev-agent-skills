@@ -5,9 +5,16 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[4]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.eval_runtime import eval_runtime_root, reset_directory
 
 
 RESERVED_CLEANUP_PATHS = (
@@ -200,9 +207,12 @@ def generate_eval_outputs(
 ) -> list[dict]:
     metadata_path = metadata_path.resolve()
     eval_root = metadata_path.parent
+    runtime_root = eval_runtime_root(metadata_path, "product_manager")
     meta = load_metadata(metadata_path)
     cleanup_paths = meta.get("execution_cleanup", [])
     statuses = []
+
+    reset_directory(runtime_root)
 
     with tempfile.TemporaryDirectory(prefix="idea-to-spec-eval-") as temp_dir:
         execution_root = Path(temp_dir) / "workspace"
@@ -235,8 +245,8 @@ def generate_eval_outputs(
                 write_text(transcript_path, transcript)
 
             write_status(status_path, status)
-            sync_declared_outputs(execution_root, eval_root, outputs)
-            copy_path(status_path, eval_root / label / "outputs/run_status.json")
+            sync_declared_outputs(execution_root, runtime_root, outputs)
+            copy_path(status_path, runtime_root / label / "outputs/run_status.json")
             statuses.append({"label": label, **status})
 
     return statuses

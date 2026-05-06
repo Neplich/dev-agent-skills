@@ -25,7 +25,7 @@ uv run agents/qa/test/run_all_evals.py
 
 ## Outputs
 
-Each eval run may create runtime-only files such as:
+Each eval run writes runtime-only files under `tmp/eval-runs/qa/`, such as:
 
 - `with_skill/outputs/candidate-output.md`
 - `with_skill/outputs/subagent-verdict.md`

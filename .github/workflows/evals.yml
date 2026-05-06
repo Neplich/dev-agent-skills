@@ -45,7 +45,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
           path: |
-            agents/designer/test/**/comparison.auto.md
+            tmp/eval-runs/designer/**
 
   qa-evals:
     if: ${{ github.event.inputs.target == 'all' || github.event.inputs.target == 'qa' }}
@@ -86,7 +86,4 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
           path: |
-            agents/qa/test/**/comparison.auto.md
-            agents/qa/test/**/with_skill/outputs/**
-            agents/qa/test/**/without_skill/outputs/**
-            agents/qa/test/**/diagnostics/**
+            tmp/eval-runs/qa/**

@@ -25,27 +25,27 @@ BLOCKED_PATTERNS = [
 ]
 
 
-def tracked_test_files() -> list[str]:
+def tracked_files() -> list[str]:
     result = subprocess.run(
-        ["git", "ls-files", "-z", "agents"],
+        ["git", "ls-files", "-z", "--", "agents", "tmp/eval-runs"],
         check=True,
         stdout=subprocess.PIPE,
     )
-    return [
-        path
-        for path in result.stdout.decode("utf-8").split("\0")
-        if path and "/test/" in path
-    ]
+    return [path for path in result.stdout.decode("utf-8").split("\0") if path]
 
 
 def is_runtime_artifact(path: str) -> bool:
+    if path.startswith("tmp/eval-runs/"):
+        return True
+    if not (path.startswith("agents/") and "/test/" in path):
+        return False
     return any(pattern.search(path) for pattern in BLOCKED_PATTERNS)
 
 
 def main() -> int:
     blocked = [
         path
-        for path in tracked_test_files()
+        for path in tracked_files()
         if Path(path).exists() and is_runtime_artifact(path)
     ]
 
