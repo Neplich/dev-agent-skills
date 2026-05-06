@@ -76,5 +76,6 @@ flowchart LR
 npx skills add ./agents/devops/skills/deployment-planner
 
 # 运行单个 DevOps eval
-uv run agents/devops/test/run_eval.py agents/devops/test/deployment-planner/evals/evals.json
+uv run agents/devops/test/run_eval.py \
+  agents/devops/test/env-config-auditor/workspace/iteration-1/eval-1-missing-variables/eval_metadata.json
 ```

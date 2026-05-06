@@ -62,8 +62,8 @@ Engineer 主要消费：
 - `docs/pm/{feature}/PRD.md`
 - `docs/pm/{feature}/TRD.md`
 - `docs/pm/{feature}/DECISIONS.md`
-- `docs/design/{feature}/UI_UX_SPEC.md`
-- `docs/design/{feature}/VISUAL_SYSTEM.md`
+- `docs/design/{feature}/ui-ux-spec.md`
+- `docs/design/{feature}/visual-system.md`
 
 Engineer 的主产物通常是代码和测试；必要时可补充：
 

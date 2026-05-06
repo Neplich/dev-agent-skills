@@ -30,15 +30,17 @@ agents/product_manager/test/idea-to-spec/
    │  ├─ eval-2-existing-project-update/
    │  └─ eval-3-greenfield-discovery/
    └─ iteration-2/
-      └─ eval-4-greenfield-bootstrap-routing/
+      ├─ eval-4-greenfield-bootstrap-routing/
+      └─ eval-5-pm-agent-direct-delegation/
 ```
 
 每个 eval workspace 包含：
 
 - 最小项目上下文文件，例如 `README.md`、`package.json`、`docs/...`
-- `with_skill/outputs/` 目录
-- `without_skill/outputs/` 目录
 - `eval_metadata.json`
+- `comparison.md`，作为长期保留的最新评测比对结果
+
+`with_skill/outputs/`、`without_skill/outputs/`、`run_status.json` 和 `comparison.auto.md` 是运行期文件。helper 可能在本地运行时生成这些文件用于检查，但它们不能提交；提交前需要清理并运行 `uv run scripts/check_eval_artifacts.py`。
 
 `eval_metadata.json` 中的输出项支持两种写法：
 
@@ -82,9 +84,9 @@ agents/product_manager/test/idea-to-spec/
 1. 进入某个 eval workspace 根目录。
 2. 读取该目录下的 `eval_metadata.json`。
 3. 运行 `run_eval.py`；它会先生成 fresh 的 with-skill / without-skill transcript，再执行断言检查。
-4. 查看临时运行目录里的 transcript 和 `run_status.json`。
+4. 查看本地生成的 transcript 和 `run_status.json`。
 5. 根据 `assertions` 做人工或脚本检查。
-6. 需要人工分析时，在该 eval 目录下补 `comparison.md` 记录对比结论。
+6. 更新该 eval 目录下的 `comparison.md` 记录最新对比结论。
 
 报告分为两类：
 

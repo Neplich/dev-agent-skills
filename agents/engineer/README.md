@@ -62,8 +62,8 @@ Engineer mainly consumes:
 - `docs/pm/{feature}/PRD.md`
 - `docs/pm/{feature}/TRD.md`
 - `docs/pm/{feature}/DECISIONS.md`
-- `docs/design/{feature}/UI_UX_SPEC.md`
-- `docs/design/{feature}/VISUAL_SYSTEM.md`
+- `docs/design/{feature}/ui-ux-spec.md`
+- `docs/design/{feature}/visual-system.md`
 
 Engineer's primary outputs are code and tests. It may also update:
 
