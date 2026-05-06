@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "agent": "engineer",
+  "skill_name": "engineer-agent",
+  "evals": [
+    {
+      "id": "eval-001-route-implementation-chain",
+      "name": "route-implementation-chain",
+      "description": "Verifies that engineer-agent routes a multi-step implementation request through the narrowest engineering chain.",
+      "prompt": "用户说：请接手这个仓库，按 docs/pm/billing-webhook/TRD.md 实现 webhook 重试逻辑，补测试，最后提交 PR。先做工程路由，不要直接改代码。",
+      "workspace": "workspace/eval-1-route-implementation-chain",
+      "expected_output": "工程路由决策，明确先理解仓库，再实现、补测试、交付，并说明每一步对应的 specialist skill。",
+      "assertions": [
+        {
+          "id": "starts_with_codebase_context",
+          "description": "先建立工程上下文",
+          "text": "必须先选择或安排 `codebase-analyzer` 获取仓库结构、技术栈、约束和现有模式。"
+        },
+        {
+          "id": "routes_implementation_to_feature_implementor",
+          "description": "实现 route",
+          "text": "必须把 webhook 重试逻辑实现交给 `feature-implementor`，并说明它基于 TRD 和现有代码执行。"
+        },
+        {
+          "id": "routes_tests_to_test_writer",
+          "description": "测试 route",
+          "text": "必须把补测试和验证覆盖交给 `test-writer`，不能把测试省略到交付阶段。"
+        },
+        {
+          "id": "routes_delivery_last",
+          "description": "交付 route",
+          "text": "必须把 `delivery` 放在实现和测试之后，用于 commit、push 或 PR 收尾。"
+        },
+        {
+          "id": "does_not_execute_directly",
+          "description": "只做路由不执行",
+          "text": "因为用户要求先做工程路由，不能直接修改代码、运行测试或创建提交。"
+        }
+      ]
+    }
+  ]
+}

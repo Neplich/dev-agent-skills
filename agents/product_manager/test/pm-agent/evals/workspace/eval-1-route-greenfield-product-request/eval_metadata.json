@@ -1,0 +1,25 @@
+{
+  "eval_id": "eval-001-route-greenfield-product-request",
+  "eval_name": "route-greenfield-product-request",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-1-route-greenfield-product-request",
+  "validation_method": "fresh_codex_subagent",
+  "skill_availability_goal": "Verify that pm-agent routes a greenfield product idea to idea-to-spec before design or engineering execution.",
+  "prompt": "用户说：这是一个空目录，我想做一个 AI 对话助手，左侧是会话历史，右侧是聊天区。先不要写代码，帮我判断应该走哪个 PM skill 和后续交接路径。",
+  "fixture_context": [
+    "README.md"
+  ],
+  "with_skill_outputs": [
+    "with_skill/outputs/subagent-verdict.md"
+  ],
+  "without_skill_outputs": [
+    "without_skill/outputs/subagent-verdict.md"
+  ],
+  "run_diagnostics": [
+    "diagnostics/run.json"
+  ],
+  "execution_cleanup": [
+    "with_skill/outputs",
+    "without_skill/outputs",
+    "diagnostics"
+  ]
+}

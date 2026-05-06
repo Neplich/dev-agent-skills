@@ -52,6 +52,10 @@ def evals_paths(root: Path) -> list[Path]:
     return sorted(root.glob("agents/*/test/*/evals/evals.json"))
 
 
+def skill_paths(root: Path) -> list[Path]:
+    return sorted(root.glob("agents/*/skills/*/SKILL.md"))
+
+
 def non_empty_string(value: Any) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
@@ -299,6 +303,20 @@ def validate_all(root: Path | None = None) -> list[ContractError]:
 
     if not paths:
         return [ContractError(root, "no evals.json files found")]
+
+    eval_path_set = {path.relative_to(root).as_posix() for path in paths}
+    for skill_doc in skill_paths(root):
+        rel_parts = skill_doc.relative_to(root).parts
+        agent = rel_parts[1]
+        skill_name = rel_parts[3]
+        expected = f"agents/{agent}/test/{skill_name}/evals/evals.json"
+        if expected not in eval_path_set:
+            errors.append(
+                ContractError(
+                    skill_doc,
+                    f"missing eval definition {expected}",
+                )
+            )
 
     for path in paths:
         errors.extend(validate_file(root, path))

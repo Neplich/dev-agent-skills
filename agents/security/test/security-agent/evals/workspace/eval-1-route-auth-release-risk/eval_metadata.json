@@ -1,0 +1,26 @@
+{
+  "eval_id": "eval-001-route-auth-release-risk",
+  "eval_name": "route-auth-release-risk",
+  "workspace_root": "agents/security/test/security-agent/evals/workspace/eval-1-route-auth-release-risk",
+  "validation_method": "fresh_codex_subagent",
+  "skill_availability_goal": "Verify that security-agent routes an auth-centered release risk request to authz-reviewer and keeps dependency audit as a follow-up.",
+  "prompt": "用户说：登录和权限模型重构准备上线，重点担心 admin 越权，同时也想知道依赖有没有漏洞。先做安全路由，不要直接写修复方案。",
+  "fixture_context": [
+    "docs/security/auth-model.md",
+    "package.json"
+  ],
+  "with_skill_outputs": [
+    "with_skill/outputs/subagent-verdict.md"
+  ],
+  "without_skill_outputs": [
+    "without_skill/outputs/subagent-verdict.md"
+  ],
+  "run_diagnostics": [
+    "diagnostics/run.json"
+  ],
+  "execution_cleanup": [
+    "with_skill/outputs",
+    "without_skill/outputs",
+    "diagnostics"
+  ]
+}

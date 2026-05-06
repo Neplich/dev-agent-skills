@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "agent": "devops",
+  "skill_name": "devops-agent",
+  "evals": [
+    {
+      "id": "eval-001-route-ci-readiness",
+      "name": "route-ci-readiness",
+      "description": "Verifies that devops-agent routes CI readiness work to the narrowest DevOps specialist and keeps follow-ups explicit.",
+      "prompt": "用户说：这个服务已经有 deploy/docker 目录，但还没有 GitHub Actions PR 门禁；另外我担心环境变量和回滚文档也不完整。先做 DevOps 路由，不要直接写 workflow。",
+      "workspace": "workspace/eval-1-route-ci-readiness",
+      "expected_output": "DevOps 路由决策，明确 CI/CD 是当前主 route，配置审计和 runbook 是后续检查，而不是一次性直接执行所有 DevOps skill。",
+      "assertions": [
+        {
+          "id": "routes_primary_to_cicd",
+          "description": "CI/CD 主 route",
+          "text": "必须选择 `cicd-bootstrap` 作为当前主 route，因为用户的当前缺口是 GitHub Actions PR 门禁。"
+        },
+        {
+          "id": "keeps_deployment_context",
+          "description": "部署上下文",
+          "text": "必须读取或传递现有 `deploy/docker` 上下文，不能假设从零开始创建部署资产。"
+        },
+        {
+          "id": "names_followups",
+          "description": "后续 route",
+          "text": "必须把环境变量覆盖率作为 `env-config-auditor` 后续，把回滚文档作为 `incident-playbook-writer` 后续。"
+        },
+        {
+          "id": "does_not_run_all_skills",
+          "description": "不扩展成全链路",
+          "text": "不能同时执行所有 DevOps skill；必须区分当前主 route 和后续检查。"
+        },
+        {
+          "id": "does_not_write_workflow",
+          "description": "只做路由不写文件",
+          "text": "因为用户要求先做路由，不能直接新增 `.github/workflows` 文件。"
+        }
+      ]
+    }
+  ]
+}
