@@ -40,7 +40,7 @@ agents/product_manager/test/idea-to-spec/
 - `eval_metadata.json`
 - `comparison.md`，作为长期保留的最新评测比对结果
 
-`with_skill/outputs/`、`without_skill/outputs/`、`run_status.json` 和 `comparison.auto.md` 是运行期文件。helper 可能在本地运行时生成这些文件用于检查，但它们不能提交；提交前需要清理并运行 `uv run scripts/check_eval_artifacts.py`。
+`with_skill/outputs/`、`without_skill/outputs/`、`run_status.json` 和 `comparison.auto.md` 是运行期文件。helper 会把这些文件生成到 `tmp/eval-runs/product_manager/` 用于检查，不写回 eval fixture，也不能提交。
 
 `eval_metadata.json` 中的输出项支持两种写法：
 
@@ -83,7 +83,7 @@ agents/product_manager/test/idea-to-spec/
 
 1. 进入某个 eval workspace 根目录。
 2. 读取该目录下的 `eval_metadata.json`。
-3. 运行 `run_eval.py`；它会先生成 fresh 的 with-skill / without-skill transcript，再执行断言检查。
+3. 运行 `run_eval.py`；它会先在 `tmp/eval-runs/product_manager/` 生成 fresh 的 with-skill / without-skill transcript，再执行断言检查。
 4. 查看本地生成的 transcript 和 `run_status.json`。
 5. 根据 `assertions` 做人工或脚本检查。
 6. 更新该 eval 目录下的 `comparison.md` 记录最新对比结论。

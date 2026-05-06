@@ -234,11 +234,11 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 4. 提交 PR 前删除运行过程文件。
 5. 只提交 eval 定义、metadata、fixture、README 和 `comparison.md`。
 
-不要提交 `with_skill/`、`without_skill/`、`baseline/`、`iteration2/`、`outputs/`、`comparison.auto.md`、transcript、candidate output、subagent verdict、timing、run status 或 diagnostics 目录。部分现有 runner 在本地运行时可能把这些文件生成到 eval fixture 下；它们只是临时文件，提交前必须删除。`with_skill_outputs`、`without_skill_outputs`、baseline outputs 等 metadata 字段只描述 runner 的运行期预期，不代表这些过程文件需要进入 git。手动或定时模型 eval workflow 可以把 transcript、verdict、timing 和 diagnostics 作为短期 CI artifact 上传用于排查，但仓库里长期保留的结果仍然是 `comparison.md`。
+不要提交 `with_skill/`、`without_skill/`、`baseline/`、`iteration2/`、`outputs/`、`comparison.auto.md`、transcript、candidate output、subagent verdict、timing、run status 或 diagnostics 目录。Eval runner 会把运行期文件写入 `tmp/eval-runs/...` 这类 scratch workspace；这些文件只是临时文件，不应复制回 eval fixture。`with_skill_outputs`、`without_skill_outputs`、baseline outputs 等 metadata 字段只描述 runner 的运行期预期，不代表这些过程文件需要进入 git。手动或定时模型 eval workflow 可以把 transcript、verdict、timing 和 diagnostics 作为短期 CI artifact 上传用于排查，但仓库里长期保留的结果仍然是 `comparison.md`。
 
 每个 `evals.json` 必须位于 `agents/{agent}/test/{skill-name}/evals/evals.json`，并声明 `schema_version: "1.0"`、`agent`、`skill_name` 和非空 `evals`。每个 eval item 必须包含 `id`、`name`、`description`、`prompt`、显式 `workspace`、`expected_output`，以及对象形式的 assertions；assertion 必须包含 lower snake_case `id`、`description` 和语义化 `text`。prompt-only eval 使用 `workspace: null`。修改 eval 定义时运行 `uv run scripts/check_eval_contract.py`。
 
-新的 eval runner 应将运行期文件写入系统临时目录或 `tmp/eval-runs/...`，再只把确认后的 `comparison.md` 同步回 eval workspace。仍会把运行期文件写入 fixture 的现有 runner，提交前必须再跑 `uv run scripts/check_eval_artifacts.py`。新的 metadata schema 应显式区分 runtime output 字段和 durable result 字段。Python 测试文件名需要跨测试目录保持唯一，例如 `test_pm_run_eval.py` 和 `test_qa_run_eval.py`，确保 pytest 能在同一个进程里收集所有确定性测试。
+Eval runner 应将运行期文件写入系统临时目录或 `tmp/eval-runs/...`，再只把确认后的 `comparison.md` 同步回 eval workspace。新的 metadata schema 应显式区分 runtime output 字段和 durable result 字段。Python 测试文件名需要跨测试目录保持唯一，例如 `test_pm_run_eval.py` 和 `test_qa_run_eval.py`，确保 pytest 能在同一个进程里收集所有确定性测试。
 
 `comparison.md` 使用以下结构：
 

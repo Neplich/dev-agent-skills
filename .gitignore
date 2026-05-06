@@ -20,6 +20,7 @@ docs/product_manager/
 __pycache__/
 *.pyc
 tmp
+tmp/eval-runs/
 
 # eval runtime artifacts
 agents/**/test/**/workspace/**/with_skill/

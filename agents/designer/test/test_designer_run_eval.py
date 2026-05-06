@@ -1,4 +1,6 @@
 import importlib.util
+import os
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -56,6 +58,44 @@ class DesignerRunEvalTests(unittest.TestCase):
             )
 
             self.assertEqual(result["status"], "PASS")
+
+    def test_main_writes_runtime_report_outside_fixture(self):
+        run_eval = load_run_eval_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            fixture = temp_root / "fixture"
+            fixture.mkdir()
+            metadata = fixture / "eval_metadata.json"
+            metadata.write_text(
+                """{
+  "eval_id": "eval-001-runtime-isolation",
+  "eval_name": "runtime-isolation",
+  "prompt": "Check runtime isolation.",
+  "with_skill_outputs": [],
+  "without_skill_outputs": [],
+  "assertions": []
+}
+"""
+            )
+
+            old_argv = sys.argv
+            old_output_dir = os.environ.get("EVAL_RUN_OUTPUT_DIR")
+            os.environ["EVAL_RUN_OUTPUT_DIR"] = str(temp_root / "runs")
+            sys.argv = ["run_eval.py", str(metadata)]
+            try:
+                result = run_eval.main()
+            finally:
+                sys.argv = old_argv
+                if old_output_dir is None:
+                    os.environ.pop("EVAL_RUN_OUTPUT_DIR", None)
+                else:
+                    os.environ["EVAL_RUN_OUTPUT_DIR"] = old_output_dir
+
+            self.assertEqual(result, 0)
+            self.assertFalse((fixture / "comparison.auto.md").exists())
+            reports = list((temp_root / "runs").rglob("comparison.auto.md"))
+            self.assertEqual(len(reports), 1)
 
 
 if __name__ == "__main__":

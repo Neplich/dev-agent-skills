@@ -4,6 +4,11 @@ import json
 import sys
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parents[4]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.eval_runtime import display_path, eval_runtime_root
 from transcript_runner import generate_eval_outputs
 
 
@@ -164,7 +169,7 @@ def main() -> int:
 
     metadata_path = Path(sys.argv[1]).resolve()
     should_generate = "--skip-generate" not in sys.argv[2:]
-    root = metadata_path.parent
+    root = eval_runtime_root(metadata_path, "product_manager")
     meta = load_metadata(metadata_path)
 
     if should_generate:
@@ -178,12 +183,13 @@ def main() -> int:
 
     report = render_report(meta, with_results, without_results, assertion_results)
     report_path = root / "comparison.auto.md"
+    report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(report)
 
     failed = any(not ok for _, ok in with_results + without_results) or any(
         result["status"] == "FAIL" for result in assertion_results
     )
-    print(report_path)
+    print(display_path(report_path))
     print("Manual review template: agents/product_manager/test/idea-to-spec/COMPARISON_TEMPLATE.md")
     return 1 if failed else 0
 

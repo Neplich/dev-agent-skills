@@ -4,12 +4,23 @@ from __future__ import annotations
 
 import json
 import re
-import shutil
 import subprocess
 import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.eval_runtime import (
+    apply_cleanup_paths,
+    copy_fixture_to_runtime,
+    display_path,
+    eval_runtime_root,
+    reset_directory,
+)
 
 
 DEFAULT_TIMEOUT_SECONDS = 180
@@ -28,6 +39,8 @@ SKILL_PATHS = {
 class EvalDefinition:
     metadata_path: Path
     eval_root: Path
+    runtime_root: Path
+    runtime_workspace_root: Path
     evals_path: Path
     skill_name: str
     eval_item: dict
@@ -40,13 +53,6 @@ def repo_root() -> Path:
 
 def load_json(path: Path) -> dict:
     return json.loads(path.read_text())
-
-
-def remove_path(path: Path) -> None:
-    if path.is_dir():
-        shutil.rmtree(path)
-    elif path.exists():
-        path.unlink()
 
 
 def load_eval_definition(metadata_path: Path | str) -> EvalDefinition:
@@ -65,6 +71,8 @@ def load_eval_definition(metadata_path: Path | str) -> EvalDefinition:
             return EvalDefinition(
                 metadata_path=metadata_path,
                 eval_root=eval_root,
+                runtime_root=eval_runtime_root(metadata_path, "qa"),
+                runtime_workspace_root=eval_runtime_root(metadata_path, "qa") / "workspace",
                 evals_path=evals_path,
                 skill_name=evals["skill_name"],
                 eval_item=item,
@@ -75,7 +83,7 @@ def load_eval_definition(metadata_path: Path | str) -> EvalDefinition:
 
 
 def rel(path: Path) -> str:
-    return path.resolve().relative_to(repo_root()).as_posix()
+    return display_path(path)
 
 
 def fixture_list(defn: EvalDefinition) -> str:
@@ -83,6 +91,10 @@ def fixture_list(defn: EvalDefinition) -> str:
     if not items:
         return "- None"
     return "\n".join(f"- {item}" for item in items)
+
+
+def runtime_workspace_label(defn: EvalDefinition) -> str:
+    return display_path(defn.runtime_workspace_root)
 
 
 def assertion_list(defn: EvalDefinition) -> str:
@@ -123,7 +135,7 @@ Read:
 - `{rel(defn.evals_path)}`
 - `{rel(defn.metadata_path)}`
 - Fixture files listed in the metadata, relative to
-  `{defn.metadata['workspace_root']}`:
+  `{runtime_workspace_label(defn)}`:
 {fixture_list(defn)}
 
 User prompt:
@@ -151,7 +163,7 @@ Read:
 - `{rel(defn.metadata_path)}`
 - `{candidate_path}`
 - Fixture files listed in the metadata, relative to
-  `{defn.metadata['workspace_root']}`:
+  `{runtime_workspace_label(defn)}`:
 {fixture_list(defn)}
 
 Evaluate whether the {label} candidate output satisfies the eval assertions.
@@ -229,14 +241,14 @@ def run_codex(prompt: str, output_path: Path, timeout_seconds: int) -> dict:
 
 
 def candidate_path(defn: EvalDefinition, label: str) -> Path:
-    return defn.eval_root / label / "outputs/candidate-output.md"
+    return defn.runtime_root / label / "outputs/candidate-output.md"
 
 
 def verdict_path(defn: EvalDefinition, label: str) -> Path:
     outputs = defn.metadata.get(f"{label}_outputs", [])
     if outputs and isinstance(outputs[0], str):
-        return defn.eval_root / outputs[0]
-    return defn.eval_root / label / "outputs/subagent-verdict.md"
+        return defn.runtime_root / outputs[0]
+    return defn.runtime_root / label / "outputs/subagent-verdict.md"
 
 
 def parse_overall(text: str) -> str:
@@ -278,15 +290,21 @@ def run_label(defn: EvalDefinition, label: str, timeout_seconds: int) -> dict:
 
 def write_run_diagnostics(defn: EvalDefinition, results: list[dict]) -> None:
     diagnostics_paths = defn.metadata.get("run_diagnostics", ["diagnostics/run.json"])
-    path = defn.eval_root / diagnostics_paths[0]
+    path = defn.runtime_root / diagnostics_paths[0]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(results, ensure_ascii=False, indent=2) + "\n")
 
 
 def clean_outputs(defn: EvalDefinition) -> None:
-    for item in defn.metadata.get("execution_cleanup", []):
-        remove_path(defn.eval_root / item)
-    remove_path(defn.eval_root / "comparison.auto.md")
+    reset_directory(defn.runtime_root)
+
+
+def prepare_runtime_workspace(defn: EvalDefinition) -> None:
+    copy_fixture_to_runtime(defn.eval_root, defn.runtime_workspace_root)
+    apply_cleanup_paths(
+        defn.runtime_workspace_root,
+        defn.metadata.get("execution_cleanup", []),
+    )
 
 
 def render_report(defn: EvalDefinition, results: list[dict]) -> str:
@@ -346,6 +364,7 @@ def run_eval(
 
     if not skip_generate:
         clean_outputs(defn)
+        prepare_runtime_workspace(defn)
         results = [
             run_label(defn, "with_skill", timeout_seconds),
             run_label(defn, "without_skill", timeout_seconds),
@@ -369,7 +388,7 @@ def run_eval(
             )
 
     report = render_report(defn, results)
-    (defn.eval_root / "comparison.auto.md").write_text(report)
+    (defn.runtime_root / "comparison.auto.md").write_text(report)
     return defn, results
 
 
@@ -380,8 +399,8 @@ def main() -> int:
 
     skip_generate = "--skip-generate" in sys.argv[2:]
     defn, results = run_eval(sys.argv[1], skip_generate=skip_generate)
-    report_path = defn.eval_root / "comparison.auto.md"
-    print(report_path)
+    report_path = defn.runtime_root / "comparison.auto.md"
+    print(display_path(report_path))
 
     by_label = {result["label"]: result for result in results}
     with_result = by_label["with_skill"]
