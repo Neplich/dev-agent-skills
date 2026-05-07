@@ -7,7 +7,7 @@ description: Generate user-facing release notes for a specific version from GitH
 
 Generate user-facing release notes for a GitHub release. This is distinct from `changelog-generator` — while changelogs document *what* changed for developers, release notes explain *why it matters* to end users in plain language.
 
-All data comes from `gh` CLI — no external MCP needed. Can read from an existing `docs/changelog.md` as a shortcut, or fetch directly from GitHub PRs.
+All data comes from `gh` CLI — no external MCP needed. Can read from an existing versioned changelog such as `docs/changelog/changelog-v1.2.0.md` as a shortcut, or fetch directly from GitHub PRs.
 
 ## Step 1 — Identify the target version
 
@@ -27,7 +27,7 @@ Capture `VERSION`, `RELEASE_DATE`, `REPO_URL`, `OWNER/REPO`.
 
 **Preferred path — read existing changelog first:**
 
-If `docs/changelog.md` exists, read it and extract the section for this version. This saves re-fetching and avoids redundant work. Skip to Step 3 if the changelog section is complete.
+If `docs/changelog/changelog-v{VERSION}.md` exists, read it and extract the section for this version. This saves re-fetching and avoids redundant work. Skip to Step 3 if the changelog section is complete.
 
 **Fallback — fetch from GitHub directly:**
 

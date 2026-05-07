@@ -15,7 +15,7 @@
 | Entry skill | `pm-agent` |
 | Specialist skills | 7 |
 | Main inputs | User ideas, local `docs/`, repository state, GitHub Issues / PRs / Milestones / Releases |
-| Main outputs | `docs/pm/{feature}/`, `docs/roadmap.md`, `docs/changelog.md`, `docs/release-notes/` |
+| Main outputs | `docs/pm/{feature}/`, `docs/roadmap.md`, `docs/changelog/changelog-v{version}.md`, `docs/release-notes/` |
 | Downstream agents | `designer-agent`, `engineer-agent` |
 
 ## Skills
@@ -26,7 +26,7 @@
 | `idea-to-spec` | Product ideas, empty-repo app requests, feature changes, spec updates | `PRD.md`, `BRD.md`, `DECISIONS.md`, `TRD.md` |
 | `competitive-brief` | Competitor positioning, gap analysis, market scan | Competitive brief, positioning opportunities, risks |
 | `competitive-intelligence` | Sales battlecards and deal support | HTML battlecard, competitor comparison matrix |
-| `changelog-generator` | Developer-facing version change summaries | `docs/changelog.md` |
+| `changelog-generator` | Developer-facing version change summaries | `docs/changelog/changelog-v{version}.md` |
 | `release-notes-generator` | User-facing release announcements | Customer-friendly release notes |
 | `roadmap-generator` | Milestones, issues, and version planning | `docs/roadmap.md` |
 | `github-reader` | Project status, backlog, PR queue, release blockers | GitHub project health report |
@@ -72,7 +72,7 @@ docs/
 Repository-level PM artifacts can use:
 
 - `docs/roadmap.md`
-- `docs/changelog.md`
+- `docs/changelog/changelog-v{version}.md`
 - `docs/release-notes/`
 
 ## Collaboration Boundary
