@@ -68,6 +68,7 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 
 - Branch、tag、release、bypass 和仓库设置权限默认只授予唯一管理员；需要维护者或机器人时再显式添加。
 - 维护变更不得直接在 `main` 上进行；开始修改前先创建工作分支，完成后通过 PR 合入。
+- PR 创建后的更新默认追加新 commit 并普通 push；除非用户明确要求整理提交历史，否则不要 amend、rebase 或 force push。
 - 当前仓库仍处于早期维护阶段，暂不新增 Release CI；发布前使用手动 release checklist：确认 `docs/changelog/changelog-v{version}.md` 存在、tag 使用 `v` 前缀 SemVer、PR 必跑 CI 全部通过，必要时手动触发 eval workflow 并记录结果。不要自动创建 GitHub Release，不要自动上传 marketplace package，也不要配置 release bot bypass tag ruleset。
 
 ### 新增 Agent
