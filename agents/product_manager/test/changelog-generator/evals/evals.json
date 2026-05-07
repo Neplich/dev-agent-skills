@@ -7,9 +7,9 @@
       "id": "eval-001-unreleased-mode",
       "name": "unreleased-mode",
       "description": "Verifies that changelog-generator handles unreleased-mode and produces the expected role-specific artifact.",
-      "prompt": "我在 https://github.com/anthropics/anthropic-sdk-python 这个仓库里工作。帮我生成 Unreleased 章节 —— 也就是最新 release tag 之后合并的所有 PR，写成 Keep a Changelog 格式，输出到 docs/changelog.md。",
+      "prompt": "我在 https://github.com/anthropics/anthropic-sdk-python 这个仓库里工作。帮我生成 Unreleased 章节 —— 也就是最新 release tag 之后合并的所有 PR，写成 Keep a Changelog 格式，输出到 docs/changelog/changelog-unreleased.md。",
       "workspace": null,
-      "expected_output": "生成 ## [Unreleased] 章节，包含最新 release 之后的 PR 列表，按 Added/Changed/Fixed 分组，每条带 PR 链接，写入 docs/changelog.md",
+      "expected_output": "生成 ## [Unreleased] 章节，包含最新 release 之后的 PR 列表，按 Added/Changed/Fixed 分组，每条带 PR 链接，写入 docs/changelog/changelog-unreleased.md",
       "assertions": [
         {
           "id": "unreleased",
@@ -32,9 +32,9 @@
           "text": "不包含 chore/ci/test 等内部变更"
         },
         {
-          "id": "docs_changelog_md",
-          "description": "输出写入了 docs/changelog.md 文件",
-          "text": "输出写入了 docs/changelog.md 文件"
+          "id": "versioned_changelog_file",
+          "description": "输出写入了 docs/changelog/changelog-unreleased.md 文件",
+          "text": "输出写入了 docs/changelog/changelog-unreleased.md 文件"
         }
       ]
     },
@@ -42,9 +42,9 @@
       "id": "eval-002-single-version-mode",
       "name": "single-version-mode",
       "description": "Verifies that changelog-generator handles single-version-mode and produces the expected role-specific artifact.",
-      "prompt": "在 https://github.com/anthropics/anthropic-sdk-python 仓库，帮我生成最新 release 版本的 changelog 条目，使用 Keep a Changelog 格式，包含该版本对应的所有 PR 引用。",
+      "prompt": "在 https://github.com/anthropics/anthropic-sdk-python 仓库，帮我生成最新 release 版本的 changelog 条目，使用 Keep a Changelog 格式，包含该版本对应的所有 PR 引用，并写入 docs/changelog/changelog-v{version}.md。",
       "workspace": null,
-      "expected_output": "生成最新 release tag 的版本块，格式为 ## [x.y.z] - YYYY-MM-DD，包含该版本窗口内的 PR，分组写入，每条带 PR 链接",
+      "expected_output": "生成最新 release tag 的版本块，格式为 ## [x.y.z] - YYYY-MM-DD，包含该版本窗口内的 PR，分组写入，每条带 PR 链接，并写入 docs/changelog/changelog-v{version}.md",
       "assertions": [
         {
           "id": "x_y_z_yyyy_mm_dd",

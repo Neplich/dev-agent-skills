@@ -1,11 +1,11 @@
 ---
 name: changelog-generator
-description: Generate or update docs/changelog.md from GitHub PRs and release tags, following Keep a Changelog format. Use this skill whenever the user asks to generate a changelog, update the changelog, create release notes, document what changed in a version, summarize changes since last release, or add a changelog entry. Trigger on phrases like "generate changelog", "update changelog", "what changed in v1.x", "create release notes", "document changes since last release", "add changelog entry for [version]", or "show me unreleased changes".
+description: Generate or update docs/changelog/changelog-v{version}.md from GitHub PRs and release tags, following Keep a Changelog format. Use this skill whenever the user asks to generate a changelog, update the changelog, create release notes, document what changed in a version, summarize changes since last release, or add a changelog entry. Trigger on phrases like "generate changelog", "update changelog", "what changed in v1.x", "create release notes", "document changes since last release", "add changelog entry for [version]", or "show me unreleased changes".
 ---
 
 # Changelog Generator
 
-Generate and maintain `docs/changelog.md` following [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format. Source of truth: merged GitHub PRs and release tags, fetched via `gh` CLI — no external MCP required.
+Generate and maintain per-version changelog files under `docs/changelog/`, such as `docs/changelog/changelog-v1.2.0.md`, following [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format. Source of truth: merged GitHub PRs and release tags, fetched via `gh` CLI — no external MCP required.
 
 ## Modes
 
@@ -27,7 +27,12 @@ gh repo view --json nameWithOwner,url,defaultBranchRef
 
 Confirm you're inside a GitHub-connected repo. Capture `REPO_URL` (e.g. `https://github.com/owner/repo`) for PR link formatting later.
 
-Also check whether `docs/changelog.md` already exists. If it does, read it before making changes so you can do a surgical update instead of a full overwrite.
+Resolve the target changelog path before writing:
+
+- Released versions use `docs/changelog/changelog-v{VERSION}.md`.
+- Unreleased changes use `docs/changelog/changelog-unreleased.md`.
+
+If the target file already exists, read it before making changes so you can do a surgical update instead of a full overwrite.
 
 ## Step 2 — Fetch releases
 
@@ -123,16 +128,18 @@ If a version has no classifiable PRs after skipping bots and chores, note:
 _No user-facing changes (dependency updates and internal maintenance only)._
 ```
 
-## Step 6 — Write to docs/changelog.md
+## Step 6 — Write to docs/changelog/
 
-**File header** (use this exactly if creating from scratch):
+**Version file header** (use this pattern if creating a released version file from scratch):
 ```markdown
-# Changelog
+# Changelog - v{VERSION}
 
-All notable changes to this project will be documented in this file.
+## [v{VERSION}] - YYYY-MM-DD
+```
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+**Unreleased file header** (use this exactly if creating `docs/changelog/changelog-unreleased.md` from scratch):
+```markdown
+# Changelog - Unreleased
 
 ## [Unreleased]
 
@@ -140,12 +147,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Update strategy:**
 
-- **Creating from scratch**: write the full header, then all version blocks newest-first, then append an `[Unreleased]` section at the top after the header.
-- **Adding a new version entry**: insert the new block immediately after the `## [Unreleased]` line. Keep the Unreleased section; clear its content if the PRs are now part of the new release.
-- **Updating Unreleased only**: replace or create the `## [Unreleased]` block. Leave all versioned blocks unchanged.
-- **Full regeneration**: overwrite the file entirely. Warn the user before doing this if they have manually edited content in the file.
+- **Creating a released version file**: create or update only `docs/changelog/changelog-v{VERSION}.md`.
+- **Updating Unreleased only**: create or update only `docs/changelog/changelog-unreleased.md`.
+- **Full regeneration**: regenerate the per-version files under `docs/changelog/`. Warn the user before doing this if they have manually edited content in those files.
+- **Root index**: if a root `CHANGELOG.md` exists, keep it as an index that links to versioned files. Do not duplicate changelog entries there.
 
-Always create `docs/` directory if it doesn't exist.
+Always create `docs/changelog/` if it doesn't exist.
 
 ## Edge Cases
 

@@ -15,7 +15,7 @@
 | 入口 skill | `pm-agent` |
 | Specialist skills | 7 个 |
 | 主要输入 | 用户想法、本地 `docs/`、代码库现状、GitHub Issues / PRs / Milestones / Releases |
-| 主要输出 | `docs/pm/{feature}/`、`docs/roadmap.md`、`docs/changelog.md`、`docs/release-notes/` |
+| 主要输出 | `docs/pm/{feature}/`、`docs/roadmap.md`、`docs/changelog/changelog-v{version}.md`、`docs/release-notes/` |
 | 下游协作 | `designer-agent`、`engineer-agent` |
 
 ## Skill 清单
@@ -26,7 +26,7 @@
 | `idea-to-spec` | 产品想法、空仓库 app 请求、已有功能变更、spec 更新 | `PRD.md`、`BRD.md`、`DECISIONS.md`、`TRD.md` |
 | `competitive-brief` | 竞品定位、差距分析、市场扫描 | 竞品简报、定位机会、风险与建议 |
 | `competitive-intelligence` | 销售向 battlecard、deal support | HTML battlecard、竞品对比矩阵 |
-| `changelog-generator` | 面向开发者的版本变化整理 | `docs/changelog.md` |
+| `changelog-generator` | 面向开发者的版本变化整理 | `docs/changelog/changelog-v{version}.md` |
 | `release-notes-generator` | 面向用户或客户的发版说明 | 用户友好的 release notes |
 | `roadmap-generator` | milestone、issue、版本计划整理 | `docs/roadmap.md` |
 | `github-reader` | 项目状态、backlog、PR 队列、release blocker | GitHub 项目健康报告 |
@@ -72,7 +72,7 @@ docs/
 Repo 级 PM 产物可以放在：
 
 - `docs/roadmap.md`
-- `docs/changelog.md`
+- `docs/changelog/changelog-v{version}.md`
 - `docs/release-notes/`
 
 ## 协作边界

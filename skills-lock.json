@@ -24,12 +24,12 @@
     "changelog-generator": {
       "source": "agents/product_manager/skills/changelog-generator",
       "sourceType": "local",
-      "computedHash": "b42db364146fe450afdccd819bdf13c20dfc8c4997d4d17cafbba0b1c4ae973a"
+      "computedHash": "48910432b2703195d3d574ed4810db6d1cd83aa6cb90b6e721ffa796614b3f91"
     },
     "release-notes-generator": {
       "source": "agents/product_manager/skills/release-notes-generator",
       "sourceType": "local",
-      "computedHash": "52f3bd48b2a392ae96c5dbe13fc5aa5fb2c49ec5b14f5d803b5968a4317f6306"
+      "computedHash": "018d801aaa2fd691909de41c220f72ec8fd2be7996fe91e4d2216649538cd8bf"
     },
     "roadmap-generator": {
       "source": "agents/product_manager/skills/roadmap-generator",
