@@ -39,6 +39,11 @@ Before running anything, gather repository evidence and confirm what is in scope
 - Read existing repository instructions for how tests are normally run in this project.
 - Prefer the repo’s documented acceptance, e2e, integration, or manual QA harness over inventing a new runner.
 - Only use targeted browser automation when no better harness or documented script exists.
+- For agent-driven browser checks, prefer the active Chrome plugin / browser
+  connector when the user environment provides it; use standalone Playwright
+  only when the repository already documents it as the test harness, or when
+  the skill is running outside Claude Code / Codex or standalone without a
+  Chrome plugin.
 - Do not assume a fixed localhost port.
 - Do not assume Playwright is the only valid tool.
 - Do not install dependencies globally or add new tooling unless the repository conventions explicitly require it.
@@ -125,13 +130,20 @@ Choose the least-assumptive executable path that still proves the requirement.
 3. Targeted browser automation
    - Use browser automation only if the repo has no better harness for the requirement.
    - Keep it scoped to the changed flows and documented acceptance points.
+   - Prefer the active Chrome plugin / browser connector for agent-operated
+     clicks, typing, screenshots, console logs, network inspection, and DOM
+     checks when it is available in the user environment.
 
 4. Custom ad hoc execution
    - Only as a last resort, and only if it is consistent with repository conventions.
 
 Do not guess the server port. Do not hardcode `3000`. Discover the running app, configured host, or documented launch path from the repository context.
 
-Do not assume Playwright. If browser automation is needed, use whatever browser tooling the repository already documents or the project conventions support.
+Do not assume Playwright. If browser automation is needed, use the active
+Chrome plugin / browser connector for agent-driven verification unless the
+repository already provides a Playwright-based command or documented harness.
+If the skill is used through a harness outside Claude Code / Codex, or used
+standalone without a Chrome plugin, fall back to Playwright.
 
 Do not install browser tooling globally. If dependencies or browsers are missing, first check project scripts, lockfiles, package manager conventions, and repo instructions.
 

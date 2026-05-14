@@ -1,5 +1,0 @@
-{
-  "scripts": {
-    "e2e": "playwright test"
-  }
-}

@@ -4,7 +4,7 @@
 
 ## 仓库架构
 
-本仓库是一个多 Agent skill marketplace，发布 6 个按角色划分的 Agent，覆盖产品、工程、QA、DevOps、设计和安全工作流。每个 Agent 包含多个遵循统一结构的 skill。
+本仓库是一个多 Agent skill marketplace，发布 6 个按角色划分的 Agent，覆盖产品、工程、QA、DevOps、设计和安全工作流。每个 Agent 包含多个遵循统一结构的 skill。目前主要面向 Claude Code 和 Codex 编写。
 
 ### 核心概念
 
