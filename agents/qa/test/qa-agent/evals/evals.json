@@ -69,7 +69,7 @@
         {
           "id": "assertion_5",
           "description": "用例驱动执行",
-          "text": "必须声明执行验证要基于新建的用例文件和仓库提供的 E2E 命令，不应每次重新全量阅读项目，也不应跳过用例文件直接做临时探索"
+          "text": "必须声明执行验证要基于新建的用例文件和仓库提供的 E2E harness；如果仓库没有脚本化 harness 但环境说明提供 Chrome 插件浏览器验证入口，必须显式写出使用 Chrome 插件 / browser connector 执行，而不是直接使用 Playwright；不应每次重新全量阅读项目，也不应跳过用例文件直接做临时探索"
         },
         {
           "id": "assertion_6",

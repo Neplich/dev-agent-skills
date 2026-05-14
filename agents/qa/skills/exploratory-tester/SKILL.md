@@ -94,12 +94,17 @@ Randomized action generation is optional and should only be used as a supplement
 Use whichever tools best fit the charter and environment:
 
 - Browser automation for repeatable UI traversal
+- Active Chrome plugin / browser connector for agent-operated web checks when
+  available in the user environment
 - Manual walkthroughs when judgment, visual inspection, or auth handling matters
 - Console and network inspection when client or backend signals need confirmation
 - Existing QA scripts when they already target the relevant path
 - Targeted randomized inputs or action variations only when they support a specific heuristic
 
 Prefer the least brittle method that still produces clear evidence.
+Use standalone Playwright only when the repository already documents it as the
+E2E harness, the project conventions require it, or the skill is running
+outside Claude Code / Codex or standalone without a Chrome plugin.
 
 ## Exploration Procedure
 

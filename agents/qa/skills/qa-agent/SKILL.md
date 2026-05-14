@@ -44,6 +44,16 @@ QA directory before falling back to ad hoc report paths.
 - `reports/` may store execution reports for validation, exploratory, bug, or
   regression runs.
 
+When routing browser-based E2E work, carry the repository's execution path into
+the downstream skill. If the repository has a documented E2E harness, use that
+harness. If there is no scripted harness but the environment notes provide an
+active Chrome plugin / browser connector entrypoint, use that entrypoint for
+agent-driven browser verification. Do not replace it with Playwright unless the
+repository already documents Playwright as the harness. This repository is
+written primarily for Claude Code and Codex; when a skill is used through a
+different harness, or used standalone without an available Chrome plugin, use
+Playwright as the browser automation fallback.
+
 For standalone QA or E2E requests where PM has not supplied PRD / TRD / Test
 Spec cases, route the downstream skill with this required sequence:
 
@@ -56,6 +66,10 @@ Spec cases, route the downstream skill with this required sequence:
    test case under `test-cases/`.
 4. Execute from the existing and newly added test case files, rather than
    rediscovering the full project on every run.
+5. Execute through the discovered repository harness or, when no scripted
+   harness exists, through the Chrome plugin / browser connector described in
+   the environment notes. If the skill is running outside Claude Code / Codex
+   or standalone without a Chrome plugin, fall back to Playwright.
 
 ## Available Skills
 
@@ -108,3 +122,7 @@ When routing is complete:
 
 - state which QA skill should handle the request
 - state the expected evidence artifact for the route
+- for browser-based E2E, state the selected execution path explicitly; if the
+  environment notes provide a Chrome plugin / browser connector entrypoint,
+  name that entrypoint directly instead of referring to "browser checks" in
+  generic terms

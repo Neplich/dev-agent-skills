@@ -1,6 +1,8 @@
 # QA Environment
 
 - Target route: `/settings/profile`
-- Local command: `npm run e2e -- profile-settings`
+- Browser validation: use the active Codex Chrome plugin / browser connector
+  against `QA_BASE_URL`; if `QA_BASE_URL` is missing, mark browser checks
+  blocked.
 - Auth: use seeded test user `qa.profile@example.test`
 - Feature flag: `profile_settings_refresh=true`

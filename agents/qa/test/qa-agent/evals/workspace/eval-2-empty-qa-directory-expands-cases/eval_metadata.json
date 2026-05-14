@@ -11,8 +11,7 @@
     "src/routes/profile-settings.md",
     "src/pages/ProfileSettingsPage.tsx",
     "src/components/ProfileSettingsForm.tsx",
-    "environment/qa-env.md",
-    "package.json"
+    "environment/qa-env.md"
   ],
   "with_skill_outputs": [
     "with_skill/outputs/subagent-verdict.md"
