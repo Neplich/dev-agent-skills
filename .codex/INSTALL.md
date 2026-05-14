@@ -2,6 +2,8 @@
 
 Install this repository into Codex via native skill discovery.
 
+This installer keeps the repository layout unchanged for Claude marketplace compatibility. Codex discovers skills through symlinks created under the selected `.agents/skills` directory.
+
 ## Before You Install
 
 Before making any filesystem changes, ask the user these two questions and wait for both answers:
@@ -22,23 +24,32 @@ If the user chooses a subset, allow multiple selections.
 
 ## Installation Model
 
-Use a single aggregate skill directory and expose only the requested agent folders inside it.
+Clone or update this repository under the selected `.agents` root, then expose each selected skill as a symlink under the selected `.agents/skills` directory.
 
 - Personal install:
-  - clone repo to `~/.codex/dev-agent-skills`
-  - expose skills from `~/.agents/skills/dev-agent-skills/`
+  - clone repo to `$HOME/.agents/dev-agent-skills`
+  - symlink skills to `$HOME/.agents/skills/<skill-name>`
 - Project install:
-  - clone repo to `<project>/.codex/dev-agent-skills`
-  - expose skills from `<project>/.agents/skills/dev-agent-skills/`
+  - clone repo to `<project>/.agents/dev-agent-skills`
+  - symlink skills to `<project>/.agents/skills/<skill-name>`
 
-Each selected agent should be linked into the aggregate directory using this mapping:
+Do not move, flatten, or rewrite the repository's `agents/*/skills/*` directories.
 
-- `pm-agent` -> `agents/product_manager`
-- `engineer-agent` -> `agents/engineer`
-- `qa-agent` -> `agents/qa`
-- `devops-agent` -> `agents/devops`
-- `designer-agent` -> `agents/designer`
-- `security-agent` -> `agents/security`
+Agent to source directory mapping:
+
+- `pm-agent` -> `agents/product_manager/skills/*`
+- `engineer-agent` -> `agents/engineer/skills/*`
+- `qa-agent` -> `agents/qa/skills/*`
+- `devops-agent` -> `agents/devops/skills/*`
+- `designer-agent` -> `agents/designer/skills/*`
+- `security-agent` -> `agents/security/skills/*`
+
+Each linked skill should end up as one of these forms:
+
+```text
+$HOME/.agents/skills/<skill-name> -> $HOME/.agents/dev-agent-skills/agents/<agent>/skills/<skill-name>
+<project>/.agents/skills/<skill-name> -> <project>/.agents/dev-agent-skills/agents/<agent>/skills/<skill-name>
+```
 
 ## Installation Steps
 
@@ -47,16 +58,16 @@ Each selected agent should be linked into the aggregate directory using this map
 For `personal`:
 
 ```bash
-CLONE_ROOT="$HOME/.codex/dev-agent-skills"
-SKILL_ROOT="$HOME/.agents/skills/dev-agent-skills"
+CLONE_ROOT="$HOME/.agents/dev-agent-skills"
+SKILL_ROOT="$HOME/.agents/skills"
 ```
 
 For `project`, from the project root:
 
 ```bash
 PROJECT_ROOT="$PWD"
-CLONE_ROOT="$PROJECT_ROOT/.codex/dev-agent-skills"
-SKILL_ROOT="$PROJECT_ROOT/.agents/skills/dev-agent-skills"
+CLONE_ROOT="$PROJECT_ROOT/.agents/dev-agent-skills"
+SKILL_ROOT="$PROJECT_ROOT/.agents/skills"
 ```
 
 ### 2. Clone or update the repository
@@ -74,34 +85,87 @@ mkdir -p "$(dirname "$CLONE_ROOT")"
 git clone https://github.com/Neplich/dev-agent-skills.git "$CLONE_ROOT"
 ```
 
-### 3. Rebuild the aggregate skill directory
+### 3. Create Codex skill symlinks
 
-Make the installed set exactly match the user's choice:
+Create the selected Codex skill root:
 
 ```bash
-rm -rf "$SKILL_ROOT"
 mkdir -p "$SKILL_ROOT"
 ```
 
-Then create symlinks for each selected agent. Example for `pm-agent` and `engineer-agent`:
+Use this helper to link every skill from a selected agent:
 
 ```bash
-ln -s "$CLONE_ROOT/agents/product_manager" "$SKILL_ROOT/product_manager"
-ln -s "$CLONE_ROOT/agents/engineer" "$SKILL_ROOT/engineer"
+link_agent_skills() {
+  agent_skills_dir="$CLONE_ROOT/$1"
+
+  find "$agent_skills_dir" -mindepth 1 -maxdepth 1 -type d | while IFS= read -r skill_dir; do
+    [ -f "$skill_dir/SKILL.md" ] || continue
+
+    skill_name="$(basename "$skill_dir")"
+    dest="$SKILL_ROOT/$skill_name"
+
+    if [ -L "$dest" ]; then
+      current_target="$(readlink "$dest")"
+      case "$current_target" in
+        "$CLONE_ROOT"/*)
+          rm "$dest"
+          ;;
+        *)
+          echo "Skip existing symlink not managed by this installer: $dest -> $current_target"
+          continue
+          ;;
+      esac
+    elif [ -e "$dest" ]; then
+      echo "Skip existing non-symlink skill directory: $dest"
+      continue
+    fi
+
+    ln -s "$skill_dir" "$dest"
+    echo "Linked $skill_name"
+  done
+}
 ```
 
-If the user chose `all`, create all six links.
+If the user chose `all`, run:
+
+```bash
+link_agent_skills "agents/product_manager/skills"
+link_agent_skills "agents/engineer/skills"
+link_agent_skills "agents/qa/skills"
+link_agent_skills "agents/devops/skills"
+link_agent_skills "agents/designer/skills"
+link_agent_skills "agents/security/skills"
+```
+
+If the user chose a subset, run only the matching lines.
+
+For example, for `pm-agent`, `engineer-agent`, and `qa-agent`:
+
+```bash
+link_agent_skills "agents/product_manager/skills"
+link_agent_skills "agents/engineer/skills"
+link_agent_skills "agents/qa/skills"
+```
 
 ### 4. Restart Codex
 
-Quit and relaunch Codex so it discovers the new skills.
+Quit and relaunch Codex so it discovers the new skills. For a `project` install, reopen Codex in that same project directory.
 
 ## Verify
 
-Check the aggregate directory:
+Check that Codex can see symlinked skill directories:
 
 ```bash
-ls -la "$SKILL_ROOT"
+find -L "$SKILL_ROOT" -maxdepth 2 -name SKILL.md -print | sort
+```
+
+For this repository, expected entries include paths such as:
+
+```text
+$SKILL_ROOT/pm-agent/SKILL.md
+$SKILL_ROOT/engineer-agent/SKILL.md
+$SKILL_ROOT/qa-agent/SKILL.md
 ```
 
 After restarting Codex, verify that the installed agent commands are available, such as:
@@ -127,10 +191,18 @@ The links continue to work after the pull. Restart Codex if the updated skills d
 
 ## Uninstalling
 
-Remove the aggregate skill directory:
+Remove only symlinks that point into the selected clone:
 
 ```bash
-rm -rf "$SKILL_ROOT"
+find "$SKILL_ROOT" -maxdepth 1 -type l -print | while IFS= read -r link; do
+  target="$(readlink "$link")"
+  case "$target" in
+    "$CLONE_ROOT"/*)
+      rm "$link"
+      echo "Removed $link"
+      ;;
+  esac
+done
 ```
 
 Optionally remove the cloned repository:
@@ -142,5 +214,6 @@ rm -rf "$CLONE_ROOT"
 ## Troubleshooting
 
 - If commands do not appear, verify the links under `"$SKILL_ROOT"` and restart Codex.
-- If the user changes from `all` to a subset, rebuild `"$SKILL_ROOT"` so only the selected agent links remain.
-- If the project install is used, confirm the user opened that same project in Codex after installation.
+- If a skill name already exists under `"$SKILL_ROOT"` and is not a symlink to this repository, keep it and report the conflict instead of overwriting it.
+- If the user changes from `all` to a subset, remove this repository's old symlinks first, then recreate only the selected agent skills.
+- If the user chooses `project`, confirm Codex is opened in that same project directory after installation.
