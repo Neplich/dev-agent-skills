@@ -104,6 +104,8 @@ The install flow will ask:
 - whether this should be a `personal` or `project` install
 - whether to install `all` agents or a selected subset
 
+Codex installs the repository at the selected `.agents/dev-agent-skills` root and symlinks each selected skill into `.agents/skills/<skill-name>`. The repository layout stays unchanged for Claude marketplace compatibility.
+
 See [docs/README.codex.md](./docs/README.codex.md) for the full Codex guide.
 
 ## Usage Examples

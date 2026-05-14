@@ -32,15 +32,17 @@ Codex 会先反问你两个问题，再执行安装：
 
 适合希望在所有项目里复用这些 Agent 的场景。
 
-- 仓库 clone 到 `~/.codex/dev-agent-skills`
-- skills 暴露到 `~/.agents/skills/dev-agent-skills/`
+- 仓库 clone 到 `~/.agents/dev-agent-skills`
+- 每个已选 Agent 下的 skills 软链接到 `~/.agents/skills/<skill-name>`
 
 ### Project
 
 适合只想在当前项目里启用这些 Agent 的场景。
 
-- 仓库 clone 到 `<project>/.codex/dev-agent-skills`
-- skills 暴露到 `<project>/.agents/skills/dev-agent-skills/`
+- 仓库 clone 到 `<project>/.agents/dev-agent-skills`
+- 每个已选 Agent 下的 skills 软链接到 `<project>/.agents/skills/<skill-name>`
+
+两种安装方式都保持仓库内的 `agents/*/skills/*` 目录不变，用于兼容 Claude marketplace。
 
 ## 手动安装
 
@@ -56,16 +58,16 @@ Codex 会先反问你两个问题，再执行安装：
 Personal:
 
 ```bash
-CLONE_ROOT="$HOME/.codex/dev-agent-skills"
-SKILL_ROOT="$HOME/.agents/skills/dev-agent-skills"
+CLONE_ROOT="$HOME/.agents/dev-agent-skills"
+SKILL_ROOT="$HOME/.agents/skills"
 ```
 
 Project:
 
 ```bash
 PROJECT_ROOT="$PWD"
-CLONE_ROOT="$PROJECT_ROOT/.codex/dev-agent-skills"
-SKILL_ROOT="$PROJECT_ROOT/.agents/skills/dev-agent-skills"
+CLONE_ROOT="$PROJECT_ROOT/.agents/dev-agent-skills"
+SKILL_ROOT="$PROJECT_ROOT/.agents/skills"
 ```
 
 ### 2. clone 或更新仓库
@@ -83,57 +85,102 @@ mkdir -p "$(dirname "$CLONE_ROOT")"
 git clone https://github.com/Neplich/dev-agent-skills.git "$CLONE_ROOT"
 ```
 
-### 3. 选择安装全部或部分 Agent
-
-安装时使用一个聚合目录，只暴露你选中的 Agent：
+### 3. 创建 Codex skill 软链接
 
 ```bash
-rm -rf "$SKILL_ROOT"
 mkdir -p "$SKILL_ROOT"
+```
+
+使用下面的函数链接某个 Agent 下的所有 skills：
+
+```bash
+link_agent_skills() {
+  agent_skills_dir="$CLONE_ROOT/$1"
+
+  find "$agent_skills_dir" -mindepth 1 -maxdepth 1 -type d | while IFS= read -r skill_dir; do
+    [ -f "$skill_dir/SKILL.md" ] || continue
+
+    skill_name="$(basename "$skill_dir")"
+    dest="$SKILL_ROOT/$skill_name"
+
+    if [ -L "$dest" ]; then
+      current_target="$(readlink "$dest")"
+      case "$current_target" in
+        "$CLONE_ROOT"/*)
+          rm "$dest"
+          ;;
+        *)
+          echo "Skip existing symlink not managed by this installer: $dest -> $current_target"
+          continue
+          ;;
+      esac
+    elif [ -e "$dest" ]; then
+      echo "Skip existing non-symlink skill directory: $dest"
+      continue
+    fi
+
+    ln -s "$skill_dir" "$dest"
+    echo "Linked $skill_name"
+  done
+}
 ```
 
 Agent 到目录的映射如下：
 
-- `pm-agent` -> `agents/product_manager`
-- `engineer-agent` -> `agents/engineer`
-- `qa-agent` -> `agents/qa`
-- `devops-agent` -> `agents/devops`
-- `designer-agent` -> `agents/designer`
-- `security-agent` -> `agents/security`
+- `pm-agent` -> `agents/product_manager/skills`
+- `engineer-agent` -> `agents/engineer/skills`
+- `qa-agent` -> `agents/qa/skills`
+- `devops-agent` -> `agents/devops/skills`
+- `designer-agent` -> `agents/designer/skills`
+- `security-agent` -> `agents/security/skills`
+
+安装全部 Agent：
+
+```bash
+link_agent_skills "agents/product_manager/skills"
+link_agent_skills "agents/engineer/skills"
+link_agent_skills "agents/qa/skills"
+link_agent_skills "agents/devops/skills"
+link_agent_skills "agents/designer/skills"
+link_agent_skills "agents/security/skills"
+```
 
 例如只安装 `pm-agent`、`engineer-agent`、`qa-agent`：
 
 ```bash
-ln -s "$CLONE_ROOT/agents/product_manager" "$SKILL_ROOT/product_manager"
-ln -s "$CLONE_ROOT/agents/engineer" "$SKILL_ROOT/engineer"
-ln -s "$CLONE_ROOT/agents/qa" "$SKILL_ROOT/qa"
+link_agent_skills "agents/product_manager/skills"
+link_agent_skills "agents/engineer/skills"
+link_agent_skills "agents/qa/skills"
 ```
-
-如果要安装全部 Agent，就把六个目录都链接进去。
 
 ### 4. 重启 Codex
 
-退出并重新打开 Codex，让它重新发现 skills。
+退出并重新打开 Codex，让它重新发现 skills。Project 安装需要在同一个项目目录里重新打开 Codex。
 
 ## 这套安装方式是怎么工作的
 
-Codex 会在启动时扫描 skill 目录。这里采用的是“聚合目录 + 按 Agent 暴露”的方式。
+Codex 会在启动时扫描 `.agents/skills`。这里采用的是“保持仓库结构 + 为每个 skill 创建软链接”的方式。
 
 Personal 安装示意：
 
 ```text
-~/.agents/skills/dev-agent-skills/
-├── product_manager -> ~/.codex/dev-agent-skills/agents/product_manager
-├── engineer -> ~/.codex/dev-agent-skills/agents/engineer
-├── qa -> ~/.codex/dev-agent-skills/agents/qa
-├── devops -> ~/.codex/dev-agent-skills/agents/devops
-├── designer -> ~/.codex/dev-agent-skills/agents/designer
-└── security -> ~/.codex/dev-agent-skills/agents/security
+~/.agents/dev-agent-skills/
+└── agents/
+    └── engineer/
+        └── skills/
+            ├── engineer-agent/
+            ├── codebase-analyzer/
+            └── feature-implementor/
+
+~/.agents/skills/
+├── engineer-agent -> ~/.agents/dev-agent-skills/agents/engineer/skills/engineer-agent
+├── codebase-analyzer -> ~/.agents/dev-agent-skills/agents/engineer/skills/codebase-analyzer
+└── feature-implementor -> ~/.agents/dev-agent-skills/agents/engineer/skills/feature-implementor
 ```
 
-Project 安装时，路径换成当前项目下的 `.codex/` 和 `.agents/`。
+Project 安装时，路径换成当前项目下的 `.agents/`。
 
-虽然底层暴露的是 Agent 目录，但用户使用时仍然只需要使用 Agent 入口命令，例如 `/pm-agent`、`/engineer-agent`。
+Claude marketplace 继续读取仓库内的 Agent 目录；Codex 通过 `.agents/skills/<skill-name>/SKILL.md` 识别 skills。
 
 ## 使用示例
 
@@ -148,42 +195,55 @@ Project 安装时，路径换成当前项目下的 `.codex/` 和 `.agents/`。
 /security-agent "进行安全审查"
 ```
 
-## 更新
-
-### Personal
+## 验证
 
 ```bash
-git -C "$HOME/.codex/dev-agent-skills" pull --ff-only
+find -L "$SKILL_ROOT" -maxdepth 2 -name SKILL.md -print | sort
 ```
 
-### Project
+预期能看到类似路径：
+
+```text
+$SKILL_ROOT/pm-agent/SKILL.md
+$SKILL_ROOT/engineer-agent/SKILL.md
+$SKILL_ROOT/qa-agent/SKILL.md
+```
+
+## 更新
 
 ```bash
-git -C "$PWD/.codex/dev-agent-skills" pull --ff-only
+git -C "$CLONE_ROOT" pull --ff-only
 ```
 
 更新后如果没有立即生效，重启 Codex。
 
 ## 卸载
 
-### Personal
+删除指向本仓库的 Codex skill 软链接：
 
 ```bash
-rm -rf "$HOME/.agents/skills/dev-agent-skills"
-rm -rf "$HOME/.codex/dev-agent-skills"
+find "$SKILL_ROOT" -maxdepth 1 -type l -print | while IFS= read -r link; do
+  target="$(readlink "$link")"
+  case "$target" in
+    "$CLONE_ROOT"/*)
+      rm "$link"
+      echo "Removed $link"
+      ;;
+  esac
+done
 ```
 
-### Project
+如果需要同时删除仓库 clone：
 
 ```bash
-rm -rf "$PWD/.agents/skills/dev-agent-skills"
-rm -rf "$PWD/.codex/dev-agent-skills"
+rm -rf "$CLONE_ROOT"
 ```
 
-如果你只想减少已安装 Agent，不需要删 clone，只需要重建 `SKILL_ROOT` 并只保留需要的 Agent 链接。
+如果只想减少已安装 Agent，不需要删 clone，只需要删除本仓库旧软链接，再重新链接需要的 Agent skills。
 
 ## 排障
 
-- 看不到命令时，先检查 `SKILL_ROOT` 下的符号链接是否正确，再重启 Codex。
+- 看不到命令时，先检查 `"$SKILL_ROOT"/<skill-name>/SKILL.md` 是否存在，再重启 Codex。
+- 如果 `"$SKILL_ROOT"/<skill-name>` 已存在且不是指向本仓库的软链接，不要覆盖，先报告冲突。
+- 如果从全部 Agent 改成部分 Agent，先删除本仓库旧软链接，再创建本次选择的软链接。
 - 使用 `project` 安装时，需要在同一个项目目录里打开 Codex。
-- 如果你原先安装的是全部 Agent，后来改成部分安装，记得重建聚合目录，不要保留旧链接。

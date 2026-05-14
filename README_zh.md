@@ -104,6 +104,8 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 - 安装到 `personal` 还是 `project` 层级
 - 安装 `all` agents，还是选择其中一部分
 
+Codex 安装会把仓库 clone 到对应层级的 `.agents/dev-agent-skills`，并把已选 Agent 下的每个 skill 软链接到 `.agents/skills/<skill-name>`。仓库目录结构保持不变，继续兼容 Claude marketplace。
+
 完整说明见 [docs/README.codex.md](./docs/README.codex.md)。
 
 ## 使用示例
