@@ -26,6 +26,23 @@ Reproduce → Analyze → Hypothesize → Fix → Verify
 
 Do NOT jump to fixing. Do NOT propose a fix before understanding the root cause.
 
+## Complex Fix Sub-Agent Split
+
+For complex bug fixes, keep the main process responsible for the failure
+context, root-cause judgment, repository rules, test evidence, and final risk
+summary. When sub-agent capabilities are available, split the work after the
+root cause is confirmed:
+
+1. implementation sub-agent: applies the smallest scoped fix and related
+   regression test updates
+2. validation sub-agent: reviews the fix against the failure evidence,
+   root-cause analysis, tests, repository rules, and unrelated-change risk
+3. main process: integrates the result and produces the final repair report
+
+Do not use this split before reproduction and root-cause analysis. Do not force
+it for simple single-file fixes, pure diagnosis, or when the user explicitly
+asks not to use sub-agents.
+
 ## Step 1 — Gather error context
 
 Collect all available information:
@@ -105,6 +122,11 @@ Fix the root cause with the smallest possible change:
 - Don't add defensive checks elsewhere "just in case"
 - Only change what's necessary to fix this specific bug
 
+For complex fixes, delegate this step to an implementation sub-agent only after
+the root cause is clear. The task must include the failing command, confirmed
+root cause, owned files or modules, forbidden areas, and the requirement not to
+revert unrelated changes.
+
 ## Step 6 — Verify fix
 
 Run the previously failing command:
@@ -125,6 +147,11 @@ Then run the full test suite to check for regressions:
 - **Fix works, but other tests break**: The fix exposed another issue, or the fix is wrong. Investigate.
 - **Fix doesn't work**: Back to Step 3 — the root cause analysis was wrong
 
+For complex fixes, assign a separate validation sub-agent after tests are run.
+It should check the failure evidence, root-cause fit, regression coverage,
+repository rules, unrelated changes, and residual risk. It must not broaden the
+fix scope.
+
 ## Step 7 — Report
 
 ```text
@@ -135,6 +162,8 @@ Then run the full test suite to check for regressions:
 - **修复**: <what was changed>
 - **文件**: <files modified>
 - **验证**: 失败测试 ✅ 通过, 回归测试 ✅ 通过
+- **验收**: <validation conclusion if sub-agent split was used>
+- **遗留风险**: <remaining risks or none>
 
 ### 建议下一步
 - <recommendation>

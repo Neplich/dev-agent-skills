@@ -29,6 +29,28 @@ repo context, and current delivery stage.
 - replacing PM discovery for greenfield product ideas or empty-workspace scope
   definition
 
+## Complex Coding Delegation
+
+For complex coding tasks, keep the main process focused on requirements,
+architecture constraints, repository rules, delivery judgment, and risk
+handling. When sub-agent capabilities are available, prefer splitting the work
+into:
+
+1. an implementation sub-agent that owns a clearly scoped set of files or
+   modules
+2. a separate validation sub-agent that reviews the result against source docs,
+   tests, repository rules, and role boundaries
+3. the main process that integrates the findings and produces the final
+   delivery summary
+
+Use this pattern when the request involves multi-file or multi-module changes,
+spec-backed implementation, bug fixes requiring regression validation, or heavy
+context across PM/design docs, code, tests, and delivery risk.
+
+Do not force delegation for single-file small edits, pure explanation, pure
+code reading, route-only planning, or when the user explicitly asks not to use
+sub-agents.
+
 ## Available Skills
 
 - `engineer-agent:codebase-analyzer` - Understand repo structure, stack, conventions, constraints
@@ -103,6 +125,11 @@ Use these only when the user clearly wants the broader workflow:
 - 已完成实现补交付 -> `test-writer` -> `delivery`
 
 Do not force the full chain when the user only wants one stage.
+
+For complex coding tasks inside these chains, preserve the main process as the
+coordinator and let the selected specialist apply the implementation/validation
+sub-agent split. The final response should state the implementation result,
+validation conclusion, tests run, and residual risks when that split is used.
 
 ## Escalation Rules
 

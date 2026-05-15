@@ -38,6 +38,16 @@ For each component in TRD, determine:
 - Is this a new file or a modification?
 - If modification, which existing file?
 - What does this file depend on? (Other files in this plan)
+- Whether the task is complex enough to use the implementation/validation
+  sub-agent split:
+  - multi-file or multi-module change
+  - spec-backed implementation with PM/design docs
+  - tests must be added or updated
+  - the main process must retain substantial requirement, code, test, and
+    delivery context
+
+Do not force the split for single-file small edits, pure explanation, pure code
+reading, or explicit user opt-out.
 
 ### 3. Order by dependency
 
@@ -69,6 +79,11 @@ Output format:
    - 依赖: 步骤 1
 3. **修改 `<path>`** — <description> (来自 <doc> §<section>)
    - 依赖: 步骤 1, 2
+
+### Sub-Agent 分工
+- 触发判断: <是否触发复杂编码分工及原因>
+- 实现 sub-agent 范围: <owned files/modules, expected behavior, tests, forbidden areas>
+- 验收 sub-agent 范围: <source docs, changed files, tests, repository rules, residual risks>
 
 确认后加载 implementor 开始编码。
 ```
