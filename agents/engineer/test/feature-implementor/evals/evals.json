@@ -27,6 +27,41 @@
           "text": "输出包含自检结果，检查 TRD/API/PRD 符合度"
         }
       ]
+    },
+    {
+      "id": "eval-002-subagent-division-from-docs",
+      "name": "subagent-division-from-docs",
+      "description": "Verifies that feature-implementor preserves main-process context and uses separate implementation and validation sub-agent responsibilities for a complex document-driven coding task.",
+      "prompt": "请根据 docs/pm/capture-loop/PRD.md、docs/pm/capture-loop/TRD.md 和 docs/design/capture-loop/ui-ux-spec.md 实现 Capture Loop 队列重试能力。现在进入编码阶段，需要修改服务逻辑、处理器和测试；请给出实现计划并说明如何安排实现与验收分工。",
+      "workspace": "workspace/eval-002-subagent-division-from-docs",
+      "expected_output": "读取源文档并保留主进程上下文，判断任务触发复杂编码分工，给出实现 sub-agent 的写入范围和禁止事项，给出验收 sub-agent 的验收依据和检查范围，并在最终交付契约中包含实现结果、测试情况、验收结论和遗留风险。",
+      "assertions": [
+        {
+          "id": "preserves_main_context",
+          "description": "主进程保留高层上下文",
+          "text": "输出必须说明主进程负责保留 PRD、TRD、设计文档、仓库规则、实现边界和最终交付判断，而不是直接吞掉所有编码和验收细节。"
+        },
+        {
+          "id": "delegates_implementation_scope",
+          "description": "实现 sub-agent 范围清晰",
+          "text": "输出必须为实现 sub-agent 指定清晰写入范围，至少包含服务逻辑、处理器或测试文件，并包含禁止回退无关改动或禁止触碰无关区域的约束。"
+        },
+        {
+          "id": "delegates_independent_validation",
+          "description": "验收 sub-agent 独立检查",
+          "text": "输出必须安排不同于实现 sub-agent 的验收 sub-agent，并要求它基于 PRD、TRD、设计文档、测试结果、仓库规则和变更范围进行验收。"
+        },
+        {
+          "id": "keeps_simple_path_exception",
+          "description": "保留简单任务例外",
+          "text": "输出不得表达所有工程任务都必须拆分 sub-agent；应保留简单单文件修改、纯解释或用户明确不拆分时的轻量路径。"
+        },
+        {
+          "id": "final_summary_contract",
+          "description": "最终交付说明完整",
+          "text": "输出必须说明最终交付需要包含实现结果、测试情况、验收结论和遗留风险。"
+        }
+      ]
     }
   ]
 }

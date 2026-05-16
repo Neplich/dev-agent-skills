@@ -11,7 +11,8 @@ This is the public entry point. It owns:
 
 - PM document reading and requirement extraction
 - Implementation planning (which files to create/modify, in what order)
-- Delegation to internal modules for step execution
+- Delegation to internal modules and, for complex coding tasks, scoped
+  implementation/validation sub-agents
 - Quality self-check before handoff
 
 Do not load internal modules until the implementation plan is confirmed.
@@ -26,6 +27,38 @@ Do NOT use for:
 - Bug fixes with no spec (use `debugger` instead)
 - Writing tests only (use `test-writer` instead)
 - Git/PR operations only (use `delivery` instead)
+
+## Complex Coding Sub-Agent Split
+
+When the implementation is multi-file, multi-module, spec-backed, or otherwise
+context-heavy, keep the main process responsible for PM/design context,
+repository constraints, implementation boundaries, final integration, and
+delivery risk. When sub-agent capabilities are available, use two separate
+delegations:
+
+1. **Implementation sub-agent**: writes code and tests only within the assigned
+   file or module scope.
+2. **Validation sub-agent**: reviews the result against PRD/TRD/design docs,
+   repository rules, test evidence, and role boundaries.
+
+The implementation task must include:
+
+- owned files, directories, or modules
+- expected behavior and source document references
+- test expectations or verification commands
+- forbidden areas and a reminder not to revert unrelated user changes
+- required output: changed files, summary, tests, and open issues
+
+The validation task must include:
+
+- source docs and acceptance criteria
+- changed files and test evidence
+- checks for requirement coverage, test coverage, repository rules, and
+  unrelated changes
+- required output: pass/fail conclusion, findings, blockers, and residual risks
+
+Do not use this split for single-file small edits, pure explanation, pure code
+reading, or when the user explicitly opts out.
 
 ## Phase 0: Gather Context
 
@@ -75,6 +108,9 @@ Break the feature into ordered implementation steps:
    - What it does
    - Which PM doc section drives it
    - Dependencies on other files in this plan
+4. Decide whether the complex coding sub-agent split applies. If it does,
+   include the implementation sub-agent write scope and validation sub-agent
+   review scope in the plan.
 
 Present the plan to the user:
 
@@ -89,6 +125,11 @@ Present the plan to the user:
 
 ### 实现顺序
 按上述编号顺序，每完成一步验证编译通过。
+
+### Sub-Agent 分工
+- 触发判断: <是否触发复杂编码分工及原因>
+- 实现 sub-agent 范围: <files/modules and forbidden areas>
+- 验收 sub-agent 范围: <source docs, tests, and review criteria>
 
 确认后开始实现？
 ```
@@ -108,6 +149,11 @@ For each step in the plan:
 3. **Verify compilation**: After each file, ensure the project still compiles/builds.
 4. **Minimal scope**: Only write what the plan calls for. No "bonus" improvements.
 
+For complex coding tasks, delegate implementation to a scoped implementation
+sub-agent instead of letting the main process absorb all implementation detail.
+The main process must keep the source docs, boundaries, tests, and delivery
+risks available for final integration.
+
 ## Phase 3: Self-Review
 
 Load the reviewer internal module:
@@ -121,6 +167,12 @@ Check the implementation against:
 3. **PRD coverage**: Does the code fulfill all P0 acceptance criteria from PRD?
 4. **Security basics**: No hardcoded secrets, no SQL injection, no XSS, proper input validation at boundaries.
 5. **Convention compliance**: Naming, file placement, import style match the project.
+
+For complex coding tasks, assign a separate validation sub-agent after the
+implementation result and deterministic test evidence are available. The
+validation sub-agent reviews the implementation against PRD/TRD/design docs,
+repository rules, test coverage, and residual risk; it does not expand the
+implementation scope.
 
 Output a brief review summary:
 
@@ -143,6 +195,10 @@ After implementation and self-review:
 - **写测试**: 使用 `test-writer` 基于 Test Spec 编写测试
 - **直接交付**: 使用 `delivery` 创建 PR（如果测试已有或不需要）
 ```
+
+When the complex coding split was used, include implementation result,
+validation conclusion, tests run, and residual risks before recommending the
+next step.
 
 ## Key Principles
 
