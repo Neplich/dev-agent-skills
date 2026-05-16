@@ -11,6 +11,25 @@ Execute the implementation plan step by step, writing code that follows project 
 - Confirmed implementation plan (from planner)
 - Project Profile
 - PM documents for reference
+- For complex coding tasks: implementation sub-agent scope, forbidden areas,
+  expected behavior, and verification commands
+
+## Sub-Agent Execution Contract
+
+When the confirmed plan triggers the complex coding split and sub-agent
+capabilities are available, the main process should delegate implementation to
+an implementation sub-agent. The delegated task must include:
+
+- owned files, directories, or modules
+- source docs and relevant acceptance criteria
+- expected behavior and tests to add or run
+- forbidden areas and instruction not to revert unrelated user changes
+- required output: changed files, implementation summary, verification results,
+  and open issues
+
+The implementation sub-agent writes code and tests within scope. The main
+process keeps the broader requirements, repository rules, and delivery risks
+for final integration.
 
 ## Process
 

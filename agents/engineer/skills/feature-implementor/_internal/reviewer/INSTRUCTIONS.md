@@ -11,6 +11,25 @@ Review the implemented code against PM documents and project conventions before 
 - List of all files created or modified
 - PM documents (PRD, TRD, API Spec)
 - Project Profile
+- Deterministic test results, when available
+- For complex coding tasks: implementation sub-agent summary and assigned
+  write scope
+
+## Independent Validation Contract
+
+When the implementation used the complex coding split, review should be handled
+by a validation sub-agent that is separate from the implementation sub-agent.
+The validation task must include:
+
+- PRD/TRD/design docs and acceptance criteria
+- changed files and implementation summary
+- deterministic test commands and results
+- repository rules, including minimal scope and unrelated-change protection
+- requested output: pass/fail conclusion, findings, blockers, missing tests,
+  and residual risks
+
+The validation sub-agent reviews only. It must not broaden the implementation
+scope or make unrelated edits.
 
 ## Review Checklist
 
@@ -64,9 +83,13 @@ For each P0 acceptance criterion in PRD:
 | PRD 覆盖 | ✅/⚠️/❌ | <details> |
 | 安全检查 | ✅/⚠️/❌ | <details> |
 | 规范检查 | ✅/⚠️/❌ | <details> |
+| 独立验收 | ✅/⚠️/❌/N/A | <details> |
 
 ### 问题 (如有)
 1. [严重程度] 描述 — 修复建议
+
+### 遗留风险
+- <risk or "无">
 
 ### 建议下一步
 - <recommendation>
