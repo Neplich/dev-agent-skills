@@ -46,6 +46,8 @@ Codex 会先反问你两个问题，再执行安装：
 
 ## 手动安装
 
+Bash 命令适用于 macOS、Linux、WSL 和 Git Bash。Windows 原生 PowerShell 请使用第 3 步后的 Windows 示例。
+
 ### 前置条件
 
 - 已安装 Codex
@@ -60,6 +62,8 @@ Personal:
 ```bash
 CLONE_ROOT="$HOME/.agents/dev-agent-skills"
 SKILL_ROOT="$HOME/.agents/skills"
+LEGACY_CLONE_ROOT="$HOME/.codex/dev-agent-skills"
+LEGACY_SKILL_ROOT="$HOME/.agents/skills/dev-agent-skills"
 ```
 
 Project:
@@ -68,6 +72,8 @@ Project:
 PROJECT_ROOT="$PWD"
 CLONE_ROOT="$PROJECT_ROOT/.agents/dev-agent-skills"
 SKILL_ROOT="$PROJECT_ROOT/.agents/skills"
+LEGACY_CLONE_ROOT="$PROJECT_ROOT/.codex/dev-agent-skills"
+LEGACY_SKILL_ROOT="$PROJECT_ROOT/.agents/skills/dev-agent-skills"
 ```
 
 ### 2. clone 或更新仓库
@@ -78,6 +84,8 @@ SKILL_ROOT="$PROJECT_ROOT/.agents/skills"
 git -C "$CLONE_ROOT" pull --ff-only
 ```
 
+如果只是日常升级，且当前软链接已经是新的 `.agents/skills/<skill-name>` 布局，已选 Agent 也没有变化，到这里就可以停止；不需要清理或重建软链接，必要时重启 Codex 即可。
+
 否则：
 
 ```bash
@@ -85,7 +93,7 @@ mkdir -p "$(dirname "$CLONE_ROOT")"
 git clone https://github.com/Neplich/dev-agent-skills.git "$CLONE_ROOT"
 ```
 
-### 3. 创建 Codex skill 软链接
+### 3. 创建或迁移 Codex skill 软链接
 
 ```bash
 mkdir -p "$SKILL_ROOT"
@@ -94,6 +102,34 @@ mkdir -p "$SKILL_ROOT"
 使用下面的函数链接某个 Agent 下的所有 skills：
 
 ```bash
+cleanup_legacy_agent_skill_root() {
+  [ -d "$LEGACY_SKILL_ROOT" ] || return 0
+
+  find "$LEGACY_SKILL_ROOT" -maxdepth 1 -type l -print | while IFS= read -r link; do
+    target="$(readlink "$link")"
+    case "$target" in
+      "$LEGACY_CLONE_ROOT"/agents/*)
+        rm "$link"
+        echo "Removed legacy symlink $link"
+        ;;
+    esac
+  done
+
+  rmdir "$LEGACY_SKILL_ROOT" 2>/dev/null || true
+}
+
+cleanup_managed_skill_links() {
+  find "$SKILL_ROOT" -maxdepth 1 -type l -print | while IFS= read -r link; do
+    target="$(readlink "$link")"
+    case "$target" in
+      "$CLONE_ROOT"/*)
+        rm "$link"
+        echo "Removed managed symlink $link"
+        ;;
+    esac
+  done
+}
+
 link_agent_skills() {
   agent_skills_dir="$CLONE_ROOT/$1"
 
@@ -125,6 +161,13 @@ link_agent_skills() {
 }
 ```
 
+首次安装、从旧聚合目录迁移，或本次改变已选 Agent 时，创建本次选择的链接前先删除本仓库旧的 managed links：
+
+```bash
+cleanup_legacy_agent_skill_root
+cleanup_managed_skill_links
+```
+
 Agent 到目录的映射如下：
 
 - `pm-agent` -> `agents/product_manager/skills`
@@ -151,6 +194,129 @@ link_agent_skills "agents/security/skills"
 link_agent_skills "agents/product_manager/skills"
 link_agent_skills "agents/engineer/skills"
 link_agent_skills "agents/qa/skills"
+```
+
+### Windows PowerShell 示例
+
+Windows 原生 PowerShell 不能直接使用上面的 Bash 命令。创建符号链接可能需要开启开发者模式，或使用管理员权限启动 PowerShell。
+
+Personal:
+
+```powershell
+$CloneRoot = Join-Path $HOME ".agents/dev-agent-skills"
+$SkillRoot = Join-Path $HOME ".agents/skills"
+$LegacyCloneRoot = Join-Path $HOME ".codex/dev-agent-skills"
+$LegacySkillRoot = Join-Path $HOME ".agents/skills/dev-agent-skills"
+```
+
+Project，需要在项目根目录执行：
+
+```powershell
+$ProjectRoot = (Get-Location).Path
+$CloneRoot = Join-Path $ProjectRoot ".agents/dev-agent-skills"
+$SkillRoot = Join-Path $ProjectRoot ".agents/skills"
+$LegacyCloneRoot = Join-Path $ProjectRoot ".codex/dev-agent-skills"
+$LegacySkillRoot = Join-Path $ProjectRoot ".agents/skills/dev-agent-skills"
+```
+
+然后 clone 或更新仓库。如果只是日常升级，且当前软链接已经是 `.agents/skills/<skill-name>` 布局，到 `git pull` 后就可以停止，必要时重启 Codex。首次安装、旧路径迁移或改变已选 Agent 时，再继续执行清理和链接创建：
+
+```powershell
+if (Test-Path -LiteralPath $CloneRoot) {
+  git -C $CloneRoot pull --ff-only
+} else {
+  New-Item -ItemType Directory -Force -Path (Split-Path $CloneRoot) | Out-Null
+  git clone https://github.com/Neplich/dev-agent-skills.git $CloneRoot
+}
+
+New-Item -ItemType Directory -Force -Path $SkillRoot | Out-Null
+
+function Test-ManagedTarget {
+  param(
+    [string]$Target,
+    [string]$Root
+  )
+
+  if (-not $Target) { return $false }
+
+  $targetFull = [System.IO.Path]::GetFullPath($Target)
+  $rootFull = [System.IO.Path]::GetFullPath($Root).TrimEnd([char[]]@('\', '/'))
+  return $targetFull.StartsWith($rootFull + [System.IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase)
+}
+
+function Cleanup-LegacyAgentSkillRoot {
+  if (-not (Test-Path -LiteralPath $LegacySkillRoot -PathType Container)) { return }
+
+  Get-ChildItem -LiteralPath $LegacySkillRoot -Force |
+    Where-Object { $_.LinkType -eq "SymbolicLink" } |
+    ForEach-Object {
+      if (Test-ManagedTarget -Target $_.Target -Root (Join-Path $LegacyCloneRoot "agents")) {
+        Remove-Item -LiteralPath $_.FullName
+        Write-Host "Removed legacy symlink $($_.FullName)"
+      }
+    }
+
+  Remove-Item -LiteralPath $LegacySkillRoot -ErrorAction SilentlyContinue
+}
+
+function Cleanup-ManagedSkillLinks {
+  Get-ChildItem -LiteralPath $SkillRoot -Force |
+    Where-Object { $_.LinkType -eq "SymbolicLink" } |
+    ForEach-Object {
+      if (Test-ManagedTarget -Target $_.Target -Root $CloneRoot) {
+        Remove-Item -LiteralPath $_.FullName
+        Write-Host "Removed managed symlink $($_.FullName)"
+      }
+    }
+}
+
+function Link-AgentSkills {
+  param([string]$AgentSkillsPath)
+
+  $agentSkillsDir = Join-Path $CloneRoot $AgentSkillsPath
+  foreach ($skillItem in Get-ChildItem -LiteralPath $agentSkillsDir -Directory) {
+    $skillDir = $skillItem.FullName
+    if (-not (Test-Path -LiteralPath (Join-Path $skillDir "SKILL.md"))) { continue }
+
+    $skillName = $skillItem.Name
+    $dest = Join-Path $SkillRoot $skillName
+
+    if (Test-Path -LiteralPath $dest) {
+      $destItem = Get-Item -LiteralPath $dest -Force
+      if ($destItem.LinkType -eq "SymbolicLink") {
+        if (Test-ManagedTarget -Target $destItem.Target -Root $CloneRoot) {
+          Remove-Item -LiteralPath $dest
+        } else {
+          Write-Host "Skip existing symlink not managed by this installer: $dest -> $($destItem.Target)"
+          continue
+        }
+      } else {
+        Write-Host "Skip existing non-symlink skill directory: $dest"
+        continue
+      }
+    }
+
+    New-Item -ItemType SymbolicLink -Path $dest -Target $skillDir | Out-Null
+    Write-Host "Linked $skillName"
+  }
+}
+
+Cleanup-LegacyAgentSkillRoot
+Cleanup-ManagedSkillLinks
+
+# 安装 all 时保留全部条目；安装子集时删除未选择的 Agent 条目。
+$SelectedAgentSkillDirs = @(
+  "agents/product_manager/skills",
+  "agents/engineer/skills",
+  "agents/qa/skills",
+  "agents/devops/skills",
+  "agents/designer/skills",
+  "agents/security/skills"
+)
+
+foreach ($agentSkillsPath in $SelectedAgentSkillDirs) {
+  Link-AgentSkills $agentSkillsPath
+}
 ```
 
 ### 4. 重启 Codex
@@ -215,7 +381,7 @@ $SKILL_ROOT/qa-agent/SKILL.md
 git -C "$CLONE_ROOT" pull --ff-only
 ```
 
-更新后如果没有立即生效，重启 Codex。
+新的 `.agents/skills/<skill-name>` 软链接会在 pull 后继续生效，所以日常升级不需要清理或重建软链接。如果是从旧的聚合目录安装方式升级，或本次改变了已选 Agent，才重新执行第 3 步，让旧的 managed links 先被删除，再创建新的软链接。更新后如果没有立即生效，重启 Codex。
 
 ## 卸载
 
