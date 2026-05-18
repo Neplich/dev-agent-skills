@@ -2,8 +2,8 @@
 
 ## Overview
 
-Update an existing TRD while preserving version history, architecture rationale,
-and cross-document consistency.
+Analyze a TRD revision request and hand it to `engineer-agent:trd-gen`. PM does
+not update Engineer-owned TRD content directly.
 
 ## When to use
 
@@ -14,12 +14,12 @@ and cross-document consistency.
 ## Quick start
 
 ```text
-Update this TRD based on the validator report and keep the API section aligned.
+Analyze this TRD validator report and prepare the Engineer handoff packet.
 ```
 
 ## Related skills
 
-- `trd-gen`
+- `engineer-agent:trd-gen`
 - `trd-validator`
 - `adr-iteration`
 - `api-iteration`

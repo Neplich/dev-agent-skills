@@ -46,6 +46,10 @@ For feature design and spec-change requests, follow these rules:
 10. In empty or near-empty workspaces, do not jump to engineering bootstrap,
     framework selection, or scaffolding unless the user explicitly says to skip
     PM and start coding now.
+11. When a BRD, PRD, DECISIONS, API, ADR, TEST_SPEC, or other durable document
+    must be written or revised, delegate the document-writing task to a fresh
+    document-writing sub-agent when sub-agent capabilities are available. The
+    main process keeps context, reviews the result, and owns the next handoff.
 
 ## Operating Modes
 
@@ -143,6 +147,9 @@ Load only the narrowest internal `INSTRUCTIONS.md` needed for the next step.
   inherit confirmed facts instead of re-asking the basics.
 - **Document as memory**: Use feature docs as durable working memory for large
   designs.
+- **Delegate document writing**: Use document-writing sub-agents for durable
+  document creation or revision so the main process can preserve context and
+  review quality.
 - **Do not regenerate by habit**: Prefer targeted iteration when the artifact
   already exists and is good enough to update in place.
 - **Never fabricate**: Mark uncertain business rules, metrics, or technical
@@ -260,9 +267,9 @@ Use when the codebase exists but the requested capability is new.
    - open risks and dependencies
 3. Continue through the normal clarify / shape / architect phases, but always
    anchor requirements and design to the detected current state.
-4. Once requirements are stable, hand off to the narrowest generator:
+4. Once requirements are stable, hand off to the narrowest next owner:
    - `prd-gen` for requirements formalization
-   - `trd-gen` for technical design
+   - `engineer-agent:trd-gen` for Engineer-owned technical design after PRD confirmation
    - `api-gen` or `adr-gen` only when those artifacts are already clearly
      justified
 
@@ -522,7 +529,7 @@ current comments module if possible."
 - chooses `existing-project-feature`
 - writes a delta brief anchored in current architecture
 - progresses section by section and records confirmed decisions
-- recommends `prd-gen`, then `trd-gen`
+- recommends `prd-gen`, then explicit handoff to `engineer-agent:trd-gen`
 
 ### Example 3: Existing docs need revision
 

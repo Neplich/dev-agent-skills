@@ -7,14 +7,14 @@
       "id": "eval-001-implement-from-prd-trd",
       "name": "implement-from-prd-trd",
       "description": "Verifies that feature-implementor handles implement-from-prd-trd and produces the expected role-specific artifact.",
-      "prompt": "根据 docs/prd.md 和 docs/trd.md 实现用户通知功能",
+      "prompt": "根据 docs/pm/notification-center/PRD.md 和 docs/engineer/notification-center/TRD.md 实现用户通知功能",
       "workspace": null,
-      "expected_output": "实现计划 + 代码文件创建/修改 + 自检报告",
+      "expected_output": "IMPLEMENTATION_PLAN.md + 代码文件创建/修改 + 自检报告",
       "assertions": [
         {
           "id": "assertion_1",
           "description": "生成实现计划",
-          "text": "输出包含文件变更清单和实现顺序"
+          "text": "输出包含实现计划文档路径、文件变更清单和实现顺序"
         },
         {
           "id": "trd",
@@ -32,14 +32,19 @@
       "id": "eval-002-subagent-division-from-docs",
       "name": "subagent-division-from-docs",
       "description": "Verifies that feature-implementor preserves main-process context and uses separate implementation and validation sub-agent responsibilities for a complex document-driven coding task.",
-      "prompt": "请根据 docs/pm/capture-loop/PRD.md、docs/pm/capture-loop/TRD.md 和 docs/design/capture-loop/ui-ux-spec.md 实现 Capture Loop 队列重试能力。现在进入编码阶段，需要修改服务逻辑、处理器和测试；请给出实现计划并说明如何安排实现与验收分工。",
+      "prompt": "请根据 docs/pm/capture-loop/PRD.md、docs/engineer/capture-loop/TRD.md 和 docs/design/capture-loop/ui-ux-spec.md 实现 Capture Loop 队列重试能力。现在进入编码阶段，需要先编写 docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md，再说明如何安排实现与验收分工。",
       "workspace": "workspace/eval-002-subagent-division-from-docs",
-      "expected_output": "读取源文档并保留主进程上下文，判断任务触发复杂编码分工，给出实现 sub-agent 的写入范围和禁止事项，给出验收 sub-agent 的验收依据和检查范围，并在最终交付契约中包含实现结果、测试情况、验收结论和遗留风险。",
+      "expected_output": "读取源文档并保留主进程上下文，确认 TRD 已就绪，要求通过文档编写 sub-agent 产出 IMPLEMENTATION_PLAN.md，判断任务触发复杂编码分工，给出实现 sub-agent 的写入范围和禁止事项，给出验收 sub-agent 的验收依据和检查范围，并在最终交付契约中包含实现结果、测试情况、验收结论和遗留风险。",
       "assertions": [
         {
           "id": "preserves_main_context",
           "description": "主进程保留高层上下文",
           "text": "输出必须说明主进程负责保留 PRD、TRD、设计文档、仓库规则、实现边界和最终交付判断，而不是直接吞掉所有编码和验收细节。"
+        },
+        {
+          "id": "writes_implementation_plan_doc",
+          "description": "实现计划文档",
+          "text": "输出必须说明先由文档编写 sub-agent 编写 `docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md`，TRD 不由 feature-implementor 改写。"
         },
         {
           "id": "delegates_implementation_scope",
@@ -60,6 +65,36 @@
           "id": "final_summary_contract",
           "description": "最终交付说明完整",
           "text": "输出必须说明最终交付需要包含实现结果、测试情况、验收结论和遗留风险。"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-missing-trd-handoff",
+      "name": "missing-trd-handoff",
+      "description": "Verifies that feature-implementor stops before implementation when the Engineer TRD is missing and hands back to trd-gen.",
+      "prompt": "请根据 docs/pm/capture-loop/PRD.md 实现 Capture Loop 队列重试能力。当前 workspace 没有 docs/engineer/capture-loop/TRD.md；请判断下一步，不要直接写代码。",
+      "workspace": "workspace/eval-003-missing-trd-handoff",
+      "expected_output": "识别缺少已确认 Engineer TRD，停止实现计划和代码实现，明确 handoff 给 engineer-agent:trd-gen 编写 docs/engineer/capture-loop/TRD.md，并说明缺失的技术决策。",
+      "assertions": [
+        {
+          "id": "detects_missing_engineer_trd",
+          "description": "识别缺失 Engineer TRD",
+          "text": "输出必须明确当前缺少 `docs/engineer/capture-loop/TRD.md` 或已确认 Engineer TRD。"
+        },
+        {
+          "id": "hands_off_to_trd_gen",
+          "description": "交回 TRD 生成",
+          "text": "输出必须把下一步交给 `engineer-agent:trd-gen` 编写或确认 TRD。"
+        },
+        {
+          "id": "does_not_write_plan_or_code",
+          "description": "不进入实现计划或代码",
+          "text": "输出不得开始编写 `IMPLEMENTATION_PLAN.md`、代码、测试或文件变更计划。"
+        },
+        {
+          "id": "names_required_trd_decisions",
+          "description": "列出缺失技术决策",
+          "text": "输出必须说明至少一个需要 TRD 决定的技术问题，例如组件影响、重试策略、验证命令或风险。"
         }
       ]
     }

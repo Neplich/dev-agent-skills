@@ -8,9 +8,10 @@ Execute the implementation plan step by step, writing code that follows project 
 
 ## Input
 
-- Confirmed implementation plan (from planner)
+- Confirmed implementation plan document (from planner)
 - Project Profile
 - PM documents for reference
+- Confirmed Engineer TRD for reference
 - For complex coding tasks: implementation sub-agent scope, forbidden areas,
   expected behavior, and verification commands
 
@@ -51,6 +52,8 @@ If creating a new file:
 Follow these rules strictly:
 - Reference `_shared/coding-rules.md` for all coding decisions
 - Every function, type, or endpoint should trace to a PM document section
+- Every file-level implementation decision should trace to the confirmed TRD or
+  implementation plan document
 - Use the project's existing patterns, not "best practices" from elsewhere
 - Keep the code simple — no abstractions beyond what's needed now
 

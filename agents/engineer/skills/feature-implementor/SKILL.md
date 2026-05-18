@@ -1,15 +1,19 @@
 ---
 name: feature-implementor
-description: "Core engineering skill: implement features based on PM documents (PRD, TRD, ADR, API Spec). Use this skill whenever the user wants to implement a feature, write code for a requirement, build functionality described in a spec, or turn a design into code. Trigger on phrases like '实现这个功能', '写代码', '开始编码', 'implement', 'build this feature', 'code this', or any request to turn PM documents into working code."
+description: "Core engineering skill: implement features from confirmed Engineer TRDs and PM/design inputs. Use this skill whenever the user wants to implement a feature, write code for a confirmed requirement, build functionality described in a TRD/spec, or turn a design into code. Trigger on phrases like '实现这个功能', '写代码', '开始编码', 'implement', 'build this feature', 'code this', or any request to turn confirmed technical plans into working code."
 ---
 
 # Feature Implementor — Public Entry
 
-The core engineering skill. Reads PM documents (PRD, TRD, ADR, API Spec), breaks the work into ordered implementation steps, writes code following project conventions, and self-reviews the result.
+The core engineering skill. Reads confirmed Engineer TRDs plus PM/design inputs,
+writes an implementation plan document, then implements code following project
+conventions and self-reviews the result.
 
 This is the public entry point. It owns:
 
-- PM document reading and requirement extraction
+- PM / Engineer / Design document reading and requirement extraction
+- Implementation plan document writing
+  (`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`)
 - Implementation planning (which files to create/modify, in what order)
 - Delegation to internal modules and, for complex coding tasks, scoped
   implementation/validation sub-agents
@@ -22,11 +26,30 @@ Do not load internal modules until the implementation plan is confirmed.
 - User wants to implement a feature described in PM documents
 - User asks to "write code" or "implement" something with a spec available
 - After `codebase-analyzer` or `project-bootstrap` has established project context
+- After `trd-gen` has produced and the user has confirmed
+  `docs/engineer/{feature}/TRD.md`
 
 Do NOT use for:
 - Bug fixes with no spec (use `debugger` instead)
 - Writing tests only (use `test-writer` instead)
 - Git/PR operations only (use `delivery` instead)
+- Creating or revising the TRD itself (use `trd-gen` instead)
+
+## TRD and Implementation Plan Boundary
+
+`docs/engineer/{feature}/TRD.md` is the technical plan and input contract.
+`feature-implementor` consumes the confirmed TRD and writes
+`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`.
+
+The implementation plan maps TRD decisions to concrete files, sequence,
+delegation, verification commands, and rollout checks. It must not change PM
+scope or rewrite TRD decisions. If the TRD is missing, incomplete, or conflicts
+with the codebase, stop and hand back to `engineer-agent:trd-gen` with the
+specific blocker.
+
+All implementation plan document writing must be delegated to a fresh
+document-writing sub-agent when sub-agent capabilities are available. The main
+process keeps the source docs, repository context, and final approval decision.
 
 ## Complex Coding Sub-Agent Split
 
@@ -62,7 +85,7 @@ reading, or when the user explicitly opts out.
 
 ## Phase 0: Gather Context
 
-### Read PM documents
+### Read source documents
 
 Scan `docs/` for relevant specs:
 
@@ -72,9 +95,12 @@ ls docs/*.md docs/**/*.md 2>/dev/null
 
 Read the documents relevant to the current task:
 - **PRD**: functional requirements, user stories, acceptance criteria
-- **TRD**: technical approach, component breakdown, architecture decisions
+- **Engineer TRD**: technical approach, component breakdown, architecture decisions
 - **ADR**: specific technology choices and constraints
 - **API Spec**: endpoint contracts, request/response shapes
+
+If `docs/engineer/{feature}/TRD.md` is missing or not confirmed, do not create
+the implementation plan. Hand off to `engineer-agent:trd-gen`.
 
 ### Check for Project Profile
 
@@ -100,6 +126,13 @@ Read the internal routing contract before planning:
 
 `agents/engineer/skills/feature-implementor/_internal/_shared/coding-rules.md`
 
+Delegate implementation plan document writing to a fresh document-writing
+sub-agent when available. The delegated task must write or update:
+
+```text
+docs/engineer/{feature}/IMPLEMENTATION_PLAN.md
+```
+
 Break the feature into ordered implementation steps:
 
 1. List every file that needs to be **created** or **modified**
@@ -111,6 +144,8 @@ Break the feature into ordered implementation steps:
 4. Decide whether the complex coding sub-agent split applies. If it does,
    include the implementation sub-agent write scope and validation sub-agent
    review scope in the plan.
+5. Include the TRD path, implementation plan path, and any blockers that require
+   returning to `trd-gen`.
 
 Present the plan to the user:
 

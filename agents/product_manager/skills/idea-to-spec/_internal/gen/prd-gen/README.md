@@ -37,5 +37,5 @@
 
 - `prd-validator` — 校验 PRD 质量
 - `prd-iteration` — 迭代更新 PRD
-- `trd-gen` — 从 PRD 生成技术设计文档
+- `engineer-agent:trd-gen` — PRD 确认后生成技术设计文档
 - `idea-to-spec` — 先用对话探索想法，再用 prd-gen 正式化

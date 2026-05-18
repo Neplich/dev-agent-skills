@@ -32,4 +32,4 @@
 ## 关联 Skill
 
 - `api-validator` — 校验 API 文档质量
-- `trd-gen` — 完整技术设计中包含 API 章节
+- `engineer-agent:trd-gen` — 完整技术设计中包含 API 章节

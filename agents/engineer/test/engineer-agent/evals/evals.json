@@ -7,9 +7,9 @@
       "id": "eval-001-route-implementation-chain",
       "name": "route-implementation-chain",
       "description": "Verifies that engineer-agent routes a multi-step implementation request through the narrowest engineering chain.",
-      "prompt": "用户说：请接手这个仓库，按 docs/pm/billing-webhook/TRD.md 实现 webhook 重试逻辑，补测试，最后提交 PR。先做工程路由，不要直接改代码。",
+      "prompt": "用户说：请接手这个仓库，按 docs/engineer/billing-webhook/TRD.md 实现 webhook 重试逻辑，补测试，最后提交 PR。先做工程路由，不要直接改代码。",
       "workspace": "workspace/eval-1-route-implementation-chain",
-      "expected_output": "工程路由决策，明确先理解仓库，再实现、补测试、交付，并说明每一步对应的 specialist skill。",
+      "expected_output": "工程路由决策，明确先理解仓库，再基于已确认 TRD 编写实现计划、实现、补测试、交付，并说明每一步对应的 specialist skill。",
       "assertions": [
         {
           "id": "starts_with_codebase_context",
@@ -19,7 +19,7 @@
         {
           "id": "routes_implementation_to_feature_implementor",
           "description": "实现 route",
-          "text": "必须把 webhook 重试逻辑实现交给 `feature-implementor`，并说明它基于 TRD 和现有代码执行。"
+          "text": "必须把 webhook 重试逻辑实现交给 `feature-implementor`，并说明它基于已确认 TRD、实现计划文档和现有代码执行。"
         },
         {
           "id": "routes_tests_to_test_writer",

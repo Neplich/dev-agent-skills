@@ -51,7 +51,7 @@ flowchart TD
   F1 --> F2["读取现有模块、权限、集成关系"]
   F2 --> F3["形成 delta brief"]
   F3 --> F4["section 逐段收敛并落档"]
-  F4 --> F5["稳定后路由到 prd-gen，必要时再到 trd-gen"]
+  F4 --> F5["稳定后路由到 prd-gen，确认后移交 engineer-agent:trd-gen"]
 
   G --> G1["总结需求变更 delta"]
   G1 --> G2["若影响范围不清晰，先加载 change-impactor"]

@@ -61,8 +61,8 @@ questions. Do not append an initialization plan.
 
 - Empty or near-empty workspace plus an idea-only product request
 - Requests that are still converging on scope, flows, layout, roles, or PM docs
-- Any case where the real next step is PRD / DECISIONS / TRD creation rather
-  than code scaffolding
+- Any case where the real next step is PRD / DECISIONS creation or Engineer TRD
+  planning rather than code scaffolding
 
 If those conditions apply, send the user to `pm-agent:idea-to-spec` first and
 stop there.

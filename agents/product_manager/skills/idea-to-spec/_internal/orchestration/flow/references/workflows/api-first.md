@@ -14,7 +14,7 @@ steps:
   - skill: api-validator
     input_from: api_docs
     gate: true
-  - skill: trd-gen
+  - skill: engineer-agent:trd-gen
     input_from: api_docs
     output_key: trd
   - skill: trd-validator

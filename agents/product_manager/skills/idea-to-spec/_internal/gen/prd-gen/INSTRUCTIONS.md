@@ -12,7 +12,7 @@ Generate a comprehensive Product Requirements Document following the standardize
 - Defining product requirements for a new feature or product
 - Standardizing an informal spec into a proper PRD
 - Converting BRD business objectives into actionable product requirements
-- **Differs from** `idea-to-spec`: idea-to-spec is a dialogue-driven flow that produces PRD + TRD combined; prd-gen focuses solely on standardized product requirements
+- **Differs from** `idea-to-spec`: idea-to-spec is a dialogue-driven flow that shapes requirements and handoff context; prd-gen focuses solely on standardized product requirements
 - **Tip**: Use `idea-to-spec` (explore mode) first to shape ideas, then `prd-gen` to formalize into a standalone PRD
 
 ## Inputs

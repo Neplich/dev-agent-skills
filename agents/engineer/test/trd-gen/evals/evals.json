@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "agent": "engineer",
+  "skill_name": "trd-gen",
+  "evals": [
+    {
+      "id": "eval-001-prd-to-engineer-trd",
+      "name": "prd-to-engineer-trd",
+      "description": "Verifies that trd-gen owns technical planning after PRD confirmation and stops before implementation.",
+      "prompt": "PM 已经确认 docs/pm/capture-loop/PRD.md 和 docs/pm/capture-loop/DECISIONS.md。请进入 Engineer 阶段，编写 TRD，并说明后续如何移交给 feature-implementor。",
+      "workspace": null,
+      "expected_output": "生成或更新 docs/engineer/{feature}/TRD.md，明确 TRD 确认后再移交 feature-implementor 编写实现计划文档，不进入代码实现。",
+      "assertions": [
+        {
+          "id": "engineer_owns_trd",
+          "description": "TRD 属于 Engineer 产物",
+          "text": "输出必须明确 TRD 由 Engineer Agent 负责，并写入 `docs/engineer/{feature}/TRD.md`。"
+        },
+        {
+          "id": "prd_confirmed_handoff",
+          "description": "PRD 确认后再进入 TRD",
+          "text": "输出必须说明只有 PRD、DECISIONS 或等价产品范围确认后，才进入 TRD 编写阶段。"
+        },
+        {
+          "id": "document_subagent",
+          "description": "文档编写委派",
+          "text": "输出必须要求 TRD 编写或更新任务由文档编写 sub-agent 执行，主进程保留上下文和最终审查。"
+        },
+        {
+          "id": "implementation_plan_handoff",
+          "description": "TRD 后移交实现计划",
+          "text": "输出必须说明 TRD 确认后移交 `feature-implementor` 编写 `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`，再进入实现。"
+        },
+        {
+          "id": "no_code_implementation",
+          "description": "不直接进入实现",
+          "text": "输出不能把 TRD 编写请求直接扩展成代码修改、测试修改或交付操作。"
+        }
+      ]
+    }
+  ]
+}

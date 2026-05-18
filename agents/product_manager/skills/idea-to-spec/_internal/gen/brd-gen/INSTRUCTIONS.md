@@ -12,7 +12,7 @@ Generate a comprehensive Business Requirements Document following the standardiz
 - Starting a new project and need to articulate business justification
 - Translating business goals into a formal requirements document
 - Need stakeholder alignment on scope, ROI, and timelines
-- **Not** for technical design (use `trd-gen`) or product features (use `prd-gen`)
+- **Not** for technical design (use `engineer-agent:trd-gen`) or product features (use `prd-gen`)
 - **Complements** `idea-to-spec`: BRD focuses on business case; idea-to-spec explores product shape through dialogue
 
 ## Inputs

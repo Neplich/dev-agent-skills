@@ -13,7 +13,7 @@ documents.
 - PRD or TRD is ready and you need test cases before development
 - Need to ensure all requirements have corresponding test coverage
 - Creating QA handoff documentation
-- **Input typically from**: `prd-gen`, `trd-gen`, or `api-gen` output
+- **Input typically from**: `prd-gen`, `engineer-agent:trd-gen`, or `api-gen` output
 
 ## Inputs
 

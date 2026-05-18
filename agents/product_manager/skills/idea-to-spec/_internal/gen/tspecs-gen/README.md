@@ -31,5 +31,5 @@
 
 ## 关联 Skill
 
-- `prd-gen` / `trd-gen` — 提供输入源文档
+- `prd-gen` / `engineer-agent:trd-gen` — 提供输入源文档
 - `trace-check` — 验证需求到测试的完整追溯链

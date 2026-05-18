@@ -4,10 +4,10 @@
   "workspace_root": "agents/qa/test/spec-based-tester/evals/workspace/eval-2-boundary-test-generation",
   "validation_method": "fresh_codex_subagent",
   "skill_availability_goal": "Verify that spec-based-tester handles login boundary testing from PM and implementation context without fabricating results.",
-  "prompt": "根据 docs/pm/login-refresh/PRD.md、docs/pm/login-refresh/TRD.md、实现变更说明和仓库测试命令，对登录表单执行边界验证；覆盖空值、超长字符串、特殊字符、非法邮箱格式和锁定账号状态。如果上下文或环境缺失，必须先标记 blocked 或 assumed。",
+  "prompt": "根据 docs/pm/login-refresh/PRD.md、docs/engineer/login-refresh/TRD.md、实现变更说明和仓库测试命令，对登录表单执行边界验证；覆盖空值、超长字符串、特殊字符、非法邮箱格式和锁定账号状态。如果上下文或环境缺失，必须先标记 blocked 或 assumed。",
   "fixture_context": [
     "docs/pm/login-refresh/PRD.md",
-    "docs/pm/login-refresh/TRD.md",
+    "docs/engineer/login-refresh/TRD.md",
     "implementation/changes.md",
     "package.json"
   ],

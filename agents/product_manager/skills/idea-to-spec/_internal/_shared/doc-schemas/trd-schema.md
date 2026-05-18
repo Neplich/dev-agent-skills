@@ -1,6 +1,7 @@
 # TRD (Technical Requirements Document) Schema
 
-> Shared schema referenced by `trd-gen`, `trd-validator`.
+> Legacy PM-side validation schema referenced by `trd-validator`. New TRD
+> generation is owned by `engineer-agent:trd-gen`.
 
 ## Required Sections
 
