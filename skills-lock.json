@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "2982cf6d2c484120ca006bac1e89fde8d2b472ac51a565ca3a411ef35f778e4e"
+      "computedHash": "0d350560b3c577f6fdc539f17a75952f5902179bcb676b4967711b51bcf13051"
     },
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",
@@ -44,22 +44,27 @@
     "engineer-agent": {
       "source": "agents/engineer/skills/engineer-agent",
       "sourceType": "local",
-      "computedHash": "8ae20ae290c627f162ba105b511e546826994ecafbabbe68e70fc3e2c685d364"
+      "computedHash": "e41060675bc1ab4db945daba7c47cf7264c1a987df19124d1204840379398fb1"
     },
     "codebase-analyzer": {
       "source": "agents/engineer/skills/codebase-analyzer",
       "sourceType": "local",
       "computedHash": "59e673c3e6807d951e80d9396ae85dc0aff8af135f1996f62a85f643d5307fb2"
     },
+    "trd-gen": {
+      "source": "agents/engineer/skills/trd-gen",
+      "sourceType": "local",
+      "computedHash": "c4c8642f0ad135b09cfed6a31aac8373a6de92a246b4542924e29671604648d0"
+    },
     "project-bootstrap": {
       "source": "agents/engineer/skills/project-bootstrap",
       "sourceType": "local",
-      "computedHash": "06ad8846c793232f16c533296d2746ee54d2006b9578c993c945fde136427551"
+      "computedHash": "f197eb1e4aa772d58dccdc566d2cfe8ad741f7e54d31b1601493ad0c31977eb6"
     },
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
       "sourceType": "local",
-      "computedHash": "42403190cdd392e1f4e378a040bfa81e38b30b63eab43910f88d09137610b2bf"
+      "computedHash": "4cc50e0823d73b150ec92f147fb889bffa664fa8f9a2e92089bd45f5fe07fd63"
     },
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",

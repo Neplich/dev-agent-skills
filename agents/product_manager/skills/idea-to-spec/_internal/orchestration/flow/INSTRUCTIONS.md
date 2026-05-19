@@ -14,7 +14,7 @@ after the lane is already classified as an end-to-end workflow request.
 ## When to use
 
 - Need to run a standard multi-step document pipeline (for example BRD -> PRD
-  -> TRD -> Tests)
+  -> Engineer TRD handoff -> Tests)
 - Want to automate a repeatable process across multiple skills
 - Setting up a complete documentation suite for a feature
 - Prefer `idea-to-spec` first if the user's goals, scope, or constraints are
@@ -58,7 +58,7 @@ Full feature documentation pipeline:
 2. `brd-validator` -> Validate BRD
 3. `prd-gen` (input: BRD) -> PRD
 4. `prd-validator` -> Validate PRD
-5. `trd-gen` (input: PRD) -> TRD
+5. `engineer-agent:trd-gen` (input: confirmed PRD) -> TRD
 6. `trd-validator` -> Validate TRD
 7. `tspecs-gen` (input: PRD + TRD) -> TEST_SPEC
 8. `tspecs-validator` -> Validate TEST_SPEC
@@ -69,7 +69,7 @@ Full feature documentation pipeline:
 Lightweight spec generation (skips BRD):
 1. `prd-gen` -> PRD
 2. `prd-validator` -> Validate
-3. `trd-gen` (input: PRD) -> TRD
+3. `engineer-agent:trd-gen` (input: confirmed PRD) -> TRD
 4. `trd-validator` -> Validate
 
 ### `api-first`
@@ -77,7 +77,7 @@ Lightweight spec generation (skips BRD):
 API-driven development:
 1. `api-gen` -> API Documentation
 2. `api-validator` -> Validate
-3. `trd-gen` (input: API docs) -> TRD
+3. `engineer-agent:trd-gen` (input: API docs and confirmed scope) -> TRD
 4. `trd-validator` -> Validate
 5. `tspecs-gen` (input: API docs) -> TEST_SPEC
 6. `tspecs-validator` -> Validate
@@ -100,6 +100,8 @@ Architecture decision:
    settled assumptions instead of re-asking basic questions.
 3. **Execute steps sequentially**:
    - For each step, invoke the skill with accumulated context
+   - For Engineer-owned TRD steps, perform an explicit handoff to
+     `engineer-agent:trd-gen`; PM does not write the TRD directly
    - Pass each step's output as input to the next step
    - If `validate: true` and a corresponding validator exists, run it after each
      gen step

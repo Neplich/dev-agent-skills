@@ -9,7 +9,8 @@ Review the implemented code against PM documents and project conventions before 
 ## Input
 
 - List of all files created or modified
-- PM documents (PRD, TRD, API Spec)
+- PM documents (PRD, DECISIONS)
+- Engineer documents (TRD, IMPLEMENTATION_PLAN, API Spec)
 - Project Profile
 - Deterministic test results, when available
 - For complex coding tasks: implementation sub-agent summary and assigned
@@ -21,7 +22,7 @@ When the implementation used the complex coding split, review should be handled
 by a validation sub-agent that is separate from the implementation sub-agent.
 The validation task must include:
 
-- PRD/TRD/design docs and acceptance criteria
+- PRD/TRD/IMPLEMENTATION_PLAN/design docs and acceptance criteria
 - changed files and implementation summary
 - deterministic test commands and results
 - repository rules, including minimal scope and unrelated-change protection
@@ -40,6 +41,7 @@ For each component described in TRD:
 - [ ] Component follows the architecture described in TRD
 - [ ] Component boundaries match TRD (not tightly coupled where TRD says loose)
 - [ ] Data flow matches TRD description
+- [ ] File-level changes match `IMPLEMENTATION_PLAN.md`
 
 ### 2. API Compliance (if API Spec exists)
 

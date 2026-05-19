@@ -27,5 +27,6 @@
 
 ## 关联 Skill
 
-- `brd-gen` / `prd-gen` / `trd-gen` — 填充文档骨架
+- `brd-gen` / `prd-gen` — 填充 PM 文档骨架
+- `engineer-agent:trd-gen` — PRD 确认后编写 Engineer TRD
 - `flow` — 定义完整工作流

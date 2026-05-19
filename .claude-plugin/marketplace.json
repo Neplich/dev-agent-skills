@@ -32,6 +32,7 @@
       "skills": [
         "./skills/engineer-agent",
         "./skills/codebase-analyzer",
+        "./skills/trd-gen",
         "./skills/project-bootstrap",
         "./skills/feature-implementor",
         "./skills/test-writer",

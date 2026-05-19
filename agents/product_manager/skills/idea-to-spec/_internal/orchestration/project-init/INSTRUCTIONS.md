@@ -27,7 +27,7 @@ empty workspace needs durable documentation scaffolding.
 - **Optional**:
   - `project_type`: webapp / mobile / api / library / data-pipeline (affects
     which doc types to include)
-  - `doc_types`: Override which documents to create -> BRD / PRD / TRD / ADR /
+  - `doc_types`: Override which documents to create -> BRD / PRD / ADR /
     API / TEST_SPEC (default: all applicable)
   - `description`: Brief project description (pre-populates Background sections)
   - `team`: Team members and roles (pre-populates Stakeholder sections)
@@ -51,23 +51,22 @@ Use it to:
 
 1. **Determine doc set**: Based on `project_type`, select applicable document
    types:
-   - webapp / mobile: BRD + PRD + TRD + ADR + API + TEST_SPEC
-   - api: PRD + TRD + ADR + API + TEST_SPEC
-   - library: TRD + ADR + TEST_SPEC
-   - data-pipeline: BRD + TRD + ADR
+   - webapp / mobile: BRD + PRD + ADR + API + TEST_SPEC
+   - api: PRD + ADR + API + TEST_SPEC
+   - library: ADR + TEST_SPEC
+   - data-pipeline: BRD + ADR
 2. **Create directory structure**:
    ```text
    docs/
-   ├─ brd/
-   ├─ prd/
-   ├─ trd/
-   ├─ adr/
-   ├─ api/
-   ├─ test-specs/
-   └─ reports/
+   ├─ pm/{feature-name}/
+   ├─ engineer/{feature-name}/
+   ├─ qa/{feature-name}/
+   ├─ design/{feature-name}/
+   ├─ devops/{feature-name}/
+   └─ security/{feature-name}/
    ```
 3. **Generate stub documents**:
-   - For BRD / PRD / TRD / API / TEST_SPEC, create a stub document with:
+   - For BRD / PRD / API / TEST_SPEC, create a stub document with:
      - Complete YAML frontmatter (version `0.1.0`, status `Draft`)
      - All required section headings from the corresponding schema
      - `[TODO]` placeholders for content
@@ -81,7 +80,6 @@ Use it to:
    | --- | --- |
    | BRD | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/brd-schema.md` |
    | PRD | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md` |
-   | TRD | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/trd-schema.md` |
    | ADR | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/adr-schema.md` |
    | API | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/api-schema.md` |
    | TEST_SPEC | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md` |
@@ -132,7 +130,6 @@ docs/
 │     └─ PRD.md                           (PRD stub)
 ├─ engineer/
 │  └─ smart-checkout/
-│     ├─ TRD.md                           (TRD stub)
 │     ├─ API.md                           (API doc stub)
 │     └─ ADR-001-initial-architecture.md  (ADR stub)
 ├─ qa/
@@ -152,5 +149,6 @@ Suggested next steps:
 1. Run `brd-gen` to flesh out `docs/pm/smart-checkout/BRD.md`
 2. Run `prd-gen` to define `docs/pm/smart-checkout/PRD.md`
 3. Update `docs/pm/smart-checkout/DECISIONS.md` as decisions are confirmed
-4. Run `trd-gen` and `tspecs-gen` to populate downstream docs
+4. Hand off to `engineer-agent:trd-gen` to write `docs/engineer/smart-checkout/TRD.md`
+5. Run `tspecs-gen` after PRD and TRD are confirmed
 ```

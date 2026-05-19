@@ -52,7 +52,7 @@
       "id": "eval-002-boundary-test-generation",
       "name": "boundary-test-generation",
       "description": "Verifies that spec-based-tester handles boundary-test-generation and produces the expected role-specific artifact.",
-      "prompt": "根据 docs/pm/login-refresh/PRD.md、docs/pm/login-refresh/TRD.md、实现变更说明和仓库测试命令，对登录表单执行边界验证；覆盖空值、超长字符串、特殊字符、非法邮箱格式和锁定账号状态。如果上下文或环境缺失，必须先标记 blocked 或 assumed。",
+      "prompt": "根据 docs/pm/login-refresh/PRD.md、docs/engineer/login-refresh/TRD.md、实现变更说明和仓库测试命令，对登录表单执行边界验证；覆盖空值、超长字符串、特殊字符、非法邮箱格式和锁定账号状态。如果上下文或环境缺失，必须先标记 blocked 或 assumed。",
       "workspace": "workspace/eval-2-boundary-test-generation",
       "expected_output": "结构化边界验证报告，包含 requirement matrix、execution path、evidence references、risk notes 和 handoff decision",
       "assertions": [

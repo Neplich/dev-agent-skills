@@ -129,7 +129,7 @@ Implementation context:
      - `eval_metadata.json`
      - `comparison.md`
      - `docs/pm/sample-feature/PRD.md`
-     - `docs/pm/sample-feature/TRD.md`
+     - `docs/engineer/sample-feature/TRD.md`
      - `docs/design/sample-feature/ui-ux-spec.md`
      - `src/sample/existing-handler.ts`
      - `src/sample/existing-service.ts`
@@ -175,7 +175,7 @@ flowchart TD
 满足以下任一条件时，Engineer Agent 应优先考虑 sub-agent 分工：
 
 - 任务涉及多文件或多模块修改。
-- 任务基于 `docs/pm/{feature}/PRD.md`、`docs/pm/{feature}/TRD.md` 或 `docs/design/{feature}/...` 实施。
+- 任务基于 `docs/pm/{feature}/PRD.md`、`docs/engineer/{feature}/TRD.md` 或 `docs/design/{feature}/...` 实施。
 - 任务需要补充或更新测试，并用测试结果支持交付判断。
 - bug 修复需要复现、根因分析、代码修复和回归验收。
 - 主进程需要同时保留需求、设计、仓库规则、代码上下文和交付风险。

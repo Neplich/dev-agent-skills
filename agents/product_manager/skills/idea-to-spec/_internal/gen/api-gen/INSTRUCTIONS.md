@@ -12,7 +12,7 @@ Generate structured API documentation following the standardized API schema.
 - Need to document an existing API from code or route definitions
 - Designing a new API and need structured documentation
 - Converting informal API notes into proper documentation
-- **Differs from** `trd-gen`: trd-gen covers full technical design; api-gen focuses exclusively on API reference documentation
+- **Differs from** `engineer-agent:trd-gen`: TRD covers full technical design; api-gen focuses exclusively on API reference documentation
 
 ## Inputs
 

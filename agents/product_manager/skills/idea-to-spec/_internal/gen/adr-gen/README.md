@@ -33,4 +33,4 @@
 
 - `adr-validator` — 校验 ADR 质量
 - `adr-iteration` — 更新 ADR 状态（Proposed → Accepted 等）
-- `trd-gen` — TRD 中的关键决策可提取为独立 ADR
+- `engineer-agent:trd-gen` — TRD 中的关键决策可提取为独立 ADR

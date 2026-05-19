@@ -21,7 +21,7 @@ steps:
   - skill: prd-validator
     input_from: prd
     gate: true
-  - skill: trd-gen
+  - skill: engineer-agent:trd-gen
     input_from: prd
     output_key: trd
   - skill: trd-validator

@@ -1,6 +1,6 @@
 # Engineer Agent
 
-`engineer-agent` 是工程角色的 dispatcher skill，负责把代码库分析、项目初始化、功能实现、测试补齐、缺陷修复和交付收尾请求路由到合适的工程 specialist skill。
+`engineer-agent` 是工程角色的 dispatcher skill，负责把代码库分析、TRD 生成、项目初始化、功能实现、测试补齐、缺陷修复和交付收尾请求路由到合适的工程 specialist skill。
 
 > [!NOTE]
 > 其他语言：[English](./README.md)
@@ -13,9 +13,9 @@
 | 项目 | 内容 |
 | --- | --- |
 | 入口 skill | `engineer-agent` |
-| Specialist skills | 6 个 |
+| Specialist skills | 7 个 |
 | 主要输入 | PM 文档、可选设计文档、现有代码库、测试结果、失败日志 |
-| 主要输出 | 代码变更、测试、工程文档、Git commit / PR |
+| 主要输出 | TRD、实现计划、代码变更、测试、工程文档、Git commit / PR |
 | 上下游协作 | 上游 `pm-agent` / `designer-agent`，下游 `qa-agent` / `devops-agent` / `security-agent` |
 
 ## Skill 清单
@@ -24,8 +24,9 @@
 | --- | --- | --- |
 | `engineer-agent` | 工程请求入口与路由 | 下游 skill 选择与执行路径 |
 | `codebase-analyzer` | 接手现有仓库、理解结构和约束 | Project Profile、技术栈与架构摘要 |
+| `trd-gen` | PRD / DECISIONS 确认后的技术计划编写 | `docs/engineer/{feature}/TRD.md` |
 | `project-bootstrap` | 基于已确认 PRD/TRD 初始化项目 | 项目骨架、基础配置、启动说明 |
-| `feature-implementor` | 按 spec 或设计文档实现功能 | 代码变更、必要工程文档 |
+| `feature-implementor` | 按已确认 TRD 或设计文档实现功能 | `IMPLEMENTATION_PLAN.md`、代码变更、必要工程文档 |
 | `test-writer` | 补单测、集成测试或验证覆盖 | 测试文件、测试运行证据 |
 | `debugger` | 复现、定位、修复 bug 或失败构建 | 最小修复、回归验证证据 |
 | `delivery` | 分支、commit、push、PR、交付收尾 | Git 提交、PR、交付摘要 |
@@ -33,6 +34,7 @@
 ## 路由规则
 
 - 理解仓库、技术栈、架构边界：使用 `codebase-analyzer`
+- PRD 确认后编写或更新技术计划：使用 `trd-gen`
 - 新项目或新服务初始化：使用 `project-bootstrap`
 - 功能实现、行为变更、按设计落地：使用 `feature-implementor`
 - 测试补齐、覆盖率、验证实现：使用 `test-writer`
@@ -48,7 +50,8 @@ flowchart LR
     PM["PM docs"] --> Engineer["engineer-agent"]
     Design["Design docs"] --> Engineer
     Engineer --> Analyze["codebase-analyzer"]
-    Analyze --> Implement["feature-implementor"]
+    Analyze --> TRD["trd-gen"]
+    TRD --> Implement["feature-implementor"]
     Implement --> Test["test-writer"]
     Test --> Delivery["delivery"]
     Implement -. failure .-> Debug["debugger"]
@@ -60,20 +63,22 @@ flowchart LR
 Engineer 主要消费：
 
 - `docs/pm/{feature}/PRD.md`
-- `docs/pm/{feature}/TRD.md`
 - `docs/pm/{feature}/DECISIONS.md`
+- `docs/engineer/{feature}/TRD.md`
 - `docs/design/{feature}/ui-ux-spec.md`
 - `docs/design/{feature}/visual-system.md`
 
-Engineer 的主产物通常是代码和测试；必要时可补充：
+Engineer 的主产物包括技术计划、实现计划、代码和测试：
 
 - `docs/engineer/{feature}/TRD.md`
+- `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
 - `docs/engineer/{feature}/API.md`
 - `docs/engineer/{feature}/ADR.md`
 
 ## 协作边界
 
 - Engineer 是唯一负责把 PM/Designer 文档转成代码、测试和交付资产的角色。
+- Engineer 在 PM 范围确认后负责 TRD 编写；`feature-implementor` 消费已确认 TRD 并产出实现计划。
 - Engineer 不替代 PM 做需求定义，也不替代 Designer 做视觉或交互决策。
 - QA 发现实现缺陷时回到 Engineer；发现需求缺口时回到 PM。
 - DevOps 和 Security 只在部署、运行、安全审查成为当前目标时介入。
@@ -82,7 +87,7 @@ Engineer 的主产物通常是代码和测试；必要时可补充：
 
 ```bash
 # 安装某个 Engineer skill 到当前项目运行时
-npx skills add ./agents/engineer/skills/feature-implementor
+npx skills add ./agents/engineer/skills/trd-gen
 
 # 查看工程 eval 定义
 find agents/engineer/test -path '*/evals/evals.json' -print

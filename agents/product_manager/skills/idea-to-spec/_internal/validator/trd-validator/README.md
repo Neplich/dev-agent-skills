@@ -17,5 +17,5 @@
 
 ## 关联 Skill
 
-- `trd-gen` — 生成 TRD
+- `engineer-agent:trd-gen` — 生成 TRD
 - `prd-validator` — 可交叉验证 PRD-TRD 一致性

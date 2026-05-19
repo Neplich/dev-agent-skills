@@ -22,5 +22,5 @@ flowchart、sequence、ER、C4、gantt、state、class、pie
 
 ## 关联 Skill
 
-- `trd-gen` — TRD 中的架构图和序列图
+- `engineer-agent:trd-gen` — TRD 中的架构图和序列图
 - `prd-gen` — PRD 中的用户流程图

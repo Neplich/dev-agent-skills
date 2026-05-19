@@ -7,7 +7,7 @@
   "prompt": "用户说：这个登录重构已经按 docs/pm/login-refresh/PRD.md 实现了，但 CI 里有一个 intermittent 失败，同时 PM 想知道是否可以进入验收。请先做 QA 路由，不要直接执行测试。",
   "fixture_context": [
     "docs/pm/login-refresh/PRD.md",
-    "docs/pm/login-refresh/TRD.md",
+    "docs/engineer/login-refresh/TRD.md",
     "implementation/changes.md",
     "ci/login-intermittent-failure.log"
   ],

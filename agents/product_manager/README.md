@@ -23,7 +23,7 @@
 | Skill | When to use | Main output |
 | --- | --- | --- |
 | `pm-agent` | PM request routing | Specialist selection and execution path |
-| `idea-to-spec` | Product ideas, empty-repo app requests, feature changes, spec updates | `PRD.md`, `BRD.md`, `DECISIONS.md`, `TRD.md` |
+| `idea-to-spec` | Product ideas, empty-repo app requests, feature changes, spec updates | `PRD.md`, `BRD.md`, `DECISIONS.md`, Engineer handoff |
 | `competitive-brief` | Competitor positioning, gap analysis, market scan | Competitive brief, positioning opportunities, risks |
 | `competitive-intelligence` | Sales battlecards and deal support | HTML battlecard, competitor comparison matrix |
 | `changelog-generator` | Developer-facing version change summaries | `docs/changelog/changelog-v{version}.md` |
@@ -33,7 +33,7 @@
 
 ## Routing Rules
 
-- Idea shaping, scope definition, PRD/BRD/TRD/ADR: use `idea-to-spec`
+- Idea shaping, scope definition, PRD/BRD/DECISIONS: use `idea-to-spec`
 - Competitor research, positioning gaps, market scans: use `competitive-brief`
 - Sales battlecards or deal support: use `competitive-intelligence`
 - Developer-facing version changes: use `changelog-generator`
@@ -65,8 +65,7 @@ docs/
     └── {feature-name}/
         ├── PRD.md
         ├── BRD.md
-        ├── DECISIONS.md
-        └── TRD.md
+        └── DECISIONS.md
 ```
 
 Repository-level PM artifacts can use:
@@ -77,10 +76,10 @@ Repository-level PM artifacts can use:
 
 ## Collaboration Boundary
 
-- PM Agent can produce requirement, business, technical-scope, and decision documents.
+- PM Agent can produce requirement, business, technical constraints, and decision documents.
 - PM Agent does not implement code, tests, deployment config, or security fixes.
 - Designer mainly consumes `PRD.md`, `BRD.md`, and `DECISIONS.md`.
-- Engineer mainly consumes `PRD.md`, `TRD.md`, and `DECISIONS.md`.
+- Engineer consumes PM docs, then owns `docs/engineer/{feature}/TRD.md` through `engineer-agent:trd-gen`.
 
 ## Local Maintenance
 

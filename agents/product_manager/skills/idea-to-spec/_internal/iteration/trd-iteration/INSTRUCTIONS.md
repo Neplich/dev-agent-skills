@@ -1,24 +1,24 @@
 ---
 name: trd-iteration
-description: Iteratively update a Technical Requirements Document (TRD) based on change requests, architecture review feedback, or validator reports. Use when users say "update TRD", "revise tech spec", "iterate technical design", "apply architecture feedback", or need to evolve an existing TRD while maintaining version history.
+description: Handoff TRD revision requests to Engineer-owned trd-gen. Use when PM document iteration discovers that a Technical Requirements Document (TRD) must change; do not update TRD content directly from PM.
 ---
 
-# TRD Iteration
+# TRD Iteration Handoff
 
-Apply changes to an existing TRD while preserving technical rationale, version
-history, and cross-document consistency.
+TRD is owned by Engineer. This internal PM instruction only analyzes why a TRD
+revision is needed and hands the work to `engineer-agent:trd-gen`.
 
 ## When to use
 
 - `trd-validator` reported issues that need fixing
 - Architecture review or implementation learning requires TRD updates
 - Data model, API, NFR, deployment, or security design changed
-- **Not for** creating a new TRD from scratch (use `trd-gen`)
+- **Not for** creating or editing TRD content directly
 
 ## Inputs
 
 - **Required**:
-  - `trd_document`: The existing TRD to update (file path or inline)
+  - `trd_document`: The existing TRD path or summary
   - `change_request`: One of:
     - Validator report from `trd-validator`
     - Architecture review comments
@@ -38,45 +38,39 @@ history, and cross-document consistency.
    - Technical clarification
    - Architecture / API / data-model update
    - Scope or operating-model change
-3. **Apply focused updates**:
-   - Preserve unchanged sections exactly
-   - Update only the affected architecture, data model, API, NFR, security,
-     deployment, observability, testing, or risk sections
-   - Keep diagrams, tables, and endpoint references consistent
+3. **Prepare Engineer handoff**:
+   - affected sections
+   - requested change
+   - source evidence
+   - related PRD / DECISIONS impact
+   - validator findings or review comments
 4. **Check cross-document impact**:
    - If the change alters a technical decision materially, recommend `adr-gen`
      or `adr-iteration`
    - If API contracts change, keep `related_api` aligned or flag follow-up work
    - If PRD assumptions are contradicted, flag that `prd-iteration` may also be
      required
-5. **Bump version**: Use
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md`.
-6. **Update changelog**: Add a frontmatter entry and inline changelog entry.
-7. **Run inline validation**: Apply `trd-validator` checks to the updated doc.
-8. **Present**: Show a diff summary, validation result, and the updated TRD.
+5. **Hand off**: Route to `engineer-agent:trd-gen` for the actual TRD revision.
+6. **Present**: Show the handoff packet and any PM-side docs that may also need
+   updates.
 
 ## Output Contract
 
-- **Format**: Updated Markdown TRD with bumped version
-- **Diff summary**: Section-by-section summary of technical changes
-- **Validation result**: Inline `trd-validator` score and remaining issues
+- **Format**: Engineer handoff packet for `engineer-agent:trd-gen`
+- **Impact summary**: Section-by-section summary of technical changes needed
 - **Cross-doc notes**: Follow-up recommendations for ADR / API / PRD alignment
 
 ## Failure Handling
 
-- Missing version metadata -> initialize at `1.0.0`
+- Missing version metadata -> note it in the Engineer handoff packet
 - Requested change conflicts with locked decisions -> surface the conflict and
   ask the user to choose
-- Change would remove a required section -> warn before proceeding
-- Post-iteration validation still FAIL -> list unresolved issues and suggest
-  another iteration
+- Change would remove a required section -> mark as a blocker for Engineer review
 
 ## Safety Boundaries
 
-- Preserve unchanged sections exactly
 - Never silently remove endpoints, NFR targets, or security controls
-- Confirm with the user before MAJOR version bumps
-- Do not modify files on disk unless explicitly instructed
+- Do not modify TRD files on disk from PM instructions
 
 ## Examples
 
@@ -89,10 +83,10 @@ history, and cross-document consistency.
 
 **Expected Output**:
 
-Changes summary:
+Handoff summary:
 - [FIXED] Deployment Architecture: Added rollback strategy for object-storage migration
 - [FIXED] NFR table: Added throughput target `500 writes/min`
 - [UPDATED] Data Model / System Interactions: Avatar upload path now uses object storage
 - Version: `1.1.0` -> `1.2.0`
 
-Updated TRD with changelog and inline validation result.
+Route this packet to `engineer-agent:trd-gen` for the actual TRD update.

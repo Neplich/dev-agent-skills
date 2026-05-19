@@ -16,6 +16,7 @@ repo context, and current delivery stage.
 - identifying whether the request is about understanding, scaffolding,
   implementing, testing, debugging, or delivering code
 - selecting the narrowest downstream engineering skill
+- owning technical planning after PM requirements are confirmed
 - defining an ordered engineering chain when the user clearly wants an
   end-to-end implementation workflow
 - asking at most one route-level clarification question when the target outcome
@@ -28,6 +29,23 @@ repo context, and current delivery stage.
 - forcing every engineering request through the full build-test-deliver chain
 - replacing PM discovery for greenfield product ideas or empty-workspace scope
   definition
+- changing PM scope while writing technical plans
+
+## Planning Handoff
+
+After `pm-agent` confirms PRD / BRD / DECISIONS, route technical planning to
+`trd-gen`. TRD belongs to Engineer and is written to
+`docs/engineer/{feature}/TRD.md`.
+
+After the TRD is confirmed, route implementation planning and execution to
+`feature-implementor`. `feature-implementor` writes
+`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` from the confirmed TRD, then
+waits for implementation confirmation before coding.
+
+All Engineer document-writing tasks, including TRD and implementation plan
+documents, should be delegated to a fresh document-writing sub-agent when
+sub-agent capabilities are available. The main process keeps source context,
+reviews the document, and owns the final handoff decision.
 
 ## Complex Coding Delegation
 
@@ -54,6 +72,7 @@ sub-agents.
 ## Available Skills
 
 - `engineer-agent:codebase-analyzer` - Understand repo structure, stack, conventions, constraints
+- `engineer-agent:trd-gen` - Write or update Engineer-owned TRDs after PRD confirmation
 - `engineer-agent:project-bootstrap` - Scaffold or initialize a new project from a TRD, approved PM docs, or explicit bootstrap override
 - `engineer-agent:feature-implementor` - Implement features, behavior changes, and scoped refactors
 - `engineer-agent:test-writer` - Add or update automated tests and coverage
@@ -67,6 +86,10 @@ Route by the engineering outcome the user wants, not by literal phrasing.
 - Repo understanding, technical due diligence, "这个项目怎么组织的",
   "技术栈是什么", "接手这个仓库"
   -> `codebase-analyzer`
+- Technical planning from confirmed PRD / DECISIONS, TRD creation or revision,
+  architecture plan, implementation blueprint, "写 TRD", "技术方案",
+  "技术计划", "工程设计"
+  -> `trd-gen`
 - New project setup, greenfield bootstrap, scaffolding from a TRD, approved PM
   docs, or an explicit "skip PM and just scaffold" request, "初始化项目",
   "搭个骨架", "起一个服务"
@@ -90,6 +113,7 @@ Route by the engineering outcome the user wants, not by literal phrasing.
 | Engineering Outcome | Primary Skill |
 | --- | --- |
 | 理解仓库、技术栈、约束、现有模式 | `codebase-analyzer` |
+| PRD 确认后的技术计划、TRD 编写或更新 | `trd-gen` |
 | 新项目/新服务初始化、脚手架搭建（已具备 TRD / 稳定 spec / 显式跳过 PM） | `project-bootstrap` |
 | 实现需求、改行为、按 spec 或设计落地、为需求做重构 | `feature-implementor` |
 | 补测试、补 coverage、把实现转成自动化验证 | `test-writer` |
@@ -99,6 +123,7 @@ Route by the engineering outcome the user wants, not by literal phrasing.
 If the request is engineering-shaped but underspecified, use these defaults:
 
 - if it implies changing production behavior -> `feature-implementor`
+- if it asks for technical planning or TRD before implementation -> `trd-gen`
 - if it implies a failure or regression -> `debugger`
 - if it implies verification without behavior change -> `test-writer`
 - if it implies shipping already-complete work -> `delivery`
@@ -119,8 +144,8 @@ If the request is engineering-shaped but underspecified, use these defaults:
 
 Use these only when the user clearly wants the broader workflow:
 
-- 现有项目完整开发流程 -> `codebase-analyzer` -> `feature-implementor` -> `test-writer` -> `delivery`
-- 新项目落地（已有 TRD / 稳定 spec） -> `project-bootstrap` -> `feature-implementor` -> `test-writer` -> `delivery`
+- 现有项目完整开发流程 -> `codebase-analyzer` -> `trd-gen` -> `feature-implementor` -> `test-writer` -> `delivery`
+- 新项目落地（PRD 已确认） -> `trd-gen` -> `project-bootstrap` -> `feature-implementor` -> `test-writer` -> `delivery`
 - bug 修复闭环 -> `debugger` -> `test-writer` -> `delivery`
 - 已完成实现补交付 -> `test-writer` -> `delivery`
 

@@ -4,11 +4,11 @@
   "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-002-subagent-division-from-docs",
   "validation_method": "fresh_codex_subagent",
   "skill_availability_goal": "Verify that feature-implementor preserves main-process context and separates implementation from validation for a complex document-driven coding task.",
-  "prompt": "请根据 docs/pm/capture-loop/PRD.md、docs/pm/capture-loop/TRD.md 和 docs/design/capture-loop/ui-ux-spec.md 实现 Capture Loop 队列重试能力。现在进入编码阶段，需要修改服务逻辑、处理器和测试；请给出实现计划并说明如何安排实现与验收分工。",
+  "prompt": "请根据 docs/pm/capture-loop/PRD.md、docs/engineer/capture-loop/TRD.md 和 docs/design/capture-loop/ui-ux-spec.md 实现 Capture Loop 队列重试能力。现在进入编码阶段，需要先编写 docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md，再说明如何安排实现与验收分工。",
   "fixture_context": [
     "README.md",
     "docs/pm/capture-loop/PRD.md",
-    "docs/pm/capture-loop/TRD.md",
+    "docs/engineer/capture-loop/TRD.md",
     "docs/design/capture-loop/ui-ux-spec.md",
     "src/capture-loop/queue-service.ts",
     "src/capture-loop/event-handler.ts",

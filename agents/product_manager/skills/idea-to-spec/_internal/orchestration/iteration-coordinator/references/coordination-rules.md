@@ -19,7 +19,7 @@ When multiple documents need updating, follow this dependency order (upstream fi
 |---------------|----------------|-----------------|
 | BRD | brd-iteration | brd-validator |
 | PRD | prd-iteration | prd-validator |
-| TRD | (manual / trd-gen re-run) | trd-validator |
+| TRD | hand off to engineer-agent:trd-gen | trd-validator |
 | ADR | adr-iteration | adr-validator |
 | API | (manual / api-gen re-run) | api-validator |
 | TEST_SPEC | (re-run tspecs-gen) | N/A |
