@@ -12,9 +12,6 @@ Icon?
 .Spotlight-V100
 .Trashes
 
-docs/pm/
-docs/product_manager/
-
 # temp
 .pytest_cache/
 __pycache__/
