@@ -243,6 +243,36 @@ Every `evals.json` must live at `agents/{agent}/test/{skill-name}/evals/evals.js
 
 Eval runners write runtime files to a system temp directory or `tmp/eval-runs/...`, then copy only the confirmed `comparison.md` back to the eval workspace. New metadata schemas should make the split explicit with runtime-output fields and a durable-result field. Keep Python test module names unique across test roots, such as `test_pm_run_eval.py` and `test_qa_run_eval.py`, so pytest can collect all deterministic tests in one process.
 
+### E2E Credential Key Maintenance
+
+E2E credentials use `age` multi-recipient encryption. The repository only stores `docs/qa/e2e/_shared/credentials/recipients.txt` and encrypted `*.env.age` files. Each maintainer or CI bot must keep its private key outside the repository and expose it to local test processes through `E2E_CREDENTIAL_AGE_KEY_FILE`.
+
+To add a maintainer or CI bot:
+
+1. Generate an age key locally:
+   ```bash
+   mkdir -p ~/.config/dev-agent-skills/e2e
+   age-keygen -o ~/.config/dev-agent-skills/e2e/age.key
+   age-keygen -y ~/.config/dev-agent-skills/e2e/age.key
+   ```
+2. Append the public recipient output to `docs/qa/e2e/_shared/credentials/recipients.txt`.
+3. Ask an already authorized maintainer to re-encrypt the affected `*.env.age` files from the current plaintext credentials:
+   ```bash
+   age -R docs/qa/e2e/_shared/credentials/recipients.txt \
+     -o docs/qa/e2e/_shared/credentials/CRED-001-admin.env.age \
+     /path/outside-repo/CRED-001-admin.env
+   ```
+4. Commit the updated `recipients.txt` and re-encrypted `*.env.age` files.
+
+To remove a maintainer or CI bot:
+
+1. Remove the public recipient from `recipients.txt`.
+2. Rotate the real test password, token, or other sensitive value.
+3. Re-encrypt the affected `*.env.age` files from the rotated plaintext credentials with the same `age -R ...` command.
+4. Commit the updated `recipients.txt` and re-encrypted `*.env.age` files.
+
+Removing a recipient without rotating the real credential is not a complete revocation.
+
 Use this `comparison.md` shape for durable results:
 
 ```markdown

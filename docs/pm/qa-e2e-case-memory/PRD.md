@@ -34,6 +34,9 @@ changelog:
   - version: "1.0.3"
     date: "2026-05-21"
     changes: "确认 QA 文档统一迁移到 docs/qa/e2e 功能树目录"
+  - version: "1.0.4"
+    date: "2026-05-21"
+    changes: "补充 age 多 recipient 维护规则和开发者 key 添加流程"
 ---
 
 # QA Agent E2E 用例沉淀与复用 PRD
@@ -363,6 +366,8 @@ docs/qa/e2e/
 
 E2E 凭据使用 `age` 作为默认加密方案。凭据明文只允许在创建或轮换时短暂存在于本地工作区外，提交到仓库的文件必须是 `*.env.age`。
 
+凭据文件必须支持多 recipient 加密。每个维护者或 CI bot 使用自己的 age key，仓库只提交 public recipient；同一个 `*.env.age` 文件需要同时加密给 `recipients.txt` 中列出的所有 authorized recipients。不得让多人共用同一把私钥。
+
 ```bash
 # 1. 生成本地解密私钥，路径在仓库外
 mkdir -p ~/.config/dev-agent-skills/e2e
@@ -386,6 +391,25 @@ age -d -i "$E2E_CREDENTIAL_AGE_KEY_FILE" \
 ```
 
 凭据明文建议使用 `.env` 格式，例如 `E2E_USERNAME=...`、`E2E_PASSWORD=...`、`E2E_TOTP_SECRET=...`。AI 或 subagent 执行测试时只能在当前进程内读取这些值，不得把明文写入 `TC-NNN-*.md`、`scripts/`、`results/`、运行日志或提交内容。
+
+### 维护者 key 管理流程
+
+新增维护者或 CI bot：
+
+1. 新维护者在本地生成自己的 age key，并保存到仓库外路径。
+2. 新维护者导出 public recipient。
+3. 维护者将 public recipient 追加到 `docs/qa/e2e/_shared/credentials/recipients.txt`。
+4. 由已有授权维护者使用当前明文凭据重新加密所有受影响的 `*.env.age` 文件。
+5. 提交更新后的 `recipients.txt` 和重新加密后的 `*.env.age` 文件。
+
+移除维护者或 CI bot：
+
+1. 从 `recipients.txt` 移除对应 public recipient。
+2. 轮换真实测试密码、token 或其他敏感值。
+3. 使用轮换后的明文凭据重新加密所有受影响的 `*.env.age` 文件。
+4. 提交更新后的 `recipients.txt` 和重新加密后的 `*.env.age` 文件。
+
+只移除 recipient 但不轮换真实凭据是不完整的撤权，因为离开的维护者可能已经解密过旧凭据。
 
 ### TC 文件建议结构
 
