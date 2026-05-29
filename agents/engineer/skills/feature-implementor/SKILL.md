@@ -19,7 +19,9 @@ This is the public entry point. It owns:
   implementation/validation sub-agents
 - Quality self-check before handoff
 
-Do not load internal modules until the implementation plan is confirmed.
+Before implementation plan confirmation, load only the planner internal module.
+Do not load implementor or reviewer modules, write code, or run fix steps until
+the implementation plan has been presented to the user and explicitly confirmed.
 
 ## When to Use
 
@@ -51,7 +53,15 @@ All implementation plan document writing must be delegated to a fresh
 document-writing sub-agent when sub-agent capabilities are available. The main
 process keeps the source docs, repository context, and final approval decision.
 
+The implementation planner is the first step for every implementation task,
+including single-file, small, and low-risk changes. Small changes may use a
+short plan, but they still require `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
+and explicit user confirmation before implementation starts.
+
 ## Complex Coding Sub-Agent Split
+
+Decide whether this split is needed inside the implementation plan after the
+planner maps the implementation scope.
 
 When the implementation is multi-file, multi-module, spec-backed, or otherwise
 context-heavy, keep the main process responsible for PM/design context,
@@ -80,8 +90,10 @@ The validation task must include:
   unrelated changes
 - required output: pass/fail conclusion, findings, blockers, and residual risks
 
-Do not use this split for single-file small edits, pure explanation, pure code
-reading, or when the user explicitly opts out.
+Do not use the implementation/validation sub-agent split for single-file small
+edits, pure explanation, pure code reading, or when the user explicitly opts
+out. This exception only skips complex delegation; it never skips implementation
+planning or plan confirmation.
 
 ## Phase 0: Gather Context
 
@@ -122,9 +134,19 @@ Implementation context:
 
 ## Phase 1: Plan the Implementation
 
+Load only the planner internal module for this phase:
+
+`agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md`
+
 Read the internal routing contract before planning:
 
 `agents/engineer/skills/feature-implementor/_internal/_shared/coding-rules.md`
+
+Every implementation task must go through this phase before code changes,
+regardless of size. The plan may be brief for small changes, but it must still
+be written to `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`, include the
+implementation/validation sub-agent split decision, and wait for user
+confirmation.
 
 Delegate implementation plan document writing to a fresh document-writing
 sub-agent when available. The delegated task must write or update:
@@ -171,9 +193,13 @@ Present the plan to the user:
 
 Wait for user confirmation before coding.
 
+Stop after presenting the plan. Do not start implementation in the same turn
+unless the user has already confirmed this exact implementation plan.
+
 ## Phase 2: Implement
 
-Load the implementor internal module:
+Only after the user confirms the implementation plan, load the implementor
+internal module:
 
 `agents/engineer/skills/feature-implementor/_internal/implementor/INSTRUCTIONS.md`
 

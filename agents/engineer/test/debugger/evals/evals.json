@@ -6,30 +6,60 @@
     {
       "id": "eval-001-fix-failing-test",
       "name": "fix-failing-test",
-      "description": "Verifies that debugger handles fix-failing-test and produces the expected role-specific artifact.",
+      "description": "Verifies that debugger reproduces and analyzes a failing test, then asks whether to produce a repair implementation plan before fixing.",
       "prompt": "测试 test/api/notifications.test.ts 失败了，帮我修复",
-      "workspace": null,
-      "expected_output": "复现 → 根因分析 → 最小修复 → 验证通过",
+      "workspace": "workspace/eval-001-fix-failing-test",
+      "expected_output": "复现 → 根因分析 → Bug 分析汇报 → 询问是否产出修复实施计划，不直接修复",
       "assertions": [
         {
-          "id": "assertion_1",
+          "id": "reproduces_failure",
           "description": "复现问题",
           "text": "输出包含问题复现步骤和错误信息"
         },
         {
-          "id": "assertion_2",
+          "id": "reports_root_cause",
           "description": "根因分析",
           "text": "输出明确的根因分析，不是猜测"
         },
         {
-          "id": "assertion_3",
-          "description": "最小修复",
-          "text": "修复只改必要的代码，不做额外重构"
+          "id": "asks_for_repair_plan",
+          "description": "询问修复实施计划",
+          "text": "输出必须先给出 Bug 分析汇报，并询问用户是否需要基于根因产出修复实施计划。"
         },
         {
-          "id": "assertion_4",
-          "description": "验证通过",
-          "text": "重新运行测试并确认通过"
+          "id": "does_not_fix_directly",
+          "description": "不得直接修复",
+          "text": "输出不得声称已经修改代码、更新测试、应用修复或验证修复通过。"
+        }
+      ]
+    },
+    {
+      "id": "eval-002-repair-plan-confirmation-gate",
+      "name": "repair-plan-confirmation-gate",
+      "description": "Verifies that debugger writes a repair implementation plan only after the user asks for it, then waits for plan confirmation before fixing.",
+      "prompt": "test/api/notifications.test.ts 的失败已经复现，根因确认是 notification status 没有处理 archived。请基于这个根因产出修复实施计划，但先不要改代码。",
+      "workspace": null,
+      "expected_output": "修复实施计划 + 文件范围 + 验证命令 + sub-agent 拆分判断 + 等待用户确认，不直接修复",
+      "assertions": [
+        {
+          "id": "writes_repair_plan",
+          "description": "产出修复实施计划",
+          "text": "输出必须包含修复实施计划，列出预期修改文件、最小修复思路和验证命令。"
+        },
+        {
+          "id": "records_fix_split_decision",
+          "description": "记录修复分工判断",
+          "text": "输出必须说明本次是否需要 implementation/validation sub-agent split。"
+        },
+        {
+          "id": "waits_for_plan_confirmation",
+          "description": "等待修复计划确认",
+          "text": "输出必须要求用户确认修复实施计划后再开始修复。"
+        },
+        {
+          "id": "does_not_apply_fix",
+          "description": "不得应用修复",
+          "text": "输出不得声称已经修改代码、更新测试或运行修复验证。"
         }
       ]
     }

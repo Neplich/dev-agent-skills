@@ -5,7 +5,9 @@
 ## Purpose
 
 Read confirmed PM, Engineer, and Design documents, then write an implementation
-plan document with an ordered list of file-level implementation steps.
+plan document with an ordered list of file-level implementation steps. This
+planner runs before implementation for every feature implementation task,
+including small and single-file changes.
 
 ## Input
 
@@ -52,8 +54,11 @@ For each component in TRD, determine:
   - the main process must retain substantial requirement, code, test, and
     delivery context
 
-Do not force the split for single-file small edits, pure explanation, pure code
-reading, or explicit user opt-out.
+Do not force the implementation/validation sub-agent split for single-file small
+edits, pure explanation, pure code reading, or explicit user opt-out. This only
+controls delegation. It does not remove the requirement to write
+`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` and wait for explicit user
+confirmation.
 
 ### 3. Order by dependency
 
@@ -75,6 +80,10 @@ a fresh document-writing sub-agent. The delegated task must include:
 - exact output path: `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
 - file change list, sequence, tests, delegation split, forbidden areas, blockers
 - instruction not to write code or revise TRD decisions
+
+For small changes, write a short plan that still names the target file, planned
+edit, source requirement, verification command, and why complex sub-agent
+delegation is not needed.
 
 The main process reviews the document before asking for implementation
 confirmation.
@@ -114,3 +123,5 @@ Output format:
 
 An implementation plan document plus a short summary with exact file paths,
 descriptions, and document references. Wait for user confirmation before coding.
+Do not start implementation in the same turn after writing the plan unless the
+user has already confirmed this exact plan.

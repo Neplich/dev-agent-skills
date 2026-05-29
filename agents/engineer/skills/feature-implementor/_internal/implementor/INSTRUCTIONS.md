@@ -8,12 +8,19 @@ Execute the implementation plan step by step, writing code that follows project 
 
 ## Input
 
-- Confirmed implementation plan document (from planner)
+- User-confirmed implementation plan document (from planner)
 - Project Profile
 - PM documents for reference
 - Confirmed Engineer TRD for reference
 - For complex coding tasks: implementation sub-agent scope, forbidden areas,
   expected behavior, and verification commands
+
+## Entry Gate
+
+Do not implement unless the main process has already presented the exact
+implementation plan to the user and the user has confirmed it. If the plan is
+missing, has only been drafted, or has not been confirmed, stop and ask for plan
+confirmation. Do not write code, update tests, or apply fixes while waiting.
 
 ## Sub-Agent Execution Contract
 

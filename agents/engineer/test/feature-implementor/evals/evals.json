@@ -6,25 +6,25 @@
     {
       "id": "eval-001-implement-from-prd-trd",
       "name": "implement-from-prd-trd",
-      "description": "Verifies that feature-implementor handles implement-from-prd-trd and produces the expected role-specific artifact.",
+      "description": "Verifies that feature-implementor handles implement-from-prd-trd by producing an implementation plan and waiting for confirmation before coding.",
       "prompt": "根据 docs/pm/notification-center/PRD.md 和 docs/engineer/notification-center/TRD.md 实现用户通知功能",
       "workspace": null,
-      "expected_output": "IMPLEMENTATION_PLAN.md + 代码文件创建/修改 + 自检报告",
+      "expected_output": "IMPLEMENTATION_PLAN.md + 文件变更清单 + 实现顺序 + 用户确认门禁，不直接写代码",
       "assertions": [
         {
-          "id": "assertion_1",
+          "id": "writes_implementation_plan",
           "description": "生成实现计划",
-          "text": "输出包含实现计划文档路径、文件变更清单和实现顺序"
+          "text": "输出包含 `docs/engineer/notification-center/IMPLEMENTATION_PLAN.md`、文件变更清单和实现顺序。"
         },
         {
-          "id": "trd",
-          "description": "代码符合 TRD",
-          "text": "实现的代码结构符合 TRD 描述的架构"
+          "id": "requires_user_confirmation",
+          "description": "等待用户确认",
+          "text": "输出必须要求用户确认实施计划后再开始编码。"
         },
         {
-          "id": "assertion_3",
-          "description": "自检通过",
-          "text": "输出包含自检结果，检查 TRD/API/PRD 符合度"
+          "id": "does_not_implement_directly",
+          "description": "不直接实施",
+          "text": "输出不得声称已经创建或修改代码文件、运行实现步骤或完成自检。"
         }
       ]
     },
@@ -95,6 +95,36 @@
           "id": "names_required_trd_decisions",
           "description": "列出缺失技术决策",
           "text": "输出必须说明至少一个需要 TRD 决定的技术问题，例如组件影响、重试策略、验证命令或风险。"
+        }
+      ]
+    },
+    {
+      "id": "eval-004-small-change-plan-gate",
+      "name": "small-change-plan-gate",
+      "description": "Verifies that a small single-file implementation still produces an implementation plan, records the sub-agent split decision, and waits for confirmation.",
+      "prompt": "docs/pm/settings-label/PRD.md 和 docs/engineer/settings-label/TRD.md 已确认。请把设置页按钮文案从「保存」改成「保存设置」，这是一个单文件小改动。请进入 feature-implementor。",
+      "workspace": null,
+      "expected_output": "产出简短 IMPLEMENTATION_PLAN.md，说明无需复杂 sub-agent 拆分，等待用户确认，不直接修改代码。",
+      "assertions": [
+        {
+          "id": "writes_plan_for_small_change",
+          "description": "小改动仍写实施计划",
+          "text": "输出必须要求产出或更新 `docs/engineer/settings-label/IMPLEMENTATION_PLAN.md`，即使这是单文件小改动。"
+        },
+        {
+          "id": "records_split_decision",
+          "description": "记录拆分判断",
+          "text": "输出必须说明本次是否触发 implementation/validation sub-agent split，并说明小改动不拆分不代表跳过实施计划。"
+        },
+        {
+          "id": "waits_for_user_confirmation",
+          "description": "等待计划确认",
+          "text": "输出必须要求用户确认实施计划后再开始实施。"
+        },
+        {
+          "id": "does_not_modify_code",
+          "description": "不得直接修改代码",
+          "text": "输出不得声称已经修改按钮文案、编辑代码文件或完成实现。"
         }
       ]
     }

@@ -64,7 +64,7 @@
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
       "sourceType": "local",
-      "computedHash": "4cc50e0823d73b150ec92f147fb889bffa664fa8f9a2e92089bd45f5fe07fd63"
+      "computedHash": "861fa566ac32aa3d3dd27f6547b0b732924d2ff9dc18552df6f356ae25162a95"
     },
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",
@@ -74,7 +74,7 @@
     "debugger": {
       "source": "agents/engineer/skills/debugger",
       "sourceType": "local",
-      "computedHash": "779ef9961140812b066aa7c7add68885d4cd4ec2ff0d1844242d7da1e3c0fcd5"
+      "computedHash": "3ae3100efed2a384384352afad7fccb24bcd000a238c9b13d4838bf8f53a652b"
     },
     "delivery": {
       "source": "agents/engineer/skills/delivery",
