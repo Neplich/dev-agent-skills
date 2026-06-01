@@ -5,17 +5,40 @@
 ## Purpose
 
 Read confirmed PM, Engineer, and Design documents, then write an implementation
-plan document with an ordered list of file-level implementation steps.
+plan document with an ordered list of file-level implementation steps. This
+planner runs before implementation for every feature implementation task,
+including small, single-file, and spec-backed bug-fix changes routed into
+`feature-implementor`.
 
 ## Input
 
-- PM documents: PRD, DECISIONS, BRD (whichever are relevant)
+- PM documents: PRD, BRD, and DECISIONS or product decision records when present
 - Engineer documents: confirmed TRD, API Spec, ADR
 - Project Profile (from codebase-analyzer)
+- Existing-feature alignment result from the public `feature-implementor`
+  PRD alignment gate
 
 ## Process
 
 ### 1. Extract requirements
+
+Before extracting implementation steps, confirm that the public PRD alignment
+gate has a clear result:
+
+- `already_approved`: the requested behavior is covered by PRD and confirmed
+  TRD, and any present decision records do not conflict; continue planning and
+  cite the source docs.
+- `needs_pm_update`: the request changes approved behavior; stop and hand off
+  to `pm-agent:idea-to-spec` using the `existing-project-update` lane.
+- `docs_missing_or_unclear`: PRD or product decision records do not define a
+  consistent expected behavior; stop and request PM alignment. Do not classify
+  a request this way only because `DECISIONS.md` is absent when PRD and TRD are
+  sufficient.
+- `trd_gap`: PM scope is stable, but the Engineer TRD is missing, incomplete,
+  stale, or conflicts with the codebase; stop and hand back to
+  `engineer-agent:trd-gen` with a TRD gap packet.
+- `explicit_skip`: the user explicitly asked to skip PRD alignment; record that
+  override in the implementation plan.
 
 From PRD:
 - List all P0 user stories and acceptance criteria
@@ -27,8 +50,16 @@ From TRD:
 - Architecture constraints
 
 If the Engineer TRD is missing, incomplete, or conflicts with the codebase, stop
-and hand back to `engineer-agent:trd-gen`. Do not silently create or revise TRD
-content inside the implementation plan.
+and hand back to `engineer-agent:trd-gen` with a TRD gap packet. Do not silently
+create or revise TRD content inside the implementation plan.
+
+The planner is the finder when it detects a TRD gap. It must clearly list the
+missing technical decisions; `trd-gen` is responsible for updating the TRD. The
+gap packet should cover affected components or modules, data flow / API /
+integration impact, validation commands, release or rollout risk, and error
+handling, observability, or security strategy when relevant. It must include a
+separate boundary line: "Finder only clarifies the TRD gaps;
+`engineer-agent:trd-gen` completes the TRD."
 
 From API Spec:
 - Endpoint list (method, path, request shape, response shape)
@@ -52,8 +83,11 @@ For each component in TRD, determine:
   - the main process must retain substantial requirement, code, test, and
     delivery context
 
-Do not force the split for single-file small edits, pure explanation, pure code
-reading, or explicit user opt-out.
+Do not force the implementation/validation sub-agent split for single-file small
+edits, pure explanation, pure code reading, or explicit user opt-out. This only
+controls delegation. It does not remove the requirement to write
+`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` and wait for explicit user
+confirmation.
 
 ### 3. Order by dependency
 
@@ -71,10 +105,17 @@ When sub-agent capabilities are available, delegate the plan document writing to
 a fresh document-writing sub-agent. The delegated task must include:
 
 - confirmed TRD path
-- PRD / DECISIONS / design inputs
+- PRD / optional DECISIONS / design inputs
+- PRD alignment result and source-document evidence
 - exact output path: `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
 - file change list, sequence, tests, delegation split, forbidden areas, blockers
 - instruction not to write code or revise TRD decisions
+
+For small changes, write a short plan that still names the target file, planned
+edit, source requirement, verification command, and why complex sub-agent
+delegation is not needed. Small changes still need a PRD alignment result; do
+not convert "single file" or "small bug fix" into implicit PM approval or
+permission to skip `IMPLEMENTATION_PLAN.md`.
 
 The main process reviews the document before asking for implementation
 confirmation.
@@ -91,6 +132,7 @@ Output format:
 - 来源文档: <list>
 - TRD: docs/engineer/<feature>/TRD.md
 - 实现计划文档: docs/engineer/<feature>/IMPLEMENTATION_PLAN.md
+- PRD 对齐: <已覆盖 / 需要 PM 更新 / 文档缺失或不清 / 用户明确跳过>
 - 预估文件数: <N> 个新建, <M> 个修改
 
 ### 步骤
@@ -114,3 +156,5 @@ Output format:
 
 An implementation plan document plus a short summary with exact file paths,
 descriptions, and document references. Wait for user confirmation before coding.
+Do not start implementation in the same turn after writing the plan unless the
+user has already confirmed this exact plan.

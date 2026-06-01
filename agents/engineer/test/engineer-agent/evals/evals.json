@@ -37,6 +37,36 @@
           "text": "因为用户要求先做工程路由，不能直接修改代码、运行测试或创建提交。"
         }
       ]
+    },
+    {
+      "id": "eval-002-existing-feature-alignment-gate",
+      "name": "existing-feature-alignment-gate",
+      "description": "Verifies that engineer-agent checks PRD/TRD and any present product decisions before routing small existing-feature behavior changes into implementation.",
+      "prompt": "用户说：现有通知中心已经有 PRD/TRD，现在想把 archived 通知也显示在 active 列表里，这是一个小改动，直接走工程实现吧。先做工程路由，不要改代码。",
+      "workspace": null,
+      "expected_output": "先要求读取 docs/pm/{feature}/PRD.md、docs/engineer/{feature}/TRD.md，以及存在的 DECISIONS.md 或产品决策记录，对比 archived 行为是否改变既有预期；如果是改变预期，路由回 pm-agent:idea-to-spec 的 existing-project-update，而不是直接进入 feature-implementor。",
+      "assertions": [
+        {
+          "id": "reads_product_and_engineer_docs",
+          "description": "先读预期行为文档",
+          "text": "输出必须要求先读取相关 `docs/pm/{feature}/PRD.md` 和 `docs/engineer/{feature}/TRD.md`，并读取存在的 `docs/pm/{feature}/DECISIONS.md` 或产品决策记录后再做工程路由。"
+        },
+        {
+          "id": "classifies_expectation_change",
+          "description": "识别需求预期变更",
+          "text": "输出必须判断 archived 通知进入 active 列表可能是改变已批准预期，而不是默认当成小代码改动。"
+        },
+        {
+          "id": "routes_to_existing_project_update",
+          "description": "回到 PM 更新路径",
+          "text": "如果该请求与 PRD/TRD 预期或已有产品决策冲突，输出必须路由到 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径更新 PRD 或产品决策记录，再同步 TRD。"
+        },
+        {
+          "id": "does_not_route_directly_to_implementation",
+          "description": "不得直接进入实现",
+          "text": "输出不得把请求直接交给 `feature-implementor` 编写实现计划或开始编码，除非明确说明 PRD/TRD 已覆盖该行为或用户显式跳过对齐。"
+        }
+      ]
     }
   ]
 }
