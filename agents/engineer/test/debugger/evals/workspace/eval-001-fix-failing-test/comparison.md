@@ -6,13 +6,16 @@
 - Test case: fix-failing-test
 - Test set: bug reproduction and repair planning gate evals
 - Entry: workspace `eval-001-fix-failing-test`
-- Latest result: pending fresh Codex subagent validation
+- Latest result: PASS - fresh Codex subagent validation completed on
+  2026-06-01
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: Notification API returns archived notifications in the active list,
   causing `test/api/notifications.test.ts` to fail.
+- Expected-behavior docs: PRD and confirmed TRD only; no separate
+  `DECISIONS.md` is present in this fixture.
 
 ## With Skill
 
@@ -22,6 +25,8 @@ Expected behavior:
 - Reproduces the failing command and records the assertion failure.
 - Uses PRD/TRD expectation to identify that archived notifications must be
   excluded from the active list.
+- Does not block only because the fixture has no separate `DECISIONS.md` when
+  PRD/TRD define the expected behavior.
 - Outputs a bug analysis report.
 - Asks whether to produce a repair implementation plan before modifying code.
 - Does not apply the fix, update tests, or claim verification success before
@@ -35,11 +40,12 @@ Expected behavior:
 
 ## Failures
 
-- Pending model validation.
+- None found in fresh Codex subagent validation.
 
 ## Next Steps
 
-- Run fresh Codex subagent validation after this fixture is reviewed.
+- Keep this comparison updated whenever debugger eval behavior or fixture
+  expectations change.
 
 ## Runtime Artifacts Policy
 
