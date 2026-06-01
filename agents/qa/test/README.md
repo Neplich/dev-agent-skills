@@ -37,6 +37,12 @@ Each eval run writes runtime-only files under `tmp/eval-runs/qa/`, such as:
 Do not commit these runtime files. The durable latest result for a workspace is
 `comparison.md`.
 
+After any actual eval run or fresh Codex subagent validation, update the
+workspace's durable `comparison.md` in the same change. PR comments and
+conversation summaries must match the committed or proposed `comparison.md`; if
+there is no comparison file to update, record the blocked or not-applicable
+reason.
+
 Runner failure is based on the `with_skill` path:
 
 - candidate output must exist

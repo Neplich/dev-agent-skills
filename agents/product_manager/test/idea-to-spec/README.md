@@ -87,6 +87,7 @@ agents/product_manager/test/idea-to-spec/
 4. 查看本地生成的 transcript 和 `run_status.json`。
 5. 根据 `assertions` 做人工或脚本检查。
 6. 更新该 eval 目录下的 `comparison.md` 记录最新对比结论。
+7. 确认 PR 评论或对话中的 eval 结论与已提交或拟提交的 `comparison.md` 一致；如果没有可更新文件，记录 blocked 或不适用原因。
 
 报告分为两类：
 

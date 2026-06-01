@@ -16,3 +16,5 @@ uv run agents/devops/test/run_eval.py \
 ```
 
 自动报告会作为运行期临时产物生成到 `tmp/eval-runs/devops/`；长期提交的最新结果只保留 `comparison.md`。
+
+实际执行 skill eval 或 fresh Codex subagent validation 后，必须在同一轮变更中更新对应 workspace 的 durable `comparison.md`。PR 评论或对话中的 eval 结论必须与已提交或拟提交的 `comparison.md` 一致；如果没有可更新文件，记录 blocked 或不适用原因。
