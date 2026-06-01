@@ -60,10 +60,19 @@ Classify the request before engineering execution:
 - If the user is asking to change approved expected behavior, route back to
   `pm-agent:idea-to-spec` using the `existing-project-update` lane so PRD /
   DECISIONS can be updated before TRD or implementation planning.
+- If PM scope is stable but the Engineer TRD is missing, incomplete, stale, or
+  conflicts with the request or codebase, route to `engineer-agent:trd-gen`
+  with a TRD gap packet. The finder owns naming the gaps; `trd-gen` owns
+  completing the TRD.
 - If the relevant docs are missing, stale, or unclear, keep the request in PM
   alignment first instead of guessing the intended behavior.
 - If the user explicitly asks to skip PRD alignment, state that override and
   continue with the narrowest engineering route.
+
+The TRD gap packet must identify the missing technical decisions that block
+implementation, including affected components or modules, data flow / API /
+integration impacts, validation commands, release or rollout risks, and error
+handling, observability, or security strategy when relevant.
 
 All Engineer document-writing tasks, including TRD and implementation plan
 documents, should be delegated to a fresh document-writing sub-agent when

@@ -25,7 +25,11 @@ confirmation. Do not write code, update tests, or apply fixes while waiting.
 For existing-feature behavior changes, the confirmed plan must also include the
 PRD alignment result. If the plan says PRD / DECISIONS must be updated, docs are
 unclear, or TRD is stale, stop and hand back to the owning PM or TRD step
-instead of implementing.
+instead of implementing. When handing back to `trd-gen`, state the TRD gap
+packet: affected components, data flow / API / integration impacts, validation
+commands, release or rollout risks, and error handling, observability, or
+security strategy that the TRD must resolve. The implementor identifies the
+gap; `trd-gen` completes the TRD.
 
 ## Sub-Agent Execution Contract
 

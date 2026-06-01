@@ -71,10 +71,10 @@
     {
       "id": "eval-003-missing-trd-handoff",
       "name": "missing-trd-handoff",
-      "description": "Verifies that feature-implementor stops before implementation when the Engineer TRD is missing and hands back to trd-gen.",
+      "description": "Verifies that feature-implementor stops before implementation when the Engineer TRD is missing and hands back a complete TRD gap packet to trd-gen.",
       "prompt": "请根据 docs/pm/capture-loop/PRD.md 实现 Capture Loop 队列重试能力。当前 workspace 没有 docs/engineer/capture-loop/TRD.md；请判断下一步，不要直接写代码。",
       "workspace": "workspace/eval-003-missing-trd-handoff",
-      "expected_output": "识别缺少已确认 Engineer TRD，停止实现计划和代码实现，明确 handoff 给 engineer-agent:trd-gen 编写 docs/engineer/capture-loop/TRD.md，并说明缺失的技术决策。",
+      "expected_output": "识别缺少已确认 Engineer TRD，停止实现计划和代码实现，明确 handoff 给 engineer-agent:trd-gen 编写 docs/engineer/capture-loop/TRD.md，并列出 TRD gap packet：受影响组件、数据流/API/集成影响、验证命令、发布风险和错误处理策略等缺失技术决策；同时说明发现者负责说明缺口，trd-gen 负责补完整 TRD。",
       "assertions": [
         {
           "id": "detects_missing_engineer_trd",
@@ -94,7 +94,12 @@
         {
           "id": "names_required_trd_decisions",
           "description": "列出缺失技术决策",
-          "text": "输出必须说明至少一个需要 TRD 决定的技术问题，例如组件影响、重试策略、验证命令或风险。"
+          "text": "输出必须列出 TRD 必须解决的缺失技术决策，覆盖受影响组件或模块、数据流/API/集成影响、验证命令、发布或回滚风险，以及错误处理、可观测性或安全策略。"
+        },
+        {
+          "id": "keeps_finder_trd_gen_boundary",
+          "description": "保持发现者和 trd-gen 边界",
+          "text": "输出必须明确发现者只负责把 TRD 缺口说清楚，`engineer-agent:trd-gen` 负责补完整 `docs/engineer/capture-loop/TRD.md`。"
         }
       ]
     },

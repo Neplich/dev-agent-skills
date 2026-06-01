@@ -37,6 +37,36 @@
           "text": "输出不能把 TRD 编写请求直接扩展成代码修改、测试修改或交付操作。"
         }
       ]
+    },
+    {
+      "id": "eval-002-resolve-trd-gap-packet",
+      "name": "resolve-trd-gap-packet",
+      "description": "Verifies that trd-gen owns completing a missing or stale TRD after another skill reports a clear gap packet.",
+      "prompt": "feature-implementor 发现 docs/engineer/capture-loop/TRD.md 缺失，已交回 TRD gap packet：需要决定受影响组件、Capture 事件数据流、队列重试验证命令、发布/回滚风险和错误处理策略。PM 的 docs/pm/capture-loop/PRD.md 已确认。请进入 trd-gen，不要写代码。",
+      "workspace": null,
+      "expected_output": "确认发现者负责说明缺口，trd-gen 负责补完整 docs/engineer/capture-loop/TRD.md；逐项处理 gap packet 中的组件、数据流、验证命令、发布风险和错误处理策略，不进入实现计划或代码。",
+      "assertions": [
+        {
+          "id": "accepts_gap_packet_as_trd_work",
+          "description": "接收 TRD gap packet",
+          "text": "输出必须说明该请求是 `trd-gen` 的 TRD 编写或更新工作，不是 feature-implementor 的实现计划或代码任务。"
+        },
+        {
+          "id": "resolves_named_gap_categories",
+          "description": "逐项补齐缺口类别",
+          "text": "输出必须逐项处理或记录 gap packet 中的受影响组件、数据流/API/集成影响、验证命令、发布或回滚风险，以及错误处理、可观测性或安全策略。"
+        },
+        {
+          "id": "keeps_finder_trd_gen_boundary",
+          "description": "保持发现者和 trd-gen 边界",
+          "text": "输出必须明确发现者负责报告 TRD 缺口，`trd-gen` 负责把 `docs/engineer/capture-loop/TRD.md` 补完整或将未决项写入 open questions。"
+        },
+        {
+          "id": "no_implementation_plan_or_code",
+          "description": "不进入实现",
+          "text": "输出不得开始编写 `IMPLEMENTATION_PLAN.md`、修改代码、补测试或进入交付。"
+        }
+      ]
     }
   ]
 }

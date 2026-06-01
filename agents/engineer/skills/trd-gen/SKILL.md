@@ -18,6 +18,8 @@ Engineer-owned technical planning skill. It turns confirmed PM requirements into
 - interface, data, deployment, observability, and validation strategy
 - engineering risks, blockers, assumptions, and open technical questions
 - writing or updating `docs/engineer/{feature}/TRD.md`
+- resolving TRD gap packets from discoverers such as `engineer-agent`,
+  `debugger`, or `feature-implementor`
 
 `trd-gen` does not own:
 
@@ -28,6 +30,10 @@ Engineer-owned technical planning skill. It turns confirmed PM requirements into
 
 If the PRD, `DECISIONS.md`, or acceptance scope is not stable, stop and hand
 back to `pm-agent:idea-to-spec` with the missing decisions.
+
+When another skill hands back a missing, incomplete, stale, or conflicting TRD,
+the discoverer owns describing the TRD gaps and `trd-gen` owns completing the
+TRD. Treat the handoff as a gap packet, not as an implementation request.
 
 ## Required Flow
 
@@ -60,6 +66,8 @@ document-writing task must include:
 
 - PRD, BRD, `DECISIONS.md`, design docs, and relevant issue links
 - current codebase and repository constraints
+- any TRD gap packet from the finder, including affected components, data flow,
+  validation, release risk, and error-handling gaps
 - required output path: `docs/engineer/{feature}/TRD.md`
 - forbidden areas and instruction not to implement code
 - required output: changed document path, summary, assumptions, open questions,
@@ -102,6 +110,9 @@ The TRD must include:
 - risks, assumptions, and open technical questions
 - explicit handoff conditions for `feature-implementor`
 
+When updating a TRD from a gap packet, address each named gap directly or record
+it as an open technical question with the owner and unblock condition.
+
 ## Quality Checks
 
 Before handoff, verify:
@@ -110,7 +121,8 @@ Before handoff, verify:
 2. Technical decisions do not change PM scope.
 3. Unknowns are marked as assumptions or open questions, not hidden as facts.
 4. The TRD path is under `docs/engineer/{feature}/`.
-5. The next step is `feature-implementor` only after the TRD is confirmed.
+5. Any inbound TRD gap packet has been resolved or explicitly tracked as open.
+6. The next step is `feature-implementor` only after the TRD is confirmed.
 
 ## Handoff
 

@@ -66,9 +66,17 @@ Classify the request:
 - If PRD / DECISIONS are missing or ambiguous, stop and request PM alignment
   before TRD or implementation planning.
 - If PRD is stable but TRD is missing, incomplete, or stale, stop and hand back
-  to `engineer-agent:trd-gen`.
+  to `engineer-agent:trd-gen` with a TRD gap packet. The finder owns naming the
+  missing technical decisions; `trd-gen` owns completing the TRD.
 - If the user explicitly asks to skip PRD alignment, record that override in
   the implementation plan before proceeding.
+
+The TRD gap packet must state the unresolved technical decisions that block
+implementation planning, including affected components or modules, data flow /
+API / integration impacts, verification commands, release or rollout risks, and
+error handling, observability, or security strategy when relevant. It must also
+include this boundary statement: the finder only clarifies the TRD gaps;
+`engineer-agent:trd-gen` completes or updates the TRD.
 
 ## TRD and Implementation Plan Boundary
 
@@ -80,7 +88,8 @@ The implementation plan maps TRD decisions to concrete files, sequence,
 delegation, verification commands, and rollout checks. It must not change PM
 scope or rewrite TRD decisions. If the TRD is missing, incomplete, or conflicts
 with the codebase, stop and hand back to `engineer-agent:trd-gen` with the
-specific blocker.
+specific blocker and TRD gap packet. Do not hide TRD gaps inside
+`IMPLEMENTATION_PLAN.md`.
 
 All implementation plan document writing must be delegated to a fresh
 document-writing sub-agent when sub-agent capabilities are available. The main
@@ -152,7 +161,9 @@ the planner. Do not treat a small change as already approved just because it is
 low-risk or single-file.
 
 If `docs/engineer/{feature}/TRD.md` is missing or not confirmed, do not create
-the implementation plan. Hand off to `engineer-agent:trd-gen`.
+the implementation plan. Hand off to `engineer-agent:trd-gen` with the TRD gap
+packet and boundary statement: finder only clarifies gaps,
+`engineer-agent:trd-gen` completes the TRD.
 
 ### Check for Project Profile
 

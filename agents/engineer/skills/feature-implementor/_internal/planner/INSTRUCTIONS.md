@@ -31,6 +31,9 @@ gate has a clear result:
   to `pm-agent:idea-to-spec` using the `existing-project-update` lane.
 - `docs_missing_or_unclear`: PM docs do not define the expected behavior; stop
   and request PM alignment.
+- `trd_gap`: PM scope is stable, but the Engineer TRD is missing, incomplete,
+  stale, or conflicts with the codebase; stop and hand back to
+  `engineer-agent:trd-gen` with a TRD gap packet.
 - `explicit_skip`: the user explicitly asked to skip PRD alignment; record that
   override in the implementation plan.
 
@@ -44,8 +47,16 @@ From TRD:
 - Architecture constraints
 
 If the Engineer TRD is missing, incomplete, or conflicts with the codebase, stop
-and hand back to `engineer-agent:trd-gen`. Do not silently create or revise TRD
-content inside the implementation plan.
+and hand back to `engineer-agent:trd-gen` with a TRD gap packet. Do not silently
+create or revise TRD content inside the implementation plan.
+
+The planner is the finder when it detects a TRD gap. It must clearly list the
+missing technical decisions; `trd-gen` is responsible for updating the TRD. The
+gap packet should cover affected components or modules, data flow / API /
+integration impact, validation commands, release or rollout risk, and error
+handling, observability, or security strategy when relevant. It must include a
+separate boundary line: "Finder only clarifies the TRD gaps;
+`engineer-agent:trd-gen` completes the TRD."
 
 From API Spec:
 - Endpoint list (method, path, request shape, response shape)

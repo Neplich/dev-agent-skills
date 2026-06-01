@@ -84,10 +84,20 @@ Use those docs to classify the report:
 - If the user's requested behavior conflicts with the approved PRD /
   DECISIONS / TRD, stop before repair planning and hand off to
   `pm-agent:idea-to-spec` using the `existing-project-update` lane.
+- If PRD / DECISIONS are stable but the Engineer TRD is missing, incomplete,
+  stale, or conflicts with the codebase or bug context, stop before repair
+  planning and hand off to `engineer-agent:trd-gen` with a TRD gap packet. The
+  debugger owns naming the missing or conflicting technical decisions; `trd-gen`
+  owns completing the TRD.
 - If the relevant docs are missing or ambiguous, stop before fixing and request
   PM alignment unless the user explicitly asked to skip it.
 - If the user explicitly skips PRD alignment, state the override in the bug
   analysis and continue with the smallest safe debug path.
+
+A TRD gap packet should list the technical decisions that block debugging or
+repair planning, including affected components, data flow / API / integration
+impact, verification commands, release or rollback risk, and error handling,
+observability, or security strategy when relevant.
 
 ## Step 1 — Gather error context
 
