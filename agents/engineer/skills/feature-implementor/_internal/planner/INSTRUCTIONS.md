@@ -7,17 +7,32 @@
 Read confirmed PM, Engineer, and Design documents, then write an implementation
 plan document with an ordered list of file-level implementation steps. This
 planner runs before implementation for every feature implementation task,
-including small and single-file changes.
+including small, single-file, and spec-backed bug-fix changes routed into
+`feature-implementor`.
 
 ## Input
 
 - PM documents: PRD, DECISIONS, BRD (whichever are relevant)
 - Engineer documents: confirmed TRD, API Spec, ADR
 - Project Profile (from codebase-analyzer)
+- Existing-feature alignment result from the public `feature-implementor`
+  PRD alignment gate
 
 ## Process
 
 ### 1. Extract requirements
+
+Before extracting implementation steps, confirm that the public PRD alignment
+gate has a clear result:
+
+- `already_approved`: the requested behavior is covered by PRD / DECISIONS and
+  TRD; continue planning and cite the source docs.
+- `needs_pm_update`: the request changes approved behavior; stop and hand off
+  to `pm-agent:idea-to-spec` using the `existing-project-update` lane.
+- `docs_missing_or_unclear`: PM docs do not define the expected behavior; stop
+  and request PM alignment.
+- `explicit_skip`: the user explicitly asked to skip PRD alignment; record that
+  override in the implementation plan.
 
 From PRD:
 - List all P0 user stories and acceptance criteria
@@ -77,13 +92,16 @@ a fresh document-writing sub-agent. The delegated task must include:
 
 - confirmed TRD path
 - PRD / DECISIONS / design inputs
+- PRD alignment result and source-document evidence
 - exact output path: `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
 - file change list, sequence, tests, delegation split, forbidden areas, blockers
 - instruction not to write code or revise TRD decisions
 
 For small changes, write a short plan that still names the target file, planned
 edit, source requirement, verification command, and why complex sub-agent
-delegation is not needed.
+delegation is not needed. Small changes still need a PRD alignment result; do
+not convert "single file" or "small bug fix" into implicit PM approval or
+permission to skip `IMPLEMENTATION_PLAN.md`.
 
 The main process reviews the document before asking for implementation
 confirmation.
@@ -100,6 +118,7 @@ Output format:
 - 来源文档: <list>
 - TRD: docs/engineer/<feature>/TRD.md
 - 实现计划文档: docs/engineer/<feature>/IMPLEMENTATION_PLAN.md
+- PRD 对齐: <已覆盖 / 需要 PM 更新 / 文档缺失或不清 / 用户明确跳过>
 - 预估文件数: <N> 个新建, <M> 个修改
 
 ### 步骤

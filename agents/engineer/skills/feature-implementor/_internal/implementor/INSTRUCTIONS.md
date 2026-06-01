@@ -22,6 +22,11 @@ implementation plan to the user and the user has confirmed it. If the plan is
 missing, has only been drafted, or has not been confirmed, stop and ask for plan
 confirmation. Do not write code, update tests, or apply fixes while waiting.
 
+For existing-feature behavior changes, the confirmed plan must also include the
+PRD alignment result. If the plan says PRD / DECISIONS must be updated, docs are
+unclear, or TRD is stale, stop and hand back to the owning PM or TRD step
+instead of implementing.
+
 ## Sub-Agent Execution Contract
 
 When the confirmed plan triggers the complex coding split and sub-agent

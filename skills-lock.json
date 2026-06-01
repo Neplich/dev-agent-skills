@@ -44,7 +44,7 @@
     "engineer-agent": {
       "source": "agents/engineer/skills/engineer-agent",
       "sourceType": "local",
-      "computedHash": "e41060675bc1ab4db945daba7c47cf7264c1a987df19124d1204840379398fb1"
+      "computedHash": "723918cfa82720e921b2358e1830ea24e04681741a2771a9967ed69924c8020b"
     },
     "codebase-analyzer": {
       "source": "agents/engineer/skills/codebase-analyzer",
@@ -64,7 +64,7 @@
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
       "sourceType": "local",
-      "computedHash": "861fa566ac32aa3d3dd27f6547b0b732924d2ff9dc18552df6f356ae25162a95"
+      "computedHash": "d7495f099ff977843ba7b1a39a0cc4cffcc5254ddc0e3cd27d57efd54e3fc062"
     },
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",
@@ -74,7 +74,7 @@
     "debugger": {
       "source": "agents/engineer/skills/debugger",
       "sourceType": "local",
-      "computedHash": "3ae3100efed2a384384352afad7fccb24bcd000a238c9b13d4838bf8f53a652b"
+      "computedHash": "d1962876c450bb2e0d0d22f89cc1fc1e3c2b64d017702d05d755151df460e495"
     },
     "delivery": {
       "source": "agents/engineer/skills/delivery",

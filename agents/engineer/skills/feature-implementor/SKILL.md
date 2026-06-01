@@ -6,6 +6,7 @@ description: "Core engineering skill: implement features from confirmed Engineer
 # Feature Implementor — Public Entry
 
 The core engineering skill. Reads confirmed Engineer TRDs plus PM/design inputs,
+confirms existing-feature requests are aligned with approved PRD / decisions,
 writes an implementation plan document, then implements code following project
 conventions and self-reviews the result.
 
@@ -26,6 +27,8 @@ the implementation plan has been presented to the user and explicitly confirmed.
 ## When to Use
 
 - User wants to implement a feature described in PM documents
+- User wants to implement an existing-feature behavior change that is already
+  reflected in PRD / DECISIONS and Engineer TRD
 - User asks to "write code" or "implement" something with a spec available
 - After `codebase-analyzer` or `project-bootstrap` has established project context
 - After `trd-gen` has produced and the user has confirmed
@@ -33,9 +36,39 @@ the implementation plan has been presented to the user and explicitly confirmed.
 
 Do NOT use for:
 - Bug fixes with no spec (use `debugger` instead)
+- Existing-feature behavior changes that require PRD / DECISIONS updates first
+  (use `pm-agent:idea-to-spec` with the `existing-project-update` lane)
 - Writing tests only (use `test-writer` instead)
 - Git/PR operations only (use `delivery` instead)
 - Creating or revising the TRD itself (use `trd-gen` instead)
+
+Spec-backed bug fixes may enter `feature-implementor` only after debugger or
+Engineer routing confirms the fix is implementation work against approved PRD /
+TRD behavior. They still require `IMPLEMENTATION_PLAN.md` and explicit user
+confirmation before code changes.
+
+## PRD Alignment Gate
+
+Before creating or updating `IMPLEMENTATION_PLAN.md` for an existing feature
+change, read the relevant PM and Engineer documents:
+
+- `docs/pm/{feature}/PRD.md`
+- `docs/pm/{feature}/DECISIONS.md`
+- `docs/engineer/{feature}/TRD.md`
+
+Classify the request:
+
+- If the requested behavior is already covered by PRD / DECISIONS and TRD,
+  continue to implementation planning and cite those documents in the plan.
+- If the request changes approved product behavior, stop before implementation
+  planning and hand off to `pm-agent:idea-to-spec` using the
+  `existing-project-update` lane.
+- If PRD / DECISIONS are missing or ambiguous, stop and request PM alignment
+  before TRD or implementation planning.
+- If PRD is stable but TRD is missing, incomplete, or stale, stop and hand back
+  to `engineer-agent:trd-gen`.
+- If the user explicitly asks to skip PRD alignment, record that override in
+  the implementation plan before proceeding.
 
 ## TRD and Implementation Plan Boundary
 
@@ -54,9 +87,10 @@ document-writing sub-agent when sub-agent capabilities are available. The main
 process keeps the source docs, repository context, and final approval decision.
 
 The implementation planner is the first step for every implementation task,
-including single-file, small, and low-risk changes. Small changes may use a
-short plan, but they still require `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
-and explicit user confirmation before implementation starts.
+including single-file, small, low-risk, and spec-backed bug-fix changes. Small
+changes may use a short plan, but they still require
+`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` and explicit user confirmation
+before implementation starts.
 
 ## Complex Coding Sub-Agent Split
 
@@ -107,9 +141,15 @@ ls docs/*.md docs/**/*.md 2>/dev/null
 
 Read the documents relevant to the current task:
 - **PRD**: functional requirements, user stories, acceptance criteria
+- **DECISIONS**: approved product decisions, rejected options, assumptions, and
+  open questions
 - **Engineer TRD**: technical approach, component breakdown, architecture decisions
 - **ADR**: specific technology choices and constraints
 - **API Spec**: endpoint contracts, request/response shapes
+
+For existing feature changes, complete the PRD alignment gate before loading
+the planner. Do not treat a small change as already approved just because it is
+low-risk or single-file.
 
 If `docs/engineer/{feature}/TRD.md` is missing or not confirmed, do not create
 the implementation plan. Hand off to `engineer-agent:trd-gen`.
@@ -128,6 +168,7 @@ Implementation context:
 - Project: <name> (<framework>)
 - Feature: <feature name from PRD>
 - Relevant docs: <list of PM docs read>
+- PRD alignment: <already approved / needs PM update / docs missing / explicit skip>
 - Existing modules affected: <list>
 - New modules needed: <list>
 ```
@@ -145,8 +186,8 @@ Read the internal routing contract before planning:
 Every implementation task must go through this phase before code changes,
 regardless of size. The plan may be brief for small changes, but it must still
 be written to `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`, include the
-implementation/validation sub-agent split decision, and wait for user
-confirmation.
+PRD alignment result, implementation/validation sub-agent split decision, and
+wait for user confirmation.
 
 Delegate implementation plan document writing to a fresh document-writing
 sub-agent when available. The delegated task must write or update:
@@ -166,7 +207,7 @@ Break the feature into ordered implementation steps:
 4. Decide whether the complex coding sub-agent split applies. If it does,
    include the implementation sub-agent write scope and validation sub-agent
    review scope in the plan.
-5. Include the TRD path, implementation plan path, and any blockers that require
+5. Include the PRD / DECISIONS / TRD paths, implementation plan path, and any blockers that require
    returning to `trd-gen`.
 
 Present the plan to the user:
@@ -182,6 +223,10 @@ Present the plan to the user:
 
 ### 实现顺序
 按上述编号顺序，每完成一步验证编译通过。
+
+### PRD 对齐
+- 状态: <已覆盖 / 需要 PM 更新 / 显式跳过>
+- 依据: <PRD / DECISIONS / TRD paths and sections>
 
 ### Sub-Agent 分工
 - 触发判断: <是否触发复杂编码分工及原因>

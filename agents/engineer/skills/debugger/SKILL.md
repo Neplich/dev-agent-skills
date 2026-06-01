@@ -6,8 +6,9 @@ description: "Reproduce, diagnose, and fix bugs with minimal changes. Use this s
 # Debugger
 
 Systematically reproduce, diagnose, and fix bugs. Follows a strict process:
-reproduce first, analyze the root cause, report the bug analysis, plan the
-repair with user confirmation, then fix minimally and verify.
+align expected behavior first, reproduce the failure, analyze the root cause,
+report the bug analysis, plan the repair with user confirmation, then fix
+minimally and verify.
 
 ## When to Use
 
@@ -23,11 +24,12 @@ repair with user confirmation, then fix minimally and verify.
 **Never guess.** Follow this order strictly:
 
 ```
-Reproduce → Analyze → Report → Repair Plan → Confirm → Fix → Verify
+Align Expected Behavior → Reproduce → Analyze → Report → Repair Plan → Confirm → Fix → Verify
 ```
 
 Do NOT jump to fixing. Do NOT propose or apply a fix before understanding the
-root cause, reporting the analysis, and getting confirmation on the repair plan.
+expected behavior, root cause, reporting the analysis, and getting confirmation
+on the repair plan.
 
 ## Complex Fix Sub-Agent Split
 
@@ -63,6 +65,29 @@ If the user confirms, produce a repair plan that includes:
 Present the repair plan and wait for user confirmation. Do not apply the fix,
 update tests, or delegate implementation until the user confirms the exact
 repair plan.
+
+## Step 0 — Align expected behavior with PRD / TRD
+
+For user-reported bugs in an existing feature, identify the likely feature and
+read the durable expected-behavior documents before deciding that code should be
+changed:
+
+- `docs/pm/{feature}/PRD.md`
+- `docs/pm/{feature}/DECISIONS.md`
+- `docs/engineer/{feature}/TRD.md`
+
+Use those docs to classify the report:
+
+- If the code or failing test deviates from PRD / TRD, cite the relevant docs
+  as the expected behavior source and continue with reproduction and root-cause
+  analysis.
+- If the user's requested behavior conflicts with the approved PRD /
+  DECISIONS / TRD, stop before repair planning and hand off to
+  `pm-agent:idea-to-spec` using the `existing-project-update` lane.
+- If the relevant docs are missing or ambiguous, stop before fixing and request
+  PM alignment unless the user explicitly asked to skip it.
+- If the user explicitly skips PRD alignment, state the override in the bug
+  analysis and continue with the smallest safe debug path.
 
 ## Step 1 — Gather error context
 
@@ -129,6 +154,7 @@ Before fixing, state the root cause clearly:
 ## 根因分析
 
 **问题**: <what's happening>
+**预期依据**: <PRD / DECISIONS / TRD paths and sections, or explicit skip>
 **根因**: <why it's happening>
 **位置**: <file:line>
 **影响**: <what else might be affected>
@@ -142,6 +168,7 @@ After confirming the root cause, report the analysis before planning or fixing:
 ## Bug 分析汇报
 
 - **问题**: <what's happening>
+- **预期依据**: <PRD / DECISIONS / TRD paths and sections, or explicit skip>
 - **根因**: <why it's happening>
 - **位置**: <file:line>
 - **影响**: <what else might be affected>

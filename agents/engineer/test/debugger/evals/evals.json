@@ -6,11 +6,16 @@
     {
       "id": "eval-001-fix-failing-test",
       "name": "fix-failing-test",
-      "description": "Verifies that debugger reproduces and analyzes a failing test, then asks whether to produce a repair implementation plan before fixing.",
+      "description": "Verifies that debugger aligns expected behavior with PRD/TRD, reproduces and analyzes a failing test, then asks whether to produce a repair implementation plan before fixing.",
       "prompt": "测试 test/api/notifications.test.ts 失败了，帮我修复",
       "workspace": "workspace/eval-001-fix-failing-test",
-      "expected_output": "复现 → 根因分析 → Bug 分析汇报 → 询问是否产出修复实施计划，不直接修复",
+      "expected_output": "读取 PRD/TRD 确认 active notification 应排除 archived → 复现 → 根因分析 → Bug 分析汇报 → 询问是否产出修复实施计划，不直接修复",
       "assertions": [
+        {
+          "id": "aligns_expected_behavior",
+          "description": "先对齐 PRD/TRD 预期",
+          "text": "输出必须引用 `docs/pm/notifications/PRD.md` 和 `docs/engineer/notifications/TRD.md`，说明 active notifications 应包含 unread/read 并排除 archived。"
+        },
         {
           "id": "reproduces_failure",
           "description": "复现问题",
@@ -60,6 +65,36 @@
           "id": "does_not_apply_fix",
           "description": "不得应用修复",
           "text": "输出不得声称已经修改代码、更新测试或运行修复验证。"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-bug-report-conflicts-with-prd",
+      "name": "bug-report-conflicts-with-prd",
+      "description": "Verifies that debugger hands off to PM when a reported bug is actually a request to change approved PRD/TRD behavior.",
+      "prompt": "用户说：通知中心 active 列表没有显示 archived 通知，这是个 bug，请直接修一下。现有 docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都写着 active 列表排除 archived。",
+      "workspace": null,
+      "expected_output": "识别用户期望与 PRD/TRD 冲突，停止修复路径，交回 pm-agent:idea-to-spec existing-project-update 更新 PRD/DECISIONS 和 TRD，不产出修复计划或代码改动。",
+      "assertions": [
+        {
+          "id": "detects_prd_conflict",
+          "description": "识别 PRD 冲突",
+          "text": "输出必须说明用户把 archived 加入 active 列表的期望与当前 PRD/TRD 预期冲突。"
+        },
+        {
+          "id": "hands_off_to_pm_update",
+          "description": "交回 PM 更新",
+          "text": "输出必须把下一步交给 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径，先更新 PRD/DECISIONS，并说明 TRD 需随后同步。"
+        },
+        {
+          "id": "does_not_produce_repair_plan",
+          "description": "不进入修复计划",
+          "text": "输出不得产出修复实施计划、修改代码、更新测试或声称已修复。"
+        },
+        {
+          "id": "allows_explicit_skip_only",
+          "description": "只有显式跳过才能继续",
+          "text": "输出必须说明除非用户明确要求跳过 PRD 对齐，否则不会直接按 bug 修复路径执行。"
         }
       ]
     }

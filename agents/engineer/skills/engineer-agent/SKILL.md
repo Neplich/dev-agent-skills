@@ -42,6 +42,29 @@ After the TRD is confirmed, route implementation planning and execution to
 `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` from the confirmed TRD, then
 waits for implementation confirmation before coding.
 
+## Existing Feature Alignment Gate
+
+Before routing an existing feature behavior change, small modification, or bug
+fix into `feature-implementor` or `debugger`, first identify the likely feature
+and read the relevant durable docs:
+
+- `docs/pm/{feature}/PRD.md`
+- `docs/pm/{feature}/DECISIONS.md`
+- `docs/engineer/{feature}/TRD.md`
+
+Classify the request before engineering execution:
+
+- If the current implementation appears to deviate from PRD / TRD expected
+  behavior, route to `debugger` and pass those documents as the expected
+  behavior source.
+- If the user is asking to change approved expected behavior, route back to
+  `pm-agent:idea-to-spec` using the `existing-project-update` lane so PRD /
+  DECISIONS can be updated before TRD or implementation planning.
+- If the relevant docs are missing, stale, or unclear, keep the request in PM
+  alignment first instead of guessing the intended behavior.
+- If the user explicitly asks to skip PRD alignment, state that override and
+  continue with the narrowest engineering route.
+
 All Engineer document-writing tasks, including TRD and implementation plan
 documents, should be delegated to a fresh document-writing sub-agent when
 sub-agent capabilities are available. The main process keeps source context,
@@ -97,13 +120,13 @@ Route by the engineering outcome the user wants, not by literal phrasing.
 - Feature implementation, code changes, requirement delivery, design-to-code,
   scoped refactors in service of a requirement, "实现功能", "落地设计",
   "把这个需求做掉", "改造这块逻辑"
-  -> `feature-implementor`
+  -> after the existing feature alignment gate passes, `feature-implementor`
 - Test coverage, acceptance tests, unit/integration tests, "补测试",
   "加 coverage", "验证实现"
   -> `test-writer`
 - Bug fixing, failing tests, broken builds, runtime regressions, hotfixes,
   "为什么挂了", "修 bug", "debug 一下", "CI 炸了"
-  -> `debugger`
+  -> after the expected behavior is aligned against PRD / TRD, `debugger`
 - Branching, commits, pushes, PR creation, delivery wrapping,
   "提交代码", "提 PR", "push 上去"
   -> `delivery`
@@ -122,7 +145,9 @@ Route by the engineering outcome the user wants, not by literal phrasing.
 
 If the request is engineering-shaped but underspecified, use these defaults:
 
-- if it implies changing production behavior -> `feature-implementor`
+- if it implies changing production behavior -> run the existing feature
+  alignment gate, then choose `feature-implementor` only when PM scope is
+  already approved
 - if it asks for technical planning or TRD before implementation -> `trd-gen`
 - if it implies a failure or regression -> `debugger`
 - if it implies verification without behavior change -> `test-writer`
@@ -146,7 +171,7 @@ Use these only when the user clearly wants the broader workflow:
 
 - 现有项目完整开发流程 -> `codebase-analyzer` -> `trd-gen` -> `feature-implementor` -> `test-writer` -> `delivery`
 - 新项目落地（PRD 已确认） -> `trd-gen` -> `project-bootstrap` -> `feature-implementor` -> `test-writer` -> `delivery`
-- bug 修复闭环 -> `debugger` -> `test-writer` -> `delivery`
+- bug 修复闭环 -> PRD / TRD expected-behavior alignment -> `debugger` -> `test-writer` -> `delivery`
 - 已完成实现补交付 -> `test-writer` -> `delivery`
 
 Do not force the full chain when the user only wants one stage.
