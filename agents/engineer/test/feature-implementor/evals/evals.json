@@ -114,7 +114,7 @@
         {
           "id": "records_prd_alignment",
           "description": "记录 PRD 对齐",
-          "text": "输出必须说明已读取或确认 `docs/pm/settings-label/PRD.md` 和 `docs/engineer/settings-label/TRD.md`，并在实施计划中记录 PRD 对齐状态。"
+          "text": "输出必须说明已读取或确认 `docs/pm/settings-label/PRD.md` 和 `docs/engineer/settings-label/TRD.md`，并在实施计划中记录 PRD 对齐状态；不得因为没有单独的 `DECISIONS.md` 而阻塞。"
         },
         {
           "id": "writes_plan_for_small_change",
@@ -141,10 +141,10 @@
     {
       "id": "eval-005-existing-behavior-change-needs-pm",
       "name": "existing-behavior-change-needs-pm",
-      "description": "Verifies that feature-implementor stops before implementation planning when a small existing-feature change would alter approved PRD/DECISIONS behavior.",
+      "description": "Verifies that feature-implementor stops before implementation planning when a small existing-feature change would alter approved PRD/TRD behavior or an existing product decision.",
       "prompt": "docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都规定 active 列表排除 archived。现在请进入 feature-implementor，把 active 列表改成包含 archived；这是一个很小的单文件改动。",
       "workspace": null,
-      "expected_output": "识别这是改变已批准预期，停止创建 IMPLEMENTATION_PLAN.md，交回 pm-agent:idea-to-spec existing-project-update 更新 PRD/DECISIONS，再同步 TRD。",
+      "expected_output": "识别这是改变已批准预期，停止创建 IMPLEMENTATION_PLAN.md，交回 pm-agent:idea-to-spec existing-project-update 更新 PRD 或产品决策记录，再同步 TRD。",
       "assertions": [
         {
           "id": "checks_approved_behavior",
@@ -154,12 +154,12 @@
         {
           "id": "stops_before_implementation_plan",
           "description": "停止实施计划",
-          "text": "输出不得开始编写或更新 `docs/engineer/notifications/IMPLEMENTATION_PLAN.md`，因为 PRD/DECISIONS 尚未更新。"
+          "text": "输出不得开始编写或更新 `docs/engineer/notifications/IMPLEMENTATION_PLAN.md`，因为 PRD 或产品决策记录尚未更新。"
         },
         {
           "id": "hands_off_to_pm_existing_update",
           "description": "交回 PM existing-project-update",
-          "text": "输出必须要求先走 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径更新 PRD/DECISIONS，并在之后同步 TRD。"
+          "text": "输出必须要求先走 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径更新 PRD 或产品决策记录，并在之后同步 TRD。"
         },
         {
           "id": "does_not_implement_directly",
@@ -179,7 +179,7 @@
         {
           "id": "treats_bug_fix_as_spec_backed",
           "description": "按 spec-backed bug fix 处理",
-          "text": "输出必须说明该 bug fix 已由 debugger 确认为实现偏离 PRD/TRD，因此可以进入 feature-implementor，但仍属于需要计划的实现任务。"
+          "text": "输出必须说明该 bug fix 已由 debugger 确认为实现偏离 PRD/TRD，因此可以进入 feature-implementor，但仍属于需要计划的实现任务；不得要求额外存在 `DECISIONS.md`。"
         },
         {
           "id": "writes_bug_fix_implementation_plan",

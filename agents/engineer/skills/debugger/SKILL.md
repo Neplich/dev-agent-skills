@@ -73,24 +73,26 @@ read the durable expected-behavior documents before deciding that code should be
 changed:
 
 - `docs/pm/{feature}/PRD.md`
-- `docs/pm/{feature}/DECISIONS.md`
 - `docs/engineer/{feature}/TRD.md`
+- `docs/pm/{feature}/DECISIONS.md` or other product decision records, when
+  present
 
 Use those docs to classify the report:
 
-- If the code or failing test deviates from PRD / TRD, cite the relevant docs
-  as the expected behavior source and continue with reproduction and root-cause
-  analysis.
-- If the user's requested behavior conflicts with the approved PRD /
-  DECISIONS / TRD, stop before repair planning and hand off to
+- If the code or failing test deviates from PRD / TRD, and no present decision
+  record conflicts, cite the relevant docs as the expected behavior source and
+  continue with reproduction and root-cause analysis.
+- If the user's requested behavior conflicts with the approved PRD, TRD, or an
+  existing decision record, stop before repair planning and hand off to
   `pm-agent:idea-to-spec` using the `existing-project-update` lane.
-- If PRD / DECISIONS are stable but the Engineer TRD is missing, incomplete,
-  stale, or conflicts with the codebase or bug context, stop before repair
-  planning and hand off to `engineer-agent:trd-gen` with a TRD gap packet. The
-  debugger owns naming the missing or conflicting technical decisions; `trd-gen`
-  owns completing the TRD.
-- If the relevant docs are missing or ambiguous, stop before fixing and request
-  PM alignment unless the user explicitly asked to skip it.
+- If PRD is stable but the Engineer TRD is missing, incomplete, stale, or
+  conflicts with the codebase or bug context, stop before repair planning and
+  hand off to `engineer-agent:trd-gen` with a TRD gap packet. The debugger owns
+  naming the missing or conflicting technical decisions; `trd-gen` owns
+  completing the TRD.
+- If PRD is missing or ambiguous, or an existing decision record conflicts with
+  the report, stop before fixing and request PM alignment unless the user
+  explicitly asked to skip it.
 - If the user explicitly skips PRD alignment, state the override in the bug
   analysis and continue with the smallest safe debug path.
 
@@ -164,7 +166,7 @@ Before fixing, state the root cause clearly:
 ## 根因分析
 
 **问题**: <what's happening>
-**预期依据**: <PRD / DECISIONS / TRD paths and sections, or explicit skip>
+**预期依据**: <PRD / TRD paths and sections, optional decisions, or explicit skip>
 **根因**: <why it's happening>
 **位置**: <file:line>
 **影响**: <what else might be affected>
@@ -178,7 +180,7 @@ After confirming the root cause, report the analysis before planning or fixing:
 ## Bug 分析汇报
 
 - **问题**: <what's happening>
-- **预期依据**: <PRD / DECISIONS / TRD paths and sections, or explicit skip>
+- **预期依据**: <PRD / TRD paths and sections, optional decisions, or explicit skip>
 - **根因**: <why it's happening>
 - **位置**: <file:line>
 - **影响**: <what else might be affected>

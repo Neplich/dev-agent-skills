@@ -12,7 +12,7 @@ including small, single-file, and spec-backed bug-fix changes routed into
 
 ## Input
 
-- PM documents: PRD, DECISIONS, BRD (whichever are relevant)
+- PM documents: PRD, BRD, and DECISIONS or product decision records when present
 - Engineer documents: confirmed TRD, API Spec, ADR
 - Project Profile (from codebase-analyzer)
 - Existing-feature alignment result from the public `feature-implementor`
@@ -25,12 +25,15 @@ including small, single-file, and spec-backed bug-fix changes routed into
 Before extracting implementation steps, confirm that the public PRD alignment
 gate has a clear result:
 
-- `already_approved`: the requested behavior is covered by PRD / DECISIONS and
-  TRD; continue planning and cite the source docs.
+- `already_approved`: the requested behavior is covered by PRD and confirmed
+  TRD, and any present decision records do not conflict; continue planning and
+  cite the source docs.
 - `needs_pm_update`: the request changes approved behavior; stop and hand off
   to `pm-agent:idea-to-spec` using the `existing-project-update` lane.
-- `docs_missing_or_unclear`: PM docs do not define the expected behavior; stop
-  and request PM alignment.
+- `docs_missing_or_unclear`: PRD or product decision records do not define a
+  consistent expected behavior; stop and request PM alignment. Do not classify
+  a request this way only because `DECISIONS.md` is absent when PRD and TRD are
+  sufficient.
 - `trd_gap`: PM scope is stable, but the Engineer TRD is missing, incomplete,
   stale, or conflicts with the codebase; stop and hand back to
   `engineer-agent:trd-gen` with a TRD gap packet.
@@ -102,7 +105,7 @@ When sub-agent capabilities are available, delegate the plan document writing to
 a fresh document-writing sub-agent. The delegated task must include:
 
 - confirmed TRD path
-- PRD / DECISIONS / design inputs
+- PRD / optional DECISIONS / design inputs
 - PRD alignment result and source-document evidence
 - exact output path: `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
 - file change list, sequence, tests, delegation split, forbidden areas, blockers

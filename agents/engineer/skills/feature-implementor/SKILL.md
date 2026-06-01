@@ -28,7 +28,8 @@ the implementation plan has been presented to the user and explicitly confirmed.
 
 - User wants to implement a feature described in PM documents
 - User wants to implement an existing-feature behavior change that is already
-  reflected in PRD / DECISIONS and Engineer TRD
+  reflected in PRD and Engineer TRD, with no conflict in existing product
+  decision records
 - User asks to "write code" or "implement" something with a spec available
 - After `codebase-analyzer` or `project-bootstrap` has established project context
 - After `trd-gen` has produced and the user has confirmed
@@ -36,7 +37,7 @@ the implementation plan has been presented to the user and explicitly confirmed.
 
 Do NOT use for:
 - Bug fixes with no spec (use `debugger` instead)
-- Existing-feature behavior changes that require PRD / DECISIONS updates first
+- Existing-feature behavior changes that require PRD or product decision updates first
   (use `pm-agent:idea-to-spec` with the `existing-project-update` lane)
 - Writing tests only (use `test-writer` instead)
 - Git/PR operations only (use `delivery` instead)
@@ -53,18 +54,21 @@ Before creating or updating `IMPLEMENTATION_PLAN.md` for an existing feature
 change, read the relevant PM and Engineer documents:
 
 - `docs/pm/{feature}/PRD.md`
-- `docs/pm/{feature}/DECISIONS.md`
 - `docs/engineer/{feature}/TRD.md`
+- `docs/pm/{feature}/DECISIONS.md` or other product decision records, when
+  present
 
 Classify the request:
 
-- If the requested behavior is already covered by PRD / DECISIONS and TRD,
-  continue to implementation planning and cite those documents in the plan.
+- If the requested behavior is already covered by PRD and confirmed TRD, and no
+  present decision record conflicts, continue to implementation planning and
+  cite those documents in the plan.
 - If the request changes approved product behavior, stop before implementation
   planning and hand off to `pm-agent:idea-to-spec` using the
   `existing-project-update` lane.
-- If PRD / DECISIONS are missing or ambiguous, stop and request PM alignment
-  before TRD or implementation planning.
+- If PRD is missing or ambiguous, or an existing decision record conflicts with
+  the request, stop and request PM alignment before TRD or implementation
+  planning.
 - If PRD is stable but TRD is missing, incomplete, or stale, stop and hand back
   to `engineer-agent:trd-gen` with a TRD gap packet. The finder owns naming the
   missing technical decisions; `trd-gen` owns completing the TRD.
@@ -150,8 +154,8 @@ ls docs/*.md docs/**/*.md 2>/dev/null
 
 Read the documents relevant to the current task:
 - **PRD**: functional requirements, user stories, acceptance criteria
-- **DECISIONS**: approved product decisions, rejected options, assumptions, and
-  open questions
+- **DECISIONS**: when present, approved product decisions, rejected options,
+  assumptions, and open questions
 - **Engineer TRD**: technical approach, component breakdown, architecture decisions
 - **ADR**: specific technology choices and constraints
 - **API Spec**: endpoint contracts, request/response shapes
@@ -218,8 +222,8 @@ Break the feature into ordered implementation steps:
 4. Decide whether the complex coding sub-agent split applies. If it does,
    include the implementation sub-agent write scope and validation sub-agent
    review scope in the plan.
-5. Include the PRD / DECISIONS / TRD paths, implementation plan path, and any blockers that require
-   returning to `trd-gen`.
+5. Include the PRD / optional DECISIONS / TRD paths, implementation plan path,
+   and any blockers that require returning to `trd-gen`.
 
 Present the plan to the user:
 
@@ -237,7 +241,7 @@ Present the plan to the user:
 
 ### PRD 对齐
 - 状态: <已覆盖 / 需要 PM 更新 / 显式跳过>
-- 依据: <PRD / DECISIONS / TRD paths and sections>
+- 依据: <PRD / TRD paths and sections, plus DECISIONS when present>
 
 ### Sub-Agent 分工
 - 触发判断: <是否触发复杂编码分工及原因>

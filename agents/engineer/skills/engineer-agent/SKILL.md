@@ -33,8 +33,8 @@ repo context, and current delivery stage.
 
 ## Planning Handoff
 
-After `pm-agent` confirms PRD / BRD / DECISIONS, route technical planning to
-`trd-gen`. TRD belongs to Engineer and is written to
+After `pm-agent` confirms the PRD / BRD and any product decision records, route
+technical planning to `trd-gen`. TRD belongs to Engineer and is written to
 `docs/engineer/{feature}/TRD.md`.
 
 After the TRD is confirmed, route implementation planning and execution to
@@ -49,23 +49,26 @@ fix into `feature-implementor` or `debugger`, first identify the likely feature
 and read the relevant durable docs:
 
 - `docs/pm/{feature}/PRD.md`
-- `docs/pm/{feature}/DECISIONS.md`
 - `docs/engineer/{feature}/TRD.md`
+- `docs/pm/{feature}/DECISIONS.md` or other product decision records, when
+  present
 
 Classify the request before engineering execution:
 
 - If the current implementation appears to deviate from PRD / TRD expected
-  behavior, route to `debugger` and pass those documents as the expected
-  behavior source.
+  behavior, and no present decision record conflicts, route to `debugger` and
+  pass those documents as the expected behavior source.
 - If the user is asking to change approved expected behavior, route back to
   `pm-agent:idea-to-spec` using the `existing-project-update` lane so PRD /
-  DECISIONS can be updated before TRD or implementation planning.
+  product decision records can be updated before TRD or implementation
+  planning.
 - If PM scope is stable but the Engineer TRD is missing, incomplete, stale, or
   conflicts with the request or codebase, route to `engineer-agent:trd-gen`
   with a TRD gap packet. The finder owns naming the gaps; `trd-gen` owns
   completing the TRD.
-- If the relevant docs are missing, stale, or unclear, keep the request in PM
-  alignment first instead of guessing the intended behavior.
+- If PRD is missing, stale, or unclear, or an existing decision record conflicts
+  with the request, keep the request in PM alignment first instead of guessing
+  the intended behavior.
 - If the user explicitly asks to skip PRD alignment, state that override and
   continue with the narrowest engineering route.
 
@@ -118,8 +121,8 @@ Route by the engineering outcome the user wants, not by literal phrasing.
 - Repo understanding, technical due diligence, "这个项目怎么组织的",
   "技术栈是什么", "接手这个仓库"
   -> `codebase-analyzer`
-- Technical planning from confirmed PRD / DECISIONS, TRD creation or revision,
-  architecture plan, implementation blueprint, "写 TRD", "技术方案",
+- Technical planning from confirmed PRD and product decisions, TRD creation or
+  revision, architecture plan, implementation blueprint, "写 TRD", "技术方案",
   "技术计划", "工程设计"
   -> `trd-gen`
 - New project setup, greenfield bootstrap, scaffolding from a TRD, approved PM

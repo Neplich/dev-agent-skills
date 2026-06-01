@@ -74,7 +74,7 @@
       "description": "Verifies that debugger hands off to PM when a reported bug is actually a request to change approved PRD/TRD behavior.",
       "prompt": "用户说：通知中心 active 列表没有显示 archived 通知，这是个 bug，请直接修一下。现有 docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都写着 active 列表排除 archived。",
       "workspace": null,
-      "expected_output": "识别用户期望与 PRD/TRD 冲突，停止修复路径，交回 pm-agent:idea-to-spec existing-project-update 更新 PRD/DECISIONS 和 TRD，不产出修复计划或代码改动。",
+      "expected_output": "识别用户期望与 PRD/TRD 冲突，停止修复路径，交回 pm-agent:idea-to-spec existing-project-update 更新 PRD 或产品决策记录并同步 TRD，不产出修复计划或代码改动。",
       "assertions": [
         {
           "id": "detects_prd_conflict",
@@ -84,7 +84,7 @@
         {
           "id": "hands_off_to_pm_update",
           "description": "交回 PM 更新",
-          "text": "输出必须把下一步交给 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径，先更新 PRD/DECISIONS，并说明 TRD 需随后同步。"
+          "text": "输出必须把下一步交给 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径，先更新 PRD 或产品决策记录，并说明 TRD 需随后同步。"
         },
         {
           "id": "does_not_produce_repair_plan",

@@ -28,8 +28,10 @@ Engineer-owned technical planning skill. It turns confirmed PM requirements into
 - code implementation
 - implementation plan documents produced after TRD approval
 
-If the PRD, `DECISIONS.md`, or acceptance scope is not stable, stop and hand
-back to `pm-agent:idea-to-spec` with the missing decisions.
+If the PRD, product decisions, or acceptance scope is not stable, stop and hand
+back to `pm-agent:idea-to-spec` with the missing decisions. `DECISIONS.md` is a
+valid decision record when present, but equivalent confirmed product decisions
+are also acceptable.
 
 When another skill hands back a missing, incomplete, stale, or conflicting TRD,
 the discoverer owns describing the TRD gaps and `trd-gen` owns completing the
@@ -39,7 +41,7 @@ TRD. Treat the handoff as a gap packet, not as an implementation request.
 
 ```mermaid
 flowchart LR
-    PM["pm-agent: PRD / BRD / DECISIONS confirmed"] --> Handoff["Explicit handoff to engineer-agent:trd-gen"]
+    PM["pm-agent: PRD / BRD / product decisions confirmed"] --> Handoff["Explicit handoff to engineer-agent:trd-gen"]
     Handoff --> TRD["trd-gen writes docs/engineer/{feature}/TRD.md"]
     TRD --> Review["Maintainer confirms TRD"]
     Review --> Plan["Explicit handoff to feature-implementor"]
@@ -51,7 +53,7 @@ Use this checkpoint language:
 
 ```text
 PRD 已确认，当前进入 Engineer TRD 阶段。
-我会基于 PRD、DECISIONS 和仓库上下文编写 `docs/engineer/{feature}/TRD.md`。
+我会基于 PRD、产品决策记录和仓库上下文编写 `docs/engineer/{feature}/TRD.md`。
 TRD 确认后，再移交给 `feature-implementor` 编写实现计划文档并进入实现。
 ```
 
@@ -64,7 +66,8 @@ sub-agent capabilities are available.
 The main process keeps the source context and final judgment. The delegated
 document-writing task must include:
 
-- PRD, BRD, `DECISIONS.md`, design docs, and relevant issue links
+- PRD, BRD, `DECISIONS.md` when present, equivalent product decisions, design
+  docs, and relevant issue links
 - current codebase and repository constraints
 - any TRD gap packet from the finder, including affected components, data flow,
   validation, release risk, and error-handling gaps
