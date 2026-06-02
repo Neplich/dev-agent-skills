@@ -136,6 +136,26 @@ def render_report(
     return "\n".join(lines) + "\n"
 
 
+def render_external_validation_report(meta: dict) -> str:
+    lines = [
+        f"# Eval {meta['eval_id']}: {meta['eval_name']}",
+        "",
+        "## Prompt",
+        "",
+        meta["prompt"],
+        "",
+        "## Runner Status",
+        "",
+        "- [SKIP] `fresh_codex_subagent` validation is not executed by this deterministic runner.",
+        "- Run Codex or Claude Code subagent validation separately, then update the durable `comparison.md`.",
+        "",
+        "## Runtime Artifact Policy",
+        "",
+        "- `subagent-verdict.md` is a runtime-only diagnostic artifact and is not required in the fixture.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def main() -> int:
     if len(sys.argv) != 2:
         print("Usage: run_eval.py <path-to-eval_metadata.json>")
@@ -146,6 +166,12 @@ def main() -> int:
     root = eval_runtime_root(metadata_path, "designer")
     copy_fixture_to_runtime(fixture_root, root)
     meta = load_metadata(metadata_path)
+
+    if meta.get("validation_method") == "fresh_codex_subagent":
+        report_path = root / "comparison.auto.md"
+        report_path.write_text(render_external_validation_report(meta))
+        print(display_path(report_path))
+        return 0
 
     with_results = check_outputs(root, meta.get("with_skill_outputs", []))
     without_results = check_outputs(root, meta.get("without_skill_outputs", []))

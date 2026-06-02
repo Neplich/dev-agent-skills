@@ -97,6 +97,47 @@ class DesignerRunEvalTests(unittest.TestCase):
             reports = list((temp_root / "runs").rglob("comparison.auto.md"))
             self.assertEqual(len(reports), 1)
 
+    def test_fresh_subagent_validation_does_not_require_verdict_outputs(self):
+        run_eval = load_run_eval_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            fixture = temp_root / "fixture"
+            fixture.mkdir()
+            metadata = fixture / "eval_metadata.json"
+            metadata.write_text(
+                """{
+  "eval_id": "eval-001-subagent-validation",
+  "eval_name": "subagent-validation",
+  "prompt": "Check subagent validation metadata.",
+  "validation_method": "fresh_codex_subagent",
+  "with_skill_outputs": ["with_skill/outputs/subagent-verdict.md"],
+  "without_skill_outputs": ["without_skill/outputs/subagent-verdict.md"],
+  "assertions": []
+}
+"""
+            )
+
+            old_argv = sys.argv
+            old_output_dir = os.environ.get("EVAL_RUN_OUTPUT_DIR")
+            os.environ["EVAL_RUN_OUTPUT_DIR"] = str(temp_root / "runs")
+            sys.argv = ["run_eval.py", str(metadata)]
+            try:
+                result = run_eval.main()
+            finally:
+                sys.argv = old_argv
+                if old_output_dir is None:
+                    os.environ.pop("EVAL_RUN_OUTPUT_DIR", None)
+                else:
+                    os.environ["EVAL_RUN_OUTPUT_DIR"] = old_output_dir
+
+            self.assertEqual(result, 0)
+            reports = list((temp_root / "runs").rglob("comparison.auto.md"))
+            self.assertEqual(len(reports), 1)
+            report = reports[0].read_text()
+            self.assertIn("[SKIP] `fresh_codex_subagent`", report)
+            self.assertIn("runtime-only diagnostic artifact", report)
+
 
 if __name__ == "__main__":
     unittest.main()
