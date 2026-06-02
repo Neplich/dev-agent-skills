@@ -2,21 +2,6 @@
   "eval_id": "eval-001-npm-audit",
   "eval_name": "NPM Dependency Audit",
   "workspace_root": "agents/security/test/dependency-risk-auditor/evals/workspace/eval-001-npm-audit",
-  "validation_method": "fresh_codex_subagent",
   "skill_availability_goal": "Test audit of Node.js project with vulnerable dependencies",
-  "prompt": "Audit the dependencies for security vulnerabilities.",
-  "with_skill_outputs": [
-    "with_skill/outputs/subagent-verdict.md"
-  ],
-  "without_skill_outputs": [
-    "without_skill/outputs/subagent-verdict.md"
-  ],
-  "run_diagnostics": [
-    "diagnostics/run.json"
-  ],
-  "execution_cleanup": [
-    "with_skill/outputs",
-    "without_skill/outputs",
-    "diagnostics"
-  ]
+  "prompt": "Audit the dependencies for security vulnerabilities."
 }

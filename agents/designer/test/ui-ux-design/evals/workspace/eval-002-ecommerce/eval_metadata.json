@@ -2,21 +2,6 @@
   "eval_id": "eval-002-ecommerce",
   "eval_name": "E-commerce Product Page",
   "workspace_root": "agents/designer/test/ui-ux-design/evals/workspace/eval-002-ecommerce",
-  "validation_method": "fresh_codex_subagent",
   "skill_availability_goal": "Design UI/UX for an e-commerce product listing and detail pages",
-  "prompt": "Design the UI/UX for an e-commerce site selling handmade crafts. Need product listing, filters, product detail page, and shopping cart. Target: mobile-first design.",
-  "with_skill_outputs": [
-    "with_skill/outputs/subagent-verdict.md"
-  ],
-  "without_skill_outputs": [
-    "without_skill/outputs/subagent-verdict.md"
-  ],
-  "run_diagnostics": [
-    "diagnostics/run.json"
-  ],
-  "execution_cleanup": [
-    "with_skill/outputs",
-    "without_skill/outputs",
-    "diagnostics"
-  ]
+  "prompt": "Design the UI/UX for an e-commerce site selling handmade crafts. Need product listing, filters, product detail page, and shopping cart. Target: mobile-first design."
 }

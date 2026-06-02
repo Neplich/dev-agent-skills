@@ -1,14 +1,14 @@
 # QA Eval Runner
 
-QA evals use a two-stage protocol:
+QA evals may use Codex or Claude subagents to execute or judge an E2E-style QA
+flow, but `subagent-verdict.md` is only a runtime diagnostic artifact. It is not
+the eval's durable result and must not be declared as a metadata output.
 
-1. Generate a candidate QA output for `with_skill` and `without_skill`.
-2. Ask a fresh Codex judge to read the candidate output, the QA skill document,
-   the QA README, the fixture workspace, and `evals.json`, then write
-   `subagent-verdict.md`.
-
-This avoids treating transcript or output-file existence as the source of truth.
-The semantic pass/fail decision comes from the fresh judge verdict.
+When a QA eval has deterministic outputs, metadata should point at the actual QA
+or E2E result artifacts, such as a test report, generated test case, execution
+summary, or evidence file. When a QA eval has no deterministic output, it should
+not be included in the deterministic runner flow; the semantic result belongs in
+the durable `comparison.md`.
 
 ## Run One Eval
 
@@ -23,14 +23,16 @@ uv run agents/qa/test/run_eval.py \
 uv run agents/qa/test/run_all_evals.py
 ```
 
+`run_all_evals.py` only discovers metadata with deterministic QA or E2E output
+fields. Metadata without those fields is handled by fresh subagent validation and
+durable `comparison.md` updates instead of the deterministic helper runner.
+
 ## Outputs
 
 Each eval run writes runtime-only files under `tmp/eval-runs/qa/`, such as:
 
 - `with_skill/outputs/candidate-output.md`
-- `with_skill/outputs/subagent-verdict.md`
 - `without_skill/outputs/candidate-output.md`
-- `without_skill/outputs/subagent-verdict.md`
 - `diagnostics/run.json`
 - `comparison.auto.md`
 
@@ -43,12 +45,6 @@ conversation summaries must match the committed or proposed `comparison.md`; if
 there is no comparison file to update, record the blocked or not-applicable
 reason.
 
-Runner failure is based on the `with_skill` path:
-
-- candidate output must exist
-- fresh judge verdict must exist
-- fresh judge verdict must report `Overall: PASS`
-
-The `without_skill` path is diagnostic. A `FAIL` verdict there is useful
-contrast, but a `PASS` verdict is not a runner failure when the prompt or fixture
-is enough for a general model to satisfy the assertions.
+Runner failure is based on the deterministic outputs declared in metadata. The
+`without_skill` path is diagnostic when present. Fresh judge verdicts can inform
+manual review, but the committed durable result is still `comparison.md`.

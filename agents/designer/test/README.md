@@ -12,11 +12,11 @@ fails with a non-zero exit code when required outputs are missing or any
 machine-checkable assertion fails. Keep the durable latest result in
 `comparison.md`; do not commit generated diagnostics.
 
-For metadata with `validation_method: "fresh_codex_subagent"`, this helper only
-writes a skip report because Codex or Claude Code subagent validation is an
-external evaluation path. `subagent-verdict.md` is a runtime-only diagnostic
-artifact from that path, not a required fixture output and not a committed
-artifact. The durable committed result remains `comparison.md`.
+Metadata with no deterministic outputs or machine-checkable assertions is not a
+deterministic runner eval. The helper writes a skip report for a direct run, and
+`run_all_evals.py` excludes it from the deterministic batch. Fresh subagent
+validation is still the semantic evaluation path, and the durable committed
+result remains `comparison.md`.
 
 After any actual eval run or fresh Codex subagent validation, update the
 workspace's durable `comparison.md` in the same change. PR comments and

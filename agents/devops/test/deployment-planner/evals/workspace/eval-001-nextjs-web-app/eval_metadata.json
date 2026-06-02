@@ -2,21 +2,6 @@
   "eval_id": "eval-001-nextjs-web-app",
   "eval_name": "nextjs-web-app",
   "workspace_root": "agents/devops/test/deployment-planner/evals/workspace/eval-001-nextjs-web-app",
-  "validation_method": "fresh_codex_subagent",
   "skill_availability_goal": "Verifies that deployment-planner handles nextjs-web-app and produces the expected role-specific artifact.",
-  "prompt": "我有一个 Next.js 项目，使用 PostgreSQL 数据库和 Redis 缓存。帮我生成 local、docker、helm 三种部署配置。",
-  "with_skill_outputs": [
-    "with_skill/outputs/subagent-verdict.md"
-  ],
-  "without_skill_outputs": [
-    "without_skill/outputs/subagent-verdict.md"
-  ],
-  "run_diagnostics": [
-    "diagnostics/run.json"
-  ],
-  "execution_cleanup": [
-    "with_skill/outputs",
-    "without_skill/outputs",
-    "diagnostics"
-  ]
+  "prompt": "我有一个 Next.js 项目，使用 PostgreSQL 数据库和 Redis 缓存。帮我生成 local、docker、helm 三种部署配置。"
 }

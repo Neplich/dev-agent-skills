@@ -2,21 +2,6 @@
   "eval_id": "eval-003-jwt",
   "eval_name": "JWT Implementation",
   "workspace_root": "agents/security/test/authz-reviewer/evals/workspace/eval-003-jwt",
-  "validation_method": "fresh_codex_subagent",
   "skill_availability_goal": "Test review of JWT token security",
-  "prompt": "Review the JWT authentication implementation.",
-  "with_skill_outputs": [
-    "with_skill/outputs/subagent-verdict.md"
-  ],
-  "without_skill_outputs": [
-    "without_skill/outputs/subagent-verdict.md"
-  ],
-  "run_diagnostics": [
-    "diagnostics/run.json"
-  ],
-  "execution_cleanup": [
-    "with_skill/outputs",
-    "without_skill/outputs",
-    "diagnostics"
-  ]
+  "prompt": "Review the JWT authentication implementation."
 }

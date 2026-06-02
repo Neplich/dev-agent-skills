@@ -2,21 +2,6 @@
   "eval_id": "eval-003-prefix-classification",
   "eval_name": "prefix-classification",
   "workspace_root": "agents/product_manager/test/changelog-generator/evals/workspace/eval-003-prefix-classification",
-  "validation_method": "fresh_codex_subagent",
   "skill_availability_goal": "Verifies that changelog-generator handles prefix-classification and produces the expected role-specific artifact.",
-  "prompt": "以下是一批 PR 标题，帮我把它们分类到 Keep a Changelog 的各个章节（Added/Changed/Fixed/Deprecated/Removed/Security），并按格式输出，跳过不需要出现在 changelog 的条目：\n\n- feat(auth): add OAuth2 login support (#101)\n- fix: resolve crash when token expires (#102)\n- chore(deps): bump requests from 2.28 to 2.31 (#103)\n- perf: reduce API response time by caching (#104)\n- feat!: redesign plugin configuration API (#105)\n- docs: update README with new examples (#106)\n- fix(ui): correct button alignment on mobile (#107)\n- ci: add GitHub Actions workflow (#108)\n- remove: drop Python 3.7 support (#109)\n- security: patch XSS vulnerability in template renderer (#110)",
-  "with_skill_outputs": [
-    "with_skill/outputs/subagent-verdict.md"
-  ],
-  "without_skill_outputs": [
-    "without_skill/outputs/subagent-verdict.md"
-  ],
-  "run_diagnostics": [
-    "diagnostics/run.json"
-  ],
-  "execution_cleanup": [
-    "with_skill/outputs",
-    "without_skill/outputs",
-    "diagnostics"
-  ]
+  "prompt": "以下是一批 PR 标题，帮我把它们分类到 Keep a Changelog 的各个章节（Added/Changed/Fixed/Deprecated/Removed/Security），并按格式输出，跳过不需要出现在 changelog 的条目：\n\n- feat(auth): add OAuth2 login support (#101)\n- fix: resolve crash when token expires (#102)\n- chore(deps): bump requests from 2.28 to 2.31 (#103)\n- perf: reduce API response time by caching (#104)\n- feat!: redesign plugin configuration API (#105)\n- docs: update README with new examples (#106)\n- fix(ui): correct button alignment on mobile (#107)\n- ci: add GitHub Actions workflow (#108)\n- remove: drop Python 3.7 support (#109)\n- security: patch XSS vulnerability in template renderer (#110)"
 }

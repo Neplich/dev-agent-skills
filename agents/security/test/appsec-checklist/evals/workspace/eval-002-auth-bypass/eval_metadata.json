@@ -2,21 +2,6 @@
   "eval_id": "eval-002-auth-bypass",
   "eval_name": "Authentication Bypass",
   "workspace_root": "agents/security/test/appsec-checklist/evals/workspace/eval-002-auth-bypass",
-  "validation_method": "fresh_codex_subagent",
   "skill_availability_goal": "Test detection of missing authentication on admin endpoint",
-  "prompt": "Check the security of the admin panel endpoints.",
-  "with_skill_outputs": [
-    "with_skill/outputs/subagent-verdict.md"
-  ],
-  "without_skill_outputs": [
-    "without_skill/outputs/subagent-verdict.md"
-  ],
-  "run_diagnostics": [
-    "diagnostics/run.json"
-  ],
-  "execution_cleanup": [
-    "with_skill/outputs",
-    "without_skill/outputs",
-    "diagnostics"
-  ]
+  "prompt": "Check the security of the admin panel endpoints."
 }

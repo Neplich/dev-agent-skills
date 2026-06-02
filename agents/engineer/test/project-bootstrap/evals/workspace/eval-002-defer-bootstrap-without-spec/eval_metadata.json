@@ -2,21 +2,6 @@
   "eval_id": "eval-002-defer-bootstrap-without-spec",
   "eval_name": "defer-bootstrap-without-spec",
   "workspace_root": "agents/engineer/test/project-bootstrap/evals/workspace/eval-002-defer-bootstrap-without-spec",
-  "validation_method": "fresh_codex_subagent",
   "skill_availability_goal": "Verifies that project-bootstrap handles defer-bootstrap-without-spec and produces the expected role-specific artifact.",
-  "prompt": "这是一个空目录。我想做一个 AI 对话助手，左侧是会话列表，右侧是聊天区。",
-  "with_skill_outputs": [
-    "with_skill/outputs/subagent-verdict.md"
-  ],
-  "without_skill_outputs": [
-    "without_skill/outputs/subagent-verdict.md"
-  ],
-  "run_diagnostics": [
-    "diagnostics/run.json"
-  ],
-  "execution_cleanup": [
-    "with_skill/outputs",
-    "without_skill/outputs",
-    "diagnostics"
-  ]
+  "prompt": "这是一个空目录。我想做一个 AI 对话助手，左侧是会话列表，右侧是聊天区。"
 }

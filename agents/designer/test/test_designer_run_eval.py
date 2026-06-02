@@ -97,7 +97,7 @@ class DesignerRunEvalTests(unittest.TestCase):
             reports = list((temp_root / "runs").rglob("comparison.auto.md"))
             self.assertEqual(len(reports), 1)
 
-    def test_fresh_subagent_validation_does_not_require_verdict_outputs(self):
+    def test_main_skips_metadata_without_deterministic_checks(self):
         run_eval = load_run_eval_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -107,13 +107,9 @@ class DesignerRunEvalTests(unittest.TestCase):
             metadata = fixture / "eval_metadata.json"
             metadata.write_text(
                 """{
-  "eval_id": "eval-001-subagent-validation",
-  "eval_name": "subagent-validation",
-  "prompt": "Check subagent validation metadata.",
-  "validation_method": "fresh_codex_subagent",
-  "with_skill_outputs": ["with_skill/outputs/subagent-verdict.md"],
-  "without_skill_outputs": ["without_skill/outputs/subagent-verdict.md"],
-  "assertions": []
+  "eval_id": "eval-001-no-deterministic-checks",
+  "eval_name": "no-deterministic-checks",
+  "prompt": "Check metadata with no deterministic runner flow."
 }
 """
             )
@@ -135,8 +131,8 @@ class DesignerRunEvalTests(unittest.TestCase):
             reports = list((temp_root / "runs").rglob("comparison.auto.md"))
             self.assertEqual(len(reports), 1)
             report = reports[0].read_text()
-            self.assertIn("[SKIP] `fresh_codex_subagent`", report)
-            self.assertIn("runtime-only diagnostic artifact", report)
+            self.assertIn("[SKIP] This eval has no deterministic outputs", report)
+            self.assertIn("fresh subagent validation", report)
 
 
 if __name__ == "__main__":

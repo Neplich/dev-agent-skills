@@ -2,21 +2,6 @@
   "eval_id": "eval-002-resolve-trd-gap-packet",
   "eval_name": "resolve-trd-gap-packet",
   "workspace_root": "agents/engineer/test/trd-gen/evals/workspace/eval-002-resolve-trd-gap-packet",
-  "validation_method": "fresh_codex_subagent",
   "skill_availability_goal": "Verifies that trd-gen owns completing a missing or stale TRD after another skill reports a clear gap packet.",
-  "prompt": "feature-implementor 发现 docs/engineer/capture-loop/TRD.md 缺失，已交回 TRD gap packet：需要决定受影响组件、Capture 事件数据流、队列重试验证命令、发布/回滚风险和错误处理策略。PM 的 docs/pm/capture-loop/PRD.md 已确认。请进入 trd-gen，不要写代码。",
-  "with_skill_outputs": [
-    "with_skill/outputs/subagent-verdict.md"
-  ],
-  "without_skill_outputs": [
-    "without_skill/outputs/subagent-verdict.md"
-  ],
-  "run_diagnostics": [
-    "diagnostics/run.json"
-  ],
-  "execution_cleanup": [
-    "with_skill/outputs",
-    "without_skill/outputs",
-    "diagnostics"
-  ]
+  "prompt": "feature-implementor 发现 docs/engineer/capture-loop/TRD.md 缺失，已交回 TRD gap packet：需要决定受影响组件、Capture 事件数据流、队列重试验证命令、发布/回滚风险和错误处理策略。PM 的 docs/pm/capture-loop/PRD.md 已确认。请进入 trd-gen，不要写代码。"
 }

@@ -32,6 +32,20 @@ PATH_LIST_FIELDS = (
     "execution_cleanup",
     "run_diagnostics",
 )
+OUTPUT_FIELDS = (
+    "with_skill_outputs",
+    "without_skill_outputs",
+    "baseline_outputs",
+    "baseline_output",
+    "baseline_skill_outputs",
+)
+RUNNER_ONLY_FIELDS = (
+    "execution_cleanup",
+    "run_diagnostics",
+)
+RUNTIME_DIAGNOSTIC_OUTPUTS = (
+    "subagent-verdict.md",
+)
 
 
 @dataclass
@@ -130,6 +144,12 @@ def validate_paths_stay_in_workspace(
         target = (workspace_root / rel).resolve()
         if target != workspace_root and workspace_root not in target.parents:
             add_error(errors, metadata_path, f"{field} escapes eval workspace: {rel!r}")
+        if any(runtime_output in rel for runtime_output in RUNTIME_DIAGNOSTIC_OUTPUTS):
+            add_error(
+                errors,
+                metadata_path,
+                f"{field} must not reference runtime diagnostic output {rel!r}",
+            )
 
 
 def validate_metadata(
@@ -161,6 +181,9 @@ def validate_metadata(
     if metadata.get("eval_id") != eval_id:
         add_error(errors, metadata_path, f"eval_id must match evals.json id {eval_id!r}")
 
+    if "validation_method" in metadata:
+        add_error(errors, metadata_path, "validation_method must not be committed in eval metadata")
+
     metadata_workspace_root = metadata.get("workspace_root")
     if metadata_workspace_root is not None:
         if not isinstance(metadata_workspace_root, str) or not is_safe_relative_path(metadata_workspace_root):
@@ -179,6 +202,15 @@ def validate_metadata(
                 metadata[field],
                 errors,
             )
+
+    if not any(field in metadata for field in OUTPUT_FIELDS):
+        for field in RUNNER_ONLY_FIELDS:
+            if field in metadata:
+                add_error(
+                    errors,
+                    metadata_path,
+                    f"{field} requires deterministic runner outputs",
+                )
 
 
 def validate_assertions(

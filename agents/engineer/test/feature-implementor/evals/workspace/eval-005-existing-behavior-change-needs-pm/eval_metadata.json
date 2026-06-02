@@ -2,21 +2,6 @@
   "eval_id": "eval-005-existing-behavior-change-needs-pm",
   "eval_name": "existing-behavior-change-needs-pm",
   "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-005-existing-behavior-change-needs-pm",
-  "validation_method": "fresh_codex_subagent",
   "skill_availability_goal": "Verifies that feature-implementor stops before implementation planning when a small existing-feature change would alter approved PRD/TRD behavior or an existing product decision.",
-  "prompt": "docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都规定 active 列表排除 archived。现在请进入 feature-implementor，把 active 列表改成包含 archived；这是一个很小的单文件改动。",
-  "with_skill_outputs": [
-    "with_skill/outputs/subagent-verdict.md"
-  ],
-  "without_skill_outputs": [
-    "without_skill/outputs/subagent-verdict.md"
-  ],
-  "run_diagnostics": [
-    "diagnostics/run.json"
-  ],
-  "execution_cleanup": [
-    "with_skill/outputs",
-    "without_skill/outputs",
-    "diagnostics"
-  ]
+  "prompt": "docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都规定 active 列表排除 archived。现在请进入 feature-implementor，把 active 列表改成包含 archived；这是一个很小的单文件改动。"
 }

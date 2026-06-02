@@ -17,4 +17,9 @@ uv run agents/devops/test/run_eval.py \
 
 自动报告会作为运行期临时产物生成到 `tmp/eval-runs/devops/`；长期提交的最新结果只保留 `comparison.md`。
 
+没有 deterministic 产物或机器可检查断言的 metadata 不属于当前 helper 的
+runner 流程。直接运行这类 metadata 时 helper 会写入 skip report；语义验证
+仍通过 fresh subagent validation 执行，并把 durable 结论写回 `comparison.md`。
+`subagent-verdict.md` 只是运行期诊断产物，不作为 metadata output 或提交产物。
+
 实际执行 skill eval 或 fresh Codex subagent validation 后，必须在同一轮变更中更新对应 workspace 的 durable `comparison.md`。PR 评论或对话中的 eval 结论必须与已提交或拟提交的 `comparison.md` 一致；如果没有可更新文件，记录 blocked 或不适用原因。
