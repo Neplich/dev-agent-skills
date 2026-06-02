@@ -124,6 +124,16 @@ def flatten_path_specs(value: Any) -> list[str] | None:
     return None
 
 
+def has_non_empty_output_paths(metadata: dict[str, Any]) -> bool:
+    for field in OUTPUT_FIELDS:
+        if field not in metadata:
+            continue
+        paths = flatten_path_specs(metadata[field])
+        if paths is not None and any(path.strip() for path in paths):
+            return True
+    return False
+
+
 def validate_paths_stay_in_workspace(
     metadata_path: Path,
     workspace_root: Path,
@@ -203,7 +213,7 @@ def validate_metadata(
                 errors,
             )
 
-    if not any(field in metadata for field in OUTPUT_FIELDS):
+    if not has_non_empty_output_paths(metadata):
         for field in RUNNER_ONLY_FIELDS:
             if field in metadata:
                 add_error(

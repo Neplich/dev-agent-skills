@@ -143,6 +143,69 @@ class EvalContractTests(unittest.TestCase):
         self.assertIn("validation_method must not be committed", rendered)
         self.assertIn("must not reference runtime diagnostic output", rendered)
 
+    def test_eval_contract_rejects_runner_diagnostics_with_empty_outputs(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
+            skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
+            workspace = evals_path.parent / "workspace/eval-001-empty-outputs"
+            workspace.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            skill_doc.write_text("# Debugger\n")
+            (workspace / "comparison.md").write_text("# Comparison\n")
+            (workspace / "eval_metadata.json").write_text(
+                json.dumps(
+                    {
+                        "eval_id": "eval-001-empty-outputs",
+                        "eval_name": "empty-outputs",
+                        "with_skill_outputs": [],
+                        "without_skill_outputs": [],
+                        "run_diagnostics": ["diagnostics/run.json"],
+                        "execution_cleanup": ["docs/pm/"],
+                    }
+                )
+            )
+            evals_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "1.0",
+                        "agent": "engineer",
+                        "skill_name": "debugger",
+                        "evals": [
+                            {
+                                "id": "eval-001-empty-outputs",
+                                "name": "empty-outputs",
+                                "description": "Invalid empty output fields",
+                                "prompt": "Run the eval",
+                                "workspace": "workspace/eval-001-empty-outputs",
+                                "expected_output": "A result",
+                                "assertions": [
+                                    {
+                                        "id": "has_result",
+                                        "description": "Has a result",
+                                        "text": "Result is present",
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "run_diagnostics requires deterministic runner outputs",
+            rendered,
+        )
+        self.assertIn(
+            "execution_cleanup requires deterministic runner outputs",
+            rendered,
+        )
+
     def test_artifact_checker_blocks_tmp_eval_runs(self):
         checker = load_artifact_checker_module()
 
