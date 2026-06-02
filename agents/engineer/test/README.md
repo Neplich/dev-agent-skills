@@ -1,7 +1,7 @@
 # Engineer Skill Evals
 
 Engineer eval definitions live under `agents/engineer/test/<skill>/evals/`.
-When an eval has a workspace, the durable result for that workspace is
+Every eval has a workspace, and the durable result for that workspace is
 `comparison.md`.
 
 Runtime transcripts, verdicts, timing data, generated outputs, and diagnostics

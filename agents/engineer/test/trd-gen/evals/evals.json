@@ -8,7 +8,7 @@
       "name": "prd-to-engineer-trd",
       "description": "Verifies that trd-gen owns technical planning after PRD confirmation and stops before implementation.",
       "prompt": "PM 已经确认 docs/pm/capture-loop/PRD.md 和 docs/pm/capture-loop/DECISIONS.md。请进入 Engineer 阶段，编写 TRD，并说明后续如何移交给 feature-implementor。",
-      "workspace": null,
+      "workspace": "workspace/eval-001-prd-to-engineer-trd",
       "expected_output": "生成或更新 docs/engineer/{feature}/TRD.md，明确 TRD 确认后再移交 feature-implementor 编写实现计划文档，不进入代码实现。",
       "assertions": [
         {
@@ -43,7 +43,7 @@
       "name": "resolve-trd-gap-packet",
       "description": "Verifies that trd-gen owns completing a missing or stale TRD after another skill reports a clear gap packet.",
       "prompt": "feature-implementor 发现 docs/engineer/capture-loop/TRD.md 缺失，已交回 TRD gap packet：需要决定受影响组件、Capture 事件数据流、队列重试验证命令、发布/回滚风险和错误处理策略。PM 的 docs/pm/capture-loop/PRD.md 已确认。请进入 trd-gen，不要写代码。",
-      "workspace": null,
+      "workspace": "workspace/eval-002-resolve-trd-gap-packet",
       "expected_output": "确认发现者负责说明缺口，trd-gen 负责补完整 docs/engineer/capture-loop/TRD.md；逐项处理 gap packet 中的组件、数据流、验证命令、发布风险和错误处理策略，不进入实现计划或代码。",
       "assertions": [
         {

@@ -8,7 +8,7 @@
       "name": "write-tests-from-spec",
       "description": "Verifies that test-writer handles write-tests-from-spec and produces the expected role-specific artifact.",
       "prompt": "根据 docs/test-spec.md 为 NotificationService 编写测试",
-      "workspace": null,
+      "workspace": "workspace/eval-001-write-tests-from-spec",
       "expected_output": "测试文件 + 测试运行结果",
       "assertions": [
         {

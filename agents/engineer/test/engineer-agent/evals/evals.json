@@ -43,7 +43,7 @@
       "name": "existing-feature-alignment-gate",
       "description": "Verifies that engineer-agent checks PRD/TRD and any present product decisions before routing small existing-feature behavior changes into implementation.",
       "prompt": "用户说：现有通知中心已经有 PRD/TRD，现在想把 archived 通知也显示在 active 列表里，这是一个小改动，直接走工程实现吧。先做工程路由，不要改代码。",
-      "workspace": null,
+      "workspace": "workspace/eval-002-existing-feature-alignment-gate",
       "expected_output": "先要求读取 docs/pm/{feature}/PRD.md、docs/engineer/{feature}/TRD.md，以及存在的 DECISIONS.md 或产品决策记录，对比 archived 行为是否改变既有预期；如果是改变预期，路由回 pm-agent:idea-to-spec 的 existing-project-update，而不是直接进入 feature-implementor。",
       "assertions": [
         {

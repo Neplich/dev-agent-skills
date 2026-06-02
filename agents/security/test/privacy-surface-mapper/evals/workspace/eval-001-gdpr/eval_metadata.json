@@ -1,0 +1,22 @@
+{
+  "eval_id": "eval-001-gdpr",
+  "eval_name": "GDPR Compliance Check",
+  "workspace_root": "agents/security/test/privacy-surface-mapper/evals/workspace/eval-001-gdpr",
+  "validation_method": "fresh_codex_subagent",
+  "skill_availability_goal": "Test privacy mapping for user data collection",
+  "prompt": "Map the personal data collection and check GDPR compliance.",
+  "with_skill_outputs": [
+    "with_skill/outputs/subagent-verdict.md"
+  ],
+  "without_skill_outputs": [
+    "without_skill/outputs/subagent-verdict.md"
+  ],
+  "run_diagnostics": [
+    "diagnostics/run.json"
+  ],
+  "execution_cleanup": [
+    "with_skill/outputs",
+    "without_skill/outputs",
+    "diagnostics"
+  ]
+}

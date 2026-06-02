@@ -33,7 +33,7 @@
       "name": "E-commerce Product Page",
       "description": "Design UI/UX for an e-commerce product listing and detail pages",
       "prompt": "Design the UI/UX for an e-commerce site selling handmade crafts. Need product listing, filters, product detail page, and shopping cart. Target: mobile-first design.",
-      "workspace": null,
+      "workspace": "workspace/eval-002-ecommerce",
       "expected_output": "结构化的电商 UI/UX 设计文档，覆盖页面清单、移动端布局和状态说明，并在设计交接处停止",
       "assertions": [
         {
@@ -53,7 +53,7 @@
       "name": "Design with Reference Website",
       "description": "Design UI/UX using a reference website for style inspiration",
       "prompt": "Design a landing page for a productivity app. Reference website: https://linear.app for clean, modern aesthetic.",
-      "workspace": null,
+      "workspace": "workspace/eval-003-with-reference",
       "expected_output": "基于参考网站模式提炼出的 UI/UX 设计文档，包含参考分析与交互规格，并在设计交接处停止",
       "assertions": [
         {

@@ -1,0 +1,22 @@
+{
+  "eval_id": "eval-001-create-pr-with-commits",
+  "eval_name": "create-pr-with-commits",
+  "workspace_root": "agents/engineer/test/delivery/evals/workspace/eval-001-create-pr-with-commits",
+  "validation_method": "fresh_codex_subagent",
+  "skill_availability_goal": "Verifies that delivery handles create-pr-with-commits and produces the expected role-specific artifact.",
+  "prompt": "代码已完成，创建 PR 并关联 Issue #123",
+  "with_skill_outputs": [
+    "with_skill/outputs/subagent-verdict.md"
+  ],
+  "without_skill_outputs": [
+    "without_skill/outputs/subagent-verdict.md"
+  ],
+  "run_diagnostics": [
+    "diagnostics/run.json"
+  ],
+  "execution_cleanup": [
+    "with_skill/outputs",
+    "without_skill/outputs",
+    "diagnostics"
+  ]
+}

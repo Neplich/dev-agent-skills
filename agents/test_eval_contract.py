@@ -1,5 +1,7 @@
 import importlib.util
+import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -38,6 +40,48 @@ class EvalContractTests(unittest.TestCase):
             [error.render(checker.repo_root()) for error in errors],
             [],
         )
+
+    def test_eval_contract_rejects_null_workspace(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
+            skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
+            evals_path.parent.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            skill_doc.write_text("# Debugger\n")
+            evals_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "1.0",
+                        "agent": "engineer",
+                        "skill_name": "debugger",
+                        "evals": [
+                            {
+                                "id": "eval-001-null-workspace",
+                                "name": "null-workspace",
+                                "description": "Invalid null workspace fixture",
+                                "prompt": "Run the eval",
+                                "workspace": None,
+                                "expected_output": "A result",
+                                "assertions": [
+                                    {
+                                        "id": "has_result",
+                                        "description": "Has a result",
+                                        "text": "Result is present",
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("workspace must be a non-empty string", rendered)
 
     def test_artifact_checker_blocks_tmp_eval_runs(self):
         checker = load_artifact_checker_module()

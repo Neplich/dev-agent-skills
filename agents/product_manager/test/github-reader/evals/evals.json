@@ -8,7 +8,7 @@
       "name": "full-status",
       "description": "Verifies that github-reader handles full-status and produces the expected role-specific artifact.",
       "prompt": "帮我看一下 anthropics/anthropic-sdk-python 现在的项目状态，包括 milestone 进度、open issue 数量和 PR 队列情况",
-      "workspace": null,
+      "workspace": "workspace/eval-001-full-status",
       "expected_output": "结构化的项目状态报告，包含 Milestone 进度表、Open Issues 分组、PR 队列（待 review / 草稿 / 近期合并），以及健康摘要",
       "assertions": [
         {
@@ -38,7 +38,7 @@
       "name": "focused-pr-query",
       "description": "Verifies that github-reader handles focused-pr-query and produces the expected role-specific artifact.",
       "prompt": "我在 cli/cli 这个仓库里工作，现在有哪些 PR 还在等待 review？按等待时间排序",
-      "workspace": null,
+      "workspace": "workspace/eval-002-focused-pr-query",
       "expected_output": "聚焦 PR 的输出，列出 awaiting review 的 PR 并按等待时间排序，不需要输出 issue 和 milestone 数据",
       "assertions": [
         {
@@ -63,7 +63,7 @@
       "name": "milestone-focused",
       "description": "Verifies that github-reader handles milestone-focused and produces the expected role-specific artifact.",
       "prompt": "看一下 facebook/react 最近的 milestone，哪个进度最慢或者已经逾期了？",
-      "workspace": null,
+      "workspace": "workspace/eval-003-milestone-focused",
       "expected_output": "Milestone 状态报告，识别出进度最慢或逾期的 milestone，给出具体数据支撑",
       "assertions": [
         {

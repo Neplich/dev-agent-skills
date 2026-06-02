@@ -1,54 +1,45 @@
-# Eval 1: SaaS Dashboard Design - Comparison
+# Eval Result: eval-001-saas-dashboard
 
-> This file is the durable eval result. Runtime output files are intentionally not committed.
+## Evaluation Target
 
-## Test Case
-Design UI/UX for a project management SaaS dashboard for small teams.
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-001-saas-dashboard`
+- Test case: SaaS Dashboard Design
+- Workspace: `workspace/eval-1-saas-dashboard`
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
 
-## With Skill Output
+## Test Set / Fixture Version
 
-**Location:** `with_skill/docs/design/ui-ux-spec.md`
+- Schema: `evals.json` v1.0
+- Fixture: Design UI/UX for a project management SaaS dashboard
+- Expected output: 结构化的 UI/UX 设计文档，包含用户流程、页面布局、组件清单和响应式说明，并在设计交接处停止
 
-**Quality:**
-- ✅ Complete user journey with Mermaid diagram
-- ✅ Detailed page inventory (6 pages)
-- ✅ ASCII prototypes for key pages
-- ✅ Component list organized by category
-- ✅ Interaction behaviors documented
-- ✅ Responsive design breakpoints defined
-- ✅ Structured, engineer-friendly format
+## Assertions
 
-**Strengths:**
-- Visual ASCII prototypes help engineers understand layout
-- Clear navigation flow with Mermaid
-- Comprehensive component list
-- Responsive design considerations
+- `assertion_1`: 产出设计文档
+- `assertion_2`: 只做设计不做实现
+- `assertion_3`: 提示下一角色
 
-## Without Skill Output
+## With Skill
 
-**Location:** `without_skill/outputs/design-notes.md`
+Observed behavior:
 
-**Quality:**
-- ❌ No visual prototypes
-- ❌ No user journey diagram
-- ❌ Vague descriptions ("maybe a sidebar")
-- ❌ No component details
-- ❌ No interaction specifications
-- ❌ No responsive design guidance
+- 当前 SKILL.md 要求产出 ui-ux-spec.md，覆盖用户旅程、ASCII 布局、组件、交互和响应式，并明确停在 design handoff，可满足 dashboard eval assertions。
 
-**Weaknesses:**
-- Too brief and incomplete
-- Not actionable for engineers
-- Missing critical details
+## Without Skill / Baseline
 
-## Conclusion
+- Baseline behavior is diagnostic only.
+- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
-**Skill Impact:** HIGH
+## Failures
 
-The skill produces significantly better output with:
-- Visual prototypes (ASCII)
-- Structured documentation
-- Complete specifications
-- Engineer-ready format
+- None found in fresh Codex subagent validation.
 
-**Recommendation:** Keep skill as-is, works well.
+## Next Steps
+
+- 保持 durable comparison 为 PASS 结论。
+
+## Runtime Artifacts Policy
+
+- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.

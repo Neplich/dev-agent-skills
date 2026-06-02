@@ -1,7 +1,7 @@
 # Product Manager Skill Evals
 
 Product manager eval definitions live under
-`agents/product_manager/test/<skill>/evals/`. When an eval has a workspace, the
+`agents/product_manager/test/<skill>/evals/`. Every eval has a workspace, and the
 durable result for that workspace is `comparison.md`.
 
 Runtime transcripts, generated reports, status files, timing data, and

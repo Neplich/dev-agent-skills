@@ -1,0 +1,22 @@
+{
+  "eval_id": "eval-003-bug-report-conflicts-with-prd",
+  "eval_name": "bug-report-conflicts-with-prd",
+  "workspace_root": "agents/engineer/test/debugger/evals/workspace/eval-003-bug-report-conflicts-with-prd",
+  "validation_method": "fresh_codex_subagent",
+  "skill_availability_goal": "Verifies that debugger hands off to PM when a reported bug is actually a request to change approved PRD/TRD behavior.",
+  "prompt": "用户说：通知中心 active 列表没有显示 archived 通知，这是个 bug，请直接修一下。现有 docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都写着 active 列表排除 archived。",
+  "with_skill_outputs": [
+    "with_skill/outputs/subagent-verdict.md"
+  ],
+  "without_skill_outputs": [
+    "without_skill/outputs/subagent-verdict.md"
+  ],
+  "run_diagnostics": [
+    "diagnostics/run.json"
+  ],
+  "execution_cleanup": [
+    "with_skill/outputs",
+    "without_skill/outputs",
+    "diagnostics"
+  ]
+}

@@ -8,7 +8,7 @@
       "name": "GDPR Compliance Check",
       "description": "Test privacy mapping for user data collection",
       "prompt": "Map the personal data collection and check GDPR compliance.",
-      "workspace": null,
+      "workspace": "workspace/eval-001-gdpr",
       "expected_output": "Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.",
       "assertions": [
         {
@@ -38,7 +38,7 @@
       "name": "User Rights Implementation",
       "description": "Test checking of user data rights implementation",
       "prompt": "Check if user rights (access, deletion, export) are implemented.",
-      "workspace": null,
+      "workspace": "workspace/eval-002-user-rights",
       "expected_output": "Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.",
       "assertions": [
         {
@@ -68,7 +68,7 @@
       "name": "Third-Party Data Sharing",
       "description": "Test mapping of third-party data sharing",
       "prompt": "Identify all third-party services receiving user data.",
-      "workspace": null,
+      "workspace": "workspace/eval-003-third-party",
       "expected_output": "Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.",
       "assertions": [
         {

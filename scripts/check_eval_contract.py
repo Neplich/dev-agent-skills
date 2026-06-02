@@ -243,15 +243,14 @@ def validate_eval_item(
         add_error(errors, path, f"evals[{eval_index}].workspace must be present")
     else:
         workspace = item["workspace"]
-        if workspace is not None:
-            if not non_empty_string(workspace) or not workspace.startswith("workspace/"):
-                add_error(
-                    errors,
-                    path,
-                    f"evals[{eval_index}].workspace must be null or start with workspace/",
-                )
-            elif not ((skill_test_dir / workspace).exists() or (path.parent / workspace).exists()):
-                add_error(errors, path, f"evals[{eval_index}].workspace does not exist: {workspace}")
+        if not non_empty_string(workspace) or not workspace.startswith("workspace/"):
+            add_error(
+                errors,
+                path,
+                f"evals[{eval_index}].workspace must be a non-empty string starting with workspace/",
+            )
+        elif not ((skill_test_dir / workspace).exists() or (path.parent / workspace).exists()):
+            add_error(errors, path, f"evals[{eval_index}].workspace does not exist: {workspace}")
 
     validate_assertions(path, eval_index, item.get("assertions"), errors)
     validate_metadata(path, skill_test_dir, eval_index, item, errors)

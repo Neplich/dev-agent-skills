@@ -8,7 +8,7 @@
       "name": "Role-Based Access Control",
       "description": "Test review of RBAC implementation in multi-role app",
       "prompt": "Review the authorization logic for this admin/user/guest system.",
-      "workspace": null,
+      "workspace": "workspace/eval-001-rbac",
       "expected_output": "Structured authorization review that identifies access-control risks, affected roles or resources, evidence, severity, and remediation guidance.",
       "assertions": [
         {
@@ -38,7 +38,7 @@
       "name": "Session Management",
       "description": "Test review of session security configuration",
       "prompt": "Check the session management security.",
-      "workspace": null,
+      "workspace": "workspace/eval-002-session",
       "expected_output": "Structured authorization review that identifies access-control risks, affected roles or resources, evidence, severity, and remediation guidance.",
       "assertions": [
         {
@@ -68,7 +68,7 @@
       "name": "JWT Implementation",
       "description": "Test review of JWT token security",
       "prompt": "Review the JWT authentication implementation.",
-      "workspace": null,
+      "workspace": "workspace/eval-003-jwt",
       "expected_output": "Structured authorization review that identifies access-control risks, affected roles or resources, evidence, severity, and remediation guidance.",
       "assertions": [
         {

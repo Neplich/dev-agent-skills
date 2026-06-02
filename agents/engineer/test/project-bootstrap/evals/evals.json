@@ -8,7 +8,7 @@
       "name": "bootstrap-nextjs-project",
       "description": "Verifies that project-bootstrap handles bootstrap-nextjs-project and produces the expected role-specific artifact.",
       "prompt": "根据 docs/trd.md 初始化一个 Next.js 项目",
-      "workspace": null,
+      "workspace": "workspace/eval-001-bootstrap-nextjs-project",
       "expected_output": "项目初始化完成 + 配置完成 + 验证通过",
       "assertions": [
         {
@@ -33,7 +33,7 @@
       "name": "defer-bootstrap-without-spec",
       "description": "Verifies that project-bootstrap handles defer-bootstrap-without-spec and produces the expected role-specific artifact.",
       "prompt": "这是一个空目录。我想做一个 AI 对话助手，左侧是会话列表，右侧是聊天区。",
-      "workspace": null,
+      "workspace": "workspace/eval-002-defer-bootstrap-without-spec",
       "expected_output": "识别到缺少 TRD 或已确认 spec；不要直接脚手架；要求先补 PM/idea-to-spec 文档收敛，或仅在用户明确要求跳过 PM 时才继续 bootstrap。",
       "assertions": [
         {

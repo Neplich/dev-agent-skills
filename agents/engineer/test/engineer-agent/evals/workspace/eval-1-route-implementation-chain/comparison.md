@@ -1,37 +1,47 @@
-# Eval Result: engineer-agent-route-implementation-chain
+# Eval Result: eval-001-route-implementation-chain
 
 ## Evaluation Target
 
+- Agent: `engineer`
 - Skill: `engineer-agent`
+- Eval: `eval-001-route-implementation-chain`
 - Test case: route-implementation-chain
-- Test set: dispatcher availability evals
-- Entry: workspace `eval-1-route-implementation-chain`
-- Latest result: PASS
+- Workspace: `workspace/eval-1-route-implementation-chain`
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: existing-service implementation request with TRD
+- Fixture: Verifies that engineer-agent routes a multi-step implementation request through the narrowest engineering chain.
+- Expected output: 工程路由决策，明确先理解仓库，再基于已确认 TRD 编写实现计划、实现、补测试、交付，并说明每一步对应的 specialist skill。
+
+## Assertions
+
+- `starts_with_codebase_context`: 先建立工程上下文
+- `routes_implementation_to_feature_implementor`: 实现 route
+- `routes_tests_to_test_writer`: 测试 route
+- `routes_delivery_last`: 交付 route
+- `does_not_execute_directly`: 只做路由不执行
 
 ## With Skill
 
-- Builds an ordered route through `codebase-analyzer`, `feature-implementor`, `test-writer`, and `delivery`.
-- Keeps delivery after implementation and validation.
-- Honors the user's request to route before editing.
+Observed behavior:
+
+- 当前 SKILL.md 支持 route-only 工程链：先 codebase-analyzer，再 feature-implementor，随后 test-writer，最后 delivery；且不直接执行修改、测试或提交。
 
 ## Without Skill / Baseline
 
-- May start implementation immediately or collapse testing and delivery into one step.
-- Less consistently preserves the engineering chain.
+- Baseline behavior is diagnostic only.
+- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures
 
-- None recorded.
+- None found in fresh Codex subagent validation.
 
 ## Next Steps
 
-- Keep this eval for Engineer dispatcher route coverage.
+- 保持该 eval 防止 route-only 请求被直接执行。
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, and diagnostics should not be committed.
+- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.

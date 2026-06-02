@@ -1,0 +1,22 @@
+{
+  "eval_id": "eval-002-single-version-mode",
+  "eval_name": "single-version-mode",
+  "workspace_root": "agents/product_manager/test/changelog-generator/evals/workspace/eval-002-single-version-mode",
+  "validation_method": "fresh_codex_subagent",
+  "skill_availability_goal": "Verifies that changelog-generator handles single-version-mode and produces the expected role-specific artifact.",
+  "prompt": "在 https://github.com/anthropics/anthropic-sdk-python 仓库，帮我生成最新 release 版本的 changelog 条目，使用 Keep a Changelog 格式，包含该版本对应的所有 PR 引用，并写入 docs/changelog/changelog-v{version}.md。",
+  "with_skill_outputs": [
+    "with_skill/outputs/subagent-verdict.md"
+  ],
+  "without_skill_outputs": [
+    "without_skill/outputs/subagent-verdict.md"
+  ],
+  "run_diagnostics": [
+    "diagnostics/run.json"
+  ],
+  "execution_cleanup": [
+    "with_skill/outputs",
+    "without_skill/outputs",
+    "diagnostics"
+  ]
+}

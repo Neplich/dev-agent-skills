@@ -1,0 +1,22 @@
+{
+  "eval_id": "eval-001-implement-from-prd-trd",
+  "eval_name": "implement-from-prd-trd",
+  "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd",
+  "validation_method": "fresh_codex_subagent",
+  "skill_availability_goal": "Verifies that feature-implementor handles implement-from-prd-trd by producing an implementation plan and waiting for confirmation before coding.",
+  "prompt": "根据 docs/pm/notification-center/PRD.md 和 docs/engineer/notification-center/TRD.md 实现用户通知功能",
+  "with_skill_outputs": [
+    "with_skill/outputs/subagent-verdict.md"
+  ],
+  "without_skill_outputs": [
+    "without_skill/outputs/subagent-verdict.md"
+  ],
+  "run_diagnostics": [
+    "diagnostics/run.json"
+  ],
+  "execution_cleanup": [
+    "with_skill/outputs",
+    "without_skill/outputs",
+    "diagnostics"
+  ]
+}
