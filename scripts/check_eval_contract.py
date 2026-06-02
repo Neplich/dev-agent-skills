@@ -44,6 +44,7 @@ RUNNER_ONLY_FIELDS = (
     "run_diagnostics",
 )
 RUNTIME_DIAGNOSTIC_OUTPUTS = (
+    "transcript.md",
     "subagent-verdict.md",
 )
 
