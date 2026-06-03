@@ -8,7 +8,7 @@
       "name": "positioning-gap-brief",
       "description": "Verifies that competitive-brief produces a structured positioning brief with evidence boundaries.",
       "prompt": "请对 Linear 和 Jira 做一份竞品 brief，重点比较项目协作场景里的定位、目标用户、关键卖点和我们可以切入的 messaging gap。",
-      "workspace": null,
+      "workspace": "workspace/eval-001-positioning-gap-brief",
       "expected_output": "结构化竞品 brief，包含竞品定位、目标用户、核心卖点、内容空白、机会、威胁和证据边界。",
       "assertions": [
         {

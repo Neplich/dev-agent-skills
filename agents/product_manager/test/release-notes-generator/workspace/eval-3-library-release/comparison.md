@@ -1,28 +1,46 @@
-# Eval Result: library-release-notes
+# Eval Result: eval-003-library-release-notes
 
 ## Evaluation Target
 
+- Agent: `product_manager`
 - Skill: `release-notes-generator`
-- Test case: `fastapi 0.135.0` library release notes
-- Test set: `agents/product_manager/test/release-notes-generator/evals/evals.json`
-- Entry: workspace `eval-3-library-release`
-- Latest result: PASS
+- Eval: `eval-003-library-release-notes`
+- Test case: library-release-notes
+- Workspace: `workspace/eval-3-library-release`
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+
+## Test Set / Fixture Version
+
+- Schema: `evals.json` v1.0
+- Fixture: Verifies that release-notes-generator handles library-release-notes and produces the expected role-specific artifact.
+- Expected output: 库发版说明，features 和 fixes 正确区分，升级指引清晰
+
+## Assertions
+
+- `audience_value`: 面向目标用户说明发布价值，而不是只罗列提交或 PR
+- `change_grouping`: 按 features、fixes、breaking changes 或等价分组组织变更
+- `source_links`: 保留正确版本、仓库和 PR 或 release 相关链接
+- `requested_output`: 按用户要求写入或明确给出目标 release notes 产物
 
 ## With Skill
 
-- Produces user-facing notes for Server-Sent Events, bug fixes, upgrade command, and no-breaking-change guidance.
-- Uses PR links and user scenarios instead of only implementation language.
-- Iteration 2 tightens the example and release summary.
+Observed behavior:
 
-## Without Skill
+- 当前 skill 支持库版本 release notes：What's New、Bug Fixes/Other Improvements、升级命令、PR 链接、用户视角语气和可选无 breaking 说明均被协议覆盖。
 
-- Produces a reasonable release note, but includes extra historical context and a less precise upgrade command.
+## Without Skill / Baseline
+
+- Baseline behavior is diagnostic only.
+- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures
 
-- None recorded.
+- None found in fresh Codex subagent validation.
 
 ## Next Steps
 
-- Keep this eval for library release notes with developer-facing upgrade guidance.
-- Runtime release-note files and timing data should not be committed.
+- 真实运行时需验证 fastapi 0.135.0 release 数据。
+
+## Runtime Artifacts Policy
+
+- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.

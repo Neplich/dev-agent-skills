@@ -7,7 +7,7 @@ import json
 import re
 import sys
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 
@@ -31,6 +31,28 @@ PATH_LIST_FIELDS = (
     "baseline_skill_outputs",
     "execution_cleanup",
     "run_diagnostics",
+)
+OUTPUT_FIELDS = (
+    "with_skill_outputs",
+    "without_skill_outputs",
+    "baseline_outputs",
+    "baseline_output",
+    "baseline_skill_outputs",
+)
+RUNNER_ONLY_FIELDS = (
+    "execution_cleanup",
+    "run_diagnostics",
+)
+RUNTIME_DIAGNOSTIC_DIRS = (
+    "diagnostics",
+)
+RUNTIME_DIAGNOSTIC_FILES = (
+    "transcript.md",
+    "candidate-output.md",
+    "subagent-verdict.md",
+    "comparison.auto.md",
+    "timing.json",
+    "run_status.json",
 )
 
 
@@ -110,6 +132,23 @@ def flatten_path_specs(value: Any) -> list[str] | None:
     return None
 
 
+def has_non_empty_output_paths(metadata: dict[str, Any]) -> bool:
+    for field in OUTPUT_FIELDS:
+        if field not in metadata:
+            continue
+        paths = flatten_path_specs(metadata[field])
+        if paths is not None and any(path.strip() for path in paths):
+            return True
+    return False
+
+
+def is_runtime_diagnostic_path(value: str) -> bool:
+    parts = PurePosixPath(value).parts
+    return any(part in RUNTIME_DIAGNOSTIC_DIRS for part in parts) or any(
+        part in RUNTIME_DIAGNOSTIC_FILES for part in parts
+    )
+
+
 def validate_paths_stay_in_workspace(
     metadata_path: Path,
     workspace_root: Path,
@@ -130,6 +169,33 @@ def validate_paths_stay_in_workspace(
         target = (workspace_root / rel).resolve()
         if target != workspace_root and workspace_root not in target.parents:
             add_error(errors, metadata_path, f"{field} escapes eval workspace: {rel!r}")
+        if is_runtime_diagnostic_path(rel):
+            add_error(
+                errors,
+                metadata_path,
+                f"{field} must not reference runtime diagnostic output {rel!r}",
+            )
+
+
+def validate_metadata_assertion_targets(
+    metadata_path: Path,
+    workspace_root: Path,
+    metadata: dict[str, Any],
+    errors: list[ContractError],
+) -> None:
+    assertions = metadata.get("assertions", [])
+    if not isinstance(assertions, list):
+        return
+
+    for index, assertion in enumerate(assertions):
+        if isinstance(assertion, dict) and "target" in assertion:
+            validate_paths_stay_in_workspace(
+                metadata_path,
+                workspace_root,
+                f"assertions[{index}].target",
+                assertion["target"],
+                errors,
+            )
 
 
 def validate_metadata(
@@ -161,6 +227,9 @@ def validate_metadata(
     if metadata.get("eval_id") != eval_id:
         add_error(errors, metadata_path, f"eval_id must match evals.json id {eval_id!r}")
 
+    if "validation_method" in metadata:
+        add_error(errors, metadata_path, "validation_method must not be committed in eval metadata")
+
     metadata_workspace_root = metadata.get("workspace_root")
     if metadata_workspace_root is not None:
         if not isinstance(metadata_workspace_root, str) or not is_safe_relative_path(metadata_workspace_root):
@@ -179,6 +248,17 @@ def validate_metadata(
                 metadata[field],
                 errors,
             )
+
+    validate_metadata_assertion_targets(metadata_path, workspace_root, metadata, errors)
+
+    if not has_non_empty_output_paths(metadata):
+        for field in RUNNER_ONLY_FIELDS:
+            if field in metadata:
+                add_error(
+                    errors,
+                    metadata_path,
+                    f"{field} requires deterministic runner outputs",
+                )
 
 
 def validate_assertions(
@@ -243,15 +323,14 @@ def validate_eval_item(
         add_error(errors, path, f"evals[{eval_index}].workspace must be present")
     else:
         workspace = item["workspace"]
-        if workspace is not None:
-            if not non_empty_string(workspace) or not workspace.startswith("workspace/"):
-                add_error(
-                    errors,
-                    path,
-                    f"evals[{eval_index}].workspace must be null or start with workspace/",
-                )
-            elif not ((skill_test_dir / workspace).exists() or (path.parent / workspace).exists()):
-                add_error(errors, path, f"evals[{eval_index}].workspace does not exist: {workspace}")
+        if not non_empty_string(workspace) or not workspace.startswith("workspace/"):
+            add_error(
+                errors,
+                path,
+                f"evals[{eval_index}].workspace must be a non-empty string starting with workspace/",
+            )
+        elif not ((skill_test_dir / workspace).exists() or (path.parent / workspace).exists()):
+            add_error(errors, path, f"evals[{eval_index}].workspace does not exist: {workspace}")
 
     validate_assertions(path, eval_index, item.get("assertions"), errors)
     validate_metadata(path, skill_test_dir, eval_index, item, errors)

@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-002-ecommerce",
+  "eval_name": "E-commerce Product Page",
+  "workspace_root": "agents/designer/test/ui-ux-design/evals/workspace/eval-002-ecommerce",
+  "skill_availability_goal": "Design UI/UX for an e-commerce product listing and detail pages",
+  "prompt": "Design the UI/UX for an e-commerce site selling handmade crafts. Need product listing, filters, product detail page, and shopping cart. Target: mobile-first design."
+}

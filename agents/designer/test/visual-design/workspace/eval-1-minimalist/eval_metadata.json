@@ -11,7 +11,6 @@
   ],
   "execution_cleanup": [
     "with_skill",
-    "without_skill",
-    "diagnostics"
+    "without_skill"
   ]
 }

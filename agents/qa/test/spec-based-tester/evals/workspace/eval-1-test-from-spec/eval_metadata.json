@@ -2,7 +2,6 @@
   "eval_id": "eval-001-test-from-spec",
   "eval_name": "test-from-spec",
   "workspace_root": "agents/qa/test/spec-based-tester/evals/workspace/eval-1-test-from-spec",
-  "validation_method": "fresh_codex_subagent",
   "skill_availability_goal": "Verify that spec-based-tester reads documented test context before selecting an execution path.",
   "prompt": "根据 docs/test-spec.md 执行规范测试",
   "fixture_context": [
@@ -10,19 +9,5 @@
     "docs/prd.md",
     "docs/trd.md",
     "package.json"
-  ],
-  "with_skill_outputs": [
-    "with_skill/outputs/subagent-verdict.md"
-  ],
-  "without_skill_outputs": [
-    "without_skill/outputs/subagent-verdict.md"
-  ],
-  "run_diagnostics": [
-    "diagnostics/run.json"
-  ],
-  "execution_cleanup": [
-    "with_skill/outputs",
-    "without_skill/outputs",
-    "diagnostics"
   ]
 }

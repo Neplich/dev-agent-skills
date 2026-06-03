@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-002-repair-plan-confirmation-gate",
+  "eval_name": "repair-plan-confirmation-gate",
+  "workspace_root": "agents/engineer/test/debugger/evals/workspace/eval-002-repair-plan-confirmation-gate",
+  "skill_availability_goal": "Verifies that debugger writes a repair implementation plan only after the user asks for it, then waits for plan confirmation before fixing.",
+  "prompt": "test/api/notifications.test.ts 的失败已经复现，根因确认是 notification status 没有处理 archived。请基于这个根因产出修复实施计划，但先不要改代码。"
+}

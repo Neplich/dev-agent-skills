@@ -169,8 +169,8 @@ class QaRunEvalTests(unittest.TestCase):
   "workspace_root": "workspace/eval-001-cleanup",
   "prompt": "cleanup",
   "fixture_context": ["docs/qa/profile-settings/"],
-  "with_skill_outputs": ["with_skill/outputs/subagent-verdict.md"],
-  "without_skill_outputs": ["without_skill/outputs/subagent-verdict.md"],
+  "with_skill_outputs": ["docs/qa/profile-settings/TEST_SPEC.md"],
+  "without_skill_outputs": ["docs/qa/profile-settings/test-cases/TC-001-new.md"],
   "execution_cleanup": [
     "docs/qa/profile-settings/TEST_SPEC.md",
     "docs/qa/profile-settings/test-cases/TC-*.md",
@@ -201,6 +201,68 @@ class QaRunEvalTests(unittest.TestCase):
             self.assertFalse((runtime_workspace / "docs/qa/profile-settings/test-cases/TC-001-old.md").exists())
             self.assertFalse((runtime_workspace / "with_skill/outputs").exists())
             self.assertTrue((eval_root / "docs/qa/profile-settings/TEST_SPEC.md").exists())
+
+    def test_main_skips_metadata_without_deterministic_outputs(self):
+        run_eval = load_run_eval_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            skill_root = root / "qa-agent"
+            eval_root = skill_root / "evals/workspace/eval-001-no-output"
+            eval_root.mkdir(parents=True)
+            (skill_root / "evals/evals.json").write_text(
+                """{
+  "schema_version": "1.0",
+  "agent": "qa",
+  "skill_name": "qa-agent",
+  "evals": [
+    {
+      "id": "eval-001-no-output",
+      "name": "no-output",
+      "description": "no-output",
+      "prompt": "no-output",
+      "workspace": "workspace/eval-001-no-output",
+      "expected_output": "no-output",
+      "assertions": [{"id": "no_output", "description": "no-output", "text": "no-output"}]
+    }
+  ]
+}
+"""
+            )
+            metadata = eval_root / "eval_metadata.json"
+            metadata.write_text(
+                """{
+  "eval_id": "eval-001-no-output",
+  "eval_name": "no-output",
+  "workspace_root": "workspace/eval-001-no-output",
+  "prompt": "no-output",
+  "fixture_context": []
+}
+"""
+            )
+
+            old_argv = sys.argv
+            old_output_dir = os.environ.get("EVAL_RUN_OUTPUT_DIR")
+            os.environ["EVAL_RUN_OUTPUT_DIR"] = str(root / "runs")
+            sys.argv = ["run_eval.py", str(metadata)]
+            try:
+                result = run_eval.main()
+            finally:
+                sys.argv = old_argv
+                if old_output_dir is None:
+                    os.environ.pop("EVAL_RUN_OUTPUT_DIR", None)
+                else:
+                    os.environ["EVAL_RUN_OUTPUT_DIR"] = old_output_dir
+
+            self.assertEqual(result, 0)
+            reports = list((root / "runs").rglob("comparison.auto.md"))
+            self.assertEqual(len(reports), 1)
+            report = reports[0].read_text()
+            self.assertIn(
+                "[SKIP] This QA eval has no deterministic QA or E2E output",
+                report,
+            )
+            self.assertIn("fresh subagent validation", report)
 
 
 if __name__ == "__main__":

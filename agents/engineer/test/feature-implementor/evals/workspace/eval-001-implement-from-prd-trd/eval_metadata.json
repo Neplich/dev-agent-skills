@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-001-implement-from-prd-trd",
+  "eval_name": "implement-from-prd-trd",
+  "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd",
+  "skill_availability_goal": "Verifies that feature-implementor handles implement-from-prd-trd by producing an implementation plan and waiting for confirmation before coding.",
+  "prompt": "根据 docs/pm/notification-center/PRD.md 和 docs/engineer/notification-center/TRD.md 实现用户通知功能"
+}

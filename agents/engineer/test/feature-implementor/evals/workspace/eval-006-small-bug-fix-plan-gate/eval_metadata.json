@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-006-small-bug-fix-plan-gate",
+  "eval_name": "small-bug-fix-plan-gate",
+  "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-006-small-bug-fix-plan-gate",
+  "skill_availability_goal": "Verifies that a small spec-backed bug fix routed into feature-implementor still writes an implementation plan and waits for confirmation.",
+  "prompt": "debugger 已确认通知中心 active 列表没有排除 archived 是实现偏离 PRD/TRD，不是需求变更；根因是 src/api/notifications.ts 的过滤条件少了 archived。现在请进入 feature-implementor 落地这个单文件小 bug fix，但先不要改代码。"
+}

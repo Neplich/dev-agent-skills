@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-001-positioning-gap-brief",
+  "eval_name": "positioning-gap-brief",
+  "workspace_root": "agents/product_manager/test/competitive-brief/evals/workspace/eval-001-positioning-gap-brief",
+  "skill_availability_goal": "Verifies that competitive-brief produces a structured positioning brief with evidence boundaries.",
+  "prompt": "请对 Linear 和 Jira 做一份竞品 brief，重点比较项目协作场景里的定位、目标用户、关键卖点和我们可以切入的 messaging gap。"
+}

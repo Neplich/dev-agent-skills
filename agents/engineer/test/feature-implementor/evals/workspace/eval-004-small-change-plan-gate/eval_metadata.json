@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-004-small-change-plan-gate",
+  "eval_name": "small-change-plan-gate",
+  "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-004-small-change-plan-gate",
+  "skill_availability_goal": "Verifies that a small single-file implementation still confirms PRD alignment, produces an implementation plan, records the sub-agent split decision, and waits for confirmation.",
+  "prompt": "docs/pm/settings-label/PRD.md 和 docs/engineer/settings-label/TRD.md 已确认。请把设置页按钮文案从「保存」改成「保存设置」，这是一个单文件小改动。请进入 feature-implementor。"
+}

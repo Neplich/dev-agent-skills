@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-001-unreleased-mode",
+  "eval_name": "unreleased-mode",
+  "workspace_root": "agents/product_manager/test/changelog-generator/evals/workspace/eval-001-unreleased-mode",
+  "skill_availability_goal": "Verifies that changelog-generator handles unreleased-mode and produces the expected role-specific artifact.",
+  "prompt": "我在 https://github.com/anthropics/anthropic-sdk-python 这个仓库里工作。帮我生成 Unreleased 章节 —— 也就是最新 release tag 之后合并的所有 PR，写成 Keep a Changelog 格式，输出到 docs/changelog/changelog-unreleased.md。"
+}

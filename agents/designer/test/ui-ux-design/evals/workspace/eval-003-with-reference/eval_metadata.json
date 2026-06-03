@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-003-with-reference",
+  "eval_name": "Design with Reference Website",
+  "workspace_root": "agents/designer/test/ui-ux-design/evals/workspace/eval-003-with-reference",
+  "skill_availability_goal": "Design UI/UX using a reference website for style inspiration",
+  "prompt": "Design a landing page for a productivity app. Reference website: https://linear.app for clean, modern aesthetic."
+}

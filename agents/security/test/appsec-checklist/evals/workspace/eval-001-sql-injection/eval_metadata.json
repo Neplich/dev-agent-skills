@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-001-sql-injection",
+  "eval_name": "SQL Injection Vulnerability",
+  "workspace_root": "agents/security/test/appsec-checklist/evals/workspace/eval-001-sql-injection",
+  "skill_availability_goal": "Test detection of SQL injection vulnerability in user search",
+  "prompt": "Review the security of this user search API endpoint."
+}

@@ -25,6 +25,13 @@ from scripts.eval_runtime import (
 
 DEFAULT_TIMEOUT_SECONDS = 180
 DEFAULT_MODEL = "gpt-5.4-mini"
+OUTPUT_FIELDS = (
+    "with_skill_outputs",
+    "without_skill_outputs",
+    "baseline_outputs",
+    "baseline_output",
+    "baseline_skill_outputs",
+)
 
 SKILL_PATHS = {
     "qa-agent": "agents/qa/skills/qa-agent/SKILL.md",
@@ -245,10 +252,11 @@ def candidate_path(defn: EvalDefinition, label: str) -> Path:
 
 
 def verdict_path(defn: EvalDefinition, label: str) -> Path:
-    outputs = defn.metadata.get(f"{label}_outputs", [])
-    if outputs and isinstance(outputs[0], str):
-        return defn.runtime_root / outputs[0]
     return defn.runtime_root / label / "outputs/subagent-verdict.md"
+
+
+def has_deterministic_outputs(defn: EvalDefinition) -> bool:
+    return any(defn.metadata.get(field) for field in OUTPUT_FIELDS)
 
 
 def parse_overall(text: str) -> str:
@@ -354,6 +362,26 @@ def render_report(defn: EvalDefinition, results: list[dict]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def render_not_applicable_report(defn: EvalDefinition) -> str:
+    lines = [
+        f"# Eval {defn.metadata['eval_id']}: {defn.metadata['eval_name']}",
+        "",
+        "## Prompt",
+        "",
+        defn.metadata["prompt"],
+        "",
+        "## Runner Status",
+        "",
+        "- [SKIP] This QA eval has no deterministic QA or E2E output declared in metadata.",
+        "- Run fresh subagent validation separately, then update the durable `comparison.md`.",
+        "",
+        "## Runtime Artifact Policy",
+        "",
+        "- Judge verdicts are runtime diagnostics and are not metadata outputs.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def run_eval(
     metadata_path: Path | str,
     *,
@@ -361,6 +389,13 @@ def run_eval(
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
 ) -> tuple[EvalDefinition, list[dict]]:
     defn = load_eval_definition(metadata_path)
+
+    if not has_deterministic_outputs(defn):
+        reset_directory(defn.runtime_root)
+        (defn.runtime_root / "comparison.auto.md").write_text(
+            render_not_applicable_report(defn)
+        )
+        return defn, []
 
     if not skip_generate:
         clean_outputs(defn)
@@ -401,6 +436,9 @@ def main() -> int:
     defn, results = run_eval(sys.argv[1], skip_generate=skip_generate)
     report_path = defn.runtime_root / "comparison.auto.md"
     print(display_path(report_path))
+
+    if not results:
+        return 0
 
     by_label = {result["label"]: result for result in results}
     with_result = by_label["with_skill"]

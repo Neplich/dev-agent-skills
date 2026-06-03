@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-002-python-api-only",
+  "eval_name": "python-api-only",
+  "workspace_root": "agents/devops/test/deployment-planner/evals/workspace/eval-002-python-api-only",
+  "skill_availability_goal": "Verifies that deployment-planner handles python-api-only and produces the expected role-specific artifact.",
+  "prompt": "我有一个 FastAPI 项目，只需要 API 服务，不需要数据库。生成部署配置。"
+}

@@ -1,29 +1,45 @@
-# Eval Result: idea-to-spec-pm-agent-direct-delegation
+# Eval Result: eval-005-pm-agent-direct-delegation
 
 ## Evaluation Target
 
+- Agent: `product_manager`
 - Skill: `idea-to-spec`
+- Eval: `eval-005-pm-agent-direct-delegation`
 - Test case: pm-agent-direct-delegation
-- Test set: idea-to-spec eval workspace
-- Entry: workspace `iteration-2/eval-5-pm-agent-direct-delegation`
-- Latest result: PASS
+- Workspace: `workspace/iteration-2/eval-5-pm-agent-direct-delegation`
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+
+## Test Set / Fixture Version
+
+- Schema: `evals.json` v1.0
+- Fixture: Verifies that idea-to-spec handles pm-agent-direct-delegation and produces the expected role-specific artifact.
+- Expected output: 通过 pm-agent 入口先识别为 PM-first 的新产品需求，再直接继续进入 idea-to-spec 的上下文摘要与需求收敛流程；不会停在'推荐技能'或'是否需要我帮你唤起'这类 dispatcher 元回答。
+
+## Assertions
+
+- `dispatcher`: 入口 dispatcher 直接下钻
+- `skill`: 不反问是否调用子 skill
+- `pm`: 进入 PM 流程
 
 ## With Skill
 
-- Handles the `/pm-agent` entry as a direct PM-first delegation path.
-- Continues into context summary and requirement shaping instead of stopping at dispatcher narration.
-- Avoids asking the user to manually invoke the downstream skill.
+Observed behavior:
 
-## Baseline
+- 当前 pm-agent downstream contract 要求路由到 idea-to-spec 后同轮继续 Phase 0 与需求收敛，不停在 dispatcher 说明，也不反问是否调用子 skill。
 
-- More likely to stay at routing advice or generic product brainstorming.
-- Provides weaker continuity into the idea-to-spec protocol.
+## Without Skill / Baseline
+
+- Baseline behavior is diagnostic only.
+- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures
 
-- None recorded.
+- None found in fresh Codex subagent validation.
 
 ## Next Steps
 
-- Keep this eval for dispatcher-to-specialist delegation behavior.
-- Runtime transcripts, verdicts, timing, and diagnostics should not be committed.
+- 保留该 eval 防止 dispatcher 只做元回答。
+
+## Runtime Artifacts Policy
+
+- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.

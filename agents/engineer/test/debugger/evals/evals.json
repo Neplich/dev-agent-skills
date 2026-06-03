@@ -43,7 +43,7 @@
       "name": "repair-plan-confirmation-gate",
       "description": "Verifies that debugger writes a repair implementation plan only after the user asks for it, then waits for plan confirmation before fixing.",
       "prompt": "test/api/notifications.test.ts 的失败已经复现，根因确认是 notification status 没有处理 archived。请基于这个根因产出修复实施计划，但先不要改代码。",
-      "workspace": null,
+      "workspace": "workspace/eval-002-repair-plan-confirmation-gate",
       "expected_output": "修复实施计划 + 文件范围 + 验证命令 + sub-agent 拆分判断 + 等待用户确认，不直接修复",
       "assertions": [
         {
@@ -73,7 +73,7 @@
       "name": "bug-report-conflicts-with-prd",
       "description": "Verifies that debugger hands off to PM when a reported bug is actually a request to change approved PRD/TRD behavior.",
       "prompt": "用户说：通知中心 active 列表没有显示 archived 通知，这是个 bug，请直接修一下。现有 docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都写着 active 列表排除 archived。",
-      "workspace": null,
+      "workspace": "workspace/eval-003-bug-report-conflicts-with-prd",
       "expected_output": "识别用户期望与 PRD/TRD 冲突，停止修复路径，交回 pm-agent:idea-to-spec existing-project-update 更新 PRD 或产品决策记录并同步 TRD，不产出修复计划或代码改动。",
       "assertions": [
         {
