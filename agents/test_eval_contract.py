@@ -143,14 +143,14 @@ class EvalContractTests(unittest.TestCase):
         self.assertIn("validation_method must not be committed", rendered)
         self.assertIn("must not reference runtime diagnostic output", rendered)
 
-    def test_eval_contract_rejects_transcript_metadata_outputs(self):
+    def test_eval_contract_rejects_transcript_metadata_assertion_targets(self):
         checker = load_checker_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
             skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
-            workspace = evals_path.parent / "workspace/eval-001-transcript-output"
+            workspace = evals_path.parent / "workspace/eval-001-transcript-target"
             workspace.mkdir(parents=True)
             skill_doc.parent.mkdir(parents=True)
             skill_doc.write_text("# Debugger\n")
@@ -158,11 +158,8 @@ class EvalContractTests(unittest.TestCase):
             (workspace / "eval_metadata.json").write_text(
                 json.dumps(
                     {
-                        "eval_id": "eval-001-transcript-output",
-                        "eval_name": "transcript-output",
-                        "with_skill_outputs": [
-                            "with_skill/outputs/transcript.md"
-                        ],
+                        "eval_id": "eval-001-transcript-target",
+                        "eval_name": "transcript-target",
                         "assertions": [
                             {
                                 "id": "has_transcript_text",
@@ -182,11 +179,11 @@ class EvalContractTests(unittest.TestCase):
                         "skill_name": "debugger",
                         "evals": [
                             {
-                                "id": "eval-001-transcript-output",
-                                "name": "transcript-output",
-                                "description": "Invalid transcript output",
+                                "id": "eval-001-transcript-target",
+                                "name": "transcript-target",
+                                "description": "Invalid transcript target",
                                 "prompt": "Run the eval",
-                                "workspace": "workspace/eval-001-transcript-output",
+                                "workspace": "workspace/eval-001-transcript-target",
                                 "expected_output": "A result",
                                 "assertions": [
                                     {
@@ -206,6 +203,65 @@ class EvalContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("must not reference runtime diagnostic output", rendered)
         self.assertIn("with_skill/outputs/transcript.md", rendered)
+
+    def test_eval_contract_rejects_runtime_artifact_metadata_paths(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
+            skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
+            workspace = evals_path.parent / "workspace/eval-001-runtime-artifacts"
+            workspace.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            skill_doc.write_text("# Debugger\n")
+            (workspace / "comparison.md").write_text("# Comparison\n")
+            (workspace / "eval_metadata.json").write_text(
+                json.dumps(
+                    {
+                        "eval_id": "eval-001-runtime-artifacts",
+                        "eval_name": "runtime-artifacts",
+                        "with_skill_outputs": [
+                            "with_skill/outputs/candidate-output.md",
+                            "with_skill/outputs/run_status.json",
+                        ],
+                        "run_diagnostics": ["diagnostics/run.json"],
+                    }
+                )
+            )
+            evals_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "1.0",
+                        "agent": "engineer",
+                        "skill_name": "debugger",
+                        "evals": [
+                            {
+                                "id": "eval-001-runtime-artifacts",
+                                "name": "runtime-artifacts",
+                                "description": "Invalid runtime artifact outputs",
+                                "prompt": "Run the eval",
+                                "workspace": "workspace/eval-001-runtime-artifacts",
+                                "expected_output": "A result",
+                                "assertions": [
+                                    {
+                                        "id": "has_result",
+                                        "description": "Has a result",
+                                        "text": "Result is present",
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("with_skill/outputs/candidate-output.md", rendered)
+        self.assertIn("with_skill/outputs/run_status.json", rendered)
+        self.assertIn("diagnostics/run.json", rendered)
 
     def test_eval_contract_rejects_runner_diagnostics_with_empty_outputs(self):
         checker = load_checker_module()

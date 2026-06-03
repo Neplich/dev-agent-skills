@@ -44,8 +44,13 @@ RUNNER_ONLY_FIELDS = (
     "run_diagnostics",
 )
 RUNTIME_DIAGNOSTIC_OUTPUTS = (
+    "diagnostics/",
     "transcript.md",
+    "candidate-output.md",
     "subagent-verdict.md",
+    "comparison.auto.md",
+    "timing.json",
+    "run_status.json",
 )
 
 
@@ -163,6 +168,27 @@ def validate_paths_stay_in_workspace(
             )
 
 
+def validate_metadata_assertion_targets(
+    metadata_path: Path,
+    workspace_root: Path,
+    metadata: dict[str, Any],
+    errors: list[ContractError],
+) -> None:
+    assertions = metadata.get("assertions", [])
+    if not isinstance(assertions, list):
+        return
+
+    for index, assertion in enumerate(assertions):
+        if isinstance(assertion, dict) and "target" in assertion:
+            validate_paths_stay_in_workspace(
+                metadata_path,
+                workspace_root,
+                f"assertions[{index}].target",
+                assertion["target"],
+                errors,
+            )
+
+
 def validate_metadata(
     evals_path: Path,
     skill_test_dir: Path,
@@ -213,6 +239,8 @@ def validate_metadata(
                 metadata[field],
                 errors,
             )
+
+    validate_metadata_assertion_targets(metadata_path, workspace_root, metadata, errors)
 
     if not has_non_empty_output_paths(metadata):
         for field in RUNNER_ONLY_FIELDS:

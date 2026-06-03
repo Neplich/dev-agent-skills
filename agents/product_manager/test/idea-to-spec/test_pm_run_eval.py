@@ -1,4 +1,6 @@
 import importlib.util
+import os
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -56,6 +58,49 @@ class RunEvalTests(unittest.TestCase):
             )
 
             self.assertEqual(result["status"], "PASS")
+
+    def test_main_skips_no_deterministic_checks_before_generation(self):
+        run_eval = load_run_eval_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            fixture = temp_root / "fixture"
+            fixture.mkdir()
+            metadata = fixture / "eval_metadata.json"
+            metadata.write_text(
+                """{
+  "eval_id": "eval-001-no-deterministic-checks",
+  "eval_name": "no-deterministic-checks",
+  "prompt": "Check metadata with no deterministic runner flow."
+}
+"""
+            )
+
+            def fail_generate(_metadata_path):
+                raise AssertionError("generate_eval_outputs should not run")
+
+            old_generate = run_eval.generate_eval_outputs
+            old_argv = sys.argv
+            old_output_dir = os.environ.get("EVAL_RUN_OUTPUT_DIR")
+            run_eval.generate_eval_outputs = fail_generate
+            os.environ["EVAL_RUN_OUTPUT_DIR"] = str(temp_root / "runs")
+            sys.argv = ["run_eval.py", str(metadata)]
+            try:
+                result = run_eval.main()
+            finally:
+                run_eval.generate_eval_outputs = old_generate
+                sys.argv = old_argv
+                if old_output_dir is None:
+                    os.environ.pop("EVAL_RUN_OUTPUT_DIR", None)
+                else:
+                    os.environ["EVAL_RUN_OUTPUT_DIR"] = old_output_dir
+
+            self.assertEqual(result, 0)
+            reports = list((temp_root / "runs").rglob("comparison.auto.md"))
+            self.assertEqual(len(reports), 1)
+            report = reports[0].read_text()
+            self.assertIn("[SKIP] This eval has no deterministic outputs", report)
+            self.assertIn("fresh subagent validation", report)
 
 
 if __name__ == "__main__":
