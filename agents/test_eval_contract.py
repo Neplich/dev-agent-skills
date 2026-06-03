@@ -222,10 +222,11 @@ class EvalContractTests(unittest.TestCase):
                         "eval_id": "eval-001-runtime-artifacts",
                         "eval_name": "runtime-artifacts",
                         "with_skill_outputs": [
+                            "diagnostics",
                             "with_skill/outputs/candidate-output.md",
                             "with_skill/outputs/run_status.json",
                         ],
-                        "run_diagnostics": ["diagnostics/run.json"],
+                        "run_diagnostics": ["diagnostics"],
                     }
                 )
             )
@@ -261,7 +262,7 @@ class EvalContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("with_skill/outputs/candidate-output.md", rendered)
         self.assertIn("with_skill/outputs/run_status.json", rendered)
-        self.assertIn("diagnostics/run.json", rendered)
+        self.assertIn("diagnostics", rendered)
 
     def test_eval_contract_rejects_runner_diagnostics_with_empty_outputs(self):
         checker = load_checker_module()

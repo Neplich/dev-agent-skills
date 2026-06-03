@@ -7,7 +7,7 @@ import json
 import re
 import sys
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 
@@ -43,8 +43,10 @@ RUNNER_ONLY_FIELDS = (
     "execution_cleanup",
     "run_diagnostics",
 )
-RUNTIME_DIAGNOSTIC_OUTPUTS = (
-    "diagnostics/",
+RUNTIME_DIAGNOSTIC_DIRS = (
+    "diagnostics",
+)
+RUNTIME_DIAGNOSTIC_FILES = (
     "transcript.md",
     "candidate-output.md",
     "subagent-verdict.md",
@@ -140,6 +142,13 @@ def has_non_empty_output_paths(metadata: dict[str, Any]) -> bool:
     return False
 
 
+def is_runtime_diagnostic_path(value: str) -> bool:
+    parts = PurePosixPath(value).parts
+    return any(part in RUNTIME_DIAGNOSTIC_DIRS for part in parts) or any(
+        part in RUNTIME_DIAGNOSTIC_FILES for part in parts
+    )
+
+
 def validate_paths_stay_in_workspace(
     metadata_path: Path,
     workspace_root: Path,
@@ -160,7 +169,7 @@ def validate_paths_stay_in_workspace(
         target = (workspace_root / rel).resolve()
         if target != workspace_root and workspace_root not in target.parents:
             add_error(errors, metadata_path, f"{field} escapes eval workspace: {rel!r}")
-        if any(runtime_output in rel for runtime_output in RUNTIME_DIAGNOSTIC_OUTPUTS):
+        if is_runtime_diagnostic_path(rel):
             add_error(
                 errors,
                 metadata_path,
