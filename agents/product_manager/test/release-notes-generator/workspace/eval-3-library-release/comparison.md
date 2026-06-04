@@ -7,7 +7,7 @@
 - Eval: `eval-003-library-release-notes`
 - Test case: library-release-notes
 - Workspace: `workspace/eval-3-library-release`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04
 
 ## Test Set / Fixture Version
 
@@ -26,7 +26,9 @@
 
 Observed behavior:
 
-- 当前 skill 支持库版本 release notes：What's New、Bug Fixes/Other Improvements、升级命令、PR 链接、用户视角语气和可选无 breaking 说明均被协议覆盖。
+- 当前 skill 继续支持库版本 release notes：feature/fix/upgrade 分组、升级命令、PR 链接、用户视角语气和可选无 breaking 说明均被协议覆盖。
+- `reference/release-outline.md` 拆出 release 大纲与格式规则，确保 `变更明细`、贡献者 mention 和完整变更链接位置稳定。
+- `reference/github-release-workflow.md` 拆出 tag、draft release、changelog preflight 和发布复核流程，不影响库 release notes 的请求产物输出要求。
 
 ## Without Skill / Baseline
 
@@ -35,7 +37,7 @@ Observed behavior:
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- None found in fresh Codex subagent validation on 2026-06-04.
 
 ## Next Steps
 

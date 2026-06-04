@@ -7,7 +7,7 @@
 - Eval: `eval-001-cli-feature-release`
 - Test case: cli-feature-release
 - Workspace: `workspace/eval-1-cli-feature`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04
 
 ## Test Set / Fixture Version
 
@@ -26,7 +26,9 @@
 
 Observed behavior:
 
-- 当前 skill 要求为指定版本生成面向用户的 release notes，突出价值、按功能/修复/breaking 等分组、保留 PR/release 链接，并在用户给定路径时输出目标产物。
+- 当前 skill 通过 `reference/release-outline.md` 保持用户价值导向、分组组织、PR/compare 链接和请求产物输出要求。
+- 新增 release 大纲规范要求沿用仓库既有结构，`变更明细` 使用 `by @user in [#N](PR_URL)`，并把完整变更链接放在变更明细之后。
+- 新增 GitHub release workflow 覆盖 approved draft 发布前的 changelog archive、根 `CHANGELOG.md` 索引、tag 指向、draft 更新、发布和最终状态复核。
 
 ## Without Skill / Baseline
 
@@ -35,7 +37,7 @@ Observed behavior:
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- None found in fresh Codex subagent validation on 2026-06-04.
 
 ## Next Steps
 

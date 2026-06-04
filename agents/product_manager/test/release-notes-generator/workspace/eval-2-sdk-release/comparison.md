@@ -7,7 +7,7 @@
 - Eval: `eval-002-sdk-breaking-changes`
 - Test case: sdk-breaking-changes
 - Workspace: `workspace/eval-2-sdk-release`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04
 
 ## Test Set / Fixture Version
 
@@ -26,7 +26,9 @@
 
 Observed behavior:
 
-- 当前 skill 明确面向技术受众但保持用户价值导向，突出 breaking changes 或说明无 breaking，包含升级命令、关键 PR 链接和版本信息，满足 SDK release notes 断言。
+- 当前 skill 仍要求面向技术受众保持用户价值导向，突出 breaking changes 或说明无破坏性变更，并保留升级指引、关键 PR 链接和版本信息。
+- `reference/release-outline.md` 保留通用 SDK / library release notes 结构，同时要求按仓库既有大纲输出中文 release notes。
+- `reference/github-release-workflow.md` 补充 approved draft 发布前的 changelog、tag 和 draft release 复核流程，不削弱 SDK release notes 的断言。
 
 ## Without Skill / Baseline
 
@@ -35,7 +37,7 @@ Observed behavior:
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- None found in fresh Codex subagent validation on 2026-06-04.
 
 ## Next Steps
 
