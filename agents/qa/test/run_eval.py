@@ -255,8 +255,43 @@ def verdict_path(defn: EvalDefinition, label: str) -> Path:
     return defn.runtime_root / label / "outputs/subagent-verdict.md"
 
 
-def has_deterministic_outputs(defn: EvalDefinition) -> bool:
-    return any(defn.metadata.get(field) for field in OUTPUT_FIELDS)
+def flatten_output_specs(value, *, nested: bool = False) -> list[tuple[str, list[str]]]:
+    if isinstance(value, str):
+        return [(value, [value])]
+    if isinstance(value, list):
+        if nested and all(isinstance(item, str) for item in value):
+            return [(" OR ".join(value), value)]
+
+        specs: list[tuple[str, list[str]]] = []
+        for item in value:
+            specs.extend(flatten_output_specs(item, nested=True))
+        return specs
+
+    raise TypeError(f"Unsupported output spec: {value!r}")
+
+
+def output_exists(defn: EvalDefinition, rel_paths: list[str]) -> bool:
+    for rel_path in rel_paths:
+        target = defn.runtime_workspace_root / rel_path
+        if target.exists() and (target.is_dir() or target.stat().st_size > 0):
+            return True
+    return False
+
+
+def check_declared_outputs(defn: EvalDefinition) -> list[dict]:
+    checks: list[dict] = []
+    for field in OUTPUT_FIELDS:
+        if field not in defn.metadata:
+            continue
+        for rel_spec, rel_paths in flatten_output_specs(defn.metadata[field]):
+            checks.append(
+                {
+                    "field": field,
+                    "path": rel_spec,
+                    "ok": output_exists(defn, rel_paths),
+                }
+            )
+    return checks
 
 
 def parse_overall(text: str) -> str:
@@ -315,7 +350,11 @@ def prepare_runtime_workspace(defn: EvalDefinition) -> None:
     )
 
 
-def render_report(defn: EvalDefinition, results: list[dict]) -> str:
+def render_report(
+    defn: EvalDefinition,
+    results: list[dict],
+    output_results: list[dict],
+) -> str:
     lines = [
         f"# Eval {defn.metadata['eval_id']}: {defn.metadata['eval_name']}",
         "",
@@ -346,6 +385,15 @@ def render_report(defn: EvalDefinition, results: list[dict]) -> str:
         )
         lines.append("")
 
+    if output_results:
+        lines.extend(["## Declared Output Checks", ""])
+        for result in output_results:
+            lines.append(
+                f"- [{'PASS' if result['ok'] else 'FAIL'}] "
+                f"`{result['field']}`: `{result['path']}`"
+            )
+        lines.append("")
+
     lines.extend(["## Expected Assertions", ""])
     for item in defn.eval_item.get("assertions", []):
         lines.append(f"- `{item.get('description', item['id'])}`: {item['text']}")
@@ -362,40 +410,13 @@ def render_report(defn: EvalDefinition, results: list[dict]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def render_not_applicable_report(defn: EvalDefinition) -> str:
-    lines = [
-        f"# Eval {defn.metadata['eval_id']}: {defn.metadata['eval_name']}",
-        "",
-        "## Prompt",
-        "",
-        defn.metadata["prompt"],
-        "",
-        "## Runner Status",
-        "",
-        "- [SKIP] This QA eval has no deterministic QA or E2E output declared in metadata.",
-        "- Run fresh subagent validation separately, then update the durable `comparison.md`.",
-        "",
-        "## Runtime Artifact Policy",
-        "",
-        "- Judge verdicts are runtime diagnostics and are not metadata outputs.",
-    ]
-    return "\n".join(lines) + "\n"
-
-
 def run_eval(
     metadata_path: Path | str,
     *,
     skip_generate: bool = False,
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
-) -> tuple[EvalDefinition, list[dict]]:
+) -> tuple[EvalDefinition, list[dict], list[dict]]:
     defn = load_eval_definition(metadata_path)
-
-    if not has_deterministic_outputs(defn):
-        reset_directory(defn.runtime_root)
-        (defn.runtime_root / "comparison.auto.md").write_text(
-            render_not_applicable_report(defn)
-        )
-        return defn, []
 
     if not skip_generate:
         clean_outputs(defn)
@@ -422,9 +443,10 @@ def run_eval(
                 }
             )
 
-    report = render_report(defn, results)
+    output_results = check_declared_outputs(defn)
+    report = render_report(defn, results, output_results)
     (defn.runtime_root / "comparison.auto.md").write_text(report)
-    return defn, results
+    return defn, results, output_results
 
 
 def main() -> int:
@@ -433,12 +455,9 @@ def main() -> int:
         return 2
 
     skip_generate = "--skip-generate" in sys.argv[2:]
-    defn, results = run_eval(sys.argv[1], skip_generate=skip_generate)
+    defn, results, output_results = run_eval(sys.argv[1], skip_generate=skip_generate)
     report_path = defn.runtime_root / "comparison.auto.md"
     print(display_path(report_path))
-
-    if not results:
-        return 0
 
     by_label = {result["label"]: result for result in results}
     with_result = by_label["with_skill"]
@@ -446,6 +465,7 @@ def main() -> int:
         not with_result["candidate_ok"]
         or not with_result["verdict_ok"]
         or with_result["overall"] != "PASS"
+        or any(not result["ok"] for result in output_results)
     )
     return 1 if failed else 0
 
