@@ -239,9 +239,21 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 
 不要提交 `with_skill/`、`without_skill/`、`baseline/`、`iteration2/`、`outputs/`、`comparison.auto.md`、transcript、candidate output、subagent verdict、timing、run status 或 diagnostics 目录。Eval runner 会把运行期文件写入 `tmp/eval-runs/...` 这类 scratch workspace；这些文件只是临时文件，不应复制回 eval fixture。`with_skill_outputs`、`without_skill_outputs`、baseline outputs 等 metadata 字段只描述 runner 的运行期预期，不代表这些过程文件需要进入 git。手动或定时模型 eval workflow 可以把 transcript、verdict、timing 和 diagnostics 作为短期 CI artifact 上传用于排查，但仓库里长期保留的结果仍然是 `comparison.md`。
 
-每个 `evals.json` 必须位于 `agents/{agent}/test/{skill-name}/evals/evals.json`，并声明 `schema_version: "1.0"`、`agent`、`skill_name` 和非空 `evals`。每个 eval item 必须包含 `id`、`name`、`description`、`prompt`、显式 `workspace`、`expected_output`，以及对象形式的 assertions；assertion 必须包含 lower snake_case `id`、`description` 和语义化 `text`。prompt-only eval 使用 `workspace: null`。修改 eval 定义时运行 `uv run scripts/check_eval_contract.py`。
+每个 `evals.json` 必须位于 `agents/{agent}/test/{skill-name}/evals/evals.json`，并声明 `schema_version: "1.0"`、`agent`、`skill_name` 和非空 `evals`。每个 eval item 必须包含 `id`、`name`、`description`、`prompt`、指向 `workspace/...` 的显式 `workspace`、`expected_output`，以及对象形式的 assertions；assertion 必须包含 lower snake_case `id`、`description` 和语义化 `text`。prompt-only eval 也需要最小 workspace，并包含 `eval_metadata.json` 和 durable `comparison.md`。修改 eval 定义时运行 `uv run scripts/check_eval_contract.py`。
 
 Eval runner 应将运行期文件写入系统临时目录或 `tmp/eval-runs/...`，再只把确认后的 `comparison.md` 同步回 eval workspace。新的 metadata schema 应显式区分 runtime output 字段和 durable result 字段。Python 测试文件名需要跨测试目录保持唯一，例如 `test_pm_run_eval.py` 和 `test_qa_run_eval.py`，确保 pytest 能在同一个进程里收集所有确定性测试。
+
+### QA E2E 本地账号文件
+
+QA E2E 凭据使用本地 ignore 账号文件，不提交明文或加密凭据文件：
+
+```text
+.qa/e2e/accounts.local.json
+```
+
+该文件已由 `.gitignore` 屏蔽。QA 文档、测试用例、脚本、结果和 eval fixture 只能引用账号 ID，例如 `platform.default.admin` 或 `ssh.default.deploy`；不得写入真实用户名、密码、token、cookie、session、SSH 密码、SSH key 内容或 passphrase。
+
+QA Agent 收到用户提供的平台账号、平台密码、SSH 账号、SSH 密码或 SSH key 路径时，应按 [`e2e-credential-store.md`](./agents/qa/skills/qa-agent/references/e2e-credential-store.md) 自动 upsert 到 `.qa/e2e/accounts.local.json`，并在本地环境允许时设置仅当前用户可读写。E2E 汇总报告必须遵循 [`e2e-test-report.md`](./agents/qa/skills/qa-agent/references/e2e-test-report.md) 的固定格式。
 
 `comparison.md` 使用以下结构：
 

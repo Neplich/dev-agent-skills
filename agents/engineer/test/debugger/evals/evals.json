@@ -6,30 +6,115 @@
     {
       "id": "eval-001-fix-failing-test",
       "name": "fix-failing-test",
-      "description": "Verifies that debugger handles fix-failing-test and produces the expected role-specific artifact.",
+      "description": "Verifies that debugger aligns expected behavior with PRD/TRD, reproduces and analyzes a failing test, then asks whether to produce a repair implementation plan before fixing.",
       "prompt": "测试 test/api/notifications.test.ts 失败了，帮我修复",
-      "workspace": null,
-      "expected_output": "复现 → 根因分析 → 最小修复 → 验证通过",
+      "workspace": "workspace/eval-001-fix-failing-test",
+      "expected_output": "读取 PRD/TRD 确认 active notification 应排除 archived → 复现 → 根因分析 → Bug 分析汇报 → 询问是否产出修复实施计划，不直接修复",
       "assertions": [
         {
-          "id": "assertion_1",
+          "id": "aligns_expected_behavior",
+          "description": "先对齐 PRD/TRD 预期",
+          "text": "输出必须引用 `docs/pm/notifications/PRD.md` 和 `docs/engineer/notifications/TRD.md`，说明 active notifications 应包含 unread/read 并排除 archived。"
+        },
+        {
+          "id": "classifies_requirement_alignment",
+          "description": "分类预期来源",
+          "text": "输出必须在根因分析前区分 implementation_deviation、requirement_change、trd_gap 或 missing_docs；只有实现偏离已批准 PRD/TRD 时才继续修复路径。"
+        },
+        {
+          "id": "reproduces_failure",
           "description": "复现问题",
           "text": "输出包含问题复现步骤和错误信息"
         },
         {
-          "id": "assertion_2",
+          "id": "reports_root_cause",
           "description": "根因分析",
           "text": "输出明确的根因分析，不是猜测"
         },
         {
-          "id": "assertion_3",
-          "description": "最小修复",
-          "text": "修复只改必要的代码，不做额外重构"
+          "id": "asks_for_repair_plan",
+          "description": "询问修复实施计划",
+          "text": "输出必须先给出 Bug 分析汇报，并询问用户是否需要基于根因产出修复实施计划。"
         },
         {
-          "id": "assertion_4",
-          "description": "验证通过",
-          "text": "重新运行测试并确认通过"
+          "id": "blocks_e2e_before_repair_plan",
+          "description": "修复计划前阻断 E2E 更新",
+          "text": "输出必须说明在修复实施计划产出并经用户确认前，不得新增或更新 E2E TC；修复完成后的 E2E 文档补充还需要引用已确认的 IMPLEMENTATION_PLAN.md。"
+        },
+        {
+          "id": "does_not_fix_directly",
+          "description": "不得直接修复",
+          "text": "输出不得声称已经修改代码、更新测试、应用修复或验证修复通过。"
+        }
+      ]
+    },
+    {
+      "id": "eval-002-repair-plan-confirmation-gate",
+      "name": "repair-plan-confirmation-gate",
+      "description": "Verifies that debugger writes a repair implementation plan only after the user asks for it, then waits for plan confirmation before fixing.",
+      "prompt": "test/api/notifications.test.ts 的失败已经复现，根因确认是 notification status 没有处理 archived。请基于这个根因产出修复实施计划，但先不要改代码。",
+      "workspace": "workspace/eval-002-repair-plan-confirmation-gate",
+      "expected_output": "修复实施计划 + 文件范围 + 验证命令 + sub-agent 拆分判断 + 等待用户确认，不直接修复",
+      "assertions": [
+        {
+          "id": "writes_repair_plan",
+          "description": "产出修复实施计划",
+          "text": "输出必须包含修复实施计划，列出预期修改文件、最小修复思路和验证命令。"
+        },
+        {
+          "id": "records_fix_split_decision",
+          "description": "记录修复分工判断",
+          "text": "输出必须说明本次是否需要 implementation/validation sub-agent split。"
+        },
+        {
+          "id": "waits_for_plan_confirmation",
+          "description": "等待修复计划确认",
+          "text": "输出必须要求用户确认修复实施计划后再开始修复。"
+        },
+        {
+          "id": "e2e_handoff_requires_confirmed_plan",
+          "description": "E2E 交接依赖确认计划",
+          "text": "修复实施计划必须包含后续 QA E2E 文档补充所需的 PRD/TRD 对齐结论、目标文件、验证命令和建议功能目录；计划确认前不得更新 docs/qa/e2e 下的 TC、script 或结果。"
+        },
+        {
+          "id": "does_not_apply_fix",
+          "description": "不得应用修复",
+          "text": "输出不得声称已经修改代码、更新测试或运行修复验证。"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-bug-report-conflicts-with-prd",
+      "name": "bug-report-conflicts-with-prd",
+      "description": "Verifies that debugger hands off to PM when a reported bug is actually a request to change approved PRD/TRD behavior.",
+      "prompt": "用户说：通知中心 active 列表没有显示 archived 通知，这是个 bug，请直接修一下。现有 docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都写着 active 列表排除 archived。",
+      "workspace": "workspace/eval-003-bug-report-conflicts-with-prd",
+      "expected_output": "识别用户期望与 PRD/TRD 冲突，停止修复路径，交回 pm-agent:idea-to-spec existing-project-update 更新 PRD 或产品决策记录并同步 TRD，不产出修复计划或代码改动。",
+      "assertions": [
+        {
+          "id": "detects_prd_conflict",
+          "description": "识别 PRD 冲突",
+          "text": "输出必须说明用户把 archived 加入 active 列表的期望与当前 PRD/TRD 预期冲突。"
+        },
+        {
+          "id": "hands_off_to_pm_update",
+          "description": "交回 PM 更新",
+          "text": "输出必须把下一步交给 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径，先更新 PRD 或产品决策记录，并说明 TRD 需随后同步。"
+        },
+        {
+          "id": "blocks_e2e_when_expectation_changes",
+          "description": "需求变化时阻断 E2E",
+          "text": "输出必须说明在 PM 更新 PRD 或产品决策、TRD 同步并确认 IMPLEMENTATION_PLAN 前，不能把 archived 通知进入 active 列表写入 docs/qa/e2e 功能树作为新的验收预期。"
+        },
+        {
+          "id": "does_not_produce_repair_plan",
+          "description": "不进入修复计划",
+          "text": "输出不得产出修复实施计划、修改代码、更新测试或声称已修复。"
+        },
+        {
+          "id": "blocks_explicit_skip_override",
+          "description": "显式跳过也不能继续",
+          "text": "输出必须说明用户要求跳过 PRD 对齐也不能直接按 bug 修复路径执行；只能记录为 blocker 或风险，等待 PRD/TRD 对齐完成。"
         }
       ]
     }

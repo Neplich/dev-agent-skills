@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-001-interactive-battlecard",
+  "eval_name": "interactive-battlecard",
+  "workspace_root": "agents/product_manager/test/competitive-intelligence/evals/workspace/eval-001-interactive-battlecard",
+  "skill_availability_goal": "Verifies that competitive-intelligence creates an evidence-aware interactive battlecard plan.",
+  "prompt": "帮我调研 Notion、Coda、Airtable 三个竞品，输出可用于销售沟通的 battlecard，包含功能对比、定价信号、近期发布和 objection handling。"
+}

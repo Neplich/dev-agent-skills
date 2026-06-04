@@ -8,7 +8,7 @@
       "name": "github-actions-docker",
       "description": "Verifies that cicd-bootstrap handles github-actions-docker and produces the expected role-specific artifact.",
       "prompt": "我的项目在 GitHub，使用 Docker 部署。帮我搭建 CI/CD 流程：PR 时运行测试，main 分支合并后自动部署到 staging。",
-      "workspace": null,
+      "workspace": "workspace/eval-001-github-actions-docker",
       "expected_output": "生成 GitHub Actions workflows，包含 CI 和 staging 部署",
       "assertions": [
         {

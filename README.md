@@ -239,9 +239,31 @@ When adding or updating a skill eval, keep the repository as the source of eval 
 
 Do not commit `with_skill/`, `without_skill/`, `baseline/`, `iteration2/`, `outputs/`, `comparison.auto.md`, transcripts, candidate outputs, subagent verdicts, timing files, run status files, or diagnostics directories. Eval runners write runtime files under scratch workspaces such as `tmp/eval-runs/...`; these files are temporary and must not be copied into eval fixtures. Metadata fields such as `with_skill_outputs`, `without_skill_outputs`, and baseline outputs describe runner expectations; they do not mean those runtime files belong in git. Manual or scheduled model eval workflows may upload transcripts, verdicts, timing, and diagnostics as short-lived CI artifacts for debugging, but the durable repository result remains `comparison.md`.
 
-Every `evals.json` must live at `agents/{agent}/test/{skill-name}/evals/evals.json` and declare `schema_version: "1.0"`, `agent`, `skill_name`, and non-empty `evals`. Each eval item must include `id`, `name`, `description`, `prompt`, explicit `workspace`, `expected_output`, and object assertions with lower snake_case `id`, `description`, and semantic `text`. Use `workspace: null` for prompt-only evals. Run `uv run scripts/check_eval_contract.py` with eval definition changes.
+Every `evals.json` must live at `agents/{agent}/test/{skill-name}/evals/evals.json` and declare `schema_version: "1.0"`, `agent`, `skill_name`, and non-empty `evals`. Each eval item must include `id`, `name`, `description`, `prompt`, explicit `workspace` pointing to `workspace/...`, `expected_output`, and object assertions with lower snake_case `id`, `description`, and semantic `text`. Prompt-only evals still need a minimal workspace with `eval_metadata.json` and durable `comparison.md`. Run `uv run scripts/check_eval_contract.py` with eval definition changes.
 
 Eval runners write runtime files to a system temp directory or `tmp/eval-runs/...`, then copy only the confirmed `comparison.md` back to the eval workspace. New metadata schemas should make the split explicit with runtime-output fields and a durable-result field. Keep Python test module names unique across test roots, such as `test_pm_run_eval.py` and `test_qa_run_eval.py`, so pytest can collect all deterministic tests in one process.
+
+### QA E2E Local Account File
+
+QA E2E credentials use a local ignored account file instead of committed
+plaintext or encrypted credential files:
+
+```text
+.qa/e2e/accounts.local.json
+```
+
+The file is excluded by `.gitignore`. QA documents, test cases, scripts,
+results, and eval fixtures may only reference credential IDs such as
+`platform.default.admin` or `ssh.default.deploy`; they must not include real
+usernames, passwords, tokens, cookies, sessions, SSH passwords, SSH key
+contents, or passphrases.
+
+When a QA agent receives platform or SSH credential details from a user, it
+should upsert them into `.qa/e2e/accounts.local.json` according to
+[`e2e-credential-store.md`](./agents/qa/skills/qa-agent/references/e2e-credential-store.md)
+and keep file permissions local-only when possible. E2E summary reports must
+follow
+[`e2e-test-report.md`](./agents/qa/skills/qa-agent/references/e2e-test-report.md).
 
 Use this `comparison.md` shape for durable results:
 

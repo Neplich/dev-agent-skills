@@ -1,42 +1,45 @@
-# Eval 4: PM Spec Handoff Stops Before Implementation
+# Eval Result: eval-004-pm-spec-handoff
 
-> This file is the durable eval result. Runtime output files are intentionally not committed.
+## Evaluation Target
 
-## Test Case
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-004-pm-spec-handoff`
+- Test case: PM Spec Handoff Stops Before Implementation
+- Workspace: `workspace/eval-4-pm-spec-handoff`
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
 
-Designer reads a complete PM handoff plus existing UI code context for billing
-notification settings.
+## Test Set / Fixture Version
 
-## With Skill Output
+- Schema: `evals.json` v1.0
+- Fixture: Read existing PM spec and current UI context, then stop at design handoff instead of drifting into implementation
+- Expected output: 读取 PM spec 和现有页面上下文后，产出设计文档并明确停止在 design handoff，不进入工程实现
 
-**Locations**
+## Assertions
 
-- `with_skill/outputs/transcript.md`
-- `with_skill/docs/design/billing-notification-settings/ui-ux-spec.md`
+- `spec`: spec 只作为设计输入
+- `assertion_2`: 完成后交给工程
+- `assertion_3`: 禁止实现漂移
 
-**Observed behavior**
+## With Skill
 
-- ✅ Reads PM spec and existing UI context
-- ✅ Treats PM spec as design input only
-- ✅ Produces a structured UI/UX handoff doc
-- ✅ Explicitly stops at design handoff
-- ✅ Routes implementation to Engineer
+Observed behavior:
 
-## Without Skill Output
+- 当前 SKILL.md 和 Designer README 都说明 PM spec 只能作为设计输入，不授权实现；eval workspace 的 PM/TRD/现有页面上下文支持产出 handoff doc，并明确交给 engineer-agent。
 
-**Location**
+## Without Skill / Baseline
 
-- `without_skill/outputs/transcript.md`
+- Baseline behavior is diagnostic only.
+- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
-**Observed behavior**
+## Failures
 
-- ❌ Treats completed PM spec as enough to start coding
-- ❌ Mentions modifying source files directly
-- ❌ Skips the design deliverable
-- ❌ Drifts into implementation and testing steps
+- None found in fresh Codex subagent validation.
 
-## Conclusion
+## Next Steps
 
-This regression case directly covers the boundary failure we want to prevent:
-Designer must be able to read an already-complete PM spec without turning that
-into implementation work.
+- 保持该 eval 防止 Designer 读取 PM/TRD 后漂移到实现。
+
+## Runtime Artifacts Policy
+
+- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.

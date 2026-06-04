@@ -8,12 +8,28 @@ Execute the implementation plan step by step, writing code that follows project 
 
 ## Input
 
-- Confirmed implementation plan document (from planner)
+- User-confirmed implementation plan document (from planner)
 - Project Profile
 - PM documents for reference
 - Confirmed Engineer TRD for reference
 - For complex coding tasks: implementation sub-agent scope, forbidden areas,
   expected behavior, and verification commands
+
+## Entry Gate
+
+Do not implement unless the main process has already presented the exact
+implementation plan to the user and the user has confirmed it. If the plan is
+missing, has only been drafted, or has not been confirmed, stop and ask for plan
+confirmation. Do not write code, update tests, or apply fixes while waiting.
+
+For existing-feature behavior changes, the confirmed plan must also include the
+PRD alignment result. If the plan says PRD or product decisions must be updated,
+docs are unclear, or TRD is stale, stop and hand back to the owning PM or TRD
+step instead of implementing. When handing back to `trd-gen`, state the TRD gap
+packet: affected components, data flow / API / integration impacts, validation
+commands, release or rollout risks, and error handling, observability, or
+security strategy that the TRD must resolve. The implementor identifies the
+gap; `trd-gen` completes the TRD.
 
 ## Sub-Agent Execution Contract
 

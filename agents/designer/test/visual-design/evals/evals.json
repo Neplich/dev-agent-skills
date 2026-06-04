@@ -53,7 +53,7 @@
       "name": "Professional Design System",
       "description": "Create a professional design system for enterprise software",
       "prompt": "Create a visual design system for an enterprise analytics platform. Target: corporate users, trustworthy and authoritative.",
-      "workspace": null,
+      "workspace": "workspace/eval-003-professional",
       "expected_output": "面向企业软件的专业视觉系统文档，强调可信和可访问性，并在设计交接处停止",
       "assertions": [
         {

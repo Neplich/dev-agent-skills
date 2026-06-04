@@ -16,8 +16,9 @@ date: <YYYY-MM-DD>
 related_prd: <filename or "N/A">
 related_trd: <filename or "N/A">
 related_api: <filename or "N/A">
-case_directory: docs/qa/<feature-name>/test-cases
-file_exploration: docs/qa/<feature-name>/FILE_EXPLORATION.md | "N/A"
+function_tree_directory: docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}
+case_directory: docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases
+flow_index: docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/FLOW_INDEX.md | "N/A"
 ```
 
 ### 2. Test Scope & Objectives
@@ -59,7 +60,7 @@ Each test case must capture:
 | --- | --- |
 | ID | Stable test case ID such as `TC-001` |
 | Title | Short scenario title |
-| Case File | Required for E2E cases, e.g. `test-cases/TC-001-login-success.md` |
+| Case File | Required for E2E cases, e.g. `cases/TC-001-login-success.md` |
 | Requirement Links | Requirement IDs or endpoint references |
 | Priority | P0 / P1 / P2 |
 | Level | Unit / Integration / E2E / Regression / Performance |
@@ -72,12 +73,12 @@ Each test case must capture:
 - **Quality**: Each test case must have Preconditions, Steps, and Expected
   Result.
 - **Quality**: Every E2E test case must have exactly one linked Markdown case
-  file under `docs/qa/<feature-name>/test-cases/`.
+  file under `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/`.
 
 ### E2E Case File Format
 
-Each file in `docs/qa/<feature-name>/test-cases/` must contain exactly one E2E
-case and use the same stable ID as `TEST_SPEC.md`.
+Each file in `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/`
+must contain exactly one E2E case and use the same stable ID as `TEST_SUITE.md`.
 
 ```markdown
 # TC-NNN: <title>
@@ -87,7 +88,7 @@ case and use the same stable ID as `TEST_SPEC.md`.
 - Priority: P0 / P1 / P2
 - Category: Positive / Negative / Boundary / Security / Reliability
 - Requirement Links:
-- Source: PRD / TRD / API / FILE_EXPLORATION / QA exploration
+- Source: PRD / TRD / API / FLOW_INDEX / QA exploration
 
 ## Preconditions
 
@@ -107,7 +108,7 @@ case and use the same stable ID as `TEST_SPEC.md`.
 
 When test cases are derived from source, config, route, fixture, harness, or
 environment file discovery, record the exploration in
-`docs/qa/<feature-name>/FILE_EXPLORATION.md`.
+`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/FLOW_INDEX.md`.
 
 The file must include:
 

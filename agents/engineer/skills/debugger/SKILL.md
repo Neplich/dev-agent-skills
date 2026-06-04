@@ -5,7 +5,10 @@ description: "Reproduce, diagnose, and fix bugs with minimal changes. Use this s
 
 # Debugger
 
-Systematically reproduce, diagnose, and fix bugs. Follows a strict process: reproduce first, then analyze, then fix minimally, then verify.
+Systematically reproduce, diagnose, and fix bugs. Follows a strict process:
+align expected behavior first, reproduce the failure, analyze the root cause,
+report the bug analysis, plan the repair with user confirmation, then fix
+minimally and verify.
 
 ## When to Use
 
@@ -21,17 +24,20 @@ Systematically reproduce, diagnose, and fix bugs. Follows a strict process: repr
 **Never guess.** Follow this order strictly:
 
 ```
-Reproduce → Analyze → Hypothesize → Fix → Verify
+Align Expected Behavior → Reproduce → Analyze → Report → Repair Plan → Confirm → Fix → Verify
 ```
 
-Do NOT jump to fixing. Do NOT propose a fix before understanding the root cause.
+Do NOT jump to fixing. Do NOT propose or apply a fix before understanding the
+expected behavior, root cause, reporting the analysis, and getting confirmation
+on the repair plan. Do NOT create or update E2E test cases before the repair
+plan is confirmed.
 
 ## Complex Fix Sub-Agent Split
 
 For complex bug fixes, keep the main process responsible for the failure
 context, root-cause judgment, repository rules, test evidence, and final risk
 summary. When sub-agent capabilities are available, split the work after the
-root cause is confirmed:
+root cause and repair plan are confirmed:
 
 1. implementation sub-agent: applies the smallest scoped fix and related
    regression test updates
@@ -42,6 +48,84 @@ root cause is confirmed:
 Do not use this split before reproduction and root-cause analysis. Do not force
 it for simple single-file fixes, pure diagnosis, or when the user explicitly
 asks not to use sub-agents.
+
+## Repair Plan Gate
+
+After the root cause is confirmed, output the bug analysis report first and ask
+whether the user wants a repair implementation plan. Do not write code yet.
+
+If the user confirms, produce a repair plan that includes:
+
+- problem, root cause, location, and impact
+- PRD/TRD alignment conclusion and source document paths
+- files or modules expected to change
+- minimal repair approach
+- regression tests or verification commands
+- suggested QA E2E function directory:
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`, when the fix may affect E2E
+  acceptance coverage
+- whether implementation/validation sub-agent split is needed
+- risks, blockers, and forbidden areas
+
+Present the repair plan and wait for user confirmation. Do not apply the fix,
+update tests, update E2E TC, update E2E scripts or results, or delegate
+implementation until the user confirms the exact repair plan.
+
+## Step 0 — Align expected behavior with PRD / TRD
+
+For user-reported bugs in an existing feature, identify the likely feature and
+read the durable expected-behavior documents before deciding that code should be
+changed:
+
+- `docs/pm/{feature}/PRD.md`
+- `docs/engineer/{feature}/TRD.md`
+- `docs/pm/{feature}/DECISIONS.md` or other product decision records, when
+  present
+
+Use those docs to classify the report:
+
+- If the code or failing test deviates from PRD / TRD, and no present decision
+  record conflicts, cite the relevant docs as the expected behavior source and
+  continue with reproduction and root-cause analysis.
+- If the user's requested behavior conflicts with the approved PRD, TRD, or an
+  existing decision record, stop before repair planning and hand off to
+  `pm-agent:idea-to-spec` using the `existing-project-update` lane.
+- If PRD is stable but the Engineer TRD is missing, incomplete, stale, or
+  conflicts with the codebase or bug context, stop before repair planning and
+  hand off to `engineer-agent:trd-gen` with a TRD gap packet. The debugger owns
+  naming the missing or conflicting technical decisions; `trd-gen` owns
+  completing the TRD.
+- If PRD is missing or ambiguous, or an existing decision record conflicts with
+  the report, stop before fixing and request PM alignment. A user request to
+  skip PRD alignment is a blocker or risk note, not permission to continue into
+  repair planning, implementation, or E2E updates.
+
+Record the classification explicitly as one of:
+
+- `implementation_deviation`: approved PRD / TRD already defines the expected
+  behavior and the implementation or test deviates from it.
+- `requirement_change`: the user is asking to change approved expected
+  behavior, so PM alignment is required before repair planning.
+- `missing_docs`: PRD, product decision records, or expected behavior
+  are missing or ambiguous.
+- `trd_gap`: PM scope is stable, but the TRD is missing, stale, incomplete, or
+  conflicts with the codebase or bug context.
+
+A TRD gap packet should list the technical decisions that block debugging or
+repair planning, including affected components, data flow / API / integration
+impact, verification commands, release or rollback risk, and error handling,
+observability, or security strategy when relevant.
+
+Do not update E2E TC, scripts, assertions, or QA result files while the
+classification is `requirement_change`, `missing_docs`, or `trd_gap`.
+For `requirement_change`, do not write the new expectation into
+`docs/qa/e2e/**` until PM updates the PRD or product decision record, TRD is
+synchronized, and a confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
+exists. If a confirmed repair later affects E2E coverage, pass a QA E2E handoff
+package after the fix and verification rather than editing TC during diagnosis
+or repair planning. That handoff must cite the confirmed
+`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`, PRD/TRD alignment conclusion,
+changed files, verification commands, and suggested QA E2E function directory.
 
 ## Step 1 — Gather error context
 
@@ -108,12 +192,57 @@ Before fixing, state the root cause clearly:
 ## 根因分析
 
 **问题**: <what's happening>
+**预期依据**: <PRD / TRD paths and sections, optional decisions, or blocked alignment gap>
 **根因**: <why it's happening>
 **位置**: <file:line>
 **影响**: <what else might be affected>
 ```
 
-## Step 5 — Implement minimal fix
+## Step 5 — Report and ask for repair planning
+
+After confirming the root cause, report the analysis before planning or fixing:
+
+```text
+## Bug 分析汇报
+
+- **问题**: <what's happening>
+- **预期依据**: <PRD / TRD paths and sections, optional decisions, or blocked alignment gap>
+- **根因**: <why it's happening>
+- **位置**: <file:line>
+- **影响**: <what else might be affected>
+- **复现证据**: <command/action and observed failure>
+
+是否需要我基于这个根因产出修复实施计划？
+```
+
+Wait for the user's answer before producing a repair plan. If the user does not
+confirm, stop after the analysis report.
+
+## Step 6 — Produce repair implementation plan
+
+Only after the user confirms repair planning, produce the plan:
+
+```text
+## 修复实施计划
+
+### 文件变更清单
+- 修改 `<path>` — <minimal fix and why>
+
+### 验证方式
+- 重新运行 `<failing command>`
+- 运行 `<regression command>`
+
+### Sub-Agent 分工
+- 触发判断: <whether complex fix split is needed>
+- 实现 sub-agent 范围: <owned files/modules, or none>
+- 验收 sub-agent 范围: <failure evidence, tests, repository rules>
+
+确认后开始修复？
+```
+
+Wait for user confirmation before fixing.
+
+## Step 7 — Implement minimal fix
 
 Fix the root cause with the smallest possible change:
 
@@ -123,11 +252,11 @@ Fix the root cause with the smallest possible change:
 - Only change what's necessary to fix this specific bug
 
 For complex fixes, delegate this step to an implementation sub-agent only after
-the root cause is clear. The task must include the failing command, confirmed
-root cause, owned files or modules, forbidden areas, and the requirement not to
-revert unrelated changes.
+the root cause and repair plan are confirmed. The task must include the failing
+command, confirmed root cause, confirmed repair plan, owned files or modules,
+forbidden areas, and the requirement not to revert unrelated changes.
 
-## Step 6 — Verify fix
+## Step 8 — Verify fix
 
 Run the previously failing command:
 
@@ -152,7 +281,7 @@ It should check the failure evidence, root-cause fit, regression coverage,
 repository rules, unrelated changes, and residual risk. It must not broaden the
 fix scope.
 
-## Step 7 — Report
+## Step 9 — Report
 
 ```text
 ## 修复报告

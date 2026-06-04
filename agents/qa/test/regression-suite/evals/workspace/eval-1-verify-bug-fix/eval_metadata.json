@@ -2,26 +2,15 @@
   "eval_id": "eval-001-verify-bug-fix",
   "eval_name": "verify-bug-fix",
   "workspace_root": "agents/qa/test/regression-suite/evals/workspace/eval-1-verify-bug-fix",
-  "validation_method": "fresh_codex_subagent",
   "skill_availability_goal": "Verify that regression-suite reuses original bug evidence and checks adjacent regression risk.",
   "prompt": "验证 Bug #001 的修复，执行回归测试",
   "fixture_context": [
     "bugs/BUG-001.md",
     "fixes/PR-001.md",
+    "docs/qa/e2e/auth/login/session-start/TEST_SUITE.md",
+    "docs/qa/e2e/auth/login/session-start/FLOW_INDEX.md",
+    "docs/qa/e2e/auth/login/session-start/cases/TC-001-login-session.md",
+    "docs/qa/e2e/auth/login/session-start/scripts/TC-001-login-session.spec.md",
     "environment/qa-env.md"
-  ],
-  "with_skill_outputs": [
-    "with_skill/outputs/subagent-verdict.md"
-  ],
-  "without_skill_outputs": [
-    "without_skill/outputs/subagent-verdict.md"
-  ],
-  "run_diagnostics": [
-    "diagnostics/run.json"
-  ],
-  "execution_cleanup": [
-    "with_skill/outputs",
-    "without_skill/outputs",
-    "diagnostics"
   ]
 }

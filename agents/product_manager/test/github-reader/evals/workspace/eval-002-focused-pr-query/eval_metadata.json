@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-002-focused-pr-query",
+  "eval_name": "focused-pr-query",
+  "workspace_root": "agents/product_manager/test/github-reader/evals/workspace/eval-002-focused-pr-query",
+  "skill_availability_goal": "Verifies that github-reader handles focused-pr-query and produces the expected role-specific artifact.",
+  "prompt": "我在 cli/cli 这个仓库里工作，现在有哪些 PR 还在等待 review？按等待时间排序"
+}

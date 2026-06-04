@@ -18,6 +18,8 @@ Engineer-owned technical planning skill. It turns confirmed PM requirements into
 - interface, data, deployment, observability, and validation strategy
 - engineering risks, blockers, assumptions, and open technical questions
 - writing or updating `docs/engineer/{feature}/TRD.md`
+- resolving TRD gap packets from discoverers such as `engineer-agent`,
+  `debugger`, or `feature-implementor`
 
 `trd-gen` does not own:
 
@@ -26,14 +28,20 @@ Engineer-owned technical planning skill. It turns confirmed PM requirements into
 - code implementation
 - implementation plan documents produced after TRD approval
 
-If the PRD, `DECISIONS.md`, or acceptance scope is not stable, stop and hand
-back to `pm-agent:idea-to-spec` with the missing decisions.
+If the PRD, product decisions, or acceptance scope is not stable, stop and hand
+back to `pm-agent:idea-to-spec` with the missing decisions. `DECISIONS.md` is a
+valid decision record when present, but equivalent confirmed product decisions
+are also acceptable.
+
+When another skill hands back a missing, incomplete, stale, or conflicting TRD,
+the discoverer owns describing the TRD gaps and `trd-gen` owns completing the
+TRD. Treat the handoff as a gap packet, not as an implementation request.
 
 ## Required Flow
 
 ```mermaid
 flowchart LR
-    PM["pm-agent: PRD / BRD / DECISIONS confirmed"] --> Handoff["Explicit handoff to engineer-agent:trd-gen"]
+    PM["pm-agent: PRD / BRD / product decisions confirmed"] --> Handoff["Explicit handoff to engineer-agent:trd-gen"]
     Handoff --> TRD["trd-gen writes docs/engineer/{feature}/TRD.md"]
     TRD --> Review["Maintainer confirms TRD"]
     Review --> Plan["Explicit handoff to feature-implementor"]
@@ -45,9 +53,33 @@ Use this checkpoint language:
 
 ```text
 PRD 已确认，当前进入 Engineer TRD 阶段。
-我会基于 PRD、DECISIONS 和仓库上下文编写 `docs/engineer/{feature}/TRD.md`。
+我会基于 PRD、产品决策记录和仓库上下文编写 `docs/engineer/{feature}/TRD.md`。
 TRD 确认后，再移交给 `feature-implementor` 编写实现计划文档并进入实现。
 ```
+
+## TRD Gap Packet Handling
+
+Accept a TRD gap packet from `engineer-agent`, `feature-implementor`,
+`debugger`, or QA E2E alignment when PM scope is stable but the TRD is missing,
+incomplete, stale, or conflicts with implementation or test evidence.
+
+The incoming packet should identify:
+
+- source request, feature, and PRD / decision records already checked
+- affected components, modules, APIs, data flow, integrations, or deployment
+  surfaces
+- missing or conflicting technical decisions
+- validation commands or evidence that exposed the gap
+- release, rollback, observability, security, error-handling, or E2E coverage
+  risk when relevant
+- the discoverer's boundary statement: the finder names the gaps; `trd-gen`
+  completes or updates the TRD
+
+`trd-gen` must either update `docs/engineer/{feature}/TRD.md` to resolve each
+named gap or record an open technical question with owner, blocker, and unblock
+condition. Do not route to `feature-implementor`, `debugger`, or QA E2E
+documentation updates until the TRD is confirmed or the open questions are
+explicitly accepted as non-blocking.
 
 ## Document-Writing Delegation
 
@@ -58,8 +90,11 @@ sub-agent capabilities are available.
 The main process keeps the source context and final judgment. The delegated
 document-writing task must include:
 
-- PRD, BRD, `DECISIONS.md`, design docs, and relevant issue links
+- PRD, BRD, `DECISIONS.md` when present, equivalent product decisions, design
+  docs, and relevant issue links
 - current codebase and repository constraints
+- any TRD gap packet from the finder, including affected components, data flow,
+  validation, release risk, and error-handling gaps
 - required output path: `docs/engineer/{feature}/TRD.md`
 - forbidden areas and instruction not to implement code
 - required output: changed document path, summary, assumptions, open questions,
@@ -102,6 +137,9 @@ The TRD must include:
 - risks, assumptions, and open technical questions
 - explicit handoff conditions for `feature-implementor`
 
+When updating a TRD from a gap packet, address each named gap directly or record
+it as an open technical question with the owner and unblock condition.
+
 ## Quality Checks
 
 Before handoff, verify:
@@ -110,7 +148,8 @@ Before handoff, verify:
 2. Technical decisions do not change PM scope.
 3. Unknowns are marked as assumptions or open questions, not hidden as facts.
 4. The TRD path is under `docs/engineer/{feature}/`.
-5. The next step is `feature-implementor` only after the TRD is confirmed.
+5. Any inbound TRD gap packet has been resolved or explicitly tracked as open.
+6. The next step is `feature-implementor` only after the TRD is confirmed.
 
 ## Handoff
 

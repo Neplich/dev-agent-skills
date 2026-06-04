@@ -92,7 +92,7 @@ feature 文档统一采用短命名体系：
 - `docs/pm/{feature-name}/BRD.md`
 - `docs/design/{feature-name}/...`
 - `docs/engineer/{feature-name}/...`
-- `docs/qa/{feature-name}/...`
+- `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/...`
 - `docs/devops/{feature-name}/...`
 - `docs/security/{feature-name}/...`
 

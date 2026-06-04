@@ -10,9 +10,34 @@ if str(REPO_ROOT) not in sys.path:
 
 from scripts.eval_runtime import copy_fixture_to_runtime, display_path, eval_runtime_root
 
+OUTPUT_FIELDS = (
+    "with_skill_outputs",
+    "without_skill_outputs",
+    "baseline_outputs",
+    "baseline_output",
+    "baseline_skill_outputs",
+)
+MACHINE_ASSERTION_FIELDS = (
+    "all_of",
+    "any_of",
+    "none_of",
+    "count_at_least",
+)
+
 
 def load_metadata(path: Path) -> dict:
     return json.loads(path.read_text())
+
+
+def has_deterministic_checks(meta: dict) -> bool:
+    if any(meta.get(field) for field in OUTPUT_FIELDS):
+        return True
+
+    for assertion in meta.get("assertions", []):
+        if isinstance(assertion, dict) and any(field in assertion for field in MACHINE_ASSERTION_FIELDS):
+            return True
+
+    return False
 
 
 def check_outputs(root: Path, outputs: list) -> list[tuple[str, bool]]:
@@ -136,6 +161,26 @@ def render_report(
     return "\n".join(lines) + "\n"
 
 
+def render_not_applicable_report(meta: dict) -> str:
+    lines = [
+        f"# Eval {meta['eval_id']}: {meta['eval_name']}",
+        "",
+        "## Prompt",
+        "",
+        meta["prompt"],
+        "",
+        "## Runner Status",
+        "",
+        "- [SKIP] This eval has no deterministic outputs or machine-checkable assertions.",
+        "- Run fresh subagent validation separately, then update the durable `comparison.md`.",
+        "",
+        "## Runtime Artifact Policy",
+        "",
+        "- Runtime diagnostics are not required in the fixture.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def main() -> int:
     if len(sys.argv) != 2:
         print("Usage: run_eval.py <path-to-eval_metadata.json>")
@@ -146,6 +191,12 @@ def main() -> int:
     root = eval_runtime_root(metadata_path, "designer")
     copy_fixture_to_runtime(fixture_root, root)
     meta = load_metadata(metadata_path)
+
+    if not has_deterministic_checks(meta):
+        report_path = root / "comparison.auto.md"
+        report_path.write_text(render_not_applicable_report(meta))
+        print(display_path(report_path))
+        return 0
 
     with_results = check_outputs(root, meta.get("with_skill_outputs", []))
     without_results = check_outputs(root, meta.get("without_skill_outputs", []))

@@ -8,7 +8,7 @@
       "name": "NPM Dependency Audit",
       "description": "Test audit of Node.js project with vulnerable dependencies",
       "prompt": "Audit the dependencies for security vulnerabilities.",
-      "workspace": null,
+      "workspace": "workspace/eval-001-npm-audit",
       "expected_output": "Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.",
       "assertions": [
         {
@@ -38,7 +38,7 @@
       "name": "Abandoned Packages",
       "description": "Test detection of abandoned/outdated packages",
       "prompt": "Check for abandoned or outdated dependencies.",
-      "workspace": null,
+      "workspace": "workspace/eval-002-abandoned",
       "expected_output": "Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.",
       "assertions": [
         {
@@ -68,7 +68,7 @@
       "name": "Python Dependency Audit",
       "description": "Test audit of Python project dependencies",
       "prompt": "Review Python dependencies for security issues.",
-      "workspace": null,
+      "workspace": "workspace/eval-003-python",
       "expected_output": "Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.",
       "assertions": [
         {

@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-002-session",
+  "eval_name": "Session Management",
+  "workspace_root": "agents/security/test/authz-reviewer/evals/workspace/eval-002-session",
+  "skill_availability_goal": "Test review of session security configuration",
+  "prompt": "Check the session management security."
+}

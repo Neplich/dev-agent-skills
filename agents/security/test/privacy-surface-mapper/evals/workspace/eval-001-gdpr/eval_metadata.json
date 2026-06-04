@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-001-gdpr",
+  "eval_name": "GDPR Compliance Check",
+  "workspace_root": "agents/security/test/privacy-surface-mapper/evals/workspace/eval-001-gdpr",
+  "skill_availability_goal": "Test privacy mapping for user data collection",
+  "prompt": "Map the personal data collection and check GDPR compliance."
+}

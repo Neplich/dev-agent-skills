@@ -27,6 +27,11 @@
           "text": "必须把补测试和验证覆盖交给 `test-writer`，不能把测试省略到交付阶段。"
         },
         {
+          "id": "routes_qa_e2e_handoff",
+          "description": "代码完成后 QA E2E 交接",
+          "text": "实现和确定性测试完成后的工程路线必须包含 QA E2E 文档补充检查：交接包引用 PRD、TRD、已确认的 IMPLEMENTATION_PLAN、变更文件、验证命令、风险和建议 docs/qa/e2e/{一级功能}/{二级功能}/{三级功能} 功能目录。"
+        },
+        {
           "id": "routes_delivery_last",
           "description": "交付 route",
           "text": "必须把 `delivery` 放在实现和测试之后，用于 commit、push 或 PR 收尾。"
@@ -35,6 +40,46 @@
           "id": "does_not_execute_directly",
           "description": "只做路由不执行",
           "text": "因为用户要求先做工程路由，不能直接修改代码、运行测试或创建提交。"
+        }
+      ]
+    },
+    {
+      "id": "eval-002-existing-feature-alignment-gate",
+      "name": "existing-feature-alignment-gate",
+      "description": "Verifies that engineer-agent checks PRD/TRD and any present product decisions before routing small existing-feature behavior changes into implementation.",
+      "prompt": "用户说：现有通知中心已经有 PRD/TRD，现在想把 archived 通知也显示在 active 列表里，这是一个小改动，直接走工程实现吧。先做工程路由，不要改代码。",
+      "workspace": "workspace/eval-002-existing-feature-alignment-gate",
+      "expected_output": "先要求读取 docs/pm/{feature}/PRD.md、docs/engineer/{feature}/TRD.md，以及存在的 DECISIONS.md 或产品决策记录，对比 archived 行为是否改变既有预期；如果是改变预期，路由回 pm-agent:idea-to-spec 的 existing-project-update，而不是直接进入 feature-implementor。",
+      "assertions": [
+        {
+          "id": "reads_product_and_engineer_docs",
+          "description": "先读预期行为文档",
+          "text": "输出必须要求先读取相关 `docs/pm/{feature}/PRD.md` 和 `docs/engineer/{feature}/TRD.md`，并读取存在的 `docs/pm/{feature}/DECISIONS.md` 或产品决策记录后再做工程路由。"
+        },
+        {
+          "id": "classifies_expectation_change",
+          "description": "识别需求预期变更",
+          "text": "输出必须判断 archived 通知进入 active 列表可能是改变已批准预期，而不是默认当成小代码改动。"
+        },
+        {
+          "id": "routes_to_existing_project_update",
+          "description": "回到 PM 更新路径",
+          "text": "如果该请求与 PRD/TRD 预期或已有产品决策冲突，输出必须路由到 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径更新 PRD 或产品决策记录，再同步 TRD。"
+        },
+        {
+          "id": "routes_trd_gap_to_trd_gen",
+          "description": "TRD gap 交回 trd-gen",
+          "text": "如果 PRD 或产品决策已明确但 TRD 缺失、过期或未覆盖该行为，输出必须构造 TRD gap packet 并交回 `engineer-agent:trd-gen` 补完整 TRD 或记录 open questions。"
+        },
+        {
+          "id": "requires_plan_after_alignment",
+          "description": "对齐后仍需实施计划",
+          "text": "只有在 PRD/TRD 对齐完成后，才能进入 `feature-implementor`；进入后仍必须先产出或引用已确认的 IMPLEMENTATION_PLAN.md，小改动和 bug fix 也不能直接编码。"
+        },
+        {
+          "id": "does_not_route_directly_to_implementation",
+          "description": "不得直接进入实现",
+          "text": "输出不得把请求直接交给 `feature-implementor` 编写实现计划或开始编码；只有明确说明 PRD/TRD 已覆盖该行为时才能继续工程实现路径，用户要求跳过对齐不能作为继续理由。"
         }
       ]
     }

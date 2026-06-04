@@ -8,7 +8,7 @@
       "name": "docker-rollback",
       "description": "Verifies that incident-playbook-writer handles docker-rollback and produces the expected role-specific artifact.",
       "prompt": "我的项目使用 Docker 部署，帮我生成故障处理和回滚手册。",
-      "workspace": null,
+      "workspace": "workspace/eval-001-docker-rollback",
       "expected_output": "生成运维手册，包含回滚、故障响应、排查指南",
       "assertions": [
         {

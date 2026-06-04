@@ -6,6 +6,7 @@ description: "Core engineering skill: implement features from confirmed Engineer
 # Feature Implementor — Public Entry
 
 The core engineering skill. Reads confirmed Engineer TRDs plus PM/design inputs,
+confirms existing-feature requests are aligned with approved PRD / decisions,
 writes an implementation plan document, then implements code following project
 conventions and self-reviews the result.
 
@@ -18,12 +19,19 @@ This is the public entry point. It owns:
 - Delegation to internal modules and, for complex coding tasks, scoped
   implementation/validation sub-agents
 - Quality self-check before handoff
+- QA E2E documentation handoff after code completion when user-facing flows or
+  acceptance paths may be affected
 
-Do not load internal modules until the implementation plan is confirmed.
+Before implementation plan confirmation, load only the planner internal module.
+Do not load implementor or reviewer modules, write code, or run fix steps until
+the implementation plan has been presented to the user and explicitly confirmed.
 
 ## When to Use
 
 - User wants to implement a feature described in PM documents
+- User wants to implement an existing-feature behavior change that is already
+  reflected in PRD and Engineer TRD, with no conflict in existing product
+  decision records
 - User asks to "write code" or "implement" something with a spec available
 - After `codebase-analyzer` or `project-bootstrap` has established project context
 - After `trd-gen` has produced and the user has confirmed
@@ -31,9 +39,51 @@ Do not load internal modules until the implementation plan is confirmed.
 
 Do NOT use for:
 - Bug fixes with no spec (use `debugger` instead)
+- Existing-feature behavior changes that require PRD or product decision updates first
+  (use `pm-agent:idea-to-spec` with the `existing-project-update` lane)
 - Writing tests only (use `test-writer` instead)
 - Git/PR operations only (use `delivery` instead)
 - Creating or revising the TRD itself (use `trd-gen` instead)
+
+Spec-backed bug fixes may enter `feature-implementor` only after debugger or
+Engineer routing confirms the fix is implementation work against approved PRD /
+TRD behavior. They still require `IMPLEMENTATION_PLAN.md` and explicit user
+confirmation before code changes.
+
+## PRD Alignment Gate
+
+Before creating or updating `IMPLEMENTATION_PLAN.md` for an existing feature
+change, read the relevant PM and Engineer documents:
+
+- `docs/pm/{feature}/PRD.md`
+- `docs/engineer/{feature}/TRD.md`
+- `docs/pm/{feature}/DECISIONS.md` or other product decision records, when
+  present
+
+Classify the request:
+
+- If the requested behavior is already covered by PRD and confirmed TRD, and no
+  present decision record conflicts, continue to implementation planning and
+  cite those documents in the plan.
+- If the request changes approved product behavior, stop before implementation
+  planning and hand off to `pm-agent:idea-to-spec` using the
+  `existing-project-update` lane.
+- If PRD is missing or ambiguous, or an existing decision record conflicts with
+  the request, stop and request PM alignment before TRD or implementation
+  planning.
+- If PRD is stable but TRD is missing, incomplete, or stale, stop and hand back
+  to `engineer-agent:trd-gen` with a TRD gap packet. The finder owns naming the
+  missing technical decisions; `trd-gen` owns completing the TRD.
+- If the user explicitly asks to skip PRD alignment, record it as a blocker or
+  risk, but do not create or update the implementation plan until PRD/TRD
+  alignment is complete.
+
+The TRD gap packet must state the unresolved technical decisions that block
+implementation planning, including affected components or modules, data flow /
+API / integration impacts, verification commands, release or rollout risks, and
+error handling, observability, or security strategy when relevant. It must also
+include this boundary statement: the finder only clarifies the TRD gaps;
+`engineer-agent:trd-gen` completes or updates the TRD.
 
 ## TRD and Implementation Plan Boundary
 
@@ -45,13 +95,23 @@ The implementation plan maps TRD decisions to concrete files, sequence,
 delegation, verification commands, and rollout checks. It must not change PM
 scope or rewrite TRD decisions. If the TRD is missing, incomplete, or conflicts
 with the codebase, stop and hand back to `engineer-agent:trd-gen` with the
-specific blocker.
+specific blocker and TRD gap packet. Do not hide TRD gaps inside
+`IMPLEMENTATION_PLAN.md`.
 
 All implementation plan document writing must be delegated to a fresh
 document-writing sub-agent when sub-agent capabilities are available. The main
 process keeps the source docs, repository context, and final approval decision.
 
+The implementation planner is the first step for every implementation task,
+including single-file, small, low-risk, and spec-backed bug-fix changes. Small
+changes may use a short plan, but they still require
+`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` and explicit user confirmation
+before implementation starts.
+
 ## Complex Coding Sub-Agent Split
+
+Decide whether this split is needed inside the implementation plan after the
+planner maps the implementation scope.
 
 When the implementation is multi-file, multi-module, spec-backed, or otherwise
 context-heavy, keep the main process responsible for PM/design context,
@@ -80,8 +140,10 @@ The validation task must include:
   unrelated changes
 - required output: pass/fail conclusion, findings, blockers, and residual risks
 
-Do not use this split for single-file small edits, pure explanation, pure code
-reading, or when the user explicitly opts out.
+Do not use the implementation/validation sub-agent split for single-file small
+edits, pure explanation, pure code reading, or when the user explicitly opts
+out. This exception only skips complex delegation; it never skips implementation
+planning or plan confirmation.
 
 ## Phase 0: Gather Context
 
@@ -95,12 +157,20 @@ ls docs/*.md docs/**/*.md 2>/dev/null
 
 Read the documents relevant to the current task:
 - **PRD**: functional requirements, user stories, acceptance criteria
+- **DECISIONS**: when present, approved product decisions, rejected options,
+  assumptions, and open questions
 - **Engineer TRD**: technical approach, component breakdown, architecture decisions
 - **ADR**: specific technology choices and constraints
 - **API Spec**: endpoint contracts, request/response shapes
 
+For existing feature changes, complete the PRD alignment gate before loading
+the planner. Do not treat a small change as already approved just because it is
+low-risk or single-file.
+
 If `docs/engineer/{feature}/TRD.md` is missing or not confirmed, do not create
-the implementation plan. Hand off to `engineer-agent:trd-gen`.
+the implementation plan. Hand off to `engineer-agent:trd-gen` with the TRD gap
+packet and boundary statement: finder only clarifies gaps,
+`engineer-agent:trd-gen` completes the TRD.
 
 ### Check for Project Profile
 
@@ -116,15 +186,26 @@ Implementation context:
 - Project: <name> (<framework>)
 - Feature: <feature name from PRD>
 - Relevant docs: <list of PM docs read>
+- PRD alignment: <already approved / needs PM update / docs missing / trd gap>
 - Existing modules affected: <list>
 - New modules needed: <list>
 ```
 
 ## Phase 1: Plan the Implementation
 
+Load only the planner internal module for this phase:
+
+`agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md`
+
 Read the internal routing contract before planning:
 
 `agents/engineer/skills/feature-implementor/_internal/_shared/coding-rules.md`
+
+Every implementation task must go through this phase before code changes,
+regardless of size. The plan may be brief for small changes, but it must still
+be written to `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`, include the
+PRD alignment result, implementation/validation sub-agent split decision, and
+wait for user confirmation.
 
 Delegate implementation plan document writing to a fresh document-writing
 sub-agent when available. The delegated task must write or update:
@@ -144,8 +225,8 @@ Break the feature into ordered implementation steps:
 4. Decide whether the complex coding sub-agent split applies. If it does,
    include the implementation sub-agent write scope and validation sub-agent
    review scope in the plan.
-5. Include the TRD path, implementation plan path, and any blockers that require
-   returning to `trd-gen`.
+5. Include the PRD / optional DECISIONS / TRD paths, implementation plan path,
+   and any blockers that require returning to `trd-gen`.
 
 Present the plan to the user:
 
@@ -161,6 +242,10 @@ Present the plan to the user:
 ### 实现顺序
 按上述编号顺序，每完成一步验证编译通过。
 
+### PRD 对齐
+- 状态: <已覆盖 / 需要 PM 更新 / 文档缺失或不清 / TRD gap>
+- 依据: <PRD / TRD paths and sections, plus DECISIONS when present>
+
 ### Sub-Agent 分工
 - 触发判断: <是否触发复杂编码分工及原因>
 - 实现 sub-agent 范围: <files/modules and forbidden areas>
@@ -171,9 +256,13 @@ Present the plan to the user:
 
 Wait for user confirmation before coding.
 
+Stop after presenting the plan. Do not start implementation in the same turn
+unless the user has already confirmed this exact implementation plan.
+
 ## Phase 2: Implement
 
-Load the implementor internal module:
+Only after the user confirms the implementation plan, load the implementor
+internal module:
 
 `agents/engineer/skills/feature-implementor/_internal/implementor/INSTRUCTIONS.md`
 
@@ -220,6 +309,35 @@ Output a brief review summary:
 - 规范检查: ✅ 命名和结构符合项目规范
 ```
 
+## QA E2E Documentation Handoff
+
+After implementation and self-review, output a QA E2E documentation handoff
+package when the change can affect user-facing behavior, acceptance flows,
+routes, permissions, login, data setup, or regression coverage.
+
+The package must include:
+
+- PRD path and relevant sections
+- TRD path and relevant sections
+- confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
+- PRD alignment result, including DECISIONS or TRD gap resolution when applicable
+- changed files and affected modules
+- verification commands run, results, and commands not run with reasons
+- known risks, environment assumptions, and QA scope questions
+- suggested QA E2E function directory:
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`
+- likely E2E impact: create TC, update existing TC, update script/assertions,
+  or no E2E update needed with rationale
+
+If the confirmed implementation plan is missing, stop and return to Phase 1
+instead of producing a QA E2E handoff. Small, single-file, low-risk, and
+spec-backed bug-fix changes still require the confirmed implementation plan
+before this handoff.
+
+Do not create or update QA E2E TC directly from this skill unless the user
+explicitly routes that QA documentation work. The default responsibility here is
+to hand off complete evidence to the QA E2E documentation flow.
+
 ## Handoff
 
 After implementation and self-review:
@@ -227,6 +345,8 @@ After implementation and self-review:
 ```text
 ## 建议下一步
 
+- **补充 QA E2E 文档**: 将 QA E2E documentation handoff package 交给 `qa-agent`
+  判断是否新增或更新 E2E TC
 - **写测试**: 使用 `test-writer` 基于 Test Spec 编写测试
 - **直接交付**: 使用 `delivery` 创建 PR（如果测试已有或不需要）
 ```

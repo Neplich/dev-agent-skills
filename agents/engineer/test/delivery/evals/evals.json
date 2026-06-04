@@ -8,7 +8,7 @@
       "name": "create-pr-with-commits",
       "description": "Verifies that delivery handles create-pr-with-commits and produces the expected role-specific artifact.",
       "prompt": "代码已完成，创建 PR 并关联 Issue #123",
-      "workspace": null,
+      "workspace": "workspace/eval-001-create-pr-with-commits",
       "expected_output": "分支创建 + 提交 + PR 创建 + CI 检查",
       "assertions": [
         {

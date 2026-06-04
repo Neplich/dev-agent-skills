@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-003-professional",
+  "eval_name": "Professional Design System",
+  "workspace_root": "agents/designer/test/visual-design/evals/workspace/eval-003-professional",
+  "skill_availability_goal": "Create a professional design system for enterprise software",
+  "prompt": "Create a visual design system for an enterprise analytics platform. Target: corporate users, trustworthy and authoritative."
+}

@@ -11,20 +11,26 @@ This is a QA validation protocol, not a router and not a generic execution scrip
 
 ## Shared QA Directory Contract
 
-For feature-scoped QA, use `docs/qa/<feature-name>/` as the durable source of
-truth when it exists.
+For E2E or feature-scoped QA, use the function-tree directory as the durable
+source of truth:
 
-- `TEST_SPEC.md` is the suite index and traceability summary.
-- `test-cases/` stores reusable test cases.
-- Every E2E test case must be stored as exactly one Markdown file:
-  `test-cases/TC-NNN-<short-slug>.md`.
-- `FILE_EXPLORATION.md` records project file exploration used to derive or
-  expand test cases.
-- `reports/` stores execution reports when the repo does not already define a
-  stronger reporting path.
+`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`
 
-If a PM PRD / TRD / Test Spec is absent or does not include concrete E2E test
-cases, do not rediscover the whole project by default. First use the QA
+- `TEST_SUITE.md` is the suite index and traceability summary.
+- `FLOW_INDEX.md` maps flows, pages, routes, APIs, states, and requirements to
+  TC files.
+- `cases/` stores reusable test cases. Every E2E test case must be stored as
+  exactly one Markdown file: `cases/TC-NNN-<short-slug>.md`.
+- `scripts/` stores matching repeatable steps or executable snippets:
+  `scripts/TC-NNN-<short-slug>.spec.md`.
+- `results/TC-NNN-<short-slug>/{platform-version}/` stores append-only
+  execution results and `testcase.snapshot.md`.
+- Feature-update reports go to
+  `_reports/{platform-version}/test-reports-{test-time}.md`; release reports go
+  to `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md`.
+
+If a PM PRD / TRD / Test Spec is absent or does not include concrete E2E cases,
+do not rediscover the whole project by default. First use the function-tree QA
 directory as persistent memory.
 
 ## Top-Level Contract
@@ -32,18 +38,29 @@ directory as persistent memory.
 Before running anything, gather repository evidence and confirm what is in scope.
 
 - Read the PM/spec documents that define the expected behavior.
-- Read `docs/qa/<feature-name>/TEST_SPEC.md` and
-  `docs/qa/<feature-name>/test-cases/*.md` before exploring source files when a
-  feature QA directory exists.
+- Read the target `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md`,
+  `FLOW_INDEX.md`, `cases/*.md`, `scripts/*.spec.md`, previous `results/`, and
+  `_reports/` before exploring source files when a function-tree QA directory
+  exists.
 - Read implementation context for the changed area, including changed files, engineer notes, release notes, or handoff notes if they exist.
 - Read existing repository instructions for how tests are normally run in this project.
-- Prefer the repo’s documented acceptance, e2e, integration, or manual QA harness over inventing a new runner.
-- Only use targeted browser automation when no better harness or documented script exists.
-- For agent-driven browser checks, prefer the active Chrome plugin / browser
-  connector when the user environment provides it; use standalone Playwright
-  only when the repository already documents it as the test harness, or when
-  the skill is running outside Claude Code / Codex or standalone without a
-  Chrome plugin.
+- If this is an existing-feature change, bug fix, or code-complete E2E
+  documentation update, confirm PRD/TRD expectation alignment and a confirmed
+  `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` before creating, updating,
+  or executing E2E acceptance TC.
+- Confirm the E2E scenario: `feature-update` validates changed functionality
+  and direct impact paths; `release` validates all active E2E TC.
+- Confirm the platform version before execution. If missing, mark the run
+  `blocked`; do not archive under `unknown`.
+- Prefer the repo’s documented acceptance, e2e, integration, or manual QA
+  harness over inventing a new runner.
+- Only use targeted browser automation when no better harness or documented
+  script exists.
+- For agent-driven browser checks, use the active Chrome plugin / browser
+  connector when available. Use standalone Playwright only as fallback when
+  Chrome is unavailable or the skill is running outside a Chrome-capable
+  environment. A repo harness that internally uses Playwright still counts as
+  the repo harness.
 - Do not assume a fixed localhost port.
 - Do not assume Playwright is the only valid tool.
 - Do not install dependencies globally or add new tooling unless the repository conventions explicitly require it.
@@ -57,30 +74,33 @@ Complete preflight before any execution step.
 When the user asks for E2E, acceptance, or spec-based QA without supplying PM
 test cases:
 
-1. Identify the feature name from the user request, existing PM docs, branch,
+1. Identify the function-tree scope from the user request, PRD/TRD, branch,
    changed files, or nearby QA docs. If it cannot be inferred, ask one concise
-   question for the feature name or target flow.
-2. Read the agreed QA directory:
-   - `docs/qa/<feature-name>/TEST_SPEC.md`
-   - `docs/qa/<feature-name>/test-cases/*.md`
-   - `docs/qa/<feature-name>/FILE_EXPLORATION.md`, if present
-   - prior `docs/qa/<feature-name>/reports/*.md`, if relevant
-3. If reusable test cases exist, treat them as the primary execution scope.
-4. Before reading broad source areas, ask the user whether there are new
-   feature updates and whether they want QA to explore project files to expand
-   the test cases.
-5. If the user says no, execute only the existing cases unless they are
-   blocked.
-6. If the user says yes, perform targeted file exploration, update
-   `FILE_EXPLORATION.md`, and write newly discovered E2E cases under
-   `test-cases/` as one file per case before execution.
+   question for the `{一级功能}/{二级功能}/{三级功能}` target.
+2. Confirm or infer the scenario: `feature-update` or `release`.
+3. Confirm the platform version before execution; if absent, stop as
+   `blocked` and ask for the version.
+4. Read the agreed QA directory:
+   - `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md`
+   - `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/FLOW_INDEX.md`
+   - `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/*.md`
+   - `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/scripts/*.spec.md`
+   - prior `results/` and `_reports/`, if relevant
+5. If reusable TC exist, treat them as the primary execution scope.
+6. For `feature-update`, execute only the changed feature, direct impact paths,
+   and related regression TC. For `release`, execute all active E2E TC.
+7. If coverage is missing and the user authorizes expansion, perform targeted
+   exploration or PRD/TRD case generation, then write or update `cases/`,
+   `scripts/`, and `FLOW_INDEX.md` before execution.
 
 ### 1) Gather scope sources
 
 Read whatever is available from the following sources, in this order of usefulness:
 
-- Existing QA test cases in `docs/qa/<feature-name>/test-cases/*.md`
-- Existing QA `TEST_SPEC.md` and `FILE_EXPLORATION.md`
+- Existing QA test cases in
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/*.md`
+- Existing `TEST_SUITE.md`, `FLOW_INDEX.md`, `scripts/*.spec.md`, prior
+  `results/`, and `_reports/`
 - Test Spec or equivalent QA acceptance doc
 - PRD or product spec
 - TRD or technical design doc
@@ -119,7 +139,7 @@ If the repo already defines a harness, use that harness. If there are multiple h
 
 Choose the least-assumptive executable path that still proves the requirement.
 
-1. Existing repo acceptance/e2e command
+1. Existing repo acceptance/e2e command or documented harness
    - Use a documented acceptance, e2e, smoke, or scenario command if it exists.
    - Prefer commands that already encode project conventions, setup, and teardown.
 
@@ -134,16 +154,16 @@ Choose the least-assumptive executable path that still proves the requirement.
      clicks, typing, screenshots, console logs, network inspection, and DOM
      checks when it is available in the user environment.
 
-4. Custom ad hoc execution
-   - Only as a last resort, and only if it is consistent with repository conventions.
+4. Playwright fallback
+   - Use standalone Playwright only when the repo harness does not cover the TC
+     and Chrome plugin / browser connector is unavailable.
+   - Do not add a new runner or install browser tooling globally.
 
 Do not guess the server port. Do not hardcode `3000`. Discover the running app, configured host, or documented launch path from the repository context.
 
-Do not assume Playwright. If browser automation is needed, use the active
-Chrome plugin / browser connector for agent-driven verification unless the
-repository already provides a Playwright-based command or documented harness.
-If the skill is used through a harness outside Claude Code / Codex, or used
-standalone without a Chrome plugin, fall back to Playwright.
+Do not assume Playwright. A repository-provided Playwright command is a repo
+harness and can be used at priority 1; standalone Playwright remains the
+fallback after Chrome is unavailable.
 
 Do not install browser tooling globally. If dependencies or browsers are missing, first check project scripts, lockfiles, package manager conventions, and repo instructions.
 
@@ -152,7 +172,11 @@ Do not install browser tooling globally. If dependencies or browsers are missing
 Execute only the tests that are justified by the preflight scope.
 
 - For E2E validation, execute from the individual case files in
-  `docs/qa/<feature-name>/test-cases/` whenever they exist.
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/` whenever they exist.
+- Execute each E2E TC through a subagent by default. The main agent confirms
+  scope, consolidates evidence, and writes the summary report.
+- Use account IDs from the TC or login-flow references. Do not write plaintext
+  credentials into TC, scripts, results, or reports.
 - Prefer targeted validation for the changed files and scoped requirements.
 - Use environment-specific setup only when the repository documentation calls for it.
 - Capture the exact command or tool path used.
@@ -170,13 +194,20 @@ During execution, distinguish:
 
 Produce a validation artifact that is useful for handoff and traceable back to the spec.
 
-Recommended artifact path when a feature QA directory is known:
+For E2E validation, write or update per-TC results under
+`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/results/TC-NNN-<short-slug>/{platform-version}/`
+and write the main-agent summary report using
+`agents/qa/skills/qa-agent/references/e2e-test-report.md`.
 
-`docs/qa/<feature-name>/reports/YYYY-MM-DD-spec-validation.md`
+Report paths:
 
-Fallback artifact path:
+- `feature-update`:
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/_reports/{platform-version}/test-reports-{test-time}.md`
+- `release`:
+  `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md`
 
-`docs/qa-reports/YYYY-MM-DD-<feature>-spec-validation.md`
+For non-E2E spec validation where the repo has no stronger reporting path, use
+`docs/qa-reports/YYYY-MM-DD-<feature>-spec-validation.md`.
 
 The report should include:
 

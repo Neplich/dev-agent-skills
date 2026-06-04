@@ -32,44 +32,64 @@ or fix verification.
 
 ## Shared QA Document Contract
 
-When QA work is feature-scoped, use `docs/qa/<feature-name>/` as the durable
-QA directory before falling back to ad hoc report paths.
+When QA work creates, updates, or executes E2E assets, use the function-tree
+directory as the durable source of truth:
 
-- `TEST_SPEC.md` is the suite index, coverage summary, and traceability record.
-- `test-cases/` stores reusable executable or manual test cases.
-- Each E2E test case must live in its own Markdown file:
-  `test-cases/TC-NNN-<short-slug>.md`.
-- `FILE_EXPLORATION.md` records project file exploration used to derive or
-  expand test cases.
-- `reports/` may store execution reports for validation, exploratory, bug, or
-  regression runs.
+`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`
 
-When routing browser-based E2E work, carry the repository's execution path into
-the downstream skill. If the repository has a documented E2E harness, use that
-harness. If there is no scripted harness but the environment notes provide an
-active Chrome plugin / browser connector entrypoint, use that entrypoint for
-agent-driven browser verification. Do not replace it with Playwright unless the
-repository already documents Playwright as the harness. This repository is
-written primarily for Claude Code and Codex; when a skill is used through a
-different harness, or used standalone without an available Chrome plugin, use
-Playwright as the browser automation fallback.
+- `TEST_SUITE.md` is the suite index, active TC list, and coverage summary.
+- `FLOW_INDEX.md` maps user flows, pages, routes, APIs, and states to TC files.
+- `cases/` stores reusable E2E cases, one Markdown file per TC:
+  `cases/TC-NNN-<short-slug>.md`.
+- `scripts/` stores matching executable or repeatable flow snippets:
+  `scripts/TC-NNN-<short-slug>.spec.md`.
+- `results/TC-NNN-<short-slug>/{platform-version}/` stores `result.md` and
+  `testcase.snapshot.md`; results are appended by platform version, not
+  overwritten.
+- `_reports/{platform-version}/test-reports-{test-time}.md` stores
+  feature-update summary reports. Release-wide reports use
+  `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md`.
+- Shared login flows and data live under `docs/qa/e2e/_shared/`.
 
-For standalone QA or E2E requests where PM has not supplied PRD / TRD / Test
-Spec cases, route the downstream skill with this required sequence:
+For E2E routing, carry these fields into the downstream skill:
 
-1. Read `docs/qa/<feature-name>/TEST_SPEC.md` and
-   `docs/qa/<feature-name>/test-cases/*.md` first.
-2. Ask the user whether there are new feature changes and whether QA should
-   explore the project files to expand test cases.
-3. If the user requests exploration, keep file discovery targeted, write or
-   update `FILE_EXPLORATION.md`, and add any new E2E coverage as one file per
-   test case under `test-cases/`.
-4. Execute from the existing and newly added test case files, rather than
-   rediscovering the full project on every run.
-5. Execute through the discovered repository harness or, when no scripted
-   harness exists, through the Chrome plugin / browser connector described in
-   the environment notes. If the skill is running outside Claude Code / Codex
-   or standalone without a Chrome plugin, fall back to Playwright.
+- Scenario: `feature-update` validates the changed feature and direct impact
+  paths in the local development test environment; `release` validates all
+  active E2E TC in the release-version test environment. If the scenario cannot
+  be inferred, ask one concise scenario question.
+- Platform version: confirm before execution. If missing, mark the E2E work
+  `blocked` and ask for the version; never archive to `unknown`.
+- Scope: confirm the function-tree node or infer it from PRD/TRD, changed
+  files, branch context, or existing QA memory. If it cannot be inferred, ask
+  one concise scope question.
+- Execution entry: repo harness first, Chrome plugin / browser connector
+  second, Playwright fallback last. State why the selected entry covers the TC.
+- Credentials: committed QA docs may only reference account IDs. If the user
+  supplies platform or SSH credentials, follow
+  `agents/qa/skills/qa-agent/references/e2e-credential-store.md` and upsert
+  `.qa/e2e/accounts.local.json` without echoing sensitive values.
+- Report format: summary reports must follow
+  `agents/qa/skills/qa-agent/references/e2e-test-report.md`.
+
+For standalone QA or E2E requests where no PM-authored E2E cases are supplied,
+route the downstream skill with this required sequence:
+
+1. Read the target function-tree `TEST_SUITE.md`, `FLOW_INDEX.md`,
+   `cases/*.md`, `scripts/*.spec.md`, prior `results/`, and `_reports/`.
+2. If the request comes from an existing-feature change, bug fix, or
+   code-complete E2E documentation update, require PRD/TRD expectation
+   alignment and a confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
+   before creating, updating, or executing acceptance TC.
+3. For `feature-update`, select the changed feature, direct impact paths, and
+   related regression TC. For `release`, select all active E2E TC.
+4. If reusable TC already cover the target, execute from those TC instead of
+   rediscovering the project.
+5. If coverage is missing and the user authorizes exploration or PRD/TRD case
+   generation, add or update `cases/`, `scripts/`, and `FLOW_INDEX.md` in the
+   function-tree directory. Do not create duplicate synonym TC.
+6. Execute every E2E TC through a subagent by default, even when there is only
+   one TC. The main agent owns scope confirmation, task splitting, result
+   confirmation, and the final summary report.
 
 ## Available Skills
 
@@ -122,7 +142,9 @@ When routing is complete:
 
 - state which QA skill should handle the request
 - state the expected evidence artifact for the route
-- for browser-based E2E, state the selected execution path explicitly; if the
-  environment notes provide a Chrome plugin / browser connector entrypoint,
-  name that entrypoint directly instead of referring to "browser checks" in
-  generic terms
+- for E2E, state scenario, function-tree scope, platform version status,
+  subagent execution plan, selected execution entry, and why the selected entry
+  follows repo harness > Chrome plugin / browser connector > Playwright fallback
+- if E2E is blocked by missing platform version, credentials, environment,
+  PRD/TRD alignment, or confirmed `IMPLEMENTATION_PLAN.md`, report the blocker
+  and next owner instead of creating or executing TC

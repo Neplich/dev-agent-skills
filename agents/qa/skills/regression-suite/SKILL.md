@@ -9,19 +9,26 @@ Verify that a fix actually resolves the original failure and that nearby surface
 
 ## Shared QA Directory Contract
 
-For feature-scoped regression work, prefer `docs/qa/<feature-name>/` as durable
-QA memory:
+For E2E or feature-scoped regression work, prefer the function-tree directory as
+durable QA memory:
 
-- `TEST_SPEC.md` is the suite index and traceability summary.
-- `test-cases/` stores reusable cases; every E2E case must be one Markdown file
+`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`
+
+- `TEST_SUITE.md` is the suite index and traceability summary.
+- `FLOW_INDEX.md` maps flows, requirements, touched files, and nearby risk
+  surfaces to reusable TC.
+- `cases/` stores reusable cases; every E2E case must be one Markdown file
   named `TC-NNN-<short-slug>.md`.
-- `FILE_EXPLORATION.md` records file exploration used to derive or expand
-  regression scope.
-- `reports/` stores regression verification reports when no stronger repo
-  convention exists.
+- `scripts/` stores matching repeatable flow snippets.
+- `results/TC-NNN-<short-slug>/{platform-version}/` stores append-only
+  execution results and `testcase.snapshot.md`.
+- `_reports/{platform-version}/test-reports-{test-time}.md` stores
+  feature-update summary reports; release-wide reports live under
+  `docs/qa/e2e/_reports/{platform-version}/`.
 
 Use these files to avoid rediscovering the full project on every regression
-run.
+run. Existing TC should be updated in place when the flow changes; do not
+overwrite historical result directories.
 
 ## When to Use
 
@@ -38,8 +45,9 @@ Reuse the original evidence instead of re-deriving the scope from scratch. The r
 Read the evidence before executing anything:
 
 - Existing QA test cases and prior file exploration:
-  `docs/qa/<feature-name>/test-cases/*.md` and
-  `docs/qa/<feature-name>/FILE_EXPLORATION.md`, when available
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/*.md`,
+  `FLOW_INDEX.md`, `scripts/*.spec.md`, prior `results/`, and `_reports/`,
+  when available
 - Original bug report or failing test evidence
 - Fix context such as changed files, PR notes, implementation notes, or release notes
 - Related areas likely to regress because they share code, state, data, UI flow, API surface, permissions, or configuration
@@ -47,11 +55,17 @@ Read the evidence before executing anything:
 If the original evidence is missing or too thin, mark the run as `blocked` until the missing material is available.
 
 If the user asks for standalone E2E regression and no PM-authored test cases are
-available, first read `docs/qa/<feature-name>/test-cases/`. Then ask whether
-there are new feature updates and whether QA should explore project files to
-expand regression cases. If exploration is requested, update
-`FILE_EXPLORATION.md` and create or update one E2E case file per reusable
-scenario before execution.
+available, first read the target function-tree `cases/`, `scripts/`, and
+`FLOW_INDEX.md`. Then ask whether there are new feature updates and whether QA
+should explore project files to expand regression cases. If exploration is
+requested, update `FLOW_INDEX.md` and create or update one E2E case file per
+reusable scenario before execution.
+
+For existing-feature changes, bug fixes, or code-complete E2E documentation
+updates, require PRD/TRD expectation alignment and a confirmed
+`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` before updating or executing
+acceptance TC. If expectations are missing, changed without PM alignment, or
+not covered by TRD, report `blocked` and name the next owner.
 
 ## Step 2 — Define the verification scope
 
@@ -67,11 +81,21 @@ Use the original evidence to keep the scope tight, but expand to nearby risk are
 
 Use the repo's documented runtime and test instructions. Do not assume a fixed local port, fixed host, or a single app layout.
 
+For E2E regression, confirm the scenario and platform version before execution:
+
+- `feature-update`: verify the fixed flow, changed feature, direct impact paths,
+  and related regression TC in the local development test environment.
+- `release`: verify all active E2E TC in the release-version test environment.
+- Missing platform version is `blocked`; do not archive under `unknown`.
+
 If the environment is not ready:
 
 - Mark the verification as `blocked`
 - Record what is missing
 - Avoid fabricating a pass from incomplete setup
+
+Choose execution entry in this order: repo harness > Chrome plugin / browser
+connector > Playwright fallback. State why the chosen entry covers the TC.
 
 ## Step 4 — Execute regression checks
 
@@ -81,9 +105,14 @@ Run checks that map to the scope:
 - Verify the expected behavior now succeeds
 - Exercise adjacent or nearby surfaces that could regress
 - Execute existing or newly expanded E2E case files from
-  `docs/qa/<feature-name>/test-cases/` when they map to the fix scope
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/` when they map to the fix scope
+- Execute each E2E TC through a subagent by default; the main agent confirms
+  results and writes the summary report.
 
 Capture evidence from runtime output, screenshots, traces, logs, or test output as needed. Keep run status separate from evidence strength: `pass`, `fail`, and `blocked` are the regression run outcomes, while evidence confidence is a secondary note about how strong and complete the supporting proof is.
+
+Use account IDs from TC or shared login-flow references. Do not write plaintext
+credentials into TC, scripts, results, or reports.
 
 ## Step 5 — Judge adjacent risk
 
@@ -144,8 +173,17 @@ If the original failure still reproduces, report `fail` and name the evidence. I
 Use a durable output path that matches repo context.
 
 - Use a local Markdown artifact when the repo tracks QA verification in files or when the user asked for a document
-- Prefer `docs/qa/<feature-name>/reports/YYYY-MM-DD-regression-verification.md`
-  when a feature QA directory is known
+- For E2E regression, append per-TC results under
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/results/TC-NNN-<short-slug>/{platform-version}/`
+  and write the main-agent summary report with
+  `agents/qa/skills/qa-agent/references/e2e-test-report.md`
+- Use
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/_reports/{platform-version}/test-reports-{test-time}.md`
+  for `feature-update` and
+  `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md` for
+  `release`
+- For non-E2E regression where the repo has no stronger convention, use
+  `docs/qa-reports/YYYY-MM-DD-<feature>-regression-verification.md`
 - Use a GitHub issue only when the repo workflow or user request explicitly wants issue tracking
 
 Do not commit changes, do not mutate code, and do not assume a GitHub-first workflow.

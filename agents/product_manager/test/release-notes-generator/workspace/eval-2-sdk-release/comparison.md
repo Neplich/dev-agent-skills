@@ -1,28 +1,46 @@
-# Eval Result: sdk-breaking-changes-release-notes
+# Eval Result: eval-002-sdk-breaking-changes
 
 ## Evaluation Target
 
+- Agent: `product_manager`
 - Skill: `release-notes-generator`
-- Test case: `anthropic-sdk-python v0.86.0` release notes
-- Test set: `agents/product_manager/test/release-notes-generator/evals/evals.json`
-- Entry: workspace `eval-2-sdk-release`
-- Latest result: PASS
+- Eval: `eval-002-sdk-breaking-changes`
+- Test case: sdk-breaking-changes
+- Workspace: `workspace/eval-2-sdk-release`
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+
+## Test Set / Fixture Version
+
+- Schema: `evals.json` v1.0
+- Fixture: Verifies that release-notes-generator handles sdk-breaking-changes and produces the expected role-specific artifact.
+- Expected output: 技术受众的 release notes，正确识别并突出 breaking changes（如有），highlights 聚焦 API 变化的用户价值
+
+## Assertions
+
+- `audience_value`: 面向目标用户说明发布价值，而不是只罗列提交或 PR
+- `change_grouping`: 按 features、fixes、breaking changes 或等价分组组织变更
+- `source_links`: 保留正确版本、仓库和 PR 或 release 相关链接
+- `requested_output`: 按用户要求写入或明确给出目标 release notes 产物
 
 ## With Skill
 
-- Produces SDK-oriented release notes with memory tools, model capabilities, async error fixes, and upgrade command.
-- Handles breaking-change logic by stating no breaking changes when the new capability fields remain optional.
-- Iteration 2 improves examples and error-handling explanation.
+Observed behavior:
 
-## Without Skill
+- 当前 skill 明确面向技术受众但保持用户价值导向，突出 breaking changes 或说明无 breaking，包含升级命令、关键 PR 链接和版本信息，满足 SDK release notes 断言。
 
-- Produces detailed notes, but includes more implementation-type detail and less concise user guidance.
+## Without Skill / Baseline
+
+- Baseline behavior is diagnostic only.
+- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures
 
-- None recorded.
+- None found in fresh Codex subagent validation.
 
 ## Next Steps
 
-- Keep this eval for SDK releases with API capability and upgrade guidance.
-- Runtime release-note files and timing data should not be committed.
+- 真实运行时需验证 v0.86.0 release 数据。
+
+## Runtime Artifacts Policy
+
+- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.

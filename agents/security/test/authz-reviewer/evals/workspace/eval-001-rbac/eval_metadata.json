@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-001-rbac",
+  "eval_name": "Role-Based Access Control",
+  "workspace_root": "agents/security/test/authz-reviewer/evals/workspace/eval-001-rbac",
+  "skill_availability_goal": "Test review of RBAC implementation in multi-role app",
+  "prompt": "Review the authorization logic for this admin/user/guest system."
+}

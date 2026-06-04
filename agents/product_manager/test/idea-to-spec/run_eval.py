@@ -11,9 +11,37 @@ if str(REPO_ROOT) not in sys.path:
 from scripts.eval_runtime import display_path, eval_runtime_root
 from transcript_runner import generate_eval_outputs
 
+OUTPUT_FIELDS = (
+    "with_skill_outputs",
+    "without_skill_outputs",
+    "baseline_outputs",
+    "baseline_output",
+    "baseline_skill_outputs",
+)
+MACHINE_ASSERTION_FIELDS = (
+    "all_of",
+    "all_of_any",
+    "any_of",
+    "none_of",
+    "count_at_least",
+)
+
 
 def load_metadata(path: Path) -> dict:
     return json.loads(path.read_text())
+
+
+def has_deterministic_checks(meta: dict) -> bool:
+    if any(meta.get(field) for field in OUTPUT_FIELDS):
+        return True
+
+    for assertion in meta.get("assertions", []):
+        if isinstance(assertion, dict) and any(
+            field in assertion for field in MACHINE_ASSERTION_FIELDS
+        ):
+            return True
+
+    return False
 
 
 def check_outputs(root: Path, outputs: list) -> list[tuple[str, bool]]:
@@ -162,6 +190,26 @@ def render_report(
     return "\n".join(lines) + "\n"
 
 
+def render_not_applicable_report(meta: dict) -> str:
+    lines = [
+        f"# Eval {meta['eval_id']}: {meta['eval_name']}",
+        "",
+        "## Prompt",
+        "",
+        meta["prompt"],
+        "",
+        "## Runner Status",
+        "",
+        "- [SKIP] This eval has no deterministic outputs or machine-checkable assertions.",
+        "- Run fresh subagent validation separately, then update the durable `comparison.md`.",
+        "",
+        "## Runtime Artifact Policy",
+        "",
+        "- Runtime transcripts and status files are diagnostics, not metadata outputs.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def main() -> int:
     if len(sys.argv) not in (2, 3):
         print("Usage: run_eval.py <path-to-eval_metadata.json> [--skip-generate]")
@@ -171,6 +219,13 @@ def main() -> int:
     should_generate = "--skip-generate" not in sys.argv[2:]
     root = eval_runtime_root(metadata_path, "product_manager")
     meta = load_metadata(metadata_path)
+
+    if not has_deterministic_checks(meta):
+        report_path = root / "comparison.auto.md"
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(render_not_applicable_report(meta))
+        print(display_path(report_path))
+        return 0
 
     if should_generate:
         generate_eval_outputs(metadata_path)

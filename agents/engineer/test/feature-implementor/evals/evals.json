@@ -6,25 +6,25 @@
     {
       "id": "eval-001-implement-from-prd-trd",
       "name": "implement-from-prd-trd",
-      "description": "Verifies that feature-implementor handles implement-from-prd-trd and produces the expected role-specific artifact.",
+      "description": "Verifies that feature-implementor handles implement-from-prd-trd by producing an implementation plan and waiting for confirmation before coding.",
       "prompt": "根据 docs/pm/notification-center/PRD.md 和 docs/engineer/notification-center/TRD.md 实现用户通知功能",
-      "workspace": null,
-      "expected_output": "IMPLEMENTATION_PLAN.md + 代码文件创建/修改 + 自检报告",
+      "workspace": "workspace/eval-001-implement-from-prd-trd",
+      "expected_output": "IMPLEMENTATION_PLAN.md + 文件变更清单 + 实现顺序 + 用户确认门禁，不直接写代码",
       "assertions": [
         {
-          "id": "assertion_1",
+          "id": "writes_implementation_plan",
           "description": "生成实现计划",
-          "text": "输出包含实现计划文档路径、文件变更清单和实现顺序"
+          "text": "输出包含 `docs/engineer/notification-center/IMPLEMENTATION_PLAN.md`、文件变更清单和实现顺序。"
         },
         {
-          "id": "trd",
-          "description": "代码符合 TRD",
-          "text": "实现的代码结构符合 TRD 描述的架构"
+          "id": "requires_user_confirmation",
+          "description": "等待用户确认",
+          "text": "输出必须要求用户确认实施计划后再开始编码。"
         },
         {
-          "id": "assertion_3",
-          "description": "自检通过",
-          "text": "输出包含自检结果，检查 TRD/API/PRD 符合度"
+          "id": "does_not_implement_directly",
+          "description": "不直接实施",
+          "text": "输出不得声称已经创建或修改代码文件、运行实现步骤或完成自检。"
         }
       ]
     },
@@ -65,16 +65,21 @@
           "id": "final_summary_contract",
           "description": "最终交付说明完整",
           "text": "输出必须说明最终交付需要包含实现结果、测试情况、验收结论和遗留风险。"
+        },
+        {
+          "id": "qa_e2e_handoff_contract",
+          "description": "QA E2E 交接包",
+          "text": "输出必须说明代码完成后需要形成 QA E2E 文档补充交接包，至少包含 PRD、TRD、已确认 IMPLEMENTATION_PLAN、变更文件、验证命令、测试结果、风险和建议 docs/qa/e2e/{一级功能}/{二级功能}/{三级功能} 功能目录。"
         }
       ]
     },
     {
       "id": "eval-003-missing-trd-handoff",
       "name": "missing-trd-handoff",
-      "description": "Verifies that feature-implementor stops before implementation when the Engineer TRD is missing and hands back to trd-gen.",
+      "description": "Verifies that feature-implementor stops before implementation when the Engineer TRD is missing and hands back a complete TRD gap packet to trd-gen.",
       "prompt": "请根据 docs/pm/capture-loop/PRD.md 实现 Capture Loop 队列重试能力。当前 workspace 没有 docs/engineer/capture-loop/TRD.md；请判断下一步，不要直接写代码。",
       "workspace": "workspace/eval-003-missing-trd-handoff",
-      "expected_output": "识别缺少已确认 Engineer TRD，停止实现计划和代码实现，明确 handoff 给 engineer-agent:trd-gen 编写 docs/engineer/capture-loop/TRD.md，并说明缺失的技术决策。",
+      "expected_output": "识别缺少已确认 Engineer TRD，停止实现计划和代码实现，明确 handoff 给 engineer-agent:trd-gen 编写 docs/engineer/capture-loop/TRD.md，并列出 TRD gap packet：受影响组件、数据流/API/集成影响、验证命令、发布风险和错误处理策略等缺失技术决策；同时说明发现者负责说明缺口，trd-gen 负责补完整 TRD。",
       "assertions": [
         {
           "id": "detects_missing_engineer_trd",
@@ -94,7 +99,122 @@
         {
           "id": "names_required_trd_decisions",
           "description": "列出缺失技术决策",
-          "text": "输出必须说明至少一个需要 TRD 决定的技术问题，例如组件影响、重试策略、验证命令或风险。"
+          "text": "输出必须列出 TRD 必须解决的缺失技术决策，覆盖受影响组件或模块、数据流/API/集成影响、验证命令、发布或回滚风险，以及错误处理、可观测性或安全策略。"
+        },
+        {
+          "id": "keeps_finder_trd_gen_boundary",
+          "description": "保持发现者和 trd-gen 边界",
+          "text": "输出必须明确发现者只负责把 TRD 缺口说清楚，`engineer-agent:trd-gen` 负责补完整 `docs/engineer/capture-loop/TRD.md`。"
+        }
+      ]
+    },
+    {
+      "id": "eval-004-small-change-plan-gate",
+      "name": "small-change-plan-gate",
+      "description": "Verifies that a small single-file implementation still confirms PRD alignment, produces an implementation plan, records the sub-agent split decision, and waits for confirmation.",
+      "prompt": "docs/pm/settings-label/PRD.md 和 docs/engineer/settings-label/TRD.md 已确认。请把设置页按钮文案从「保存」改成「保存设置」，这是一个单文件小改动。请进入 feature-implementor。",
+      "workspace": "workspace/eval-004-small-change-plan-gate",
+      "expected_output": "确认 PRD/TRD 已覆盖该文案变更，产出简短 IMPLEMENTATION_PLAN.md，说明无需复杂 sub-agent 拆分，等待用户确认，不直接修改代码。",
+      "assertions": [
+        {
+          "id": "records_prd_alignment",
+          "description": "记录 PRD 对齐",
+          "text": "输出必须说明已读取或确认 `docs/pm/settings-label/PRD.md` 和 `docs/engineer/settings-label/TRD.md`，并在实施计划中记录 PRD 对齐状态；不得因为没有单独的 `DECISIONS.md` 而阻塞。"
+        },
+        {
+          "id": "writes_plan_for_small_change",
+          "description": "小改动仍写实施计划",
+          "text": "输出必须要求产出或更新 `docs/engineer/settings-label/IMPLEMENTATION_PLAN.md`，即使这是单文件小改动。"
+        },
+        {
+          "id": "records_split_decision",
+          "description": "记录拆分判断",
+          "text": "输出必须说明本次是否触发 implementation/validation sub-agent split，并说明小改动不拆分不代表跳过实施计划。"
+        },
+        {
+          "id": "waits_for_user_confirmation",
+          "description": "等待计划确认",
+          "text": "输出必须要求用户确认实施计划后再开始实施。"
+        },
+        {
+          "id": "blocks_e2e_without_confirmed_plan",
+          "description": "E2E 文档补充依赖确认计划",
+          "text": "输出必须说明后续 QA E2E 文档补充只能引用已确认的 `docs/engineer/settings-label/IMPLEMENTATION_PLAN.md`；如果计划缺失或未确认，E2E TC 新增或更新必须 blocked。"
+        },
+        {
+          "id": "does_not_modify_code",
+          "description": "不得直接修改代码",
+          "text": "输出不得声称已经修改按钮文案、编辑代码文件或完成实现。"
+        }
+      ]
+    },
+    {
+      "id": "eval-005-existing-behavior-change-needs-pm",
+      "name": "existing-behavior-change-needs-pm",
+      "description": "Verifies that feature-implementor stops before implementation planning when a small existing-feature change would alter approved PRD/TRD behavior or an existing product decision.",
+      "prompt": "docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都规定 active 列表排除 archived。现在请进入 feature-implementor，把 active 列表改成包含 archived；这是一个很小的单文件改动。",
+      "workspace": "workspace/eval-005-existing-behavior-change-needs-pm",
+      "expected_output": "识别这是改变已批准预期，停止创建 IMPLEMENTATION_PLAN.md，交回 pm-agent:idea-to-spec existing-project-update 更新 PRD 或产品决策记录，再同步 TRD。",
+      "assertions": [
+        {
+          "id": "checks_approved_behavior",
+          "description": "检查已批准预期",
+          "text": "输出必须先根据 PRD/TRD 判断 active 列表包含 archived 是否改变既有预期，而不是只按单文件小改动处理。"
+        },
+        {
+          "id": "stops_before_implementation_plan",
+          "description": "停止实施计划",
+          "text": "输出不得开始编写或更新 `docs/engineer/notifications/IMPLEMENTATION_PLAN.md`，因为 PRD 或产品决策记录尚未更新。"
+        },
+        {
+          "id": "hands_off_to_pm_existing_update",
+          "description": "交回 PM existing-project-update",
+          "text": "输出必须要求先走 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径更新 PRD 或产品决策记录，并在之后同步 TRD。"
+        },
+        {
+          "id": "blocks_e2e_expected_behavior_change",
+          "description": "预期未对齐时阻断 E2E",
+          "text": "输出必须说明在 PRD 或产品决策更新、TRD 同步和实施计划确认前，不能把 archived 进入 active 列表写成新的 E2E TC 或验收预期。"
+        },
+        {
+          "id": "does_not_implement_directly",
+          "description": "不得直接实施",
+          "text": "输出不得声称已经修改代码、更新测试或完成实现。"
+        }
+      ]
+    },
+    {
+      "id": "eval-006-small-bug-fix-plan-gate",
+      "name": "small-bug-fix-plan-gate",
+      "description": "Verifies that a small spec-backed bug fix routed into feature-implementor still writes an implementation plan and waits for confirmation.",
+      "prompt": "debugger 已确认通知中心 active 列表没有排除 archived 是实现偏离 PRD/TRD，不是需求变更；根因是 src/api/notifications.ts 的过滤条件少了 archived。现在请进入 feature-implementor 落地这个单文件小 bug fix，但先不要改代码。",
+      "workspace": "workspace/eval-006-small-bug-fix-plan-gate",
+      "expected_output": "基于已确认 PRD/TRD 和 debugger 根因，产出或更新 docs/engineer/notifications/IMPLEMENTATION_PLAN.md，记录 PRD 对齐、文件范围、验证命令和无需复杂 sub-agent 拆分，等待用户确认，不直接修复。",
+      "assertions": [
+        {
+          "id": "treats_bug_fix_as_spec_backed",
+          "description": "按 spec-backed bug fix 处理",
+          "text": "输出必须说明该 bug fix 已由 debugger 确认为实现偏离 PRD/TRD，因此可以进入 feature-implementor，但仍属于需要计划的实现任务；不得要求额外存在 `DECISIONS.md`。"
+        },
+        {
+          "id": "writes_bug_fix_implementation_plan",
+          "description": "小 bug fix 仍写实施计划",
+          "text": "输出必须要求产出或更新 `docs/engineer/notifications/IMPLEMENTATION_PLAN.md`，并列出目标文件 `src/api/notifications.ts` 和验证命令。"
+        },
+        {
+          "id": "records_no_complex_split",
+          "description": "记录轻量分工判断",
+          "text": "输出必须说明这是单文件小修复，可以不触发复杂 implementation/validation sub-agent split，但不能跳过实施计划。"
+        },
+        {
+          "id": "waits_before_fixing",
+          "description": "等待确认再修",
+          "text": "输出必须等待用户确认实施计划后再修改代码，不得声称已经应用修复或验证通过。"
+        },
+        {
+          "id": "prepares_e2e_handoff_after_fix",
+          "description": "修复完成后准备 E2E 交接",
+          "text": "输出必须说明修复完成后需要把 PRD/TRD 对齐结论、已确认 IMPLEMENTATION_PLAN、变更文件、验证命令和建议功能树目录交给 QA E2E 文档补充流程；未完成修复计划确认前不得更新 E2E TC。"
         }
       ]
     }

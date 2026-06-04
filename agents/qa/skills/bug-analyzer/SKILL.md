@@ -9,20 +9,29 @@ Turn a failing scenario into a defect artifact only when the evidence crosses a 
 
 ## Shared QA Directory Contract
 
-For feature-scoped QA artifacts, prefer `docs/qa/<feature-name>/` when it
-exists:
+For feature-scoped E2E or reusable regression artifacts, prefer the function
+tree directory when it exists:
 
-- `test-cases/` stores reusable cases; every E2E case must be one Markdown file
+`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`
+
+- `cases/` stores reusable cases; every E2E case must be one Markdown file
   named `TC-NNN-<short-slug>.md`.
-- `FILE_EXPLORATION.md` records file exploration used to derive or expand
+- `scripts/` stores matching repeatable flow snippets when the reproduction
+  should become executable.
+- `FLOW_INDEX.md` records flow, source, route, or API evidence used to derive
   reusable coverage.
-- `reports/` stores bug analysis artifacts when no stronger repo convention
-  exists.
+- `results/` and `_reports/` store versioned execution evidence and summaries.
 
 Bug analysis does not create broad test plans, but when a confirmed E2E
 reproduction should become reusable regression coverage, write or update one
-case file under `docs/qa/<feature-name>/test-cases/` and reference it from the
-defect artifact.
+case file under `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/` and reference
+it from the defect artifact.
+
+If the reusable TC would validate an existing-feature change or bug fix as an
+acceptance expectation, require PRD/TRD expectation alignment and a confirmed
+`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` before creating or updating
+that TC. If the expectation is unclear, keep the defect artifact focused on the
+observed failure and mark reusable E2E coverage as `blocked`.
 
 ## When to Use
 
@@ -85,8 +94,10 @@ Keep reproduction steps grounded in the observed evidence. If the failure is not
 Pick the durable output that matches the repo workflow and the user request.
 
 - Use a local Markdown artifact when the work is being tracked in-repo, when the repo does not require GitHub workflow, or when the user asked for a file-based handoff
-- Prefer `docs/qa/<feature-name>/reports/YYYY-MM-DD-bug-<short-slug>.md` when
-  a feature QA directory is known
+- For E2E-related defects, prefer the function-tree report path:
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/_reports/{platform-version}/test-reports-{test-time}.md`
+- For non-E2E defects where the repo has no stronger convention, use
+  `docs/qa-reports/YYYY-MM-DD-<feature>-bug-<short-slug>.md`
 - Use a GitHub issue only when the repository workflow explicitly wants issue tracking or the user requested an issue
 
 Do not assume GitHub issue creation is the primary output. Do not mutate code, commit changes, or invent a delivery workflow as part of this skill.
@@ -141,7 +152,7 @@ If the report adds a reusable E2E regression case, include:
 
 ```markdown
 ## Reusable Test Case
-- Test case file: docs/qa/<feature-name>/test-cases/TC-NNN-<short-slug>.md
+- Test case file: docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/TC-NNN-<short-slug>.md
 - Purpose: [why this case should be rerun]
 ```
 

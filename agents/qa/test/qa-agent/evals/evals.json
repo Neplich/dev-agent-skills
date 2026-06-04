@@ -24,7 +24,22 @@
         {
           "id": "qa",
           "description": "QA 用例记忆",
-          "text": "如果是独立 QA 或 E2E 请求，必须要求下游先读取 docs/qa/{feature}/TEST_SPEC.md 和 test-cases/*.md；如需扩充覆盖，应先询问用户是否有新功能更新、是否需要探索项目文件，并把探索记录写入 FILE_EXPLORATION.md"
+          "text": "如果是独立 QA 或 E2E 请求，必须要求下游先读取 docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md、FLOW_INDEX.md、cases/*.md、scripts/*.spec.md、历史 results/ 和 _reports/，而不是旧的单层 QA 目录。"
+        },
+        {
+          "id": "e2e_execution_protocol",
+          "description": "E2E 执行协议",
+          "text": "E2E 路由必须要求先确认测试场景和平台版本；版本缺失时 blocked 且不得写入 unknown；执行入口按 repo harness > Chrome plugin / browser connector > Playwright fallback 选择；单个 E2E TC 也默认由 subagent 执行，主 agent 负责拆分和汇总。"
+        },
+        {
+          "id": "credential_and_report_refs",
+          "description": "账号与报告 reference",
+          "text": "如果用户提供平台账号、SSH 账号或其他凭据，输出必须要求按 agents/qa/skills/qa-agent/references/e2e-credential-store.md upsert 到 .qa/e2e/accounts.local.json，测试文档只引用账号 ID；主 agent 汇总报告必须使用 e2e-test-report.md reference 的固定字段和路径。"
+        },
+        {
+          "id": "alignment_and_plan_gate",
+          "description": "PRD/TRD 与实施计划门禁",
+          "text": "如果请求来自现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须先检查 PRD/TRD 和存在的产品决策记录；预期变化回 PM，TRD gap 回 trd-gen，文档缺失 blocked；继续 E2E 前还必须引用已确认的 IMPLEMENTATION_PLAN.md。"
         },
         {
           "id": "assertion_4",
@@ -42,14 +57,14 @@
       "id": "eval-002-empty-qa-directory-expands-cases",
       "name": "empty-qa-directory-expands-cases",
       "description": "Verifies that qa-agent handles empty-qa-directory-expands-cases and produces the expected role-specific artifact.",
-      "prompt": "用户说：请对 profile-settings 做一次 E2E QA。docs/qa/profile-settings/ 目录已经存在，但 TEST_SPEC.md 和 test-cases/ 里没有任何测试用例。我确认这个功能有新更新，请主动探索项目文件来补充测试用例，然后基于新建的用例执行验证。先做 QA 路由和执行协议说明。",
+      "prompt": "用户说：请对 profile-settings 做一次 E2E QA。docs/qa/e2e/account/profile-settings/profile-form/ 功能目录已经存在，但 TEST_SUITE.md、FLOW_INDEX.md 和 cases/ 里没有任何测试用例。我确认这是 feature-update 场景且功能有新更新，请主动探索项目文件来补充测试用例，然后基于新建的用例执行验证。先做 QA 路由和执行协议说明。",
       "workspace": "workspace/eval-2-empty-qa-directory-expands-cases",
-      "expected_output": "QA 路由决策与执行协议，明确空 QA 用例目录需要触发目标文件探索、创建 FILE_EXPLORATION.md、创建独立 E2E 测试用例文件，并要求后续验证基于这些用例执行",
+      "expected_output": "QA 路由决策与执行协议，明确空 E2E 功能树目录需要触发目标文件探索、更新 TEST_SUITE.md 和 FLOW_INDEX.md、创建独立 TC 与 script 文件，并要求后续验证基于这些用例执行",
       "assertions": [
         {
           "id": "assertion_1",
           "description": "空目录识别",
-          "text": "必须识别 docs/qa/profile-settings/ 已存在但缺少 TEST_SPEC.md，且 test-cases/ 没有可执行测试用例；不能把空目录当作已有覆盖"
+          "text": "必须识别 docs/qa/e2e/account/profile-settings/profile-form/ 已存在但 TEST_SUITE.md、FLOW_INDEX.md 和 cases/ 没有可执行 TC；不能把空功能目录当作已有覆盖，也不能回退到旧的单层 profile-settings QA 目录。"
         },
         {
           "id": "assertion_2",
@@ -59,17 +74,22 @@
         {
           "id": "assertion_3",
           "description": "探索记录沉淀",
-          "text": "必须要求创建或更新 docs/qa/profile-settings/FILE_EXPLORATION.md，记录探索过的文件、发现的路由/表单/命令、覆盖含义和待确认假设"
+          "text": "必须要求更新 docs/qa/e2e/account/profile-settings/profile-form/TEST_SUITE.md 和 FLOW_INDEX.md，记录探索过的文件、发现的路由/表单/命令、覆盖含义和待确认假设。"
         },
         {
           "id": "e2e",
           "description": "E2E 用例创建",
-          "text": "必须要求为 profile-settings 创建 TEST_SPEC.md 或更新套件索引，并将每个新增 E2E 测试用例单独保存为 docs/qa/profile-settings/test-cases/TC-NNN-<short-slug>.md"
+          "text": "必须将每个新增 E2E 测试用例单独保存为 docs/qa/e2e/account/profile-settings/profile-form/cases/TC-NNN-<short-slug>.md，并把对应可执行或半可执行流程脚本保存为 scripts/TC-NNN-<short-slug>.spec.md；脚本不得包含明文账号、密码、token、cookie、session、SSH 密码或 SSH key。"
         },
         {
           "id": "assertion_5",
           "description": "用例驱动执行",
-          "text": "必须声明执行验证要基于新建的用例文件和仓库提供的 E2E harness；如果仓库没有脚本化 harness 但环境说明提供 Chrome 插件浏览器验证入口，必须显式写出使用 Chrome 插件 / browser connector 执行，而不是直接使用 Playwright；不应每次重新全量阅读项目，也不应跳过用例文件直接做临时探索"
+          "text": "必须声明执行验证要基于新建的 TC 和 script；feature-update 场景只覆盖更新功能和直接影响路径；执行入口必须先判断 repo harness，无法覆盖时使用 Chrome 插件 / browser connector，Chrome 不可用时才使用 Playwright 兜底。"
+        },
+        {
+          "id": "version_and_subagent_gate",
+          "description": "版本与 subagent 门禁",
+          "text": "执行前必须确认测试平台版本；缺失时 blocked 并询问用户，不得使用 unknown 目录；所有 E2E TC 默认交给 subagent 执行，主 agent 最终按 e2e-test-report.md 生成 feature-update 报告到功能目录 _reports/{platform-version}/test-reports-{test-time}.md。"
         },
         {
           "id": "assertion_6",

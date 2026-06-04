@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-003-python",
+  "eval_name": "Python Dependency Audit",
+  "workspace_root": "agents/security/test/dependency-risk-auditor/evals/workspace/eval-003-python",
+  "skill_availability_goal": "Test audit of Python project dependencies",
+  "prompt": "Review Python dependencies for security issues."
+}

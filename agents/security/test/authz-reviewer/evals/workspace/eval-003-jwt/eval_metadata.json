@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-003-jwt",
+  "eval_name": "JWT Implementation",
+  "workspace_root": "agents/security/test/authz-reviewer/evals/workspace/eval-003-jwt",
+  "skill_availability_goal": "Test review of JWT token security",
+  "prompt": "Review the JWT authentication implementation."
+}

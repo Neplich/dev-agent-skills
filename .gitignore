@@ -12,15 +12,15 @@ Icon?
 .Spotlight-V100
 .Trashes
 
-docs/pm/
-docs/product_manager/
-
 # temp
 .pytest_cache/
 __pycache__/
 *.pyc
 tmp
 tmp/eval-runs/
+
+# local QA E2E credentials
+.qa/e2e/accounts.local.json
 
 # eval runtime artifacts
 agents/**/test/**/workspace/**/with_skill/

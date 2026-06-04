@@ -1,5 +1,7 @@
 import importlib.util
+import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -37,6 +39,401 @@ class EvalContractTests(unittest.TestCase):
         self.assertEqual(
             [error.render(checker.repo_root()) for error in errors],
             [],
+        )
+
+    def test_eval_contract_rejects_null_workspace(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
+            skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
+            evals_path.parent.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            skill_doc.write_text("# Debugger\n")
+            evals_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "1.0",
+                        "agent": "engineer",
+                        "skill_name": "debugger",
+                        "evals": [
+                            {
+                                "id": "eval-001-null-workspace",
+                                "name": "null-workspace",
+                                "description": "Invalid null workspace fixture",
+                                "prompt": "Run the eval",
+                                "workspace": None,
+                                "expected_output": "A result",
+                                "assertions": [
+                                    {
+                                        "id": "has_result",
+                                        "description": "Has a result",
+                                        "text": "Result is present",
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("workspace must be a non-empty string", rendered)
+
+    def test_eval_contract_rejects_subagent_verdict_metadata_outputs(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
+            skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
+            workspace = evals_path.parent / "workspace/eval-001-subagent-verdict"
+            workspace.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            skill_doc.write_text("# Debugger\n")
+            (workspace / "comparison.md").write_text("# Comparison\n")
+            (workspace / "eval_metadata.json").write_text(
+                json.dumps(
+                    {
+                        "eval_id": "eval-001-subagent-verdict",
+                        "eval_name": "subagent-verdict",
+                        "validation_method": "fresh_codex_subagent",
+                        "with_skill_outputs": [
+                            "with_skill/outputs/subagent-verdict.md"
+                        ],
+                        "without_skill_outputs": [
+                            "without_skill/outputs/subagent-verdict.md"
+                        ],
+                    }
+                )
+            )
+            evals_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "1.0",
+                        "agent": "engineer",
+                        "skill_name": "debugger",
+                        "evals": [
+                            {
+                                "id": "eval-001-subagent-verdict",
+                                "name": "subagent-verdict",
+                                "description": "Invalid runtime verdict output",
+                                "prompt": "Run the eval",
+                                "workspace": "workspace/eval-001-subagent-verdict",
+                                "expected_output": "A result",
+                                "assertions": [
+                                    {
+                                        "id": "has_result",
+                                        "description": "Has a result",
+                                        "text": "Result is present",
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("validation_method must not be committed", rendered)
+        self.assertIn("must not reference runtime diagnostic output", rendered)
+
+    def test_eval_contract_rejects_transcript_metadata_assertion_targets(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
+            skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
+            workspace = evals_path.parent / "workspace/eval-001-transcript-target"
+            workspace.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            skill_doc.write_text("# Debugger\n")
+            (workspace / "comparison.md").write_text("# Comparison\n")
+            (workspace / "eval_metadata.json").write_text(
+                json.dumps(
+                    {
+                        "eval_id": "eval-001-transcript-target",
+                        "eval_name": "transcript-target",
+                        "assertions": [
+                            {
+                                "id": "has_transcript_text",
+                                "description": "Invalid transcript target",
+                                "target": "with_skill/outputs/transcript.md",
+                                "all_of": ["Result"],
+                            }
+                        ],
+                    }
+                )
+            )
+            evals_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "1.0",
+                        "agent": "engineer",
+                        "skill_name": "debugger",
+                        "evals": [
+                            {
+                                "id": "eval-001-transcript-target",
+                                "name": "transcript-target",
+                                "description": "Invalid transcript target",
+                                "prompt": "Run the eval",
+                                "workspace": "workspace/eval-001-transcript-target",
+                                "expected_output": "A result",
+                                "assertions": [
+                                    {
+                                        "id": "has_result",
+                                        "description": "Has a result",
+                                        "text": "Result is present",
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("must not reference runtime diagnostic output", rendered)
+        self.assertIn("with_skill/outputs/transcript.md", rendered)
+
+    def test_eval_contract_allows_fixture_context_diagnostic_names(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
+            skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
+            workspace = evals_path.parent / "workspace/eval-001-fixture-transcript"
+            workspace.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            skill_doc.write_text("# Debugger\n")
+            (workspace / "comparison.md").write_text("# Comparison\n")
+            (workspace / "eval_metadata.json").write_text(
+                json.dumps(
+                    {
+                        "eval_id": "eval-001-fixture-transcript",
+                        "eval_name": "fixture-transcript",
+                        "fixture_context": [
+                            "fixtures/customer-interview/transcript.md",
+                            "fixtures/diagnostics/readme.md",
+                        ],
+                    }
+                )
+            )
+            evals_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "1.0",
+                        "agent": "engineer",
+                        "skill_name": "debugger",
+                        "evals": [
+                            {
+                                "id": "eval-001-fixture-transcript",
+                                "name": "fixture-transcript",
+                                "description": "Valid fixture transcript input",
+                                "prompt": "Run the eval",
+                                "workspace": "workspace/eval-001-fixture-transcript",
+                                "expected_output": "A result",
+                                "assertions": [
+                                    {
+                                        "id": "has_result",
+                                        "description": "Has a result",
+                                        "text": "Result is present",
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        self.assertEqual(
+            "\n".join(error.render(root) for error in errors),
+            "",
+        )
+
+    def test_eval_contract_rejects_runtime_artifact_metadata_paths(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
+            skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
+            workspace = evals_path.parent / "workspace/eval-001-runtime-artifacts"
+            workspace.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            skill_doc.write_text("# Debugger\n")
+            (workspace / "comparison.md").write_text("# Comparison\n")
+            (workspace / "eval_metadata.json").write_text(
+                json.dumps(
+                    {
+                        "eval_id": "eval-001-runtime-artifacts",
+                        "eval_name": "runtime-artifacts",
+                        "with_skill_outputs": [
+                            "diagnostics",
+                            "with_skill/outputs/candidate-output.md",
+                            "with_skill/outputs/run_status.json",
+                        ],
+                        "run_diagnostics": ["diagnostics"],
+                    }
+                )
+            )
+            evals_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "1.0",
+                        "agent": "engineer",
+                        "skill_name": "debugger",
+                        "evals": [
+                            {
+                                "id": "eval-001-runtime-artifacts",
+                                "name": "runtime-artifacts",
+                                "description": "Invalid runtime artifact outputs",
+                                "prompt": "Run the eval",
+                                "workspace": "workspace/eval-001-runtime-artifacts",
+                                "expected_output": "A result",
+                                "assertions": [
+                                    {
+                                        "id": "has_result",
+                                        "description": "Has a result",
+                                        "text": "Result is present",
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("with_skill/outputs/candidate-output.md", rendered)
+        self.assertIn("with_skill/outputs/run_status.json", rendered)
+        self.assertIn("diagnostics", rendered)
+
+    def test_eval_contract_rejects_runner_diagnostics_with_empty_outputs(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
+            skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
+            workspace = evals_path.parent / "workspace/eval-001-empty-outputs"
+            workspace.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            skill_doc.write_text("# Debugger\n")
+            (workspace / "comparison.md").write_text("# Comparison\n")
+            (workspace / "eval_metadata.json").write_text(
+                json.dumps(
+                    {
+                        "eval_id": "eval-001-empty-outputs",
+                        "eval_name": "empty-outputs",
+                        "with_skill_outputs": [],
+                        "without_skill_outputs": [],
+                        "run_diagnostics": ["diagnostics/run.json"],
+                    }
+                )
+            )
+            evals_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "1.0",
+                        "agent": "engineer",
+                        "skill_name": "debugger",
+                        "evals": [
+                            {
+                                "id": "eval-001-empty-outputs",
+                                "name": "empty-outputs",
+                                "description": "Invalid empty output fields",
+                                "prompt": "Run the eval",
+                                "workspace": "workspace/eval-001-empty-outputs",
+                                "expected_output": "A result",
+                                "assertions": [
+                                    {
+                                        "id": "has_result",
+                                        "description": "Has a result",
+                                        "text": "Result is present",
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "run_diagnostics requires deterministic runner outputs",
+            rendered,
+        )
+        self.assertNotIn("execution_cleanup requires deterministic runner outputs", rendered)
+
+    def test_eval_contract_allows_execution_cleanup_without_outputs(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
+            skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
+            workspace = evals_path.parent / "workspace/eval-001-cleanup-only"
+            workspace.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            skill_doc.write_text("# Debugger\n")
+            (workspace / "comparison.md").write_text("# Comparison\n")
+            (workspace / "eval_metadata.json").write_text(
+                json.dumps(
+                    {
+                        "eval_id": "eval-001-cleanup-only",
+                        "eval_name": "cleanup-only",
+                        "execution_cleanup": ["docs/pm/"],
+                    }
+                )
+            )
+            evals_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "1.0",
+                        "agent": "engineer",
+                        "skill_name": "debugger",
+                        "evals": [
+                            {
+                                "id": "eval-001-cleanup-only",
+                                "name": "cleanup-only",
+                                "description": "Valid cleanup-only metadata",
+                                "prompt": "Run the eval",
+                                "workspace": "workspace/eval-001-cleanup-only",
+                                "expected_output": "A result",
+                                "assertions": [
+                                    {
+                                        "id": "has_result",
+                                        "description": "Has a result",
+                                        "text": "Result is present",
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        self.assertEqual(
+            "\n".join(error.render(root) for error in errors),
+            "",
         )
 
     def test_artifact_checker_blocks_tmp_eval_runs(self):
