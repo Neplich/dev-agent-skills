@@ -270,9 +270,16 @@ def flatten_output_specs(value, *, nested: bool = False) -> list[tuple[str, list
     raise TypeError(f"Unsupported output spec: {value!r}")
 
 
+def output_base(defn: EvalDefinition, rel_path: str) -> Path:
+    first_part = Path(rel_path).parts[0] if Path(rel_path).parts else ""
+    if first_part in {"with_skill", "without_skill", "baseline"}:
+        return defn.runtime_root
+    return defn.runtime_workspace_root
+
+
 def output_exists(defn: EvalDefinition, rel_paths: list[str]) -> bool:
     for rel_path in rel_paths:
-        target = defn.runtime_workspace_root / rel_path
+        target = output_base(defn, rel_path) / rel_path
         if target.exists() and (target.is_dir() or target.stat().st_size > 0):
             return True
     return False

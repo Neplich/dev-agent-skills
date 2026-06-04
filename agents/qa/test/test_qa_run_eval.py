@@ -109,6 +109,74 @@ class QaRunEvalTests(unittest.TestCase):
             ],
         )
 
+    def test_output_check_uses_runtime_root_for_runner_outputs(self):
+        run_eval = load_run_eval_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            skill_root = root / "qa-agent"
+            eval_root = skill_root / "evals/workspace/eval-001-runtime-output"
+            eval_root.mkdir(parents=True)
+            (skill_root / "evals/evals.json").write_text(
+                """{
+  "schema_version": "1.0",
+  "agent": "qa",
+  "skill_name": "qa-agent",
+  "evals": [
+    {
+      "id": "eval-001-runtime-output",
+      "name": "runtime-output",
+      "description": "runtime-output",
+      "prompt": "runtime-output",
+      "workspace": "workspace/eval-001-runtime-output",
+      "expected_output": "runtime-output",
+      "assertions": [{"id": "runtime_output", "description": "runtime-output", "text": "runtime-output"}]
+    }
+  ]
+}
+"""
+            )
+            metadata = eval_root / "eval_metadata.json"
+            metadata.write_text(
+                """{
+  "eval_id": "eval-001-runtime-output",
+  "eval_name": "runtime-output",
+  "workspace_root": "workspace/eval-001-runtime-output",
+  "prompt": "runtime-output",
+  "fixture_context": [],
+  "with_skill_outputs": [
+    "with_skill/outputs/report.md"
+  ]
+}
+"""
+            )
+
+            old_output_dir = os.environ.get("EVAL_RUN_OUTPUT_DIR")
+            os.environ["EVAL_RUN_OUTPUT_DIR"] = str(root / "runs")
+            try:
+                loaded = run_eval.load_eval_definition(metadata)
+                report = loaded.runtime_root / "with_skill/outputs/report.md"
+                report.parent.mkdir(parents=True, exist_ok=True)
+                report.write_text("runtime report")
+
+                checks = run_eval.check_declared_outputs(loaded)
+            finally:
+                if old_output_dir is None:
+                    os.environ.pop("EVAL_RUN_OUTPUT_DIR", None)
+                else:
+                    os.environ["EVAL_RUN_OUTPUT_DIR"] = old_output_dir
+
+            self.assertEqual(
+                checks,
+                [
+                    {
+                        "field": "with_skill_outputs",
+                        "path": "with_skill/outputs/report.md",
+                        "ok": True,
+                    }
+                ],
+            )
+
     def test_render_report_marks_semantic_failures(self):
         run_eval = load_run_eval_module()
         metadata = Path(
