@@ -154,6 +154,8 @@ def validate_paths_stay_in_workspace(
     field: str,
     value: Any,
     errors: list[ContractError],
+    *,
+    forbid_runtime_diagnostics: bool = False,
 ) -> None:
     paths = flatten_path_specs(value)
     if paths is None:
@@ -168,7 +170,7 @@ def validate_paths_stay_in_workspace(
         target = (workspace_root / rel).resolve()
         if target != workspace_root and workspace_root not in target.parents:
             add_error(errors, metadata_path, f"{field} escapes eval workspace: {rel!r}")
-        if is_runtime_diagnostic_path(rel):
+        if forbid_runtime_diagnostics and is_runtime_diagnostic_path(rel):
             add_error(
                 errors,
                 metadata_path,
@@ -194,6 +196,7 @@ def validate_metadata_assertion_targets(
                 f"assertions[{index}].target",
                 assertion["target"],
                 errors,
+                forbid_runtime_diagnostics=True,
             )
 
 
@@ -246,6 +249,9 @@ def validate_metadata(
                 field,
                 metadata[field],
                 errors,
+                forbid_runtime_diagnostics=(
+                    field in OUTPUT_FIELDS or field == "run_diagnostics"
+                ),
             )
 
     validate_metadata_assertion_targets(metadata_path, workspace_root, metadata, errors)

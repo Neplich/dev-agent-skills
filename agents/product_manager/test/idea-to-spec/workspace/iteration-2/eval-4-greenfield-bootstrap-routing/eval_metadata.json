@@ -2,5 +2,8 @@
   "eval_id": "eval-004-greenfield-bootstrap-routing",
   "eval_name": "greenfield-bootstrap-routing",
   "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-2/eval-4-greenfield-bootstrap-routing",
+  "execution_cleanup": [
+    "PRD.md"
+  ],
   "prompt": "这是一个空目录。我想做一个 AI 对话助手，左侧是会话列表，右侧是聊天区。先不要直接初始化项目，先帮我梳理需求并落成 PRD 骨架。"
 }

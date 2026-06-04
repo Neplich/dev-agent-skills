@@ -61,6 +61,8 @@ Use it to:
    ├─ pm/{feature-name}/
    ├─ engineer/{feature-name}/
    ├─ qa/e2e/{一级功能}/{二级功能}/{三级功能}/
+   │  ├─ cases/
+   │  └─ scripts/
    ├─ design/{feature-name}/
    ├─ devops/{feature-name}/
    └─ security/{feature-name}/
@@ -73,6 +75,8 @@ Use it to:
      - Pre-populated fields from inputs (project name, description, team)
    - For ADR, create the directory plus an ADR template note or index rather
      than inventing a concrete decision record up front
+   - For E2E TEST_SUITE, create the full function-tree memory scaffold:
+     `TEST_SUITE.md`, `FLOW_INDEX.md`, empty `cases/`, and empty `scripts/`
 
    Use these canonical schema sources:
 
@@ -94,6 +98,8 @@ Use it to:
 
 - **Format**: Directory structure with Markdown files
 - **Stub quality**: Each stub has valid frontmatter and all required headings
+- **E2E scaffold**: Function-tree QA directories include `TEST_SUITE.md`,
+  `FLOW_INDEX.md`, `cases/`, and `scripts/`
 - **Index**: `docs/README.md` with document inventory
 - **Next steps**: Recommended skill execution order
 
@@ -137,7 +143,10 @@ docs/
 │     └─ commerce/
 │        └─ checkout/
 │           └─ optimization/
-│              └─ TEST_SUITE.md           (E2E TEST_SUITE stub)
+│              ├─ TEST_SUITE.md           (E2E TEST_SUITE stub)
+│              ├─ FLOW_INDEX.md           (flow coverage stub)
+│              ├─ cases/                  (E2E case files)
+│              └─ scripts/                (E2E flow scripts)
 ├─ design/
 │  └─ smart-checkout/
 │     └─ ui-ux-spec.md                    (UI/UX spec stub)

@@ -204,6 +204,64 @@ class EvalContractTests(unittest.TestCase):
         self.assertIn("must not reference runtime diagnostic output", rendered)
         self.assertIn("with_skill/outputs/transcript.md", rendered)
 
+    def test_eval_contract_allows_fixture_context_diagnostic_names(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
+            skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
+            workspace = evals_path.parent / "workspace/eval-001-fixture-transcript"
+            workspace.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            skill_doc.write_text("# Debugger\n")
+            (workspace / "comparison.md").write_text("# Comparison\n")
+            (workspace / "eval_metadata.json").write_text(
+                json.dumps(
+                    {
+                        "eval_id": "eval-001-fixture-transcript",
+                        "eval_name": "fixture-transcript",
+                        "fixture_context": [
+                            "fixtures/customer-interview/transcript.md",
+                            "fixtures/diagnostics/readme.md",
+                        ],
+                    }
+                )
+            )
+            evals_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "1.0",
+                        "agent": "engineer",
+                        "skill_name": "debugger",
+                        "evals": [
+                            {
+                                "id": "eval-001-fixture-transcript",
+                                "name": "fixture-transcript",
+                                "description": "Valid fixture transcript input",
+                                "prompt": "Run the eval",
+                                "workspace": "workspace/eval-001-fixture-transcript",
+                                "expected_output": "A result",
+                                "assertions": [
+                                    {
+                                        "id": "has_result",
+                                        "description": "Has a result",
+                                        "text": "Result is present",
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        self.assertEqual(
+            "\n".join(error.render(root) for error in errors),
+            "",
+        )
+
     def test_eval_contract_rejects_runtime_artifact_metadata_paths(self):
         checker = load_checker_module()
 

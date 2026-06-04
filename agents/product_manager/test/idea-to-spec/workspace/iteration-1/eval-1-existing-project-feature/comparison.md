@@ -28,9 +28,10 @@
 Observed behavior:
 
 - PASS - fresh Codex subagent validation on 2026-06-04 confirmed all eval
-  assertions pass, and E2E QA document generation is aligned to
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` with `TEST_SUITE.md`,
-  `FLOW_INDEX.md`, `cases/`, and `scripts/`.
+  assertions pass. `project-init` creates the complete QA E2E function-tree
+  scaffold with `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/`, and `scripts/`;
+  `eval-004` keeps stale root `PRD.md` only as an `execution_cleanup` target
+  so PM-first empty-workspace routing remains stable.
 - 当前 skill 要求 Phase 0 先读项目上下文并选择 existing-project-feature lane，单决策点推进，关键点给 2-3 个方案和 trade-off，按 section 确认并写入 DECISIONS.md/PM 文档。
 
 ## Without Skill / Baseline
@@ -41,8 +42,8 @@ Observed behavior:
 ## Failures
 
 - None found in fresh Codex subagent validation.
-- No residual legacy QA TEST_SPEC path, test-cases directory, or file
-  exploration document requirements were found.
+- No residual legacy QA path, case-directory, or exploration-memory
+  requirements were found.
 
 ## Next Steps
 
