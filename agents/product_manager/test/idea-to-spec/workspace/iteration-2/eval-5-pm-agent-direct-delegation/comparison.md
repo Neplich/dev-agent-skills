@@ -7,7 +7,7 @@
 - Eval: `eval-005-pm-agent-direct-delegation`
 - Test case: pm-agent-direct-delegation
 - Workspace: `workspace/iteration-2/eval-5-pm-agent-direct-delegation`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `idea-to-spec` skill
 
 ## Test Set / Fixture Version
 
@@ -25,6 +25,10 @@
 
 Observed behavior:
 
+- PASS - fresh Codex subagent validation on 2026-06-04 confirmed all eval
+  assertions pass, and E2E QA document generation is aligned to
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` with `TEST_SUITE.md`,
+  `FLOW_INDEX.md`, `cases/`, and `scripts/`.
 - 当前 pm-agent downstream contract 要求路由到 idea-to-spec 后同轮继续 Phase 0 与需求收敛，不停在 dispatcher 说明，也不反问是否调用子 skill。
 
 ## Without Skill / Baseline
@@ -35,6 +39,8 @@ Observed behavior:
 ## Failures
 
 - None found in fresh Codex subagent validation.
+- No residual legacy QA TEST_SPEC path, test-cases directory, or file
+  exploration document requirements were found.
 
 ## Next Steps
 

@@ -37,8 +37,8 @@ gate has a clear result:
 - `trd_gap`: PM scope is stable, but the Engineer TRD is missing, incomplete,
   stale, or conflicts with the codebase; stop and hand back to
   `engineer-agent:trd-gen` with a TRD gap packet.
-- `explicit_skip`: the user explicitly asked to skip PRD alignment; record that
-  override in the implementation plan.
+- A user request to skip PRD alignment is not a valid planning state. Treat it
+  as blocked until PRD/TRD alignment is complete.
 
 From PRD:
 - List all P0 user stories and acceptance criteria
@@ -132,7 +132,7 @@ Output format:
 - 来源文档: <list>
 - TRD: docs/engineer/<feature>/TRD.md
 - 实现计划文档: docs/engineer/<feature>/IMPLEMENTATION_PLAN.md
-- PRD 对齐: <已覆盖 / 需要 PM 更新 / 文档缺失或不清 / 用户明确跳过>
+- PRD 对齐: <已覆盖 / 需要 PM 更新 / 文档缺失或不清 / TRD gap>
 - 预估文件数: <N> 个新建, <M> 个修改
 
 ### 步骤

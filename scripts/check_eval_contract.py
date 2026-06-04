@@ -40,7 +40,6 @@ OUTPUT_FIELDS = (
     "baseline_skill_outputs",
 )
 RUNNER_ONLY_FIELDS = (
-    "execution_cleanup",
     "run_diagnostics",
 )
 RUNTIME_DIAGNOSTIC_DIRS = (

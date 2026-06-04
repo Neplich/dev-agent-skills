@@ -434,7 +434,7 @@ Downstream docs should use the short-path agent structure:
 
 - `docs/design/{feature-name}/...`
 - `docs/engineer/{feature-name}/...`
-- `docs/qa/{feature-name}/...`
+- `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/...`
 - `docs/devops/{feature-name}/...`
 - `docs/security/{feature-name}/...`
 

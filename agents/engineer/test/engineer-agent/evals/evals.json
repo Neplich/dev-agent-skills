@@ -79,7 +79,7 @@
         {
           "id": "does_not_route_directly_to_implementation",
           "description": "不得直接进入实现",
-          "text": "输出不得把请求直接交给 `feature-implementor` 编写实现计划或开始编码，除非明确说明 PRD/TRD 已覆盖该行为或用户显式跳过对齐。"
+          "text": "输出不得把请求直接交给 `feature-implementor` 编写实现计划或开始编码；只有明确说明 PRD/TRD 已覆盖该行为时才能继续工程实现路径，用户要求跳过对齐不能作为继续理由。"
         }
       ]
     }

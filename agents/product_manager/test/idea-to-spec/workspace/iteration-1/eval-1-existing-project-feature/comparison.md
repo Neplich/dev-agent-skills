@@ -7,7 +7,7 @@
 - Eval: `eval-001-existing-project-feature-design`
 - Test case: existing-project-feature-design
 - Workspace: `workspace/iteration-1/eval-1-existing-project-feature`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `idea-to-spec` skill
 
 ## Test Set / Fixture Version
 
@@ -27,6 +27,10 @@
 
 Observed behavior:
 
+- PASS - fresh Codex subagent validation on 2026-06-04 confirmed all eval
+  assertions pass, and E2E QA document generation is aligned to
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` with `TEST_SUITE.md`,
+  `FLOW_INDEX.md`, `cases/`, and `scripts/`.
 - 当前 skill 要求 Phase 0 先读项目上下文并选择 existing-project-feature lane，单决策点推进，关键点给 2-3 个方案和 trade-off，按 section 确认并写入 DECISIONS.md/PM 文档。
 
 ## Without Skill / Baseline
@@ -37,6 +41,8 @@ Observed behavior:
 ## Failures
 
 - None found in fresh Codex subagent validation.
+- No residual legacy QA TEST_SPEC path, test-cases directory, or file
+  exploration document requirements were found.
 
 ## Next Steps
 

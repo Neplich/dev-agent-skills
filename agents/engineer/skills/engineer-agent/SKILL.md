@@ -77,8 +77,9 @@ Classify the request before engineering execution:
 - If PRD is missing, stale, or unclear, or an existing decision record conflicts
   with the request, keep the request in PM alignment first instead of guessing
   the intended behavior.
-- If the user explicitly asks to skip PRD alignment, state that override and
-  continue with the narrowest engineering route.
+- If the user explicitly asks to skip PRD alignment, record the request as a
+  blocker or risk, but do not route to implementation, repair, or E2E updates
+  until PRD/TRD alignment is complete.
 
 The TRD gap packet must identify the missing technical decisions that block
 implementation, including affected components or modules, data flow / API /

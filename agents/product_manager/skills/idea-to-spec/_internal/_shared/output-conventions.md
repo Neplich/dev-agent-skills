@@ -85,8 +85,11 @@ docs/<agent-short>/<feature-name>/<DOC>.md
 
 - Design: `ui-ux-spec.md`, `visual-system.md`
 - Engineer: `TRD.md`, `API.md`, `ADR-001-<title>.md`
-- QA: `TEST_SPEC.md`, `FILE_EXPLORATION.md`,
-  `test-cases/TC-NNN-<short-slug>.md`, `reports/YYYY-MM-DD-<report>.md`
+- QA E2E: `TEST_SUITE.md`, `FLOW_INDEX.md`,
+  `cases/TC-NNN-<short-slug>.md`,
+  `scripts/TC-NNN-<short-slug>.spec.md`,
+  `results/TC-NNN-<short-slug>/{platform-version}/result.md`,
+  `_reports/{platform-version}/test-reports-{test-time}.md`
 - DevOps: `RELEASE_PLAN.md`
 - Security: `SECURITY_REVIEW.md`
 
@@ -98,10 +101,10 @@ docs/<agent-short>/<feature-name>/<DOC>.md
   artifacts use uppercase names, while Designer artifacts use
   `ui-ux-spec.md` and `visual-system.md`
 - Store each E2E test case in one file under
-  `docs/qa/<feature-name>/test-cases/`; keep `TEST_SPEC.md` as the index and
-  traceability summary
-- Use `FILE_EXPLORATION.md` to persist source-file exploration that expands QA
-  coverage
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/`; keep `TEST_SUITE.md`
+  as the index and traceability summary
+- Use `FLOW_INDEX.md` to persist source-file exploration that expands QA
+  coverage and maps flows to TC files
 - Keep related docs in the same feature folder for that agent unless there is a
   clear reason to split further
 

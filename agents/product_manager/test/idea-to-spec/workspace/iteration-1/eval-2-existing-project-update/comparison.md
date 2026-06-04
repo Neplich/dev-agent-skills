@@ -7,7 +7,7 @@
 - Eval: `eval-002-existing-project-update`
 - Test case: existing-project-update
 - Workspace: `workspace/iteration-1/eval-2-existing-project-update`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `idea-to-spec` skill
 
 ## Test Set / Fixture Version
 
@@ -26,6 +26,10 @@
 
 Observed behavior:
 
+- PASS - fresh Codex subagent validation on 2026-06-04 confirmed all eval
+  assertions pass, and E2E QA document generation is aligned to
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` with `TEST_SUITE.md`,
+  `FLOW_INDEX.md`, `cases/`, and `scripts/`.
 - 当前 skill 和 skill-map 明确 existing-project-update lane：先做 delta/blast radius，优先 change-impactor 与 targeted iteration，列出受影响 PRD/TRD/DECISIONS 等文档，避免全量重写。
 
 ## Without Skill / Baseline
@@ -36,6 +40,8 @@ Observed behavior:
 ## Failures
 
 - None found in fresh Codex subagent validation.
+- No residual legacy QA TEST_SPEC path, test-cases directory, or file
+  exploration document requirements were found.
 
 ## Next Steps
 

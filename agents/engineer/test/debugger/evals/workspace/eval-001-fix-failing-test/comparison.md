@@ -7,7 +7,7 @@
 - Eval: `eval-001-fix-failing-test`
 - Test case: fix-failing-test
 - Workspace: `workspace/eval-001-fix-failing-test`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `debugger` skill
 
 ## Test Set / Fixture Version
 
@@ -21,6 +21,10 @@
 
 Current `SKILL.md` satisfies all assertions:
 
+- PASS - fresh Codex subagent validation on 2026-06-04 confirmed current
+  `debugger` aligns PRD/TRD expected behavior first, classifies requirement
+  alignment, reproduces and analyzes before planning, blocks E2E updates before
+  confirmed repair planning, and does not fix directly.
 - `aligns_expected_behavior`: Step 0 requires reading
   `docs/pm/{feature}/PRD.md` and `docs/engineer/{feature}/TRD.md` before
   deciding code should change. The fixture PRD/TRD define active notifications

@@ -7,7 +7,7 @@
 - Eval: `eval-004-greenfield-bootstrap-routing`
 - Test case: greenfield-bootstrap-routing
 - Workspace: `workspace/iteration-2/eval-4-greenfield-bootstrap-routing`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `idea-to-spec` skill
 
 ## Test Set / Fixture Version
 
@@ -26,6 +26,11 @@
 
 Observed behavior:
 
+- PASS - fresh Codex subagent validation on 2026-06-04 confirmed all eval
+  assertions pass, and E2E QA document generation is aligned to
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` with `TEST_SUITE.md`,
+  `FLOW_INDEX.md`, `cases/`, and `scripts/`, including the `project-init`
+  scaffolding example.
 - 当前 skill 对空或近空 workspace 的产品请求要求先输出 context summary，选择 greenfield-discovery/bootstrap PM-first lane，不运行脚手架，并把 PRD/DECISIONS/project-init 作为下一步。
 
 ## Without Skill / Baseline
@@ -36,6 +41,8 @@ Observed behavior:
 ## Failures
 
 - None found in fresh Codex subagent validation.
+- No residual legacy QA TEST_SPEC path, test-cases directory, or file
+  exploration document requirements were found.
 
 ## Next Steps
 

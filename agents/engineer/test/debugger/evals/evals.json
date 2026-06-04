@@ -112,9 +112,9 @@
           "text": "输出不得产出修复实施计划、修改代码、更新测试或声称已修复。"
         },
         {
-          "id": "allows_explicit_skip_only",
-          "description": "只有显式跳过才能继续",
-          "text": "输出必须说明除非用户明确要求跳过 PRD 对齐，否则不会直接按 bug 修复路径执行。"
+          "id": "blocks_explicit_skip_override",
+          "description": "显式跳过也不能继续",
+          "text": "输出必须说明用户要求跳过 PRD 对齐也不能直接按 bug 修复路径执行；只能记录为 blocker 或风险，等待 PRD/TRD 对齐完成。"
         }
       ]
     }

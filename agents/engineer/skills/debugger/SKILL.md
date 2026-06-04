@@ -96,10 +96,9 @@ Use those docs to classify the report:
   naming the missing or conflicting technical decisions; `trd-gen` owns
   completing the TRD.
 - If PRD is missing or ambiguous, or an existing decision record conflicts with
-  the report, stop before fixing and request PM alignment unless the user
-  explicitly asked to skip it.
-- If the user explicitly skips PRD alignment, state the override in the bug
-  analysis and continue with the smallest safe debug path.
+  the report, stop before fixing and request PM alignment. A user request to
+  skip PRD alignment is a blocker or risk note, not permission to continue into
+  repair planning, implementation, or E2E updates.
 
 Record the classification explicitly as one of:
 
@@ -111,7 +110,6 @@ Record the classification explicitly as one of:
   are missing or ambiguous.
 - `trd_gap`: PM scope is stable, but the TRD is missing, stale, incomplete, or
   conflicts with the codebase or bug context.
-- `explicit_skip`: the user explicitly asks to skip PRD alignment.
 
 A TRD gap packet should list the technical decisions that block debugging or
 repair planning, including affected components, data flow / API / integration
@@ -194,7 +192,7 @@ Before fixing, state the root cause clearly:
 ## 根因分析
 
 **问题**: <what's happening>
-**预期依据**: <PRD / TRD paths and sections, optional decisions, or explicit skip>
+**预期依据**: <PRD / TRD paths and sections, optional decisions, or blocked alignment gap>
 **根因**: <why it's happening>
 **位置**: <file:line>
 **影响**: <what else might be affected>
@@ -208,7 +206,7 @@ After confirming the root cause, report the analysis before planning or fixing:
 ## Bug 分析汇报
 
 - **问题**: <what's happening>
-- **预期依据**: <PRD / TRD paths and sections, optional decisions, or explicit skip>
+- **预期依据**: <PRD / TRD paths and sections, optional decisions, or blocked alignment gap>
 - **根因**: <why it's happening>
 - **位置**: <file:line>
 - **影响**: <what else might be affected>

@@ -7,7 +7,7 @@
 - Eval: `eval-005-existing-behavior-change-needs-pm`
 - Test case: existing-behavior-change-needs-pm
 - Workspace: `workspace/eval-005-existing-behavior-change-needs-pm`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `feature-implementor` skill
 
 ## Test Set / Fixture Version
 
@@ -28,12 +28,14 @@
 
 Observed behavior:
 
-- PASS - fresh Codex subagent validation completed on 2026-06-04.
+- PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `feature-implementor` skill.
 - Current `SKILL.md` requires existing-feature behavior changes to complete the PRD alignment gate before planning, including PRD, TRD, and product decision records when present.
 - If a request changes approved product behavior, the skill stops before implementation planning and hands off to `pm-agent:idea-to-spec` using the `existing-project-update` lane.
 - If PRD/product decisions need updates, the skill does not create `docs/engineer/notifications/IMPLEMENTATION_PLAN.md`, does not update tests, and does not implement code just because the change is small or single-file.
 - After PM alignment, stale or changed technical decisions return through TRD sync before implementation planning.
 - Because QA E2E handoff is only after implementation, self-review, and a confirmed implementation plan, this skill blocks turning the unaligned archived-in-active behavior into a new E2E expected result before PRD/product decision update, TRD sync, and plan confirmation.
+- User requests to skip PRD alignment are recorded as blocker/risk only; they
+  do not permit implementation planning, code changes, or E2E updates.
 
 ## Without Skill / Baseline
 

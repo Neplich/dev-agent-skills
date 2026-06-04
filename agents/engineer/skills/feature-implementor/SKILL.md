@@ -74,8 +74,9 @@ Classify the request:
 - If PRD is stable but TRD is missing, incomplete, or stale, stop and hand back
   to `engineer-agent:trd-gen` with a TRD gap packet. The finder owns naming the
   missing technical decisions; `trd-gen` owns completing the TRD.
-- If the user explicitly asks to skip PRD alignment, record that override in
-  the implementation plan before proceeding.
+- If the user explicitly asks to skip PRD alignment, record it as a blocker or
+  risk, but do not create or update the implementation plan until PRD/TRD
+  alignment is complete.
 
 The TRD gap packet must state the unresolved technical decisions that block
 implementation planning, including affected components or modules, data flow /
@@ -185,7 +186,7 @@ Implementation context:
 - Project: <name> (<framework>)
 - Feature: <feature name from PRD>
 - Relevant docs: <list of PM docs read>
-- PRD alignment: <already approved / needs PM update / docs missing / explicit skip>
+- PRD alignment: <already approved / needs PM update / docs missing / trd gap>
 - Existing modules affected: <list>
 - New modules needed: <list>
 ```
@@ -242,7 +243,7 @@ Present the plan to the user:
 按上述编号顺序，每完成一步验证编译通过。
 
 ### PRD 对齐
-- 状态: <已覆盖 / 需要 PM 更新 / 显式跳过>
+- 状态: <已覆盖 / 需要 PM 更新 / 文档缺失或不清 / TRD gap>
 - 依据: <PRD / TRD paths and sections, plus DECISIONS when present>
 
 ### Sub-Agent 分工
@@ -319,7 +320,7 @@ The package must include:
 - PRD path and relevant sections
 - TRD path and relevant sections
 - confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
-- PRD alignment result, including DECISIONS or explicit skip when applicable
+- PRD alignment result, including DECISIONS or TRD gap resolution when applicable
 - changed files and affected modules
 - verification commands run, results, and commands not run with reasons
 - known risks, environment assumptions, and QA scope questions
