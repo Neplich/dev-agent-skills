@@ -9,19 +9,25 @@ Use this skill to discover defects through guided exploration, not to generate r
 
 ## Shared QA Directory Contract
 
-For feature-scoped QA, use `docs/qa/<feature-name>/` as durable QA memory:
+For E2E or feature-scoped QA, use the function-tree directory as durable QA
+memory:
 
-- `TEST_SPEC.md` is the suite index and coverage summary.
-- `test-cases/` stores reusable test cases.
-- Every E2E test case produced or expanded by exploration must be written as
-  one Markdown file: `test-cases/TC-NNN-<short-slug>.md`.
-- `FILE_EXPLORATION.md` records source files, config files, routes, test
-  harnesses, fixtures, and environment notes inspected to derive coverage.
-- `reports/` stores exploratory reports when no stronger repo convention
-  exists.
+`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`
 
-Exploration should supplement this directory instead of re-reading the entire
-project on every standalone QA run.
+- `TEST_SUITE.md` is the suite index and coverage summary.
+- `FLOW_INDEX.md` records reusable flows, source/config clues, routes, pages,
+  APIs, states, TC mapping, and coverage implications.
+- `cases/` stores reusable test cases. Every E2E case produced or expanded by
+  exploration must be one Markdown file:
+  `cases/TC-NNN-<short-slug>.md`.
+- `scripts/` stores matching repeatable steps or executable snippets:
+  `scripts/TC-NNN-<short-slug>.spec.md`.
+- `results/` and `_reports/` store versioned execution evidence and summary
+  reports.
+
+Exploration should supplement this function-tree memory instead of re-reading
+the entire project on every standalone QA run. Existing equivalent flows should
+be updated in place; do not create duplicate synonym TC.
 
 ## When to Use
 
@@ -41,9 +47,9 @@ project on every standalone QA run.
 Before any testing action, gather the context needed to choose an exploration charter:
 
 1. Read existing QA memory first when available:
-   `docs/qa/<feature-name>/TEST_SPEC.md`,
-   `docs/qa/<feature-name>/test-cases/*.md`,
-   `docs/qa/<feature-name>/FILE_EXPLORATION.md`, and relevant reports.
+   `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md`,
+   `FLOW_INDEX.md`, `cases/*.md`, `scripts/*.spec.md`, relevant `results/`,
+   and `_reports/`.
 2. Read the PM or release context for the feature, scope, and intended user
    value.
 3. Read implementation notes, changed files, or the equivalent change summary
@@ -55,10 +61,18 @@ Before any testing action, gather the context needed to choose an exploration ch
 
 If any of the above is missing, note the gap and make the smallest safe assumption needed to continue.
 
-For standalone exploratory or E2E requests with no PM-authored test cases, ask
-the user whether there are new feature updates and whether project-file
-exploration should be used to expand test cases. If they decline exploration,
-use existing QA memory and execute only the scoped charter.
+For standalone exploratory or E2E requests with no PM-authored test cases,
+confirm the function-tree scope and scenario. If execution is requested, confirm
+the platform version first; missing versions are `blocked`, never written to
+`unknown`. Ask whether there are new feature updates and whether project-file
+exploration should be used to expand TC. If they decline exploration, use
+existing QA memory and execute only the scoped charter.
+
+When exploration follows an existing-feature change, bug fix, or code-complete
+E2E documentation update, first require PRD/TRD expectation alignment and a
+confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`. If either is
+missing, block reusable TC creation/update and send the work back to the
+appropriate PM or Engineer step.
 
 ## Exploration Charter
 
@@ -102,9 +116,9 @@ Use whichever tools best fit the charter and environment:
 - Targeted randomized inputs or action variations only when they support a specific heuristic
 
 Prefer the least brittle method that still produces clear evidence.
-Use standalone Playwright only when the repository already documents it as the
-E2E harness, the project conventions require it, or the skill is running
-outside Claude Code / Codex or standalone without a Chrome plugin.
+For E2E execution, choose repo harness first, Chrome plugin / browser connector
+second, and standalone Playwright only as fallback when Chrome is unavailable.
+A repo harness that internally uses Playwright still counts as repo harness.
 
 ## Exploration Procedure
 
@@ -113,10 +127,11 @@ outside Claude Code / Codex or standalone without a Chrome plugin.
 3. Probe the prioritized edge cases from the charter.
 4. Branch into nearby risk exploration only when the observed behavior justifies it.
 5. If exploration reads source or config files to derive coverage, write or
-   update `docs/qa/<feature-name>/FILE_EXPLORATION.md` with the files read,
-   why they were read, and coverage implications.
+   update `FLOW_INDEX.md` with the files read, why they were read, and coverage
+   implications.
 6. If exploration identifies reusable E2E scenarios, write or update one case
-   file per scenario under `docs/qa/<feature-name>/test-cases/`.
+   file under `cases/` and the matching flow snippet under `scripts/` when
+   repeatable execution needs it.
 7. Track what was covered, what was intentionally skipped, and what still needs
    follow-up.
 
@@ -128,6 +143,10 @@ During exploration, capture:
 - Network failures, abnormal responses, or suspicious timing
 - Reproduction consistency
 - Any conditions that make the result ambiguous or environment-dependent
+
+Use account IDs from login-flow references when authentication is needed. Do
+not write plaintext usernames, passwords, tokens, cookies, sessions, SSH
+passwords, or SSH key contents into TC, scripts, results, or reports.
 
 ## Bug Escalation Rules
 
@@ -145,9 +164,19 @@ Keep unconfirmed anomalies in the exploratory report. Do not promote them as def
 
 ## Evidence Output
 
-Write the exploratory report to
-`docs/qa/<feature-name>/reports/YYYY-MM-DD-exploratory-report.md` when the
-feature QA directory is known. Otherwise use the fallback path
+For E2E exploration that executes TC, write per-TC evidence under
+`results/TC-NNN-<short-slug>/{platform-version}/` and write the main-agent
+summary report with
+`agents/qa/skills/qa-agent/references/e2e-test-report.md`.
+
+Report paths:
+
+- `feature-update`:
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/_reports/{platform-version}/test-reports-{test-time}.md`
+- `release`:
+  `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md`
+
+For non-E2E exploratory reports where the repo has no stronger convention, use
 `docs/qa-reports/YYYY-MM-DD-<feature>-exploratory-report.md`.
 
 The report must be concise, handoff-ready, and clearly separate these sections:

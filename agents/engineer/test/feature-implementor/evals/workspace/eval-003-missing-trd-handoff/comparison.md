@@ -7,13 +7,14 @@
 - Eval: `eval-003-missing-trd-handoff`
 - Test case: missing-trd-handoff
 - Workspace: `workspace/eval-003-missing-trd-handoff`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: Verifies that feature-implementor stops before implementation when the Engineer TRD is missing and hands back a complete TRD gap packet to trd-gen.
 - Expected output: 识别缺少已确认 Engineer TRD，停止实现计划和代码实现，明确 handoff 给 engineer-agent:trd-gen 编写 docs/engineer/capture-loop/TRD.md，并列出 TRD gap packet：受影响组件、数据流/API/集成影响、验证命令、发布风险和错误处理策略等缺失技术决策；同时说明发现者负责说明缺口，trd-gen 负责补完整 TRD。
+- Fixture files read: `README.md`, `docs/pm/capture-loop/PRD.md`, workspace metadata, and this comparison. The workspace intentionally has no `docs/engineer/capture-loop/TRD.md`.
 
 ## Assertions
 
@@ -27,7 +28,11 @@
 
 Observed behavior:
 
-- 当前 SKILL.md 在 TRD 缺失时停止，不写 IMPLEMENTATION_PLAN 或代码，交给 engineer-agent:trd-gen，并要求 TRD gap packet 覆盖组件、数据流/API、验证、发布风险和错误处理等决策。
+- PASS - fresh Codex subagent validation completed on 2026-06-04.
+- Current `SKILL.md` requires reading PM and Engineer docs before existing-feature implementation planning and explicitly stops when PRD is stable but TRD is missing, incomplete, or stale.
+- The skill hands back to `engineer-agent:trd-gen` with a TRD gap packet instead of creating `IMPLEMENTATION_PLAN.md`, code, tests, or a file-change implementation plan.
+- The required gap packet covers unresolved technical decisions, affected components/modules, data flow/API/integration impacts, verification commands, release or rollout risks, and error handling, observability, or security strategy when relevant.
+- The skill requires the boundary statement that the finder only clarifies TRD gaps and `engineer-agent:trd-gen` completes or updates the TRD.
 
 ## Without Skill / Baseline
 
@@ -36,11 +41,11 @@ Observed behavior:
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- None.
 
 ## Next Steps
 
-- 保持该 eval 覆盖缺 TRD handoff。
+- Keep this eval focused on missing-TRD blocking and complete TRD gap handoff.
 
 ## Runtime Artifacts Policy
 

@@ -3,10 +3,10 @@
   "eval_name": "empty-qa-directory-expands-cases",
   "workspace_root": "agents/qa/test/qa-agent/evals/workspace/eval-2-empty-qa-directory-expands-cases",
   "skill_availability_goal": "Verify that qa-agent handles an empty QA case directory by routing to targeted file exploration, test-case creation, and case-based execution when the user has authorized exploration.",
-  "prompt": "用户说：请对 profile-settings 做一次 E2E QA。docs/qa/profile-settings/ 目录已经存在，但 TEST_SPEC.md 和 test-cases/ 里没有任何测试用例。我确认这个功能有新更新，请主动探索项目文件来补充测试用例，然后基于新建的用例执行验证。先做 QA 路由和执行协议说明。",
+  "prompt": "用户说：请对 profile-settings 做一次 E2E QA。docs/qa/e2e/account/profile-settings/profile-form/ 功能目录已经存在，但 TEST_SUITE.md、FLOW_INDEX.md 和 cases/ 里没有任何测试用例。我确认这是 feature-update 场景且功能有新更新，请主动探索项目文件来补充测试用例，然后基于新建的用例执行验证。先做 QA 路由和执行协议说明。",
   "fixture_context": [
-    "docs/qa/profile-settings/",
-    "docs/qa/profile-settings/test-cases/",
+    "docs/qa/e2e/account/profile-settings/profile-form/TEST_SUITE.md",
+    "docs/qa/e2e/account/profile-settings/profile-form/FLOW_INDEX.md",
     "src/routes/profile-settings.md",
     "src/pages/ProfileSettingsPage.tsx",
     "src/components/ProfileSettingsForm.tsx",

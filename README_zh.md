@@ -243,35 +243,17 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 
 Eval runner 应将运行期文件写入系统临时目录或 `tmp/eval-runs/...`，再只把确认后的 `comparison.md` 同步回 eval workspace。新的 metadata schema 应显式区分 runtime output 字段和 durable result 字段。Python 测试文件名需要跨测试目录保持唯一，例如 `test_pm_run_eval.py` 和 `test_qa_run_eval.py`，确保 pytest 能在同一个进程里收集所有确定性测试。
 
-### E2E 凭据 key 维护
+### QA E2E 本地账号文件
 
-E2E 凭据使用 `age` 多 recipient 加密。仓库只提交 `docs/qa/e2e/_shared/credentials/recipients.txt` 和 `*.env.age` 密文文件；每个维护者或 CI bot 的私钥必须保存在仓库外，并通过 `E2E_CREDENTIAL_AGE_KEY_FILE` 提供给本地测试进程。
+QA E2E 凭据使用本地 ignore 账号文件，不提交明文或加密凭据文件：
 
-新增维护者或 CI bot：
+```text
+.qa/e2e/accounts.local.json
+```
 
-1. 新维护者本地生成 age key：
-   ```bash
-   mkdir -p ~/.config/dev-agent-skills/e2e
-   age-keygen -o ~/.config/dev-agent-skills/e2e/age.key
-   age-keygen -y ~/.config/dev-agent-skills/e2e/age.key
-   ```
-2. 将输出的 public recipient 追加到 `docs/qa/e2e/_shared/credentials/recipients.txt`。
-3. 由已有授权维护者使用当前明文凭据重新加密受影响的 `*.env.age` 文件：
-   ```bash
-   age -R docs/qa/e2e/_shared/credentials/recipients.txt \
-     -o docs/qa/e2e/_shared/credentials/CRED-001-admin.env.age \
-     /path/outside-repo/CRED-001-admin.env
-   ```
-4. 提交更新后的 `recipients.txt` 和重新加密后的 `*.env.age` 文件。
+该文件已由 `.gitignore` 屏蔽。QA 文档、测试用例、脚本、结果和 eval fixture 只能引用账号 ID，例如 `platform.default.admin` 或 `ssh.default.deploy`；不得写入真实用户名、密码、token、cookie、session、SSH 密码、SSH key 内容或 passphrase。
 
-移除维护者或 CI bot：
-
-1. 从 `recipients.txt` 移除对应 public recipient。
-2. 轮换真实测试密码、token 或其他敏感值。
-3. 使用同一条 `age -R ...` 命令，把轮换后的明文凭据重新加密为受影响的 `*.env.age` 文件。
-4. 提交更新后的 `recipients.txt` 和重新加密后的 `*.env.age` 文件。
-
-只移除 recipient 但不轮换真实凭据是不完整的撤权。
+QA Agent 收到用户提供的平台账号、平台密码、SSH 账号、SSH 密码或 SSH key 路径时，应按 [`e2e-credential-store.md`](./agents/qa/skills/qa-agent/references/e2e-credential-store.md) 自动 upsert 到 `.qa/e2e/accounts.local.json`，并在本地环境允许时设置仅当前用户可读写。E2E 汇总报告必须遵循 [`e2e-test-report.md`](./agents/qa/skills/qa-agent/references/e2e-test-report.md) 的固定格式。
 
 `comparison.md` 使用以下结构：
 

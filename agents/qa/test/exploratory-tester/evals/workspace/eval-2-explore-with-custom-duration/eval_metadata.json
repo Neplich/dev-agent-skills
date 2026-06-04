@@ -6,6 +6,8 @@
   "prompt": "对用户指定的目标应用进行 5 分钟探索测试，按探索章程验证 changed surface、相邻风险和证据分层",
   "fixture_context": [
     "docs/pm/settings-panel/PRD.md",
+    "docs/qa/e2e/account/settings/email-preferences/TEST_SUITE.md",
+    "docs/qa/e2e/account/settings/email-preferences/FLOW_INDEX.md",
     "implementation/changed-surface.md",
     "environment/qa-env.md"
   ]

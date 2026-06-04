@@ -6,7 +6,7 @@
 > 其他语言：[English](./README.md)
 
 > [!NOTE]
-> 独立 QA 或 E2E 请求应先复用 `docs/qa/{feature}/` 下的既有测试用例，再决定是否扩充探索范围。
+> 独立 E2E 请求应先复用 `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` 下的功能树用例，再决定是否扩充探索范围。
 
 ## 快速信息
 
@@ -37,27 +37,43 @@
 
 默认规则：先判断用户要的证据类型，再选择最小足够的 QA skill，不把探索测试伪装成全量验收。
 
-## 用例持久化
+## E2E 用例持久化
 
-QA 独立使用时的默认目录：
+独立 E2E 和功能范围 QA 持久化默认使用以下目录：
 
 ```text
-docs/
-└── qa/
-    └── {feature-name}/
-        ├── TEST_SPEC.md
-        ├── FILE_EXPLORATION.md
-        ├── test-cases/
-        │   └── TC-NNN-<short-slug>.md
-        └── reports/
+docs/qa/e2e/
+├── _shared/
+│   ├── login-flows/
+│   └── data/
+├── _reports/
+│   └── {platform-version}/
+│       └── test-reports-{test-time}.md
+└── {一级功能}/
+    └── {二级功能}/
+        └── {三级功能}/
+            ├── TEST_SUITE.md
+            ├── FLOW_INDEX.md
+            ├── cases/
+            │   └── TC-NNN-<short-slug>.md
+            ├── scripts/
+            │   └── TC-NNN-<short-slug>.spec.md
+            ├── results/
+            │   └── TC-NNN-<short-slug>/{platform-version}/
+            └── _reports/
+                └── {platform-version}/test-reports-{test-time}.md
 ```
 
 工作顺序：
 
-1. 读取 `TEST_SPEC.md` 和 `test-cases/*.md`
-2. 询问是否有新功能变化、是否需要扩充文件探索
-3. 仅在需要时更新 `FILE_EXPLORATION.md` 和新增 test case
-4. 基于持久化用例执行验证并输出报告
+1. 确认 E2E 场景：`feature-update` 用于开发环境本地验证，`release` 用于发版版本测试环境全量 active E2E。
+2. 执行前确认测试平台版本；缺失时标记 `blocked`，不得写入 `unknown` 目录。
+3. 先读取 `TEST_SUITE.md`、`FLOW_INDEX.md`、`cases/*.md`、`scripts/*.spec.md`、历史 `results/` 和 `_reports/`，再决定是否探索。
+4. 现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须先完成 PRD/TRD 预期对齐，并引用已确认的 `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`。
+5. 每个 E2E TC 默认交给 subagent 执行；主 agent 负责范围、结果确认和汇总报告。
+6. 执行入口按 repo harness > Chrome plugin / browser connector > Playwright fallback 选择。
+7. 凭据只写入 `.qa/e2e/accounts.local.json`，并按 `agents/qa/skills/qa-agent/references/e2e-credential-store.md` 使用账号 ID；提交文档不得包含明文凭据。
+8. 主 agent 汇总报告使用 `agents/qa/skills/qa-agent/references/e2e-test-report.md` 的固定格式。
 
 ## 典型工作流
 

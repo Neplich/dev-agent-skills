@@ -32,6 +32,11 @@
           "text": "输出必须说明 TRD 确认后移交 `feature-implementor` 编写 `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`，再进入实现。"
         },
         {
+          "id": "qa_e2e_after_confirmed_plan",
+          "description": "E2E 在确认计划后交接",
+          "text": "输出必须说明代码完成后的 QA E2E 文档补充不能直接由 TRD 请求触发；它依赖已确认 TRD、已确认 IMPLEMENTATION_PLAN 和实现完成后的交接包。"
+        },
+        {
           "id": "no_code_implementation",
           "description": "不直接进入实现",
           "text": "输出不能把 TRD 编写请求直接扩展成代码修改、测试修改或交付操作。"
@@ -60,6 +65,11 @@
           "id": "keeps_finder_trd_gen_boundary",
           "description": "保持发现者和 trd-gen 边界",
           "text": "输出必须明确发现者负责报告 TRD 缺口，`trd-gen` 负责把 `docs/engineer/capture-loop/TRD.md` 补完整或将未决项写入 open questions。"
+        },
+        {
+          "id": "unresolved_gap_blocks_e2e",
+          "description": "未解决 gap 阻断 E2E 更新",
+          "text": "如果 gap packet 中仍有 open questions 或 TRD 未补完整，输出必须说明 feature-implementor、debugger 或 QA E2E 文档补充都应 blocked，不能把缺失技术决策直接写进 IMPLEMENTATION_PLAN.md 或 docs/qa/e2e TC。"
         },
         {
           "id": "no_implementation_plan_or_code",

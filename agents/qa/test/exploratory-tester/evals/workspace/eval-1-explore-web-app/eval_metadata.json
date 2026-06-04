@@ -6,6 +6,9 @@
   "prompt": "对当前可访问的目标应用进行探索测试，基于产品上下文、变更范围和环境说明发现潜在问题并验证探索协议",
   "fixture_context": [
     "docs/pm/search-refresh/PRD.md",
+    "docs/qa/e2e/search/results/filtering/TEST_SUITE.md",
+    "docs/qa/e2e/search/results/filtering/FLOW_INDEX.md",
+    "docs/qa/e2e/search/results/filtering/cases/TC-001-filter-results.md",
     "implementation/changed-surface.md",
     "environment/qa-env.md"
   ]

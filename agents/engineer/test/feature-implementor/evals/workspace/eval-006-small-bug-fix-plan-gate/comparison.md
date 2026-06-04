@@ -7,13 +7,14 @@
 - Eval: `eval-006-small-bug-fix-plan-gate`
 - Test case: small-bug-fix-plan-gate
 - Workspace: `workspace/eval-006-small-bug-fix-plan-gate`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: Verifies that a small spec-backed bug fix routed into feature-implementor still writes an implementation plan and waits for confirmation.
 - Expected output: 基于已确认 PRD/TRD 和 debugger 根因，产出或更新 docs/engineer/notifications/IMPLEMENTATION_PLAN.md，记录 PRD 对齐、文件范围、验证命令和无需复杂 sub-agent 拆分，等待用户确认，不直接修复。
+- Validation input: current `SKILL.md`, Engineer README, `evals.json`, workspace metadata, and this comparison.
 
 ## Assertions
 
@@ -21,12 +22,19 @@
 - `writes_bug_fix_implementation_plan`: 小 bug fix 仍写实施计划
 - `records_no_complex_split`: 记录轻量分工判断
 - `waits_before_fixing`: 等待确认再修
+- `prepares_e2e_handoff_after_fix`: 修复完成后准备 E2E 交接
 
 ## With Skill
 
 Observed behavior:
 
-- 当前 SKILL.md 允许 debugger 已确认的 spec-backed bug fix 进入 feature-implementor，但仍必须写 IMPLEMENTATION_PLAN、列文件/验证命令、记录轻量 split 判断并等确认。
+- PASS - fresh Codex subagent validation completed on 2026-06-04.
+- Current `SKILL.md` says bug fixes with no spec use `debugger`, but spec-backed bug fixes may enter `feature-implementor` after debugger or Engineer routing confirms the fix is implementation work against approved PRD/TRD behavior.
+- The same section says spec-backed bug fixes still require `IMPLEMENTATION_PLAN.md` and explicit user confirmation before code changes.
+- The planner phase applies to every implementation task, including spec-backed bug-fix changes, and must include file scope, verification commands, PRD alignment result, and implementation/validation split decision.
+- The complex split exception allows a single-file small fix to skip complex implementation/validation sub-agent split, but it never skips the plan or confirmation.
+- Phase 2 only starts after plan confirmation, so the skill does not apply the `src/api/notifications.ts` fix or claim verification before confirmation.
+- After implementation and self-review, the QA E2E handoff package must include PRD/TRD paths, confirmed `IMPLEMENTATION_PLAN.md`, PRD alignment, changed files, verification commands/results, risks, and suggested `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`; if the confirmed plan is missing, the skill stops before producing that handoff.
 
 ## Without Skill / Baseline
 
@@ -35,7 +43,7 @@ Observed behavior:
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- None.
 
 ## Next Steps
 

@@ -19,6 +19,9 @@ __pycache__/
 tmp
 tmp/eval-runs/
 
+# local QA E2E credentials
+.qa/e2e/accounts.local.json
+
 # eval runtime artifacts
 agents/**/test/**/workspace/**/with_skill/
 agents/**/test/**/workspace/**/without_skill/

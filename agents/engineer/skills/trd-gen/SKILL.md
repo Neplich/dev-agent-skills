@@ -57,6 +57,30 @@ PRD 已确认，当前进入 Engineer TRD 阶段。
 TRD 确认后，再移交给 `feature-implementor` 编写实现计划文档并进入实现。
 ```
 
+## TRD Gap Packet Handling
+
+Accept a TRD gap packet from `engineer-agent`, `feature-implementor`,
+`debugger`, or QA E2E alignment when PM scope is stable but the TRD is missing,
+incomplete, stale, or conflicts with implementation or test evidence.
+
+The incoming packet should identify:
+
+- source request, feature, and PRD / decision records already checked
+- affected components, modules, APIs, data flow, integrations, or deployment
+  surfaces
+- missing or conflicting technical decisions
+- validation commands or evidence that exposed the gap
+- release, rollback, observability, security, error-handling, or E2E coverage
+  risk when relevant
+- the discoverer's boundary statement: the finder names the gaps; `trd-gen`
+  completes or updates the TRD
+
+`trd-gen` must either update `docs/engineer/{feature}/TRD.md` to resolve each
+named gap or record an open technical question with owner, blocker, and unblock
+condition. Do not route to `feature-implementor`, `debugger`, or QA E2E
+documentation updates until the TRD is confirmed or the open questions are
+explicitly accepted as non-blocking.
+
 ## Document-Writing Delegation
 
 To avoid context drift during long document drafting, all TRD writing and TRD

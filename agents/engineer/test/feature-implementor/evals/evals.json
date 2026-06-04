@@ -65,6 +65,11 @@
           "id": "final_summary_contract",
           "description": "最终交付说明完整",
           "text": "输出必须说明最终交付需要包含实现结果、测试情况、验收结论和遗留风险。"
+        },
+        {
+          "id": "qa_e2e_handoff_contract",
+          "description": "QA E2E 交接包",
+          "text": "输出必须说明代码完成后需要形成 QA E2E 文档补充交接包，至少包含 PRD、TRD、已确认 IMPLEMENTATION_PLAN、变更文件、验证命令、测试结果、风险和建议 docs/qa/e2e/{一级功能}/{二级功能}/{三级功能} 功能目录。"
         }
       ]
     },
@@ -132,6 +137,11 @@
           "text": "输出必须要求用户确认实施计划后再开始实施。"
         },
         {
+          "id": "blocks_e2e_without_confirmed_plan",
+          "description": "E2E 文档补充依赖确认计划",
+          "text": "输出必须说明后续 QA E2E 文档补充只能引用已确认的 `docs/engineer/settings-label/IMPLEMENTATION_PLAN.md`；如果计划缺失或未确认，E2E TC 新增或更新必须 blocked。"
+        },
+        {
           "id": "does_not_modify_code",
           "description": "不得直接修改代码",
           "text": "输出不得声称已经修改按钮文案、编辑代码文件或完成实现。"
@@ -160,6 +170,11 @@
           "id": "hands_off_to_pm_existing_update",
           "description": "交回 PM existing-project-update",
           "text": "输出必须要求先走 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径更新 PRD 或产品决策记录，并在之后同步 TRD。"
+        },
+        {
+          "id": "blocks_e2e_expected_behavior_change",
+          "description": "预期未对齐时阻断 E2E",
+          "text": "输出必须说明在 PRD 或产品决策更新、TRD 同步和实施计划确认前，不能把 archived 进入 active 列表写成新的 E2E TC 或验收预期。"
         },
         {
           "id": "does_not_implement_directly",
@@ -195,6 +210,11 @@
           "id": "waits_before_fixing",
           "description": "等待确认再修",
           "text": "输出必须等待用户确认实施计划后再修改代码，不得声称已经应用修复或验证通过。"
+        },
+        {
+          "id": "prepares_e2e_handoff_after_fix",
+          "description": "修复完成后准备 E2E 交接",
+          "text": "输出必须说明修复完成后需要把 PRD/TRD 对齐结论、已确认 IMPLEMENTATION_PLAN、变更文件、验证命令和建议功能树目录交给 QA E2E 文档补充流程；未完成修复计划确认前不得更新 E2E TC。"
         }
       ]
     }

@@ -7,6 +7,8 @@
   "fixture_context": [
     "docs/pm/login-refresh/PRD.md",
     "docs/engineer/login-refresh/TRD.md",
+    "docs/qa/e2e/auth/login/login-refresh/TEST_SUITE.md",
+    "docs/qa/e2e/auth/login/login-refresh/FLOW_INDEX.md",
     "implementation/changes.md",
     "ci/login-intermittent-failure.log"
   ]

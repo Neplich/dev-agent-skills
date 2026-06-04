@@ -19,6 +19,8 @@ This is the public entry point. It owns:
 - Delegation to internal modules and, for complex coding tasks, scoped
   implementation/validation sub-agents
 - Quality self-check before handoff
+- QA E2E documentation handoff after code completion when user-facing flows or
+  acceptance paths may be affected
 
 Before implementation plan confirmation, load only the planner internal module.
 Do not load implementor or reviewer modules, write code, or run fix steps until
@@ -306,6 +308,35 @@ Output a brief review summary:
 - 规范检查: ✅ 命名和结构符合项目规范
 ```
 
+## QA E2E Documentation Handoff
+
+After implementation and self-review, output a QA E2E documentation handoff
+package when the change can affect user-facing behavior, acceptance flows,
+routes, permissions, login, data setup, or regression coverage.
+
+The package must include:
+
+- PRD path and relevant sections
+- TRD path and relevant sections
+- confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
+- PRD alignment result, including DECISIONS or explicit skip when applicable
+- changed files and affected modules
+- verification commands run, results, and commands not run with reasons
+- known risks, environment assumptions, and QA scope questions
+- suggested QA E2E function directory:
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`
+- likely E2E impact: create TC, update existing TC, update script/assertions,
+  or no E2E update needed with rationale
+
+If the confirmed implementation plan is missing, stop and return to Phase 1
+instead of producing a QA E2E handoff. Small, single-file, low-risk, and
+spec-backed bug-fix changes still require the confirmed implementation plan
+before this handoff.
+
+Do not create or update QA E2E TC directly from this skill unless the user
+explicitly routes that QA documentation work. The default responsibility here is
+to hand off complete evidence to the QA E2E documentation flow.
+
 ## Handoff
 
 After implementation and self-review:
@@ -313,6 +344,8 @@ After implementation and self-review:
 ```text
 ## 建议下一步
 
+- **补充 QA E2E 文档**: 将 QA E2E documentation handoff package 交给 `qa-agent`
+  判断是否新增或更新 E2E TC
 - **写测试**: 使用 `test-writer` 基于 Test Spec 编写测试
 - **直接交付**: 使用 `delivery` 创建 PR（如果测试已有或不需要）
 ```

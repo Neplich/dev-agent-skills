@@ -2,12 +2,12 @@
 
 ## Evaluation Target
 
+- Agent: `engineer`
 - Skill: `debugger`
+- Eval: `eval-001-fix-failing-test`
 - Test case: fix-failing-test
-- Test set: bug reproduction and repair planning gate evals
-- Entry: workspace `eval-001-fix-failing-test`
-- Latest result: PASS - fresh Codex subagent validation completed on
-  2026-06-01
+- Workspace: `workspace/eval-001-fix-failing-test`
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04
 
 ## Test Set / Fixture Version
 
@@ -19,18 +19,30 @@
 
 ## With Skill
 
-Expected behavior:
+Current `SKILL.md` satisfies all assertions:
 
-- Reads the failing test and related source.
-- Reproduces the failing command and records the assertion failure.
-- Uses PRD/TRD expectation to identify that archived notifications must be
-  excluded from the active list.
-- Does not block only because the fixture has no separate `DECISIONS.md` when
-  PRD/TRD define the expected behavior.
-- Outputs a bug analysis report.
-- Asks whether to produce a repair implementation plan before modifying code.
-- Does not apply the fix, update tests, or claim verification success before
-  repair plan confirmation.
+- `aligns_expected_behavior`: Step 0 requires reading
+  `docs/pm/{feature}/PRD.md` and `docs/engineer/{feature}/TRD.md` before
+  deciding code should change. The fixture PRD/TRD define active notifications
+  as `unread` and `read` only, excluding `archived`.
+- `classifies_requirement_alignment`: Step 0 requires recording the alignment
+  classification explicitly, including `implementation_deviation`,
+  `requirement_change`, `missing_docs`, and `trd_gap`; an implementation
+  deviation is the only normal path that continues toward reproduction and
+  repair.
+- `reproduces_failure`: Steps 1 and 2 require collecting error context and
+  running the exact failing command.
+- `reports_root_cause`: Steps 3 through 5 require source-code analysis,
+  explicit root-cause reporting, location, impact, and reproduction evidence.
+- `asks_for_repair_plan`: Step 5 requires a Bug analysis report and asks
+  whether to produce a repair implementation plan before planning or fixing.
+- `blocks_e2e_before_repair_plan`: The Core Principle and Repair Plan Gate block
+  E2E TC updates before the repair plan is confirmed. Step 0 also requires any
+  post-fix QA E2E handoff to cite the confirmed
+  `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`.
+- `does_not_fix_directly`: The Core Principle and Repair Plan Gate prohibit
+  jumping directly to fixing, modifying code, updating tests, updating E2E
+  assets, or claiming verification before the exact repair plan is confirmed.
 
 ## Without Skill / Baseline
 
@@ -40,12 +52,11 @@ Expected behavior:
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- None.
 
 ## Next Steps
 
-- Keep this comparison updated whenever debugger eval behavior or fixture
-  expectations change.
+- None for this eval.
 
 ## Runtime Artifacts Policy
 

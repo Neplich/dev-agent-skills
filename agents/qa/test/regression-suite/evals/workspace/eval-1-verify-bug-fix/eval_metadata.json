@@ -7,6 +7,10 @@
   "fixture_context": [
     "bugs/BUG-001.md",
     "fixes/PR-001.md",
+    "docs/qa/e2e/auth/login/session-start/TEST_SUITE.md",
+    "docs/qa/e2e/auth/login/session-start/FLOW_INDEX.md",
+    "docs/qa/e2e/auth/login/session-start/cases/TC-001-login-session.md",
+    "docs/qa/e2e/auth/login/session-start/scripts/TC-001-login-session.spec.md",
     "environment/qa-env.md"
   ]
 }

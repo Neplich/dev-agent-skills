@@ -29,7 +29,8 @@ Align Expected Behavior → Reproduce → Analyze → Report → Repair Plan →
 
 Do NOT jump to fixing. Do NOT propose or apply a fix before understanding the
 expected behavior, root cause, reporting the analysis, and getting confirmation
-on the repair plan.
+on the repair plan. Do NOT create or update E2E test cases before the repair
+plan is confirmed.
 
 ## Complex Fix Sub-Agent Split
 
@@ -56,15 +57,19 @@ whether the user wants a repair implementation plan. Do not write code yet.
 If the user confirms, produce a repair plan that includes:
 
 - problem, root cause, location, and impact
+- PRD/TRD alignment conclusion and source document paths
 - files or modules expected to change
 - minimal repair approach
 - regression tests or verification commands
+- suggested QA E2E function directory:
+  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`, when the fix may affect E2E
+  acceptance coverage
 - whether implementation/validation sub-agent split is needed
 - risks, blockers, and forbidden areas
 
 Present the repair plan and wait for user confirmation. Do not apply the fix,
-update tests, or delegate implementation until the user confirms the exact
-repair plan.
+update tests, update E2E TC, update E2E scripts or results, or delegate
+implementation until the user confirms the exact repair plan.
 
 ## Step 0 — Align expected behavior with PRD / TRD
 
@@ -96,10 +101,33 @@ Use those docs to classify the report:
 - If the user explicitly skips PRD alignment, state the override in the bug
   analysis and continue with the smallest safe debug path.
 
+Record the classification explicitly as one of:
+
+- `implementation_deviation`: approved PRD / TRD already defines the expected
+  behavior and the implementation or test deviates from it.
+- `requirement_change`: the user is asking to change approved expected
+  behavior, so PM alignment is required before repair planning.
+- `missing_docs`: PRD, product decision records, or expected behavior
+  are missing or ambiguous.
+- `trd_gap`: PM scope is stable, but the TRD is missing, stale, incomplete, or
+  conflicts with the codebase or bug context.
+- `explicit_skip`: the user explicitly asks to skip PRD alignment.
+
 A TRD gap packet should list the technical decisions that block debugging or
 repair planning, including affected components, data flow / API / integration
 impact, verification commands, release or rollback risk, and error handling,
 observability, or security strategy when relevant.
+
+Do not update E2E TC, scripts, assertions, or QA result files while the
+classification is `requirement_change`, `missing_docs`, or `trd_gap`.
+For `requirement_change`, do not write the new expectation into
+`docs/qa/e2e/**` until PM updates the PRD or product decision record, TRD is
+synchronized, and a confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
+exists. If a confirmed repair later affects E2E coverage, pass a QA E2E handoff
+package after the fix and verification rather than editing TC during diagnosis
+or repair planning. That handoff must cite the confirmed
+`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`, PRD/TRD alignment conclusion,
+changed files, verification commands, and suggested QA E2E function directory.
 
 ## Step 1 — Gather error context
 

@@ -168,20 +168,21 @@ class QaRunEvalTests(unittest.TestCase):
   "eval_name": "cleanup",
   "workspace_root": "workspace/eval-001-cleanup",
   "prompt": "cleanup",
-  "fixture_context": ["docs/qa/profile-settings/"],
-  "with_skill_outputs": ["docs/qa/profile-settings/TEST_SPEC.md"],
-  "without_skill_outputs": ["docs/qa/profile-settings/test-cases/TC-001-new.md"],
+  "fixture_context": ["docs/qa/e2e/account/profile-settings/profile-form/"],
+  "with_skill_outputs": ["docs/qa/e2e/account/profile-settings/profile-form/TEST_SUITE.md"],
+  "without_skill_outputs": ["docs/qa/e2e/account/profile-settings/profile-form/cases/TC-001-new.md"],
   "execution_cleanup": [
-    "docs/qa/profile-settings/TEST_SPEC.md",
-    "docs/qa/profile-settings/test-cases/TC-*.md",
+    "docs/qa/e2e/account/profile-settings/profile-form/TEST_SUITE.md",
+    "docs/qa/e2e/account/profile-settings/profile-form/cases/TC-*.md",
     "with_skill/outputs"
   ]
 }
 """
             )
-            (eval_root / "docs/qa/profile-settings/test-cases").mkdir(parents=True)
-            (eval_root / "docs/qa/profile-settings/TEST_SPEC.md").write_text("stale")
-            (eval_root / "docs/qa/profile-settings/test-cases/TC-001-old.md").write_text("stale")
+            e2e_root = eval_root / "docs/qa/e2e/account/profile-settings/profile-form"
+            (e2e_root / "cases").mkdir(parents=True)
+            (e2e_root / "TEST_SUITE.md").write_text("stale")
+            (e2e_root / "cases/TC-001-old.md").write_text("stale")
             (eval_root / "with_skill/outputs").mkdir(parents=True)
 
             old_output_dir = os.environ.get("EVAL_RUN_OUTPUT_DIR")
@@ -197,10 +198,11 @@ class QaRunEvalTests(unittest.TestCase):
                     os.environ["EVAL_RUN_OUTPUT_DIR"] = old_output_dir
 
             runtime_workspace = loaded.runtime_workspace_root
-            self.assertFalse((runtime_workspace / "docs/qa/profile-settings/TEST_SPEC.md").exists())
-            self.assertFalse((runtime_workspace / "docs/qa/profile-settings/test-cases/TC-001-old.md").exists())
+            runtime_e2e_root = runtime_workspace / "docs/qa/e2e/account/profile-settings/profile-form"
+            self.assertFalse((runtime_e2e_root / "TEST_SUITE.md").exists())
+            self.assertFalse((runtime_e2e_root / "cases/TC-001-old.md").exists())
             self.assertFalse((runtime_workspace / "with_skill/outputs").exists())
-            self.assertTrue((eval_root / "docs/qa/profile-settings/TEST_SPEC.md").exists())
+            self.assertTrue((e2e_root / "TEST_SUITE.md").exists())
 
     def test_main_skips_metadata_without_deterministic_outputs(self):
         run_eval = load_run_eval_module()

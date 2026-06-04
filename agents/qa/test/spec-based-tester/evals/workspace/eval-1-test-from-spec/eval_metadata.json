@@ -8,6 +8,9 @@
     "docs/test-spec.md",
     "docs/prd.md",
     "docs/trd.md",
+    "docs/qa/e2e/commerce/checkout/discount-code/TEST_SUITE.md",
+    "docs/qa/e2e/commerce/checkout/discount-code/FLOW_INDEX.md",
+    "docs/qa/e2e/commerce/checkout/discount-code/cases/TC-001-discount-code.md",
     "package.json"
   ]
 }

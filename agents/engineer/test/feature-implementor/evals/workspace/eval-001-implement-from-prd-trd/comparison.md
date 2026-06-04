@@ -7,13 +7,14 @@
 - Eval: `eval-001-implement-from-prd-trd`
 - Test case: implement-from-prd-trd
 - Workspace: `workspace/eval-001-implement-from-prd-trd`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: Verifies that feature-implementor handles implement-from-prd-trd by producing an implementation plan and waiting for confirmation before coding.
 - Expected output: IMPLEMENTATION_PLAN.md + 文件变更清单 + 实现顺序 + 用户确认门禁，不直接写代码
+- Validation input: current `agents/engineer/skills/feature-implementor/SKILL.md`, Engineer README, `evals.json`, workspace metadata, and this comparison.
 
 ## Assertions
 
@@ -25,7 +26,10 @@
 
 Observed behavior:
 
-- 当前 SKILL.md 要消费已确认 PRD/TRD，先写 docs/engineer/{feature}/IMPLEMENTATION_PLAN.md，包含文件清单、顺序和 PRD 对齐，并等待用户确认后才编码。
+- PASS - fresh Codex subagent validation completed on 2026-06-04.
+- Current `SKILL.md` consumes confirmed PRD/TRD, enters Phase 1 before any code changes, delegates or writes `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`, includes the file change list, implementation order, PRD alignment result, split decision, and blockers, then presents the plan and asks for confirmation.
+- The skill explicitly says to stop after presenting the plan and not start implementation in the same turn unless the user has already confirmed the exact plan.
+- Phase 2 code work and implementor module loading are gated behind user confirmation of the implementation plan.
 
 ## Without Skill / Baseline
 
@@ -34,11 +38,11 @@ Observed behavior:
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- None.
 
 ## Next Steps
 
-- 保持该 eval 覆盖 implementation plan gate。
+- Keep this eval focused on the confirmed-PRD/TRD plan gate and no-direct-code boundary.
 
 ## Runtime Artifacts Policy
 

@@ -42,6 +42,14 @@ After the TRD is confirmed, route implementation planning and execution to
 `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` from the confirmed TRD, then
 waits for implementation confirmation before coding.
 
+After implementation and self-review complete, check that the
+`feature-implementor` result includes a QA E2E documentation handoff package
+when the change can affect user-facing flows. The package must include PRD,
+TRD, confirmed `IMPLEMENTATION_PLAN.md`, changed files, verification commands,
+risks, and the suggested `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` directory.
+If the package is missing or does not cite a confirmed implementation plan,
+route back to the implementor before handing the result to QA.
+
 ## Existing Feature Alignment Gate
 
 Before routing an existing feature behavior change, small modification, or bug

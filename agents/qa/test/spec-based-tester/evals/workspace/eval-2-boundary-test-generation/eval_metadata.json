@@ -7,6 +7,10 @@
   "fixture_context": [
     "docs/pm/login-refresh/PRD.md",
     "docs/engineer/login-refresh/TRD.md",
+    "docs/qa/e2e/auth/login/login-form/TEST_SUITE.md",
+    "docs/qa/e2e/auth/login/login-form/FLOW_INDEX.md",
+    "docs/qa/e2e/auth/login/login-form/cases/TC-001-login-boundaries.md",
+    "docs/qa/e2e/auth/login/login-form/scripts/TC-001-login-boundaries.spec.md",
     "implementation/changes.md",
     "package.json"
   ]

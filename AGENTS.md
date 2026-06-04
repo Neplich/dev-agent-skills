@@ -27,7 +27,7 @@
 - 文档 frontmatter 应包含 `feature`、`version`、`date` 和 `last_updated`
 - 仓库级发布变更记录按版本归档到 `docs/changelog/changelog-v{version}.md`；根目录 `CHANGELOG.md` 只作为索引，不重复维护 changelog 条目
 - 除发布 changelog 归档外，文档版本历史通过 git 追踪，不要创建多个版本化文件
-- QA feature 文档位于 `docs/qa/{feature-name}/`；`TEST_SPEC.md` 是测试套件索引，`test-cases/` 存放可复用用例，`FILE_EXPLORATION.md` 记录用于扩展覆盖范围的文件探索过程，`reports/` 存放 QA 执行产物
+- QA E2E 测试资产统一位于 `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`；`TEST_SUITE.md` 是功能测试套件索引，`FLOW_INDEX.md` 记录流程覆盖关系，`cases/` 存放 `TC-NNN-<short-slug>.md`，`scripts/` 存放可执行流程脚本片段，`results/` 按 TC 和平台版本追加执行结果，`_reports/{platform-version}/test-reports-{test-time}.md` 存放功能更新汇总报告；发版全量报告位于 `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md`
 
 **市场注册**
 
@@ -47,7 +47,7 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 
 - Engineer 读取 `docs/pm/{feature}/` 和 `docs/design/{feature}/`
 - QA 读取 `docs/pm/{feature}/` 和实现代码
-- QA 在进行广泛项目探索前，先读取已有的 `docs/qa/{feature}/TEST_SPEC.md` 和 `docs/qa/{feature}/test-cases/*.md`
+- QA 在进行广泛项目探索前，先读取已有的 `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md`、`FLOW_INDEX.md`、`cases/*.md` 和 `scripts/*.spec.md`
 - DevOps 读取 `docs/engineer/{feature}/TRD.md`
 - Designer 读取 `docs/pm/{feature}/PRD.md` 和 `docs/pm/{feature}/BRD.md`
 - Security 读取 `docs/pm/{feature}/` 和代码库
@@ -108,15 +108,23 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 - **可独立触发**：skill 应能独立工作，而不是只能作为链路一环
 - **业务友好**：尽量优先保证非技术用户也能理解
 
-### QA 测试用例持久化
+### QA E2E 测试用例持久化
 
-单独使用 QA 时，重新探索项目前必须先复用持久化测试用例记忆：
+单独使用 QA 或执行 E2E 时，重新探索项目前必须先复用功能树下的持久化测试用例记忆：
 
-- 先读取 `docs/qa/{feature}/TEST_SPEC.md` 和 `docs/qa/{feature}/test-cases/*.md`
-- 询问是否有新的 feature 变更，以及是否需要扩展项目文件探索来补充测试用例
-- 如果需要探索，把已探索文件、发现和覆盖影响写入 `docs/qa/{feature}/FILE_EXPLORATION.md`
-- 每个 E2E 测试用例单独存为 Markdown 文件，放在 `docs/qa/{feature}/test-cases/` 下，命名为 `TC-NNN-<short-slug>.md`
-- 从这些用例文件执行 E2E 验证，只新增本次发现的用例，不要每次重新发现整个项目
+- 先确认测试场景：`feature-update` 表示功能更新，在开发环境本地验证更新功能和直接影响路径；`release` 表示发版，在发版版本测试环境执行全部 active E2E 用例
+- 先确认测试平台版本；缺失时必须 blocked 并询问用户，不得使用 `unknown` 目录归档
+- 先读取 `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md`、`FLOW_INDEX.md`、`cases/*.md`、`scripts/*.spec.md`、历史 `results/` 和 `_reports/`
+- 基于 PRD/TRD 生成 E2E 测试时，直接按 `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` 分类和记录，不再新增 `docs/qa/{feature}` 入口
+- 每个 E2E 测试用例单独存为 Markdown 文件，放在功能目录的 `cases/` 下，命名为 `TC-NNN-<short-slug>.md`；对应流程脚本放在 `scripts/TC-NNN-<short-slug>.spec.md`
+- `scripts/*.spec.md` 可以保存可执行脚本片段以保证重复执行一致，但不得包含明文账号、密码、token、cookie、session、SSH 密码或 SSH key 内容
+- 多个 TC 复用 `docs/qa/e2e/_shared/login-flows/` 下的登录方式；测试账号只引用账号 ID
+- 平台账号和 SSH 账号统一存放在本地 `.qa/e2e/accounts.local.json`，该文件必须被 `.gitignore` 屏蔽；账号落盘格式遵循 `agents/qa/skills/qa-agent/references/e2e-credential-store.md`
+- 执行入口优先级为 repo harness > Chrome plugin / browser connector > Playwright fallback；repo harness 存在且覆盖当前 TC 时必须优先使用
+- 单个 E2E 测试任务默认由 subagent 执行，主 agent 负责范围确认、拆分、结果确认和按 `agents/qa/skills/qa-agent/references/e2e-test-report.md` 生成汇总报告
+- 现有功能变更或 bug 修复触发 E2E 文档更新前，必须先完成 PRD/TRD 预期对齐；预期变化回 PM，TRD gap 回 `trd-gen`，文档缺失或预期不清时 blocked
+- 代码完成后的 E2E 文档补充必须引用已确认的 `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`；小功能、单文件变更和轻量 bug fix 也不能跳过实施计划门禁
+- 已有 E2E 测试基于功能更新增量更新，历史结果只追加不覆盖
 
 ### Skill 测试
 
