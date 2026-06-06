@@ -10,6 +10,16 @@ Use this workflow when creating, updating, or publishing GitHub releases.
 | Draft release | Create or update a release draft | Create or update tag only if requested or required |
 | Publish release | User confirms draft can be published | Run preflight, ensure changelog archives, update tag if needed, publish |
 
+## Version Variables
+
+Normalize release variables before running commands:
+
+- `THIS_TAG`: the exact GitHub release tag, for example `v1.2.0`.
+- `VERSION`: the version without one leading `v`, for example `1.2.0`.
+- `PREV_TAG`: the exact previous release tag.
+
+Use `THIS_TAG` for Git tags, GitHub releases, and compare URLs. Use `VERSION` for changelog archive paths such as `docs/changelog/changelog-v{VERSION}.md`.
+
 ## Publishing Preflight
 
 Before publishing an approved draft release:
@@ -28,9 +38,9 @@ Commands:
 date '+%Y-%m-%d %H:%M:%S %Z'
 git status --short --branch
 git branch --show-current
-gh release view v{VERSION} --json tagName,name,isDraft,publishedAt,targetCommitish
-git show --no-patch --format='%H%n%D%n%s' v{VERSION}
-git ls-remote --tags origin v{VERSION}
+gh release view {THIS_TAG} --json tagName,name,isDraft,publishedAt,targetCommitish
+git show --no-patch --format='%H%n%D%n%s' {THIS_TAG}
+git ls-remote --tags origin {THIS_TAG}
 test -f docs/changelog/changelog-v{VERSION}.md
 ```
 
@@ -61,10 +71,10 @@ git checkout -b neplich-codex/changelog-v{VERSION}
 uv run scripts/check_repository_contract.py
 git diff --check
 git add CHANGELOG.md docs/changelog/changelog-v{VERSION}.md
-git commit -m "docs: 补充 v{VERSION} changelog"
+git commit -m "docs: 补充 {THIS_TAG} changelog"
 git push -u origin neplich-codex/changelog-v{VERSION}
 gh pr create --base main --head neplich-codex/changelog-v{VERSION} \
-  --title "docs: 补充 v{VERSION} changelog" \
+  --title "docs: 补充 {THIS_TAG} changelog" \
   --body "..."
 gh pr checks {PR_NUMBER} --watch
 gh pr merge {PR_NUMBER} --squash --delete-branch
@@ -81,23 +91,23 @@ Pre-check:
 ```bash
 git rev-parse HEAD
 git rev-parse origin/main
-git show --no-patch --format='%H%n%D%n%s' v{VERSION}
+git show --no-patch --format='%H%n%D%n%s' {THIS_TAG}
 ```
 
 Recreate tag:
 
 ```bash
-git tag -d v{VERSION}
-git push origin :refs/tags/v{VERSION}
-git tag -a v{VERSION} -m "v{VERSION}"
-git push origin v{VERSION}
+git tag -d {THIS_TAG}
+git push origin :refs/tags/{THIS_TAG}
+git tag -a {THIS_TAG} -m "{THIS_TAG}"
+git push origin {THIS_TAG}
 ```
 
 If the remote reports repository rule bypass messages for tag deletion or creation, verify success with:
 
 ```bash
-git ls-remote --tags origin v{VERSION}
-git show --no-patch --format='%H%n%D%n%s' v{VERSION}
+git ls-remote --tags origin {THIS_TAG}
+git show --no-patch --format='%H%n%D%n%s' {THIS_TAG}
 ```
 
 ## Draft Release Creation
@@ -105,7 +115,7 @@ git show --no-patch --format='%H%n%D%n%s' v{VERSION}
 Create a draft release when the user asks for a release but says not to publish:
 
 ```bash
-gh release create v{VERSION} \
+gh release create {THIS_TAG} \
   --draft \
   --title "{TITLE}" \
   --notes-file {NOTES_FILE}
@@ -114,13 +124,13 @@ gh release create v{VERSION} \
 GitHub may return an `untagged-*` URL for draft releases. Verify by querying the tag:
 
 ```bash
-gh release view v{VERSION} --json tagName,name,isDraft,publishedAt,targetCommitish
+gh release view {THIS_TAG} --json tagName,name,isDraft,publishedAt,targetCommitish
 ```
 
 Expected draft state:
 
 ```text
-tagName = v{VERSION}
+tagName = {THIS_TAG}
 isDraft = true
 publishedAt = null
 ```
@@ -130,13 +140,13 @@ publishedAt = null
 After editing release notes, update the draft body:
 
 ```bash
-gh release edit v{VERSION} --notes-file {NOTES_FILE}
+gh release edit {THIS_TAG} --notes-file {NOTES_FILE}
 ```
 
 Re-check:
 
 ```bash
-gh release view v{VERSION} --json tagName,name,isDraft,publishedAt,body
+gh release view {THIS_TAG} --json tagName,name,isDraft,publishedAt,body
 ```
 
 ## Publishing
@@ -152,17 +162,17 @@ Only publish after:
 Publish:
 
 ```bash
-gh release edit v{VERSION} --notes-file {NOTES_FILE} --target main --verify-tag
-gh release edit v{VERSION} --draft=false --latest
+gh release edit {THIS_TAG} --notes-file {NOTES_FILE} --target main --verify-tag
+gh release edit {THIS_TAG} --draft=false --latest
 ```
 
 Final verification:
 
 ```bash
-gh release view v{VERSION} \
+gh release view {THIS_TAG} \
   --json tagName,name,isDraft,isPrerelease,publishedAt,url,targetCommitish
-git show --no-patch --format='%H%n%D%n%s' v{VERSION}
-git ls-remote --tags origin v{VERSION}
+git show --no-patch --format='%H%n%D%n%s' {THIS_TAG}
+git ls-remote --tags origin {THIS_TAG}
 ```
 
 Expected final state:

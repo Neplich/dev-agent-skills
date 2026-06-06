@@ -34,6 +34,16 @@
       "check": "semantic validation confirms the release was generated from a complete commit and PR audit; bot, docs, chore, and internal-looking changes are considered before any grouping or omission"
     },
     {
+      "id": "tag_normalization_no_double_v",
+      "description": "Tag and version placeholders avoid double-v expansion",
+      "check": "semantic validation confirms a target tag like v0.86.0 is represented as THIS_TAG=v0.86.0 and VERSION=0.86.0; release/tag/compare commands do not render vv0.86.0 and changelog paths render changelog-v0.86.0.md"
+    },
+    {
+      "id": "commit_audit_uses_target_tag",
+      "description": "Commit audit uses the target tag instead of HEAD",
+      "check": "semantic validation confirms commit audit commands use PREV_TAG..THIS_TAG, not PREV_TAG..HEAD, so old releases do not include post-release commits"
+    },
+    {
       "id": "change_detail_preserves_conventional_prefix",
       "description": "Change detail entries preserve conventional commit prefixes from source PR titles or commit subjects",
       "check": "semantic validation confirms What's Changed or equivalent change detail entries keep prefixes such as 'feat:', 'fix:', 'docs:', 'test:', or 'chore:' when present in the source title"

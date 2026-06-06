@@ -26,10 +26,18 @@ Read the relevant reference before acting:
 
 Determine:
 
-- Target version, for example `v1.2.0`.
-- Previous version or compare range.
+- Target tag (`THIS_TAG`), for example `v1.2.0`.
+- Normalized version (`VERSION`), for example `1.2.0`, used only for versioned changelog filenames or titles that intentionally add a `v`.
+- Previous tag (`PREV_TAG`) or compare range.
 - Whether the task is only writing notes, updating a draft, creating a tag, or publishing a release.
 - Whether the release should remain a draft.
+
+Normalize before templating commands:
+
+- `THIS_TAG` is the exact GitHub release tag, including a leading `v` when the repository uses one.
+- `VERSION` strips exactly one leading `v` from `THIS_TAG`.
+- Never prepend another `v` to `THIS_TAG`.
+- Never use `VERSION` in Git tag, GitHub release, or compare commands unless the repository's tags are known to be unprefixed.
 
 Ask only if the version or publish/draft intent is unclear.
 
@@ -38,7 +46,7 @@ Useful commands:
 ```bash
 gh repo view --json nameWithOwner,url,defaultBranchRef
 gh release list --json tagName,publishedAt,name,isDraft --order desc --limit 20
-gh release view v{VERSION} --json tagName,name,body,isDraft,publishedAt,targetCommitish
+gh release view {THIS_TAG} --json tagName,name,body,isDraft,publishedAt,targetCommitish
 git tag --list --sort=version:refname
 ```
 
@@ -70,8 +78,8 @@ gh pr list \
 For squash-heavy repositories, also inspect the compare range:
 
 ```bash
-git log PREV_TAG..HEAD --date=iso --pretty=format:'%h%x09%ad%x09%s'
-gh api repos/{OWNER}/{REPO}/compare/PREV_TAG...THIS_TAG
+git log {PREV_TAG}..{THIS_TAG} --date=iso --pretty=format:'%h%x09%ad%x09%s'
+gh api repos/{OWNER}/{REPO}/compare/{PREV_TAG}...{THIS_TAG}
 ```
 
 ## Step 3 - Write Or Update Release Notes
@@ -99,14 +107,14 @@ High-level rule:
 Common commands:
 
 ```bash
-gh release create v{VERSION} --draft --title "{TITLE}" --notes-file {NOTES_FILE}
-gh release edit v{VERSION} --notes-file {NOTES_FILE}
-gh release edit v{VERSION} --draft=false --latest
+gh release create {THIS_TAG} --draft --title "{TITLE}" --notes-file {NOTES_FILE}
+gh release edit {THIS_TAG} --notes-file {NOTES_FILE}
+gh release edit {THIS_TAG} --draft=false --latest
 ```
 
 ## Edge Cases
 
 - If the release tag points at an older commit and release checklist files are added afterward, merge those files first, then delete and recreate the tag at the new release commit before publishing.
-- If GitHub returns an `untagged-*` URL for a draft release, verify it by querying `gh release view v{VERSION}` and checking `tagName` and `isDraft`.
+- If GitHub returns an `untagged-*` URL for a draft release, verify it by querying `gh release view {THIS_TAG}` and checking `tagName` and `isDraft`.
 - If a target changelog archive is missing, create it with `changelog-generator` style content before publishing.
 - If the user only wants release notes text, do not mutate GitHub releases or tags.

@@ -2,10 +2,12 @@
 
 Use the repository's existing release outline before introducing a new structure.
 
+Use `THIS_TAG` for the full release tag, for example `v1.2.0`. Use `VERSION` only when a normalized version without one leading `v` is required.
+
 For this repository, match the `v0.1.1` release outline:
 
 ```markdown
-# Release Notes - v{VERSION} ({YYYY-MM-DD})
+# Release Notes - {THIS_TAG} ({YYYY-MM-DD})
 
 {One short paragraph describing the release theme and why it matters.}
 
@@ -50,7 +52,7 @@ Fetch and follow instructions from {INSTALL_URL}
 
 - {conventional title} by @{author} in [#{number}]({PR_URL})
 
-完整变更： {REPO_URL}/compare/{PREV_TAG}...{VERSION}
+完整变更： {REPO_URL}/compare/{PREV_TAG}...{THIS_TAG}
 ```
 
 ## Structure Rules
@@ -99,7 +101,7 @@ If a change came from a direct commit and no PR exists, use the commit author an
 For repositories without an existing release style, use:
 
 ```markdown
-# Release Notes - v{VERSION} ({YYYY-MM-DD})
+# Release Notes - {THIS_TAG} ({YYYY-MM-DD})
 
 {One short release theme paragraph.}
 
@@ -125,5 +127,5 @@ For repositories without an existing release style, use:
 
 - {conventional title} by @{author} in [#{number}]({PR_URL})
 
-Full changelog: {REPO_URL}/compare/{PREV_TAG}...{VERSION}
+Full changelog: {REPO_URL}/compare/{PREV_TAG}...{THIS_TAG}
 ```
