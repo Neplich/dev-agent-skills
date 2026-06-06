@@ -27,6 +27,11 @@
           "text": "保留正确版本、仓库和 PR 或 release 相关链接"
         },
         {
+          "id": "source_audit",
+          "description": "先审计版本范围内所有 commit 和 PR，再决定 release notes 的分组、摘要或省略",
+          "text": "先审计版本范围内所有 commit 和 PR，再决定 release notes 的分组、摘要或省略"
+        },
+        {
           "id": "requested_output",
           "description": "按用户要求写入或明确给出目标 release notes 产物",
           "text": "按用户要求写入或明确给出目标 release notes 产物"
@@ -58,6 +63,11 @@
           "text": "保留正确版本、仓库和 PR 或 release 相关链接"
         },
         {
+          "id": "source_audit",
+          "description": "先审计版本范围内所有 commit 和 PR，再决定 release notes 的分组、摘要或省略",
+          "text": "先审计版本范围内所有 commit 和 PR，再决定 release notes 的分组、摘要或省略"
+        },
+        {
           "id": "requested_output",
           "description": "按用户要求写入或明确给出目标 release notes 产物",
           "text": "按用户要求写入或明确给出目标 release notes 产物"
@@ -87,6 +97,11 @@
           "id": "source_links",
           "description": "保留正确版本、仓库和 PR 或 release 相关链接",
           "text": "保留正确版本、仓库和 PR 或 release 相关链接"
+        },
+        {
+          "id": "source_audit",
+          "description": "先审计版本范围内所有 commit 和 PR，再决定 release notes 的分组、摘要或省略",
+          "text": "先审计版本范围内所有 commit 和 PR，再决定 release notes 的分组、摘要或省略"
         },
         {
           "id": "requested_output",

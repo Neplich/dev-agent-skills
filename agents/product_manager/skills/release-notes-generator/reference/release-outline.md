@@ -65,6 +65,7 @@ Fetch and follow instructions from {INSTALL_URL}
 ## Content Rules
 
 - Write for users and maintainers, not as an internal implementation log.
+- Audit all commits and PRs in the release compare range before deciding what to highlight, group, summarize, or omit.
 - Start with the release outcome, then list details.
 - Prefer 3 to 5 highlights. Group smaller changes under `其他改进`.
 - Keep each highlight to one short paragraph unless an upgrade action needs more detail.

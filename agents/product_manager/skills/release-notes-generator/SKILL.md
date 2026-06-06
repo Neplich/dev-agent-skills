@@ -50,6 +50,13 @@ Prefer existing versioned changelog archives:
 docs/changelog/changelog-v{VERSION}.md
 ```
 
+Always audit the full compare range before writing release notes:
+
+- Inspect all commits in `PREV_TAG..THIS_TAG`.
+- Inspect all merged PRs in the same release window.
+- Do not discard bot, documentation, chore, or internal-looking changes before the audit. Use the complete source set as the basis for release decisions.
+- The final release notes may group, summarize, or omit low-signal items, but the decision should come after the full source audit.
+
 If the changelog is missing or incomplete, fetch merged PRs and commits from GitHub:
 
 ```bash

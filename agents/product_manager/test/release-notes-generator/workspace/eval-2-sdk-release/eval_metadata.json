@@ -29,9 +29,9 @@
       "check": "text contains 'pip install anthropic==0.86.0' or 'pip install anthropic' near version reference"
     },
     {
-      "id": "no_stainless_bot",
-      "description": "No stainless-app[bot] PR content in body",
-      "check": "text does not mention 'stainless-app' or 'stainless[bot]'"
+      "id": "source_audit_all_commits_and_prs",
+      "description": "Release generation audits all commits and merged PRs in the compare range before curation",
+      "check": "semantic validation confirms the release was generated from a complete commit and PR audit; bot, docs, chore, and internal-looking changes are considered before any grouping or omission"
     },
     {
       "id": "pr_links_format",

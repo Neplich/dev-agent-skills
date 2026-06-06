@@ -29,6 +29,11 @@
       "check": "any PR link matches pattern [#\\d+](https://github.com/fastapi/fastapi/pull/\\d+)"
     },
     {
+      "id": "source_audit_all_commits_and_prs",
+      "description": "Release generation audits all commits and merged PRs in the compare range before curation",
+      "check": "semantic validation confirms the release was generated from a complete commit and PR audit; bot, docs, chore, and internal-looking changes are considered before any grouping or omission"
+    },
+    {
       "id": "user_perspective_tone",
       "description": "Feature descriptions avoid pure implementation language — no bullet lines beginning with 'Implemented', 'Refactored', 'Added support for' as the only description",
       "check": "fewer than 30% of feature bullet points start with 'Implemented' or 'Refactored'"

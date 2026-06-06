@@ -29,9 +29,9 @@
       "check": "text contains at least one link matching pattern [#\\d+](https://github.com/cli/cli/pull/\\d+)"
     },
     {
-      "id": "no_bot_content",
-      "description": "No bot PR content (dependabot/renovate) in release notes body",
-      "check": "text does not contain 'dependabot' or 'renovate[bot]'"
+      "id": "source_audit_all_commits_and_prs",
+      "description": "Release generation audits all commits and merged PRs in the compare range before curation",
+      "check": "semantic validation confirms the release was generated from a complete commit and PR audit; bot, docs, chore, and internal-looking changes are considered before any grouping or omission"
     },
     {
       "id": "has_upgrade_section",

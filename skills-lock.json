@@ -29,7 +29,7 @@
     "release-notes-generator": {
       "source": "agents/product_manager/skills/release-notes-generator",
       "sourceType": "local",
-      "computedHash": "656d26573e497fbc9f50bba054eeab58e42328c048d6c26bdf058f673297626f"
+      "computedHash": "7bf02ae7f0c2c069a2078be65c269fbb55ff4ef88633176451ec9fa43e63e1b1"
     },
     "roadmap-generator": {
       "source": "agents/product_manager/skills/roadmap-generator",
