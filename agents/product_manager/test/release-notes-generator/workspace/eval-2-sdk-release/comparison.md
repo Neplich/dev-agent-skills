@@ -7,7 +7,7 @@
 - Eval: `eval-002-sdk-breaking-changes`
 - Test case: sdk-breaking-changes
 - Workspace: `workspace/eval-2-sdk-release`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-06
+- Latest result: PASS - Codex CLI eval generation completed on 2026-06-06
 
 ## Test Set / Fixture Version
 
@@ -33,6 +33,8 @@ Observed behavior:
 - `reference/release-outline.md` 保留通用 SDK / library release notes 结构，同时要求按仓库既有大纲输出中文 release notes。
 - `变更明细` 保留来源标题中的 conventional commit prefix，例如 `feat:`、`fix:`、`docs:`、`test:` 或 `chore:`。
 - `reference/github-release-workflow.md` 补充 approved draft 发布前的 changelog、tag 和 draft release 复核流程，不削弱 SDK release notes 的断言。
+- 实际生成 `anthropics/anthropic-sdk-python` v0.86.0 release notes 时，输出包含 breaking changes、What's New、fixes and compatibility、upgrade guide、PR links 和 full changelog。
+- 运行记录显示先审计 `v0.85.0...v0.86.0` compare range 的 8 个 commits 和 included merged PR，再进行分组和摘要；`stainless-app[bot]`、internal、generated API 和 release commit 均被纳入审计。`What's Changed` 保留了 `feat:`、`feat(api):`、`fix(client):`、`fix(deps):`、`fix(pydantic):`、`chore(internal):`、`release:` 等前缀。
 
 ## Without Skill / Baseline
 
@@ -41,11 +43,11 @@ Observed behavior:
 
 ## Failures
 
-- None found in fresh Codex subagent validation on 2026-06-06.
+- None found in Codex CLI eval generation on 2026-06-06.
 
 ## Next Steps
 
-- 真实运行时需验证 v0.86.0 release 数据。
+- 保留该 eval 继续覆盖 SDK breaking-change 判断、完整 source audit、升级命令和 conventional prefix 保留行为。
 
 ## Runtime Artifacts Policy
 

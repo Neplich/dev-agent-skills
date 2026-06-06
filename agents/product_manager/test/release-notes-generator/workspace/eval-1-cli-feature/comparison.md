@@ -7,7 +7,7 @@
 - Eval: `eval-001-cli-feature-release`
 - Test case: cli-feature-release
 - Workspace: `workspace/eval-1-cli-feature`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-06
+- Latest result: PASS - Codex CLI eval generation completed on 2026-06-06
 
 ## Test Set / Fixture Version
 
@@ -33,6 +33,8 @@ Observed behavior:
 - 新增 release 大纲规范要求沿用仓库既有结构，`变更明细` 使用 `by @user in [#N](PR_URL)`，并把完整变更链接放在变更明细之后。
 - `变更明细` 保留来源标题中的 conventional commit prefix，例如 `feat:`、`fix:`、`docs:`、`test:` 或 `chore:`。
 - 新增 GitHub release workflow 覆盖 approved draft 发布前的 changelog archive、根 `CHANGELOG.md` 索引、tag 指向、draft 更新、发布和最终状态复核。
+- 实际生成 `cli/cli` v2.88.0 release notes 时，输出包含 `What's New`、bug fixes、other improvements、upgrading、PR links 和 full changelog。`What's Changed` 中保留了 `feat(pr diff):`、`feat(repo):`、`fix:`、`docs:`、`build:`、`refactor:`、`chore(deps):` 等来源前缀。
+- 运行记录显示先审计 `v2.87.3...v2.88.0` compare range 的 135 个 commits 和 release 范围内 39 个 merged PR，再进行分组和摘要；bot、dependency 和 internal-looking 条目被纳入审计。
 
 ## Without Skill / Baseline
 
@@ -41,11 +43,11 @@ Observed behavior:
 
 ## Failures
 
-- None found in fresh Codex subagent validation on 2026-06-06.
+- None found in Codex CLI eval generation on 2026-06-06.
 
 ## Next Steps
 
-- 真实运行时需 gh release/PR 数据验证。
+- 保留该 eval 继续覆盖完整 source audit、PR 链接、升级说明和 conventional prefix 保留行为。
 
 ## Runtime Artifacts Policy
 
