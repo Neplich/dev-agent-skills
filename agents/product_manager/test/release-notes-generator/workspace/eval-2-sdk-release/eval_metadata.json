@@ -34,6 +34,11 @@
       "check": "semantic validation confirms the release was generated from a complete commit and PR audit; bot, docs, chore, and internal-looking changes are considered before any grouping or omission"
     },
     {
+      "id": "change_detail_preserves_conventional_prefix",
+      "description": "Change detail entries preserve conventional commit prefixes from source PR titles or commit subjects",
+      "check": "semantic validation confirms What's Changed or equivalent change detail entries keep prefixes such as 'feat:', 'fix:', 'docs:', 'test:', or 'chore:' when present in the source title"
+    },
+    {
       "id": "pr_links_format",
       "description": "PR links follow correct github.com format",
       "check": "any PR link matches pattern [#\\d+](https://github.com/anthropics/anthropic-sdk-python/pull/\\d+)"

@@ -59,6 +59,7 @@ Fetch and follow instructions from {INSTALL_URL}
 - Do not include an `已关闭 Issue` section unless the user explicitly asks for it.
 - Keep `变更明细` as the final section.
 - Mention contributors in `变更明细` with `by @user in [#N](PR_URL)`.
+- Preserve conventional commit prefixes in `变更明细` items when the source PR title or commit subject has one, for example `feat:`, `fix:`, `docs:`, `test:`, or `chore:`.
 - Link major highlights inline, but avoid linking every sentence.
 - Keep release notes in Chinese for this repository.
 

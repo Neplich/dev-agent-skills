@@ -39,9 +39,9 @@
       "check": "text contains '⬆️ Upgrading' or '## Upgrading'"
     },
     {
-      "id": "no_raw_cc_prefix",
-      "description": "No raw conventional commit prefixes in body (feat:, fix: etc.)",
-      "check": "text does not contain bullet lines starting with 'feat:' or 'fix:' or 'chore:'"
+      "id": "change_detail_preserves_conventional_prefix",
+      "description": "Change detail entries preserve conventional commit prefixes from source PR titles or commit subjects",
+      "check": "semantic validation confirms What's Changed or equivalent change detail entries keep prefixes such as 'feat:', 'fix:', 'docs:', 'test:', or 'chore:' when present in the source title"
     }
   ]
 }

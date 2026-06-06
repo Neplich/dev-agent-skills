@@ -34,6 +34,11 @@
       "check": "semantic validation confirms the release was generated from a complete commit and PR audit; bot, docs, chore, and internal-looking changes are considered before any grouping or omission"
     },
     {
+      "id": "change_detail_preserves_conventional_prefix",
+      "description": "Change detail entries preserve conventional commit prefixes from source PR titles or commit subjects",
+      "check": "semantic validation confirms What's Changed or equivalent change detail entries keep prefixes such as 'feat:', 'fix:', 'docs:', 'test:', or 'chore:' when present in the source title"
+    },
+    {
       "id": "user_perspective_tone",
       "description": "Feature descriptions avoid pure implementation language — no bullet lines beginning with 'Implemented', 'Refactored', 'Added support for' as the only description",
       "check": "fewer than 30% of feature bullet points start with 'Implemented' or 'Refactored'"
