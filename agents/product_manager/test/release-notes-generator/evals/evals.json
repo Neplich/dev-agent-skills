@@ -27,6 +27,26 @@
           "text": "保留正确版本、仓库和 PR 或 release 相关链接"
         },
         {
+          "id": "source_audit",
+          "description": "先审计版本范围内所有 commit 和 PR，再决定 release notes 的分组、摘要或省略",
+          "text": "先审计版本范围内所有 commit 和 PR，再决定 release notes 的分组、摘要或省略"
+        },
+        {
+          "id": "tag_normalization",
+          "description": "输入带 v 的 tag 时不会在 release、tag 或 changelog 模板中生成双 v",
+          "text": "将目标 tag 归一化为完整 THIS_TAG 和无前导 v 的 VERSION；release/tag/compare 命令使用 THIS_TAG，changelog 路径使用 changelog-v{VERSION}.md，不能生成 vv1.2.0"
+        },
+        {
+          "id": "target_tag_audit_range",
+          "description": "commit 审计范围使用目标 tag 而不是 HEAD",
+          "text": "commit 审计必须使用 PREV_TAG..THIS_TAG 或等价 compare range，不能使用 PREV_TAG..HEAD 作为已发布版本的来源审计"
+        },
+        {
+          "id": "change_detail_prefix",
+          "description": "变更明细保留来源 PR 标题或 commit subject 中的 conventional commit 前缀",
+          "text": "变更明细保留来源 PR 标题或 commit subject 中的 conventional commit 前缀，例如 feat:、fix:、docs:、test: 或 chore:"
+        },
+        {
           "id": "requested_output",
           "description": "按用户要求写入或明确给出目标 release notes 产物",
           "text": "按用户要求写入或明确给出目标 release notes 产物"
@@ -58,6 +78,26 @@
           "text": "保留正确版本、仓库和 PR 或 release 相关链接"
         },
         {
+          "id": "source_audit",
+          "description": "先审计版本范围内所有 commit 和 PR，再决定 release notes 的分组、摘要或省略",
+          "text": "先审计版本范围内所有 commit 和 PR，再决定 release notes 的分组、摘要或省略"
+        },
+        {
+          "id": "tag_normalization",
+          "description": "输入带 v 的 tag 时不会在 release、tag 或 changelog 模板中生成双 v",
+          "text": "将目标 tag 归一化为完整 THIS_TAG 和无前导 v 的 VERSION；release/tag/compare 命令使用 THIS_TAG，changelog 路径使用 changelog-v{VERSION}.md，不能生成 vv1.2.0"
+        },
+        {
+          "id": "target_tag_audit_range",
+          "description": "commit 审计范围使用目标 tag 而不是 HEAD",
+          "text": "commit 审计必须使用 PREV_TAG..THIS_TAG 或等价 compare range，不能使用 PREV_TAG..HEAD 作为已发布版本的来源审计"
+        },
+        {
+          "id": "change_detail_prefix",
+          "description": "变更明细保留来源 PR 标题或 commit subject 中的 conventional commit 前缀",
+          "text": "变更明细保留来源 PR 标题或 commit subject 中的 conventional commit 前缀，例如 feat:、fix:、docs:、test: 或 chore:"
+        },
+        {
           "id": "requested_output",
           "description": "按用户要求写入或明确给出目标 release notes 产物",
           "text": "按用户要求写入或明确给出目标 release notes 产物"
@@ -87,6 +127,26 @@
           "id": "source_links",
           "description": "保留正确版本、仓库和 PR 或 release 相关链接",
           "text": "保留正确版本、仓库和 PR 或 release 相关链接"
+        },
+        {
+          "id": "source_audit",
+          "description": "先审计版本范围内所有 commit 和 PR，再决定 release notes 的分组、摘要或省略",
+          "text": "先审计版本范围内所有 commit 和 PR，再决定 release notes 的分组、摘要或省略"
+        },
+        {
+          "id": "tag_normalization",
+          "description": "输入带 v 的 tag 时不会在 release、tag 或 changelog 模板中生成双 v",
+          "text": "将目标 tag 归一化为完整 THIS_TAG 和无前导 v 的 VERSION；release/tag/compare 命令使用 THIS_TAG，changelog 路径使用 changelog-v{VERSION}.md，不能生成 vv1.2.0"
+        },
+        {
+          "id": "target_tag_audit_range",
+          "description": "commit 审计范围使用目标 tag 而不是 HEAD",
+          "text": "commit 审计必须使用 PREV_TAG..THIS_TAG 或等价 compare range，不能使用 PREV_TAG..HEAD 作为已发布版本的来源审计"
+        },
+        {
+          "id": "change_detail_prefix",
+          "description": "变更明细保留来源 PR 标题或 commit subject 中的 conventional commit 前缀",
+          "text": "变更明细保留来源 PR 标题或 commit subject 中的 conventional commit 前缀，例如 feat:、fix:、docs:、test: 或 chore:"
         },
         {
           "id": "requested_output",

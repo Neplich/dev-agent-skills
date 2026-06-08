@@ -29,9 +29,19 @@
       "check": "text contains at least one link matching pattern [#\\d+](https://github.com/cli/cli/pull/\\d+)"
     },
     {
-      "id": "no_bot_content",
-      "description": "No bot PR content (dependabot/renovate) in release notes body",
-      "check": "text does not contain 'dependabot' or 'renovate[bot]'"
+      "id": "source_audit_all_commits_and_prs",
+      "description": "Release generation audits all commits and merged PRs in the compare range before curation",
+      "check": "semantic validation confirms the release was generated from a complete commit and PR audit; bot, docs, chore, and internal-looking changes are considered before any grouping or omission"
+    },
+    {
+      "id": "tag_normalization_no_double_v",
+      "description": "Tag and version placeholders avoid double-v expansion",
+      "check": "semantic validation confirms a target tag like v2.88.0 is represented as THIS_TAG=v2.88.0 and VERSION=2.88.0; release/tag/compare commands do not render vv2.88.0 and changelog paths render changelog-v2.88.0.md"
+    },
+    {
+      "id": "commit_audit_uses_target_tag",
+      "description": "Commit audit uses the target tag instead of HEAD",
+      "check": "semantic validation confirms commit audit commands use PREV_TAG..THIS_TAG, not PREV_TAG..HEAD, so old releases do not include post-release commits"
     },
     {
       "id": "has_upgrade_section",
@@ -39,9 +49,9 @@
       "check": "text contains '⬆️ Upgrading' or '## Upgrading'"
     },
     {
-      "id": "no_raw_cc_prefix",
-      "description": "No raw conventional commit prefixes in body (feat:, fix: etc.)",
-      "check": "text does not contain bullet lines starting with 'feat:' or 'fix:' or 'chore:'"
+      "id": "change_detail_preserves_conventional_prefix",
+      "description": "Change detail entries preserve conventional commit prefixes from source PR titles or commit subjects",
+      "check": "semantic validation confirms What's Changed or equivalent change detail entries keep prefixes such as 'feat:', 'fix:', 'docs:', 'test:', or 'chore:' when present in the source title"
     }
   ]
 }
