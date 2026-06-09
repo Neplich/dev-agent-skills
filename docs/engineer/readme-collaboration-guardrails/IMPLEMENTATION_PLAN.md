@@ -1,8 +1,8 @@
 ---
 title: "README 协作门禁主链路实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.3.0"
-status: Pending Confirmation
+version: "0.3.1"
+status: Implemented
 author: "Neplich Codex"
 date: "2026-06-09"
 last_updated: "2026-06-09"
