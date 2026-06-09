@@ -47,15 +47,20 @@
 
 ```mermaid
 flowchart LR
-    PM["PM docs"] --> Engineer["engineer-agent"]
-    Design["Design docs"] --> Engineer
+    PM["PM 文档 / 决策记录"] --> Engineer["engineer-agent"]
+    Design["设计文档"] --> Engineer
     Engineer --> Analyze["codebase-analyzer"]
+    Engineer --> Align["现有功能 PRD/TRD 对齐"]
     Analyze --> TRD["trd-gen"]
-    TRD --> Implement["feature-implementor"]
+    Align --> TRD
+    TRD --> Plan["确认 IMPLEMENTATION_PLAN"]
+    Plan --> Implement["feature-implementor"]
+    Plan -. "失败 / 回归" .-> Debug["debugger"]
     Implement --> Test["test-writer"]
-    Test --> Delivery["delivery"]
-    Implement -. failure .-> Debug["debugger"]
     Debug --> Test
+    Implement --> QAHandOff["QA E2E handoff package"]
+    QAHandOff --> QA["qa-agent"]
+    Test --> Delivery["delivery"]
 ```
 
 ## 输入与产物

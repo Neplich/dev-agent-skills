@@ -47,15 +47,20 @@ Default rule: if the request changes production behavior, first confirm the requ
 
 ```mermaid
 flowchart LR
-    PM["PM docs"] --> Engineer["engineer-agent"]
+    PM["PM docs / decisions"] --> Engineer["engineer-agent"]
     Design["Design docs"] --> Engineer
     Engineer --> Analyze["codebase-analyzer"]
+    Engineer --> Align["Existing feature PRD/TRD alignment"]
     Analyze --> TRD["trd-gen"]
-    TRD --> Implement["feature-implementor"]
+    Align --> TRD
+    TRD --> Plan["Confirm IMPLEMENTATION_PLAN"]
+    Plan --> Implement["feature-implementor"]
+    Plan -. "failure / regression" .-> Debug["debugger"]
     Implement --> Test["test-writer"]
-    Test --> Delivery["delivery"]
-    Implement -. failure .-> Debug["debugger"]
     Debug --> Test
+    Implement --> QAHandOff["QA E2E handoff package"]
+    QAHandOff --> QA["qa-agent"]
+    Test --> Delivery["delivery"]
 ```
 
 ## Inputs And Outputs
