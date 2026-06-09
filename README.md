@@ -52,12 +52,13 @@ It includes:
 ```mermaid
 flowchart LR
     PM["PM Agent"] --> Designer["Designer Agent"]
-    PM --> Align["PRD/TRD alignment"]
-    Designer --> Align
+    PM --> Engineer["Engineer Agent"]
+    Designer --> Engineer
+    Engineer --> Align["PRD/TRD alignment"]
     Align --> TRD["Engineer TRD confirmed"]
     TRD --> Plan["IMPLEMENTATION_PLAN confirmed"]
-    Plan --> Engineer["Engineer Agent"]
-    Engineer --> QAHandOff["QA E2E handoff package"]
+    Plan --> Impl["Implementation / debug"]
+    Impl --> QAHandOff["QA E2E handoff package"]
     QAHandOff --> QA["QA Agent"]
     QA --> Engineer
     QA -. "Requirement gap / acceptance issue" .-> PM
@@ -70,9 +71,9 @@ Existing feature changes, bug fixes, and user-visible implementation should pass
 
 Common chains:
 
-1. `pm-agent -> PRD/TRD alignment -> engineer-agent -> QA E2E handoff -> qa-agent`
-2. `pm-agent -> designer-agent -> PRD/TRD alignment -> engineer-agent -> QA E2E handoff -> qa-agent`
-3. `PRD/TRD alignment -> engineer-agent <-> qa-agent` for bugfix and regression loops
+1. `pm-agent -> engineer-agent -> PRD/TRD alignment -> QA E2E handoff -> qa-agent`
+2. `pm-agent -> designer-agent -> engineer-agent -> PRD/TRD alignment -> QA E2E handoff -> qa-agent`
+3. `engineer-agent -> PRD/TRD alignment -> qa-agent` for bugfix and regression loops
 4. `engineer-agent -> devops-agent` for deployment, CI/CD, and runtime readiness
 5. `engineer-agent -> security-agent` for pre-release or focused security review
 

@@ -52,12 +52,13 @@
 ```mermaid
 flowchart LR
     PM["PM Agent"] --> Designer["Designer Agent"]
-    PM --> Align["PRD/TRD 对齐"]
-    Designer --> Align
+    PM --> Engineer["Engineer Agent"]
+    Designer --> Engineer
+    Engineer --> Align["PRD/TRD 对齐"]
     Align --> TRD["Engineer TRD 已确认"]
     TRD --> Plan["IMPLEMENTATION_PLAN 已确认"]
-    Plan --> Engineer["Engineer Agent"]
-    Engineer --> QAHandOff["QA E2E handoff package"]
+    Plan --> Impl["实现 / 修复"]
+    Impl --> QAHandOff["QA E2E handoff package"]
     QAHandOff --> QA["QA Agent"]
     QA --> Engineer
     QA -. "需求缺口 / 验收问题" .-> PM
@@ -70,9 +71,9 @@ flowchart LR
 
 常见链路：
 
-1. `pm-agent -> PRD/TRD 对齐 -> engineer-agent -> QA E2E handoff -> qa-agent`
-2. `pm-agent -> designer-agent -> PRD/TRD 对齐 -> engineer-agent -> QA E2E handoff -> qa-agent`
-3. `PRD/TRD 对齐 -> engineer-agent <-> qa-agent`，用于缺陷修复和回归确认
+1. `pm-agent -> engineer-agent -> PRD/TRD 对齐 -> QA E2E handoff -> qa-agent`
+2. `pm-agent -> designer-agent -> engineer-agent -> PRD/TRD 对齐 -> QA E2E handoff -> qa-agent`
+3. `engineer-agent -> PRD/TRD 对齐 -> qa-agent`，用于缺陷修复和回归确认
 4. `engineer-agent -> devops-agent`，用于部署、CI/CD 和运行准备
 5. `engineer-agent -> security-agent`，用于发布前或专项安全审查
 
