@@ -54,12 +54,7 @@ flowchart LR
     PM["PM Agent"] --> Designer["Designer Agent"]
     PM --> Engineer["Engineer Agent"]
     Designer --> Engineer
-    Engineer --> Align["PRD/TRD 对齐"]
-    Align --> TRD["Engineer TRD 已确认"]
-    TRD --> Plan["IMPLEMENTATION_PLAN 已确认"]
-    Plan --> Impl["实现 / 修复"]
-    Impl --> QAHandOff["QA E2E handoff package"]
-    QAHandOff --> QA["QA Agent"]
+    Engineer --> QA["QA Agent"]
     QA --> Engineer
     QA -. "需求缺口 / 验收问题" .-> PM
     Engineer --> DevOps["DevOps Agent"]
@@ -67,13 +62,23 @@ flowchart LR
     Security --> Engineer
 ```
 
+工程门禁：
+
+```mermaid
+flowchart LR
+    Align["PRD/TRD 对齐"] --> TRD["TRD 已确认"]
+    TRD --> Plan["IMPLEMENTATION_PLAN 已确认"]
+    Plan --> Work["实现 / 修复"]
+    Work --> QAHandOff["QA E2E handoff"]
+```
+
 现有功能变更、bug fix 和用户可见实现应先完成 PRD/TRD 对齐，再进入工程执行。Engineer 在实现前确认 TRD 和 `IMPLEMENTATION_PLAN.md`；影响用户流程的实现完成后，通过 QA E2E 交接包移交给 QA。
 
 常见链路：
 
-1. `pm-agent -> engineer-agent -> PRD/TRD 对齐 -> QA E2E handoff -> qa-agent`
-2. `pm-agent -> designer-agent -> engineer-agent -> PRD/TRD 对齐 -> QA E2E handoff -> qa-agent`
-3. `engineer-agent -> PRD/TRD 对齐 -> qa-agent`，用于缺陷修复和回归确认
+1. `pm-agent -> engineer-agent -> qa-agent`
+2. `pm-agent -> designer-agent -> engineer-agent -> qa-agent`
+3. `engineer-agent <-> qa-agent`，用于缺陷修复和回归确认
 4. `engineer-agent -> devops-agent`，用于部署、CI/CD 和运行准备
 5. `engineer-agent -> security-agent`，用于发布前或专项安全审查
 

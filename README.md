@@ -54,12 +54,7 @@ flowchart LR
     PM["PM Agent"] --> Designer["Designer Agent"]
     PM --> Engineer["Engineer Agent"]
     Designer --> Engineer
-    Engineer --> Align["PRD/TRD alignment"]
-    Align --> TRD["Engineer TRD confirmed"]
-    TRD --> Plan["IMPLEMENTATION_PLAN confirmed"]
-    Plan --> Impl["Implementation / debug"]
-    Impl --> QAHandOff["QA E2E handoff package"]
-    QAHandOff --> QA["QA Agent"]
+    Engineer --> QA["QA Agent"]
     QA --> Engineer
     QA -. "Requirement gap / acceptance issue" .-> PM
     Engineer --> DevOps["DevOps Agent"]
@@ -67,13 +62,23 @@ flowchart LR
     Security --> Engineer
 ```
 
+Engineering guardrails:
+
+```mermaid
+flowchart LR
+    Align["PRD/TRD alignment"] --> TRD["TRD confirmed"]
+    TRD --> Plan["IMPLEMENTATION_PLAN confirmed"]
+    Plan --> Work["implementation / debug"]
+    Work --> QAHandOff["QA E2E handoff"]
+```
+
 Existing feature changes, bug fixes, and user-visible implementation should pass PRD/TRD alignment before engineering execution. Engineer confirms the TRD and `IMPLEMENTATION_PLAN.md` before implementation, then hands user-flow impact to QA through a QA E2E package.
 
 Common chains:
 
-1. `pm-agent -> engineer-agent -> PRD/TRD alignment -> QA E2E handoff -> qa-agent`
-2. `pm-agent -> designer-agent -> engineer-agent -> PRD/TRD alignment -> QA E2E handoff -> qa-agent`
-3. `engineer-agent -> PRD/TRD alignment -> qa-agent` for bugfix and regression loops
+1. `pm-agent -> engineer-agent -> qa-agent`
+2. `pm-agent -> designer-agent -> engineer-agent -> qa-agent`
+3. `engineer-agent <-> qa-agent` for bugfix and regression loops
 4. `engineer-agent -> devops-agent` for deployment, CI/CD, and runtime readiness
 5. `engineer-agent -> security-agent` for pre-release or focused security review
 

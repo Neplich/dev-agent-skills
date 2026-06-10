@@ -59,6 +59,7 @@ flowchart LR
     Implement --> Test["test-writer"]
     Debug --> Test
     Implement --> QAHandOff["QA E2E handoff package"]
+    Debug --> QAHandOff
     QAHandOff --> QA["qa-agent"]
     Test --> Delivery["delivery"]
 ```
