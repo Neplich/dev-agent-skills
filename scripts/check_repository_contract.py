@@ -448,6 +448,11 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
 
     base_ref = implementation_plan_base_ref(root)
     if base_ref is None:
+        add_error(
+            errors,
+            root / "docs" / "engineer",
+            "cannot compare implementation plan metadata because no base ref is available; fetch origin/main or main before running repository contract",
+        )
         return
 
     for rel in changed_files_against(root, base_ref):

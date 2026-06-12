@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -514,6 +515,31 @@ class EvalContractTests(unittest.TestCase):
 
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("metadata.version must match latest changelog version '0.1.3'", rendered)
+
+    def test_repository_contract_rejects_missing_implementation_plan_base_ref(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            plan = root / "docs/engineer/example/IMPLEMENTATION_PLAN.md"
+            plan.parent.mkdir(parents=True)
+            plan.write_text(
+                "---\n"
+                'feature: "example"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-12"\n'
+                'last_updated: "2026-06-12"\n'
+                "---\n\n"
+                "# Example Plan\n"
+            )
+            subprocess.run(["git", "init", "-b", "feature"], cwd=root, check=True)
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("no base ref is available", rendered)
 
 
 if __name__ == "__main__":
