@@ -7,7 +7,7 @@
 - Eval: `eval-004-small-change-plan-gate`
 - Test case: small-change-plan-gate
 - Workspace: `workspace/eval-004-small-change-plan-gate`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `feature-implementor` skill
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-11 against the current uncommitted `feature-implementor` skill
 
 ## Test Set / Fixture Version
 
@@ -29,7 +29,7 @@
 
 Observed behavior:
 
-- PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `feature-implementor` skill.
+- PASS - fresh Codex subagent validation completed on 2026-06-11 against the current uncommitted `feature-implementor` skill.
 - Current `SKILL.md` requires existing-feature changes to read PRD and TRD, plus DECISIONS only when present, so a missing standalone `DECISIONS.md` does not block an otherwise covered PRD/TRD change.
 - The implementation planner is explicitly the first step for every implementation task, including single-file, small, and low-risk changes.
 - The plan must be written to `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`, include the PRD alignment result and implementation/validation sub-agent split decision, then wait for user confirmation.

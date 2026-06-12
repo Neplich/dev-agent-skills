@@ -7,7 +7,7 @@
 - Eval: `eval-003-missing-trd-handoff`
 - Test case: missing-trd-handoff
 - Workspace: `workspace/eval-003-missing-trd-handoff`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `feature-implementor` skill
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-11 against the current uncommitted `feature-implementor` skill
 
 ## Test Set / Fixture Version
 
@@ -28,7 +28,7 @@
 
 Observed behavior:
 
-- PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `feature-implementor` skill.
+- PASS - fresh Codex subagent validation completed on 2026-06-11 against the current uncommitted `feature-implementor` skill.
 - Current `SKILL.md` requires reading PM and Engineer docs before existing-feature implementation planning and explicitly stops when PRD is stable but TRD is missing, incomplete, or stale.
 - The skill hands back to `engineer-agent:trd-gen` with a TRD gap packet instead of creating `IMPLEMENTATION_PLAN.md`, code, tests, or a file-change implementation plan.
 - The required gap packet covers unresolved technical decisions, affected components/modules, data flow/API/integration impacts, verification commands, release or rollout risks, and error handling, observability, or security strategy when relevant.

@@ -15,6 +15,9 @@ from typing import Any
 
 SKILL_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LOCK_HASH_RE = re.compile(r"^[0-9a-f]{64}$")
+SEMVER_RE = re.compile(r"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+IMPLEMENTATION_PLAN_RE = re.compile(r"^docs/engineer/[^/]+/IMPLEMENTATION_PLAN\.md$")
 BLOCKED_TRACKED_PATTERNS = (
     re.compile(r"(^|/)\.DS_Store$"),
     re.compile(r"(^|/)\.pytest_cache(/|$)"),
@@ -104,6 +107,49 @@ def parse_frontmatter(path: Path, errors: list[ContractError]) -> dict[str, str]
 
     add_error(errors, path, "unterminated YAML frontmatter")
     return None
+
+
+def parse_markdown_frontmatter(
+    path: Path,
+    content: str,
+    errors: list[ContractError] | None = None,
+) -> tuple[dict[str, str], str] | None:
+    lines = content.splitlines()
+    if not lines or lines[0].strip() != "---":
+        if errors is not None:
+            add_error(errors, path, "missing YAML frontmatter")
+        return None
+
+    end_index: int | None = None
+    for index, line in enumerate(lines[1:], start=1):
+        if line.strip() == "---":
+            end_index = index
+            break
+
+    if end_index is None:
+        if errors is not None:
+            add_error(errors, path, "unterminated YAML frontmatter")
+        return None
+
+    fields: dict[str, str] = {}
+    for line in lines[1:end_index]:
+        if not line.strip() or line.startswith((" ", "\t", "-")) or ":" not in line:
+            continue
+        key, value = line.split(":", 1)
+        key = key.strip()
+        value = value.strip()
+        if not key:
+            continue
+        if (
+            len(value) >= 2
+            and value[0] == value[-1]
+            and value[0] in {'"', "'"}
+        ):
+            value = value[1:-1]
+        fields[key] = value
+
+    body = "\n".join(lines[end_index + 1 :])
+    return fields, body
 
 
 def validate_skill(root: Path, skill_dir: Path, errors: list[ContractError]) -> None:
@@ -292,6 +338,107 @@ def tracked_files(root: Path) -> list[str]:
     return [path for path in result.stdout.decode("utf-8").split("\0") if path]
 
 
+def git_output(root: Path, args: list[str]) -> str | None:
+    try:
+        result = subprocess.run(
+            ["git", *args],
+            cwd=root,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+        )
+    except subprocess.CalledProcessError:
+        return None
+    return result.stdout.decode("utf-8")
+
+
+def implementation_plan_base_ref(root: Path) -> str | None:
+    for ref in ("origin/main", "main"):
+        if git_output(root, ["rev-parse", "--verify", ref]) is None:
+            continue
+        merge_base = git_output(root, ["merge-base", "HEAD", ref])
+        if merge_base:
+            return merge_base.strip()
+    return None
+
+
+def changed_files_against(root: Path, base_ref: str) -> list[str]:
+    output = git_output(root, ["diff", "--name-only", "-z", base_ref, "--", "docs/engineer"])
+    if output is None:
+        return []
+    return [path for path in output.split("\0") if path]
+
+
+def content_at_ref(root: Path, ref: str, rel: str) -> str | None:
+    return git_output(root, ["show", f"{ref}:{rel}"])
+
+
+def validate_implementation_plan_metadata(root: Path, errors: list[ContractError]) -> None:
+    implementation_plans = [
+        rel
+        for rel in tracked_files(root)
+        if IMPLEMENTATION_PLAN_RE.fullmatch(rel) and (root / rel).exists()
+    ]
+
+    for rel in implementation_plans:
+        path = root / rel
+        parsed = parse_markdown_frontmatter(path, path.read_text(), errors)
+        if parsed is None:
+            continue
+        metadata, _ = parsed
+
+        for field in ("feature", "version", "date", "last_updated"):
+            value = metadata.get(field)
+            if not isinstance(value, str) or not value.strip():
+                add_error(errors, path, f"frontmatter {field!r} must be non-empty")
+
+        version = metadata.get("version", "")
+        if version and not SEMVER_RE.fullmatch(version):
+            add_error(errors, path, "frontmatter 'version' must be SemVer, for example 0.1.0")
+
+        for field in ("date", "last_updated"):
+            value = metadata.get(field, "")
+            if value and not DATE_RE.fullmatch(value):
+                add_error(errors, path, f"frontmatter {field!r} must use YYYY-MM-DD")
+
+    base_ref = implementation_plan_base_ref(root)
+    if base_ref is None:
+        return
+
+    for rel in changed_files_against(root, base_ref):
+        if not IMPLEMENTATION_PLAN_RE.fullmatch(rel) or not (root / rel).exists():
+            continue
+
+        current_path = root / rel
+        base_content = content_at_ref(root, base_ref, rel)
+        if base_content is None:
+            continue
+
+        current_parsed = parse_markdown_frontmatter(current_path, current_path.read_text())
+        base_parsed = parse_markdown_frontmatter(current_path, base_content)
+        if current_parsed is None or base_parsed is None:
+            continue
+
+        current_metadata, current_body = current_parsed
+        base_metadata, base_body = base_parsed
+        body_changed = current_body != base_body
+        version_changed = current_metadata.get("version") != base_metadata.get("version")
+        last_updated_changed = current_metadata.get("last_updated") != base_metadata.get("last_updated")
+
+        if body_changed and not version_changed and not last_updated_changed:
+            add_error(
+                errors,
+                current_path,
+                "body changed without updating frontmatter 'version' or 'last_updated'",
+            )
+        if version_changed and not last_updated_changed:
+            add_error(
+                errors,
+                current_path,
+                "frontmatter 'version' changed without updating 'last_updated'",
+            )
+
+
 def validate_tracked_file_policy(root: Path, errors: list[ContractError]) -> None:
     for rel in tracked_files(root):
         if any(pattern.search(rel) for pattern in BLOCKED_TRACKED_PATTERNS):
@@ -304,6 +451,7 @@ def validate_all(root: Path | None = None) -> list[ContractError]:
     validate_claude_symlink(root, errors)
     validate_marketplace(root, errors)
     validate_skills_lock(root, errors)
+    validate_implementation_plan_metadata(root, errors)
     validate_tracked_file_policy(root, errors)
     return errors
 

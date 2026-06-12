@@ -109,6 +109,7 @@ a fresh document-writing sub-agent. The delegated task must include:
 - PRD alignment result and source-document evidence
 - exact output path: `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
 - file change list, sequence, tests, delegation split, forbidden areas, blockers
+- frontmatter maintenance for `version` and `last_updated`
 - instruction not to write code or revise TRD decisions
 
 For small changes, write a short plan that still names the target file, planned
@@ -116,6 +117,25 @@ edit, source requirement, verification command, and why complex sub-agent
 delegation is not needed. Small changes still need a PRD alignment result; do
 not convert "single file" or "small bug fix" into implicit PM approval or
 permission to skip `IMPLEMENTATION_PLAN.md`.
+
+#### Frontmatter version rules
+
+`IMPLEMENTATION_PLAN.md` frontmatter must stay in sync with the plan body:
+
+- New plans should start at `version: "0.1.0"` unless the repository has a
+  stricter convention, and must include `feature`, `date`, and `last_updated`.
+- Substantive plan changes must update both `version` and `last_updated` in the
+  same edit. Substantive changes include changed implementation scope, ordered
+  steps, file list, delegation model, verification commands, status, rollout
+  checks, or architecture / flow diagrams.
+- Use PATCH for clarifications that preserve the confirmed scope, MINOR for
+  changed implementation scope or sequencing, and MAJOR only when replacing the
+  confirmed plan contract.
+- Typo, formatting, or non-semantic copy edits may keep the existing `version`,
+  but should refresh `last_updated` when the file is touched.
+- Preserve existing optional frontmatter fields such as `related_issue`,
+  `related_pr`, `author`, and `generated_by` unless the current edit directly
+  invalidates them.
 
 The main process reviews the document before asking for implementation
 confirmation.
