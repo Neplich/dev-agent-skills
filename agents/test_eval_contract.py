@@ -8,6 +8,9 @@ from pathlib import Path
 
 CHECKER_PATH = Path(__file__).resolve().parents[1] / "scripts/check_eval_contract.py"
 ARTIFACT_CHECKER_PATH = Path(__file__).resolve().parents[1] / "scripts/check_eval_artifacts.py"
+REPOSITORY_CHECKER_PATH = (
+    Path(__file__).resolve().parents[1] / "scripts/check_repository_contract.py"
+)
 
 
 def load_checker_module():
@@ -27,6 +30,18 @@ def load_artifact_checker_module():
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
     sys.modules["check_eval_artifacts"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def load_repository_checker_module():
+    spec = importlib.util.spec_from_file_location(
+        "check_repository_contract",
+        REPOSITORY_CHECKER_PATH,
+    )
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    sys.modules["check_repository_contract"] = module
     spec.loader.exec_module(module)
     return module
 
@@ -458,6 +473,47 @@ class EvalContractTests(unittest.TestCase):
                 "agents/qa/skills/example/with_skill/README.md"
             )
         )
+
+    def test_repository_contract_rejects_stale_marketplace_metadata_version(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            marketplace = root / ".claude-plugin/marketplace.json"
+            skill_doc = root / "agents/engineer/skills/example/SKILL.md"
+            changelog = root / "docs/changelog/changelog-v0.1.3.md"
+            marketplace.parent.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            changelog.parent.mkdir(parents=True)
+            skill_doc.write_text(
+                "---\n"
+                "name: example\n"
+                "description: Example skill\n"
+                "---\n"
+            )
+            changelog.write_text("# Changelog - v0.1.3\n")
+            marketplace.write_text(
+                json.dumps(
+                    {
+                        "name": "dev-agent-skills",
+                        "owner": {"name": "Neplich"},
+                        "metadata": {"version": "0.1.2"},
+                        "plugins": [
+                            {
+                                "name": "engineer-agent",
+                                "source": "./agents/engineer",
+                                "skills": ["./skills/example"],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = []
+            checker.validate_marketplace(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("metadata.version must match latest changelog version '0.1.3'", rendered)
 
 
 if __name__ == "__main__":

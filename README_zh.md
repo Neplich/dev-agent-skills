@@ -235,6 +235,7 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 - 新增 Agent 或 skill 时，优先遵循现有 `agents/*` 结构。
 - `AGENTS.md` 是唯一编辑源；`CLAUDE.md` 必须保持为指向它的软链接。
 - 涉及发布、面向用户或面向开发者的变更时，同步维护 [`docs/changelog/`](./docs/changelog/) 下的版本化 changelog；根目录 [`CHANGELOG.md`](./CHANGELOG.md) 只作为索引，README 只保留当前项目状态。
+- `.claude-plugin/marketplace.json` 的 `metadata.version` 必须与仓库 release 版本保持一致，但不带 `v` 前缀。创建 release tag 前，先更新 `metadata.version`、新增对应的 `docs/changelog/changelog-v{version}.md`，并同步根目录 changelog 索引。
 - 仓库限制性权限默认只授予唯一管理员；后续需要维护者或机器人时再显式添加。
 - Skill eval 应验证角色边界、上下文读取、执行路径和结构化产物，而不是只检查泛化回答质量。
 - 所有 skill eval 定义统一使用 `evals.json` schema v1.0，不新增 agent 专属 schema 例外。

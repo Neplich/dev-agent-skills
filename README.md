@@ -235,6 +235,7 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 - Follow the existing `agents/*` structure when adding a new agent or skill.
 - Keep `AGENTS.md` as the only edited guidance source; `CLAUDE.md` must remain a symlink to it.
 - Update versioned changelog files under [`docs/changelog/`](./docs/changelog/) for release-facing, user-facing, or developer-facing changes; keep root [`CHANGELOG.md`](./CHANGELOG.md) as an index and keep README focused on the current project state.
+- Keep `.claude-plugin/marketplace.json` `metadata.version` aligned with the repository release version without the `v` prefix. Before creating a release tag, update `metadata.version`, add the matching `docs/changelog/changelog-v{version}.md`, and update the root changelog index.
 - Restrictive repository permissions default to the sole administrator; add maintainers or bots explicitly when needed.
 - Skill evals should verify role boundaries, context reading, execution-path selection, and structured artifacts instead of generic answer quality alone.
 - All skill eval definitions use the shared `evals.json` schema v1.0; do not add agent-specific schema exceptions.

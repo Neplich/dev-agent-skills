@@ -17,6 +17,7 @@ SKILL_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LOCK_HASH_RE = re.compile(r"^[0-9a-f]{64}$")
 SEMVER_RE = re.compile(r"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+CHANGELOG_VERSION_RE = re.compile(r"^changelog-v(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)\.md$")
 IMPLEMENTATION_PLAN_RE = re.compile(r"^docs/engineer/[^/]+/IMPLEMENTATION_PLAN\.md$")
 BLOCKED_TRACKED_PATTERNS = (
     re.compile(r"(^|/)\.DS_Store$"),
@@ -174,6 +175,29 @@ def validate_skill(root: Path, skill_dir: Path, errors: list[ContractError]) -> 
         add_error(errors, skill_doc, "frontmatter name must use lowercase letters, digits, and hyphens only")
 
 
+def semver_key(version: str) -> tuple[int, int, int, int, str]:
+    core, _, prerelease = version.partition("-")
+    major, minor, patch = (int(part) for part in core.split("."))
+    release_rank = 0 if prerelease else 1
+    return major, minor, patch, release_rank, prerelease
+
+
+def latest_changelog_version(root: Path) -> str | None:
+    versions: list[str] = []
+    changelog_dir = root / "docs" / "changelog"
+    if not changelog_dir.exists():
+        return None
+
+    for path in changelog_dir.iterdir():
+        match = CHANGELOG_VERSION_RE.fullmatch(path.name)
+        if match:
+            versions.append(match.group(1))
+
+    if not versions:
+        return None
+    return max(versions, key=semver_key)
+
+
 def validate_marketplace(root: Path, errors: list[ContractError]) -> None:
     path = root / ".claude-plugin" / "marketplace.json"
     payload = load_json(path, errors)
@@ -185,6 +209,27 @@ def validate_marketplace(root: Path, errors: list[ContractError]) -> None:
     if not isinstance(plugins, list):
         add_error(errors, path, "plugins must be an array")
         return
+
+    metadata = payload.get("metadata")
+    if not isinstance(metadata, dict):
+        add_error(errors, path, "metadata must be an object")
+    else:
+        metadata_version = metadata.get("version")
+        if not isinstance(metadata_version, str) or not SEMVER_RE.fullmatch(metadata_version):
+            add_error(errors, path, "metadata.version must be SemVer without a leading 'v'")
+        latest_version = latest_changelog_version(root)
+        if latest_version is None:
+            add_error(
+                errors,
+                path,
+                "docs/changelog must contain at least one changelog-v{version}.md file",
+            )
+        elif metadata_version != latest_version:
+            add_error(
+                errors,
+                path,
+                f"metadata.version must match latest changelog version {latest_version!r}",
+            )
 
     for index, plugin in enumerate(plugins):
         if not isinstance(plugin, dict):
