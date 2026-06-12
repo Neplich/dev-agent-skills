@@ -198,6 +198,27 @@ def latest_changelog_version(root: Path) -> str | None:
     return max(versions, key=semver_key)
 
 
+def validate_root_changelog_entry(
+    root: Path,
+    metadata_version: str,
+    errors: list[ContractError],
+) -> None:
+    path = root / "CHANGELOG.md"
+    expected_link = f"docs/changelog/changelog-v{metadata_version}.md"
+    try:
+        content = path.read_text()
+    except OSError as exc:
+        add_error(errors, path, f"cannot read changelog index: {exc}")
+        return
+
+    if expected_link not in content:
+        add_error(
+            errors,
+            path,
+            f"must reference {expected_link} for marketplace metadata.version",
+        )
+
+
 def validate_marketplace(root: Path, errors: list[ContractError]) -> None:
     path = root / ".claude-plugin" / "marketplace.json"
     payload = load_json(path, errors)
@@ -215,7 +236,11 @@ def validate_marketplace(root: Path, errors: list[ContractError]) -> None:
         add_error(errors, path, "metadata must be an object")
     else:
         metadata_version = metadata.get("version")
-        if not isinstance(metadata_version, str) or not SEMVER_RE.fullmatch(metadata_version):
+        metadata_version_valid = (
+            isinstance(metadata_version, str)
+            and SEMVER_RE.fullmatch(metadata_version) is not None
+        )
+        if not metadata_version_valid:
             add_error(errors, path, "metadata.version must be SemVer without a leading 'v'")
         latest_version = latest_changelog_version(root)
         if latest_version is None:
@@ -224,12 +249,14 @@ def validate_marketplace(root: Path, errors: list[ContractError]) -> None:
                 path,
                 "docs/changelog must contain at least one changelog-v{version}.md file",
             )
-        elif metadata_version != latest_version:
+        elif metadata_version_valid and metadata_version != latest_version:
             add_error(
                 errors,
                 path,
                 f"metadata.version must match latest changelog version {latest_version!r}",
             )
+        elif metadata_version_valid:
+            validate_root_changelog_entry(root, metadata_version, errors)
 
     for index, plugin in enumerate(plugins):
         if not isinstance(plugin, dict):

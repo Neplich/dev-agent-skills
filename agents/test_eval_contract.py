@@ -516,6 +516,55 @@ class EvalContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("metadata.version must match latest changelog version '0.1.3'", rendered)
 
+    def test_repository_contract_rejects_missing_root_changelog_index(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            marketplace = root / ".claude-plugin/marketplace.json"
+            skill_doc = root / "agents/engineer/skills/example/SKILL.md"
+            changelog = root / "docs/changelog/changelog-v0.1.3.md"
+            changelog_index = root / "CHANGELOG.md"
+            marketplace.parent.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            changelog.parent.mkdir(parents=True)
+            skill_doc.write_text(
+                "---\n"
+                "name: example\n"
+                "description: Example skill\n"
+                "---\n"
+            )
+            changelog.write_text("# Changelog - v0.1.3\n")
+            changelog_index.write_text(
+                "# Changelog\n\n"
+                "- [v0.1.2](./docs/changelog/changelog-v0.1.2.md)\n"
+            )
+            marketplace.write_text(
+                json.dumps(
+                    {
+                        "name": "dev-agent-skills",
+                        "owner": {"name": "Neplich"},
+                        "metadata": {"version": "0.1.3"},
+                        "plugins": [
+                            {
+                                "name": "engineer-agent",
+                                "source": "./agents/engineer",
+                                "skills": ["./skills/example"],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = []
+            checker.validate_marketplace(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "CHANGELOG.md: must reference docs/changelog/changelog-v0.1.3.md",
+            rendered,
+        )
+
     def test_repository_contract_rejects_missing_implementation_plan_base_ref(self):
         checker = load_repository_checker_module()
 
