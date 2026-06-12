@@ -568,6 +568,91 @@ class EvalContractTests(unittest.TestCase):
         self.assertEqual(latest_version, "1.2.3-rc.10")
         self.assertEqual("\n".join(error.render(root) for error in errors), "")
 
+    def test_repository_contract_rejects_invalid_prerelease_metadata_version(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            marketplace = root / ".claude-plugin/marketplace.json"
+            skill_doc = root / "agents/engineer/skills/example/SKILL.md"
+            changelog = root / "docs/changelog/changelog-v1.2.3-rc.1.md"
+            marketplace.parent.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            changelog.parent.mkdir(parents=True)
+            skill_doc.write_text(
+                "---\n"
+                "name: example\n"
+                "description: Example skill\n"
+                "---\n"
+            )
+            changelog.write_text("# Changelog - v1.2.3-rc.1\n")
+            marketplace.write_text(
+                json.dumps(
+                    {
+                        "name": "dev-agent-skills",
+                        "owner": {"name": "Neplich"},
+                        "metadata": {"version": "1.2.3-rc.01"},
+                        "plugins": [
+                            {
+                                "name": "engineer-agent",
+                                "source": "./agents/engineer",
+                                "skills": ["./skills/example"],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = []
+            checker.validate_marketplace(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("metadata.version must be SemVer without a leading 'v'", rendered)
+
+    def test_repository_contract_rejects_invalid_prerelease_changelog_filename(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            marketplace = root / ".claude-plugin/marketplace.json"
+            skill_doc = root / "agents/engineer/skills/example/SKILL.md"
+            changelog = root / "docs/changelog/changelog-v1.2.3-rc..1.md"
+            marketplace.parent.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            changelog.parent.mkdir(parents=True)
+            skill_doc.write_text(
+                "---\n"
+                "name: example\n"
+                "description: Example skill\n"
+                "---\n"
+            )
+            changelog.write_text("# Changelog - v1.2.3-rc..1\n")
+            marketplace.write_text(
+                json.dumps(
+                    {
+                        "name": "dev-agent-skills",
+                        "owner": {"name": "Neplich"},
+                        "metadata": {"version": "1.2.3-rc.1"},
+                        "plugins": [
+                            {
+                                "name": "engineer-agent",
+                                "source": "./agents/engineer",
+                                "skills": ["./skills/example"],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = []
+            checker.validate_marketplace(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "docs/changelog must contain at least one changelog-v{version}.md file",
+            rendered,
+        )
+
     def test_repository_contract_rejects_missing_root_changelog_index(self):
         checker = load_repository_checker_module()
 

@@ -15,9 +15,18 @@ from typing import Any
 
 SKILL_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LOCK_HASH_RE = re.compile(r"^[0-9a-f]{64}$")
-SEMVER_RE = re.compile(r"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
+SEMVER_CORE_PATTERN = r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)"
+SEMVER_PRERELEASE_IDENTIFIER_PATTERN = (
+    r"(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)"
+)
+SEMVER_PRERELEASE_PATTERN = (
+    rf"{SEMVER_PRERELEASE_IDENTIFIER_PATTERN}"
+    rf"(?:\.{SEMVER_PRERELEASE_IDENTIFIER_PATTERN})*"
+)
+SEMVER_PATTERN = rf"{SEMVER_CORE_PATTERN}(?:-{SEMVER_PRERELEASE_PATTERN})?"
+SEMVER_RE = re.compile(rf"^{SEMVER_PATTERN}$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-CHANGELOG_VERSION_RE = re.compile(r"^changelog-v(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)\.md$")
+CHANGELOG_VERSION_RE = re.compile(rf"^changelog-v({SEMVER_PATTERN})\.md$")
 IMPLEMENTATION_PLAN_RE = re.compile(r"^docs/engineer/[^/]+/IMPLEMENTATION_PLAN\.md$")
 BLOCKED_TRACKED_PATTERNS = (
     re.compile(r"(^|/)\.DS_Store$"),
