@@ -395,7 +395,7 @@ docs/qa/e2e/
 
 汇总报告 reference 固定格式：
 
-QA Agent 需要新增 `agents/qa/skills/qa-agent/references/e2e-test-report.md`，用于固定测试报告 Markdown 格式。主 agent 生成测试报告时必须使用该 reference 的字段、顺序和表格结构。
+QA Agent 当前由 `agents/qa/skills/qa-agent/references/e2e-test-report.md` 定义测试报告 Markdown 格式。主 agent 生成测试报告时必须使用该 reference 的字段、顺序和表格结构。
 
 ```markdown
 # E2E 测试汇总报告
