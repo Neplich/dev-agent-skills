@@ -206,16 +206,32 @@ def semver_key(version: str) -> tuple[int, int, int, int, tuple[tuple[int, int |
     return major, minor, patch, release_rank, prerelease_key(prerelease)
 
 
-def latest_changelog_version(root: Path) -> str | None:
+def latest_changelog_version(
+    root: Path,
+    errors: list[ContractError] | None = None,
+) -> str | None:
     versions: list[str] = []
     changelog_dir = root / "docs" / "changelog"
     if not changelog_dir.exists():
         return None
 
     for path in changelog_dir.iterdir():
+        if not path.name.startswith("changelog-v"):
+            continue
         match = CHANGELOG_VERSION_RE.fullmatch(path.name)
-        if match:
-            versions.append(match.group(1))
+        if match is None:
+            if errors is not None:
+                add_error(
+                    errors,
+                    path,
+                    "changelog filename must use changelog-v{SemVer}.md",
+                )
+            continue
+        if not path.is_file():
+            if errors is not None:
+                add_error(errors, path, "changelog entry must be a file")
+            continue
+        versions.append(match.group(1))
 
     if not versions:
         return None
@@ -266,7 +282,7 @@ def validate_marketplace(root: Path, errors: list[ContractError]) -> None:
         )
         if not metadata_version_valid:
             add_error(errors, path, "metadata.version must be SemVer without a leading 'v'")
-        latest_version = latest_changelog_version(root)
+        latest_version = latest_changelog_version(root, errors)
         if latest_version is None:
             add_error(
                 errors,
