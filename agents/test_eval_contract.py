@@ -516,6 +516,58 @@ class EvalContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("metadata.version must match latest changelog version '0.1.3'", rendered)
 
+    def test_repository_contract_orders_prerelease_changelog_versions(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            marketplace = root / ".claude-plugin/marketplace.json"
+            skill_doc = root / "agents/engineer/skills/example/SKILL.md"
+            changelog_dir = root / "docs/changelog"
+            changelog_index = root / "CHANGELOG.md"
+            marketplace.parent.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            changelog_dir.mkdir(parents=True)
+            skill_doc.write_text(
+                "---\n"
+                "name: example\n"
+                "description: Example skill\n"
+                "---\n"
+            )
+            (changelog_dir / "changelog-v1.2.3-rc.2.md").write_text(
+                "# Changelog - v1.2.3-rc.2\n"
+            )
+            (changelog_dir / "changelog-v1.2.3-rc.10.md").write_text(
+                "# Changelog - v1.2.3-rc.10\n"
+            )
+            changelog_index.write_text(
+                "# Changelog\n\n"
+                "- [v1.2.3-rc.10](./docs/changelog/changelog-v1.2.3-rc.10.md)\n"
+            )
+            marketplace.write_text(
+                json.dumps(
+                    {
+                        "name": "dev-agent-skills",
+                        "owner": {"name": "Neplich"},
+                        "metadata": {"version": "1.2.3-rc.10"},
+                        "plugins": [
+                            {
+                                "name": "engineer-agent",
+                                "source": "./agents/engineer",
+                                "skills": ["./skills/example"],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = []
+            latest_version = checker.latest_changelog_version(root)
+            checker.validate_marketplace(root, errors)
+
+        self.assertEqual(latest_version, "1.2.3-rc.10")
+        self.assertEqual("\n".join(error.render(root) for error in errors), "")
+
     def test_repository_contract_rejects_missing_root_changelog_index(self):
         checker = load_repository_checker_module()
 

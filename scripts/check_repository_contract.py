@@ -175,11 +175,26 @@ def validate_skill(root: Path, skill_dir: Path, errors: list[ContractError]) -> 
         add_error(errors, skill_doc, "frontmatter name must use lowercase letters, digits, and hyphens only")
 
 
-def semver_key(version: str) -> tuple[int, int, int, int, str]:
+def prerelease_identifier_key(identifier: str) -> tuple[int, int | str]:
+    if identifier.isdigit():
+        return 0, int(identifier)
+    return 1, identifier
+
+
+def prerelease_key(prerelease: str) -> tuple[tuple[int, int | str], ...]:
+    if not prerelease:
+        return ()
+    return tuple(
+        prerelease_identifier_key(identifier)
+        for identifier in prerelease.split(".")
+    )
+
+
+def semver_key(version: str) -> tuple[int, int, int, int, tuple[tuple[int, int | str], ...]]:
     core, _, prerelease = version.partition("-")
     major, minor, patch = (int(part) for part in core.split("."))
     release_rank = 0 if prerelease else 1
-    return major, minor, patch, release_rank, prerelease
+    return major, minor, patch, release_rank, prerelease_key(prerelease)
 
 
 def latest_changelog_version(root: Path) -> str | None:
