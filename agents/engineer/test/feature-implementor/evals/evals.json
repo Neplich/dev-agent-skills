@@ -25,6 +25,11 @@
           "id": "does_not_implement_directly",
           "description": "不直接实施",
           "text": "输出不得声称已经创建或修改代码文件、运行实现步骤或完成自检。"
+        },
+        {
+          "id": "maintains_plan_metadata",
+          "description": "维护实施计划元数据",
+          "text": "输出必须说明 `docs/engineer/notification-center/IMPLEMENTATION_PLAN.md` 的 frontmatter 需要包含 `version` 和 `last_updated`；新建计划使用初始版本，实质性更新计划正文时同步更新 `version` 和 `last_updated`，纯格式或错别字修正可不提升版本。"
         }
       ]
     },

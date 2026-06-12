@@ -98,6 +98,17 @@ with the codebase, stop and hand back to `engineer-agent:trd-gen` with the
 specific blocker and TRD gap packet. Do not hide TRD gaps inside
 `IMPLEMENTATION_PLAN.md`.
 
+Implementation plan frontmatter is part of the confirmed engineering artifact.
+New plans should start with `version: "0.1.0"` unless the repository has a
+stricter convention. When an existing plan's body, scope, ordered steps,
+delegation model, verification commands, status, or diagrams change
+substantively, update both `version` and `last_updated` in the same edit. Use a
+PATCH bump for clarifications that preserve scope, a MINOR bump for changed
+implementation scope or sequencing, and a MAJOR bump only for replacing the
+confirmed plan contract. Typo, formatting, or other non-semantic edits may
+leave `version` unchanged, but should still refresh `last_updated` when the
+file is touched.
+
 All implementation plan document writing must be delegated to a fresh
 document-writing sub-agent when sub-agent capabilities are available. The main
 process keeps the source docs, repository context, and final approval decision.

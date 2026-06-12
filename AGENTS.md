@@ -32,6 +32,7 @@
 **市场注册**
 
 - `.claude-plugin/marketplace.json` 定义所有 Agent 及其 skills
+- `.claude-plugin/marketplace.json` 的 `metadata.version` 必须等于当前仓库 release 版本但不带 `v` 前缀；每次创建 release tag 前，先把该字段更新到目标版本，并确认存在对应 `docs/changelog/changelog-v{version}.md` 与根 `CHANGELOG.md` 索引
 - `skills-lock.json` 保存已安装 skill 的元数据
 
 ### Agent 协作流
@@ -71,7 +72,7 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 - Branch、tag、release、bypass 和仓库设置权限默认只授予唯一管理员；需要维护者或机器人时再显式添加。
 - 维护变更不得直接在 `main` 上进行；开始修改前先创建工作分支，完成后通过 PR 合入。
 - PR 创建后的更新默认追加新 commit 并普通 push；除非用户明确要求整理提交历史，否则不要 amend、rebase 或 force push。
-- 当前仓库仍处于早期维护阶段，暂不新增 Release CI；发布前使用手动 release checklist：确认 `docs/changelog/changelog-v{version}.md` 存在、tag 使用 `v` 前缀 SemVer、PR 必跑 CI 全部通过，必要时手动触发 eval workflow 并记录结果；每次使用 tag 发版时，按 skill 维度汇总 skill eval 后的 `comparison.md` 最新结论。不要自动创建 GitHub Release，不要自动上传 marketplace package，也不要配置 release bot bypass tag ruleset。
+- 当前仓库仍处于早期维护阶段，暂不新增 Release CI；发布前使用手动 release checklist：确认 `.claude-plugin/marketplace.json` 的 `metadata.version` 已更新为目标版本且不带 `v` 前缀，确认 `docs/changelog/changelog-v{version}.md` 存在并已被根 `CHANGELOG.md` 索引，tag 使用 `v` 前缀 SemVer，PR 必跑 CI 全部通过，必要时手动触发 eval workflow 并记录结果；每次使用 tag 发版时，按 skill 维度汇总 skill eval 后的 `comparison.md` 最新结论。不要自动创建 GitHub Release，不要自动上传 marketplace package，也不要配置 release bot bypass tag ruleset。
 
 ### 新增 Agent
 
