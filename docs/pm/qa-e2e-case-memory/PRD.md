@@ -1,13 +1,13 @@
 ---
 title: "QA Agent E2E 用例沉淀与复用 PRD"
 type: PRD
-version: "1.0.8"
+version: "1.0.9"
 status: Draft
 author: "AI Assistant"
 date: "2026-05-19"
 generated_by: "prd-gen"
 feature: "qa-e2e-case-memory"
-last_updated: "2026-06-03"
+last_updated: "2026-06-15"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/18"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/18"
@@ -55,6 +55,9 @@ changelog:
   - version: "1.0.8"
     date: "2026-06-03"
     changes: "同步 PRD/TRD 对齐门禁、实施计划门禁和 durable comparison 更新要求"
+  - version: "1.0.9"
+    date: "2026-06-15"
+    changes: "修正 E2E 汇总报告 reference 的当前状态描述"
 ---
 
 # QA Agent E2E 用例沉淀与复用 PRD
@@ -395,7 +398,7 @@ docs/qa/e2e/
 
 汇总报告 reference 固定格式：
 
-QA Agent 需要新增 `agents/qa/skills/qa-agent/references/e2e-test-report.md`，用于固定测试报告 Markdown 格式。主 agent 生成测试报告时必须使用该 reference 的字段、顺序和表格结构。
+QA Agent 当前由 `agents/qa/skills/qa-agent/references/e2e-test-report.md` 定义测试报告 Markdown 格式。主 agent 生成测试报告时必须使用该 reference 的字段、顺序和表格结构。
 
 ```markdown
 # E2E 测试汇总报告
