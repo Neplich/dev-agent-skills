@@ -35,7 +35,7 @@ BLOCKED_TRACKED_PATTERNS = (
     re.compile(r"\.pyc$"),
     re.compile(r"^docs/superpowers(/|$)"),
 )
-GENERIC_AUTHOR_VALUES = {"AI Assistant", "Codex"}
+GENERIC_AUTHOR_VALUES = {"AI Assistant", "Codex", "Claude Code"}
 
 
 @dataclass
