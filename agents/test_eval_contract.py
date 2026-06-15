@@ -838,7 +838,7 @@ class EvalContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("no base ref is available", rendered)
 
-    def test_repository_contract_rejects_bare_claude_code_author(self):
+    def test_repository_contract_rejects_placeholder_author(self):
         checker = load_repository_checker_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -848,7 +848,7 @@ class EvalContractTests(unittest.TestCase):
             prd.write_text(
                 "---\n"
                 'title: "Example PRD"\n'
-                'author: "Claude Code"\n'
+                'author: "AI Assistant"\n'
                 "---\n\n"
                 "# Example PRD\n"
             )
@@ -865,9 +865,35 @@ class EvalContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("docs/pm/example/PRD.md", rendered)
         self.assertIn(
-            "frontmatter 'author' must include the generation requester display name and agent platform",
+            "frontmatter 'author' must be a filled, non-placeholder traceable value",
             rendered,
         )
+
+    def test_repository_contract_accepts_custom_author_platform(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            prd = root / "docs/pm/example/PRD.md"
+            prd.parent.mkdir(parents=True)
+            prd.write_text(
+                "---\n"
+                'title: "Example PRD"\n'
+                'author: "Neplich Custom Agent"\n'
+                "---\n\n"
+                "# Example PRD\n"
+            )
+            subprocess.run(["git", "init", "-b", "feature"], cwd=root, check=True)
+            subprocess.run(
+                ["git", "add", prd.relative_to(root).as_posix()],
+                cwd=root,
+                check=True,
+            )
+
+            errors = []
+            checker.validate_formal_document_author(root, errors)
+
+        self.assertEqual([], errors)
 
 
 if __name__ == "__main__":

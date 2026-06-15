@@ -35,7 +35,7 @@ BLOCKED_TRACKED_PATTERNS = (
     re.compile(r"\.pyc$"),
     re.compile(r"^docs/superpowers(/|$)"),
 )
-GENERIC_AUTHOR_VALUES = {"AI Assistant", "Codex", "Claude Code"}
+PLACEHOLDER_AUTHOR_VALUES = {"AI Assistant", "TBD", "TODO", "Unknown", "N/A"}
 
 
 @dataclass
@@ -569,11 +569,19 @@ def validate_formal_document_author(root: Path, errors: list[ContractError]) -> 
 
         metadata, _ = parsed
         author = metadata.get("author")
-        if author in GENERIC_AUTHOR_VALUES:
+        if isinstance(author, str):
+            normalized_author = " ".join(author.split())
+        else:
+            normalized_author = ""
+        if author is not None and (
+            not normalized_author
+            or normalized_author in PLACEHOLDER_AUTHOR_VALUES
+            or (normalized_author.startswith("<") and normalized_author.endswith(">"))
+        ):
             add_error(
                 errors,
                 path,
-                "frontmatter 'author' must include the generation requester display name and agent platform",
+                "frontmatter 'author' must be a filled, non-placeholder traceable value",
             )
 
 

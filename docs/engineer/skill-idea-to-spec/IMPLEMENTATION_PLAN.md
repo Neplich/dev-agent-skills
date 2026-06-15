@@ -6,7 +6,7 @@ version: "0.2.0"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-15"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/32"
 related_pm_docs:
   - "docs/pm/agents/pm-agent/skills/idea-to-spec/PRD.md"
@@ -20,9 +20,9 @@ related_trd: "docs/engineer/skill-idea-to-spec/TRD.md"
 ## 1. 背景
 
 GitHub issue #32 要求自动生成或更新的 Markdown frontmatter 不再使用
-`author: "AI Assistant"` 这类无法追踪来源的泛称。目标格式是“git 用户 +
+`author: "AI Assistant"` 这类无法追踪来源的泛称。目标格式是“生成触发者展示名 +
 Agent 平台名”，例如当前仓库本地 git 用户为 `neplich`，展示口径为
-`Neplich Codex`。
+`Neplich Codex`；平台名可以是用户自定义值。
 
 本次问题不只影响旧模板。当前 `neplich-codex/agent-skill-prds` 分支中新增的
 Agent / Skill PRD 使用 `author: "Codex"`，虽然能识别平台，但仍缺少触发生成的
@@ -78,7 +78,8 @@ flowchart LR
 ## 3. 目标
 
 - 所有新生成正式 Markdown 文档的 `author` 使用“生成触发者展示名 + Agent 平台名”。
-- 禁止正式文档继续使用 `AI Assistant` 或裸平台名 `Codex` 这类不可完整追踪作者。
+- 允许平台名为用户自定义值；仓库校验不维护固定平台名 allowlist 或 denylist。
+- 禁止正式文档继续使用空值或 `AI Assistant` 这类不可完整追踪的占位泛称。
 - PRD、TRD 和 IMPLEMENTATION_PLAN 的归属 Skill PRD 明确该 author 要求。
 - 共享输出约定、schema、生成示例和仓库契约校验保持一致。
 - 修正当前仓库已有正式文档中的 `author: "AI Assistant"` 和 `author: "Codex"`。
@@ -103,9 +104,9 @@ flowchart LR
 
 1. 当前仓库 `git config user.name` 的展示名。
 2. GitHub 登录名或仓库上下文中能确认的展示名。
-3. 无法确认时询问用户，不回退到 `AI Assistant` 或裸平台名。
+3. 无法确认触发者或平台名时询问用户，不回退到空值或 `AI Assistant` 这类占位泛称。
 
-平台名由当前执行环境决定，例如 `Codex` 或 `Claude Code`。
+平台名由当前执行环境或用户确认决定，可以是 `Codex`、`Claude Code` 或自定义 Agent 平台名。
 
 ```mermaid
 flowchart LR
@@ -138,13 +139,13 @@ flowchart LR
 
 | 文件 | 操作 | 变更内容 |
 | --- | --- | --- |
-| `agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md` | 修改 | 在共享 frontmatter 约定中明确 author 命名规则，不允许 `AI Assistant` 或裸平台名。 |
+| `agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md` | 修改 | 在共享 frontmatter 约定中明确 author 命名规则，不允许空值或占位泛称，平台名不做固定枚举。 |
 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/*.md` | 修改 | 将 schema 中的 `author: <name>` 说明收紧为可追踪作者格式。 |
 | `agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md` | 修改 | 将 PRD 示例 `author: "AI Assistant"` 替换为 `author: "Neplich Codex"`，并补充规则说明。 |
 | `agents/product_manager/skills/idea-to-spec/_internal/gen/brd-gen/INSTRUCTIONS.md` | 修改 | 将 BRD 示例 `author: "AI Assistant"` 替换为 `author: "Neplich Codex"`，并补充规则说明。 |
 | `agents/engineer/skills/trd-gen/_internal/trd-schema.md` | 修改 | 在 TRD schema 的 metadata 部分加入 author 规则。 |
 | `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md` | 修改 | 要求新建或更新 `IMPLEMENTATION_PLAN.md` 时保留/写入可追踪 author。 |
-| `scripts/check_repository_contract.py` | 修改 | 增加正式文档 author 校验，阻止 tracked formal docs 使用 `AI Assistant` 或裸平台名 `Codex`。 |
+| `scripts/check_repository_contract.py` | 修改 | 增加正式文档 author 校验，阻止 tracked formal docs 使用空值或占位泛称，不按固定平台名枚举审计。 |
 
 ### 6.4 历史文档修正
 
@@ -178,12 +179,13 @@ flowchart LR
 
 5. **增加仓库契约校验**
    - 在 `check_repository_contract.py` 中扫描 tracked formal docs 的 YAML frontmatter。
-   - 禁止 `author: "AI Assistant"` 和 `author: "Codex"`。
+   - 禁止空值和 `author: "AI Assistant"` 这类占位泛称。
+   - 不按固定平台名枚举拦截，允许用户自定义平台名。
    - 保留 eval fixture、数据集和非正式文本样例例外。
 
 6. **修正历史正式文档**
    - 将旧 `AI Assistant` 和新 `Codex` author 批量改为 `Neplich Codex`。
-   - 验证：`rg -n '^author:\s*"(AI Assistant|Codex)"' docs agents --glob '*.md'`
+   - 验证：`rg -n '^author:\s*"AI Assistant"' docs agents --glob '*.md'`
      不再命中正式文档。
 
 7. **运行验证并准备 eval 决策**
@@ -195,8 +197,8 @@ flowchart LR
 - `uv run scripts/check_repository_contract.py`
 - `uv run scripts/check_eval_contract.py`
 - `uv run scripts/check_eval_artifacts.py`
-- `rg -n '^author:\s*"(AI Assistant|Codex)"' docs agents --glob '*.md'`
-- `rg -n 'author:\s*"AI Assistant"|author:\s*"Codex"' agents/product_manager/skills/idea-to-spec`
+- `rg -n '^author:\s*"AI Assistant"' docs agents --glob '*.md'`
+- `rg -n 'author:\s*"AI Assistant"' agents/product_manager/skills/idea-to-spec`
 
 ## 9. Eval 影响
 

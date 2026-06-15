@@ -6,7 +6,7 @@ status: Approved
 feature: "skill-idea-to-spec"
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-15"
 generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/idea-to-spec/PRD.md"
 related_docs:
@@ -25,10 +25,11 @@ related_docs:
 - `docs/pm/agents/engineer-agent/skills/trd-gen/PRD.md`
 - `docs/pm/agents/engineer-agent/skills/feature-implementor/PRD.md`
 
-PM scope 已确认：正式生成或更新的 Markdown 文档不得继续使用
-`author: "AI Assistant"` 或裸平台名 `author: "Codex"`；应使用“生成触发者展示名 +
-Agent 平台名”的可追踪格式，例如 `Neplich Codex`。本 TRD 不改变 PM scope，
-只定义落地该规则所需的技术修改、校验范围和验证命令。
+PM scope 已确认：正式生成或更新的 Markdown 文档应使用“生成触发者展示名 +
+Agent 平台名”的可追踪格式，例如 `Neplich Codex`。平台名可以是用户自定义值；
+仓库契约只校验已有 `author` 字段是否填入实际、非占位内容，不维护固定平台名
+allowlist 或 denylist。本 TRD 不改变 PM scope，只定义落地该规则所需的技术修改、
+校验范围和验证命令。
 
 ## 2. Technical Overview
 
@@ -57,8 +58,8 @@ flowchart LR
 | `agents/product_manager/skills/idea-to-spec/_internal/gen/brd-gen/INSTRUCTIONS.md` | BRD generation example | Replace `AI Assistant` with `Neplich Codex`. | issue #32 |
 | `agents/engineer/skills/trd-gen/_internal/trd-schema.md` | Engineer TRD metadata schema | Add author metadata guidance. | `trd-gen` PRD FR-S08 |
 | `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md` | Implementation plan metadata workflow | Require traceable author when creating or maintaining plans. | `feature-implementor` PRD FR-S08 |
-| `scripts/check_repository_contract.py` | Deterministic repository contract | Detect generic author names in tracked formal Markdown frontmatter. | issue #32 acceptance |
-| `docs/**/*.md` formal documents | Existing durable docs | Replace `AI Assistant` and bare `Codex` authors with `Neplich Codex`. | issue #32 acceptance |
+| `scripts/check_repository_contract.py` | Deterministic repository contract | Detect empty or placeholder author values in tracked formal Markdown frontmatter without platform-name enumeration. | issue #32 acceptance |
+| `docs/**/*.md` formal documents | Existing durable docs | Replace known placeholder or platform-only author values with filled traceable values such as `Neplich Codex`. | issue #32 acceptance |
 
 ## 4. Interfaces and Data
 
@@ -74,10 +75,13 @@ Examples:
 
 - `Neplich Codex`
 - `Neplich Claude Code`
+- `Neplich Custom Agent`
 
-The repository contract only validates committed formal Markdown frontmatter. It does
-not parse arbitrary prose, eval fixture author values such as `Eval Fixture`, or data
-set examples where `AI Assistant` is not a document author.
+The repository contract only validates committed formal Markdown frontmatter with an
+existing `author` field. It rejects empty values and placeholders such as
+`AI Assistant`, but it does not parse or enumerate Agent platform names. It also
+does not parse arbitrary prose, eval fixture author values such as `Eval Fixture`,
+or data set examples where `AI Assistant` is not a document author.
 
 ## 5. Implementation Constraints
 
@@ -97,8 +101,8 @@ set examples where `AI Assistant` is not a document author.
 | Repository contract | Author metadata check and existing repo contracts | `uv run scripts/check_repository_contract.py` | Yes |
 | Eval contract | Ensure eval metadata and workspaces remain valid | `uv run scripts/check_eval_contract.py` | Yes |
 | Eval artifacts | Ensure no runtime artifacts were committed | `uv run scripts/check_eval_artifacts.py` | Yes |
-| Static author scan | Confirm generic author frontmatter is gone | `rg -n '^author:\s*"(AI Assistant|Codex)"' docs agents --glob '*.md'` | Yes |
-| Targeted template scan | Confirm generator examples no longer use generic author values | `rg -n 'author:\s*"AI Assistant"|author:\s*"Codex"' agents/product_manager/skills/idea-to-spec` | Yes |
+| Static author scan | Confirm known placeholder author frontmatter is gone | `rg -n '^author:\s*"AI Assistant"' docs agents --glob '*.md'` | Yes |
+| Targeted template scan | Confirm generator examples no longer use placeholder author values | `rg -n 'author:\s*"AI Assistant"' agents/product_manager/skills/idea-to-spec` | Yes |
 
 ## 7. Rollout and Operations
 

@@ -71,7 +71,7 @@ changelog:
 | FR-S05 | Boundary Guard | 不接管 `engineer-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 需求/决策不稳回 pm-agent:idea-to-spec；TRD confirmed 后交 feature-implementor；TRD gap 未解决时阻断实现、debugger 和 QA E2E 文档更新。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
-| FR-S08 | Author Metadata | `trd-gen` 创建或更新 `docs/engineer/{feature}/TRD.md` 时必须使用“生成触发者展示名 + Agent 平台名”的 `author`。 | P0 | TRD frontmatter 不使用 `AI Assistant` 或裸平台名，示例格式为 `Neplich Codex`。 |
+| FR-S08 | Author Metadata | `trd-gen` 创建或更新 `docs/engineer/{feature}/TRD.md` 时必须使用“生成触发者展示名 + Agent 平台名”的 `author`；平台名可以是用户自定义值。 | P0 | TRD frontmatter 使用已填写的可追踪 author，例如 `Neplich Codex`，不使用空值或 `AI Assistant` 这类占位泛称。 |
 
 ## 当前实现对齐
 

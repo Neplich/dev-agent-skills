@@ -52,9 +52,10 @@ For generated or updated formal Markdown documents, `author` MUST use:
 Examples: `Neplich Codex`, `Neplich Claude Code`.
 
 Use the current repository git user display name when available, then append
-the active Agent platform name. If the display name cannot be determined, ask
-the user to confirm it. Do not use generic values such as `AI Assistant` or a
-bare platform name such as `Codex`.
+the active Agent platform name. The platform name may be a custom user-provided
+value, so repository checks must not depend on a fixed platform allowlist. If
+the display name or platform cannot be determined, ask the user to confirm it.
+Do not use empty values or placeholders such as `AI Assistant`.
 
 Follow Semantic Versioning in frontmatter and changelog. Do not encode the
 version into the filename.

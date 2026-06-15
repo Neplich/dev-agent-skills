@@ -20,8 +20,9 @@ related_decisions: docs/pm/<feature-name>/DECISIONS.md
 ```
 
 The `author` value must identify both the generation requester and Agent
-platform, for example `Neplich Codex`. Do not use `AI Assistant` or a bare
-platform name such as `Codex`.
+platform, for example `Neplich Codex`. The platform name may be custom; ask the
+user when either part is unknown, and do not use empty values or placeholders
+such as `AI Assistant`.
 
 ### 2. Source Context
 

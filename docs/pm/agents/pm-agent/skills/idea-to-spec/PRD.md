@@ -75,7 +75,7 @@ changelog:
 | FR-S05 | Boundary Guard | 不接管 `pm-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | PM internal lifecycle 按 skill-map 指向最窄 internal resource、engineer-agent:trd-gen 或 validator/iteration；设计产物需求按 Agent 协作边界交 designer-agent。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
-| FR-S08 | Author Metadata | `idea-to-spec` 生成或更新的正式 Markdown 文档必须使用“生成触发者展示名 + Agent 平台名”的 `author`，不得使用 `AI Assistant` 或裸平台名。 | P0 | `PRD.md`、`BRD.md`、`DECISIONS.md`、diff、impact analysis、iteration 和 validator handoff 等正式文档 frontmatter 使用可追踪 author，例如 `Neplich Codex`。 |
+| FR-S08 | Author Metadata | `idea-to-spec` 生成或更新的正式 Markdown 文档必须使用“生成触发者展示名 + Agent 平台名”的 `author`；平台名可以是用户自定义值。 | P0 | `PRD.md`、`BRD.md`、`DECISIONS.md`、diff、impact analysis、iteration 和 validator handoff 等正式文档 frontmatter 使用已填写的可追踪 author，例如 `Neplich Codex`，不使用空值或 `AI Assistant` 这类占位泛称。 |
 
 ## 当前实现对齐
 
