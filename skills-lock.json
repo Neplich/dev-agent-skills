@@ -24,7 +24,7 @@
     "changelog-generator": {
       "source": "agents/product_manager/skills/changelog-generator",
       "sourceType": "local",
-      "computedHash": "48910432b2703195d3d574ed4810db6d1cd83aa6cb90b6e721ffa796614b3f91"
+      "computedHash": "34f5dfa961c1c9db4d4760a4b00df9d4773a0ff74027c537cc5b7575241bee91"
     },
     "release-notes-generator": {
       "source": "agents/product_manager/skills/release-notes-generator",
