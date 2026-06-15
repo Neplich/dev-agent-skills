@@ -36,6 +36,7 @@ BLOCKED_TRACKED_PATTERNS = (
     re.compile(r"^docs/superpowers(/|$)"),
 )
 PLACEHOLDER_AUTHOR_VALUES = {"AI Assistant", "TBD", "TODO", "Unknown", "N/A"}
+TEMPLATE_PLACEHOLDER_RE = re.compile(r"<[^<>]+>")
 
 
 @dataclass
@@ -576,7 +577,7 @@ def validate_formal_document_author(root: Path, errors: list[ContractError]) -> 
         if author is not None and (
             not normalized_author
             or normalized_author in PLACEHOLDER_AUTHOR_VALUES
-            or (normalized_author.startswith("<") and normalized_author.endswith(">"))
+            or TEMPLATE_PLACEHOLDER_RE.search(normalized_author)
         ):
             add_error(
                 errors,

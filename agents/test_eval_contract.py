@@ -869,6 +869,37 @@ class EvalContractTests(unittest.TestCase):
             rendered,
         )
 
+    def test_repository_contract_rejects_embedded_author_placeholder(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            prd = root / "docs/pm/example/PRD.md"
+            prd.parent.mkdir(parents=True)
+            prd.write_text(
+                "---\n"
+                'title: "Example PRD"\n'
+                'author: "Neplich <agent platform name>"\n'
+                "---\n\n"
+                "# Example PRD\n"
+            )
+            subprocess.run(["git", "init", "-b", "feature"], cwd=root, check=True)
+            subprocess.run(
+                ["git", "add", prd.relative_to(root).as_posix()],
+                cwd=root,
+                check=True,
+            )
+
+            errors = []
+            checker.validate_formal_document_author(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("docs/pm/example/PRD.md", rendered)
+        self.assertIn(
+            "frontmatter 'author' must be a filled, non-placeholder traceable value",
+            rendered,
+        )
+
     def test_repository_contract_accepts_custom_author_platform(self):
         checker = load_repository_checker_module()
 
