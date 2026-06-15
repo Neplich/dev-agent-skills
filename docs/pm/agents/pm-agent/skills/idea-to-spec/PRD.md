@@ -2,9 +2,9 @@
 title: "idea-to-spec — Product Requirements Document"
 type: PRD
 feature: "skill-idea-to-spec"
-version: "1.0.0"
+version: "1.1.0"
 status: Draft
-author: "Codex"
+author: "Neplich Codex"
 date: "2026-06-12"
 last_updated: "2026-06-12"
 generated_by: "prd-gen"
@@ -15,8 +15,15 @@ related_docs:
   - "agents/product_manager/skills/idea-to-spec/SKILL.md"
   - ".claude-plugin/marketplace.json"
   - "agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md"
+  - "agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md"
+  - "agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/"
+  - "agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md"
+  - "agents/product_manager/skills/idea-to-spec/_internal/gen/brd-gen/INSTRUCTIONS.md"
   - "agents/product_manager/test/idea-to-spec/evals/evals.json"
 changelog:
+  - version: "1.1.0"
+    date: "2026-06-12"
+    changes: "补充正式文档 author 元数据可追踪命名规则"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"
@@ -68,6 +75,7 @@ changelog:
 | FR-S05 | Boundary Guard | 不接管 `pm-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | PM internal lifecycle 按 skill-map 指向最窄 internal resource、engineer-agent:trd-gen 或 validator/iteration；设计产物需求按 Agent 协作边界交 designer-agent。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
+| FR-S08 | Author Metadata | `idea-to-spec` 生成或更新的正式 Markdown 文档必须使用“生成触发者展示名 + Agent 平台名”的 `author`，不得使用 `AI Assistant` 或裸平台名。 | P0 | `PRD.md`、`BRD.md`、`DECISIONS.md`、diff、impact analysis、iteration 和 validator handoff 等正式文档 frontmatter 使用可追踪 author，例如 `Neplich Codex`。 |
 
 ## 当前实现对齐
 
@@ -78,6 +86,7 @@ changelog:
 - 选择 greenfield-discovery / greenfield-bootstrap / existing-project-feature / existing-project-update / pipeline / diff-only
 - 按 lane 进行 section-based shaping
 - 将稳定内容写入对应 PM docs
+- 写入或维护正式文档 frontmatter 时使用可追踪 `author`
 
 ## 验收标准
 

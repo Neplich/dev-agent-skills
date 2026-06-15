@@ -56,6 +56,11 @@ agents/product_manager/test/idea-to-spec/
 - `none_of`: 不允许出现的文本片段
 - `count_at_least`: 某段文本最少出现多少次
 
+`transcript.md`、`run_status.json` 和 `comparison.auto.md` 是 runtime diagnostics。
+metadata 不要把这些路径显式写入 `with_skill_outputs`、`without_skill_outputs`
+或 assertion `target`；需要检查 transcript 时省略 `target`，runner 会使用默认
+`with_skill/outputs/transcript.md`。
+
 如果断言只有 `id`、`description` 而没有这些字段，runner 会把它标记为 `MANUAL`。
 
 ## 运行约定

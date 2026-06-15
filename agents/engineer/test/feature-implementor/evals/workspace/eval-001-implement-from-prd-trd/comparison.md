@@ -7,7 +7,7 @@
 - Eval: `eval-001-implement-from-prd-trd`
 - Test case: implement-from-prd-trd
 - Workspace: `workspace/eval-001-implement-from-prd-trd`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `feature-implementor` skill
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-12 against the current uncommitted planner author metadata rule; all assertions remain satisfied
 
 ## Test Set / Fixture Version
 
@@ -26,7 +26,7 @@
 
 Observed behavior:
 
-- PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `feature-implementor` skill.
+- PASS - fresh Codex subagent validation completed on 2026-06-12 against the current uncommitted planner author metadata rule; all assertions remain satisfied.
 - Current `SKILL.md` consumes confirmed PRD/TRD, enters Phase 1 before any code changes, delegates or writes `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`, includes the file change list, implementation order, PRD alignment result, split decision, and blockers, then presents the plan and asks for confirmation.
 - The skill explicitly says to stop after presenting the plan and not start implementation in the same turn unless the user has already confirmed the exact plan.
 - Phase 2 code work and implementor module loading are gated behind user confirmation of the implementation plan.

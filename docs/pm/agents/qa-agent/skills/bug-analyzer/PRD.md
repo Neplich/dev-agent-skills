@@ -4,7 +4,7 @@ type: PRD
 feature: "skill-bug-analyzer"
 version: "1.0.0"
 status: Draft
-author: "Codex"
+author: "Neplich Codex"
 date: "2026-06-12"
 last_updated: "2026-06-12"
 generated_by: "prd-gen"

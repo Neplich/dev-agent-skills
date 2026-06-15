@@ -11,7 +11,7 @@
 title: <project name> — Product Requirements Document
 version: <SemVer>
 status: Draft | In Review | Approved | Superseded
-author: <name>
+author: <generation requester display name + agent platform name>
 date: <YYYY-MM-DD>
 reviewers: []
 related_brd: <filename or "N/A">

@@ -7,7 +7,7 @@
 - Eval: `eval-001-prd-to-engineer-trd`
 - Test case: prd-to-engineer-trd
 - Workspace: `workspace/eval-001-prd-to-engineer-trd`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04.
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-12; added TRD author metadata rule requires requester display name plus agent platform and does not change TRD ownership, PRD gate, handoff, or no-code boundaries.
 
 ## Test Set / Fixture Version
 
@@ -28,7 +28,7 @@
 
 Observed behavior:
 
-- PASS - fresh Codex subagent validation completed on 2026-06-04.
+- PASS - fresh Codex subagent validation completed on 2026-06-12; added TRD author metadata rule requires requester display name plus agent platform and does not change TRD ownership, PRD gate, handoff, or no-code boundaries.
 - 当前 `SKILL.md` 明确 `trd-gen` 是 Engineer-owned technical planning skill，写入 `docs/engineer/{feature}/TRD.md`，且 Engineer README 也将 `trd-gen` 定义为 PRD / DECISIONS 确认后的技术计划编写产物。
 - 当前 `SKILL.md` 要求 PRD、产品决策或验收范围不稳定时停止并交回 `pm-agent:idea-to-spec`；checkpoint language 明确 “PRD 已确认，当前进入 Engineer TRD 阶段”。
 - 当前 `SKILL.md` 要求所有 TRD 编写和修订在可用时委派给 fresh document-writing sub-agent，主进程保留源上下文、最终判断和返回后的审查。
@@ -43,7 +43,7 @@ Observed behavior:
 
 ## Failures
 
-- None. All eval assertions pass under fresh Codex subagent validation on 2026-06-04.
+- None. All eval assertions pass under fresh Codex subagent validation on 2026-06-12.
 
 ## Next Steps
 

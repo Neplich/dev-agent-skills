@@ -10,7 +10,7 @@
 title: "ADR-<NNN>: <Decision Title>"
 version: <SemVer>
 status: Proposed | Accepted | Deprecated | Superseded
-author: <name>
+author: <generation requester display name + agent platform name>
 date: <YYYY-MM-DD>
 superseded_by: <ADR number or "N/A">
 related_docs: []

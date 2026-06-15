@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -115,6 +116,61 @@ class TranscriptRunnerTests(unittest.TestCase):
                 "prd",
             )
             self.assertFalse((eval_root / "docs/pm/feature/design.md").exists())
+
+    def test_generate_eval_outputs_copies_transcripts_as_runtime_diagnostics(self):
+        runner = load_runner_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            eval_root = temp_root / "eval"
+            eval_root.mkdir()
+            metadata = eval_root / "eval_metadata.json"
+            metadata.write_text(
+                json.dumps(
+                    {
+                        "eval_id": "eval-001-runtime-transcript",
+                        "eval_name": "runtime-transcript",
+                        "prompt": "Check transcript diagnostics.",
+                    }
+                )
+            )
+
+            def fake_run_claude(command, cwd, timeout_seconds):
+                label = "with_skill" if "--plugin-dir" in command else "without_skill"
+                transcript = f"{label} transcript"
+                return transcript, {
+                    "command": command,
+                    "cwd": str(cwd),
+                    "timeout": False,
+                    "returncode": 0,
+                    "stdout_length": len(transcript),
+                    "stderr": "",
+                    "duration_ms": 1,
+                    "result_length": len(transcript),
+                }
+
+            old_run_claude = runner.run_claude
+            old_output_dir = os.environ.get("EVAL_RUN_OUTPUT_DIR")
+            runner.run_claude = fake_run_claude
+            os.environ["EVAL_RUN_OUTPUT_DIR"] = str(temp_root / "runs")
+            try:
+                runner.generate_eval_outputs(metadata)
+            finally:
+                runner.run_claude = old_run_claude
+                if old_output_dir is None:
+                    os.environ.pop("EVAL_RUN_OUTPUT_DIR", None)
+                else:
+                    os.environ["EVAL_RUN_OUTPUT_DIR"] = old_output_dir
+
+            runtime_root = temp_root / "runs/product_manager/eval"
+            self.assertEqual(
+                (runtime_root / "with_skill/outputs/transcript.md").read_text(),
+                "with_skill transcript",
+            )
+            self.assertEqual(
+                (runtime_root / "without_skill/outputs/transcript.md").read_text(),
+                "without_skill transcript",
+            )
 
 
 if __name__ == "__main__":

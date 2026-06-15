@@ -3,7 +3,7 @@ title: "QA Agent E2E 用例沉淀与复用 TRD"
 type: TRD
 version: "1.0.2"
 status: Draft
-author: "AI Assistant"
+author: "Neplich Codex"
 date: "2026-05-21"
 generated_by: "trd-gen"
 feature: "qa-e2e-case-memory"

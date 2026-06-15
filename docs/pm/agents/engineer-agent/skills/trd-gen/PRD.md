@@ -2,9 +2,9 @@
 title: "trd-gen — Product Requirements Document"
 type: PRD
 feature: "skill-trd-gen"
-version: "1.0.0"
+version: "1.1.0"
 status: Draft
-author: "Codex"
+author: "Neplich Codex"
 date: "2026-06-12"
 last_updated: "2026-06-12"
 generated_by: "prd-gen"
@@ -17,6 +17,9 @@ related_docs:
   - "agents/engineer/skills/trd-gen/_internal/trd-schema.md"
   - "agents/engineer/test/trd-gen/evals/evals.json"
 changelog:
+  - version: "1.1.0"
+    date: "2026-06-12"
+    changes: "补充 TRD author 元数据可追踪命名规则"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"
@@ -68,6 +71,7 @@ changelog:
 | FR-S05 | Boundary Guard | 不接管 `engineer-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 需求/决策不稳回 pm-agent:idea-to-spec；TRD confirmed 后交 feature-implementor；TRD gap 未解决时阻断实现、debugger 和 QA E2E 文档更新。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
+| FR-S08 | Author Metadata | `trd-gen` 创建或更新 `docs/engineer/{feature}/TRD.md` 时必须使用“生成触发者展示名 + Agent 平台名”的 `author`。 | P0 | TRD frontmatter 不使用 `AI Assistant` 或裸平台名，示例格式为 `Neplich Codex`。 |
 
 ## 当前实现对齐
 
@@ -77,6 +81,7 @@ changelog:
 - 当 sub-agent 可用时委派 fresh document-writing sub-agent 写/修 TRD
 - 主进程审查 TRD schema、边界和风险
 - 确认后准备 feature-implementor handoff
+- 写入或维护 TRD frontmatter 时使用可追踪 `author`
 
 ## 验收标准
 

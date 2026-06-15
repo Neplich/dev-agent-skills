@@ -22,6 +22,7 @@ BLOCKED_TRACKED_PATTERNS = (
     re.compile(r"\.pyc$"),
     re.compile(r"^docs/superpowers(/|$)"),
 )
+GENERIC_AUTHOR_VALUES = {"AI Assistant", "Codex"}
 
 
 @dataclass
@@ -292,6 +293,48 @@ def tracked_files(root: Path) -> list[str]:
     return [path for path in result.stdout.decode("utf-8").split("\0") if path]
 
 
+def parse_markdown_frontmatter(path: Path) -> dict[str, str] | None:
+    lines = path.read_text().splitlines()
+    if not lines or lines[0].strip() != "---":
+        return None
+
+    fields: dict[str, str] = {}
+    for line in lines[1:]:
+        if line.strip() == "---":
+            return fields
+        if not line.strip() or line.startswith((" ", "\t")) or ":" not in line:
+            continue
+        key, value = line.split(":", 1)
+        value = value.strip()
+        if (
+            len(value) >= 2
+            and value[0] == value[-1]
+            and value[0] in {'"', "'"}
+        ):
+            value = value[1:-1]
+        fields[key.strip()] = value
+    return None
+
+
+def validate_formal_document_author(root: Path, errors: list[ContractError]) -> None:
+    for rel in tracked_files(root):
+        if not rel.startswith("docs/") or not rel.endswith(".md"):
+            continue
+
+        path = root / rel
+        metadata = parse_markdown_frontmatter(path)
+        if metadata is None:
+            continue
+
+        author = metadata.get("author")
+        if author in GENERIC_AUTHOR_VALUES:
+            add_error(
+                errors,
+                path,
+                "frontmatter 'author' must include the generation requester display name and agent platform",
+            )
+
+
 def validate_tracked_file_policy(root: Path, errors: list[ContractError]) -> None:
     for rel in tracked_files(root):
         if any(pattern.search(rel) for pattern in BLOCKED_TRACKED_PATTERNS):
@@ -304,6 +347,7 @@ def validate_all(root: Path | None = None) -> list[ContractError]:
     validate_claude_symlink(root, errors)
     validate_marketplace(root, errors)
     validate_skills_lock(root, errors)
+    validate_formal_document_author(root, errors)
     validate_tracked_file_policy(root, errors)
     return errors
 

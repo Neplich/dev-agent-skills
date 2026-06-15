@@ -11,7 +11,7 @@
 title: <project or feature name> - Test Specification
 version: <SemVer>
 status: Draft | In Review | Approved | Superseded
-author: <name>
+author: <generation requester display name + agent platform name>
 date: <YYYY-MM-DD>
 related_prd: <filename or "N/A">
 related_trd: <filename or "N/A">

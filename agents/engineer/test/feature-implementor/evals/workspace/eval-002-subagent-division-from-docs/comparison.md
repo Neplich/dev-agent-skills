@@ -7,7 +7,7 @@
 - Eval: `eval-002-subagent-division-from-docs`
 - Test case: subagent-division-from-docs
 - Workspace: `workspace/eval-002-subagent-division-from-docs`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `feature-implementor` skill
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-12 against the current uncommitted planner author metadata rule; all assertions remain satisfied
 
 ## Test Set / Fixture Version
 
@@ -30,7 +30,7 @@
 
 Observed behavior:
 
-- PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `feature-implementor` skill.
+- PASS - fresh Codex subagent validation completed on 2026-06-12 against the current uncommitted planner author metadata rule; all assertions remain satisfied.
 - Current `SKILL.md` says the main process keeps PM/design context, repository constraints, implementation boundaries, final integration, and delivery risk while complex coding can be delegated.
 - Phase 1 requires a fresh document-writing sub-agent for `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` when available, and states the plan must not rewrite TRD decisions.
 - The complex coding section requires separate implementation and validation sub-agents for multi-file, multi-module, spec-backed, or context-heavy work. It requires implementation tasks to include owned files/modules, source document references, test expectations, forbidden areas, and a reminder not to revert unrelated user changes.

@@ -3,7 +3,7 @@ title: "Engineer Agent 编码阶段 sub-agent 分工决策记录"
 type: DECISIONS
 version: "1.0.0"
 status: Draft
-author: "AI Assistant"
+author: "Neplich Codex"
 date: "2026-05-15"
 generated_by: "idea-to-spec"
 feature: "engineer-agent-subagent-division"

@@ -243,6 +243,7 @@ def generate_eval_outputs(
                 status = exc.status
             else:
                 write_text(transcript_path, transcript)
+                copy_path(transcript_path, runtime_root / label / "outputs/transcript.md")
 
             write_status(status_path, status)
             sync_declared_outputs(execution_root, runtime_root, outputs)

@@ -6,22 +6,53 @@
     "docs/pm/app-tags"
   ],
   "prompt": "我们在一个已有的 Web 应用里，要新增应用标签系统。请先看项目上下文，再和我一起把方案收敛下来，最终沉淀成 PM 设计文档。",
-  "with_skill_outputs": [
-    "docs/pm/app-tags/DECISIONS.md",
-    [
-      "docs/pm/app-tags/design.md",
-      "docs/pm/app-tags/PRD.md"
-    ]
-  ],
   "assertions": [
     {
-      "id": "decision_log_created",
-      "description": "Creates or updates PM decision log",
-      "target": "docs/pm/app-tags/DECISIONS.md",
-      "all_of": [
-        "# Confirmed Decisions",
-        "Portal-owned concept",
-        "normalized_name"
+      "id": "interactive_first_turn_protocol",
+      "description": "First turn stays in the idea-to-spec protocol instead of requiring final PM artifacts before user confirmation",
+      "all_of_any": [
+        [
+          "项目上下文",
+          "Project context",
+          "context summary"
+        ],
+        [
+          "existing-project-feature",
+          "existing project",
+          "已有 Web 应用",
+          "已有项目"
+        ],
+        [
+          "DECISIONS.md",
+          "PM 文档",
+          "docs/pm",
+          "prd-gen"
+        ],
+        [
+          "请",
+          "确认",
+          "需要确认",
+          "请确认",
+          "请你",
+          "确认后",
+          "如果以上理解",
+          "请直接指出",
+          "需要调整",
+          "对齐",
+          "first decision",
+          "第一个决策"
+        ],
+        [
+          "决策点",
+          "问题",
+          "目标",
+          "Problem",
+          "Goal",
+          "Scope",
+          "MVP",
+          "Target users",
+          "我的理解"
+        ]
       ]
     }
   ]

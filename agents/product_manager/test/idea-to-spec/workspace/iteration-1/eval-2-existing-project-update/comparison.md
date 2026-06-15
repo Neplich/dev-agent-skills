@@ -7,7 +7,7 @@
 - Eval: `eval-002-existing-project-update`
 - Test case: existing-project-update
 - Workspace: `workspace/iteration-1/eval-2-existing-project-update`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `idea-to-spec` skill
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-12 against the current uncommitted author metadata change; deterministic `run_eval.py` check also passed.
 
 ## Test Set / Fixture Version
 
@@ -26,11 +26,8 @@
 
 Observed behavior:
 
-- PASS - fresh Codex subagent validation on 2026-06-04 confirmed all eval
-  assertions pass. `project-init` creates the complete QA E2E function-tree
-  scaffold with `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/`, and `scripts/`;
-  `eval-004` keeps stale root `PRD.md` only as an `execution_cleanup` target
-  so PM-first empty-workspace routing remains stable.
+- PASS - fresh Codex subagent validation on 2026-06-12 confirmed all semantic eval assertions remain satisfied under the author metadata change.
+- PASS - deterministic `run_eval.py` check on 2026-06-12 generated the declared DECISIONS, PRD, and TRD outputs and passed `decision_history_handled`.
 - 当前 skill 和 skill-map 明确 existing-project-update lane：先做 delta/blast radius，优先 change-impactor 与 targeted iteration，列出受影响 PRD/TRD/DECISIONS 等文档，避免全量重写。
 
 ## Without Skill / Baseline
@@ -40,9 +37,7 @@ Observed behavior:
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
-- No residual legacy QA path, case-directory, or exploration-memory
-  requirements were found.
+- None found in fresh Codex subagent validation or deterministic `run_eval.py` checks on 2026-06-12.
 
 ## Next Steps
 

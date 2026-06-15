@@ -3,7 +3,7 @@ title: "Engineer Agent 编码阶段 sub-agent 分工实施文档"
 type: TRD
 version: "1.1.0"
 status: Draft
-author: "AI Assistant"
+author: "Neplich Codex"
 date: "2026-05-15"
 generated_by: "feature-implementor"
 feature: "engineer-agent-subagent-division"
