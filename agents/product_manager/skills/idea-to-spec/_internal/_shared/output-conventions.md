@@ -13,7 +13,7 @@ title: "<Document Title>"
 type: BRD | PRD | TRD | ADR | API | TEST_SPEC | DECISIONS
 version: "1.0.0"
 status: Draft | In Review | Approved | Superseded | Deprecated
-author: "<author name>"
+author: "<generation requester display name + agent platform name>"
 date: "YYYY-MM-DD"
 generated_by: "<skill-name>"
 related_docs:
@@ -33,13 +33,28 @@ changelog:
 | type | Yes | Document type enum |
 | version | Yes | SemVer string |
 | status | Yes | Document lifecycle status |
-| author | Yes | Creator name |
+| author | Yes | Traceable creator display name |
 | date | Yes | Creation/update date |
 | generated_by | Yes | Skill that generated this document |
 | related_docs | No | List of related document paths |
 | changelog | Yes | Version history entries |
 
 ## 2. Version Numbering
+
+### Author Naming
+
+For generated or updated formal Markdown documents, `author` MUST use:
+
+```text
+<generation requester display name> <agent platform name>
+```
+
+Examples: `Neplich Codex`, `Neplich Claude Code`.
+
+Use the current repository git user display name when available, then append
+the active Agent platform name. If the display name cannot be determined, ask
+the user to confirm it. Do not use generic values such as `AI Assistant` or a
+bare platform name such as `Codex`.
 
 Follow Semantic Versioning in frontmatter and changelog. Do not encode the
 version into the filename.

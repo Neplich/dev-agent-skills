@@ -7,7 +7,7 @@
 - Eval: `eval-001-existing-project-feature-design`
 - Test case: existing-project-feature-design
 - Workspace: `workspace/iteration-1/eval-1-existing-project-feature`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `idea-to-spec` skill
+- Latest result: PASS - fresh Codex subagent validation passed on 2026-06-12, and deterministic `run_eval.py` passed after aligning the metadata to check first-turn transcript behavior instead of requiring final PM artifacts before user confirmation.
 
 ## Test Set / Fixture Version
 
@@ -27,11 +27,8 @@
 
 Observed behavior:
 
-- PASS - fresh Codex subagent validation on 2026-06-04 confirmed all eval
-  assertions pass. `project-init` creates the complete QA E2E function-tree
-  scaffold with `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/`, and `scripts/`;
-  `eval-004` keeps stale root `PRD.md` only as an `execution_cleanup` target
-  so PM-first empty-workspace routing remains stable.
+- PASS - fresh Codex subagent validation on 2026-06-12 confirmed the semantic assertions still pass under the author metadata change: context summary, single-decision progression, option comparison, section gating, and DECISIONS/PM doc memory expectations remain intact.
+- PASS - deterministic `run_eval.py` check passed on 2026-06-12 after the metadata was aligned to the interactive first-turn protocol. The runner now stores with-skill and without-skill transcripts as runtime diagnostics, and checks that the with-skill transcript includes context summary, existing-project lane, durable PM doc next step, confirmation gate, and structured problem/scope signals.
 - 当前 skill 要求 Phase 0 先读项目上下文并选择 existing-project-feature lane，单决策点推进，关键点给 2-3 个方案和 trade-off，按 section 确认并写入 DECISIONS.md/PM 文档。
 
 ## Without Skill / Baseline
@@ -41,13 +38,12 @@ Observed behavior:
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
-- No residual legacy QA path, case-directory, or exploration-memory
-  requirements were found.
+- None found in fresh Codex subagent validation or deterministic `run_eval.py` checks on 2026-06-12.
+- Previous deterministic artifact failure was an eval metadata issue: the one-turn prompt asks to work together, so the correct first-turn behavior is to stop at confirmation before writing final PM artifacts.
 
 ## Next Steps
 
-- 无需修改 skill。
+- Keep deterministic checks focused on first-turn protocol. Add separate multi-turn or seeded artifact eval coverage if final `DECISIONS.md` / PRD generation needs automated verification.
 
 ## Runtime Artifacts Policy
 

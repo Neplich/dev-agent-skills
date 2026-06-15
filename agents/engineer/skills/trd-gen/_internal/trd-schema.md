@@ -12,11 +12,16 @@ type: TRD
 version: <SemVer>
 status: Draft | In Review | Approved | Superseded
 feature: <feature-name>
+author: <generation requester display name + agent platform name>
 date: <YYYY-MM-DD>
 last_updated: <YYYY-MM-DD>
 related_prd: docs/pm/<feature-name>/PRD.md
 related_decisions: docs/pm/<feature-name>/DECISIONS.md
 ```
+
+The `author` value must identify both the generation requester and Agent
+platform, for example `Neplich Codex`. Do not use `AI Assistant` or a bare
+platform name such as `Codex`.
 
 ### 2. Source Context
 

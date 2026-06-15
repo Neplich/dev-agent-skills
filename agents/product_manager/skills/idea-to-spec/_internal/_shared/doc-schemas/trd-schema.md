@@ -11,7 +11,7 @@
 title: <project name> — Technical Requirements Document
 version: <SemVer>
 status: Draft | In Review | Approved | Superseded
-author: <name>
+author: <generation requester display name + agent platform name>
 date: <YYYY-MM-DD>
 related_prd: <filename or "N/A">
 ```

@@ -68,7 +68,7 @@ title: "Checkout Flow Redesign — Business Requirements Document"
 type: BRD
 version: "1.0.0"
 status: Draft
-author: "AI Assistant"
+author: "Neplich Codex"
 date: "2025-01-15"
 generated_by: brd-gen
 changelog:

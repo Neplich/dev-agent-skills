@@ -6,21 +6,22 @@
 
 | Eval | Scenario | Status | Main Finding | Follow-up |
 | --- | --- | --- | --- | --- |
-| Eval 1 | Existing project feature | Reviewed + Auto-checked | Skill 协议有效；eval 已允许 `design.md` 作为阶段性产物 | 可继续增强 transcript 结构检查 |
-| Eval 2 | Existing project update | Reviewed + Auto-checked | Skill update lane 有效；自动断言已覆盖 decision history 更新 | 可继续增强 blast-radius 细粒度检查 |
-| Eval 3 | Greenfield discovery | Reviewed + Auto-checked | Skill discovery mode 有效；自动断言已覆盖确认 checkpoint | 可继续增强“延后文档化”的文本信号检查 |
-| Eval 4 | Empty-workspace PM-first bootstrap routing | Reviewed + Auto-checked | fresh baseline 已可自动生成；断言已放宽到 PM-first discovery/bootstrap lane 语义 | 可继续观察后续 prompt 演化是否仍稳定 |
-| Eval 5 | PM agent direct delegation | Reviewed | Dispatcher request 应转交 `idea-to-spec`，而不是直接产出完整 PM 文档 | 可继续增强 dispatcher handoff 断言 |
+| Eval 1 | Existing project feature | PASS + Auto-checked | 2026-06-12 fresh subagent validation 通过；deterministic runner 已改为检查交互式首轮 transcript 协议，不再要求确认前生成最终 PM artifact | 可用多轮或 seeded artifact eval 另测最终落档 |
+| Eval 2 | Existing project update | PASS + Auto-checked | 2026-06-12 fresh subagent validation 和 deterministic `decision_history_handled` 均通过 | 可继续增强 blast-radius 细粒度检查 |
+| Eval 3 | Greenfield discovery | PASS + Subagent-checked | 2026-06-12 fresh subagent validation 通过；无 deterministic artifact assertions | 可继续增强“延后文档化”的文本信号检查 |
+| Eval 4 | Empty-workspace PM-first bootstrap routing | PASS + Subagent-checked | 2026-06-12 fresh subagent validation 通过；无 deterministic artifact assertions | 可继续观察后续 prompt 演化是否仍稳定 |
+| Eval 5 | PM agent direct delegation | PASS + Subagent-checked | 2026-06-12 fresh subagent validation 通过；dispatcher request 仍直接转交 `idea-to-spec` | 可继续增强 dispatcher handoff 断言 |
 
 ## Key Conclusions
 
-- 当前 `idea-to-spec` 协议在已有三类已运行场景上都明显优于无 skill 对照组
-- 目前暴露的问题主要在 eval 定义精度，而不是主 prompt 方向
-- Eval 1 / 2 / 3 当前都已有基础机器断言覆盖，不再只依赖文件存在性检查
+- 当前 `idea-to-spec` 协议在 fresh subagent semantic validation 中保持稳定，author 元数据规则没有破坏 PM-first 路由、section gate、DECISIONS 记忆或 existing-project-update 路由
+- 本轮暴露并修复的问题主要在 eval 定义精度，而不是 author 元数据改动本身
+- Eval 1 的 deterministic check 已对齐交互式首轮：验证 context summary、existing-project lane、确认门禁、PM 文档下一步和结构化问题/范围信号
+- Eval 2 的 deterministic check 通过，证明 existing-project-update 产物路径和 decision history 更新仍可自动验证
 - Eval 4 新增了空工作区 PM-first 守门场景，用于回归“不要直接初始化项目”
 - Eval 5 覆盖 PM dispatcher 直接委托边界，用于回归“dispatcher 不直接替 specialist 完成产物”
 - `run_eval.py` 现在会先生成 fresh transcript，再执行断言；baseline 仍然是硬性必需产物
-- 最新一次真实回归里，Eval 4 的 with-skill / without-skill transcript 都已成功生成，并且机器断言已全部通过
+- 最新一次真实回归里，Eval 1 / Eval 2 的 deterministic checks 通过，Eval 3/4/5 按 metadata 生成 not-applicable 报告并依赖 fresh subagent validation
 - `idea-to-spec` 的新协议已经形成可回归的最小基线：
   - context summary
   - 单决策点推进
@@ -64,5 +65,6 @@
 
 ## Next Improvements
 
-1. Add stronger automated checks for behavioral assertions instead of relying mostly on manual review.
-2. Standardize transcript format so turn-by-turn confirmation discipline is easier to verify.
+1. Add separate multi-turn or seeded artifact checks for final `DECISIONS.md` / PRD generation when that behavior needs deterministic coverage.
+2. Add stronger automated checks for behavioral assertions instead of relying mostly on manual review.
+3. Standardize transcript format so turn-by-turn confirmation discipline is easier to verify.

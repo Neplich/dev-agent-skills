@@ -3,7 +3,7 @@ title: "QA Agent E2E 用例沉淀与复用实施计划"
 type: IMPLEMENTATION_PLAN
 version: "1.0.0"
 status: Pending Confirmation
-author: "AI Assistant"
+author: "Neplich Codex"
 date: "2026-06-03"
 generated_by: "feature-implementor"
 feature: "qa-e2e-case-memory"

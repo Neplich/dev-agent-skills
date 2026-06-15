@@ -35,6 +35,7 @@ BLOCKED_TRACKED_PATTERNS = (
     re.compile(r"\.pyc$"),
     re.compile(r"^docs/superpowers(/|$)"),
 )
+GENERIC_AUTHOR_VALUES = {"AI Assistant", "Codex"}
 
 
 @dataclass
@@ -556,6 +557,26 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
             )
 
 
+def validate_formal_document_author(root: Path, errors: list[ContractError]) -> None:
+    for rel in tracked_files(root):
+        if not rel.startswith("docs/") or not rel.endswith(".md"):
+            continue
+
+        path = root / rel
+        parsed = parse_markdown_frontmatter(path, path.read_text())
+        if parsed is None:
+            continue
+
+        metadata, _ = parsed
+        author = metadata.get("author")
+        if author in GENERIC_AUTHOR_VALUES:
+            add_error(
+                errors,
+                path,
+                "frontmatter 'author' must include the generation requester display name and agent platform",
+            )
+
+
 def validate_tracked_file_policy(root: Path, errors: list[ContractError]) -> None:
     for rel in tracked_files(root):
         if any(pattern.search(rel) for pattern in BLOCKED_TRACKED_PATTERNS):
@@ -569,6 +590,7 @@ def validate_all(root: Path | None = None) -> list[ContractError]:
     validate_marketplace(root, errors)
     validate_skills_lock(root, errors)
     validate_implementation_plan_metadata(root, errors)
+    validate_formal_document_author(root, errors)
     validate_tracked_file_policy(root, errors)
     return errors
 

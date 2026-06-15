@@ -3,7 +3,7 @@ title: "QA Agent E2E 用例沉淀与复用 PRD"
 type: PRD
 version: "1.0.8"
 status: Draft
-author: "AI Assistant"
+author: "Neplich Codex"
 date: "2026-05-19"
 generated_by: "prd-gen"
 feature: "qa-e2e-case-memory"
