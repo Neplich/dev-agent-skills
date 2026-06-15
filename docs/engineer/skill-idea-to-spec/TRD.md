@@ -27,9 +27,9 @@ related_docs:
 
 PM scope 已确认：正式生成或更新的 Markdown 文档应使用“生成触发者展示名 +
 Agent 平台名”的可追踪格式，例如 `Neplich Codex`。平台名可以是用户自定义值；
-仓库契约只校验已有 `author` 字段是否填入实际、非占位内容，不维护固定平台名
-allowlist 或 denylist。本 TRD 不改变 PM scope，只定义落地该规则所需的技术修改、
-校验范围和验证命令。
+仓库契约只校验已有 `author` 字段是否填入实际、非占位内容，并用通用两段结构确认
+触发者和平台名都已填写；不维护固定平台名 allowlist 或 denylist。本 TRD 不改变
+PM scope，只定义落地该规则所需的技术修改、校验范围和验证命令。
 
 ## 2. Technical Overview
 
@@ -78,10 +78,10 @@ Examples:
 - `Neplich Custom Agent`
 
 The repository contract only validates committed formal Markdown frontmatter with an
-existing `author` field. It rejects empty values and placeholders such as
-`AI Assistant`, but it does not parse or enumerate Agent platform names. It also
-does not parse arbitrary prose, eval fixture author values such as `Eval Fixture`,
-or data set examples where `AI Assistant` is not a document author.
+existing `author` field. It rejects empty values, one-part values, and placeholders
+such as `AI Assistant`, but it does not parse or enumerate Agent platform names. It
+also does not parse arbitrary prose, eval fixture author values such as
+`Eval Fixture`, or data set examples where `AI Assistant` is not a document author.
 
 ## 5. Implementation Constraints
 

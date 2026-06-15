@@ -78,7 +78,8 @@ flowchart LR
 ## 3. 目标
 
 - 所有新生成正式 Markdown 文档的 `author` 使用“生成触发者展示名 + Agent 平台名”。
-- 允许平台名为用户自定义值；仓库校验不维护固定平台名 allowlist 或 denylist。
+- 允许平台名为用户自定义值；仓库校验用通用两段结构确认触发者和平台名都已填写，
+  不维护固定平台名 allowlist 或 denylist。
 - 禁止正式文档继续使用空值或 `AI Assistant` 这类不可完整追踪的占位泛称。
 - PRD、TRD 和 IMPLEMENTATION_PLAN 的归属 Skill PRD 明确该 author 要求。
 - 共享输出约定、schema、生成示例和仓库契约校验保持一致。
@@ -145,7 +146,7 @@ flowchart LR
 | `agents/product_manager/skills/idea-to-spec/_internal/gen/brd-gen/INSTRUCTIONS.md` | 修改 | 将 BRD 示例 `author: "AI Assistant"` 替换为 `author: "Neplich Codex"`，并补充规则说明。 |
 | `agents/engineer/skills/trd-gen/_internal/trd-schema.md` | 修改 | 在 TRD schema 的 metadata 部分加入 author 规则。 |
 | `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md` | 修改 | 要求新建或更新 `IMPLEMENTATION_PLAN.md` 时保留/写入可追踪 author。 |
-| `scripts/check_repository_contract.py` | 修改 | 增加正式文档 author 校验，阻止 tracked formal docs 使用空值或占位泛称，不按固定平台名枚举审计。 |
+| `scripts/check_repository_contract.py` | 修改 | 增加正式文档 author 校验，阻止 tracked formal docs 使用空值、单段值或占位泛称，不按固定平台名枚举审计。 |
 
 ### 6.4 历史文档修正
 
@@ -179,7 +180,7 @@ flowchart LR
 
 5. **增加仓库契约校验**
    - 在 `check_repository_contract.py` 中扫描 tracked formal docs 的 YAML frontmatter。
-   - 禁止空值和 `author: "AI Assistant"` 这类占位泛称。
+   - 禁止空值、单段 author 和 `author: "AI Assistant"` 这类占位泛称。
    - 不按固定平台名枚举拦截，允许用户自定义平台名。
    - 保留 eval fixture、数据集和非正式文本样例例外。
 

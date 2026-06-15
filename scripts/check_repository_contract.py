@@ -576,6 +576,7 @@ def validate_formal_document_author(root: Path, errors: list[ContractError]) -> 
             normalized_author = ""
         if author is not None and (
             not normalized_author
+            or len(normalized_author.split()) < 2
             or normalized_author in PLACEHOLDER_AUTHOR_VALUES
             or TEMPLATE_PLACEHOLDER_RE.search(normalized_author)
         ):
