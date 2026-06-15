@@ -1,18 +1,21 @@
 ---
 title: "Engineer Agent 编码阶段 sub-agent 分工 PRD"
 type: PRD
-version: "1.0.0"
+version: "1.0.1"
 status: Draft
 author: "AI Assistant"
 date: "2026-05-15"
 generated_by: "prd-gen"
 feature: "engineer-agent-subagent-division"
-last_updated: "2026-05-15"
+last_updated: "2026-06-15"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/12"
 related_docs:
   - "docs/pm/engineer-agent-subagent-division/DECISIONS.md"
 related_brd: "N/A"
 changelog:
+  - version: "1.0.1"
+    date: "2026-06-15"
+    changes: "明确 TRD 和 IMPLEMENTATION_PLAN 文档编写 sub-agent 委派不属于本 PRD 覆盖范围"
   - version: "1.0.0"
     date: "2026-05-15"
     changes: "初始版本"
