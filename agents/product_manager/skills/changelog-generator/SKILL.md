@@ -60,9 +60,10 @@ Paginate if needed (add `--limit 200` and re-query with narrower windows for den
 
 **Skip these PRs/commits automatically:**
 - Author is a bot: `dependabot`, `renovate`, `github-actions`, or any login ending in `[bot]`
-- Title prefix is `chore:` / `ci:` / `test:` / `build:` / `style:` / `docs:`
 - Title matches `chore(deps)`, `chore(release)`, `Bump X from Y to Z`
 - Scope is `internal`: e.g. `feat(internal):`, `fix(internal):`, `refactor(internal):` — these are implementation details not relevant to users
+
+Do not automatically skip `docs:`, `test:`, `ci:`, `build:`, or `style:` titles. Treat them as low-priority candidates and review the PR body, title, and any available file context before deciding.
 
 ## Step 4 — Classify each PR
 
@@ -77,8 +78,19 @@ Read the PR **title** to determine its changelog section. Use this mapping:
 | `deprecate:` | Deprecated | |
 | `remove:` / `revert:` | Removed | |
 | `security:` | Security | |
-| `docs:` | — | Skip (internal docs) |
-| `chore:` / `ci:` / `test:` / `build:` / `style:` | — | Skip |
+| `docs:` | Review body/context | Include if it changes user-facing docs, skill behavior, release workflow, installation, marketplace, or collaboration rules |
+| `test:` / `ci:` / `build:` / `style:` | Review body/context | Include if it changes eval contracts, durable comparison, required gates, release workflow, installation, or user-visible behavior |
+| `chore:` | — | Skip unless the title/body clearly describes user-visible behavior |
+
+For docs-first or skill marketplace repositories, include `docs:`, `test:`, `ci:`, `build:`, or `style:` PRs when the PR body or title indicates changes to:
+
+- skill behavior, routing, handoff, gates, or collaboration boundaries
+- eval fixtures, assertions, durable `comparison.md`, fresh validation, or required checks
+- marketplace registry, skill metadata, installation, packaging, or lockfile semantics
+- release workflow, changelog preflight, tags, draft releases, or publishing flow
+- public README, reference, or skill documentation that changes how users operate the project
+
+Skip low-value maintenance PRs when title/body/context indicate only spelling, formatting, link text cleanup, test or fixture renames without contract changes, mock cleanup, CI cache/runner maintenance, or dependency installation details without release-gate impact. If the body is empty and changed files are unavailable, skip low-value prefixes unless the title itself clearly describes user-visible behavior.
 
 **No prefix or ambiguous title**: use your judgment based on the PR title content — "add X", "implement X", "support X" → Added; "fix X", "resolve X", "patch X" → Fixed; anything that sounds like a change → Changed. Don't ask the user about every ambiguous case.
 
@@ -91,6 +103,9 @@ Examples:
 - `fix: resolve crash on empty list` → `Resolve crash on empty list`
 - `fix(client): fix async error handling` → `**client:** Fix async error handling`
 - `chore: bump deps` → skip
+- `docs: update release workflow` with body mentioning changelog preflight → Changed
+- `test: refresh eval fixtures` with body mentioning durable comparison contract → Changed
+- `ci: tune cache restore key` with no release-gate impact → skip
 
 ## Step 5 — Format the output
 

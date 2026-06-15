@@ -76,10 +76,10 @@
     {
       "id": "eval-003-prefix-classification",
       "name": "prefix-classification",
-      "description": "Verifies that changelog-generator handles prefix-classification and produces the expected role-specific artifact.",
-      "prompt": "以下是一批 PR 标题，帮我把它们分类到 Keep a Changelog 的各个章节（Added/Changed/Fixed/Deprecated/Removed/Security），并按格式输出，跳过不需要出现在 changelog 的条目：\n\n- feat(auth): add OAuth2 login support (#101)\n- fix: resolve crash when token expires (#102)\n- chore(deps): bump requests from 2.28 to 2.31 (#103)\n- perf: reduce API response time by caching (#104)\n- feat!: redesign plugin configuration API (#105)\n- docs: update README with new examples (#106)\n- fix(ui): correct button alignment on mobile (#107)\n- ci: add GitHub Actions workflow (#108)\n- remove: drop Python 3.7 support (#109)\n- security: patch XSS vulnerability in template renderer (#110)",
+      "description": "Verifies that changelog-generator handles conventional prefix classification plus semantic review for docs/test/ci PRs.",
+      "prompt": "以下是一批 PR 标题和正文，帮我把它们分类到 Keep a Changelog 的各个章节（Added/Changed/Fixed/Deprecated/Removed/Security），并按格式输出，跳过不需要出现在 changelog 的条目。注意：docs/test/ci 不能只按前缀跳过，需要根据正文判断是否影响用户可见能力、skill 行为、eval 契约、release workflow、installation 或协作边界。\n\n- feat(auth): add OAuth2 login support (#101)\n  Body: Adds a new OAuth2 login flow for users.\n- fix: resolve crash when token expires (#102)\n  Body: Fixes a user-visible crash.\n- chore(deps): bump requests from 2.28 to 2.31 (#103)\n  Body: Dependency maintenance only.\n- perf: reduce API response time by caching (#104)\n  Body: Improves response time.\n- feat!: redesign plugin configuration API (#105)\n  Body: BREAKING CHANGE: plugin configuration fields changed.\n- docs: update release notes generator publishing workflow (#106)\n  Body: Adds GitHub draft release, changelog preflight, tag retargeting, and publishing review rules used by release owners.\n- test: tighten changelog-generator eval contract (#107)\n  Body: Updates eval assertions and durable comparison requirements so docs/test/ci PRs are judged by semantic impact.\n- ci: require repository and eval contract checks before release (#108)\n  Body: Changes required release gates for this skill marketplace.\n- docs: fix typo in README heading (#109)\n  Body: Copyediting only; no behavior or workflow change.\n- ci: tune cache restore key (#110)\n  Body: Internal cache maintenance only; no release gate change.\n- fix(ui): correct button alignment on mobile (#111)\n  Body: Fixes visible UI layout.\n- remove: drop Python 3.7 support (#112)\n  Body: Removes unsupported runtime.\n- security: patch XSS vulnerability in template renderer (#113)\n  Body: Fixes a security vulnerability.",
       "workspace": "workspace/eval-003-prefix-classification",
-      "expected_output": "Added: feat items; Changed: perf/refactor; Fixed: fix items; Removed: remove items; Security: security items. 跳过 chore/docs/ci。Breaking change (#105) 带 ⚠️ BREAKING 前缀。",
+      "expected_output": "Added: feat items. Changed: perf items plus docs/test/ci items with semantic impact. Fixed: fix items. Removed: remove items. Security: security items. 跳过 chore(deps)、formatting-only docs 和 cache-only ci。Breaking change (#105) 带 ⚠️ BREAKING 前缀。",
       "assertions": [
         {
           "id": "feat_auth_added_add_oauth2_login_support",
@@ -107,14 +107,29 @@
           "text": "feat! → Added 章节，带 ⚠️ BREAKING 前缀"
         },
         {
-          "id": "docs",
-          "description": "docs → 跳过",
-          "text": "docs → 跳过"
+          "id": "docs_release_workflow_changed",
+          "description": "docs PR 正文描述 release workflow / changelog preflight 影响时进入 Changed 章节",
+          "text": "docs PR 正文描述 GitHub draft release、changelog preflight、tag retargeting 或 publishing review 影响时进入 Changed 章节，而不是仅凭 docs 前缀跳过"
         },
         {
-          "id": "ci",
-          "description": "ci → 跳过",
-          "text": "ci → 跳过"
+          "id": "test_eval_contract_changed",
+          "description": "test PR 正文描述 eval assertion 或 durable comparison 契约影响时进入 Changed 章节",
+          "text": "test PR 正文描述 eval assertions、durable comparison 或语义判断契约影响时进入 Changed 章节，而不是仅凭 test 前缀跳过"
+        },
+        {
+          "id": "ci_release_gate_changed",
+          "description": "ci PR 正文描述 release gate 或 required check 影响时进入 Changed 章节",
+          "text": "ci PR 正文描述 required release gates、repository contract 或 eval contract checks 影响时进入 Changed 章节，而不是仅凭 ci 前缀跳过"
+        },
+        {
+          "id": "docs_typo_skipped",
+          "description": "formatting-only docs → 跳过",
+          "text": "仅修 typo、copyediting、heading 或 formatting 且无行为变化的 docs PR 被跳过"
+        },
+        {
+          "id": "ci_cache_skipped",
+          "description": "cache-only ci → 跳过",
+          "text": "仅调整 cache restore key、runner 或内部 CI maintenance 且无 release gate 影响的 ci PR 被跳过"
         },
         {
           "id": "remove_removed",

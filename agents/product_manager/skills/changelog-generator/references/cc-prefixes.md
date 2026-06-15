@@ -11,13 +11,34 @@
 | `deprecate` / `deprecated` | Deprecated | ✅ Yes |
 | `remove` / `revert` | Removed | ✅ Yes |
 | `security` | Security | ✅ Yes |
-| `docs` | — | ❌ Skip (internal) |
+| `docs` | Review body/context | Conditional |
 | `chore` | — | ❌ Skip |
-| `ci` | — | ❌ Skip |
-| `test` / `tests` | — | ❌ Skip |
-| `build` | — | ❌ Skip |
-| `style` | — | ❌ Skip |
+| `ci` | Review body/context | Conditional |
+| `test` / `tests` | Review body/context | Conditional |
+| `build` | Review body/context | Conditional |
+| `style` | Review body/context | Conditional |
 | `wip` | — | ❌ Skip |
+
+## Conditional Low-Value Prefixes
+
+`docs`, `test`, `ci`, `build`, and `style` are low-priority candidates, not automatic skips. Read the PR body, title, and any available file context before deciding.
+
+Include these PRs when the content changes:
+
+- skill behavior, routing, handoff, gates, or collaboration boundaries
+- eval fixtures, assertions, durable `comparison.md`, fresh validation, or required checks
+- marketplace registry, skill metadata, installation, packaging, or lockfile semantics
+- release workflow, changelog preflight, tags, draft releases, or publishing flow
+- public README, reference, or skill documentation that changes how users operate the project
+
+Skip these PRs when they are only:
+
+- spelling, copyediting, formatting, or link text cleanup
+- README examples that do not change behavior or operational guidance
+- test renames, fixture cleanup, mock cleanup, or coverage reshuffling without contract changes
+- CI cache, runner, dependency install, or lint-only maintenance without release-gate impact
+
+If the body is empty and changed files are unavailable, skip low-value prefixes unless the title itself clearly describes user-visible behavior.
 
 ## Scope Handling
 
