@@ -110,6 +110,10 @@ a fresh document-writing sub-agent. The delegated task must include:
 - exact output path: `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
 - file change list, sequence, tests, delegation split, forbidden areas, blockers
 - frontmatter maintenance for `version` and `last_updated`
+- traceable frontmatter author using
+  `<generation requester display name> <agent platform name>`, for example
+  `Neplich Codex`; the platform name may be custom, so ask the user when either
+  part is unknown and do not use empty values or placeholders
 - instruction not to write code or revise TRD decisions
 
 For small changes, write a short plan that still names the target file, planned

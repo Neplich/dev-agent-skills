@@ -3,7 +3,7 @@ title: "Engineer Agent 编码阶段 sub-agent 分工 PRD"
 type: PRD
 version: "1.0.1"
 status: Draft
-author: "AI Assistant"
+author: "Neplich Codex"
 date: "2026-05-15"
 generated_by: "prd-gen"
 feature: "engineer-agent-subagent-division"

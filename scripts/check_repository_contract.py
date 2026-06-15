@@ -35,6 +35,8 @@ BLOCKED_TRACKED_PATTERNS = (
     re.compile(r"\.pyc$"),
     re.compile(r"^docs/superpowers(/|$)"),
 )
+PLACEHOLDER_AUTHOR_VALUES = {"AI Assistant", "TBD", "TODO", "Unknown", "N/A"}
+TEMPLATE_PLACEHOLDER_RE = re.compile(r"<[^<>]+>")
 
 
 @dataclass
@@ -556,6 +558,35 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
             )
 
 
+def validate_formal_document_author(root: Path, errors: list[ContractError]) -> None:
+    for rel in tracked_files(root):
+        if not rel.startswith("docs/") or not rel.endswith(".md"):
+            continue
+
+        path = root / rel
+        parsed = parse_markdown_frontmatter(path, path.read_text())
+        if parsed is None:
+            continue
+
+        metadata, _ = parsed
+        author = metadata.get("author")
+        if isinstance(author, str):
+            normalized_author = " ".join(author.split())
+        else:
+            normalized_author = ""
+        if author is not None and (
+            not normalized_author
+            or len(normalized_author.split()) < 2
+            or normalized_author in PLACEHOLDER_AUTHOR_VALUES
+            or TEMPLATE_PLACEHOLDER_RE.search(normalized_author)
+        ):
+            add_error(
+                errors,
+                path,
+                "frontmatter 'author' must be a filled, non-placeholder traceable value",
+            )
+
+
 def validate_tracked_file_policy(root: Path, errors: list[ContractError]) -> None:
     for rel in tracked_files(root):
         if any(pattern.search(rel) for pattern in BLOCKED_TRACKED_PATTERNS):
@@ -569,6 +600,7 @@ def validate_all(root: Path | None = None) -> list[ContractError]:
     validate_marketplace(root, errors)
     validate_skills_lock(root, errors)
     validate_implementation_plan_metadata(root, errors)
+    validate_formal_document_author(root, errors)
     validate_tracked_file_policy(root, errors)
     return errors
 

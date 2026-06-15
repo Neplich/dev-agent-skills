@@ -2,11 +2,11 @@
 title: "feature-implementor — Product Requirements Document"
 type: PRD
 feature: "skill-feature-implementor"
-version: "1.0.0"
+version: "1.1.0"
 status: Draft
-author: "Codex"
+author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-15"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -19,6 +19,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md"
   - "agents/engineer/test/feature-implementor/evals/evals.json"
 changelog:
+  - version: "1.1.0"
+    date: "2026-06-12"
+    changes: "补充 IMPLEMENTATION_PLAN author 元数据可追踪命名规则"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"
@@ -70,6 +73,7 @@ changelog:
 | FR-S05 | Boundary Guard | 无 spec bug 走 debugger；纯测试走 test-writer；Git/PR 走 delivery；TRD 编写/修订走 trd-gen。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 需求变化到 pm-agent:idea-to-spec；TRD gap 到 trd-gen；完成后到 test-writer、qa-agent、delivery。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
+| FR-S08 | Author Metadata | `feature-implementor` 创建或更新 `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` 时必须使用“生成触发者展示名 + Agent 平台名”的 `author`；平台名可以是用户自定义值。 | P0 | IMPLEMENTATION_PLAN frontmatter 使用已填写的可追踪 author，例如 `Neplich Codex`，不使用空值或 `AI Assistant` 这类占位泛称。 |
 
 ## 当前实现对齐
 
@@ -82,6 +86,7 @@ changelog:
 - 加载 implementor 执行；复杂任务委派 implementation sub-agent
 - 测试后按需委派 validation sub-agent
 - 自检并准备 QA E2E handoff
+- 写入或维护 IMPLEMENTATION_PLAN frontmatter 时使用可追踪 `author`
 
 ## 验收标准
 

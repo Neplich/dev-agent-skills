@@ -7,7 +7,7 @@
 - Eval: `eval-003-greenfield-discovery`
 - Test case: greenfield-discovery
 - Workspace: `workspace/iteration-1/eval-3-greenfield-discovery`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `idea-to-spec` skill
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-12 against the current uncommitted author metadata change; this eval has no deterministic artifact assertions.
 
 ## Test Set / Fixture Version
 
@@ -25,11 +25,8 @@
 
 Observed behavior:
 
-- PASS - fresh Codex subagent validation on 2026-06-04 confirmed all eval
-  assertions pass. `project-init` creates the complete QA E2E function-tree
-  scaffold with `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/`, and `scripts/`;
-  `eval-004` keeps stale root `PRD.md` only as an `execution_cleanup` target
-  so PM-first empty-workspace routing remains stable.
+- PASS - fresh Codex subagent validation on 2026-06-12 confirmed all semantic eval assertions remain satisfied under the author metadata change.
+- `run_eval.py` generated a not-applicable report because this eval has no deterministic outputs or machine-checkable assertions.
 - 当前 skill 对模糊新想法默认保持 greenfield-discovery，不直接生成完整 PRD/TRD，通过单决策点和选项比较收敛，方向稳定后才建议文档化。
 
 ## Without Skill / Baseline
@@ -39,9 +36,7 @@ Observed behavior:
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
-- No residual legacy QA path, case-directory, or exploration-memory
-  requirements were found.
+- None found in fresh Codex subagent validation on 2026-06-12.
 
 ## Next Steps
 

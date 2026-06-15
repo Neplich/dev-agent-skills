@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "aed9c8b95adcbdf4ce6f5b3b2117782885b9cfd31a97aef561fb95868c3856bc"
+      "computedHash": "3d000da85b9c078d8efcdf043f1dd6c028692af0be8db369bb99479d931e6cd5"
     },
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",
@@ -54,7 +54,7 @@
     "trd-gen": {
       "source": "agents/engineer/skills/trd-gen",
       "sourceType": "local",
-      "computedHash": "8dea8dbf52cf050494a3b3ecbd1d3256931da9882e324b4f2831973d361bff7f"
+      "computedHash": "84c417f9b4b86657c5deb0376f60fba0cb6f7cf758ed7a898b255dc0e39ff987"
     },
     "project-bootstrap": {
       "source": "agents/engineer/skills/project-bootstrap",
@@ -64,7 +64,7 @@
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
       "sourceType": "local",
-      "computedHash": "231f7b6d6d79944b5fef08d5025afd53f19a4eb64f993dccdf2c4a43506df59d"
+      "computedHash": "9736f7b6b98af0f85d3dc8e6fe6b487da8d33575a1a957dc1a7ab5fdcd27d5f0"
     },
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",

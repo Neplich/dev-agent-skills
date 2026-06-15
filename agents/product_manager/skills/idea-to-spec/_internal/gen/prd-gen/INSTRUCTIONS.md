@@ -72,7 +72,7 @@ title: "Social Login — Product Requirements Document"
 type: PRD
 version: "1.0.0"
 status: Draft
-author: "AI Assistant"
+author: "Neplich Codex"
 date: "2025-01-15"
 generated_by: prd-gen
 related_brd: "N/A"

@@ -7,7 +7,7 @@
 - Eval: `eval-002-resolve-trd-gap-packet`
 - Test case: resolve-trd-gap-packet
 - Workspace: `workspace/eval-002-resolve-trd-gap-packet`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04.
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-12; added TRD author metadata rule requires requester display name plus agent platform and does not change TRD ownership, PRD gate, handoff, or no-code boundaries.
 
 ## Test Set / Fixture Version
 
@@ -27,7 +27,7 @@
 
 Observed behavior:
 
-- PASS - fresh Codex subagent validation completed on 2026-06-04.
+- PASS - fresh Codex subagent validation completed on 2026-06-12; added TRD author metadata rule requires requester display name plus agent platform and does not change TRD ownership, PRD gate, handoff, or no-code boundaries.
 - 当前 `SKILL.md` 明确接收来自 `engineer-agent`、`feature-implementor`、`debugger` 或 QA E2E alignment 的 TRD gap packet；当 PM 范围稳定但 TRD 缺失、不完整、过期或冲突时，这是 `trd-gen` 的 TRD 编写或更新工作，不是实现计划或代码任务。
 - 当前 `SKILL.md` 要求 gap packet 标出受影响组件、模块、API、数据流、集成或部署面，缺失或冲突的技术决策，暴露 gap 的验证命令或证据，以及发布、回滚、可观测性、安全、错误处理或 E2E 风险。
 - 当前 `SKILL.md` 要求 `trd-gen` 逐项解决 named gap，或以 owner、blocker 和 unblock condition 记录 open technical question；TRD 输出清单也覆盖 impacted modules/components/APIs/data/integration、validation commands、rollout、observability、security、operational concerns、risks 和 open questions。
@@ -41,7 +41,7 @@ Observed behavior:
 
 ## Failures
 
-- None. All eval assertions pass under fresh Codex subagent validation on 2026-06-04.
+- None. All eval assertions pass under fresh Codex subagent validation on 2026-06-12.
 
 ## Next Steps
 
