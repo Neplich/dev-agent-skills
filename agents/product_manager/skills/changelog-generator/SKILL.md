@@ -60,10 +60,10 @@ Paginate if needed (add `--limit 200` and re-query with narrower windows for den
 
 **Skip these PRs/commits automatically:**
 - Author is a bot: `dependabot`, `renovate`, `github-actions`, or any login ending in `[bot]`
-- Title matches `chore(deps)`, `chore(release)`, `Bump X from Y to Z`
+- Title matches `chore(deps)`, `chore(deps-dev)`, `build(deps)`, `build(deps-dev)`, `chore(release)`, `Bump X from Y to Z`
 - Scope is `internal`: e.g. `feat(internal):`, `fix(internal):`, `refactor(internal):` — these are implementation details not relevant to users
 
-Do not automatically skip `docs:`, `test:`, `ci:`, `build:`, or `style:` titles. Treat them as low-priority candidates and review the PR body, title, and any available file context before deciding.
+Do not automatically skip `docs:`, `test:`, `ci:`, general `build:`, or `style:` titles outside the dependency bump patterns above. Treat them as low-priority candidates and review the PR body, title, and any available file context before deciding.
 
 ## Step 4 — Classify each PR
 
@@ -103,6 +103,7 @@ Examples:
 - `fix: resolve crash on empty list` → `Resolve crash on empty list`
 - `fix(client): fix async error handling` → `**client:** Fix async error handling`
 - `chore: bump deps` → skip
+- `build(deps): bump vite` → skip
 - `docs: update release workflow` with body mentioning changelog preflight → Changed
 - `test: refresh eval fixtures` with body mentioning durable comparison contract → Changed
 - `ci: tune cache restore key` with no release-gate impact → skip

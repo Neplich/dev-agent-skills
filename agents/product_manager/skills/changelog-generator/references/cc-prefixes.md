@@ -95,5 +95,5 @@ Skip PRs where `author.login` matches:
 Also skip PRs with these title patterns regardless of author:
 - `chore(deps):` or `chore(deps-dev):`
 - `chore(release):`
-- `build(deps):`
+- `build(deps):` or `build(deps-dev):`
 - `Bump X from Y to Z`

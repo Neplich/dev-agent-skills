@@ -13,13 +13,14 @@
 
 - Schema: `evals.json` v1.0
 - Fixture: Verifies that changelog-generator handles conventional prefix classification plus semantic docs/test/ci review.
-- Expected output: Added: feat items. Changed: perf items plus docs/test/ci items with semantic impact. Fixed: fix items. Removed: remove items. Security: security items. 跳过 chore(deps)、formatting-only docs 和 cache-only ci。Breaking change (#105) 带 ⚠️ BREAKING 前缀。
+- Expected output: Added: feat items. Changed: perf items plus docs/test/ci items with semantic impact. Fixed: fix items. Removed: remove items. Security: security items. 跳过 chore(deps)、build(deps)、formatting-only docs 和 cache-only ci。Breaking change (#105) 带 ⚠️ BREAKING 前缀。
 
 ## Assertions
 
 - `feat_auth_added_add_oauth2_login_support`: feat(auth) → Added 章节，标题清洗为 Add OAuth2 login support
 - `fix_fixed`: fix → Fixed 章节
 - `chore_deps`: chore(deps) → 跳过，不出现在输出
+- `build_deps_skipped`: build(deps) → 跳过，不出现在输出
 - `perf_changed`: perf → Changed 章节
 - `feat_added_breaking`: feat! → Added 章节，带 ⚠️ BREAKING 前缀
 - `docs_release_workflow_changed`: docs PR 正文描述 release workflow / changelog preflight 影响时进入 Changed 章节
@@ -34,7 +35,7 @@
 
 Observed behavior:
 
-- Fresh Codex subagent validation confirmed the current skill contract keeps conventional prefix classification for feat/fix/perf/remove/security, keeps chore(deps) skipped, classifies semantic docs/test/ci PRs into Changed when they affect release workflow, eval contracts, durable comparison, or required gates, and skips formatting-only docs or cache-only ci changes.
+- Fresh Codex subagent validation confirmed the current skill contract keeps conventional prefix classification for feat/fix/perf/remove/security, keeps chore(deps) and build(deps) dependency bumps skipped, classifies semantic docs/test/ci/general build/style PRs through semantic review when they affect release workflow, eval contracts, durable comparison, or required gates, and skips formatting-only docs or cache-only ci changes.
 
 ## Without Skill / Baseline
 
