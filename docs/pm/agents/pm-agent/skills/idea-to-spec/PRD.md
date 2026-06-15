@@ -6,7 +6,7 @@ version: "1.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-15"
 generated_by: "prd-gen"
 related_docs:
   - "agents/product_manager/README.md"
