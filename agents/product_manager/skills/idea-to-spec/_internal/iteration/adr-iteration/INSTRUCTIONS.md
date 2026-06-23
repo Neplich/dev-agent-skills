@@ -1,69 +1,38 @@
 ---
 name: adr-iteration
-description: Update an ADR's status or content based on review outcomes. Use when users say "accept ADR", "deprecate ADR", "supersede ADR", "update ADR status", or need to transition an ADR through its lifecycle (Proposed → Accepted → Deprecated → Superseded).
+description: Deprecated PM-owned ADR iteration resource. Do not update ADR files from PM; route ADR revision requests to engineer-agent:trd-gen.
 ---
 
-# ADR Iteration
+# ADR Iteration Handoff
 
-Update an existing ADR's status or content following the ADR lifecycle.
+ADRs are Engineer-owned. This internal PM instruction only analyzes why an ADR
+must change and hands the request to `engineer-agent:trd-gen`.
 
 ## When to use
 
-- ADR has been reviewed and needs status change (Proposed → Accepted)
-- ADR is being deprecated or superseded
-- Minor content updates based on review feedback
-- **Simplest** iteration skill — primarily status transitions
+- A legacy PM route points at `adr-iteration`
+- `adr-validator` or review feedback indicates an ADR should change
+- An ADR status, supersession, or content update needs Engineer ownership
+- Do not edit, accept, deprecate, supersede, or renumber ADR files from PM
 
 ## Inputs
 
-- **Required**:
-  - `adr_document`: The existing ADR
-  - `action`: One of:
-    - `accept` — transition to Accepted
-    - `deprecate` — transition to Deprecated (requires rationale)
-    - `supersede` — transition to Superseded (requires superseding ADR number)
-    - `update` — content changes without status change
-- **Optional**:
-  - `rationale`: Reason for status change
-  - `superseded_by`: ADR number that supersedes this one
-  - `content_changes`: Specific content updates
+- `adr_document`: existing ADR path or summary, when available
+- `change_request`: validator report, review comments, architecture decision,
+  status transition request, or supersession context
+- `related_prd`: source PRD or PM decision context
+- `feature_path` metadata and evidence
 
 ## Workflow
 
-1. **Read current ADR**: Parse status and content.
-2. **Validate transition**: Check against allowed transitions in `adr-schema.md`:
-   - Proposed → Accepted / Deprecated
-   - Accepted → Deprecated / Superseded
-   - Deprecated / Superseded → (terminal, no further transitions)
-3. **Apply changes**: Update status, add rationale, update metadata.
-4. **Bump version**: PATCH for status change, MINOR for content changes.
-5. **Update changelog**.
-6. **Run inline validation**: Apply adr-validator checks.
-7. **Present**: Updated ADR.
+1. Read the current ADR context and requested transition or content change.
+2. Check whether PM scope or product decisions are impacted.
+3. Prepare a handoff packet for `engineer-agent:trd-gen` with the requested
+   status or content change and supporting evidence.
+4. Do not modify ADR files; Engineer owns the revision, numbering, status, and
+   changelog.
 
-## Output Contract
+## Output contract
 
-- **Format**: Updated Markdown ADR
-- **Status transition**: Clearly documented in changelog
-
-## Failure Handling
-
-- Invalid transition (e.g., Deprecated → Accepted) → explain valid transitions, ask user to clarify
-- Missing superseded_by for supersede action → ask for the ADR number
-- Terminal status → inform user this ADR cannot be further transitioned
-
-## Safety Boundaries
-
-- Validate transition rules before applying
-- Never skip directly to terminal states without proper rationale
-
-## Examples
-
-### Example 1: Accept an ADR
-
-**User**: Accept ADR-001, it was approved in today's architecture review.
-
-**Expected Output**:
-- Status: Proposed → Accepted
-- Version: 1.0.0 → 1.0.1
-- Changelog: "Status changed to Accepted following architecture review on 2025-01-15"
+Return an Engineer handoff packet with decision context, requested transition,
+alternatives or constraints, related PM evidence, and unresolved questions.

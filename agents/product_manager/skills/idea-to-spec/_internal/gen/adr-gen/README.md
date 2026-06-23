@@ -1,19 +1,20 @@
-# ADR 生成器 (adr-gen, deprecated)
+# ADR Handoff Stub (adr-gen, deprecated)
 
 ## 概述
 
-历史 PM 内部生成器，仅保留作兼容参考。新的 ADR 由
-`engineer-agent:trd-gen` 在 Engineer 阶段生成。
+历史 PM 内部生成器已迁移为 handoff stub。新的 ADR 由
+`engineer-agent:trd-gen` 在 Engineer 阶段生成，PM 不再写入 ADR 文件。
 
 ## 使用场景
 
-- 仅阅读历史规则或 schema 参考
-- 新 ADR 请求应 handoff 到 `engineer-agent:trd-gen`
+- legacy 路由仍指向 `adr-gen` 时，立即停止 PM 生成
+- 将已确认 PM 范围、`feature_path`、决策背景和备选方案移交给
+  `engineer-agent:trd-gen`
 
 ## 快速开始
 
 ```
-请把 PostgreSQL 选型 ADR 请求移交给 engineer-agent:trd-gen
+请把 PostgreSQL 选型 ADR 请求整理成 handoff packet 并移交给 engineer-agent:trd-gen
 ```
 
 ## 输入
@@ -27,10 +28,10 @@
 
 ## 输出
 
-标准 ADR 文档，包含：标题、状态、上下文、决策、后果、备选方案对比
+只输出 handoff packet。目标 Engineer 产物是
+`docs/engineer/{feature_path}/ADR-<NNN>-<decision-title>.md`，但本 PM stub 不写文件。
 
 ## 关联 Skill
 
-- `adr-validator` — 校验 ADR 质量
-- `adr-iteration` — 更新 ADR 状态（Proposed → Accepted 等）
-- `engineer-agent:trd-gen` — TRD 中的关键决策可提取为独立 ADR
+- `engineer-agent:trd-gen` — 生成或更新 Engineer-owned ADR
+- `adr-validator` — 校验已生成的 ADR 质量

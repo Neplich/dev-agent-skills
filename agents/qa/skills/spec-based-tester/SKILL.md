@@ -45,9 +45,12 @@ TC, read:
 - `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
 
 All three documents must refer to the same feature path. If PRD is missing or
-the parent feature is unclear, return to PM. If TRD or the confirmed
-implementation plan is missing, stale, or on a different path, return to
-Engineer/TRD alignment and mark the E2E acceptance work `blocked`.
+the parent feature is unclear, return to `pm-agent:idea-to-spec`. If TRD is
+missing, stale, incomplete, or on a different path, return to
+`engineer-agent:trd-gen`. If the confirmed implementation plan is missing,
+stale, or on a different path, return to
+`engineer-agent:feature-implementor`. In all of these cases, mark the E2E
+acceptance work `blocked`.
 
 ## Top-Level Contract
 

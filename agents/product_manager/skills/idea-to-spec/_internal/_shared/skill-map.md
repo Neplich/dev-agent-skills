@@ -184,7 +184,7 @@ back to PM clarification or document the blocker.
 | Business case, ROI, or stakeholder alignment needed | `brd-gen` | Stay in `idea-to-spec` for a brief validation memo |
 | Existing repo, new feature requirements stable | `prd-gen` | `prd-validator` after generation |
 | Existing repo, technical design needed after PRD confirmation | `engineer-agent:trd-gen` | Engineer-owned API / ADR docs through `trd-gen`, then matching validators after Engineer TRD confirmation |
-| Existing repo, one approved doc needs revision | Matching `*-iteration` | Matching validator |
+| Existing repo, one approved PM doc needs revision | Matching PM `*-iteration` | Matching validator; Engineer-owned TRD/API/ADR revisions hand off to `engineer-agent:trd-gen` |
 | Existing repo, multiple docs need coordinated revision | `change-impactor` -> `iteration-coordinator` | `trace-check` and `version-differ` after updates |
 | QA assets or regression mapping needed | `tspecs-gen` | `tspecs-validator` or `trace-check` |
 | Full end-to-end pipeline requested | `flow` | Narrower gen / validator steps if the user backs off |
@@ -198,7 +198,7 @@ back to PM clarification or document the blocker.
   directly instead of `iteration-coordinator`.
 - If multiple docs are affected, use this order by default:
   - BRD -> PRD -> TRD -> API -> TEST_SPEC
-  - ADRs run in parallel when a decision record is affected
+  - ADR handoffs to `engineer-agent:trd-gen` run in parallel when a decision record is affected
 - After multi-doc updates, prefer `trace-check` before closing the loop.
 - Regenerate from scratch only when:
   - the target artifact is missing

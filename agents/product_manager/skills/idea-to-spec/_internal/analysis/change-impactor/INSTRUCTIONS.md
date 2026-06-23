@@ -88,4 +88,4 @@ Scan project documents to identify all artifacts affected by a proposed change.
 
 **User**: We're changing the auth system from session-based to JWT. What's the impact?
 
-**Expected Output**: Impact report showing PRD (auth requirements), TRD (auth architecture, API design, security section), API docs (auth headers), test specs (auth test cases) are all directly impacted. ADRs may need a new decision record. Recommended order: ADR → PRD → TRD → API → TEST_SPEC.
+**Expected Output**: Impact report showing PRD (auth requirements), TRD (auth architecture, API design, security section), API docs (auth headers), test specs (auth test cases) are all directly impacted. ADRs may need an Engineer-owned decision record. Recommended order: ADR handoff to `engineer-agent:trd-gen` → PRD → TRD/API handoff to `engineer-agent:trd-gen` → TEST_SPEC.

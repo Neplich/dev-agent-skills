@@ -1,24 +1,24 @@
-# API Iteration (api-iteration)
+# API Iteration Handoff (api-iteration, deprecated)
 
 ## Overview
 
-Update existing API documentation while preserving endpoint history and contract
-clarity.
+API documentation is Engineer-owned. This PM resource only prepares a handoff
+packet for `engineer-agent:trd-gen`; it does not update API files.
 
 ## When to use
 
-- `api-validator` found issues
-- Endpoints, fields, auth, or error codes changed
-- You need a versioned diff for API docs
+- legacy routing points at `api-iteration`
+- API validator or review feedback needs Engineer-owned revision
+- endpoint, auth, error, or data-model changes need API doc updates
 
 ## Quick start
 
 ```text
-Revise this API spec based on the new auth flow and endpoint changes.
+Prepare an Engineer handoff packet for this API spec change.
 ```
 
 ## Related skills
 
-- `engineer-agent:trd-gen` — creates new Engineer-owned API docs
+- `engineer-agent:trd-gen` — creates or updates Engineer-owned API docs
 - `api-validator`
 - `version-differ`

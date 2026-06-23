@@ -1,7 +1,7 @@
 # ADR (Architecture Decision Record) Schema
 
 > Shared schema referenced by Engineer-owned ADRs from
-> `engineer-agent:trd-gen`, `adr-validator`, and `adr-iteration`.
+> `engineer-agent:trd-gen` and `adr-validator`.
 
 ## Required Sections
 
@@ -79,7 +79,7 @@ One of: `Proposed` | `Accepted` | `Deprecated` | `Superseded by ADR-<NNN>`
 
 ## Status Transition Rules
 
-Used by `adr-iteration`:
+Used by `engineer-agent:trd-gen` and `adr-validator`:
 
 ```
 Proposed → Accepted      (requires: reviewer approval)

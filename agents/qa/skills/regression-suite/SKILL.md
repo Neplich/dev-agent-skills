@@ -65,9 +65,13 @@ For existing-feature changes, bug fixes, or code-complete E2E documentation
 updates, require PRD/TRD expectation alignment and a confirmed
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before updating or
 executing acceptance TC. Read `docs/pm/{feature_path}/PRD.md` and
-`docs/engineer/{feature_path}/TRD.md` from the same path. If the feature path
-or expectations are missing, changed without PM alignment, not covered by TRD,
-or missing a confirmed plan, report `blocked` and name the next owner.
+`docs/engineer/{feature_path}/TRD.md` from the same path. If the feature path,
+PRD, or expectations are missing, changed without PM alignment, or unclear,
+report `blocked` and return to `pm-agent:idea-to-spec`. If TRD is missing,
+stale, incomplete, or path-mismatched, report `blocked` and return to
+`engineer-agent:trd-gen`. If the confirmed implementation plan is missing,
+stale, or path-mismatched, report `blocked` and return to
+`engineer-agent:feature-implementor`.
 
 ## Step 2 — Define the verification scope
 

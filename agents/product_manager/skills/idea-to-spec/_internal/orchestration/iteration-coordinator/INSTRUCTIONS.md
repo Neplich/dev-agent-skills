@@ -43,7 +43,7 @@ Before selecting per-document iteration or validator skills, read
 
 Use it to:
 
-- select the direct lifecycle skill for BRD / PRD / TRD / API / ADR /
+- select the direct lifecycle owner for BRD / PRD / TRD / API / ADR /
   TEST_SPEC
 - keep update ordering aligned with `idea-to-spec` and `flow`
 - decide when fallback regeneration is actually necessary
@@ -58,11 +58,11 @@ Use it to:
 2. **Plan iteration sequence**: Order documents by dependency using the shared
    lifecycle map:
    - BRD -> PRD -> TRD -> API -> TEST_SPEC
-   - ADRs update in parallel if affected
+  - ADR handoffs to `engineer-agent:trd-gen` run in parallel if affected
 3. **Iterate sequentially**: For each affected document in order:
    - Show the user what will change in this document
-   - Run the corresponding direct iteration skill from the shared lifecycle
-     matrix
+   - Run the corresponding direct iteration skill or handoff owner from the
+     shared lifecycle matrix
    - If the document type falls outside the shared lifecycle matrix, fall back
      to focused regeneration with the closest `*-gen` skill, then produce a
      diff summary before asking the user to confirm
@@ -135,8 +135,8 @@ Impact Analysis: 5 documents affected
 
 Starting iteration sequence...
 
-Step 1/5: Creating ADR-005...
-  OK ADR created, validation: PASS (4.5/5)
+Step 1/5: Preparing ADR-005 handoff...
+  OK handoff packet ready for engineer-agent:trd-gen
 
 Step 2/5: Updating PRD auth requirements...
   OK PRD updated 1.2.0 -> 1.3.0, validation: PASS (4.0/5)

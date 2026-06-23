@@ -1,19 +1,20 @@
-# API 文档生成器 (api-gen, deprecated)
+# API Handoff Stub (api-gen, deprecated)
 
 ## 概述
 
-历史 PM 内部生成器，仅保留作兼容参考。新的 API 文档由
-`engineer-agent:trd-gen` 在 Engineer 阶段生成。
+历史 PM 内部生成器已迁移为 handoff stub。新的 API 文档由
+`engineer-agent:trd-gen` 在 Engineer 阶段生成，PM 不再写入 `API.md`。
 
 ## 使用场景
 
-- 仅阅读历史规则或 schema 参考
-- 新 API 文档请求应 handoff 到 `engineer-agent:trd-gen`
+- legacy 路由仍指向 `api-gen` 时，立即停止 PM 生成
+- 将已确认 PM 范围、`feature_path`、接口目标和代码证据移交给
+  `engineer-agent:trd-gen`
 
 ## 快速开始
 
 ```
-请基于这些 Express 路由，把 API 文档生成请求移交给 engineer-agent:trd-gen
+请基于这些 Express 路由，准备 API 文档 handoff packet 并移交给 engineer-agent:trd-gen
 ```
 
 ## 输入
@@ -27,9 +28,10 @@
 
 ## 输出
 
-结构化 API 文档，包含：概述、认证、端点详情、数据模型、错误码、curl 示例
+只输出 handoff packet。目标 Engineer 产物是
+`docs/engineer/{feature_path}/API.md`，但本 PM stub 不写文件。
 
 ## 关联 Skill
 
-- `api-validator` — 校验 API 文档质量
-- `engineer-agent:trd-gen` — 完整技术设计中包含 API 章节
+- `engineer-agent:trd-gen` — 生成或更新 Engineer-owned API 文档
+- `api-validator` — 校验已生成的 API 文档质量

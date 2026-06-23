@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "6fde34d2c9416640f8ea03d2d862de4e4866b1c84f5e5f86891f0ca282ec7f16"
+      "computedHash": "68bebf9762cd3fb09f5af758a621cc3e6d5cb6a35273768cb702785d3e697bfd"
     },
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",
@@ -94,7 +94,7 @@
     "spec-based-tester": {
       "source": "agents/qa/skills/spec-based-tester",
       "sourceType": "local",
-      "computedHash": "414fe4e798463e020f71c1be3e8db2dc10d72791e8b1c0c361af76de567b861f"
+      "computedHash": "2f7ad97aa42d17df539c66814676db62a1b0cd98ca72555a7d49bded0742c699"
     },
     "bug-analyzer": {
       "source": "agents/qa/skills/bug-analyzer",
@@ -104,7 +104,7 @@
     "regression-suite": {
       "source": "agents/qa/skills/regression-suite",
       "sourceType": "local",
-      "computedHash": "a3b7e84b84e608e97159bc664b65bac56608c59b86788e7a076b8686eea37314"
+      "computedHash": "2afb83d698000194d233c55c6088ab83424f2aa8903303f23fd55e11934d39b7"
     },
     "devops-agent": {
       "source": "agents/devops/skills/devops-agent",

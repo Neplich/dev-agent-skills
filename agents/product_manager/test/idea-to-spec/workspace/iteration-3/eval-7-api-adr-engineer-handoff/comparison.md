@@ -7,7 +7,7 @@
 - Eval: `eval-007-api-adr-engineer-handoff`
 - Test case: api-adr-engineer-handoff
 - Workspace: `workspace/iteration-3/eval-7-api-adr-engineer-handoff`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23 after API / ADR ownership migration
+- Latest result: PASS - fresh Codex subagent validation on 2026-06-23 after API / ADR ownership migration and PM deprecated stub cleanup
 
 ## Test Set / Fixture Version
 
@@ -26,8 +26,8 @@
 
 Observed behavior:
 
-- The current `idea-to-spec` skill routes stable technical planning, API documentation, and ADR creation to `engineer-agent:trd-gen` after PRD confirmation.
-- PM keeps ownership of product requirements and decision context only. It does not trigger PM internal `api-gen` or `adr-gen` for new Engineer-owned documents.
+- The current `idea-to-spec` skill routes stable technical planning, API documentation, and ADR creation or revision to `engineer-agent:trd-gen` after PRD confirmation.
+- PM keeps ownership of product requirements and decision context only. The historical PM internal `api-gen`, `adr-gen`, `api-iteration`, and `adr-iteration` resources are deprecated handoff stubs and must not write Engineer-owned documents.
 - The handoff packet carries `feature_path=chat-interface/history-search`, `parent_feature=chat-interface`, `feature_level=2`, the PRD path, API goals, and the search-index decision background.
 - API and ADR outputs are expected under `docs/engineer/chat-interface/history-search/`, preventing a parallel `docs/engineer/history-search/` directory.
 
