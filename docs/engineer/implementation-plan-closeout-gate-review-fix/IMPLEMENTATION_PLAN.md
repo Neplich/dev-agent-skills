@@ -1,7 +1,7 @@
 ---
 title: "IMPLEMENTATION_PLAN 收尾门禁 Review 修复实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.1"
+version: "0.1.2"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -17,6 +17,7 @@ related_issue: "https://github.com/Neplich/dev-agent-skills/issues/44"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 related_review:
   - "https://github.com/Neplich/dev-agent-skills/pull/45#discussion_r3461935792"
+  - "https://github.com/Neplich/dev-agent-skills/pull/45#discussion_r3462072967"
 ---
 
 # IMPLEMENTATION_PLAN 收尾门禁 Review 修复实施计划
@@ -40,13 +41,13 @@ review 修复聚焦 durable evidence 补强，不改变 skill 行为。
 | TRD alignment | 已补齐 review-fix TRD | `docs/engineer/implementation-plan-closeout-gate-review-fix/TRD.md` |
 | Implementation plan | 已确认并实施 | 本文件已更新为 `status: "Implemented"` |
 | Code / document edits | 已完成 | 已更新 baseline evidence、主 closeout 计划和本 review-fix closeout |
-| Validation | 已完成 | 本地完整检查 PASS；fresh subagent `019ef5bb-27cd-7b22-b11b-cd9910c9457f` PASS |
+| Validation | 已完成 | 本地完整检查 PASS；with-skill baseline 对照 PASS；without-skill baseline 对照 PASS |
 
 ## 2. 修复范围
 
 | 来源 | 文件 | 问题 | 修复处理 | 验证方式 |
 | --- | --- | --- | --- | --- |
-| PR review 未解决线程 | `agents/engineer/test/feature-implementor/evals/workspace/eval-010-implementation-plan-closeout-sync/comparison.md` | `Without Skill / Baseline` 只写了假设风险，没有真实 baseline 结果，也没有 blocked 原因。 | 更新 `Without Skill / Baseline`：记录本轮未生成独立 without-skill transcript，并按仓库 eval 规则写清 blocked / skipped 原因；说明本 eval 的对比依据来自 fresh subagent validation，不伪造 baseline pass。 | `uv run scripts/check_eval_artifacts.py`；人工确认 comparison 里 baseline 不再是纯假设。 |
+| PR review 未解决线程 | `agents/engineer/test/feature-implementor/evals/workspace/eval-010-implementation-plan-closeout-sync/comparison.md` | `Without Skill / Baseline` 最初缺少真实 baseline；补成 blocked 后又与 `Latest result: PASS` 冲突。 | 生成实际 without-skill baseline 结果，并更新 `Without Skill / Baseline`、`Latest result`、`Failures` 和 `Next Steps`，让完整 PASS 有真实 baseline 支撑。 | `uv run scripts/check_eval_artifacts.py`；with-skill / without-skill subagent 对照；人工确认 comparison 不再出现 blocked baseline 与 PASS 冲突。 |
 | 本地 review 补强项 | `docs/engineer/implementation-plan-closeout-gate/IMPLEMENTATION_PLAN.md` | closeout 证据只记录第一轮 subagent FAIL，未记录最终第二轮 PASS。 | 在 Fresh subagent validation / 实施结果中补充第二轮 subagent `019ef5a6-5558-7a02-a5e7-a14bd3c6e272` 的 PASS 结论和完整测试命令全绿结果。 | 人工确认 closeout plan 能支撑 `status: "Implemented"`。 |
 | 一致性补强 | 同上两个文件 | 两处 durable evidence 应互相一致。 | 让 `IMPLEMENTATION_PLAN.md` 和 `comparison.md` 对 fresh validation、baseline / skipped、runtime artifact policy 的描述一致。 | `git diff --check`；人工 review 两个文件证据链。 |
 | 回归检查 | 全仓库 | 文档和 eval fixture 修改可能影响契约。 | 修完后复跑完整确定性检查。 | repository contract、eval contract、eval artifacts、pytest。 |
@@ -63,11 +64,11 @@ review 修复聚焦 durable evidence 补强，不改变 skill 行为。
 
 ```mermaid
 flowchart TD
-    A["确认本计划"] --> B["更新 eval-010 comparison baseline"]
-    B --> C["更新主 closeout IMPLEMENTATION_PLAN 最终 PASS 证据"]
-    C --> D["检查两份 durable evidence 一致性"]
-    D --> E["运行确定性检查"]
-    E --> F["运行 fresh subagent validation"]
+    A["确认本计划"] --> B["生成 without-skill baseline"]
+    B --> C["更新 eval-010 comparison baseline"]
+    C --> D["更新主 closeout IMPLEMENTATION_PLAN 最终 PASS 证据"]
+    D --> E["检查两份 durable evidence 一致性"]
+    E --> F["运行确定性检查"]
     F --> G["更新本 review-fix 计划实施结果"]
 ```
 
@@ -75,9 +76,9 @@ flowchart TD
 
 修改 `agents/engineer/test/feature-implementor/evals/workspace/eval-010-implementation-plan-closeout-sync/comparison.md`：
 
-- 将 `Without Skill / Baseline` 从假设风险改成明确结果。
-- 如果没有实际 baseline transcript，写明 blocked / skipped 原因。
-- 明确不把 fresh subagent validation 当作伪造 baseline。
+- 将 `Without Skill / Baseline` 从 blocked / skipped 改成实际 without-skill baseline 结果。
+- 记录 baseline subagent id、PASS 结论和相对 with-skill 的弱化点。
+- 明确 `Latest result: PASS` 由 with-skill 和 without-skill baseline 两侧实际结果支撑。
 
 ### Step 2: 更新主 closeout 实施计划
 
@@ -113,7 +114,7 @@ uv run --with pytest pytest agents/test_eval_contract.py
 
 如用户要求额外验收，可使用 fresh subagent 只读复核：
 
-- baseline / skipped 描述是否满足 PR review；
+- baseline 结果是否满足 PR review；
 - closeout plan 是否包含最终 PASS；
 - 确定性检查是否通过。
 
@@ -121,7 +122,7 @@ uv run --with pytest pytest agents/test_eval_contract.py
 
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
-| 把 skipped baseline 写成 pass/fail | 伪造 eval 对比结论 | 明确写 blocked / skipped 原因，不虚构运行结果。 |
+| 把缺失 baseline 写成 pass/fail | 伪造 eval 对比结论 | 已实际运行 without-skill baseline，并只记录真实结果。 |
 | 只补 comparison，不补实施计划 | closeout 证据仍不完整 | 同步更新主 closeout IMPLEMENTATION_PLAN。 |
 | 为修 review 改动 skill 行为 | 扩大 PR 范围 | 本轮只改 durable evidence 文档。 |
 
@@ -131,11 +132,11 @@ uv run --with pytest pytest agents/test_eval_contract.py
 
 - 已更新
   `agents/engineer/test/feature-implementor/evals/workspace/eval-010-implementation-plan-closeout-sync/comparison.md`，
-  将 `Without Skill / Baseline` 明确记录为未生成独立 baseline transcript，并说明未推断 baseline pass/fail。
+  将 `Without Skill / Baseline` 更新为实际 without-skill baseline 结果，并同步 `Latest result`。
 - 已更新
   `docs/engineer/implementation-plan-closeout-gate/IMPLEMENTATION_PLAN.md`，
-  补充最终 subagent `019ef5a6-5558-7a02-a5e7-a14bd3c6e272` PASS 证据。
-- 已确认两份 durable evidence 均描述第一轮 subagent 发现 stale closeout，最终同步后 PASS，且没有伪造 baseline 结果。
+  补充最终 subagent `019ef5a6-5558-7a02-a5e7-a14bd3c6e272` PASS 证据和 eval-010 with/baseline 对照证据。
+- 已确认两份 durable evidence 均描述第一轮 subagent 发现 stale closeout，最终同步后 PASS，且完整 PASS 由实际 baseline 结果支撑。
 
 已完成确定性校验：
 
@@ -159,11 +160,17 @@ Fresh subagent validation：
 
 - Subagent: `019ef5bb-27cd-7b22-b11b-cd9910c9457f`
 - Result: PASS
-- Coverage: subagent confirmed the `comparison.md` baseline section records `BLOCKED / not generated`, no baseline pass/fail is inferred, the main closeout plan includes final PASS evidence, and the complete deterministic check flow passed.
+- Coverage: subagent confirmed the first review-fix pass did not infer baseline pass/fail while the baseline was missing. The later review required an actual baseline for a full eval PASS, which is addressed by the baseline generation result below.
+
+Baseline generation：
+
+- With-skill subagent: `019ef5f3-bf60-7922-bcc0-2a296cd3be0b`, PASS.
+- Without-skill baseline subagent: `019ef5f3-e0e2-7ef3-adb9-5f89535a79f3`, PASS.
+- Result: `comparison.md` now records an actual baseline result; the previous `BLOCKED / not generated` state has been removed.
 
 ## 8. 残余风险
 
 | Risk | Status | Note |
 | --- | --- | --- |
-| Separate without-skill transcript is not available | Accepted | 本轮明确记录未生成原因，不推断 baseline pass/fail。 |
+| Separate without-skill baseline may be weaker than skill run | Accepted | baseline 已实际生成并通过；弱化点是未读取 `feature-implementor` 专属模板和内部规则。 |
 | Runtime eval artifacts accidentally committed | Mitigated | `check_eval_artifacts.py` PASS；本轮未提交 runtime transcript、diagnostics、outputs、timing 或 run status。 |

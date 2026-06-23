@@ -1,7 +1,7 @@
 ---
 title: "IMPLEMENTATION_PLAN 收尾门禁实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.1"
+version: "0.1.2"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -34,7 +34,7 @@ related_issue: "https://github.com/Neplich/dev-agent-skills/issues/44"
 | Implementation plan | 已确认并实施 | 本文件已更新为 `status: "Implemented"` |
 | Code / skill edits | 已完成 | PRD、SKILL.md、internal instructions、eval fixture 和 `skills-lock.json` 已更新 |
 | Deterministic checks | 已完成 | 见 `## 7. 实施结果` |
-| Fresh subagent validation | 已完成并已处理反馈 | subagent `019ef5a2-e27a-7df2-8fd1-11614b8e8664` 完整测试命令 PASS，并指出 closeout durable 产物待同步；最终 subagent `019ef5a6-5558-7a02-a5e7-a14bd3c6e272` PASS |
+| Fresh subagent validation | 已完成并已处理反馈 | closeout validation PASS；eval-010 with-skill subagent `019ef5f3-bf60-7922-bcc0-2a296cd3be0b` PASS，without-skill baseline subagent `019ef5f3-e0e2-7ef3-adb9-5f89535a79f3` PASS |
 
 ### 1.2 成功标准
 
@@ -231,6 +231,7 @@ Fresh subagent validation:
 - Initial validation: subagent `019ef5a2-e27a-7df2-8fd1-11614b8e8664` ran the full deterministic check flow successfully, then blocked delivery because this implementation plan and the new eval comparison were still in pre-closeout state.
 - Resolution: this closeout update changed the plan to implemented state and updated the durable eval comparison.
 - Final validation: subagent `019ef5a6-5558-7a02-a5e7-a14bd3c6e272` passed after the closeout sync and confirmed there was no unresolved stale closeout state.
+- Eval baseline validation: subagent `019ef5f3-bf60-7922-bcc0-2a296cd3be0b` passed with `feature-implementor`; subagent `019ef5f3-e0e2-7ef3-adb9-5f89535a79f3` passed as the without-skill baseline against the same prompt and fixture. The durable `comparison.md` now records an actual baseline result instead of a blocked baseline.
 - Final command coverage: `git diff --check`, `uv run scripts/check_repository_contract.py`, `uv run scripts/check_eval_contract.py`, `uv run scripts/check_eval_artifacts.py`, and `uv run --with pytest pytest agents/test_eval_contract.py`.
 
 ## 8. 残余风险
@@ -239,4 +240,4 @@ Fresh subagent validation:
 | --- | --- | --- |
 | Runtime eval artifacts accidentally committed | Mitigated | `check_eval_artifacts.py` PASS；runtime artifacts policy 已写入 skill 和 comparison。 |
 | Closeout rule later regresses | Mitigated | `eval-010-implementation-plan-closeout-sync` 覆盖 stale closeout state。 |
-| Model transcript not generated as separate artifact | Accepted | 本轮按用户要求使用 fresh subagent validation；未提交 runtime transcript。 |
+| Runtime transcript files are not committed | Mitigated | with-skill 和 without-skill baseline subagent 结果已汇总到 durable `comparison.md`；runtime transcript 文件仍不入库。 |
