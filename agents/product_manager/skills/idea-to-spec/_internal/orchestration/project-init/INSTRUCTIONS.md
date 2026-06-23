@@ -27,8 +27,10 @@ empty workspace needs durable documentation scaffolding.
 - **Optional**:
   - `project_type`: webapp / mobile / api / library / data-pipeline (affects
     which doc types to include)
-  - `doc_types`: Override which documents to create -> BRD / PRD / ADR /
-    API / E2E TEST_SUITE (default: all applicable)
+  - `doc_types`: Override which PM / QA documents to create -> BRD / PRD /
+    E2E TEST_SUITE (default: all applicable). API and ADR requests are recorded
+    as Engineer handoff items for `engineer-agent:trd-gen`, not created by
+    `project-init`.
   - `description`: Brief project description (pre-populates Background sections)
   - `team`: Team members and roles (pre-populates Stakeholder sections)
   - `handoff_packet`: Phase 0 context from `idea-to-spec` to preserve settled
@@ -51,12 +53,13 @@ Use it to:
 
 ## Workflow
 
-1. **Determine doc set**: Based on `project_type`, select applicable document
-   types:
-   - webapp / mobile: BRD + PRD + ADR + API + E2E TEST_SUITE
-   - api: PRD + ADR + API + E2E TEST_SUITE
-   - library: ADR + E2E TEST_SUITE
-   - data-pipeline: BRD + ADR
+1. **Determine doc set**: Based on `project_type`, select PM-created and QA
+   scaffold document types. API and ADR are Engineer-owned and must be listed
+   as `engineer-agent:trd-gen` handoff items instead of PM-created stubs:
+   - webapp / mobile: BRD + PRD + E2E TEST_SUITE; optional API / ADR handoff
+   - api: PRD + E2E TEST_SUITE; API / ADR handoff
+   - library: E2E TEST_SUITE; optional ADR handoff
+   - data-pipeline: BRD; optional ADR handoff
 2. **Create directory structure**:
    ```text
    docs/
@@ -70,13 +73,14 @@ Use it to:
    └─ security/{feature_path}/
    ```
 3. **Generate stub documents**:
-   - For BRD / PRD / API / E2E TEST_SUITE, create a stub document with:
+   - For BRD / PRD / E2E TEST_SUITE, create a stub document with:
      - Complete YAML frontmatter (version `0.1.0`, status `Draft`)
      - All required section headings from the corresponding schema
      - `[TODO]` placeholders for content
      - Pre-populated fields from inputs (project name, description, team)
-   - For ADR, create the directory plus an ADR template note or index rather
-     than inventing a concrete decision record up front
+   - For API / ADR needs, add a handoff note in the summary or index that sends
+     confirmed scope, interface goals, decision context, and `feature_path` to
+     `engineer-agent:trd-gen`
    - For E2E TEST_SUITE, create the full function-tree memory scaffold:
      `TEST_SUITE.md`, `FLOW_INDEX.md`, empty `cases/`, and empty `scripts/`
 
@@ -86,8 +90,6 @@ Use it to:
    | --- | --- |
    | BRD | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/brd-schema.md` |
    | PRD | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md` |
-   | ADR | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/adr-schema.md` |
-   | API | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/api-schema.md` |
    | E2E TEST_SUITE | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md` |
 4. **Create index file**: Generate `docs/README.md` with:
    - Project overview
