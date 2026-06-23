@@ -5,11 +5,11 @@ feature: "skill-designer-agent"
 feature_path: "agents/designer-agent/skills/designer-agent"
 parent_feature: "agents/designer-agent/skills"
 feature_level: "4"
-version: "1.0.0"
+version: "1.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-06-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/designer/README.md"
@@ -20,7 +20,12 @@ related_docs:
   - "docs/pm/feature-path-contract/PRD.md"
   - "docs/engineer/feature-path-contract/TRD.md"
   - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
+  - "docs/pm/frontend-ui-routing-contract/PRD.md"
+  - "docs/engineer/frontend-ui-routing-contract/TRD.md"
 changelog:
+  - version: "1.1.0"
+    date: "2026-06-24"
+    changes: "Add Engineer-sourced UI maintenance design handoff"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"
@@ -72,6 +77,7 @@ changelog:
 | FR-S05 | Boundary Guard | 不接管 `designer-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 需要实现时指向 engineer-agent，不调用 Engineer 内部 skill。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
+| FR-S08 | Engineer UI Maintenance Handoff | 处理来自 Engineer 的 UI maintenance / frontend-update design request。 | P0 | 只选择 `ui-ux-design`、`visual-design` 或二者条件链路，输出 `docs/design/{feature_path}` 下的设计交付物，完成后回交 `engineer-agent`，不得调用 Engineer 内部 skill 或继续实现。 |
 
 ## 当前实现对齐
 

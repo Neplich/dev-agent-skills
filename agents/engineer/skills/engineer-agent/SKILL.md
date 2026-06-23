@@ -1,6 +1,6 @@
 ---
 name: engineer-agent
-description: Route engineering work to the right downstream skill. Use when the user needs repo analysis, spec-driven project bootstrap, feature implementation, refactoring for a settled requirement, test coverage, bug fixing, CI-break triage, commits, pushes, or PR delivery. If the workspace is empty or new and the user is still defining what to build, route back to PM first. Trigger on phrases like "分析代码库", "接手这个仓库", "初始化项目", "实现这个功能", "按设计稿落地", "改一下这段逻辑", "补测试", "这个测试为什么挂了", "修 bug", "做个 hotfix", "commit", "push", "提 PR", or any engineering request that should be routed before execution."
+description: Route engineering work to the right downstream skill. Use when the user needs repo analysis, spec-driven project bootstrap, feature implementation, frontend UI implementation, refactoring for a settled requirement, test coverage, bug fixing, CI-break triage, commits, pushes, or PR delivery. If the workspace is empty or new and the user is still defining what to build, route back to PM first. Trigger on phrases like "分析代码库", "接手这个仓库", "初始化项目", "实现这个功能", "按设计稿落地", "更新前端代码", "改 UI", "优化界面实现", "改一下这段逻辑", "补测试", "这个测试为什么挂了", "修 bug", "做个 hotfix", "commit", "push", "提 PR", or any engineering request that should be routed before execution."
 ---
 
 # Engineer Agent Dispatcher
@@ -48,6 +48,18 @@ After the TRD is confirmed, route implementation planning and execution to
 `feature-implementor`. `feature-implementor` writes
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` from the confirmed TRD,
 then waits for implementation confirmation before coding.
+
+Frontend code updates, UI implementation, interface optimization, and
+design-to-code requests are engineering requests. Complete the existing feature
+alignment gate first. If the request changes page structure, interaction flow,
+visual system, component rules, usability, or information hierarchy, check
+whether `docs/design/{feature_path}/ui-ux-spec.md` and/or
+`docs/design/{feature_path}/visual-system.md` exist and cover the change. If
+the design deliverables are missing, stale, or conflicting, hand off to
+`designer-agent` with the resolved feature path, source docs, and design gap;
+after design handoff returns, route the implementation to
+`feature-implementor`. Do not route local frontend implementation work to an
+external UI reference skill.
 
 After implementation and self-review complete, check that the
 `feature-implementor` result includes a QA E2E documentation handoff package
@@ -158,8 +170,9 @@ Route by the engineering outcome the user wants, not by literal phrasing.
   "搭个骨架", "起一个服务"
   -> `project-bootstrap`
 - Feature implementation, code changes, requirement delivery, design-to-code,
-  scoped refactors in service of a requirement, "实现功能", "落地设计",
-  "把这个需求做掉", "改造这块逻辑"
+  frontend code updates, UI implementation, interface optimization, scoped
+  refactors in service of a requirement, "实现功能", "落地设计",
+  "更新前端代码", "改 UI", "优化界面实现", "把这个需求做掉", "改造这块逻辑"
   -> after the existing feature alignment gate passes, `feature-implementor`
 - Test coverage, acceptance tests, unit/integration tests, "补测试",
   "加 coverage", "验证实现"

@@ -33,6 +33,24 @@ Forbidden actions:
 If the user asks for implementation, finish the design route first, then stop
 and direct the next step to `engineer-agent`.
 
+## Engineer UI Maintenance Handoff
+
+Designer can receive a UI maintenance or frontend-update design request from
+`engineer-agent` when implementation is blocked by missing, stale, or incomplete
+design inputs. Treat the Engineer handoff as design scope, not as permission to
+implement.
+
+- Consume the confirmed `feature_path`, PM docs, relevant TRD, and the design
+  gap packet from Engineer.
+- Route only to `ui-ux-design`, `visual-design`, or the conditional chain of
+  both skills.
+- Write or update only `docs/design/{feature_path}/ui-ux-spec.md` and/or
+  `docs/design/{feature_path}/visual-system.md`.
+- Stop after design handoff and direct implementation back to `engineer-agent`.
+
+Do not call Engineer internal skills, produce implementation task lists, shell
+commands, code patches, tests, or deployment instructions.
+
 ## Feature Path Gate
 
 For feature-scoped design deliverables, Designer consumes a confirmed
@@ -63,6 +81,10 @@ Route by the design outcome the user wants.
   wireframes, information architecture, redesigning a workflow, reference-site
   interaction patterns, "流程怎么设计", "页面怎么拆", "做 wireframe"
   -> `ui-ux-design`
+- Engineer-sourced UI maintenance or frontend-update design handoff, with a
+  confirmed `feature_path` and a design gap for page structure, interaction, or
+  visual deliverables
+  -> `ui-ux-design` and, when visual rules are affected, `visual-design`
 - Visual direction, aesthetic system, product-appropriate style, color,
   typography, component styling, UX quality rules, anti-patterns, tone of
   voice, brand feel, "风格怎么定", "视觉系统", "组件视觉规范"

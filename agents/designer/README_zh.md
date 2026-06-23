@@ -30,6 +30,7 @@
 
 - UX 流程、页面结构、信息架构、线框、交互规范：使用 `ui-ux-design`
 - 视觉风格、设计系统、颜色、字体、组件规范、文案语气：使用 `visual-design`
+- 来自 Engineer 的 UI 维护或前端更新设计缺口：只更新相关设计交付物，完成后 handoff 回 `engineer-agent`
 - 需求模糊但明显是设计问题：默认先走 `ui-ux-design`
 - 完整设计闭环：先 `ui-ux-design`，再 `visual-design`
 
@@ -80,6 +81,7 @@ agents/designer/skills/visual-design/references/
 - Designer 输出设计文档、Mermaid 流程和 ASCII 线框。
 - Designer 不修改项目代码，不生成测试，不创建部署配置。
 - Engineer 是唯一负责把 PM/Designer 文档转化为代码、测试和交付产物的角色。
+- 来自 Engineer 的 UI 维护请求在 Designer 内仍然只做设计；设计 handoff 后由 Engineer 继续实现。
 
 ## 本地维护
 

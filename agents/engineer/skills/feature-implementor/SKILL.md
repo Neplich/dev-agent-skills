@@ -16,6 +16,7 @@ This is the public entry point. It owns:
 - Implementation plan document writing
   (`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`)
 - Implementation planning (which files to create/modify, in what order)
+- UI design handoff checks before planning frontend UI or visual changes
 - Delegation to internal modules and, for complex coding tasks, scoped
   implementation/validation sub-agents
 - Quality self-check before handoff
@@ -99,6 +100,26 @@ API / integration impacts, verification commands, release or rollout risks, and
 error handling, observability, or security strategy when relevant. It must also
 include this boundary statement: the finder only clarifies the TRD gaps;
 `engineer-agent:trd-gen` completes or updates the TRD.
+
+## UI Design Handoff Gate
+
+Before creating or updating `IMPLEMENTATION_PLAN.md` for a frontend UI,
+interaction, visual, component, usability, or information hierarchy change,
+check the design inputs for the resolved `feature_path`:
+
+- `docs/design/{feature_path}/ui-ux-spec.md`
+- `docs/design/{feature_path}/visual-system.md`
+
+If the relevant design deliverables exist and cover the requested change, cite
+them in the implementation plan. If the change is limited enough that Designer
+does not need to update the design, state the reason explicitly in the plan.
+
+If the design deliverables are missing, stale, or conflict with the requested
+change, stop before planning or implementation. Hand the gap back through
+`engineer-agent` to `designer-agent`, naming the missing design decisions and
+the expected design documents. Do not hide the design gap inside
+`IMPLEMENTATION_PLAN.md`, and do not start coding without a confirmed plan after
+the design handoff returns.
 
 ## TRD and Implementation Plan Boundary
 
@@ -194,10 +215,17 @@ Read the documents relevant to the current task:
 - **Engineer TRD**: technical approach, component breakdown, architecture decisions
 - **ADR**: specific technology choices and constraints
 - **API Spec**: endpoint contracts, request/response shapes
+- **Design docs**: UI/UX flow and visual-system inputs when the change affects
+  frontend UI behavior, visuals, components, usability, or information hierarchy
 
 For existing feature changes, complete the PRD alignment gate before loading
 the planner. Do not treat a small change as already approved just because it is
 low-risk or single-file.
+
+For frontend UI or visual changes, complete the UI Design Handoff Gate before
+loading the planner. A small UI change may avoid Designer updates only when the
+plan states why existing PM/TRD/design inputs already cover the requested
+change.
 
 If `docs/engineer/{feature_path}/TRD.md` is missing, not confirmed, or does not
 mirror `docs/pm/{feature_path}/PRD.md`, do not create the implementation plan.
@@ -261,6 +289,9 @@ Break the feature into ordered implementation steps:
 5. Include the PRD / optional DECISIONS / TRD paths, implementation plan path,
    resolved `feature_path`, `parent_feature`, `feature_level`, and any blockers
    that require returning to PM or `trd-gen`.
+6. For frontend UI or visual changes, include the referenced design docs or the
+   reason Designer does not need to update them. If design inputs are missing,
+   stale, or conflicting, stop and hand off instead of writing the plan.
 
 Present the plan to the user:
 

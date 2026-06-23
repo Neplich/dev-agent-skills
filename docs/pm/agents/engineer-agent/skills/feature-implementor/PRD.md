@@ -5,11 +5,11 @@ feature: "skill-feature-implementor"
 feature_path: "agents/engineer-agent/skills/feature-implementor"
 parent_feature: "agents/engineer-agent/skills"
 feature_level: "4"
-version: "1.2.0"
+version: "1.3.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-06-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -18,12 +18,17 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/SKILL.md"
   - "docs/pm/feature-path-contract/PRD.md"
   - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/pm/frontend-ui-routing-contract/PRD.md"
+  - "docs/engineer/frontend-ui-routing-contract/TRD.md"
   - ".claude-plugin/marketplace.json"
   - "agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md"
   - "agents/engineer/skills/feature-implementor/_internal/implementor/INSTRUCTIONS.md"
   - "agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md"
   - "agents/engineer/test/feature-implementor/evals/evals.json"
 changelog:
+  - version: "1.3.0"
+    date: "2026-06-24"
+    changes: "Add UI design handoff gate before implementation planning"
   - version: "1.2.0"
     date: "2026-06-23"
     changes: "Add feature_path implementation plan gate requirements"
@@ -83,6 +88,7 @@ changelog:
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
 | FR-S08 | Author Metadata | `feature-implementor` 创建或更新 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 时必须使用“生成触发者展示名 + Agent 平台名”的 `author`；平台名可以是用户自定义值。 | P0 | IMPLEMENTATION_PLAN frontmatter 使用已填写的可追踪 author，例如 `Neplich Codex`，不使用空值或 `AI Assistant` 这类占位泛称。 |
 | FR-S09 | Feature Path Plan Gate | 写实施计划前必须校验 PRD/TRD 的 `feature_path`、`parent_feature`、`feature_level` 和 TRD `related_prd` 一致。 | P0 | 缺 PRD 回 PM；缺 TRD、TRD stale 或路径/字段不一致回 `trd-gen`；只有 PRD/TRD 已确认且路径一致时才允许创建 Engineer 目标目录并写计划。 |
+| FR-S10 | UI Design Handoff Gate | 前端 UI 行为、视觉或交互变化进入实施计划前必须检查设计交付物。 | P0 | 实施计划必须引用覆盖当前变化的 `docs/design/{feature_path}/ui-ux-spec.md` 和/或 `visual-system.md`，或明确说明无需 Designer 更新的理由；设计缺失、过期或冲突时停止并 handoff 回 `engineer-agent -> designer-agent`。 |
 
 ## 当前实现对齐
 
@@ -90,6 +96,7 @@ changelog:
 
 - 检查 Do NOT use 边界
 - 读取规格和代码上下文
+- 对前端 UI 变化检查设计交付物或记录无需 Designer 更新的理由
 - 写 IMPLEMENTATION_PLAN，并记录复杂编码 implementation/validation sub-agent split 判断
 - 等待用户明确确认
 - 加载 implementor 执行；复杂任务委派 implementation sub-agent
