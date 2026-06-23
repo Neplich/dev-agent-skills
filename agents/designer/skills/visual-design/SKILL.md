@@ -13,7 +13,7 @@ Allowed actions:
 - Run the local `references/design-system-data/scripts/search.py` helper for design-system lookup and reference search
 - Choose a product-appropriate aesthetic direction and justify it
 - Define color, typography, spacing, component, and copy guidelines
-- Write or update `docs/design/{feature-name}/visual-system.md`
+- Write or update `docs/design/{feature_path}/visual-system.md`
 
 Forbidden actions:
 - Writing or modifying source code, tests, design tokens in code, configs, or deployment files
@@ -23,11 +23,22 @@ Forbidden actions:
 
 If the input includes a completed PM or UX spec, use it to shape the visual system and stop at design handoff.
 
+## Feature Path Gate
+
+Before writing a feature-scoped visual system, consume a confirmed
+`feature_path` from the PM/design handoff or `docs/pm/{feature_path}/PRD.md`.
+Read PM context from `docs/pm/{feature_path}/`, read
+`docs/design/{feature_path}/ui-ux-spec.md` when it exists, and read
+`docs/engineer/{feature_path}/TRD.md` only for platform constraints that affect
+presentation. Write only to `docs/design/{feature_path}/visual-system.md`. If
+the feature path or parent feature is unclear, stop and return to
+`pm-agent:idea-to-spec`; do not create a synonym top-level design directory.
+
 ## Execution Steps
 
 ### Step 1: Gather Context
 
-1. **Read PM documents**:
+1. **Read PM documents** from `docs/pm/{feature_path}/`:
    - BRD: brand tone, target audience, business goals
    - PRD: product type and features
    - DECISIONS: confirmed design constraints and trade-offs
@@ -290,7 +301,7 @@ Based on product type:
 
 ### Step 13: Generate Output Document
 
-Create `docs/design/{feature-name}/visual-system.md` with this structure:
+Create `docs/design/{feature_path}/visual-system.md` with this structure:
 
 ```markdown
 # Visual Design System
@@ -339,7 +350,7 @@ Designer stops here. Next role: `engineer-agent`.
 ## Completion Criteria
 
 This skill is complete only when:
-- `docs/design/{feature-name}/visual-system.md` has been written or updated
+- `docs/design/{feature_path}/visual-system.md` has been written or updated
 - The final response summarizes the visual system deliverable and its file location
 - The workflow stops at design handoff
 
@@ -350,4 +361,4 @@ After completion:
 
 ## Output Location
 
-Write to: `docs/design/{feature-name}/visual-system.md`
+Write to: `docs/design/{feature_path}/visual-system.md`

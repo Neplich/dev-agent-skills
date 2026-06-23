@@ -7,7 +7,7 @@
 - Eval: `eval-001-fix-failing-test`
 - Test case: fix-failing-test
 - Workspace: `workspace/eval-001-fix-failing-test`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `debugger` skill
+- Latest result: PASS - fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
 
@@ -21,12 +21,12 @@
 
 Current `SKILL.md` satisfies all assertions:
 
-- PASS - fresh Codex subagent validation on 2026-06-04 confirmed current
+- Fresh Codex subagent validation on 2026-06-23 read the current skill docs, Engineer README, eval definition, fixture metadata/context, and this comparison; all listed assertions are satisfied.
   `debugger` aligns PRD/TRD expected behavior first, classifies requirement
   alignment, reproduces and analyzes before planning, blocks E2E updates before
   confirmed repair planning, and does not fix directly.
 - `aligns_expected_behavior`: Step 0 requires reading
-  `docs/pm/{feature}/PRD.md` and `docs/engineer/{feature}/TRD.md` before
+  `docs/pm/{feature_path}/PRD.md` and `docs/engineer/{feature_path}/TRD.md` before
   deciding code should change. The fixture PRD/TRD define active notifications
   as `unread` and `read` only, excluding `archived`.
 - `classifies_requirement_alignment`: Step 0 requires recording the alignment
@@ -43,7 +43,7 @@ Current `SKILL.md` satisfies all assertions:
 - `blocks_e2e_before_repair_plan`: The Core Principle and Repair Plan Gate block
   E2E TC updates before the repair plan is confirmed. Step 0 also requires any
   post-fix QA E2E handoff to cite the confirmed
-  `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`.
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`.
 - `does_not_fix_directly`: The Core Principle and Repair Plan Gate prohibit
   jumping directly to fixing, modifying code, updating tests, updating E2E
   assets, or claiming verification before the exact repair plan is confirmed.

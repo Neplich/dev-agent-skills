@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-003-nested-feature-alignment-routing",
+  "eval_name": "nested-feature-alignment-routing",
+  "workspace_root": "agents/engineer/test/engineer-agent/evals/workspace/eval-003-nested-feature-alignment-routing",
+  "skill_availability_goal": "Verify that engineer-agent resolves a nested feature_path before routing an existing feature change.",
+  "prompt": "用户说：Chat Interface 已经有 History Search 子功能 PRD/TRD，现在想调整搜索结果排序，这是个很小的现有功能改动。请先做工程路由，不要改代码。相关文档在 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/history-search/TRD.md。",
+  "fixture_context": [
+    "README.md",
+    "docs/pm/chat-interface/history-search/PRD.md",
+    "docs/engineer/chat-interface/history-search/TRD.md"
+  ]
+}

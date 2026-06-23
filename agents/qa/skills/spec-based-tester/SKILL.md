@@ -33,6 +33,22 @@ If a PM PRD / TRD / Test Spec is absent or does not include concrete E2E cases,
 do not rediscover the whole project by default. First use the function-tree QA
 directory as persistent memory.
 
+## Feature Path Gate
+
+For existing-feature changes, bug fixes, or code-complete E2E documentation
+updates, QA consumes a confirmed `feature_path`; it does not infer a new one
+from the leaf feature name. Before creating, updating, or executing acceptance
+TC, read:
+
+- `docs/pm/{feature_path}/PRD.md`
+- `docs/engineer/{feature_path}/TRD.md`
+- `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
+
+All three documents must refer to the same feature path. If PRD is missing or
+the parent feature is unclear, return to PM. If TRD or the confirmed
+implementation plan is missing, stale, or on a different path, return to
+Engineer/TRD alignment and mark the E2E acceptance work `blocked`.
+
 ## Top-Level Contract
 
 Before running anything, gather repository evidence and confirm what is in scope.
@@ -46,8 +62,8 @@ Before running anything, gather repository evidence and confirm what is in scope
 - Read existing repository instructions for how tests are normally run in this project.
 - If this is an existing-feature change, bug fix, or code-complete E2E
   documentation update, confirm PRD/TRD expectation alignment and a confirmed
-  `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` before creating, updating,
-  or executing E2E acceptance TC.
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before creating,
+  updating, or executing E2E acceptance TC.
 - Confirm the E2E scenario: `feature-update` validates changed functionality
   and direct impact paths; `release` validates all active E2E TC.
 - Confirm the platform version before execution. If missing, mark the run
@@ -77,19 +93,22 @@ test cases:
 1. Identify the function-tree scope from the user request, PRD/TRD, branch,
    changed files, or nearby QA docs. If it cannot be inferred, ask one concise
    question for the `{一级功能}/{二级功能}/{三级功能}` target.
-2. Confirm or infer the scenario: `feature-update` or `release`.
-3. Confirm the platform version before execution; if absent, stop as
+2. For existing-feature changes, bug fixes, or code-complete E2E documentation
+   updates, identify the confirmed `feature_path` and check the same-path PRD,
+   TRD, and implementation plan before writing or executing acceptance TC.
+3. Confirm or infer the scenario: `feature-update` or `release`.
+4. Confirm the platform version before execution; if absent, stop as
    `blocked` and ask for the version.
-4. Read the agreed QA directory:
+5. Read the agreed QA directory:
    - `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md`
    - `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/FLOW_INDEX.md`
    - `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/*.md`
    - `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/scripts/*.spec.md`
    - prior `results/` and `_reports/`, if relevant
-5. If reusable TC exist, treat them as the primary execution scope.
-6. For `feature-update`, execute only the changed feature, direct impact paths,
+6. If reusable TC exist, treat them as the primary execution scope.
+7. For `feature-update`, execute only the changed feature, direct impact paths,
    and related regression TC. For `release`, execute all active E2E TC.
-7. If coverage is missing and the user authorizes expansion, perform targeted
+8. If coverage is missing and the user authorizes expansion, perform targeted
    exploration or PRD/TRD case generation, then write or update `cases/`,
    `scripts/`, and `FLOW_INDEX.md` before execution.
 

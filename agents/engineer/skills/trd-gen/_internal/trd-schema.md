@@ -11,18 +11,43 @@ title: <feature name> — Technical Requirements Document
 type: TRD
 version: <SemVer>
 status: Draft | In Review | Approved | Superseded
-feature: <feature-name>
+feature: <last feature slug>
+feature_path: <feature-path>
+parent_feature: <parent feature path or N/A>
+feature_level: <1 | 2 | 3>
 author: <generation requester display name + agent platform name>
 date: <YYYY-MM-DD>
 last_updated: <YYYY-MM-DD>
-related_prd: docs/pm/<feature-name>/PRD.md
-related_decisions: docs/pm/<feature-name>/DECISIONS.md
+related_prd: docs/pm/<feature-path>/PRD.md
+related_decisions: docs/pm/<feature-path>/DECISIONS.md
 ```
 
 The `author` value must identify both the generation requester and Agent
 platform, for example `Neplich Codex`. The platform name may be custom; ask the
 user when either part is unknown, and do not use empty values or placeholders
 such as `AI Assistant`.
+
+`feature_path` is the canonical cross-role key and supports one to three
+directory segments separated by `/`, for example `chat-interface`,
+`chat-interface/history-search`, or
+`chat-interface/history-search/export`. `feature` remains a compatibility
+field; for new nested documents it should use the final slug while
+`feature_path` stores the full path. `parent_feature` must be `N/A` for a
+level-1 feature and the parent path for level 2 or 3. `feature_level` must
+match the number of path segments.
+
+For legacy single-level TRDs or PRDs without these fields, read them as:
+
+```yaml
+feature_path: <directory-name>
+parent_feature: N/A
+feature_level: 1
+```
+
+New TRDs and substantive TRD updates must write the explicit fields above.
+`related_prd` must point to `docs/pm/<feature-path>/PRD.md`; if the PRD is
+missing or its path/frontmatter does not match, stop and return to PM alignment
+or a TRD gap handoff instead of writing a mismatched TRD.
 
 ### 2. Source Context
 
@@ -75,5 +100,5 @@ such as `AI Assistant`.
 
 - Confirmed TRD path.
 - Implementation plan document path:
-  `docs/engineer/<feature-name>/IMPLEMENTATION_PLAN.md`.
+  `docs/engineer/<feature-path>/IMPLEMENTATION_PLAN.md`.
 - Handoff conditions and blockers.

@@ -13,9 +13,21 @@ version: <SemVer>
 status: Draft | In Review | Approved | Superseded
 author: <generation requester display name + agent platform name>
 date: <YYYY-MM-DD>
+feature: <leaf feature slug>
+feature_path: <1-3 level feature path>
+parent_feature: <parent feature path or "N/A">
+feature_level: <1 | 2 | 3>
 reviewers: []
 related_brd: <filename or "N/A">
 ```
+
+Feature-scoped PRDs must be written to `docs/pm/{feature_path}/PRD.md`.
+`feature_path` is the canonical cross-role key and supports one to three
+slash-separated lower kebab-case segments. `feature` is the leaf slug for
+compatibility; `parent_feature` is `N/A` for level 1 and the parent path for
+levels 2-3; `feature_level` must equal the number of path segments. Legacy
+single-level PRDs without these fields may be read as level-1 features, but new
+or updated PRDs must include them.
 
 ### 2. Background & Motivation
 

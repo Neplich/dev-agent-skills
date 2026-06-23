@@ -53,6 +53,15 @@ directory as the durable source of truth:
 
 For E2E routing, carry these fields into the downstream skill:
 
+- Feature path: consume a confirmed `feature_path` from PM/Engineer handoff or
+  from `docs/pm/{feature_path}/PRD.md`. Existing-feature changes, bug fixes,
+  and code-complete E2E documentation updates must read
+  `docs/pm/{feature_path}/PRD.md`,
+  `docs/engineer/{feature_path}/TRD.md`, and
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before any acceptance
+  TC is created, updated, or executed. If the feature path is ambiguous, hand
+  back to `pm-agent:idea-to-spec`; if TRD or plan is missing or mismatched,
+  hand back to `engineer-agent:trd-gen`.
 - Scenario: `feature-update` validates the changed feature and direct impact
   paths in the local development test environment; `release` validates all
   active E2E TC in the release-version test environment. If the scenario cannot
@@ -78,8 +87,9 @@ route the downstream skill with this required sequence:
    `cases/*.md`, `scripts/*.spec.md`, prior `results/`, and `_reports/`.
 2. If the request comes from an existing-feature change, bug fix, or
    code-complete E2E documentation update, require PRD/TRD expectation
-   alignment and a confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
-   before creating, updating, or executing acceptance TC.
+   alignment on the same `feature_path` and a confirmed
+   `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before creating,
+   updating, or executing acceptance TC.
 3. For `feature-update`, select the changed feature, direct impact paths, and
    related regression TC. For `release`, select all active E2E TC.
 4. If reusable TC already cover the target, execute from those TC instead of
@@ -146,5 +156,6 @@ When routing is complete:
   subagent execution plan, selected execution entry, and why the selected entry
   follows repo harness > Chrome plugin / browser connector > Playwright fallback
 - if E2E is blocked by missing platform version, credentials, environment,
-  PRD/TRD alignment, or confirmed `IMPLEMENTATION_PLAN.md`, report the blocker
-  and next owner instead of creating or executing TC
+  unclear `feature_path`, PRD/TRD alignment, or confirmed
+  `IMPLEMENTATION_PLAN.md`, report the blocker and next owner instead of
+  creating or executing TC

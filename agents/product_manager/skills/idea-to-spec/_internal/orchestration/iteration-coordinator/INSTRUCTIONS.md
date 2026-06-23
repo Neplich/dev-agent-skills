@@ -52,7 +52,9 @@ Use it to:
 
 1. **Assess impact**: If no `impact_report` is provided, run
    `change-impactor` to identify affected documents and the recommended update
-   order.
+   order. Group affected feature-scoped documents by `feature_path`; if
+   multiple candidate paths exist for the same requested change, stop for path
+   clarification before running iterations.
 2. **Plan iteration sequence**: Order documents by dependency using the shared
    lifecycle map:
    - BRD -> PRD -> TRD -> API -> TEST_SPEC
@@ -96,6 +98,11 @@ Use it to:
 ## Failure Handling
 
 - Iteration skill fails on a document -> report the error, ask to skip or retry
+- Handoff packet lacks `feature_path` for feature-scoped docs -> return to
+  `idea-to-spec` path resolution before coordinating document changes
+- Affected documents disagree on `feature_path`, `parent_feature`, or
+  `feature_level` -> present the conflict and do not cascade edits until the
+  owner confirms the correct path
 - Validator FAIL after iteration -> offer to re-iterate or accept as-is
 - Document type outside the shared lifecycle matrix -> use focused regeneration
   + validator + `version-differ`, and flag that the lifecycle is only partially

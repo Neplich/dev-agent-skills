@@ -2,23 +2,28 @@
 title: "feature-implementor — Product Requirements Document"
 type: PRD
 feature: "skill-feature-implementor"
-version: "1.1.0"
+version: "1.2.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-15"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
   - "agents/engineer/README_zh.md"
   - "agents/engineer/skills/engineer-agent/SKILL.md"
   - "agents/engineer/skills/feature-implementor/SKILL.md"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
   - ".claude-plugin/marketplace.json"
   - "agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md"
   - "agents/engineer/skills/feature-implementor/_internal/implementor/INSTRUCTIONS.md"
   - "agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md"
   - "agents/engineer/test/feature-implementor/evals/evals.json"
 changelog:
+  - version: "1.2.0"
+    date: "2026-06-23"
+    changes: "Add feature_path implementation plan gate requirements"
   - version: "1.1.0"
     date: "2026-06-12"
     changes: "补充 IMPLEMENTATION_PLAN author 元数据可追踪命名规则"
@@ -69,11 +74,12 @@ changelog:
 | FR-S01 | Trigger Matching | `feature-implementor` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `feature-implementor` SKILL.md 一致。 |
 | FR-S02 | Context Intake | 确认 TRD、DECISIONS/产品决策、Project Profile/codebase scan、API Spec、ADR、设计输入、PRD/TRD alignment result。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
-| FR-S04 | Artifact Output | 先产出 docs/engineer/{feature}/IMPLEMENTATION_PLAN.md，且计划包含 PRD alignment result 和 implementation/validation sub-agent split decision；用户确认后才产出代码变更、自检和必要工程文档。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
+| FR-S04 | Artifact Output | 先产出 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`，且计划包含 PRD alignment result、feature path gate result 和 implementation/validation sub-agent split decision；用户确认后才产出代码变更、自检和必要工程文档。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 无 spec bug 走 debugger；纯测试走 test-writer；Git/PR 走 delivery；TRD 编写/修订走 trd-gen。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 需求变化到 pm-agent:idea-to-spec；TRD gap 到 trd-gen；完成后到 test-writer、qa-agent、delivery。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
-| FR-S08 | Author Metadata | `feature-implementor` 创建或更新 `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` 时必须使用“生成触发者展示名 + Agent 平台名”的 `author`；平台名可以是用户自定义值。 | P0 | IMPLEMENTATION_PLAN frontmatter 使用已填写的可追踪 author，例如 `Neplich Codex`，不使用空值或 `AI Assistant` 这类占位泛称。 |
+| FR-S08 | Author Metadata | `feature-implementor` 创建或更新 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 时必须使用“生成触发者展示名 + Agent 平台名”的 `author`；平台名可以是用户自定义值。 | P0 | IMPLEMENTATION_PLAN frontmatter 使用已填写的可追踪 author，例如 `Neplich Codex`，不使用空值或 `AI Assistant` 这类占位泛称。 |
+| FR-S09 | Feature Path Plan Gate | 写实施计划前必须校验 PRD/TRD 的 `feature_path`、`parent_feature`、`feature_level` 和 TRD `related_prd` 一致。 | P0 | 缺 PRD 回 PM；缺 TRD、TRD stale 或路径/字段不一致回 `trd-gen`；只有 PRD/TRD 已确认且路径一致时才允许创建 Engineer 目标目录并写计划。 |
 
 ## 当前实现对齐
 

@@ -24,7 +24,7 @@
         {
           "id": "uses_real_output_filenames",
           "description": "真实输出文件名",
-          "text": "必须使用 `docs/design/{feature}/ui-ux-spec.md` 和 `docs/design/{feature}/visual-system.md` 作为设计交付文件名。"
+          "text": "必须使用 `docs/design/{feature_path}/ui-ux-spec.md` 和 `docs/design/{feature_path}/visual-system.md` 作为设计交付文件名。"
         },
         {
           "id": "stops_before_code",
@@ -35,6 +35,36 @@
           "id": "hands_off_to_engineer",
           "description": "工程 handoff",
           "text": "必须说明实现应在设计完成后交给 `engineer-agent`。"
+        }
+      ]
+    },
+    {
+      "id": "eval-002-feature-path-design-handoff",
+      "name": "feature-path-design-handoff",
+      "description": "Verifies that designer-agent mirrors a confirmed nested feature_path into design outputs and does not create a synonym top-level directory.",
+      "prompt": "用户说：PM 已确认 feature_path 是 chat-interface/history-search，PRD 在 docs/pm/chat-interface/history-search/PRD.md，TRD 在 docs/engineer/chat-interface/history-search/TRD.md。请做设计路由并说明 UI/UX 和视觉产物位置，不要把 history-search 写成新的顶层 design 目录，也不要进入实现。",
+      "workspace": "workspace/eval-2-feature-path-design-handoff",
+      "expected_output": "设计路由决策，读取同一 feature_path 的 PM/Engineer 文档，输出 docs/design/chat-interface/history-search 下的设计产物路径，并在 design handoff 停止",
+      "assertions": [
+        {
+          "id": "uses_confirmed_feature_path",
+          "description": "消费已确认 feature_path",
+          "text": "必须把 `chat-interface/history-search` 作为唯一 feature_path，并引用同一路径的 PRD/TRD 作为设计输入。"
+        },
+        {
+          "id": "mirrors_design_outputs",
+          "description": "镜像设计输出路径",
+          "text": "必须把 UI/UX 和 visual-system 产物定位到 `docs/design/chat-interface/history-search/ui-ux-spec.md` 和 `docs/design/chat-interface/history-search/visual-system.md`。"
+        },
+        {
+          "id": "no_synonym_top_level",
+          "description": "不创建同义顶层目录",
+          "text": "不得建议或创建 `docs/design/history-search/`、`docs/design/chat-history-search/` 或其他同义顶层目录。"
+        },
+        {
+          "id": "stops_before_code",
+          "description": "设计边界",
+          "text": "必须停在 design handoff，不输出代码、工程实现步骤、测试命令或补丁。"
         }
       ]
     }

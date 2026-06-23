@@ -117,6 +117,41 @@
           "text": "输出必须说明用户要求跳过 PRD 对齐也不能直接按 bug 修复路径执行；只能记录为 blocker 或风险，等待 PRD/TRD 对齐完成。"
         }
       ]
+    },
+    {
+      "id": "eval-004-nested-feature-path-bug-alignment",
+      "name": "nested-feature-path-bug-alignment",
+      "description": "Verifies that debugger aligns expected behavior against nested PRD/TRD feature_path documents before repair planning.",
+      "prompt": "用户说：Chat History Search 的搜索结果排序不对，这是 bug，请修一下。相关预期文档在 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/history-search/TRD.md。请先按 debugger 流程处理，不要直接修复。",
+      "workspace": "workspace/eval-004-nested-feature-path-bug-alignment",
+      "expected_output": "先读取 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/history-search/TRD.md，对齐 feature_path、parent_feature、feature_level 和 related_prd，再分类为 implementation_deviation / requirement_change / missing_docs / trd_gap；不直接修复。",
+      "assertions": [
+        {
+          "id": "reads_nested_expected_behavior_docs",
+          "description": "读取嵌套预期文档",
+          "text": "输出必须引用 `docs/pm/chat-interface/history-search/PRD.md` 和 `docs/engineer/chat-interface/history-search/TRD.md`，并说明它们对应 `feature_path: chat-interface/history-search`。"
+        },
+        {
+          "id": "validates_trd_related_prd",
+          "description": "校验 TRD related_prd",
+          "text": "输出必须检查 TRD `related_prd` 是否指向同一路径 PRD，并在不匹配时分类为 `trd_gap`。"
+        },
+        {
+          "id": "classifies_before_repair_plan",
+          "description": "修复计划前分类",
+          "text": "输出必须在 repair plan 或修复前先分类为 `implementation_deviation`、`requirement_change`、`missing_docs` 或 `trd_gap`。"
+        },
+        {
+          "id": "blocks_wrong_path_or_requirement_change",
+          "description": "路径或需求变化时阻断",
+          "text": "如果 feature_path 不清、PRD 缺失、需求变化或 TRD 路径不一致，输出必须回 PM 或 `trd-gen`，不得进入修复计划、代码修改或 E2E 更新。"
+        },
+        {
+          "id": "does_not_fix_directly",
+          "description": "不得直接修复",
+          "text": "输出不得声称已经修改代码、更新测试、应用修复或验证修复通过。"
+        }
+      ]
     }
   ]
 }

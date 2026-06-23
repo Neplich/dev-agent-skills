@@ -73,14 +73,22 @@ implementation until the user confirms the exact repair plan.
 
 ## Step 0 — Align expected behavior with PRD / TRD
 
-For user-reported bugs in an existing feature, identify the likely feature and
-read the durable expected-behavior documents before deciding that code should be
-changed:
+For user-reported bugs in an existing feature, identify the likely
+`feature_path` and read the durable expected-behavior documents before deciding
+that code should be changed:
 
-- `docs/pm/{feature}/PRD.md`
-- `docs/engineer/{feature}/TRD.md`
-- `docs/pm/{feature}/DECISIONS.md` or other product decision records, when
+- `docs/pm/{feature_path}/PRD.md`
+- `docs/engineer/{feature_path}/TRD.md`
+- `docs/pm/{feature_path}/DECISIONS.md` or other product decision records, when
   present
+
+Resolve `feature_path` by scanning `docs/pm/**/PRD.md` and reading
+`feature_path`, `parent_feature`, and `feature_level` frontmatter where
+present. Old single-level docs without those fields are compatible and count as
+level-1 features. If the likely feature is ambiguous, the PRD is missing, the
+path is deeper than three levels, or the report appears to target a child
+feature that was generated as a wrong top-level directory, classify the report
+as `missing_docs` and request PM alignment instead of guessing.
 
 Use those docs to classify the report:
 
@@ -90,11 +98,13 @@ Use those docs to classify the report:
 - If the user's requested behavior conflicts with the approved PRD, TRD, or an
   existing decision record, stop before repair planning and hand off to
   `pm-agent:idea-to-spec` using the `existing-project-update` lane.
-- If PRD is stable but the Engineer TRD is missing, incomplete, stale, or
-  conflicts with the codebase or bug context, stop before repair planning and
-  hand off to `engineer-agent:trd-gen` with a TRD gap packet. The debugger owns
-  naming the missing or conflicting technical decisions; `trd-gen` owns
-  completing the TRD.
+- If PRD is stable but the Engineer TRD is missing, incomplete, stale, conflicts
+  with the codebase or bug context, uses a different `feature_path`, has
+  mismatched `parent_feature` or `feature_level`, or has a `related_prd` that
+  does not point to `docs/pm/{feature_path}/PRD.md`, stop before repair
+  planning and hand off to `engineer-agent:trd-gen` with a TRD gap packet. The
+  debugger owns naming the missing or conflicting technical decisions;
+  `trd-gen` owns completing the TRD.
 - If PRD is missing or ambiguous, or an existing decision record conflicts with
   the report, stop before fixing and request PM alignment. A user request to
   skip PRD alignment is a blocker or risk note, not permission to continue into
@@ -120,12 +130,14 @@ Do not update E2E TC, scripts, assertions, or QA result files while the
 classification is `requirement_change`, `missing_docs`, or `trd_gap`.
 For `requirement_change`, do not write the new expectation into
 `docs/qa/e2e/**` until PM updates the PRD or product decision record, TRD is
-synchronized, and a confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
-exists. If a confirmed repair later affects E2E coverage, pass a QA E2E handoff
-package after the fix and verification rather than editing TC during diagnosis
-or repair planning. That handoff must cite the confirmed
-`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`, PRD/TRD alignment conclusion,
-changed files, verification commands, and suggested QA E2E function directory.
+synchronized, and a confirmed
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` exists. If a confirmed
+repair later affects E2E coverage, pass a QA E2E handoff package after the fix
+and verification rather than editing TC during diagnosis or repair planning.
+That handoff must cite the confirmed
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`, PRD/TRD alignment
+conclusion, changed files, verification commands, and suggested QA E2E function
+directory.
 
 ## Step 1 — Gather error context
 

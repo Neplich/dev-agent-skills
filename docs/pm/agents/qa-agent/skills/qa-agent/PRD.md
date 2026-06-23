@@ -6,7 +6,7 @@ version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/qa/README.md"
@@ -16,6 +16,9 @@ related_docs:
   - "agents/qa/skills/qa-agent/references/e2e-credential-store.md"
   - "agents/qa/skills/qa-agent/references/e2e-test-report.md"
   - "agents/qa/test/qa-agent/evals/evals.json"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.0.0"
     date: "2026-06-12"
@@ -62,7 +65,7 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-S01 | Trigger Matching | `qa-agent` 必须作为 `qa-agent` 的入口 dispatcher，选择一个最窄下游 specialist。 | P0 | 匹配场景与 parent dispatcher 和 `qa-agent` SKILL.md 一致。 |
-| FR-S02 | Context Intake | 路由级 QA evidence outcome；E2E 硬门禁包括平台版本、凭据/环境、PRD/TRD alignment、确认的 IMPLEMENTATION_PLAN。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
+| FR-S02 | Context Intake | 路由级 QA evidence outcome；E2E 硬门禁包括平台版本、凭据/环境、同一 `feature_path` 的 PRD/TRD alignment、确认的 IMPLEMENTATION_PLAN。 | P0 | 路径不清、缺 plan 或文档不一致时 blocked 并说明 next owner；可推导上下文不应被写成硬门槛。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
 | FR-S04 | Artifact Output | route decision、选择理由、expected evidence artifact、上下文清单、E2E 执行协议、风险/阻塞/交接说明。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `qa-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |

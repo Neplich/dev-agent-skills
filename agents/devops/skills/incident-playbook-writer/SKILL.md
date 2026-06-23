@@ -25,6 +25,13 @@ Before generating playbooks, inspect:
 - current CI/CD and operational entrypoints if they affect rollback or incident response
 - whether this is a repo-wide runbook or tied to a specific feature/release
 - existing runbooks so you can extend rather than overwrite by habit
+- for feature-scoped runbooks, the confirmed `feature_path`,
+  `docs/engineer/{feature_path}/TRD.md`, and
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
+
+If feature scope is requested but `feature_path` is unclear, do not invent a
+new top-level `docs/devops/{name}/` directory. Return to PM for PRD/path
+clarification or Engineer for missing or stale TRD/implementation plan.
 
 ## Step 1 — Identify Deployment Method
 
@@ -106,5 +113,7 @@ Output:
 ## Output Rules
 
 - Primary outputs belong in durable operational paths under `deploy/`
+- Feature-scoped rollback, release, or incident supplements belong under
+  `docs/devops/{feature_path}/...`
 - Tie instructions to the repository's actual deployment methods and commands
 - Do not generate generic on-call prose detached from the configured runtime

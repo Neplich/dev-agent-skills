@@ -31,7 +31,10 @@ Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-convent
 
 - **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/brd-schema.md`
 - **Metadata**: `type: BRD`, version `1.0.0`, status `Draft`
-- **Naming**: `docs/pm/<feature-name>/BRD.md`
+- **Naming**: `docs/pm/<feature_path>/BRD.md`
+- **Feature path gate**: use the same resolved `feature_path` as the related
+  PRD or PM handoff. If no related PRD exists yet, scan `docs/pm/**/PRD.md`
+  before choosing the BRD folder. Parent ambiguity blocks generation.
 
 ## Workflow Details
 
@@ -53,6 +56,8 @@ Generate all required sections per the schema:
 **BRD-specific failure handling**:
 - ROI cannot be estimated → include "ROI: Requires further analysis" with a list of data points needed
 - Stakeholders unknown → use generic roles (Product Owner, Engineering Lead, etc.) and mark `[ASSUMED]`
+- Parent feature ambiguity → ask for confirmation or return blocked; do not
+  create a new parallel top-level PM folder for a likely child feature.
 
 ## Examples
 
@@ -71,6 +76,10 @@ status: Draft
 author: "Neplich Codex"
 date: "2025-01-15"
 generated_by: brd-gen
+feature_path: checkout-flow
+feature: checkout-flow
+parent_feature: N/A
+feature_level: 1
 changelog:
   - version: "1.0.0"
     date: "2025-01-15"

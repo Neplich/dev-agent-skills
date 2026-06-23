@@ -7,7 +7,7 @@
 - Eval: `eval-006-small-bug-fix-plan-gate`
 - Test case: small-bug-fix-plan-gate
 - Workspace: `workspace/eval-006-small-bug-fix-plan-gate`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-12 against the current uncommitted planner author metadata rule; all assertions remain satisfied
+- Latest result: PASS - fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
 
@@ -28,7 +28,7 @@
 
 Observed behavior:
 
-- PASS - fresh Codex subagent validation completed on 2026-06-12 against the current uncommitted planner author metadata rule; all assertions remain satisfied.
+- Fresh Codex subagent validation on 2026-06-23 read the current skill docs, Engineer README, eval definition, fixture metadata/context, and this comparison; all listed assertions are satisfied.
 - Current `SKILL.md` says bug fixes with no spec use `debugger`, but spec-backed bug fixes may enter `feature-implementor` after debugger or Engineer routing confirms the fix is implementation work against approved PRD/TRD behavior.
 - The same section says spec-backed bug fixes still require `IMPLEMENTATION_PLAN.md` and explicit user confirmation before code changes.
 - The planner phase applies to every implementation task, including spec-backed bug-fix changes, and must include file scope, verification commands, PRD alignment result, and implementation/validation split decision.

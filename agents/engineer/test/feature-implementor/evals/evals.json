@@ -222,6 +222,66 @@
           "text": "输出必须说明修复完成后需要把 PRD/TRD 对齐结论、已确认 IMPLEMENTATION_PLAN、变更文件、验证命令和建议功能树目录交给 QA E2E 文档补充流程；未完成修复计划确认前不得更新 E2E TC。"
         }
       ]
+    },
+    {
+      "id": "eval-007-missing-nested-trd-handoff",
+      "name": "missing-nested-trd-handoff",
+      "description": "Verifies that feature-implementor blocks implementation planning for a nested PRD when the mirrored Engineer TRD is missing.",
+      "prompt": "请根据 docs/pm/chat-interface/history-search/PRD.md 实现 Chat History Search。该 PRD 的 feature_path 是 chat-interface/history-search，但 workspace 没有 docs/engineer/chat-interface/history-search/TRD.md。请判断下一步，不要写 IMPLEMENTATION_PLAN 或代码。",
+      "workspace": "workspace/eval-007-missing-nested-trd-handoff",
+      "expected_output": "识别缺少 docs/engineer/chat-interface/history-search/TRD.md，停止 IMPLEMENTATION_PLAN 和代码实现，回 engineer-agent:trd-gen，并携带 feature_path、parent_feature、feature_level、PRD 路径和预期 TRD 路径。",
+      "assertions": [
+        {
+          "id": "detects_missing_mirrored_trd",
+          "description": "识别缺少镜像 TRD",
+          "text": "输出必须明确缺少 `docs/engineer/chat-interface/history-search/TRD.md`，而不是只检查 `docs/engineer/history-search/TRD.md` 或 `docs/engineer/chat-interface/TRD.md`。"
+        },
+        {
+          "id": "hands_off_to_trd_gen_with_feature_path",
+          "description": "携带 feature path 交回 trd-gen",
+          "text": "输出必须把下一步交给 `engineer-agent:trd-gen`，并在 TRD gap packet 中包含 `feature_path: chat-interface/history-search`、`parent_feature: chat-interface`、`feature_level: 2`、PRD 路径和预期 TRD 路径。"
+        },
+        {
+          "id": "does_not_write_plan_or_code",
+          "description": "不写实施计划或代码",
+          "text": "输出不得开始编写 `docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md`、代码、测试或文件变更计划。"
+        },
+        {
+          "id": "keeps_pm_trd_boundary",
+          "description": "保持 PM/TRD 边界",
+          "text": "输出必须说明缺 PRD 回 PM，当前是缺 TRD 因此回 `trd-gen`；feature-implementor 不自行补写 TRD 决策。"
+        }
+      ]
+    },
+    {
+      "id": "eval-008-feature-path-mismatch-blocked",
+      "name": "feature-path-mismatch-blocked",
+      "description": "Verifies that feature-implementor blocks implementation planning when PRD and TRD feature paths do not match.",
+      "prompt": "请根据 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/TRD.md 实现 Chat History Search。PRD feature_path 是 chat-interface/history-search，但 TRD feature_path 是 chat-interface。请判断下一步，不要写 IMPLEMENTATION_PLAN 或代码。",
+      "workspace": "workspace/eval-008-feature-path-mismatch-blocked",
+      "expected_output": "识别 PRD/TRD feature_path、parent_feature、feature_level 或 related_prd 不一致，停止写 IMPLEMENTATION_PLAN，blocked 或交回 engineer-agent:trd-gen 修正 TRD。",
+      "assertions": [
+        {
+          "id": "detects_prd_trd_path_mismatch",
+          "description": "识别 PRD/TRD 路径不一致",
+          "text": "输出必须明确 PRD `feature_path` 是 `chat-interface/history-search`，TRD `feature_path` 是 `chat-interface`，二者不一致。"
+        },
+        {
+          "id": "checks_related_prd",
+          "description": "校验 related_prd",
+          "text": "输出必须检查 TRD `related_prd` 是否指向 `docs/pm/chat-interface/history-search/PRD.md`，不匹配时不得继续规划。"
+        },
+        {
+          "id": "blocks_implementation_plan",
+          "description": "阻断实施计划",
+          "text": "输出不得创建或更新 `docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md`，不得开始代码或测试修改。"
+        },
+        {
+          "id": "hands_off_to_trd_gen",
+          "description": "交回 trd-gen 修正",
+          "text": "输出必须把下一步交给 `engineer-agent:trd-gen` 修正或重写镜像 `docs/engineer/chat-interface/history-search/TRD.md`。"
+        }
+      ]
     }
   ]
 }

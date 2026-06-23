@@ -6,7 +6,7 @@ version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/security/README.md"
@@ -61,9 +61,9 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-S01 | Trigger Matching | `appsec-checklist` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `appsec-checklist` SKILL.md 一致。 |
-| FR-S02 | Context Intake | 代码库、依赖清单、PM docs、工程 docs/TRD、QA 反馈、关键接口和发布范围。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
+| FR-S02 | Context Intake | 代码库、依赖清单、`docs/pm/{feature_path}/PRD.md`、`docs/engineer/{feature_path}/TRD.md`、必要实施计划、QA 反馈、关键接口和发布范围。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；`feature_path` 或 PM/Engineer 文档不清时回 PM/Engineer，不自建同义顶层目录。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
-| FR-S04 | Artifact Output | 创建/更新 docs/security/{feature-name}/appsec-checklist.md，包含风险、证据、影响和修复建议。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
+| FR-S04 | Artifact Output | 创建/更新 `docs/security/{feature_path}/appsec-checklist.md`，包含 feature path frontmatter、风险、证据、影响和修复建议。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `security-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 修复到 engineer-agent/devops-agent；需求约束风险到 pm-agent；如发现 auth、dependency 或 privacy 专项风险，在报告中标注建议由 security-agent 重新路由，不在本 specialist 内串联执行。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
@@ -74,7 +74,7 @@ changelog:
 
 - 执行应用安全检查和发布前 gate
 - 扫描 input handling、secrets、uploads、API review 等风险面
-- 产出 `docs/security/{feature-name}/appsec-checklist.md`
+- 产出 `docs/security/{feature_path}/appsec-checklist.md`
 - 对 auth/deps/privacy 专项风险给出后续路由建议，不在本 specialist 内形成 security chain
 
 ## 验收标准

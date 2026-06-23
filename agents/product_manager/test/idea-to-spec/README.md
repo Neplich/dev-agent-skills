@@ -10,7 +10,7 @@
 - 单决策点推进，而不是并行追问多个未确认问题
 - 在关键设计点上提供 `2-3` 个方案和 trade-off
 - 按 section 逐段推进并等待确认
-- 使用 `docs/pm/{feature-name}/DECISIONS.md` 作为持久记忆源
+- 使用 `docs/pm/{feature_path}/DECISIONS.md` 作为持久记忆源
 - 对已收敛 section 进行增量落档
 - 在阶段结束后执行文档收束
 - 在空工作区的新产品请求里保持 PM-first，而不是直接进入工程脚手架
@@ -29,9 +29,11 @@ agents/product_manager/test/idea-to-spec/
    │  ├─ eval-1-existing-project-feature/
    │  ├─ eval-2-existing-project-update/
    │  └─ eval-3-greenfield-discovery/
-   └─ iteration-2/
-      ├─ eval-4-greenfield-bootstrap-routing/
-      └─ eval-5-pm-agent-direct-delegation/
+   ├─ iteration-2/
+   │  ├─ eval-4-greenfield-bootstrap-routing/
+   │  └─ eval-5-pm-agent-direct-delegation/
+   └─ iteration-3/
+      └─ eval-6-nested-feature-path/
 ```
 
 每个 eval workspace 包含：
@@ -72,7 +74,9 @@ metadata 不要把这些路径显式写入 `with_skill_outputs`、`without_skill
 期望结果：
 
 - 输出遵循设计协议
-- 若进入文档化阶段，产物优先写入 `docs/pm/{feature-name}/...`
+- 若进入文档化阶段，产物优先写入 `docs/pm/{feature_path}/...`
+- 写入前扫描 `docs/pm/**/PRD.md`；已有父 PRD 明确匹配时，子功能落到嵌套
+  `feature_path`，父功能不清楚时 blocked 或澄清
 - 对话或产物能体现 `DECISIONS.md`、section gate、增量落档
 
 ### Without Skill
@@ -150,7 +154,7 @@ metadata 不要把这些路径显式写入 `with_skill_outputs`、`without_skill
 
 ### 产物断言
 
-- 是否创建或更新了 `docs/pm/{feature-name}/DECISIONS.md`
+- 是否创建或更新了 `docs/pm/{feature_path}/DECISIONS.md`
 - 是否把收敛后的 section 写入 PM 文档
 - 是否在文档正文中使用稳定、表述性的语言
 

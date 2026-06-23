@@ -21,9 +21,11 @@
 - 每个回合只推进一个待确认决策点
 - 在关键设计取舍上先给 `2-3` 个备选方案与 trade-off
 - 按固定 section 顺序逐段推进
-- 已确认决策写入 `docs/pm/{feature-name}/DECISIONS.md`
+- 已确认决策写入 `docs/pm/{feature_path}/DECISIONS.md`
 - 已收敛 section 增量写入 PM 文档
 - 每个阶段结束后做一次文档收束，正文只保留当前有效设计
+- 写入 PRD/BRD/DECISIONS/design.md 前扫描 `docs/pm/**/PRD.md`，确认最多三级
+  `feature_path`；父功能不清楚时先澄清或 blocked，不创建新的并列顶层目录
 
 ## 逻辑路线图
 
@@ -87,14 +89,19 @@ idea-to-spec/
 
 feature 文档统一采用短命名体系：
 
-- `docs/pm/{feature-name}/DECISIONS.md`
-- `docs/pm/{feature-name}/PRD.md`
-- `docs/pm/{feature-name}/BRD.md`
-- `docs/design/{feature-name}/...`
-- `docs/engineer/{feature-name}/...`
+- `docs/pm/{feature_path}/DECISIONS.md`
+- `docs/pm/{feature_path}/PRD.md`
+- `docs/pm/{feature_path}/BRD.md`
+- `docs/pm/{feature_path}/design.md`
+- `docs/design/{feature_path}/...`
+- `docs/engineer/{feature_path}/...`
 - `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/...`
-- `docs/devops/{feature-name}/...`
-- `docs/security/{feature-name}/...`
+- `docs/devops/{feature_path}/...`
+- `docs/security/{feature_path}/...`
+
+`feature_path` 最多三级；新正式文档 frontmatter 包含 `feature_path`、
+`feature`、`parent_feature` 和 `feature_level`。旧单层 PM 文档缺少这些字段时，
+读取时兼容为一级功能。
 
 ## 安装
 

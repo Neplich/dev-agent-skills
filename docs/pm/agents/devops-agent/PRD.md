@@ -6,7 +6,7 @@ version: "1.0.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-15"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/devops/README.md"
@@ -36,6 +36,7 @@ changelog:
 2. 保持 route matrix 与 README、dispatcher `SKILL.md`、marketplace 和 skill 目录一致。
 3. 在需要跨角色协作时说明 owning agent、输入包和期望产物。
 4. 支持后续维护者通过 related docs 和 eval fixture 追踪行为漂移。
+5. 对 feature-scoped DevOps 工作消费 PM/Engineer 已确认的 `feature_path`，不自行创建同义顶层目录。
 
 ## 非目标
 
@@ -58,6 +59,7 @@ changelog:
 | US-A01 | 作为用户，我想通过 `devops-agent` 进入部署规划、CI/CD、环境配置审计和故障手册流程，以便获得最小足够的 specialist 处理。 | P0 | 给定匹配请求，输出主 route 或标准 DevOps 准备链路入口、选择理由和下一步产物。 |
 | US-A02 | 作为维护者，我想确认 route matrix 不自路由，同时能表达 README 的典型 DevOps 链路和单点入口，以便和 eval 保持一致。 | P0 | 流程图表达 `deployment-planner` -> `cicd-bootstrap` -> `env-config-auditor` -> `incident-playbook-writer` 的标准部署准备链路，并允许已有部署自动化、配置审计或 runbook 请求直接进入对应节点。 |
 | US-A03 | 作为下游 Agent，我想收到明确 handoff，以便继续工作时不重猜上下文。 | P1 | handoff 包含 target、source docs、blocked reason 或 expected output。 |
+| US-A04 | 作为维护者，我希望 DevOps 下游报告沿用 PRD/TRD 的 `feature_path`，以便不会按末级功能名生成错误并列目录。 | P0 | feature-scoped DevOps 文档写入 `docs/devops/{feature_path}/...`；路径不清时回 PM/Engineer。 |
 
 ## 功能需求
 
@@ -68,6 +70,7 @@ changelog:
 | FR-A02 | Context Boundary | Dispatcher 只收集路由所需上下文；实现/审查/测试细节由被选 specialist 收集。 | P0 | 缺少内容级上下文不会让入口停在元路由。 |
 | FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任。 | P0 | Dispatcher 输出预期产物类型，不伪装成 specialist report。 |
 | FR-A04 | Handoff | 部署准备链路可串联 `deployment-planner`、`cicd-bootstrap`、`env-config-auditor` 和 `incident-playbook-writer`；已有部署自动化、配置审计或 runbook 单点请求可直接进入对应 specialist；业务代码给 engineer-agent，安全复审或敏感配置风险给 security-agent，需求/范围给 pm-agent。 | P0 | Handoff 指向 owning skill/agent，并说明输入包和期望输出。 |
+| FR-A05 | Feature Path Consumption | feature-scoped DevOps work 必须读取已确认 `feature_path`，并消费 `docs/engineer/{feature_path}/TRD.md` 和 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`；repo-wide 工作继续使用 `deploy/` 或仓库级报告路径。 | P0 | 路径不清、PRD 缺失、TRD/实施计划缺失或不一致时，回 PM/Engineer，不创建同义顶层 DevOps 目录。 |
 
 ## 当前实现对齐
 

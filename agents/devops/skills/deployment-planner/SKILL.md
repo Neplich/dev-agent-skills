@@ -24,8 +24,15 @@ Before generating anything, inspect:
 - relevant engineering docs and PM deployment requirements when they exist
 - whether `deploy/` already exists
 - whether the work is repo-wide or feature-scoped
+- for feature-scoped work, the confirmed `feature_path` and the matching
+  `docs/engineer/{feature_path}/TRD.md` and
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
 
 If `deploy/` already exists, prefer extension or targeted iteration over blind regeneration.
+
+If the request appears feature-scoped but the `feature_path` is unclear, do not
+invent a new top-level DevOps directory. Return to PM for PRD/path clarification
+or to Engineer when the TRD or implementation plan is missing or inconsistent.
 
 ## Input Requirements
 
@@ -42,6 +49,11 @@ Read TRD to extract:
 - Runtime requirements (Node.js, Python, Go, etc.)
 - Database needs (PostgreSQL, MySQL, Redis, etc.)
 - External dependencies (S3, email service, etc.)
+
+When a feature scope exists, read the TRD from
+`docs/engineer/{feature_path}/TRD.md` and mirror any deployment constraints into
+feature-scoped notes under `docs/devops/{feature_path}/...`. Repo-wide deploy
+assets still belong under `deploy/`.
 
 If no durable deployment requirements exist, ask the user:
 1. What type of application is this?
@@ -219,6 +231,8 @@ Output:
 ## Output Rules
 
 - Primary outputs belong under `deploy/`
+- Feature-scoped deployment notes, release constraints, or readiness reports
+  belong under `docs/devops/{feature_path}/...`
 - Prefer executable config over prose-only explanation
 - Add `README.md` files only where they help someone use the generated deployment assets
 - Do not automatically create CI/CD config here; hand off to `cicd-bootstrap` when needed

@@ -2,21 +2,26 @@
 title: "trd-gen — Product Requirements Document"
 type: PRD
 feature: "skill-trd-gen"
-version: "1.1.0"
+version: "1.2.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-15"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
   - "agents/engineer/README_zh.md"
   - "agents/engineer/skills/engineer-agent/SKILL.md"
   - "agents/engineer/skills/trd-gen/SKILL.md"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
   - ".claude-plugin/marketplace.json"
   - "agents/engineer/skills/trd-gen/_internal/trd-schema.md"
   - "agents/engineer/test/trd-gen/evals/evals.json"
 changelog:
+  - version: "1.2.0"
+    date: "2026-06-23"
+    changes: "Add feature_path TRD mirror path and frontmatter requirements"
   - version: "1.1.0"
     date: "2026-06-12"
     changes: "补充 TRD author 元数据可追踪命名规则"
@@ -67,11 +72,12 @@ changelog:
 | FR-S01 | Trigger Matching | `trd-gen` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `trd-gen` SKILL.md 一致。 |
 | FR-S02 | Context Intake | confirmed PRD 或等价需求、DECISIONS.md 或等价确认决策、repo path/current context；BRD/design/issue/PR references 可选。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
-| FR-S04 | Artifact Output | 未阻塞时创建/更新 docs/engineer/{feature}/TRD.md，并满足 _internal/trd-schema.md；blocked 时说明原因。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
+| FR-S04 | Artifact Output | 未阻塞时创建/更新 `docs/engineer/{feature_path}/TRD.md`，并满足 `_internal/trd-schema.md`；blocked 时说明原因。 | P0 | TRD 镜像 `docs/pm/{feature_path}/PRD.md`，并写入 `feature_path`、`parent_feature`、`feature_level` 和匹配的 `related_prd`。 |
 | FR-S05 | Boundary Guard | 不接管 `engineer-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 需求/决策不稳回 pm-agent:idea-to-spec；TRD confirmed 后交 feature-implementor；TRD gap 未解决时阻断实现、debugger 和 QA E2E 文档更新。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
-| FR-S08 | Author Metadata | `trd-gen` 创建或更新 `docs/engineer/{feature}/TRD.md` 时必须使用“生成触发者展示名 + Agent 平台名”的 `author`；平台名可以是用户自定义值。 | P0 | TRD frontmatter 使用已填写的可追踪 author，例如 `Neplich Codex`，不使用空值或 `AI Assistant` 这类占位泛称。 |
+| FR-S08 | Author Metadata | `trd-gen` 创建或更新 `docs/engineer/{feature_path}/TRD.md` 时必须使用“生成触发者展示名 + Agent 平台名”的 `author`；平台名可以是用户自定义值。 | P0 | TRD frontmatter 使用已填写的可追踪 author，例如 `Neplich Codex`，不使用空值或 `AI Assistant` 这类占位泛称。 |
+| FR-S09 | Feature Path Gate | `trd-gen` 写 TRD 前必须验证 PRD `feature_path` 可镜像。 | P0 | 缺 PRD、PRD 路径不清、超过三级或 frontmatter 与路径不一致时回 PM；旧单层 PRD 兼容为一级功能。 |
 
 ## 当前实现对齐
 

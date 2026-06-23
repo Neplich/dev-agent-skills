@@ -9,7 +9,7 @@
       "description": "Verifies that idea-to-spec handles existing-project-feature-design and produces the expected role-specific artifact.",
       "prompt": "我们在一个已有的 Web 应用里，要新增应用标签系统。请先看项目上下文，再和我一起把方案收敛下来，最终沉淀成 PM 设计文档。",
       "workspace": "workspace/iteration-1/eval-1-existing-project-feature",
-      "expected_output": "先给出项目上下文摘要，然后按单决策点推进设计；在关键点提供 2-3 个方案和 trade-off；按 section 逐段确认；把已确认内容沉淀到 docs/pm/{feature}/DECISIONS.md 与相关 PM 文档。",
+      "expected_output": "先给出项目上下文摘要，然后按单决策点推进设计；在关键点提供 2-3 个方案和 trade-off；按 section 逐段确认；把已确认内容沉淀到 docs/pm/{feature_path}/DECISIONS.md 与相关 PM 文档。",
       "assertions": [
         {
           "id": "assertion_1",
@@ -145,6 +145,36 @@
           "id": "pm",
           "description": "进入 PM 流程",
           "text": "在同一轮里继续提炼产品定位、功能边界、MVP 或其他需求收敛问题"
+        }
+      ]
+    },
+    {
+      "id": "eval-006-nested-feature-path",
+      "name": "nested-feature-path",
+      "description": "Verifies that idea-to-spec scans existing PM PRDs and routes a child feature under the confirmed parent feature_path instead of creating a parallel top-level directory.",
+      "prompt": "已有 Web 应用已经有 Chat Interface 的 PRD。现在要新增聊天历史搜索。请先看项目文档，判断应该更新或生成哪些 PM 文档，并给出后续 handoff 包。",
+      "workspace": "workspace/iteration-3/eval-6-nested-feature-path",
+      "expected_output": "扫描 docs/pm/**/PRD.md；识别已有父功能 chat-interface；将聊天历史搜索解析为 feature_path=chat-interface/history-search；不创建 docs/pm/history-search/PRD.md；handoff packet 包含 feature_path、feature、parent_feature、feature_level 和 feature_path_evidence。",
+      "assertions": [
+        {
+          "id": "scan_existing_prds",
+          "description": "先扫描 PM PRD 以确认父功能",
+          "text": "输出提到扫描或读取 docs/pm/**/PRD.md、已有 PRD、Chat Interface PRD 或 docs/pm/chat-interface/PRD.md"
+        },
+        {
+          "id": "nested_feature_path",
+          "description": "子功能落到父功能下",
+          "text": "输出明确 feature_path 为 chat-interface/history-search 或 docs/pm/chat-interface/history-search/PRD.md"
+        },
+        {
+          "id": "no_parallel_top_level",
+          "description": "不创建并列顶层目录",
+          "text": "输出不会把历史搜索写到 docs/pm/history-search/PRD.md 作为新的一级功能"
+        },
+        {
+          "id": "handoff_fields",
+          "description": "handoff 包含 feature path 字段",
+          "text": "handoff packet 包含 feature_path、feature、parent_feature、feature_level 和 feature_path_evidence"
         }
       ]
     }

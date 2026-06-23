@@ -18,7 +18,7 @@ Allowed actions:
 - read PM and existing design documents
 - analyze user journeys, flows, screens, information architecture, and visual
   references
-- write or update design deliverables under `docs/design/{feature-name}/`
+- write or update design deliverables under `docs/design/{feature_path}/`
 - summarize design outputs and explicit handoff points
 
 Forbidden actions:
@@ -32,6 +32,23 @@ Forbidden actions:
 
 If the user asks for implementation, finish the design route first, then stop
 and direct the next step to `engineer-agent`.
+
+## Feature Path Gate
+
+For feature-scoped design deliverables, Designer consumes a confirmed
+`feature_path`; it does not decide or invent one.
+
+- Read PM source documents from `docs/pm/{feature_path}/`, including `PRD.md`,
+  `BRD.md`, and `DECISIONS.md` when present.
+- Read the matching Engineer TRD from `docs/engineer/{feature_path}/TRD.md`
+  when technical constraints are relevant to design.
+- Write design outputs only under `docs/design/{feature_path}/`.
+- If the request names only a child feature, nickname, or ambiguous parent
+  feature and no confirmed `feature_path` can be found, stop and hand the
+  scope back to `pm-agent:idea-to-spec`; do not create a synonym top-level
+  directory under `docs/design/`.
+- Existing one-segment feature directories remain valid first-level
+  `feature_path` values.
 
 ## Available Skills
 
@@ -78,7 +95,8 @@ Do not force both skills when the user only wants one design layer.
 - Ask one route-level clarification question only when the primary design layer
   is genuinely unclear and the output type would change.
 - If PM docs are missing but the design intent is still clear, route to the
-  narrowest design skill and let it gather what it needs.
+  narrowest design skill for non-persistent design advice only. Durable
+  feature-scoped design docs still require the Feature Path Gate.
 - If the user actually wants coded UI changes, stop at design handoff and make
   the next step explicit to `engineer-agent`.
 

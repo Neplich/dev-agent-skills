@@ -6,7 +6,7 @@ version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/qa/README.md"
@@ -17,6 +17,9 @@ related_docs:
   - "agents/qa/skills/qa-agent/references/e2e-test-report.md"
   - "skills-lock.json"
   - "agents/qa/test/qa-agent/evals/evals.json"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.0.0"
     date: "2026-06-12"
@@ -67,7 +70,8 @@ changelog:
 | FR-A02 | Context Boundary | Dispatcher 只收集路由所需上下文；实现/审查/测试细节由被选 specialist 收集。 | P0 | 缺少内容级上下文不会让入口停在元路由。 |
 | FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任。 | P0 | Dispatcher 输出预期产物类型，不伪装成 specialist report。 |
 | FR-A04 | Handoff | QA 内部先选一个最窄 specialist；实现缺陷交 engineer-agent，需求/验收缺口交 pm-agent，发布判断交 release owner。 | P0 | Handoff 指向 owning skill/agent，并说明输入包和期望输出。 |
-| FR-A05 | E2E Case Memory | 对 feature-update 或 release E2E 工作，必须先确认测试场景和 platform version，读取 `TEST_SUITE.md`、`FLOW_INDEX.md`、`cases/*.md`、`scripts/*.spec.md`、历史 `results/` 和 `_reports/`；现有功能、bug fix 或代码完成后的 E2E 更新必须完成 PRD/TRD 预期对齐，并引用已确认的 `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`。 | P0 | 缺 platform version 时 blocked；执行默认由 subagent 负责；入口顺序为 repo harness > Chrome plugin / browser connector > Playwright fallback；凭据只引用本地账号 ID；汇总报告使用 `e2e-test-report.md`。 |
+| FR-A05 | E2E Case Memory | 对 feature-update 或 release E2E 工作，必须先确认测试场景和 platform version，读取 `TEST_SUITE.md`、`FLOW_INDEX.md`、`cases/*.md`、`scripts/*.spec.md`、历史 `results/` 和 `_reports/`；现有功能、bug fix 或代码完成后的 E2E 更新必须消费同一 `feature_path` 下的 PRD/TRD/IMPLEMENTATION_PLAN。 | P0 | 缺 platform version、路径不清、PRD/TRD 不一致或缺已确认 plan 时 blocked；执行默认由 subagent 负责；入口顺序为 repo harness > Chrome plugin / browser connector > Playwright fallback；凭据只引用本地账号 ID；汇总报告使用 `e2e-test-report.md`。 |
+| FR-A06 | Feature Path Gate | QA 不拥有 feature path 决策权，只消费已确认路径。 | P0 | 缺 PRD 回 PM；缺 TRD 或 plan 回 Engineer；不得创建/更新/执行 E2E acceptance TC。 |
 
 ## 当前实现对齐
 
@@ -111,7 +115,7 @@ flowchart LR
     Decision --> Output["QA artifact 或 route decision"]
     Output --> E2ECheck{"是否是 E2E/验收 TC 更新或执行?"}
     E2ECheck -->|否| Handoff["QA 内部先选一个最窄 specialist；实现缺陷交 engineer-agent，需求/验收缺口交 pm-agent，发布判断交 release owner。"]
-    E2ECheck -->|是| E2EGate["确认 feature-update/release、platform version、PRD/TRD 预期和 IMPLEMENTATION_PLAN"]
+    E2ECheck -->|是| E2EGate["确认 feature_path、feature-update/release、platform version、同路径 PRD/TRD/IMPLEMENTATION_PLAN"]
     E2EGate --> Memory["读取 TEST_SUITE、FLOW_INDEX、cases、scripts、results、_reports"]
     Memory --> Execute["subagent 默认执行；repo harness > Chrome/browser > Playwright"]
     Execute --> Report["凭据只引用账号 ID；按 e2e-test-report 归档"]

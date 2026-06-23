@@ -33,6 +33,10 @@ failure handling, and safety boundaries.
 - **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md`
 - **Metadata**: `type: TEST_SPEC`, version `1.0.0`
 - **Naming**: `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md`
+- **Feature path source**: derive the QA function tree from the confirmed
+  `feature_path` in the source PRD/TRD or handoff packet. If the source docs do
+  not agree on `feature_path`, stop and return to PM/Engineer alignment instead
+  of inventing a QA path.
 - **Case files**: every E2E test case must also be written as a separate
   Markdown file under `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/` using
   `TC-NNN-<short-slug>.md`
@@ -92,6 +96,9 @@ failure handling, and safety boundaries.
 **Tspecs-specific failure handling**:
 - Source doc lacks acceptance criteria -> derive testable criteria, mark `[DERIVED]`
 - Ambiguous requirement -> generate test for most likely interpretation, flag for review
+- Source docs lack or conflict on `feature_path` -> blocked/handoff to PM or
+  Engineer alignment; do not create a new QA feature tree from the terminal
+  feature name alone
 - Too many requirements (> 50) -> ask user to filter by priority
 - Use synthetic data only -> no real user data or credentials
 

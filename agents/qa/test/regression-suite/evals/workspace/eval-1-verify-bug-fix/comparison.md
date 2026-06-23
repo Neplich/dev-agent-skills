@@ -15,7 +15,7 @@
 - Produces a clear pass/fail/blocked regression conclusion.
 - Reads the function-tree E2E suite, flow index, case file, script snippet, prior results, and reports when available before execution.
 - Keeps `feature-update` scoped to the fixed flow, direct impact paths, shared components, adjacent flows, and related state branches; reserves all active E2E TC coverage for `release`.
-- Requires PRD/TRD expectation alignment and a confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` before updating or executing acceptance TC for existing-feature changes or bug fixes.
+- Requires same-`feature_path` PRD/TRD expectation alignment and a confirmed `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before updating or executing acceptance TC for existing-feature changes or bug fixes.
 - Treats a missing platform version as `blocked`, avoids `unknown`, and appends E2E results under `results/TC-NNN-<short-slug>/{platform-version}/` without overwriting history.
 - Separates run status from evidence confidence and includes a release recommendation.
 

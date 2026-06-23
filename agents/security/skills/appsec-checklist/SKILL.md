@@ -7,11 +7,21 @@ description: Scan codebase for common security vulnerabilities and generate secu
 
 ### Step 1: Understand the Feature Context
 
-1. **Read PM documents** from `docs/pm/{feature-name}/`:
+1. **Resolve feature scope**:
+   - For feature-scoped review, use the confirmed `feature_path`.
+   - Read `docs/pm/{feature_path}/PRD.md`.
+   - Read `docs/engineer/{feature_path}/TRD.md` and
+     `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when architecture,
+     implementation, or release scope affects security risk.
+   - If `feature_path` is unclear, return to PM for PRD/path clarification or
+     Engineer for missing/stale TRD or implementation plan; do not invent a
+     new top-level security directory.
+
+2. **Read PM documents**:
    - PRD: understand feature functionality and data flow
    - TRD: understand architecture, third-party services, data storage
 
-2. **Identify security-critical areas**:
+3. **Identify security-critical areas**:
    - Authentication/authorization logic
    - User input handling
    - Data storage and transmission
@@ -56,12 +66,15 @@ Use Grep and Read tools to search for security issues:
 
 ### Step 3: Generate Security Report
 
-Create `docs/security/{feature-name}/appsec-checklist.md` with:
+Create `docs/security/{feature_path}/appsec-checklist.md` with:
 
 **Frontmatter:**
 ```yaml
 ---
-feature: {feature-name}
+feature: {feature}
+feature_path: {feature_path}
+parent_feature: {parent_feature}
+feature_level: {feature_level}
 version: v1
 date: YYYY-MM-DD
 last_updated: YYYY-MM-DD

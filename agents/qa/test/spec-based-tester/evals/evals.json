@@ -94,7 +94,7 @@
         {
           "id": "alignment_plan_gate",
           "description": "PRD/TRD 和实施计划门禁",
-          "text": "如果边界验证来自现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须先确认 PRD/TRD 预期对齐并引用已确认的 IMPLEMENTATION_PLAN.md；预期变化回 PM，TRD gap 回 trd-gen，文档缺失或平台版本缺失时 blocked。"
+          "text": "如果边界验证来自现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须先确认同一 feature_path 下 PRD/TRD 预期对齐并引用已确认的 IMPLEMENTATION_PLAN.md；预期变化回 PM，TRD gap 或缺 plan 回 trd-gen，文档缺失或平台版本缺失时 blocked。"
         }
       ]
     }

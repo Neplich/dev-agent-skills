@@ -33,6 +33,8 @@ empty workspace needs durable documentation scaffolding.
   - `team`: Team members and roles (pre-populates Stakeholder sections)
   - `handoff_packet`: Phase 0 context from `idea-to-spec` to preserve settled
     scope and naming
+  - `feature_path`: optional 1-3 level feature path. Default to a level-1 path
+    derived from `project_name` for new greenfield projects.
 
 ## Shared Routing Contract
 
@@ -58,14 +60,14 @@ Use it to:
 2. **Create directory structure**:
    ```text
    docs/
-   ├─ pm/{feature-name}/
-   ├─ engineer/{feature-name}/
+   ├─ pm/{feature_path}/
+   ├─ engineer/{feature_path}/
    ├─ qa/e2e/{一级功能}/{二级功能}/{三级功能}/
    │  ├─ cases/
    │  └─ scripts/
-   ├─ design/{feature-name}/
-   ├─ devops/{feature-name}/
-   └─ security/{feature-name}/
+   ├─ design/{feature_path}/
+   ├─ devops/{feature_path}/
+   └─ security/{feature_path}/
    ```
 3. **Generate stub documents**:
    - For BRD / PRD / API / E2E TEST_SUITE, create a stub document with:
@@ -106,6 +108,8 @@ Use it to:
 ## Failure Handling
 
 - Directory already exists -> warn, ask whether to merge or skip existing files
+- `feature_path` exceeds 3 levels or contains unsafe segments -> ask for a new
+  path before creating folders
 - Invalid project type -> list valid types and ask the user to choose
 - No description provided -> create minimal stubs with `[TODO]` throughout
 

@@ -14,8 +14,8 @@
 | --- | --- |
 | 入口 skill | `designer-agent` |
 | Specialist skills | 2 个 |
-| 主要输入 | `docs/pm/{feature}/PRD.md`、`BRD.md`、`DECISIONS.md`、可选 Engineer TRD、参考网站或品牌线索 |
-| 主要输出 | `docs/design/{feature}/ui-ux-spec.md`、`visual-system.md` |
+| 主要输入 | 已确认的 `docs/pm/{feature_path}/PRD.md`、`BRD.md`、`DECISIONS.md`、可选 `docs/engineer/{feature_path}/TRD.md`、参考网站或品牌线索 |
+| 主要输出 | `docs/design/{feature_path}/ui-ux-spec.md`、`visual-system.md` |
 | 核心边界 | 只做设计文档，不生成代码、测试、脚本、部署配置 |
 
 ## Skill 清单
@@ -47,11 +47,13 @@ flowchart LR
 
 ```text
 docs/
-└── design/
-    └── {feature-name}/
+    └── design/
+    └── {feature_path}/
         ├── ui-ux-spec.md
         └── visual-system.md
 ```
+
+Designer 只消费 PM/Engineer handoff 中已确认的 `feature_path`。路径或父功能不清时，回到 PM 对齐，不创建同义顶层设计目录。
 
 ## Visual Design References
 

@@ -1,0 +1,13 @@
+{
+  "eval_id": "eval-003-feature-path-missing-plan-blocked",
+  "eval_name": "feature-path-missing-plan-blocked",
+  "workspace_root": "agents/qa/test/qa-agent/evals/workspace/eval-3-feature-path-missing-plan-blocked",
+  "skill_availability_goal": "Verify that qa-agent consumes same-path PRD/TRD but blocks E2E acceptance work when the confirmed implementation plan is missing.",
+  "prompt": "用户说：account/profile/preferences 已经开发完成，请基于 docs/pm/account/profile/preferences/PRD.md 和 docs/engineer/account/profile/preferences/TRD.md 更新并执行 E2E 验收 TC。docs/qa/e2e/account/profile/preferences/ 目录也存在。先做 QA 路由和门禁判断。",
+  "fixture_context": [
+    "docs/pm/account/profile/preferences/PRD.md",
+    "docs/engineer/account/profile/preferences/TRD.md",
+    "docs/qa/e2e/account/profile/preferences/TEST_SUITE.md",
+    "docs/qa/e2e/account/profile/preferences/FLOW_INDEX.md"
+  ]
+}

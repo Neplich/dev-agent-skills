@@ -69,10 +69,12 @@ exploration should be used to expand TC. If they decline exploration, use
 existing QA memory and execute only the scoped charter.
 
 When exploration follows an existing-feature change, bug fix, or code-complete
-E2E documentation update, first require PRD/TRD expectation alignment and a
-confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`. If either is
-missing, block reusable TC creation/update and send the work back to the
-appropriate PM or Engineer step.
+E2E documentation update, first identify the confirmed `feature_path`, read
+`docs/pm/{feature_path}/PRD.md`, `docs/engineer/{feature_path}/TRD.md`, and a
+confirmed `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`. If the path or
+PM expectation is unclear, return to PM. If TRD or the plan is missing, stale,
+or not on the same path, block reusable TC creation/update/execution and send
+the work back to the appropriate Engineer step.
 
 ## Exploration Charter
 

@@ -12,8 +12,19 @@ version: <SemVer>
 status: Draft | In Review | Approved | Superseded
 author: <generation requester display name + agent platform name>
 date: <YYYY-MM-DD>
+feature: <leaf feature slug>
+feature_path: <1-3 level feature path>
+parent_feature: <parent feature path or "N/A">
+feature_level: <1 | 2 | 3>
 reviewers: []
 ```
+
+Feature-scoped BRDs must use the same `feature_path` as the related PM feature
+documents and be written under `docs/pm/{feature_path}/`. `feature_path` is the
+canonical cross-role key with one to three slash-separated lower kebab-case
+segments. `feature` is the leaf slug, `parent_feature` is `N/A` for level 1, and
+`feature_level` must match the path depth. If parent ownership is unclear, stop
+for clarification instead of creating a synonymous top-level directory.
 
 ### 2. Executive Summary
 

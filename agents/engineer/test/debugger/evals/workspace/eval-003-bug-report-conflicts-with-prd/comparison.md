@@ -7,7 +7,7 @@
 - Eval: `eval-003-bug-report-conflicts-with-prd`
 - Test case: bug-report-conflicts-with-prd
 - Workspace: `workspace/eval-003-bug-report-conflicts-with-prd`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04 against the current uncommitted `debugger` skill
+- Latest result: PASS - fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
 
@@ -21,7 +21,7 @@
 
 Current `SKILL.md` satisfies all assertions:
 
-- PASS - fresh Codex subagent validation on 2026-06-04 confirmed current
+- Fresh Codex subagent validation on 2026-06-23 read the current skill docs, Engineer README, eval definition, fixture metadata/context, and this comparison; all listed assertions are satisfied.
   `debugger` routes approved PRD/TRD conflicts back to PM, blocks E2E
   expectation changes until PRD/TRD/IMPLEMENTATION_PLAN alignment is complete,
   and no longer treats explicit PRD-alignment skip requests as permission for
@@ -35,7 +35,7 @@ Current `SKILL.md` satisfies all assertions:
 - `blocks_e2e_when_expectation_changes`: Step 0 blocks writing the new
   expectation into `docs/qa/e2e/**` until PM updates the PRD or product decision
   record, TRD is synchronized, and a confirmed
-  `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` exists.
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` exists.
 - `does_not_produce_repair_plan`: Step 0 says to stop before repair planning
   for a PRD/TRD conflict; Core Principle and Repair Plan Gate prohibit fixing
   before the repair plan flow is confirmed.

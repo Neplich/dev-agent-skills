@@ -24,9 +24,9 @@
 | --- | --- | --- |
 | `engineer-agent` | Engineering request routing | Specialist selection and execution path |
 | `codebase-analyzer` | Taking over an existing repo, understanding structure and constraints | Project profile, stack and architecture summary |
-| `trd-gen` | Writing technical plans after PRD / DECISIONS are confirmed | `docs/engineer/{feature}/TRD.md` |
+| `trd-gen` | Writing technical plans after PRD / DECISIONS are confirmed | `docs/engineer/{feature_path}/TRD.md` |
 | `project-bootstrap` | Initializing a project from approved PRD/TRD | Project skeleton, base config, startup notes |
-| `feature-implementor` | Implementing a confirmed TRD or design document | `IMPLEMENTATION_PLAN.md`, code changes, necessary docs |
+| `feature-implementor` | Implementing a confirmed TRD or design document | `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`, code changes, necessary docs |
 | `test-writer` | Adding unit, integration, or validation coverage | Test files, test execution evidence |
 | `debugger` | Reproducing, diagnosing, and fixing bugs or build failures | Minimal fix, regression evidence |
 | `delivery` | Branches, commits, pushes, PRs, delivery wrap-up | Git commit, PR, delivery summary |
@@ -68,18 +68,23 @@ flowchart LR
 
 Engineer mainly consumes:
 
-- `docs/pm/{feature}/PRD.md`
-- `docs/pm/{feature}/DECISIONS.md`
-- `docs/engineer/{feature}/TRD.md`
-- `docs/design/{feature}/ui-ux-spec.md`
-- `docs/design/{feature}/visual-system.md`
+- `docs/pm/{feature_path}/PRD.md`
+- `docs/pm/{feature_path}/DECISIONS.md`
+- `docs/engineer/{feature_path}/TRD.md`
+- `docs/design/{feature_path}/ui-ux-spec.md`
+- `docs/design/{feature_path}/visual-system.md`
+
+`feature_path` is the canonical path key for feature-scoped documents. New
+Engineer documents mirror the PM path and include `feature_path`,
+`parent_feature`, and `feature_level` frontmatter. Existing single-level docs
+without those fields remain compatible as level-1 features.
 
 Engineer's primary outputs include technical plans, implementation plans, code, and tests:
 
-- `docs/engineer/{feature}/TRD.md`
-- `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
-- `docs/engineer/{feature}/API.md`
-- `docs/engineer/{feature}/ADR.md`
+- `docs/engineer/{feature_path}/TRD.md`
+- `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
+- `docs/engineer/{feature_path}/API.md`
+- `docs/engineer/{feature_path}/ADR.md`
 
 ## Collaboration Boundary
 

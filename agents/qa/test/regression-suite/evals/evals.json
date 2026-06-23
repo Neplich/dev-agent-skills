@@ -34,7 +34,7 @@
         {
           "id": "alignment_version_archive",
           "description": "对齐门禁与版本归档",
-          "text": "回归来自现有功能变更或 bug fix 时，必须先确认 PRD/TRD 预期对齐并引用已确认的 IMPLEMENTATION_PLAN.md；平台版本缺失时 blocked；结果只追加到 results/TC-NNN-<short-slug>/{platform-version}/result.md 和 testcase.snapshot.md，不覆盖历史结果。"
+          "text": "回归来自现有功能变更或 bug fix 时，必须先确认同一 feature_path 下 PRD/TRD 预期对齐并引用已确认的 IMPLEMENTATION_PLAN.md；平台版本缺失时 blocked；结果只追加到 results/TC-NNN-<short-slug>/{platform-version}/result.md 和 testcase.snapshot.md，不覆盖历史结果。"
         },
         {
           "id": "assertion_5",

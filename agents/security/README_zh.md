@@ -15,7 +15,7 @@
 | 入口 skill | `security-agent` |
 | Specialist skills | 4 个 |
 | 主要输入 | 代码库、依赖清单、PM 文档、工程文档、QA 反馈 |
-| 主要输出 | `docs/security/{feature-name}/` 下的安全报告 |
+| 主要输出 | `docs/security/{feature_path}/` 下的安全报告 |
 | 触发时机 | 敏感功能完成后、发布前、专项风险复审时 |
 
 ## Skill 清单
@@ -42,12 +42,14 @@
 ```text
 docs/
 └── security/
-    └── {feature-name}/
+    └── {feature_path}/
         ├── appsec-checklist.md
         ├── authz-review.md
         ├── dependency-audit.md
         └── privacy-map.md
 ```
+
+Feature-scoped Security 工作消费 PM/Engineer 已确认的 `feature_path`。路径不清时，回 PM 补 PRD/路径归属，或回 Engineer 补 TRD/实施计划；不要自建同义顶层 Security 目录。
 
 ## 典型工作流
 
@@ -71,6 +73,8 @@ flowchart LR
 - Security 不直接做业务实现或部署变更。
 - 需要修改代码、依赖或配置时，交由 Engineer 或 DevOps 接手。
 - 风险来自需求设计时，交由 PM 重新确认约束。
+- Security 不判断父功能归属；需要功能范围时读取
+  `docs/pm/{feature_path}/PRD.md` 和匹配的 Engineer TRD/实施计划。
 
 ## 本地维护
 

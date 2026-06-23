@@ -1,0 +1,11 @@
+{
+  "eval_id": "eval-007-missing-nested-trd-handoff",
+  "eval_name": "missing-nested-trd-handoff",
+  "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-007-missing-nested-trd-handoff",
+  "skill_availability_goal": "Verify that feature-implementor blocks implementation planning for a nested PRD when the mirrored Engineer TRD is missing.",
+  "prompt": "请根据 docs/pm/chat-interface/history-search/PRD.md 实现 Chat History Search。该 PRD 的 feature_path 是 chat-interface/history-search，但 workspace 没有 docs/engineer/chat-interface/history-search/TRD.md。请判断下一步，不要写 IMPLEMENTATION_PLAN 或代码。",
+  "fixture_context": [
+    "README.md",
+    "docs/pm/chat-interface/history-search/PRD.md"
+  ]
+}

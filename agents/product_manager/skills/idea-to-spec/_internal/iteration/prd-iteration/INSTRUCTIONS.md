@@ -27,7 +27,9 @@ Apply changes to an existing PRD while maintaining version history and quality s
 
 ## Workflow
 
-1. **Read current document**: Parse existing PRD, extract version metadata.
+1. **Read current document**: Parse existing PRD, extract version metadata and
+   `feature_path` metadata. If missing on an old single-level PRD, infer level
+   1 from the containing folder.
 
 2. **Analyze changes**: Classify the change request:
    - Fix validation issues (CRITICAL first, then WARNING)
@@ -35,6 +37,9 @@ Apply changes to an existing PRD while maintaining version history and quality s
    - Scope changes (may require MAJOR version bump)
 
 3. **Apply changes**: Modify affected sections while preserving unchanged content.
+   If the change would move the PRD to a child feature path or reveals an
+   existing parallel directory is misplaced, stop and present a path conflict
+   summary instead of silently editing the wrong PRD.
 
 4. **Bump version**: Per `agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md`:
    - Typo/formatting → PATCH
@@ -57,6 +62,11 @@ Apply changes to an existing PRD while maintaining version history and quality s
 ## Failure Handling
 
 - Version metadata missing → add it (start at 1.0.0)
+- `feature_path` frontmatter conflicts with the file path → blocked until the
+  user confirms whether to correct metadata or migrate the document
+- Requested change belongs under a different parent feature → return to
+  `idea-to-spec` path clarification or create a PM handoff; do not update the
+  current PRD as if it owned the child feature
 - Conflicting changes → ask user to prioritize
 - Changes would remove required sections → warn and ask for confirmation
 - Post-iteration validation still FAIL → present issues and suggest next iteration

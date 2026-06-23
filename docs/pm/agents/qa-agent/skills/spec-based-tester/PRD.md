@@ -6,7 +6,7 @@ version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/qa/README.md"
@@ -15,6 +15,9 @@ related_docs:
   - "agents/qa/skills/spec-based-tester/SKILL.md"
   - ".claude-plugin/marketplace.json"
   - "agents/qa/test/spec-based-tester/evals/evals.json"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.0.0"
     date: "2026-06-12"
@@ -61,7 +64,7 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-S01 | Trigger Matching | `spec-based-tester` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `spec-based-tester` SKILL.md 一致。 |
-| FR-S02 | Context Intake | PRD/TRD/Test Spec 和实现上下文；E2E 功能树、feature-update/release、平台版本和已确认 IMPLEMENTATION_PLAN 仅在 E2E、现有功能变更、bug fix 或代码完成后 E2E 文档更新时作为门禁。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
+| FR-S02 | Context Intake | PRD/TRD/Test Spec 和实现上下文；E2E 功能树、feature-update/release、平台版本和同一 `feature_path` 下已确认 IMPLEMENTATION_PLAN 仅在 E2E、现有功能变更、bug fix 或代码完成后 E2E 文档更新时作为门禁。 | P0 | 缺少 PRD 回 PM；缺 TRD/plan 或路径不一致回 Engineer 并 blocked；可推导上下文不应被写成硬门槛。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
 | FR-S04 | Artifact Output | requirement matrix、pass/fail/blocked/assumed、confirmed failures only、blocked items、risk notes、E2E/non-E2E 报告路径。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `qa-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
@@ -73,7 +76,7 @@ changelog:
 ### 当前实现工作流
 
 - 普通 spec validation 先读取 spec 和实现上下文
-- E2E/现有功能变更/bug fix/code-complete E2E 更新时复用 docs/qa/e2e 功能树并确认场景、平台版本和 IMPLEMENTATION_PLAN 门禁
+- E2E/现有功能变更/bug fix/code-complete E2E 更新时复用 docs/qa/e2e 功能树并确认场景、平台版本和同路径 PRD/TRD/IMPLEMENTATION_PLAN 门禁
 - 读取历史 TC/cases/scripts/results/reports
 - 按 repo harness > integration/manual QA script > Chrome/browser > Playwright 执行
 - 输出验收矩阵和证据

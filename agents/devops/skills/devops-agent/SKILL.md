@@ -18,6 +18,8 @@ DevOps skill.
 - selecting the narrowest downstream DevOps skill
 - sequencing multiple DevOps skills only when the user clearly wants a broader
   operational workflow
+- preserving an already-confirmed `feature_path` for feature-scoped DevOps
+  work
 - asking at most one route-level clarification question when the target outcome
   is truly ambiguous
 
@@ -27,6 +29,7 @@ DevOps skill.
   `deployment-planner`, `cicd-bootstrap`, `env-config-auditor`, or
   `incident-playbook-writer`
 - forcing every feature through a DevOps phase
+- deciding or inventing a feature path when PM/Engineer docs are unclear
 - acting as a general incident response or feature implementation agent
 
 ## Available Skills
@@ -90,6 +93,25 @@ Do not expand into a full operational chain by default.
   product/design work, keep the DevOps route narrow and make the next handoff
   explicit to the owning agent.
 
+## Feature Path Gate
+
+For feature-scoped DevOps work, consume the `feature_path` already confirmed by
+PM and Engineer:
+
+- read `docs/pm/{feature_path}/PRD.md` when product deployment constraints are
+  relevant
+- read `docs/engineer/{feature_path}/TRD.md` and
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when engineering
+  deployment, release, config, or rollback details are relevant
+- write durable feature-scoped DevOps reports under
+  `docs/devops/{feature_path}/...`
+
+If the request names only a feature display name and the matching
+`feature_path` is unclear, do not create a synonymous top-level
+`docs/devops/{name}/` directory. Return the work to PM for PRD/path
+clarification or to Engineer when the TRD/implementation plan is missing or
+inconsistent. Repo-wide deployment assets and reports may still use `deploy/`.
+
 ## Output Behavior
 
 When routing is complete:
@@ -98,4 +120,4 @@ When routing is complete:
 - if relevant, state the follow-up DevOps chain
 - make it clear whether outputs are expected under `deploy/`,
   repo-native CI/CD paths such as `.github/workflows/`, or durable operational
-  docs under `docs/devops/` or `deploy/`
+  docs under `docs/devops/{feature_path}/` or `deploy/`

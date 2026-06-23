@@ -29,9 +29,11 @@ it from the defect artifact.
 
 If the reusable TC would validate an existing-feature change or bug fix as an
 acceptance expectation, require PRD/TRD expectation alignment and a confirmed
-`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` before creating or updating
-that TC. If the expectation is unclear, keep the defect artifact focused on the
-observed failure and mark reusable E2E coverage as `blocked`.
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before creating or
+updating that TC. Read `docs/pm/{feature_path}/PRD.md` and
+`docs/engineer/{feature_path}/TRD.md` from the same path. If the feature path
+or expectation is unclear, keep the defect artifact focused on the observed
+failure and mark reusable E2E coverage as `blocked`.
 
 ## When to Use
 

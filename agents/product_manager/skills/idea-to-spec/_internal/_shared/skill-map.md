@@ -45,8 +45,11 @@ These rules apply before any internal routing:
 - Use section-based progression and do not move to the next section until the
   current one is confirmed or deliberately deferred.
 - Record confirmed decisions, open questions, assumptions, and rejected options
-  in `docs/pm/{feature-name}/DECISIONS.md` when the conversation is in
+  in `docs/pm/{feature_path}/DECISIONS.md` when the conversation is in
   documenting mode.
+- Before writing PM feature docs, scan `docs/pm/**/PRD.md` and resolve a
+  1-3 level `feature_path`. If parent ownership is not clear, block or ask a
+  minimal clarification instead of creating a new top-level sibling directory.
 - Treat feature docs as durable memory for long-running design threads.
 - After a major stage, consolidate process notes into stable declarative prose.
 
@@ -101,13 +104,18 @@ compact packet that preserves settled context and avoids re-asking basics.
 - `project_context`: repo path, workspace status, tech stack, key modules
 - `docs_context`: doc inventory, maturity, missing artifacts, active feature doc
   paths
+- `feature_path`: resolved 1-3 level PM feature path, or `unresolved`
+- `feature`: terminal feature slug or compatible legacy feature value
+- `parent_feature`: parent feature path, or `N/A` for level 1
+- `feature_level`: `1`, `2`, or `3`
+- `feature_path_evidence`: list of sources proving why this path is correct
 - `request_lane`: one of the lane values above
 - `problem_and_goal`: problem, target users, success metrics
 - `scope`: MVP, non-goals, priorities, rollout constraints
 - `current_state`: integrations, permissions, data flows, dependencies
 - `change_request`: delta summary for existing-project updates
 - `decisions_locked`: agreed decisions that should not be reopened lightly
-- `decision_log_path`: path to `docs/pm/{feature-name}/DECISIONS.md` when it
+- `decision_log_path`: path to `docs/pm/{feature_path}/DECISIONS.md` when it
   exists
 - `drafted_sections`: sections already produced in this session or in the
   working docs
@@ -130,6 +138,13 @@ docs_context:
   missing_artifacts: [docs/pm/notifications/DECISIONS.md]
   active_feature_docs:
     - docs/pm/notifications/PRD.md
+feature_path: notifications
+feature: notifications
+parent_feature: N/A
+feature_level: 1
+feature_path_evidence:
+  - source: docs/pm/notifications/PRD.md
+    reason: Existing level-1 feature PRD matches the requested notification center scope
 request_lane: existing-project-feature
 problem_and_goal:
   problem: Users miss comment mentions.
@@ -156,6 +171,10 @@ recommended_next_skill:
   name: prd-gen
   reason: Requirements are stable and ready for formalization
 ```
+
+When the next owner is `engineer-agent:trd-gen`, this packet is mandatory. If
+`feature_path` is unresolved, do not hand off as if the path were settled; route
+back to PM clarification or document the blocker.
 
 ## 7. Phase and Situation Routing
 

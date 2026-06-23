@@ -24,9 +24,9 @@
 | --- | --- | --- |
 | `engineer-agent` | 工程请求入口与路由 | 下游 skill 选择与执行路径 |
 | `codebase-analyzer` | 接手现有仓库、理解结构和约束 | Project Profile、技术栈与架构摘要 |
-| `trd-gen` | PRD / DECISIONS 确认后的技术计划编写 | `docs/engineer/{feature}/TRD.md` |
+| `trd-gen` | PRD / DECISIONS 确认后的技术计划编写 | `docs/engineer/{feature_path}/TRD.md` |
 | `project-bootstrap` | 基于已确认 PRD/TRD 初始化项目 | 项目骨架、基础配置、启动说明 |
-| `feature-implementor` | 按已确认 TRD 或设计文档实现功能 | `IMPLEMENTATION_PLAN.md`、代码变更、必要工程文档 |
+| `feature-implementor` | 按已确认 TRD 或设计文档实现功能 | `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`、代码变更、必要工程文档 |
 | `test-writer` | 补单测、集成测试或验证覆盖 | 测试文件、测试运行证据 |
 | `debugger` | 复现、定位、修复 bug 或失败构建 | 最小修复、回归验证证据 |
 | `delivery` | 分支、commit、push、PR、交付收尾 | Git 提交、PR、交付摘要 |
@@ -68,18 +68,21 @@ flowchart LR
 
 Engineer 主要消费：
 
-- `docs/pm/{feature}/PRD.md`
-- `docs/pm/{feature}/DECISIONS.md`
-- `docs/engineer/{feature}/TRD.md`
-- `docs/design/{feature}/ui-ux-spec.md`
-- `docs/design/{feature}/visual-system.md`
+- `docs/pm/{feature_path}/PRD.md`
+- `docs/pm/{feature_path}/DECISIONS.md`
+- `docs/engineer/{feature_path}/TRD.md`
+- `docs/design/{feature_path}/ui-ux-spec.md`
+- `docs/design/{feature_path}/visual-system.md`
+
+`feature_path` 是功能级文档的主路径键。新的 Engineer 文档必须镜像 PM 路径，并在
+frontmatter 中包含 `feature_path`、`parent_feature`、`feature_level`。旧的单层文档缺少这些字段时，仍兼容为一级功能。
 
 Engineer 的主产物包括技术计划、实现计划、代码和测试：
 
-- `docs/engineer/{feature}/TRD.md`
-- `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
-- `docs/engineer/{feature}/API.md`
-- `docs/engineer/{feature}/ADR.md`
+- `docs/engineer/{feature_path}/TRD.md`
+- `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
+- `docs/engineer/{feature_path}/API.md`
+- `docs/engineer/{feature_path}/ADR.md`
 
 ## 协作边界
 
