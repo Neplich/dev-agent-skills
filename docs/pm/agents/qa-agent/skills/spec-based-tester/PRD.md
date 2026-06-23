@@ -2,6 +2,9 @@
 title: "spec-based-tester — Product Requirements Document"
 type: PRD
 feature: "skill-spec-based-tester"
+feature_path: "agents/qa-agent/spec-based-tester"
+parent_feature: "agents/qa-agent"
+feature_level: "3"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

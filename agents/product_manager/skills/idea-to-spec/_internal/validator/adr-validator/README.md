@@ -17,5 +17,5 @@
 
 ## 关联 Skill
 
-- `adr-gen` — 生成 ADR
+- `engineer-agent:trd-gen` — 生成 Engineer-owned ADR
 - `adr-iteration` — 迭代更新 ADR 状态

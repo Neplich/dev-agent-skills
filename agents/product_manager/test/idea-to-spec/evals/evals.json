@@ -177,6 +177,36 @@
           "text": "handoff packet 包含 feature_path、feature、parent_feature、feature_level 和 feature_path_evidence"
         }
       ]
+    },
+    {
+      "id": "eval-007-api-adr-engineer-handoff",
+      "name": "api-adr-engineer-handoff",
+      "description": "Verifies that idea-to-spec does not generate Engineer API or ADR docs directly and instead hands stable scope to engineer-agent:trd-gen.",
+      "prompt": "PM 范围已经稳定：docs/pm/chat-interface/history-search/PRD.md 已确认。现在需要为这个功能补 API 文档和一份搜索索引选型 ADR。请判断由谁生成、输出到哪里，并给出 handoff 包。",
+      "workspace": "workspace/iteration-3/eval-7-api-adr-engineer-handoff",
+      "expected_output": "不直接调用 PM 内部 api-gen 或 adr-gen，不直接写 docs/engineer 文档；输出给 engineer-agent:trd-gen 的 handoff 包，要求 Engineer 在 docs/engineer/chat-interface/history-search/ 下生成 API.md 和 ADR-*.md，并携带 feature_path、parent_feature、feature_level、PRD 路径和决策背景。",
+      "assertions": [
+        {
+          "id": "does_not_use_pm_api_adr_generators",
+          "description": "PM 不直接生成 API 或 ADR",
+          "text": "输出必须说明 API 文档和 ADR 是 Engineer-owned 产物，不能由 PM 内部 `api-gen` 或 `adr-gen` 直接生成。"
+        },
+        {
+          "id": "routes_to_trd_gen",
+          "description": "路由到 Engineer trd-gen",
+          "text": "输出必须把下一步明确交给 `engineer-agent:trd-gen`，由其处理 API / ADR 与 TRD 对齐。"
+        },
+        {
+          "id": "engineer_paths_mirror_feature_path",
+          "description": "Engineer 输出路径镜像 feature_path",
+          "text": "输出必须要求 API / ADR 位于 `docs/engineer/chat-interface/history-search/`，例如 `API.md` 和 `ADR-*.md`，不能写到 `docs/engineer/history-search/`。"
+        },
+        {
+          "id": "handoff_contains_feature_path_evidence",
+          "description": "交接包包含路径证据",
+          "text": "handoff 包必须包含 `feature_path`、`parent_feature`、`feature_level`、PRD 路径和 API / ADR 决策背景。"
+        }
+      ]
     }
   ]
 }

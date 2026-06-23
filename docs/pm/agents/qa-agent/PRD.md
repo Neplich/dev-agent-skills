@@ -2,6 +2,9 @@
 title: "qa-agent — Product Requirements Document"
 type: PRD
 feature: "agent-qa-agent"
+feature_path: "agents/qa-agent"
+parent_feature: "agents"
+feature_level: "2"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

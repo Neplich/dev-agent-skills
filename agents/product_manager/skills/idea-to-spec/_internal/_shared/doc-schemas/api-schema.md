@@ -1,6 +1,7 @@
 # API Documentation Schema
 
-> Shared schema referenced by `api-gen` and `api-validator`.
+> Shared schema referenced by Engineer-owned API docs from
+> `engineer-agent:trd-gen` and by `api-validator`.
 
 ## Required Sections
 

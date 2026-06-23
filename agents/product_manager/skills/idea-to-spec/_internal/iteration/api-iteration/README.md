@@ -19,6 +19,6 @@ Revise this API spec based on the new auth flow and endpoint changes.
 
 ## Related skills
 
-- `api-gen`
+- `engineer-agent:trd-gen` — creates new Engineer-owned API docs
 - `api-validator`
 - `version-differ`

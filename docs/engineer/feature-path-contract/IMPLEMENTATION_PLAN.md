@@ -1,7 +1,7 @@
 ---
 title: "PRD/TRD 多级功能目录契约实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-23"
@@ -14,6 +14,7 @@ feature_level: "1"
 related_prd: "docs/pm/feature-path-contract/PRD.md"
 related_trd: "docs/engineer/feature-path-contract/TRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/37"
+related_pr: "https://github.com/Neplich/dev-agent-skills/pull/42"
 ---
 
 # PRD/TRD 多级功能目录契约实施计划
@@ -325,3 +326,148 @@ rg -n "comparison.auto.md|transcript.md|candidate-output.md|subagent-verdict.md|
 - `skills-lock.json` 已按实际 skill 文档变更刷新。
 - `uv run scripts/check_repository_contract.py`、`uv run scripts/check_eval_contract.py`、`uv run scripts/check_eval_artifacts.py` 通过。
 - 实际执行的 eval 或 fresh subagent validation 结论与提交的 `comparison.md` 一致。
+
+## 11. PR Review 修复实施计划
+
+### 11.1 修复上下文
+
+本节承接 PR #42 review 发现的 3 个契约缺口，并记录用户确认后的修复方向：
+
+| Review 问题 | 用户确认的解决方向 | 计划状态 |
+| --- | --- | --- |
+| 本次触碰的 PRD 缺少 `feature_path`、`parent_feature`、`feature_level`。 | 合理，需要补齐字段，不只依赖旧 `feature` 或目录反推。 | 进入实施 |
+| `repository-contract` 仍只检查单层 `IMPLEMENTATION_PLAN.md`。 | 合理，需要补全多级 `feature_path` 计划门禁。 | 进入实施 |
+| PM 内部 `api-gen` / `adr-gen` 仍使用旧 `<feature-name>` 路径。 | API 和 ADR 生成都应迁移到 Engineer，PM 不拥有工程 API/ADR 文档生成职责。 | 进入实施 |
+
+### 11.2 修复门禁
+
+| 门禁 | 当前结果 | 证据 |
+| --- | --- | --- |
+| PRD 存在 | 通过 | `docs/pm/feature-path-contract/PRD.md` |
+| TRD 存在 | 通过 | `docs/engineer/feature-path-contract/TRD.md` |
+| PRD/TRD `feature_path` 对齐 | 通过 | 两者均为 `feature-path-contract` |
+| Review 修复是否改变 PM 范围 | 不改变 | 仍属于 PRD FR-005、FR-007、FR-012 的路径和门禁固化 |
+| 是否需要回 `trd-gen` | 不需要 | TRD 已覆盖 frontmatter、计划门禁、eval/contract 风险；本节只细化实施文件 |
+| 是否可以开始代码/文档修改 | 待用户确认 | 本节确认后再进入 skill、script、eval 和 PRD frontmatter 修改 |
+
+```mermaid
+flowchart TD
+    A["Review comments"] --> B["补齐 PRD frontmatter"]
+    A --> C["扩展 repository-contract 多级计划门禁"]
+    A --> D["迁移 API/ADR ownership 到 Engineer"]
+    B --> E["更新 eval / fresh validation"]
+    C --> E
+    D --> E
+    E --> F["刷新 skills-lock.json"]
+    F --> G["运行 contract + pytest"]
+```
+
+### 11.3 文件变更清单
+
+#### A. 补齐被触碰 PRD 的 feature path frontmatter
+
+| 操作 | 文件范围 | 修改目标 |
+| --- | --- | --- |
+| 修改 | `docs/pm/agents/*/PRD.md` 中本 PR 已触碰的 Agent PRD | 增加 `feature_path`、`parent_feature`、`feature_level`，路径按 `agents/{agent}` 映射。 |
+| 修改 | `docs/pm/agents/*/skills/*/PRD.md` 中本 PR 已触碰的 Skill PRD | 增加 `feature_path`、`parent_feature`、`feature_level`，路径按 `agents/{agent}/{skill}` 映射。 |
+| 修改 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` | 明确多级 PRD 触及时必须补齐 frontmatter；旧单层兼容不等于多级 PRD 可长期缺字段。 |
+| 修改 | `agents/product_manager/skills/idea-to-spec/_internal/iteration/prd-iteration/INSTRUCTIONS.md` | 更新 PRD 时校验并补齐 feature path 三字段；路径不一致时 blocked。 |
+| 修改 | `docs/pm/agents/pm-agent/PRD.md` 与 `docs/pm/agents/pm-agent/skills/idea-to-spec/PRD.md` | 记录 touched PRD backfill 规则和验收口径。 |
+
+字段映射规则：
+
+| PRD 路径 | `feature_path` | `parent_feature` | `feature_level` |
+| --- | --- | --- | --- |
+| `docs/pm/agents/{agent}/PRD.md` | `agents/{agent}` | `agents` | `2` |
+| `docs/pm/agents/{agent}/skills/{skill}/PRD.md` | `agents/{agent}/{skill}` | `agents/{agent}` | `3` |
+
+#### B. 补全 repository-contract 多级实施计划门禁
+
+| 操作 | 文件 | 修改目标 |
+| --- | --- | --- |
+| 修改 | `scripts/check_repository_contract.py` | 将 `IMPLEMENTATION_PLAN_RE` 从单层 `docs/engineer/[^/]+/IMPLEMENTATION_PLAN.md` 扩展为 1-3 级 `feature_path`。 |
+| 修改 | `scripts/check_repository_contract.py` | 对 `IMPLEMENTATION_PLAN.md` frontmatter 增加 `feature_path`、`parent_feature`、`feature_level`、`related_prd`、`related_trd` 校验。 |
+| 修改 | `scripts/check_repository_contract.py` | 校验目录路径与 `feature_path` 一致，`parent_feature` 与父级一致，`feature_level` 与路径段数一致。 |
+| 修改 | `scripts/check_repository_contract.py` | 校验 `related_prd` 等于 `docs/pm/{feature_path}/PRD.md`，`related_trd` 等于 `docs/engineer/{feature_path}/TRD.md`。 |
+| 修改/新增 | repository contract 相关 pytest | 增加二级和三级 `IMPLEMENTATION_PLAN.md` fixture，确保旧单层仍通过，多级缺字段或路径不一致会失败。 |
+
+#### C. API / ADR 生成职责迁移到 Engineer
+
+| 操作 | 文件或目录 | 修改目标 |
+| --- | --- | --- |
+| 修改 | `agents/product_manager/skills/idea-to-spec/SKILL.md` | PM 不再生成 Engineer API/ADR 文档；只收敛产品层接口目标、约束和技术决策背景，并 handoff 给 Engineer。 |
+| 修改 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` | 移除 PM 内部 `api-gen` / `adr-gen` 作为生成目标；改为 Engineer handoff。 |
+| 修改 | `agents/product_manager/skills/idea-to-spec/_internal/orchestration/*` | 清理 project-init、flow、iteration-coordinator 中把 API/ADR 当 PM 生成器的路由。 |
+| 修改/迁移 | `agents/product_manager/skills/idea-to-spec/_internal/gen/api-gen/` | 标记 deprecated 或迁出 PM 路由；不再作为 PM-owned 生成器触发。 |
+| 修改/迁移 | `agents/product_manager/skills/idea-to-spec/_internal/gen/adr-gen/` | 标记 deprecated 或迁出 PM 路由；不再作为 PM-owned 生成器触发。 |
+| 新增/修改 | `agents/engineer/skills/*` | 增加 Engineer-owned API/ADR 生成能力，或在 `trd-gen`/Engineer routing 中明确 API/ADR 文档生成职责。 |
+| 新增/修改 | Engineer eval | 覆盖嵌套 `feature_path` 下生成 `docs/engineer/{feature_path}/API.md` 和 `docs/engineer/{feature_path}/ADR-<NNN>-<decision-title>.md`。 |
+| 新增/修改 | PM eval | 覆盖 PM 遇到 API/ADR 请求时不直接写 Engineer 文档，而是输出 Engineer handoff。 |
+
+### 11.4 实施顺序
+
+1. **补 PRD frontmatter**
+   - 先用脚本枚举本 PR 相对 `origin/main` 触碰的 `docs/pm/**/PRD.md`。
+   - 只补本次触碰且属于 feature path 治理范围的 PRD。
+   - 修改后抽样检查 frontmatter 与目录映射。
+
+2. **扩展 repository contract**
+   - 先更新多级 `IMPLEMENTATION_PLAN.md` 匹配规则。
+   - 再增加 feature path 元数据校验函数。
+   - 最后补 deterministic pytest fixture，避免只靠人工 review。
+
+3. **迁移 API/ADR ownership**
+   - 先从 PM 路由中移除直接生成 API/ADR 的入口。
+   - 再在 Engineer 侧建立 API/ADR 文档生成职责和路径规则。
+   - 最后补 PM handoff eval 与 Engineer generation eval。
+
+4. **刷新 eval comparison**
+   - 实际执行或 fresh Codex subagent validation 后更新相关 durable `comparison.md`。
+   - 不提交 `transcript.md`、`subagent-verdict.md`、`comparison.auto.md`、`outputs/` 或 diagnostics。
+
+5. **刷新 lock 与验证**
+   - 刷新 `skills-lock.json` 中受影响 skill 的 hash。
+   - 运行 repository/eval/artifact 门禁和全量 pytest。
+
+### 11.5 Sub-Agent 分工
+
+本修复跨 PM、Engineer、contract 和 eval，属于多模块上下文重的变更。确认本计划后建议使用并行分工：
+
+| Worker | 范围 | 输出 |
+| --- | --- | --- |
+| Worker A: PRD Frontmatter | `docs/pm/agents/**/PRD.md`、PM PRD/frontmatter 规则 | 补字段清单、字段映射证据、静态检查结果 |
+| Worker B: Contract Gate | `scripts/check_repository_contract.py`、对应 pytest | 多级 plan 校验、负例/正例测试、contract 结果 |
+| Worker C: API/ADR Ownership | PM `idea-to-spec` 路由、Engineer API/ADR 生成职责、相关 eval | PM handoff 规则、Engineer 输出路径规则、eval 更新 |
+| Worker D: Validation | 相关 `comparison.md`、fresh validation、final gate | fresh validation 结论、runtime artifact 检查、剩余风险 |
+
+主进程负责整合 diff、刷新 `skills-lock.json`、运行最终门禁、更新 PR #42。
+
+### 11.6 验证命令
+
+实施完成后必须运行：
+
+```bash
+uv run scripts/check_repository_contract.py
+uv run scripts/check_eval_contract.py
+uv run scripts/check_eval_artifacts.py
+git diff --check
+uv run --with pytest pytest
+```
+
+补充检查：
+
+```bash
+rg -n "docs/engineer/<feature-name>|docs/engineer/\\{feature\\}|docs/engineer/\\{feature-name\\}" agents/product_manager agents/engineer --glob "*.md"
+rg -n "NOT RUN|PENDING fresh validation|Fresh model validation is still pending|fresh Codex subagent validation have not|no model eval or fresh|Not assessed" agents -g "comparison.md"
+```
+
+### 11.7 完成定义
+
+- 本次触碰的 PRD 均有 `feature_path`、`parent_feature`、`feature_level`。
+- 多级 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 被 repository contract 识别并校验。
+- API/ADR 生成职责从 PM 路由迁移到 Engineer，PM 只 handoff 产品需求和决策背景。
+- API/ADR 输出路径使用 `docs/engineer/{feature_path}/...`，不能用末级 `<feature-name>` 自建并列目录。
+- PM 和 Engineer eval 覆盖 API/ADR ownership 和嵌套路径。
+- 所有实际执行的 fresh validation 结论已写入 durable `comparison.md`。
+- `skills-lock.json` 与受影响 skill 文档一致。
+- PR #42 更新后 CI required checks 全部通过。

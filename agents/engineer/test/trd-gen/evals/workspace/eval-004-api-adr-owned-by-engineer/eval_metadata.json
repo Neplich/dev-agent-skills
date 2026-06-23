@@ -1,0 +1,11 @@
+{
+  "eval_id": "eval-004-api-adr-owned-by-engineer",
+  "eval_name": "api-adr-owned-by-engineer",
+  "workspace_root": "agents/engineer/test/trd-gen/evals/workspace/eval-004-api-adr-owned-by-engineer",
+  "skill_availability_goal": "Verify that trd-gen owns API and ADR docs after PM scope is confirmed and mirrors feature_path.",
+  "prompt": "PM 已确认 docs/pm/chat-interface/history-search/PRD.md。请进入 Engineer 阶段，为聊天历史搜索补 TRD、API 文档和一份搜索索引选型 ADR。不要写实现计划或代码。",
+  "fixture_context": [
+    "README.md",
+    "docs/pm/chat-interface/history-search/PRD.md"
+  ]
+}

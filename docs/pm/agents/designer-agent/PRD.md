@@ -2,6 +2,9 @@
 title: "designer-agent — Product Requirements Document"
 type: PRD
 feature: "agent-designer-agent"
+feature_path: "agents/designer-agent"
+parent_feature: "agents"
+feature_level: "2"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

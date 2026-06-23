@@ -1,14 +1,18 @@
 ---
 name: trd-gen
-description: "Generate or update Engineer-owned Technical Requirements Documents (TRD) after PRD and product decisions are stable. Use this skill when users ask for a TRD, technical plan, engineering design, architecture plan, implementation blueprint, or when pm-agent hands off a confirmed PRD for technical planning before implementation."
+description: "Generate or update Engineer-owned Technical Requirements Documents (TRD), API docs, and ADRs after PRD and product decisions are stable. Use this skill when users ask for a TRD, technical plan, engineering design, architecture plan, API specification, ADR, implementation blueprint, or when pm-agent hands off a confirmed PRD for technical planning before implementation."
 ---
 
 # TRD Generator
 
 Engineer-owned technical planning skill. It turns confirmed PM requirements into
 `docs/engineer/{feature_path}/TRD.md`, mirroring
-`docs/pm/{feature_path}/PRD.md`, then hands the confirmed TRD to
-`feature-implementor` for an implementation plan and code execution.
+`docs/pm/{feature_path}/PRD.md`. When the confirmed technical scope includes
+interface contracts or architecture decisions, it also owns
+`docs/engineer/{feature_path}/API.md` and
+`docs/engineer/{feature_path}/ADR-<NNN>-<decision-title>.md`, then hands the
+confirmed Engineer document set to `feature-implementor` for an implementation
+plan and code execution.
 
 ## Role Boundary
 
@@ -19,6 +23,10 @@ Engineer-owned technical planning skill. It turns confirmed PM requirements into
 - interface, data, deployment, observability, and validation strategy
 - engineering risks, blockers, assumptions, and open technical questions
 - writing or updating `docs/engineer/{feature_path}/TRD.md`
+- writing or updating `docs/engineer/{feature_path}/API.md` when interface
+  contracts are in scope
+- writing or updating `docs/engineer/{feature_path}/ADR-*.md` when durable
+  technical decisions are in scope
 - resolving TRD gap packets from discoverers such as `engineer-agent`,
   `debugger`, or `feature-implementor`
 
@@ -45,7 +53,8 @@ flowchart LR
     PM["pm-agent: PRD / BRD / product decisions confirmed"] --> Handoff["Explicit handoff to engineer-agent:trd-gen"]
     Handoff --> PathGate["Resolve feature_path from docs/pm/{feature_path}/PRD.md"]
     PathGate --> TRD["trd-gen writes docs/engineer/{feature_path}/TRD.md"]
-    TRD --> Review["Maintainer confirms TRD"]
+    TRD --> OptionalDocs["API.md / ADR-*.md when in scope"]
+    OptionalDocs --> Review["Maintainer confirms Engineer docs"]
     Review --> Plan["Explicit handoff to feature-implementor"]
     Plan --> ImplPlan["feature-implementor writes docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md"]
     ImplPlan --> Code["Implementation / tests / delivery"]
@@ -57,7 +66,7 @@ Use this checkpoint language:
 PRD 已确认，当前进入 Engineer TRD 阶段。
 我会基于 PRD、产品决策记录和仓库上下文解析 `feature_path`，并编写
 `docs/engineer/{feature_path}/TRD.md`。
-TRD 确认后，再移交给 `feature-implementor` 编写实现计划文档并进入实现。
+Engineer 文档确认后，再移交给 `feature-implementor` 编写实现计划文档并进入实现。
 ```
 
 ## TRD Gap Packet Handling
@@ -99,6 +108,9 @@ document-writing task must include:
 - any TRD gap packet from the finder, including affected components, data flow,
   validation, release risk, and error-handling gaps
 - required output path: `docs/engineer/{feature_path}/TRD.md`
+- optional Engineer-owned output paths:
+  `docs/engineer/{feature_path}/API.md` and
+  `docs/engineer/{feature_path}/ADR-*.md`
 - forbidden areas and instruction not to implement code
 - required output: changed document path, summary, assumptions, open questions,
   and validation notes
@@ -128,6 +140,8 @@ Write or update:
 
 ```text
 docs/engineer/{feature_path}/TRD.md
+docs/engineer/{feature_path}/API.md                 # when API docs are in scope
+docs/engineer/{feature_path}/ADR-<NNN>-<slug>.md     # when an ADR is in scope
 ```
 
 The TRD must include:
@@ -137,6 +151,8 @@ The TRD must include:
 - source documents and requirement traceability
 - technical overview and architecture diagram
 - impacted modules, components, APIs, data, and integration points
+- API documentation when interface contracts are stable enough to document
+- ADRs when a technical decision needs durable rationale
 - implementation constraints and non-goals
 - validation strategy and concrete verification commands when known
 - rollout, observability, security, and operational concerns when applicable
@@ -160,15 +176,19 @@ Before handoff, verify:
    `feature_path=<directory-name>`, `parent_feature=N/A`, and
    `feature_level=1`.
 6. `related_prd` points to `docs/pm/{feature_path}/PRD.md`.
-7. Any inbound TRD gap packet has been resolved or explicitly tracked as open.
-8. The next step is `feature-implementor` only after the TRD is confirmed.
+7. API and ADR documents, when produced, live under
+   `docs/engineer/{feature_path}/` and do not use only the terminal feature
+   name as a parallel top-level directory.
+8. Any inbound TRD gap packet has been resolved or explicitly tracked as open.
+9. The next step is `feature-implementor` only after the Engineer document set
+   is confirmed.
 
 ## Handoff
 
 After the TRD is confirmed:
 
 ```text
-TRD 已确认，当前移交给 `feature-implementor`。
+Engineer 文档已确认，当前移交给 `feature-implementor`。
 下一步应基于 `docs/engineer/{feature_path}/TRD.md` 编写
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`，确认后再进入代码实现。
 ```

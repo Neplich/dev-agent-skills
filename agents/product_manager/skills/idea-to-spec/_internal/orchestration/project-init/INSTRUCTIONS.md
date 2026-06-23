@@ -140,8 +140,7 @@ docs/
 │     └─ PRD.md                           (PRD stub)
 ├─ engineer/
 │  └─ smart-checkout/
-│     ├─ API.md                           (API doc stub)
-│     └─ ADR-001-initial-architecture.md  (ADR stub)
+│     └─ TRD.md                           (Engineer-owned TRD stub after handoff)
 ├─ qa/
 │  └─ e2e/
 │     └─ commerce/
@@ -166,5 +165,6 @@ Suggested next steps:
 2. Run `prd-gen` to define `docs/pm/smart-checkout/PRD.md`
 3. Update `docs/pm/smart-checkout/DECISIONS.md` as decisions are confirmed
 4. Hand off to `engineer-agent:trd-gen` to write `docs/engineer/smart-checkout/TRD.md`
-5. Run `tspecs-gen` after PRD and TRD are confirmed
+5. Let `engineer-agent:trd-gen` create API / ADR docs under `docs/engineer/smart-checkout/` when the confirmed scope requires them
+6. Run `tspecs-gen` after PRD and TRD are confirmed
 ```

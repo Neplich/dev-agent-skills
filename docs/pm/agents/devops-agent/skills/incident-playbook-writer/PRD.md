@@ -2,6 +2,9 @@
 title: "incident-playbook-writer — Product Requirements Document"
 type: PRD
 feature: "skill-incident-playbook-writer"
+feature_path: "agents/devops-agent/incident-playbook-writer"
+parent_feature: "agents/devops-agent"
+feature_level: "3"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

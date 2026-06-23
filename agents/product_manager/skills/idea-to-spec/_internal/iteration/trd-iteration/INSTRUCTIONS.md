@@ -45,8 +45,8 @@ revision is needed and hands the work to `engineer-agent:trd-gen`.
    - related PRD / DECISIONS impact
    - validator findings or review comments
 4. **Check cross-document impact**:
-   - If the change alters a technical decision materially, recommend `adr-gen`
-     or `adr-iteration`
+   - If the change alters a technical decision materially, route ADR creation
+     or revision to `engineer-agent:trd-gen`
    - If API contracts change, keep `related_api` aligned or flag follow-up work
    - If PRD assumptions are contradicted, flag that `prd-iteration` may also be
      required

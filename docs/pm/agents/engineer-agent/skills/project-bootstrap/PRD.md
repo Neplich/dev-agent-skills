@@ -2,6 +2,9 @@
 title: "project-bootstrap — Product Requirements Document"
 type: PRD
 feature: "skill-project-bootstrap"
+feature_path: "agents/engineer-agent/project-bootstrap"
+parent_feature: "agents/engineer-agent"
+feature_level: "3"
 version: "1.1.0"
 status: Draft
 author: "Neplich Codex"

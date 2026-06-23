@@ -2,6 +2,9 @@
 title: "security-agent — Product Requirements Document"
 type: PRD
 feature: "skill-security-agent"
+feature_path: "agents/security-agent/security-agent"
+parent_feature: "agents/security-agent"
+feature_level: "3"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

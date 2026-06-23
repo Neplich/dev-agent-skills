@@ -75,18 +75,17 @@ Lightweight spec generation (skips BRD):
 ### `api-first`
 
 API-driven development:
-1. `api-gen` -> API Documentation
-2. `api-validator` -> Validate
-3. `engineer-agent:trd-gen` (input: API docs and confirmed scope) -> TRD
-4. `trd-validator` -> Validate
-5. `tspecs-gen` (input: API docs) -> TEST_SPEC
-6. `tspecs-validator` -> Validate
+1. `engineer-agent:trd-gen` (input: confirmed PRD / API goals) -> TRD + API Documentation
+2. `api-validator` -> Validate API docs
+3. `trd-validator` -> Validate TRD
+4. `tspecs-gen` (input: confirmed PRD + TRD + API docs) -> TEST_SPEC
+5. `tspecs-validator` -> Validate
 
 ### `decision-record`
 
 Architecture decision:
-1. `adr-gen` -> ADR
-2. `adr-validator` -> Validate
+1. `engineer-agent:trd-gen` (input: confirmed PRD / decision context) -> ADR + TRD alignment
+2. `adr-validator` -> Validate ADR
 3. `change-impactor` -> Impact Analysis
 
 ## Workflow

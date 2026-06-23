@@ -112,6 +112,41 @@
           "text": "输出不得开始编写 `IMPLEMENTATION_PLAN.md`、修改代码、补测试或进入交付。"
         }
       ]
+    },
+    {
+      "id": "eval-004-api-adr-owned-by-engineer",
+      "name": "api-adr-owned-by-engineer",
+      "description": "Verifies that trd-gen owns API and ADR docs after PM scope is confirmed and mirrors the PRD feature_path.",
+      "prompt": "PM 已确认 docs/pm/chat-interface/history-search/PRD.md。请进入 Engineer 阶段，为聊天历史搜索补 TRD、API 文档和一份搜索索引选型 ADR。不要写实现计划或代码。",
+      "workspace": "workspace/eval-004-api-adr-owned-by-engineer",
+      "expected_output": "确认 `trd-gen` 负责 Engineer-owned TRD、API.md 和 ADR-*.md；输出路径都在 docs/engineer/chat-interface/history-search/ 下；保留 feature_path、parent_feature、feature_level 和 related_prd；不调用 PM 内部 api-gen/adr-gen，也不写 IMPLEMENTATION_PLAN.md 或代码。",
+      "assertions": [
+        {
+          "id": "engineer_owns_api_and_adr",
+          "description": "API / ADR 属于 Engineer 产物",
+          "text": "输出必须说明 API 文档和 ADR 由 `engineer-agent:trd-gen` 负责，而不是 PM 内部生成器负责。"
+        },
+        {
+          "id": "writes_all_engineer_docs_under_feature_path",
+          "description": "全部 Engineer 文档镜像 feature_path",
+          "text": "输出必须把目标路径设为 `docs/engineer/chat-interface/history-search/TRD.md`、`docs/engineer/chat-interface/history-search/API.md` 和 `docs/engineer/chat-interface/history-search/ADR-*.md`。"
+        },
+        {
+          "id": "preserves_related_prd_and_metadata",
+          "description": "保留路径 frontmatter 和 related_prd",
+          "text": "输出必须要求 Engineer 文档保留 `feature_path: chat-interface/history-search`、`parent_feature: chat-interface`、`feature_level: 2`，并让 `related_prd` 指向 `docs/pm/chat-interface/history-search/PRD.md`。"
+        },
+        {
+          "id": "does_not_use_pm_generators",
+          "description": "不调用 PM 内部 API/ADR 生成器",
+          "text": "输出不得把 API 或 ADR 生成路由到 PM 内部 `api-gen` 或 `adr-gen`。"
+        },
+        {
+          "id": "no_plan_or_code",
+          "description": "不进入实现计划或代码",
+          "text": "输出不得开始编写 `IMPLEMENTATION_PLAN.md`、修改代码、补测试或进入交付。"
+        }
+      ]
     }
   ]
 }

@@ -2,6 +2,9 @@
 title: "env-config-auditor — Product Requirements Document"
 type: PRD
 feature: "skill-env-config-auditor"
+feature_path: "agents/devops-agent/env-config-auditor"
+parent_feature: "agents/devops-agent"
+feature_level: "3"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

@@ -2,6 +2,9 @@
 title: "ui-ux-design — Product Requirements Document"
 type: PRD
 feature: "skill-ui-ux-design"
+feature_path: "agents/designer-agent/ui-ux-design"
+parent_feature: "agents/designer-agent"
+feature_level: "3"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

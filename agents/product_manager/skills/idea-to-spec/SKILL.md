@@ -291,8 +291,8 @@ Use when the codebase exists but the requested capability is new.
 4. Once requirements are stable, hand off to the narrowest next owner:
    - `prd-gen` for requirements formalization
    - `engineer-agent:trd-gen` for Engineer-owned technical design after PRD confirmation
-   - `api-gen` or `adr-gen` only when those artifacts are already clearly
-     justified
+   - `engineer-agent:trd-gen` for Engineer-owned API or ADR documents when
+     interface contracts or architecture decisions are already clearly justified
 
 ### Lane: `existing-project-update`
 

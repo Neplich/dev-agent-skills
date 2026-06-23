@@ -1,7 +1,7 @@
 ---
 title: "PRD/TRD 多级功能目录契约 TRD"
 type: TRD
-version: "1.0.0"
+version: "1.0.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-23"
@@ -23,6 +23,8 @@ related_docs:
   - "agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/gen/brd-gen/INSTRUCTIONS.md"
+  - "agents/product_manager/skills/idea-to-spec/_internal/gen/api-gen/INSTRUCTIONS.md"
+  - "agents/product_manager/skills/idea-to-spec/_internal/gen/adr-gen/INSTRUCTIONS.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/iteration/prd-iteration/INSTRUCTIONS.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/orchestration/project-init/INSTRUCTIONS.md"
   - "agents/engineer/skills/engineer-agent/SKILL.md"
@@ -35,6 +37,9 @@ changelog:
   - version: "1.0.0"
     date: "2026-06-23"
     changes: "初始版本"
+  - version: "1.0.1"
+    date: "2026-06-23"
+    changes: "补充 API / ADR 生成职责迁移到 Engineer 的技术契约"
 ---
 
 # PRD/TRD 多级功能目录契约 TRD
@@ -69,6 +74,7 @@ flowchart TD
 - `feature_path` 是跨 PM、Engineer、Design、QA、DevOps、Security 的功能归属主键。
 - `feature_path` 最多三级，目录段使用仓库现有 slug 风格。
 - PRD 是 feature path 的产品归属来源；TRD 和实施计划必须镜像 PRD。
+- API 文档和 ADR 是 Engineer-owned 产物；PM 只 handoff 产品范围、接口目标和技术决策背景。
 - 缺 PRD 回 PM；缺 TRD、TRD stale 或 TRD 路径不一致回 `trd-gen`。
 - 旧单层目录视为一级功能，读取兼容，写入时补齐字段或按维护者确认迁移。
 
@@ -114,6 +120,10 @@ source_documents:
   prd: docs/pm/chat-interface/history-search/PRD.md
   decisions: docs/pm/chat-interface/history-search/DECISIONS.md
 handoff_target: engineer-agent:trd-gen
+engineer_outputs:
+  trd: docs/engineer/chat-interface/history-search/TRD.md
+  api: docs/engineer/chat-interface/history-search/API.md
+  adr: docs/engineer/chat-interface/history-search/ADR-001-search-index.md
 ```
 
 ## 4. 解析与扫描算法
@@ -139,6 +149,8 @@ handoff_target: engineer-agent:trd-gen
 4. 校验 `parent_feature` 与路径父级一致；一级功能必须为 `N/A`。
 5. 写入或更新 `docs/engineer/{feature_path}/TRD.md`。
 6. TRD 的 `related_prd` 必须指向 `docs/pm/{feature_path}/PRD.md`。
+7. 当接口契约或架构决策已稳定，写入或更新同目录下的 `API.md` 和 `ADR-*.md`。
+8. 不调用 PM 内部 `api-gen` 或 `adr-gen` 生成 Engineer 文档。
 
 ### 4.3 实施计划门禁
 
@@ -182,6 +194,8 @@ handoff_target: engineer-agent:trd-gen
 | PM draft | `docs/pm/{feature_path}/design.md` |
 | Engineer TRD | `docs/engineer/{feature_path}/TRD.md` |
 | Engineer plan | `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` |
+| Engineer API | `docs/engineer/{feature_path}/API.md` |
+| Engineer ADR | `docs/engineer/{feature_path}/ADR-*.md` |
 | Design docs | `docs/design/{feature_path}/...` |
 | QA E2E | `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/...` |
 | DevOps report | `docs/devops/{feature_path}/...` |
@@ -191,6 +205,7 @@ handoff_target: engineer-agent:trd-gen
 
 - 生成 PRD 时，如果父级 PRD 不存在且用户表达的是子功能，必须回 PM 澄清功能树，不直接创建并列顶层目录。
 - 生成 TRD 时，如果 PRD 的 `feature_path` 指向嵌套目录但 PRD 文件缺失，必须回 PM。
+- 生成 API 或 ADR 时，如果 PRD 未确认或 `feature_path` 不明确，必须回 PM；如果 PM 范围已确认，则由 `trd-gen` 在 `docs/engineer/{feature_path}/` 下生成，不使用 PM 内部生成器。
 - 生成实施计划时，如果 PRD 或 TRD 缺失，分别回 PM 或 TRD；如果只有 Engineer 目标目录不存在，且 PRD/TRD 已确认一致，可以创建目录。
 - 下游 Design、QA、DevOps、Security 不拥有 feature path 决策权；路径不清时回 PM/Engineer。
 

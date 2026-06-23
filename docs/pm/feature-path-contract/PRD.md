@@ -1,7 +1,7 @@
 ---
 title: "PRD/TRD 多级功能目录契约 PRD"
 type: PRD
-version: "1.0.0"
+version: "1.0.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-23"
@@ -30,6 +30,9 @@ changelog:
   - version: "1.0.0"
     date: "2026-06-23"
     changes: "初始版本"
+  - version: "1.0.1"
+    date: "2026-06-23"
+    changes: "补充 API / ADR 生成职责迁移到 Engineer 的交付标准"
 ---
 
 # PRD/TRD 多级功能目录契约 PRD
@@ -81,6 +84,7 @@ QA E2E 已经使用 `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` 
 | US-004 | 作为维护者，我希望旧单层文档继续可读，以便历史功能不被一次性迁移阻断。 | P0 | 无 `feature_path` 的旧单层目录被视为一级功能；后续触及时补字段或按确认规则迁移。 |
 | US-005 | 作为 Skill 作者，我希望 eval 能覆盖父功能识别和缺层阻断，以便路径契约不会回退。 | P0 | `idea-to-spec`、`trd-gen`、`feature-implementor` 至少各有语义断言覆盖嵌套路径成功与缺失门禁。 |
 | US-006 | 作为下游 Agent 使用者，我希望 Design、QA、DevOps、Security 报告使用同一功能路径，以便跨角色产物能互相定位。 | P1 | feature-scoped 下游产物引用同一 `feature_path`，不自行创建同义并列目录。 |
+| US-007 | 作为维护者，我希望 API 文档和 ADR 由 Engineer 生成，以便 PM 不越界写工程文档。 | P0 | PM 只输出 API / ADR 背景和 handoff；Engineer 在 `docs/engineer/{feature_path}/` 下生成 `API.md` 与 `ADR-*.md`。 |
 
 ## 5. 功能需求
 
@@ -98,6 +102,7 @@ QA E2E 已经使用 `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` 
 | FR-010 | 旧路径兼容 | 现有单层 `{feature}` 目录继续视为一级功能。 | P0 | 不因缺少 `feature_path` 字段阻断旧文档读取；触及时补齐字段或记录迁移决策。 |
 | FR-011 | 误放目录处理 | 对已确认误放的并列目录定义迁移边界。 | P0 | 只有在维护者确认后才移动历史文档；普通生成流程只阻断新错误，不擅自迁移。 |
 | FR-012 | Eval 覆盖 | 增加路径成功、缺层阻断和 handoff 断言。 | P0 | 相关 eval 使用 schema `1.0`，实际执行 eval 或 fresh subagent validation 后更新 durable `comparison.md`。 |
+| FR-013 | API / ADR Engineer ownership | API 文档和 ADR 由 Engineer 拥有，PM 只负责产品范围、约束和决策背景 handoff。 | P0 | `idea-to-spec` 不直接触发 PM 内部 `api-gen` / `adr-gen`；`trd-gen` 负责 `docs/engineer/{feature_path}/API.md` 和 `ADR-*.md`。 |
 
 ## 6. 用户流程
 
@@ -149,6 +154,8 @@ flowchart TD
 | PM | working draft | `docs/pm/{feature_path}/design.md` |
 | Engineer | TRD | `docs/engineer/{feature_path}/TRD.md` |
 | Engineer | IMPLEMENTATION_PLAN | `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` |
+| Engineer | API | `docs/engineer/{feature_path}/API.md` |
+| Engineer | ADR | `docs/engineer/{feature_path}/ADR-*.md` |
 | Design | feature-scoped design docs | `docs/design/{feature_path}/...` |
 | QA | E2E assets | `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/...` |
 | DevOps | feature-scoped reports | `docs/devops/{feature_path}/...` |
@@ -163,6 +170,7 @@ flowchart TD
 | AC-003 | 缺 PRD、缺 TRD、路径冲突时不会生成实施计划。 | `feature-implementor` eval 检查 blocked/handoff 输出。 |
 | AC-004 | 旧单层路径仍可读取。 | fixture 包含无 `feature_path` 的旧一级目录并验证兼容读取。 |
 | AC-005 | 实际执行 eval 或 fresh subagent validation 后，durable `comparison.md` 与对话/PR 结论一致。 | 检查对应 eval workspace 的 `comparison.md`。 |
+| AC-006 | API / ADR 请求不会由 PM 直接生成 Engineer 文档。 | `idea-to-spec` 与 `trd-gen` eval 覆盖 Engineer handoff、输出路径和禁止 PM 内部 `api-gen` / `adr-gen`。 |
 
 ## 10. 发布计划与里程碑
 

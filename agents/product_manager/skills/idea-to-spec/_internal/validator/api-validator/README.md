@@ -17,4 +17,4 @@
 
 ## 关联 Skill
 
-- `api-gen` — 生成 API 文档
+- `engineer-agent:trd-gen` — 生成 Engineer-owned API 文档

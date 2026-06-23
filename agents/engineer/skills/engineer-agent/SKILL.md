@@ -17,6 +17,7 @@ repo context, and current delivery stage.
   implementing, testing, debugging, or delivering code
 - selecting the narrowest downstream engineering skill
 - owning technical planning after PM requirements are confirmed
+- owning API documentation and ADR routing after PM scope is confirmed
 - defining an ordered engineering chain when the user clearly wants an
   end-to-end implementation workflow
 - asking at most one route-level clarification question when the target outcome
@@ -37,6 +38,11 @@ After `pm-agent` confirms the PRD / BRD and any product decision records, route
 technical planning to `trd-gen`. TRD belongs to Engineer and is written to
 `docs/engineer/{feature_path}/TRD.md`, mirroring the confirmed PM path
 `docs/pm/{feature_path}/PRD.md`.
+
+API documentation and ADR creation also belong to Engineer once PM scope is
+confirmed. Route API specs, endpoint documentation, architecture decision
+records, and durable technical rationale to `trd-gen`; PM should only provide
+product requirements, constraints, decision context, and feature path evidence.
 
 After the TRD is confirmed, route implementation planning and execution to
 `feature-implementor`. `feature-implementor` writes
@@ -129,7 +135,7 @@ sub-agents.
 ## Available Skills
 
 - `engineer-agent:codebase-analyzer` - Understand repo structure, stack, conventions, constraints
-- `engineer-agent:trd-gen` - Write or update Engineer-owned TRDs after PRD confirmation
+- `engineer-agent:trd-gen` - Write or update Engineer-owned TRDs, API docs, and ADRs after PRD confirmation
 - `engineer-agent:project-bootstrap` - Scaffold or initialize a new project from a TRD, approved PM docs, or explicit bootstrap override
 - `engineer-agent:feature-implementor` - Implement features, behavior changes, and scoped refactors
 - `engineer-agent:test-writer` - Add or update automated tests and coverage
@@ -145,7 +151,7 @@ Route by the engineering outcome the user wants, not by literal phrasing.
   -> `codebase-analyzer`
 - Technical planning from confirmed PRD and product decisions, TRD creation or
   revision, architecture plan, implementation blueprint, "写 TRD", "技术方案",
-  "技术计划", "工程设计"
+  "技术计划", "工程设计", "API 文档", "接口规范", "ADR", "架构决策"
   -> `trd-gen`
 - New project setup, greenfield bootstrap, scaffolding from a TRD, approved PM
   docs, or an explicit "skip PM and just scaffold" request, "初始化项目",
@@ -170,7 +176,7 @@ Route by the engineering outcome the user wants, not by literal phrasing.
 | Engineering Outcome | Primary Skill |
 | --- | --- |
 | 理解仓库、技术栈、约束、现有模式 | `codebase-analyzer` |
-| PRD 确认后的技术计划、TRD 编写或更新 | `trd-gen` |
+| PRD 确认后的技术计划、TRD/API/ADR 编写或更新 | `trd-gen` |
 | 新项目/新服务初始化、脚手架搭建（已具备 TRD / 稳定 spec / 显式跳过 PM） | `project-bootstrap` |
 | 实现需求、改行为、按 spec 或设计落地、为需求做重构 | `feature-implementor` |
 | 补测试、补 coverage、把实现转成自动化验证 | `test-writer` |

@@ -1,6 +1,7 @@
 # ADR (Architecture Decision Record) Schema
 
-> Shared schema referenced by `adr-gen`, `adr-validator`, and `adr-iteration`.
+> Shared schema referenced by Engineer-owned ADRs from
+> `engineer-agent:trd-gen`, `adr-validator`, and `adr-iteration`.
 
 ## Required Sections
 

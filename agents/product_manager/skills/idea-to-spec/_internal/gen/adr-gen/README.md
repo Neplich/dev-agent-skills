@@ -1,19 +1,19 @@
-# ADR 生成器 (adr-gen)
+# ADR 生成器 (adr-gen, deprecated)
 
 ## 概述
 
-自动生成标准化的架构决策记录 (Architecture Decision Record)。
+历史 PM 内部生成器，仅保留作兼容参考。新的 ADR 由
+`engineer-agent:trd-gen` 在 Engineer 阶段生成。
 
 ## 使用场景
 
-- 做出或需要记录重要技术决策
-- 评估不同技术方案的优劣
-- 需要为未来参考建立决策历史
+- 仅阅读历史规则或 schema 参考
+- 新 ADR 请求应 handoff 到 `engineer-agent:trd-gen`
 
 ## 快速开始
 
 ```
-帮我写一个 ADR，记录为什么选择 PostgreSQL 而不是 MongoDB
+请把 PostgreSQL 选型 ADR 请求移交给 engineer-agent:trd-gen
 ```
 
 ## 输入

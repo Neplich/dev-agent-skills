@@ -1,19 +1,19 @@
-# API 文档生成器 (api-gen)
+# API 文档生成器 (api-gen, deprecated)
 
 ## 概述
 
-从代码、路由定义或口头描述自动生成结构化 API 文档。
+历史 PM 内部生成器，仅保留作兼容参考。新的 API 文档由
+`engineer-agent:trd-gen` 在 Engineer 阶段生成。
 
 ## 使用场景
 
-- 为已有 API 补充文档
-- 设计新 API 时生成规范文档
-- 将非正式 API 笔记转为标准文档
+- 仅阅读历史规则或 schema 参考
+- 新 API 文档请求应 handoff 到 `engineer-agent:trd-gen`
 
 ## 快速开始
 
 ```
-帮我为这些 Express 路由生成 API 文档
+请基于这些 Express 路由，把 API 文档生成请求移交给 engineer-agent:trd-gen
 ```
 
 ## 输入

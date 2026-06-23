@@ -1,18 +1,22 @@
 ---
 name: adr-gen
-description: Generate an Architecture Decision Record (ADR) for technical decisions. Use when users say "create ADR", "architecture decision", "record decision", "ADR", "document tech choice", or need to formalize why a specific technology, pattern, or approach was chosen.
+description: Deprecated PM-owned ADR generator. Do not use for new generation; route ADR requests to engineer-agent:trd-gen.
 ---
 
 # ADR Generator
 
-Generate an Architecture Decision Record following the standardized ADR schema.
+Deprecated PM-owned generator retained for historical reference. New ADRs are
+Engineer-owned and must be routed to `engineer-agent:trd-gen` with confirmed PM
+scope, decision context, alternatives, constraints, and feature path evidence.
 
 ## When to use
 
 - Making or documenting a significant technical decision
 - Choosing between technologies, patterns, or architectural approaches
 - Need a formal record of why a decision was made for future reference
-- **Simplest** gen skill — ADR format is lightweight and well-defined
+- **Deprecated**: do not trigger this PM generator for new ADRs. Use
+  `engineer-agent:trd-gen` so ADRs are written with the TRD and feature path
+  contract.
 
 ## Inputs
 
@@ -30,7 +34,7 @@ Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-convent
 
 - **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/adr-schema.md`
 - **Metadata**: `type: ADR`, version `1.0.0`, status `Proposed`
-- **Naming**: `docs/engineer/<feature-name>/ADR-<NNN>-<decision-title>.md`
+- **Naming**: `docs/engineer/{feature_path}/ADR-<NNN>-<decision-title>.md`
 
 ## Workflow Details
 

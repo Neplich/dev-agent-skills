@@ -6,15 +6,15 @@ Architecture decision workflow — create ADR, validate, assess impact.
 
 ```yaml
 name: decision-record
-description: Record and validate an architecture decision, then assess impact
+description: Hand off a technical decision for Engineer-owned ADR, then validate and assess impact
 steps:
-  - skill: adr-gen
+  - skill: engineer-agent:trd-gen
     input_from: context
-    output_key: adr
+    output_key: trd_and_adr
   - skill: adr-validator
-    input_from: adr
+    input_from: trd_and_adr
     gate: true
   - skill: change-impactor
-    input_from: adr
+    input_from: trd_and_adr
     output_key: impact_report
 ```

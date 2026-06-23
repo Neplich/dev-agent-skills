@@ -22,5 +22,5 @@ Proposed → Accepted → Deprecated / Superseded
 
 ## 关联 Skill
 
-- `adr-gen` — 生成 ADR
+- `engineer-agent:trd-gen` — 生成新的 Engineer-owned ADR
 - `adr-validator` — 校验 ADR 质量

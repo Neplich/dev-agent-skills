@@ -2,6 +2,9 @@
 title: "deployment-planner — Product Requirements Document"
 type: PRD
 feature: "skill-deployment-planner"
+feature_path: "agents/devops-agent/deployment-planner"
+parent_feature: "agents/devops-agent"
+feature_level: "3"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

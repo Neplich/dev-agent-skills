@@ -87,8 +87,8 @@ document state.
 | BRD generation | `brd-gen` | `agents/product_manager/skills/idea-to-spec/_internal/gen/brd-gen/INSTRUCTIONS.md` | Business case or stakeholder alignment is stable |
 | PRD generation | `prd-gen` | `agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md` | Requirements and flows are stable |
 | TRD generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | PRD and product decisions are stable; explicit Engineer handoff is needed |
-| ADR generation | `adr-gen` | `agents/product_manager/skills/idea-to-spec/_internal/gen/adr-gen/INSTRUCTIONS.md` | A decision needs durable rationale |
-| API generation | `api-gen` | `agents/product_manager/skills/idea-to-spec/_internal/gen/api-gen/INSTRUCTIONS.md` | Interface contracts are stable |
+| ADR generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | A technical decision needs durable Engineer-owned rationale |
+| API generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | Interface contracts are stable and ready for Engineer-owned API documentation |
 | Test spec generation | `tspecs-gen` | `agents/product_manager/skills/idea-to-spec/_internal/gen/tspecs-gen/INSTRUCTIONS.md` | QA assets should be derived from approved requirements or design |
 | Workflow execution | `flow` | `agents/product_manager/skills/idea-to-spec/_internal/orchestration/flow/INSTRUCTIONS.md` | User wants an end-to-end pipeline |
 | Project bootstrap | `project-init` | `agents/product_manager/skills/idea-to-spec/_internal/orchestration/project-init/INSTRUCTIONS.md` | Empty workspace needs durable doc scaffolding |
@@ -183,7 +183,7 @@ back to PM clarification or document the blocker.
 | Empty workspace, durable docs needed | `project-init` | Stay in `idea-to-spec` for lightweight validation only |
 | Business case, ROI, or stakeholder alignment needed | `brd-gen` | Stay in `idea-to-spec` for a brief validation memo |
 | Existing repo, new feature requirements stable | `prd-gen` | `prd-validator` after generation |
-| Existing repo, technical design needed after PRD confirmation | `engineer-agent:trd-gen` | `adr-gen`, `api-gen`, then matching validators after Engineer TRD confirmation |
+| Existing repo, technical design needed after PRD confirmation | `engineer-agent:trd-gen` | Engineer-owned API / ADR docs through `trd-gen`, then matching validators after Engineer TRD confirmation |
 | Existing repo, one approved doc needs revision | Matching `*-iteration` | Matching validator |
 | Existing repo, multiple docs need coordinated revision | `change-impactor` -> `iteration-coordinator` | `trace-check` and `version-differ` after updates |
 | QA assets or regression mapping needed | `tspecs-gen` | `tspecs-validator` or `trace-check` |
@@ -212,8 +212,8 @@ back to PM clarification or document the blocker.
 | BRD | `brd-gen` | `brd-validator` | `brd-iteration` |
 | PRD | `prd-gen` | `prd-validator` | `prd-iteration` |
 | TRD | `engineer-agent:trd-gen` | `trd-validator` | hand off to `engineer-agent:trd-gen` for revisions |
-| API | `api-gen` | `api-validator` | `api-iteration` |
-| ADR | `adr-gen` | `adr-validator` | `adr-iteration` |
+| API | `engineer-agent:trd-gen` | `api-validator` | hand off to `engineer-agent:trd-gen` for revisions |
+| ADR | `engineer-agent:trd-gen` | `adr-validator` | hand off to `engineer-agent:trd-gen` for revisions |
 | TEST_SPEC | `tspecs-gen` | `tspecs-validator` | `tspecs-iteration` |
 
 ## 10. Shared References

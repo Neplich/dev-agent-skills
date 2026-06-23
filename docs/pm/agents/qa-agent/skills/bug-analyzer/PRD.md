@@ -2,6 +2,9 @@
 title: "bug-analyzer — Product Requirements Document"
 type: PRD
 feature: "skill-bug-analyzer"
+feature_path: "agents/qa-agent/bug-analyzer"
+parent_feature: "agents/qa-agent"
+feature_level: "3"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

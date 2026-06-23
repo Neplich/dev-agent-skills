@@ -1,18 +1,23 @@
 ---
 name: api-gen
-description: Generate structured API documentation from code, route definitions, or verbal descriptions. Use when users say "create API docs", "document API", "API specification", "endpoint documentation", "generate API reference", or need to produce comprehensive API documentation for a service.
+description: Deprecated PM-owned API generator. Do not use for new generation; route API documentation requests to engineer-agent:trd-gen.
 ---
 
 # API Documentation Generator
 
-Generate structured API documentation following the standardized API schema.
+Deprecated PM-owned generator retained for historical reference. New API
+documentation belongs to Engineer and must be routed to `engineer-agent:trd-gen`
+with the confirmed PM scope, feature path, interface goals, constraints, and
+available code or OpenAPI evidence.
 
 ## When to use
 
 - Need to document an existing API from code or route definitions
 - Designing a new API and need structured documentation
 - Converting informal API notes into proper documentation
-- **Differs from** `engineer-agent:trd-gen`: TRD covers full technical design; api-gen focuses exclusively on API reference documentation
+- **Deprecated**: do not trigger this PM generator for new API documents. Use
+  `engineer-agent:trd-gen` so API docs are produced with the TRD and feature
+  path contract.
 
 ## Inputs
 
@@ -34,7 +39,7 @@ Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-convent
 
 - **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/api-schema.md`
 - **Metadata**: `type: API`, version `1.0.0`
-- **Naming**: `docs/engineer/<feature-name>/API.md`
+- **Naming**: `docs/engineer/{feature_path}/API.md`
 
 ## Workflow Details
 

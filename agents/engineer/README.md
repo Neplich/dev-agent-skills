@@ -24,7 +24,7 @@
 | --- | --- | --- |
 | `engineer-agent` | Engineering request routing | Specialist selection and execution path |
 | `codebase-analyzer` | Taking over an existing repo, understanding structure and constraints | Project profile, stack and architecture summary |
-| `trd-gen` | Writing technical plans after PRD / DECISIONS are confirmed | `docs/engineer/{feature_path}/TRD.md` |
+| `trd-gen` | Writing technical plans, API docs, and ADRs after PRD / DECISIONS are confirmed | `docs/engineer/{feature_path}/TRD.md`, optional `API.md` / `ADR-*.md` |
 | `project-bootstrap` | Initializing a project from approved PRD/TRD | Project skeleton, base config, startup notes |
 | `feature-implementor` | Implementing a confirmed TRD or design document | `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`, code changes, necessary docs |
 | `test-writer` | Adding unit, integration, or validation coverage | Test files, test execution evidence |
@@ -34,7 +34,7 @@
 ## Routing Rules
 
 - Understand repository structure, stack, and architecture boundaries: use `codebase-analyzer`
-- Write or update the technical plan after PRD confirmation: use `trd-gen`
+- Write or update the technical plan, API docs, or ADRs after PRD confirmation: use `trd-gen`
 - Bootstrap a new project or service: use `project-bootstrap`
 - Implement features, behavior changes, or design handoff: use `feature-implementor`
 - Add tests, coverage, or implementation validation: use `test-writer`
@@ -79,17 +79,18 @@ Engineer documents mirror the PM path and include `feature_path`,
 `parent_feature`, and `feature_level` frontmatter. Existing single-level docs
 without those fields remain compatible as level-1 features.
 
-Engineer's primary outputs include technical plans, implementation plans, code, and tests:
+Engineer's primary outputs include technical plans, API / ADR docs,
+implementation plans, code, and tests:
 
 - `docs/engineer/{feature_path}/TRD.md`
 - `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
 - `docs/engineer/{feature_path}/API.md`
-- `docs/engineer/{feature_path}/ADR.md`
+- `docs/engineer/{feature_path}/ADR-*.md`
 
 ## Collaboration Boundary
 
 - Engineer is the only role that turns PM/Designer documents into code, tests, and delivery artifacts.
-- Engineer owns TRD writing after PM scope is confirmed. `feature-implementor` consumes confirmed TRDs and produces implementation plans.
+- Engineer owns TRD, API documentation, and ADR writing after PM scope is confirmed. `feature-implementor` consumes confirmed Engineer docs and produces implementation plans.
 - Engineer does not replace PM for requirement definition or Designer for UX/visual decisions.
 - QA findings return to Engineer when they are implementation defects, and to PM when they are requirement gaps.
 - DevOps and Security join only when deployment, runtime, or security review becomes the current goal.

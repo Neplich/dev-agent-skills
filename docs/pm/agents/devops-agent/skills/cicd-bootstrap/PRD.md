@@ -2,6 +2,9 @@
 title: "cicd-bootstrap — Product Requirements Document"
 type: PRD
 feature: "skill-cicd-bootstrap"
+feature_path: "agents/devops-agent/cicd-bootstrap"
+parent_feature: "agents/devops-agent"
+feature_level: "3"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

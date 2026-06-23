@@ -2,6 +2,9 @@
 title: "devops-agent — Product Requirements Document"
 type: PRD
 feature: "skill-devops-agent"
+feature_path: "agents/devops-agent/devops-agent"
+parent_feature: "agents/devops-agent"
+feature_level: "3"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

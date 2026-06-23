@@ -2,6 +2,9 @@
 title: "regression-suite — Product Requirements Document"
 type: PRD
 feature: "skill-regression-suite"
+feature_path: "agents/qa-agent/regression-suite"
+parent_feature: "agents/qa-agent"
+feature_level: "3"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

@@ -2,6 +2,9 @@
 title: "engineer-agent — Product Requirements Document"
 type: PRD
 feature: "skill-engineer-agent"
+feature_path: "agents/engineer-agent/engineer-agent"
+parent_feature: "agents/engineer-agent"
+feature_level: "3"
 version: "1.1.0"
 status: Draft
 author: "Neplich Codex"

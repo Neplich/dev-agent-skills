@@ -13,7 +13,8 @@ version history, and endpoint-level diffs.
 - `api-validator` reported issues that need fixing
 - Endpoint contracts changed after implementation or review
 - New endpoints, fields, auth rules, or error codes need documentation updates
-- **Not for** creating a new API document from scratch (use `api-gen`)
+- **Not for** creating a new API document from scratch; route new API docs to
+  `engineer-agent:trd-gen`
 
 ## Inputs
 
