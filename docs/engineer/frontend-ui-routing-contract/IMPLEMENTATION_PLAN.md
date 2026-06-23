@@ -30,9 +30,9 @@ related_issue: "https://github.com/Neplich/dev-agent-skills/issues/35"
 | --- | --- | --- |
 | PRD alignment | 已补齐 issue 级 PRD | `docs/pm/frontend-ui-routing-contract/PRD.md` |
 | TRD alignment | 已补齐 issue 级 TRD | `docs/engineer/frontend-ui-routing-contract/TRD.md` |
-| Implementation plan | 待用户确认 | 本文件 |
-| Code / skill edits | 未开始 | 本轮只写计划，不改 skill 行为文件 |
-| Eval execution | 待确认 | 修改 skill / eval 后需询问是否运行对应 eval |
+| Implementation plan | 已确认并实施 | 本文件已更新为 `status: "Implemented"` |
+| Code / skill edits | 已完成 | PRD、SKILL.md、README、eval fixture 和 `skills-lock.json` 已更新 |
+| Eval execution | 已完成 | 3 组 fresh Codex subagent validation 均 PASS，见对应 durable `comparison.md` |
 
 ### 1.2 成功标准
 
@@ -310,4 +310,10 @@ uv run scripts/check_eval_artifacts.py
 uv run --with pytest pytest agents/test_eval_contract.py
 ```
 
-模型 eval 尚未执行；按仓库规则，后续需要维护者确认是否运行受影响 skill eval，并在实际执行后更新对应 durable `comparison.md`。
+受影响 skill eval 已完成 fresh Codex subagent validation，并已更新对应 durable `comparison.md`：
+
+- `agents/engineer/test/engineer-agent/evals/workspace/eval-004-frontend-ui-routing-contract/comparison.md`
+- `agents/engineer/test/feature-implementor/evals/workspace/eval-009-ui-design-handoff-gate/comparison.md`
+- `agents/designer/test/designer-agent/evals/workspace/eval-003-engineer-ui-maintenance-handoff/comparison.md`
+
+CLI transcript diagnostics 只作为运行期材料保存在 `tmp/eval-runs/manual-issue35/`，不提交到 git。
