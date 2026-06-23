@@ -14,6 +14,8 @@ Execute the implementation plan step by step, writing code that follows project 
 - Confirmed Engineer TRD for reference
 - For complex coding tasks: implementation sub-agent scope, forbidden areas,
   expected behavior, and verification commands
+- Closeout evidence to collect: changed files, deterministic commands run,
+  command results, commands not run with reasons, eval status, and residual risks
 
 ## Entry Gate
 
@@ -87,7 +89,21 @@ After each file:
 
 If the build fails, fix it before moving to the next step.
 
-### 4. Progress update
+### 4. Collect closeout evidence
+
+Track the evidence needed to update the confirmed `IMPLEMENTATION_PLAN.md` after
+implementation:
+
+- files created or modified
+- deterministic check commands run and their results
+- commands skipped or blocked, with reasons
+- skill eval or fresh subagent validation status, when applicable
+- residual risks, open issues, or follow-up owners
+
+Do not write runtime eval artifacts into the repository. Transcript,
+diagnostic, output, timing, and run-status files are temporary only.
+
+### 5. Progress update
 
 After each step, briefly report:
 

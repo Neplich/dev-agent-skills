@@ -40,6 +40,30 @@ When creating or updating `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`:
    `related_trd` points to `docs/engineer/{feature_path}/TRD.md`; mismatches
    block plan writing and must be handed back to PM or `trd-gen`.
 
+## Implementation Plan Closeout
+
+When implementation is complete, update or confirm
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before QA E2E handoff or
+delivery:
+
+1. Set or confirm the final status, such as `status: "Implemented"` when the
+   plan has been fully implemented.
+2. Add an implementation result section or status table that records completed
+   files, completed checks, remaining risks, and next owner.
+3. Record deterministic check commands exactly as run, with pass/fail/blocked
+   results.
+4. For commands not run, record skipped or blocked reasons instead of leaving
+   them as pending.
+5. If skill eval or fresh subagent validation ran, cite the durable
+   `comparison.md` paths. If it did not run, record the skipped or blocked
+   reason.
+6. Do not commit runtime eval artifacts such as transcripts, diagnostics,
+   outputs, timing data, run status files, or `comparison.auto.md`.
+7. A completed plan must not keep unresolved planning-state wording such as
+   "waiting for confirmation", "not started", "pending execution", or "model
+   eval not executed" unless the same section clearly marks it as historical and
+   records the current resolved result.
+
 ## Commit Granularity
 
 When used with `delivery` skill:
