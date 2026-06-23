@@ -60,8 +60,9 @@ For E2E routing, carry these fields into the downstream skill:
   `docs/engineer/{feature_path}/TRD.md`, and
   `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before any acceptance
   TC is created, updated, or executed. If the feature path is ambiguous, hand
-  back to `pm-agent:idea-to-spec`; if TRD or plan is missing or mismatched,
-  hand back to `engineer-agent:trd-gen`.
+  back to `pm-agent:idea-to-spec`; if TRD is missing or mismatched, hand back
+  to `engineer-agent:trd-gen`; if the implementation plan is missing or
+  mismatched, hand back to `engineer-agent:feature-implementor`.
 - Scenario: `feature-update` validates the changed feature and direct impact
   paths in the local development test environment; `release` validates all
   active E2E TC in the release-version test environment. If the scenario cannot

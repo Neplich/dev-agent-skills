@@ -18,7 +18,7 @@
 ## Assertions
 
 - `reads_same_feature_path`: use `account/profile/preferences` as the confirmed feature path and read matching PRD/TRD plus QA function-tree memory.
-- `blocks_missing_plan`: mark the request blocked and return the gap to Engineer/TRD/implementation-plan alignment.
+- `blocks_missing_plan`: mark the request blocked and return the missing implementation plan to `engineer-agent:feature-implementor`.
 - `no_e2e_mutation_or_execution`: do not create, update, or execute acceptance TC without the plan.
 - `keeps_single_route`: choose one narrow QA route and do not enter implementation.
 
@@ -26,7 +26,7 @@
 
 - PASS. Current `qa-agent` instructions consume a confirmed same-path `feature_path` before E2E acceptance work. The fixture provides matching `docs/pm/account/profile/preferences/PRD.md`, `docs/engineer/account/profile/preferences/TRD.md`, and QA function-tree memory under `docs/qa/e2e/account/profile/preferences/`.
 - PASS. The QA Feature Path Gate requires `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` for existing-feature changes, bug fixes, or code-complete E2E documentation updates before creating, updating, or executing acceptance TC. The fixture intentionally omits `docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md`, so the correct route result is `blocked`.
-- PASS. The skill requires missing TRD or implementation-plan gaps to return to Engineer/TRD alignment, preserving the next owner as Engineer/TRD/implementation-plan alignment rather than QA execution.
+- PASS. The skill separates owners: missing or mismatched TRD returns to `engineer-agent:trd-gen`, while a missing or mismatched implementation plan returns to `engineer-agent:feature-implementor`. This fixture omits the implementation plan, so the next owner is `engineer-agent:feature-implementor` rather than QA execution.
 - PASS. The route remains a single narrow QA route and stops before TC mutation, TC execution, or implementation repair. The QA directory being present is treated as memory to read, not sufficient authorization to run acceptance.
 
 ## Without Skill / Baseline

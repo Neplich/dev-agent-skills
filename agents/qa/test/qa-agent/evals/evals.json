@@ -39,7 +39,7 @@
         {
           "id": "alignment_and_plan_gate",
           "description": "PRD/TRD 与实施计划门禁",
-          "text": "如果请求来自现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须先检查同一 feature_path 下的 PRD/TRD、存在的产品决策记录和已确认的 IMPLEMENTATION_PLAN.md；预期变化回 PM，TRD gap 或缺 plan 回 trd-gen，文档缺失 blocked。"
+          "text": "如果请求来自现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须先检查同一 feature_path 下的 PRD/TRD、存在的产品决策记录和已确认的 IMPLEMENTATION_PLAN.md；预期变化回 PM，TRD gap 回 trd-gen，缺 plan 回 feature-implementor，文档缺失 blocked。"
         },
         {
           "id": "assertion_4",
@@ -114,7 +114,7 @@
         {
           "id": "blocks_missing_plan",
           "description": "缺实施计划 blocked",
-          "text": "缺少 `docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md` 时必须标记 blocked，并把 next owner 指向 Engineer/TRD/implementation-plan 对齐。"
+          "text": "缺少 `docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md` 时必须标记 blocked，并把 next owner 指向 `engineer-agent:feature-implementor` 补齐实施计划。"
         },
         {
           "id": "no_e2e_mutation_or_execution",

@@ -84,7 +84,7 @@
     "qa-agent": {
       "source": "agents/qa/skills/qa-agent",
       "sourceType": "local",
-      "computedHash": "9a9742e629dd85bf3f04db6add2f1c324f0ff398ee7377f27cf60697d3d92125"
+      "computedHash": "9501b6df7d230cee6b83e59e9200c8bd1a73386ec79c480752941b9dacb447f3"
     },
     "exploratory-tester": {
       "source": "agents/qa/skills/exploratory-tester",
