@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "ce3810f120e5e1ed1e0f7c0a37362c2890ef14c49b81efc8138cd22660f96015"
+      "computedHash": "afae4ef550bed7f273fbd7e39fff4888edfa8124f6c5f1a139d78fc24253829d"
     },
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",

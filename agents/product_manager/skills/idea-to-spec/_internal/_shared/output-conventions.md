@@ -11,6 +11,10 @@ Every generated formal document MUST begin with a YAML frontmatter block:
 ---
 title: "<Document Title>"
 type: BRD | PRD | TRD | ADR | API | TEST_SPEC | DECISIONS
+feature: "<terminal-feature-slug>"
+feature_path: "<1-3-level-feature-path>"
+parent_feature: "<parent-feature-path-or-N/A>"
+feature_level: "1 | 2 | 3"
 version: "1.0.0"
 status: Draft | In Review | Approved | Superseded | Deprecated
 author: "<generation requester display name + agent platform name>"
