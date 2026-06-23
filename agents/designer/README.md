@@ -30,6 +30,7 @@
 
 - UX flows, page structure, information architecture, wireframes, interaction rules: use `ui-ux-design`
 - Visual style, design system, color, typography, component rules, copy tone: use `visual-design`
+- Engineer handoff for UI maintenance or frontend-update design gaps: update the relevant design deliverables, then hand back to `engineer-agent`
 - Ambiguous but clearly design-oriented requests: default to `ui-ux-design`
 - Full design loop: run `ui-ux-design` first, then `visual-design`
 
@@ -82,6 +83,7 @@ These references are only used for design reasoning. Even if raw data contains s
 - Designer produces design documents, Mermaid flows, and ASCII wireframes.
 - Designer does not modify project code, generate tests, or create deployment config.
 - Engineer is the only role that turns PM/Designer documents into code, tests, and delivery artifacts.
+- Engineer-sourced UI maintenance requests remain design-only in Designer; implementation returns to Engineer after the design handoff.
 
 ## Local Maintenance
 

@@ -5,11 +5,11 @@ feature: "agent-designer-agent"
 feature_path: "agents/designer-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.0.0"
+version: "1.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-06-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/designer/README.md"
@@ -21,7 +21,12 @@ related_docs:
   - "docs/pm/feature-path-contract/PRD.md"
   - "docs/engineer/feature-path-contract/TRD.md"
   - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
+  - "docs/pm/frontend-ui-routing-contract/PRD.md"
+  - "docs/engineer/frontend-ui-routing-contract/TRD.md"
 changelog:
+  - version: "1.1.0"
+    date: "2026-06-24"
+    changes: "Add Engineer-sourced UI maintenance design handoff"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"
@@ -40,6 +45,7 @@ changelog:
 3. 在需要跨角色协作时说明 owning agent、输入包和期望产物。
 4. 支持后续维护者通过 related docs 和 eval fixture 追踪行为漂移。
 5. 消费 PM/Engineer 已确认的 `feature_path`，并将设计产物镜像到同一路径。
+6. 支持来自 Engineer 的 UI maintenance / frontend-update design request，并在设计交付后回交 Engineer。
 
 ## 非目标
 
@@ -73,6 +79,7 @@ changelog:
 | FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任。 | P0 | Dispatcher 输出预期产物类型，不伪装成 specialist report。 |
 | FR-A04 | Handoff | 完整设计闭环可先 ui-ux-design 再 visual-design；需要实现时只停在 design handoff 并指向 engineer-agent，不选择 Engineer 内部 skill。 | P0 | Handoff 指向 owning skill/agent，并说明输入包和期望输出。 |
 | FR-A05 | Feature Path Consumption | feature-scoped 设计只能消费已确认的 `feature_path`，读取 `docs/pm/{feature_path}`，输出 `docs/design/{feature_path}`。 | P0 | 路径或父功能不清时回 `pm-agent:idea-to-spec`，不得自建同义顶层 design 目录。 |
+| FR-A06 | Engineer UI Maintenance Handoff | Designer 必须能处理 Engineer 来源的 UI maintenance / frontend-update design request。 | P0 | Designer 只更新 `docs/design/{feature_path}/ui-ux-spec.md` 和/或 `visual-system.md`；不得输出代码、测试、部署配置或工程实现清单；完成后明确 handoff 回 `engineer-agent`。 |
 
 ## 当前实现对齐
 

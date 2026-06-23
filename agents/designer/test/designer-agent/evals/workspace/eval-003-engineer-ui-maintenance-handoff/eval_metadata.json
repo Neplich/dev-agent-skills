@@ -1,0 +1,11 @@
+{
+  "eval_id": "eval-003-engineer-ui-maintenance-handoff",
+  "eval_name": "engineer-ui-maintenance-handoff",
+  "workspace_root": "agents/designer/test/designer-agent/evals/workspace/eval-003-engineer-ui-maintenance-handoff",
+  "skill_availability_goal": "Verify that designer-agent accepts an Engineer-sourced UI maintenance design request, writes only design deliverables, and hands implementation back to engineer-agent.",
+  "prompt": "Engineer 已完成 PRD/TRD 对齐，feature_path 是 customer-portal/profile-settings。现在因为前端 UI 更新缺少设计交付物，请 designer-agent 补齐设置页信息层级和主按钮视觉规范；不要写代码，不要生成实现清单，完成后交回 Engineer。",
+  "fixture_context": [
+    "docs/pm/customer-portal/profile-settings/PRD.md",
+    "docs/engineer/customer-portal/profile-settings/TRD.md"
+  ]
+}

@@ -1,0 +1,20 @@
+---
+title: "Profile Settings TRD"
+type: TRD
+feature: "profile-settings"
+feature_path: "customer-portal/profile-settings"
+parent_feature: "customer-portal"
+feature_level: "2"
+version: "1.0.0"
+status: Draft
+author: "Fixture"
+date: "2026-06-24"
+last_updated: "2026-06-24"
+related_prd: "docs/pm/customer-portal/profile-settings/PRD.md"
+---
+
+# Profile Settings TRD
+
+Engineer confirmed the feature path and implementation surface. The current
+blocker is missing UI/UX and visual design guidance for the requested frontend
+change.

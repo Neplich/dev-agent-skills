@@ -117,6 +117,51 @@
           "text": "因为用户要求先做工程路由，输出不得修改代码、写 IMPLEMENTATION_PLAN 或运行测试。"
         }
       ]
+    },
+    {
+      "id": "eval-004-frontend-ui-routing-contract",
+      "name": "frontend-ui-routing-contract",
+      "description": "Verifies that engineer-agent treats local frontend UI implementation requests as engineering work, checks design deliverables, and hands design gaps to designer-agent instead of external UI skills.",
+      "prompt": "用户说：Customer Portal 的 profile settings 已有 PRD/TRD，现在要更新前端代码，调整设置页的信息层级和主按钮样式。请先做工程路由，不要改代码。相关文档在 docs/pm/customer-portal/profile-settings/PRD.md 和 docs/engineer/customer-portal/profile-settings/TRD.md。",
+      "workspace": "workspace/eval-004-frontend-ui-routing-contract",
+      "expected_output": "把前端 UI 更新识别为 engineer-agent 入口，先读取同一 feature_path 的 PRD/TRD，再检查 docs/design/customer-portal/profile-settings 下的 UI/UX 和 visual-system 交付物；设计缺失或过期时 handoff 到 designer-agent，设计补齐后再进入 feature-implementor，不建议修改或调用外部 ui-ux-pro-max。",
+      "assertions": [
+        {
+          "id": "routes_frontend_update_to_engineer",
+          "description": "前端实现请求进入 Engineer",
+          "text": "输出必须把“更新前端代码、调整信息层级和按钮样式”识别为 Engineering request，并由 `engineer-agent` 承接。"
+        },
+        {
+          "id": "does_not_route_to_external_ui_skill",
+          "description": "不路由到外部 UI skill",
+          "text": "输出不得建议修改、调用或依赖外部 `ui-ux-pro-max` 来承接本地前端实现请求。"
+        },
+        {
+          "id": "runs_feature_alignment",
+          "description": "先做 PRD/TRD 对齐",
+          "text": "输出必须解析 `customer-portal/profile-settings` feature_path，并读取 `docs/pm/customer-portal/profile-settings/PRD.md` 与 `docs/engineer/customer-portal/profile-settings/TRD.md` 后再决定后续路由。"
+        },
+        {
+          "id": "checks_design_deliverables",
+          "description": "检查设计交付物",
+          "text": "输出必须检查 `docs/design/customer-portal/profile-settings/ui-ux-spec.md` 和/或 `docs/design/customer-portal/profile-settings/visual-system.md` 是否存在且覆盖当前 UI 变化。"
+        },
+        {
+          "id": "hands_design_gap_to_designer",
+          "description": "设计缺口交给 Designer",
+          "text": "当设计交付物缺失、过期或不覆盖信息层级与按钮样式变化时，输出必须 handoff 到 `designer-agent`，并说明需要补齐的设计范围。"
+        },
+        {
+          "id": "routes_implementation_after_design",
+          "description": "设计补齐后回到实现",
+          "text": "输出必须说明 Designer 完成设计交付后再回到 `engineer-agent` / `feature-implementor`，并继续遵守 IMPLEMENTATION_PLAN 确认门禁。"
+        },
+        {
+          "id": "does_not_execute_directly",
+          "description": "只做路由不执行",
+          "text": "因为用户要求先做工程路由，输出不得修改代码、写 IMPLEMENTATION_PLAN 或运行测试。"
+        }
+      ]
     }
   ]
 }

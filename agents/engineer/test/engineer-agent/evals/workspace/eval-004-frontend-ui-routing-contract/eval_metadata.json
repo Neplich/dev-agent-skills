@@ -1,0 +1,11 @@
+{
+  "eval_id": "eval-004-frontend-ui-routing-contract",
+  "eval_name": "frontend-ui-routing-contract",
+  "workspace_root": "agents/engineer/test/engineer-agent/evals/workspace/eval-004-frontend-ui-routing-contract",
+  "skill_availability_goal": "Verify that engineer-agent treats local frontend UI implementation requests as engineering work, checks design deliverables, and hands design gaps to designer-agent.",
+  "prompt": "用户说：Customer Portal 的 profile settings 已有 PRD/TRD，现在要更新前端代码，调整设置页的信息层级和主按钮样式。请先做工程路由，不要改代码。相关文档在 docs/pm/customer-portal/profile-settings/PRD.md 和 docs/engineer/customer-portal/profile-settings/TRD.md。",
+  "fixture_context": [
+    "docs/pm/customer-portal/profile-settings/PRD.md",
+    "docs/engineer/customer-portal/profile-settings/TRD.md"
+  ]
+}

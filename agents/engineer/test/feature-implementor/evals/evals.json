@@ -282,6 +282,46 @@
           "text": "输出必须把下一步交给 `engineer-agent:trd-gen` 修正或重写镜像 `docs/engineer/chat-interface/history-search/TRD.md`。"
         }
       ]
+    },
+    {
+      "id": "eval-009-ui-design-handoff-gate",
+      "name": "ui-design-handoff-gate",
+      "description": "Verifies that feature-implementor checks design deliverables before planning frontend UI changes and blocks when design inputs are missing or conflicting.",
+      "prompt": "docs/pm/customer-portal/profile-settings/PRD.md 和 docs/engineer/customer-portal/profile-settings/TRD.md 已确认。请进入 feature-implementor，更新设置页前端 UI 的信息层级和主按钮样式；当前 workspace 没有 docs/design/customer-portal/profile-settings/ui-ux-spec.md 或 visual-system.md。先不要改代码。",
+      "workspace": "workspace/eval-009-ui-design-handoff-gate",
+      "expected_output": "识别这是前端 UI 行为和视觉变化，先检查同 feature_path 的设计交付物；因 UI/UX 和 visual-system 缺失，停止创建 IMPLEMENTATION_PLAN.md，handoff 回 engineer-agent -> designer-agent 补齐设计；设计完成后仍需再写 IMPLEMENTATION_PLAN 并等待用户确认。",
+      "assertions": [
+        {
+          "id": "detects_ui_design_change",
+          "description": "识别 UI 设计变化",
+          "text": "输出必须说明信息层级和主按钮样式变化属于前端 UI / visual change，需要进入 UI Design Handoff Gate。"
+        },
+        {
+          "id": "checks_design_docs",
+          "description": "检查设计文档",
+          "text": "输出必须检查 `docs/design/customer-portal/profile-settings/ui-ux-spec.md` 和 `docs/design/customer-portal/profile-settings/visual-system.md` 是否存在且覆盖当前变化。"
+        },
+        {
+          "id": "blocks_plan_when_design_missing",
+          "description": "设计缺失时阻断计划",
+          "text": "由于 workspace 缺少相关设计交付物，输出不得创建或更新 `docs/engineer/customer-portal/profile-settings/IMPLEMENTATION_PLAN.md`。"
+        },
+        {
+          "id": "hands_off_to_designer",
+          "description": "交回 Designer 补设计",
+          "text": "输出必须 handoff 回 `engineer-agent -> designer-agent`，要求补齐 UI/UX 或 visual-system 设计交付物。"
+        },
+        {
+          "id": "preserves_plan_gate_after_design",
+          "description": "设计后仍需实施计划",
+          "text": "输出必须说明 Designer 补齐设计后仍要由 `feature-implementor` 写 IMPLEMENTATION_PLAN 并等待用户确认，不能直接编码。"
+        },
+        {
+          "id": "does_not_implement_directly",
+          "description": "不得直接实现",
+          "text": "输出不得声称已经修改前端代码、运行测试或完成实现。"
+        }
+      ]
     }
   ]
 }

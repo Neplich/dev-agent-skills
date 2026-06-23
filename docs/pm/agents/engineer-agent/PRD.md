@@ -5,11 +5,11 @@ feature: "agent-engineer-agent"
 feature_path: "agents/engineer-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.1.0"
+version: "1.2.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-06-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -19,9 +19,14 @@ related_docs:
   - "docs/pm/feature-path-contract/PRD.md"
   - "docs/engineer/feature-path-contract/TRD.md"
   - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
+  - "docs/pm/frontend-ui-routing-contract/PRD.md"
+  - "docs/engineer/frontend-ui-routing-contract/TRD.md"
   - "skills-lock.json"
   - "agents/engineer/test/engineer-agent/evals/evals.json"
 changelog:
+  - version: "1.2.0"
+    date: "2026-06-24"
+    changes: "Add frontend UI update routing contract"
   - version: "1.1.0"
     date: "2026-06-23"
     changes: "Add feature_path mirroring and generation gate requirements"
@@ -43,6 +48,7 @@ changelog:
 3. 在需要跨角色协作时说明 owning agent、输入包和期望产物。
 4. 支持后续维护者通过 related docs 和 eval fixture 追踪行为漂移。
 5. 确保 Engineer TRD、实施计划和调试入口镜像 PM `feature_path`，避免子功能被错误生成到并列目录。
+6. 将本地前端代码更新、UI 实现和设计落地请求纳入 Engineer 入口，并在设计交付物缺失或过期时 handoff 到 Designer。
 
 ## 非目标
 
@@ -76,6 +82,7 @@ changelog:
 | FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任。 | P0 | Dispatcher 输出预期产物类型，不伪装成 specialist report。 |
 | FR-A04 | Handoff | 需求变化回 pm-agent:idea-to-spec；设计交付物回 designer-agent；工程完成后按情况给 qa-agent、devops-agent、security-agent；QA E2E handoff 包含 PRD/TRD、确认的 IMPLEMENTATION_PLAN、变更文件、验证命令、风险和建议目录。 | P0 | Handoff 指向 owning skill/agent，并说明输入包和期望输出。 |
 | FR-A05 | Feature Path Alignment | 现有功能变更、TRD、实施计划和 debugger expected-behavior 对齐必须使用 PM 确认的 `feature_path`。 | P0 | Engineer 读取 `docs/pm/{feature_path}/PRD.md` 并镜像 `docs/engineer/{feature_path}/TRD.md`、`IMPLEMENTATION_PLAN.md`；缺 PRD 回 PM，缺 TRD 或路径不一致回 `trd-gen`。 |
+| FR-A06 | Frontend UI Routing | 本地前端代码更新、UI 实现、界面优化和设计落地请求必须先由 Engineer 入口承接。 | P0 | Engineer 先完成 PRD/TRD alignment；设计交付物缺失、过期或不覆盖当前变化时 handoff 到 `designer-agent`；设计交付完成后回到 Engineer 进入 implementation planning。 |
 
 ## 当前实现对齐
 
@@ -86,7 +93,7 @@ changelog:
 | `codebase-analyzer` | 理解项目根、技术栈、架构、约定、依赖和 CI/CD |
 | `trd-gen` | PRD/产品决策稳定后的 TRD 或 TRD gap packet |
 | `project-bootstrap` | 已有 TRD/approved PM docs 后初始化项目，或用户显式 skip PM scaffold override |
-| `feature-implementor` | TRD 确认后先写 IMPLEMENTATION_PLAN 并获确认，再实现 |
+| `feature-implementor` | TRD 确认后先写 IMPLEMENTATION_PLAN 并获确认，再实现；前端 UI 更新在设计交付物覆盖后进入本 route |
 | `test-writer` | 补测试；无 Test Spec 时可从 PRD/API/code 推导 |
 | `debugger` | 失败日志、构建失败、GitHub bug issue；先对齐期望、复现、分析、repair plan、确认，再修复 |
 | `delivery` | git status/branch/log、staging、commit、push、PR、CI、交付 summary |
@@ -123,7 +130,7 @@ flowchart LR
     Decision --> debugger["debugger"]
     Decision --> delivery["delivery"]
     Decision --> Output["role-specific artifact 或 route decision"]
-    Output --> Handoff["需求变化回 pm-agent:idea-to-spec；设计交付物回 designer-agent；工程完成后按情况给 qa-agent、devops-agent、security-agent；QA E2E handoff 包含 PRD/TRD、确认的 IMPLEMENTATION_PLAN、变更文件、验证命令、风险和建议目录。"]
+    Output --> Handoff["需求变化回 pm-agent:idea-to-spec；设计交付缺口回 designer-agent；工程完成后按情况给 qa-agent、devops-agent、security-agent；QA E2E handoff 包含 PRD/TRD、确认的 IMPLEMENTATION_PLAN、变更文件、验证命令、风险和建议目录。"]
 ```
 
 Alternative flow: 如果 route 目标真正不清，最多提出一个路由级澄清问题。

@@ -67,6 +67,41 @@
           "text": "必须停在 design handoff，不输出代码、工程实现步骤、测试命令或补丁。"
         }
       ]
+    },
+    {
+      "id": "eval-003-engineer-ui-maintenance-handoff",
+      "name": "engineer-ui-maintenance-handoff",
+      "description": "Verifies that designer-agent accepts an Engineer-sourced UI maintenance design request, writes only design deliverables, and hands implementation back to engineer-agent.",
+      "prompt": "Engineer 已完成 PRD/TRD 对齐，feature_path 是 customer-portal/profile-settings。现在因为前端 UI 更新缺少设计交付物，请 designer-agent 补齐设置页信息层级和主按钮视觉规范；不要写代码，不要生成实现清单，完成后交回 Engineer。",
+      "workspace": "workspace/eval-003-engineer-ui-maintenance-handoff",
+      "expected_output": "消费 Engineer handoff 中的 customer-portal/profile-settings feature_path，选择 ui-ux-design 和必要的 visual-design，输出 docs/design/customer-portal/profile-settings 下的设计产物路径，拒绝代码和工程实现清单，并明确 handoff 回 engineer-agent。",
+      "assertions": [
+        {
+          "id": "accepts_engineer_design_handoff",
+          "description": "接受 Engineer 来源设计缺口",
+          "text": "输出必须把该请求识别为来自 `engineer-agent` 的 UI maintenance / frontend-update design handoff，而不是工程实现请求。"
+        },
+        {
+          "id": "uses_confirmed_feature_path",
+          "description": "使用已确认 feature_path",
+          "text": "输出必须使用 `customer-portal/profile-settings` 作为 feature_path，并读取同路径 PM/Engineer 文档作为设计输入。"
+        },
+        {
+          "id": "routes_design_skills",
+          "description": "选择设计 skill",
+          "text": "输出必须选择 `ui-ux-design` 处理信息层级和页面结构，并在主按钮视觉规范受影响时选择或安排 `visual-design`。"
+        },
+        {
+          "id": "writes_design_outputs_only",
+          "description": "只输出设计产物",
+          "text": "输出只能指向 `docs/design/customer-portal/profile-settings/ui-ux-spec.md` 和/或 `docs/design/customer-portal/profile-settings/visual-system.md`，不得输出代码、测试、shell 命令、部署配置或工程实现清单。"
+        },
+        {
+          "id": "hands_back_to_engineer",
+          "description": "回交 Engineer",
+          "text": "输出必须说明设计交付完成后 handoff 回 `engineer-agent`，由 Engineer 继续 TRD / IMPLEMENTATION_PLAN / code / test。"
+        }
+      ]
     }
   ]
 }

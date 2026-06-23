@@ -37,6 +37,7 @@
 - Write or update the technical plan, API docs, or ADRs after PRD confirmation: use `trd-gen`
 - Bootstrap a new project or service: use `project-bootstrap`
 - Implement features, behavior changes, or design handoff: use `feature-implementor`
+- Frontend code updates, UI implementation, or design-to-code: enter through Engineer; hand off to Designer only when design deliverables are missing or stale
 - Add tests, coverage, or implementation validation: use `test-writer`
 - Debug bugs, failed logs, failing tests, or broken builds: use `debugger`
 - Commit, push, open PRs, or finish delivery: use `delivery`
@@ -92,6 +93,7 @@ implementation plans, code, and tests:
 - Engineer is the only role that turns PM/Designer documents into code, tests, and delivery artifacts.
 - Engineer owns TRD, API documentation, and ADR writing after PM scope is confirmed. `feature-implementor` consumes confirmed Engineer docs and produces implementation plans.
 - Engineer does not replace PM for requirement definition or Designer for UX/visual decisions.
+- Frontend UI implementation stays in Engineer after PRD/TRD alignment; if UI/UX or visual documents are missing or stale, Engineer hands that design gap to Designer before implementation planning.
 - QA findings return to Engineer when they are implementation defects, and to PM when they are requirement gaps.
 - DevOps and Security join only when deployment, runtime, or security review becomes the current goal.
 

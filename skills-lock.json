@@ -44,7 +44,7 @@
     "engineer-agent": {
       "source": "agents/engineer/skills/engineer-agent",
       "sourceType": "local",
-      "computedHash": "f69e00e958106873f7ceb741afb7a575871df0ddef5e6bf81d9951cfaab9c26a"
+      "computedHash": "7255bfdb94657ebbc56a0f5616e6ea12ccd652986665c224c23cf2099d60b2ea"
     },
     "codebase-analyzer": {
       "source": "agents/engineer/skills/codebase-analyzer",
@@ -64,7 +64,7 @@
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
       "sourceType": "local",
-      "computedHash": "17d840ef98b093b852be5c3ba0ea186d13232088bb999c70fd9244d1116c85c7"
+      "computedHash": "fa2ef0c323db6b09deb40074ab191b690a0822c2b54ff518fdf4ee3f9b5f4f5a"
     },
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",
@@ -134,7 +134,7 @@
     "designer-agent": {
       "source": "agents/designer/skills/designer-agent",
       "sourceType": "local",
-      "computedHash": "19f216808d6959b90a37a9dd603a9144473d19f8c3d3e4834b3424823ab40e11"
+      "computedHash": "4f0fdcd7258fbab017405384d501dd0981b2ff1cf71a4aac744ba55bc9cf84e6"
     },
     "ui-ux-design": {
       "source": "agents/designer/skills/ui-ux-design",

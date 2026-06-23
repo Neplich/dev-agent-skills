@@ -5,11 +5,11 @@ feature: "skill-engineer-agent"
 feature_path: "agents/engineer-agent/skills/engineer-agent"
 parent_feature: "agents/engineer-agent/skills"
 feature_level: "4"
-version: "1.1.0"
+version: "1.2.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-06-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -17,9 +17,14 @@ related_docs:
   - "agents/engineer/skills/engineer-agent/SKILL.md"
   - "docs/pm/feature-path-contract/PRD.md"
   - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/pm/frontend-ui-routing-contract/PRD.md"
+  - "docs/engineer/frontend-ui-routing-contract/TRD.md"
   - ".claude-plugin/marketplace.json"
   - "agents/engineer/test/engineer-agent/evals/evals.json"
 changelog:
+  - version: "1.2.0"
+    date: "2026-06-24"
+    changes: "Add frontend UI implementation routing and Designer handoff"
   - version: "1.1.0"
     date: "2026-06-23"
     changes: "Add feature_path alignment gate for existing-feature routing"
@@ -75,6 +80,7 @@ changelog:
 | FR-S06 | Handoff | PM-first、Designer、内部 trd/feature/debug/test/delivery、QA/DevOps/Security。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
 | FR-S08 | Feature Path Gate | Existing Feature Alignment Gate 必须先解析 `feature_path`，再路由到 `debugger`、`trd-gen` 或 `feature-implementor`。 | P0 | 缺 PRD 或父功能不清回 PM；缺 TRD、TRD stale、`feature_path`/`parent_feature`/`feature_level` 或 `related_prd` 不一致时回 `trd-gen`。 |
+| FR-S09 | Frontend UI Routing | 前端代码更新、UI 实现、界面优化和设计落地必须作为 Engineering request 处理。 | P0 | 先完成 PRD/TRD alignment；涉及页面结构、交互、视觉系统、组件规范、可用性或信息层级变化时检查设计交付物；设计缺口 handoff 到 `designer-agent`，设计完成后再回到 `feature-implementor`。 |
 
 ## 当前实现对齐
 
@@ -85,7 +91,7 @@ changelog:
 | `codebase-analyzer` | 理解项目根、技术栈、架构、约定、依赖和 CI/CD |
 | `trd-gen` | PRD/产品决策稳定后的 TRD 或 TRD gap packet |
 | `project-bootstrap` | 已有 TRD/approved PM docs 后初始化项目，或用户显式 skip PM scaffold override |
-| `feature-implementor` | TRD 确认后先写 IMPLEMENTATION_PLAN 并获确认，再实现 |
+| `feature-implementor` | TRD 确认后先写 IMPLEMENTATION_PLAN 并获确认，再实现；前端 UI 更新需先完成设计交付物检查 |
 | `test-writer` | 补测试；无 Test Spec 时可从 PRD/API/code 推导 |
 | `debugger` | 失败日志、构建失败、GitHub bug issue；先对齐期望、复现、分析、repair plan、确认，再修复 |
 | `delivery` | git status/branch/log、staging、commit、push、PR、CI、交付 summary |
