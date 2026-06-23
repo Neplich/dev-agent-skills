@@ -2,9 +2,9 @@
 title: "feature-implementor — Product Requirements Document"
 type: PRD
 feature: "skill-feature-implementor"
-feature_path: "agents/engineer-agent/feature-implementor"
-parent_feature: "agents/engineer-agent"
-feature_level: "3"
+feature_path: "agents/engineer-agent/skills/feature-implementor"
+parent_feature: "agents/engineer-agent/skills"
+feature_level: "4"
 version: "1.2.0"
 status: Draft
 author: "Neplich Codex"

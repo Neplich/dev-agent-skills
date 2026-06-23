@@ -2,9 +2,9 @@
 title: "authz-reviewer — Product Requirements Document"
 type: PRD
 feature: "skill-authz-reviewer"
-feature_path: "agents/security-agent/authz-reviewer"
-parent_feature: "agents/security-agent"
-feature_level: "3"
+feature_path: "agents/security-agent/skills/authz-reviewer"
+parent_feature: "agents/security-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

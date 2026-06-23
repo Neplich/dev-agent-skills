@@ -77,6 +77,7 @@ flowchart TD
 - API 文档和 ADR 是 Engineer-owned 产物；PM 只 handoff 产品范围、接口目标和技术决策背景。
 - 缺 PRD 回 PM；缺 TRD、TRD stale 或 TRD 路径不一致回 `trd-gen`。
 - 旧单层目录视为一级功能，读取兼容，写入时补齐字段或按维护者确认迁移。
+- 仓库自身 Agent/Skill 治理 PRD 保留 `docs/pm/agents/{agent}/skills/{skill}/PRD.md` 的 `skills` 目录段；该例外不放宽普通产品功能文档的 1-3 级限制。
 
 ## 3. Feature Path 数据契约
 
@@ -101,6 +102,11 @@ flowchart TD
 | `feature_level` | 必填 | 从路径段数推导 | 取值为 `1`、`2`、`3`。 |
 | `related_prd` | TRD/Plan 必填 | 现有路径保留并校验 | 必须指向同一 `feature_path` 的 PRD。 |
 | `related_trd` | Plan 必填 | 现有路径保留并校验 | 必须指向同一 `feature_path` 的 TRD。 |
+
+Agent/Skill 治理 PRD 的兼容例外为 `feature_path=agents/{agent}/skills/{skill}`、
+`parent_feature=agents/{agent}/skills`、`feature_level=4`。解析器不能把该
+例外泛化到普通 feature-scoped 产物；TRD、实施计划、API 和 ADR 仍镜像
+1-3 级产品 `feature_path`。
 
 ### 3.3 交接包
 

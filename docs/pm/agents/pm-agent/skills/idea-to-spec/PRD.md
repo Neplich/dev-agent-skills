@@ -2,9 +2,9 @@
 title: "idea-to-spec — Product Requirements Document"
 type: PRD
 feature: "skill-idea-to-spec"
-feature_path: "agents/pm-agent/idea-to-spec"
-parent_feature: "agents/pm-agent"
-feature_level: "3"
+feature_path: "agents/pm-agent/skills/idea-to-spec"
+parent_feature: "agents/pm-agent/skills"
+feature_level: "4"
 version: "1.2.0"
 status: Draft
 author: "Neplich Codex"

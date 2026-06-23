@@ -2,9 +2,9 @@
 title: "exploratory-tester — Product Requirements Document"
 type: PRD
 feature: "skill-exploratory-tester"
-feature_path: "agents/qa-agent/exploratory-tester"
-parent_feature: "agents/qa-agent"
-feature_level: "3"
+feature_path: "agents/qa-agent/skills/exploratory-tester"
+parent_feature: "agents/qa-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

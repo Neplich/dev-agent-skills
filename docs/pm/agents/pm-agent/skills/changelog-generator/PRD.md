@@ -2,11 +2,14 @@
 title: "changelog-generator — Product Requirements Document"
 type: PRD
 feature: "skill-changelog-generator"
+feature_path: "agents/pm-agent/skills/changelog-generator"
+parent_feature: "agents/pm-agent/skills"
+feature_level: "4"
 version: "1.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-15"
+last_updated: "2026-06-23"
 generated_by: "prd-iteration"
 related_docs:
   - "agents/product_manager/README.md"
@@ -18,6 +21,9 @@ related_docs:
   - "agents/product_manager/test/changelog-generator/evals/evals.json"
   - "docs/engineer/skill-changelog-generator/TRD.md"
   - "https://github.com/Neplich/dev-agent-skills/issues/29"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.1.0"
     date: "2026-06-15"

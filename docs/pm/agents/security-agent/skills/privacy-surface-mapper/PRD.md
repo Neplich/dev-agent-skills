@@ -2,9 +2,9 @@
 title: "privacy-surface-mapper — Product Requirements Document"
 type: PRD
 feature: "skill-privacy-surface-mapper"
-feature_path: "agents/security-agent/privacy-surface-mapper"
-parent_feature: "agents/security-agent"
-feature_level: "3"
+feature_path: "agents/security-agent/skills/privacy-surface-mapper"
+parent_feature: "agents/security-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

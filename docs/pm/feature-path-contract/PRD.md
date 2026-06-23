@@ -103,6 +103,7 @@ QA E2E 已经使用 `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` 
 | FR-011 | 误放目录处理 | 对已确认误放的并列目录定义迁移边界。 | P0 | 只有在维护者确认后才移动历史文档；普通生成流程只阻断新错误，不擅自迁移。 |
 | FR-012 | Eval 覆盖 | 增加路径成功、缺层阻断和 handoff 断言。 | P0 | 相关 eval 使用 schema `1.0`，实际执行 eval 或 fresh subagent validation 后更新 durable `comparison.md`。 |
 | FR-013 | API / ADR Engineer ownership | API 文档和 ADR 由 Engineer 拥有，PM 只负责产品范围、约束和决策背景 handoff。 | P0 | `idea-to-spec` 不直接触发 PM 内部 `api-gen` / `adr-gen`；`trd-gen` 负责 `docs/engineer/{feature_path}/API.md` 和 `ADR-*.md`。 |
+| FR-014 | Agent/Skill Governance PRD 例外 | 仓库自身 Agent/Skill 治理 PRD 必须保留 `docs/pm/agents/{agent}/skills/{skill}/PRD.md` 的 `skills` 目录段。 | P0 | 这类 PRD 的 `feature_path` 必须为 `agents/{agent}/skills/{skill}`，`parent_feature` 为 `agents/{agent}/skills`，`feature_level` 为 `4`；普通产品功能文档仍限制为 1-3 级。 |
 
 ## 6. 用户流程
 
@@ -143,6 +144,10 @@ flowchart TD
 | `parent_feature` | string 或 `N/A` | 父级 feature path；一级功能使用 `N/A`。 |
 | `feature_level` | integer | 功能层级，取值为 `1`、`2` 或 `3`。 |
 | `feature_path_evidence` | list | 路径归属证据，例如匹配到的父 PRD、用户明确确认、issue 引用或 DECISIONS 记录。 |
+
+Agent/Skill 治理 PRD 是仓库目录镜像例外：`docs/pm/agents/{agent}/skills/{skill}/PRD.md`
+必须使用 `feature_path=agents/{agent}/skills/{skill}` 和 `feature_level=4`，
+以保证 canonical lookup 指向真实文件。该例外不能用于普通产品功能文档。
 
 ## 8. 目录契约
 

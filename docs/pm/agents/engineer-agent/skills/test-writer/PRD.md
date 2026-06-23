@@ -2,11 +2,14 @@
 title: "test-writer — Product Requirements Document"
 type: PRD
 feature: "skill-test-writer"
+feature_path: "agents/engineer-agent/skills/test-writer"
+parent_feature: "agents/engineer-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -15,6 +18,9 @@ related_docs:
   - "agents/engineer/skills/test-writer/SKILL.md"
   - ".claude-plugin/marketplace.json"
   - "agents/engineer/test/test-writer/evals/evals.json"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.0.0"
     date: "2026-06-12"

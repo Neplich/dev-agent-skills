@@ -369,7 +369,7 @@ flowchart TD
 | 操作 | 文件范围 | 修改目标 |
 | --- | --- | --- |
 | 修改 | `docs/pm/agents/*/PRD.md` 中本 PR 已触碰的 Agent PRD | 增加 `feature_path`、`parent_feature`、`feature_level`，路径按 `agents/{agent}` 映射。 |
-| 修改 | `docs/pm/agents/*/skills/*/PRD.md` 中本 PR 已触碰的 Skill PRD | 增加 `feature_path`、`parent_feature`、`feature_level`，路径按 `agents/{agent}/{skill}` 映射。 |
+| 修改 | `docs/pm/agents/*/skills/*/PRD.md` 下全部 Skill PRD | 增加 `feature_path`、`parent_feature`、`feature_level`，路径按 `agents/{agent}/skills/{skill}` 映射并保留 `skills` 目录段。 |
 | 修改 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` | 明确多级 PRD 触及时必须补齐 frontmatter；旧单层兼容不等于多级 PRD 可长期缺字段。 |
 | 修改 | `agents/product_manager/skills/idea-to-spec/_internal/iteration/prd-iteration/INSTRUCTIONS.md` | 更新 PRD 时校验并补齐 feature path 三字段；路径不一致时 blocked。 |
 | 修改 | `docs/pm/agents/pm-agent/PRD.md` 与 `docs/pm/agents/pm-agent/skills/idea-to-spec/PRD.md` | 记录 touched PRD backfill 规则和验收口径。 |
@@ -379,7 +379,11 @@ flowchart TD
 | PRD 路径 | `feature_path` | `parent_feature` | `feature_level` |
 | --- | --- | --- | --- |
 | `docs/pm/agents/{agent}/PRD.md` | `agents/{agent}` | `agents` | `2` |
-| `docs/pm/agents/{agent}/skills/{skill}/PRD.md` | `agents/{agent}/{skill}` | `agents/{agent}` | `3` |
+| `docs/pm/agents/{agent}/skills/{skill}/PRD.md` | `agents/{agent}/skills/{skill}` | `agents/{agent}/skills` | `4` |
+
+上述 Agent/Skill 治理 PRD 是仓库目录镜像例外，目的是让
+`docs/pm/{feature_path}/PRD.md` 能解析到真实文件；普通产品功能文档仍只能使用
+1-3 级 `feature_path`。
 
 #### B. 补全 repository-contract 多级实施计划门禁
 

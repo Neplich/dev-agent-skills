@@ -2,9 +2,9 @@
 title: "appsec-checklist — Product Requirements Document"
 type: PRD
 feature: "skill-appsec-checklist"
-feature_path: "agents/security-agent/appsec-checklist"
-parent_feature: "agents/security-agent"
-feature_level: "3"
+feature_path: "agents/security-agent/skills/appsec-checklist"
+parent_feature: "agents/security-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"

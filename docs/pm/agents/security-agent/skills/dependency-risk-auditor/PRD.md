@@ -2,9 +2,9 @@
 title: "dependency-risk-auditor — Product Requirements Document"
 type: PRD
 feature: "skill-dependency-risk-auditor"
-feature_path: "agents/security-agent/dependency-risk-auditor"
-parent_feature: "agents/security-agent"
-feature_level: "3"
+feature_path: "agents/security-agent/skills/dependency-risk-auditor"
+parent_feature: "agents/security-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
