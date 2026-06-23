@@ -9,7 +9,7 @@ When multiple documents need updating, follow this dependency order (upstream fi
 2. BRD (business objectives / scope)
 3. PRD (product requirements)
 4. TRD (technical design)
-5. API Documentation
+5. API Documentation (Engineer-owned)
 6. Test Specifications
 ```
 
@@ -20,8 +20,8 @@ When multiple documents need updating, follow this dependency order (upstream fi
 | BRD | brd-iteration | brd-validator |
 | PRD | prd-iteration | prd-validator |
 | TRD | hand off to engineer-agent:trd-gen | trd-validator |
-| ADR | adr-iteration | adr-validator |
-| API | (manual / api-gen re-run) | api-validator |
+| ADR | hand off to engineer-agent:trd-gen | adr-validator |
+| API | hand off to engineer-agent:trd-gen | api-validator |
 | TEST_SPEC | (re-run tspecs-gen) | N/A |
 
 ## Cross-Document Consistency Rules

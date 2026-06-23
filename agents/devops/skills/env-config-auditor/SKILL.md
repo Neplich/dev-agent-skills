@@ -22,8 +22,15 @@ Before auditing, inspect the narrowest relevant context:
 - `deploy/` config that defines local, Docker, or Helm runtime settings
 - CI/CD config such as `.github/workflows/` or `.gitlab-ci.yml`
 - relevant engineering or PM docs only if they clarify environment-specific constraints
+- for feature-scoped audits, the confirmed `feature_path`,
+  `docs/engineer/{feature_path}/TRD.md`, and
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
 
 If the repo has no durable deployment/config context yet, suggest running `deployment-planner` first.
+
+If a feature-scoped audit lacks a clear `feature_path`, do not create a new
+top-level `docs/devops/{name}/` directory. Return to PM for PRD/path
+clarification or Engineer for missing or stale TRD/implementation plan.
 
 ## Step 1 — Scan for Required Environment Variables
 
@@ -83,7 +90,7 @@ Verify sensitive vars are not in `.env.example` with real values
 
 Write the report to a durable project path:
 
-- prefer `docs/devops/{feature-name}/ENV_AUDIT.md` for feature or release scoped audits
+- prefer `docs/devops/{feature_path}/ENV_AUDIT.md` for feature or release scoped audits
 - otherwise use `deploy/ENV_AUDIT.md` for repo-wide deployment audits
 
 Use this structure:
@@ -121,4 +128,5 @@ Output:
 - **No deploy/ directory**: Suggest running `deployment-planner` first
 - **No env vars found**: Verify search patterns for the tech stack
 - **Encrypted secrets**: Skip validation, note in report
-- **Unknown feature scope**: Use `deploy/ENV_AUDIT.md` instead of inventing a feature folder
+- **Unknown feature scope**: use `deploy/ENV_AUDIT.md` only for true repo-wide
+  audits; otherwise return to PM/Engineer instead of inventing a feature folder

@@ -17,6 +17,8 @@ including small, single-file, and spec-backed bug-fix changes routed into
 - Project Profile (from codebase-analyzer)
 - Existing-feature alignment result from the public `feature-implementor`
   PRD alignment gate
+- Resolved `feature_path`, `parent_feature`, and `feature_level` from PRD/TRD
+  frontmatter or legacy single-level path inference
 
 ## Process
 
@@ -39,6 +41,22 @@ gate has a clear result:
   `engineer-agent:trd-gen` with a TRD gap packet.
 - A user request to skip PRD alignment is not a valid planning state. Treat it
   as blocked until PRD/TRD alignment is complete.
+
+Before extracting implementation steps, run the feature path gate:
+
+1. Confirm the PRD path is `docs/pm/{feature_path}/PRD.md`.
+2. Confirm the TRD path is `docs/engineer/{feature_path}/TRD.md`.
+3. Confirm PRD and TRD frontmatter have matching `feature_path`,
+   `parent_feature`, and `feature_level`.
+4. Confirm TRD `related_prd` points to `docs/pm/{feature_path}/PRD.md`.
+5. Confirm the planned output path is
+   `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`.
+
+If the PRD is missing or the PM feature path is unclear, stop and hand back to
+`pm-agent:idea-to-spec`. If the TRD is missing, stale, or path-mismatched, stop
+and hand back to `engineer-agent:trd-gen` with a TRD gap packet. Old single-level
+docs without feature path fields remain valid as level-1 features; infer the
+fields from the directory name while writing new plans with explicit fields.
 
 From PRD:
 - List all P0 user stories and acceptance criteria
@@ -86,8 +104,8 @@ For each component in TRD, determine:
 Do not force the implementation/validation sub-agent split for single-file small
 edits, pure explanation, pure code reading, or explicit user opt-out. This only
 controls delegation. It does not remove the requirement to write
-`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` and wait for explicit user
-confirmation.
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` and wait for explicit
+user confirmation.
 
 ### 3. Order by dependency
 
@@ -107,9 +125,10 @@ a fresh document-writing sub-agent. The delegated task must include:
 - confirmed TRD path
 - PRD / optional DECISIONS / design inputs
 - PRD alignment result and source-document evidence
-- exact output path: `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
+- exact output path: `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
 - file change list, sequence, tests, delegation split, forbidden areas, blockers
-- frontmatter maintenance for `version` and `last_updated`
+- frontmatter maintenance for `version`, `last_updated`, `feature_path`,
+  `parent_feature`, `feature_level`, `related_prd`, and `related_trd`
 - traceable frontmatter author using
   `<generation requester display name> <agent platform name>`, for example
   `Neplich Codex`; the platform name may be custom, so ask the user when either
@@ -127,7 +146,9 @@ permission to skip `IMPLEMENTATION_PLAN.md`.
 `IMPLEMENTATION_PLAN.md` frontmatter must stay in sync with the plan body:
 
 - New plans should start at `version: "0.1.0"` unless the repository has a
-  stricter convention, and must include `feature`, `date`, and `last_updated`.
+  stricter convention, and must include `feature`, `feature_path`,
+  `parent_feature`, `feature_level`, `date`, `last_updated`, `related_prd`, and
+  `related_trd`.
 - Substantive plan changes must update both `version` and `last_updated` in the
   same edit. Substantive changes include changed implementation scope, ordered
   steps, file list, delegation model, verification commands, status, rollout
@@ -154,8 +175,9 @@ Output format:
 ### 概述
 - 功能: <feature name>
 - 来源文档: <list>
-- TRD: docs/engineer/<feature>/TRD.md
-- 实现计划文档: docs/engineer/<feature>/IMPLEMENTATION_PLAN.md
+- Feature path: <feature_path>
+- TRD: docs/engineer/<feature_path>/TRD.md
+- 实现计划文档: docs/engineer/<feature_path>/IMPLEMENTATION_PLAN.md
 - PRD 对齐: <已覆盖 / 需要 PM 更新 / 文档缺失或不清 / TRD gap>
 - 预估文件数: <N> 个新建, <M> 个修改
 

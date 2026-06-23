@@ -6,7 +6,7 @@
 > 其他语言：[English](./README.md)
 
 > [!NOTE]
-> 独立 E2E 请求应先复用 `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` 下的功能树用例，再决定是否扩充探索范围。
+> 独立 E2E 请求应先复用 `docs/qa/e2e/{feature_path}/` 下的功能树用例，再决定是否扩充探索范围。
 
 ## 快速信息
 
@@ -49,19 +49,17 @@ docs/qa/e2e/
 ├── _reports/
 │   └── {platform-version}/
 │       └── test-reports-{test-time}.md
-└── {一级功能}/
-    └── {二级功能}/
-        └── {三级功能}/
-            ├── TEST_SUITE.md
-            ├── FLOW_INDEX.md
-            ├── cases/
-            │   └── TC-NNN-<short-slug>.md
-            ├── scripts/
-            │   └── TC-NNN-<short-slug>.spec.md
-            ├── results/
-            │   └── TC-NNN-<short-slug>/{platform-version}/
-            └── _reports/
-                └── {platform-version}/test-reports-{test-time}.md
+└── {feature_path}/
+    ├── TEST_SUITE.md
+    ├── FLOW_INDEX.md
+    ├── cases/
+    │   └── TC-NNN-<short-slug>.md
+    ├── scripts/
+    │   └── TC-NNN-<short-slug>.spec.md
+    ├── results/
+    │   └── TC-NNN-<short-slug>/{platform-version}/
+    └── _reports/
+        └── {platform-version}/test-reports-{test-time}.md
 ```
 
 工作顺序：
@@ -69,7 +67,7 @@ docs/qa/e2e/
 1. 确认 E2E 场景：`feature-update` 用于开发环境本地验证，`release` 用于发版版本测试环境全量 active E2E。
 2. 执行前确认测试平台版本；缺失时标记 `blocked`，不得写入 `unknown` 目录。
 3. 先读取 `TEST_SUITE.md`、`FLOW_INDEX.md`、`cases/*.md`、`scripts/*.spec.md`、历史 `results/` 和 `_reports/`，再决定是否探索。
-4. 现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须先完成 PRD/TRD 预期对齐，并引用已确认的 `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`。
+4. 现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须消费已确认的 `feature_path`，读取 `docs/pm/{feature_path}/PRD.md`、`docs/engineer/{feature_path}/TRD.md` 和已确认的 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`，三者对齐后才创建、更新或执行验收 TC。
 5. 每个 E2E TC 默认交给 subagent 执行；主 agent 负责范围、结果确认和汇总报告。
 6. 执行入口按 repo harness > Chrome plugin / browser connector > Playwright fallback 选择。
 7. 凭据只写入 `.qa/e2e/accounts.local.json`，并按 `agents/qa/skills/qa-agent/references/e2e-credential-store.md` 使用账号 ID；提交文档不得包含明文凭据。

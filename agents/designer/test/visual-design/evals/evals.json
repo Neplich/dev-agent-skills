@@ -14,7 +14,7 @@
         {
           "id": "assertion_1",
           "description": "产出视觉系统文档",
-          "text": "输出写入 docs/design/{feature-name}/visual-system.md，并包含颜色、字体、间距和组件规则"
+          "text": "输出写入 docs/design/{feature_path}/visual-system.md，并包含颜色、字体、间距和组件规则；路径来自已确认 feature_path"
         },
         {
           "id": "assertion_2",

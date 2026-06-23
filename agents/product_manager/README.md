@@ -15,7 +15,7 @@
 | Entry skill | `pm-agent` |
 | Specialist skills | 7 |
 | Main inputs | User ideas, local `docs/`, repository state, GitHub Issues / PRs / Milestones / Releases |
-| Main outputs | `docs/pm/{feature}/`, `docs/roadmap.md`, `docs/changelog/changelog-v{version}.md`, `docs/release-notes/` |
+| Main outputs | `docs/pm/{feature_path}/`, `docs/roadmap.md`, `docs/changelog/changelog-v{version}.md`, `docs/release-notes/` |
 | Downstream agents | `designer-agent`, `engineer-agent` |
 
 ## Skills
@@ -62,11 +62,15 @@ Feature-level PM documents use this directory shape:
 ```text
 docs/
 └── pm/
-    └── {feature-name}/
+    └── {feature_path}/
         ├── PRD.md
         ├── BRD.md
         └── DECISIONS.md
 ```
+
+`feature_path` is a multi-level path. Before creating PM feature docs, scan
+`docs/pm/**/PRD.md`; attach child features under a confirmed parent PRD, and
+block or clarify when parent ownership is unclear.
 
 Repository-level PM artifacts can use:
 
@@ -79,7 +83,7 @@ Repository-level PM artifacts can use:
 - PM Agent can produce requirement, business, technical constraints, and decision documents.
 - PM Agent does not implement code, tests, deployment config, or security fixes.
 - Designer mainly consumes `PRD.md`, `BRD.md`, and `DECISIONS.md`.
-- Engineer consumes PM docs, then owns `docs/engineer/{feature}/TRD.md` through `engineer-agent:trd-gen`.
+- Engineer consumes PM docs, then owns `docs/engineer/{feature_path}/TRD.md` through `engineer-agent:trd-gen`.
 
 ## Local Maintenance
 

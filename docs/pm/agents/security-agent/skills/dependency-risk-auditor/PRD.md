@@ -2,11 +2,14 @@
 title: "dependency-risk-auditor — Product Requirements Document"
 type: PRD
 feature: "skill-dependency-risk-auditor"
+feature_path: "agents/security-agent/skills/dependency-risk-auditor"
+parent_feature: "agents/security-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/security/README.md"
@@ -61,9 +64,9 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-S01 | Trigger Matching | `dependency-risk-auditor` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `dependency-risk-auditor` SKILL.md 一致。 |
-| FR-S02 | Context Intake | 依赖 manifest/lockfile；audit 工具不可用时人工分析，不把 runtime/供应链约束当作默认 blocking 输入。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
+| FR-S02 | Context Intake | 依赖 manifest/lockfile；feature-scoped audit 读取 `docs/pm/{feature_path}/PRD.md`、`docs/engineer/{feature_path}/TRD.md` 和必要实施计划；audit 工具不可用时人工分析，不把 runtime/供应链约束当作默认 blocking 输入。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；`feature_path` 或 PM/Engineer 文档不清时回 PM/Engineer，不自建同义顶层目录。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
-| FR-S04 | Artifact Output | 创建/更新 docs/security/{feature-name}/dependency-audit.md，包含 frontmatter、Executive Summary、漏洞、废弃包、升级建议。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
+| FR-S04 | Artifact Output | 创建/更新 `docs/security/{feature_path}/dependency-audit.md`，包含 feature path frontmatter、Executive Summary、漏洞、废弃包、升级建议。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `security-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 依赖升级/代码修复到 engineer-agent；部署/配置变更到 devops-agent；需求边界风险到 PM。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |

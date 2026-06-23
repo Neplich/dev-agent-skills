@@ -45,8 +45,8 @@ revision is needed and hands the work to `engineer-agent:trd-gen`.
    - related PRD / DECISIONS impact
    - validator findings or review comments
 4. **Check cross-document impact**:
-   - If the change alters a technical decision materially, recommend `adr-gen`
-     or `adr-iteration`
+   - If the change alters a technical decision materially, route ADR creation
+     or revision to `engineer-agent:trd-gen`
    - If API contracts change, keep `related_api` aligned or flag follow-up work
    - If PRD assumptions are contradicted, flag that `prd-iteration` may also be
      required
@@ -84,9 +84,9 @@ revision is needed and hands the work to `engineer-agent:trd-gen`.
 **Expected Output**:
 
 Handoff summary:
-- [FIXED] Deployment Architecture: Added rollback strategy for object-storage migration
-- [FIXED] NFR table: Added throughput target `500 writes/min`
-- [UPDATED] Data Model / System Interactions: Avatar upload path now uses object storage
-- Version: `1.1.0` -> `1.2.0`
+- [NEEDS ENGINEER] Deployment Architecture: add rollback strategy for object-storage migration
+- [NEEDS ENGINEER] NFR table: clarify throughput target `500 writes/min`
+- [NEEDS ENGINEER] Data Model / System Interactions: update avatar upload path for object storage
+- Suggested version impact: `1.1.0` -> `1.2.0`
 
 Route this packet to `engineer-agent:trd-gen` for the actual TRD update.

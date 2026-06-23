@@ -136,6 +136,10 @@ explicitly requested or strongly implied by the user's end goal.
 - If the routed skill is `idea-to-spec`, switch straight into its Phase 0
   context summary and lane selection, then continue with the next requirement
   shaping step in the same turn.
+- When routing feature-scoped PM work to `idea-to-spec`, preserve any known
+  `feature_path` context. If the request may be a child feature, let
+  `idea-to-spec` scan `docs/pm/**/PRD.md` and resolve parent ownership before
+  any PRD/BRD/DECISIONS/design output is created.
 - Only remain at the routing layer when a single clarification question is
   required to disambiguate two materially different PM outcomes.
 

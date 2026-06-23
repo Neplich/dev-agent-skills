@@ -14,7 +14,7 @@ This is the public entry point. It owns:
 
 - PM / Engineer / Design document reading and requirement extraction
 - Implementation plan document writing
-  (`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`)
+  (`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`)
 - Implementation planning (which files to create/modify, in what order)
 - Delegation to internal modules and, for complex coding tasks, scoped
   implementation/validation sub-agents
@@ -35,7 +35,7 @@ the implementation plan has been presented to the user and explicitly confirmed.
 - User asks to "write code" or "implement" something with a spec available
 - After `codebase-analyzer` or `project-bootstrap` has established project context
 - After `trd-gen` has produced and the user has confirmed
-  `docs/engineer/{feature}/TRD.md`
+  `docs/engineer/{feature_path}/TRD.md`
 
 Do NOT use for:
 - Bug fixes with no spec (use `debugger` instead)
@@ -53,12 +53,25 @@ confirmation before code changes.
 ## PRD Alignment Gate
 
 Before creating or updating `IMPLEMENTATION_PLAN.md` for an existing feature
-change, read the relevant PM and Engineer documents:
+change, resolve `feature_path` and read the relevant PM and Engineer documents:
 
-- `docs/pm/{feature}/PRD.md`
-- `docs/engineer/{feature}/TRD.md`
-- `docs/pm/{feature}/DECISIONS.md` or other product decision records, when
+- `docs/pm/{feature_path}/PRD.md`
+- `docs/engineer/{feature_path}/TRD.md`
+- `docs/pm/{feature_path}/DECISIONS.md` or other product decision records, when
   present
+
+`feature_path` is the canonical feature key. New documents must use one or more
+directory segments and include `feature_path`, `parent_feature`, and
+`feature_level` frontmatter. Old single-level documents without those fields
+are compatible and should be read as level-1 features. Before planning, verify
+that:
+
+- the PRD exists at `docs/pm/{feature_path}/PRD.md`
+- the TRD exists at `docs/engineer/{feature_path}/TRD.md`
+- PRD and TRD `feature_path`, `parent_feature`, and `feature_level` match
+- TRD `related_prd` points to `docs/pm/{feature_path}/PRD.md`
+- the target plan path is
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
 
 Classify the request:
 
@@ -68,11 +81,13 @@ Classify the request:
 - If the request changes approved product behavior, stop before implementation
   planning and hand off to `pm-agent:idea-to-spec` using the
   `existing-project-update` lane.
-- If PRD is missing or ambiguous, or an existing decision record conflicts with
-  the request, stop and request PM alignment before TRD or implementation
-  planning.
-- If PRD is stable but TRD is missing, incomplete, or stale, stop and hand back
-  to `engineer-agent:trd-gen` with a TRD gap packet. The finder owns naming the
+- If PRD is missing, ambiguous, lacks a resolvable `feature_path`, or an
+  existing decision record conflicts with the request, stop and request PM
+  alignment before TRD or implementation planning.
+- If PRD is stable but TRD is missing, incomplete, stale, uses a different
+  `feature_path`, has mismatched `parent_feature` or `feature_level`, or has a
+  `related_prd` that does not point to the same PRD path, stop and hand back to
+  `engineer-agent:trd-gen` with a TRD gap packet. The finder owns naming the
   missing technical decisions; `trd-gen` owns completing the TRD.
 - If the user explicitly asks to skip PRD alignment, record it as a blocker or
   risk, but do not create or update the implementation plan until PRD/TRD
@@ -87,9 +102,9 @@ include this boundary statement: the finder only clarifies the TRD gaps;
 
 ## TRD and Implementation Plan Boundary
 
-`docs/engineer/{feature}/TRD.md` is the technical plan and input contract.
+`docs/engineer/{feature_path}/TRD.md` is the technical plan and input contract.
 `feature-implementor` consumes the confirmed TRD and writes
-`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`.
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`.
 
 The implementation plan maps TRD decisions to concrete files, sequence,
 delegation, verification commands, and rollout checks. It must not change PM
@@ -97,6 +112,12 @@ scope or rewrite TRD decisions. If the TRD is missing, incomplete, or conflicts
 with the codebase, stop and hand back to `engineer-agent:trd-gen` with the
 specific blocker and TRD gap packet. Do not hide TRD gaps inside
 `IMPLEMENTATION_PLAN.md`.
+
+If the only missing directory is the target Engineer directory and both PRD and
+TRD are confirmed with matching `feature_path`, creating
+`docs/engineer/{feature_path}/` for the implementation plan is allowed. Missing
+PRD content belongs to `pm-agent:idea-to-spec`; missing, stale, or
+path-mismatched TRD content belongs to `engineer-agent:trd-gen`.
 
 Implementation plan frontmatter is part of the confirmed engineering artifact.
 New plans should start with `version: "0.1.0"` unless the repository has a
@@ -116,8 +137,8 @@ process keeps the source docs, repository context, and final approval decision.
 The implementation planner is the first step for every implementation task,
 including single-file, small, low-risk, and spec-backed bug-fix changes. Small
 changes may use a short plan, but they still require
-`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` and explicit user confirmation
-before implementation starts.
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` and explicit user
+confirmation before implementation starts.
 
 ## Complex Coding Sub-Agent Split
 
@@ -178,10 +199,11 @@ For existing feature changes, complete the PRD alignment gate before loading
 the planner. Do not treat a small change as already approved just because it is
 low-risk or single-file.
 
-If `docs/engineer/{feature}/TRD.md` is missing or not confirmed, do not create
-the implementation plan. Hand off to `engineer-agent:trd-gen` with the TRD gap
-packet and boundary statement: finder only clarifies gaps,
-`engineer-agent:trd-gen` completes the TRD.
+If `docs/engineer/{feature_path}/TRD.md` is missing, not confirmed, or does not
+mirror `docs/pm/{feature_path}/PRD.md`, do not create the implementation plan.
+Hand off to `engineer-agent:trd-gen` with the TRD gap packet and boundary
+statement: finder only clarifies gaps, `engineer-agent:trd-gen` completes the
+TRD.
 
 ### Check for Project Profile
 
@@ -214,15 +236,15 @@ Read the internal routing contract before planning:
 
 Every implementation task must go through this phase before code changes,
 regardless of size. The plan may be brief for small changes, but it must still
-be written to `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`, include the
-PRD alignment result, implementation/validation sub-agent split decision, and
-wait for user confirmation.
+be written to `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`, include
+the PRD alignment result, feature path gate result, implementation/validation
+sub-agent split decision, and wait for user confirmation.
 
 Delegate implementation plan document writing to a fresh document-writing
 sub-agent when available. The delegated task must write or update:
 
 ```text
-docs/engineer/{feature}/IMPLEMENTATION_PLAN.md
+docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md
 ```
 
 Break the feature into ordered implementation steps:
@@ -237,7 +259,8 @@ Break the feature into ordered implementation steps:
    include the implementation sub-agent write scope and validation sub-agent
    review scope in the plan.
 5. Include the PRD / optional DECISIONS / TRD paths, implementation plan path,
-   and any blockers that require returning to `trd-gen`.
+   resolved `feature_path`, `parent_feature`, `feature_level`, and any blockers
+   that require returning to PM or `trd-gen`.
 
 Present the plan to the user:
 
@@ -330,13 +353,13 @@ The package must include:
 
 - PRD path and relevant sections
 - TRD path and relevant sections
-- confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
+- confirmed `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
 - PRD alignment result, including DECISIONS or TRD gap resolution when applicable
 - changed files and affected modules
 - verification commands run, results, and commands not run with reasons
 - known risks, environment assumptions, and QA scope questions
 - suggested QA E2E function directory:
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`
+  `docs/qa/e2e/{feature_path}/`
 - likely E2E impact: create TC, update existing TC, update script/assertions,
   or no E2E update needed with rationale
 

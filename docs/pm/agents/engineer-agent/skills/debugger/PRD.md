@@ -2,20 +2,28 @@
 title: "debugger — Product Requirements Document"
 type: PRD
 feature: "skill-debugger"
-version: "1.0.0"
+feature_path: "agents/engineer-agent/skills/debugger"
+parent_feature: "agents/engineer-agent/skills"
+feature_level: "4"
+version: "1.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
   - "agents/engineer/README_zh.md"
   - "agents/engineer/skills/engineer-agent/SKILL.md"
   - "agents/engineer/skills/debugger/SKILL.md"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
   - ".claude-plugin/marketplace.json"
   - "agents/engineer/test/debugger/evals/evals.json"
 changelog:
+  - version: "1.1.0"
+    date: "2026-06-23"
+    changes: "Add feature_path expected-behavior alignment gate"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"
@@ -61,12 +69,13 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-S01 | Trigger Matching | `debugger` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `debugger` SKILL.md 一致。 |
-| FR-S02 | Context Intake | 失败命令、日志、复现步骤、相关代码、GitHub bug issue、PRD/TRD/DECISIONS 里的期望行为。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
+| FR-S02 | Context Intake | 失败命令、日志、复现步骤、相关代码、GitHub bug issue、按 `feature_path` 定位的 PRD/TRD/DECISIONS 里的期望行为。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
 | FR-S04 | Artifact Output | 阶段性产物：期望对齐结论、复现证据、根因分析、repair plan、确认后的最小修复和验证报告。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `engineer-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | requirement_change/missing_docs 到 pm-agent:idea-to-spec；trd_gap 到 trd-gen；QA E2E handoff；复杂修复可拆 implementation/validation sub-agent。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
+| FR-S08 | Feature Path Debug Gate | bug 修复前必须按 `feature_path` 读取 PRD/TRD，并校验 TRD 镜像 PRD。 | P0 | 路径不清、缺 PRD、需求变化回 PM；缺 TRD、TRD stale 或 `related_prd`/frontmatter 不一致回 `trd-gen`；不得进入修复计划或 E2E 更新。 |
 
 ## 当前实现对齐
 

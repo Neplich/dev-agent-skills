@@ -17,6 +17,7 @@ repo context, and current delivery stage.
   implementing, testing, debugging, or delivering code
 - selecting the narrowest downstream engineering skill
 - owning technical planning after PM requirements are confirmed
+- owning API documentation and ADR routing after PM scope is confirmed
 - defining an ordered engineering chain when the user clearly wants an
   end-to-end implementation workflow
 - asking at most one route-level clarification question when the target outcome
@@ -35,31 +36,45 @@ repo context, and current delivery stage.
 
 After `pm-agent` confirms the PRD / BRD and any product decision records, route
 technical planning to `trd-gen`. TRD belongs to Engineer and is written to
-`docs/engineer/{feature}/TRD.md`.
+`docs/engineer/{feature_path}/TRD.md`, mirroring the confirmed PM path
+`docs/pm/{feature_path}/PRD.md`.
+
+API documentation and ADR creation also belong to Engineer once PM scope is
+confirmed. Route API specs, endpoint documentation, architecture decision
+records, and durable technical rationale to `trd-gen`; PM should only provide
+product requirements, constraints, decision context, and feature path evidence.
 
 After the TRD is confirmed, route implementation planning and execution to
 `feature-implementor`. `feature-implementor` writes
-`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` from the confirmed TRD, then
-waits for implementation confirmation before coding.
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` from the confirmed TRD,
+then waits for implementation confirmation before coding.
 
 After implementation and self-review complete, check that the
 `feature-implementor` result includes a QA E2E documentation handoff package
 when the change can affect user-facing flows. The package must include PRD,
 TRD, confirmed `IMPLEMENTATION_PLAN.md`, changed files, verification commands,
-risks, and the suggested `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` directory.
+risks, and the suggested `docs/qa/e2e/{feature_path}/` directory.
 If the package is missing or does not cite a confirmed implementation plan,
 route back to the implementor before handing the result to QA.
 
 ## Existing Feature Alignment Gate
 
 Before routing an existing feature behavior change, small modification, or bug
-fix into `feature-implementor` or `debugger`, first identify the likely feature
-and read the relevant durable docs:
+fix into `feature-implementor` or `debugger`, first resolve the likely
+`feature_path` and read the relevant durable docs:
 
-- `docs/pm/{feature}/PRD.md`
-- `docs/engineer/{feature}/TRD.md`
-- `docs/pm/{feature}/DECISIONS.md` or other product decision records, when
+- `docs/pm/{feature_path}/PRD.md`
+- `docs/engineer/{feature_path}/TRD.md`
+- `docs/pm/{feature_path}/DECISIONS.md` or other product decision records, when
   present
+
+Resolve `feature_path` by scanning `docs/pm/**/PRD.md` and reading
+`feature_path`, `parent_feature`, and `feature_level` frontmatter when present.
+Old single-level documents without those fields are compatible and are treated
+as `feature_path=<directory-name>`, `parent_feature=N/A`, and
+`feature_level=1`. If the feature path is ambiguous, missing a PRD, invalid, or
+appears to be a child feature incorrectly represented as a new top-level
+directory, keep the request in PM alignment instead of guessing.
 
 Classify the request before engineering execution:
 
@@ -70,10 +85,12 @@ Classify the request before engineering execution:
   `pm-agent:idea-to-spec` using the `existing-project-update` lane so PRD /
   product decision records can be updated before TRD or implementation
   planning.
-- If PM scope is stable but the Engineer TRD is missing, incomplete, stale, or
-  conflicts with the request or codebase, route to `engineer-agent:trd-gen`
-  with a TRD gap packet. The finder owns naming the gaps; `trd-gen` owns
-  completing the TRD.
+- If PM scope is stable but the Engineer TRD is missing, incomplete, stale,
+  has a different `feature_path`, has mismatched `parent_feature` or
+  `feature_level`, or has a `related_prd` that does not point to
+  `docs/pm/{feature_path}/PRD.md`, route to `engineer-agent:trd-gen` with a
+  TRD gap packet. The finder owns naming the gaps; `trd-gen` owns completing
+  the TRD.
 - If PRD is missing, stale, or unclear, or an existing decision record conflicts
   with the request, keep the request in PM alignment first instead of guessing
   the intended behavior.
@@ -84,7 +101,9 @@ Classify the request before engineering execution:
 The TRD gap packet must identify the missing technical decisions that block
 implementation, including affected components or modules, data flow / API /
 integration impacts, validation commands, release or rollout risks, and error
-handling, observability, or security strategy when relevant.
+handling, observability, or security strategy when relevant. It must also carry
+`feature_path`, `feature`, `parent_feature`, `feature_level`, the PRD path,
+the expected TRD path, and the feature path evidence used for routing.
 
 All Engineer document-writing tasks, including TRD and implementation plan
 documents, should be delegated to a fresh document-writing sub-agent when
@@ -116,7 +135,7 @@ sub-agents.
 ## Available Skills
 
 - `engineer-agent:codebase-analyzer` - Understand repo structure, stack, conventions, constraints
-- `engineer-agent:trd-gen` - Write or update Engineer-owned TRDs after PRD confirmation
+- `engineer-agent:trd-gen` - Write or update Engineer-owned TRDs, API docs, and ADRs after PRD confirmation
 - `engineer-agent:project-bootstrap` - Scaffold or initialize a new project from a TRD, approved PM docs, or explicit bootstrap override
 - `engineer-agent:feature-implementor` - Implement features, behavior changes, and scoped refactors
 - `engineer-agent:test-writer` - Add or update automated tests and coverage
@@ -132,7 +151,7 @@ Route by the engineering outcome the user wants, not by literal phrasing.
   -> `codebase-analyzer`
 - Technical planning from confirmed PRD and product decisions, TRD creation or
   revision, architecture plan, implementation blueprint, "写 TRD", "技术方案",
-  "技术计划", "工程设计"
+  "技术计划", "工程设计", "API 文档", "接口规范", "ADR", "架构决策"
   -> `trd-gen`
 - New project setup, greenfield bootstrap, scaffolding from a TRD, approved PM
   docs, or an explicit "skip PM and just scaffold" request, "初始化项目",
@@ -157,7 +176,7 @@ Route by the engineering outcome the user wants, not by literal phrasing.
 | Engineering Outcome | Primary Skill |
 | --- | --- |
 | 理解仓库、技术栈、约束、现有模式 | `codebase-analyzer` |
-| PRD 确认后的技术计划、TRD 编写或更新 | `trd-gen` |
+| PRD 确认后的技术计划、TRD/API/ADR 编写或更新 | `trd-gen` |
 | 新项目/新服务初始化、脚手架搭建（已具备 TRD / 稳定 spec / 显式跳过 PM） | `project-bootstrap` |
 | 实现需求、改行为、按 spec 或设计落地、为需求做重构 | `feature-implementor` |
 | 补测试、补 coverage、把实现转成自动化验证 | `test-writer` |

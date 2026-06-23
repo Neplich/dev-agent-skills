@@ -31,7 +31,12 @@ Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-convent
 
 - **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md`
 - **Metadata**: `type: PRD`, version `1.0.0`, status `Draft`
-- **Naming**: `docs/pm/<feature-name>/PRD.md`
+- **Naming**: `docs/pm/<feature_path>/PRD.md`
+- **Feature path gate**: before writing, scan `docs/pm/**/PRD.md`, resolve a
+  multi-level `feature_path`, and include `feature_path`, `feature`,
+  `parent_feature`, and `feature_level` in frontmatter. If the request may be a
+  child feature but parent ownership is unclear, blocked/clarify instead of
+  creating a new top-level PRD.
 
 ## Workflow Details
 
@@ -57,6 +62,8 @@ Generate all sections per schema:
 **PRD-specific failure handling**:
 - No user persona info → generate reasonable default persona, mark `[ASSUMED]`
 - Missing technical context for NFRs → include standard defaults (p95 < 2s, 99.9% uptime) marked `[DEFAULT]`
+- Parent feature ambiguity → do not write `docs/pm/<child>/PRD.md`; ask for
+  parent confirmation or return a blocked PM path result.
 
 ## Examples
 
@@ -75,6 +82,10 @@ status: Draft
 author: "Neplich Codex"
 date: "2025-01-15"
 generated_by: prd-gen
+feature_path: social-login
+feature: social-login
+parent_feature: N/A
+feature_level: 1
 related_brd: "N/A"
 changelog:
   - version: "1.0.0"

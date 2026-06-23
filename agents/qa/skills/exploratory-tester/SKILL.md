@@ -12,7 +12,7 @@ Use this skill to discover defects through guided exploration, not to generate r
 For E2E or feature-scoped QA, use the function-tree directory as durable QA
 memory:
 
-`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`
+`docs/qa/e2e/{feature_path}/`
 
 - `TEST_SUITE.md` is the suite index and coverage summary.
 - `FLOW_INDEX.md` records reusable flows, source/config clues, routes, pages,
@@ -47,7 +47,7 @@ be updated in place; do not create duplicate synonym TC.
 Before any testing action, gather the context needed to choose an exploration charter:
 
 1. Read existing QA memory first when available:
-   `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md`,
+   `docs/qa/e2e/{feature_path}/TEST_SUITE.md`,
    `FLOW_INDEX.md`, `cases/*.md`, `scripts/*.spec.md`, relevant `results/`,
    and `_reports/`.
 2. Read the PM or release context for the feature, scope, and intended user
@@ -68,11 +68,27 @@ the platform version first; missing versions are `blocked`, never written to
 exploration should be used to expand TC. If they decline exploration, use
 existing QA memory and execute only the scoped charter.
 
+Even when exploration is blocked before browser or harness execution, the
+preflight output must explicitly state:
+
+- the full QA memory read set: `TEST_SUITE.md`, `FLOW_INDEX.md`,
+  `cases/*.md`, `scripts/*.spec.md`, prior `results/`, and `_reports/`
+- the scenario decision (`feature-update` or `release`) and platform version
+  status
+- the intended execution entry order and selected entry rationale using repo
+  harness > Chrome plugin / browser connector > Playwright fallback
+- that executable E2E TC are delegated to subagents by default, while the main
+  agent owns scope and summary reporting
+- whether expansion would update `FLOW_INDEX.md`, one TC file under `cases/`,
+  and the matching `scripts/*.spec.md`
+
 When exploration follows an existing-feature change, bug fix, or code-complete
-E2E documentation update, first require PRD/TRD expectation alignment and a
-confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`. If either is
-missing, block reusable TC creation/update and send the work back to the
-appropriate PM or Engineer step.
+E2E documentation update, first identify the confirmed `feature_path`, read
+`docs/pm/{feature_path}/PRD.md`, `docs/engineer/{feature_path}/TRD.md`, and a
+confirmed `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`. If the path or
+PM expectation is unclear, return to PM. If TRD or the plan is missing, stale,
+or not on the same path, block reusable TC creation/update/execution and send
+the work back to the appropriate Engineer step.
 
 ## Exploration Charter
 
@@ -82,6 +98,11 @@ Define a short charter before interacting with the app. The charter must include
 - Timebox: chosen from the context, not a fixed skill default
 - Heuristics: what kinds of failures matter most for this pass
 - Escalation signals: what observations are strong enough to become a bug report candidate
+
+Do not use vague timebox phrasing such as "a short exploration window". If the
+user or fixture provides a duration, use it exactly. If execution is blocked
+before a timer can start, state that no execution timebox started and name the
+source that would determine the timebox on retry.
 
 Charter heuristics should be specific to the change and typically include:
 
@@ -172,7 +193,7 @@ summary report with
 Report paths:
 
 - `feature-update`:
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/_reports/{platform-version}/test-reports-{test-time}.md`
+  `docs/qa/e2e/{feature_path}/_reports/{platform-version}/test-reports-{test-time}.md`
 - `release`:
   `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md`
 

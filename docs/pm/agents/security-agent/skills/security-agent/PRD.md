@@ -2,11 +2,14 @@
 title: "security-agent — Product Requirements Document"
 type: PRD
 feature: "skill-security-agent"
+feature_path: "agents/security-agent/skills/security-agent"
+parent_feature: "agents/security-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/security/README.md"
@@ -32,6 +35,7 @@ changelog:
 2. 让维护者能用 PRD 对照 `SKILL.md` / README / eval 检查行为漂移。
 3. 将 Sub Agent 校验发现的实现差异收敛为可验收 requirement。
 4. 保持与 `security-agent` 的角色边界一致。
+5. 保证 feature-scoped security route 只消费 PM/Engineer 已确认的 `feature_path`。
 
 ## 非目标
 
@@ -66,6 +70,7 @@ changelog:
 | FR-S05 | Boundary Guard | 不接管 `security-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 主要到四个 security specialist；修复代码/依赖到 Engineer，部署/配置到 DevOps，需求边界风险到 PM。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
+| FR-S08 | Feature Path Gate | 对 feature-scoped Security 请求，dispatcher 必须传递已确认的 `feature_path`，并要求下游读取 `docs/pm/{feature_path}/PRD.md`、`docs/engineer/{feature_path}/TRD.md` 和必要的实施计划。 | P0 | `feature_path` 不清时回 PM 补 PRD/路径归属；TRD 或实施计划缺失/不一致时回 Engineer；不得创建 `docs/security/{name}/` 同义顶层目录。 |
 
 ## 当前实现对齐
 

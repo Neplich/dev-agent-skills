@@ -2,11 +2,14 @@
 title: "regression-suite — Product Requirements Document"
 type: PRD
 feature: "skill-regression-suite"
+feature_path: "agents/qa-agent/skills/regression-suite"
+parent_feature: "agents/qa-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/qa/README.md"
@@ -16,6 +19,9 @@ related_docs:
   - ".claude-plugin/marketplace.json"
   - "agents/qa/skills/qa-agent/references/e2e-test-report.md"
   - "agents/qa/test/regression-suite/evals/evals.json"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.0.0"
     date: "2026-06-12"
@@ -62,7 +68,7 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-S01 | Trigger Matching | `regression-suite` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `regression-suite` SKILL.md 一致。 |
-| FR-S02 | Context Intake | 原始 bug report 或 failing evidence 是硬前置；同时读取修复说明、历史证据、已知问题、相邻风险、E2E 功能树、场景和平台版本。 | P0 | 缺少原始失败证据时 blocked；其他缺少真正阻塞的上下文时才澄清或 blocked。 |
+| FR-S02 | Context Intake | 原始 bug report 或 failing evidence 是硬前置；同时读取修复说明、同一 `feature_path` 下的 PRD/TRD/IMPLEMENTATION_PLAN、历史证据、已知问题、相邻风险、E2E 功能树、场景和平台版本。 | P0 | 缺少原始失败证据、路径不清或缺已确认 plan 时 blocked。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
 | FR-S04 | Artifact Output | original failure recheck、fixed behavior、adjacent checks、new issues、release recommendation、evidence confidence 与 run status 分离，以及归档路径。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `qa-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |

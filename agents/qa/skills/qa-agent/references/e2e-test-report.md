@@ -8,7 +8,7 @@ created by the main agent after subagent execution.
 Feature update reports:
 
 ```text
-docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/_reports/{platform-version}/test-reports-{test-time}.md
+docs/qa/e2e/{feature_path}/_reports/{platform-version}/test-reports-{test-time}.md
 ```
 
 Release full-run reports:

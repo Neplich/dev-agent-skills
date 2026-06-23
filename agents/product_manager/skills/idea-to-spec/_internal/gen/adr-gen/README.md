@@ -1,19 +1,20 @@
-# ADR 生成器 (adr-gen)
+# ADR Handoff Stub (adr-gen, deprecated)
 
 ## 概述
 
-自动生成标准化的架构决策记录 (Architecture Decision Record)。
+历史 PM 内部生成器已迁移为 handoff stub。新的 ADR 由
+`engineer-agent:trd-gen` 在 Engineer 阶段生成，PM 不再写入 ADR 文件。
 
 ## 使用场景
 
-- 做出或需要记录重要技术决策
-- 评估不同技术方案的优劣
-- 需要为未来参考建立决策历史
+- legacy 路由仍指向 `adr-gen` 时，立即停止 PM 生成
+- 将已确认 PM 范围、`feature_path`、决策背景和备选方案移交给
+  `engineer-agent:trd-gen`
 
 ## 快速开始
 
 ```
-帮我写一个 ADR，记录为什么选择 PostgreSQL 而不是 MongoDB
+请把 PostgreSQL 选型 ADR 请求整理成 handoff packet 并移交给 engineer-agent:trd-gen
 ```
 
 ## 输入
@@ -27,10 +28,10 @@
 
 ## 输出
 
-标准 ADR 文档，包含：标题、状态、上下文、决策、后果、备选方案对比
+只输出 handoff packet。目标 Engineer 产物是
+`docs/engineer/{feature_path}/ADR-<NNN>-<decision-title>.md`，但本 PM stub 不写文件。
 
 ## 关联 Skill
 
-- `adr-validator` — 校验 ADR 质量
-- `adr-iteration` — 更新 ADR 状态（Proposed → Accepted 等）
-- `engineer-agent:trd-gen` — TRD 中的关键决策可提取为独立 ADR
+- `engineer-agent:trd-gen` — 生成或更新 Engineer-owned ADR
+- `adr-validator` — 校验已生成的 ADR 质量

@@ -47,6 +47,28 @@ def load_repository_checker_module():
     return module
 
 
+def init_git_main(root: Path) -> None:
+    subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True)
+    (root / "README.md").write_text("# Fixture\n")
+    subprocess.run(["git", "add", "README.md"], cwd=root, check=True)
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            "user.name=Test User",
+            "-c",
+            "user.email=test@example.com",
+            "commit",
+            "-m",
+            "base",
+        ],
+        cwd=root,
+        check=True,
+        stdout=subprocess.DEVNULL,
+    )
+    subprocess.run(["git", "switch", "-c", "feature"], cwd=root, check=True)
+
+
 class EvalContractTests(unittest.TestCase):
     def test_all_agent_skill_evals_follow_shared_contract(self):
         checker = load_checker_module()
@@ -837,6 +859,328 @@ class EvalContractTests(unittest.TestCase):
 
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("no base ref is available", rendered)
+
+    def test_repository_contract_accepts_nested_implementation_plan_metadata(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            plan = root / "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md"
+            prd = root / "docs/pm/chat-interface/history-search/PRD.md"
+            trd = root / "docs/engineer/chat-interface/history-search/TRD.md"
+            plan.parent.mkdir(parents=True)
+            prd.parent.mkdir(parents=True)
+            prd.write_text(
+                "---\n"
+                'feature: "history-search"\n'
+                'feature_path: "chat-interface/history-search"\n'
+                'parent_feature: "chat-interface"\n'
+                'feature_level: "2"\n'
+                'version: "1.0.0"\n'
+                'date: "2026-06-23"\n'
+                'last_updated: "2026-06-23"\n'
+                "---\n\n"
+                "# History Search PRD\n"
+            )
+            trd.write_text(
+                "---\n"
+                'feature: "history-search"\n'
+                'feature_path: "chat-interface/history-search"\n'
+                'parent_feature: "chat-interface"\n'
+                'feature_level: "2"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-23"\n'
+                'last_updated: "2026-06-23"\n'
+                'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n'
+                "---\n\n"
+                "# History Search TRD\n"
+            )
+            plan.write_text(
+                "---\n"
+                'feature: "history-search"\n'
+                'feature_path: "chat-interface/history-search"\n'
+                'parent_feature: "chat-interface"\n'
+                'feature_level: "2"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-23"\n'
+                'last_updated: "2026-06-23"\n'
+                'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n'
+                'related_trd: "docs/engineer/chat-interface/history-search/TRD.md"\n'
+                "---\n\n"
+                "# History Search Plan\n"
+            )
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        self.assertEqual([], errors)
+
+    def test_repository_contract_rejects_changed_plan_with_missing_related_docs(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            plan = root / "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md"
+            plan.parent.mkdir(parents=True)
+            plan.write_text(
+                "---\n"
+                'feature: "history-search"\n'
+                'feature_path: "chat-interface/history-search"\n'
+                'parent_feature: "chat-interface"\n'
+                'feature_level: "2"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-23"\n'
+                'last_updated: "2026-06-23"\n'
+                'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n'
+                'related_trd: "docs/engineer/chat-interface/history-search/TRD.md"\n'
+                "---\n\n"
+                "# History Search Plan\n"
+            )
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("frontmatter 'related_prd' must point to an existing file", rendered)
+        self.assertIn("frontmatter 'related_trd' must point to an existing file", rendered)
+
+    def test_repository_contract_rejects_changed_plan_without_feature_path_metadata(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            plan = root / "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md"
+            plan.parent.mkdir(parents=True)
+            plan.write_text(
+                "---\n"
+                'feature: "history-search"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-23"\n'
+                'last_updated: "2026-06-23"\n'
+                "---\n\n"
+                "# History Search Plan\n"
+            )
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("frontmatter 'feature_path' must be non-empty", rendered)
+        self.assertIn("frontmatter 'parent_feature' must be non-empty", rendered)
+        self.assertIn("frontmatter 'feature_level' must be non-empty", rendered)
+        self.assertIn("frontmatter 'related_prd' must be non-empty", rendered)
+        self.assertIn("frontmatter 'related_trd' must be non-empty", rendered)
+
+    def test_repository_contract_accepts_deep_implementation_plan_path(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            plan = root / "docs/engineer/a/b/c/d/IMPLEMENTATION_PLAN.md"
+            prd = root / "docs/pm/a/b/c/d/PRD.md"
+            trd = root / "docs/engineer/a/b/c/d/TRD.md"
+            plan.parent.mkdir(parents=True)
+            prd.parent.mkdir(parents=True)
+            prd.write_text(
+                "---\n"
+                'feature: "d"\n'
+                'feature_path: "a/b/c/d"\n'
+                'parent_feature: "a/b/c"\n'
+                'feature_level: "4"\n'
+                'version: "1.0.0"\n'
+                'date: "2026-06-23"\n'
+                'last_updated: "2026-06-23"\n'
+                "---\n\n"
+                "# Deep PRD\n"
+            )
+            trd.write_text(
+                "---\n"
+                'feature: "d"\n'
+                'feature_path: "a/b/c/d"\n'
+                'parent_feature: "a/b/c"\n'
+                'feature_level: "4"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-23"\n'
+                'last_updated: "2026-06-23"\n'
+                'related_prd: "docs/pm/a/b/c/d/PRD.md"\n'
+                "---\n\n"
+                "# Deep TRD\n"
+            )
+            plan.write_text(
+                "---\n"
+                'feature: "d"\n'
+                'feature_path: "a/b/c/d"\n'
+                'parent_feature: "a/b/c"\n'
+                'feature_level: "4"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-23"\n'
+                'last_updated: "2026-06-23"\n'
+                'related_prd: "docs/pm/a/b/c/d/PRD.md"\n'
+                'related_trd: "docs/engineer/a/b/c/d/TRD.md"\n'
+                "---\n\n"
+                "# Too Deep Plan\n"
+            )
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        self.assertEqual([], errors)
+
+    def test_repository_contract_rejects_invalid_implementation_plan_path_segments(self):
+        checker = load_repository_checker_module()
+
+        invalid_paths = [
+            "a/Bad_Segment",
+            "foo-",
+            "a--b",
+        ]
+        for feature_path in invalid_paths:
+            with self.subTest(feature_path=feature_path):
+                with tempfile.TemporaryDirectory() as temp_dir:
+                    root = Path(temp_dir)
+                    init_git_main(root)
+                    plan = root / f"docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md"
+                    plan.parent.mkdir(parents=True)
+                    parent_feature = (
+                        "/".join(feature_path.split("/")[:-1])
+                        if "/" in feature_path
+                        else "N/A"
+                    )
+                    feature = feature_path.split("/")[-1].lower().replace("_", "-")
+                    plan.write_text(
+                        "---\n"
+                        f'feature: "{feature}"\n'
+                        f'feature_path: "{feature_path}"\n'
+                        f'parent_feature: "{parent_feature}"\n'
+                        f'feature_level: "{len(feature_path.split("/"))}"\n'
+                        'version: "0.1.0"\n'
+                        'date: "2026-06-23"\n'
+                        'last_updated: "2026-06-23"\n'
+                        f'related_prd: "docs/pm/{feature_path}/PRD.md"\n'
+                        f'related_trd: "docs/engineer/{feature_path}/TRD.md"\n'
+                        "---\n\n"
+                        "# Invalid Segment Plan\n"
+                    )
+                    subprocess.run(
+                        ["git", "add", plan.relative_to(root).as_posix()],
+                        cwd=root,
+                        check=True,
+                    )
+
+                    errors = []
+                    checker.validate_implementation_plan_metadata(root, errors)
+
+                rendered = "\n".join(error.render(root) for error in errors)
+                self.assertIn(
+                    "implementation plan path must be docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md with one or more lowercase kebab-case segments",
+                    rendered,
+                )
+
+    def test_repository_contract_rejects_changed_plan_related_doc_mismatch(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            plan = root / "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md"
+            plan.parent.mkdir(parents=True)
+            plan.write_text(
+                "---\n"
+                'feature: "history-search"\n'
+                'feature_path: "chat-interface/history-search"\n'
+                'parent_feature: "chat-interface"\n'
+                'feature_level: "2"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-23"\n'
+                'last_updated: "2026-06-23"\n'
+                'related_prd: "docs/pm/history-search/PRD.md"\n'
+                'related_trd: "docs/engineer/history-search/TRD.md"\n'
+                "---\n\n"
+                "# History Search Plan\n"
+            )
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "frontmatter 'related_prd' must be 'docs/pm/chat-interface/history-search/PRD.md'",
+            rendered,
+        )
+        self.assertIn(
+            "frontmatter 'related_trd' must be 'docs/engineer/chat-interface/history-search/TRD.md'",
+            rendered,
+        )
+
+    def test_repository_contract_rejects_changed_plan_with_trd_related_prd_mismatch(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            prd = root / "docs/pm/chat-interface/history-search/PRD.md"
+            trd = root / "docs/engineer/chat-interface/history-search/TRD.md"
+            plan = root / "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md"
+            prd.parent.mkdir(parents=True)
+            plan.parent.mkdir(parents=True)
+            prd.write_text(
+                "---\n"
+                'feature: "history-search"\n'
+                'feature_path: "chat-interface/history-search"\n'
+                'parent_feature: "chat-interface"\n'
+                'feature_level: "2"\n'
+                'version: "1.0.0"\n'
+                'date: "2026-06-23"\n'
+                'last_updated: "2026-06-23"\n'
+                "---\n\n"
+                "# History Search PRD\n"
+            )
+            trd.write_text(
+                "---\n"
+                'feature: "history-search"\n'
+                'feature_path: "chat-interface/history-search"\n'
+                'parent_feature: "chat-interface"\n'
+                'feature_level: "2"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-23"\n'
+                'last_updated: "2026-06-23"\n'
+                'related_prd: "docs/pm/history-search/PRD.md"\n'
+                "---\n\n"
+                "# History Search TRD\n"
+            )
+            plan.write_text(
+                "---\n"
+                'feature: "history-search"\n'
+                'feature_path: "chat-interface/history-search"\n'
+                'parent_feature: "chat-interface"\n'
+                'feature_level: "2"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-23"\n'
+                'last_updated: "2026-06-23"\n'
+                'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n'
+                'related_trd: "docs/engineer/chat-interface/history-search/TRD.md"\n'
+                "---\n\n"
+                "# History Search Plan\n"
+            )
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "frontmatter 'related_prd' must be 'docs/pm/chat-interface/history-search/PRD.md'",
+            rendered,
+        )
 
     def test_repository_contract_rejects_placeholder_author(self):
         checker = load_repository_checker_module()

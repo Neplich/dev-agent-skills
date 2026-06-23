@@ -7,7 +7,7 @@
 - Eval: `eval-002-boundary-test-generation`
 - Test case: boundary-test-generation
 - Workspace: `workspace/eval-2-boundary-test-generation`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-04
+- Latest result: PASS - fresh Codex subagent validation on 2026-06-23 after QA owner split fix
 
 ## Test Set / Fixture Version
 
@@ -36,7 +36,7 @@ Observed behavior:
 - PASS. 报告协议要求 requirement matrix 逐项标记 `pass`、`fail`、`blocked` 或 `assumed`，并为每项保留 evidence references，避免把 blocked 或 assumed 项升级成缺陷。
 - PASS. Expected outcome 和 evidence contract 要求输出 validation summary、requirement matrix、execution path、evidence references、risk notes、blocked items、release/implementation risks 和 handoff notes，覆盖 eval 的硬性结构。
 - PASS. Bug-analyzer handoff 仅允许 confirmed reproducible failure with evidence；缺失环境、证据不足、不稳定观察和假设必须保留为 blocked 或 assumed。
-- PASS. 对现有功能变更、bug fix 或代码完成后的 E2E 文档更新，skill 要求先确认 PRD/TRD 预期对齐并有已确认的 `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`；预期变化回 PM，TRD gap 回 `trd-gen`，文档缺失、平台版本缺失或实施计划缺失时 blocked。本 fixture 没有提供 `IMPLEMENTATION_PLAN.md`，因此真实执行时应 blocked，而不是伪造边界验证结果。
+- PASS. 对现有功能变更、bug fix 或代码完成后的 E2E 文档更新，skill 要求先确认同一 `feature_path` 下 PRD/TRD 预期对齐并有已确认的 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`；预期变化或 PRD/path 不清回 `pm-agent:idea-to-spec`，TRD gap 回 `engineer-agent:trd-gen`，缺 implementation plan 回 `engineer-agent:feature-implementor`，文档缺失、平台版本缺失或实施计划缺失时 blocked。本 fixture 没有提供 `IMPLEMENTATION_PLAN.md`，因此真实执行时应 blocked，而不是伪造边界验证结果。
 
 ## Without Skill / Baseline
 
@@ -49,7 +49,7 @@ Observed behavior:
 
 ## Next Steps
 
-- 保持缺失浏览器环境、缺失平台版本或缺失已确认实施计划时不伪造执行结果；按 skill 规则记录 blocked。
+- 保持缺失浏览器环境、缺失平台版本或缺失已确认实施计划时不伪造执行结果；按 skill 规则记录 blocked，并按 PRD/path、TRD、implementation plan 三类缺口交给对应 owner。
 
 ## Runtime Artifacts Policy
 

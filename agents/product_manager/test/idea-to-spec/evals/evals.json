@@ -9,7 +9,7 @@
       "description": "Verifies that idea-to-spec handles existing-project-feature-design and produces the expected role-specific artifact.",
       "prompt": "我们在一个已有的 Web 应用里，要新增应用标签系统。请先看项目上下文，再和我一起把方案收敛下来，最终沉淀成 PM 设计文档。",
       "workspace": "workspace/iteration-1/eval-1-existing-project-feature",
-      "expected_output": "先给出项目上下文摘要，然后按单决策点推进设计；在关键点提供 2-3 个方案和 trade-off；按 section 逐段确认；把已确认内容沉淀到 docs/pm/{feature}/DECISIONS.md 与相关 PM 文档。",
+      "expected_output": "先给出项目上下文摘要，然后按单决策点推进设计；在关键点提供 2-3 个方案和 trade-off；按 section 逐段确认；把已确认内容沉淀到 docs/pm/{feature_path}/DECISIONS.md 与相关 PM 文档。",
       "assertions": [
         {
           "id": "assertion_1",
@@ -145,6 +145,66 @@
           "id": "pm",
           "description": "进入 PM 流程",
           "text": "在同一轮里继续提炼产品定位、功能边界、MVP 或其他需求收敛问题"
+        }
+      ]
+    },
+    {
+      "id": "eval-006-nested-feature-path",
+      "name": "nested-feature-path",
+      "description": "Verifies that idea-to-spec scans existing PM PRDs and routes a child feature under the confirmed parent feature_path instead of creating a parallel top-level directory.",
+      "prompt": "已有 Web 应用已经有 Chat Interface 的 PRD。现在要新增聊天历史搜索。请先看项目文档，判断应该更新或生成哪些 PM 文档，并给出后续 handoff 包。",
+      "workspace": "workspace/iteration-3/eval-6-nested-feature-path",
+      "expected_output": "扫描 docs/pm/**/PRD.md；识别已有父功能 chat-interface；将聊天历史搜索解析为 feature_path=chat-interface/history-search；不创建 docs/pm/history-search/PRD.md；handoff packet 包含 feature_path、feature、parent_feature、feature_level 和 feature_path_evidence。",
+      "assertions": [
+        {
+          "id": "scan_existing_prds",
+          "description": "先扫描 PM PRD 以确认父功能",
+          "text": "输出提到扫描或读取 docs/pm/**/PRD.md、已有 PRD、Chat Interface PRD 或 docs/pm/chat-interface/PRD.md"
+        },
+        {
+          "id": "nested_feature_path",
+          "description": "子功能落到父功能下",
+          "text": "输出明确 feature_path 为 chat-interface/history-search 或 docs/pm/chat-interface/history-search/PRD.md"
+        },
+        {
+          "id": "no_parallel_top_level",
+          "description": "不创建并列顶层目录",
+          "text": "输出不会把历史搜索写到 docs/pm/history-search/PRD.md 作为新的一级功能"
+        },
+        {
+          "id": "handoff_fields",
+          "description": "handoff 包含 feature path 字段",
+          "text": "handoff packet 包含 feature_path、feature、parent_feature、feature_level 和 feature_path_evidence"
+        }
+      ]
+    },
+    {
+      "id": "eval-007-api-adr-engineer-handoff",
+      "name": "api-adr-engineer-handoff",
+      "description": "Verifies that idea-to-spec does not generate Engineer API or ADR docs directly and instead hands stable scope to engineer-agent:trd-gen.",
+      "prompt": "PM 范围已经稳定：docs/pm/chat-interface/history-search/PRD.md 已确认。现在需要为这个功能补 API 文档和一份搜索索引选型 ADR。请判断由谁生成、输出到哪里，并给出 handoff 包。",
+      "workspace": "workspace/iteration-3/eval-7-api-adr-engineer-handoff",
+      "expected_output": "不直接调用 PM 内部 api-gen 或 adr-gen，不直接写 docs/engineer 文档；输出给 engineer-agent:trd-gen 的 handoff 包，要求 Engineer 在 docs/engineer/chat-interface/history-search/ 下生成 API.md 和 ADR-*.md，并携带 feature_path、parent_feature、feature_level、PRD 路径和决策背景。",
+      "assertions": [
+        {
+          "id": "does_not_use_pm_api_adr_generators",
+          "description": "PM 不直接生成 API 或 ADR",
+          "text": "输出必须说明 API 文档和 ADR 是 Engineer-owned 产物，不能由 PM 内部 `api-gen` 或 `adr-gen` 直接生成。"
+        },
+        {
+          "id": "routes_to_trd_gen",
+          "description": "路由到 Engineer trd-gen",
+          "text": "输出必须把下一步明确交给 `engineer-agent:trd-gen`，由其处理 API / ADR 与 TRD 对齐。"
+        },
+        {
+          "id": "engineer_paths_mirror_feature_path",
+          "description": "Engineer 输出路径镜像 feature_path",
+          "text": "输出必须要求 API / ADR 位于 `docs/engineer/chat-interface/history-search/`，例如 `API.md` 和 `ADR-*.md`，不能写到 `docs/engineer/history-search/`。"
+        },
+        {
+          "id": "handoff_contains_feature_path_evidence",
+          "description": "交接包包含路径证据",
+          "text": "handoff 包必须包含 `feature_path`、`parent_feature`、`feature_level`、PRD 路径和 API / ADR 决策背景。"
         }
       ]
     }

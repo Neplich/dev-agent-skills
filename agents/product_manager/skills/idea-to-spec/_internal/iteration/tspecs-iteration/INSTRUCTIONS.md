@@ -43,7 +43,7 @@ history, traceability, and versioning.
 3. **Update coverage deliberately**:
    - Add or revise test cases for changed requirements
    - For every added or revised E2E case, create or update exactly one
-     `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/TC-NNN-<short-slug>.md`
+     `docs/qa/e2e/{feature_path}/cases/TC-NNN-<short-slug>.md`
      file and link it from `TEST_SUITE.md`
    - If the change request requires project file exploration, update
      `FLOW_INDEX.md` in the function-tree directory with inspected files and

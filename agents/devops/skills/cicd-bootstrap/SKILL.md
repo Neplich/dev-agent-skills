@@ -24,8 +24,16 @@ Before writing CI/CD config, inspect:
 - which deployment targets exist under `deploy/`
 - which test/build commands are actually present in the repo
 - whether the task is repo-wide automation or specific to one release path
+- for feature-scoped release work, the confirmed `feature_path` plus
+  `docs/engineer/{feature_path}/TRD.md` and
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
 
 If CI/CD already exists, prefer targeted updates over full regeneration.
+
+If the release path is feature-scoped but the `feature_path` is unclear, do not
+create a synonymous top-level `docs/devops/{name}/` folder. Return to PM for
+PRD/path clarification or Engineer for missing or stale TRD/implementation
+plan.
 
 ## Input Requirements
 
@@ -92,7 +100,8 @@ Define stages and jobs:
 Document required secrets in a durable operational path:
 
 - prefer `deploy/SECRETS.md`
-- if feature-scoped release notes are needed, optionally also reference `docs/devops/{feature-name}/RELEASE_PLAN.md`
+- if feature-scoped release notes are needed, also reference or create
+  `docs/devops/{feature_path}/RELEASE_PLAN.md`
 
 For GitHub Actions:
 - `DOCKER_USERNAME` / `DOCKER_PASSWORD` (if using Docker Hub)
@@ -156,4 +165,6 @@ Output:
   - `.github/workflows/`
   - `.gitlab-ci.yml`
 - Secrets documentation should be durable and reviewable
+- Feature-scoped release plans or CI/CD readiness notes belong under
+  `docs/devops/{feature_path}/...`
 - Do not invent generic lint/test/build commands when the repository already exposes canonical commands

@@ -1,0 +1,11 @@
+{
+  "eval_id": "eval-002-feature-path-design-handoff",
+  "eval_name": "feature-path-design-handoff",
+  "workspace_root": "agents/designer/test/designer-agent/evals/workspace/eval-2-feature-path-design-handoff",
+  "skill_availability_goal": "Verify that designer-agent mirrors confirmed feature_path into design output paths without creating synonym top-level directories.",
+  "prompt": "用户说：PM 已确认 feature_path 是 chat-interface/history-search，PRD 在 docs/pm/chat-interface/history-search/PRD.md，TRD 在 docs/engineer/chat-interface/history-search/TRD.md。请做设计路由并说明 UI/UX 和视觉产物位置，不要把 history-search 写成新的顶层 design 目录，也不要进入实现。",
+  "fixture_context": [
+    "docs/pm/chat-interface/history-search/PRD.md",
+    "docs/engineer/chat-interface/history-search/TRD.md"
+  ]
+}

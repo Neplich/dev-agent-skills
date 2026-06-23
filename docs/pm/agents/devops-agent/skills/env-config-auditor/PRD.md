@@ -2,11 +2,14 @@
 title: "env-config-auditor — Product Requirements Document"
 type: PRD
 feature: "skill-env-config-auditor"
+feature_path: "agents/devops-agent/skills/env-config-auditor"
+parent_feature: "agents/devops-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/devops/README.md"
@@ -61,9 +64,9 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-S01 | Trigger Matching | `env-config-auditor` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `env-config-auditor` SKILL.md 一致。 |
-| FR-S02 | Context Intake | 代码中的环境变量读取点、deploy 配置、CI/CD secrets/config、运行配置和必要 PM/TRD 约束。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
+| FR-S02 | Context Intake | 代码中的环境变量读取点、deploy 配置、CI/CD secrets/config、运行配置和必要 PM/TRD 约束；feature-scoped audit 还必须消费已确认 `feature_path`、`docs/engineer/{feature_path}/TRD.md` 和 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；`feature_path` 或 Engineer 文档不清时回 PM/Engineer，不自建同义顶层目录。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
-| FR-S04 | Artifact Output | 配置审计报告、缺口清单、Security Issues/Recommendations；feature/release scoped audit 写入 `docs/devops/{feature-name}/ENV_AUDIT.md`，repo-wide deployment audit 写入 `deploy/ENV_AUDIT.md`。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
+| FR-S04 | Artifact Output | 配置审计报告、缺口清单、Security Issues/Recommendations；feature/release scoped audit 写入 `docs/devops/{feature_path}/ENV_AUDIT.md`，repo-wide deployment audit 写入 `deploy/ENV_AUDIT.md`。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `devops-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 缺部署上下文到 deployment-planner；CI secrets 到 cicd-bootstrap；修复到 engineer-agent/security-agent；如需运行手册，回 `devops-agent` broader operational workflow 再判断是否进入 incident-playbook-writer。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
@@ -75,7 +78,7 @@ changelog:
 - 扫描代码 env var 读取
 - 对比 deploy/local、deploy/docker、Helm、CI/CD
 - 检查硬编码 secrets、unsafe defaults、missing required secrets
-- 写入 `docs/devops/{feature-name}/ENV_AUDIT.md` 或 `deploy/ENV_AUDIT.md`，输出缺口和修复建议
+- 写入 `docs/devops/{feature_path}/ENV_AUDIT.md` 或 repo-wide `deploy/ENV_AUDIT.md`，输出缺口和修复建议
 
 ## 验收标准
 

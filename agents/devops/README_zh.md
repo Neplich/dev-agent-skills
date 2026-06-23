@@ -15,7 +15,7 @@
 | 入口 skill | `devops-agent` |
 | Specialist skills | 4 个 |
 | 主要输入 | 工程代码、PM/TRD、部署约束、环境变量、CI/CD 现状 |
-| 主要输出 | `deploy/` 配置、CI/CD 文件、环境审计、runbook |
+| 主要输出 | `deploy/` 配置、CI/CD 文件、`docs/devops/{feature_path}/` 报告、runbook |
 | 上下游协作 | 上游 `engineer-agent`，必要时回到 `pm-agent` 或 `security-agent` |
 
 ## Skill 清单
@@ -50,7 +50,9 @@ deploy/
 
 - `.github/workflows/`
 - `.gitlab-ci.yml`
-- `docs/devops/{feature-name}/`
+- `docs/devops/{feature_path}/`
+
+Feature-scoped DevOps 工作消费 PM/Engineer 已确认的 `feature_path`。路径不清时，回 PM 补 PRD/路径归属，或回 Engineer 补 TRD/实施计划；不要自建同义顶层 DevOps 目录。
 
 ## 典型工作流
 
@@ -68,6 +70,9 @@ flowchart LR
 - DevOps 可以生成部署配置、CI/CD、环境审计和运维手册。
 - DevOps 不替代 Engineer 修业务代码，也不替代 Security 做安全审查。
 - 环境配置发现敏感风险时，应把修复或安全复审交给合适角色继续处理。
+- DevOps 不判断父功能归属；需要功能范围时读取
+  `docs/engineer/{feature_path}/TRD.md` 和
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。
 
 ## 本地维护
 

@@ -2,11 +2,14 @@
 title: "devops-agent — Product Requirements Document"
 type: PRD
 feature: "skill-devops-agent"
+feature_path: "agents/devops-agent/skills/devops-agent"
+parent_feature: "agents/devops-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/devops/README.md"
@@ -32,6 +35,7 @@ changelog:
 2. 让维护者能用 PRD 对照 `SKILL.md` / README / eval 检查行为漂移。
 3. 将 Sub Agent 校验发现的实现差异收敛为可验收 requirement。
 4. 保持与 `devops-agent` 的角色边界一致。
+5. 保证 feature-scoped DevOps route 只消费 PM/Engineer 已确认的 `feature_path`。
 
 ## 非目标
 
@@ -66,6 +70,7 @@ changelog:
 | FR-S05 | Boundary Guard | 不接管 `devops-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 业务代码或测试变更交 engineer-agent；需求或范围约束交 pm-agent；安全复审或敏感配置风险交 security-agent；DevOps 内部仅在明确 broader operational workflow 时串联 specialist chain。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
+| FR-S08 | Feature Path Gate | 对 feature-scoped DevOps 请求，dispatcher 必须传递已确认的 `feature_path`，并要求下游读取 `docs/engineer/{feature_path}/TRD.md` 和 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。 | P0 | `feature_path` 不清时回 PM 补 PRD/路径归属；TRD 或实施计划缺失/不一致时回 Engineer；不得创建 `docs/devops/{name}/` 同义顶层目录。 |
 
 ## 当前实现对齐
 

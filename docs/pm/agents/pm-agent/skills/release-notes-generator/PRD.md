@@ -2,11 +2,14 @@
 title: "release-notes-generator — Product Requirements Document"
 type: PRD
 feature: "skill-release-notes-generator"
+feature_path: "agents/pm-agent/skills/release-notes-generator"
+parent_feature: "agents/pm-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/product_manager/README.md"
@@ -17,6 +20,9 @@ related_docs:
   - "agents/product_manager/skills/release-notes-generator/reference/release-outline.md"
   - "agents/product_manager/skills/release-notes-generator/reference/github-release-workflow.md"
   - "agents/product_manager/test/release-notes-generator/evals/evals.json"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.0.0"
     date: "2026-06-12"

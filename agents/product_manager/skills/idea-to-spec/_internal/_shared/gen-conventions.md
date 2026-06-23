@@ -8,8 +8,9 @@
 
 Every gen skill follows this 6-step workflow:
 
-1. **Collect context**: Read provided inputs plus any active feature docs. If
-   `docs/pm/{feature-name}/DECISIONS.md` exists, treat it as the source of
+1. **Collect context**: Read provided inputs plus any active feature docs. Scan
+   `docs/pm/**/PRD.md` before choosing a target feature folder. If
+   `docs/pm/{feature_path}/DECISIONS.md` exists, treat it as the source of
    truth for confirmed decisions, open questions, assumptions, and rejected
    options.
 
@@ -45,6 +46,8 @@ Every gen skill follows this 6-step workflow:
   `output-conventions.md`
 - **Memory sync**: When a generation step locks a new decision, ensure the
   corresponding `DECISIONS.md` is updated in the same feature folder
+- **Feature path fields**: New formal feature-scoped documents include
+  `feature_path`, `feature`, `parent_feature`, and `feature_level`
 - **Line limit**: Keep output under 500 lines, including frontmatter
 - **Section limit**: Keep each section under 80 lines; split or compress if
   exceeded
@@ -99,6 +102,8 @@ Use these markers only when needed:
 
 ## Failure Handling
 
+- **Feature parent is unclear** -> blocked or ask the smallest clarifying
+  question. Do not create a new top-level folder for a possible child feature.
 - **Vague input after 2 rounds of questions** -> produce a partial document with
   explicit markers for incomplete sections and list the missing information
 - **Cannot estimate a value** -> include the field with a note explaining what
@@ -117,7 +122,30 @@ Use these markers only when needed:
 3. **No silent memory drift**: If the generated document changes a previously
    confirmed decision, surface the conflict explicitly instead of silently
    overwriting it.
-4. **No directory drift**: Keep PM docs under `docs/pm/{feature-name}/` and do
-   not invent alternate feature doc roots.
+4. **No directory drift**: Keep PM docs under `docs/pm/{feature_path}/`, where
+   `feature_path` has one or more slash-separated slug segments. Do not invent
+   alternate feature doc roots, and do not create a sibling top-level directory
+   when an existing parent PRD clearly owns the child feature.
 5. **No sensitive data**: Do not include real credentials, tokens, internal
    IPs, or PII in examples.
+
+## Feature Path Gate
+
+Run this gate before writing `PRD.md`, `BRD.md`, `DECISIONS.md`, or PM
+`design.md`:
+
+1. Scan `docs/pm/**/PRD.md`, supporting multi-level feature paths.
+2. Read each PRD's `feature_path`, `feature`, `parent_feature`,
+   `feature_level`, `title`, `related_issue`, and `related_docs` when present.
+3. For old single-level PRDs without `feature_path`, infer
+   `feature_path=<folder>`, `parent_feature=N/A`, and `feature_level=1`.
+4. Decide whether the request is a level-1 feature or belongs under an existing
+   parent PRD using explicit evidence: user statement, issue context, PRD title,
+   DECISIONS content, or directory path.
+5. Auto-create a child path only when evidence is clear. Otherwise stop with a
+   blocked result or ask a concise clarification.
+6. Reject empty paths, absolute paths, `..`, hidden segments, duplicate slashes,
+   and non-lower-kebab path segments such as trailing hyphens or repeated
+   hyphen separators.
+
+Record the result in the next handoff as `feature_path_evidence`.

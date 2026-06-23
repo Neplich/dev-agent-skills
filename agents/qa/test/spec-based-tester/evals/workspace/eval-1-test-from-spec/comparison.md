@@ -31,7 +31,7 @@
 Observed behavior:
 
 - PASS. 当前 `spec-based-tester` 要求执行前读取 PM/spec、TRD、实现上下文、仓库指令和现有 QA 功能树，并记录 scope、环境假设、unknowns、blocked checks。
-- PASS. 当 PM 未提供具体 E2E 用例时，skill 要求先读取 `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md`、`FLOW_INDEX.md`、`cases/*.md`、`scripts/*.spec.md`、历史 `results/` 和 `_reports/`；fixture 已有 `commerce/checkout/discount-code` 功能树和 `TC-001-discount-code`，所以应优先复用现有 TC，不回退到旧的单层 QA 目录。
+- PASS. 当 PM 未提供具体 E2E 用例时，skill 要求先读取 `docs/qa/e2e/{feature_path}/TEST_SUITE.md`、`FLOW_INDEX.md`、`cases/*.md`、`scripts/*.spec.md`、历史 `results/` 和 `_reports/`；fixture 已有 `commerce/checkout/discount-code` 功能树和 `TC-001-discount-code`，所以应优先复用现有 TC，不回退到旧的单层 QA 目录。
 - PASS. 执行路径规则明确为 repo acceptance/e2e/integration/manual QA harness 优先，其次 Chrome plugin / browser connector，最后才是 standalone Playwright fallback；fixture 的 TRD 和 TEST_SUITE 均指向 `npm test -- checkout-discount` 作为 repo harness。
 - PASS. Evidence contract 要求 requirement matrix 使用 `pass`、`fail`、`blocked` 或 `assumed`，并明确不把 blocked 或 assumed 项误写成 confirmed defect。
 - PASS. 输出要求包含 scoped validation summary、requirement matrix、execution path、evidence references、risk notes、blocked items 和 handoff notes。

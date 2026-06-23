@@ -19,7 +19,7 @@
         {
           "id": "assertion_2",
           "description": "独立用例复用",
-          "text": "当 PM 未提供具体 E2E 用例时，必须先读取 docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md、FLOW_INDEX.md、cases/*.md、scripts/*.spec.md 和历史 results/；已有 TC 覆盖目标时直接复用，不得从零阅读全项目或回退到旧的单层 QA 目录。"
+          "text": "当 PM 未提供具体 E2E 用例时，必须先读取 docs/qa/e2e/{feature_path}/TEST_SUITE.md、FLOW_INDEX.md、cases/*.md、scripts/*.spec.md 和历史 results/；已有 TC 覆盖目标时直接复用，不得从零阅读全项目或回退到旧的单层 QA 目录。"
         },
         {
           "id": "assertion_3",
@@ -39,7 +39,7 @@
         {
           "id": "e2e",
           "description": "E2E 单文件约束",
-          "text": "新增或补充的每个 E2E TC 必须作为单独 Markdown 文件写入 docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/TC-NNN-<short-slug>.md，并在 FLOW_INDEX.md、TEST_SUITE.md 或验证报告中引用对应文件；对应脚本写入 scripts/TC-NNN-<short-slug>.spec.md。"
+          "text": "新增或补充的每个 E2E TC 必须作为单独 Markdown 文件写入 docs/qa/e2e/{feature_path}/cases/TC-NNN-<short-slug>.md，并在 FLOW_INDEX.md、TEST_SUITE.md 或验证报告中引用对应文件；对应脚本写入 scripts/TC-NNN-<short-slug>.spec.md。"
         },
         {
           "id": "versioned_report_archive",
@@ -94,7 +94,7 @@
         {
           "id": "alignment_plan_gate",
           "description": "PRD/TRD 和实施计划门禁",
-          "text": "如果边界验证来自现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须先确认 PRD/TRD 预期对齐并引用已确认的 IMPLEMENTATION_PLAN.md；预期变化回 PM，TRD gap 回 trd-gen，文档缺失或平台版本缺失时 blocked。"
+          "text": "如果边界验证来自现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须先确认同一 feature_path 下 PRD/TRD 预期对齐并引用已确认的 IMPLEMENTATION_PLAN.md；预期变化回 PM，TRD gap 回 trd-gen，缺 implementation plan 回 feature-implementor，文档缺失或平台版本缺失时 blocked。"
         }
       ]
     }

@@ -2,11 +2,14 @@
 title: "pm-agent — Product Requirements Document"
 type: PRD
 feature: "agent-pm-agent"
-version: "1.0.0"
+feature_path: "agents/pm-agent"
+parent_feature: "agents"
+feature_level: "2"
+version: "1.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/product_manager/README.md"
@@ -16,6 +19,12 @@ related_docs:
   - "skills-lock.json"
   - "agents/product_manager/test/pm-agent/evals/evals.json"
 changelog:
+  - version: "1.1.1"
+    date: "2026-06-23"
+    changes: "Clarified feature_path routing as multi-level"
+  - version: "1.1.0"
+    date: "2026-06-23"
+    changes: "Added PM feature_path routing contract"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"
@@ -63,8 +72,9 @@ changelog:
 | FR-A00 | Entry Dispatcher | `pm-agent` 必须作为入口 dispatcher，负责激活角色级流程。 | P0 | README、marketplace 和 entry SKILL 都指向 `pm-agent`。 |
 | FR-A01 | Route Matrix | Dispatcher 默认选择一个最小主 route；只有用户明确要求或目标强烈暗示更广 PM 链路时，才定义后续 multi-skill chain。 | P0 | 主 route 属于 `idea-to-spec`, `competitive-brief`, `competitive-intelligence`, `changelog-generator`, `release-notes-generator`, `roadmap-generator`, `github-reader`，不包含 `pm-agent` 自身。 |
 | FR-A02 | Context Boundary | Dispatcher 只收集路由所需上下文；实现/审查/测试细节由被选 specialist 收集。 | P0 | 缺少内容级上下文不会让入口停在元路由。 |
-| FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任；PM 主输出路径必须覆盖 `docs/pm/{feature}/`、`docs/roadmap.md`、`docs/changelog/changelog-v{version}.md` 和 `docs/release-notes/`。 | P0 | Dispatcher 输出预期产物路径和类型，不伪装成 specialist report。 |
-| FR-A04 | Handoff | UI/UX 产物交给 designer-agent；PM 范围稳定后通过 engineer-agent:trd-gen 进入工程；非 PM 范围按 owning agent 转交。 | P0 | Handoff 指向 owning skill/agent，并说明输入包和期望输出。 |
+| FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任；PM 主输出路径必须覆盖 `docs/pm/{feature_path}/`、`docs/roadmap.md`、`docs/changelog/changelog-v{version}.md` 和 `docs/release-notes/`。 | P0 | Dispatcher 输出预期产物路径和类型，不伪装成 specialist report。 |
+| FR-A04 | Handoff | UI/UX 产物交给 designer-agent；PM 范围稳定后通过 engineer-agent:trd-gen 进入工程；非 PM 范围按 owning agent 转交。 | P0 | Handoff 指向 owning skill/agent，并说明输入包、`feature_path` 证据和期望输出。 |
+| FR-A05 | Feature Path Routing | 当请求需要 PRD/BRD/DECISIONS/design.md 时，PM 入口必须把请求交给 `idea-to-spec` 解析合法多级 `feature_path`。 | P0 | 子功能不直接生成并列顶层 PM 目录；父功能不清楚时 blocked 或澄清。 |
 
 ## 当前实现对齐
 
@@ -87,6 +97,7 @@ changelog:
 | AC-01 | Agent route matrix 与 README、entry SKILL、marketplace 和 skill 目录一致，且不自路由。 | 对照 related_docs 和 `.claude-plugin/marketplace.json` 人工 review。 |
 | AC-02 | 默认只选择一个最小主 route；明确要求或强烈暗示 broader PM workflow 时才串联 PM skills。 | 检查功能需求、路由矩阵和 Mermaid flow。 |
 | AC-03 | 跨角色 handoff 指向 owning agent/skill，并包含输入包与期望产物。 | 检查功能需求、用户流程和 handoff 描述。 |
+| AC-04 | feature-scoped PM 产物使用 `docs/pm/{feature_path}/`，子功能归属不清时不会创建新顶层目录。 | 对照 `idea-to-spec` 规则和 eval fixture。 |
 
 ## 非功能需求
 

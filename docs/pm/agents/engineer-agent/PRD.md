@@ -2,20 +2,29 @@
 title: "engineer-agent — Product Requirements Document"
 type: PRD
 feature: "agent-engineer-agent"
-version: "1.0.0"
+feature_path: "agents/engineer-agent"
+parent_feature: "agents"
+feature_level: "2"
+version: "1.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
   - "agents/engineer/README_zh.md"
   - ".claude-plugin/marketplace.json"
   - "agents/engineer/skills/engineer-agent/SKILL.md"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
   - "skills-lock.json"
   - "agents/engineer/test/engineer-agent/evals/evals.json"
 changelog:
+  - version: "1.1.0"
+    date: "2026-06-23"
+    changes: "Add feature_path mirroring and generation gate requirements"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"
@@ -33,6 +42,7 @@ changelog:
 2. 保持 route matrix 与 README、dispatcher `SKILL.md`、marketplace 和 skill 目录一致。
 3. 在需要跨角色协作时说明 owning agent、输入包和期望产物。
 4. 支持后续维护者通过 related docs 和 eval fixture 追踪行为漂移。
+5. 确保 Engineer TRD、实施计划和调试入口镜像 PM `feature_path`，避免子功能被错误生成到并列目录。
 
 ## 非目标
 
@@ -65,6 +75,7 @@ changelog:
 | FR-A02 | Context Boundary | Dispatcher 只收集路由所需上下文；实现/审查/测试细节由被选 specialist 收集。 | P0 | 缺少内容级上下文不会让入口停在元路由。 |
 | FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任。 | P0 | Dispatcher 输出预期产物类型，不伪装成 specialist report。 |
 | FR-A04 | Handoff | 需求变化回 pm-agent:idea-to-spec；设计交付物回 designer-agent；工程完成后按情况给 qa-agent、devops-agent、security-agent；QA E2E handoff 包含 PRD/TRD、确认的 IMPLEMENTATION_PLAN、变更文件、验证命令、风险和建议目录。 | P0 | Handoff 指向 owning skill/agent，并说明输入包和期望输出。 |
+| FR-A05 | Feature Path Alignment | 现有功能变更、TRD、实施计划和 debugger expected-behavior 对齐必须使用 PM 确认的 `feature_path`。 | P0 | Engineer 读取 `docs/pm/{feature_path}/PRD.md` 并镜像 `docs/engineer/{feature_path}/TRD.md`、`IMPLEMENTATION_PLAN.md`；缺 PRD 回 PM，缺 TRD 或路径不一致回 `trd-gen`。 |
 
 ## 当前实现对齐
 

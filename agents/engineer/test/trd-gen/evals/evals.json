@@ -9,12 +9,12 @@
       "description": "Verifies that trd-gen owns technical planning after PRD confirmation and stops before implementation.",
       "prompt": "PM 已经确认 docs/pm/capture-loop/PRD.md 和 docs/pm/capture-loop/DECISIONS.md。请进入 Engineer 阶段，编写 TRD，并说明后续如何移交给 feature-implementor。",
       "workspace": "workspace/eval-001-prd-to-engineer-trd",
-      "expected_output": "生成或更新 docs/engineer/{feature}/TRD.md，明确 TRD 确认后再移交 feature-implementor 编写实现计划文档，不进入代码实现。",
+      "expected_output": "生成或更新 docs/engineer/{feature_path}/TRD.md，明确 TRD 确认后再移交 feature-implementor 编写实现计划文档，不进入代码实现。",
       "assertions": [
         {
           "id": "engineer_owns_trd",
           "description": "TRD 属于 Engineer 产物",
-          "text": "输出必须明确 TRD 由 Engineer Agent 负责，并写入 `docs/engineer/{feature}/TRD.md`。"
+          "text": "输出必须明确 TRD 由 Engineer Agent 负责，并写入 `docs/engineer/{feature_path}/TRD.md`。"
         },
         {
           "id": "prd_confirmed_handoff",
@@ -29,7 +29,7 @@
         {
           "id": "implementation_plan_handoff",
           "description": "TRD 后移交实现计划",
-          "text": "输出必须说明 TRD 确认后移交 `feature-implementor` 编写 `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`，再进入实现。"
+          "text": "输出必须说明 TRD 确认后移交 `feature-implementor` 编写 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`，再进入实现。"
         },
         {
           "id": "qa_e2e_after_confirmed_plan",
@@ -74,6 +74,76 @@
         {
           "id": "no_implementation_plan_or_code",
           "description": "不进入实现",
+          "text": "输出不得开始编写 `IMPLEMENTATION_PLAN.md`、修改代码、补测试或进入交付。"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-nested-prd-to-engineer-trd",
+      "name": "nested-prd-to-engineer-trd",
+      "description": "Verifies that trd-gen mirrors a nested PRD feature_path when writing the Engineer TRD.",
+      "prompt": "PM 已经确认 docs/pm/chat-interface/history-search/PRD.md，frontmatter 中 feature_path 是 chat-interface/history-search。请进入 Engineer TRD 阶段，编写对应 TRD，不要写实现计划或代码。",
+      "workspace": "workspace/eval-003-nested-prd-to-engineer-trd",
+      "expected_output": "生成或更新 docs/engineer/chat-interface/history-search/TRD.md，TRD frontmatter 包含 feature_path、parent_feature、feature_level，related_prd 指向 docs/pm/chat-interface/history-search/PRD.md，并说明 TRD 确认后再移交 feature-implementor。",
+      "assertions": [
+        {
+          "id": "mirrors_nested_feature_path",
+          "description": "镜像嵌套 feature_path",
+          "text": "输出必须把 TRD 目标路径设为 `docs/engineer/chat-interface/history-search/TRD.md`，不得生成到 `docs/engineer/history-search/TRD.md` 或 `docs/engineer/chat-interface/TRD.md`。"
+        },
+        {
+          "id": "preserves_feature_metadata",
+          "description": "保留 feature path frontmatter",
+          "text": "输出必须要求 TRD frontmatter 包含 `feature_path: chat-interface/history-search`、`parent_feature: chat-interface` 和 `feature_level: 2`。"
+        },
+        {
+          "id": "related_prd_matches_path",
+          "description": "related_prd 匹配 PRD 路径",
+          "text": "输出必须要求 TRD `related_prd` 指向 `docs/pm/chat-interface/history-search/PRD.md`。"
+        },
+        {
+          "id": "blocks_on_missing_or_unclear_prd_path",
+          "description": "PRD 路径不清时阻断",
+          "text": "如果无法确认 PRD feature_path 或父功能归属，输出必须回 PM 对齐，不能猜测并创建新的顶层 TRD。"
+        },
+        {
+          "id": "no_plan_or_code",
+          "description": "不进入实现计划或代码",
+          "text": "输出不得开始编写 `IMPLEMENTATION_PLAN.md`、修改代码、补测试或进入交付。"
+        }
+      ]
+    },
+    {
+      "id": "eval-004-api-adr-owned-by-engineer",
+      "name": "api-adr-owned-by-engineer",
+      "description": "Verifies that trd-gen owns API and ADR docs after PM scope is confirmed and mirrors the PRD feature_path.",
+      "prompt": "PM 已确认 docs/pm/chat-interface/history-search/PRD.md。请进入 Engineer 阶段，为聊天历史搜索补 TRD、API 文档和一份搜索索引选型 ADR。不要写实现计划或代码。",
+      "workspace": "workspace/eval-004-api-adr-owned-by-engineer",
+      "expected_output": "确认 `trd-gen` 负责 Engineer-owned TRD、API.md 和 ADR-*.md；输出路径都在 docs/engineer/chat-interface/history-search/ 下；保留 feature_path、parent_feature、feature_level 和 related_prd；不调用 PM 内部 api-gen/adr-gen，也不写 IMPLEMENTATION_PLAN.md 或代码。",
+      "assertions": [
+        {
+          "id": "engineer_owns_api_and_adr",
+          "description": "API / ADR 属于 Engineer 产物",
+          "text": "输出必须说明 API 文档和 ADR 由 `engineer-agent:trd-gen` 负责，而不是 PM 内部生成器负责。"
+        },
+        {
+          "id": "writes_all_engineer_docs_under_feature_path",
+          "description": "全部 Engineer 文档镜像 feature_path",
+          "text": "输出必须把目标路径设为 `docs/engineer/chat-interface/history-search/TRD.md`、`docs/engineer/chat-interface/history-search/API.md` 和 `docs/engineer/chat-interface/history-search/ADR-*.md`。"
+        },
+        {
+          "id": "preserves_related_prd_and_metadata",
+          "description": "保留路径 frontmatter 和 related_prd",
+          "text": "输出必须要求 Engineer 文档保留 `feature_path: chat-interface/history-search`、`parent_feature: chat-interface`、`feature_level: 2`，并让 `related_prd` 指向 `docs/pm/chat-interface/history-search/PRD.md`。"
+        },
+        {
+          "id": "does_not_use_pm_generators",
+          "description": "不调用 PM 内部 API/ADR 生成器",
+          "text": "输出不得把 API 或 ADR 生成路由到 PM 内部 `api-gen` 或 `adr-gen`。"
+        },
+        {
+          "id": "no_plan_or_code",
+          "description": "不进入实现计划或代码",
           "text": "输出不得开始编写 `IMPLEMENTATION_PLAN.md`、修改代码、补测试或进入交付。"
         }
       ]

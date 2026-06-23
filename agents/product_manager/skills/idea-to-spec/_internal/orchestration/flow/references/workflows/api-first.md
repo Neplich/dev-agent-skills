@@ -6,22 +6,19 @@ API-driven development that starts from interface definition.
 
 ```yaml
 name: api-first
-description: API documentation first, then TRD and test specs
+description: Engineer-owned API documentation with TRD and test specs
 steps:
-  - skill: api-gen
-    input_from: context
-    output_key: api_docs
-  - skill: api-validator
-    input_from: api_docs
-    gate: true
   - skill: engineer-agent:trd-gen
-    input_from: api_docs
-    output_key: trd
+    input_from: context
+    output_key: trd_and_api_docs
+  - skill: api-validator
+    input_from: trd_and_api_docs
+    gate: true
   - skill: trd-validator
-    input_from: trd
+    input_from: trd_and_api_docs
     gate: true
   - skill: tspecs-gen
-    input_from: api_docs
+    input_from: trd_and_api_docs
     output_key: test_specs
   - skill: tspecs-validator
     input_from: test_specs

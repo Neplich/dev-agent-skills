@@ -6,7 +6,7 @@
 > Other languages: [中文](./README_zh.md)
 
 > [!NOTE]
-> Standalone E2E requests should reuse existing function-tree cases under `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` before expanding project exploration.
+> Standalone E2E requests should reuse existing function-tree cases under `docs/qa/e2e/{feature_path}/` before expanding project exploration.
 
 ## Quick Facts
 
@@ -49,19 +49,17 @@ docs/qa/e2e/
 ├── _reports/
 │   └── {platform-version}/
 │       └── test-reports-{test-time}.md
-└── {一级功能}/
-    └── {二级功能}/
-        └── {三级功能}/
-            ├── TEST_SUITE.md
-            ├── FLOW_INDEX.md
-            ├── cases/
-            │   └── TC-NNN-<short-slug>.md
-            ├── scripts/
-            │   └── TC-NNN-<short-slug>.spec.md
-            ├── results/
-            │   └── TC-NNN-<short-slug>/{platform-version}/
-            └── _reports/
-                └── {platform-version}/test-reports-{test-time}.md
+└── {feature_path}/
+    ├── TEST_SUITE.md
+    ├── FLOW_INDEX.md
+    ├── cases/
+    │   └── TC-NNN-<short-slug>.md
+    ├── scripts/
+    │   └── TC-NNN-<short-slug>.spec.md
+    ├── results/
+    │   └── TC-NNN-<short-slug>/{platform-version}/
+    └── _reports/
+        └── {platform-version}/test-reports-{test-time}.md
 ```
 
 Workflow:
@@ -69,7 +67,7 @@ Workflow:
 1. Confirm the E2E scenario: `feature-update` for local development validation, or `release` for full active E2E on the release test environment.
 2. Confirm the platform version before execution; missing versions are `blocked`, never archived under `unknown`.
 3. Read `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/*.md`, `scripts/*.spec.md`, prior `results/`, and `_reports/` before exploring.
-4. For existing-feature changes, bug fixes, or code-complete E2E updates, require PRD/TRD expectation alignment and a confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` before creating, updating, or executing acceptance TC.
+4. For existing-feature changes, bug fixes, or code-complete E2E updates, consume a confirmed `feature_path`, read `docs/pm/{feature_path}/PRD.md`, `docs/engineer/{feature_path}/TRD.md`, and a confirmed `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`, then create, update, or execute acceptance TC only when those documents align.
 5. Execute each E2E TC through a subagent by default; the main agent owns scope, result confirmation, and the summary report.
 6. Choose the execution entry in this order: repo harness > Chrome plugin / browser connector > Playwright fallback.
 7. Store credentials only in `.qa/e2e/accounts.local.json` using account IDs from `agents/qa/skills/qa-agent/references/e2e-credential-store.md`; committed QA docs must not contain plaintext credentials.

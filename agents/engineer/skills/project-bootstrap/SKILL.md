@@ -72,14 +72,24 @@ stop there.
 Locate and read the strongest available spec:
 
 ```bash
-find docs -maxdepth 4 \( -name 'TRD.md' -o -name 'trd.md' -o -name 'PRD.md' -o -name 'prd.md' -o -name 'DECISIONS.md' \) 2>/dev/null
+find docs \( -name 'TRD.md' -o -name 'trd.md' -o -name 'PRD.md' -o -name 'prd.md' -o -name 'DECISIONS.md' \) 2>/dev/null
 ```
+
+Do not use a shallow `-maxdepth` that can miss nested
+`docs/pm/{feature_path}/PRD.md` or `docs/engineer/{feature_path}/TRD.md`
+documents. `feature_path` supports one or more feature levels, including
+repository-maintenance specs under role/skill documentation trees. Missing a
+nested spec is a false negative and must not trigger the no-spec stop branch.
 
 Preferred input order:
 
 1. engineer TRD
 2. PM PRD plus DECISIONS
 3. explicit user override to skip PM and scaffold anyway
+
+When a TRD or PRD includes `feature_path`, prefer the matching mirrored pair:
+`docs/pm/{feature_path}/PRD.md` and `docs/engineer/{feature_path}/TRD.md`.
+Legacy single-level docs without `feature_path` are valid as level-1 features.
 
 If no TRD or approved PM docs exist:
 

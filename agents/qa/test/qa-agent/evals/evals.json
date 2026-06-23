@@ -24,7 +24,7 @@
         {
           "id": "qa",
           "description": "QA 用例记忆",
-          "text": "如果是独立 QA 或 E2E 请求，必须要求下游先读取 docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md、FLOW_INDEX.md、cases/*.md、scripts/*.spec.md、历史 results/ 和 _reports/，而不是旧的单层 QA 目录。"
+          "text": "如果是独立 QA 或 E2E 请求，必须要求下游先读取 docs/qa/e2e/{feature_path}/TEST_SUITE.md、FLOW_INDEX.md、cases/*.md、scripts/*.spec.md、历史 results/ 和 _reports/，而不是旧的单层 QA 目录。"
         },
         {
           "id": "e2e_execution_protocol",
@@ -39,7 +39,7 @@
         {
           "id": "alignment_and_plan_gate",
           "description": "PRD/TRD 与实施计划门禁",
-          "text": "如果请求来自现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须先检查 PRD/TRD 和存在的产品决策记录；预期变化回 PM，TRD gap 回 trd-gen，文档缺失 blocked；继续 E2E 前还必须引用已确认的 IMPLEMENTATION_PLAN.md。"
+          "text": "如果请求来自现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须先检查同一 feature_path 下的 PRD/TRD、存在的产品决策记录和已确认的 IMPLEMENTATION_PLAN.md；预期变化回 PM，TRD gap 回 trd-gen，缺 plan 回 feature-implementor，文档缺失 blocked。"
         },
         {
           "id": "assertion_4",
@@ -95,6 +95,36 @@
           "id": "assertion_6",
           "description": "路由边界",
           "text": "必须选择一个最窄主 route；可说明 spec-based-tester 或 exploratory-tester 如何接手，但不能同时执行多个 QA skill 或把 QA 路由扩展成实现修复"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-feature-path-missing-plan-blocked",
+      "name": "feature-path-missing-plan-blocked",
+      "description": "Verifies that qa-agent blocks code-complete E2E acceptance work when same-path PRD/TRD exist but the confirmed implementation plan is missing.",
+      "prompt": "用户说：account/profile/preferences 已经开发完成，请基于 docs/pm/account/profile/preferences/PRD.md 和 docs/engineer/account/profile/preferences/TRD.md 更新并执行 E2E 验收 TC。docs/qa/e2e/account/profile/preferences/ 目录也存在。先做 QA 路由和门禁判断。",
+      "workspace": "workspace/eval-3-feature-path-missing-plan-blocked",
+      "expected_output": "QA 路由决策必须识别 feature_path account/profile/preferences，读取同路径 PRD/TRD 和 QA 功能树，但因为缺少 docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md 而 blocked，不创建、更新或执行 E2E acceptance TC",
+      "assertions": [
+        {
+          "id": "reads_same_feature_path",
+          "description": "同路径上下文",
+          "text": "必须把 `account/profile/preferences` 作为 feature_path，读取同路径 PRD 和 TRD，并保留 QA E2E 功能树 `docs/qa/e2e/account/profile/preferences/`。"
+        },
+        {
+          "id": "blocks_missing_plan",
+          "description": "缺实施计划 blocked",
+          "text": "缺少 `docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md` 时必须标记 blocked，并把 next owner 指向 `engineer-agent:feature-implementor` 补齐实施计划。"
+        },
+        {
+          "id": "no_e2e_mutation_or_execution",
+          "description": "不更新或执行验收 TC",
+          "text": "在缺已确认实施计划时，不得创建、更新或执行 E2E acceptance TC，也不得把 QA 功能树空目录当作可执行覆盖。"
+        },
+        {
+          "id": "keeps_single_route",
+          "description": "单一路由",
+          "text": "必须选择一个最窄 QA route，并把缺 plan 作为 blocker，而不是并行调用多个 QA skill 或进入实现修复。"
         }
       ]
     }

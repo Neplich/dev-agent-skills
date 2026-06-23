@@ -24,9 +24,9 @@
 | --- | --- | --- |
 | `engineer-agent` | 工程请求入口与路由 | 下游 skill 选择与执行路径 |
 | `codebase-analyzer` | 接手现有仓库、理解结构和约束 | Project Profile、技术栈与架构摘要 |
-| `trd-gen` | PRD / DECISIONS 确认后的技术计划编写 | `docs/engineer/{feature}/TRD.md` |
+| `trd-gen` | PRD / DECISIONS 确认后的技术计划、API 文档和 ADR 编写 | `docs/engineer/{feature_path}/TRD.md`，可选 `API.md` / `ADR-*.md` |
 | `project-bootstrap` | 基于已确认 PRD/TRD 初始化项目 | 项目骨架、基础配置、启动说明 |
-| `feature-implementor` | 按已确认 TRD 或设计文档实现功能 | `IMPLEMENTATION_PLAN.md`、代码变更、必要工程文档 |
+| `feature-implementor` | 按已确认 TRD 或设计文档实现功能 | `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`、代码变更、必要工程文档 |
 | `test-writer` | 补单测、集成测试或验证覆盖 | 测试文件、测试运行证据 |
 | `debugger` | 复现、定位、修复 bug 或失败构建 | 最小修复、回归验证证据 |
 | `delivery` | 分支、commit、push、PR、交付收尾 | Git 提交、PR、交付摘要 |
@@ -34,7 +34,7 @@
 ## 路由规则
 
 - 理解仓库、技术栈、架构边界：使用 `codebase-analyzer`
-- PRD 确认后编写或更新技术计划：使用 `trd-gen`
+- PRD 确认后编写或更新技术计划、API 文档或 ADR：使用 `trd-gen`
 - 新项目或新服务初始化：使用 `project-bootstrap`
 - 功能实现、行为变更、按设计落地：使用 `feature-implementor`
 - 测试补齐、覆盖率、验证实现：使用 `test-writer`
@@ -68,23 +68,26 @@ flowchart LR
 
 Engineer 主要消费：
 
-- `docs/pm/{feature}/PRD.md`
-- `docs/pm/{feature}/DECISIONS.md`
-- `docs/engineer/{feature}/TRD.md`
-- `docs/design/{feature}/ui-ux-spec.md`
-- `docs/design/{feature}/visual-system.md`
+- `docs/pm/{feature_path}/PRD.md`
+- `docs/pm/{feature_path}/DECISIONS.md`
+- `docs/engineer/{feature_path}/TRD.md`
+- `docs/design/{feature_path}/ui-ux-spec.md`
+- `docs/design/{feature_path}/visual-system.md`
 
-Engineer 的主产物包括技术计划、实现计划、代码和测试：
+`feature_path` 是功能级文档的主路径键。新的 Engineer 文档必须镜像 PM 路径，并在
+frontmatter 中包含 `feature_path`、`parent_feature`、`feature_level`。旧的单层文档缺少这些字段时，仍兼容为一级功能。
 
-- `docs/engineer/{feature}/TRD.md`
-- `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`
-- `docs/engineer/{feature}/API.md`
-- `docs/engineer/{feature}/ADR.md`
+Engineer 的主产物包括技术计划、API / ADR 文档、实现计划、代码和测试：
+
+- `docs/engineer/{feature_path}/TRD.md`
+- `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
+- `docs/engineer/{feature_path}/API.md`
+- `docs/engineer/{feature_path}/ADR-*.md`
 
 ## 协作边界
 
 - Engineer 是唯一负责把 PM/Designer 文档转成代码、测试和交付资产的角色。
-- Engineer 在 PM 范围确认后负责 TRD 编写；`feature-implementor` 消费已确认 TRD 并产出实现计划。
+- Engineer 在 PM 范围确认后负责 TRD、API 文档和 ADR 编写；`feature-implementor` 消费已确认 Engineer 文档并产出实现计划。
 - Engineer 不替代 PM 做需求定义，也不替代 Designer 做视觉或交互决策。
 - QA 发现实现缺陷时回到 Engineer；发现需求缺口时回到 PM。
 - DevOps 和 Security 只在部署、运行、安全审查成为当前目标时介入。

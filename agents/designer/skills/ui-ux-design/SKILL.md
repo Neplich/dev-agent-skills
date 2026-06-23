@@ -11,7 +11,7 @@ Allowed actions:
 - Read PM docs and existing design docs
 - Analyze reference websites for design patterns
 - Create user journeys, page inventories, ASCII layouts, component lists, and interaction notes
-- Write or update `docs/design/{feature-name}/ui-ux-spec.md`
+- Write or update `docs/design/{feature_path}/ui-ux-spec.md`
 
 Forbidden actions:
 - Writing or modifying source code, tests, build files, or deployment config
@@ -20,11 +20,22 @@ Forbidden actions:
 
 If the input includes a completed PM spec, treat it as design input only, not as permission to implement.
 
+## Feature Path Gate
+
+Before writing a feature-scoped UI/UX spec, resolve a confirmed `feature_path`
+from the PM handoff or `docs/pm/{feature_path}/PRD.md`. Read PM context from
+`docs/pm/{feature_path}/` and optional technical constraints from
+`docs/engineer/{feature_path}/TRD.md`; write only to
+`docs/design/{feature_path}/ui-ux-spec.md`. If the parent feature is unclear,
+or the available PM docs suggest the requested work belongs under an existing
+parent feature but do not confirm the child path, stop and return to
+`pm-agent:idea-to-spec` instead of creating a new top-level design directory.
+
 ## Execution Steps
 
 ### Step 1: Gather Requirements
 
-1. **Read PM documents** from `docs/` directory:
+1. **Read PM documents** from `docs/pm/{feature_path}/`:
    - PRD: feature requirements, user stories, use cases
    - BRD: target users, business goals, brand tone
    - DECISIONS: confirmed product decisions, open questions, design constraints
@@ -185,7 +196,7 @@ Document responsive breakpoints:
 
 ### Step 9: Generate Output Document
 
-Create `docs/design/{feature-name}/ui-ux-spec.md` with the following structure:
+Create `docs/design/{feature_path}/ui-ux-spec.md` with the following structure:
 
 ```markdown
 # UI/UX Design Specification
@@ -226,7 +237,7 @@ Before finalizing, ensure:
 ## Completion Criteria
 
 This skill is complete only when:
-- `docs/design/{feature-name}/ui-ux-spec.md` has been written or updated
+- `docs/design/{feature_path}/ui-ux-spec.md` has been written or updated
 - The final response summarizes the design deliverable and its file location
 - The workflow stops at design handoff
 
@@ -237,4 +248,4 @@ After completion:
 
 ## Output Location
 
-Write the final document to: `docs/design/{feature-name}/ui-ux-spec.md`
+Write the final document to: `docs/design/{feature_path}/ui-ux-spec.md`

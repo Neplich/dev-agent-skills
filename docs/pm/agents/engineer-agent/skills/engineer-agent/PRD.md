@@ -2,19 +2,27 @@
 title: "engineer-agent — Product Requirements Document"
 type: PRD
 feature: "skill-engineer-agent"
-version: "1.0.0"
+feature_path: "agents/engineer-agent/skills/engineer-agent"
+parent_feature: "agents/engineer-agent/skills"
+feature_level: "4"
+version: "1.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
   - "agents/engineer/README_zh.md"
   - "agents/engineer/skills/engineer-agent/SKILL.md"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
   - ".claude-plugin/marketplace.json"
   - "agents/engineer/test/engineer-agent/evals/evals.json"
 changelog:
+  - version: "1.1.0"
+    date: "2026-06-23"
+    changes: "Add feature_path alignment gate for existing-feature routing"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"
@@ -60,12 +68,13 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-S01 | Trigger Matching | `engineer-agent` 必须作为 `engineer-agent` 的入口 dispatcher，选择一个最窄下游 specialist。 | P0 | 匹配场景与 parent dispatcher 和 `engineer-agent` SKILL.md 一致。 |
-| FR-S02 | Context Intake | 路由级工程意图；现有功能变更/bug fix 需读取 PRD/TRD/DECISIONS 做对齐分类。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
+| FR-S02 | Context Intake | 路由级工程意图；现有功能变更/bug fix 需按 `feature_path` 读取 PRD/TRD/DECISIONS 做对齐分类。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
 | FR-S04 | Artifact Output | 选中最窄工程 specialist、后续链路和已解析上下文。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `engineer-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | PM-first、Designer、内部 trd/feature/debug/test/delivery、QA/DevOps/Security。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
+| FR-S08 | Feature Path Gate | Existing Feature Alignment Gate 必须先解析 `feature_path`，再路由到 `debugger`、`trd-gen` 或 `feature-implementor`。 | P0 | 缺 PRD 或父功能不清回 PM；缺 TRD、TRD stale、`feature_path`/`parent_feature`/`feature_level` 或 `related_prd` 不一致时回 `trd-gen`。 |
 
 ## 当前实现对齐
 

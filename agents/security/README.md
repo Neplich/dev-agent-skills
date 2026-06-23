@@ -15,7 +15,7 @@
 | Entry skill | `security-agent` |
 | Specialist skills | 4 |
 | Main inputs | Codebase, dependency manifests, PM docs, engineering docs, QA feedback |
-| Main outputs | Security reports under `docs/security/{feature-name}/` |
+| Main outputs | Security reports under `docs/security/{feature_path}/` |
 | Trigger timing | After sensitive features are implemented, before release, or during focused risk review |
 
 ## Skills
@@ -42,12 +42,17 @@ Default rule: security requests that do not clearly focus on auth, dependencies,
 ```text
 docs/
 └── security/
-    └── {feature-name}/
+    └── {feature_path}/
         ├── appsec-checklist.md
         ├── authz-review.md
         ├── dependency-audit.md
         └── privacy-map.md
 ```
+
+Feature-scoped security work consumes the `feature_path` confirmed by PM and
+Engineer. If the path is unclear, Security returns to PM for PRD/path
+clarification or Engineer for missing/stale TRD or implementation plan instead
+of creating a new top-level security directory.
 
 ## Typical Flow
 
@@ -71,6 +76,9 @@ flowchart LR
 - Security does not directly implement business code or deployment changes.
 - Code, dependency, or config changes go to Engineer or DevOps.
 - Requirement-driven risk goes back to PM for constraint clarification.
+- Security does not decide parent feature ownership; it reads
+  `docs/pm/{feature_path}/PRD.md` and the matching Engineer TRD/implementation
+  plan when feature scope is required.
 
 ## Local Maintenance
 

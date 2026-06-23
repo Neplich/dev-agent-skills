@@ -2,11 +2,14 @@
 title: "exploratory-tester — Product Requirements Document"
 type: PRD
 feature: "skill-exploratory-tester"
+feature_path: "agents/qa-agent/skills/exploratory-tester"
+parent_feature: "agents/qa-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/qa/README.md"
@@ -15,6 +18,9 @@ related_docs:
   - "agents/qa/skills/exploratory-tester/SKILL.md"
   - ".claude-plugin/marketplace.json"
   - "agents/qa/test/exploratory-tester/evals/evals.json"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.0.0"
     date: "2026-06-12"
@@ -61,7 +67,7 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-S01 | Trigger Matching | `exploratory-tester` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `exploratory-tester` SKILL.md 一致。 |
-| FR-S02 | Context Intake | QA memory、PM/release context、实现变更、已知风险、环境说明；charter 是 preflight 后产物。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
+| FR-S02 | Context Intake | QA memory、同一 `feature_path` 下的 PM/Engineer context、实现变更、已知风险、环境说明；charter 是 preflight 后产物。 | P0 | 路径不清、缺已确认 plan 或文档不一致时不能创建/更新/执行验收 TC；可推导上下文不应被写成硬门槛。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
 | FR-S04 | Artifact Output | E2E per-TC evidence、feature-update/release report 或非 E2E report；包含 charter、timebox、evidence、confirmed failures、unconfirmed signals、covered path、gaps、next actions；源文件探索推导覆盖时更新 `FLOW_INDEX.md`，发现可复用 E2E 场景时更新 `cases/` 和匹配 `scripts/`。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不做 spec validation 主流程、不写 bug ticket 作为主产物、不输出无解释浏览器脚本结果、不随机点击。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |

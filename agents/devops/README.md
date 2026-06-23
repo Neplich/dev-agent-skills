@@ -15,7 +15,7 @@
 | Entry skill | `devops-agent` |
 | Specialist skills | 4 |
 | Main inputs | Engineering code, PM/TRD constraints, deployment requirements, environment variables, CI/CD state |
-| Main outputs | `deploy/` config, CI/CD files, environment audit, runbook |
+| Main outputs | `deploy/` config, CI/CD files, `docs/devops/{feature_path}/` reports, runbook |
 | Collaboration | Upstream `engineer-agent`; may route back to `pm-agent` or `security-agent` |
 
 ## Skills
@@ -50,7 +50,12 @@ When needed, DevOps may also update:
 
 - `.github/workflows/`
 - `.gitlab-ci.yml`
-- `docs/devops/{feature-name}/`
+- `docs/devops/{feature_path}/`
+
+Feature-scoped DevOps work consumes an existing `feature_path` from PM/Engineer
+docs. If the path is unclear, DevOps returns to PM for PRD/path clarification or
+Engineer for missing/stale TRD or implementation plan instead of creating a new
+top-level DevOps directory.
 
 ## Typical Flow
 
@@ -68,6 +73,10 @@ flowchart LR
 - DevOps can generate deployment config, CI/CD, environment audits, and runbooks.
 - DevOps does not replace Engineer for business code changes or Security for security review.
 - Sensitive configuration risks should be handed to the right role for remediation or security review.
+- DevOps does not decide parent feature ownership; it consumes
+  `docs/engineer/{feature_path}/TRD.md` and
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when feature scope is
+  required.
 
 ## Local Maintenance
 

@@ -2,11 +2,14 @@
 title: "security-agent — Product Requirements Document"
 type: PRD
 feature: "agent-security-agent"
+feature_path: "agents/security-agent"
+parent_feature: "agents"
+feature_level: "2"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/security/README.md"
@@ -33,6 +36,7 @@ changelog:
 2. 保持 route matrix 与 README、dispatcher `SKILL.md`、marketplace 和 skill 目录一致。
 3. 在需要跨角色协作时说明 owning agent、输入包和期望产物。
 4. 支持后续维护者通过 related docs 和 eval fixture 追踪行为漂移。
+5. 对 feature-scoped Security review 消费 PM/Engineer 已确认的 `feature_path`，不自行创建同义顶层目录。
 
 ## 非目标
 
@@ -53,8 +57,9 @@ changelog:
 | ID | User Story | Priority | Acceptance Criteria |
 |----|-----------|----------|---------------------|
 | US-A01 | 作为用户，我想通过 `security-agent` 进入应用安全、认证授权、依赖风险和隐私数据流审查流程，以便获得最小足够的 specialist 处理。 | P0 | 给定匹配请求，输出一个主 route、选择理由和下一步产物。 |
-| US-A02 | 作为维护者，我想确认 route matrix 不自路由、不全量执行，同时能表达 security report 输出目录约束，以便和 eval 及 README 保持一致。 | P0 | 流程图表达最小主 route，并包含 `docs/security/{feature-name}/` 下的报告文件约束。 |
+| US-A02 | 作为维护者，我想确认 route matrix 不自路由、不全量执行，同时能表达 security report 输出目录约束，以便和 eval 及 README 保持一致。 | P0 | 流程图表达最小主 route，并包含 `docs/security/{feature_path}/` 下的报告文件约束。 |
 | US-A03 | 作为下游 Agent，我想收到明确 handoff，以便继续工作时不重猜上下文。 | P1 | handoff 包含 target、source docs、blocked reason 或 expected output。 |
+| US-A04 | 作为维护者，我希望 Security review 沿用 PRD/TRD 的 `feature_path`，以便安全报告不会写成错误并列目录。 | P0 | feature-scoped security reports 写入 `docs/security/{feature_path}/...`；路径不清时回 PM/Engineer。 |
 
 ## 功能需求
 
@@ -63,8 +68,9 @@ changelog:
 | FR-A00 | Entry Dispatcher | `security-agent` 必须作为入口 dispatcher，负责激活角色级流程。 | P0 | README、marketplace 和 entry SKILL 都指向 `security-agent`。 |
 | FR-A01 | Route Matrix | Dispatcher 必须只选择一个最小主 route，除非用户明确要求更广链路。 | P0 | 主 route 属于 `appsec-checklist`, `authz-reviewer`, `dependency-risk-auditor`, `privacy-surface-mapper`，不包含 `security-agent` 自身。 |
 | FR-A02 | Context Boundary | Dispatcher 只收集路由所需上下文；实现/审查/测试细节由被选 specialist 收集。 | P0 | 缺少内容级上下文不会让入口停在元路由。 |
-| FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任；security report 写入 `docs/security/{feature-name}/`，并使用 `appsec-checklist.md`、`authz-review.md`、`dependency-audit.md`、`privacy-map.md` 这些 README 约定文件名。 | P0 | Dispatcher 输出预期产物路径和类型，不伪装成 specialist report。 |
+| FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任；feature-scoped security report 写入 `docs/security/{feature_path}/`，并使用 `appsec-checklist.md`、`authz-review.md`、`dependency-audit.md`、`privacy-map.md` 这些 README 约定文件名。 | P0 | Dispatcher 输出预期产物路径和类型，不伪装成 specialist report。 |
 | FR-A04 | Handoff | 主要 handoff 是 4 个 security specialist；代码/依赖修复给 engineer-agent，部署/配置给 devops-agent，需求边界风险给 pm-agent。 | P0 | Handoff 指向 owning skill/agent，并说明输入包和期望输出。 |
+| FR-A05 | Feature Path Consumption | feature-scoped Security review 必须读取已确认 `feature_path`，并消费 `docs/pm/{feature_path}/PRD.md`、`docs/engineer/{feature_path}/TRD.md` 和必要的实施计划。 | P0 | 路径不清、PRD 缺失、TRD/实施计划缺失或不一致时，回 PM/Engineer，不创建同义顶层 Security 目录。 |
 
 ## 当前实现对齐
 
@@ -105,7 +111,7 @@ flowchart LR
     Decision --> authz_reviewer["authz-reviewer"]
     Decision --> dependency_risk_auditor["dependency-risk-auditor"]
     Decision --> privacy_surface_mapper["privacy-surface-mapper"]
-    Decision --> Output["docs/security/{feature-name}/ security report 或 route decision"]
+    Decision --> Output["docs/security/{feature_path}/ security report 或 route decision"]
     Output --> ReportPath["报告文件：appsec-checklist.md / authz-review.md / dependency-audit.md / privacy-map.md"]
     ReportPath --> Handoff["主要 handoff 是 4 个 security specialist；代码/依赖修复给 engineer-agent，部署/配置给 devops-agent，需求边界风险给 pm-agent。"]
 ```

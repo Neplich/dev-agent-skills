@@ -27,7 +27,13 @@ SEMVER_PATTERN = rf"{SEMVER_CORE_PATTERN}(?:-{SEMVER_PRERELEASE_PATTERN})?"
 SEMVER_RE = re.compile(rf"^{SEMVER_PATTERN}$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 CHANGELOG_VERSION_RE = re.compile(rf"^changelog-v({SEMVER_PATTERN})\.md$")
-IMPLEMENTATION_PLAN_RE = re.compile(r"^docs/engineer/[^/]+/IMPLEMENTATION_PLAN\.md$")
+FEATURE_PATH_SEGMENT_PATTERN = r"[a-z0-9]+(?:-[a-z0-9]+)*"
+IMPLEMENTATION_PLAN_RE = re.compile(
+    rf"^docs/engineer/"
+    rf"(?P<feature_path>{FEATURE_PATH_SEGMENT_PATTERN}"
+    rf"(?:/{FEATURE_PATH_SEGMENT_PATTERN})*)"
+    rf"/IMPLEMENTATION_PLAN\.md$"
+)
 BLOCKED_TRACKED_PATTERNS = (
     re.compile(r"(^|/)\.DS_Store$"),
     re.compile(r"(^|/)\.pytest_cache(/|$)"),
@@ -487,15 +493,109 @@ def content_at_ref(root: Path, ref: str, rel: str) -> str | None:
     return git_output(root, ["show", f"{ref}:{rel}"])
 
 
+def implementation_plan_feature_path(rel: str) -> str | None:
+    match = IMPLEMENTATION_PLAN_RE.fullmatch(rel)
+    if match is None:
+        return None
+    return match.group("feature_path")
+
+
+def expected_parent_feature(feature_path: str) -> str:
+    parts = feature_path.split("/")
+    if len(parts) == 1:
+        return "N/A"
+    return "/".join(parts[:-1])
+
+
+def validate_related_feature_document(
+    root: Path,
+    source_path: Path,
+    rel_doc: str,
+    feature_path: str,
+    doc_type: str,
+    errors: list[ContractError],
+) -> None:
+    path = root / rel_doc
+    if not path.exists():
+        add_error(errors, source_path, f"frontmatter {doc_type!r} must point to an existing file")
+        return
+
+    parsed = parse_markdown_frontmatter(path, path.read_text(), errors)
+    if parsed is None:
+        return
+    metadata, _ = parsed
+
+    feature_path_fields = ("feature_path", "parent_feature", "feature_level")
+    has_feature_path_metadata = any(metadata.get(field) for field in feature_path_fields)
+    requires_feature_path_metadata = "/" in feature_path
+    if has_feature_path_metadata or requires_feature_path_metadata:
+        for field in feature_path_fields:
+            value = metadata.get(field)
+            if not isinstance(value, str) or not value.strip():
+                add_error(errors, path, f"frontmatter {field!r} must be non-empty")
+
+    metadata_feature_path = metadata.get("feature_path", "")
+    if metadata_feature_path and metadata_feature_path != feature_path:
+        add_error(
+            errors,
+            path,
+            f"frontmatter 'feature_path' must match directory path {feature_path!r}",
+        )
+
+    parent_feature = metadata.get("parent_feature", "")
+    expected_parent = expected_parent_feature(feature_path)
+    if parent_feature and parent_feature != expected_parent:
+        add_error(
+            errors,
+            path,
+            f"frontmatter 'parent_feature' must be {expected_parent!r}",
+        )
+
+    feature_level = metadata.get("feature_level", "")
+    expected_level = str(len(feature_path.split("/")))
+    if feature_level and feature_level != expected_level:
+        add_error(
+            errors,
+            path,
+            f"frontmatter 'feature_level' must be {expected_level!r}",
+        )
+
+    if doc_type == "related_trd":
+        expected_related_prd = f"docs/pm/{feature_path}/PRD.md"
+        related_prd = metadata.get("related_prd", "")
+        if not isinstance(related_prd, str) or not related_prd.strip():
+            add_error(errors, path, "frontmatter 'related_prd' must be non-empty")
+        elif related_prd != expected_related_prd:
+            add_error(
+                errors,
+                path,
+                f"frontmatter 'related_prd' must be {expected_related_prd!r}",
+            )
+
+
 def validate_implementation_plan_metadata(root: Path, errors: list[ContractError]) -> None:
     implementation_plans = [
         rel
         for rel in tracked_files(root)
-        if IMPLEMENTATION_PLAN_RE.fullmatch(rel) and (root / rel).exists()
+        if rel.startswith("docs/engineer/")
+        and rel.endswith("/IMPLEMENTATION_PLAN.md")
+        and (root / rel).exists()
     ]
+
+    base_ref = implementation_plan_base_ref(root)
+    changed_plans = set(changed_files_against(root, base_ref)) if base_ref else set()
 
     for rel in implementation_plans:
         path = root / rel
+        feature_path = implementation_plan_feature_path(rel)
+        if feature_path is None:
+            add_error(
+                errors,
+                path,
+                "implementation plan path must be docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md with one or more lowercase kebab-case segments",
+            )
+            continue
+
         parsed = parse_markdown_frontmatter(path, path.read_text(), errors)
         if parsed is None:
             continue
@@ -515,7 +615,82 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
             if value and not DATE_RE.fullmatch(value):
                 add_error(errors, path, f"frontmatter {field!r} must use YYYY-MM-DD")
 
-    base_ref = implementation_plan_base_ref(root)
+        feature_path_fields = ("feature_path", "parent_feature", "feature_level")
+        has_feature_path_metadata = any(metadata.get(field) for field in feature_path_fields)
+        requires_feature_path_metadata = rel in changed_plans
+        if has_feature_path_metadata or requires_feature_path_metadata:
+            for field in feature_path_fields:
+                value = metadata.get(field)
+                if not isinstance(value, str) or not value.strip():
+                    add_error(errors, path, f"frontmatter {field!r} must be non-empty")
+
+        metadata_feature_path = metadata.get("feature_path", "")
+        if metadata_feature_path and metadata_feature_path != feature_path:
+            add_error(
+                errors,
+                path,
+                f"frontmatter 'feature_path' must match directory path {feature_path!r}",
+            )
+
+        parent_feature = metadata.get("parent_feature", "")
+        expected_parent = expected_parent_feature(feature_path)
+        if parent_feature and parent_feature != expected_parent:
+            add_error(
+                errors,
+                path,
+                f"frontmatter 'parent_feature' must be {expected_parent!r}",
+            )
+
+        feature_level = metadata.get("feature_level", "")
+        expected_level = str(len(feature_path.split("/")))
+        if feature_level and feature_level != expected_level:
+            add_error(
+                errors,
+                path,
+                f"frontmatter 'feature_level' must be {expected_level!r}",
+            )
+
+        if rel in changed_plans:
+            for field in ("related_prd", "related_trd"):
+                value = metadata.get(field)
+                if not isinstance(value, str) or not value.strip():
+                    add_error(errors, path, f"frontmatter {field!r} must be non-empty")
+
+            expected_related_prd = f"docs/pm/{feature_path}/PRD.md"
+            expected_related_trd = f"docs/engineer/{feature_path}/TRD.md"
+            related_prd = metadata.get("related_prd", "")
+            related_trd = metadata.get("related_trd", "")
+            if related_prd and related_prd != expected_related_prd:
+                add_error(
+                    errors,
+                    path,
+                    f"frontmatter 'related_prd' must be {expected_related_prd!r}",
+                )
+            if related_trd and related_trd != expected_related_trd:
+                add_error(
+                    errors,
+                    path,
+                    f"frontmatter 'related_trd' must be {expected_related_trd!r}",
+                )
+            if related_prd == expected_related_prd:
+                validate_related_feature_document(
+                    root,
+                    path,
+                    related_prd,
+                    feature_path,
+                    "related_prd",
+                    errors,
+                )
+            if related_trd == expected_related_trd:
+                validate_related_feature_document(
+                    root,
+                    path,
+                    related_trd,
+                    feature_path,
+                    "related_trd",
+                    errors,
+                )
+
     if base_ref is None:
         add_error(
             errors,

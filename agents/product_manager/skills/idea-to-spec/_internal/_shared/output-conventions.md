@@ -11,13 +11,17 @@ Every generated formal document MUST begin with a YAML frontmatter block:
 ---
 title: "<Document Title>"
 type: BRD | PRD | TRD | ADR | API | TEST_SPEC | DECISIONS
+feature: "<terminal-feature-slug>"
+feature_path: "<multi-level-feature-path>"
+parent_feature: "<parent-feature-path-or-N/A>"
+feature_level: "<positive-integer-path-depth>"
 version: "1.0.0"
 status: Draft | In Review | Approved | Superseded | Deprecated
 author: "<generation requester display name + agent platform name>"
 date: "YYYY-MM-DD"
 generated_by: "<skill-name>"
 related_docs:
-  - "docs/pm/<feature-name>/DECISIONS.md"
+  - "docs/pm/<feature_path>/DECISIONS.md"
 changelog:
   - version: "1.0.0"
     date: "YYYY-MM-DD"
@@ -36,6 +40,10 @@ changelog:
 | author | Yes | Traceable creator display name |
 | date | Yes | Creation/update date |
 | generated_by | Yes | Skill that generated this document |
+| feature_path | Yes for new feature-scoped docs | Multi-level slash-separated feature path |
+| feature | Yes for new feature-scoped docs | Terminal feature slug or compatible legacy feature value |
+| parent_feature | Yes for new feature-scoped docs | Parent feature path, or `N/A` for level 1 |
+| feature_level | Yes for new feature-scoped docs | Positive integer matching `feature_path` depth |
 | related_docs | No | List of related document paths |
 | changelog | Yes | Version history entries |
 
@@ -78,8 +86,12 @@ version into the filename.
 Use feature-scoped folders with stable filenames:
 
 ```text
-docs/<agent-short>/<feature-name>/<DOC>.md
+docs/<agent-short>/<feature_path>/<DOC>.md
 ```
+
+`feature_path` must contain one or more slash-separated slug segments. Existing
+single-level folders without feature-path metadata remain readable as level-1
+features.
 
 ### Short Agent Paths
 
@@ -116,8 +128,11 @@ docs/<agent-short>/<feature-name>/<DOC>.md
 - Use the canonical filename for each artifact; PM, QA, DevOps, and Security
   artifacts use uppercase names, while Designer artifacts use
   `ui-ux-spec.md` and `visual-system.md`
+- Before writing PM feature docs, scan `docs/pm/**/PRD.md` and resolve
+  `feature_path`. If a child feature's parent is unclear, block or clarify
+  instead of creating a new parallel top-level directory.
 - Store each E2E test case in one file under
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/`; keep `TEST_SUITE.md`
+  `docs/qa/e2e/{feature_path}/cases/`; keep `TEST_SUITE.md`
   as the index and traceability summary
 - Use `FLOW_INDEX.md` to persist source-file exploration that expands QA
   coverage and maps flows to TC files
@@ -153,7 +168,7 @@ the document when the doc has already undergone material revision.
 
 ## 6. Documentation Memory Rules
 
-- `docs/pm/{feature-name}/DECISIONS.md` is the canonical PM decision ledger
+- `docs/pm/{feature_path}/DECISIONS.md` is the canonical PM decision ledger
 - When a generated document locks a new product or technical decision, update
   `DECISIONS.md` or explicitly reference the pending decision that still needs
   confirmation

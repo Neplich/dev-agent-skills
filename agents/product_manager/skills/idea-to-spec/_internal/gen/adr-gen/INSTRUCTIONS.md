@@ -1,78 +1,37 @@
 ---
 name: adr-gen
-description: Generate an Architecture Decision Record (ADR) for technical decisions. Use when users say "create ADR", "architecture decision", "record decision", "ADR", "document tech choice", or need to formalize why a specific technology, pattern, or approach was chosen.
+description: Deprecated PM-owned ADR generator. Do not generate ADRs from PM; route ADR requests to engineer-agent:trd-gen.
 ---
 
-# ADR Generator
+# ADR Handoff
 
-Generate an Architecture Decision Record following the standardized ADR schema.
+This internal PM resource is retained only as a migration stub for older
+references. Architecture Decision Records are Engineer-owned and must be
+handled by `engineer-agent:trd-gen`.
 
 ## When to use
 
-- Making or documenting a significant technical decision
-- Choosing between technologies, patterns, or architectural approaches
-- Need a formal record of why a decision was made for future reference
-- **Simplest** gen skill — ADR format is lightweight and well-defined
+- Only when a legacy PM flow or stale reference points at `adr-gen`
+- Only to stop PM-side ADR generation and prepare an Engineer handoff packet
+- Do not create, update, renumber, accept, deprecate, or supersede ADR files
+  from this PM resource
 
-## Inputs
+## Required handoff
 
-- **Required**:
-  - `decision_context`: What decision needs to be made or was made
-- **Optional**:
-  - `alternatives`: Known alternatives to evaluate
-  - `constraints`: Technical or organizational constraints
-  - `adr_number`: Sequential ADR number (auto-incremented if not provided)
-  - `existing_adrs_dir`: Directory to scan for existing ADRs to determine next number
+Route ADR requests to `engineer-agent:trd-gen` with:
 
-## Conventions
+- confirmed `feature_path`, `feature`, `parent_feature`, and `feature_level`
+- source PRD and decision context
+- the technical decision to record or revise
+- known alternatives, constraints, and trade-offs
+- business forces PM has confirmed
+- open questions or blockers that Engineer must resolve
 
-Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow, failure handling, and safety boundaries.
+## Output contract
 
-- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/adr-schema.md`
-- **Metadata**: `type: ADR`, version `1.0.0`, status `Proposed`
-- **Naming**: `docs/engineer/<feature-name>/ADR-<NNN>-<decision-title>.md`
+Return a handoff packet only. The target Engineer output path is
+`docs/engineer/{feature_path}/ADR-<NNN>-<decision-title>.md`, but this PM
+resource must not write it.
 
-## Workflow Details
-
-Clarifying questions (if input is brief, max 3): what forces drive this decision, what alternatives were considered, what constraints exist.
-
-Generate ADR:
-- Title: `ADR-<NNN>: <Descriptive Title>`
-- Status: `Proposed`
-- Context: Technical and business forces
-- Decision: Clear "We will..." statement
-- Consequences: Positive, Negative, and Neutral
-- Alternatives Considered: ≥ 2 with pros/cons/rejection reason
-
-**ADR-specific failure handling**:
-- No alternatives known → research common approaches, present as `[RESEARCHED]`
-- Decision already made → document retrospectively, note in Context section
-- Cannot determine ADR number → start at `001`
-- Present alternatives fairly — avoid bias toward a predetermined choice
-
-## Examples
-
-### Example 1: Database choice
-
-**User**: Create an ADR for choosing PostgreSQL over MongoDB for our user management service.
-
-**Expected Output** (abbreviated):
-
-```
-ADR-001: Use PostgreSQL for User Management Service
-
-Status: Proposed
-
-Context: The user management service requires ACID transactions for account operations, complex queries for reporting, and strong schema enforcement...
-
-Decision: We will use PostgreSQL 16 as the primary database for the user management service.
-
-Consequences:
-- Positive: ACID compliance, mature ecosystem, strong SQL support
-- Negative: Less flexible schema evolution compared to document stores
-- Neutral: Team has moderate PostgreSQL experience
-
-Alternatives Considered:
-| MongoDB | Flexible schema, horizontal scaling | No ACID by default, weaker joins | User data is relational; ACID is critical |
-| MySQL | ACID, wide adoption | Fewer advanced features (CTEs, JSON) | PostgreSQL offers better JSON + relational hybrid |
-```
+If `feature_path` is unresolved or PM scope is not confirmed, return to
+`idea-to-spec` path and scope clarification before handing off to Engineer.

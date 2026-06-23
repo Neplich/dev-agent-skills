@@ -1,76 +1,35 @@
 ---
 name: api-gen
-description: Generate structured API documentation from code, route definitions, or verbal descriptions. Use when users say "create API docs", "document API", "API specification", "endpoint documentation", "generate API reference", or need to produce comprehensive API documentation for a service.
+description: Deprecated PM-owned API generator. Do not generate API docs from PM; route API documentation requests to engineer-agent:trd-gen.
 ---
 
-# API Documentation Generator
+# API Documentation Handoff
 
-Generate structured API documentation following the standardized API schema.
+This internal PM resource is retained only as a migration stub for older
+references. API documentation is Engineer-owned and must be handled by
+`engineer-agent:trd-gen`.
 
 ## When to use
 
-- Need to document an existing API from code or route definitions
-- Designing a new API and need structured documentation
-- Converting informal API notes into proper documentation
-- **Differs from** `engineer-agent:trd-gen`: TRD covers full technical design; api-gen focuses exclusively on API reference documentation
+- Only when a legacy PM flow or stale reference points at `api-gen`
+- Only to stop PM-side API generation and prepare an Engineer handoff packet
+- Do not create, update, or scaffold `API.md` from this PM resource
 
-## Inputs
+## Required handoff
 
-- **Required**:
-  - `api_source`: One of:
-    - Code files (route definitions, controllers)
-    - Verbal description of endpoints
-    - OpenAPI/Swagger spec to enhance
-    - Existing informal API notes
-- **Optional**:
-  - `base_url`: API base URL
-  - `auth_method`: Authentication approach
-  - `service_name`: Name of the service
-  - `existing_models`: Data model definitions
+Route API documentation requests to `engineer-agent:trd-gen` with:
 
-## Conventions
+- confirmed `feature_path`, `feature`, `parent_feature`, and `feature_level`
+- source PRD and decision context
+- interface goals, constraints, and non-goals
+- available code, route definitions, or OpenAPI evidence
+- known auth, data model, error handling, and versioning requirements
+- open questions or blockers that Engineer must resolve
 
-Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow, failure handling, and safety boundaries.
+## Output contract
 
-- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/api-schema.md`
-- **Metadata**: `type: API`, version `1.0.0`
-- **Naming**: `docs/engineer/<feature-name>/API.md`
+Return a handoff packet only. The target Engineer output path is
+`docs/engineer/{feature_path}/API.md`, but this PM resource must not write it.
 
-## Workflow Details
-
-Parse source input to extract endpoints, methods, parameters, request/response schemas, and error codes.
-
-Generate API docs:
-- Overview with base URL and versioning
-- Authentication section with example headers
-- Common headers table
-- For each endpoint: method + path, summary, auth requirement, rate limit, path/query parameters, request body schema, response schemas (success + errors)
-- Data models with field definitions
-- Error code reference table
-- Pagination and rate limiting (if applicable)
-- At least 1 complete curl example
-
-**Quality requirements**: Every endpoint has method, path, at least one response, and error codes.
-
-**API-specific failure handling**:
-- Incomplete code input → document what's found, mark gaps as `[INCOMPLETE]`
-- No auth info → include placeholder section with common auth patterns
-- Ambiguous parameter types → infer from context, mark `[INFERRED]`
-- Do not expose internal implementation details (internal IPs, credentials)
-- Do not fabricate endpoints not present in source material
-- Sanitize any real data in examples
-
-## Examples
-
-### Example 1: From route definitions
-
-**User**: Document the API for this Express router:
-```js
-router.get('/users', authMiddleware, listUsers);
-router.get('/users/:id', authMiddleware, getUser);
-router.post('/users', authMiddleware, createUser);
-router.put('/users/:id', authMiddleware, updateUser);
-router.delete('/users/:id', authMiddleware, deleteUser);
-```
-
-**Expected Output**: Full API documentation with 5 endpoints, Bearer auth, request/response schemas inferred from handler names, standard CRUD error codes, and a curl example for creating a user.
+If `feature_path` is unresolved or PM scope is not confirmed, return to
+`idea-to-spec` path and scope clarification before handing off to Engineer.

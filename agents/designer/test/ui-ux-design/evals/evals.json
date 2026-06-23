@@ -14,7 +14,7 @@
         {
           "id": "assertion_1",
           "description": "产出设计文档",
-          "text": "输出写入 docs/design/{feature-name}/ui-ux-spec.md，并包含用户旅程、ASCII 布局和交互说明"
+          "text": "输出写入 docs/design/{feature_path}/ui-ux-spec.md，并包含用户旅程、ASCII 布局和交互说明；路径来自已确认 feature_path"
         },
         {
           "id": "assertion_2",

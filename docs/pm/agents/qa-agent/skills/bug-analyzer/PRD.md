@@ -2,11 +2,14 @@
 title: "bug-analyzer — Product Requirements Document"
 type: PRD
 feature: "skill-bug-analyzer"
+feature_path: "agents/qa-agent/skills/bug-analyzer"
+parent_feature: "agents/qa-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/qa/README.md"
@@ -15,6 +18,9 @@ related_docs:
   - "agents/qa/skills/bug-analyzer/SKILL.md"
   - ".claude-plugin/marketplace.json"
   - "agents/qa/test/bug-analyzer/evals/evals.json"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.0.0"
     date: "2026-06-12"
@@ -63,7 +69,7 @@ changelog:
 | FR-S01 | Trigger Matching | `bug-analyzer` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `bug-analyzer` SKILL.md 一致。 |
 | FR-S02 | Context Intake | 失败场景、日志、截图/录屏、环境、复现线索；证据不足时可产出 honest artifact/evidence request。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
-| FR-S04 | Artifact Output | Title、Classification、Scenario、Environment、Reproduction、Expected/Actual、Evidence、Impact、Severity with rationale、Confidence statement；evidence status、severity 和 confidence 必须分离，可映射 defect matrix。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
+| FR-S04 | Artifact Output | Title、Classification、Scenario、Environment、Reproduction、Expected/Actual、Evidence、Impact、Severity with rationale、Confidence statement；evidence status、severity 和 confidence 必须分离，可映射 defect matrix。若要沉淀现有功能或 bug fix 的可复用 E2E 验收 TC，必须消费同一 `feature_path` 下 PRD/TRD/IMPLEMENTATION_PLAN。 | P0 | 未阻塞时产出指定 artifact；缺路径或缺已确认 plan 时只保留缺陷证据并将 reusable E2E coverage 标为 blocked。 |
 | FR-S05 | Boundary Guard | 不接管 `qa-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 实现问题到 engineer-agent；需求/验收缺口到 pm-agent；发布风险到 release owner/review。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |

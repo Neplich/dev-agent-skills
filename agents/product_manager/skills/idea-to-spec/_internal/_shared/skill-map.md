@@ -45,8 +45,11 @@ These rules apply before any internal routing:
 - Use section-based progression and do not move to the next section until the
   current one is confirmed or deliberately deferred.
 - Record confirmed decisions, open questions, assumptions, and rejected options
-  in `docs/pm/{feature-name}/DECISIONS.md` when the conversation is in
+  in `docs/pm/{feature_path}/DECISIONS.md` when the conversation is in
   documenting mode.
+- Before writing PM feature docs, scan `docs/pm/**/PRD.md` and resolve a
+  multi-level `feature_path`. If parent ownership is not clear, block or ask a
+  minimal clarification instead of creating a new top-level sibling directory.
 - Treat feature docs as durable memory for long-running design threads.
 - After a major stage, consolidate process notes into stable declarative prose.
 
@@ -84,8 +87,8 @@ document state.
 | BRD generation | `brd-gen` | `agents/product_manager/skills/idea-to-spec/_internal/gen/brd-gen/INSTRUCTIONS.md` | Business case or stakeholder alignment is stable |
 | PRD generation | `prd-gen` | `agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md` | Requirements and flows are stable |
 | TRD generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | PRD and product decisions are stable; explicit Engineer handoff is needed |
-| ADR generation | `adr-gen` | `agents/product_manager/skills/idea-to-spec/_internal/gen/adr-gen/INSTRUCTIONS.md` | A decision needs durable rationale |
-| API generation | `api-gen` | `agents/product_manager/skills/idea-to-spec/_internal/gen/api-gen/INSTRUCTIONS.md` | Interface contracts are stable |
+| ADR generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | A technical decision needs durable Engineer-owned rationale |
+| API generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | Interface contracts are stable and ready for Engineer-owned API documentation |
 | Test spec generation | `tspecs-gen` | `agents/product_manager/skills/idea-to-spec/_internal/gen/tspecs-gen/INSTRUCTIONS.md` | QA assets should be derived from approved requirements or design |
 | Workflow execution | `flow` | `agents/product_manager/skills/idea-to-spec/_internal/orchestration/flow/INSTRUCTIONS.md` | User wants an end-to-end pipeline |
 | Project bootstrap | `project-init` | `agents/product_manager/skills/idea-to-spec/_internal/orchestration/project-init/INSTRUCTIONS.md` | Empty workspace needs durable doc scaffolding |
@@ -101,13 +104,18 @@ compact packet that preserves settled context and avoids re-asking basics.
 - `project_context`: repo path, workspace status, tech stack, key modules
 - `docs_context`: doc inventory, maturity, missing artifacts, active feature doc
   paths
+- `feature_path`: resolved multi-level PM feature path, or `unresolved`
+- `feature`: terminal feature slug or compatible legacy feature value
+- `parent_feature`: parent feature path, or `N/A` for level 1
+- `feature_level`: positive integer matching `feature_path` depth
+- `feature_path_evidence`: list of sources proving why this path is correct
 - `request_lane`: one of the lane values above
 - `problem_and_goal`: problem, target users, success metrics
 - `scope`: MVP, non-goals, priorities, rollout constraints
 - `current_state`: integrations, permissions, data flows, dependencies
 - `change_request`: delta summary for existing-project updates
 - `decisions_locked`: agreed decisions that should not be reopened lightly
-- `decision_log_path`: path to `docs/pm/{feature-name}/DECISIONS.md` when it
+- `decision_log_path`: path to `docs/pm/{feature_path}/DECISIONS.md` when it
   exists
 - `drafted_sections`: sections already produced in this session or in the
   working docs
@@ -130,6 +138,13 @@ docs_context:
   missing_artifacts: [docs/pm/notifications/DECISIONS.md]
   active_feature_docs:
     - docs/pm/notifications/PRD.md
+feature_path: notifications
+feature: notifications
+parent_feature: N/A
+feature_level: 1
+feature_path_evidence:
+  - source: docs/pm/notifications/PRD.md
+    reason: Existing level-1 feature PRD matches the requested notification center scope
 request_lane: existing-project-feature
 problem_and_goal:
   problem: Users miss comment mentions.
@@ -157,6 +172,10 @@ recommended_next_skill:
   reason: Requirements are stable and ready for formalization
 ```
 
+When the next owner is `engineer-agent:trd-gen`, this packet is mandatory. If
+`feature_path` is unresolved, do not hand off as if the path were settled; route
+back to PM clarification or document the blocker.
+
 ## 7. Phase and Situation Routing
 
 | Phase / Situation | Primary internal skill | Alternative / follow-up |
@@ -164,8 +183,8 @@ recommended_next_skill:
 | Empty workspace, durable docs needed | `project-init` | Stay in `idea-to-spec` for lightweight validation only |
 | Business case, ROI, or stakeholder alignment needed | `brd-gen` | Stay in `idea-to-spec` for a brief validation memo |
 | Existing repo, new feature requirements stable | `prd-gen` | `prd-validator` after generation |
-| Existing repo, technical design needed after PRD confirmation | `engineer-agent:trd-gen` | `adr-gen`, `api-gen`, then matching validators after Engineer TRD confirmation |
-| Existing repo, one approved doc needs revision | Matching `*-iteration` | Matching validator |
+| Existing repo, technical design needed after PRD confirmation | `engineer-agent:trd-gen` | Engineer-owned API / ADR docs through `trd-gen`, then matching validators after Engineer TRD confirmation |
+| Existing repo, one approved PM doc needs revision | Matching PM `*-iteration` | Matching validator; Engineer-owned TRD/API/ADR revisions hand off to `engineer-agent:trd-gen` |
 | Existing repo, multiple docs need coordinated revision | `change-impactor` -> `iteration-coordinator` | `trace-check` and `version-differ` after updates |
 | QA assets or regression mapping needed | `tspecs-gen` | `tspecs-validator` or `trace-check` |
 | Full end-to-end pipeline requested | `flow` | Narrower gen / validator steps if the user backs off |
@@ -179,7 +198,7 @@ recommended_next_skill:
   directly instead of `iteration-coordinator`.
 - If multiple docs are affected, use this order by default:
   - BRD -> PRD -> TRD -> API -> TEST_SPEC
-  - ADRs run in parallel when a decision record is affected
+  - ADR handoffs to `engineer-agent:trd-gen` run in parallel when a decision record is affected
 - After multi-doc updates, prefer `trace-check` before closing the loop.
 - Regenerate from scratch only when:
   - the target artifact is missing
@@ -193,8 +212,8 @@ recommended_next_skill:
 | BRD | `brd-gen` | `brd-validator` | `brd-iteration` |
 | PRD | `prd-gen` | `prd-validator` | `prd-iteration` |
 | TRD | `engineer-agent:trd-gen` | `trd-validator` | hand off to `engineer-agent:trd-gen` for revisions |
-| API | `api-gen` | `api-validator` | `api-iteration` |
-| ADR | `adr-gen` | `adr-validator` | `adr-iteration` |
+| API | `engineer-agent:trd-gen` | `api-validator` | hand off to `engineer-agent:trd-gen` for revisions |
+| ADR | `engineer-agent:trd-gen` | `adr-validator` | hand off to `engineer-agent:trd-gen` for revisions |
 | TEST_SPEC | `tspecs-gen` | `tspecs-validator` | `tspecs-iteration` |
 
 ## 10. Shared References

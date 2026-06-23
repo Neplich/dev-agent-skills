@@ -7,7 +7,17 @@ description: Map personal data collection points and privacy compliance requirem
 
 ### Step 1: Understand Data Requirements
 
-1. **Read PM documents** from `docs/pm/{feature-name}/`:
+1. **Resolve feature scope**:
+   - For feature-scoped privacy mapping, use the confirmed `feature_path`.
+   - Read `docs/pm/{feature_path}/PRD.md`.
+   - Read `docs/engineer/{feature_path}/TRD.md` and
+     `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when architecture,
+     storage, integrations, or release scope affect data handling.
+   - If `feature_path` is unclear, return to PM for PRD/path clarification or
+     Engineer for missing/stale TRD or implementation plan; do not invent a
+     new top-level security directory.
+
+2. **Read PM documents**:
    - PRD: identify what user data is collected and why
    - Extract data fields (name, email, phone, address, etc.)
 
@@ -47,12 +57,15 @@ Search for implementation of these features.
 
 ### Step 5: Generate Privacy Map Report
 
-Create `docs/security/{feature-name}/privacy-map.md`:
+Create `docs/security/{feature_path}/privacy-map.md`:
 
 **Frontmatter:**
 ```yaml
 ---
-feature: {feature-name}
+feature: {feature}
+feature_path: {feature_path}
+parent_feature: {parent_feature}
+feature_level: {feature_level}
 version: v1
 date: YYYY-MM-DD
 last_updated: YYYY-MM-DD

@@ -13,9 +13,26 @@ version: <SemVer>
 status: Draft | In Review | Approved | Superseded
 author: <generation requester display name + agent platform name>
 date: <YYYY-MM-DD>
+feature: <leaf feature slug>
+feature_path: <multi-level feature path>
+parent_feature: <parent feature path or "N/A">
+feature_level: <positive integer path depth>
 reviewers: []
 related_brd: <filename or "N/A">
 ```
+
+Feature-scoped PRDs must be written to `docs/pm/{feature_path}/PRD.md`.
+`feature_path` is the canonical cross-role key and supports one or more
+slash-separated lower kebab-case segments. `feature` is the leaf slug for
+compatibility; `parent_feature` is `N/A` for level 1 and the parent path for
+deeper features; `feature_level` must equal the number of path segments. Legacy
+single-level PRDs without these fields may be read as level-1 features, but new
+or updated PRDs must include them.
+
+Repository governance PRDs that mirror the agent registry under
+`docs/pm/agents/{agent}/skills/{skill}/PRD.md` use the same multi-level contract:
+preserve the `skills` segment in `feature_path`, set
+`parent_feature` to `agents/{agent}/skills`, and set `feature_level` to `4`.
 
 ### 2. Background & Motivation
 

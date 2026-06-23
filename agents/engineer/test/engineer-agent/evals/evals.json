@@ -29,7 +29,7 @@
         {
           "id": "routes_qa_e2e_handoff",
           "description": "代码完成后 QA E2E 交接",
-          "text": "实现和确定性测试完成后的工程路线必须包含 QA E2E 文档补充检查：交接包引用 PRD、TRD、已确认的 IMPLEMENTATION_PLAN、变更文件、验证命令、风险和建议 docs/qa/e2e/{一级功能}/{二级功能}/{三级功能} 功能目录。"
+          "text": "实现和确定性测试完成后的工程路线必须包含 QA E2E 文档补充检查：交接包引用 PRD、TRD、已确认的 IMPLEMENTATION_PLAN、变更文件、验证命令、风险和建议 docs/qa/e2e/{feature_path} 功能目录。"
         },
         {
           "id": "routes_delivery_last",
@@ -49,12 +49,12 @@
       "description": "Verifies that engineer-agent checks PRD/TRD and any present product decisions before routing small existing-feature behavior changes into implementation.",
       "prompt": "用户说：现有通知中心已经有 PRD/TRD，现在想把 archived 通知也显示在 active 列表里，这是一个小改动，直接走工程实现吧。先做工程路由，不要改代码。",
       "workspace": "workspace/eval-002-existing-feature-alignment-gate",
-      "expected_output": "先要求读取 docs/pm/{feature}/PRD.md、docs/engineer/{feature}/TRD.md，以及存在的 DECISIONS.md 或产品决策记录，对比 archived 行为是否改变既有预期；如果是改变预期，路由回 pm-agent:idea-to-spec 的 existing-project-update，而不是直接进入 feature-implementor。",
+      "expected_output": "先要求读取 docs/pm/{feature_path}/PRD.md、docs/engineer/{feature_path}/TRD.md，以及存在的 DECISIONS.md 或产品决策记录，对比 archived 行为是否改变既有预期；如果是改变预期，路由回 pm-agent:idea-to-spec 的 existing-project-update，而不是直接进入 feature-implementor。",
       "assertions": [
         {
           "id": "reads_product_and_engineer_docs",
           "description": "先读预期行为文档",
-          "text": "输出必须要求先读取相关 `docs/pm/{feature}/PRD.md` 和 `docs/engineer/{feature}/TRD.md`，并读取存在的 `docs/pm/{feature}/DECISIONS.md` 或产品决策记录后再做工程路由。"
+          "text": "输出必须要求先读取相关 `docs/pm/{feature_path}/PRD.md` 和 `docs/engineer/{feature_path}/TRD.md`，并读取存在的 `docs/pm/{feature_path}/DECISIONS.md` 或产品决策记录后再做工程路由。"
         },
         {
           "id": "classifies_expectation_change",
@@ -80,6 +80,41 @@
           "id": "does_not_route_directly_to_implementation",
           "description": "不得直接进入实现",
           "text": "输出不得把请求直接交给 `feature-implementor` 编写实现计划或开始编码；只有明确说明 PRD/TRD 已覆盖该行为时才能继续工程实现路径，用户要求跳过对齐不能作为继续理由。"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-nested-feature-alignment-routing",
+      "name": "nested-feature-alignment-routing",
+      "description": "Verifies that engineer-agent resolves a nested feature_path before routing an existing feature change.",
+      "prompt": "用户说：Chat Interface 已经有 History Search 子功能 PRD/TRD，现在想调整搜索结果排序，这是个很小的现有功能改动。请先做工程路由，不要改代码。相关文档在 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/history-search/TRD.md。",
+      "workspace": "workspace/eval-003-nested-feature-alignment-routing",
+      "expected_output": "先按 feature_path 读取 docs/pm/chat-interface/history-search/PRD.md、docs/engineer/chat-interface/history-search/TRD.md 和同路径 DECISIONS；判断是否改变已批准预期。只有 PRD/TRD 对齐后才路由到 feature-implementor 或 debugger。",
+      "assertions": [
+        {
+          "id": "resolves_nested_feature_path",
+          "description": "解析嵌套 feature_path",
+          "text": "输出必须把相关功能识别为 `chat-interface/history-search`，并读取 `docs/pm/chat-interface/history-search/PRD.md` 和 `docs/engineer/chat-interface/history-search/TRD.md`。"
+        },
+        {
+          "id": "does_not_use_sibling_or_parent_only_path",
+          "description": "不使用错误并列或父级路径",
+          "text": "输出不得只读取 `docs/pm/history-search/PRD.md`、`docs/engineer/history-search/TRD.md` 或只用父级 `docs/pm/chat-interface/PRD.md` 代替子功能对齐。"
+        },
+        {
+          "id": "routes_requirement_change_to_pm",
+          "description": "需求变更回 PM",
+          "text": "如果排序调整改变 PRD/TRD 已批准预期，输出必须路由回 `pm-agent:idea-to-spec` 的 `existing-project-update`，再同步 TRD。"
+        },
+        {
+          "id": "routes_trd_mismatch_to_trd_gen",
+          "description": "TRD 不一致回 trd-gen",
+          "text": "如果 TRD 缺失、stale 或 feature path frontmatter / `related_prd` 不匹配，输出必须交回 `engineer-agent:trd-gen`。"
+        },
+        {
+          "id": "does_not_execute_directly",
+          "description": "只做路由不执行",
+          "text": "因为用户要求先做工程路由，输出不得修改代码、写 IMPLEMENTATION_PLAN 或运行测试。"
         }
       ]
     }

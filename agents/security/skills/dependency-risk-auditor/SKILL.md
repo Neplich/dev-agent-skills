@@ -5,6 +5,15 @@ description: Audit project dependencies for known vulnerabilities, abandoned pac
 
 ## Execution Steps
 
+### Step 0: Resolve Review Scope
+
+For feature-scoped dependency review, use the confirmed `feature_path` and read
+`docs/pm/{feature_path}/PRD.md`, `docs/engineer/{feature_path}/TRD.md`, and
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when they explain package
+usage, runtime, or release scope. If the path is unclear, return to PM for
+PRD/path clarification or Engineer for missing/stale TRD or implementation
+plan; do not invent a new top-level security directory.
+
 ### Step 1: Identify Dependency Files
 
 Search for dependency manifest files:
@@ -59,12 +68,16 @@ If audit tools are not available, proceed with manual analysis.
 
 ### Step 4: Generate Dependency Audit Report
 
-Create `docs/security/{feature-name}/dependency-audit.md`:
+Create `docs/security/{feature_path}/dependency-audit.md` for feature-scoped
+audits:
 
 **Frontmatter:**
 ```yaml
 ---
-feature: {feature-name}
+feature: {feature}
+feature_path: {feature_path}
+parent_feature: {parent_feature}
+feature_level: {feature_level}
 version: v1
 date: YYYY-MM-DD
 last_updated: YYYY-MM-DD

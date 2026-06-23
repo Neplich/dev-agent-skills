@@ -7,11 +7,21 @@ description: Review authentication and authorization logic, check permission mod
 
 ### Step 1: Understand User Roles and Permissions
 
-1. **Read PM documents** from `docs/pm/{feature-name}/`:
+1. **Resolve feature scope**:
+   - For feature-scoped review, use the confirmed `feature_path`.
+   - Read `docs/pm/{feature_path}/PRD.md`.
+   - Read `docs/engineer/{feature_path}/TRD.md` and
+     `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when architecture
+     or implementation details affect auth/authz behavior.
+   - If `feature_path` is unclear, return to PM for PRD/path clarification or
+     Engineer for missing/stale TRD or implementation plan; do not invent a
+     new top-level security directory.
+
+2. **Read PM documents**:
    - PRD: identify user roles, permissions, access levels
    - Extract role definitions (e.g., admin, user, guest)
 
-2. **Create role matrix** - document expected permissions for each role
+3. **Create role matrix** - document expected permissions for each role
 
 ### Step 2: Analyze Authentication Flow
 
@@ -56,12 +66,15 @@ description: Review authentication and authorization logic, check permission mod
 
 ### Step 5: Generate Authorization Review Report
 
-Create `docs/security/{feature-name}/authz-review.md`:
+Create `docs/security/{feature_path}/authz-review.md`:
 
 **Frontmatter:**
 ```yaml
 ---
-feature: {feature-name}
+feature: {feature}
+feature_path: {feature_path}
+parent_feature: {parent_feature}
+feature_level: {feature_level}
 version: v1
 date: YYYY-MM-DD
 last_updated: YYYY-MM-DD

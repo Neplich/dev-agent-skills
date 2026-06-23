@@ -2,11 +2,14 @@
 title: "idea-to-spec — Product Requirements Document"
 type: PRD
 feature: "skill-idea-to-spec"
-version: "1.1.0"
+feature_path: "agents/pm-agent/skills/idea-to-spec"
+parent_feature: "agents/pm-agent/skills"
+feature_level: "4"
+version: "1.2.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-15"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/product_manager/README.md"
@@ -21,6 +24,12 @@ related_docs:
   - "agents/product_manager/skills/idea-to-spec/_internal/gen/brd-gen/INSTRUCTIONS.md"
   - "agents/product_manager/test/idea-to-spec/evals/evals.json"
 changelog:
+  - version: "1.2.1"
+    date: "2026-06-23"
+    changes: "Clarified feature_path contract as multi-level"
+  - version: "1.2.0"
+    date: "2026-06-23"
+    changes: "Added feature_path generation and handoff contract"
   - version: "1.1.0"
     date: "2026-06-12"
     changes: "补充正式文档 author 元数据可追踪命名规则"
@@ -71,11 +80,14 @@ changelog:
 | FR-S01 | Trigger Matching | `idea-to-spec` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `idea-to-spec` SKILL.md 一致。 |
 | FR-S02 | Context Intake | Phase 0 本地 workspace/doc context、用户目标、scope、constraints；BRD 仅在需要业务论证时生成。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
-| FR-S04 | Artifact Output | lane-appropriate artifact 或 recommended next step；常见产物写入 `docs/pm/{feature-name}/`，包括 `PRD.md`、`BRD.md`、`DECISIONS.md`、`design.md`、diff、impact analysis、iteration 或 validator handoff。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
+| FR-S04 | Artifact Output | lane-appropriate artifact 或 recommended next step；常见产物写入 `docs/pm/{feature_path}/`，包括 `PRD.md`、`BRD.md`、`DECISIONS.md`、`design.md`、diff、impact analysis、iteration 或 validator handoff。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `pm-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | PM internal lifecycle 按 skill-map 指向最窄 internal resource、engineer-agent:trd-gen 或 validator/iteration；设计产物需求按 Agent 协作边界交 designer-agent。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
 | FR-S08 | Author Metadata | `idea-to-spec` 生成或更新的正式 Markdown 文档必须使用“生成触发者展示名 + Agent 平台名”的 `author`；平台名可以是用户自定义值。 | P0 | `PRD.md`、`BRD.md`、`DECISIONS.md`、diff、impact analysis、iteration 和 validator handoff 等正式文档 frontmatter 使用已填写的可追踪 author，例如 `Neplich Codex`，不使用空值或 `AI Assistant` 这类占位泛称。 |
+| FR-S09 | Feature Path Contract | 写入 PRD/BRD/DECISIONS/design.md 前必须扫描 `docs/pm/**/PRD.md`，解析合法多级 `feature_path`，并在正式文档和 handoff 中携带路径证据。 | P0 | 已有父 PRD 明确匹配时，子功能落入 `docs/pm/{feature_path}/`；父功能不清楚时 blocked 或澄清，不创建新并列顶层目录。 |
+| FR-S10 | Feature Path Frontmatter | 新正式 PM 文档必须包含 `feature_path`、`feature`、`parent_feature`、`feature_level`。 | P0 | 旧单层文档读取兼容为一级功能；新建或实质更新的正式文档包含四个字段。 |
+| FR-S11 | Feature Path Handoff | PM internal lifecycle 和 Engineer handoff 包必须包含 `feature_path`、`feature`、`parent_feature`、`feature_level`、`feature_path_evidence`。 | P0 | 下游不需要根据末级 feature 名称重新猜路径；缺字段时 handoff 指明回 PM 对齐。 |
 
 ## 当前实现对齐
 
@@ -86,6 +98,8 @@ changelog:
 - 选择 greenfield-discovery / greenfield-bootstrap / existing-project-feature / existing-project-update / pipeline / diff-only
 - 按 lane 进行 section-based shaping
 - 将稳定内容写入对应 PM docs
+- 写入 PM feature docs 前扫描 `docs/pm/**/PRD.md` 并解析 `feature_path`
+- 子功能父级明确时写入嵌套路径；父级不明时 blocked 或澄清
 - 写入或维护正式文档 frontmatter 时使用可追踪 `author`
 
 ## 验收标准

@@ -12,7 +12,7 @@ Verify that a fix actually resolves the original failure and that nearby surface
 For E2E or feature-scoped regression work, prefer the function-tree directory as
 durable QA memory:
 
-`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`
+`docs/qa/e2e/{feature_path}/`
 
 - `TEST_SUITE.md` is the suite index and traceability summary.
 - `FLOW_INDEX.md` maps flows, requirements, touched files, and nearby risk
@@ -45,7 +45,7 @@ Reuse the original evidence instead of re-deriving the scope from scratch. The r
 Read the evidence before executing anything:
 
 - Existing QA test cases and prior file exploration:
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/*.md`,
+  `docs/qa/e2e/{feature_path}/cases/*.md`,
   `FLOW_INDEX.md`, `scripts/*.spec.md`, prior `results/`, and `_reports/`,
   when available
 - Original bug report or failing test evidence
@@ -63,9 +63,28 @@ reusable scenario before execution.
 
 For existing-feature changes, bug fixes, or code-complete E2E documentation
 updates, require PRD/TRD expectation alignment and a confirmed
-`docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` before updating or executing
-acceptance TC. If expectations are missing, changed without PM alignment, or
-not covered by TRD, report `blocked` and name the next owner.
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before updating or
+executing acceptance TC. Read `docs/pm/{feature_path}/PRD.md` and
+`docs/engineer/{feature_path}/TRD.md` from the same path. If the feature path,
+PRD, or expectations are missing, changed without PM alignment, or unclear,
+report `blocked` and return to `pm-agent:idea-to-spec`. If TRD is missing,
+stale, incomplete, or path-mismatched, report `blocked` and return to
+`engineer-agent:trd-gen`. If the confirmed implementation plan is missing,
+stale, or path-mismatched, report `blocked` and return to
+`engineer-agent:feature-implementor`.
+
+The regression report must include a visible alignment gate section before the
+execution result:
+
+- `feature_path`
+- PRD path and expectation status
+- TRD path and expectation status
+- confirmed `IMPLEMENTATION_PLAN.md` path and status
+- next owner when any gate is missing or mismatched
+
+Do not proceed directly from bug evidence to regression execution without this
+same-path PRD/TRD/plan check when the request is tied to an existing feature or
+bug fix.
 
 ## Step 2 — Define the verification scope
 
@@ -105,7 +124,7 @@ Run checks that map to the scope:
 - Verify the expected behavior now succeeds
 - Exercise adjacent or nearby surfaces that could regress
 - Execute existing or newly expanded E2E case files from
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/` when they map to the fix scope
+  `docs/qa/e2e/{feature_path}/cases/` when they map to the fix scope
 - Execute each E2E TC through a subagent by default; the main agent confirms
   results and writes the summary report.
 
@@ -174,11 +193,11 @@ Use a durable output path that matches repo context.
 
 - Use a local Markdown artifact when the repo tracks QA verification in files or when the user asked for a document
 - For E2E regression, append per-TC results under
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/results/TC-NNN-<short-slug>/{platform-version}/`
+  `docs/qa/e2e/{feature_path}/results/TC-NNN-<short-slug>/{platform-version}/`
   and write the main-agent summary report with
   `agents/qa/skills/qa-agent/references/e2e-test-report.md`
 - Use
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/_reports/{platform-version}/test-reports-{test-time}.md`
+  `docs/qa/e2e/{feature_path}/_reports/{platform-version}/test-reports-{test-time}.md`
   for `feature-update` and
   `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md` for
   `release`

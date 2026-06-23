@@ -14,8 +14,8 @@
 | --- | --- |
 | Entry skill | `designer-agent` |
 | Specialist skills | 2 |
-| Main inputs | `docs/pm/{feature}/PRD.md`, `BRD.md`, `DECISIONS.md`, optional Engineer TRD, reference sites, brand cues |
-| Main outputs | `docs/design/{feature}/ui-ux-spec.md`, `visual-system.md` |
+| Main inputs | Confirmed `docs/pm/{feature_path}/PRD.md`, `BRD.md`, `DECISIONS.md`, optional `docs/engineer/{feature_path}/TRD.md`, reference sites, brand cues |
+| Main outputs | `docs/design/{feature_path}/ui-ux-spec.md`, `visual-system.md` |
 | Core boundary | Design documents only; no code, tests, scripts, or deployment config |
 
 ## Skills
@@ -47,11 +47,15 @@ flowchart LR
 
 ```text
 docs/
-└── design/
-    └── {feature-name}/
+    └── design/
+    └── {feature_path}/
         ├── ui-ux-spec.md
         └── visual-system.md
 ```
+
+Designer consumes `feature_path` from PM/Engineer handoff. If the path or parent
+feature is unclear, route back to PM alignment instead of creating a synonym
+top-level design directory.
 
 ## Visual Design References
 

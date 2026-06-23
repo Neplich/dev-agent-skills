@@ -15,7 +15,7 @@
 | 入口 skill | `pm-agent` |
 | Specialist skills | 7 个 |
 | 主要输入 | 用户想法、本地 `docs/`、代码库现状、GitHub Issues / PRs / Milestones / Releases |
-| 主要输出 | `docs/pm/{feature}/`、`docs/roadmap.md`、`docs/changelog/changelog-v{version}.md`、`docs/release-notes/` |
+| 主要输出 | `docs/pm/{feature_path}/`、`docs/roadmap.md`、`docs/changelog/changelog-v{version}.md`、`docs/release-notes/` |
 | 下游协作 | `designer-agent`、`engineer-agent` |
 
 ## Skill 清单
@@ -62,11 +62,15 @@ Feature 级 PM 文档使用固定目录：
 ```text
 docs/
 └── pm/
-    └── {feature-name}/
+    └── {feature_path}/
         ├── PRD.md
         ├── BRD.md
         └── DECISIONS.md
 ```
+
+`feature_path` 支持多级。创建 PM 功能文档前先扫描 `docs/pm/**/PRD.md`；
+如果新需求明确属于已有父 PRD，就挂到父目录下；父功能归属不清时先澄清或
+blocked，不创建新的并列顶层目录。
 
 Repo 级 PM 产物可以放在：
 
@@ -79,7 +83,7 @@ Repo 级 PM 产物可以放在：
 - PM Agent 可以产出需求、业务、技术约束和决策文档。
 - PM Agent 不直接实现代码、测试、部署配置或安全修复。
 - Designer 主要消费 `PRD.md`、`BRD.md`、`DECISIONS.md`。
-- Engineer 消费 PM 文档后，通过 `engineer-agent:trd-gen` 负责 `docs/engineer/{feature}/TRD.md`。
+- Engineer 消费 PM 文档后，通过 `engineer-agent:trd-gen` 负责 `docs/engineer/{feature_path}/TRD.md`。
 
 ## 本地维护
 

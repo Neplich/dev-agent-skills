@@ -27,12 +27,16 @@ empty workspace needs durable documentation scaffolding.
 - **Optional**:
   - `project_type`: webapp / mobile / api / library / data-pipeline (affects
     which doc types to include)
-  - `doc_types`: Override which documents to create -> BRD / PRD / ADR /
-    API / E2E TEST_SUITE (default: all applicable)
+  - `doc_types`: Override which PM / QA documents to create -> BRD / PRD /
+    E2E TEST_SUITE (default: all applicable). API and ADR requests are recorded
+    as Engineer handoff items for `engineer-agent:trd-gen`, not created by
+    `project-init`.
   - `description`: Brief project description (pre-populates Background sections)
   - `team`: Team members and roles (pre-populates Stakeholder sections)
   - `handoff_packet`: Phase 0 context from `idea-to-spec` to preserve settled
     scope and naming
+  - `feature_path`: optional multi-level feature path. Default to a level-1 path
+    derived from `project_name` for new greenfield projects.
 
 ## Shared Routing Contract
 
@@ -49,32 +53,34 @@ Use it to:
 
 ## Workflow
 
-1. **Determine doc set**: Based on `project_type`, select applicable document
-   types:
-   - webapp / mobile: BRD + PRD + ADR + API + E2E TEST_SUITE
-   - api: PRD + ADR + API + E2E TEST_SUITE
-   - library: ADR + E2E TEST_SUITE
-   - data-pipeline: BRD + ADR
+1. **Determine doc set**: Based on `project_type`, select PM-created and QA
+   scaffold document types. API and ADR are Engineer-owned and must be listed
+   as `engineer-agent:trd-gen` handoff items instead of PM-created stubs:
+   - webapp / mobile: BRD + PRD + E2E TEST_SUITE; optional API / ADR handoff
+   - api: PRD + E2E TEST_SUITE; API / ADR handoff
+   - library: E2E TEST_SUITE; optional ADR handoff
+   - data-pipeline: BRD; optional ADR handoff
 2. **Create directory structure**:
    ```text
    docs/
-   ├─ pm/{feature-name}/
-   ├─ engineer/{feature-name}/
-   ├─ qa/e2e/{一级功能}/{二级功能}/{三级功能}/
+   ├─ pm/{feature_path}/
+   ├─ engineer/{feature_path}/
+   ├─ qa/e2e/{feature_path}/
    │  ├─ cases/
    │  └─ scripts/
-   ├─ design/{feature-name}/
-   ├─ devops/{feature-name}/
-   └─ security/{feature-name}/
+   ├─ design/{feature_path}/
+   ├─ devops/{feature_path}/
+   └─ security/{feature_path}/
    ```
 3. **Generate stub documents**:
-   - For BRD / PRD / API / E2E TEST_SUITE, create a stub document with:
+   - For BRD / PRD / E2E TEST_SUITE, create a stub document with:
      - Complete YAML frontmatter (version `0.1.0`, status `Draft`)
      - All required section headings from the corresponding schema
      - `[TODO]` placeholders for content
      - Pre-populated fields from inputs (project name, description, team)
-   - For ADR, create the directory plus an ADR template note or index rather
-     than inventing a concrete decision record up front
+   - For API / ADR needs, add a handoff note in the summary or index that sends
+     confirmed scope, interface goals, decision context, and `feature_path` to
+     `engineer-agent:trd-gen`
    - For E2E TEST_SUITE, create the full function-tree memory scaffold:
      `TEST_SUITE.md`, `FLOW_INDEX.md`, empty `cases/`, and empty `scripts/`
 
@@ -84,8 +90,6 @@ Use it to:
    | --- | --- |
    | BRD | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/brd-schema.md` |
    | PRD | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md` |
-   | ADR | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/adr-schema.md` |
-   | API | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/api-schema.md` |
    | E2E TEST_SUITE | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md` |
 4. **Create index file**: Generate `docs/README.md` with:
    - Project overview
@@ -106,6 +110,8 @@ Use it to:
 ## Failure Handling
 
 - Directory already exists -> warn, ask whether to merge or skip existing files
+- `feature_path` contains unsafe segments or has unclear parent evidence -> ask
+  for a corrected path before creating folders
 - Invalid project type -> list valid types and ask the user to choose
 - No description provided -> create minimal stubs with `[TODO]` throughout
 
@@ -136,8 +142,7 @@ docs/
 │     └─ PRD.md                           (PRD stub)
 ├─ engineer/
 │  └─ smart-checkout/
-│     ├─ API.md                           (API doc stub)
-│     └─ ADR-001-initial-architecture.md  (ADR stub)
+│     └─ TRD.md                           (Engineer-owned TRD stub after handoff)
 ├─ qa/
 │  └─ e2e/
 │     └─ commerce/
@@ -162,5 +167,6 @@ Suggested next steps:
 2. Run `prd-gen` to define `docs/pm/smart-checkout/PRD.md`
 3. Update `docs/pm/smart-checkout/DECISIONS.md` as decisions are confirmed
 4. Hand off to `engineer-agent:trd-gen` to write `docs/engineer/smart-checkout/TRD.md`
-5. Run `tspecs-gen` after PRD and TRD are confirmed
+5. Let `engineer-agent:trd-gen` create API / ADR docs under `docs/engineer/smart-checkout/` when the confirmed scope requires them
+6. Run `tspecs-gen` after PRD and TRD are confirmed
 ```

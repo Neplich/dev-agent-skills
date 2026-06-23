@@ -2,11 +2,14 @@
 title: "visual-design — Product Requirements Document"
 type: PRD
 feature: "skill-visual-design"
+feature_path: "agents/designer-agent/skills/visual-design"
+parent_feature: "agents/designer-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/designer/README.md"
@@ -24,6 +27,9 @@ related_docs:
   - "agents/designer/skills/visual-design/references/anti-patterns.md"
   - "agents/designer/skills/visual-design/references/ux-quality-rules.md"
   - "agents/designer/test/visual-design/evals/evals.json"
+  - "docs/pm/feature-path-contract/PRD.md"
+  - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.0.0"
     date: "2026-06-12"
@@ -70,9 +76,9 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-S01 | Trigger Matching | `visual-design` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `visual-design` SKILL.md 一致。 |
-| FR-S02 | Context Intake | BRD/PRD/DECISIONS、TRD、已有 ui-ux-spec、目标用户、平台设备、数据密度、流程复杂度、可访问性风险、品牌线索。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
+| FR-S02 | Context Intake | 已确认 `feature_path` 下的 BRD/PRD/DECISIONS、TRD、已有 ui-ux-spec、目标用户、平台设备、数据密度、流程复杂度、可访问性风险、品牌线索。 | P0 | 路径或父功能不清时回 PM；可推导上下文不应被写成硬门槛。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
-| FR-S04 | Artifact Output | 创建/更新 docs/design/{feature-name}/visual-system.md。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
+| FR-S04 | Artifact Output | 创建/更新 `docs/design/{feature_path}/visual-system.md`。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner；不得创建同义顶层 design 目录。 |
 | FR-S05 | Boundary Guard | 不输出 design tokens in code、configs、Tailwind/CSS variables、React/Vue/SwiftUI/shadcn snippets、install commands 或工程任务。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 需要实现时指向 engineer-agent；不匹配但仍是设计请求时回 designer-agent。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |

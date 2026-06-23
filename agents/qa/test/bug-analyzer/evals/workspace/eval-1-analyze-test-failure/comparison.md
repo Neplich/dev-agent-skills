@@ -15,8 +15,8 @@
 - PASS: The skill separates evidence status from confidence, using `confirmed and reproducible`, `confirmed but environment-sensitive`, and `suspected / needs more evidence` without collapsing severity into certainty.
 - PASS: The skill requires severity rationale, confidence statement, reproduction steps, expected/actual behavior, evidence references, and implementation or release impact in the defect artifact.
 - PASS: The skill defaults to durable local Markdown output and only creates a GitHub issue when repo workflow or user request requires it.
-- PASS: For confirmed E2E reproductions that should become reusable regression coverage, the skill requires cases under `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/TC-NNN-<short-slug>.md`, matching scripts under `scripts/`, and a defect artifact reference.
-- PASS: For existing-feature changes or bug-fix acceptance coverage, the skill requires PRD/TRD expectation alignment and a confirmed `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`; unclear expectations keep reusable E2E coverage blocked.
+- PASS: For confirmed E2E reproductions that should become reusable regression coverage, the skill requires cases under `docs/qa/e2e/{feature_path}/cases/TC-NNN-<short-slug>.md`, matching scripts under `scripts/`, and a defect artifact reference.
+- PASS: For existing-feature changes or bug-fix acceptance coverage, the skill requires PRD/TRD expectation alignment and a confirmed `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`; unclear paths or expectations keep reusable E2E coverage blocked.
 
 ## Baseline
 

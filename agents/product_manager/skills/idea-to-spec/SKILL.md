@@ -157,12 +157,29 @@ Load only the narrowest internal `INSTRUCTIONS.md` needed for the next step.
 
 ## Feature Document Memory
 
-For ongoing feature design, use the short-path document layout:
+For ongoing feature design, use `feature_path` as the durable feature key.
+`feature_path` is a relative PM feature path with one or more slash-separated slug
+segments, such as `chat-interface`,
+`chat-interface/history-search`, or
+`chat-interface/history-search/export/reporting`.
 
-- `docs/pm/{feature-name}/DECISIONS.md`
-- `docs/pm/{feature-name}/PRD.md`
-- `docs/pm/{feature-name}/BRD.md`
-- `docs/pm/{feature-name}/design.md` as a temporary PM working draft when the
+Before choosing or writing a feature folder, scan existing PM PRDs with
+`docs/pm/**/PRD.md`:
+
+- If an existing parent PRD clearly matches the request, attach the new child
+  under that parent feature path.
+- If parent ownership is unclear, stop with a blocked result or ask the
+  smallest clarifying question. Do not create a new parallel top-level folder
+  for a possible child feature.
+- Treat old single-level feature folders without `feature_path` frontmatter as
+  level-1 features for read compatibility.
+
+Use the short-path document layout:
+
+- `docs/pm/{feature_path}/DECISIONS.md`
+- `docs/pm/{feature_path}/PRD.md`
+- `docs/pm/{feature_path}/BRD.md`
+- `docs/pm/{feature_path}/design.md` as a temporary PM working draft when the
   design has not yet split into formal docs
 
 Treat `DECISIONS.md` as the source of truth for:
@@ -188,6 +205,9 @@ Check for:
 - architecture markers: `src/`, `apps/`, `packages/`, `services/`, `infra/`
 - documentation markers: BRD / PRD / TRD / ADR / API / TEST_SPEC /
   DECISIONS files, validation reports, doc indexes
+- feature path markers: existing `docs/pm/**/PRD.md` files, their
+  `feature_path`, `parent_feature`, and `feature_level` frontmatter, and any
+  related `DECISIONS.md` files
 
 ### Classify the current state
 
@@ -216,6 +236,7 @@ Project context:
 - Status: [empty / prototype / existing project]
 - Tech stack: [detected or TBD]
 - Existing docs: [none / partial / approved core docs]
+- Feature path: [resolved multi-level feature_path / unresolved and why]
 - Suggested lane: [greenfield-discovery / greenfield-bootstrap / existing-project-feature / existing-project-update / pipeline / diff-only]
 - Likely next step: [stay in idea-to-spec / project-init / prd-gen / change-impactor / flow / ...]
 ```
@@ -270,8 +291,8 @@ Use when the codebase exists but the requested capability is new.
 4. Once requirements are stable, hand off to the narrowest next owner:
    - `prd-gen` for requirements formalization
    - `engineer-agent:trd-gen` for Engineer-owned technical design after PRD confirmation
-   - `api-gen` or `adr-gen` only when those artifacts are already clearly
-     justified
+   - `engineer-agent:trd-gen` for Engineer-owned API or ADR documents when
+     interface contracts or architecture decisions are already clearly justified
 
 ### Lane: `existing-project-update`
 
@@ -423,20 +444,27 @@ For existing-project updates, also include:
 
 ## Deliverable Shapes
 
-Default to feature-scoped docs under `docs/pm/{feature-name}/`.
+Default to feature-scoped docs under `docs/pm/{feature_path}/`.
 
 - `DECISIONS.md` for the decision ledger
 - `PRD.md` for product requirements
 - `BRD.md` for business framing when needed
 - `design.md` for an intermediate PM draft before the final split
 
+New formal PM documents must include these frontmatter fields:
+
+- `feature_path`: the full multi-level feature path
+- `feature`: the terminal feature slug or compatible legacy feature value
+- `parent_feature`: the parent feature path, or `N/A` for level 1
+- `feature_level`: positive integer matching `feature_path` depth
+
 Downstream docs should use the short-path agent structure:
 
-- `docs/design/{feature-name}/...`
-- `docs/engineer/{feature-name}/...`
-- `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/...`
-- `docs/devops/{feature-name}/...`
-- `docs/security/{feature-name}/...`
+- `docs/design/{feature_path}/...`
+- `docs/engineer/{feature_path}/...`
+- `docs/qa/e2e/{feature_path}/...`
+- `docs/devops/{feature_path}/...`
+- `docs/security/{feature_path}/...`
 
 ## Handoff Behavior
 
@@ -463,6 +491,10 @@ Rules:
 - Prefer the narrowest useful internal skill.
 - Recommend a direct `*-iteration` skill before `flow` for existing-doc updates.
 - Recommend `flow` only when the user explicitly wants end-to-end execution.
+- Every feature-scoped handoff packet must include `feature_path`, `feature`,
+  `parent_feature`, `feature_level`, and `feature_path_evidence`. If any of
+  these are unknown, the handoff must say which owner resolves the gap instead
+  of letting downstream skills infer a path from the feature name.
 
 ## Quality Checklist
 
@@ -489,6 +521,9 @@ Additionally confirm:
   and ask for confirmation.
 - **Unclear existing-project lane**: ask whether the request is net-new
   capability or a change to existing behavior.
+- **Unclear parent feature**: blocked or ask the smallest clarifying question;
+  do not create a new top-level `docs/pm/{child}/` folder when the request may
+  belong under an existing parent PRD.
 - **Too many possible downstream skills**: stay in `idea-to-spec` and narrow
   the request before loading anything else.
 - **Conflicting requirements**: state the conflict plainly, explain trade-offs,

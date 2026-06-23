@@ -21,5 +21,5 @@ Analyze this TRD validator report and prepare the Engineer handoff packet.
 
 - `engineer-agent:trd-gen`
 - `trd-validator`
-- `adr-iteration`
-- `api-iteration`
+- `adr-validator`
+- `api-validator`

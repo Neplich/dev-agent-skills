@@ -7,7 +7,7 @@
 - Eval: `eval-002-subagent-division-from-docs`
 - Test case: subagent-division-from-docs
 - Workspace: `workspace/eval-002-subagent-division-from-docs`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-12 against the current uncommitted planner author metadata rule; all assertions remain satisfied
+- Latest result: PASS - fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
 
@@ -30,14 +30,14 @@
 
 Observed behavior:
 
-- PASS - fresh Codex subagent validation completed on 2026-06-12 against the current uncommitted planner author metadata rule; all assertions remain satisfied.
+- Fresh Codex subagent validation on 2026-06-23 read the current skill docs, Engineer README, eval definition, fixture metadata/context, and this comparison; all listed assertions are satisfied.
 - Current `SKILL.md` says the main process keeps PM/design context, repository constraints, implementation boundaries, final integration, and delivery risk while complex coding can be delegated.
-- Phase 1 requires a fresh document-writing sub-agent for `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md` when available, and states the plan must not rewrite TRD decisions.
+- Phase 1 requires a fresh document-writing sub-agent for `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when available, and states the plan must not rewrite TRD decisions.
 - The complex coding section requires separate implementation and validation sub-agents for multi-file, multi-module, spec-backed, or context-heavy work. It requires implementation tasks to include owned files/modules, source document references, test expectations, forbidden areas, and a reminder not to revert unrelated user changes.
 - The validation task must use source docs, acceptance criteria, changed files, test evidence, repository rules, coverage, unrelated-change checks, and must return pass/fail, findings, blockers, and residual risks.
 - The skill preserves the simple-path exception for single-file small edits, pure explanation, pure code reading, or user opt-out, while making clear that this only skips complex delegation and never skips implementation planning or confirmation.
 - The handoff section requires implementation result, validation conclusion, tests run, and residual risks when the split was used.
-- The QA E2E documentation handoff section requires PRD, TRD, confirmed implementation plan, PRD alignment result, changed files, verification commands and results, risks, environment assumptions, QA questions, suggested `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` directory, and likely E2E impact after implementation and self-review.
+- The QA E2E documentation handoff section requires PRD, TRD, confirmed implementation plan, PRD alignment result, changed files, verification commands and results, risks, environment assumptions, QA questions, suggested `docs/qa/e2e/{feature_path}/` directory, and likely E2E impact after implementation and self-review.
 
 ## Without Skill / Baseline
 

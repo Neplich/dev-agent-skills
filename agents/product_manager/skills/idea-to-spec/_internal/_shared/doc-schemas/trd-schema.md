@@ -13,8 +13,20 @@ version: <SemVer>
 status: Draft | In Review | Approved | Superseded
 author: <generation requester display name + agent platform name>
 date: <YYYY-MM-DD>
-related_prd: <filename or "N/A">
+feature: <leaf feature slug>
+feature_path: <multi-level feature path>
+parent_feature: <parent feature path or "N/A">
+feature_level: <positive integer path depth>
+related_prd: docs/pm/{feature_path}/PRD.md | "N/A"
 ```
+
+Feature-scoped PM-side TRD validation is legacy, but when used it must mirror
+the PM `feature_path` and write or validate `docs/engineer/{feature_path}/TRD.md`.
+`feature_path` is the canonical cross-role key with one or more lower
+kebab-case path segments. `feature` is the leaf slug, `parent_feature` is `N/A`
+for level 1, and `feature_level` must match the path depth. If the PRD and TRD
+paths or frontmatter disagree, return to PM/Engineer alignment instead of
+continuing with implementation.
 
 ### 2. Overview
 

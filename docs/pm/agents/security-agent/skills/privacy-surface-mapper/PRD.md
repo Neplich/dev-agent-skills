@@ -2,11 +2,14 @@
 title: "privacy-surface-mapper — Product Requirements Document"
 type: PRD
 feature: "skill-privacy-surface-mapper"
+feature_path: "agents/security-agent/skills/privacy-surface-mapper"
+parent_feature: "agents/security-agent/skills"
+feature_level: "4"
 version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-12"
+last_updated: "2026-06-23"
 generated_by: "prd-gen"
 related_docs:
   - "agents/security/README.md"
@@ -61,9 +64,9 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-S01 | Trigger Matching | `privacy-surface-mapper` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `privacy-surface-mapper` SKILL.md 一致。 |
-| FR-S02 | Context Intake | PM docs、PII、consent、retention、deletion/export rights、data sharing、隐私合规、表单/API/analytics。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
+| FR-S02 | Context Intake | `docs/pm/{feature_path}/PRD.md`、`docs/engineer/{feature_path}/TRD.md`、必要实施计划、PII、consent、retention、deletion/export rights、data sharing、隐私合规、表单/API/analytics。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；`feature_path` 或 PM/Engineer 文档不清时回 PM/Engineer，不自建同义顶层目录。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
-| FR-S04 | Artifact Output | 创建/更新 docs/security/{feature-name}/privacy-map.md，包含 Personal Data Inventory、Data Flow Diagram、Third-Party Sharing、User Rights、Privacy Risks、Recommendations。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
+| FR-S04 | Artifact Output | 创建/更新 `docs/security/{feature_path}/privacy-map.md`，包含 feature path frontmatter、Personal Data Inventory、Data Flow Diagram、Third-Party Sharing、User Rights、Privacy Risks、Recommendations。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `security-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | 代码/依赖/配置修复到 Engineer/DevOps；需求约束风险到 PM；泛安全请求默认不走本 skill。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
@@ -72,7 +75,7 @@ changelog:
 
 ### 当前实现工作流
 
-- 读取 PM docs
+- 读取 `docs/pm/{feature_path}/PRD.md` 和同路径 Engineer 文档
 - 搜索表单/API/analytics 和个人数据收集点
 - 分类敏感/行为数据
 - 检查存储/传输/跨境和第三方共享

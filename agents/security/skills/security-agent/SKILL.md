@@ -17,6 +17,8 @@ dependency risk analysis, or privacy/data-handling mapping.
 - selecting the narrowest downstream security skill
 - sequencing multiple security skills when the user clearly wants a broader
   release-gate or sensitive-feature review
+- preserving an already-confirmed `feature_path` for feature-scoped security
+  review
 - asking at most one route-level clarification question when the target review
   is truly ambiguous
 
@@ -25,6 +27,7 @@ dependency risk analysis, or privacy/data-handling mapping.
 - directly implementing code or deployment fixes
 - acting as a general incident response dispatcher
 - replacing the downstream review protocols of its specialist skills
+- deciding or inventing a feature path when PM/Engineer docs are unclear
 
 ## Available Skills
 
@@ -83,6 +86,24 @@ security outcome.
 - If fixes are needed, keep the security output focused on evidence and hand the
   remediation back to `engineer-agent` or `devops-agent` as appropriate.
 
+## Feature Path Gate
+
+For feature-scoped security review, consume the `feature_path` already confirmed
+by PM and Engineer:
+
+- read `docs/pm/{feature_path}/PRD.md` for product scope, data, roles, and
+  security expectations
+- read `docs/engineer/{feature_path}/TRD.md` and
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when architecture,
+  implementation, or release scope affects the review
+- write feature-scoped security reports under
+  `docs/security/{feature_path}/...`
+
+If the user gives only a display name and the matching `feature_path` is
+unclear, do not create a synonymous top-level `docs/security/{name}/`
+directory. Return to PM for PRD/path clarification or Engineer for missing or
+stale TRD/implementation plan.
+
 ## Output Behavior
 
 When routing is complete:
@@ -91,3 +112,5 @@ When routing is complete:
 - if relevant, state the follow-up security chain
 - make the expected output clear as a structured review or risk report, not an
   implementation patch
+- for feature-scoped work, state the expected report path under
+  `docs/security/{feature_path}/...`
