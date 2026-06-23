@@ -1037,35 +1037,52 @@ class EvalContractTests(unittest.TestCase):
     def test_repository_contract_rejects_invalid_implementation_plan_path_segments(self):
         checker = load_repository_checker_module()
 
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            init_git_main(root)
-            plan = root / "docs/engineer/a/Bad_Segment/IMPLEMENTATION_PLAN.md"
-            plan.parent.mkdir(parents=True)
-            plan.write_text(
-                "---\n"
-                'feature: "bad-segment"\n'
-                'feature_path: "a/Bad_Segment"\n'
-                'parent_feature: "a"\n'
-                'feature_level: "2"\n'
-                'version: "0.1.0"\n'
-                'date: "2026-06-23"\n'
-                'last_updated: "2026-06-23"\n'
-                'related_prd: "docs/pm/a/Bad_Segment/PRD.md"\n'
-                'related_trd: "docs/engineer/a/Bad_Segment/TRD.md"\n'
-                "---\n\n"
-                "# Invalid Segment Plan\n"
-            )
-            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+        invalid_paths = [
+            "a/Bad_Segment",
+            "foo-",
+            "a--b",
+        ]
+        for feature_path in invalid_paths:
+            with self.subTest(feature_path=feature_path):
+                with tempfile.TemporaryDirectory() as temp_dir:
+                    root = Path(temp_dir)
+                    init_git_main(root)
+                    plan = root / f"docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md"
+                    plan.parent.mkdir(parents=True)
+                    parent_feature = (
+                        "/".join(feature_path.split("/")[:-1])
+                        if "/" in feature_path
+                        else "N/A"
+                    )
+                    feature = feature_path.split("/")[-1].lower().replace("_", "-")
+                    plan.write_text(
+                        "---\n"
+                        f'feature: "{feature}"\n'
+                        f'feature_path: "{feature_path}"\n'
+                        f'parent_feature: "{parent_feature}"\n'
+                        f'feature_level: "{len(feature_path.split("/"))}"\n'
+                        'version: "0.1.0"\n'
+                        'date: "2026-06-23"\n'
+                        'last_updated: "2026-06-23"\n'
+                        f'related_prd: "docs/pm/{feature_path}/PRD.md"\n'
+                        f'related_trd: "docs/engineer/{feature_path}/TRD.md"\n'
+                        "---\n\n"
+                        "# Invalid Segment Plan\n"
+                    )
+                    subprocess.run(
+                        ["git", "add", plan.relative_to(root).as_posix()],
+                        cwd=root,
+                        check=True,
+                    )
 
-            errors = []
-            checker.validate_implementation_plan_metadata(root, errors)
+                    errors = []
+                    checker.validate_implementation_plan_metadata(root, errors)
 
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn(
-            "implementation plan path must be docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md with one or more lowercase kebab-case segments",
-            rendered,
-        )
+                rendered = "\n".join(error.render(root) for error in errors)
+                self.assertIn(
+                    "implementation plan path must be docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md with one or more lowercase kebab-case segments",
+                    rendered,
+                )
 
     def test_repository_contract_rejects_changed_plan_related_doc_mismatch(self):
         checker = load_repository_checker_module()

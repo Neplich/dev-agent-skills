@@ -60,8 +60,8 @@ change, resolve `feature_path` and read the relevant PM and Engineer documents:
 - `docs/pm/{feature_path}/DECISIONS.md` or other product decision records, when
   present
 
-`feature_path` is the canonical feature key. New documents must use one to
-three directory segments and include `feature_path`, `parent_feature`, and
+`feature_path` is the canonical feature key. New documents must use one or more
+directory segments and include `feature_path`, `parent_feature`, and
 `feature_level` frontmatter. Old single-level documents without those fields
 are compatible and should be read as level-1 features. Before planning, verify
 that:

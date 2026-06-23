@@ -145,6 +145,7 @@ Run this gate before writing `PRD.md`, `BRD.md`, `DECISIONS.md`, or PM
 5. Auto-create a child path only when evidence is clear. Otherwise stop with a
    blocked result or ask a concise clarification.
 6. Reject empty paths, absolute paths, `..`, hidden segments, duplicate slashes,
-   and paths deeper than 3 levels.
+   and non-lower-kebab path segments such as trailing hyphens or repeated
+   hyphen separators.
 
 Record the result in the next handoff as `feature_path_evidence`.

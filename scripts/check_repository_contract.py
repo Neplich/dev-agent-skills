@@ -27,7 +27,7 @@ SEMVER_PATTERN = rf"{SEMVER_CORE_PATTERN}(?:-{SEMVER_PRERELEASE_PATTERN})?"
 SEMVER_RE = re.compile(rf"^{SEMVER_PATTERN}$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 CHANGELOG_VERSION_RE = re.compile(rf"^changelog-v({SEMVER_PATTERN})\.md$")
-FEATURE_PATH_SEGMENT_PATTERN = r"[a-z0-9][a-z0-9-]*"
+FEATURE_PATH_SEGMENT_PATTERN = r"[a-z0-9]+(?:-[a-z0-9]+)*"
 IMPLEMENTATION_PLAN_RE = re.compile(
     rf"^docs/engineer/"
     rf"(?P<feature_path>{FEATURE_PATH_SEGMENT_PATTERN}"

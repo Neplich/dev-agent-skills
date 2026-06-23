@@ -110,8 +110,8 @@ Use it to:
 ## Failure Handling
 
 - Directory already exists -> warn, ask whether to merge or skip existing files
-- `feature_path` exceeds 3 levels or contains unsafe segments -> ask for a new
-  path before creating folders
+- `feature_path` contains unsafe segments or has unclear parent evidence -> ask
+  for a corrected path before creating folders
 - Invalid project type -> list valid types and ask the user to choose
 - No description provided -> create minimal stubs with `[TODO]` throughout
 

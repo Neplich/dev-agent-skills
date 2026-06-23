@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "99d5a4b6ab89fbb1b1a887a856c51743b967dda0ba26a6adc34818b62002569b"
+      "computedHash": "8e94a4920b50a2bc93a7547628534a09e9795d163de6558a1f93e97fcf2c3f92"
     },
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",
@@ -64,7 +64,7 @@
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
       "sourceType": "local",
-      "computedHash": "d84c39652a9cdd8a87a4ffefc9b8171a6f97491ebf1b6b02a4e5c42877a865da"
+      "computedHash": "17d840ef98b093b852be5c3ba0ea186d13232088bb999c70fd9244d1116c85c7"
     },
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",
