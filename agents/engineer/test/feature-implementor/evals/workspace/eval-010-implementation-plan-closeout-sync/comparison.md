@@ -7,7 +7,7 @@
 - Eval: `eval-010-implementation-plan-closeout-sync`
 - Test case: implementation-plan-closeout-sync
 - Workspace: `workspace/eval-010-implementation-plan-closeout-sync`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-24; deterministic checks passed and the subagent confirmed the new PRD/SKILL/internal/eval direction covers stale closeout state
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-24; deterministic checks passed, the first validation caught stale durable closeout evidence, and the final validation confirmed the synchronized PRD/SKILL/internal/eval direction covers stale closeout state
 
 ## Test Set / Fixture Version
 
@@ -26,15 +26,15 @@
 
 ## With Skill
 
-- PASS. Fresh subagent validation confirmed the PRD/TRD, `SKILL.md`, implementor/reviewer/output conventions, eval definition, fixture, and lockfile direction satisfy the closeout-gate plan. The subagent's first delivery verdict was blocked only because this durable comparison and the implementation plan closeout had not yet been synchronized; both are now updated.
+- PASS. Fresh subagent validation confirmed the PRD/TRD, `SKILL.md`, implementor/reviewer/output conventions, eval definition, fixture, and lockfile direction satisfy the closeout-gate plan. The first validation blocked delivery because this durable comparison and the implementation plan closeout had not yet been synchronized; after those artifacts were updated, the final validation passed.
 
 ## Without Skill / Baseline
 
-- Baseline risk: without this closeout gate, an implementation can proceed to handoff or delivery while the durable plan artifact still contradicts the implemented state.
+- BLOCKED / not generated. This PR did not produce a separate without-skill transcript for `eval-010`, and the deterministic checks do not provide a runner mode that disables only `feature-implementor` while preserving the same prompt and workspace. No baseline pass/fail is inferred. The recorded baseline risk remains: without this closeout gate, an implementation can proceed to handoff or delivery while the durable plan artifact still contradicts the implemented state.
 
 ## Failures
 
-- None in the skill/eval contract after closeout synchronization. The initial subagent validation found all deterministic commands passing and identified only stale durable closeout artifacts, which this update resolves.
+- None in the skill/eval contract after closeout synchronization. The initial subagent validation found all deterministic commands passing and identified only stale durable closeout artifacts; the final validation passed after this comparison and the implementation plan were synchronized.
 
 ## Next Steps
 

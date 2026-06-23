@@ -34,7 +34,7 @@ related_issue: "https://github.com/Neplich/dev-agent-skills/issues/44"
 | Implementation plan | 已确认并实施 | 本文件已更新为 `status: "Implemented"` |
 | Code / skill edits | 已完成 | PRD、SKILL.md、internal instructions、eval fixture 和 `skills-lock.json` 已更新 |
 | Deterministic checks | 已完成 | 见 `## 7. 实施结果` |
-| Fresh subagent validation | 已完成并已处理反馈 | subagent `019ef5a2-e27a-7df2-8fd1-11614b8e8664` 完整测试命令 PASS，并指出 closeout durable 产物待同步；本节已完成该同步 |
+| Fresh subagent validation | 已完成并已处理反馈 | subagent `019ef5a2-e27a-7df2-8fd1-11614b8e8664` 完整测试命令 PASS，并指出 closeout durable 产物待同步；最终 subagent `019ef5a6-5558-7a02-a5e7-a14bd3c6e272` PASS |
 
 ### 1.2 成功标准
 
@@ -228,9 +228,10 @@ uv run --with pytest pytest agents/test_eval_contract.py
 
 Fresh subagent validation:
 
-- Subagent: `019ef5a2-e27a-7df2-8fd1-11614b8e8664`
-- Result: deterministic checks PASS; initial delivery verdict FAIL because this implementation plan and the new eval comparison were still in pre-closeout state.
-- Resolution: this closeout update changes the plan to implemented state and updates the durable eval comparison.
+- Initial validation: subagent `019ef5a2-e27a-7df2-8fd1-11614b8e8664` ran the full deterministic check flow successfully, then blocked delivery because this implementation plan and the new eval comparison were still in pre-closeout state.
+- Resolution: this closeout update changed the plan to implemented state and updated the durable eval comparison.
+- Final validation: subagent `019ef5a6-5558-7a02-a5e7-a14bd3c6e272` passed after the closeout sync and confirmed there was no unresolved stale closeout state.
+- Final command coverage: `git diff --check`, `uv run scripts/check_repository_contract.py`, `uv run scripts/check_eval_contract.py`, `uv run scripts/check_eval_artifacts.py`, and `uv run --with pytest pytest agents/test_eval_contract.py`.
 
 ## 8. 残余风险
 
