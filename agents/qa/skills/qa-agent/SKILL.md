@@ -35,7 +35,7 @@ or fix verification.
 When QA work creates, updates, or executes E2E assets, use the function-tree
 directory as the durable source of truth:
 
-`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`
+`docs/qa/e2e/{feature_path}/`
 
 - `TEST_SUITE.md` is the suite index, active TC list, and coverage summary.
 - `FLOW_INDEX.md` maps user flows, pages, routes, APIs, and states to TC files.
@@ -153,9 +153,21 @@ When routing is complete:
 
 - state which QA skill should handle the request
 - state the expected evidence artifact for the route
+- for E2E, list the complete QA memory read set before any execution:
+  `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/*.md`, `scripts/*.spec.md`, prior
+  `results/`, and `_reports/`
 - for E2E, state scenario, function-tree scope, platform version status,
   subagent execution plan, selected execution entry, and why the selected entry
   follows repo harness > Chrome plugin / browser connector > Playwright fallback
+- for E2E, state the credential handling reference
+  `agents/qa/skills/qa-agent/references/e2e-credential-store.md`, the local
+  store `.qa/e2e/accounts.local.json`, and the summary report reference
+  `agents/qa/skills/qa-agent/references/e2e-test-report.md`
+- for existing-feature changes, bug fixes, or code-complete E2E documentation
+  updates, state the same-path PRD, TRD, and confirmed
+  `IMPLEMENTATION_PLAN.md` gate explicitly; expectation changes return to PM,
+  TRD gaps return to `engineer-agent:trd-gen`, and missing implementation plans
+  return to `engineer-agent:feature-implementor`
 - if E2E is blocked by missing platform version, credentials, environment,
   unclear `feature_path`, PRD/TRD alignment, or confirmed
   `IMPLEMENTATION_PLAN.md`, report the blocker and next owner instead of

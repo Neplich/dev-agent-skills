@@ -35,7 +35,7 @@ workflow, output format, failure handling, and safety boundaries.
   endpoint coverage, and NFR tests stay aligned.
 - **Case files**: Validate that every E2E test case in `TEST_SUITE.md` links to
   exactly one file under
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/`, and that each
+  `docs/qa/e2e/{feature_path}/cases/`, and that each
   file contains one matching `TC-NNN` case.
 - **File exploration**: When test coverage was derived from project file
   exploration, validate that `FLOW_INDEX.md` exists and lists inspected files

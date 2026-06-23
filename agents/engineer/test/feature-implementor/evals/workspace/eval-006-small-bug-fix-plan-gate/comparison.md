@@ -34,7 +34,7 @@ Observed behavior:
 - The planner phase applies to every implementation task, including spec-backed bug-fix changes, and must include file scope, verification commands, PRD alignment result, and implementation/validation split decision.
 - The complex split exception allows a single-file small fix to skip complex implementation/validation sub-agent split, but it never skips the plan or confirmation.
 - Phase 2 only starts after plan confirmation, so the skill does not apply the `src/api/notifications.ts` fix or claim verification before confirmation.
-- After implementation and self-review, the QA E2E handoff package must include PRD/TRD paths, confirmed `IMPLEMENTATION_PLAN.md`, PRD alignment, changed files, verification commands/results, risks, and suggested `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`; if the confirmed plan is missing, the skill stops before producing that handoff.
+- After implementation and self-review, the QA E2E handoff package must include PRD/TRD paths, confirmed `IMPLEMENTATION_PLAN.md`, PRD alignment, changed files, verification commands/results, risks, and suggested `docs/qa/e2e/{feature_path}/`; if the confirmed plan is missing, the skill stops before producing that handoff.
 
 ## Without Skill / Baseline
 

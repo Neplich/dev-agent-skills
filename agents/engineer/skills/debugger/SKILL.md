@@ -62,7 +62,7 @@ If the user confirms, produce a repair plan that includes:
 - minimal repair approach
 - regression tests or verification commands
 - suggested QA E2E function directory:
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`, when the fix may affect E2E
+  `docs/qa/e2e/{feature_path}/`, when the fix may affect E2E
   acceptance coverage
 - whether implementation/validation sub-agent split is needed
 - risks, blockers, and forbidden areas
@@ -86,9 +86,9 @@ Resolve `feature_path` by scanning `docs/pm/**/PRD.md` and reading
 `feature_path`, `parent_feature`, and `feature_level` frontmatter where
 present. Old single-level docs without those fields are compatible and count as
 level-1 features. If the likely feature is ambiguous, the PRD is missing, the
-path is deeper than three levels, or the report appears to target a child
-feature that was generated as a wrong top-level directory, classify the report
-as `missing_docs` and request PM alignment instead of guessing.
+path is invalid, or the report appears to target a child feature that was
+generated as a wrong top-level directory, classify the report as `missing_docs`
+and request PM alignment instead of guessing.
 
 Use those docs to classify the report:
 

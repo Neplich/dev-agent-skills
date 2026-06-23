@@ -158,10 +158,10 @@ Load only the narrowest internal `INSTRUCTIONS.md` needed for the next step.
 ## Feature Document Memory
 
 For ongoing feature design, use `feature_path` as the durable feature key.
-`feature_path` is a relative PM feature path with 1-3 slash-separated slug
+`feature_path` is a relative PM feature path with one or more slash-separated slug
 segments, such as `chat-interface`,
 `chat-interface/history-search`, or
-`chat-interface/history-search/export`.
+`chat-interface/history-search/export/reporting`.
 
 Before choosing or writing a feature folder, scan existing PM PRDs with
 `docs/pm/**/PRD.md`:
@@ -236,7 +236,7 @@ Project context:
 - Status: [empty / prototype / existing project]
 - Tech stack: [detected or TBD]
 - Existing docs: [none / partial / approved core docs]
-- Feature path: [resolved 1-3 level feature_path / unresolved and why]
+- Feature path: [resolved multi-level feature_path / unresolved and why]
 - Suggested lane: [greenfield-discovery / greenfield-bootstrap / existing-project-feature / existing-project-update / pipeline / diff-only]
 - Likely next step: [stay in idea-to-spec / project-init / prd-gen / change-impactor / flow / ...]
 ```
@@ -453,16 +453,16 @@ Default to feature-scoped docs under `docs/pm/{feature_path}/`.
 
 New formal PM documents must include these frontmatter fields:
 
-- `feature_path`: the full 1-3 level feature path
+- `feature_path`: the full multi-level feature path
 - `feature`: the terminal feature slug or compatible legacy feature value
 - `parent_feature`: the parent feature path, or `N/A` for level 1
-- `feature_level`: `1`, `2`, or `3`
+- `feature_level`: positive integer matching `feature_path` depth
 
 Downstream docs should use the short-path agent structure:
 
 - `docs/design/{feature_path}/...`
 - `docs/engineer/{feature_path}/...`
-- `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/...`
+- `docs/qa/e2e/{feature_path}/...`
 - `docs/devops/{feature_path}/...`
 - `docs/security/{feature_path}/...`
 

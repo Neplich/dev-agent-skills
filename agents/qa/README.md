@@ -6,7 +6,7 @@
 > Other languages: [中文](./README_zh.md)
 
 > [!NOTE]
-> Standalone E2E requests should reuse existing function-tree cases under `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` before expanding project exploration.
+> Standalone E2E requests should reuse existing function-tree cases under `docs/qa/e2e/{feature_path}/` before expanding project exploration.
 
 ## Quick Facts
 
@@ -49,19 +49,17 @@ docs/qa/e2e/
 ├── _reports/
 │   └── {platform-version}/
 │       └── test-reports-{test-time}.md
-└── {一级功能}/
-    └── {二级功能}/
-        └── {三级功能}/
-            ├── TEST_SUITE.md
-            ├── FLOW_INDEX.md
-            ├── cases/
-            │   └── TC-NNN-<short-slug>.md
-            ├── scripts/
-            │   └── TC-NNN-<short-slug>.spec.md
-            ├── results/
-            │   └── TC-NNN-<short-slug>/{platform-version}/
-            └── _reports/
-                └── {platform-version}/test-reports-{test-time}.md
+└── {feature_path}/
+    ├── TEST_SUITE.md
+    ├── FLOW_INDEX.md
+    ├── cases/
+    │   └── TC-NNN-<short-slug>.md
+    ├── scripts/
+    │   └── TC-NNN-<short-slug>.spec.md
+    ├── results/
+    │   └── TC-NNN-<short-slug>/{platform-version}/
+    └── _reports/
+        └── {platform-version}/test-reports-{test-time}.md
 ```
 
 Workflow:

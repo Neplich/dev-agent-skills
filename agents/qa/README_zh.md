@@ -6,7 +6,7 @@
 > 其他语言：[English](./README.md)
 
 > [!NOTE]
-> 独立 E2E 请求应先复用 `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` 下的功能树用例，再决定是否扩充探索范围。
+> 独立 E2E 请求应先复用 `docs/qa/e2e/{feature_path}/` 下的功能树用例，再决定是否扩充探索范围。
 
 ## 快速信息
 
@@ -49,19 +49,17 @@ docs/qa/e2e/
 ├── _reports/
 │   └── {platform-version}/
 │       └── test-reports-{test-time}.md
-└── {一级功能}/
-    └── {二级功能}/
-        └── {三级功能}/
-            ├── TEST_SUITE.md
-            ├── FLOW_INDEX.md
-            ├── cases/
-            │   └── TC-NNN-<short-slug>.md
-            ├── scripts/
-            │   └── TC-NNN-<short-slug>.spec.md
-            ├── results/
-            │   └── TC-NNN-<short-slug>/{platform-version}/
-            └── _reports/
-                └── {platform-version}/test-reports-{test-time}.md
+└── {feature_path}/
+    ├── TEST_SUITE.md
+    ├── FLOW_INDEX.md
+    ├── cases/
+    │   └── TC-NNN-<short-slug>.md
+    ├── scripts/
+    │   └── TC-NNN-<short-slug>.spec.md
+    ├── results/
+    │   └── TC-NNN-<short-slug>/{platform-version}/
+    └── _reports/
+        └── {platform-version}/test-reports-{test-time}.md
 ```
 
 工作顺序：

@@ -13,6 +13,6 @@ Use this framework to synthesize a focused visual system. Do not paste this file
 
 ## Output Rule
 
-The final artifact is a Markdown design document under `docs/design/{feature-name}/visual-system.md`.
+The final artifact is a Markdown design document under `docs/design/{feature_path}/visual-system.md`.
 
 It must stop at design handoff. It must not include code snippets, shell commands, token files, install commands, or implementation task lists.

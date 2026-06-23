@@ -5,7 +5,7 @@ feature: "skill-idea-to-spec"
 feature_path: "agents/pm-agent/skills/idea-to-spec"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
-version: "1.2.0"
+version: "1.2.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
@@ -24,6 +24,9 @@ related_docs:
   - "agents/product_manager/skills/idea-to-spec/_internal/gen/brd-gen/INSTRUCTIONS.md"
   - "agents/product_manager/test/idea-to-spec/evals/evals.json"
 changelog:
+  - version: "1.2.1"
+    date: "2026-06-23"
+    changes: "Clarified feature_path contract as multi-level"
   - version: "1.2.0"
     date: "2026-06-23"
     changes: "Added feature_path generation and handoff contract"
@@ -82,7 +85,7 @@ changelog:
 | FR-S06 | Handoff | PM internal lifecycle 按 skill-map 指向最窄 internal resource、engineer-agent:trd-gen 或 validator/iteration；设计产物需求按 Agent 协作边界交 designer-agent。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
 | FR-S08 | Author Metadata | `idea-to-spec` 生成或更新的正式 Markdown 文档必须使用“生成触发者展示名 + Agent 平台名”的 `author`；平台名可以是用户自定义值。 | P0 | `PRD.md`、`BRD.md`、`DECISIONS.md`、diff、impact analysis、iteration 和 validator handoff 等正式文档 frontmatter 使用已填写的可追踪 author，例如 `Neplich Codex`，不使用空值或 `AI Assistant` 这类占位泛称。 |
-| FR-S09 | Feature Path Contract | 写入 PRD/BRD/DECISIONS/design.md 前必须扫描 `docs/pm/**/PRD.md`，解析最多三级 `feature_path`，并在正式文档和 handoff 中携带路径证据。 | P0 | 已有父 PRD 明确匹配时，子功能落入 `docs/pm/{parent}/{child}/`；父功能不清楚时 blocked 或澄清，不创建新并列顶层目录。 |
+| FR-S09 | Feature Path Contract | 写入 PRD/BRD/DECISIONS/design.md 前必须扫描 `docs/pm/**/PRD.md`，解析合法多级 `feature_path`，并在正式文档和 handoff 中携带路径证据。 | P0 | 已有父 PRD 明确匹配时，子功能落入 `docs/pm/{feature_path}/`；父功能不清楚时 blocked 或澄清，不创建新并列顶层目录。 |
 | FR-S10 | Feature Path Frontmatter | 新正式 PM 文档必须包含 `feature_path`、`feature`、`parent_feature`、`feature_level`。 | P0 | 旧单层文档读取兼容为一级功能；新建或实质更新的正式文档包含四个字段。 |
 | FR-S11 | Feature Path Handoff | PM internal lifecycle 和 Engineer handoff 包必须包含 `feature_path`、`feature`、`parent_feature`、`feature_level`、`feature_path_evidence`。 | P0 | 下游不需要根据末级 feature 名称重新猜路径；缺字段时 handoff 指明回 PM 对齐。 |
 

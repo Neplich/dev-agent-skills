@@ -33,13 +33,13 @@ failure handling, and safety boundaries.
 
 - **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md`
 - **Metadata**: `type: TEST_SPEC`, version `1.0.0`
-- **Naming**: `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md`
+- **Naming**: `docs/qa/e2e/{feature_path}/TEST_SUITE.md`
 - **Feature path source**: derive the QA function tree from the confirmed
   `feature_path` in the source PRD/TRD or handoff packet. If the source docs do
   not agree on `feature_path`, stop and return to PM/Engineer alignment instead
   of inventing a QA path.
 - **Case files**: every E2E test case must also be written as a separate
-  Markdown file under `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/` using
+  Markdown file under `docs/qa/e2e/{feature_path}/cases/` using
   `TC-NNN-<short-slug>.md`
 - **File exploration memory**: if test cases are derived from project file
   exploration rather than only PRD / TRD / API docs, write

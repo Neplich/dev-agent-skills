@@ -37,7 +37,7 @@ Observed behavior:
 - The validation task must use source docs, acceptance criteria, changed files, test evidence, repository rules, coverage, unrelated-change checks, and must return pass/fail, findings, blockers, and residual risks.
 - The skill preserves the simple-path exception for single-file small edits, pure explanation, pure code reading, or user opt-out, while making clear that this only skips complex delegation and never skips implementation planning or confirmation.
 - The handoff section requires implementation result, validation conclusion, tests run, and residual risks when the split was used.
-- The QA E2E documentation handoff section requires PRD, TRD, confirmed implementation plan, PRD alignment result, changed files, verification commands and results, risks, environment assumptions, QA questions, suggested `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` directory, and likely E2E impact after implementation and self-review.
+- The QA E2E documentation handoff section requires PRD, TRD, confirmed implementation plan, PRD alignment result, changed files, verification commands and results, risks, environment assumptions, QA questions, suggested `docs/qa/e2e/{feature_path}/` directory, and likely E2E impact after implementation and self-review.
 
 ## Without Skill / Baseline
 

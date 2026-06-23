@@ -29,7 +29,7 @@
         {
           "id": "routes_qa_e2e_handoff",
           "description": "代码完成后 QA E2E 交接",
-          "text": "实现和确定性测试完成后的工程路线必须包含 QA E2E 文档补充检查：交接包引用 PRD、TRD、已确认的 IMPLEMENTATION_PLAN、变更文件、验证命令、风险和建议 docs/qa/e2e/{一级功能}/{二级功能}/{三级功能} 功能目录。"
+          "text": "实现和确定性测试完成后的工程路线必须包含 QA E2E 文档补充检查：交接包引用 PRD、TRD、已确认的 IMPLEMENTATION_PLAN、变更文件、验证命令、风险和建议 docs/qa/e2e/{feature_path} 功能目录。"
         },
         {
           "id": "routes_delivery_last",

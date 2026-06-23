@@ -53,7 +53,7 @@ After implementation and self-review complete, check that the
 `feature-implementor` result includes a QA E2E documentation handoff package
 when the change can affect user-facing flows. The package must include PRD,
 TRD, confirmed `IMPLEMENTATION_PLAN.md`, changed files, verification commands,
-risks, and the suggested `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/` directory.
+risks, and the suggested `docs/qa/e2e/{feature_path}/` directory.
 If the package is missing or does not cite a confirmed implementation plan,
 route back to the implementor before handing the result to QA.
 
@@ -72,9 +72,9 @@ Resolve `feature_path` by scanning `docs/pm/**/PRD.md` and reading
 `feature_path`, `parent_feature`, and `feature_level` frontmatter when present.
 Old single-level documents without those fields are compatible and are treated
 as `feature_path=<directory-name>`, `parent_feature=N/A`, and
-`feature_level=1`. If the feature path is ambiguous, missing a PRD, deeper than
-three levels, or appears to be a child feature incorrectly represented as a new
-top-level directory, keep the request in PM alignment instead of guessing.
+`feature_level=1`. If the feature path is ambiguous, missing a PRD, invalid, or
+appears to be a child feature incorrectly represented as a new top-level
+directory, keep the request in PM alignment instead of guessing.
 
 Classify the request before engineering execution:
 

@@ -14,7 +14,7 @@ status: Draft | In Review | Approved | Superseded
 feature: <last feature slug>
 feature_path: <feature-path>
 parent_feature: <parent feature path or N/A>
-feature_level: <1 | 2 | 3>
+feature_level: <positive integer>
 author: <generation requester display name + agent platform name>
 date: <YYYY-MM-DD>
 last_updated: <YYYY-MM-DD>
@@ -27,14 +27,14 @@ platform, for example `Neplich Codex`. The platform name may be custom; ask the
 user when either part is unknown, and do not use empty values or placeholders
 such as `AI Assistant`.
 
-`feature_path` is the canonical cross-role key and supports one to three
+`feature_path` is the canonical cross-role key and supports one or more
 directory segments separated by `/`, for example `chat-interface`,
-`chat-interface/history-search`, or
-`chat-interface/history-search/export`. `feature` remains a compatibility
+`chat-interface/history-search`, `chat-interface/history-search/export`, or
+`agents/engineer-agent/skills/trd-gen`. `feature` remains a compatibility
 field; for new nested documents it should use the final slug while
 `feature_path` stores the full path. `parent_feature` must be `N/A` for a
-level-1 feature and the parent path for level 2 or 3. `feature_level` must
-match the number of path segments.
+level-1 feature and the full parent path for deeper features. `feature_level`
+must be a positive integer matching the number of path segments.
 
 For legacy single-level TRDs or PRDs without these fields, read them as:
 

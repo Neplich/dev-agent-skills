@@ -68,7 +68,7 @@ docs/
         └── DECISIONS.md
 ```
 
-`feature_path` is a 1-3 level path. Before creating PM feature docs, scan
+`feature_path` is a multi-level path. Before creating PM feature docs, scan
 `docs/pm/**/PRD.md`; attach child features under a confirmed parent PRD, and
 block or clarify when parent ownership is unclear.
 

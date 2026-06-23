@@ -29,7 +29,7 @@ Observed behavior:
 - The current `idea-to-spec` skill keeps vague product ideas in `greenfield-discovery`.
 - The skill contract blocks immediate full PRD/TRD generation, requires one decision point per turn, and recommends downstream document generation only after problem, users, scope, constraints, and assumptions are stable.
 - The fixture is intentionally thin and has no formal docs, matching the assertion that discovery should narrow the idea before durable document creation.
-- The feature_path schema update does not weaken this eval: early discovery may keep the target feature path unresolved, but the skill must resolve or clarify a 1-3 level `feature_path` before writing formal feature-scoped docs.
+- The feature_path schema update does not weaken this eval: early discovery may keep the target feature path unresolved, but the skill must resolve or clarify a valid multi-level `feature_path` before writing formal feature-scoped docs.
 
 ## Without Skill / Baseline
 

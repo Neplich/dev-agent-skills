@@ -74,7 +74,7 @@
         {
           "id": "qa_e2e_handoff_contract",
           "description": "QA E2E 交接包",
-          "text": "输出必须说明代码完成后需要形成 QA E2E 文档补充交接包，至少包含 PRD、TRD、已确认 IMPLEMENTATION_PLAN、变更文件、验证命令、测试结果、风险和建议 docs/qa/e2e/{一级功能}/{二级功能}/{三级功能} 功能目录。"
+          "text": "输出必须说明代码完成后需要形成 QA E2E 文档补充交接包，至少包含 PRD、TRD、已确认 IMPLEMENTATION_PLAN、变更文件、验证命令、测试结果、风险和建议 docs/qa/e2e/{feature_path} 功能目录。"
         }
       ]
     },

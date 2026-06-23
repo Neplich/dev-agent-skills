@@ -33,7 +33,7 @@ Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-convent
 - **Metadata**: `type: PRD`, version `1.0.0`, status `Draft`
 - **Naming**: `docs/pm/<feature_path>/PRD.md`
 - **Feature path gate**: before writing, scan `docs/pm/**/PRD.md`, resolve a
-  1-3 level `feature_path`, and include `feature_path`, `feature`,
+  multi-level `feature_path`, and include `feature_path`, `feature`,
   `parent_feature`, and `feature_level` in frontmatter. If the request may be a
   child feature but parent ownership is unclear, blocked/clarify instead of
   creating a new top-level PRD.

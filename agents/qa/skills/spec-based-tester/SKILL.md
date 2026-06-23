@@ -14,7 +14,7 @@ This is a QA validation protocol, not a router and not a generic execution scrip
 For E2E or feature-scoped QA, use the function-tree directory as the durable
 source of truth:
 
-`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`
+`docs/qa/e2e/{feature_path}/`
 
 - `TEST_SUITE.md` is the suite index and traceability summary.
 - `FLOW_INDEX.md` maps flows, pages, routes, APIs, states, and requirements to
@@ -57,7 +57,7 @@ acceptance work `blocked`.
 Before running anything, gather repository evidence and confirm what is in scope.
 
 - Read the PM/spec documents that define the expected behavior.
-- Read the target `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md`,
+- Read the target `docs/qa/e2e/{feature_path}/TEST_SUITE.md`,
   `FLOW_INDEX.md`, `cases/*.md`, `scripts/*.spec.md`, previous `results/`, and
   `_reports/` before exploring source files when a function-tree QA directory
   exists.
@@ -95,7 +95,7 @@ test cases:
 
 1. Identify the function-tree scope from the user request, PRD/TRD, branch,
    changed files, or nearby QA docs. If it cannot be inferred, ask one concise
-   question for the `{一级功能}/{二级功能}/{三级功能}` target.
+   question for the `{feature_path}` target.
 2. For existing-feature changes, bug fixes, or code-complete E2E documentation
    updates, identify the confirmed `feature_path` and check the same-path PRD,
    TRD, and implementation plan before writing or executing acceptance TC.
@@ -103,10 +103,10 @@ test cases:
 4. Confirm the platform version before execution; if absent, stop as
    `blocked` and ask for the version.
 5. Read the agreed QA directory:
-   - `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md`
-   - `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/FLOW_INDEX.md`
-   - `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/*.md`
-   - `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/scripts/*.spec.md`
+   - `docs/qa/e2e/{feature_path}/TEST_SUITE.md`
+   - `docs/qa/e2e/{feature_path}/FLOW_INDEX.md`
+   - `docs/qa/e2e/{feature_path}/cases/*.md`
+   - `docs/qa/e2e/{feature_path}/scripts/*.spec.md`
    - prior `results/` and `_reports/`, if relevant
 6. If reusable TC exist, treat them as the primary execution scope.
 7. For `feature-update`, execute only the changed feature, direct impact paths,
@@ -120,7 +120,7 @@ test cases:
 Read whatever is available from the following sources, in this order of usefulness:
 
 - Existing QA test cases in
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/*.md`
+  `docs/qa/e2e/{feature_path}/cases/*.md`
 - Existing `TEST_SUITE.md`, `FLOW_INDEX.md`, `scripts/*.spec.md`, prior
   `results/`, and `_reports/`
 - Test Spec or equivalent QA acceptance doc
@@ -132,6 +132,21 @@ Read whatever is available from the following sources, in this order of usefulne
 - Existing test commands, local setup instructions, environment notes, and known prerequisites
 
 If a source does not exist, note it as absent rather than inventing a substitute.
+
+Before reporting any pass/fail result, include a preflight baseline section with:
+
+- scope and feature path
+- environment and platform version status
+- unknowns and blocked checks
+- same-path PRD/TRD/confirmed `IMPLEMENTATION_PLAN.md` gate status when the
+  request comes from an existing-feature change, bug fix, or code-complete E2E
+  documentation update
+- QA memory read status for `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/*.md`,
+  `scripts/*.spec.md`, prior `results/`, and `_reports/`
+
+If reusable TC exist, explicitly state whether they are reused. If `scripts/`,
+prior `results/`, or `_reports/` are absent, record them as absent or blocked
+rather than silently skipping them.
 
 ### 2) Record the validation frame
 
@@ -194,7 +209,7 @@ Do not install browser tooling globally. If dependencies or browsers are missing
 Execute only the tests that are justified by the preflight scope.
 
 - For E2E validation, execute from the individual case files in
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/` whenever they exist.
+  `docs/qa/e2e/{feature_path}/cases/` whenever they exist.
 - Execute each E2E TC through a subagent by default. The main agent confirms
   scope, consolidates evidence, and writes the summary report.
 - Use account IDs from the TC or login-flow references. Do not write plaintext
@@ -217,14 +232,14 @@ During execution, distinguish:
 Produce a validation artifact that is useful for handoff and traceable back to the spec.
 
 For E2E validation, write or update per-TC results under
-`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/results/TC-NNN-<short-slug>/{platform-version}/`
+`docs/qa/e2e/{feature_path}/results/TC-NNN-<short-slug>/{platform-version}/`
 and write the main-agent summary report using
 `agents/qa/skills/qa-agent/references/e2e-test-report.md`.
 
 Report paths:
 
 - `feature-update`:
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/_reports/{platform-version}/test-reports-{test-time}.md`
+  `docs/qa/e2e/{feature_path}/_reports/{platform-version}/test-reports-{test-time}.md`
 - `release`:
   `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md`
 

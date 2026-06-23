@@ -25,4 +25,4 @@ Forbidden:
 - Emit Tailwind config, CSS variables, React/Vue/SwiftUI components, shadcn install commands, or implementation checklists in final design artifacts.
 - Treat stack-specific code examples as implementation instructions.
 
-Final `visual-design` output must remain a Markdown design handoff under `docs/design/{feature-name}/visual-system.md`.
+Final `visual-design` output must remain a Markdown design handoff under `docs/design/{feature_path}/visual-system.md`.

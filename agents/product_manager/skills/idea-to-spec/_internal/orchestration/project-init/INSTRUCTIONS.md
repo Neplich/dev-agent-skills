@@ -35,7 +35,7 @@ empty workspace needs durable documentation scaffolding.
   - `team`: Team members and roles (pre-populates Stakeholder sections)
   - `handoff_packet`: Phase 0 context from `idea-to-spec` to preserve settled
     scope and naming
-  - `feature_path`: optional 1-3 level feature path. Default to a level-1 path
+  - `feature_path`: optional multi-level feature path. Default to a level-1 path
     derived from `project_name` for new greenfield projects.
 
 ## Shared Routing Contract
@@ -65,7 +65,7 @@ Use it to:
    docs/
    ├─ pm/{feature_path}/
    ├─ engineer/{feature_path}/
-   ├─ qa/e2e/{一级功能}/{二级功能}/{三级功能}/
+   ├─ qa/e2e/{feature_path}/
    │  ├─ cases/
    │  └─ scripts/
    ├─ design/{feature_path}/

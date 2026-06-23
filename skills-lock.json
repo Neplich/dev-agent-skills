@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "68bebf9762cd3fb09f5af758a621cc3e6d5cb6a35273768cb702785d3e697bfd"
+      "computedHash": "99d5a4b6ab89fbb1b1a887a856c51743b967dda0ba26a6adc34818b62002569b"
     },
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",
@@ -44,7 +44,7 @@
     "engineer-agent": {
       "source": "agents/engineer/skills/engineer-agent",
       "sourceType": "local",
-      "computedHash": "8c46e2c045007f0e6987040092ed6d9e8dea2292aabeb60b3c431da9d494f22b"
+      "computedHash": "f69e00e958106873f7ceb741afb7a575871df0ddef5e6bf81d9951cfaab9c26a"
     },
     "codebase-analyzer": {
       "source": "agents/engineer/skills/codebase-analyzer",
@@ -54,17 +54,17 @@
     "trd-gen": {
       "source": "agents/engineer/skills/trd-gen",
       "sourceType": "local",
-      "computedHash": "d2be6bedc4fab82bdafcffbc51256e846db5f9abc99fe728863942abf6412c6f"
+      "computedHash": "168bc4ff4912b92229edb0c1cbd76269d1b2fe593d4db24e6c0f8dab1a97ff95"
     },
     "project-bootstrap": {
       "source": "agents/engineer/skills/project-bootstrap",
       "sourceType": "local",
-      "computedHash": "908518211e57549369d018bc8ed835a2a7239aad3e3f9acfa88f848a7a588e7e"
+      "computedHash": "5686ee0aba28dd8f0bc0f7299a7acdfb393e97ec500d59ad455b85b2c3076c59"
     },
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
       "sourceType": "local",
-      "computedHash": "78018f42bc0fa32a1746e40cbd1cb77bfa098df6627aa1094a0b0244c544dba9"
+      "computedHash": "d84c39652a9cdd8a87a4ffefc9b8171a6f97491ebf1b6b02a4e5c42877a865da"
     },
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",
@@ -74,7 +74,7 @@
     "debugger": {
       "source": "agents/engineer/skills/debugger",
       "sourceType": "local",
-      "computedHash": "5260871c1774c46b30bf95b9b78fc047839c5cd5072386b3144660fc254fae6b"
+      "computedHash": "988cf23d824bb48e21e3516e7ffc22f74dcf830bc2885b966d6e23610eb9fc07"
     },
     "delivery": {
       "source": "agents/engineer/skills/delivery",
@@ -84,27 +84,27 @@
     "qa-agent": {
       "source": "agents/qa/skills/qa-agent",
       "sourceType": "local",
-      "computedHash": "9501b6df7d230cee6b83e59e9200c8bd1a73386ec79c480752941b9dacb447f3"
+      "computedHash": "79f3723b25c5a6be15a13cb8bbfea9cd449bea920153b2cccddc7a6a1c429019"
     },
     "exploratory-tester": {
       "source": "agents/qa/skills/exploratory-tester",
       "sourceType": "local",
-      "computedHash": "f816858bfd3e3b626c34dc5969e162df6d978c96c35225ecf892b7fda5ffe1b5"
+      "computedHash": "438f422ee52878abe7bb29fc8f913c73c7491198ed2549adf7f6af096a1f6beb"
     },
     "spec-based-tester": {
       "source": "agents/qa/skills/spec-based-tester",
       "sourceType": "local",
-      "computedHash": "2f7ad97aa42d17df539c66814676db62a1b0cd98ca72555a7d49bded0742c699"
+      "computedHash": "c94f6ed2fbc6d009ffb2e1d6c13fe96a42298596d2a9be360d57809c1f388dba"
     },
     "bug-analyzer": {
       "source": "agents/qa/skills/bug-analyzer",
       "sourceType": "local",
-      "computedHash": "f33e81cb613bbf744a061c088923f4f3fc189bc57e5acc610c839e369dea2b36"
+      "computedHash": "cff50c8616b735b07abb5102d9a7e784c0c85c5b961a775227b5036fc237c355"
     },
     "regression-suite": {
       "source": "agents/qa/skills/regression-suite",
       "sourceType": "local",
-      "computedHash": "2afb83d698000194d233c55c6088ab83424f2aa8903303f23fd55e11934d39b7"
+      "computedHash": "b52c393948be4331c4715644268ab4e82e84c70b38456bb112e5741bdafcd05d"
     },
     "devops-agent": {
       "source": "agents/devops/skills/devops-agent",
@@ -144,7 +144,7 @@
     "visual-design": {
       "source": "agents/designer/skills/visual-design",
       "sourceType": "local",
-      "computedHash": "e101602f44e6fc43db44259611a4ab2b3201ec884a32b0cf53784a1676ec6caf"
+      "computedHash": "4e0e9c8d12447516d85f48cd763994ccec31c9d9a3ccc507dff12565f83d0fdd"
     },
     "security-agent": {
       "source": "agents/security/skills/security-agent",

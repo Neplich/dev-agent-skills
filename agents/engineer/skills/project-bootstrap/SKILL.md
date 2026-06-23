@@ -77,10 +77,9 @@ find docs \( -name 'TRD.md' -o -name 'trd.md' -o -name 'PRD.md' -o -name 'prd.md
 
 Do not use a shallow `-maxdepth` that can miss nested
 `docs/pm/{feature_path}/PRD.md` or `docs/engineer/{feature_path}/TRD.md`
-documents. `feature_path` supports one to three feature levels, and some
-repository-maintenance specs may live under deeper role/skill documentation
-trees. Missing a nested spec is a false negative and must not trigger the
-no-spec stop branch.
+documents. `feature_path` supports one or more feature levels, including
+repository-maintenance specs under role/skill documentation trees. Missing a
+nested spec is a false negative and must not trigger the no-spec stop branch.
 
 Preferred input order:
 

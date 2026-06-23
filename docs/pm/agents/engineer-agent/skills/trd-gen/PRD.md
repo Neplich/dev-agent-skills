@@ -5,7 +5,7 @@ feature: "skill-trd-gen"
 feature_path: "agents/engineer-agent/skills/trd-gen"
 parent_feature: "agents/engineer-agent/skills"
 feature_level: "4"
-version: "1.2.0"
+version: "1.2.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
@@ -22,6 +22,9 @@ related_docs:
   - "agents/engineer/skills/trd-gen/_internal/trd-schema.md"
   - "agents/engineer/test/trd-gen/evals/evals.json"
 changelog:
+  - version: "1.2.1"
+    date: "2026-06-23"
+    changes: "Clarified TRD feature_path gate as multi-level"
   - version: "1.2.0"
     date: "2026-06-23"
     changes: "Add feature_path TRD mirror path and frontmatter requirements"
@@ -80,7 +83,7 @@ changelog:
 | FR-S06 | Handoff | 需求/决策不稳回 pm-agent:idea-to-spec；TRD confirmed 后交 feature-implementor；TRD gap 未解决时阻断实现、debugger 和 QA E2E 文档更新。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
 | FR-S08 | Author Metadata | `trd-gen` 创建或更新 `docs/engineer/{feature_path}/TRD.md` 时必须使用“生成触发者展示名 + Agent 平台名”的 `author`；平台名可以是用户自定义值。 | P0 | TRD frontmatter 使用已填写的可追踪 author，例如 `Neplich Codex`，不使用空值或 `AI Assistant` 这类占位泛称。 |
-| FR-S09 | Feature Path Gate | `trd-gen` 写 TRD 前必须验证 PRD `feature_path` 可镜像。 | P0 | 缺 PRD、PRD 路径不清、超过三级或 frontmatter 与路径不一致时回 PM；旧单层 PRD 兼容为一级功能。 |
+| FR-S09 | Feature Path Gate | `trd-gen` 写 TRD 前必须验证 PRD `feature_path` 可镜像。 | P0 | 缺 PRD、PRD 路径不清、路径非法或 frontmatter 与路径不一致时回 PM；旧单层 PRD 兼容为一级功能。 |
 
 ## 当前实现对齐
 

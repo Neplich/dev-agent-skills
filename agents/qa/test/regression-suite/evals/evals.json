@@ -19,7 +19,7 @@
         {
           "id": "qa",
           "description": "QA 用例复用",
-          "text": "回归执行前应读取 docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md、FLOW_INDEX.md、cases/*.md、scripts/*.spec.md、历史 results/ 和 _reports/；如需新增 E2E 回归覆盖，必须将新增 TC 单独存入 cases/，对应脚本存入 scripts/。"
+          "text": "回归执行前应读取 docs/qa/e2e/{feature_path}/TEST_SUITE.md、FLOW_INDEX.md、cases/*.md、scripts/*.spec.md、历史 results/ 和 _reports/；如需新增 E2E 回归覆盖，必须将新增 TC 单独存入 cases/，对应脚本存入 scripts/。"
         },
         {
           "id": "assertion_3",

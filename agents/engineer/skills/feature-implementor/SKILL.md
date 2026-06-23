@@ -359,7 +359,7 @@ The package must include:
 - verification commands run, results, and commands not run with reasons
 - known risks, environment assumptions, and QA scope questions
 - suggested QA E2E function directory:
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`
+  `docs/qa/e2e/{feature_path}/`
 - likely E2E impact: create TC, update existing TC, update script/assertions,
   or no E2E update needed with rationale
 

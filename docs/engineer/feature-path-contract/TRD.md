@@ -1,7 +1,7 @@
 ---
 title: "PRD/TRD 多级功能目录契约 TRD"
 type: TRD
-version: "1.0.1"
+version: "1.0.2"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-23"
@@ -40,13 +40,16 @@ changelog:
   - version: "1.0.1"
     date: "2026-06-23"
     changes: "补充 API / ADR 生成职责迁移到 Engineer 的技术契约"
+  - version: "1.0.2"
+    date: "2026-06-23"
+    changes: "将 feature_path 技术契约升级为多级统一口径"
 ---
 
 # PRD/TRD 多级功能目录契约 TRD
 
 ## 1. 来源上下文
 
-本 TRD 承接 `docs/pm/feature-path-contract/PRD.md` 和 GitHub issue #37。PM 范围已经明确：将 `{feature-name}` 升级为最多三级 `{feature_path}`，并防止 PRD、TRD、`IMPLEMENTATION_PLAN.md` 生成到错误的并列目录。
+本 TRD 承接 `docs/pm/feature-path-contract/PRD.md` 和 GitHub issue #37。PM 范围已经明确：将 `{feature-name}` 升级为允许多级的 `{feature_path}`，并防止 PRD、TRD、`IMPLEMENTATION_PLAN.md` 生成到错误的并列目录。
 
 本 TRD 只定义技术契约、影响范围、门禁和验证策略，不进入实现。后续应由 `feature-implementor` 基于本 TRD 生成 `docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md`，实施计划确认后再修改 skill 文档、内部指令、eval 或锁文件。
 
@@ -72,12 +75,12 @@ flowchart TD
 核心规则：
 
 - `feature_path` 是跨 PM、Engineer、Design、QA、DevOps、Security 的功能归属主键。
-- `feature_path` 最多三级，目录段使用仓库现有 slug 风格。
+- `feature_path` 支持一个或多个目录段，目录段使用仓库现有 lower kebab-case slug 风格。
 - PRD 是 feature path 的产品归属来源；TRD 和实施计划必须镜像 PRD。
 - API 文档和 ADR 是 Engineer-owned 产物；PM 只 handoff 产品范围、接口目标和技术决策背景。
 - 缺 PRD 回 PM；缺 TRD、TRD stale 或 TRD 路径不一致回 `trd-gen`。
 - 旧单层目录视为一级功能，读取兼容，写入时补齐字段或按维护者确认迁移。
-- 仓库自身 Agent/Skill 治理 PRD 保留 `docs/pm/agents/{agent}/skills/{skill}/PRD.md` 的 `skills` 目录段；该例外不放宽普通产品功能文档的 1-3 级限制。
+- 仓库自身 Agent/Skill 治理 PRD 保留 `docs/pm/agents/{agent}/skills/{skill}/PRD.md` 的 `skills` 目录段；该路径按统一多级口径处理。
 
 ## 3. Feature Path 数据契约
 
@@ -86,11 +89,11 @@ flowchart TD
 | 项 | 规则 |
 | --- | --- |
 | 名称 | `feature_path` |
-| 层级 | 1-3 级 |
+| 层级 | 1-N 级 |
 | 分隔符 | `/` |
 | 目录段 | lower kebab-case slug，例如 `chat-interface` |
-| 示例 | `chat-interface`、`chat-interface/history-search`、`chat-interface/history-search/export` |
-| 非法 | 空路径、超过三级、包含 `..`、绝对路径、重复斜杠、隐藏目录段 |
+| 示例 | `chat-interface`、`chat-interface/history-search`、`chat-interface/history-search/export/reporting` |
+| 非法 | 空路径、空段、包含 `.` 或 `..`、绝对路径、重复斜杠、隐藏目录段、非 lower kebab-case 段 |
 
 ### 3.2 语义字段
 
@@ -99,14 +102,13 @@ flowchart TD
 | `feature_path` | 必填 | 缺失时从目录路径推导 | 完整功能路径，作为主键。 |
 | `feature` | 必填 | 现有值保留 | 兼容字段；新文档建议使用末级 slug，完整路径由 `feature_path` 表达。 |
 | `parent_feature` | 必填 | 一级旧文档推导为 `N/A` | 父 feature path；一级功能为 `N/A`。 |
-| `feature_level` | 必填 | 从路径段数推导 | 取值为 `1`、`2`、`3`。 |
+| `feature_level` | 必填 | 从路径段数推导 | 任意正整数，必须等于 `feature_path` 段数。 |
 | `related_prd` | TRD/Plan 必填 | 现有路径保留并校验 | 必须指向同一 `feature_path` 的 PRD。 |
 | `related_trd` | Plan 必填 | 现有路径保留并校验 | 必须指向同一 `feature_path` 的 TRD。 |
 
-Agent/Skill 治理 PRD 的兼容例外为 `feature_path=agents/{agent}/skills/{skill}`、
-`parent_feature=agents/{agent}/skills`、`feature_level=4`。解析器不能把该
-例外泛化到普通 feature-scoped 产物；TRD、实施计划、API 和 ADR 仍镜像
-1-3 级产品 `feature_path`。
+Agent/Skill 治理 PRD 使用同一多级口径：`feature_path=agents/{agent}/skills/{skill}`、
+`parent_feature=agents/{agent}/skills`、`feature_level=4`。解析器必须保留
+`skills` 目录段，确保 canonical lookup 指向真实文件。
 
 ### 3.3 交接包
 
@@ -138,7 +140,7 @@ engineer_outputs:
 
 `idea-to-spec`、`prd-gen`、`prd-iteration`、`iteration-coordinator` 和相关 PM generator 在写入 PRD、BRD、DECISIONS 或 PM draft 前执行：
 
-1. 扫描 `docs/pm/**/PRD.md`，深度支持 1-3 级。
+1. 扫描 `docs/pm/**/PRD.md`，深度支持多级 feature path。
 2. 读取每个 PRD 的 frontmatter：`feature_path`、`feature`、`parent_feature`、`feature_level`、`title`、`related_issue`、`related_docs`。
 3. 对缺少 `feature_path` 的旧单层 PRD，从 `docs/pm/{feature}/PRD.md` 推导 `feature_path={feature}`、`feature_level=1`。
 4. 根据用户请求、issue 标题/正文、现有 PRD 标题、DECISIONS 和目录路径判断是否属于已有父功能。
@@ -177,7 +179,7 @@ engineer_outputs:
 | PRD 缺少父级归属或 `feature_path` 不明确 | 停止，回 PM 澄清或更新 PRD。 |
 | TRD 缺失 | 停止，回 `engineer-agent:trd-gen` 补 TRD。 |
 | TRD stale、路径不一致或 `related_prd` 不匹配 | 停止，回 `engineer-agent:trd-gen` 修正 TRD。 |
-| 1-3 级目录缺失但 PRD/TRD 均已确认且路径一致 | 允许创建目标 Engineer 目录并写入实施计划。 |
+| 多级目录缺失但 PRD/TRD 均已确认且路径一致 | 允许创建目标 Engineer 目录并写入实施计划。 |
 | 用户要求跳过路径对齐 | blocked，不继续写实施计划或代码。 |
 
 ### 4.4 Debugger 和 QA 门禁
@@ -203,7 +205,7 @@ engineer_outputs:
 | Engineer API | `docs/engineer/{feature_path}/API.md` |
 | Engineer ADR | `docs/engineer/{feature_path}/ADR-*.md` |
 | Design docs | `docs/design/{feature_path}/...` |
-| QA E2E | `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/...` |
+| QA E2E | `docs/qa/e2e/{feature_path}/...` |
 | DevOps report | `docs/devops/{feature_path}/...` |
 | Security report | `docs/security/{feature_path}/...` |
 
@@ -259,7 +261,7 @@ feature_level: 1
 | P0 | `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md` | 写计划前执行 PRD/TRD/目录缺层门禁。 |
 | P0 | `agents/engineer/skills/debugger/SKILL.md` | bug 对齐读取 `docs/pm/{feature_path}` 与 `docs/engineer/{feature_path}`。 |
 | P1 | `agents/designer/**` | feature-scoped design docs 镜像 feature path。 |
-| P1 | `agents/qa/**` | QA 消费 PRD/TRD/Plan 时使用同一 feature path；E2E 目录规则保持三级功能树。 |
+| P1 | `agents/qa/**` | QA 消费 PRD/TRD/Plan 时使用同一 feature path；E2E 目录使用 `docs/qa/e2e/{feature_path}/`。 |
 | P1 | `agents/devops/**` | feature-scoped DevOps 报告使用 feature path。 |
 | P1 | `agents/security/**` | feature-scoped Security 报告使用 feature path。 |
 | P1 | `agents/**/test/**/evals/evals.json` 和 fixture | 增加嵌套路径、缺层 blocked、旧路径兼容 eval。 |
@@ -323,7 +325,7 @@ rg -n "feature_path|parent_feature|feature_level" agents docs --glob "*.md"
 | Risk | 自动父功能匹配过度自信会把文档放入错误父目录。 | Engineer | Yes |
 | Risk | 只更新 PM/Engineer，未更新下游消费方，会让 Design/QA/DevOps/Security 继续漂移。 | Engineer | Yes |
 | Risk | 只更新文档不更新 eval，会导致规则后续回退。 | Engineer | Yes |
-| Assumption | 三级 feature path 足以覆盖当前仓库需要；更深层级应重构功能树。 | Maintainer | No |
+| Decision | `feature_path` 支持多级统一口径；合法深度由功能树决定，不因超过三级而 blocked。 | Maintainer | No |
 | Assumption | 旧单层目录不批量迁移，只有确认误放时再迁移。 | Maintainer | No |
 | Decision | 新文档继续保留 `feature` 作为兼容字段；`feature_path` 是完整路径主键，一级功能时二者可以相同，嵌套功能时 `feature` 使用末级 slug。 | Engineer | No |
 | Open Question | 是否需要新增 repository contract 检查 feature path frontmatter 与目录路径一致。 | Maintainer | No |

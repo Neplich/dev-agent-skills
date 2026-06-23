@@ -14,22 +14,22 @@ status: Draft | In Review | Approved | Superseded
 author: <generation requester display name + agent platform name>
 date: <YYYY-MM-DD>
 feature: <leaf feature slug>
-feature_path: <1-3 level feature path>
+feature_path: <multi-level feature path>
 parent_feature: <parent feature path or "N/A">
-feature_level: <1 | 2 | 3>
+feature_level: <positive integer path depth>
 related_prd: docs/pm/{feature_path}/PRD.md | "N/A"
 related_trd: docs/engineer/{feature_path}/TRD.md | "N/A"
 related_api: <filename or "N/A">
-function_tree_directory: docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}
-case_directory: docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases
-flow_index: docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/FLOW_INDEX.md | "N/A"
+function_tree_directory: docs/qa/e2e/{feature_path}
+case_directory: docs/qa/e2e/{feature_path}/cases
+flow_index: docs/qa/e2e/{feature_path}/FLOW_INDEX.md | "N/A"
 ```
 
 Feature-scoped test specs consume a confirmed PM/Engineer `feature_path`; they
-do not create a new path. `feature_path` may contain one to three slash-separated
+do not create a new path. `feature_path` may contain one or more slash-separated
 slug segments and must match `related_prd` and `related_trd` when those docs are
 present. The QA E2E function tree can use the same path segments for
-`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/`; if the path, PRD, TRD, or confirmed
+`docs/qa/e2e/{feature_path}/`; if the path, PRD, TRD, or confirmed
 implementation plan is missing or conflicting, block and return to PM/Engineer
 alignment.
 
@@ -85,11 +85,11 @@ Each test case must capture:
 - **Quality**: Each test case must have Preconditions, Steps, and Expected
   Result.
 - **Quality**: Every E2E test case must have exactly one linked Markdown case
-  file under `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/`.
+  file under `docs/qa/e2e/{feature_path}/cases/`.
 
 ### E2E Case File Format
 
-Each file in `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/`
+Each file in `docs/qa/e2e/{feature_path}/cases/`
 must contain exactly one E2E case and use the same stable ID as `TEST_SUITE.md`.
 
 ```markdown
@@ -120,7 +120,7 @@ must contain exactly one E2E case and use the same stable ID as `TEST_SUITE.md`.
 
 When test cases are derived from source, config, route, fixture, harness, or
 environment file discovery, record the exploration in
-`docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/FLOW_INDEX.md`.
+`docs/qa/e2e/{feature_path}/FLOW_INDEX.md`.
 
 The file must include:
 

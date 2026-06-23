@@ -48,7 +48,7 @@ These rules apply before any internal routing:
   in `docs/pm/{feature_path}/DECISIONS.md` when the conversation is in
   documenting mode.
 - Before writing PM feature docs, scan `docs/pm/**/PRD.md` and resolve a
-  1-3 level `feature_path`. If parent ownership is not clear, block or ask a
+  multi-level `feature_path`. If parent ownership is not clear, block or ask a
   minimal clarification instead of creating a new top-level sibling directory.
 - Treat feature docs as durable memory for long-running design threads.
 - After a major stage, consolidate process notes into stable declarative prose.
@@ -104,10 +104,10 @@ compact packet that preserves settled context and avoids re-asking basics.
 - `project_context`: repo path, workspace status, tech stack, key modules
 - `docs_context`: doc inventory, maturity, missing artifacts, active feature doc
   paths
-- `feature_path`: resolved 1-3 level PM feature path, or `unresolved`
+- `feature_path`: resolved multi-level PM feature path, or `unresolved`
 - `feature`: terminal feature slug or compatible legacy feature value
 - `parent_feature`: parent feature path, or `N/A` for level 1
-- `feature_level`: `1`, `2`, or `3`
+- `feature_level`: positive integer matching `feature_path` depth
 - `feature_path_evidence`: list of sources proving why this path is correct
 - `request_lane`: one of the lane values above
 - `problem_and_goal`: problem, target users, success metrics

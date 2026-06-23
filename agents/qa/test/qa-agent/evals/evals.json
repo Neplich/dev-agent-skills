@@ -24,7 +24,7 @@
         {
           "id": "qa",
           "description": "QA 用例记忆",
-          "text": "如果是独立 QA 或 E2E 请求，必须要求下游先读取 docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/TEST_SUITE.md、FLOW_INDEX.md、cases/*.md、scripts/*.spec.md、历史 results/ 和 _reports/，而不是旧的单层 QA 目录。"
+          "text": "如果是独立 QA 或 E2E 请求，必须要求下游先读取 docs/qa/e2e/{feature_path}/TEST_SUITE.md、FLOW_INDEX.md、cases/*.md、scripts/*.spec.md、历史 results/ 和 _reports/，而不是旧的单层 QA 目录。"
         },
         {
           "id": "e2e_execution_protocol",

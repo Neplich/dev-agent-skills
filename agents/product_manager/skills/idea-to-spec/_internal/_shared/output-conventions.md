@@ -12,9 +12,9 @@ Every generated formal document MUST begin with a YAML frontmatter block:
 title: "<Document Title>"
 type: BRD | PRD | TRD | ADR | API | TEST_SPEC | DECISIONS
 feature: "<terminal-feature-slug>"
-feature_path: "<1-3-level-feature-path>"
+feature_path: "<multi-level-feature-path>"
 parent_feature: "<parent-feature-path-or-N/A>"
-feature_level: "1 | 2 | 3"
+feature_level: "<positive-integer-path-depth>"
 version: "1.0.0"
 status: Draft | In Review | Approved | Superseded | Deprecated
 author: "<generation requester display name + agent platform name>"
@@ -40,10 +40,10 @@ changelog:
 | author | Yes | Traceable creator display name |
 | date | Yes | Creation/update date |
 | generated_by | Yes | Skill that generated this document |
-| feature_path | Yes for new feature-scoped docs | 1-3 level slash-separated feature path |
+| feature_path | Yes for new feature-scoped docs | Multi-level slash-separated feature path |
 | feature | Yes for new feature-scoped docs | Terminal feature slug or compatible legacy feature value |
 | parent_feature | Yes for new feature-scoped docs | Parent feature path, or `N/A` for level 1 |
-| feature_level | Yes for new feature-scoped docs | `1`, `2`, or `3`, matching `feature_path` depth |
+| feature_level | Yes for new feature-scoped docs | Positive integer matching `feature_path` depth |
 | related_docs | No | List of related document paths |
 | changelog | Yes | Version history entries |
 
@@ -89,7 +89,7 @@ Use feature-scoped folders with stable filenames:
 docs/<agent-short>/<feature_path>/<DOC>.md
 ```
 
-`feature_path` must contain 1-3 slash-separated slug segments. Existing
+`feature_path` must contain one or more slash-separated slug segments. Existing
 single-level folders without feature-path metadata remain readable as level-1
 features.
 
@@ -132,7 +132,7 @@ features.
   `feature_path`. If a child feature's parent is unclear, block or clarify
   instead of creating a new parallel top-level directory.
 - Store each E2E test case in one file under
-  `docs/qa/e2e/{一级功能}/{二级功能}/{三级功能}/cases/`; keep `TEST_SUITE.md`
+  `docs/qa/e2e/{feature_path}/cases/`; keep `TEST_SUITE.md`
   as the index and traceability summary
 - Use `FLOW_INDEX.md` to persist source-file exploration that expands QA
   coverage and maps flows to TC files

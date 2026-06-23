@@ -1,7 +1,7 @@
 ---
-title: "PRD/TRD 多级功能目录契约实施计划"
+title: "Feature Path 多级统一口径实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.1"
+version: "0.2.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-23"
@@ -17,438 +17,223 @@ related_issue: "https://github.com/Neplich/dev-agent-skills/issues/37"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/42"
 ---
 
-# PRD/TRD 多级功能目录契约实施计划
+# Feature Path 多级统一口径实施计划
 
 ## 1. 实施上下文
 
-本计划承接 `docs/pm/feature-path-contract/PRD.md` 和 `docs/engineer/feature-path-contract/TRD.md`，目标是把仓库内单层 `{feature-name}` 文档契约升级为最多三级 `{feature_path}`，并确保 PRD、TRD、`IMPLEMENTATION_PLAN.md` 及下游消费方不会错误生成并列目录或引用错误文档。
+本计划承接 issue #37、当前 PR #42 的 review 修复讨论，以及维护者对功能树演进的新增要求：随着项目功能点扩充，固定一、二、三级功能点不能完整覆盖真实产品结构，`feature_path` 需要从“最多三级”升级为“允许多级的统一口径”。
 
-### 1.1 计划门禁
+本次修复已先完成 `docs/pm/feature-path-contract/PRD.md` 和 `docs/engineer/feature-path-contract/TRD.md` 范围对齐，两份源文档均确认 `feature_path` 支持多级统一口径，再进入 skill、脚本和 eval 修改。
 
-| 门禁 | 当前结果 | 证据 |
+### 1.1 当前门禁状态
+
+| 门禁 | 当前结果 | 处理 |
 | --- | --- | --- |
 | PRD 存在 | 通过 | `docs/pm/feature-path-contract/PRD.md` |
 | TRD 存在 | 通过 | `docs/engineer/feature-path-contract/TRD.md` |
 | PRD/TRD `feature_path` 对齐 | 通过 | 两者均为 `feature-path-contract` |
-| PRD/TRD `parent_feature` 对齐 | 通过 | 两者均为 `N/A` |
-| PRD/TRD `feature_level` 对齐 | 通过 | 两者均为 `"1"` |
-| TRD `related_prd` 匹配 | 通过 | `docs/engineer/feature-path-contract/TRD.md` 指向同一路径 PRD |
-
-后续进入 skill 修改前仍需确认本实施计划。实施阶段不能扩展到本计划未列出的功能，也不能在缺少 PRD/TRD 路径对齐时继续生成计划、代码或 E2E 产物。
+| PRD/TRD 是否覆盖新需求 | 通过 | 两者已更新为多级统一口径 |
+| 是否可以直接改 skill / contract / eval | 通过 | Phase 0 已完成，可继续实施 |
 
 ```mermaid
 flowchart TD
-    A["确认 PRD/TRD feature_path 对齐"] --> B["更新 PM 模块"]
-    B --> C["更新 Engineer 模块"]
-    C --> D["更新 Downstream 模块"]
-    D --> E["更新 Eval 与 contract 覆盖"]
-    E --> F["刷新 skills-lock.json"]
-    F --> G["运行静态契约检查"]
-    G --> H["执行对应 skill eval / fresh subagent validation"]
-    H --> I["更新 durable comparison.md"]
+    A["维护者确认多级统一口径"] --> B["Phase 0: 更新 PRD/TRD"]
+    B --> C{"PRD/TRD 是否确认多级? "}
+    C -->|否| D["blocked: 回 PM/TRD 对齐"]
+    C -->|是| E["Phase 1: Repository contract"]
+    E --> F["Phase 2: PM / Engineer skill"]
+    F --> G["Phase 3: QA / Downstream skill"]
+    G --> H["Phase 4: Eval 与 comparison"]
+    H --> I["Phase 5: skills-lock 与验证"]
 ```
 
-## 2. 实施范围
+## 2. 目标口径
 
-### 2.1 PM 模块
+| 项 | 新口径 |
+| --- | --- |
+| `feature_path` | 一个或多个 lower kebab-case 目录段，使用 `/` 分隔。 |
+| `feature` | 兼容字段，新文档使用 `feature_path` 最后一段。 |
+| `parent_feature` | 一级为 `N/A`，多级为去掉末段后的完整父路径。 |
+| `feature_level` | 任意正整数字符串，值必须等于 `feature_path` 段数。 |
+| Agent/Skill PRD | 不再需要“4 级例外”概念；`agents/{agent}/skills/{skill}` 是普通合法多级路径，必须保留 `skills` 目录段。 |
+| QA E2E | 统一表达为 `docs/qa/e2e/{feature_path}/`。现有三级目录是合法示例，不再是上限。 |
+| 旧单层文档 | 继续兼容为 `feature_level=1`，不做强制批量迁移。 |
 
-PM 模块负责识别、生成和更新产品文档的 `feature_path`，是路径归属来源。
+路径仍必须拒绝空路径、空段、重复斜杠、绝对路径、`.`、`..`、隐藏目录段和非 lower kebab-case slug。
 
-| 文件 | 操作 | 修改目标 | 来源 |
+## 3. 实施范围总览
+
+| 范围 | 涉及内容 | 改动量 | 说明 |
 | --- | --- | --- | --- |
-| `agents/product_manager/skills/idea-to-spec/SKILL.md` | 修改 | 将 feature document memory、deliverable shapes 和 PM-first routing 从 `{feature-name}` 升级为 `{feature_path}`；明确最多三级和旧单层兼容。 | PRD FR-001, FR-002, FR-003；TRD §4.1 |
-| `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` | 修改 | Handoff packet 增加 `feature_path`、`feature`、`parent_feature`、`feature_level`、`feature_path_evidence`。 | PRD FR-006；TRD §3.3 |
-| `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` | 修改 | 增加写入前扫描 `docs/pm/**/PRD.md`、父功能识别、路径不清 blocked 和 no directory drift 规则。 | PRD FR-002；TRD §4.1 |
-| `agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md` | 修改 | 统一 `docs/<agent-short>/{feature_path}/<DOC>.md` 路径和正式文档 frontmatter 字段。 | PRD FR-003, FR-005；TRD §5 |
-| `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md` | 修改 | PRD schema 增加 `feature_path`、`parent_feature`、`feature_level` 和兼容说明。 | PRD FR-005；TRD §3.2 |
-| `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/brd-schema.md` | 修改 | BRD schema 镜像 PM feature path 字段。 | PRD FR-003, FR-005 |
-| `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md` | 修改 | Test Spec 消费同一 feature path，避免测试规格漂移。 | PRD FR-009 |
-| `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/trd-schema.md` | 修改 | PM 侧 TRD schema 引用同一 feature path，保持旧路径兼容。 | PRD FR-004, FR-005 |
-| `agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md` | 修改 | PRD 生成前扫描父 PRD；父功能不明确时 blocked 或澄清；不得创建疑似并列顶层目录。 | PRD US-001, FR-002；TRD §4.1 |
-| `agents/product_manager/skills/idea-to-spec/_internal/gen/brd-gen/INSTRUCTIONS.md` | 修改 | BRD 写入 `docs/pm/{feature_path}/BRD.md`，与 PRD 同目录。 | PRD FR-003 |
-| `agents/product_manager/skills/idea-to-spec/_internal/gen/tspecs-gen/INSTRUCTIONS.md` | 修改 | 测试规格引用 `feature_path`，并读取同路径 PRD/TRD。 | PRD FR-009 |
-| `agents/product_manager/skills/idea-to-spec/_internal/iteration/prd-iteration/INSTRUCTIONS.md` | 修改 | 更新已有 PRD 前校验路径和 frontmatter 一致；误放并列目录必须先输出冲突分析。 | PRD FR-011；TRD §6.2 |
-| `agents/product_manager/skills/idea-to-spec/_internal/orchestration/iteration-coordinator/INSTRUCTIONS.md` | 修改 | 迭代协调时携带 feature path 证据，禁止下游凭末级名称自行选路径。 | PRD FR-006 |
-| `agents/product_manager/skills/idea-to-spec/_internal/orchestration/project-init/INSTRUCTIONS.md` | 修改 | 新项目初始化时保留一级路径默认值，同时允许后续子功能路径。 | PRD FR-010 |
+| PRD/TRD 源文档 | `docs/pm/feature-path-contract/PRD.md`、`docs/engineer/feature-path-contract/TRD.md` | 中 | 已先把“最多三级”改为“多级统一”，再实施后续约束。 |
+| Repository contract | `scripts/check_repository_contract.py`、`agents/test_eval_contract.py` | 中 | 4+ 级从失败用例改为成功用例，并保留非法路径负例。 |
+| PM skill | `idea-to-spec` public entry、shared conventions、schemas、generators、iteration/orchestration | 大 | PM 是 `feature_path` 归属来源，必须先统一。 |
+| Engineer skill | `engineer-agent`、`trd-gen`、`feature-implementor`、`debugger`、`project-bootstrap` | 中到大 | 消费并镜像任意深度路径，缺文档时回正确 owner。 |
+| QA skill | `qa-agent`、`spec-based-tester`、`regression-suite`、`exploratory-tester`、`bug-analyzer` | 大 | 从固定三级 E2E 目录升级到 `{feature_path}`。 |
+| Designer / DevOps / Security | 下游 feature-scoped 输出和 README | 中 | 下游只消费已确认路径，不自行决定父功能。 |
+| Eval / comparison | 相关 `evals.json`、fixture、durable `comparison.md` | 大 | 必须覆盖 4+ 级成功、非法路径失败、旧单层兼容和 owner handoff。 |
+| `skills-lock.json` | 受影响 skill hash | 小 | 所有 skill 文档修改后刷新。 |
 
-### 2.2 Engineer 模块
+预估改动规模：如果同时统一 QA E2E 目录口径，约 35-55 个文件会发生实质变化；如果只改 PM/Engineer 和 repository contract，约 20-30 个文件。
 
-Engineer 模块负责镜像 PM 路径，并在 TRD、实施计划、调试流程中执行硬门禁。
+## 4. Phase 0: PRD/TRD 范围对齐
 
-| 文件 | 操作 | 修改目标 | 来源 |
-| --- | --- | --- | --- |
-| `agents/engineer/skills/engineer-agent/SKILL.md` | 修改 | Existing Feature Alignment Gate 改为按 `feature_path` 查找 PRD、TRD、DECISIONS 和实现计划。 | PRD FR-004, FR-007；TRD §4.2 |
-| `agents/engineer/skills/trd-gen/SKILL.md` | 修改 | TRD 输出路径改为 `docs/engineer/{feature_path}/TRD.md`；缺 PRD 或 PRD 路径不清时回 PM。 | PRD US-002；TRD §4.2 |
-| `agents/engineer/skills/trd-gen/_internal/trd-schema.md` | 修改 | 增加 feature path frontmatter、`related_prd` 镜像校验和旧单层兼容。 | PRD FR-005；TRD §3.2 |
-| `agents/engineer/skills/feature-implementor/SKILL.md` | 修改 | 写实施计划前校验 PRD/TRD feature path、frontmatter 和 `related_prd` 一致；缺 PRD 回 PM，缺 TRD 回 `trd-gen`。 | PRD US-003, FR-007；TRD §4.3 |
-| `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md` | 修改 | Planner 输入、输出路径、sub-agent 任务包和 blocker 规则全部升级为 `{feature_path}`。 | PRD FR-007；TRD §4.3 |
-| `agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md` | 修改 | 实施计划输出约定增加 `feature_path`、`parent_feature`、`feature_level` 和 `related_trd`。 | PRD FR-005；TRD §5 |
-| `agents/engineer/skills/debugger/SKILL.md` | 修改 | bug 修复前按 feature path 对齐 PRD/TRD；需求变化回 PM，TRD gap 回 `trd-gen`。 | PRD FR-008；TRD §4.4 |
-| `agents/engineer/skills/project-bootstrap/SKILL.md` | 修改 | 查找 specs 时支持嵌套 PRD/TRD，避免浅层扫描误判缺 spec。 | PRD FR-010 |
-| `agents/engineer/README.md` | 修改 | 同步主入口文档中的 PRD/TRD/IMPLEMENTATION_PLAN 路径链路。 | TRD §5 |
+### 4.1 文件变更
 
-### 2.3 Downstream 模块
+| 文件 | 操作 | 修改目标 |
+| --- | --- | --- |
+| `docs/pm/feature-path-contract/PRD.md` | 修改 | 将目标、FR、用户流程、数据模型、假设从“最多三级”改为“多级统一”。 |
+| `docs/engineer/feature-path-contract/TRD.md` | 修改 | 将技术契约、解析算法、门禁、风险和交接条件改为任意深度 `feature_path`。 |
+| `docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md` | 修改 | 保持本计划与更新后的 PRD/TRD 一致。 |
 
-Downstream 模块不拥有 feature path 决策权，只消费 PM/Engineer 已确认的路径。
+### 4.2 PRD 更新要点
 
-| 文件或目录 | 操作 | 修改目标 | 来源 |
-| --- | --- | --- | --- |
-| `agents/designer/skills/designer-agent/SKILL.md` | 修改 | 设计 handoff 读取 `docs/pm/{feature_path}`，输出 `docs/design/{feature_path}`。 | PRD US-006, FR-009 |
-| `agents/designer/skills/ui-ux-design/SKILL.md` | 修改 | UI/UX spec 输出路径镜像 PM feature path。 | PRD FR-009 |
-| `agents/designer/skills/visual-design/SKILL.md` | 修改 | Visual system 文档按 feature path 落位，不自建同义顶层目录。 | PRD FR-009 |
-| `agents/qa/skills/qa-agent/SKILL.md` | 修改 | QA 范围确认读取同一路径 PRD/TRD/Plan；E2E 目录继续使用三级功能树。 | PRD FR-009；TRD §4.4 |
-| `agents/qa/skills/spec-based-tester/SKILL.md` | 修改 | 从 spec 生成测试前检查 `feature_path` 和已确认实施计划。 | PRD FR-009 |
-| `agents/qa/skills/regression-suite/SKILL.md` | 修改 | 回归验证按 feature path 复用历史 E2E 资产。 | PRD FR-009 |
-| `agents/qa/skills/bug-analyzer/SKILL.md` | 修改 | bug artifact 引用同一路径 PRD/TRD，避免缺路径时扩大分析范围。 | PRD FR-008, FR-009 |
-| `agents/qa/skills/exploratory-tester/SKILL.md` | 修改 | 探索测试前定位 feature path，避免写入错误 QA 功能树。 | PRD FR-009 |
-| `agents/devops/skills/devops-agent/SKILL.md` | 修改 | feature-scoped DevOps routing 消费 `docs/engineer/{feature_path}/TRD.md`。 | PRD FR-009 |
-| `agents/devops/skills/deployment-planner/SKILL.md` | 修改 | 部署计划输出 `docs/devops/{feature_path}`，路径不清回 Engineer。 | PRD FR-009 |
-| `agents/devops/skills/cicd-bootstrap/SKILL.md` | 修改 | CI/CD 变更引用同一路径 TRD/Plan。 | PRD FR-009 |
-| `agents/devops/skills/env-config-auditor/SKILL.md` | 修改 | 环境配置审计报告使用 feature path。 | PRD FR-009 |
-| `agents/devops/skills/incident-playbook-writer/SKILL.md` | 修改 | runbook 与 rollback 文档引用同一路径 Engineer 文档。 | PRD FR-009 |
-| `agents/security/skills/security-agent/SKILL.md` | 修改 | security routing 使用 feature path 读取 PM/Engineer 文档。 | PRD FR-009 |
-| `agents/security/skills/appsec-checklist/SKILL.md` | 修改 | release gate 或 feature review 引用同一路径文档。 | PRD FR-009 |
-| `agents/security/skills/authz-reviewer/SKILL.md` | 修改 | authz review 按 feature path 定位需求和技术设计。 | PRD FR-009 |
-| `agents/security/skills/privacy-surface-mapper/SKILL.md` | 修改 | privacy mapping 使用 feature path 归档。 | PRD FR-009 |
+| 当前旧口径 | 新口径 |
+| --- | --- |
+| `feature_path` 最多 1-3 级。 | `feature_path` 支持 1-N 级，N 由实际功能树决定。 |
+| 超过三级时 blocked，要求重构功能树。 | 超过三级只要路径合法且父功能证据明确，应允许生成。 |
+| Agent/Skill PRD 是 4 级例外。 | Agent/Skill PRD 是普通多级路径，不再需要例外规则。 |
+| QA E2E 固定 `{一级}/{二级}/{三级}`。 | QA E2E 使用 `{feature_path}`，三级只是现有示例。 |
 
-### 2.4 Eval / Contract 模块
+### 4.3 TRD 更新要点
 
-Eval 和契约模块负责防止行为回退。只要实际执行 skill eval 或 fresh Codex subagent validation，就必须同步更新 durable `comparison.md`；运行期产物不得提交。
+| 技术点 | 新要求 |
+| --- | --- |
+| 路径正则 | 支持 `segment(/segment)*`。 |
+| `feature_level` | 用 `len(feature_path.split("/"))` 计算，允许任意正整数。 |
+| 目录镜像 | PM、Engineer、Design、QA、DevOps、Security 都使用同一 `feature_path`。 |
+| blocked 条件 | 不再因深度 blocked；只因路径非法、父功能不清、文档缺失或前后不一致 blocked。 |
 
-| 文件或目录 | 操作 | 修改目标 | 来源 |
-| --- | --- | --- | --- |
-| `agents/product_manager/test/idea-to-spec/evals/evals.json` | 修改 | 增加父 PRD 已存在时生成二级 PRD、父功能模糊时 blocked、旧单层兼容读取的 eval。 | PRD AC-001, AC-004 |
-| `agents/product_manager/test/idea-to-spec/evals/workspace/**` | 修改/新增 fixture | 增加 `docs/pm/{parent}/PRD.md`、预期嵌套路径和模糊父功能 fixture。 | PRD AC-001 |
-| `agents/product_manager/test/idea-to-spec/**/comparison.md` | 修改 | 实际执行 eval 或 fresh subagent validation 后写入最新 durable 结论。 | PRD AC-005 |
-| `agents/engineer/test/trd-gen/evals/evals.json` | 修改 | 增加嵌套 PRD 输入到嵌套 TRD 输出、`related_prd` 匹配和路径冲突 blocked 断言。 | PRD AC-002 |
-| `agents/engineer/test/trd-gen/evals/workspace/**` | 修改/新增 fixture | 增加嵌套 PRD fixture 与旧单层兼容 fixture。 | TRD §8 |
-| `agents/engineer/test/trd-gen/**/comparison.md` | 修改 | 实际执行 eval 或 fresh subagent validation 后写入最新 durable 结论。 | PRD AC-005 |
-| `agents/engineer/test/feature-implementor/evals/evals.json` | 修改 | 增加缺 TRD、PRD/TRD 路径不一致、正确嵌套路径生成计划的 eval。 | PRD AC-003 |
-| `agents/engineer/test/feature-implementor/evals/workspace/**` | 修改/新增 fixture | 增加 PRD-only、mismatched TRD、aligned nested feature path fixture。 | TRD §8 |
-| `agents/engineer/test/feature-implementor/**/comparison.md` | 修改 | 实际执行 eval 或 fresh subagent validation 后写入最新 durable 结论。 | PRD AC-005 |
-| `agents/engineer/test/debugger/evals/evals.json` | 修改 | 增加二级 feature path bug 对齐和需求变化回 PM 的 eval。 | PRD FR-008 |
-| `agents/qa/test/qa-agent/evals/evals.json` | 修改 | 增加 QA 消费同一路径 PRD/TRD/Plan 并落入 E2E 功能树的 eval。 | PRD FR-009 |
-| `agents/qa/test/spec-based-tester/evals/evals.json` | 修改 | 增加缺已确认实施计划时 blocked 的 eval。 | TRD §4.4 |
-| `agents/designer/test/designer-agent/evals/evals.json` | 修改 | 增加设计 handoff 镜像 feature path 的 eval。 | PRD FR-009 |
-| `scripts/check_repository_contract.py` | 可选修改 | 如果维护者确认新增静态契约，检查正式文档 frontmatter 与目录路径一致。 | TRD Open Question |
-| `scripts/check_eval_contract.py` | 视需要修改 | 若 eval schema 需要表达 runtime/durable 字段差异，保持 schema `1.0` 兼容。 | 仓库 eval 契约 |
-| `skills-lock.json` | 修改 | 所有 skill 文档更新后刷新 metadata 和 hash。 | 仓库市场注册规则 |
+验证：`docs/pm/feature-path-contract/PRD.md` 和 `docs/engineer/feature-path-contract/TRD.md` 不再把普通功能限制为 1-3 级。
 
-## 3. 分阶段顺序
+## 5. Phase 1: Repository Contract
 
-### Phase 0: 实施前确认
+| 文件 | 操作 | 修改目标 |
+| --- | --- | --- |
+| `scripts/check_repository_contract.py` | 修改 | 将 `IMPLEMENTATION_PLAN_RE` 改为支持任意深度 `feature_path`。 |
+| `scripts/check_repository_contract.py` | 修改 | 增加或抽取通用 `feature_path` 校验函数，拒绝非法路径段。 |
+| `scripts/check_repository_contract.py` | 修改 | 继续校验 `feature_path`、`parent_feature`、`feature_level`、`related_prd`、`related_trd` 与路径一致。 |
+| `agents/test_eval_contract.py` | 修改 | 将“4 级计划应失败”改为“4+ 级计划应通过”。 |
+| `agents/test_eval_contract.py` | 新增 | 增加非法路径负例：空段、绝对路径、`..`、隐藏段、非法字符。 |
 
-1. 确认本实施计划已被用户接受。
-2. 确认 PRD/TRD 的 `feature_path`、`parent_feature`、`feature_level` 仍对齐。
-3. 读取即将修改的每个文件，禁止在未读文件上直接编辑。
-4. 记录当前未跟踪或用户已有变更，后续不得回退不属于本任务的改动。
+生成门禁：
 
-验证：只做只读检查，不运行 eval，不改除计划外的文件。
+| 场景 | 结果 |
+| --- | --- |
+| `docs/engineer/a/b/c/d/IMPLEMENTATION_PLAN.md` 且 frontmatter 匹配 | 通过 |
+| `feature_level: "3"` 但路径是 4 段 | 失败 |
+| `parent_feature` 不等于父路径 | 失败 |
+| `related_prd` 或 `related_trd` 不指向同一 `feature_path` | 失败 |
+| 路径包含 `..`、空段或隐藏段 | 失败 |
 
-### Phase 1: PM 模块更新
+## 6. Phase 2: PM Skill 更新
 
-1. 更新 `idea-to-spec` 入口和 shared conventions。
-2. 更新 PRD/BRD/Test Spec/TRD schema。
-3. 更新 PRD/BRD/Test Spec generation 和 PRD iteration。
-4. 更新 PM handoff packet，确保下游始终收到 feature path 证据。
+PM 是 `feature_path` 的归属来源。所有正式 PM 文档生成或更新前，都必须先扫描既有 PRD，确认父功能归属。
 
-验证：`rg` 检查 PM 模块中旧 `{feature-name}` 路径说法是否仍会误导生成；保留必要的兼容说明。
+| 文件或目录 | 操作 | 修改目标 |
+| --- | --- | --- |
+| `agents/product_manager/README.md`、`README_zh.md` | 修改 | 将 `feature_path` 说明从 1-3 级改为多级。 |
+| `agents/product_manager/skills/idea-to-spec/SKILL.md` | 修改 | Feature Document Memory、context summary、deliverable shapes 支持多级。 |
+| `agents/product_manager/skills/idea-to-spec/README.md` | 修改 | 同步公开说明。 |
+| `agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md` | 修改 | YAML 模板和 required fields 改为多级。 |
+| `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` | 修改 | No directory drift 规则不再限制深度。 |
+| `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` | 修改 | Handoff packet 中 `feature_level` 改为任意正整数。 |
+| `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/*.md` | 修改 | PRD、BRD、TRD、TEST_SPEC schema 同步多级。 |
+| `agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md` | 修改 | PRD 生成前按多级 feature path 扫描父 PRD。 |
+| `agents/product_manager/skills/idea-to-spec/_internal/gen/tspecs-gen/INSTRUCTIONS.md` | 修改 | Test Spec 的 QA 路径改为 `docs/qa/e2e/{feature_path}`。 |
+| `agents/product_manager/skills/idea-to-spec/_internal/iteration/*` | 修改 | 更新 PRD/Test Spec/API/ADR handoff 时保留完整多级路径。 |
+| `agents/product_manager/skills/idea-to-spec/_internal/orchestration/project-init/INSTRUCTIONS.md` | 修改 | Greenfield 默认一级，后续功能允许多级。 |
 
-### Phase 2: Engineer 模块更新
-
-1. 更新 `engineer-agent` 路由门禁。
-2. 更新 `trd-gen` 和 TRD schema。
-3. 更新 `feature-implementor` 和 planner 门禁。
-4. 更新 `debugger` 与 `project-bootstrap`。
-
-验证：确认缺 PRD、缺 TRD、路径不一致、旧单层兼容四种情况都有明确处理。
-
-### Phase 3: Downstream 模块更新
-
-1. 更新 Designer feature-scoped 输出路径。
-2. 更新 QA spec/E2E 消费路径和实施计划门禁。
-3. 更新 DevOps feature-scoped report 路径。
-4. 更新 Security review/report 路径。
-
-验证：Downstream 文档只消费 feature path，不拥有父功能判断权；路径不清必须回 PM/Engineer。
-
-### Phase 4: Eval fixture 与 durable comparison 更新
-
-1. 更新 `idea-to-spec`、`trd-gen`、`feature-implementor`、`debugger` 的 P0 eval。
-2. 更新 QA、Designer 的 P1 eval。
-3. 必要时更新 DevOps/Security eval，用于覆盖 feature-scoped report 路径。
-4. 实际执行 eval 或 fresh Codex subagent validation 后，立即更新对应 durable `comparison.md`。
-5. 不提交 `with_skill/`、`without_skill/`、`outputs/`、`transcript.md`、`candidate-output.md`、`subagent-verdict.md`、`timing.json`、`run_status.json`、diagnostics 或 `comparison.auto.md`。
-
-验证：eval assertions 使用语义断言，覆盖路径、frontmatter、blocked/handoff，而不是只检查固定文案。
-
-### Phase 5: skills-lock 刷新
-
-1. 在所有 skill 文档和内部指令改完后刷新 `skills-lock.json`。
-2. 仅刷新受影响 skill 的 metadata/hash，避免无关 churn。
-3. 若仓库提供专用脚本，优先使用脚本；否则按现有 lock 文件格式最小更新。
-
-验证：`git diff` 中 `skills-lock.json` 的变化应能追溯到实际修改过的 skill。
-
-### Phase 6: 全量验证
-
-按顺序执行：
-
-```bash
-uv run scripts/check_repository_contract.py
-uv run scripts/check_eval_contract.py
-uv run scripts/check_eval_artifacts.py
-```
-
-随后执行受影响 skill 的 eval 或 fresh Codex subagent validation。若实际执行模型 eval，必须更新 durable `comparison.md`；若因 runner、凭据或外部服务 blocked，必须在结果中记录 blocked 原因，不能把静态检查冒充 eval 通过。
-
-## 4. Sub-Agent 并行分工
-
-### Worker A: PM Module
-
-- 范围：`agents/product_manager/skills/idea-to-spec/**`、`agents/product_manager/test/idea-to-spec/**`。
-- 目标：实现 feature path 识别、PM 产物路径、handoff packet 和 PM eval。
-- 禁止：修改 Engineer、QA、Designer、DevOps、Security skill；提交 runtime artifacts。
-- 输出：changed files、PM 规则摘要、eval/validation 证据、未决问题。
-
-### Worker B: Engineer Module
-
-- 范围：`agents/engineer/skills/engineer-agent/SKILL.md`、`trd-gen`、`feature-implementor`、`debugger`、`project-bootstrap`、对应 Engineer eval。
-- 目标：实现 TRD 镜像、实施计划门禁、debugger 对齐和 Engineer eval。
-- 禁止：更改 PM 文档职责或自行补写 PRD 决策。
-- 输出：changed files、门禁覆盖清单、eval/validation 证据、TRD gap。
-
-### Worker C: QA / Designer Module
-
-- 范围：`agents/qa/**`、`agents/designer/**` 以及对应 eval。
-- 目标：将下游消费路径升级为 feature path，并保持 QA E2E 三级功能树不变。
-- 禁止：把 QA 或 Designer 变成 feature path 决策方。
-- 输出：changed files、下游 handoff 规则、eval/validation 证据。
-
-### Worker D: DevOps / Security Module
-
-- 范围：`agents/devops/**`、`agents/security/**` 以及必要 eval。
-- 目标：feature-scoped report 和 release/security review 使用同一 feature path。
-- 禁止：新增 release CI、release bot 或仓库权限变更。
-- 输出：changed files、报告路径规则、eval/validation 证据。
-
-### Worker E: Integration / Contract
-
-- 范围：`skills-lock.json`、可选 `scripts/check_repository_contract.py`、可选 `scripts/check_eval_contract.py`、跨模块 final review。
-- 目标：整合并消除规则冲突；刷新 lock；执行契约检查和全量验证。
-- 禁止：替任一业务 worker 扩展 scope；不提交运行期诊断产物。
-- 输出：验证命令、结果摘要、剩余风险、是否可进入 PR。
-
-## 5. 生成门禁与错误处理
+PM 生成门禁：
 
 | 场景 | 必须处理 |
 | --- | --- |
-| 生成 PM 文档前无法确认父功能 | blocked 或最小澄清；不得创建新顶层目录。 |
-| 新需求属于已有父功能 | 写入 `docs/pm/{parent}/{child}/...` 或第三级路径；handoff 带证据。 |
-| `feature_path` 超过三级 | blocked，要求重构功能树或重新确认范围。 |
-| PRD 缺失 | 回 `pm-agent:idea-to-spec`，不生成 TRD 或实施计划。 |
-| TRD 缺失 | 回 `engineer-agent:trd-gen`，不生成实施计划。 |
-| PRD/TRD 路径或 frontmatter 不一致 | blocked 或 TRD gap handoff，不实现代码。 |
-| PRD/TRD 已对齐但 Engineer 目录不存在 | 允许创建目标 Engineer 目录并写入产物。 |
-| 下游路径不清 | 回 PM/Engineer 对齐，不自建同义目录。 |
-| 实际执行 eval 或 fresh subagent validation | 同步更新 durable `comparison.md`。 |
-| 生成 runtime artifacts | 只能放 scratch workspace 或 CI artifact，不提交。 |
+| 找不到 PRD 且用户请求明显是现有子功能 | blocked 或询问父功能，不创建同义顶层目录。 |
+| 找到多个候选父 PRD | blocked 或给最小澄清问题。 |
+| 用户明确确认完整多级路径 | 按该路径写入，并记录证据。 |
+| API / ADR 请求 | PM 只写产品范围、接口目标和决策背景 handoff；Engineer 负责生成 API/ADR 文档。 |
 
-## 6. 禁止事项
+## 7. Phase 3: Engineer Skill 更新
 
-- 不自动批量迁移历史单层文档。
-- 不在路径证据不足时猜测父功能。
-- 不把 `feature` 当作跨模块主键；跨模块主键是 `feature_path`。
-- 不让 `feature-implementor`、QA、Designer、DevOps 或 Security 自行补写 PRD/TRD 决策。
-- 不提交 runtime artifacts，包括 transcripts、outputs、diagnostics、`comparison.auto.md` 和临时 verdict。
-- 不新增 Release CI、release bot、仓库权限或 bypass 规则。
-- 不借本次契约升级重构无关 skill 文案、格式或 eval。
-- 不在用户确认本计划前进入 skill 修改。
+Engineer 镜像 PM 确认的 `feature_path`，不重新决定父功能。
 
-## 7. 验证命令
+| 文件或目录 | 操作 | 修改目标 |
+| --- | --- | --- |
+| `agents/engineer/README.md`、`README_zh.md` | 修改 | 同步多级路径说明。 |
+| `agents/engineer/skills/engineer-agent/SKILL.md` | 修改 | Existing Feature Alignment Gate 不再把 4+ 级当缺文档。 |
+| `agents/engineer/skills/trd-gen/SKILL.md` | 修改 | TRD、API、ADR 全部写入 `docs/engineer/{feature_path}/`。 |
+| `agents/engineer/skills/trd-gen/_internal/trd-schema.md` | 修改 | schema 中 `feature_level` 改为任意正整数。 |
+| `agents/engineer/skills/feature-implementor/SKILL.md` | 修改 | PRD/TRD/Plan gate 支持多级。 |
+| `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md` | 修改 | 输出路径、sub-agent 任务包和 blocker 规则支持多级。 |
+| `agents/engineer/skills/debugger/SKILL.md` | 修改 | bug 对齐不因路径超过三级回 PM。 |
+| `agents/engineer/skills/project-bootstrap/SKILL.md` | 修改 | 规范说明改为多级，继续禁止浅层 `maxdepth` 漏 spec。 |
 
-实施完成后必须执行：
+Engineer 生成门禁：
 
-```bash
-uv run scripts/check_repository_contract.py
-uv run scripts/check_eval_contract.py
-uv run scripts/check_eval_artifacts.py
+| 场景 | 必须处理 |
+| --- | --- |
+| PRD 缺失 | 回 `pm-agent:idea-to-spec`。 |
+| PRD 路径或 frontmatter 不清 | 回 PM 对齐。 |
+| TRD 缺失、stale 或 `related_prd` 不匹配 | 回 `engineer-agent:trd-gen`。 |
+| `IMPLEMENTATION_PLAN.md` 缺失 | 回 `engineer-agent:feature-implementor`。 |
+| 路径合法但为 4+ 级 | 允许继续，不能因为深度 blocked。 |
+
+## 8. Phase 4: QA 与 Downstream 更新
+
+### 8.1 QA
+
+QA E2E 目录应改为统一 `feature_path` 表达：
+
+```text
+docs/qa/e2e/{feature_path}/
 ```
 
-建议补充只读检查：
+现有 `docs/qa/e2e/auth/login/login-form/` 这类三级目录继续有效，因为它本身也是合法 `feature_path`。本计划不要求批量迁移历史 E2E 资产。
 
-```bash
-rg -n "docs/pm/\\{feature-name\\}|docs/engineer/\\{feature-name\\}|docs/<agent-short>/\\{feature-name\\}" agents docs --glob "*.md"
-rg -n "feature_path|parent_feature|feature_level" agents docs --glob "*.md"
-rg -n "comparison.auto.md|transcript.md|candidate-output.md|subagent-verdict.md|run_status.json|timing.json" agents docs --glob "*.md"
-```
-
-模型 eval 或 fresh subagent validation 的执行范围至少覆盖：
-
-- `idea-to-spec`
-- `trd-gen`
-- `feature-implementor`
-- `debugger`
-- `qa-agent`
-- `spec-based-tester`
-- `designer-agent`
-
-如果 DevOps/Security 文档发生行为约束变更，也应补充对应 eval 或 fresh subagent validation。
-
-## 8. 风险与缓解
-
-| 风险 | 影响 | 缓解 |
+| 文件或目录 | 操作 | 修改目标 |
 | --- | --- | --- |
-| 父功能自动匹配过度自信 | PRD 写入错误父目录 | 只在已有 PRD、issue、DECISIONS 或用户确认能提供证据时自动归属；否则 blocked。 |
-| 只更新 PM/Engineer，遗漏下游消费方 | 后续 QA/Design/DevOps/Security 继续目录漂移 | Downstream worker 单独负责消费方，并在 integration review 中检查旧路径说法。 |
-| eval 只检查文案 | 不能防止错误目录生成 | eval assertions 必须检查路径、frontmatter、handoff 和 blocked 语义。 |
-| `skills-lock.json` 未刷新 | marketplace metadata 与 skill 文档不一致 | 所有 skill 改完后统一刷新 lock，并检查 diff 是否仅覆盖受影响 skill。 |
-| 旧单层文档被误判为违规 | 维护成本突增 | 旧单层目录读取兼容为一级功能；实质更新时再补字段。 |
-| 多 worker 并行改同一文件 | 产生覆盖或冲突 | PM、Engineer、Downstream、Eval/contract 按文件边界分工；Integration worker 只整合。 |
+| `AGENTS.md` | 修改 | QA E2E 持久化路径从固定三级改为 `{feature_path}`。 |
+| `agents/qa/README.md`、`README_zh.md` | 修改 | 同步 QA E2E 路径口径。 |
+| `agents/qa/skills/qa-agent/SKILL.md` | 修改 | 路由、读历史用例、结果报告路径支持多级。 |
+| `agents/qa/skills/spec-based-tester/SKILL.md` | 修改 | preflight 和 evidence contract 改为 `{feature_path}`。 |
+| `agents/qa/skills/regression-suite/SKILL.md` | 修改 | 回归结果和报告路径改为 `{feature_path}`。 |
+| `agents/qa/skills/exploratory-tester/SKILL.md` | 修改 | 探索测试前读取 `{feature_path}` QA memory。 |
+| `agents/qa/skills/bug-analyzer/SKILL.md` | 修改 | bug artifact 引用同一路径 QA memory。 |
+| `agents/qa/skills/qa-agent/references/e2e-test-report.md` | 修改 | report 模板路径改为 `{feature_path}`。 |
 
-## 9. 回滚策略
+### 8.2 Designer / DevOps / Security
 
-1. 普通文档和 eval 变更使用 git revert 回滚。
-2. 若只发现某个模块规则不正确，优先回滚该模块 commit，再重新执行对应 eval。
-3. 若 `skills-lock.json` 与 skill 文档不匹配，回滚 lock 后重新按当前 skill 内容刷新。
-4. 若已迁移误放目录，回滚必须同步恢复 frontmatter、`related_*` 引用和 eval fixture，不能只移动目录。
-5. 回滚后重新运行 repository contract、eval contract 和 eval artifact 检查。
-
-## 10. 完成定义
-
-本 issue 的实施完成需要同时满足：
-
-- PM、Engineer、Downstream 模块都采用 `feature_path` 契约。
-- PRD、TRD、`IMPLEMENTATION_PLAN.md` 路径镜像门禁被写入相关 skill。
-- 缺 PRD、缺 TRD、路径冲突、父功能不清、超过三级均有 blocked/handoff 行为。
-- 旧单层文档读取兼容为一级功能。
-- 对应 eval fixture 和 durable `comparison.md` 已更新。
-- `skills-lock.json` 已按实际 skill 文档变更刷新。
-- `uv run scripts/check_repository_contract.py`、`uv run scripts/check_eval_contract.py`、`uv run scripts/check_eval_artifacts.py` 通过。
-- 实际执行的 eval 或 fresh subagent validation 结论与提交的 `comparison.md` 一致。
-
-## 11. PR Review 修复实施计划
-
-### 11.1 修复上下文
-
-本节承接 PR #42 review 发现的 3 个契约缺口，并记录用户确认后的修复方向：
-
-| Review 问题 | 用户确认的解决方向 | 计划状态 |
+| 范围 | 操作 | 修改目标 |
 | --- | --- | --- |
-| 本次触碰的 PRD 缺少 `feature_path`、`parent_feature`、`feature_level`。 | 合理，需要补齐字段，不只依赖旧 `feature` 或目录反推。 | 进入实施 |
-| `repository-contract` 仍只检查单层 `IMPLEMENTATION_PLAN.md`。 | 合理，需要补全多级 `feature_path` 计划门禁。 | 进入实施 |
-| PM 内部 `api-gen` / `adr-gen` 仍使用旧 `<feature-name>` 路径。 | API 和 ADR 生成都应迁移到 Engineer，PM 不拥有工程 API/ADR 文档生成职责。 | 进入实施 |
+| `agents/designer/**` | 修改 | 所有 design 输出继续使用 `docs/design/{feature_path}/`，补充多级不受限说明。 |
+| `agents/devops/**` | 修改 | feature-scoped DevOps 报告继续使用 `docs/devops/{feature_path}/`，路径不清回 PM/Engineer。 |
+| `agents/security/**` | 修改 | security reports 继续使用 `docs/security/{feature_path}/`，路径不清回 PM/Engineer。 |
 
-### 11.2 修复门禁
+Downstream 生成门禁：
 
-| 门禁 | 当前结果 | 证据 |
+| 场景 | 必须处理 |
+| --- | --- |
+| 只有展示名，没有确认 `feature_path` | 回 PM/Engineer，不自建同义顶层目录。 |
+| PRD/TRD/Plan 缺失 | 按 owner 回退，不直接写 QA/Design/DevOps/Security 产物。 |
+| 已确认 4+ 级 `feature_path` | 使用完整路径，不截断为前三层或末级。 |
+
+## 9. Phase 5: Eval 与 durable comparison
+
+| Skill | 必补场景 | Durable 结果 |
 | --- | --- | --- |
-| PRD 存在 | 通过 | `docs/pm/feature-path-contract/PRD.md` |
-| TRD 存在 | 通过 | `docs/engineer/feature-path-contract/TRD.md` |
-| PRD/TRD `feature_path` 对齐 | 通过 | 两者均为 `feature-path-contract` |
-| Review 修复是否改变 PM 范围 | 不改变 | 仍属于 PRD FR-005、FR-007、FR-012 的路径和门禁固化 |
-| 是否需要回 `trd-gen` | 不需要 | TRD 已覆盖 frontmatter、计划门禁、eval/contract 风险；本节只细化实施文件 |
-| 是否可以开始代码/文档修改 | 待用户确认 | 本节确认后再进入 skill、script、eval 和 PRD frontmatter 修改 |
+| `idea-to-spec` | 4+ 级路径生成 PRD；父功能不清 blocked；旧单层兼容。 | 更新相关 `comparison.md`。 |
+| `trd-gen` | 4+ 级 PRD 生成同路径 TRD/API/ADR；PRD 缺失回 PM。 | 更新相关 `comparison.md`。 |
+| `feature-implementor` | 4+ 级 PRD/TRD 生成 plan；缺 TRD 回 `trd-gen`；路径冲突 blocked。 | 更新相关 `comparison.md`。 |
+| `debugger` | bug 报告定位 4+ 级功能；需求变化回 PM。 | 更新相关 `comparison.md`。 |
+| `qa-agent` / `spec-based-tester` / `regression-suite` | QA E2E 使用 `docs/qa/e2e/{feature_path}`；缺 plan 回 `feature-implementor`。 | 更新相关 `comparison.md`。 |
+| `designer-agent` | 4+ 级路径写入 `docs/design/{feature_path}`。 | 更新相关 `comparison.md`。 |
+| `devops-agent` / `security-agent` | 4+ 级 feature-scoped report 不截断路径。 | 视改动更新 comparison。 |
 
-```mermaid
-flowchart TD
-    A["Review comments"] --> B["补齐 PRD frontmatter"]
-    A --> C["扩展 repository-contract 多级计划门禁"]
-    A --> D["迁移 API/ADR ownership 到 Engineer"]
-    B --> E["更新 eval / fresh validation"]
-    C --> E
-    D --> E
-    E --> F["刷新 skills-lock.json"]
-    F --> G["运行 contract + pytest"]
-```
+运行期产物策略不变：`with_skill/`、`without_skill/`、`outputs/`、`transcript.md`、`candidate-output.md`、`subagent-verdict.md`、`timing.json`、`run_status.json`、diagnostics 和 `comparison.auto.md` 不提交。
 
-### 11.3 文件变更清单
+## 10. Phase 6: Lock 与验证
 
-#### A. 补齐被触碰 PRD 的 feature path frontmatter
-
-| 操作 | 文件范围 | 修改目标 |
-| --- | --- | --- |
-| 修改 | `docs/pm/agents/*/PRD.md` 中本 PR 已触碰的 Agent PRD | 增加 `feature_path`、`parent_feature`、`feature_level`，路径按 `agents/{agent}` 映射。 |
-| 修改 | `docs/pm/agents/*/skills/*/PRD.md` 下全部 Skill PRD | 增加 `feature_path`、`parent_feature`、`feature_level`，路径按 `agents/{agent}/skills/{skill}` 映射并保留 `skills` 目录段。 |
-| 修改 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` | 明确多级 PRD 触及时必须补齐 frontmatter；旧单层兼容不等于多级 PRD 可长期缺字段。 |
-| 修改 | `agents/product_manager/skills/idea-to-spec/_internal/iteration/prd-iteration/INSTRUCTIONS.md` | 更新 PRD 时校验并补齐 feature path 三字段；路径不一致时 blocked。 |
-| 修改 | `docs/pm/agents/pm-agent/PRD.md` 与 `docs/pm/agents/pm-agent/skills/idea-to-spec/PRD.md` | 记录 touched PRD backfill 规则和验收口径。 |
-
-字段映射规则：
-
-| PRD 路径 | `feature_path` | `parent_feature` | `feature_level` |
-| --- | --- | --- | --- |
-| `docs/pm/agents/{agent}/PRD.md` | `agents/{agent}` | `agents` | `2` |
-| `docs/pm/agents/{agent}/skills/{skill}/PRD.md` | `agents/{agent}/skills/{skill}` | `agents/{agent}/skills` | `4` |
-
-上述 Agent/Skill 治理 PRD 是仓库目录镜像例外，目的是让
-`docs/pm/{feature_path}/PRD.md` 能解析到真实文件；普通产品功能文档仍只能使用
-1-3 级 `feature_path`。
-
-#### B. 补全 repository-contract 多级实施计划门禁
-
-| 操作 | 文件 | 修改目标 |
-| --- | --- | --- |
-| 修改 | `scripts/check_repository_contract.py` | 将 `IMPLEMENTATION_PLAN_RE` 从单层 `docs/engineer/[^/]+/IMPLEMENTATION_PLAN.md` 扩展为 1-3 级 `feature_path`。 |
-| 修改 | `scripts/check_repository_contract.py` | 对 `IMPLEMENTATION_PLAN.md` frontmatter 增加 `feature_path`、`parent_feature`、`feature_level`、`related_prd`、`related_trd` 校验。 |
-| 修改 | `scripts/check_repository_contract.py` | 校验目录路径与 `feature_path` 一致，`parent_feature` 与父级一致，`feature_level` 与路径段数一致。 |
-| 修改 | `scripts/check_repository_contract.py` | 校验 `related_prd` 等于 `docs/pm/{feature_path}/PRD.md`，`related_trd` 等于 `docs/engineer/{feature_path}/TRD.md`。 |
-| 修改/新增 | repository contract 相关 pytest | 增加二级和三级 `IMPLEMENTATION_PLAN.md` fixture，确保旧单层仍通过，多级缺字段或路径不一致会失败。 |
-
-#### C. API / ADR 生成职责迁移到 Engineer
-
-| 操作 | 文件或目录 | 修改目标 |
-| --- | --- | --- |
-| 修改 | `agents/product_manager/skills/idea-to-spec/SKILL.md` | PM 不再生成 Engineer API/ADR 文档；只收敛产品层接口目标、约束和技术决策背景，并 handoff 给 Engineer。 |
-| 修改 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` | 移除 PM 内部 `api-gen` / `adr-gen` 作为生成目标；改为 Engineer handoff。 |
-| 修改 | `agents/product_manager/skills/idea-to-spec/_internal/orchestration/*` | 清理 project-init、flow、iteration-coordinator 中把 API/ADR 当 PM 生成器的路由。 |
-| 修改/迁移 | `agents/product_manager/skills/idea-to-spec/_internal/gen/api-gen/` | 标记 deprecated 或迁出 PM 路由；不再作为 PM-owned 生成器触发。 |
-| 修改/迁移 | `agents/product_manager/skills/idea-to-spec/_internal/gen/adr-gen/` | 标记 deprecated 或迁出 PM 路由；不再作为 PM-owned 生成器触发。 |
-| 新增/修改 | `agents/engineer/skills/*` | 增加 Engineer-owned API/ADR 生成能力，或在 `trd-gen`/Engineer routing 中明确 API/ADR 文档生成职责。 |
-| 新增/修改 | Engineer eval | 覆盖嵌套 `feature_path` 下生成 `docs/engineer/{feature_path}/API.md` 和 `docs/engineer/{feature_path}/ADR-<NNN>-<decision-title>.md`。 |
-| 新增/修改 | PM eval | 覆盖 PM 遇到 API/ADR 请求时不直接写 Engineer 文档，而是输出 Engineer handoff。 |
-
-### 11.4 实施顺序
-
-1. **补 PRD frontmatter**
-   - 先用脚本枚举本 PR 相对 `origin/main` 触碰的 `docs/pm/**/PRD.md`。
-   - 只补本次触碰且属于 feature path 治理范围的 PRD。
-   - 修改后抽样检查 frontmatter 与目录映射。
-
-2. **扩展 repository contract**
-   - 先更新多级 `IMPLEMENTATION_PLAN.md` 匹配规则。
-   - 再增加 feature path 元数据校验函数。
-   - 最后补 deterministic pytest fixture，避免只靠人工 review。
-
-3. **迁移 API/ADR ownership**
-   - 先从 PM 路由中移除直接生成 API/ADR 的入口。
-   - 再在 Engineer 侧建立 API/ADR 文档生成职责和路径规则。
-   - 最后补 PM handoff eval 与 Engineer generation eval。
-
-4. **刷新 eval comparison**
-   - 实际执行或 fresh Codex subagent validation 后更新相关 durable `comparison.md`。
-   - 不提交 `transcript.md`、`subagent-verdict.md`、`comparison.auto.md`、`outputs/` 或 diagnostics。
-
-5. **刷新 lock 与验证**
-   - 刷新 `skills-lock.json` 中受影响 skill 的 hash。
-   - 运行 repository/eval/artifact 门禁和全量 pytest。
-
-### 11.5 Sub-Agent 分工
-
-本修复跨 PM、Engineer、contract 和 eval，属于多模块上下文重的变更。确认本计划后建议使用并行分工：
-
-| Worker | 范围 | 输出 |
-| --- | --- | --- |
-| Worker A: PRD Frontmatter | `docs/pm/agents/**/PRD.md`、PM PRD/frontmatter 规则 | 补字段清单、字段映射证据、静态检查结果 |
-| Worker B: Contract Gate | `scripts/check_repository_contract.py`、对应 pytest | 多级 plan 校验、负例/正例测试、contract 结果 |
-| Worker C: API/ADR Ownership | PM `idea-to-spec` 路由、Engineer API/ADR 生成职责、相关 eval | PM handoff 规则、Engineer 输出路径规则、eval 更新 |
-| Worker D: Validation | 相关 `comparison.md`、fresh validation、final gate | fresh validation 结论、runtime artifact 检查、剩余风险 |
-
-主进程负责整合 diff、刷新 `skills-lock.json`、运行最终门禁、更新 PR #42。
-
-### 11.6 验证命令
-
-实施完成后必须运行：
+所有 skill 文档、内部指令或 eval fixture 改完后，刷新 `skills-lock.json`。提交前按顺序运行：
 
 ```bash
 uv run scripts/check_repository_contract.py
@@ -458,20 +243,54 @@ git diff --check
 uv run --with pytest pytest
 ```
 
-补充检查：
+补充只读检查：
 
 ```bash
-rg -n "docs/engineer/<feature-name>|docs/engineer/\\{feature\\}|docs/engineer/\\{feature-name\\}" agents/product_manager agents/engineer --glob "*.md"
-rg -n "NOT RUN|PENDING fresh validation|Fresh model validation is still pending|fresh Codex subagent validation have not|no model eval or fresh|Not assessed" agents -g "comparison.md"
+rg -n "最多三级|1-3 level|one to three|deeper than three|超过三级" agents docs scripts --glob "*.md" --glob "*.py"
+rg -n "docs/qa/e2e/\\{一级功能\\}/\\{二级功能\\}/\\{三级功能\\}" AGENTS.md agents docs --glob "*.md"
+rg -n "comparison.auto.md|transcript.md|candidate-output.md|subagent-verdict.md|run_status.json|timing.json" agents docs --glob "*.md"
 ```
 
-### 11.7 完成定义
+允许历史 changelog 或旧需求文档保留历史表述；当前生效的 skill、contract、PRD/TRD/Plan 不应继续把普通功能限制为三级。
 
-- 本次触碰的 PRD 均有 `feature_path`、`parent_feature`、`feature_level`。
-- 多级 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 被 repository contract 识别并校验。
-- API/ADR 生成职责从 PM 路由迁移到 Engineer，PM 只 handoff 产品需求和决策背景。
-- API/ADR 输出路径使用 `docs/engineer/{feature_path}/...`，不能用末级 `<feature-name>` 自建并列目录。
-- PM 和 Engineer eval 覆盖 API/ADR ownership 和嵌套路径。
-- 所有实际执行的 fresh validation 结论已写入 durable `comparison.md`。
-- `skills-lock.json` 与受影响 skill 文档一致。
-- PR #42 更新后 CI required checks 全部通过。
+## 11. Sub-Agent 分工
+
+本变更跨多角色、多 skill、多 eval，确认计划后建议拆分：
+
+| Worker | 范围 | 输出 |
+| --- | --- | --- |
+| Worker A: PRD/TRD Alignment | `docs/pm/feature-path-contract/PRD.md`、`docs/engineer/feature-path-contract/TRD.md` | 更新后的多级源契约、门禁和完成定义。 |
+| Worker B: Contract | `scripts/check_repository_contract.py`、`agents/test_eval_contract.py` | 任意深度路径校验、4+ 正例、非法路径负例。 |
+| Worker C: PM / Engineer | PM 与 Engineer skill、schema、README、eval | 生成与镜像路径统一，owner handoff 正确。 |
+| Worker D: QA / Downstream | QA、Designer、DevOps、Security skill 与 eval | 下游消费完整路径，不截断、不自建同义目录。 |
+| Worker E: Integration | `skills-lock.json`、全量验证、PR review 回归 | lock 刷新、测试结果、runtime artifact 审查、剩余风险。 |
+
+主进程负责整合 diff、避免 worker 互相覆盖、运行最终门禁，并确认 PR 评论中提到的问题是否已全部关闭。
+
+## 12. 禁止事项
+
+- 不在 PRD/TRD 未对齐时直接修改 skill 行为。
+- 不把 4+ 级作为 Agent/Skill 专属例外；多级是统一口径。
+- 不因为路径较深而要求用户重构功能树。
+- 不在父功能证据不足时自动猜测路径。
+- 不批量迁移历史单层或三级 QA 资产。
+- 不把 QA、Designer、DevOps、Security 变成 feature path 决策方。
+- 不提交 eval runtime artifacts。
+- 不借本次治理变更重构无关文案或格式。
+
+## 13. 完成定义
+
+本计划完成需要同时满足：
+
+- PRD/TRD 已确认 `feature_path` 支持多级统一口径。
+- `repository-contract` 接受合法 4+ 级 `IMPLEMENTATION_PLAN.md`，拒绝非法路径。
+- PM 生成链路支持多级并在父功能不清时 blocked。
+- Engineer TRD、API、ADR、IMPLEMENTATION_PLAN 镜像完整 `feature_path`。
+- QA E2E 使用 `docs/qa/e2e/{feature_path}` 作为统一表达，旧三级资产继续兼容。
+- Designer、DevOps、Security 使用完整 `feature_path`，不截断路径。
+- 缺 PRD、缺 TRD、缺 Plan、路径冲突和父功能不清都回到正确 owner。
+- 相关 eval 与 durable `comparison.md` 覆盖 4+ 级成功、非法路径失败、旧单层兼容和 owner handoff。
+- `skills-lock.json` 与实际 skill 文档一致。
+- 本地 repository contract、eval contract、eval artifacts、pytest 和 `git diff --check` 均通过。
+
+确认本计划后，才能进入 Phase 0 的 PRD/TRD 更新与后续实现。

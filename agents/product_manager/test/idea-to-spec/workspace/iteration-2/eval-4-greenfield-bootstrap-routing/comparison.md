@@ -30,7 +30,7 @@ Observed behavior:
 - The current `idea-to-spec` skill requires Phase 0 context summary for empty or near-empty product requests, with tech stack and existing docs marked as TBD/none.
 - The PM-first guardrail keeps this request in `greenfield-discovery` or `greenfield-bootstrap`, recommends PRD/DECISIONS/project-init style document work, and does not run scaffolding commands.
 - The fixture README says the workspace is intentionally empty except eval metadata. The stale root `PRD.md` remains only as an `execution_cleanup` target, so it does not change the expected PM-first routing.
-- The feature_path schema update reinforces the PM-first lane: before `project-init` or PRD skeleton output becomes formal, the flow must establish a valid 1-3 level `feature_path` and include the required feature metadata fields.
+- The feature_path schema update reinforces the PM-first lane: before `project-init` or PRD skeleton output becomes formal, the flow must establish a valid multi-level `feature_path` and include the required feature metadata fields.
 
 ## Without Skill / Baseline
 

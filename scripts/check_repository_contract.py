@@ -31,7 +31,7 @@ FEATURE_PATH_SEGMENT_PATTERN = r"[a-z0-9][a-z0-9-]*"
 IMPLEMENTATION_PLAN_RE = re.compile(
     rf"^docs/engineer/"
     rf"(?P<feature_path>{FEATURE_PATH_SEGMENT_PATTERN}"
-    rf"(?:/{FEATURE_PATH_SEGMENT_PATTERN}){{0,2}})"
+    rf"(?:/{FEATURE_PATH_SEGMENT_PATTERN})*)"
     rf"/IMPLEMENTATION_PLAN\.md$"
 )
 BLOCKED_TRACKED_PATTERNS = (
@@ -592,7 +592,7 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
             add_error(
                 errors,
                 path,
-                "implementation plan path must be docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md with 1-3 lowercase kebab-case segments",
+                "implementation plan path must be docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md with one or more lowercase kebab-case segments",
             )
             continue
 

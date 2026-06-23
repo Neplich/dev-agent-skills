@@ -68,7 +68,7 @@ docs/
         └── DECISIONS.md
 ```
 
-`feature_path` 最多三级。创建 PM 功能文档前先扫描 `docs/pm/**/PRD.md`；
+`feature_path` 支持多级。创建 PM 功能文档前先扫描 `docs/pm/**/PRD.md`；
 如果新需求明确属于已有父 PRD，就挂到父目录下；父功能归属不清时先澄清或
 blocked，不创建新的并列顶层目录。
 

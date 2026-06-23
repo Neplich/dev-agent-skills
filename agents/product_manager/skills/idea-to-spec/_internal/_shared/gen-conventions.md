@@ -123,7 +123,7 @@ Use these markers only when needed:
    confirmed decision, surface the conflict explicitly instead of silently
    overwriting it.
 4. **No directory drift**: Keep PM docs under `docs/pm/{feature_path}/`, where
-   `feature_path` has 1-3 slash-separated slug segments. Do not invent
+   `feature_path` has one or more slash-separated slug segments. Do not invent
    alternate feature doc roots, and do not create a sibling top-level directory
    when an existing parent PRD clearly owns the child feature.
 5. **No sensitive data**: Do not include real credentials, tokens, internal
@@ -134,7 +134,7 @@ Use these markers only when needed:
 Run this gate before writing `PRD.md`, `BRD.md`, `DECISIONS.md`, or PM
 `design.md`:
 
-1. Scan `docs/pm/**/PRD.md`, supporting 1-3 feature path levels.
+1. Scan `docs/pm/**/PRD.md`, supporting multi-level feature paths.
 2. Read each PRD's `feature_path`, `feature`, `parent_feature`,
    `feature_level`, `title`, `related_issue`, and `related_docs` when present.
 3. For old single-level PRDs without `feature_path`, infer
