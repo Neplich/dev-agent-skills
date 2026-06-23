@@ -6,7 +6,7 @@ feature_path: "customer-portal/profile-settings"
 parent_feature: "customer-portal"
 feature_level: "2"
 version: "1.0.0"
-status: Draft
+status: Approved
 author: "Fixture"
 date: "2026-06-24"
 last_updated: "2026-06-24"
