@@ -45,13 +45,14 @@ conversation summaries must match the committed or proposed `comparison.md`; if
 there is no comparison file to update, record the blocked or not-applicable
 reason.
 
-Fresh Codex subagent validation must run both `with_skill` and `without_skill`
-against the same eval prompt and fixture. The `without_skill` run is the
-baseline input for `comparison.md`; if it cannot be generated or reviewed, do
-not record a full `PASS`.
+Fresh Codex subagent validation should run both `with_skill` and `without_skill`
+against the same eval prompt and fixture. The `without_skill` run is baseline
+input for `comparison.md`; if it cannot be generated or reviewed, record its
+impact in the comparison conclusion instead of treating baseline text as a
+separate machine-graded result.
 
-Runner failure is based on the deterministic outputs declared in metadata. The
-`without_skill` semantic verdict may fail as useful baseline contrast, but its
-candidate output and fresh judge verdict must be generated when the runner is
-used. Fresh judge verdicts can inform manual review, but the committed durable
-result is still `comparison.md`.
+Runner failure is based on the with-skill candidate, with-skill verdict, and the
+deterministic outputs declared in metadata. The `without_skill` candidate and
+fresh judge verdict are reported as baseline comparison evidence when present;
+missing or failing baseline evidence informs manual review, but the committed
+durable result is still `comparison.md`.

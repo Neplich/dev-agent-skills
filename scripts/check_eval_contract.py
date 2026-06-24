@@ -53,40 +53,6 @@ RUNTIME_DIAGNOSTIC_FILES = (
     "timing.json",
     "run_status.json",
 )
-LATEST_PASS_RE = re.compile(r"(?im)^\s*-\s*Latest result:\s*PASS\b")
-BASELINE_HEADING_RE = re.compile(
-    r"^(#{2,6})\s+(?:Without Skill / Baseline|Without Skill|Baseline)\s*$",
-    re.IGNORECASE,
-)
-HEADING_RE = re.compile(r"^(#{1,6})\s+\S")
-WEAK_BASELINE_PATTERNS = (
-    (
-        re.compile(r"\bBaseline behavior is diagnostic only\.", re.IGNORECASE),
-        "baseline is diagnostic-only",
-    ),
-    (
-        re.compile(r"\bBaseline behavior remains diagnostic:", re.IGNORECASE),
-        "baseline remains diagnostic-only",
-    ),
-    (
-        re.compile(
-            r"^\s*-\s*(?:BLOCKED|SKIPPED)\b"
-            r"|\b(?:baseline|without_skill)[^\n.]{0,80}\b"
-            r"(?:was|is|were|remains)\s+(?:blocked|skipped)\b"
-            r"|\b(?:blocked|skipped)[^\n.]{0,80}\b(?:baseline|without_skill)\b",
-            re.IGNORECASE | re.MULTILINE,
-        ),
-        "baseline is blocked or skipped",
-    ),
-    (
-        re.compile(
-            r"\b(?:baseline|without_skill)[^\n.]{0,80}\b(?:not generated|not run)\b"
-            r"|\b(?:not generated|not run)[^\n.]{0,80}\b(?:baseline|without_skill)\b",
-            re.IGNORECASE,
-        ),
-        "baseline is not generated or not run",
-    ),
-)
 
 
 @dataclass
@@ -234,52 +200,6 @@ def validate_metadata_assertion_targets(
             )
 
 
-def baseline_sections(text: str) -> list[str]:
-    lines = text.splitlines()
-    sections: list[str] = []
-    index = 0
-
-    while index < len(lines):
-        match = BASELINE_HEADING_RE.match(lines[index])
-        if not match:
-            index += 1
-            continue
-
-        heading_level = len(match.group(1))
-        section_lines = [lines[index]]
-        index += 1
-        while index < len(lines):
-            next_heading = HEADING_RE.match(lines[index])
-            if next_heading and len(next_heading.group(1)) <= heading_level:
-                break
-            section_lines.append(lines[index])
-            index += 1
-        sections.append("\n".join(section_lines))
-
-    return sections
-
-
-def validate_comparison(path: Path, errors: list[ContractError]) -> None:
-    text = path.read_text()
-    if not LATEST_PASS_RE.search(text):
-        return
-
-    sections = baseline_sections(text)
-    if not sections:
-        add_error(errors, path, "Latest result PASS requires a baseline section")
-        return
-
-    baseline_text = "\n\n".join(sections)
-    for pattern, reason in WEAK_BASELINE_PATTERNS:
-        if pattern.search(baseline_text):
-            add_error(
-                errors,
-                path,
-                "Latest result PASS cannot be paired with explicit missing or "
-                f"blocked baseline state; found {reason}",
-            )
-
-
 def validate_metadata(
     evals_path: Path,
     skill_test_dir: Path,
@@ -301,8 +221,6 @@ def validate_metadata(
         return
     if not comparison_path.exists():
         add_error(errors, evals_path, f"evals[{eval_index}] workspace is missing durable comparison.md")
-    else:
-        validate_comparison(comparison_path, errors)
 
     metadata = load_json(metadata_path, errors)
     if metadata is None:

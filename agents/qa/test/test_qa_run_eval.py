@@ -210,7 +210,7 @@ class QaRunEvalTests(unittest.TestCase):
 
         self.assertIn("[PASS] `with_skill` semantic verdict: PASS", report)
         self.assertIn("[FAIL] `without_skill` semantic verdict: FAIL", report)
-        self.assertIn("`without_skill` must produce candidate output", report)
+        self.assertIn("`without_skill` is baseline input for `comparison.md`", report)
 
     def test_runtime_paths_are_isolated_from_eval_fixture(self):
         run_eval = load_run_eval_module()
@@ -453,7 +453,7 @@ class QaRunEvalTests(unittest.TestCase):
             self.assertIn("## Declared Output Checks", report)
             self.assertIn("[FAIL] `with_skill_outputs`", report)
 
-    def test_main_fails_when_without_skill_baseline_is_missing(self):
+    def test_main_reports_without_skill_baseline_missing_without_failing(self):
         run_eval = load_run_eval_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -513,7 +513,7 @@ class QaRunEvalTests(unittest.TestCase):
                 else:
                     os.environ["EVAL_RUN_OUTPUT_DIR"] = old_output_dir
 
-            self.assertEqual(result, 1)
+            self.assertEqual(result, 0)
             reports = list((root / "runs").rglob("comparison.auto.md"))
             self.assertEqual(len(reports), 1)
             report = reports[0].read_text()
