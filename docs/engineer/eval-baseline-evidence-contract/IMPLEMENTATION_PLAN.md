@@ -1,7 +1,7 @@
 ---
 title: "评测基线证据契约实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.2"
+version: "0.1.3"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -16,6 +16,9 @@ related_trd: "docs/engineer/eval-baseline-evidence-contract/TRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/46"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 changelog:
+  - version: "0.1.3"
+    date: "2026-06-24"
+    changes: "扩展 blocked / skipped baseline 硬冲突匹配，覆盖非状态开头的描述句"
   - version: "0.1.2"
     date: "2026-06-24"
     changes: "根据 PR review 收窄 checker 职责边界，明确 baseline 质量由运行后 review 判断"
@@ -255,8 +258,9 @@ uv run --with pytest pytest agents/test_eval_contract.py
   - 仅当 `comparison.md` 包含 `Latest result: PASS` 时触发；
   - 只检查 `## Without Skill / Baseline`、`## Without Skill` 或 `## Baseline` section；
   - 拒绝 diagnostic-only、remains diagnostic、blocked / skipped、not generated / not run 等明确缺失或阻塞状态；
+  - blocked / skipped 检测覆盖 `BLOCKED` / `SKIPPED` 状态 bullet，也覆盖 `Baseline was skipped...` 和 `Without-skill baseline is blocked...` 这类明确描述句；
   - 不判断 baseline 自由文本是否语义完整，baseline PASS / FAIL / BLOCKED 由实际运行后的 sub-agent / 人工 review 判断。
-- `agents/test_eval_contract.py` 已新增 6 个 baseline 证据回归用例。
+- `agents/test_eval_contract.py` 已新增 8 个 baseline 证据回归用例。
 - 74 个历史 comparison 已从完整 `PASS` 改为 `PARTIAL`，并补充明确 blocked baseline 原因。
 - 已确认 `Latest result: PASS` 与 `Baseline behavior is/remains diagnostic` 并存数量为 0。
 - 本轮未运行模型 eval 或 fresh Codex subagent baseline；原因是 #46 允许无法补齐实际 baseline 的历史 eval 先移出完整 PASS 语义。
@@ -278,7 +282,7 @@ uv run --with pytest pytest agents/test_eval_contract.py
 - `uv run scripts/check_repository_contract.py`: PASS
 - `uv run scripts/check_eval_contract.py`: PASS
 - `uv run scripts/check_eval_artifacts.py`: PASS
-- `uv run --with pytest pytest agents/test_eval_contract.py`: PASS, 35 passed
+- `uv run --with pytest pytest agents/test_eval_contract.py`: PASS, 37 passed
 
 ### 10.4 剩余风险
 

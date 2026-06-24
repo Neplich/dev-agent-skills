@@ -73,7 +73,14 @@ WEAK_BASELINE_PATTERNS = (
         "baseline remains diagnostic-only",
     ),
     (
-        re.compile(r"(?im)^\s*-\s*(?:BLOCKED|SKIPPED)\b"),
+        re.compile(
+            r"(?im)^\s*-\s*(?:BLOCKED|SKIPPED)\b"
+            r"|\b(?:baseline|without-skill)[^\n.]{0,80}\b"
+            r"(?:is|was|were|has been|had been|remains|remained|cannot be|could not be)"
+            r"\s+(?:\w+\s+){0,3}(?:blocked|skipped)\b"
+            r"|\b(?:blocked|skipped)\s+(?:baseline|without-skill)\b",
+            re.IGNORECASE,
+        ),
         "baseline is blocked or skipped",
     ),
     (
