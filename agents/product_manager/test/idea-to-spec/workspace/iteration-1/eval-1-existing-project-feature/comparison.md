@@ -7,7 +7,7 @@
 - Eval: `eval-001-existing-project-feature-design`
 - Test case: existing-project-feature-design
 - Workspace: `workspace/iteration-1/eval-1-existing-project-feature`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation on 2026-06-23 after the feature_path doc-schema update
 
 ## Test Set / Fixture Version
@@ -35,7 +35,7 @@ Observed behavior:
 - The feature_path schema update is compatible with this eval: `app-tags` is a valid level-1 `feature_path`, and any new or updated formal PM document for the feature must now carry `feature_path`, `feature`, `parent_feature`, and `feature_level`.
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - Without the skill contract, the likely risk is jumping straight to a complete solution or implementation plan before context detection, confirmation, and PM document memory are established.
 
 ## Failures

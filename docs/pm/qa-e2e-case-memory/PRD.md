@@ -157,7 +157,7 @@ TRD 完成后，仓库后续 issue 已补齐现有功能变更、轻量 bug fix 
 | FR-019 | Eval 覆盖 | 增加或更新 QA eval 验证关键行为。 | P0 | Eval 覆盖已有 TC 二次复用、功能树生成、版本归档、共享登录、凭据安全、执行入口优先级、代码完成后 E2E 文档补充、功能更新/发版双场景、汇总报告归档和 subagent 模式。 |
 | FR-020 | PRD/TRD 对齐门禁 | 现有功能变更、轻量变更或 bug 修复触发 E2E 文档更新前，先确认产品预期来源。 | P0 | QA E2E 流程读取 PRD、TRD 和存在的产品决策记录；区分实现偏离、预期变化、文档缺失和 TRD gap；预期未对齐时不得直接生成、更新或执行作为验收依据的 E2E TC。 |
 | FR-021 | 实施计划门禁 | 代码完成后的 E2E 文档补充必须引用已确认的实施计划。 | P0 | 小功能、单文件变更和轻量 bug fix 均不能跳过 `docs/engineer/{feature}/IMPLEMENTATION_PLAN.md`；缺失或未确认时，E2E 文档补充 blocked 并回到 Engineer 计划流程。 |
-| FR-022 | Durable comparison 同步 | skill eval 或 fresh subagent validation 的结论必须写回 durable `comparison.md`。 | P0 | 实际执行 eval 后，`comparison.md` 记录 latest result、执行模式、with-skill 行为、baseline 或 without-skill 行为、失败项、next steps 和运行期产物策略；PR/对话结论必须与该文件一致。 |
+| FR-022 | Durable comparison 同步 | skill eval 或 fresh subagent validation 的结论必须写回 durable `comparison.md`。 | P0 | 实际执行 eval 后，`comparison.md` 记录 latest result、执行模式、with-skill 行为、baseline 或 without_skill 行为、失败项、next steps 和运行期产物策略；PR/对话结论必须与该文件一致。 |
 
 ## 6. 非功能需求
 

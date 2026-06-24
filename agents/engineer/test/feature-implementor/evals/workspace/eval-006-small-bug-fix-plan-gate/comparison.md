@@ -7,7 +7,7 @@
 - Eval: `eval-006-small-bug-fix-plan-gate`
 - Test case: small-bug-fix-plan-gate
 - Workspace: `workspace/eval-006-small-bug-fix-plan-gate`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
@@ -38,7 +38,7 @@ Observed behavior:
 - After implementation and self-review, the QA E2E handoff package must include PRD/TRD paths, confirmed `IMPLEMENTATION_PLAN.md`, PRD alignment, changed files, verification commands/results, risks, and suggested `docs/qa/e2e/{feature_path}/`; if the confirmed plan is missing, the skill stops before producing that handoff.
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

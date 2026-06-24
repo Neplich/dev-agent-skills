@@ -7,7 +7,7 @@
 - Eval: `eval-007-api-adr-engineer-handoff`
 - Test case: api-adr-engineer-handoff
 - Workspace: `workspace/iteration-3/eval-7-api-adr-engineer-handoff`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation on 2026-06-23 after API / ADR ownership migration and PM deprecated stub cleanup
 
 ## Test Set / Fixture Version
@@ -33,7 +33,7 @@ Observed behavior:
 - API and ADR outputs are expected under `docs/engineer/chat-interface/history-search/`, preventing a parallel `docs/engineer/history-search/` directory.
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - Without the ownership gate, PM could directly use the historical internal API / ADR generators and write Engineer docs using only the terminal feature name.
 
 ## Failures

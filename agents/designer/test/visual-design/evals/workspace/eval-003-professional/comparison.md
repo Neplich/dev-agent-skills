@@ -7,7 +7,7 @@
 - Eval: `eval-003-professional`
 - Test case: Professional Design System
 - Workspace: `workspace/eval-003-professional`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
@@ -28,7 +28,7 @@ Observed behavior:
 - 当前流程覆盖企业分析平台的可信、可扫描层级、WCAG AA 对比度、UX 质量规则和反模式，同时明确只交付视觉规范，不输出代码或工程命令。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

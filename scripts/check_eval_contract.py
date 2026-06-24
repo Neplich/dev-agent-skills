@@ -78,8 +78,8 @@ WEAK_BASELINE_PATTERNS = (
     ),
     (
         re.compile(
-            r"\b(?:baseline|without-skill)[^\n.]{0,80}\b(?:not generated|not run)\b"
-            r"|\b(?:not generated|not run)[^\n.]{0,80}\b(?:baseline|without-skill)\b",
+            r"\b(?:baseline|without_skill)[^\n.]{0,80}\b(?:not generated|not run)\b"
+            r"|\b(?:not generated|not run)[^\n.]{0,80}\b(?:baseline|without_skill)\b",
             re.IGNORECASE,
         ),
         "baseline is not generated or not run",

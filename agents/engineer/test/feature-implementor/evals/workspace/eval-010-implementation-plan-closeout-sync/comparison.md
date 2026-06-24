@@ -7,13 +7,13 @@
 - Eval: `eval-010-implementation-plan-closeout-sync`
 - Test case: implementation-plan-closeout-sync
 - Workspace: `workspace/eval-010-implementation-plan-closeout-sync`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-24; with-skill run `019ef5f3-bf60-7922-bcc0-2a296cd3be0b` passed, without-skill baseline run `019ef5f3-e0e2-7ef3-adb9-5f89535a79f3` passed, and deterministic checks passed
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-24; with-skill run `019ef5f3-bf60-7922-bcc0-2a296cd3be0b` passed, without_skill baseline run `019ef5f3-e0e2-7ef3-adb9-5f89535a79f3` passed, and deterministic checks passed
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: Confirmed PRD/TRD plus an `IMPLEMENTATION_PLAN.md` whose frontmatter is implemented while the body still contains planning-state text.
-- Run set: actual with-skill subagent validation plus actual without-skill baseline subagent validation against the same prompt and fixture.
+- Run set: actual with-skill subagent validation plus actual without_skill baseline subagent validation against the same prompt and fixture.
 - Expected output: block QA handoff or delivery until the implementation plan closeout state, implementation result, deterministic checks, and eval evidence are synchronized.
 
 ## Assertions
@@ -35,11 +35,11 @@
 
 ## Failures
 
-- None in the skill/eval contract after closeout synchronization. Both actual with-skill and without-skill baseline runs passed; the remaining distinction is that the with-skill run also validates the `feature-implementor`-specific closeout contract.
+- None in the skill/eval contract after closeout synchronization. Both actual with-skill and without_skill baseline runs passed; the remaining distinction is that the with-skill run also validates the `feature-implementor`-specific closeout contract.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for stale `IMPLEMENTATION_PLAN.md` closeout state. Re-run both with-skill and without-skill baseline validation if `feature-implementor` closeout behavior, implementation plan output conventions, or eval fixture docs change.
+- Keep this eval as regression coverage for stale `IMPLEMENTATION_PLAN.md` closeout state. Re-run both with-skill and without_skill baseline validation if `feature-implementor` closeout behavior, implementation plan output conventions, or eval fixture docs change.
 
 ## Runtime Artifacts Policy
 

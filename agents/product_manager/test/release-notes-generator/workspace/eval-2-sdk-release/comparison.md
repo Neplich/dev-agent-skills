@@ -7,7 +7,7 @@
 - Eval: `eval-002-sdk-breaking-changes`
 - Test case: sdk-breaking-changes
 - Workspace: `workspace/eval-2-sdk-release`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation completed on 2026-06-06 after tag normalization repair
 
 ## Test Set / Fixture Version
@@ -42,7 +42,7 @@ Observed behavior:
 - 运行记录显示先审计 `v0.85.0...v0.86.0` compare range 的 8 个 commits 和 included merged PR，再进行分组和摘要；`stainless-app[bot]`、internal、generated API 和 release commit 均被纳入审计。`What's Changed` 保留了 `feat:`、`feat(api):`、`fix(client):`、`fix(deps):`、`fix(pydantic):`、`chore(internal):`、`release:` 等前缀。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

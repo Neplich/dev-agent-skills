@@ -1,7 +1,7 @@
 ---
 title: "评测基线证据契约 TRD"
 type: TRD
-version: "0.1.3"
+version: "0.1.4"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -15,12 +15,15 @@ related_prd: "docs/pm/eval-baseline-evidence-contract/PRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/46"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 changelog:
+  - version: "0.1.4"
+    date: "2026-06-24"
+    changes: "统一 without_skill 运行模式命名，并覆盖 missing baseline 检测"
   - version: "0.1.3"
     date: "2026-06-24"
     changes: "修复 baseline section 扫描边界，子标题内容仍纳入 PASS 冲突检查"
   - version: "0.1.2"
     date: "2026-06-24"
-    changes: "补充 fresh subagent validation 的 without-skill baseline 生成协议"
+    changes: "补充 fresh subagent validation 的 without_skill baseline 生成协议"
   - version: "0.1.1"
     date: "2026-06-24"
     changes: "收窄 checker 为硬冲突检查，不做 baseline 语义质量判断"
@@ -53,9 +56,9 @@ run status 和 `comparison.auto.md` 继续不入库。
 | --- | --- |
 | `docs/pm/eval-baseline-evidence-contract/PRD.md` | 完整 PASS 不得与明确缺失或被阻塞的 baseline 状态冲突。 |
 | GitHub issue #46 | 历史弱 baseline 文案必须移除、替换，或移出 PASS 语义。 |
-| PR #45 `eval-010` 修复 | 完整 PASS 可引用真实 with-skill 和 without-skill subagent 结果，同时保持 runtime artifact 不入库。 |
+| PR #45 `eval-010` 修复 | 完整 PASS 可引用真实 with-skill 和 without_skill subagent 结果，同时保持 runtime artifact 不入库。 |
 | `AGENTS.md` eval artifact 策略 | Durable result 是 `comparison.md`；runtime artifacts 不得提交。 |
-| 用户确认方向 | Baseline 缺失源于 fresh subagent validation 未执行 without-skill run；后续每次 skill 测评必须补 baseline。 |
+| 用户确认方向 | Baseline 缺失源于 fresh subagent validation 未执行 without_skill run；后续每次 skill 测评必须补 baseline。 |
 
 ## 3. 架构概览
 
@@ -147,7 +150,7 @@ sub-agent / 人工 review 在写入 durable `comparison.md` 前完成。
 - `Latest result: BLOCKED - baseline runner unavailable`
 
 Checker 也应允许经 review 保留的完整 PASS，例如已修复的 `eval-010` comparison
-记录了 with-skill 和 without-skill subagent ID 及结果；历史 comparison 中的
+记录了 with-skill 和 without_skill subagent ID 及结果；历史 comparison 中的
 假设性 baseline 描述是否仍然可信，由后续 eval 刷新或 PR review 判断，而不是由
 脚本推断。
 
@@ -158,7 +161,7 @@ Checker 也应允许经 review 保留的完整 PASS，例如已修复的 `eval-0
 1. 使用 eval 定义中的 prompt、fixture 和 assertions 运行 `with_skill`。
 2. 使用同一 prompt 和 fixture，在不读取或应用目标 skill / Agent README 的条件下运行 `without_skill`。
 3. 将两路结果交给 fresh subagent / judge 做语义评审。
-4. 在 durable `comparison.md` 中记录 with-skill 行为、without-skill baseline 行为、失败项、next steps 和 runtime artifact policy。
+4. 在 durable `comparison.md` 中记录 with-skill 行为、without_skill baseline 行为、失败项、next steps 和 runtime artifact policy。
 
 如果 `without_skill` baseline 不能生成、没有 judge verdict，或无法被 reviewer 判断，本次结果不能写完整 `PASS`。可以保留 with-skill 通过证据，但 latest result 应写为 `PARTIAL` 或 `BLOCKED`，并说明 baseline 缺失原因。
 
@@ -176,7 +179,7 @@ Checker 也应允许经 review 保留的完整 PASS，例如已修复的 `eval-0
 
 | 场景 | 需要的编辑 |
 | --- | --- |
-| 已知实际 without-skill baseline | 保留 `Latest result: PASS`；记录 baseline 运行日期、方式、结果，以及与 with-skill 的差异。 |
+| 已知实际 without_skill baseline | 保留 `Latest result: PASS`；记录 baseline 运行日期、方式、结果，以及与 with-skill 的差异。 |
 | 经 review 保留的历史 baseline 描述 | 可保留 `Latest result: PASS`；语义可信度由后续 eval 刷新或 PR review 判断，checker 不做自由文本质量判定。 |
 | baseline 未生成 | 将 latest result 改为 `PARTIAL` 或 `BLOCKED`；说明 baseline 缺失原因。 |
 | baseline 确实不适用 | 只有当文档明确解释 baseline 为何不需要且不违反 eval 契约时，才保留 `PASS`。 |

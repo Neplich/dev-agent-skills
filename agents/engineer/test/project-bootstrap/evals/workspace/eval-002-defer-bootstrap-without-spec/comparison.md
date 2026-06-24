@@ -7,7 +7,7 @@
 - Eval: `eval-002-defer-bootstrap-without-spec`
 - Test case: defer-bootstrap-without-spec
 - Workspace: `workspace/eval-002-defer-bootstrap-without-spec`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
@@ -29,7 +29,7 @@ Observed behavior:
 - 当前 SKILL.md 的 Non-Negotiable Gate 明确无 TRD/PRD/已确认 spec 且无显式 skip PM 时必须拒绝 scaffold，回指 pm-agent:idea-to-spec，并保留显式 override 例外。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

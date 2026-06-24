@@ -7,7 +7,7 @@
 - Eval: `eval-002-abandoned`
 - Test case: Abandoned Packages
 - Workspace: `workspace/eval-002-abandoned`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
@@ -30,7 +30,7 @@ Observed behavior:
 - 当前 skill 明确检查 abandoned/outdated packages、deprecation、archived repo、长期无更新和替代方案，覆盖依赖清单、风险分类、证据和升级计划。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

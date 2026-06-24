@@ -7,7 +7,7 @@
 - Eval: `eval-004-api-adr-owned-by-engineer`
 - Test case: api-adr-owned-by-engineer
 - Workspace: `workspace/eval-004-api-adr-owned-by-engineer`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation on 2026-06-23 after API / ADR ownership migration
 
 ## Test Set / Fixture Version
@@ -32,7 +32,7 @@
 - The skill stops before `feature-implementor`; it must not create `IMPLEMENTATION_PLAN.md`, code, tests, commits, or PRs.
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - Without the Engineer ownership rule, API / ADR generation may be routed to historical PM internal generators or written under a terminal-name-only directory.
 
 ## Failures

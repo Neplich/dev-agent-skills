@@ -37,8 +37,8 @@ closeout gate 行为。
 
 `comparison.md` 的 `Without Skill / Baseline` section 必须选择一种明确状态：
 
-- 如果已经生成 baseline / without-skill 结果，记录实际结果和观察到的行为。
-- 如果没有生成 baseline / without-skill 结果，明确写出 blocked 或 skipped 原因，不用假设性风险替代结果。
+- 如果已经生成 baseline / without_skill 结果，记录实际结果和观察到的行为。
+- 如果没有生成 baseline / without_skill 结果，明确写出 blocked 或 skipped 原因，不用假设性风险替代结果。
 
 本次修复不伪造 baseline pass/fail。
 

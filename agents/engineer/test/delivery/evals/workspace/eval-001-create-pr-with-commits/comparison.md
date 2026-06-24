@@ -7,7 +7,7 @@
 - Eval: `eval-001-create-pr-with-commits`
 - Test case: create-pr-with-commits
 - Workspace: `workspace/eval-001-create-pr-with-commits`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
@@ -30,7 +30,7 @@ Observed behavior:
 - 当前 SKILL.md 覆盖 git 状态检查、按项目规范建分支、定向 stage、Conventional Commit、PR body 含摘要/PM 文档/测试状态，并在创建 PR 后检查 CI。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

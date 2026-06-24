@@ -7,7 +7,7 @@
 - Eval: `eval-004-greenfield-bootstrap-routing`
 - Test case: greenfield-bootstrap-routing
 - Workspace: `workspace/iteration-2/eval-4-greenfield-bootstrap-routing`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation on 2026-06-23 after the feature_path doc-schema update
 
 ## Test Set / Fixture Version
@@ -34,7 +34,7 @@ Observed behavior:
 - The feature_path schema update reinforces the PM-first lane: before `project-init` or PRD skeleton output becomes formal, the flow must establish a valid multi-level `feature_path` and include the required feature metadata fields.
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - Without the skill contract, the likely risk is starting `npm create`, `create-next-app`, or another engineering bootstrap before PM requirements are settled.
 
 ## Failures

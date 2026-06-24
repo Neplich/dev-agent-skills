@@ -7,7 +7,7 @@
 - Eval: `eval-001-explore-web-app`
 - Test case: explore-web-app
 - Workspace: `workspace/eval-1-explore-web-app`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation completed on 2026-06-04
 
 ## Test Set / Fixture Version
@@ -36,7 +36,7 @@ Observed behavior:
 - 当前 skill 要求 E2E 执行入口按 repo harness > Chrome plugin / browser connector > Playwright fallback 选择，并默认由 subagent 执行 E2E TC；本 eval 未要求真实执行，`QA_BASE_URL` 缺失时应报告 browser execution blocked，同时仍产出 charter 和 evidence plan。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

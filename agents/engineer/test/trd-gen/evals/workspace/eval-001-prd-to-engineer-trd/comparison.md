@@ -7,7 +7,7 @@
 - Eval: `eval-001-prd-to-engineer-trd`
 - Test case: prd-to-engineer-trd
 - Workspace: `workspace/eval-001-prd-to-engineer-trd`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
@@ -38,7 +38,7 @@ Observed behavior:
 - 当前 `SKILL.md` 明确 `trd-gen` 不负责代码实现，也不负责 TRD approval 后的 implementation plan 文档；handoff 文案要求未经用户确认不得继续实现。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

@@ -7,7 +7,7 @@
 - Eval: `eval-001-route-implementation-chain`
 - Test case: route-implementation-chain
 - Workspace: `workspace/eval-1-route-implementation-chain`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
@@ -38,7 +38,7 @@ Observed behavior:
 - 因用户要求“先做工程路由，不要直接改代码”，当前 SKILL.md 的 dispatcher 职责只选择下游 skill 和执行路径，不会直接修改代码、运行测试或创建提交。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

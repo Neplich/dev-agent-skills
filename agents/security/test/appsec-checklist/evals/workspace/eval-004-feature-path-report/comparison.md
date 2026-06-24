@@ -7,7 +7,7 @@
 - Eval: `eval-004-feature-path-report`
 - Test case: Feature Path Security Report
 - Workspace: `workspace/eval-004-feature-path-report`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation completed on 2026-06-23.
 
 ## Test Set / Fixture Version
@@ -31,7 +31,7 @@
 - Expected with-skill behavior is therefore to read the same-path PM/Engineer documents, produce frontmatter with `feature_path: chat-interface/history-search`, `parent_feature: chat-interface`, and `feature_level: 2`, and write `docs/security/chat-interface/history-search/appsec-checklist.md` without creating `docs/security/history-search/appsec-checklist.md`.
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - The feature-path gate adds the required behavior that unclear or missing path evidence must return to PM/Engineer instead of guessing a synonymous directory.
 
 ## Failures
