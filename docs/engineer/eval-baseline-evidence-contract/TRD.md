@@ -1,7 +1,7 @@
 ---
 title: "评测基线证据契约 TRD"
 type: TRD
-version: "0.1.4"
+version: "0.1.5"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -15,6 +15,9 @@ related_prd: "docs/pm/eval-baseline-evidence-contract/PRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/46"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 changelog:
+  - version: "0.1.5"
+    date: "2026-06-24"
+    changes: "明确 baseline not required 不豁免 blocked、skipped、not generated 或 not run 硬冲突"
   - version: "0.1.4"
     date: "2026-06-24"
     changes: "统一 without_skill 运行模式命名，并覆盖 missing baseline 检测"
@@ -38,8 +41,9 @@ changelog:
 
 本技术方案为 eval durable comparison 增加确定性仓库契约。核心规则保持窄范围：
 tracked `comparison.md` 如果写有 `Latest result: PASS`，就不得把 baseline
-描述为 diagnostic-only、blocked、skipped、not generated 或 not run，除非文件
-同时明确说明该 eval 不需要 baseline。
+描述为 diagnostic-only、blocked、skipped、not generated 或 not run。即使文件
+同时出现 baseline not required 一类说明，只要 baseline section 记录了这些硬冲突，
+完整 PASS 仍应被拒绝。
 
 方案扩展现有 eval 校验和 fresh subagent validation 协议，不新增 runner，也不把
 baseline 内容质量固化成脚本规则。Baseline 内容必须来自同一 eval prompt / fixture
@@ -135,12 +139,15 @@ section 读取应包含其下方子标题内容，并只在遇到同级或更高
 - `Baseline behavior remains diagnostic:`
 - `BLOCKED`
 - `SKIPPED`
+- `baseline` 或 `without_skill` 被描述为 blocked / skipped
 - `not generated`
 - `not run`
 
 首版实现应保持模式简单，并对英文状态词做大小写不敏感判断。Checker 不判断
 baseline 自由文本是否覆盖充分，也不要求固定的正向证据结构；这部分由
 sub-agent / 人工 review 在写入 durable `comparison.md` 前完成。
+`baseline not required`、`baseline not applicable` 等说明本身不触发失败，但也
+不能豁免同一 section 中明确记录的 blocked、skipped、not generated 或 not run 状态。
 
 ### 6.4 允许状态
 
@@ -182,7 +189,7 @@ Checker 也应允许经 review 保留的完整 PASS，例如已修复的 `eval-0
 | 已知实际 without_skill baseline | 保留 `Latest result: PASS`；记录 baseline 运行日期、方式、结果，以及与 with-skill 的差异。 |
 | 经 review 保留的历史 baseline 描述 | 可保留 `Latest result: PASS`；语义可信度由后续 eval 刷新或 PR review 判断，checker 不做自由文本质量判定。 |
 | baseline 未生成 | 将 latest result 改为 `PARTIAL` 或 `BLOCKED`；说明 baseline 缺失原因。 |
-| baseline 确实不适用 | 只有当文档明确解释 baseline 为何不需要且不违反 eval 契约时，才保留 `PASS`。 |
+| baseline 确实不适用 | 只有当文档明确解释 baseline 为何不需要，且没有 blocked、skipped、not generated 或 not run 硬冲突时，才保留 `PASS`。 |
 | 仍有 diagnostic-only 文案 | 替换成上述任一合法状态。 |
 
 Issue 中记录的 72 个精确 diagnostic-only baseline 文件，以及 2 个额外 `remains diagnostic`

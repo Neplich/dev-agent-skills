@@ -1,7 +1,7 @@
 ---
 title: "评测基线证据契约实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.5"
+version: "0.1.6"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -16,6 +16,9 @@ related_trd: "docs/engineer/eval-baseline-evidence-contract/TRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/46"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 changelog:
+  - version: "0.1.6"
+    date: "2026-06-24"
+    changes: "补充 blocked/skipped prose 检测，并确保 baseline not required 不遮蔽硬冲突"
   - version: "0.1.5"
     date: "2026-06-24"
     changes: "统一 without_skill 命名并补充 underscore baseline 缺失检测"
@@ -113,9 +116,11 @@ flowchart TD
   - `Baseline behavior remains diagnostic:`
   - `BLOCKED`
   - `SKIPPED`
+  - `baseline` 或 `without_skill` 被自然语言描述为 blocked / skipped
   - `not generated`
   - `not run`
 - 不用脚本判断 baseline 自由文本是否语义完整、覆盖充分或足以代表 skill 质量；该判断保留给 sub-agent / 人工 review。
+- `baseline not required` 说明不作为硬冲突豁免；同一 baseline section 只要记录 blocked、skipped、not generated 或 not run，完整 PASS 仍失败。
 - 复用现有 `ContractError` 输出违规，保持 CLI 输出格式一致。
 
 验证：
@@ -132,6 +137,8 @@ uv run scripts/check_eval_contract.py
 
 - 增加 `Latest result: PASS` + `Baseline behavior is diagnostic only.` 应失败的 fixture。
 - 增加 `Latest result: PASS` + `Baseline behavior remains diagnostic:` 应失败的 fixture。
+- 增加 `Latest result: PASS` + blocked / skipped 自然语言 baseline 描述应失败的 fixture。
+- 增加 `baseline not required` 与明确 blocked / not generated 同时出现时应失败的 fixture。
 - 增加 `Latest result: PASS` + 经 review 保留的 baseline 文案应通过的 fixture。
 - 增加 `Latest result: PARTIAL` + baseline not generated 应通过的 fixture。
 
@@ -316,8 +323,10 @@ uv run --with pytest pytest agents/test_eval_contract.py
   - 只检查 `## Without Skill / Baseline`、`## Without Skill` 或 `## Baseline` section；
   - baseline section 的 `###` 等子标题内容会继续纳入检查，只在遇到同级或更高级 heading 时停止；
   - 拒绝 diagnostic-only、remains diagnostic、blocked / skipped、not generated / not run 等明确缺失或阻塞状态；
+  - blocked / skipped 同时覆盖 `- BLOCKED` / `- SKIPPED` 状态 bullet 和 `baseline` / `without_skill` 被自然语言描述为 blocked / skipped 的写法；
+  - `baseline not required` 说明不会遮蔽同一 baseline section 中的明确硬冲突；
   - 不判断 baseline 自由文本是否语义完整，baseline PASS / FAIL / BLOCKED 由实际运行后的 sub-agent / 人工 review 判断。
-- `agents/test_eval_contract.py` 已新增 8 个 baseline 证据回归用例。
+- `agents/test_eval_contract.py` 已新增 11 个 baseline 证据回归用例。
 - fresh subagent validation 协议已明确要求同一 eval prompt / fixture 下运行 `with_skill` 与 `without_skill`，并把 `without_skill` 作为 baseline 写回 durable `comparison.md`。
 - QA runner 已在 `without_skill` candidate 或 fresh judge verdict 缺失时失败；`without_skill` 语义 verdict 为 `FAIL` 时仍可作为有效 baseline 对照。
 - 74 个历史 comparison 已从完整 `PASS` 改为 `PARTIAL`，并补充明确 blocked baseline 原因。
@@ -341,8 +350,9 @@ uv run --with pytest pytest agents/test_eval_contract.py
 - `uv run scripts/check_repository_contract.py`: PASS
 - `uv run scripts/check_eval_contract.py`: PASS
 - `uv run scripts/check_eval_artifacts.py`: PASS
-- `uv run --with pytest pytest agents/test_eval_contract.py`: PASS, 37 passed
+- `uv run --with pytest pytest agents/test_eval_contract.py`: PASS, 40 passed
 - `uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py`: PASS, 13 passed
+- `uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py agents/test_eval_contract.py`: PASS, 53 passed
 
 ### 10.4 剩余风险
 

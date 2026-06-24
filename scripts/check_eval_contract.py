@@ -59,10 +59,6 @@ BASELINE_HEADING_RE = re.compile(
     re.IGNORECASE,
 )
 HEADING_RE = re.compile(r"^(#{1,6})\s+\S")
-BASELINE_NOT_REQUIRED_RE = re.compile(
-    r"\bbaseline\b.{0,80}\b(?:not required|not applicable|unnecessary)\b",
-    re.IGNORECASE,
-)
 WEAK_BASELINE_PATTERNS = (
     (
         re.compile(r"\bBaseline behavior is diagnostic only\.", re.IGNORECASE),
@@ -73,7 +69,13 @@ WEAK_BASELINE_PATTERNS = (
         "baseline remains diagnostic-only",
     ),
     (
-        re.compile(r"(?im)^\s*-\s*(?:BLOCKED|SKIPPED)\b"),
+        re.compile(
+            r"^\s*-\s*(?:BLOCKED|SKIPPED)\b"
+            r"|\b(?:baseline|without_skill)[^\n.]{0,80}\b"
+            r"(?:was|is|were|remains)\s+(?:blocked|skipped)\b"
+            r"|\b(?:blocked|skipped)[^\n.]{0,80}\b(?:baseline|without_skill)\b",
+            re.IGNORECASE | re.MULTILINE,
+        ),
         "baseline is blocked or skipped",
     ),
     (
@@ -268,9 +270,6 @@ def validate_comparison(path: Path, errors: list[ContractError]) -> None:
         return
 
     baseline_text = "\n\n".join(sections)
-    if BASELINE_NOT_REQUIRED_RE.search(baseline_text):
-        return
-
     for pattern, reason in WEAK_BASELINE_PATTERNS:
         if pattern.search(baseline_text):
             add_error(
