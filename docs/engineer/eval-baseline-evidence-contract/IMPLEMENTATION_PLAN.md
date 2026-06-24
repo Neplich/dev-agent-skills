@@ -1,7 +1,7 @@
 ---
 title: "评测基线证据契约实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.3"
+version: "0.1.4"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -16,6 +16,9 @@ related_trd: "docs/engineer/eval-baseline-evidence-contract/TRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/46"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 changelog:
+  - version: "0.1.4"
+    date: "2026-06-24"
+    changes: "修复 baseline section 子标题扫描漏检问题"
   - version: "0.1.3"
     date: "2026-06-24"
     changes: "补充 fresh subagent validation 必须生成 without-skill baseline 的协议和 QA runner 门禁"
@@ -308,9 +311,10 @@ uv run --with pytest pytest agents/test_eval_contract.py
 - `check_eval_contract.py` 已新增 baseline section 级硬冲突校验：
   - 仅当 `comparison.md` 包含 `Latest result: PASS` 时触发；
   - 只检查 `## Without Skill / Baseline`、`## Without Skill` 或 `## Baseline` section；
+  - baseline section 的 `###` 等子标题内容会继续纳入检查，只在遇到同级或更高级 heading 时停止；
   - 拒绝 diagnostic-only、remains diagnostic、blocked / skipped、not generated / not run 等明确缺失或阻塞状态；
   - 不判断 baseline 自由文本是否语义完整，baseline PASS / FAIL / BLOCKED 由实际运行后的 sub-agent / 人工 review 判断。
-- `agents/test_eval_contract.py` 已新增 6 个 baseline 证据回归用例。
+- `agents/test_eval_contract.py` 已新增 7 个 baseline 证据回归用例。
 - fresh subagent validation 协议已明确要求同一 eval prompt / fixture 下运行 `with_skill` 与 `without_skill`，并把 `without_skill` 作为 baseline 写回 durable `comparison.md`。
 - QA runner 已在 `without_skill` candidate 或 fresh judge verdict 缺失时失败；`without_skill` 语义 verdict 为 `FAIL` 时仍可作为有效 baseline 对照。
 - 74 个历史 comparison 已从完整 `PASS` 改为 `PARTIAL`，并补充明确 blocked baseline 原因。
@@ -334,7 +338,7 @@ uv run --with pytest pytest agents/test_eval_contract.py
 - `uv run scripts/check_repository_contract.py`: PASS
 - `uv run scripts/check_eval_contract.py`: PASS
 - `uv run scripts/check_eval_artifacts.py`: PASS
-- `uv run --with pytest pytest agents/test_eval_contract.py`: PASS, 35 passed
+- `uv run --with pytest pytest agents/test_eval_contract.py`: PASS, 36 passed
 - `uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py`: PASS, 13 passed
 
 ### 10.4 剩余风险

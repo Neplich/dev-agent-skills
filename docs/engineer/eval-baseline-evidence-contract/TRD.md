@@ -1,7 +1,7 @@
 ---
 title: "评测基线证据契约 TRD"
 type: TRD
-version: "0.1.2"
+version: "0.1.3"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -15,6 +15,9 @@ related_prd: "docs/pm/eval-baseline-evidence-contract/PRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/46"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 changelog:
+  - version: "0.1.3"
+    date: "2026-06-24"
+    changes: "修复 baseline section 扫描边界，子标题内容仍纳入 PASS 冲突检查"
   - version: "0.1.2"
     date: "2026-06-24"
     changes: "补充 fresh subagent validation 的 without-skill baseline 生成协议"
@@ -122,7 +125,8 @@ Latest result: PASS
 
 ### 6.3 PASS 下的 Baseline 硬冲突
 
-检测到完整 PASS 后，如果 baseline 相关文本包含以下内容，则拒绝该文件：
+检测到完整 PASS 后，如果 baseline 相关文本包含以下内容，则拒绝该文件。Baseline
+section 读取应包含其下方子标题内容，并只在遇到同级或更高级 Markdown heading 时停止：
 
 - `Baseline behavior is diagnostic only.`
 - `Baseline behavior remains diagnostic:`

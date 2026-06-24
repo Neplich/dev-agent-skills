@@ -55,10 +55,10 @@ RUNTIME_DIAGNOSTIC_FILES = (
 )
 LATEST_PASS_RE = re.compile(r"(?im)^\s*-\s*Latest result:\s*PASS\b")
 BASELINE_HEADING_RE = re.compile(
-    r"^#{2,6}\s+(?:Without Skill / Baseline|Without Skill|Baseline)\s*$",
+    r"^(#{2,6})\s+(?:Without Skill / Baseline|Without Skill|Baseline)\s*$",
     re.IGNORECASE,
 )
-NEXT_HEADING_RE = re.compile(r"^#{1,6}\s+\S")
+HEADING_RE = re.compile(r"^(#{1,6})\s+\S")
 BASELINE_NOT_REQUIRED_RE = re.compile(
     r"\bbaseline\b.{0,80}\b(?:not required|not applicable|unnecessary)\b",
     re.IGNORECASE,
@@ -238,13 +238,18 @@ def baseline_sections(text: str) -> list[str]:
     index = 0
 
     while index < len(lines):
-        if not BASELINE_HEADING_RE.match(lines[index]):
+        match = BASELINE_HEADING_RE.match(lines[index])
+        if not match:
             index += 1
             continue
 
+        heading_level = len(match.group(1))
         section_lines = [lines[index]]
         index += 1
-        while index < len(lines) and not NEXT_HEADING_RE.match(lines[index]):
+        while index < len(lines):
+            next_heading = HEADING_RE.match(lines[index])
+            if next_heading and len(next_heading.group(1)) <= heading_level:
+                break
             section_lines.append(lines[index])
             index += 1
         sections.append("\n".join(section_lines))
