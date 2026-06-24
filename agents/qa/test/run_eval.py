@@ -308,6 +308,14 @@ def parse_overall(text: str) -> str:
     return "MISSING"
 
 
+def has_generated_verdict(result: dict) -> bool:
+    return (
+        result["candidate_ok"]
+        and result["verdict_ok"]
+        and result["overall"] in {"PASS", "FAIL"}
+    )
+
+
 def run_label(defn: EvalDefinition, label: str, timeout_seconds: int) -> dict:
     cand_path = candidate_path(defn, label)
     verd_path = verdict_path(defn, label)
@@ -411,7 +419,8 @@ def render_report(
             "## Runner Policy",
             "",
             "- `with_skill` must produce candidate output and receive a PASS verdict.",
-            "- `without_skill` is generated for comparison; a FAIL verdict is diagnostic, not a runner failure.",
+            "- `without_skill` must produce candidate output and a fresh judge verdict as baseline evidence.",
+            "- `without_skill` may receive a FAIL semantic verdict; that contrast is diagnostic, not a runner failure.",
         ]
     )
     return "\n".join(lines) + "\n"
@@ -468,10 +477,12 @@ def main() -> int:
 
     by_label = {result["label"]: result for result in results}
     with_result = by_label["with_skill"]
+    without_result = by_label["without_skill"]
     failed = (
         not with_result["candidate_ok"]
         or not with_result["verdict_ok"]
         or with_result["overall"] != "PASS"
+        or not has_generated_verdict(without_result)
         or any(not result["ok"] for result in output_results)
     )
     return 1 if failed else 0

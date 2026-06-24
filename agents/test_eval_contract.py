@@ -601,7 +601,7 @@ class EvalContractTests(unittest.TestCase):
 
         self.assertEqual("\n".join(error.render(root) for error in errors), "")
 
-    def test_eval_contract_allows_pass_with_reviewed_hypothetical_baseline(self):
+    def test_eval_contract_allows_pass_with_reviewed_actual_baseline_summary(self):
         checker = load_checker_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -609,10 +609,11 @@ class EvalContractTests(unittest.TestCase):
             evals_path = self.write_eval_fixture(
                 root,
                 "# Comparison\n\n"
-                "- Latest result: PASS - reviewed comparison retained by maintainer\n\n"
+                "- Latest result: PASS - reviewed with-skill and without-skill runs\n\n"
                 "## Without Skill / Baseline\n\n"
-                "- May skip the required gate in a generic response.\n"
-                "- Less consistently preserves the role boundary.\n",
+                "- Baseline run `019ef5f3-e0e2-7ef3-adb9-5f89535a79f3` completed "
+                "against the same prompt and fixture.\n"
+                "- The baseline output was less consistent about the role boundary.\n",
             )
 
             errors = checker.validate_file(root, evals_path)

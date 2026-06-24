@@ -1,7 +1,7 @@
 ---
 title: "评测基线证据契约实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.2"
+version: "0.1.3"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -16,6 +16,9 @@ related_trd: "docs/engineer/eval-baseline-evidence-contract/TRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/46"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 changelog:
+  - version: "0.1.3"
+    date: "2026-06-24"
+    changes: "补充 fresh subagent validation 必须生成 without-skill baseline 的协议和 QA runner 门禁"
   - version: "0.1.2"
     date: "2026-06-24"
     changes: "根据 PR review 收窄 checker 职责边界，明确 baseline 质量由运行后 review 判断"
@@ -49,7 +52,7 @@ baseline 证据。
 | PRD 对齐 | 已起草 | `docs/pm/eval-baseline-evidence-contract/PRD.md` |
 | TRD 对齐 | 已起草 | `docs/engineer/eval-baseline-evidence-contract/TRD.md` |
 | 实施计划 | 已确认并实施 | 本文件已更新为 `status: "Implemented"` |
-| 代码修改 | 已完成 | `scripts/check_eval_contract.py`、`agents/test_eval_contract.py` |
+| 代码修改 | 已完成 | `scripts/check_eval_contract.py`、`agents/test_eval_contract.py`、`agents/qa/test/run_eval.py` |
 | 历史 comparison 清理 | 已完成 | 74 个 historical comparison 已移出完整 PASS 语义 |
 | 验证 | 已完成 | 见 `## 10. 实施收尾` |
 
@@ -61,6 +64,10 @@ baseline 证据。
 | --- | --- | --- |
 | `scripts/check_eval_contract.py` | 修改 | 增加 durable `comparison.md` 的 PASS baseline 硬冲突校验。 |
 | `agents/test_eval_contract.py` | 修改 | 增加非法和合法 baseline 证据状态的回归测试。 |
+| `AGENTS.md` | 修改 | 明确 fresh subagent validation 必须生成 `with_skill` 和 `without_skill` 两路结果。 |
+| `agents/*/test/README.md` | 修改 | 在各 Agent eval 指南中声明 `without_skill` baseline 缺失时不能写完整 PASS。 |
+| `agents/qa/test/run_eval.py` | 修改 | QA runner 在 `without_skill` candidate 或 judge verdict 缺失时失败。 |
+| `agents/qa/test/test_qa_run_eval.py` | 修改 | 覆盖 QA runner baseline 生成缺失时失败的回归场景。 |
 | `agents/**/comparison.md` | 修改 | 将 PASS 下的 diagnostic-only baseline 状态替换为 review 结论或非 PASS 语义。 |
 | `docs/engineer/eval-baseline-evidence-contract/IMPLEMENTATION_PLAN.md` | 修改 | 实施后记录结果、验证证据和剩余风险。 |
 
@@ -80,9 +87,11 @@ flowchart TD
     B --> C["新增回归测试"]
     C --> D["运行 checker 列出历史违规"]
     D --> E["更新历史 comparison 文件"]
-    E --> F["运行确定性验证"]
-    F --> G["更新本计划 closeout"]
-    G --> H["准备 PR / 关闭 issue"]
+    E --> F["补充 fresh subagent baseline 协议"]
+    F --> G["收紧 QA runner baseline 门禁"]
+    G --> H["运行确定性验证"]
+    H --> I["更新本计划 closeout"]
+    I --> J["准备 PR / 关闭 issue"]
 ```
 
 ## 5. 文件级步骤
@@ -179,7 +188,40 @@ uv run scripts/check_eval_artifacts.py
 `diagnostics/`、`transcript.md`、`candidate-output.md`、`subagent-verdict.md`、
 `timing.json`、`run_status.json` 或 `comparison.auto.md` 被 tracked。
 
-### 步骤 6：最终确定性验证
+### 步骤 6：补充 fresh subagent baseline 生成协议
+
+修改 `AGENTS.md` 与各 Agent test README：
+
+- fresh Codex subagent validation 必须基于同一份 eval prompt 和 fixture 完成 `with_skill` 与 `without_skill` 两次运行。
+- `without_skill` 运行结果是 durable `comparison.md` 的 baseline 来源。
+- baseline 未生成或无法评审时，不能记录完整 `PASS`；应记录 `PARTIAL` 或 `BLOCKED` 并说明原因。
+- 运行期产物仍写入隔离 scratch workspace，不提交到 git。
+
+验证：
+
+```bash
+git diff --check
+```
+
+预期结果：文档格式无 trailing whitespace。
+
+### 步骤 7：收紧 QA runner baseline 门禁
+
+修改 `agents/qa/test/run_eval.py` 与 `agents/qa/test/test_qa_run_eval.py`：
+
+- `without_skill` 语义 verdict 可以是 `FAIL`，用于对照 skill 改善效果。
+- `without_skill` candidate、fresh judge verdict 或可解析 verdict 缺失时，runner 返回失败。
+- 自动报告的 runner policy 明确 baseline evidence 生成要求。
+
+验证：
+
+```bash
+uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py
+```
+
+预期结果：QA runner 单测通过。
+
+### 步骤 8：最终确定性验证
 
 运行完整仓库验证序列：
 
@@ -242,10 +284,22 @@ uv run --with pytest pytest agents/test_eval_contract.py
   - `docs/pm/eval-baseline-evidence-contract/PRD.md`
   - `docs/engineer/eval-baseline-evidence-contract/TRD.md`
   - `docs/engineer/eval-baseline-evidence-contract/IMPLEMENTATION_PLAN.md`
+- 更新仓库和 Agent eval 协议：
+  - `AGENTS.md`
+  - `agents/designer/test/README.md`
+  - `agents/devops/test/README.md`
+  - `agents/engineer/test/README.md`
+  - `agents/product_manager/test/README.md`
+  - `agents/product_manager/test/idea-to-spec/README.md`
+  - `agents/qa/test/README.md`
+  - `agents/security/test/README.md`
 - 修改校验逻辑：
   - `scripts/check_eval_contract.py`
 - 修改回归测试：
   - `agents/test_eval_contract.py`
+- 修改 QA runner：
+  - `agents/qa/test/run_eval.py`
+  - `agents/qa/test/test_qa_run_eval.py`
 - 批量更新历史 eval durable result：
   - 74 个 `agents/**/comparison.md`
 
@@ -257,6 +311,8 @@ uv run --with pytest pytest agents/test_eval_contract.py
   - 拒绝 diagnostic-only、remains diagnostic、blocked / skipped、not generated / not run 等明确缺失或阻塞状态；
   - 不判断 baseline 自由文本是否语义完整，baseline PASS / FAIL / BLOCKED 由实际运行后的 sub-agent / 人工 review 判断。
 - `agents/test_eval_contract.py` 已新增 6 个 baseline 证据回归用例。
+- fresh subagent validation 协议已明确要求同一 eval prompt / fixture 下运行 `with_skill` 与 `without_skill`，并把 `without_skill` 作为 baseline 写回 durable `comparison.md`。
+- QA runner 已在 `without_skill` candidate 或 fresh judge verdict 缺失时失败；`without_skill` 语义 verdict 为 `FAIL` 时仍可作为有效 baseline 对照。
 - 74 个历史 comparison 已从完整 `PASS` 改为 `PARTIAL`，并补充明确 blocked baseline 原因。
 - 已确认 `Latest result: PASS` 与 `Baseline behavior is/remains diagnostic` 并存数量为 0。
 - 本轮未运行模型 eval 或 fresh Codex subagent baseline；原因是 #46 允许无法补齐实际 baseline 的历史 eval 先移出完整 PASS 语义。
@@ -279,11 +335,12 @@ uv run --with pytest pytest agents/test_eval_contract.py
 - `uv run scripts/check_eval_contract.py`: PASS
 - `uv run scripts/check_eval_artifacts.py`: PASS
 - `uv run --with pytest pytest agents/test_eval_contract.py`: PASS, 35 passed
+- `uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py`: PASS, 13 passed
 
 ### 10.4 剩余风险
 
 | 风险 | 状态 | 说明 |
 | --- | --- | --- |
 | 历史 eval 尚未补真实 without-skill baseline | Accepted | 已通过 `PARTIAL` 语义避免误判为完整 PASS；后续可逐个补 baseline 后恢复 PASS。 |
-| Checker 不覆盖 baseline 语义质量 | Accepted | 当前只覆盖 #46 中发现的 exact / remains diagnostic 变体和 blocked / skipped / not generated / not run 硬冲突；baseline 内容质量由 sub-agent / 人工 review 判断。 |
+| Checker 不覆盖 baseline 语义质量 | Accepted | 当前只覆盖 #46 中发现的 exact / remains diagnostic 变体和 blocked / skipped / not generated / not run 硬冲突；baseline 内容质量由执行 with/without 两路运行后的 sub-agent / 人工 review 判断。 |
 | 批量 comparison 编辑较多 | Mitigated | 每个文件只改 latest result 和 baseline section，保留 prior validation note 与原有 With Skill 证据。 |

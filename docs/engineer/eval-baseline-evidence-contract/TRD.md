@@ -1,7 +1,7 @@
 ---
 title: "评测基线证据契约 TRD"
 type: TRD
-version: "0.1.1"
+version: "0.1.2"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -15,6 +15,9 @@ related_prd: "docs/pm/eval-baseline-evidence-contract/PRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/46"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 changelog:
+  - version: "0.1.2"
+    date: "2026-06-24"
+    changes: "补充 fresh subagent validation 的 without-skill baseline 生成协议"
   - version: "0.1.1"
     date: "2026-06-24"
     changes: "收窄 checker 为硬冲突检查，不做 baseline 语义质量判断"
@@ -32,7 +35,10 @@ tracked `comparison.md` 如果写有 `Latest result: PASS`，就不得把 baseli
 描述为 diagnostic-only、blocked、skipped、not generated 或 not run，除非文件
 同时明确说明该 eval 不需要 baseline。
 
-方案扩展现有 eval 校验，不新增 runner，也不把 baseline 内容质量固化成脚本规则。
+方案扩展现有 eval 校验和 fresh subagent validation 协议，不新增 runner，也不把
+baseline 内容质量固化成脚本规则。Baseline 内容必须来自同一 eval prompt / fixture
+下的 `without_skill` 运行；fresh subagent 或 runner 需要先生成 `with_skill` 与
+`without_skill` 两路结果，再把 baseline 行为摘要写入 durable `comparison.md`。
 Baseline 的 PASS、FAIL 或 BLOCKED 应由运行 eval 的 sub-agent、fresh judge 或人工
 reviewer 结合当前 skill、fixture 和实际运行结果判断。历史 comparison 文件只通过
 durable Markdown 结果清理；runtime transcripts、diagnostics、outputs、timing、
@@ -46,20 +52,23 @@ run status 和 `comparison.auto.md` 继续不入库。
 | GitHub issue #46 | 历史弱 baseline 文案必须移除、替换，或移出 PASS 语义。 |
 | PR #45 `eval-010` 修复 | 完整 PASS 可引用真实 with-skill 和 without-skill subagent 结果，同时保持 runtime artifact 不入库。 |
 | `AGENTS.md` eval artifact 策略 | Durable result 是 `comparison.md`；runtime artifacts 不得提交。 |
+| 用户确认方向 | Baseline 缺失源于 fresh subagent validation 未执行 without-skill run；后续每次 skill 测评必须补 baseline。 |
 
 ## 3. 架构概览
 
 ```mermaid
 flowchart TD
-    A["已跟踪的 evals.json"] --> B["check_eval_contract.py"]
-    C["已跟踪的 comparison.md"] --> B
-    D["已跟踪的 eval_metadata.json"] --> B
-    B --> E{"schema 和 metadata 有效?"}
-    E -->|否| F["契约检查失败"]
-    E -->|是| G{"PASS baseline 有硬冲突?"}
-    G -->|是| F
-    G -->|否| H["契约检查通过"]
-    I["check_eval_artifacts.py"] --> J["runtime artifact 策略"]
+    A["eval prompt / fixture"] --> B["with_skill run"]
+    A --> C["without_skill baseline run"]
+    B --> D["fresh subagent / judge review"]
+    C --> D
+    D --> E["更新 durable comparison.md"]
+    E --> F["check_eval_contract.py"]
+    G["evals.json / eval_metadata.json"] --> F
+    F --> H{"schema 和 PASS baseline 契约有效?"}
+    H -->|否| I["契约检查失败"]
+    H -->|是| J["契约检查通过"]
+    K["check_eval_artifacts.py"] --> L["runtime artifact 策略"]
 ```
 
 | 组件 | 职责 |
@@ -67,6 +76,8 @@ flowchart TD
 | `scripts/check_eval_contract.py` | 继续校验 eval schema 和 metadata；新增 durable comparison 硬冲突校验。 |
 | `agents/test_eval_contract.py` | 覆盖合法和非法 comparison 证据模式。 |
 | `agents/**/comparison.md` | 存储 durable latest result、baseline behavior、failures、next steps 和 artifact policy。 |
+| `AGENTS.md` 与 `agents/*/test/README.md` | 定义 fresh subagent validation 必须生成 `without_skill` baseline 的运行协议。 |
+| `agents/qa/test/run_eval.py` | 已有 QA fresh candidate / judge runner；需要在 baseline 候选或 verdict 缺失时失败。 |
 | `scripts/check_eval_artifacts.py` | 继续阻止 runtime artifact 文件入库；本次无需语义变更。 |
 
 ## 4. 技术栈
@@ -86,6 +97,7 @@ flowchart TD
 | --- | --- | --- |
 | `Latest result: PASS` | 完整 durable eval pass。 | 不得与明确缺失、blocked、skipped、not generated、not run 或 diagnostic-only baseline 状态并存。 |
 | `Without Skill / Baseline` 或 `Baseline` | Baseline 对照 section。 | 在 PASS 下不得是 diagnostic-only、blocked、skipped、not generated 或 not run。 |
+| `without_skill` runtime result | 同一 eval prompt / fixture 下不加载 skill 的运行输出。 | 作为 baseline 内容来源；不提交运行期产物，只把语义摘要写入 `comparison.md`。 |
 | `Latest result: PARTIAL` | 有价值但不完整的验证结果。 | 可以包含 baseline 缺失原因。 |
 | `Latest result: BLOCKED` | Eval 未完整完成。 | 必须说明 blocker；不得表达完整 PASS。 |
 
@@ -135,10 +147,21 @@ Checker 也应允许经 review 保留的完整 PASS，例如已修复的 `eval-0
 假设性 baseline 描述是否仍然可信，由后续 eval 刷新或 PR review 判断，而不是由
 脚本推断。
 
+### 6.5 Fresh Subagent Baseline 生成协议
+
+实际执行 skill eval 或 fresh Codex subagent validation 时，执行者必须完成：
+
+1. 使用 eval 定义中的 prompt、fixture 和 assertions 运行 `with_skill`。
+2. 使用同一 prompt 和 fixture，在不读取或应用目标 skill / Agent README 的条件下运行 `without_skill`。
+3. 将两路结果交给 fresh subagent / judge 做语义评审。
+4. 在 durable `comparison.md` 中记录 with-skill 行为、without-skill baseline 行为、失败项、next steps 和 runtime artifact policy。
+
+如果 `without_skill` baseline 不能生成、没有 judge verdict，或无法被 reviewer 判断，本次结果不能写完整 `PASS`。可以保留 with-skill 通过证据，但 latest result 应写为 `PARTIAL` 或 `BLOCKED`，并说明 baseline 缺失原因。
+
 ## 7. 实现约束
 
 - 改动集中在现有校验脚本和测试。
-- 不新增 eval runner。
+- 不新增 eval runner；只收紧已有 QA runner 的 baseline 生成失败门禁。
 - 不在简单 section 级文本扫描足够时引入脆弱的完整 Markdown AST 解析。
 - 不改变 `evals.json` schema version。
 - 不修改无关 skill 文档、fixture 内容或格式。

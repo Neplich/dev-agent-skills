@@ -14,6 +14,11 @@ conversation summaries must match the committed or proposed `comparison.md`; if
 there is no comparison file to update, record the blocked or not-applicable
 reason.
 
+Fresh Codex subagent validation must run both `with_skill` and `without_skill`
+against the same eval prompt and fixture. The `without_skill` run is the
+baseline input for `comparison.md`; if it cannot be generated or reviewed, do
+not record a full `PASS`.
+
 Some skills may also have more specific running guides, such as
 `idea-to-spec/README.md`; follow the specific guide plus the durable comparison
 rule above.

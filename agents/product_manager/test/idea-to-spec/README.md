@@ -98,6 +98,8 @@ metadata 不要把这些路径显式写入 `with_skill_outputs`、`without_skill
 6. 更新该 eval 目录下的 `comparison.md` 记录最新对比结论。
 7. 确认 PR 评论或对话中的 eval 结论与已提交或拟提交的 `comparison.md` 一致；如果没有可更新文件，记录 blocked 或不适用原因。
 
+如果 `without-skill` transcript 没有成功生成或无法评审，`comparison.md` 不得记录完整 `PASS`；应记录为 `PARTIAL` 或 `BLOCKED`，并说明 baseline 缺失原因。
+
 报告分为两类：
 
 - `comparison.auto.md`：由 helper 自动生成的运行期临时报告，不作为 durable result 提交
