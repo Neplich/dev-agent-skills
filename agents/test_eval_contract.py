@@ -534,8 +534,11 @@ class EvalContractTests(unittest.TestCase):
             errors = checker.validate_file(root, evals_path)
 
         rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("Latest result PASS requires actual baseline evidence", rendered)
-        self.assertIn("baseline behavior is diagnostic only", rendered)
+        self.assertIn(
+            "Latest result PASS cannot be paired with explicit missing or blocked baseline state",
+            rendered,
+        )
+        self.assertIn("baseline is diagnostic-only", rendered)
 
     def test_eval_contract_rejects_pass_with_remaining_diagnostic_baseline(self):
         checker = load_checker_module()
@@ -553,8 +556,11 @@ class EvalContractTests(unittest.TestCase):
             errors = checker.validate_file(root, evals_path)
 
         rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("Latest result PASS requires actual baseline evidence", rendered)
-        self.assertIn("baseline behavior remains diagnostic", rendered)
+        self.assertIn(
+            "Latest result PASS cannot be paired with explicit missing or blocked baseline state",
+            rendered,
+        )
+        self.assertIn("baseline remains diagnostic-only", rendered)
 
     def test_eval_contract_rejects_pass_with_blocked_baseline(self):
         checker = load_checker_module()
@@ -572,7 +578,10 @@ class EvalContractTests(unittest.TestCase):
             errors = checker.validate_file(root, evals_path)
 
         rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("Latest result PASS requires actual baseline evidence", rendered)
+        self.assertIn(
+            "Latest result PASS cannot be paired with explicit missing or blocked baseline state",
+            rendered,
+        )
 
     def test_eval_contract_allows_pass_with_actual_baseline(self):
         checker = load_checker_module()
@@ -586,6 +595,24 @@ class EvalContractTests(unittest.TestCase):
                 "## Without Skill / Baseline\n\n"
                 "- PASS. Baseline run `019ef5f3-e0e2-7ef3-adb9-5f89535a79f3` passed "
                 "against the same prompt and fixture.\n",
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        self.assertEqual("\n".join(error.render(root) for error in errors), "")
+
+    def test_eval_contract_allows_pass_with_reviewed_hypothetical_baseline(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(
+                root,
+                "# Comparison\n\n"
+                "- Latest result: PASS - reviewed comparison retained by maintainer\n\n"
+                "## Without Skill / Baseline\n\n"
+                "- May skip the required gate in a generic response.\n"
+                "- Less consistently preserves the role boundary.\n",
             )
 
             errors = checker.validate_file(root, evals_path)

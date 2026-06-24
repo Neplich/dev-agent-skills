@@ -66,11 +66,11 @@ BASELINE_NOT_REQUIRED_RE = re.compile(
 WEAK_BASELINE_PATTERNS = (
     (
         re.compile(r"\bBaseline behavior is diagnostic only\.", re.IGNORECASE),
-        "baseline behavior is diagnostic only",
+        "baseline is diagnostic-only",
     ),
     (
         re.compile(r"\bBaseline behavior remains diagnostic:", re.IGNORECASE),
-        "baseline behavior remains diagnostic",
+        "baseline remains diagnostic-only",
     ),
     (
         re.compile(r"(?im)^\s*-\s*(?:BLOCKED|SKIPPED)\b"),
@@ -83,10 +83,6 @@ WEAK_BASELINE_PATTERNS = (
             re.IGNORECASE,
         ),
         "baseline is not generated or not run",
-    ),
-    (
-        re.compile(r"\bbaseline risk\b", re.IGNORECASE),
-        "baseline risk without actual result",
     ),
 )
 
@@ -275,7 +271,8 @@ def validate_comparison(path: Path, errors: list[ContractError]) -> None:
             add_error(
                 errors,
                 path,
-                f"Latest result PASS requires actual baseline evidence; found {reason}",
+                "Latest result PASS cannot be paired with explicit missing or "
+                f"blocked baseline state; found {reason}",
             )
 
 

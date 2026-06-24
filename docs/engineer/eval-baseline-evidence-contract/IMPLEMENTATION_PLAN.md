@@ -1,7 +1,7 @@
 ---
 title: "评测基线证据契约实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.1"
+version: "0.1.2"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -16,6 +16,9 @@ related_trd: "docs/engineer/eval-baseline-evidence-contract/TRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/46"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 changelog:
+  - version: "0.1.2"
+    date: "2026-06-24"
+    changes: "根据 PR review 收窄 checker 职责边界，明确 baseline 质量由运行后 review 判断"
   - version: "0.1.1"
     date: "2026-06-24"
     changes: "记录实现结果、历史 comparison 清理数量和验证结果"
@@ -56,9 +59,9 @@ baseline 证据。
 
 | 路径 | 操作 | 目的 |
 | --- | --- | --- |
-| `scripts/check_eval_contract.py` | 修改 | 增加 durable `comparison.md` 的 PASS baseline 证据校验。 |
+| `scripts/check_eval_contract.py` | 修改 | 增加 durable `comparison.md` 的 PASS baseline 硬冲突校验。 |
 | `agents/test_eval_contract.py` | 修改 | 增加非法和合法 baseline 证据状态的回归测试。 |
-| `agents/**/comparison.md` | 修改 | 将 PASS 下的弱 baseline 证据替换为实际 baseline 结果或非 PASS 语义。 |
+| `agents/**/comparison.md` | 修改 | 将 PASS 下的 diagnostic-only baseline 状态替换为 review 结论或非 PASS 语义。 |
 | `docs/engineer/eval-baseline-evidence-contract/IMPLEMENTATION_PLAN.md` | 修改 | 实施后记录结果、验证证据和剩余风险。 |
 
 ### 3.2 非目标
@@ -90,14 +93,14 @@ flowchart TD
 
 - 增加 helper 读取每个 durable `comparison.md`。
 - 使用 `Latest result: PASS` 判断完整 PASS。
-- 完整 PASS 下拒绝以下弱 baseline 文案：
+- 完整 PASS 下拒绝以下硬冲突 baseline 文案：
   - `Baseline behavior is diagnostic only.`
   - `Baseline behavior remains diagnostic:`
   - `BLOCKED`
   - `SKIPPED`
   - `not generated`
   - `not run`
-  - 只有 `baseline risk` 而没有实际 baseline 结果。
+- 不用脚本判断 baseline 自由文本是否语义完整、覆盖充分或足以代表 skill 质量；该判断保留给 sub-agent / 人工 review。
 - 复用现有 `ContractError` 输出违规，保持 CLI 输出格式一致。
 
 验证：
@@ -114,7 +117,7 @@ uv run scripts/check_eval_contract.py
 
 - 增加 `Latest result: PASS` + `Baseline behavior is diagnostic only.` 应失败的 fixture。
 - 增加 `Latest result: PASS` + `Baseline behavior remains diagnostic:` 应失败的 fixture。
-- 增加 `Latest result: PASS` + 实际 baseline 结果应通过的 fixture。
+- 增加 `Latest result: PASS` + 经 review 保留的 baseline 文案应通过的 fixture。
 - 增加 `Latest result: PARTIAL` + baseline not generated 应通过的 fixture。
 
 验证：
@@ -131,7 +134,7 @@ uv run --with pytest pytest agents/test_eval_contract.py
 
 预期起始盘点：
 
-- issue 中记录的 72 个精确弱 baseline 文件；
+- issue 中记录的 72 个精确 diagnostic-only baseline 文件；
 - 2 个额外包含 `Baseline behavior remains diagnostic:` 的 tracked 文件。
 
 实现时应以 checker 输出作为编辑历史 comparison 的准确信息来源。
@@ -140,8 +143,8 @@ uv run --with pytest pytest agents/test_eval_contract.py
 
 对每个 invalid comparison：
 
-1. 如果文件中已有实际 baseline 证据，将 baseline section 改写为直接陈述结果。
-2. 如果没有实际 baseline 证据，将 latest result 从完整 `PASS` 改为 `PARTIAL` 或 `BLOCKED`。
+1. 如果文件中已有实际 baseline 运行或 review 结论，将 baseline section 改写为直接陈述结果。
+2. 如果 baseline 明确未生成或被阻塞，将 latest result 从完整 `PASS` 改为 `PARTIAL` 或 `BLOCKED`。
 3. 保留已有 with-skill validation 证据。
 4. 保持 runtime artifact policy 明确。
 5. 避免无关措辞或格式改动。
@@ -225,7 +228,7 @@ uv run --with pytest pytest agents/test_eval_contract.py
 | 风险 | 影响 | 缓解 |
 | --- | --- | --- |
 | 批量 Markdown 编辑隐藏语义变化。 | Reviewer 可能漏看意外结果变化。 | 每处编辑限制在 latest result 和 baseline section。 |
-| Checker 范围过宽。 | 合法 PASS 文件可能失败。 | 限定为完整 PASS + 已知弱 baseline 短语。 |
+| Checker 范围过宽。 | 合法 PASS 文件可能失败。 | 限定为完整 PASS + 明确缺失、blocked、skipped 或 diagnostic-only baseline 状态。 |
 | 大量历史 eval 无法生成 baseline。 | 多个文件会变为 PARTIAL。 | 真实反映证据状态，后续可逐步补 baseline。 |
 | 模型 eval 重跑耗时。 | 实现可能被拖慢。 | 本次不强制重跑；缺证据时使用非 PASS 语义。 |
 
@@ -248,11 +251,12 @@ uv run --with pytest pytest agents/test_eval_contract.py
 
 ### 10.2 实施结果
 
-- `check_eval_contract.py` 已新增 baseline section 级校验：
+- `check_eval_contract.py` 已新增 baseline section 级硬冲突校验：
   - 仅当 `comparison.md` 包含 `Latest result: PASS` 时触发；
   - 只检查 `## Without Skill / Baseline`、`## Without Skill` 或 `## Baseline` section；
-  - 拒绝 diagnostic-only、remains diagnostic、blocked / skipped、not generated / not run、baseline risk 等弱 baseline 证据。
-- `agents/test_eval_contract.py` 已新增 5 个 baseline 证据回归用例。
+  - 拒绝 diagnostic-only、remains diagnostic、blocked / skipped、not generated / not run 等明确缺失或阻塞状态；
+  - 不判断 baseline 自由文本是否语义完整，baseline PASS / FAIL / BLOCKED 由实际运行后的 sub-agent / 人工 review 判断。
+- `agents/test_eval_contract.py` 已新增 6 个 baseline 证据回归用例。
 - 74 个历史 comparison 已从完整 `PASS` 改为 `PARTIAL`，并补充明确 blocked baseline 原因。
 - 已确认 `Latest result: PASS` 与 `Baseline behavior is/remains diagnostic` 并存数量为 0。
 - 本轮未运行模型 eval 或 fresh Codex subagent baseline；原因是 #46 允许无法补齐实际 baseline 的历史 eval 先移出完整 PASS 语义。
@@ -274,12 +278,12 @@ uv run --with pytest pytest agents/test_eval_contract.py
 - `uv run scripts/check_repository_contract.py`: PASS
 - `uv run scripts/check_eval_contract.py`: PASS
 - `uv run scripts/check_eval_artifacts.py`: PASS
-- `uv run --with pytest pytest agents/test_eval_contract.py`: PASS, 34 passed
+- `uv run --with pytest pytest agents/test_eval_contract.py`: PASS, 35 passed
 
 ### 10.4 剩余风险
 
 | 风险 | 状态 | 说明 |
 | --- | --- | --- |
 | 历史 eval 尚未补真实 without-skill baseline | Accepted | 已通过 `PARTIAL` 语义避免误判为完整 PASS；后续可逐个补 baseline 后恢复 PASS。 |
-| Checker 只覆盖已知弱 baseline 文案 | Accepted | 当前覆盖 #46 中发现的 exact / remains diagnostic 变体和 blocked / skipped / not generated / not run 模式；未来 review 发现新变体时再补规则。 |
+| Checker 不覆盖 baseline 语义质量 | Accepted | 当前只覆盖 #46 中发现的 exact / remains diagnostic 变体和 blocked / skipped / not generated / not run 硬冲突；baseline 内容质量由 sub-agent / 人工 review 判断。 |
 | 批量 comparison 编辑较多 | Mitigated | 每个文件只改 latest result 和 baseline section，保留 prior validation note 与原有 With Skill 证据。 |
