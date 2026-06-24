@@ -70,6 +70,50 @@ def init_git_main(root: Path) -> None:
 
 
 class EvalContractTests(unittest.TestCase):
+    def write_eval_fixture(self, root: Path, comparison_text: str) -> Path:
+        evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
+        skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
+        workspace = evals_path.parent / "workspace/eval-001-baseline-evidence"
+        workspace.mkdir(parents=True)
+        skill_doc.parent.mkdir(parents=True)
+        skill_doc.write_text("# Debugger\n")
+        (workspace / "comparison.md").write_text(comparison_text)
+        (workspace / "eval_metadata.json").write_text(
+            json.dumps(
+                {
+                    "eval_id": "eval-001-baseline-evidence",
+                    "eval_name": "baseline-evidence",
+                }
+            )
+        )
+        evals_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": "1.0",
+                    "agent": "engineer",
+                    "skill_name": "debugger",
+                    "evals": [
+                        {
+                            "id": "eval-001-baseline-evidence",
+                            "name": "baseline-evidence",
+                            "description": "Baseline evidence fixture",
+                            "prompt": "Run the eval",
+                            "workspace": "workspace/eval-001-baseline-evidence",
+                            "expected_output": "A result",
+                            "assertions": [
+                                {
+                                    "id": "has_result",
+                                    "description": "Has a result",
+                                    "text": "Result is present",
+                                }
+                            ],
+                        }
+                    ],
+                }
+            )
+        )
+        return evals_path
+
     def test_all_agent_skill_evals_follow_shared_contract(self):
         checker = load_checker_module()
         errors = checker.validate_all()
@@ -473,6 +517,97 @@ class EvalContractTests(unittest.TestCase):
             "\n".join(error.render(root) for error in errors),
             "",
         )
+
+    def test_eval_contract_rejects_pass_with_diagnostic_only_baseline(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(
+                root,
+                "# Comparison\n\n"
+                "- Latest result: PASS - fresh validation passed\n\n"
+                "## Without Skill / Baseline\n\n"
+                "- Baseline behavior is diagnostic only.\n",
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("Latest result PASS requires actual baseline evidence", rendered)
+        self.assertIn("baseline behavior is diagnostic only", rendered)
+
+    def test_eval_contract_rejects_pass_with_remaining_diagnostic_baseline(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(
+                root,
+                "# Comparison\n\n"
+                "- Latest result: PASS - fresh validation passed\n\n"
+                "## Without Skill / Baseline\n\n"
+                "- Baseline behavior remains diagnostic: a generic response may miss the guardrail.\n",
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("Latest result PASS requires actual baseline evidence", rendered)
+        self.assertIn("baseline behavior remains diagnostic", rendered)
+
+    def test_eval_contract_rejects_pass_with_blocked_baseline(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(
+                root,
+                "# Comparison\n\n"
+                "- Latest result: PASS - fresh validation passed\n\n"
+                "## Without Skill / Baseline\n\n"
+                "- BLOCKED: without-skill baseline was not generated.\n",
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("Latest result PASS requires actual baseline evidence", rendered)
+
+    def test_eval_contract_allows_pass_with_actual_baseline(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(
+                root,
+                "# Comparison\n\n"
+                "- Latest result: PASS - with-skill and without-skill runs passed\n\n"
+                "## Without Skill / Baseline\n\n"
+                "- PASS. Baseline run `019ef5f3-e0e2-7ef3-adb9-5f89535a79f3` passed "
+                "against the same prompt and fixture.\n",
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        self.assertEqual("\n".join(error.render(root) for error in errors), "")
+
+    def test_eval_contract_allows_partial_with_missing_baseline_reason(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(
+                root,
+                "# Comparison\n\n"
+                "- Latest result: PARTIAL - with-skill validation passed; baseline not generated\n\n"
+                "## Without Skill / Baseline\n\n"
+                "- BLOCKED: without-skill baseline was not generated for this historical comparison.\n",
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        self.assertEqual("\n".join(error.render(root) for error in errors), "")
 
     def test_artifact_checker_blocks_tmp_eval_runs(self):
         checker = load_artifact_checker_module()

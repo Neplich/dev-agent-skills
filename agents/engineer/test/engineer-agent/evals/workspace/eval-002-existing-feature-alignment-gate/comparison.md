@@ -7,7 +7,8 @@
 - Eval: `eval-002-existing-feature-alignment-gate`
 - Test case: existing-feature-alignment-gate
 - Workspace: `workspace/eval-002-existing-feature-alignment-gate`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
 
@@ -40,8 +41,7 @@ Observed behavior:
 - 只有在 PRD/TRD 对齐后才能进入 `feature-implementor`；进入后仍由 `feature-implementor` 基于确认 TRD 写入 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`，并等待实现确认后再编码。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

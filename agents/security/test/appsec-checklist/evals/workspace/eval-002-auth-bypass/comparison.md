@@ -7,7 +7,8 @@
 - Eval: `eval-002-auth-bypass`
 - Test case: Authentication Bypass
 - Workspace: `workspace/eval-002-auth-bypass`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
 
@@ -29,8 +30,7 @@ Observed behavior:
 - 当前 skill 覆盖认证、session、access control、缺失权限检查和认证绕过，并要求按 Critical/High 等级给出证据、影响和修复建议。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

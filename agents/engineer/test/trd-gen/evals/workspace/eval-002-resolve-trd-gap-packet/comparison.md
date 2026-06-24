@@ -7,7 +7,8 @@
 - Eval: `eval-002-resolve-trd-gap-packet`
 - Test case: resolve-trd-gap-packet
 - Workspace: `workspace/eval-002-resolve-trd-gap-packet`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
 
@@ -35,8 +36,7 @@ Observed behavior:
 - 当前 `SKILL.md` 明确在 TRD 被确认或 open questions 被明确接受为非阻塞前，不得路由到 `feature-implementor`、`debugger` 或 QA E2E documentation updates；因此未解决 gap 会阻断 `IMPLEMENTATION_PLAN.md`、代码修改、测试补充和 docs/qa/e2e TC 更新。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

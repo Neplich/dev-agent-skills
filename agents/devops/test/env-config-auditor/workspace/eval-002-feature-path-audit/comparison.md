@@ -7,7 +7,8 @@
 - Eval: `eval-002-feature-path-audit`
 - Test case: feature-path-audit
 - Workspace: `workspace/eval-002-feature-path-audit`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-23.
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation completed on 2026-06-23.
 
 ## Test Set / Fixture Version
 
@@ -29,8 +30,7 @@
 - Expected with-skill behavior is therefore to read the same-path Engineer documents, audit the search env vars, and write `docs/devops/chat-interface/history-search/ENV_AUDIT.md` without creating `docs/devops/history-search/ENV_AUDIT.md`.
 
 ## Without Skill / Baseline
-
-- Baseline behavior remains diagnostic: a generic response may treat `history-search` as the whole feature name, skip the confirmed parent path, and create `docs/devops/history-search/ENV_AUDIT.md`.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - The feature-path gate adds the required behavior that unclear or missing path evidence must return to PM/Engineer instead of guessing a synonymous directory.
 
 ## Failures

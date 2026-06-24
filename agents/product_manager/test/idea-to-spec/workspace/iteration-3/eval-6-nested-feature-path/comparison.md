@@ -7,7 +7,8 @@
 - Eval: `eval-006-nested-feature-path`
 - Test case: nested-feature-path
 - Workspace: `workspace/iteration-3/eval-6-nested-feature-path`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23 after the feature_path doc-schema update
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation on 2026-06-23 after the feature_path doc-schema update
 
 ## Test Set / Fixture Version
 
@@ -34,8 +35,7 @@ Observed behavior:
 - The feature_path doc-schema update directly supports this eval: PRD and BRD schemas require the same feature metadata, TEST_SPEC consumes the confirmed PM/Engineer path, and legacy PM-side TRD validation mirrors `docs/engineer/{feature_path}/TRD.md`.
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - Without the skill-specific PM feature path gate, the likely risk is treating `history-search` as a standalone level-1 feature and writing `docs/pm/history-search/PRD.md`.
 
 ## Failures

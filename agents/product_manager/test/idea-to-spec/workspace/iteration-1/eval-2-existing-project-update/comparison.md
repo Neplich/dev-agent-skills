@@ -7,7 +7,8 @@
 - Eval: `eval-002-existing-project-update`
 - Test case: existing-project-update
 - Workspace: `workspace/iteration-1/eval-2-existing-project-update`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23 after the feature_path doc-schema update
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation on 2026-06-23 after the feature_path doc-schema update
 
 ## Test Set / Fixture Version
 
@@ -33,8 +34,7 @@ Observed behavior:
 - The feature_path schema update is compatible with this eval: legacy single-level `notification-center` docs remain readable as a level-1 feature, while any updated formal docs or handoff should preserve `feature_path=notification-center`, `feature=notification-center`, `parent_feature=N/A`, and `feature_level=1`.
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - Without the skill contract, the likely risk is treating the request as a new design or rewriting documents without retiring the prior polling decision.
 
 ## Failures

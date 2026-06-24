@@ -7,7 +7,8 @@
 - Eval: `eval-001-unreleased-mode`
 - Test case: unreleased-mode
 - Workspace: `workspace/eval-001-unreleased-mode`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
 
@@ -30,8 +31,7 @@ Observed behavior:
 - 当前 skill 明确支持 Unreleased mode：定位最新 release 后的 merged PR，跳过 bot 和 chore/ci/test 等内部变更，按 Keep a Changelog 输出 ## [Unreleased] 并写入 docs/changelog/changelog-unreleased.md。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

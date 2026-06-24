@@ -7,7 +7,8 @@
 - Eval: `eval-004-small-change-plan-gate`
 - Test case: small-change-plan-gate
 - Workspace: `workspace/eval-004-small-change-plan-gate`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
 
@@ -38,8 +39,7 @@ Observed behavior:
 - The QA E2E documentation handoff section stops if a confirmed implementation plan is missing, and says small, single-file, low-risk, and spec-backed bug-fix changes still require the confirmed implementation plan before the handoff.
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

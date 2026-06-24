@@ -7,7 +7,8 @@
 - Eval: `eval-004-pm-spec-handoff`
 - Test case: PM Spec Handoff Stops Before Implementation
 - Workspace: `workspace/eval-4-pm-spec-handoff`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
 
@@ -28,8 +29,7 @@ Observed behavior:
 - 当前 SKILL.md 和 Designer README 都说明 PM spec 只能作为设计输入，不授权实现；eval workspace 的 PM/TRD/现有页面上下文支持产出 handoff doc，并明确交给 engineer-agent。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

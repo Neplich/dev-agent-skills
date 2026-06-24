@@ -7,7 +7,8 @@
 - Eval: `eval-002-feature-path-design-handoff`
 - Test case: feature-path-design-handoff
 - Workspace: `workspace/eval-2-feature-path-design-handoff`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
 
@@ -30,8 +31,7 @@
 - PASS. Designer boundaries forbid code, tests, scripts, deployment config, engineer task lists, and implementation instructions; the route stops at design handoff and names `engineer-agent` as the implementation owner.
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - A generic answer may route the design work but drop the parent feature and suggest a top-level `history-search` design directory.
 
 ## Failures

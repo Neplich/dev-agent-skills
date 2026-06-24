@@ -7,7 +7,8 @@
 - Eval: `eval-003-python`
 - Test case: Python Dependency Audit
 - Workspace: `workspace/eval-003-python`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
 
@@ -29,8 +30,7 @@ Observed behavior:
 - 当前 skill 覆盖 requirements.txt/Pipfile、pip-audit、Python CVE/版本证据、严重度分类和升级/缓解建议，满足 eval 断言。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

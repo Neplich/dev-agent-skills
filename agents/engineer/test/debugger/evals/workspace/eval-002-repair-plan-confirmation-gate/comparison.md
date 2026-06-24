@@ -7,7 +7,8 @@
 - Eval: `eval-002-repair-plan-confirmation-gate`
 - Test case: repair-plan-confirmation-gate
 - Workspace: `workspace/eval-002-repair-plan-confirmation-gate`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
 
@@ -42,8 +43,7 @@ Current `SKILL.md` satisfies all assertions:
   implementation until the exact repair plan is confirmed.
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing,
   evidence, and artifact expectations are preserved.
 

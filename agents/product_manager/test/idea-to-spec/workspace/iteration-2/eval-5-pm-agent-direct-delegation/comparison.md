@@ -7,7 +7,8 @@
 - Eval: `eval-005-pm-agent-direct-delegation`
 - Test case: pm-agent-direct-delegation
 - Workspace: `workspace/iteration-2/eval-5-pm-agent-direct-delegation`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23 after the feature_path doc-schema update
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation on 2026-06-23 after the feature_path doc-schema update
 
 ## Test Set / Fixture Version
 
@@ -32,8 +33,7 @@ Observed behavior:
 - The feature_path schema update does not change dispatcher expectations, but once the delegated `idea-to-spec` flow reaches durable document output, it must apply the same feature path gate and handoff fields.
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - Without the dispatcher contract, the likely risk is a meta-routing response that recommends `idea-to-spec` but does not actually begin PM requirement shaping.
 
 ## Failures

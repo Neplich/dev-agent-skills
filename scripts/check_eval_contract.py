@@ -53,6 +53,42 @@ RUNTIME_DIAGNOSTIC_FILES = (
     "timing.json",
     "run_status.json",
 )
+LATEST_PASS_RE = re.compile(r"(?im)^\s*-\s*Latest result:\s*PASS\b")
+BASELINE_HEADING_RE = re.compile(
+    r"^#{2,6}\s+(?:Without Skill / Baseline|Without Skill|Baseline)\s*$",
+    re.IGNORECASE,
+)
+NEXT_HEADING_RE = re.compile(r"^#{1,6}\s+\S")
+BASELINE_NOT_REQUIRED_RE = re.compile(
+    r"\bbaseline\b.{0,80}\b(?:not required|not applicable|unnecessary)\b",
+    re.IGNORECASE,
+)
+WEAK_BASELINE_PATTERNS = (
+    (
+        re.compile(r"\bBaseline behavior is diagnostic only\.", re.IGNORECASE),
+        "baseline behavior is diagnostic only",
+    ),
+    (
+        re.compile(r"\bBaseline behavior remains diagnostic:", re.IGNORECASE),
+        "baseline behavior remains diagnostic",
+    ),
+    (
+        re.compile(r"(?im)^\s*-\s*(?:BLOCKED|SKIPPED)\b"),
+        "baseline is blocked or skipped",
+    ),
+    (
+        re.compile(
+            r"\b(?:baseline|without-skill)[^\n.]{0,80}\b(?:not generated|not run)\b"
+            r"|\b(?:not generated|not run)[^\n.]{0,80}\b(?:baseline|without-skill)\b",
+            re.IGNORECASE,
+        ),
+        "baseline is not generated or not run",
+    ),
+    (
+        re.compile(r"\bbaseline risk\b", re.IGNORECASE),
+        "baseline risk without actual result",
+    ),
+)
 
 
 @dataclass
@@ -200,6 +236,49 @@ def validate_metadata_assertion_targets(
             )
 
 
+def baseline_sections(text: str) -> list[str]:
+    lines = text.splitlines()
+    sections: list[str] = []
+    index = 0
+
+    while index < len(lines):
+        if not BASELINE_HEADING_RE.match(lines[index]):
+            index += 1
+            continue
+
+        section_lines = [lines[index]]
+        index += 1
+        while index < len(lines) and not NEXT_HEADING_RE.match(lines[index]):
+            section_lines.append(lines[index])
+            index += 1
+        sections.append("\n".join(section_lines))
+
+    return sections
+
+
+def validate_comparison(path: Path, errors: list[ContractError]) -> None:
+    text = path.read_text()
+    if not LATEST_PASS_RE.search(text):
+        return
+
+    sections = baseline_sections(text)
+    if not sections:
+        add_error(errors, path, "Latest result PASS requires a baseline section")
+        return
+
+    baseline_text = "\n\n".join(sections)
+    if BASELINE_NOT_REQUIRED_RE.search(baseline_text):
+        return
+
+    for pattern, reason in WEAK_BASELINE_PATTERNS:
+        if pattern.search(baseline_text):
+            add_error(
+                errors,
+                path,
+                f"Latest result PASS requires actual baseline evidence; found {reason}",
+            )
+
+
 def validate_metadata(
     evals_path: Path,
     skill_test_dir: Path,
@@ -221,6 +300,8 @@ def validate_metadata(
         return
     if not comparison_path.exists():
         add_error(errors, evals_path, f"evals[{eval_index}] workspace is missing durable comparison.md")
+    else:
+        validate_comparison(comparison_path, errors)
 
     metadata = load_json(metadata_path, errors)
     if metadata is None:

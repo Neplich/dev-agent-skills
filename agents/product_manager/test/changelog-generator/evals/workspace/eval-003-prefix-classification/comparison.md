@@ -7,7 +7,8 @@
 - Eval: `eval-003-prefix-classification`
 - Test case: prefix-classification
 - Workspace: `workspace/eval-003-prefix-classification`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-15; no changelog-generator transcript runner is available, so no model transcript was generated
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without-skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation completed on 2026-06-15; no changelog-generator transcript runner is available, so no model transcript was generated
 
 ## Test Set / Fixture Version
 
@@ -38,8 +39,7 @@ Observed behavior:
 - Fresh Codex subagent validation confirmed the current skill contract keeps conventional prefix classification for feat/fix/perf/remove/security, keeps chore(deps) and build(deps) dependency bumps skipped, classifies semantic docs/test/ci/general build/style PRs through semantic review when they affect release workflow, eval contracts, durable comparison, or required gates, and skips formatting-only docs or cache-only ci changes.
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without-skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures
