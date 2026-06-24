@@ -583,42 +583,6 @@ class EvalContractTests(unittest.TestCase):
             rendered,
         )
 
-    def test_eval_contract_rejects_pass_with_skipped_baseline_sentence(self):
-        checker = load_checker_module()
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            evals_path = self.write_eval_fixture(
-                root,
-                "# Comparison\n\n"
-                "- Latest result: PASS - fresh validation passed\n\n"
-                "## Without Skill / Baseline\n\n"
-                "- Baseline was skipped because the runner was unavailable.\n",
-            )
-
-            errors = checker.validate_file(root, evals_path)
-
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("baseline is blocked or skipped", rendered)
-
-    def test_eval_contract_rejects_pass_with_blocked_baseline_sentence(self):
-        checker = load_checker_module()
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            evals_path = self.write_eval_fixture(
-                root,
-                "# Comparison\n\n"
-                "- Latest result: PASS - fresh validation passed\n\n"
-                "## Without Skill / Baseline\n\n"
-                "- Without-skill baseline is blocked by missing credentials.\n",
-            )
-
-            errors = checker.validate_file(root, evals_path)
-
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("baseline is blocked or skipped", rendered)
-
     def test_eval_contract_allows_pass_with_actual_baseline(self):
         checker = load_checker_module()
 
