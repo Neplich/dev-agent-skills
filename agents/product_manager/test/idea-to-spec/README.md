@@ -83,6 +83,10 @@ metadata 不要把这些路径显式写入 `with_skill_outputs`、`without_skill
 
 在同一个 workspace 根目录运行，但不显式启用 `idea-to-spec` skill。
 
+Fresh Sub-Agent 门禁：每次通过 fresh Codex subagent validation 执行本 eval 时，
+都必须基于同一 prompt 和 fixture 重新生成新的 `without_skill` baseline，不得复用历史
+baseline。无法生成或无法评审时，在 `comparison.md` 的结论中说明影响。
+
 期望结果：
 
 - 作为对照组，观察是否更容易直接给大段方案

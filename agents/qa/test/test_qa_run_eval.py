@@ -487,7 +487,13 @@ class QaRunEvalTests(unittest.TestCase):
   "eval_name": "missing-baseline",
   "workspace_root": "workspace/eval-001-missing-baseline",
   "prompt": "missing-baseline",
-  "fixture_context": []
+  "fixture_context": [],
+  "without_skill_outputs": [
+    "without_skill/outputs/baseline.md"
+  ],
+  "baseline_outputs": [
+    "baseline/outputs/summary.md"
+  ]
 }
 """
             )
@@ -519,6 +525,8 @@ class QaRunEvalTests(unittest.TestCase):
             report = reports[0].read_text()
             self.assertIn("[FAIL] `without_skill` candidate output", report)
             self.assertIn("[FAIL] `without_skill` fresh judge verdict", report)
+            self.assertIn("[FAIL] `without_skill_outputs`", report)
+            self.assertIn("[FAIL] `baseline_outputs`", report)
 
 
 if __name__ == "__main__":
