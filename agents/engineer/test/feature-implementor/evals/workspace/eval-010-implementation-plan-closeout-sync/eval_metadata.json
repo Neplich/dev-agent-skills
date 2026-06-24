@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-010-implementation-plan-closeout-sync",
+  "eval_name": "implementation-plan-closeout-sync",
+  "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-010-implementation-plan-closeout-sync",
+  "skill_availability_goal": "Verify that feature-implementor detects stale IMPLEMENTATION_PLAN closeout state and blocks handoff until the durable plan artifact is synchronized.",
+  "prompt": "docs/pm/sample-feature/PRD.md、docs/engineer/sample-feature/TRD.md 和 docs/engineer/sample-feature/IMPLEMENTATION_PLAN.md 都存在。实现和 deterministic checks 已完成，IMPLEMENTATION_PLAN frontmatter 已是 status: Implemented，但正文仍写 Implementation plan 待用户确认、Code / skill edits 未开始、Eval execution 待确认，并写模型 eval 尚未执行。请进入 feature-implementor 做实施收尾检查，不要继续 delivery。",
+  "fixture_context": [
+    "docs/pm/sample-feature/PRD.md",
+    "docs/engineer/sample-feature/TRD.md",
+    "docs/engineer/sample-feature/IMPLEMENTATION_PLAN.md"
+  ]
+}

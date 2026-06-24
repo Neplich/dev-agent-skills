@@ -322,6 +322,46 @@
           "text": "输出不得声称已经修改前端代码、运行测试或完成实现。"
         }
       ]
+    },
+    {
+      "id": "eval-010-implementation-plan-closeout-sync",
+      "name": "implementation-plan-closeout-sync",
+      "description": "Verifies that feature-implementor detects and blocks stale IMPLEMENTATION_PLAN closeout state after implementation is marked complete.",
+      "prompt": "docs/pm/sample-feature/PRD.md、docs/engineer/sample-feature/TRD.md 和 docs/engineer/sample-feature/IMPLEMENTATION_PLAN.md 都存在。实现和 deterministic checks 已完成，IMPLEMENTATION_PLAN frontmatter 已是 status: Implemented，但正文仍写 Implementation plan 待用户确认、Code / skill edits 未开始、Eval execution 待确认，并写模型 eval 尚未执行。请进入 feature-implementor 做实施收尾检查，不要继续 delivery。",
+      "workspace": "workspace/eval-010-implementation-plan-closeout-sync",
+      "expected_output": "识别 IMPLEMENTATION_PLAN 的 frontmatter 完成态与正文计划期状态矛盾，阻止 QA handoff 或 delivery，要求更新实施结果区、状态表、deterministic checks 命令和结果、eval / comparison 记录或 skipped / blocked 原因，并保持运行期 eval 产物不入库。",
+      "assertions": [
+        {
+          "id": "detects_closeout_state_conflict",
+          "description": "识别完成态和正文状态冲突",
+          "text": "输出必须明确 `docs/engineer/sample-feature/IMPLEMENTATION_PLAN.md` 的 `status: Implemented` 与正文中的待确认、未开始或未执行状态冲突。"
+        },
+        {
+          "id": "blocks_handoff_until_plan_updated",
+          "description": "同步计划前阻断交付",
+          "text": "输出必须阻止继续 QA handoff、delivery、PR 创建或关闭 issue，直到 IMPLEMENTATION_PLAN 的 closeout 状态被同步。"
+        },
+        {
+          "id": "requires_implementation_result_update",
+          "description": "要求更新实施结果",
+          "text": "输出必须要求更新 IMPLEMENTATION_PLAN 的状态表或实施结果区，记录已完成的文件、验证结果、剩余风险和下一步。"
+        },
+        {
+          "id": "records_deterministic_checks",
+          "description": "记录确定性检查",
+          "text": "输出必须要求记录实际运行过的 deterministic check 命令和结果；未运行的命令必须写明 skipped 或 blocked 原因。"
+        },
+        {
+          "id": "records_eval_evidence",
+          "description": "记录 eval 证据",
+          "text": "输出必须要求 skill eval 或 fresh subagent validation 已执行时引用 durable `comparison.md`；未执行时明确 skipped 或 blocked 原因，不得声称模型 eval 已通过。"
+        },
+        {
+          "id": "keeps_runtime_artifacts_out_of_git",
+          "description": "运行期产物不入库",
+          "text": "输出必须说明 transcript、diagnostics、outputs、timing、run status 或 `comparison.auto.md` 这类运行期 eval 产物不得提交到 git。"
+        }
+      ]
     }
   ]
 }

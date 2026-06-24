@@ -5,13 +5,15 @@ feature: "skill-feature-implementor"
 feature_path: "agents/engineer-agent/skills/feature-implementor"
 parent_feature: "agents/engineer-agent/skills"
 feature_level: "4"
-version: "1.3.0"
+version: "1.4.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
 last_updated: "2026-06-24"
 generated_by: "prd-gen"
 related_docs:
+  - "docs/pm/implementation-plan-closeout-gate/PRD.md"
+  - "docs/engineer/implementation-plan-closeout-gate/TRD.md"
   - "agents/engineer/README.md"
   - "agents/engineer/README_zh.md"
   - "agents/engineer/skills/engineer-agent/SKILL.md"
@@ -26,6 +28,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md"
   - "agents/engineer/test/feature-implementor/evals/evals.json"
 changelog:
+  - version: "1.4.0"
+    date: "2026-06-24"
+    changes: "Add implementation plan closeout gate after implementation and validation"
   - version: "1.3.0"
     date: "2026-06-24"
     changes: "Add UI design handoff gate before implementation planning"
@@ -89,6 +94,7 @@ changelog:
 | FR-S08 | Author Metadata | `feature-implementor` 创建或更新 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 时必须使用“生成触发者展示名 + Agent 平台名”的 `author`；平台名可以是用户自定义值。 | P0 | IMPLEMENTATION_PLAN frontmatter 使用已填写的可追踪 author，例如 `Neplich Codex`，不使用空值或 `AI Assistant` 这类占位泛称。 |
 | FR-S09 | Feature Path Plan Gate | 写实施计划前必须校验 PRD/TRD 的 `feature_path`、`parent_feature`、`feature_level` 和 TRD `related_prd` 一致。 | P0 | 缺 PRD 回 PM；缺 TRD、TRD stale 或路径/字段不一致回 `trd-gen`；只有 PRD/TRD 已确认且路径一致时才允许创建 Engineer 目标目录并写计划。 |
 | FR-S10 | UI Design Handoff Gate | 前端 UI 行为、视觉或交互变化进入实施计划前必须检查设计交付物。 | P0 | 实施计划必须引用覆盖当前变化的 `docs/design/{feature_path}/ui-ux-spec.md` 和/或 `visual-system.md`，或明确说明无需 Designer 更新的理由；设计缺失、过期或冲突时停止并 handoff 回 `engineer-agent -> designer-agent`。 |
+| FR-S11 | Implementation Plan Closeout Gate | 实现和验证完成后，必须同步更新 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 的实施结果、验证证据和剩余状态。 | P0 | `status: Implemented` 或等价完成态不得与正文“待确认 / 未开始 / 未执行”矛盾；已运行 deterministic checks 时记录实际命令；已运行 skill eval 或 fresh subagent validation 时引用 durable `comparison.md`；未运行时记录 skipped / blocked 原因。 |
 
 ## 当前实现对齐
 
@@ -101,7 +107,8 @@ changelog:
 - 等待用户明确确认
 - 加载 implementor 执行；复杂任务委派 implementation sub-agent
 - 测试后按需委派 validation sub-agent
-- 自检并准备 QA E2E handoff
+- 实现和验证完成后同步 `IMPLEMENTATION_PLAN.md` 的 closeout 状态、结果和验证证据
+- 自检确认 closeout 并准备 QA E2E handoff
 - 写入或维护 IMPLEMENTATION_PLAN frontmatter 时使用可追踪 `author`
 
 ## 验收标准
@@ -111,6 +118,7 @@ changelog:
 | AC-01 | P0 trigger、context、workflow、artifact 和 handoff 与当前实现文档一致。 | 对照 related_docs 中的 README、SKILL.md、internal/reference 或 eval 文件人工 review。 |
 | AC-02 | 文档不包含自路由、全量默认执行或将 specialist 行为泛化为整个 Agent 的错误描述。 | 检查 route matrix、非目标、边界和 Mermaid flow。 |
 | AC-03 | 产物要求必须指向具体文件、报告、代码变更或 blocked 输出，不使用模糊替代表述。 | 检查功能需求和用户流程中的 artifact 节点。 |
+| AC-04 | 实施完成态的 `IMPLEMENTATION_PLAN.md` 不得保留计划期状态残留。 | reviewer checklist 和 feature-implementor closeout eval。 |
 
 ## 非功能需求
 
@@ -133,8 +141,9 @@ flowchart LR
     Step3 --> Step4["等待用户明确确认"]
     Step4 --> Step5["执行实现；复杂任务委派 implementation sub-agent"]
     Step5 --> Step6["测试后按需委派 validation sub-agent"]
-    Step6 --> Step7["自检并准备 QA E2E handoff"]
-    Step7 --> Artifact["输出具体产物或 blocked 结果"]
+    Step6 --> Step7["同步 IMPLEMENTATION_PLAN closeout"]
+    Step7 --> Step8["自检并准备 QA E2E handoff"]
+    Step8 --> Artifact["输出具体产物或 blocked 结果"]
     Artifact --> Handoff["交接或结束"]
 ```
 

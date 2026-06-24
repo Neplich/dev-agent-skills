@@ -13,6 +13,7 @@ Review the implemented code against PM documents and project conventions before 
 - Engineer documents (TRD, IMPLEMENTATION_PLAN, API Spec)
 - Project Profile
 - Deterministic test results, when available
+- Implementation plan closeout evidence and updated closeout state
 - For complex coding tasks: implementation sub-agent summary and assigned
   write scope
 
@@ -73,6 +74,22 @@ For each P0 acceptance criterion in PRD:
 - [ ] Import style matches existing code
 - [ ] Error handling follows project patterns
 
+### 6. Implementation Plan Closeout
+
+- [ ] Completed implementations update or confirm
+      `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before QA E2E
+      handoff or delivery
+- [ ] If frontmatter uses `status: Implemented` or an equivalent complete
+      state, the body no longer contains unresolved planning-state text such as
+      "waiting for confirmation", "not started", "pending execution", or
+      "model eval not executed"
+- [ ] Deterministic checks that ran are listed with actual commands and results
+- [ ] Commands not run are listed with skipped or blocked reasons
+- [ ] Skill eval or fresh subagent validation that ran links to durable
+      `comparison.md`; if it did not run, the reason is explicit
+- [ ] Runtime eval artifacts such as transcripts, diagnostics, outputs, timing
+      data, and run-status files are not committed
+
 ## Output
 
 ```text
@@ -85,6 +102,7 @@ For each P0 acceptance criterion in PRD:
 | PRD 覆盖 | ✅/⚠️/❌ | <details> |
 | 安全检查 | ✅/⚠️/❌ | <details> |
 | 规范检查 | ✅/⚠️/❌ | <details> |
+| 实施计划收尾 | ✅/⚠️/❌ | <details> |
 | 独立验收 | ✅/⚠️/❌/N/A | <details> |
 
 ### 问题 (如有)
@@ -106,3 +124,5 @@ For each P0 acceptance criterion in PRD:
 | ❌ | Blocking issues | Must fix before handoff |
 
 If any ❌ issues found, go back to Phase 2 to fix them before producing the final review.
+If the ❌ issue is stale `IMPLEMENTATION_PLAN.md` closeout state, update the
+plan closeout and re-run this review before handoff.

@@ -20,6 +20,7 @@ This is the public entry point. It owns:
 - Delegation to internal modules and, for complex coding tasks, scoped
   implementation/validation sub-agents
 - Quality self-check before handoff
+- Implementation plan closeout after implementation and validation
 - QA E2E documentation handoff after code completion when user-facing flows or
   acceptance paths may be affected
 
@@ -373,6 +374,37 @@ Output a brief review summary:
 - 安全检查: ✅ 无明显安全问题
 - 规范检查: ✅ 命名和结构符合项目规范
 ```
+
+## Implementation Plan Closeout Gate
+
+After implementation and deterministic checks, update or confirm the confirmed
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before QA E2E handoff or
+delivery. The reviewer must validate this closeout before handoff. This keeps
+the durable plan artifact aligned with the implemented state.
+
+The closeout must record:
+
+- the final frontmatter status, such as `status: "Implemented"` when the plan
+  has been fully implemented
+- the implementation result and changed file summary
+- deterministic check commands that actually ran and their results
+- commands not run, with skipped or blocked reasons
+- skill eval or fresh subagent validation results when they ran, including the
+  durable `comparison.md` paths
+- residual risks, open follow-ups, and next owner when applicable
+
+If skill eval or fresh subagent validation did not run, say so explicitly with
+the skipped or blocked reason. Do not imply model eval passed without durable
+`comparison.md` evidence. Runtime artifacts such as transcripts, outputs,
+diagnostics, timing data, and run status files must remain outside git.
+
+Before handoff, check that a completed plan does not still contain stale
+planning-state wording. When frontmatter says `Implemented` or an equivalent
+complete state, the plan body must not contradict it with unresolved status such
+as "waiting for confirmation", "not started", "pending execution", or "model
+eval not executed" unless those phrases are clearly historical context with a
+current resolved result. If stale state remains, update the plan closeout before
+continuing.
 
 ## QA E2E Documentation Handoff
 
