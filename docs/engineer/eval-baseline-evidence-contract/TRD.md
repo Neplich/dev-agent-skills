@@ -1,7 +1,7 @@
 ---
 title: "评测基线证据契约 TRD"
 type: TRD
-version: "0.1.7"
+version: "0.1.8"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -15,6 +15,9 @@ related_prd: "docs/pm/eval-baseline-evidence-contract/PRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/46"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 changelog:
+  - version: "0.1.8"
+    date: "2026-06-24"
+    changes: "明确 mixed target assertion 仍由 with-skill 门禁处理"
   - version: "0.1.7"
     date: "2026-06-24"
     changes: "补充 Fresh Sub-Agent baseline 重新生成门禁，并统一 baseline runner 检查为只报告"
@@ -90,7 +93,7 @@ flowchart TD
 | `agents/**/comparison.md` | 存储 durable latest result、baseline behavior、failures、next steps 和 artifact policy。 |
 | `AGENTS.md` 与 `README.md` | 定义 baseline 是 comparison 对照输入，最终结论以 `comparison.md` 为准。 |
 | `agents/qa/test/run_eval.py` | QA fresh candidate / judge runner；报告 baseline 候选、verdict 和 baseline output 状态，但不把 baseline 缺失作为独立失败门禁。 |
-| `agents/designer/test/run_eval.py`、`agents/devops/test/run_eval.py`、`agents/product_manager/test/idea-to-spec/run_eval.py` | deterministic helper runner；只把 with-skill 产物和 with-skill assertion 作为失败门禁，baseline output 和 baseline-target assertion 只报告。 |
+| `agents/designer/test/run_eval.py`、`agents/devops/test/run_eval.py`、`agents/product_manager/test/idea-to-spec/run_eval.py` | deterministic helper runner；只把 with-skill 产物和包含 with-skill target 的 assertion 作为失败门禁，baseline output 和 baseline-only assertion 只报告。 |
 | `scripts/check_eval_artifacts.py` | 继续阻止 runtime artifact 文件入库；本次无需语义变更。 |
 
 ## 4. 技术栈
@@ -148,17 +151,18 @@ comparison 是否可信。但 runner failure 只来自 with-skill 路径：
 
 - `with_skill_outputs` 缺失；
 - with-skill candidate / verdict 缺失或失败；
-- assertion target 不在 `without_skill/` 或 `baseline/` 下且机器断言失败。
+- assertion target 不全在 `without_skill/` 或 `baseline/` 下且机器断言失败。
 
 `without_skill_outputs`、`baseline_outputs`、`baseline_output`、
-`baseline_skill_outputs` 和 target 位于 `without_skill/` 或 `baseline/` 下的
-assertion 都是 comparison 证据输入，只报告 PASS / FAIL 状态，不独立导致 runner
-失败。
+`baseline_skill_outputs` 和所有 target 都位于 `without_skill/` 或 `baseline/` 下的
+baseline-only assertion 都是 comparison 证据输入，只报告 PASS / FAIL 状态，不独立导致
+runner 失败。混合 target assertion 只要包含 with-skill target，就仍按 with-skill
+门禁处理。
 
 ## 7. 实现约束
 
 - 改动集中在现有校验脚本、runner、测试和仓库指导文档。
-- 不新增 eval runner；现有 QA、Designer、DevOps 和 Product Manager runner 继续报告 baseline 证据状态，但不把 baseline 缺失或 baseline-target assertion 失败作为独立失败门禁。
+- 不新增 eval runner；现有 QA、Designer、DevOps 和 Product Manager runner 继续报告 baseline 证据状态，但不把 baseline 缺失或 baseline-only assertion 失败作为独立失败门禁。
 - 不引入 Markdown AST 或 regex baseline 语义扫描。
 - 不改变 `evals.json` schema version。
 - 不修改无关 skill 文档、fixture 内容或格式。
@@ -219,7 +223,7 @@ sequenceDiagram
 | 单元测试 | baseline 自由文本不触发 contract failure。 | pytest / unittest | 在 `agents/test_eval_contract.py` 覆盖 |
 | 单元测试 | workspace 缺少 durable `comparison.md` 应失败。 | pytest / unittest | 既有测试覆盖 |
 | 单元测试 | PARTIAL 或 BLOCKED 等 latest result 文案不由 checker 解析。 | pytest / unittest | 在 baseline 语义不校验测试中覆盖 |
-| 单元测试 | baseline output 或 baseline-target assertion 失败不触发 runner failure。 | pytest / unittest | 覆盖 QA、Designer、DevOps 和 Product Manager runner |
+| 单元测试 | baseline output 或 baseline-only assertion 失败不触发 runner failure，mixed target assertion 失败仍触发 runner failure。 | pytest / unittest | 覆盖 QA、Designer、DevOps 和 Product Manager runner |
 | 集成检查 | 当前仓库 eval schema、metadata 和 durable comparison 存在性有效。 | `uv run scripts/check_eval_contract.py` | PASS |
 | 产物策略 | Runtime artifact 保持未入库。 | `uv run scripts/check_eval_artifacts.py` | PASS |
 

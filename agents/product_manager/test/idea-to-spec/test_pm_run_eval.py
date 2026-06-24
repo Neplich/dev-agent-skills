@@ -162,6 +162,64 @@ class RunEvalTests(unittest.TestCase):
             self.assertIn("[FAIL] `baseline_outputs", rendered)
             self.assertIn("[FAIL] `baseline_target_is_report_only`", rendered)
 
+    def test_main_fails_when_mixed_target_assertion_fails(self):
+        run_eval = load_run_eval_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            fixture = temp_root / "fixture"
+            fixture.mkdir()
+            metadata = fixture / "eval_metadata.json"
+            metadata.write_text(
+                """{
+  "eval_id": "eval-001-mixed-target-gates",
+  "eval_name": "mixed-target-gates",
+  "prompt": "Check mixed target gating behavior.",
+  "with_skill_outputs": [
+    "with_skill/outputs/PRD.md"
+  ],
+  "assertions": [
+    {
+      "id": "mixed_target_still_gates",
+      "description": "Mixed with_skill and baseline targets remain gated",
+      "target": [
+        "with_skill/outputs/PRD.md",
+        "without_skill/outputs/notes.md"
+      ],
+      "all_of": ["required with-skill detail"]
+    }
+  ]
+}
+"""
+            )
+
+            old_argv = sys.argv
+            old_output_dir = os.environ.get("EVAL_RUN_OUTPUT_DIR")
+            os.environ["EVAL_RUN_OUTPUT_DIR"] = str(temp_root / "runs")
+            try:
+                runtime_root = run_eval.eval_runtime_root(metadata, "product_manager")
+                with_skill = runtime_root / "with_skill/outputs/PRD.md"
+                baseline = runtime_root / "without_skill/outputs/notes.md"
+                with_skill.parent.mkdir(parents=True)
+                baseline.parent.mkdir(parents=True)
+                with_skill.write_text("with skill PRD")
+                baseline.write_text("baseline notes")
+
+                sys.argv = ["run_eval.py", str(metadata), "--skip-generate"]
+                result = run_eval.main()
+            finally:
+                sys.argv = old_argv
+                if old_output_dir is None:
+                    os.environ.pop("EVAL_RUN_OUTPUT_DIR", None)
+                else:
+                    os.environ["EVAL_RUN_OUTPUT_DIR"] = old_output_dir
+
+            self.assertEqual(result, 1)
+            reports = list((temp_root / "runs").rglob("comparison.auto.md"))
+            self.assertEqual(len(reports), 1)
+            rendered = reports[0].read_text()
+            self.assertIn("[FAIL] `mixed_target_still_gates`", rendered)
+
 
 if __name__ == "__main__":
     unittest.main()

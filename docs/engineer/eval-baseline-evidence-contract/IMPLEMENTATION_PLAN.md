@@ -1,7 +1,7 @@
 ---
 title: "评测基线证据契约实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.8"
+version: "0.1.9"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -16,6 +16,9 @@ related_trd: "docs/engineer/eval-baseline-evidence-contract/TRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/46"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 changelog:
+  - version: "0.1.9"
+    date: "2026-06-24"
+    changes: "修复 mixed target assertion 被误判为 baseline-only 的 review 问题"
   - version: "0.1.8"
     date: "2026-06-24"
     changes: "补充 Fresh Sub-Agent baseline 重新生成门禁，并统一 baseline runner 检查为只报告"
@@ -56,8 +59,9 @@ changelog:
 sub-agent / fresh judge / reviewer 基于 comparison 全文判断。
 
 本轮增量处理范围：baseline 不只出现在 declared outputs，也可能出现在
-baseline-target assertions。确定性 runner 应报告这些状态，但不能把 baseline output
-缺失或 baseline-target assertion 失败作为 runner failure。每次通过 Fresh Sub-Agent
+baseline-only assertions。确定性 runner 应报告这些状态，但不能把 baseline output
+缺失或 baseline-only assertion 失败作为 runner failure；混合 target assertion 只要
+包含 `with_skill/` target，仍按 with-skill 门禁处理。每次通过 Fresh Sub-Agent
 执行 skill eval 时，必须重新生成新的 `without_skill` baseline，不得复用历史
 baseline。
 
@@ -88,9 +92,9 @@ baseline。
 | `scripts/check_eval_contract.py` | 修改 | 移除 durable `comparison.md` baseline 自由文本语义校验，只保留 comparison 存在性。 |
 | `agents/test_eval_contract.py` | 修改 | 增加 baseline 语义不由 contract checker 校验的回归测试。 |
 | `agents/qa/test/run_eval.py` | 修改 | baseline output fields 只报告，不参与 runner failure。 |
-| `agents/designer/test/run_eval.py` | 修改 | baseline output fields 和 baseline-target assertions 只报告，不参与 runner failure。 |
-| `agents/devops/test/run_eval.py` | 修改 | baseline output fields 和 baseline-target assertions 只报告，不参与 runner failure。 |
-| `agents/product_manager/test/idea-to-spec/run_eval.py` | 修改 | baseline output fields 和 baseline-target assertions 只报告，不参与 runner failure。 |
+| `agents/designer/test/run_eval.py` | 修改 | baseline output fields 和 baseline-only assertions 只报告，不参与 runner failure；mixed target assertion 仍参与门禁。 |
+| `agents/devops/test/run_eval.py` | 修改 | baseline output fields 和 baseline-only assertions 只报告，不参与 runner failure；mixed target assertion 仍参与门禁。 |
+| `agents/product_manager/test/idea-to-spec/run_eval.py` | 修改 | baseline output fields 和 baseline-only assertions 只报告，不参与 runner failure；mixed target assertion 仍参与门禁。 |
 | `AGENTS.md` | 修改 | 明确 baseline 是 comparison 的 without-skill 对照输入。 |
 | `README.md` | 修改 | 补充 Baseline 作用、Latest result 结论来源和 deterministic checker 边界。 |
 | `docs/engineer/eval-baseline-evidence-contract/IMPLEMENTATION_PLAN.md` | 修改 | 实施后记录结果、验证证据和剩余风险。 |
@@ -158,7 +162,8 @@ uv run --with pytest pytest agents/test_eval_contract.py
 - `with_skill_outputs` 缺失继续导致 runner 失败。
 - `without_skill_outputs`、`baseline_outputs`、`baseline_output` 和
   `baseline_skill_outputs` 只报告，不导致 runner 失败。
-- target 位于 `without_skill/` 或 `baseline/` 下的机器断言只报告，不导致 runner 失败。
+- 所有 target 都位于 `without_skill/` 或 `baseline/` 下的机器断言只报告，不导致 runner 失败。
+- 混合 target assertion 只要包含 `with_skill/` target，失败时仍导致 runner 失败。
 - QA runner 保留 `without_skill` candidate / fresh judge verdict 报告，但不把缺失或
   FAIL 作为 runner failure。
 
@@ -172,8 +177,8 @@ uv run --with pytest pytest \
   agents/product_manager/test/idea-to-spec/test_pm_run_eval.py
 ```
 
-预期结果：baseline output 缺失和 baseline-target assertion 失败只出现在报告中；
-with-skill 产物和断言仍是 deterministic runner 门禁。
+预期结果：baseline output 缺失和 baseline-only assertion 失败只出现在报告中；
+with-skill 产物和 mixed target assertion 仍是 deterministic runner 门禁。
 
 ### 步骤 4：补充 baseline 作用说明与 Fresh Sub-Agent 门禁
 
@@ -200,7 +205,7 @@ git diff --check
 - 移除“checker 拦截 PASS baseline 硬冲突”的需求和技术方案。
 - 记录 baseline 的对照输入职责。
 - 保留 durable comparison、runtime artifact 策略和 fresh validation 证据链要求。
-- 记录 baseline output 与 baseline-target assertion 在 deterministic runner 中只报告、不失败。
+- 记录 baseline output 与 baseline-only assertion 在 deterministic runner 中只报告、不失败；mixed target assertion 仍按 with-skill 门禁处理。
 - 记录 Fresh Sub-Agent 必须重新生成新的 without_skill baseline。
 
 ### 步骤 6：保持 runtime artifact 策略
@@ -312,7 +317,7 @@ uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py agents/designer/t
   - 继续要求 eval workspace 包含 durable `comparison.md`。
 - `agents/test_eval_contract.py` 已新增 baseline 语义不由 contract checker 校验的回归用例。
 - QA runner 已调整为报告 `without_skill` baseline evidence 状态，但不再因为 baseline candidate、fresh judge verdict 或 baseline output 缺失而返回失败。
-- Designer、DevOps 和 Product Manager runner 已统一为只把 with-skill output 和 with-skill assertion failure 作为 deterministic runner 门禁；`without_skill_outputs`、baseline output fields 和 baseline-target assertions 只报告。
+- Designer、DevOps 和 Product Manager runner 已统一为只把 with-skill output 和包含 with-skill target 的 assertion failure 作为 deterministic runner 门禁；`without_skill_outputs`、baseline output fields 和 baseline-only assertions 只报告。
 - `AGENTS.md` 和 `README.md` 已明确 baseline 是 `without_skill` 对照输入，最终结论以 `comparison.md` 的 `Latest result` 和 reviewer/sub-agent 判断为准。
 - Fresh Sub-Agent 门禁已补充：每次通过 fresh Codex subagent validation 执行 skill eval 时，必须基于同一 prompt / fixture 重新生成新的 `without_skill` baseline，不得复用历史 baseline。
 - 本轮未运行模型 eval 或 fresh Codex subagent baseline；本次调整 deterministic contract checker、runner baseline failure 边界和文档门禁。
@@ -334,7 +339,7 @@ uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py agents/designer/t
 - `uv run scripts/check_repository_contract.py`: PASS
 - `uv run scripts/check_eval_contract.py`: PASS
 - `uv run scripts/check_eval_artifacts.py`: PASS
-- `uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py agents/designer/test/test_designer_run_eval.py agents/devops/test/test_devops_run_eval.py agents/product_manager/test/idea-to-spec/test_pm_run_eval.py agents/test_eval_contract.py`: PASS, 56 passed
+- `uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py agents/designer/test/test_designer_run_eval.py agents/devops/test/test_devops_run_eval.py agents/product_manager/test/idea-to-spec/test_pm_run_eval.py agents/test_eval_contract.py`: PASS, 59 passed
 
 ### 10.4 剩余风险
 

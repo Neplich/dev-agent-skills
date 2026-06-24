@@ -86,7 +86,7 @@ def is_baseline_target(target_spec) -> bool:
     if isinstance(target_spec, str):
         return target_spec.startswith(BASELINE_PATH_PREFIXES)
     if isinstance(target_spec, list):
-        return any(is_baseline_target(item) for item in target_spec)
+        return bool(target_spec) and all(is_baseline_target(item) for item in target_spec)
     return False
 
 
@@ -194,7 +194,7 @@ def render_report(
             "## Runner Policy",
             "",
             "- With-skill outputs and with-skill assertion failures are deterministic runner gates.",
-            "- Baseline / without_skill outputs and baseline-target assertions are comparison evidence; report them here and judge the durable result in `comparison.md`.",
+            "- Baseline / without_skill outputs and assertions whose targets are all baseline paths are comparison evidence; report them here and judge the durable result in `comparison.md`.",
             "",
             "## Notes",
             "",
