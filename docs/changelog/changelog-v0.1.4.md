@@ -18,4 +18,4 @@
 - 调整 `changelog-generator` 的 docs/test/ci/build/style 前缀处理策略，避免 skill marketplace 中的重要文档、eval 或发布流程变化被无条件跳过。([#41](https://github.com/Neplich/dev-agent-skills/pull/41))
 - 固化前端 UI 更新路由，要求 Engineer 完成 PRD/TRD 对齐后检查设计交付物，设计缺失或过期时回接 Designer。([#43](https://github.com/Neplich/dev-agent-skills/pull/43))
 - 补齐 `feature-implementor` 实施计划收尾门禁，防止 `status: Implemented` 与正文计划状态冲突进入 handoff / delivery。([#45](https://github.com/Neplich/dev-agent-skills/pull/45))
-- 规范 eval baseline 证据契约，阻止完整 PASS 搭配 diagnostic-only、blocked 或 skipped baseline 说明，并回填历史 comparison 证据状态。([#47](https://github.com/Neplich/dev-agent-skills/pull/47))
+- 规范 eval baseline 证据契约，明确 baseline 是 `without_skill` 对照输入；deterministic checker 不再根据 baseline 自由文本判断 PASS、PARTIAL 或 BLOCKED，baseline output 与 baseline-only assertion 只作为报告证据。([#47](https://github.com/Neplich/dev-agent-skills/pull/47))
