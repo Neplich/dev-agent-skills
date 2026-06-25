@@ -41,25 +41,25 @@
     {
       "id": "eval-002-feature-path-design-handoff",
       "name": "feature-path-design-handoff",
-      "description": "Verifies that designer-agent mirrors a confirmed nested feature_path into design outputs and does not create a synonym top-level directory.",
-      "prompt": "用户说：PM 已确认 feature_path 是 chat-interface/history-search，PRD 在 docs/pm/chat-interface/history-search/PRD.md，TRD 在 docs/engineer/chat-interface/history-search/TRD.md。请做设计路由并说明 UI/UX 和视觉产物位置，不要把 history-search 写成新的顶层 design 目录，也不要进入实现。",
+      "description": "Verifies that designer-agent mirrors a confirmed 4-level feature_path into design outputs and does not create a synonym or truncated top-level directory.",
+      "prompt": "用户说：PM 已确认 feature_path 是 chat-interface/messages/history/search，PRD 在 docs/pm/chat-interface/messages/history/search/PRD.md，TRD 在 docs/engineer/chat-interface/messages/history/search/TRD.md。请做设计路由并说明 UI/UX 和视觉产物位置，不要把 search 或 history-search 写成新的顶层 design 目录，也不要进入实现。",
       "workspace": "workspace/eval-2-feature-path-design-handoff",
-      "expected_output": "设计路由决策，读取同一 feature_path 的 PM/Engineer 文档，输出 docs/design/chat-interface/history-search 下的设计产物路径，并在 design handoff 停止",
+      "expected_output": "设计路由决策，读取同一 feature_path 的 PM/Engineer 文档，输出 docs/design/chat-interface/messages/history/search 下的设计产物路径，并在 design handoff 停止",
       "assertions": [
         {
           "id": "uses_confirmed_feature_path",
           "description": "消费已确认 feature_path",
-          "text": "必须把 `chat-interface/history-search` 作为唯一 feature_path，并引用同一路径的 PRD/TRD 作为设计输入。"
+          "text": "必须把 `chat-interface/messages/history/search` 作为唯一 feature_path，并引用同一路径的 PRD/TRD 作为设计输入。"
         },
         {
           "id": "mirrors_design_outputs",
           "description": "镜像设计输出路径",
-          "text": "必须把 UI/UX 和 visual-system 产物定位到 `docs/design/chat-interface/history-search/ui-ux-spec.md` 和 `docs/design/chat-interface/history-search/visual-system.md`。"
+          "text": "必须把 UI/UX 和 visual-system 产物定位到 `docs/design/chat-interface/messages/history/search/ui-ux-spec.md` 和 `docs/design/chat-interface/messages/history/search/visual-system.md`。"
         },
         {
           "id": "no_synonym_top_level",
-          "description": "不创建同义顶层目录",
-          "text": "不得建议或创建 `docs/design/history-search/`、`docs/design/chat-history-search/` 或其他同义顶层目录。"
+          "description": "不创建同义或截断目录",
+          "text": "不得建议或创建 `docs/design/search/`、`docs/design/history-search/`、`docs/design/chat-history-search/`、`docs/design/chat-interface/history-search/` 或其他同义/截断目录。"
         },
         {
           "id": "stops_before_code",

@@ -2,11 +2,11 @@
   "eval_id": "eval-004-nested-feature-path-bug-alignment",
   "eval_name": "nested-feature-path-bug-alignment",
   "workspace_root": "agents/engineer/test/debugger/evals/workspace/eval-004-nested-feature-path-bug-alignment",
-  "skill_availability_goal": "Verify that debugger aligns expected behavior against nested PRD/TRD feature_path documents before repair planning.",
-  "prompt": "用户说：Chat History Search 的搜索结果排序不对，这是 bug，请修一下。相关预期文档在 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/history-search/TRD.md。请先按 debugger 流程处理，不要直接修复。",
+  "skill_availability_goal": "Verify that debugger aligns expected behavior against 4-level PRD/TRD feature_path documents before repair planning.",
+  "prompt": "用户说：Message History Search 的搜索结果排序不对，这是 bug，请修一下。相关预期文档在 docs/pm/chat-interface/messages/history/search/PRD.md 和 docs/engineer/chat-interface/messages/history/search/TRD.md。请先按 debugger 流程处理，不要直接修复。",
   "fixture_context": [
     "README.md",
-    "docs/pm/chat-interface/history-search/PRD.md",
-    "docs/engineer/chat-interface/history-search/TRD.md"
+    "docs/pm/chat-interface/messages/history/search/PRD.md",
+    "docs/engineer/chat-interface/messages/history/search/TRD.md"
   ]
 }

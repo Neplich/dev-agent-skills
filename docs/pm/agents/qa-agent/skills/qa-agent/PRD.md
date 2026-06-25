@@ -19,9 +19,9 @@ related_docs:
   - "agents/qa/skills/qa-agent/references/e2e-credential-store.md"
   - "agents/qa/skills/qa-agent/references/e2e-test-report.md"
   - "agents/qa/test/qa-agent/evals/evals.json"
-  - "docs/pm/feature-path-contract/PRD.md"
-  - "docs/engineer/feature-path-contract/TRD.md"
-  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
+  - "docs/pm/repository-governance/feature-path-contract/PRD.md"
+  - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
+  - "docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.0.0"
     date: "2026-06-12"

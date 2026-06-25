@@ -1,0 +1,14 @@
+{
+  "eval_id": "eval-011-four-level-feature-path-plan-gate",
+  "eval_name": "four-level-feature-path-plan-gate",
+  "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-011-four-level-feature-path-plan-gate",
+  "skill_availability_goal": "Verify that feature-implementor accepts matching 4-level PRD/TRD documents and writes the mirrored IMPLEMENTATION_PLAN gate before coding.",
+  "prompt": "docs/pm/chat-interface/messages/history/search/PRD.md 和 docs/engineer/chat-interface/messages/history/search/TRD.md 已确认。请进入 feature-implementor，为消息历史搜索实现写实施计划；先不要改代码。",
+  "fixture_context": [
+    "README.md",
+    "docs/pm/chat-interface/messages/history/search/PRD.md",
+    "docs/engineer/chat-interface/messages/history/search/TRD.md",
+    "src/chat-interface/messages/history/search-service.ts",
+    "tests/chat-interface/messages/history/search-service.test.ts"
+  ]
+}

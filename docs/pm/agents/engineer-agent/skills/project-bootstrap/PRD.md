@@ -16,8 +16,8 @@ related_docs:
   - "agents/engineer/README_zh.md"
   - "agents/engineer/skills/engineer-agent/SKILL.md"
   - "agents/engineer/skills/project-bootstrap/SKILL.md"
-  - "docs/pm/feature-path-contract/PRD.md"
-  - "docs/engineer/feature-path-contract/TRD.md"
+  - "docs/pm/repository-governance/feature-path-contract/PRD.md"
+  - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
   - ".claude-plugin/marketplace.json"
   - "agents/engineer/test/project-bootstrap/evals/evals.json"
 changelog:

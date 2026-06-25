@@ -18,9 +18,9 @@ related_docs:
   - "agents/engineer/skills/codebase-analyzer/SKILL.md"
   - ".claude-plugin/marketplace.json"
   - "agents/engineer/test/codebase-analyzer/evals/evals.json"
-  - "docs/pm/feature-path-contract/PRD.md"
-  - "docs/engineer/feature-path-contract/TRD.md"
-  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
+  - "docs/pm/repository-governance/feature-path-contract/PRD.md"
+  - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
+  - "docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.0.0"
     date: "2026-06-12"
