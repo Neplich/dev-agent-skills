@@ -4,7 +4,7 @@
 
 ### Added
 
-- 将 `trd-gen` 从 PM 内部能力迁移为 Engineer Agent 的公开 skill，并注册到 marketplace；PRD 确认后由 Engineer 负责产出 `docs/engineer/{feature}/TRD.md`。([#19](https://github.com/Neplich/dev-agent-skills/pull/19))
+- 将 `trd-gen` 从 PM 内部能力迁移为 Engineer Agent 的公开 skill，并注册到 marketplace；PRD 确认后由 Engineer 负责产出 `docs/engineer/{feature_path}/TRD.md`。([#19](https://github.com/Neplich/dev-agent-skills/pull/19))
 - 增加 Engineer Agent 复杂编码任务分工规则，明确主进程、实现 sub-agent 和验收 sub-agent 的职责边界。([#16](https://github.com/Neplich/dev-agent-skills/pull/16))
 - 增加 `feature-implementor` 文档驱动实现 eval fixture，并补充缺失 TRD 时不得直接实施的负向 eval。([#16](https://github.com/Neplich/dev-agent-skills/pull/16), [#19](https://github.com/Neplich/dev-agent-skills/pull/19))
 
