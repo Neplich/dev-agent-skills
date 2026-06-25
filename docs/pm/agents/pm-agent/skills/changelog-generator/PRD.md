@@ -19,11 +19,11 @@ related_docs:
   - "agents/product_manager/skills/changelog-generator/references/cc-prefixes.md"
   - ".claude-plugin/marketplace.json"
   - "agents/product_manager/test/changelog-generator/evals/evals.json"
-  - "docs/engineer/skill-changelog-generator/TRD.md"
+  - "docs/engineer/agents/pm-agent/skills/changelog-generator/TRD.md"
   - "https://github.com/Neplich/dev-agent-skills/issues/29"
-  - "docs/pm/feature-path-contract/PRD.md"
-  - "docs/engineer/feature-path-contract/TRD.md"
-  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
+  - "docs/pm/repository-governance/feature-path-contract/PRD.md"
+  - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
+  - "docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.1.0"
     date: "2026-06-15"
@@ -205,7 +205,7 @@ Error flow: 如果必要上下文无法满足，输出 blocked reason、missing 
 ## 相关实现文档
 
 - Internal: `agents/product_manager/README.md`, `agents/product_manager/README_zh.md`, `agents/product_manager/skills/pm-agent/SKILL.md`, `agents/product_manager/skills/changelog-generator/SKILL.md`, `agents/product_manager/skills/changelog-generator/references/cc-prefixes.md`, `.claude-plugin/marketplace.json`, `agents/product_manager/test/changelog-generator/evals/evals.json`。
-- Engineer: `docs/engineer/skill-changelog-generator/TRD.md`。
+- Engineer: `docs/engineer/agents/pm-agent/skills/changelog-generator/TRD.md`。
 - Issue: `https://github.com/Neplich/dev-agent-skills/issues/29`。
 - Internal: 父级 dispatcher route matrix、README 和 marketplace 注册。
 - External: Codex / Claude Code skill execution environment；具体外部 CLI/API 仅在 SKILL.md 明确要求时使用。

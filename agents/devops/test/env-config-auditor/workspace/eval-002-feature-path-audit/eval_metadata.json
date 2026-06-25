@@ -2,12 +2,12 @@
   "eval_id": "eval-002-feature-path-audit",
   "eval_name": "feature-path-audit",
   "workspace_root": "agents/devops/test/env-config-auditor/workspace/eval-002-feature-path-audit",
-  "skill_availability_goal": "Verify that env-config-auditor writes feature-scoped audit reports under the confirmed nested feature_path and returns to PM/Engineer when the path is unclear.",
-  "prompt": "对 chat-interface/history-search 这个功能做环境配置审计。仓库里已经有 docs/pm/chat-interface/history-search/PRD.md、docs/engineer/chat-interface/history-search/TRD.md 和 docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md。请把 feature-scoped 报告写到正确的 DevOps 路径；如果路径不清就应回 PM/Engineer，而不是新建并列目录。",
+  "skill_availability_goal": "Verify that env-config-auditor writes feature-scoped audit reports under the confirmed 4-level feature_path and returns to PM/Engineer when the path is unclear.",
+  "prompt": "对 chat-interface/messages/history/search 这个功能做环境配置审计。仓库里已经有 docs/pm/chat-interface/messages/history/search/PRD.md、docs/engineer/chat-interface/messages/history/search/TRD.md 和 docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md。请把 feature-scoped 报告写到正确的 DevOps 路径；如果路径不清就应回 PM/Engineer，而不是新建并列目录。",
   "fixture_context": [
-    "docs/pm/chat-interface/history-search/PRD.md",
-    "docs/engineer/chat-interface/history-search/TRD.md",
-    "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md",
+    "docs/pm/chat-interface/messages/history/search/PRD.md",
+    "docs/engineer/chat-interface/messages/history/search/TRD.md",
+    "docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md",
     "src/server.ts",
     "deploy/local/.env.example"
   ]

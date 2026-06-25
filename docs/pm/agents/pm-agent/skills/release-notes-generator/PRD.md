@@ -20,9 +20,9 @@ related_docs:
   - "agents/product_manager/skills/release-notes-generator/reference/release-outline.md"
   - "agents/product_manager/skills/release-notes-generator/reference/github-release-workflow.md"
   - "agents/product_manager/test/release-notes-generator/evals/evals.json"
-  - "docs/pm/feature-path-contract/PRD.md"
-  - "docs/engineer/feature-path-contract/TRD.md"
-  - "docs/engineer/feature-path-contract/IMPLEMENTATION_PLAN.md"
+  - "docs/pm/repository-governance/feature-path-contract/PRD.md"
+  - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
+  - "docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
   - version: "1.0.0"
     date: "2026-06-12"

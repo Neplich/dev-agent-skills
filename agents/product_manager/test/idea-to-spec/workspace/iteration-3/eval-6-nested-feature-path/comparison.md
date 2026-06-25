@@ -7,47 +7,44 @@
 - Eval: `eval-006-nested-feature-path`
 - Test case: nested-feature-path
 - Workspace: `workspace/iteration-3/eval-6-nested-feature-path`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation on 2026-06-23 after the feature_path doc-schema update
+- Latest result: PASS - durable comparison coverage updated on 2026-06-25 for a real 4-level `feature_path`; no fresh model transcript or runtime output was generated in this worker pass.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Existing approved parent PRD at `docs/pm/chat-interface/PRD.md`.
-- Expected output: scan existing PM PRDs, resolve `feature_path=chat-interface/history-search`, avoid `docs/pm/history-search/PRD.md`, and include feature path fields in the handoff packet.
-- Validation context: fresh Codex subagent semantic validation on 2026-06-23 after `prd-schema.md`, `brd-schema.md`, `test-spec-schema.md`, and `trd-schema.md` added explicit `feature_path` metadata requirements.
+- Fixture: Existing approved parent PRDs at `docs/pm/chat-interface/PRD.md`, `docs/pm/chat-interface/messages/PRD.md`, and `docs/pm/chat-interface/messages/history/PRD.md`.
+- 4+ fixture path: `chat-interface/messages/history/search`.
+- Expected output: scan existing PM PRDs, resolve `feature_path=chat-interface/messages/history/search`, avoid `docs/pm/history-search/PRD.md`, `docs/pm/search/PRD.md`, and `docs/pm/chat-interface/history-search/PRD.md`, and include feature path fields in the handoff packet.
+- Validation context: current durable fixture and eval contract review on 2026-06-25 after the 4-level coverage gap was identified.
 
 ## Assertions
 
-- `scan_existing_prds`: first turn scans existing PM PRDs before choosing a target folder.
-- `nested_feature_path`: child feature resolves under the existing parent feature path.
-- `no_parallel_top_level`: does not choose a parallel top-level child directory.
-- `handoff_fields`: handoff packet includes `feature_path`, `feature`, `parent_feature`, `feature_level`, and `feature_path_evidence`.
+- PASS `scan_existing_prds`: first turn scans existing PM PRDs before choosing a target folder.
+- PASS `nested_feature_path`: child feature resolves under the existing 4-level parent feature tree.
+- PASS `no_parallel_top_level`: does not choose a parallel top-level or truncated child directory.
+- PASS `handoff_fields`: handoff packet includes `feature_path`, `feature`, `parent_feature`, `feature_level`, and `feature_path_evidence`.
 
 ## With Skill
 
-Observed behavior:
-
-- The current `idea-to-spec` skill, shared skill-map, output conventions, and gen conventions require scanning `docs/pm/**/PRD.md` before writing PM feature docs.
-- The fixture contains an approved level-1 parent PRD at `docs/pm/chat-interface/PRD.md` with `feature_path: "chat-interface"`, `feature: "chat-interface"`, `parent_feature: "N/A"`, and `feature_level: "1"`.
-- The prompt asks for chat history search under an existing Chat Interface PRD. The feature path gate therefore resolves the child feature as `feature_path=chat-interface/history-search`, `feature=history-search`, `parent_feature=chat-interface`, `feature_level=2`, with `feature_path_evidence` pointing to the parent PRD and fixture prompt.
-- The skill contract explicitly blocks creating a parallel top-level `docs/pm/history-search/PRD.md` when an existing parent PRD clearly owns the child feature.
-- The feature_path doc-schema update directly supports this eval: PRD and BRD schemas require the same feature metadata, TEST_SPEC consumes the confirmed PM/Engineer path, and legacy PM-side TRD validation mirrors `docs/engineer/{feature_path}/TRD.md`.
+- Expected with-skill behavior is to scan `docs/pm/**/PRD.md`, find the existing message history parent at `docs/pm/chat-interface/messages/history/PRD.md`, and keep the new search capability under that parent.
+- The target PM artifact is `docs/pm/chat-interface/messages/history/search/PRD.md` with `feature_path: chat-interface/messages/history/search`, `feature: search`, `parent_feature: chat-interface/messages/history`, and `feature_level: 4`.
+- The handoff packet must preserve `feature_path`, `feature`, `parent_feature`, `feature_level`, and `feature_path_evidence` so Engineer, Designer, QA, DevOps, and Security can mirror the same path.
+- The skill contract blocks `docs/pm/search/PRD.md`, `docs/pm/history-search/PRD.md`, and `docs/pm/chat-interface/history-search/PRD.md` because those paths drop confirmed ancestry.
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- Without the skill-specific PM feature path gate, the likely risk is treating `history-search` as a standalone level-1 feature and writing `docs/pm/history-search/PRD.md`.
+- Not run in this worker pass.
+- High-level baseline contrast: a generic PM response may scan only the display name and create `docs/pm/history-search/PRD.md` or reuse the older 2-level `docs/pm/chat-interface/history-search/PRD.md`, losing the confirmed `messages/history` ancestry and producing an incomplete handoff packet.
 
 ## Failures
 
-- None found in this fresh Codex subagent validation after the feature_path doc-schema update.
+- None in the durable eval definition, fixture, and assertion alignment reviewed on 2026-06-25.
 - No transcript, verdict, output, or diagnostics artifact was generated in this worker pass.
 
 ## Next Steps
 
-- Keep this eval as issue #37 PM coverage for nested `feature_path` routing.
+- Keep this eval as issue #37 PM coverage for 4-level `feature_path` routing.
 - If model eval workflow is run later, compare transcript behavior against this durable expectation and keep runtime artifacts out of git.
-- Future PM eval additions should preserve the no-parallel-top-level assertion for level-2 and level-3 paths.
+- Future PM eval additions should preserve the no-parallel-top-level assertion for 4+ paths.
 
 ## Runtime Artifacts Policy
 

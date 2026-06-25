@@ -2,12 +2,12 @@
   "eval_id": "eval-004-feature-path-report",
   "eval_name": "Feature Path Security Report",
   "workspace_root": "agents/security/test/appsec-checklist/evals/workspace/eval-004-feature-path-report",
-  "skill_availability_goal": "Verify that appsec-checklist writes feature-scoped security reports under the confirmed nested feature_path and returns to PM/Engineer when the path is unclear.",
-  "prompt": "对 chat-interface/history-search 做发布前应用安全检查。仓库中已有 docs/pm/chat-interface/history-search/PRD.md、docs/engineer/chat-interface/history-search/TRD.md 和 docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md。请输出 feature-scoped 安全报告；不要把 history-search 写成顶层 feature。",
+  "skill_availability_goal": "Verify that appsec-checklist writes feature-scoped security reports under the confirmed 4-level feature_path and returns to PM/Engineer when the path is unclear.",
+  "prompt": "对 chat-interface/messages/history/search 做发布前应用安全检查。仓库中已有 docs/pm/chat-interface/messages/history/search/PRD.md、docs/engineer/chat-interface/messages/history/search/TRD.md 和 docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md。请输出 feature-scoped 安全报告；不要把 search 或 history-search 写成顶层 feature。",
   "fixture_context": [
-    "docs/pm/chat-interface/history-search/PRD.md",
-    "docs/engineer/chat-interface/history-search/TRD.md",
-    "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md",
+    "docs/pm/chat-interface/messages/history/search/PRD.md",
+    "docs/engineer/chat-interface/messages/history/search/TRD.md",
+    "docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md",
     "src/search.ts"
   ]
 }

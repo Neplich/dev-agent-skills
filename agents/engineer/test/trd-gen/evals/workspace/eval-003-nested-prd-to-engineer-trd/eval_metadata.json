@@ -2,10 +2,10 @@
   "eval_id": "eval-003-nested-prd-to-engineer-trd",
   "eval_name": "nested-prd-to-engineer-trd",
   "workspace_root": "agents/engineer/test/trd-gen/evals/workspace/eval-003-nested-prd-to-engineer-trd",
-  "skill_availability_goal": "Verify that trd-gen mirrors a nested PRD feature_path when writing the Engineer TRD.",
-  "prompt": "PM 已经确认 docs/pm/chat-interface/history-search/PRD.md，frontmatter 中 feature_path 是 chat-interface/history-search。请进入 Engineer TRD 阶段，编写对应 TRD，不要写实现计划或代码。",
+  "skill_availability_goal": "Verify that trd-gen mirrors a 4-level PRD feature_path when writing the Engineer TRD.",
+  "prompt": "PM 已经确认 docs/pm/chat-interface/messages/history/search/PRD.md，frontmatter 中 feature_path 是 chat-interface/messages/history/search。请进入 Engineer TRD 阶段，编写对应 TRD，不要写实现计划或代码。",
   "fixture_context": [
     "README.md",
-    "docs/pm/chat-interface/history-search/PRD.md"
+    "docs/pm/chat-interface/messages/history/search/PRD.md"
   ]
 }

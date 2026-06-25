@@ -36,20 +36,20 @@
     {
       "id": "eval-002-feature-path-audit",
       "name": "feature-path-audit",
-      "description": "Verifies that env-config-auditor uses a confirmed nested feature_path and does not create a synonymous top-level DevOps report directory.",
-      "prompt": "对 chat-interface/history-search 这个功能做环境配置审计。仓库里已经有 docs/pm/chat-interface/history-search/PRD.md、docs/engineer/chat-interface/history-search/TRD.md 和 docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md。请把 feature-scoped 报告写到正确的 DevOps 路径；如果路径不清就应回 PM/Engineer，而不是新建并列目录。",
+      "description": "Verifies that env-config-auditor uses a confirmed 4-level feature_path and does not create a synonymous or truncated DevOps report directory.",
+      "prompt": "对 chat-interface/messages/history/search 这个功能做环境配置审计。仓库里已经有 docs/pm/chat-interface/messages/history/search/PRD.md、docs/engineer/chat-interface/messages/history/search/TRD.md 和 docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md。请把 feature-scoped 报告写到正确的 DevOps 路径；如果路径不清就应回 PM/Engineer，而不是新建并列目录。",
       "workspace": "workspace/eval-002-feature-path-audit",
-      "expected_output": "读取同一 feature_path 下的 PM/Engineer 文档，输出 docs/devops/chat-interface/history-search/ENV_AUDIT.md，不生成 docs/devops/history-search/ENV_AUDIT.md。",
+      "expected_output": "读取同一 feature_path 下的 PM/Engineer 文档，输出 docs/devops/chat-interface/messages/history/search/ENV_AUDIT.md，不生成 docs/devops/history-search/ENV_AUDIT.md 或 docs/devops/chat-interface/history-search/ENV_AUDIT.md。",
       "assertions": [
         {
           "id": "uses_confirmed_feature_path",
-          "description": "读取 chat-interface/history-search 的同路径 Engineer TRD 和 IMPLEMENTATION_PLAN",
-          "text": "必须使用已确认的 feature_path `chat-interface/history-search`，并读取 `docs/engineer/chat-interface/history-search/TRD.md` 与 `docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md`。"
+          "description": "读取 chat-interface/messages/history/search 的同路径 Engineer TRD 和 IMPLEMENTATION_PLAN",
+          "text": "必须使用已确认的 feature_path `chat-interface/messages/history/search`，并读取 `docs/engineer/chat-interface/messages/history/search/TRD.md` 与 `docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md`。"
         },
         {
           "id": "writes_nested_devops_report",
           "description": "输出嵌套 DevOps ENV_AUDIT 路径",
-          "text": "必须输出 `docs/devops/chat-interface/history-search/ENV_AUDIT.md`，不能输出 `docs/devops/history-search/ENV_AUDIT.md`。"
+          "text": "必须输出 `docs/devops/chat-interface/messages/history/search/ENV_AUDIT.md`，不能输出 `docs/devops/history-search/ENV_AUDIT.md` 或 `docs/devops/chat-interface/history-search/ENV_AUDIT.md`。"
         },
         {
           "id": "does_not_invent_feature_directory",

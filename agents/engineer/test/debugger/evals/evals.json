@@ -121,15 +121,15 @@
     {
       "id": "eval-004-nested-feature-path-bug-alignment",
       "name": "nested-feature-path-bug-alignment",
-      "description": "Verifies that debugger aligns expected behavior against nested PRD/TRD feature_path documents before repair planning.",
-      "prompt": "用户说：Chat History Search 的搜索结果排序不对，这是 bug，请修一下。相关预期文档在 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/history-search/TRD.md。请先按 debugger 流程处理，不要直接修复。",
+      "description": "Verifies that debugger aligns expected behavior against 4-level PRD/TRD feature_path documents before repair planning.",
+      "prompt": "用户说：Message History Search 的搜索结果排序不对，这是 bug，请修一下。相关预期文档在 docs/pm/chat-interface/messages/history/search/PRD.md 和 docs/engineer/chat-interface/messages/history/search/TRD.md。请先按 debugger 流程处理，不要直接修复。",
       "workspace": "workspace/eval-004-nested-feature-path-bug-alignment",
-      "expected_output": "先读取 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/history-search/TRD.md，对齐 feature_path、parent_feature、feature_level 和 related_prd，再分类为 implementation_deviation / requirement_change / missing_docs / trd_gap；不直接修复。",
+      "expected_output": "先读取 docs/pm/chat-interface/messages/history/search/PRD.md 和 docs/engineer/chat-interface/messages/history/search/TRD.md，对齐 feature_path、parent_feature、feature_level 和 related_prd，再分类为 implementation_deviation / requirement_change / missing_docs / trd_gap；不直接修复。",
       "assertions": [
         {
           "id": "reads_nested_expected_behavior_docs",
-          "description": "读取嵌套预期文档",
-          "text": "输出必须引用 `docs/pm/chat-interface/history-search/PRD.md` 和 `docs/engineer/chat-interface/history-search/TRD.md`，并说明它们对应 `feature_path: chat-interface/history-search`。"
+          "description": "读取 4 级预期文档",
+          "text": "输出必须引用 `docs/pm/chat-interface/messages/history/search/PRD.md` 和 `docs/engineer/chat-interface/messages/history/search/TRD.md`，并说明它们对应 `feature_path: chat-interface/messages/history/search`。"
         },
         {
           "id": "validates_trd_related_prd",

@@ -2,13 +2,17 @@
   "eval_id": "eval-006-nested-feature-path",
   "eval_name": "nested-feature-path",
   "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-3/eval-6-nested-feature-path",
-  "prompt": "已有 Web 应用已经有 Chat Interface 的 PRD。现在要新增聊天历史搜索。请先看项目文档，判断应该更新或生成哪些 PM 文档，并给出后续 handoff 包。",
+  "prompt": "已有 Web 应用已经有 Chat Interface 和 Message History 的 PRD。现在要新增消息历史搜索。请先看项目文档，判断应该更新或生成哪些 PM 文档，并给出后续 handoff 包。",
   "fixture_context": [
-    "docs/pm/chat-interface/PRD.md"
+    "docs/pm/chat-interface/PRD.md",
+    "docs/pm/chat-interface/messages/PRD.md",
+    "docs/pm/chat-interface/messages/history/PRD.md"
   ],
   "execution_cleanup": [
+    "docs/pm/chat-interface/messages/history/search",
     "docs/pm/chat-interface/history-search",
-    "docs/pm/history-search"
+    "docs/pm/history-search",
+    "docs/pm/search"
   ],
   "assertions": [
     {
@@ -17,13 +21,13 @@
       "all_of_any": [
         [
           "docs/pm/**/PRD.md",
-          "docs/pm/chat-interface/PRD.md",
+          "docs/pm/chat-interface/messages/history/PRD.md",
           "已有 PRD",
-          "Chat Interface PRD"
+          "Message History PRD"
         ],
         [
-          "chat-interface",
-          "Chat Interface"
+          "chat-interface/messages/history",
+          "Message History"
         ]
       ]
     },
@@ -32,8 +36,8 @@
       "description": "Child feature resolves under the existing parent feature path",
       "all_of_any": [
         [
-          "chat-interface/history-search",
-          "docs/pm/chat-interface/history-search/PRD.md"
+          "chat-interface/messages/history/search",
+          "docs/pm/chat-interface/messages/history/search/PRD.md"
         ],
         [
           "parent_feature",
@@ -45,7 +49,9 @@
       "id": "no_parallel_top_level",
       "description": "Does not choose a parallel top-level child directory",
       "none_of": [
-        "docs/pm/history-search/PRD.md"
+        "docs/pm/history-search/PRD.md",
+        "docs/pm/search/PRD.md",
+        "docs/pm/chat-interface/history-search/PRD.md"
       ]
     },
     {

@@ -362,6 +362,46 @@
           "text": "输出必须说明 transcript、diagnostics、outputs、timing、run status 或 `comparison.auto.md` 这类运行期 eval 产物不得提交到 git。"
         }
       ]
+    },
+    {
+      "id": "eval-011-four-level-feature-path-plan-gate",
+      "name": "four-level-feature-path-plan-gate",
+      "description": "Verifies that feature-implementor accepts matching 4-level PRD/TRD documents, writes the mirrored IMPLEMENTATION_PLAN path, and waits for confirmation before coding.",
+      "prompt": "docs/pm/chat-interface/messages/history/search/PRD.md 和 docs/engineer/chat-interface/messages/history/search/TRD.md 已确认。请进入 feature-implementor，为消息历史搜索实现写实施计划；先不要改代码。",
+      "workspace": "workspace/eval-011-four-level-feature-path-plan-gate",
+      "expected_output": "确认 PRD/TRD 的 feature_path 都是 chat-interface/messages/history/search，产出 docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md，记录 feature_path、parent_feature、feature_level、文件范围和验证命令，等待用户确认后再编码。",
+      "assertions": [
+        {
+          "id": "reads_matching_four_level_docs",
+          "description": "读取并确认 4 级 PRD/TRD 对齐",
+          "text": "输出必须引用 `docs/pm/chat-interface/messages/history/search/PRD.md` 和 `docs/engineer/chat-interface/messages/history/search/TRD.md`，并确认二者 `feature_path` 都是 `chat-interface/messages/history/search`。"
+        },
+        {
+          "id": "writes_four_level_plan_path",
+          "description": "实施计划路径镜像 4 级 feature_path",
+          "text": "输出必须创建或更新 `docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md`，不得写到 `docs/engineer/history-search/IMPLEMENTATION_PLAN.md`、`docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md` 或 `docs/engineer/chat-interface/IMPLEMENTATION_PLAN.md`。"
+        },
+        {
+          "id": "preserves_feature_metadata",
+          "description": "实施计划保留 feature path metadata",
+          "text": "输出必须要求 IMPLEMENTATION_PLAN frontmatter 包含 `feature_path: chat-interface/messages/history/search`、`parent_feature: chat-interface/messages/history`、`feature_level: 4`、`related_prd` 和 `related_trd`。"
+        },
+        {
+          "id": "includes_scope_and_checks",
+          "description": "计划包含范围和验证",
+          "text": "输出必须列出预期修改文件范围和 deterministic 验证命令，且这些内容与消息历史搜索实现相关。"
+        },
+        {
+          "id": "waits_for_user_confirmation",
+          "description": "等待计划确认",
+          "text": "输出必须要求用户确认 IMPLEMENTATION_PLAN 后再开始编码。"
+        },
+        {
+          "id": "does_not_implement_directly",
+          "description": "不得直接实施",
+          "text": "输出不得声称已经修改代码、更新测试、运行实现或完成验证。"
+        }
+      ]
     }
   ]
 }

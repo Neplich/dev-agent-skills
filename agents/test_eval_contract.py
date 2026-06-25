@@ -1116,6 +1116,134 @@ class EvalContractTests(unittest.TestCase):
 
         self.assertEqual([], errors)
 
+    def test_repository_contract_accepts_governance_and_collaboration_namespaces(self):
+        checker = load_repository_checker_module()
+
+        cases = [
+            ("repository-governance/feature-path-contract", "repository-governance", "2"),
+            ("agent-collaboration/frontend-ui-routing-contract", "agent-collaboration", "2"),
+        ]
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+
+            for feature_path, parent_feature, feature_level in cases:
+                feature = feature_path.split("/")[-1]
+                prd = root / f"docs/pm/{feature_path}/PRD.md"
+                trd = root / f"docs/engineer/{feature_path}/TRD.md"
+                plan = root / f"docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md"
+                prd.parent.mkdir(parents=True)
+                plan.parent.mkdir(parents=True)
+                prd.write_text(
+                    "---\n"
+                    f'feature: "{feature}"\n'
+                    f'feature_path: "{feature_path}"\n'
+                    f'parent_feature: "{parent_feature}"\n'
+                    f'feature_level: "{feature_level}"\n'
+                    'version: "0.1.0"\n'
+                    'date: "2026-06-25"\n'
+                    'last_updated: "2026-06-25"\n'
+                    "---\n\n"
+                    f"# {feature} PRD\n"
+                )
+                trd.write_text(
+                    "---\n"
+                    f'feature: "{feature}"\n'
+                    f'feature_path: "{feature_path}"\n'
+                    f'parent_feature: "{parent_feature}"\n'
+                    f'feature_level: "{feature_level}"\n'
+                    'version: "0.1.0"\n'
+                    'date: "2026-06-25"\n'
+                    'last_updated: "2026-06-25"\n'
+                    f'related_prd: "docs/pm/{feature_path}/PRD.md"\n'
+                    "---\n\n"
+                    f"# {feature} TRD\n"
+                )
+                plan.write_text(
+                    "---\n"
+                    f'feature: "{feature}"\n'
+                    f'feature_path: "{feature_path}"\n'
+                    f'parent_feature: "{parent_feature}"\n'
+                    f'feature_level: "{feature_level}"\n'
+                    'version: "0.1.0"\n'
+                    'date: "2026-06-25"\n'
+                    'last_updated: "2026-06-25"\n'
+                    f'related_prd: "docs/pm/{feature_path}/PRD.md"\n'
+                    f'related_trd: "docs/engineer/{feature_path}/TRD.md"\n'
+                    "---\n\n"
+                    f"# {feature} Plan\n"
+                )
+
+            subprocess.run(["git", "add", "docs"], cwd=root, check=True)
+
+            errors = []
+            checker.validate_feature_document_metadata(root, errors)
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        self.assertEqual([], errors)
+
+    def test_repository_contract_skips_canonical_checks_for_legacy_plans(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            plan = (
+                root
+                / "docs/engineer/agents/engineer-agent/skills/feature-implementor/_legacy/old-plan/IMPLEMENTATION_PLAN.md"
+            )
+            plan.parent.mkdir(parents=True)
+            plan.write_text(
+                "---\n"
+                'feature: "old-plan"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-25"\n'
+                'last_updated: "2026-06-25"\n'
+                'legacy_of: "agents/engineer-agent/skills/feature-implementor"\n'
+                'legacy_reason: "Historical implementation plan superseded by current requirements"\n'
+                'superseded_by: "docs/pm/agents/engineer-agent/skills/feature-implementor/PRD.md"\n'
+                "---\n\n"
+                "# Old Plan\n"
+            )
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+            checker.validate_legacy_artifact_metadata(root, errors)
+
+        self.assertEqual([], errors)
+
+    def test_repository_contract_rejects_legacy_artifacts_missing_required_fields(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            plan = (
+                root
+                / "docs/engineer/agents/engineer-agent/skills/feature-implementor/_legacy/old-plan/IMPLEMENTATION_PLAN.md"
+            )
+            plan.parent.mkdir(parents=True)
+            plan.write_text(
+                "---\n"
+                'feature: "old-plan"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-25"\n'
+                'last_updated: "2026-06-25"\n'
+                'legacy_of: ""\n'
+                "---\n\n"
+                "# Old Plan\n"
+            )
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_legacy_artifact_metadata(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("frontmatter 'legacy_of' must be non-empty", rendered)
+        self.assertIn("frontmatter 'legacy_reason' must be non-empty", rendered)
+        self.assertIn("frontmatter 'superseded_by' must be non-empty", rendered)
+
     def test_repository_contract_rejects_invalid_implementation_plan_path_segments(self):
         checker = load_repository_checker_module()
 
@@ -1261,6 +1389,115 @@ class EvalContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn(
             "frontmatter 'related_prd' must be 'docs/pm/chat-interface/history-search/PRD.md'",
+            rendered,
+        )
+
+    def test_repository_contract_accepts_feature_document_metadata(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            prd = root / "docs/pm/agents/pm-agent/skills/idea-to-spec/PRD.md"
+            trd = root / "docs/engineer/agents/pm-agent/skills/idea-to-spec/TRD.md"
+            prd.parent.mkdir(parents=True)
+            trd.parent.mkdir(parents=True)
+            prd.write_text(
+                "---\n"
+                'feature: "skill-idea-to-spec"\n'
+                'feature_path: "agents/pm-agent/skills/idea-to-spec"\n'
+                'parent_feature: "agents/pm-agent/skills"\n'
+                'feature_level: "4"\n'
+                'version: "1.0.0"\n'
+                'date: "2026-06-25"\n'
+                'last_updated: "2026-06-25"\n'
+                "---\n\n"
+                "# idea-to-spec PRD\n"
+            )
+            trd.write_text(
+                "---\n"
+                'feature: "skill-idea-to-spec"\n'
+                'feature_path: "agents/pm-agent/skills/idea-to-spec"\n'
+                'parent_feature: "agents/pm-agent/skills"\n'
+                'feature_level: "4"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-25"\n'
+                'last_updated: "2026-06-25"\n'
+                'related_prd: "docs/pm/agents/pm-agent/skills/idea-to-spec/PRD.md"\n'
+                "---\n\n"
+                "# idea-to-spec TRD\n"
+            )
+            subprocess.run(["git", "init", "-b", "feature"], cwd=root, check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "add",
+                    prd.relative_to(root).as_posix(),
+                    trd.relative_to(root).as_posix(),
+                ],
+                cwd=root,
+                check=True,
+            )
+
+            errors = []
+            checker.validate_feature_document_metadata(root, errors)
+
+        self.assertEqual([], errors)
+
+    def test_repository_contract_rejects_feature_document_metadata_mismatch(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            prd = root / "docs/pm/agents/pm-agent/skills/idea-to-spec/PRD.md"
+            trd = root / "docs/engineer/agents/pm-agent/skills/idea-to-spec/TRD.md"
+            prd.parent.mkdir(parents=True)
+            trd.parent.mkdir(parents=True)
+            prd.write_text(
+                "---\n"
+                'feature: "skill-idea-to-spec"\n'
+                'version: "1.0.0"\n'
+                'date: "2026-06-25"\n'
+                'last_updated: "2026-06-25"\n'
+                "---\n\n"
+                "# idea-to-spec PRD\n"
+            )
+            trd.write_text(
+                "---\n"
+                'feature: "skill-idea-to-spec"\n'
+                'feature_path: "agents/pm-agent/skills/idea-to-spec"\n'
+                'parent_feature: "agents/pm-agent"\n'
+                'feature_level: "3"\n'
+                'version: "0.1.0"\n'
+                'date: "2026-06-25"\n'
+                'last_updated: "2026-06-25"\n'
+                'related_prd: "docs/pm/skill-idea-to-spec/PRD.md"\n'
+                "---\n\n"
+                "# idea-to-spec TRD\n"
+            )
+            subprocess.run(["git", "init", "-b", "feature"], cwd=root, check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "add",
+                    prd.relative_to(root).as_posix(),
+                    trd.relative_to(root).as_posix(),
+                ],
+                cwd=root,
+                check=True,
+            )
+
+            errors = []
+            checker.validate_feature_document_metadata(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("frontmatter 'feature_path' must be non-empty", rendered)
+        self.assertIn(
+            "frontmatter 'parent_feature' must be 'agents/pm-agent/skills'",
+            rendered,
+        )
+        self.assertIn("frontmatter 'feature_level' must be '4'", rendered)
+        self.assertIn(
+            "frontmatter 'related_prd' must be 'docs/pm/agents/pm-agent/skills/idea-to-spec/PRD.md'",
             rendered,
         )
 

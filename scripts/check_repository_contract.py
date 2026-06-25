@@ -34,6 +34,18 @@ IMPLEMENTATION_PLAN_RE = re.compile(
     rf"(?:/{FEATURE_PATH_SEGMENT_PATTERN})*)"
     rf"/IMPLEMENTATION_PLAN\.md$"
 )
+PM_PRD_RE = re.compile(
+    rf"^docs/pm/"
+    rf"(?P<feature_path>{FEATURE_PATH_SEGMENT_PATTERN}"
+    rf"(?:/{FEATURE_PATH_SEGMENT_PATTERN})*)"
+    rf"/PRD\.md$"
+)
+ENGINEER_TRD_RE = re.compile(
+    rf"^docs/engineer/"
+    rf"(?P<feature_path>{FEATURE_PATH_SEGMENT_PATTERN}"
+    rf"(?:/{FEATURE_PATH_SEGMENT_PATTERN})*)"
+    rf"/TRD\.md$"
+)
 BLOCKED_TRACKED_PATTERNS = (
     re.compile(r"(^|/)\.DS_Store$"),
     re.compile(r"(^|/)\.pytest_cache(/|$)"),
@@ -500,6 +512,10 @@ def implementation_plan_feature_path(rel: str) -> str | None:
     return match.group("feature_path")
 
 
+def is_legacy_artifact_path(rel: str) -> bool:
+    return "/_legacy/" in rel
+
+
 def expected_parent_feature(feature_path: str) -> str:
     parts = feature_path.split("/")
     if len(parts) == 1:
@@ -573,12 +589,89 @@ def validate_related_feature_document(
             )
 
 
+def validate_feature_path_metadata(
+    source_path: Path,
+    metadata: dict[str, str],
+    feature_path: str,
+    errors: list[ContractError],
+) -> None:
+    for field in ("feature_path", "parent_feature", "feature_level"):
+        value = metadata.get(field)
+        if not isinstance(value, str) or not value.strip():
+            add_error(errors, source_path, f"frontmatter {field!r} must be non-empty")
+
+    metadata_feature_path = metadata.get("feature_path", "")
+    if metadata_feature_path and metadata_feature_path != feature_path:
+        add_error(
+            errors,
+            source_path,
+            f"frontmatter 'feature_path' must match directory path {feature_path!r}",
+        )
+
+    parent_feature = metadata.get("parent_feature", "")
+    expected_parent = expected_parent_feature(feature_path)
+    if parent_feature and parent_feature != expected_parent:
+        add_error(
+            errors,
+            source_path,
+            f"frontmatter 'parent_feature' must be {expected_parent!r}",
+        )
+
+    feature_level = metadata.get("feature_level", "")
+    expected_level = str(len(feature_path.split("/")))
+    if feature_level and feature_level != expected_level:
+        add_error(
+            errors,
+            source_path,
+            f"frontmatter 'feature_level' must be {expected_level!r}",
+        )
+
+
+def validate_feature_document_metadata(root: Path, errors: list[ContractError]) -> None:
+    for rel in tracked_files(root):
+        if is_legacy_artifact_path(rel):
+            continue
+
+        prd_match = PM_PRD_RE.fullmatch(rel)
+        trd_match = ENGINEER_TRD_RE.fullmatch(rel)
+        if prd_match is None and trd_match is None:
+            continue
+
+        path = root / rel
+        parsed = parse_markdown_frontmatter(path, path.read_text(), errors)
+        if parsed is None:
+            continue
+        metadata, _ = parsed
+
+        feature_path = (
+            prd_match.group("feature_path")
+            if prd_match is not None
+            else trd_match.group("feature_path")
+        )
+        validate_feature_path_metadata(path, metadata, feature_path, errors)
+
+        if trd_match is not None:
+            expected_related_prd = f"docs/pm/{feature_path}/PRD.md"
+            related_prd = metadata.get("related_prd", "")
+            if not isinstance(related_prd, str) or not related_prd.strip():
+                add_error(errors, path, "frontmatter 'related_prd' must be non-empty")
+            elif related_prd != expected_related_prd:
+                add_error(
+                    errors,
+                    path,
+                    f"frontmatter 'related_prd' must be {expected_related_prd!r}",
+                )
+            elif not (root / related_prd).exists():
+                add_error(errors, path, "frontmatter 'related_prd' must point to an existing file")
+
+
 def validate_implementation_plan_metadata(root: Path, errors: list[ContractError]) -> None:
     implementation_plans = [
         rel
         for rel in tracked_files(root)
         if rel.startswith("docs/engineer/")
         and rel.endswith("/IMPLEMENTATION_PLAN.md")
+        and not is_legacy_artifact_path(rel)
         and (root / rel).exists()
     ]
 
@@ -700,6 +793,8 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
         return
 
     for rel in changed_files_against(root, base_ref):
+        if is_legacy_artifact_path(rel):
+            continue
         if not IMPLEMENTATION_PLAN_RE.fullmatch(rel) or not (root / rel).exists():
             continue
 
@@ -731,6 +826,27 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
                 current_path,
                 "frontmatter 'version' changed without updating 'last_updated'",
             )
+
+
+def validate_legacy_artifact_metadata(root: Path, errors: list[ContractError]) -> None:
+    required_fields = ("legacy_of", "legacy_reason", "superseded_by")
+
+    for rel in tracked_files(root):
+        if not rel.startswith("docs/") or not rel.endswith(".md"):
+            continue
+        if not is_legacy_artifact_path(rel):
+            continue
+
+        path = root / rel
+        parsed = parse_markdown_frontmatter(path, path.read_text(), errors)
+        if parsed is None:
+            continue
+        metadata, _ = parsed
+
+        for field in required_fields:
+            value = metadata.get(field)
+            if not isinstance(value, str) or not value.strip():
+                add_error(errors, path, f"frontmatter {field!r} must be non-empty")
 
 
 def validate_formal_document_author(root: Path, errors: list[ContractError]) -> None:
@@ -774,7 +890,9 @@ def validate_all(root: Path | None = None) -> list[ContractError]:
     validate_claude_symlink(root, errors)
     validate_marketplace(root, errors)
     validate_skills_lock(root, errors)
+    validate_feature_document_metadata(root, errors)
     validate_implementation_plan_metadata(root, errors)
+    validate_legacy_artifact_metadata(root, errors)
     validate_formal_document_author(root, errors)
     validate_tracked_file_policy(root, errors)
     return errors

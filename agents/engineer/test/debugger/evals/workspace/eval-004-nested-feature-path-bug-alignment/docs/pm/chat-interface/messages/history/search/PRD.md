@@ -1,0 +1,20 @@
+---
+title: "Message History Search PRD"
+type: PRD
+feature: "search"
+feature_path: "chat-interface/messages/history/search"
+parent_feature: "chat-interface/messages/history"
+feature_level: "4"
+version: "1.0.0"
+status: Approved
+author: "Neplich Codex"
+date: "2026-06-25"
+last_updated: "2026-06-25"
+---
+
+# Message History Search PRD
+
+## Requirement
+
+Search results are ordered by relevance, then newest message time, inside the
+message history view.
