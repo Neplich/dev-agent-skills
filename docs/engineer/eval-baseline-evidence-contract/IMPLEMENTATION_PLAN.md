@@ -1,11 +1,11 @@
 ---
 title: "评测基线证据契约实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.9"
+version: "0.1.10"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-06-24"
-last_updated: "2026-06-24"
+last_updated: "2026-06-25"
 generated_by: "feature-implementor"
 feature: "eval-baseline-evidence-contract"
 feature_path: "eval-baseline-evidence-contract"
@@ -16,6 +16,9 @@ related_trd: "docs/engineer/eval-baseline-evidence-contract/TRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/46"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 changelog:
+  - version: "0.1.10"
+    date: "2026-06-25"
+    changes: "修复字符串形式 baseline output metadata 被逐字符检查的问题"
   - version: "0.1.9"
     date: "2026-06-24"
     changes: "修复 mixed target assertion 被误判为 baseline-only 的 review 问题"
@@ -63,7 +66,8 @@ baseline-only assertions。确定性 runner 应报告这些状态，但不能把
 缺失或 baseline-only assertion 失败作为 runner failure；混合 target assertion 只要
 包含 `with_skill/` target，仍按 with-skill 门禁处理。每次通过 Fresh Sub-Agent
 执行 skill eval 时，必须重新生成新的 `without_skill` baseline，不得复用历史
-baseline。
+baseline。本轮继续补齐 review 指出的 output metadata 形态问题：字符串形式
+`baseline_output` 必须按单一路径检查，不能被逐字符拆分。
 
 来源文档：
 
@@ -92,9 +96,9 @@ baseline。
 | `scripts/check_eval_contract.py` | 修改 | 移除 durable `comparison.md` baseline 自由文本语义校验，只保留 comparison 存在性。 |
 | `agents/test_eval_contract.py` | 修改 | 增加 baseline 语义不由 contract checker 校验的回归测试。 |
 | `agents/qa/test/run_eval.py` | 修改 | baseline output fields 只报告，不参与 runner failure。 |
-| `agents/designer/test/run_eval.py` | 修改 | baseline output fields 和 baseline-only assertions 只报告，不参与 runner failure；mixed target assertion 仍参与门禁。 |
-| `agents/devops/test/run_eval.py` | 修改 | baseline output fields 和 baseline-only assertions 只报告，不参与 runner failure；mixed target assertion 仍参与门禁。 |
-| `agents/product_manager/test/idea-to-spec/run_eval.py` | 修改 | baseline output fields 和 baseline-only assertions 只报告，不参与 runner failure；mixed target assertion 仍参与门禁。 |
+| `agents/designer/test/run_eval.py` | 修改 | baseline output fields 和 baseline-only assertions 只报告，不参与 runner failure；mixed target assertion 仍参与门禁；字符串 output metadata 按单一路径检查。 |
+| `agents/devops/test/run_eval.py` | 修改 | baseline output fields 和 baseline-only assertions 只报告，不参与 runner failure；mixed target assertion 仍参与门禁；字符串 output metadata 按单一路径检查。 |
+| `agents/product_manager/test/idea-to-spec/run_eval.py` | 修改 | baseline output fields 和 baseline-only assertions 只报告，不参与 runner failure；mixed target assertion 仍参与门禁；字符串 output metadata 按单一路径检查。 |
 | `AGENTS.md` | 修改 | 明确 baseline 是 comparison 的 without-skill 对照输入。 |
 | `README.md` | 修改 | 补充 Baseline 作用、Latest result 结论来源和 deterministic checker 边界。 |
 | `docs/engineer/eval-baseline-evidence-contract/IMPLEMENTATION_PLAN.md` | 修改 | 实施后记录结果、验证证据和剩余风险。 |
@@ -164,6 +168,7 @@ uv run --with pytest pytest agents/test_eval_contract.py
   `baseline_skill_outputs` 只报告，不导致 runner 失败。
 - 所有 target 都位于 `without_skill/` 或 `baseline/` 下的机器断言只报告，不导致 runner 失败。
 - 混合 target assertion 只要包含 `with_skill/` target，失败时仍导致 runner 失败。
+- 字符串形式 output metadata 先规范化为单一路径列表，再交给 output presence check。
 - QA runner 保留 `without_skill` candidate / fresh judge verdict 报告，但不把缺失或
   FAIL 作为 runner failure。
 
@@ -178,7 +183,8 @@ uv run --with pytest pytest \
 ```
 
 预期结果：baseline output 缺失和 baseline-only assertion 失败只出现在报告中；
-with-skill 产物和 mixed target assertion 仍是 deterministic runner 门禁。
+with-skill 产物和 mixed target assertion 仍是 deterministic runner 门禁；字符串形式
+`baseline_output` 会按完整路径报告。
 
 ### 步骤 4：补充 baseline 作用说明与 Fresh Sub-Agent 门禁
 
@@ -318,6 +324,7 @@ uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py agents/designer/t
 - `agents/test_eval_contract.py` 已新增 baseline 语义不由 contract checker 校验的回归用例。
 - QA runner 已调整为报告 `without_skill` baseline evidence 状态，但不再因为 baseline candidate、fresh judge verdict 或 baseline output 缺失而返回失败。
 - Designer、DevOps 和 Product Manager runner 已统一为只把 with-skill output 和包含 with-skill target 的 assertion failure 作为 deterministic runner 门禁；`without_skill_outputs`、baseline output fields 和 baseline-only assertions 只报告。
+- Designer、DevOps 和 Product Manager runner 已在 output presence check 前规范化 metadata output 形态；字符串形式 `baseline_output` 会作为完整路径检查，不会逐字符拆分。
 - `AGENTS.md` 和 `README.md` 已明确 baseline 是 `without_skill` 对照输入，最终结论以 `comparison.md` 的 `Latest result` 和 reviewer/sub-agent 判断为准。
 - Fresh Sub-Agent 门禁已补充：每次通过 fresh Codex subagent validation 执行 skill eval 时，必须基于同一 prompt / fixture 重新生成新的 `without_skill` baseline，不得复用历史 baseline。
 - 本轮未运行模型 eval 或 fresh Codex subagent baseline；本次调整 deterministic contract checker、runner baseline failure 边界和文档门禁。
@@ -339,7 +346,7 @@ uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py agents/designer/t
 - `uv run scripts/check_repository_contract.py`: PASS
 - `uv run scripts/check_eval_contract.py`: PASS
 - `uv run scripts/check_eval_artifacts.py`: PASS
-- `uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py agents/designer/test/test_designer_run_eval.py agents/devops/test/test_devops_run_eval.py agents/product_manager/test/idea-to-spec/test_pm_run_eval.py agents/test_eval_contract.py`: PASS, 59 passed
+- `uv run --with pytest pytest agents/qa/test/test_qa_run_eval.py agents/designer/test/test_designer_run_eval.py agents/devops/test/test_devops_run_eval.py agents/product_manager/test/idea-to-spec/test_pm_run_eval.py agents/test_eval_contract.py`: PASS, 62 passed
 
 ### 10.4 剩余风险
 

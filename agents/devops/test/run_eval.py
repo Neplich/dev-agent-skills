@@ -70,6 +70,16 @@ def check_outputs(root: Path, outputs: list) -> list[tuple[str, bool]]:
     return results
 
 
+def normalize_output_specs(value) -> list:
+    if value is None:
+        return []
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, list):
+        return value
+    raise TypeError(f"Unsupported output spec: {value!r}")
+
+
 def check_output_fields(
     root: Path,
     meta: dict,
@@ -77,7 +87,7 @@ def check_output_fields(
 ) -> list[tuple[str, bool]]:
     results = []
     for field in fields:
-        for label, ok in check_outputs(root, meta.get(field, [])):
+        for label, ok in check_outputs(root, normalize_output_specs(meta.get(field))):
             results.append((f"{field}: {label}", ok))
     return results
 

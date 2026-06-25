@@ -1,11 +1,11 @@
 ---
 title: "评测基线证据契约 PRD"
 type: PRD
-version: "0.1.7"
+version: "0.1.8"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
-last_updated: "2026-06-24"
+last_updated: "2026-06-25"
 generated_by: "idea-to-spec"
 feature: "eval-baseline-evidence-contract"
 feature_path: "eval-baseline-evidence-contract"
@@ -14,6 +14,9 @@ feature_level: "1"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/46"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
 changelog:
+  - version: "0.1.8"
+    date: "2026-06-25"
+    changes: "明确 runner 必须将字符串形式 output metadata 作为单一路径处理"
   - version: "0.1.7"
     date: "2026-06-24"
     changes: "明确混合 target assertion 不能按 baseline-only 豁免"
@@ -100,6 +103,7 @@ PR #45 和后续 review 暴露了 eval durable result 的边界问题：baseline
 | FR-006 | 回归测试 | checker 行为必须有确定性测试覆盖。 | P1 | `uv run --with pytest pytest agents/test_eval_contract.py` 覆盖“不校验 baseline 语义”的样例。 |
 | FR-007 | Fresh Subagent Baseline 门禁 | 每次 fresh subagent validation 必须使用同一 eval prompt 和 fixture 重新生成新的 `without_skill` baseline，并把 `without_skill` 结果作为 comparison 对照输入。 | P0 | 仓库级 eval 规则说明 baseline 的输入角色、不得复用历史 baseline，以及无法生成时的记录要求。 |
 | FR-008 | Baseline Runner 检查边界 | deterministic runner 可报告 `without_skill_outputs`、baseline output metadata，以及所有 target 都位于 `without_skill/` 或 `baseline/` 下的 baseline-only assertions；这些结果不能独立导致 runner 失败。 | P0 | QA、Designer、DevOps 和 Product Manager deterministic runner 只把 with-skill 产物和包含 with-skill target 的 assertions 作为失败门禁。 |
+| FR-009 | Output Metadata 规范化 | Designer、DevOps 和 Product Manager runner 必须在检查 output 前把字符串形式 metadata 规范化为单一路径列表。 | P0 | `"baseline_output": "baseline/out.md"` 按完整路径检查，不被逐字符拆分。 |
 
 ## 6. 非功能需求
 
@@ -155,7 +159,7 @@ flowchart TD
 | `uv run scripts/check_eval_contract.py` | 校验 eval schema、workspace、metadata 和 durable comparison 存在性。 | 不根据 baseline 文案判断 PASS / PARTIAL / BLOCKED。 |
 | `uv run scripts/check_eval_artifacts.py` | 校验 runtime artifact 策略。 | 继续拒绝已提交的 runtime artifact。 |
 | `uv run --with pytest pytest agents/test_eval_contract.py` | eval 检查回归测试。 | 覆盖 schema、metadata、workspace、comparison 存在性和 baseline 语义不校验样例。 |
-| `agents/**/test/run_eval.py` | deterministic runner 辅助检查。 | 只把 with-skill 产物和包含 with-skill target 的 assertion 作为失败门禁；baseline 相关产物和 baseline-only 断言只报告。 |
+| `agents/**/test/run_eval.py` | deterministic runner 辅助检查。 | 只把 with-skill 产物和包含 with-skill target 的 assertion 作为失败门禁；baseline 相关产物和 baseline-only 断言只报告；字符串形式 output metadata 按单一路径处理。 |
 
 ## 11. 假设与约束
 
