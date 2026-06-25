@@ -18,6 +18,12 @@ OUTPUT_FIELDS = (
     "baseline_output",
     "baseline_skill_outputs",
 )
+BASELINE_OUTPUT_FIELDS = (
+    "without_skill_outputs",
+    "baseline_outputs",
+    "baseline_output",
+    "baseline_skill_outputs",
+)
 MACHINE_ASSERTION_FIELDS = (
     "all_of",
     "all_of_any",
@@ -25,6 +31,7 @@ MACHINE_ASSERTION_FIELDS = (
     "none_of",
     "count_at_least",
 )
+BASELINE_PATH_PREFIXES = ("without_skill/", "baseline/")
 
 
 def load_metadata(path: Path) -> dict:
@@ -65,6 +72,40 @@ def check_outputs(root: Path, outputs: list) -> list[tuple[str, bool]]:
 
         raise TypeError(f"Unsupported output spec: {item!r}")
     return results
+
+
+def normalize_output_specs(value) -> list:
+    if value is None:
+        return []
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, list):
+        return value
+    raise TypeError(f"Unsupported output spec: {value!r}")
+
+
+def check_output_fields(
+    root: Path,
+    meta: dict,
+    fields: tuple[str, ...],
+) -> list[tuple[str, bool]]:
+    results = []
+    for field in fields:
+        for label, ok in check_outputs(root, normalize_output_specs(meta.get(field))):
+            results.append((f"{field}: {label}", ok))
+    return results
+
+
+def is_baseline_target(target_spec) -> bool:
+    if isinstance(target_spec, str):
+        return target_spec.startswith(BASELINE_PATH_PREFIXES)
+    if isinstance(target_spec, list):
+        return bool(target_spec) and all(is_baseline_target(item) for item in target_spec)
+    return False
+
+
+def is_baseline_assertion(assertion: dict) -> bool:
+    return is_baseline_target(assertion.get("target", "with_skill/outputs/transcript.md"))
 
 
 def read_targets(root: Path, target_spec) -> str:
@@ -170,7 +211,7 @@ def render_report(
         icon = "PASS" if ok else "FAIL"
         lines.append(f"- [{icon}] `{rel}`")
     lines.append("")
-    lines.append("### Without Skill")
+    lines.append("### Baseline / Without Skill")
     lines.append("")
     for rel, ok in without_results:
         icon = "PASS" if ok else "FAIL"
@@ -186,6 +227,12 @@ def render_report(
     lines.append("")
     lines.append("## Notes")
     lines.append("")
+    lines.append(
+        "- With-skill outputs and with-skill assertion failures are deterministic runner gates."
+    )
+    lines.append(
+        "- Baseline / without_skill outputs and assertions whose targets are all baseline paths are comparison evidence; judge the durable result in `comparison.md`."
+    )
     lines.append("- Fill in qualitative comparison after reviewing transcripts and docs.")
     return "\n".join(lines) + "\n"
 
@@ -230,20 +277,22 @@ def main() -> int:
     if should_generate:
         generate_eval_outputs(metadata_path)
 
-    with_results = check_outputs(root, meta.get("with_skill_outputs", []))
-    without_results = check_outputs(root, meta.get("without_skill_outputs", []))
+    with_results = check_output_fields(root, meta, ("with_skill_outputs",))
+    baseline_results = check_output_fields(root, meta, BASELINE_OUTPUT_FIELDS)
     assertion_results = [
         evaluate_assertion(root, assertion) for assertion in meta.get("assertions", [])
     ]
 
-    report = render_report(meta, with_results, without_results, assertion_results)
+    report = render_report(meta, with_results, baseline_results, assertion_results)
     report_path = root / "comparison.auto.md"
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(report)
 
-    failed = any(not ok for _, ok in with_results + without_results) or any(
-        result["status"] == "FAIL" for result in assertion_results
+    gated_assertion_failed = any(
+        result["status"] == "FAIL" and not is_baseline_assertion(assertion)
+        for assertion, result in zip(meta.get("assertions", []), assertion_results)
     )
+    failed = any(not ok for _, ok in with_results) or gated_assertion_failed
     print(display_path(report_path))
     print("Manual review template: agents/product_manager/test/idea-to-spec/COMPARISON_TEMPLATE.md")
     return 1 if failed else 0

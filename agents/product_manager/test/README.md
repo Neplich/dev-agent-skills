@@ -14,6 +14,13 @@ conversation summaries must match the committed or proposed `comparison.md`; if
 there is no comparison file to update, record the blocked or not-applicable
 reason.
 
+Fresh Sub-Agent gate: every fresh Codex subagent validation must generate a new
+`without_skill` baseline against the same eval prompt and fixture. Do not reuse
+historical baseline text as the current run. The `without_skill` run is baseline
+input for `comparison.md`; if it cannot be generated or reviewed, record its
+impact in the comparison conclusion instead of treating baseline text as a
+separate machine-graded result.
+
 Some skills may also have more specific running guides, such as
 `idea-to-spec/README.md`; follow the specific guide plus the durable comparison
 rule above.

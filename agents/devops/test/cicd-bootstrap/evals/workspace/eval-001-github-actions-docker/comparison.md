@@ -7,7 +7,8 @@
 - Eval: `eval-001-github-actions-docker`
 - Test case: github-actions-docker
 - Workspace: `workspace/eval-001-github-actions-docker`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
 
@@ -30,8 +31,7 @@ Observed behavior:
 - 当前 skill 覆盖 GitHub + Docker CI/CD 场景：会检查现有部署目标和命令，生成 PR CI workflow、main 分支 staging 部署 workflow，并把所需 secrets 记录到 deploy/SECRETS.md。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

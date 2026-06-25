@@ -7,7 +7,8 @@
 - Eval: `eval-002-boundary-test-generation`
 - Test case: boundary-test-generation
 - Workspace: `workspace/eval-2-boundary-test-generation`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23 after QA owner split fix
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation on 2026-06-23 after QA owner split fix
 
 ## Test Set / Fixture Version
 
@@ -39,8 +40,7 @@ Observed behavior:
 - PASS. 对现有功能变更、bug fix 或代码完成后的 E2E 文档更新，skill 要求先确认同一 `feature_path` 下 PRD/TRD 预期对齐并有已确认的 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`；预期变化或 PRD/path 不清回 `pm-agent:idea-to-spec`，TRD gap 回 `engineer-agent:trd-gen`，缺 implementation plan 回 `engineer-agent:feature-implementor`，文档缺失、平台版本缺失或实施计划缺失时 blocked。本 fixture 没有提供 `IMPLEMENTATION_PLAN.md`，因此真实执行时应 blocked，而不是伪造边界验证结果。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

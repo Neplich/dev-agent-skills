@@ -383,7 +383,7 @@ flowchart TD
 
 1. 写入 latest result：`pass`、`fail` 或 `blocked`。
 2. 写入 execution mode：deterministic check、model transcript、fresh Codex subagent validation 或组合方式。
-3. 更新 with-skill behavior、baseline 或 without-skill behavior。
+3. 更新 with-skill behavior、baseline 或 without_skill behavior。
 4. 记录 failures、next steps 和 runtime artifact policy。
 5. 确认 PR 评论、对话总结和 `comparison.md` 结论一致。
 

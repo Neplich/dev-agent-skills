@@ -32,6 +32,12 @@ OUTPUT_FIELDS = (
     "baseline_output",
     "baseline_skill_outputs",
 )
+BASELINE_OUTPUT_FIELDS = {
+    "without_skill_outputs",
+    "baseline_outputs",
+    "baseline_output",
+    "baseline_skill_outputs",
+}
 
 SKILL_PATHS = {
     "qa-agent": "agents/qa/skills/qa-agent/SKILL.md",
@@ -411,7 +417,9 @@ def render_report(
             "## Runner Policy",
             "",
             "- `with_skill` must produce candidate output and receive a PASS verdict.",
-            "- `without_skill` is generated for comparison; a FAIL verdict is diagnostic, not a runner failure.",
+            "- `with_skill_outputs` are runner gates; `without_skill_outputs` and baseline output fields are comparison evidence and are reported without failing the runner.",
+            "- `without_skill` is baseline input for `comparison.md`; missing or failing baseline evidence is reported here but is not a runner failure by itself.",
+            "- `without_skill` may receive a FAIL semantic verdict; that contrast is comparison evidence, not a runner failure.",
         ]
     )
     return "\n".join(lines) + "\n"
@@ -468,11 +476,16 @@ def main() -> int:
 
     by_label = {result["label"]: result for result in results}
     with_result = by_label["with_skill"]
+    required_output_failed = any(
+        not result["ok"]
+        for result in output_results
+        if result["field"] not in BASELINE_OUTPUT_FIELDS
+    )
     failed = (
         not with_result["candidate_ok"]
         or not with_result["verdict_ok"]
         or with_result["overall"] != "PASS"
-        or any(not result["ok"] for result in output_results)
+        or required_output_failed
     )
     return 1 if failed else 0
 

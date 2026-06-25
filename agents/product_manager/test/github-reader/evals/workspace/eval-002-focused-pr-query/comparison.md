@@ -7,7 +7,8 @@
 - Eval: `eval-002-focused-pr-query`
 - Test case: focused-pr-query
 - Workspace: `workspace/eval-002-focused-pr-query`
-- Latest result: PASS - canonical comparison migration retained current-version result on 2026-06-02
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
+- Prior validation note: canonical comparison migration retained current-version result on 2026-06-02
 
 ## Test Set / Fixture Version
 
@@ -28,8 +29,7 @@ Observed behavior:
 - 保留并迁移 iteration-2 最新 comparison。该结果已基于当前 github-reader skill 版本，覆盖 focused PR 查询、等待时间排序和避免冗余 issue/milestone 输出。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

@@ -7,7 +7,8 @@
 - Eval: `eval-001-minimalist`
 - Test case: Minimalist Design System
 - Workspace: `workspace/eval-1-minimalist`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
 
@@ -28,8 +29,7 @@ Observed behavior:
 - 当前 SKILL.md 要求产出 visual-system.md，包含颜色、字体、间距、组件和文案规则，并禁止 design token 落地代码、CSS/组件实现、工程任务或测试命令。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

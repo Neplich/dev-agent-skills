@@ -210,6 +210,7 @@ class QaRunEvalTests(unittest.TestCase):
 
         self.assertIn("[PASS] `with_skill` semantic verdict: PASS", report)
         self.assertIn("[FAIL] `without_skill` semantic verdict: FAIL", report)
+        self.assertIn("`without_skill` is baseline input for `comparison.md`", report)
 
     def test_runtime_paths_are_isolated_from_eval_fixture(self):
         run_eval = load_run_eval_module()
@@ -451,6 +452,81 @@ class QaRunEvalTests(unittest.TestCase):
             report = reports[0].read_text()
             self.assertIn("## Declared Output Checks", report)
             self.assertIn("[FAIL] `with_skill_outputs`", report)
+
+    def test_main_reports_without_skill_baseline_missing_without_failing(self):
+        run_eval = load_run_eval_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            skill_root = root / "qa-agent"
+            eval_root = skill_root / "evals/workspace/eval-001-missing-baseline"
+            eval_root.mkdir(parents=True)
+            (skill_root / "evals/evals.json").write_text(
+                """{
+  "schema_version": "1.0",
+  "agent": "qa",
+  "skill_name": "qa-agent",
+  "evals": [
+    {
+      "id": "eval-001-missing-baseline",
+      "name": "missing-baseline",
+      "description": "missing-baseline",
+      "prompt": "missing-baseline",
+      "workspace": "workspace/eval-001-missing-baseline",
+      "expected_output": "missing-baseline",
+      "assertions": [{"id": "missing_baseline", "description": "missing-baseline", "text": "missing-baseline"}]
+    }
+  ]
+}
+"""
+            )
+            metadata = eval_root / "eval_metadata.json"
+            metadata.write_text(
+                """{
+  "eval_id": "eval-001-missing-baseline",
+  "eval_name": "missing-baseline",
+  "workspace_root": "workspace/eval-001-missing-baseline",
+  "prompt": "missing-baseline",
+  "fixture_context": [],
+  "without_skill_outputs": [
+    "without_skill/outputs/baseline.md"
+  ],
+  "baseline_outputs": [
+    "baseline/outputs/summary.md"
+  ]
+}
+"""
+            )
+
+            old_argv = sys.argv
+            old_output_dir = os.environ.get("EVAL_RUN_OUTPUT_DIR")
+            os.environ["EVAL_RUN_OUTPUT_DIR"] = str(root / "runs")
+            try:
+                loaded = run_eval.load_eval_definition(metadata)
+                candidate = run_eval.candidate_path(loaded, "with_skill")
+                verdict = run_eval.verdict_path(loaded, "with_skill")
+                candidate.parent.mkdir(parents=True, exist_ok=True)
+                verdict.parent.mkdir(parents=True, exist_ok=True)
+                candidate.write_text("candidate")
+                verdict.write_text("# Verdict\n- Overall: PASS\n")
+
+                sys.argv = ["run_eval.py", str(metadata), "--skip-generate"]
+                result = run_eval.main()
+            finally:
+                sys.argv = old_argv
+                if old_output_dir is None:
+                    os.environ.pop("EVAL_RUN_OUTPUT_DIR", None)
+                else:
+                    os.environ["EVAL_RUN_OUTPUT_DIR"] = old_output_dir
+
+            self.assertEqual(result, 0)
+            reports = list((root / "runs").rglob("comparison.auto.md"))
+            self.assertEqual(len(reports), 1)
+            report = reports[0].read_text()
+            self.assertIn("[FAIL] `without_skill` candidate output", report)
+            self.assertIn("[FAIL] `without_skill` fresh judge verdict", report)
+            self.assertIn("[FAIL] `without_skill_outputs`", report)
+            self.assertIn("[FAIL] `baseline_outputs`", report)
 
 
 if __name__ == "__main__":

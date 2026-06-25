@@ -7,7 +7,8 @@
 - Eval: `eval-002-session`
 - Test case: Session Management
 - Workspace: `workspace/eval-002-session`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
 
@@ -29,8 +30,7 @@ Observed behavior:
 - 当前 skill 专门覆盖 session timeout、cookie flags、session regeneration、logout，并要求纳入 session lifecycle、风险、证据和修复建议。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

@@ -45,6 +45,16 @@ conversation summaries must match the committed or proposed `comparison.md`; if
 there is no comparison file to update, record the blocked or not-applicable
 reason.
 
-Runner failure is based on the deterministic outputs declared in metadata. The
-`without_skill` path is diagnostic when present. Fresh judge verdicts can inform
-manual review, but the committed durable result is still `comparison.md`.
+Fresh Sub-Agent gate: every fresh Codex subagent validation must generate a new
+`without_skill` baseline against the same eval prompt and fixture. Do not reuse
+historical baseline text as the current run. The `without_skill` run is baseline
+input for `comparison.md`; if it cannot be generated or reviewed, record its
+impact in the comparison conclusion instead of treating baseline text as a
+separate machine-graded result.
+
+Runner failure is based on the with-skill candidate, with-skill verdict, and the
+deterministic with-skill outputs declared in metadata. The `without_skill`
+candidate, fresh judge verdict, `without_skill_outputs`, and baseline output
+fields are reported as baseline comparison evidence when present; missing or
+failing baseline evidence informs manual review, but the committed durable result
+is still `comparison.md`.

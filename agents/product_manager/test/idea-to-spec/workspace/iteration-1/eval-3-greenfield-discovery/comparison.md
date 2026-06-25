@@ -7,7 +7,8 @@
 - Eval: `eval-003-greenfield-discovery`
 - Test case: greenfield-discovery
 - Workspace: `workspace/iteration-1/eval-3-greenfield-discovery`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23 after the feature_path doc-schema update
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation on 2026-06-23 after the feature_path doc-schema update
 
 ## Test Set / Fixture Version
 
@@ -32,8 +33,7 @@ Observed behavior:
 - The feature_path schema update does not weaken this eval: early discovery may keep the target feature path unresolved, but the skill must resolve or clarify a valid multi-level `feature_path` before writing formal feature-scoped docs.
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - Without the skill contract, the likely risk is producing a premature PRD or implementation plan from a vague idea.
 
 ## Failures

@@ -7,7 +7,8 @@
 - Eval: `eval-003-library-release-notes`
 - Test case: library-release-notes
 - Workspace: `workspace/eval-3-library-release`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-06 after tag normalization repair
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation completed on 2026-06-06 after tag normalization repair
 
 ## Test Set / Fixture Version
 
@@ -41,8 +42,7 @@ Observed behavior:
 - 运行记录显示先审计 `0.134.0...0.135.0` compare range 的 3 个 commits 和 merged PR [#15030](https://github.com/fastapi/fastapi/pull/15030)，再进行分组和摘要；release metadata commit 与 bot-authored release note commit 均被纳入审计。该 release 来源标题未使用 conventional prefix，因此输出按来源保留 emoji/title 格式。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

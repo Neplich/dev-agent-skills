@@ -70,6 +70,50 @@ def init_git_main(root: Path) -> None:
 
 
 class EvalContractTests(unittest.TestCase):
+    def write_eval_fixture(self, root: Path, comparison_text: str) -> Path:
+        evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
+        skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
+        workspace = evals_path.parent / "workspace/eval-001-baseline-evidence"
+        workspace.mkdir(parents=True)
+        skill_doc.parent.mkdir(parents=True)
+        skill_doc.write_text("# Debugger\n")
+        (workspace / "comparison.md").write_text(comparison_text)
+        (workspace / "eval_metadata.json").write_text(
+            json.dumps(
+                {
+                    "eval_id": "eval-001-baseline-evidence",
+                    "eval_name": "baseline-evidence",
+                }
+            )
+        )
+        evals_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": "1.0",
+                    "agent": "engineer",
+                    "skill_name": "debugger",
+                    "evals": [
+                        {
+                            "id": "eval-001-baseline-evidence",
+                            "name": "baseline-evidence",
+                            "description": "Baseline evidence fixture",
+                            "prompt": "Run the eval",
+                            "workspace": "workspace/eval-001-baseline-evidence",
+                            "expected_output": "A result",
+                            "assertions": [
+                                {
+                                    "id": "has_result",
+                                    "description": "Has a result",
+                                    "text": "Result is present",
+                                }
+                            ],
+                        }
+                    ],
+                }
+            )
+        )
+        return evals_path
+
     def test_all_agent_skill_evals_follow_shared_contract(self):
         checker = load_checker_module()
         errors = checker.validate_all()
@@ -473,6 +517,44 @@ class EvalContractTests(unittest.TestCase):
             "\n".join(error.render(root) for error in errors),
             "",
         )
+
+    def test_eval_contract_does_not_validate_baseline_semantics(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(
+                root,
+                "# Comparison\n\n"
+                "- Latest result: PASS - reviewer accepted the comparison conclusion\n\n"
+                "## Without Skill / Baseline\n\n"
+                "- BLOCKED: without_skill baseline was not generated.\n"
+                "- Baseline behavior is diagnostic only.\n"
+                "- Baseline was blocked by unavailable runner.\n"
+                "- The without_skill run was skipped.\n"
+                "- without_skill run was not generated.\n",
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        self.assertEqual("\n".join(error.render(root) for error in errors), "")
+
+    def test_eval_contract_allows_partial_with_missing_baseline_reason(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(
+                root,
+                "# Comparison\n\n"
+                "- Latest result: PARTIAL - with-skill validation passed; baseline not generated\n\n"
+                "## Without Skill / Baseline\n\n"
+                "- BLOCKED: without_skill baseline was not generated for this historical comparison.\n",
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        self.assertEqual("\n".join(error.render(root) for error in errors), "")
 
     def test_artifact_checker_blocks_tmp_eval_runs(self):
         checker = load_artifact_checker_module()

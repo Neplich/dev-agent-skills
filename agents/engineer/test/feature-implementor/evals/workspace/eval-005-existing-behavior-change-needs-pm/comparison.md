@@ -7,7 +7,8 @@
 - Eval: `eval-005-existing-behavior-change-needs-pm`
 - Test case: existing-behavior-change-needs-pm
 - Workspace: `workspace/eval-005-existing-behavior-change-needs-pm`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
 
@@ -38,8 +39,7 @@ Observed behavior:
   do not permit implementation planning, code changes, or E2E updates.
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

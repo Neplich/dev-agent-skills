@@ -7,7 +7,8 @@
 - Eval: `eval-001-rbac`
 - Test case: Role-Based Access Control
 - Workspace: `workspace/eval-001-rbac`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
 
@@ -29,8 +30,7 @@ Observed behavior:
 - 当前 skill 要求提取角色权限、生成 role matrix、检查 protected endpoints 和 RBAC 覆盖，能输出越权风险、证据、影响和修复/回归建议。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

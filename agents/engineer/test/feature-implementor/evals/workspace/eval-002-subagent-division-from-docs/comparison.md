@@ -7,7 +7,8 @@
 - Eval: `eval-002-subagent-division-from-docs`
 - Test case: subagent-division-from-docs
 - Workspace: `workspace/eval-002-subagent-division-from-docs`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
 
@@ -40,8 +41,7 @@ Observed behavior:
 - The QA E2E documentation handoff section requires PRD, TRD, confirmed implementation plan, PRD alignment result, changed files, verification commands and results, risks, environment assumptions, QA questions, suggested `docs/qa/e2e/{feature_path}/` directory, and likely E2E impact after implementation and self-review.
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

@@ -7,7 +7,8 @@
 - Eval: `eval-001-saas-dashboard`
 - Test case: SaaS Dashboard Design
 - Workspace: `workspace/eval-1-saas-dashboard`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
+- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version
 
@@ -28,8 +29,7 @@ Observed behavior:
 - 当前 SKILL.md 要求产出 ui-ux-spec.md，覆盖用户旅程、ASCII 布局、组件、交互和响应式，并明确停在 design handoff，可满足 dashboard eval assertions。
 
 ## Without Skill / Baseline
-
-- Baseline behavior is diagnostic only.
+- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
 - This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
 
 ## Failures

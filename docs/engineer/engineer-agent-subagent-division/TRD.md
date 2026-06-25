@@ -277,7 +277,7 @@ agents/engineer/test/feature-implementor/evals/workspace/eval-002-subagent-divis
 - fixture version
 - latest result
 - with-skill behavior
-- baseline 或 without-skill behavior
+- baseline 或 without_skill behavior
 - failures
 - next steps
 - runtime artifact policy
