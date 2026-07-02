@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-012-implementation-plan-archive-preflight",
+  "eval_name": "implementation-plan-archive-preflight",
+  "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-012-implementation-plan-archive-preflight",
+  "skill_availability_goal": "Verify that feature-implementor scans for an existing active IMPLEMENTATION_PLAN before creating a next plan on the same feature_path, blocks a direct overwrite, and asks the user to archive, continue, or supersede.",
+  "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要新增部分退款能力。docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md 已存在且是上一轮全额退款的完成态计划，尚未归档。请进入 feature-implementor 为部分退款创建下一份实施计划，先不要改代码。",
+  "fixture_context": [
+    "docs/pm/payment-refund/PRD.md",
+    "docs/engineer/payment-refund/TRD.md",
+    "docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md"
+  ]
+}

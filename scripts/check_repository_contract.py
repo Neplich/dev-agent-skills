@@ -34,6 +34,14 @@ IMPLEMENTATION_PLAN_RE = re.compile(
     rf"(?:/{FEATURE_PATH_SEGMENT_PATTERN})*)"
     rf"/IMPLEMENTATION_PLAN\.md$"
 )
+IMPLEMENTATION_PLAN_ARCHIVE_RE = re.compile(
+    rf"^docs/engineer/"
+    rf"(?P<feature_path>{FEATURE_PATH_SEGMENT_PATTERN}"
+    rf"(?:/{FEATURE_PATH_SEGMENT_PATTERN})*?)"
+    rf"/implementation-plans/archive/"
+    rf"IMPLEMENTATION_PLAN-(?P<scope>{FEATURE_PATH_SEGMENT_PATTERN})\.md$"
+)
+ARCHIVE_STATUS_VALUES = {"Archived", "Superseded"}
 PM_PRD_RE = re.compile(
     rf"^docs/pm/"
     rf"(?P<feature_path>{FEATURE_PATH_SEGMENT_PATTERN}"
@@ -743,6 +751,8 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
                 f"frontmatter 'feature_level' must be {expected_level!r}",
             )
 
+        validate_active_plan_archive_linkage(root, rel, feature_path, metadata, errors)
+
         if rel in changed_plans:
             for field in ("related_prd", "related_trd"):
                 value = metadata.get(field)
@@ -828,6 +838,112 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
             )
 
 
+def validate_archive_plan_metadata(
+    root: Path,
+    rel: str,
+    errors: list[ContractError],
+) -> None:
+    match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel)
+    if match is None:
+        return
+
+    path = root / rel
+    feature_path = match.group("feature_path")
+    scope = match.group("scope")
+
+    parsed = parse_markdown_frontmatter(path, path.read_text(), errors)
+    if parsed is None:
+        return
+    metadata, _ = parsed
+
+    status = metadata.get("status", "")
+    for field in ("implementation_scope", "status", "archived_at", "archive_approved_by", "source_plan"):
+        value = metadata.get(field)
+        if not isinstance(value, str) or not value.strip():
+            add_error(errors, path, f"frontmatter {field!r} must be non-empty")
+
+    if status and status not in ARCHIVE_STATUS_VALUES:
+        add_error(
+            errors,
+            path,
+            "frontmatter 'status' must be 'Archived' or 'Superseded'",
+        )
+
+    if status == "Superseded":
+        reason = metadata.get("superseded_reason")
+        if not isinstance(reason, str) or not reason.strip():
+            add_error(errors, path, "frontmatter 'superseded_reason' must be non-empty for Superseded archives")
+
+    implementation_scope = metadata.get("implementation_scope", "")
+    if implementation_scope and implementation_scope != scope:
+        add_error(
+            errors,
+            path,
+            f"frontmatter 'implementation_scope' must match archive filename scope {scope!r}",
+        )
+
+    archived_at = metadata.get("archived_at", "")
+    if archived_at and not DATE_RE.fullmatch(archived_at):
+        add_error(errors, path, "frontmatter 'archived_at' must use YYYY-MM-DD")
+
+    expected_source = f"docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md"
+    source_plan = metadata.get("source_plan", "")
+    if source_plan and source_plan != expected_source:
+        add_error(
+            errors,
+            path,
+            f"frontmatter 'source_plan' must be {expected_source!r}",
+        )
+
+
+def validate_active_plan_archive_linkage(
+    root: Path,
+    rel: str,
+    feature_path: str,
+    metadata: dict[str, str],
+    errors: list[ContractError],
+) -> None:
+    previous_archive = metadata.get("previous_plan_archive")
+    if not isinstance(previous_archive, str) or not previous_archive.strip():
+        return
+
+    path = root / rel
+    archive_match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(previous_archive)
+    if archive_match is None:
+        add_error(
+            errors,
+            path,
+            "frontmatter 'previous_plan_archive' must point to an implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md path",
+        )
+        return
+
+    if archive_match.group("feature_path") != feature_path:
+        add_error(
+            errors,
+            path,
+            f"frontmatter 'previous_plan_archive' must reference an archive on feature_path {feature_path!r}",
+        )
+        return
+
+    if not (root / previous_archive).exists():
+        add_error(
+            errors,
+            path,
+            "frontmatter 'previous_plan_archive' must point to an existing archive file",
+        )
+
+
+def validate_archive_plans(root: Path, errors: list[ContractError]) -> None:
+    for rel in tracked_files(root):
+        if is_legacy_artifact_path(rel):
+            continue
+        if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel) is None:
+            continue
+        if not (root / rel).exists():
+            continue
+        validate_archive_plan_metadata(root, rel, errors)
+
+
 def validate_legacy_artifact_metadata(root: Path, errors: list[ContractError]) -> None:
     required_fields = ("legacy_of", "legacy_reason", "superseded_by")
 
@@ -892,6 +1008,7 @@ def validate_all(root: Path | None = None) -> list[ContractError]:
     validate_skills_lock(root, errors)
     validate_feature_document_metadata(root, errors)
     validate_implementation_plan_metadata(root, errors)
+    validate_archive_plans(root, errors)
     validate_legacy_artifact_metadata(root, errors)
     validate_formal_document_author(root, errors)
     validate_tracked_file_policy(root, errors)
