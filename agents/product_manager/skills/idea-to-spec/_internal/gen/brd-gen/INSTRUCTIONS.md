@@ -27,9 +27,9 @@ Generate a comprehensive Business Requirements Document following the standardiz
 
 ## Conventions
 
-Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow, failure handling, and safety boundaries.
+Follow `_internal/_shared/gen-conventions.md` for standard workflow, failure handling, and safety boundaries.
 
-- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/brd-schema.md`
+- **Schema**: `_internal/_shared/doc-schemas/brd-schema.md`
 - **Metadata**: `type: BRD`, version `1.0.0`, status `Draft`
 - **Naming**: `docs/pm/<feature_path>/BRD.md`
 - **Feature path gate**: use the same resolved `feature_path` as the related

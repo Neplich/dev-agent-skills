@@ -15,7 +15,7 @@ It owns:
 - section-by-section requirement shaping
 - handoff packet assembly
 - progressive loading of internal instruction resources under
-  `agents/product_manager/skills/idea-to-spec/_internal/`
+  `_internal/`
 
 Do not expose or recommend the full internal instruction tree up front. Keep
 the user interacting with `idea-to-spec` until the narrowest useful next step
@@ -115,7 +115,7 @@ Do not use this for:
 Before loading any internal instruction resource or building a handoff packet,
 read:
 
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+`_internal/_shared/skill-map.md`
 
 Treat that file as the source of truth for:
 
@@ -500,7 +500,7 @@ Rules:
 
 Before delivery, validate against:
 
-- `agents/product_manager/skills/idea-to-spec/_internal/_shared/quality-rules.md`
+- `_internal/_shared/quality-rules.md`
 
 Additionally confirm:
 

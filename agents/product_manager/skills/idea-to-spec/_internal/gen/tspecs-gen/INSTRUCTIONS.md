@@ -28,10 +28,10 @@ documents.
 
 ## Conventions
 
-Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` for standard workflow,
+Follow `_internal/_shared/gen-conventions.md` for standard workflow,
 failure handling, and safety boundaries.
 
-- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md`
+- **Schema**: `_internal/_shared/doc-schemas/test-spec-schema.md`
 - **Metadata**: `type: TEST_SPEC`, version `1.0.0`
 - **Naming**: `docs/qa/e2e/{feature_path}/TEST_SUITE.md`
 - **Feature path source**: derive the QA function tree from the confirmed
