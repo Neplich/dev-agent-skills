@@ -17,8 +17,8 @@
 **Skill 结构**
 
 - `SKILL.md` 是公开 skill 文档
-- `_internal/INSTRUCTIONS.md` 包含 Agent 的详细实现指导
-- `_internal/modules/` 可包含可选支持模块
+- `_internal/` 为可选目录，仅在 skill 需要分阶段或分模块渐进加载指令时使用；简单 skill 允许只有单文件 `SKILL.md`
+- 使用 `_internal/` 时，每个内部模块目录只保留一个 `INSTRUCTIONS.md` 作为指令入口，跨模块共享内容放 `_internal/_shared/`
 - Skill 使用 YAML frontmatter 保存元数据
 
 **文档组织**
@@ -86,8 +86,8 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 
 3. 为每个 skill 创建：
    - `skills/{skill-name}/SKILL.md`
-   - `skills/{skill-name}/_internal/INSTRUCTIONS.md`
    - `test/{skill-name}/evals/evals.json`
+   - 仅在需要渐进加载时创建 `skills/{skill-name}/_internal/`
 
 4. 在 `.claude-plugin/marketplace.json` 注册 Agent：
    ```json
