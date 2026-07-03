@@ -896,20 +896,20 @@ def validate_archive_plan_metadata(
         )
 
     feature_path_fields = ("feature_path", "parent_feature", "feature_level")
-    if any(metadata.get(field) for field in feature_path_fields):
+    if any(field in metadata for field in feature_path_fields):
         validate_feature_path_metadata(path, metadata, feature_path, errors)
 
     expected_related_prd = f"docs/pm/{feature_path}/PRD.md"
     expected_related_trd = f"docs/engineer/{feature_path}/TRD.md"
     related_prd = metadata.get("related_prd", "")
     related_trd = metadata.get("related_trd", "")
-    if related_prd and related_prd != expected_related_prd:
+    if "related_prd" in metadata and related_prd != expected_related_prd:
         add_error(
             errors,
             path,
             f"frontmatter 'related_prd' must be {expected_related_prd!r}",
         )
-    if related_trd and related_trd != expected_related_trd:
+    if "related_trd" in metadata and related_trd != expected_related_trd:
         add_error(
             errors,
             path,

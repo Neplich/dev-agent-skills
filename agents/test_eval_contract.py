@@ -1178,7 +1178,10 @@ class EvalContractTests(unittest.TestCase):
         self.assertEqual([], errors)
 
     def _write_history_search_archive_fixture(
-        self, root: Path, feature_path_line: str = 'feature_path: "chat-interface/history-search"\n'
+        self,
+        root: Path,
+        feature_path_line: str = 'feature_path: "chat-interface/history-search"\n',
+        related_prd_line: str = 'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n',
     ) -> Path:
         archive = (
             root
@@ -1197,7 +1200,7 @@ class EvalContractTests(unittest.TestCase):
             'archived_at: "2026-06-25"\n'
             'archive_approved_by: "Maintainer"\n'
             'source_plan: "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md"\n'
-            'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n'
+            f"{related_prd_line}"
             'related_trd: "docs/engineer/chat-interface/history-search/TRD.md"\n'
             "---\n\n"
             "# Archived History Search Plan\n"
@@ -1223,6 +1226,47 @@ class EvalContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn(
             "frontmatter 'feature_path' must match directory path 'chat-interface/history-search'",
+            rendered,
+        )
+
+    def test_repository_contract_rejects_archive_plan_empty_feature_path(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            archive = self._write_history_search_archive_fixture(
+                root, feature_path_line='feature_path: ""\n'
+            )
+            subprocess.run(
+                ["git", "add", archive.relative_to(root).as_posix()], cwd=root, check=True
+            )
+
+            errors = []
+            checker.validate_archive_plans(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("frontmatter 'feature_path' must be non-empty", rendered)
+
+    def test_repository_contract_rejects_archive_plan_empty_related_prd(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            archive = self._write_history_search_archive_fixture(
+                root, related_prd_line='related_prd: ""\n'
+            )
+            subprocess.run(
+                ["git", "add", archive.relative_to(root).as_posix()], cwd=root, check=True
+            )
+
+            errors = []
+            checker.validate_archive_plans(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "frontmatter 'related_prd' must be 'docs/pm/chat-interface/history-search/PRD.md'",
             rendered,
         )
 
