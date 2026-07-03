@@ -896,6 +896,17 @@ def validate_archive_plan_metadata(
         )
 
 
+def feature_path_has_plan_archives(root: Path, feature_path: str) -> bool:
+    archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
+    if not archive_dir.is_dir():
+        return False
+    for candidate in archive_dir.glob("IMPLEMENTATION_PLAN-*.md"):
+        candidate_rel = candidate.relative_to(root).as_posix()
+        if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel):
+            return True
+    return False
+
+
 def validate_active_plan_archive_linkage(
     root: Path,
     rel: str,
@@ -903,11 +914,17 @@ def validate_active_plan_archive_linkage(
     metadata: dict[str, str],
     errors: list[ContractError],
 ) -> None:
+    path = root / rel
     previous_archive = metadata.get("previous_plan_archive")
     if not isinstance(previous_archive, str) or not previous_archive.strip():
+        if feature_path_has_plan_archives(root, feature_path):
+            add_error(
+                errors,
+                path,
+                "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path",
+            )
         return
 
-    path = root / rel
     archive_match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(previous_archive)
     if archive_match is None:
         add_error(

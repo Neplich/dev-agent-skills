@@ -1059,6 +1059,124 @@ class EvalContractTests(unittest.TestCase):
         self.assertIn("frontmatter 'related_prd' must be non-empty", rendered)
         self.assertIn("frontmatter 'related_trd' must be non-empty", rendered)
 
+    def _write_history_search_plan_fixture(self, root: Path, plan_extra_frontmatter: str = "") -> Path:
+        plan = root / "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md"
+        prd = root / "docs/pm/chat-interface/history-search/PRD.md"
+        trd = root / "docs/engineer/chat-interface/history-search/TRD.md"
+        plan.parent.mkdir(parents=True)
+        prd.parent.mkdir(parents=True)
+        prd.write_text(
+            "---\n"
+            'feature: "history-search"\n'
+            'feature_path: "chat-interface/history-search"\n'
+            'parent_feature: "chat-interface"\n'
+            'feature_level: "2"\n'
+            'version: "1.0.0"\n'
+            'date: "2026-06-23"\n'
+            'last_updated: "2026-06-23"\n'
+            "---\n\n"
+            "# History Search PRD\n"
+        )
+        trd.write_text(
+            "---\n"
+            'feature: "history-search"\n'
+            'feature_path: "chat-interface/history-search"\n'
+            'parent_feature: "chat-interface"\n'
+            'feature_level: "2"\n'
+            'version: "0.1.0"\n'
+            'date: "2026-06-23"\n'
+            'last_updated: "2026-06-23"\n'
+            'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n'
+            "---\n\n"
+            "# History Search TRD\n"
+        )
+        plan.write_text(
+            "---\n"
+            'feature: "history-search"\n'
+            'feature_path: "chat-interface/history-search"\n'
+            'parent_feature: "chat-interface"\n'
+            'feature_level: "2"\n'
+            'version: "0.1.0"\n'
+            'date: "2026-06-23"\n'
+            'last_updated: "2026-06-23"\n'
+            'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n'
+            'related_trd: "docs/engineer/chat-interface/history-search/TRD.md"\n'
+            f"{plan_extra_frontmatter}"
+            "---\n\n"
+            "# History Search Plan\n"
+        )
+        return plan
+
+    def test_repository_contract_rejects_missing_previous_plan_archive_when_archive_exists(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            plan = self._write_history_search_plan_fixture(root)
+            archive = (
+                root
+                / "docs/engineer/chat-interface/history-search"
+                / "implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"
+            )
+            archive.parent.mkdir(parents=True)
+            archive.write_text("# Archived Plan\n")
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path",
+            rendered,
+        )
+
+    def test_repository_contract_accepts_previous_plan_archive_linkage_when_archive_exists(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            plan = self._write_history_search_plan_fixture(
+                root,
+                'previous_plan_archive: "docs/engineer/chat-interface/history-search/'
+                'implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"\n',
+            )
+            archive = (
+                root
+                / "docs/engineer/chat-interface/history-search"
+                / "implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"
+            )
+            archive.parent.mkdir(parents=True)
+            archive.write_text("# Archived Plan\n")
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        self.assertEqual([], errors)
+
+    def test_repository_contract_accepts_missing_previous_plan_archive_without_archives(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            plan = self._write_history_search_plan_fixture(root)
+            archive_dir = (
+                root
+                / "docs/engineer/chat-interface/history-search"
+                / "implementation-plans/archive"
+            )
+            archive_dir.mkdir(parents=True)
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        self.assertEqual([], errors)
+
     def test_repository_contract_accepts_deep_implementation_plan_path(self):
         checker = load_repository_checker_module()
 
