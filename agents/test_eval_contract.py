@@ -1177,6 +1177,110 @@ class EvalContractTests(unittest.TestCase):
 
         self.assertEqual([], errors)
 
+    def _write_history_search_archive_fixture(
+        self, root: Path, feature_path_line: str = 'feature_path: "chat-interface/history-search"\n'
+    ) -> Path:
+        archive = (
+            root
+            / "docs/engineer/chat-interface/history-search"
+            / "implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"
+        )
+        archive.parent.mkdir(parents=True)
+        archive.write_text(
+            "---\n"
+            'feature: "history-search"\n'
+            f"{feature_path_line}"
+            'parent_feature: "chat-interface"\n'
+            'feature_level: "2"\n'
+            'implementation_scope: "initial-rollout"\n'
+            'status: "Archived"\n'
+            'archived_at: "2026-06-25"\n'
+            'archive_approved_by: "Maintainer"\n'
+            'source_plan: "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md"\n'
+            'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n'
+            'related_trd: "docs/engineer/chat-interface/history-search/TRD.md"\n'
+            "---\n\n"
+            "# Archived History Search Plan\n"
+        )
+        return archive
+
+    def test_repository_contract_rejects_archive_plan_feature_path_mismatch(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            archive = self._write_history_search_archive_fixture(
+                root, 'feature_path: "billing"\n'
+            )
+            subprocess.run(
+                ["git", "add", archive.relative_to(root).as_posix()], cwd=root, check=True
+            )
+
+            errors = []
+            checker.validate_archive_plans(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "frontmatter 'feature_path' must match directory path 'chat-interface/history-search'",
+            rendered,
+        )
+
+    def test_repository_contract_accepts_archive_plan_with_consistent_feature_metadata(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            archive = self._write_history_search_archive_fixture(root)
+            subprocess.run(
+                ["git", "add", archive.relative_to(root).as_posix()], cwd=root, check=True
+            )
+
+            errors = []
+            checker.validate_archive_plans(root, errors)
+
+        self.assertEqual([], errors)
+
+    def test_repository_contract_rejects_misnamed_files_in_archive_directory(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            archive_dir = (
+                root
+                / "docs/engineer/chat-interface/history-search"
+                / "implementation-plans/archive"
+            )
+            archive_dir.mkdir(parents=True)
+            underscore = archive_dir / "IMPLEMENTATION_PLAN-full_refund.md"
+            underscore.write_text("# Misnamed Archive\n")
+            unrelated = archive_dir / "BAD.md"
+            unrelated.write_text("# Unrelated File\n")
+            subprocess.run(
+                [
+                    "git",
+                    "add",
+                    underscore.relative_to(root).as_posix(),
+                    unrelated.relative_to(root).as_posix(),
+                ],
+                cwd=root,
+                check=True,
+            )
+
+            errors = []
+            checker.validate_archive_plans(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertEqual(2, len(errors))
+        self.assertIn("IMPLEMENTATION_PLAN-full_refund.md", rendered)
+        self.assertIn("BAD.md", rendered)
+        self.assertIn(
+            "implementation-plans/archive only allows IMPLEMENTATION_PLAN-<scope>.md with a lower kebab-case scope",
+            rendered,
+        )
+
     def test_repository_contract_accepts_deep_implementation_plan_path(self):
         checker = load_repository_checker_module()
 

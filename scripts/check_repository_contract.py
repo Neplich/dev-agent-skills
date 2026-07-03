@@ -895,6 +895,27 @@ def validate_archive_plan_metadata(
             f"frontmatter 'source_plan' must be {expected_source!r}",
         )
 
+    feature_path_fields = ("feature_path", "parent_feature", "feature_level")
+    if any(metadata.get(field) for field in feature_path_fields):
+        validate_feature_path_metadata(path, metadata, feature_path, errors)
+
+    expected_related_prd = f"docs/pm/{feature_path}/PRD.md"
+    expected_related_trd = f"docs/engineer/{feature_path}/TRD.md"
+    related_prd = metadata.get("related_prd", "")
+    related_trd = metadata.get("related_trd", "")
+    if related_prd and related_prd != expected_related_prd:
+        add_error(
+            errors,
+            path,
+            f"frontmatter 'related_prd' must be {expected_related_prd!r}",
+        )
+    if related_trd and related_trd != expected_related_trd:
+        add_error(
+            errors,
+            path,
+            f"frontmatter 'related_trd' must be {expected_related_trd!r}",
+        )
+
 
 def feature_path_has_plan_archives(root: Path, feature_path: str) -> bool:
     archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
@@ -954,9 +975,19 @@ def validate_archive_plans(root: Path, errors: list[ContractError]) -> None:
     for rel in tracked_files(root):
         if is_legacy_artifact_path(rel):
             continue
-        if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel) is None:
-            continue
         if not (root / rel).exists():
+            continue
+        if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel) is None:
+            if (
+                rel.startswith("docs/engineer/")
+                and "/implementation-plans/archive/" in rel
+                and rel.endswith(".md")
+            ):
+                add_error(
+                    errors,
+                    root / rel,
+                    "implementation-plans/archive only allows IMPLEMENTATION_PLAN-<scope>.md with a lower kebab-case scope",
+                )
             continue
         validate_archive_plan_metadata(root, rel, errors)
 
