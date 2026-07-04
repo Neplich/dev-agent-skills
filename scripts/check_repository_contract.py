@@ -41,6 +41,7 @@ IMPLEMENTATION_PLAN_ARCHIVE_RE = re.compile(
     rf"/implementation-plans/archive/"
     rf"IMPLEMENTATION_PLAN-(?P<scope>{FEATURE_PATH_SEGMENT_PATTERN})\.md$"
 )
+IMPLEMENTATION_SCOPE_RE = re.compile(rf"^{FEATURE_PATH_SEGMENT_PATTERN}$")
 ARCHIVE_STATUS_VALUES = {"Archived", "Superseded"}
 PM_PRD_RE = re.compile(
     rf"^docs/pm/"
@@ -766,6 +767,14 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
                 value = metadata.get(field)
                 if not isinstance(value, str) or not value.strip():
                     add_error(errors, path, f"frontmatter {field!r} must be non-empty")
+
+            implementation_scope = metadata.get("implementation_scope", "")
+            if implementation_scope and IMPLEMENTATION_SCOPE_RE.fullmatch(implementation_scope) is None:
+                add_error(
+                    errors,
+                    path,
+                    "frontmatter 'implementation_scope' must be a lower kebab-case scope",
+                )
 
             expected_related_prd = f"docs/pm/{feature_path}/PRD.md"
             expected_related_trd = f"docs/engineer/{feature_path}/TRD.md"

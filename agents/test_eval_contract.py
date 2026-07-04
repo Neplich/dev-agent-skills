@@ -1115,6 +1115,26 @@ class EvalContractTests(unittest.TestCase):
         )
         return plan
 
+    def test_repository_contract_rejects_changed_plan_with_invalid_implementation_scope(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            plan = self._write_history_search_plan_fixture(
+                root, implementation_scope="Bad Scope"
+            )
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "frontmatter 'implementation_scope' must be a lower kebab-case scope",
+            rendered,
+        )
+
     def test_repository_contract_rejects_missing_previous_plan_archive_for_replacement_scope(self):
         checker = load_repository_checker_module()
 
