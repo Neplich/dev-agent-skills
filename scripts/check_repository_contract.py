@@ -917,15 +917,17 @@ def validate_archive_plan_metadata(
         )
 
 
-def feature_path_has_plan_archives(root: Path, feature_path: str) -> bool:
+def feature_path_plan_archive_scopes(root: Path, feature_path: str) -> set[str]:
     archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
+    scopes: set[str] = set()
     if not archive_dir.is_dir():
-        return False
+        return scopes
     for candidate in archive_dir.glob("IMPLEMENTATION_PLAN-*.md"):
         candidate_rel = candidate.relative_to(root).as_posix()
-        if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel):
-            return True
-    return False
+        match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel)
+        if match is not None:
+            scopes.add(match.group("scope"))
+    return scopes
 
 
 def validate_active_plan_archive_linkage(
@@ -942,12 +944,18 @@ def validate_active_plan_archive_linkage(
         # Only replacement plans created or rewritten after an archive exists
         # must record the back link; an unchanged active plan (for example the
         # copy-archived source plan left in place) is allowed to omit it.
-        if plan_changed and feature_path_has_plan_archives(root, feature_path):
-            add_error(
-                errors,
-                path,
-                "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path",
-            )
+        # A changed active plan whose 'implementation_scope' matches an
+        # existing archive scope is the just-archived source plan (closeout
+        # evidence and approved archive copy landing together), not a
+        # replacement plan, so it may also omit the back link.
+        if plan_changed:
+            archive_scopes = feature_path_plan_archive_scopes(root, feature_path)
+            if archive_scopes and metadata.get("implementation_scope") not in archive_scopes:
+                add_error(
+                    errors,
+                    path,
+                    "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path and 'implementation_scope' does not match any archived scope",
+                )
         return
 
     archive_match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(previous_archive)

@@ -1061,7 +1061,12 @@ class EvalContractTests(unittest.TestCase):
         self.assertIn("frontmatter 'related_prd' must be non-empty", rendered)
         self.assertIn("frontmatter 'related_trd' must be non-empty", rendered)
 
-    def _write_history_search_plan_fixture(self, root: Path, plan_extra_frontmatter: str = "") -> Path:
+    def _write_history_search_plan_fixture(
+        self,
+        root: Path,
+        plan_extra_frontmatter: str = "",
+        implementation_scope: str = "initial-rollout",
+    ) -> Path:
         plan = root / "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md"
         prd = root / "docs/pm/chat-interface/history-search/PRD.md"
         trd = root / "docs/engineer/chat-interface/history-search/TRD.md"
@@ -1101,7 +1106,7 @@ class EvalContractTests(unittest.TestCase):
             'version: "0.1.0"\n'
             'date: "2026-06-23"\n'
             'last_updated: "2026-06-23"\n'
-            'implementation_scope: "initial-rollout"\n'
+            f'implementation_scope: "{implementation_scope}"\n'
             'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n'
             'related_trd: "docs/engineer/chat-interface/history-search/TRD.md"\n'
             f"{plan_extra_frontmatter}"
@@ -1110,13 +1115,15 @@ class EvalContractTests(unittest.TestCase):
         )
         return plan
 
-    def test_repository_contract_rejects_missing_previous_plan_archive_when_archive_exists(self):
+    def test_repository_contract_rejects_missing_previous_plan_archive_for_replacement_scope(self):
         checker = load_repository_checker_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             init_git_main(root)
-            plan = self._write_history_search_plan_fixture(root)
+            plan = self._write_history_search_plan_fixture(
+                root, implementation_scope="search-filters-v2"
+            )
             archive = (
                 root
                 / "docs/engineer/chat-interface/history-search"
@@ -1131,9 +1138,35 @@ class EvalContractTests(unittest.TestCase):
 
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn(
-            "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path",
+            "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path and 'implementation_scope' does not match any archived scope",
             rendered,
         )
+
+    def test_repository_contract_accepts_missing_previous_plan_archive_for_closeout_archived_scope(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            # Closeout flow: the changed active plan carries the same
+            # implementation_scope as its just-created archive copy, so no
+            # previous_plan_archive back link is required.
+            plan = self._write_history_search_plan_fixture(
+                root, implementation_scope="initial-rollout"
+            )
+            archive = (
+                root
+                / "docs/engineer/chat-interface/history-search"
+                / "implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"
+            )
+            archive.parent.mkdir(parents=True)
+            archive.write_text("# Archived Plan\n")
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        self.assertEqual([], errors)
 
     def test_repository_contract_accepts_previous_plan_archive_linkage_when_archive_exists(self):
         checker = load_repository_checker_module()
@@ -1145,6 +1178,7 @@ class EvalContractTests(unittest.TestCase):
                 root,
                 'previous_plan_archive: "docs/engineer/chat-interface/history-search/'
                 'implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"\n',
+                implementation_scope="search-filters-v2",
             )
             archive = (
                 root
@@ -1186,7 +1220,9 @@ class EvalContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True)
-            self._write_history_search_plan_fixture(root)
+            self._write_history_search_plan_fixture(
+                root, implementation_scope="search-filters-v2"
+            )
             subprocess.run(["git", "add", "-A"], cwd=root, check=True)
             subprocess.run(
                 [
