@@ -35,6 +35,15 @@ updating that TC. Read `docs/pm/{feature_path}/PRD.md` and
 or expectation is unclear, keep the defect artifact focused on the observed
 failure and mark reusable E2E coverage as `blocked`.
 
+Gate strength for that reusable TC follows the `change_tier` contract in
+`AGENTS.md` (变更分级契约). Consume `change_tier` from the handoff when
+present, or self-assess it per that contract. For `hotfix` with unchanged
+approved PRD/TRD expectations, only require covering the direct impact paths
+and appending results, and accept the confirmed lightweight plan form for the
+plan gate; for `standard` and above, keep the full PRD/TRD expectation
+alignment gate. Tiering never waives evidence, and a request that changes
+approved PRD/TRD expectations is never `hotfix` — route it back to PM.
+
 ## When to Use
 
 - A test, manual check, or exploratory pass fails and needs triage

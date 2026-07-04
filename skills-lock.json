@@ -89,22 +89,22 @@
     "exploratory-tester": {
       "source": "agents/qa/skills/exploratory-tester",
       "sourceType": "local",
-      "computedHash": "438f422ee52878abe7bb29fc8f913c73c7491198ed2549adf7f6af096a1f6beb"
+      "computedHash": "38f14651b1ab6a8682d09c8e1bda465b16e324fb4c6ebe01d886d250720ad9eb"
     },
     "spec-based-tester": {
       "source": "agents/qa/skills/spec-based-tester",
       "sourceType": "local",
-      "computedHash": "c94f6ed2fbc6d009ffb2e1d6c13fe96a42298596d2a9be360d57809c1f388dba"
+      "computedHash": "de817c26b736ba6ccce59a2bfcbb8300d33793508dfc46a6eb7304728041e3be"
     },
     "bug-analyzer": {
       "source": "agents/qa/skills/bug-analyzer",
       "sourceType": "local",
-      "computedHash": "cff50c8616b735b07abb5102d9a7e784c0c85c5b961a775227b5036fc237c355"
+      "computedHash": "204f7c8425b48c25022d195e82a2151a44642e4e3af202486a23a7cfed669042"
     },
     "regression-suite": {
       "source": "agents/qa/skills/regression-suite",
       "sourceType": "local",
-      "computedHash": "b52c393948be4331c4715644268ab4e82e84c70b38456bb112e5741bdafcd05d"
+      "computedHash": "4523d4cd6c86f11b25fd7cd787dda314f6929998fea8277ce105eb8249281641"
     },
     "devops-agent": {
       "source": "agents/devops/skills/devops-agent",

@@ -90,6 +90,15 @@ PM expectation is unclear, return to PM. If TRD or the plan is missing, stale,
 or not on the same path, block reusable TC creation/update/execution and send
 the work back to the appropriate Engineer step.
 
+Gate strength for that alignment follows the `change_tier` contract in
+`AGENTS.md` (变更分级契约). Consume `change_tier` from the handoff when
+present, or self-assess it per that contract. For `hotfix` with unchanged
+approved PRD/TRD expectations, only require validating the direct impact
+paths and appending results, and accept the confirmed lightweight plan form
+for the plan gate; for `standard` and above, keep the full PRD/TRD
+expectation alignment gate. Tiering never waives evidence, and a request that
+changes approved PRD/TRD expectations is never `hotfix` — return it to PM.
+
 ## Exploration Charter
 
 Define a short charter before interacting with the app. The charter must include:
