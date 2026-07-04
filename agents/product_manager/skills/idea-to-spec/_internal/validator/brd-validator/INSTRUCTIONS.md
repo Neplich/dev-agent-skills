@@ -23,9 +23,9 @@ Validate a BRD document against the standardized schema and quality rules.
 
 ## Conventions
 
-Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/validator-conventions.md` for standard workflow, output format, failure handling, and safety boundaries.
+Follow `_internal/_shared/validator-conventions.md` for standard workflow, output format, failure handling, and safety boundaries.
 
-- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/brd-schema.md`
+- **Schema**: `_internal/_shared/doc-schemas/brd-schema.md`
 
 ## BRD-Specific Checks
 
