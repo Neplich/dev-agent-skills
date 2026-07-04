@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "8e94a4920b50a2bc93a7547628534a09e9795d163de6558a1f93e97fcf2c3f92"
+      "computedHash": "91a67864d1a33c1b6b8ac77a14115b82b153839554ba5233f95447b22011a91d"
     },
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",
@@ -64,7 +64,7 @@
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
       "sourceType": "local",
-      "computedHash": "c6f654a0cc66dc814e730681b62d9e9f8e7ff173253209ce74278fd120d48f62"
+      "computedHash": "9e19b7eab449bf6466b66cf9ec3016397b78d4853fbd6185682a225343fd0c0a"
     },
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",
@@ -84,7 +84,7 @@
     "qa-agent": {
       "source": "agents/qa/skills/qa-agent",
       "sourceType": "local",
-      "computedHash": "79f3723b25c5a6be15a13cb8bbfea9cd449bea920153b2cccddc7a6a1c429019"
+      "computedHash": "925ce298c2d387f5732af207363ed292c4244936fa7342430475bf5160ebb0f3"
     },
     "exploratory-tester": {
       "source": "agents/qa/skills/exploratory-tester",
@@ -144,7 +144,7 @@
     "visual-design": {
       "source": "agents/designer/skills/visual-design",
       "sourceType": "local",
-      "computedHash": "4e0e9c8d12447516d85f48cd763994ccec31c9d9a3ccc507dff12565f83d0fdd"
+      "computedHash": "9d1aa9eefaef047ac2188e035ea1b14ca71a42563ddd52703de2db7e04458bd4"
     },
     "security-agent": {
       "source": "agents/security/skills/security-agent",

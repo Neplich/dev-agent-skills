@@ -34,7 +34,7 @@
         {
           "id": "credential_and_report_refs",
           "description": "账号与报告 reference",
-          "text": "如果用户提供平台账号、SSH 账号或其他凭据，输出必须要求按 agents/qa/skills/qa-agent/references/e2e-credential-store.md upsert 到 .qa/e2e/accounts.local.json，测试文档只引用账号 ID；主 agent 汇总报告必须使用 e2e-test-report.md reference 的固定字段和路径。"
+          "text": "如果用户提供平台账号、SSH 账号或其他凭据，输出必须要求按本 skill 目录下的 references/e2e-credential-store.md upsert 到 .qa/e2e/accounts.local.json，测试文档只引用账号 ID；主 agent 汇总报告必须使用 e2e-test-report.md reference 的固定字段和路径。"
         },
         {
           "id": "alignment_and_plan_gate",

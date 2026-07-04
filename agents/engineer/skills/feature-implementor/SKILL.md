@@ -305,11 +305,11 @@ Implementation context:
 
 Load only the planner internal module for this phase:
 
-`agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md`
+`_internal/planner/INSTRUCTIONS.md`
 
 Read the internal routing contract before planning:
 
-`agents/engineer/skills/feature-implementor/_internal/_shared/coding-rules.md`
+`_internal/_shared/coding-rules.md`
 
 Every implementation task must go through this phase before code changes,
 regardless of size. The plan may be brief for small changes, but it must still
@@ -378,7 +378,7 @@ unless the user has already confirmed this exact implementation plan.
 Only after the user confirms the implementation plan, load the implementor
 internal module:
 
-`agents/engineer/skills/feature-implementor/_internal/implementor/INSTRUCTIONS.md`
+`_internal/implementor/INSTRUCTIONS.md`
 
 For each step in the plan:
 
@@ -396,7 +396,7 @@ risks available for final integration.
 
 Load the reviewer internal module:
 
-`agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md`
+`_internal/reviewer/INSTRUCTIONS.md`
 
 Check the implementation against:
 

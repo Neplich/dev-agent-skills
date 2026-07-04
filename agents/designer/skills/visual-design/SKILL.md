@@ -62,16 +62,16 @@ Primary reference database:
 - `references/design-system-data/scripts/search.py` - BM25 search and design-system output helper
 - `references/design-system-data/README.md` - data notes and local no-code usage boundary
 
-For design-system generation, run the helper from the repository root as internal analysis:
+For design-system generation, run the helper from this skill's directory (the directory containing this SKILL.md) as internal analysis:
 
 ```bash
-uv run python agents/designer/skills/visual-design/references/design-system-data/scripts/search.py "<product type> <industry> <keywords>" --design-system -p "<Project Name>" -f markdown
+uv run python references/design-system-data/scripts/search.py "<product type> <industry> <keywords>" --design-system -p "<Project Name>" -f markdown
 ```
 
 For focused lookup, use domains such as `product`, `style`, `color`, `typography`, `ux`, `chart`, or `landing`:
 
 ```bash
-uv run python agents/designer/skills/visual-design/references/design-system-data/scripts/search.py "enterprise analytics dashboard" --domain product
+uv run python references/design-system-data/scripts/search.py "enterprise analytics dashboard" --domain product
 ```
 
 Supplementary local references:
