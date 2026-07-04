@@ -64,6 +64,37 @@ delivery:
    eval not executed" unless the same section clearly marks it as historical and
    records the current resolved result.
 
+## Implementation Plan Archive
+
+The active plan entry is always
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`. Historical plans live only
+under `docs/engineer/{feature_path}/implementation-plans/archive/`.
+
+Before creating or replacing an active plan on a `feature_path`:
+
+1. Scan for an existing active plan and the archive directory.
+2. If an active plan exists and no handling decision was recorded, do not
+   overwrite it; ask the user to archive it, continue updating it, or archive it
+   as `Superseded` with a reason.
+
+When archiving after closeout and user/maintainer approval:
+
+1. Write the archive plan to
+   `docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`,
+   where `<scope>` is lower kebab-case and describes the implemented scope. The
+   `<scope>` must match the archive filename suffix.
+2. Completed archives use `status: "Archived"`. Replaced or abandoned archives
+   use `status: "Superseded"` and must add `superseded_reason`. Do not use other
+   status values such as `Historical` or `Legacy`.
+3. Archive frontmatter must include `implementation_scope`, `status`,
+   `archived_at` (YYYY-MM-DD), `archive_approved_by`, and `source_plan` pointing
+   to `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`. Preserve the
+   original `feature`, `feature_path`, `parent_feature`, `feature_level`,
+   `related_prd`, `related_trd`, `version`, `date`, `last_updated`, and `author`.
+4. When a new active plan is created after archival, add
+   `previous_plan_archive` to its frontmatter pointing to the archive file. Omit
+   `previous_plan_archive` when continuing to update the current plan.
+
 ## Commit Granularity
 
 When used with `delivery` skill:

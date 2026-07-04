@@ -24,9 +24,9 @@ Validate a PRD document against the standardized schema and quality rules.
 
 ## Conventions
 
-Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/validator-conventions.md` for standard workflow, output format, failure handling, and safety boundaries.
+Follow `_internal/_shared/validator-conventions.md` for standard workflow, output format, failure handling, and safety boundaries.
 
-- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md`
+- **Schema**: `_internal/_shared/doc-schemas/prd-schema.md`
 - **Cross-check**: If BRD provided, verify all BRD objectives map to PRD features.
 
 ## PRD-Specific Checks

@@ -40,7 +40,7 @@ empty workspace needs durable documentation scaffolding.
 
 ## Shared Routing Contract
 
-Read `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` before
+Read `_internal/_shared/skill-map.md` before
 finalizing doc types,
 schema sources, or recommended next steps.
 
@@ -88,14 +88,14 @@ Use it to:
 
    | Doc Type | Shared Schema |
    | --- | --- |
-   | BRD | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/brd-schema.md` |
-   | PRD | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md` |
-   | E2E TEST_SUITE | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md` |
+   | BRD | `_internal/_shared/doc-schemas/brd-schema.md` |
+   | PRD | `_internal/_shared/doc-schemas/prd-schema.md` |
+   | E2E TEST_SUITE | `_internal/_shared/doc-schemas/test-spec-schema.md` |
 4. **Create index file**: Generate `docs/README.md` with:
    - Project overview
    - Document inventory table
    - Workflow guide aligned to
-     `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+     `_internal/_shared/skill-map.md`
 5. **Present**: Summary of created files and suggested next steps.
 
 ## Output Contract
