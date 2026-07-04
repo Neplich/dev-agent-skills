@@ -107,7 +107,7 @@ skill 文档，按契约维持完整实施计划流程。
 | 仓库契约 | `uv run scripts/check_repository_contract.py` | 通过 |
 | eval 契约 | `uv run scripts/check_eval_contract.py` | 通过 |
 | eval 产物策略 | `uv run scripts/check_eval_artifacts.py` | 通过 |
-| CI 同款 pytest | `uv run pytest agents scripts -q` | 通过 |
+| CI 同款 pytest | `uv run --with pytest pytest agents/product_manager/test/idea-to-spec agents/qa/test/test_qa_run_eval.py agents/designer/test/test_designer_run_eval.py agents/devops/test/test_devops_run_eval.py agents/test_eval_contract.py` | 通过（72 passed, 3 subtests passed） |
 
 ### 6.2 剩余风险与后续工作
 
