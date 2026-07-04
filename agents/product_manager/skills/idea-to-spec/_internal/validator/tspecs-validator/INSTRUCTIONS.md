@@ -27,10 +27,10 @@ rules.
 
 ## Conventions
 
-Follow `agents/product_manager/skills/idea-to-spec/_internal/_shared/validator-conventions.md` for standard
+Follow `_internal/_shared/validator-conventions.md` for standard
 workflow, output format, failure handling, and safety boundaries.
 
-- **Schema**: `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/test-spec-schema.md`
+- **Schema**: `_internal/_shared/doc-schemas/test-spec-schema.md`
 - **Cross-check**: If related docs are provided, verify that requirement IDs,
   endpoint coverage, and NFR tests stay aligned.
 - **Case files**: Validate that every E2E test case in `TEST_SUITE.md` links to

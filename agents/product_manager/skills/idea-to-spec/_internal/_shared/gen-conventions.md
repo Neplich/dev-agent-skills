@@ -19,7 +19,7 @@ Every gen skill follows this 6-step workflow:
    unrelated questions into one turn. Do not exceed 2 rounds of clarification.
 
 3. **Load schema**: Reference the corresponding schema in
-   `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/`.
+   `_internal/_shared/doc-schemas/`.
    Use the canonical filenames: `brd-schema.md`, `prd-schema.md`,
    `trd-schema.md`, `adr-schema.md`, `api-schema.md`, and
    `test-spec-schema.md`. Skip this step for utility skills
@@ -27,7 +27,7 @@ Every gen skill follows this 6-step workflow:
 
 4. **Generate or update the target document**: Produce all required sections per
    the loaded schema. Follow
-   `agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md`
+   `_internal/_shared/output-conventions.md`
    for naming, directory layout, and frontmatter format.
 
 5. **Consolidate**: Rewrite any process notes, tentative correction phrasing, or
@@ -35,7 +35,7 @@ Every gen skill follows this 6-step workflow:
    state the current design directly.
 
 6. **Self-check**: Validate the output against
-   `agents/product_manager/skills/idea-to-spec/_internal/_shared/quality-rules.md`
+   `_internal/_shared/quality-rules.md`
    scoring dimensions. Target overall score `>= 3.5` before presenting.
 
 ## Output Standards

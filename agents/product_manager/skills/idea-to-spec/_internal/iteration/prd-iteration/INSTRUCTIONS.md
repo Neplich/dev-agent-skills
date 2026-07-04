@@ -41,7 +41,7 @@ Apply changes to an existing PRD while maintaining version history and quality s
    existing parallel directory is misplaced, stop and present a path conflict
    summary instead of silently editing the wrong PRD.
 
-4. **Bump version**: Per `agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md`:
+4. **Bump version**: Per `_internal/_shared/output-conventions.md`:
    - Typo/formatting → PATCH
    - New/updated content → MINOR
    - Scope change → MAJOR
