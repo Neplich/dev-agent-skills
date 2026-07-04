@@ -132,6 +132,13 @@ explicitly requested or strongly implied by the user's end goal.
   path first. Point the next step to `engineer-agent` only after PM scope is
   stable or the user explicitly opts out of PM.
 
+## Missing Handoff Target
+
+If a handoff target skill or agent is not installed or unavailable, tell the
+user which stage is missing and which plugin to install (for example
+`engineer-agent` or `designer-agent`), mark that handoff stage as blocked, and
+do not perform the missing agent's responsibilities yourself.
+
 ## Downstream Execution Contract
 
 - After selecting the downstream PM skill, immediately continue with that

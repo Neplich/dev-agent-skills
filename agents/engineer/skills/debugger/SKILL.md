@@ -110,6 +110,11 @@ Use those docs to classify the report:
   skip PRD alignment is a blocker or risk note, not permission to continue into
   repair planning, implementation, or E2E updates.
 
+If the target agent's plugin for a cross-agent handoff is not installed or
+unavailable, state the missing stage and required plugin, mark that handoff
+stage as blocked, and do not perform the missing agent's responsibilities
+yourself.
+
 Record the classification explicitly as one of:
 
 - `implementation_deviation`: approved PRD / TRD already defines the expected

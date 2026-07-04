@@ -56,7 +56,7 @@ history, traceability, and versioning.
    - Keep Coverage Summary and Traceability Matrix synchronized
    - Mark retired tests explicitly and note replacement coverage if any
 5. **Bump version**: Use
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md`.
+`_internal/_shared/output-conventions.md`.
 6. **Update changelog**: Record coverage added, revised, deferred, or retired.
 7. **Run inline validation**: Apply `tspecs-validator` checks, using related
    docs if provided.

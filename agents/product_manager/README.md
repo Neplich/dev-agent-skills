@@ -87,6 +87,15 @@ Repository-level PM artifacts can use:
 - Designer mainly consumes `PRD.md`, `BRD.md`, and `DECISIONS.md`.
 - Engineer consumes PM docs, then owns `docs/engineer/{feature_path}/TRD.md` through `engineer-agent:trd-gen`.
 
+## Collaboration Dependencies
+
+PM Agent hands off to peer agents that are packaged and installed as separate plugins:
+
+- `engineer-agent` for TRD and technical planning after PM scope is stable
+- `designer-agent` for UI/UX deliverables
+
+If a target agent is not installed, the corresponding handoff stage is unavailable; PM Agent reports the missing stage and the recommended plugin and marks that stage blocked instead of doing the work itself.
+
 ## Local Maintenance
 
 ```bash

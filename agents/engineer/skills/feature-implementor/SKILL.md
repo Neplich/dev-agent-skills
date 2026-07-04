@@ -20,7 +20,9 @@ This is the public entry point. It owns:
 - Delegation to internal modules and, for complex coding tasks, scoped
   implementation/validation sub-agents
 - Quality self-check before handoff
+- Pre-plan scan of any existing active plan on the same `feature_path`
 - Implementation plan closeout after implementation and validation
+- Implementation plan archival after closeout, on user or maintainer approval
 - QA E2E documentation handoff after code completion when user-facing flows or
   acceptance paths may be affected
 
@@ -162,6 +164,52 @@ changes may use a short plan, but they still require
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` and explicit user
 confirmation before implementation starts.
 
+## Implementation Plan Archive Gate
+
+### Pre-plan scan before creating or replacing an active plan
+
+Before writing a new `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` for a
+`feature_path`, scan for an existing active plan and the archive directory:
+
+- `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
+- `docs/engineer/{feature_path}/implementation-plans/archive/`
+
+If no active plan exists, create the new plan normally. If an active plan
+already exists and no handling decision has been recorded, do not overwrite it.
+Report the existing plan path, its status and scope, then ask the user to pick
+one of exactly three options:
+
+1. Archive the completed plan, then create a new active plan.
+2. Continue updating the current active plan (version bump, no archive).
+3. Archive the old plan as `Superseded` with a recorded reason, then create a
+   new active plan.
+
+The chosen option must be written into the plan body or frontmatter, not left
+only in conversation. Do not create or replace the active plan while the
+decision is unresolved.
+
+### Post-closeout archival
+
+Archival happens only after the closeout gate is complete and the user or
+maintainer approves it. When archiving:
+
+- Move or copy the completed plan to
+  `docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`,
+  where `<scope>` is a lower kebab-case description of the implemented scope.
+- The archive plan frontmatter must include `implementation_scope`, `status`
+  (`Archived` for completed, `Superseded` for replaced), `archived_at`,
+  `archive_approved_by`, and `source_plan` pointing to the active entry.
+  `Superseded` archives must also include `superseded_reason`.
+- Preserve closeout evidence, verification commands, eval/skipped/blocked
+  records, and residual risks in the archived plan.
+- When a new active plan is created after archival, its frontmatter must record
+  `previous_plan_archive` pointing to the archive file.
+
+The active plan entry stays fixed at
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` so QA, DevOps, and Security
+never have to guess the current plan path. Do not require archival for every
+lightweight update; continuing to update the current active plan remains valid.
+
 ## Complex Coding Sub-Agent Split
 
 Decide whether this split is needed inside the implementation plan after the
@@ -257,11 +305,11 @@ Implementation context:
 
 Load only the planner internal module for this phase:
 
-`agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md`
+`_internal/planner/INSTRUCTIONS.md`
 
 Read the internal routing contract before planning:
 
-`agents/engineer/skills/feature-implementor/_internal/_shared/coding-rules.md`
+`_internal/_shared/coding-rules.md`
 
 Every implementation task must go through this phase before code changes,
 regardless of size. The plan may be brief for small changes, but it must still
@@ -330,7 +378,7 @@ unless the user has already confirmed this exact implementation plan.
 Only after the user confirms the implementation plan, load the implementor
 internal module:
 
-`agents/engineer/skills/feature-implementor/_internal/implementor/INSTRUCTIONS.md`
+`_internal/implementor/INSTRUCTIONS.md`
 
 For each step in the plan:
 
@@ -348,7 +396,7 @@ risks available for final integration.
 
 Load the reviewer internal module:
 
-`agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md`
+`_internal/reviewer/INSTRUCTIONS.md`
 
 Check the implementation against:
 
@@ -447,6 +495,11 @@ After implementation and self-review:
 - **写测试**: 使用 `test-writer` 基于 Test Spec 编写测试
 - **直接交付**: 使用 `delivery` 创建 PR（如果测试已有或不需要）
 ```
+
+If the target agent's plugin for a cross-agent handoff is not installed or
+unavailable, state the missing stage and required plugin, mark that handoff
+stage as blocked, and do not perform the missing agent's responsibilities
+yourself.
 
 When the complex coding split was used, include implementation result,
 validation conclusion, tests run, and residual risks before recommending the

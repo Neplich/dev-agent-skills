@@ -76,10 +76,10 @@ For E2E routing, carry these fields into the downstream skill:
   second, Playwright fallback last. State why the selected entry covers the TC.
 - Credentials: committed QA docs may only reference account IDs. If the user
   supplies platform or SSH credentials, follow
-  `agents/qa/skills/qa-agent/references/e2e-credential-store.md` and upsert
+  `references/e2e-credential-store.md` and upsert
   `.qa/e2e/accounts.local.json` without echoing sensitive values.
 - Report format: summary reports must follow
-  `agents/qa/skills/qa-agent/references/e2e-test-report.md`.
+  `references/e2e-test-report.md`.
 
 For standalone QA or E2E requests where no PM-authored E2E cases are supplied,
 route the downstream skill with this required sequence:
@@ -147,6 +147,13 @@ If the request is QA-shaped but underspecified, use these defaults:
 - If code changes are clearly required, keep the QA route focused on evidence
   and hand the fix back to `engineer-agent`.
 
+## Missing Handoff Target
+
+If a handoff target skill or agent is not installed or unavailable, tell the
+user which stage is missing and which plugin to install (for example
+`pm-agent` or `engineer-agent`), mark that handoff stage as blocked, and do
+not perform the missing agent's responsibilities yourself.
+
 ## Output Behavior
 
 When routing is complete:
@@ -160,9 +167,9 @@ When routing is complete:
   subagent execution plan, selected execution entry, and why the selected entry
   follows repo harness > Chrome plugin / browser connector > Playwright fallback
 - for E2E, state the credential handling reference
-  `agents/qa/skills/qa-agent/references/e2e-credential-store.md`, the local
+  `references/e2e-credential-store.md`, the local
   store `.qa/e2e/accounts.local.json`, and the summary report reference
-  `agents/qa/skills/qa-agent/references/e2e-test-report.md`
+  `references/e2e-test-report.md`
 - for existing-feature changes, bug fixes, or code-complete E2E documentation
   updates, state the same-path PRD, TRD, and confirmed
   `IMPLEMENTATION_PLAN.md` gate explicitly; expectation changes return to PM,

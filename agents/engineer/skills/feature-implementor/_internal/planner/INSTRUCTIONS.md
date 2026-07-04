@@ -58,6 +58,22 @@ and hand back to `engineer-agent:trd-gen` with a TRD gap packet. Old single-leve
 docs without feature path fields remain valid as level-1 features; infer the
 fields from the directory name while writing new plans with explicit fields.
 
+Before writing a new or replacement active plan, run the pre-plan archive scan:
+
+1. Check whether `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` already
+   exists and read its frontmatter and closeout status.
+2. Check `docs/engineer/{feature_path}/implementation-plans/archive/` for prior
+   archived plans.
+3. If no active plan exists, continue planning and create the new plan.
+4. If an active plan exists and no handling decision has been recorded, stop and
+   report the existing plan path, status, and scope, then ask the user to choose
+   one of: archive the completed plan then create a new plan, continue updating
+   the current plan, or archive the old plan as `Superseded` with a reason then
+   create a new plan. Do not overwrite the active plan while the decision is
+   unresolved.
+5. When a new active plan is created after archival, record
+   `previous_plan_archive` in its frontmatter pointing to the archive file.
+
 From PRD:
 - List all P0 user stories and acceptance criteria
 - Note P1 items that affect architecture but may be deferred

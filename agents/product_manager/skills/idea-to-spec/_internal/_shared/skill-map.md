@@ -1,7 +1,7 @@
 # Product Manager Internal Routing Map
 
 > Shared routing contract for `idea-to-spec` and the internal instruction
-> resources under `agents/product_manager/skills/idea-to-spec/_internal/`.
+> resources under `_internal/`.
 > Load this file first whenever `idea-to-spec` needs to decide lane selection,
 > handoff shape, lifecycle routing, or fallback behavior.
 
@@ -10,13 +10,13 @@
 - `idea-to-spec` is the only public, triggerable design-entry skill in this
   skill group.
 - All other capabilities are internal instruction resources and live under:
-  - `agents/product_manager/skills/idea-to-spec/_internal/analysis/`
-  - `agents/product_manager/skills/idea-to-spec/_internal/gen/`
-  - `agents/product_manager/skills/idea-to-spec/_internal/iteration/`
-  - `agents/product_manager/skills/idea-to-spec/_internal/orchestration/`
-  - `agents/product_manager/skills/idea-to-spec/_internal/validator/`
+  - `_internal/analysis/`
+  - `_internal/gen/`
+  - `_internal/iteration/`
+  - `_internal/orchestration/`
+  - `_internal/validator/`
 - Shared conventions and document schemas live under
-  `agents/product_manager/skills/idea-to-spec/_internal/_shared/`.
+  `_internal/_shared/`.
 - Default loading rule: keep only `idea-to-spec` in active context, then load
   exactly one internal `INSTRUCTIONS.md` plus the minimum shared references
   needed for the current step.
@@ -81,20 +81,20 @@ document state.
 
 | Capability | Skill | Internal path | Use when |
 | --- | --- | --- | --- |
-| Change impact analysis | `change-impactor` | `agents/product_manager/skills/idea-to-spec/_internal/analysis/change-impactor/INSTRUCTIONS.md` | A change request may affect one or more existing docs |
-| Traceability review | `trace-check` | `agents/product_manager/skills/idea-to-spec/_internal/analysis/trace-check/INSTRUCTIONS.md` | Need coverage or mapping review after generation / iteration |
-| Version diff | `version-differ` | `agents/product_manager/skills/idea-to-spec/_internal/analysis/version-differ/INSTRUCTIONS.md` | Need comparison only, not editing |
-| BRD generation | `brd-gen` | `agents/product_manager/skills/idea-to-spec/_internal/gen/brd-gen/INSTRUCTIONS.md` | Business case or stakeholder alignment is stable |
-| PRD generation | `prd-gen` | `agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md` | Requirements and flows are stable |
+| Change impact analysis | `change-impactor` | `_internal/analysis/change-impactor/INSTRUCTIONS.md` | A change request may affect one or more existing docs |
+| Traceability review | `trace-check` | `_internal/analysis/trace-check/INSTRUCTIONS.md` | Need coverage or mapping review after generation / iteration |
+| Version diff | `version-differ` | `_internal/analysis/version-differ/INSTRUCTIONS.md` | Need comparison only, not editing |
+| BRD generation | `brd-gen` | `_internal/gen/brd-gen/INSTRUCTIONS.md` | Business case or stakeholder alignment is stable |
+| PRD generation | `prd-gen` | `_internal/gen/prd-gen/INSTRUCTIONS.md` | Requirements and flows are stable |
 | TRD generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | PRD and product decisions are stable; explicit Engineer handoff is needed |
 | ADR generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | A technical decision needs durable Engineer-owned rationale |
 | API generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | Interface contracts are stable and ready for Engineer-owned API documentation |
-| Test spec generation | `tspecs-gen` | `agents/product_manager/skills/idea-to-spec/_internal/gen/tspecs-gen/INSTRUCTIONS.md` | QA assets should be derived from approved requirements or design |
-| Workflow execution | `flow` | `agents/product_manager/skills/idea-to-spec/_internal/orchestration/flow/INSTRUCTIONS.md` | User wants an end-to-end pipeline |
-| Project bootstrap | `project-init` | `agents/product_manager/skills/idea-to-spec/_internal/orchestration/project-init/INSTRUCTIONS.md` | Empty workspace needs durable doc scaffolding |
-| Multi-doc update | `iteration-coordinator` | `agents/product_manager/skills/idea-to-spec/_internal/orchestration/iteration-coordinator/INSTRUCTIONS.md` | Multiple docs must change together |
-| Direct doc update | Matching `*-iteration` | `agents/product_manager/skills/idea-to-spec/_internal/iteration/.../INSTRUCTIONS.md` | One approved doc needs revision |
-| Quality review | Matching `*-validator` | `agents/product_manager/skills/idea-to-spec/_internal/validator/.../INSTRUCTIONS.md` | A generated or updated doc needs a score / gap report |
+| Test spec generation | `tspecs-gen` | `_internal/gen/tspecs-gen/INSTRUCTIONS.md` | QA assets should be derived from approved requirements or design |
+| Workflow execution | `flow` | `_internal/orchestration/flow/INSTRUCTIONS.md` | User wants an end-to-end pipeline |
+| Project bootstrap | `project-init` | `_internal/orchestration/project-init/INSTRUCTIONS.md` | Empty workspace needs durable doc scaffolding |
+| Multi-doc update | `iteration-coordinator` | `_internal/orchestration/iteration-coordinator/INSTRUCTIONS.md` | Multiple docs must change together |
+| Direct doc update | Matching `*-iteration` | `_internal/iteration/.../INSTRUCTIONS.md` | One approved doc needs revision |
+| Quality review | Matching `*-validator` | `_internal/validator/.../INSTRUCTIONS.md` | A generated or updated doc needs a score / gap report |
 
 ## 6. Handoff Packet Contract
 
@@ -176,6 +176,11 @@ When the next owner is `engineer-agent:trd-gen`, this packet is mandatory. If
 `feature_path` is unresolved, do not hand off as if the path were settled; route
 back to PM clarification or document the blocker.
 
+If the target agent's plugin for a cross-agent handoff is not installed or
+unavailable, state the missing stage and required plugin, mark that handoff
+stage as blocked, and do not perform the missing agent's responsibilities
+yourself.
+
 ## 7. Phase and Situation Routing
 
 | Phase / Situation | Primary internal skill | Alternative / follow-up |
@@ -219,12 +224,12 @@ back to PM clarification or document the blocker.
 ## 10. Shared References
 
 - Schema source root:
-  `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/`
+  `_internal/_shared/doc-schemas/`
 - Generator conventions:
-  `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md`
+  `_internal/_shared/gen-conventions.md`
 - Validator conventions:
-  `agents/product_manager/skills/idea-to-spec/_internal/_shared/validator-conventions.md`
+  `_internal/_shared/validator-conventions.md`
 - Quality scoring:
-  `agents/product_manager/skills/idea-to-spec/_internal/_shared/quality-rules.md`
+  `_internal/_shared/quality-rules.md`
 - Versioning and output rules:
-  `agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md`
+  `_internal/_shared/output-conventions.md`

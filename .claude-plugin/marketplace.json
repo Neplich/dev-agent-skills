@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "pm-agent",
-      "description": "Dispatcher for product discovery, scope shaping, specs, empty/new-repo app ideas before coding, AI assistant/chat UI concept shaping, competitive research, release communication, roadmaps, and GitHub project status.",
+      "description": "Dispatcher for product discovery, scope shaping, specs, empty/new-repo app ideas before coding, AI assistant/chat UI concept shaping, competitive research, release communication, roadmaps, and GitHub project status. Hands off to engineer-agent for technical planning and to designer-agent for UI/UX deliverables when those stages apply.",
       "source": "./agents/product_manager",
       "strict": false,
       "skills": [
@@ -27,7 +27,7 @@
     },
     {
       "name": "engineer-agent",
-      "description": "Dispatcher for repo analysis, spec-driven project bootstrap, implementation, debugging, testing, and delivery once requirements are settled or the user explicitly wants scaffolding.",
+      "description": "Dispatcher for repo analysis, spec-driven project bootstrap, implementation, debugging, testing, and delivery once requirements are settled or the user explicitly wants scaffolding. Hands off to pm-agent, designer-agent, qa-agent, devops-agent, or security-agent when those stages apply.",
       "source": "./agents/engineer",
       "strict": false,
       "skills": [
@@ -43,7 +43,7 @@
     },
     {
       "name": "qa-agent",
-      "description": "Dispatcher for acceptance testing, exploratory testing, bug analysis, and regression verification.",
+      "description": "Dispatcher for acceptance testing, exploratory testing, bug analysis, and regression verification. Hands back to pm-agent for requirement gaps and to engineer-agent for TRD, implementation-plan, or code-fix gaps.",
       "source": "./agents/qa",
       "strict": false,
       "skills": [
@@ -56,7 +56,7 @@
     },
     {
       "name": "devops-agent",
-      "description": "Dispatcher for deployment planning, CI/CD automation, environment audits, and rollback/runbook preparation.",
+      "description": "Dispatcher for deployment planning, CI/CD automation, environment audits, and rollback/runbook preparation. Hands back to pm-agent for feature scope clarification and to engineer-agent for missing or stale TRD/implementation plans.",
       "source": "./agents/devops",
       "strict": false,
       "skills": [
@@ -69,7 +69,7 @@
     },
     {
       "name": "designer-agent",
-      "description": "Dispatcher for UX flows, UI structure, wireframes, reference-pattern analysis, and reference-backed visual design systems.",
+      "description": "Dispatcher for UX flows, UI structure, wireframes, reference-pattern analysis, and reference-backed visual design systems. Hands scope gaps back to pm-agent and implementation to engineer-agent when those stages apply.",
       "source": "./agents/designer",
       "strict": false,
       "skills": [
@@ -80,7 +80,7 @@
     },
     {
       "name": "security-agent",
-      "description": "Dispatcher for application security, auth/authz review, dependency risk, and privacy/data-flow reviews.",
+      "description": "Dispatcher for application security, auth/authz review, dependency risk, and privacy/data-flow reviews. Hands remediation to engineer-agent or devops-agent and scope clarification back to pm-agent when those stages apply.",
       "source": "./agents/security",
       "strict": false,
       "skills": [
