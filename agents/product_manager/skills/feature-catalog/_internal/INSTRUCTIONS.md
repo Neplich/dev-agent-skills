@@ -83,6 +83,7 @@ Write `docs/pm/FEATURE_CATALOG.md` only after maintainer confirmation:
 ---
 title: "Feature Catalog"
 type: FEATURE_CATALOG
+feature: "feature-catalog"
 version: "0.1.0"
 status: Confirmed
 date: "<confirmation date>"

@@ -14,7 +14,7 @@
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
       "sourceType": "local",
-      "computedHash": "f4f6f9d53acb6d68b9f609349ea6208e28eecca3d2b3df2899570ef6c0010da9"
+      "computedHash": "da7c80e2380d14de38b335892e9de864f9cc50b378395f46bcce4ca06527dac7"
     },
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",
@@ -54,7 +54,7 @@
     "codebase-analyzer": {
       "source": "agents/engineer/skills/codebase-analyzer",
       "sourceType": "local",
-      "computedHash": "20d648154e2e7a548b1b58db82c627d9a891be84b509b60d2fa677dd3fab696b"
+      "computedHash": "9ff2fb17db2267be43296be4480d90f8cf3ccb81ce8eb4000911e72f88bd810a"
     },
     "trd-gen": {
       "source": "agents/engineer/skills/trd-gen",

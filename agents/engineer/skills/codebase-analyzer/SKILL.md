@@ -196,7 +196,12 @@ take-over. Build it with these rules:
   and existing docs that serve the same capability. Do not copy code directory
   names as feature names; code paths are evidence only.
 - When evidence maps to an existing `docs/pm/**/PRD.md`, reuse that feature's
-  `feature_path` as `suggested_feature_path`. When parent ownership or
+  `feature_path` as `suggested_feature_path`. For legacy single-level PRDs
+  whose frontmatter has no `feature_path`, apply the feature-path-contract
+  fallback: treat `docs/pm/{feature}/PRD.md` as `feature_path={feature}`,
+  `parent_feature=N/A`, `feature_level=1`, and reuse that derived path
+  instead of emitting `unresolved` or a duplicate top-level suggestion. When
+  parent ownership or
   monorepo scope is unclear, set `suggested_feature_path: unresolved` and
   record the blocking question in `open_questions` instead of inventing a new
   top-level path.

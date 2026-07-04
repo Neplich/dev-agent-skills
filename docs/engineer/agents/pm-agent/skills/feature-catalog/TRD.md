@@ -1,11 +1,11 @@
 ---
 title: "接手项目功能目录与项目画像 TRD"
 type: TRD
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-04"
-last_updated: "2026-07-04"
+last_updated: "2026-07-05"
 generated_by: "trd-gen"
 feature: "feature-catalog"
 feature_path: "agents/pm-agent/skills/feature-catalog"
@@ -21,6 +21,9 @@ related_docs:
   - ".claude-plugin/marketplace.json"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.1"
+    date: "2026-07-05"
+    changes: "Align feature_path_evidence with shared {source, reason} handoff shape; keep full category evidence in source_catalog"
   - version: "0.1.0"
     date: "2026-07-04"
     changes: "Initial technical design for feature-catalog skill and feature_inventory profile extension"
@@ -34,8 +37,9 @@ changelog:
   段，给出候选功能、建议 `feature_path`、分类证据、置信度和待确认问题。
 - 在 `pm-agent` 下新增 `feature-catalog` specialist skill，承接
   “接手项目 -> 功能目录草案 -> 维护者确认 -> 正式功能文档” 流程。
-- 把 catalog 条目证据结构定义为 `feature_path_evidence` 的标准来源，供
-  `prd-gen` / `trd-gen` handoff packet 直接引用。
+- 把已确认 catalog 条目定义为 handoff packet 中 `feature_path_evidence`
+  （`{source, reason}` 条目列表）的推导来源，完整分类证据经 `source_catalog`
+  引用，供 `prd-gen` / `trd-gen` 消费。
 - 完成 marketplace、skills-lock 注册和 eval 契约覆盖。
 
 ## 2. 影响范围
@@ -116,7 +120,12 @@ feature_inventory:
 - 门禁：草案未确认不写任何正式文档；父功能或 monorepo 范围不清时 blocked
   并只问当前最小澄清问题；不创建新的并列顶层目录。
 - Handoff packet 字段：`feature_path`、`feature`、`parent_feature`、
-  `feature_level`、`feature_path_evidence`（直接引用 catalog 条目证据）。
+  `feature_level`、`feature_path_evidence` 和 `source_catalog`。
+  `feature_path_evidence` 遵循共享 handoff 契约形状，是 `{source, reason}`
+  条目列表：每个非空证据类别归并为一条（`source` 为该类别代表路径，
+  `reason` 说明类别与路径依据），另加一条引用已确认的
+  `docs/pm/FEATURE_CATALOG.md`；完整的分类证据对象只保留在 catalog 文档中，
+  通过 `source_catalog` 字段引用，不在 packet 内联第二种证据格式。
 - SKILL.md 内部引用一律使用相对 SKILL.md 目录的路径，例如
   `_internal/INSTRUCTIONS.md`。
 
