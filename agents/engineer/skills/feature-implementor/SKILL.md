@@ -448,6 +448,11 @@ After implementation and self-review:
 - **直接交付**: 使用 `delivery` 创建 PR（如果测试已有或不需要）
 ```
 
+If the target agent's plugin for a cross-agent handoff is not installed or
+unavailable, state the missing stage and required plugin, mark that handoff
+stage as blocked, and do not perform the missing agent's responsibilities
+yourself.
+
 When the complex coding split was used, include implementation result,
 validation conclusion, tests run, and residual risks before recommending the
 next step.

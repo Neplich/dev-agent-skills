@@ -176,6 +176,11 @@ When the next owner is `engineer-agent:trd-gen`, this packet is mandatory. If
 `feature_path` is unresolved, do not hand off as if the path were settled; route
 back to PM clarification or document the blocker.
 
+If the target agent's plugin for a cross-agent handoff is not installed or
+unavailable, state the missing stage and required plugin, mark that handoff
+stage as blocked, and do not perform the missing agent's responsibilities
+yourself.
+
 ## 7. Phase and Situation Routing
 
 | Phase / Situation | Primary internal skill | Alternative / follow-up |

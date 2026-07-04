@@ -34,6 +34,11 @@ presentation. Write only to `docs/design/{feature_path}/visual-system.md`. If
 the feature path or parent feature is unclear, stop and return to
 `pm-agent:idea-to-spec`; do not create a synonym top-level design directory.
 
+If the target agent's plugin for a cross-agent handoff is not installed or
+unavailable, state the missing stage and required plugin, mark that handoff
+stage as blocked, and do not perform the missing agent's responsibilities
+yourself.
+
 ## Execution Steps
 
 ### Step 1: Gather Context

@@ -495,6 +495,10 @@ Rules:
   `parent_feature`, `feature_level`, and `feature_path_evidence`. If any of
   these are unknown, the handoff must say which owner resolves the gap instead
   of letting downstream skills infer a path from the feature name.
+- If the target agent's plugin for a cross-agent handoff is not installed or
+  unavailable, state the missing stage and required plugin, mark that handoff
+  stage as blocked, and do not perform the missing agent's responsibilities
+  yourself.
 
 ## Quality Checklist
 

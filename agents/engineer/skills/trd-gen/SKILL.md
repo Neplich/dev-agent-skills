@@ -42,6 +42,11 @@ back to `pm-agent:idea-to-spec` with the missing decisions. `DECISIONS.md` is a
 valid decision record when present, but equivalent confirmed product decisions
 are also acceptable.
 
+If the target agent's plugin for a cross-agent handoff is not installed or
+unavailable, state the missing stage and required plugin, mark that handoff
+stage as blocked, and do not perform the missing agent's responsibilities
+yourself.
+
 When another skill hands back a missing, incomplete, stale, or conflicting TRD,
 the discoverer owns describing the TRD gaps and `trd-gen` owns completing the
 TRD. Treat the handoff as a gap packet, not as an implementation request.
