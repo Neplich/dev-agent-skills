@@ -1,7 +1,7 @@
 ---
 title: "IMPLEMENTATION_PLAN 归档门禁 TRD"
 type: TRD
-version: "0.1.2"
+version: "0.1.3"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-01"
@@ -21,6 +21,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md"
   - "scripts/check_repository_contract.py"
 changelog:
+  - version: "0.1.3"
+    date: "2026-07-04"
+    changes: "Limit the closeout back-link exemption to archives added or updated in the same change set; pre-existing base archives no longer grant it"
   - version: "0.1.2"
     date: "2026-07-04"
     changes: "Clarify that changed active plans only require previous_plan_archive when implementation_scope does not match an existing archive scope"
@@ -150,7 +153,7 @@ superseded_reason: "<reason>"
 | `IMPLEMENTATION_PLAN_ARCHIVE_RE` | 匹配 archive 目录和 `<scope>`。 |
 | Archive metadata validator | 校验必填字段、日期、状态值、scope 与文件名一致、`source_plan` 指向活跃入口，以及必填的 `feature_path`、`parent_feature`、`feature_level` 与归档所在 `feature_path` 一致。 |
 | Active plan linkage validator | 当活跃计划声明 `previous_plan_archive` 时，校验文件存在且 feature metadata 一致。 |
-| Changed active plan guard | 对新增或明显替换的活跃计划，要求 `implementation_scope`；若声明上一份归档，则必须通过 linkage validator。当同 `feature_path` 已存在归档且变更计划未声明 `previous_plan_archive` 时，按 `implementation_scope` 区分：命中某个归档 scope 视为刚被归档的源计划（closeout 与归档同提交），不要求回链；未命中任何归档 scope 视为归档后的替换新计划，必须回链。 |
+| Changed active plan guard | 对新增或明显替换的活跃计划，要求 `implementation_scope`；若声明上一份归档，则必须通过 linkage validator。当同 `feature_path` 已存在归档且变更计划未声明 `previous_plan_archive` 时，按 `implementation_scope` 区分：命中「本次变更集中新增或更新的归档」的 scope 视为刚被归档的源计划（closeout 与归档同提交），不要求回链；未命中任何本次变更中的归档 scope（包括只命中 base 上已存在且本次未动的历史归档）视为归档后的替换新计划，必须回链。 |
 | Path allowlist | 允许 archive 目录下的 `IMPLEMENTATION_PLAN-<scope>.md`，避免被现有 active-plan path check 误报。 |
 
 语义说明：

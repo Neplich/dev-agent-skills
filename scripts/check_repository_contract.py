@@ -684,7 +684,7 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
     ]
 
     base_ref = implementation_plan_base_ref(root)
-    changed_plans = set(changed_files_against(root, base_ref)) if base_ref else set()
+    changed_engineer_docs = set(changed_files_against(root, base_ref)) if base_ref else set()
 
     for rel in implementation_plans:
         path = root / rel
@@ -718,7 +718,7 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
 
         feature_path_fields = ("feature_path", "parent_feature", "feature_level")
         has_feature_path_metadata = any(metadata.get(field) for field in feature_path_fields)
-        requires_feature_path_metadata = rel in changed_plans
+        requires_feature_path_metadata = rel in changed_engineer_docs
         if has_feature_path_metadata or requires_feature_path_metadata:
             for field in feature_path_fields:
                 value = metadata.get(field)
@@ -752,10 +752,16 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
             )
 
         validate_active_plan_archive_linkage(
-            root, rel, feature_path, metadata, rel in changed_plans, errors
+            root,
+            rel,
+            feature_path,
+            metadata,
+            rel in changed_engineer_docs,
+            changed_engineer_docs,
+            errors,
         )
 
-        if rel in changed_plans:
+        if rel in changed_engineer_docs:
             for field in ("implementation_scope", "related_prd", "related_trd"):
                 value = metadata.get(field)
                 if not isinstance(value, str) or not value.strip():
@@ -930,12 +936,29 @@ def feature_path_plan_archive_scopes(root: Path, feature_path: str) -> set[str]:
     return scopes
 
 
+def feature_path_changed_plan_archive_scopes(
+    root: Path,
+    feature_path: str,
+    changed_engineer_docs: set[str],
+) -> set[str]:
+    scopes: set[str] = set()
+    for candidate_rel in changed_engineer_docs:
+        match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel)
+        if match is None or match.group("feature_path") != feature_path:
+            continue
+        if not (root / candidate_rel).exists():
+            continue
+        scopes.add(match.group("scope"))
+    return scopes
+
+
 def validate_active_plan_archive_linkage(
     root: Path,
     rel: str,
     feature_path: str,
     metadata: dict[str, str],
     plan_changed: bool,
+    changed_engineer_docs: set[str],
     errors: list[ContractError],
 ) -> None:
     path = root / rel
@@ -945,16 +968,21 @@ def validate_active_plan_archive_linkage(
         # must record the back link; an unchanged active plan (for example the
         # copy-archived source plan left in place) is allowed to omit it.
         # A changed active plan whose 'implementation_scope' matches an
-        # existing archive scope is the just-archived source plan (closeout
-        # evidence and approved archive copy landing together), not a
-        # replacement plan, so it may also omit the back link.
+        # archive scope added or updated in this same change set is the
+        # just-archived source plan (closeout evidence and approved archive
+        # copy landing together), not a replacement plan, so it may also omit
+        # the back link. Archives that already existed on the base ref and are
+        # untouched in this change do not grant that exemption.
         if plan_changed:
             archive_scopes = feature_path_plan_archive_scopes(root, feature_path)
-            if archive_scopes and metadata.get("implementation_scope") not in archive_scopes:
+            changed_archive_scopes = feature_path_changed_plan_archive_scopes(
+                root, feature_path, changed_engineer_docs
+            )
+            if archive_scopes and metadata.get("implementation_scope") not in changed_archive_scopes:
                 add_error(
                     errors,
                     path,
-                    "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path and 'implementation_scope' does not match any archived scope",
+                    "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path and 'implementation_scope' does not match any archive scope added or updated in this change",
                 )
         return
 

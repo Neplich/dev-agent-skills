@@ -1070,8 +1070,8 @@ class EvalContractTests(unittest.TestCase):
         plan = root / "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md"
         prd = root / "docs/pm/chat-interface/history-search/PRD.md"
         trd = root / "docs/engineer/chat-interface/history-search/TRD.md"
-        plan.parent.mkdir(parents=True)
-        prd.parent.mkdir(parents=True)
+        plan.parent.mkdir(parents=True, exist_ok=True)
+        prd.parent.mkdir(parents=True, exist_ok=True)
         prd.write_text(
             "---\n"
             'feature: "history-search"\n'
@@ -1138,7 +1138,7 @@ class EvalContractTests(unittest.TestCase):
 
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn(
-            "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path and 'implementation_scope' does not match any archived scope",
+            "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path and 'implementation_scope' does not match any archive scope added or updated in this change",
             rendered,
         )
 
@@ -1149,8 +1149,8 @@ class EvalContractTests(unittest.TestCase):
             root = Path(temp_dir)
             init_git_main(root)
             # Closeout flow: the changed active plan carries the same
-            # implementation_scope as its just-created archive copy, so no
-            # previous_plan_archive back link is required.
+            # implementation_scope as its archive copy created in the same
+            # change set, so no previous_plan_archive back link is required.
             plan = self._write_history_search_plan_fixture(
                 root, implementation_scope="initial-rollout"
             )
@@ -1162,11 +1162,63 @@ class EvalContractTests(unittest.TestCase):
             archive.parent.mkdir(parents=True)
             archive.write_text("# Archived Plan\n")
             subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+            subprocess.run(
+                ["git", "add", archive.relative_to(root).as_posix()], cwd=root, check=True
+            )
 
             errors = []
             checker.validate_implementation_plan_metadata(root, errors)
 
         self.assertEqual([], errors)
+
+    def test_repository_contract_rejects_missing_previous_plan_archive_for_base_archived_scope(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            # The archive already exists on the main baseline; the feature
+            # branch only changes the active plan and reuses the archived
+            # scope, so the closeout exemption must not apply.
+            subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True)
+            archive = (
+                root
+                / "docs/engineer/chat-interface/history-search"
+                / "implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"
+            )
+            archive.parent.mkdir(parents=True)
+            archive.write_text("# Archived Plan\n")
+            subprocess.run(
+                ["git", "add", archive.relative_to(root).as_posix()], cwd=root, check=True
+            )
+            subprocess.run(
+                [
+                    "git",
+                    "-c",
+                    "user.name=Test User",
+                    "-c",
+                    "user.email=test@example.com",
+                    "commit",
+                    "-m",
+                    "base",
+                ],
+                cwd=root,
+                check=True,
+                stdout=subprocess.DEVNULL,
+            )
+            subprocess.run(["git", "switch", "-c", "feature"], cwd=root, check=True)
+            plan = self._write_history_search_plan_fixture(
+                root, implementation_scope="initial-rollout"
+            )
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path and 'implementation_scope' does not match any archive scope added or updated in this change",
+            rendered,
+        )
 
     def test_repository_contract_accepts_previous_plan_archive_linkage_when_archive_exists(self):
         checker = load_repository_checker_module()
