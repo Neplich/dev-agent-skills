@@ -147,6 +147,13 @@ If the request is QA-shaped but underspecified, use these defaults:
 - If code changes are clearly required, keep the QA route focused on evidence
   and hand the fix back to `engineer-agent`.
 
+## Missing Handoff Target
+
+If a handoff target skill or agent is not installed or unavailable, tell the
+user which stage is missing and which plugin to install (for example
+`pm-agent` or `engineer-agent`), mark that handoff stage as blocked, and do
+not perform the missing agent's responsibilities yourself.
+
 ## Output Behavior
 
 When routing is complete:

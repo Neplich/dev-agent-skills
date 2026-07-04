@@ -31,6 +31,11 @@ or the available PM docs suggest the requested work belongs under an existing
 parent feature but do not confirm the child path, stop and return to
 `pm-agent:idea-to-spec` instead of creating a new top-level design directory.
 
+If the target agent's plugin for a cross-agent handoff is not installed or
+unavailable, state the missing stage and required plugin, mark that handoff
+stage as blocked, and do not perform the missing agent's responsibilities
+yourself.
+
 ## Execution Steps
 
 ### Step 1: Gather Requirements

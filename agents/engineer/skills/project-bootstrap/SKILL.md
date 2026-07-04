@@ -27,6 +27,11 @@ In that stop branch, your response must do all of the following:
 - mention that bootstrap can resume after PM docs are stable, or sooner only if
   the user explicitly says to skip PM
 
+If the target agent's plugin for a cross-agent handoff is not installed or
+unavailable, state the missing stage and required plugin, mark that handoff
+stage as blocked, and do not perform the missing agent's responsibilities
+yourself.
+
 Do not ask stack questions in that branch. Do not suggest specific frameworks
 in that branch. Do not begin scaffolding in that branch.
 

@@ -97,6 +97,16 @@ implementation plans, code, and tests:
 - QA findings return to Engineer when they are implementation defects, and to PM when they are requirement gaps.
 - DevOps and Security join only when deployment, runtime, or security review becomes the current goal.
 
+## Collaboration Dependencies
+
+Engineer Agent hands off to peer agents that are packaged and installed as separate plugins:
+
+- `pm-agent` for requirement definition, scope alignment, and PRD updates
+- `designer-agent` for missing or stale UI/UX and visual design deliverables
+- `qa-agent` for validation, `devops-agent` for deployment, and `security-agent` for security review
+
+If a target agent is not installed, the corresponding handoff stage is unavailable; Engineer Agent reports the missing stage and the recommended plugin and marks that stage blocked instead of doing the work itself.
+
 ## Local Maintenance
 
 ```bash

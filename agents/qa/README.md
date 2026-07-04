@@ -94,6 +94,15 @@ flowchart LR
 - Implementation issues go to Engineer; requirement or acceptance-criteria issues go to PM.
 - QA reports should clearly separate verified results, uncovered areas, blocked items, and residual risk.
 
+## Collaboration Dependencies
+
+QA Agent hands off to peer agents that are packaged and installed as separate plugins:
+
+- `pm-agent` for requirement gaps and feature-path clarification
+- `engineer-agent` for TRD gaps, missing implementation plans, and code fixes
+
+If a target agent is not installed, the corresponding handoff stage is unavailable; QA Agent reports the missing stage and the recommended plugin and marks that stage blocked instead of doing the work itself.
+
 ## Local Maintenance
 
 ```bash

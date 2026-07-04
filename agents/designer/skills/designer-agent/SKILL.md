@@ -122,6 +122,13 @@ Do not force both skills when the user only wants one design layer.
 - If the user actually wants coded UI changes, stop at design handoff and make
   the next step explicit to `engineer-agent`.
 
+## Missing Handoff Target
+
+If a handoff target skill or agent is not installed or unavailable, tell the
+user which stage is missing and which plugin to install (for example
+`pm-agent` or `engineer-agent`), mark that handoff stage as blocked, and do
+not perform the missing agent's responsibilities yourself.
+
 ## Output Behavior
 
 When routing is complete:

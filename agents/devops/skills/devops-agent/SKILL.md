@@ -93,6 +93,13 @@ Do not expand into a full operational chain by default.
   product/design work, keep the DevOps route narrow and make the next handoff
   explicit to the owning agent.
 
+## Missing Handoff Target
+
+If a handoff target skill or agent is not installed or unavailable, tell the
+user which stage is missing and which plugin to install (for example
+`pm-agent` or `engineer-agent`), mark that handoff stage as blocked, and do
+not perform the missing agent's responsibilities yourself.
+
 ## Feature Path Gate
 
 For feature-scoped DevOps work, consume the `feature_path` already confirmed by
