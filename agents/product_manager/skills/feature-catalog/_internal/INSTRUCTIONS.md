@@ -21,9 +21,13 @@ features, decide blocked states, and format the catalog and handoff outputs.
    scheduled jobs, and test names.
 
 Never re-run a deep codebase scan yourself when a Project Profile is
-available; consume it. When neither a profile nor `codebase-analyzer` is
-available, keep the fallback scan read-only and shallow (entry points, not
-implementations) and cap every resulting entry at `confidence: low`.
+available; consume it. When no profile exists, run the lightweight scan
+directly and draft from it — do not block on a `codebase-analyzer` handoff.
+Keep the scan read-only and shallow (entry points, not implementations) and
+cap every entry derived only from it at `confidence: low`. Suggest running
+`codebase-analyzer` first only when the repository clearly exceeds a shallow
+scan (many services or modules, unfamiliar stack, unresolvable evidence
+conflicts), and phrase it as a recommendation, not a blocker.
 
 ## 2. Merging evidence into candidate features
 

@@ -43,11 +43,15 @@ Detailed execution guidance lives in `_internal/INSTRUCTIONS.md`.
 - Code scan results: routes, pages, API endpoints, services, data models,
   background jobs, tests
 
-If no Project Profile or `feature_inventory` is available yet, request an
-explicit handoff to `engineer-agent:codebase-analyzer` to generate one. If
-that skill is unavailable in the current environment, degrade to a lightweight
-read-only scan of README, routes, and API entry points, and mark every entry
-derived this way as `confidence: low`.
+If a Project Profile or `feature_inventory` already exists, reuse it as the
+primary evidence source. If none is available yet, do not block on a handoff:
+run a lightweight read-only scan directly (README, routes, pages, API entry
+points, services, workspace or module manifests) and produce the draft catalog
+from that evidence, marking entries derived only from this scan as
+`confidence: low`. Recommend running `engineer-agent:codebase-analyzer` first —
+as a suggestion, not a blocker — only when the repository is clearly beyond a
+lightweight scan, for example many services or modules, an unfamiliar stack, or
+evidence conflicts the scan cannot resolve.
 
 ## Protocol
 
@@ -61,7 +65,8 @@ Before proposing any name, read what already exists:
    fallback: treat `docs/pm/{feature}/PRD.md` as `feature_path={feature}`,
    `parent_feature=N/A`, `feature_level=1`.
 2. Read README and any feature-level docs for business vocabulary.
-3. Load the Project Profile and its `feature_inventory` entries.
+3. Load the Project Profile and its `feature_inventory` entries when present;
+   otherwise collect evidence through the lightweight scan described above.
 
 Existing feature paths — explicit or derived through the legacy fallback —
 are authoritative: evidence that maps to an existing feature must reuse its
