@@ -75,6 +75,29 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 - 创建 PR 后不要直接合并；必须等待维护者明确确认“可以合并”后再执行 merge / squash / rebase 合并操作。
 - 当前仓库仍处于早期维护阶段，暂不新增 Release CI；发布前使用手动 release checklist：确认 `.claude-plugin/marketplace.json` 的 `metadata.version` 已更新为目标版本且不带 `v` 前缀，确认 `docs/changelog/changelog-v{version}.md` 存在并已被根 `CHANGELOG.md` 索引，tag 使用 `v` 前缀 SemVer，PR 必跑 CI 全部通过，必要时手动触发 eval workflow 并记录结果；每次使用 tag 发版时，按 skill 维度汇总 skill eval 后的 `comparison.md` 最新结论。不要自动创建 GitHub Release，不要自动上传 marketplace package，也不要配置 release bot bypass tag ruleset。
 
+### 变更分级契约
+
+本节是变更分级（`change_tier`）的唯一定义源。所有角色的门禁按 `change_tier` 取强度，不再各自默认最严；分级只调整门禁的形态和确认次数，不取消任何证据要求，`hotfix` 仍必须留下验证证据和结果记录。
+
+| 等级 | 典型场景 | 判定信号 |
+| --- | --- | --- |
+| `hotfix` | 单文件轻量修复、typo、配置修正、已有失败测试的直接修复 | 不改变已批准 PRD/TRD 预期；变更可由一条验证命令覆盖 |
+| `standard` | 常规功能实现、现有功能行为调整、多文件重构 | 有对应 `feature_path`；预期可能变化，需要 PRD/TRD 对齐 |
+| `major` | 跨角色大功能、新增 agent/skill、契约面变更、发布 | 影响多个角色文档、marketplace 注册表或 contract 脚本 |
+
+判定入口：PM 唯一入口（issue #52）落地前，由承接请求的 skill 按上表自判并在产出中记录 `change_tier`；#52 落地后由 `pm-agent` 在入口分类时判级，并把 `change_tier` 写入 handoff packet，fast lane 判定直接引用本契约的 `hotfix` 判定。判定信号不满足、预期可能变化或无法判级时，一律按 `standard` 处理；试图以 `hotfix` 名义跳过预期变更对齐的请求必须 blocked 或回 PM。
+
+各门禁按等级取强度：
+
+| 门禁 | `hotfix` | `standard` / `major` |
+| --- | --- | --- |
+| plan gate（`feature-implementor`） | 允许轻量计划形态：在现有活跃计划中追加 scope 条目或使用简化模板，具体形态由 TRD 阶段确定；仍需一次用户确认 | 维持完整 `IMPLEMENTATION_PLAN.md` 确认流程 |
+| closeout / archive gate（archive gate 见 issue #54） | 合并 closeout 与归档为一次确认 | 维持独立审批 |
+| QA E2E 门禁 | 只要求验证直接影响路径并追加结果 | 维持 PRD/TRD 预期对齐门禁 |
+| PM entry gate（issue #52 落地后生效） | 与交付类请求（delivery / 状态查询）走 fast lane，分类后立即放行 | 新需求、预期变更、范围不清一律留在 PM |
+
+skill eval 的 Fresh Sub-Agent 门禁作用于 skill 自身的测试流程，不参与本分级。
+
 ### 新增 Agent
 
 1. 创建目录结构：
@@ -124,8 +147,8 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 - 平台账号和 SSH 账号统一存放在本地 `.qa/e2e/accounts.local.json`，该文件必须被 `.gitignore` 屏蔽；账号落盘格式遵循 `agents/qa/skills/qa-agent/references/e2e-credential-store.md`
 - 执行入口优先级为 repo harness > Chrome plugin / browser connector > Playwright fallback；repo harness 存在且覆盖当前 TC 时必须优先使用
 - 单个 E2E 测试任务默认由 subagent 执行，主 agent 负责范围确认、拆分、结果确认和按 `agents/qa/skills/qa-agent/references/e2e-test-report.md` 生成汇总报告
-- 现有功能变更或 bug 修复触发 E2E 文档更新前，必须先完成 PRD/TRD 预期对齐；预期变化回 PM，TRD gap 回 `trd-gen`，文档缺失或预期不清时 blocked
-- 代码完成后的 E2E 文档补充必须引用已确认的 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`；小功能、单文件变更和轻量 bug fix 也不能跳过实施计划门禁
+- 现有功能变更或 bug 修复触发 E2E 文档更新前，必须先完成 PRD/TRD 预期对齐；预期变化回 PM，TRD gap 回 `trd-gen`，文档缺失或预期不清时 blocked；门禁强度按「变更分级契约」的 `change_tier` 取值，`hotfix` 只要求验证直接影响路径并追加结果，`standard` 以上维持预期对齐门禁
+- 代码完成后的 E2E 文档补充必须引用已确认的 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`；任何等级都不能跳过实施计划门禁，`hotfix` 可引用「变更分级契约」允许的轻量计划形态
 - 已有 E2E 测试基于功能更新增量更新，历史结果只追加不覆盖
 
 ### Skill 测试

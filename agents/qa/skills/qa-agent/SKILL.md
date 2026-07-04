@@ -63,6 +63,14 @@ For E2E routing, carry these fields into the downstream skill:
   back to `pm-agent:idea-to-spec`; if TRD is missing or mismatched, hand back
   to `engineer-agent:trd-gen`; if the implementation plan is missing or
   mismatched, hand back to `engineer-agent:feature-implementor`.
+- Change tier: E2E gate strength follows the `change_tier` contract in
+  `AGENTS.md` (变更分级契约). Consume `change_tier` from the Engineer handoff
+  when present, or self-assess it per that contract. For `hotfix`, only require
+  validating the direct impact paths and appending results, referencing the
+  confirmed lightweight plan form; for `standard` and above, keep the full
+  PRD/TRD expectation alignment gate. Tiering never waives evidence: `hotfix`
+  results must still be recorded, and a request that changes approved PRD/TRD
+  expectations must not be treated as `hotfix` — route it back to PM.
 - Scenario: `feature-update` validates the changed feature and direct impact
   paths in the local development test environment; `release` validates all
   active E2E TC in the release-version test environment. If the scenario cannot
@@ -167,7 +175,9 @@ When routing is complete:
   updates, state the same-path PRD, TRD, and confirmed
   `IMPLEMENTATION_PLAN.md` gate explicitly; expectation changes return to PM,
   TRD gaps return to `engineer-agent:trd-gen`, and missing implementation plans
-  return to `engineer-agent:feature-implementor`
+  return to `engineer-agent:feature-implementor`; state the resolved
+  `change_tier` and the gate strength it selects per the `AGENTS.md`
+  变更分级契约
 - if E2E is blocked by missing platform version, credentials, environment,
   unclear `feature_path`, PRD/TRD alignment, or confirmed
   `IMPLEMENTATION_PLAN.md`, report the blocker and next owner instead of
