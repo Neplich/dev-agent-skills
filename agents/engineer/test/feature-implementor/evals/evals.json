@@ -402,6 +402,76 @@
           "text": "输出不得声称已经修改代码、更新测试、运行实现或完成验证。"
         }
       ]
+    },
+    {
+      "id": "eval-012-implementation-plan-archive-preflight",
+      "name": "implementation-plan-archive-preflight",
+      "description": "Verifies that feature-implementor runs the pre-plan archive scan and blocks a direct overwrite when an unarchived active IMPLEMENTATION_PLAN already exists on the same feature_path.",
+      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要新增部分退款能力。docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md 已存在且是上一轮全额退款的完成态计划，尚未归档。请进入 feature-implementor 为部分退款创建下一份实施计划，先不要改代码。",
+      "workspace": "workspace/eval-012-implementation-plan-archive-preflight",
+      "expected_output": "运行 pre-plan archive 扫描，识别同 feature_path 已有未归档活跃计划，阻止直接覆盖，报告旧计划路径/状态/范围，并要求用户在归档后新建、继续更新、归档为 Superseded 三种处理方式中选择，不直接改代码。",
+      "assertions": [
+        {
+          "id": "runs_pre_plan_archive_scan",
+          "description": "运行归档前置扫描",
+          "text": "输出必须说明在写新计划前扫描了 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md` 和 `docs/engineer/payment-refund/implementation-plans/archive/` 归档目录。"
+        },
+        {
+          "id": "blocks_direct_overwrite",
+          "description": "阻止直接覆盖",
+          "text": "输出不得直接覆盖或替换现有活跃 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`，在处理方式未确定前不得写入新计划。"
+        },
+        {
+          "id": "offers_three_handling_options",
+          "description": "提供三种处理选项",
+          "text": "输出必须要求用户在“归档旧计划后新建”“继续更新当前计划”“归档为 Superseded 并记录原因”这三种处理方式中选择。"
+        },
+        {
+          "id": "keeps_active_entry_fixed",
+          "description": "活跃入口保持不变",
+          "text": "输出必须说明当前活跃计划入口仍固定为 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`，归档只放到 `implementation-plans/archive/`。"
+        },
+        {
+          "id": "does_not_implement_directly",
+          "description": "不得直接实施",
+          "text": "输出不得声称已经修改代码、运行实现或完成验证。"
+        }
+      ]
+    },
+    {
+      "id": "eval-013-implementation-plan-archive-allows-next-plan",
+      "name": "implementation-plan-archive-allows-next-plan",
+      "description": "Verifies that feature-implementor allows creating a next active plan once the prior plan is archived, requires previous_plan_archive linkage, and keeps the active entry fixed.",
+      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要新增部分退款能力。上一轮全额退款计划已经 closeout 并归档到 docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md，当前没有活跃的 docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md。请进入 feature-implementor 为部分退款创建下一份实施计划，先不要改代码。",
+      "workspace": "workspace/eval-013-implementation-plan-archive-allows-next-plan",
+      "expected_output": "识别上一份计划已归档、当前无活跃计划阻塞，允许创建新的 docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md，要求新计划 frontmatter 记录 previous_plan_archive 指向归档文件，活跃入口保持不变，等待用户确认后再编码。",
+      "assertions": [
+        {
+          "id": "detects_prior_plan_archived",
+          "description": "识别旧计划已归档",
+          "text": "输出必须识别上一份计划已归档到 `docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md`，当前没有未处理的活跃计划阻塞。"
+        },
+        {
+          "id": "allows_new_active_plan",
+          "description": "允许创建新活跃计划",
+          "text": "输出必须允许为部分退款范围创建新的 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`。"
+        },
+        {
+          "id": "records_previous_plan_archive",
+          "description": "记录归档引用",
+          "text": "输出必须要求新计划 frontmatter 记录 `previous_plan_archive` 指向 `docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md`。"
+        },
+        {
+          "id": "keeps_active_entry_fixed",
+          "description": "活跃入口保持不变",
+          "text": "输出必须说明新活跃计划路径仍是 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`，不写到归档目录里。"
+        },
+        {
+          "id": "waits_for_user_confirmation",
+          "description": "等待计划确认",
+          "text": "输出必须要求用户确认新实施计划后再开始编码，不得直接修改代码。"
+        }
+      ]
     }
   ]
 }
