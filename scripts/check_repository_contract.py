@@ -756,7 +756,7 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
         )
 
         if rel in changed_plans:
-            for field in ("related_prd", "related_trd"):
+            for field in ("implementation_scope", "related_prd", "related_trd"):
                 value = metadata.get(field)
                 if not isinstance(value, str) or not value.strip():
                     add_error(errors, path, f"frontmatter {field!r} must be non-empty")
@@ -897,9 +897,7 @@ def validate_archive_plan_metadata(
             f"frontmatter 'source_plan' must be {expected_source!r}",
         )
 
-    feature_path_fields = ("feature_path", "parent_feature", "feature_level")
-    if any(field in metadata for field in feature_path_fields):
-        validate_feature_path_metadata(path, metadata, feature_path, errors)
+    validate_feature_path_metadata(path, metadata, feature_path, errors)
 
     expected_related_prd = f"docs/pm/{feature_path}/PRD.md"
     expected_related_trd = f"docs/engineer/{feature_path}/TRD.md"

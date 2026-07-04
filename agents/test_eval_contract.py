@@ -987,6 +987,7 @@ class EvalContractTests(unittest.TestCase):
                 'version: "0.1.0"\n'
                 'date: "2026-06-23"\n'
                 'last_updated: "2026-06-23"\n'
+                'implementation_scope: "initial-rollout"\n'
                 'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n'
                 'related_trd: "docs/engineer/chat-interface/history-search/TRD.md"\n'
                 "---\n\n"
@@ -1056,6 +1057,7 @@ class EvalContractTests(unittest.TestCase):
         self.assertIn("frontmatter 'feature_path' must be non-empty", rendered)
         self.assertIn("frontmatter 'parent_feature' must be non-empty", rendered)
         self.assertIn("frontmatter 'feature_level' must be non-empty", rendered)
+        self.assertIn("frontmatter 'implementation_scope' must be non-empty", rendered)
         self.assertIn("frontmatter 'related_prd' must be non-empty", rendered)
         self.assertIn("frontmatter 'related_trd' must be non-empty", rendered)
 
@@ -1099,6 +1101,7 @@ class EvalContractTests(unittest.TestCase):
             'version: "0.1.0"\n'
             'date: "2026-06-23"\n'
             'last_updated: "2026-06-23"\n'
+            'implementation_scope: "initial-rollout"\n'
             'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n'
             'related_trd: "docs/engineer/chat-interface/history-search/TRD.md"\n'
             f"{plan_extra_frontmatter}"
@@ -1222,6 +1225,8 @@ class EvalContractTests(unittest.TestCase):
         root: Path,
         feature_path_line: str = 'feature_path: "chat-interface/history-search"\n',
         related_prd_line: str = 'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n',
+        parent_feature_line: str = 'parent_feature: "chat-interface"\n',
+        feature_level_line: str = 'feature_level: "2"\n',
     ) -> Path:
         archive = (
             root
@@ -1233,8 +1238,8 @@ class EvalContractTests(unittest.TestCase):
             "---\n"
             'feature: "history-search"\n'
             f"{feature_path_line}"
-            'parent_feature: "chat-interface"\n'
-            'feature_level: "2"\n'
+            f"{parent_feature_line}"
+            f"{feature_level_line}"
             'implementation_scope: "initial-rollout"\n'
             'status: "Archived"\n'
             'archived_at: "2026-06-25"\n'
@@ -1287,6 +1292,30 @@ class EvalContractTests(unittest.TestCase):
 
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("frontmatter 'feature_path' must be non-empty", rendered)
+
+    def test_repository_contract_rejects_archive_plan_omitting_feature_metadata(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            archive = self._write_history_search_archive_fixture(
+                root,
+                feature_path_line="",
+                parent_feature_line="",
+                feature_level_line="",
+            )
+            subprocess.run(
+                ["git", "add", archive.relative_to(root).as_posix()], cwd=root, check=True
+            )
+
+            errors = []
+            checker.validate_archive_plans(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("frontmatter 'feature_path' must be non-empty", rendered)
+        self.assertIn("frontmatter 'parent_feature' must be non-empty", rendered)
+        self.assertIn("frontmatter 'feature_level' must be non-empty", rendered)
 
     def test_repository_contract_rejects_archive_plan_empty_related_prd(self):
         checker = load_repository_checker_module()
@@ -1410,6 +1439,7 @@ class EvalContractTests(unittest.TestCase):
                 'version: "0.1.0"\n'
                 'date: "2026-06-23"\n'
                 'last_updated: "2026-06-23"\n'
+                'implementation_scope: "initial-rollout"\n'
                 'related_prd: "docs/pm/a/b/c/d/PRD.md"\n'
                 'related_trd: "docs/engineer/a/b/c/d/TRD.md"\n'
                 "---\n\n"
@@ -1474,6 +1504,7 @@ class EvalContractTests(unittest.TestCase):
                     'version: "0.1.0"\n'
                     'date: "2026-06-25"\n'
                     'last_updated: "2026-06-25"\n'
+                    'implementation_scope: "initial-rollout"\n'
                     f'related_prd: "docs/pm/{feature_path}/PRD.md"\n'
                     f'related_trd: "docs/engineer/{feature_path}/TRD.md"\n'
                     "---\n\n"

@@ -1,11 +1,11 @@
 ---
 title: "IMPLEMENTATION_PLAN 归档门禁 TRD"
 type: TRD
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-01"
-last_updated: "2026-07-01"
+last_updated: "2026-07-04"
 generated_by: "trd-gen"
 feature: "implementation-plan-archive-gate"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate"
@@ -21,6 +21,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md"
   - "scripts/check_repository_contract.py"
 changelog:
+  - version: "0.1.1"
+    date: "2026-07-04"
+    changes: "Require archive plans to keep feature_path, parent_feature, and feature_level consistent with the archive location"
   - version: "0.1.0"
     date: "2026-07-01"
     changes: "Initial technical design for implementation plan archive gate"
@@ -130,9 +133,10 @@ source_plan: "docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md"
 superseded_reason: "<reason>"
 ```
 
-归档文件还应保留原计划的 `feature`、`feature_path`、`parent_feature`、
-`feature_level`、`related_prd`、`related_trd`、`version`、`date`、
-`last_updated` 和 `author`，以便独立审查。
+归档文件必须保留原计划的 `feature_path`、`parent_feature` 和
+`feature_level`，且必须与归档所在 `feature_path` 一致；还应保留原计划的
+`feature`、`related_prd`、`related_trd`、`version`、`date`、`last_updated`
+和 `author`，以便独立审查。
 
 ## 5. Repository Contract 设计
 
@@ -141,7 +145,7 @@ superseded_reason: "<reason>"
 | Component | Behavior |
 | --- | --- |
 | `IMPLEMENTATION_PLAN_ARCHIVE_RE` | 匹配 archive 目录和 `<scope>`。 |
-| Archive metadata validator | 校验必填字段、日期、状态值、scope 与文件名一致、`source_plan` 指向活跃入口。 |
+| Archive metadata validator | 校验必填字段、日期、状态值、scope 与文件名一致、`source_plan` 指向活跃入口，以及必填的 `feature_path`、`parent_feature`、`feature_level` 与归档所在 `feature_path` 一致。 |
 | Active plan linkage validator | 当活跃计划声明 `previous_plan_archive` 时，校验文件存在且 feature metadata 一致。 |
 | Changed active plan guard | 对新增或明显替换的活跃计划，要求 `implementation_scope`；若声明上一份归档，则必须通过 linkage validator。 |
 | Path allowlist | 允许 archive 目录下的 `IMPLEMENTATION_PLAN-<scope>.md`，避免被现有 active-plan path check 误报。 |
