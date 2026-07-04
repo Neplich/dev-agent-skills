@@ -8,7 +8,11 @@ features, decide blocked states, and format the catalog and handoff outputs.
 
 1. Existing `docs/pm/**/PRD.md` frontmatter: collect `feature`,
    `feature_path`, `parent_feature`, `feature_level`. These are the
-   authoritative names.
+   authoritative names. For legacy single-level PRDs whose frontmatter has
+   no `feature_path`, derive `feature_path={directory name}`,
+   `parent_feature=N/A`, `feature_level=1` — the same fallback the
+   feature-path contract scanner uses — and treat them as existing
+   features when suggesting paths and parents.
 2. Project Profile `feature_inventory` from
    `engineer-agent:codebase-analyzer`.
 3. README and other docs for business vocabulary.
@@ -35,8 +39,9 @@ implementations) and cap every resulting entry at `confidence: low`.
 
 ## 3. feature_path suggestion rules
 
-- Reuse first: if evidence maps to an existing PRD feature, reuse its
-  `feature_path` exactly; a sub-capability nests under it as
+- Reuse first: if evidence maps to an existing PRD feature — including a
+  legacy PRD resolved through the fallback above — reuse its `feature_path`
+  exactly; a sub-capability nests under it as
   `{parent_feature_path}/{child-slug}`.
 - New level-1 paths are allowed only when the capability clearly has no
   existing parent and the maintainer will confirm it.
@@ -122,20 +127,22 @@ handoff_packet:
   parent_feature: <parent path or N/A>
   feature_level: <segment count>
   feature_path_evidence:
-    routes: []
-    pages: []
-    api_endpoints: []
-    services: []
-    data_models: []
-    background_jobs: []
-    tests: []
-    docs: []
+    - source: docs/pm/FEATURE_CATALOG.md
+      reason: Maintainer-confirmed catalog entry for this feature
+    - source: <representative evidence path, e.g. src/api/refund.ts>
+      reason: <evidence category and why it maps this capability to the path>
   source_catalog: docs/pm/FEATURE_CATALOG.md
 ```
 
-`feature_path_evidence` is copied from the confirmed catalog entry's evidence
-block. Downstream skills reference this packet instead of rebuilding their own
-evidence format.
+`feature_path_evidence` uses the shared handoff contract shape: a list of
+`{source, reason}` entries. Build it from the confirmed catalog entry by
+merging each non-empty evidence category into one entry — `source` is a
+representative path from that category, `reason` states the category and why
+it proves the path — plus one entry citing the confirmed catalog itself. The
+full per-category evidence object lives only in `docs/pm/FEATURE_CATALOG.md`,
+referenced via `source_catalog`; do not inline it in the packet or invent a
+second evidence format. Downstream skills reference this packet instead of
+rebuilding their own evidence.
 
 ## 8. Output behavior
 

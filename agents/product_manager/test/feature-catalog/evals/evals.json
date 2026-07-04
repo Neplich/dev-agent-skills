@@ -64,7 +64,7 @@
         {
           "id": "handoff_packet_fields",
           "description": "handoff packet 字段完整",
-          "text": "对确认后流程的说明包含 handoff packet 字段：feature_path、feature、parent_feature、feature_level 和 feature_path_evidence，且 feature_path_evidence 引用 catalog 条目的证据结构"
+          "text": "对确认后流程的说明包含 handoff packet 字段：feature_path、feature、parent_feature、feature_level 和 feature_path_evidence，且 feature_path_evidence 采用共享 handoff 契约的 {source, reason} 条目列表（由 catalog 条目证据归并而来并引用确认后的 catalog），而不是内联 routes/pages 等分类证据对象"
         },
         {
           "id": "no_bulk_prd",

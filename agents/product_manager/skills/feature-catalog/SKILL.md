@@ -56,13 +56,16 @@ derived this way as `confidence: low`.
 Before proposing any name, read what already exists:
 
 1. Scan `docs/pm/**/PRD.md` and collect every existing `feature_path`,
-   `parent_feature`, and `feature_level`.
+   `parent_feature`, and `feature_level`. For legacy single-level PRDs
+   whose frontmatter has no `feature_path`, apply the feature-path-contract
+   fallback: treat `docs/pm/{feature}/PRD.md` as `feature_path={feature}`,
+   `parent_feature=N/A`, `feature_level=1`.
 2. Read README and any feature-level docs for business vocabulary.
 3. Load the Project Profile and its `feature_inventory` entries.
 
-Existing feature paths are authoritative: evidence that maps to an existing
-feature must reuse its `feature_path`, never fork a parallel top-level
-directory.
+Existing feature paths — explicit or derived through the legacy fallback —
+are authoritative: evidence that maps to an existing feature must reuse its
+`feature_path`, never fork a parallel top-level directory.
 
 ### Step 2 — Draft the feature catalog
 
@@ -127,9 +130,14 @@ For each confirmed feature the user wants documented:
   `engineer-agent:trd-gen` to mirror `docs/engineer/{feature_path}/TRD.md`.
 
 Every handoff packet must include `feature_path`, `feature`,
-`parent_feature`, `feature_level`, and `feature_path_evidence`. Use the
-confirmed catalog entry's evidence block as the standard
-`feature_path_evidence` format; do not invent a second evidence format.
+`parent_feature`, `feature_level`, and `feature_path_evidence`.
+`feature_path_evidence` follows the shared handoff contract: a list of
+`{source, reason}` entries derived from the confirmed catalog entry — merge
+each non-empty evidence category into one entry whose `source` is a
+representative path and whose `reason` explains why it proves the path, and
+keep one entry citing `docs/pm/FEATURE_CATALOG.md`. The full per-category
+evidence object stays in the catalog document referenced by the packet's
+`source_catalog` field; never inline it as `feature_path_evidence`.
 
 If a handoff target skill (`codebase-analyzer`, `idea-to-spec`/`prd-gen`, or
 `trd-gen`) is missing in the current environment, stop at the confirmed
