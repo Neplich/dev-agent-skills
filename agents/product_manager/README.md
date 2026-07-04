@@ -13,7 +13,7 @@
 | Item | Details |
 | --- | --- |
 | Entry skill | `pm-agent` |
-| Specialist skills | 7 |
+| Specialist skills | 8 |
 | Main inputs | User ideas, local `docs/`, repository state, GitHub Issues / PRs / Milestones / Releases |
 | Main outputs | `docs/pm/{feature_path}/`, `docs/roadmap.md`, `docs/changelog/changelog-v{version}.md`, `docs/release-notes/` |
 | Downstream agents | `designer-agent`, `engineer-agent` |
@@ -24,6 +24,7 @@
 | --- | --- | --- |
 | `pm-agent` | PM request routing | Specialist selection and execution path |
 | `idea-to-spec` | Product ideas, empty-repo app requests, feature changes, spec updates | `PRD.md`, `BRD.md`, `DECISIONS.md`, Engineer handoff |
+| `feature-catalog` | Project take-over, feature directory and feature profile for existing code | Feature catalog draft, `docs/pm/FEATURE_CATALOG.md`, `prd-gen`/`trd-gen` handoff |
 | `competitive-brief` | Competitor positioning, gap analysis, market scan | Competitive brief, positioning opportunities, risks |
 | `competitive-intelligence` | Sales battlecards and deal support | HTML battlecard, competitor comparison matrix |
 | `changelog-generator` | Developer-facing version change summaries | `docs/changelog/changelog-v{version}.md` |
@@ -34,6 +35,7 @@
 ## Routing Rules
 
 - Idea shaping, scope definition, PRD/BRD/DECISIONS: use `idea-to-spec`
+- Project take-over, feature catalog, feature profile for an existing repo: use `feature-catalog`
 - Competitor research, positioning gaps, market scans: use `competitive-brief`
 - Sales battlecards or deal support: use `competitive-intelligence`
 - Developer-facing version changes: use `changelog-generator`

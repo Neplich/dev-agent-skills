@@ -1,0 +1,17 @@
+{
+  "eval_id": "eval-001-legacy-project-catalog",
+  "eval_name": "legacy-project-catalog",
+  "workspace_root": "agents/product_manager/test/feature-catalog/evals/workspace/eval-001-legacy-project-catalog",
+  "skill_availability_goal": "Verifies that feature-catalog builds an evidence-backed feature catalog draft for a legacy project with no PM docs and stops at the maintainer confirmation gate.",
+  "prompt": "我刚接手这个项目，之前团队没有留下任何 PM 文档。帮我建立功能目录，先梳理一下这个项目现在有哪些功能。",
+  "fixture_context": [
+    "README.md",
+    "package.json",
+    "src/routes/auth.js",
+    "src/routes/orders.js",
+    "src/services/order-service.js",
+    "src/services/notification-job.js",
+    "src/models/order.js",
+    "test/orders.test.js"
+  ]
+}
