@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "agent": "product_manager",
+  "skill_name": "feature-catalog",
+  "evals": [
+    {
+      "id": "eval-001-legacy-project-catalog",
+      "name": "legacy-project-catalog",
+      "description": "Verifies that feature-catalog builds an evidence-backed feature catalog draft for a legacy project with no PM docs, and stops at the maintainer confirmation gate instead of generating formal documents.",
+      "prompt": "我刚接手这个项目，之前团队没有留下任何 PM 文档。帮我建立功能目录，先梳理一下这个项目现在有哪些功能。",
+      "workspace": "workspace/eval-001-legacy-project-catalog",
+      "expected_output": "一份显式标记待确认的功能目录草案：按业务能力归并出候选功能（如登录认证、订单管理、订单状态通知），每个条目带 suggested_feature_path、分类证据（routes/api_endpoints/services/data_models/background_jobs/tests）、high/medium/low 置信度、open questions 和关联代码路径；输出以维护者确认 feature_path 的请求收尾，不写 docs/pm/FEATURE_CATALOG.md，也不生成任何 PRD。",
+      "assertions": [
+        {
+          "id": "draft_before_formal_docs",
+          "description": "草案先行，不落正式文档",
+          "text": "输出是显式标记为待确认的功能目录草案，在维护者确认前没有写 docs/pm/FEATURE_CATALOG.md，也没有创建或补写任何 docs/pm/{feature_path}/PRD.md"
+        },
+        {
+          "id": "evidence_and_confidence",
+          "description": "条目带分类证据和置信度",
+          "text": "每个候选功能条目包含分类证据（routes、api_endpoints、services、data_models、background_jobs、tests、docs 中至少覆盖实际存在的类别）和 high/medium/low 置信度标记"
+        },
+        {
+          "id": "business_capability_naming",
+          "description": "按业务能力命名",
+          "text": "候选功能按用户可理解的业务能力命名（例如登录认证、订单管理、订单状态通知），而不是机械复制 src/routes、src/services 等代码目录名；代码路径只出现在证据或关联代码路径里"
+        },
+        {
+          "id": "open_questions_present",
+          "description": "不确定项记录待确认问题",
+          "text": "归属或边界不确定的条目记录了 open questions 或标记 unresolved，而不是伪造完整确定的结论"
+        },
+        {
+          "id": "confirmation_gate",
+          "description": "以确认门禁收尾",
+          "text": "输出以请维护者确认 feature_path 的问题收尾，没有在确认前继续 handoff 给 prd-gen 或 trd-gen"
+        }
+      ]
+    },
+    {
+      "id": "eval-002-child-feature-under-parent-prd",
+      "name": "child-feature-under-parent-prd",
+      "description": "Verifies that feature-catalog reuses the existing parent PRD feature_path and nests the new refund capability as a child feature with a complete handoff packet, instead of creating a parallel top-level directory.",
+      "prompt": "我们接手维护这个项目，docs/pm 里已经有 order-management 的 PRD。代码里最近多了退款模块，帮我做功能画像并更新功能目录，确定退款功能的 feature_path，说明确认后下一步怎么走。",
+      "workspace": "workspace/eval-002-child-feature-under-parent-prd",
+      "expected_output": "先读取 docs/pm/order-management/PRD.md 并复用既有 feature_path；退款作为 order-management 下的子功能提案（如 order-management/refund），parent_feature 和 feature_level 与嵌套路径一致，带 refund-api/refund-service/test 证据；说明维护者确认后由 prd-gen 创建或更新 PRD/DECISIONS，PM 文档确认后显式 handoff engineer-agent:trd-gen，handoff packet 包含 feature_path、feature、parent_feature、feature_level 和 feature_path_evidence。",
+      "assertions": [
+        {
+          "id": "parent_prd_context_read",
+          "description": "先读父 PRD 并复用其 feature_path",
+          "text": "输出表明先读取了 docs/pm/order-management/PRD.md，并把 order-management 作为既有父功能复用其 feature_path，而不是重新命名该功能"
+        },
+        {
+          "id": "child_nested_under_parent",
+          "description": "子功能嵌套在父路径下",
+          "text": "退款功能被建议为 order-management 下的子 feature_path（例如 order-management/refund 或等价 lower kebab-case 子路径），没有被建议成新的并列顶层目录"
+        },
+        {
+          "id": "feature_level_metadata",
+          "description": "父子元数据一致",
+          "text": "退款条目的 parent_feature 指向 order-management，feature_level 与建议路径的段数一致"
+        },
+        {
+          "id": "handoff_packet_fields",
+          "description": "handoff packet 字段完整",
+          "text": "对确认后流程的说明包含 handoff packet 字段：feature_path、feature、parent_feature、feature_level 和 feature_path_evidence，且 feature_path_evidence 采用共享 handoff 契约的 {source, reason} 条目列表（由 catalog 条目证据归并而来并引用确认后的 catalog），而不是内联 routes/pages 等分类证据对象"
+        },
+        {
+          "id": "no_bulk_prd",
+          "description": "不越界生成 PRD/TRD",
+          "text": "输出没有直接生成退款 PRD 或 TRD 正文；PRD/DECISIONS 创建或更新指向 prd-gen，Engineer 侧 TRD 镜像显式指向 engineer-agent:trd-gen"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-monorepo-scope-clarification",
+      "name": "monorepo-scope-clarification",
+      "description": "Verifies that feature-catalog blocks with one minimal scope clarification question when a monorepo take-over request does not say which workspace to catalog, instead of fabricating a confirmed catalog.",
+      "prompt": "接手了这个 monorepo，帮我建立功能目录。",
+      "workspace": "workspace/eval-003-monorepo-scope-clarification",
+      "expected_output": "识别出 apps/web、apps/admin、services/api 三个独立 workspace 且请求未指定范围，输出 blocked 状态和一个最小范围澄清问题（先梳理哪个 workspace 或是否全部纳入）；不为未确认范围产出确认版功能目录，不写正式文档，也不为每个 workspace 猜测并列顶层 feature_path 作为结论。",
+      "assertions": [
+        {
+          "id": "blocked_on_scope",
+          "description": "识别范围不清并 blocked",
+          "text": "输出识别出 monorepo 中存在多个独立 workspace（web、admin、api），并因请求未指定范围而给出 blocked 或等价的待澄清状态"
+        },
+        {
+          "id": "minimal_clarification",
+          "description": "只问最小澄清问题",
+          "text": "输出只问一个最小的范围澄清问题（先梳理哪个 workspace 或是否全部纳入），没有展开成多问题清单或冗长问卷"
+        },
+        {
+          "id": "no_fabricated_catalog",
+          "description": "不伪造确认版目录",
+          "text": "在范围确认前没有产出确认版功能目录，没有写 docs/pm/FEATURE_CATALOG.md，也没有生成任何 PRD"
+        },
+        {
+          "id": "no_parallel_top_level",
+          "description": "不猜测并列顶层路径",
+          "text": "输出没有把每个 workspace 直接猜测为新的并列顶层 feature_path 结论；如列出候选也明确标记为 unresolved 待确认"
+        }
+      ]
+    }
+  ]
+}

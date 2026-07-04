@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-013-implementation-plan-archive-allows-next-plan",
+  "eval_name": "implementation-plan-archive-allows-next-plan",
+  "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-013-implementation-plan-archive-allows-next-plan",
+  "skill_availability_goal": "Verify that feature-implementor allows creating a next active plan once the prior plan has been archived, and requires the new plan to record previous_plan_archive while keeping the active entry fixed.",
+  "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要新增部分退款能力。上一轮全额退款计划已经 closeout 并归档到 docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md，当前没有活跃的 docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md。请进入 feature-implementor 为部分退款创建下一份实施计划，先不要改代码。",
+  "fixture_context": [
+    "docs/pm/payment-refund/PRD.md",
+    "docs/engineer/payment-refund/TRD.md",
+    "docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md"
+  ]
+}

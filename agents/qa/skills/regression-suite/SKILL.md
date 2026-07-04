@@ -84,6 +84,11 @@ the alignment gate section, and a request that changes approved PRD/TRD
 expectations is never `hotfix` — report `blocked` and return to
 `pm-agent:idea-to-spec`.
 
+If the target agent's plugin for a cross-agent handoff is not installed or
+unavailable, state the missing stage and required plugin, mark that handoff
+stage as blocked, and do not perform the missing agent's responsibilities
+yourself.
+
 The regression report must include a visible alignment gate section before the
 execution result:
 

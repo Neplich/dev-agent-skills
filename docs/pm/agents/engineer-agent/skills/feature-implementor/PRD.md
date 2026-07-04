@@ -5,15 +5,19 @@ feature: "skill-feature-implementor"
 feature_path: "agents/engineer-agent/skills/feature-implementor"
 parent_feature: "agents/engineer-agent/skills"
 feature_level: "4"
-version: "1.4.0"
+version: "1.5.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-24"
+last_updated: "2026-07-02"
 generated_by: "prd-gen"
 related_docs:
   - "docs/pm/agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate/PRD.md"
   - "docs/engineer/agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate/TRD.md"
+  - "docs/pm/agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate/PRD.md"
+  - "docs/engineer/agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate/TRD.md"
+  - "agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md"
+  - "scripts/check_repository_contract.py"
   - "agents/engineer/README.md"
   - "agents/engineer/README_zh.md"
   - "agents/engineer/skills/engineer-agent/SKILL.md"
@@ -28,6 +32,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md"
   - "agents/engineer/test/feature-implementor/evals/evals.json"
 changelog:
+  - version: "1.5.0"
+    date: "2026-07-02"
+    changes: "Add implementation plan archive gate for pre-plan scan and post-closeout archival"
   - version: "1.4.0"
     date: "2026-06-24"
     changes: "Add implementation plan closeout gate after implementation and validation"
@@ -95,6 +102,7 @@ changelog:
 | FR-S09 | Feature Path Plan Gate | 写实施计划前必须校验 PRD/TRD 的 `feature_path`、`parent_feature`、`feature_level` 和 TRD `related_prd` 一致。 | P0 | 缺 PRD 回 PM；缺 TRD、TRD stale 或路径/字段不一致回 `trd-gen`；只有 PRD/TRD 已确认且路径一致时才允许创建 Engineer 目标目录并写计划。 |
 | FR-S10 | UI Design Handoff Gate | 前端 UI 行为、视觉或交互变化进入实施计划前必须检查设计交付物。 | P0 | 实施计划必须引用覆盖当前变化的 `docs/design/{feature_path}/ui-ux-spec.md` 和/或 `visual-system.md`，或明确说明无需 Designer 更新的理由；设计缺失、过期或冲突时停止并 handoff 回 `engineer-agent -> designer-agent`。 |
 | FR-S11 | Implementation Plan Closeout Gate | 实现和验证完成后，必须同步更新 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 的实施结果、验证证据和剩余状态。 | P0 | `status: Implemented` 或等价完成态不得与正文“待确认 / 未开始 / 未执行”矛盾；已运行 deterministic checks 时记录实际命令；已运行 skill eval 或 fresh subagent validation 时引用 durable `comparison.md`；未运行时记录 skipped / blocked 原因。 |
+| FR-S12 | Implementation Plan Archive Gate | 创建或替换同一 `feature_path` 的活跃计划前必须扫描已有计划；完成态或废弃态旧计划只有经 closeout 和用户/维护者审批后才归档。 | P0 | 已有未归档活跃计划时不得直接覆盖，必须先询问“归档后新建 / 继续更新 / 归档为 Superseded”三选一；归档到 `docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`，归档 frontmatter 含 `implementation_scope`、`status`（`Archived` 或 `Superseded`）、`archived_at`、`archive_approved_by`、`source_plan`，废弃态额外含 `superseded_reason`；归档后新建计划记录 `previous_plan_archive`；活跃入口保持 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 不变。 |
 
 ## 当前实现对齐
 
@@ -103,12 +111,14 @@ changelog:
 - 检查 Do NOT use 边界
 - 读取规格和代码上下文
 - 对前端 UI 变化检查设计交付物或记录无需 Designer 更新的理由
+- 写计划前扫描同 `feature_path` 已有活跃计划，未归档时先请用户选择归档 / 继续更新 / 废弃
 - 写 IMPLEMENTATION_PLAN，并记录复杂编码 implementation/validation sub-agent split 判断
 - 等待用户明确确认
 - 加载 implementor 执行；复杂任务委派 implementation sub-agent
 - 测试后按需委派 validation sub-agent
 - 实现和验证完成后同步 `IMPLEMENTATION_PLAN.md` 的 closeout 状态、结果和验证证据
-- 自检确认 closeout 并准备 QA E2E handoff
+- closeout 完成后，经用户或维护者审批再把旧计划归档到 archive 目录
+- 自检确认 closeout 和 archive 状态一致并准备 QA E2E handoff
 - 写入或维护 IMPLEMENTATION_PLAN frontmatter 时使用可追踪 `author`
 
 ## 验收标准
@@ -119,6 +129,7 @@ changelog:
 | AC-02 | 文档不包含自路由、全量默认执行或将 specialist 行为泛化为整个 Agent 的错误描述。 | 检查 route matrix、非目标、边界和 Mermaid flow。 |
 | AC-03 | 产物要求必须指向具体文件、报告、代码变更或 blocked 输出，不使用模糊替代表述。 | 检查功能需求和用户流程中的 artifact 节点。 |
 | AC-04 | 实施完成态的 `IMPLEMENTATION_PLAN.md` 不得保留计划期状态残留。 | reviewer checklist 和 feature-implementor closeout eval。 |
+| AC-05 | 同一 `feature_path` 存在未归档活跃计划时不会被直接覆盖；归档发生在 closeout 和审批之后，归档 metadata 完整，新计划引用 `previous_plan_archive`。 | repository contract 归档校验和 feature-implementor archive gate eval。 |
 
 ## 非功能需求
 

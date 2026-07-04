@@ -13,7 +13,7 @@
 | Item | Details |
 | --- | --- |
 | Entry skill | `pm-agent` |
-| Specialist skills | 7 |
+| Specialist skills | 8 |
 | Main inputs | User ideas, local `docs/`, repository state, GitHub Issues / PRs / Milestones / Releases |
 | Main outputs | `docs/pm/{feature_path}/`, `docs/roadmap.md`, `docs/changelog/changelog-v{version}.md`, `docs/release-notes/` |
 | Downstream agents | `designer-agent`, `engineer-agent` |
@@ -24,6 +24,7 @@
 | --- | --- | --- |
 | `pm-agent` | PM request routing | Specialist selection and execution path |
 | `idea-to-spec` | Product ideas, empty-repo app requests, feature changes, spec updates | `PRD.md`, `BRD.md`, `DECISIONS.md`, Engineer handoff |
+| `feature-catalog` | Project take-over, feature directory and feature profile for existing code | Feature catalog draft, `docs/pm/FEATURE_CATALOG.md`, `prd-gen`/`trd-gen` handoff |
 | `competitive-brief` | Competitor positioning, gap analysis, market scan | Competitive brief, positioning opportunities, risks |
 | `competitive-intelligence` | Sales battlecards and deal support | HTML battlecard, competitor comparison matrix |
 | `changelog-generator` | Developer-facing version change summaries | `docs/changelog/changelog-v{version}.md` |
@@ -34,6 +35,7 @@
 ## Routing Rules
 
 - Idea shaping, scope definition, PRD/BRD/DECISIONS: use `idea-to-spec`
+- Project take-over, feature catalog, feature profile for an existing repo: use `feature-catalog`
 - Competitor research, positioning gaps, market scans: use `competitive-brief`
 - Sales battlecards or deal support: use `competitive-intelligence`
 - Developer-facing version changes: use `changelog-generator`
@@ -84,6 +86,15 @@ Repository-level PM artifacts can use:
 - PM Agent does not implement code, tests, deployment config, or security fixes.
 - Designer mainly consumes `PRD.md`, `BRD.md`, and `DECISIONS.md`.
 - Engineer consumes PM docs, then owns `docs/engineer/{feature_path}/TRD.md` through `engineer-agent:trd-gen`.
+
+## Collaboration Dependencies
+
+PM Agent hands off to peer agents that are packaged and installed as separate plugins:
+
+- `engineer-agent` for TRD and technical planning after PM scope is stable
+- `designer-agent` for UI/UX deliverables
+
+If a target agent is not installed, the corresponding handoff stage is unavailable; PM Agent reports the missing stage and the recommended plugin and marks that stage blocked instead of doing the work itself.
 
 ## Local Maintenance
 

@@ -52,6 +52,11 @@ stale, or on a different path, return to
 `engineer-agent:feature-implementor`. In all of these cases, mark the E2E
 acceptance work `blocked`.
 
+If the target agent's plugin for a cross-agent handoff is not installed or
+unavailable, state the missing stage and required plugin, mark that handoff
+stage as blocked, and do not perform the missing agent's responsibilities
+yourself.
+
 ## Top-Level Contract
 
 Before running anything, gather repository evidence and confirm what is in scope.

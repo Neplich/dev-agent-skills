@@ -94,6 +94,22 @@ For each P0 acceptance criterion in PRD:
       approval into one confirmation; `standard` / `major` keep independent
       approvals; evidence records are required at every tier
 
+### 7. Implementation Plan Archive Consistency
+
+- [ ] If a new active plan replaced an existing one, the old plan was archived
+      or explicitly kept as a continued update, per the pre-plan archive scan
+      decision
+- [ ] Archival happened only after closeout was complete and user/maintainer
+      approval was recorded
+- [ ] Archive plans live under
+      `docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`
+      and use `status: Archived` or `status: Superseded` only
+- [ ] Archive frontmatter includes `implementation_scope`, `status`,
+      `archived_at`, `archive_approved_by`, and `source_plan`; `Superseded`
+      archives also include `superseded_reason`
+- [ ] When the new active plan declares `previous_plan_archive`, that path
+      exists and points to an archive file on the same `feature_path`
+
 ## Output
 
 ```text
@@ -107,6 +123,7 @@ For each P0 acceptance criterion in PRD:
 | 安全检查 | ✅/⚠️/❌ | <details> |
 | 规范检查 | ✅/⚠️/❌ | <details> |
 | 实施计划收尾 | ✅/⚠️/❌ | <details> |
+| 实施计划归档 | ✅/⚠️/❌/N/A | <details> |
 | 独立验收 | ✅/⚠️/❌/N/A | <details> |
 
 ### 问题 (如有)

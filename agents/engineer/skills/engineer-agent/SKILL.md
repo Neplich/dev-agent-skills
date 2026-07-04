@@ -248,6 +248,13 @@ validation conclusion, tests run, and residual risks when that split is used.
   the next handoff explicit to `qa-agent`, `security-agent`,
   `designer-agent`, or `devops-agent`.
 
+## Missing Handoff Target
+
+If a handoff target skill or agent is not installed or unavailable, tell the
+user which stage is missing and which plugin to install (for example
+`pm-agent` or `designer-agent`), mark that handoff stage as blocked, and do
+not perform the missing agent's responsibilities yourself.
+
 ## Output Behavior
 
 When routing is complete:

@@ -80,6 +80,15 @@ flowchart LR
   `docs/pm/{feature_path}/PRD.md` and the matching Engineer TRD/implementation
   plan when feature scope is required.
 
+## Collaboration Dependencies
+
+Security Agent hands off to peer agents that are packaged and installed as separate plugins:
+
+- `engineer-agent` and `devops-agent` for remediation of confirmed findings
+- `pm-agent` for requirement-driven risk and feature-path clarification
+
+If a target agent is not installed, the corresponding handoff stage is unavailable; Security Agent reports the missing stage and the recommended plugin and marks that stage blocked instead of doing the work itself.
+
 ## Local Maintenance
 
 ```bash

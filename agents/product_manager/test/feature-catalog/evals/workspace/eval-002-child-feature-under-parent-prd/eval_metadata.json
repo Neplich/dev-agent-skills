@@ -1,0 +1,14 @@
+{
+  "eval_id": "eval-002-child-feature-under-parent-prd",
+  "eval_name": "child-feature-under-parent-prd",
+  "workspace_root": "agents/product_manager/test/feature-catalog/evals/workspace/eval-002-child-feature-under-parent-prd",
+  "skill_availability_goal": "Verifies that feature-catalog reuses the existing parent PRD feature_path, nests the refund capability as a child feature, and emits a complete handoff packet.",
+  "prompt": "我们接手维护这个项目，docs/pm 里已经有 order-management 的 PRD。代码里最近多了退款模块，帮我做功能画像并更新功能目录，确定退款功能的 feature_path，说明确认后下一步怎么走。",
+  "fixture_context": [
+    "README.md",
+    "docs/pm/order-management/PRD.md",
+    "src/orders/refund/refund-api.js",
+    "src/orders/refund/refund-service.js",
+    "test/refund.test.js"
+  ]
+}

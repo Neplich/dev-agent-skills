@@ -17,8 +17,8 @@
 **Skill 结构**
 
 - `SKILL.md` 是公开 skill 文档
-- `_internal/INSTRUCTIONS.md` 包含 Agent 的详细实现指导
-- `_internal/modules/` 可包含可选支持模块
+- `_internal/` 为可选目录，仅在 skill 需要分阶段或分模块渐进加载指令时使用；简单 skill 允许只有单文件 `SKILL.md`
+- 使用 `_internal/` 时，每个内部模块目录只保留一个 `INSTRUCTIONS.md` 作为指令入口，跨模块共享内容放 `_internal/_shared/`
 - Skill 使用 YAML frontmatter 保存元数据
 
 **文档组织**
@@ -27,6 +27,7 @@
 - 文档 frontmatter 应包含 `feature`、`version`、`date` 和 `last_updated`
 - 仓库级发布变更记录按版本归档到 `docs/changelog/changelog-v{version}.md`；根目录 `CHANGELOG.md` 只作为索引，不重复维护 changelog 条目
 - 除发布 changelog 归档外，文档版本历史通过 git 追踪，不要创建多个版本化文件
+- 窄例外（仅限实施计划归档）：`feature-implementor` 的完成态或废弃态实施计划经 closeout 和用户/维护者审批后，可归档到 `docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`；`<scope>` 使用 lower kebab-case 描述该次实现范围。当前活跃计划入口仍固定为 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。该例外只覆盖实施计划归档，不适用于 PRD、TRD 或其他文档类型
 - QA E2E 测试资产统一位于 `docs/qa/e2e/{feature_path}/`；`TEST_SUITE.md` 是功能测试套件索引，`FLOW_INDEX.md` 记录流程覆盖关系，`cases/` 存放 `TC-NNN-<short-slug>.md`，`scripts/` 存放可执行流程脚本片段，`results/` 按 TC 和平台版本追加执行结果，`_reports/{platform-version}/test-reports-{test-time}.md` 存放功能更新汇总报告；发版全量报告位于 `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md`
 
 **市场注册**
@@ -109,8 +110,8 @@ skill eval 的 Fresh Sub-Agent 门禁作用于 skill 自身的测试流程，不
 
 3. 为每个 skill 创建：
    - `skills/{skill-name}/SKILL.md`
-   - `skills/{skill-name}/_internal/INSTRUCTIONS.md`
    - `test/{skill-name}/evals/evals.json`
+   - 仅在需要渐进加载时创建 `skills/{skill-name}/_internal/`
 
 4. 在 `.claude-plugin/marketplace.json` 注册 Agent：
    ```json

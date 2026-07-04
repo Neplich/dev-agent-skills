@@ -1,0 +1,14 @@
+{
+  "name": "shopline-lite",
+  "version": "1.4.2",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "express": "^4.19.0",
+    "jsonwebtoken": "^9.0.0",
+    "node-cron": "^3.0.0"
+  }
+}
