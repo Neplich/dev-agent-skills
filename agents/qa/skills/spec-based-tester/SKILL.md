@@ -72,6 +72,15 @@ Before running anything, gather repository evidence and confirm what is in scope
   documentation update, confirm PRD/TRD expectation alignment and a confirmed
   `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before creating,
   updating, or executing E2E acceptance TC.
+- Gate strength for that alignment follows the `change_tier` contract in
+  `AGENTS.md` (变更分级契约). Consume `change_tier` from the handoff when
+  present, or self-assess it per that contract. For `hotfix` with unchanged
+  approved PRD/TRD expectations, only require validating the direct impact
+  paths and appending results, and accept the confirmed lightweight plan form
+  for the plan gate; for `standard` and above, keep the full PRD/TRD
+  expectation alignment gate. Tiering never waives evidence, and a request
+  that changes approved PRD/TRD expectations is never `hotfix` — route it
+  back to PM.
 - Confirm the E2E scenario: `feature-update` validates changed functionality
   and direct impact paths; `release` validates all active E2E TC.
 - Confirm the platform version before execution. If missing, mark the run

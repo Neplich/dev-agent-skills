@@ -73,6 +73,17 @@ stale, incomplete, or path-mismatched, report `blocked` and return to
 stale, or path-mismatched, report `blocked` and return to
 `engineer-agent:feature-implementor`.
 
+Gate strength for this alignment follows the `change_tier` contract in
+`AGENTS.md` (变更分级契约). Consume `change_tier` from the handoff when
+present, or self-assess it per that contract. For `hotfix` with unchanged
+approved PRD/TRD expectations, only require verifying the direct impact paths
+and appending results, and accept the confirmed lightweight plan form as the
+confirmed implementation plan; for `standard` and above, keep the full
+PRD/TRD expectation alignment gate above. Tiering never waives evidence or
+the alignment gate section, and a request that changes approved PRD/TRD
+expectations is never `hotfix` — report `blocked` and return to
+`pm-agent:idea-to-spec`.
+
 If the target agent's plugin for a cross-agent handoff is not installed or
 unavailable, state the missing stage and required plugin, mark that handoff
 stage as blocked, and do not perform the missing agent's responsibilities

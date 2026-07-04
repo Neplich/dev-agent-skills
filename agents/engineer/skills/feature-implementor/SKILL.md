@@ -164,6 +164,16 @@ changes may use a short plan, but they still require
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` and explicit user
 confirmation before implementation starts.
 
+Plan gate strength follows the `change_tier` contract in `AGENTS.md`
+(变更分级契约). Resolve `change_tier` from the handoff packet when present, or
+self-assess it per that contract. `hotfix` may use the lightweight plan form
+defined there (append a scope entry to the existing active plan or use a
+simplified template, with the concrete form settled at TRD stage) and still
+needs one user confirmation; `standard` and `major` keep the full
+`IMPLEMENTATION_PLAN.md` confirmation flow. Tiering only changes the plan form
+and confirmation count, never the evidence requirements or the PRD alignment
+gate: a request that changes approved PRD/TRD expectations is never `hotfix`.
+
 ## Implementation Plan Archive Gate
 
 ### Pre-plan scan before creating or replacing an active plan
@@ -446,6 +456,13 @@ the skipped or blocked reason. Do not imply model eval passed without durable
 `comparison.md` evidence. Runtime artifacts such as transcripts, outputs,
 diagnostics, timing data, and run status files must remain outside git.
 
+Closeout confirmation strength follows the `change_tier` contract in
+`AGENTS.md` (变更分级契约): for `hotfix`, merge closeout and any archive
+approval (see the archive gate from issue #54, when enabled) into a single user
+confirmation; for `standard` and `major`, keep closeout and archive approvals
+independent. The closeout evidence records listed above are required at every
+tier.
+
 Before handoff, check that a completed plan does not still contain stale
 planning-state wording. When frontmatter says `Implemented` or an equivalent
 complete state, the plan body must not contradict it with unresolved status such
@@ -477,7 +494,10 @@ The package must include:
 If the confirmed implementation plan is missing, stop and return to Phase 1
 instead of producing a QA E2E handoff. Small, single-file, low-risk, and
 spec-backed bug-fix changes still require the confirmed implementation plan
-before this handoff.
+before this handoff; for `hotfix` tier, the confirmed lightweight plan form
+from the `AGENTS.md` 变更分级契约 satisfies this gate. Include the resolved
+`change_tier` in the handoff package so QA can apply the matching E2E gate
+strength.
 
 Do not create or update QA E2E TC directly from this skill unless the user
 explicitly routes that QA documentation work. The default responsibility here is

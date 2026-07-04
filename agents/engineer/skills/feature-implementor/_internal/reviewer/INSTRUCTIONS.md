@@ -89,6 +89,10 @@ For each P0 acceptance criterion in PRD:
       `comparison.md`; if it did not run, the reason is explicit
 - [ ] Runtime eval artifacts such as transcripts, diagnostics, outputs, timing
       data, and run-status files are not committed
+- [ ] Closeout confirmation strength follows the `change_tier` contract in
+      `AGENTS.md` (变更分级契约): `hotfix` merges closeout and any archive
+      approval into one confirmation; `standard` / `major` keep independent
+      approvals; evidence records are required at every tier
 
 ### 7. Implementation Plan Archive Consistency
 

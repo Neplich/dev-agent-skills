@@ -106,6 +106,19 @@ If the request is PM-shaped but underspecified, use these defaults:
   enough for implementation, or when the user explicitly says to skip PM and
   scaffold code immediately.
 
+## Change Tier Assessment
+
+When classifying a request, assess its `change_tier` (`hotfix` / `standard` /
+`major`) using the 变更分级契约 in `AGENTS.md` as the single definition source,
+and carry the resolved tier in the routing context so downstream skills apply
+the matching gate strength. Until the PM entry gate from issue #52 lands,
+downstream skills may also self-assess the tier; once #52 lands, `pm-agent`
+owns tier classification at the entry point and writes `change_tier` into the
+handoff packet, and `hotfix` plus delivery-type requests (delivery / status
+queries) take the fast lane defined by that contract. New requirements,
+expectation changes, and unclear scope always stay on the PM path and are never
+fast-laned as `hotfix`.
+
 ## Common Multi-Skill Chains
 
 Use these only when the user clearly wants the broader PM workflow:

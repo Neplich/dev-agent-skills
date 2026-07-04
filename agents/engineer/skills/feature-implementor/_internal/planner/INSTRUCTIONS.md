@@ -157,6 +157,15 @@ delegation is not needed. Small changes still need a PRD alignment result; do
 not convert "single file" or "small bug fix" into implicit PM approval or
 permission to skip `IMPLEMENTATION_PLAN.md`.
 
+Plan form strength follows the `change_tier` contract in `AGENTS.md`
+(变更分级契约). Record the resolved `change_tier` (from the handoff packet or
+self-assessed) in the plan. `hotfix` may use the lightweight plan form defined
+there — append a scope entry to the existing active plan or use a simplified
+template — and still needs one user confirmation with the verification command
+and result recorded; `standard` and `major` keep the full plan flow. A request
+that changes approved PRD/TRD expectations must not be planned as `hotfix`;
+treat it as `standard` and route through the PRD alignment gate.
+
 #### Frontmatter version rules
 
 `IMPLEMENTATION_PLAN.md` frontmatter must stay in sync with the plan body:

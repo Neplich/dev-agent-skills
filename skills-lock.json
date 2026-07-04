@@ -4,7 +4,7 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "6cbde88499fb549e4f51e0ae0968b90f2bb65d3ee56b50071de79d8dfb0325a0"
+      "computedHash": "328ad558023b58d18783dea0f7033fd581fa62476399c65a0cc51a743008d17e"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
@@ -69,7 +69,7 @@
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
       "sourceType": "local",
-      "computedHash": "d4f623c88f98584f67530501d2256f69c0c07eec5bdebeb8f1b256fb92995fcf"
+      "computedHash": "fe5ff26cbe434b4f2f5bca6054f9f3793249deaf2d0f5f1ebf16fad517016a04"
     },
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",
@@ -89,27 +89,27 @@
     "qa-agent": {
       "source": "agents/qa/skills/qa-agent",
       "sourceType": "local",
-      "computedHash": "5bbd3ad9c583230ef514c3101a74094019f2badfc6b6f59352703133b9cfb1e8"
+      "computedHash": "3ec00f33becdaffc42e77b1bf99c12fc25d5c337f0fd2da53b0b90850224bb45"
     },
     "exploratory-tester": {
       "source": "agents/qa/skills/exploratory-tester",
       "sourceType": "local",
-      "computedHash": "438f422ee52878abe7bb29fc8f913c73c7491198ed2549adf7f6af096a1f6beb"
+      "computedHash": "38f14651b1ab6a8682d09c8e1bda465b16e324fb4c6ebe01d886d250720ad9eb"
     },
     "spec-based-tester": {
       "source": "agents/qa/skills/spec-based-tester",
       "sourceType": "local",
-      "computedHash": "1ef232bb379ca2b6a3abddb1676663ca4ce938d691d3bfc7d0593a0b3ec9fef3"
+      "computedHash": "8daa6547b899609e44654f1cfb2e1b22762a3fe07cea37775460e9127ba6ea2a"
     },
     "bug-analyzer": {
       "source": "agents/qa/skills/bug-analyzer",
       "sourceType": "local",
-      "computedHash": "cff50c8616b735b07abb5102d9a7e784c0c85c5b961a775227b5036fc237c355"
+      "computedHash": "204f7c8425b48c25022d195e82a2151a44642e4e3af202486a23a7cfed669042"
     },
     "regression-suite": {
       "source": "agents/qa/skills/regression-suite",
       "sourceType": "local",
-      "computedHash": "a2f53d1a583dc015e292ab39ada47cd33b734dc60727bb78bd33925cbc443622"
+      "computedHash": "6ab62ad2e6754626771bfd0c8b8d5cad7b72eefc6c5e2e4915b99fb103d787ab"
     },
     "devops-agent": {
       "source": "agents/devops/skills/devops-agent",
