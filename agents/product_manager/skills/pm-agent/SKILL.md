@@ -25,8 +25,8 @@ when the broader outcome clearly spans multiple PM capabilities.
 `pm-agent` is not responsible for:
 
 - running the full design or document-writing protocol itself
-- duplicating the domain logic of `idea-to-spec`, `competitive-brief`,
-  `competitive-intelligence`, `changelog-generator`,
+- duplicating the domain logic of `idea-to-spec`, `feature-catalog`,
+  `competitive-brief`, `competitive-intelligence`, `changelog-generator`,
   `release-notes-generator`, `roadmap-generator`, or `github-reader`
 - continuing into design implementation, engineering execution, QA, DevOps, or
   security work
@@ -36,6 +36,7 @@ when the broader outcome clearly spans multiple PM capabilities.
 ## Available Skills
 
 - `pm-agent:idea-to-spec` - Product discovery, scope shaping, spec creation, spec updates
+- `pm-agent:feature-catalog` - Take-over feature catalog and project feature profile for existing codebases
 - `pm-agent:competitive-brief` - Competitive analysis, positioning, market comparison
 - `pm-agent:competitive-intelligence` - Sales-facing battlecards and deal support
 - `pm-agent:changelog-generator` - Developer-facing changelog generation from GitHub
@@ -51,6 +52,10 @@ Route by the user's intended PM outcome, not by literal wording.
   spec creation, spec updates, empty/new repo app ideas, "把想法变成文档",
   "收敛需求", "定义边界", "空目录里做个产品", "先别写代码先做 PRD"
   -> `idea-to-spec`
+- Taking over an existing project, mapping what features it has today,
+  building a feature directory or feature inventory before new specs,
+  "建立功能目录", "功能画像", "接手项目先梳理功能", "这个项目现在有哪些功能"
+  -> `feature-catalog`
 - Competitor research, positioning comparison, market scan, messaging gaps,
   "竞品分析", "我们和 X 怎么比"
   -> `competitive-brief`
@@ -74,6 +79,7 @@ Route by the user's intended PM outcome, not by literal wording.
 | PM Outcome | Primary Skill |
 | --- | --- |
 | 新想法、新功能、空/新仓库里的产品想法、范围收敛、已有 spec 更新 | `idea-to-spec` |
+| 接手已有项目、建立功能目录、功能画像、梳理现有功能 | `feature-catalog` |
 | 竞品分析、定位比较、市场情报 | `competitive-brief` |
 | 销售 battlecard、deal support | `competitive-intelligence` |
 | changelog、版本差异、未发布改动 | `changelog-generator` |
@@ -104,6 +110,7 @@ If the request is PM-shaped but underspecified, use these defaults:
 
 Use these only when the user clearly wants the broader PM workflow:
 
+- 接手项目先建功能目录再收敛需求 -> `feature-catalog` -> `idea-to-spec`
 - 完整产品规划 -> `idea-to-spec` -> `competitive-brief` -> `roadmap-generator`
 - 先看项目状态再做规划 -> `github-reader` -> `roadmap-generator`
 - 先整理变更再写对外版本说明 -> `changelog-generator` -> `release-notes-generator`

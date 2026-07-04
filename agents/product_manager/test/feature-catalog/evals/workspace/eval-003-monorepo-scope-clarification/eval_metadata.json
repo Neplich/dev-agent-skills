@@ -1,0 +1,15 @@
+{
+  "eval_id": "eval-003-monorepo-scope-clarification",
+  "eval_name": "monorepo-scope-clarification",
+  "workspace_root": "agents/product_manager/test/feature-catalog/evals/workspace/eval-003-monorepo-scope-clarification",
+  "skill_availability_goal": "Verifies that feature-catalog blocks with one minimal scope clarification question when a monorepo take-over request does not specify which workspace to catalog.",
+  "prompt": "接手了这个 monorepo，帮我建立功能目录。",
+  "fixture_context": [
+    "README.md",
+    "pnpm-workspace.yaml",
+    "apps/web/package.json",
+    "apps/web/src/pages/dashboard.tsx",
+    "apps/admin/package.json",
+    "services/api/package.json"
+  ]
+}

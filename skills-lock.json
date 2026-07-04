@@ -4,12 +4,17 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "7986c8d36e29fe667faa2ff88da40744b6c10ca4e14402cd8183fb5537868696"
+      "computedHash": "de693f78eeba8386802eabc6d1976adfc76c73b95a8119fa4bac03135f3fcdfe"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
       "computedHash": "8e94a4920b50a2bc93a7547628534a09e9795d163de6558a1f93e97fcf2c3f92"
+    },
+    "feature-catalog": {
+      "source": "agents/product_manager/skills/feature-catalog",
+      "sourceType": "local",
+      "computedHash": "838037cbc0ecbcc83f0307fe105eea874aa528c7517fce4db96ee417814fc01e"
     },
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",
@@ -49,7 +54,7 @@
     "codebase-analyzer": {
       "source": "agents/engineer/skills/codebase-analyzer",
       "sourceType": "local",
-      "computedHash": "59e673c3e6807d951e80d9396ae85dc0aff8af135f1996f62a85f643d5307fb2"
+      "computedHash": "20d648154e2e7a548b1b58db82c627d9a891be84b509b60d2fa677dd3fab696b"
     },
     "trd-gen": {
       "source": "agents/engineer/skills/trd-gen",

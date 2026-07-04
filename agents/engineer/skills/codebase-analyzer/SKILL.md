@@ -169,7 +169,43 @@ project_profile:
     pm_doc_inventory: [list of docs found in docs/]
     has_readme: <true/false>
     has_api_docs: <true/false>
+
+  feature_inventory:
+    - candidate_feature: <human-readable name>
+      suggested_feature_path: <lower-kebab feature path or unresolved>
+      evidence:
+        routes: []
+        pages: []
+        api_endpoints: []
+        services: []
+        data_models: []
+        background_jobs: []
+        tests: []
+        docs: []
+      confidence: <high/medium/low>
+      open_questions: []
 ```
+
+### Building feature_inventory
+
+`feature_inventory` turns the scan into a candidate feature map for project
+take-over. Build it with these rules:
+
+- Group evidence by business capability a user would recognize, merging
+  routes, pages, API endpoints, services, data models, background jobs, tests,
+  and existing docs that serve the same capability. Do not copy code directory
+  names as feature names; code paths are evidence only.
+- When evidence maps to an existing `docs/pm/**/PRD.md`, reuse that feature's
+  `feature_path` as `suggested_feature_path`. When parent ownership or
+  monorepo scope is unclear, set `suggested_feature_path: unresolved` and
+  record the blocking question in `open_questions` instead of inventing a new
+  top-level path.
+- Set `confidence: high` when multiple evidence categories corroborate the
+  capability, `medium` when only one category or naming inference supports
+  it, and `low` when the entry rests on directory names or dependency guesses.
+- `feature_inventory` is profiling evidence, not a naming decision. Formal
+  `feature_path` confirmation belongs to `pm-agent:feature-catalog`, which
+  takes this inventory as input and runs the maintainer confirmation gate.
 
 ## Edge Cases
 

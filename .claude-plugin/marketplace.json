@@ -16,6 +16,7 @@
       "skills": [
         "./skills/pm-agent",
         "./skills/idea-to-spec",
+        "./skills/feature-catalog",
         "./skills/competitive-brief",
         "./skills/competitive-intelligence",
         "./skills/changelog-generator",
