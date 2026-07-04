@@ -85,6 +85,15 @@ These references are only used for design reasoning. Even if raw data contains s
 - Engineer is the only role that turns PM/Designer documents into code, tests, and delivery artifacts.
 - Engineer-sourced UI maintenance requests remain design-only in Designer; implementation returns to Engineer after the design handoff.
 
+## Collaboration Dependencies
+
+Designer Agent hands off to peer agents that are packaged and installed as separate plugins:
+
+- `pm-agent` for scope and feature-path clarification
+- `engineer-agent` for implementation after design handoff
+
+If a target agent is not installed, the corresponding handoff stage is unavailable; Designer Agent reports the missing stage and the recommended plugin and marks that stage blocked instead of doing the work itself.
+
 ## Local Maintenance
 
 ```bash

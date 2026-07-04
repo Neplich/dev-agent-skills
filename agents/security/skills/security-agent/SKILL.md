@@ -86,6 +86,13 @@ security outcome.
 - If fixes are needed, keep the security output focused on evidence and hand the
   remediation back to `engineer-agent` or `devops-agent` as appropriate.
 
+## Missing Handoff Target
+
+If a handoff target skill or agent is not installed or unavailable, tell the
+user which stage is missing and which plugin to install (for example
+`engineer-agent` or `devops-agent`), mark that handoff stage as blocked, and
+do not perform the missing agent's responsibilities yourself.
+
 ## Feature Path Gate
 
 For feature-scoped security review, consume the `feature_path` already confirmed

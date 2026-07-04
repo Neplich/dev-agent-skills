@@ -78,6 +78,15 @@ flowchart LR
   `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when feature scope is
   required.
 
+## Collaboration Dependencies
+
+DevOps Agent hands off to peer agents that are packaged and installed as separate plugins:
+
+- `pm-agent` for PRD and feature-path clarification
+- `engineer-agent` for missing or stale TRD/implementation plans
+
+If a target agent is not installed, the corresponding handoff stage is unavailable; DevOps Agent reports the missing stage and the recommended plugin and marks that stage blocked instead of doing the work itself.
+
 ## Local Maintenance
 
 ```bash
