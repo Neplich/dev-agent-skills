@@ -1177,6 +1177,46 @@ class EvalContractTests(unittest.TestCase):
 
         self.assertEqual([], errors)
 
+    def test_repository_contract_accepts_missing_previous_plan_archive_for_unchanged_plan(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True)
+            self._write_history_search_plan_fixture(root)
+            subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "-c",
+                    "user.name=Test User",
+                    "-c",
+                    "user.email=test@example.com",
+                    "commit",
+                    "-m",
+                    "base",
+                ],
+                cwd=root,
+                check=True,
+                stdout=subprocess.DEVNULL,
+            )
+            subprocess.run(["git", "switch", "-c", "feature"], cwd=root, check=True)
+            archive = (
+                root
+                / "docs/engineer/chat-interface/history-search"
+                / "implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"
+            )
+            archive.parent.mkdir(parents=True)
+            archive.write_text("# Archived Plan\n")
+            subprocess.run(
+                ["git", "add", archive.relative_to(root).as_posix()], cwd=root, check=True
+            )
+
+            errors = []
+            checker.validate_implementation_plan_metadata(root, errors)
+
+        self.assertEqual([], errors)
+
     def _write_history_search_archive_fixture(
         self,
         root: Path,

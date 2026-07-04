@@ -751,7 +751,9 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
                 f"frontmatter 'feature_level' must be {expected_level!r}",
             )
 
-        validate_active_plan_archive_linkage(root, rel, feature_path, metadata, errors)
+        validate_active_plan_archive_linkage(
+            root, rel, feature_path, metadata, rel in changed_plans, errors
+        )
 
         if rel in changed_plans:
             for field in ("related_prd", "related_trd"):
@@ -933,12 +935,16 @@ def validate_active_plan_archive_linkage(
     rel: str,
     feature_path: str,
     metadata: dict[str, str],
+    plan_changed: bool,
     errors: list[ContractError],
 ) -> None:
     path = root / rel
     previous_archive = metadata.get("previous_plan_archive")
     if not isinstance(previous_archive, str) or not previous_archive.strip():
-        if feature_path_has_plan_archives(root, feature_path):
+        # Only replacement plans created or rewritten after an archive exists
+        # must record the back link; an unchanged active plan (for example the
+        # copy-archived source plan left in place) is allowed to omit it.
+        if plan_changed and feature_path_has_plan_archives(root, feature_path):
             add_error(
                 errors,
                 path,
