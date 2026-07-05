@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "PM-first agent skill marketplace with one public pm-agent entry and downstream PM-orchestrated engineering, QA, DevOps, design, and security capabilities",
-    "version": "0.1.4"
+    "version": "0.2.0"
   },
   "plugins": [
     {
