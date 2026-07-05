@@ -191,12 +191,25 @@ def parse_markdown_frontmatter(
     return fields, body
 
 
-def markdown_changelog_has_version_date(
+def markdown_frontmatter_block(content: str) -> str:
+    lines = content.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return ""
+    for index, line in enumerate(lines[1:], start=1):
+        if line.strip() == "---":
+            return "\n".join(lines[1:index])
+    return ""
+
+
+def markdown_frontmatter_changelog_has_version_date(
     content: str,
     version: str,
     date: str,
 ) -> bool:
     if not version or not date:
+        return False
+    frontmatter = markdown_frontmatter_block(content)
+    if not frontmatter:
         return False
     version_pattern = re.compile(
         rf"(?m)^\s*-\s+version:\s*['\"]?{re.escape(version)}['\"]?\s*$"
@@ -206,11 +219,11 @@ def markdown_changelog_has_version_date(
     )
     next_entry_pattern = re.compile(r"(?m)^\s*-\s+version:")
 
-    for match in version_pattern.finditer(content):
+    for match in version_pattern.finditer(frontmatter):
         entry_start = match.end()
-        next_entry = next_entry_pattern.search(content, entry_start)
-        entry_end = next_entry.start() if next_entry else len(content)
-        if date_pattern.search(content[entry_start:entry_end]):
+        next_entry = next_entry_pattern.search(frontmatter, entry_start)
+        entry_end = next_entry.start() if next_entry else len(frontmatter)
+        if date_pattern.search(frontmatter[entry_start:entry_end]):
             return True
 
     return False
@@ -876,7 +889,7 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
         has_same_day_changelog_entry = (
             not last_updated_changed
             and current_metadata.get("last_updated") == base_metadata.get("last_updated")
-            and markdown_changelog_has_version_date(
+            and markdown_frontmatter_changelog_has_version_date(
                 current_content,
                 current_metadata.get("version", ""),
                 current_metadata.get("last_updated", ""),
