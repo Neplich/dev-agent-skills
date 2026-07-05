@@ -116,9 +116,9 @@ Do not force both skills when the user only wants one design layer.
 
 - Ask one route-level clarification question only when the primary design layer
   is genuinely unclear and the output type would change.
-- If PM docs are missing but the design intent is still clear, route to the
-  narrowest design skill for non-persistent design advice only. Durable
-  feature-scoped design docs still require the Feature Path Gate.
+- If PM handoff context or equivalent confirmed PM/design documents are missing,
+  return to `pm-agent` for classification before selecting a design skill. Do
+  not use non-persistent design advice as a bypass around the entry gate.
 - If the user actually wants coded UI changes, stop at design handoff and make
   the next step explicit to `engineer-agent`.
 

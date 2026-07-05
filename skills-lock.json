@@ -139,7 +139,7 @@
     "designer-agent": {
       "source": "agents/designer/skills/designer-agent",
       "sourceType": "local",
-      "computedHash": "a62881272fb29164aa506575e6c4164ae1448fc37b8c12adec784fb021cac383"
+      "computedHash": "1a18eb2ebd8dd1f1c159136fa779f88a3d462676e92b8979f158fb96ef8b1843"
     },
     "ui-ux-design": {
       "source": "agents/designer/skills/ui-ux-design",
