@@ -75,7 +75,7 @@ last_updated: 2026-07-05
 | Skill | Latest result | 说明 |
 | --- | --- | --- |
 | `devops-agent` | **PASS** | 2026-07-05 fresh validation，CI 就绪路由场景 |
-| `env-config-auditor` | **PASS** | 2026-06-25 四级路径覆盖更新 |
+| `env-config-auditor` | **PARTIAL** | eval-001 保留历史 with-skill 证据，without_skill baseline 未生成 |
 | `cicd-bootstrap` | **PARTIAL** | without_skill baseline 未生成 |
 | `deployment-planner` | **PARTIAL** | 2 eval，without_skill baseline 未生成 |
 | `incident-playbook-writer` | **PARTIAL** | without_skill baseline 未生成 |
@@ -102,8 +102,8 @@ last_updated: 2026-07-05
 
 | 结论 | 数量 | Skills |
 | --- | --- | --- |
-| **PASS** | 15 | pm-agent, idea-to-spec, feature-catalog, roadmap-generator, engineer-agent, feature-implementor, qa-agent, bug-analyzer, exploratory-tester, regression-suite, spec-based-tester, devops-agent, env-config-auditor, designer-agent, security-agent |
-| **PARTIAL** | 20 | changelog-generator, competitive-brief, competitive-intelligence, github-reader, release-notes-generator, codebase-analyzer, debugger, delivery, project-bootstrap, test-writer, trd-gen, cicd-bootstrap, deployment-planner, incident-playbook-writer, ui-ux-design, visual-design, appsec-checklist, authz-reviewer, dependency-risk-auditor, privacy-surface-mapper |
+| **PASS** | 14 | pm-agent, idea-to-spec, feature-catalog, roadmap-generator, engineer-agent, feature-implementor, qa-agent, bug-analyzer, exploratory-tester, regression-suite, spec-based-tester, devops-agent, designer-agent, security-agent |
+| **PARTIAL** | 21 | changelog-generator, competitive-brief, competitive-intelligence, github-reader, release-notes-generator, codebase-analyzer, debugger, delivery, project-bootstrap, test-writer, trd-gen, cicd-bootstrap, deployment-planner, env-config-auditor, incident-playbook-writer, ui-ux-design, visual-design, appsec-checklist, authz-reviewer, dependency-risk-auditor, privacy-surface-mapper |
 | **BLOCKED** | 0 | — |
 
 PARTIAL 原因集中在 without_skill baseline 未生成（历史 eval 在 Fresh Sub-Agent 门禁收紧前执行），with-skill 产物和行为证据已存在；下一版本应对 PARTIAL skill 补跑 fresh Codex subagent validation。
