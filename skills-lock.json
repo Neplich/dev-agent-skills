@@ -49,7 +49,7 @@
     "engineer-agent": {
       "source": "agents/engineer/skills/engineer-agent",
       "sourceType": "local",
-      "computedHash": "6bbe8277ac38af4d79400a8c6160f42dc4d390eda3d9fbea2c47558ce73f99f7"
+      "computedHash": "f4330ace47ca79e1878a9426c284721725fe60046218984105c00f6d942c7714"
     },
     "codebase-analyzer": {
       "source": "agents/engineer/skills/codebase-analyzer",

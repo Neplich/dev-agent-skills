@@ -155,6 +155,29 @@ def test_downstream_role_routers_return_direct_requests_to_pm():
         )
 
 
+def test_engineer_router_preserves_specialist_specific_entry_basis():
+    skill_text = (ROOT / "agents/engineer/skills/engineer-agent/SKILL.md").read_text()
+
+    assert_contains_all(
+        skill_text,
+        [
+            "`trd-gen` may proceed from confirmed PM documents",
+            "before an Engineer TRD exists",
+            "`feature-implementor`",
+            "requires same-path PRD, TRD",
+        ],
+    )
+    assert_contains_all(
+        skill_text,
+        [
+            "directly requests `project-bootstrap`",
+            "explicitly says to skip",
+            "PM and scaffold anyway",
+            "route to `project-bootstrap`",
+        ],
+    )
+
+
 def test_specialist_gates_block_direct_bypass():
     for path in SPECIALIST_GATE_SKILLS:
         skill_text = path.read_text()

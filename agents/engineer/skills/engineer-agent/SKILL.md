@@ -73,19 +73,27 @@ route back to the implementor before handing the result to QA.
 ## PM Handoff Entry Gate
 
 Before routing, require either an explicit PM handoff packet or an equivalent
-confirmed document chain. The PM-side packet fields are defined in
+confirmed entry basis for the selected engineering specialist. The PM-side
+packet fields are defined in
 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
 
 - If the user directly invokes `engineer-agent`, `feature-implementor`,
-  `debugger`, `test-writer`, `project-bootstrap`, or `delivery` without that
-  packet or equivalent docs, do not execute the engineering workflow; return
-  the request to `pm-agent` for classification.
+  `debugger`, `test-writer`, `project-bootstrap`, or `delivery` without a
+  packet, equivalent specialist entry basis, or explicit bootstrap override,
+  do not execute the engineering workflow; return the request to `pm-agent`
+  for classification.
 - If a packet is present, preserve its `request_type`, `change_tier`,
   `feature_path` fields, source documents, and required output while selecting
   the narrowest engineering skill.
-- If no packet is present but the repo already contains the same-path PM PRD,
-  Engineer TRD, and confirmed implementation plan needed by the chosen
-  specialist, treat that as the equivalent confirmed document chain.
+- If no packet is present, apply the selected specialist's own entry basis:
+  `trd-gen` may proceed from confirmed PM documents with stable scope and
+  feature path, even before an Engineer TRD exists; `feature-implementor`
+  requires same-path PRD, TRD, and confirmed implementation scope; `debugger`,
+  `test-writer`, `delivery`, and `codebase-analyzer` use their own documented
+  expected-behavior, test-basis, completed-work, or project-context gates.
+- If the user directly requests `project-bootstrap` and explicitly says to skip
+  PM and scaffold anyway, route to `project-bootstrap`; that specialist owns
+  the override path and minimum stack questions.
 - Detailed PRD/TRD, repair, bootstrap, plan, and closeout gates live in the
   selected specialist (`feature-implementor`, `debugger`, `project-bootstrap`,
   `trd-gen`, or `test-writer`); this router points to them instead of copying
