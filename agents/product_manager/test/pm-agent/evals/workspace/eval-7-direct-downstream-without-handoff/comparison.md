@@ -6,7 +6,9 @@
 - Test case: direct-downstream-without-handoff
 - Test set: PM entry evals for issue #52 / FR-006 scenario 7
 - Entry: workspace `eval-7-direct-downstream-without-handoff`
-- Latest result: PASS (deterministic Batch 3 gate coverage)
+- Latest result: PARTIAL - deterministic Batch 3 gate coverage exists, but fresh
+  Codex subagent validation and a newly generated without-skill baseline are
+  still pending Batch 4 authorization.
 
 ## Test Set / Fixture Version
 
@@ -26,9 +28,10 @@
 - May treat the named downstream role as direct execution permission.
 - May begin implementation before source documents or scope are confirmed.
 
-## Failures
+## Failures / Coverage Gaps
 
-- None recorded.
+- Fresh Codex subagent validation has not run for this new scenario.
+- A new without-skill baseline has not been generated for this new scenario.
 
 ## Next Steps
 

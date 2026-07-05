@@ -6,7 +6,9 @@
 - Test case: direct-specialist-bypass-gate
 - Test set: PM entry evals for issue #52 / FR-006 scenario 8
 - Entry: workspace `eval-8-direct-specialist-bypass-gate`
-- Latest result: PASS (deterministic Batch 3 specialist-gate coverage)
+- Latest result: PARTIAL - deterministic Batch 3 specialist-gate coverage exists,
+  but fresh Codex subagent validation and a newly generated without-skill
+  baseline are still pending Batch 4 authorization.
 
 ## Test Set / Fixture Version
 
@@ -30,9 +32,10 @@
 - May assume direct specialist invocation is permission to plan or implement.
 - May skip PM classification and source document checks.
 
-## Failures
+## Failures / Coverage Gaps
 
-- None recorded.
+- Fresh Codex subagent validation has not run for this new scenario.
+- A new without-skill baseline has not been generated for this new scenario.
 
 ## Next Steps
 
