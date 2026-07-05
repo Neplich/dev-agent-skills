@@ -1,7 +1,7 @@
 ---
 title: "PM 唯一入口 Batch 2 实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.2.2"
+version: "0.2.3"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-07-05"
@@ -16,6 +16,9 @@ related_prd: "docs/pm/repository-governance/pm-single-entry/PRD.md"
 related_trd: "docs/engineer/repository-governance/pm-single-entry/TRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/52"
 changelog:
+  - version: "0.2.3"
+    date: "2026-07-05"
+    changes: "Codex Review 修复：区分 PM-only route context 与 cross-role handoff packet，允许非 feature scope 使用 N/A"
   - version: "0.2.2"
     date: "2026-07-05"
     changes: "Codex Review 修复：收窄 delivery/status fast lane，明确 repo status 留在 PM route"
@@ -155,18 +158,21 @@ flowchart TD
   specialist request types，避免竞品、battlecard、release notes、changelog、roadmap 等
   PM-owned 路由被迫套入不相关类型；后续 Codex Review P2 中进一步收窄 `delivery` /
   `status` fast lane，使 repo health、backlog、PR queue、release-readiness planning 和
-  blockers 明确走 `repo_status` / `github-reader`。
+  blockers 明确走 `repo_status` / `github-reader`；再次按 Codex Review P2 区分 PM-only
+  route context 与 cross-role handoff packet，非 feature 的 repo/release/market context 可用
+  `N/A` feature scope。
 - `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`：保留原 PM 内部
   packet，新增跨角色 PM handoff packet 权威定义、`feature_path_evidence` `{source, reason}`
-  结构、downstream owner 映射和示例；同步 PM-only specialist request types。
+  结构、downstream owner 映射和示例；同步 PM-only specialist request types；允许 PM-only
+  非 feature 路由使用 `N/A` scope 与空 evidence，不阻塞或编造 feature path。
 - `skills-lock.json`：重算 `pm-agent` 与 `idea-to-spec` 的 `computedHash`。
 
 ### 8.2 Hash 重算
 
 | Skill | Hash |
 | --- | --- |
-| `pm-agent` | `d3c52028221aecc058b0704409c5a214be93ae6b42b9f0643eed5039593857a3` |
-| `idea-to-spec` | `3627dc643da20d963206525f49868a2e788c83af8c7b49675ec482ca4463019e` |
+| `pm-agent` | `c3a0fb128e5040754aba1dbcb6175e3e29061d736a21d6ec0e23cf473b7a0a03` |
+| `idea-to-spec` | `93bf2a4942bc491d9f457c266e99afde4b500996c5ea9ffc9d14cb593eda064c` |
 
 ### 8.3 验证结果
 

@@ -191,7 +191,7 @@ When classifying a request, assess `change_tier` (`hotfix` / `standard` /
 
 ## PM Handoff Packet
 
-When routing to Designer, Engineer, QA, DevOps, Security, delivery, or another
+When routing to Designer, Engineer, QA, DevOps, Security, delivery, or any other
 non-PM owner, include a structured packet. YAML is preferred, but an equivalent
 explicit field list is acceptable. Field definitions are authoritative in
 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
@@ -206,8 +206,7 @@ Required fields:
   repo-status sources used for the routing decision
 - `scope_decision`: confirmed scope, non-goals, and whether approved
   expectations changed
-- `downstream_owner`: Designer, Engineer, QA, DevOps, Security, delivery, or a
-  named PM specialist when staying inside PM
+- `downstream_owner`: Designer, Engineer, QA, DevOps, Security, or delivery
 - `required_output`: document, implementation, report, verification evidence,
   delivery action, or status summary expected from the next owner
 - `blockers_risks`: missing docs, unresolved decisions, unavailable plugins,
@@ -216,6 +215,13 @@ Required fields:
 If a required field is unresolved, do not present the handoff as ready. Keep the
 request in PM clarification or mark the handoff as blocked with the missing
 field named.
+
+PM-only specialist routing does not require this cross-role packet. For
+`feature_catalog`, `competitive_research`, `battlecard`, `changelog`,
+`release_notes`, `roadmap`, and `repo_status`, record the selected PM skill,
+`request_type`, source context, and follow-up handoff condition. If the request
+is not tied to a product feature, use `N/A` for feature-scope fields instead of
+blocking or inventing a `feature_path`.
 
 ## Common Multi-Skill Chains
 

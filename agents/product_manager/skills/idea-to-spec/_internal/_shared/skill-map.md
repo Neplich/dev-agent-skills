@@ -193,14 +193,14 @@ Required fields:
 | --- | --- |
 | `request_type` | Stable request class: `new_feature`, `existing_update`, `bug_report`, `design`, `validation`, `deployment`, `security`, `delivery`, `status`, `feature_catalog`, `competitive_research`, `battlecard`, `changelog`, `release_notes`, `roadmap`, or `repo_status`. |
 | `change_tier` | `hotfix`, `standard`, or `major`, using the 变更分级契约 in `AGENTS.md` as the single definition source. |
-| `feature_path` | Canonical multi-level feature path, or `unresolved` when PM clarification must continue. |
-| `feature` | Terminal feature slug or compatible legacy feature value. |
-| `parent_feature` | Parent feature path, or `N/A` for level-1 features. |
-| `feature_level` | Positive integer matching the feature path depth. |
-| `feature_path_evidence` | List of `{source, reason}` entries proving why the path is correct. |
+| `feature_path` | Canonical multi-level feature path, `unresolved` when PM clarification must continue, or `N/A` for non-feature PM-only routes. |
+| `feature` | Terminal feature slug, compatible legacy feature value, or `N/A` for non-feature PM-only routes. |
+| `parent_feature` | Parent feature path, `N/A` for level-1 features, or `N/A` for non-feature PM-only routes. |
+| `feature_level` | Positive integer matching the feature path depth, or `N/A` for non-feature PM-only routes. |
+| `feature_path_evidence` | List of `{source, reason}` entries proving why the path is correct, or an empty list for non-feature PM-only routes. |
 | `source_documents` | PRD, DECISIONS, TRD, design docs, issue, PR, release, repo-status, or other evidence used for routing. |
 | `scope_decision` | Confirmed scope, non-goals, and whether approved product expectations changed. |
-| `downstream_owner` | Next owner: `Designer`, `Engineer`, `QA`, `DevOps`, `Security`, `delivery`, or a named PM specialist when the request stays PM-owned. |
+| `downstream_owner` | Next owner: `Designer`, `Engineer`, `QA`, `DevOps`, `Security`, or `delivery`. |
 | `required_output` | Concrete artifact or action expected from the next owner: document, plan, implementation, report, verification evidence, delivery action, or status summary. |
 | `blockers_risks` | Missing docs, unresolved decisions, unavailable plugins, platform limits, verification risk, or security / privacy risk. |
 
@@ -217,6 +217,13 @@ Do not inline route / API / page inventory objects into
 If the path is unresolved, set `feature_path: unresolved`, explain the blocker
 in `blockers_risks`, and do not hand off as if the path were settled.
 
+PM-only specialist routes such as `feature_catalog`, `competitive_research`,
+`battlecard`, `changelog`, `release_notes`, `roadmap`, and `repo_status` do not
+require a cross-role handoff packet when they stay inside PM. For non-feature
+repository, release, or market context, set feature-scope fields to `N/A`, keep
+`feature_path_evidence: []`, and continue with the selected PM specialist
+instead of blocking or inventing a feature path.
+
 ### Downstream Owner Map
 
 | Routing condition | downstream_owner | Required packet emphasis |
@@ -226,7 +233,7 @@ in `blockers_risks`, and do not hand off as if the path were settled.
 | Confirmed acceptance, exploratory, bug analysis, smoke, retest, or regression work | `QA` | Test basis, expected behavior, environment, affected flows, result format. |
 | Confirmed deployment, CI/CD, environment, Docker, Helm, release readiness, rollback, or runbook work | `DevOps` | Environment, release target, rollback expectation, operational risk. |
 | Confirmed AppSec, auth/authz, dependency, secret, privacy, upload, webhook, or data-flow review | `Security` | Risk surface, assets, permissions, data categories, remediation expectations. |
-| Inherited-project feature inventory, competitive research, battlecards, changelogs, release notes, roadmaps, or repository status | Named PM specialist | PM-owned route, selected specialist, source repository or release context, and any follow-up handoff condition. |
+| Inherited-project feature inventory, competitive research, battlecards, changelogs, release notes, roadmaps, or repository status | Named PM specialist | PM-owned route context only: selected specialist, source repository or release context, optional `N/A` feature scope for non-feature work, and any follow-up handoff condition. |
 | New feature, existing update, unclear scope, or expectation change not yet confirmed | PM specialist | Keep the request in PM; do not send a ready handoff packet. |
 
 Example cross-role handoff:
