@@ -88,6 +88,10 @@ these stable `request_type` values in routing notes and handoff packets.
 | `deployment` | Record operational goal, environment, release scope, rollback needs, and risks. | DevOps receives a bounded deployment / CI / release-readiness packet. |
 | `security` | Record risk surface, assets, permissions, data flow, and remediation expectations. | Security receives a bounded review packet with scope and required output. |
 | `delivery` / `status` | Confirm changed scope, verification state, CI/review status, and requested delivery action. | Engineer / delivery or GitHub status work can use the fast lane after classification. |
+| `feature_catalog` | Route inherited-project inventory and feature-profile work to `feature-catalog`. | Stay in PM until the catalog or feature profile is maintainer-confirmed. |
+| `competitive_research` / `battlecard` | Route market comparison to `competitive-brief` and sales battlecards to `competitive-intelligence`. | Stay in PM unless follow-up roadmap, messaging, or implementation work needs a separate handoff. |
+| `changelog` / `release_notes` | Route developer-facing changelog work to `changelog-generator` and user-facing announcements to `release-notes-generator`. | Stay in PM unless release execution or delivery status needs a separate handoff. |
+| `roadmap` / `repo_status` | Route planning, milestones, backlog, PR queue, blockers, and repository health to `roadmap-generator` or `github-reader`. | Stay in PM unless confirmed downstream execution is requested. |
 
 New requirements, expectation changes, and unclear scope stay on the PM path.
 Do not route them to downstream execution as `hotfix`.

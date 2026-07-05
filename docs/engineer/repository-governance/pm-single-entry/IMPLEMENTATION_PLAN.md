@@ -1,7 +1,7 @@
 ---
 title: "PM 唯一入口 Batch 2 实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.2.0"
+version: "0.2.1"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-07-05"
@@ -16,6 +16,9 @@ related_prd: "docs/pm/repository-governance/pm-single-entry/PRD.md"
 related_trd: "docs/engineer/repository-governance/pm-single-entry/TRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/52"
 changelog:
+  - version: "0.2.1"
+    date: "2026-07-05"
+    changes: "Codex Review 修复：补齐 PM-only specialist request_type，并重算 hash"
   - version: "0.2.0"
     date: "2026-07-05"
     changes: "实施完成：更新 pm-agent 分类与 packet 规则、PM 共享 handoff 契约，重算 hash 并记录验证结果"
@@ -89,7 +92,9 @@ flowchart TD
 1. 更新 `pm-agent/SKILL.md`：
    - frontmatter description 保持高召回但控制长度，覆盖 PRD FR-002 九类用户起点。
    - 增加请求类型分类表，覆盖 `new_feature`、`existing_update`、`bug_report`、`design`、
-     `validation`、`deployment`、`security`、`delivery`、`status`。
+     `validation`、`deployment`、`security`、`delivery`、`status`，以及 PM-only specialist
+     类型 `feature_catalog`、`competitive_research`、`battlecard`、`changelog`、
+     `release_notes`、`roadmap`、`repo_status`。
    - 明确每类请求的 PM 处理动作与 handoff 条件，落实 PRD FR-003。
    - 让 `change_tier` 判级引用 `AGENTS.md` 唯一定义源，明确 `hotfix` 和交付 / 状态查询 fast lane 不跳过分类。
    - 增加 handoff packet 组装规则，指向 PM `_internal` 共享契约，避免在入口文件复制过长字段解释。
@@ -143,18 +148,20 @@ flowchart TD
 本批已按计划完成：
 
 - `agents/product_manager/skills/pm-agent/SKILL.md`：新增用户入口覆盖清单、请求分类协议、
-  `change_tier` 判级规则和 PM handoff packet 组装要求。
+  `change_tier` 判级规则和 PM handoff packet 组装要求；按 Codex Review P2 补齐 PM-only
+  specialist request types，避免竞品、battlecard、release notes、changelog、roadmap 等
+  PM-owned 路由被迫套入不相关类型。
 - `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`：保留原 PM 内部
   packet，新增跨角色 PM handoff packet 权威定义、`feature_path_evidence` `{source, reason}`
-  结构、downstream owner 映射和示例。
+  结构、downstream owner 映射和示例；同步 PM-only specialist request types。
 - `skills-lock.json`：重算 `pm-agent` 与 `idea-to-spec` 的 `computedHash`。
 
 ### 8.2 Hash 重算
 
 | Skill | Hash |
 | --- | --- |
-| `pm-agent` | `19da2023f6e5d57963524b1b9f2f81d26c6d3fe3525b581805d875bef7f08fe4` |
-| `idea-to-spec` | `cdb6910f9e1b58c651bf451043a8aa5f21c68e24796ae50c4cee82f910928fed` |
+| `pm-agent` | `7a54b9cc9ec4ed6118d74725756185eaa5d41fa9b4c3bdb06f6e7778b30f6f51` |
+| `idea-to-spec` | `3627dc643da20d963206525f49868a2e788c83af8c7b49675ec482ca4463019e` |
 
 ### 8.3 验证结果
 

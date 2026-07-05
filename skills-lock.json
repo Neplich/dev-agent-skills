@@ -4,12 +4,12 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "19da2023f6e5d57963524b1b9f2f81d26c6d3fe3525b581805d875bef7f08fe4"
+      "computedHash": "7a54b9cc9ec4ed6118d74725756185eaa5d41fa9b4c3bdb06f6e7778b30f6f51"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "cdb6910f9e1b58c651bf451043a8aa5f21c68e24796ae50c4cee82f910928fed"
+      "computedHash": "3627dc643da20d963206525f49868a2e788c83af8c7b49675ec482ca4463019e"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",

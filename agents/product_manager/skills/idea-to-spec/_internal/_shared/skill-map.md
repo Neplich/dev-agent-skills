@@ -191,7 +191,7 @@ Required fields:
 
 | Field | Meaning |
 | --- | --- |
-| `request_type` | Stable request class: `new_feature`, `existing_update`, `bug_report`, `design`, `validation`, `deployment`, `security`, `delivery`, or `status`. |
+| `request_type` | Stable request class: `new_feature`, `existing_update`, `bug_report`, `design`, `validation`, `deployment`, `security`, `delivery`, `status`, `feature_catalog`, `competitive_research`, `battlecard`, `changelog`, `release_notes`, `roadmap`, or `repo_status`. |
 | `change_tier` | `hotfix`, `standard`, or `major`, using the 变更分级契约 in `AGENTS.md` as the single definition source. |
 | `feature_path` | Canonical multi-level feature path, or `unresolved` when PM clarification must continue. |
 | `feature` | Terminal feature slug or compatible legacy feature value. |
@@ -226,6 +226,7 @@ in `blockers_risks`, and do not hand off as if the path were settled.
 | Confirmed acceptance, exploratory, bug analysis, smoke, retest, or regression work | `QA` | Test basis, expected behavior, environment, affected flows, result format. |
 | Confirmed deployment, CI/CD, environment, Docker, Helm, release readiness, rollback, or runbook work | `DevOps` | Environment, release target, rollback expectation, operational risk. |
 | Confirmed AppSec, auth/authz, dependency, secret, privacy, upload, webhook, or data-flow review | `Security` | Risk surface, assets, permissions, data categories, remediation expectations. |
+| Inherited-project feature inventory, competitive research, battlecards, changelogs, release notes, roadmaps, or repository status | Named PM specialist | PM-owned route, selected specialist, source repository or release context, and any follow-up handoff condition. |
 | New feature, existing update, unclear scope, or expectation change not yet confirmed | PM specialist | Keep the request in PM; do not send a ready handoff packet. |
 
 Example cross-role handoff:
