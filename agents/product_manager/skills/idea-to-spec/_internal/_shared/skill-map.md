@@ -193,11 +193,11 @@ Required fields:
 | --- | --- |
 | `request_type` | Stable request class: `new_feature`, `existing_update`, `bug_report`, `design`, `validation`, `deployment`, `security`, `delivery`, `status`, `feature_catalog`, `competitive_research`, `battlecard`, `changelog`, `release_notes`, `roadmap`, or `repo_status`. |
 | `change_tier` | `hotfix`, `standard`, or `major`, using the 变更分级契约 in `AGENTS.md` as the single definition source. |
-| `feature_path` | Canonical multi-level feature path, `unresolved` when PM clarification must continue, or `N/A` for non-feature PM-only routes. |
-| `feature` | Terminal feature slug, compatible legacy feature value, or `N/A` for non-feature PM-only routes. |
-| `parent_feature` | Parent feature path, `N/A` for level-1 features, or `N/A` for non-feature PM-only routes. |
-| `feature_level` | Positive integer matching the feature path depth, or `N/A` for non-feature PM-only routes. |
-| `feature_path_evidence` | List of `{source, reason}` entries proving why the path is correct, or an empty list for non-feature PM-only routes. |
+| `feature_path` | Canonical multi-level feature path, `unresolved` when PM clarification must continue, or `N/A` for confirmed non-feature repo-wide work. |
+| `feature` | Terminal feature slug, compatible legacy feature value, or `N/A` for confirmed non-feature repo-wide work. |
+| `parent_feature` | Parent feature path, `N/A` for level-1 features, or `N/A` for confirmed non-feature repo-wide work. |
+| `feature_level` | Positive integer matching the feature path depth, or `N/A` for confirmed non-feature repo-wide work. |
+| `feature_path_evidence` | List of `{source, reason}` entries proving why the path is correct, or an empty list for confirmed non-feature repo-wide work. |
 | `source_documents` | PRD, DECISIONS, TRD, design docs, issue, PR, release, repo-status, or other evidence used for routing. |
 | `scope_decision` | Confirmed scope, non-goals, and whether approved product expectations changed. |
 | `downstream_owner` | Next owner: `Designer`, `Engineer`, `QA`, `DevOps`, `Security`, or `delivery`. |
@@ -216,6 +216,13 @@ Do not inline route / API / page inventory objects into
 `feature_path_evidence`; convert them to concise `{source, reason}` entries.
 If the path is unresolved, set `feature_path: unresolved`, explain the blocker
 in `blockers_risks`, and do not hand off as if the path were settled.
+
+Confirmed non-feature repo-wide downstream handoffs may also use `N/A`
+feature-scope fields and `feature_path_evidence: []`. Use this only after PM
+classification confirms the work is repository-level rather than feature-tied,
+for example repository CI, release automation, deployment assets, or delivery
+status. Name the repository or release evidence in `source_documents` and do not
+use `N/A` to skip feature-path clarification for product feature work.
 
 PM-only specialist routes such as `feature_catalog`, `competitive_research`,
 `battlecard`, `changelog`, `release_notes`, `roadmap`, and `repo_status` do not

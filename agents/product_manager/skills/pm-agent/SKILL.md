@@ -216,6 +216,12 @@ If a required field is unresolved, do not present the handoff as ready. Keep the
 request in PM clarification or mark the handoff as blocked with the missing
 field named.
 
+Confirmed non-feature repo-wide downstream handoffs, such as repository-level
+CI, release automation, deployment assets, or delivery status, may use `N/A`
+for feature-scope fields and `feature_path_evidence: []`. Record the repository
+or release evidence in `source_documents`, and do not use `N/A` for work that is
+actually tied to a product feature.
+
 PM-only specialist routing does not require this cross-role packet. For
 `feature_catalog`, `competitive_research`, `battlecard`, `changelog`,
 `release_notes`, `roadmap`, and `repo_status`, record the selected PM skill,
