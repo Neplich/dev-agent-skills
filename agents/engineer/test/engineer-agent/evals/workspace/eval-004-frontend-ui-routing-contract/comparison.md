@@ -7,42 +7,41 @@
 - Eval: `eval-004-frontend-ui-routing-contract`
 - Test case: frontend-ui-routing-contract
 - Workspace: `workspace/eval-004-frontend-ui-routing-contract`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-24 after the issue #35 frontend UI routing contract update
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Nested `customer-portal/profile-settings` PRD/TRD with missing design docs.
-- Expected output: route local frontend UI implementation through Engineer, check design deliverables, hand design gaps to Designer, then return to implementation planning.
-- Validation context: fresh Codex subagent semantic validation plus CLI transcript diagnostics under `tmp/eval-runs/manual-issue35/engineer-agent/`.
+- Fixture: frontend UI implementation request for `customer-portal/profile-settings` with same-path PRD/TRD and missing design deliverables.
+- Context read before applying the skill: `evals.json`, workspace `README.md`, `eval_metadata.json`, `docs/pm/customer-portal/profile-settings/PRD.md`, and `docs/engineer/customer-portal/profile-settings/TRD.md`.
 
 ## Assertions
 
-- PASS `routes_frontend_update_to_engineer`: frontend code updates, UI implementation, "改 UI", and design-to-code requests remain Engineer-entry requests.
-- PASS `does_not_route_to_external_ui_skill`: the skill explicitly avoids routing local frontend implementation to external UI reference skills such as `ui-ux-pro-max`.
-- PASS `runs_feature_alignment`: the fixture PRD/TRD share `feature_path: customer-portal/profile-settings`, and the skill requires same-feature PRD/TRD alignment first.
-- PASS `checks_design_deliverables`: the skill checks `docs/design/{feature_path}/ui-ux-spec.md` and/or `visual-system.md` before UI implementation planning.
-- PASS `hands_design_gap_to_designer`: missing, stale, or conflicting design docs are handed to `designer-agent` with feature path, source docs, and design gap.
-- PASS `routes_implementation_after_design`: implementation returns to `feature-implementor` only after design handoff, with the `IMPLEMENTATION_PLAN` confirmation gate preserved.
-- PASS `does_not_execute_directly`: route-only requests do not write code, implementation plans, or run tests.
+- PASS `routes_frontend_update_to_engineer`: frontend code and UI implementation remain Engineering work.
+- PASS `does_not_route_to_external_ui_skill`: the route does not use external `ui-ux-pro-max` for local implementation.
+- PASS `runs_feature_alignment`: the route preserves `customer-portal/profile-settings` and reads same-path PRD/TRD first.
+- PASS `checks_design_deliverables`: the route checks `docs/design/customer-portal/profile-settings/ui-ux-spec.md` and/or `visual-system.md`.
+- PASS `hands_design_gap_to_designer`: missing, stale, or conflicting design inputs are handed to `designer-agent` with the resolved feature path and gap.
+- PASS `routes_implementation_after_design`: implementation returns to `feature-implementor` only after design deliverables are complete and plan confirmation remains in force.
+- PASS `does_not_execute_directly`: the route-only prompt does not authorize code, plan, or test execution.
 
-## With Skill
+## With Skill Behavior
 
-- PASS. The with-skill CLI transcript treated the request as an Engineer routing task, checked the PRD/TRD, detected missing design deliverables, handed the gap to `designer-agent`, and did not recommend `ui-ux-pro-max` or implementation.
+`engineer-agent` satisfies the Batch 4 frontend UI routing contract. It classifies local frontend updates as Engineering, applies the PM handoff and same-path PRD/TRD gate, checks design deliverables for page structure, interaction, visual rules, and information hierarchy, then hands design gaps to `designer-agent` without performing Designer work itself. The route returns to `feature-implementor` only after design handoff completion.
 
-## Without Skill / Baseline
+## Without Skill Baseline
 
-- Baseline CLI output treated the prompt as a direct UI design/change request and offered layout/style directions, without preserving the Engineer PRD/TRD and design-handoff routing contract.
+Without the router skill and Engineer README, a generic response would likely treat the prompt as either a direct UI design task or a direct frontend implementation task. It might provide layout and button style guidance, or suggest coding steps, while missing the repository-specific design deliverable check and the prohibition on external UI reference skills for local implementation routing.
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- None found.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for frontend UI routing. Re-run fresh subagent validation if `engineer-agent` routing, Designer handoff, or eval fixture docs change.
+- Keep this eval as regression coverage for frontend UI implementation routing and Designer handoff boundaries.
 
 ## Runtime Artifacts Policy
 
-- CLI transcript diagnostics were generated under `tmp/eval-runs/manual-issue35/engineer-agent/` and are runtime artifacts only.
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- No runtime artifacts were created for this validation.
+- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.

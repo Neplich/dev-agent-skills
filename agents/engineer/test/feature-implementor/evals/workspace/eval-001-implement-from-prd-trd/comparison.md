@@ -7,36 +7,29 @@
 - Eval: `eval-001-implement-from-prd-trd`
 - Test case: implement-from-prd-trd
 - Workspace: `workspace/eval-001-implement-from-prd-trd`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation on 2026-06-23
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that feature-implementor handles implement-from-prd-trd by producing an implementation plan, maintaining plan metadata, and waiting for confirmation before coding.
-- Expected output: IMPLEMENTATION_PLAN.md + 文件变更清单 + 实现顺序 + 用户确认门禁，不直接写代码
-- Validation input: current `agents/engineer/skills/feature-implementor/SKILL.md`, Engineer README, `evals.json`, workspace metadata, and this comparison.
+- Fixture files read before skill use: `eval_metadata.json` and the `eval-001-implement-from-prd-trd` item in `evals.json`.
+- Fixture note: this workspace stores metadata only; the PRD/TRD paths are supplied by the eval prompt and expected output.
+- Expected output: produce or update `docs/engineer/notification-center/IMPLEMENTATION_PLAN.md` with file change list, implementation order, plan metadata rules, and a user confirmation gate; do not code directly.
 
 ## Assertions
 
-- `writes_implementation_plan`: 生成实现计划
-- `requires_user_confirmation`: 等待用户确认
-- `does_not_implement_directly`: 不直接实施
-- `maintains_plan_metadata`: 维护实施计划元数据
+- PASS `writes_implementation_plan`: the skill contract requires `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`, file list, order, verification, alignment result, metadata, and split decision before implementation.
+- PASS `requires_user_confirmation`: planner and implementor both stop until the exact implementation plan is presented and confirmed.
+- PASS `does_not_implement_directly`: Phase 2 code work is gated behind plan confirmation.
+- PASS `maintains_plan_metadata`: planner and output conventions require `version`, `last_updated`, `feature_path`, `parent_feature`, `feature_level`, `related_prd`, and `related_trd`, with version/date maintenance rules.
 
-## With Skill
+## With Skill Behavior
 
-Observed behavior:
+Fresh with-skill validation read `agents/engineer/skills/feature-implementor/SKILL.md`, `agents/engineer/README.md`, planner instructions, implementor entry gate, shared coding rules, reviewer instructions, and output conventions. The current skill keeps the PM handoff entry gate intact: direct specialist invocation cannot bypass PM handoff or the equivalent confirmed document chain. Given the eval prompt declares PRD and TRD inputs for `notification-center`, the correct with-skill response is to enter Phase 1 planning, write the durable implementation plan path, include file changes and implementation order, state metadata maintenance requirements, and wait for user confirmation before loading implementor instructions or modifying code.
 
-- Fresh Codex subagent validation on 2026-06-23 read the current skill docs, Engineer README, eval definition, fixture metadata/context, and this comparison; all listed assertions are satisfied.
-- Current `SKILL.md` consumes confirmed PRD/TRD, enters Phase 1 before any code changes, delegates or writes `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`, includes the file change list, implementation order, PRD alignment result, split decision, and blockers, then presents the plan and asks for confirmation.
-- The plan metadata rules require `IMPLEMENTATION_PLAN.md` frontmatter to include `version` and `last_updated`; new plans start from an initial version, substantive body updates change both `version` and `last_updated`, and typo or formatting-only edits may keep `version` unchanged.
-- The skill explicitly says to stop after presenting the plan and not start implementation in the same turn unless the user has already confirmed the exact plan.
-- Phase 2 code work and implementor module loading are gated behind user confirmation of the implementation plan.
+## Without Skill Baseline
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+The fresh without-skill baseline was summarized from the eval item and metadata before reading `feature-implementor` or Engineer README. A generic implementation response could treat the prompt as permission to start coding, provide only an informal checklist, or omit frontmatter/version rules. It might still mention a plan because the expected output asks for one, but it would not reliably enforce the durable `IMPLEMENTATION_PLAN.md` gate, exact metadata contract, or Phase 2 confirmation boundary.
 
 ## Failures
 
@@ -44,8 +37,9 @@ Observed behavior:
 
 ## Next Steps
 
-- Keep this eval focused on the confirmed-PRD/TRD plan gate, plan metadata maintenance, and no-direct-code boundary.
+- Keep this eval focused on the confirmed PRD/TRD to implementation-plan gate, metadata maintenance, and no-direct-code boundary.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- This validation did not create runtime artifacts.
+- Runtime transcripts, verdicts, timing files, outputs, diagnostics, run status files, and `comparison.auto.md` must not be committed.

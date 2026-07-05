@@ -7,41 +7,41 @@
 - Eval: `eval-009-ui-design-handoff-gate`
 - Test case: ui-design-handoff-gate
 - Workspace: `workspace/eval-009-ui-design-handoff-gate`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-24 after the issue #35 UI design handoff gate update
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Confirmed PRD/TRD for a frontend UI change with missing design docs.
-- Expected output: block implementation planning and hand design work back through Engineer to Designer.
-- Validation context: fresh Codex subagent semantic validation plus CLI transcript diagnostics under `tmp/eval-runs/manual-issue35/feature-implementor/`.
+- Fixture files read before skill use: `README.md`, `eval_metadata.json`, `docs/pm/customer-portal/profile-settings/PRD.md`, and `docs/engineer/customer-portal/profile-settings/TRD.md`.
+- Fixture summary: PM/TRD documents exist for `customer-portal/profile-settings`, but same-feature `docs/design/customer-portal/profile-settings/ui-ux-spec.md` and `visual-system.md` are intentionally missing.
+- Expected output: identify a frontend UI/visual change, block implementation planning, hand design work back through Engineer to Designer, and preserve the plan gate after design docs are supplied.
 
 ## Assertions
 
-- PASS `detects_ui_design_change`: frontend UI, visual, component, usability, and information hierarchy changes enter the UI Design Handoff Gate.
-- PASS `checks_design_docs`: the skill checks same-feature `docs/design/{feature_path}/ui-ux-spec.md` and `visual-system.md`.
-- PASS `blocks_plan_when_design_missing`: the fixture has no design docs, so the skill stops before `IMPLEMENTATION_PLAN.md` or implementation.
-- PASS `hands_off_to_designer`: missing design decisions are handed back through `engineer-agent` to `designer-agent`.
-- PASS `preserves_plan_gate_after_design`: after Designer returns, implementation still requires an `IMPLEMENTATION_PLAN.md` and user confirmation.
-- PASS `does_not_implement_directly`: no code, tests, or fix steps are allowed before the design and plan gates are satisfied.
+- PASS `detects_ui_design_change`: information hierarchy and primary button styling are frontend UI/visual changes.
+- PASS `checks_design_docs`: the skill checks same-feature `ui-ux-spec.md` and `visual-system.md`.
+- PASS `blocks_plan_when_design_missing`: missing design deliverables block `docs/engineer/customer-portal/profile-settings/IMPLEMENTATION_PLAN.md`.
+- PASS `hands_off_to_designer`: the gap is handed through `engineer-agent` to `designer-agent`.
+- PASS `preserves_plan_gate_after_design`: after Designer resolves the gap, feature-implementor must still write a plan and wait for confirmation.
+- PASS `does_not_implement_directly`: no frontend code, tests, or verification are performed before design and plan gates.
 
-## With Skill
+## With Skill Behavior
 
-- PASS. The with-skill CLI transcript recognized the UI/visual change, checked for missing design deliverables, stopped before planning, and sent the gap through Engineer to Designer.
+Fresh with-skill validation confirmed the UI Design Handoff Gate. The current skill enters the gate for frontend UI, interaction, visual, component, usability, or information hierarchy changes. Since the fixture lacks the same-feature design docs, the skill must stop before planning and hand the missing design deliverables back through Engineer to Designer. Once design docs exist and cover the change, the implementation still returns to `feature-implementor` for `IMPLEMENTATION_PLAN.md` and user confirmation before coding.
 
-## Without Skill / Baseline
+## Without Skill Baseline
 
-- Baseline CLI output treated the request as a direct frontend implementation task and proposed changing layout, hierarchy, and button styling without checking design docs or blocking on Designer handoff.
+The fresh without-skill baseline was summarized before reading skill docs. A generic frontend implementation response is likely to propose layout, hierarchy, and button style changes directly from PRD/TRD or start a code plan. It would not reliably require same-feature UI/UX and visual-system documents, block the implementation plan, or preserve the Designer handoff before coding.
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- None.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for UI design handoff gating. Re-run fresh subagent validation if `feature-implementor` planning gates, design inputs, or eval fixture docs change.
+- Keep this eval as regression coverage for UI design handoff gating.
 
 ## Runtime Artifacts Policy
 
-- CLI transcript diagnostics were generated under `tmp/eval-runs/manual-issue35/feature-implementor/` and are runtime artifacts only.
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- This validation did not create runtime artifacts.
+- Runtime transcripts, verdicts, timing files, outputs, diagnostics, run status files, and `comparison.auto.md` must not be committed.

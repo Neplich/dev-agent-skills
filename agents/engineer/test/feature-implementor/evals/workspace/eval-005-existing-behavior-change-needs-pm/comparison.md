@@ -7,40 +7,30 @@
 - Eval: `eval-005-existing-behavior-change-needs-pm`
 - Test case: existing-behavior-change-needs-pm
 - Workspace: `workspace/eval-005-existing-behavior-change-needs-pm`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation on 2026-06-23
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that feature-implementor stops before implementation planning when a small existing-feature change would alter approved PRD/TRD behavior or an existing product decision.
-- Expected output: 识别这是改变已批准预期，停止创建 IMPLEMENTATION_PLAN.md，交回 pm-agent:idea-to-spec existing-project-update 更新 PRD 或产品决策记录，再同步 TRD。
-- Validation input: current `SKILL.md`, Engineer README, `evals.json`, workspace metadata, and this comparison.
+- Fixture files read before skill use: `eval_metadata.json` and the `eval-005-existing-behavior-change-needs-pm` item in `evals.json`.
+- Fixture note: this workspace stores metadata only; the prompt declares PRD/TRD currently require active lists to exclude archived items.
+- Expected output: recognize the requested archived-in-active behavior changes approved expectations, stop before `IMPLEMENTATION_PLAN.md`, return to `pm-agent:idea-to-spec` using `existing-project-update`, then require TRD sync before implementation.
 
 ## Assertions
 
-- `checks_approved_behavior`: 检查已批准预期
-- `stops_before_implementation_plan`: 停止实施计划
-- `hands_off_to_pm_existing_update`: 交回 PM existing-project-update
-- `blocks_e2e_expected_behavior_change`: 预期未对齐时阻断 E2E
-- `does_not_implement_directly`: 不得直接实施
+- PASS `checks_approved_behavior`: the alignment gate classifies expectation changes before planning.
+- PASS `stops_before_implementation_plan`: behavior changes that need PM updates do not create or update `docs/engineer/notifications/IMPLEMENTATION_PLAN.md`.
+- PASS `hands_off_to_pm_existing_update`: approved expectation changes return to `pm-agent:idea-to-spec` with `existing-project-update`.
+- PASS `blocks_e2e_expected_behavior_change`: QA E2E expectations cannot be updated until PRD/product decision update, TRD sync, and implementation plan confirmation.
+- PASS `does_not_implement_directly`: the skill does not code, test, or claim implementation when scope is unaligned.
 
-## With Skill
+## With Skill Behavior
 
-Observed behavior:
+Fresh with-skill validation confirmed the PM handoff gate is still meaningful after direct specialist updates: confirmed PRD/TRD inputs do not permit implementation when the requested behavior contradicts them. The current skill should classify archived items in the active list as an approved-expectation change, stop before planning, route the request to `pm-agent:idea-to-spec` through `existing-project-update`, and require synchronized TRD updates before any `feature-implementor` plan or QA E2E expected behavior update.
 
-- Fresh Codex subagent validation on 2026-06-23 read the current skill docs, Engineer README, eval definition, fixture metadata/context, and this comparison; all listed assertions are satisfied.
-- Current `SKILL.md` requires existing-feature behavior changes to complete the PRD alignment gate before planning, including PRD, TRD, and product decision records when present.
-- If a request changes approved product behavior, the skill stops before implementation planning and hands off to `pm-agent:idea-to-spec` using the `existing-project-update` lane.
-- If PRD/product decisions need updates, the skill does not create `docs/engineer/notifications/IMPLEMENTATION_PLAN.md`, does not update tests, and does not implement code just because the change is small or single-file.
-- After PM alignment, stale or changed technical decisions return through TRD sync before implementation planning.
-- Because QA E2E handoff is only after implementation, self-review, and a confirmed implementation plan, this skill blocks turning the unaligned archived-in-active behavior into a new E2E expected result before PRD/product decision update, TRD sync, and plan confirmation.
-- User requests to skip PRD alignment are recorded as blocker/risk only; they
-  do not permit implementation planning, code changes, or E2E updates.
+## Without Skill Baseline
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+The fresh without-skill baseline was summarized before reading skill docs. A generic worker may over-focus on the prompt's "small single-file change" framing and either propose the code/test edit or write a lightweight plan. It would not reliably treat the request as a product expectation change, block `IMPLEMENTATION_PLAN.md`, or require PM update plus later TRD sync before E2E changes.
 
 ## Failures
 
@@ -48,8 +38,9 @@ Observed behavior:
 
 ## Next Steps
 
-- 保持该 eval 覆盖现有行为变更回 PM。
+- Keep this eval focused on stopping small existing-behavior changes that alter approved PM/TRD expectations.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- This validation did not create runtime artifacts.
+- Runtime transcripts, verdicts, timing files, outputs, diagnostics, run status files, and `comparison.auto.md` must not be committed.

@@ -7,40 +7,41 @@
 - Eval: `eval-010-implementation-plan-closeout-sync`
 - Test case: implementation-plan-closeout-sync
 - Workspace: `workspace/eval-010-implementation-plan-closeout-sync`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-24; with-skill run `019ef5f3-bf60-7922-bcc0-2a296cd3be0b` passed, without_skill baseline run `019ef5f3-e0e2-7ef3-adb9-5f89535a79f3` passed, and deterministic checks passed
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Confirmed PRD/TRD plus an `IMPLEMENTATION_PLAN.md` whose frontmatter is implemented while the body still contains planning-state text.
-- Run set: actual with-skill subagent validation plus actual without_skill baseline subagent validation against the same prompt and fixture.
-- Expected output: block QA handoff or delivery until the implementation plan closeout state, implementation result, deterministic checks, and eval evidence are synchronized.
+- Fixture files read before skill use: `README.md`, `eval_metadata.json`, `docs/pm/sample-feature/PRD.md`, `docs/engineer/sample-feature/TRD.md`, and `docs/engineer/sample-feature/IMPLEMENTATION_PLAN.md`.
+- Fixture summary: the implementation plan frontmatter says `status: Implemented`, but the body still says the plan awaits confirmation, code/skill edits are not started, eval execution is pending, and model eval has not run.
+- Expected output: block QA handoff and delivery until closeout state, implementation result, deterministic checks, eval evidence, and runtime artifact policy are synchronized.
 
 ## Assertions
 
-- PASS `detects_closeout_state_conflict`: the updated skill and reviewer instructions identify conflict between `status: Implemented` and unresolved pending/not-started/not-executed body state.
-- PASS `blocks_handoff_until_plan_updated`: the closeout gate runs before QA handoff or delivery and blocks when the durable plan is stale.
-- PASS `requires_implementation_result_update`: output conventions require implementation result, status table, completed files, checks, risks, and next owner.
-- PASS `records_deterministic_checks`: output conventions require actual deterministic commands and results, or skipped/blocked reasons.
-- PASS `records_eval_evidence`: output conventions require durable `comparison.md` references for executed evals, or skipped/blocked reasons.
-- PASS `keeps_runtime_artifacts_out_of_git`: skill and output conventions keep transcripts, diagnostics, outputs, timing, run status, and `comparison.auto.md` out of git.
+- PASS `detects_closeout_state_conflict`: reviewer and output conventions detect implemented frontmatter with unresolved planning-state text.
+- PASS `blocks_handoff_until_plan_updated`: closeout must be updated before QA E2E handoff, delivery, PR creation, or issue closeout.
+- PASS `requires_implementation_result_update`: closeout records final status, changed files, completed checks, remaining risks, and next owner.
+- PASS `records_deterministic_checks`: actual deterministic commands and results, or skipped/blocked reasons, must be recorded.
+- PASS `records_eval_evidence`: executed skill eval or fresh subagent validation must cite durable `comparison.md`; skipped or blocked evals need explicit reasons.
+- PASS `keeps_runtime_artifacts_out_of_git`: runtime transcripts, diagnostics, outputs, timing, run status, and `comparison.auto.md` stay out of git.
 
-## With Skill
+## With Skill Behavior
 
-- PASS. Subagent `019ef5f3-bf60-7922-bcc0-2a296cd3be0b` used `feature-implementor` and confirmed the PRD/TRD, `SKILL.md`, implementor/reviewer/output conventions, eval definition, and fixture satisfy the closeout-gate plan. The candidate output blocked QA handoff, delivery, PR creation, and issue closeout until the durable `IMPLEMENTATION_PLAN.md` closeout state, deterministic checks, eval evidence, and runtime artifact policy are synchronized.
+Fresh with-skill validation read reviewer and output conventions in addition to the public skill and Engineer README. The skill should detect the contradiction between `status: Implemented` and unresolved pending/not-started/not-executed body state, block any handoff or delivery, and require the durable `IMPLEMENTATION_PLAN.md` to be synchronized with implementation result, deterministic checks, eval/comparison evidence, residual risks, and runtime artifact policy.
 
-## Without Skill / Baseline
+## Without Skill Baseline
 
-- PASS. Subagent `019ef5f3-e0e2-7ef3-adb9-5f89535a79f3` ran the same prompt and fixture without reading or using `feature-implementor` or its internal instructions. The baseline response still detected the stale `IMPLEMENTATION_PLAN.md` closeout state, blocked QA handoff and delivery, required implementation-result, deterministic-check, eval-evidence, and runtime-artifact updates, and satisfied all six assertions. Baseline weakness: it could not confirm the `feature-implementor`-specific closeout templates, wording, or ordering beyond the prompt, fixture, and repository-level eval constraints.
+The fresh without-skill baseline was summarized before reading skill docs. Because the prompt explicitly highlights the stale closeout state, a generic reviewer would likely detect the conflict and block delivery. Its weakness is that it would not reliably apply `feature-implementor`-specific closeout ordering, exact runtime artifact exclusions, durable `comparison.md` citation expectations, or archive/closeout consistency rules from reviewer and output conventions.
 
 ## Failures
 
-- None in the skill/eval contract after closeout synchronization. Both actual with-skill and without_skill baseline runs passed; the remaining distinction is that the with-skill run also validates the `feature-implementor`-specific closeout contract.
+- None.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for stale `IMPLEMENTATION_PLAN.md` closeout state. Re-run both with-skill and without_skill baseline validation if `feature-implementor` closeout behavior, implementation plan output conventions, or eval fixture docs change.
+- Keep this eval focused on stale implementation-plan closeout state blocking delivery and QA handoff.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, diagnostics, run status files, and `comparison.auto.md` should not be committed.
+- This validation did not create runtime artifacts.
+- Runtime transcripts, verdicts, timing files, outputs, diagnostics, run status files, and `comparison.auto.md` must not be committed.

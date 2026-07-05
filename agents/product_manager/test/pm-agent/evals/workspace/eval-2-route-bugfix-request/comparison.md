@@ -6,35 +6,34 @@
 - Test case: route-bugfix-request
 - Test set: PM entry evals for issue #52 / FR-006 scenario 2
 - Entry: workspace `eval-2-route-bugfix-request`
-- Latest result: PASS (deterministic Batch 2 route coverage)
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: bug-fix request without confirmed product expectation
+- Fixture: login bug report before expected behavior has been checked
+- Expected output: classify as `bug_report`, confirm approved PRD / TRD expected behavior first, then hand off to Engineer/debugger only after implementation deviation is established.
 
 ## With Skill
 
-- Classifies the request as `bug_report`.
-- Keeps the request in PM long enough to confirm expected behavior from
-  approved PRD / TRD or equivalent source docs.
-- Allows Engineer/debugger handoff only after the report is confirmed as an
-  implementation deviation.
+- The `pm-agent` classification protocol explicitly maps bug reports to `bug_report`.
+- It requires comparing the reported token-expiry spinner against approved PRD / TRD or equivalent product expectations before diagnosing implementation.
+- It only allows Engineer/debugger handoff after expected behavior is confirmed and the issue is an implementation deviation.
 
-## Without Skill / Baseline
+## Without Skill / without_skill Baseline
 
-- May jump directly into debugging from the error log.
-- Less consistently checks product expectation before diagnosing code.
+- The baseline read the eval item and fixture before target skill docs. A generic response could jump straight into debugging the token expiry behavior from logs.
+- It may ask for reproduction details, but is less consistent about product expectation alignment before debugger handoff.
 
 ## Failures
 
-- None recorded in deterministic coverage.
+- None. The current `pm-agent` protocol satisfies the bug classification and expectation-first assertions.
 
 ## Next Steps
 
-- Re-run with fresh Codex subagent validation in the post-merge centralized
-  skill-eval pass.
+- Keep this eval as PM entry coverage for bug reports.
+- Re-run fresh validation if bug handling or debugger handoff gates change.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, and diagnostics should not be committed.
+- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.

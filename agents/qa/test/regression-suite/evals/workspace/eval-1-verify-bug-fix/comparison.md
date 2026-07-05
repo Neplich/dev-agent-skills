@@ -2,35 +2,48 @@
 
 ## Evaluation Target
 
+- Agent: `qa`
 - Skill: `regression-suite`
+- Eval: `eval-001-verify-bug-fix`
 - Test case: verify-bug-fix
-- Test set: QA availability evals
-- Entry: workspace `eval-1-verify-bug-fix`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23 after QA owner split fix
+- Workspace: `workspace/eval-1-verify-bug-fix`
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
+- Validation method: fresh Codex subagent review; baseline was derived before reading `regression-suite` or QA README, then with-skill behavior was checked against `SKILL.md`, `agents/qa/README.md`, direct shared references, eval assertions, and fixture evidence.
 
-## With Skill
+## Test Set / Fixture Version
 
-- Reuses the original bug report, fix notes, and QA environment context.
-- Verifies the fix path and adjacent regression risk instead of checking only the happy path.
-- Produces a clear pass/fail/blocked regression conclusion.
-- Reads the function-tree E2E suite, flow index, case file, script snippet, prior results, and reports when available before execution.
-- Keeps `feature-update` scoped to the fixed flow, direct impact paths, shared components, adjacent flows, and related state branches; reserves all active E2E TC coverage for `release`.
-- Requires same-`feature_path` PRD/TRD expectation alignment and a confirmed `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before updating or executing acceptance TC for existing-feature changes or bug fixes.
-- Routes PRD/path ambiguity to `pm-agent:idea-to-spec`, TRD gaps to `engineer-agent:trd-gen`, and missing or mismatched implementation plans to `engineer-agent:feature-implementor`.
-- Treats a missing platform version as `blocked`, avoids `unknown`, and appends E2E results under `results/TC-NNN-<short-slug>/{platform-version}/` without overwriting history.
-- Separates run status from evidence confidence and includes a release recommendation.
+- Schema: `evals.json` v1.0
+- Prompt: 验证 Bug #001 的修复，执行回归测试
+- Fixture context: `BUG-001.md`, `PR-001.md`, QA environment note, `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/TC-001-login-session.md`, and `scripts/TC-001-login-session.spec.md`.
+- Scenario and version: `feature-update`, platform version `v1.2.0-fix.1`.
 
-## Baseline
+## Without Skill Baseline
 
-- More likely to verify only the direct symptom.
-- Provides weaker linkage back to original bug evidence.
-- More likely to over-expand a local `feature-update` regression into release-wide coverage or skip durable E2E case memory.
+- A generic regression answer would likely run or recommend `npm test -- login-regression` and stop at the original happy path.
+- It might not preserve the original failure, expected behavior, fix context, adjacent invalid-credential and locked-account risks, and evidence confidence as separate report fields.
+- It could over-expand a local `feature-update` into release-wide coverage or skip the existing function-tree E2E memory.
+- It would be less likely to block acceptance TC execution when same-path PRD/TRD or confirmed implementation-plan evidence is missing.
+
+## With Skill Behavior
+
+- PASS: `regression-suite` requires the original bug report, failing evidence, fix context, expected behavior, and scoped regression target before execution. The fixture provides original login 500 behavior, expected session creation, fix summary, adjacent serialization risks, and QA environment notes.
+- PASS: The skill reuses existing QA memory under `docs/qa/e2e/auth/login/session-start/`, including suite, flow index, case file, script, prior results, and reports when available.
+- PASS: The verification scope covers original failure recheck, expected fixed behavior, and adjacent invalid-credential and locked-account branches because they share response serialization.
+- PASS: `feature-update` scope stays limited to the fixed flow, direct impact paths, shared components, adjacent flows, and related state branches; full active E2E coverage is reserved for `release`.
+- PASS: Platform version `v1.2.0-fix.1` is available, so any actual result archive would append under `results/TC-001-login-session/v1.2.0-fix.1/` and would not overwrite history.
+- PASS: Because this is a bug-fix regression, the skill requires a visible same-path PRD/TRD/confirmed `IMPLEMENTATION_PLAN.md` gate before executing or updating acceptance TC. The fixture does not include those documents, so the correct with-skill execution result is blocked at that gate rather than release-ready.
+- PASS: The report contract keeps run status (`pass`, `fail`, `blocked`) separate from evidence confidence and includes release recommendation. With the missing alignment/plan evidence in this fixture, recommendation should be `blocked` or `needs more verification`, not `safe to release`.
 
 ## Failures
 
-- None. Current `regression-suite` instructions satisfy all eval assertions for evidence reuse, QA case reuse, fix verification, adjacent regression scope, PRD/TRD and implementation-plan gate, owner routing, platform-version archive rules, and release recommendation.
+- None identified. The current skill contract satisfies all eval assertions for original-context reuse, QA case reuse, fix verification, adjacent-risk scope, alignment and version archive gates, release recommendation, and status/confidence separation.
 
 ## Next Steps
 
-- Keep this eval for regression evidence reuse.
-- Runtime transcripts, verdicts, timing, and diagnostics should not be committed.
+- No fixture or skill change is required from this eval.
+- A real run should provide or confirm same-path PRD, TRD, and implementation-plan evidence before executing or archiving the E2E regression result.
+
+## Runtime Artifact Policy
+
+- No runtime artifacts were created for this validation.
+- Do not commit transcripts, verdicts, timing files, diagnostics, `with_skill/`, `without_skill/`, `outputs/`, or `comparison.auto.md`.

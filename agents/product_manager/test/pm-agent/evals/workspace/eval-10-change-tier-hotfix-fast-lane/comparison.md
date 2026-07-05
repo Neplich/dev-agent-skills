@@ -6,38 +6,34 @@
 - Test case: change-tier-hotfix-fast-lane
 - Test set: change-tier contract evals for issue #55 / FR-008
 - Entry: workspace `eval-10-change-tier-hotfix-fast-lane`
-- Latest result: PARTIAL - deterministic Batch 4 definition and pytest coverage
-  exist, but fresh centralized subagent validation is deferred to the
-  post-merge skill-eval pass.
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: already-scoped README link fix with verification evidence
+- Fixture: README link fix that does not change approved behavior and has local verification evidence
+- Expected output: classify as `hotfix`, allow fast lane after classification, and preserve scope / source / verification evidence.
 
 ## With Skill
 
-- Classifies the request as `hotfix` because it does not change approved
-  behavior and can be covered by direct evidence.
-- Allows the fast lane only after classification.
-- Keeps scope, source evidence, and verification evidence requirements.
+- The `pm-agent` change-tier rule classifies unchanged-expectation lightweight fixes as `hotfix`.
+- It allows `hotfix` plus `delivery` / `status` requests to use the fast lane only after scope, source evidence, and verification status are confirmed.
+- It keeps verification evidence requirements intact rather than treating fast lane as no-evidence delivery.
 
-## Without Skill / Baseline
+## Without Skill / without_skill Baseline
 
-- May skip `change_tier` classification.
-- May treat the fast lane as permission to omit verification evidence.
+- The baseline read the eval item and fixture before target skill docs. A generic response could accept fast lane but omit the structured evidence requirement.
+- It may not distinguish classification-before-fast-lane from immediate delivery.
 
-## Failures / Coverage Gaps
+## Failures
 
-- Fresh Codex subagent validation has not run for this scenario in this PR.
-- A new without-skill baseline will be generated in the post-merge centralized
-  skill-eval pass.
+- None. The current `pm-agent` change-tier rule satisfies all hotfix fast-lane assertions.
 
 ## Next Steps
 
-- Run fresh with-skill and without-skill validation in the centralized eval
-  phase after Batch 4 merges.
+- Keep this eval as coverage for valid hotfix fast-lane handling.
+- Re-run fresh validation if change-tier definitions or fast-lane evidence requirements change.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, and diagnostics should not be committed.
+- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.

@@ -7,50 +7,42 @@
 - Eval: `eval-001-route-mixed-qa-request`
 - Test case: route-mixed-qa-request
 - Workspace: `workspace/eval-1-route-mixed-qa-request`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-04
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that qa-agent handles route-mixed-qa-request and produces the expected role-specific artifact.
-- Expected output: QA 路由决策，明确选择最窄的下游 QA skill、选择理由、需要读取的上下文和预期 evidence artifact
+- Fixture: login refresh implementation with PM acceptance question and intermittent CI failure evidence.
+- Context read before applying the skill: `evals.json`, workspace `eval_metadata.json`, `docs/pm/login-refresh/PRD.md`, `docs/engineer/login-refresh/TRD.md`, `docs/qa/e2e/auth/login/login-refresh/TEST_SUITE.md`, `FLOW_INDEX.md`, `implementation/changes.md`, and `ci/login-intermittent-failure.log`.
 
 ## Assertions
 
-- `assertion_1`: 路由选择
-- `assertion_2`: 上下文传递
-- `qa`: QA 用例记忆
-- `e2e_execution_protocol`: E2E 执行协议
-- `credential_and_report_refs`: 账号与报告 reference
-- `alignment_and_plan_gate`: PRD/TRD 与实施计划门禁
-- `assertion_4`: 结构化产物
-- `assertion_5`: 边界控制
+- PASS `assertion_1`: the primary QA route is `spec-based-tester` because PM asks whether an implementation can enter documented acceptance; the intermittent CI failure remains a risk note or possible `bug-analyzer` follow-up.
+- PASS `assertion_2`: downstream context includes PM/spec, TRD, implementation changes, CI failure log, environment constraints, and test commands.
+- PASS `qa`: E2E work reads the function-tree memory set under `docs/qa/e2e/{feature_path}/`, including suite, flow index, cases, scripts, prior results, and reports.
+- PASS `e2e_execution_protocol`: E2E routing requires scenario and platform version, blocks missing versions instead of writing `unknown`, selects repo harness > Chrome plugin / browser connector > Playwright fallback, and delegates TC execution to subagents.
+- PASS `credential_and_report_refs`: credential storage uses `references/e2e-credential-store.md` and `.qa/e2e/accounts.local.json`; summary reporting uses `references/e2e-test-report.md`.
+- PASS `alignment_and_plan_gate`: existing-feature and code-complete E2E updates require same-path PRD, TRD, product decisions when present, and confirmed `IMPLEMENTATION_PLAN.md`; gaps return to PM, `trd-gen`, or `feature-implementor`.
+- PASS `assertion_4`: expected artifacts include route decision, execution path, evidence references, risk notes, blockers, and handoff notes.
+- PASS `assertion_5`: only one primary QA route is selected; the intermittent failure is not promoted to a confirmed bug without stronger evidence.
 
-## With Skill
+## With Skill Behavior
 
-Observed behavior:
+`qa-agent` satisfies the mixed QA routing contract. It chooses the narrowest current evidence route, preserves the intermittent CI failure as risk or follow-up rather than a parallel execution path, and carries the required QA memory, environment, credential, report, and PRD/TRD/plan gates into the selected specialist. Because the fixture does not include a confirmed implementation plan, the route can still be selected, but E2E acceptance creation or execution would be blocked until `engineer-agent:feature-implementor` supplies the confirmed plan.
 
-- PASS - fresh Codex subagent validation completed on 2026-06-04.
-- `qa-agent` requires routing before execution and selecting one narrow downstream QA skill. For this fixture, the main route is `spec-based-tester` because PM asks whether the implemented login refresh can enter documented acceptance. The intermittent CI failure remains a risk note or potential `bug-analyzer` follow-up, not a confirmed bug and not a second simultaneously executed route.
-- The skill requires carrying PM/spec context, implementation changes, CI failure information, environment notes, and test commands into the downstream route. The fixture provides `docs/pm/login-refresh/PRD.md`, `docs/engineer/login-refresh/TRD.md`, `implementation/changes.md`, `ci/login-intermittent-failure.log`, and the TRD command/environment constraints, including not assuming a fixed localhost port.
-- The E2E protocol is satisfied: the skill uses `docs/qa/e2e/{feature_path}/` with `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/`, `scripts/`, prior `results/`, and `_reports/`; it requires `feature-update` or `release`, blocks missing platform version instead of using `unknown`, selects execution by repo harness > Chrome plugin / browser connector > Playwright fallback, and runs E2E TC through subagents by default.
-- Credential and report references are covered by explicit skill-relative links to `references/e2e-credential-store.md` and `references/e2e-test-report.md` under the qa-agent skill directory. The skill requires local `.qa/e2e/accounts.local.json` storage and committed docs referencing account IDs only.
-- The PRD/TRD and plan gate is covered for this existing-feature change: the skill requires same-`feature_path` PRD/TRD expectation alignment and a confirmed `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before creating, updating, or executing acceptance TC. If alignment, environment, credentials, feature path, or the implementation plan are missing, the output must report `blocked` and the next owner.
-- The expected artifact shape is explicit: route decision, execution path, evidence artifact, E2E scenario/scope/version status, subagent plan, selected execution entry, evidence references, risk notes, and blocker or handoff notes.
+## Without Skill Baseline
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+Without the router skill, QA README, and QA E2E references, a generic response would likely either start running tests immediately or split the work into both acceptance testing and bug analysis. It might assume a localhost port or browser path, miss the durable E2E memory read set, omit credential/report references, or classify the intermittent CI log as a confirmed bug too early.
 
 ## Failures
 
-- None.
+- None found. The missing implementation plan is an expected gate condition for acceptance execution, not a router failure.
 
 ## Next Steps
 
-- No skill or fixture change is required for this eval.
+- Keep this eval as regression coverage for mixed QA requests, single-route selection, and E2E gate preservation.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- No runtime artifacts were created for this validation.
+- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.

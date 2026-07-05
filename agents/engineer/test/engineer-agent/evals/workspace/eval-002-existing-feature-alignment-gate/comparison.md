@@ -7,42 +7,30 @@
 - Eval: `eval-002-existing-feature-alignment-gate`
 - Test case: existing-feature-alignment-gate
 - Workspace: `workspace/eval-002-existing-feature-alignment-gate`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation on 2026-06-23
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that engineer-agent checks PRD/TRD and any present product decisions before routing small existing-feature behavior changes into implementation.
-- Expected output: 先要求读取 docs/pm/{feature_path}/PRD.md、docs/engineer/{feature_path}/TRD.md，以及存在的 DECISIONS.md 或产品决策记录，对比 archived 行为是否改变既有预期；如果是改变预期，路由回 pm-agent:idea-to-spec 的 existing-project-update，而不是直接进入 feature-implementor。
+- Fixture: small existing-feature behavior change request for Notification Center archived items.
+- Context read before applying the skill: `evals.json` and workspace `eval_metadata.json`.
 
 ## Assertions
 
-- `reads_product_and_engineer_docs`: 先读预期行为文档
-- `classifies_expectation_change`: 识别需求预期变更
-- `routes_to_existing_project_update`: 回到 PM 更新路径
-- `routes_trd_gap_to_trd_gen`: TRD gap 交回 trd-gen
-- `requires_plan_after_alignment`: 对齐后仍需实施计划
-- `does_not_route_directly_to_implementation`: 不得直接进入实现
+- PASS `reads_product_and_engineer_docs`: the route requires same-feature PM PRD, Engineer TRD, and existing product decision records before implementation routing.
+- PASS `classifies_expectation_change`: archived notifications appearing in the active list is treated as a possible approved-expectation change, not as an automatic small code edit.
+- PASS `routes_to_existing_project_update`: expectation conflicts return to `pm-agent:idea-to-spec` through the `existing-project-update` lane.
+- PASS `routes_trd_gap_to_trd_gen`: missing, stale, or incomplete TRD coverage is handed to `engineer-agent:trd-gen` with a TRD gap packet.
+- PASS `requires_plan_after_alignment`: implementation can proceed only after PRD/TRD alignment and still requires a confirmed implementation plan.
+- PASS `does_not_route_directly_to_implementation`: the user's request to skip alignment is not accepted as permission to enter coding or planning directly.
 
-## With Skill
+## With Skill Behavior
 
-Observed behavior:
+`engineer-agent` satisfies the existing-feature alignment gate. Its PM handoff entry gate accepts only an explicit packet or equivalent specialist entry basis, and its routing rules send production behavior changes through PRD/TRD alignment before `feature-implementor`. The directly referenced `feature-implementor` gate confirms that expectation changes go back to PM, TRD gaps go to `trd-gen`, and plan confirmation remains mandatory after alignment.
 
-- Fresh Codex subagent validation on 2026-06-23 read the current skill docs, Engineer README, eval definition, fixture metadata/context, and this comparison; all listed assertions are satisfied.
-  `engineer-agent` enforces the existing-feature PRD/TRD alignment gate before
-  implementation or debugging, routes expectation changes to PM, routes TRD
-  gaps to `trd-gen`, requires a confirmed implementation plan after alignment,
-  and treats user requests to skip PRD alignment as blocker/risk rather than a
-  valid continue reason.
-- 当前 SKILL.md 明确 Existing Feature Alignment Gate：现有功能行为变更、小改动或 bug fix 进入 `feature-implementor` 或 `debugger` 前，必须先识别相关 feature，并读取 `docs/pm/{feature_path}/PRD.md`、`docs/engineer/{feature_path}/TRD.md`，以及存在的 `docs/pm/{feature_path}/DECISIONS.md` 或其他产品决策记录。
-- 对 archived 通知显示到 active 列表这类请求，当前 SKILL.md 不把“小改动”默认视为可直接实现，而是先分类：如果是在改变已批准预期，路由回 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径更新 PRD 或产品决策记录。
-- 如果 PRD 或产品决策稳定但 TRD 缺失、过期、不完整或与请求/代码冲突，当前 SKILL.md 要求构造 TRD gap packet，并交给 `engineer-agent:trd-gen` 补完整 TRD。
-- 只有在 PRD/TRD 对齐后才能进入 `feature-implementor`；进入后仍由 `feature-implementor` 基于确认 TRD 写入 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`，并等待实现确认后再编码。
+## Without Skill Baseline
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+Without the router skill and Engineer README, a generic answer would likely accept the user's "small change" framing and route straight to implementation planning or code changes. It may mention checking docs, but it is less likely to classify the active-versus-archived behavior as a product expectation change or to block direct implementation until PRD/TRD and decision records align.
 
 ## Failures
 
@@ -50,8 +38,9 @@ Observed behavior:
 
 ## Next Steps
 
-- 保持该 eval 覆盖现有功能变更的 PRD/TRD 对齐门禁。
+- Keep this eval as regression coverage for existing-feature PRD/TRD alignment and user attempts to bypass PM updates.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- No runtime artifacts were created for this validation.
+- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.

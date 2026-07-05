@@ -6,36 +6,34 @@
 - Test case: route-ui-update-request
 - Test set: PM entry evals for issue #52 / FR-006 scenario 4
 - Entry: workspace `eval-4-route-ui-update-request`
-- Latest result: PASS (deterministic Batch 2 route coverage)
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: frontend UI update request with ambiguous PM / Designer / Engineer
-  ownership
+- Fixture: frontend UI update request with ambiguous PM / Designer / Engineer ownership
+- Expected output: classify as `design` or `existing_update`, decide whether PM expectation update, Designer artifact, or Engineer implementation is needed, and delay implementation until alignment is complete.
 
 ## With Skill
 
-- Classifies the request as `design` or `existing_update`.
-- Checks whether product expectations changed before selecting a downstream
-  owner.
-- Sends design artifacts to Designer and waits for PM / TRD / design alignment
-  before Engineer frontend implementation.
+- The `pm-agent` protocol distinguishes UI / UX design artifacts from frontend implementation.
+- It requires checking whether the settings page layout change alters product expectations before picking Designer or Engineer.
+- It routes design artifacts to Designer and waits for PM / TRD / design alignment before Engineer frontend implementation.
 
-## Without Skill / Baseline
+## Without Skill / without_skill Baseline
 
-- May treat UI wording as direct frontend implementation.
-- Less consistently separates design artifact needs from code execution.
+- The baseline read the eval item and fixture before target skill docs. A generic response could treat the UI request as direct frontend work.
+- It may mention design review, but is less consistent about separating PM expectation changes, design deliverables, and implementation readiness.
 
 ## Failures
 
-- None recorded in deterministic coverage.
+- None. The current `pm-agent` protocol satisfies the UI routing assertions.
 
 ## Next Steps
 
-- Re-run with fresh Codex subagent validation in the post-merge centralized
-  skill-eval pass.
+- Keep this eval as PM entry coverage for UI update routing.
+- Re-run fresh validation if Designer or Engineer handoff boundaries change.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, and diagnostics should not be committed.
+- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.

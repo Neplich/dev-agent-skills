@@ -7,32 +7,29 @@
 - Eval: `eval-003-nested-feature-alignment-routing`
 - Test case: nested-feature-alignment-routing
 - Workspace: `workspace/eval-003-nested-feature-alignment-routing`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation on 2026-06-23
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Nested PRD/TRD pair at `chat-interface/history-search`.
-- Expected output: route-level alignment reads the nested PRD/TRD pair before choosing PM update, TRD gap, debugger, or feature-implementor.
-- Fixture files read: `README.md`, nested PRD/TRD, workspace metadata, and this comparison.
+- Fixture: existing `chat-interface/history-search` PRD/TRD with a small search result ordering change.
+- Context read before applying the skill: `evals.json`, workspace `README.md`, `eval_metadata.json`, `docs/pm/chat-interface/history-search/PRD.md`, and `docs/engineer/chat-interface/history-search/TRD.md`.
 
 ## Assertions
 
-- `resolves_nested_feature_path`: identifies and reads the nested feature path.
-- `does_not_use_sibling_or_parent_only_path`: does not substitute sibling or parent-only docs.
-- `routes_requirement_change_to_pm`: routes expectation changes to PM.
-- `routes_trd_mismatch_to_trd_gen`: routes TRD mismatch to `trd-gen`.
-- `does_not_execute_directly`: performs route-only output.
+- PASS `resolves_nested_feature_path`: the route preserves `chat-interface/history-search` and reads the same-path PRD and TRD.
+- PASS `does_not_use_sibling_or_parent_only_path`: the route does not collapse to `history-search` or parent-only `chat-interface`.
+- PASS `routes_requirement_change_to_pm`: ordering changes that alter approved expectations return to `pm-agent:idea-to-spec` existing-project update.
+- PASS `routes_trd_mismatch_to_trd_gen`: stale, missing, or path-mismatched TRDs go to `engineer-agent:trd-gen`.
+- PASS `does_not_execute_directly`: route-only work does not write plans, code, or tests.
 
-## With Skill
+## With Skill Behavior
 
-- Fresh Codex subagent validation on 2026-06-23 read the current skill docs, Engineer README, eval definition, fixture metadata/context, and this comparison; all listed assertions are satisfied.
-- Expected behavior is defined by the updated `engineer-agent` Existing Feature Alignment Gate.
+`engineer-agent` satisfies the nested feature-path contract. It consumes the same-path PM and Engineer documents, preserves the canonical `feature_path`, and keeps implementation blocked until PRD/TRD expectations align. The directly referenced `trd-gen` and `feature-implementor` gates reinforce that path mismatches and stale TRDs are not fixed by implementation routing.
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records the intended regression surface for nested feature routing.
+## Without Skill Baseline
+
+Without the router skill and Engineer README, a generic response could treat "History Search" as a top-level feature or use only the parent chat interface context. It might recommend a direct sorting change because the user calls it small, missing the requirement that child feature docs and `related_prd` stay aligned before routing.
 
 ## Failures
 
@@ -40,8 +37,9 @@
 
 ## Next Steps
 
-- Keep this eval focused on the nested feature_path regression surface covered by the fixture.
+- Keep this eval as regression coverage for nested `feature_path` resolution and same-path PRD/TRD alignment.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- No runtime artifacts were created for this validation.
+- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.

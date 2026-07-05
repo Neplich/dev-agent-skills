@@ -6,39 +6,34 @@
 - Test case: direct-downstream-without-handoff
 - Test set: PM entry evals for issue #52 / FR-006 scenario 7
 - Entry: workspace `eval-7-direct-downstream-without-handoff`
-- Latest result: PARTIAL - deterministic Batch 4 gate coverage exists, but fresh
-  Codex subagent validation and a newly generated without-skill baseline are
-  deferred to the post-merge centralized skill-eval pass.
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: direct downstream role-router request without PM handoff context
+- Expected output: reject direct downstream execution, return to `pm-agent`, and require PM handoff packet or equivalent confirmed docs.
 
 ## With Skill
 
-- Rejects direct downstream execution without a PM handoff packet or equivalent
-  confirmed source documents.
-- Returns the request to `pm-agent` for request type, scope, feature path, and
-  handoff readiness classification.
-- Avoids starting implementation, tests, delivery, or other role execution.
+- The `pm-agent` and downstream execution contract reject starting Engineer implementation without PM classification and source context.
+- It returns the request to `pm-agent` for request type, scope, feature path, and handoff readiness classification.
+- It requires PM handoff packet or equivalent confirmed PRD / TRD / design / test / deployment / security docs before downstream execution.
 
-## Without Skill / Baseline
+## Without Skill / without_skill Baseline
 
-- May treat the named downstream role as direct execution permission.
-- May begin implementation before source documents or scope are confirmed.
+- The baseline read the eval item and fixture before target skill docs. A generic response could honor the user's "directly use engineer-agent" instruction and start implementation planning.
+- It is less reliable about enforcing the PM handoff entry gate when the user explicitly asks to skip PM docs.
 
-## Failures / Coverage Gaps
+## Failures
 
-- Fresh Codex subagent validation has not run for this scenario in this PR.
-- A new without-skill baseline will be generated in the post-merge centralized
-  skill-eval pass.
+- None. The current PM entry gate satisfies all direct-downstream defense assertions.
 
 ## Next Steps
 
-- Run fresh with-skill and without-skill validation in the centralized eval
-  phase after Batch 4 merges.
+- Keep this eval as PM entry coverage for direct role-router bypass attempts.
+- Re-run fresh validation if downstream role-router entry gates change.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, and diagnostics should not be committed.
+- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.

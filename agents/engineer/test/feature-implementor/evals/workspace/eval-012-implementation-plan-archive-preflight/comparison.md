@@ -7,57 +7,30 @@
 - Eval: `eval-012-implementation-plan-archive-preflight`
 - Test case: implementation-plan-archive-preflight
 - Workspace: `workspace/eval-012-implementation-plan-archive-preflight`
-- Latest result: PASS - fresh Codex subagent validation confirmed the archive preflight gate blocks direct overwrite of an unarchived active plan.
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Confirmed PRD/TRD plus an existing completed `IMPLEMENTATION_PLAN.md` on `feature_path: payment-refund` that has not been archived.
-- Run set: with-skill fresh subagent validation and a separate fresh without_skill baseline run against the same prompt and fixture.
-- Expected output: block direct overwrite of the active plan; report the existing plan path, status, and scope; ask the user to archive-then-create, continue updating, or supersede with a reason.
+- Fixture files read before skill use: `README.md`, `eval_metadata.json`, `docs/pm/payment-refund/PRD.md`, `docs/engineer/payment-refund/TRD.md`, and `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`.
+- Fixture summary: PRD/TRD now cover partial refunds, but an existing active `IMPLEMENTATION_PLAN.md` for `implementation_scope: full-refund-flow` has `status: Implemented` and has not been archived.
+- Expected output: run archive preflight, block direct overwrite, report existing plan path/status/scope, and ask the user to choose archive-then-create, continue-update, or supersede-with-reason.
 
 ## Assertions
 
-- PASS `runs_pre_plan_archive_scan`: with-skill behavior scans the existing active plan and `implementation-plans/archive/` before writing a new plan.
-- PASS `blocks_direct_overwrite`: with-skill behavior blocks overwriting or replacing the active `IMPLEMENTATION_PLAN.md` while the handling decision is unresolved.
-- PASS `offers_three_handling_options`: with-skill behavior asks the user to choose archive-then-create, continue-updating, or supersede-with-reason.
-- PASS `keeps_active_entry_fixed`: with-skill behavior keeps the active plan entry at `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`.
-- PASS `does_not_implement_directly`: with-skill behavior does not modify code or claim implementation completed.
+- PASS `runs_pre_plan_archive_scan`: the skill scans active `IMPLEMENTATION_PLAN.md` and `implementation-plans/archive/` before a new plan.
+- PASS `blocks_direct_overwrite`: unresolved active-plan handling blocks overwriting or replacing the active entry.
+- PASS `offers_three_handling_options`: the user must choose archive completed plan then create, continue updating, or archive as `Superseded` with reason then create.
+- PASS `keeps_active_entry_fixed`: active entry stays `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`; history goes under `implementation-plans/archive/`.
+- PASS `does_not_implement_directly`: no code, implementation, or verification is performed before plan handling and confirmation.
 
-## With Skill
+## With Skill Behavior
 
-Fresh Codex subagent validation applied `feature-implementor` and read the Agent
-README, public skill doc, planner, reviewer, output conventions, eval definition,
-and fixture.
+Fresh with-skill validation confirmed the Plan And Archive Gate. The current skill should first confirm the PRD/TRD feature path, then scan `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md` and the archive directory. Because the fixture has an unarchived active plan with completed full-refund scope and no recorded handling decision for the new partial-refund scope, the skill must stop before writing a new plan, report the existing plan path, `status: Implemented`, and `implementation_scope: full-refund-flow`, and ask for one of the three allowed handling decisions.
 
-The subagent concluded that `feature-implementor` should first confirm PRD/TRD
-alignment, then run the pre-plan archive scan. The fixture contains
-`docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md` with
-`status: Implemented`, `implementation_scope: full-refund-flow`, and no archive
-record. Therefore the skill must not create or overwrite a new active plan for
-the partial-refund scope. It must report the old plan path, status, and scope,
-then ask the user to choose one of the three allowed handling paths.
+## Without Skill Baseline
 
-With-skill assertion verdicts were all PASS. There were no blocking findings.
-
-## Without Skill / Baseline
-
-A separate fresh Codex subagent generated a without_skill baseline without
-reading or applying `feature-implementor` or the Engineer Agent README.
-
-The baseline would likely read the PRD/TRD and notice the existing
-`IMPLEMENTATION_PLAN.md`, but without the archive gate it would probably draft
-or prepare a replacement plan instead of formally blocking. Baseline behavior
-was assessed as:
-
-- PARTIAL `runs_pre_plan_archive_scan`: likely notices active plan, but does not reliably scan archive.
-- PARTIAL `blocks_direct_overwrite`: likely avoids coding, but may still draft a replacement active plan.
-- FAIL `offers_three_handling_options`: does not reliably require the exact three archive/update/supersede choices.
-- PARTIAL `keeps_active_entry_fixed`: may use the active path, but does not reliably state archive-only history handling.
-- PASS `does_not_implement_directly`: prompt already asks not to code.
-
-The baseline gap confirms the new skill rule adds behavior that generic
-implementation planning does not reliably provide.
+The fresh without-skill baseline was summarized before reading skill docs. A generic planner would likely notice the existing active plan but might draft a replacement or update it directly for partial refunds. It would not reliably scan the archive directory, require the exact three handling options, keep the active entry fixed as the only live plan, or block all writes until the handling decision is explicit.
 
 ## Failures
 
@@ -65,9 +38,9 @@ implementation planning does not reliably provide.
 
 ## Next Steps
 
-- Keep this eval in the `feature-implementor` regression set.
-- If archive metadata rules change, update the fixture and re-run fresh with-skill and without_skill validation.
+- Keep this eval focused on archive preflight blocking direct overwrite of an unarchived active plan.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, diagnostics, run status files, and `comparison.auto.md` should not be committed.
+- This validation did not create runtime artifacts.
+- Runtime transcripts, verdicts, timing files, outputs, diagnostics, run status files, and `comparison.auto.md` must not be committed.
