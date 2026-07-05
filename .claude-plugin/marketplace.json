@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "pm-agent",
-      "description": "Dispatcher for product discovery, scope shaping, specs, empty/new-repo app ideas before coding, AI assistant/chat UI concept shaping, competitive research, release communication, roadmaps, and GitHub project status. Hands off to engineer-agent for technical planning and to designer-agent for UI/UX deliverables when those stages apply.",
+      "description": "Public entry dispatcher for product ideas, requirement changes, bug reports, implementation requests, tests, UI/design, deployment, security, release communication, roadmaps, and GitHub project status. Classifies scope first, then hands off to downstream role agents or PM specialists when ready.",
       "source": "./agents/product_manager",
       "strict": false,
       "skills": [
