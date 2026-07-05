@@ -1,6 +1,7 @@
 ---
 name: deployment-planner
-description: "Use when a project needs new or updated deployment configuration, when an existing system adds services or deployment targets, or when `deploy/` assets must be created or extended for local, Docker, or Kubernetes environments."
+description: "Internal DevOps specialist invoked by devops-agent after pm-agent handoff to plan deployment configuration, service targets, local runtime, Docker, Kubernetes, and deploy assets."
+visibility: internal
 ---
 
 # Deployment Planner

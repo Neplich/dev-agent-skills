@@ -1,6 +1,7 @@
 ---
 name: delivery
-description: "Manage Git branches, commits, and PRs for delivering completed work. Use this skill when code is ready to be committed, a PR needs to be created, or changes need to be pushed. Trigger on phrases like '提交代码', '创建 PR', '提 PR', 'commit', 'create pull request', 'push changes', 'deliver', or after feature-implementor and test-writer complete their work."
+description: "Internal engineering specialist invoked by engineer-agent after pm-agent handoff to manage branch delivery, commits, pushes, PR creation, and PR update evidence for completed work."
+visibility: internal
 ---
 
 # Delivery

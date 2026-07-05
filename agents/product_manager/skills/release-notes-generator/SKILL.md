@@ -1,6 +1,7 @@
 ---
 name: release-notes-generator
-description: Generate user-facing release notes for a specific version from GitHub PRs and release tags. Unlike changelog-generator, release notes explain why changes matter to users. Use this skill when the user asks to write release notes, draft a release announcement, create a GitHub release body, prepare or publish a draft release, or summarize what changed in a version.
+description: "Internal PM specialist invoked by pm-agent for release communication to draft user-facing release notes, release announcements, and GitHub release bodies from version context."
+visibility: internal
 ---
 
 # Release Notes Generator

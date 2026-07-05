@@ -1,6 +1,7 @@
 ---
 name: cicd-bootstrap
-description: "Use when a repository needs CI/CD automation, when deployment configs already exist but pipeline automation is missing, or when release workflows must be added to GitHub Actions or GitLab CI."
+description: "Internal DevOps specialist invoked by devops-agent after pm-agent handoff to add or update CI/CD automation, GitHub Actions, GitLab CI, and release workflow configuration."
+visibility: internal
 ---
 
 # CI/CD Bootstrap

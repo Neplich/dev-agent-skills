@@ -1,6 +1,7 @@
 ---
 name: test-writer
-description: "Write tests based on PM Test Spec and implemented code. Use this skill whenever the user asks to write tests, add test coverage, create unit tests, or validate an implementation with tests. Trigger on phrases like '写测试', '补测试', '添加测试', 'write tests', 'add test coverage', 'test this feature', or after feature-implementor completes and tests are needed."
+description: "Internal engineering specialist invoked by engineer-agent after pm-agent handoff to add or update tests from confirmed PM test expectations, implementation context, and repository conventions."
+visibility: internal
 ---
 
 # Test Writer

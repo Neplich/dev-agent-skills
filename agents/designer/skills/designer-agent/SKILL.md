@@ -1,6 +1,7 @@
 ---
 name: designer-agent
-description: Route design work to the right downstream skill. Use when the user needs UX flows, UI structure, information architecture, screen definitions, wireframes, redesign direction, reference-site pattern analysis, or a visual design system covering color, type, components, and copy tone. Trigger on phrases like "设计一下流程", "做个页面方案", "重做这个界面", "梳理信息架构", "出 wireframe", "参考这个网站做风格", "定义视觉系统", or any design-oriented request that should be routed before execution."
+description: "Downstream design router invoked after pm-agent handoff. Classifies confirmed design scope across UX flows, information architecture, screen definitions, wireframes, reference-pattern analysis, and visual-system work, then delegates to design specialists."
+visibility: internal
 ---
 
 # Designer Agent Dispatcher

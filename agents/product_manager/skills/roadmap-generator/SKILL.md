@@ -1,6 +1,7 @@
 ---
 name: roadmap-generator
-description: Generate or update a project roadmap (docs/roadmap.md) from GitHub Milestones, Issues, and PRs. Use this skill when the user asks to create a roadmap, update the roadmap, show what's planned, visualize project timeline, or sync the roadmap with GitHub. Trigger on phrases like "生成路线图", "更新 roadmap", "项目规划", "下个版本计划什么", "roadmap 同步", "milestone 规划", or any request about project planning and timeline.
+description: "Internal PM specialist invoked by pm-agent for planning to generate or update roadmap docs from GitHub milestones, issues, PRs, and release context."
+visibility: internal
 ---
 
 # Roadmap Generator

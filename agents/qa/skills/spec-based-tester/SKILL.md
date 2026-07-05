@@ -1,6 +1,7 @@
 ---
 name: spec-based-tester
-description: "QA validation protocol for spec-backed requirements. Reads PM docs, implementation context, and repo instructions before choosing the safest executable test path."
+description: "Internal QA specialist invoked by qa-agent after pm-agent handoff to validate spec-backed requirements using PM docs, implementation context, repo instructions, and the safest executable test path."
+visibility: internal
 ---
 
 # Spec-Based Tester

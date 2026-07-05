@@ -1,6 +1,7 @@
 ---
 name: regression-suite
-description: "Verify fixes with evidence reuse, adjacent-risk review, and clear pass/fail/blocked reporting for QA handoff."
+description: "Internal QA specialist invoked by qa-agent after pm-agent handoff to verify fixes with reused evidence, adjacent-risk review, and clear pass/fail or blocked reporting."
+visibility: internal
 ---
 
 # Regression Suite

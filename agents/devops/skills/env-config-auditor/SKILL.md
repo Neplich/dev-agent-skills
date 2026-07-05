@@ -1,6 +1,7 @@
 ---
 name: env-config-auditor
-description: "Use when checking deployment readiness, tracing missing environment variables, or reviewing environment configuration coverage across local, CI/CD, and runtime environments."
+description: "Internal DevOps specialist invoked by devops-agent after pm-agent handoff to audit deployment readiness, environment variables, and configuration coverage across local, CI/CD, and runtime contexts."
+visibility: internal
 ---
 
 # Environment Config Auditor

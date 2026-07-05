@@ -1,6 +1,7 @@
 ---
 name: incident-playbook-writer
-description: "Use when a deployed system needs rollback guidance, incident response instructions, troubleshooting runbooks, or on-call preparation tied to the repository's actual deployment setup."
+description: "Internal DevOps specialist invoked by devops-agent after pm-agent handoff to write rollback guidance, incident response steps, troubleshooting runbooks, and on-call preparation tied to deployment setup."
+visibility: internal
 ---
 
 # Incident Playbook Writer

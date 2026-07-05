@@ -9,18 +9,18 @@ This installer keeps the repository layout unchanged for Claude marketplace comp
 Before making any filesystem changes, ask the user these two questions and wait for both answers:
 
 1. Do you want a `personal` install or a `project` install?
-2. Do you want to install `all` agents, or a selected subset from this list?
+2. Do you want to install `pm-agent` only, `all` agents, or a selected subset from this list?
 
-Available agents:
+Available public entry and downstream capabilities:
 
-- `pm-agent` - product planning and docs
-- `engineer-agent` - implementation, testing, debugging, delivery
-- `qa-agent` - exploratory and spec-based testing
-- `devops-agent` - deployment, CI/CD, environment audits
-- `designer-agent` - UI/UX and visual design
-- `security-agent` - appsec, authz, dependency, privacy review
+- `pm-agent` - direct user entry for product planning, request classification, docs, GitHub status, and downstream handoff
+- `engineer-agent` - downstream engineering capability for PM handoff after scope is confirmed
+- `qa-agent` - downstream QA capability for PM handoff after expectations are confirmed
+- `devops-agent` - downstream DevOps capability for PM handoff after operational scope is confirmed
+- `designer-agent` - downstream design capability for PM handoff after design scope is confirmed
+- `security-agent` - downstream security capability for PM handoff after security scope is confirmed
 
-If the user chooses a subset, allow multiple selections.
+Select `pm-agent` as the direct user entry. If the user chooses a subset, allow multiple selections for downstream PM-orchestrated capabilities.
 
 ## Installation Model
 
@@ -34,6 +34,8 @@ Clone or update this repository under the selected `.agents` root, then expose e
   - symlink skills to `<project>/.agents/skills/<skill-name>`
 
 Do not move, flatten, or rewrite the repository's `agents/*/skills/*` directories.
+
+The symlink model keeps downstream skills available for PM-orchestrated handoff. Direct user requests should start from `pm-agent`; downstream role routers and specialist skills require a PM handoff packet or equivalent confirmed document chain.
 
 Agent to source directory mapping:
 
@@ -181,7 +183,7 @@ link_agent_skills "agents/designer/skills"
 link_agent_skills "agents/security/skills"
 ```
 
-If the user chose a subset, run only the matching lines.
+If the user chose `pm-agent` only, run only the product manager line. If the user chose a subset, run only the matching lines.
 
 For example, for `pm-agent`, `engineer-agent`, and `qa-agent`:
 
@@ -334,16 +336,11 @@ $SKILL_ROOT/engineer-agent/SKILL.md
 $SKILL_ROOT/qa-agent/SKILL.md
 ```
 
-After restarting Codex, verify that the installed agent commands are available, such as:
+After restarting Codex, verify that the direct entry command is available:
 
 - `/pm-agent`
-- `/engineer-agent`
-- `/qa-agent`
-- `/devops-agent`
-- `/designer-agent`
-- `/security-agent`
 
-Only the commands for the selected agents need to be present.
+Selected downstream skills may also be discoverable as linked skill directories, but they are PM-orchestrated capabilities rather than direct user entries.
 
 ## Updating
 

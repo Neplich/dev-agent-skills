@@ -1,6 +1,7 @@
 ---
 name: idea-to-spec
-description: "Use this when the user wants to turn a product idea, an empty-workspace app request, an existing-project feature request, or a spec change into structured PM or technical design output before implementation."
+description: "Internal PM specialist invoked by pm-agent to turn product ideas, empty-workspace app requests, existing-feature changes, or spec updates into structured PM/design outputs before downstream work."
+visibility: internal
 ---
 
 # Idea to Spec

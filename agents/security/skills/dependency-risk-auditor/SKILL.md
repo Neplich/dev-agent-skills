@@ -1,6 +1,7 @@
 ---
 name: dependency-risk-auditor
-description: Audit project dependencies for known vulnerabilities, abandoned packages, and supply chain risks.
+description: "Internal security specialist invoked by security-agent after pm-agent handoff to audit dependencies for vulnerabilities, abandonment, licensing, and supply-chain risk."
+visibility: internal
 ---
 
 ## Execution Steps
