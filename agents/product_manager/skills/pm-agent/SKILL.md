@@ -1,6 +1,6 @@
 ---
 name: pm-agent
-description: Public entry router for product ideas, requirement changes, bug reports, implementation requests, tests, UI/design, deployment, security, delivery, commits, pushes, PRs, release communication, roadmaps, and GitHub project status. Classifies scope first, then routes to PM specialists or hands off to downstream role agents when ready.
+description: Public entry router for product ideas, requirement changes, inherited-project feature catalogs, competitive research, battlecards, bug reports, implementation requests, tests, UI/design, deployment, security, delivery, commits, pushes, PRs, release communication, roadmaps, and GitHub project status. Classifies scope first, then routes to PM specialists or hands off to downstream role agents when ready.
 ---
 
 # PM Agent Dispatcher
