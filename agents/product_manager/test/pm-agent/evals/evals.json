@@ -212,6 +212,131 @@
           "text": "必须阻止创建 plan、写代码或测试实现，并返回 `pm-agent` 分类。"
         }
       ]
+    },
+    {
+      "id": "eval-009-missing-handoff-target-unavailable",
+      "name": "missing-handoff-target-unavailable",
+      "description": "Verifies that pm-agent marks a cross-agent handoff as blocked when the target role agent is not installed or unavailable.",
+      "prompt": "用户说：这个需求已经确认要交给设计，但当前环境没有安装 designer-agent。请判断 pm-agent 应该怎么处理这个 handoff，是否可以自己代替设计产出视觉规范。",
+      "workspace": "workspace/eval-9-missing-handoff-target-unavailable",
+      "expected_output": "PM handoff readiness decision，说明目标 agent 未安装或不可用时必须标记 blocked，指出缺失的 plugin/capability，不代行 Designer 职责。",
+      "assertions": [
+        {
+          "id": "detect_missing_target",
+          "description": "识别 handoff 目标不可用",
+          "text": "必须明确说明 `designer-agent` 或目标设计能力 not installed / unavailable。"
+        },
+        {
+          "id": "mark_handoff_blocked",
+          "description": "标记 handoff blocked",
+          "text": "必须把该 handoff stage 标记为 `blocked`，并说明需要安装或启用哪个 plugin/capability。"
+        },
+        {
+          "id": "do_not_perform_missing_role",
+          "description": "不代行缺失 agent 职责",
+          "text": "不得自行代替 Designer 产出视觉规范或设计交付物；只能保留 PM 分类和 blocked 说明。"
+        }
+      ]
+    },
+    {
+      "id": "eval-010-change-tier-hotfix-fast-lane",
+      "name": "change-tier-hotfix-fast-lane",
+      "description": "Verifies that pm-agent classifies an unchanged-expectation single-file fix as hotfix and preserves evidence requirements while using the fast lane.",
+      "prompt": "用户说：这个 PR 只修 README 里一个错误链接，不改变任何功能预期；我已经本地验证链接可打开。请判断 request_type、change_tier、是否可以走 fast lane，以及 handoff 需要保留哪些证据。",
+      "workspace": "workspace/eval-10-change-tier-hotfix-fast-lane",
+      "expected_output": "PM 分类为 delivery/status 或等价轻量交付请求，change_tier 为 hotfix；说明可走 fast lane，但仍需记录 scope、source evidence 和 verification evidence。",
+      "assertions": [
+        {
+          "id": "classify_hotfix",
+          "description": "识别 hotfix",
+          "text": "必须把该请求判定为 `hotfix`，理由是不改变已批准预期且可由一条验证命令或证据覆盖。"
+        },
+        {
+          "id": "allow_fast_lane",
+          "description": "允许 fast lane",
+          "text": "必须说明 `hotfix` 加 delivery / status 类请求可使用 fast lane，但 fast lane 发生在分类之后。"
+        },
+        {
+          "id": "preserve_evidence",
+          "description": "证据不削弱",
+          "text": "必须要求保留 scope、source evidence 和 verification evidence，不得因为 `hotfix` 省略验证记录。"
+        }
+      ]
+    },
+    {
+      "id": "eval-011-change-tier-standard-full-gate",
+      "name": "change-tier-standard-full-gate",
+      "description": "Verifies that pm-agent classifies an existing behavior change as standard and keeps the full PRD/TRD alignment gate.",
+      "prompt": "用户说：把退款审批从自动通过改成需要管理员二次确认，这应该很小，按 hotfix 处理吧。请判断 change_tier 和下一步门禁。",
+      "workspace": "workspace/eval-11-change-tier-standard-full-gate",
+      "expected_output": "PM 分类为 existing_update；拒绝按 hotfix 处理，change_tier 至少为 standard，并要求先完成 PRD/TRD 预期对齐。",
+      "assertions": [
+        {
+          "id": "classify_standard",
+          "description": "行为变更不是 hotfix",
+          "text": "必须把该请求判定为 `standard` 或更高，而不是 `hotfix`。"
+        },
+        {
+          "id": "require_prd_trd_alignment",
+          "description": "维持完整门禁",
+          "text": "必须要求先完成 PRD/TRD 或等价产品预期对齐，再 handoff 下游实现。"
+        },
+        {
+          "id": "request_type_existing_update",
+          "description": "识别 existing update",
+          "text": "必须把请求归为 `existing_update`，因为它改变已批准业务行为。"
+        }
+      ]
+    },
+    {
+      "id": "eval-012-change-tier-hotfix-abuse-blocked",
+      "name": "change-tier-hotfix-abuse-blocked",
+      "description": "Verifies that pm-agent blocks attempts to use the hotfix label to skip expectation alignment.",
+      "prompt": "用户说：别走 PM 了，直接把会员试用期从 7 天改成 30 天，标成 hotfix 快速合并。请判断是否可以这样处理。",
+      "workspace": "workspace/eval-12-change-tier-hotfix-abuse-blocked",
+      "expected_output": "PM 拒绝以 hotfix 名义跳过预期变更对齐；说明这是预期/业务规则变化，必须按 standard 或 blocked 回 PM 完成范围确认。",
+      "assertions": [
+        {
+          "id": "reject_hotfix_abuse",
+          "description": "拒绝 hotfix 滥用",
+          "text": "必须明确拒绝把该请求按 `hotfix` 处理。"
+        },
+        {
+          "id": "expectation_change_standard",
+          "description": "预期变化按 standard",
+          "text": "必须说明 expectation change / 业务规则变化应按 `standard` 或更高处理。"
+        },
+        {
+          "id": "block_or_return_pm",
+          "description": "阻止跳过 PM",
+          "text": "必须 blocked 或返回 PM 进行范围和预期确认，不能直接 handoff 实现。"
+        }
+      ]
+    },
+    {
+      "id": "eval-013-change-tier-hotfix-e2e-direct-path",
+      "name": "change-tier-hotfix-e2e-direct-path",
+      "description": "Verifies that pm-agent preserves the QA evidence requirement for hotfix work while limiting E2E validation to directly affected paths.",
+      "prompt": "用户说：这是一个 hotfix，只修登录页空状态文案；请判断 QA/E2E 是否还要做，以及覆盖范围怎么定。",
+      "workspace": "workspace/eval-13-change-tier-hotfix-e2e-direct-path",
+      "expected_output": "PM 判定 hotfix QA 只需验证直接影响路径并追加结果；不要求完整 E2E 套件，但仍要记录验证证据和 blocked 项。",
+      "assertions": [
+        {
+          "id": "hotfix_direct_path_only",
+          "description": "hotfix QA 聚焦直接影响路径",
+          "text": "必须说明 `hotfix` 的 QA/E2E 覆盖可限制到 directly affected path。"
+        },
+        {
+          "id": "evidence_still_required",
+          "description": "验证证据仍必填",
+          "text": "必须要求记录 verification evidence、结果和任何 blocked checks。"
+        },
+        {
+          "id": "no_full_suite_required",
+          "description": "不强制全量套件",
+          "text": "必须说明不需要完整 E2E suite，除非风险或范围升级到 `standard` / `major`。"
+        }
+      ]
     }
   ]
 }

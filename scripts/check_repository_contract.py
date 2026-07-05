@@ -271,6 +271,28 @@ def validate_skill(root: Path, skill_dir: Path, errors: list[ContractError]) -> 
         add_error(errors, skill_doc, "frontmatter name must use lowercase letters, digits, and hyphens only")
 
 
+def validate_skill_visibility(root: Path, errors: list[ContractError]) -> None:
+    """PM-only public entry contract: only pm-agent may omit internal visibility."""
+    for skill_doc in sorted(root.glob("agents/*/skills/*/SKILL.md")):
+        metadata = parse_frontmatter(skill_doc, errors)
+        if metadata is None:
+            continue
+
+        name = metadata.get("name", "")
+        visibility = metadata.get("visibility")
+        if name == "pm-agent":
+            if visibility == "internal":
+                add_error(errors, skill_doc, "pm-agent must remain the public entry and not be internal")
+            continue
+
+        if visibility != "internal":
+            add_error(
+                errors,
+                skill_doc,
+                "non-pm skill frontmatter must declare visibility: internal",
+            )
+
+
 def prerelease_identifier_key(identifier: str) -> tuple[int, int | str]:
     if identifier.isdigit():
         return 0, int(identifier)
@@ -1170,6 +1192,7 @@ def validate_all(root: Path | None = None) -> list[ContractError]:
     errors: list[ContractError] = []
     validate_claude_symlink(root, errors)
     validate_marketplace(root, errors)
+    validate_skill_visibility(root, errors)
     validate_skills_lock(root, errors)
     validate_feature_document_metadata(root, errors)
     validate_implementation_plan_metadata(root, errors)

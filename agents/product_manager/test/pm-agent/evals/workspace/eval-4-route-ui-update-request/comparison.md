@@ -33,8 +33,8 @@
 
 ## Next Steps
 
-- Re-run with fresh Codex subagent validation when the Batch 4 full eval pass is
-  authorized.
+- Re-run with fresh Codex subagent validation in the post-merge centralized
+  skill-eval pass.
 
 ## Runtime Artifacts Policy
 

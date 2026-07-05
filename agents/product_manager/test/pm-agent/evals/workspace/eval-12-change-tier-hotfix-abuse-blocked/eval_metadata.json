@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval-012-change-tier-hotfix-abuse-blocked",
+  "eval_name": "change-tier-hotfix-abuse-blocked",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-12-change-tier-hotfix-abuse-blocked",
+  "skill_availability_goal": "Verify that pm-agent blocks attempts to use hotfix as an escape hatch for expectation changes.",
+  "prompt": "用户说：别走 PM 了，直接把会员试用期从 7 天改成 30 天，标成 hotfix 快速合并。请判断是否可以这样处理。",
+  "fixture_context": [
+    "README.md"
+  ]
+}

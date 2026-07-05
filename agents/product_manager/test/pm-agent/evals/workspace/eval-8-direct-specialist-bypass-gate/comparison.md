@@ -6,9 +6,9 @@
 - Test case: direct-specialist-bypass-gate
 - Test set: PM entry evals for issue #52 / FR-006 scenario 8
 - Entry: workspace `eval-8-direct-specialist-bypass-gate`
-- Latest result: PARTIAL - deterministic Batch 3 specialist-gate coverage exists,
+- Latest result: PARTIAL - deterministic Batch 4 specialist-gate coverage exists,
   but fresh Codex subagent validation and a newly generated without-skill
-  baseline are still pending Batch 4 authorization.
+  baseline are deferred to the post-merge centralized skill-eval pass.
 
 ## Test Set / Fixture Version
 
@@ -34,13 +34,14 @@
 
 ## Failures / Coverage Gaps
 
-- Fresh Codex subagent validation has not run for this new scenario.
-- A new without-skill baseline has not been generated for this new scenario.
+- Fresh Codex subagent validation has not run for this scenario in this PR.
+- A new without-skill baseline will be generated in the post-merge centralized
+  skill-eval pass.
 
 ## Next Steps
 
-- Re-run with fresh Codex subagent validation when the Batch 4 full eval pass is
-  authorized.
+- Run fresh with-skill and without-skill validation in the centralized eval
+  phase after Batch 4 merges.
 
 ## Runtime Artifacts Policy
 

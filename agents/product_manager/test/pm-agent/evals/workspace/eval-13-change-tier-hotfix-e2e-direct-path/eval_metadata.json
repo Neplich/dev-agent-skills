@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval-013-change-tier-hotfix-e2e-direct-path",
+  "eval_name": "change-tier-hotfix-e2e-direct-path",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-13-change-tier-hotfix-e2e-direct-path",
+  "skill_availability_goal": "Verify that pm-agent keeps QA evidence requirements for hotfixes while limiting E2E coverage to directly affected paths.",
+  "prompt": "用户说：这是一个 hotfix，只修登录页空状态文案；请判断 QA/E2E 是否还要做，以及覆盖范围怎么定。",
+  "fixture_context": [
+    "README.md"
+  ]
+}
