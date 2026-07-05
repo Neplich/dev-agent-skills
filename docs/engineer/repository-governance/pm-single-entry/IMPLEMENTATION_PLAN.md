@@ -1,7 +1,7 @@
 ---
 title: "PM 唯一入口 Batch 2 实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.2.4"
+version: "0.2.5"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-07-05"
@@ -16,6 +16,9 @@ related_prd: "docs/pm/repository-governance/pm-single-entry/PRD.md"
 related_trd: "docs/engineer/repository-governance/pm-single-entry/TRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/52"
 changelog:
+  - version: "0.2.5"
+    date: "2026-07-05"
+    changes: "Codex Review 修复：补齐 Batch 2 PM 入口 eval 场景 1-6 与 deterministic pytest 覆盖"
   - version: "0.2.4"
     date: "2026-07-05"
     changes: "Codex Review 修复：允许已确认的非 feature repo-wide downstream handoff 使用 N/A scope"
@@ -171,6 +174,11 @@ flowchart TD
   非 feature 路由使用 `N/A` scope 与空 evidence，不阻塞或编造 feature path；允许已确认
   repo-wide CI、release automation、deployment assets 或 delivery status 下游交接使用
   `N/A` scope，同时禁止用 `N/A` 跳过 feature 相关工作的 path clarification。
+- `agents/product_manager/test/pm-agent/evals/evals.json` 与对应 workspace：补齐 FR-006
+  场景 1-6 的 PM 入口 eval，覆盖新功能、bug、补测试、UI、部署/CI 和安全入口，并为每个
+  workspace 提供 durable `comparison.md`。
+- `agents/product_manager/test/pm-agent/test_pm_entry_eval.py` 与 `.github/workflows/ci.yml`：
+  增加 deterministic Batch 2 PM 入口 eval 覆盖，并纳入 CI 同款 pytest 命令。
 - `skills-lock.json`：重算 `pm-agent` 与 `idea-to-spec` 的 `computedHash`。
 
 ### 8.2 Hash 重算
@@ -188,11 +196,13 @@ flowchart TD
 | 仓库契约 | `uv run scripts/check_repository_contract.py` | 通过 |
 | eval 契约 | `uv run scripts/check_eval_contract.py` | 通过 |
 | eval 产物策略 | `uv run scripts/check_eval_artifacts.py` | 通过 |
-| CI 同款 pytest | `uv run --with pytest pytest agents/product_manager/test/idea-to-spec agents/qa/test/test_qa_run_eval.py agents/designer/test/test_designer_run_eval.py agents/devops/test/test_devops_run_eval.py agents/test_eval_contract.py` | 通过（85 passed） |
+| pm-agent PM 入口 eval pytest | `uv run --with pytest pytest agents/product_manager/test/pm-agent` | 通过（2 passed） |
+| CI 同款 pytest | `uv run --with pytest pytest agents/product_manager/test/idea-to-spec agents/product_manager/test/pm-agent agents/qa/test/test_qa_run_eval.py agents/designer/test/test_designer_run_eval.py agents/devops/test/test_devops_run_eval.py agents/test_eval_contract.py` | 通过（87 passed） |
 
 ### 8.4 未执行项与后续
 
-- 未执行 fresh subagent skill eval：本批只更新 PM 入口协议与 handoff 契约，FR-006 全量 eval
-  与 durable `comparison.md` 更新按 TRD 第 8 节保留到 Batch 4。
+- 未执行 fresh subagent skill eval：本批已补齐并执行 FR-006 场景 1-6 的 deterministic PM
+  入口 eval；防绕过场景 7-8 仍按 TRD 第 8 节进入 Batch 3，fresh subagent 全量验证仍保留到
+  Batch 4。
 - 下一批前置条件：Batch 2 PR 需通过 GitHub CI、Codex Review 且维护者确认合并后，才能
   开始 Batch 3 的下游 gate 统一、#59 去重与 #60 正文瘦身。

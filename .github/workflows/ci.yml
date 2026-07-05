@@ -50,6 +50,7 @@ jobs:
       - run: |
           uv run --with pytest pytest \
             agents/product_manager/test/idea-to-spec \
+            agents/product_manager/test/pm-agent \
             agents/qa/test/test_qa_run_eval.py \
             agents/designer/test/test_designer_run_eval.py \
             agents/devops/test/test_devops_run_eval.py \

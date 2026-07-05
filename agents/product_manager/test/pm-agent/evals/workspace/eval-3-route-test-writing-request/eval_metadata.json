@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval-003-route-test-writing-request",
+  "eval_name": "route-test-writing-request",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-3-route-test-writing-request",
+  "skill_availability_goal": "Verify that pm-agent classifies test-writing requests and confirms the test basis before QA or test-writer handoff.",
+  "prompt": "用户说：帮我补测试，覆盖订单退款流程的异常分支。请判断应该怎么分类、需要什么测试依据，以及后续交给谁。",
+  "fixture_context": [
+    "README.md"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval-005-route-deployment-request",
+  "eval_name": "route-deployment-request",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-5-route-deployment-request",
+  "skill_availability_goal": "Verify that pm-agent classifies CI and deployment requests before DevOps handoff.",
+  "prompt": "用户说：帮我配 CI，并做上线前检查。这个是仓库级配置，不属于某个功能。请判断分类、scope 和后续交接。",
+  "fixture_context": [
+    "README.md"
+  ]
+}
