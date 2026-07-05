@@ -1,7 +1,7 @@
 ---
 title: "PM 唯一入口 Batch 2 实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.2.1"
+version: "0.2.2"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-07-05"
@@ -16,6 +16,9 @@ related_prd: "docs/pm/repository-governance/pm-single-entry/PRD.md"
 related_trd: "docs/engineer/repository-governance/pm-single-entry/TRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/52"
 changelog:
+  - version: "0.2.2"
+    date: "2026-07-05"
+    changes: "Codex Review 修复：收窄 delivery/status fast lane，明确 repo status 留在 PM route"
   - version: "0.2.1"
     date: "2026-07-05"
     changes: "Codex Review 修复：补齐 PM-only specialist request_type，并重算 hash"
@@ -150,7 +153,9 @@ flowchart TD
 - `agents/product_manager/skills/pm-agent/SKILL.md`：新增用户入口覆盖清单、请求分类协议、
   `change_tier` 判级规则和 PM handoff packet 组装要求；按 Codex Review P2 补齐 PM-only
   specialist request types，避免竞品、battlecard、release notes、changelog、roadmap 等
-  PM-owned 路由被迫套入不相关类型。
+  PM-owned 路由被迫套入不相关类型；后续 Codex Review P2 中进一步收窄 `delivery` /
+  `status` fast lane，使 repo health、backlog、PR queue、release-readiness planning 和
+  blockers 明确走 `repo_status` / `github-reader`。
 - `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`：保留原 PM 内部
   packet，新增跨角色 PM handoff packet 权威定义、`feature_path_evidence` `{source, reason}`
   结构、downstream owner 映射和示例；同步 PM-only specialist request types。
@@ -160,7 +165,7 @@ flowchart TD
 
 | Skill | Hash |
 | --- | --- |
-| `pm-agent` | `7a54b9cc9ec4ed6118d74725756185eaa5d41fa9b4c3bdb06f6e7778b30f6f51` |
+| `pm-agent` | `d3c52028221aecc058b0704409c5a214be93ae6b42b9f0643eed5039593857a3` |
 | `idea-to-spec` | `3627dc643da20d963206525f49868a2e788c83af8c7b49675ec482ca4463019e` |
 
 ### 8.3 验证结果
