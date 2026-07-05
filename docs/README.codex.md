@@ -44,7 +44,7 @@ Codex 会先反问你两个问题，再执行安装：
 
 两种安装方式都保持仓库内的 `agents/*/skills/*` 目录不变，用于兼容 Claude marketplace。
 
-Codex 会发现已链接的所有 skills；本仓库约定直接用户请求从 `pm-agent` 进入，下游 role router 和 specialist skill 仅在 PM handoff packet 或等效已确认文档链存在时承接。
+Codex 会发现已链接的所有 skills；本仓库约定直接用户请求优先从 `pm-agent` 进入，下游 role router 和 specialist skill 用于 PM handoff 或等效已确认文档链已经明确范围后的工作。
 
 ## 手动安装
 
@@ -368,7 +368,7 @@ Claude marketplace 继续读取仓库内的 Agent 目录；Codex 通过 `.agents
 /pm-agent "上线前做一次权限和依赖风险审查"
 ```
 
-下游 role router 和 specialist skills 仍会被链接，供 PM 编排后的 handoff 使用；没有 PM handoff packet 或等效已确认文档链时，直接请求应回到 `pm-agent` 分类。
+下游 role router 和 specialist skills 仍会被链接，供 PM 编排后的 handoff 使用；直接用户请求优先从 `pm-agent` 分类，下游 skills 用于 PM handoff 或等效已确认文档链已经明确范围后的工作。
 
 ## 验证
 

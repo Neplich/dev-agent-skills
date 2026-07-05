@@ -35,7 +35,7 @@ Clone or update this repository under the selected `.agents` root, then expose e
 
 Do not move, flatten, or rewrite the repository's `agents/*/skills/*` directories.
 
-The symlink model keeps downstream skills available for PM-orchestrated handoff. Direct user requests should start from `pm-agent`; downstream role routers and specialist skills require a PM handoff packet or equivalent confirmed document chain.
+The symlink model keeps downstream skills available for PM-orchestrated handoff. Prefer `pm-agent` for direct user requests; downstream role routers and specialist skills are intended for work whose scope has already been confirmed by PM handoff or an equivalent document chain.
 
 Agent to source directory mapping:
 

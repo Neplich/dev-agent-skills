@@ -134,7 +134,7 @@ See [docs/README.codex.md](./docs/README.codex.md) for the full Codex guide.
 /pm-agent "Review authorization and dependency risk before release."
 ```
 
-Downstream role routers and specialist skills remain installed as PM-orchestrated capabilities. Direct requests without a PM handoff packet or equivalent confirmed document chain should return to `pm-agent` for classification.
+Downstream role routers and specialist skills remain installed as PM-orchestrated capabilities. Prefer `pm-agent` for direct user requests; downstream skills are intended for work whose scope has already been confirmed by PM handoff or an equivalent document chain.
 
 ## Repository Structure
 
