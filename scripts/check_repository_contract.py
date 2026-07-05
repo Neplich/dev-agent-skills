@@ -208,7 +208,7 @@ def markdown_frontmatter_changelog_block(content: str) -> str:
 
     lines = frontmatter.splitlines()
     for index, line in enumerate(lines):
-        if line.strip() != "changelog:":
+        if line != "changelog:":
             continue
 
         block: list[str] = []

@@ -628,6 +628,10 @@ class EvalContractTests(unittest.TestCase):
             'feature: "history-search"\n'
             'version: "0.3.5"\n'
             'last_updated: "2026-07-05"\n'
+            "release_metadata:\n"
+            "  changelog:\n"
+            '    - version: "0.3.5"\n'
+            '      date: "2026-07-05"\n'
             "release_refs:\n"
             '  - version: "0.3.5"\n'
             '    date: "2026-07-05"\n'
