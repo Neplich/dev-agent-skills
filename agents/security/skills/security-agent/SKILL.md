@@ -30,6 +30,22 @@ dependency risk analysis, or privacy/data-handling mapping.
 - replacing the downstream review protocols of its specialist skills
 - deciding or inventing a feature path when PM/Engineer docs are unclear
 
+## PM Handoff Entry Gate
+
+Security is a downstream router. Before routing, require an explicit PM handoff
+packet or equivalent confirmed security context. The PM-side packet fields are
+defined in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
+- If the user directly asks `security-agent` or a security specialist for a
+  review without PM handoff context, return the request to `pm-agent` for
+  classification.
+- Preserve confirmed feature scope, risk surface, source documents, and
+  required report type when routing to a security specialist.
+- Full feature-path, source-document, and output-location gates live in the
+  selected security specialist; this router only keeps the entry check and
+  pointer.
+
 ## Available Skills
 
 - `security-agent:appsec-checklist` - Broad application security review and release-gate checklist
@@ -93,22 +109,6 @@ If a handoff target skill or agent is not installed or unavailable, tell the
 user which stage is missing and which plugin to install (for example
 `engineer-agent` or `devops-agent`), mark that handoff stage as blocked, and
 do not perform the missing agent's responsibilities yourself.
-
-## PM Handoff Entry Gate
-
-Security is a downstream router. Before routing, require an explicit PM handoff
-packet or equivalent confirmed security context. The PM-side packet fields are
-defined in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
-
-- If the user directly asks `security-agent` or a security specialist for a
-  review without PM handoff context, return the request to `pm-agent` for
-  classification.
-- Preserve confirmed feature scope, risk surface, source documents, and
-  required report type when routing to a security specialist.
-- Full feature-path, source-document, and output-location gates live in the
-  selected security specialist; this router only keeps the entry check and
-  pointer.
 
 ## Output Behavior
 

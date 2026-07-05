@@ -114,7 +114,7 @@
     "devops-agent": {
       "source": "agents/devops/skills/devops-agent",
       "sourceType": "local",
-      "computedHash": "004d4628fb7ffa8c744c940defb371e3bb03ffed3043bae851e4f3624253c87a"
+      "computedHash": "7eb35834cf3cae44a720829f4502e9789ecb37441b1a686bed8da0ed8516d244"
     },
     "deployment-planner": {
       "source": "agents/devops/skills/deployment-planner",
@@ -154,7 +154,7 @@
     "security-agent": {
       "source": "agents/security/skills/security-agent",
       "sourceType": "local",
-      "computedHash": "c67a8a501da9b08afa3b803cd26623b7463e0a75848d8c51730a21c3d4dcfa66"
+      "computedHash": "ec97d5d20e53517a881333ee08b5fc78e592e86719fc713e7da09290729bf139"
     },
     "appsec-checklist": {
       "source": "agents/security/skills/appsec-checklist",
