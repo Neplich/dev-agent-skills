@@ -96,7 +96,7 @@ document state.
 | Direct doc update | Matching `*-iteration` | `_internal/iteration/.../INSTRUCTIONS.md` | One approved doc needs revision |
 | Quality review | Matching `*-validator` | `_internal/validator/.../INSTRUCTIONS.md` | A generated or updated doc needs a score / gap report |
 
-## 6. Handoff Packet Contract
+## 6. Internal PM Handoff Packet Contract
 
 When `idea-to-spec` hands work to any internal instruction resource, pass a
 compact packet that preserves settled context and avoids re-asking basics.
@@ -181,7 +181,85 @@ unavailable, state the missing stage and required plugin, mark that handoff
 stage as blocked, and do not perform the missing agent's responsibilities
 yourself.
 
-## 7. Phase and Situation Routing
+## 7. Cross-Role PM Handoff Packet Contract
+
+When `pm-agent` or `idea-to-spec` sends work to Designer, Engineer, QA, DevOps,
+Security, delivery, or another non-PM owner, use this cross-role packet. This
+section is the authoritative PM-side field definition for issue #52.
+
+Required fields:
+
+| Field | Meaning |
+| --- | --- |
+| `request_type` | Stable request class: `new_feature`, `existing_update`, `bug_report`, `design`, `validation`, `deployment`, `security`, `delivery`, or `status`. |
+| `change_tier` | `hotfix`, `standard`, or `major`, using the 变更分级契约 in `AGENTS.md` as the single definition source. |
+| `feature_path` | Canonical multi-level feature path, or `unresolved` when PM clarification must continue. |
+| `feature` | Terminal feature slug or compatible legacy feature value. |
+| `parent_feature` | Parent feature path, or `N/A` for level-1 features. |
+| `feature_level` | Positive integer matching the feature path depth. |
+| `feature_path_evidence` | List of `{source, reason}` entries proving why the path is correct. |
+| `source_documents` | PRD, DECISIONS, TRD, design docs, issue, PR, release, repo-status, or other evidence used for routing. |
+| `scope_decision` | Confirmed scope, non-goals, and whether approved product expectations changed. |
+| `downstream_owner` | Next owner: `Designer`, `Engineer`, `QA`, `DevOps`, `Security`, `delivery`, or a named PM specialist when the request stays PM-owned. |
+| `required_output` | Concrete artifact or action expected from the next owner: document, plan, implementation, report, verification evidence, delivery action, or status summary. |
+| `blockers_risks` | Missing docs, unresolved decisions, unavailable plugins, platform limits, verification risk, or security / privacy risk. |
+
+`feature_path_evidence` must always use this shape:
+
+```yaml
+feature_path_evidence:
+  - source: docs/pm/order-management/PRD.md
+    reason: Existing parent PRD owns checkout and refund flows, and the requested refund change belongs under that product area.
+```
+
+Do not inline route / API / page inventory objects into
+`feature_path_evidence`; convert them to concise `{source, reason}` entries.
+If the path is unresolved, set `feature_path: unresolved`, explain the blocker
+in `blockers_risks`, and do not hand off as if the path were settled.
+
+### Downstream Owner Map
+
+| Routing condition | downstream_owner | Required packet emphasis |
+| --- | --- | --- |
+| Confirmed UX, UI, information architecture, wireframes, or visual-system work | `Designer` | PM scope, source PRD / BRD, design goal, target users, required design artifact. |
+| Confirmed TRD, implementation, debugging, tests, code review, commit, push, PR, or delivery work | `Engineer` or `delivery` | PRD / TRD / implementation-plan source docs, `change_tier`, verification expectations, delivery state. |
+| Confirmed acceptance, exploratory, bug analysis, smoke, retest, or regression work | `QA` | Test basis, expected behavior, environment, affected flows, result format. |
+| Confirmed deployment, CI/CD, environment, Docker, Helm, release readiness, rollback, or runbook work | `DevOps` | Environment, release target, rollback expectation, operational risk. |
+| Confirmed AppSec, auth/authz, dependency, secret, privacy, upload, webhook, or data-flow review | `Security` | Risk surface, assets, permissions, data categories, remediation expectations. |
+| New feature, existing update, unclear scope, or expectation change not yet confirmed | PM specialist | Keep the request in PM; do not send a ready handoff packet. |
+
+Example cross-role handoff:
+
+```yaml
+request_type: existing_update
+change_tier: standard
+feature_path: order-management/refunds
+feature: refunds
+parent_feature: order-management
+feature_level: 2
+feature_path_evidence:
+  - source: docs/pm/order-management/PRD.md
+    reason: The existing order-management PRD owns post-purchase refund behavior.
+source_documents:
+  - docs/pm/order-management/PRD.md
+  - docs/pm/order-management/DECISIONS.md
+scope_decision:
+  summary: Update refund approval copy without changing approval workflow.
+  expectation_changed: true
+  non_goals: [payment-provider integration changes]
+downstream_owner: Engineer
+required_output:
+  - Update Engineer TRD for the approved copy behavior.
+  - Prepare implementation plan after TRD alignment.
+blockers_risks:
+  - Current TRD does not yet mention refund approval copy.
+```
+
+If the target agent or skill is unavailable, state the missing stage, name the
+plugin or capability needed, mark the handoff blocked in `blockers_risks`, and
+do not perform that downstream role's responsibilities yourself.
+
+## 8. Phase and Situation Routing
 
 | Phase / Situation | Primary internal skill | Alternative / follow-up |
 | --- | --- | --- |
@@ -195,7 +273,7 @@ yourself.
 | Full end-to-end pipeline requested | `flow` | Narrower gen / validator steps if the user backs off |
 | Diff only | `version-differ` | `trace-check` if the issue is coverage rather than versioning |
 
-## 8. Existing-Project Update Rules
+## 9. Existing-Project Update Rules
 
 - Run `change-impactor` first when the user asks to update an existing feature,
   requirement, rollout policy, or integration and the blast radius is unclear.
@@ -210,7 +288,7 @@ yourself.
   - the current artifact is too incomplete to safely iterate
   - the user explicitly prefers regeneration
 
-## 9. Lifecycle Coverage Matrix
+## 10. Lifecycle Coverage Matrix
 
 | Document Type | Generator | Validator | Iteration |
 | --- | --- | --- | --- |
@@ -221,7 +299,7 @@ yourself.
 | ADR | `engineer-agent:trd-gen` | `adr-validator` | hand off to `engineer-agent:trd-gen` for revisions |
 | TEST_SPEC | `tspecs-gen` | `tspecs-validator` | `tspecs-iteration` |
 
-## 10. Shared References
+## 11. Shared References
 
 - Schema source root:
   `_internal/_shared/doc-schemas/`
