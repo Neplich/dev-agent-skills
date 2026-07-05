@@ -14,7 +14,7 @@
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
       "sourceType": "local",
-      "computedHash": "762ef8752b82da850d83545eb73b2b9cf82ff458fd05f5ecb3c0a10ded3b21c2"
+      "computedHash": "726ff8b9d4e6e201037ab3247a0c3fb176e6ae45e68d93ce34af543fbaa6f5b0"
     },
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",
