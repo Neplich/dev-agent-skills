@@ -94,23 +94,21 @@ user which stage is missing and which plugin to install (for example
 `engineer-agent` or `devops-agent`), mark that handoff stage as blocked, and
 do not perform the missing agent's responsibilities yourself.
 
-## Feature Path Gate
+## PM Handoff Entry Gate
 
-For feature-scoped security review, consume the `feature_path` already confirmed
-by PM and Engineer:
+Security is a downstream router. Before routing, require an explicit PM handoff
+packet or equivalent confirmed security context. The PM-side packet fields are
+defined in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
 
-- read `docs/pm/{feature_path}/PRD.md` for product scope, data, roles, and
-  security expectations
-- read `docs/engineer/{feature_path}/TRD.md` and
-  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when architecture,
-  implementation, or release scope affects the review
-- write feature-scoped security reports under
-  `docs/security/{feature_path}/...`
-
-If the user gives only a display name and the matching `feature_path` is
-unclear, do not create a synonymous top-level `docs/security/{name}/`
-directory. Return to PM for PRD/path clarification or Engineer for missing or
-stale TRD/implementation plan.
+- If the user directly asks `security-agent` or a security specialist for a
+  review without PM handoff context, return the request to `pm-agent` for
+  classification.
+- Preserve confirmed feature scope, risk surface, source documents, and
+  required report type when routing to a security specialist.
+- Full feature-path, source-document, and output-location gates live in the
+  selected security specialist; this router only keeps the entry check and
+  pointer.
 
 ## Output Behavior
 

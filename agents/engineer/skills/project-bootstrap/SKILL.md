@@ -10,15 +10,18 @@ Initialize a new project from scratch based on settled specs. Intelligently
 chooses between official CLI tools and manual setup depending on the tech
 stack.
 
-## Non-Negotiable Gate
+## PM Handoff Entry Gate
 
 Before asking about frameworks, package managers, backend choices, or target
 directories, run this gate:
 
-1. Check whether a TRD or approved PM docs already exist.
-2. Check whether the user explicitly said to skip PM and scaffold anyway.
-3. If specs are missing and there is no explicit override, stop immediately and
-   redirect to `pm-agent:idea-to-spec`.
+1. Check whether the request carries a PM handoff packet or approved PM/TRD
+   docs for the scaffold scope.
+2. Check whether a TRD or approved PM docs already exist.
+3. Check whether the user explicitly said to skip PM and scaffold anyway.
+4. If specs are missing and there is no explicit override, stop immediately and
+   return the request to `pm-agent` for classification before
+   `pm-agent:idea-to-spec` handles scope.
 
 In that stop branch, your response must do all of the following:
 

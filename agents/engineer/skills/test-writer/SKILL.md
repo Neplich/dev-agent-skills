@@ -15,6 +15,18 @@ Write tests based on PM Test Spec documents and implemented code. Identifies the
 - When Test Spec exists and tests need to be written
 - Standalone: to add test coverage for untested code
 
+## PM Handoff Entry Gate
+
+Before writing tests, require a PM/Engineer handoff packet or equivalent
+confirmed test basis: PRD acceptance criteria, Test Spec, API Spec, or
+implementation context that already traces to confirmed scope. If the user
+directly invokes `test-writer` with "补测试" but no confirmed expected behavior
+source, return the request to `pm-agent` for classification instead of
+inventing test expectations.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Step 1 — Read Test Spec
 
 Locate the Test Spec:

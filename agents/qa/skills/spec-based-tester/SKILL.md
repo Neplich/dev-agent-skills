@@ -10,6 +10,16 @@ Validate documented requirements against the implementation using the best avail
 
 This is a QA validation protocol, not a router and not a generic execution script. It stays within QA boundaries: read the spec and implementation context, choose an execution path, collect evidence, and report confirmed results, blocked items, and handoff risks.
 
+## PM Handoff Entry Gate
+
+Before validating, require a PM/QA handoff packet or equivalent confirmed test
+basis. If the user directly invokes this specialist without PM handoff context,
+confirmed specs, or an existing QA memory scope, return the request to
+`pm-agent` for classification instead of inventing acceptance expectations.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Shared QA Directory Contract
 
 For E2E or feature-scoped QA, use the function-tree directory as the durable

@@ -43,6 +43,16 @@ be updated in place; do not create duplicate synonym TC.
 - This skill does not write bug tickets itself
 - This skill does not dump generic browser-script output without interpretation
 
+## PM Handoff Entry Gate
+
+Before exploring, require a PM/QA handoff packet or equivalent confirmed QA
+scope. If the user directly invokes this specialist without PM handoff context,
+an existing QA memory scope, or a confirmed exploration target, return the
+request to `pm-agent` for classification instead of expanding broad discovery.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Exploration Preflight
 
 Before any testing action, gather the context needed to choose an exploration charter:

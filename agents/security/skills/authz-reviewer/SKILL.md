@@ -4,6 +4,17 @@ description: "Internal security specialist invoked by security-agent after pm-ag
 visibility: internal
 ---
 
+## PM Handoff Entry Gate
+
+Before auth/authz review, require a PM/Security handoff packet or equivalent
+confirmed security context. If the user directly invokes this specialist
+without PM handoff context, confirmed roles/permissions scope, or a confirmed
+`feature_path` for feature-scoped work, return the request to `pm-agent` for
+classification.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Execution Steps
 
 ### Step 1: Understand User Roles and Permissions

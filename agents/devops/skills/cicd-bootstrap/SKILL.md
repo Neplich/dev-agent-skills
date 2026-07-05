@@ -17,6 +17,17 @@ Generate CI/CD pipeline configurations that automate testing, building, and depl
 - Existing CI/CD must be extended for a new service, worker, environment, or release path
 - Existing workflows must be updated after deployment architecture or target changes
 
+## PM Handoff Entry Gate
+
+Before writing CI/CD config, require a PM/DevOps handoff packet or equivalent
+confirmed release or automation context. Confirmed repo-wide CI/CD work may use
+`N/A` feature scope; feature-scoped release work needs the confirmed
+`feature_path`. If the user directly invokes this specialist without that
+context, return the request to `pm-agent` for classification.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Context Preflight
 
 Before writing CI/CD config, inspect:

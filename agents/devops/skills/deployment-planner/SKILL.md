@@ -17,6 +17,17 @@ Generate three deployment configurations based on project requirements: local de
 - Existing deployment config must be extended for a new service, worker, or microservice
 - Existing deployment targets must be expanded or revised, such as adding Docker, Helm, staging, or production variants
 
+## PM Handoff Entry Gate
+
+Before planning deployment assets, require a PM/DevOps handoff packet or
+equivalent confirmed operational context. Confirmed repo-wide deployment work
+may use `N/A` feature scope; feature-scoped work needs the confirmed
+`feature_path`. If the user directly invokes this specialist without that
+context, return the request to `pm-agent` for classification.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Context Preflight
 
 Before generating anything, inspect:

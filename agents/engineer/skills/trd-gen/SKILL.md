@@ -52,6 +52,18 @@ When another skill hands back a missing, incomplete, stale, or conflicting TRD,
 the discoverer owns describing the TRD gaps and `trd-gen` owns completing the
 TRD. Treat the handoff as a gap packet, not as an implementation request.
 
+## PM Handoff Entry Gate
+
+Before writing or updating Engineer-owned documents, require a PM handoff packet
+or equivalent confirmed PM documents with stable product scope and feature path.
+If the user directly invokes `trd-gen` with an unresolved product idea,
+expectation change, or ambiguous feature path, stop and return the request to
+`pm-agent` for classification. Direct invocation does not bypass the need for
+stable PM scope.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Required Flow
 
 ```mermaid

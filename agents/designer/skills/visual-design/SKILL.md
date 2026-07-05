@@ -24,6 +24,16 @@ Forbidden actions:
 
 If the input includes a completed PM or UX spec, use it to shape the visual system and stop at design handoff.
 
+## PM Handoff Entry Gate
+
+Before creating visual-system deliverables, require a PM/design handoff packet
+or equivalent confirmed PM/design scope. If the user directly invokes this
+specialist without PM handoff context or a confirmed `feature_path`, return the
+request to `pm-agent` for classification.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Feature Path Gate
 
 Before writing a feature-scoped visual system, consume a confirmed

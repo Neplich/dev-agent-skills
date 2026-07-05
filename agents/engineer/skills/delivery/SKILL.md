@@ -15,6 +15,18 @@ Manage the Git workflow for delivering completed code: branch creation, meaningf
 - User asks to commit or push changes
 - After `feature-implementor` + `test-writer` + optional `debugger` complete
 
+## PM Handoff Entry Gate
+
+Delivery is a downstream engineering specialist. Before committing, pushing, or
+creating a PR, require PM/Engineer handoff context or equivalent completed-work
+evidence: changed scope, verification status, related issue/PRD/TRD when
+applicable, and the requested delivery action. If the user directly asks for
+delivery while scope or verification status is unclear, return to `pm-agent`
+for classification or status confirmation.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Step 1 — Assess current Git state
 
 ```bash

@@ -31,85 +31,22 @@ or fix verification.
 - expanding requested verification into broad discovery by default
 - forcing every QA request through a full test battery
 
-## Shared QA Document Contract
+## PM Handoff Entry Gate
 
-When QA work creates, updates, or executes E2E assets, use the function-tree
-directory as the durable source of truth:
+QA is a downstream router. Before routing, require an explicit PM handoff
+packet or equivalent confirmed test basis. The PM-side packet fields are
+defined in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
 
-`docs/qa/e2e/{feature_path}/`
-
-- `TEST_SUITE.md` is the suite index, active TC list, and coverage summary.
-- `FLOW_INDEX.md` maps user flows, pages, routes, APIs, and states to TC files.
-- `cases/` stores reusable E2E cases, one Markdown file per TC:
-  `cases/TC-NNN-<short-slug>.md`.
-- `scripts/` stores matching executable or repeatable flow snippets:
-  `scripts/TC-NNN-<short-slug>.spec.md`.
-- `results/TC-NNN-<short-slug>/{platform-version}/` stores `result.md` and
-  `testcase.snapshot.md`; results are appended by platform version, not
-  overwritten.
-- `_reports/{platform-version}/test-reports-{test-time}.md` stores
-  feature-update summary reports. Release-wide reports use
-  `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md`.
-- Shared login flows and data live under `docs/qa/e2e/_shared/`.
-
-For E2E routing, carry these fields into the downstream skill:
-
-- Feature path: consume a confirmed `feature_path` from PM/Engineer handoff or
-  from `docs/pm/{feature_path}/PRD.md`. Existing-feature changes, bug fixes,
-  and code-complete E2E documentation updates must read
-  `docs/pm/{feature_path}/PRD.md`,
-  `docs/engineer/{feature_path}/TRD.md`, and
-  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before any acceptance
-  TC is created, updated, or executed. If the feature path is ambiguous, hand
-  back to `pm-agent:idea-to-spec`; if TRD is missing or mismatched, hand back
-  to `engineer-agent:trd-gen`; if the implementation plan is missing or
-  mismatched, hand back to `engineer-agent:feature-implementor`.
-- Change tier: E2E gate strength follows the `change_tier` contract in
-  `AGENTS.md` (变更分级契约). Consume `change_tier` from the Engineer handoff
-  when present, or self-assess it per that contract. For `hotfix`, only require
-  validating the direct impact paths and appending results, referencing the
-  confirmed lightweight plan form; for `standard` and above, keep the full
-  PRD/TRD expectation alignment gate. Tiering never waives evidence: `hotfix`
-  results must still be recorded, and a request that changes approved PRD/TRD
-  expectations must not be treated as `hotfix` — route it back to PM.
-- Scenario: `feature-update` validates the changed feature and direct impact
-  paths in the local development test environment; `release` validates all
-  active E2E TC in the release-version test environment. If the scenario cannot
-  be inferred, ask one concise scenario question.
-- Platform version: confirm before execution. If missing, mark the E2E work
-  `blocked` and ask for the version; never archive to `unknown`.
-- Scope: confirm the function-tree node or infer it from PRD/TRD, changed
-  files, branch context, or existing QA memory. If it cannot be inferred, ask
-  one concise scope question.
-- Execution entry: repo harness first, Chrome plugin / browser connector
-  second, Playwright fallback last. State why the selected entry covers the TC.
-- Credentials: committed QA docs may only reference account IDs. If the user
-  supplies platform or SSH credentials, follow
-  `references/e2e-credential-store.md` and upsert
-  `.qa/e2e/accounts.local.json` without echoing sensitive values.
-- Report format: summary reports must follow
-  `references/e2e-test-report.md`.
-
-For standalone QA or E2E requests where no PM-authored E2E cases are supplied,
-route the downstream skill with this required sequence:
-
-1. Read the target function-tree `TEST_SUITE.md`, `FLOW_INDEX.md`,
-   `cases/*.md`, `scripts/*.spec.md`, prior `results/`, and `_reports/`.
-2. If the request comes from an existing-feature change, bug fix, or
-   code-complete E2E documentation update, require PRD/TRD expectation
-   alignment on the same `feature_path` and a confirmed
-   `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` before creating,
-   updating, or executing acceptance TC.
-3. For `feature-update`, select the changed feature, direct impact paths, and
-   related regression TC. For `release`, select all active E2E TC.
-4. If reusable TC already cover the target, execute from those TC instead of
-   rediscovering the project.
-5. If coverage is missing and the user authorizes exploration or PRD/TRD case
-   generation, add or update `cases/`, `scripts/`, and `FLOW_INDEX.md` in the
-   function-tree directory. Do not create duplicate synonym TC.
-6. Execute every E2E TC through a subagent by default, even when there is only
-   one TC. The main agent owns scope confirmation, task splitting, result
-   confirmation, and the final summary report.
+- If the user directly asks `qa-agent` or a QA specialist for acceptance,
+  exploratory, bug-analysis, retest, regression, or E2E work without PM
+  handoff context, return the request to `pm-agent` for classification.
+- Preserve confirmed `feature_path`, `change_tier`, source documents,
+  scenario, platform-version status, and required evidence artifact when
+  routing to the selected QA specialist.
+- Full E2E memory, feature-path, PRD/TRD/implementation-plan, platform-version,
+  credential, and execution-entry gates live in the QA specialists; this router
+  only keeps the entry check and pointer.
 
 ## Available Skills
 
