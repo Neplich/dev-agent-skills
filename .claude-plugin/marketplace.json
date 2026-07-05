@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "pm-agent",
-      "description": "Public entry dispatcher for product ideas, requirement changes, bug reports, implementation requests, tests, UI/design, deployment, security, release communication, roadmaps, and GitHub project status. Classifies scope first, then hands off to downstream role agents or PM specialists when ready.",
+      "description": "Public entry dispatcher for product ideas, requirement changes, bug reports, implementation requests, tests, UI/design, deployment, security, delivery, commits, pushes, PRs, release communication, roadmaps, and GitHub project status. Classifies scope first, then hands off to downstream role agents or PM specialists when ready.",
       "source": "./agents/product_manager",
       "strict": false,
       "skills": [

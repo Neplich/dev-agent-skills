@@ -1,6 +1,6 @@
 ---
 name: pm-agent
-description: Public entry router for product ideas, requirement changes, bug reports, implementation requests, tests, UI/design, deployment, security, delivery, release communication, roadmaps, and GitHub project status. Classifies scope first, then routes to PM specialists or hands off to downstream role agents when ready.
+description: Public entry router for product ideas, requirement changes, bug reports, implementation requests, tests, UI/design, deployment, security, delivery, commits, pushes, PRs, release communication, roadmaps, and GitHub project status. Classifies scope first, then routes to PM specialists or hands off to downstream role agents when ready.
 ---
 
 # PM Agent Dispatcher
@@ -53,7 +53,7 @@ execution.
 ## Downstream Role Handoff Targets
 
 - `designer-agent` - confirmed UX, UI structure, visual-system, or design handoff work
-- `engineer-agent` - confirmed TRD, implementation, tests, debugging, delivery, or codebase work
+- `engineer-agent` - confirmed TRD, implementation, tests, debugging, delivery, commits, pushes, PRs, or codebase work
 - `qa-agent` - confirmed acceptance, exploratory, bug analysis, or regression validation work
 - `devops-agent` - confirmed deployment, CI/CD, environment, release readiness, rollback, or runbook work
 - `security-agent` - confirmed AppSec, auth/authz, dependency, privacy, or data-flow review work
@@ -91,7 +91,8 @@ Route by the user's intended PM outcome, not by literal wording.
   with confirmed product scope
   -> hand off to `designer-agent`
 - Technical planning, implementation, code changes, debugging, tests, delivery,
-  or codebase analysis requests with confirmed PM/technical scope
+  commits, pushes, PRs, or codebase analysis requests with confirmed
+  PM/technical scope
   -> hand off to `engineer-agent`
 - Validation, acceptance, exploratory testing, bug analysis, smoke testing, or
   regression verification with confirmed expectations
