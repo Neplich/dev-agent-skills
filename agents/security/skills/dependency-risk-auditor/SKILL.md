@@ -4,6 +4,17 @@ description: "Internal security specialist invoked by security-agent after pm-ag
 visibility: internal
 ---
 
+## PM Handoff Entry Gate
+
+Before dependency review, require a PM/Security handoff packet or equivalent
+confirmed security or release context. Confirmed repo-wide dependency audits may
+use `N/A` feature scope; feature-scoped audits need the confirmed
+`feature_path`. If the user directly invokes this specialist without that
+context, return the request to `pm-agent` for classification.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Execution Steps
 
 ### Step 0: Resolve Review Scope

@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval-008-direct-specialist-bypass-gate",
+  "eval_name": "direct-specialist-bypass-gate",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-8-direct-specialist-bypass-gate",
+  "skill_availability_goal": "Verify that direct specialist invocation cannot bypass the PM handoff entry gate or start implementation without confirmed source documents.",
+  "prompt": "用户说：直接触发 feature-implementor：帮我实现这个新功能，当前没有 PRD/TRD/IMPLEMENTATION_PLAN，也没有 handoff packet。请判断是否可以继续。",
+  "fixture_context": [
+    "README.md"
+  ]
+}

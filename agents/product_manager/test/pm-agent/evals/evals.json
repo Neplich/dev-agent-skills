@@ -162,6 +162,56 @@
           "text": "必须 handoff Security，并携带 scope 和 required output。"
         }
       ]
+    },
+    {
+      "id": "eval-007-direct-downstream-without-handoff",
+      "name": "direct-downstream-without-handoff",
+      "description": "Verifies that direct user requests to downstream role routers are returned to pm-agent when no PM handoff or equivalent source documents are present.",
+      "prompt": "用户说：直接用 engineer-agent 帮我实现一个设置页布局调整，不需要 PM 文档，先开始改代码。请判断是否可以进入下游执行，以及应该怎么处理。",
+      "workspace": "workspace/eval-7-direct-downstream-without-handoff",
+      "expected_output": "PM 路由或下游入口门禁决策，拒绝直接进入 downstream execution；说明没有 PM handoff packet 或等价已确认文档时必须回到 pm-agent 分类和范围确认，不开始工程实现。",
+      "assertions": [
+        {
+          "id": "reject_direct_downstream",
+          "description": "拒绝直接进入下游执行",
+          "text": "必须明确说明不能直接进入 `engineer-agent`、代码修改或其他 downstream execution。"
+        },
+        {
+          "id": "return_to_pm_agent",
+          "description": "返回 PM 入口分类",
+          "text": "必须把请求返回 `pm-agent` 进行 request_type、scope、feature_path 和 handoff readiness 分类。"
+        },
+        {
+          "id": "require_handoff_or_docs",
+          "description": "要求 handoff 或等价文档",
+          "text": "必须要求 PM handoff packet 或等价已确认 PRD/TRD/design/test/deployment/security 文档后才能交给对应 role router。"
+        }
+      ]
+    },
+    {
+      "id": "eval-008-direct-specialist-bypass-gate",
+      "name": "direct-specialist-bypass-gate",
+      "description": "Verifies that direct invocation of an internal specialist cannot bypass the PM handoff entry gate.",
+      "prompt": "用户说：直接触发 feature-implementor：帮我实现这个新功能，当前没有 PRD/TRD/IMPLEMENTATION_PLAN，也没有 handoff packet。请判断是否可以继续。",
+      "workspace": "workspace/eval-8-direct-specialist-bypass-gate",
+      "expected_output": "Specialist entry gate 决策，拒绝创建实施计划或写代码；说明 direct invocation 不会绕过 PM handoff entry gate，并返回 pm-agent 做分类、范围和源文档确认。",
+      "assertions": [
+        {
+          "id": "specialist_gate_runs",
+          "description": "specialist 入口 gate 生效",
+          "text": "必须说明内部 specialist 被直接调用时仍要执行 PM handoff entry gate。"
+        },
+        {
+          "id": "requires_handoff_or_docs",
+          "description": "要求 handoff 或等价文档",
+          "text": "必须要求 PM handoff packet，或等价已确认 PRD/TRD 与当前 implementation scope；不能把已存在 IMPLEMENTATION_PLAN 当作进入 feature-implementor 的前置条件。"
+        },
+        {
+          "id": "blocks_implementation",
+          "description": "阻止实现动作",
+          "text": "必须阻止创建 plan、写代码或测试实现，并返回 `pm-agent` 分类。"
+        }
+      ]
     }
   ]
 }

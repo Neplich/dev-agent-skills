@@ -33,6 +33,19 @@ expected behavior, root cause, reporting the analysis, and getting confirmation
 on the repair plan. Do NOT create or update E2E test cases before the repair
 plan is confirmed.
 
+## PM Handoff Entry Gate
+
+Before debugging, require an explicit PM/Engineer handoff packet or an
+equivalent confirmed document chain that defines expected behavior. If the user
+directly invokes `debugger` with a raw bug report and no approved PRD/TRD
+expectation source, do not reproduce or fix yet; return the request to
+`pm-agent` for classification. Direct invocation does not bypass this gate.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+When equivalent docs are present, Step 0 below remains the authoritative
+expected-behavior gate.
+
 ## Complex Fix Sub-Agent Split
 
 For complex bug fixes, keep the main process responsible for the failure

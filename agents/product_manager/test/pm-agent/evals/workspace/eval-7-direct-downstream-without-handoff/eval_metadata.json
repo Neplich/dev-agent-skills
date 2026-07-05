@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval-007-direct-downstream-without-handoff",
+  "eval_name": "direct-downstream-without-handoff",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-7-direct-downstream-without-handoff",
+  "skill_availability_goal": "Verify that direct downstream role-router requests without PM handoff context return to pm-agent classification instead of execution.",
+  "prompt": "用户说：直接用 engineer-agent 帮我实现一个设置页布局调整，不需要 PM 文档，先开始改代码。请判断是否可以进入下游执行，以及应该怎么处理。",
+  "fixture_context": [
+    "README.md"
+  ]
+}

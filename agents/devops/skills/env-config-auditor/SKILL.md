@@ -15,6 +15,17 @@ Validate environment configuration completeness and security across all deployme
 - Troubleshooting deployment issues
 - Security audit of configuration
 
+## PM Handoff Entry Gate
+
+Before auditing config, require a PM/DevOps handoff packet or equivalent
+confirmed operational context. Confirmed repo-wide readiness work may use `N/A`
+feature scope; feature-scoped audits need the confirmed `feature_path`. If the
+user directly invokes this specialist without that context, return the request
+to `pm-agent` for classification.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Context Preflight
 
 Before auditing, inspect the narrowest relevant context:

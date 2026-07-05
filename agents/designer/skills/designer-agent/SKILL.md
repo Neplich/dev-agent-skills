@@ -52,22 +52,21 @@ implement.
 Do not call Engineer internal skills, produce implementation task lists, shell
 commands, code patches, tests, or deployment instructions.
 
-## Feature Path Gate
+## PM Handoff Entry Gate
 
-For feature-scoped design deliverables, Designer consumes a confirmed
-`feature_path`; it does not decide or invent one.
+Designer is a downstream router. Before routing, require an explicit PM handoff
+packet or equivalent confirmed PM/design documents with a stable
+`feature_path`. The PM-side packet fields are defined in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
 
-- Read PM source documents from `docs/pm/{feature_path}/`, including `PRD.md`,
-  `BRD.md`, and `DECISIONS.md` when present.
-- Read the matching Engineer TRD from `docs/engineer/{feature_path}/TRD.md`
-  when technical constraints are relevant to design.
-- Write design outputs only under `docs/design/{feature_path}/`.
-- If the request names only a child feature, nickname, or ambiguous parent
-  feature and no confirmed `feature_path` can be found, stop and hand the
-  scope back to `pm-agent:idea-to-spec`; do not create a synonym top-level
-  directory under `docs/design/`.
-- Existing one-segment feature directories remain valid first-level
-  `feature_path` values.
+- If the user directly asks `designer-agent` or a design specialist for new
+  design work without PM handoff context, return the request to `pm-agent` for
+  classification.
+- Preserve confirmed `feature_path`, source PM docs, design goal, target users,
+  and required design artifact when routing to `ui-ux-design` or
+  `visual-design`.
+- Full feature-path and output-location gates live in the selected design
+  specialist; this router only keeps the entry check and pointer.
 
 ## Available Skills
 
@@ -117,9 +116,9 @@ Do not force both skills when the user only wants one design layer.
 
 - Ask one route-level clarification question only when the primary design layer
   is genuinely unclear and the output type would change.
-- If PM docs are missing but the design intent is still clear, route to the
-  narrowest design skill for non-persistent design advice only. Durable
-  feature-scoped design docs still require the Feature Path Gate.
+- If PM handoff context or equivalent confirmed PM/design documents are missing,
+  return to `pm-agent` for classification before selecting a design skill. Do
+  not use non-persistent design advice as a bypass around the entry gate.
 - If the user actually wants coded UI changes, stop at design handoff and make
   the next step explicit to `engineer-agent`.
 

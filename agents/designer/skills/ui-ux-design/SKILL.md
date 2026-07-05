@@ -21,6 +21,16 @@ Forbidden actions:
 
 If the input includes a completed PM spec, treat it as design input only, not as permission to implement.
 
+## PM Handoff Entry Gate
+
+Before creating design deliverables, require a PM/design handoff packet or
+equivalent confirmed PM scope. If the user directly invokes this specialist
+without PM handoff context or a confirmed `feature_path`, return the request to
+`pm-agent` for classification.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Feature Path Gate
 
 Before writing a feature-scoped UI/UX spec, resolve a confirmed `feature_path`

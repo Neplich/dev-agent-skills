@@ -191,6 +191,64 @@ def parse_markdown_frontmatter(
     return fields, body
 
 
+def markdown_frontmatter_block(content: str) -> str:
+    lines = content.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return ""
+    for index, line in enumerate(lines[1:], start=1):
+        if line.strip() == "---":
+            return "\n".join(lines[1:index])
+    return ""
+
+
+def markdown_frontmatter_changelog_block(content: str) -> str:
+    frontmatter = markdown_frontmatter_block(content)
+    if not frontmatter:
+        return ""
+
+    lines = frontmatter.splitlines()
+    for index, line in enumerate(lines):
+        if line != "changelog:":
+            continue
+
+        block: list[str] = []
+        for child in lines[index + 1 :]:
+            if child.strip() and not child.startswith((" ", "\t")):
+                break
+            block.append(child)
+        return "\n".join(block)
+
+    return ""
+
+
+def markdown_frontmatter_changelog_has_version_date(
+    content: str,
+    version: str,
+    date: str,
+) -> bool:
+    if not version or not date:
+        return False
+    changelog = markdown_frontmatter_changelog_block(content)
+    if not changelog:
+        return False
+    version_pattern = re.compile(
+        rf"(?m)^\s*-\s+version:\s*['\"]?{re.escape(version)}['\"]?\s*$"
+    )
+    date_pattern = re.compile(
+        rf"(?m)^\s+date:\s*['\"]?{re.escape(date)}['\"]?\s*$"
+    )
+    next_entry_pattern = re.compile(r"(?m)^\s*-\s+version:")
+
+    for match in version_pattern.finditer(changelog):
+        entry_start = match.end()
+        next_entry = next_entry_pattern.search(changelog, entry_start)
+        entry_end = next_entry.start() if next_entry else len(changelog)
+        if date_pattern.search(changelog[entry_start:entry_end]):
+            return True
+
+    return False
+
+
 def validate_skill(root: Path, skill_dir: Path, errors: list[ContractError]) -> None:
     skill_doc = skill_dir / "SKILL.md"
     if not skill_doc.exists():
@@ -830,7 +888,8 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
         if base_content is None:
             continue
 
-        current_parsed = parse_markdown_frontmatter(current_path, current_path.read_text())
+        current_content = current_path.read_text()
+        current_parsed = parse_markdown_frontmatter(current_path, current_content)
         base_parsed = parse_markdown_frontmatter(current_path, base_content)
         if current_parsed is None or base_parsed is None:
             continue
@@ -847,7 +906,16 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
                 current_path,
                 "body changed without updating frontmatter 'version' or 'last_updated'",
             )
-        if version_changed and not last_updated_changed:
+        has_same_day_changelog_entry = (
+            not last_updated_changed
+            and current_metadata.get("last_updated") == base_metadata.get("last_updated")
+            and markdown_frontmatter_changelog_has_version_date(
+                current_content,
+                current_metadata.get("version", ""),
+                current_metadata.get("last_updated", ""),
+            )
+        )
+        if version_changed and not last_updated_changed and not has_same_day_changelog_entry:
             add_error(
                 errors,
                 current_path,

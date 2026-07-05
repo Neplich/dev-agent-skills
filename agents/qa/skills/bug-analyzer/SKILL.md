@@ -55,6 +55,17 @@ approved PRD/TRD expectations is never `hotfix` — route it back to PM.
 
 Do not treat every failure as a confirmed bug. First collect evidence, then classify the report, then choose the output path that fits the repo context.
 
+## PM Handoff Entry Gate
+
+Before analyzing a failure, require a PM/QA handoff packet, existing QA evidence,
+or another confirmed failure source that defines the intake scope. If the user
+directly invokes this specialist with a raw bug report and no route context,
+return the request to `pm-agent` for classification unless the prompt supplies
+enough evidence to remain a QA-only defect intake.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Step 1 — Intake evidence
 
 Collect the minimum evidence needed to judge the report:

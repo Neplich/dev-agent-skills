@@ -14,6 +14,17 @@ Scan an existing codebase and produce a structured Project Profile. This profile
 - When another skill needs project context but no Project Profile exists yet
 - When the user asks about project structure, tech stack, or conventions
 
+## PM Handoff Entry Gate
+
+This is a downstream engineering specialist. Use it when `pm-agent` or
+`engineer-agent` asks for repository context, or when an equivalent confirmed
+workflow already needs a Project Profile. If the user directly invokes this
+skill for general project status, backlog, or feature naming without PM route
+context, return the request to `pm-agent` for classification.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Step 1 — Verify project root
 
 Confirm you are in a valid project directory:

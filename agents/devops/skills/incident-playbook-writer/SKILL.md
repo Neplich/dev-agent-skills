@@ -18,6 +18,17 @@ Create operational runbooks for common incidents and failure scenarios.
 - When existing rollback or troubleshooting docs are outdated
 - When operational procedures must be revised after topology or release-process changes
 
+## PM Handoff Entry Gate
+
+Before writing runbooks, require a PM/DevOps handoff packet or equivalent
+confirmed operational context. Confirmed repo-wide incident or rollback work may
+use `N/A` feature scope; feature-scoped runbooks need the confirmed
+`feature_path`. If the user directly invokes this specialist without that
+context, return the request to `pm-agent` for classification.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Context Preflight
 
 Before generating playbooks, inspect:

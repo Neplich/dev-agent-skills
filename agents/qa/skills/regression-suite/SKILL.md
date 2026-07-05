@@ -41,6 +41,17 @@ overwrite historical result directories.
 
 Reuse the original evidence instead of re-deriving the scope from scratch. The regression run should confirm the fix, test the nearby surfaces that could break, and report whether the scope is ready to release.
 
+## PM Handoff Entry Gate
+
+Before verifying a fix, require a PM/QA handoff packet or equivalent completed
+fix evidence: original failure, fix context, expected behavior, and scoped
+regression target. If the user directly invokes this specialist without PM
+handoff context or fix evidence, return the request to `pm-agent` for
+classification instead of inventing the regression scope.
+
+Use the PM-side packet definition in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
 ## Step 1 — Regression preflight
 
 Read the evidence before executing anything:

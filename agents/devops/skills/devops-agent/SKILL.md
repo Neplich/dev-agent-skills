@@ -33,6 +33,22 @@ DevOps skill.
 - deciding or inventing a feature path when PM/Engineer docs are unclear
 - acting as a general incident response or feature implementation agent
 
+## PM Handoff Entry Gate
+
+DevOps is a downstream router. Before routing, require an explicit PM handoff
+packet or equivalent confirmed operational context. The PM-side packet fields
+are defined in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
+- If the user directly asks `devops-agent` or a DevOps specialist for
+  deployment, CI, config, release, rollback, or runbook work without PM handoff
+  context, return the request to `pm-agent` for classification.
+- Preserve confirmed feature scope and source documents for feature-scoped
+  work; preserve `N/A` feature scope for confirmed repo-wide CI, deployment,
+  release automation, or status work.
+- Full feature-path, repo-wide, and output-location gates live in the selected
+  DevOps specialist; this router only keeps the entry check and pointer.
+
 ## Available Skills
 
 - `devops-agent:deployment-planner` - Deployment assets, packaging, runtime targets, `deploy/` expansion
@@ -100,25 +116,6 @@ If a handoff target skill or agent is not installed or unavailable, tell the
 user which stage is missing and which plugin to install (for example
 `pm-agent` or `engineer-agent`), mark that handoff stage as blocked, and do
 not perform the missing agent's responsibilities yourself.
-
-## Feature Path Gate
-
-For feature-scoped DevOps work, consume the `feature_path` already confirmed by
-PM and Engineer:
-
-- read `docs/pm/{feature_path}/PRD.md` when product deployment constraints are
-  relevant
-- read `docs/engineer/{feature_path}/TRD.md` and
-  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when engineering
-  deployment, release, config, or rollback details are relevant
-- write durable feature-scoped DevOps reports under
-  `docs/devops/{feature_path}/...`
-
-If the request names only a feature display name and the matching
-`feature_path` is unclear, do not create a synonymous top-level
-`docs/devops/{name}/` directory. Return the work to PM for PRD/path
-clarification or to Engineer when the TRD/implementation plan is missing or
-inconsistent. Repo-wide deployment assets and reports may still use `deploy/`.
 
 ## Output Behavior
 

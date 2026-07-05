@@ -51,8 +51,8 @@ After the TRD is confirmed, route implementation planning and execution to
 then waits for implementation confirmation before coding.
 
 Frontend code updates, UI implementation, interface optimization, and
-design-to-code requests are engineering requests. Complete the existing feature
-alignment gate first. If the request changes page structure, interaction flow,
+design-to-code requests are engineering requests. Complete the PM handoff entry
+gate first. If the request changes page structure, interaction flow,
 visual system, component rules, usability, or information hierarchy, check
 whether `docs/design/{feature_path}/ui-ux-spec.md` and/or
 `docs/design/{feature_path}/visual-system.md` exist and cover the change. If
@@ -70,53 +70,34 @@ risks, and the suggested `docs/qa/e2e/{feature_path}/` directory.
 If the package is missing or does not cite a confirmed implementation plan,
 route back to the implementor before handing the result to QA.
 
-## Existing Feature Alignment Gate
+## PM Handoff Entry Gate
 
-Before routing an existing feature behavior change, small modification, or bug
-fix into `feature-implementor` or `debugger`, first resolve the likely
-`feature_path` and read the relevant durable docs:
+Before routing, require either an explicit PM handoff packet or an equivalent
+confirmed entry basis for the selected engineering specialist. The PM-side
+packet fields are defined in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
 
-- `docs/pm/{feature_path}/PRD.md`
-- `docs/engineer/{feature_path}/TRD.md`
-- `docs/pm/{feature_path}/DECISIONS.md` or other product decision records, when
-  present
-
-Resolve `feature_path` by scanning `docs/pm/**/PRD.md` and reading
-`feature_path`, `parent_feature`, and `feature_level` frontmatter when present.
-Old single-level documents without those fields are compatible and are treated
-as `feature_path=<directory-name>`, `parent_feature=N/A`, and
-`feature_level=1`. If the feature path is ambiguous, missing a PRD, invalid, or
-appears to be a child feature incorrectly represented as a new top-level
-directory, keep the request in PM alignment instead of guessing.
-
-Classify the request before engineering execution:
-
-- If the current implementation appears to deviate from PRD / TRD expected
-  behavior, and no present decision record conflicts, route to `debugger` and
-  pass those documents as the expected behavior source.
-- If the user is asking to change approved expected behavior, route back to
-  `pm-agent:idea-to-spec` using the `existing-project-update` lane so PRD /
-  product decision records can be updated before TRD or implementation
-  planning.
-- If PM scope is stable but the Engineer TRD is missing, incomplete, stale,
-  has a different `feature_path`, has mismatched `parent_feature` or
-  `feature_level`, or has a `related_prd` that does not point to
-  `docs/pm/{feature_path}/PRD.md`, route to `engineer-agent:trd-gen` with a
-  TRD gap packet. The finder owns naming the gaps; `trd-gen` owns completing
-  the TRD.
-- If PRD is missing, stale, or unclear, or an existing decision record conflicts
-  with the request, keep the request in PM alignment first instead of guessing
-  the intended behavior.
-- If the user explicitly asks to skip PRD alignment, record the request as a
-  blocker or risk, but do not route to implementation, repair, or E2E updates
-  until PRD/TRD alignment is complete.
-
-The TRD gap packet must identify the missing technical decisions that block
-implementation, including affected components or modules, data flow / API /
-integration impacts, validation commands, release or rollout risks, and error
-handling, observability, or security strategy when relevant. It must also carry
-`feature_path`, `feature`, `parent_feature`, `feature_level`, the PRD path,
-the expected TRD path, and the feature path evidence used for routing.
+- If the user directly invokes `engineer-agent`, `feature-implementor`,
+  `debugger`, `test-writer`, `project-bootstrap`, or `delivery` without a
+  packet, equivalent specialist entry basis, or explicit bootstrap override,
+  do not execute the engineering workflow; return the request to `pm-agent`
+  for classification.
+- If a packet is present, preserve its `request_type`, `change_tier`,
+  `feature_path` fields, source documents, and required output while selecting
+  the narrowest engineering skill.
+- If no packet is present, apply the selected specialist's own entry basis:
+  `trd-gen` may proceed from confirmed PM documents with stable scope and
+  feature path, even before an Engineer TRD exists; `feature-implementor`
+  requires same-path PRD, TRD, and confirmed implementation scope; `debugger`,
+  `test-writer`, `delivery`, and `codebase-analyzer` use their own documented
+  expected-behavior, test-basis, completed-work, or project-context gates.
+- If the user directly requests `project-bootstrap` and explicitly says to skip
+  PM and scaffold anyway, route to `project-bootstrap`; that specialist owns
+  the override path and minimum stack questions.
+- Detailed PRD/TRD, repair, bootstrap, plan, and closeout gates live in the
+  selected specialist (`feature-implementor`, `debugger`, `project-bootstrap`,
+  `trd-gen`, or `test-writer`); this router points to them instead of copying
+  their full gate text.
 
 All Engineer document-writing tasks, including TRD and implementation plan
 documents, should be delegated to a fresh document-writing sub-agent when
