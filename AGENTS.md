@@ -50,7 +50,7 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 - 用户侧新需求、变更、bug、测试、部署、安全、交付或仓库状态诉求默认先进入 `pm-agent` 分类；下游 role router 和 specialist 只在 PM handoff packet 或等效已确认文档链存在时承接。
 - PM handoff packet 字段定义以 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` 为权威；`AGENTS.md` 不复制字段清单。
 - 5 个 role router 只保留入口凭据检查和分流指针；具体执行 gate 的权威副本留在对应 specialist `SKILL.md`，例如 `feature-implementor` 的 PRD/TRD/plan/archive gate、`debugger` 的 expected-behavior gate、QA specialist 的 E2E gate，以及 Designer/DevOps/Security specialist 的 feature-scope gate。
-- 直接调用下游且没有 PM handoff packet 或等效已确认文档链时，不执行下游协议，回到 `pm-agent` 做入口分类。
+- 直接调用下游且没有 PM handoff packet 或等效已确认文档链时，不执行下游协议，回到 `pm-agent` 做入口分类；唯一例外是用户直接请求 `project-bootstrap` 且明确要求跳过 PM 并立即 scaffold，此时可进入 `project-bootstrap` 的最小脚手架 override。
 
 **文档依赖**
 
