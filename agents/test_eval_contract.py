@@ -620,6 +620,47 @@ class EvalContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("metadata.version must match latest changelog version '0.1.3'", rendered)
 
+    def test_repository_contract_same_day_exception_uses_frontmatter_changelog_only(self):
+        checker = load_repository_checker_module()
+
+        content = (
+            "---\n"
+            'feature: "history-search"\n'
+            'version: "0.3.5"\n'
+            'last_updated: "2026-07-05"\n'
+            "release_refs:\n"
+            '  - version: "0.3.5"\n'
+            '    date: "2026-07-05"\n'
+            "changelog:\n"
+            '  - version: "0.3.4"\n'
+            '    date: "2026-07-05"\n'
+            "---\n\n"
+            "```yaml\n"
+            '- version: "0.3.5"\n'
+            '  date: "2026-07-05"\n'
+            "```\n"
+        )
+
+        self.assertFalse(
+            checker.markdown_frontmatter_changelog_has_version_date(
+                content,
+                "0.3.5",
+                "2026-07-05",
+            )
+        )
+
+        content_with_changelog_entry = content.replace(
+            '  - version: "0.3.4"\n',
+            '  - version: "0.3.5"\n',
+        )
+        self.assertTrue(
+            checker.markdown_frontmatter_changelog_has_version_date(
+                content_with_changelog_entry,
+                "0.3.5",
+                "2026-07-05",
+            )
+        )
+
     def test_repository_contract_orders_prerelease_changelog_versions(self):
         checker = load_repository_checker_module()
 

@@ -201,6 +201,26 @@ def markdown_frontmatter_block(content: str) -> str:
     return ""
 
 
+def markdown_frontmatter_changelog_block(content: str) -> str:
+    frontmatter = markdown_frontmatter_block(content)
+    if not frontmatter:
+        return ""
+
+    lines = frontmatter.splitlines()
+    for index, line in enumerate(lines):
+        if line.strip() != "changelog:":
+            continue
+
+        block: list[str] = []
+        for child in lines[index + 1 :]:
+            if child.strip() and not child.startswith((" ", "\t")):
+                break
+            block.append(child)
+        return "\n".join(block)
+
+    return ""
+
+
 def markdown_frontmatter_changelog_has_version_date(
     content: str,
     version: str,
@@ -208,8 +228,8 @@ def markdown_frontmatter_changelog_has_version_date(
 ) -> bool:
     if not version or not date:
         return False
-    frontmatter = markdown_frontmatter_block(content)
-    if not frontmatter:
+    changelog = markdown_frontmatter_changelog_block(content)
+    if not changelog:
         return False
     version_pattern = re.compile(
         rf"(?m)^\s*-\s+version:\s*['\"]?{re.escape(version)}['\"]?\s*$"
@@ -219,11 +239,11 @@ def markdown_frontmatter_changelog_has_version_date(
     )
     next_entry_pattern = re.compile(r"(?m)^\s*-\s+version:")
 
-    for match in version_pattern.finditer(frontmatter):
+    for match in version_pattern.finditer(changelog):
         entry_start = match.end()
-        next_entry = next_entry_pattern.search(frontmatter, entry_start)
-        entry_end = next_entry.start() if next_entry else len(frontmatter)
-        if date_pattern.search(frontmatter[entry_start:entry_end]):
+        next_entry = next_entry_pattern.search(changelog, entry_start)
+        entry_end = next_entry.start() if next_entry else len(changelog)
+        if date_pattern.search(changelog[entry_start:entry_end]):
             return True
 
     return False
