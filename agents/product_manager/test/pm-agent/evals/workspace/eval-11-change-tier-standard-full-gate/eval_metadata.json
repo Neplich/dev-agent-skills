@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval-011-change-tier-standard-full-gate",
+  "eval_name": "change-tier-standard-full-gate",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-11-change-tier-standard-full-gate",
+  "skill_availability_goal": "Verify that pm-agent classifies approved-behavior changes as standard and keeps PRD/TRD alignment.",
+  "prompt": "用户说：把退款审批从自动通过改成需要管理员二次确认，这应该很小，按 hotfix 处理吧。请判断 change_tier 和下一步门禁。",
+  "fixture_context": [
+    "README.md"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval-009-missing-handoff-target-unavailable",
+  "eval_name": "missing-handoff-target-unavailable",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-9-missing-handoff-target-unavailable",
+  "skill_availability_goal": "Verify that pm-agent marks unavailable cross-agent handoff targets as blocked instead of performing missing downstream responsibilities.",
+  "prompt": "用户说：这个需求已经确认要交给设计，但当前环境没有安装 designer-agent。请判断 pm-agent 应该怎么处理这个 handoff，是否可以自己代替设计产出视觉规范。",
+  "fixture_context": [
+    "README.md"
+  ]
+}

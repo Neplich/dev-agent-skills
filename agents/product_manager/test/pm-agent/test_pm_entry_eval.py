@@ -82,6 +82,35 @@ FR006_GATE_DEFENSE_CASES = {
         "`pm-agent`",
     ],
 }
+MISSING_TARGET_CASES = {
+    "eval-009-missing-handoff-target-unavailable": [
+        "not installed",
+        "blocked",
+        "不代行",
+    ],
+}
+CHANGE_TIER_CASES = {
+    "eval-010-change-tier-hotfix-fast-lane": [
+        "`hotfix`",
+        "fast lane",
+        "verification evidence",
+    ],
+    "eval-011-change-tier-standard-full-gate": [
+        "`standard`",
+        "PRD/TRD",
+        "而不是 `hotfix`",
+    ],
+    "eval-012-change-tier-hotfix-abuse-blocked": [
+        "`hotfix`",
+        "expectation change",
+        "`standard`",
+    ],
+    "eval-013-change-tier-hotfix-e2e-direct-path": [
+        "`hotfix`",
+        "directly affected path",
+        "QA",
+    ],
+}
 
 
 def load_evals():
@@ -123,6 +152,14 @@ def test_fr006_pm_entry_scenarios_7_to_8_are_defined():
     assert_eval_workspaces_exist(set(FR006_GATE_DEFENSE_CASES))
 
 
+def test_missing_handoff_target_eval_is_defined():
+    assert_eval_workspaces_exist(set(MISSING_TARGET_CASES))
+
+
+def test_change_tier_contract_evals_are_defined():
+    assert_eval_workspaces_exist(set(CHANGE_TIER_CASES))
+
+
 def test_pm_agent_protocol_covers_fr006_entry_routes():
     skill_text = PM_AGENT_SKILL.read_text()
 
@@ -133,10 +170,45 @@ def test_pm_agent_protocol_covers_fr006_entry_routes():
         assert_contains_all(skill_text, required_terms)
 
 
+def test_pm_agent_protocol_covers_missing_targets_and_change_tier():
+    skill_text = PM_AGENT_SKILL.read_text()
+
+    assert_contains_all(
+        skill_text,
+        [
+            "If a handoff target skill or agent is not installed or unavailable",
+            "mark that handoff stage as blocked",
+            "do not perform the missing agent's responsibilities",
+        ],
+    )
+    assert_contains_all(
+        skill_text,
+        [
+            "assess `change_tier`",
+            "`hotfix`",
+            "`standard`",
+            "`major`",
+            "`hotfix` plus `delivery` / `status` requests may use the fast lane",
+            "Do not route them to downstream execution as `hotfix`",
+        ],
+    )
+
+
 def test_eval_definitions_cover_gate_defense_language():
     evals = load_evals()
 
     for eval_id, required_terms in FR006_GATE_DEFENSE_CASES.items():
+        item_text = json.dumps(evals[eval_id], ensure_ascii=False)
+        assert_contains_all(item_text, required_terms)
+
+
+def test_eval_definitions_cover_missing_targets_and_change_tier():
+    evals = load_evals()
+
+    for eval_id, required_terms in {
+        **MISSING_TARGET_CASES,
+        **CHANGE_TIER_CASES,
+    }.items():
         item_text = json.dumps(evals[eval_id], ensure_ascii=False)
         assert_contains_all(item_text, required_terms)
 
