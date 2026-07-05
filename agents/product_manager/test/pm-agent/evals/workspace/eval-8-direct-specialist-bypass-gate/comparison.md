@@ -11,13 +11,17 @@
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: direct internal specialist request without PRD/TRD/plan or handoff
+- Fixture: direct internal specialist request without PRD/TRD, implementation
+  scope, or handoff
 
 ## With Skill
 
 - Enforces the specialist PM handoff entry gate even when the user names the
   internal specialist directly.
-- Requires a PM handoff packet or equivalent confirmed PRD/TRD/plan chain.
+- Requires a PM handoff packet or equivalent confirmed PRD/TRD plus current
+  implementation scope. Existing `IMPLEMENTATION_PLAN.md` is not required for
+  first-time `feature-implementor` planning, because this specialist creates
+  that plan.
 - Blocks planning, code changes, and test implementation, then returns the
   request to `pm-agent` classification.
 

@@ -204,7 +204,7 @@
         {
           "id": "requires_handoff_or_docs",
           "description": "要求 handoff 或等价文档",
-          "text": "必须要求 PM handoff packet 或等价已确认 PRD/TRD/IMPLEMENTATION_PLAN 文档链。"
+          "text": "必须要求 PM handoff packet，或等价已确认 PRD/TRD 与当前 implementation scope；不能把已存在 IMPLEMENTATION_PLAN 当作进入 feature-implementor 的前置条件。"
         },
         {
           "id": "blocks_implementation",
