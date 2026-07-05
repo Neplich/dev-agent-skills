@@ -7,41 +7,39 @@
 - Eval: `eval-003-engineer-ui-maintenance-handoff`
 - Test case: engineer-ui-maintenance-handoff
 - Workspace: `workspace/eval-003-engineer-ui-maintenance-handoff`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-06-24 after the issue #35 Engineer UI maintenance handoff update
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Engineer-sourced design gap for `customer-portal/profile-settings`.
-- Expected output: write only design deliverables and return implementation to Engineer.
-- Validation context: fresh Codex subagent semantic validation plus CLI transcript diagnostics under `tmp/eval-runs/manual-issue35/designer-agent/`. The local Designer eval helper also generated a runtime `comparison.auto.md` skip report because this case has no deterministic outputs.
+- Fixture: Engineer-sourced UI maintenance design gap for `customer-portal/profile-settings`.
+- Context read before applying the skill: `evals.json`, workspace `eval_metadata.json`, `docs/pm/customer-portal/profile-settings/PRD.md`, and `docs/engineer/customer-portal/profile-settings/TRD.md`.
 
 ## Assertions
 
-- PASS `accepts_engineer_design_handoff`: the skill accepts Engineer-sourced UI maintenance / frontend-update design handoffs and treats them as design scope only.
-- PASS `uses_confirmed_feature_path`: the fixture PRD/TRD and metadata all use `customer-portal/profile-settings`, and the skill consumes confirmed `feature_path`.
-- PASS `routes_design_skills`: information hierarchy routes to `ui-ux-design`, and primary button visual rules route to or include `visual-design`.
-- PASS `writes_design_outputs_only`: outputs are limited to `docs/design/{feature_path}/ui-ux-spec.md` and/or `visual-system.md`.
-- PASS `hands_back_to_engineer`: implementation returns to `engineer-agent` after design docs are complete.
+- PASS `accepts_engineer_design_handoff`: the route recognizes an Engineer UI maintenance handoff as design scope, not Engineering implementation.
+- PASS `uses_confirmed_feature_path`: the route uses `customer-portal/profile-settings` and reads same-path PM/Engineer docs.
+- PASS `routes_design_skills`: information hierarchy goes to `ui-ux-design`, and primary button visual rules include `visual-design`.
+- PASS `writes_design_outputs_only`: outputs are limited to `docs/design/customer-portal/profile-settings/ui-ux-spec.md` and/or `visual-system.md`.
+- PASS `hands_back_to_engineer`: implementation returns to `engineer-agent` after design deliverables are complete.
 
-## With Skill
+## With Skill Behavior
 
-- PASS. The with-skill CLI transcript routed to `ui-ux-design` plus `visual-design`, named the two design deliverable paths, avoided code or implementation lists, and handed the result back to Engineer.
+`designer-agent` satisfies the Engineer UI maintenance handoff contract. It treats the Engineer packet as a design-only gap, selects `ui-ux-design` plus `visual-design` for the stated information hierarchy and primary button visual rules, writes only design deliverables under the resolved feature path, and stops before code, tests, shell commands, or implementation task lists.
 
-## Without Skill / Baseline
+## Without Skill Baseline
 
-- Baseline CLI output stayed design-only and mentioned returning to Engineer, but it did not name the expected `docs/design/customer-portal/profile-settings/` deliverables or explicit design-skill routing covered by the skill.
+Without the router skill and Designer README, a generic response could read the request as a frontend implementation planning task because it came from Engineer and mentions UI maintenance. It might return a component checklist or implementation steps, and it may not name the expected `docs/design/customer-portal/profile-settings/` artifacts.
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- None found.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for Engineer-sourced UI maintenance handoffs. Re-run fresh subagent validation if `designer-agent` routing, design-only boundaries, or eval fixture docs change.
+- Keep this eval as regression coverage for Engineer-to-Designer UI maintenance handoffs.
 
 ## Runtime Artifacts Policy
 
-- CLI transcript diagnostics were generated under `tmp/eval-runs/manual-issue35/designer-agent/` and are runtime artifacts only.
-- Runtime `comparison.auto.md` from the Designer helper remains under `tmp/eval-runs/...` and should not be committed.
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- No runtime artifacts were created for this validation.
+- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.

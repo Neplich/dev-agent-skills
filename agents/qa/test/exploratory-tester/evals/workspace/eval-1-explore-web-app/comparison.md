@@ -7,46 +7,41 @@
 - Eval: `eval-001-explore-web-app`
 - Test case: explore-web-app
 - Workspace: `workspace/eval-1-explore-web-app`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-04
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
+- Validation method: fresh Codex subagent review; baseline was derived before reading `exploratory-tester` or QA README, then with-skill behavior was checked against `SKILL.md`, `agents/qa/README.md`, direct shared references, eval assertions, and fixture evidence.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that exploratory-tester handles explore-web-app and produces the expected role-specific artifact.
 - Expected output: 探索测试报告，包含发现的问题列表和复现路径
+- Fixture context: search-refresh PRD, `SearchPanel`, `FilterPills`, `ResultsList`, QA environment note, `TEST_SUITE.md`, `FLOW_INDEX.md`, and `cases/TC-001-filter-results.md`.
+- Scenario and version: `feature-update`, platform version `v0.9.0-dev`.
 
-## Assertions
+## Without Skill Baseline
 
-- `assertion_1`: 探索章程
-- `assertion_2`: 探索记忆沉淀
-- `assertion_3`: 范围与时限
-- `assertion_4`: 证据分层
-- `assertion_5`: 探索方法
-- `assertion_6`: 可交接产物
-- `deduplicates_existing_flows`: 不重复创建同义 TC
+- A generic exploratory answer would likely begin browser probing or list ad hoc checks without first building a charter from PM context, changed surface, known risks, and environment constraints.
+- It could skip the existing `docs/qa/e2e/search/results/filtering/` memory and create a duplicate filter-results TC instead of updating `TC-001-filter-results`.
+- It might not separate observed defects, suspicious unconfirmed signals, and gaps not explored.
+- It could ignore that browser execution depends on `QA_BASE_URL`, and it would be less likely to state repo harness > Chrome plugin / browser connector > Playwright fallback as the execution-entry order.
 
-## With Skill
+## With Skill Behavior
 
-Observed behavior:
-
-- 当前 skill 要求先读 QA 记忆、PM 上下文、changed surface、风险和环境说明，再产出包含 surface、timebox、heuristics、escalation signals 的 exploration charter；fixture 提供 search-refresh PRD、SearchPanel/FilterPills/ResultsList 改动面和 QA_BASE_URL 阻塞规则，能满足 charter、上下文驱动范围、证据分层和可交接报告 assertions。
-- 当前 skill 明确把 `docs/qa/e2e/{feature_path}/` 作为 durable QA memory，要求先读取 `TEST_SUITE.md`、`FLOW_INDEX.md`、`cases/*.md`、`scripts/*.spec.md`、历史结果和报告。fixture 中已有 `docs/qa/e2e/search/results/filtering/TEST_SUITE.md`、`FLOW_INDEX.md` 和 `cases/TC-001-filter-results.md`，且这些文件明确要求同一 filter-results flow 增量更新既有 TC，不创建同义重复 TC；skill 的 deduplication 规则与 fixture 预期一致。
-- 当前 skill 要求如果读取源码或配置来推导覆盖面，需要更新 `FLOW_INDEX.md` 记录读取文件、原因和覆盖影响；如果识别出可复用 E2E 场景，需要写入单独 case，并在需要可重复执行时写对应 script。一次性观察保留在探索报告，不沉淀为重复 TC。
-- 当前 skill 要求 E2E 执行入口按 repo harness > Chrome plugin / browser connector > Playwright fallback 选择，并默认由 subagent 执行 E2E TC；本 eval 未要求真实执行，`QA_BASE_URL` 缺失时应报告 browser execution blocked，同时仍产出 charter 和 evidence plan。
-
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+- PASS: `exploratory-tester` requires a charter before interaction, including surface, timebox source, heuristics, and escalation signals. The fixture supplies the changed search surfaces and keyboard-focus risk needed for that charter.
+- PASS: Existing QA memory is primary. The skill requires reading `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/*.md`, `scripts/*.spec.md`, prior `results/`, and `_reports/`; absent scripts/results/reports must be recorded instead of silently skipped.
+- PASS: The fixture's existing `TC-001-filter-results` covers the filter-results flow. The skill requires updating the existing TC, script, or `FLOW_INDEX.md` when the same flow is found, and keeps one-off observations in the exploratory report.
+- PASS: For existing-feature exploration, reusable TC creation/update/execution remains gated by same-path PRD/TRD expectation alignment and a confirmed `IMPLEMENTATION_PLAN.md`; fixture-level browser execution is also blocked unless `QA_BASE_URL` is present.
+- PASS: The report contract separates observed issues, suspicious but unconfirmed signals, gaps not explored, exploration path covered, evidence used, and recommended next actions.
 
 ## Failures
 
-- None. Fresh Codex subagent validation found the current `SKILL.md` satisfies all eval assertions, including QA memory reuse, durable function-tree updates, and duplicate TC avoidance.
+- None identified. The current skill contract satisfies all eval assertions for chartering, QA memory reuse, scope/timebox discipline, evidence layering, chartered exploration, handoff-ready output, and duplicate TC avoidance.
 
 ## Next Steps
 
-- 无需修改 fixture。Residual risk: this validation is static against the skill contract and fixture files; no browser session, repo harness, or model transcript was executed.
+- No fixture or skill change is required from this eval.
+- A real execution should record any missing `scripts/`, prior `results/`, `_reports/`, `QA_BASE_URL`, TRD, or implementation-plan gates as blocked before browser or E2E execution.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- No runtime artifacts were created for this validation.
+- Do not commit transcripts, verdicts, timing files, diagnostics, `with_skill/`, `without_skill/`, `outputs/`, or `comparison.auto.md`.

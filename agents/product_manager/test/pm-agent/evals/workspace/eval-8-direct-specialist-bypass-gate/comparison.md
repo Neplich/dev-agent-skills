@@ -6,43 +6,34 @@
 - Test case: direct-specialist-bypass-gate
 - Test set: PM entry evals for issue #52 / FR-006 scenario 8
 - Entry: workspace `eval-8-direct-specialist-bypass-gate`
-- Latest result: PARTIAL - deterministic Batch 4 specialist-gate coverage exists,
-  but fresh Codex subagent validation and a newly generated without-skill
-  baseline are deferred to the post-merge centralized skill-eval pass.
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: direct internal specialist request without PRD/TRD, implementation
-  scope, or handoff
+- Fixture: direct internal specialist invocation without PRD, TRD, implementation plan, or PM handoff packet
+- Expected output: specialist entry gate blocks plan/code/test implementation and returns to `pm-agent` classification.
 
 ## With Skill
 
-- Enforces the specialist PM handoff entry gate even when the user names the
-  internal specialist directly.
-- Requires a PM handoff packet or equivalent confirmed PRD/TRD plus current
-  implementation scope. Existing `IMPLEMENTATION_PLAN.md` is not required for
-  first-time `feature-implementor` planning, because this specialist creates
-  that plan.
-- Blocks planning, code changes, and test implementation, then returns the
-  request to `pm-agent` classification.
+- The PM handoff entry gate applies even when an internal specialist is directly invoked.
+- It requires a PM handoff packet or equivalent confirmed PRD / TRD and current implementation scope before `feature-implementor` planning can proceed.
+- It blocks creating an implementation plan, writing code, or writing tests until the request returns to `pm-agent` classification.
 
-## Without Skill / Baseline
+## Without Skill / without_skill Baseline
 
-- May assume direct specialist invocation is permission to plan or implement.
-- May skip PM classification and source document checks.
+- The baseline read the eval item and fixture before target skill docs. A generic response could treat the explicit specialist invocation as permission to start planning.
+- It may incorrectly treat the missing implementation plan as something to create immediately instead of a downstream step after confirmed PM / TRD context.
 
-## Failures / Coverage Gaps
+## Failures
 
-- Fresh Codex subagent validation has not run for this scenario in this PR.
-- A new without-skill baseline will be generated in the post-merge centralized
-  skill-eval pass.
+- None. The current gate language satisfies all direct-specialist bypass assertions.
 
 ## Next Steps
 
-- Run fresh with-skill and without-skill validation in the centralized eval
-  phase after Batch 4 merges.
+- Keep this eval as coverage for internal specialist bypass attempts.
+- Re-run fresh validation if specialist entry prerequisites change.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, and diagnostics should not be committed.
+- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.

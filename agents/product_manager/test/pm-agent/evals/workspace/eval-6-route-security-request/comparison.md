@@ -6,35 +6,34 @@
 - Test case: route-security-request
 - Test set: PM entry evals for issue #52 / FR-006 scenario 6
 - Entry: workspace `eval-6-route-security-request`
-- Latest result: PASS (deterministic Batch 2 route coverage)
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: authorization, dependency, and secret-risk review request
+- Fixture: authorization, dependency, and secrets-risk review request
+- Expected output: classify as `security`, capture risk scope, and hand off Security with scope and required output.
 
 ## With Skill
 
-- Classifies the request as `security`.
-- Records risk surface, assets, permissions, data flow, and remediation
-  expectations.
-- Hands off to Security with scope and required output.
+- The `pm-agent` protocol maps authorization, dependency risk, secrets, privacy, upload, webhook, login, and data-flow risk requests to `security`.
+- It requires recording risk surface, assets, permissions, data flow, and remediation expectations.
+- It hands off to Security with a bounded review packet instead of doing the security specialist work itself.
 
-## Without Skill / Baseline
+## Without Skill / without_skill Baseline
 
-- May start a security checklist without PM-side classification.
-- Less consistently names assets, permissions, and data-flow scope before
-  handoff.
+- The baseline read the eval item and fixture before target skill docs. A generic response could start a broad security checklist immediately.
+- It may miss the PM-side scope packet and required output definition for Security.
 
 ## Failures
 
-- None recorded in deterministic coverage.
+- None. The current `pm-agent` protocol satisfies security classification and handoff assertions.
 
 ## Next Steps
 
-- Re-run with fresh Codex subagent validation in the post-merge centralized
-  skill-eval pass.
+- Keep this eval as PM entry coverage for security routing.
+- Re-run fresh validation if Security handoff fields change.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, and diagnostics should not be committed.
+- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.

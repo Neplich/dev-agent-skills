@@ -6,38 +6,34 @@
 - Test case: missing-handoff-target-unavailable
 - Test set: PM entry evals for issue #52 / #62 missing target coverage
 - Entry: workspace `eval-9-missing-handoff-target-unavailable`
-- Latest result: PARTIAL - deterministic Batch 4 definition and pytest coverage
-  exist, but fresh centralized subagent validation is deferred to the
-  post-merge skill-eval pass.
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: confirmed design handoff with missing `designer-agent`
+- Expected output: mark handoff blocked, name missing capability, and do not perform Designer responsibilities inside PM.
 
 ## With Skill
 
-- Detects that the target handoff capability is not installed or unavailable.
-- Marks the handoff stage as `blocked` and names the missing plugin or
-  capability.
-- Does not perform the missing Designer responsibility inside PM.
+- The `pm-agent` missing handoff target rule detects unavailable downstream agents or skills.
+- It names the missing `designer-agent` capability, marks that handoff stage as `blocked`, and records the blocker.
+- It does not substitute for Designer by producing visual specifications or design deliverables.
 
-## Without Skill / Baseline
+## Without Skill / without_skill Baseline
 
-- May continue by inventing the missing downstream role's output.
-- May fail to identify the installation or availability blocker.
+- The baseline read the eval item and fixture before target skill docs. A generic response could proceed by drafting a design spec despite the missing Designer capability.
+- It may mention installation but is less reliable about marking the handoff stage blocked and stopping at PM classification.
 
-## Failures / Coverage Gaps
+## Failures
 
-- Fresh Codex subagent validation has not run for this scenario in this PR.
-- A new without-skill baseline will be generated in the post-merge centralized
-  skill-eval pass.
+- None. The current missing-target rule satisfies all assertions.
 
 ## Next Steps
 
-- Run fresh with-skill and without-skill validation in the centralized eval
-  phase after Batch 4 merges.
+- Keep this eval as coverage for unavailable cross-agent handoff targets.
+- Re-run fresh validation if plugin availability handling changes.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, and diagnostics should not be committed.
+- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.

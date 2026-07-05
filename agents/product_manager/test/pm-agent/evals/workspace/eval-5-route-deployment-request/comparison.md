@@ -6,36 +6,34 @@
 - Test case: route-deployment-request
 - Test set: PM entry evals for issue #52 / FR-006 scenario 5
 - Entry: workspace `eval-5-route-deployment-request`
-- Latest result: PASS (deterministic Batch 2 route coverage)
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: repo-wide CI and release-readiness request
+- Expected output: classify as `deployment`, allow repo-wide `N/A` feature fields, and prepare DevOps handoff with operational scope.
 
 ## With Skill
 
-- Classifies the request as `deployment`.
-- Allows confirmed non-feature repo-wide work to use `N/A` feature-scope fields
-  and empty `feature_path_evidence`.
-- Records operational goal, environment, release scope, rollback needs, and
-  risks before DevOps handoff.
+- The `pm-agent` protocol maps CI and release-readiness work to `deployment`.
+- It allows confirmed non-feature repo-wide work to use `feature_path: N/A`, related feature fields as `N/A`, and `feature_path_evidence: []`.
+- It requires operational goal, environment, release scope, rollback needs, and risks before DevOps handoff.
 
-## Without Skill / Baseline
+## Without Skill / without_skill Baseline
 
-- May jump directly into CI implementation without recording operational scope.
-- Less consistently distinguishes repo-wide deployment work from feature-scoped
-  DevOps outputs.
+- The baseline read the eval item and fixture before target skill docs. A generic response could jump directly into CI configuration.
+- It may not preserve the repo-wide non-feature scope rule or the complete DevOps handoff context.
 
 ## Failures
 
-- None recorded in deterministic coverage.
+- None. The current `pm-agent` protocol satisfies deployment classification and repo-wide scope assertions.
 
 ## Next Steps
 
-- Re-run with fresh Codex subagent validation in the post-merge centralized
-  skill-eval pass.
+- Keep this eval as PM entry coverage for deployment and CI routing.
+- Re-run fresh validation if repo-wide feature-scope handling changes.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, and diagnostics should not be committed.
+- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.

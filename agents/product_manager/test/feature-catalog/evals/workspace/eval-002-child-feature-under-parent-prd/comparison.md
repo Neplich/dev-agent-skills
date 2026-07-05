@@ -7,40 +7,43 @@
 - Eval: `eval-002-child-feature-under-parent-prd`
 - Test case: child-feature-under-parent-prd
 - Workspace: `workspace/eval-002-child-feature-under-parent-prd`
-- Latest result: BLOCKED - 本条是新增 skill 的首个 eval 定义，本轮只提交了 eval 定义与 fixture，尚未执行模型 transcript 生成和 fresh Codex subagent validation；`without_skill` baseline 也尚未生成。模型 eval 由维护者在 PR 上决定触发。
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: 初版（本次随 skill 一起提交）——已有 `docs/pm/order-management/PRD.md` 父 PRD，代码新增 `src/orders/refund/` 退款模块与测试
-- Expected output: 复用父 feature_path，退款作为 order-management 下子功能提案，parent_feature/feature_level 一致，说明确认后 prd-gen / trd-gen 链路，handoff packet 字段完整
+- Fixture: existing `docs/pm/order-management/PRD.md` parent PRD plus new refund API/service/test code
+- Expected output: reuse parent `order-management`, propose refund as a child feature, include consistent metadata and handoff packet fields, and avoid generating PRD/TRD content directly.
 
 ## Assertions
 
-- `parent_prd_context_read`: 先读父 PRD 并复用其 feature_path
-- `child_nested_under_parent`: 子功能嵌套在父路径下
-- `feature_level_metadata`: 父子元数据一致
-- `handoff_packet_fields`: handoff packet 字段完整
-- `no_bulk_prd`: 不越界生成 PRD/TRD
+- `parent_prd_context_read`: read parent PRD and reuse its `feature_path`
+- `child_nested_under_parent`: suggest refund under `order-management`
+- `feature_level_metadata`: `parent_feature` and `feature_level` match the nested path
+- `handoff_packet_fields`: handoff packet includes feature path fields and `{source, reason}` evidence
+- `no_bulk_prd`: no direct PRD/TRD generation
 
 ## With Skill
 
-- 尚未运行。首次 fresh subagent validation 执行后在此记录 with-skill 行为摘要。
+- The `feature-catalog` protocol makes existing PRD feature paths authoritative. The fixture PRD confirms `feature_path: order-management`, `parent_feature: N/A`, and `feature_level: 1`.
+- The refund evidence belongs under the parent order-management capability, so the expected suggestion is `order-management/refund` or equivalent lower-kebab child path with `parent_feature: order-management` and `feature_level: 2`.
+- The handoff packet must include `feature_path`, `feature`, `parent_feature`, `feature_level`, and `feature_path_evidence` as `{source, reason}` entries derived from the confirmed catalog, plus `source_catalog`.
+- The protocol sends confirmed requirements work to `prd-gen` via `pm-agent:idea-to-spec`, and only after PM docs are confirmed does it hand off to `engineer-agent:trd-gen`.
 
-## Without Skill / Baseline
+## Without Skill / without_skill Baseline
 
-- BLOCKED: 尚未生成本 eval 的 `without_skill` baseline。按 Fresh Sub-Agent 门禁，首次执行时必须基于同一份 prompt 和 fixture 重新生成新的 baseline，不得复用历史 baseline。
-- 在 baseline 与 with-skill 结果生成并被评审前，本文件不构成 eval PASS 结论。
+- The baseline read the eval item and fixture before target skill docs. A generic scan could notice `src/orders/refund/`, but might propose a new top-level `refund` feature or inline route/service/test objects directly into `feature_path_evidence`.
+- It may also start writing a refund PRD or TRD instead of stopping at feature path confirmation and handoff.
 
 ## Failures
 
-- 无（尚未执行）。
+- None. The current `feature-catalog` protocol satisfies parent reuse, child nesting, metadata, handoff packet, and no-PRD/TRD assertions.
 
 ## Next Steps
 
-- 维护者在 PR 上决定是否触发模型 eval workflow / fresh Codex subagent validation。
-- 执行后更新本文件的 Latest result、With Skill 和 Without Skill / Baseline 小节。
+- Keep this eval as coverage for child features under an existing parent PRD.
+- Re-run fresh validation if feature-path evidence or catalog-to-spec handoff rules change.
 
 ## Runtime Artifacts Policy
 
-- 运行期 transcripts、verdicts、outputs、timing 和 diagnostics 写入隔离 scratch workspace（如 `tmp/eval-runs/...`），不提交到 git；长期提交的结果只有本 `comparison.md`。
+- No runtime artifacts were created or committed. Transcripts, verdicts, outputs, timing, and diagnostics must remain outside git; the durable result is this `comparison.md`.

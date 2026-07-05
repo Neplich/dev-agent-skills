@@ -7,41 +7,38 @@
 - Eval: `eval-003-feature-path-missing-plan-blocked`
 - Test case: feature-path-missing-plan-blocked
 - Workspace: `workspace/eval-3-feature-path-missing-plan-blocked`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation on 2026-06-23
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Same-path PRD and TRD for `account/profile/preferences`, an existing QA E2E function-tree directory, and no `docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md`.
-- Expected output: QA route decision that blocks E2E acceptance TC creation/update/execution because the confirmed implementation plan is missing.
+- Fixture: same-path PRD/TRD and QA E2E function tree for `account/profile/preferences`, with no confirmed implementation plan.
+- Context read before applying the skill: `evals.json`, workspace `eval_metadata.json`, `docs/pm/account/profile/preferences/PRD.md`, `docs/engineer/account/profile/preferences/TRD.md`, `docs/qa/e2e/account/profile/preferences/TEST_SUITE.md`, and `FLOW_INDEX.md`.
 
 ## Assertions
 
-- `reads_same_feature_path`: use `account/profile/preferences` as the confirmed feature path and read matching PRD/TRD plus QA function-tree memory.
-- `blocks_missing_plan`: mark the request blocked and return the missing implementation plan to `engineer-agent:feature-implementor`.
-- `no_e2e_mutation_or_execution`: do not create, update, or execute acceptance TC without the plan.
-- `keeps_single_route`: choose one narrow QA route and do not enter implementation.
+- PASS `reads_same_feature_path`: the route preserves `account/profile/preferences`, reads same-path PRD/TRD, and keeps the QA E2E function tree under the same path.
+- PASS `blocks_missing_plan`: missing `docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md` is a blocker, with next owner `engineer-agent:feature-implementor`.
+- PASS `no_e2e_mutation_or_execution`: no E2E acceptance TC is created, updated, or executed without the confirmed implementation plan.
+- PASS `keeps_single_route`: the router keeps one narrow QA route and treats the missing plan as the blocker instead of invoking multiple QA skills or entering implementation repair.
 
-## With Skill
+## With Skill Behavior
 
-- PASS. Current `qa-agent` instructions consume a confirmed same-path `feature_path` before E2E acceptance work. The fixture provides matching `docs/pm/account/profile/preferences/PRD.md`, `docs/engineer/account/profile/preferences/TRD.md`, and QA function-tree memory under `docs/qa/e2e/account/profile/preferences/`.
-- PASS. The QA Feature Path Gate requires `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` for existing-feature changes, bug fixes, or code-complete E2E documentation updates before creating, updating, or executing acceptance TC. The fixture intentionally omits `docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md`, so the correct route result is `blocked`.
-- PASS. The skill separates owners: missing or mismatched TRD returns to `engineer-agent:trd-gen`, while a missing or mismatched implementation plan returns to `engineer-agent:feature-implementor`. This fixture omits the implementation plan, so the next owner is `engineer-agent:feature-implementor` rather than QA execution.
-- PASS. The route remains a single narrow QA route and stops before TC mutation, TC execution, or implementation repair. The QA directory being present is treated as memory to read, not sufficient authorization to run acceptance.
+`qa-agent` satisfies the expected blocked behavior. Its router output requires same-path PRD/TRD and confirmed implementation plan gates for code-complete E2E acceptance updates. The directly referenced QA specialist gates confirm that a missing implementation plan blocks creating, updating, or executing acceptance TC and sends the next action to `engineer-agent:feature-implementor`.
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- A generic answer may treat the QA directory as sufficient context and start creating or executing TC without the implementation-plan gate.
+## Without Skill Baseline
+
+Without the router skill, QA README, and QA E2E gate references, a generic response could proceed from the existing PRD/TRD and QA directory into test-case creation or execution. It might treat the empty QA tree as enough context and miss that the confirmed `IMPLEMENTATION_PLAN.md` is mandatory for code-complete acceptance work.
 
 ## Failures
 
-- None.
+- None found. The blocked route is the expected pass condition for this eval.
 
 ## Next Steps
 
-- No skill or fixture change is required for this eval. Residual risk: this validation is a direct skill-read judgment against current docs and fixture files; no model transcript was generated.
+- Keep this eval as regression coverage for missing implementation-plan blocking before E2E acceptance mutation or execution.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- No runtime artifacts were created for this validation.
+- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.
