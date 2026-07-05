@@ -1,6 +1,7 @@
 ---
 name: codebase-analyzer
-description: "Scan and understand an existing codebase before starting work. Use this skill whenever the engineer needs to understand a project's structure, tech stack, coding conventions, dependencies, or architecture patterns before implementing features. Trigger on phrases like '分析代码库', '了解项目结构', '项目用了什么技术栈', '代码规范是什么', or any request to understand an existing codebase before coding."
+description: "Internal engineering specialist invoked by engineer-agent after pm-agent handoff to scan an existing codebase and summarize structure, stack, conventions, dependencies, and architecture evidence before downstream work."
+visibility: internal
 ---
 
 # Codebase Analyzer

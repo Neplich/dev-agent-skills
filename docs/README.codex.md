@@ -13,18 +13,18 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 Codex 会先反问你两个问题，再执行安装：
 
 1. 安装范围是 `personal` 还是 `project`
-2. 安装 `all` agents，还是从多个 agents 中选择安装
+2. 安装 `pm-agent` only、`all` agents，还是从多个 agents 中选择安装
 
-## 可安装的 Agent
+## 公开入口与下游能力
 
-- `pm-agent`：产品规划、需求文档、路线图、发版说明
-- `engineer-agent`：代码分析、项目搭建、功能实现、测试、调试、交付
-- `qa-agent`：探索测试、规范测试、Bug 分析、回归验证
-- `devops-agent`：部署规划、CI/CD、环境审计、故障处理
-- `designer-agent`：UI/UX 设计、reference-backed 视觉系统、界面规范，仅产出设计文档不写代码
-- `security-agent`：应用安全、权限审查、依赖风险、隐私映射
+- `pm-agent`：直接用户入口，负责需求分类、范围确认、文档产出、GitHub 状态读取和下游 handoff
+- `engineer-agent`：PM handoff 后的下游工程能力，承接已确认范围内的代码分析、TRD、实现、测试、调试和交付
+- `qa-agent`：PM handoff 后的下游 QA 能力，承接已确认预期下的探索测试、规范测试、Bug 分析和回归验证
+- `devops-agent`：PM handoff 后的下游 DevOps 能力，承接已确认运维范围内的部署规划、CI/CD、环境审计和故障处理
+- `designer-agent`：PM handoff 后的下游设计能力，承接已确认设计范围内的 UI/UX、视觉系统和界面规范
+- `security-agent`：PM handoff 后的下游安全能力，承接已确认安全范围内的应用安全、权限审查、依赖风险和隐私映射
 
-如果选择 `selected`，支持一次选择多个 Agent。
+直接入口选择 `pm-agent`。如果选择 `selected`，支持一次选择多个下游 Agent 作为 PM 编排能力。
 
 ## 安装层级
 
@@ -43,6 +43,8 @@ Codex 会先反问你两个问题，再执行安装：
 - 每个已选 Agent 下的 skills 软链接到 `<project>/.agents/skills/<skill-name>`
 
 两种安装方式都保持仓库内的 `agents/*/skills/*` 目录不变，用于兼容 Claude marketplace。
+
+Codex 会发现已链接的所有 skills；本仓库约定直接用户请求优先从 `pm-agent` 进入，下游 role router 和 specialist skill 用于 PM handoff 或等效已确认文档链已经明确范围后的工作。
 
 ## 手动安装
 
@@ -188,7 +190,13 @@ link_agent_skills "agents/designer/skills"
 link_agent_skills "agents/security/skills"
 ```
 
-例如只安装 `pm-agent`、`engineer-agent`、`qa-agent`：
+如果只安装直接入口，运行：
+
+```bash
+link_agent_skills "agents/product_manager/skills"
+```
+
+例如安装 `pm-agent` 以及 PM handoff 可用的 `engineer-agent`、`qa-agent`：
 
 ```bash
 link_agent_skills "agents/product_manager/skills"
@@ -354,12 +362,13 @@ Claude marketplace 继续读取仓库内的 Agent 目录；Codex 通过 `.agents
 
 ```text
 /pm-agent "我想做一个任务管理应用"
-/engineer-agent "实现用户登录功能"
-/qa-agent "测试登录功能"
-/devops-agent "配置 CI/CD"
-/designer-agent "设计用户登录界面"
-/security-agent "进行安全审查"
+/pm-agent "登录流程有 bug，先确认预期再安排修复"
+/pm-agent "按 spec 验证登录功能"
+/pm-agent "配置 CI/CD 并做发布前检查"
+/pm-agent "上线前做一次权限和依赖风险审查"
 ```
+
+下游 role router 和 specialist skills 仍会被链接，供 PM 编排后的 handoff 使用；直接用户请求优先从 `pm-agent` 分类，下游 skills 用于 PM handoff 或等效已确认文档链已经明确范围后的工作。
 
 ## 验证
 

@@ -1,6 +1,7 @@
 ---
 name: qa-agent
-description: Route QA work to the right downstream skill. Use when the user needs documented acceptance, exploratory discovery, failure reproduction, or fix verification. Trigger on phrases like "测一下这个功能", "按 spec 验证", "做冒烟测试", "探索一下 UI", "帮我复现这个问题", "分析 bug", "复测这个修复", "回归测试", or any QA-oriented request that should be routed before execution.
+description: "Downstream QA router invoked after pm-agent handoff. Classifies confirmed validation scope across acceptance, exploratory testing, bug analysis, and regression verification, then delegates to QA specialists."
+visibility: internal
 ---
 
 # QA Agent Dispatcher

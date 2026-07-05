@@ -1,6 +1,7 @@
 ---
 name: devops-agent
-description: Route DevOps work to the right downstream skill. Use when the user needs deployment planning, runtime packaging, Docker or Helm setup, CI/CD automation, environment variable auditing, release readiness checks, rollback/runbook documentation, or operational hardening for a repo or service. Trigger on phrases like "怎么部署", "补 docker/helm", "配 CI", "加 GitHub Actions", "环境变量对齐一下", "检查 secrets", "发布前运维准备", "写回滚手册", "做 runbook", or any DevOps-oriented request that should be routed before execution."
+description: "Downstream DevOps router invoked after pm-agent handoff. Classifies confirmed operational scope across deployment planning, runtime packaging, CI/CD, environment audits, release readiness, rollback, and runbook work, then delegates to DevOps specialists."
+visibility: internal
 ---
 
 # DevOps Agent Dispatcher

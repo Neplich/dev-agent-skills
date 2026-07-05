@@ -1,6 +1,7 @@
 ---
 name: feature-catalog
-description: "Build a feature catalog and project feature profile when taking over an existing project. Use this skill whenever the user inherits a codebase mid-way and needs to map existing routes, pages, APIs, services, data models, background jobs, tests, and docs into a maintainer-confirmable feature directory with evidence and confidence before any PRD work. Trigger on phrases like '建立功能目录', '功能画像', '接手项目先梳理功能', '这个项目现在有哪些功能', 'build a feature catalog', 'map the existing features', 'feature inventory for this repo', or any request to establish a feature directory for an inherited project."
+description: "Internal PM specialist invoked by pm-agent for inherited projects to map routes, pages, APIs, services, data models, tests, and docs into a maintainer-confirmable feature catalog."
+visibility: internal
 ---
 
 # Feature Catalog

@@ -1,6 +1,7 @@
 ---
 name: feature-implementor
-description: "Core engineering skill: implement features from confirmed Engineer TRDs and PM/design inputs. Use this skill whenever the user wants to implement a feature, write code for a confirmed requirement, build functionality described in a TRD/spec, or turn a design into code. Trigger on phrases like '实现这个功能', '写代码', '开始编码', 'implement', 'build this feature', 'code this', or any request to turn confirmed technical plans into working code."
+description: "Internal engineering specialist invoked by engineer-agent after pm-agent handoff to implement confirmed TRDs and PM/design inputs through a verified implementation plan."
+visibility: internal
 ---
 
 # Feature Implementor — Public Entry

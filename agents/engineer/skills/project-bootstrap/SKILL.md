@@ -1,6 +1,7 @@
 ---
 name: project-bootstrap
-description: "Initialize a new project from settled specs only. If there is no TRD, PRD, or approved PM docs and the user did not explicitly say to skip PM, this skill must refuse to bootstrap and must redirect to `pm-agent:idea-to-spec` without asking about React, Vite, Next.js, package managers, or other stack choices."
+description: "Internal engineering specialist invoked by engineer-agent after pm-agent handoff to initialize a project only from settled PRD/TRD or approved PM scope, with PM redirection when specs are absent."
+visibility: internal
 ---
 
 # Project Bootstrap

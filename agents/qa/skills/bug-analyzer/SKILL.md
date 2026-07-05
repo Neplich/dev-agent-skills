@@ -1,6 +1,7 @@
 ---
 name: bug-analyzer
-description: "Analyze failing scenarios with an evidence-first intake, classify defect confidence, and produce a durable bug artifact for QA handoff."
+description: "Internal QA specialist invoked by qa-agent after pm-agent handoff to analyze failing scenarios, classify defect confidence, and produce durable bug evidence for QA or engineering handoff."
+visibility: internal
 ---
 
 # Bug Analyzer

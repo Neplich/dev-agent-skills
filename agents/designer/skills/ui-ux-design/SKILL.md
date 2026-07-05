@@ -1,6 +1,7 @@
 ---
 name: ui-ux-design
-description: Design UI/UX flows and specifications with optional reference website analysis. Outputs user journeys, page layouts, and ASCII prototypes.
+description: "Internal design specialist invoked by designer-agent after pm-agent handoff to produce UX flows, page structures, journey maps, and ASCII prototypes from confirmed PM/design scope."
+visibility: internal
 ---
 
 ## Hard Boundaries

@@ -1,6 +1,7 @@
 ---
 name: engineer-agent
-description: Route engineering work to the right downstream skill. Use when the user needs repo analysis, spec-driven project bootstrap, feature implementation, frontend UI implementation, refactoring for a settled requirement, test coverage, bug fixing, CI-break triage, commits, pushes, or PR delivery. If the workspace is empty or new and the user is still defining what to build, route back to PM first. Trigger on phrases like "分析代码库", "接手这个仓库", "初始化项目", "实现这个功能", "按设计稿落地", "更新前端代码", "改 UI", "优化界面实现", "改一下这段逻辑", "补测试", "这个测试为什么挂了", "修 bug", "做个 hotfix", "commit", "push", "提 PR", or any engineering request that should be routed before execution."
+description: "Downstream engineering router invoked after pm-agent handoff. Classifies confirmed engineering scope across codebase analysis, TRD generation, bootstrap, implementation, tests, debugging, delivery, and UI implementation, then delegates to engineering specialists."
+visibility: internal
 ---
 
 # Engineer Agent Dispatcher

@@ -1,6 +1,7 @@
 ---
 name: github-reader
-description: Read and summarize GitHub repository project state for a PM. Use this skill whenever the user asks about project status, issue backlog, milestone progress, PR queue, what's blocking a release, what the team is working on, or wants a health check of a GitHub repo. Trigger on phrases like "项目状态", "milestone 进度", "有哪些 PR 在等 review", "backlog 里有什么", "哪些 issue 没有 assignee", "本周合并了什么", "release 准备好了吗", or any question about repo health. Also use this skill proactively when another skill (roadmap-generator, weekly-report) needs fresh GitHub data as input.
+description: "Internal PM specialist invoked by pm-agent for GitHub project-state intake, including issues, PRs, milestones, backlog health, release readiness, and recent repository activity."
+visibility: internal
 ---
 
 # GitHub Reader

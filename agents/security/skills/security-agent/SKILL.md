@@ -1,6 +1,7 @@
 ---
 name: security-agent
-description: Route security review work to the right downstream skill. Use when the user needs a release-gate security pass, application security review, auth/authz review, dependency or supply-chain audit, privacy/data-flow mapping, or focused review of risky surfaces such as login, roles, uploads, webhooks, secrets, or third-party integrations. Trigger on phrases like "做安全检查", "上线前过一遍安全", "看下权限模型", "登录注册有没有问题", "依赖有没有漏洞", "查一下 secrets 风险", "GDPR/CCPA", "数据流梳理", or any security-oriented request that should be routed before execution."
+description: "Downstream security router invoked after pm-agent handoff. Classifies confirmed security scope across AppSec, auth/authz, dependency risk, privacy, and data-flow review, then delegates to security specialists."
+visibility: internal
 ---
 
 # Security Agent Dispatcher

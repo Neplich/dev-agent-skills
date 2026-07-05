@@ -1,6 +1,7 @@
 ---
 name: privacy-surface-mapper
-description: Map personal data collection points and privacy compliance requirements for GDPR/CCPA.
+description: "Internal security specialist invoked by security-agent after pm-agent handoff to map personal-data collection, privacy obligations, GDPR/CCPA concerns, and data-flow exposure."
+visibility: internal
 ---
 
 ## Execution Steps

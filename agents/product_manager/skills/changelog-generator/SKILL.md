@@ -1,6 +1,7 @@
 ---
 name: changelog-generator
-description: Generate or update docs/changelog/changelog-v{version}.md from GitHub PRs and release tags, following Keep a Changelog format. Use this skill whenever the user asks to generate a changelog, update the changelog, create release notes, document what changed in a version, summarize changes since last release, or add a changelog entry. Trigger on phrases like "generate changelog", "update changelog", "what changed in v1.x", "create release notes", "document changes since last release", "add changelog entry for [version]", or "show me unreleased changes".
+description: "Internal PM specialist invoked by pm-agent for release communication to generate or update versioned changelogs from merged PRs, tags, and repository release history."
+visibility: internal
 ---
 
 # Changelog Generator

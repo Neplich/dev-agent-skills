@@ -1,6 +1,7 @@
 ---
 name: debugger
-description: "Reproduce, diagnose, and fix bugs with minimal changes. Use this skill when tests fail, builds break, runtime errors occur, or the user reports a bug. Trigger on phrases like '测试失败', '构建报错', '有个 bug', 'fix this error', 'debug', 'why is this failing', 'tests are broken', or when test-writer reports failing tests."
+description: "Internal engineering specialist invoked by engineer-agent after pm-agent handoff to reproduce, diagnose, and fix confirmed implementation defects with minimal scoped changes and verification evidence."
+visibility: internal
 ---
 
 # Debugger

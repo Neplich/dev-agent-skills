@@ -1,6 +1,7 @@
 ---
 name: trd-gen
-description: "Generate or update Engineer-owned Technical Requirements Documents (TRD), API docs, and ADRs after PRD and product decisions are stable. Use this skill when users ask for a TRD, technical plan, engineering design, architecture plan, API specification, ADR, implementation blueprint, or when pm-agent hands off a confirmed PRD for technical planning before implementation."
+description: "Internal engineering specialist invoked by engineer-agent after pm-agent handoff to create or update Engineer-owned TRDs, API docs, ADRs, and implementation blueprints from stable PM decisions."
+visibility: internal
 ---
 
 # TRD Generator

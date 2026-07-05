@@ -1,6 +1,7 @@
 ---
 name: exploratory-tester
-description: "Discovery-driven exploratory QA that uses an exploration charter to examine changed product surfaces, environmental risks, and nearby failure modes with flexible tooling."
+description: "Internal QA specialist invoked by qa-agent after pm-agent handoff to explore changed product surfaces, environmental risks, and nearby failure modes with evidence-backed charters."
+visibility: internal
 ---
 
 # Exploratory Tester

@@ -1,6 +1,7 @@
 ---
 name: visual-design
-description: Use when the user needs a visual design system, aesthetic direction, color, typography, component styling, copy tone, or reference-backed UI quality rules before engineering implementation.
+description: "Internal design specialist invoked by designer-agent after pm-agent handoff to define visual systems, aesthetic direction, color, typography, components, copy tone, and reference-backed UI quality rules."
+visibility: internal
 ---
 
 ## Hard Boundaries

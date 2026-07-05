@@ -4,177 +4,177 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "328ad558023b58d18783dea0f7033fd581fa62476399c65a0cc51a743008d17e"
+      "computedHash": "ba844af48911e9f15881496e5109305dce3398e48e278f38ee96abf410905f06"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "2a4f7c1ee4bd5cdb34623ea9ad56d088b8d6e684aea1fc46c3dcb0e03d3e5ad5"
+      "computedHash": "0712c97932654e0bb21fdb3eb62634ea4eeefa5357319f8d47d3f10cc80ef95b"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
       "sourceType": "local",
-      "computedHash": "8c829787b7fae02db2fae6ee24526e6c0a1f08548eea3b0680d2c97e168b597b"
+      "computedHash": "726ff8b9d4e6e201037ab3247a0c3fb176e6ae45e68d93ce34af543fbaa6f5b0"
     },
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",
       "sourceType": "local",
-      "computedHash": "45e7d6b097dc935967a1aac717e987bb862d887a80723ec124c44a83fb369970"
+      "computedHash": "a4448c0edc870f025c78eea113f04acfdfdd3d16171d7e5bc494cbe258c90844"
     },
     "competitive-intelligence": {
       "source": "agents/product_manager/skills/competitive-intelligence",
       "sourceType": "local",
-      "computedHash": "c133ad3f1918d767c379eb32e22f0890300b87ed1882c2a853d0e63ecd5cb539"
+      "computedHash": "9b3a5a2dd94506586b6ba4bf49080ffa9de0d36325be008e4a8a5954794af763"
     },
     "changelog-generator": {
       "source": "agents/product_manager/skills/changelog-generator",
       "sourceType": "local",
-      "computedHash": "34f5dfa961c1c9db4d4760a4b00df9d4773a0ff74027c537cc5b7575241bee91"
+      "computedHash": "1a219d4647e5f1812ced576ff0915d696f5f178115484cf4c7cb982550ae6ed0"
     },
     "release-notes-generator": {
       "source": "agents/product_manager/skills/release-notes-generator",
       "sourceType": "local",
-      "computedHash": "c77448e8c5c6109169ade598d80de465d63696e92f69cf09ff3aec674cc6b53e"
+      "computedHash": "2fa7b97cf6b9a8b8de39346928f3c7b79d8d2ae4f9b4a40daeab342da45d201f"
     },
     "roadmap-generator": {
       "source": "agents/product_manager/skills/roadmap-generator",
       "sourceType": "local",
-      "computedHash": "63f0a11840df2ee6bd764dfaaab8bc11df4678727bf6c05f9f1f3512cb2d3189"
+      "computedHash": "50a30b3bbf5389d0aebb405dd6f9b0caf456237efff3b82419753ec8b58f1de4"
     },
     "github-reader": {
       "source": "agents/product_manager/skills/github-reader",
       "sourceType": "local",
-      "computedHash": "b46508002418ccfd2067f2c3723290c26015f745ccd637dc7324019fe6b97317"
+      "computedHash": "13f1ca0e25b34c9be7db37a797cd536cde1f717c4c9e1a5b66bacf593fe99b3a"
     },
     "engineer-agent": {
       "source": "agents/engineer/skills/engineer-agent",
       "sourceType": "local",
-      "computedHash": "e02207755560234714d9e7050c0a8159b7bd10bcf95e969b672c03593a96878f"
+      "computedHash": "2be1d95a8d71bd5342631cfc773c7e15184730dfb2e4971d0fea179c78e153ce"
     },
     "codebase-analyzer": {
       "source": "agents/engineer/skills/codebase-analyzer",
       "sourceType": "local",
-      "computedHash": "bc5399f49b5fce5f04eb2faadf9e7a15f18b38c2fc6ef5b4f802ec3356d6e888"
+      "computedHash": "948584889c1eabbe69c4219370eb51d952b406887169988684a253ba2a949451"
     },
     "trd-gen": {
       "source": "agents/engineer/skills/trd-gen",
       "sourceType": "local",
-      "computedHash": "68a265de4ad92c6d6d1fd136a2a91e48b1a9e4d09932bc004c495de0b4cf1f1b"
+      "computedHash": "3b4fc0bd2ad9bd2b67b99ab70277e97e282ebedb19ac944039990dc510a29948"
     },
     "project-bootstrap": {
       "source": "agents/engineer/skills/project-bootstrap",
       "sourceType": "local",
-      "computedHash": "624810d166985f8ea60086aeb265a0890fb5b29ed1074b33644620cdb1576a15"
+      "computedHash": "5150db502d1aa2a13b075ad690685873bf19c165409e2210b9a78f7f32495a1f"
     },
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
       "sourceType": "local",
-      "computedHash": "fe5ff26cbe434b4f2f5bca6054f9f3793249deaf2d0f5f1ebf16fad517016a04"
+      "computedHash": "c475ed369702ebbe22a25466d72d8d4872109131344f3b5a4db45558b5dda10f"
     },
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",
       "sourceType": "local",
-      "computedHash": "6bd2bf030719128aacf967dd09bfbd1faed9fe9231431809f0bc77214f31e279"
+      "computedHash": "dab0d810264b68acd535c221a6e611dc77af7f46cf80e4622df371f391401fc2"
     },
     "debugger": {
       "source": "agents/engineer/skills/debugger",
       "sourceType": "local",
-      "computedHash": "f03bb590e9caf90a087d516b8a8a682a4ce4f34515e156900f1b25d0e36e7565"
+      "computedHash": "510481b3ac2424e03f21d0c7214d003bc9f6dabd639e323d8f02196d0c9cb848"
     },
     "delivery": {
       "source": "agents/engineer/skills/delivery",
       "sourceType": "local",
-      "computedHash": "7a8730093acb8aa84f5fb47268683a3ec51e0fe723e16426f85903b46603f576"
+      "computedHash": "1f9ed2e864c3c7fd0d53670d94a567c70e419a7e3ecb5adf5c451794ec786c66"
     },
     "qa-agent": {
       "source": "agents/qa/skills/qa-agent",
       "sourceType": "local",
-      "computedHash": "3ec00f33becdaffc42e77b1bf99c12fc25d5c337f0fd2da53b0b90850224bb45"
+      "computedHash": "51217f7b8f7097f80eae1d156017ea77c8ce058ef102d60fe79dd35da5ece2cc"
     },
     "exploratory-tester": {
       "source": "agents/qa/skills/exploratory-tester",
       "sourceType": "local",
-      "computedHash": "38f14651b1ab6a8682d09c8e1bda465b16e324fb4c6ebe01d886d250720ad9eb"
+      "computedHash": "ad33562cae6130ddd45a773434066aeb792ca2207528f4dbb2fd1c3bde5872c5"
     },
     "spec-based-tester": {
       "source": "agents/qa/skills/spec-based-tester",
       "sourceType": "local",
-      "computedHash": "8daa6547b899609e44654f1cfb2e1b22762a3fe07cea37775460e9127ba6ea2a"
+      "computedHash": "b63646da330ec8ff35c7b1583ef5abd6b47be073ca821f00896affce9e94a9f0"
     },
     "bug-analyzer": {
       "source": "agents/qa/skills/bug-analyzer",
       "sourceType": "local",
-      "computedHash": "204f7c8425b48c25022d195e82a2151a44642e4e3af202486a23a7cfed669042"
+      "computedHash": "e6cc7e0de05367495e647360c6799e9b825808ace1725b4841daddbbb97b55d6"
     },
     "regression-suite": {
       "source": "agents/qa/skills/regression-suite",
       "sourceType": "local",
-      "computedHash": "6ab62ad2e6754626771bfd0c8b8d5cad7b72eefc6c5e2e4915b99fb103d787ab"
+      "computedHash": "d38a3f56dce0a809c7e9eb3e5f3db446cc913dafaad3a7b35ae7f4f6a6084408"
     },
     "devops-agent": {
       "source": "agents/devops/skills/devops-agent",
       "sourceType": "local",
-      "computedHash": "d7df45ee24fdb7dfe446497e1b8f307523248166fd02a04c8b626c7fb1f7bc93"
+      "computedHash": "e9c0a5da1283403bb46cbf53ab2ed4462698b5fcad985f7e4b35fb154cd53364"
     },
     "deployment-planner": {
       "source": "agents/devops/skills/deployment-planner",
       "sourceType": "local",
-      "computedHash": "0e96946a24ae585f9ae548d2b4621dca1d136b1b72dc5e1f5d7575976afee86b"
+      "computedHash": "1ae4941c765e8f15559c67bdf6b0c290e00c96fb32833b14c91b11e9d98534e7"
     },
     "cicd-bootstrap": {
       "source": "agents/devops/skills/cicd-bootstrap",
       "sourceType": "local",
-      "computedHash": "b78608c871ae2879b006c2eb974b7ad343d5d2e1e5edea5c704096cf4fa3cd05"
+      "computedHash": "7869a8d87ade3003a34a8ba7cd845de094539124094b6e86aea33675977e9544"
     },
     "env-config-auditor": {
       "source": "agents/devops/skills/env-config-auditor",
       "sourceType": "local",
-      "computedHash": "11f753a4611a25415383d7bea38f7a59b2b2a817755e4ff093aee78803688cce"
+      "computedHash": "3b7e5a63a550d6253663586dcf87400f8c9d82e0ed9bb8db84e4370651a6c5af"
     },
     "incident-playbook-writer": {
       "source": "agents/devops/skills/incident-playbook-writer",
       "sourceType": "local",
-      "computedHash": "08cd0b325c9451cbe66e787a850dda6092a3c96cbdea3417a249047cb15f2ce7"
+      "computedHash": "552a408849c4249c54b9573da52ea2e936efbded17da04cc6b8e8510032cb6e3"
     },
     "designer-agent": {
       "source": "agents/designer/skills/designer-agent",
       "sourceType": "local",
-      "computedHash": "0c2796b0e22417349be721bc9909c3efa3b356cbfb8326f36b6307cfb9f002f6"
+      "computedHash": "48416b4d16427d11a3b3458f7812e35a70bb3b964c99f0b569daa08531b6583e"
     },
     "ui-ux-design": {
       "source": "agents/designer/skills/ui-ux-design",
       "sourceType": "local",
-      "computedHash": "7ebba0f367f45ee49a7452bf22b6b4fc49e9ab1f5d960b874cd94145a514e85e"
+      "computedHash": "bd98b203e09f2bf85ac3606b1ef2e94186d32f0a34e02a028c9714f7682c2499"
     },
     "visual-design": {
       "source": "agents/designer/skills/visual-design",
       "sourceType": "local",
-      "computedHash": "8bb48a9051d6ceb0f76824bd04a011a51f94b6ee677d34a32d985a2067abcdf0"
+      "computedHash": "8705696aefdb5fdc0674dad60ebd2d2bdb05aff697c808366762cdce67cd93a2"
     },
     "security-agent": {
       "source": "agents/security/skills/security-agent",
       "sourceType": "local",
-      "computedHash": "1e4f3bad83411c81d6657d2d1cd40ccc4819665ec6b4c30c009db7ee09bbfe4c"
+      "computedHash": "441b5afe9d1155a0e6b072820f1fb4e66f0fc176e865d62680e8a8c8618a494e"
     },
     "appsec-checklist": {
       "source": "agents/security/skills/appsec-checklist",
       "sourceType": "local",
-      "computedHash": "45baffb1459686085113ed67f97f1d8fbca7432088b81fc89ebd2c71ff318d7a"
+      "computedHash": "d7023050322d37f920b03f54d533aecbaf7de52e7e9d3101ef50799056cce994"
     },
     "authz-reviewer": {
       "source": "agents/security/skills/authz-reviewer",
       "sourceType": "local",
-      "computedHash": "6a6b86a93a7492966a0613187d8293be5ef06b30616a6878155897ee847b3770"
+      "computedHash": "1eee0312543fde14b069f1545a7759a6169e3f9e867dab934ba04b29e6db8d87"
     },
     "dependency-risk-auditor": {
       "source": "agents/security/skills/dependency-risk-auditor",
       "sourceType": "local",
-      "computedHash": "2ab4572cd6d48b32a7f8faf65fa06e6cd9cdad8e9dc4c30a419abe37522824de"
+      "computedHash": "6c1097288280dbde86ed253e9297ee541498ed9456d3bb181987f9693bfe187d"
     },
     "privacy-surface-mapper": {
       "source": "agents/security/skills/privacy-surface-mapper",
       "sourceType": "local",
-      "computedHash": "264df0803e6bd70247f7b3809a9cc881dc01b47f05d7b7d5b37eae80b5936e1c"
+      "computedHash": "4dcccab059f00db155cf010ce1bb54fbfdce713ba73311c31fdd8b37d99c9238"
     }
   }
 }

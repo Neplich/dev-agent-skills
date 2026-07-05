@@ -1,6 +1,7 @@
 ---
 name: appsec-checklist
-description: Scan codebase for common security vulnerabilities and generate security checklist report before release.
+description: "Internal security specialist invoked by security-agent after pm-agent handoff to scan application code for common vulnerabilities and produce a release-oriented security checklist."
+visibility: internal
 ---
 
 ## Execution Steps

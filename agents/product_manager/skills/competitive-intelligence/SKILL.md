@@ -1,6 +1,7 @@
 ---
 name: competitive-intelligence
-description: Research your competitors and build an interactive battlecard. Outputs an HTML artifact with clickable competitor cards and a comparison matrix. Trigger with "competitive intel", "research competitors", "how do we compare to [competitor]", "battlecard for [competitor]", or "what's new with [competitor]".
+description: "Internal PM specialist invoked by pm-agent for competitor research to build an interactive battlecard with competitor cards and a comparison matrix."
+visibility: internal
 ---
 
 # Competitive Intelligence

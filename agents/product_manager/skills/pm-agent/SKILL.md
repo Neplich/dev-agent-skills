@@ -1,13 +1,15 @@
 ---
 name: pm-agent
-description: Route PM work to the right downstream skill. Use when the user needs product discovery, idea shaping, requirement clarification, scope definition, spec creation or updates, competitor research, release communication, roadmap planning, changelog generation, GitHub project status, or is describing a new app or feature in an empty or new repo before engineering should start. Trigger on phrases like "我想做一个...", "做个 AI 助手", "AI 对话助手", "左侧会话历史右侧对话页", "聊天 UI 结构", "先做 PRD", "先梳理需求", "定义范围", "空目录里做个...", "已有 spec 要改", "竞品分析", "battlecard", "生成 changelog", "写发版说明", "做路线图", "项目状态", "milestone 进度", "有哪些 PR 卡住了", or any PM-level request that should be routed before execution."
+description: Public entry router for product ideas, requirement changes, inherited-project feature catalogs, competitive research, battlecards, bug reports, implementation requests, tests, UI/design, deployment, security, delivery, commits, pushes, PRs, release communication, roadmaps, and GitHub project status. Classifies scope first, then routes to PM specialists or hands off to downstream role agents when ready.
 ---
 
 # PM Agent Dispatcher
 
-`pm-agent` is the PM capability entry point. It classifies the user's PM goal,
-routes to the narrowest downstream PM skill, and defines follow-up chains only
-when the broader outcome clearly spans multiple PM capabilities.
+`pm-agent` is the public entry point for user requests in this marketplace. It
+classifies the user's goal first, routes to the narrowest downstream PM skill
+when the work is PM-owned, and hands off to downstream role agents when the
+request is ready for design, engineering, QA, DevOps, security, or delivery
+execution.
 
 ## Role Boundary
 
@@ -15,10 +17,14 @@ when the broader outcome clearly spans multiple PM capabilities.
 
 - identifying the primary PM outcome the user wants
 - selecting the narrowest PM skill that owns that outcome
+- classifying non-PM requests before handoff so downstream execution has a
+  confirmed scope, source documents, and `change_tier`
 - intercepting empty-workspace or new-repo product requests before they jump
   straight into engineering bootstrap
 - sequencing multiple PM skills when the request clearly spans discovery,
   status, planning, and release communication
+- handing off confirmed design, engineering, QA, DevOps, security, or delivery
+  work to the appropriate downstream role agent
 - asking at most one route-level clarification question when the target outcome
   is truly ambiguous
 
@@ -33,7 +39,7 @@ when the broader outcome clearly spans multiple PM capabilities.
 - letting empty-workspace product ideas skip PM discovery and go straight to
   code scaffolding unless the user explicitly asks to bypass PM
 
-## Available Skills
+## Available PM Skills
 
 - `pm-agent:idea-to-spec` - Product discovery, scope shaping, spec creation, spec updates
 - `pm-agent:feature-catalog` - Take-over feature catalog and project feature profile for existing codebases
@@ -43,6 +49,14 @@ when the broader outcome clearly spans multiple PM capabilities.
 - `pm-agent:release-notes-generator` - User-facing release notes and announcements
 - `pm-agent:roadmap-generator` - Roadmap creation or sync from GitHub planning signals
 - `pm-agent:github-reader` - GitHub status, milestones, backlog, PR queue, blockers
+
+## Downstream Role Handoff Targets
+
+- `designer-agent` - confirmed UX, UI structure, visual-system, or design handoff work
+- `engineer-agent` - confirmed TRD, implementation, tests, debugging, delivery, commits, pushes, PRs, or codebase work
+- `qa-agent` - confirmed acceptance, exploratory, bug analysis, or regression validation work
+- `devops-agent` - confirmed deployment, CI/CD, environment, release readiness, rollback, or runbook work
+- `security-agent` - confirmed AppSec, auth/authz, dependency, privacy, or data-flow review work
 
 ## Routing Signals
 
@@ -73,6 +87,22 @@ Route by the user's intended PM outcome, not by literal wording.
 - Repo health, milestone progress, issue backlog, review queue, release blockers,
   "项目状态", "有哪些 PR 卡住", "release ready 吗"
   -> `github-reader`
+- UX flow, UI structure, visual-system, page design, or reference-style requests
+  with confirmed product scope
+  -> hand off to `designer-agent`
+- Technical planning, implementation, code changes, debugging, tests, delivery,
+  commits, pushes, PRs, or codebase analysis requests with confirmed
+  PM/technical scope
+  -> hand off to `engineer-agent`
+- Validation, acceptance, exploratory testing, bug analysis, smoke testing, or
+  regression verification with confirmed expectations
+  -> hand off to `qa-agent`
+- Deployment, CI/CD, Docker, Helm, environment configuration, release readiness,
+  rollback, or runbook requests with confirmed operational scope
+  -> hand off to `devops-agent`
+- Security review, authorization, dependency risk, secrets, privacy, webhook,
+  upload, login, or data-flow risk requests with confirmed security scope
+  -> hand off to `security-agent`
 
 ## Default Routes
 

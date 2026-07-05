@@ -1,6 +1,7 @@
 ---
 name: authz-reviewer
-description: Review authentication and authorization logic, check permission models and access control implementation.
+description: "Internal security specialist invoked by security-agent after pm-agent handoff to review authentication, authorization, permission models, and access-control implementation."
+visibility: internal
 ---
 
 ## Execution Steps
