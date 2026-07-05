@@ -58,6 +58,44 @@ execution.
 - `devops-agent` - confirmed deployment, CI/CD, environment, release readiness, rollback, or runbook work
 - `security-agent` - confirmed AppSec, auth/authz, dependency, privacy, or data-flow review work
 
+## User Entry Coverage
+
+Treat `pm-agent` as the first stop for all user-side starting points, including:
+
+- new ideas, new features, new modules, or empty/new repository product shapes
+- existing behavior, UX, rule, copy, rollout, or scope changes
+- reported problems, bugs, abnormal behavior, failed logs, or CI failures
+- implementation, refactor, test-writing, commit, push, PR, or delivery requests
+- UX, UI, interaction, page, information architecture, or visual-system requests
+- acceptance, smoke, retest, regression, exploratory, or bug-analysis requests
+- deployment, CI/CD, environment, Docker, Helm, release, rollback, or runbook work
+- security, auth/authz, login, dependency, secret, privacy, data-flow, webhook,
+  upload, or permission-risk reviews
+- GitHub issue, PR, milestone, release, changelog, roadmap, or repo status work
+
+## Request Classification Protocol
+
+Classify the request before selecting a downstream PM skill or role agent. Use
+these stable `request_type` values in routing notes and handoff packets.
+
+| Request type | PM action | Handoff condition |
+| --- | --- | --- |
+| `new_feature` | Keep the work in PM discovery or `idea-to-spec`; clarify problem, users, scope, success criteria, and feature path. | PRD / scope is confirmed and the next owner has a concrete requested output. |
+| `existing_update` | Use the existing-project update lane; inspect approved docs and update PRD / DECISIONS before technical execution. | Product expectation is updated or confirmed unchanged, then TRD / design / test docs are aligned as needed. |
+| `bug_report` | Compare the report against approved PRD / TRD expectations before diagnosing implementation. | Only hand off to Engineer / debugger after the expected behavior is confirmed and the bug is an implementation deviation. |
+| `design` | Decide whether the user needs design artifacts or frontend implementation. | Design artifacts go to Designer; frontend implementation waits for PM / TRD / design alignment. |
+| `validation` | Confirm the test basis: PRD, TRD, confirmed implementation plan, or existing acceptance record. | QA / test-writer receives the work only after expectations are stable and source docs are named. |
+| `deployment` | Record operational goal, environment, release scope, rollback needs, and risks. | DevOps receives a bounded deployment / CI / release-readiness packet. |
+| `security` | Record risk surface, assets, permissions, data flow, and remediation expectations. | Security receives a bounded review packet with scope and required output. |
+| `delivery` / `status` | Confirm already-scoped change scope, verification state, CI/review status, and requested delivery action. | Engineer / delivery can use the fast lane only for known work whose scope is already confirmed. Repo health, backlog, PR queue, release-readiness planning, and blockers route to `repo_status` / `github-reader`. |
+| `feature_catalog` | Route inherited-project inventory and feature-profile work to `feature-catalog`. | Stay in PM until the catalog or feature profile is maintainer-confirmed. |
+| `competitive_research` / `battlecard` | Route market comparison to `competitive-brief` and sales battlecards to `competitive-intelligence`. | Stay in PM unless follow-up roadmap, messaging, or implementation work needs a separate handoff. |
+| `changelog` / `release_notes` | Route developer-facing changelog work to `changelog-generator` and user-facing announcements to `release-notes-generator`. | Stay in PM unless release execution or delivery status needs a separate handoff. |
+| `roadmap` / `repo_status` | Route planning, milestones, backlog, PR queue, blockers, and repository health to `roadmap-generator` or `github-reader`. | Stay in PM unless confirmed downstream execution is requested. |
+
+New requirements, expectation changes, and unclear scope stay on the PM path.
+Do not route them to downstream execution as `hotfix`.
+
 ## Routing Signals
 
 Route by the user's intended PM outcome, not by literal wording.
@@ -138,16 +176,58 @@ If the request is PM-shaped but underspecified, use these defaults:
 
 ## Change Tier Assessment
 
-When classifying a request, assess its `change_tier` (`hotfix` / `standard` /
-`major`) using the 变更分级契约 in `AGENTS.md` as the single definition source,
-and carry the resolved tier in the routing context so downstream skills apply
-the matching gate strength. Until the PM entry gate from issue #52 lands,
-downstream skills may also self-assess the tier; once #52 lands, `pm-agent`
-owns tier classification at the entry point and writes `change_tier` into the
-handoff packet, and `hotfix` plus delivery-type requests (delivery / status
-queries) take the fast lane defined by that contract. New requirements,
-expectation changes, and unclear scope always stay on the PM path and are never
-fast-laned as `hotfix`.
+When classifying a request, assess `change_tier` (`hotfix` / `standard` /
+`major`) using the 变更分级契约 in `AGENTS.md` as the single definition source.
+
+- `pm-agent` owns tier classification at the entry point and writes
+  `change_tier` into every cross-role PM handoff packet.
+- If the signal is unclear, classify as `standard`.
+- If the work changes approved expectations, has unclear scope, or needs PM /
+  TRD alignment, keep it on the PM path instead of using `hotfix`.
+- `hotfix` plus `delivery` / `status` requests may use the fast lane only after
+  classification confirms scope, source evidence, and verification status.
+- `major` is appropriate for cross-role governance, new agent / skill behavior,
+  marketplace registration, contract scripts, or release-facing contract work.
+
+## PM Handoff Packet
+
+When routing to Designer, Engineer, QA, DevOps, Security, delivery, or any other
+non-PM owner, include a structured packet. YAML is preferred, but an equivalent
+explicit field list is acceptable. Field definitions are authoritative in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
+Required fields:
+
+- `request_type`: one of the stable values from the classification protocol
+- `change_tier`: `hotfix`, `standard`, or `major`
+- `feature_path`, `feature`, `parent_feature`, `feature_level`
+- `feature_path_evidence`: list of `{source, reason}` entries
+- `source_documents`: PRD, DECISIONS, TRD, design docs, issue, PR, release, or
+  repo-status sources used for the routing decision
+- `scope_decision`: confirmed scope, non-goals, and whether approved
+  expectations changed
+- `downstream_owner`: Designer, Engineer, QA, DevOps, Security, or delivery
+- `required_output`: document, implementation, report, verification evidence,
+  delivery action, or status summary expected from the next owner
+- `blockers_risks`: missing docs, unresolved decisions, unavailable plugins,
+  platform limits, verification risks, or security / privacy concerns
+
+If a required field is unresolved, do not present the handoff as ready. Keep the
+request in PM clarification or mark the handoff as blocked with the missing
+field named.
+
+Confirmed non-feature repo-wide downstream handoffs, such as repository-level
+CI, release automation, deployment assets, or delivery status, may use `N/A`
+for feature-scope fields and `feature_path_evidence: []`. Record the repository
+or release evidence in `source_documents`, and do not use `N/A` for work that is
+actually tied to a product feature.
+
+PM-only specialist routing does not require this cross-role packet. For
+`feature_catalog`, `competitive_research`, `battlecard`, `changelog`,
+`release_notes`, `roadmap`, and `repo_status`, record the selected PM skill,
+`request_type`, source context, and follow-up handoff condition. If the request
+is not tied to a product feature, use `N/A` for feature-scope fields instead of
+blocking or inventing a `feature_path`.
 
 ## Common Multi-Skill Chains
 

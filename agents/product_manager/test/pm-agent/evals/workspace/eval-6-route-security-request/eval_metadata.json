@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval-006-route-security-request",
+  "eval_name": "route-security-request",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-6-route-security-request",
+  "skill_availability_goal": "Verify that pm-agent classifies security requests before Security handoff.",
+  "prompt": "用户说：看下权限控制、依赖漏洞和 secrets 风险，帮我判断该怎么处理。请给出分类和交接要求。",
+  "fixture_context": [
+    "README.md"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval-004-route-ui-update-request",
+  "eval_name": "route-ui-update-request",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-4-route-ui-update-request",
+  "skill_availability_goal": "Verify that pm-agent classifies UI update requests before Designer or Engineer handoff.",
+  "prompt": "用户说：更新一下前端 UI，把设置页改成左右分栏并调整交互。请判断这是 PM、Designer 还是 Engineer 路径。",
+  "fixture_context": [
+    "README.md"
+  ]
+}

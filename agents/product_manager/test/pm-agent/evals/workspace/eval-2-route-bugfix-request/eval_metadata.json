@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval-002-route-bugfix-request",
+  "eval_name": "route-bugfix-request",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-2-route-bugfix-request",
+  "skill_availability_goal": "Verify that pm-agent classifies bug-fix requests before debugger or engineering handoff.",
+  "prompt": "用户说：帮我修这个登录 bug，错误日志显示 token 过期后页面一直转圈。请判断应该怎么分类、先确认什么，再交给谁处理。",
+  "fixture_context": [
+    "README.md"
+  ]
+}

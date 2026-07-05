@@ -4,9 +4,9 @@
 
 - Skill: `pm-agent`
 - Test case: route-greenfield-product-request
-- Test set: dispatcher availability evals
+- Test set: PM entry evals for issue #52 / FR-006 scenario 1
 - Entry: workspace `eval-1-route-greenfield-product-request`
-- Latest result: PASS
+- Latest result: PASS (deterministic Batch 2 route coverage)
 
 ## Test Set / Fixture Version
 
@@ -30,7 +30,8 @@
 
 ## Next Steps
 
-- Keep this eval for PM dispatcher route coverage.
+- Re-run with fresh Codex subagent validation when the Batch 4 full eval pass is
+  authorized.
 
 ## Runtime Artifacts Policy
 

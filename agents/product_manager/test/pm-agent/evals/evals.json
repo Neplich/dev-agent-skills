@@ -37,6 +37,131 @@
           "text": "必须说明只有需求稳定后才 handoff 给 `designer-agent` 或 `engineer-agent`。"
         }
       ]
+    },
+    {
+      "id": "eval-002-route-bugfix-request",
+      "name": "route-bugfix-request",
+      "description": "Verifies that pm-agent classifies a user bug-fix request before debugger or engineering execution.",
+      "prompt": "用户说：帮我修这个登录 bug，错误日志显示 token 过期后页面一直转圈。请判断应该怎么分类、先确认什么，再交给谁处理。",
+      "workspace": "workspace/eval-2-route-bugfix-request",
+      "expected_output": "PM 路由决策，识别为 bug_report；先确认 approved PRD/TRD 预期行为和复现证据，再在确认实现偏差后 handoff Engineer/debugger。",
+      "assertions": [
+        {
+          "id": "request_type_bug_report",
+          "description": "识别 bug report 类型",
+          "text": "必须把请求分类为 `bug_report`，而不是直接进入修复。"
+        },
+        {
+          "id": "expectation_first",
+          "description": "先确认预期",
+          "text": "必须先对照 approved PRD/TRD 或等价产品预期确认正确行为。"
+        },
+        {
+          "id": "debugger_handoff_after_confirmation",
+          "description": "确认偏差后再交给 debugger",
+          "text": "只有确认是实现偏差后，才 handoff 给 Engineer/debugger。"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-route-test-writing-request",
+      "name": "route-test-writing-request",
+      "description": "Verifies that pm-agent classifies a test-writing request and asks for a stable test basis before QA or test-writer handoff.",
+      "prompt": "用户说：帮我补测试，覆盖订单退款流程的异常分支。请判断应该怎么分类、需要什么测试依据，以及后续交给谁。",
+      "workspace": "workspace/eval-3-route-test-writing-request",
+      "expected_output": "PM 路由决策，识别为 validation；先确认 PRD/TRD/IMPLEMENTATION_PLAN 或既有验收记录作为测试依据，再 handoff QA 或 Engineer/test-writer。",
+      "assertions": [
+        {
+          "id": "request_type_validation",
+          "description": "识别 validation 类型",
+          "text": "必须把补测试请求分类为 `validation` 或等价测试验证路径。"
+        },
+        {
+          "id": "test_basis_first",
+          "description": "先确认测试依据",
+          "text": "必须先确认 PRD、TRD、IMPLEMENTATION_PLAN 或既有验收记录作为测试依据。"
+        },
+        {
+          "id": "qa_or_test_writer_handoff",
+          "description": "稳定预期后再交接",
+          "text": "必须说明预期稳定且来源文档明确后，才 handoff QA 或 Engineer/test-writer。"
+        }
+      ]
+    },
+    {
+      "id": "eval-004-route-ui-update-request",
+      "name": "route-ui-update-request",
+      "description": "Verifies that pm-agent classifies a frontend UI update request and chooses between PM, Designer, and Engineer paths.",
+      "prompt": "用户说：更新一下前端 UI，把设置页改成左右分栏并调整交互。请判断这是 PM、Designer 还是 Engineer 路径。",
+      "workspace": "workspace/eval-4-route-ui-update-request",
+      "expected_output": "PM 路由决策，识别为 design 或 existing_update；先判断是否改变产品预期和是否需要设计产物，设计产物 handoff Designer，前端实现等待 PM/TRD/design 对齐后再 handoff Engineer。",
+      "assertions": [
+        {
+          "id": "request_type_design_or_update",
+          "description": "识别 UI 请求类型",
+          "text": "必须把 UI 更新分类为 `design` 或 `existing_update`，而不是直接进入前端实现。"
+        },
+        {
+          "id": "pm_designer_engineer_decision",
+          "description": "区分 PM、Designer、Engineer 路径",
+          "text": "必须判断是否需要 PM 预期更新、Designer 设计产物或 Engineer 前端实现。"
+        },
+        {
+          "id": "implementation_waits_for_alignment",
+          "description": "实现等待对齐",
+          "text": "前端实现必须等待 PM / TRD / design 对齐后再 handoff Engineer。"
+        }
+      ]
+    },
+    {
+      "id": "eval-005-route-deployment-request",
+      "name": "route-deployment-request",
+      "description": "Verifies that pm-agent classifies deployment, CI, and release-readiness requests before DevOps handoff.",
+      "prompt": "用户说：帮我配 CI，并做上线前检查。这个是仓库级配置，不属于某个功能。请判断分类、scope 和后续交接。",
+      "workspace": "workspace/eval-5-route-deployment-request",
+      "expected_output": "PM 路由决策，识别为 deployment；记录仓库级非 feature scope 可使用 N/A feature fields，明确运维目标、环境、发布范围、回滚需求和风险，再 handoff DevOps。",
+      "assertions": [
+        {
+          "id": "request_type_deployment",
+          "description": "识别 deployment 类型",
+          "text": "必须把配 CI 或上线前检查分类为 `deployment`。"
+        },
+        {
+          "id": "repo_wide_scope_allowed",
+          "description": "仓库级 scope 可用 N/A",
+          "text": "仓库级非 feature 工作必须允许使用 `N/A` feature scope 和空 feature_path_evidence。"
+        },
+        {
+          "id": "devops_handoff_packet",
+          "description": "交接 DevOps 前补齐上下文",
+          "text": "必须先记录 operational goal、environment、release scope、rollback needs 和 risks，再 handoff DevOps。"
+        }
+      ]
+    },
+    {
+      "id": "eval-006-route-security-request",
+      "name": "route-security-request",
+      "description": "Verifies that pm-agent classifies security, authz, dependency, and secret-risk requests before Security handoff.",
+      "prompt": "用户说：看下权限控制、依赖漏洞和 secrets 风险，帮我判断该怎么处理。请给出分类和交接要求。",
+      "workspace": "workspace/eval-6-route-security-request",
+      "expected_output": "PM 路由决策，识别为 security；先记录 risk surface、assets、permissions、data flow 和 remediation expectations，再 handoff Security。",
+      "assertions": [
+        {
+          "id": "request_type_security",
+          "description": "识别 security 类型",
+          "text": "必须把权限、依赖漏洞或 secrets 风险请求分类为 `security`。"
+        },
+        {
+          "id": "security_scope_first",
+          "description": "先记录安全范围",
+          "text": "必须先记录 risk surface、assets、permissions、data flow 和 remediation expectations。"
+        },
+        {
+          "id": "security_handoff",
+          "description": "交接 Security",
+          "text": "必须 handoff Security，并携带 scope 和 required output。"
+        }
+      ]
     }
   ]
 }
