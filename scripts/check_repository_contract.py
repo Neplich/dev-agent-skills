@@ -191,13 +191,29 @@ def parse_markdown_frontmatter(
     return fields, body
 
 
-def markdown_changelog_mentions_version(content: str, version: str) -> bool:
-    if not version:
+def markdown_changelog_has_version_date(
+    content: str,
+    version: str,
+    date: str,
+) -> bool:
+    if not version or not date:
         return False
-    pattern = re.compile(
+    version_pattern = re.compile(
         rf"(?m)^\s*-\s+version:\s*['\"]?{re.escape(version)}['\"]?\s*$"
     )
-    return pattern.search(content) is not None
+    date_pattern = re.compile(
+        rf"(?m)^\s+date:\s*['\"]?{re.escape(date)}['\"]?\s*$"
+    )
+    next_entry_pattern = re.compile(r"(?m)^\s*-\s+version:")
+
+    for match in version_pattern.finditer(content):
+        entry_start = match.end()
+        next_entry = next_entry_pattern.search(content, entry_start)
+        entry_end = next_entry.start() if next_entry else len(content)
+        if date_pattern.search(content[entry_start:entry_end]):
+            return True
+
+    return False
 
 
 def validate_skill(root: Path, skill_dir: Path, errors: list[ContractError]) -> None:
@@ -860,9 +876,10 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
         has_same_day_changelog_entry = (
             not last_updated_changed
             and current_metadata.get("last_updated") == base_metadata.get("last_updated")
-            and markdown_changelog_mentions_version(
+            and markdown_changelog_has_version_date(
                 current_content,
                 current_metadata.get("version", ""),
+                current_metadata.get("last_updated", ""),
             )
         )
         if version_changed and not last_updated_changed and not has_same_day_changelog_entry:
