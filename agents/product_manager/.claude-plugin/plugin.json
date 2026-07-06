@@ -1,6 +1,6 @@
 {
   "name": "pm-agent",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Public entry dispatcher for product ideas, requirement changes, inherited-project feature catalogs, competitive research, battlecards, bug reports, implementation requests, tests, UI/design, deployment, security, delivery, commits, pushes, PRs, release communication, roadmaps, and GitHub project status. Classifies scope first, then hands off to downstream role agents or PM specialists when ready.",
   "author": {
     "name": "Neplich"
