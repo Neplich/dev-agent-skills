@@ -7,13 +7,14 @@
 - Eval: `eval-001-route-mixed-qa-request`
 - Test case: route-mixed-qa-request
 - Workspace: `workspace/eval-1-route-mixed-qa-request`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: login refresh implementation with PM acceptance question and intermittent CI failure evidence.
 - Context read before applying the skill: `evals.json`, workspace `eval_metadata.json`, `docs/pm/login-refresh/PRD.md`, `docs/engineer/login-refresh/TRD.md`, `docs/qa/e2e/auth/login/login-refresh/TEST_SUITE.md`, `FLOW_INDEX.md`, `implementation/changes.md`, and `ci/login-intermittent-failure.log`.
+- #81 context read: `Safety-Net Closeout and Auto-Continue` from `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
 
 ## Assertions
 
@@ -30,17 +31,20 @@
 
 `qa-agent` satisfies the mixed QA routing contract. It chooses the narrowest current evidence route, preserves the intermittent CI failure as risk or follow-up rather than a parallel execution path, and carries the required QA memory, environment, credential, report, and PRD/TRD/plan gates into the selected specialist. Because the fixture does not include a confirmed implementation plan, the route can still be selected, but E2E acceptance creation or execution would be blocked until `engineer-agent:feature-implementor` supplies the confirmed plan.
 
+#81 closeout behavior is safe for this case: after routing, `qa-agent` may propose the next collaboration-chain owner, but `auto-continue` cannot make QA perform engineering fixes, bypass E2E gates, or execute another role's workflow.
+
 ## Without Skill Baseline
 
-Without the router skill, QA README, and QA E2E references, a generic response would likely either start running tests immediately or split the work into both acceptance testing and bug analysis. It might assume a localhost port or browser path, miss the durable E2E memory read set, omit credential/report references, or classify the intermittent CI log as a confirmed bug too early.
+Fresh baseline generated on 2026-07-06 without reading or applying `qa-agent` skill instructions or the QA Agent README: a generic response would likely either start running tests immediately or split the work into both acceptance testing and bug analysis. It might assume a localhost port or browser path, miss the durable E2E memory read set, omit credential/report references, or classify the intermittent CI log as a confirmed bug too early.
 
 ## Failures
 
 - None found. The missing implementation plan is an expected gate condition for acceptance execution, not a router failure.
+- No #81 regression found: original single-route selection and gate behavior remain intact, and `auto-continue` does not cross the QA role boundary.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for mixed QA requests, single-route selection, and E2E gate preservation.
+- Keep this eval as regression coverage for mixed QA requests, single-route selection, E2E gate preservation, and #81 closeout boundary behavior.
 
 ## Runtime Artifacts Policy
 

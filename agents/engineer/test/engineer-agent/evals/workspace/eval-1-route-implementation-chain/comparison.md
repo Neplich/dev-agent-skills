@@ -7,7 +7,7 @@
 - Eval: `eval-001-route-implementation-chain`
 - Test case: route-implementation-chain
 - Workspace: `workspace/eval-1-route-implementation-chain`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
 
 ## Test Set / Fixture Version
 
@@ -26,15 +26,15 @@
 
 ## With Skill Behavior
 
-`engineer-agent` satisfies the full route chain. It preserves the PM handoff entry gate, then selects the narrow engineering sequence: `codebase-analyzer` -> `feature-implementor` -> `test-writer` -> QA E2E handoff check -> `delivery`. The skill explicitly points implementation planning to `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`, keeps downstream specialist gates in their owners, and does not perform implementation itself.
+`engineer-agent` satisfies the full route chain. It preserves the PM handoff entry gate, then selects the narrow engineering sequence: `codebase-analyzer` -> `feature-implementor` -> `test-writer` -> QA E2E handoff check -> `delivery`. The skill explicitly points implementation planning to `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`, keeps downstream specialist gates in their owners, and does not perform implementation itself. For issue #81, the safety-net closeout can propose the next collaboration owner after the engineering route is complete, but `auto-continue` remains handoff-only across roles and does not authorize Engineer to execute QA work or bypass the implementation-plan gate.
 
 ## Without Skill Baseline
 
-Without the router skill and Engineer README, a generic response would likely treat the request as a normal implementation checklist, start from the named TRD, and propose coding plus tests directly. It might include delivery at the end, but it is less likely to require codebase context first, preserve the `feature-implementor` plan gate, or include the QA E2E handoff package with confirmed `IMPLEMENTATION_PLAN.md`.
+Fresh baseline generated on 2026-07-06 without applying `engineer-agent` or the Engineer README: a generic response would likely treat the request as a normal implementation checklist, start from the named TRD, and propose coding plus tests directly. It might include delivery at the end, but it is less likely to require codebase context first, preserve the `feature-implementor` plan gate, include the QA E2E handoff package with confirmed `IMPLEMENTATION_PLAN.md`, or distinguish auto-continued cross-role handoff from executing another role's workflow.
 
 ## Failures
 
-- None found.
+- None found. Issue #81 did not regress the original route/gate behavior or expand Engineer beyond its role boundary.
 
 ## Next Steps
 

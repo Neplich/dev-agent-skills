@@ -7,7 +7,7 @@
 - Eval: `eval-002-feature-path-design-handoff`
 - Test case: feature-path-design-handoff
 - Workspace: `workspace/eval-2-feature-path-design-handoff`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
 
 ## Test Set / Fixture Version
 
@@ -24,19 +24,19 @@
 
 ## With Skill Behavior
 
-`designer-agent` satisfies the feature-path mirroring contract. Its PM handoff gate requires a stable `feature_path`, and Designer README states that output directories consume the PM/Engineer path rather than inventing synonyms. The with-skill route writes only `ui-ux-spec.md` and `visual-system.md` under the full 4-level path and leaves implementation to `engineer-agent`.
+`designer-agent` satisfies the feature-path mirroring contract. Its PM handoff gate requires a stable `feature_path`, and Designer README states that output directories consume the PM/Engineer path rather than inventing synonyms. The with-skill route writes only `ui-ux-spec.md` and `visual-system.md` under the full 4-level path and leaves implementation to `engineer-agent`. For issue #81, role boundaries take precedence over auto-continue, so Designer may hand off the confirmed design artifacts to `engineer-agent` but must not continue into engineering workflow, implementation steps, tests, or patches.
 
 ## Without Skill Baseline
 
-Without the router skill and Designer README, a generic design answer might preserve the topic but shorten the path to `history-search` or `chat-interface/history-search`, because those are more natural labels. It may also include implementation sequencing or test advice, which would violate the Designer boundary.
+Fresh without-skill baseline generated in this run on 2026-07-06: without the router skill and Designer README, a generic design answer might preserve the topic and even copy the provided PRD/TRD paths, but it has weaker pressure to mirror the full `chat-interface/messages/history/search` path into `docs/design/`. It might shorten the path to `history-search` or `chat-interface/history-search`, and it may include implementation sequencing or test advice instead of stopping at the issue #81 Designer-to-Engineer handoff boundary.
 
 ## Failures
 
-- None found.
+- None found. The issue #81 role-boundary check passed: Designer mirrors the full design path and stops before engineering work.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for multi-level feature-path symmetry across PM, Engineer, and Designer docs.
+- Keep this eval as regression coverage for multi-level feature-path symmetry across PM, Engineer, and Designer docs, including issue #81 handoff-only auto-continue behavior.
 
 ## Runtime Artifacts Policy
 
