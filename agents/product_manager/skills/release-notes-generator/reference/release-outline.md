@@ -4,6 +4,16 @@ Use the repository's existing release outline before introducing a new structure
 
 Use `THIS_TAG` for the full release tag, for example `v1.2.0`. Use `VERSION` only when a normalized version without one leading `v` is required.
 
+## GitHub Release Name
+
+For this repository, the GitHub release `name` and `gh release --title` value must be `v{VERSION} - {概括性简述}`. The summary should cover about 3 key release items, align with the body highlights, and never be only the bare tag.
+
+Example:
+
+```text
+v0.2.0 - PM 唯一入口、变更分级契约与实施计划归档门禁
+```
+
 For this repository, match the `v0.1.1` release outline:
 
 ```markdown
@@ -74,7 +84,7 @@ Fetch and follow instructions from {INSTALL_URL}
 - Keep each highlight to one short paragraph unless an upgrade action needs more detail.
 - Include upgrade commands only when they are stable and useful for the release audience.
 - If a release has breaking changes, place them near the top and add concrete migration steps.
-- If there are no breaking changes, say `无破坏性变更。已有安装可以继续使用。`
+- If there are no breaking changes in a skill or plugin marketplace repository, say `无破坏性变更。已有安装可以继续使用；建议按使用环境执行下面的升级方式。`
 
 ## Change Detail Rules
 

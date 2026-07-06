@@ -114,6 +114,8 @@ git show --no-patch --format='%H%n%D%n%s' {THIS_TAG}
 
 Create a draft release when the user asks for a release but says not to publish:
 
+Set `{TITLE}` from the GitHub Release Name rule in `reference/release-outline.md`; do not use only the bare tag.
+
 ```bash
 gh release create {THIS_TAG} \
   --draft \
