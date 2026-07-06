@@ -4,12 +4,12 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "5cc3464ec14ced41c6aaecb4c88a19ed6d6038db48c6632b1ddcf3c29fd070de"
+      "computedHash": "d90905d9a4342ad6a6398ee203ba6aa58c5612493a81a5d02baaf677cdf76f29"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "b1f3c0c82499b851ce5b52c2f113975a42bafa7b4c3c96cdb39cfd68e85c8c05"
+      "computedHash": "72f8885625c4262ea0ddb471f14791e60fe71f47c586297234f90aa65add93e8"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
@@ -49,7 +49,7 @@
     "engineer-agent": {
       "source": "agents/engineer/skills/engineer-agent",
       "sourceType": "local",
-      "computedHash": "f4330ace47ca79e1878a9426c284721725fe60046218984105c00f6d942c7714"
+      "computedHash": "2563d9894f1dea013a361377b0e3dadf25a8125a1cb0d4f910ba7dc91b97a290"
     },
     "codebase-analyzer": {
       "source": "agents/engineer/skills/codebase-analyzer",
@@ -89,7 +89,7 @@
     "qa-agent": {
       "source": "agents/qa/skills/qa-agent",
       "sourceType": "local",
-      "computedHash": "bcedde8e7ee8e9fd23e91c8afe2213effbcc1f98663d3b55cb03230cc4556125"
+      "computedHash": "da8e090f4d177603e98e401cbe2ab16ea22561ec87bd9c557b760668cc555b67"
     },
     "exploratory-tester": {
       "source": "agents/qa/skills/exploratory-tester",
@@ -114,7 +114,7 @@
     "devops-agent": {
       "source": "agents/devops/skills/devops-agent",
       "sourceType": "local",
-      "computedHash": "7eb35834cf3cae44a720829f4502e9789ecb37441b1a686bed8da0ed8516d244"
+      "computedHash": "12ba9d852dc41727b7870c16f5ff6d9c2f9c32571602a3d30b0be485594d6a5f"
     },
     "deployment-planner": {
       "source": "agents/devops/skills/deployment-planner",
@@ -139,7 +139,7 @@
     "designer-agent": {
       "source": "agents/designer/skills/designer-agent",
       "sourceType": "local",
-      "computedHash": "1a18eb2ebd8dd1f1c159136fa779f88a3d462676e92b8979f158fb96ef8b1843"
+      "computedHash": "ac7536619f2d61c1805dc508ef383a17fee14c476777e235c159c7099f66cce8"
     },
     "ui-ux-design": {
       "source": "agents/designer/skills/ui-ux-design",
@@ -154,7 +154,7 @@
     "security-agent": {
       "source": "agents/security/skills/security-agent",
       "sourceType": "local",
-      "computedHash": "ec97d5d20e53517a881333ee08b5fc78e592e86719fc713e7da09290729bf139"
+      "computedHash": "4818332850624f39467a1ed67e5129e03ee7cc1e1238bc1a4b32a530f074bbf6"
     },
     "appsec-checklist": {
       "source": "agents/security/skills/appsec-checklist",

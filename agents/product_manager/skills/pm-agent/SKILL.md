@@ -289,3 +289,9 @@ When routing is complete:
   permission to proceed
 - preserve settled PM context so the downstream skill does not need to reopen
   route decisions
+- after the routed skill or role stage completes, apply the cross-role
+  safety-net closeout defined in
+  `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+  (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
+  next step, request confirmation before continuing, and honor user-enabled
+  `auto-continue`

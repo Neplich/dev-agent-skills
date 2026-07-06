@@ -274,7 +274,42 @@ If the target agent or skill is unavailable, state the missing stage, name the
 plugin or capability needed, mark the handoff blocked in `blockers_risks`, and
 do not perform that downstream role's responsibilities yourself.
 
-## 8. Phase and Situation Routing
+## 8. Safety-Net Closeout and Auto-Continue
+
+This is the cross-role public behavior shared by the six dispatchers. It
+applies after the current role finishes its scoped task, selected specialist
+workflow, or blocked handoff report.
+
+- Use the existing Downstream Owner Map and the collaboration chain
+  `PM -> Designer -> Engineer -> QA -> DevOps -> Security` to identify the
+  most likely next owner. Do not create a parallel owner map or new chain.
+- At closeout, proactively tell the user what the recommended next step is,
+  why that owner is next, and what artifact or action that owner should
+  produce.
+- Unless the user has already authorized automatic continuation, ask for user
+  confirmation before continuing into the next role or skill. One role
+  completion normally produces one next-step proposal.
+- If the user authorizes auto-continue with wording such as "后面自动继续",
+  "auto", or an equivalent instruction, continue through the collaboration
+  chain without step-by-step confirmation until the chain ends, a blocker is
+  reached, a required target is unavailable, or the user tells the agent to
+  stop.
+- Role boundaries and role-only gates take precedence over auto-continue.
+  Auto-continue never authorizes the current role to execute another role's
+  workflow, call that role's specialists, or bypass a hard stop. Across roles,
+  auto-continue only automates the next-owner proposal and handoff; the next
+  owner agent performs the actual work under its own gates. Roles with hard
+  stopping points, such as Designer stopping at design deliverables and handing
+  implementation to `engineer-agent`, may auto-continue only up to that handoff
+  point.
+- If a user directly invokes a downstream role, dispatcher, or specialist but
+  the required upstream PM handoff packet, confirmed document chain, or
+  specialist entry basis is missing, softly guide the request back through
+  `pm-agent` to fill the prerequisite context. This is a safety-net guidance
+  path, not a silent refusal and not permission to execute downstream work
+  without the missing basis.
+
+## 9. Phase and Situation Routing
 
 | Phase / Situation | Primary internal skill | Alternative / follow-up |
 | --- | --- | --- |
@@ -288,7 +323,7 @@ do not perform that downstream role's responsibilities yourself.
 | Full end-to-end pipeline requested | `flow` | Narrower gen / validator steps if the user backs off |
 | Diff only | `version-differ` | `trace-check` if the issue is coverage rather than versioning |
 
-## 9. Existing-Project Update Rules
+## 10. Existing-Project Update Rules
 
 - Run `change-impactor` first when the user asks to update an existing feature,
   requirement, rollout policy, or integration and the blast radius is unclear.
@@ -303,7 +338,7 @@ do not perform that downstream role's responsibilities yourself.
   - the current artifact is too incomplete to safely iterate
   - the user explicitly prefers regeneration
 
-## 10. Lifecycle Coverage Matrix
+## 11. Lifecycle Coverage Matrix
 
 | Document Type | Generator | Validator | Iteration |
 | --- | --- | --- | --- |
@@ -314,7 +349,7 @@ do not perform that downstream role's responsibilities yourself.
 | ADR | `engineer-agent:trd-gen` | `adr-validator` | hand off to `engineer-agent:trd-gen` for revisions |
 | TEST_SPEC | `tspecs-gen` | `tspecs-validator` | `tspecs-iteration` |
 
-## 11. Shared References
+## 12. Shared References
 
 - Schema source root:
   `_internal/_shared/doc-schemas/`

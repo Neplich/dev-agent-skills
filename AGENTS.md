@@ -48,10 +48,13 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
 **PM 唯一入口与下游 gate 指针**
 
 - 用户侧新需求、变更、bug、测试、部署、安全、交付或仓库状态诉求默认先进入 `pm-agent` 分类；下游 role router 和 specialist 只在 PM handoff packet 或等效已确认文档链存在时承接。
+- 用户未显式点名任何 skill 或 agent 时，默认进入 `pm-agent`；用户显式点名某个 skill 或 agent 时，这是受支持的直达路径，但仍必须经过对应入口 gate 的安全网。
 - PM handoff packet 字段定义以 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` 为权威；`AGENTS.md` 不复制字段清单。
+- 下游安全网包含前置与收尾两面：缺少 PM handoff packet、等效已确认文档链或 specialist entry basis 时，温和引导用户经 `pm-agent` 补齐前置；完成当前事项后，主动建议协作链下一步并等待确认，用户已授权 `auto-continue` 时可连续推进直到链路结束或用户喊停。
+- 跨角色收尾与 `auto-continue` 的权威定义在 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` 的 `Safety-Net Closeout and Auto-Continue` 节；`AGENTS.md` 只保留入口契约和指针。
 - SKILL.md frontmatter 的 `visibility: internal` 是声明层标记，Claude Code 与 Codex 都不消费该字段，不隐藏 slash 命令也不阻止显式直调；`pm-agent` 是默认入口，下游标记为 `internal` 仅表示非默认入口。
 - 5 个 role router 只保留入口凭据检查和分流指针；具体执行 gate 的权威副本留在对应 specialist `SKILL.md`，例如 `feature-implementor` 的 PRD/TRD/plan/archive gate、`debugger` 的 expected-behavior gate、QA specialist 的 E2E gate，以及 Designer/DevOps/Security specialist 的 feature-scope gate。
-- 直接调用下游且没有 PM handoff packet 或等效已确认文档链时，不执行下游协议，回到 `pm-agent` 做入口分类；唯一例外是用户直接请求 `project-bootstrap` 且明确要求跳过 PM 并立即 scaffold，此时可进入 `project-bootstrap` 的最小脚手架 override。
+- 直接调用下游且没有 PM handoff packet、等效已确认文档链或 specialist entry basis 时，不执行下游协议，应温和引导用户经 `pm-agent` 补齐前置并完成入口分类；唯一例外是用户直接请求 `project-bootstrap` 且明确要求跳过 PM 并立即 scaffold，此时可进入 `project-bootstrap` 的最小脚手架 override。
 
 **文档依赖**
 

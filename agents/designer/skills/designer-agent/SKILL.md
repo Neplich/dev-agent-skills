@@ -137,3 +137,9 @@ When routing is complete:
 - if relevant, state the follow-up design chain
 - make the design-only stopping point explicit and name `engineer-agent` as the
   next step for implementation
+- after the routed skill or role stage completes, apply the cross-role
+  safety-net closeout defined in
+  `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+  (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
+  next step, request confirmation before continuing, and honor user-enabled
+  `auto-continue`
