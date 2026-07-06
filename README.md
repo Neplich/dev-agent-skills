@@ -180,7 +180,7 @@ The data design follows ui ux pro max's organization model and is maintained und
 > [!NOTE]
 > Use `uv run ...` for Python-based validation scripts and eval runners in this repository.
 
-PR CI uses three required checks in this order:
+PR CI uses four required checks in this order:
 
 ```bash
 # repository-contract
@@ -190,12 +190,17 @@ uv run scripts/check_repository_contract.py
 uv run scripts/check_eval_contract.py
 uv run scripts/check_eval_artifacts.py
 
+# doc-contract
+uv run scripts/check_doc_contract.py
+
 # python-tests
 uv run --with pytest pytest \
   agents/product_manager/test/idea-to-spec \
+  agents/product_manager/test/pm-agent \
   agents/qa/test/test_qa_run_eval.py \
   agents/designer/test/test_designer_run_eval.py \
   agents/devops/test/test_devops_run_eval.py \
+  agents/test_doc_contract.py \
   agents/test_eval_contract.py
 ```
 
