@@ -12,7 +12,7 @@
       "name": "pm-agent",
       "description": "Public entry dispatcher for product ideas, requirement changes, inherited-project feature catalogs, competitive research, battlecards, bug reports, implementation requests, tests, UI/design, deployment, security, delivery, commits, pushes, PRs, release communication, roadmaps, and GitHub project status. Classifies scope first, then hands off to downstream role agents or PM specialists when ready.",
       "source": "./agents/product_manager",
-      "strict": false,
+      "strict": true,
       "skills": [
         "./skills/pm-agent",
         "./skills/idea-to-spec",
@@ -29,7 +29,7 @@
       "name": "engineer-agent",
       "description": "Downstream engineering capability invoked after pm-agent handoff for confirmed codebase analysis, TRDs, bootstrapping, implementation, tests, debugging, and delivery. Skills remain available for PM-orchestrated execution, not as standalone starting points.",
       "source": "./agents/engineer",
-      "strict": false,
+      "strict": true,
       "skills": [
         "./skills/engineer-agent",
         "./skills/codebase-analyzer",
@@ -45,7 +45,7 @@
       "name": "qa-agent",
       "description": "Downstream QA capability invoked after pm-agent handoff for confirmed acceptance, exploratory testing, bug analysis, and regression verification. Requirement or implementation gaps return through the PM-orchestrated handoff path.",
       "source": "./agents/qa",
-      "strict": false,
+      "strict": true,
       "skills": [
         "./skills/qa-agent",
         "./skills/exploratory-tester",
@@ -58,7 +58,7 @@
       "name": "devops-agent",
       "description": "Downstream DevOps capability invoked after pm-agent handoff for confirmed deployment planning, CI/CD automation, environment audits, release readiness, rollback, and runbook preparation.",
       "source": "./agents/devops",
-      "strict": false,
+      "strict": true,
       "skills": [
         "./skills/devops-agent",
         "./skills/deployment-planner",
@@ -71,7 +71,7 @@
       "name": "designer-agent",
       "description": "Downstream design capability invoked after pm-agent handoff for confirmed UX flows, information architecture, wireframes, reference-pattern analysis, and reference-backed visual system work.",
       "source": "./agents/designer",
-      "strict": false,
+      "strict": true,
       "skills": [
         "./skills/designer-agent",
         "./skills/ui-ux-design",
@@ -82,7 +82,7 @@
       "name": "security-agent",
       "description": "Downstream security capability invoked after pm-agent handoff for confirmed AppSec, auth/authz, dependency risk, privacy, and data-flow reviews, with remediation routed through the PM handoff path.",
       "source": "./agents/security",
-      "strict": false,
+      "strict": true,
       "skills": [
         "./skills/security-agent",
         "./skills/appsec-checklist",
