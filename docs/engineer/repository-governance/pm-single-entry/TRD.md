@@ -10,7 +10,7 @@ feature: "pm-single-entry"
 feature_path: "repository-governance/pm-single-entry"
 parent_feature: "repository-governance"
 feature_level: "2"
-last_updated: "2026-07-05"
+last_updated: "2026-07-06"
 related_prd: "docs/pm/repository-governance/pm-single-entry/PRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/52"
 related_docs:
@@ -99,7 +99,7 @@ flowchart TD
 
 | 选项 | 做法 | 优点 | 缺点 | 结论 |
 | --- | --- | --- | --- | --- |
-| A. internal-only 标记 | 在 SKILL.md frontmatter 增加自定义字段（如 `visibility: internal`）并在文档中声明语义。 | 声明清晰，可被 contract 脚本校验。 | 两个平台的 harness 都不消费该字段，对模型选择行为无实际影响；单独使用等于没有降级。 | 采用，但仅作为**声明层**：供文档、contract 脚本和 reviewer 使用，不指望平台执行。 |
+| A. internal-only 标记 | 在 SKILL.md frontmatter 增加自定义字段（如 `visibility: internal`）并在文档中声明语义。 | 声明清晰，可被 contract 脚本校验。 | 两个平台的 harness 都不消费该字段，对模型选择行为无实际影响；不隐藏 slash 命令，也不阻止用户显式直调。 | 采用，但仅作为**声明层**：供文档、contract 脚本和 reviewer 使用，表达下游不是默认入口，不指望平台执行。 |
 | B. frontmatter 触发描述弱化 | 非 PM skill 的 description 移除用户侧触发短语，改写为「Downstream capability. Invoked via pm-agent handoff...」类弱触发表述。 | 直接作用于模型选择概率，是平台机制内唯一能真正降低直接命中率的手段；同时缩减常驻上下文（#61 的 10KB 问题）。 | 无法降为零：用户显式点名 skill 名称时仍会命中；弱化过度可能影响 PM 编排链路内的合法调用。 | 采用，作为**主降级手段**。description 保留 skill 职责描述与「handoff 后使用」定位，只删用户侧起点短语。 |
 | C. 触发后强制回 PM | specialist 入口保留 gate：无 PM handoff packet（或等效已确认文档链）时不执行，输出回 `pm-agent` 的引导。 | 不依赖平台机制，绕过路径的最终兜底；gate 行为可被 eval 验证。 | 依赖模型遵循 SKILL.md 指令，属于行为层约束而非硬拦截；增加 specialist 入口文件少量篇幅。 | 采用，作为**纵深防御**。gate 全文唯一副本放 specialist（与 #59 对齐）。 |
 
@@ -114,8 +114,8 @@ flowchart TD
 **采用「PM 收口 + specialist description 弱化（#61 方案 B 语义）+ specialist 内 gate 保留
 作为纵深防御」的组合策略。**
 
-- 对外入口层面按 #52 收口：`pm-agent` 是唯一公开入口，5 个 role router 与 28 个
-  specialist 全部内部化。
+- 对外入口层面按 #52 收口：`pm-agent` 是默认入口，5 个 role router 与 28 个
+  specialist 标记为非默认入口，用户显式直达下游仍是受支持路径。
 - description 分工按方案 B 语义执行于 specialist 与 role router 两层：用户侧起点短语
   全部收敛到 `pm-agent` description（高召回）；role router description 收敛为「PM handoff
   后的角色内分流」；specialist description 收敛为「router/PM 编排下的执行模块」弱触发
@@ -215,7 +215,7 @@ specialist（及 role router）入口 gate 的统一判定顺序：
 
 | 优先级 | 路径 | 预期改动 |
 | --- | --- | --- |
-| P0 | `README.md`、`README_zh.md`、`.codex/INSTALL.md`、`docs/README.codex.md` | 只推荐 `pm-agent` 为直接调用入口；下游定位为 PM 编排能力。 |
+| P0 | `README.md`、`README_zh.md`、`.codex/INSTALL.md`、`docs/README.codex.md` | 推荐 `pm-agent` 为默认入口；下游定位为 PM 编排能力，同时保留显式直达路径。 |
 | P0 | `.claude-plugin/marketplace.json` | 6 个 plugin description 收口；skill 列表保持不变。 |
 | P0 | `agents/product_manager/skills/pm-agent/SKILL.md` | description 高召回扩写；路由协议增加请求分类表、change_tier 判级、handoff packet 组装。 |
 | P0 | PM `_internal` 共享模块（skill-map / handoff contract） | packet 字段唯一权威定义；下游 owner 映射。 |
@@ -298,7 +298,7 @@ gate 副本。
 
 | 类型 | 内容 | Owner | Blocking |
 | --- | --- | --- | --- |
-| Risk | 平台机制无法保证弱化后的 skill 不被直接命中；gate 属于行为层约束，模型可能不遵循。 | Engineer | No（通过 eval 持续监测，残余风险已在 3.2 节声明） |
+| Risk | 平台机制不阻止用户显式直达下游；gate 属于行为层约束，模型可能不遵循。 | Engineer | No（通过 eval 持续监测，残余风险已在 3.2 节声明） |
 | Risk | specialist description 弱化过度导致 PM 编排链路内合法调用失败。 | Engineer | Yes（Batch 1 需 eval 覆盖 handoff 放行场景后才可合并） |
 | Risk | 在途 PR 合并顺序变化导致实施基线漂移。 | Maintainer | Yes（实现开始前重校 TRD 第 7、8 节的文件清单） |
 | Decision | 入口策略：PM 收口 + specialist description 弱化（#61 方案 B 语义）+ specialist 内 gate 纵深防御；不采用纯方案 A，理由见 4.2。 | Maintainer | No |

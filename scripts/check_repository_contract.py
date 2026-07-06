@@ -272,7 +272,14 @@ def validate_skill(root: Path, skill_dir: Path, errors: list[ContractError]) -> 
 
 
 def validate_skill_visibility(root: Path, errors: list[ContractError]) -> None:
-    """PM-only public entry contract: only pm-agent may omit internal visibility."""
+    """Validate the PM default-entry visibility marker.
+
+    `pm-agent` is the only default public entry. Other skills declare
+    `visibility: internal` as a declaration-layer marker: Claude Code and
+    Codex do not consume this field, so it does not hide slash commands or
+    block direct invocation. Direct invocation is a supported path; its
+    routing and guardrail behavior is defined by the entry contract.
+    """
     for skill_doc in sorted(root.glob("agents/*/skills/*/SKILL.md")):
         metadata = parse_frontmatter(skill_doc, errors)
         if metadata is None:
