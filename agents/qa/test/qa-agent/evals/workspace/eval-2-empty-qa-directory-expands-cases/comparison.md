@@ -7,13 +7,14 @@
 - Eval: `eval-002-empty-qa-directory-expands-cases`
 - Test case: empty-qa-directory-expands-cases
 - Workspace: `workspace/eval-2-empty-qa-directory-expands-cases`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: existing empty E2E function tree for profile settings plus source files and QA environment notes.
 - Context read before applying the skill: `evals.json`, workspace `eval_metadata.json`, `docs/qa/e2e/account/profile-settings/profile-form/TEST_SUITE.md`, `FLOW_INDEX.md`, `environment/qa-env.md`, `src/routes/profile-settings.md`, `src/pages/ProfileSettingsPage.tsx`, and `src/components/ProfileSettingsForm.tsx`.
+- #81 context read: `Safety-Net Closeout and Auto-Continue` from `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
 
 ## Assertions
 
@@ -29,17 +30,20 @@
 
 `qa-agent` satisfies the empty-directory E2E route. It treats the existing function tree as durable memory, but not as executable coverage, and points to `exploratory-tester` as the narrow route for discovering flows and creating cases. It preserves credential hygiene, per-TC case/script persistence, subagent execution, and platform-version blocking. The fixture's `TEST_SUITE.md` states the platform version is missing, so execution is intentionally blocked until the version is provided; case expansion can still be routed as the preparatory QA work.
 
+#81 closeout behavior is safe for this case: after preparatory QA routing, `qa-agent` may propose the next owner or handoff, but `auto-continue` cannot skip the platform-version gate, execute blocked E2E work, or perform implementation fixes outside the QA role.
+
 ## Without Skill Baseline
 
-Without the router skill, QA README, and QA references, a generic response might either mark the existing QA directory as sufficient coverage or jump straight to browser execution from source files. It is less likely to create durable per-TC case/script files, preserve function-tree report paths, block missing platform version correctly, or avoid writing credentials into scripts.
+Fresh baseline generated on 2026-07-06 without reading or applying `qa-agent` skill instructions or the QA Agent README: a generic response might either mark the existing QA directory as sufficient coverage or jump straight to browser execution from source files. It is less likely to create durable per-TC case/script files, preserve function-tree report paths, block missing platform version correctly, or avoid writing credentials into scripts.
 
 ## Failures
 
 - None found. Missing platform version is the expected execution blocker for this fixture.
+- No #81 regression found: original empty-directory expansion, E2E persistence, and version gates remain intact, and `auto-continue` does not authorize blocked execution.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for empty E2E function-tree expansion and version-gated execution.
+- Keep this eval as regression coverage for empty E2E function-tree expansion, version-gated execution, and #81 closeout boundary behavior.
 
 ## Runtime Artifacts Policy
 

@@ -7,13 +7,13 @@
 - Eval: `eval-001-route-auth-release-risk`
 - Test case: route-auth-release-risk
 - Workspace: `workspace/eval-1-route-auth-release-risk`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: auth-centered release security request with dependency-risk concern.
-- Context read before applying the skill: `evals.json`, workspace `eval_metadata.json`, `docs/security/auth-model.md`, and `package.json`.
+- Context read before applying the skill: `security-agent/SKILL.md`, Security Agent `README.md`, `evals.json`, workspace `eval_metadata.json`, `docs/security/auth-model.md`, `package.json`, and the `Safety-Net Closeout and Auto-Continue` section in `skill-map.md`.
 
 ## Assertions
 
@@ -25,19 +25,21 @@
 
 ## With Skill Behavior
 
-`security-agent` satisfies the release-risk route. Its router chooses the narrowest security outcome, so the auth/admin risk gets `authz-reviewer` as the current route while dependency audit remains a named follow-up. The skill preserves Security as an evidence-backed risk review role and explicitly hands remediation to Engineer or DevOps when findings require changes.
+`security-agent` satisfies the release-risk route. Its router chooses the narrowest security outcome, so the auth/admin risk gets `authz-reviewer` as the current route while dependency audit remains a named `dependency-risk-auditor` follow-up. The selected downstream context is authentication flow, role and permission matrix, sensitive routes, test evidence, and the dependency manifest.
+
+The skill preserves Security as an evidence-backed risk review role and explicitly hands remediation to `engineer-agent` or `devops-agent` when findings require code, dependency, or deployment changes. The #81 safety-net closeout is compatible with this route: the prompt asks for routing only and does not authorize auto-continue, so Security stops at the route and handoff proposal. If auto-continue were enabled later, it would automate only the next-owner handoff and would not let Security execute another role's workflow or bypass that role's gate.
 
 ## Without Skill Baseline
 
-Without the router skill and Security README, a generic response could blend auth review, dependency audit, and fix recommendations into one broad release checklist. It may also suggest code changes directly instead of keeping Security output as structured risk evidence with remediation handoff.
+Fresh without_skill baseline generated on 2026-07-06 without reading or applying `security-agent/SKILL.md` or the Security Agent README: a generic response could blend auth review, dependency audit, and fix recommendations into one broad release checklist. It may choose a broad security review as the primary route instead of the narrower auth route, bury the dependency concern in the same checklist, and suggest direct code or package changes instead of keeping Security output as structured risk evidence with remediation handoff.
 
 ## Failures
 
-- None found.
+- None found. No #81 regression was observed: the original narrow routing and remediation handoff remain intact, and auto-continue does not expand the Security role boundary.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for Security narrow-route selection and remediation handoff.
+- Keep this eval as regression coverage for Security narrow-route selection, remediation handoff, and #81 auto-continue boundary behavior.
 
 ## Runtime Artifacts Policy
 

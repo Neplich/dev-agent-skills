@@ -7,7 +7,7 @@
 - Eval: `eval-004-frontend-ui-routing-contract`
 - Test case: frontend-ui-routing-contract
 - Workspace: `workspace/eval-004-frontend-ui-routing-contract`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
 
 ## Test Set / Fixture Version
 
@@ -27,15 +27,15 @@
 
 ## With Skill Behavior
 
-`engineer-agent` satisfies the Batch 4 frontend UI routing contract. It classifies local frontend updates as Engineering, applies the PM handoff and same-path PRD/TRD gate, checks design deliverables for page structure, interaction, visual rules, and information hierarchy, then hands design gaps to `designer-agent` without performing Designer work itself. The route returns to `feature-implementor` only after design handoff completion.
+`engineer-agent` satisfies the frontend UI routing contract. It classifies local frontend updates as Engineering, applies the PM handoff and same-path PRD/TRD gate, checks design deliverables for page structure, interaction, visual rules, and information hierarchy, then hands design gaps to `designer-agent` without performing Designer work itself. The route returns to `feature-implementor` only after design handoff completion. For issue #81, `auto-continue` may move only as far as the Designer handoff when design deliverables are missing; it does not permit Engineer to create design deliverables, call external UI skills, or bypass the later `IMPLEMENTATION_PLAN.md` confirmation gate.
 
 ## Without Skill Baseline
 
-Without the router skill and Engineer README, a generic response would likely treat the prompt as either a direct UI design task or a direct frontend implementation task. It might provide layout and button style guidance, or suggest coding steps, while missing the repository-specific design deliverable check and the prohibition on external UI reference skills for local implementation routing.
+Fresh baseline generated on 2026-07-06 without applying `engineer-agent` or the Engineer README: a generic response would likely treat the prompt as either a direct UI design task or a direct frontend implementation task. It might provide layout and button style guidance, or suggest coding steps, while missing the repository-specific design deliverable check, the prohibition on external UI reference skills for local implementation routing, and the rule that auto-continuation cannot make Engineer perform Designer work.
 
 ## Failures
 
-- None found.
+- None found. Issue #81 did not regress frontend UI routing, Designer handoff boundaries, or implementation-plan gating after design completion.
 
 ## Next Steps
 

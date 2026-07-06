@@ -7,7 +7,7 @@
 - Eval: `eval-001-route-design-handoff`
 - Test case: route-design-handoff
 - Workspace: `workspace/eval-1-route-design-handoff`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
 
 ## Test Set / Fixture Version
 
@@ -25,19 +25,19 @@
 
 ## With Skill Behavior
 
-`designer-agent` satisfies the design-only route. It accepts confirmed PM/design context, selects the narrow design sequence `ui-ux-design` -> `visual-design` when both UX and visual scope are requested, writes only durable design deliverables, and stops before implementation. Its missing-target rule requires marking unavailable handoff stages as blocked instead of performing Engineer work.
+`designer-agent` satisfies the design-only route. It accepts confirmed PM/design context, selects the narrow design sequence `ui-ux-design` -> `visual-design` when both UX and visual scope are requested, writes only durable design deliverables, and stops before implementation. For issue #81, the inherited safety-net closeout may propose or auto-continue only to the `engineer-agent` handoff point; it does not authorize Designer to invoke Engineer specialists, write React components, or perform implementation work.
 
 ## Without Skill Baseline
 
-Without the router skill and Designer README, a generic response could blend design advice with React implementation because the prompt asks to "顺手" write components. It may describe UI structure and visual style, but it is less likely to enforce the two exact design artifact filenames or stop at an Engineer handoff.
+Fresh without-skill baseline generated in this run on 2026-07-06: without the router skill and Designer README, a generic response could honor the "不要进入实现" clause but still blend design routing with React-oriented next steps because the prompt asks to "顺手" write components. It may describe UI structure and visual style, but it is less likely to enforce the exact `ui-ux-design` -> `visual-design` sequence, the two durable design artifact filenames, or the issue #81 boundary that auto-continue stops at an Engineer handoff.
 
 ## Failures
 
-- None found.
+- None found. The issue #81 role-boundary check passed: Designer stops before code and hands implementation to `engineer-agent`.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for Designer design-only routing and implementation handoff.
+- Keep this eval as regression coverage for Designer design-only routing, implementation handoff, and issue #81 auto-continue boundary behavior.
 
 ## Runtime Artifacts Policy
 

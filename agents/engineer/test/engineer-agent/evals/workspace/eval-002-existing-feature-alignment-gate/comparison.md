@@ -7,7 +7,7 @@
 - Eval: `eval-002-existing-feature-alignment-gate`
 - Test case: existing-feature-alignment-gate
 - Workspace: `workspace/eval-002-existing-feature-alignment-gate`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
 
 ## Test Set / Fixture Version
 
@@ -26,15 +26,15 @@
 
 ## With Skill Behavior
 
-`engineer-agent` satisfies the existing-feature alignment gate. Its PM handoff entry gate accepts only an explicit packet or equivalent specialist entry basis, and its routing rules send production behavior changes through PRD/TRD alignment before `feature-implementor`. The directly referenced `feature-implementor` gate confirms that expectation changes go back to PM, TRD gaps go to `trd-gen`, and plan confirmation remains mandatory after alignment.
+`engineer-agent` satisfies the existing-feature alignment gate. Its PM handoff entry gate accepts only an explicit packet or equivalent specialist entry basis, and its routing rules send production behavior changes through PRD/TRD alignment before `feature-implementor`. The directly referenced `feature-implementor` gate confirms that expectation changes go back to PM, TRD gaps go to `trd-gen`, and plan confirmation remains mandatory after alignment. For issue #81, `auto-continue` may carry the handoff proposal back to `pm-agent` when the archived/active behavior conflicts with approved expectations, but it does not let Engineer update PM requirements or proceed around the PRD/TRD gate.
 
 ## Without Skill Baseline
 
-Without the router skill and Engineer README, a generic answer would likely accept the user's "small change" framing and route straight to implementation planning or code changes. It may mention checking docs, but it is less likely to classify the active-versus-archived behavior as a product expectation change or to block direct implementation until PRD/TRD and decision records align.
+Fresh baseline generated on 2026-07-06 without applying `engineer-agent` or the Engineer README: a generic answer would likely accept the user's "small change" framing and route straight to implementation planning or code changes. It may mention checking docs, but it is less likely to classify the active-versus-archived behavior as a product expectation change, block direct implementation until PRD/TRD and decision records align, or constrain auto-continuation to a PM handoff instead of doing PM work inside Engineer.
 
 ## Failures
 
-- None found.
+- None found. Issue #81 did not regress the existing-feature alignment gate or weaken PM-first handling of expectation changes.
 
 ## Next Steps
 

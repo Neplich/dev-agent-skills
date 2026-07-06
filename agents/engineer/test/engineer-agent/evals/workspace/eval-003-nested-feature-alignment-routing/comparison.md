@@ -7,7 +7,7 @@
 - Eval: `eval-003-nested-feature-alignment-routing`
 - Test case: nested-feature-alignment-routing
 - Workspace: `workspace/eval-003-nested-feature-alignment-routing`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
 
 ## Test Set / Fixture Version
 
@@ -25,15 +25,15 @@
 
 ## With Skill Behavior
 
-`engineer-agent` satisfies the nested feature-path contract. It consumes the same-path PM and Engineer documents, preserves the canonical `feature_path`, and keeps implementation blocked until PRD/TRD expectations align. The directly referenced `trd-gen` and `feature-implementor` gates reinforce that path mismatches and stale TRDs are not fixed by implementation routing.
+`engineer-agent` satisfies the nested feature-path contract. It consumes the same-path PM and Engineer documents, preserves the canonical `feature_path`, and keeps implementation blocked until PRD/TRD expectations align. The directly referenced `trd-gen` and `feature-implementor` gates reinforce that path mismatches and stale TRDs are not fixed by implementation routing. For issue #81, safety-net closeout preserves the same resolved feature path when proposing a PM or `trd-gen` handoff, and `auto-continue` does not authorize route-only prompts to write implementation plans, code, or PM updates.
 
 ## Without Skill Baseline
 
-Without the router skill and Engineer README, a generic response could treat "History Search" as a top-level feature or use only the parent chat interface context. It might recommend a direct sorting change because the user calls it small, missing the requirement that child feature docs and `related_prd` stay aligned before routing.
+Fresh baseline generated on 2026-07-06 without applying `engineer-agent` or the Engineer README: a generic response could treat "History Search" as a top-level feature or use only the parent chat interface context. It might recommend a direct sorting change because the user calls it small, missing the requirement that child feature docs and `related_prd` stay aligned before routing, and it is less likely to keep auto-continued handoff bound to the resolved nested feature path.
 
 ## Failures
 
-- None found.
+- None found. Issue #81 did not regress nested `feature_path` resolution, TRD mismatch routing, or route-only execution boundaries.
 
 ## Next Steps
 
