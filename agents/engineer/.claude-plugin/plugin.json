@@ -1,0 +1,8 @@
+{
+  "name": "engineer-agent",
+  "version": "0.2.0",
+  "description": "Downstream engineering capability invoked after pm-agent handoff for confirmed codebase analysis, TRDs, bootstrapping, implementation, tests, debugging, and delivery. Skills remain available for PM-orchestrated execution, not as standalone starting points.",
+  "author": {
+    "name": "Neplich"
+  }
+}
