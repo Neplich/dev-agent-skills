@@ -1,6 +1,6 @@
 {
   "name": "designer-agent",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Downstream design capability invoked after pm-agent handoff for confirmed UX flows, information architecture, wireframes, reference-pattern analysis, and reference-backed visual system work.",
   "author": {
     "name": "Neplich"
