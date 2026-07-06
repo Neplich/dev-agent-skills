@@ -34,7 +34,7 @@
     "release-notes-generator": {
       "source": "agents/product_manager/skills/release-notes-generator",
       "sourceType": "local",
-      "computedHash": "bcfc5eefab74cc13c2f1b0b3725046025251050ba710df9f8b7765887fd756fe"
+      "computedHash": "4fbcdd07a103773d9bccdc24ca85e3d1a03c0131eab45bf7298c1accedba71c1"
     },
     "roadmap-generator": {
       "source": "agents/product_manager/skills/roadmap-generator",

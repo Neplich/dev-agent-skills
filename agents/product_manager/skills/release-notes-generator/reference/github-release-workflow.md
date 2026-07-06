@@ -139,10 +139,10 @@ publishedAt = null
 
 ## Draft Release Updates
 
-After editing release notes, update the draft body:
+After editing release notes, update the draft body. Always pass `--title "{TITLE}"` here too (per the GitHub Release Name rule), so a draft created before this rule or outside this workflow is not published with the bare-tag name:
 
 ```bash
-gh release edit {THIS_TAG} --notes-file {NOTES_FILE}
+gh release edit {THIS_TAG} --title "{TITLE}" --notes-file {NOTES_FILE}
 ```
 
 Re-check:
@@ -164,7 +164,7 @@ Only publish after:
 Publish:
 
 ```bash
-gh release edit {THIS_TAG} --notes-file {NOTES_FILE} --target main --verify-tag
+gh release edit {THIS_TAG} --title "{TITLE}" --notes-file {NOTES_FILE} --target main --verify-tag
 gh release edit {THIS_TAG} --draft=false --latest
 ```
 
