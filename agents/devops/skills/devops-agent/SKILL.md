@@ -126,3 +126,9 @@ When routing is complete:
 - make it clear whether outputs are expected under `deploy/`,
   repo-native CI/CD paths such as `.github/workflows/`, or durable operational
   docs under `docs/devops/{feature_path}/` or `deploy/`
+- after the routed skill or role stage completes, apply the cross-role
+  safety-net closeout defined in
+  `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+  (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
+  next step, request confirmation before continuing, and honor user-enabled
+  `auto-continue`
