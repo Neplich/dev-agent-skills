@@ -294,6 +294,14 @@ workflow, or blocked handoff report.
   chain without step-by-step confirmation until the chain ends, a blocker is
   reached, a required target is unavailable, or the user tells the agent to
   stop.
+- Role boundaries and role-only gates take precedence over auto-continue.
+  Auto-continue never authorizes the current role to execute another role's
+  workflow, call that role's specialists, or bypass a hard stop. Across roles,
+  auto-continue only automates the next-owner proposal and handoff; the next
+  owner agent performs the actual work under its own gates. Roles with hard
+  stopping points, such as Designer stopping at design deliverables and handing
+  implementation to `engineer-agent`, may auto-continue only up to that handoff
+  point.
 - If a user directly invokes a downstream role, dispatcher, or specialist but
   the required upstream PM handoff packet, confirmed document chain, or
   specialist entry basis is missing, softly guide the request back through
