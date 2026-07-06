@@ -20,3 +20,82 @@ last_updated: 2026-07-06
 - **`visibility: internal` 声明层语义对齐**：保留字段与其合约校验，明确 `visibility: internal` 是声明层标记——Claude Code 与 Codex 均不消费该字段，不隐藏 slash 命令、也不阻止用户显式直达；`pm-agent` 为默认入口，下游标记为「非默认入口」而非「不可直接调用」。同步更新合约脚本 docstring、`AGENTS.md` 与 PM 单一入口 TRD 的相关措辞。([#84](https://github.com/Neplich/dev-agent-skills/pull/84))
 - **发版 eval 复验（安全网行为）**：对 `#85` 改动的 6 个 dispatcher（`pm-agent` / `engineer-agent` / `qa-agent` / `designer-agent` / `devops-agent` / `security-agent`）执行 fresh Codex subagent 验证，重新生成 `without_skill` baseline 并更新 25 个 durable `comparison.md`。全部 case PASS：原有路由 / gate 无回归，`auto-continue` 在各角色均只推进到建议 / 交接、不越界；Designer / QA / Security 硬边界在 `auto-continue` 下仍成立。([#87](https://github.com/Neplich/dev-agent-skills/pull/87))
 - **README 与仓库状态同步**：`README.md` / `README_zh.md` 本地验证命令补齐 `doc-contract` 检查、`agents/product_manager/test/pm-agent` 与 `agents/test_doc_contract.py`，并将「必跑检查」计数从 3 更新为 4，与 `ci.yml` 逐行一致；`AGENTS.md` 当前状态块把 `pm-agent` specialist 数更新为 8、Specialist 总数更新为 29，对齐实际的 35 skills / 29 specialist。([#88](https://github.com/Neplich/dev-agent-skills/pull/88))
+
+## Skill Eval 汇总（v0.2.1 发版前）
+
+在 v0.2.0（2026-07-05 Batch 4 fresh Codex subagent validation）基线上，v0.2.1 通过 [#87](https://github.com/Neplich/dev-agent-skills/pull/87) 对 #81 安全网 / `auto-continue` 改动的 6 个 dispatcher 重新执行 2026-07-06 fresh Codex subagent validation（重新生成 `without_skill` baseline，25 个 case 全 PASS）。其余 skill 的 `comparison.md` 未在本版本改动，最新结论沿用 v0.2.0。
+
+### PM Agent（9 skills）
+
+| Skill | Latest result | 说明 |
+| --- | --- | --- |
+| `pm-agent` | **PASS** | 13 eval，2026-07-06 fresh validation（#81 安全网 / `auto-continue` 复验），覆盖 change_tier fast lane、bypass gate、missing handoff、直达下游无 handoff 等场景 |
+| `idea-to-spec` | **PASS** | 7 eval（3 个 iteration），2026-07-05 fresh validation，覆盖嵌套路径和 API ADR handoff |
+| `feature-catalog` | **PASS** | 3 eval，2026-07-05 fresh validation |
+| `roadmap-generator` | **PASS** | 3 eval 通过 |
+| `changelog-generator` | **PARTIAL** | 3 eval，without_skill baseline 未生成，历史 with-skill 产物存在 |
+| `competitive-brief` | **PARTIAL** | without_skill baseline 未生成 |
+| `competitive-intelligence` | **PARTIAL** | without_skill baseline 未生成 |
+| `github-reader` | **PARTIAL** | 3 eval，without_skill baseline 未生成 |
+| `release-notes-generator` | **PARTIAL** | 3 eval，without_skill baseline 未生成 |
+
+### Engineer Agent（8 skills）
+
+| Skill | Latest result | 说明 |
+| --- | --- | --- |
+| `engineer-agent` | **PASS** | 4 eval，2026-07-06 fresh validation（#81 复验），覆盖前端 UI 路由和嵌套路径对齐；`auto-continue` 尊重工程自身 gate |
+| `feature-implementor` | **PASS** | 13 eval，2026-07-05 fresh validation，含归档门禁 eval 012-013 |
+| `codebase-analyzer` | **PARTIAL** | without_skill baseline 未生成 |
+| `debugger` | **PARTIAL** | 4 eval 中 eval-001 PASS（2026-06-23）、eval-004 PASS（2026-06-25），另 2 eval without_skill baseline 未生成 |
+| `delivery` | **PARTIAL** | without_skill baseline 未生成 |
+| `project-bootstrap` | **PARTIAL** | without_skill baseline 未生成 |
+| `test-writer` | **PARTIAL** | without_skill baseline 未生成 |
+| `trd-gen` | **PARTIAL** | 4 eval 中 eval-003 PASS（2026-06-25 四级路径），其余 without_skill baseline 未生成 |
+
+### QA Agent（5 skills）
+
+| Skill | Latest result | 说明 |
+| --- | --- | --- |
+| `qa-agent` | **PASS** | 3 eval，2026-07-06 fresh validation（#81 复验），覆盖 E2E gate 和缺少计划的阻断场景；`auto-continue` 不越界执行工程修复 |
+| `bug-analyzer` | **PASS** | 2 eval，2026-07-05 fresh validation |
+| `exploratory-tester` | **PASS** | 2 eval，2026-07-05 fresh validation |
+| `regression-suite` | **PASS** | 2 eval，2026-07-05 fresh validation |
+| `spec-based-tester` | **PASS** | 2 eval，2026-07-05 fresh validation |
+
+### DevOps Agent（5 skills）
+
+| Skill | Latest result | 说明 |
+| --- | --- | --- |
+| `devops-agent` | **PASS** | 1 eval，2026-07-06 fresh validation（#81 复验），CI 就绪路由场景；`auto-continue` 仅推进到交接 |
+| `env-config-auditor` | **PARTIAL** | eval-001 保留历史 with-skill 证据，without_skill baseline 未生成 |
+| `cicd-bootstrap` | **PARTIAL** | without_skill baseline 未生成 |
+| `deployment-planner` | **PARTIAL** | 2 eval，without_skill baseline 未生成 |
+| `incident-playbook-writer` | **PARTIAL** | without_skill baseline 未生成 |
+
+### Designer Agent（3 skills）
+
+| Skill | Latest result | 说明 |
+| --- | --- | --- |
+| `designer-agent` | **PASS** | 3 eval，2026-07-06 fresh validation（#81 复验），设计边界在 `auto-continue` 下仍成立、实现交回 `engineer-agent` |
+| `ui-ux-design` | **PARTIAL** | without_skill baseline 未生成 |
+| `visual-design` | **PARTIAL** | without_skill baseline 未生成 |
+
+### Security Agent（5 skills）
+
+| Skill | Latest result | 说明 |
+| --- | --- | --- |
+| `security-agent` | **PASS** | 1 eval，2026-07-06 fresh validation（#81 复验），auth release risk 路由场景；`auto-continue` 不越界执行 Engineer/DevOps 工作 |
+| `appsec-checklist` | **PARTIAL** | 4 eval 中 eval-004 PASS（2026-06-25 四级路径），其余 without_skill baseline 未生成 |
+| `authz-reviewer` | **PARTIAL** | 3 eval，without_skill baseline 未生成 |
+| `dependency-risk-auditor` | **PARTIAL** | 3 eval，without_skill baseline 未生成 |
+| `privacy-surface-mapper` | **PARTIAL** | 3 eval，without_skill baseline 未生成 |
+
+### 汇总统计
+
+| 结论 | 数量 | Skills |
+| --- | --- | --- |
+| **PASS** | 14 | pm-agent, idea-to-spec, feature-catalog, roadmap-generator, engineer-agent, feature-implementor, qa-agent, bug-analyzer, exploratory-tester, regression-suite, spec-based-tester, devops-agent, designer-agent, security-agent |
+| **PARTIAL** | 21 | changelog-generator, competitive-brief, competitive-intelligence, github-reader, release-notes-generator, codebase-analyzer, debugger, delivery, project-bootstrap, test-writer, trd-gen, cicd-bootstrap, deployment-planner, env-config-auditor, incident-playbook-writer, ui-ux-design, visual-design, appsec-checklist, authz-reviewer, dependency-risk-auditor, privacy-surface-mapper |
+| **BLOCKED** | 0 | — |
+
+v0.2.1 的 6 个 dispatcher 已在 #81 行为变更后于 2026-07-06 重新 fresh validation 全 PASS。PARTIAL 原因仍集中在 without_skill baseline 未生成（历史 eval 在 Fresh Sub-Agent 门禁收紧前执行），with-skill 产物和行为证据已存在；下一版本应对 PARTIAL skill 补跑 fresh Codex subagent validation。
