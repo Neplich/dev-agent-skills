@@ -368,6 +368,48 @@ def validate_root_changelog_entry(
         )
 
 
+def validate_plugin_manifest(
+    manifest_path: Path,
+    marketplace_path: Path,
+    plugin_index: int,
+    plugin_name: Any,
+    metadata_version: Any,
+    errors: list[ContractError],
+) -> None:
+    if not manifest_path.exists():
+        add_error(
+            errors,
+            manifest_path,
+            "plugin source must contain .claude-plugin/plugin.json",
+        )
+        return
+
+    payload = load_json(manifest_path, errors)
+    if not isinstance(payload, dict):
+        add_error(errors, manifest_path, "top-level payload must be an object")
+        return
+
+    if not isinstance(plugin_name, str) or not plugin_name.strip():
+        add_error(
+            errors,
+            marketplace_path,
+            f"plugins[{plugin_index}].name must be a non-empty string",
+        )
+    elif payload.get("name") != plugin_name:
+        add_error(
+            errors,
+            manifest_path,
+            f"name must match marketplace plugins[{plugin_index}].name {plugin_name!r}",
+        )
+
+    if isinstance(metadata_version, str) and payload.get("version") != metadata_version:
+        add_error(
+            errors,
+            manifest_path,
+            f"version must match marketplace metadata.version {metadata_version!r}",
+        )
+
+
 def validate_marketplace(root: Path, errors: list[ContractError]) -> None:
     path = root / ".claude-plugin" / "marketplace.json"
     payload = load_json(path, errors)
@@ -380,6 +422,7 @@ def validate_marketplace(root: Path, errors: list[ContractError]) -> None:
         add_error(errors, path, "plugins must be an array")
         return
 
+    metadata_version: Any = None
     metadata = payload.get("metadata")
     if not isinstance(metadata, dict):
         add_error(errors, path, "metadata must be an object")
@@ -421,6 +464,15 @@ def validate_marketplace(root: Path, errors: list[ContractError]) -> None:
         if not source_path.exists():
             add_error(errors, root / source, f"plugins[{index}].source does not exist")
             continue
+
+        validate_plugin_manifest(
+            source_path / ".claude-plugin" / "plugin.json",
+            path,
+            index,
+            plugin.get("name"),
+            metadata_version,
+            errors,
+        )
 
         skills = plugin.get("skills")
         if not isinstance(skills, list):

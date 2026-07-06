@@ -620,6 +620,77 @@ class EvalContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("metadata.version must match latest changelog version '0.1.3'", rendered)
 
+    def test_repository_contract_requires_plugin_manifest_name_and_version(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            marketplace = root / ".claude-plugin/marketplace.json"
+            plugin_manifest = root / "agents/engineer/.claude-plugin/plugin.json"
+            skill_doc = root / "agents/engineer/skills/example/SKILL.md"
+            changelog = root / "docs/changelog/changelog-v1.2.3.md"
+            changelog_index = root / "CHANGELOG.md"
+            marketplace.parent.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            changelog.parent.mkdir(parents=True)
+            plugin_manifest.parent.mkdir(parents=True)
+            skill_doc.write_text(
+                "---\n"
+                "name: example\n"
+                "description: Example skill\n"
+                "---\n"
+            )
+            changelog.write_text("# Changelog - v1.2.3\n")
+            changelog_index.write_text(
+                "# Changelog\n\n"
+                "- [v1.2.3](./docs/changelog/changelog-v1.2.3.md)\n"
+            )
+            marketplace.write_text(
+                json.dumps(
+                    {
+                        "name": "dev-agent-skills",
+                        "owner": {"name": "Neplich"},
+                        "metadata": {"version": "1.2.3"},
+                        "plugins": [
+                            {
+                                "name": "engineer-agent",
+                                "source": "./agents/engineer",
+                                "skills": ["./skills/example"],
+                            }
+                        ],
+                    }
+                )
+            )
+
+            errors = []
+            checker.validate_marketplace(root, errors)
+            missing_rendered = "\n".join(error.render(root) for error in errors)
+
+            plugin_manifest.write_text(
+                json.dumps(
+                    {
+                        "name": "wrong-agent",
+                        "version": "1.2.2",
+                    }
+                )
+            )
+            errors = []
+            checker.validate_marketplace(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "agents/engineer/.claude-plugin/plugin.json: plugin source must contain .claude-plugin/plugin.json",
+            missing_rendered,
+        )
+        self.assertIn(
+            "name must match marketplace plugins[0].name 'engineer-agent'",
+            rendered,
+        )
+        self.assertIn(
+            "version must match marketplace metadata.version '1.2.3'",
+            rendered,
+        )
+
     def test_repository_contract_same_day_exception_uses_frontmatter_changelog_only(self):
         checker = load_repository_checker_module()
 
@@ -671,10 +742,12 @@ class EvalContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             marketplace = root / ".claude-plugin/marketplace.json"
+            plugin_manifest = root / "agents/engineer/.claude-plugin/plugin.json"
             skill_doc = root / "agents/engineer/skills/example/SKILL.md"
             changelog_dir = root / "docs/changelog"
             changelog_index = root / "CHANGELOG.md"
             marketplace.parent.mkdir(parents=True)
+            plugin_manifest.parent.mkdir(parents=True)
             skill_doc.parent.mkdir(parents=True)
             changelog_dir.mkdir(parents=True)
             skill_doc.write_text(
@@ -682,6 +755,14 @@ class EvalContractTests(unittest.TestCase):
                 "name: example\n"
                 "description: Example skill\n"
                 "---\n"
+            )
+            plugin_manifest.write_text(
+                json.dumps(
+                    {
+                        "name": "engineer-agent",
+                        "version": "1.2.3-rc.10",
+                    }
+                )
             )
             (changelog_dir / "changelog-v1.2.3-rc.2.md").write_text(
                 "# Changelog - v1.2.3-rc.2\n"
