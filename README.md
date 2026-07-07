@@ -114,10 +114,10 @@ git clone https://github.com/Neplich/dev-agent-skills.git ~/.agents/dev-agent-sk
 cd ~/.agents/dev-agent-skills
 
 # Install all role router and specialist skills by default.
-uv run scripts/install_codex_skills.py
+python3 scripts/install_codex_skills.py
 
 # Optional minimal mode: install only the six role router skills.
-uv run scripts/install_codex_skills.py --routers-only
+python3 scripts/install_codex_skills.py --routers-only
 ```
 
 Codex resolves skill symlinks to their real path before looking upward for plugin manifests. If skills are symlinked into this repository clone, Codex can find `agents/{role}/.claude-plugin/plugin.json` and add namespace prefixes such as `Pm Agent:` to every skill. The installer copies skill directories into `~/.agents/skills/` so the target ancestor chain does not include those manifests, and it adds managed support references so shared repo-relative instructions remain loadable. See [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95).

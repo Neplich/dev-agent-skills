@@ -114,10 +114,10 @@ git clone https://github.com/Neplich/dev-agent-skills.git ~/.agents/dev-agent-sk
 cd ~/.agents/dev-agent-skills
 
 # 默认安装全部 role router 和 specialist skills
-uv run scripts/install_codex_skills.py
+python3 scripts/install_codex_skills.py
 
 # 可选最小模式：只安装 6 个 role router skills
-uv run scripts/install_codex_skills.py --routers-only
+python3 scripts/install_codex_skills.py --routers-only
 ```
 
 Codex 会先把 skill 软链接解析到真实路径，再向上查找 plugin manifest。若把 skill 软链接进本仓库 clone，Codex 会命中 `agents/{role}/.claude-plugin/plugin.json`，并给所有 skill 加上 `Pm Agent:` 这类 namespace 前缀。该脚本把 skill 目录复制到 `~/.agents/skills/`，让目标目录祖先链避开这些 manifest，并添加受管 support references，确保共享的 repo-relative 指令仍可读取。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。

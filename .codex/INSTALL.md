@@ -74,13 +74,13 @@ fi
 Default all skills:
 
 ```bash
-uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT"
+python3 "$CLONE_ROOT/scripts/install_codex_skills.py" --target "$SKILL_ROOT"
 ```
 
 Restricted role routers only:
 
 ```bash
-uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT" --routers-only
+python3 "$CLONE_ROOT/scripts/install_codex_skills.py" --target "$SKILL_ROOT" --routers-only
 ```
 
 `--routers-only` prints a warning because specialist skills are not installed,
@@ -97,7 +97,7 @@ same-name directories are skipped or blocked instead of being mutated. Use
 `--force` to delete and recopy existing selected managed skill directories:
 
 ```bash
-uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT" --force
+python3 "$CLONE_ROOT/scripts/install_codex_skills.py" --target "$SKILL_ROOT" --force
 ```
 
 The installer prints the copied or skipped skills and warns if the target
