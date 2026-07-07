@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import sys
 from dataclasses import dataclass
@@ -20,6 +21,19 @@ PLUGIN_MANIFESTS = (
 INSTALL_MARKER = ".dev-agent-skills-install.json"
 SUPPORT_DIR_NAME = ".dev-agent-skills-support"
 LEGACY_AGGREGATE_DIR = "dev-agent-skills"
+AGENT_SKILL_PATH_PREFIXES = (
+    "agents/product_manager/skills/",
+    "agents/engineer/skills/",
+    "agents/qa/skills/",
+    "agents/devops/skills/",
+    "agents/designer/skills/",
+    "agents/security/skills/",
+)
+AGENT_SKILL_PATH_RE = re.compile(
+    r"(?<![./A-Za-z0-9_-])("
+    + "|".join(re.escape(prefix) for prefix in AGENT_SKILL_PATH_PREFIXES)
+    + r")"
+)
 
 
 @dataclass(frozen=True)
@@ -210,19 +224,35 @@ def prepare_support_tree(root: Path, target_root: Path) -> Path:
         support_agents,
         ignore=shutil.ignore_patterns(".claude-plugin", "test", "__pycache__"),
     )
-    return support_agents
+    return support_root
 
 
-def ensure_support_reference(target: Path, support_agents: Path) -> None:
-    link = target / "agents"
+def rewrite_support_paths(target: Path) -> None:
+    for path in target.rglob("*"):
+        if path.is_symlink() or not path.is_file():
+            continue
+
+        try:
+            content = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+
+        updated = AGENT_SKILL_PATH_RE.sub(rf"{SUPPORT_DIR_NAME}/\1", content)
+
+        if updated != content:
+            path.write_text(updated, encoding="utf-8")
+
+
+def ensure_support_reference(target: Path, support_root: Path) -> None:
+    link = target / SUPPORT_DIR_NAME
     if link.exists() or link.is_symlink():
         remove_existing(link)
 
-    relative_support = os.path.relpath(support_agents, start=target)
+    relative_support = os.path.relpath(support_root, start=target)
     try:
         link.symlink_to(relative_support, target_is_directory=True)
     except OSError:
-        shutil.copytree(support_agents, link)
+        shutil.copytree(support_root, link)
 
 
 def remove_legacy_aggregate_root(target_root: Path, root: Path) -> list[Path]:
@@ -346,7 +376,7 @@ def install_skill(
     target_root: Path,
     force: bool,
     root: Path,
-    support_agents: Path,
+    support_root: Path,
 ) -> InstallResult:
     target = target_root / skill.skill_name
     target_exists = target.exists() or target.is_symlink()
@@ -369,7 +399,8 @@ def install_skill(
         remove_existing(target)
 
     shutil.copytree(skill.source, target)
-    ensure_support_reference(target, support_agents)
+    rewrite_support_paths(target)
+    ensure_support_reference(target, support_root)
     write_marker(target, skill)
     if repo_symlink:
         status = "migrated"
@@ -504,14 +535,14 @@ def main(argv: list[str]) -> int:
             else []
         )
         removed_legacy = remove_legacy_aggregate_root(target_root, root)
-        support_agents = prepare_support_tree(root, target_root)
+        support_root = prepare_support_tree(root, target_root)
         results = [
             install_skill(
                 skill,
                 target_root,
                 force=args.force,
                 root=root,
-                support_agents=support_agents,
+                support_root=support_root,
             )
             for skill in specs
         ]

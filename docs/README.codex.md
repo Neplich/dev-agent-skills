@@ -30,7 +30,7 @@ Codex 会先确认两个问题：
 
 Codex 会先把 skill 软链接解析到真实路径，再从该真实路径向上查找 `.codex-plugin/plugin.json` 或 `.claude-plugin/plugin.json`。本仓库为了兼容 Claude marketplace，必须保留 `agents/{role}/.claude-plugin/plugin.json`。
 
-如果 `~/.agents/skills/<skill-name>` 软链接到仓库 clone 内的 `agents/{role}/skills/<skill-name>`，Codex 会在祖先目录命中该 role 的 `plugin.json`，并给 skill 名加上 `Pm Agent:` 这类 namespace 前缀。复制式安装会把 skill 目录复制到目标 skill root 下，避免目标目录祖先链包含这些 plugin manifest，并写入受管 marker 与隐藏 support tree，让共享的 repo-relative skill references 在复制后仍可读取。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。
+如果 `~/.agents/skills/<skill-name>` 软链接到仓库 clone 内的 `agents/{role}/skills/<skill-name>`，Codex 会在祖先目录命中该 role 的 `plugin.json`，并给 skill 名加上 `Pm Agent:` 这类 namespace 前缀。复制式安装会把 skill 目录复制到目标 skill root 下，避免目标目录祖先链包含这些 plugin manifest，并写入受管 marker、隐藏 support tree 与隐藏 per-skill support references，让共享的 repo-relative skill references 在复制后仍可读取，同时不会向扫描器暴露重复 skills。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。
 
 ```mermaid
 flowchart TD

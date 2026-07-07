@@ -120,7 +120,7 @@ python3 scripts/install_codex_skills.py
 python3 scripts/install_codex_skills.py --routers-only
 ```
 
-Codex 会先把 skill 软链接解析到真实路径，再向上查找 plugin manifest。若把 skill 软链接进本仓库 clone，Codex 会命中 `agents/{role}/.claude-plugin/plugin.json`，并给所有 skill 加上 `Pm Agent:` 这类 namespace 前缀。该脚本把 skill 目录复制到 `~/.agents/skills/`，让目标目录祖先链避开这些 manifest，并添加受管 support references，确保共享的 repo-relative 指令仍可读取。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。
+Codex 会先把 skill 软链接解析到真实路径，再向上查找 plugin manifest。若把 skill 软链接进本仓库 clone，Codex 会命中 `agents/{role}/.claude-plugin/plugin.json`，并给所有 skill 加上 `Pm Agent:` 这类 namespace 前缀。该脚本把 skill 目录复制到 `~/.agents/skills/`，让目标目录祖先链避开这些 manifest，并添加隐藏的受管 support references，确保共享的 repo-relative 指令仍可读取，同时不会向扫描器暴露重复 skills。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。
 
 默认安装全部 role router 和 specialist skills，确保 `pm-agent` 和 role router 编排流程可以调用下游 specialist。`--routers-only` 只适合入口分类所需的最小安装；该模式不会安装 specialist skills，因此 `pm-agent` 和 role router 无法调用下游 specialist 工作流。如果目标目录已存在本仓库管理的 specialist skills，`--routers-only` 会阻断并给出清理指引；使用 `--force` 才会删除未选中的受管 skills，未证明归属的同名目录不会被自动删除。使用 `--target <path>` 可指定项目级或自定义 skill 目录，使用 `--force` 可替换已存在的复制目录。
 

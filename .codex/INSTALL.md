@@ -36,8 +36,9 @@ names.
 
 The installer below copies each selected skill directory into the Codex skill
 root so the target ancestor chain avoids those plugin manifests.
-It also writes managed install markers and a hidden support tree so shared
-repo-relative skill references remain available after copying.
+It also writes managed install markers, a hidden support tree, and hidden
+per-skill support references so shared repo-relative skill references remain
+available after copying without exposing duplicate skills to the scanner.
 
 ## Installation Steps
 
