@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 INSTALLER = ROOT / "scripts" / "install_codex_skills.py"
 MARKETPLACE = ROOT / ".claude-plugin" / "marketplace.json"
 MIRROR_DIR = ".dev-agent-skills"
+MIRROR_MARKER = ".dev-agent-skills-mirror.json"
 
 
 def run_installer(target: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -81,6 +82,10 @@ def test_default_install_creates_hidden_mirror_and_relative_skill_symlinks(tmp_p
     assert "Mirror:" in result.stdout
     assert scanned_skill_entries(target) == marketplace_skill_names()
     assert (target / MIRROR_DIR / "agents").is_dir()
+    marker = json.loads((target / MIRROR_DIR / MIRROR_MARKER).read_text(encoding="utf-8"))
+    assert marker["schema"] == "dev-agent-skills-codex-mirror"
+    assert marker["version"] == 1
+    assert marker["source"] == ROOT.resolve().as_posix()
     assert_relative_mirror_link(target, "pm-agent")
     assert_relative_mirror_link(target, "debugger")
 
@@ -125,6 +130,7 @@ def test_idempotent_reinstall_rebuilds_stale_hidden_mirror(tmp_path: Path) -> No
     assert second.returncode == 0, second.stderr + second.stdout
     assert "updated: pm-agent" in second.stdout
     assert not stale.exists()
+    assert (target / MIRROR_DIR / MIRROR_MARKER).is_file()
     assert scanned_skill_entries(target) == marketplace_skill_names()
 
 
@@ -140,7 +146,26 @@ def test_force_rebuilds_mirror_and_replaces_owned_links(tmp_path: Path) -> None:
 
     assert second.returncode == 0, second.stderr + second.stdout
     assert "replaced: pm-agent" in second.stdout
+    assert (target / MIRROR_DIR / MIRROR_MARKER).is_file()
     assert skill_file.read_text(encoding="utf-8").startswith("---")
+
+
+def test_unowned_hidden_mirror_directory_errors_without_partial_changes(tmp_path: Path) -> None:
+    for args in [(), ("--force",)]:
+        target = tmp_path / ("skills-force" if args else "skills-default")
+        mirror = target / MIRROR_DIR
+        mirror.mkdir(parents=True)
+        sentinel = mirror / "user-owned.txt"
+        sentinel.write_text("keep", encoding="utf-8")
+
+        result = run_installer(target, *args)
+
+        assert result.returncode == 1
+        assert "target contains a hidden mirror path that is not owned by this installer" in result.stderr
+        assert sentinel.read_text(encoding="utf-8") == "keep"
+        assert mirror.is_dir()
+        assert not (mirror / MIRROR_MARKER).exists()
+        assert not (target / "pm-agent").exists()
 
 
 def test_unowned_selected_directory_is_skipped_without_force(tmp_path: Path) -> None:

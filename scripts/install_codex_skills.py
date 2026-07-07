@@ -16,6 +16,7 @@ from typing import Any
 
 REPO_NAME = "dev-agent-skills"
 MIRROR_DIR_NAME = ".dev-agent-skills"
+MIRROR_MARKER_NAME = ".dev-agent-skills-mirror.json"
 LEGACY_AGGREGATE_DIR = "dev-agent-skills"
 PLUGIN_DIR_NAMES = {".claude-plugin", ".codex-plugin"}
 PLUGIN_MANIFESTS = (
@@ -215,6 +216,26 @@ def mirror_root(target_root: Path) -> Path:
     return target_root / MIRROR_DIR_NAME
 
 
+def mirror_marker_path(mirror: Path) -> Path:
+    return mirror / MIRROR_MARKER_NAME
+
+
+def write_mirror_marker(root: Path, mirror: Path) -> None:
+    marker = {
+        "schema": "dev-agent-skills-codex-mirror",
+        "version": 1,
+        "source": root.resolve().as_posix(),
+    }
+    mirror_marker_path(mirror).write_text(
+        json.dumps(marker, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def is_owned_mirror(path: Path) -> bool:
+    return path.is_symlink() or mirror_marker_path(path).is_file()
+
+
 def is_mirror_symlink(path: Path, target_root: Path) -> bool:
     if not path.is_symlink():
         return False
@@ -293,6 +314,13 @@ def build_preflight_plan(
             "--force target contains skill names that are not owned by this installer: "
             f"{summarize_paths(force_conflicts)}. Move or remove those paths manually; "
             "--force will not delete unowned entries."
+        )
+
+    mirror = mirror_root(target_root)
+    if (mirror.exists() or mirror.is_symlink()) and not is_owned_mirror(mirror):
+        raise ValueError(
+            "target contains a hidden mirror path that is not owned by this installer: "
+            f"{mirror}. Move or remove that path manually; the installer will not delete it."
         )
 
     legacy = target_root / LEGACY_AGGREGATE_DIR
@@ -411,6 +439,8 @@ def rebuild_mirror(root: Path, target_root: Path) -> list[Path]:
     referenced_test_paths = find_referenced_test_paths(root)
     for rel_path in referenced_test_paths:
         copy_extra_path(root, mirror, rel_path)
+
+    write_mirror_marker(root, mirror)
 
     return referenced_test_paths
 
