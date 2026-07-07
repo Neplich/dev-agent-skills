@@ -64,7 +64,7 @@ def resolve_relative(base: Path, value: Any, field: str) -> Path:
     return (base / safe_relative_path(value, field)).resolve()
 
 
-def parse_skill_specs(root: Path, routers_only: bool) -> list[SkillSpec]:
+def parse_skill_specs(root: Path) -> list[SkillSpec]:
     data = load_json(marketplace_path(root))
     plugins = data.get("plugins")
     if not isinstance(plugins, list) or not plugins:
@@ -94,8 +94,6 @@ def parse_skill_specs(root: Path, routers_only: bool) -> list[SkillSpec]:
             )
             skill_name = skill_source.name
 
-            if routers_only and skill_name != plugin_name:
-                continue
             if not (skill_source / "SKILL.md").is_file():
                 raise ValueError(f"{skill_source}: missing SKILL.md")
             if skill_name in seen:
@@ -112,11 +110,15 @@ def parse_skill_specs(root: Path, routers_only: bool) -> list[SkillSpec]:
                 )
             )
 
-    if not specs:
+    return specs
+
+
+def select_skill_specs(specs: list[SkillSpec], routers_only: bool) -> list[SkillSpec]:
+    selected = [spec for spec in specs if not routers_only or spec.skill_name == spec.plugin_name]
+    if not selected:
         mode = "--routers-only" if routers_only else "all"
         raise ValueError(f"no skills selected for install mode {mode}")
-
-    return specs
+    return selected
 
 
 def remove_existing(path: Path) -> None:
@@ -130,11 +132,67 @@ def remove_existing(path: Path) -> None:
         raise ValueError(f"{path}: unsupported existing filesystem entry")
 
 
-def install_skill(skill: SkillSpec, target_root: Path, force: bool) -> InstallResult:
+def is_relative_to(path: Path, parent: Path) -> bool:
+    try:
+        path.relative_to(parent)
+    except ValueError:
+        return False
+    return True
+
+
+def is_repo_symlink(path: Path, root: Path) -> bool:
+    return path.is_symlink() and is_relative_to(path.resolve(strict=False), root)
+
+
+def find_unselected_existing_targets(
+    all_specs: list[SkillSpec],
+    selected_specs: list[SkillSpec],
+    target_root: Path,
+) -> list[tuple[SkillSpec, Path]]:
+    selected_names = {spec.skill_name for spec in selected_specs}
+    targets: list[tuple[SkillSpec, Path]] = []
+
+    for spec in all_specs:
+        if spec.skill_name in selected_names:
+            continue
+        target = target_root / spec.skill_name
+        if target.exists() or target.is_symlink():
+            targets.append((spec, target))
+
+    return targets
+
+
+def remove_unselected_targets(
+    all_specs: list[SkillSpec],
+    selected_specs: list[SkillSpec],
+    target_root: Path,
+    force: bool,
+) -> list[tuple[SkillSpec, Path]]:
+    existing = find_unselected_existing_targets(all_specs, selected_specs, target_root)
+    if not existing:
+        return []
+
+    if not force:
+        names = ", ".join(spec.skill_name for spec, _target in existing[:8])
+        if len(existing) > 8:
+            names = f"{names}, ... ({len(existing)} total)"
+        raise ValueError(
+            "--routers-only target already contains specialist skills managed by this repo: "
+            f"{names}. Remove those directories or rerun with --force to delete "
+            "unselected managed skills before installing routers-only."
+        )
+
+    for _spec, target in existing:
+        remove_existing(target)
+    return existing
+
+
+def install_skill(skill: SkillSpec, target_root: Path, force: bool, root: Path) -> InstallResult:
     target = target_root / skill.skill_name
     target_exists = target.exists() or target.is_symlink()
+    repo_symlink = is_repo_symlink(target, root)
     if target_exists:
-        if not force:
+        if not force and not repo_symlink:
             return InstallResult(
                 skill=skill,
                 status="skipped",
@@ -145,12 +203,13 @@ def install_skill(skill: SkillSpec, target_root: Path, force: bool) -> InstallRe
         remove_existing(target)
 
     shutil.copytree(skill.source, target)
-    status = "replaced" if target_exists else "installed"
+    status = "migrated" if repo_symlink else "replaced" if target_exists else "installed"
+    message = "replaced repository symlink with copied skill" if repo_symlink else "copied"
     return InstallResult(
         skill=skill,
         status=status,
         target=target,
-        message="copied",
+        message=message,
     )
 
 
@@ -176,6 +235,7 @@ def render_results(
     target_root: Path,
     manifests: list[Path],
     routers_only: bool,
+    removed_unselected: list[tuple[SkillSpec, Path]],
 ) -> None:
     print(f"Target: {target_root}")
     print("Installed skills:")
@@ -207,6 +267,12 @@ def render_results(
             "orchestration cannot call downstream specialist workflows."
         )
         print("Use this mode only for minimal entry classification.")
+
+        if removed_unselected:
+            print()
+            print("Removed unselected managed skills for --routers-only:")
+            for spec, target in removed_unselected:
+                print(f"- removed: {spec.skill_name} ({spec.plugin_name}) -> {target}")
 
     if manifests:
         print()
@@ -246,15 +312,27 @@ def main(argv: list[str]) -> int:
     target_root = Path(args.target).expanduser().resolve()
 
     try:
-        specs = parse_skill_specs(root, routers_only=args.routers_only)
+        all_specs = parse_skill_specs(root)
+        specs = select_skill_specs(all_specs, routers_only=args.routers_only)
         target_root.mkdir(parents=True, exist_ok=True)
-        results = [install_skill(skill, target_root, force=args.force) for skill in specs]
+        removed_unselected = (
+            remove_unselected_targets(all_specs, specs, target_root, force=args.force)
+            if args.routers_only
+            else []
+        )
+        results = [install_skill(skill, target_root, force=args.force, root=root) for skill in specs]
         manifests = find_namespace_manifests(target_root)
     except (OSError, ValueError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
 
-    render_results(results, target_root, manifests, routers_only=args.routers_only)
+    render_results(
+        results,
+        target_root,
+        manifests,
+        routers_only=args.routers_only,
+        removed_unselected=removed_unselected,
+    )
     return 0
 
 

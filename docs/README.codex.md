@@ -104,7 +104,7 @@ uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKIL
 uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT" --routers-only
 ```
 
-`--routers-only` 会输出警告，因为该模式不会安装 specialist skills，`pm-agent` / role router 编排无法调用下游 specialist 工作流，只适合入口分类最小安装。
+`--routers-only` 会输出警告，因为该模式不会安装 specialist skills，`pm-agent` / role router 编排无法调用下游 specialist 工作流，只适合入口分类最小安装。如果目标目录已存在本仓库管理的 specialist skills，`--routers-only` 会阻断并给出清理指引；使用 `--force` 才会删除未选中的受管 skills。
 
 目标 skill 已存在时，脚本默认跳过并提示。需要替换已有目录时使用 `--force`：
 

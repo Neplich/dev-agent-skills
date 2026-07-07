@@ -84,6 +84,9 @@ uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKIL
 `--routers-only` prints a warning because specialist skills are not installed,
 and `pm-agent` / role-router orchestration cannot call downstream specialist
 workflows. Use it only for minimal entry classification.
+If the target already contains managed specialist skills, `--routers-only`
+stops with cleanup instructions unless `--force` is used to remove unselected
+managed skills.
 
 If a selected skill directory already exists, the installer skips it by default.
 Use `--force` to delete and recopy existing selected skill directories:
