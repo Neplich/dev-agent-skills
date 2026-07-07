@@ -107,7 +107,7 @@ Claude Code scans installed plugins by plugin root. This repository scopes each 
 
 ### Codex
 
-Clone or update this repository, then run the copy-based installer:
+Clone or update this repository, then run the mirror-based installer:
 
 ```bash
 git clone https://github.com/Neplich/dev-agent-skills.git ~/.agents/dev-agent-skills
@@ -116,15 +116,15 @@ cd ~/.agents/dev-agent-skills
 # Install all role router and specialist skills by default.
 python3 scripts/install_codex_skills.py
 
-# Optional minimal mode: install only the six role router skills.
+# Optional minimal mode: expose only the six role router skills.
 python3 scripts/install_codex_skills.py --routers-only
 ```
 
-Codex resolves skill symlinks to their real path before looking upward for plugin manifests. If skills are symlinked into this repository clone, Codex can find `agents/{role}/.claude-plugin/plugin.json` and add namespace prefixes such as `Pm Agent:` to every skill. The installer copies skill directories into `~/.agents/skills/` so the target ancestor chain does not include those manifests, and it adds hidden managed support references so shared repo-relative instructions remain loadable without exposing duplicate skills to the scanner. See [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95).
+Codex resolves skill symlinks to their real path before looking upward for plugin manifests. If skills are symlinked directly into this repository clone, Codex can find `agents/{role}/.claude-plugin/plugin.json` and add namespace prefixes such as `Pm Agent:` to every skill. The installer mirrors the repository `agents/` tree into `~/.agents/skills/.dev-agent-skills/` without plugin manifests or agent test directories, then creates relative symlinks such as `~/.agents/skills/pm-agent -> .dev-agent-skills/agents/product_manager/skills/pm-agent`. The resolved skill path stays inside the hidden mirror, and repo-relative shared instructions remain loadable without path rewriting. See [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95).
 
-The default install copies all role router and specialist skills so `pm-agent` and role-router orchestration can call downstream specialists. Use `--routers-only` only for a minimal entry-classification install; in that mode specialist skills are not installed, so `pm-agent` and role routers cannot call downstream specialist workflows. If a target already contains managed specialist skills, `--routers-only` stops with cleanup instructions unless `--force` is used to remove the unselected managed skills; unowned same-name directories are never deleted automatically. Use `--target <path>` for a project-local or custom skill directory, and `--force` to replace existing copied skill directories.
+The default install links all role router and specialist skills so `pm-agent` and role-router orchestration can call downstream specialists. Use `--routers-only` only for a minimal entry-classification install; in that mode only the six router symlinks are exposed at the target root, while the full hidden mirror remains available for shared instruction references. Switching modes removes no-longer-selected symlinks only when they are proven to belong to this installer. Existing symlinks into a dev-agent-skills checkout are migrated automatically. Real directories and symlinks to other locations are treated as unowned: they are skipped by default, and `--force` reports them as conflicts instead of deleting them. Use `--target <path>` for a project-local or custom skill directory, and `--force` to rebuild the mirror and replace owned symlinks.
 
-To disable one copied skill by path, add a path-specific entry to `~/.codex/config.toml`:
+To disable one installed skill by path, add a path-specific entry to `~/.codex/config.toml`:
 
 ```toml
 [[skills.config]]
@@ -211,7 +211,8 @@ uv run --with pytest pytest \
   agents/designer/test/test_designer_run_eval.py \
   agents/devops/test/test_devops_run_eval.py \
   agents/test_doc_contract.py \
-  agents/test_eval_contract.py
+  agents/test_eval_contract.py \
+  scripts/test_install_codex_skills.py
 ```
 
 Additional local model evals are manual quality checks, not first-version PR required checks:

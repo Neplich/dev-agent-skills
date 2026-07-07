@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install Codex skills by copying them out of the repository tree."""
+"""Install Codex skills with a hidden repository mirror and root symlinks."""
 
 from __future__ import annotations
 
@@ -14,25 +14,16 @@ from pathlib import Path
 from typing import Any
 
 
+REPO_NAME = "dev-agent-skills"
+MIRROR_DIR_NAME = ".dev-agent-skills"
+LEGACY_AGGREGATE_DIR = "dev-agent-skills"
+PLUGIN_DIR_NAMES = {".claude-plugin", ".codex-plugin"}
 PLUGIN_MANIFESTS = (
     ".claude-plugin/plugin.json",
     ".codex-plugin/plugin.json",
 )
-INSTALL_MARKER = ".dev-agent-skills-install.json"
-SUPPORT_DIR_NAME = ".dev-agent-skills-support"
-LEGACY_AGGREGATE_DIR = "dev-agent-skills"
-AGENT_SKILL_PATH_PREFIXES = (
-    "agents/product_manager/skills/",
-    "agents/engineer/skills/",
-    "agents/qa/skills/",
-    "agents/devops/skills/",
-    "agents/designer/skills/",
-    "agents/security/skills/",
-)
-AGENT_SKILL_PATH_RE = re.compile(
-    r"(?<![./A-Za-z0-9_-])("
-    + "|".join(re.escape(prefix) for prefix in AGENT_SKILL_PATH_PREFIXES)
-    + r")"
+TEST_REFERENCE_RE = re.compile(
+    r"(?P<path>(?:agents/[A-Za-z0-9_.-]+/test/[A-Za-z0-9_./-]+|test/[A-Za-z0-9_./-]+))"
 )
 
 
@@ -41,6 +32,7 @@ class SkillSpec:
     plugin_name: str
     skill_name: str
     source: Path
+    source_rel: Path
 
 
 @dataclass(frozen=True)
@@ -49,6 +41,23 @@ class InstallResult:
     status: str
     target: Path
     message: str
+
+
+@dataclass(frozen=True)
+class ExistingTarget:
+    skill: SkillSpec
+    target: Path
+    owned: bool
+
+
+@dataclass(frozen=True)
+class PreflightPlan:
+    selected_existing: list[ExistingTarget]
+    selected_skipped: list[ExistingTarget]
+    unselected_remove: list[ExistingTarget]
+    unselected_skipped: list[ExistingTarget]
+    legacy_remove: list[Path]
+    legacy_skipped: list[Path]
 
 
 def repo_root() -> Path:
@@ -119,12 +128,18 @@ def parse_skill_specs(root: Path) -> list[SkillSpec]:
                     f"duplicate skill target name {skill_name!r}: {seen[skill_name]} and {skill_source}"
                 )
 
+            try:
+                source_rel = skill_source.relative_to(root)
+            except ValueError as exc:
+                raise ValueError(f"{skill_source}: skill source must be inside repository root") from exc
+
             seen[skill_name] = skill_source
             specs.append(
                 SkillSpec(
                     plugin_name=plugin_name,
                     skill_name=skill_name,
                     source=skill_source,
+                    source_rel=source_rel,
                 )
             )
 
@@ -158,265 +173,293 @@ def is_relative_to(path: Path, parent: Path) -> bool:
     return True
 
 
-def is_repo_symlink(path: Path, root: Path) -> bool:
-    return path.is_symlink() and is_relative_to(path.resolve(strict=False), root)
+def marketplace_name(path: Path) -> str | None:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return None
+
+    name = data.get("name")
+    return name if isinstance(name, str) else None
 
 
-def is_documented_legacy_symlink(path: Path) -> bool:
-    if not path.is_symlink():
-        return False
-
-    parts = path.resolve(strict=False).parts
-    for index, part in enumerate(parts[:-1]):
-        if part in {".codex", ".agents"} and parts[index + 1] == LEGACY_AGGREGATE_DIR:
+def is_dev_agent_checkout_path(path: Path) -> bool:
+    current = path.resolve(strict=False)
+    for parent in (current, *current.parents):
+        manifest = parent / ".claude-plugin" / "marketplace.json"
+        if manifest.is_file() and marketplace_name(manifest) == REPO_NAME:
             return True
     return False
 
 
-def is_managed_symlink(path: Path, root: Path) -> bool:
-    return is_repo_symlink(path, root) or is_documented_legacy_symlink(path)
-
-
-def marker_payload(skill: SkillSpec) -> dict[str, str]:
-    rel_source = skill.source
-    try:
-        rel_source = skill.source.relative_to(repo_root())
-    except ValueError:
-        pass
-    return {
-        "installer": "dev-agent-skills",
-        "pluginName": skill.plugin_name,
-        "skillName": skill.skill_name,
-        "source": rel_source.as_posix(),
-    }
-
-
-def write_marker(target: Path, skill: SkillSpec) -> None:
-    (target / INSTALL_MARKER).write_text(
-        json.dumps(marker_payload(skill), ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
-
-
-def marker_matches(target: Path, skill: SkillSpec) -> bool:
-    marker = target / INSTALL_MARKER
-    if not marker.is_file():
-        return False
-    try:
-        return json.loads(marker.read_text(encoding="utf-8")) == marker_payload(skill)
-    except (json.JSONDecodeError, OSError):
+def directory_contains_dev_agent_marketplace(path: Path) -> bool:
+    if not path.is_dir() or path.is_symlink():
         return False
 
+    direct = path / ".claude-plugin" / "marketplace.json"
+    if direct.is_file() and marketplace_name(direct) == REPO_NAME:
+        return True
 
-def is_managed_target(skill: SkillSpec, target: Path, root: Path) -> bool:
-    return is_managed_symlink(target, root) or marker_matches(target, skill)
+    try:
+        candidates = path.rglob("marketplace.json")
+        for candidate in candidates:
+            if ".claude-plugin" in candidate.parts and marketplace_name(candidate) == REPO_NAME:
+                return True
+    except OSError:
+        return False
 
-
-def prepare_support_tree(root: Path, target_root: Path) -> Path:
-    support_root = target_root / SUPPORT_DIR_NAME
-    support_agents = support_root / "agents"
-
-    if support_root.exists() or support_root.is_symlink():
-        remove_existing(support_root)
-
-    shutil.copytree(
-        root / "agents",
-        support_agents,
-        ignore=shutil.ignore_patterns(".claude-plugin", "test", "__pycache__"),
-    )
-    return support_root
+    return False
 
 
-def rewrite_support_paths(target: Path) -> None:
-    for path in target.rglob("*"):
-        if path.is_symlink() or not path.is_file():
+def mirror_root(target_root: Path) -> Path:
+    return target_root / MIRROR_DIR_NAME
+
+
+def is_mirror_symlink(path: Path, target_root: Path) -> bool:
+    if not path.is_symlink():
+        return False
+    return is_relative_to(path.resolve(strict=False), mirror_root(target_root).resolve(strict=False))
+
+
+def is_checkout_symlink(path: Path) -> bool:
+    return path.is_symlink() and is_dev_agent_checkout_path(path.resolve(strict=False))
+
+
+def is_owned_skill_target(path: Path, target_root: Path) -> bool:
+    return is_mirror_symlink(path, target_root) or is_checkout_symlink(path)
+
+
+def is_owned_legacy_aggregate(path: Path, target_root: Path) -> bool:
+    if path.is_symlink():
+        return is_mirror_symlink(path, target_root) or is_checkout_symlink(path)
+    return directory_contains_dev_agent_marketplace(path)
+
+
+def summarize_paths(paths: list[Path]) -> str:
+    names = ", ".join(path.name for path in paths[:8])
+    if len(paths) > 8:
+        names = f"{names}, ... ({len(paths)} total)"
+    return names
+
+
+def build_preflight_plan(
+    all_specs: list[SkillSpec],
+    selected_specs: list[SkillSpec],
+    target_root: Path,
+    routers_only: bool,
+    force: bool,
+) -> PreflightPlan:
+    selected_names = {spec.skill_name for spec in selected_specs}
+    selected_existing: list[ExistingTarget] = []
+    selected_skipped: list[ExistingTarget] = []
+    unselected_remove: list[ExistingTarget] = []
+    unselected_skipped: list[ExistingTarget] = []
+    force_conflicts: list[Path] = []
+
+    for spec in selected_specs:
+        target = target_root / spec.skill_name
+        if not (target.exists() or target.is_symlink()):
             continue
 
+        owned = is_owned_skill_target(target, target_root)
+        existing = ExistingTarget(skill=spec, target=target, owned=owned)
+        if owned:
+            selected_existing.append(existing)
+        elif force:
+            force_conflicts.append(target)
+        else:
+            selected_skipped.append(existing)
+
+    if routers_only:
+        for spec in all_specs:
+            if spec.skill_name in selected_names:
+                continue
+
+            target = target_root / spec.skill_name
+            if not (target.exists() or target.is_symlink()):
+                continue
+
+            owned = is_owned_skill_target(target, target_root)
+            existing = ExistingTarget(skill=spec, target=target, owned=owned)
+            if owned:
+                unselected_remove.append(existing)
+            elif force:
+                force_conflicts.append(target)
+            else:
+                unselected_skipped.append(existing)
+
+    if force_conflicts:
+        raise ValueError(
+            "--force target contains skill names that are not owned by this installer: "
+            f"{summarize_paths(force_conflicts)}. Move or remove those paths manually; "
+            "--force will not delete unowned entries."
+        )
+
+    legacy = target_root / LEGACY_AGGREGATE_DIR
+    legacy_remove: list[Path] = []
+    legacy_skipped: list[Path] = []
+    if legacy.exists() or legacy.is_symlink():
+        if is_owned_legacy_aggregate(legacy, target_root):
+            legacy_remove.append(legacy)
+        else:
+            legacy_skipped.append(legacy)
+
+    return PreflightPlan(
+        selected_existing=selected_existing,
+        selected_skipped=selected_skipped,
+        unselected_remove=unselected_remove,
+        unselected_skipped=unselected_skipped,
+        legacy_remove=legacy_remove,
+        legacy_skipped=legacy_skipped,
+    )
+
+
+def iter_skill_instruction_files(root: Path) -> list[Path]:
+    files: list[Path] = []
+    for skill_dir in sorted((root / "agents").glob("*/skills/*")):
+        skill_file = skill_dir / "SKILL.md"
+        if skill_file.is_file():
+            files.append(skill_file)
+
+        internal = skill_dir / "_internal"
+        if internal.is_dir():
+            files.extend(sorted(path for path in internal.rglob("*") if path.is_file()))
+
+    return files
+
+
+def role_root_for_instruction_file(root: Path, path: Path) -> Path | None:
+    try:
+        rel = path.relative_to(root)
+    except ValueError:
+        return None
+
+    parts = rel.parts
+    if len(parts) < 4 or parts[0] != "agents" or parts[2] != "skills":
+        return None
+    return root / "agents" / parts[1]
+
+
+def find_referenced_test_paths(root: Path) -> list[Path]:
+    referenced: set[Path] = set()
+
+    for instruction_file in iter_skill_instruction_files(root):
         try:
-            content = path.read_text(encoding="utf-8")
+            content = instruction_file.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             continue
 
-        updated = AGENT_SKILL_PATH_RE.sub(rf"{SUPPORT_DIR_NAME}/\1", content)
+        role_root = role_root_for_instruction_file(root, instruction_file)
+        for match in TEST_REFERENCE_RE.finditer(content):
+            raw = match.group("path").strip("`'\"),.;:")
+            candidates: list[Path] = []
 
-        if updated != content:
-            path.write_text(updated, encoding="utf-8")
+            if raw.startswith("agents/"):
+                candidates.append(root / raw)
+            elif raw.startswith("test/") and role_root is not None:
+                candidates.append(role_root / raw)
+                candidates.append(root / raw)
 
+            for candidate in candidates:
+                if candidate.exists() or candidate.is_symlink():
+                    try:
+                        referenced.add(candidate.resolve(strict=False).relative_to(root))
+                    except ValueError:
+                        pass
 
-def ensure_support_reference(target: Path, support_root: Path) -> None:
-    link = target / SUPPORT_DIR_NAME
-    if link.exists() or link.is_symlink():
-        remove_existing(link)
-
-    relative_support = os.path.relpath(support_root, start=target)
-    try:
-        link.symlink_to(relative_support, target_is_directory=True)
-    except OSError:
-        shutil.copytree(support_root, link)
-
-
-def remove_legacy_aggregate_root(target_root: Path, root: Path) -> list[Path]:
-    legacy = target_root / LEGACY_AGGREGATE_DIR
-    if not (legacy.exists() or legacy.is_symlink()):
-        return []
-
-    if is_managed_symlink(legacy, root):
-        remove_existing(legacy)
-        return [legacy]
-
-    if not legacy.is_dir():
-        return []
-
-    removed: list[Path] = []
-    try:
-        children = list(legacy.iterdir())
-    except OSError:
-        return []
-
-    for child in children:
-        if child.is_symlink() and is_managed_symlink(child, root):
-            remove_existing(child)
-            removed.append(child)
-
-    try:
-        next(legacy.iterdir())
-    except StopIteration:
-        legacy.rmdir()
-        removed.append(legacy)
-    except OSError:
-        pass
-
-    return removed
+    return sorted(referenced)
 
 
-def find_unselected_existing_targets(
-    all_specs: list[SkillSpec],
-    selected_specs: list[SkillSpec],
-    target_root: Path,
-) -> list[tuple[SkillSpec, Path]]:
-    selected_names = {spec.skill_name for spec in selected_specs}
-    targets: list[tuple[SkillSpec, Path]] = []
+def mirror_ignore(root: Path):
+    agents_root = root / "agents"
 
-    for spec in all_specs:
-        if spec.skill_name in selected_names:
-            continue
-        target = target_root / spec.skill_name
-        if target.exists() or target.is_symlink():
-            targets.append((spec, target))
+    def ignore(current: str, names: list[str]) -> set[str]:
+        current_path = Path(current)
+        ignored = {name for name in names if name in PLUGIN_DIR_NAMES}
 
-    return targets
+        if current_path.parent == agents_root and "test" in names:
+            ignored.add("test")
+
+        return ignored
+
+    return ignore
 
 
-def remove_unselected_targets(
-    all_specs: list[SkillSpec],
-    selected_specs: list[SkillSpec],
-    target_root: Path,
-    force: bool,
-) -> list[tuple[SkillSpec, Path]]:
-    existing = find_unselected_existing_targets(all_specs, selected_specs, target_root)
-    if not existing:
-        return []
+def copy_extra_path(root: Path, mirror: Path, rel_path: Path) -> None:
+    source = root / rel_path
+    target = mirror / rel_path
 
-    unproven = [(spec, target) for spec, target in existing if not is_managed_target(spec, target, repo_root())]
-    if unproven:
-        names = ", ".join(spec.skill_name for spec, _target in unproven[:8])
-        if len(unproven) > 8:
-            names = f"{names}, ... ({len(unproven)} total)"
-        raise ValueError(
-            "--routers-only target contains unselected skill names that were not "
-            f"installed by this installer: {names}. Move or remove those paths "
-            "manually; they will not be deleted by --force."
-        )
-
-    if not force:
-        names = ", ".join(spec.skill_name for spec, _target in existing[:8])
-        if len(existing) > 8:
-            names = f"{names}, ... ({len(existing)} total)"
-        raise ValueError(
-            "--routers-only target already contains specialist skills managed by this repo: "
-            f"{names}. Remove those directories or rerun with --force to delete "
-            "unselected managed skills before installing routers-only."
-        )
-
-    for _spec, target in existing:
+    if target.exists() or target.is_symlink():
         remove_existing(target)
-    return existing
+
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if source.is_symlink() or source.is_file():
+        shutil.copy2(source, target, follow_symlinks=False)
+    elif source.is_dir():
+        shutil.copytree(source, target, ignore=mirror_ignore(root))
 
 
-def preflight_selected_targets(
-    selected_specs: list[SkillSpec],
-    target_root: Path,
-    force: bool,
-    root: Path,
-) -> None:
-    if not force:
-        return
+def rebuild_mirror(root: Path, target_root: Path) -> list[Path]:
+    mirror = mirror_root(target_root)
 
-    unowned: list[Path] = []
-    for spec in selected_specs:
-        target = target_root / spec.skill_name
-        if (target.exists() or target.is_symlink()) and not is_managed_target(spec, target, root):
-            unowned.append(target)
+    if mirror.exists() or mirror.is_symlink():
+        remove_existing(mirror)
 
-    if not unowned:
-        return
+    (mirror / "agents").parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(root / "agents", mirror / "agents", ignore=mirror_ignore(root))
 
-    names = ", ".join(path.name for path in unowned[:8])
-    if len(unowned) > 8:
-        names = f"{names}, ... ({len(unowned)} total)"
-    raise ValueError(
-        "--force target contains selected skill names that were not installed "
-        f"by this installer: {names}. Move or remove those paths manually; "
-        "they will not be deleted by --force."
-    )
+    referenced_test_paths = find_referenced_test_paths(root)
+    for rel_path in referenced_test_paths:
+        copy_extra_path(root, mirror, rel_path)
+
+    return referenced_test_paths
 
 
-def install_skill(
+def symlink_target_for_skill(target_root: Path, skill: SkillSpec) -> str:
+    mirror_skill = mirror_root(target_root) / skill.source_rel
+    return os.path.relpath(mirror_skill, start=target_root)
+
+
+def install_selected_skill(
     skill: SkillSpec,
     target_root: Path,
+    plan: PreflightPlan,
     force: bool,
-    root: Path,
-    support_root: Path,
 ) -> InstallResult:
     target = target_root / skill.skill_name
-    target_exists = target.exists() or target.is_symlink()
-    repo_symlink = is_repo_symlink(target, root)
-    if target_exists:
-        managed = is_managed_target(skill, target, root)
-        if not managed:
-            if force:
-                raise ValueError(
-                    f"{target}: exists but was not installed by this installer; "
-                    "move or remove it manually before using --force"
-                )
-            return InstallResult(
-                skill=skill,
-                status="skipped",
-                target=target,
-                message="target already exists; use --force to replace it",
-            )
+    skipped = {existing.skill.skill_name: existing for existing in plan.selected_skipped}
+    existing = {existing.skill.skill_name: existing for existing in plan.selected_existing}
 
+    if skill.skill_name in skipped:
+        return InstallResult(
+            skill=skill,
+            status="skipped",
+            target=target,
+            message="target exists but is not owned by this installer; left unchanged",
+        )
+
+    existed = skill.skill_name in existing
+    was_checkout_symlink = existed and is_checkout_symlink(target)
+
+    if target.exists() or target.is_symlink():
         remove_existing(target)
 
-    shutil.copytree(skill.source, target)
-    rewrite_support_paths(target)
-    ensure_support_reference(target, support_root)
-    write_marker(target, skill)
-    if repo_symlink:
+    target.symlink_to(symlink_target_for_skill(target_root, skill), target_is_directory=True)
+
+    if was_checkout_symlink:
         status = "migrated"
-    elif target_exists and not force:
-        status = "updated"
-    elif target_exists:
+        message = "replaced checkout symlink with mirror symlink"
+    elif existed and force:
         status = "replaced"
+        message = "replaced managed mirror symlink"
+    elif existed:
+        status = "updated"
+        message = "refreshed managed mirror symlink"
     else:
         status = "installed"
-    message = "replaced repository symlink with copied skill" if repo_symlink else "copied"
-    return InstallResult(
-        skill=skill,
-        status=status,
-        target=target,
-        message=message,
-    )
+        message = "created mirror symlink"
+
+    return InstallResult(skill=skill, status=status, target=target, message=message)
 
 
 def find_namespace_manifests(target_root: Path) -> list[Path]:
@@ -441,21 +484,17 @@ def render_results(
     target_root: Path,
     manifests: list[Path],
     routers_only: bool,
-    removed_unselected: list[tuple[SkillSpec, Path]],
-    removed_legacy: list[Path],
+    plan: PreflightPlan,
+    referenced_test_paths: list[Path],
 ) -> None:
     print(f"Target: {target_root}")
+    print(f"Mirror: {mirror_root(target_root)}")
     print("Installed skills:")
 
     for result in results:
-        rel_source = result.skill.source
-        try:
-            rel_source = result.skill.source.relative_to(repo_root())
-        except ValueError:
-            pass
         print(
             f"- {result.status}: {result.skill.skill_name} "
-            f"({result.skill.plugin_name}) <- {rel_source} -> {result.target} "
+            f"({result.skill.plugin_name}) <- {result.skill.source_rel.as_posix()} -> {result.target} "
             f"[{result.message}]"
         )
 
@@ -466,26 +505,45 @@ def render_results(
     summary = ", ".join(f"{status}={count}" for status, count in sorted(counts.items()))
     print(f"Summary: {summary}")
 
-    if removed_legacy:
+    if referenced_test_paths:
+        print()
+        print("Included referenced test paths in mirror:")
+        for rel_path in referenced_test_paths:
+            print(f"- {rel_path.as_posix()}")
+
+    if plan.legacy_remove:
         print()
         print("Removed legacy aggregate entries:")
-        for path in removed_legacy:
+        for path in plan.legacy_remove:
             print(f"- removed: {path}")
+
+    if plan.legacy_skipped:
+        print()
+        print("WARNING: skipped unowned legacy aggregate entries:")
+        for path in plan.legacy_skipped:
+            print(f"- skipped: {path}")
 
     if routers_only:
         print()
         print("WARNING: --routers-only installed only role router skills.")
         print(
-            "Specialist skills were not installed, so pm-agent / role router "
-            "orchestration cannot call downstream specialist workflows."
+            "Specialist skills were not linked at the target root, so pm-agent / "
+            "role router orchestration cannot call downstream specialist workflows."
         )
+        print("The hidden mirror still contains the full agents tree for shared instructions.")
         print("Use this mode only for minimal entry classification.")
 
-        if removed_unselected:
+        if plan.unselected_remove:
             print()
             print("Removed unselected managed skills for --routers-only:")
-            for spec, target in removed_unselected:
-                print(f"- removed: {spec.skill_name} ({spec.plugin_name}) -> {target}")
+            for existing in plan.unselected_remove:
+                print(f"- removed: {existing.skill.skill_name} ({existing.skill.plugin_name}) -> {existing.target}")
+
+        if plan.unselected_skipped:
+            print()
+            print("WARNING: skipped unowned unselected skill names for --routers-only:")
+            for existing in plan.unselected_skipped:
+                print(f"- skipped: {existing.skill.skill_name} -> {existing.target}")
 
     if manifests:
         print()
@@ -499,7 +557,7 @@ def render_results(
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Copy dev-agent-skills Codex skill directories into a skill target."
+        description="Install dev-agent-skills for Codex with a hidden mirror and root symlinks."
     )
     parser.add_argument(
         "--target",
@@ -509,12 +567,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--routers-only",
         action="store_true",
-        help="install only role router skills; specialist orchestration will be unavailable",
+        help="link only role router skills at the target root; specialist orchestration will be unavailable",
     )
     parser.add_argument(
         "--force",
         action="store_true",
-        help="replace existing target skill directories before copying",
+        help="rebuild the mirror and replace owned target symlinks; never deletes unowned entries",
     )
     return parser.parse_args(argv)
 
@@ -527,22 +585,27 @@ def main(argv: list[str]) -> int:
     try:
         all_specs = parse_skill_specs(root)
         specs = select_skill_specs(all_specs, routers_only=args.routers_only)
-        target_root.mkdir(parents=True, exist_ok=True)
-        preflight_selected_targets(specs, target_root, force=args.force, root=root)
-        removed_unselected = (
-            remove_unselected_targets(all_specs, specs, target_root, force=args.force)
-            if args.routers_only
-            else []
+        plan = build_preflight_plan(
+            all_specs,
+            specs,
+            target_root,
+            routers_only=args.routers_only,
+            force=args.force,
         )
-        removed_legacy = remove_legacy_aggregate_root(target_root, root)
-        support_root = prepare_support_tree(root, target_root)
+        target_root.mkdir(parents=True, exist_ok=True)
+
+        for path in plan.legacy_remove:
+            remove_existing(path)
+        for existing in plan.unselected_remove:
+            remove_existing(existing.target)
+
+        referenced_test_paths = rebuild_mirror(root, target_root)
         results = [
-            install_skill(
+            install_selected_skill(
                 skill,
                 target_root,
+                plan=plan,
                 force=args.force,
-                root=root,
-                support_root=support_root,
             )
             for skill in specs
         ]
@@ -556,8 +619,8 @@ def main(argv: list[str]) -> int:
         target_root,
         manifests,
         routers_only=args.routers_only,
-        removed_unselected=removed_unselected,
-        removed_legacy=removed_legacy,
+        plan=plan,
+        referenced_test_paths=referenced_test_paths,
     )
     return 0
 

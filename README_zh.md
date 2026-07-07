@@ -107,7 +107,7 @@ Claude Code 会按 plugin root 扫描已安装插件。本仓库已经把每个 
 
 ### Codex
 
-clone 或更新本仓库后，运行复制式安装脚本：
+clone 或更新本仓库后，运行镜像式安装脚本：
 
 ```bash
 git clone https://github.com/Neplich/dev-agent-skills.git ~/.agents/dev-agent-skills
@@ -116,15 +116,15 @@ cd ~/.agents/dev-agent-skills
 # 默认安装全部 role router 和 specialist skills
 python3 scripts/install_codex_skills.py
 
-# 可选最小模式：只安装 6 个 role router skills
+# 可选最小模式：只暴露 6 个 role router skills
 python3 scripts/install_codex_skills.py --routers-only
 ```
 
-Codex 会先把 skill 软链接解析到真实路径，再向上查找 plugin manifest。若把 skill 软链接进本仓库 clone，Codex 会命中 `agents/{role}/.claude-plugin/plugin.json`，并给所有 skill 加上 `Pm Agent:` 这类 namespace 前缀。该脚本把 skill 目录复制到 `~/.agents/skills/`，让目标目录祖先链避开这些 manifest，并添加隐藏的受管 support references，确保共享的 repo-relative 指令仍可读取，同时不会向扫描器暴露重复 skills。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。
+Codex 会先把 skill 软链接解析到真实路径，再向上查找 plugin manifest。若把 skill 直接软链接进本仓库 clone，Codex 会命中 `agents/{role}/.claude-plugin/plugin.json`，并给所有 skill 加上 `Pm Agent:` 这类 namespace 前缀。该脚本把仓库 `agents/` 树镜像到 `~/.agents/skills/.dev-agent-skills/`，剔除 plugin manifest 和 agent test 目录，再在目标根目录创建 `~/.agents/skills/pm-agent -> .dev-agent-skills/agents/product_manager/skills/pm-agent` 这类相对软链。解析后的 skill 路径停留在隐藏镜像内，共享 repo-relative 指令无需改写即可读取。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。
 
-默认安装全部 role router 和 specialist skills，确保 `pm-agent` 和 role router 编排流程可以调用下游 specialist。`--routers-only` 只适合入口分类所需的最小安装；该模式不会安装 specialist skills，因此 `pm-agent` 和 role router 无法调用下游 specialist 工作流。如果目标目录已存在本仓库管理的 specialist skills，`--routers-only` 会阻断并给出清理指引；使用 `--force` 才会删除未选中的受管 skills，未证明归属的同名目录不会被自动删除。使用 `--target <path>` 可指定项目级或自定义 skill 目录，使用 `--force` 可替换已存在的复制目录。
+默认安装全部 role router 和 specialist skills，确保 `pm-agent` 和 role router 编排流程可以调用下游 specialist。`--routers-only` 只适合入口分类所需的最小安装；该模式只在目标根目录暴露 6 个 router 软链，但隐藏镜像仍保留完整 `agents/` 树供共享指令引用。切换模式时，脚本只会清理能证明归属本安装器的不再 selected 软链。已有指向 dev-agent-skills checkout 的旧软链会自动迁移到隐藏镜像软链。真实目录或指向其他位置的软链都视为非归属目标：默认跳过，`--force` 会报错列出冲突项而不是删除。使用 `--target <path>` 可指定项目级或自定义 skill 目录，使用 `--force` 可重建镜像并替换归属软链。
 
-如需按路径禁用单个已复制 skill，可在 `~/.codex/config.toml` 中添加：
+如需按路径禁用单个已安装 skill，可在 `~/.codex/config.toml` 中添加：
 
 ```toml
 [[skills.config]]
@@ -211,7 +211,8 @@ uv run --with pytest pytest \
   agents/designer/test/test_designer_run_eval.py \
   agents/devops/test/test_devops_run_eval.py \
   agents/test_doc_contract.py \
-  agents/test_eval_contract.py
+  agents/test_eval_contract.py \
+  scripts/test_install_codex_skills.py
 ```
 
 额外本地模型 eval 是质量检查，不属于第一版 PR 必跑门禁：
