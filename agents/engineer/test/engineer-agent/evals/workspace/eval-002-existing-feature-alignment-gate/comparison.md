@@ -7,13 +7,14 @@
 - Eval: `eval-002-existing-feature-alignment-gate`
 - Test case: existing-feature-alignment-gate
 - Workspace: `workspace/eval-002-existing-feature-alignment-gate`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 for PR #98 trigger description routing review.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: small existing-feature behavior change request for Notification Center archived items.
-- Context read before applying the skill: `evals.json` and workspace `eval_metadata.json`.
+- Context read before applying the skill: `AGENTS.md`, `agents/engineer/README.md`, `agents/engineer/skills/engineer-agent/SKILL.md`, `evals.json`, and workspace `eval_metadata.json`.
+- Runtime evidence: fresh subagent artifacts were generated under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-002-existing-feature-alignment-gate/`.
 
 ## Assertions
 
@@ -26,15 +27,15 @@
 
 ## With Skill Behavior
 
-`engineer-agent` satisfies the existing-feature alignment gate. Its PM handoff entry gate accepts only an explicit packet or equivalent specialist entry basis, and its routing rules send production behavior changes through PRD/TRD alignment before `feature-implementor`. The directly referenced `feature-implementor` gate confirms that expectation changes go back to PM, TRD gaps go to `trd-gen`, and plan confirmation remains mandatory after alignment. For issue #81, `auto-continue` may carry the handoff proposal back to `pm-agent` when the archived/active behavior conflicts with approved expectations, but it does not let Engineer update PM requirements or proceed around the PRD/TRD gate.
+`engineer-agent` satisfies the existing-feature alignment gate after the PR #98 trigger description edits. The with-skill run first entered the existing-feature PRD/TRD alignment gate, required same-feature `PRD.md`, `TRD.md`, and present `DECISIONS.md` or product decision records, classified archived notifications appearing in the active list as a possible approved-expectation change, routed conflicts to `pm-agent:idea-to-spec` via `existing-project-update`, routed TRD gaps to `engineer-agent:trd-gen`, and kept `feature-implementor` blocked until alignment plus a confirmed `IMPLEMENTATION_PLAN.md`.
 
 ## Without Skill Baseline
 
-Fresh baseline generated on 2026-07-06 without applying `engineer-agent` or the Engineer README: a generic answer would likely accept the user's "small change" framing and route straight to implementation planning or code changes. It may mention checking docs, but it is less likely to classify the active-versus-archived behavior as a product expectation change, block direct implementation until PRD/TRD and decision records align, or constrain auto-continuation to a PM handoff instead of doing PM work inside Engineer.
+Fresh baseline generated on 2026-07-08 from the eval prompt, workspace metadata, and generic engineering judgment only, without applying `engineer-agent`, the Engineer README, or any previous baseline. The baseline tended to treat the request as small engineering work and only lightly suggested checking PRD/TRD; it did not reliably enforce product decision records, PM existing-project-update routing, TRD gap packet handling, or a mandatory confirmed implementation plan after alignment.
 
 ## Failures
 
-- None found. Issue #81 did not regress the existing-feature alignment gate or weaken PM-first handling of expectation changes.
+- None found. PR #98 did not regress existing-feature expectation alignment, TRD gap routing, or the block on user attempts to bypass PRD/TRD gates.
 
 ## Next Steps
 
@@ -42,5 +43,6 @@ Fresh baseline generated on 2026-07-06 without applying `engineer-agent` or the 
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created for this validation.
-- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.
+- Runtime artifacts were created only under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-002-existing-feature-alignment-gate/`.
+- Generated `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence only and must not be committed.
+- Durable committed evidence for this run is this `comparison.md`.

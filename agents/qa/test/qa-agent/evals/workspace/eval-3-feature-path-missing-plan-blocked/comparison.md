@@ -7,14 +7,14 @@
 - Eval: `eval-003-feature-path-missing-plan-blocked`
 - Test case: feature-path-missing-plan-blocked
 - Workspace: `workspace/eval-3-feature-path-missing-plan-blocked`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 for PR #98 trigger description routing review.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: same-path PRD/TRD and QA E2E function tree for `account/profile/preferences`, with no confirmed implementation plan.
-- Context read before applying the skill: `evals.json`, workspace `eval_metadata.json`, `docs/pm/account/profile/preferences/PRD.md`, `docs/engineer/account/profile/preferences/TRD.md`, `docs/qa/e2e/account/profile/preferences/TEST_SUITE.md`, and `FLOW_INDEX.md`.
-- #81 context read: `Safety-Net Closeout and Auto-Continue` from `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+- Context read before applying the skill: `AGENTS.md`, `agents/qa/README.md`, `agents/qa/skills/qa-agent/SKILL.md`, `evals.json`, workspace `eval_metadata.json`, `docs/pm/account/profile/preferences/PRD.md`, `docs/engineer/account/profile/preferences/TRD.md`, `docs/qa/e2e/account/profile/preferences/TEST_SUITE.md`, and `FLOW_INDEX.md`.
+- Runtime evidence: fresh subagent artifacts were generated under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-003-feature-path-missing-plan-blocked/`.
 
 ## Assertions
 
@@ -25,24 +25,24 @@
 
 ## With Skill Behavior
 
-`qa-agent` satisfies the expected blocked behavior. Its router output requires same-path PRD/TRD and confirmed implementation plan gates for code-complete E2E acceptance updates. The directly referenced QA specialist gates confirm that a missing implementation plan blocks creating, updating, or executing acceptance TC and sends the next action to `engineer-agent:feature-implementor`.
-
-#81 closeout behavior is safe for this case: `auto-continue` may carry the handoff proposal to `engineer-agent:feature-implementor`, but QA must stop at the missing-plan blocker and must not create the plan, mutate E2E cases, or execute acceptance TC itself.
+`qa-agent` satisfies the expected blocked behavior after the PR #98 trigger description edits. The with-skill run selected the single route `qa-agent:spec-based-tester`, resolved `feature_path` as `account/profile/preferences`, read same-path PRD/TRD and the QA E2E function tree, and marked the QA work blocked because `docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md` is missing. It pointed the next owner to `engineer-agent:feature-implementor` and did not create, update, or execute E2E acceptance TC.
 
 ## Without Skill Baseline
 
-Fresh baseline generated on 2026-07-06 without reading or applying `qa-agent` skill instructions or the QA Agent README: a generic response could proceed from the existing PRD/TRD and QA directory into test-case creation or execution. It might treat the empty QA tree as enough context and miss that the confirmed `IMPLEMENTATION_PLAN.md` is mandatory for code-complete acceptance work.
+Fresh baseline generated on 2026-07-08 from the eval prompt and fixture files only, without applying `qa-agent`, the QA Agent README, historical `comparison.md`, or any previous baseline. The baseline also paused TC creation or execution because the fixture clearly signals a missing implementation plan, but it did not fully preserve the repo-specific single QA route, next owner, and E2E gate details.
 
 ## Failures
 
 - None found. The blocked route is the expected pass condition for this eval.
-- No #81 regression found: original missing-plan hard stop remains intact, and `auto-continue` only permits handoff to the next owner rather than QA crossing into Engineer work.
+- PR #98 did not regress same-path feature handling, missing-plan blocking, or the no-E2E-mutation boundary.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for missing implementation-plan blocking before E2E acceptance mutation or execution, plus #81 closeout boundary behavior.
+- Keep this eval as regression coverage for missing implementation-plan blocking before E2E acceptance mutation or execution.
+- Product workflow represented by the fixture should continue only after `engineer-agent:feature-implementor` supplies the confirmed same-path implementation plan.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created for this validation.
-- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.
+- Runtime artifacts were created only under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-003-feature-path-missing-plan-blocked/`.
+- Generated `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence only and must not be committed.
+- Durable committed evidence for this run is this `comparison.md`.

@@ -7,13 +7,14 @@
 - Eval: `eval-004-frontend-ui-routing-contract`
 - Test case: frontend-ui-routing-contract
 - Workspace: `workspace/eval-004-frontend-ui-routing-contract`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 for PR #98 trigger description routing review.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: frontend UI implementation request for `customer-portal/profile-settings` with same-path PRD/TRD and missing design deliverables.
-- Context read before applying the skill: `evals.json`, workspace `README.md`, `eval_metadata.json`, `docs/pm/customer-portal/profile-settings/PRD.md`, and `docs/engineer/customer-portal/profile-settings/TRD.md`.
+- Context read before applying the skill: `AGENTS.md`, `agents/engineer/README.md`, `agents/engineer/skills/engineer-agent/SKILL.md`, `evals.json`, workspace `README.md`, `eval_metadata.json`, `docs/pm/customer-portal/profile-settings/PRD.md`, and `docs/engineer/customer-portal/profile-settings/TRD.md`.
+- Runtime evidence: fresh subagent artifacts were generated under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-004-frontend-ui-routing-contract/`.
 
 ## Assertions
 
@@ -27,15 +28,15 @@
 
 ## With Skill Behavior
 
-`engineer-agent` satisfies the frontend UI routing contract. It classifies local frontend updates as Engineering, applies the PM handoff and same-path PRD/TRD gate, checks design deliverables for page structure, interaction, visual rules, and information hierarchy, then hands design gaps to `designer-agent` without performing Designer work itself. The route returns to `feature-implementor` only after design handoff completion. For issue #81, `auto-continue` may move only as far as the Designer handoff when design deliverables are missing; it does not permit Engineer to create design deliverables, call external UI skills, or bypass the later `IMPLEMENTATION_PLAN.md` confirmation gate.
+`engineer-agent` satisfies the frontend UI routing contract after the PR #98 trigger description edits. The with-skill run treated frontend code and UI implementation as Engineering work, resolved `feature_path` as `customer-portal/profile-settings`, read same-path PRD/TRD, checked `docs/design/customer-portal/profile-settings/ui-ux-spec.md` and `visual-system.md`, identified the missing design deliverables as a Designer gap, handed the gap to `designer-agent`, and routed back to `engineer-agent` / `feature-implementor` only after design completion while preserving the `IMPLEMENTATION_PLAN.md` confirmation gate. It did not modify code, write a plan, run tests, or recommend `ui-ux-pro-max`.
 
 ## Without Skill Baseline
 
-Fresh baseline generated on 2026-07-06 without applying `engineer-agent` or the Engineer README: a generic response would likely treat the prompt as either a direct UI design task or a direct frontend implementation task. It might provide layout and button style guidance, or suggest coding steps, while missing the repository-specific design deliverable check, the prohibition on external UI reference skills for local implementation routing, and the rule that auto-continuation cannot make Engineer perform Designer work.
+Fresh baseline generated on 2026-07-08 from the eval prompt and fixture files only, without applying `engineer-agent`, the Engineer README, historical `comparison.md`, or any previous baseline. The baseline recognized a frontend update, read PRD/TRD generically, noticed missing design guidance, and suggested design confirmation before implementation, but lacked the repository-specific `engineer-agent` route contract, exact `designer-agent` handoff protocol, and required `feature-implementor` plan gate.
 
 ## Failures
 
-- None found. Issue #81 did not regress frontend UI routing, Designer handoff boundaries, or implementation-plan gating after design completion.
+- None found. PR #98 did not regress frontend UI routing, Designer handoff boundaries, external UI skill exclusion, or implementation-plan gating after design completion.
 
 ## Next Steps
 
@@ -43,5 +44,6 @@ Fresh baseline generated on 2026-07-06 without applying `engineer-agent` or the 
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created for this validation.
-- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.
+- Runtime artifacts were created only under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-004-frontend-ui-routing-contract/`.
+- Generated `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence only and must not be committed.
+- Durable committed evidence for this run is this `comparison.md`.
