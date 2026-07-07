@@ -13,9 +13,9 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 Codex 会先确认两个问题：
 
 1. 安装范围是 `personal` 还是 `project`
-2. 安装默认 role routers，还是安装 `all` skills
+2. 默认安装全部 skills，还是使用受限的 `routers-only` 模式
 
-默认 role routers 包含：
+默认全量安装包含这些 role routers：
 
 - `pm-agent`：直接用户入口，负责需求分类、范围确认、文档产出、GitHub 状态读取和下游 handoff
 - `engineer-agent`：PM handoff 后的下游工程能力，承接已确认范围内的代码分析、TRD、实现、测试、调试和交付
@@ -24,7 +24,7 @@ Codex 会先确认两个问题：
 - `designer-agent`：PM handoff 后的下游设计能力，承接已确认设计范围内的 UI/UX、视觉系统和界面规范
 - `security-agent`：PM handoff 后的下游安全能力，承接已确认安全范围内的应用安全、权限审查、依赖风险和隐私映射
 
-除非你明确希望所有 specialist skills 都在 Codex 中可见，否则使用默认 role routers。
+默认全量安装同时包含全部 specialist skills，确保 `pm-agent` 和 role router 编排流程可以调用下游 specialist。只有在明确只需要入口分类的最小场景下才使用 `routers-only`；该模式不会安装 specialist skills，因此 PM 和 role router 编排无法调用下游 specialist。
 
 ## 为什么不用软链接
 
@@ -92,17 +92,19 @@ fi
 
 ### 3. 复制 skills
 
-默认只复制 6 个 role routers：
+默认复制全部 skills：
 
 ```bash
 uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT"
 ```
 
-复制全部 skills：
+受限模式，只复制 6 个 role routers：
 
 ```bash
-uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT" --all
+uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT" --routers-only
 ```
+
+`--routers-only` 会输出警告，因为该模式不会安装 specialist skills，`pm-agent` / role router 编排无法调用下游 specialist 工作流，只适合入口分类最小安装。
 
 目标 skill 已存在时，脚本默认跳过并提示。需要替换已有目录时使用 `--force`：
 

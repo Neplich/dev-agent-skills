@@ -64,7 +64,7 @@ def resolve_relative(base: Path, value: Any, field: str) -> Path:
     return (base / safe_relative_path(value, field)).resolve()
 
 
-def parse_skill_specs(root: Path, install_all: bool) -> list[SkillSpec]:
+def parse_skill_specs(root: Path, routers_only: bool) -> list[SkillSpec]:
     data = load_json(marketplace_path(root))
     plugins = data.get("plugins")
     if not isinstance(plugins, list) or not plugins:
@@ -94,7 +94,7 @@ def parse_skill_specs(root: Path, install_all: bool) -> list[SkillSpec]:
             )
             skill_name = skill_source.name
 
-            if not install_all and skill_name != plugin_name:
+            if routers_only and skill_name != plugin_name:
                 continue
             if not (skill_source / "SKILL.md").is_file():
                 raise ValueError(f"{skill_source}: missing SKILL.md")
@@ -113,7 +113,7 @@ def parse_skill_specs(root: Path, install_all: bool) -> list[SkillSpec]:
             )
 
     if not specs:
-        mode = "--all" if install_all else "router-only"
+        mode = "--routers-only" if routers_only else "all"
         raise ValueError(f"no skills selected for install mode {mode}")
 
     return specs
@@ -171,7 +171,12 @@ def find_namespace_manifests(target_root: Path) -> list[Path]:
     return manifests
 
 
-def render_results(results: list[InstallResult], target_root: Path, manifests: list[Path]) -> None:
+def render_results(
+    results: list[InstallResult],
+    target_root: Path,
+    manifests: list[Path],
+    routers_only: bool,
+) -> None:
     print(f"Target: {target_root}")
     print("Installed skills:")
 
@@ -194,6 +199,15 @@ def render_results(results: list[InstallResult], target_root: Path, manifests: l
     summary = ", ".join(f"{status}={count}" for status, count in sorted(counts.items()))
     print(f"Summary: {summary}")
 
+    if routers_only:
+        print()
+        print("WARNING: --routers-only installed only role router skills.")
+        print(
+            "Specialist skills were not installed, so pm-agent / role router "
+            "orchestration cannot call downstream specialist workflows."
+        )
+        print("Use this mode only for minimal entry classification.")
+
     if manifests:
         print()
         print("WARNING: target ancestor chain contains plugin manifests.")
@@ -214,9 +228,9 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="target skill directory (default: ~/.agents/skills)",
     )
     parser.add_argument(
-        "--all",
+        "--routers-only",
         action="store_true",
-        help="install all skills instead of only role router skills",
+        help="install only role router skills; specialist orchestration will be unavailable",
     )
     parser.add_argument(
         "--force",
@@ -232,7 +246,7 @@ def main(argv: list[str]) -> int:
     target_root = Path(args.target).expanduser().resolve()
 
     try:
-        specs = parse_skill_specs(root, install_all=args.all)
+        specs = parse_skill_specs(root, routers_only=args.routers_only)
         target_root.mkdir(parents=True, exist_ok=True)
         results = [install_skill(skill, target_root, force=args.force) for skill in specs]
         manifests = find_namespace_manifests(target_root)
@@ -240,7 +254,7 @@ def main(argv: list[str]) -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
 
-    render_results(results, target_root, manifests)
+    render_results(results, target_root, manifests, routers_only=args.routers_only)
     return 0
 
 

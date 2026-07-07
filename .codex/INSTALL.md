@@ -8,9 +8,9 @@ skills from this repository clone into the Codex skill directory.
 Ask the user two questions and wait for both answers:
 
 1. Should this be a `personal` install or a `project` install?
-2. Should Codex install the default role routers only, or `all` skills?
+2. Should Codex install all skills by default, or use the restricted `routers-only` mode?
 
-Default role routers:
+Default all-skills install includes the role routers:
 
 - `pm-agent` - direct user entry for product planning, request classification, docs, GitHub status, and downstream handoff
 - `engineer-agent` - downstream engineering capability for PM handoff after scope is confirmed
@@ -19,8 +19,11 @@ Default role routers:
 - `designer-agent` - downstream design capability for PM handoff after design scope is confirmed
 - `security-agent` - downstream security capability for PM handoff after security scope is confirmed
 
-Select the default role routers unless the user explicitly wants every specialist
-skill visible in Codex.
+The default all-skills install also includes every specialist skill so `pm-agent`
+and role-router orchestration can call downstream specialist workflows. Select
+`routers-only` only when the user explicitly wants the minimal entry
+classification surface; specialist skills are not installed in that mode, so PM
+and role-router orchestration cannot call downstream specialists.
 
 ## Why Copy Instead Of Symlink
 
@@ -66,17 +69,21 @@ fi
 
 ### 3. Copy Skills
 
-Default role routers only:
+Default all skills:
 
 ```bash
 uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT"
 ```
 
-All skills:
+Restricted role routers only:
 
 ```bash
-uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT" --all
+uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT" --routers-only
 ```
+
+`--routers-only` prints a warning because specialist skills are not installed,
+and `pm-agent` / role-router orchestration cannot call downstream specialist
+workflows. Use it only for minimal entry classification.
 
 If a selected skill directory already exists, the installer skips it by default.
 Use `--force` to delete and recopy existing selected skill directories:

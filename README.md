@@ -113,16 +113,16 @@ Clone or update this repository, then run the copy-based installer:
 git clone https://github.com/Neplich/dev-agent-skills.git ~/.agents/dev-agent-skills
 cd ~/.agents/dev-agent-skills
 
-# Install only the six role router skills by default.
+# Install all role router and specialist skills by default.
 uv run scripts/install_codex_skills.py
 
-# Install every skill when you want all specialist skills visible to Codex.
-uv run scripts/install_codex_skills.py --all
+# Optional minimal mode: install only the six role router skills.
+uv run scripts/install_codex_skills.py --routers-only
 ```
 
 Codex resolves skill symlinks to their real path before looking upward for plugin manifests. If skills are symlinked into this repository clone, Codex can find `agents/{role}/.claude-plugin/plugin.json` and add namespace prefixes such as `Pm Agent:` to every skill. The installer copies skill directories into `~/.agents/skills/` so the target ancestor chain does not include those manifests. See [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95).
 
-The default install copies only the six role routers: `pm-agent`, `engineer-agent`, `qa-agent`, `devops-agent`, `designer-agent`, and `security-agent`. Use `--all` to copy all skills, `--target <path>` for a project-local or custom skill directory, and `--force` to replace existing copied skill directories.
+The default install copies all role router and specialist skills so `pm-agent` and role-router orchestration can call downstream specialists. Use `--routers-only` only for a minimal entry-classification install; in that mode specialist skills are not installed, so `pm-agent` and role routers cannot call downstream specialist workflows. Use `--target <path>` for a project-local or custom skill directory, and `--force` to replace existing copied skill directories.
 
 To disable one copied skill by path, add a path-specific entry to `~/.codex/config.toml`:
 
