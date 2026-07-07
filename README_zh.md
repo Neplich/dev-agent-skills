@@ -107,20 +107,30 @@ Claude Code 会按 plugin root 扫描已安装插件。本仓库已经把每个 
 
 ### Codex
 
-在 Codex 中输入：
+clone 或更新本仓库后，运行复制式安装脚本：
 
-```text
-Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/heads/main/.codex/INSTALL.md
+```bash
+git clone https://github.com/Neplich/dev-agent-skills.git ~/.agents/dev-agent-skills
+cd ~/.agents/dev-agent-skills
+
+# 默认只安装 6 个 role router skills
+uv run scripts/install_codex_skills.py
+
+# 需要让 Codex 看到全部 specialist skills 时使用
+uv run scripts/install_codex_skills.py --all
 ```
 
-安装流程会先确认：
+Codex 会先把 skill 软链接解析到真实路径，再向上查找 plugin manifest。若把 skill 软链接进本仓库 clone，Codex 会命中 `agents/{role}/.claude-plugin/plugin.json`，并给所有 skill 加上 `Pm Agent:` 这类 namespace 前缀。该脚本把 skill 目录复制到 `~/.agents/skills/`，让目标目录祖先链避开这些 manifest。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。
 
-- 安装到 `personal` 还是 `project` 层级
-- 安装 `all` agents，还是选择其中一部分
+默认安装 6 个 role router：`pm-agent`、`engineer-agent`、`qa-agent`、`devops-agent`、`designer-agent`、`security-agent`。使用 `--all` 可复制全部 skills，使用 `--target <path>` 可指定项目级或自定义 skill 目录，使用 `--force` 可替换已存在的复制目录。
 
-直接入口选择 `pm-agent`；当 PM 编排需要设计、工程、QA、DevOps 或安全能力时，再安装对应下游 Agent。
+如需按路径禁用单个已复制 skill，可在 `~/.codex/config.toml` 中添加：
 
-Codex 安装会把仓库 clone 到对应层级的 `.agents/dev-agent-skills`，并把已选 Agent 下的每个 skill 软链接到 `.agents/skills/<skill-name>`。仓库目录结构保持不变，继续兼容 Claude marketplace。
+```toml
+[[skills.config]]
+path = "/Users/you/.agents/skills/debugger"
+enabled = false
+```
 
 完整说明见 [docs/README.codex.md](./docs/README.codex.md)。
 

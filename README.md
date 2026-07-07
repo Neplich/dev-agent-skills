@@ -107,20 +107,30 @@ Claude Code scans installed plugins by plugin root. This repository scopes each 
 
 ### Codex
 
-In Codex, say:
+Clone or update this repository, then run the copy-based installer:
 
-```text
-Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/heads/main/.codex/INSTALL.md
+```bash
+git clone https://github.com/Neplich/dev-agent-skills.git ~/.agents/dev-agent-skills
+cd ~/.agents/dev-agent-skills
+
+# Install only the six role router skills by default.
+uv run scripts/install_codex_skills.py
+
+# Install every skill when you want all specialist skills visible to Codex.
+uv run scripts/install_codex_skills.py --all
 ```
 
-The install flow will ask:
+Codex resolves skill symlinks to their real path before looking upward for plugin manifests. If skills are symlinked into this repository clone, Codex can find `agents/{role}/.claude-plugin/plugin.json` and add namespace prefixes such as `Pm Agent:` to every skill. The installer copies skill directories into `~/.agents/skills/` so the target ancestor chain does not include those manifests. See [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95).
 
-- whether this should be a `personal` or `project` install
-- whether to install `all` agents or a selected subset
+The default install copies only the six role routers: `pm-agent`, `engineer-agent`, `qa-agent`, `devops-agent`, `designer-agent`, and `security-agent`. Use `--all` to copy all skills, `--target <path>` for a project-local or custom skill directory, and `--force` to replace existing copied skill directories.
 
-Select `pm-agent` for the direct entry. Add downstream role agents when PM-orchestrated handoff should be able to use their skills.
+To disable one copied skill by path, add a path-specific entry to `~/.codex/config.toml`:
 
-Codex installs the repository at the selected `.agents/dev-agent-skills` root and symlinks each selected skill into `.agents/skills/<skill-name>`. The repository layout stays unchanged for Claude marketplace compatibility.
+```toml
+[[skills.config]]
+path = "/Users/you/.agents/skills/debugger"
+enabled = false
+```
 
 See [docs/README.codex.md](./docs/README.codex.md) for the full Codex guide.
 
