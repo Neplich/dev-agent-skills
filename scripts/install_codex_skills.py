@@ -148,6 +148,21 @@ def is_repo_symlink(path: Path, root: Path) -> bool:
     return path.is_symlink() and is_relative_to(path.resolve(strict=False), root)
 
 
+def is_documented_legacy_symlink(path: Path) -> bool:
+    if not path.is_symlink():
+        return False
+
+    parts = path.resolve(strict=False).parts
+    for index, part in enumerate(parts[:-1]):
+        if part in {".codex", ".agents"} and parts[index + 1] == LEGACY_AGGREGATE_DIR:
+            return True
+    return False
+
+
+def is_managed_symlink(path: Path, root: Path) -> bool:
+    return is_repo_symlink(path, root) or is_documented_legacy_symlink(path)
+
+
 def marker_payload(skill: SkillSpec) -> dict[str, str]:
     rel_source = skill.source
     try:
@@ -180,7 +195,7 @@ def marker_matches(target: Path, skill: SkillSpec) -> bool:
 
 
 def is_managed_target(skill: SkillSpec, target: Path, root: Path) -> bool:
-    return is_repo_symlink(target, root) or marker_matches(target, skill)
+    return is_managed_symlink(target, root) or marker_matches(target, skill)
 
 
 def prepare_support_tree(root: Path, target_root: Path) -> Path:
@@ -215,7 +230,7 @@ def remove_legacy_aggregate_root(target_root: Path, root: Path) -> list[Path]:
     if not (legacy.exists() or legacy.is_symlink()):
         return []
 
-    if is_repo_symlink(legacy, root):
+    if is_managed_symlink(legacy, root):
         remove_existing(legacy)
         return [legacy]
 
@@ -229,7 +244,7 @@ def remove_legacy_aggregate_root(target_root: Path, root: Path) -> list[Path]:
         return []
 
     for child in children:
-        if child.is_symlink() and is_repo_symlink(child, root):
+        if child.is_symlink() and is_managed_symlink(child, root):
             remove_existing(child)
             removed.append(child)
 
@@ -296,6 +311,34 @@ def remove_unselected_targets(
     for _spec, target in existing:
         remove_existing(target)
     return existing
+
+
+def preflight_selected_targets(
+    selected_specs: list[SkillSpec],
+    target_root: Path,
+    force: bool,
+    root: Path,
+) -> None:
+    if not force:
+        return
+
+    unowned: list[Path] = []
+    for spec in selected_specs:
+        target = target_root / spec.skill_name
+        if (target.exists() or target.is_symlink()) and not is_managed_target(spec, target, root):
+            unowned.append(target)
+
+    if not unowned:
+        return
+
+    names = ", ".join(path.name for path in unowned[:8])
+    if len(unowned) > 8:
+        names = f"{names}, ... ({len(unowned)} total)"
+    raise ValueError(
+        "--force target contains selected skill names that were not installed "
+        f"by this installer: {names}. Move or remove those paths manually; "
+        "they will not be deleted by --force."
+    )
 
 
 def install_skill(
@@ -454,12 +497,13 @@ def main(argv: list[str]) -> int:
         all_specs = parse_skill_specs(root)
         specs = select_skill_specs(all_specs, routers_only=args.routers_only)
         target_root.mkdir(parents=True, exist_ok=True)
-        removed_legacy = remove_legacy_aggregate_root(target_root, root)
+        preflight_selected_targets(specs, target_root, force=args.force, root=root)
         removed_unselected = (
             remove_unselected_targets(all_specs, specs, target_root, force=args.force)
             if args.routers_only
             else []
         )
+        removed_legacy = remove_legacy_aggregate_root(target_root, root)
         support_agents = prepare_support_tree(root, target_root)
         results = [
             install_skill(
