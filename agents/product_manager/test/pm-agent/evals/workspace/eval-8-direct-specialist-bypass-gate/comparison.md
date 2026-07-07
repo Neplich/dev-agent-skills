@@ -6,36 +6,37 @@
 - Test case: direct-specialist-bypass-gate
 - Test set: PM entry evals for issue #52 / FR-006 scenario 8
 - Entry: workspace `eval-8-direct-specialist-bypass-gate`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 for PR #98 trigger description revisions
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: direct internal specialist invocation without PRD, TRD, implementation plan, or PM handoff packet
-- Expected output: specialist entry gate blocks plan/code/test implementation and returns to `pm-agent` classification.
+- Expected output: specialist entry gate blocks plan, code, and test implementation, then returns to `pm-agent` classification.
 
 ## Assertions
 
 - PASS `specialist_gate_runs`: Direct invocation of an internal specialist still triggers the PM handoff entry gate.
-- PASS `requires_handoff_or_docs`: The gate requires PM handoff packet or equivalent confirmed PRD / TRD and current implementation scope; an implementation plan is not treated as the upstream entry prerequisite.
+- PASS `requires_handoff_or_docs`: The gate requires a PM handoff packet or equivalent confirmed PRD / TRD and current implementation scope; an existing implementation plan is not treated as the upstream entry prerequisite.
 - PASS `blocks_implementation`: The route blocks plan creation, code, and tests, then returns to `pm-agent` classification.
 
 ## With Skill Behavior
 
-- The PM handoff entry gate applies even when an internal specialist is directly invoked.
-- It requires a PM handoff packet or equivalent confirmed PRD / TRD and current implementation scope before `feature-implementor` planning can proceed.
-- It blocks creating an implementation plan, writing code, or writing tests until the request returns to `pm-agent` classification.
-- Issue #81 safety-net behavior remains within boundary: auto-continue cannot bypass the specialist entry gate or let PM execute `feature-implementor` planning.
+- Applied `pm-agent` entry routing, Product Manager Agent README guidance, and `feature-implementor` specialist gate evidence.
+- The direct request to trigger `feature-implementor` cannot continue because the fixture states that PRD, TRD, implementation plan, and PM handoff packet are missing.
+- `feature-implementor` may only start planning after an explicit Engineer / delivery-adjacent PM handoff packet or an equivalent confirmed PRD / TRD plus current implementation-scope decision.
+- The correct with-skill response blocks implementation-plan creation, code changes, and test implementation, then returns the request to `pm-agent` for classification, scope, source documents, and `change_tier`.
 
 ## Without Skill Baseline
 
-- Fresh without_skill baseline regenerated on 2026-07-06 without applying `pm-agent` or the Product Manager Agent README. A generic response could treat the explicit specialist invocation as permission to start planning.
-- It may incorrectly treat the missing implementation plan as something to create immediately instead of a downstream step after confirmed PM / TRD context.
+- Fresh without_skill baseline regenerated on 2026-07-08 from the same prompt and fixture without applying or citing the `pm-agent` skill or Product Manager Agent README.
+- A generic assistant would likely notice that PRD / TRD / implementation plan are missing and ask for requirements, but it may treat the explicit specialist invocation as permission to start an implementation plan or requirements draft.
+- The baseline is weaker because it does not reliably name the internal specialist PM handoff entry gate, does not require a PM handoff packet or equivalent confirmed PRD / TRD plus current implementation scope, and may not return the request to `pm-agent`.
 
 ## Failures
 
-- None. The current gate language satisfies all direct-specialist bypass assertions.
-- No issue #81 regression found; the role-boundary priority blocks direct specialist execution without upstream basis.
+- None. The PR #98 trigger description revision and current gate language satisfy all direct-specialist bypass assertions.
+- No bypass path found: direct specialist invocation remains blocked without upstream PM handoff or equivalent confirmed documents.
 
 ## Next Steps
 
@@ -44,4 +45,5 @@
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.
+- No tmp runtime artifacts were created in this validation.
+- Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.
