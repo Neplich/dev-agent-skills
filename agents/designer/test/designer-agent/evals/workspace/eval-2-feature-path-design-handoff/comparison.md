@@ -7,13 +7,16 @@
 - Eval: `eval-002-feature-path-design-handoff`
 - Test case: feature-path-design-handoff
 - Workspace: `workspace/eval-2-feature-path-design-handoff`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
+- Review context: PR #98 trigger description routing review
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: confirmed 4-level feature path `chat-interface/messages/history/search` with same-path PM PRD and Engineer TRD.
-- Context read before applying the skill: `evals.json`, workspace `eval_metadata.json`, `docs/pm/chat-interface/messages/history/search/PRD.md`, and `docs/engineer/chat-interface/messages/history/search/TRD.md`.
+- Fixture metadata: `eval_metadata.json` for `eval-002-feature-path-design-handoff`.
+- Context read before applying the skill: `AGENTS.md`, `agents/designer/README.md`, `agents/designer/skills/designer-agent/SKILL.md`, `evals.json`, workspace `eval_metadata.json`, `docs/pm/chat-interface/messages/history/search/PRD.md`, `docs/engineer/chat-interface/messages/history/search/TRD.md`, and the `skill-map.md` sections directly referenced by the skill for PM handoff fields and Safety-Net Closeout / Auto-Continue.
+- Fixture file status: both metadata-referenced fixture documents exist. PRD and TRD frontmatter both confirm `feature_path: chat-interface/messages/history/search`, `parent_feature: chat-interface/messages/history`, and feature level 4.
 
 ## Assertions
 
@@ -24,21 +27,33 @@
 
 ## With Skill Behavior
 
-`designer-agent` satisfies the feature-path mirroring contract. Its PM handoff gate requires a stable `feature_path`, and Designer README states that output directories consume the PM/Engineer path rather than inventing synonyms. The with-skill route writes only `ui-ux-spec.md` and `visual-system.md` under the full 4-level path and leaves implementation to `engineer-agent`. For issue #81, role boundaries take precedence over auto-continue, so Designer may hand off the confirmed design artifacts to `engineer-agent` but must not continue into engineering workflow, implementation steps, tests, or patches.
+`designer-agent` satisfies the feature-path mirroring contract for the PR #98 trigger description routing review. Its PM handoff gate accepts this request because the prompt provides confirmed PM context, same-path PRD/TRD sources, and a stable `feature_path`. Designer README states that output directories consume `feature_path` from PM/Engineer handoff rather than inventing synonyms. The with-skill route preserves `chat-interface/messages/history/search` and points UI/UX and visual outputs to:
+
+- `docs/design/chat-interface/messages/history/search/ui-ux-spec.md`
+- `docs/design/chat-interface/messages/history/search/visual-system.md`
+
+The route may select `ui-ux-design` for flows, page structure, and interaction work, and `visual-design` when visual-system rules are needed. It stops at design handoff and leaves implementation to `engineer-agent`; it does not produce code, tests, shell commands, patches, deployment config, or engineering implementation steps.
 
 ## Without Skill Baseline
 
-Fresh without-skill baseline generated in this run on 2026-07-06: without the router skill and Designer README, a generic design answer might preserve the topic and even copy the provided PRD/TRD paths, but it has weaker pressure to mirror the full `chat-interface/messages/history/search` path into `docs/design/`. It might shorten the path to `history-search` or `chat-interface/history-search`, and it may include implementation sequencing or test advice instead of stopping at the issue #81 Designer-to-Engineer handoff boundary.
+Fresh without-skill baseline generated in this run on 2026-07-08 from the eval prompt and fixture-level PM/Engineer document facts only. It did not use historical `comparison.md`, historical baselines, Designer README routing rules, or `designer-agent/SKILL.md` router instructions as source material for the baseline behavior.
+
+Without the router skill and Designer README, a generic answer would likely notice the explicit feature path and same-path PRD/TRD references. The weaker behavior is that it may treat "message history search" as the user-facing topic and shorten the design path to `docs/design/search/`, `docs/design/history-search/`, `docs/design/chat-history-search/`, or `docs/design/chat-interface/history-search/`. It may also include implementation sequencing, test suggestions, or frontend update advice instead of stopping strictly at the Designer-to-Engineer handoff boundary.
 
 ## Failures
 
-- None found. The issue #81 role-boundary check passed: Designer mirrors the full design path and stops before engineering work.
+- None found. All assertions pass for PR #98 trigger description routing review.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for multi-level feature-path symmetry across PM, Engineer, and Designer docs, including issue #81 handoff-only auto-continue behavior.
+- Keep this eval as regression coverage for multi-level feature-path symmetry across PM, Engineer, and Designer docs.
+- Re-run fresh with-skill and without-skill validation if Designer router trigger descriptions, feature-path routing, or design handoff wording changes again.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created for this validation.
-- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.
+- Runtime evidence for this validation was written only under `tmp/eval-runs/2026-07-08-router-trigger-batch4-final/eval-002-feature-path-design-handoff/`:
+  - `with_skill.md`
+  - `without_skill.md`
+  - `verdict.md`
+- These runtime files are scratch diagnostics and must not be committed.
+- Durable eval history is this `comparison.md`; runtime transcripts, verdicts, timing, output directories, diagnostics, generated with_skill files, and generated without_skill files remain outside the submitted fixture workspace.
