@@ -4,9 +4,9 @@
 
 - Skill: `pm-agent`
 - Test case: route-bugfix-request
-- Test set: PM entry evals for issue #52 / FR-006 scenario 2
+- Test set: PM entry evals for issue #52 / FR-006 scenario 2; PR #98 trigger-description routing check
 - Entry: workspace `eval-2-route-bugfix-request`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08
 
 ## Test Set / Fixture Version
 
@@ -22,26 +22,27 @@
 
 ## With Skill Behavior
 
-- The `pm-agent` classification protocol explicitly maps bug reports to `bug_report`.
-- It requires comparing the reported token-expiry spinner against approved PRD / TRD or equivalent product expectations before diagnosing implementation.
-- It only allows Engineer/debugger handoff after expected behavior is confirmed and the issue is an implementation deviation.
-- Issue #81 safety-net behavior remains within boundary: closeout may recommend Engineer/debugger as the next owner after expectation confirmation, but does not run debugging or repair inside PM.
+- Fresh subagent applied the current-branch `pm-agent` SKILL.md and Product Manager Agent README.
+- The router classifies the token-expiry spinner report as `bug_report` instead of starting a repair.
+- It requires approved PRD / TRD or equivalent product expectations, reproduction evidence, and actual behavior before implementation diagnosis.
+- It only allows `engineer-agent` / debugger handoff after the spinner behavior is confirmed as an implementation deviation; unclear expectations should not be treated as a `hotfix`.
 
 ## Without Skill Baseline
 
-- Fresh without_skill baseline regenerated on 2026-07-06 without applying `pm-agent` or the Product Manager Agent README. A generic response could jump straight into debugging the token expiry behavior from logs.
-- It may ask for reproduction details, but is less consistent about product expectation alignment before debugger handoff.
+- Fresh without_skill baseline was regenerated on 2026-07-08 from the eval prompt and fixture README only; it did not reuse historical baseline text and did not apply `pm-agent` SKILL.md or the Product Manager Agent README.
+- The generic baseline may ask for reproduction details and expected token-expiry behavior, but it is less reliable about explicitly classifying `request_type: bug_report`, preserving `change_tier`, and enforcing the PM expectation-first gate before debugger handoff.
 
 ## Failures
 
 - None. The current `pm-agent` protocol satisfies the bug classification and expectation-first assertions.
-- No issue #81 regression found; auto-continue does not bypass expected-behavior confirmation or execute Engineer/debugger work from the PM role.
+- No routing regression found from the PR #98 trigger-description changes.
 
 ## Next Steps
 
 - Keep this eval as PM entry coverage for bug reports.
-- Re-run fresh validation if bug handling or debugger handoff gates change.
+- Re-run fresh validation if bug handling, debugger handoff gates, or entry trigger descriptions change.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.
+- No runtime artifacts were committed. The validating subagent did not create runtime files.
+- If future transcripts, verdicts, timing data, outputs, or diagnostics are generated, keep them under `tmp/eval-runs/pm-agent-20260708/eval-002/` or another isolated scratch path and do not commit them.
