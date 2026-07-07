@@ -179,17 +179,8 @@ def marker_matches(target: Path, skill: SkillSpec) -> bool:
         return False
 
 
-def skill_file_matches(target: Path, skill: SkillSpec) -> bool:
-    source_skill = skill.source / "SKILL.md"
-    target_skill = target / "SKILL.md"
-    try:
-        return target.is_dir() and target_skill.read_bytes() == source_skill.read_bytes()
-    except OSError:
-        return False
-
-
 def is_managed_target(skill: SkillSpec, target: Path, root: Path) -> bool:
-    return is_repo_symlink(target, root) or marker_matches(target, skill) or skill_file_matches(target, skill)
+    return is_repo_symlink(target, root) or marker_matches(target, skill)
 
 
 def prepare_support_tree(root: Path, target_root: Path) -> Path:
@@ -219,29 +210,38 @@ def ensure_support_reference(target: Path, support_agents: Path) -> None:
         shutil.copytree(support_agents, link)
 
 
-def is_legacy_aggregate_root(path: Path, root: Path) -> bool:
-    if is_repo_symlink(path, root):
-        return True
-    if not path.is_dir():
-        return False
-
-    try:
-        children = list(path.iterdir())
-    except OSError:
-        return False
-
-    return any(child.is_symlink() and is_repo_symlink(child, root) for child in children)
-
-
-def remove_legacy_aggregate_root(target_root: Path, root: Path) -> Path | None:
+def remove_legacy_aggregate_root(target_root: Path, root: Path) -> list[Path]:
     legacy = target_root / LEGACY_AGGREGATE_DIR
     if not (legacy.exists() or legacy.is_symlink()):
-        return None
-    if not is_legacy_aggregate_root(legacy, root):
-        return None
+        return []
 
-    remove_existing(legacy)
-    return legacy
+    if is_repo_symlink(legacy, root):
+        remove_existing(legacy)
+        return [legacy]
+
+    if not legacy.is_dir():
+        return []
+
+    removed: list[Path] = []
+    try:
+        children = list(legacy.iterdir())
+    except OSError:
+        return []
+
+    for child in children:
+        if child.is_symlink() and is_repo_symlink(child, root):
+            remove_existing(child)
+            removed.append(child)
+
+    try:
+        next(legacy.iterdir())
+    except StopIteration:
+        legacy.rmdir()
+        removed.append(legacy)
+    except OSError:
+        pass
+
+    return removed
 
 
 def find_unselected_existing_targets(
@@ -309,15 +309,12 @@ def install_skill(
     target_exists = target.exists() or target.is_symlink()
     repo_symlink = is_repo_symlink(target, root)
     if target_exists:
-        if not force and not repo_symlink:
-            if is_managed_target(skill, target, root) and target.is_dir():
-                ensure_support_reference(target, support_agents)
-                write_marker(target, skill)
-                return InstallResult(
-                    skill=skill,
-                    status="updated",
-                    target=target,
-                    message="target already exists; refreshed support references",
+        managed = is_managed_target(skill, target, root)
+        if not managed:
+            if force:
+                raise ValueError(
+                    f"{target}: exists but was not installed by this installer; "
+                    "move or remove it manually before using --force"
                 )
             return InstallResult(
                 skill=skill,
@@ -331,7 +328,14 @@ def install_skill(
     shutil.copytree(skill.source, target)
     ensure_support_reference(target, support_agents)
     write_marker(target, skill)
-    status = "migrated" if repo_symlink else "replaced" if target_exists else "installed"
+    if repo_symlink:
+        status = "migrated"
+    elif target_exists and not force:
+        status = "updated"
+    elif target_exists:
+        status = "replaced"
+    else:
+        status = "installed"
     message = "replaced repository symlink with copied skill" if repo_symlink else "copied"
     return InstallResult(
         skill=skill,
@@ -364,7 +368,7 @@ def render_results(
     manifests: list[Path],
     routers_only: bool,
     removed_unselected: list[tuple[SkillSpec, Path]],
-    removed_legacy: Path | None,
+    removed_legacy: list[Path],
 ) -> None:
     print(f"Target: {target_root}")
     print("Installed skills:")
@@ -388,9 +392,11 @@ def render_results(
     summary = ", ".join(f"{status}={count}" for status, count in sorted(counts.items()))
     print(f"Summary: {summary}")
 
-    if removed_legacy is not None:
+    if removed_legacy:
         print()
-        print(f"Removed legacy aggregate skill root: {removed_legacy}")
+        print("Removed legacy aggregate entries:")
+        for path in removed_legacy:
+            print(f"- removed: {path}")
 
     if routers_only:
         print()

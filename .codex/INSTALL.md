@@ -91,10 +91,10 @@ stops with cleanup instructions unless `--force` is used to remove unselected
 managed skills. Same-name directories without installer ownership proof are not
 deleted automatically.
 
-If a selected managed skill directory already exists, the installer refreshes
-its support references. Unowned same-name directories are skipped or blocked
-instead of being mutated. Use `--force` to delete and recopy existing selected
-managed skill directories:
+If a selected managed skill directory already exists, the installer synchronizes
+it from the current clone and refreshes its support references. Unowned
+same-name directories are skipped or blocked instead of being mutated. Use
+`--force` to delete and recopy existing selected managed skill directories:
 
 ```bash
 uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT" --force
