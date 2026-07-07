@@ -36,6 +36,8 @@ names.
 
 The installer below copies each selected skill directory into the Codex skill
 root so the target ancestor chain avoids those plugin manifests.
+It also writes managed install markers and a hidden support tree so shared
+repo-relative skill references remain available after copying.
 
 ## Installation Steps
 
@@ -86,10 +88,13 @@ and `pm-agent` / role-router orchestration cannot call downstream specialist
 workflows. Use it only for minimal entry classification.
 If the target already contains managed specialist skills, `--routers-only`
 stops with cleanup instructions unless `--force` is used to remove unselected
-managed skills.
+managed skills. Same-name directories without installer ownership proof are not
+deleted automatically.
 
-If a selected skill directory already exists, the installer skips it by default.
-Use `--force` to delete and recopy existing selected skill directories:
+If a selected managed skill directory already exists, the installer refreshes
+its support references. Unowned same-name directories are skipped or blocked
+instead of being mutated. Use `--force` to delete and recopy existing selected
+managed skill directories:
 
 ```bash
 uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT" --force

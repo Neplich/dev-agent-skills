@@ -30,7 +30,7 @@ Codex 会先确认两个问题：
 
 Codex 会先把 skill 软链接解析到真实路径，再从该真实路径向上查找 `.codex-plugin/plugin.json` 或 `.claude-plugin/plugin.json`。本仓库为了兼容 Claude marketplace，必须保留 `agents/{role}/.claude-plugin/plugin.json`。
 
-如果 `~/.agents/skills/<skill-name>` 软链接到仓库 clone 内的 `agents/{role}/skills/<skill-name>`，Codex 会在祖先目录命中该 role 的 `plugin.json`，并给 skill 名加上 `Pm Agent:` 这类 namespace 前缀。复制式安装会把 skill 目录复制到目标 skill root 下，避免目标目录祖先链包含这些 plugin manifest。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。
+如果 `~/.agents/skills/<skill-name>` 软链接到仓库 clone 内的 `agents/{role}/skills/<skill-name>`，Codex 会在祖先目录命中该 role 的 `plugin.json`，并给 skill 名加上 `Pm Agent:` 这类 namespace 前缀。复制式安装会把 skill 目录复制到目标 skill root 下，避免目标目录祖先链包含这些 plugin manifest，并写入受管 marker 与隐藏 support tree，让共享的 repo-relative skill references 在复制后仍可读取。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。
 
 ```mermaid
 flowchart TD
@@ -104,9 +104,9 @@ uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKIL
 uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT" --routers-only
 ```
 
-`--routers-only` 会输出警告，因为该模式不会安装 specialist skills，`pm-agent` / role router 编排无法调用下游 specialist 工作流，只适合入口分类最小安装。如果目标目录已存在本仓库管理的 specialist skills，`--routers-only` 会阻断并给出清理指引；使用 `--force` 才会删除未选中的受管 skills。
+`--routers-only` 会输出警告，因为该模式不会安装 specialist skills，`pm-agent` / role router 编排无法调用下游 specialist 工作流，只适合入口分类最小安装。如果目标目录已存在本仓库管理的 specialist skills，`--routers-only` 会阻断并给出清理指引；使用 `--force` 才会删除未选中的受管 skills，未证明归属的同名目录不会被自动删除。
 
-目标 skill 已存在时，脚本默认跳过并提示。需要替换已有目录时使用 `--force`：
+目标 skill 已存在且属于本安装器管理时，脚本会刷新 support references。未证明归属的同名目录会被跳过或阻断，不会被静默修改。需要替换已存在的受管目录时使用 `--force`：
 
 ```bash
 uv run --directory "$CLONE_ROOT" scripts/install_codex_skills.py --target "$SKILL_ROOT" --force
