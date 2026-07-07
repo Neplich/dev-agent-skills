@@ -29,7 +29,7 @@
     "changelog-generator": {
       "source": "agents/product_manager/skills/changelog-generator",
       "sourceType": "local",
-      "computedHash": "50b8524e9112004717847a274f055fab10239be875f3bc391ea8e4d29151639f"
+      "computedHash": "a10b972b640f14a52764d5f98fc69e9059aeca0ebb37ef9dd12aaf301c089fe2"
     },
     "release-notes-generator": {
       "source": "agents/product_manager/skills/release-notes-generator",
@@ -79,7 +79,7 @@
     "debugger": {
       "source": "agents/engineer/skills/debugger",
       "sourceType": "local",
-      "computedHash": "329d9f0788b3713b6e65b7949c5051a33a7b26d2f5e3e98ced4481f1942c9791"
+      "computedHash": "10cee790b054131d3b6bb115a68bd03badb2bc1fa7e026e9fad1d724d5bd793a"
     },
     "delivery": {
       "source": "agents/engineer/skills/delivery",
