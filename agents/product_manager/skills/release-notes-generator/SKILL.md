@@ -1,6 +1,6 @@
 ---
 name: release-notes-generator
-description: "Internal PM specialist invoked by pm-agent for release communication to draft user-facing release notes, release announcements, and GitHub release bodies from version context."
+description: "Internal PM specialist—not a direct entry point. Invoked by pm-agent after entry classification to draft user-facing release notes, release announcements, and GitHub release bodies from version context."
 visibility: internal
 ---
 

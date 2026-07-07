@@ -1,6 +1,6 @@
 ---
 name: competitive-intelligence
-description: "Internal PM specialist invoked by pm-agent for competitor research to build an interactive battlecard with competitor cards and a comparison matrix."
+description: "Internal PM specialist—not a direct entry point. Invoked by pm-agent after entry classification to build sales battlecards with competitor cards and comparison matrices."
 visibility: internal
 ---
 

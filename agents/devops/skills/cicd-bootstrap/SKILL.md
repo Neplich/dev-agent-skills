@@ -1,6 +1,6 @@
 ---
 name: cicd-bootstrap
-description: "Internal DevOps specialist invoked by devops-agent after pm-agent handoff to add or update CI/CD automation, GitHub Actions, GitLab CI, and release workflow configuration."
+description: "Internal DevOps specialist—not a direct entry point. Invoked by devops-agent after pm-agent handoff to add or update CI/CD automation, GitHub Actions, GitLab CI, and release workflow configuration."
 visibility: internal
 ---
 

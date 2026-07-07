@@ -1,6 +1,6 @@
 ---
 name: project-bootstrap
-description: "Internal engineering specialist invoked by engineer-agent after pm-agent handoff to initialize a project only from settled PRD/TRD or approved PM scope, with PM redirection when specs are absent."
+description: "Internal engineering specialist—not a direct entry point. Invoked by engineer-agent after pm-agent handoff to initialize a project from settled PRD/TRD or approved PM scope, with PM redirection when specs are absent."
 visibility: internal
 ---
 

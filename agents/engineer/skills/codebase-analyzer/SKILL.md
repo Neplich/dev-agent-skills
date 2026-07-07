@@ -1,6 +1,6 @@
 ---
 name: codebase-analyzer
-description: "Internal engineering specialist invoked by engineer-agent after pm-agent handoff to scan an existing codebase and summarize structure, stack, conventions, dependencies, and architecture evidence before downstream work."
+description: "Internal engineering specialist—not a direct entry point. Invoked by engineer-agent after pm-agent handoff to inspect an existing codebase and summarize structure, stack, conventions, dependencies, and architecture evidence."
 visibility: internal
 ---
 

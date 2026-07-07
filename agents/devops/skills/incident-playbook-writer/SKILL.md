@@ -1,6 +1,6 @@
 ---
 name: incident-playbook-writer
-description: "Internal DevOps specialist invoked by devops-agent after pm-agent handoff to write rollback guidance, incident response steps, troubleshooting runbooks, and on-call preparation tied to deployment setup."
+description: "Internal DevOps specialist—not a direct entry point. Invoked by devops-agent after pm-agent handoff to write rollback guidance, incident response steps, troubleshooting runbooks, and on-call preparation tied to deployment setup."
 visibility: internal
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: env-config-auditor
-description: "Internal DevOps specialist invoked by devops-agent after pm-agent handoff to audit deployment readiness, environment variables, and configuration coverage across local, CI/CD, and runtime contexts."
+description: "Internal DevOps specialist—not a direct entry point. Invoked by devops-agent after pm-agent handoff to audit deployment readiness, environment variables, and configuration coverage across local, CI/CD, and runtime contexts."
 visibility: internal
 ---
 

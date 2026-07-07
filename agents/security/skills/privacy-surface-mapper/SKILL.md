@@ -1,6 +1,6 @@
 ---
 name: privacy-surface-mapper
-description: "Internal security specialist invoked by security-agent after pm-agent handoff to map personal-data collection, privacy obligations, GDPR/CCPA concerns, and data-flow exposure."
+description: "Internal security specialist—not a direct entry point. Invoked by security-agent after pm-agent handoff to map personal-data collection, privacy obligations, GDPR/CCPA concerns, and data-flow exposure."
 visibility: internal
 ---
 
