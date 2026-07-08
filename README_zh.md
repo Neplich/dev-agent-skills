@@ -107,20 +107,30 @@ Claude Code 会按 plugin root 扫描已安装插件。本仓库已经把每个 
 
 ### Codex
 
-在 Codex 中输入：
+clone 或更新本仓库后，运行镜像式安装脚本：
 
-```text
-Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/heads/main/.codex/INSTALL.md
+```bash
+git clone https://github.com/Neplich/dev-agent-skills.git ~/.agents/dev-agent-skills
+cd ~/.agents/dev-agent-skills
+
+# 默认安装全部 role router 和 specialist skills
+python3 scripts/install_codex_skills.py
+
+# 可选最小模式：只暴露 6 个 role router skills
+python3 scripts/install_codex_skills.py --routers-only
 ```
 
-安装流程会先确认：
+Codex 会先把 skill 软链接解析到真实路径，再向上查找 plugin manifest。若把 skill 直接软链接进本仓库 clone，Codex 会命中 `agents/{role}/.claude-plugin/plugin.json`，并给所有 skill 加上 `Pm Agent:` 这类 namespace 前缀。该脚本把仓库 `agents/` 树镜像到 `~/.agents/skills/.dev-agent-skills/`，剔除 plugin manifest 和 agent test 目录，再在目标根目录创建 `~/.agents/skills/pm-agent -> .dev-agent-skills/agents/product_manager/skills/pm-agent` 这类相对软链。解析后的 skill 路径停留在隐藏镜像内，共享 repo-relative 指令无需改写即可读取。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。
 
-- 安装到 `personal` 还是 `project` 层级
-- 安装 `all` agents，还是选择其中一部分
+默认安装全部 role router 和 specialist skills，确保 `pm-agent` 和 role router 编排流程可以调用下游 specialist。`--routers-only` 只适合入口分类所需的最小安装；该模式只在目标根目录暴露 6 个 router 软链，但隐藏镜像仍保留完整 `agents/` 树供共享指令引用。切换模式时，脚本只会清理能证明归属本安装器的不再 selected 软链。已有指向 dev-agent-skills checkout 的旧软链会自动迁移到隐藏镜像软链。真实目录或指向其他位置的软链都视为非归属目标：默认跳过，`--force` 会报错列出冲突项而不是删除。隐藏镜像自身也遵循同一保护：已有 `.dev-agent-skills` 目录缺少安装器 marker 时会报冲突，绝不删除。使用 `--target <path>` 可指定项目级或自定义 skill 目录，使用 `--force` 可重建镜像并替换归属软链。
 
-直接入口选择 `pm-agent`；当 PM 编排需要设计、工程、QA、DevOps 或安全能力时，再安装对应下游 Agent。
+如需按路径禁用单个已安装 skill，可在 `~/.codex/config.toml` 中添加：
 
-Codex 安装会把仓库 clone 到对应层级的 `.agents/dev-agent-skills`，并把已选 Agent 下的每个 skill 软链接到 `.agents/skills/<skill-name>`。仓库目录结构保持不变，继续兼容 Claude marketplace。
+```toml
+[[skills.config]]
+path = "/Users/you/.agents/skills/debugger"
+enabled = false
+```
 
 完整说明见 [docs/README.codex.md](./docs/README.codex.md)。
 
@@ -201,7 +211,8 @@ uv run --with pytest pytest \
   agents/designer/test/test_designer_run_eval.py \
   agents/devops/test/test_devops_run_eval.py \
   agents/test_doc_contract.py \
-  agents/test_eval_contract.py
+  agents/test_eval_contract.py \
+  scripts/test_install_codex_skills.py
 ```
 
 额外本地模型 eval 是质量检查，不属于第一版 PR 必跑门禁：

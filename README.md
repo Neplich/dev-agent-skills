@@ -107,20 +107,30 @@ Claude Code scans installed plugins by plugin root. This repository scopes each 
 
 ### Codex
 
-In Codex, say:
+Clone or update this repository, then run the mirror-based installer:
 
-```text
-Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/heads/main/.codex/INSTALL.md
+```bash
+git clone https://github.com/Neplich/dev-agent-skills.git ~/.agents/dev-agent-skills
+cd ~/.agents/dev-agent-skills
+
+# Install all role router and specialist skills by default.
+python3 scripts/install_codex_skills.py
+
+# Optional minimal mode: expose only the six role router skills.
+python3 scripts/install_codex_skills.py --routers-only
 ```
 
-The install flow will ask:
+Codex resolves skill symlinks to their real path before looking upward for plugin manifests. If skills are symlinked directly into this repository clone, Codex can find `agents/{role}/.claude-plugin/plugin.json` and add namespace prefixes such as `Pm Agent:` to every skill. The installer mirrors the repository `agents/` tree into `~/.agents/skills/.dev-agent-skills/` without plugin manifests or agent test directories, then creates relative symlinks such as `~/.agents/skills/pm-agent -> .dev-agent-skills/agents/product_manager/skills/pm-agent`. The resolved skill path stays inside the hidden mirror, and repo-relative shared instructions remain loadable without path rewriting. See [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95).
 
-- whether this should be a `personal` or `project` install
-- whether to install `all` agents or a selected subset
+The default install links all role router and specialist skills so `pm-agent` and role-router orchestration can call downstream specialists. Use `--routers-only` only for a minimal entry-classification install; in that mode only the six router symlinks are exposed at the target root, while the full hidden mirror remains available for shared instruction references. Switching modes removes no-longer-selected symlinks only when they are proven to belong to this installer. Existing symlinks into a dev-agent-skills checkout are migrated automatically. Real directories and symlinks to other locations are treated as unowned: they are skipped by default, and `--force` reports them as conflicts instead of deleting them. The hidden mirror itself is protected the same way: an existing `.dev-agent-skills` directory without the installer marker is reported as a conflict and is never deleted. Use `--target <path>` for a project-local or custom skill directory, and `--force` to rebuild the mirror and replace owned symlinks.
 
-Select `pm-agent` for the direct entry. Add downstream role agents when PM-orchestrated handoff should be able to use their skills.
+To disable one installed skill by path, add a path-specific entry to `~/.codex/config.toml`:
 
-Codex installs the repository at the selected `.agents/dev-agent-skills` root and symlinks each selected skill into `.agents/skills/<skill-name>`. The repository layout stays unchanged for Claude marketplace compatibility.
+```toml
+[[skills.config]]
+path = "/Users/you/.agents/skills/debugger"
+enabled = false
+```
 
 See [docs/README.codex.md](./docs/README.codex.md) for the full Codex guide.
 
@@ -201,7 +211,8 @@ uv run --with pytest pytest \
   agents/designer/test/test_designer_run_eval.py \
   agents/devops/test/test_devops_run_eval.py \
   agents/test_doc_contract.py \
-  agents/test_eval_contract.py
+  agents/test_eval_contract.py \
+  scripts/test_install_codex_skills.py
 ```
 
 Additional local model evals are manual quality checks, not first-version PR required checks:
