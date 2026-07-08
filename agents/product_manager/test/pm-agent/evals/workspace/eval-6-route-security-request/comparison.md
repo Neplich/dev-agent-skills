@@ -4,9 +4,9 @@
 
 - Skill: `pm-agent`
 - Test case: route-security-request
-- Test set: PM entry evals for issue #52 / FR-006 scenario 6
+- Test set: PM entry evals for issue #52 / FR-006 scenario 6; PR #98 trigger-description routing check
 - Entry: workspace `eval-6-route-security-request`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08
 
 ## Test Set / Fixture Version
 
@@ -22,26 +22,27 @@
 
 ## With Skill Behavior
 
-- The `pm-agent` protocol maps authorization, dependency risk, secrets, privacy, upload, webhook, login, and data-flow risk requests to `security`.
-- It requires recording risk surface, assets, permissions, data flow, and remediation expectations.
-- It hands off to Security with a bounded review packet instead of doing the security specialist work itself.
-- Issue #81 safety-net behavior remains within boundary: closeout may recommend Security next, but PM does not run AppSec, dependency, or privacy review work itself.
+- Fresh subagent applied the current-branch `pm-agent` SKILL.md and Product Manager Agent README.
+- The router classifies authorization control, dependency vulnerabilities, and secrets risk as `request_type: security`.
+- It records risk surface, assets, permissions, data flow, and remediation expectations before handoff.
+- It prepares a bounded Security handoff with scope decision, downstream owner, required output, and blockers / risks; PM does not run the security specialist review itself.
 
 ## Without Skill Baseline
 
-- Fresh without_skill baseline regenerated on 2026-07-06 without applying `pm-agent` or the Product Manager Agent README. A generic response could start a broad security checklist immediately.
-- It may miss the PM-side scope packet and required output definition for Security.
+- Fresh without_skill baseline was regenerated on 2026-07-08 from the eval prompt and fixture README only; it did not reuse historical baseline text and did not apply `pm-agent` SKILL.md or the Product Manager Agent README.
+- The generic baseline tends to start a security checklist for authz, dependencies, and secrets, but it does not reliably require PM-side scope capture or produce a Security handoff packet with required output.
 
 ## Failures
 
 - None. The current `pm-agent` protocol satisfies security classification and handoff assertions.
-- No issue #81 regression found; auto-continue does not bypass Security scope capture or perform downstream security specialist work.
+- No routing regression found from the PR #98 trigger-description changes.
 
 ## Next Steps
 
 - Keep this eval as PM entry coverage for security routing.
-- Re-run fresh validation if Security handoff fields change.
+- Re-run fresh validation if Security handoff fields, security routing, or entry trigger descriptions change.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.
+- No runtime artifacts were committed. The validating subagent did not create runtime files.
+- If future transcripts, verdicts, timing data, outputs, or diagnostics are generated, keep them under `tmp/eval-runs/pm-agent-20260708/eval-006/` or another isolated scratch path and do not commit them.

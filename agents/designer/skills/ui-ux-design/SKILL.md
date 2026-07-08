@@ -1,6 +1,6 @@
 ---
 name: ui-ux-design
-description: "Internal design specialist invoked by designer-agent after pm-agent handoff to produce UX flows, page structures, journey maps, and ASCII prototypes from confirmed PM/design scope."
+description: "Internal design specialist—not a direct entry point. Invoked by designer-agent after pm-agent handoff to produce UX flows, page structures, journey maps, and ASCII prototypes from confirmed PM/design scope."
 visibility: internal
 ---
 

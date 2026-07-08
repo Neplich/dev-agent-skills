@@ -1,6 +1,6 @@
 ---
 name: delivery
-description: "Internal engineering specialist invoked by engineer-agent after pm-agent handoff to manage branch delivery, commits, pushes, PR creation, and PR update evidence for completed work."
+description: "Internal engineering specialist—not a direct entry point. Invoked by engineer-agent after pm-agent handoff to manage branch delivery, commits, pushes, PR creation, and PR update evidence for completed work."
 visibility: internal
 ---
 

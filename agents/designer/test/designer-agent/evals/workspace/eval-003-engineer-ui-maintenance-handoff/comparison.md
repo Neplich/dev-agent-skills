@@ -7,39 +7,73 @@
 - Eval: `eval-003-engineer-ui-maintenance-handoff`
 - Test case: engineer-ui-maintenance-handoff
 - Workspace: `workspace/eval-003-engineer-ui-maintenance-handoff`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
+- Review context: PR #98 trigger description routing review
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: Engineer-sourced UI maintenance design gap for `customer-portal/profile-settings`.
-- Context read before applying the skill: `evals.json`, workspace `eval_metadata.json`, `docs/pm/customer-portal/profile-settings/PRD.md`, and `docs/engineer/customer-portal/profile-settings/TRD.md`.
+- Prompt source: `agents/designer/test/designer-agent/evals/evals.json` and workspace `eval_metadata.json`.
+- Fixture documents:
+  - `docs/pm/customer-portal/profile-settings/PRD.md`
+  - `docs/engineer/customer-portal/profile-settings/TRD.md`
+- Fixture document status: both approved, both dated 2026-06-24, both confirming `feature_path: customer-portal/profile-settings`
 
 ## Assertions
 
-- PASS `accepts_engineer_design_handoff`: the route recognizes an Engineer UI maintenance handoff as design scope, not Engineering implementation.
-- PASS `uses_confirmed_feature_path`: the route uses `customer-portal/profile-settings` and reads same-path PM/Engineer docs.
-- PASS `routes_design_skills`: information hierarchy goes to `ui-ux-design`, and primary button visual rules include `visual-design`.
-- PASS `writes_design_outputs_only`: outputs are limited to `docs/design/customer-portal/profile-settings/ui-ux-spec.md` and/or `visual-system.md`.
-- PASS `hands_back_to_engineer`: implementation returns to `engineer-agent` after design deliverables are complete.
+| Assertion | Result | Notes |
+| --- | --- | --- |
+| `accepts_engineer_design_handoff` | PASS | The with-skill route treats the request as an Engineer UI maintenance design gap, not an engineering implementation request. |
+| `uses_confirmed_feature_path` | PASS | The route preserves `customer-portal/profile-settings` and uses the approved PRD/TRD fixture documents as the design basis. |
+| `routes_design_skills` | PASS | The route selects `ui-ux-design` for information hierarchy and page structure, and selects `visual-design` for the primary button visual rule. |
+| `writes_design_outputs_only` | PASS | The route limits outputs to `docs/design/customer-portal/profile-settings/ui-ux-spec.md` and `docs/design/customer-portal/profile-settings/visual-system.md`; it does not produce code, tests, shell commands, deployment config, or engineering implementation lists. |
+| `hands_back_to_engineer` | PASS | The route stops after design handoff and names `engineer-agent` as the next owner for TRD / IMPLEMENTATION_PLAN / code / test continuation. |
 
 ## With Skill Behavior
 
-`designer-agent` satisfies the Engineer UI maintenance handoff contract. It treats the Engineer packet as a design-only gap, selects `ui-ux-design` plus `visual-design` for the stated information hierarchy and primary button visual rules, writes only design deliverables under the resolved feature path, and stops before code, tests, shell commands, or implementation task lists. For issue #81, even if auto-continue is enabled after closeout, Designer may only hand the completed design deliverables back to `engineer-agent`; Engineer must perform TRD / IMPLEMENTATION_PLAN / code / test work under its own gates.
+The with-skill run read and applied `AGENTS.md`, `agents/designer/README.md`, `agents/designer/skills/designer-agent/SKILL.md`, the eval definition, `eval_metadata.json`, the PRD/TRD fixture documents, and the directly referenced PM shared handoff / closeout contract in `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+
+Observed behavior:
+
+- Entry gate is satisfied by equivalent confirmed PM/Engineer documents: the PRD and TRD are approved, share the same stable `feature_path`, and identify the missing UI/UX and visual guidance as the current blocker.
+- The request is accepted as Designer scope because `designer-agent` explicitly supports Engineer UI maintenance and frontend-update design handoffs.
+- The route selects `ui-ux-design` for settings page information hierarchy and structure.
+- The route selects `visual-design` because the primary button visual emphasis affects component visual rules.
+- The only valid design outputs are `docs/design/customer-portal/profile-settings/ui-ux-spec.md` and `docs/design/customer-portal/profile-settings/visual-system.md`.
+- The router stops at design handoff and returns implementation to `engineer-agent`; it does not invoke Engineer skills or produce implementation work.
 
 ## Without Skill Baseline
 
-Fresh without-skill baseline generated in this run on 2026-07-06: without the router skill and Designer README, a generic response could read the request as a frontend implementation planning task because it came from Engineer and mentions UI maintenance. It might return a component checklist, implementation steps, shell/test guidance, or a mixed design-plus-engineering plan, and it may not name the expected `docs/design/customer-portal/profile-settings/` artifacts or the issue #81 rule that auto-continue stops at handoff.
+Source: fresh baseline generated on 2026-07-08 using only the eval prompt and general PRD/TRD fixture facts. It did not read or apply `agents/designer/README.md`, `agents/designer/skills/designer-agent/SKILL.md`, historical `comparison.md`, or any old baseline.
+
+Baseline behavior summary:
+
+- It would likely recognize a design documentation gap because the prompt explicitly says Engineer completed alignment and asks for settings page information hierarchy plus primary button guidance.
+- It would likely preserve `customer-portal/profile-settings` because the prompt states the feature path directly.
+- It would likely avoid code because the prompt explicitly forbids code and implementation checklists.
+- It is less reliable on the repository-specific router contract: exact design artifact filenames, split routing between interaction structure and visual-system work, and the role-gated Designer stopping point are not guaranteed without the skill.
 
 ## Failures
 
-- None found. The issue #81 role-boundary check passed: Designer accepts the Engineer-sourced design gap but hands implementation back to `engineer-agent`.
+None.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for Engineer-to-Designer UI maintenance handoffs and issue #81 auto-continue boundary behavior.
+- Keep the eval result as PASS for this PR #98 routing review.
+- Do not commit runtime artifacts from `tmp/eval-runs/`.
+- If the Designer router trigger wording changes again, rerun this eval with a new fresh without-skill baseline and update this comparison file in the same change set.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created for this validation.
-- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.
+Runtime evidence for this validation was written only under:
+
+`tmp/eval-runs/2026-07-08-router-trigger-batch4-final/eval-003-engineer-ui-maintenance-handoff/`
+
+Files:
+
+- `with_skill.md`
+- `without_skill.md`
+- `verdict.md`
+
+These files are scratch runtime artifacts for short-term review only. They must not be committed, and they must not be copied into the fixture workspace. The durable result for the eval is this `comparison.md` file.

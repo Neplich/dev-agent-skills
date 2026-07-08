@@ -4,9 +4,9 @@
 
 - Skill: `pm-agent`
 - Test case: route-deployment-request
-- Test set: PM entry evals for issue #52 / FR-006 scenario 5
+- Test set: PM entry evals for issue #52 / FR-006 scenario 5; PR #98 trigger-description routing check
 - Entry: workspace `eval-5-route-deployment-request`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08
 
 ## Test Set / Fixture Version
 
@@ -22,26 +22,27 @@
 
 ## With Skill Behavior
 
-- The `pm-agent` protocol maps CI and release-readiness work to `deployment`.
-- It allows confirmed non-feature repo-wide work to use `feature_path: N/A`, related feature fields as `N/A`, and `feature_path_evidence: []`.
-- It requires operational goal, environment, release scope, rollback needs, and risks before DevOps handoff.
-- Issue #81 safety-net behavior remains within boundary: closeout may recommend DevOps as next owner, but PM does not create CI, deployment config, or release-readiness artifacts itself.
+- Fresh subagent applied the current-branch `pm-agent` SKILL.md and Product Manager Agent README.
+- The router maps repo-level CI and pre-launch checks to `request_type: deployment`.
+- Because the work is confirmed as repository-level and not feature-scoped, feature fields may use `N/A` and `feature_path_evidence: []`.
+- It prepares DevOps handoff only after recording operational goal, environment, release scope, rollback needs, and risks; PM does not directly create CI or deployment configuration.
 
 ## Without Skill Baseline
 
-- Fresh without_skill baseline regenerated on 2026-07-06 without applying `pm-agent` or the Product Manager Agent README. A generic response could jump directly into CI configuration.
-- It may not preserve the repo-wide non-feature scope rule or the complete DevOps handoff context.
+- Fresh without_skill baseline was regenerated on 2026-07-08 from the eval prompt and fixture README only; it did not reuse historical baseline text and did not apply `pm-agent` SKILL.md or the Product Manager Agent README.
+- The generic baseline can identify CI and launch readiness as DevOps/deployment work, but may jump into CI configuration advice and omit the PM handoff packet, `change_tier`, repo-wide `N/A` feature-scope rule, and full DevOps handoff context.
 
 ## Failures
 
 - None. The current `pm-agent` protocol satisfies deployment classification and repo-wide scope assertions.
-- No issue #81 regression found; auto-continue does not bypass the DevOps handoff packet or execute DevOps work from PM.
+- No routing regression found from the PR #98 trigger-description changes.
 
 ## Next Steps
 
 - Keep this eval as PM entry coverage for deployment and CI routing.
-- Re-run fresh validation if repo-wide feature-scope handling changes.
+- Re-run fresh validation if repo-wide feature-scope handling, DevOps handoff packet fields, or entry trigger descriptions change.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.
+- No runtime artifacts were committed. The validating subagent did not create runtime files.
+- If future transcripts, verdicts, timing data, outputs, or diagnostics are generated, keep them under `tmp/eval-runs/pm-agent-20260708/eval-005/` or another isolated scratch path and do not commit them.

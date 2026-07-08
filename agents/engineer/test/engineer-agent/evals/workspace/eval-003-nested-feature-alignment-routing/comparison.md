@@ -7,13 +7,14 @@
 - Eval: `eval-003-nested-feature-alignment-routing`
 - Test case: nested-feature-alignment-routing
 - Workspace: `workspace/eval-003-nested-feature-alignment-routing`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 for PR #98 trigger description routing review.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: existing `chat-interface/history-search` PRD/TRD with a small search result ordering change.
-- Context read before applying the skill: `evals.json`, workspace `README.md`, `eval_metadata.json`, `docs/pm/chat-interface/history-search/PRD.md`, and `docs/engineer/chat-interface/history-search/TRD.md`.
+- Context read before applying the skill: `AGENTS.md`, `agents/engineer/README.md`, `agents/engineer/skills/engineer-agent/SKILL.md`, `evals.json`, workspace `README.md`, `eval_metadata.json`, `docs/pm/chat-interface/history-search/PRD.md`, and `docs/engineer/chat-interface/history-search/TRD.md`.
+- Runtime evidence: fresh subagent artifacts were generated under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-003-nested-feature-alignment-routing/`.
 
 ## Assertions
 
@@ -25,15 +26,15 @@
 
 ## With Skill Behavior
 
-`engineer-agent` satisfies the nested feature-path contract. It consumes the same-path PM and Engineer documents, preserves the canonical `feature_path`, and keeps implementation blocked until PRD/TRD expectations align. The directly referenced `trd-gen` and `feature-implementor` gates reinforce that path mismatches and stale TRDs are not fixed by implementation routing. For issue #81, safety-net closeout preserves the same resolved feature path when proposing a PM or `trd-gen` handoff, and `auto-continue` does not authorize route-only prompts to write implementation plans, code, or PM updates.
+`engineer-agent` satisfies the nested feature-path contract after the PR #98 trigger description edits. The with-skill run resolved `feature_path` as `chat-interface/history-search`, read the same-path PRD/TRD, checked approved status and `related_prd` alignment, routed approved-behavior changes to `pm-agent:idea-to-spec` with `request_type: existing-project-update`, routed missing, stale, or path-mismatched TRD/frontmatter back to `engineer-agent:trd-gen`, and stayed route-only without writing code, implementation plans, or tests.
 
 ## Without Skill Baseline
 
-Fresh baseline generated on 2026-07-06 without applying `engineer-agent` or the Engineer README: a generic response could treat "History Search" as a top-level feature or use only the parent chat interface context. It might recommend a direct sorting change because the user calls it small, missing the requirement that child feature docs and `related_prd` stay aligned before routing, and it is less likely to keep auto-continued handoff bound to the resolved nested feature path.
+Fresh baseline generated on 2026-07-08 from the eval prompt and fixture files only, without applying `engineer-agent`, the Engineer README, historical `comparison.md`, or any previous baseline. The baseline recognized the nested path and avoided direct coding, but did not reliably name `pm-agent:idea-to-spec` / `existing-project-update`, `engineer-agent:trd-gen`, or explicitly reject parent-only and sibling paths.
 
 ## Failures
 
-- None found. Issue #81 did not regress nested `feature_path` resolution, TRD mismatch routing, or route-only execution boundaries.
+- None found. PR #98 did not regress nested `feature_path` resolution, TRD mismatch routing, or route-only execution boundaries.
 
 ## Next Steps
 
@@ -41,5 +42,6 @@ Fresh baseline generated on 2026-07-06 without applying `engineer-agent` or the 
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created for this validation.
-- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.
+- Runtime artifacts were created only under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-003-nested-feature-alignment-routing/`.
+- Generated `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence only and must not be committed.
+- Durable committed evidence for this run is this `comparison.md`.

@@ -4,9 +4,9 @@
 
 - Skill: `pm-agent`
 - Test case: route-ui-update-request
-- Test set: PM entry evals for issue #52 / FR-006 scenario 4
+- Test set: PM entry evals for issue #52 / FR-006 scenario 4; PR #98 trigger-description routing check
 - Entry: workspace `eval-4-route-ui-update-request`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08
 
 ## Test Set / Fixture Version
 
@@ -22,26 +22,27 @@
 
 ## With Skill Behavior
 
-- The `pm-agent` protocol distinguishes UI / UX design artifacts from frontend implementation.
-- It requires checking whether the settings page layout change alters product expectations before picking Designer or Engineer.
-- It routes design artifacts to Designer and waits for PM / TRD / design alignment before Engineer frontend implementation.
-- Issue #81 safety-net behavior remains within boundary: closeout may suggest Designer or Engineer next, but PM does not create design deliverables or implement UI changes.
+- Fresh subagent applied the current-branch `pm-agent` SKILL.md and Product Manager Agent README.
+- The router classifies the settings-page layout and interaction update as `design` or `existing_update`; it does not send the work straight to frontend implementation.
+- Because the request may alter existing product expectations, `change_tier` tends toward `standard` rather than `hotfix`.
+- The route first checks whether PM expectations or PRD / DECISIONS need alignment, then sends design artifacts to Designer when needed, and only hands off Engineer frontend implementation after PM / TRD / design alignment.
 
 ## Without Skill Baseline
 
-- Fresh without_skill baseline regenerated on 2026-07-06 without applying `pm-agent` or the Product Manager Agent README. A generic response could treat the UI request as direct frontend work.
-- It may mention design review, but is less consistent about separating PM expectation changes, design deliverables, and implementation readiness.
+- Fresh without_skill baseline was regenerated on 2026-07-08 from the eval prompt and fixture README only; it did not reuse historical baseline text and did not apply `pm-agent` SKILL.md or the Product Manager Agent README.
+- The generic baseline may still prefer design first and engineering after the layout is clear, but it does not reliably enforce `change_tier`, PM handoff gates, or the explicit PRD / TRD / design alignment requirement.
 
 ## Failures
 
 - None. The current `pm-agent` protocol satisfies the UI routing assertions.
-- No issue #81 regression found; auto-continue respects the PM -> Designer -> Engineer boundary and cannot skip alignment gates.
+- No routing regression found from the PR #98 trigger-description changes.
 
 ## Next Steps
 
 - Keep this eval as PM entry coverage for UI update routing.
-- Re-run fresh validation if Designer or Engineer handoff boundaries change.
+- Re-run fresh validation if Designer or Engineer handoff boundaries, UI update routing, or entry trigger descriptions change.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.
+- No runtime artifacts were committed. The validating subagent did not create runtime files.
+- If future transcripts, verdicts, timing data, outputs, or diagnostics are generated, keep them under `tmp/eval-runs/pm-agent-20260708/eval-004/` or another isolated scratch path and do not commit them.

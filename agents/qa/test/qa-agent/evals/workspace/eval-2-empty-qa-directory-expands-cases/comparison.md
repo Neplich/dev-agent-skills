@@ -7,14 +7,14 @@
 - Eval: `eval-002-empty-qa-directory-expands-cases`
 - Test case: empty-qa-directory-expands-cases
 - Workspace: `workspace/eval-2-empty-qa-directory-expands-cases`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-06
+- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 for PR #98 trigger description routing review.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: existing empty E2E function tree for profile settings plus source files and QA environment notes.
-- Context read before applying the skill: `evals.json`, workspace `eval_metadata.json`, `docs/qa/e2e/account/profile-settings/profile-form/TEST_SUITE.md`, `FLOW_INDEX.md`, `environment/qa-env.md`, `src/routes/profile-settings.md`, `src/pages/ProfileSettingsPage.tsx`, and `src/components/ProfileSettingsForm.tsx`.
-- #81 context read: `Safety-Net Closeout and Auto-Continue` from `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+- Context read before applying the skill: `AGENTS.md`, `agents/qa/README.md`, `agents/qa/skills/qa-agent/SKILL.md`, `evals.json`, workspace `eval_metadata.json`, `docs/qa/e2e/account/profile-settings/profile-form/TEST_SUITE.md`, `FLOW_INDEX.md`, `environment/qa-env.md`, `src/routes/profile-settings.md`, `src/pages/ProfileSettingsPage.tsx`, and `src/components/ProfileSettingsForm.tsx`.
+- Runtime evidence: fresh subagent artifacts were generated under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-002-empty-qa-directory-expands-cases/`.
 
 ## Assertions
 
@@ -24,28 +24,27 @@
 - PASS `e2e`: each new E2E case must be stored as `cases/TC-NNN-<short-slug>.md` with a matching `scripts/TC-NNN-<short-slug>.spec.md`, without plaintext secrets.
 - PASS `assertion_5`: validation is TC-driven, feature-update scope stays on the changed feature and direct impacts, and execution entry follows repo harness > Chrome plugin / browser connector > Playwright fallback.
 - PASS `version_and_subagent_gate`: platform version is required before execution; missing version blocks execution and reports go to `_reports/{platform-version}/test-reports-{test-time}.md` only after a real version is known.
-- PASS `assertion_6`: the router selects one narrow QA route, with `exploratory-tester` as the best fit for expanding empty E2E coverage before execution.
+- PASS `assertion_6`: the router selects one narrow QA route and does not expand QA routing into implementation repair or multiple QA specialists.
 
 ## With Skill Behavior
 
-`qa-agent` satisfies the empty-directory E2E route. It treats the existing function tree as durable memory, but not as executable coverage, and points to `exploratory-tester` as the narrow route for discovering flows and creating cases. It preserves credential hygiene, per-TC case/script persistence, subagent execution, and platform-version blocking. The fixture's `TEST_SUITE.md` states the platform version is missing, so execution is intentionally blocked until the version is provided; case expansion can still be routed as the preparatory QA work.
-
-#81 closeout behavior is safe for this case: after preparatory QA routing, `qa-agent` may propose the next owner or handoff, but `auto-continue` cannot skip the platform-version gate, execute blocked E2E work, or perform implementation fixes outside the QA role.
+`qa-agent` satisfies the empty-directory E2E route after the PR #98 trigger description edits. The with-skill run selected a single primary route, `qa-agent:spec-based-tester`, recognized that `docs/qa/e2e/account/profile-settings/profile-form/` exists but has no executable TC, required targeted exploration of route, page, form, environment, harness, and test-command context, and required updates to `TEST_SUITE.md`, `FLOW_INDEX.md`, independent `cases/TC-NNN-<short-slug>.md`, and matching `scripts/TC-NNN-<short-slug>.spec.md` before TC-driven execution. It preserved the feature-update scope, execution-entry priority, subagent execution rule, and platform-version blocker; missing platform version blocks execution and forbids `unknown` result paths.
 
 ## Without Skill Baseline
 
-Fresh baseline generated on 2026-07-06 without reading or applying `qa-agent` skill instructions or the QA Agent README: a generic response might either mark the existing QA directory as sufficient coverage or jump straight to browser execution from source files. It is less likely to create durable per-TC case/script files, preserve function-tree report paths, block missing platform version correctly, or avoid writing credentials into scripts.
+Fresh baseline generated on 2026-07-08 from the eval prompt and fixture files only, without applying `qa-agent`, the QA Agent README, historical `comparison.md`, or any previous baseline. The baseline recognized a need to inspect code and add tests, but lacked the complete function-tree persistence contract, repo harness > Chrome / browser connector > Playwright execution priority, default subagent execution, report path rules, and `unknown` prohibition.
 
 ## Failures
 
-- None found. Missing platform version is the expected execution blocker for this fixture.
-- No #81 regression found: original empty-directory expansion, E2E persistence, and version gates remain intact, and `auto-continue` does not authorize blocked execution.
+- None found. Missing platform version is the expected execution blocker for this fixture, not a router failure.
+- PR #98 did not regress empty-directory expansion, E2E persistence, version-gated execution, or QA route boundaries.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for empty E2E function-tree expansion, version-gated execution, and #81 closeout boundary behavior.
+- Keep this eval as regression coverage for empty E2E function-tree expansion and version-gated execution.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created for this validation.
-- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.
+- Runtime artifacts were created only under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-002-empty-qa-directory-expands-cases/`.
+- Generated `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence only and must not be committed.
+- Durable committed evidence for this run is this `comparison.md`.

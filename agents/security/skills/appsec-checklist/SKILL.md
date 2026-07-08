@@ -1,6 +1,6 @@
 ---
 name: appsec-checklist
-description: "Internal security specialist invoked by security-agent after pm-agent handoff to scan application code for common vulnerabilities and produce a release-oriented security checklist."
+description: "Internal security specialist—not a direct entry point. Invoked by security-agent after pm-agent handoff to scan application code for common vulnerabilities and produce a release-oriented security checklist."
 visibility: internal
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: trd-gen
-description: "Internal engineering specialist invoked by engineer-agent after pm-agent handoff to create or update Engineer-owned TRDs, API docs, ADRs, and implementation blueprints from stable PM decisions."
+description: "Internal engineering specialist—not a direct entry point. Invoked by engineer-agent after pm-agent handoff to create or update Engineer-owned TRDs, API docs, ADRs, and implementation blueprints from stable PM decisions."
 visibility: internal
 ---
 

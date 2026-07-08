@@ -1,6 +1,6 @@
 ---
 name: debugger
-description: "Internal engineering specialist invoked by engineer-agent after pm-agent handoff to reproduce, diagnose, and fix confirmed implementation defects with minimal scoped changes and verification evidence."
+description: "Internal engineering specialist—not a direct entry point. Invoked by engineer-agent after pm-agent handoff to reproduce, diagnose, and fix confirmed implementation defects with minimal scoped changes and verification evidence."
 visibility: internal
 ---
 

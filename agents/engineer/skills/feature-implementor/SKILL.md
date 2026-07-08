@@ -1,6 +1,6 @@
 ---
 name: feature-implementor
-description: "Internal engineering specialist invoked by engineer-agent after pm-agent handoff to implement confirmed TRDs and PM/design inputs through a verified implementation plan."
+description: "Internal engineering specialist—not a direct entry point. Invoked by engineer-agent after pm-agent handoff to implement confirmed TRDs and PM/design inputs through a verified implementation plan."
 visibility: internal
 ---
 

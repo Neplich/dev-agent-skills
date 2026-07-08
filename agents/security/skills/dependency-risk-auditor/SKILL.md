@@ -1,6 +1,6 @@
 ---
 name: dependency-risk-auditor
-description: "Internal security specialist invoked by security-agent after pm-agent handoff to audit dependencies for vulnerabilities, abandonment, licensing, and supply-chain risk."
+description: "Internal security specialist—not a direct entry point. Invoked by security-agent after pm-agent handoff to audit dependencies for vulnerabilities, abandonment, licensing, and supply-chain risk."
 visibility: internal
 ---
 
