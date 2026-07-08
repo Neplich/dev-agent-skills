@@ -174,12 +174,18 @@ def is_relative_to(path: Path, parent: Path) -> bool:
     return True
 
 
+def removal_guard_path(path: Path) -> Path:
+    if path.is_symlink():
+        return path.parent.resolve(strict=False) / path.name
+    return path.resolve(strict=False)
+
+
 def validate_removals_do_not_touch_source(root: Path, paths: list[Path]) -> None:
     source = root.resolve(strict=False)
     conflicts: list[Path] = []
 
     for path in paths:
-        target = path.resolve(strict=False)
+        target = removal_guard_path(path)
         if target == source or is_relative_to(target, source) or is_relative_to(source, target):
             conflicts.append(path)
 

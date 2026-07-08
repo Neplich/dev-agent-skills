@@ -262,7 +262,7 @@ def test_checkout_symlink_is_migrated_to_hidden_mirror_symlink(tmp_path: Path) -
     assert is_under(target / "debugger", target / MIRROR_DIR)
 
 
-def test_selected_source_checkout_symlink_errors_without_deleting(tmp_path: Path) -> None:
+def test_selected_source_checkout_symlink_migrates_without_deleting_checkout(tmp_path: Path) -> None:
     target = tmp_path / "skills"
     target.mkdir(parents=True)
     checkout_target = ROOT / skill_source_rel("debugger")
@@ -270,11 +270,13 @@ def test_selected_source_checkout_symlink_errors_without_deleting(tmp_path: Path
 
     result = run_installer(target)
 
-    assert result.returncode == 1
-    assert "安装源 checkout 位于目标删除路径内" in result.stderr
-    assert (target / "debugger").is_symlink()
-    assert (target / "debugger").resolve(strict=True) == checkout_target
-    assert not (target / MIRROR_DIR).exists()
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert "migrated: debugger" in result.stdout
+    assert_relative_mirror_link(target, "debugger")
+    assert is_under(target / "debugger", target / MIRROR_DIR)
+    assert checkout_target.is_dir()
+    assert (checkout_target / "SKILL.md").is_file()
+    assert INSTALLER.is_file()
 
 
 def test_owned_legacy_aggregate_symlink_is_removed_before_install(tmp_path: Path) -> None:
