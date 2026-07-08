@@ -174,6 +174,22 @@ def is_relative_to(path: Path, parent: Path) -> bool:
     return True
 
 
+def validate_removals_do_not_touch_source(root: Path, paths: list[Path]) -> None:
+    source = root.resolve(strict=False)
+    conflicts: list[Path] = []
+
+    for path in paths:
+        target = path.resolve(strict=False)
+        if target == source or is_relative_to(target, source) or is_relative_to(source, target):
+            conflicts.append(path)
+
+    if conflicts:
+        raise ValueError(
+            "安装源 checkout 位于目标删除路径内，请先把 checkout 移出 target 或换用其他 --target: "
+            f"{summarize_paths(conflicts)}"
+        )
+
+
 def marketplace_name(path: Path) -> str | None:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -264,6 +280,7 @@ def summarize_paths(paths: list[Path]) -> str:
 
 
 def build_preflight_plan(
+    root: Path,
     all_specs: list[SkillSpec],
     selected_specs: list[SkillSpec],
     target_root: Path,
@@ -331,6 +348,14 @@ def build_preflight_plan(
             legacy_remove.append(legacy)
         else:
             legacy_skipped.append(legacy)
+
+    planned_removals: list[Path] = []
+    if mirror.exists() or mirror.is_symlink():
+        planned_removals.append(mirror)
+    planned_removals.extend(existing.target for existing in selected_existing)
+    planned_removals.extend(existing.target for existing in unselected_remove)
+    planned_removals.extend(legacy_remove)
+    validate_removals_do_not_touch_source(root, planned_removals)
 
     return PreflightPlan(
         selected_existing=selected_existing,
@@ -616,6 +641,7 @@ def main(argv: list[str]) -> int:
         all_specs = parse_skill_specs(root)
         specs = select_skill_specs(all_specs, routers_only=args.routers_only)
         plan = build_preflight_plan(
+            root,
             all_specs,
             specs,
             target_root,
