@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -19,6 +20,40 @@ def run_installer(target: Path, *args: str) -> subprocess.CompletedProcess[str]:
         text=True,
         capture_output=True,
         check=False,
+    )
+
+
+def write_dev_agent_marketplace_marker(root: Path) -> None:
+    (root / ".claude-plugin").mkdir(parents=True, exist_ok=True)
+    (root / ".claude-plugin/marketplace.json").write_text(
+        json.dumps({"name": "dev-agent-skills"}),
+        encoding="utf-8",
+    )
+
+
+def make_minimal_checkout(root: Path) -> None:
+    (root / "scripts").mkdir(parents=True)
+    shutil.copy2(INSTALLER, root / "scripts" / "install_codex_skills.py")
+    (root / ".claude-plugin").mkdir()
+    (root / "agents/product_manager/skills/pm-agent").mkdir(parents=True)
+    (root / "agents/product_manager/skills/pm-agent/SKILL.md").write_text(
+        "---\nname: pm-agent\n---\n",
+        encoding="utf-8",
+    )
+    (root / ".claude-plugin/marketplace.json").write_text(
+        json.dumps(
+            {
+                "name": "dev-agent-skills",
+                "plugins": [
+                    {
+                        "name": "pm-agent",
+                        "source": "./agents/product_manager",
+                        "skills": ["./skills/pm-agent"],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
     )
 
 
@@ -213,7 +248,10 @@ def test_force_errors_on_unowned_unselected_directory_without_partial_changes(tm
 def test_checkout_symlink_is_migrated_to_hidden_mirror_symlink(tmp_path: Path) -> None:
     target = tmp_path / "skills"
     target.mkdir(parents=True)
-    checkout_target = ROOT / skill_source_rel("debugger")
+    old_checkout = tmp_path / "old-checkout"
+    write_dev_agent_marketplace_marker(old_checkout)
+    checkout_target = old_checkout / skill_source_rel("debugger")
+    checkout_target.mkdir(parents=True)
     (target / "debugger").symlink_to(checkout_target, target_is_directory=True)
 
     result = run_installer(target)
@@ -224,10 +262,29 @@ def test_checkout_symlink_is_migrated_to_hidden_mirror_symlink(tmp_path: Path) -
     assert is_under(target / "debugger", target / MIRROR_DIR)
 
 
+def test_selected_source_checkout_symlink_migrates_without_deleting_checkout(tmp_path: Path) -> None:
+    target = tmp_path / "skills"
+    target.mkdir(parents=True)
+    checkout_target = ROOT / skill_source_rel("debugger")
+    (target / "debugger").symlink_to(checkout_target, target_is_directory=True)
+
+    result = run_installer(target)
+
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert "migrated: debugger" in result.stdout
+    assert_relative_mirror_link(target, "debugger")
+    assert is_under(target / "debugger", target / MIRROR_DIR)
+    assert checkout_target.is_dir()
+    assert (checkout_target / "SKILL.md").is_file()
+    assert INSTALLER.is_file()
+
+
 def test_owned_legacy_aggregate_symlink_is_removed_before_install(tmp_path: Path) -> None:
     target = tmp_path / "skills"
     target.mkdir(parents=True)
-    (target / "dev-agent-skills").symlink_to(ROOT, target_is_directory=True)
+    old_checkout = tmp_path / "old-checkout"
+    write_dev_agent_marketplace_marker(old_checkout)
+    (target / "dev-agent-skills").symlink_to(old_checkout, target_is_directory=True)
 
     result = run_installer(target)
 
@@ -235,6 +292,37 @@ def test_owned_legacy_aggregate_symlink_is_removed_before_install(tmp_path: Path
     assert "Removed legacy aggregate entries:" in result.stdout
     assert not (target / "dev-agent-skills").exists()
     assert_relative_mirror_link(target, "pm-agent")
+
+
+def test_source_checkout_inside_legacy_aggregate_delete_path_errors_without_deleting(
+    tmp_path: Path,
+) -> None:
+    target = tmp_path / "skills"
+    checkout = target / "dev-agent-skills"
+    make_minimal_checkout(checkout)
+    sentinel = checkout / "local-change.txt"
+    sentinel.write_text("keep local checkout", encoding="utf-8")
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(checkout / "scripts" / "install_codex_skills.py"),
+            "--target",
+            str(target),
+        ],
+        cwd=checkout,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "安装源 checkout 位于目标删除路径内" in result.stderr
+    assert sentinel.read_text(encoding="utf-8") == "keep local checkout"
+    assert (checkout / ".claude-plugin/marketplace.json").is_file()
+    assert (checkout / "agents/product_manager/skills/pm-agent/SKILL.md").is_file()
+    assert not (target / MIRROR_DIR).exists()
+    assert not (target / "pm-agent").exists()
 
 
 def test_mirror_does_not_contain_plugin_manifests(tmp_path: Path) -> None:
