@@ -259,6 +259,10 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 
 不要提交 `with_skill/`、`without_skill/`、`baseline/`、`iteration2/`、`outputs/`、`comparison.auto.md`、transcript、candidate output、subagent verdict、timing、run status 或 diagnostics 目录。Eval runner 会把运行期文件写入 `tmp/eval-runs/...` 这类 scratch workspace；这些文件只是临时文件，不应复制回 eval fixture。`with_skill_outputs`、`without_skill_outputs`、baseline outputs 等 metadata 字段只描述 runner 的运行期预期，不代表这些过程文件需要进入 git。手动或定时模型 eval workflow 可以把 transcript、verdict、timing 和 diagnostics 作为短期 CI artifact 上传用于排查，但仓库里长期保留的结果仍然是 `comparison.md`。
 
+Baseline 是 `comparison.md` 使用的 without-skill 对照输入，不是独立的机器判定产物。durable 的 `Latest result` 是 sub-agent、fresh judge 或人工 reviewer 在比较 with-skill 行为、without-skill baseline 行为、assertions 和 fixture 上下文后得出的结论。确定性 contract 检查只校验 eval 定义、必需 workspace、durable comparison 是否存在，以及运行期 artifact 是否合规；不会根据自由文本的 baseline 推断 PASS、PARTIAL 或 BLOCKED。
+
+Fresh Sub-Agent 门禁：每次全新 Codex subagent 执行 skill eval 时，都必须基于同一份 eval prompt 和 fixture 重新生成新的 `without_skill` baseline。不要复用历史 baseline 文本充当本次运行结果。如果新的 baseline 无法生成或无法被评审，应在 `comparison.md` 中记录其影响；确定性 runner 不对 baseline 文本本身打分。
+
 每个 `evals.json` 必须位于 `agents/{agent}/test/{skill-name}/evals/evals.json`，并声明 `schema_version: "1.0"`、`agent`、`skill_name` 和非空 `evals`。每个 eval item 必须包含 `id`、`name`、`description`、`prompt`、指向 `workspace/...` 的显式 `workspace`、`expected_output`，以及对象形式的 assertions；assertion 必须包含 lower snake_case `id`、`description` 和语义化 `text`。prompt-only eval 也需要最小 workspace，并包含 `eval_metadata.json` 和 durable `comparison.md`。修改 eval 定义时运行 `uv run scripts/check_eval_contract.py`。
 
 Eval runner 应将运行期文件写入系统临时目录或 `tmp/eval-runs/...`，再只把确认后的 `comparison.md` 同步回 eval workspace。新的 metadata schema 应显式区分 runtime output 字段和 durable result 字段。Python 测试文件名需要跨测试目录保持唯一，例如 `test_pm_run_eval.py` 和 `test_qa_run_eval.py`，确保 pytest 能在同一个进程里收集所有确定性测试。
