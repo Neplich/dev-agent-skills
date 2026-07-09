@@ -73,6 +73,8 @@ docs/qa/e2e/
 7. 凭据只写入 `.qa/e2e/accounts.local.json`，并按 `agents/qa/skills/qa-agent/references/e2e-credential-store.md` 使用账号 ID；提交文档不得包含明文凭据。
 8. 主 agent 汇总报告使用 `agents/qa/skills/qa-agent/references/e2e-test-report.md` 的固定格式。
 
+凭据存储细节以 [`e2e-credential-store.md`](./skills/qa-agent/references/e2e-credential-store.md) 为准，E2E 汇总报告以 [`e2e-test-report.md`](./skills/qa-agent/references/e2e-test-report.md) 为准。本 README 只保留角色说明，不复制凭据 schema 或报告模板。
+
 ## 典型工作流
 
 ```mermaid

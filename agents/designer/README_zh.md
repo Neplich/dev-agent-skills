@@ -72,7 +72,13 @@ agents/designer/skills/visual-design/references/
 └── anti-patterns.md             # 通用与场景反模式
 ```
 
-`design-system-data/` 的数据设计参考了 ui ux pro max，包括产品类型、风格模式、颜色、字体、UX 规则、图表、landing pattern、icons 和 stack guideline 等维度。
+设计系统数据：
+
+- 本地路径：`agents/designer/skills/visual-design/references/design-system-data/`
+- 数据范围：产品类型、风格模式、颜色、字体、UX guidelines、charts、landing patterns、icons、stack guidelines
+- 使用边界：只用于设计推理和设计系统文档
+
+该数据设计参考了 ui ux pro max 的组织方式，并按本仓库自己的路径和文档结构维护。
 
 这些 references 只用于设计推理。即使原始数据中存在 stack/code 字段，最终设计文档也不能包含 Tailwind config、CSS 变量落地、React/Vue/SwiftUI 组件、安装命令或工程任务清单。
 

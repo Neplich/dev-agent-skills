@@ -65,6 +65,18 @@ flowchart LR
     Test --> Delivery["delivery"]
 ```
 
+## 工程门禁
+
+现有功能变更、bug fix 和用户可见实现应先完成 PRD/TRD 对齐，再进入工程执行。Engineer 在实现前确认 TRD 和 `IMPLEMENTATION_PLAN.md`；影响用户流程的实现完成后，通过 QA E2E 交接包移交给 QA。
+
+```mermaid
+flowchart LR
+    Align["PRD/TRD 对齐"] --> TRD["TRD 已确认"]
+    TRD --> Plan["IMPLEMENTATION_PLAN 已确认"]
+    Plan --> Work["实现 / 修复"]
+    Work --> QAHandOff["QA E2E handoff"]
+```
+
 ## 输入与产物
 
 Engineer 主要消费：
