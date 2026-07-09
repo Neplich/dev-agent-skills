@@ -74,7 +74,13 @@ agents/designer/skills/visual-design/references/
 └── anti-patterns.md             # General and scenario-specific anti-patterns
 ```
 
-The `design-system-data/` data design references ui ux pro max across product types, style patterns, colors, typography, UX rules, charts, landing patterns, icons, and stack guidelines.
+Design system data:
+
+- Local path: `agents/designer/skills/visual-design/references/design-system-data/`
+- Data coverage: product types, style patterns, colors, typography, UX guidelines, charts, landing patterns, icons, and stack guidelines
+- Usage boundary: design reasoning and design-system documentation only
+
+The data design follows ui ux pro max's organization model and is maintained under this repository's own paths and documentation.
 
 These references are only used for design reasoning. Even if raw data contains stack/code fields, final design documents must not include Tailwind config, CSS variable implementation, React/Vue/SwiftUI components, install commands, or engineering task lists.
 

@@ -30,7 +30,7 @@ Codex 会先确认两个问题：
 
 Codex 会先把 skill 软链接解析到真实路径，再从该真实路径向上查找 `.codex-plugin/plugin.json` 或 `.claude-plugin/plugin.json`。本仓库为了兼容 Claude marketplace，必须保留 `agents/{role}/.claude-plugin/plugin.json`。
 
-如果 `~/.agents/skills/<skill-name>` 软链接到仓库 clone 内的 `agents/{role}/skills/<skill-name>`，Codex 会在祖先目录命中该 role 的 `plugin.json`，并给 skill 名加上 `Pm Agent:` 这类 namespace 前缀。镜像式安装会把仓库 `agents/` 树复制到 `~/.agents/skills/.dev-agent-skills/`，剔除 plugin manifest 和 agent test 目录，再在目标根目录创建 `~/.agents/skills/<skill-name> -> .dev-agent-skills/agents/{role}/skills/{skill-name}` 这类相对软链。解析后的真实路径仍在隐藏镜像内，祖先链不含 plugin manifest；共享 repo-relative skill references 保持原样可读，不需要 marker、support tree 或路径改写。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。
+如果 `~/.agents/skills/<skill-name>` 软链接到仓库 clone 内的 `agents/{role}/skills/<skill-name>`，Codex 会在祖先目录命中该 role 的 `plugin.json`，并给 skill 名加上 `Pm Agent:` 这类 namespace 前缀。镜像式安装会把仓库 `agents/` 树复制到 `~/.agents/skills/.dev-agent-skills/`，剔除 plugin manifest 和 agent test 目录，再在目标根目录创建 `~/.agents/skills/<skill-name> -> .dev-agent-skills/agents/{role}/skills/{skill-name}` 这类相对软链。解析后的真实路径仍在隐藏镜像内，祖先链不含 plugin manifest；共享 repo-relative skill references 保持原样可读，不需要 support tree 或路径改写。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。
 
 ```mermaid
 flowchart TD
@@ -110,9 +110,13 @@ python3 "$CLONE_ROOT/scripts/install_codex_skills.py" --target "$SKILL_ROOT" --r
 
 `--routers-only` 会输出警告，因为该模式只在目标根目录创建 6 个 role router 软链，`pm-agent` / role router 编排无法调用下游 specialist 工作流，只适合入口分类最小安装。隐藏镜像仍保留完整 `agents/` 树，供共享指令引用。
 
-脚本只管理两类目标：解析路径落在 `<skill-root>/.dev-agent-skills/` 内的软链，以及解析路径落在 dev-agent-skills checkout 内的旧软链。旧 checkout 软链会自动迁移到隐藏镜像软链。`<skill-root>/dev-agent-skills` legacy aggregate 若能证明归属，也会在安装前移除；非归属 aggregate 会告警并保留。
+`--target <path>` 指定可见 skill 软链所在目录；默认值是 `~/.agents/skills`。无论目标是个人级还是项目级，隐藏镜像都创建在 `<target>/.dev-agent-skills/`。
 
-真实目录或指向其他位置的软链都视为非归属目标：默认跳过，`--force` 会报错列出冲突项并在重建镜像或替换软链前退出。需要重建隐藏镜像并替换所有归属软链时使用 `--force`：
+隐藏镜像内的 `.dev-agent-skills-mirror.json` 是安装器 ownership marker。已有隐藏镜像若是软链，或包含这个 marker，才会被视为本安装器可管理；已有真实目录缺少 marker 时会报冲突，不会删除。
+
+脚本只管理两类目标：解析路径落在 `<target>/.dev-agent-skills/` 内的软链，以及解析路径落在 dev-agent-skills checkout 内的旧软链。旧 checkout 软链会自动迁移到隐藏镜像软链。`<target>/dev-agent-skills` legacy aggregate 若能证明归属，也会在安装前移除；非归属 aggregate 会告警并保留。
+
+真实目录、无 owner marker 的隐藏镜像、以及指向其他位置的软链都视为非归属目标：默认跳过或报冲突，`--force` 也不会删除它们。`--force` 的语义是重建隐藏镜像并替换所有归属软链；如果目标里存在非归属 skill 名冲突，脚本会列出冲突项并在修改前退出：
 
 ```bash
 python3 "$CLONE_ROOT/scripts/install_codex_skills.py" --target "$SKILL_ROOT" --force

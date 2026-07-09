@@ -65,6 +65,18 @@ flowchart LR
     Test --> Delivery["delivery"]
 ```
 
+## Engineering Guardrails
+
+Existing feature changes, bug fixes, and user-visible implementation should pass PRD/TRD alignment before engineering execution. Engineer confirms the TRD and `IMPLEMENTATION_PLAN.md` before implementation, then hands user-flow impact to QA through a QA E2E package.
+
+```mermaid
+flowchart LR
+    Align["PRD/TRD alignment"] --> TRD["TRD confirmed"]
+    TRD --> Plan["IMPLEMENTATION_PLAN confirmed"]
+    Plan --> Work["implementation / debug"]
+    Work --> QAHandOff["QA E2E handoff"]
+```
+
 ## Inputs And Outputs
 
 Engineer mainly consumes:

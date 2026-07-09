@@ -73,6 +73,8 @@ Workflow:
 7. Store credentials only in `.qa/e2e/accounts.local.json` using account IDs from `agents/qa/skills/qa-agent/references/e2e-credential-store.md`; committed QA docs must not contain plaintext credentials.
 8. Write the main-agent report using `agents/qa/skills/qa-agent/references/e2e-test-report.md`.
 
+Credential storage details are defined in [`e2e-credential-store.md`](./skills/qa-agent/references/e2e-credential-store.md). E2E summary reports follow [`e2e-test-report.md`](./skills/qa-agent/references/e2e-test-report.md). Keep this README as a role guide instead of duplicating credential schema or report templates here.
+
 ## Typical Flow
 
 ```mermaid
