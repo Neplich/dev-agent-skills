@@ -5,7 +5,7 @@ feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.2.0"
+version: "1.2.1"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -30,6 +30,9 @@ changelog:
   - version: "1.2.0"
     date: "2026-07-14"
     changes: "新增存量文档回填（sync 第四模式，MVP api 链路先行）与骨架一次性建全原则"
+  - version: "1.2.1"
+    date: "2026-07-14"
+    changes: "按 PR review 意见拆分 FR-A02 的产品范围与 MVP 范围，frontmatter 校验范围显式排除 .meta/"
 ---
 
 # docs-agent PRD
@@ -91,8 +94,8 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-A01 | docs-site-bootstrap | 初始化 VitePress 站点骨架：目录分类（api / database / design / product / ops / release-notes / standards）、frontmatter 内容模型、文档类型模板、prepare 与 check 脚本（含 visibility public / internal 双站点过滤生成）、空 `change-map.yaml`。模板以文本形式内置于 skill。骨架一次性完整生成（全部目录分类与双站点机器），文档内容随协作链节点与存量回填渐进填充。 | P0 | 空项目 bootstrap 后骨架完整可构建；重复执行幂等；未显式请求时不触发。 |
-| FR-A02 | formal-docs-sync | 三个同步节点：feature 落地同步 api / database / design 文档；部署验证同步 ops 文档；发版同步 release-notes 与产品手册。数据来源为 TRD、过程文档与代码证据。第四模式见 FR-A09 存量回填。 | P0 | 同步只更新受影响文档；每次同步追加或修正 change-map 条目；文档描述 latest state，不堆积变更历史。 |
-| FR-A03 | docs-audit | 发版门禁。确定性层：diff 命中 change-map 后检查要求更新的文档是否被更新、frontmatter 完整。事实层：agent 对影响域文档逐条核对声明与代码（API path / 参数 / 错误结构、schema 字段、env 变量）。 | P0 | 产出版本化 audit 报告；三态结论；全部 verified 或修复后统一盖章 `last_verified_version`。 |
+| FR-A02 | formal-docs-sync | 三个同步节点：feature 落地同步 api / database / design 文档；部署验证同步 ops 文档；发版同步 release-notes 与产品手册。数据来源为 TRD、过程文档与代码证据。第四模式见 FR-A09 存量回填。完整三节点覆盖为产品目标范围；MVP 按决议 6/8 收窄为 api 链路（feature 落地节点与存量回填），database / design / ops / release-notes / 产品手册的同步为后续迭代，不作为 MVP 验收面。 | P0 | 同步只更新受影响文档；每次同步追加或修正 change-map 条目；文档描述 latest state，不堆积变更历史。MVP 验收仅覆盖 api 链路。 |
+| FR-A03 | docs-audit | 发版门禁。确定性层：diff 命中 change-map 后检查要求更新的文档是否被更新、frontmatter 完整（校验范围排除 `.meta/` 机器消费区）。事实层：agent 对影响域文档逐条核对声明与代码（API path / 参数 / 错误结构、schema 字段、env 变量）。 | P0 | 产出版本化 audit 报告；三态结论；全部 verified 或修复后统一盖章 `last_verified_version`。 |
 | FR-A04 | 消费契约 | 6 个现有 Agent 增加读取协议：任务落点命中 change-map 时优先读映射文档；`debugger` 可把 API contract 文档作为 expected-behavior 依据来源之一。 | P0 | 协议以 `_shared` 共享约定为主、各 SKILL.md 指针为辅；无文档站时静默降级，不产生额外询问。 |
 | FR-A05 | 信任模型 | 文档是声明状态，代码是 ground truth。影响结论的关键判断必须回代码验证；`last_verified_version` 与当前版本差距决定信任度。 | P0 | 消费契约与 audit 协议均显式引用该模型；文档与代码不符时输出分歧证据而非采信文档。 |
 | FR-A06 | change-map 双向索引 | `change-map.yaml` 写方向供 sync / audit 判定受影响文档，读方向供 6 个 Agent 按任务落点取文档。 | P0 | 同一份数据服务两个方向；条目由 sync 在 feature 落地时生长，或由存量回填批量种子化，不要求人工预先维护全量映射。 |
@@ -175,7 +178,7 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
 | 宿主 `docs/site/standards/change-map.yaml` | File read/write | 双向索引：sync 生长、audit 判定、Agent 消费 |
-| 宿主 `docs/site/**/*.md` frontmatter | File read/write | 内容模型与版本盖章 |
+| 宿主 `docs/site/**/*.md` frontmatter（排除 .meta/ 机器消费区） | File read/write | 内容模型与版本盖章 |
 | 宿主 git tag / GitHub Release | Read | 版本锚与 diff 基准 |
 | `docs/engineer/{feature_path}/TRD.md` | File read | sync 的 `related_code` 与变更事实来源 |
 | `.claude-plugin/marketplace.json` | File write | 注册 docs-agent 与 3 个 skill |
