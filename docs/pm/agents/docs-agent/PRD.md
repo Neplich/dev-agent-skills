@@ -10,6 +10,7 @@ status: Draft
 author: "Neplich Claude"
 date: "2026-07-14"
 last_updated: "2026-07-14"
+related_issue: "https://github.com/Neplich/dev-agent-skills/issues/105"
 related_docs:
   - "AGENTS.md"
   - ".claude-plugin/marketplace.json"
