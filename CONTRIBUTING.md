@@ -1,12 +1,14 @@
-# 贡献指南
+# Contributing Guide
 
-本文件只作为贡献者命令清单。仓库规则、文档契约、eval 策略、发布约束、commit / PR 文案和维护边界均以 [AGENTS.md](./AGENTS.md) 为权威。
+> Other languages: [中文](./CONTRIBUTING_zh.md)
 
-## 本地验证
+This file is only a contributor command list. Repository rules, document contracts, eval strategy, release constraints, commit / PR wording, and maintenance boundaries are all governed by [AGENTS.md](./AGENTS.md) as the single source of authority.
 
-仓库内 Python 验证脚本和 eval runner 默认使用 `uv run ...`。
+## Local Validation
 
-PR 检查按 CI 顺序执行：
+Python validation scripts and the eval runner in this repository use `uv run ...` by default.
+
+PR checks run in CI order:
 
 ```bash
 # 1. repository-contract
@@ -31,16 +33,16 @@ uv run --with pytest pytest \
   scripts/test_install_codex_skills.py
 ```
 
-可选 JSON 静态格式检查：
+Optional JSON static format check:
 
 ```bash
 uv run python -m json.tool .claude-plugin/marketplace.json >/tmp/marketplace.json.out
 uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 ```
 
-## 手动 Eval
+## Manual Eval
 
-本地模型 eval 是质量检查，不属于第一版 PR 必跑 status check：
+Local model evals are quality checks and are not part of the first-round required PR status checks:
 
 ```bash
 # Designer eval diagnostics
@@ -50,19 +52,19 @@ uv run agents/designer/test/run_all_evals.py
 uv run agents/qa/test/run_all_evals.py
 ```
 
-涉及 skill 行为、routing、eval fixture 或 release readiness 的变更，按 [AGENTS.md](./AGENTS.md#skill-测试) 的 eval 策略执行。GitHub Actions 的 `Manual Evals` workflow 可选择 `all`、`designer` 或 `qa`；QA eval 需要仓库 `OPENAI_API_KEY` secret。
+Changes involving skill behavior, routing, eval fixtures, or release readiness follow the eval strategy in [AGENTS.md](./AGENTS.md#skill-测试). The GitHub Actions `Manual Evals` workflow accepts `all`, `designer`, or `qa`; the QA eval requires the repository `OPENAI_API_KEY` secret.
 
-## Eval 维护清单
+## Eval Maintenance Checklist
 
-仓库只保留 eval 定义和最新持久化结论，运行日志和 transcript 不进 git。详细规则见 [AGENTS.md](./AGENTS.md#skill-测试)。
+The repository keeps only eval definitions and the latest persisted conclusions; run logs and transcripts do not enter git. See [AGENTS.md](./AGENTS.md#skill-测试) for the detailed rules.
 
-1. 新建或更新 skill 与 eval fixture。
-2. 运行相关确定性检查和已批准的手动 eval。
-3. 将最新持久化结果写入 `comparison.md`。
-4. 开 PR 前删除运行期产物。
-5. 只提交 eval 定义、metadata、fixture、README 文件和 `comparison.md`。
+1. Create or update the skill and eval fixtures.
+2. Run the relevant deterministic checks and the approved manual evals.
+3. Write the latest persisted result into `comparison.md`.
+4. Remove runtime artifacts before opening a PR.
+5. Commit only eval definitions, metadata, fixtures, README files, and `comparison.md`.
 
-`comparison.md` 使用以下结构：
+`comparison.md` uses the following structure:
 
 ```markdown
 # Eval Result: <eval-name>
@@ -77,10 +79,10 @@ uv run agents/qa/test/run_all_evals.py
 ## Runtime Artifacts Policy
 ```
 
-## 维护索引
+## Maintenance Index
 
-- 仓库工作流、分支和 PR 规则：[AGENTS.md](./AGENTS.md#开发工作流)
-- 文档结构与 frontmatter 契约：[AGENTS.md](./AGENTS.md#文档组织)
-- release 与 changelog 规则：[AGENTS.md](./AGENTS.md#仓库治理)
-- skill eval schema 与 artifact 策略：[AGENTS.md](./AGENTS.md#skill-测试)
-- QA E2E 持久化与凭据处理：[AGENTS.md](./AGENTS.md#qa-e2e-测试用例持久化)
+- Repository workflow, branch, and PR rules: [AGENTS.md](./AGENTS.md#开发工作流)
+- Document structure and frontmatter contract: [AGENTS.md](./AGENTS.md#文档组织)
+- Release and changelog rules: [AGENTS.md](./AGENTS.md#仓库治理)
+- Skill eval schema and artifact policy: [AGENTS.md](./AGENTS.md#skill-测试)
+- QA E2E persistence and credential handling: [AGENTS.md](./AGENTS.md#qa-e2e-测试用例持久化)
