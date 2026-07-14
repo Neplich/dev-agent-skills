@@ -5,8 +5,8 @@ feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.0.0"
-status: Draft
+version: "1.1.0"
+status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
 last_updated: "2026-07-14"
@@ -24,6 +24,9 @@ changelog:
   - version: "1.0.0"
     date: "2026-07-14"
     changes: "Initial draft"
+  - version: "1.1.0"
+    date: "2026-07-14"
+    changes: "补齐 6 项待确认问题决议，status 置为 Approved"
 ---
 
 # docs-agent PRD
@@ -82,7 +85,7 @@ changelog:
 
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
-| FR-A01 | docs-site-bootstrap | 初始化 VitePress 站点骨架：目录分类（api / database / design / product / ops / release-notes / standards）、frontmatter 内容模型、文档类型模板、prepare 与 check 脚本、空 `change-map.yaml`。模板以文本形式内置于 skill。 | P0 | 空项目 bootstrap 后骨架完整可构建；重复执行幂等；未显式请求时不触发。 |
+| FR-A01 | docs-site-bootstrap | 初始化 VitePress 站点骨架：目录分类（api / database / design / product / ops / release-notes / standards）、frontmatter 内容模型、文档类型模板、prepare 与 check 脚本（含 visibility public / internal 双站点过滤生成）、空 `change-map.yaml`。模板以文本形式内置于 skill。 | P0 | 空项目 bootstrap 后骨架完整可构建；重复执行幂等；未显式请求时不触发。 |
 | FR-A02 | formal-docs-sync | 三个同步节点：feature 落地同步 api / database / design 文档；部署验证同步 ops 文档；发版同步 release-notes 与产品手册。数据来源为 TRD、过程文档与代码证据。 | P0 | 同步只更新受影响文档；每次同步追加或修正 change-map 条目；文档描述 latest state，不堆积变更历史。 |
 | FR-A03 | docs-audit | 发版门禁。确定性层：diff 命中 change-map 后检查要求更新的文档是否被更新、frontmatter 完整。事实层：agent 对影响域文档逐条核对声明与代码（API path / 参数 / 错误结构、schema 字段、env 变量）。 | P0 | 产出版本化 audit 报告；三态结论；全部 verified 或修复后统一盖章 `last_verified_version`。 |
 | FR-A04 | 消费契约 | 6 个现有 Agent 增加读取协议：任务落点命中 change-map 时优先读映射文档；`debugger` 可把 API contract 文档作为 expected-behavior 依据来源之一。 | P0 | 协议以 `_shared` 共享约定为主、各 SKILL.md 指针为辅；无文档站时静默降级，不产生额外询问。 |
@@ -203,9 +206,9 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 
 | # | Question | Owner | Deadline | Resolution |
 |---|----------|-------|----------|------------|
-| 1 | 消费契约改动落在各 Agent SKILL.md 还是集中于新 `_shared` 约定文件，指针粒度如何取？ | Maintainer | TBD | Unresolved |
-| 2 | audit 报告归档路径：沿用 QA `_reports/{platform-version}/` 先例，还是站点 `.meta/` 或 `docs/docs/`？ | Maintainer | TBD | Unresolved |
-| 3 | `visibility` 双站点是否进入 MVP，还是先单站点、双站点后置？ | Maintainer | TBD | Unresolved |
-| 4 | bootstrap 是否额外生成宿主项目本地维护 skill（仿 `hub-docs-maintainer`），还是逻辑全部留在 marketplace skill？ | Maintainer | TBD | Unresolved |
-| 5 | `pm-agent` release 类 skill 输出目标切换到站点 `release-notes/` 的触发条件与向后兼容方式？ | Maintainer | TBD | Unresolved |
-| 6 | MVP 的 sync 链路只覆盖 api 文档是否成立，database / ops 的迭代切分点？ | Maintainer | TBD | Unresolved |
+| 1 | 消费契约改动落在各 Agent SKILL.md 还是集中于新 `_shared` 约定文件，指针粒度如何取？ | Maintainer | 2026-07-14 | 集中放 docs-agent 的 `_internal/_shared/consumption-contract.md` 作为权威约定，6 个 Agent specialist SKILL.md 各加一行指针，与 skill-map.md 先例一致 |
+| 2 | audit 报告归档路径：沿用 QA `_reports/{platform-version}/` 先例，还是站点 `.meta/` 或 `docs/docs/`？ | Maintainer | 2026-07-14 | 归档到宿主站点 `docs/site/.meta/audit/audit-{version}.md`；`.meta/` 为机器消费区，不进导航、不受 frontmatter 校验约束 |
+| 3 | `visibility` 双站点是否进入 MVP，还是先单站点、双站点后置？ | Maintainer | 2026-07-14 | visibility 双站点全进 MVP：bootstrap 骨架内置 visibility 过滤生成脚本、public / internal 双首页与双站点配置 |
+| 4 | bootstrap 是否额外生成宿主项目本地维护 skill（仿 `hub-docs-maintainer`），还是逻辑全部留在 marketplace skill？ | Maintainer | 2026-07-14 | 不生成宿主本地维护 skill；逻辑全部留在 marketplace 的 `formal-docs-sync`，宿主差异落 `standards/` 与 change-map 数据层 |
+| 5 | `pm-agent` release 类 skill 输出目标切换到站点 `release-notes/` 的触发条件与向后兼容方式？ | Maintainer | 2026-07-14 | 按站点存在性自动切换：宿主存在 `docs/site/release-notes/` 时 release 类 skill 输出指向站点目录，不存在时维持现状，无配置项 |
+| 6 | MVP 的 sync 链路只覆盖 api 文档是否成立，database / ops 的迭代切分点？ | Maintainer | 2026-07-14 | MVP 仅覆盖 api 链路（feature 落地节点）；database、ops 作为后续两次迭代 |
