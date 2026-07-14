@@ -5,7 +5,7 @@ feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.1.0"
+version: "1.2.0"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -27,6 +27,9 @@ changelog:
   - version: "1.1.0"
     date: "2026-07-14"
     changes: "补齐 6 项待确认问题决议，status 置为 Approved"
+  - version: "1.2.0"
+    date: "2026-07-14"
+    changes: "新增存量文档回填（sync 第四模式，MVP api 链路先行）与骨架一次性建全原则"
 ---
 
 # docs-agent PRD
@@ -53,6 +56,7 @@ changelog:
 4. 提供 `docs-audit` skill：发版前对 diff 影响域内的文档做事实性校验，通过后统一盖章 `last_verified_version`。
 5. 为现有 6 个 Agent 定义正式文档消费契约：任务落点命中 `change-map.yaml` 时优先读取对应文档，代码仍是 ground truth。
 6. 文档版本锚定 git tag / GitHub Release，不引入独立文档版本体系。
+7. 支持接手已有项目：通过存量回填为现有实现生成正式文档基线，并种子化 change-map。
 
 ## 非目标
 
@@ -80,19 +84,21 @@ changelog:
 | US-A03 | 作为维护者，我想在发版前对文档做事实性校验，以便过期声明不随版本发布。 | P0 | diff 影响域内文档逐条核对，产出 verified / stale / mismatch 三态报告；mismatch 未处理时发版流程 blocked。 |
 | US-A04 | 作为角色 Agent，我想按任务落点读取正式文档，以便降低探索成本且不被过期内容误导。 | P0 | 任务路径命中 change-map 时优先读取映射文档；关键判断回代码验证；文档缺失时静默降级为代码扫描。 |
 | US-A05 | 作为角色 Agent，我在工作中发现文档与代码不符时，想把它变成可追踪证据，以便 docs-agent 修正。 | P1 | 不符事实以结构化形式记入产出，作为 `docs-audit` 输入。 |
+| US-A06 | 作为维护者，接手已有项目时，我想为现有实现回填生成正式文档基线，以便文档站从第一天就描述系统当前状态。 | P0 | 回填按维护者确认的范围分批执行；已有 feature-catalog 产物时优先作为回填地图；生成文档的同时生成 change-map 种子条目；MVP 覆盖 api 链路。 |
 
 ## 功能需求
 
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
-| FR-A01 | docs-site-bootstrap | 初始化 VitePress 站点骨架：目录分类（api / database / design / product / ops / release-notes / standards）、frontmatter 内容模型、文档类型模板、prepare 与 check 脚本（含 visibility public / internal 双站点过滤生成）、空 `change-map.yaml`。模板以文本形式内置于 skill。 | P0 | 空项目 bootstrap 后骨架完整可构建；重复执行幂等；未显式请求时不触发。 |
-| FR-A02 | formal-docs-sync | 三个同步节点：feature 落地同步 api / database / design 文档；部署验证同步 ops 文档；发版同步 release-notes 与产品手册。数据来源为 TRD、过程文档与代码证据。 | P0 | 同步只更新受影响文档；每次同步追加或修正 change-map 条目；文档描述 latest state，不堆积变更历史。 |
+| FR-A01 | docs-site-bootstrap | 初始化 VitePress 站点骨架：目录分类（api / database / design / product / ops / release-notes / standards）、frontmatter 内容模型、文档类型模板、prepare 与 check 脚本（含 visibility public / internal 双站点过滤生成）、空 `change-map.yaml`。模板以文本形式内置于 skill。骨架一次性完整生成（全部目录分类与双站点机器），文档内容随协作链节点与存量回填渐进填充。 | P0 | 空项目 bootstrap 后骨架完整可构建；重复执行幂等；未显式请求时不触发。 |
+| FR-A02 | formal-docs-sync | 三个同步节点：feature 落地同步 api / database / design 文档；部署验证同步 ops 文档；发版同步 release-notes 与产品手册。数据来源为 TRD、过程文档与代码证据。第四模式见 FR-A09 存量回填。 | P0 | 同步只更新受影响文档；每次同步追加或修正 change-map 条目；文档描述 latest state，不堆积变更历史。 |
 | FR-A03 | docs-audit | 发版门禁。确定性层：diff 命中 change-map 后检查要求更新的文档是否被更新、frontmatter 完整。事实层：agent 对影响域文档逐条核对声明与代码（API path / 参数 / 错误结构、schema 字段、env 变量）。 | P0 | 产出版本化 audit 报告；三态结论；全部 verified 或修复后统一盖章 `last_verified_version`。 |
 | FR-A04 | 消费契约 | 6 个现有 Agent 增加读取协议：任务落点命中 change-map 时优先读映射文档；`debugger` 可把 API contract 文档作为 expected-behavior 依据来源之一。 | P0 | 协议以 `_shared` 共享约定为主、各 SKILL.md 指针为辅；无文档站时静默降级，不产生额外询问。 |
 | FR-A05 | 信任模型 | 文档是声明状态，代码是 ground truth。影响结论的关键判断必须回代码验证；`last_verified_version` 与当前版本差距决定信任度。 | P0 | 消费契约与 audit 协议均显式引用该模型；文档与代码不符时输出分歧证据而非采信文档。 |
-| FR-A06 | change-map 双向索引 | `change-map.yaml` 写方向供 sync / audit 判定受影响文档，读方向供 6 个 Agent 按任务落点取文档。 | P0 | 同一份数据服务两个方向；条目由 sync 在 feature 落地时生长，不要求人工预先维护全量映射。 |
+| FR-A06 | change-map 双向索引 | `change-map.yaml` 写方向供 sync / audit 判定受影响文档，读方向供 6 个 Agent 按任务落点取文档。 | P0 | 同一份数据服务两个方向；条目由 sync 在 feature 落地时生长，或由存量回填批量种子化，不要求人工预先维护全量映射。 |
 | FR-A07 | 版本锚定 | `last_verified_version` 取值域为宿主项目 git tag / GitHub Release；无版本体系的宿主项目该字段可缺省。 | P1 | 字段仅由 audit 通过后盖章写入；缺省时 audit 报告需注明版本锚不可用。 |
 | FR-A08 | 逻辑与数据分层 | 通用逻辑（读者分层、路由方法、模板映射、写作纪律、生命周期节点）内置于 skill；项目数据（change-map 条目、模块名、目录微调）留在宿主项目 `standards/`。 | P0 | skill 内不出现任何宿主项目专有路径或模块名；bootstrap 生成的数据层文件归宿主项目所有。 |
+| FR-A09 | 存量回填（sync 第四模式） | 接手已有项目时，formal-docs-sync 以回填模式运行：按维护者确认的范围（优先复用 PM feature-catalog 产物作为地图）为现有实现生成正式文档基线，并生成 change-map 种子条目；按模块分批推进，每批需维护者确认。 | P0 | 含存量代码的项目可分批产出文档基线与 change-map 种子；MVP 覆盖 api 链路，database / ops 随后续迭代；无 feature-catalog 产物时按代码扫描圈定范围并要求确认。 |
 
 ## 参考实现对齐
 
@@ -113,6 +119,7 @@ changelog:
 | AC-03 | audit 对注入的文档-代码不符 fixture 报告 mismatch 并 blocked 发版建议。 | eval fixture：文档声明与代码事实不一致的 workspace。 |
 | AC-04 | 6 个 Agent 在有文档站的 workspace 中优先按 change-map 取文档，无文档站时行为与现状一致。 | 现有 Agent eval 增补消费场景断言。 |
 | AC-05 | skill 文档、marketplace 注册、skills-lock、eval 齐备且通过全部契约检查。 | `check_repository_contract.py`、`check_eval_contract.py`、`check_doc_contract.py`。 |
+| AC-06 | 回填模式在含存量代码的 fixture 上生成 api 文档基线与 change-map 种子条目，且分批范围经确认。 | eval fixture：含存量 API 代码与 feature-catalog 产物的 workspace。 |
 
 ## 非功能需求
 
@@ -128,7 +135,7 @@ changelog:
 ```mermaid
 flowchart TB
     subgraph produce["生产侧 docs-agent"]
-        B["docs-site-bootstrap"] --> S["formal-docs-sync<br/>feature 落地 / 部署验证 / 发版"]
+        B["docs-site-bootstrap"] --> S["formal-docs-sync<br/>feature 落地 / 部署验证 / 发版 / 存量回填"]
         S --> A["docs-audit 发版门禁"]
     end
     subgraph consume["消费侧 6 个角色 Agent"]
@@ -187,7 +194,7 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 | Phase | Scope | Target Date | Owner |
 |-------|-------|-------------|-------|
 | Workstream 1 | 消费契约：`_shared` 约定 + 6 个 Agent SKILL.md 指针，在已有文档站的宿主项目验证 | TBD | Maintainer |
-| Workstream 2 | `docs-site-bootstrap` + `formal-docs-sync`：站点骨架模板与三节点同步 | TBD | Maintainer |
+| Workstream 2 | `docs-site-bootstrap` + `formal-docs-sync`：站点骨架模板、三节点同步与存量回填（api 链路） | TBD | Maintainer |
 | Workstream 3 | `docs-audit`：发版门禁、版本盖章、报告归档 | TBD | Maintainer |
 
 推进顺序为 1 → 2 → 3：消费侧改动最小且可在已有文档站的项目立即验证；消费跑通证明文档格式可被消费，再建生产侧；门禁最后收口闭环。
@@ -201,6 +208,7 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 | 正式文档堆积 feature 增量变成变更日志 | Medium | 文档失去"当前状态"语义 | 模板与写作纪律固化 latest state 规则，audit 检查文档形态 |
 | bootstrap 模板与宿主项目结构冲突 | Low | 初始化失败或覆盖已有文档 | bootstrap 幂等、遇已有内容 blocked 并要求用户确认 |
 | 新 Agent eval 成本高（尤其 sync fixture） | High | 交付周期拉长 | MVP 收窄为 bootstrap + api 文档单链路，database / ops 后续迭代 |
+| 大代码库存量回填成本高 | Medium | 回填烂尾或质量下降 | 按模块分批 + feature-catalog 地图 + 每批维护者确认；MVP 收窄为 api 链路 |
 
 ## 待确认问题
 
@@ -212,3 +220,5 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 | 4 | bootstrap 是否额外生成宿主项目本地维护 skill（仿 `hub-docs-maintainer`），还是逻辑全部留在 marketplace skill？ | Maintainer | 2026-07-14 | 不生成宿主本地维护 skill；逻辑全部留在 marketplace 的 `formal-docs-sync`，宿主差异落 `standards/` 与 change-map 数据层 |
 | 5 | `pm-agent` release 类 skill 输出目标切换到站点 `release-notes/` 的触发条件与向后兼容方式？ | Maintainer | 2026-07-14 | 按站点存在性自动切换：宿主存在 `docs/site/release-notes/` 时 release 类 skill 输出指向站点目录，不存在时维持现状，无配置项 |
 | 6 | MVP 的 sync 链路只覆盖 api 文档是否成立，database / ops 的迭代切分点？ | Maintainer | 2026-07-14 | MVP 仅覆盖 api 链路（feature 落地节点）；database、ops 作为后续两次迭代 |
+| 7 | 存量回填落在 bootstrap、独立 skill 还是 sync 模式？ | Maintainer | 2026-07-14 | 作为 formal-docs-sync 的第四模式；复用同一套模板映射、写作纪律与 change-map 生长逻辑 |
+| 8 | 存量回填是否进 MVP，覆盖范围如何切？ | Maintainer | 2026-07-14 | 进 MVP，api 链路先行；database、ops 回填随各自迭代补齐 |
