@@ -123,13 +123,13 @@ PRD/TRD 对齐、实现计划确认和 QA E2E handoff 等工程门禁见 [Engine
 
 - [Codex Guide](./docs/README.codex.md)：Codex 安装模型、镜像机制、排障和按路径禁用。
 - [Agents Guide](./AGENTS.md)：agent 仓库指导、文档契约、维护流程、eval 规则和 PR 检查的唯一事实源。
-- [Contributing](./CONTRIBUTING.md)：本地验证命令和维护流程链接。
+- [Contributing](./CONTRIBUTING_zh.md)：本地验证命令和维护流程链接。
 - [Changelog Index](./CHANGELOG.md)：版本化 release changelog 入口。
 - Agent 文档：[PM](./agents/product_manager/README_zh.md)、[Designer](./agents/designer/README_zh.md)、[Engineer](./agents/engineer/README_zh.md)、[QA](./agents/qa/README_zh.md)、[DevOps](./agents/devops/README_zh.md)、[Security](./agents/security/README_zh.md)。
 
 ## 贡献
 
-本地检查和贡献流程见 [CONTRIBUTING.md](./CONTRIBUTING.md)。`AGENTS.md` 仍是仓库指导的唯一事实源。
+本地检查和贡献流程见 [CONTRIBUTING_zh.md](./CONTRIBUTING_zh.md)。`AGENTS.md` 仍是仓库指导的唯一事实源。
 
 ## License
 
