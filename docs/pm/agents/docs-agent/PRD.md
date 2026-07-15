@@ -5,7 +5,7 @@ feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.2.4"
+version: "1.2.5"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -42,6 +42,9 @@ changelog:
   - version: "1.2.4"
     date: "2026-07-15"
     changes: "marketplace 注册面明确为 4 个 skill 路径（router + 3 specialist）"
+  - version: "1.2.5"
+    date: "2026-07-15"
+    changes: "sync 影响域输入放宽为 TRD 影响域证据链，注册触点补 plugin manifest"
 ---
 
 # docs-agent PRD
@@ -189,7 +192,7 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 | 宿主 `docs/site/standards/change-map.yaml` | File read/write | 双向索引：sync 生长、audit 判定、Agent 消费 |
 | 宿主 `docs/site/**/*.md` frontmatter（排除 .meta/ 机器消费区） | File read/write | 内容模型与版本盖章 |
 | 宿主 git tag / GitHub Release | Read | 版本锚与 diff 基准 |
-| `docs/engineer/{feature_path}/TRD.md` | File read | sync 的 `related_code` 与变更事实来源 |
+| `docs/engineer/{feature_path}/TRD.md` | File read | sync 的影响域证据（frontmatter related_code 或影响模块章节）与变更事实来源 |
 | `.claude-plugin/marketplace.json` | File write | 注册 docs-agent 与 4 个 skill 路径（同名 router + 3 个 specialist） |
 
 ## 假设与约束
@@ -199,7 +202,7 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 | Constraint | `AGENTS.md` 是仓库指导唯一来源，本 Agent 契约需在其中登记。 | 指导分叉导致协作链不认识第 7 个角色。 |
 | Constraint | 过程文档契约不变，正式文档层是新增而非替代。 | 破坏现有 6 个 Agent 的文档记忆。 |
 | Assumption | 宿主项目使用 git 并可选使用 GitHub Release。 | 无 git 的宿主无法使用版本锚与 audit diff 基准。 |
-| Assumption | TRD 的 `related_code` 足以圈定 sync 与 audit 的影响域。 | 影响域漏判时需人工补充 change-map 条目。 |
+| Assumption | TRD 的影响域证据（related_code 字段或影响模块章节）足以圈定 sync 与 audit 的影响域。 | 影响域漏判时需人工补充 change-map 条目。 |
 
 ## 发布计划与里程碑
 
