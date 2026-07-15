@@ -1,7 +1,7 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.1.7"
+version: "0.1.8"
 status: Draft
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -191,7 +191,7 @@ bootstrap 生成的种子元数据 last_verified_version 初始为 unverified，
 6 个脚本的职责必须保持分离：
 
 - `check-frontmatter`：扫描 `docs/site/**/*.md`，排除 `.meta/`、`.generated/`、VitePress cache/dist 与依赖目录；校验字段、枚举和非空数组。
-- `check-affected`：取得工作区 diff，或从显式 base / merge-base 取得提交 diff；用 picomatch 执行 code_glob 和 exclude，要求命中条目的 `required_docs` 同批更新。
+- check-affected：取得工作区 diff，或从显式 base / merge-base 取得提交 diff；用 picomatch 执行 code_glob 和 exclude，报告命中条目中 required_docs 未同批更新的候选核对项（suspect）。该条件默认非阻塞（只输出报告，退出码不失败），与 7.1/7.2 的 audit 判定分层一致，stale/verified 由 docs-audit 事实层给出；宿主可通过显式 strict 开关自行将该条件提升为 CI 阻塞。frontmatter 无效仍为阻塞失败。
 - `check-version`：校验 `.meta/releases.json` 的 `latest`、`released`、`verifiedDocs` 内部一致性；存在显式 release version 或 git tag 时与其对齐，无版本锚时输出不可用说明而非绑定某种部署工具。
 - `prepare-nav`：从 frontmatter 生成 public / internal 两份 sidebar 数据，public 接受 `public|both`，internal 接受 `public|internal|both`（internal 站为全集导航）。
 - `prepare-site`：清理隔离输出目录，按 visibility 复制页面和对应首页，连接 VitePress config / theme；源目录不被改写。
