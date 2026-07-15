@@ -1,35 +1,37 @@
-# Eval Result: eval-005-mapped-notification-ui
+# Consumption Regression Comparison
 
 ## Evaluation Target
 
-- Agent: `designer`
 - Skill: `ui-ux-design`
 - Eval: `eval-005-mapped-notification-ui`
-- Workspace: `workspace/eval-005-mapped-notification-ui`
-- Latest result: pending fresh validation
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Fixture version: 1.0
-- The eval definition and fixture are established. Fresh subagent validation will run before this PR is submitted for review and will write the result back here.
+- Fixture: `ws1-consumption-v1`
+- Commit: `0b000b9`
 
-## With Skill
+## Latest Result
 
-- Pending fresh validation of mapped-document-first reading, code verification, and low trust for `unverified` documentation.
+**PASS** — with-skill 完整执行消费链（change-map 反查 → 读映射文档 → 回 HTML 核证默认状态分歧 → unverified 以代码为准），随后正确停在 Designer 的 PM handoff 门禁，未越权产出设计文档。
 
-## Without Skill / Baseline
+## With-Skill Behavior
 
-- Pending a new baseline generated from the same prompt and fixture without applying the skill.
+- 核证出文档声称默认开启 vs checkbox 无 checked 属性的分歧并结构化记录。
+- 门禁行为最合规：缺 PM handoff packet 与 feature_path 时拒绝猜测 feature 路径写设计文档，回 pm-agent 补齐。
+
+## Without-Skill Baseline
+
+- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
+- baseline 走 pm-agent → designer-agent 链产出了设计文档，流程可用但越过了 handoff 凭据缺失的门禁，也未按契约组织分歧证据。
 
 ## Failures
 
-- Pending fresh validation; no result is claimed yet.
+- 无。
 
 ## Next Steps
 
-- Run fresh subagent validation and replace the pending sections with observed evidence.
+- 保留本结果；后续 fixture 可增加干扰文档以放大行为差距。
 
 ## Runtime Artifact Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics must be written only to an isolated scratch workspace and must not be committed.
+- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。

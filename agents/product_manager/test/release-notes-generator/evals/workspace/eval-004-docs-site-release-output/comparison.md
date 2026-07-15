@@ -2,36 +2,36 @@
 
 ## Evaluation Target
 
-- Agent: `product_manager`
 - Skill: `release-notes-generator`
 - Eval: `eval-004-docs-site-release-output`
 
-## Fixture Version
+## Test Set / Fixture Version
 
-- Fixture version: `ws1-consumption-v1`
+- Fixture: `ws1-consumption-v1`
+- Commit: `0b000b9`
 
 ## Latest Result
 
-Latest result: pending fresh validation
+**PASS** — with-skill 在站点存在时把发布说明写入 docs/site/release-notes/ 并保留 docs/changelog/ 版本归档与根索引，未虚构 PR/贡献者，另按契约结构化报告了陈旧 API 文档分歧。
 
-The eval definition and fixture are established. Fresh subagent validation will run before this PR is submitted for review, and this comparison will then be updated.
+## With-Skill Behavior
 
-## With Skill
+- 显式按 skill 与消费契约执行：发布说明落站点目录、归档留原契约路径、站点索引同步更新。
+- 发现 docs/site/api/releases.md 仍停留 v1.3.0 且 unverified，按分歧证据记录而未顺带修改，保持精准变更边界。
 
-- Pending fresh validation.
+## Without-Skill Baseline
 
-## Without Skill
-
-- Pending a newly generated baseline from the same prompt and fixture.
+- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
+- baseline 也把发布说明写入了站点目录并保留归档（fixture 中站点目录的存在自然引导了该行为），但未产出契约格式的分歧证据。
 
 ## Failures
 
-- None recorded before validation.
+- 无。
 
 ## Next Steps
 
-- Run fresh with-skill and without-skill validation, then write the evidence and result here.
+- 保留本结果；后续 fixture 可增加干扰文档以放大行为差距。
 
 ## Runtime Artifact Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics are written only to an isolated scratch workspace and are not committed.
+- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
