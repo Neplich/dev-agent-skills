@@ -1,0 +1,14 @@
+title: Upload documentation map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - src/upload/**
+last_verified_version: unverified
+change_map:
+  "src/upload/**":
+    required_docs:
+      - docs/site/api/upload.md
+    trigger: Update upload documentation when limits or transfer modes change.

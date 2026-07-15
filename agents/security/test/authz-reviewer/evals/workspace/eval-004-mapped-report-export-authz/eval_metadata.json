@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-004-mapped-report-export-authz",
+  "eval_name": "Mapped Report Export Authorization",
+  "workspace_root": "agents/security/test/authz-reviewer/evals/workspace/eval-004-mapped-report-export-authz",
+  "skill_availability_goal": "Verify mapped-document-first authorization exploration, code verification, and lowest trust for unverified documentation.",
+  "prompt": "请审查 src/access/report-export-policy.js 的报表导出授权逻辑，说明哪些角色可以导出以及是否存在越权风险。",
+  "fixture_context": [
+    "src/access/report-export-policy.js",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/report-export.md"
+  ]
+}

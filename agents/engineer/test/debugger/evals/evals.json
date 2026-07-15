@@ -152,6 +152,31 @@
           "text": "输出不得声称已经修改代码、更新测试、应用修复或验证修复通过。"
         }
       ]
+    },
+    {
+      "id": "eval-005-mapped-cache-debug-evidence",
+      "name": "使用映射文档诊断缓存过期问题",
+      "description": "验证调试任务命中 change-map 后用低信任文档定位并以代码证据诊断",
+      "prompt": "请诊断 `src/cache/` 中缓存比预期更早过期的问题，说明复现依据和根因；不要直接修复。",
+      "expected_output": "读取命中的缓存 API 页面，以代码核证 TTL 行为并报告文档与实现分歧。",
+      "workspace": "workspace/eval-005-mapped-cache-debug-evidence",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "优先读取映射文档",
+          "text": "根据 `src/cache/` 任务落点读取 change-map 命中的 `docs/site/api/cache.md`，不遍历无关文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "根因判断回代码核证",
+          "text": "检查 `src/cache/ttl.txt` 后确认代码 TTL 为 60 秒而文档声称 300 秒，以代码事实解释问题并结构化报告分歧。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "未验证文档按最低信任处理",
+          "text": "明确把 `last_verified_version: unverified` 当作最低信任，复现与根因判断不依赖未经代码验证的文档声明。"
+        }
+      ]
     }
   ]
 }

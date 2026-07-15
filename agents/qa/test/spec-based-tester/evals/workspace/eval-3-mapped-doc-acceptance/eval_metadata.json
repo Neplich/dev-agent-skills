@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-003-mapped-doc-acceptance",
+  "eval_name": "mapped-doc-acceptance",
+  "workspace_root": "agents/qa/test/spec-based-tester/evals/workspace/eval-3-mapped-doc-acceptance",
+  "skill_availability_goal": "Verify mapped-document consumption and code verification for spec-based-tester.",
+  "prompt": "请对 src/profile/validation.rules 中的昵称长度规则执行规范验收，给出需求矩阵和证据结论。",
+  "fixture_context": [
+    "src/profile/validation.rules",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/profile-validation.md"
+  ]
+}

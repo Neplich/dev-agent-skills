@@ -1,0 +1,2 @@
+default_page_size: 25
+maximum_page_size: 100

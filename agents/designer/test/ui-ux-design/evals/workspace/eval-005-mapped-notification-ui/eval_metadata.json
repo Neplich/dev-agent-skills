@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-005-mapped-notification-ui",
+  "eval_name": "Mapped Notification UI Documentation",
+  "workspace_root": "agents/designer/test/ui-ux-design/evals/workspace/eval-005-mapped-notification-ui",
+  "skill_availability_goal": "Verify mapped-document-first UI exploration, code verification, and lowest trust for unverified documentation.",
+  "prompt": "请为通知偏好设置页补充 UI/UX 设计规格，重点核对 src/ui/notification-preferences.html 中邮件通知开关的默认状态，并说明现有行为、交互状态与工程 handoff。",
+  "fixture_context": [
+    "src/ui/notification-preferences.html",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/notification-preferences.md"
+  ]
+}

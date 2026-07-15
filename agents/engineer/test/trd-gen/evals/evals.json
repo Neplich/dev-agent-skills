@@ -147,6 +147,31 @@
           "text": "输出不得开始编写 `IMPLEMENTATION_PLAN.md`、修改代码、补测试或进入交付。"
         }
       ]
+    },
+    {
+      "id": "eval-005-mapped-upload-trd-evidence",
+      "name": "使用映射文档核证上传模块 TRD 现状",
+      "description": "验证 TRD 生成命中 change-map 后使用文档导航并以代码核证技术现状",
+      "prompt": "请为 `src/upload/` 增加分片上传能力准备 TRD，先确认当前接口行为与技术差距；不要进入实现。",
+      "expected_output": "读取命中的上传 API 页面，以代码核证当前能力，并将文档分歧作为 TRD 决策证据。",
+      "workspace": "workspace/eval-005-mapped-upload-trd-evidence",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "优先读取映射文档",
+          "text": "从 `src/upload/` 任务落点读取 change-map 指向的 `docs/site/api/upload.md`，不遍历无关文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "技术现状回代码核证",
+          "text": "用 `src/upload/limits.txt` 核证当前实现，发现文档写最大 20 MB 而代码限制 10 MB，并在 TRD 证据中保留分歧与影响。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "未验证文档按最低信任处理",
+          "text": "将 `last_verified_version: unverified` 视为最低信任，不基于该页面直接确定接口限制或技术方案。"
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,13 @@
+title: Documentation change map
+visibility: internal
+doc_type: standard
+stage: dev
+owners: [docs]
+related_code: [src/build/pipeline.rules]
+last_verified_version: unverified
+change_map:
+  "src/build/**":
+    required_docs:
+      - docs/site/api/build-pipeline.md
+    trigger: Update CI documentation when pipeline validation commands change.
+    exclude: []

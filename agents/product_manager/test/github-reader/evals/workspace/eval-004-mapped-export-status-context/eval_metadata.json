@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-004-mapped-export-status-context",
+  "eval_name": "mapped-export-status-context",
+  "workspace_root": "agents/product_manager/test/github-reader/evals/workspace/eval-004-mapped-export-status-context",
+  "skill_availability_goal": "Verify that github-reader uses mapped unverified documentation to narrow status discovery and validates delivery claims against code.",
+  "prompt": "请结合仓库内证据汇总 `src/export/` 模块的当前交付状态与风险，不要扩展到其他模块。",
+  "fixture_context": [
+    "src/export/handler.txt",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/export.md"
+  ]
+}

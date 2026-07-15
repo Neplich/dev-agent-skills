@@ -92,6 +92,31 @@
           "text": "给出隐私合规缺口和改进建议"
         }
       ]
+    },
+    {
+      "id": "eval-004-mapped-profile-retention",
+      "name": "Mapped Profile Data Retention",
+      "description": "Verify that a privacy mapping reads mapped formal documentation and validates an unverified retention claim against the processing configuration",
+      "prompt": "请梳理 src/privacy/profile-processing.yaml 的个人资料处理面，重点核对收集字段、处理目的和删除后的保留期限。",
+      "workspace": "workspace/eval-004-mapped-profile-retention",
+      "expected_output": "优先读取 change-map 命中的个人资料处理文档，再以配置核对保留期限；将 unverified 文档按最低信任处理并报告 30 天声明与 90 天配置事实的不一致。",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "命中 change-map 后优先读取个人资料 required_docs",
+          "text": "从 src/privacy/profile-processing.yaml 反查 change-map，优先读取 docs/site/api/profile-data.md，只读取命中文档及必要上下文，不遍历无关正式文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "以处理配置核对删除后的保留期限",
+          "text": "关键隐私结论回到 src/privacy/profile-processing.yaml；识别文档声称删除后保留 30 天、配置实际为 90 天的不一致，并以配置事实评估合规影响。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "将 unverified 隐私文档按最低信任处理",
+          "text": "识别 required_docs 的 last_verified_version 为 unverified，对所有关键隐私判断扩大代码或配置核证，而不是直接采信文档或拒绝读取。"
+        }
+      ]
     }
   ]
 }

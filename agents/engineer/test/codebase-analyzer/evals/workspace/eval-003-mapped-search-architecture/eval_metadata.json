@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-003-mapped-search-architecture",
+  "eval_name": "mapped-search-architecture",
+  "workspace_root": "agents/engineer/test/codebase-analyzer/evals/workspace/eval-003-mapped-search-architecture",
+  "skill_availability_goal": "Verify that codebase-analyzer uses mapped unverified documentation to focus exploration and validates architecture claims against code.",
+  "prompt": "请分析 `src/search/` 的模块职责、请求流程和当前接口能力。",
+  "fixture_context": [
+    "src/search/query.txt",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/search.md"
+  ]
+}

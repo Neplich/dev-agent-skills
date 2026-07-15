@@ -77,6 +77,31 @@
           "text": "deploy/local/start.sh 不包含数据库初始化步骤"
         }
       ]
+    },
+    {
+      "id": "eval-003-mapped-doc-deployment",
+      "name": "mapped-doc-deployment",
+      "description": "验证部署规划通过 change-map 定位运行时文档，并用代码配置核证未验证的端口声明。",
+      "prompt": "为 src/runtime/server.conf 中的服务生成最小容器部署建议，确认应暴露的服务端口。",
+      "workspace": "workspace/eval-003-mapped-doc-deployment",
+      "expected_output": "基于映射文档定位、以代码配置确认端口的部署建议和文档差异记录。",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "先读取命中的运行时文档",
+          "text": "从 src/runtime/server.conf 命中 change-map 后优先读取 docs/site/api/runtime-server.md，不进行无关站点文档遍历。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "部署端口以代码配置核证",
+          "text": "检查 src/runtime/server.conf，识别文档写端口 8080 而代码配置为 8081；部署建议不得盲用文档端口，并需说明差异及部署影响。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "未核证运行时文档最低信任",
+          "text": "对 last_verified_version: unverified 按最低信任处理，关键部署参数必须由代码或测试证据确认。"
+        }
+      ]
     }
   ]
 }

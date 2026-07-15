@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-002-mapped-doc-cicd",
+  "eval_name": "mapped-doc-cicd",
+  "workspace_root": "agents/devops/test/cicd-bootstrap/evals/workspace/eval-002-mapped-doc-cicd",
+  "skill_availability_goal": "Verify mapped-document consumption and code verification for cicd-bootstrap.",
+  "prompt": "为 src/build/pipeline.rules 中定义的校验流程设计最小 CI job，确认应执行的命令。",
+  "fixture_context": [
+    "src/build/pipeline.rules",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/build-pipeline.md"
+  ]
+}

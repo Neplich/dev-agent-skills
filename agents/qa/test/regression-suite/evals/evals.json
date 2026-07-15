@@ -77,6 +77,31 @@
           "text": "缺少测试平台版本或发版测试环境时，不得写入 unknown 目录或把局部 feature-update 回归当作 release 全量 E2E 结论；必须列出恢复验证所需的版本、环境、原始 bug 和修复证据。"
         }
       ]
+    },
+    {
+      "id": "eval-003-mapped-doc-regression",
+      "name": "mapped-doc-regression",
+      "description": "验证回归范围通过 change-map 定位，同时对未核证且过时的文档声明执行代码核证。",
+      "prompt": "为 src/search/query.rules 的最短查询长度修复制定定向回归范围，并判断当前实际阈值。",
+      "workspace": "workspace/eval-3-mapped-doc-regression",
+      "expected_output": "以映射文档缩小范围、以代码事实确定阈值的回归计划和差异说明。",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "优先读取搜索规则映射文档",
+          "text": "使用 src/search/query.rules 命中 change-map，先读取 docs/site/api/search-query.md，避免遍历其他站点文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "回归预期由代码核证",
+          "text": "回到 src/search/query.rules 确认最短查询长度实际为 3，而文档仍写 2；不得把文档声明直接当成回归预期，并需记录差异和直接影响路径。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "最低信任处理未核证文档",
+          "text": "发现 last_verified_version: unverified 后扩大对代码或测试的核证，不以该文档单独给出 pass 或 release-ready 结论。"
+        }
+      ]
     }
   ]
 }

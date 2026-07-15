@@ -1,0 +1,15 @@
+title: Documentation change map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - src/api/**
+last_verified_version: unverified
+change_map:
+  "src/api/search-handler.js":
+    required_docs:
+      - docs/site/api/user-search.md
+    trigger: Review the API documentation when search input handling or query construction changes.
+    exclude: []

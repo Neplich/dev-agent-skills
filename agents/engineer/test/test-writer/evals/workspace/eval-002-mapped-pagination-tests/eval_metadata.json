@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-002-mapped-pagination-tests",
+  "eval_name": "mapped-pagination-tests",
+  "workspace_root": "agents/engineer/test/test-writer/evals/workspace/eval-002-mapped-pagination-tests",
+  "skill_availability_goal": "Verify that test-writer reads mapped unverified documentation but derives test expectations from code evidence.",
+  "prompt": "请为 `src/pagination/` 的边界行为设计并编写测试，先核对当前默认页大小。",
+  "fixture_context": [
+    "src/pagination/defaults.txt",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/pagination.md"
+  ]
+}

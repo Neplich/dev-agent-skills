@@ -1,0 +1,14 @@
+title: Search documentation map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - src/search/**
+last_verified_version: unverified
+change_map:
+  "src/search/**":
+    required_docs:
+      - docs/site/api/search.md
+    trigger: Update search documentation when query behavior changes.

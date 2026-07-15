@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-003-mapped-doc-deployment",
+  "eval_name": "mapped-doc-deployment",
+  "workspace_root": "agents/devops/test/deployment-planner/evals/workspace/eval-003-mapped-doc-deployment",
+  "skill_availability_goal": "Verify mapped-document consumption and code verification for deployment-planner.",
+  "prompt": "为 src/runtime/server.conf 中的服务生成最小容器部署建议，确认应暴露的服务端口。",
+  "fixture_context": [
+    "src/runtime/server.conf",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/runtime-server.md"
+  ]
+}

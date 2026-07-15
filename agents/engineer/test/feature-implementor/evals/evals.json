@@ -472,6 +472,31 @@
           "text": "输出必须要求用户确认新实施计划后再开始编码，不得直接修改代码。"
         }
       ]
+    },
+    {
+      "id": "eval-014-mapped-session-plan-evidence",
+      "name": "使用映射文档核证会话实现计划",
+      "description": "验证实施计划准备命中 change-map 后精准读取低信任文档并回代码核证",
+      "prompt": "请为 `src/session/` 增加会话续期准备实施计划；先核对当前超时行为，不要直接修改代码。",
+      "expected_output": "读取映射的会话 API 文档，以代码验证当前超时并将分歧纳入计划证据。",
+      "workspace": "workspace/eval-014-mapped-session-plan-evidence",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "优先读取映射文档",
+          "text": "由 `src/session/` 命中 change-map 后先读取 `docs/site/api/session.md`，不扩展为全库文档遍历。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "计划依据回代码核证",
+          "text": "以 `src/session/config.txt` 核证当前超时为 30 分钟，识别文档写 60 分钟的分歧，并把影响纳入计划而非盲信文档。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "未验证文档按最低信任处理",
+          "text": "对 `last_verified_version: unverified` 按最低信任处理，所有影响实施范围的关键判断均回代码或测试验证。"
+        }
+      ]
     }
   ]
 }

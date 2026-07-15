@@ -207,6 +207,31 @@
           "text": "handoff 包必须包含 `feature_path`、`parent_feature`、`feature_level`、PRD 路径和 API / ADR 决策背景。"
         }
       ]
+    },
+    {
+      "id": "eval-008-mapped-notification-update",
+      "name": "基于映射文档定义通知功能更新",
+      "description": "验证现有功能更新在命中 change-map 时精准取文档且回代码确认现状",
+      "prompt": "现有 `src/notifications/` 需要新增短信渠道。请先梳理当前行为与差距，再形成现有项目功能更新的需求范围。",
+      "expected_output": "读取命中的通知 API 页面，以代码核证当前渠道并把文档分歧纳入需求证据。",
+      "workspace": "workspace/eval-008-mapped-notification-update",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "优先读取映射文档",
+          "text": "从 `src/notifications/` 落点命中 change-map，先读取 `docs/site/api/notifications.md`，不遍历无关站点页面。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "现有行为回代码核证",
+          "text": "根据 `src/notifications/channels.txt` 确认代码仅支持 email，识别文档还声称支持 webhook 的不一致，且不以文档覆盖代码事实。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "未验证文档按最低信任处理",
+          "text": "明确降低 `last_verified_version: unverified` 文档的信任，需求现状与影响范围均以代码证据复核。"
+        }
+      ]
     }
   ]
 }

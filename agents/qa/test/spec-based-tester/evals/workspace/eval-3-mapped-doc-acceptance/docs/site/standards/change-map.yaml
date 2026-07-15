@@ -1,0 +1,13 @@
+title: Documentation change map
+visibility: internal
+doc_type: standard
+stage: dev
+owners: [docs]
+related_code: [src/profile/validation.rules]
+last_verified_version: unverified
+change_map:
+  "src/profile/**":
+    required_docs:
+      - docs/site/api/profile-validation.md
+    trigger: Update profile validation documentation when nickname constraints change.
+    exclude: []

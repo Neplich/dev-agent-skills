@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-003-mapped-doc-config-audit",
+  "eval_name": "mapped-doc-config-audit",
+  "workspace_root": "agents/devops/test/env-config-auditor/evals/workspace/eval-003-mapped-doc-config-audit",
+  "skill_availability_goal": "Verify mapped-document consumption and code verification for env-config-auditor.",
+  "prompt": "审计 src/config/required.env 定义的运行时变量要求，判断 API_TOKEN 是否为必填配置。",
+  "fixture_context": [
+    "src/config/required.env",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/runtime-config.md"
+  ]
+}

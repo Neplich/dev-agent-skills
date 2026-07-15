@@ -57,6 +57,31 @@
           "text": "如果 feature_path 不清或同路径 TRD/实施计划缺失，必须回 PM/Engineer 对齐，而不是自建同义顶层目录。"
         }
       ]
+    },
+    {
+      "id": "eval-003-mapped-doc-config-audit",
+      "name": "mapped-doc-config-audit",
+      "description": "验证配置审计读取 change-map 指向的配置文档，并用代码事实核证未验证的必需变量声明。",
+      "prompt": "审计 src/config/required.env 定义的运行时变量要求，判断 API_TOKEN 是否为必填配置。",
+      "workspace": "workspace/eval-003-mapped-doc-config-audit",
+      "expected_output": "区分映射文档声明和代码配置事实的环境审计结论。",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "优先读取配置映射文档",
+          "text": "根据 src/config/required.env 命中 change-map，先读取 docs/site/api/runtime-config.md，不遍历无关文档目录。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "变量必填性以代码配置为准",
+          "text": "回读 src/config/required.env，发现文档称 API_TOKEN 可选而代码标记为 required；不得采信过时文档，应记录声明、事实和配置缺失风险。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "未核证配置文档按最低信任处理",
+          "text": "识别 last_verified_version: unverified，不以文档单独判定配置覆盖完整，关键结论必须由代码或测试核证。"
+        }
+      ]
     }
   ]
 }

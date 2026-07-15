@@ -1,0 +1,14 @@
+title: Cache documentation map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - src/cache/**
+last_verified_version: unverified
+change_map:
+  "src/cache/**":
+    required_docs:
+      - docs/site/api/cache.md
+    trigger: Update cache documentation when expiry behavior changes.

@@ -1,0 +1,14 @@
+title: Notification documentation map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - src/notifications/**
+last_verified_version: unverified
+change_map:
+  "src/notifications/**":
+    required_docs:
+      - docs/site/api/notifications.md
+    trigger: Update notification documentation when channels change.

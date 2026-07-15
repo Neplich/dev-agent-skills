@@ -1,0 +1,13 @@
+title: Documentation change map
+visibility: internal
+doc_type: standard
+stage: dev
+owners: [docs]
+related_code: [src/runtime/health.rules]
+last_verified_version: unverified
+change_map:
+  "src/runtime/**":
+    required_docs:
+      - docs/site/api/runtime-health.md
+    trigger: Update incident guidance when health-check thresholds change.
+    exclude: []

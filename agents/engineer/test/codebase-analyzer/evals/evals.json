@@ -52,6 +52,31 @@
           "text": "如果是 monorepo，列出所有子项目路径"
         }
       ]
+    },
+    {
+      "id": "eval-003-mapped-search-architecture",
+      "name": "使用映射文档分析搜索模块架构",
+      "description": "验证架构分析命中 change-map 后精准读取低信任文档并以代码核证",
+      "prompt": "请分析 `src/search/` 的模块职责、请求流程和当前接口能力。",
+      "expected_output": "先读取映射的搜索 API 页面，再以代码事实核证架构与接口能力并报告分歧。",
+      "workspace": "workspace/eval-003-mapped-search-architecture",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "优先读取映射文档",
+          "text": "由 `src/search/` 命中 change-map 后先读取 `docs/site/api/search.md`，不扫描其他无关文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "架构判断回代码核证",
+          "text": "以 `src/search/query.txt` 核证接口能力，识别文档声明支持模糊搜索而代码只实现精确匹配，并报告该分歧的影响。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "未验证文档按最低信任处理",
+          "text": "对 `last_verified_version: unverified` 按最低信任处理，模块职责与能力等关键结论均回代码验证。"
+        }
+      ]
     }
   ]
 }

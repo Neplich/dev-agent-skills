@@ -1,0 +1,13 @@
+title: Documentation change map
+visibility: internal
+doc_type: standard
+stage: dev
+owners: [docs]
+related_code: [src/notifications/retry.rules]
+last_verified_version: unverified
+change_map:
+  "src/notifications/**":
+    required_docs:
+      - docs/site/api/notification-retry.md
+    trigger: Update notification documentation when retry behavior changes.
+    exclude: []

@@ -97,6 +97,31 @@
           "text": "如果边界验证来自现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须先确认同一 feature_path 下 PRD/TRD 预期对齐并引用已确认的 IMPLEMENTATION_PLAN.md；预期变化回 PM，TRD gap 回 trd-gen，缺 implementation plan 回 feature-implementor，文档缺失或平台版本缺失时 blocked。"
         }
       ]
+    },
+    {
+      "id": "eval-003-mapped-doc-acceptance",
+      "name": "mapped-doc-acceptance",
+      "description": "验证规范测试在任务路径命中 change-map 时优先消费映射文档，并对未核证且与代码冲突的声明回到代码核证。",
+      "prompt": "请对 src/profile/validation.rules 中的昵称长度规则执行规范验收，给出需求矩阵和证据结论。",
+      "workspace": "workspace/eval-3-mapped-doc-acceptance",
+      "expected_output": "基于映射文档定位、以代码事实核证的规范验收报告，并明确记录文档与代码的分歧。",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "优先读取 change-map 命中的正式文档",
+          "text": "识别任务落点 src/profile/validation.rules，先读取 docs/site/standards/change-map.yaml 命中的 docs/site/api/profile-validation.md，不遍历无关文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "用代码证据核证文档声明",
+          "text": "关键判断必须回到 src/profile/validation.rules；发现文档声明昵称最长 80 个字符而代码限制为 64 个字符时，不得盲信文档，并记录文档路径、声明、代码事实和验收影响。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "未核证文档按最低信任处理",
+          "text": "识别 last_verified_version: unverified，将映射文档作为低信任定位线索，所有关键验收判断均由代码或测试证据确认。"
+        }
+      ]
     }
   ]
 }

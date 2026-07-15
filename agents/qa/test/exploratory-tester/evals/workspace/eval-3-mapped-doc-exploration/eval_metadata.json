@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-003-mapped-doc-exploration",
+  "eval_name": "mapped-doc-exploration",
+  "workspace_root": "agents/qa/test/exploratory-tester/evals/workspace/eval-3-mapped-doc-exploration",
+  "skill_availability_goal": "Verify mapped-document consumption and code verification for exploratory-tester.",
+  "prompt": "围绕 src/checkout/session.rules 的结账会话超时行为制定最小探索章程，并指出应重点验证的边界。",
+  "fixture_context": [
+    "src/checkout/session.rules",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/checkout-session.md"
+  ]
+}

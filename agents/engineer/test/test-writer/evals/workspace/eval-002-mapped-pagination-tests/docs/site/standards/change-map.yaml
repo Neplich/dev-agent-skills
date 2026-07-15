@@ -1,0 +1,14 @@
+title: Pagination documentation map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - src/pagination/**
+last_verified_version: unverified
+change_map:
+  "src/pagination/**":
+    required_docs:
+      - docs/site/api/pagination.md
+    trigger: Update pagination documentation when defaults or limits change.

@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-004-catalog-mapped-billing-feature",
+  "eval_name": "catalog-mapped-billing-feature",
+  "workspace_root": "agents/product_manager/test/feature-catalog/evals/workspace/eval-004-catalog-mapped-billing-feature",
+  "skill_availability_goal": "Verify that feature-catalog uses mapped unverified documentation as navigation and validates catalog facts against code.",
+  "prompt": "请盘点 `src/billing/` 当前已经实现的计费功能，给出带证据与置信度的功能目录草案。",
+  "fixture_context": [
+    "src/billing/service.txt",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/billing.md"
+  ]
+}

@@ -1,0 +1,2 @@
+idle_timeout_minutes: 30
+renewal: disabled

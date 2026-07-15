@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-004-mapped-client-dependency",
+  "eval_name": "Mapped Client Dependency Documentation",
+  "workspace_root": "agents/security/test/dependency-risk-auditor/evals/workspace/eval-004-mapped-client-dependency",
+  "skill_availability_goal": "Verify mapped-document-first dependency exploration, manifest verification, and lowest trust for unverified documentation.",
+  "prompt": "请审计 src/dependencies/manifest.json 中网络客户端依赖的风险，核对当前版本并给出升级或缓解建议。",
+  "fixture_context": [
+    "src/dependencies/manifest.json",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/network-client.md"
+  ]
+}
