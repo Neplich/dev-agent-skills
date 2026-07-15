@@ -1,7 +1,7 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.1.12"
+version: "0.1.13"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -292,12 +292,12 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 | WS2 sync | 新增 | `agents/docs/skills/formal-docs-sync/**` | 三节点协议与 api 回填 MVP |
 | WS2 producer 增强 | 修改 | `agents/engineer/skills/trd-gen/SKILL.md`、`agents/engineer/skills/trd-gen/_internal/trd-schema.md` | TRD 输出契约增加可选 frontmatter related_code 字段（机器可读影响域，增强项非 gate；缺省时 sync 走影响域证据链回退）；schema 契约与 SKILL.md 同步更新，避免新 TRD 合规但缺 related_code |
 | WS2 eval | 新增 | `agents/docs/test/{docs-agent,docs-site-bootstrap,formal-docs-sync}/evals/{evals.json,workspace/**}` | router、bootstrap、sync durable eval |
-| WS2 eval workflow | 修改 | .github/workflows/evals.yml | 新增 docs target 与 docs-agent eval job，使 4 个 skill 的合并前手动 eval 触发可执行 |
+| WS2 eval workflow | 修改 | .github/workflows/evals.yml | 新增 docs target 与 docs-agent eval job，使 router / bootstrap / sync 三个 skill 的合并前手动 eval 触发可执行；docs-audit 由 WS3 接入同一 target |
 | WS2 注册 | 修改 | `.claude-plugin/marketplace.json`、`skills-lock.json`、`agents/docs/.claude-plugin/plugin.json`（新增） | 注册 docs-agent 及 router / bootstrap / sync 3 个 skill 路径，刷新 hash；plugin manifest 与 marketplace name/version 对齐；docs-audit 注册由 WS3 追加 |
 | WS2 协作契约 | 修改 | `AGENTS.md` | 协作流、6 个 router、文档依赖、当前状态与 specialist 总数 |
 | WS2 用户文档 | 修改 | `README.md`、`README_zh.md`、`.codex/INSTALL.md`、`docs/README.codex.md` | 暴露新 plugin 与安装/协作说明 |
 | WS3 audit | 新增 | `agents/docs/skills/docs-audit/**` | 两层审计、报告与统一盖章协议 |
-| WS3 eval | 新增 | `agents/docs/test/docs-audit/evals/{evals.json,workspace/**}` | mismatch、stale、verified 与无版本锚 fixture |
+| WS3 eval | 新增 | `agents/docs/test/docs-audit/evals/{evals.json,workspace/**}` | mismatch、stale、verified 与无版本锚 fixture；接入 evals.yml 的 docs target |
 | WS3 audit | 修改 | `.claude-plugin/marketplace.json`、`skills-lock.json` | 追加 docs-audit 注册达成 4-skill 终态，刷新 metadata 与 computedHash |
 | WS1-3 contract | 修改（按硬编码情况） | `scripts/check_repository_contract.py`、`scripts/check_eval_contract.py` 及对应 `tests/` | 若现有校验硬编码 Agent/router/skill 数量或路径，扩展到 docs-agent；不为动态已兼容逻辑做无关重写 |
 | 交接文档 | 新增（TRD 确认后） | `docs/engineer/agents/docs-agent/IMPLEMENTATION_PLAN.md` | feature-implementor 的活跃实施计划 |
