@@ -5,7 +5,7 @@ feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.2.3"
+version: "1.2.4"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -39,6 +39,9 @@ changelog:
   - version: "1.2.3"
     date: "2026-07-15"
     changes: "发版节点收窄为产品手册同步与 release-notes 落位核对，release-notes 产出归 release-notes-generator"
+  - version: "1.2.4"
+    date: "2026-07-15"
+    changes: "marketplace 注册面明确为 4 个 skill 路径（router + 3 specialist）"
 ---
 
 # docs-agent PRD
@@ -187,7 +190,7 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 | 宿主 `docs/site/**/*.md` frontmatter（排除 .meta/ 机器消费区） | File read/write | 内容模型与版本盖章 |
 | 宿主 git tag / GitHub Release | Read | 版本锚与 diff 基准 |
 | `docs/engineer/{feature_path}/TRD.md` | File read | sync 的 `related_code` 与变更事实来源 |
-| `.claude-plugin/marketplace.json` | File write | 注册 docs-agent 与 3 个 skill |
+| `.claude-plugin/marketplace.json` | File write | 注册 docs-agent 与 4 个 skill 路径（同名 router + 3 个 specialist） |
 
 ## 假设与约束
 

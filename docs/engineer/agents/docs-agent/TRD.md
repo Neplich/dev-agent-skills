@@ -1,7 +1,7 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.1.3"
+version: "0.1.4"
 status: Draft
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -19,7 +19,7 @@ related_issue: "https://github.com/Neplich/dev-agent-skills/issues/105"
 
 ## 1. 来源上下文
 
-本 TRD 将已批准的 `docs/pm/agents/docs-agent/PRD.md` 1.2.2 转成可实施的工程设计，变更来源为 issue #105。需求范围已稳定，`feature_path` 固定为 `agents/docs-agent`，本阶段不修改产品范围。参考实现提供 `docs/site` 内容模型、双站点预处理、change-map、生命周期、模板和校验脚本；本设计只提取可通用化机制，宿主项目的路径映射和模块数据不进入 marketplace skill。
+本 TRD 将已批准的 `docs/pm/agents/docs-agent/PRD.md`（Approved，版本以其 frontmatter 为准，当前 1.2.4）转成可实施的工程设计，变更来源为 issue #105。需求范围已稳定，`feature_path` 固定为 `agents/docs-agent`，本阶段不修改产品范围。参考实现提供 `docs/site` 内容模型、双站点预处理、change-map、生命周期、模板和校验脚本；本设计只提取可通用化机制，宿主项目的路径映射和模块数据不进入 marketplace skill。
 
 PRD 的 8 项决议是本 TRD 的强约束：
 
@@ -365,7 +365,7 @@ docs-agent 随 marketplace 下一个版本发布：更新 `.claude-plugin/market
 
 TRD 获维护者确认后，`feature-implementor` 才可创建 `docs/engineer/agents/docs-agent/IMPLEMENTATION_PLAN.md`。交接包必须包含：
 
-- Approved PRD：`docs/pm/agents/docs-agent/PRD.md` 1.2.2。
+- Approved PRD：`docs/pm/agents/docs-agent/PRD.md`（版本以其 frontmatter 为准，当前 1.2.4）。
 - Confirmed TRD：`docs/engineer/agents/docs-agent/TRD.md`。
 - issue #105 与 8 项决议，`change_tier: major`，固定顺序 WS1 → WS2 → WS3。
 - 第 9 节完整文件触点和 forbidden scope：不修改参考实现，不引入宿主专有模块名，不把宿主 `docs/site/**` 当 marketplace 预置数据。
