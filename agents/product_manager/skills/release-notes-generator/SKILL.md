@@ -87,6 +87,8 @@ gh api repos/{OWNER}/{REPO}/compare/{PREV_TAG}...{THIS_TAG}
 
 Use `reference/release-outline.md` for the release body. Match the repository's existing release style before introducing a new outline.
 
+宿主存在 `docs/site/release-notes/` 时，将 release notes 写入该站点目录；不存在时完全保留既有输出路径和行为，不新增配置项。
+
 Default rules:
 
 - Write in the repository's documentation language. For this repository, use Chinese release notes.

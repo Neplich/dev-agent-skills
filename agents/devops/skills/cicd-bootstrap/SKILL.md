@@ -30,6 +30,8 @@ Use the PM-side packet definition in
 
 ## Context Preflight
 
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 docs-agent 的 `consumption-contract.md` 执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+
 Before writing CI/CD config, inspect:
 
 - whether `.github/workflows/` or `.gitlab-ci.yml` already exists

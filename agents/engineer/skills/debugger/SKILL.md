@@ -87,6 +87,8 @@ implementation until the user confirms the exact repair plan.
 
 ## Step 0 — Align expected behavior with PRD / TRD
 
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 docs-agent 的 `consumption-contract.md` 执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+
 For user-reported bugs in an existing feature, identify the likely
 `feature_path` and read the durable expected-behavior documents before deciding
 that code should be changed:
@@ -95,6 +97,8 @@ that code should be changed:
 - `docs/engineer/{feature_path}/TRD.md`
 - `docs/pm/{feature_path}/DECISIONS.md` or other product decision records, when
   present
+
+命中的 API contract 文档可作为预期依据来源之一，但只有与 Approved PRD/TRD、测试及代码证据不冲突时才可采信。
 
 Resolve `feature_path` by scanning `docs/pm/**/PRD.md` and reading
 `feature_path`, `parent_feature`, and `feature_level` frontmatter where

@@ -19,6 +19,8 @@ Use the PM-side packet definition in
 
 ### Step 0: Resolve Review Scope
 
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 docs-agent 的 `consumption-contract.md` 执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+
 For feature-scoped dependency review, use the confirmed `feature_path` and read
 `docs/pm/{feature_path}/PRD.md`, `docs/engineer/{feature_path}/TRD.md`, and
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when they explain package
