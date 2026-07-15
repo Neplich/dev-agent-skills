@@ -5,7 +5,7 @@ feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.2.5"
+version: "1.2.6"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -45,6 +45,9 @@ changelog:
   - version: "1.2.5"
     date: "2026-07-15"
     changes: "sync 影响域输入放宽为 TRD 影响域证据链，注册触点补 plugin manifest"
+  - version: "1.2.6"
+    date: "2026-07-15"
+    changes: "US-A02 验收标准对齐影响域证据链"
 ---
 
 # docs-agent PRD
@@ -95,7 +98,7 @@ changelog:
 | ID | User Story | Priority | Acceptance Criteria |
 |----|-----------|----------|---------------------|
 | US-A01 | 作为维护者，我想在项目中初始化文档站骨架，以便获得统一的目录分类、模板与校验脚本。 | P0 | bootstrap 后存在站点目录分类、frontmatter 标准、模板、预处理与校验脚本、空 `change-map.yaml`；未显式请求时不执行。 |
-| US-A02 | 作为维护者，我想在 feature 落地时自动同步受影响的正式文档，以便文档不依赖人工自觉。 | P0 | `feature-implementor` closeout 后，`formal-docs-sync` 依据 TRD `related_code` 更新对应文档并追加 change-map 条目。 |
+| US-A02 | 作为维护者，我想在 feature 落地时自动同步受影响的正式文档，以便文档不依赖人工自觉。 | P0 | `feature-implementor` closeout 后，`formal-docs-sync` 依据 TRD 影响域证据（frontmatter `related_code` 字段或影响模块章节，缺失时回退已确认实施计划 scope 与实际 diff）更新对应文档并追加 change-map 条目。 |
 | US-A03 | 作为维护者，我想在发版前对文档做事实性校验，以便过期声明不随版本发布。 | P0 | diff 影响域内文档逐条核对，产出 verified / stale / mismatch 三态报告；mismatch 未处理时发版流程 blocked。 |
 | US-A04 | 作为角色 Agent，我想按任务落点读取正式文档，以便降低探索成本且不被过期内容误导。 | P0 | 任务路径命中 change-map 时优先读取映射文档；关键判断回代码验证；文档缺失时静默降级为代码扫描。 |
 | US-A05 | 作为角色 Agent，我在工作中发现文档与代码不符时，想把它变成可追踪证据，以便 docs-agent 修正。 | P1 | 不符事实以结构化形式记入产出，作为 `docs-audit` 输入。 |
