@@ -1,11 +1,11 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.1.1"
+version: "0.1.2"
 status: Draft
 author: "Neplich Claude"
 date: "2026-07-14"
-last_updated: "2026-07-14"
+last_updated: "2026-07-15"
 generated_by: "trd-gen"
 feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
@@ -29,7 +29,7 @@ PRD 的 8 项决议是本 TRD 的强约束：
 | 2 | audit 报告归档到站点 `.meta/`。 | 使用 `docs/site/.meta/audit/audit-{version}.md`；`.meta/` 不进导航且不受 frontmatter 校验。 |
 | 3 | public / internal 双站点进入 MVP。 | bootstrap 一次生成双首页、三份 VitePress config、visibility 过滤和双站点命令。 |
 | 4 | 不生成宿主项目本地维护 skill。 | 通用维护协议随 `formal-docs-sync` 分发；宿主差异只写入 `docs/site/standards/`。 |
-| 5 | release 类输出按站点存在性自动切换。 | 存在 `docs/site/release-notes/` 时写入该目录，否则维持现有输出路径，不新增配置项。 |
+| 5 | release-notes 输出按站点存在性自动切换，changelog 归档路径不变。 | 仅 release-notes-generator 在存在 `docs/site/release-notes/` 时写入该目录，否则维持现有输出路径，不新增配置项；changelog-generator 归档始终留在 `docs/changelog/changelog-v{version}.md`。 |
 | 6 | sync MVP 仅覆盖 api 链路。 | feature 落地与存量回填只把 api 文档作为 MVP 验收面；其他文档类型保留协议和骨架，不纳入 MVP 通过条件。 |
 | 7 | 存量回填是 sync 的第四模式。 | `formal-docs-sync` 复用同一套证据、模板选择和 change-map 生长协议。 |
 | 8 | 存量回填进入 MVP，api 先行。 | fixture 必须覆盖已有 API 代码、范围确认、分批执行和种子条目生成。 |
@@ -160,7 +160,7 @@ owners:
   - docs
 related_code:
   - src/**
-last_verified_version: v1.0.0
+last_verified_version: unverified
 change_map:
   "src/example/**":
     required_docs:
@@ -170,7 +170,7 @@ change_map:
       - "**/*.test.*"
 ```
 
-键是 `code_glob`；值固定为 `{required_docs: [], trigger: 文本, exclude: []（可选）}`。`required_docs` 路径相对仓库根，`exclude` 只缩小当前 code_glob，不覆盖其他条目。sync 写入时合并相同 code_glob、去重并稳定排序 `required_docs`；不得删除人工维护的未知条目。`docs/site/.meta/` 是机器消费区，目录内 Markdown 不参与 frontmatter 扫描、导航或 change-map 的 required-doc 更新判定。
+bootstrap 生成的种子元数据 last_verified_version 初始为 unverified，仅当宿主无版本体系时按 FR-A07 例外缺省；真实版本锚只能由 docs-audit 盖章写入。键是 `code_glob`；值固定为 `{required_docs: [], trigger: 文本, exclude: []（可选）}`。`required_docs` 路径相对仓库根，`exclude` 只缩小当前 code_glob，不覆盖其他条目。sync 写入时合并相同 code_glob、去重并稳定排序 `required_docs`；不得删除人工维护的未知条目。`docs/site/.meta/` 是机器消费区，目录内 Markdown 不参与 frontmatter 扫描、导航或 change-map 的 required-doc 更新判定。
 
 ## 5. docs-site-bootstrap 设计
 
@@ -184,7 +184,7 @@ change_map:
 | VitePress | `.vitepress/config.shared.ts`、`config.public.ts`、`config.internal.ts`；`.vitepress/theme/index.ts` 与 `custom.css`；public 只导航公开内容，internal 导航全部允许内容 |
 | 双首页 | `index.public.md` 与 `index.internal.md`，分别标记 `visibility: public` / `internal`，prepare 时复制为目标站点 `index.md` |
 | standards | `standards/index.md`、`doc-lifecycle.md`、`doc-granularity.md`；5 个模板：`api-template.md`、`database.md`、`feature-design.md`、`ops-runbook.md`、`product-handbook.md` |
-| 数据文件 | 带顶部元数据且 `change_map: {}` 的空 `standards/change-map.yaml`；`.meta/releases.json` 初始含 `latest`、`released`、`verifiedDocs` |
+| 数据文件 | 带顶部元数据（`last_verified_version: unverified`）且 `change_map: {}` 的空 `standards/change-map.yaml`；`.meta/releases.json` 初始含 `latest`、`released`、`verifiedDocs` |
 
 6 个脚本的职责必须保持分离：
 
