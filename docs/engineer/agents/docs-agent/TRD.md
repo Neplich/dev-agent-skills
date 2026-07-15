@@ -1,7 +1,7 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.1.8"
+version: "0.1.9"
 status: Draft
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -181,9 +181,9 @@ bootstrap 生成的种子元数据 last_verified_version 初始为 unverified，
 | 分类 | 生成内容 |
 | --- | --- |
 | 7 个内容目录 | `docs/site/api/`、`database/`、`design/`、`product/`、`ops/`、`release-notes/`、`standards/`；每类提供可构建入口页或占位页，不生成业务事实 |
-| npm 工程 | `docs/site/package.json`；依赖集为 `vitepress`、`fast-glob`、`gray-matter`、`picomatch`、`yaml`；scripts 暴露 prepare、dev、build 与三类 check 命令 |
+| npm 工程 | `docs/site/package.json`；依赖集为 `vitepress`、`fast-glob`、`gray-matter`、`picomatch`、`yaml`、`mermaid`；scripts 暴露 prepare、dev、build 与三类 check 命令 |
 | 6 个脚本 | `scripts/check-frontmatter.mjs`、`check-affected.mjs`、`check-version.mjs`、`prepare-site.mjs`、`prepare-nav.mjs`、`dev-site.mjs`，以及只被这些入口复用的 `scripts/lib/` helper |
-| VitePress | `.vitepress/config.shared.ts`、`config.public.ts`、`config.internal.ts`；`.vitepress/theme/index.ts` 与 `custom.css`；public 只导航公开内容，internal 导航全部允许内容 |
+| VitePress | `.vitepress/config.shared.ts`、`config.public.ts`、`config.internal.ts`；`.vitepress/theme/index.ts` 与 `custom.css`，及 Mermaid 渲染组件（设计/流程文档模板要求真实 Mermaid 图，站点必须能渲染）；public 只导航公开内容，internal 导航全部允许内容 |
 | 双首页 | `index.public.md` 与 `index.internal.md`，分别标记 `visibility: public` / `internal`，prepare 时复制为目标站点 `index.md` |
 | standards | `standards/index.md`、`doc-lifecycle.md`、`doc-granularity.md`；5 个模板：`api-template.md`、`database.md`、`feature-design.md`、`ops-runbook.md`、`product-handbook.md` |
 | 数据文件 | 带顶部元数据（`last_verified_version: unverified`）且 `change_map: {}` 的空 `standards/change-map.yaml`；`.meta/releases.json` 初始含 `latest`、`released`、`verifiedDocs` |
