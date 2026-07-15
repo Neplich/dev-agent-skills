@@ -1,7 +1,7 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.1.13"
+version: "0.1.14"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -102,7 +102,7 @@ agents/docs/
 `agents/docs/skills/docs-agent/SKILL.md` 是第 6 个下游 role router，职责只有：
 
 1. 校验 PM handoff packet、等效已确认文档链或 specialist entry basis；缺失时返回 `pm-agent`。
-2. 按目标分流：显式建站 → `docs-site-bootstrap`；同步或回填 → `formal-docs-sync`；发版审计 → `docs-audit`。
+2. 按目标分流：显式建站 → `docs-site-bootstrap`；同步或回填 → `formal-docs-sync`；发版审计 → `docs-audit`（随 WS3 交付；WS2 中间态对审计请求明确告知能力未交付并 blocked，不得 handoff 到不存在的 skill，WS3 落地时启用该分流）。
 3. 指向 specialist gate 的权威副本，不复制幂等、范围确认、版本锚或 mismatch 阻塞规则。
 4. 完成后按 PM safety-net closeout 建议下一角色步骤；未启用 `auto-continue` 时等待确认。
 
@@ -297,6 +297,7 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 | WS2 协作契约 | 修改 | `AGENTS.md` | 协作流、6 个 router、文档依赖、当前状态与 specialist 总数 |
 | WS2 用户文档 | 修改 | `README.md`、`README_zh.md`、`.codex/INSTALL.md`、`docs/README.codex.md` | 暴露新 plugin 与安装/协作说明 |
 | WS3 audit | 新增 | `agents/docs/skills/docs-audit/**` | 两层审计、报告与统一盖章协议 |
+| WS3 router 分流启用 | 修改 | `agents/docs/skills/docs-agent/SKILL.md`、`agents/docs/test/docs-agent/evals/{evals.json,workspace/**}` | 启用 router 审计分流并移除 WS2 中间态 blocked 文案，router eval 断言由 blocked 改为 handoff docs-audit |
 | WS3 eval | 新增 | `agents/docs/test/docs-audit/evals/{evals.json,workspace/**}` | mismatch、stale、verified 与无版本锚 fixture；接入 evals.yml 的 docs target |
 | WS3 audit | 修改 | `.claude-plugin/marketplace.json`、`skills-lock.json` | 追加 docs-audit 注册达成 4-skill 终态，刷新 metadata 与 computedHash |
 | WS1-3 contract | 修改（按硬编码情况） | `scripts/check_repository_contract.py`、`scripts/check_eval_contract.py` 及对应 `tests/` | 若现有校验硬编码 Agent/router/skill 数量或路径，扩展到 docs-agent；不为动态已兼容逻辑做无关重写 |
@@ -312,7 +313,7 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 | --- | --- | --- |
 | PR 1 / WS1 消费契约 | 新增共享 contract；为 6 个现有 Agent 的适用 specialist 增加指针；补 debugger 与 release 输出切换；增加消费回归 fixture | 有 change-map 时精准读映射文档且关键判断回代码；无站点时行为不变；不复制权威协议 |
 | PR 2 / WS2 Agent 骨架 + bootstrap + sync | 新增 `agents/docs`、router、bootstrap、sync、内置模板、注册和 lock；实现完整骨架协议、feature api 同步与存量 api 回填 | router / bootstrap / sync 3-skill 注册结构合法且路径全部可解析；bootstrap 完整/幂等/opt-in；sync 只更新影响 API；回填按批确认并生成 change-map 种子 |
-| PR 3 / WS3 audit 门禁 | 新增 docs-audit、确定性/事实层、报告和盖章协议；接入 release handoff | mismatch/stale 阻塞；全 verified 才统一盖章；`.meta/` 排除 frontmatter；无锚不伪造版本；marketplace 追加 docs-audit 达成 4-skill 注册终态 |
+| PR 3 / WS3 audit 门禁 | 新增 docs-audit、确定性/事实层、报告和盖章协议；接入 release handoff；启用 router 审计分流 | mismatch/stale 阻塞；全 verified 才统一盖章；`.meta/` 排除 frontmatter；无锚不伪造版本；marketplace 追加 docs-audit 达成 4-skill 注册终态 |
 
 每个 PR 修改 skill 后在同批刷新对应 `skills-lock.json` hash，实际执行 eval 时同批更新 durable `comparison.md`。不得把三个 PR 的确认合并成一次 major 实施确认；每个 workstream 按实施计划明确入口与出口。
 
