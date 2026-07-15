@@ -1,7 +1,7 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.1.14"
+version: "0.1.15"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -25,7 +25,7 @@ PRD 的 8 项决议是本 TRD 的强约束：
 
 | # | 已确认决议 | 技术落点 |
 | --- | --- | --- |
-| 1 | 消费契约集中维护，6 个现有 Agent 只加指针。 | 权威文件为 `agents/docs/skills/docs-agent/_internal/_shared/consumption-contract.md`；各 specialist 入口只引用，不复制协议。 |
+| 1 | 消费契约集中维护，6 个现有 Agent 只加指针。 | 权威文件为 `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`，随 pm-agent 默认入口插件分发，保证任何标准安装可解析（沿用 skill-map.md 先例）；各 specialist 入口只引用，不复制协议。 |
 | 2 | audit 报告归档到站点 `.meta/`。 | 使用 `docs/site/.meta/audit/audit-{version}.md`；`.meta/` 不进导航且不受 frontmatter 校验。 |
 | 3 | public / internal 双站点进入 MVP。 | bootstrap 一次生成双首页、三份 VitePress config、visibility 过滤和双站点命令。 |
 | 4 | 不生成宿主项目本地维护 skill。 | 通用维护协议随 `formal-docs-sync` 分发；宿主差异只写入 `docs/site/standards/`。 |
@@ -77,8 +77,7 @@ agents/docs/
 ├── README.md
 ├── skills/
 │   ├── docs-agent/
-│   │   ├── SKILL.md
-│   │   └── _internal/_shared/consumption-contract.md
+│   │   └── SKILL.md
 │   ├── docs-site-bootstrap/
 │   │   ├── SKILL.md
 │   │   └── _internal/INSTRUCTIONS.md
@@ -264,7 +263,7 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 
 ## 8. 消费契约设计
 
-权威文件 `agents/docs/skills/docs-agent/_internal/_shared/consumption-contract.md` 包含以下固定骨架：
+权威文件 `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md` 包含以下固定骨架。该文件随 pm-agent 默认入口插件分发，保证任何标准安装可解析（沿用 skill-map.md 先例）：
 
 1. **适用条件**：宿主存在 `docs/site/standards/change-map.yaml` 才启用；不存在时静默沿用当前代码探索，不追问建站。
 2. **读取协议**：从任务输入解析代码/功能落点 → 用 change-map 的 code_glob 与 exclude 反查 required_docs → 只读命中文档及必要索引 → 对影响结论的关键声明回代码或测试验证。
@@ -284,7 +283,7 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 
 | Workstream | 操作 | 路径 | 目的 |
 | --- | --- | --- | --- |
-| WS1 消费契约 | 新增 | `agents/docs/skills/docs-agent/_internal/_shared/consumption-contract.md` | 权威读取与信任协议 |
+| WS1 消费契约 | 新增 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md` | 权威读取与信任协议 |
 | WS1 消费契约 | 修改 | `agents/{product_manager,engineer,qa,devops,designer,security}/skills/*/SKILL.md`（排除 6 个 role router，只改适用 specialist） | 增加一行消费指针；debugger 与 release 类 skill 加专属规则 |
 | WS1 消费契约 | 修改 | 6 个现有 Agent 的对应 `test/*/evals/evals.json`、workspace fixture、`comparison.md` | 覆盖有/无文档站两种消费行为 |
 | WS2 Agent 骨架 | 新增 | `agents/docs/README.md`、`agents/docs/skills/docs-agent/SKILL.md` | 第 7 个 Agent 与第 6 个下游 router |
@@ -363,7 +362,7 @@ docs-agent 随 marketplace 下一个版本发布：更新 `.claude-plugin/market
 | Risk | related_code 太宽或 change-map glob 重叠，造成 required docs 过度命中。 | sync 输出每个 glob 的命中样本；分批确认；audit 报告展示条目来源与 exclude。 | No |
 | Risk | 大仓库存量回填批次过大，review 质量下降。 | 默认按 feature-catalog 模块拆分；单批需能由一组稳定 API 页面和 code_glob 描述，实施计划再定义建议上限。 | No |
 | Risk | 参考实现中的版本检查绑定具体部署工件，直接搬运会破坏技术栈无关性。 | 通用 `check-version` 只消费 release metadata、显式版本和 git 锚；宿主扩展由其数据层负责。 | No |
-| Risk | 共享消费 contract 位于 docs-agent plugin，单独安装旧 Agent plugin 时指针不可读。 | 指针要求“宿主存在 change-map 才启用”并静默降级；实施计划需验证 marketplace 全量安装与单 plugin 安装两种形态。 | No |
+| Risk | 共享消费 contract 依赖 pm-agent 插件分发，未安装 pm-agent 的非常规安装形态只剩指针摘要。 | 权威文件随默认入口插件 pm-agent 分发（skill-map.md 同先例）；指针摘要本身含核心协议且静默降级。 | No |
 | Assumption | 宿主使用 git，且 `docs/site/` 可作为正式文档根。 | 不满足时 sync/audit 不能使用默认 diff/路径，需由 PM 重新确认产品范围，不在 MVP 自适配。 | Yes |
 | Assumption | API 事实可从路由/schema/handler/contract test 中至少取得一种可靠证据。 | 无可靠证据时该页面标记 unresolved，不生成猜测内容，不进入 verified。 | Yes，针对该批次 |
 | Open Question | 回填“单批”是按业务 feature、API surface 还是 code owner 切分。 | `IMPLEMENTATION_PLAN.md` 结合首个 fixture 选择默认粒度；无论选择哪种都保留每批确认。 | No |

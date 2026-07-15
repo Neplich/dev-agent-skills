@@ -22,12 +22,12 @@ related_issue: "https://github.com/Neplich/dev-agent-skills/issues/105"
 
 现有 6 个角色 Agent 已覆盖产品、设计、工程、QA、DevOps 与安全协作，但宿主项目中描述系统当前状态的正式文档仍缺少专属维护角色。issue #105 与已批准 PRD 因此定义第 7 个角色 Agent `docs-agent`，负责正式文档站初始化、同步、存量回填和发版前审计，并为现有 6 个 Agent 增加以 change-map 为入口的消费契约。
 
-本计划把 `docs/engineer/agents/docs-agent/TRD.md`（版本以 frontmatter 为准，当前 0.1.14）展开为三个独立 PR 的文件级执行顺序、验证门禁、回滚点和维护者确认点。计划只展开 marketplace 仓库内的实现触点；宿主项目中的 `docs/site/**` 仍是 skill 运行输出，不作为本仓库预置文件。
+本计划把 `docs/engineer/agents/docs-agent/TRD.md`（版本以 frontmatter 为准，当前 0.1.15）展开为三个独立 PR 的文件级执行顺序、验证门禁、回滚点和维护者确认点。计划只展开 marketplace 仓库内的实现触点；宿主项目中的 `docs/site/**` 仍是 skill 运行输出，不作为本仓库预置文件。
 
 ## 2. 前置对齐结论
 
-- PRD：`docs/pm/agents/docs-agent/PRD.md`，版本以 frontmatter 为准（当前 1.2.7），状态为 `Approved`。
-- TRD：`docs/engineer/agents/docs-agent/TRD.md`，版本以 frontmatter 为准（当前 0.1.14）；状态为 `Approved`。
+- PRD：`docs/pm/agents/docs-agent/PRD.md`，版本以 frontmatter 为准（当前 1.2.8），状态为 `Approved`。
+- TRD：`docs/engineer/agents/docs-agent/TRD.md`，版本以 frontmatter 为准（当前 0.1.15）；状态为 `Approved`。
 - 需求来源：GitHub issue #105；PRD 已确认的 8 项决议逐项沿用，不在计划中改写。
 - Feature path：PRD 与 TRD 均为 `agents/docs-agent`，`parent_feature: agents`、`feature_level: "2"` 一致。
 - 变更分级：`change_tier: major`。新增 Agent、skill、marketplace 注册、跨角色消费契约与 contract/eval 触点，维持完整计划确认流程。
@@ -48,7 +48,7 @@ TRD 第 13 节的两个 Open Question 在本计划中落定如下：
 
 ## 4. 非目标
 
-- 不修改 PRD（版本以 frontmatter 为准，当前 1.2.7）的产品范围或 TRD（版本以 frontmatter 为准，当前 0.1.14）的技术设计；除第 2 节两个 Open Question 外不新增设计决策。
+- 不修改 PRD（版本以 frontmatter 为准，当前 1.2.8）的产品范围或 TRD（版本以 frontmatter 为准，当前 0.1.15）的技术设计；除第 2 节两个 Open Question 外不新增设计决策。
 - 不修改或复制参考实现，不把参考项目的专有路径、模块名或品牌内容写入 marketplace 模板。
 - 不在本 marketplace 仓库预置宿主项目 `docs/site/**`；该目录只由宿主显式执行 bootstrap 后生成。
 - 不把 database、design、ops、release-notes 或产品手册自动同步描述为 MVP 已完成能力；MVP 同步与回填验收仅覆盖 api 链路。
@@ -61,7 +61,7 @@ TRD 第 13 节的两个 Open Question 在本计划中落定如下：
 
 | 操作 | 路径 | 目的 |
 | --- | --- | --- |
-| 新增 | `agents/docs/skills/docs-agent/_internal/_shared/consumption-contract.md` | 建立任务落点、change-map 反查、精准读取、代码回证、新鲜度与分歧输出的权威消费协议。 |
+| 新增 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md` | 建立任务落点、change-map 反查、精准读取、代码回证、新鲜度与分歧输出的权威消费协议，随 pm-agent 入口插件分发。 |
 | 修改 | `agents/product_manager/skills/{feature-catalog,github-reader,idea-to-spec}/SKILL.md` | 为执行代码或项目探索的 PM specialist 增加一行消费契约指针。 |
 | 修改 | `agents/engineer/skills/{codebase-analyzer,trd-gen,feature-implementor,debugger,test-writer}/SKILL.md` | 为执行代码或项目探索的 Engineer specialist 增加一行消费契约指针。 |
 | 修改 | `agents/qa/skills/{spec-based-tester,exploratory-tester,bug-analyzer,regression-suite}/SKILL.md` | 为 4 个 QA specialist 增加一行消费契约指针。 |
