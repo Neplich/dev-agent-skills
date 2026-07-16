@@ -1,0 +1,9 @@
+diff --git a/src/catalog/routes.txt b/src/catalog/routes.txt
+index 3333333..4444444 100644
+--- a/src/catalog/routes.txt
++++ b/src/catalog/routes.txt
+@@
+ ROUTE GET /catalog/items
++QUERY locale required nonblank
+ QUERY limit optional default=20 max=100
++ERROR 400 {"code": "invalid_locale"}

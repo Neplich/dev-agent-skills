@@ -1,0 +1,7 @@
+diff --git a/src/catalog/routes.txt b/src/catalog/routes.txt
+index 1111111..2222222 100644
+--- a/src/catalog/routes.txt
++++ b/src/catalog/routes.txt
+@@
+-ROUTE POST /catalog/items
++ROUTE GET /catalog/items

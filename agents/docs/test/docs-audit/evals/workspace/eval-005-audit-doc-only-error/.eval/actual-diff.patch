@@ -1,0 +1,8 @@
+diff --git a/docs/site/api/catalog.md b/docs/site/api/catalog.md
+index bbbbbbb..ccccccc 100644
+--- a/docs/site/api/catalog.md
++++ b/docs/site/api/catalog.md
+@@
+ `GET /catalog/items` is public and returns status 200 with an `items` array.
++
++`DELETE /catalog/items/{item_id}` removes an item and returns status 204.

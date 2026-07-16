@@ -1,0 +1,8 @@
+ROUTE GET /catalog/items
+AUTH public
+QUERY limit optional default=20 max=100
+SUCCESS 200 {"items": []}
+ERROR 400 {"code": "invalid_limit"}
+STREAMING no
+FILES none
+IMPLEMENTATION normalize_limit helper

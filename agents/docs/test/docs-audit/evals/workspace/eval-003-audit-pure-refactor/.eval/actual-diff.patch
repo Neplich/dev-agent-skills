@@ -1,0 +1,7 @@
+diff --git a/src/catalog/routes.txt b/src/catalog/routes.txt
+index 5555555..6666666 100644
+--- a/src/catalog/routes.txt
++++ b/src/catalog/routes.txt
+@@
+-IMPLEMENTATION inline limit normalization
++IMPLEMENTATION normalize_limit helper

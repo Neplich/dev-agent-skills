@@ -1,0 +1,16 @@
+ROUTE GET /catalog/items
+AUTH public
+QUERY none
+SUCCESS 200 {"items": []}
+ERROR none
+STREAMING no
+FILES none
+IMPLEMENTATION table dispatcher
+
+ROUTE GET /catalog/status
+AUTH service-token required
+QUERY none
+SUCCESS 200 {"status": "ready"}
+ERROR 401 {"code": "unauthorized"}
+STREAMING no
+FILES none
