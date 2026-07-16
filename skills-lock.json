@@ -59,7 +59,7 @@
     "trd-gen": {
       "source": "agents/engineer/skills/trd-gen",
       "sourceType": "local",
-      "computedHash": "c206763c65d383ca180a8424ce0145a4cf79cf25df3a9da9800a27ab4f00a72d"
+      "computedHash": "d270b28b21b7188aaed7a848adc196fd6fa77b2f497cb8c02da40bf1b2e277dc"
     },
     "project-bootstrap": {
       "source": "agents/engineer/skills/project-bootstrap",
@@ -175,6 +175,21 @@
       "source": "agents/security/skills/privacy-surface-mapper",
       "sourceType": "local",
       "computedHash": "e96d6aeeb3cc5edb03e6f1aa62a9a708f398fbb1c83018c6af436fa270e17735"
+    },
+    "docs-agent": {
+      "source": "agents/docs/skills/docs-agent",
+      "sourceType": "local",
+      "computedHash": "92ddb27aa78c43f37a950d0ac6ca34d4bffed5ce0f80253e4e1ae80319172df4"
+    },
+    "docs-site-bootstrap": {
+      "source": "agents/docs/skills/docs-site-bootstrap",
+      "sourceType": "local",
+      "computedHash": "7a677f1f6d6864798109529149a882ae2535c644f88fe04952d9b24d2872b49a"
+    },
+    "formal-docs-sync": {
+      "source": "agents/docs/skills/formal-docs-sync",
+      "sourceType": "local",
+      "computedHash": "b78fd5c537e501628c30a685945ded007c7f997ceb155405a0bbf9f6a5b3db24"
     }
   }
 }

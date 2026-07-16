@@ -23,6 +23,7 @@ Codex 会先确认两个问题：
 - `devops-agent`：PM handoff 后的下游 DevOps 能力，承接已确认运维范围内的部署规划、CI/CD、环境审计和故障处理
 - `designer-agent`：PM handoff 后的下游设计能力，承接已确认设计范围内的 UI/UX、视觉系统和界面规范
 - `security-agent`：PM handoff 后的下游安全能力，承接已确认安全范围内的应用安全、权限审查、依赖风险和隐私映射
+- `docs-agent`：PM handoff 后的下游正式文档能力，承接站点初始化与证据驱动同步；审计随 WS3 交付
 
 默认全量安装同时包含全部 specialist skills，确保 `pm-agent` 和 role router 编排流程可以调用下游 specialist。只有在明确只需要入口分类的最小场景下才使用 `routers-only`；该模式不会在目标根目录暴露 specialist skills，因此 PM 和 role router 编排无法调用下游 specialist。
 
@@ -102,13 +103,13 @@ fi
 python3 "$CLONE_ROOT/scripts/install_codex_skills.py" --target "$SKILL_ROOT"
 ```
 
-受限模式，只暴露 6 个 role routers：
+受限模式，只暴露 7 个 role routers：
 
 ```bash
 python3 "$CLONE_ROOT/scripts/install_codex_skills.py" --target "$SKILL_ROOT" --routers-only
 ```
 
-`--routers-only` 会输出警告，因为该模式只在目标根目录创建 6 个 role router 软链，`pm-agent` / role router 编排无法调用下游 specialist 工作流，只适合入口分类最小安装。隐藏镜像仍保留完整 `agents/` 树，供共享指令引用。
+`--routers-only` 会输出警告，因为该模式只在目标根目录创建 7 个 role router 软链，`pm-agent` / role router 编排无法调用下游 specialist 工作流，只适合入口分类最小安装。隐藏镜像仍保留完整 `agents/` 树，供共享指令引用。
 
 `--target <path>` 指定可见 skill 软链所在目录；默认值是 `~/.agents/skills`。无论目标是个人级还是项目级，隐藏镜像都创建在 `<target>/.dev-agent-skills/`。
 
