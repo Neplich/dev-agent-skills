@@ -76,13 +76,16 @@ and five content templates; the empty change map; and release metadata.
 
 Static assets follow three publication rules. Put assets intended for both
 targets in `docs/site/public/`; the complete directory is copied into both
-generated trees using the VitePress public-directory convention. Other
-non-Markdown assets are copied only when the target contains at least one page
-in the asset's directory. Never copy `standards/change-map.yaml`, `.meta/**`,
+generated trees using the VitePress public-directory convention. Other assets
+are copied only when an included page directly references them. Assets not
+referenced by any included page do not enter the generated tree; put assets
+used through dynamic or indirect references, such as script-built paths, in
+`docs/site/public/`. Never copy `standards/change-map.yaml`, `.meta/**`,
 `.vitepress/**` beyond the template's explicit config/theme wiring,
 `node_modules/**`, or `.generated/**` into a generated tree. Hosts must not put
-internal-only assets in `docs/site/public/`; keep an internal-only asset beside
-its internal page instead.
+internal-only assets in `docs/site/public/`; an internal-only asset may live
+beside the internal page that references it because reference-level copying
+keeps it out of the public build.
 
 ## 3. Embedded Templates
 
@@ -571,8 +574,8 @@ if (fileURLToPath(import.meta.url) === process.argv[1]) {
 Target: `docs/site/scripts/prepare-site.mjs`
 
 ```js
-import { cp, mkdir, rm } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { cp, mkdir, realpath, rm, stat } from 'node:fs/promises';
+import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import fg from 'fast-glob';
 import { collectMarkdown, visibleFor } from './lib/pages.mjs';
@@ -580,6 +583,82 @@ import { GENERATED_ROOT, NAV_ROOT, SITE_ROOT, readText, writeText } from './lib/
 import { prepareNav } from './prepare-nav.mjs';
 
 const TARGETS = new Set(['public', 'internal']);
+const MARKDOWN_REFERENCE = /!?\[[^\]]*\]\(\s*(<[^>\n]+>|[^)\s]+)(?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?\s*\)/g;
+const HTML_REFERENCE = /\b(?:src|href)\s*=\s*(["'])(.*?)\1/gi;
+const EXCLUDED_SEGMENTS = new Set(['.meta', '.vitepress', 'node_modules', '.generated']);
+
+function directReferences(source) {
+  const references = new Set();
+  for (const match of source.matchAll(MARKDOWN_REFERENCE)) {
+    const reference = match[1];
+    references.add(reference.startsWith('<') ? reference.slice(1, -1) : reference);
+  }
+  for (const match of source.matchAll(HTML_REFERENCE)) references.add(match[2]);
+  return references;
+}
+
+function excludedAsset(relativePath) {
+  const segments = relativePath.split('/');
+  return relativePath === 'standards/change-map.yaml'
+    || segments.some((segment) => EXCLUDED_SEGMENTS.has(segment));
+}
+
+function warnSkippedAsset(page, reference, reason) {
+  console.warn(`Skipped asset reference "${reference}" from "${page}": ${reason}.`);
+}
+
+async function referencedAssets(pages) {
+  const siteRoot = await realpath(SITE_ROOT);
+  const assets = new Map();
+  for (const page of pages) {
+    for (const rawReference of directReferences(page.source)) {
+      const reference = rawReference.trim();
+      if (!reference || reference.startsWith('#') || reference.startsWith('/')
+        || /^https?:\/\//i.test(reference) || /^mailto:/i.test(reference)) continue;
+      const pathOnly = reference.split(/[?#]/, 1)[0];
+      if (/\.md$/i.test(pathOnly)) continue;
+      let decodedPath;
+      try {
+        decodedPath = decodeURIComponent(pathOnly);
+      } catch {
+        warnSkippedAsset(page.relativePath, reference, 'invalid URL encoding');
+        continue;
+      }
+      const candidate = resolve(SITE_ROOT, dirname(page.relativePath), decodedPath);
+      const lexicalRelative = relative(SITE_ROOT, candidate).replaceAll('\\', '/');
+      if (!lexicalRelative || lexicalRelative === '..' || lexicalRelative.startsWith('../')
+        || isAbsolute(lexicalRelative)) {
+        warnSkippedAsset(page.relativePath, reference, 'path is outside docs/site');
+        continue;
+      }
+      if (excludedAsset(lexicalRelative)) {
+        warnSkippedAsset(page.relativePath, reference, 'path is in an excluded area');
+        continue;
+      }
+      try {
+        const source = await realpath(candidate);
+        const realRelative = relative(siteRoot, source).replaceAll('\\', '/');
+        if (!realRelative || realRelative === '..' || realRelative.startsWith('../')
+          || isAbsolute(realRelative)) {
+          warnSkippedAsset(page.relativePath, reference, 'resolved path is outside docs/site');
+          continue;
+        }
+        if (excludedAsset(realRelative)) {
+          warnSkippedAsset(page.relativePath, reference, 'resolved path is in an excluded area');
+          continue;
+        }
+        if (!(await stat(source)).isFile()) {
+          warnSkippedAsset(page.relativePath, reference, 'resolved path is not a file');
+          continue;
+        }
+        assets.set(lexicalRelative, source);
+      } catch {
+        warnSkippedAsset(page.relativePath, reference, 'file does not exist');
+      }
+    }
+  }
+  return assets;
+}
 
 export async function prepareSite(target) {
   if (!TARGETS.has(target)) throw new Error('Target must be public or internal');
@@ -588,15 +667,17 @@ export async function prepareSite(target) {
   await rm(output, { recursive: true, force: true });
   await mkdir(output, { recursive: true });
 
-  const visibleDirectories = new Set(['.']);
+  const includedPages = [];
   for (const page of await collectMarkdown()) {
     if (page.relativePath === 'index.public.md' || page.relativePath === 'index.internal.md') continue;
     if (!visibleFor(page.data.visibility, target)) continue;
     await writeText(resolve(output, page.relativePath), page.source);
-    visibleDirectories.add(dirname(page.relativePath));
+    includedPages.push(page);
   }
   const home = resolve(SITE_ROOT, `index.${target}.md`);
-  await writeText(resolve(output, 'index.md'), await readText(home));
+  const homeSource = await readText(home);
+  await writeText(resolve(output, 'index.md'), homeSource);
+  includedPages.push({ relativePath: `index.${target}.md`, source: homeSource });
 
   const publicAssets = await fg(['public/**'], {
     cwd: SITE_ROOT,
@@ -606,16 +687,7 @@ export async function prepareSite(target) {
       '**/.meta/**', '**/.generated/**', '**/node_modules/**', '**/.vitepress/**'
     ]
   });
-  const colocatedAssets = (await fg(['**/*'], {
-    cwd: SITE_ROOT,
-    onlyFiles: true,
-    dot: true,
-    ignore: [
-      '**/*.md', 'public/**', 'standards/change-map.yaml', '.meta/**',
-      '.generated/**', '**/node_modules/**', 'scripts/**', 'package.json',
-      'package-lock.json', '.vitepress/**'
-    ]
-  })).filter((asset) => visibleDirectories.has(dirname(asset)));
+  const referenced = await referencedAssets(includedPages);
   const vitepressAssets = await fg([
     '.vitepress/config.shared.ts', `.vitepress/config.${target}.ts`,
     '.vitepress/theme/**'
@@ -625,10 +697,10 @@ export async function prepareSite(target) {
     dot: true,
     ignore: ['**/.meta/**', '**/.generated/**', '**/node_modules/**']
   });
-  for (const asset of new Set([...publicAssets, ...colocatedAssets, ...vitepressAssets])) {
+  for (const asset of new Set([...publicAssets, ...referenced.keys(), ...vitepressAssets])) {
     const destination = resolve(output, asset);
     await mkdir(dirname(destination), { recursive: true });
-    await cp(resolve(SITE_ROOT, asset), destination);
+    await cp(referenced.get(asset) ?? resolve(SITE_ROOT, asset), destination);
   }
   await mkdir(resolve(output, '.vitepress/generated'), { recursive: true });
   await cp(
