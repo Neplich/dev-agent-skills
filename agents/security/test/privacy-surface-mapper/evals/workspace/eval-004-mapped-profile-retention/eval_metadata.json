@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-004-mapped-profile-retention",
+  "eval_name": "Mapped Profile Data Retention",
+  "workspace_root": "agents/security/test/privacy-surface-mapper/evals/workspace/eval-004-mapped-profile-retention",
+  "skill_availability_goal": "Verify mapped-document-first privacy exploration, configuration verification, and lowest trust for unverified documentation.",
+  "prompt": "请梳理 src/privacy/profile-processing.yaml 的个人资料处理面，重点核对收集字段、处理目的和删除后的保留期限。",
+  "fixture_context": [
+    "src/privacy/profile-processing.yaml",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/profile-data.md"
+  ]
+}

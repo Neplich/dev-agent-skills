@@ -1,0 +1,15 @@
+title: Documentation change map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - src/access/**
+last_verified_version: unverified
+change_map:
+  "src/access/report-export-policy.js":
+    required_docs:
+      - docs/site/api/report-export.md
+    trigger: Review authorization documentation when report export roles change.
+    exclude: []

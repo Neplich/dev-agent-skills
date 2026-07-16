@@ -87,6 +87,31 @@
           "text": "对需要跟进的区域写清风险 notes 和下一步建议，便于后续 QA 或 bug-analyzer 接手"
         }
       ]
+    },
+    {
+      "id": "eval-003-mapped-doc-exploration",
+      "name": "mapped-doc-exploration",
+      "description": "验证探索测试使用 change-map 缩小上下文，并对未核证文档与代码的冲突保留代码证据。",
+      "prompt": "围绕 src/checkout/session.rules 的结账会话超时行为制定最小探索章程，并指出应重点验证的边界。",
+      "workspace": "workspace/eval-3-mapped-doc-exploration",
+      "expected_output": "以映射文档定位、代码事实核证的探索章程和风险记录。",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "先消费命中的结账会话文档",
+          "text": "根据 src/checkout/session.rules 命中 change-map 后，优先读取 docs/site/api/checkout-session.md，仅围绕必要上下文设计探索，不遍历整个 docs/site。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "探索边界以代码事实为准",
+          "text": "回读 src/checkout/session.rules，识别文档声称 15 分钟而代码实际为 10 分钟；不得将文档值直接作为预期，需把差异及其对探索边界的影响列为证据。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "未核证文档不作为确认事实",
+          "text": "对 last_verified_version: unverified 按最低信任处理，所有关键探索假设都需由代码或测试再次确认。"
+        }
+      ]
     }
   ]
 }

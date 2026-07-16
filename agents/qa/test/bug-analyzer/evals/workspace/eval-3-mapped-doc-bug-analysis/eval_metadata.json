@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-003-mapped-doc-bug-analysis",
+  "eval_name": "mapped-doc-bug-analysis",
+  "workspace_root": "agents/qa/test/bug-analyzer/evals/workspace/eval-3-mapped-doc-bug-analysis",
+  "skill_availability_goal": "Verify mapped-document consumption and code verification for bug-analyzer.",
+  "prompt": "分析 src/notifications/retry.rules 中通知重试次数可能与预期不一致的问题，形成证据化缺陷分析。",
+  "fixture_context": [
+    "src/notifications/retry.rules",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/notification-retry.md"
+  ]
+}

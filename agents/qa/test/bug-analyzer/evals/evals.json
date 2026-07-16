@@ -72,6 +72,31 @@
           "text": "不能创建 GitHub issue 或 confirmed bug artifact；只能建议本地调查 note 或待补证据清单"
         }
       ]
+    },
+    {
+      "id": "eval-003-mapped-doc-bug-analysis",
+      "name": "mapped-doc-bug-analysis",
+      "description": "验证缺陷分析从 change-map 定位相关文档，并在未核证文档与代码不一致时以代码证据判断。",
+      "prompt": "分析 src/notifications/retry.rules 中通知重试次数可能与预期不一致的问题，形成证据化缺陷分析。",
+      "workspace": "workspace/eval-3-mapped-doc-bug-analysis",
+      "expected_output": "区分文档声明与代码事实的缺陷分析，并说明证据置信度和影响。",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "从映射文档获取缺陷上下文",
+          "text": "任务路径命中 change-map 后先读取 docs/site/api/notification-retry.md，不对无关站点文档做全库遍历。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "缺陷判断回到代码证据",
+          "text": "检查 src/notifications/retry.rules，明确文档声明重试 3 次但代码配置为 2 次；不得仅凭文档确认 bug，应分别记录文档声明、代码事实及对缺陷分类的影响。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "降低未核证文档的证据权重",
+          "text": "识别 last_verified_version: unverified，将其视为最低信任线索，缺陷结论和置信度必须由代码或测试证据支撑。"
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,14 @@
+title: Export documentation map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - src/export/**
+last_verified_version: unverified
+change_map:
+  "src/export/**":
+    required_docs:
+      - docs/site/api/export.md
+    trigger: Update export documentation when supported formats change.

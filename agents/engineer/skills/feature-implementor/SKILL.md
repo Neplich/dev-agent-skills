@@ -113,6 +113,8 @@ The active plan path remains fixed at
 
 ## Implementation Flow
 
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+
 1. Gather PRD, DECISIONS, TRD, relevant design docs, repo structure, and active
    plan/archive state.
 2. Write or update the plan with file list, order, verification, alignment

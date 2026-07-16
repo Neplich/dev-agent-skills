@@ -1,0 +1,13 @@
+title: Documentation change map
+visibility: internal
+doc_type: standard
+stage: dev
+owners: [docs]
+related_code: [src/search/query.rules]
+last_verified_version: unverified
+change_map:
+  "src/search/**":
+    required_docs:
+      - docs/site/api/search-query.md
+    trigger: Update search documentation when query validation changes.
+    exclude: []

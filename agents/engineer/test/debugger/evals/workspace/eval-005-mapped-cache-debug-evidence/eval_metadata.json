@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-005-mapped-cache-debug-evidence",
+  "eval_name": "mapped-cache-debug-evidence",
+  "workspace_root": "agents/engineer/test/debugger/evals/workspace/eval-005-mapped-cache-debug-evidence",
+  "skill_availability_goal": "Verify that debugger uses mapped unverified documentation for orientation and determines the root cause from code evidence.",
+  "prompt": "请诊断 `src/cache/` 中缓存比预期更早过期的问题，说明复现依据和根因；不要直接修复。",
+  "fixture_context": [
+    "src/cache/ttl.txt",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/cache.md"
+  ]
+}

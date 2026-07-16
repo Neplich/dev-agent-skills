@@ -42,6 +42,31 @@
           "text": "deploy/ON_CALL.md 存在"
         }
       ]
+    },
+    {
+      "id": "eval-002-mapped-doc-incident-playbook",
+      "name": "mapped-doc-incident-playbook",
+      "description": "验证故障手册通过 change-map 读取健康检查文档，并依据代码核证未验证的失败阈值。",
+      "prompt": "为 src/runtime/health.rules 的连续健康检查失败场景编写最小处置与回滚步骤，确认告警阈值。",
+      "workspace": "workspace/eval-002-mapped-doc-incident-playbook",
+      "expected_output": "以代码事实确定告警阈值的故障处置步骤，并记录映射文档差异。",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "先读取健康检查映射文档",
+          "text": "任务命中 src/runtime/health.rules 后优先读取 docs/site/api/runtime-health.md，不遍历其他站点文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "告警阈值回到代码核证",
+          "text": "检查 src/runtime/health.rules，识别文档声称连续失败 3 次触发告警而代码阈值为 5；手册不得盲用文档值，并需说明对处置时机的影响。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "未核证运维文档最低信任",
+          "text": "对 last_verified_version: unverified 按最低信任处理，告警与回滚关键步骤必须以代码或测试证据确认。"
+        }
+      ]
     }
   ]
 }

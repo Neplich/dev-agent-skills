@@ -1,0 +1,5 @@
+personal_data:
+  - email
+  - display_name
+purpose: account_profile
+retention_after_deletion_days: 90

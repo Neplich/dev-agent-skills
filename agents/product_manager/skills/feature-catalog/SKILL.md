@@ -58,6 +58,8 @@ evidence conflicts the scan cannot resolve.
 
 ### Step 1 — Read existing feature context
 
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+
 Before proposing any name, read what already exists:
 
 1. Scan `docs/pm/**/PRD.md` and collect every existing `feature_path`,

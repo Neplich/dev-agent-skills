@@ -1,8 +1,8 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.1.11"
-status: Draft
+version: "0.1.15"
+status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
 last_updated: "2026-07-15"
@@ -25,7 +25,7 @@ PRD 的 8 项决议是本 TRD 的强约束：
 
 | # | 已确认决议 | 技术落点 |
 | --- | --- | --- |
-| 1 | 消费契约集中维护，6 个现有 Agent 只加指针。 | 权威文件为 `agents/docs/skills/docs-agent/_internal/_shared/consumption-contract.md`；各 specialist 入口只引用，不复制协议。 |
+| 1 | 消费契约集中维护，6 个现有 Agent 只加指针。 | 权威文件为 `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`，随 pm-agent 默认入口插件分发，保证任何标准安装可解析（沿用 skill-map.md 先例）；各 specialist 入口只引用，不复制协议。 |
 | 2 | audit 报告归档到站点 `.meta/`。 | 使用 `docs/site/.meta/audit/audit-{version}.md`；`.meta/` 不进导航且不受 frontmatter 校验。 |
 | 3 | public / internal 双站点进入 MVP。 | bootstrap 一次生成双首页、三份 VitePress config、visibility 过滤和双站点命令。 |
 | 4 | 不生成宿主项目本地维护 skill。 | 通用维护协议随 `formal-docs-sync` 分发；宿主差异只写入 `docs/site/standards/`。 |
@@ -77,8 +77,7 @@ agents/docs/
 ├── README.md
 ├── skills/
 │   ├── docs-agent/
-│   │   ├── SKILL.md
-│   │   └── _internal/_shared/consumption-contract.md
+│   │   └── SKILL.md
 │   ├── docs-site-bootstrap/
 │   │   ├── SKILL.md
 │   │   └── _internal/INSTRUCTIONS.md
@@ -102,7 +101,7 @@ agents/docs/
 `agents/docs/skills/docs-agent/SKILL.md` 是第 6 个下游 role router，职责只有：
 
 1. 校验 PM handoff packet、等效已确认文档链或 specialist entry basis；缺失时返回 `pm-agent`。
-2. 按目标分流：显式建站 → `docs-site-bootstrap`；同步或回填 → `formal-docs-sync`；发版审计 → `docs-audit`。
+2. 按目标分流：显式建站 → `docs-site-bootstrap`；同步或回填 → `formal-docs-sync`；发版审计 → `docs-audit`（随 WS3 交付；WS2 中间态对审计请求明确告知能力未交付并 blocked，不得 handoff 到不存在的 skill，WS3 落地时启用该分流）。
 3. 指向 specialist gate 的权威副本，不复制幂等、范围确认、版本锚或 mismatch 阻塞规则。
 4. 完成后按 PM safety-net closeout 建议下一角色步骤；未启用 `auto-continue` 时等待确认。
 
@@ -127,7 +126,7 @@ agents/docs/
 
 注册前必须新增 agents/docs/.claude-plugin/plugin.json，name 等于 marketplace 条目名 docs-agent，version 等于 marketplace metadata.version，结构对齐现有 agent 的 plugin manifest（含 description 与 author）；check_repository_contract.py 会校验两者一致。
 
-注册时同步更新 `skills-lock.json` 中 4 个 skill 的 path、metadata 与 `computedHash`。`AGENTS.md` 必须更新三处：协作流图增加 Docs Agent 正式文档生产/审计节点；“文档依赖”增加 6 个现有 Agent 读取消费契约与 docs-agent 读取 PRD/TRD/代码证据；“当前状态”从 6 个 Agent / 29 个 specialist 更新为 7 个 Agent / 32 个 specialist，并登记 docs-agent 的 3 个 specialist。README 和安装文档的 agent 清单也应同步暴露新 plugin，但不得把下游 router 描述成默认入口。
+上述 JSON 为 4-skill 注册终态。注册随 workstream 增量推进：WS2 注册 ./skills/docs-agent、./skills/docs-site-bootstrap、./skills/formal-docs-sync 三个路径并写入对应 skills-lock.json 条目；WS3 追加 ./skills/docs-audit 完成终态。repository contract 要求已注册路径必须真实存在，不得在 WS2 提前注册 docs-audit 或创建 stub。`AGENTS.md` 必须更新三处：协作流图增加 Docs Agent 正式文档生产/审计节点；“文档依赖”增加 6 个现有 Agent 读取消费契约与 docs-agent 读取 PRD/TRD/代码证据；“当前状态”随 workstream 增量更新：WS2 更新为 7 个 Agent / 31 个 specialist（登记 docs-agent 的 router 与 2 个 specialist），WS3 更新为 32 个 specialist（补 docs-audit）。README 和安装文档的 agent 清单也应同步暴露新 plugin，但不得把下游 router 描述成默认入口。
 
 ## 4. 内容模型与 change-map schema
 
@@ -264,7 +263,7 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 
 ## 8. 消费契约设计
 
-权威文件 `agents/docs/skills/docs-agent/_internal/_shared/consumption-contract.md` 包含以下固定骨架：
+权威文件 `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md` 包含以下固定骨架。该文件随 pm-agent 默认入口插件分发，保证任何标准安装可解析（沿用 skill-map.md 先例）：
 
 1. **适用条件**：宿主存在 `docs/site/standards/change-map.yaml` 才启用；不存在时静默沿用当前代码探索，不追问建站。
 2. **读取协议**：从任务输入解析代码/功能落点 → 用 change-map 的 code_glob 与 exclude 反查 required_docs → 只读命中文档及必要索引 → 对影响结论的关键声明回代码或测试验证。
@@ -284,7 +283,7 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 
 | Workstream | 操作 | 路径 | 目的 |
 | --- | --- | --- | --- |
-| WS1 消费契约 | 新增 | `agents/docs/skills/docs-agent/_internal/_shared/consumption-contract.md` | 权威读取与信任协议 |
+| WS1 消费契约 | 新增 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md` | 权威读取与信任协议 |
 | WS1 消费契约 | 修改 | `agents/{product_manager,engineer,qa,devops,designer,security}/skills/*/SKILL.md`（排除 6 个 role router，只改适用 specialist） | 增加一行消费指针；debugger 与 release 类 skill 加专属规则 |
 | WS1 消费契约 | 修改 | 6 个现有 Agent 的对应 `test/*/evals/evals.json`、workspace fixture、`comparison.md` | 覆盖有/无文档站两种消费行为 |
 | WS2 Agent 骨架 | 新增 | `agents/docs/README.md`、`agents/docs/skills/docs-agent/SKILL.md` | 第 7 个 Agent 与第 6 个下游 router |
@@ -292,12 +291,14 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 | WS2 sync | 新增 | `agents/docs/skills/formal-docs-sync/**` | 三节点协议与 api 回填 MVP |
 | WS2 producer 增强 | 修改 | `agents/engineer/skills/trd-gen/SKILL.md`、`agents/engineer/skills/trd-gen/_internal/trd-schema.md` | TRD 输出契约增加可选 frontmatter related_code 字段（机器可读影响域，增强项非 gate；缺省时 sync 走影响域证据链回退）；schema 契约与 SKILL.md 同步更新，避免新 TRD 合规但缺 related_code |
 | WS2 eval | 新增 | `agents/docs/test/{docs-agent,docs-site-bootstrap,formal-docs-sync}/evals/{evals.json,workspace/**}` | router、bootstrap、sync durable eval |
-| WS2 eval workflow | 修改 | .github/workflows/evals.yml | 新增 docs target 与 docs-agent eval job，使 4 个 skill 的合并前手动 eval 触发可执行 |
-| WS2 注册 | 修改 | `.claude-plugin/marketplace.json`、`skills-lock.json`、`agents/docs/.claude-plugin/plugin.json`（新增） | 注册 docs-agent 及 4 个 skill，刷新 hash；plugin manifest 与 marketplace name/version 对齐 |
+| WS2 eval workflow | 修改 | .github/workflows/evals.yml | 新增 docs target 与 docs-agent eval job，使 router / bootstrap / sync 三个 skill 的合并前手动 eval 触发可执行；docs-audit 由 WS3 接入同一 target |
+| WS2 注册 | 修改 | `.claude-plugin/marketplace.json`、`skills-lock.json`、`agents/docs/.claude-plugin/plugin.json`（新增） | 注册 docs-agent 及 router / bootstrap / sync 3 个 skill 路径，刷新 hash；plugin manifest 与 marketplace name/version 对齐；docs-audit 注册由 WS3 追加 |
 | WS2 协作契约 | 修改 | `AGENTS.md` | 协作流、6 个 router、文档依赖、当前状态与 specialist 总数 |
 | WS2 用户文档 | 修改 | `README.md`、`README_zh.md`、`.codex/INSTALL.md`、`docs/README.codex.md` | 暴露新 plugin 与安装/协作说明 |
 | WS3 audit | 新增 | `agents/docs/skills/docs-audit/**` | 两层审计、报告与统一盖章协议 |
-| WS3 eval | 新增 | `agents/docs/test/docs-audit/evals/{evals.json,workspace/**}` | mismatch、stale、verified 与无版本锚 fixture |
+| WS3 router 分流启用 | 修改 | `agents/docs/skills/docs-agent/SKILL.md`、`agents/docs/test/docs-agent/evals/{evals.json,workspace/**}` | 启用 router 审计分流并移除 WS2 中间态 blocked 文案，router eval 断言由 blocked 改为 handoff docs-audit |
+| WS3 eval | 新增 | `agents/docs/test/docs-audit/evals/{evals.json,workspace/**}` | mismatch、stale、verified 与无版本锚 fixture；接入 evals.yml 的 docs target |
+| WS3 audit | 修改 | `.claude-plugin/marketplace.json`、`skills-lock.json` | 追加 docs-audit 注册达成 4-skill 终态，刷新 metadata 与 computedHash |
 | WS1-3 contract | 修改（按硬编码情况） | `scripts/check_repository_contract.py`、`scripts/check_eval_contract.py` 及对应 `tests/` | 若现有校验硬编码 Agent/router/skill 数量或路径，扩展到 docs-agent；不为动态已兼容逻辑做无关重写 |
 | 交接文档 | 新增（TRD 确认后） | `docs/engineer/agents/docs-agent/IMPLEMENTATION_PLAN.md` | feature-implementor 的活跃实施计划 |
 
@@ -310,8 +311,8 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 | PR / Workstream | 实施内容 | 验收出口 |
 | --- | --- | --- |
 | PR 1 / WS1 消费契约 | 新增共享 contract；为 6 个现有 Agent 的适用 specialist 增加指针；补 debugger 与 release 输出切换；增加消费回归 fixture | 有 change-map 时精准读映射文档且关键判断回代码；无站点时行为不变；不复制权威协议 |
-| PR 2 / WS2 Agent 骨架 + bootstrap + sync | 新增 `agents/docs`、router、bootstrap、sync、内置模板、注册和 lock；实现完整骨架协议、feature api 同步与存量 api 回填 | 4-skill 注册结构合法；bootstrap 完整/幂等/opt-in；sync 只更新影响 API；回填按批确认并生成 change-map 种子 |
-| PR 3 / WS3 audit 门禁 | 新增 docs-audit、确定性/事实层、报告和盖章协议；接入 release handoff | mismatch/stale 阻塞；全 verified 才统一盖章；`.meta/` 排除 frontmatter；无锚不伪造版本 |
+| PR 2 / WS2 Agent 骨架 + bootstrap + sync | 新增 `agents/docs`、router、bootstrap、sync、内置模板、注册和 lock；实现完整骨架协议、feature api 同步与存量 api 回填 | router / bootstrap / sync 3-skill 注册结构合法且路径全部可解析；bootstrap 完整/幂等/opt-in；sync 只更新影响 API；回填按批确认并生成 change-map 种子 |
+| PR 3 / WS3 audit 门禁 | 新增 docs-audit、确定性/事实层、报告和盖章协议；接入 release handoff；启用 router 审计分流 | mismatch/stale 阻塞；全 verified 才统一盖章；`.meta/` 排除 frontmatter；无锚不伪造版本；marketplace 追加 docs-audit 达成 4-skill 注册终态 |
 
 每个 PR 修改 skill 后在同批刷新对应 `skills-lock.json` hash，实际执行 eval 时同批更新 durable `comparison.md`。不得把三个 PR 的确认合并成一次 major 实施确认；每个 workstream 按实施计划明确入口与出口。
 
@@ -361,7 +362,7 @@ docs-agent 随 marketplace 下一个版本发布：更新 `.claude-plugin/market
 | Risk | related_code 太宽或 change-map glob 重叠，造成 required docs 过度命中。 | sync 输出每个 glob 的命中样本；分批确认；audit 报告展示条目来源与 exclude。 | No |
 | Risk | 大仓库存量回填批次过大，review 质量下降。 | 默认按 feature-catalog 模块拆分；单批需能由一组稳定 API 页面和 code_glob 描述，实施计划再定义建议上限。 | No |
 | Risk | 参考实现中的版本检查绑定具体部署工件，直接搬运会破坏技术栈无关性。 | 通用 `check-version` 只消费 release metadata、显式版本和 git 锚；宿主扩展由其数据层负责。 | No |
-| Risk | 共享消费 contract 位于 docs-agent plugin，单独安装旧 Agent plugin 时指针不可读。 | 指针要求“宿主存在 change-map 才启用”并静默降级；实施计划需验证 marketplace 全量安装与单 plugin 安装两种形态。 | No |
+| Risk | 共享消费 contract 依赖 pm-agent 插件分发，未安装 pm-agent 的非常规安装形态只剩指针摘要。 | 权威文件随默认入口插件 pm-agent 分发（skill-map.md 同先例）；指针摘要本身含核心协议且静默降级。 | No |
 | Assumption | 宿主使用 git，且 `docs/site/` 可作为正式文档根。 | 不满足时 sync/audit 不能使用默认 diff/路径，需由 PM 重新确认产品范围，不在 MVP 自适配。 | Yes |
 | Assumption | API 事实可从路由/schema/handler/contract test 中至少取得一种可靠证据。 | 无可靠证据时该页面标记 unresolved，不生成猜测内容，不进入 verified。 | Yes，针对该批次 |
 | Open Question | 回填“单批”是按业务 feature、API surface 还是 code owner 切分。 | `IMPLEMENTATION_PLAN.md` 结合首个 fixture 选择默认粒度；无论选择哪种都保留每批确认。 | No |

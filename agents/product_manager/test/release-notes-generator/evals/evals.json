@@ -155,6 +155,37 @@
         }
       ],
       "files": []
+    },
+    {
+      "id": "eval-004-docs-site-release-output",
+      "name": "文档站存在时切换发布说明输出",
+      "description": "验证存在 docs/site/release-notes 时发布说明写入站点目录，同时保留仓库版本归档契约",
+      "prompt": "请为 v1.4.0 生成发布说明。仓库已经包含文档站，请按当前仓库约定给出应写入的目标路径，并保留版本化 changelog 归档与根索引要求。",
+      "expected_output": "发布说明输出到 docs/site/release-notes，同时继续维护版本化 changelog 归档及根 CHANGELOG 索引。",
+      "workspace": "workspace/eval-004-docs-site-release-output",
+      "assertions": [
+        {
+          "id": "writes_release_notes_to_site",
+          "description": "站点存在时写入站点发布说明目录",
+          "text": "检测到 `docs/site/release-notes/` 后，面向读者的 v1.4.0 发布说明目标切换为该目录下的版本页面，而不是只输出到旧位置。"
+        },
+        {
+          "id": "preserves_versioned_changelog_archive",
+          "description": "保留版本化 changelog 归档",
+          "text": "输出仍要求维护 `docs/changelog/changelog-v1.4.0.md` 作为仓库级版本归档，站点发布说明不替代该归档。"
+        },
+        {
+          "id": "preserves_root_changelog_index",
+          "description": "保留根 changelog 索引契约",
+          "text": "输出仍要求根 `CHANGELOG.md` 索引 v1.4.0 归档，不在根索引重复维护完整发布条目。"
+        },
+        {
+          "id": "keeps_existing_release_evidence_contract",
+          "description": "保留既有发布证据契约",
+          "text": "站点路径切换不取消来源审计、目标 tag 审计范围、面向用户的价值说明和变更明细等既有 release-notes 契约。"
+        }
+      ],
+      "files": []
     }
   ]
 }

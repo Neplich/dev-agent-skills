@@ -1,0 +1,14 @@
+title: Session documentation map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - src/session/**
+last_verified_version: unverified
+change_map:
+  "src/session/**":
+    required_docs:
+      - docs/site/api/session.md
+    trigger: Update session documentation when timeout or renewal behavior changes.

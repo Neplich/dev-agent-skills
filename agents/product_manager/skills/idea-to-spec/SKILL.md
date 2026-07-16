@@ -84,6 +84,8 @@ New formal PM documents must include `feature_path`, `feature`,
 
 ## Phase 0: Context Detection
 
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+
 Inspect repo markers, stack markers, architecture directories, existing docs,
 and `docs/pm/**/PRD.md` metadata. Output a compact context summary covering
 directory, project status, detected stack, existing docs, feature path, chosen

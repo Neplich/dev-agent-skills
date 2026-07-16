@@ -122,6 +122,31 @@
           "text": "如果 feature_path 不清或同路径 PRD/TRD/实施计划缺失，必须回 PM/Engineer 对齐，而不是自建同义顶层目录。"
         }
       ]
+    },
+    {
+      "id": "eval-005-mapped-search-security",
+      "name": "Mapped Search Security Documentation",
+      "description": "Verify that an application security review uses mapped formal documentation as a low-trust exploration aid and checks the search query against code",
+      "prompt": "请审查 src/api/search-handler.js 的用户搜索安全性，重点检查查询参数如何进入数据查询，并给出证据、影响和修复建议。",
+      "workspace": "workspace/eval-005-mapped-search-security",
+      "expected_output": "优先读取 change-map 命中的搜索 API 文档，再以代码核对查询构造；将 unverified 文档按最低信任处理并报告参数化声明与代码插值事实的不一致。",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "命中 change-map 后优先读取搜索 API required_docs",
+          "text": "从 src/api/search-handler.js 反查 change-map，优先读取 docs/site/api/user-search.md，只读取命中文档及必要上下文，不遍历无关正式文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "以处理器代码核对查询参数安全声明",
+          "text": "关键安全结论回到 src/api/search-handler.js；识别文档声称使用参数化查询、代码实际直接插值 query 的不一致，并以代码事实评估风险。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "将 unverified 搜索文档按最低信任处理",
+          "text": "识别 required_docs 的 last_verified_version 为 unverified，对所有关键安全判断扩大代码核证，而不是直接采信文档或拒绝读取。"
+        }
+      ]
     }
   ]
 }

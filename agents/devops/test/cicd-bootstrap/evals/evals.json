@@ -37,6 +37,31 @@
           "text": "deploy/SECRETS.md 文档存在，列出需要的 secrets"
         }
       ]
+    },
+    {
+      "id": "eval-002-mapped-doc-cicd",
+      "name": "mapped-doc-cicd",
+      "description": "验证 CI/CD 设计通过 change-map 定位构建文档，并用代码配置核证未验证的校验命令。",
+      "prompt": "为 src/build/pipeline.rules 中定义的校验流程设计最小 CI job，确认应执行的命令。",
+      "workspace": "workspace/eval-002-mapped-doc-cicd",
+      "expected_output": "以代码配置确认校验命令的 CI 建议，并报告映射文档与代码差异。",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "优先读取构建流程映射文档",
+          "text": "根据 src/build/pipeline.rules 命中 change-map 后先读取 docs/site/api/build-pipeline.md，不遍历无关站点文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "CI 命令以代码配置为准",
+          "text": "回读 src/build/pipeline.rules，发现文档声明运行 test 而代码要求 verify；不得盲信文档，应使用代码事实并说明错误命令对流水线的影响。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "未核证流水线文档最低信任",
+          "text": "识别 last_verified_version: unverified，所有关键 CI 步骤必须由代码或测试配置核证。"
+        }
+      ]
     }
   ]
 }

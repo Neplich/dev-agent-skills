@@ -1,0 +1,15 @@
+title: Documentation change map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - src/dependencies/**
+last_verified_version: unverified
+change_map:
+  "src/dependencies/manifest.json":
+    required_docs:
+      - docs/site/api/network-client.md
+    trigger: Review dependency documentation when the network client version changes.
+    exclude: []

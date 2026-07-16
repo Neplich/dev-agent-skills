@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-005-mapped-upload-trd-evidence",
+  "eval_name": "mapped-upload-trd-evidence",
+  "workspace_root": "agents/engineer/test/trd-gen/evals/workspace/eval-005-mapped-upload-trd-evidence",
+  "skill_availability_goal": "Verify that trd-gen uses mapped unverified documentation as context and confirms technical constraints from code.",
+  "prompt": "请为 `src/upload/` 增加分片上传能力准备 TRD，先确认当前接口行为与技术差距；不要进入实现。",
+  "fixture_context": [
+    "src/upload/limits.txt",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/upload.md"
+  ]
+}

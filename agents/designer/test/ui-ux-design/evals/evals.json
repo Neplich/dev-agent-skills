@@ -92,6 +92,31 @@
           "text": "输出不包含代码修改、实现步骤拆解、测试命令或补丁动作"
         }
       ]
+    },
+    {
+      "id": "eval-005-mapped-notification-ui",
+      "name": "Mapped Notification UI Documentation",
+      "description": "Verify that UI/UX design exploration follows the mapped formal documentation and validates an unverified default-state claim against the UI code",
+      "prompt": "请为通知偏好设置页补充 UI/UX 设计规格，重点核对 src/ui/notification-preferences.html 中邮件通知开关的默认状态，并说明现有行为、交互状态与工程 handoff。",
+      "workspace": "workspace/eval-005-mapped-notification-ui",
+      "expected_output": "优先读取 change-map 命中的通知偏好正式文档，再以代码核对默认状态；将 unverified 文档按最低信任处理并报告文档与代码的不一致，最终停在设计 handoff。",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "命中 change-map 后优先读取通知偏好 required_docs",
+          "text": "从任务落点 src/ui/notification-preferences.html 反查 change-map，优先读取 docs/site/api/notification-preferences.md，只读取命中文档及必要上下文，不遍历无关正式文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "以 UI 代码核对邮件通知默认状态",
+          "text": "关键设计判断回到 src/ui/notification-preferences.html；识别文档声称默认开启、代码实际未选中的不一致，不以文档覆盖代码事实。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "将 unverified 正式文档按最低信任处理",
+          "text": "识别 required_docs 的 last_verified_version 为 unverified，对所有关键设计判断扩大代码核证，而不是直接采信文档或拒绝读取。"
+        }
+      ]
     }
   ]
 }

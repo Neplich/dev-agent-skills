@@ -1,0 +1,13 @@
+title: Documentation change map
+visibility: internal
+doc_type: standard
+stage: dev
+owners: [docs]
+related_code: [src/runtime/server.conf]
+last_verified_version: unverified
+change_map:
+  "src/runtime/**":
+    required_docs:
+      - docs/site/api/runtime-server.md
+    trigger: Update runtime deployment documentation when server configuration changes.
+    exclude: []

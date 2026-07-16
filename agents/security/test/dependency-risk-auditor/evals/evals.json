@@ -92,6 +92,31 @@
           "text": "给出升级、替换或缓解建议"
         }
       ]
+    },
+    {
+      "id": "eval-004-mapped-client-dependency",
+      "name": "Mapped Client Dependency Documentation",
+      "description": "Verify that a dependency audit reads mapped formal documentation and validates an unverified client version claim against the dependency manifest",
+      "prompt": "请审计 src/dependencies/manifest.json 中网络客户端依赖的风险，核对当前版本并给出升级或缓解建议。",
+      "workspace": "workspace/eval-004-mapped-client-dependency",
+      "expected_output": "优先读取 change-map 命中的依赖文档，再以清单核对实际版本；将 unverified 文档按最低信任处理并报告文档版本与依赖清单不一致。",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "命中 change-map 后优先读取网络客户端 required_docs",
+          "text": "从 src/dependencies/manifest.json 反查 change-map，优先读取 docs/site/api/network-client.md，只读取命中文档及必要上下文，不遍历无关正式文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "以依赖清单核对网络客户端版本",
+          "text": "关键依赖结论回到 src/dependencies/manifest.json；识别文档声称使用 2.1.0、清单实际固定 1.4.0 的不一致，并以清单事实评估风险。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "将 unverified 依赖文档按最低信任处理",
+          "text": "识别 required_docs 的 last_verified_version 为 unverified，对所有关键依赖判断扩大代码或清单核证，而不是直接采信文档或拒绝读取。"
+        }
+      ]
     }
   ]
 }

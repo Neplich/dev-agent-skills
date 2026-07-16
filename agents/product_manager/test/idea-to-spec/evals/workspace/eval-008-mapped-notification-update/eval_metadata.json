@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-008-mapped-notification-update",
+  "eval_name": "mapped-notification-update",
+  "workspace_root": "agents/product_manager/test/idea-to-spec/evals/workspace/eval-008-mapped-notification-update",
+  "skill_availability_goal": "Verify that idea-to-spec reads mapped unverified documentation first and confirms existing behavior from code before scoping an update.",
+  "prompt": "现有 `src/notifications/` 需要新增短信渠道。请先梳理当前行为与差距，再形成现有项目功能更新的需求范围。",
+  "fixture_context": [
+    "src/notifications/channels.txt",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/notifications.md"
+  ]
+}

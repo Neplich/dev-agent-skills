@@ -1,0 +1,15 @@
+title: Documentation change map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - src/ui/**
+last_verified_version: unverified
+change_map:
+  "src/ui/notification-preferences.html":
+    required_docs:
+      - docs/site/api/notification-preferences.md
+    trigger: Update the interaction documentation when notification controls or defaults change.
+    exclude: []

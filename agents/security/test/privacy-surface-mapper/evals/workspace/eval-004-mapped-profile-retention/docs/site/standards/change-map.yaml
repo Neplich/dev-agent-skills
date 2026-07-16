@@ -1,0 +1,15 @@
+title: Documentation change map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - src/privacy/**
+last_verified_version: unverified
+change_map:
+  "src/privacy/profile-processing.yaml":
+    required_docs:
+      - docs/site/api/profile-data.md
+    trigger: Review privacy documentation when profile fields, purposes, or retention settings change.
+    exclude: []

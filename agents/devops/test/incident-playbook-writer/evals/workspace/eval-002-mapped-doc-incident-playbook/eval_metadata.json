@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-002-mapped-doc-incident-playbook",
+  "eval_name": "mapped-doc-incident-playbook",
+  "workspace_root": "agents/devops/test/incident-playbook-writer/evals/workspace/eval-002-mapped-doc-incident-playbook",
+  "skill_availability_goal": "Verify mapped-document consumption and code verification for incident-playbook-writer.",
+  "prompt": "为 src/runtime/health.rules 的连续健康检查失败场景编写最小处置与回滚步骤，确认告警阈值。",
+  "fixture_context": [
+    "src/runtime/health.rules",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/runtime-health.md"
+  ]
+}

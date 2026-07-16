@@ -5,7 +5,7 @@ feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.2.7"
+version: "1.2.8"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -51,6 +51,9 @@ changelog:
   - version: "1.2.7"
     date: "2026-07-15"
     changes: "audit 确定性层未更新文档降级为候选核对项，stale 由事实层确认"
+  - version: "1.2.8"
+    date: "2026-07-15"
+    changes: "决议 1 权威文件改随 pm-agent 入口插件分发，保证安装可达（PR #109 review 修订）"
 ---
 
 # docs-agent PRD
@@ -235,7 +238,7 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 
 | # | Question | Owner | Deadline | Resolution |
 |---|----------|-------|----------|------------|
-| 1 | 消费契约改动落在各 Agent SKILL.md 还是集中于新 `_shared` 约定文件，指针粒度如何取？ | Maintainer | 2026-07-14 | 集中放 docs-agent 的 `_internal/_shared/consumption-contract.md` 作为权威约定，6 个 Agent specialist SKILL.md 各加一行指针，与 skill-map.md 先例一致 |
+| 1 | 消费契约改动落在各 Agent SKILL.md 还是集中于新 `_shared` 约定文件，指针粒度如何取？ | Maintainer | 2026-07-14 | 集中放 docs-agent 的 `_internal/_shared/consumption-contract.md` 作为权威约定，6 个 Agent specialist SKILL.md 各加一行指针，与 skill-map.md 先例一致；权威文件路径修订为 `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`，随 pm-agent 默认入口插件分发以保证安装可解析（沿用 skill-map.md 先例，PR #109 review 修订） |
 | 2 | audit 报告归档路径：沿用 QA `_reports/{platform-version}/` 先例，还是站点 `.meta/` 或 `docs/docs/`？ | Maintainer | 2026-07-14 | 归档到宿主站点 `docs/site/.meta/audit/audit-{version}.md`；`.meta/` 为机器消费区，不进导航、不受 frontmatter 校验约束 |
 | 3 | `visibility` 双站点是否进入 MVP，还是先单站点、双站点后置？ | Maintainer | 2026-07-14 | visibility 双站点全进 MVP：bootstrap 骨架内置 visibility 过滤生成脚本、public / internal 双首页与双站点配置 |
 | 4 | bootstrap 是否额外生成宿主项目本地维护 skill（仿 `hub-docs-maintainer`），还是逻辑全部留在 marketplace skill？ | Maintainer | 2026-07-14 | 不生成宿主本地维护 skill；逻辑全部留在 marketplace 的 `formal-docs-sync`，宿主差异落 `standards/` 与 change-map 数据层 |

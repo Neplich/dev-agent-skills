@@ -92,6 +92,31 @@
           "text": "提供可执行的授权修复和回归验证建议"
         }
       ]
+    },
+    {
+      "id": "eval-004-mapped-report-export-authz",
+      "name": "Mapped Report Export Authorization",
+      "description": "Verify that an authorization review reads mapped formal documentation and validates an unverified role claim against the policy code",
+      "prompt": "请审查 src/access/report-export-policy.js 的报表导出授权逻辑，说明哪些角色可以导出以及是否存在越权风险。",
+      "workspace": "workspace/eval-004-mapped-report-export-authz",
+      "expected_output": "优先读取 change-map 命中的报表导出文档，再以代码核对角色权限；将 unverified 文档按最低信任处理并报告管理员专属声明与 analyst 可导出事实的不一致。",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "命中 change-map 后优先读取报表导出 required_docs",
+          "text": "从 src/access/report-export-policy.js 反查 change-map，优先读取 docs/site/api/report-export.md，只读取命中文档及必要上下文，不遍历无关正式文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "以授权策略代码核对可导出角色",
+          "text": "关键授权结论回到 src/access/report-export-policy.js；识别文档声称仅 admin 可导出、代码实际允许 analyst 的不一致，并以代码事实评估越权风险。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "将 unverified 授权文档按最低信任处理",
+          "text": "识别 required_docs 的 last_verified_version 为 unverified，对所有关键授权判断扩大代码核证，而不是直接采信文档或拒绝读取。"
+        }
+      ]
     }
   ]
 }

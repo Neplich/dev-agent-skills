@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-005-mapped-search-security",
+  "eval_name": "Mapped Search Security Documentation",
+  "workspace_root": "agents/security/test/appsec-checklist/evals/workspace/eval-005-mapped-search-security",
+  "skill_availability_goal": "Verify mapped-document-first application security exploration, code verification, and lowest trust for unverified documentation.",
+  "prompt": "请审查 src/api/search-handler.js 的用户搜索安全性，重点检查查询参数如何进入数据查询，并给出证据、影响和修复建议。",
+  "fixture_context": [
+    "src/api/search-handler.js",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/user-search.md"
+  ]
+}

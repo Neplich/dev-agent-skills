@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-003-mapped-doc-regression",
+  "eval_name": "mapped-doc-regression",
+  "workspace_root": "agents/qa/test/regression-suite/evals/workspace/eval-3-mapped-doc-regression",
+  "skill_availability_goal": "Verify mapped-document consumption and code verification for regression-suite.",
+  "prompt": "为 src/search/query.rules 的最短查询长度修复制定定向回归范围，并判断当前实际阈值。",
+  "fixture_context": [
+    "src/search/query.rules",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/search-query.md"
+  ]
+}

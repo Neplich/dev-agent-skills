@@ -1,0 +1,14 @@
+title: Billing documentation map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - src/billing/**
+last_verified_version: unverified
+change_map:
+  "src/billing/**":
+    required_docs:
+      - docs/site/api/billing.md
+    trigger: Update billing documentation when subscription behavior changes.

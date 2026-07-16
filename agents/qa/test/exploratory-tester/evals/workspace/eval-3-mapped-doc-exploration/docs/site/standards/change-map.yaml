@@ -1,0 +1,13 @@
+title: Documentation change map
+visibility: internal
+doc_type: standard
+stage: dev
+owners: [docs]
+related_code: [src/checkout/session.rules]
+last_verified_version: unverified
+change_map:
+  "src/checkout/**":
+    required_docs:
+      - docs/site/api/checkout-session.md
+    trigger: Update checkout session documentation when timeout behavior changes.
+    exclude: []

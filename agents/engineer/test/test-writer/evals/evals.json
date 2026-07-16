@@ -27,6 +27,31 @@
           "text": "测试文件命名和结构符合项目现有测试模式"
         }
       ]
+    },
+    {
+      "id": "eval-002-mapped-pagination-tests",
+      "name": "使用映射文档编写分页测试",
+      "description": "验证测试编写命中 change-map 后精准读取低信任文档并按代码事实设计断言",
+      "prompt": "请为 `src/pagination/` 的边界行为设计并编写测试，先核对当前默认页大小。",
+      "expected_output": "读取映射的分页 API 文档，以代码核证默认值，并基于真实行为设计测试。",
+      "workspace": "workspace/eval-002-mapped-pagination-tests",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "优先读取映射文档",
+          "text": "从 `src/pagination/` 命中 change-map 后先读取 `docs/site/api/pagination.md`，不扫描无关文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "测试预期回代码核证",
+          "text": "以 `src/pagination/defaults.txt` 核证默认页大小为 25，识别文档写 50 的不一致，并按代码事实设置测试预期。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "未验证文档按最低信任处理",
+          "text": "把 `last_verified_version: unverified` 按最低信任处理，不直接将文档数值写入测试断言。"
+        }
+      ]
     }
   ]
 }

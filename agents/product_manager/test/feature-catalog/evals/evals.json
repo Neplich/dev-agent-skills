@@ -102,6 +102,31 @@
           "text": "输出没有把每个 workspace 直接猜测为新的并列顶层 feature_path 结论；如列出候选也明确标记为 unresolved 待确认"
         }
       ]
+    },
+    {
+      "id": "eval-004-catalog-mapped-billing-feature",
+      "name": "使用映射文档盘点计费功能",
+      "description": "验证功能目录盘点命中 change-map 后精准读取低信任文档并回代码核证",
+      "prompt": "请盘点 `src/billing/` 当前已经实现的计费功能，给出带证据与置信度的功能目录草案。",
+      "expected_output": "先读取 change-map 命中的计费 API 文档，再以代码事实核证功能边界并报告文档分歧。",
+      "workspace": "workspace/eval-004-catalog-mapped-billing-feature",
+      "assertions": [
+        {
+          "id": "reads_mapped_docs_first",
+          "description": "优先读取映射文档",
+          "text": "从任务落点 `src/billing/` 命中 change-map 后，先读取 `docs/site/api/billing.md`，且不遍历无关文档。"
+        },
+        {
+          "id": "verifies_against_code",
+          "description": "回到代码核证目录事实",
+          "text": "关键功能判断以 `src/billing/service.txt` 为事实来源，识别文档声称支持年付而代码只支持月付，并保留文档路径、文档声明、代码事实和影响。"
+        },
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "未验证文档按最低信任处理",
+          "text": "明确把 `last_verified_version: unverified` 视为最低信任，所有关键目录结论均回到代码验证，不把文档直接当成已确认事实。"
+        }
+      ]
     }
   ]
 }
