@@ -80,6 +80,21 @@ trust model, and output format are authoritative in
 `_internal/INSTRUCTIONS.md`. Load that file after this gate passes; do not
 invent a parallel workflow.
 
+### Design Delivery Closeout Gate
+
+In feature-delivery mode, before proposing any feature-level
+`docs/site/design/**` write, verify all seven closeout conditions for the same
+`feature_path`: Approved PRD, Confirmed TRD with traceable impact scope,
+confirmed implementation plan, fully completed plan scope, code and diff
+coverage, all required tests passing, and the existing candidate-scope
+confirmation. Treat the design page and its design change-map entry as one
+atomic scope; if any condition or its evidence is missing, block with zero
+changes to both.
+
+The authoritative checklist, accepted closeout evidence, blocked output,
+write/read-back rules, and bootstrap/backfill boundaries are in
+`_internal/INSTRUCTIONS.md` under **Design Delivery Closeout Gate**.
+
 ## Missing Documentation Site
 
 If `docs/site/` or its standards are absent, do not create them silently.
