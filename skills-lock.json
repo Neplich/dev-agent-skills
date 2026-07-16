@@ -194,7 +194,7 @@
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",
       "sourceType": "local",
-      "computedHash": "f0f506a3d276e74f195bf93a58e72e391a40ec357ae94d08ea8f191412becc04"
+      "computedHash": "84b15c10e0ef5b431f76ff2aa722870db3129313546b8dcc71c49559b041acc0"
     }
   }
 }

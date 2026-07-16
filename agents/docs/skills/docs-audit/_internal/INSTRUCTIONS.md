@@ -66,9 +66,11 @@ when there is no changed code or change-map match, so a documentation-only
 claim cannot bypass fact verification.
 
 Use each such page's frontmatter `related_code` to bound its code and test
-evidence. For a non-code page whose valid frontmatter permits an empty or
-missing `related_code`, perform frontmatter and document-structure checks only;
-do not manufacture a code-evidence task or placeholder glob.
+evidence. The field is required for every page. For a `landing`, `release`, or
+`standard` page, an empty `related_code` array is valid and means to perform
+frontmatter and document-structure checks only; do not manufacture a
+code-evidence task or placeholder glob. A missing `related_code` field is
+invalid frontmatter and makes the page `stale` in Step 5.
 
 ### Step 5: Validate frontmatter
 
@@ -82,12 +84,15 @@ Validate every affected formal Markdown page and explicitly exclude
 | `doc_type` | `landing`, `release`, `design`, `api`, `database`, `ops`, `product`, or `standard` |
 | `stage` | `draft`, `dev`, `ops`, or `release` |
 | `owners` | non-empty string array |
-| `related_code` | path/glob array; non-empty for `api`, `database`, `design`, `ops`, and `product`; empty or absent is allowed for `landing`, `release`, and `standard` |
+| `related_code` | required path/glob array; non-empty for `api`, `database`, `design`, `ops`, and `product`; an empty array is allowed for `landing`, `release`, and `standard`, but the field must not be absent |
 | `last_verified_version` | tag/Release string or `unverified`; it may be absent only when the host has no version anchor |
 
 An invalid field, invalid enum, invalid conditional `related_code`, or invalid
-version field makes the page `stale` immediately. The literal `unverified` is
-valid but carries the lowest trust and requires full claim verification.
+version field makes the page `stale` immediately. The literal `unverified` and
+an older release anchor are valid version values, not `stale` conclusions. They
+lower trust and require broader code and test verification; after the complete
+affected set is `verified`, the unified stamp step advances them to the current
+version anchor.
 
 ### Step 6: Classify deterministic findings
 
@@ -141,7 +146,7 @@ Assign final statuses from this table after fact verification:
 | Status | Decision rule | Release recommendation |
 | --- | --- | --- |
 | `verified` | Every material declaration has current code or test evidence and no omission was found. | Proceed for this item; stamp only when the complete affected set is verified. |
-| `stale` | A map match is factually confirmed to be out of sync, or the page has obsolete version/field data or invalid frontmatter. | Blocked; synchronize and re-audit the documentation. |
+| `stale` | Fact-layer review confirms that a material declaration is no longer synchronized with current code, or a frontmatter field is invalid. An older release anchor or `unverified` only lowers trust and broadens verification; it is advanced by unified stamping after the complete affected set is verified. | Blocked; synchronize and re-audit the documentation. |
 | `mismatch` | A document declaration directly conflicts with current code or test fact. | Blocked; confirm whether documentation or implementation must change, then re-audit. |
 
 Any `stale`, `mismatch`, or unresolved evidence gap blocks the release audit.

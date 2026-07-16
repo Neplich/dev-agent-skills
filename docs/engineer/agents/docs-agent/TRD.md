@@ -1,7 +1,7 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.1.16"
+version: "0.1.17"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -13,6 +13,10 @@ parent_feature: "agents"
 feature_level: "2"
 related_prd: "docs/pm/agents/docs-agent/PRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/105"
+changelog:
+  - version: "0.1.17"
+    date: "2026-07-16"
+    changes: "收敛 audit stale 判定，并统一 related_code 必填语义"
 ---
 
 # docs-agent TRD
@@ -141,13 +145,13 @@ agents/docs/
 | `doc_type` | `landing`、`release`、`design`、`api`、`database`、`ops`、`product`、`standard` | 决定模板与导航分类；`standard` 用于 standards 目录下的规范与模板页 |
 | `stage` | `draft`、`dev`、`ops`、`release` | 表示内容所处生命周期节点 |
 | `owners` | 非空字符串数组 | 使用角色或团队标识，不写个人凭据 |
-| `related_code` | 路径 / glob 数组 | `api`、`database`、`design`、`ops`、`product` 页面必填非空，只列支撑该文档事实的代码范围；`landing`、`release`、`standard` 页面允许为空数组或缺省，不得填占位假 glob |
+| `related_code` | 路径 / glob 数组 | `api`、`database`、`design`、`ops`、`product` 页面必填非空，只列支撑该文档事实的代码范围；`landing`、`release`、`standard` 页面使用空数组表示无关联代码（字段本身必填、缺省视为无效），不得填占位假 glob |
 | `last_verified_version` | git tag / GitHub Release 字符串，或字面量 `unverified` | 新建或变更后未过审计的页面使用 `unverified`；只能由 audit 全部 verified 后统一替换为版本锚 |
 
 FR-A07 的唯一例外是宿主没有版本体系时可缺省 `last_verified_version`；validator 必须把“未发现版本锚”与普通字段缺失区分，audit 报告明确记录 `version_anchor: unavailable`，不得伪造 `unknown` 版本。
 
 validator 接受 `unverified` 为合法值，frontmatter 校验不因该值失败。
-validator 对 related_code 的非空校验按 doc_type 区分；非代码页面为空不视为失败。
+validator 要求所有页面存在 related_code 字段；非代码页面空数组不视为失败，字段缺省一律失败。
 
 ### 4.2 change-map
 
@@ -256,7 +260,7 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 | 状态 | 判定 | release 建议 |
 | --- | --- | --- |
 | `verified` | 声明有当前代码/测试证据且无遗漏 | 可继续；仅全部条目 verified 时盖章 |
-| `stale` | 映射命中且事实层确认声明已与当前代码不同步，或版本/字段过期 | blocked，先同步文档 |
+| `stale` | 映射命中且事实层确认声明已与当前代码不同步，或 frontmatter 字段无效；旧版本锚只降低信任并扩大核对，由统一盖章步骤推进，不构成 stale | blocked，先同步文档 |
 | `mismatch` | 文档声明与代码事实直接冲突 | blocked，先确认修文档还是修代码 |
 
 报告写入 `docs/site/.meta/audit/audit-{version}.md`；无版本锚时以 target HEAD 短 SHA 回退命名为 `audit-{target-short-sha}.md`，并在报告中记录 `version_anchor: unavailable`，不得虚构版本号，包含 base/target、版本锚、changed files、命中的 change-map、逐文档证据、三态结论、阻塞项和复核命令。`.meta/` 报告不需要标准 frontmatter。仅当所有影响域结论均为 `verified` 时，统一把受审页面的 `last_verified_version` 从 `unverified` 或旧版本锚更新为本次 tag / Release，并同步 `.meta/releases.json`；部分 verified 不局部盖章。
