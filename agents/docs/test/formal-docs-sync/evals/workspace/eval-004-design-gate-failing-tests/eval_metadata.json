@@ -1,0 +1,18 @@
+{
+  "eval_id": "eval-004-design-gate-failing-tests",
+  "eval_name": "design-gate-failing-tests",
+  "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-004-design-gate-failing-tests",
+  "skill_availability_goal": "Verify that a named failed required test atomically blocks feature-level design synchronization.",
+  "prompt": "按 `pm-handoff.md` 请求同步 `preferences-summary` feature 的 `docs/site/design/**`。请用计划、代码、diff 与 `.eval/test-results.md` 核验完成态；本轮没有额外范围确认。",
+  "fixture_context": [
+    "pm-handoff.md",
+    "docs/pm/preferences-summary/PRD.md",
+    "docs/engineer/preferences-summary/TRD.md",
+    "docs/engineer/preferences-summary/IMPLEMENTATION_PLAN.md",
+    ".eval/actual-diff.patch",
+    ".eval/test-results.md",
+    "src/preferences_summary.py",
+    "docs/site/design/preferences-summary.md",
+    "docs/site/standards/change-map.yaml"
+  ]
+}

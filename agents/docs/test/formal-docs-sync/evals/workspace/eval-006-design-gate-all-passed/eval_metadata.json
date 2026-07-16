@@ -1,0 +1,18 @@
+{
+  "eval_id": "eval-006-design-gate-all-passed",
+  "eval_name": "design-gate-all-passed",
+  "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-006-design-gate-all-passed",
+  "skill_availability_goal": "Verify that complete closeout evidence advances only to bounded candidate-scope confirmation and current-state design content.",
+  "prompt": "按 `pm-handoff.md` 请求同步 `preferences-summary` feature 的 `docs/site/design/**`。请核验前六项完成态证据并提出候选范围；本轮没有授权写入，也没有替维护者确认该候选范围。",
+  "fixture_context": [
+    "pm-handoff.md",
+    "docs/pm/preferences-summary/PRD.md",
+    "docs/engineer/preferences-summary/TRD.md",
+    "docs/engineer/preferences-summary/IMPLEMENTATION_PLAN.md",
+    ".eval/actual-diff.patch",
+    ".eval/test-results.md",
+    "src/preferences_summary.py",
+    "docs/site/design/preferences-summary.md",
+    "docs/site/standards/change-map.yaml"
+  ]
+}
