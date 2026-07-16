@@ -240,7 +240,7 @@ instead of blocking or inventing a feature path.
 | Confirmed acceptance, exploratory, bug analysis, smoke, retest, or regression work | `QA` | Test basis, expected behavior, environment, affected flows, result format. |
 | Confirmed deployment, CI/CD, environment, Docker, Helm, release readiness, rollback, or runbook work | `DevOps` | Environment, release target, rollback expectation, operational risk. |
 | Confirmed AppSec, auth/authz, dependency, secret, privacy, upload, webhook, or data-flow review | `Security` | Risk surface, assets, permissions, data categories, remediation expectations. |
-| Confirmed formal documentation site bootstrap, post-feature / post-deployment / post-release formal-docs synchronization, existing formal-docs backfill, or release documentation audit | `Docs` | Source feature / deployment / release evidence, formal-docs scope, target site or pages, synchronization or audit output; `docs-agent` router provides bootstrap and sync in WS2, while audit routing becomes executable after WS3 delivers `docs-audit`. |
+| Confirmed formal documentation site bootstrap, post-feature / post-deployment / post-release formal-docs synchronization, existing formal-docs backfill, or release documentation audit | `Docs` | Source feature / deployment / release evidence, formal-docs scope, target site or pages, synchronization or audit output; `docs-agent` routes bootstrap, synchronization, backfill, and audit to the matching specialist. |
 | Inherited-project feature inventory, competitive research, battlecards, changelogs, release notes, roadmaps, or repository status | Named PM specialist | PM-owned route context only: selected specialist, source repository or release context, optional `N/A` feature scope for non-feature work, and any follow-up handoff condition. |
 | New feature, existing update, unclear scope, or expectation change not yet confirmed | PM specialist | Keep the request in PM; do not send a ready handoff packet. |
 
@@ -289,7 +289,7 @@ workflow, or blocked handoff report.
   `PM -> Designer -> Engineer -> QA -> DevOps -> Security` to identify the
   most likely next owner. Insert `Docs` when formal documentation work is due:
   after feature implementation, recommend `formal-docs-sync`; before release,
-  recommend `docs-audit` after WS3 delivers that capability. Do not create a
+  recommend `docs-audit`. Do not create a
   parallel owner map or new chain.
 - At closeout, proactively tell the user what the recommended next step is,
   why that owner is next, and what artifact or action that owner should

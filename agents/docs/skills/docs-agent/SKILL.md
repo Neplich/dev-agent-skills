@@ -17,7 +17,7 @@ preserves confirmed scope and evidence through the handoff.
 - checking for a PM handoff packet, an equivalent confirmed document chain, or
   the selected specialist's documented entry basis
 - routing explicit site initialization to `docs-site-bootstrap`, synchronization
-  or backfill to `formal-docs-sync`, and blocking release audit until WS3
+  or backfill to `formal-docs-sync`, and release audit to `docs-audit`
 - pointing to each specialist's authoritative gate without copying it
 - applying the PM safety-net closeout after the current work finishes
 
@@ -60,9 +60,8 @@ authoritative specialist contract.
   formal documentation site
 - `docs-agent:formal-docs-sync` - Synchronize confirmed feature, deployment, or
   release facts, or backfill existing formal API documentation
-- `docs-agent:docs-audit` - Audit formal documentation before release; this
-  specialist is delivered in WS3 and is unavailable in the WS2 intermediate
-  state
+- `docs-agent:docs-audit` - Audit formal documentation before release and
+  produce the release recommendation, evidence report, and version stamp
 
 ## Routing Signals
 
@@ -76,8 +75,7 @@ Route by the requested documentation outcome, not literal phrasing.
   -> `formal-docs-sync`
 - Audit formal docs for release readiness or verify release documentation
   coverage
-  -> WS2 intermediate state: explain that `docs-audit` is scheduled for WS3,
-  mark the audit stage blocked, and do not hand off to the unavailable skill
+  -> `docs-audit`
 
 ## Specialist Gate Pointers
 
@@ -85,8 +83,8 @@ Route by the requested documentation outcome, not literal phrasing.
   `docs-site-bootstrap/SKILL.md` and its internal instructions.
 - Synchronization and backfill behavior is authoritative in
   `formal-docs-sync/SKILL.md` and its internal instructions.
-- Release audit behavior will become authoritative in
-  `docs-audit/SKILL.md` when WS3 delivers that specialist.
+- Release audit behavior is authoritative in
+  `docs-audit/SKILL.md` and its internal instructions.
 
 Do not expand these pointers into duplicated specialist protocols inside this
 router.
@@ -95,15 +93,14 @@ router.
 
 If a required peer agent, plugin, or specialist is unavailable, identify the
 missing stage and required capability, mark that stage blocked, and do not
-perform its responsibilities. The unavailable WS2 audit route follows this
-rule explicitly.
+perform its responsibilities.
 
 ## Output Behavior
 
 When routing is complete:
 
-- state the selected specialist, or the blocked stage if the target is not yet
-  available
+- state the selected specialist, or the blocked stage if a required target is
+  unavailable
 - state the accepted entry basis and the expected documentation artifact
 - preserve unresolved evidence or ownership gaps for the selected specialist
 - after the current role or specialist finishes, apply the cross-role

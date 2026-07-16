@@ -23,7 +23,7 @@ Codex 会先确认两个问题：
 - `devops-agent`：PM handoff 后的下游 DevOps 能力，承接已确认运维范围内的部署规划、CI/CD、环境审计和故障处理
 - `designer-agent`：PM handoff 后的下游设计能力，承接已确认设计范围内的 UI/UX、视觉系统和界面规范
 - `security-agent`：PM handoff 后的下游安全能力，承接已确认安全范围内的应用安全、权限审查、依赖风险和隐私映射
-- `docs-agent`：PM handoff 后的下游正式文档能力，承接站点初始化与证据驱动同步；审计随 WS3 交付
+- `docs-agent`：PM handoff 后的下游正式文档能力，承接站点初始化、证据驱动同步与发版审计
 
 默认全量安装同时包含全部 specialist skills，确保 `pm-agent` 和 role router 编排流程可以调用下游 specialist。只有在明确只需要入口分类的最小场景下才使用 `routers-only`；该模式不会在目标根目录暴露 specialist skills，因此 PM 和 role router 编排无法调用下游 specialist。
 

@@ -1,0 +1,8 @@
+{
+  "eval_id": "eval-003-route-release-audit",
+  "eval_name": "route-release-audit",
+  "workspace_root": "agents/docs/test/docs-agent/evals/workspace/eval-003-route-release-audit",
+  "skill_availability_goal": "Verify that docs-agent recognizes an equivalent release entry chain and routes the request to docs-audit without copying the specialist protocol.",
+  "prompt": "请基于 `release-entry.md` 对 v0.4.0 做发版正式文档审计，并给出下一步 handoff。只完成 Docs Agent 的入口检查和分流，不执行 specialist 工作。",
+  "fixture_context": ["release-entry.md"]
+}
