@@ -74,6 +74,16 @@ helpers; shared, public, and internal VitePress configuration; theme and
 Mermaid rendering; two homepages; seven content-section entry pages; standards
 and five content templates; the empty change map; and release metadata.
 
+Static assets follow three publication rules. Put assets intended for both
+targets in `docs/site/public/`; the complete directory is copied into both
+generated trees using the VitePress public-directory convention. Other
+non-Markdown assets are copied only when the target contains at least one page
+in the asset's directory. Never copy `standards/change-map.yaml`, `.meta/**`,
+`.vitepress/**` beyond the template's explicit config/theme wiring,
+`node_modules/**`, or `.generated/**` into a generated tree. Hosts must not put
+internal-only assets in `docs/site/public/`; keep an internal-only asset beside
+its internal page instead.
+
 ## 3. Embedded Templates
 
 ### npm project
@@ -562,7 +572,7 @@ Target: `docs/site/scripts/prepare-site.mjs`
 
 ```js
 import { cp, mkdir, rm } from 'node:fs/promises';
-import { basename, dirname, resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import fg from 'fast-glob';
 import { collectMarkdown, visibleFor } from './lib/pages.mjs';
@@ -578,24 +588,44 @@ export async function prepareSite(target) {
   await rm(output, { recursive: true, force: true });
   await mkdir(output, { recursive: true });
 
+  const visibleDirectories = new Set(['.']);
   for (const page of await collectMarkdown()) {
     if (page.relativePath === 'index.public.md' || page.relativePath === 'index.internal.md') continue;
     if (!visibleFor(page.data.visibility, target)) continue;
     await writeText(resolve(output, page.relativePath), page.source);
+    visibleDirectories.add(dirname(page.relativePath));
   }
   const home = resolve(SITE_ROOT, `index.${target}.md`);
   await writeText(resolve(output, 'index.md'), await readText(home));
 
-  const assets = await fg(['**/*'], {
+  const publicAssets = await fg(['public/**'], {
     cwd: SITE_ROOT,
     onlyFiles: true,
     dot: true,
     ignore: [
-      '**/*.md', '.meta/**', '.generated/**', 'node_modules/**', 'scripts/**',
-      'package.json', 'package-lock.json', '.vitepress/cache/**', '.vitepress/dist/**'
+      '**/.meta/**', '**/.generated/**', '**/node_modules/**', '**/.vitepress/**'
     ]
   });
-  for (const asset of assets) {
+  const colocatedAssets = (await fg(['**/*'], {
+    cwd: SITE_ROOT,
+    onlyFiles: true,
+    dot: true,
+    ignore: [
+      '**/*.md', 'public/**', 'standards/change-map.yaml', '.meta/**',
+      '.generated/**', '**/node_modules/**', 'scripts/**', 'package.json',
+      'package-lock.json', '.vitepress/**'
+    ]
+  })).filter((asset) => visibleDirectories.has(dirname(asset)));
+  const vitepressAssets = await fg([
+    '.vitepress/config.shared.ts', `.vitepress/config.${target}.ts`,
+    '.vitepress/theme/**'
+  ], {
+    cwd: SITE_ROOT,
+    onlyFiles: true,
+    dot: true,
+    ignore: ['**/.meta/**', '**/.generated/**', '**/node_modules/**']
+  });
+  for (const asset of new Set([...publicAssets, ...colocatedAssets, ...vitepressAssets])) {
     const destination = resolve(output, asset);
     await mkdir(dirname(destination), { recursive: true });
     await cp(resolve(SITE_ROOT, asset), destination);
