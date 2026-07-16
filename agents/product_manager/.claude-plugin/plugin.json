@@ -1,6 +1,6 @@
 {
   "name": "pm-agent",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Default entry plugin for new user requests. Use when the user describes product ideas, feature requests, requirement changes, bugs, build/test/deploy/review/status requests, feature catalogs, competitive research, release communication, roadmaps, or GitHub project status. Classifies scope first, then routes to PM specialists or hands off to downstream role agents.",
   "author": {
     "name": "Neplich"
