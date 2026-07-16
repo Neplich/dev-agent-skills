@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "agent": "docs",
+  "skill_name": "formal-docs-sync",
+  "evals": [
+    {
+      "id": "eval-001-sync-feature-api",
+      "name": "Feature 模式精准同步 API 正式文档",
+      "description": "验证已确认 feature evidence chain 下只更新 change-map 命中的 API 页面，并以代码和测试为事实源。",
+      "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行正式文档同步。维护者已确认本批只处理 `src/api/search.py`、`src/api/schemas.py` 与命中的 `docs/site/api/search.md`；请从 fixture 代码、测试和 diff 核证后写入，并合并 change-map。",
+      "expected_output": "只更新 search API 页面，准确记录路径、参数和错误；保留未知人工映射及无关文档；不声称 database/ops 自动同步完成。",
+      "workspace": "workspace/eval-001-sync-feature-api",
+      "assertions": [
+        {
+          "id": "updates_only_mapped_api_doc",
+          "description": "只更新命中 API 页面",
+          "text": "根据 TRD related_code、plan scope、actual diff 与 change-map，只更新 `docs/site/api/search.md`；不修改 `docs/site/database/search-index.md` 或其他无关页面。"
+        },
+        {
+          "id": "extracts_current_api_facts",
+          "description": "从代码和测试提取 API 事实",
+          "text": "以路由、schema、handler 与 contract test 为 ground truth，记录 `GET /api/search`、必填 query 参数 `q`、可选 `limit` 及 400 `invalid_query` 错误，不延续 fixture 文档中的旧路径或猜测。"
+        },
+        {
+          "id": "merges_map_without_deleting_unknown",
+          "description": "合并映射且保留人工未知条目",
+          "text": "合并相同 `code_glob` 的 required_docs 并稳定去重排序，保留 `plugins/manual/**` 人工未知条目及其 trigger、exclude，不因当前 scope 未命中而删除。"
+        },
+        {
+          "id": "keeps_mvp_boundary",
+          "description": "遵守 API-only MVP 边界",
+          "text": "明确 feature sync 的 MVP 自动化仅覆盖 API 页面和 API code_glob，不声称 database、design、ops 或 release 文档已自动同步完成。"
+        },
+        {
+          "id": "marks_changed_page_unverified",
+          "description": "新状态等待审计验证",
+          "text": "将变更后的 API 页面写成稳定 current state，并保持 `last_verified_version: unverified`，不由 sync 盖 release 版本。"
+        }
+      ]
+    },
+    {
+      "id": "eval-002-plan-backfill-batches",
+      "name": "Catalog 优先规划存量 API 回填批次",
+      "description": "验证 backfill 优先使用 feature catalog 划定一批 API 范围，列出 code_glob、页面与种子映射并等待确认。",
+      "prompt": "维护者明确请求为当前 fixture 仓库回填存量 API 文档。请优先读取 `docs/pm/feature-catalog.md`，提出第一批范围，但本轮不要确认或执行该批次；同时说明如果仓库没有 catalog，应怎样形成候选范围。",
+      "expected_output": "按 catalog 的 accounts 模块提出单批 code_glob、页面与证据入口，保持未确认零写入；说明无 catalog 时先扫描 API surface 再确认。",
+      "workspace": "workspace/eval-002-plan-backfill-batches",
+      "assertions": [
+        {
+          "id": "prefers_catalog_scope",
+          "description": "优先使用 feature catalog",
+          "text": "先用 catalog 中 feature 到 code path 到 owner 的关系选出 `accounts` 单模块第一批，并核对引用路径真实存在；不把 billing 模块静默并入。"
+        },
+        {
+          "id": "presents_batch_before_write",
+          "description": "按批列范围并等待确认",
+          "text": "在写入前列出第一批的 `src/api/accounts/**` code_glob、拟生成 `docs/site/api/accounts.md` 页面、证据入口、owner 与 out-of-batch 范围，并明确等待维护者确认。"
+        },
+        {
+          "id": "keeps_unconfirmed_batch_read_only",
+          "description": "未确认批次不写入",
+          "text": "本轮不创建或修改 API 页面和 `change-map.yaml`，不开始第二批，也不把显式 backfill 请求误当作 batch confirmation。"
+        },
+        {
+          "id": "aligns_seed_with_page",
+          "description": "种子条目与页面一一对应",
+          "text": "拟议的 API change-map seed 使用 `src/api/accounts/**`，其 required_docs 指向拟生成的 `docs/site/api/accounts.md`，不包含不存在或越界页面。"
+        },
+        {
+          "id": "handles_missing_catalog_semantically",
+          "description": "无 catalog 时先扫描再确认",
+          "text": "说明若无 feature catalog，应先扫描 API entry points、schema、handler 与 contract tests，按一个顶级 route group 形成候选批次，然后展示 code_glob 和页面并等待确认，不能扫描后直接全库生成。"
+        }
+      ]
+    }
+  ]
+}

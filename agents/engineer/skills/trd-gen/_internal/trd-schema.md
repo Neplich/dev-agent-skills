@@ -20,6 +20,8 @@ date: <YYYY-MM-DD>
 last_updated: <YYYY-MM-DD>
 related_prd: docs/pm/<feature-path>/PRD.md
 related_decisions: docs/pm/<feature-path>/DECISIONS.md
+related_code: # optional machine-readable affected paths or globs
+  - src/<feature>/**
 ```
 
 The `author` value must identify both the generation requester and Agent
@@ -48,6 +50,12 @@ New TRDs and substantive TRD updates must write the explicit fields above.
 `related_prd` must point to `docs/pm/<feature-path>/PRD.md`; if the PRD is
 missing or its path/frontmatter does not match, stop and return to PM alignment
 or a TRD gap handoff instead of writing a mismatched TRD.
+
+`related_code` is optional and, when present, must be an array of repository
+paths or globs that machine-readably identifies the affected code domain for
+`formal-docs-sync` and `docs-audit`. It is an enhancement rather than a TRD or
+handoff gate. When it is absent, consumers must use their impact-domain
+evidence-chain fallback instead of blocking solely on this field.
 
 ### 2. Source Context
 

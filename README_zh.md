@@ -4,11 +4,11 @@
 
 面向软件交付全流程的多 Agent 技能市场。
 
-[![Agents](https://img.shields.io/badge/agents-6-blue)](#agents)
-[![Skills](https://img.shields.io/badge/skills-35-green)](#agents)
+[![Agents](https://img.shields.io/badge/agents-7-blue)](#agents)
+[![Skills](https://img.shields.io/badge/skills-38-green)](#agents)
 [![License](https://img.shields.io/badge/license-Apache%202.0-orange)](LICENSE)
 
-`pm-agent` • `designer-agent` • `engineer-agent` • `qa-agent` • `devops-agent` • `security-agent`
+`pm-agent` • `designer-agent` • `engineer-agent` • `qa-agent` • `devops-agent` • `security-agent` • `docs-agent`
 
 [快速开始](#快速开始) • [使用示例](#使用示例) • [Agents](#agents) • [协作方式](#协作方式) • [文档索引](#文档索引)
 
@@ -19,12 +19,12 @@
 
 ## 概览
 
-这个仓库把 6 个按角色划分的 Agent 集中发布在同一个 marketplace/source 中，用来覆盖一条完整的软件交付链：需求、设计、实现、测试、部署和安全审查。
+这个仓库把 7 个按角色划分的 Agent 集中发布在同一个 marketplace/source 中，用来覆盖一条完整的软件交付链：需求、设计、实现、测试、部署、安全审查和正式文档。
 
 仓库内容包括：
 
-- 1 个公开 PM 入口 skill，加 5 个下游 role router
-- 29 个内部 specialist skills，覆盖产品、工程、QA、DevOps、设计和安全细分任务
+- 1 个公开 PM 入口 skill，加 6 个下游 role router
+- 31 个内部 specialist skills，覆盖产品、工程、QA、DevOps、设计、安全和正式文档细分任务
 - Claude Code marketplace 配置
 - Codex 原生 skill discovery 安装入口
 - Agent 级 eval fixtures 与本地验证脚本
@@ -49,6 +49,7 @@
 /plugin install qa-agent@dev-agent-skills
 /plugin install devops-agent@dev-agent-skills
 /plugin install security-agent@dev-agent-skills
+/plugin install docs-agent@dev-agent-skills
 ```
 
 ### Codex
@@ -60,7 +61,7 @@ cd ~/.agents/dev-agent-skills
 # 默认安装全部 role router 和 specialist skills
 python3 scripts/install_codex_skills.py
 
-# 可选最小模式：只暴露 6 个 role router skills
+# 可选最小模式：只暴露 7 个 role router skills
 python3 scripts/install_codex_skills.py --routers-only
 ```
 
@@ -88,6 +89,7 @@ python3 scripts/install_codex_skills.py --routers-only
 | `qa-agent` | 规范验收、探索测试、缺陷分析、回归验证 | 5 (`1 + 4`) | 仅 PM handoff | [qa](./agents/qa/README_zh.md) |
 | `devops-agent` | 部署规划、CI/CD、环境配置审计、故障手册 | 5 (`1 + 4`) | 仅 PM handoff | [devops](./agents/devops/README_zh.md) |
 | `security-agent` | 应用安全、授权审查、依赖风险、隐私数据流 | 5 (`1 + 4`) | 仅 PM handoff | [security](./agents/security/README_zh.md) |
+| `docs-agent` | 正式文档分流、站点初始化与证据驱动同步；审计随 WS3 交付 | 3 (`1 + 2`) | 仅 PM handoff | [docs](./agents/docs/README.md) |
 
 > [!TIP]
 > 直接用户入口使用 `/pm-agent`。PM 会先分类请求，范围明确后再 handoff 到下游 role router 或 specialist skill。
@@ -105,6 +107,10 @@ flowchart LR
     Engineer --> DevOps["DevOps Agent"]
     Engineer --> Security["Security Agent"]
     Security --> Engineer
+    PM --> Docs["Docs Agent"]
+    Engineer --> Docs
+    QA --> Docs
+    DevOps --> Docs
 ```
 
 PRD/TRD 对齐、实现计划确认和 QA E2E handoff 等工程门禁见 [Engineer Agent 文档](./agents/engineer/README_zh.md)。
@@ -116,6 +122,7 @@ PRD/TRD 对齐、实现计划确认和 QA E2E handoff 等工程门禁见 [Engine
 3. `engineer-agent <-> qa-agent`，用于缺陷修复和回归确认
 4. `engineer-agent -> devops-agent`，用于部署、CI/CD 和运行准备
 5. `engineer-agent -> security-agent`，用于发布前或专项安全审查
+6. `pm-agent -> docs-agent`，用于范围确认后的正式文档站点初始化或同步；审计随 WS3 交付
 
 不是所有项目都要走完整链路。每个 Agent 都能独立完成自己的角色闭环，只有在需要跨角色协作时才 handoff。
 
@@ -125,7 +132,7 @@ PRD/TRD 对齐、实现计划确认和 QA E2E handoff 等工程门禁见 [Engine
 - [Agents Guide](./AGENTS.md)：agent 仓库指导、文档契约、维护流程、eval 规则和 PR 检查的唯一事实源。
 - [Contributing](./CONTRIBUTING_zh.md)：本地验证命令和维护流程链接。
 - [Changelog Index](./CHANGELOG.md)：版本化 release changelog 入口。
-- Agent 文档：[PM](./agents/product_manager/README_zh.md)、[Designer](./agents/designer/README_zh.md)、[Engineer](./agents/engineer/README_zh.md)、[QA](./agents/qa/README_zh.md)、[DevOps](./agents/devops/README_zh.md)、[Security](./agents/security/README_zh.md)。
+- Agent 文档：[PM](./agents/product_manager/README_zh.md)、[Designer](./agents/designer/README_zh.md)、[Engineer](./agents/engineer/README_zh.md)、[QA](./agents/qa/README_zh.md)、[DevOps](./agents/devops/README_zh.md)、[Security](./agents/security/README_zh.md)、[Docs](./agents/docs/README.md)。
 
 ## 贡献
 

@@ -90,6 +90,17 @@
         "./skills/dependency-risk-auditor",
         "./skills/privacy-surface-mapper"
       ]
+    },
+    {
+      "name": "docs-agent",
+      "description": "Downstream documentation capability invoked after pm-agent handoff for confirmed formal documentation bootstrap, synchronization, backfill, and release audit.",
+      "source": "./agents/docs",
+      "strict": true,
+      "skills": [
+        "./skills/docs-agent",
+        "./skills/docs-site-bootstrap",
+        "./skills/formal-docs-sync"
+      ]
     }
   ]
 }

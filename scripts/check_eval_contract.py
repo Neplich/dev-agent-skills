@@ -15,6 +15,7 @@ SCHEMA_VERSION = "1.0"
 VALID_AGENTS = {
     "designer",
     "devops",
+    "docs",
     "engineer",
     "product_manager",
     "qa",

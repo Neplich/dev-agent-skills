@@ -1,0 +1,20 @@
+{
+  "eval_id": "eval-001-sync-feature-api",
+  "eval_name": "sync-feature-api",
+  "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api",
+  "skill_availability_goal": "Verify bounded feature-mode API synchronization from confirmed process context and current code/test facts.",
+  "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行正式文档同步。维护者已确认本批只处理 `src/api/search.py`、`src/api/schemas.py` 与命中的 `docs/site/api/search.md`；请从 fixture 代码、测试和 diff 核证后写入，并合并 change-map。",
+  "fixture_context": [
+    "pm-handoff.md",
+    "docs/pm/search-api/PRD.md",
+    "docs/engineer/search-api/TRD.md",
+    "docs/engineer/search-api/IMPLEMENTATION_PLAN.md",
+    ".eval/actual-diff.patch",
+    "src/api/search.py",
+    "src/api/schemas.py",
+    "tests/contract/test_search_api.py",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/search.md",
+    "docs/site/database/search-index.md"
+  ]
+}

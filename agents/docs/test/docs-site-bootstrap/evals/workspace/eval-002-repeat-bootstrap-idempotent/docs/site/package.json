@@ -1,0 +1,27 @@
+{
+  "name": "formal-docs-site",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "prepare:nav": "node scripts/prepare-nav.mjs",
+    "prepare:site:public": "node scripts/prepare-site.mjs public",
+    "prepare:site:internal": "node scripts/prepare-site.mjs internal",
+    "dev:public": "node scripts/dev-site.mjs public --host 127.0.0.1 --port 4173",
+    "dev:internal": "node scripts/dev-site.mjs internal --host 127.0.0.1 --port 4174",
+    "build:public": "npm run prepare:site:public && vitepress build .generated/public",
+    "build:internal": "npm run prepare:site:internal && vitepress build .generated/internal",
+    "check:frontmatter": "node scripts/check-frontmatter.mjs",
+    "check:affected": "node scripts/check-affected.mjs",
+    "check:version": "node scripts/check-version.mjs",
+    "test:docs": "npm run check:frontmatter && npm run check:affected && npm run check:version && npm run build:public && npm run build:internal"
+  },
+  "dependencies": {
+    "fast-glob": "^3.3.3",
+    "gray-matter": "^4.0.3",
+    "mermaid": "^11.4.1",
+    "picomatch": "^4.0.2",
+    "vitepress": "^1.6.3",
+    "yaml": "^2.7.0"
+  }
+}

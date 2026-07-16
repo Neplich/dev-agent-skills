@@ -1,0 +1,14 @@
+{
+  "eval_id": "eval-003-block-bootstrap-conflict",
+  "eval_name": "block-bootstrap-conflict",
+  "workspace_root": "agents/docs/test/docs-site-bootstrap/evals/workspace/eval-003-block-bootstrap-conflict",
+  "skill_availability_goal": "Verify complete conflict reporting and explicit kept-as-is handling without overwriting host content.",
+  "prompt": "请在此已部分建站的 fixture 上补齐 bootstrap。`fixture-scope.json` 描述代表性目标，其中宿主已定制 `docs/site/standards/index.md`。请先做完整分类并按冲突 gate 处理。",
+  "fixture_context": [
+    "fixture-scope.json",
+    "docs/site/package.json",
+    "docs/site/standards/index.md",
+    "docs/site/.meta/releases.json",
+    "docs/site/.meta/bootstrap-manifest.json"
+  ]
+}

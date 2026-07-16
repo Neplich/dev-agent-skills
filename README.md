@@ -4,11 +4,11 @@
 
 Multi-agent skills for the full software delivery lifecycle.
 
-[![Agents](https://img.shields.io/badge/agents-6-blue)](#agents)
-[![Skills](https://img.shields.io/badge/skills-35-green)](#agents)
+[![Agents](https://img.shields.io/badge/agents-7-blue)](#agents)
+[![Skills](https://img.shields.io/badge/skills-38-green)](#agents)
 [![License](https://img.shields.io/badge/license-Apache%202.0-orange)](LICENSE)
 
-`pm-agent` • `designer-agent` • `engineer-agent` • `qa-agent` • `devops-agent` • `security-agent`
+`pm-agent` • `designer-agent` • `engineer-agent` • `qa-agent` • `devops-agent` • `security-agent` • `docs-agent`
 
 [Quick Start](#quick-start) • [Usage Examples](#usage-examples) • [Agents](#agents) • [Collaboration Model](#collaboration-model) • [Documentation](#documentation)
 
@@ -19,12 +19,12 @@ Multi-agent skills for the full software delivery lifecycle.
 
 ## Overview
 
-This repository publishes six role-based agents from one marketplace/source, covering the full path from product planning to design, implementation, testing, deployment, and security review.
+This repository publishes seven role-based agents from one marketplace/source, covering the full path from product planning to design, implementation, testing, deployment, security review, and formal documentation.
 
 It includes:
 
-- 1 public PM entry skill plus 5 downstream role routers
-- 29 internal specialist skills across product, engineering, QA, DevOps, design, and security work
+- 1 public PM entry skill plus 6 downstream role routers
+- 31 internal specialist skills across product, engineering, QA, DevOps, design, security, and formal documentation work
 - Claude Code marketplace configuration
 - Codex native skill discovery installation instructions
 - Agent-level eval fixtures and local validation scripts
@@ -49,6 +49,7 @@ It includes:
 /plugin install qa-agent@dev-agent-skills
 /plugin install devops-agent@dev-agent-skills
 /plugin install security-agent@dev-agent-skills
+/plugin install docs-agent@dev-agent-skills
 ```
 
 ### Codex
@@ -60,7 +61,7 @@ cd ~/.agents/dev-agent-skills
 # Install all role router and specialist skills by default.
 python3 scripts/install_codex_skills.py
 
-# Optional minimal mode: expose only the six role router skills.
+# Optional minimal mode: expose only the seven role router skills.
 python3 scripts/install_codex_skills.py --routers-only
 ```
 
@@ -88,6 +89,7 @@ Downstream role routers and specialist skills remain installed as PM-orchestrate
 | `qa-agent` | Spec validation, exploratory testing, bug analysis, regression verification | 5 (`1 + 4`) | PM handoff only | [qa](./agents/qa/README.md) |
 | `devops-agent` | Deployment planning, CI/CD, environment configuration audits, incident playbooks | 5 (`1 + 4`) | PM handoff only | [devops](./agents/devops/README.md) |
 | `security-agent` | AppSec, authorization review, dependency risk, privacy data-flow mapping | 5 (`1 + 4`) | PM handoff only | [security](./agents/security/README.md) |
+| `docs-agent` | Formal documentation routing, site bootstrap, and evidence-backed synchronization; audit follows in WS3 | 3 (`1 + 2`) | PM handoff only | [docs](./agents/docs/README.md) |
 
 > [!TIP]
 > Use `/pm-agent` as the direct user entry. PM classifies the request and hands off to downstream role routers or specialist skills when the scope is ready.
@@ -105,6 +107,10 @@ flowchart LR
     Engineer --> DevOps["DevOps Agent"]
     Engineer --> Security["Security Agent"]
     Security --> Engineer
+    PM --> Docs["Docs Agent"]
+    Engineer --> Docs
+    QA --> Docs
+    DevOps --> Docs
 ```
 
 Engineering guardrails for PRD/TRD alignment, implementation planning, and QA E2E handoff are documented in the [Engineer Agent guide](./agents/engineer/README.md).
@@ -116,6 +122,7 @@ Common chains:
 3. `engineer-agent <-> qa-agent` for bugfix and regression loops
 4. `engineer-agent -> devops-agent` for deployment, CI/CD, and runtime readiness
 5. `engineer-agent -> security-agent` for pre-release or focused security review
+6. `pm-agent -> docs-agent` for formal documentation bootstrap or synchronization after scope is confirmed; audit follows in WS3
 
 Not every project needs the full chain. Each agent can complete its own role-specific loop, and cross-agent handoff happens only when another role is needed.
 
@@ -125,7 +132,7 @@ Not every project needs the full chain. Each agent can complete its own role-spe
 - [Agents Guide](./AGENTS.md): repository guidance source for agents, document contracts, maintenance workflow, eval rules, and PR checks.
 - [Contributing](./CONTRIBUTING.md): local validation commands and maintainer workflow links.
 - [Changelog Index](./CHANGELOG.md): versioned release changelog entrypoint.
-- Agent guides: [PM](./agents/product_manager/README.md), [Designer](./agents/designer/README.md), [Engineer](./agents/engineer/README.md), [QA](./agents/qa/README.md), [DevOps](./agents/devops/README.md), [Security](./agents/security/README.md).
+- Agent guides: [PM](./agents/product_manager/README.md), [Designer](./agents/designer/README.md), [Engineer](./agents/engineer/README.md), [QA](./agents/qa/README.md), [DevOps](./agents/devops/README.md), [Security](./agents/security/README.md), [Docs](./agents/docs/README.md).
 
 ## Contributing
 

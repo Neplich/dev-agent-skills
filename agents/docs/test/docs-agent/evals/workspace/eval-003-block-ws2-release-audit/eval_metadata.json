@@ -1,0 +1,8 @@
+{
+  "eval_id": "eval-003-block-ws2-release-audit",
+  "eval_name": "block-ws2-release-audit",
+  "workspace_root": "agents/docs/test/docs-agent/evals/workspace/eval-003-block-ws2-release-audit",
+  "skill_availability_goal": "Verify that docs-agent recognizes an equivalent release entry chain but blocks the unavailable WS3 docs-audit route.",
+  "prompt": "请基于 `release-entry.md` 对 v0.4.0 做发版正式文档审计，并给出下一步 handoff。当前处于 WS2。",
+  "fixture_context": ["release-entry.md"]
+}

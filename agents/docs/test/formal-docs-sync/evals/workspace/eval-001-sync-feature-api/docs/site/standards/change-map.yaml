@@ -1,0 +1,22 @@
+title: 文档变更映射
+visibility: internal
+doc_type: standard
+stage: dev
+owners:
+  - docs
+related_code: []
+last_verified_version: unverified
+
+change_map:
+  "plugins/manual/**":
+    required_docs:
+      - docs/site/product/manual-integrations.md
+    trigger: manually maintained integration contract changes
+    exclude:
+      - "plugins/manual/examples/**"
+  "src/api/**":
+    required_docs:
+      - docs/site/api/search.md
+    trigger: API route, schema, request, response, or error behavior changes
+    exclude:
+      - "src/api/internal/**"

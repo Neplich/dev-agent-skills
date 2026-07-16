@@ -1,11 +1,11 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.1.15"
+version: "0.1.16"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
-last_updated: "2026-07-15"
+last_updated: "2026-07-16"
 generated_by: "trd-gen"
 feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
@@ -289,6 +289,7 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 | WS2 Agent 骨架 | 新增 | `agents/docs/README.md`、`agents/docs/skills/docs-agent/SKILL.md` | 第 7 个 Agent 与第 6 个下游 router |
 | WS2 bootstrap | 新增 | `agents/docs/skills/docs-site-bootstrap/**` | opt-in 建站协议与内置文本模板 |
 | WS2 sync | 新增 | `agents/docs/skills/formal-docs-sync/**` | 三节点协议与 api 回填 MVP |
+| WS2 PM 路由 | 修改 | `agents/product_manager/skills/pm-agent/SKILL.md`、`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` | PM 入口增加 formal-docs 请求分类与 downstream_owner: Docs 路由，使 docs-agent 经默认 PM-first 路径可达 |
 | WS2 producer 增强 | 修改 | `agents/engineer/skills/trd-gen/SKILL.md`、`agents/engineer/skills/trd-gen/_internal/trd-schema.md` | TRD 输出契约增加可选 frontmatter related_code 字段（机器可读影响域，增强项非 gate；缺省时 sync 走影响域证据链回退）；schema 契约与 SKILL.md 同步更新，避免新 TRD 合规但缺 related_code |
 | WS2 eval | 新增 | `agents/docs/test/{docs-agent,docs-site-bootstrap,formal-docs-sync}/evals/{evals.json,workspace/**}` | router、bootstrap、sync durable eval |
 | WS2 eval workflow | 修改 | .github/workflows/evals.yml | 新增 docs target 与 docs-agent eval job，使 router / bootstrap / sync 三个 skill 的合并前手动 eval 触发可执行；docs-audit 由 WS3 接入同一 target |

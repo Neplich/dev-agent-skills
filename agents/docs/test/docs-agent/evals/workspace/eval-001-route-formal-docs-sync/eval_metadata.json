@@ -1,0 +1,8 @@
+{
+  "eval_id": "eval-001-route-formal-docs-sync",
+  "eval_name": "route-formal-docs-sync",
+  "workspace_root": "agents/docs/test/docs-agent/evals/workspace/eval-001-route-formal-docs-sync",
+  "skill_availability_goal": "Verify that docs-agent accepts a complete PM handoff and routes feature documentation synchronization without duplicating the specialist gate.",
+  "prompt": "请根据 `pm-handoff.md` 处理已完成搜索 API 实现后的正式文档同步请求。只完成 Docs Agent 的入口检查和分流，不执行 specialist 工作。",
+  "fixture_context": ["pm-handoff.md"]
+}

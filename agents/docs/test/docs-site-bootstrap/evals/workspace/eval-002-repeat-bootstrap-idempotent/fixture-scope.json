@@ -1,0 +1,11 @@
+{
+  "fixture_version": "ws2-bootstrap-v1",
+  "purpose": "Minimal representative state for an already complete bootstrap",
+  "materialized_targets": [
+    "docs/site/package.json",
+    "docs/site/standards/index.md",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/.meta/releases.json"
+  ],
+  "omitted_target_assumption": "All other targets from the 35-target embedded inventory are present and byte-identical in the isolated evaluation host; they are omitted only to keep the committed fixture small."
+}

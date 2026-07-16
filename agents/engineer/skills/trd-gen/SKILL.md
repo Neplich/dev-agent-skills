@@ -168,6 +168,10 @@ The TRD must include:
 
 - metadata with `type: TRD`, `feature`, `feature_path`, `parent_feature`,
   `feature_level`, `version`, `date`, `last_updated`, and `related_prd`
+- optional frontmatter `related_code` as a machine-readable array of affected
+  repository paths or globs, so `formal-docs-sync` and `docs-audit` can scope
+  the impact precisely; this is an enhancement, not a handoff gate, and when
+  omitted consumers fall back to the impact-domain evidence chain
 - source documents and requirement traceability
 - technical overview and architecture diagram
 - impacted modules, components, APIs, data, and integration points

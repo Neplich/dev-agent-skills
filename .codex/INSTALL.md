@@ -19,6 +19,7 @@ Default all-skills install includes the role routers:
 - `devops-agent` - downstream DevOps capability for PM handoff after operational scope is confirmed
 - `designer-agent` - downstream design capability for PM handoff after design scope is confirmed
 - `security-agent` - downstream security capability for PM handoff after security scope is confirmed
+- `docs-agent` - downstream formal documentation bootstrap and synchronization capability for PM handoff; audit follows in WS3
 
 The default all-skills install also includes every specialist skill so `pm-agent`
 and role-router orchestration can call downstream specialist workflows. Select
@@ -89,7 +90,7 @@ Restricted role routers only:
 python3 "$CLONE_ROOT/scripts/install_codex_skills.py" --target "$SKILL_ROOT" --routers-only
 ```
 
-`--routers-only` prints a warning because only the six role router symlinks are
+`--routers-only` prints a warning because only the seven role router symlinks are
 created at the target root, so `pm-agent` / role-router orchestration cannot
 call downstream specialist workflows. The hidden mirror still contains the full
 `agents/` tree so shared instruction references remain available. Use this mode

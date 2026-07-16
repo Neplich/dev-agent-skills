@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "agent": "docs",
+  "skill_name": "docs-agent",
+  "evals": [
+    {
+      "id": "eval-001-route-formal-docs-sync",
+      "name": "完整 PM handoff 路由到正式文档同步",
+      "description": "验证 router 接受完整 PM handoff packet，并只引用 specialist 权威 gate 分流到 formal-docs-sync。",
+      "prompt": "请根据 `pm-handoff.md` 处理已完成搜索 API 实现后的正式文档同步请求。只完成 Docs Agent 的入口检查和分流，不执行 specialist 工作。",
+      "expected_output": "接受完整 PM handoff，选择 formal-docs-sync，保留 packet 字段，并以路径指针引用 specialist gate 而不复制其执行协议。",
+      "workspace": "workspace/eval-001-route-formal-docs-sync",
+      "assertions": [
+        {
+          "id": "routes_formal_docs_sync",
+          "description": "正确分流同步请求",
+          "text": "识别请求是已确认 feature delivery 后的正式文档同步，并选择 `formal-docs-sync`，不改派 bootstrap 或 audit。"
+        },
+        {
+          "id": "accepts_complete_handoff",
+          "description": "接受完整 PM handoff",
+          "text": "说明接受的入口凭据是 `pm-handoff.md` 中的完整 PM handoff packet，并保留 request_type、change_tier、feature_path、feature、parent_feature、feature_level、feature_path_evidence、source_documents、scope_decision、downstream_owner、required_output 与 blockers_risks。"
+        },
+        {
+          "id": "references_specialist_gate_only",
+          "description": "只引用 specialist gate",
+          "text": "仅指向 `formal-docs-sync/SKILL.md` 及其内部指令作为权威执行 gate，不在 router 输出中复制 evidence order、五步同步或 change-map 写入规则正文。"
+        },
+        {
+          "id": "recognizes_shared_consumption_contract",
+          "description": "识别共享正式文档消费契约",
+          "text": "指出 specialist 的 trust model 应引用 `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`，router 只保留该权威指针，不复制共享契约正文。"
+        }
+      ]
+    },
+    {
+      "id": "eval-002-missing-entry-basis",
+      "name": "无凭据建站请求回到 PM 入口",
+      "description": "验证未提供 PM handoff、等效文档链或完整 specialist entry basis 时，router 温和引导回 pm-agent。",
+      "prompt": "帮我把正式文档站建起来。",
+      "expected_output": "说明缺少目标仓库和有效入口凭据，温和引导经 pm-agent 分类或补齐 specialist entry basis，且不执行建站协议。",
+      "workspace": "workspace/eval-002-missing-entry-basis",
+      "assertions": [
+        {
+          "id": "guides_to_pm_agent",
+          "description": "温和引导回 PM",
+          "text": "明确当前没有 PM handoff packet、等效已确认文档链或完整 specialist entry basis，并温和引导用户经 `pm-agent` 完成分类和前置上下文。"
+        },
+        {
+          "id": "does_not_execute_bootstrap",
+          "description": "不执行下游建站协议",
+          "text": "不创建 `docs/site/`、不加载或复述 bootstrap 模板、不生成 manifest，也不把模糊请求当作显式 opt-in。"
+        },
+        {
+          "id": "names_missing_credentials",
+          "description": "指出可解锁的入口条件",
+          "text": "指出至少缺少已确认的宿主仓库路径，并说明显式建站请求加确认仓库路径可构成 docs-site-bootstrap 的 specialist entry basis。"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-block-ws2-release-audit",
+      "name": "WS2 中间态阻塞发版文档审计",
+      "description": "验证 router 接受等效确认文档链后，仍因 docs-audit 尚未交付而阻塞审计请求。",
+      "prompt": "请基于 `release-entry.md` 对 v0.4.0 做发版正式文档审计，并给出下一步 handoff。当前处于 WS2。",
+      "expected_output": "接受等效确认文档链，明确 docs-audit 随 WS3 交付，标记审计阶段 blocked，且不 handoff 到缺失 skill。",
+      "workspace": "workspace/eval-003-block-ws2-release-audit",
+      "assertions": [
+        {
+          "id": "accepts_equivalent_chain",
+          "description": "识别等效确认文档链",
+          "text": "识别 `release-entry.md` 中已确认 release scope、版本 tag、changelog、release evidence 与审计请求为该路由的等效确认入口。"
+        },
+        {
+          "id": "blocks_until_ws3",
+          "description": "明确 WS3 交付前阻塞",
+          "text": "明确 `docs-audit` 将随 WS3 交付、在当前 WS2 中不可用，并把 release audit 阶段标记为 blocked。"
+        },
+        {
+          "id": "does_not_handoff_missing_skill",
+          "description": "不交接到缺失 skill",
+          "text": "不声称已调用、已完成或可 handoff 到 `docs-audit`，只记录缺失能力、保留入口证据并等待 WS3。"
+        }
+      ]
+    }
+  ]
+}
