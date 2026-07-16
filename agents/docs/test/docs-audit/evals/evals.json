@@ -55,7 +55,7 @@
       "assertions": [
         {"id": "verifies_complete_affected_set", "description": "完整影响域全部 verified", "text": "确定性层纳入 change-map 命中的两个 required docs，事实层逐页核对并将完整影响域全部判为 `verified`，无 unresolved evidence gap。"},
         {"id": "stamps_all_pages_together", "description": "统一更新受审页面", "text": "只有全部 verified 后，才在同一次审计操作中把两张受审页面的 `last_verified_version` 统一更新为 `v1.1.0`。"},
-        {"id": "synchronizes_release_metadata", "description": "同步 release metadata", "text": "统一盖章同步更新 `docs/site/.meta/releases.json` 的 `latest`、`released` 与 `verifiedDocs`，使其与 `v1.1.0` 和受审页面一致。"},
+        {"id": "synchronizes_release_metadata", "description": "同步 release metadata", "text": "统一盖章同步更新 `docs/site/.meta/releases.json` 的 `latest`、`released` 与 `verifiedDocs`，其中 `verifiedDocs` 以受审文档路径为 key、`v1.1.0` 版本字符串为 value。"},
         {"id": "persists_versioned_report", "description": "写入版本化审计报告", "text": "报告持久化到 `docs/site/.meta/audit/audit-v1.1.0.md`，包含显式 base、target、版本锚、证据、结论和复核命令。"}
       ]
     },

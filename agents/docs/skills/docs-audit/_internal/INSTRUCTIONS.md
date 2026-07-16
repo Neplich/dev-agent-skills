@@ -58,6 +58,12 @@ exclusion narrows only its owning `code_glob` and does not cancel another
 matching entry. Record the changed file, map version, matched glob, trigger,
 applied exclusions, and resulting match.
 
+When the change-map delta adds a mapping or expands an entry's `required_docs`,
+add every newly mounted required document directly to the affected-page set for
+fact-layer review, even when no code file changed. A missing document or invalid
+frontmatter is an evidence gap; a declaration proven out of date is `stale`.
+Reporting only the map delta is not sufficient to release.
+
 Treat the change-map delta itself as audit evidence. The report must include a
 dedicated change-map changes section with each added, deleted, or modified
 entry. For a deleted or narrowed entry, cite the reason and its source, such as
@@ -228,7 +234,8 @@ Then, in one audit operation:
 - update every affected page's `last_verified_version` from `unverified` or an
   older anchor to the current tag or Release;
 - synchronize `docs/site/.meta/releases.json` to the same verified version
-  context; and
+  context, storing `verifiedDocs` as document-path keys mapped to verified
+  version strings; and
 - read all affected pages and release metadata back to verify that the stamp
   is complete and consistent.
 
