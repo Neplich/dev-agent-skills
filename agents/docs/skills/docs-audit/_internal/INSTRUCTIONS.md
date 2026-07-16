@@ -36,20 +36,33 @@ Run all six steps in order.
 Run or reproduce the semantics of:
 
 ```bash
-git diff --name-status <base>...<target>
+git diff --name-status <base> <target>
 ```
 
 Preserve change status and path. Add only those working-tree changes that were
 confirmed as part of the scope. The combined set is the report's changed-files
-inventory.
+inventory. Use the two-dot endpoint diff by default. Only when the caller
+explicitly requests merge-base semantics, use
+`git diff --name-status <base>...<target>` and state that three-dot semantic in
+the report.
 
 ### Step 2: Match change-map entries
 
-Parse `docs/site/standards/change-map.yaml`. For every changed file, match each
-`code_glob`; then apply that entry's optional `exclude`. An exclusion narrows
-only its owning `code_glob` and does not cancel another matching entry. Record
-the changed file, matched glob, trigger, applied exclusions, and resulting
-match.
+Parse `docs/site/standards/change-map.yaml`. When the change-map itself is in
+the changed-files inventory, read its base and target versions and compare
+entries by `code_glob`, recording every added, deleted, and modified mapping.
+Match changed files against the union of base and target `code_glob` entries so
+that a deleted or narrowed old entry still participates in this audit's impact
+set. For every matched entry, apply that version's optional `exclude`; an
+exclusion narrows only its owning `code_glob` and does not cancel another
+matching entry. Record the changed file, map version, matched glob, trigger,
+applied exclusions, and resulting match.
+
+Treat the change-map delta itself as audit evidence. The report must include a
+dedicated change-map changes section with each added, deleted, or modified
+entry. For a deleted or narrowed entry, cite the reason and its source, such as
+evidence that the corresponding code was deleted. A mapping narrowing without
+a reasonable, verifiable source is a blocking item.
 
 ### Step 3: Resolve required documents
 
@@ -177,8 +190,13 @@ Include at least:
 - Base: <resolved base or unavailable>
 - Target: <resolved target and short SHA>
 - Version anchor: <tag/Release or unavailable>
+- Diff semantics: <two-dot endpoint diff or explicitly requested three-dot merge-base diff>
 - Changed files: <name-status inventory>
 - Change-map matches: <file, code_glob, exclude, trigger, required_docs>
+
+## Change-map changes
+
+<added, deleted, and modified entries; reasons and sources for deletions or narrowing; blockers or none>
 
 ## Per-document evidence
 
