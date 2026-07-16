@@ -1,0 +1,13 @@
+diff --git a/src/catalog/routes.txt b/src/catalog/routes.txt
+index 7777777..8888888 100644
+--- a/src/catalog/routes.txt
++++ b/src/catalog/routes.txt
+@@
+-IMPLEMENTATION legacy dispatcher
++IMPLEMENTATION table dispatcher
+diff --git a/docs/site/api/catalog-items.md b/docs/site/api/catalog-items.md
+index 9999999..aaaaaaa 100644
+--- a/docs/site/api/catalog-items.md
++++ b/docs/site/api/catalog-items.md
+@@
+ # Catalog Items API

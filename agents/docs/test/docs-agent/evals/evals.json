@@ -59,12 +59,12 @@
       ]
     },
     {
-      "id": "eval-003-block-ws2-release-audit",
-      "name": "WS2 中间态阻塞发版文档审计",
-      "description": "验证 router 接受等效确认文档链后，仍因 docs-audit 尚未交付而阻塞审计请求。",
-      "prompt": "请基于 `release-entry.md` 对 v0.4.0 做发版正式文档审计，并给出下一步 handoff。当前处于 WS2。",
-      "expected_output": "接受等效确认文档链，明确 docs-audit 随 WS3 交付，标记审计阶段 blocked，且不 handoff 到缺失 skill。",
-      "workspace": "workspace/eval-003-block-ws2-release-audit",
+      "id": "eval-003-route-release-audit",
+      "name": "发版文档审计分流",
+      "description": "验证 router 接受等效确认文档链后，将发版审计请求分流到 docs-audit。",
+      "prompt": "请基于 `release-entry.md` 对 v0.4.0 做发版正式文档审计，并给出下一步 handoff。只完成 Docs Agent 的入口检查和分流，不执行 specialist 工作。",
+      "expected_output": "接受等效确认文档链，选择 docs-audit，保留版本与 release 证据，并以路径指针引用 specialist gate 而不复制审计协议。",
+      "workspace": "workspace/eval-003-route-release-audit",
       "assertions": [
         {
           "id": "accepts_equivalent_chain",
@@ -72,14 +72,14 @@
           "text": "识别 `release-entry.md` 中已确认 release scope、版本 tag、changelog、release evidence 与审计请求为该路由的等效确认入口。"
         },
         {
-          "id": "blocks_until_ws3",
-          "description": "明确 WS3 交付前阻塞",
-          "text": "明确 `docs-audit` 将随 WS3 交付、在当前 WS2 中不可用，并把 release audit 阶段标记为 blocked。"
+          "id": "routes_docs_audit",
+          "description": "正确分流审计请求",
+          "text": "选择 `docs-audit`，保留 release scope、版本 tag、changelog 与 release evidence，并将审计执行交给该 specialist。"
         },
         {
-          "id": "does_not_handoff_missing_skill",
-          "description": "不交接到缺失 skill",
-          "text": "不声称已调用、已完成或可 handoff 到 `docs-audit`，只记录缺失能力、保留入口证据并等待 WS3。"
+          "id": "references_audit_gate_only",
+          "description": "只引用审计 specialist gate",
+          "text": "仅指向 `docs-audit/SKILL.md` 及其内部指令作为权威执行 gate，不在 router 输出中复制 base/target、确定性层、事实层、三态或统一盖章协议。"
         }
       ]
     }

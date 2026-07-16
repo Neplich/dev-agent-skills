@@ -58,7 +58,7 @@ execution.
 - `qa-agent` - confirmed acceptance, exploratory, bug analysis, or regression validation work
 - `devops-agent` - confirmed deployment, CI/CD, environment, release readiness, rollback, or runbook work
 - `security-agent` - confirmed AppSec, auth/authz, dependency, privacy, or data-flow review work
-- `docs-agent` - confirmed formal documentation site bootstrap, synchronization, backfill, or release documentation audit work; bootstrap and sync are available in WS2, while audit is delivered in WS3
+- `docs-agent` - confirmed formal documentation site bootstrap, synchronization, backfill, or release documentation audit work
 
 ## User Entry Coverage
 
@@ -91,7 +91,7 @@ these stable `request_type` values in routing notes and handoff packets.
 | `validation` | Confirm the test basis: PRD, TRD, confirmed implementation plan, or existing acceptance record. | QA / test-writer receives the work only after expectations are stable and source docs are named. |
 | `deployment` | Record operational goal, environment, release scope, rollback needs, and risks. | DevOps receives a bounded deployment / CI / release-readiness packet. |
 | `security` | Record risk surface, assets, permissions, data flow, and remediation expectations. | Security receives a bounded review packet with scope and required output. |
-| `formal_docs` | Distinguish formal documentation site work from role-owned process documents such as PRD, TRD, implementation plans, and QA reports. | Docs receives a bounded bootstrap, synchronization, backfill, or release documentation audit packet; audit remains blocked until WS3 delivers `docs-audit`. |
+| `formal_docs` | Distinguish formal documentation site work from role-owned process documents such as PRD, TRD, implementation plans, and QA reports. | Docs receives a bounded bootstrap, synchronization, backfill, or release documentation audit packet and routes it to the matching specialist. |
 | `delivery` / `status` | Confirm already-scoped change scope, verification state, CI/review status, and requested delivery action. | Engineer / delivery can use the fast lane only for known work whose scope is already confirmed. Repo health, backlog, PR queue, release-readiness planning, and blockers route to `repo_status` / `github-reader`. |
 | `feature_catalog` | Route inherited-project inventory and feature-profile work to `feature-catalog`. | Stay in PM until the catalog or feature profile is maintainer-confirmed. |
 | `competitive_research` / `battlecard` | Route market comparison to `competitive-brief` and sales battlecards to `competitive-intelligence`. | Stay in PM unless follow-up roadmap, messaging, or implementation work needs a separate handoff. |
@@ -150,7 +150,7 @@ Route by the user's intended PM outcome, not by literal wording.
   synchronization, existing formal-docs backfill, or release documentation audit
   with confirmed source scope -> hand off to `docs-agent`; keep PRD, TRD,
   implementation plans, QA reports, and other process documents with their
-  owning roles, and mark audit execution blocked until WS3 delivers `docs-audit`
+  owning roles
 
 ## Default Routes
 

@@ -5,7 +5,7 @@
 Multi-agent skills for the full software delivery lifecycle.
 
 [![Agents](https://img.shields.io/badge/agents-7-blue)](#agents)
-[![Skills](https://img.shields.io/badge/skills-38-green)](#agents)
+[![Skills](https://img.shields.io/badge/skills-39-green)](#agents)
 [![License](https://img.shields.io/badge/license-Apache%202.0-orange)](LICENSE)
 
 `pm-agent` • `designer-agent` • `engineer-agent` • `qa-agent` • `devops-agent` • `security-agent` • `docs-agent`
@@ -24,7 +24,7 @@ This repository publishes seven role-based agents from one marketplace/source, c
 It includes:
 
 - 1 public PM entry skill plus 6 downstream role routers
-- 31 internal specialist skills across product, engineering, QA, DevOps, design, security, and formal documentation work
+- 32 internal specialist skills across product, engineering, QA, DevOps, design, security, and formal documentation work
 - Claude Code marketplace configuration
 - Codex native skill discovery installation instructions
 - Agent-level eval fixtures and local validation scripts
@@ -89,7 +89,7 @@ Downstream role routers and specialist skills remain installed as PM-orchestrate
 | `qa-agent` | Spec validation, exploratory testing, bug analysis, regression verification | 5 (`1 + 4`) | PM handoff only | [qa](./agents/qa/README.md) |
 | `devops-agent` | Deployment planning, CI/CD, environment configuration audits, incident playbooks | 5 (`1 + 4`) | PM handoff only | [devops](./agents/devops/README.md) |
 | `security-agent` | AppSec, authorization review, dependency risk, privacy data-flow mapping | 5 (`1 + 4`) | PM handoff only | [security](./agents/security/README.md) |
-| `docs-agent` | Formal documentation routing, site bootstrap, and evidence-backed synchronization; audit follows in WS3 | 3 (`1 + 2`) | PM handoff only | [docs](./agents/docs/README.md) |
+| `docs-agent` | Formal documentation routing, site bootstrap, evidence-backed synchronization, and release audit | 4 (`1 + 3`) | PM handoff only | [docs](./agents/docs/README.md) |
 
 > [!TIP]
 > Use `/pm-agent` as the direct user entry. PM classifies the request and hands off to downstream role routers or specialist skills when the scope is ready.
@@ -122,7 +122,7 @@ Common chains:
 3. `engineer-agent <-> qa-agent` for bugfix and regression loops
 4. `engineer-agent -> devops-agent` for deployment, CI/CD, and runtime readiness
 5. `engineer-agent -> security-agent` for pre-release or focused security review
-6. `pm-agent -> docs-agent` for formal documentation bootstrap or synchronization after scope is confirmed; audit follows in WS3
+6. `pm-agent -> docs-agent` for formal documentation bootstrap, synchronization, or pre-release audit after scope is confirmed
 
 Not every project needs the full chain. Each agent can complete its own role-specific loop, and cross-agent handoff happens only when another role is needed.
 

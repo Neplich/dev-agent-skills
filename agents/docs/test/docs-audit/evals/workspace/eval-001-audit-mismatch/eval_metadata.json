@@ -1,0 +1,13 @@
+{
+  "eval_id": "eval-001-audit-mismatch",
+  "eval_name": "audit-mismatch",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-001-audit-mismatch",
+  "skill_availability_goal": "Verify that a direct conflict between a formal API claim and current code is reported as mismatch and blocks release without stamping.",
+  "prompt": "审计 fixture 中已确认的 base `4a1b2c3` 到 target `5d6e7f8` 范围，版本锚为 `v1.1.0`。请执行两层 docs audit，以代码为 ground truth，持久化报告并给出 release 建议；不要修复文档或代码。",
+  "fixture_context": [
+    ".eval/actual-diff.patch",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/catalog.md",
+    "src/catalog/routes.txt"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "eval_id": "eval-004-audit-all-verified",
+  "eval_name": "audit-all-verified",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-004-audit-all-verified",
+  "skill_availability_goal": "Verify unified stamping and versioned report persistence only after the complete affected set is verified against an explicit version anchor.",
+  "prompt": "以显式 base `a1b2c3d`、target `b2c3d4e` 和待发布版本锚 `v1.1.0` 审计 fixture。全部核对完成后持久化报告；仅在完整影响域全部 verified 时执行统一盖章。",
+  "fixture_context": [
+    ".eval/actual-diff.patch",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/catalog-items.md",
+    "docs/site/api/catalog-status.md",
+    "docs/site/.meta/releases.json",
+    "src/catalog/routes.txt"
+  ]
+}

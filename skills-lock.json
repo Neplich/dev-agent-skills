@@ -4,12 +4,12 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "c7f5c35077a106ba64937a8b27f289677c713a66d6c72acbbb9e5a72a2e3d844"
+      "computedHash": "fad1743870b729a0c834c1519df0bd08ab864402df4e306fa3381165c730c8ea"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "9a18c5fb343a0ce054ad9cde2d638a071e0637730c88a6f8f37f0dd003b9bba4"
+      "computedHash": "bdfc99eaf76d5e41be5c1b2d05a4247e1f2a10df1d38f1c5816c6b0f3678998a"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
@@ -179,7 +179,7 @@
     "docs-agent": {
       "source": "agents/docs/skills/docs-agent",
       "sourceType": "local",
-      "computedHash": "73b5fe9def16cc971a96c0f9788ffb4079147bdde17f6b73be050abe0158660d"
+      "computedHash": "d026795dfdd7559b396d44e76be1bbc75f8bd802283c4242a9e7534e0d44968b"
     },
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",
@@ -190,6 +190,11 @@
       "source": "agents/docs/skills/formal-docs-sync",
       "sourceType": "local",
       "computedHash": "b78fd5c537e501628c30a685945ded007c7f997ceb155405a0bbf9f6a5b3db24"
+    },
+    "docs-audit": {
+      "source": "agents/docs/skills/docs-audit",
+      "sourceType": "local",
+      "computedHash": "4448fff00ed000212f31d3ed30c26c82cc5e0f640d51b4f303f9552dac19edde"
     }
   }
 }

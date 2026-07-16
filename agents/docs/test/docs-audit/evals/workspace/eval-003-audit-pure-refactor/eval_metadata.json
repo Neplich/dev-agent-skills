@@ -1,0 +1,13 @@
+{
+  "eval_id": "eval-003-audit-pure-refactor",
+  "eval_name": "audit-pure-refactor",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-003-audit-pure-refactor",
+  "skill_availability_goal": "Verify that a change-map hit caused only by implementation refactoring is fact-checked and classified verified without a no-op documentation edit.",
+  "prompt": "审计 fixture 中已确认的 base `81a2b3c` 到 target `92d3e4f` 范围，版本锚为 `v1.1.0`。请核对命中映射但未更新的 API 页面，持久化报告并给出 release 建议；不要为满足同 diff 更新而改写准确文档。",
+  "fixture_context": [
+    ".eval/actual-diff.patch",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/catalog.md",
+    "src/catalog/routes.txt"
+  ]
+}

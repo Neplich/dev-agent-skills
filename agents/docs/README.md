@@ -27,16 +27,14 @@ requests to the matching documentation specialist.
 | `docs-agent` | Formal documentation request routing | Specialist selection or a bounded blocked handoff |
 | `docs-site-bootstrap` | The maintainer explicitly asks to initialize a formal documentation site | A technology-neutral `docs/site/` foundation and standards |
 | `formal-docs-sync` | A confirmed feature, deployment, release, or existing system needs formal documentation synchronization or backfill | Current-state formal docs and `change-map.yaml` updates; the MVP acceptance surface is API documentation |
-| `docs-audit` | Release readiness requires formal-document coverage and fact verification | Version-scoped audit report and release recommendation; delivered in WS3 |
+| `docs-audit` | Release readiness requires formal-document coverage and fact verification | Version-scoped audit report, release recommendation, and unified version stamp when all pages are verified |
 
 ## Routing Rules
 
 - Explicit formal documentation-site initialization: use `docs-site-bootstrap`.
 - Feature, deployment, or release synchronization, or existing-system backfill:
   use `formal-docs-sync`.
-- Release documentation audit: use `docs-audit` after its WS3 delivery. During
-  the WS2 intermediate state, report that the capability is unavailable and
-  mark the audit stage blocked.
+- Release documentation audit: use `docs-audit`.
 
 ## Collaboration Position
 

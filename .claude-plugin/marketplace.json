@@ -99,7 +99,8 @@
       "skills": [
         "./skills/docs-agent",
         "./skills/docs-site-bootstrap",
-        "./skills/formal-docs-sync"
+        "./skills/formal-docs-sync",
+        "./skills/docs-audit"
       ]
     }
   ]

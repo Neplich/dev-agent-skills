@@ -1,0 +1,8 @@
+{
+  "latest": "v1.0.0",
+  "released": ["v1.0.0"],
+  "verifiedDocs": {
+    "docs/site/api/catalog-items.md": "v1.0.0",
+    "docs/site/api/catalog-status.md": "v1.0.0"
+  }
+}

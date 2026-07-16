@@ -1,0 +1,15 @@
+title: Documentation change map
+visibility: internal
+doc_type: standard
+stage: dev
+owners:
+  - documentation-team
+related_code: []
+
+change_map:
+  "src/catalog/**":
+    required_docs:
+      - docs/site/api/catalog.md
+    trigger: API method, path, parameter, response, or error behavior changes
+    exclude:
+      - "src/catalog/tests/**"

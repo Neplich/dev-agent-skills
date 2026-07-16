@@ -19,7 +19,7 @@ Default all-skills install includes the role routers:
 - `devops-agent` - downstream DevOps capability for PM handoff after operational scope is confirmed
 - `designer-agent` - downstream design capability for PM handoff after design scope is confirmed
 - `security-agent` - downstream security capability for PM handoff after security scope is confirmed
-- `docs-agent` - downstream formal documentation bootstrap and synchronization capability for PM handoff; audit follows in WS3
+- `docs-agent` - downstream formal documentation bootstrap, synchronization, and release-audit capability for PM handoff
 
 The default all-skills install also includes every specialist skill so `pm-agent`
 and role-router orchestration can call downstream specialist workflows. Select

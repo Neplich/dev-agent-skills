@@ -1,0 +1,8 @@
+ROUTE GET /catalog/items
+AUTH public
+QUERY none
+SUCCESS 200 {"items": []}
+ERROR none
+STREAMING no
+FILES none
+IMPLEMENTATION table dispatcher

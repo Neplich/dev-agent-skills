@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "agent": "docs",
+  "skill_name": "docs-audit",
+  "evals": [
+    {
+      "id": "eval-001-audit-mismatch",
+      "name": "审计文档与代码直接冲突",
+      "description": "验证 API 文档声明与当前代码事实直接冲突时判定 mismatch，并阻塞 release 且不盖章。",
+      "prompt": "审计 fixture 中已确认的 base `4a1b2c3` 到 target `5d6e7f8` 范围，版本锚为 `v1.1.0`。请执行两层 docs audit，以代码为 ground truth，持久化报告并给出 release 建议；不要修复文档或代码。",
+      "expected_output": "命中映射 API 页面，指出 POST 文档声明与 GET 代码事实的冲突，结论为 mismatch，release blocked，列出证据且不写版本盖章。",
+      "workspace": "workspace/eval-001-audit-mismatch",
+      "assertions": [
+        {"id": "includes_mapped_page", "description": "命中 change-map 影响域", "text": "确定性层根据 `src/catalog/routes.txt` 的 diff 和 change-map 将 `docs/site/api/catalog.md` 纳入完整影响域。"},
+        {"id": "classifies_direct_conflict_mismatch", "description": "直接冲突判 mismatch", "text": "事实层保留文档 `POST /catalog/items` 声明、代码 `GET /catalog/items` 事实及其证据路径和影响，并将页面判为 `mismatch`。"},
+        {"id": "blocks_with_conflict_evidence", "description": "冲突阻塞 release", "text": "release 建议为 blocked，具体列出冲突证据和需要确认修文档还是修代码的待办。"},
+        {"id": "does_not_stamp_blocked_set", "description": "阻塞集合不盖章", "text": "存在 mismatch 时不更新受审页面的 `last_verified_version`，也不同步 `.meta/releases.json`，不得对 verified 子集局部盖章。"}
+      ]
+    },
+    {
+      "id": "eval-002-audit-stale-doc",
+      "name": "审计映射命中文档确实过期",
+      "description": "验证代码新增必填参数而 required_docs 未同批更新时，先记 suspect，再由事实层确认 stale 并阻塞。",
+      "prompt": "审计 fixture 中已确认的 base `6a1b2c3` 到 target `7d6e5f4` 范围，版本锚为 `v1.1.0`。请执行确定性层和事实层，持久化报告并给出 release 建议；不要同步文档。",
+      "expected_output": "未同批更新的映射页面先标 suspect，事实核对确认缺少新增必填 locale 参数后判 stale，release blocked 且不盖章。",
+      "workspace": "workspace/eval-002-audit-stale-doc",
+      "assertions": [
+        {"id": "marks_missing_doc_update_suspect", "description": "确定性层只记 suspect", "text": "代码 diff 命中 change-map 且 required doc 未同批更新时，确定性层将页面记为 `suspect` 并送事实层，不直接把未更新等同于 stale。"},
+        {"id": "confirms_outdated_claim_stale", "description": "事实层确认 stale", "text": "事实层以当前代码中新增必填 `locale` 查询参数为证据，确认文档参数声明已经不同步并最终判为 `stale`。"},
+        {"id": "blocks_stale_release", "description": "stale 阻塞 release", "text": "报告列出 stale 证据、同步文档后重审的具体待办，并给出 blocked release 建议。"},
+        {"id": "does_not_stamp_stale_set", "description": "stale 集合不盖章", "text": "存在 stale 时不更新 `last_verified_version` 或 `.meta/releases.json`。"}
+      ]
+    },
+    {
+      "id": "eval-003-audit-pure-refactor",
+      "name": "审计纯实现重构",
+      "description": "验证 diff 虽命中 change-map，但外部 API 声明仍准确时由 suspect 转为 verified，且不强制无意义文档编辑。",
+      "prompt": "审计 fixture 中已确认的 base `81a2b3c` 到 target `92d3e4f` 范围，版本锚为 `v1.1.0`。请核对命中映射但未更新的 API 页面，持久化报告并给出 release 建议；不要为满足同 diff 更新而改写准确文档。",
+      "expected_output": "映射命中页面先为 suspect，经事实层确认方法、路径、参数和响应未变后判 verified，不要求编辑文档，也不因文档未改而 blocked。",
+      "workspace": "workspace/eval-003-audit-pure-refactor",
+      "assertions": [
+        {"id": "sends_refactor_suspect_to_fact_layer", "description": "纯重构仍进入事实层", "text": "确定性层把未同批更新的映射页面作为 `suspect` 交给事实层，而不是直接放行或直接判 stale。"},
+        {"id": "classifies_accurate_refactor_verified", "description": "准确声明判 verified", "text": "事实层核对当前代码后确认 GET 路径、可选 limit 参数、200 响应和 400 错误声明仍准确，最终判为 `verified`。"},
+        {"id": "does_not_force_noop_doc_edit", "description": "不强制无意义编辑", "text": "报告明确纯实现重构无需为了同 diff 更新而编辑准确文档。"},
+        {"id": "does_not_block_for_unchanged_accurate_doc", "description": "不因未改文档阻塞", "text": "release 建议不因 required doc 未同批修改而 blocked；判断依据是事实层 verified，而不是是否产生文档 diff。"}
+      ]
+    },
+    {
+      "id": "eval-004-audit-all-verified",
+      "name": "全部 verified 后统一盖章",
+      "description": "验证显式 base/target 与 v1.1.0 版本锚下，完整影响域全部 verified 才统一更新页面和 release metadata。",
+      "prompt": "以显式 base `a1b2c3d`、target `b2c3d4e` 和待发布版本锚 `v1.1.0` 审计 fixture。全部核对完成后持久化报告；仅在完整影响域全部 verified 时执行统一盖章。",
+      "expected_output": "两张受审 API 页面均 verified，统一将其 last_verified_version 更新为 v1.1.0，同步 releases.json，并写入 audit-v1.1.0.md。",
+      "workspace": "workspace/eval-004-audit-all-verified",
+      "assertions": [
+        {"id": "verifies_complete_affected_set", "description": "完整影响域全部 verified", "text": "确定性层纳入 change-map 命中的两个 required docs，事实层逐页核对并将完整影响域全部判为 `verified`，无 unresolved evidence gap。"},
+        {"id": "stamps_all_pages_together", "description": "统一更新受审页面", "text": "只有全部 verified 后，才在同一次审计操作中把两张受审页面的 `last_verified_version` 统一更新为 `v1.1.0`。"},
+        {"id": "synchronizes_release_metadata", "description": "同步 release metadata", "text": "统一盖章同步更新 `docs/site/.meta/releases.json` 的 `latest`、`released` 与 `verifiedDocs`，其中 `verifiedDocs` 以受审文档路径为 key、`v1.1.0` 版本字符串为 value。"},
+        {"id": "persists_versioned_report", "description": "写入版本化审计报告", "text": "报告持久化到 `docs/site/.meta/audit/audit-v1.1.0.md`，包含显式 base、target、版本锚、证据、结论和复核命令。"}
+      ]
+    },
+    {
+      "id": "eval-005-audit-doc-only-error",
+      "name": "拦截纯文档错误声明",
+      "description": "验证没有代码 diff 时，变更的正式文档页面仍直接进入影响域并由事实层拦截错误声明。",
+      "prompt": "审计 fixture 中已确认的 base `c1d2e3f` 到 target `d2e3f4a` 范围，版本锚为 `v1.1.0`。该范围只有正式文档变更；请仍执行完整事实核对，持久化报告并给出 release 建议。",
+      "expected_output": "直接纳入纯文档变更页面，以 related_code 定位事实，发现新写的 DELETE 声明与代码冲突，判 mismatch 并 blocked，不因无代码 diff 放行。",
+      "workspace": "workspace/eval-005-audit-doc-only-error",
+      "assertions": [
+        {"id": "includes_doc_only_change", "description": "纯文档变更直接入影响域", "text": "确定性层将 changed files 中的 `docs/site/api/catalog.md` 直接加入影响域，即使没有任何代码 diff 或 change-map 代码命中。"},
+        {"id": "uses_related_code_for_fact_check", "description": "按 related_code 核对事实", "text": "事实层使用页面 `related_code` 圈定 `src/catalog/routes.txt`，不因 diff 中没有代码文件而跳过 ground truth 核对。"},
+        {"id": "classifies_doc_only_conflict_mismatch", "description": "纯文档错误判 mismatch", "text": "新文档声明 `DELETE /catalog/items/{item_id}`，当前代码只提供 GET；报告保留声明、事实、证据和影响并判为 `mismatch`。"},
+        {"id": "blocks_despite_no_code_diff", "description": "无代码 diff 仍阻塞", "text": "release 建议为 blocked 且不盖章，明确不能因为无代码 diff 而放行错误文档。"}
+      ]
+    },
+    {
+      "id": "eval-006-audit-no-version-anchor",
+      "name": "无版本锚继续审计但不盖章",
+      "description": "验证没有 tag、Release 或显式版本锚时仍审计确认范围，使用 target 短 SHA 命名报告且不写版本字段。",
+      "prompt": "审计已确认的 base `e1f2a3b` 到真实 target commit `7c9e2af` 范围。宿主没有 tag、GitHub Release 或任何显式版本锚；请继续审计并持久化报告，不要发明版本。",
+      "expected_output": "页面事实结论仍为 verified，报告写 version_anchor: unavailable，并回退为 audit-7c9e2af.md；不改 last_verified_version 或 releases.json。",
+      "workspace": "workspace/eval-006-audit-no-version-anchor",
+      "assertions": [
+        {"id": "audits_without_version_anchor", "description": "无锚仍执行审计", "text": "在无 tag、Release 或显式版本锚时仍对已确认 base/target 范围执行确定性层和事实层，并给出真实审核结论。"},
+        {"id": "records_anchor_unavailable", "description": "报告明确版本锚不可用", "text": "持久化报告使用机器可读文本 `version_anchor: unavailable`，不得用 unknown、分支名或推断版本代替。"},
+        {"id": "uses_target_sha_report_name", "description": "使用 target 短 SHA 回退命名", "text": "报告写入 `docs/site/.meta/audit/audit-7c9e2af.md`，使用 fixture 提供的真实 target short SHA。"},
+        {"id": "does_not_write_version_stamp", "description": "无锚不写版本盖章", "text": "即使页面结论为 verified，也不写或改 `last_verified_version`，并且不修改 `.meta/releases.json`。"}
+      ]
+    }
+  ]
+}

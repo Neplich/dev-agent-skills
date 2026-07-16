@@ -1,0 +1,13 @@
+{
+  "eval_id": "eval-006-audit-no-version-anchor",
+  "eval_name": "audit-no-version-anchor",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-006-audit-no-version-anchor",
+  "skill_availability_goal": "Verify that audit proceeds without a release version anchor, persists an unavailable marker and target-SHA report name, and writes no stamp.",
+  "prompt": "审计已确认的 base `e1f2a3b` 到真实 target commit `7c9e2af` 范围。宿主没有 tag、GitHub Release 或任何显式版本锚；请继续审计并持久化报告，不要发明版本。",
+  "fixture_context": [
+    ".eval/actual-diff.patch",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/catalog.md",
+    "src/catalog/routes.txt"
+  ]
+}
