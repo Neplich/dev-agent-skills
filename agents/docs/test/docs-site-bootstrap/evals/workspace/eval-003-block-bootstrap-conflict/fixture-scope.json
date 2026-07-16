@@ -1,0 +1,11 @@
+{
+  "fixture_version": "ws2-bootstrap-v1",
+  "purpose": "Minimal representative bootstrap state with one unresolved host conflict",
+  "materialized_targets": [
+    "docs/site/package.json",
+    "docs/site/standards/index.md",
+    "docs/site/.meta/releases.json"
+  ],
+  "known_conflict": "docs/site/standards/index.md differs from the embedded template and has no prior kept-as-is decision",
+  "omitted_target_assumption": "All other targets from the 35-target embedded inventory classify as missing or byte-identical; the fixture materializes only enough state to verify conflict behavior."
+}

@@ -1,0 +1,8 @@
+{
+  "eval_id": "eval-001-bootstrap-empty-workspace",
+  "eval_name": "bootstrap-empty-workspace",
+  "workspace_root": "agents/docs/test/docs-site-bootstrap/evals/workspace/eval-001-bootstrap-empty-workspace",
+  "skill_availability_goal": "Verify complete, bounded bootstrap behavior from an explicitly confirmed empty host workspace.",
+  "prompt": "我明确确认在当前 fixture 仓库初始化正式文档站，固定目标为 `docs/site/`，并同意创建完整 scaffold 与 bootstrap manifest。请执行 bootstrap 并报告 read-back 与重复执行结果。",
+  "execution_cleanup": ["docs/site"]
+}

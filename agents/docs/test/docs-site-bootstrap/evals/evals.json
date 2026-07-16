@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "agent": "docs",
+  "skill_name": "docs-site-bootstrap",
+  "evals": [
+    {
+      "id": "eval-001-bootstrap-empty-workspace",
+      "name": "空 workspace 显式初始化完整文档站",
+      "description": "验证明确 opt-in 的空仓库会得到完整 35 个静态目标、manifest、合法 frontmatter 和路径边界。",
+      "prompt": "我明确确认在当前 fixture 仓库初始化正式文档站，固定目标为 `docs/site/`，并同意创建完整 scaffold 与 bootstrap manifest。请执行 bootstrap 并报告 read-back 与重复执行结果。",
+      "expected_output": "生成 35 个嵌入模板目标和 bootstrap manifest；所有 Markdown 页面满足 7 字段 frontmatter；写入仅限 docs/site。",
+      "workspace": "workspace/eval-001-bootstrap-empty-workspace",
+      "assertions": [
+        {
+          "id": "creates_complete_inventory",
+          "description": "生成清单完整",
+          "text": "清点并生成 `_internal/INSTRUCTIONS.md` 中全部 35 个静态模板目标，以及 `docs/site/.meta/bootstrap-manifest.json`，manifest files 覆盖所有已处理静态目标。"
+        },
+        {
+          "id": "validates_seven_frontmatter_fields",
+          "description": "frontmatter 七字段合法",
+          "text": "每个正式 Markdown 页面均包含合法的 title、visibility、doc_type、stage、owners、related_code、last_verified_version；code-bearing doc_type 的 related_code 非空。"
+        },
+        {
+          "id": "writes_only_docs_site",
+          "description": "不越权写目标根外路径",
+          "text": "所有生成文件均位于 `docs/site/`；不修改仓库根配置、过程文档、源码或 `docs/site/` 外的任何路径。"
+        },
+        {
+          "id": "requires_explicit_opt_in",
+          "description": "仅在明确 opt-in 后写入",
+          "text": "说明本次允许写入是因为 prompt 明确确认目标仓库、固定 `docs/site/` 根和完整 scaffold；若缺少显式 opt-in 则必须在任何文件写入前停止。"
+        },
+        {
+          "id": "reports_manifest_readback",
+          "description": "回读 manifest 并验证幂等",
+          "text": "回读并解析 manifest，验证路径与状态，并说明模板及决策不变时重复运行是 zero-diff。"
+        }
+      ]
+    },
+    {
+      "id": "eval-002-repeat-bootstrap-idempotent",
+      "name": "已完成 bootstrap 重复执行保持零差异",
+      "description": "使用代表性完整状态 fixture 验证字节一致的模板和稳定 manifest 不被改写。",
+      "prompt": "请在此已完成 bootstrap 的 fixture 上重复运行 docs-site-bootstrap。`fixture-scope.json` 说明了最小化 fixture 的等价范围；未物化的模板目标视为与嵌入模板字节一致。请报告文件分类、manifest 状态和 git 内容差异。",
+      "expected_output": "所有代表性目标分类为 skipped-identical，既有 manifest 时间戳不变，重复运行产生零内容差异。",
+      "workspace": "workspace/eval-002-repeat-bootstrap-idempotent",
+      "assertions": [
+        {
+          "id": "produces_zero_diff",
+          "description": "重复执行零差异",
+          "text": "逐项比较后不重写模板文件或 manifest，报告工作区文件内容 zero-diff，并保留既有 createdAt。"
+        },
+        {
+          "id": "reports_skipped_identical",
+          "description": "相同内容标记 skipped-identical",
+          "text": "fixture 中代表性模板目标均按字节一致分类为 `skipped-identical`，manifest 中对应持久状态保持为 `skipped-identical`。"
+        },
+        {
+          "id": "preserves_existing_state",
+          "description": "不重置宿主状态",
+          "text": "不重置 `standards/change-map.yaml`、`.meta/releases.json` 或任何既有正式页面。"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-block-bootstrap-conflict",
+      "name": "冲突页面阻塞隐式覆盖",
+      "description": "验证宿主 standards/index.md 与模板不同时列出完整冲突并等待逐文件决策。",
+      "prompt": "请在此已部分建站的 fixture 上补齐 bootstrap。`fixture-scope.json` 描述代表性目标，其中宿主已定制 `docs/site/standards/index.md`。请先做完整分类并按冲突 gate 处理。",
+      "expected_output": "列出 standards/index.md 冲突并 blocked，不覆盖或规范化宿主内容，给出 overwrite、merge、kept-as-is 三种显式选择。",
+      "workspace": "workspace/eval-003-block-bootstrap-conflict",
+      "assertions": [
+        {
+          "id": "blocks_on_complete_conflict_list",
+          "description": "冲突清单完整并阻塞",
+          "text": "将 `docs/site/standards/index.md` 列入完整冲突清单并把未解决覆盖阶段标记 blocked；不制造该路径的成功 manifest 状态。"
+        },
+        {
+          "id": "does_not_overwrite_conflict",
+          "description": "不部分覆盖宿主文件",
+          "text": "在用户选择前不覆盖、合并、格式化或部分规范化冲突文件，保留 fixture 中的宿主定制内容。"
+        },
+        {
+          "id": "offers_explicit_resolution_choices",
+          "description": "说明三类解决选项",
+          "text": "针对冲突明确给出 overwrite、显式 merge 和保留现有文件三种选择；仅在用户选择保留后才把该路径记为 `kept-as-is`。"
+        }
+      ]
+    }
+  ]
+}

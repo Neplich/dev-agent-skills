@@ -1,0 +1,13 @@
+diff --git a/src/api/search.py b/src/api/search.py
+new file mode 100644
+--- /dev/null
++++ b/src/api/search.py
+@@
++@router.get("/search", response_model=SearchResponse)
++def search(q: str = Query(...), limit: int = Query(20, ge=1, le=100)):
++    if not q.strip():
++        raise HTTPException(status_code=400, detail={"code": "invalid_query"})
+diff --git a/src/api/schemas.py b/src/api/schemas.py
+new file mode 100644
+diff --git a/tests/contract/test_search_api.py b/tests/contract/test_search_api.py
+new file mode 100644

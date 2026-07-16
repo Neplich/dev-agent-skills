@@ -66,6 +66,7 @@ jobs:
             agents/qa/test/test_qa_run_eval.py \
             agents/designer/test/test_designer_run_eval.py \
             agents/devops/test/test_devops_run_eval.py \
+            agents/docs/test/test_docs_run_eval.py \
             agents/test_doc_contract.py \
             agents/test_eval_contract.py \
             scripts/test_install_codex_skills.py

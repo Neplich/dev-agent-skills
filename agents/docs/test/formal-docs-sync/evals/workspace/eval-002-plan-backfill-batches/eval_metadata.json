@@ -1,0 +1,15 @@
+{
+  "eval_id": "eval-002-plan-backfill-batches",
+  "eval_name": "plan-backfill-batches",
+  "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-002-plan-backfill-batches",
+  "skill_availability_goal": "Verify catalog-first bounded API backfill planning and no writes before per-batch confirmation.",
+  "prompt": "维护者明确请求为当前 fixture 仓库回填存量 API 文档。请优先读取 `docs/pm/feature-catalog.md`，提出第一批范围，但本轮不要确认或执行该批次；同时说明如果仓库没有 catalog，应怎样形成候选范围。",
+  "fixture_context": [
+    "docs/pm/feature-catalog.md",
+    "src/api/accounts/routes.py",
+    "src/api/accounts/schemas.py",
+    "tests/contract/test_accounts_api.py",
+    "src/api/billing/routes.py",
+    "docs/site/standards/change-map.yaml"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-002-missing-entry-basis",
+  "eval_name": "missing-entry-basis",
+  "workspace_root": "agents/docs/test/docs-agent/evals/workspace/eval-002-missing-entry-basis",
+  "skill_availability_goal": "Verify that docs-agent sends an uncredentialed bootstrap request through pm-agent and does not execute the downstream protocol.",
+  "prompt": "帮我把正式文档站建起来。"
+}

@@ -1,0 +1,15 @@
+{
+  "eval_id": "eval-002-repeat-bootstrap-idempotent",
+  "eval_name": "repeat-bootstrap-idempotent",
+  "workspace_root": "agents/docs/test/docs-site-bootstrap/evals/workspace/eval-002-repeat-bootstrap-idempotent",
+  "skill_availability_goal": "Verify zero-diff repeat bootstrap behavior with representative byte-identical templates and stable manifest state.",
+  "prompt": "请在此已完成 bootstrap 的 fixture 上重复运行 docs-site-bootstrap。`fixture-scope.json` 说明了最小化 fixture 的等价范围；未物化的模板目标视为与嵌入模板字节一致。请报告文件分类、manifest 状态和 git 内容差异。",
+  "fixture_context": [
+    "fixture-scope.json",
+    "docs/site/package.json",
+    "docs/site/standards/index.md",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/.meta/releases.json",
+    "docs/site/.meta/bootstrap-manifest.json"
+  ]
+}

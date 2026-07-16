@@ -11,6 +11,7 @@ name: Manual Evals
         options:
           - all
           - designer
+          - docs
           - qa
 
 permissions:
@@ -46,6 +47,36 @@ jobs:
           retention-days: 7
           path: |
             tmp/eval-runs/designer/**
+
+  docs-evals:
+    if: ${{ github.event.inputs.target == 'all' || github.event.inputs.target == 'docs' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v8.1.0
+        with:
+          enable-cache: true
+      - name: Run docs eval diagnostics
+        id: run-docs-evals
+        continue-on-error: true
+        run: uv run agents/docs/test/run_all_evals.py
+      - name: Explain docs eval diagnostics
+        if: ${{ steps.run-docs-evals.outcome == 'failure' }}
+        run: |
+          echo "::warning::Docs eval diagnostics found missing or failing runtime outputs."
+          echo "::warning::Review the uploaded comparison.auto.md artifacts before using this run as merge evidence."
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: docs-eval-runtime-artifacts
+          if-no-files-found: ignore
+          retention-days: 7
+          path: |
+            tmp/eval-runs/docs/**
 
   qa-evals:
     if: ${{ github.event.inputs.target == 'all' || github.event.inputs.target == 'qa' }}

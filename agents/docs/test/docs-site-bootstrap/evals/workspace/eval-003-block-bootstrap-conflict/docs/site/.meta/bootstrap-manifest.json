@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1.0",
+  "generatedRoot": "docs/site",
+  "createdAt": "2026-07-16T08:00:00+08:00",
+  "files": {
+    "docs/site/.meta/releases.json": "skipped-identical",
+    "docs/site/package.json": "skipped-identical"
+  }
+}
