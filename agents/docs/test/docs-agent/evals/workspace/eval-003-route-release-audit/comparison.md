@@ -7,29 +7,30 @@
 
 ## Test Set / Fixture Version
 
-- Fixture: `docs-audit-route-v2`
-- Source update: audit routing enabled
+- Fixture: `ws2-docs-v1`
+- Commit: `c05f689`
 
 ## Latest Result
 
-**NOT RUN** — 本轮只把 router eval 定义对齐到已启用的 `docs-audit` handoff；fresh with-skill / without-skill validation 留待 docs-audit eval 补齐时集中执行。
+**PASS** — with-skill 识别等效已确认发布链后把审计请求正常分流 docs-audit，保留 release scope/tag/changelog/证据，只引用 specialist gate，停在 handoff 确认点（WS3 分流启用后的复跑验证）。
 
 ## With-Skill Behavior
 
-- 预期保留等效 release 入口证据并选择 `docs-audit`。
-- 预期只指向 specialist gate，不复制两层审计、三态或统一盖章协议。
+- 首轮运行暴露 fixture 残留 WS2 时代的 unresolved_blocker 表述导致误判 blocked；修正 fixture 至 WS3 现实后复跑通过。
+- 分流语义与 4-skill 终态一致。
 
 ## Without-Skill Baseline
 
-- 本轮未生成新的 baseline；不得复用旧 blocked 场景的 baseline 作为当前 handoff 场景证据。
+- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 文档。
+- baseline 也指向 docs-audit gate 作为权威，但入口凭据校验与 handoff 字段保留由临场组织。
 
 ## Failures
 
-- Fresh with-skill / without-skill validation 尚未执行。
+- 无。
 
 ## Next Steps
 
-- 与 docs-audit 六组 fixture 一并运行 fresh validation，并把最新结论回填到本文件。
+- 保留本结果。
 
 ## Runtime Artifact Policy
 

@@ -7,28 +7,31 @@
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws3-docs-audit-v1`
+- Fixture: `ws2-docs-v1`
+- Commit: `c05f689`
 
 ## Latest Result
 
-Latest result: pending fresh validation
+**PASS** — with-skill 对命中 change-map 的纯实现重构判 verified：API 契约逐项核对未变化，不强制文档编辑、不 blocked，全 verified 后统一盖章 v1.1.0 并同步 releases.json，release 建议 proceed。
 
 ## With-Skill Behavior
 
-- Pending fresh validation.
+- suspect 两段式判定正确：确定性层圈候选、事实层核对契约后放行。
+- 审计报告落 .meta/audit/audit-v1.1.0.md，SHA 证据来源限制明确记录。
 
 ## Without-Skill Baseline
 
-- Pending fresh validation from the same prompt and fixture.
+- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 文档。
+- baseline 同样得出不应阻塞的结论且不改写准确文档，但未执行盖章语义与报告归档协议。
 
 ## Failures
 
-- None recorded before validation.
+- 无。
 
 ## Next Steps
 
-- Run fresh with-skill and without-skill validation and update this durable result.
+- 保留本结果。
 
 ## Runtime Artifact Policy
 
-- Runtime artifacts belong under `tmp/eval-runs/` and are not committed.
+- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。

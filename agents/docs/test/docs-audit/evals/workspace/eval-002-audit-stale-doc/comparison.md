@@ -7,28 +7,31 @@
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws3-docs-audit-v1`
+- Fixture: `ws2-docs-v1`
+- Commit: `c05f689`
 
 ## Latest Result
 
-Latest result: pending fresh validation
+**PASS** — with-skill 确定性层记 suspect 后事实层确认文档过期（遗漏 locale 必填参数、invalid_locale 错误、limit 默认/上限）判 stale，release blocked、不盖章，解锁路径指向 formal-docs-sync 同步后复审。
 
 ## With-Skill Behavior
 
-- Pending fresh validation.
+- 两段式判定完整：不因未改文档直接 stale，由事实核对确认不同步后才阻塞。
+- 只产出审计报告，未越权改文档或版本元数据。
 
 ## Without-Skill Baseline
 
-- Pending fresh validation from the same prompt and fixture.
+- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 文档。
+- baseline 也识别了文档缺口，但阻塞语义、盖章禁止与复审路径由临场组织，未按审计协议产出三态报告。
 
 ## Failures
 
-- None recorded before validation.
+- 无。
 
 ## Next Steps
 
-- Run fresh with-skill and without-skill validation and update this durable result.
+- 保留本结果。
 
 ## Runtime Artifact Policy
 
-- Runtime artifacts belong under `tmp/eval-runs/` and are not committed.
+- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
