@@ -24,7 +24,7 @@ last_updated: 2026-07-16
 
 ## Skill Eval 汇总（v0.3.0 发版前）
 
-本节按本次变更涉及的 skill 汇总 durable `comparison.md` 的最新结论。全部结论均来自对应 PR 执行的 fresh Codex subagent validation；本次发版未修改 skill 执行协议或 eval fixture，因此复用已提交的最新结果，不重复运行模型 eval。
+本节按本次变更涉及的 skill 汇总 durable `comparison.md` 的最新结论。全部结论均来自对应 PR 执行的 fresh Codex subagent validation；本次发版未修改 skill 执行协议或 eval fixture，因此复用已提交的最新结果，不重复运行模型 eval。当前 `agents/docs/test/**/comparison.md` 共 18 份，去重后为 **18/18 PASS**：`docs-agent` 3 份、`docs-site-bootstrap` 3 份、`formal-docs-sync` 6 份、`docs-audit` 6 份。
 
 ### WS1：既有 Agent 正式文档消费回归（22/22 PASS）
 
@@ -40,16 +40,18 @@ last_updated: 2026-07-16
 
 各 comparison 均验证了 change-map 定位、代码/测试事实核证、文档分歧处理与角色门禁；`debugger` 和 `release-notes-generator` 的专属规则也分别通过对应 eval。([#109](https://github.com/Neplich/dev-agent-skills/pull/109))
 
-### WS2：Docs Agent 骨架、bootstrap 与 sync（8/8 PASS）
+### WS2：Docs Agent 骨架、bootstrap 与 sync（PR #110 合并时 8/8 PASS）
+
+下表是 PR #110 合并时的 fresh validation 历史快照，不作为当前 durable comparison 的独立去重总计；其中 WS2 的第三个 router 审计阻塞用例已在 WS3 被 release audit 正式分流用例替换。
 
 | Skill | Eval 范围 | 最新结论 |
 | --- | --- | :---: |
-| `docs-agent` | sync 分流、缺少入口凭据、WS2 审计请求门禁 | 3/3 PASS |
+| `docs-agent` | sync 分流、缺少入口凭据、WS2 审计请求门禁 | 3/3 PASS（历史快照） |
 | `docs-site-bootstrap` | 空仓库生成、重复执行幂等、冲突阻塞 | 3/3 PASS |
 | `formal-docs-sync` | 功能 API 同步、存量回填分批计划 | 2/2 PASS |
 | **合计** | **8 个 eval** | **8/8 PASS** |
 
-WS2 的 `docs-agent` 审计门禁用例在 WS3 启用 `docs-audit` 后更新为正式分流用例，并再次通过 fresh validation。([#110](https://github.com/Neplich/dev-agent-skills/pull/110)、[#111](https://github.com/Neplich/dev-agent-skills/pull/111))
+当前 durable `docs-agent` 集合仍为 3/3 PASS：前两个 WS2 用例保持 PASS，第三个文件已由 WS3 的 release audit 正式分流用例替代并重新通过 fresh validation。WS2 的 8/8 与下方 WS3 的 7/7 是各 PR 合并时的验证结论，二者共享这个被更新的 router 集成用例，不应相加为当前独立用例总数。([#110](https://github.com/Neplich/dev-agent-skills/pull/110)、[#111](https://github.com/Neplich/dev-agent-skills/pull/111))
 
 ### WS3：发版审计门禁与 4-skill 终态（7/7 PASS）
 
