@@ -184,14 +184,14 @@ yourself.
 ## 7. Cross-Role PM Handoff Packet Contract
 
 When `pm-agent` or `idea-to-spec` sends work to Designer, Engineer, QA, DevOps,
-Security, delivery, or another non-PM owner, use this cross-role packet. This
+Security, Docs, delivery, or another non-PM owner, use this cross-role packet. This
 section is the authoritative PM-side field definition for issue #52.
 
 Required fields:
 
 | Field | Meaning |
 | --- | --- |
-| `request_type` | Stable request class: `new_feature`, `existing_update`, `bug_report`, `design`, `validation`, `deployment`, `security`, `delivery`, `status`, `feature_catalog`, `competitive_research`, `battlecard`, `changelog`, `release_notes`, `roadmap`, or `repo_status`. |
+| `request_type` | Stable request class: `new_feature`, `existing_update`, `bug_report`, `design`, `validation`, `deployment`, `security`, `formal_docs`, `delivery`, `status`, `feature_catalog`, `competitive_research`, `battlecard`, `changelog`, `release_notes`, `roadmap`, or `repo_status`. |
 | `change_tier` | `hotfix`, `standard`, or `major`, using the 变更分级契约 in `AGENTS.md` as the single definition source. |
 | `feature_path` | Canonical multi-level feature path, `unresolved` when PM clarification must continue, or `N/A` for confirmed non-feature repo-wide work. |
 | `feature` | Terminal feature slug, compatible legacy feature value, or `N/A` for confirmed non-feature repo-wide work. |
@@ -200,7 +200,7 @@ Required fields:
 | `feature_path_evidence` | List of `{source, reason}` entries proving why the path is correct, or an empty list for confirmed non-feature repo-wide work. |
 | `source_documents` | PRD, DECISIONS, TRD, design docs, issue, PR, release, repo-status, or other evidence used for routing. |
 | `scope_decision` | Confirmed scope, non-goals, and whether approved product expectations changed. |
-| `downstream_owner` | Next owner: `Designer`, `Engineer`, `QA`, `DevOps`, `Security`, or `delivery`. |
+| `downstream_owner` | Next owner: `Designer`, `Engineer`, `QA`, `DevOps`, `Security`, `Docs`, or `delivery`. |
 | `required_output` | Concrete artifact or action expected from the next owner: document, plan, implementation, report, verification evidence, delivery action, or status summary. |
 | `blockers_risks` | Missing docs, unresolved decisions, unavailable plugins, platform limits, verification risk, or security / privacy risk. |
 
@@ -240,8 +240,13 @@ instead of blocking or inventing a feature path.
 | Confirmed acceptance, exploratory, bug analysis, smoke, retest, or regression work | `QA` | Test basis, expected behavior, environment, affected flows, result format. |
 | Confirmed deployment, CI/CD, environment, Docker, Helm, release readiness, rollback, or runbook work | `DevOps` | Environment, release target, rollback expectation, operational risk. |
 | Confirmed AppSec, auth/authz, dependency, secret, privacy, upload, webhook, or data-flow review | `Security` | Risk surface, assets, permissions, data categories, remediation expectations. |
+| Confirmed formal documentation site bootstrap, post-feature / post-deployment / post-release formal-docs synchronization, existing formal-docs backfill, or release documentation audit | `Docs` | Source feature / deployment / release evidence, formal-docs scope, target site or pages, synchronization or audit output; `docs-agent` router provides bootstrap and sync in WS2, while audit routing becomes executable after WS3 delivers `docs-audit`. |
 | Inherited-project feature inventory, competitive research, battlecards, changelogs, release notes, roadmaps, or repository status | Named PM specialist | PM-owned route context only: selected specialist, source repository or release context, optional `N/A` feature scope for non-feature work, and any follow-up handoff condition. |
 | New feature, existing update, unclear scope, or expectation change not yet confirmed | PM specialist | Keep the request in PM; do not send a ready handoff packet. |
+
+PRD, TRD, implementation plans, QA reports, and other role-owned process
+documents remain with their owning PM, Engineer, or QA role. Route to `Docs`
+only for the formal documentation layer maintained through `docs-agent`.
 
 Example cross-role handoff:
 
@@ -282,7 +287,10 @@ workflow, or blocked handoff report.
 
 - Use the existing Downstream Owner Map and the collaboration chain
   `PM -> Designer -> Engineer -> QA -> DevOps -> Security` to identify the
-  most likely next owner. Do not create a parallel owner map or new chain.
+  most likely next owner. Insert `Docs` when formal documentation work is due:
+  after feature implementation, recommend `formal-docs-sync`; before release,
+  recommend `docs-audit` after WS3 delivers that capability. Do not create a
+  parallel owner map or new chain.
 - At closeout, proactively tell the user what the recommended next step is,
   why that owner is next, and what artifact or action that owner should
   produce.

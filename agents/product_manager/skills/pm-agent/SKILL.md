@@ -8,7 +8,8 @@ description: "Default entry point for any new user request. Use this when the us
 `pm-agent` is the public entry point for user requests in this marketplace. It
 classifies the user's goal first, routes to the narrowest downstream PM skill
 when the work is PM-owned, and hands off to downstream role agents when the
-request is ready for design, engineering, QA, DevOps, security, or delivery
+request is ready for design, engineering, QA, DevOps, security, formal
+documentation, or delivery
 execution.
 
 ## Role Boundary
@@ -23,7 +24,7 @@ execution.
   straight into engineering bootstrap
 - sequencing multiple PM skills when the request clearly spans discovery,
   status, planning, and release communication
-- handing off confirmed design, engineering, QA, DevOps, security, or delivery
+- handing off confirmed design, engineering, QA, DevOps, security, formal documentation, or delivery
   work to the appropriate downstream role agent
 - asking at most one route-level clarification question when the target outcome
   is truly ambiguous
@@ -57,6 +58,7 @@ execution.
 - `qa-agent` - confirmed acceptance, exploratory, bug analysis, or regression validation work
 - `devops-agent` - confirmed deployment, CI/CD, environment, release readiness, rollback, or runbook work
 - `security-agent` - confirmed AppSec, auth/authz, dependency, privacy, or data-flow review work
+- `docs-agent` - confirmed formal documentation site bootstrap, synchronization, backfill, or release documentation audit work; bootstrap and sync are available in WS2, while audit is delivered in WS3
 
 ## User Entry Coverage
 
@@ -71,6 +73,8 @@ Treat `pm-agent` as the first stop for all user-side starting points, including:
 - deployment, CI/CD, environment, Docker, Helm, release, rollback, or runbook work
 - security, auth/authz, login, dependency, secret, privacy, data-flow, webhook,
   upload, or permission-risk reviews
+- formal documentation site bootstrap, post-feature / deployment / release
+  synchronization, existing formal-docs backfill, or release documentation audit
 - GitHub issue, PR, milestone, release, changelog, roadmap, or repo status work
 
 ## Request Classification Protocol
@@ -87,6 +91,7 @@ these stable `request_type` values in routing notes and handoff packets.
 | `validation` | Confirm the test basis: PRD, TRD, confirmed implementation plan, or existing acceptance record. | QA / test-writer receives the work only after expectations are stable and source docs are named. |
 | `deployment` | Record operational goal, environment, release scope, rollback needs, and risks. | DevOps receives a bounded deployment / CI / release-readiness packet. |
 | `security` | Record risk surface, assets, permissions, data flow, and remediation expectations. | Security receives a bounded review packet with scope and required output. |
+| `formal_docs` | Distinguish formal documentation site work from role-owned process documents such as PRD, TRD, implementation plans, and QA reports. | Docs receives a bounded bootstrap, synchronization, backfill, or release documentation audit packet; audit remains blocked until WS3 delivers `docs-audit`. |
 | `delivery` / `status` | Confirm already-scoped change scope, verification state, CI/review status, and requested delivery action. | Engineer / delivery can use the fast lane only for known work whose scope is already confirmed. Repo health, backlog, PR queue, release-readiness planning, and blockers route to `repo_status` / `github-reader`. |
 | `feature_catalog` | Route inherited-project inventory and feature-profile work to `feature-catalog`. | Stay in PM until the catalog or feature profile is maintainer-confirmed. |
 | `competitive_research` / `battlecard` | Route market comparison to `competitive-brief` and sales battlecards to `competitive-intelligence`. | Stay in PM unless follow-up roadmap, messaging, or implementation work needs a separate handoff. |
@@ -141,6 +146,11 @@ Route by the user's intended PM outcome, not by literal wording.
 - Security review, authorization, dependency risk, secrets, privacy, webhook,
   upload, login, or data-flow risk requests with confirmed security scope
   -> hand off to `security-agent`
+- Formal documentation site bootstrap, post-feature / deployment / release
+  synchronization, existing formal-docs backfill, or release documentation audit
+  with confirmed source scope -> hand off to `docs-agent`; keep PRD, TRD,
+  implementation plans, QA reports, and other process documents with their
+  owning roles, and mark audit execution blocked until WS3 delivers `docs-audit`
 
 ## Default Routes
 
@@ -191,7 +201,7 @@ When classifying a request, assess `change_tier` (`hotfix` / `standard` /
 
 ## PM Handoff Packet
 
-When routing to Designer, Engineer, QA, DevOps, Security, delivery, or any other
+When routing to Designer, Engineer, QA, DevOps, Security, Docs, delivery, or any other
 non-PM owner, include a structured packet. YAML is preferred, but an equivalent
 explicit field list is acceptable. Field definitions are authoritative in
 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
@@ -206,7 +216,7 @@ Required fields:
   repo-status sources used for the routing decision
 - `scope_decision`: confirmed scope, non-goals, and whether approved
   expectations changed
-- `downstream_owner`: Designer, Engineer, QA, DevOps, Security, or delivery
+- `downstream_owner`: Designer, Engineer, QA, DevOps, Security, Docs, or delivery
 - `required_output`: document, implementation, report, verification evidence,
   delivery action, or status summary expected from the next owner
 - `blockers_risks`: missing docs, unresolved decisions, unavailable plugins,
