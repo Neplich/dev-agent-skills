@@ -7,29 +7,31 @@
 
 ## Test Set / Fixture Version
 
-- Fixture: `design-closeout-v1`
-- Commit: pending
+- Fixture: `ws2-docs-v1`
+- Commit: `c05f689`
 
 ## Latest Result
 
-Latest result: pending fresh validation
+**PASS** — with-skill 确认前六项完成态证据全部通过后，提出设计页 + design map 的原子候选范围（页面/代码范围/证据/排除项），正确停在第七项维护者范围确认，零写入。
 
 ## With-Skill Behavior
 
-- Pending fresh validation against all six completion gates, the existing scope-confirmation stop, and current-state-only candidate content.
+- 正向路径不越权：证据全过≠可写入，候选范围确认门禁保留。
+- 候选内容只描述代码与测试证明的 current state。
 
 ## Without-Skill Baseline
 
-- Pending generation from the same prompt and fixture without the skill or Docs Agent README.
+- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 文档。
+- baseline 同样停在确认点零写入，行为一致；差异在七项门禁的逐项核验记录与候选范围的协议化呈现。
 
 ## Failures
 
-- Pending fresh validation.
+- 无。
 
 ## Next Steps
 
-- Run fresh with-skill and without-skill validation, then replace this pending result.
+- 保留本结果。
 
 ## Runtime Artifact Policy
 
-- Runtime artifacts belong only in `tmp/eval-runs/` and are not committed.
+- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
