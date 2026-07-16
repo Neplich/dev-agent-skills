@@ -8,7 +8,12 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.eval_runtime import copy_fixture_to_runtime, display_path, eval_runtime_root
+from scripts.eval_runtime import (
+    apply_cleanup_paths,
+    copy_fixture_to_runtime,
+    display_path,
+    eval_runtime_root,
+)
 
 OUTPUT_FIELDS = (
     "with_skill_outputs",
@@ -271,6 +276,7 @@ def main() -> int:
         load_eval_item(metadata_path, meta)
     root = eval_runtime_root(metadata_path, "docs")
     copy_fixture_to_runtime(fixture_root, root)
+    apply_cleanup_paths(root, meta.get("execution_cleanup", []))
 
     if not has_deterministic_checks(meta):
         report_path = root / "comparison.auto.md"
