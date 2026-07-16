@@ -1,27 +1,37 @@
-# Docs Eval Comparison
+# Skill Eval Comparison
 
 ## Evaluation Target
+
 - Skill: `docs-site-bootstrap`
 - Eval: `eval-001-bootstrap-empty-workspace`
 
 ## Test Set / Fixture Version
-- Fixture: `ws2-bootstrap-v1` empty host repository
-- Expected focus: 35 static targets plus manifest, frontmatter, and write boundary
+
+- Fixture: `ws2-docs-v1`
+- Commit: `c05f689`
 
 ## Latest Result
-Latest result: pending fresh validation
+
+**PASS** — with-skill 在显式 opt-in 下一次生成 35 个模板 + manifest（全部 created、与内嵌模板逐字节一致），回读验证通过并确认重复运行 zero-diff，全部写入限于 docs/site/。
 
 ## With-Skill Behavior
-- Pending a fresh run after applying `execution_cleanup` in an isolated scratch copy.
+
+- 生成清单与磁盘文件、manifest 三方一致；frontmatter 7 字段合法。
+- 明确说明写入授权来自显式 opt-in，完成后停下等待确认。
 
 ## Without-Skill Baseline
-- Pending a new baseline from the same clean fixture without the skill or Agent README.
+
+- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 文档。
+- baseline 同样完成了 scaffold 生成，但清单完整性与 manifest 语义的核对组织较松散。
 
 ## Failures
-- Pending validation.
+
+- 无。
 
 ## Next Steps
-- Generate both fresh runs, inspect the isolated file inventory, and record the assertion-based result here.
+
+- 保留本结果。
 
 ## Runtime Artifact Policy
-- Generated sites, transcripts, outputs, verdicts, timing, run status, and diagnostics belong only in `tmp/eval-runs/`; only this durable comparison is committed.
+
+- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。

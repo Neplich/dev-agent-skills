@@ -1,27 +1,37 @@
-# Docs Eval Comparison
+# Skill Eval Comparison
 
 ## Evaluation Target
+
 - Skill: `docs-site-bootstrap`
 - Eval: `eval-002-repeat-bootstrap-idempotent`
 
 ## Test Set / Fixture Version
-- Fixture: `ws2-bootstrap-v1` representative completed state
-- Expected focus: skipped-identical and zero-diff repeat
+
+- Fixture: `ws2-docs-v1`
+- Commit: `c05f689`
 
 ## Latest Result
-Latest result: pending fresh validation
+
+**PASS** — with-skill 重复执行零内容变更：4 个代表性目标 skipped-identical、createdAt 与 manifest SHA 保持不变，change-map 与 releases.json 未被重置。
 
 ## With-Skill Behavior
-- Pending a fresh run against the representative completed-state fixture.
+
+- 逐项字节比较后不重写任何文件，Git 层面 zero-diff 有明确证据。
+- 既有正式页面与数据文件全部保留。
 
 ## Without-Skill Baseline
-- Pending a new baseline from the same fixture without the skill or Agent README.
+
+- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 文档。
+- baseline 同样实现幂等零改动，行为一致；差异在 manifest 持久状态语义（createdAt 保留、状态机）的协议化表述。
 
 ## Failures
-- Pending validation.
+
+- 无。
 
 ## Next Steps
-- Compare pre/post hashes in scratch and record the fresh reviewer conclusion.
+
+- 保留本结果。
 
 ## Runtime Artifact Policy
-- Runtime copies, transcripts, outputs, verdicts, timing, run status, and diagnostics belong only in `tmp/eval-runs/` and must not be committed.
+
+- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。

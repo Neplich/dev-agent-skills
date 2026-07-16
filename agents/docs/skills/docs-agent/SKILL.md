@@ -40,7 +40,12 @@ The PM-side packet fields and cross-role behavior are defined in
 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
 
 If none of these entry bases is present, softly guide the request through
-`pm-agent` for classification and prerequisite context. Do not execute the
+`pm-agent` for classification and prerequisite context. A partially satisfied
+specialist entry basis is treated the same as a missing one: for example, an
+explicit site-initialization request without a confirmed host repository path
+is not a valid route entry. Name the missing credential, explain what would
+complete the entry basis, and guide the request through `pm-agent` instead of
+routing first and letting the specialist collect credentials. Do not execute the
 documentation workflow. Preserve the packet's `request_type`, `change_tier`,
 `feature_path`, source documents, scope decision, required output, and
 blockers/risks when present.

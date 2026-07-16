@@ -1,27 +1,37 @@
-# Docs Eval Comparison
+# Skill Eval Comparison
 
 ## Evaluation Target
+
 - Skill: `docs-site-bootstrap`
 - Eval: `eval-003-block-bootstrap-conflict`
 
 ## Test Set / Fixture Version
-- Fixture: `ws2-bootstrap-v1` representative conflict state
-- Expected focus: blocked conflict and explicit kept-as-is choice
+
+- Fixture: `ws2-docs-v1`
+- Commit: `c05f689`
 
 ## Latest Result
-Latest result: pending fresh validation
+
+**PASS** — with-skill 对宿主定制的 standards/index.md 给出完整冲突清单并 blocked，提供 kept-as-is / 覆盖 / 显式合并三选项，用户选择前不写入任何冲突路径。
 
 ## With-Skill Behavior
-- Pending a fresh run against the host-customized standards page.
+
+- 冲突清单完整（含全部缺失目标分类），不部分覆盖、不格式化宿主内容。
+- kept-as-is 语义与 manifest 登记规则表述一致。
 
 ## Without-Skill Baseline
-- Pending a new baseline from the same fixture without the skill or Agent README.
+
+- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 文档。
+- baseline 同样阻断并给出三选项（仓库冲突契约的等价行为），差异在 manifest 状态机与 bootstrap 协议的显式引用。
 
 ## Failures
-- Pending validation.
+
+- 无。
 
 ## Next Steps
-- Generate both fresh runs and verify the customized bytes remain unchanged.
+
+- 保留本结果。
 
 ## Runtime Artifact Policy
-- Runtime copies, transcripts, outputs, verdicts, timing, run status, and diagnostics belong only in `tmp/eval-runs/` and must not be committed.
+
+- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
