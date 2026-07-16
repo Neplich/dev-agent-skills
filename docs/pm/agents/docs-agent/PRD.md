@@ -5,12 +5,14 @@ feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.2.8"
+version: "1.3.0"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
-last_updated: "2026-07-15"
-related_issue: "https://github.com/Neplich/dev-agent-skills/issues/105"
+last_updated: "2026-07-16"
+related_issues:
+  - "https://github.com/Neplich/dev-agent-skills/issues/105"
+  - "https://github.com/Neplich/dev-agent-skills/issues/112"
 related_docs:
   - "AGENTS.md"
   - ".claude-plugin/marketplace.json"
@@ -54,6 +56,9 @@ changelog:
   - version: "1.2.8"
     date: "2026-07-15"
     changes: "决议 1 权威文件改随 pm-agent 入口插件分发，保证安装可达（PR #109 review 修订）"
+  - version: "1.3.0"
+    date: "2026-07-16"
+    changes: "新增设计文档交付链最后一步收口门禁（issue #112）"
 ---
 
 # docs-agent PRD
@@ -90,6 +95,8 @@ changelog:
 - 不把站点渲染纳入本仓库 PR 必跑校验链；渲染是宿主项目的运行时关注点。
 - 不改变过程文档（`docs/pm/`、`docs/engineer/` 等）的既有契约与路径。
 - 不假设特定语言或框架；存在 OpenAPI schema 等机器可读证据时作为加速路径而非前提。
+- 不阻止 `docs-site-bootstrap` 预先创建 `design/` 目录、索引与空模板；交付闭环前只禁止填充或改写功能级设计事实。
+- 不以存量回填绕过 feature delivery 门禁；design backfill 若后续启用，必须单独定义以稳定代码和通过测试为依据的门禁。
 
 ## 用户画像
 
@@ -109,6 +116,7 @@ changelog:
 | US-A04 | 作为角色 Agent，我想按任务落点读取正式文档，以便降低探索成本且不被过期内容误导。 | P0 | 任务路径命中 change-map 时优先读取映射文档；关键判断回代码验证；文档缺失时静默降级为代码扫描。 |
 | US-A05 | 作为角色 Agent，我在工作中发现文档与代码不符时，想把它变成可追踪证据，以便 docs-agent 修正。 | P1 | 不符事实以结构化形式记入产出，作为 `docs-audit` 输入。 |
 | US-A06 | 作为维护者，接手已有项目时，我想为现有实现回填生成正式文档基线，以便文档站从第一天就描述系统当前状态。 | P0 | 回填按维护者确认的范围分批执行；已有 feature-catalog 产物时优先作为回填地图；生成文档的同时生成 change-map 种子条目；MVP 覆盖 api 链路。 |
+| US-A07 | 作为维护者，我不希望功能级设计文档在实现与测试闭环前被改写，以便 `docs/site/design/**` 始终描述已落地并验证的当前状态。 | P0 | 七项门禁全部通过后才进入设计写入候选确认；任一门禁不满足时原子性 blocked，设计正文与对应 design change-map 条目零变化。 |
 
 ## 功能需求
 
@@ -123,6 +131,7 @@ changelog:
 | FR-A07 | 版本锚定 | `last_verified_version` 取值域为宿主项目 git tag / GitHub Release；无版本体系的宿主项目该字段可缺省。 | P1 | 字段仅由 audit 通过后盖章写入；缺省时 audit 报告需注明版本锚不可用。 |
 | FR-A08 | 逻辑与数据分层 | 通用逻辑（读者分层、路由方法、模板映射、写作纪律、生命周期节点）内置于 skill；项目数据（change-map 条目、模块名、目录微调）留在宿主项目 `standards/`。 | P0 | skill 内不出现任何宿主项目专有路径或模块名；bootstrap 生成的数据层文件归宿主项目所有。 |
 | FR-A09 | 存量回填（sync 第四模式） | 接手已有项目时，formal-docs-sync 以回填模式运行：按维护者确认的范围（优先复用 PM feature-catalog 产物作为地图）为现有实现生成正式文档基线，并生成 change-map 种子条目；按模块分批推进，每批需维护者确认。 | P0 | 含存量代码的项目可分批产出文档基线与 change-map 种子；MVP 覆盖 api 链路，database / ops 随后续迭代；无 feature-catalog 产物时按代码扫描圈定范围并要求确认。 |
+| FR-A10 | design 交付链收口门禁 | feature delivery 模式写入功能级 `docs/site/design/**` 前，必须同时确认同一 `feature_path` 的 Approved PRD、含可追踪影响域的 Confirmed TRD、已确认实施计划、计划范围全部完成且无 pending / blocked / deferred / TODO / stub、实际代码与 diff 覆盖计划及 TRD 范围、计划要求的测试全部执行并通过（含 `change_tier` 要求的 QA / E2E 证据），并在全部通过后继续执行既有范围确认门禁。 | P0 | 任一条件不满足时原子性 blocked，设计正文与对应 design change-map 条目均零变化；输出缺失证据、当前 owner 与下一步，不写暂定设计、未来态或部分正文。 |
 
 ## 参考实现对齐
 
@@ -144,6 +153,7 @@ changelog:
 | AC-04 | 6 个 Agent 在有文档站的 workspace 中优先按 change-map 取文档，无文档站时行为与现状一致。 | 现有 Agent eval 增补消费场景断言。 |
 | AC-05 | skill 文档、marketplace 注册、skills-lock、eval 齐备且通过全部契约检查。 | `check_repository_contract.py`、`check_eval_contract.py`、`check_doc_contract.py`。 |
 | AC-06 | 回填模式在含存量代码的 fixture 上生成 api 文档基线与 change-map 种子条目，且分批范围经确认。 | eval fixture：含存量 API 代码与 feature-catalog 产物的 workspace。 |
+| AC-07 | design 收口门禁覆盖实现未完成、测试失败或缺失、证据与 `feature_path` 不一致三类反向场景，以及实现、测试与 closeout 证据全部满足后进入候选范围确认的正向场景；所有 blocked 场景中设计正文与对应 design change-map 条目零变化。 | 持久化四组 eval fixture，并断言反向场景原子性 blocked、正向场景仍等待既有范围确认。 |
 
 ## 非功能需求
 

@@ -1,7 +1,7 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.1.19"
+version: "0.2.0"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -12,8 +12,13 @@ feature_path: "agents/docs-agent"
 parent_feature: "agents"
 feature_level: "2"
 related_prd: "docs/pm/agents/docs-agent/PRD.md"
-related_issue: "https://github.com/Neplich/dev-agent-skills/issues/105"
+related_issues:
+  - "https://github.com/Neplich/dev-agent-skills/issues/105"
+  - "https://github.com/Neplich/dev-agent-skills/issues/112"
 changelog:
+  - version: "0.2.0"
+    date: "2026-07-16"
+    changes: "新增设计文档交付链最后一步收口门禁（issue #112）"
   - version: "0.1.19"
     date: "2026-07-16"
     changes: "补充 change-map 新挂载文档的事实层审计"
@@ -29,7 +34,7 @@ changelog:
 
 ## 1. 来源上下文
 
-本 TRD 将已批准的 `docs/pm/agents/docs-agent/PRD.md`（Approved，版本以其 frontmatter 为准，当前 1.2.7）转成可实施的工程设计，变更来源为 issue #105。需求范围已稳定，`feature_path` 固定为 `agents/docs-agent`，本阶段不修改产品范围。参考实现提供 `docs/site` 内容模型、双站点预处理、change-map、生命周期、模板和校验脚本；本设计只提取可通用化机制，宿主项目的路径映射和模块数据不进入 marketplace skill。
+本 TRD 将已批准的 `docs/pm/agents/docs-agent/PRD.md`（Approved，版本以其 frontmatter 为准，当前 1.3.0）转成可实施的工程设计，变更来源为 issue #105 与 issue #112。需求范围已稳定，`feature_path` 固定为 `agents/docs-agent`，本阶段不修改产品范围。参考实现提供 `docs/site` 内容模型、双站点预处理、change-map、生命周期、模板和校验脚本；本设计只提取可通用化机制，宿主项目的路径映射和模块数据不进入 marketplace skill。
 
 PRD 的 8 项决议是本 TRD 的强约束：
 
@@ -246,6 +251,24 @@ bootstrap 生成的种子元数据 last_verified_version 初始为 unverified，
 
 MVP 的 feature 落地和存量回填都只验收 api 链路。database、design、ops、release-notes 和产品手册的目录、模板与协议可存在，但其自动同步不得被描述为 MVP 已完成能力。
 
+### 6.3 design 交付链收口门禁
+
+feature delivery 模式对任何功能级 `docs/site/design/**` 页面提出写入前，必须按同一 `feature_path` 同时确认以下七项；任一项不满足即停止，不进入范围确认或写入：
+
+1. 存在 Approved `docs/pm/{feature_path}/PRD.md`。
+2. 存在 Confirmed `docs/engineer/{feature_path}/TRD.md`，且包含可追踪的影响域。
+3. 存在已确认的 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。
+4. 实施计划中的本次交付范围全部完成，不存在仍属本次范围的 pending、blocked、deferred、TODO、stub 或未落地条目。
+5. 实际代码与 diff 覆盖实施计划和 TRD 声明的交付范围；不得仅凭过程文档自我宣称完成。
+6. 实施计划要求的相关测试均已实际执行并全部通过，不存在影响本次范围的 failed、blocked、unknown 或未经说明的 skipped；计划或 `change_tier` 要求 QA / E2E 证据时，该证据也必须完成并通过。
+7. 前六项全部通过后，仍执行 `formal-docs-sync` 既有范围确认门禁，向维护者展示候选设计页面、代码范围、证据、排除项和未决项，获得确认后才能写入。
+
+完成态证据复用 `feature-implementor` closeout 的既有形态：实施计划 scope 条目的完成状态、实际 diff 覆盖和测试执行记录。不得发明新的证据格式；无法取得证据时按证据缺口 blocked，不采信过程文档的自我宣称。
+
+blocked 输出必须逐项指出缺失证据、当前 owner 与下一步，并禁止先写暂定设计、未来态、实施草案或部分设计正文。功能级 design 页面与其 design change-map 条目属于同一原子范围；门禁失败时二者均零变化。
+
+写入后的设计正文只陈述最终代码与通过测试共同证明的 current state；随后回读页面并用最终代码与测试证据逐项核对关键设计声明。新建或变更页面仍使用 `last_verified_version: unverified`，最终版本锚只由 `docs-audit` 统一盖章。
+
 ## 7. docs-audit 设计
 
 audit 以最近 release tag 为默认 base，以待发布 HEAD 为 target；调用方可显式提供 base/target。没有 tag、Release 或显式版本锚时仍可审计工作区，但报告必须写明版本锚不可用，且不写 `last_verified_version`。
@@ -311,6 +334,10 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 | WS3 router 分流启用 | 修改 | `agents/docs/skills/docs-agent/SKILL.md`、`agents/docs/test/docs-agent/evals/{evals.json,workspace/**}` | 启用 router 审计分流并移除 WS2 中间态 blocked 文案，router eval 断言由 blocked 改为 handoff docs-audit |
 | WS3 eval | 新增 | `agents/docs/test/docs-audit/evals/{evals.json,workspace/**}` | mismatch、stale、verified 与无版本锚 fixture；接入 evals.yml 的 docs target |
 | WS3 audit | 修改 | `.claude-plugin/marketplace.json`、`skills-lock.json` | 追加 docs-audit 注册达成 4-skill 终态，刷新 metadata 与 computedHash |
+| design 收口门禁 | 修改 | `docs/pm/agents/docs-agent/PRD.md`、`docs/engineer/agents/docs-agent/{TRD.md,IMPLEMENTATION_PLAN.md}` | 登记 issue #112 产品、技术与独立实施 scope 契约 |
+| design 收口门禁 | 修改 | `agents/docs/skills/formal-docs-sync/SKILL.md`、`agents/docs/skills/formal-docs-sync/_internal/INSTRUCTIONS.md` | 落地七项完成态门禁、blocked、原子写入与回读规则 |
+| design 收口门禁 | 新增/修改 | `agents/docs/test/formal-docs-sync/evals/**` | 增加实现未完成、测试失败或缺失、feature_path 不一致、全部通过四组 fixture 与 durable comparison |
+| design 收口门禁 | 修改 | `skills-lock.json` | 刷新 formal-docs-sync metadata 与 computedHash |
 | WS1-3 contract | 修改（按硬编码情况） | `scripts/check_repository_contract.py`、`scripts/check_eval_contract.py` 及对应 `tests/` | 若现有校验硬编码 Agent/router/skill 数量或路径，扩展到 docs-agent；不为动态已兼容逻辑做无关重写 |
 | 交接文档 | 新增（TRD 确认后） | `docs/engineer/agents/docs-agent/IMPLEMENTATION_PLAN.md` | feature-implementor 的活跃实施计划 |
 
@@ -318,15 +345,16 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 
 ## 10. 实施拆分
 
-本功能新增 Agent、修改 6 个角色消费契约、marketplace 注册与 eval，按 `AGENTS.md` 判定 `change_tier: major`。实施顺序固定为三个独立 PR：
+本功能新增 Agent、修改 6 个角色消费契约、marketplace 注册与 eval，并由 issue #112 追加 design 收口契约，按 `AGENTS.md` 判定 `change_tier: major`。实施顺序固定为四个独立 PR：
 
 | PR / Workstream | 实施内容 | 验收出口 |
 | --- | --- | --- |
 | PR 1 / WS1 消费契约 | 新增共享 contract；为 6 个现有 Agent 的适用 specialist 增加指针；补 debugger 与 release 输出切换；增加消费回归 fixture | 有 change-map 时精准读映射文档且关键判断回代码；无站点时行为不变；不复制权威协议 |
 | PR 2 / WS2 Agent 骨架 + bootstrap + sync | 新增 `agents/docs`、router、bootstrap、sync、内置模板、注册和 lock；实现完整骨架协议、feature api 同步与存量 api 回填 | router / bootstrap / sync 3-skill 注册结构合法且路径全部可解析；bootstrap 完整/幂等/opt-in；sync 只更新影响 API；回填按批确认并生成 change-map 种子 |
 | PR 3 / WS3 audit 门禁 | 新增 docs-audit、确定性/事实层、报告和盖章协议；接入 release handoff；启用 router 审计分流 | mismatch/stale 阻塞；全 verified 才统一盖章；`.meta/` 排除 frontmatter；无锚不伪造版本；marketplace 追加 docs-audit 达成 4-skill 注册终态 |
+| PR 4 / issue #112 design 收口门禁 | 修订 PRD/TRD/实施计划；在 `formal-docs-sync` 落地同 feature_path 的七项完成态门禁、blocked 原子性与 current-state 回读；新增四组持久化 eval 并刷新 lock | 三反一正 eval 全部通过；所有反向场景断言 design 正文与 map 零变化；repository → eval → artifact → doc → python 契约链全绿 |
 
-每个 PR 修改 skill 后在同批刷新对应 `skills-lock.json` hash，实际执行 eval 时同批更新 durable `comparison.md`。不得把三个 PR 的确认合并成一次 major 实施确认；每个 workstream 按实施计划明确入口与出口。
+每个 PR 修改 skill 后在同批刷新对应 `skills-lock.json` hash，实际执行 eval 时同批更新 durable `comparison.md`。不得把四个 PR 的确认合并成一次 major 实施确认；每个 workstream 按实施计划明确入口与出口。
 
 ## 11. 验证策略
 
@@ -337,6 +365,7 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 | `docs-agent` router | AC-04、AC-05 | 含完整 PM handoff、等效文档链、无凭据请求三组 workspace | 正确分流三 specialist；无凭据回 PM；只引用 specialist gate；识别共享消费契约 |
 | `docs-site-bootstrap` | AC-01、AC-05 | 空 workspace、已完整 bootstrap、存在冲突文件三组 | 一次生成清单完整；第二次零差异；冲突 blocked 且不覆盖；未显式 opt-in 不写文件；eval schema 1.0 |
 | `formal-docs-sync` feature 模式 | AC-02、AC-05 | 已确认 PRD/TRD/plan、API code diff、已有无关文档与 change-map | 只更新命中 API 文档；从代码取 path/参数/错误；合并映射不删未知条目；不声称 database/ops 已完成 |
+| `formal-docs-sync` design 收口门禁 | AC-07 | 四组 fixture：计划范围仍未完成；测试 failed 或证据缺失；PRD/TRD/plan/closeout 证据与 `feature_path` 不一致；实现、diff、测试与 closeout 全部通过 | 前三组原子性 blocked，输出缺失证据、owner 与下一步，design 正文及对应 map 零变化；正向组仅进入既有候选范围确认，不越过维护者确认写入；写入后只保留代码与测试证明的 current state |
 | `formal-docs-sync` 回填模式 | AC-06 | 存量 API 代码 + feature-catalog；另设无 catalog fixture | 优先用 catalog 画范围；无 catalog 扫描后先确认；按批生成 API 基线与种子；未确认批次不写入 |
 | `docs-audit` | AC-03、AC-05 | 文档声明与代码不符、文档声明确实过期、命中 change-map 但声明仍准确的纯重构、全部一致、仅文档变更且声明有误、无 release tag 共六组 | 分别输出 mismatch/stale/verified；前两者 blocked；全部 verified 才盖章；无锚仅报告不可用；纯重构场景判 verified 且不强制文档编辑；纯文档错误变更被事实层拦截，不因无代码 diff 而放行 |
 | 6 Agent 消费回归 | AC-04 | 同一任务分别放入命中 change-map、无站点、过期版本三种 workspace | 优先精准读 required_docs；关键结论回代码；无站点静默降级；旧版本降低信任而非盲信 |
@@ -384,15 +413,16 @@ docs-agent 随 marketplace 下一个版本发布：更新 `.claude-plugin/market
 
 TRD 获维护者确认后，`feature-implementor` 才可创建 `docs/engineer/agents/docs-agent/IMPLEMENTATION_PLAN.md`。交接包必须包含：
 
-- Approved PRD：`docs/pm/agents/docs-agent/PRD.md`（版本以其 frontmatter 为准，当前 1.2.7）。
+- Approved PRD：`docs/pm/agents/docs-agent/PRD.md`（版本以其 frontmatter 为准，当前 1.3.0）。
 - Confirmed TRD：`docs/engineer/agents/docs-agent/TRD.md`。
-- issue #105 与 8 项决议，`change_tier: major`，固定顺序 WS1 → WS2 → WS3。
+- issue #105、issue #112 与 8 项决议，`change_tier: major`，固定顺序 WS1 → WS2 → WS3 → PR 4 design 收口门禁。
 - 第 9 节完整文件触点和 forbidden scope：不修改参考实现，不引入宿主专有模块名，不把宿主 `docs/site/**` 当 marketplace 预置数据。
 - 4 个 skill 的入口凭据、router/specialist gate 边界、消费 contract 权威路径和 marketplace 注册草案。
 - bootstrap 生成 manifest、7 字段 / change-map schema、`.meta/` 排除、冲突幂等策略和 opt-in 条件。
 - sync 的三节点 / 回填协议、latest-state 纪律及“MVP 仅 api 链路”的验收边界。
+- design 写入的七项完成态门禁、feature-implementor closeout 证据复用、blocked 原子性与 current-state 回读规则。
 - audit 的 base/target、三态、报告路径、全部 verified 后统一盖章和无版本锚行为。
 - 第 11 节 eval fixture/assertion 映射、契约命令顺序、Fresh Sub-Agent 与 durable `comparison.md` 门禁。
 - 第 13 节 blocking 风险的 owner 与解锁条件；未解决 blocking 项必须写入计划并停在对应 workstream 前。
 
-实施计划需按三个独立 PR 展开到逐文件步骤、每步验证、回滚点和确认点。TRD 确认只授权编写实施计划，不授权直接修改 skill、registry、lock、eval 或宿主文档站。
+实施计划需按四个独立 PR 展开到逐文件步骤、每步验证、回滚点和确认点。TRD 确认只授权编写实施计划，不授权直接修改 skill、registry、lock、eval 或宿主文档站。
