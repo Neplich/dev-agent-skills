@@ -72,6 +72,106 @@
           "text": "说明若无 feature catalog，应先扫描 API entry points、schema、handler 与 contract tests，按一个顶级 route group 形成候选批次，然后展示 code_glob 和页面并等待确认，不能扫描后直接全库生成。"
         }
       ]
+    },
+    {
+      "id": "eval-003-design-gate-incomplete-scope",
+      "name": "Design 收口门禁阻断未完成范围",
+      "description": "验证实施计划仍有本次范围内未完成条目时，design 正文与映射保持原子性零变化。",
+      "prompt": "按 `pm-handoff.md` 请求同步 `preferences-summary` feature 的 `docs/site/design/**`。请先核验同一 feature_path 的完成态证据；本轮没有额外范围确认。",
+      "expected_output": "识别实施计划中仍属本次范围的 TODO 条目并 blocked，指名 owner 与下一步；不修改 design 页面或对应 change-map 条目，也不写暂定或未来态设计。",
+      "workspace": "workspace/eval-003-design-gate-incomplete-scope",
+      "assertions": [
+        {
+          "id": "blocks_on_incomplete_scope",
+          "description": "未完成范围阻断 design 同步",
+          "text": "明确指出计划条目 `SCOPE-02 Add compact summary rendering` 仍为 `TODO` 且属于本次交付范围，当前 owner 为 Engineer / feature implementor，下一步是完成代码与对应验证后重新提供 closeout 证据。"
+        },
+        {
+          "id": "design_zero_change",
+          "description": "门禁失败时 design 原子范围零变化",
+          "text": "不修改 `docs/site/design/preferences-summary.md`，也不修改 `docs/site/standards/change-map.yaml` 中对应 design required_docs 条目；报告两者均为零变化。"
+        },
+        {
+          "id": "no_tentative_design",
+          "description": "不生成暂定或未来态设计正文",
+          "text": "blocked 状态下不写 provisional、tentative、planned、future-state 或部分 design 正文，不把尚未实现的紧凑摘要描述成 current state。"
+        }
+      ]
+    },
+    {
+      "id": "eval-004-design-gate-failing-tests",
+      "name": "Design 收口门禁阻断失败测试",
+      "description": "验证计划范围与代码 diff 完整但要求测试失败时，design 正文与映射保持原子性零变化。",
+      "prompt": "按 `pm-handoff.md` 请求同步 `preferences-summary` feature 的 `docs/site/design/**`。请用计划、代码、diff 与 `.eval/test-results.md` 核验完成态；本轮没有额外范围确认。",
+      "expected_output": "识别具名失败测试并 blocked，说明补测解锁路径；不修改 design 页面或对应 change-map 条目。",
+      "workspace": "workspace/eval-004-design-gate-failing-tests",
+      "assertions": [
+        {
+          "id": "blocks_on_failing_tests",
+          "description": "计划要求测试失败时阻断",
+          "text": "识别计划要求的 `test_compact_summary_handles_empty_values` 已执行但结果为 `FAILED`，因此第六项门禁不通过并停止在范围确认与写入之前。"
+        },
+        {
+          "id": "design_zero_change",
+          "description": "测试门禁失败时 design 原子范围零变化",
+          "text": "不修改 `docs/site/design/preferences-summary.md`，也不修改 `docs/site/standards/change-map.yaml` 中对应 design required_docs 条目；报告两者均为零变化。"
+        },
+        {
+          "id": "names_missing_evidence",
+          "description": "指名失败证据与解锁路径",
+          "text": "指名失败测试、当前 owner 为 Engineer / test owner，并说明修复实现或测试后重新执行该计划要求测试、取得全通过记录，再重新进入 design 收口门禁。"
+        }
+      ]
+    },
+    {
+      "id": "eval-005-design-gate-mismatched-evidence",
+      "name": "Design 收口门禁阻断路径证据不一致",
+      "description": "验证 PRD/TRD metadata 与请求 feature_path 不一致时，在 design 写入前路由回对应 owner。",
+      "prompt": "按 `pm-handoff.md` 请求同步 `preferences-summary` feature 的 `docs/site/design/**`。请先核验 PRD、TRD、计划、代码、diff 与测试是否都属于同一 feature_path；本轮没有额外范围确认。",
+      "expected_output": "识别请求路径与 PRD/TRD metadata 的 feature_path 冲突并 blocked，路由 PM 与 Engineer owner 补齐证据；design 页面与映射零变化。",
+      "workspace": "workspace/eval-005-design-gate-mismatched-evidence",
+      "assertions": [
+        {
+          "id": "blocks_on_evidence_mismatch",
+          "description": "feature_path 证据不一致时阻断",
+          "text": "明确对比请求及 plan 的 `preferences-summary` 与 PRD/TRD frontmatter 的 `account-preferences`，将其判为同一路径证据冲突并停止在候选范围确认与写入之前。"
+        },
+        {
+          "id": "design_zero_change",
+          "description": "证据冲突时 design 原子范围零变化",
+          "text": "不修改 `docs/site/design/preferences-summary.md`，也不修改 `docs/site/standards/change-map.yaml` 中对应 design required_docs 条目；报告两者均为零变化。"
+        },
+        {
+          "id": "routes_to_owner",
+          "description": "回对应 owner 修正证据链",
+          "text": "将 PRD feature_path 归属冲突路由给 PM owner，将 TRD 同路径与影响域对齐路由给 Engineer / trd-gen；要求二者与请求和计划统一后再重试，不自行猜测正确路径。"
+        }
+      ]
+    },
+    {
+      "id": "eval-006-design-gate-all-passed",
+      "name": "Design 收口门禁通过后停在范围确认",
+      "description": "验证前六项完成态证据齐备后，仍只展示候选 design 范围并等待维护者确认。",
+      "prompt": "按 `pm-handoff.md` 请求同步 `preferences-summary` feature 的 `docs/site/design/**`。请核验前六项完成态证据并提出候选范围；本轮没有授权写入，也没有替维护者确认该候选范围。",
+      "expected_output": "确认前六项证据均通过，展示候选页面、代码范围、证据、排除项与未决项，停在维护者确认；候选正文只描述代码和通过测试证明的 current state。",
+      "workspace": "workspace/eval-006-design-gate-all-passed",
+      "assertions": [
+        {
+          "id": "passes_completion_gates",
+          "description": "前六项完成态门禁全部通过",
+          "text": "逐项确认 Approved PRD、含可追踪影响域的 Confirmed TRD、已确认计划、计划 scope 全部完成、实际代码与 diff 覆盖计划/TRD、计划要求测试全部执行并通过。"
+        },
+        {
+          "id": "stops_at_scope_confirmation",
+          "description": "通过后仍等待既有候选范围确认",
+          "text": "展示候选页面 `docs/site/design/preferences-summary.md`、代码范围 `src/preferences_summary.py`、证据、排除项与未决项，并明确等待维护者确认；不直接修改页面或 change-map。"
+        },
+        {
+          "id": "current_state_only",
+          "description": "候选内容仅陈述 current state",
+          "text": "候选设计内容只陈述代码与通过测试共同证明的当前行为：按固定字段顺序返回非空偏好摘要并省略空值；不加入未来态、实施过程或无证据声明。"
+        }
+      ]
     }
   ]
 }

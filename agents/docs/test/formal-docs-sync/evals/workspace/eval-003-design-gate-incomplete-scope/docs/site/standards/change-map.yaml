@@ -1,0 +1,14 @@
+title: Documentation Change Map
+visibility: internal
+doc_type: standard
+stage: dev
+owners:
+  - docs
+related_code: []
+last_verified_version: unverified
+
+change_map:
+  "src/preferences_summary.py":
+    required_docs:
+      - docs/site/design/preferences-summary.md
+    trigger: preference summary presentation changes

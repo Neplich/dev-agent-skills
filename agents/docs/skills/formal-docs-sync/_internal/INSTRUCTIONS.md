@@ -8,15 +8,77 @@ current-state writing, backfill batching, change-map growth, and reporting.
 
 | Node | Entry credentials and evidence | Product target output | MVP output |
 | --- | --- | --- | --- |
-| Feature delivery | Approved PRD; Confirmed TRD impact evidence from frontmatter `related_code` or the impacted modules/interfaces section; confirmed `IMPLEMENTATION_PLAN.md`; actual diff and tests | API, database, and design docs plus change-map updates | API docs and API `code_glob` entries only |
+| Feature delivery | Approved PRD; Confirmed TRD impact evidence from frontmatter `related_code` or the impacted modules/interfaces section; confirmed `IMPLEMENTATION_PLAN.md`; actual diff and tests | API, database, and design docs plus change-map updates; feature-level design output is subject to the Section 2 closeout gate | API docs and API `code_glob` entries only |
 | Deployment verification | TRD deployment surface; deployment configuration; verification commands and results; environment differences | Operations runbook and necessary release-preparation entries | Future iteration; not part of MVP acceptance |
 | Release | Release scope; verified version or tag; changelog and release-process documents; audit conclusion | Product manual; release-note content is produced by `pm-agent:release-notes-generator`, and sync only verifies that the existing release notes are placed under the formal site when present and agree with the version context | Future iteration; not part of MVP acceptance |
 
-Existing-system backfill is the fourth execution mode in Section 3. It does not
+Existing-system backfill is the fourth execution mode in Section 4. It does not
 require a feature implementation plan and shares the same evidence, writing,
 map-growth, and confirmation disciplines.
 
-## 2. Five-Step Synchronization Protocol
+## 2. Design Delivery Closeout Gate
+
+In feature-delivery mode, complete this checklist before proposing any write to
+a feature-level `docs/site/design/**` page. Items 1–6 must refer to the same
+`feature_path`; item 7 runs only after they all pass.
+
+- [ ] **Approved PRD.** Read `docs/pm/{feature_path}/PRD.md`; verify that it
+  exists, is Approved, and its feature metadata resolves to the same
+  `feature_path` as the delivery scope.
+- [ ] **Confirmed TRD with traceable impact scope.** Read
+  `docs/engineer/{feature_path}/TRD.md`; verify that it exists, is Confirmed,
+  matches the same `feature_path`, and identifies the affected code through
+  frontmatter `related_code` or an impacted-modules/interfaces section.
+- [ ] **Confirmed implementation plan.** Read
+  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`; verify that it exists,
+  matches the same `feature_path`, and records maintainer or user confirmation
+  for the delivery scope.
+- [ ] **Entire delivery scope completed.** Inspect every plan scope entry for
+  this delivery and its recorded status; pass only when all are complete and
+  none remain `pending`, `blocked`, `deferred`, `TODO`, a stub, or otherwise
+  unimplemented.
+- [ ] **Code and diff cover the declared scope.** Compare the actual code and
+  diff with every applicable plan scope entry and the TRD impact scope; pass
+  only when the implementation covers both. A process document's own claim of
+  completion is not evidence of implementation.
+- [ ] **All required tests executed and passed.** Compare the plan's required
+  tests with execution records and results; pass only when every required test
+  was actually run and passed. Any relevant `failed`, `blocked`, `unknown`, or
+  unexplained `skipped` result fails the gate. When the plan or `change_tier`
+  requires QA or E2E evidence, verify that evidence was completed and passed
+  as well.
+- [ ] **Existing candidate-scope confirmation completed.** After items 1–6
+  pass, follow Section 3 and present the candidate design pages, code scope,
+  evidence, exclusions, and unresolved items. Write only after the maintainer
+  confirms that bounded scope.
+
+Reuse the existing `feature-implementor` closeout evidence shape: completed
+plan scope statuses, actual diff coverage, and test execution records. Do not
+invent a separate evidence format. Missing or inaccessible evidence is an
+evidence gap and blocks the gate.
+
+For a blocked result, list each failed checklist item with its missing or
+conflicting evidence, current owner, and next action. Do not write provisional
+designs, future-state descriptions, implementation drafts, or a partial design
+body while blocked.
+
+Treat each feature-level design page and its corresponding design change-map
+entry as one atomic write scope. If any checklist item fails, neither may
+change. If the gate and scope confirmation pass, write them in the same bounded
+operation.
+
+The design body may state only the current state jointly demonstrated by final
+code and passing tests. After writing, read the page back and check every key
+design claim against that final code and test evidence. Keep new or changed
+pages at `last_verified_version: unverified`; only `docs-audit` stamps the
+final verified version.
+
+This gate does not apply to design directories, indexes, or empty templates
+pre-created by `docs-site-bootstrap`. Design backfill is not enabled; define a
+separate gate before enabling it. This gate does not change the existing node
+behavior for API, database, operations, product, or release-note output.
+
+## 3. Five-Step Synchronization Protocol
 
 Run these steps for feature delivery, deployment verification, and release.
 
@@ -89,7 +151,7 @@ pages back to verify:
 Report changed docs, evidence, map delta, unresolved discrepancies, and the
 recommended next lifecycle node or collaboration owner.
 
-## 3. Existing-System Backfill Protocol
+## 4. Existing-System Backfill Protocol
 
 Backfill creates a reviewed current-state API baseline in bounded batches.
 
@@ -120,7 +182,7 @@ If no reliable API fact can be established from routes, schemas, handlers, or
 contract tests, stop before writing that page and report the batch as
 unresolved with the evidence needed to continue.
 
-## 4. Change-Map Write Rules
+## 5. Change-Map Write Rules
 
 Apply these rules to `docs/site/standards/change-map.yaml`:
 
@@ -140,7 +202,7 @@ Apply these rules to `docs/site/standards/change-map.yaml`:
 After every write, parse and read back the map rather than relying only on the
 edit operation's success.
 
-## 5. Latest-State (Current-State) Discipline and Trust Model
+## 6. Latest-State (Current-State) Discipline and Trust Model
 
 Follow the shared consumption contract maintained by pm-agent at:
 
@@ -168,7 +230,7 @@ Write pages as latest/current state:
 - Keep uncertainty explicit as an unresolved item with its required evidence
   and owner; never turn an assumption into a current-state fact.
 
-## 6. Missing-Site Behavior
+## 7. Missing-Site Behavior
 
 Before proposing writes, verify that the host has the formal documentation
 foundation under `docs/site/`, including its standards and change map. If it is
@@ -179,7 +241,7 @@ Do not initialize the site, copy a scaffold, or create partial formal-doc paths
 without the user's explicit bootstrap request and the bootstrap specialist's
 own gate.
 
-## 7. Per-Batch Report
+## 8. Per-Batch Report
 
 Use this minimum report shape after each synchronization scope or backfill
 batch:
