@@ -179,22 +179,22 @@
     "docs-agent": {
       "source": "agents/docs/skills/docs-agent",
       "sourceType": "local",
-      "computedHash": "d026795dfdd7559b396d44e76be1bbc75f8bd802283c4242a9e7534e0d44968b"
+      "computedHash": "1b060f65530f274f978938d6701d66523e277b0b112c829024131b67aceae374"
     },
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",
       "sourceType": "local",
-      "computedHash": "d61a74574e8464b576358474a634b7e68e39f3e6f0d9d6f4bbd280c9263fb809"
+      "computedHash": "bdf4dd6169ba1d67d93e54f905e5e6f6a5bc4d980cd4f2e44e0b02ed3531683c"
     },
     "formal-docs-sync": {
       "source": "agents/docs/skills/formal-docs-sync",
       "sourceType": "local",
-      "computedHash": "f80e9273027bd4795b014c107e02aef41b14ce8847e6ba794081f297a2275ba9"
+      "computedHash": "7d72218011a57d138f3366f534a30b231cefd883db5436f98d341d0607274ca6"
     },
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",
       "sourceType": "local",
-      "computedHash": "4448fff00ed000212f31d3ed30c26c82cc5e0f640d51b4f303f9552dac19edde"
+      "computedHash": "81261a1490cf188d8e3c74a300d16c3a263c307e20c057fcf912318685c45444"
     }
   }
 }

@@ -46,8 +46,9 @@ Before auditing or writing:
    set whose conclusions are all `verified` may receive one unified version
    stamp; never stamp a verified subset.
 5. When the version anchor is unavailable, record
-   `version_anchor: unavailable` and do not write `last_verified_version` or
-   invent a version, even if every audited claim is verified.
+   `version_anchor: unavailable` and do not stamp `last_verified_version` or
+   invent a version, even if every audited claim is verified. Keep the existing
+   value, or `unverified` for a new page; the field must not be omitted.
 
 The exact two-layer protocol, status semantics, report format, stamp update,
 and release handoff live in `_internal/INSTRUCTIONS.md`. Load that file only

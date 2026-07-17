@@ -18,6 +18,9 @@ preserves confirmed scope and evidence through the handoff.
   the selected specialist's documented entry basis
 - routing explicit site initialization to `docs-site-bootstrap`, synchronization
   or backfill to `formal-docs-sync`, and release audit to `docs-audit`
+- owning the default formal-document frontmatter contract at
+  `_internal/_shared/frontmatter-contract.md`, which specialist producers and
+  auditors consume together
 - pointing to each specialist's authoritative gate without copying it
 - applying the PM safety-net closeout after the current work finishes
 

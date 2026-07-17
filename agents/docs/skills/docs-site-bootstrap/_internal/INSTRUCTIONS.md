@@ -4,6 +4,10 @@ Detailed execution guidance and the complete host-site templates for
 `docs-site-bootstrap`. The public contract and all gates live in `../SKILL.md`.
 This is the only internal instruction entry.
 
+All embedded formal pages and frontmatter validation scripts consume the
+authoritative contract in
+`agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md`.
+
 ## 1. Execution Protocol
 
 Use the fixed host-repository root `docs/site/` and execute in this order.
@@ -161,10 +165,9 @@ import { readText, SITE_ROOT, toPosix } from './paths.mjs';
 
 export const VISIBILITIES = new Set(['public', 'internal', 'both']);
 export const DOC_TYPES = new Set([
-  'landing', 'release', 'design', 'api', 'database', 'ops', 'product', 'standard'
+  'landing', 'release', 'design', 'api', 'database', 'ops', 'product'
 ]);
 export const STAGES = new Set(['draft', 'dev', 'ops', 'release']);
-export const CODE_DOC_TYPES = new Set(['api', 'database', 'design', 'ops', 'product']);
 export const SECTION_ORDER = [
   'standards', 'product', 'design', 'api', 'database', 'ops', 'release-notes'
 ];
@@ -216,7 +219,7 @@ Target: `docs/site/scripts/lib/frontmatter.mjs`
 
 ```js
 import {
-  CODE_DOC_TYPES, DOC_TYPES, STAGES, VISIBILITIES, collectMarkdown
+  DOC_TYPES, STAGES, VISIBILITIES, collectMarkdown
 } from './pages.mjs';
 
 const REQUIRED = [
@@ -228,11 +231,10 @@ const nonEmptyStrings = (value) => Array.isArray(value)
   && value.length > 0
   && value.every((item) => typeof item === 'string' && item.trim() !== '');
 
-export function validatePage(page, { versionAnchorUnavailable = false } = {}) {
+export function validatePage(page) {
   const data = page.data;
   const errors = [];
   for (const key of REQUIRED) {
-    if (key === 'last_verified_version' && versionAnchorUnavailable) continue;
     if (!(key in data) || data[key] === null || data[key] === '') {
       errors.push(`missing required field "${key}"`);
     }
@@ -252,24 +254,20 @@ export function validatePage(page, { versionAnchorUnavailable = false } = {}) {
   if (!nonEmptyStrings(data.owners)) {
     errors.push('owners must be a non-empty string array');
   }
-  if (!Array.isArray(data.related_code)
-      || data.related_code.some((item) => typeof item !== 'string' || item.trim() === '')) {
-    errors.push('related_code must be a string array');
-  } else if (CODE_DOC_TYPES.has(data.doc_type) && data.related_code.length === 0) {
-    errors.push(`related_code must be non-empty for doc_type ${data.doc_type}`);
+  if (!nonEmptyStrings(data.related_code)) {
+    errors.push('related_code must be a non-empty string array');
   }
-  if (data.last_verified_version !== undefined
-      && (typeof data.last_verified_version !== 'string'
-        || data.last_verified_version.trim() === '')) {
+  if (typeof data.last_verified_version !== 'string'
+      || data.last_verified_version.trim() === '') {
     errors.push('last_verified_version must be a version anchor or unverified');
   }
   return errors;
 }
 
-export async function collectFrontmatterFailures({ versionAnchorUnavailable = false } = {}) {
+export async function collectFrontmatterFailures() {
   const failures = [];
   for (const page of await collectMarkdown()) {
-    const errors = validatePage(page, { versionAnchorUnavailable });
+    const errors = validatePage(page);
     if (errors.length) failures.push({ path: page.relativePath, errors });
   }
   return failures;
@@ -324,22 +322,23 @@ function parseArgs(argv) {
   const unknown = argv.find((value) => !allowed.has(value));
   if (unknown) throw new Error(`Unknown argument: ${unknown}`);
   return {
-    versionAnchorUnavailable: argv.includes('--version-anchor-unavailable')
+    anchorUnavailable: argv.includes('--version-anchor-unavailable')
       || process.env.DOCS_VERSION_ANCHOR === 'unavailable'
   };
 }
 
-export async function checkFrontmatter({
-  versionAnchorUnavailable = process.env.DOCS_VERSION_ANCHOR === 'unavailable'
-} = {}) {
-  return collectFrontmatterFailures({ versionAnchorUnavailable });
+export async function checkFrontmatter() {
+  return collectFrontmatterFailures();
 }
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
-  const failures = await checkFrontmatter(options);
-  if (options.versionAnchorUnavailable) {
-    console.log('version_anchor: unavailable; last_verified_version may be omitted.');
+  const failures = await checkFrontmatter();
+  if (options.anchorUnavailable) {
+    console.log(
+      'version_anchor: unavailable; keep the existing last_verified_version, '
+      + 'or use unverified for a new page.'
+    );
   }
   for (const failure of failures) {
     console.error(failure.path);
@@ -939,7 +938,8 @@ doc_type: landing
 stage: release
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -965,7 +965,8 @@ doc_type: landing
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -997,7 +998,8 @@ doc_type: landing
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1017,7 +1019,8 @@ doc_type: landing
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1037,7 +1040,8 @@ doc_type: landing
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1057,7 +1061,8 @@ doc_type: landing
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1077,7 +1082,8 @@ doc_type: landing
 stage: ops
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1097,7 +1103,8 @@ doc_type: landing
 stage: release
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1113,11 +1120,12 @@ Target: `docs/site/standards/index.md`
 ---
 title: 文档规范
 visibility: internal
-doc_type: standard
+doc_type: design
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1145,11 +1153,12 @@ Target: `docs/site/standards/doc-lifecycle.md`
 ---
 title: 文档生命周期
 visibility: internal
-doc_type: standard
+doc_type: design
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1186,11 +1195,12 @@ Target: `docs/site/standards/doc-granularity.md`
 ---
 title: 文档粒度
 visibility: internal
-doc_type: standard
+doc_type: design
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1228,11 +1238,12 @@ Target: `docs/site/standards/templates/api-template.md`
 ---
 title: API 文档模板
 visibility: internal
-doc_type: standard
+doc_type: design
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1276,11 +1287,12 @@ Target: `docs/site/standards/templates/database.md`
 ---
 title: 数据库文档模板
 visibility: internal
-doc_type: standard
+doc_type: design
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1325,11 +1337,12 @@ Target: `docs/site/standards/templates/feature-design.md`
 ---
 title: 功能设计模板
 visibility: internal
-doc_type: standard
+doc_type: design
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1374,11 +1387,12 @@ Target: `docs/site/standards/templates/ops-runbook.md`
 ---
 title: 运维手册模板
 visibility: internal
-doc_type: standard
+doc_type: design
 stage: ops
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1422,11 +1436,12 @@ Target: `docs/site/standards/templates/product-handbook.md`
 ---
 title: 产品手册模板
 visibility: internal
-doc_type: standard
+doc_type: design
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
@@ -1473,11 +1488,12 @@ Target: `docs/site/standards/change-map.yaml`
 ```yaml
 title: 文档变更映射
 visibility: internal
-doc_type: standard
+doc_type: design
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 
 # Entry schema:

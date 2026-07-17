@@ -20,8 +20,10 @@ Resolve the audit baseline before computing impact:
 If there is no tag, Release, or explicit version anchor, continue auditing the
 confirmed working scope. Set `version_anchor: unavailable`, identify the real
 target commit when one exists, and never substitute `unknown`, a branch name,
-or an inferred version. Do not write `last_verified_version` or release
-metadata without a usable tag or Release anchor.
+or an inferred version. Do not stamp `last_verified_version` or write release
+metadata without a usable tag or Release anchor. Existing pages retain their
+current `last_verified_version`; new pages use `unverified`, and the field must
+never be omitted.
 
 Record the exact resolved base and target in the report. If a default base
 cannot be resolved, state that directly rather than inventing a commit range;
@@ -85,28 +87,29 @@ when there is no changed code or change-map match, so a documentation-only
 claim cannot bypass fact verification.
 
 Use each such page's frontmatter `related_code` to bound its code and test
-evidence. The field is required for every page. For a `landing`, `release`, or
-`standard` page, an empty `related_code` array is valid and means to perform
-frontmatter and document-structure checks only; do not manufacture a
-code-evidence task or placeholder glob. A missing `related_code` field is
-invalid frontmatter and makes the page `stale` in Step 5.
+evidence. The field must be a non-empty string array for every page, and the
+audit always uses it to bound the code and test evidence scope. A missing or
+empty `related_code` field is invalid frontmatter and makes the page `stale`
+in Step 5.
 
 ### Step 5: Validate frontmatter
 
 Validate every affected formal Markdown page and explicitly exclude
-`docs/site/.meta/**`. Check the seven standard fields and their constraints:
+`docs/site/.meta/**`. The authoritative field rules live in
+`agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md`.
+Check the seven required fields and their constraints:
 
 | Field | Validation |
 | --- | --- |
 | `title` | non-empty string |
 | `visibility` | `public`, `internal`, or `both` |
-| `doc_type` | `landing`, `release`, `design`, `api`, `database`, `ops`, `product`, or `standard` |
+| `doc_type` | `landing`, `release`, `design`, `api`, `database`, `ops`, or `product` |
 | `stage` | `draft`, `dev`, `ops`, or `release` |
 | `owners` | non-empty string array |
-| `related_code` | required path/glob array; non-empty for `api`, `database`, `design`, `ops`, and `product`; an empty array is allowed for `landing`, `release`, and `standard`, but the field must not be absent |
-| `last_verified_version` | tag/Release string or `unverified`; it may be absent only when the host has no version anchor |
+| `related_code` | non-empty string array of repository-relative paths or globs for every `doc_type` |
+| `last_verified_version` | non-empty version anchor string or `unverified`; always required, including when the host has no version anchor |
 
-An invalid field, invalid enum, invalid conditional `related_code`, or invalid
+An invalid field, invalid enum, invalid `related_code`, or invalid
 version field makes the page `stale` immediately. The literal `unverified` and
 an older release anchor are valid version values, not `stale` conclusions. They
 lower trust and require broader code and test verification; after the complete
@@ -241,8 +244,10 @@ Then, in one audit operation:
 
 Do not stamp a verified subset when another page is `stale`, `mismatch`, or
 blocked by missing evidence. Do not partially update `.meta/releases.json`.
-When the version anchor is unavailable, do not write `last_verified_version`
-and do not alter release metadata.
+When the version anchor is unavailable, do not stamp
+`last_verified_version` and do not alter release metadata. Keep each page's
+existing value; new pages remain `unverified`, and the field must not be
+omitted.
 
 ## 7. Release Handoff
 

@@ -133,6 +133,10 @@ path/query/body parameters, schemas, response and error shapes, fields, tests,
 deployment steps, commands, environment differences, and release/version
 context.
 
+Apply the authoritative default frontmatter contract from
+`agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md` to
+every new or updated formal page.
+
 For new or changed formal pages, use `last_verified_version: unverified` until
 the audit capability verifies the complete affected set. Sync must not stamp a
 release version. Unsupported or contradictory claims remain unresolved and
