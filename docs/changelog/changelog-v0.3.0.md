@@ -2,7 +2,7 @@
 feature: release-changelog
 version: 0.3.0
 date: 2026-07-16
-last_updated: 2026-07-16
+last_updated: 2026-07-17
 ---
 
 # Changelog - v0.3.0
