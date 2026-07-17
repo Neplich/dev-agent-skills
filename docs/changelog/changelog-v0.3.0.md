@@ -13,7 +13,7 @@ last_updated: 2026-07-16
 
 ### Added
 
-- **第 7 个角色 `docs-agent`**：新增 router 与 3 个 specialist，形成 4-skill 终态。`docs-site-bootstrap` 以显式 opt-in、幂等和冲突门禁生成公开站点与内部站点骨架；`formal-docs-sync` 支持按变更影响域同步正式文档，并可按 feature catalog 或 API surface 分批回填存量项目；`docs-audit` 在发版前核对文档与代码事实，输出 verified / stale / mismatch 三态审计结论，存在 stale 或 mismatch 时阻止发布。([#108](https://github.com/Neplich/dev-agent-skills/pull/108)、[#110](https://github.com/Neplich/dev-agent-skills/pull/110)、[#111](https://github.com/Neplich/dev-agent-skills/pull/111))
+- **第 7 个角色 `docs-agent`**：新增 router 与 3 个 specialist，形成 4-skill 终态。`docs-site-bootstrap` 以显式 opt-in、幂等和冲突门禁生成公开站点与内部站点骨架；`formal-docs-sync` 支持按变更影响域同步正式文档，并可按 feature catalog 或 API surface 分批回填存量项目，v0.3.0 已验收的自动化范围仅为 API 文档，deployment / release 模式当前主要负责证据检查、范围判断与 handoff，database、design、ops、product 页面仍需人工维护或另行 handoff；`docs-audit` 在发版前核对文档与代码事实，输出 verified / stale / mismatch 三态审计结论，存在 stale 或 mismatch 时阻止发布。([#108](https://github.com/Neplich/dev-agent-skills/pull/108)、[#110](https://github.com/Neplich/dev-agent-skills/pull/110)、[#111](https://github.com/Neplich/dev-agent-skills/pull/111))
 - **正式文档消费契约**：新增共享 `consumption-contract.md`，覆盖 Product Manager、Engineer、QA、DevOps、Designer、Security 6 个既有 Agent 的 22 个 specialist；其中 21 个接入通用指针，`debugger` 增加 expected-behavior 安全规则，`release-notes-generator` 增加站点发布说明输出规则。契约要求以 change-map 定位文档、以代码和测试作为事实源，并结构化报告分歧。([#109](https://github.com/Neplich/dev-agent-skills/pull/109))
 - **PM 入口 Docs 路由**：`pm-agent` 与共享 skill map 增加正式文档 bootstrap、sync/backfill、audit 的分类与 handoff，Docs Agent 纳入 PM-first 协作链。([#110](https://github.com/Neplich/dev-agent-skills/pull/110)、[#111](https://github.com/Neplich/dev-agent-skills/pull/111))
 
