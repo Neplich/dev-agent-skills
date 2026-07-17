@@ -1,0 +1,19 @@
+title: Documentation change map
+visibility: internal
+doc_type: design
+stage: release
+owners:
+  - documentation-team
+related_code:
+  - docs/site
+last_verified_version: unverified
+
+change_map:
+  "src/catalog/**":
+    required_docs:
+      - docs/site/api/valid-catalog.md
+      - docs/site/api/invalid-standard-doc-type.md
+      - docs/site/api/invalid-empty-related-code.md
+      - docs/site/api/invalid-missing-last-verified-version.md
+      - docs/site/api/invalid-empty-owners.md
+    trigger: Catalog API behavior or documentation contract changes

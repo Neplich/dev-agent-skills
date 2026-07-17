@@ -1,11 +1,12 @@
 ---
 title: 文档规范
 visibility: internal
-doc_type: standard
+doc_type: design
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 ---
 
