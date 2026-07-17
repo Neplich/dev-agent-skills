@@ -184,7 +184,7 @@
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",
       "sourceType": "local",
-      "computedHash": "bdf4dd6169ba1d67d93e54f905e5e6f6a5bc4d980cd4f2e44e0b02ed3531683c"
+      "computedHash": "db3c1fa62a54ba7cc66b89546c73b05c0061e5ab43f07fa9c2b28d0731d9e7d0"
     },
     "formal-docs-sync": {
       "source": "agents/docs/skills/formal-docs-sync",

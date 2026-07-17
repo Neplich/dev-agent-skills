@@ -1238,7 +1238,7 @@ Target: `docs/site/standards/templates/api-template.md`
 ---
 title: API 文档模板
 visibility: internal
-doc_type: design
+doc_type: api
 stage: dev
 owners:
   - docs
@@ -1287,7 +1287,7 @@ Target: `docs/site/standards/templates/database.md`
 ---
 title: 数据库文档模板
 visibility: internal
-doc_type: design
+doc_type: database
 stage: dev
 owners:
   - docs
@@ -1387,7 +1387,7 @@ Target: `docs/site/standards/templates/ops-runbook.md`
 ---
 title: 运维手册模板
 visibility: internal
-doc_type: design
+doc_type: ops
 stage: ops
 owners:
   - docs
@@ -1436,7 +1436,7 @@ Target: `docs/site/standards/templates/product-handbook.md`
 ---
 title: 产品手册模板
 visibility: internal
-doc_type: design
+doc_type: product
 stage: dev
 owners:
   - docs
