@@ -7,13 +7,14 @@
 
 ## Test Set / Fixture Version
 
-- Fixture: `issue-122-assets-v1`
-- Branch fixture commit: `a2a30a3`
+- Current fixture: `issue-122-assets-v2-c5r`
+- Last fresh-evaluated fixture: `issue-122-assets-v1` at branch commit `a2a30a3`
 - Fresh validation date: `2026-07-19`
+- C5R deterministic alignment: current materialized `docs/site/package.json` is byte-identical to the packaged asset; no fresh model eval was run.
 
 ## Latest Result
 
-**PASS** — fresh judge 对 3 条 assertions 全部判定 PASS。with-skill 对完整 38 资产运行副本逐字节分类为 `skipped-identical`，代表性 9 条 manifest、`createdAt`、change-map、release metadata 和正式页面均未改写。
+**PASS（最近一次 fresh 结论，fixture v1）** — fresh judge 对 3 条 assertions 全部判定 PASS。C5R 已把物化 `package.json` 对齐到 fixture v2，但没有运行新的 with-skill / without-skill，因此不把确定性字节检查表述为新的 fresh PASS。
 
 ## With-Skill Behavior
 
@@ -33,7 +34,7 @@
 
 ## Next Steps
 
-- 保留本结果；资产清单、幂等分类或 manifest 状态机变化时重新生成 fresh with/without validation。
+- 保留最近一次 fresh 结果；资产清单、幂等分类或 manifest 状态机变化时重新生成 fresh with/without validation。C5R 仅改变物化 `package.json` 的宿主检查严格度，已完成字节对齐并明确记录未重跑。
 
 ## Runtime Artifact Policy
 

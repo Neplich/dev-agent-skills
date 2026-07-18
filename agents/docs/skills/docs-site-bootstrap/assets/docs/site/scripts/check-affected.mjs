@@ -1,7 +1,7 @@
 import { execFile } from 'node:child_process';
-import { access } from 'node:fs/promises';
+import { lstat, realpath } from 'node:fs/promises';
 import { promisify } from 'node:util';
-import { resolve } from 'node:path';
+import { isAbsolute, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import picomatch from 'picomatch';
 import YAML from 'yaml';
@@ -11,14 +11,25 @@ import { readText, REPO_ROOT, SITE_ROOT, toPosix } from './lib/paths.mjs';
 const exec = promisify(execFile);
 const MAP_PATH = resolve(SITE_ROOT, 'standards/change-map.yaml');
 
-function parseArgs(argv) {
+export function parseArgs(argv) {
   const result = { strict: false, base: null };
+  let strictSeen = false;
+  let baseSeen = false;
   for (let index = 0; index < argv.length; index += 1) {
-    if (argv[index] === '--strict') result.strict = true;
-    else if (argv[index] === '--base') result.base = argv[++index];
+    if (argv[index] === '--strict') {
+      if (strictSeen) throw new Error('--strict may be provided only once');
+      strictSeen = true;
+      result.strict = true;
+    } else if (argv[index] === '--base') {
+      if (baseSeen) throw new Error('--base may be provided only once');
+      baseSeen = true;
+      const value = argv[index + 1];
+      if (!value || value.startsWith('--')) throw new Error('--base requires a git ref');
+      result.base = value;
+      index += 1;
+    }
     else throw new Error(`Unknown argument: ${argv[index]}`);
   }
-  if (result.base === undefined) throw new Error('--base requires a git ref');
   return result;
 }
 
@@ -27,21 +38,21 @@ async function git(args) {
   return stdout;
 }
 
-function parseNameOnly(output) {
-  return output.split('\n').map((item) => toPosix(item.trim())).filter(Boolean);
+export function parseGitPaths(output) {
+  return output.split('\0').map((item) => toPosix(item)).filter(Boolean);
 }
 
 async function changedFiles(base) {
   if (base) {
     const mergeBase = (await git(['merge-base', base, 'HEAD'])).trim();
-    const committed = parseNameOnly(await git(['diff', '--name-only', `${mergeBase}...HEAD`]));
-    const working = parseNameOnly(await git(['diff', '--name-only', 'HEAD']));
-    const untracked = parseNameOnly(await git(['ls-files', '--others', '--exclude-standard']));
+    const committed = parseGitPaths(await git(['diff', '--name-only', '-z', `${mergeBase}...HEAD`]));
+    const working = parseGitPaths(await git(['diff', '--name-only', '-z', 'HEAD']));
+    const untracked = parseGitPaths(await git(['ls-files', '--others', '--exclude-standard', '-z']));
     return [...new Set([...committed, ...working, ...untracked])].sort();
   }
-  const unstaged = parseNameOnly(await git(['diff', '--name-only']));
-  const staged = parseNameOnly(await git(['diff', '--name-only', '--cached']));
-  const untracked = parseNameOnly(await git(['ls-files', '--others', '--exclude-standard']));
+  const unstaged = parseGitPaths(await git(['diff', '--name-only', '-z']));
+  const staged = parseGitPaths(await git(['diff', '--name-only', '--cached', '-z']));
+  const untracked = parseGitPaths(await git(['ls-files', '--others', '--exclude-standard', '-z']));
   return [...new Set([...unstaged, ...staged, ...untracked])].sort();
 }
 
@@ -50,10 +61,69 @@ function matches(path, glob, excludes = []) {
     && !excludes.some((pattern) => picomatch(pattern, { dot: true })(path));
 }
 
-async function requiredDocExists(path) {
+function repoRelativeGlob(value, label) {
+  if (typeof value !== 'string' || value.trim() === '' || value !== value.trim()
+      || value.includes('\\') || value.startsWith('/') || /^[A-Za-z]:\//.test(value)
+      || value.split('/').includes('..')) {
+    throw new Error(`${label} must be repository-root relative`);
+  }
+}
+
+function requiredDocPath(value, label) {
+  repoRelativeGlob(value, label);
+  const segments = value.split('/');
+  if (!value.startsWith('docs/site/') || !value.endsWith('.md')
+      || segments.some((segment) => segment === '' || segment.startsWith('.'))) {
+    throw new Error(`${label} must be a Markdown page under docs/site/`);
+  }
+}
+
+function stringArray(value, label, { nonEmpty = false } = {}) {
+  if (!Array.isArray(value) || (nonEmpty && value.length === 0)
+      || value.some((item) => typeof item !== 'string' || item.trim() === '')) {
+    throw new Error(`${label} must be ${nonEmpty ? 'a non-empty' : 'a'} string array`);
+  }
+  if (new Set(value).size !== value.length) throw new Error(`${label} must not contain duplicates`);
+}
+
+export function validateChangeMap(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)
+      || !Object.hasOwn(raw, 'change_map')) {
+    throw new Error('change_map is required and must be a mapping');
+  }
+  const map = raw.change_map;
+  if (!map || typeof map !== 'object' || Array.isArray(map)) {
+    throw new Error('change_map must be a mapping');
+  }
+  for (const [codeGlob, rule] of Object.entries(map)) {
+    repoRelativeGlob(codeGlob, `change_map key ${JSON.stringify(codeGlob)}`);
+    if (!rule || typeof rule !== 'object' || Array.isArray(rule)) {
+      throw new Error(`change_map entry ${codeGlob} must be a mapping`);
+    }
+    stringArray(rule.required_docs, `change_map entry ${codeGlob} required_docs`, { nonEmpty: true });
+    for (const path of rule.required_docs) requiredDocPath(path, `change_map entry ${codeGlob} required_docs item`);
+    if (typeof rule.trigger !== 'string' || rule.trigger.trim() === '') {
+      throw new Error(`change_map entry ${codeGlob} trigger must be a non-empty string`);
+    }
+    if (rule.exclude !== undefined) {
+      stringArray(rule.exclude, `change_map entry ${codeGlob} exclude`);
+      for (const pattern of rule.exclude) repoRelativeGlob(pattern, `change_map entry ${codeGlob} exclude item`);
+    }
+  }
+  return map;
+}
+
+export async function requiredDocExists(
+  path, { repoRoot = REPO_ROOT, siteRoot = SITE_ROOT } = {}
+) {
   try {
-    await access(resolve(REPO_ROOT, path));
-    return true;
+    const candidate = resolve(repoRoot, path);
+    if (!(await lstat(candidate)).isFile()) return false;
+    const realSiteRoot = await realpath(siteRoot);
+    const source = await realpath(candidate);
+    const realRelative = toPosix(relative(realSiteRoot, source));
+    return realRelative !== '..' && !realRelative.startsWith('../')
+      && !isAbsolute(realRelative) && realRelative !== '';
   } catch {
     return false;
   }
@@ -68,11 +138,7 @@ export async function checkAffected({ base = null, strict = false } = {}, depend
   if (frontmatterFailures.length) {
     return { blocked: true, frontmatterFailures, changed: [], suspects: [] };
   }
-  const raw = YAML.parse(await readChangeMap()) ?? {};
-  const map = raw.change_map ?? {};
-  if (typeof map !== 'object' || Array.isArray(map)) {
-    throw new Error('change_map must be a mapping');
-  }
+  const map = validateChangeMap(YAML.parse(await readChangeMap()));
   const changed = await getChangedFiles(base);
   const changedSet = new Set(changed);
   const suspects = [];

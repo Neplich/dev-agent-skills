@@ -28,23 +28,24 @@ export function visibleFor(visibility, target) {
   throw new Error(`Unsupported site target: ${target}`);
 }
 
-export async function collectMarkdown({ includeHomes = true } = {}) {
+export async function collectMarkdown({ includeHomes = true, siteRoot = SITE_ROOT } = {}) {
   const patterns = includeHomes
     ? ['**/*.md']
     : SECTION_ORDER.map((section) => `${section}/**/*.md`);
   const entries = await fg(patterns, {
-    cwd: SITE_ROOT,
+    cwd: siteRoot,
     onlyFiles: true,
+    followSymbolicLinks: false,
     dot: true,
     ignore: IGNORE_GLOBS
   });
   const pages = [];
   for (const relativePath of entries.sort()) {
-    const source = await readText(resolve(SITE_ROOT, relativePath));
+    const source = await readText(resolve(siteRoot, relativePath));
     const parsed = matter(source);
     pages.push({
       relativePath: toPosix(relativePath),
-      absolutePath: resolve(SITE_ROOT, relativePath),
+      absolutePath: resolve(siteRoot, relativePath),
       source,
       data: parsed.data ?? {},
       content: parsed.content,

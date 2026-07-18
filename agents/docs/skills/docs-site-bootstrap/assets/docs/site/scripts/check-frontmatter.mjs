@@ -1,10 +1,11 @@
 import { fileURLToPath } from 'node:url';
 import { collectFrontmatterFailures } from './lib/frontmatter.mjs';
 
-function parseArgs(argv) {
+export function parseArgs(argv) {
   const allowed = new Set(['--version-anchor-unavailable']);
   const unknown = argv.find((value) => !allowed.has(value));
   if (unknown) throw new Error(`Unknown argument: ${unknown}`);
+  if (argv.length > 1) throw new Error('--version-anchor-unavailable may be provided only once');
   return {
     anchorUnavailable: argv.includes('--version-anchor-unavailable')
       || process.env.DOCS_VERSION_ANCHOR === 'unavailable'

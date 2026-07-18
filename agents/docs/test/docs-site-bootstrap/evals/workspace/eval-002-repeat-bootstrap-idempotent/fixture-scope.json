@@ -1,5 +1,5 @@
 {
-  "fixture_version": "issue-122-assets-v1",
+  "fixture_version": "issue-122-assets-v2-c5r",
   "purpose": "Minimal representative state for an already complete bootstrap",
   "materialized_targets": [
     "docs/site/package.json",

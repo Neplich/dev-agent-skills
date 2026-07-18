@@ -16,7 +16,8 @@ export function buildSidebar(pages, target) {
     const items = pages
       .filter((page) => page.relativePath.startsWith(`${section}/`))
       .filter((page) => visibleFor(page.data.visibility, target))
-      .sort((left, right) => left.relativePath.localeCompare(right.relativePath, 'zh-CN'))
+      .sort((left, right) => left.relativePath < right.relativePath ? -1
+        : left.relativePath > right.relativePath ? 1 : 0)
       .map((page) => ({ text: page.data.title, link: page.route }));
     if (items.length) {
       sidebar[`/${section}/`] = [{ text: SECTION_LABELS[section], items }];

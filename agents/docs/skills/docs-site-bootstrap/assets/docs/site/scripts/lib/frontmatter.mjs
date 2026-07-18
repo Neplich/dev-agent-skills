@@ -14,6 +14,9 @@ const nonEmptyStrings = (value) => Array.isArray(value)
 export function validatePage(page) {
   const data = page.data;
   const errors = [];
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    return ['frontmatter must be a mapping'];
+  }
   for (const key of REQUIRED) {
     if (!(key in data) || data[key] === null || data[key] === '') {
       errors.push(`missing required field "${key}"`);

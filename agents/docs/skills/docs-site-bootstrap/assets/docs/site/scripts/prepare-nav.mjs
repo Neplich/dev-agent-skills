@@ -2,9 +2,10 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { collectMarkdown } from './lib/pages.mjs';
 import { buildSidebar, renderSidebar } from './lib/sidebar.mjs';
-import { NAV_ROOT, writeText } from './lib/paths.mjs';
+import { NAV_ROOT, SITE_ROOT, validatePathInside, writeText } from './lib/paths.mjs';
 
 export async function prepareNav() {
+  await validatePathInside(NAV_ROOT, SITE_ROOT, '.generated navigation');
   const pages = await collectMarkdown({ includeHomes: false });
   for (const target of ['public', 'internal']) {
     const sidebar = buildSidebar(pages, target);

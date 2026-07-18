@@ -4,14 +4,24 @@ import {
   cp, lstat, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile
 } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, resolve, win32 } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
 import YAML from 'yaml';
-import { checkAffected } from '../check-affected.mjs';
+import {
+  checkAffected, parseArgs as parseAffectedArgs, parseGitPaths,
+  requiredDocExists, validateChangeMap
+} from '../check-affected.mjs';
+import { parseArgs as parseFrontmatterArgs } from '../check-frontmatter.mjs';
+import { explicitVersion, validateReleaseMetadata } from '../check-version.mjs';
 import { attachChildLifecycle } from '../dev-site.mjs';
-import { npmExecutable, scaffoldDocument } from '../scaffold-doc.mjs';
+import { collectMarkdown } from '../lib/pages.mjs';
+import { buildSidebar } from '../lib/sidebar.mjs';
+import { replaceGeneratedDirectory, validateGeneratedRoot } from '../prepare-site.mjs';
+import {
+  missingParentDirectories, npmExecutable, parseArgs as parseScaffoldArgs, scaffoldDocument
+} from '../scaffold-doc.mjs';
 
 const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const SITE_SOURCE = resolve(TEST_DIR, '../..');
@@ -106,6 +116,16 @@ test('scaffoldDocument rejects paths outside docs/site', async () => {
   );
 });
 
+test('scaffoldDocument rejects hidden path segments under a document type directory', async () => {
+  const fixture = await createFixture();
+  const input = options();
+  input.path = 'docs/site/api/.meta/generated.md';
+  await assert.rejects(
+    scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
+    /--path must not contain hidden path segments/
+  );
+});
+
 test('scaffoldDocument rejects a change-map target that resolves outside docs/site', async () => {
   const fixture = await createFixture();
   const input = options();
@@ -134,6 +154,26 @@ test('scaffoldDocument rejects non-relative change-map code globs', async (conte
   }
 });
 
+test('scaffoldDocument rejects non-relative exclude and related-code globs', async (context) => {
+  for (const [field, value, expected] of [
+    ['excludes', '../generated/**', /--exclude must be repository-root relative/],
+    ['relatedCode', 'C:\\outside\\**', /--related-code must be repository-root relative/]
+  ]) {
+    await context.test(field, async () => {
+      const fixture = await createFixture();
+      const input = options();
+      input.codeGlob = 'src/api/**';
+      input.trigger = 'API behavior changes';
+      input.changeMapTargets = [input.path];
+      input[field] = [value];
+      await assert.rejects(
+        scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
+        expected
+      );
+    });
+  }
+});
+
 test('scaffoldDocument rejects non-page change-map targets', async (context) => {
   for (const mapTarget of ['docs/site/api', 'docs/site/api/generated.txt', 'docs/site/.meta/page.md']) {
     await context.test(mapTarget, async () => {
@@ -150,6 +190,19 @@ test('scaffoldDocument rejects non-page change-map targets', async (context) => 
   }
 });
 
+test('scaffoldDocument rejects an existing Markdown-shaped directory as a change-map target', async () => {
+  const fixture = await createFixture();
+  await mkdir(resolve(fixture.siteRoot, 'api/directory.md'), { recursive: true });
+  const input = options();
+  input.codeGlob = 'src/api/**';
+  input.trigger = 'API behavior changes';
+  input.changeMapTargets = [input.path, 'docs/site/api/directory.md'];
+  await assert.rejects(
+    scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
+    /must resolve to a regular Markdown file/
+  );
+});
+
 test('scaffoldDocument rejects a symlinked change-map parent outside docs/site', async () => {
   const fixture = await createFixture();
   const outside = resolve(fixture.repoRoot, 'outside-standards');
@@ -163,6 +216,55 @@ test('scaffoldDocument rejects a symlinked change-map parent outside docs/site',
   await assert.rejects(
     scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
     /must not escape docs\/site through a symbolic link/
+  );
+});
+
+test('scaffoldDocument rejects a change-map file symlink even when it stays inside docs/site', async () => {
+  const fixture = await createFixture();
+  const mapPath = resolve(fixture.siteRoot, 'standards/change-map.yaml');
+  const realMap = resolve(fixture.siteRoot, 'standards/change-map.real.yaml');
+  await writeFile(realMap, await readFile(mapPath, 'utf8'), 'utf8');
+  await rm(mapPath);
+  await symlink(realMap, mapPath, 'file');
+  const input = options();
+  input.codeGlob = 'src/api/**';
+  input.trigger = 'API behavior changes';
+  input.changeMapTargets = [input.path];
+  await assert.rejects(
+    scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
+    /change-map file must not be a symbolic link/
+  );
+});
+
+test('scaffoldDocument rejects an additional change-map target outside docs/site through a symlink', async () => {
+  const fixture = await createFixture();
+  const outside = resolve(fixture.repoRoot, 'outside-pages');
+  await mkdir(outside);
+  await symlink(outside, resolve(fixture.siteRoot, 'api-link'), 'dir');
+  const input = options();
+  input.codeGlob = 'src/api/**';
+  input.trigger = 'API behavior changes';
+  input.changeMapTargets = [input.path, 'docs/site/api-link/reference.md'];
+  await assert.rejects(
+    scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
+    /--change-map-target must not escape docs\/site through a symbolic link/
+  );
+});
+
+test('scaffoldDocument dry-run rejects an existing symlinked change-map target', async () => {
+  const fixture = await createFixture();
+  await mkdir(resolve(fixture.siteRoot, 'api'));
+  const actual = resolve(fixture.siteRoot, 'api/actual.md');
+  await writeFile(actual, '# actual\n', 'utf8');
+  await symlink(actual, resolve(fixture.siteRoot, 'api/alias.md'), 'file');
+  const input = options();
+  input.dryRun = true;
+  input.codeGlob = 'src/api/**';
+  input.trigger = 'API behavior changes';
+  input.changeMapTargets = [input.path, 'docs/site/api/alias.md'];
+  await assert.rejects(
+    scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
+    /must resolve to a regular Markdown file/
   );
 });
 
@@ -226,6 +328,15 @@ test('scaffoldDocument rejects missing #118 inputs and incomplete change-map inp
     await assert.rejects(
       scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
       /--trigger is required/
+    );
+  });
+  await context.test('multi-line title', async () => {
+    const fixture = await createFixture();
+    const input = options();
+    input.title = 'first line\nsecond line';
+    await assert.rejects(
+      scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
+      /--title must be a single line/
     );
   });
 });
@@ -338,6 +449,41 @@ test('scaffoldDocument rolls back the page and change map when post-write checks
   assert.equal(await readFile(mapPath, 'utf8'), originalMap);
 });
 
+test('scaffoldDocument reports rollback cleanup failures without hiding the write failure', async () => {
+  const fixture = await createFixture();
+  const input = options();
+  input.path = 'docs/site/api/nested/generated.md';
+  await assert.rejects(
+    scaffoldDocument(input, {
+      ...fixture,
+      runDocsChecks: async () => {
+        await writeFile(resolve(fixture.siteRoot, 'api/concurrent.md'), 'keep', 'utf8');
+        throw new Error('simulated verification failure');
+      }
+    }),
+    (error) => {
+      assert.equal(error instanceof AggregateError, true);
+      assert.match(error.message, /rollback encountered 1 error/);
+      assert.match(error.cause.message, /simulated verification failure/);
+      return true;
+    }
+  );
+  assert.equal(await readFile(resolve(fixture.siteRoot, 'api/concurrent.md'), 'utf8'), 'keep');
+});
+
+test('missingParentDirectories uses Windows path semantics for rollback boundaries', async () => {
+  const siteRoot = 'C:\\repo\\docs\\site';
+  const target = 'C:\\repo\\docs\\site\\api\\nested\\generated.md';
+  const missing = await missingParentDirectories(target, siteRoot, {
+    pathApi: win32,
+    pathExists: async () => false
+  });
+  assert.deepEqual(missing, [
+    'C:\\repo\\docs\\site\\api\\nested',
+    'C:\\repo\\docs\\site\\api'
+  ]);
+});
+
 test('scaffoldDocument rejects release notes and hands off to issue #116', async () => {
   const fixture = await createFixture();
   const input = options('release-notes');
@@ -373,6 +519,118 @@ test('checkAffected treats a deleted required doc as missing even when it change
   assert.deepEqual(result.suspects[0].missingDocs, [requiredDoc]);
 });
 
+test('checkAffected rejects a change map without the top-level change_map key', async () => {
+  await assert.rejects(
+    checkAffected({}, {
+      checkFrontmatter: async () => [],
+      readChangeMap: async () => YAML.stringify({ version: 1 }),
+      changedFiles: async () => []
+    }),
+    /change_map is required and must be a mapping/
+  );
+});
+
+test('validateChangeMap rejects malformed rules instead of disabling checks', async (context) => {
+  const cases = [
+    [{ 'src/**': null }, /entry src\/\*\* must be a mapping/],
+    [{ 'src/**': { trigger: 'change' } }, /required_docs must be a non-empty string array/],
+    [{ 'src/**': { required_docs: ['../outside.md'], trigger: 'change' } }, /repository-root relative/],
+    [{ 'src/**': { required_docs: ['docs/site/api/page.md'] } }, /trigger must be a non-empty string/],
+    [{ 'src/**': { required_docs: ['docs/site/api/page.md'], trigger: 'change', exclude: '../all' } }, /exclude must be a string array/]
+  ];
+  for (const [changeMap, expected] of cases) {
+    await context.test(expected.source, () => {
+      assert.throws(() => validateChangeMap({ change_map: changeMap }), expected);
+    });
+  }
+});
+
+test('requiredDocExists rejects a required page reached through an external symlink', async () => {
+  const fixture = await createFixture();
+  const outside = resolve(fixture.repoRoot, 'outside-required');
+  await mkdir(outside);
+  await writeFile(resolve(outside, 'page.md'), '# outside\n', 'utf8');
+  await symlink(outside, resolve(fixture.siteRoot, 'linked'), 'dir');
+  assert.equal(await requiredDocExists('docs/site/linked/page.md', fixture), false);
+});
+
+test('parseGitPaths preserves whitespace and newlines in NUL-delimited git paths', () => {
+  assert.deepEqual(parseGitPaths('src/空 格.mjs\0src/line\nbreak.mjs\0'), [
+    'src/空 格.mjs', 'src/line\nbreak.mjs'
+  ]);
+});
+
+test('CLI parsers reject duplicate flags and option-looking empty values', () => {
+  assert.throws(() => parseAffectedArgs(['--strict', '--strict']), /only once/);
+  assert.throws(() => parseAffectedArgs(['--base', '--strict']), /requires a git ref/);
+  assert.throws(() => parseAffectedArgs(['--base', 'main', '--base', 'HEAD']), /only once/);
+  assert.throws(
+    () => parseFrontmatterArgs(['--version-anchor-unavailable', '--version-anchor-unavailable']),
+    /only once/
+  );
+  assert.throws(() => explicitVersion(['--version', '--other'], {}), /requires a value/);
+  assert.throws(() => explicitVersion([], { RELEASE_VERSION: ' ' }), /non-empty string/);
+  assert.throws(() => parseScaffoldArgs(['--dry-run', '--dry-run']), /only once/);
+  assert.throws(() => parseScaffoldArgs(['--overwrite', '--overwrite']), /only once/);
+});
+
+test('validateReleaseMetadata rejects malformed root objects and ambiguous versions', () => {
+  assert.deepEqual(validateReleaseMetadata(null), ['release metadata must be an object']);
+  const errors = validateReleaseMetadata({
+    latest: '',
+    released: ['v1.0.0', 'v1.0.0'],
+    verifiedDocs: { '': 'v1.0.0' }
+  });
+  assert.ok(errors.includes('latest must not be an empty string'));
+  assert.ok(errors.includes('released must not contain duplicates'));
+  assert.ok(errors.includes('verifiedDocs keys must be non-empty paths'));
+});
+
+test('collectMarkdown does not follow symlinked directories outside the site root', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'docs-pages-'));
+  const outside = await mkdtemp(join(tmpdir(), 'docs-pages-outside-'));
+  await writeFile(resolve(outside, 'page.md'), '---\ntitle: outside\n---\n', 'utf8');
+  await symlink(outside, resolve(root, 'linked'), 'dir');
+  assert.deepEqual(await collectMarkdown({ siteRoot: root }), []);
+});
+
+test('validateGeneratedRoot rejects a generated directory symlinked outside docs/site', async () => {
+  const fixture = await createFixture();
+  const outside = resolve(fixture.repoRoot, 'outside-generated');
+  await mkdir(outside);
+  await symlink(outside, resolve(fixture.siteRoot, '.generated'), 'dir');
+  await assert.rejects(
+    validateGeneratedRoot(resolve(fixture.siteRoot, '.generated'), fixture.siteRoot),
+    /must not escape docs\/site through a symbolic link/
+  );
+});
+
+test('replaceGeneratedDirectory preserves the previous tree when preparation fails', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'docs-generated-'));
+  const output = resolve(root, 'public');
+  await mkdir(output);
+  await writeFile(resolve(output, 'state.txt'), 'old', 'utf8');
+  await assert.rejects(
+    replaceGeneratedDirectory(output, async (staging) => {
+      await writeFile(resolve(staging, 'state.txt'), 'partial', 'utf8');
+      throw new Error('build failed');
+    }),
+    /build failed/
+  );
+  assert.equal(await readFile(resolve(output, 'state.txt'), 'utf8'), 'old');
+  assert.deepEqual((await readdir(root)).sort(), ['public']);
+});
+
+test('buildSidebar uses code-point ordering independent of locale data', () => {
+  const pages = ['ä.md', 'Z.md'].map((relativePath) => ({
+    relativePath: `api/${relativePath}`,
+    route: `/api/${relativePath.slice(0, -3)}`,
+    data: { title: relativePath, visibility: 'both' }
+  }));
+  const items = buildSidebar(pages, 'public')['/api/'][0].items;
+  assert.deepEqual(items.map((item) => item.text), ['Z.md', 'ä.md']);
+});
+
 test('attachChildLifecycle closes the watcher and propagates the child exit code', () => {
   const child = new EventEmitter();
   child.kill = () => {};
@@ -389,6 +647,50 @@ test('attachChildLifecycle closes the watcher and propagates the child exit code
   assert.equal(runtimeProcess.exitCode, 2);
   assert.equal(runtimeProcess.listenerCount('SIGINT'), 0);
   assert.equal(runtimeProcess.listenerCount('SIGTERM'), 0);
+});
+
+test('attachChildLifecycle handles spawn errors and signal exit codes', async (context) => {
+  await context.test('spawn error', () => {
+    const child = new EventEmitter();
+    child.kill = () => {};
+    const watcher = new EventEmitter();
+    watcher.close = () => {};
+    const runtimeProcess = new EventEmitter();
+    const errors = [];
+    attachChildLifecycle(child, watcher, () => {}, runtimeProcess, (error) => errors.push(error));
+    child.emit('error', new Error('spawn failed'));
+    assert.equal(runtimeProcess.exitCode, 1);
+    assert.match(errors[0].message, /spawn failed/);
+    assert.equal(runtimeProcess.listenerCount('SIGINT'), 0);
+  });
+  await context.test('SIGINT', () => {
+    const child = new EventEmitter();
+    let signal;
+    child.kill = (value) => { signal = value; };
+    const watcher = new EventEmitter();
+    watcher.close = () => {};
+    const runtimeProcess = new EventEmitter();
+    attachChildLifecycle(child, watcher, () => {}, runtimeProcess);
+    runtimeProcess.emit('SIGINT');
+    assert.equal(signal, 'SIGINT');
+    assert.equal(runtimeProcess.exitCode, 130);
+  });
+  await context.test('cleanup failure', () => {
+    const child = new EventEmitter();
+    child.kill = () => {};
+    const runtimeProcess = new EventEmitter();
+    const errors = [];
+    attachChildLifecycle(child, { close: () => { throw new Error('close failed'); } },
+      () => {}, runtimeProcess, (error) => errors.push(error));
+    child.emit('close', 0);
+    assert.equal(runtimeProcess.exitCode, 1);
+    assert.match(errors[0].message, /close failed/);
+  });
+});
+
+test('test:docs runs the affected-document gate in strict mode', async () => {
+  const packageData = JSON.parse(await readFile(resolve(SITE_SOURCE, 'package.json'), 'utf8'));
+  assert.match(packageData.scripts['test:docs'], /check:affected -- --strict/);
 });
 
 test('npmExecutable uses the Windows npm command shim', () => {

@@ -14,7 +14,7 @@
     "check:frontmatter": "node scripts/check-frontmatter.mjs",
     "check:affected": "node scripts/check-affected.mjs",
     "check:version": "node scripts/check-version.mjs",
-    "test:docs": "npm run check:frontmatter && npm run check:affected && npm run check:version && node --test scripts/__tests__/*.test.mjs",
+    "test:docs": "npm run check:frontmatter && npm run check:affected -- --strict && npm run check:version && node --test scripts/__tests__/*.test.mjs",
     "new:doc": "node scripts/scaffold-doc.mjs"
   },
   "dependencies": {

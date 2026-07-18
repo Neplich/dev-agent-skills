@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import {
   lstat, mkdir, readFile, realpath, rename, rm, rmdir, writeFile
 } from 'node:fs/promises';
-import { dirname, isAbsolute, relative, resolve } from 'node:path';
+import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
@@ -36,6 +36,7 @@ export function parseArgs(argv) {
     owners: [], relatedCode: [], excludes: [], changeMapTargets: [],
     dryRun: false, overwrite: false
   };
+  const flags = new Set();
   const scalar = new Map([
     ['--type', 'type'], ['--path', 'path'], ['--title', 'title'],
     ['--visibility', 'visibility'], ['--stage', 'stage'],
@@ -47,8 +48,11 @@ export function parseArgs(argv) {
   ]);
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
-    if (argument === '--dry-run') options.dryRun = true;
-    else if (argument === '--overwrite') options.overwrite = true;
+    if (argument === '--dry-run' || argument === '--overwrite') {
+      if (flags.has(argument)) throw new Error(`${argument} may be provided only once`);
+      flags.add(argument);
+      options[argument === '--dry-run' ? 'dryRun' : 'overwrite'] = true;
+    }
     else if (scalar.has(argument)) {
       const key = scalar.get(argument);
       if (options[key] !== undefined) throw new Error(`${argument} may be provided only once`);
@@ -68,6 +72,17 @@ function required(value, option) {
   if (typeof value !== 'string' || value.trim() === '') throw new Error(`${option} is required`);
 }
 
+function normalizeRepoGlob(value, option) {
+  required(value, option);
+  const normalized = value.replaceAll('\\', '/');
+  if (/[\0\r\n]/.test(normalized) || isAbsolute(value) || normalized.startsWith('/')
+      || /^[A-Za-z]:\//.test(normalized)
+      || normalized.split('/').includes('..')) {
+    throw new Error(`${option} must be repository-root relative`);
+  }
+  return normalized;
+}
+
 function validateInputs(options, repoRoot) {
   required(options.type, '--type');
   if (options.type === 'release-notes' || options.type === 'release') {
@@ -79,6 +94,7 @@ function validateInputs(options, repoRoot) {
     [options.path, '--path'], [options.title, '--title'],
     [options.visibility, '--visibility'], [options.stage, '--stage']
   ]) required(value, option);
+  if (/[\0\r\n]/.test(options.title)) throw new Error('--title must be a single line');
   if (!VISIBILITIES.has(options.visibility)) {
     throw new Error('--visibility must be public, internal, or both');
   }
@@ -89,6 +105,7 @@ function validateInputs(options, repoRoot) {
   if (!options.relatedCode.length || options.relatedCode.some((item) => !item.trim())) {
     throw new Error('at least one non-empty --related-code is required');
   }
+  options.relatedCode = options.relatedCode.map((item) => normalizeRepoGlob(item, '--related-code'));
   if (isAbsolute(options.path)) throw new Error('--path must be repository-root relative');
   const normalized = toPosix(options.path);
   const expected = `docs/site/${type.directory}/`;
@@ -103,25 +120,26 @@ function validateInputs(options, repoRoot) {
   if (!lexical.startsWith(expected) || !lexical.endsWith('.md')) {
     throw new Error(`--type ${options.type} requires a Markdown path under ${expected}**`);
   }
+  const pageSegments = lexical.slice(expected.length).split('/');
+  if (pageSegments.some((segment) => segment.startsWith('.'))) {
+    throw new Error('--path must not contain hidden path segments under the document type directory');
+  }
   const mappingSupplied = [
     options.codeGlob, options.trigger, ...options.excludes, ...options.changeMapTargets
   ].some((value) => value !== undefined && value !== '');
   if (mappingSupplied) {
     required(options.codeGlob, '--code-glob');
     required(options.trigger, '--trigger');
-    const normalizedCodeGlob = options.codeGlob.replaceAll('\\', '/');
-    const codeGlobSegments = normalizedCodeGlob.split('/');
-    if (isAbsolute(options.codeGlob) || normalizedCodeGlob.startsWith('/')
-        || /^[A-Za-z]:\//.test(normalizedCodeGlob)
-        || codeGlobSegments.includes('..')) {
-      throw new Error('--code-glob must be repository-root relative');
-    }
-    options.codeGlob = normalizedCodeGlob;
+    options.codeGlob = normalizeRepoGlob(options.codeGlob, '--code-glob');
+    options.excludes = options.excludes.map((item) => normalizeRepoGlob(item, '--exclude'));
     if (!options.changeMapTargets.length
         || options.changeMapTargets.some((item) => !item.trim())) {
       throw new Error('explicit change-map input requires at least one --change-map-target');
     }
     options.changeMapTargets = options.changeMapTargets.map((mapTarget) => {
+      if (/[\0\r\n]/.test(mapTarget)) {
+        throw new Error('--change-map-target must be a single repository-relative path');
+      }
       if (isAbsolute(mapTarget)) {
         throw new Error('--change-map-target must be repository-root relative under docs/site/');
       }
@@ -253,18 +271,19 @@ async function exists(path) {
   }
 }
 
-async function validateTargetRealPath(target, siteRoot) {
+async function validateTargetRealPath(target, siteRoot, option = '--path') {
   const realSiteRoot = await realpath(siteRoot);
-  let existingParent = dirname(target);
-  while (!(await exists(existingParent))) {
-    const parent = dirname(existingParent);
-    if (parent === existingParent) throw new Error('--path has no existing parent');
-    existingParent = parent;
+  let existingPath = target;
+  while (!(await exists(existingPath))) {
+    const parent = dirname(existingPath);
+    if (parent === existingPath) throw new Error(`${option} has no existing parent`);
+    existingPath = parent;
   }
-  const realParent = await realpath(existingParent);
-  const relativeParent = toPosix(relative(realSiteRoot, realParent));
-  if (relativeParent === '..' || relativeParent.startsWith('../')) {
-    throw new Error('--path must not escape docs/site through a symbolic link');
+  const realExistingPath = await realpath(existingPath);
+  const relativeExistingPath = toPosix(relative(realSiteRoot, realExistingPath));
+  if (relativeExistingPath === '..' || relativeExistingPath.startsWith('../')
+      || isAbsolute(relativeExistingPath)) {
+    throw new Error(`${option} must not escape docs/site through a symbolic link`);
   }
 }
 
@@ -276,13 +295,19 @@ async function defaultRunDocsChecks(siteRoot) {
   await exec(npmExecutable(), ['run', 'test:docs'], { cwd: siteRoot });
 }
 
-async function missingParentDirectories(path, stopAt) {
+export async function missingParentDirectories(targetPath, stopAt, dependencies = {}) {
+  const pathApi = dependencies.pathApi ?? { dirname, isAbsolute, relative, sep };
+  const pathExists = dependencies.pathExists ?? exists;
   const missing = [];
-  let current = dirname(path);
-  while (current !== stopAt && current.startsWith(`${stopAt}/`)) {
-    if (await exists(current)) break;
+  let current = pathApi.dirname(targetPath);
+  while (current !== stopAt) {
+    const relativeCurrent = pathApi.relative(stopAt, current);
+    if (relativeCurrent === '' || relativeCurrent === '..'
+        || relativeCurrent.startsWith(`..${pathApi.sep}`)
+        || pathApi.isAbsolute(relativeCurrent)) break;
+    if (await pathExists(current)) break;
     missing.push(current);
-    current = dirname(current);
+    current = pathApi.dirname(current);
   }
   return missing;
 }
@@ -304,15 +329,39 @@ async function atomicWrite(changes, verify, rollbackRoots = []) {
     }
     await verify();
   } catch (error) {
-    for (const temp of temporary) await rm(temp, { force: true });
-    for (const [path, content] of originals) {
-      if (content === null) await rm(path, { force: true });
-      else {
-        await mkdir(dirname(path), { recursive: true });
-        await writeFile(path, content);
+    const rollbackErrors = [];
+    for (const temp of temporary) {
+      try {
+        await rm(temp, { force: true });
+      } catch (rollbackError) {
+        rollbackErrors.push(rollbackError);
       }
     }
-    for (const root of rollbackRoots) await rmdir(root).catch(() => {});
+    for (const [path, content] of originals) {
+      try {
+        if (content === null) await rm(path, { force: true });
+        else {
+          await mkdir(dirname(path), { recursive: true });
+          await writeFile(path, content);
+        }
+      } catch (rollbackError) {
+        rollbackErrors.push(rollbackError);
+      }
+    }
+    for (const root of rollbackRoots) {
+      try {
+        await rmdir(root);
+      } catch (rollbackError) {
+        rollbackErrors.push(rollbackError);
+      }
+    }
+    if (rollbackErrors.length) {
+      throw new AggregateError(
+        [error, ...rollbackErrors],
+        `write failed and rollback encountered ${rollbackErrors.length} error(s)`,
+        { cause: error }
+      );
+    }
     throw error;
   }
 }
@@ -322,13 +371,28 @@ export async function scaffoldDocument(options, dependencies = {}) {
   const siteRoot = dependencies.siteRoot ?? SITE_ROOT;
   const runDocsChecks = dependencies.runDocsChecks ?? defaultRunDocsChecks;
   const resolved = validateInputs(options, repoRoot);
+  if (await exists(resolved.target) && (await lstat(resolved.target)).isSymbolicLink()) {
+    throw new Error(`target page must not be a symbolic link: ${resolved.lexical}`);
+  }
   await validateTargetRealPath(resolved.target, siteRoot);
   const mapPath = resolve(siteRoot, 'standards/change-map.yaml');
-  if (resolved.mappingSupplied) await validateTargetRealPath(mapPath, siteRoot);
-  if (await exists(resolved.target)) {
-    if ((await lstat(resolved.target)).isSymbolicLink()) {
-      throw new Error(`target page must not be a symbolic link: ${resolved.lexical}`);
+  if (resolved.mappingSupplied) {
+    await validateTargetRealPath(mapPath, siteRoot, '--change-map-target');
+    if ((await lstat(mapPath)).isSymbolicLink()) {
+      throw new Error('change-map file must not be a symbolic link');
     }
+    for (const mapTarget of options.changeMapTargets) {
+      const absoluteTarget = resolve(repoRoot, mapTarget);
+      await validateTargetRealPath(absoluteTarget, siteRoot, '--change-map-target');
+      if (await exists(absoluteTarget)) {
+        const stats = await lstat(absoluteTarget);
+        if (!stats.isFile()) {
+          throw new Error('--change-map-target must resolve to a regular Markdown file when it exists');
+        }
+      }
+    }
+  }
+  if (await exists(resolved.target)) {
     if (!options.overwrite) {
       throw new Error(`target already exists; pass --overwrite only after explicit authorization: ${resolved.lexical}`);
     }
@@ -349,6 +413,23 @@ export async function scaffoldDocument(options, dependencies = {}) {
   };
   if (options.dryRun) return summary;
 
+  await validateTargetRealPath(resolved.target, siteRoot);
+  if (resolved.mappingSupplied) {
+    await validateTargetRealPath(mapPath, siteRoot, '--change-map-target');
+    if ((await lstat(mapPath)).isSymbolicLink()) {
+      throw new Error('change-map file must not be a symbolic link');
+    }
+    for (const mapTarget of options.changeMapTargets) {
+      const absoluteTarget = resolve(repoRoot, mapTarget);
+      await validateTargetRealPath(absoluteTarget, siteRoot, '--change-map-target');
+      if (await exists(absoluteTarget)) {
+        const stats = await lstat(absoluteTarget);
+        if (!stats.isFile()) {
+          throw new Error('--change-map-target must resolve to a regular Markdown file when it exists');
+        }
+      }
+    }
+  }
   const rollbackDirectories = await missingParentDirectories(resolved.target, siteRoot);
   const changes = [{ path: resolved.target, content: pageContent }];
   if (mapChange) changes.push({ path: mapPath, content: mapChange.output });
