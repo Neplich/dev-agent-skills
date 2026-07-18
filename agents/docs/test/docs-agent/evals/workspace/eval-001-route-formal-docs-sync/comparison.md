@@ -8,29 +8,32 @@
 ## Test Set / Fixture Version
 
 - Fixture: `ws2-docs-v1`
-- Commit: `c05f689`
+- Commit: `bf53753`
 
 ## Latest Result
 
-**PASS** — with-skill 校验 PM handoff 后正确分流 formal-docs-sync，保留 packet 字段与下游注意事项，只引用 specialist gate 不复制正文，未启用 auto-continue 时停在分流结果。
+**PARTIAL** — with-skill 正确接受 PM handoff 并分流到 `formal-docs-sync`，但最终输出未完整保留全部 packet 字段，也未显式给出 specialist gate 与共享 consumption contract 的权威路径指针。
 
 ## With-Skill Behavior
 
-- 入口凭据检查、最窄 specialist 选择与 handoff 保留完整执行。
-- 明确下游需保留'不覆盖人工 change-map 条目'等证据边界。
+- 来源：本次 fresh `codex exec` 独立子进程；读取隔离工作区内的 `docs-agent` `SKILL.md`、`_internal/**` 与 Docs Agent README，并使用本 eval fixture。
+- `routes_formal_docs_sync`：通过。接受 PM cross-role handoff，选择 `docs-agent:formal-docs-sync`，未改派 bootstrap 或 audit。
+- `accepts_complete_handoff`：未通过。输出保留了 `request_type`、`change_tier`、`feature_path`、source documents、scope、required output 与风险摘要，但未显式保留 `feature`、`parent_feature`、`feature_level`、`feature_path_evidence`、`downstream_owner` 等全部字段。
+- `references_specialist_gate_only`：未通过。未执行 specialist，但没有显式指向 `formal-docs-sync/SKILL.md` 及其内部指令。
+- `recognizes_shared_consumption_contract`：未通过。未给出 `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md` 权威指针。
 
 ## Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 文档。
-- baseline 也完成了入口检查与分流方向判断，但 packet 字段保留与 gate 指针边界的组织依赖临场推断。
+- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture；隔离约束下未读取或应用 skill / Agent README。
+- baseline 也接受 handoff 并选择 `formal-docs-sync`，但同样没有完整保留 packet 字段，也没有 specialist gate 或共享 consumption contract 的路径指针。
 
 ## Failures
 
-- 无。
+- with-skill 未满足 3 条输出契约断言：完整 packet 字段保留、specialist gate 路径指针、共享 consumption contract 路径指针。
 
 ## Next Steps
 
-- 保留本结果。
+- 后续 docs-agent router 变更应让最终 handoff 输出显式保留完整 packet 字段，并仅以权威路径指向 specialist gate 与共享 consumption contract；修正后重新执行本 eval。
 
 ## Runtime Artifact Policy
 
