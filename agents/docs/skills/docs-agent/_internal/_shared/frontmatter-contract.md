@@ -1,7 +1,7 @@
 # Default Frontmatter Contract
 
 > Single source of truth owned by `docs-agent` for the default frontmatter
-> contract of formal documentation pages.
+> contract of formal Markdown pages under `docs/site/`.
 > `docs-site-bootstrap` consumes it for built-in pages, templates, and the
 > validation script delivered to host repositories; `formal-docs-sync`
 > consumes it for created or updated pages; `docs-audit` consumes it for
@@ -29,12 +29,19 @@ All seven fields are unconditionally required.
 ## Notes
 
 - `standard` is not a valid `doc_type` value. Standards explanation pages
-  (`standards/index.md`, `doc-lifecycle.md`, `doc-granularity.md`, and the
-  `change-map.yaml` header) use `doc_type: design`. Template pages under
+  (`standards/index.md`, `doc-lifecycle.md`, and `doc-granularity.md`) use
+  `doc_type: design`. The descriptive header in
+  `standards/change-map.yaml` follows the same `doc_type: design` convention,
+  but it is not a formal Markdown page and is outside both
+  `check:frontmatter` and docs-audit frontmatter validation. Its structure and
+  metadata are validated by the change-map toolchain owned by issue #122,
+  matching the AI Hub baseline behavior. Template pages under
   `standards/templates/` follow the AI Hub precedent and use their target
   `doc_type` (`api`, `database`, `design`, `ops`, or `product`). Template pages
   participate in internal-page validation, while their `doc_type` identifies
-  the target page type represented by the template.
+  the target page type represented by the template. They are reusable
+  placeholder artifacts, so that target `doc_type` does not make the template
+  itself subject to type-specific fact checks.
 - `last_verified_version` is always required. Use `unverified` when the page
   has not been verified or no version anchor is available.
 - `last_verified_version` records the version against which the page content

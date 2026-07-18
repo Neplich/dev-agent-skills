@@ -5,7 +5,7 @@ version: "0.3.0"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
-last_updated: "2026-07-17"
+last_updated: "2026-07-18"
 generated_by: "trd-gen"
 feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
@@ -170,9 +170,11 @@ validator 要求所有页面的 `related_code` 都是非空字符串数组；字
 
 ### 4.2 默认 frontmatter 契约（issue #118）
 
-默认契约的唯一事实来源是 `agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md`。`docs-site-bootstrap` 的内置页面、模板与宿主校验脚本，`formal-docs-sync` 新增或更新的页面，以及 `docs-audit` 的 frontmatter 判定共同消费该文件；生成端与审计端必须对同一页面得出一致结论。
+默认契约的唯一事实来源是 `agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md`，校验对象是 `docs/site/` 下的正式 Markdown 页面。`docs-site-bootstrap` 的内置页面、模板与宿主校验脚本，`formal-docs-sync` 新增或更新的页面，以及 `docs-audit` 的 frontmatter 判定共同消费该文件；生成端与审计端必须对同一页面得出一致结论。
 
-契约无条件要求 `title`、`visibility`、`doc_type`、`stage`、`owners`、`related_code`、`last_verified_version` 七个字段。`visibility` 仅接受 `public`、`internal`、`both`，`stage` 仅接受 `draft`、`dev`、`ops`、`release`；`owners` 与 `related_code` 均为非空字符串数组，`related_code` 对所有页面类型都必须非空。`doc_type` 仅接受 `landing`、`release`、`design`、`api`、`database`、`ops`、`product`，不再接受 `standard`；standards 说明页（`standards/index.md`、`doc-lifecycle.md`、`doc-granularity.md` 与 `change-map.yaml` 头部）使用 `design`；`standards/templates/` 下模板页按 AI Hub 先例使用各自目标 `doc_type`（`api`、`database`、`design`、`ops`、`product`），模板页作为 internal 页面参与校验，其 `doc_type` 表示模板目标类型。
+契约无条件要求 `title`、`visibility`、`doc_type`、`stage`、`owners`、`related_code`、`last_verified_version` 七个字段。`visibility` 仅接受 `public`、`internal`、`both`，`stage` 仅接受 `draft`、`dev`、`ops`、`release`；`owners` 与 `related_code` 均为非空字符串数组，`related_code` 对所有页面类型都必须非空。`doc_type` 仅接受 `landing`、`release`、`design`、`api`、`database`、`ops`、`product`，不再接受 `standard`；standards 说明页（`standards/index.md`、`doc-lifecycle.md` 与 `doc-granularity.md`）使用 `design`；`standards/templates/` 下模板页按 AI Hub 先例使用各自目标 `doc_type`（`api`、`database`、`design`、`ops`、`product`），模板页作为 internal 页面参与 frontmatter 与结构完整性校验，其 `doc_type` 表示模板目标类型，不使模板占位内容成为类型化事实核查对象。
+
+`standards/change-map.yaml` 的描述性头部沿用 `doc_type: design` 约定，但不属于 `check:frontmatter` 与 docs-audit frontmatter 校验对象；其结构与元数据由 change-map 工具链校验，并由 issue #122 跟踪。这一边界与 AI Hub 的 `check:frontmatter` 仅收集 Markdown 页面的基准行为一致。
 
 `last_verified_version` 是无条件必填的非空字符串；未验证或无版本锚时使用 `unverified`，不得缺省字段。该字段表示内容验证版本，不表示发布状态，统一盖章时序由 `docs-audit` 持有。额外字段不受本契约限制。
 
@@ -180,7 +182,7 @@ frontmatter 不合格的页面由 `docs-audit` 记为 `stale`，release 不得 `
 
 ### 4.3 change-map
 
-`docs/site/standards/change-map.yaml` 自身在文件顶部携带同一组元数据，随后才是 `change_map`。通用 schema 为：
+`docs/site/standards/change-map.yaml` 自身在文件顶部携带沿用正式页面字段命名的描述性元数据，随后才是 `change_map`。该头部不是 frontmatter 契约校验对象；其结构与元数据校验归 change-map 工具链（issue #122）。通用 schema 为：
 
 ```yaml
 title: 文档变更映射

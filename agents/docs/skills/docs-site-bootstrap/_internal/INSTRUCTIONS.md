@@ -4,9 +4,13 @@ Detailed execution guidance and the complete host-site templates for
 `docs-site-bootstrap`. The public contract and all gates live in `../SKILL.md`.
 This is the only internal instruction entry.
 
-All embedded formal pages and frontmatter validation scripts consume the
-authoritative contract in
+All embedded formal Markdown pages and frontmatter validation scripts consume
+the authoritative contract in
 `agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md`.
+The descriptive header in `standards/change-map.yaml` follows the shared field
+naming and `doc_type: design` convention, but is not a `check:frontmatter`
+target; change-map structure and metadata validation belong to the change-map
+toolchain tracked by issue #122.
 
 ## 1. Execution Protocol
 
@@ -1482,6 +1486,11 @@ flowchart LR
 ````
 
 ### Change map and release metadata
+
+The following YAML header is descriptive metadata using the
+`doc_type: design` convention. It is not a formal Markdown page and does not
+enter `check:frontmatter`; its validation belongs to the change-map toolchain
+tracked by issue #122.
 
 Target: `docs/site/standards/change-map.yaml`
 

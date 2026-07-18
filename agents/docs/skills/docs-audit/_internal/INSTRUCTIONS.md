@@ -86,6 +86,12 @@ the affected-page set, excluding `docs/site/.meta/**`. This rule applies even
 when there is no changed code or change-map match, so a documentation-only
 claim cannot bypass fact verification.
 
+Pages under `docs/site/standards/templates/**` are reusable template artifacts
+with placeholder bodies. Keep them in the affected set for frontmatter and
+structural-completeness validation, but do not perform the target `doc_type`'s
+type-specific fact checks against their placeholder content. Template
+placeholders alone never block a release.
+
 Use each such page's frontmatter `related_code` to bound its code and test
 evidence. The field must be a non-empty string array for every page, and the
 audit always uses it to bound the code and test evidence scope. A missing or
@@ -121,13 +127,22 @@ version anchor.
 Keep invalid-frontmatter pages as `stale`. Mark a matched `required_docs` page
 that was not updated in the same diff only as `suspect` and send it to the fact
 layer. Also send directly changed formal pages and other affected pages with
-valid frontmatter to the fact layer. `suspect` is a review priority label, not
-a fourth final status.
+valid frontmatter to the fact layer, except template artifacts under
+`docs/site/standards/templates/**`, which proceed only to template structure
+validation. `suspect` is a review priority label, not a fourth final status.
 
 ## 3. Fact Layer
 
-For every affected page that is not already `stale` from invalid frontmatter,
-build a claim-to-evidence checklist. Follow the shared trust model:
+Do not apply this layer's type-specific fact checks to
+`docs/site/standards/templates/**`. For those reusable placeholder artifacts,
+verify only the shared frontmatter contract and the expected template
+structure; their target `doc_type` describes the page they help authors create,
+not factual API, schema, deployment, or operations claims made by the template
+itself. A placeholder value or absent implementation evidence in a template is
+not a release blocker.
+
+For every non-template affected page that is not already `stale` from invalid
+frontmatter, build a claim-to-evidence checklist. Follow the shared trust model:
 
 `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`
 
