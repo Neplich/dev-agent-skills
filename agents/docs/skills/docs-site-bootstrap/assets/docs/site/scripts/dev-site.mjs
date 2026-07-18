@@ -7,6 +7,12 @@ import { prepareSite } from './prepare-site.mjs';
 
 const IGNORED = ['.generated/', '.vitepress/cache/', '.vitepress/dist/', 'node_modules/'];
 
+export function shouldPrepareForChange(path) {
+  if (IGNORED.some((prefix) => path.startsWith(prefix))) return false;
+  return path.startsWith('.vitepress/') || path.startsWith('public/')
+    || /\.(md|ya?ml)$/i.test(path);
+}
+
 export function attachChildLifecycle(
   child, watcher, clearPending, runtimeProcess = process,
   reportError = (error) => console.error(error instanceof Error ? error.message : error)
@@ -80,8 +86,7 @@ export async function devSite(target, extraArgs = []) {
     watcher = watch(SITE_ROOT, { recursive: true }, (_event, filename) => {
       if (!filename) return;
       const path = toPosix(relative(SITE_ROOT, resolve(SITE_ROOT, filename)));
-      if (IGNORED.some((prefix) => path.startsWith(prefix))) return;
-      if (!/\.(md|ya?ml)$/i.test(path)) return;
+      if (!shouldPrepareForChange(path)) return;
       clearTimeout(timer);
       timer = setTimeout(() => {
         prepareSite(target).catch((error) => console.error(`Prepare failed: ${error.message}`));

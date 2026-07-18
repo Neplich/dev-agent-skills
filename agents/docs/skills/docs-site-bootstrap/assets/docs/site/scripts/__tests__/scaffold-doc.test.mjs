@@ -10,12 +10,12 @@ import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
 import YAML from 'yaml';
 import {
-  checkAffected, parseArgs as parseAffectedArgs, parseGitPaths,
+  changedFiles, checkAffected, parseArgs as parseAffectedArgs, parseGitPaths,
   requiredDocExists, validateChangeMap
 } from '../check-affected.mjs';
 import { parseArgs as parseFrontmatterArgs } from '../check-frontmatter.mjs';
 import { explicitVersion, validateReleaseMetadata } from '../check-version.mjs';
-import { attachChildLifecycle } from '../dev-site.mjs';
+import { attachChildLifecycle, shouldPrepareForChange } from '../dev-site.mjs';
 import { collectMarkdown } from '../lib/pages.mjs';
 import { buildSidebar } from '../lib/sidebar.mjs';
 import { replaceGeneratedDirectory, validateGeneratedRoot } from '../prepare-site.mjs';
@@ -124,6 +124,20 @@ test('scaffoldDocument rejects hidden path segments under a document type direct
     scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
     /--path must not contain hidden path segments/
   );
+});
+
+test('scaffoldDocument rejects NUL, CR, and LF control characters in --path', async (context) => {
+  for (const [label, control] of [['NUL', '\0'], ['CR', '\r'], ['LF', '\n']]) {
+    await context.test(label, async () => {
+      const fixture = await createFixture();
+      const input = options();
+      input.path = `docs/site/api/generated${control}.md`;
+      await assert.rejects(
+        scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
+        /--path must not contain NUL, CR, or LF control characters/
+      );
+    });
+  }
 });
 
 test('scaffoldDocument rejects a change-map target that resolves outside docs/site', async () => {
@@ -560,6 +574,43 @@ test('parseGitPaths preserves whitespace and newlines in NUL-delimited git paths
   ]);
 });
 
+test('strict affected gate includes committed diff in a clean CI checkout', async () => {
+  const outputs = new Map([
+    ['symbolic-ref --quiet --short refs/remotes/origin/HEAD', ''],
+    ['rev-parse --verify --quiet base-sha^{commit}', 'base-sha\n'],
+    ['merge-base base-sha HEAD', 'merge-base-sha\n'],
+    ['diff --name-only -z merge-base-sha...HEAD', 'src/api/handler.mjs\0'],
+    ['diff --name-only -z HEAD', ''],
+    ['ls-files --others --exclude-standard -z', '']
+  ]);
+  const runGit = async (args) => {
+    const key = args.join(' ');
+    if (!outputs.has(key)) throw new Error(`unexpected git call: ${key}`);
+    return outputs.get(key);
+  };
+  const gitOptions = {
+    strict: true,
+    runGit,
+    environment: { GITHUB_BASE_SHA: 'base-sha' }
+  };
+  assert.deepEqual(await changedFiles(null, gitOptions), ['src/api/handler.mjs']);
+  const result = await checkAffected({ strict: true }, {
+    checkFrontmatter: async () => [],
+    readChangeMap: async () => YAML.stringify({
+      change_map: {
+        'src/api/**': {
+          required_docs: ['docs/site/api/required.md'],
+          trigger: 'API behavior changes'
+        }
+      }
+    }),
+    changedFiles: (base, options) => changedFiles(base, { ...gitOptions, ...options }),
+    requiredDocExists: async () => true
+  });
+  assert.equal(result.blocked, true);
+  assert.deepEqual(result.suspects[0].missingDocs, ['docs/site/api/required.md']);
+});
+
 test('CLI parsers reject duplicate flags and option-looking empty values', () => {
   assert.throws(() => parseAffectedArgs(['--strict', '--strict']), /only once/);
   assert.throws(() => parseAffectedArgs(['--base', '--strict']), /requires a git ref/);
@@ -647,6 +698,18 @@ test('attachChildLifecycle closes the watcher and propagates the child exit code
   assert.equal(runtimeProcess.exitCode, 2);
   assert.equal(runtimeProcess.listenerCount('SIGINT'), 0);
   assert.equal(runtimeProcess.listenerCount('SIGTERM'), 0);
+});
+
+test('dev watcher rebuilds copied VitePress and public assets', () => {
+  for (const path of [
+    '.vitepress/config.shared.ts', '.vitepress/theme/MermaidRenderer.vue',
+    '.vitepress/theme/custom.css', 'public/images/diagram.svg'
+  ]) {
+    assert.equal(shouldPrepareForChange(path), true, path);
+  }
+  assert.equal(shouldPrepareForChange('.vitepress/cache/deps.json'), false);
+  assert.equal(shouldPrepareForChange('.vitepress/dist/index.html'), false);
+  assert.equal(shouldPrepareForChange('scripts/dev-site.mjs'), false);
 });
 
 test('attachChildLifecycle handles spawn errors and signal exit codes', async (context) => {

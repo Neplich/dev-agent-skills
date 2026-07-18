@@ -95,6 +95,9 @@ function validateInputs(options, repoRoot) {
     [options.visibility, '--visibility'], [options.stage, '--stage']
   ]) required(value, option);
   if (/[\0\r\n]/.test(options.title)) throw new Error('--title must be a single line');
+  if (/[\0\r\n]/.test(options.path)) {
+    throw new Error('--path must not contain NUL, CR, or LF control characters');
+  }
   if (!VISIBILITIES.has(options.visibility)) {
     throw new Error('--visibility must be public, internal, or both');
   }

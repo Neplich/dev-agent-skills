@@ -42,17 +42,67 @@ export function parseGitPaths(output) {
   return output.split('\0').map((item) => toPosix(item)).filter(Boolean);
 }
 
-async function changedFiles(base) {
-  if (base) {
-    const mergeBase = (await git(['merge-base', base, 'HEAD'])).trim();
-    const committed = parseGitPaths(await git(['diff', '--name-only', '-z', `${mergeBase}...HEAD`]));
-    const working = parseGitPaths(await git(['diff', '--name-only', '-z', 'HEAD']));
-    const untracked = parseGitPaths(await git(['ls-files', '--others', '--exclude-standard', '-z']));
+async function refExists(ref, runGit) {
+  try {
+    await runGit(['rev-parse', '--verify', '--quiet', `${ref}^{commit}`]);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function inferCommittedBase(
+  { runGit = git, environment = process.env } = {}
+) {
+  const candidates = [
+    environment.GITHUB_BASE_SHA,
+    environment.CI_MERGE_REQUEST_DIFF_BASE_SHA,
+    environment.GITHUB_BASE_REF && `origin/${environment.GITHUB_BASE_REF}`,
+    environment.GITHUB_BASE_REF,
+    environment.CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+      && `origin/${environment.CI_MERGE_REQUEST_TARGET_BRANCH_NAME}`,
+    environment.CHANGE_TARGET && `origin/${environment.CHANGE_TARGET}`
+  ].filter(Boolean);
+  try {
+    const remoteHead = (await runGit([
+      'symbolic-ref', '--quiet', '--short', 'refs/remotes/origin/HEAD'
+    ])).trim();
+    if (remoteHead) candidates.push(remoteHead);
+  } catch {
+    // A local or shallow checkout may not have an origin/HEAD symbolic ref.
+  }
+  candidates.push('HEAD^1');
+  for (const candidate of [...new Set(candidates)]) {
+    if (await refExists(candidate, runGit)) return candidate;
+  }
+  return null;
+}
+
+export async function changedFiles(
+  base, { strict = false, runGit = git, environment = process.env } = {}
+) {
+  const committedBase = base ?? (strict
+    ? await inferCommittedBase({ runGit, environment })
+    : null);
+  if (strict && !committedBase) {
+    throw new Error('strict affected check could not determine a committed base');
+  }
+  if (committedBase) {
+    const mergeBase = (await runGit(['merge-base', committedBase, 'HEAD'])).trim();
+    const committed = parseGitPaths(await runGit([
+      'diff', '--name-only', '-z', `${mergeBase}...HEAD`
+    ]));
+    const working = parseGitPaths(await runGit(['diff', '--name-only', '-z', 'HEAD']));
+    const untracked = parseGitPaths(await runGit([
+      'ls-files', '--others', '--exclude-standard', '-z'
+    ]));
     return [...new Set([...committed, ...working, ...untracked])].sort();
   }
-  const unstaged = parseGitPaths(await git(['diff', '--name-only', '-z']));
-  const staged = parseGitPaths(await git(['diff', '--name-only', '--cached', '-z']));
-  const untracked = parseGitPaths(await git(['ls-files', '--others', '--exclude-standard', '-z']));
+  const unstaged = parseGitPaths(await runGit(['diff', '--name-only', '-z']));
+  const staged = parseGitPaths(await runGit(['diff', '--name-only', '--cached', '-z']));
+  const untracked = parseGitPaths(await runGit([
+    'ls-files', '--others', '--exclude-standard', '-z'
+  ]));
   return [...new Set([...unstaged, ...staged, ...untracked])].sort();
 }
 
@@ -139,7 +189,7 @@ export async function checkAffected({ base = null, strict = false } = {}, depend
     return { blocked: true, frontmatterFailures, changed: [], suspects: [] };
   }
   const map = validateChangeMap(YAML.parse(await readChangeMap()));
-  const changed = await getChangedFiles(base);
+  const changed = await getChangedFiles(base, { strict });
   const changedSet = new Set(changed);
   const suspects = [];
   for (const [codeGlob, rule] of Object.entries(map)) {
