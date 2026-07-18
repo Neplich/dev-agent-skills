@@ -76,15 +76,33 @@
     {
       "id": "eval-006-audit-no-version-anchor",
       "name": "无版本锚继续审计但不盖章",
-      "description": "验证没有 tag、Release 或显式版本锚时仍审计确认范围，使用 target 短 SHA 命名报告且不写版本字段。",
-      "prompt": "审计已确认的 base `e1f2a3b` 到真实 target commit `7c9e2af` 范围。宿主没有 tag、GitHub Release 或任何显式版本锚；请继续审计并持久化报告，不要发明版本。",
-      "expected_output": "页面事实结论仍为 verified，报告写 version_anchor: unavailable，并回退为 audit-7c9e2af.md；不改 last_verified_version 或 releases.json。",
+      "description": "验证没有 tag、Release 或显式版本锚时仍审计确认范围，使用 target 短 SHA 命名报告，并保持 last_verified_version 为 unverified 而不盖章。",
+      "prompt": "审计已确认的 base `e1f2a3b` 到真实 target commit `7c9e2af` 范围。宿主没有 tag、GitHub Release 或任何显式版本锚；请继续审计并持久化报告，不要发明版本，并保持页面的 unverified 状态不盖章。",
+      "expected_output": "页面事实结论仍为 verified，报告写 version_anchor: unavailable，并回退为 audit-7c9e2af.md；last_verified_version 保持 unverified，不修改 releases.json。",
       "workspace": "workspace/eval-006-audit-no-version-anchor",
       "assertions": [
         {"id": "audits_without_version_anchor", "description": "无锚仍执行审计", "text": "在无 tag、Release 或显式版本锚时仍对已确认 base/target 范围执行确定性层和事实层，并给出真实审核结论。"},
         {"id": "records_anchor_unavailable", "description": "报告明确版本锚不可用", "text": "持久化报告使用机器可读文本 `version_anchor: unavailable`，不得用 unknown、分支名或推断版本代替。"},
         {"id": "uses_target_sha_report_name", "description": "使用 target 短 SHA 回退命名", "text": "报告写入 `docs/site/.meta/audit/audit-7c9e2af.md`，使用 fixture 提供的真实 target short SHA。"},
-        {"id": "does_not_write_version_stamp", "description": "无锚不写版本盖章", "text": "即使页面结论为 verified，也不写或改 `last_verified_version`，并且不修改 `.meta/releases.json`。"}
+        {"id": "does_not_write_version_stamp", "description": "无锚保持 unverified 不盖章", "text": "即使页面结论为 verified，也不把 `last_verified_version` 从 `unverified` 改成版本号，而是保留 `unverified`，并且不修改 `.meta/releases.json`；不得因缺少版本锚而删除该必填字段。"}
+      ]
+    },
+    {
+      "id": "eval-007-frontmatter-contract-fixtures",
+      "name": "审计 frontmatter 契约合法与非法页面组",
+      "description": "验证 docs-audit 在读取等效确认的 release 审计入口凭据后，与生成端使用同一 frontmatter 契约：一个合法 API 页面进入事实层，四个非法页面按具体契约错误判 stale 并阻塞 release。",
+      "prompt": "`release-entry.md` 提供了已确认的 pending release 版本上下文、显式 base/target、审计请求与证据清单。请据此对 fixture 站点执行 docs-audit frontmatter 判定并给出审计结论。逐页使用 docs-agent 的 frontmatter 契约真源核对字段合法性；对合法页面继续进入事实层，对非法页面记录具体 stale 原因，并给出 release 是否可以 proceed 的结论。不要修复 fixture。",
+      "expected_output": "先接受 release-entry.md 的等效确认入口凭据并解析 base/target 与 pending release 上下文；合法 API 页面通过 frontmatter 校验并进入事实层；doc_type: standard、related_code: []、缺 last_verified_version、owners: [] 四个页面分别因对应契约错误记为 stale；release blocked 且不得 proceed，判定与 bootstrap 生成端校验逻辑一致。",
+      "workspace": "workspace/eval-007-frontmatter-contract-fixtures",
+      "assertions": [
+        {"id": "accepts_confirmed_audit_entry", "description": "接受等效确认的审计入口凭据", "text": "读取 `release-entry.md`，接受其中 pending release `v0.4.0`、显式 base `4a1b2c3` 与 target `7c9e2af`、审计请求及证据清单作为 docs-audit 的等效确认入口，并在该范围内执行审计。"},
+        {"id": "rejects_standard_doc_type", "description": "拒绝 standard 文档类型", "text": "将 `docs/site/api/invalid-standard-doc-type.md` 因 `doc_type: standard` 不在允许的 landing、release、design、api、database、ops、product 集合中判为 `stale`。"},
+        {"id": "rejects_empty_related_code", "description": "拒绝空 related_code", "text": "将 `docs/site/api/invalid-empty-related-code.md` 因所有页面都要求 `related_code` 为非空字符串数组而判为 `stale`。"},
+        {"id": "rejects_missing_last_verified_version", "description": "拒绝缺少版本核验字段", "text": "将 `docs/site/api/invalid-missing-last-verified-version.md` 因无条件必填的 `last_verified_version` 缺失而判为 `stale`。"},
+        {"id": "rejects_empty_owners", "description": "拒绝空 owners", "text": "将 `docs/site/api/invalid-empty-owners.md` 因 `owners` 不是非空字符串数组而判为 `stale`。"},
+        {"id": "accepts_valid_api_page", "description": "合法 API 页面进入事实层", "text": "确认 `docs/site/api/valid-catalog.md` 的七个必填字段和值均合法，通过 frontmatter 校验并进入事实层核对 `src/catalog/routes.txt`。"},
+        {"id": "blocks_release_for_invalid_frontmatter", "description": "非法 frontmatter 阻塞 release", "text": "四个非法页面均作为 `stale` 保留在影响域时，release 结论为 blocked 且不得 `proceed`，也不得对合法页面局部盖章。"},
+        {"id": "uses_shared_contract_source", "description": "审计端与生成端同源", "text": "明确以 docs-agent 的 `frontmatter-contract.md` 为判定真源，并确认 docs-audit 结论与 docs-site-bootstrap 内嵌 frontmatter 校验逻辑一致。"}
       ]
     }
   ]

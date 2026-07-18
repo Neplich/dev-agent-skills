@@ -20,8 +20,10 @@ Resolve the audit baseline before computing impact:
 If there is no tag, Release, or explicit version anchor, continue auditing the
 confirmed working scope. Set `version_anchor: unavailable`, identify the real
 target commit when one exists, and never substitute `unknown`, a branch name,
-or an inferred version. Do not write `last_verified_version` or release
-metadata without a usable tag or Release anchor.
+or an inferred version. Do not stamp `last_verified_version` or write release
+metadata without a usable tag or Release anchor. Existing pages retain their
+current `last_verified_version`; new pages use `unverified`, and the field must
+never be omitted.
 
 Record the exact resolved base and target in the report. If a default base
 cannot be resolved, state that directly rather than inventing a commit range;
@@ -84,29 +86,36 @@ the affected-page set, excluding `docs/site/.meta/**`. This rule applies even
 when there is no changed code or change-map match, so a documentation-only
 claim cannot bypass fact verification.
 
+Pages under `docs/site/standards/templates/**` are reusable template artifacts
+with placeholder bodies. Keep them in the affected set for frontmatter and
+structural-completeness validation, but do not perform the target `doc_type`'s
+type-specific fact checks against their placeholder content. Template
+placeholders alone never block a release.
+
 Use each such page's frontmatter `related_code` to bound its code and test
-evidence. The field is required for every page. For a `landing`, `release`, or
-`standard` page, an empty `related_code` array is valid and means to perform
-frontmatter and document-structure checks only; do not manufacture a
-code-evidence task or placeholder glob. A missing `related_code` field is
-invalid frontmatter and makes the page `stale` in Step 5.
+evidence. The field must be a non-empty string array for every page, and the
+audit always uses it to bound the code and test evidence scope. A missing or
+empty `related_code` field is invalid frontmatter and makes the page `stale`
+in Step 5.
 
 ### Step 5: Validate frontmatter
 
 Validate every affected formal Markdown page and explicitly exclude
-`docs/site/.meta/**`. Check the seven standard fields and their constraints:
+`docs/site/.meta/**`. The authoritative field rules live in
+`agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md`.
+Check the seven required fields and their constraints:
 
 | Field | Validation |
 | --- | --- |
 | `title` | non-empty string |
 | `visibility` | `public`, `internal`, or `both` |
-| `doc_type` | `landing`, `release`, `design`, `api`, `database`, `ops`, `product`, or `standard` |
+| `doc_type` | `landing`, `release`, `design`, `api`, `database`, `ops`, or `product` |
 | `stage` | `draft`, `dev`, `ops`, or `release` |
 | `owners` | non-empty string array |
-| `related_code` | required path/glob array; non-empty for `api`, `database`, `design`, `ops`, and `product`; an empty array is allowed for `landing`, `release`, and `standard`, but the field must not be absent |
-| `last_verified_version` | tag/Release string or `unverified`; it may be absent only when the host has no version anchor |
+| `related_code` | non-empty string array of repository-relative paths or globs for every `doc_type` |
+| `last_verified_version` | non-empty version anchor string or `unverified`; always required, including when the host has no version anchor |
 
-An invalid field, invalid enum, invalid conditional `related_code`, or invalid
+An invalid field, invalid enum, invalid `related_code`, or invalid
 version field makes the page `stale` immediately. The literal `unverified` and
 an older release anchor are valid version values, not `stale` conclusions. They
 lower trust and require broader code and test verification; after the complete
@@ -118,13 +127,22 @@ version anchor.
 Keep invalid-frontmatter pages as `stale`. Mark a matched `required_docs` page
 that was not updated in the same diff only as `suspect` and send it to the fact
 layer. Also send directly changed formal pages and other affected pages with
-valid frontmatter to the fact layer. `suspect` is a review priority label, not
-a fourth final status.
+valid frontmatter to the fact layer, except template artifacts under
+`docs/site/standards/templates/**`, which proceed only to template structure
+validation. `suspect` is a review priority label, not a fourth final status.
 
 ## 3. Fact Layer
 
-For every affected page that is not already `stale` from invalid frontmatter,
-build a claim-to-evidence checklist. Follow the shared trust model:
+Do not apply this layer's type-specific fact checks to
+`docs/site/standards/templates/**`. For those reusable placeholder artifacts,
+verify only the shared frontmatter contract and the expected template
+structure; their target `doc_type` describes the page they help authors create,
+not factual API, schema, deployment, or operations claims made by the template
+itself. A placeholder value or absent implementation evidence in a template is
+not a release blocker.
+
+For every non-template affected page that is not already `stale` from invalid
+frontmatter, build a claim-to-evidence checklist. Follow the shared trust model:
 
 `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`
 
@@ -241,8 +259,10 @@ Then, in one audit operation:
 
 Do not stamp a verified subset when another page is `stale`, `mismatch`, or
 blocked by missing evidence. Do not partially update `.meta/releases.json`.
-When the version anchor is unavailable, do not write `last_verified_version`
-and do not alter release metadata.
+When the version anchor is unavailable, do not stamp
+`last_verified_version` and do not alter release metadata. Keep each page's
+existing value; new pages remain `unverified`, and the field must not be
+omitted.
 
 ## 7. Release Handoff
 

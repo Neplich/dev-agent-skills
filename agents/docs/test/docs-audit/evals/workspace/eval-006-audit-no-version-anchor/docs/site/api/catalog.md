@@ -7,6 +7,7 @@ owners:
   - catalog-team
 related_code:
   - src/catalog/routes.txt
+last_verified_version: unverified
 ---
 
 # Catalog API

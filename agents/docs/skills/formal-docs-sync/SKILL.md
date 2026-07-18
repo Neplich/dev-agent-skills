@@ -72,8 +72,10 @@ Before any write:
 4. For backfill, execute only one confirmed batch at a time and request
    confirmation again before the next batch.
 5. Apply the latest-state discipline: write every changed page as the stable
-   current state, validate its claims against code or test evidence, and leave
-   new or changed pages unverified for later audit.
+   current state, validate its claims against code or test evidence, apply the
+   default frontmatter contract in
+   `agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md`,
+   and leave new or changed pages unverified for later audit.
 
 The full node protocol, evidence order, batch mechanics, map merge behavior,
 trust model, and output format are authoritative in
