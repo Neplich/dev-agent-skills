@@ -89,7 +89,7 @@ Downstream role routers and specialist skills remain installed as PM-orchestrate
 | `qa-agent` | Spec validation, exploratory testing, bug analysis, regression verification | 5 (`1 + 4`) | PM handoff only | [qa](./agents/qa/README.md) |
 | `devops-agent` | Deployment planning, CI/CD, environment configuration audits, incident playbooks | 5 (`1 + 4`) | PM handoff only | [devops](./agents/devops/README.md) |
 | `security-agent` | AppSec, authorization review, dependency risk, privacy data-flow mapping | 5 (`1 + 4`) | PM handoff only | [security](./agents/security/README.md) |
-| `docs-agent` | Formal documentation routing, site bootstrap, evidence-backed synchronization, and release audit | 4 (`1 + 3`) | PM handoff only | [docs](./agents/docs/README.md) |
+| `docs-agent` | Formal documentation routing, site bootstrap, evidence-backed synchronization (v0.3.0 accepted automation surface: API docs only), and release audit | 4 (`1 + 3`) | PM handoff only | [docs](./agents/docs/README.md) |
 
 > [!TIP]
 > Use `/pm-agent` as the direct user entry. PM classifies the request and hands off to downstream role routers or specialist skills when the scope is ready.
