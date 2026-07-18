@@ -1,4 +1,5 @@
 import { execFile } from 'node:child_process';
+import { access } from 'node:fs/promises';
 import { promisify } from 'node:util';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -49,23 +50,39 @@ function matches(path, glob, excludes = []) {
     && !excludes.some((pattern) => picomatch(pattern, { dot: true })(path));
 }
 
-export async function checkAffected({ base = null, strict = false } = {}) {
-  const frontmatterFailures = await checkFrontmatter();
+async function requiredDocExists(path) {
+  try {
+    await access(resolve(REPO_ROOT, path));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function checkAffected({ base = null, strict = false } = {}, dependencies = {}) {
+  const runFrontmatterCheck = dependencies.checkFrontmatter ?? checkFrontmatter;
+  const readChangeMap = dependencies.readChangeMap ?? (() => readText(MAP_PATH));
+  const getChangedFiles = dependencies.changedFiles ?? changedFiles;
+  const docExists = dependencies.requiredDocExists ?? requiredDocExists;
+  const frontmatterFailures = await runFrontmatterCheck();
   if (frontmatterFailures.length) {
     return { blocked: true, frontmatterFailures, changed: [], suspects: [] };
   }
-  const raw = YAML.parse(await readText(MAP_PATH)) ?? {};
+  const raw = YAML.parse(await readChangeMap()) ?? {};
   const map = raw.change_map ?? {};
   if (typeof map !== 'object' || Array.isArray(map)) {
     throw new Error('change_map must be a mapping');
   }
-  const changed = await changedFiles(base);
+  const changed = await getChangedFiles(base);
   const changedSet = new Set(changed);
   const suspects = [];
   for (const [codeGlob, rule] of Object.entries(map)) {
     const codeMatches = changed.filter((path) => matches(path, codeGlob, rule.exclude ?? []));
     if (!codeMatches.length) continue;
-    const missingDocs = (rule.required_docs ?? []).filter((path) => !changedSet.has(path));
+    const missingDocs = [];
+    for (const path of rule.required_docs ?? []) {
+      if (!changedSet.has(path) || !(await docExists(path))) missingDocs.push(path);
+    }
     if (missingDocs.length) {
       suspects.push({ codeGlob, trigger: rule.trigger ?? '', codeMatches, missingDocs });
     }

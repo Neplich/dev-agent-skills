@@ -109,6 +109,14 @@ function validateInputs(options, repoRoot) {
   if (mappingSupplied) {
     required(options.codeGlob, '--code-glob');
     required(options.trigger, '--trigger');
+    const normalizedCodeGlob = options.codeGlob.replaceAll('\\', '/');
+    const codeGlobSegments = normalizedCodeGlob.split('/');
+    if (isAbsolute(options.codeGlob) || normalizedCodeGlob.startsWith('/')
+        || /^[A-Za-z]:\//.test(normalizedCodeGlob)
+        || codeGlobSegments.includes('..')) {
+      throw new Error('--code-glob must be repository-root relative');
+    }
+    options.codeGlob = normalizedCodeGlob;
     if (!options.changeMapTargets.length
         || options.changeMapTargets.some((item) => !item.trim())) {
       throw new Error('explicit change-map input requires at least one --change-map-target');
@@ -122,6 +130,10 @@ function validateInputs(options, repoRoot) {
       if (relativeTarget === '..' || relativeTarget.startsWith('../')
           || !relativeTarget.startsWith('docs/site/')) {
         throw new Error('--change-map-target must be repository-root relative under docs/site/');
+      }
+      const pageSegments = relativeTarget.slice('docs/site/'.length).split('/');
+      if (!relativeTarget.endsWith('.md') || pageSegments.some((segment) => segment.startsWith('.'))) {
+        throw new Error('--change-map-target must be a Markdown page under docs/site/');
       }
       return relativeTarget;
     });
@@ -256,8 +268,12 @@ async function validateTargetRealPath(target, siteRoot) {
   }
 }
 
+export function npmExecutable(platform = process.platform) {
+  return platform === 'win32' ? 'npm.cmd' : 'npm';
+}
+
 async function defaultRunDocsChecks(siteRoot) {
-  await exec('npm', ['run', 'test:docs'], { cwd: siteRoot });
+  await exec(npmExecutable(), ['run', 'test:docs'], { cwd: siteRoot });
 }
 
 async function missingParentDirectories(path, stopAt) {
@@ -307,6 +323,8 @@ export async function scaffoldDocument(options, dependencies = {}) {
   const runDocsChecks = dependencies.runDocsChecks ?? defaultRunDocsChecks;
   const resolved = validateInputs(options, repoRoot);
   await validateTargetRealPath(resolved.target, siteRoot);
+  const mapPath = resolve(siteRoot, 'standards/change-map.yaml');
+  if (resolved.mappingSupplied) await validateTargetRealPath(mapPath, siteRoot);
   if (await exists(resolved.target)) {
     if ((await lstat(resolved.target)).isSymbolicLink()) {
       throw new Error(`target page must not be a symbolic link: ${resolved.lexical}`);
@@ -318,7 +336,6 @@ export async function scaffoldDocument(options, dependencies = {}) {
   const templatePath = resolve(siteRoot, 'standards/templates', resolved.type.template);
   const scaffold = extractScaffold(await readFile(templatePath, 'utf8'));
   const pageContent = renderPage(scaffold, options);
-  const mapPath = resolve(siteRoot, 'standards/change-map.yaml');
   const mapSource = await readFile(mapPath, 'utf8');
   parseChangeMap(mapSource);
   const mapChange = resolved.mappingSupplied ? mergeChangeMap(mapSource, options) : null;

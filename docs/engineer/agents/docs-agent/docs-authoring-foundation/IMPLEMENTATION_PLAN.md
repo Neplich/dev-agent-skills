@@ -1,8 +1,8 @@
 ---
 title: "Docs Authoring Foundation 实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.0"
-status: Approved
+version: "0.2.0"
+status: Implemented
 author: "Neplich Codex"
 date: "2026-07-19"
 last_updated: "2026-07-19"
@@ -16,6 +16,9 @@ related_trd: "docs/engineer/agents/docs-agent/docs-authoring-foundation/TRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/122"
 changelog:
+  - version: "0.2.0"
+    date: "2026-07-19"
+    changes: "按 C1-C4 实际交付重整 W1-W6 范围，并记录 review 加固与验证收尾"
   - version: "0.1.0"
     date: "2026-07-19"
     changes: "记录 W1 至 W6 已批准实施总纲与分阶段验证门禁"
@@ -34,7 +37,10 @@ changelog:
   skill eval，保留完整计划、验证与维护者确认门禁。
 - 维护者已批准实施总纲：W1 资产抽取 → W2 模板 scaffold 区块 → W3 确定性
   脚手架与测试 → W4 宿主命令契约 → W5 bootstrap 门禁保持 → W6 eval 与交付。
-- 本轮只执行 W1 和本计划落盘；W2 至 W6 仅记录，不能据此在本轮提前修改。
+- 实际交付分为四轮：C1 完成 W1 与 PRD/TRD/实施计划文档链；C2 完成
+  W2-W4；C3 完成 W6 的 eval 对齐与 fresh validation；C4 按 PR #125 review
+  加固 W3/W4 相关脚本、补充回归测试并完成交付复核。W5 不是独立功能提交，
+  其门禁保持要求贯穿 C1-C4 并由 bootstrap 与宿主回归验证。
 
 ## 2. 目标与非目标
 
@@ -45,18 +51,18 @@ change-map 合并、原子写入和完整测试证据，同时保持现有 boots
 
 非目标：引入 AI Hub 项目事实；修改 frontmatter 字段语义或 audit 盖章语义；
 生成 Release Notes；替代 #121 的范围确认与事实写作；修改宿主 GitHub Actions；
-自动发布、push、开 PR 或 merge。
+自动发布、创建新 PR 或 merge。
 
 ## 3. 分阶段计划
 
 | 阶段 | 内容 | 验证方式 |
 | --- | --- | --- |
-| W1 静态资产抽取（本轮已确认并执行） | 新建 `assets/docs/site/**`，将基线 `_internal/INSTRUCTIONS.md` 中每个 `Target:` 静态正文按相同宿主相对路径逐字节迁出；指令收敛为 gate、inventory、冲突、manifest、顺序、资产索引、回读和 zero-diff；同步 `SKILL.md` 资产化措辞并只刷新 `docs-site-bootstrap` lock hash。 | 临时脚本从 W1 基线提取每个目标正文，输出“资产路径 ← 原行区间 ← 一致性”表并逐字节全通过；资产清单无 `bootstrap-manifest.json`；`INSTRUCTIONS.md` 不超过 400 行；4 个 contract checker 和 CI 同款 pytest 通过。 |
-| W2 五模板 scaffold 区块 | 在 api、database、design、ops、product 五个宿主模板中各加入唯一 `docs-scaffold:start/end` 区块；各模板使用目标 `doc_type`，`standards/templates/**` 保留 frontmatter / 结构校验但免类型化事实核查；formal-docs-sync 单类型流程只渐进读取当前模板。 | 解析测试证明每个模板恰有一组有序标记和可解析 `md` 围栏；五种 `doc_type` 与目标目录对应；全仓检查不存在第二份完整骨架；internal 站点检查通过。 |
-| W3 确定性脚手架与测试 | 新增 `scripts/scaffold-doc.mjs`，实现显式输入、路径与类型约束、固定 `unverified`、dry-run、默认拒绝覆盖、显式 change-map merge、未知内容保留、页面与 map 原子写入、回读和 `test:docs`；change-map 头部校验归本 feature 工具链。 | `scaffold-doc.test.mjs` 覆盖五类成功路径、未知类型、越界、类型错配、覆盖拒绝、区块异常、dry-run 零写入、merge 去重稳定排序、未知内容保留、失败回滚与写后校验；fixture 无独立模板正文。 |
-| W4 宿主命令契约 | 在宿主资产 `package.json` 只暴露 `new:doc`，指向唯一 `scaffold-doc.mjs`；保持 prepare、dev、build、frontmatter、affected、version 与 `test:docs` 命令组织，Release Notes 请求拒绝并 handoff #116。 | 在隔离 AI Hub-shaped fixture 执行 `npm run new:doc -- ...` 的 dry-run / 写入用例和 `npm run test:docs`；分别执行 public / internal build；确认无 `new-doc` 或第二个 scaffold 命令。 |
-| W5 Bootstrap 门禁保持 | 让 bootstrap 从资产复制完整宿主基础，保持显式 opt-in、全量 inventory、冲突汇总、overwrite / merge / `kept-as-is` 选择、动态 manifest、写后回读、人工内容保护和重复 zero-diff；渐进加载不削弱完整交付。 | 现有 bootstrap 确定性测试全部通过，并新增或调整资产源断言；空目录、identical、conflict、`kept-as-is`、无效 manifest、已填充 change map / release metadata、重复运行均符合原语义。 |
-| W6 Eval 与交付 | 更新受影响 eval 定义和 durable `comparison.md`，重做资产化后 `eval-002` 字节 fixture；执行 fresh with-skill 与同 prompt / fixture 的 fresh without-skill baseline；刷新最终 lock hash并完成全量检查、review 与交付。 | 4 个 contract checker、CI 同款 9 路径 pytest、宿主 Node 测试全部通过；fresh judge 结论写入 `comparison.md`；运行期 transcript / verdict / diagnostics 不提交；diff 无 AI Hub 事实、无无关变更，维护者确认后才进入 PR / merge 流程。 |
+| W1 静态资产抽取（C1） | 新建 `assets/docs/site/**`，将基线 `_internal/INSTRUCTIONS.md` 的静态正文按宿主相对路径逐字节迁出；同时建立 PRD、TRD 与本实施计划文档链，收敛 Skill 指令并刷新 lock hash。 | 字节映射、资产清单、指令规模、仓库 checker 与 pytest 在 C1 验证通过。 |
+| W2 五模板 scaffold 区块（C2） | 在五类宿主模板中交付唯一 `docs-scaffold:start/end` 区块，并补 standards 索引与单类型渐进读取约束。 | 模板 marker、`md` 围栏、`doc_type` 与目录映射由脚手架测试和文档检查覆盖。 |
+| W3 确定性脚手架与测试（C2，C4 加固） | C2 交付 `scaffold-doc.mjs`、五类创建、dry-run、覆盖拒绝、change-map merge、原子写入与回滚；C4 增加 change-map 写入 realpath 边界、repo-relative code glob、Markdown page target 与删除 required doc 的防护。 | `scaffold-doc.test.mjs` 覆盖既有正反路径，并在 C4 增加 symlink、绝对/上跳 glob、目录/非 Markdown/机器目录 target、删除 required doc 用例。 |
+| W4 宿主命令契约（C2，C4 加固） | C2 在 `package.json` 交付唯一 `new:doc` 并保持 prepare/dev/build/check/test 命令；C4 让 post-write 检查在 Windows 使用 `npm.cmd`，并在 VitePress 子进程退出时关闭 watcher、传播退出码。 | 隔离宿主执行 `npm run test:docs`；单元测试覆盖 Windows shim 与 child exit 生命周期。 |
+| W5 Bootstrap 门禁保持（C1-C4 持续验证） | 资产复制继续保持显式 opt-in、完整 inventory、冲突汇总、`kept-as-is`、动态 manifest、回读、人工内容保护和重复 zero-diff；未引入独立的新行为提交。 | C1/C2 的确定性检查与 C3 fresh eval 共同证明完整交付、冲突阻断和幂等语义未退化；C4 继续运行宿主与仓库全量回归。 |
+| W6 Eval 与交付（C3，C4 收尾） | C3 对齐 eval 定义与 fixture，重新生成 fresh with-skill / without-skill baseline 并更新 durable `comparison.md`；C4 按物化清单判断是否需要重验，刷新最终 lock hash、运行全量检查并提交 PR review 修复。 | C3 fresh judge 已记录 PASS；C4 记录 eval-002 决策、宿主测试、4 个 checker、CI pytest、PR review 与 CI 结果，运行期产物不提交且不合并 PR。 |
 
 ```mermaid
 flowchart LR
@@ -67,40 +73,15 @@ flowchart LR
     W5 --> W6["W6 Fresh eval 与交付"]
 ```
 
-## 4. W1 本轮精确范围
+## 4. 实际交付分组
 
-### 4.1 允许修改
-
-- 新增 `agents/docs/skills/docs-site-bootstrap/assets/docs/site/**`，逐一对应基线
-  `INSTRUCTIONS.md` 的静态 `Target:`。
-- 重写 `agents/docs/skills/docs-site-bootstrap/_internal/INSTRUCTIONS.md`，只保留
-  执行协议与资产索引，控制在 400 行以内。
-- 必要时只修改 `agents/docs/skills/docs-site-bootstrap/SKILL.md` 的“内嵌模板”
-  表述为“资产文件”，不改变 gate。
-- 新增本目录 `TRD.md` 与 `IMPLEMENTATION_PLAN.md`。
-- 仅刷新 `skills-lock.json` 中 `docs-site-bootstrap.computedHash`。
-- 临时字节自检脚本和结果写入 `tmp/`，不得提交。
-
-### 4.2 禁止修改
-
-- 不改变任何迁移正文的字节，包括格式、注释、依赖版本和结尾换行。
-- 不创建静态 `assets/docs/site/.meta/bootstrap-manifest.json`。
-- 不修改 eval fixture、`evals.json` 或 `comparison.md`；这些属于 W6。
-- 不实现 scaffold 标记、`scaffold-doc.mjs`、`new:doc` 或新测试；这些属于
-  W2 至 W4。
-- 不加入 AI Hub 名称、owners、业务路径、版本、change map 或 release 数据。
-- 不 push、开 PR、merge、amend、rebase 或 force push。
-
-### 4.3 W1 操作顺序
-
-1. 记录分支创建前的 `INSTRUCTIONS.md` blob，枚举全部 `Target:` 与代码围栏边界。
-2. 逐目标创建同构资产，保留原正文和结尾字节。
-3. 运行临时提取器逐字节比较；任何不一致先修复资产，不进入下一步。
-4. 将 `INSTRUCTIONS.md` 改为协议与逐文件映射索引，回读确认完整 inventory、
-   冲突、`kept-as-is`、manifest 和 zero-diff 规则仍在。
-5. 同步 `SKILL.md` 的资产化措辞；刷新单一 lock hash 字段。
-6. 执行 contract checker、CI pytest、字节映射检查和 diff 审核。
-7. 按维护者指定文案创建一次普通 commit；不 push，并停在功能分支。
+1. **C1 / `5f39454`**：完成 W1 静态资产化，并建立 PRD、TRD、实施计划文档链。
+2. **C2 / `a2a30a3`**：完成 W2 五模板区块、W3 脚手架与测试、W4 宿主命令。
+3. **C3 / `c4e7026`**：完成 W6 的 eval 定义、fixture、fresh with/without
+   validation 与 durable comparison；同时补齐 bootstrap 入口报告协议。
+4. **C4 / PR #125 review 修复**：只处理 7 条已核实 P2，补充相应回归测试，
+   按 eval-002 物化清单决定是否重验，刷新 lock hash并完成 push、review 与 CI
+   复核；禁止 merge、amend、rebase、force push 或提交 `tmp/`。
 
 ## 5. 验证命令
 
@@ -142,11 +123,45 @@ assets/docs/site/<relative-path> <- INSTRUCTIONS.md:<start>-<end> <- identical
 
 ## 7. 阶段门禁与收尾
 
-- W1 已获维护者确认，本轮可以执行；完成 W1 后停下报告，不自动进入 W2。
-- W2 至 W6 每阶段开始前回读 issue #122、TRD、当前计划与前一阶段证据；若范围、
-  scaffold 标记、命令名、模板类型或 issue 边界变化，先更新批准文档。
-- 每阶段只处理该行文件与验证，发现无关问题仅报告。
-- 实施完成后记录最终文件、命令、结果、eval 证据和残余风险；只有维护者明确批准
-  closeout 后才能归档活动计划。
-- 本轮 Git 交付只允许指定普通 commit，不 push，并停在
-  `feat/122-docs-authoring-foundation`。
+- W1-W4 已按 C1/C2 完成，W5 门禁保持已由 C3 eval 与本轮回归继续验证。
+- C3 已完成 W6 的 fresh eval 部分；C4 只在物化资产字节变化时重验 eval-002，
+  否则记录跳过依据，不改写 comparison。
+- C4 完成后记录最终文件、命令、eval 决策和残余风险，普通 commit 并 push 到
+  既有 PR 分支；等待 review 三信号和 CI 全绿后切回 `main`。
+- 活动计划不在本轮归档；PR #125 不 merge，不 amend、rebase、force push 或使用
+  管理员绕过。
+
+## 8. C4 实施结果
+
+### 8.1 完成范围
+
+- `scaffold-doc.mjs` 已拒绝非仓库相对 code glob、非 Markdown page 的
+  change-map target，并在写 change map 前校验其真实父路径仍位于 `docs/site/`。
+- `check-affected.mjs` 已把工作区中不存在的 required doc 判为缺失，即使删除路径
+  同时出现在 Git changed set 中。
+- `dev-site.mjs` 已在 VitePress 子进程退出时清理 watcher 与信号监听，并传播数字
+  退出码；脚手架写后检查在 Windows 使用 `npm.cmd`。
+- `scaffold-doc.test.mjs` 已加入上述边界和跨平台回归测试；未新增第二份模板正文。
+
+### 8.2 验证记录
+
+| 命令 / 检查 | 结果 |
+| --- | --- |
+| 临时宿主 `npm run test:docs` | PASS，36 tests，0 failures |
+| `uv run scripts/check_repository_contract.py` | PASS |
+| `uv run scripts/check_eval_contract.py` | PASS |
+| `uv run scripts/check_eval_artifacts.py` | PASS |
+| `uv run scripts/check_doc_contract.py` | PASS |
+| `.github/workflows/ci.yml` 同款 pytest 命令 | PASS，126 tests |
+
+### 8.3 Eval 与残余风险
+
+- eval-002 未重跑。其 `fixture-scope.json` 物化 9 个目标；本轮修改的 4 个资产
+  `scripts/scaffold-doc.mjs`、`scripts/check-affected.mjs`、`scripts/dev-site.mjs`
+  和 `scripts/__tests__/scaffold-doc.test.mjs` 均不在物化清单内。资产清单语义、
+  manifest 状态机和代表性 zero-diff 字节断言未变，因此不改写 durable
+  `comparison.md`。
+- Windows shim 与 child-exit 生命周期由确定性单元测试覆盖；最终跨平台状态仍以
+  PR CI 和后续真实 Windows 宿主运行为准。
+- 下一所有者为 PR #125 review 与 CI 复核；本轮不需要新增 QA E2E 文档，原因是
+  变更只影响 docs bootstrap 开发者脚本和单元测试，不改变终端产品用户流程。

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
+import { EventEmitter } from 'node:events';
 import {
-  cp, lstat, mkdir, mkdtemp, readFile, readdir, symlink, writeFile
+  cp, lstat, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile
 } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
@@ -8,7 +9,9 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
 import YAML from 'yaml';
-import { scaffoldDocument } from '../scaffold-doc.mjs';
+import { checkAffected } from '../check-affected.mjs';
+import { attachChildLifecycle } from '../dev-site.mjs';
+import { npmExecutable, scaffoldDocument } from '../scaffold-doc.mjs';
 
 const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const SITE_SOURCE = resolve(TEST_DIR, '../..');
@@ -112,6 +115,54 @@ test('scaffoldDocument rejects a change-map target that resolves outside docs/si
   await assert.rejects(
     scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
     /--change-map-target must be repository-root relative under docs\/site\//
+  );
+});
+
+test('scaffoldDocument rejects non-relative change-map code globs', async (context) => {
+  for (const codeGlob of ['/src/api/**', '../src/api/**', 'C:\\src\\api\\**']) {
+    await context.test(codeGlob, async () => {
+      const fixture = await createFixture();
+      const input = options();
+      input.codeGlob = codeGlob;
+      input.trigger = 'API behavior changes';
+      input.changeMapTargets = [input.path];
+      await assert.rejects(
+        scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
+        /--code-glob must be repository-root relative/
+      );
+    });
+  }
+});
+
+test('scaffoldDocument rejects non-page change-map targets', async (context) => {
+  for (const mapTarget of ['docs/site/api', 'docs/site/api/generated.txt', 'docs/site/.meta/page.md']) {
+    await context.test(mapTarget, async () => {
+      const fixture = await createFixture();
+      const input = options();
+      input.codeGlob = 'src/api/**';
+      input.trigger = 'API behavior changes';
+      input.changeMapTargets = [mapTarget];
+      await assert.rejects(
+        scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
+        /--change-map-target must be a Markdown page under docs\/site\//
+      );
+    });
+  }
+});
+
+test('scaffoldDocument rejects a symlinked change-map parent outside docs/site', async () => {
+  const fixture = await createFixture();
+  const outside = resolve(fixture.repoRoot, 'outside-standards');
+  await cp(resolve(fixture.siteRoot, 'standards'), outside, { recursive: true });
+  await rm(resolve(fixture.siteRoot, 'standards'), { recursive: true });
+  await symlink(outside, resolve(fixture.siteRoot, 'standards'), 'dir');
+  const input = options();
+  input.codeGlob = 'src/api/**';
+  input.trigger = 'API behavior changes';
+  input.changeMapTargets = [input.path];
+  await assert.rejects(
+    scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
+    /must not escape docs\/site through a symbolic link/
   );
 });
 
@@ -301,4 +352,46 @@ test('scaffoldDocument rejects release notes and hands off to issue #116', async
     scaffoldDocument(pathInput, { ...fixture, runDocsChecks: noChecks }),
     /Release Notes Skill from issue #116/
   );
+});
+
+test('checkAffected treats a deleted required doc as missing even when it changed', async () => {
+  const requiredDoc = 'docs/site/api/required.md';
+  const result = await checkAffected({ strict: true }, {
+    checkFrontmatter: async () => [],
+    readChangeMap: async () => YAML.stringify({
+      change_map: {
+        'src/api/**': {
+          required_docs: [requiredDoc],
+          trigger: 'API behavior changes'
+        }
+      }
+    }),
+    changedFiles: async () => ['src/api/handler.mjs', requiredDoc],
+    requiredDocExists: async () => false
+  });
+  assert.equal(result.blocked, true);
+  assert.deepEqual(result.suspects[0].missingDocs, [requiredDoc]);
+});
+
+test('attachChildLifecycle closes the watcher and propagates the child exit code', () => {
+  const child = new EventEmitter();
+  child.kill = () => {};
+  const runtimeProcess = new EventEmitter();
+  runtimeProcess.exitCode = undefined;
+  let watcherCloses = 0;
+  let timerClears = 0;
+  attachChildLifecycle(child, { close: () => { watcherCloses += 1; } }, () => {
+    timerClears += 1;
+  }, runtimeProcess);
+  child.emit('close', 2);
+  assert.equal(watcherCloses, 1);
+  assert.equal(timerClears, 1);
+  assert.equal(runtimeProcess.exitCode, 2);
+  assert.equal(runtimeProcess.listenerCount('SIGINT'), 0);
+  assert.equal(runtimeProcess.listenerCount('SIGTERM'), 0);
+});
+
+test('npmExecutable uses the Windows npm command shim', () => {
+  assert.equal(npmExecutable('win32'), 'npm.cmd');
+  assert.equal(npmExecutable('darwin'), 'npm');
 });
