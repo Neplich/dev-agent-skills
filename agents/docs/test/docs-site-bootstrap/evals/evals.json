@@ -6,15 +6,20 @@
     {
       "id": "eval-001-bootstrap-empty-workspace",
       "name": "空 workspace 显式初始化完整文档站",
-      "description": "验证明确 opt-in 的空仓库会得到完整 35 个静态目标、manifest、合法 frontmatter 和路径边界。",
+      "description": "验证明确 opt-in 的空仓库会得到完整资产清单、manifest、合法 frontmatter、确定性文档脚手架和路径边界。",
       "prompt": "我明确确认在当前 fixture 仓库初始化正式文档站，固定目标为 `docs/site/`，并同意创建完整 scaffold 与 bootstrap manifest。请执行 bootstrap 并报告 read-back 与重复执行结果。",
-      "expected_output": "生成 35 个嵌入模板目标和 bootstrap manifest；所有 Markdown 页面满足 7 字段 frontmatter；写入仅限 docs/site。",
+      "expected_output": "从 assets/docs/site 复制完整资产清单并生成 bootstrap manifest；所有 Markdown 页面满足 7 字段 frontmatter；交付确定性 new:doc 脚手架；写入仅限 docs/site。",
       "workspace": "workspace/eval-001-bootstrap-empty-workspace",
       "assertions": [
         {
           "id": "creates_complete_inventory",
           "description": "生成清单完整",
-          "text": "清点并生成 `_internal/INSTRUCTIONS.md` 中全部 35 个静态模板目标，以及 `docs/site/.meta/bootstrap-manifest.json`，manifest files 覆盖所有已处理静态目标。"
+          "text": "清点并逐字节复制 `assets/docs/site/` 中的完整静态资产清单，并生成 `docs/site/.meta/bootstrap-manifest.json`；manifest files 覆盖所有已处理静态资产。"
+        },
+        {
+          "id": "delivers_deterministic_scaffold_assets",
+          "description": "交付确定性文档脚手架资产",
+          "text": "交付站点包含 package.json 中唯一的 `new:doc` 命令、`scripts/scaffold-doc.mjs` 和 `scripts/__tests__/scaffold-doc.test.mjs`；五个 standards/templates Markdown 文件各含恰好一个 `docs-scaffold` 区块，且全部被 `standards/index.md` 索引。"
         },
         {
           "id": "validates_seven_frontmatter_fields",
@@ -42,7 +47,7 @@
       "id": "eval-002-repeat-bootstrap-idempotent",
       "name": "已完成 bootstrap 重复执行保持零差异",
       "description": "使用代表性完整状态 fixture 验证字节一致的模板和稳定 manifest 不被改写。",
-      "prompt": "请在此已完成 bootstrap 的 fixture 上重复运行 docs-site-bootstrap。`fixture-scope.json` 说明了最小化 fixture 的等价范围；未物化的模板目标视为与嵌入模板字节一致。请报告文件分类、manifest 状态和 git 内容差异。",
+      "prompt": "请在此已完成 bootstrap 的 fixture 上重复运行 docs-site-bootstrap。`fixture-scope.json` 说明了最小化 fixture 的等价范围；未物化的资产目标视为与 `assets/docs/site/` 源资产字节一致。请报告文件分类、manifest 状态和 git 内容差异。",
       "expected_output": "所有代表性目标分类为 skipped-identical，既有 manifest 时间戳不变，重复运行产生零内容差异。",
       "workspace": "workspace/eval-002-repeat-bootstrap-idempotent",
       "assertions": [

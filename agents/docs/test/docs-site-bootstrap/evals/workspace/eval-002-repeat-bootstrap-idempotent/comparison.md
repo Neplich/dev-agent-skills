@@ -7,33 +7,34 @@
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws2-bootstrap-v1`
-- Branch fixture commit: `71bbb09`
+- Fixture: `issue-122-assets-v1`
+- Branch fixture commit: `a2a30a3`
+- Fresh validation date: `2026-07-19`
 
 ## Latest Result
 
-**PASS** — fresh judge 对 3 条 assertions 全部判定 PASS。with-skill 对 4 个物化代表目标逐字节比较一致，并按 fixture 等价规则将其余 31 个目标视为一致；35 项均分类为 `skipped-identical`，manifest、`createdAt`、change-map、release metadata 和正式页面均未改写。
+**PASS** — fresh judge 对 3 条 assertions 全部判定 PASS。with-skill 对完整 38 资产运行副本逐字节分类为 `skipped-identical`，代表性 9 条 manifest、`createdAt`、change-map、release metadata 和正式页面均未改写。
 
 ## With-Skill Behavior
 
-- Manifest 回读有效，4 个物化目标的持久状态保持 `skipped-identical`，`createdAt` 保持 `2026-07-16T08:00:00+08:00`。
-- Manifest 前后 SHA-256 一致，工作区与暂存区内容 diff 均为空。
-- 明确报告 0 created、0 kept-as-is、0 conflicting，并保留宿主 change-map、release metadata 和页面状态。
+- 38 个静态资产与 `assets/docs/site/` 逐字节一致，创建、冲突和失败均为 0。
+- Manifest 的 9 个物化代表目标保持 `skipped-identical`，`createdAt` 保持 `2026-07-16T08:00:00+08:00`，前后 SHA-256 均为 `0bb02c44054da996a17a489f0453ced2c03cde6b9bf757d4a035ac5f3e90017b`。
+- `standards/change-map.yaml`、`.meta/releases.json` 和既有正式页面全部保留；工作区与暂存区内容 diff 均为 0。
 
 ## Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，使用相同原始 prompt 与 fixture，新生成且未接触 skill 文档或 Agent README。
-- baseline 同样正确利用 `fixture-scope.json`，最终文件、manifest、状态与时间均无差异，核心 assertions 也成立。
-- with-skill 的增益主要是更完整的持久状态语义、精确 manifest 哈希、逐项分类和后续 handoff；本用例的最终行为与 baseline 没有实质差异。
+- 来源：本次 fresh `codex exec` 独立子进程，使用相同原始 prompt 与完整运行态 fixture，新生成且未提供任何 skill 文档或 Agent README。
+- baseline 同样确认 38 项 zero-diff 和 9 条代表性 manifest 状态；主要依赖 fixture 的等价假设，未提供 with-skill 的完整逐项资产证据链。
+- baseline 结果仅作为对照输入，不影响 with-skill 的 PASS 判定。
 
 ## Failures
 
-- 无 assertion failure。with-skill 的首个本地校验命令遗漏 Ruby `time` 模块，补充后完成同一轮只读验证，未产生文件改写。
+- 无 assertion failure。
 
 ## Next Steps
 
-- 保留本结果；幂等分类或 manifest 状态机变化时重跑此 eval。
+- 保留本结果；资产清单、幂等分类或 manifest 状态机变化时重新生成 fresh with/without validation。
 
 ## Runtime Artifact Policy
 
-- 本次 transcripts、workspace 副本和 judge verdict 仅位于 `tmp/eval-runs/118/eval-002-repeat-bootstrap-idempotent/`，不提交到 git。
+- 本次 transcripts、workspace 副本、baseline 和 judge verdict 仅位于 `tmp/eval-runs/122/eval-002-repeat-bootstrap-idempotent/`，不提交到 git。
