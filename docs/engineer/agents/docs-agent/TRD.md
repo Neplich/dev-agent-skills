@@ -157,7 +157,7 @@ agents/docs/
 | --- | --- | --- |
 | `title` | 非空字符串 | 页面人类可读标题 |
 | `visibility` | `public`、`internal`、`both` | 控制双站点收录 |
-| `doc_type` | `landing`、`release`、`design`、`api`、`database`、`ops`、`product` | 决定模板与导航分类；standards 与写作规范页面使用 `design` |
+| `doc_type` | `landing`、`release`、`design`、`api`、`database`、`ops`、`product` | 决定模板与导航分类；standards 说明页使用 `design`，`standards/templates/` 下模板页使用各自目标 `doc_type` |
 | `stage` | `draft`、`dev`、`ops`、`release` | 表示内容所处生命周期节点 |
 | `owners` | 非空字符串数组 | 使用角色或团队标识，不写个人凭据 |
 | `related_code` | 非空路径 / glob 字符串数组 | 所有页面类型都必须非空，只列支撑该文档事实的代码与测试证据范围 |
@@ -172,7 +172,7 @@ validator 要求所有页面的 `related_code` 都是非空字符串数组；字
 
 默认契约的唯一事实来源是 `agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md`。`docs-site-bootstrap` 的内置页面、模板与宿主校验脚本，`formal-docs-sync` 新增或更新的页面，以及 `docs-audit` 的 frontmatter 判定共同消费该文件；生成端与审计端必须对同一页面得出一致结论。
 
-契约无条件要求 `title`、`visibility`、`doc_type`、`stage`、`owners`、`related_code`、`last_verified_version` 七个字段。`visibility` 仅接受 `public`、`internal`、`both`，`stage` 仅接受 `draft`、`dev`、`ops`、`release`；`owners` 与 `related_code` 均为非空字符串数组，`related_code` 对所有页面类型都必须非空。`doc_type` 仅接受 `landing`、`release`、`design`、`api`、`database`、`ops`、`product`，不再接受 `standard`；standards 与写作规范页面按 AI Hub 先例使用 `design`。
+契约无条件要求 `title`、`visibility`、`doc_type`、`stage`、`owners`、`related_code`、`last_verified_version` 七个字段。`visibility` 仅接受 `public`、`internal`、`both`，`stage` 仅接受 `draft`、`dev`、`ops`、`release`；`owners` 与 `related_code` 均为非空字符串数组，`related_code` 对所有页面类型都必须非空。`doc_type` 仅接受 `landing`、`release`、`design`、`api`、`database`、`ops`、`product`，不再接受 `standard`；standards 说明页（`standards/index.md`、`doc-lifecycle.md`、`doc-granularity.md` 与 `change-map.yaml` 头部）使用 `design`；`standards/templates/` 下模板页按 AI Hub 先例使用各自目标 `doc_type`（`api`、`database`、`design`、`ops`、`product`），模板页作为 internal 页面参与校验，其 `doc_type` 表示模板目标类型。
 
 `last_verified_version` 是无条件必填的非空字符串；未验证或无版本锚时使用 `unverified`，不得缺省字段。该字段表示内容验证版本，不表示发布状态，统一盖章时序由 `docs-audit` 持有。额外字段不受本契约限制。
 
@@ -214,7 +214,7 @@ bootstrap 生成的种子元数据 `last_verified_version` 初始为 `unverified
 | 6 个脚本 | `scripts/check-frontmatter.mjs`、`check-affected.mjs`、`check-version.mjs`、`prepare-site.mjs`、`prepare-nav.mjs`、`dev-site.mjs`，以及只被这些入口复用的 `scripts/lib/` helper |
 | VitePress | `.vitepress/config.shared.ts`、`config.public.ts`、`config.internal.ts`；`.vitepress/theme/index.ts` 与 `custom.css`，及 Mermaid 渲染组件（设计/流程文档模板要求真实 Mermaid 图，站点必须能渲染）；public 只导航公开内容，internal 导航全部允许内容 |
 | 双首页 | `index.public.md` 与 `index.internal.md`，分别标记 `visibility: public` / `internal`，prepare 时复制为目标站点 `index.md` |
-| standards | `standards/index.md`、`doc-lifecycle.md`、`doc-granularity.md`；5 个模板：`api-template.md`、`database.md`、`feature-design.md`、`ops-runbook.md`、`product-handbook.md`；standards 与写作规范页面的 frontmatter 使用 `doc_type: design` |
+| standards | `standards/index.md`、`doc-lifecycle.md`、`doc-granularity.md` 与 `change-map.yaml` 头部使用 `doc_type: design`；5 个模板 `api-template.md`、`database.md`、`feature-design.md`、`ops-runbook.md`、`product-handbook.md` 作为 internal 页面参与校验，并分别使用目标 `doc_type` `api`、`database`、`design`、`ops`、`product` |
 | 数据文件 | 带顶部元数据（`last_verified_version: unverified`）且 `change_map: {}` 的空 `standards/change-map.yaml`；`.meta/releases.json` 初始含 `latest`、`released`、`verifiedDocs` |
 
 6 个脚本的职责必须保持分离：

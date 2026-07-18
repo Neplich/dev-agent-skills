@@ -28,8 +28,13 @@ All seven fields are unconditionally required.
 
 ## Notes
 
-- `standard` is not a valid `doc_type` value. Standards and writing-guidance pages use
-  `doc_type: design`, following the AI Hub precedent.
+- `standard` is not a valid `doc_type` value. Standards explanation pages
+  (`standards/index.md`, `doc-lifecycle.md`, `doc-granularity.md`, and the
+  `change-map.yaml` header) use `doc_type: design`. Template pages under
+  `standards/templates/` follow the AI Hub precedent and use their target
+  `doc_type` (`api`, `database`, `design`, `ops`, or `product`). Template pages
+  participate in internal-page validation, while their `doc_type` identifies
+  the target page type represented by the template.
 - `last_verified_version` is always required. Use `unverified` when the page
   has not been verified or no version anchor is available.
 - `last_verified_version` records the version against which the page content
