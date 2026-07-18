@@ -12,8 +12,25 @@ last_verified_version: unverified
 
 # 产品手册模板
 
-复制本骨架时将页面 `doc_type` 改为 `product`，并将 `related_code` 指向
-支撑当前能力的真实入口与测试。只陈述已经存在的产品行为。
+只陈述已经存在的产品行为。`related_code` 必须覆盖支撑当前能力的真实入口与
+测试；术语与当前界面和接口保持一致。按用户角色说明权限、限制、失败反馈与
+恢复路径，不写规划中的能力。
+
+<!-- docs-scaffold:start -->
+```md
+---
+title: {{title}}
+visibility: {{visibility}}
+doc_type: {{doc_type}}
+stage: {{stage}}
+owners:
+  - {{owner}}
+related_code:
+  - {{related_code}}
+last_verified_version: unverified
+---
+
+# {{title}}
 
 ## 受众与范围
 
@@ -23,17 +40,11 @@ last_verified_version: unverified
 
 ## 核心概念
 
-定义读者必须理解的对象、角色、状态和约束，术语与当前界面和接口保持
-一致。
+定义读者必须理解的对象、角色、状态和约束。
 
 ## 用户流程
 
-```mermaid
-flowchart LR
-  A[进入功能] --> B[完成配置]
-  B --> C[执行主要任务]
-  C --> D[查看结果]
-```
+用 Mermaid 流程图表达进入功能、完成配置、执行任务和查看结果。
 
 ## 权限、限制与异常
 
@@ -44,3 +55,5 @@ flowchart LR
 - 功能设计：
 - API 或数据说明：
 - 运维说明：
+```
+<!-- docs-scaffold:end -->

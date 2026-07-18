@@ -12,8 +12,25 @@ last_verified_version: unverified
 
 # 运维手册模板
 
-复制本骨架时将页面 `doc_type` 改为 `ops`，并将 `related_code` 指向真实
-部署配置、自动化脚本和健康检查。只保留当前可执行步骤。
+只保留当前可执行步骤。`related_code` 必须覆盖真实部署配置、自动化脚本与健康
+检查；每项操作包含前置条件、明确成功标准和可执行回滚。敏感值只引用安全
+存储位置，不得写入文档。
+
+<!-- docs-scaffold:start -->
+```md
+---
+title: {{title}}
+visibility: {{visibility}}
+doc_type: {{doc_type}}
+stage: {{stage}}
+owners:
+  - {{owner}}
+related_code:
+  - {{related_code}}
+last_verified_version: unverified
+---
+
+# {{title}}
 
 ## 服务与适用范围
 
@@ -23,8 +40,7 @@ last_verified_version: unverified
 
 ## 前置条件
 
-列出所需版本、权限、配置、备份和外部依赖。敏感值只引用安全存储位置，
-不得写入文档。
+列出所需版本、权限、配置、备份和外部依赖。
 
 ## 执行步骤
 
@@ -34,7 +50,7 @@ last_verified_version: unverified
 
 ## 检查点与观测
 
-记录可复现的接口、日志、指标、作业或数据检查，以及明确的成功标准。
+记录可复现的接口、日志、指标、作业或数据检查及成功标准。
 
 ## 回滚与故障处理
 
@@ -42,3 +58,5 @@ last_verified_version: unverified
 - 回滚步骤：
 - 回滚后验证：
 - 常见症状与诊断入口：
+```
+<!-- docs-scaffold:end -->

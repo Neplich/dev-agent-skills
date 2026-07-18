@@ -12,8 +12,25 @@ last_verified_version: unverified
 
 # 数据库文档模板
 
-复制本骨架时将页面 `doc_type` 改为 `database`，并将 `related_code` 指向
-真实 schema、迁移与关键数据访问代码。只描述最新 schema 当前状态。
+只描述最新 schema 当前状态。`related_code` 必须覆盖真实 schema、迁移与关键
+数据访问代码；记录真实索引、外键、逻辑引用和删除策略，不存在物理外键时
+明确逻辑约束位置。历史迁移过程不混入当前字段定义。
+
+<!-- docs-scaffold:start -->
+```md
+---
+title: {{title}}
+visibility: {{visibility}}
+doc_type: {{doc_type}}
+stage: {{stage}}
+owners:
+  - {{owner}}
+related_code:
+  - {{related_code}}
+last_verified_version: unverified
+---
+
+# {{title}}
 
 ## 范围与所有权
 
@@ -23,10 +40,7 @@ last_verified_version: unverified
 
 ## 实体关系
 
-```mermaid
-erDiagram
-  ENTITY_A ||--o{ ENTITY_B : contains
-```
+用 Mermaid ER 图记录当前实体关系。
 
 ## 表与字段
 
@@ -36,10 +50,10 @@ erDiagram
 
 ## 索引与关系
 
-记录真实索引、外键、逻辑引用、删除策略和查询依赖。不存在物理外键时应
-明确逻辑约束所在位置。
+记录真实索引、外键、逻辑引用、删除策略和查询依赖。
 
 ## 数据生命周期
 
-说明创建、更新、归档、删除、敏感字段保护和必要迁移边界。历史迁移过程
-放在迁移说明，不混入当前字段定义。
+说明创建、更新、归档、删除、敏感字段保护和必要迁移边界。
+```
+<!-- docs-scaffold:end -->

@@ -12,8 +12,25 @@ last_verified_version: unverified
 
 # 功能设计模板
 
-复制本骨架时将页面 `doc_type` 改为 `design`，并将 `related_code` 指向
-真实模块和测试。页面表达当前稳定设计，不保留方案讨论或实施日记。
+页面表达当前稳定设计，不保留方案讨论或实施日记。`related_code` 必须覆盖真实
+模块和测试；链接权威 API 与数据库页面，不重复完整 contract。结构、流程、
+错误与安全边界都应能回到代码或测试证据。
+
+<!-- docs-scaffold:start -->
+```md
+---
+title: {{title}}
+visibility: {{visibility}}
+doc_type: {{doc_type}}
+stage: {{stage}}
+owners:
+  - {{owner}}
+related_code:
+  - {{related_code}}
+last_verified_version: unverified
+---
+
+# {{title}}
 
 ## 能力与边界
 
@@ -27,19 +44,14 @@ last_verified_version: unverified
 
 ## 核心流程
 
-```mermaid
-flowchart LR
-  A[调用方] --> B[入口]
-  B --> C[核心模块]
-  C --> D[稳定输出]
-```
+用 Mermaid 流程图表达调用方、入口、核心模块与稳定输出。
 
 ## 数据、接口与配置
 
-链接权威 API 和数据库页面，说明本模块直接拥有的状态、配置和兼容边界，
-不要重复完整 contract。
+说明本模块直接拥有的状态、配置和兼容边界，并链接权威 contract。
 
 ## 错误、安全与验收
 
-记录权限、敏感信息、失败归因、超时或重试边界，以及可以防回归的关键
-测试场景。
+记录权限、敏感信息、失败归因、超时或重试边界和防回归测试。
+```
+<!-- docs-scaffold:end -->
