@@ -38,33 +38,34 @@ scaffold described in `_internal/INSTRUCTIONS.md`.
 ## Idempotency and Conflict Gate
 
 Build the complete target inventory and establish
-`docs/site/.meta/bootstrap-manifest.json` before applying template files. For
+`docs/site/.meta/bootstrap-manifest.json` before applying asset files. For
 every target path:
 
 - create it when it does not exist and record `created`;
-- skip it when its content is identical to the embedded template and record
+- skip it when its content is byte-identical to the corresponding asset and record
   `skipped-identical`;
 - if it differs, report it in the complete conflict list and stop before
   overwriting that file; never preserve a conflict silently.
 
 For each conflict, require the user to choose overwrite, explicit merge, or
 keep the existing file. A keep decision records `kept-as-is` in the manifest;
-later runs must skip template-equality enforcement for that exact path. An
+later runs must skip asset-equality enforcement for that exact path. An
 existing `kept-as-is` record is not permission to overwrite or normalize the
 file.
 
 Do not partially overwrite conflicting files before the user resolves them.
 Non-conflicting new files may be generated within the already confirmed
 bootstrap scope. Repeated execution must produce zero content changes when the
-templates and manifest decisions are unchanged, and must never reset an
+assets and manifest decisions are unchanged, and must never reset an
 existing change map, release metadata, or formal documentation page.
 
 ## Execution Source
 
 The authoritative path inventory, manifest state transitions, write order,
-read-back checks, and complete embedded template text live in
-`_internal/INSTRUCTIONS.md`. Load that single instruction entry only after the
-entry and opt-in gates pass. Render its templates exactly except for explicit
+asset-to-host mapping, and read-back checks live in `_internal/INSTRUCTIONS.md`.
+Static host output lives under `assets/docs/site/**` with the same relative
+paths as host `docs/site/**`. Load the internal entry only after the entry and
+opt-in gates pass, then copy asset bytes exactly except for explicit
 user-approved conflict resolution; do not fetch scaffold files from another
 repository.
 
