@@ -12,4 +12,5 @@ last_verified_version: unverified
 
 # Catalog Status API
 
-`GET /catalog/status` returns status 200 with `{"status": "ready"}`.
+`GET /catalog/status` requires a service token, returns status 200 with
+`{"status": "ready"}`, and returns a 401 `unauthorized` error without one.

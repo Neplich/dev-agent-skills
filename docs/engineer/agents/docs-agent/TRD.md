@@ -1,7 +1,7 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.5.0"
+version: "0.5.1"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -18,6 +18,9 @@ related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/117"
   - "https://github.com/Neplich/dev-agent-skills/issues/118"
 changelog:
+  - version: "0.5.1"
+    date: "2026-07-19"
+    changes: "PR #128 A6 增加盖章 commit 相对审计 target_ref 的差异收敛校验"
   - version: "0.5.0"
     date: "2026-07-19"
     changes: "PR #128 A5 将 post-tag 内容绑定收紧为严格 tree equality，并统一版本事实规范化比较"
@@ -326,7 +329,7 @@ docs-audit 使用同一份维护者确认的目标版本事实执行 tag 前和 
 
 #### Pre-tag audit
 
-Pre-tag audit 在 release PR 阶段按以下九步执行：
+Pre-tag audit 在 release PR 阶段按以下十步执行：
 
 1. 确认 `base_ref`、`target_ref` 和维护者已确认的 `target_release_version`。
 2. 基于 `base_ref..target_ref` 圈定完整受影响页面集合；默认使用两点端点差异，只有调用方显式要求 merge-base 语义时才使用三点形式并在报告注明。
@@ -336,9 +339,10 @@ Pre-tag audit 在 release PR 阶段按以下九步执行：
 6. 只有统一盖章集合全部为 `verified`，才允许把集合内全部页面的 `last_verified_version` 一次性统一更新为 `target_release_version`；其中 Release Notes 等 release surface 不得因未由代码 diff 命中而漏盖章。
 7. 即使同名 tag 尚不存在，也允许完成本次统一盖章。
 8. 逐页回读证明完整盖章后，对统一盖章集合每张页面的章后精确字节，以及版本索引、`.meta/releases.json`、文件化 #116 handoff 和宿主版本事实文件等其他版本面计算 SHA-256，并把盖章页面清单、逐页章前/章后 `last_verified_version`、逐页章后内容哈希、所有版本面路径与哈希、审计 `target_ref` commit、最终 `ready_for_tag` 和结果时间写入同一 pre-tag 持久化记录。
-9. 将统一盖章与上述审计记录更新作为宿主 release PR 分支上的一个普通“盖章后 commit”提交；二者必须处于同一 commit，不得只停留在工作区。Git 创建该 commit 后，由可信 pre-tag handoff 持久化其完整 commit SHA、Git tree hash、记录路径与记录 blob hash，提交内记录保留各页章后内容哈希；记录不得自包含其所在 commit/tree identity，以避免 Git 哈希自引用。工作区状态不得作为记录锚点。通过 `git show <盖章后SHA>:<记录路径>` 回读并核对 blob、commit 与 tree 证据后才返回 `ready_for_tag`，且该状态只表示 tag 前文档审计通过，不得表述为“已发布”。
+9. 在创建 commit 前，先对审计 `target_ref` 与完整 staged candidate 做差异收敛预检，并把候选差异文件清单与结论写入审计记录后重新 stage。授权白名单只有：统一盖章集合页面和本轮已验证的 release 版本面 Markdown 页面，且其内容差异只能是 `last_verified_version` 字段行；以及审计记录文件本身。任何白名单外路径，或白名单内 Markdown 页面除盖章字段行之外的内容差异，均属于未审计差异；提交前已经 staged 的无关内容同样不得豁免。
+10. 将统一盖章与上述审计记录更新作为宿主 release PR 分支上的一个普通“盖章后 commit”提交；二者必须处于同一 commit，不得只停留在工作区。Git 创建该 commit 后，必须执行 `git diff --name-only <target_ref-commit> <盖章后SHA>` 并逐文件核对完整内容差异，确认实际 commit 差异与记录内文件清单一致且只含第 9 步授权变化；任何越界路径或内容均返回 `blocked`，报告列出具体差异，不得建立可信 `ready_for_tag` handoff。校验通过后，由可信 pre-tag handoff 持久化完整 commit SHA、Git tree hash、记录路径与记录 blob hash，提交内记录保留各页章后内容哈希与差异收敛清单/结论；记录不得自包含其所在 commit/tree identity，以避免 Git 哈希自引用。工作区状态不得作为记录锚点。通过 `git show <盖章后SHA>:<记录路径>` 回读并核对 blob、commit、tree 与差异收敛证据后才返回 `ready_for_tag`，且该状态只表示 tag 前文档审计通过，不得表述为“已发布”。
 
-以下六类情况必须返回 `blocked` 且不得盖章：
+以下七类情况必须返回 `blocked` 且不得返回 `ready_for_tag`；在统一写入前发现时必须零盖章，只有 commit 创建后才能发现的差异收敛失败不得建立可信成功 handoff，并须持久化 blocked 差异证据：
 
 - 缺少 `target_release_version`；
 - 目标版本来自分支名、`target_ref` 或其他上下文推测；
@@ -346,9 +350,10 @@ Pre-tag audit 在 release PR 阶段按以下九步执行：
 - 目标版本未获得维护者确认；
 - 受影响页面存在 `stale`、`mismatch`、`unverified` 或证据不足；
 - Release Notes、版本索引、release metadata 或宿主版本事实与目标版本不一致。
+- 盖章后 commit 相对审计 `target_ref` 出现白名单外路径，或授权 Markdown 页面出现 `last_verified_version` 字段行之外的内容差异。
 
 不允许只对 `verified` 子集局部盖章。`target_release_version` 在审计完成后变化时，已有 `ready_for_tag` 立即失效，必须以新目标版本重新执行完整 pre-tag audit。
-统一盖章、逐页回读、内容哈希、审计记录更新、盖章后 commit 创建、commit/tree 锚定或记录回读任一步失败时返回 `blocked`；失败记录不得写入成功盖章结论、`ready_for_tag` 或成功时间。
+统一盖章、逐页回读、内容哈希、审计记录更新、盖章后 commit 创建、差异收敛、commit/tree 锚定或记录回读任一步失败时返回 `blocked`；差异收敛的文件清单、越界路径/内容和结论必须持久化到审计记录，失败记录不得写入成功盖章结论、`ready_for_tag` 或成功时间。
 
 #### Post-tag audit
 
@@ -392,7 +397,7 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 | `stale` | 映射命中且事实层确认声明已与当前代码不同步，或 frontmatter 字段无效；旧 `last_verified_version` 只降低信任并扩大核对，由统一盖章步骤推进，不构成 stale | blocked，先同步文档 |
 | `mismatch` | 文档声明与代码事实直接冲突 | blocked，先确认修文档还是修代码 |
 
-Pre-tag 报告写入 `docs/site/.meta/audit/audit-{target_release_version}.md`，包含审计阶段、`base_ref`、`target_ref`、`target_release_version`、changed files、命中的 change-map、统一盖章页面集合、逐文档盖章前 `last_verified_version` 与当前证据、三态结论、阻塞项和复核命令；`.meta/` 报告不需要标准 frontmatter。统一盖章与逐页回读成功后，必须把统一盖章页面清单、逐页章前/章后 `last_verified_version`、逐页章后精确字节 SHA-256、版本索引/`.meta/releases.json`/#116 handoff/宿主版本事实文件等其他版本面路径与 SHA-256、审计 `target_ref` commit、`ready_for_tag` 与结果时间写入同一记录；统一盖章与记录更新必须作为宿主 release PR 分支上的一个普通盖章后 commit 提交，随后由可信 pre-tag handoff 持久化 commit SHA、tree hash、记录路径与 blob hash，工作区不可作为记录锚点，失败路径不得写成功结论。缺少维护者确认的 `target_release_version` 时只可返回 blocked 诊断，不得以短 SHA 或 `unknown` 伪造版本审计记录。Post-tag 必须通过 `git show <盖章后SHA>:<记录路径>` 读取锚定 commit 内的记录并核对 blob；当前副本不一致时报告差异并以提交版为准。实际 tag commit tree hash 必须严格等于 handoff 锚定的盖章后 tree hash；tree 不等时不允许以逐项文件哈希降级放行，无论未审计差异还是已审计文件漂移均 blocked，并报告差异摘要及“宿主删/移错误 tag 后，以实际待发布内容为新 `target_ref` 同版本完整重跑并 supersede 旧记录”或“确认新版本并以实际待发布内容为新 `target_ref` 完整重跑”两条维护者救济路径。所有版本事实按来源合法形态解析为同一 SemVer 后比较；形态非法、解析失败或规范化后不等均 blocked。docs-audit 不执行 tag 操作。只有统一盖章集合全部 `verified` 时才盖章；部分 verified 不局部盖章。`.meta/releases.json` 只参与一致性验证，docs-audit 不创建或维护其内容。
+Pre-tag 报告写入 `docs/site/.meta/audit/audit-{target_release_version}.md`，包含审计阶段、`base_ref`、`target_ref`、`target_release_version`、changed files、命中的 change-map、统一盖章页面集合、逐文档盖章前 `last_verified_version` 与当前证据、三态结论、阻塞项和复核命令；`.meta/` 报告不需要标准 frontmatter。统一盖章与逐页回读成功后，必须把统一盖章页面清单、逐页章前/章后 `last_verified_version`、逐页章后精确字节 SHA-256、版本索引/`.meta/releases.json`/#116 handoff/宿主版本事实文件等其他版本面路径与 SHA-256、审计 `target_ref` commit、`ready_for_tag` 与结果时间写入同一记录；统一盖章与记录更新必须作为宿主 release PR 分支上的一个普通盖章后 commit 提交。返回 `ready_for_tag` 前必须用 `git diff --name-only` 加逐文件内容 diff 核对审计 `target_ref` 与盖章后 commit 的完整差异；只授权审计记录文件，以及统一盖章页/已验证 release Markdown 页的 `last_verified_version` 字段行变化。差异文件清单、逐文件授权结论和总体收敛结论必须写入同一审计记录；任何其他路径或内容（包括提交前已 staged 的无关内容）均 blocked 并列出越界差异。校验通过后由可信 pre-tag handoff 持久化 commit SHA、tree hash、记录路径与 blob hash，工作区不可作为记录锚点，失败路径不得写成功结论。缺少维护者确认的 `target_release_version` 时只可返回 blocked 诊断，不得以短 SHA 或 `unknown` 伪造版本审计记录。Post-tag 必须通过 `git show <盖章后SHA>:<记录路径>` 读取锚定 commit 内的记录并核对 blob；当前副本不一致时报告差异并以提交版为准。实际 tag commit tree hash 必须严格等于 handoff 锚定的盖章后 tree hash；tree 不等时不允许以逐项文件哈希降级放行，无论未审计差异还是已审计文件漂移均 blocked，并报告差异摘要及“宿主删/移错误 tag 后，以实际待发布内容为新 `target_ref` 同版本完整重跑并 supersede 旧记录”或“确认新版本并以实际待发布内容为新 `target_ref` 完整重跑”两条维护者救济路径。所有版本事实按来源合法形态解析为同一 SemVer 后比较；形态非法、解析失败或规范化后不等均 blocked。docs-audit 不执行 tag 操作。只有统一盖章集合全部 `verified` 时才盖章；部分 verified 不局部盖章。`.meta/releases.json` 只参与一致性验证，docs-audit 不创建或维护其内容。
 
 ## 8. 消费契约设计
 

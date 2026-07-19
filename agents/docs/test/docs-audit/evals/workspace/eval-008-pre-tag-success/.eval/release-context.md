@@ -37,3 +37,8 @@ trusted pre-tag handoff anchors the committed record with commit SHA, tree hash,
 record path, and record blob hash; the record does not self-contain its commit
 or tree identity. Working-tree state is not an anchor. The source-specific `v`
 prefix difference is valid and must be normalized before equality comparison.
+Before returning `ready_for_tag`, the full `target_ref` to post-stamp commit
+file inventory and every file's content diff contain only the audit record and
+the four unified-stamp pages; each page changes only its
+`last_verified_version` field line. The audit record persists this inventory
+and a passed convergence conclusion.

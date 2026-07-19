@@ -257,7 +257,15 @@ Run the pre-tag protocol in this order:
    stamp result: unified-stamp page list, each page's pre-stamp and post-stamp
    `last_verified_version`, post-stamp page hashes, other release-surface
    hashes, audited `target_ref`, final `ready_for_tag`, and result time.
-10. Stage the complete unified-stamp set and that successful audit-record update
+10. Before commit creation, compare the complete staged candidate against the
+    resolved audited `target_ref`. Authorize only the unified-stamp pages and
+    verified Markdown release-version surfaces, whose content diff may change
+    only the `last_verified_version` field line, plus the audit record path
+    itself. Persist the candidate difference file list and convergence result
+    in the audit record, then stage that final record. Any other path, or any
+    other content hunk in an authorized Markdown page, is an unaudited delta;
+    this includes unrelated content that was already staged before the audit.
+11. Stage the complete unified-stamp set and that successful audit-record update
     together and create one ordinary commit on the host release PR branch (the
     **post-stamp commit**). The stamp and successful record must be introduced
     by that same commit, not left only in the working tree or split across
@@ -267,11 +275,20 @@ Run the pre-tag protocol in this order:
     must contain every unified-stamp page's post-stamp content hash; it cannot
     self-contain its own commit or tree identity. Read the record back from the
     anchored commit with `git show <post-stamp-commit>:<record-path>`, verify its
-    blob hash and the handoff's commit/tree anchor, and only then return
-    `ready_for_tag`. A working-tree state is never a valid anchor. This means
-    ready for tag creation, never already published or released.
+    blob hash and the handoff's commit/tree anchor. Before returning
+    `ready_for_tag`, compute `git diff --name-only <target-ref-commit>
+    <post-stamp-commit>` and inspect the complete content diff for every listed
+    file. The actual commit diff must match the persisted convergence inventory
+    and the same authorization rules from step 10. Any out-of-scope path or
+    non-`last_verified_version` change in an authorized page returns `blocked`
+    and is listed in the report; do not create a trusted ready handoff. A
+    working-tree state is never a valid anchor. This means ready for tag
+    creation, never already published or released.
 
-Return `blocked` with no stamp when any of the following is true:
+Return `blocked` and do not return `ready_for_tag` when any of the following is
+true. Failures detected before the unified write must leave every page
+unstamped; a convergence failure detected only after commit creation leaves no
+trusted successful handoff and must persist the blocked difference evidence:
 
 - `target_release_version` is missing;
 - the target version was inferred from a branch name, `target_ref`, or context;
@@ -281,7 +298,9 @@ Return `blocked` with no stamp when any of the following is true:
   review, or lacks sufficient evidence; or
 - Release Notes, the version index, release metadata, or host version facts
   violate their required source form, are not valid SemVer, or do not equal
-  `target_release_version` after normalization.
+  `target_release_version` after normalization; or
+- the post-stamp commit differs from the audited `target_ref` outside the audit
+  record and authorized `last_verified_version` field-line changes.
 
 Here, “remains unverified” is a factual verification outcome caused by missing
 evidence; the valid frontmatter value `last_verified_version: unverified` does
@@ -291,9 +310,11 @@ Never stamp only a `verified` subset. If `target_release_version` changes after
 the audit, the report, unified stamp conclusion, and `ready_for_tag` result are
 immediately invalid; rerun the complete pre-tag audit for the new value.
 If stamping, page read-back, hashing, atomic record replacement, post-stamp
-commit creation, or committed-record read-back fails, return `blocked`. The persisted record may retain
-diagnostic or pre-stamp evidence, but it must not contain a successful stamp
-conclusion, `ready_for_tag`, or a success time.
+commit creation, commit-difference convergence, or committed-record read-back
+fails, return `blocked`. Persist the difference inventory, out-of-scope paths
+or content hunks, and blocked conclusion in the audit record. The record may
+retain diagnostic or pre-stamp evidence, but it must not contain a successful
+stamp conclusion, `ready_for_tag`, or a success time.
 
 ### Final page status
 
@@ -352,6 +373,9 @@ Include at least:
 - Record path: <repository-relative audit record path committed with the stamp>
 - Stamped pages: <path, pre-stamp last_verified_version, post-stamp last_verified_version, post-stamp SHA-256>
 - Release-surface content evidence: <surface, path, post-stamp SHA-256>
+- Post-stamp convergence: <target_ref to post-stamp commit file inventory,
+  authorized category, per-file content-diff result, out-of-scope differences,
+  and passed or blocked conclusion>
 - Stamp read-back: <complete / failed>
 - Committed record read-back: <git show from post-stamp commit complete / failed>
 - Ready result time: <timestamp written only on success>
@@ -397,7 +421,13 @@ Then, in one audit operation:
   post-stamp commit on the host release PR branch, then verify the committed
   record and persist the trusted handoff tuple `(post-stamp commit SHA, tree
   hash, record path, record blob hash)`. Do not use an uncommitted working tree
-  as the successful record anchor.
+  as the successful record anchor; and
+- before returning `ready_for_tag`, compare the full `target_ref` to
+  post-stamp-commit file inventory and every content diff. Permit only the
+  audit record plus `last_verified_version` field-line changes in unified-stamp
+  or verified Markdown release-version pages. Persist the inventory and
+  convergence conclusion in the audit record. Any other path or hunk,
+  including unrelated content staged before commit creation, is `blocked`.
 
 Do not stamp a verified subset when another page is `stale`, `mismatch`, or
 blocked by `unverified` or missing evidence. The matching tag is not required

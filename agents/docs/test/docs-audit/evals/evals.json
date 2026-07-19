@@ -110,8 +110,8 @@
       "id": "eval-008-pre-tag-success",
       "name": "Tag 前完整核验并统一盖章",
       "description": "验证维护者已确认 target_release_version、匹配 tag 尚不存在且完整影响域和版本表面均 verified 时统一盖章并返回 ready_for_tag。",
-      "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已明确确认 `target_release_version: v1.2.0`，`base_ref: v1.1.0`、`target_ref: release-head`，且同名 tag 尚不存在。核对完整受影响页面、#116 handoff、Release Notes、索引、`.meta/releases.json` 和宿主版本事实；全部通过后，把受影响页面与本次 verified 且含 `last_verified_version` 的 Release Notes/索引 Markdown 组成统一盖章集，逐页回读，并将完整盖章与成功审计记录放入宿主 release PR 分支上的同一个普通盖章后 commit。",
-      "expected_output": "完整影响域和 release surface 全部 verified；带 v 的目标版本、Release Notes/索引/releases.json 与无 v 的 package.json 先按来源校验并规范化为同一 SemVer；两张 API 页、Release Notes 页及其 Markdown 索引统一盖章为 v1.2.0 并回读；成功记录与这些盖章由同一普通盖章后 commit 引入，可信 pre-tag handoff 以 commit SHA/tree hash/记录路径/blob hash 锚定提交版记录，记录含各页章后内容哈希；只读核对 releases.json，返回 ready_for_tag 且明确不表示已发布。",
+      "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已明确确认 `target_release_version: v1.2.0`，`base_ref: v1.1.0`、`target_ref: release-head`，且同名 tag 尚不存在。核对完整受影响页面、#116 handoff、Release Notes、索引、`.meta/releases.json` 和宿主版本事实；全部通过后，把受影响页面与本次 verified 且含 `last_verified_version` 的 Release Notes/索引 Markdown 组成统一盖章集，逐页回读，并将完整盖章与成功审计记录放入宿主 release PR 分支上的同一个普通盖章后 commit；返回 ready_for_tag 前记录并核对 target_ref 到该 commit 的完整差异只含授权盖章字段与审计记录。",
+      "expected_output": "完整影响域和 release surface 全部 verified；带 v 的目标版本、Release Notes/索引/releases.json 与无 v 的 package.json 先按来源校验并规范化为同一 SemVer；两张 API 页、Release Notes 页及其 Markdown 索引统一盖章为 v1.2.0 并回读；成功记录与这些盖章由同一普通盖章后 commit 引入，可信 pre-tag handoff 以 commit SHA/tree hash/记录路径/blob hash 锚定提交版记录；记录含各页章后内容哈希，以及 target_ref 到盖章后 commit 的完整差异文件清单与收敛通过结论；只读核对 releases.json，返回 ready_for_tag 且明确不表示已发布。",
       "workspace": "workspace/eval-008-pre-tag-success",
       "assertions": [
         {"id": "accepts_confirmed_version_without_tag", "description": "tag 不存在仍可执行 pre-tag", "text": "分别记录 `base_ref`、`target_ref` 和维护者确认的 `target_release_version: v1.2.0`；不因同名 tag 尚不存在而阻塞。"},
@@ -121,21 +121,22 @@
         {"id": "stamps_complete_set_atomically", "description": "受影响页与 release Markdown 统一盖章", "text": "只在所有条件通过后，将两张受影响 API 页面、`docs/site/release-notes/v1.2.0.md` 和 `docs/site/release-notes/index.md` 的 `last_verified_version` 在一次审计操作中统一更新为 `v1.2.0` 并回读核对；不修改 `.meta/releases.json`。"},
         {"id": "commits_stamp_and_record_together", "description": "盖章与成功记录落同一普通 commit", "text": "完整统一盖章集与成功 `audit-v1.2.0.md` 由宿主 release PR 分支上的同一个普通盖章后 commit 引入；不得只锚定工作区，也不得把盖章和记录拆到不同 commit。"},
         {"id": "persists_stamp_and_content_evidence", "description": "可信 handoff 锚定提交版记录与内容证据", "text": "成功记录从盖章后 commit 回读，包含四张统一盖章页面清单、各自章前/章后 `last_verified_version` 与章后精确字节 SHA-256，其他版本面路径和 SHA-256、审计 `target_ref` commit、最终 `ready_for_tag` 与结果时间；commit 创建后，可信 pre-tag handoff 持久化盖章后 commit SHA、tree hash、记录路径和 blob hash。记录不得自包含其所在 commit/tree identity，任一步失败不得写成功结论。"},
+        {"id": "records_post_stamp_diff_convergence", "description": "记录盖章 commit 差异收敛通过证据", "text": "返回 `ready_for_tag` 前使用 `git diff --name-only` 与逐文件内容 diff 核对审计 `target_ref` 到盖章后 commit 的完整差异；成功记录持久化差异文件清单和通过结论，并证明除审计记录外，四张授权 Markdown 页面都只改动 `last_verified_version` 字段行。"},
         {"id": "returns_ready_for_tag_not_published", "description": "返回正确阶段状态", "text": "pre-tag 结果为 `ready_for_tag`，并明确该状态只表示可创建 tag，不表示版本已经发布或 release verified。"}
       ]
     },
     {
       "id": "eval-009-pre-tag-blocked",
-      "name": "Tag 前缺少明确版本且存在 stale 页面",
-      "description": "验证 target_release_version 缺失且只能从分支名猜测时立即 blocked；fixture 同时含 verified/stale 混合集合，必须零盖章。",
-      "prompt": "执行 fixture 中请求的 pre-tag audit。`base_ref` 与 `target_ref` 已确认，但维护者没有提供 `target_release_version`；分支名含 `release/v1.2.0` 只能作为上下文，不能当作目标版本。fixture 还包含一张准确页面和一张过期页面。请按入口 gate 处理，不要修复或局部盖章。",
-      "expected_output": "因目标版本缺失且分支名推测无效而 blocked，不持久化版本化报告、不盖章；不得给看似 verified 的子集局部盖章。",
+      "name": "Tag 前盖章 commit 混入无关 staged 文件",
+      "description": "验证版本与事实层均通过但盖章 commit 混入 target_ref 外的 staged 源码时，差异收敛校验 blocked 且不得返回 ready_for_tag。",
+      "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已确认 `target_release_version: v1.2.0`，完整影响域和版本表面均可验证，但提交前已有无关的 `src/catalog/debug-trace.txt` 变更被 staged，并随统一盖章和审计记录进入盖章后 commit。必须核对 `target_ref` 到该 commit 的完整文件清单和逐文件内容差异。",
+      "expected_output": "识别盖章后 commit 含白名单外 staged 源码路径，持久化差异清单与越界结论并返回 blocked；不得返回 ready_for_tag 或建立可信成功 handoff。",
       "workspace": "workspace/eval-009-pre-tag-blocked",
       "assertions": [
-        {"id": "rejects_missing_target_release_version", "description": "缺少目标版本阻塞", "text": "明确指出维护者未确认 `target_release_version`，pre-tag 结果为 `blocked`。"},
-        {"id": "rejects_branch_name_inference", "description": "拒绝从分支推测", "text": "不把 `release/v1.2.0`、`target_ref` 或其他上下文推测为目标版本，也不接受 inferred version。"},
-        {"id": "writes_no_versioned_report", "description": "入口阻塞不持久化报告", "text": "入口 gate 未通过时不创建 `.meta/audit/audit-*.md`，仅可返回只读诊断与补充维护者确认的待办。"},
-        {"id": "stamps_nothing_when_blocked", "description": "阻塞时零盖章", "text": "两张页面均保持原 `last_verified_version`，不得只给看似 verified 的 catalog-items 页面局部盖章；`.meta/releases.json` 也保持只读。"}
+        {"id": "audits_valid_pre_tag_inputs", "description": "入口与事实层本可通过", "text": "分别记录已确认的 `base_ref`、`target_ref` 和 `target_release_version: v1.2.0`，并确认影响页面、Release Notes、索引、`.meta/releases.json` 与 package 版本事实均可通过核验。"},
+        {"id": "detects_unrelated_staged_path", "description": "发现白名单外 staged 源码", "text": "通过 `git diff --name-only` 和逐文件内容 diff 识别 `src/catalog/debug-trace.txt` 出现在审计 `target_ref` 到盖章后 commit 的差异中；该路径不属于统一盖章页、release Markdown 页或审计记录。"},
+        {"id": "persists_blocked_convergence_evidence", "description": "持久化越界差异与 blocked 结论", "text": "`audit-v1.2.0.md` 持久化 target_ref 到盖章后 commit 的完整差异文件清单、逐文件授权判断、越界源码路径和 `blocked` 结论。"},
+        {"id": "withholds_ready_for_tag", "description": "越界 commit 不返回 ready_for_tag", "text": "即使统一盖章和事实核验已完成，也不得返回 `ready_for_tag`、写入成功时间或建立可信成功 handoff；结论保持 `blocked`。"}
       ]
     },
     {

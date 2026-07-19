@@ -1,0 +1,7 @@
+diff --git a/src/catalog/debug-trace.txt b/src/catalog/debug-trace.txt
+index 6666666..7777777 100644
+--- a/src/catalog/debug-trace.txt
++++ b/src/catalog/debug-trace.txt
+@@
+-TRACE disabled
++TRACE verbose
