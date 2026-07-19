@@ -1,123 +1,60 @@
 ---
 name: formal-docs-sync
-description: "Internal documentation specialist—not a direct entry point. Invoked by docs-agent to synchronize confirmed feature, deployment, and release facts or backfill current-state formal API documentation."
+description: "Internal documentation specialist—not a direct entry point. Invoked by docs-agent to synchronize current-state API, database, design, ops, and product docs from confirmed feature, deployment, release, or bounded backfill evidence."
 visibility: internal
 ---
 
 # Formal Docs Sync
 
-Synchronizes a host project's formal documentation from confirmed process
-context and current system evidence. This file owns the entry and execution
-gates that apply immediately; load `_internal/INSTRUCTIONS.md` only after the
-mode and entry basis are resolved.
+Synchronizes confirmed current-state facts into a host project's existing
+formal documentation site. This file owns only the entry gate and mode
+selection. After they pass, load `_internal/INSTRUCTIONS.md`; that entry tells
+you which single type module to load for each target page.
 
-## PM Handoff Entry Gate
+## Entry Gate
 
-Require a PM handoff packet or an equivalent confirmed entry basis for the
-selected mode. The PM packet definition lives in
+Require a PM handoff packet or an equivalent confirmed entry basis for exactly
+one mode. The PM packet definition lives in
 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
-Direct invocation does not bypass the mode-specific gate.
+Direct invocation does not waive this gate.
 
-- **Feature delivery:** require an Approved PRD, a Confirmed TRD with impact
-  evidence, a confirmed `IMPLEMENTATION_PLAN.md`, and the actual diff and test
-  evidence.
+- **Feature delivery:** require an Approved PRD, a Confirmed TRD with traceable
+  impact scope, a confirmed `IMPLEMENTATION_PLAN.md`, the actual diff, and
+  required test results. Feature-level design pages additionally require the
+  existing design closeout gate described in `_internal/INSTRUCTIONS.md`.
 - **Deployment verification:** require confirmed deployment scope, the TRD
   deployment surface, deployment configuration, verification commands and
   results, and known environment differences.
-- **Release:** require confirmed release scope, a verified version or tag,
-  changelog and release-process evidence, and the documentation audit
-  conclusion. Versioned pages under `docs/site/release-notes/` are owned by
-  `docs-agent:release-notes-generator`; this skill only verifies their
-  placement and version context. GitHub Release bodies and operations remain
-  with `pm-agent:release-notes-generator` until issue #120 changes that
-  ownership.
-- **Existing-system backfill:** accept an explicit maintainer backfill request,
-  a confirmed repository target, and either a PM feature catalog or permission
-  to perform the bounded discovery pass. An implementation plan is not required
-  for this mode, but each proposed batch requires maintainer confirmation.
+- **Release:** require confirmed release scope, verified version evidence,
+  changelog and release-process evidence, and audit context. This mode does not
+  own Release Notes.
+- **Existing-system backfill:** require an explicit maintainer request, a
+  confirmed host repository, and a feature catalog or permission for bounded
+  discovery. An implementation plan is not required, but every finite batch
+  requires confirmation.
 
-If the selected mode lacks its basis, stop before writing formal docs, report
-the missing evidence and owner, and return unresolved product or technical
-scope to `pm-agent` or `engineer-agent:trd-gen` as appropriate.
+If the basis is incomplete, stop before writing. Return product ambiguity to
+`pm-agent`, technical-impact gaps to `engineer-agent:trd-gen`, and a missing
+site foundation to `docs-site-bootstrap`; synchronization must not initialize
+the site.
 
-## Modes
+## Mode Selection
 
-| Mode | Purpose | Primary evidence |
-| --- | --- | --- |
-| Feature delivery | Synchronize formal docs after confirmed implementation | PRD, TRD impact scope, confirmed plan, diff, tests |
-| Deployment verification | Synchronize operational facts after deployment validation | TRD deployment surface, configuration, commands, results, environment differences |
-| Release | Reconcile formal product and release context | Release scope, verified version/tag, changelog, release evidence, audit conclusion |
-| Existing-system backfill | Establish a reviewed current-state baseline in bounded batches | Feature catalog or bounded API discovery, code, schemas, handlers, contract tests |
+| Mode | Confirmed synchronization surface |
+| --- | --- |
+| Feature delivery | Affected API, database, design, and product pages, with their change-map entries and only necessary indexes or host-required navigation. |
+| Deployment verification | Current ops, upgrade, and rollback facts, with their change-map entries and only necessary indexes or host-required navigation. |
+| Release | Only affected product and ops pages, reconciled with confirmed version facts. Release Notes body, index, metadata, and navigation belong to `docs-agent:release-notes-generator`. |
+| Existing-system backfill | One maintainer-confirmed finite batch of API, database, design, ops, or product current-state pages. Prefer a feature catalog and existing change map; never expand bounded discovery into full-site generation. |
 
-## MVP Boundary
+The accepted implementation surface is all five formal document types: API,
+database, design, ops, and product. This remains one specialist; do not create
+parallel type-specific skills.
 
-The MVP acceptance surface covers only the API path for feature delivery and
-existing-system backfill: API pages and their API `code_glob` entries in
-`docs/site/standards/change-map.yaml`.
+## Authoritative Execution Pointer
 
-Database, design, operations, release notes, and product manuals remain product
-target scope with documented lifecycle nodes and templates. Do not claim their
-automatic synchronization as an implemented MVP capability. Deployment and
-release modes may assess evidence and report future-target outputs without
-presenting those outputs as accepted MVP automation.
-
-## Authoritative Execution Gates
-
-Before any write:
-
-1. Resolve one mode and verify its node evidence.
-2. Derive a bounded candidate scope from the approved evidence chain. If the
-   technical impact scope cannot be established, stop and return a gap packet
-   to `engineer-agent:trd-gen`.
-3. Present the candidate docs, code globs, evidence sources, exclusions, and
-   unresolved items. Wait for maintainer confirmation of the scope.
-4. For backfill, execute only one confirmed batch at a time and request
-   confirmation again before the next batch.
-5. Apply the latest-state discipline: write every changed page as the stable
-   current state, validate its claims against code or test evidence, apply the
-   default frontmatter contract in
-   `agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md`,
-   and leave new or changed pages unverified for later audit.
-
-The full node protocol, evidence order, batch mechanics, map merge behavior,
-trust model, and output format are authoritative in
-`_internal/INSTRUCTIONS.md`. Load that file after this gate passes; do not
-invent a parallel workflow.
-
-### Design Delivery Closeout Gate
-
-In feature-delivery mode, before proposing any feature-level
-`docs/site/design/**` write, verify all seven closeout conditions for the same
-`feature_path`: Approved PRD, Confirmed TRD with traceable impact scope,
-confirmed implementation plan, fully completed plan scope, code and diff
-coverage, all required tests passing, and the existing candidate-scope
-confirmation. Treat the design page and its design change-map entry as one
-atomic scope; if any condition or its evidence is missing, block with zero
-changes to both.
-
-The authoritative checklist, accepted closeout evidence, blocked output,
-write/read-back rules, and bootstrap/backfill boundaries are in
-`_internal/INSTRUCTIONS.md` under **Design Delivery Closeout Gate**.
-
-## Missing Documentation Site
-
-If `docs/site/` or its standards are absent, do not create them silently.
-Report the missing formal-documentation foundation and offer an explicit
-handoff to `docs-site-bootstrap` before synchronization.
-
-## Output
-
-For an executed scope or batch, report:
-
-- mode and confirmed scope
-- changed formal docs
-- evidence used and verification performed
-- change-map delta
-- unresolved discrepancies or missing evidence
-- coverage and remaining gaps
-- the recommended next node or collaboration owner
-
-At closeout, follow the safety-net behavior in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` and
-wait for confirmation before another role or batch unless the user has already
-enabled the applicable continuation.
+After the gate and mode are resolved, load `_internal/INSTRUCTIONS.md` and
+follow its eight-step host-site contract, mode rules, change-map discipline,
+boundaries, and report shape. For each target type, load only the corresponding
+`_internal/types/<type>/INSTRUCTIONS.md`; do not read the other four type
+modules unless they enter the confirmed scope.
