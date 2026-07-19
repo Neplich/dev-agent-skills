@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-004-route-release-notes",
+  "eval_name": "route-release-notes",
+  "workspace_root": "agents/docs/test/docs-agent/evals/workspace/eval-004-route-release-notes",
+  "skill_availability_goal": "Verify that docs-agent accepts a complete site Release Notes entry basis, preserves the handoff context, and routes only to the new specialist gate.",
+  "prompt": "请根据 `release-handoff.md` 处理 v1.0.0 的站内 Release Notes 请求。只完成 Docs Agent 的入口检查和分流，不执行 specialist 工作。",
+  "fixture_context": ["release-handoff.md"],
+  "execution_cleanup": []
+}

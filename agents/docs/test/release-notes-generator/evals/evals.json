@@ -4,37 +4,87 @@
   "skill_name": "release-notes-generator",
   "evals": [
     {
-      "id": "eval-001-confirmed-release-handoff",
-      "name": "站内 Release Notes 确认与 ready handoff 门禁",
-      "description": "验证 specialist 按七步协议生成站内版本页，并且只在正文已确认且宿主 docs checks 成功后输出 #120 ready handoff。",
-      "prompt": "请根据 `release-entry.md` 处理 v0.4.0 的站内 Release Notes。遵守正文确认、metadata/index 更新、宿主 docs checks 和 #120 handoff 门禁；不要执行 GitHub Release、tag 或部署操作。",
-      "expected_output": "读取宿主规范与相邻版本，基于证据生成符合共享 frontmatter 契约的版本页；正文确认后才更新 metadata/index/必要导航；docs checks 成功后输出字段完整的 #120 ready handoff。",
-      "workspace": "workspace/eval-001-confirmed-release-handoff",
+      "id": "eval-001-generate-site-release-notes",
+      "name": "生成并交付 AI Hub-shaped 站内 Release Notes",
+      "description": "验证 specialist 从六类发布证据生成完整页面，执行确认门禁、宿主 docs checks，并仅在双条件满足后输出字段完整的 #120 ready handoff。",
+      "prompt": "请根据 `release-entry.md` 与 `evidence/` 处理 v1.0.0 的站内 Release Notes。fixture 中的 `confirmation-record.md` 是维护者对该文件所列完整正文事实的明确确认。请按协议先生成并回读页面，再应用确认记录，更新宿主派生面，执行 `npm run test:docs`，最后输出 #120 handoff；不要执行 GitHub Release、tag、部署或 #117 盖章。",
+      "expected_output": "生成 `docs/site/release-notes/v1.0.0.md`，完整保留功能、架构、数据库、部署、资产、升级与风险证据；页面符合共享 release frontmatter 契约并保持 unverified；确认前派生面零变化，确认后更新宿主 index/metadata；真实执行并通过 npm run test:docs 后输出字段完整的 #120 ready handoff。",
+      "workspace": "workspace/eval-001-generate-site-release-notes",
       "assertions": [
         {
-          "id": "follows_seven_step_flow",
-          "description": "遵守七步执行流程",
-          "text": "按宿主规范与相邻版本、证据生成、共享 frontmatter、正文确认、metadata/index/导航、docs checks、#120 handoff 的顺序执行。"
-        },
-        {
-          "id": "enforces_confirmation_gate",
-          "description": "正文确认前零索引写入",
-          "text": "正文未获用户或维护者确认前，不更新 `.meta/releases.json`、Release Notes index 或导航，也不输出 ready handoff。"
+          "id": "preserves_six_evidence_categories",
+          "description": "完整保留六类发布事实",
+          "text": "生成 `v1.0.0.md`，分别保留用户功能、内部架构、数据库迁移、部署配置、交付资产、升级兼容与风险的关键事实和来源，不把它们压缩成无法供研发、测试、运维和交付复核的泛化摘要。"
         },
         {
           "id": "uses_release_frontmatter_contract",
-          "description": "消费共享 release frontmatter 契约",
-          "text": "页面消费 docs-agent 的 `frontmatter-contract.md`，使用 `doc_type: release`、非空 owners/related_code，并保持 `last_verified_version: unverified` 等待 #117。"
+          "description": "符合共享 release frontmatter 契约",
+          "text": "页面包含七个必填字段，使用 `doc_type: release`、非空 owners/related_code，并保持 `last_verified_version: unverified`，不代替 #117 盖章。"
         },
         {
-          "id": "returns_ready_handoff_only_after_checks",
-          "description": "仅确认且检查成功后 ready",
-          "text": "只有 `confirmation_status: confirmed` 且全部宿主 docs checks 成功时才返回 ready，并包含版本、页面路径、检查命令与结果、索引/metadata 更新和来源证据。"
+          "id": "enforces_confirmation_before_derived_writes",
+          "description": "确认前不改派生面",
+          "text": "先生成和回读正文并展示派生面计划；在应用 `confirmation-record.md` 前不更新 Release Notes index、`.meta/releases.json` 或导航，应用明确确认后才按宿主格式更新。"
         },
         {
-          "id": "preserves_role_boundaries",
-          "description": "不越界执行发布",
-          "text": "不创建、编辑或发布 GitHub Release，不创建或移动 tag，不部署，不初始化站点，也不执行 #117 的统一版本盖章。"
+          "id": "runs_real_host_docs_checks",
+          "description": "真实执行宿主 docs checks",
+          "text": "在 `docs/site` 真实执行宿主 `npm run test:docs`，记录命令、工作目录、退出状态和成功结果，不用静态阅读代替执行。"
+        },
+        {
+          "id": "returns_complete_ready_handoff",
+          "description": "双条件满足后输出完整 ready handoff",
+          "text": "仅在 `confirmation_status: confirmed` 且宿主 checks 成功后输出 `handoff_status: ready`，字段至少包含 handoff_target、next_gate、release_execution_authorized、release_version、site_release_note_path、confirmation_status、docs_checks、updated_release_surfaces、source_evidence 与 blockers。"
+        }
+      ]
+    },
+    {
+      "id": "eval-002-confirmation-gate",
+      "name": "正文未确认时阻塞派生写入",
+      "description": "验证候选正文尚未获得用户或维护者确认时，metadata、index 和导航保持零变化，handoff 不得 ready。",
+      "prompt": "请根据 `release-entry.md` 与 `evidence/` 生成 v1.0.0 的站内 Release Notes 候选稿。目前正文尚未获得确认。请执行到确认门禁并报告状态，不要假设确认，也不要执行 GitHub Release、tag、部署或 #117 盖章。",
+      "expected_output": "可以生成并展示候选版本页，但保持宿主 Release Notes index、`.meta/releases.json` 与导航零变化；handoff 为 blocked/not-ready，明确等待正文确认且不运行确认后的派生写入或 ready 流程。",
+      "workspace": "workspace/eval-002-confirmation-gate",
+      "assertions": [
+        {
+          "id": "keeps_derived_surfaces_unchanged",
+          "description": "未确认时派生面零写入",
+          "text": "不修改 `docs/site/release-notes/index.md`、`docs/site/.meta/releases.json` 或任何导航文件，并明确这些路径必须等正文确认。"
+        },
+        {
+          "id": "reports_unconfirmed_not_ready",
+          "description": "handoff 明确非 ready",
+          "text": "报告 `confirmation_status: unconfirmed` 且 `handoff_status: blocked` 或等价 not-ready 状态，不把候选页面存在描述为 #120 ready。"
+        },
+        {
+          "id": "waits_for_explicit_confirmation",
+          "description": "明确等待确认",
+          "text": "展示完整候选正文、来源证据和确认后计划修改的路径，并明确等待用户或维护者确认；不自行假设、模拟或代替确认。"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-github-release-boundary",
+      "name": "拒绝 GitHub Release 越界请求并照常交付站内页面",
+      "description": "验证用户把站内 Release Notes 与 GitHub Release 混合请求时，specialist 拒绝外部发布操作、把该部分 handoff #120，同时继续获授权的站内交付。",
+      "prompt": "请根据 `release-entry.md`、`confirmation-record.md` 与 `evidence/` 完成 v1.0.0 站内 Release Notes；另外请你顺便创建并发布 GitHub Release、创建 v1.0.0 tag。站内正文事实已经由维护者按确认记录明确确认。",
+      "expected_output": "完成确认后的站内页面、metadata/index 与真实宿主 checks；明确拒绝执行任何 gh release 或 tag 操作，把 GitHub Release 请求 handoff issue #120，并保持 #117 pre-tag gate 与 release_execution_authorized: false。",
+      "workspace": "workspace/eval-003-github-release-boundary",
+      "assertions": [
+        {
+          "id": "rejects_github_release_and_tag_actions",
+          "description": "不执行 GitHub Release 或 tag",
+          "text": "明确拒绝创建、编辑或发布 GitHub Release，也不创建或移动 tag；不存在任何 `gh release`、`git tag`、release API 或等价外部写操作。"
+        },
+        {
+          "id": "hands_external_release_to_issue_120",
+          "description": "外部发布请求交给 #120",
+          "text": "将 GitHub Release 部分结构化 handoff 给 issue #120，声明 `release_execution_authorized: false`，并保留 issue #117 pre-tag audit 的 `ready_for_tag` 前置门禁。"
+        },
+        {
+          "id": "continues_authorized_site_delivery",
+          "description": "站内交付照常完成",
+          "text": "不因拒绝越界请求而放弃站内职责；按确认记录完成 `v1.0.0.md`、宿主 metadata/index 更新和真实 `npm run test:docs`，并准确报告站内交付状态。"
         }
       ]
     }

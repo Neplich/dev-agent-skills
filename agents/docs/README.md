@@ -104,8 +104,9 @@ than changing that role's documents.
 Docs Agent relies on peer capabilities that may be packaged as separate
 plugins:
 
-- `pm-agent` for request classification, approved scope, feature catalogs,
-  release notes, and the shared handoff contract
+- `pm-agent` for request classification, approved release scope, feature
+  catalogs, and the shared handoff contract; site Release Notes are owned by
+  this Agent's `release-notes-generator`
 - `engineer-agent` for confirmed TRDs, implementation plans, code evidence, and
   unresolved technical impact scope
 - `qa-agent` for validation evidence

@@ -1,6 +1,6 @@
 ---
 name: release-notes-generator
-description: "Internal documentation specialist—not a direct entry point. Invoked by docs-agent to generate, confirm, index, and validate a host site's versioned Release Notes before the GitHub Release handoff."
+description: "Internal documentation specialist—not the default entry point. Normally invoked by docs-agent to generate, confirm, index, and validate a host site's versioned Release Notes before the GitHub Release handoff."
 visibility: internal
 ---
 
@@ -85,6 +85,8 @@ hoc release or GitHub workflow.
 
 Report:
 
+- accepted entry basis, including the host, confirmed version and release scope,
+  evidence boundary, and any missing entry credential;
 - target release version and site Release Notes path;
 - confirmation status;
 - evidence sources used and unresolved evidence gaps;

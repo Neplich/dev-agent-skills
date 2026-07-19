@@ -130,6 +130,44 @@ def test_default_install_creates_hidden_mirror_and_relative_skill_symlinks(tmp_p
     assert skill_source_rel("release-notes-generator") == Path(
         "agents/docs/skills/release-notes-generator"
     )
+    assert (
+        target
+        / MIRROR_DIR
+        / "agents/product_manager/skills/release-notes-generator/SKILL.md"
+    ).is_file()
+    assert (
+        target / MIRROR_DIR / "agents/docs/skills/release-notes-generator/SKILL.md"
+    ).is_file()
+
+
+def test_duplicate_skill_basename_within_one_plugin_is_rejected(tmp_path: Path) -> None:
+    checkout = tmp_path / "checkout"
+    make_minimal_checkout(checkout)
+    for parent in ("one", "two"):
+        skill = checkout / f"agents/product_manager/{parent}/duplicate"
+        skill.mkdir(parents=True)
+        (skill / "SKILL.md").write_text("---\nname: duplicate\n---\n", encoding="utf-8")
+
+    marketplace_path = checkout / ".claude-plugin/marketplace.json"
+    marketplace = json.loads(marketplace_path.read_text(encoding="utf-8"))
+    marketplace["plugins"][0]["skills"] = ["./one/duplicate", "./two/duplicate"]
+    marketplace_path.write_text(json.dumps(marketplace), encoding="utf-8")
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(checkout / "scripts/install_codex_skills.py"),
+            "--target",
+            str(tmp_path / "skills"),
+        ],
+        cwd=checkout,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "duplicate skill target name 'duplicate' in plugin 'pm-agent'" in result.stderr
 
 
 def test_routers_only_links_only_router_skills_but_keeps_full_hidden_mirror(tmp_path: Path) -> None:

@@ -34,7 +34,7 @@
     "release-notes-generator": {
       "source": "agents/docs/skills/release-notes-generator",
       "sourceType": "local",
-      "computedHash": "a83720fd62d350d3657fcc8c33049085cbe8d9b9a64c7250bdf0134ca5d5a7e7"
+      "computedHash": "a566917d3b733c0ed92c2f44ae448bece1cb26dd59170799ee2ba63add728e15"
     },
     "roadmap-generator": {
       "source": "agents/product_manager/skills/roadmap-generator",
@@ -179,7 +179,7 @@
     "docs-agent": {
       "source": "agents/docs/skills/docs-agent",
       "sourceType": "local",
-      "computedHash": "c8cc1d215ee232dc773f5f2f146ce81a1e0be8d7e34bf4b18cda51825b25bcac"
+      "computedHash": "df0ec31ad400d07ee8cadb3dc6f207d61e2cfb46a59bfcbd44ae8d016df43e74"
     },
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",

@@ -4,7 +4,7 @@
     "name": "Neplich"
   },
   "metadata": {
-    "description": "PM-first agent skill marketplace with one public pm-agent entry and downstream PM-orchestrated engineering, QA, DevOps, design, and security capabilities",
+    "description": "PM-first agent skill marketplace with one public pm-agent entry and downstream PM-orchestrated engineering, QA, DevOps, design, security, and documentation capabilities",
     "version": "0.3.0"
   },
   "plugins": [

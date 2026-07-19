@@ -3,10 +3,10 @@
 > Single source of truth owned by `docs-agent` for the default frontmatter
 > contract of formal Markdown pages under `docs/site/`.
 > `docs-site-bootstrap` consumes it for built-in pages, templates, and the
-> validation script delivered to host repositories; `formal-docs-sync`
-> consumes it for created or updated pages; `docs-audit` consumes it for
-> frontmatter decisions. Producers and auditors must reach the same conclusion
-> for the same page.
+> validation script delivered to host repositories; `formal-docs-sync` and
+> `release-notes-generator` consume it for created or updated pages; and
+> `docs-audit` consumes it for frontmatter decisions. Producers and auditors
+> must reach the same conclusion for the same page.
 
 The initial rules were migrated from the verified AI Hub implementation for
 issue #118. AI Hub is the source and compatibility baseline for this first
@@ -56,6 +56,9 @@ All seven fields are unconditionally required.
   and the host validation script it delivers.
 - `formal-docs-sync` must apply this contract whenever it creates or updates a
   formal documentation page.
+- `release-notes-generator` must apply this contract to versioned site Release
+  Notes and keep `last_verified_version: unverified` until `docs-audit` owns the
+  version-stamping sequence.
 - `docs-audit` must use this contract for frontmatter decisions. A page with
   invalid frontmatter is `stale`, and a release must not `proceed` while any
   such page remains in scope.
