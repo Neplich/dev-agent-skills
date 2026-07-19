@@ -1,0 +1,16 @@
+{
+  "eval_id": "eval-003-preserve-facts-and-add-traceability",
+  "eval_name": "preserve-facts-and-add-traceability",
+  "workspace_root": "agents/product_manager/test/github-release-generator/evals/workspace/eval-003-preserve-facts-and-add-traceability",
+  "skill_availability_goal": "Verify fact-preserving conversion from confirmed site Release Notes with curated compare, PR, commit, and contributor traceability.",
+  "prompt": "读取 release-package.md、站内页面和 github-evidence.md，生成只读 GitHub Release 完整预览。",
+  "fixture_context": [
+    "release-package.md",
+    "github-evidence.md",
+    "docs/site/release-notes/v1.0.0.md"
+  ],
+  "execution_cleanup": [
+    "release-preview.md",
+    "release-action.md"
+  ]
+}

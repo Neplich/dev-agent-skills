@@ -1,0 +1,17 @@
+{
+  "eval_id": "eval-002-enforce-release-sequence-gates",
+  "eval_name": "enforce-release-sequence-gates",
+  "workspace_root": "agents/product_manager/test/github-release-generator/evals/workspace/eval-002-enforce-release-sequence-gates",
+  "skill_availability_goal": "Verify site-notes-first sequencing, ready_for_tag preview authority, and independent publication gates for missing tag/post-tag audit and missing approval.",
+  "prompt": "读取 release-package.md、站内页面、github-evidence.md 与 publish-requests.md，生成预览并分别判断两个发布请求。",
+  "fixture_context": [
+    "release-package.md",
+    "publish-requests.md",
+    "github-evidence.md",
+    "docs/site/release-notes/v1.0.0.md"
+  ],
+  "execution_cleanup": [
+    "release-preview.md",
+    "release-action.md"
+  ]
+}

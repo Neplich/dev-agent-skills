@@ -1,0 +1,13 @@
+{
+  "eval_id": "eval-014-route-site-notes-and-github-release",
+  "eval_name": "route-site-notes-and-github-release",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-14-route-site-notes-and-github-release",
+  "skill_availability_goal": "Verify the issue #120 routing split between Docs site Release Notes and PM GitHub Release work.",
+  "prompt": "分别路由站内用户版本说明与其后的 GitHub Release 预览，并说明顺序边界。",
+  "fixture_context": [
+    "README.md"
+  ],
+  "execution_cleanup": [
+    "routing-output.md"
+  ]
+}

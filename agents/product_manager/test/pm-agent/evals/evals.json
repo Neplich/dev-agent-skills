@@ -337,6 +337,36 @@
           "text": "必须说明不需要完整 E2E suite，除非风险或范围升级到 `standard` / `major`。"
         }
       ]
+    },
+    {
+      "id": "eval-014-route-site-notes-and-github-release",
+      "name": "route-site-notes-and-github-release",
+      "description": "Verifies that pm-agent splits site/user-facing Release Notes from GitHub Release page work after the issue #120 rename.",
+      "prompt": "请分别为以下两个请求选择最窄 owner：A. 为 v1.0.0 编写并落位 docs/site/release-notes/ 的用户版本说明；B. 基于已确认站内版本说明生成 GitHub Release 预览。说明顺序与交接边界，不要实际写文件或发布。",
+      "workspace": "workspace/eval-14-route-site-notes-and-github-release",
+      "expected_output": "A handoff docs-agent:release-notes-generator；B route PM github-release-generator，且 B 必须等待 A 的 confirmed ready handoff 与 release audit gates。",
+      "assertions": [
+        {
+          "id": "routes_site_notes_to_docs_specialist",
+          "description": "站内版本说明归 Docs specialist",
+          "text": "请求 A 必须 handoff 到 docs-agent:release-notes-generator，不能路由到 PM github-release-generator 或 changelog-generator。"
+        },
+        {
+          "id": "routes_github_release_to_pm_specialist",
+          "description": "GitHub Release 归 PM specialist",
+          "text": "请求 B 必须路由到 PM github-release-generator，不能让 Docs specialist 执行 GitHub Release preview、draft 或 publish。"
+        },
+        {
+          "id": "preserves_release_sequence",
+          "description": "保持 site-first 顺序",
+          "text": "必须说明站内 Release Notes 先确认并通过 Docs gates，再由 PM github-release-generator 消费 ready handoff 和 release audit evidence。"
+        },
+        {
+          "id": "does_not_use_old_pm_skill_name",
+          "description": "不回退到 PM 旧名",
+          "text": "不得把 PM owner 命名为 release-notes-generator；该朴素名在此路由中只表示 docs-agent specialist。"
+        }
+      ]
     }
   ]
 }

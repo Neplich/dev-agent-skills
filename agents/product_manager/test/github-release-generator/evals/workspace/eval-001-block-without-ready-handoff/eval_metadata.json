@@ -1,0 +1,17 @@
+{
+  "eval_id": "eval-001-block-without-ready-handoff",
+  "eval_name": "block-without-ready-handoff",
+  "workspace_root": "agents/product_manager/test/github-release-generator/evals/workspace/eval-001-block-without-ready-handoff",
+  "skill_availability_goal": "Verify that missing and unconfirmed issue #116 handoffs both block publishable GitHub Release content and return to the site Release Notes owner.",
+  "prompt": "分别审查 scenarios/no-handoff.md 与 scenarios/unconfirmed-handoff.md，不执行外部写入。",
+  "fixture_context": [
+    "scenarios/no-handoff.md",
+    "scenarios/unconfirmed-handoff.md",
+    "docs/site/release-notes/v1.0.0.md",
+    "evidence/release-scope.md"
+  ],
+  "execution_cleanup": [
+    "release-preview.md",
+    "release-action.md"
+  ]
+}

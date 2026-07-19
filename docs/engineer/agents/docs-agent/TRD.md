@@ -1,7 +1,7 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.6.0"
+version: "0.6.1"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -17,7 +17,11 @@ related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/112"
   - "https://github.com/Neplich/dev-agent-skills/issues/117"
   - "https://github.com/Neplich/dev-agent-skills/issues/118"
+  - "https://github.com/Neplich/dev-agent-skills/issues/120"
 changelog:
+  - version: "0.6.1"
+    date: "2026-07-20"
+    changes: "对齐 #120 的站内 Release Notes 与 GitHub Release owner 边界"
   - version: "0.6.0"
     date: "2026-07-19"
     changes: "PR #128 A8 全面加固双阶段审计的隔离事务、可发现锚、差异纯度、状态机与记录 schema"
@@ -70,7 +74,7 @@ PRD 的 8 项决议是本 TRD 的强约束：
 | 2 | audit 报告归档到站点 `.meta/`。 | 使用 `docs/site/.meta/audit/audit-{version}.md`；`.meta/` 不进导航且不受 frontmatter 校验。 |
 | 3 | public / internal 双站点进入 MVP。 | bootstrap 一次生成双首页、三份 VitePress config、visibility 过滤和双站点命令。 |
 | 4 | 不生成宿主项目本地维护 skill。 | 通用维护协议随 `formal-docs-sync` 分发；宿主差异只写入 `docs/site/standards/`。 |
-| 5 | release-notes 输出按站点存在性自动切换，changelog 归档路径不变。 | 仅 release-notes-generator 在存在 `docs/site/release-notes/` 时写入该目录，否则维持现有输出路径，不新增配置项；changelog-generator 归档始终留在 `docs/changelog/changelog-v{version}.md`。 |
+| 5 | 站内 Release Notes 与 GitHub Release 分属 Docs、PM 两个 specialist，changelog 归档路径不变。 | `docs-agent:release-notes-generator` 写入并校验 `docs/site/release-notes/`，PM `github-release-generator` 只消费 ready handoff 与审计证据；changelog-generator 归档始终留在 `docs/changelog/changelog-v{version}.md`。 |
 | 6 | sync MVP 仅覆盖 api 链路。 | feature 落地与存量回填只把 api 文档作为 MVP 验收面；其他文档类型保留协议和骨架，不纳入 MVP 通过条件。 |
 | 7 | 存量回填是 sync 的第四模式。 | `formal-docs-sync` 复用同一套证据、模板选择和 change-map 生长协议。 |
 | 8 | 存量回填进入 MVP，api 先行。 | fixture 必须覆盖已有 API 代码、范围确认、分批执行和种子条目生成。 |
@@ -266,7 +270,7 @@ bootstrap 生成的种子元数据 `last_verified_version` 初始为 `unverified
 | --- | --- | --- | --- |
 | feature 落地 | Approved PRD、Confirmed TRD 的影响域证据（frontmatter `related_code` 字段或影响模块章节）、已确认 `IMPLEMENTATION_PLAN.md`、实际 diff/测试 | api、database、design 文档及 change-map | 仅 api 文档及 API code_glob 条目 |
 | 部署验证 | TRD 部署面、部署配置、验证命令与结果、环境差异 | ops runbook、必要的 release 准备条目 | 后续迭代，不作为 MVP 验收面 |
-| 发版 | release scope、已验证版本/tag、changelog/release 过程文档、审计结论 | 产品手册；release-notes 内容由 pm-agent 的 release-notes-generator 产出（站点存在时其输出已指向 docs/site/release-notes/），sync 不重复生成，只核对站点 release-notes 与版本上下文一致 | 后续迭代，不作为 MVP 验收面 |
+| 发版 | release scope、已验证版本/tag、changelog/release 过程文档、审计结论 | 产品手册；站内 Release Notes 由 `docs-agent:release-notes-generator` 产出，sync 不重复生成，只核对站内页面与版本上下文一致；GitHub Release 由 PM `github-release-generator` 在 ready handoff 与审计门禁后处理 | 后续迭代，不作为 MVP 验收面 |
 
 每个节点执行相同步骤：
 
@@ -422,7 +426,7 @@ Pre-tag candidate 固定写入 `docs/site/.meta/audit/audit-{target_release_vers
 宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 docs-agent 的 `consumption-contract.md` 执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 ```
 
-`debugger` 的 expected-behavior gate 增补：命中的 API contract 可作为预期依据来源之一，但只有与 Approved PRD/TRD/测试及代码证据不冲突时才可采信。仅 `release-notes-generator` 按 `docs/site/release-notes/` 存在性切换输出目标：存在则写入站点目录，不存在则完全保留既有路径和行为；`changelog-generator` 的版本归档始终留在 `docs/changelog/changelog-v{version}.md` 既有契约路径，站点 release-notes 页面可引用归档事实但不替代归档。
+`debugger` 的 expected-behavior gate 增补：命中的 API contract 可作为预期依据来源之一，但只有与 Approved PRD/TRD/测试及代码证据不冲突时才可采信。`docs-agent:release-notes-generator` 负责 `docs/site/release-notes/` 页面、索引、metadata、确认与宿主 checks；PM `github-release-generator` 不写站点，只消费其 ready handoff。`changelog-generator` 的版本归档始终留在 `docs/changelog/changelog-v{version}.md` 既有契约路径，站内 Release Notes 可引用归档事实但不替代归档。
 
 ## 9. 影响文件范围
 
