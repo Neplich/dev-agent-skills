@@ -210,7 +210,17 @@ Run the pre-tag protocol in this order:
    and all release surfaces agree may Section 6 update every affected page's
    `last_verified_version` together to `target_release_version`.
 6. Permit that unified stamp even when no matching tag exists yet.
-7. After read-back proves the complete stamp, return `ready_for_tag`. This
+7. After read-back proves the complete stamp, compute SHA-256 over the exact
+   post-stamp bytes of every affected page and every release-version surface,
+   including the confirmed Release Notes page, its version index,
+   `docs/site/.meta/releases.json`, the issue #116 handoff when file-backed,
+   and each file backing the host version facts. Record the audited
+   `target_ref` commit and the post-stamp `HEAD` commit with those hashes.
+8. Atomically replace the same persisted pre-tag record with the successful
+   stamp result: stamped-page list, each page's pre-stamp and post-stamp
+   `last_verified_version`, post-stamp page hashes, release-surface hashes,
+   audited `target_ref`, post-stamp `HEAD`, final `ready_for_tag`, and result
+   time. Read this final record back before returning `ready_for_tag`. This
    means ready for tag creation, never already published or released.
 
 Return `blocked` with no stamp when any of the following is true:
@@ -231,6 +241,10 @@ not itself make a page stale or block it from becoming factually `verified`.
 Never stamp only a `verified` subset. If `target_release_version` changes after
 the audit, the report, unified stamp conclusion, and `ready_for_tag` result are
 immediately invalid; rerun the complete pre-tag audit for the new value.
+If stamping, page read-back, hashing, atomic record replacement, or final
+record read-back fails, return `blocked`. The persisted record may retain
+diagnostic or pre-stamp evidence, but it must not contain a successful stamp
+conclusion, `ready_for_tag`, or a success time.
 
 ### Final page status
 
@@ -280,13 +294,24 @@ Include at least:
 
 ## Release-version surfaces
 
-<#116 handoff, Release Notes, version index, releases.json, and host version facts>
+<#116 handoff, Release Notes, version index, releases.json, and host version facts; persist each file-backed path and its exact-byte SHA-256>
+
+## Successful unified stamp record
+
+- Hash algorithm: SHA-256 over exact file bytes
+- Audited target_ref: <resolved target_ref commit>
+- Post-stamp HEAD: <HEAD resolved after successful page stamping and read-back>
+- Stamped pages: <path, pre-stamp last_verified_version, post-stamp last_verified_version, post-stamp SHA-256>
+- Release-surface content evidence: <surface, path, post-stamp SHA-256>
+- Stamp read-back: <complete / failed>
+- Atomic record read-back: <complete / failed>
+- Ready result time: <timestamp written only on success>
 
 ## Conclusion
 
 - Status summary: <verified / stale / mismatch counts and evidence gaps>
 - Blocking items: <to-do list or none>
-- Phase result: <ready_for_tag or blocked>
+- Phase result: <ready_for_tag or blocked; success is written only after stamp, hashes, atomic replacement, and read-back succeed>
 - Review commands: <commands sufficient to reproduce diff, validation, and evidence checks>
 ```
 
@@ -307,7 +332,11 @@ Then, in one audit operation:
 
 - update every affected page's `last_verified_version` from `unverified` or an
   older anchor to `target_release_version`; and
-- read all affected pages back to verify that the complete stamp is consistent.
+- read all affected pages back to verify that the complete stamp is consistent;
+- hash the exact post-stamp bytes of every affected page and file-backed
+  release-version surface; and
+- atomically write the successful stamp fields and `ready_for_tag` result back
+  to the same pre-tag record, then read that record back.
 
 Do not stamp a verified subset when another page is `stale`, `mismatch`, or
 blocked by `unverified` or missing evidence. The matching tag is not required
@@ -320,17 +349,32 @@ must not be omitted.
 
 Run the post-tag protocol in this order:
 
-1. Read and resolve the actual tag; a missing tag is a blocker.
-2. Read the persisted pre-tag record, including `base_ref`, `target_ref`,
-   `target_release_version`, the complete-set stamp result, pre-stamp values,
-   evidence, and `ready_for_tag` conclusion.
-3. Verify that the actual tag, `target_release_version`, confirmed Release
+1. Read the actual tag and resolve its peeled commit; a missing tag or
+   unresolvable tag commit is a blocker.
+2. Read the persisted pre-tag record. Require the exact fields written by the
+   successful pre-tag path: `base_ref`, audited `target_ref` commit,
+   `target_release_version`, post-stamp `HEAD`, stamped-page list, per-page
+   pre/post `last_verified_version`, every post-stamp page and release-surface
+   SHA-256, `ready_for_tag`, and its result time. Missing fields are evidence
+   gaps, not values to reconstruct from current files.
+3. Bind the tag commit to the recorded audited content:
+   - Fast path: binding holds when the peeled tag commit equals the recorded
+     post-stamp `HEAD`, or their resolved Git trees are identical.
+   - General path: at the peeled tag commit, read every recorded affected page
+     and release-surface path (for example with
+     `git show <tag-commit>:<path>`), recompute SHA-256 over those exact bytes,
+     and require every path and hash to match the pre-tag record exactly.
+   Use the general path whenever the fast path does not establish binding;
+   never compare only the tag name and version strings.
+4. Verify that the actual tag name, `target_release_version`, confirmed Release
    Notes, version index, `docs/site/.meta/releases.json`, and host version facts
-   all match exactly.
-4. Return `release_verified` only when the pre-tag record remains valid and all
-   evidence is complete and consistent.
-5. Return `blocked` when any value differs, the tag is missing, the pre-tag
-   record was invalidated by a target-version change, or evidence is missing.
+   also match exactly.
+5. Return `release_verified` only when content binding succeeds, the pre-tag
+   record remains valid, and all evidence is complete and consistent.
+6. Return `blocked` and require a complete pre-tag rerun when any recorded path
+   is missing or any content hash drifts, including when the tag name is
+   correct. Also return `blocked` when the tag is missing, the pre-tag record
+   was invalidated, or evidence is missing.
 
 Post-tag audit performs final consistency verification only. Do not regenerate
 Release Notes, indexes, release metadata, documentation, GitHub Release

@@ -50,13 +50,13 @@
       "name": "全部 verified 后统一盖章",
       "description": "验证维护者确认的 target_release_version 下，完整影响域全部 verified 且只读 release metadata 一致时统一更新页面，不修改 releases.json。",
       "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`，显式 `base_ref` 为 `a1b2c3d`、`target_ref` 为 `b2c3d4e`，且匹配 tag 尚不存在。请审计 fixture；仅在完整影响域和所有 release-version surfaces 全部通过时统一盖章并持久化报告。`.meta/releases.json` 由 #116 维护，本审计只能读取核对。",
-      "expected_output": "两张受审 API 页面均 verified，记录各页盖章前值并统一将 last_verified_version 更新为 v1.1.0；只读核对 releases.json，不修改它；写入 audit-v1.1.0.md 并返回 ready_for_tag，且不表述为已发布。",
+      "expected_output": "两张受审 API 页面均 verified，统一盖章并回读；只读核对 releases.json，不修改它；在 audit-v1.1.0.md 原子持久化完整盖章结果、页面与版本面内容证据后返回 ready_for_tag，且不表述为已发布。",
       "workspace": "workspace/eval-004-audit-all-verified",
       "assertions": [
         {"id": "verifies_complete_affected_set", "description": "完整影响域全部 verified", "text": "确定性层纳入 change-map 命中的两个 required docs，事实层逐页核对并将完整影响域全部判为 `verified`，无 unresolved evidence gap。"},
         {"id": "stamps_all_pages_together", "description": "统一更新受审页面", "text": "只有全部 verified 后，才在同一次审计操作中把两张受审页面的 `last_verified_version` 统一更新为 `v1.1.0`。"},
         {"id": "verifies_release_metadata_read_only", "description": "只读核对 release metadata", "text": "核对 `docs/site/.meta/releases.json` 与 `target_release_version` 一致，但不创建或修改该文件；其内容归 #116 维护。"},
-        {"id": "persists_versioned_report", "description": "写入版本化审计报告", "text": "报告持久化到 `docs/site/.meta/audit/audit-v1.1.0.md`，分别记录 `base_ref`、`target_ref`、`target_release_version`、两页盖章前值、证据、结论和复核命令，阶段结果为 `ready_for_tag` 且不称版本已发布。"}
+        {"id": "persists_versioned_report", "description": "原子持久化完整成功记录", "text": "统一盖章和逐页回读成功后，原子回写并回读 `docs/site/.meta/audit/audit-v1.1.0.md`：记录 `base_ref`、审计 `target_ref` commit、`target_release_version`、盖章后 `HEAD`、两页盖章清单与章前/章后值、页面和版本面精确字节 SHA-256、最终 `ready_for_tag`、结果时间、证据与复核命令；失败路径不得写成功结论，成功结果不得称版本已发布。"}
       ]
     },
     {
@@ -109,14 +109,15 @@
       "id": "eval-008-pre-tag-success",
       "name": "Tag 前完整核验并统一盖章",
       "description": "验证维护者已确认 target_release_version、匹配 tag 尚不存在且完整影响域和版本表面均 verified 时统一盖章并返回 ready_for_tag。",
-      "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已明确确认 `target_release_version: v1.2.0`，`base_ref: v1.1.0`、`target_ref: release-head`，且同名 tag 尚不存在。核对完整受影响页面、#116 handoff、Release Notes、索引、`.meta/releases.json` 和宿主版本事实；全部通过后统一盖章并持久化报告。",
-      "expected_output": "完整影响域全部 verified，报告记录每页盖章前值，统一盖章为 v1.2.0，只读核对 releases.json，返回 ready_for_tag 且明确不表示已发布。",
+      "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已明确确认 `target_release_version: v1.2.0`，`base_ref: v1.1.0`、`target_ref: release-head`，且同名 tag 尚不存在。核对完整受影响页面、#116 handoff、Release Notes、索引、`.meta/releases.json` 和宿主版本事实；全部通过后统一盖章、逐页回读，并把盖章结果与内容证据原子回写同一持久化报告。",
+      "expected_output": "完整影响域全部 verified，统一盖章为 v1.2.0 并回读；同一记录含盖章页面、章前/章后值、页面与版本面内容哈希、审计 target_ref、盖章后 HEAD、ready_for_tag 与时间；只读核对 releases.json，且明确不表示已发布。",
       "workspace": "workspace/eval-008-pre-tag-success",
       "assertions": [
         {"id": "accepts_confirmed_version_without_tag", "description": "tag 不存在仍可执行 pre-tag", "text": "分别记录 `base_ref`、`target_ref` 和维护者确认的 `target_release_version: v1.2.0`；不因同名 tag 尚不存在而阻塞。"},
         {"id": "verifies_complete_set_and_surfaces", "description": "完整集合和版本表面通过", "text": "将 change-map 要求的两张 API 页面纳入完整影响域并逐页判为 `verified`，同时核对 #116 handoff、Release Notes、索引、`.meta/releases.json` 与宿主版本事实均为 `v1.2.0`。"},
         {"id": "records_pre_stamp_values", "description": "报告记录盖章前值", "text": "审计报告逐页记录盖章前的 `last_verified_version`：catalog-items 为 `v1.1.0`，catalog-status 为 `unverified`，且不新增 `baseline_verified_version` frontmatter。"},
         {"id": "stamps_complete_set_atomically", "description": "完整集合统一盖章", "text": "只在所有条件通过后，将两张受影响页面的 `last_verified_version` 在一次审计操作中统一更新为 `v1.2.0` 并回读核对；不修改 `.meta/releases.json`。"},
+        {"id": "persists_stamp_and_content_evidence", "description": "成功后原子持久化盖章与内容证据", "text": "逐页回读通过后，原子回写并回读同一 `audit-v1.2.0.md`：记录两张盖章页面清单、各自章前/章后 `last_verified_version`、章后精确字节 SHA-256，Release Notes、索引、`.meta/releases.json` 与宿主版本事实文件的路径和 SHA-256，审计 `target_ref` commit、盖章后 `HEAD`、最终 `ready_for_tag` 与结果时间；任一步失败不得写成功结论。"},
         {"id": "returns_ready_for_tag_not_published", "description": "返回正确阶段状态", "text": "pre-tag 结果为 `ready_for_tag`，并明确该状态只表示可创建 tag，不表示版本已经发布或 release verified。"}
       ]
     },
@@ -137,28 +138,30 @@
     {
       "id": "eval-010-post-tag-match",
       "name": "Tag 后版本事实完全一致",
-      "description": "验证实际 tag、pre-tag 记录、目标版本、Release Notes、索引、metadata 与宿主版本事实一致时返回 release_verified。",
-      "prompt": "执行 fixture 中定义的 post-tag audit。读取已有 pre-tag 审计记录与实际 tag 证据，核对 `target_release_version`、Release Notes、索引、`.meta/releases.json` 和宿主版本事实。只做最终复核，不重新生成内容或盖章。",
-      "expected_output": "所有版本事实均为 v1.2.0，pre-tag ready_for_tag 记录仍有效，返回 release_verified；只追加 post-tag 证据，不重生成任何 release 内容。",
+      "description": "验证 tag commit 与 pre-tag 记录的全部页面和版本面内容哈希一致时返回 release_verified。",
+      "prompt": "执行 fixture 中定义的 post-tag audit。读取已有 pre-tag 审计记录并解析实际 `v1.2.0` tag commit；快路径不成立时，在 tag commit 处逐项重算受影响页面和版本面内容哈希，与记录比较。只做最终复核，不重新生成内容或盖章。",
+      "expected_output": "实际 tag commit 虽不同于盖章后 HEAD 且 tree 不同，但 tag commit 处所有记录路径的内容哈希完全匹配 pre-tag 审计态，内容绑定成立并返回 release_verified；只追加 post-tag 证据。",
       "workspace": "workspace/eval-010-post-tag-match",
       "assertions": [
-        {"id": "reads_valid_pre_tag_record", "description": "读取仍有效的 pre-tag 记录", "text": "读取 `audit-v1.2.0.md` 中的 `base_ref`、`target_ref`、`target_release_version`、盖章结果、盖章前值、证据和 `ready_for_tag` 结论，并确认记录未失效。"},
-        {"id": "matches_actual_tag_and_surfaces", "description": "实际 tag 与所有版本表面一致", "text": "实际 tag、`target_release_version`、Release Notes、索引、`.meta/releases.json` 和宿主版本事实均精确匹配 `v1.2.0`。"},
+        {"id": "reads_valid_pre_tag_record", "description": "严格读取成功 pre-tag 记录", "text": "读取 `audit-v1.2.0.md` 中与 pre-tag 成功回写严格对应的字段：审计 `target_ref` commit、盖章后 `HEAD`、盖章页面清单、逐页章前/章后值、页面和版本面 SHA-256、`ready_for_tag` 与结果时间；不从当前文件补造缺失字段。"},
+        {"id": "resolves_actual_tag_commit", "description": "解析实际 tag commit", "text": "解析实际 tag `v1.2.0` 指向的 commit，并记录其与盖章后 `HEAD`/tree 的快路径比较结果；不得只比较 tag 名与版本字符串。"},
+        {"id": "binds_tag_commit_by_content", "description": "一般路径逐项重算内容哈希", "text": "因 tag commit 不等于盖章后 `HEAD` 且 tree 不同，走一般路径，在 tag commit 处逐项重算两张受影响页面、Release Notes、索引、`.meta/releases.json` 与宿主版本事实文件的精确字节 SHA-256；路径集合与 pre-tag 记录完全一致，因此内容绑定成立。"},
         {"id": "returns_release_verified", "description": "返回 tag 后成功状态", "text": "证据完整一致时 post-tag 阶段结果为 `release_verified`，不退化为 `ready_for_tag`。"},
         {"id": "does_not_regenerate_or_restamp", "description": "只复核不重新生成", "text": "只向既有审计记录追加 post-tag 核对证据；不重新生成 Release Notes、索引、release metadata、GitHub Release 内容或文档盖章。"}
       ]
     },
     {
       "id": "eval-011-post-tag-mismatch",
-      "name": "Tag 后实际版本不匹配",
-      "description": "验证实际 tag 与 target_release_version 不一致时 post-tag audit blocked，原 ready_for_tag 不得升级且不重新生成内容。",
-      "prompt": "执行 fixture 中定义的 post-tag audit。已有 pre-tag 记录针对 `target_release_version: v1.2.0` 且曾返回 `ready_for_tag`，但实际 tag 证据为 `v1.2.1`。核对所有版本表面并给出阶段结果；不要重写 release 内容来消除冲突。",
-      "expected_output": "识别实际 tag v1.2.1 与目标版本 v1.2.0 不一致，返回 blocked，不返回 release_verified，不重生成内容或重盖章。",
+      "name": "Tag 名正确但审计内容漂移",
+      "description": "验证实际 tag 名正确但 tag commit 内容与 pre-tag 审计态漂移时 blocked，并要求重跑 pre-tag。",
+      "prompt": "执行 fixture 中定义的 post-tag audit。已有完整 pre-tag 记录针对 `target_release_version: v1.2.0` 且曾返回 `ready_for_tag`，实际 tag 名也是 `v1.2.0`，但 tag commit 不同于盖章后 HEAD/tree，且其中 catalog-status 页面内容已漂移。请逐项重算内容哈希并给出阶段结果；不要重写 release 内容来消除冲突。",
+      "expected_output": "实际 tag 名 v1.2.0 正确，但 tag commit 处 catalog-status 内容哈希与 pre-tag 记录不一致，内容绑定失败并返回 blocked；要求完整重跑 pre-tag，不返回 release_verified，不重生成内容或重盖章。",
       "workspace": "workspace/eval-011-post-tag-mismatch",
       "assertions": [
-        {"id": "detects_tag_target_mismatch", "description": "识别 tag 与目标版本冲突", "text": "保留实际 tag `v1.2.1` 与 pre-tag `target_release_version: v1.2.0` 两项事实及证据，明确二者不一致。"},
-        {"id": "invalidates_pre_tag_handoff", "description": "旧 ready_for_tag 不可升级", "text": "说明实际 tag 不匹配使既有 pre-tag handoff 无法用于最终验证，阶段结果为 `blocked`。"},
-        {"id": "does_not_return_release_verified", "description": "不返回成功状态", "text": "不得返回 `release_verified`，并给出由宿主确认正确 tag 或重新执行 pre-tag audit 的具体待办。"},
+        {"id": "accepts_correct_tag_name_but_checks_commit", "description": "tag 名正确仍检查 commit 内容", "text": "保留实际 tag 与 `target_release_version` 均为 `v1.2.0` 的事实，同时解析 tag commit 并确认其不等于记录的盖章后 `HEAD` 且 tree 不同；不得因 tag 名正确直接放行。"},
+        {"id": "detects_audited_content_drift", "description": "逐项哈希识别审计内容漂移", "text": "在 tag commit 处逐项重算记录中的页面和版本面 SHA-256，明确 `docs/site/api/catalog-status.md` 哈希与 pre-tag 审计态不一致，其余路径匹配也不能掩盖该漂移。"},
+        {"id": "invalidates_pre_tag_handoff", "description": "内容漂移阻断旧 ready_for_tag", "text": "说明 tag commit 未绑定到已审计内容，既有 `ready_for_tag` 不可升级，阶段结果为 `blocked`。"},
+        {"id": "does_not_return_release_verified", "description": "不返回成功状态并要求重跑", "text": "不得返回 `release_verified`，必须要求按当前 tag 内容重新执行完整 pre-tag audit，而不是仅重新确认 tag 名。"},
         {"id": "does_not_rewrite_release_content", "description": "不重生成内容掩盖冲突", "text": "不修改页面盖章，不重生成 Release Notes、索引、`.meta/releases.json`、GitHub Release 内容，也不创建或移动 tag。"}
       ]
     }

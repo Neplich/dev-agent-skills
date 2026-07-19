@@ -1,7 +1,7 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.4.0"
+version: "0.4.1"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -18,6 +18,9 @@ related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/117"
   - "https://github.com/Neplich/dev-agent-skills/issues/118"
 changelog:
+  - version: "0.4.1"
+    date: "2026-07-19"
+    changes: "绑定 post-tag commit 与 pre-tag 审计内容，并持久化统一盖章结果证据"
   - version: "0.4.0"
     date: "2026-07-19"
     changes: "新增 docs-audit pre-tag / post-tag 双阶段版本审计协议（issue #117）"
@@ -302,7 +305,7 @@ docs-audit 使用同一份维护者确认的目标版本事实执行 tag 前和 
 
 #### Pre-tag audit
 
-Pre-tag audit 在 release PR 阶段按以下七步执行：
+Pre-tag audit 在 release PR 阶段按以下八步执行：
 
 1. 确认 `base_ref`、`target_ref` 和维护者已确认的 `target_release_version`。
 2. 基于 `base_ref..target_ref` 圈定完整受影响页面集合；默认使用两点端点差异，只有调用方显式要求 merge-base 语义时才使用三点形式并在报告注明。
@@ -310,7 +313,8 @@ Pre-tag audit 在 release PR 阶段按以下七步执行：
 4. 在审计报告记录各页面盖章前的 `last_verified_version`。
 5. 只有完整受影响页面集合全部为 `verified`，才允许把这些页面的 `last_verified_version` 统一更新为 `target_release_version`。
 6. 即使同名 tag 尚不存在，也允许完成本次统一盖章。
-7. 审计通过后返回 `ready_for_tag`；该状态只表示 tag 前文档审计通过，不得表述为“已发布”。
+7. 逐页回读证明完整盖章后，对每张受影响页面的章后精确字节，以及 Release Notes、版本索引、`.meta/releases.json`、文件化 #116 handoff 和宿主版本事实文件等版本面计算 SHA-256，同时记录审计时的 `target_ref` commit 与盖章后 `HEAD`。
+8. 将盖章页面清单、逐页章前/章后 `last_verified_version`、逐页章后哈希、所有版本面路径与哈希、审计 `target_ref`、盖章后 `HEAD`、最终 `ready_for_tag` 和结果时间原子回写到同一 pre-tag 持久化记录，并在回读成功后才返回；该状态只表示 tag 前文档审计通过，不得表述为“已发布”。
 
 以下六类情况必须返回 `blocked` 且不得盖章：
 
@@ -322,16 +326,18 @@ Pre-tag audit 在 release PR 阶段按以下七步执行：
 - Release Notes、版本索引、release metadata 或宿主版本事实与目标版本不一致。
 
 不允许只对 `verified` 子集局部盖章。`target_release_version` 在审计完成后变化时，已有 `ready_for_tag` 立即失效，必须以新目标版本重新执行完整 pre-tag audit。
+统一盖章、逐页回读、内容哈希、原子回写或记录回读任一步失败时返回 `blocked`；失败记录不得写入成功盖章结论、`ready_for_tag` 或成功时间。
 
 #### Post-tag audit
 
-Post-tag audit 在宿主创建实际 tag 后按以下五步执行：
+Post-tag audit 在宿主创建实际 tag 后按以下六步执行：
 
-1. 读取实际 tag。
-2. 读取 pre-tag 审计记录中的 `base_ref`、`target_ref`、`target_release_version`、盖章结果和证据。
-3. 核对实际 tag、`target_release_version`、Release Notes、版本索引、`.meta/releases.json` 和宿主版本事实完全一致。
-4. 全部一致且证据完整时返回 `release_verified`。
-5. 不一致、缺少 tag、pre-tag 结果失效或证据不足时返回 `blocked`。
+1. 读取实际 tag 并解析其 peeled commit；tag 缺失或 commit 无法解析时 `blocked`。
+2. 严格读取 pre-tag 成功路径原子回写的字段：`base_ref`、审计 `target_ref` commit、`target_release_version`、盖章后 `HEAD`、盖章页面清单、逐页章前/章后 `last_verified_version`、逐页和版本面 SHA-256、`ready_for_tag` 与结果时间；字段缺失视为证据不足，不得从当前文件补造。
+3. 执行内容绑定快路径：tag commit 等于记录的盖章后 `HEAD`，或二者 Git tree 相同，则内容绑定成立。
+4. 快路径不成立时走一般路径：在 tag commit 处逐项读取记录中的受影响页面和版本面路径，对精确字节重算 SHA-256，只有路径集合与哈希全部等于 pre-tag 记录才算内容绑定成立；不得只比较 tag 名和版本字符串。
+5. 内容绑定成立且实际 tag 名、`target_release_version`、Release Notes、版本索引、`.meta/releases.json`、宿主版本事实和全部证据一致时返回 `release_verified`。
+6. 任一路径缺失或哈希漂移（包括 tag 名正确但内容与审计态不同）、pre-tag 结果失效或证据不足时返回 `blocked`，并要求重新执行完整 pre-tag audit。
 
 Post-tag audit 只复核最终版本事实，不重新生成或编辑 Release Notes、版本索引、release metadata、GitHub Release 内容或其他发布内容，也不重新执行统一盖章。
 
@@ -363,7 +369,7 @@ agent 对每个影响域页面建立“声明 → 代码证据”清单。对候
 | `stale` | 映射命中且事实层确认声明已与当前代码不同步，或 frontmatter 字段无效；旧 `last_verified_version` 只降低信任并扩大核对，由统一盖章步骤推进，不构成 stale | blocked，先同步文档 |
 | `mismatch` | 文档声明与代码事实直接冲突 | blocked，先确认修文档还是修代码 |
 
-Pre-tag 报告写入 `docs/site/.meta/audit/audit-{target_release_version}.md`，包含审计阶段、`base_ref`、`target_ref`、`target_release_version`、changed files、命中的 change-map、逐文档盖章前 `last_verified_version` 与当前证据、三态结论、阻塞项、统一盖章结果和复核命令；`.meta/` 报告不需要标准 frontmatter。缺少维护者确认的 `target_release_version` 时只可返回 blocked 诊断，不得以短 SHA 或 `unknown` 伪造版本审计记录。Post-tag 读取 pre-tag 记录并追加最终复核结论，不重新生成内容。只有 pre-tag 完整影响域全部 `verified` 时才统一盖章；部分 verified 不局部盖章。`.meta/releases.json` 只参与一致性验证，docs-audit 不创建或维护其内容。
+Pre-tag 报告写入 `docs/site/.meta/audit/audit-{target_release_version}.md`，包含审计阶段、`base_ref`、`target_ref`、`target_release_version`、changed files、命中的 change-map、逐文档盖章前 `last_verified_version` 与当前证据、三态结论、阻塞项和复核命令；`.meta/` 报告不需要标准 frontmatter。统一盖章与逐页回读成功后，必须把盖章页面清单、逐页章前/章后 `last_verified_version`、逐页章后精确字节 SHA-256、Release Notes/版本索引/`.meta/releases.json`/#116 handoff/宿主版本事实文件等版本面路径与 SHA-256、审计 `target_ref` commit、盖章后 `HEAD`、`ready_for_tag` 与结果时间原子回写到同一记录并回读；失败路径不得写成功结论。缺少维护者确认的 `target_release_version` 时只可返回 blocked 诊断，不得以短 SHA 或 `unknown` 伪造版本审计记录。Post-tag 严格读取这些字段，解析实际 tag commit，并以 HEAD/tree 快路径或 tag commit 逐项重算哈希的一般路径证明内容绑定后才追加最终复核结论；任一漂移均 blocked 并要求重跑 pre-tag，不重新生成内容。只有 pre-tag 完整影响域全部 `verified` 时才统一盖章；部分 verified 不局部盖章。`.meta/releases.json` 只参与一致性验证，docs-audit 不创建或维护其内容。
 
 ## 8. 消费契约设计
 
