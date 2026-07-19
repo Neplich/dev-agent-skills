@@ -6,6 +6,11 @@
     "docs/site/.meta/releases.json": "skipped-identical",
     "docs/site/package.json": "skipped-identical",
     "docs/site/standards/change-map.yaml": "skipped-identical",
-    "docs/site/standards/index.md": "skipped-identical"
+    "docs/site/standards/index.md": "skipped-identical",
+    "docs/site/standards/templates/api-template.md": "skipped-identical",
+    "docs/site/standards/templates/database.md": "skipped-identical",
+    "docs/site/standards/templates/feature-design.md": "skipped-identical",
+    "docs/site/standards/templates/ops-runbook.md": "skipped-identical",
+    "docs/site/standards/templates/product-handbook.md": "skipped-identical"
   }
 }

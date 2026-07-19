@@ -7,34 +7,37 @@
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws2-docs-v1`
-- Branch fixture commit: `71bbb09`
+- Fixture: `issue-122-assets-38-v1`
+- Branch fixture commit: `a2a30a3`
 - Execution cleanup: `docs/site`
+- Fresh validation date: `2026-07-19`
 
 ## Latest Result
 
-**PASS** — fresh judge 对 5 条 assertions 全部判定 PASS。with-skill 在显式 opt-in 后生成 35 个嵌入模板目标和 `.meta/bootstrap-manifest.json`；磁盘实际为 35 个静态文件加 manifest，16 个 Markdown 页面全部满足七字段 frontmatter，第二次分类为 35 项 identical、0 missing、0 conflict、无需写入。
+**PASS** — fresh judge 对 6 条 assertions 全部判定 PASS。上轮 PARTIAL 的唯一根因是 `_internal/INSTRUCTIONS.md` 完成报告协议缺少入口依据与无显式 opt-in 时的 pre-write stop；协议补全后，本轮 fresh with-skill 报告完整声明用户显式 opt-in、已确认宿主、固定 `docs/site/` 根，以及缺少显式 opt-in 时必须在任何文件写入前停止。
 
 ## With-Skill Behavior
 
-- 严格把生成范围限制在 `docs/site/`，manifest 覆盖全部 35 个静态目标且路径有序。
-- 所有正式 Markdown 页面均使用合法枚举、非空 `owners` / `related_code` 和必填 `last_verified_version: unverified`。
-- 回读 manifest 成功；独立字节比较确认 35 个目标与嵌入模板一致，重复执行保留 `createdAt` 并产生 zero-diff。
+- 6 条 assertions 全部 PASS，包括修复后的 `requires_explicit_opt_in`。
+- 38/38 静态目标与 `assets/docs/site/` 逐字节一致；manifest 覆盖全部 38 个路径，磁盘共 39 个文件。
+- `package.json` 只有一个 `new:doc` 命令，scaffold 实现和测试存在；五模板各含恰好一个 `docs-scaffold` 区块并全部由 `standards/index.md` 索引。
+- 16 个 Markdown 页面满足七字段 frontmatter；重复执行前后 39 个文件 SHA-256 快照一致，`createdAt` 保持不变。
+- 完成报告明确列出本次写入的三项入口依据，并声明缺少显式 opt-in 时在任何文件写入前停止。
 
 ## Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，使用相同原始 prompt 与 cleanup 后的空 fixture，新生成且未接触 skill 文档或 Agent README。
-- baseline 自行创建 7 个框架无关文件，manifest 位于错误的 `docs/site/bootstrap-manifest.json`，没有生成规定的 35 项清单。
-- 其 6 个 Markdown 中有 2 个无 frontmatter，其余使用另一套四字段 metadata，不满足七字段契约；仅目录边界和通用幂等性成立。
+- 来源：本次全新 Codex subagent，使用相同原始 prompt 与 cleanup 后空 fixture，新生成且未读取或应用 skill 文档、Agent README 或历史 baseline。
+- baseline 自行创建 10 个受管文件，manifest 位于 `docs/site/bootstrap-manifest.json`，没有 38 项 packaged inventory、规定的 scaffold 测试、五模板 marker/index 体系或入口依据报告协议。
+- baseline 能验证其自建文件的 read-back、重复执行幂等和简单 `new:doc` 拒绝覆盖，但不满足 docs-site-bootstrap 资产契约。
 
 ## Failures
 
-- 无 assertion failure。运行中用于 read-back 的 Ruby 辅助检查遇到旧版本 API与字符串编码差异，改用兼容 Hash 统计和 byte-array 比较后完成验证；模板产物未因此重写或降级。
+- 无 assertion failure。独立 judge 在隔离宿主直接执行 scaffold 测试时因未安装 `gray-matter` 停在依赖解析；该 assertion 要求交付测试资产，文件存在且与权威资产逐字节一致，因此不影响 PASS。
 
 ## Next Steps
 
-- 保留本结果；模板清单、manifest 或 frontmatter 生成规则变化时重跑此 eval。
+- 保留本结果；资产清单、脚手架契约、入口报告协议或 manifest 状态机变化时重新生成 fresh with/without validation。
 
 ## Runtime Artifact Policy
 
-- 本次 transcripts、生成站点副本和 judge verdict 仅位于 `tmp/eval-runs/118/eval-001-bootstrap-empty-workspace/`，不提交到 git。
+- 本次响应、生成站点副本、baseline 和独立 judge verdict 仅位于 `tmp/eval-runs/122-c3b-20260719/eval-001-bootstrap-empty-workspace/`，不提交到 git。

@@ -1,0 +1,19 @@
+title: 文档变更映射
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - docs/site
+last_verified_version: unverified
+
+# Entry schema:
+# change_map:
+#   "<repository-relative code_glob>":
+#     required_docs:
+#       - docs/site/<section>/<page>.md
+#     trigger: <when a code change requires documentation review>
+#     exclude:
+#       - "<optional glob that narrows only this entry>"
+change_map: {}

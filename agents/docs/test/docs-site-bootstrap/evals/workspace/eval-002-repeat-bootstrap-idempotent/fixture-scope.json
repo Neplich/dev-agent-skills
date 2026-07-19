@@ -1,11 +1,16 @@
 {
-  "fixture_version": "ws2-bootstrap-v1",
+  "fixture_version": "issue-122-assets-v2-c5r",
   "purpose": "Minimal representative state for an already complete bootstrap",
   "materialized_targets": [
     "docs/site/package.json",
     "docs/site/standards/index.md",
+    "docs/site/standards/templates/api-template.md",
+    "docs/site/standards/templates/database.md",
+    "docs/site/standards/templates/feature-design.md",
+    "docs/site/standards/templates/ops-runbook.md",
+    "docs/site/standards/templates/product-handbook.md",
     "docs/site/standards/change-map.yaml",
     "docs/site/.meta/releases.json"
   ],
-  "omitted_target_assumption": "All other targets from the 35-target embedded inventory are present and byte-identical in the isolated evaluation host; they are omitted only to keep the committed fixture small."
+  "omitted_target_assumption": "All other targets from the 38-asset packaged inventory are present and byte-identical in the isolated evaluation host; they are omitted only to keep the committed fixture small."
 }
