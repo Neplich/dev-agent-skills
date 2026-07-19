@@ -14,7 +14,6 @@ from pathlib import Path
 from typing import Any
 
 
-REPO_NAME = "dev-agent-skills"
 MIRROR_DIR_NAME = ".dev-agent-skills"
 MIRROR_MARKER_NAME = ".dev-agent-skills-mirror.json"
 LEGACY_AGGREGATE_DIR = "dev-agent-skills"
@@ -231,44 +230,6 @@ def validate_removals_do_not_touch_source(root: Path, paths: list[Path]) -> None
         )
 
 
-def marketplace_name(path: Path) -> str | None:
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
-        return None
-
-    name = data.get("name")
-    return name if isinstance(name, str) else None
-
-
-def is_dev_agent_checkout_path(path: Path) -> bool:
-    current = path.resolve(strict=False)
-    for parent in (current, *current.parents):
-        manifest = parent / ".claude-plugin" / "marketplace.json"
-        if manifest.is_file() and marketplace_name(manifest) == REPO_NAME:
-            return True
-    return False
-
-
-def directory_contains_dev_agent_marketplace(path: Path) -> bool:
-    if not path.is_dir() or path.is_symlink():
-        return False
-
-    direct = path / ".claude-plugin" / "marketplace.json"
-    if direct.is_file() and marketplace_name(direct) == REPO_NAME:
-        return True
-
-    try:
-        candidates = path.rglob("marketplace.json")
-        for candidate in candidates:
-            if ".claude-plugin" in candidate.parts and marketplace_name(candidate) == REPO_NAME:
-                return True
-    except OSError:
-        return False
-
-    return False
-
-
 def mirror_root(target_root: Path) -> Path:
     return target_root / MIRROR_DIR_NAME
 
@@ -290,27 +251,24 @@ def write_mirror_marker(root: Path, mirror: Path) -> None:
 
 
 def is_owned_mirror(path: Path) -> bool:
-    return path.is_symlink() or mirror_marker_path(path).is_file()
+    return mirror_marker_path(path).is_file()
 
 
 def is_mirror_symlink(path: Path, target_root: Path) -> bool:
     if not path.is_symlink():
         return False
-    return is_relative_to(path.resolve(strict=False), mirror_root(target_root).resolve(strict=False))
-
-
-def is_checkout_symlink(path: Path) -> bool:
-    return path.is_symlink() and is_dev_agent_checkout_path(path.resolve(strict=False))
+    mirror = mirror_root(target_root)
+    return is_owned_mirror(mirror) and is_relative_to(
+        path.resolve(strict=False), mirror.resolve(strict=False)
+    )
 
 
 def is_owned_skill_target(path: Path, target_root: Path) -> bool:
-    return is_mirror_symlink(path, target_root) or is_checkout_symlink(path)
+    return is_mirror_symlink(path, target_root)
 
 
 def is_owned_legacy_aggregate(path: Path, target_root: Path) -> bool:
-    if path.is_symlink():
-        return is_mirror_symlink(path, target_root) or is_checkout_symlink(path)
-    return directory_contains_dev_agent_marketplace(path)
+    return mirror_marker_path(path).is_file()
 
 
 def summarize_paths(paths: list[Path]) -> str:
@@ -415,7 +373,7 @@ def build_preflight_plan(
         for target in sorted(target_root.iterdir()):
             if target.name in current_install_names or target.name in reserved_names:
                 continue
-            if is_owned_skill_target(target, target_root):
+            if is_mirror_symlink(target, target_root):
                 obsolete_managed_remove.append(target)
 
     planned_removals: list[Path] = []
@@ -568,17 +526,12 @@ def install_selected_skill(
         )
 
     existed = skill.install_name in existing
-    was_checkout_symlink = existed and is_checkout_symlink(target)
-
     if target.exists() or target.is_symlink():
         remove_existing(target)
 
     target.symlink_to(symlink_target_for_skill(target_root, skill), target_is_directory=True)
 
-    if was_checkout_symlink:
-        status = "migrated"
-        message = "replaced checkout symlink with mirror symlink"
-    elif existed and force:
+    if existed and force:
         status = "replaced"
         message = "replaced managed mirror symlink"
     elif existed:

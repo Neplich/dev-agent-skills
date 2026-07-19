@@ -342,6 +342,52 @@ def test_upgrade_preserves_unowned_obsolete_alias_name(tmp_path: Path) -> None:
     assert not unowned.is_symlink()
 
 
+def test_upgrade_preserves_unmanaged_checkout_symlink_for_obsolete_alias(
+    tmp_path: Path,
+) -> None:
+    target = tmp_path / "skills"
+    first = run_installer(target)
+    assert first.returncode == 0, first.stderr + first.stdout
+
+    custom_checkout = tmp_path / "custom-checkout"
+    write_dev_agent_marketplace_marker(custom_checkout)
+    custom_skill = custom_checkout / "agents/custom/skills/release-notes-generator"
+    custom_skill.mkdir(parents=True)
+    (custom_skill / "SKILL.md").write_text(
+        "---\nname: release-notes-generator\n---\n",
+        encoding="utf-8",
+    )
+    custom_alias = target / "pm-release-notes-generator"
+    custom_alias.symlink_to(custom_skill, target_is_directory=True)
+
+    upgraded = run_installer(target)
+
+    assert upgraded.returncode == 0, upgraded.stderr + upgraded.stdout
+    assert "Removed obsolete managed skill aliases:" not in upgraded.stdout
+    assert custom_alias.is_symlink()
+    assert custom_alias.resolve(strict=True) == custom_skill
+
+
+def test_reinstall_removes_dangling_obsolete_mirror_symlink(tmp_path: Path) -> None:
+    target = tmp_path / "skills"
+    first = run_installer(target)
+    assert first.returncode == 0, first.stderr + first.stdout
+
+    obsolete = target / "obsolete-skill"
+    obsolete.symlink_to(
+        Path(MIRROR_DIR) / "agents/product_manager/skills/removed-skill",
+        target_is_directory=True,
+    )
+    assert obsolete.is_symlink()
+    assert not obsolete.exists()
+
+    upgraded = run_installer(target)
+
+    assert upgraded.returncode == 0, upgraded.stderr + upgraded.stdout
+    assert "Removed obsolete managed skill aliases:" in upgraded.stdout
+    assert not obsolete.is_symlink()
+
+
 def test_routers_only_links_only_router_skills_but_keeps_full_hidden_mirror(tmp_path: Path) -> None:
     target = tmp_path / "skills"
 
@@ -420,6 +466,26 @@ def test_unowned_hidden_mirror_directory_errors_without_partial_changes(tmp_path
         assert not (target / "pm-agent").exists()
 
 
+def test_unowned_hidden_mirror_symlink_errors_without_deleting_target(tmp_path: Path) -> None:
+    target = tmp_path / "skills"
+    target.mkdir()
+    custom_checkout = tmp_path / "custom-checkout"
+    write_dev_agent_marketplace_marker(custom_checkout)
+    sentinel = custom_checkout / "keep.txt"
+    sentinel.write_text("keep", encoding="utf-8")
+    mirror = target / MIRROR_DIR
+    mirror.symlink_to(custom_checkout, target_is_directory=True)
+
+    result = run_installer(target)
+
+    assert result.returncode == 1
+    assert "target contains a hidden mirror path that is not owned by this installer" in result.stderr
+    assert mirror.is_symlink()
+    assert mirror.resolve(strict=True) == custom_checkout
+    assert sentinel.read_text(encoding="utf-8") == "keep"
+    assert not (target / "pm-agent").exists()
+
+
 def test_unowned_selected_directory_is_skipped_without_force(tmp_path: Path) -> None:
     target = tmp_path / "skills"
     unowned = target / "pm-agent"
@@ -462,7 +528,7 @@ def test_force_errors_on_unowned_unselected_directory_without_partial_changes(tm
     assert not (target / MIRROR_DIR).exists()
 
 
-def test_checkout_symlink_is_migrated_to_hidden_mirror_symlink(tmp_path: Path) -> None:
+def test_unmanaged_checkout_symlink_for_selected_skill_is_preserved(tmp_path: Path) -> None:
     target = tmp_path / "skills"
     target.mkdir(parents=True)
     old_checkout = tmp_path / "old-checkout"
@@ -474,12 +540,13 @@ def test_checkout_symlink_is_migrated_to_hidden_mirror_symlink(tmp_path: Path) -
     result = run_installer(target)
 
     assert result.returncode == 0, result.stderr + result.stdout
-    assert "migrated: debugger" in result.stdout
-    assert_relative_mirror_link(target, "debugger")
-    assert is_under(target / "debugger", target / MIRROR_DIR)
+    assert "skipped: debugger" in result.stdout
+    assert (target / "debugger").is_symlink()
+    assert (target / "debugger").resolve(strict=True) == checkout_target
+    assert (target / MIRROR_DIR / skill_source_rel("debugger") / "SKILL.md").is_file()
 
 
-def test_selected_source_checkout_symlink_migrates_without_deleting_checkout(tmp_path: Path) -> None:
+def test_selected_source_checkout_symlink_is_preserved(tmp_path: Path) -> None:
     target = tmp_path / "skills"
     target.mkdir(parents=True)
     checkout_target = ROOT / skill_source_rel("debugger")
@@ -488,15 +555,15 @@ def test_selected_source_checkout_symlink_migrates_without_deleting_checkout(tmp
     result = run_installer(target)
 
     assert result.returncode == 0, result.stderr + result.stdout
-    assert "migrated: debugger" in result.stdout
-    assert_relative_mirror_link(target, "debugger")
-    assert is_under(target / "debugger", target / MIRROR_DIR)
+    assert "skipped: debugger" in result.stdout
+    assert (target / "debugger").is_symlink()
+    assert (target / "debugger").resolve(strict=True) == checkout_target
     assert checkout_target.is_dir()
     assert (checkout_target / "SKILL.md").is_file()
     assert INSTALLER.is_file()
 
 
-def test_owned_legacy_aggregate_symlink_is_removed_before_install(tmp_path: Path) -> None:
+def test_unmanaged_legacy_aggregate_checkout_symlink_is_preserved(tmp_path: Path) -> None:
     target = tmp_path / "skills"
     target.mkdir(parents=True)
     old_checkout = tmp_path / "old-checkout"
@@ -506,12 +573,13 @@ def test_owned_legacy_aggregate_symlink_is_removed_before_install(tmp_path: Path
     result = run_installer(target)
 
     assert result.returncode == 0, result.stderr + result.stdout
-    assert "Removed legacy aggregate entries:" in result.stdout
-    assert not (target / "dev-agent-skills").exists()
+    assert "WARNING: skipped unowned legacy aggregate entries:" in result.stdout
+    assert (target / "dev-agent-skills").is_symlink()
+    assert (target / "dev-agent-skills").resolve(strict=True) == old_checkout
     assert_relative_mirror_link(target, "pm-agent")
 
 
-def test_source_checkout_inside_legacy_aggregate_delete_path_errors_without_deleting(
+def test_source_checkout_inside_legacy_aggregate_path_is_preserved(
     tmp_path: Path,
 ) -> None:
     target = tmp_path / "skills"
@@ -533,13 +601,13 @@ def test_source_checkout_inside_legacy_aggregate_delete_path_errors_without_dele
         check=False,
     )
 
-    assert result.returncode == 1
-    assert "安装源 checkout 位于目标删除路径内" in result.stderr
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert "WARNING: skipped unowned legacy aggregate entries:" in result.stdout
     assert sentinel.read_text(encoding="utf-8") == "keep local checkout"
     assert (checkout / ".claude-plugin/marketplace.json").is_file()
     assert (checkout / "agents/product_manager/skills/pm-agent/SKILL.md").is_file()
-    assert not (target / MIRROR_DIR).exists()
-    assert not (target / "pm-agent").exists()
+    assert (target / MIRROR_DIR).is_dir()
+    assert_relative_mirror_link(target, "pm-agent")
 
 
 def test_mirror_does_not_contain_plugin_manifests(tmp_path: Path) -> None:
