@@ -5,7 +5,7 @@ feature: "skill-github-release-generator"
 feature_path: "agents/pm-agent/skills/github-release-generator"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
-version: "1.2.0"
+version: "1.3.0"
 status: Implemented
 author: "Neplich Codex"
 date: "2026-07-20"
@@ -282,3 +282,28 @@ G5 实施结果：受影响 eval-002 已使用本轮全新 with-skill、without-
 完成验证，6/6 assertions PASS；durable `comparison.md` 已同步，并如实记录 fixture 提示较强、
 without-skill 同为 6/6 的非阻塞区分度 finding。`github-release-generator` computedHash 已刷新。
 四项 checker 全部 PASS，CI 同款 pytest 为 133 passed，安装器独立测试为 23 passed。
+
+## 10. G6 latest 写序收口与发布工作流自查
+
+PR #129 的两条新 P1 与本轮小型自查由维护者明确授权，继续更新当前活跃计划：
+
+1. draft create/update 省略全部 latest flag；preview 仍展示 publish-only latest 决策，draft
+   写后确认 published latest 指针不变。
+2. publish 若需内容更新，先执行不带 latest 的 draft 内容写并回读；最终 `draft=false` 写前
+   再次读取 latest 与目标 tag OID，未漂移时在一次写中原子应用 lifecycle、prerelease 与
+   latest 决策。
+3. 补齐重复执行的 create/update/publish/no-op 分支、每次写后的回读、两写之间的外部漂移
+   检测，以及失败状态与恢复提示。最终写后再次核对远端 tag OID；latest 回读不符只报告
+   纠正命令，不自动执行第三次写入，tag 漂移不自动修复。
+4. 更新 eval-002 的 draft latest 与 publish 两写复查断言，使用本轮全新 with-skill、
+   without-skill 和独立 judge 更新 durable `comparison.md`。
+5. 刷新 computedHash，运行四项 checker、CI 同款 pytest 与安装器测试，再按用户指定的一次
+   commit、push、PR 评论和 CI watch 完成交付；不执行真实 tag/Release 操作或 merge。
+
+G6 实施结果：两条 P1 已修复；小型自查补齐 fresh target `isPrerelease`、最终写后 remote
+tag OID 回读、create/update/publish/no-op 幂等分支与失败恢复矩阵。最终 skill source 上的
+R2 fresh with-skill、without-skill 与独立 judge 均为 6/6 assertions PASS，judge 判定当前
+assertions 区分度为 0/6；durable `comparison.md` 已如实记录 baseline 的额外 missing-tag
+风险。`github-release-generator` computedHash 已刷新为 current。四项 checker 全部 PASS，
+CI 同款 pytest 为 133 passed，安装器独立测试为 23 passed，独立只读验收的两项 blocking
+finding 均已修复。未执行真实 tag、GitHub Release、部署或 `docs/site/` 写入。

@@ -89,11 +89,12 @@ invalid, version-mismatched, or blocked audit evidence returns to
 6. Show the complete title and body preview, version-normalization evidence,
    current latest Release evidence, and the exact latest/prerelease decision
    before any GitHub write. The maintainer must confirm this decision with the
-   preview. Before each draft or publish write, re-read the current latest
-   Release and require it to match the preview evidence. Drift invalidates the
-   decision: stop, refresh the preview, and obtain new maintainer confirmation.
-   A write uses the flags from the most recently confirmed preview and never
-   silently promotes them.
+   preview. Before each draft write and immediately before the final publish
+   write, re-read the current latest Release and require it to match the
+   preview evidence. Drift invalidates the decision: stop, refresh the preview,
+   and obtain new maintainer confirmation. Draft writes omit every latest flag;
+   the confirmed latest flag is applied only by the final draft-to-published
+   write, together with the final prerelease state.
 
 GitHub evidence may add traceability and formatting, not new or contradictory
 version facts. If it exposes an omission or conflict, block and return the page
@@ -111,8 +112,12 @@ also create the missing tag, which this skill does not own. An existing remote
 draft may be updated only after proving the remote tag state is unchanged; a
 new remote draft may be created only for an already-existing tag. After any
 draft write, read it back and verify the tag, title, body, `isDraft`,
-`isPrerelease`, latest decision, URL, and unchanged remote tag state. Report
-any mismatch as a failed write; do not describe it as complete.
+`isPrerelease`, URL, unchanged remote tag state, and unchanged published latest
+pointer. Draft create/update commands must not pass `--latest` or
+`--latest=false`; the previewed latest decision is reserved for publication.
+Treat an already matching draft as a no-op, and never downgrade an already
+published Release to draft. Report any mismatch as a failed write; do not
+describe it as complete.
 
 ## Publish Gate
 
@@ -128,14 +133,23 @@ draft cannot be reused as publish approval. A missing or moved tag, invalidated
 pre-tag authority, blocked post-tag audit, version mismatch, or absent approval
 prohibits publication.
 
-Immediately before publishing, re-read the current latest Release. If its tag
-or the resulting SemVer comparison differs from the confirmed preview, stop
-and require a refreshed preview and new confirmation; do not publish with a
-stale `--latest` decision.
+If content must be updated before publication, write and read back that draft
+content first without a latest flag. Immediately before the final
+draft-to-published write, re-read the current latest Release and target tag
+identity. If either differs from the confirmed preview/audited tag, stop with
+the Release still in its last verified state and require the owning flow to
+refresh its evidence. Apply `draft=false`, the final prerelease state, and the
+confirmed latest flag in that one final write. An already published Release
+that fully matches the approved state is a readback-only no-op; mismatches are
+failures, not permission to flip it again.
 
 After publishing, read the GitHub Release back and verify its tag, title, body,
 draft/published state, prerelease/latest state, publication time, and URL
-before reporting success.
+before reporting success. Re-read the remote tag OID as part of this final
+verification; tag drift returns to the host tag owner and post-tag audit. If
+the latest pointer differs, report the observed state and an exact corrective
+`gh release edit <expected-tag> --latest` command, but do not execute that
+third-party Release correction automatically or repair the tag.
 
 ## Role Boundary
 

@@ -5,7 +5,7 @@ feature: "skill-github-release-generator"
 feature_path: "agents/pm-agent/skills/github-release-generator"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
-version: "1.0.0"
+version: "1.1.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-20"
@@ -99,10 +99,11 @@ skill 必须先验证以下字段和证据：
   latest 缺失或任一版本无法安全解析/比较时，使用 `--prerelease=false --latest=false`。
 - preview 必须展示原始 tag、规范化版本、当前 latest tag/URL、比较结果及最终两个 flag，
   由维护者连同标题和正文一起确认。
-- draft create/update 与 publish 每次写入前都重新只读当前 latest Release，并按同一规则
-  复核比较结论；只有证据与最近一次已确认 preview 完全一致时，命令才复用其中的显式
-  prerelease/latest flag。latest tag 或比较结论漂移时必须停止、刷新 preview 并重新取得
-  维护者确认，不得沿用 stale flag 或静默计算成更宽松的 latest 结论。
+- draft create/update 每次写入前、publish 的最终状态写入前都重新只读当前 latest Release，
+  并按同一规则复核比较结论。draft 写入只应用 prerelease 状态并省略 latest flag；latest
+  决策只在最终 `draft=false` 写入中与 prerelease 状态原子应用。latest tag 或比较结论漂移
+  时必须停止、刷新 preview 并重新取得维护者确认，不得沿用 stale flag 或静默计算成更
+  宽松的 latest 结论。
 
 ## 4. #117 时序状态机
 
@@ -131,9 +132,12 @@ skill 必须先验证以下字段和证据：
 4. 已有 draft 可在证明 tag 状态不变的前提下更新；新建远端 draft 必须使用
    `--verify-tag` 绑定已经存在的 tag。任一 draft 写入前重新读取当前 latest Release；若
    与已确认 preview 的 latest 证据或比较结果不一致，返回 preview 重新确认。
-5. 写入后用 `gh release view` 或 Connector 回读 tag、name、body、`isDraft`、
-   `isPrerelease`、latest 决策和 URL，并比较写前写后的远端 tag 状态。
-6. 若操作会创建或移动 Git tag，必须停止；本 skill 不拥有 tag。
+5. draft create/update 一律不传 `--latest` 或 `--latest=false`；写入后用 `gh release view`
+   或 Connector 回读 tag、name、body、`isDraft`、`isPrerelease` 和 URL，并比较写前写后的
+   远端 tag OID 与 published latest 指针，二者都必须不变。
+6. 重复执行时先按当前状态选择 create、update 或 no-op；已匹配 draft 不写，已 published
+   不降级，禁止产生重复 Release 或重复状态翻转。
+7. 若操作会创建或移动 Git tag，必须停止；本 skill 不拥有 tag。
 
 ### 4.3 publish 状态
 
@@ -149,12 +153,17 @@ post-tag handoff 必须对应同一 `target_release_version` 和实际 tag，并
 authority、实际 tag 与版本来源的复核结论。任何 `blocked`、tag 缺失/移动或版本不一致
 都禁止发布。此前对生成 Release Notes 或创建 draft 的批准不能复用为发布批准。
 
-发布写入前还必须重新只读当前 latest Release 并复核 SemVer 比较。latest 指针或比较结论
-相对已确认 preview 发生变化时，原 latest 决策失效，必须刷新 preview 并重新取得维护者
-确认；不得使用 stale 的 `--latest`。
+若发布需要先更新标题/正文/prerelease，第一次写仅更新仍为 draft 的内容且不携带 latest
+flag，随后立即回读。最终 `draft=false` 写入前必须再次读取 latest Release 与目标 tag OID；
+这次复查位于两次可能的写之间。latest 漂移返回 preview 重新确认，tag 漂移返回宿主 tag
+owner 与 post-tag audit。只有两项证据均未漂移时，最终写才把 `draft=false`、prerelease 与
+已确认 latest flag 原子应用。已 published 且完全匹配时只回读 no-op，不重复翻转。
 
 发布后再次回读并核对 tag、标题、正文、draft/published 状态、prerelease/latest 状态、
-发布时间和 URL；回读失败或不一致必须报告失败，不宣称发布完成。
+发布时间、URL 与远端 tag OID；`targetCommitish` 不能替代 tag OID 复查。回读失败或不一致
+必须报告失败，不宣称发布完成。latest 指针不符时输出把预期 tag 设为 latest 的精确纠正
+命令，但不得自动执行第三次写入或修改第三方 Release；tag 漂移返回宿主 tag owner 与
+post-tag audit，不自动修 tag。
 
 ## 5. 内容转换规则
 
