@@ -73,6 +73,7 @@ Before writing, show the maintainer:
 - candidate pages and types;
 - code paths and globs;
 - evidence for each page;
+- feature owner or owning team when the feature catalog provides one;
 - proposed change-map, index, or host-required navigation delta;
 - explicit exclusions, unresolved discrepancies, and out-of-batch scope.
 
@@ -146,15 +147,20 @@ Synchronize only affected product and ops pages and reconcile their material
 claims with the confirmed release version evidence. Do not generate or edit a
 Release Notes body, its index, `.meta/releases.json`, or Release Notes
 navigation. Handoff all such work to `docs-agent:release-notes-generator`
-(issue #116). Do not prepare or operate a GitHub Release.
+(issue #116). For a direct Release Notes request, stop with zero site writes
+and pass the confirmed version, scope, evidence, and requested site surfaces to
+that specialist immediately; do not ask for separate permission to perform
+the routing handoff. Do not prepare or operate a GitHub Release.
 
 ### Existing-system backfill
 
 Support finite confirmed batches for all five types. Prefer a PM feature
 catalog and the existing change map. Without a mapping, bounded discovery may
 propose one coherent page group plus its map entries, but must not expand into
-a repository-wide scan or full-site generation. Execute one confirmed batch,
-report remaining candidates, and wait for confirmation before another batch.
+a repository-wide scan or full-site generation. Preserve the feature owner or
+owning team from the catalog in the proposed batch when present. Execute one
+confirmed batch, report remaining candidates, and wait for confirmation before
+another batch.
 
 ## Design Delivery Closeout Gate
 
@@ -205,5 +211,7 @@ After each scope or backfill batch, report:
 - Host docs checks: <commands, cwd, and results>
 - Unresolved discrepancies: <items, owners, next evidence or none>
 - Coverage and remaining batches: <summary>
-- Handoff: <docs-audit ready/blocked, or release-notes-generator when applicable>
+- Handoff: <docs-audit (issue #117) ready/blocked, or
+  release-notes-generator (issue #116) with the confirmed version, scope,
+  evidence, and requested site surfaces when applicable>
 ```

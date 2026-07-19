@@ -7,31 +7,30 @@
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws2-docs-v1`
-- Commit: `c05f689`
+- Fixture: `issue-121-s2-final`
+- Run date: `2026-07-19`
 
 ## Latest Result
 
-**PASS** — with-skill 确认前六项完成态证据全部通过后，提出设计页 + design map 的原子候选范围（页面/代码范围/证据/排除项），正确停在第七项维护者范围确认，零写入。
+**PASS** — with-skill 3/3 assertions 通过；without-skill baseline 3/3。
 
 ## With-Skill Behavior
 
-- 正向路径不越权：证据全过≠可写入，候选范围确认门禁保留。
-- 候选内容只描述代码与测试证明的 current state。
+- 七项 design closeout 证据全部通过后仍停在候选范围确认，不提前写入。
+- 候选内容仅使用最终代码与通过测试支持的当前事实，并保持后续 `unverified` 纪律。
 
 ## Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 文档。
-- baseline 同样停在确认点零写入，行为一致；差异在七项门禁的逐项核验记录与候选范围的协议化呈现。
+- 全新 baseline 在该明确 fixture 上同样满足 3/3。
 
 ## Failures
 
-- 无。
+- with-skill 无 assertion failure。
 
 ## Next Steps
 
-- 保留本结果。
+- closeout 条件或候选确认协议变化时重跑。
 
 ## Runtime Artifact Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- 运行期证据仅保留在 `tmp/eval-runs/121/`，不提交。

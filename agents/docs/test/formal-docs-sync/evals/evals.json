@@ -27,9 +27,9 @@
           "text": "合并相同 `code_glob` 的 required_docs 并稳定去重排序，保留 `plugins/manual/**` 人工未知条目及其 trigger、exclude，不因当前 scope 未命中而删除。"
         },
         {
-          "id": "keeps_mvp_boundary",
-          "description": "遵守 API-only MVP 边界",
-          "text": "明确 feature sync 的 MVP 自动化仅覆盖 API 页面和 API code_glob，不声称 database、design、ops 或 release 文档已自动同步完成。"
+          "id": "keeps_confirmed_type_scope",
+          "description": "在五类能力中保持本次 API 范围",
+          "text": "识别 formal-docs-sync 当前可处理 API、database、design、ops、product 五类正式文档，但本次已确认范围只命中并加载 API 类型；不把其他四类能力误报为本次已同步。"
         },
         {
           "id": "marks_changed_page_unverified",
@@ -170,6 +170,146 @@
           "id": "current_state_only",
           "description": "候选内容仅陈述 current state",
           "text": "候选设计内容只陈述代码与通过测试共同证明的当前行为：按固定字段顺序返回非空偏好摘要并省略空值；不加入未来态、实施过程或无证据声明。"
+        }
+      ]
+    },
+    {
+      "id": "eval-007-feature-database-design",
+      "name": "Feature 模式同步 Database 与 Design 当前状态",
+      "description": "验证已确认 feature delivery 在 design closeout 全通过后，按宿主模板和 change map 原子同步 database 与 design 页面。",
+      "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行 `workspace-access` 的 database + design 正式文档同步。design closeout 证据已完整提供且本批页面与映射均已获维护者确认。请只加载目标类型规则，核对 schema、代码、diff 与测试，更新页面和 change map，执行宿主 `npm run test:docs`，再输出 #117 handoff。",
+      "expected_output": "只更新 workspace-access 的 database 与 design 页面及原子映射；准确写入当前 schema、逻辑关系和最终控制流，不写未来态；两页保持 unverified，真实通过宿主 docs checks 后 handoff docs-audit。",
+      "workspace": "workspace/eval-007-feature-database-design",
+      "assertions": [
+        {
+          "id": "loads_only_database_design_contracts",
+          "description": "只加载目标类型的宿主模板与模块",
+          "text": "先读取宿主 standards entry、change map、database 与 design 模板，并只加载 database/design 类型模块；不读取或应用 API、ops、product 类型规则。"
+        },
+        {
+          "id": "passes_design_closeout_gate",
+          "description": "同一 feature_path 的 design closeout 全通过",
+          "text": "逐项核对 Approved PRD、Confirmed TRD、已确认计划、全部 scope complete、diff 覆盖、全部 required tests passed 及已确认候选范围，确认 design closeout 七项均通过后才写入。"
+        },
+        {
+          "id": "synchronizes_database_current_state",
+          "description": "从 schema 与测试写入数据库当前事实",
+          "text": "将 `docs/site/database/workspace-access.md` 更新为当前 `workspace_memberships` schema：`(workspace_id, user_id)` 唯一约束、`role` 仅允许 owner/editor/viewer、`created_at` 必填；明确 workspace/user 是由应用层验证的逻辑引用，不虚构物理外键。"
+        },
+        {
+          "id": "synchronizes_delivered_design",
+          "description": "只写最终代码与测试支持的设计",
+          "text": "将 `docs/site/design/workspace-access.md` 更新为当前控制流：service 先验证 workspace 与 user 存在，再由 repository upsert membership；不写计划中的 inherited role 或未来架构。"
+        },
+        {
+          "id": "updates_atomic_map_and_unverified_pages",
+          "description": "页面与映射原子更新并等待审计",
+          "text": "两页及 `src/workspace_access/**` 对应 change-map required_docs 作为同一确认范围更新、回读并稳定排序；两页均为 `last_verified_version: unverified`，不执行版本盖章。"
+        },
+        {
+          "id": "runs_host_checks_and_handoffs_audit",
+          "description": "真实执行宿主检查并 handoff #117",
+          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，记录命令、cwd、退出状态和结果；随后把完整 affected set handoff 给 `docs-agent:docs-audit`（#117）。"
+        }
+      ]
+    },
+    {
+      "id": "eval-008-deployment-ops-upgrade",
+      "name": "Deployment verification 同步 Ops 与 Upgrade 当前事实",
+      "description": "验证部署模式只根据已执行配置和结果同步 runbook、升级及回滚，不把部署计划写成现状。",
+      "prompt": "按 `deployment-handoff.md` 的已确认 deployment verification 范围同步 `docs/site/ops/ai-hub-upgrade.md`。请对照 Compose 配置、已执行命令和结果、环境差异及 `deployment-plan.md`，只写当前可执行事实；页面与映射已确认。完成后运行宿主 `npm run test:docs` 并输出 #117 handoff。",
+      "expected_output": "更新单一 ops 页面及映射，写入已验证的 Compose 启动、升级、健康检查和回滚步骤；明确排除仍在计划中的 Kubernetes 路径；保持 unverified，通过 docs checks 后 handoff docs-audit。",
+      "workspace": "workspace/eval-008-deployment-ops-upgrade",
+      "assertions": [
+        {
+          "id": "uses_executed_deployment_evidence",
+          "description": "只消费已确认且执行过的部署证据",
+          "text": "以 `deploy/compose.yaml`、`.eval/deployment-results.md` 中的命令/退出状态/健康结果和环境差异为事实源，不能仅凭 TRD 或 deployment plan 宣称可运行。"
+        },
+        {
+          "id": "writes_current_ops_upgrade_rollback",
+          "description": "同步当前 runbook、升级与回滚",
+          "text": "页面准确记录 `AI_HUB_IMAGE` 默认 `registry.example/ai-hub:v1.4.2`、Compose 启动/升级、`/healthz` 返回 200 的成功标准，以及回滚到 `v1.4.1` 后重新检查健康状态。"
+        },
+        {
+          "id": "does_not_promote_plan_to_current_state",
+          "description": "不得把计划写成现状",
+          "text": "明确将 `deployment-plan.md` 中尚未执行的 Kubernetes/Helm 迁移排除在当前正式文档之外；不得写成已支持、已部署或可执行现状。"
+        },
+        {
+          "id": "keeps_ops_scope_atomic_and_unverified",
+          "description": "Ops 页面与映射原子更新",
+          "text": "只更新 `docs/site/ops/ai-hub-upgrade.md` 与 `deploy/**` 对应 change-map 条目，回读核对并保持页面 `last_verified_version: unverified`；不修改 product、design、database 或 Release Notes。"
+        },
+        {
+          "id": "runs_ops_host_checks_and_handoffs",
+          "description": "真实通过宿主检查并 handoff",
+          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，准确记录结果，然后 handoff `docs-agent:docs-audit`（#117），不执行部署。"
+        }
+      ]
+    },
+    {
+      "id": "eval-009-release-product-ops",
+      "name": "Release 模式只同步受影响 Product 与 Ops",
+      "description": "验证 release scope 只更新与 v1.5.0 事实一致的 product/ops 当前页面，并保持 Release Notes 与 metadata 边界。",
+      "prompt": "按 `release-handoff.md` 的已确认 v1.5.0 release 范围同步仍受影响的 product 与 ops 正式页面。请核对 release scope、版本证据、实现/配置、测试和审计上下文，只更新 change map 命中的页面，执行宿主 `npm run test:docs`，再输出 #117 handoff。不要生成或编辑 Release Notes。",
+      "expected_output": "只更新 dashboard product 页面与 runtime ops 页面及其映射，内容与 v1.5.0 已确认事实一致；Release Notes 正文/index/metadata/navigation 零变化，两页保持 unverified，通过检查后 handoff docs-audit。",
+      "workspace": "workspace/eval-009-release-product-ops",
+      "assertions": [
+        {
+          "id": "limits_release_to_affected_product_ops",
+          "description": "Release 仅同步受影响 product/ops",
+          "text": "根据 release scope、diff 与 change map，只更新 `docs/site/product/dashboard-limits.md` 和 `docs/site/ops/dashboard-runtime.md` 及其映射；不扩张到 API、database、design 或无关站点页面。"
+        },
+        {
+          "id": "reconciles_confirmed_version_facts",
+          "description": "逐项核对 v1.5.0 版本事实",
+          "text": "用 `release-evidence.md`、代码、配置和测试交叉核对：v1.5.0 当前 dashboard 上限为 25，runtime 镜像为 `registry.example/ai-hub:v1.5.0`，不得延续旧的 10 或 v1.4.0，也不得写入未确认的 v1.5.1 计划。"
+        },
+        {
+          "id": "preserves_release_notes_surfaces",
+          "description": "Release Notes 相关面零变化",
+          "text": "不创建或编辑 Release Notes 正文、`release-notes/index.md`、`.meta/releases.json` 或 Release Notes navigation；如需该交付，指向 `docs-agent:release-notes-generator`（#116）。"
+        },
+        {
+          "id": "keeps_release_pages_unverified",
+          "description": "同步页面仍等待 #117 盖章",
+          "text": "product 与 ops 页面均保持 `last_verified_version: unverified`，不因 release mode 或版本证据自行写入 v1.5.0 盖章。"
+        },
+        {
+          "id": "runs_release_host_checks_and_handoffs",
+          "description": "真实通过宿主检查并 handoff",
+          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，记录命令/cwd/退出状态，随后将两页完整 affected set handoff `docs-agent:docs-audit`（#117）。"
+        }
+      ]
+    },
+    {
+      "id": "eval-010-release-notes-boundary",
+      "name": "Release Notes 越界请求阻塞并零写入 handoff",
+      "description": "验证直接要求 formal-docs-sync 生成 Release Notes 时拒绝越界职责，交给站内 specialist，且站点零变化。",
+      "prompt": "请直接用 formal-docs-sync 根据 `release-request.md` 为 v1.5.0 生成 Release Notes 正文、更新 release index 和 `.meta/releases.json`。不要转给其他 skill，我希望你现在就写入。",
+      "expected_output": "拒绝由 formal-docs-sync 执行 Release Notes 正文/index/metadata/navigation 写入，说明边界并将请求与证据 handoff 给 `docs-agent:release-notes-generator`，而不是 docs-audit、GitHub Release 或泛化 PM 路由；整个 docs/site 零变化，也不执行 GitHub Release。",
+      "workspace": "workspace/eval-010-release-notes-boundary",
+      "assertions": [
+        {
+          "id": "rejects_release_notes_scope",
+          "description": "拒绝 Release Notes 越界职责",
+          "text": "明确说明 Release Notes 正文、版本索引、`.meta/releases.json` 和对应 navigation 不属于 formal-docs-sync，即使用户要求绕过分工也不执行。"
+        },
+        {
+          "id": "handoffs_site_release_notes_specialist",
+          "description": "handoff 站内 release-notes-generator",
+          "text": "将已确认的 v1.5.0 站内 Release Notes 请求和现有证据 handoff 给 `docs-agent:release-notes-generator`，而不是 docs-audit、GitHub Release 或泛化 PM 路由。"
+        },
+        {
+          "id": "keeps_entire_site_zero_diff",
+          "description": "越界阻塞时 docs/site 零写入",
+          "text": "不创建 `docs/site/release-notes/v1.5.0.md`，不修改 index、metadata、navigation、任何正式页面、change map 或站点脚本；报告整个 `docs/site/` 零变化。"
+        },
+        {
+          "id": "does_not_operate_github_release",
+          "description": "不越界执行 GitHub Release",
+          "text": "不创建 tag，不生成或发布 GitHub Release，不把 #120 外部发布职责混入站内 handoff。"
         }
       ]
     }

@@ -29,5 +29,7 @@ Read the ops template linked from the host standards entry—normally
 
 Keep only currently executable steps, prerequisites, checkpoints, rollback,
 and troubleshooting that evidence supports. Upgrade and rollback instructions
-are ops pages, not Release Notes. Keep ops pages and their change-map entries
-in the same confirmed write/read-back scope.
+are ops pages, not Release Notes; hand off any Release Notes body, index,
+metadata, or navigation request to `docs-agent:release-notes-generator`. Keep
+ops pages and their change-map entries in the same confirmed write/read-back
+scope.

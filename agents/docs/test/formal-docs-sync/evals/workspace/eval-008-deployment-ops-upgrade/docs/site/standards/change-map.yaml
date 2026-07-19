@@ -1,0 +1,29 @@
+title: 文档变更映射
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - docs/site
+last_verified_version: unverified
+
+# Entry schema:
+# change_map:
+#   "<repository-relative code_glob>":
+#     required_docs:
+#       - docs/site/<section>/<page>.md
+#     trigger: <when a code change requires documentation review>
+#     exclude:
+#       - "<optional glob that narrows only this entry>"
+change_map:
+  "deploy/**":
+    required_docs:
+      - docs/site/ops/ai-hub-upgrade.md
+    trigger: runtime configuration, startup, upgrade, health, or rollback changes
+    exclude:
+      - "deploy/examples/**"
+  "src/product/**":
+    required_docs:
+      - docs/site/product/index.md
+    trigger: user-facing behavior changes

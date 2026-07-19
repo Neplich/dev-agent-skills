@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-009-release-product-ops",
+  "eval_name": "release-product-ops",
+  "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-009-release-product-ops",
+  "skill_availability_goal": "Verify release-mode reconciliation of only affected product and ops current-state pages against confirmed v1.5.0 facts.",
+  "prompt": "按 `release-handoff.md` 的已确认 v1.5.0 release 范围同步仍受影响的 product 与 ops 正式页面。请核对 release scope、版本证据、实现/配置、测试和审计上下文，只更新 change map 命中的页面，执行宿主 `npm run test:docs`，再输出 #117 handoff。不要生成或编辑 Release Notes。",
+  "fixture_context": ["release-handoff.md", "release-evidence.md", "audit-context.md", "src/product/dashboard_limits.ts", "deploy/dashboard.env", ".eval/release-test-results.md", "docs/site/"],
+  "execution_cleanup": ["docs/site/.generated", "sync-report.md"]
+}

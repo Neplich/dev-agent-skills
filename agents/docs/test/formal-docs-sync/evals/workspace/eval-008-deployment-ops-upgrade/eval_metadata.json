@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-008-deployment-ops-upgrade",
+  "eval_name": "deployment-ops-upgrade",
+  "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-008-deployment-ops-upgrade",
+  "skill_availability_goal": "Verify deployment-mode ops synchronization from executed evidence without promoting planned Kubernetes work to current state.",
+  "prompt": "按 `deployment-handoff.md` 的已确认 deployment verification 范围同步 `docs/site/ops/ai-hub-upgrade.md`。请对照 Compose 配置、已执行命令和结果、环境差异及 `deployment-plan.md`，只写当前可执行事实；页面与映射已确认。完成后运行宿主 `npm run test:docs` 并输出 #117 handoff。",
+  "fixture_context": ["deployment-handoff.md", "docs/engineer/ai-hub-runtime/TRD.md", "deploy/compose.yaml", "deployment-plan.md", ".eval/deployment-results.md", "docs/site/"],
+  "execution_cleanup": ["docs/site/.generated", "sync-report.md"]
+}

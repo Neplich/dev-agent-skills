@@ -1,8 +1,8 @@
 ---
 title: "Formal Docs Sync 多类型扩展实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.2.0"
-status: Approved
+version: "0.4.0"
+status: Implemented
 author: "Neplich Codex"
 date: "2026-07-19"
 last_updated: "2026-07-19"
@@ -17,6 +17,12 @@ related_trd: "docs/engineer/agents/docs-agent/formal-docs-sync/TRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/121"
 changelog:
+  - version: "0.4.0"
+    date: "2026-07-19"
+    changes: "记录 S2c 维护者决策：eval-010 改为语义 handoff 断言并完成 fresh validation，S2 门禁解除"
+  - version: "0.3.0"
+    date: "2026-07-19"
+    changes: "记录 S2 fresh validation 结果：eval 001-009 PASS，eval 010 NON-PASS，交付门禁阻塞"
   - version: "0.2.0"
     date: "2026-07-19"
     changes: "完成 S1 实现、lock hash 刷新、仓库契约检查与 CI 同款 Python 回归"
@@ -37,8 +43,9 @@ changelog:
 - 硬前置 #118 与 #122 已合并；#116 站内 Release Notes specialist 已交付；#117 是
   同步后的审计与统一盖章 owner。
 - 维护者已明确批准总纲并要求直接执行：S1 完成实现和确定性验证；S2 完成 eval、fresh
-  validation、durable comparison 与后续交付。因此本计划记录为 `Approved`，无需再次
-  等待实施确认。
+  validation、durable comparison 与后续交付。S2c 将 eval-010 的 issue 编号字面要求修订
+  为 specialist handoff 语义断言；本轮 fresh judge 判定 PASS，当前计划状态为
+  `Implemented`，交付门禁已解除。
 
 ## 2. 目标与非目标
 
@@ -56,7 +63,7 @@ comparison。
 | 阶段 | 内容 | 验证与完成条件 | 状态 |
 | --- | --- | --- | --- |
 | S1 — 实现 | 建立 Approved 文档链；瘦身 `SKILL.md` 为入口门禁、四模式和流程指针；将 `_internal/INSTRUCTIONS.md` 改为通用八步站点契约；新增 API、database、design、ops、product 五类型模块；落实模式边界、模板消费、design closeout、有限 backfill、缺站 handoff、#116/#117/#118/#122 边界；刷新 `formal-docs-sync` computedHash。 | 渐进加载结构与类型职责静态核对；4 个仓库 checker 和 CI 同款 pytest 全部通过。既有 eval 如仅因旧表述失效则如实记录，不在 S1 修改。 | Completed |
-| S2 — Eval 与交付 | 基于 #122 资产扩展 AI Hub-shaped fixtures，覆盖 feature database / design、deployment ops、product sync 和 Release Notes 越界；按同一 prompt / fixture 生成 fresh with-skill 与 fresh without-skill，交由 fresh Codex subagent 评审并更新 durable `comparison.md`；完成最终仓库验证与 PR 交付。 | eval contract / artifact checks 通过；所有本轮 assertions 有 fresh evidence；comparison 与实际结果一致；不提交运行期 transcript、verdict 或 diagnostics；PR 等待 CI / review 与维护者确认，不自动 merge。 | Approved / Pending |
+| S2 — Eval 与交付 | 基于 #122 资产扩展 AI Hub-shaped fixtures，覆盖 feature database / design、deployment ops、product sync 和 Release Notes 越界；按同一 prompt / fixture 生成 fresh with-skill 与 fresh without-skill，交由 fresh Codex subagent 评审并更新 durable `comparison.md`；完成最终仓库验证与 PR 交付。 | eval contract / artifact checks 通过；所有本轮 assertions 有 fresh evidence；comparison 与实际结果一致；不提交运行期 transcript、verdict 或 diagnostics；PR 等待 CI / review 与维护者确认，不自动 merge。 | Completed |
 
 ```mermaid
 flowchart LR
@@ -170,3 +177,47 @@ uv run scripts/check_doc_contract.py
   fixture 或 durable `comparison.md`，原因是 issue #121 已将这些工作明确划入 S2。
 - S1 残余风险仅是旧 eval 的自然语言断言可能受 API-only 表述移除影响；须在 S2 通过
   fresh with-skill / without-skill 与 durable comparison 验证，不以本轮确定性检查替代。
+
+## 10. S2 实施结果
+
+### 10.1 Fresh validation 取舍
+
+- 本轮开始时已有的运行目录不沿用。其 fixture 与 skill 文档在运行后仍有修改，且无法
+  同时确认每个 eval 的 with-skill、without-skill 与独立 judge 记录都基于最终输入完整
+  生成，不满足 fresh validation 沿用条件。
+- eval 001-009 的最终结论来自统一协议补强后的第三轮全量 fresh 重跑；eval-010 在 S2c
+  断言语义化修订后单独重新生成全新 with-skill 与独立 without-skill baseline，并由独立
+  fresh judge 按当前 assertions 评审。
+- 运行期 transcript、verdict、timing、status 与 diagnostics 只保留在
+  `tmp/eval-runs/121/` 与 `tmp/eval-runs/121-s2c-eval010/`，不作为提交内容。
+
+### 10.2 Eval 结论
+
+| Eval | 场景 | 最终结论 | Durable comparison |
+| --- | --- | --- | --- |
+| `eval-001-sync-feature-api` | Feature 模式精准同步 API 正式文档 | PASS | `agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api/comparison.md` |
+| `eval-002-plan-backfill-batches` | Catalog 优先规划存量 API 回填批次 | PASS | `agents/docs/test/formal-docs-sync/evals/workspace/eval-002-plan-backfill-batches/comparison.md` |
+| `eval-003-design-gate-incomplete-scope` | Design 收口门禁阻断未完成范围 | PASS | `agents/docs/test/formal-docs-sync/evals/workspace/eval-003-design-gate-incomplete-scope/comparison.md` |
+| `eval-004-design-gate-failing-tests` | Design 收口门禁阻断失败测试 | PASS | `agents/docs/test/formal-docs-sync/evals/workspace/eval-004-design-gate-failing-tests/comparison.md` |
+| `eval-005-design-gate-mismatched-evidence` | Design 收口门禁阻断路径证据不一致 | PASS | `agents/docs/test/formal-docs-sync/evals/workspace/eval-005-design-gate-mismatched-evidence/comparison.md` |
+| `eval-006-design-gate-all-passed` | Design 收口门禁通过后停在范围确认 | PASS | `agents/docs/test/formal-docs-sync/evals/workspace/eval-006-design-gate-all-passed/comparison.md` |
+| `eval-007-feature-database-design` | Feature 模式同步 Database 与 Design 当前状态 | PASS | `agents/docs/test/formal-docs-sync/evals/workspace/eval-007-feature-database-design/comparison.md` |
+| `eval-008-deployment-ops-upgrade` | Deployment verification 同步 Ops 与 Upgrade 当前事实 | PASS | `agents/docs/test/formal-docs-sync/evals/workspace/eval-008-deployment-ops-upgrade/comparison.md` |
+| `eval-009-release-product-ops` | Release 模式只同步受影响 Product 与 Ops | PASS | `agents/docs/test/formal-docs-sync/evals/workspace/eval-009-release-product-ops/comparison.md` |
+| `eval-010-release-notes-boundary` | Release Notes 越界请求阻塞并零写入 handoff | PASS | `agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary/comparison.md` |
+
+### 10.3 实施完成与门禁解除
+
+- 最终确定性验证全部通过：repository contract、eval contract、eval artifact policy、
+  documentation contract 均为 PASS；CI 同款 pytest 共 `128` 项通过、`0` 项失败。
+- 维护者判定 eval-010 原 assertion 与 `expected_output` 中的 `issue #116` 字面要求违反
+  `AGENTS.md` 的语义断言准则，因此移除该字符串要求；行为语义未变，仍要求将请求与证据
+  handoff 给 `docs-agent:release-notes-generator`，而不是 docs-audit、GitHub Release 或
+  泛化 PM 路由。
+- 修订后的 `eval-010-release-notes-boundary` 已单独执行全新 with-skill、独立生成的
+  without-skill baseline 与独立 fresh judge：with-skill 满足 `4/4` assertions，
+  without-skill 满足 `1/4` assertions，最终结论为 PASS。
+- with-skill 的 `docs/site/` 源文件数保持 41 → 41 且 aggregate hash 不变；baseline
+  从 41 → 42 并修改 Release Notes 正文、index 与 metadata，形成明确行为对照。
+- S2 已完成，eval-010 阻塞已解除，可以继续 commit、push、PR 与 CI 交付；仍不自动
+  merge、tag、release 或部署。

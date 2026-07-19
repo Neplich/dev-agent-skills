@@ -63,7 +63,8 @@ authoritative specialist contract.
 - `docs-agent:docs-site-bootstrap` - Explicitly initialize a host project's
   formal documentation site
 - `docs-agent:formal-docs-sync` - Synchronize confirmed feature, deployment, or
-  release facts, or backfill existing formal API documentation
+  release facts, or backfill bounded API, database, design, ops, or product
+  current-state documentation
 - `docs-agent:release-notes-generator` - Generate, confirm, index, and validate
   a host site's versioned Release Notes before the GitHub Release handoff
 - `docs-agent:docs-audit` - Audit formal documentation before release and
@@ -76,8 +77,8 @@ Route by the requested documentation outcome, not literal phrasing.
 - Explicitly initialize, create, or scaffold the formal documentation site
   -> `docs-site-bootstrap`
 - Synchronize formal docs after a feature, deployment, or release; update
-  existing formal docs; document the current API state; backfill an inherited
-  codebase
+  existing API, database, design, ops, or product current-state docs; backfill
+  a bounded batch in an inherited codebase
   -> `formal-docs-sync`
 - Generate or update a versioned page under the host site's Release Notes,
   confirm its body, update release metadata and indexes, and validate it before
