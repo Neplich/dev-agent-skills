@@ -1,0 +1,22 @@
+{
+  "eval_id": "eval-008-pre-tag-success",
+  "eval_name": "pre-tag-success",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-008-pre-tag-success",
+  "skill_availability_goal": "Verify that a maintainer-confirmed target release can pass pre-tag audit and receive a complete unified stamp even while the matching tag is absent.",
+  "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已明确确认 `target_release_version: v1.2.0`，`base_ref: v1.1.0`、`target_ref: release-head`，且同名 tag 尚不存在。核对完整受影响页面、#116 handoff、Release Notes、索引、`.meta/releases.json` 和宿主版本事实；全部通过后统一盖章并持久化报告。",
+  "execution_cleanup": [
+    "docs/site/.meta/audit/audit-v1.2.0.md"
+  ],
+  "fixture_context": [
+    ".eval/actual-diff.patch",
+    ".eval/release-context.md",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/catalog-items.md",
+    "docs/site/api/catalog-status.md",
+    "docs/site/release-notes/v1.2.0.md",
+    "docs/site/release-notes/index.md",
+    "docs/site/.meta/releases.json",
+    "package.json",
+    "src/catalog/routes.txt"
+  ]
+}

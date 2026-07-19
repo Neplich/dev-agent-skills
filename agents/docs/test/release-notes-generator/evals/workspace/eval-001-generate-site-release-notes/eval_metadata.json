@@ -2,7 +2,7 @@
   "eval_id": "eval-001-generate-site-release-notes",
   "eval_name": "generate-site-release-notes",
   "workspace_root": "agents/docs/test/release-notes-generator/evals/workspace/eval-001-generate-site-release-notes",
-  "skill_availability_goal": "Verify evidence-complete site Release Notes generation, confirmation-ordered derived writes, real host checks, and the issue #120 ready handoff contract.",
+  "skill_availability_goal": "Verify evidence-complete site Release Notes generation, confirmation-ordered derived writes, real host checks, and the issue #117 pre-tag site-ready handoff contract with issue #120 retained as downstream owner.",
   "prompt": "请根据 release-entry.md 与 evidence/ 处理 v1.0.0 的站内 Release Notes，并应用 confirmation-record.md 后完成宿主检查与 handoff。",
   "fixture_context": ["release-entry.md", "confirmation-record.md", "evidence/", "docs/site/package.json", "docs/site/scripts/", "docs/site/standards/", "docs/site/release-notes/README.md", "docs/site/release-notes/v0.9.0.md", "docs/site/.meta/releases.json"],
   "execution_cleanup": ["docs/site/release-notes/v1.0.0.md", "docs/site/.generated", "handoff.yaml"]

@@ -62,11 +62,14 @@ This specialist owns only the documentation-site Release Notes delivery:
 - updating host release metadata, indexes, and necessary navigation after
   confirmation;
 - running host documentation checks; and
-- producing the structured ready handoff required by issue #120.
+- producing the structured site-ready handoff consumed by issue #117 pre-tag
+  audit, while preserving issue #120 as the downstream GitHub Release owner.
 
 The ready handoff proves only that the site Release Notes are confirmed and
-validated. Route it through the issue #117 pre-tag audit; issue #120 may not
-prepare a GitHub Release draft until #117 returns `ready_for_tag`.
+validated. Send it directly to issue #117 pre-tag audit with the explicitly
+maintainer-confirmed `target_release_version` and its confirmation source.
+Issue #120 may not prepare a GitHub Release draft until #117 returns
+`ready_for_tag`.
 
 It does not create, edit, or publish a GitHub Release; create or move a tag;
 publish images; update Helm; deploy software; initialize a documentation site;
@@ -92,10 +95,13 @@ Report:
 - evidence sources used and unresolved evidence gaps;
 - metadata, indexes, and navigation changed after confirmation;
 - host documentation check commands and results; and
-- a `ready` or `blocked` handoff for issue #120.
+- a `ready` or `blocked` site-ready handoff for issue #117, including the
+  maintainer-confirmed `target_release_version` and confirmation source; issue
+  #120 remains the downstream owner after `ready_for_tag`.
 
-Only `confirmation_status: confirmed` together with successful host docs
-checks can produce a ready handoff. At closeout, follow the safety-net behavior
+Only an explicitly maintainer-confirmed `target_release_version`,
+`confirmation_status: confirmed`, and successful host docs checks together can
+produce a ready handoff. At closeout, follow the safety-net behavior
 in `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
 and wait for confirmation before another role acts unless the applicable
 `auto-continue` authorization already exists.

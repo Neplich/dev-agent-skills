@@ -3,7 +3,7 @@
   "eval_name": "audit-doc-only-error",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-005-audit-doc-only-error",
   "skill_availability_goal": "Verify that a changed formal page is fact-checked and blocked when its new claim conflicts with current code, even without a code diff.",
-  "prompt": "审计 fixture 中已确认的 base `c1d2e3f` 到 target `d2e3f4a` 范围，版本锚为 `v1.1.0`。该范围只有正式文档变更；请仍执行完整事实核对，持久化报告并给出 release 建议。",
+  "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`。审计 fixture 中已确认的 `base_ref` `c1d2e3f` 到 `target_ref` `d2e3f4a` 范围。该范围只有正式文档变更；请仍执行完整事实核对，持久化报告并给出阶段结果。",
   "fixture_context": [
     ".eval/actual-diff.patch",
     "docs/site/standards/change-map.yaml",

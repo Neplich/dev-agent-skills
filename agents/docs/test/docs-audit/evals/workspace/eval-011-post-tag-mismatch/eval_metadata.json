@@ -1,0 +1,18 @@
+{
+  "eval_id": "eval-011-post-tag-mismatch",
+  "eval_name": "post-tag-mismatch",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-011-post-tag-mismatch",
+  "skill_availability_goal": "Verify that an actual tag differing from target_release_version blocks post-tag audit without rewriting release content or stamps.",
+  "prompt": "执行 fixture 中定义的 post-tag audit。已有 pre-tag 记录针对 `target_release_version: v1.2.0` 且曾返回 `ready_for_tag`，但实际 tag 证据为 `v1.2.1`。核对所有版本表面并给出阶段结果；不要重写 release 内容来消除冲突。",
+  "execution_cleanup": [],
+  "fixture_context": [
+    ".eval/release-context.md",
+    "docs/site/.meta/audit/audit-v1.2.0.md",
+    "docs/site/api/catalog-items.md",
+    "docs/site/api/catalog-status.md",
+    "docs/site/release-notes/v1.2.0.md",
+    "docs/site/release-notes/index.md",
+    "docs/site/.meta/releases.json",
+    "package.json"
+  ]
+}

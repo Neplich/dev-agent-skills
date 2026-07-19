@@ -4,7 +4,8 @@
 - change_tier: `major`
 - feature_path: `dashboard-capacity`
 - mode: `release`
-- release_version: `v1.5.0`
+- target_release_version: `v1.5.0`
+- target_release_version_confirmation: 维护者在本 release handoff 中明确确认
 - confirmed_scope: `docs/site/product/dashboard-limits.md`, `docs/site/ops/dashboard-runtime.md`, and their matched change-map entries
 - version_evidence: `release-evidence.md`
 - audit_context: `audit-context.md`

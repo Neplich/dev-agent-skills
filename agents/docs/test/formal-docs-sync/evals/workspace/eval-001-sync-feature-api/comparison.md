@@ -7,32 +7,41 @@
 
 ## Test Set / Fixture Version
 
-- Fixture: `issue-121-s2-final`
-- Run date: `2026-07-19`
+- Fixture version: `issue #117 cross-doc audit 2026-07-19`
+- Fresh run: `tmp/eval-runs/117-adjacent/formal-docs-sync/eval-001-sync-feature-api/`
+- Source head: `00c9741dabc24f6b6df377c69c42adb989722648` plus the current issue #117 working tree
 
 ## Latest Result
 
-**PASS** — 最终 fresh judge 判定 with-skill 5/5 assertions 通过；without-skill baseline 4/5。
+**PASS（5/5 assertions）** — with-skill 仅同步命中的 Search API 页面，从代码与测试恢复当前事实，保留 change-map 人工条目并将页面置为 `unverified`。
+
+## Assertions
+
+- `updates_only_mapped_api_doc`：PASS。diff 只修改 `docs/site/api/search.md`，database 与其他页面零变化。
+- `extracts_current_api_facts`：PASS。记录 `GET /api/search`、必填 `q`、可选 `limit` 和 400 `invalid_query`，不延续旧路径。
+- `merges_map_without_deleting_unknown`：PASS。现有映射无需文本变更，`plugins/manual/**` 及其 trigger/exclude 保留。
+- `keeps_confirmed_type_scope`：PASS。识别五类型能力但本轮只读取 API 模块、API 模板与目标证据，没有读取其他类型模块内容。
+- `marks_changed_page_unverified`：PASS。页面写成 current state，`last_verified_version: unverified`。
 
 ## With-Skill Behavior
 
-- 仅加载 API 类型模块，按已确认范围同步 `docs/site/api/search.md` 与映射。
-- 页面保持 `last_verified_version: unverified`，人工映射与无关页面未受影响。
-- 宿主 `npm run test:docs` 真实通过。
+- 锁定安装后在 `docs/site/` 真实执行 `npm run test:docs`，73/73 通过。
+- 因缺少维护者确认的 `target_release_version`，#117 pre-tag handoff 正确 blocked，不从分支或 ref 推测版本。
 
 ## Without-Skill Baseline
 
-- 同 prompt、同 pristine fixture 全新生成，未读取 Agent 或 skill 文档。
-- baseline 完成 API 同步，但未建立五类型能力下的单类型 progressive-loading 边界。
+- 来源：同一 prompt 与 pristine fixture 的本轮 fresh `without_skill`；不含目标 skill、Docs README、旧 comparison 或 with-skill 输出，未复用历史 baseline。
+- baseline 完成主要 API 内容与宿主检查，但没有建立“五类型能力下只加载 API 模块”的 progressive-loading 证据，也仅静态核证 Python 测试。
 
 ## Failures
 
-- with-skill 无 assertion failure。
+- 无 with-skill assertion failure。
+- Harness limitation：baseline 的父仓库 Git 命令可见文件名/状态，未读取目标 skill 或 README 内容；未影响目标页面、类型加载与 handoff 判断。后续应隔离 scratch Git 元数据。
 
 ## Next Steps
 
-- 本结果可保留；skill、fixture 或断言变化时重新执行 fresh validation。
+- 保持单类型 progressive loading、`unverified` 与无确认版本时 blocked 的回归门禁。
 
 ## Runtime Artifact Policy
 
-- transcripts、workspace 副本与 judge verdict 仅位于 `tmp/eval-runs/121/`，不提交。
+- workspace 副本、依赖、candidate、transcript、manifest、diff 与状态仅位于 `tmp/eval-runs/117-adjacent/`，不提交到 git。

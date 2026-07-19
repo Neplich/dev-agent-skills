@@ -1,8 +1,8 @@
 {
-  "latest": "v1.0.0",
-  "released": ["v1.0.0"],
+  "latest": "v1.1.0",
+  "released": ["v1.0.0", "v1.1.0"],
   "verifiedDocs": {
-    "docs/site/api/catalog-items.md": "v1.0.0",
-    "docs/site/api/catalog-status.md": "v1.0.0"
+    "docs/site/api/catalog-items.md": "v1.1.0",
+    "docs/site/api/catalog-status.md": "v1.1.0"
   }
 }

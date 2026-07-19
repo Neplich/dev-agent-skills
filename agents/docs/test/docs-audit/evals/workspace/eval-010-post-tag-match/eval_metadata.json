@@ -1,0 +1,18 @@
+{
+  "eval_id": "eval-010-post-tag-match",
+  "eval_name": "post-tag-match",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-010-post-tag-match",
+  "skill_availability_goal": "Verify release_verified only when the actual tag and every release-version surface match a still-valid pre-tag audit record.",
+  "prompt": "执行 fixture 中定义的 post-tag audit。读取已有 pre-tag 审计记录与实际 tag 证据，核对 `target_release_version`、Release Notes、索引、`.meta/releases.json` 和宿主版本事实。只做最终复核，不重新生成内容或盖章。",
+  "execution_cleanup": [],
+  "fixture_context": [
+    ".eval/release-context.md",
+    "docs/site/.meta/audit/audit-v1.2.0.md",
+    "docs/site/api/catalog-items.md",
+    "docs/site/api/catalog-status.md",
+    "docs/site/release-notes/v1.2.0.md",
+    "docs/site/release-notes/index.md",
+    "docs/site/.meta/releases.json",
+    "package.json"
+  ]
+}

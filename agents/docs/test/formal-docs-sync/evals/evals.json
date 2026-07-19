@@ -279,7 +279,7 @@
         {
           "id": "runs_release_host_checks_and_handoffs",
           "description": "真实通过宿主检查并 handoff",
-          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，记录命令/cwd/退出状态，随后将两页完整 affected set handoff `docs-agent:docs-audit`（#117）。"
+          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，记录命令/cwd/退出状态，随后将两页完整 affected set、维护者确认的 `target_release_version: v1.5.0` 及确认来源 handoff `docs-agent:docs-audit`（#117）进入 pre-tag；不得从分支名或 Git ref 推测版本。"
         }
       ]
     },

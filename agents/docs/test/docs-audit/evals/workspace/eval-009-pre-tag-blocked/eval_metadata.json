@@ -1,0 +1,19 @@
+{
+  "eval_id": "eval-009-pre-tag-blocked",
+  "eval_name": "pre-tag-blocked",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-009-pre-tag-blocked",
+  "skill_availability_goal": "Verify that a missing target_release_version and a branch-name inference block pre-tag writes before a mixed verified/stale set can be partially stamped.",
+  "prompt": "执行 fixture 中请求的 pre-tag audit。`base_ref` 与 `target_ref` 已确认，但维护者没有提供 `target_release_version`；分支名含 `release/v1.2.0` 只能作为上下文，不能当作目标版本。fixture 还包含一张准确页面和一张过期页面。请按入口 gate 处理，不要修复或局部盖章。",
+  "execution_cleanup": [
+    "docs/site/.meta/audit"
+  ],
+  "fixture_context": [
+    ".eval/actual-diff.patch",
+    ".eval/release-context.md",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/catalog-items.md",
+    "docs/site/api/catalog-status.md",
+    "docs/site/.meta/releases.json",
+    "src/catalog/routes.txt"
+  ]
+}
