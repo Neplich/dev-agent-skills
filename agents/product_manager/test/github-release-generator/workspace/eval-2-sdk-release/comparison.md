@@ -3,7 +3,7 @@
 ## Evaluation Target
 
 - Agent: `product_manager`
-- Skill: `release-notes-generator`
+- Skill: `github-release-generator`
 - Eval: `eval-002-sdk-breaking-changes`
 - Test case: sdk-breaking-changes
 - Workspace: `workspace/eval-2-sdk-release`
@@ -13,7 +13,7 @@
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that release-notes-generator handles sdk-breaking-changes and produces the expected role-specific artifact.
+- Fixture: Historical pre-rename release-notes fixture; G2 must realign it to github-release-generator gates.
 - Expected output: 技术受众的 release notes，正确识别并突出 breaking changes（如有），highlights 聚焦 API 变化的用户价值
 
 ## Assertions
@@ -50,6 +50,8 @@ Observed behavior:
 - None found in fresh Codex subagent validation on 2026-06-06.
 
 ## Next Steps
+
+- G1 仅迁移结构；本历史结果不证明 #116/#117 新门禁，G2 需重写并 fresh validation。
 
 - 保留该 eval 继续覆盖 SDK breaking-change 判断、完整 source audit、升级命令和 conventional prefix 保留行为。
 

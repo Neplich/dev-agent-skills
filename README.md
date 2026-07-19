@@ -83,7 +83,7 @@ Downstream role routers and specialist skills remain installed as PM-orchestrate
 
 | Agent | Focus | Skills | Invocation | Docs |
 | --- | --- | :---: | --- | --- |
-| `pm-agent` | Requirements, specs, competitor research, roadmap, release communication, GitHub project status | 9 (`1 + 8`) | Direct entry: `/pm-agent` | [product_manager](./agents/product_manager/README.md) |
+| `pm-agent` | Requirements, specs, competitor research, roadmap, gated GitHub Release generation, GitHub project status | 9 (`1 + 8`) | Direct entry: `/pm-agent` | [product_manager](./agents/product_manager/README.md) |
 | `designer-agent` | UX flows, information architecture, wireframes, visual systems, design handoff | 3 (`1 + 2`) | PM handoff only | [designer](./agents/designer/README.md) |
 | `engineer-agent` | Codebase analysis, TRD generation, project bootstrap, feature implementation, tests, debugging, delivery | 8 (`1 + 7`) | PM handoff only | [engineer](./agents/engineer/README.md) |
 | `qa-agent` | Spec validation, exploratory testing, bug analysis, regression verification | 5 (`1 + 4`) | PM handoff only | [qa](./agents/qa/README.md) |
@@ -123,6 +123,7 @@ Common chains:
 4. `engineer-agent -> devops-agent` for deployment, CI/CD, and runtime readiness
 5. `engineer-agent -> security-agent` for pre-release or focused security review
 6. `pm-agent -> docs-agent` for formal documentation bootstrap, synchronization, site Release Notes, or pre-release audit after scope is confirmed
+7. `docs-agent:release-notes-generator -> docs-agent:docs-audit -> pm-agent:github-release-generator` for confirmed site notes, two-phase release verification, and the GitHub Release
 
 Not every project needs the full chain. Each agent can complete its own role-specific loop, and cross-agent handoff happens only when another role is needed.
 

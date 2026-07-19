@@ -3,7 +3,7 @@
 ## Evaluation Target
 
 - Agent: `product_manager`
-- Skill: `release-notes-generator`
+- Skill: `github-release-generator`
 - Eval: `eval-004-docs-site-release-output`
 - Test case: 文档站与 GitHub Release 双输出边界
 
@@ -17,7 +17,7 @@
 
 ## Latest Result
 
-**PASS** — fresh with-skill 结果满足 5/5 assertions：PM 保留客户公告、GitHub Release 正文与 issue #120 完成前的 tag-aware/draft/publish 边界；站内 `docs/site/release-notes/v1.4.0.md` 以包含版本、scope、证据、宿主和 required output 的 packet 交给 `docs-agent:release-notes-generator`；版本化 changelog 与根索引仍是独立发布门禁。fresh without-skill baseline 仅满足 1/5，证明新 skill 边界提供了实质行为增益。
+**BLOCKED（G1 结构迁移）** — 以下 fresh 结果属于更名前的 PM `release-notes-generator`，不能证明 `github-release-generator` 已满足 #116 ready handoff 或 #117 双态门禁。G2 将重写 prompt/assertions/fixture，并重新执行 fresh with-skill 与 fresh without-skill validation。
 
 ## Assertion Results
 
@@ -52,8 +52,8 @@
 
 ## Next Steps
 
-- 保留本结果作为 PM specialist 在 #120 完成前的职责回归门禁。
-- #120 真正迁移 GitHub Release 能力时，应同步修改该 eval 的 expected output/assertions，并重新执行 fresh with-skill 与 without-skill；在此之前不得把 GitHub Release 边界提前迁出 PM。
+- 本结果只作为更名前历史证据保留，不作为新 skill 的 PASS 结论。
+- G2 同步修改 expected output/assertions 后，重新执行 fresh with-skill 与 without-skill。
 - `eval_metadata.json` 的 prompt 应持续与 `evals.json` 真源对齐，避免 runner 选择旧 prompt。
 
 ## Runtime Artifact Policy

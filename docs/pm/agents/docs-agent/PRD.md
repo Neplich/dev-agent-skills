@@ -17,7 +17,7 @@ related_issues:
 related_docs:
   - "AGENTS.md"
   - ".claude-plugin/marketplace.json"
-  - "agents/product_manager/skills/release-notes-generator/SKILL.md"
+  - "agents/product_manager/skills/github-release-generator/SKILL.md"
   - "agents/product_manager/skills/changelog-generator/SKILL.md"
   - "agents/engineer/skills/codebase-analyzer/SKILL.md"
   - "agents/engineer/skills/debugger/SKILL.md"

@@ -1,20 +1,20 @@
-# Eval Result: eval-003-library-release-notes
+# Eval Result: eval-001-cli-feature-release
 
 ## Evaluation Target
 
 - Agent: `product_manager`
-- Skill: `release-notes-generator`
-- Eval: `eval-003-library-release-notes`
-- Test case: library-release-notes
-- Workspace: `workspace/eval-3-library-release`
+- Skill: `github-release-generator`
+- Eval: `eval-001-cli-feature-release`
+- Test case: cli-feature-release
+- Workspace: `workspace/eval-1-cli-feature`
 - Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
 - Prior validation note: fresh Codex subagent validation completed on 2026-06-06 after tag normalization repair
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that release-notes-generator handles library-release-notes and produces the expected role-specific artifact.
-- Expected output: 库发版说明，features 和 fixes 正确区分，升级指引清晰
+- Fixture: Historical pre-rename release-notes fixture; G2 must realign it to github-release-generator gates.
+- Expected output: 用户友好的 release notes，包含高亮功能、bug fixes 摘要、正确的 PR 链接，语气面向终端用户
 
 ## Assertions
 
@@ -31,15 +31,15 @@
 
 Observed behavior:
 
-- 当前 skill 继续支持库版本 release notes：feature/fix/upgrade 分组、升级命令、PR 链接、用户视角语气和可选无 breaking 说明均被协议覆盖。
-- 当前 skill 明确要求用完整 commit/PR 审计作为 release notes 依据，再进行用户可读的归并和取舍。
-- 当前 skill 明确区分 `THIS_TAG` 和 `VERSION`，release/tag/compare 命令使用完整 tag，changelog 路径使用去掉前导 `v` 的版本号，避免双 `v`。
+- 当前 skill 通过 `reference/release-outline.md` 保持用户价值导向、分组组织、PR/compare 链接和请求产物输出要求。
+- 当前 skill 明确要求先审计 compare 范围内全部 commit 和 merged PR，再决定哪些内容进入高亮、分组、摘要或省略。
+- 当前 skill 明确区分 `THIS_TAG` 和 `VERSION`，release/tag/compare 命令使用完整 tag，changelog 路径使用去掉前导 `v` 的版本号，避免 `vv2.88.0`。
 - 当前 skill 的 commit audit 命令使用 `PREV_TAG..THIS_TAG`，避免已发布旧版本被当前 `HEAD` 后续提交污染。
-- `reference/release-outline.md` 拆出 release 大纲与格式规则，确保 `变更明细`、贡献者 mention 和完整变更链接位置稳定。
+- 新增 release 大纲规范要求沿用仓库既有结构，`变更明细` 使用 `by @user in [#N](PR_URL)`，并把完整变更链接放在变更明细之后。
 - `变更明细` 保留来源标题中的 conventional commit prefix，例如 `feat:`、`fix:`、`docs:`、`test:` 或 `chore:`。
-- `reference/github-release-workflow.md` 拆出 tag、draft release、changelog preflight 和发布复核流程，不影响库 release notes 的请求产物输出要求。
-- 实际生成 `fastapi/fastapi` 0.135.0 release notes 时，输出包含 SSE feature highlight、bug-fix absence statement、documentation notes、upgrade guide、PR link 和 full changelog。
-- 运行记录显示先审计 `0.134.0...0.135.0` compare range 的 3 个 commits 和 merged PR [#15030](https://github.com/fastapi/fastapi/pull/15030)，再进行分组和摘要；release metadata commit 与 bot-authored release note commit 均被纳入审计。该 release 来源标题未使用 conventional prefix，因此输出按来源保留 emoji/title 格式。
+- 新增 GitHub release workflow 覆盖 approved draft 发布前的 changelog archive、根 `CHANGELOG.md` 索引、tag 指向、draft 更新、发布和最终状态复核。
+- 实际生成 `cli/cli` v2.88.0 release notes 时，输出包含 `What's New`、bug fixes、other improvements、upgrading、PR links 和 full changelog。`What's Changed` 中保留了 `feat(pr diff):`、`feat(repo):`、`fix:`、`docs:`、`build:`、`refactor:`、`chore(deps):` 等来源前缀。
+- 运行记录显示先审计 `v2.87.3...v2.88.0` compare range 的 135 个 commits 和 release 范围内 39 个 merged PR，再进行分组和摘要；bot、dependency 和 internal-looking 条目被纳入审计。
 
 ## Without Skill / Baseline
 - BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
@@ -51,7 +51,8 @@ Observed behavior:
 
 ## Next Steps
 
-- 保留该 eval 继续覆盖 library release notes、完整 source audit、升级命令和来源标题保留行为。
+- 保留该 eval 继续覆盖完整 source audit、PR 链接、升级说明和 conventional prefix 保留行为。
+- G1 仅迁移结构；本历史结果不证明 #116/#117 新门禁，G2 需重写并 fresh validation。
 
 ## Runtime Artifacts Policy
 

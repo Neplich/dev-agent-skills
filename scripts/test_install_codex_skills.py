@@ -139,27 +139,19 @@ def test_default_install_creates_hidden_mirror_and_relative_skill_symlinks(tmp_p
     assert marker["source"] == ROOT.resolve().as_posix()
     assert_relative_mirror_link(target, "pm-agent")
     assert_relative_mirror_link(target, "debugger")
-    assert_relative_mirror_link(target, "pm-release-notes-generator")
-    assert_relative_mirror_link(target, "docs-release-notes-generator")
-    assert not (target / "release-notes-generator").exists()
-    assert skill_source_rel("pm-release-notes-generator") == Path(
-        "agents/product_manager/skills/release-notes-generator"
+    assert_relative_mirror_link(target, "github-release-generator")
+    assert_relative_mirror_link(target, "release-notes-generator")
+    assert skill_source_rel("github-release-generator") == Path(
+        "agents/product_manager/skills/github-release-generator"
     )
-    assert skill_source_rel("docs-release-notes-generator") == Path(
+    assert skill_source_rel("release-notes-generator") == Path(
         "agents/docs/skills/release-notes-generator"
     )
-    assert (
-        "pm-agent:release-notes-generator is explicitly callable as "
-        "pm-release-notes-generator"
-    ) in result.stdout
-    assert (
-        "docs-agent:release-notes-generator is explicitly callable as "
-        "docs-release-notes-generator"
-    ) in result.stdout
+    assert "Qualified aliases for colliding skill names:" not in result.stdout
     assert (
         target
         / MIRROR_DIR
-        / "agents/product_manager/skills/release-notes-generator/SKILL.md"
+        / "agents/product_manager/skills/github-release-generator/SKILL.md"
     ).is_file()
     assert (
         target / MIRROR_DIR / "agents/docs/skills/release-notes-generator/SKILL.md"
@@ -197,24 +189,66 @@ def test_duplicate_skill_basename_within_one_plugin_is_rejected(tmp_path: Path) 
 
 
 def test_reinstall_removes_obsolete_managed_unqualified_collision_alias(tmp_path: Path) -> None:
+    checkout = tmp_path / "checkout"
+    make_minimal_checkout(checkout)
+    for role in ("product_manager", "docs"):
+        skill = checkout / f"agents/{role}/skills/shared-release"
+        skill.mkdir(parents=True)
+        (skill / "SKILL.md").write_text(
+            "---\nname: shared-release\n---\n",
+            encoding="utf-8",
+        )
+
+    marketplace_path = checkout / ".claude-plugin/marketplace.json"
+    marketplace = json.loads(marketplace_path.read_text(encoding="utf-8"))
+    marketplace["plugins"][0]["skills"].append("./skills/shared-release")
+    marketplace["plugins"].append(
+        {
+            "name": "docs-agent",
+            "source": "./agents/docs",
+            "skills": ["./skills/shared-release"],
+        }
+    )
+    marketplace_path.write_text(json.dumps(marketplace), encoding="utf-8")
+
     target = tmp_path / "skills"
 
-    first = run_installer(target)
-    assert first.returncode == 0, first.stderr + first.stdout
+    def run_checkout_installer() -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [
+                sys.executable,
+                str(checkout / "scripts/install_codex_skills.py"),
+                "--target",
+                str(target),
+            ],
+            cwd=checkout,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
 
-    obsolete = target / "release-notes-generator"
+    first = run_checkout_installer()
+    assert first.returncode == 0, first.stderr + first.stdout
+    assert (target / "pm-shared-release").is_symlink()
+    assert (target / "docs-shared-release").is_symlink()
+
+    obsolete = target / "shared-release"
     obsolete.symlink_to(
-        Path(MIRROR_DIR) / "agents/docs/skills/release-notes-generator",
+        Path(MIRROR_DIR) / "agents/docs/skills/shared-release",
         target_is_directory=True,
     )
 
-    second = run_installer(target)
+    second = run_checkout_installer()
 
     assert second.returncode == 0, second.stderr + second.stdout
     assert "Removed obsolete unqualified collision aliases:" in second.stdout
     assert not obsolete.exists()
-    assert_relative_mirror_link(target, "pm-release-notes-generator")
-    assert_relative_mirror_link(target, "docs-release-notes-generator")
+    assert (target / "pm-shared-release").resolve(strict=True) == (
+        target / MIRROR_DIR / "agents/product_manager/skills/shared-release"
+    )
+    assert (target / "docs-shared-release").resolve(strict=True) == (
+        target / MIRROR_DIR / "agents/docs/skills/shared-release"
+    )
 
 
 def test_routers_only_links_only_router_skills_but_keeps_full_hidden_mirror(tmp_path: Path) -> None:

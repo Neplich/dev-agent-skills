@@ -20,7 +20,7 @@
         "./skills/competitive-brief",
         "./skills/competitive-intelligence",
         "./skills/changelog-generator",
-        "./skills/release-notes-generator",
+        "./skills/github-release-generator",
         "./skills/roadmap-generator",
         "./skills/github-reader"
       ]

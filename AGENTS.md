@@ -57,7 +57,7 @@ PM / Engineer / QA / DevOps → Docs Agent（正式文档生产 / 审计）
 - 下游安全网包含前置与收尾两面：缺少 PM handoff packet、等效已确认文档链或 specialist entry basis 时，温和引导用户经 `pm-agent` 补齐前置；完成当前事项后，主动建议协作链下一步并等待确认，用户已授权 `auto-continue` 时可连续推进直到链路结束或用户喊停。
 - 跨角色收尾与 `auto-continue` 的权威定义在 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` 的 `Safety-Net Closeout and Auto-Continue` 节；`AGENTS.md` 只保留入口契约和指针。
 - SKILL.md frontmatter 的 `visibility: internal` 是声明层标记，Claude Code 与 Codex 都不消费该字段，不隐藏 slash 命令也不阻止显式直调；`pm-agent` 是默认入口，下游标记为 `internal` 仅表示非默认入口。
-- 6 个 role router 只保留入口凭据检查和分流指针，其中 `docs-agent` 分流正式文档站点 bootstrap、API/database/design/ops/product 当前事实 sync、站内 Release Notes 和 audit；具体执行 gate 的权威副本留在对应 specialist `SKILL.md`，例如 `feature-implementor` 的 PRD/TRD/plan/archive gate、`debugger` 的 expected-behavior gate、QA specialist 的 E2E gate，以及 Designer/DevOps/Security/Docs specialist 的 feature-scope gate。
+- 6 个 role router 只保留入口凭据检查和分流指针，其中 `docs-agent` 分流正式文档站点 bootstrap、API/database/design/ops/product 当前事实 sync、站内 Release Notes 和 audit；PM `github-release-generator` 只在站内 Release Notes 已确认且 docs-audit 门禁通过后生成 GitHub Release；具体执行 gate 的权威副本留在对应 specialist `SKILL.md`，例如 `feature-implementor` 的 PRD/TRD/plan/archive gate、`debugger` 的 expected-behavior gate、QA specialist 的 E2E gate，以及 Designer/DevOps/Security/Docs specialist 的 feature-scope gate。
 - 直接调用下游且没有 PM handoff packet、等效已确认文档链或 specialist entry basis 时，不执行下游协议，应温和引导用户经 `pm-agent` 补齐前置并完成入口分类；唯一例外是用户直接请求 `project-bootstrap` 且明确要求跳过 PM 并立即 scaffold，此时可进入 `project-bootstrap` 的最小脚手架 override。
 
 **文档依赖**

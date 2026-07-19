@@ -83,7 +83,7 @@ python3 scripts/install_codex_skills.py --routers-only
 
 | Agent | 关注范围 | Skills | 调用方式 | 文档 |
 | --- | --- | :---: | --- | --- |
-| `pm-agent` | 需求收敛、spec、竞品、路线图、版本沟通、GitHub 项目状态 | 9 (`1 + 8`) | 直接入口：`/pm-agent` | [product_manager](./agents/product_manager/README_zh.md) |
+| `pm-agent` | 需求收敛、spec、竞品、路线图、带门禁的 GitHub Release、GitHub 项目状态 | 9 (`1 + 8`) | 直接入口：`/pm-agent` | [product_manager](./agents/product_manager/README_zh.md) |
 | `designer-agent` | UX 流程、信息架构、线框、视觉系统、设计交接 | 3 (`1 + 2`) | 仅 PM handoff | [designer](./agents/designer/README_zh.md) |
 | `engineer-agent` | 代码库分析、TRD 生成、项目初始化、功能实现、测试、调试、交付 | 8 (`1 + 7`) | 仅 PM handoff | [engineer](./agents/engineer/README_zh.md) |
 | `qa-agent` | 规范验收、探索测试、缺陷分析、回归验证 | 5 (`1 + 4`) | 仅 PM handoff | [qa](./agents/qa/README_zh.md) |
@@ -123,6 +123,7 @@ PRD/TRD 对齐、实现计划确认和 QA E2E handoff 等工程门禁见 [Engine
 4. `engineer-agent -> devops-agent`，用于部署、CI/CD 和运行准备
 5. `engineer-agent -> security-agent`，用于发布前或专项安全审查
 6. `pm-agent -> docs-agent`，用于范围确认后的正式文档站点初始化、同步、站内 Release Notes 或发版前审计
+7. `docs-agent:release-notes-generator -> docs-agent:docs-audit -> pm-agent:github-release-generator`，用于已确认站内版本说明、双阶段发版验证和 GitHub Release
 
 不是所有项目都要走完整链路。每个 Agent 都能独立完成自己的角色闭环，只有在需要跨角色协作时才 handoff。
 

@@ -4,12 +4,12 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "3d3018a24217325866dbd2afb7e5e2050e9cc4616c8249f136bb11ea7dc39680"
+      "computedHash": "fdfb0835f91f23b570e7434d044a009e0d1c39435ac7ac6868ba88c45a07c747"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "ba9b41225cb1778e3da077d811a50d23d8393be9e0ff9b8910f44ad75bbbe370"
+      "computedHash": "98784a91499097d8cf6987438a4d11fc744dbbed47cd4d62745325f9b55e4c7a"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
@@ -31,12 +31,12 @@
       "sourceType": "local",
       "computedHash": "a10b972b640f14a52764d5f98fc69e9059aeca0ebb37ef9dd12aaf301c089fe2"
     },
-    "pm-release-notes-generator": {
-      "source": "agents/product_manager/skills/release-notes-generator",
+    "github-release-generator": {
+      "source": "agents/product_manager/skills/github-release-generator",
       "sourceType": "local",
-      "computedHash": "96cd86bf0cbb1370e78f0d3a174da45f009716a981132865cc8fb6d2447b9127"
+      "computedHash": "bd1b7a9a84f5b2287f09a88d47222c516f437a8b8c41b8e089bf633944a80e32"
     },
-    "docs-release-notes-generator": {
+    "release-notes-generator": {
       "source": "agents/docs/skills/release-notes-generator",
       "sourceType": "local",
       "computedHash": "bfd05fccdadf434e9cf5e7854bd959b1f025ddc2c9684c4338e0385f85855dfb"

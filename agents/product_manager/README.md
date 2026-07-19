@@ -28,7 +28,7 @@
 | `competitive-brief` | Competitor positioning, gap analysis, market scan | Competitive brief, positioning opportunities, risks |
 | `competitive-intelligence` | Sales battlecards and deal support | HTML battlecard, competitor comparison matrix |
 | `changelog-generator` | Developer-facing version change summaries | `docs/changelog/changelog-v{version}.md` |
-| `release-notes-generator` | Customer announcements and GitHub Release work until issue #120 | Customer-friendly announcement or GitHub Release body; formal-site pages hand off to Docs |
+| `github-release-generator` | GitHub Release work after confirmed site Release Notes and release audits | Traceable preview or draft; approved publication after the tag and post-tag audit |
 | `roadmap-generator` | Milestones, issues, and version planning | `docs/roadmap.md` |
 | `github-reader` | Project status, backlog, PR queue, release blockers | GitHub project health report |
 
@@ -39,8 +39,9 @@
 - Competitor research, positioning gaps, market scans: use `competitive-brief`
 - Sales battlecards or deal support: use `competitive-intelligence`
 - Developer-facing version changes: use `changelog-generator`
-- Customer announcements and GitHub Release work: use `release-notes-generator`.
-- Versioned pages under `docs/site/release-notes/`: hand off to
+- GitHub Release preview, draft, or approved publication: use
+  `github-release-generator` after the Docs release gates pass.
+- User-facing version notes and versioned pages under `docs/site/release-notes/`: hand off to
   `docs-agent:release-notes-generator`.
 - Roadmap and milestone planning: use `roadmap-generator`
 - GitHub project status, PR/Issue queues, release blockers: use `github-reader`
@@ -54,7 +55,7 @@ flowchart LR
     Idea["User idea / project status"] --> PM["pm-agent"]
     PM --> Spec["idea-to-spec"]
     PM --> GitHub["github-reader"]
-    PM --> Release["changelog / announcements"]
+    PM --> Release["changelog / GitHub Release"]
     Spec --> Designer["designer-agent"]
     Spec --> Engineer["engineer-agent"]
 ```
