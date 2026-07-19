@@ -1,56 +1,64 @@
-# Skill Eval Comparison
+# Eval Comparison — eval-010-post-tag-match
 
-## Evaluation Target
+## Evaluation target
 
 - Skill: `docs-audit`
-- Eval: `eval-010-post-tag-match`
+- Scenario: post-tag match with external-package priority and fixed tag-tree fallback
+- Validation time: `2026-07-20 00:43:50 +0800`
+- Validation method: fresh paired reasoning from the pristine fixture; the without-skill result was frozen before any docs-audit skill, internal instructions, Docs Agent README, or comparison file was read.
 
-## Test Set / Fixture Version
+## Test set / fixture
 
-- Fixture version: A7 / 2026-07-19
-- Assertions: 7
-- Fresh pair: current A7 prompt against two pristine copies of the same fixture.
+- Eval definition: `eval-010-post-tag-match`
+- Fixture: `workspace/eval-010-post-tag-match`
+- Candidate blob recomputed: `6bc99b264aae1474108df063c93073ce1f88d00f`
+- Discovery blob recomputed: `e1da7205fda886e90828b1e60584c1946564ce92`
+- Inventory digest recomputed: `sha256:bd935efb92eedfb3facbfe867542687802159c700fa73dee1d2a896deac041a8`
+- Empty-ledger digest recomputed: `sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`
+- Current lineage digest recomputed: `sha256:207291263efab078cada72fa90060fe7318c1daadb4220a05eee92368edefa5c`
+- Tag tuple: lightweight `(9f8e7d6, 9f8e7d6, 6666666666666666666666666666666666666666)`; package handoff tree is the same tree, while the recorded anchor tree is `4444444444444444444444444444444444444444` and is recovered by removing the discovery path whose preimage is absent.
+- All six persisted file SHA-256 values recomputed exactly.
 
-## Latest Result
+## Latest result
 
-**PASS — fresh with-skill 7 / 7 assertions passed.** 候选从可信 handoff 锚定 commit 读取并校验提交版 pre-tag record；实际 tag commit 虽不同，但 tree hash 完全相等，版本来源规范化一致，因此仅在独立 post-tag 记录中返回 `release_verified`，不重生成或重盖章。
+**PASS.** With skill: **10/10 assertions passed**. Without skill: **10/10 assertions passed**. Assertion lift: **0**.
 
-Fresh without-skill baseline 为 **5 / 7**。它正确使用 tree-hash 快路径、阶段状态和独立记录，但未验证 handoff blob 与 pre-tag record 必填证据，也把 Release Notes/索引/releases.json 的来源核对概括成“documentation”。
+The skill-applied result correctly returns `release_verified` only after the validated independent post-tag record is committed, read back, and integrated. The zero lift is material: the eval definition and fixture explicitly expose enough protocol detail for the pristine without-skill baseline to reproduce every asserted behavior.
 
-## Assertion Results
+## Assertion results
 
-| Assertion | With skill | Without skill | Evidence summary |
+| Assertion | With skill | Without skill | Paired finding |
 | --- | --- | --- | --- |
-| `reads_valid_pre_tag_record` | PASS | FAIL | with-skill 使用 `git show 3333333:...`、校验 blob/path/tree 和必填记录字段；baseline 仅泛称使用 handoff record。 |
-| `resolves_actual_tag_commit` | PASS | PASS | 两者均解析 tag commit `9f8e7d6` 与实际 tree。 |
-| `binds_tag_commit_by_tree_hash` | PASS | PASS | 两者均在 commit 不同、tree 相等时仅以 tree equality 建立内容绑定。 |
-| `normalizes_mixed_version_forms` | PASS | FAIL | baseline 未逐一核对 Release Notes、索引和 releases.json 的来源形态。 |
-| `returns_release_verified` | PASS | PASS | 两者均在内容和版本一致时返回 post-tag `release_verified`。 |
-| `persists_separate_post_tag_record` | PASS | PASS | 两者均写独立 `audit-v1.2.0-post-tag.md` 并保持 pre-tag record 不变。 |
-| `does_not_regenerate_or_restamp` | PASS | PASS | 两者均只复核，不重新生成 release surface 或盖章。 |
+| `prefers_and_validates_external_handoff` | PASS | PASS | External package is preferred; package/artifact conflict blocks rather than falling back. |
+| `falls_back_to_fixed_tag_tree_artifact` | PASS | PASS | Fixed tag-tree discovery, absent preimage reconstruction, schema/digest/convergence checks, and exactly one current attempt are explicit. |
+| `reads_candidate_without_ready_from_anchor` | PASS | PASS | Candidate blob is byte-identical, contains `candidate_verified`, and does not claim `ready_for_tag`; discovery is final pre-tag authority. |
+| `resolves_actual_tag_commit` | PASS | PASS | Entry and pre-integration lightweight tag tuples are identical; the protocol also preserves annotated-tag semantics. |
+| `binds_tag_tree_to_validated_handoff_tree` | PASS | PASS | Commit identity differs but tree identity passes via the validated handoff tree; no commit-only shortcut is used. |
+| `uses_tag_tree_object_reads_only` | PASS | PASS | Pages and required version files are evaluated from peeled-tag-tree blobs, modes, hashes, and raw version forms. |
+| `normalizes_mixed_version_forms` | PASS | PASS | Four `v1.2.0` sources and package `1.2.0` normalize component-wise to `1.2.0`. |
+| `returns_release_verified` | PASS | PASS | Complete consistency produces post-tag `release_verified`, not `ready_for_tag`. |
+| `persists_post_tag_atomically` | PASS | PASS | Confirmed evidence branch/head, isolated single-path transaction, convergence/readback, FF CAS, guarded rollback, and cleanup are all retained. |
+| `does_not_regenerate_or_restamp` | PASS | PASS | Only the independent post-tag record is written; release surfaces and stamps remain unchanged. |
 
-## With-Skill Behavior
+## With-skill behavior
 
-- 来源：本会话 A7 fresh with-skill candidate；读取当前 skill/内部协议、Docs README、eval 定义和 pristine fixture。
-- 结果：7 / 7。提交版 record blob 实算为 `38be5ead4d55f0e800444abf16991005a8b2b44f`，记录中的四页与 releases.json/package.json SHA-256 也与 fixture 精确字节一致。
+The skill makes the authority hierarchy and transaction boundary normative: external package first, fixed tag-tree fallback second, candidate never final authority, strict tree semantics despite squash, tag-tree-only source verification, and durable readback before exposing `release_verified`.
 
-## Without-Skill Baseline
+## Without-skill baseline
 
-- 来源：本会话 A7 全新 baseline；相同 prompt、独立 pristine fixture，不读取或应用 skill、Docs README、历史 comparison 或 baseline。
-- 结果：5 / 7。高层结论正确，但缺 anchored record 消费门禁和逐来源版本证据。
-- 对比结论：本例显示 2 条断言的 skill 增益，集中在提交版记录可信性与版本面完整性。
+The fresh baseline was generated only from the eval-010 object, its metadata, and explicitly listed fixture files. It independently reproduced the same digests, blobs, tag tuple, release result, and persistence gates. It did not read or search docs-audit skill files, internal instructions, the Docs Agent README, any prior comparison, or unrelated repository content before being frozen.
 
-## Failures and Limitations
+## Failures
 
-- With-skill 无失败；baseline 失败 2 条。
-- fixture 使用合成 commit/tree；没有真实 tag peel 操作。
-- eval-001～007 不在 A7 两阶段收敛协议变更及本轮指定验证范围内，其 prompt、assertions 与 fixture 未被本任务修改，因此未重跑也未更新其 comparison。
+- Assertion failures: none.
+- Validation contamination: none observed.
+- Discriminative weakness: all 10 assertions are recoverable from the baseline-visible eval object and fixture, so this case demonstrates correctness but not measurable skill lift.
 
-## Next Steps
+## Next steps
 
-- 后续接入 Git harness 时，直接验证 tag peel、tree equality、`git show` blob 与独立 post-tag record 写入。
+- Keep the result `PASS`.
+- If future evaluation must measure skill lift, reduce protocol-complete wording in baseline-visible assertions/fixture context while retaining an independent judge rubric.
 
-## Runtime Artifact Policy
+## Runtime artifact policy
 
-- fresh candidates 与 judge 诊断仅位于 gitignored `tmp/eval-runs/docs-audit-a7.*`，未写入 fixture、未加入 git、不得提交。
-- Durable 结果仅为本 `comparison.md`；未复用历史 baseline。
+No `with_skill/`, `without_skill/`, transcript, verdict, timing, diagnostics, or generated post-tag record was created. This durable `comparison.md` is the only eval result updated.

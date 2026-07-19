@@ -1,54 +1,99 @@
-# Skill Eval Comparison
+# eval-004-audit-all-verified Comparison
 
-## Evaluation Target
+## Evaluation target
 
+- Agent: `docs-agent`
 - Skill: `docs-audit`
 - Eval: `eval-004-audit-all-verified`
+- Validation time: `2026-07-20 00:23:47 +0800`
+- Scope: complete affected-set verification, canonical version-source inventory and genesis digests, unified stamping, candidate/anchor/discovery transaction, and integration-gated `ready_for_tag`.
 
-## Test Set / Fixture Version
+## Test set and method
 
-- Fixture version: A5 / 2026-07-19
-- Assertions: 5
+This is a fresh paired validation against the current 6 assertions. The
+`without_skill` baseline ran first from a pristine fixture copy and read only
+the current eval definition, metadata, prompt, and fixture files. It did not
+read the Docs Agent README, `docs-audit` skill instructions, prior comparison,
+or historical output. The `with_skill` run then started from a second pristine
+fixture copy after fully reading `agents/docs/skills/docs-audit/SKILL.md`,
+`agents/docs/skills/docs-audit/_internal/INSTRUCTIONS.md`, and
+`agents/docs/README.md`.
 
-## Latest Result
+## Latest result
 
-**PASS — fresh with-skill 5 / 5 assertions passed.** 当前 skill、assertions 与 fixture 一致要求：完整影响域事实核验通过后，两张 API 页、Release Notes 页和 Markdown 索引组成四页统一盖章集；带 `v` 的目标版本/Release Notes/索引/releases.json 与无 `v` 的 package version 先按来源校验，再规范化为同一 SemVer；成功记录与完整盖章由同一普通 post-stamp commit 引入并由外部 handoff 锚定，最终返回不表示已发布的 `ready_for_tag`。
+**PASS** — `with_skill` satisfies **6/6** assertions. The fresh
+`without_skill` baseline satisfies **4/6** assertions. The skill-specific delta
+is the complete canonical candidate producer schema and the mandatory
+anchor/discovery/handoff/integration success chain.
 
-Fresh without-skill baseline 为 **3 / 5**；`stamps_all_pages_together` 与 `persists_versioned_report` 未通过。with-skill 对完整统一盖章范围和成功记录边界体现了可观测增益。
+## Canonical digest verification
 
-## Assertion Results
+The with-skill run reconstructed the exact six-field inventory rather than
+trusting the fixture literals. It sorted **6 entries** by `source_id`:
+`actual_tag`, `host_package`, `release_index`, `release_metadata`,
+`release_notes`, and `target_version`. Each object contains exactly
+`source_id`, `locator_kind`, `locator`, `selector`, `extractor`, and
+`required_raw_form`; compact RFC 8259 JSON uses sorted object keys, UTF-8, no
+insignificant whitespace, and no trailing newline.
 
-| Assertion | With skill | Without skill | Evidence summary |
+- Recomputed v1.1.0 inventory digest:
+  `sha256:109170c373e9aab353ff234d73d7fb28ca70e464cab3d2019dfa79928365a787`
+- Fixture inventory digest:
+  `sha256:109170c373e9aab353ff234d73d7fb28ca70e464cab3d2019dfa79928365a787`
+- Recomputed empty prior-lineage digest from exact bytes `[]`:
+  `sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`
+- Fixture genesis digest:
+  `sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`
+
+Both comparisons are exact matches. The `actual_tag` entry is
+`git-ref / refs/tags/v1.1.0 / tag-name / git-tag-name-v1 / vX.Y.Z`; its
+pre-tag value remains `pending_expected_absent`, so expected absence is not a
+version mismatch and does not represent publication.
+
+## Assertion results
+
+| Assertion | without_skill | with_skill | Evidence summary |
 | --- | --- | --- | --- |
-| `verifies_complete_affected_set` | PASS | PASS | `src/catalog/routes.txt` 命中 change-map 的两张 required docs；两张 API 页均有当前路由事实支持并可判为 `verified`。 |
-| `stamps_all_pages_together` | PASS | FAIL | with-skill 只在完整集合通过后统一更新两张 API 页、`v1.1.0.md` 与 Markdown 索引；baseline 未完整覆盖四页统一盖章集。 |
-| `verifies_release_metadata_read_only` | PASS | PASS | 两路均核对 `docs/site/.meta/releases.json` 的 `v1.1.0`，且保持 #116 所属 metadata 只读。 |
-| `normalizes_mixed_version_forms` | PASS | PASS | fixture 的目标版本、Release Notes/索引/releases.json 为 `v1.1.0`，`package.json` 为 `1.1.0`；按来源形态校验后均规范化为 SemVer `1.1.0`。 |
-| `persists_versioned_report` | PASS | FAIL | with-skill 完整记录四页章前/章后值、精确字节哈希、版本面证据、audited target、结果时间和 `ready_for_tag`，并遵守同 commit 与外部 handoff anchor；baseline 的成功记录未完整满足该契约。 |
+| `verifies_complete_affected_set` | PASS | PASS | The endpoint diff matches `src/catalog/**`; both required API pages are included and their method, path, auth, query, success, error, streaming, and file claims match the route evidence. Exactly **2/2 affected pages** are `verified`, with zero unresolved gaps. |
+| `stamps_all_pages_together` | PASS | PASS | Exactly **4 pages** form the unified stamp set: two API pages, v1.1.0 Release Notes, and the Markdown index. They are updated and read back together as `v1.1.0` only after the complete set passes. |
+| `verifies_release_metadata_read_only` | PASS | PASS | `.meta/releases.json` agrees with the target version and remains read-only; no candidate delta includes it. |
+| `normalizes_mixed_version_forms` | PASS | PASS | Required `v1.1.0` sources and package `1.1.0` pass source-form validation and normalize to the same case-sensitive SemVer identity. |
+| `persists_candidate_producer_schema` | FAIL | PASS | The baseline can repeat the supplied digest literal but cannot reconstruct the exact six-entry/six-field canonical inventory or prove the genesis digest, and it lacks the full identity, per-page blob/hash, lineage, dual-gate, and no-premature-success producer contract. The skill-guided result recomputes both digests exactly and requires the complete fixed-path candidate with conclusion only `candidate_verified`. |
+| `anchors_candidate_then_discovers_success` | FAIL | PASS | The baseline does not make committed raw metadata/content/tree/blob confirmation, fixed discovery, handoff-only commit, external package, normal fast-forward integration, and integrated readback one indivisible success gate. The skill does. |
 
-## With-Skill Behavior
+## With-skill behavior
 
-- 来源：本会话 A5 fresh with-skill validation 的最终有效复跑；读取当前 `docs-audit` skill、内部指令、Docs README、同一 prompt/assertions 与 pristine fixture，不复用历史 baseline。
-- 结果：5 / 5。完整影响域和 release surfaces 均通过；四页统一盖章与成功记录处于同一普通 post-stamp commit 边界，可信 handoff 锚定 commit SHA、tree hash、record path 和 blob hash；`releases.json` 保持只读。
-- 版本处理：保留各来源要求的原始形态，并将 `v1.1.0` 与 `1.1.0` 规范化为同一 SemVer 后判等。
+The skill keeps `base_ref`, `target_ref`, and the maintainer-confirmed target
+version independent, accepts the absent future tag for pre-tag, verifies all
+facts from target-tree ordinary blobs, and keeps `.meta/releases.json`
+read-only. It builds the four-page stamp and fixed candidate only in an
+isolated worktree/branch/index. The candidate records the complete producer
+schema, actual-tag pending contract, exact recomputed inventory and prior
+lineage digests, and only `candidate_verified`—never `ready_for_tag`, success
+time, containing commit/tree, or post-commit confirmation.
 
-## Without-Skill Baseline
+The initial and atomically replaced final candidate each pass the complete raw
+metadata, unfolded name-status, summary, and full binary-patch gate. Only then
+is the anchor committed and checked. The fixed discovery is written only after
+anchor confirmation, then committed as the sole handoff delta and anchored by
+the external package. `ready_for_tag` is returned only after normal
+fast-forward integration and integrated readback, and is explicitly not a
+publication result.
 
-- 来源：本会话 A5 fresh without-skill validation 的最终有效复跑；只读取同一 prompt/assertions 与 pristine fixture，不读取 skill、Docs README、comparison 或历史 baseline。
-- 结果：3 / 5。通过完整影响域、只读 release metadata 与混合版本规范化；未完整覆盖四页统一盖章集，也未形成满足全部字段、同 commit 边界和可信外部锚点要求的成功记录。
-- 对比结论：with-skill 补足了 baseline 在统一盖章范围和 durable success record 上的两个协议缺口。
+## Failures
 
-## Failures and Limitations
+- `with_skill`: none.
+- `without_skill`: `persists_candidate_producer_schema` and
+  `anchors_candidate_then_discovers_success` fail.
 
-- With-skill 无 assertion failure。
-- Baseline 失败项：`stamps_all_pages_together`、`persists_versioned_report`。
-- fixture 使用合成 refs 与预期 handoff identity；验证的是协议语义，不代表对真实宿主仓库创建了 post-stamp commit。
+## Next steps
 
-## Next Steps
+No skill change is required. Preserve the exact canonical digest input schema,
+actual-tag pending entry, genesis bytes `[]`, and anchor/discovery/integration
+ordering in future edits.
 
-- 保留本结果；当统一盖章集合、版本规范化表或成功记录/外部 handoff 协议变化时，重新运行 fresh with-skill / without-skill 配对验证。
+## Runtime artifact policy
 
-## Runtime Artifact Policy
-
-- 本文件只记录本会话最终有效 fresh 结论；修正前的 eval-004 结果不作为证据，也未复用历史 baseline。
-- 未创建、引用或提交 `tmp/`、transcript、candidate output、verdict、timing 或其他运行期产物；durable 产物仅为本 `comparison.md`。
+No runtime artifact was written or committed. The two runs used disposable
+fixture copies; this durable `comparison.md` is the only eval-004 output
+updated by this validation.

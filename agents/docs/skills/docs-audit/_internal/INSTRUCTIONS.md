@@ -9,23 +9,39 @@ and release handoff.
 
 Resolve the three independent audit inputs before computing impact:
 
-1. Resolve `base_ref`, the code-comparison start. Use the caller-supplied ref
-   when explicit; otherwise use the most recent release tag. It is a Git ref or
-   commit only and does not describe publication state.
-2. Resolve `target_ref`, the code-comparison end. Use the caller-supplied ref
+1. Resolve `target_ref`, the code-comparison end. Use the caller-supplied ref
    when explicit; otherwise use pending-release `HEAD`. It is a Git ref or
    commit only and is not the target release version.
-3. Include confirmed working-tree changes only as diagnostic scope. During a
-   pre-tag audit they may expand the changed-files inventory and affected-page
-   set, but they cannot support a passing fact conclusion. If they are needed
-   as evidence, require the maintainer to commit them, update `target_ref`, and
-   rerun the complete pre-tag audit.
-4. Resolve `target_release_version` independently. It is the exact version
+2. Resolve `target_release_version` independently. It is the exact version
    whose documentation is being audited and the pre-tag unified-stamp anchor.
    A maintainer must confirm it explicitly; do not infer it from a ref, branch,
    filename, package metadata, or surrounding context, and do not accept
    `unknown`. The matching tag does not need to exist during pre-tag audit.
-
+3. Resolve `base_ref`, the code-comparison start. Use the caller-supplied ref
+   when explicit. Otherwise walk the resolved target commit's first-parent
+   history and select the nearest commit carrying exactly one strict,
+   source-valid release SemVer tag whose normalized identity differs from
+   `target_release_version`. A tag is eligible only when its peeled tree
+   contains the fixed discovery path
+   `docs/site/.meta/audit/handoffs/pre-tag-{tag-version}.md` and candidate path,
+   and the discovery schema, candidate blob, cumulative lineage, reconstructed
+   anchor tree, and final tag-tree binding all validate from that tree alone.
+   This tag-tree test is the sole meaning of "previously verified" for default
+   selection; do not consume a current branch, post-tag evidence branch,
+   worktree, external classification, or unreachable old object. It therefore
+   rejects drifted or incomplete tags without needing a mutable registry. A
+   same-version remediation rerun must supply `base_ref` explicitly. Record the
+   selected tag and peeled commit. Multiple tags on the nearest eligible
+   commit, no eligible candidate, or an unresolvable tag is `blocked`; never
+   choose by tagger date, lexical order, or loose version coercion.
+4. Resolve both refs immediately to immutable commit SHAs. Working-tree,
+   staged, untracked, or later branch content may be described only in a
+   read-only diagnostic. If any such content falls within the audit scope,
+   authorized write paths, or required evidence inventory, the phase is
+   `blocked`: require the maintainer to commit it, update `target_ref`, and
+   rerun the complete pre-tag audit. Passing evidence must be exact blobs from
+   the resolved `target_ref` tree, not merely content that existed in an
+   ancestor and not any current filesystem bytes.
 If `target_release_version` is missing, inferred, `unknown`, or lacks explicit
 maintainer confirmation, return `blocked` before report persistence or any
 write. If a default ref cannot be resolved, name the missing ref rather than
@@ -40,12 +56,13 @@ Select exactly one phase:
   still-valid pre-tag record. Do not rerun generation or unified stamping.
 
 An existing tag normally selects post-tag. One narrow exception permits
-pre-tag re-entry: post-tag has already classified the tag's content binding as
-drifted, the maintainer has explicitly selected one of the remediation paths
-in Section 7, and any required tag deletion or movement is performed by the
-host maintainer outside docs-audit. Record that selection and the resulting
-tag state before starting the complete pre-tag protocol; docs-audit never
-deletes, moves, or creates a tag.
+pre-tag re-entry: post-tag has invalidated the pre-tag authority or tag binding
+for any tree, locator, schema, blob, hash, type, lineage, or version reason;
+the maintainer has selected a remediation path in Section 7; and the host
+maintainer has deleted or moved the invalid tag outside docs-audit. Record that
+selection and the now-absent/replaced tag state before the complete pre-tag
+protocol. If the invalid tag still resolves to the target version, remain
+post-tag `blocked`; docs-audit never deletes, moves, or creates a tag.
 
 When no confirmed release version exists, a read-only diagnostic fact review
 may still describe the affected pages, but the audit result remains `blocked`:
@@ -69,10 +86,50 @@ across sources and do not silently repair a source that uses the wrong form.
 
 Parse every normalization input as strict SemVer without lossy coercion, and
 compare the resulting normalized SemVer identities. Preserve pre-release and
-build components in that identity. Record both the raw source value and the
-normalized value in the audit evidence. A missing value, invalid SemVer,
+build components in that identity. Identity equality is component-wise and
+case-sensitive, including pre-release and build identifiers; SemVer precedence
+that ignores build metadata is not sufficient. Sources requiring a prefix
+accept exactly one lowercase `v`; `V`, `vv`, or a missing prefix is invalid.
+Record both the raw source value and the normalized value in the audit
+evidence. The confirmed entry or issue #116 handoff must also declare the
+complete required version-source inventory as
+`{source_id, locator_kind, locator, selector, extractor, required_raw_form}`.
+For a Git file, `locator` is its repository path and `selector` is an exact
+JSON Pointer, YAML/Markdown field identity, or unique index-entry key;
+`extractor` names the deterministic parser and version. Non-file facts use an
+immutable locator such as the tag ref/object, maintainer-confirmation id, or
+handoff field. A missing/ambiguous selector, multiple matches, or an unknown
+extractor is `blocked`; never scan a multi-version file and choose a plausible
+value.
+Pre-tag persists that inventory and post-tag consumes the same inventory; do
+not silently add, drop, or substitute a source. A missing value, invalid SemVer,
 source-form violation, or normalized inequality is `blocked` in both pre-tag
-and post-tag audits even if another surface is valid.
+and post-tag audits even if another surface is valid. Report every failing
+required source rather than stopping after the first one.
+
+The inventory always includes the future actual-tag source. During pre-tag its
+locator/selector/extractor/raw-form contract is persisted with
+`pre_tag_value: pending_expected_absent`; absence is expected and is not a
+version failure. Post-tag resolves that exact declared locator and replaces the
+pending state with the raw tag value and normalized comparison result.
+
+All protocol digests use one canonical algorithm. Serialize RFC 8259 JSON as
+UTF-8 with object keys sorted lexicographically, arrays in the order specified
+below, no insignificant whitespace, no trailing newline, exact case-sensitive
+strings, and JSON base-10 integers. Omit absent optional members; never encode
+them as `null`. Hash the resulting bytes with SHA-256 and persist lowercase
+`sha256:<64-hex>`. The version inventory digest input is an array sorted by
+`source_id`, each object containing exactly `source_id`, `locator_kind`,
+`locator`, `selector`, `extractor`, and `required_raw_form`. The empty lineage
+ledger therefore has a deterministic genesis digest. A completed prior lineage
+entry contains exactly `attempt`, `commit`, `tree`, `record_path`,
+`record_blob`, `handoff_blob`, and `previous_lineage_digest`; the array is
+strictly ascending by integer `attempt`. The discovery current entry contains
+exactly `attempt`, `anchor_commit`, `anchor_tree`, `record_path`, `record_blob`,
+and `previous_lineage_digest`. `prior_lineage_digest` hashes only the completed
+prior-entry array; discovery `lineage_digest` hashes that same array with the
+current entry appended. Producer and consumer must recompute the bytes, not
+trust a stored digest literal.
 
 ## 2. Deterministic Layer
 
@@ -88,7 +145,8 @@ git diff --name-status <base> <target>
 
 Preserve change status and path. Add only those working-tree changes that were
 confirmed as diagnostic scope. The combined set is the report's changed-files
-inventory, but uncommitted entries are never passing fact evidence in pre-tag.
+inventory, but any in-scope uncommitted entry blocks phase success and is never
+passing fact evidence in pre-tag.
 Use the two-dot endpoint diff by default. Only when the caller explicitly
 requests merge-base semantics, use
 `git diff --name-status <base>...<target>` and state that three-dot semantic in
@@ -149,6 +207,13 @@ in Step 5.
 Validate every affected formal Markdown page and explicitly exclude
 `docs/site/.meta/**`. The authoritative field rules live in
 `agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md`.
+Before reading bytes, inspect the resolved `target_ref` tree entry. Formal
+pages, file-backed release surfaces, and audit records must be ordinary Git
+blobs; a tree, gitlink, symlink mode `120000`, filesystem dereference, or
+missing entry is `blocked`. Preserve each entry's mode and object type as
+evidence. A stamp may modify an existing regular page only without changing its
+mode or type; newly created audit records must use regular non-executable mode
+`100644`.
 Check the seven required fields and their constraints:
 
 | Field | Validation |
@@ -184,8 +249,11 @@ Do not apply this layer's type-specific fact checks to
 verify only the shared frontmatter contract and the expected template
 structure; their target `doc_type` describes the page they help authors create,
 not factual API, schema, deployment, or operations claims made by the template
-itself. A placeholder value or absent implementation evidence in a template is
-not a release blocker.
+itself. A template whose shared frontmatter and expected structure both pass
+receives final status `verified`; otherwise it is `stale` or blocked by the
+missing structural evidence. This status does not imply type-specific fact
+checking. A placeholder value or absent implementation evidence in a template
+is not a release blocker.
 
 For every non-template affected page that is not already `stale` from invalid
 frontmatter, build a claim-to-evidence checklist. Follow the shared trust model:
@@ -224,110 +292,117 @@ guess a `verified` conclusion or stamp the affected set.
 
 ## 4. Pre-tag Audit
 
-Run the pre-tag protocol in this order:
+Use two fixed, version-addressed paths:
 
-1. Confirm `base_ref`, `target_ref`, and the maintainer-confirmed
-   `target_release_version` as separate inputs.
-2. Use the complete `base_ref..target_ref` endpoint diff to resolve the full
-   affected-page set through the deterministic layer. Every code,
-   configuration, test, handoff, and other fact used as passing evidence must
-   be committed content reachable from the resolved `target_ref`. An
-   uncommitted working-tree change may be reported as diagnostic context, but
-   it is never passing evidence. When a maintainer supplies such a change as
-   evidence, return `blocked`, require it to be committed, require
-   `target_ref` to be updated to that commit, and rerun the complete pre-tag
-   audit.
-3. Verify every affected document through the fact layer. Also verify the
-   issue #116 ready handoff and its confirmed Release Notes page, the host's
-   Release Notes index, `docs/site/.meta/releases.json`, and host version facts
-   against `target_release_version` using the source-specific normalization
-   table in Section 1. Audit verifies these release surfaces; it does not
-   generate Release Notes or create or maintain release metadata.
-4. Define the unified stamp set as the union of the complete affected-page set
-   and every Markdown release-version surface verified by this run that carries
-   `last_verified_version`, including the target-version Release Notes page and
-   its Markdown index. Deduplicate paths. Non-Markdown release metadata and host
-   version facts remain verified, hashed, read-only surfaces.
-5. Record each unified-stamp page's current `last_verified_version` in the
-   audit report before any stamp write. This is the historical baseline for
-   this run; do not add `baseline_verified_version` or any other baseline
-   frontmatter.
-6. Only when every page in the unified stamp set is factually `verified`, all
-   evidence is complete, and all release surfaces agree may Section 6 update
-   every unified-stamp page's `last_verified_version` together to
-   `target_release_version`.
-7. Permit that unified stamp even when no matching tag exists yet.
-8. After read-back proves the complete stamp, compute SHA-256 over the exact
-   post-stamp bytes of every unified-stamp page and every other file-backed
-   release-version surface,
-   including the confirmed Release Notes page, its version index,
-   `docs/site/.meta/releases.json`, the issue #116 handoff when file-backed,
-   and each file backing the host version facts.
-9. Write the complete unified-stamp files, then stage only the explicitly
-   authorized paths: the unified-stamp pages and the versioned pre-tag audit
-   record path. Do not inherit the caller's existing index as part of the
-   audit candidate.
-10. Before writing any successful result, success time, or `ready_for_tag`
-    field, compare the complete staged candidate against the resolved audited
-    `target_ref`. Authorize page content changes only on the
-    `last_verified_version` field line; the versioned pre-tag audit record is
-    the only other authorized path. Any other path or content hunk is an
-    unaudited delta, including unrelated content that was already staged before
-    the audit. Return `blocked` immediately, do not create the post-stamp
-    commit, and do not write a successful audit record or trusted handoff.
-11. Only after the staged convergence gate passes, atomically write the
-    successful pre-tag record with the candidate difference inventory and
-    passed conclusion, unified-stamp page list, each page's pre-stamp and
-    post-stamp `last_verified_version`, post-stamp page hashes, other
-    release-surface hashes, audited `target_ref`, final `ready_for_tag`, and
-    result time. Stage that final record with the already staged complete stamp
-    set and create one ordinary commit on the host release PR branch (the
-    **post-stamp commit**). The stamp and successful record must be introduced
-    by that same commit, not left only in the working tree or split across
-    commits.
-12. After Git creates the commit, confirm the committed result by computing
-    `git diff --name-only <target-ref-commit> <post-stamp-commit>` and inspecting
-    every file's complete content diff under the same authorization rules from
-    step 10. This confirmation is expected to pass because the staged
-    candidate already passed. If it unexpectedly fails, return `blocked`, do
-    not create a trusted handoff, and write the failure and complete difference
-    evidence to the independent versioned supplemental record
-    `docs/site/.meta/audit/audit-{target_release_version}-pre-tag-post-commit-blocked.md`.
-    Never append to or modify the committed pre-tag anchor record after this
-    failure.
-13. Only when both the pre-commit staged convergence gate and the post-commit
-    confirmation pass, persist a trusted pre-tag handoff anchor containing the
-    post-stamp commit SHA, its resolved Git tree hash, the record path, and that
-    path's Git blob hash. The committed record itself must contain every
-    unified-stamp page's post-stamp content hash; it cannot self-contain its own
-    commit or tree identity. Read the record back from the anchored commit with
-    `git show <post-stamp-commit>:<record-path>`, verify its blob hash and the
-    handoff's commit/tree anchor, then and only then return `ready_for_tag` to
-    issue #120. A working-tree state is never a valid anchor. This means ready
-    for tag creation, never already published or released.
+- candidate evidence: `docs/site/.meta/audit/audit-{target_release_version}.md`;
+- discoverable final handoff:
+  `docs/site/.meta/audit/handoffs/pre-tag-{target_release_version}.md`.
 
-Return `blocked` and do not return `ready_for_tag` when any of the following is
-true. Failures detected before the unified write must leave every page
-unstamped. A staged convergence failure after writing the stamp leaves no
-commit, no successful record, and no trusted handoff. An unexpected
-post-commit confirmation failure leaves no trusted successful handoff and must
-persist blocked evidence only in the independent supplemental record without
-modifying the committed pre-tag anchor:
+Resolve `target_release_version` to its strict canonical source form before
+substitution. Do not add timestamps or branch names. A same-version rerun
+reuses these paths. The candidate embeds the cumulative ordered prior-attempt
+ledger and its digest. The discovery copies that ledger and appends the current
+anchor/record tuple plus a new chain digest; its current entry omits its own
+handoff blob to avoid self-reference, while the external package supplies that
+blob. The current entry names the immediately superseded attempt. Old blobs
+remain immutable in history when available, but fallback validation does not
+require a squash-discarded commit.
 
-- `target_release_version` is missing;
-- the target version was inferred from a branch name, `target_ref`, or context;
-- the target version is `unknown`;
-- the target version lacks explicit maintainer confirmation;
-- any fact used as passing evidence is absent from the committed content
-  reachable from `target_ref`, including maintainer-supplied uncommitted
-  working-tree evidence;
-- any affected page is `stale`, `mismatch`, remains unverified after fact
-  review, or lacks sufficient evidence; or
-- Release Notes, the version index, release metadata, or host version facts
-  violate their required source form, are not valid SemVer, or do not equal
-  `target_release_version` after normalization; or
-- the post-stamp commit differs from the audited `target_ref` outside the audit
-  record and authorized `last_verified_version` field-line changes.
+Run the protocol in this order:
+
+1. Resolve immutable `base_ref` and `target_ref` commits, the confirmed target
+   version, required version-source inventory, release branch ref, and any
+   prior active anchor. Capture the host branch, index, worktree, and relevant
+   path fingerprints before any write. Re-resolve the branch before integration;
+   movement from `target_ref` is a blocker.
+2. Compute the complete impact set and run every fact check from exact blobs in
+   the `target_ref` tree. Any in-scope staged, unstaged, or untracked content is
+   diagnostic-only and blocks success until committed into a new `target_ref`
+   and the complete audit is rerun.
+3. Verify the issue #116 handoff, every declared version source, and every
+   affected page. Define the unified stamp set as the affected-page set union
+   every verified Markdown release surface carrying `last_verified_version`.
+   Record pre-stamp values. Non-Markdown sources remain read-only hashed facts.
+4. Create an isolated temporary worktree and temporary branch from the exact
+   `target_ref` commit, with an index initialized from that tree. Never build the
+   candidate in or inherit the caller's worktree/index. The host branch remains
+   unchanged until every candidate check passes.
+5. In the isolated candidate, write all stamps together and create the candidate
+   evidence record. Read back every page and hash exact Git-candidate bytes for
+   every stamped page and file-backed version source. The record may state only
+   `candidate_verified`; it must not contain `ready_for_tag`, a success time,
+   its containing commit/tree identity, or a claim that post-commit confirmation
+   already passed.
+6. Stage only the unified-stamp pages and fixed candidate-record path. Validate
+   the complete staged delta with raw metadata, name status with rename/copy
+   folding disabled, summary, and full binary patch. A stamp page must remain at
+   the same path as an ordinary blob, preserve its exact mode, have status `M`,
+   and change only the single `last_verified_version` field line. The candidate
+   record may be `A` or `M` only at its fixed path and must be a `100644` ordinary
+   blob with the complete schema from Section 5. Reject `R`, `C`, `D`, `T`,
+   mode-only changes, executable-bit changes, symlinks, gitlinks, path swaps,
+   and every other path or content hunk.
+7. After atomically replacing the final candidate record, stage it again and
+   repeat the same full staged gate. This second gate proves the exact final
+   record, its source inventory, hashes, candidate conclusion, and difference
+   inventory; an earlier draft check never authorizes the final bytes.
+8. Create the ordinary **post-stamp anchor commit** on the temporary branch.
+   Re-run the same raw metadata, status, type, mode, path, and content checks for
+   `target_ref..anchor_commit`; verify `anchor_commit^{tree}`, the candidate
+   record blob, and `git show <anchor_commit>:<record-path>`. Any failure makes
+   the candidate invalid and produces no final handoff.
+9. Only after step 8 passes, write the fixed discoverable handoff file. It must
+   contain `schema_version`, `attempt`, `phase: pre-tag`,
+   `target_release_version`, immutable `base_ref`/`target_ref` commits,
+   `phase_result: ready_for_tag`, result time, version-source inventory digest,
+   anchor commit/tree, candidate record path/blob, post-commit confirmation
+   result/time, the handoff path's prior mode/blob or `absent`, and optional
+   copied prior `lineage` entries
+   `(attempt, commit, tree, record_path, record_blob, handoff_blob,
+   previous_lineage_digest)`, a current entry
+   `(attempt, anchor_commit, anchor_tree, record_path, record_blob,
+   previous_lineage_digest)` without a self-referential handoff blob, a
+   recomputed `lineage_digest`, and the immediately superseded attempt id when
+   applicable. The external package supplies the current discovery blob.
+   The anchor commit SHA is therefore stored in a committed, version-addressed
+   discovery record without requiring a Git self-reference.
+10. Stage only that handoff path. Require a `100644` ordinary blob and an `A` or
+    `M` status, reject every other delta, then create the **handoff commit**.
+    Confirm the anchor-to-handoff delta with the same raw/status/type/mode/patch
+    checks, validate the handoff schema and blob, and record the handoff commit
+    and tree in the external release handoff package. The file cannot contain
+    its own containing commit/tree; the package supplies those two identities.
+11. Integrate the validated temporary branch by a normal fast-forward only when
+    the host release branch still equals `target_ref` and its captured
+    worktree/index fingerprints are unchanged. Verify the integrated branch
+    resolves to the handoff commit/tree and committed discovery blob. Only then
+    expose the external package and return `ready_for_tag` to issue #120. A
+    squash or merge may later change commit identity, but the released tree must
+    preserve the validated tree semantics in Section 7. If post-FF readback
+    fails, update the host branch back to `target_ref` only when compare-and-
+    swap proves it still equals the just-integrated handoff commit; then restore
+    captured index/worktree state and verify the ref and every fingerprint. If
+    the branch moved concurrently, do not overwrite it: remain `blocked`, name
+    the residual ref/commit and exact maintainer recovery command, and prohibit
+    tag creation.
+
+Every failure, including post-integration readback, is transactional: delete
+the isolated worktree and temporary ref, perform the guarded branch rollback
+from step 11 when integration occurred, restore accidentally touched authorized host
+path and index entry to the captured pre-write bytes/mode/type, remove this
+attempt's untracked drafts, and verify branch SHA, `git status --porcelain=v2`,
+staged/unstaged raw diffs, modes, types, and per-path hashes match the captured
+state. Never restore or overwrite unrelated user changes. If restoration itself
+cannot be proven, remain `blocked`, list the exact residual paths/index entries
+and manual recovery commands, and prohibit tag creation. In particular, a
+staged convergence failure must leave no stamp, record draft, candidate commit,
+handoff, or half-staged state in the host worktree.
+
+Return `blocked` and do not return `ready_for_tag` for any missing/ambiguous
+input, in-scope worktree content, non-`target_ref` fact evidence, non-regular or
+symlink input, factual blocker, version-source failure, schema gap, hash/readback
+failure, mode/type/path/content convergence failure, temporary commit failure,
+handoff failure, branch movement, integration failure, or incomplete rollback.
 
 Here, “remains unverified” is a factual verification outcome caused by missing
 evidence; the valid frontmatter value `last_verified_version: unverified` does
@@ -336,13 +411,10 @@ not itself make a page stale or block it from becoming factually `verified`.
 Never stamp only a `verified` subset. If `target_release_version` changes after
 the audit, the report, unified stamp conclusion, and `ready_for_tag` result are
 immediately invalid; rerun the complete pre-tag audit for the new value.
-If stamping, page read-back, hashing, staged-difference convergence, atomic
-record replacement, post-stamp commit creation, post-commit confirmation, or
-committed-record read-back fails, return `blocked`. Before commit creation,
-persist only diagnostic or pre-stamp evidence and never a successful stamp
-conclusion, `ready_for_tag`, or success time. After commit creation, persist an
-unexpected confirmation failure only in the independent supplemental record;
-never rewrite the anchored pre-tag record.
+The candidate record is immutable evidence, not a final success authority.
+`ready_for_tag` is authoritative only through a validated discovery record and
+external package after integration. A failed temporary attempt is cleaned up;
+it does not require a supplemental success-looking record in host history.
 
 ### Final page status
 
@@ -363,72 +435,31 @@ with the confirmed `target_release_version`.
 
 ## 5. Persist the Audit Report
 
-Write the report under `docs/site/.meta/audit/` as
-`audit-{target_release_version}.md`. The version comes only from the explicit,
-maintainer-confirmed input. Do not derive the filename from a branch or ref.
-Audit reports are in `.meta/` and do not require the standard seven-field
-frontmatter.
+The candidate record path and discoverable handoff path are fixed in Section 4.
+Both are `100644` ordinary blobs under `.meta/` and do not use standard page
+frontmatter. The candidate record must contain every field consumed later:
 
-Include at least:
+| Field group | Required candidate-record content |
+| --- | --- |
+| Identity | `schema_version`, `attempt`, `phase: pre-tag`, immutable `base_ref` and `target_ref` commits, confirmed `target_release_version`, diff semantics, ordered prior-attempt `lineage`, prior `lineage_digest`, and optional immediately superseded attempt id; the current tuple is added only by discovery after the candidate blob exists |
+| Impact | raw/name-status changed-file inventory, change-map matches/delta, affected and unified-stamp sets |
+| Per-page evidence | path, target-tree mode/type/blob, pre/post stamp value, claims, exact target-ref code/test blob evidence, final status, post-stamp SHA-256 |
+| Version sources | complete required inventory with locator kind/value, selector and extractor identity, raw form, normalized case-sensitive SemVer identity, target-tree path/mode/type/blob when file-backed, SHA-256, comparison result, canonical inventory JSON algorithm/version and recomputed digest; the actual-tag entry is `pending_expected_absent` only in pre-tag |
+| Convergence | both staged-gate inventories with raw old/new mode, object type, status with rename/copy disabled, full-patch decision, and zero unauthorized delta |
+| Candidate conclusion | `candidate_verified`, stamp read-back result, blockers, reproducible commands; never `ready_for_tag`, success time, containing commit/tree, or post-commit result |
 
-```markdown
-# Formal documentation audit
-
-- Audit phase: pre-tag
-- base_ref: <resolved base ref and commit>
-- target_ref: <resolved target ref and commit>
-- target_release_version: <maintainer-confirmed version>
-- Diff semantics: <two-dot endpoint diff or explicitly requested three-dot merge-base diff>
-- Changed files: <name-status inventory>
-- Change-map matches: <file, code_glob, exclude, trigger, required_docs>
-
-## Change-map changes
-
-<added, deleted, and modified entries; reasons and sources for deletions or narrowing; blockers or none>
-
-## Per-document evidence
-
-<page, pre-stamp last_verified_version, claims, code/test evidence, impact, deterministic findings, final status>
-
-## Release-version surfaces
-
-<#116 handoff, Release Notes, version index, releases.json, and host version facts; record each raw version, required source form, normalized SemVer, comparison result, file-backed path, and exact-byte SHA-256>
-
-## Successful unified stamp record
-
-- Hash algorithm: SHA-256 over exact file bytes
-- Audited target_ref: <resolved target_ref commit>
-- Record path: <repository-relative audit record path committed with the stamp>
-- Stamped pages: <path, pre-stamp last_verified_version, post-stamp last_verified_version, post-stamp SHA-256>
-- Release-surface content evidence: <surface, path, post-stamp SHA-256>
-- Pre-commit staged convergence: <target_ref to staged candidate file
-  inventory, authorized category, per-file content-diff result, out-of-scope
-  differences, and passed conclusion; a blocked candidate has no successful
-  record>
-- Post-commit confirmation: <not written back to this anchored pre-tag record;
-  a passed confirmation belongs to the trusted handoff/external delivery
-  evidence, while an unexpected failure is written only to the independent
-  supplemental record>
-- Stamp read-back: <complete / failed>
-- Committed record read-back: <git show from post-stamp commit complete / failed>
-- Ready result time: <timestamp written only on success>
-
-## Conclusion
-
-- Status summary: <verified / stale / mismatch counts and evidence gaps>
-- Blocking items: <to-do list or none>
-- Phase result: <ready_for_tag or blocked; success is written only after stamp, hashes, atomic replacement, and read-back succeed>
-- Review commands: <commands sufficient to reproduce diff, validation, and evidence checks>
-```
-
-Read the report back after writing and verify the three independent inputs,
-inventory, pre-stamp baselines, release surfaces, evidence, statuses, blockers,
-commands, and phase result.
-
-After the ordinary post-stamp commit is created, persist its commit SHA, tree
-hash, this record path, and this record's Git blob hash in the trusted pre-tag
-handoff. This external anchor avoids a Git self-reference: the record cannot
-contain the identity of the commit or tree that contains the record.
+Atomically replace the candidate record in the isolated worktree, read it back,
+validate this schema, and re-run final staged convergence before committing it.
+The discoverable handoff file is produced only after committed candidate
+confirmation and uses the exact schema listed in Section 4 step 9. The external
+package adds the handoff commit/tree/path/blob identities that the handoff file
+cannot self-contain. Post-tag rejects unknown schema versions, missing fields,
+ambiguous attempts, non-monotonic or duplicate attempt ids, a broken cumulative
+lineage digest, a current tuple that disagrees with the ledger, or any other
+tuple inconsistency. When older commits were removed by squash, the current
+tag-anchored cumulative ledger is the validation source; do not require an old
+object that is no longer reachable and never reconstruct missing current fields
+from the worktree.
 
 ## 6. Unified Version Stamp
 
@@ -448,26 +479,16 @@ Then, in one audit operation:
 - read all unified-stamp pages back to verify that the complete stamp is consistent;
 - hash the exact post-stamp bytes of every unified-stamp page and file-backed
   release-version surface; and
-- stage only the unified-stamp pages and versioned pre-tag record, then validate
-  the complete staged diff against `target_ref` before writing any success
-  field; and
-- only after staged convergence passes, atomically write the successful stamp
-  fields and `ready_for_tag` result back to the same pre-tag record; and
-- commit the full stamp set and successful record together as one ordinary
-  post-stamp commit on the host release PR branch, then verify the committed
-  record and persist the trusted handoff tuple `(post-stamp commit SHA, tree
-  hash, record path, record blob hash)`. Do not use an uncommitted working tree
-  as the successful record anchor; and
-- after commit creation, confirm the full `target_ref` to post-stamp-commit file
-  inventory and every content diff. Permit only the audit record plus
-  `last_verified_version` field-line changes in unified-stamp or verified
-  Markdown release-version pages. Any unexpected failure is `blocked`, is
-  written to the independent versioned supplemental record, and must not
-  modify the anchored pre-tag record or produce a handoff. Only both passed
-  gates permit the issue #120 handoff.
+- build, validate, commit, confirm, discoverably anchor, and integrate the
+  candidate through the isolated transaction in Section 4. Both staged and
+  committed gates inspect paths, contents, statuses, modes, object types,
+  rename/copy/delete/type changes, symlinks, and gitlinks; and
+- return `ready_for_tag` only from the final integrated discovery record and
+  external package. The candidate record itself never expresses final success.
 
-Do not stamp a verified subset when another page is `stale`, `mismatch`, or
-blocked by `unverified` or missing evidence. The matching tag is not required
+Do not stamp a verified subset when another page is `stale`, `mismatch`, remains
+factually unverified after review, or has missing evidence. The literal
+frontmatter value `unverified` is not by itself a blocker. The matching tag is not required
 for this pre-tag write. Do not modify `.meta/releases.json`; issue #116 owns
 that content, while this audit only verifies it. Outside a valid pre-tag audit,
 keep each page's existing value; new pages remain `unverified`, and the field
@@ -477,75 +498,103 @@ must not be omitted.
 
 Run the post-tag protocol in this order:
 
-1. Read the actual tag and resolve its peeled commit; a missing tag or
-   unresolvable tag commit is a blocker.
-2. Take the post-stamp commit SHA from the trusted pre-tag handoff and read the
-   persisted pre-tag record from that anchor with
-   `git show <post-stamp-commit>:<record-path>`. Do not use the working-tree
-   record or a later revision as the authority. If the current-path pre-tag
-   copy differs from the committed record, report the difference and continue
-   with the committed record. The independent versioned post-tag record is a
-   separate path and its presence must be excluded from this current-copy
-   comparison. Require the exact fields written by the successful pre-tag
-   path: `base_ref`, audited `target_ref` commit,
-   `target_release_version`, unified-stamp page list, per-page
-   pre/post `last_verified_version`, every post-stamp page and release-surface
-   SHA-256, `ready_for_tag`, and its result time. Missing fields are evidence
-   gaps, not values to reconstruct from current files. Independently require
-   the trusted handoff's post-stamp tree hash, record path, and record blob hash;
-   verify that the `git show` bytes match that blob before consuming the record.
-3. Bind the tag commit to the recorded audited content:
-   resolve the peeled tag commit's Git tree hash and require it to equal the
-   trusted handoff's post-stamp tree hash. Commit identity may differ, but tree
-   equality is mandatory. If the trees differ, return `blocked` immediately;
-   rehashing only the previously recorded pages or release surfaces cannot
-   authorize `release_verified`, because the tag may contain unaudited code or
-   other paths. Produce a name-status difference summary between the anchored
-   post-stamp tree and actual tag tree, including added, modified, deleted, and
-   renamed paths. Per-path hashes may be recomputed only as diagnostic evidence
-   and can never override tree inequality.
-4. Verify that the actual tag name, `target_release_version`, confirmed Release
-   Notes, version index, `docs/site/.meta/releases.json`, and host version facts
-   satisfy their required source forms and resolve to the same normalized
-   SemVer identity.
-5. Return `release_verified` only when content binding succeeds, the pre-tag
-   record remains valid, and all evidence is complete and consistent.
-6. Return `blocked` when the actual tag tree differs from the anchored
-   post-stamp tree, any recorded path is missing, any diagnostic content hash
-   drifts, or any normalized version fact is invalid or unequal, including when
-   the tag name is correct. The report must include the tree difference summary
-   and present two maintainer-selected remediation paths: (a) the host
-   maintainer deletes or moves the incorrect tag, uses the actual content to be
-   released as the new `target_ref`, reruns the complete pre-tag audit with the
-   same `target_release_version`, and marks the old record `superseded`; or (b)
-   the maintainer abandons that version, confirms a new
-   `target_release_version`, uses the actual content to be released as the new
-   `target_ref`, and reruns the complete pre-tag audit. docs-audit records and
-   adjudicates the selected path only; it never deletes, moves, or creates a
-   tag. Also return `blocked` when the tag is missing, the pre-tag record was
-   invalidated, or evidence is missing.
+1. Resolve the actual tag twice: once at entry and once immediately before
+   result integration. Record and compare
+   `(tag_ref_target_object_id, peeled_commit, peeled_tree)`. For an annotated
+   tag the first member is the tag-object id; for a lightweight tag it is the
+   directly referenced commit id. Both forms are supported. Missing, moved,
+   unpeelable, or tuple-mismatched tags are `blocked`.
+   Also require a caller- or maintainer-confirmed `release_evidence_branch_ref`
+   and resolve its exact `release_evidence_expected_head` commit. This branch is
+   the sole integration target for the independent post-tag result; never infer
+   it from the current branch, the tag, or `HEAD`.
+2. Locate pre-tag authority. Prefer the external package and validate its
+   handoff commit/tree/path/blob plus the committed discovery file. If the
+   package is absent or its commit is unavailable after squash/fresh clone,
+   read exactly
+   `docs/site/.meta/audit/handoffs/pre-tag-{target_release_version}.md`
+   from the peeled tag tree. Validate its complete schema and blob. Reconstruct
+   the anchor tree by replacing that handoff path with its recorded prior
+   mode/blob or removing it when the preimage is `absent`; the reconstructed
+   tree must equal the recorded anchor tree. If a supplied package conflicts
+   with the tag artifact, block rather than silently falling back. The fixed
+   discovery must resolve exactly one current pre-tag attempt. Its cumulative
+   prior ledger may contain multiple strictly monotonic, unique historical
+   attempts; only the current attempt can become release-active after final
+   tag-tree binding. Zero or multiple current attempts are ambiguous and
+   `blocked`.
+3. Validate the anchor four ways when its commit object is available:
+   commit-to-tree, commit/path-to-record-blob, discovery tuple, and tag tree.
+   When squash makes the commit unavailable, the deterministic reconstructed
+   tree, tag-tree candidate record blob, discovery schema, and full convergence
+   evidence are the equivalent fallback. In both paths, the actual tag tree
+   must equal the package's handoff tree or be exactly the reconstructed anchor
+   tree plus the single validated discovery-path delta. Commit identity may
+   differ; any other tree delta is `blocked`.
+4. Read the candidate record only from the anchor commit or the byte-identical
+   record blob in the peeled tag tree. Validate all Section 5 fields,
+   `candidate_verified`, cumulative lineage and chain digest, convergence evidence, and discovery
+   `ready_for_tag`. Never read a working-tree/later-branch copy as passing
+   evidence. A dirty current copy is diagnostic only and cannot repair a gap.
+5. From the peeled tag commit, use Git object reads for every stamped page and
+   required version-source path. Verify ordinary-blob type/mode, existence,
+   exact SHA-256, raw form, and component-wise case-sensitive SemVer identity
+   against the persisted inventory. Missing or substituted sources are
+   `blocked`; current filesystem bytes cannot support `release_verified`.
+6. On tree inequality, report raw old/new mode, type, object identity,
+   name-status with rename/copy folding disabled, summary, and full relevant
+   patch. Per-path hashes are diagnostic and can never override tree inequality.
+7. Only after all applicable decision checks complete, build the fixed independent record
+   `docs/site/.meta/audit/audit-{target_release_version}-post-tag.md` in an
+   isolated transaction. Include attempt/lineage, tag-ref target object,
+   peeled commit/tree,
+   locator mode (`handoff` or `tag_fallback`), all anchor/tree/blob/schema/hash
+   checks, version-source results, blockers, commands, and the candidate phase
+   result (`release_verified` only when every check passed, otherwise
+   `blocked`). Atomically replace, schema-check, stage only this `100644` ordinary
+   path, apply the same metadata/content convergence rules, commit on the
+   confirmed release-evidence branch from its expected head, read back its blob,
+   then fast-forward that exact branch only if it still equals
+   `release_evidence_expected_head` and its captured worktree/index state is
+   unchanged. Verify the integrated commit/tree/path/blob. If verification
+   after fast-forward fails, return the evidence branch to
+   `release_evidence_expected_head` only when compare-and-swap proves it still
+   equals the just-integrated result commit. Never overwrite a concurrent move;
+   report the residual ref/commit and exact maintainer recovery command. Any
+   write, stage, commit, readback, or integration failure cleans the isolated
+   attempt, performs that guarded ref rollback when needed, restores touched
+   host path/index fingerprints, verifies the restored ref and fingerprints,
+   and returns `blocked`; it must not expose `release_verified` or a partial
+   record.
+8. Return `release_verified` only after the integrated post-tag record is
+   committed and read back. Never append to or modify the anchored candidate or
+   discovery blobs. Every rerun repeats locator and content checks.
+
+Blocked outcomes have these required next steps:
+
+| Trigger | Record and next step |
+| --- | --- |
+| Tag missing | Keep the valid pre-tag authority unchanged; host creates the correct tag at the validated integrated handoff/release tree (anchor plus validated discovery delta), then rerun post-tag. |
+| Handoff missing/unresolvable | Run the fixed-path fallback. If it cannot uniquely validate, invalidate the attempted success and rerun complete pre-tag to create a new discoverable anchor. |
+| Record/schema/blob/hash/type gap | Persist a post-tag blocked result when possible; repair the intended committed release content and complete pre-tag again. Never patch evidence from the worktree. |
+| Tag tree, release branch, or version source drift | Maintainer chooses either: correct/delete/move the erroneous tag and rerun complete pre-tag for the same version, or abandon it and confirm a new version. Both use the actual intended content as new `target_ref`. |
+| Same-version rerun | The new candidate/discovery records carry the cumulative chained lineage and identify the immediately superseded attempt; the post-tag blocked record stores the selected remedy. Old blobs are never edited. The fixed discovery path exposes exactly one current attempt whose ledger digest and final tag-tree binding must validate, including after squash. |
+| Post-tag persistence failure | Restore/remove the partial post-tag result, keep the pre-tag anchor and tag unchanged, repair persistence, and rerun post-tag. No success state exists until durable readback passes. |
 
 Post-tag audit performs final consistency verification only. Do not regenerate
 Release Notes, indexes, release metadata, documentation, GitHub Release
-content, or unified stamps.
-
-Persist the post-tag result only to the separate versioned record
-`docs/site/.meta/audit/audit-{target_release_version}-post-tag.md`. Never append
-to or modify the anchored pre-tag record. Record the actual tag and peeled
-commit, actual and anchored tree hashes, tree-equality result, any name-status
-difference summary, each version source's raw and normalized values, checked
-surfaces, evidence, blockers, review commands, and `release_verified` or
-`blocked` result. Every post-tag rerun must continue to read the unchanged
-pre-tag blob from the trusted handoff anchor.
+content, unified stamps, or any tag.
 
 ## 8. Release Handoff and Responsibility Boundaries
 
 Return the persisted audit report and exactly one phase result:
 
 - **`ready_for_tag`:** pre-tag audit passed and the complete unified stamp set
-  was stamped to `target_release_version`; do not call the version published.
+  was stamped to `target_release_version`, committed, confirmed, discoverably
+  anchored, and integrated; do not call the version published.
 - **`release_verified`:** post-tag audit proved the actual tag and all release
-  surfaces match the still-valid pre-tag record.
+  surfaces match the still-valid pre-tag candidate/discovery lineage, and the
+  independent post-tag result was committed and read back.
 - **Blocked:** list every `stale`, `mismatch`, and evidence-gap item with the
   document, fact, impact, required action, and responsible owner when known.
 

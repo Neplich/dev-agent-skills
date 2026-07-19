@@ -42,10 +42,15 @@ Select exactly one phase after the entry credentials are complete:
   stamp to the confirmed `target_release_version`.
 - **Post-tag:** the actual tag exists. Read the valid pre-tag record and verify
   that the tag and every release-version surface still match the same
-  `target_release_version`; do not regenerate or restamp content.
+  `target_release_version`; locate the anchor by the trusted handoff first and
+  otherwise by the deterministic versioned discovery path defined internally.
+  Do not regenerate or restamp content.
 
 `ready_for_tag` means the documentation and version facts are ready for tag
-creation. It must never be described as published or released.
+creation. It exists only after committed candidate validation, discoverable
+handoff validation, and branch integration all pass; a working-tree or
+candidate-record value is never sufficient. It must never be described as
+published or released.
 `release_verified` means the post-tag consistency check passed. Any missing,
 invalid, inconsistent, or insufficient evidence returns `blocked`.
 
@@ -54,9 +59,10 @@ invalid, inconsistent, or insufficient evidence returns `blocked`.
 Before auditing or writing:
 
 1. Resolve `base_ref`, `target_ref`, and the maintainer-confirmed
-   `target_release_version` independently. Default the refs to the most recent
-   release tag and pending-release `HEAD`; never treat either ref as the target
-   release version.
+   `target_release_version` independently. Default `target_ref` to the
+   pending-release `HEAD`. Resolve a default `base_ref` deterministically from
+   that immutable target commit as defined internally; never use tagger date,
+   lexical order, or either ref as the target release version.
 2. Run the deterministic layer before fact verification. It establishes the
    changed files, change-map matches, affected formal pages, frontmatter
    validity, and suspect pages; it does not turn a missing same-diff document

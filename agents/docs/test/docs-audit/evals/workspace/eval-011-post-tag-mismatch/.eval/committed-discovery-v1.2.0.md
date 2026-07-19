@@ -1,0 +1,25 @@
+# Pre-tag discovery handoff
+
+- schema_version: `1.0`
+- attempt: `2`
+- phase: `pre-tag`
+- target_release_version: `v1.2.0`
+- base_ref_commit: `1111111`
+- target_ref_commit: `2222222`
+- phase_result: `ready_for_tag`
+- result_time: `2026-07-19T10:05:00+08:00`
+- version_source_inventory_digest: `sha256:bd935efb92eedfb3facbfe867542687802159c700fa73dee1d2a896deac041a8`
+- anchor_commit: `3333333`
+- anchor_tree: `4444444444444444444444444444444444444444`
+- candidate_record_path: `docs/site/.meta/audit/audit-v1.2.0.md`
+- candidate_record_blob: `22772710f35bef7baf16c11a4b492bf560682b7c`
+- post_commit_confirmation: `passed`
+- post_commit_confirmation_time: `2026-07-19T10:04:00+08:00`
+- discovery_path_preimage: `(mode=100644, blob=111dddd)`
+- digest_algorithm: `canonical-json-rfc8259-sorted-v1`
+- prior_attempt_lineage: `[(attempt=1, commit=111aaaa, tree=111bbbb, record_path=docs/site/.meta/audit/audit-v1.2.0.md, record_blob=111cccc, handoff_blob=111dddd, previous_lineage_digest=sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945)]`
+- previous_lineage_digest: `sha256:33adb80c0b52f1a6ec51c2235336610b156e1d7ae818cdb554d5b48b169eee26`
+- current_entry: `(attempt=2, anchor_commit=3333333, anchor_tree=4444444444444444444444444444444444444444, record_path=docs/site/.meta/audit/audit-v1.2.0.md, record_blob=22772710f35bef7baf16c11a4b492bf560682b7c, previous_lineage_digest=sha256:33adb80c0b52f1a6ec51c2235336610b156e1d7ae818cdb554d5b48b169eee26)`
+- lineage_digest: `sha256:54422aea098062c6a08a3cd51aff818ec65ee9afbc42bcfcf69e43a45f803c41`
+- immediately_superseded_attempt: `1`
+- current_handoff_blob: omitted to avoid self-reference; supplied by external package

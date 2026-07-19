@@ -1,59 +1,110 @@
-# Skill Eval Comparison
+# eval-008-pre-tag-success Comparison
 
-## Evaluation Target
+## Evaluation target
 
+- Agent: `docs-agent`
 - Skill: `docs-audit`
 - Eval: `eval-008-pre-tag-success`
+- Validation time: `2026-07-20 00:23:47 +0800`
+- Scope: full pre-tag candidate transaction, canonical inventory/genesis digests, actual-tag pending contract, two staged gates, anchor/discovery commits, integration readback, and post-FF CAS rollback.
 
-## Test Set / Fixture Version
+## Test set and method
 
-- Fixture version: A7 / 2026-07-19
-- Assertions: 10
-- Fresh pair: current A7 prompt against two pristine copies of the same fixture.
+This is a fresh paired validation against the current 12 assertions. The
+`without_skill` baseline ran first from a pristine fixture copy and read only
+the current eval definition, metadata, prompt, and fixture files. It did not
+read the Docs Agent README, `docs-audit` skill instructions, prior comparison,
+or historical output. The `with_skill` run then started from a second pristine
+fixture copy after fully reading `agents/docs/skills/docs-audit/SKILL.md`,
+`agents/docs/skills/docs-audit/_internal/INSTRUCTIONS.md`, and
+`agents/docs/README.md`.
 
-## Latest Result
+## Latest result
 
-**PASS — fresh with-skill 10 / 10 assertions passed.** 候选完整执行 pre-tag 两道收敛门：先在成功记录出现前校验 staged inventory 与逐文件内容差异，再把四页统一盖章和成功记录放入同一普通 commit，随后执行 commit 后确认；只有两关都通过才建立外部可信 handoff 并返回不表示已发布的 `ready_for_tag`。
+**PASS** — `with_skill` satisfies **12/12** assertions. The fresh
+`without_skill` baseline satisfies **10/12** assertions. The two skill-specific
+gaps are independent canonical digest production inside the candidate schema
+and the complete concurrency-safe CAS rollback contract after post-FF readback
+failure.
 
-Fresh without-skill baseline 为 **4 / 10**。它能识别版本、混合版本规范化、同 commit 边界和阶段结果，但未形成可审计的完整 release-surface 核验、章前字段约束、回读、精确哈希和可信 handoff 证据链，也未精确定义两道收敛门。
+## Canonical digest verification
 
-## Assertion Results
+The with-skill run reconstructed the exact six-field inventory rather than
+trusting the fixture literals. It sorted **6 entries** by `source_id`:
+`actual_tag`, `host_package`, `release_index`, `release_metadata`,
+`release_notes`, and `target_version`. Each object contains exactly
+`source_id`, `locator_kind`, `locator`, `selector`, `extractor`, and
+`required_raw_form`; compact RFC 8259 JSON uses sorted object keys, UTF-8, no
+insignificant whitespace, and no trailing newline.
 
-| Assertion | With skill | Without skill | Evidence summary |
+- Recomputed v1.2.0 inventory digest:
+  `sha256:bd935efb92eedfb3facbfe867542687802159c700fa73dee1d2a896deac041a8`
+- Fixture inventory digest:
+  `sha256:bd935efb92eedfb3facbfe867542687802159c700fa73dee1d2a896deac041a8`
+- Recomputed empty prior-lineage digest from exact bytes `[]`:
+  `sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`
+- Fixture genesis digest:
+  `sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`
+
+Both comparisons are exact matches. The `actual_tag` entry is
+`git-ref / refs/tags/v1.2.0 / tag-name / git-tag-name-v1 / vX.Y.Z`; its
+pre-tag value remains `pending_expected_absent`. Tag absence is expected and
+does not represent publication or a failed version comparison.
+
+## Assertion results
+
+| Assertion | without_skill | with_skill | Evidence summary |
 | --- | --- | --- | --- |
-| `accepts_confirmed_version_without_tag` | PASS | PASS | 两者均分别记录 refs 与维护者确认版本，并接受 tag 尚不存在的 pre-tag。 |
-| `verifies_complete_set_and_surfaces` | PASS | FAIL | with-skill 核对两张 API 页、#116、Release Notes/索引、releases.json 与 package；baseline 未明确核对 #116 及 Release Markdown 事实。 |
-| `normalizes_mixed_version_forms` | PASS | PASS | 两者均按带 `v`/不带 `v` 来源规范化为 SemVer `1.2.0`。 |
-| `records_pre_stamp_values` | PASS | FAIL | baseline 列出四个旧值，但未约束不得新增 `baseline_verified_version`。 |
-| `stamps_complete_set_atomically` | PASS | FAIL | baseline 提到四页盖章和只读 releases.json，但未要求完整回读证明。 |
-| `commits_stamp_and_record_together` | PASS | PASS | 两者均要求四页盖章与成功记录由同一普通 commit 引入。 |
-| `persists_stamp_and_content_evidence` | PASS | FAIL | baseline 缺逐页章前/章后值、精确字节 SHA-256、其他版本面哈希及 commit/tree/path/blob handoff tuple。 |
-| `validates_staged_convergence_before_success_record` | PASS | FAIL | with-skill 明确成功字段前的完整 staged inventory 与逐内容 hunk 白名单；baseline 仅泛化检查意外路径。 |
-| `confirms_commit_before_handoff` | PASS | FAIL | baseline 未说明 post-commit 完整内容授权复核、结果不得回写锚定 blob，以及两关通过后才 handoff。 |
-| `returns_ready_for_tag_not_published` | PASS | PASS | 两者均返回 `ready_for_tag` 并明确不等于发布或 post-tag 验证。 |
+| `accepts_confirmed_version_without_tag` | PASS | PASS | Keeps `base_ref: v1.1.0`, `target_ref: release-head`, and confirmed `v1.2.0` distinct; absent future tag does not block pre-tag. |
+| `verifies_complete_set_and_surfaces` | PASS | PASS | Exactly **2/2 API pages** are affected and verified; #116 handoff, Release Notes, index, releases metadata, and host package facts also pass. |
+| `normalizes_mixed_version_forms` | PASS | PASS | Required `v1.2.0` sources and package `1.2.0` pass source-form validation and normalize to one case-sensitive SemVer identity. |
+| `records_pre_stamp_values` | PASS | PASS | Exact four values are retained: `v1.1.0`, `unverified`, `unverified`, `v1.1.0`; no `baseline_verified_version` is added. |
+| `stamps_complete_set_atomically` | PASS | PASS | Exactly **4 pages** are stamped and read back together as `v1.2.0`; `.meta/releases.json` remains read-only. |
+| `builds_isolated_candidate_transaction` | PASS | PASS | Candidate work occurs from the immutable target commit in an isolated worktree/branch/index; captured host state stays untouched before integration. |
+| `candidate_record_has_no_ready_result` | FAIL | PASS | Baseline follows the visible happy-path schema but cannot independently reconstruct the exact six-entry canonical inventory, recompute both SHA-256 digests, or prove the literal values rather than echo them. The skill-guided candidate recomputes exact inventory/genesis digests, persists actual-tag pending, and excludes premature final authority. |
+| `validates_two_complete_staged_gates` | PASS | PASS | Initial and final candidate bytes each pass raw mode/type, unfolded name-status, summary, and full binary-patch checks with no unauthorized path or hunk. |
+| `confirms_anchor_commit_before_discovery` | PASS | PASS | Discovery is forbidden until target-to-anchor raw metadata/content/tree/blob and `git show` readback all pass. |
+| `persists_fixed_discovery_handoff` | PASS | PASS | Fixed discovery contains anchor and candidate identities plus lineage fields without self-reference; only its 100644 blob is committed and the external package supplies handoff commit/tree/path/blob. |
+| `returns_ready_only_after_integration` | FAIL | PASS | Baseline waits for FF/readback on the happy path but lacks the full post-FF failure contract. The skill requires CAS proof against the just-integrated handoff commit before rollback, target-ref restoration plus fingerprint verification, and non-overwrite/residual-ref/manual-command handling on concurrent movement. |
+| `returns_ready_for_tag_not_published` | PASS | PASS | Final state means tag creation is allowed; it is not publication or `release_verified`. |
 
-## With-Skill Behavior
+## With-skill behavior
 
-- 来源：本会话 A7 fresh with-skill candidate；读取当前 `docs-audit` SKILL、内部指令、Docs README、eval 定义和 pristine fixture。
-- 结果：10 / 10。完整覆盖统一盖章集、来源规范化、章前基线、精确字节哈希、成功记录、同 commit 边界、pre-commit staged convergence、post-commit confirmation 与外部可信 handoff。
+The skill-guided run validates the full affected set and release surfaces from
+the exact target tree, applies the four-page stamp only after all evidence and
+version identities pass, and builds a fixed-path candidate whose positive
+conclusion is only `candidate_verified`. Its exact canonical inventory and
+genesis digests match the fixture values; any mismatch would instead be
+`blocked` and fail this eval.
 
-## Without-Skill Baseline
+Both staged gates inspect raw modes, object types, unfolded statuses, summary,
+and full binary patch. Anchor confirmation precedes discovery; the discovery
+handoff is committed separately and anchored by an external package. The host
+branch is fast-forwarded only if its ref and captured worktree/index
+fingerprints remain unchanged. Final authority appears only after integrated
+commit/tree/discovery-blob readback.
 
-- 来源：本会话 A7 全新 baseline；使用相同 prompt 与独立 pristine fixture，仅基于 fixture 作答，不读取或应用 skill、Docs README、历史 comparison 或历史 baseline。
-- 结果：4 / 10。能从 prompt 直接复现高层顺序，但没有把协议细化成满足证据链断言的可复核输出。
-- 对比结论：本例显示 6 条断言的可量化 skill 增益，主要集中在成功记录写入时序、精确内容证据与可信锚定。
+If that readback fails after fast-forward, rollback to `target_ref` is allowed
+only when compare-and-swap proves the branch still equals the just-integrated
+handoff commit. The process then restores and verifies every captured
+fingerprint. A concurrent move is never overwritten: the result remains
+`blocked`, names the residual ref/commit and exact maintainer recovery command,
+and prohibits tag creation.
 
-## Failures and Limitations
+## Failures
 
-- With-skill 无 assertion failure；baseline 失败 6 条，均为证据完整性或执行时序缺口。
-- fixture 使用合成 refs/commit/tree，仅验证协议语义；未在 fixture 中实际创建 Git commit 或 tag。
-- eval-001～007 不在 A7 两阶段收敛协议变更及本轮指定验证范围内，其 prompt、assertions 与 fixture 未被本任务修改，因此未重跑也未更新其 comparison。
+- `with_skill`: none.
+- `without_skill`: `candidate_record_has_no_ready_result` and
+  `returns_ready_only_after_integration` fail.
 
-## Next Steps
+## Next steps
 
-- 保持当前 staged-before-success 与 post-commit-confirmation 两关断言；若后续引入真实 Git harness，再补实际 commit/tree/blob 执行验证。
+No skill change is required. Preserve exact canonical inventory fields and
+ordering, actual-tag pending semantics, genesis bytes `[]`, and the guarded
+post-FF CAS rollback language in future protocol edits.
 
-## Runtime Artifact Policy
+## Runtime artifact policy
 
-- 本轮 fresh with/without candidate 与 judge 诊断仅位于 gitignored `tmp/eval-runs/docs-audit-a7.*` 隔离目录，未写入 fixture、未加入 git、不得提交。
-- Durable 结果仅为本 `comparison.md`；未复用历史 baseline。
+No runtime artifact was written or committed. The two runs used disposable
+fixture copies; this durable `comparison.md` is the only eval-008 output
+updated by this validation.
