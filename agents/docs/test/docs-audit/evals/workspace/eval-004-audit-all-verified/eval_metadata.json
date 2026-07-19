@@ -2,7 +2,7 @@
   "eval_id": "eval-004-audit-all-verified",
   "eval_name": "audit-all-verified",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-004-audit-all-verified",
-  "skill_availability_goal": "Verify unified pre-tag stamping and ready_for_tag only after the complete affected set and all release-version surfaces match the maintainer-confirmed target_release_version, while release metadata stays read-only.",
+  "skill_availability_goal": "Verify unified pre-tag stamping and ready_for_tag only after the complete affected set passes and source-specific v-prefixed and unprefixed version facts normalize to the maintainer-confirmed SemVer, while release metadata stays read-only.",
   "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`，显式 `base_ref` 为 `a1b2c3d`、`target_ref` 为 `b2c3d4e`，且匹配 tag 尚不存在。请审计 fixture；仅在完整影响域和所有 release-version surfaces 全部通过时统一盖章并持久化报告。`.meta/releases.json` 由 #116 维护，本审计只能读取核对。",
   "fixture_context": [
     ".eval/actual-diff.patch",

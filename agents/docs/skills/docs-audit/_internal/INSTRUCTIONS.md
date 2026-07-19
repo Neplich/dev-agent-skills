@@ -50,6 +50,27 @@ it cannot persist a versioned audit report, produce a phase success, or alter
 stamps. Existing values remain unchanged and new pages remain `unverified`,
 preserving issue #118 semantics.
 
+### Release-version normalization
+
+Validate each raw version fact against its owning source's required form, then
+normalize it before any equality comparison. Do not compare the raw strings
+across sources and do not silently repair a source that uses the wrong form.
+
+| Source | Required raw form | Normalization input |
+| --- | --- | --- |
+| Maintainer-confirmed `target_release_version` and actual Git tag | `vX.Y.Z` (including valid SemVer pre-release or build suffixes) | Remove exactly one leading `v`. |
+| Versioned Release Notes page and its version index entry | `vX.Y.Z` | Remove exactly one leading `v`. |
+| `docs/site/.meta/releases.json` keys or fields whose values represent release versions | `vX.Y.Z` | Remove exactly one leading `v`; paths and other non-version values are not parsed as versions. |
+| `.claude-plugin/marketplace.json` `metadata.version` | `X.Y.Z` without `v` | Use the raw value unchanged. This matches the host convention in `AGENTS.md`. |
+| `package.json` `version` | `X.Y.Z` without `v` | Use the raw value unchanged. |
+
+Parse every normalization input as strict SemVer without lossy coercion, and
+compare the resulting normalized SemVer identities. Preserve pre-release and
+build components in that identity. Record both the raw source value and the
+normalized value in the audit evidence. A missing value, invalid SemVer,
+source-form violation, or normalized inequality is `blocked` in both pre-tag
+and post-tag audits even if another surface is valid.
+
 ## 2. Deterministic Layer
 
 Run all six steps in order.
@@ -209,8 +230,9 @@ Run the pre-tag protocol in this order:
 3. Verify every affected document through the fact layer. Also verify the
    issue #116 ready handoff and its confirmed Release Notes page, the host's
    Release Notes index, `docs/site/.meta/releases.json`, and host version facts
-   against `target_release_version`. Audit verifies these release surfaces; it
-   does not generate Release Notes or create or maintain release metadata.
+   against `target_release_version` using the source-specific normalization
+   table in Section 1. Audit verifies these release surfaces; it does not
+   generate Release Notes or create or maintain release metadata.
 4. Define the unified stamp set as the union of the complete affected-page set
    and every Markdown release-version surface verified by this run that carries
    `last_verified_version`, including the target-version Release Notes page and
@@ -257,8 +279,9 @@ Return `blocked` with no stamp when any of the following is true:
 - the target version lacks explicit maintainer confirmation;
 - any affected page is `stale`, `mismatch`, remains unverified after fact
   review, or lacks sufficient evidence; or
-- Release Notes, the version index, release metadata, or host version facts do
-  not match `target_release_version`.
+- Release Notes, the version index, release metadata, or host version facts
+  violate their required source form, are not valid SemVer, or do not equal
+  `target_release_version` after normalization.
 
 Here, “remains unverified” is a factual verification outcome caused by missing
 evidence; the valid frontmatter value `last_verified_version: unverified` does
@@ -320,7 +343,7 @@ Include at least:
 
 ## Release-version surfaces
 
-<#116 handoff, Release Notes, version index, releases.json, and host version facts; persist each file-backed path and its exact-byte SHA-256>
+<#116 handoff, Release Notes, version index, releases.json, and host version facts; record each raw version, required source form, normalized SemVer, comparison result, file-backed path, and exact-byte SHA-256>
 
 ## Successful unified stamp record
 
@@ -357,7 +380,8 @@ Stamp only during a valid pre-tag audit and only when all conditions are true:
 1. every page in the unified stamp set has a final `verified` conclusion
    and there is no unresolved evidence gap; and
 2. Release Notes, the version index, `docs/site/.meta/releases.json`, and host
-   version facts all match the maintainer-confirmed `target_release_version`.
+   version facts all satisfy their required source forms and equal the
+   maintainer-confirmed `target_release_version` after SemVer normalization.
 
 Then, in one audit operation:
 
@@ -402,37 +426,44 @@ Run the post-tag protocol in this order:
    the trusted handoff's post-stamp tree hash, record path, and record blob hash;
    verify that the `git show` bytes match that blob before consuming the record.
 3. Bind the tag commit to the recorded audited content:
-   - Fast path: resolve the peeled tag commit's Git tree hash. Binding holds
-     only when that tree hash equals the recorded post-stamp tree hash. Commit
-     identity alone is not a separate fast-path condition.
-   - General path: at the peeled tag commit, read every recorded affected page
-     and release-surface path (for example with
-     `git show <tag-commit>:<path>`), recompute SHA-256 over those exact bytes,
-     and require every path and hash to match the pre-tag record exactly.
-   Use the general path whenever the fast path does not establish binding;
-   never compare only the tag name and version strings.
+   resolve the peeled tag commit's Git tree hash and require it to equal the
+   trusted handoff's post-stamp tree hash. Commit identity may differ, but tree
+   equality is mandatory. If the trees differ, return `blocked` immediately;
+   rehashing only the previously recorded pages or release surfaces cannot
+   authorize `release_verified`, because the tag may contain unaudited code or
+   other paths. Produce a name-status difference summary between the anchored
+   post-stamp tree and actual tag tree, including added, modified, deleted, and
+   renamed paths. Per-path hashes may be recomputed only as diagnostic evidence
+   and can never override tree inequality.
 4. Verify that the actual tag name, `target_release_version`, confirmed Release
    Notes, version index, `docs/site/.meta/releases.json`, and host version facts
-   also match exactly.
+   satisfy their required source forms and resolve to the same normalized
+   SemVer identity.
 5. Return `release_verified` only when content binding succeeds, the pre-tag
    record remains valid, and all evidence is complete and consistent.
-6. Return `blocked` when any recorded path is missing or any content hash
-   drifts, including when the tag name is correct. The report must present two
-   maintainer-selected remediation paths: (a) the host maintainer deletes or
-   moves the incorrect tag, reruns the complete pre-tag audit with the same
-   `target_release_version`, and the old record is marked `superseded`; or (b)
+6. Return `blocked` when the actual tag tree differs from the anchored
+   post-stamp tree, any recorded path is missing, any diagnostic content hash
+   drifts, or any normalized version fact is invalid or unequal, including when
+   the tag name is correct. The report must include the tree difference summary
+   and present two maintainer-selected remediation paths: (a) the host
+   maintainer deletes or moves the incorrect tag, uses the actual content to be
+   released as the new `target_ref`, reruns the complete pre-tag audit with the
+   same `target_release_version`, and marks the old record `superseded`; or (b)
    the maintainer abandons that version, confirms a new
-   `target_release_version`, and reruns the complete pre-tag audit. docs-audit
-   records and adjudicates the selected path only; it never deletes, moves, or
-   creates a tag. Also return `blocked` when the tag is missing, the pre-tag
-   record was invalidated, or evidence is missing.
+   `target_release_version`, uses the actual content to be released as the new
+   `target_ref`, and reruns the complete pre-tag audit. docs-audit records and
+   adjudicates the selected path only; it never deletes, moves, or creates a
+   tag. Also return `blocked` when the tag is missing, the pre-tag record was
+   invalidated, or evidence is missing.
 
 Post-tag audit performs final consistency verification only. Do not regenerate
 Release Notes, indexes, release metadata, documentation, GitHub Release
 content, or unified stamps.
 
 Persist or append a post-tag section to the same audit record without erasing
-the pre-tag evidence. Record the actual tag, checked surfaces, evidence,
+the pre-tag evidence. Record the actual tag and peeled commit, actual and
+anchored tree hashes, tree-equality result, any name-status difference summary,
+each version source's raw and normalized values, checked surfaces, evidence,
 blockers, review commands, and `release_verified` or `blocked` result.
 
 ## 8. Release Handoff and Responsibility Boundaries

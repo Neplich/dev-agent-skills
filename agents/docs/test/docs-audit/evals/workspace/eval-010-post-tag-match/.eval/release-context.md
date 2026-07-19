@@ -18,10 +18,13 @@
 - release_notes_index: `docs/site/release-notes/index.md`
 - release_metadata: `docs/site/.meta/releases.json` (read-only audit surface)
 - host_version_fact: `package.json` version `1.2.0`
+- version_normalization: actual tag/Release Notes/index/releases.json
+  `v1.2.0` and package.json `1.2.0` normalize to SemVer `1.2.0`
 
 The host repository supplies the trusted pre-tag handoff and actual tag
 evidence. The file `.eval/tag-commit-tree.txt` represents the Git tree hash
 resolved from `9f8e7d6^{tree}`. Although the tag commit differs from the
 post-stamp commit, its tree equals the tree hash stored by the trusted handoff,
 so the audit must use the tree-hash fast path. Commit identity alone is not a
-fast path. The audit must not create or move the tag.
+fast path. The audit must not create or move the tag. The source-specific `v`
+prefix difference is valid and must be normalized before equality comparison.

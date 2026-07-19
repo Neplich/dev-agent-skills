@@ -2,7 +2,7 @@
   "eval_id": "eval-010-post-tag-match",
   "eval_name": "post-tag-match",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-010-post-tag-match",
-  "skill_availability_goal": "Verify release_verified through the tree-hash-only fast path when tag and post-stamp commits differ but their Git trees match.",
+  "skill_availability_goal": "Verify release_verified only when tag and post-stamp Git trees match exactly and source-specific version forms normalize to the same SemVer.",
   "prompt": "执行 fixture 中定义的 post-tag audit。从 pre-tag handoff 锚定的盖章后 commit 读取记录，并解析实际 `v1.2.0` tag commit；按 Git tree hash 语义判断快路径。只做最终复核，不重新生成内容或盖章。",
   "execution_cleanup": [],
   "fixture_context": [

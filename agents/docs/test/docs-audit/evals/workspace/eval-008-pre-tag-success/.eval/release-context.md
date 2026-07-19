@@ -17,6 +17,9 @@
 - release_notes_index: `docs/site/release-notes/index.md`
 - release_metadata: `docs/site/.meta/releases.json` (read-only audit surface)
 - host_version_fact: `package.json` version `1.2.0`
+- version_normalization: `v1.2.0` from the target version, Release
+  Notes/index/releases.json and `1.2.0` from package.json both normalize to
+  SemVer `1.2.0`
 - unified_stamp_set:
   - `docs/site/api/catalog-items.md` (pre-stamp `v1.1.0`)
   - `docs/site/api/catalog-status.md` (pre-stamp `unverified`)
@@ -32,4 +35,5 @@ post-stamp file bytes, persist those hashes, and introduce the four-page stamp
 plus the successful audit record in the same ordinary post-stamp commit. The
 trusted pre-tag handoff anchors the committed record with commit SHA, tree hash,
 record path, and record blob hash; the record does not self-contain its commit
-or tree identity. Working-tree state is not an anchor.
+or tree identity. Working-tree state is not an anchor. The source-specific `v`
+prefix difference is valid and must be normalized before equality comparison.
