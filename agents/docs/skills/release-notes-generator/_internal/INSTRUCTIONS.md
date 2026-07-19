@@ -110,16 +110,20 @@ specialist 也不得把目标版本写入该字段以绕过审计时序。额外
 检查失败时保留真实失败证据，不把部分通过描述为 ready，也不越界修改代码、
 部署配置或其他角色文档来掩盖失败。
 
-## 7. 输出 Issue #120 Ready Handoff
+## 7. 输出 Issue #117 Pre-tag Handoff
 
 输出结构化 handoff，至少包含：
 
 ```yaml
-handoff_target: "issue #120 / github-release-generator"
+handoff_target: "issue #117 / docs-audit pre-tag"
+downstream_target: "issue #120 / github-release-generator"
 handoff_status: ready # 或 blocked
 next_gate: "issue #117 pre-tag audit"
 release_execution_authorized: false
-release_version: "vX.Y.Z"
+target_release_version: "vX.Y.Z"
+target_release_version_confirmation:
+  status: maintainer_confirmed
+  source: "<维护者确认记录路径或可追溯引用>"
 site_release_note_path: "docs/site/release-notes/vX.Y.Z.md"
 confirmation_status: confirmed # 或 unconfirmed
 docs_checks:
@@ -139,13 +143,14 @@ source_evidence:
 blockers: []
 ```
 
-仅当 `confirmation_status: confirmed` 且所有宿主 required docs checks 均成功时，
-`handoff_status` 才能是 `ready`。其他情况一律为 `blocked`，并准确列出未确认正文、
-失败/未执行检查、版本不一致或证据缺口。
+仅当 `target_release_version_confirmation.status: maintainer_confirmed`、
+`confirmation_status: confirmed` 且所有宿主 required docs checks 均成功时，
+`handoff_status` 才能是 `ready`。其他情况一律为 `blocked`，并准确列出目标版本缺少
+维护者确认、未确认正文、失败/未执行检查、版本不一致或证据缺口。
 
-该 handoff 只证明站内 Release Notes 已确认且校验通过，是 #120 的必要输入，不是
-GitHub Release 执行授权。应先把它交给 issue #117 执行 pre-tag audit；只有 #117
-返回 `ready_for_tag` 后，#120 才可继续准备 GitHub Release 草稿。本 specialist 不
+该 handoff 只证明站内 Release Notes 已确认且校验通过，应直接交给 issue #117 执行
+pre-tag audit；它也是 #120 的必要上游证据，但不是 GitHub Release 执行授权。只有
+#117 返回 `ready_for_tag` 后，#120 才可继续准备 GitHub Release 草稿。本 specialist 不
 创建、编辑或发布 GitHub Release，不收集 GitHub Release 专用的 PR、贡献者或
 compare 信息，不创建或移动 tag。issue #117 的 pre-tag/post-tag 审计与统一盖章
 不能由本 handoff 代替。

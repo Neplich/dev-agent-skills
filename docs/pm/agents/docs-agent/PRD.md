@@ -5,14 +5,15 @@ feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.3.0"
+version: "1.4.0"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
-last_updated: "2026-07-16"
+last_updated: "2026-07-19"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/105"
   - "https://github.com/Neplich/dev-agent-skills/issues/112"
+  - "https://github.com/Neplich/dev-agent-skills/issues/117"
 related_docs:
   - "AGENTS.md"
   - ".claude-plugin/marketplace.json"
@@ -59,6 +60,9 @@ changelog:
   - version: "1.3.0"
     date: "2026-07-16"
     changes: "新增设计文档交付链最后一步收口门禁（issue #112）"
+  - version: "1.4.0"
+    date: "2026-07-19"
+    changes: "引入维护者确认的 target_release_version 与 pre-tag/post-tag 双阶段文档审计（issue #117）"
 ---
 
 # docs-agent PRD
@@ -82,9 +86,9 @@ changelog:
 1. 新增 `docs-agent` 角色，负责宿主项目正式文档层（结果文档）的初始化、同步与审计。
 2. 提供 `docs-site-bootstrap` skill：按用户显式请求初始化 VitePress 文档站骨架、文档标准与空 `change-map.yaml`。
 3. 提供 `formal-docs-sync` skill：在协作链三个节点（feature 落地、部署验证、发版）同步 API、数据库、设计、运维、产品文档，并在每次同步时生长 `change-map.yaml` 条目。
-4. 提供 `docs-audit` skill：发版前对 diff 影响域内的文档做事实性校验，通过后统一盖章 `last_verified_version`。
+4. 提供 `docs-audit` skill：使用维护者确认的 `target_release_version` 分别执行 pre-tag 与 post-tag 审计；pre-tag 对完整影响域做事实性校验和统一盖章并返回 `ready_for_tag`，post-tag 复核实际 tag 后返回 `release_verified`。
 5. 为现有 6 个 Agent 定义正式文档消费契约：任务落点命中 `change-map.yaml` 时优先读取对应文档，代码仍是 ground truth。
-6. 文档版本锚定 git tag / GitHub Release，不引入独立文档版本体系。
+6. `last_verified_version` 锚定维护者确认的目标发布版本，不建立独立文档版本体系，也不把页面验证版本解释为已发布状态。
 7. 支持接手已有项目：通过存量回填为现有实现生成正式文档基线，并种子化 change-map。
 
 ## 非目标
@@ -124,11 +128,11 @@ changelog:
 |----|---------|-------------|----------|---------------------|
 | FR-A01 | docs-site-bootstrap | 初始化 VitePress 站点骨架：目录分类（api / database / design / product / ops / release-notes / standards）、frontmatter 内容模型、文档类型模板、prepare 与 check 脚本（含 visibility public / internal 双站点过滤生成）、空 `change-map.yaml`。模板以文本形式内置于 skill。骨架一次性完整生成（全部目录分类与双站点机器），文档内容随协作链节点与存量回填渐进填充。 | P0 | 空项目 bootstrap 后骨架完整可构建；重复执行幂等；未显式请求时不触发。 |
 | FR-A02 | formal-docs-sync | 三个同步节点：feature 落地同步 api / database / design 文档；部署验证同步 ops 文档；发版同步产品手册，并核对 release-notes 站点落位（release-notes 内容由 release-notes-generator 产出，sync 不重复生成）。数据来源为 TRD、过程文档与代码证据。第四模式见 FR-A09 存量回填。完整三节点覆盖为产品目标范围；MVP 按决议 6/8 收窄为 api 链路（feature 落地节点与存量回填），database / design / ops / release-notes / 产品手册的同步为后续迭代，不作为 MVP 验收面。 | P0 | 同步只更新受影响文档；每次同步追加或修正 change-map 条目；文档描述 latest state，不堆积变更历史。MVP 验收仅覆盖 api 链路。 |
-| FR-A03 | docs-audit | 发版门禁。确定性层：diff 命中 change-map 后检查要求更新的文档是否被更新（未同步更新的记为候选核对项，交由事实层判定）、frontmatter 完整（校验范围排除 `.meta/` 机器消费区）。事实层：agent 对影响域文档逐条核对声明与代码（API path / 参数 / 错误结构、schema 字段、env 变量）。 | P0 | 产出版本化 audit 报告；三态结论；全部 verified 或修复后统一盖章 `last_verified_version`。 |
+| FR-A03 | docs-audit | 双阶段发版门禁。以独立的 `base_ref`、`target_ref` 和维护者确认的 `target_release_version` 为输入；确定性层计算完整影响域并检查 frontmatter，事实层逐页核对声明与代码；pre-tag 负责一致性核对和统一盖章，post-tag 只复核实际 tag 与既有发布事实。 | P0 | pre-tag 仅在完整影响域全部 verified 且版本事实一致时统一盖章并返回 `ready_for_tag`；post-tag 一致时返回 `release_verified`，否则 blocked；不允许局部盖章。 |
 | FR-A04 | 消费契约 | 6 个现有 Agent 增加读取协议：任务落点命中 change-map 时优先读映射文档；`debugger` 可把 API contract 文档作为 expected-behavior 依据来源之一。 | P0 | 协议以 `_shared` 共享约定为主、各 SKILL.md 指针为辅；无文档站时静默降级，不产生额外询问。 |
 | FR-A05 | 信任模型 | 文档是声明状态，代码是 ground truth。影响结论的关键判断必须回代码验证；`last_verified_version` 与当前版本差距决定信任度。 | P0 | 消费契约与 audit 协议均显式引用该模型；文档与代码不符时输出分歧证据而非采信文档。 |
 | FR-A06 | change-map 双向索引 | `change-map.yaml` 写方向供 sync / audit 判定受影响文档，读方向供 6 个 Agent 按任务落点取文档。 | P0 | 同一份数据服务两个方向；条目由 sync 在 feature 落地时生长，或由存量回填批量种子化，不要求人工预先维护全量映射。 |
-| FR-A07 | 版本锚定 | `last_verified_version` 取值域为宿主项目 git tag / GitHub Release；无版本体系的宿主项目该字段可缺省。 | P1 | 字段仅由 audit 通过后盖章写入；缺省时 audit 报告需注明版本锚不可用。 |
+| FR-A07 | 版本锚定 | `last_verified_version` 无条件存在，取维护者确认的 `target_release_version` 或 `unverified`；该字段只表示页面内容已针对该版本完成验证，不表示版本已经发布。 | P1 | pre-tag 即使同名 tag 尚不存在也可在完整影响域全部 verified 后统一盖章；缺少、推测或未确认目标版本时 blocked 且零盖章。 |
 | FR-A08 | 逻辑与数据分层 | 通用逻辑（读者分层、路由方法、模板映射、写作纪律、生命周期节点）内置于 skill；项目数据（change-map 条目、模块名、目录微调）留在宿主项目 `standards/`。 | P0 | skill 内不出现任何宿主项目专有路径或模块名；bootstrap 生成的数据层文件归宿主项目所有。 |
 | FR-A09 | 存量回填（sync 第四模式） | 接手已有项目时，formal-docs-sync 以回填模式运行：按维护者确认的范围（优先复用 PM feature-catalog 产物作为地图）为现有实现生成正式文档基线，并生成 change-map 种子条目；按模块分批推进，每批需维护者确认。 | P0 | 含存量代码的项目可分批产出文档基线与 change-map 种子；MVP 覆盖 api 链路，database / ops 随后续迭代；无 feature-catalog 产物时按代码扫描圈定范围并要求确认。 |
 | FR-A10 | design 交付链收口门禁 | feature delivery 模式写入功能级 `docs/site/design/**` 前，必须同时确认同一 `feature_path` 的 Approved PRD、含可追踪影响域的 Confirmed TRD、已确认实施计划、计划范围全部完成且无 pending / blocked / deferred / TODO / stub、实际代码与 diff 覆盖计划及 TRD 范围、计划要求的测试全部执行并通过（含 `change_tier` 要求的 QA / E2E 证据），并在全部通过后继续执行既有范围确认门禁。 | P0 | 任一条件不满足时原子性 blocked，设计正文与对应 design change-map 条目均零变化；输出缺失证据、当前 owner 与下一步，不写暂定设计、未来态或部分正文。 |
@@ -175,8 +179,11 @@ flowchart TB
     subgraph consume["消费侧 6 个角色 Agent"]
         C["按 change-map 取文档<br/>文档=地图 代码=ground truth"]
     end
-    A -->|audit 通过| STAMP["盖章 last_verified_version = 新 tag"]
-    STAMP --> TAG["git tag / GitHub Release"]
+    A -->|pre-tag 通过| STAMP["盖章 last_verified_version = target_release_version"]
+    STAMP --> READY["ready_for_tag"]
+    READY --> TAG["宿主创建 git tag"]
+    TAG --> POST["post-tag audit"]
+    POST --> VERIFIED["release_verified"]
     S -.更新文档.-> C
     C -.文档与代码不符证据.-> A
     TAG -.新鲜度信号.-> C
@@ -189,7 +196,11 @@ flowchart LR
     D["git diff 上一 release tag → HEAD"] --> DET["确定性层<br/>check-affected + frontmatter"]
     DET --> FACT["事实层<br/>agent 逐条核对声明 vs 代码"]
     FACT --> R{"报告三态"}
-    R -->|verified| OK["盖章并放行"]
+    R -->|完整集合 verified| STAMP["pre-tag 统一盖章"]
+    STAMP --> READY["ready_for_tag"]
+    READY --> TAG["宿主创建 tag"]
+    TAG --> POST["post-tag 一致性复核"]
+    POST --> VERIFIED["release_verified"]
     R -->|stale / mismatch| FIX["修文档或修代码"] --> FACT
 ```
 
@@ -210,7 +221,8 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 |----------|--------|---------|
 | 宿主 `docs/site/standards/change-map.yaml` | File read/write | 双向索引：sync 生长、audit 判定、Agent 消费 |
 | 宿主 `docs/site/**/*.md` frontmatter（排除 .meta/ 机器消费区） | File read/write | 内容模型与版本盖章 |
-| 宿主 git tag / GitHub Release | Read | 版本锚与 diff 基准 |
+| 维护者确认的 `target_release_version` | Read | pre-tag 统一盖章使用的目标版本；不得从 Git ref 或分支名推测 |
+| 宿主 git tag / GitHub Release | Read | diff 基准与 post-tag 最终一致性复核；pre-tag 不要求同名 tag 已存在 |
 | `docs/engineer/{feature_path}/TRD.md` | File read | sync 的影响域证据（frontmatter related_code 或影响模块章节）与变更事实来源 |
 | `.claude-plugin/marketplace.json` | File write | 注册 docs-agent 与 4 个 skill 路径（同名 router + 3 个 specialist） |
 

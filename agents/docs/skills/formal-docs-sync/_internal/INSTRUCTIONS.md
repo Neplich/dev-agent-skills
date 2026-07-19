@@ -119,10 +119,14 @@ completion; do not repair unrelated code or deployment state to hide it.
 
 ### 8. Handoff to docs audit
 
-After all required checks pass, hand the complete affected set to
-`docs-agent:docs-audit` (issue #117) for fact audit and unified version
-stamping. A sync report is not a stamp or release authorization. If checks
-fail, return a blocked handoff with the exact evidence.
+After all required checks pass, hand the complete affected set and evidence to
+`docs-agent:docs-audit` (issue #117). Enter pre-tag audit only when a maintainer
+has explicitly confirmed `target_release_version`; include that value and its
+confirmation source in the handoff. Otherwise keep every changed page
+`last_verified_version: unverified`, return a blocked handoff that explicitly
+waits for confirmed release context, and never infer a version from refs,
+branch names, or other context. A sync report is not a stamp or release
+authorization. If checks fail, return a blocked handoff with the exact evidence.
 
 ## Mode Rules
 
@@ -211,7 +215,9 @@ After each scope or backfill batch, report:
 - Host docs checks: <commands, cwd, and results>
 - Unresolved discrepancies: <items, owners, next evidence or none>
 - Coverage and remaining batches: <summary>
-- Handoff: <docs-audit (issue #117) ready/blocked, or
+- Handoff: <docs-audit (issue #117) ready, or blocked while waiting for confirmed
+  target_release_version; include its maintainer confirmation source when
+  available, or
   release-notes-generator (issue #116) with the confirmed version, scope,
   evidence, and requested site surfaces when applicable>
 ```

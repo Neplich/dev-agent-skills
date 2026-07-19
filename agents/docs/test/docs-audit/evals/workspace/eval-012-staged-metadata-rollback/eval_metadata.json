@@ -1,0 +1,15 @@
+{
+  "eval_id": "eval-012-staged-metadata-rollback",
+  "eval_name": "staged-metadata-rollback",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-012-staged-metadata-rollback",
+  "skill_availability_goal": "Verify staged and committed convergence covers modes, object types, symlinks, renames, copies, deletions, path swaps and full patches, with proven transactional restoration on failure.",
+  "prompt": "执行 fixture 描述的 pre-tag candidate 收敛检查。raw metadata 显示可执行位、ordinary blob 到 symlink、rename、delete 与额外路径；逐项裁定并说明 staged gate blocked 后如何恢复和验证宿主状态。",
+  "execution_cleanup": [
+    "docs/site/.meta/audit/audit-v1.2.0.md",
+    "docs/site/.meta/audit/handoffs/pre-tag-v1.2.0.md"
+  ],
+  "fixture_context": [
+    ".eval/staged-convergence-evidence.md",
+    ".eval/prewrite-fingerprint.md"
+  ]
+}

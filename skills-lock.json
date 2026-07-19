@@ -39,7 +39,7 @@
     "docs-release-notes-generator": {
       "source": "agents/docs/skills/release-notes-generator",
       "sourceType": "local",
-      "computedHash": "8f88e114c699c92c10b7e52abeccb6db46b195f204b3e02b3a9823180fd2c30b"
+      "computedHash": "bfd05fccdadf434e9cf5e7854bd959b1f025ddc2c9684c4338e0385f85855dfb"
     },
     "roadmap-generator": {
       "source": "agents/product_manager/skills/roadmap-generator",
@@ -184,7 +184,7 @@
     "docs-agent": {
       "source": "agents/docs/skills/docs-agent",
       "sourceType": "local",
-      "computedHash": "4d9b14cb51ff20d0652b36f665fd29abd8721e5a9ca102a6a9660b2f66b3b52a"
+      "computedHash": "5ef79433cb010ee0a46322378985137691f5c1a4163a0e67ff136d2442b46d92"
     },
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",
@@ -194,12 +194,12 @@
     "formal-docs-sync": {
       "source": "agents/docs/skills/formal-docs-sync",
       "sourceType": "local",
-      "computedHash": "abb23dd2f68900c41dbb4a2844d25ac8a1c65e7f5504a58f3358238d84725fc6"
+      "computedHash": "49b3daf702fdab69a9a407e8739649c092bc04eb40d65db7394617ab723066ea"
     },
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",
       "sourceType": "local",
-      "computedHash": "328ec27bf787aeede0d88bf454f8c505edbc68bf9218d6b932a05f72a8f0b0f5"
+      "computedHash": "a41dbef3eafd665441af30e2f4d5162b3605b7ee272d0cfb4787cdd56b53f6f1"
     }
   }
 }

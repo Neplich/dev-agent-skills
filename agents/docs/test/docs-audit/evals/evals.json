@@ -7,13 +7,13 @@
       "id": "eval-001-audit-mismatch",
       "name": "审计文档与代码直接冲突",
       "description": "验证 API 文档声明与当前代码事实直接冲突时判定 mismatch，并阻塞 release 且不盖章。",
-      "prompt": "审计 fixture 中已确认的 base `4a1b2c3` 到 target `5d6e7f8` 范围，版本锚为 `v1.1.0`。请执行两层 docs audit，以代码为 ground truth，持久化报告并给出 release 建议；不要修复文档或代码。",
-      "expected_output": "命中映射 API 页面，指出 POST 文档声明与 GET 代码事实的冲突，结论为 mismatch，release blocked，列出证据且不写版本盖章。",
+      "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`。审计 fixture 中已确认的 `base_ref` `4a1b2c3` 到 `target_ref` `5d6e7f8` 范围。请执行两层 docs audit，以代码为 ground truth，持久化报告并给出阶段结果；不要修复文档或代码。",
+      "expected_output": "命中映射 API 页面，指出 POST 文档声明与 GET 代码事实的冲突，结论为 mismatch，pre-tag audit blocked，列出证据且不写版本盖章。",
       "workspace": "workspace/eval-001-audit-mismatch",
       "assertions": [
         {"id": "includes_mapped_page", "description": "命中 change-map 影响域", "text": "确定性层根据 `src/catalog/routes.txt` 的 diff 和 change-map 将 `docs/site/api/catalog.md` 纳入完整影响域。"},
         {"id": "classifies_direct_conflict_mismatch", "description": "直接冲突判 mismatch", "text": "事实层保留文档 `POST /catalog/items` 声明、代码 `GET /catalog/items` 事实及其证据路径和影响，并将页面判为 `mismatch`。"},
-        {"id": "blocks_with_conflict_evidence", "description": "冲突阻塞 release", "text": "release 建议为 blocked，具体列出冲突证据和需要确认修文档还是修代码的待办。"},
+        {"id": "blocks_with_conflict_evidence", "description": "冲突阻塞 pre-tag audit", "text": "阶段结果为 `blocked`，具体列出冲突证据和需要确认修文档还是修代码的待办，不返回 `ready_for_tag`。"},
         {"id": "does_not_stamp_blocked_set", "description": "阻塞集合不盖章", "text": "存在 mismatch 时不更新受审页面的 `last_verified_version`，也不同步 `.meta/releases.json`，不得对 verified 子集局部盖章。"}
       ]
     },
@@ -21,13 +21,13 @@
       "id": "eval-002-audit-stale-doc",
       "name": "审计映射命中文档确实过期",
       "description": "验证代码新增必填参数而 required_docs 未同批更新时，先记 suspect，再由事实层确认 stale 并阻塞。",
-      "prompt": "审计 fixture 中已确认的 base `6a1b2c3` 到 target `7d6e5f4` 范围，版本锚为 `v1.1.0`。请执行确定性层和事实层，持久化报告并给出 release 建议；不要同步文档。",
-      "expected_output": "未同批更新的映射页面先标 suspect，事实核对确认缺少新增必填 locale 参数后判 stale，release blocked 且不盖章。",
+      "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`。审计 fixture 中已确认的 `base_ref` `6a1b2c3` 到 `target_ref` `7d6e5f4` 范围。请执行确定性层和事实层，持久化报告并给出阶段结果；不要同步文档。",
+      "expected_output": "未同批更新的映射页面先标 suspect，事实核对确认缺少新增必填 locale 参数后判 stale，pre-tag audit blocked 且不盖章。",
       "workspace": "workspace/eval-002-audit-stale-doc",
       "assertions": [
         {"id": "marks_missing_doc_update_suspect", "description": "确定性层只记 suspect", "text": "代码 diff 命中 change-map 且 required doc 未同批更新时，确定性层将页面记为 `suspect` 并送事实层，不直接把未更新等同于 stale。"},
         {"id": "confirms_outdated_claim_stale", "description": "事实层确认 stale", "text": "事实层以当前代码中新增必填 `locale` 查询参数为证据，确认文档参数声明已经不同步并最终判为 `stale`。"},
-        {"id": "blocks_stale_release", "description": "stale 阻塞 release", "text": "报告列出 stale 证据、同步文档后重审的具体待办，并给出 blocked release 建议。"},
+        {"id": "blocks_stale_release", "description": "stale 阻塞 pre-tag audit", "text": "报告列出 stale 证据、同步文档后重审的具体待办，阶段结果为 `blocked` 且不返回 `ready_for_tag`。"},
         {"id": "does_not_stamp_stale_set", "description": "stale 集合不盖章", "text": "存在 stale 时不更新 `last_verified_version` 或 `.meta/releases.json`。"}
       ]
     },
@@ -35,74 +35,183 @@
       "id": "eval-003-audit-pure-refactor",
       "name": "审计纯实现重构",
       "description": "验证 diff 虽命中 change-map，但外部 API 声明仍准确时由 suspect 转为 verified，且不强制无意义文档编辑。",
-      "prompt": "审计 fixture 中已确认的 base `81a2b3c` 到 target `92d3e4f` 范围，版本锚为 `v1.1.0`。请核对命中映射但未更新的 API 页面，持久化报告并给出 release 建议；不要为满足同 diff 更新而改写准确文档。",
-      "expected_output": "映射命中页面先为 suspect，经事实层确认方法、路径、参数和响应未变后判 verified，不要求编辑文档，也不因文档未改而 blocked。",
+      "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`。审计 fixture 中已确认的 `base_ref` `81a2b3c` 到 `target_ref` `92d3e4f` 范围。请核对命中映射但未更新的 API 页面；只评估页面事实结论，不要为满足同 diff 更新而改写准确文档，也不要在缺少 Release Notes 等版本表面时宣称 `ready_for_tag`。",
+      "expected_output": "映射命中页面先为 suspect，经事实层确认方法、路径、参数和响应未变后判 verified，不要求编辑文档；整体 pre-tag audit 因 fixture 未提供完整版本表面证据而 blocked，不盖章。",
       "workspace": "workspace/eval-003-audit-pure-refactor",
       "assertions": [
         {"id": "sends_refactor_suspect_to_fact_layer", "description": "纯重构仍进入事实层", "text": "确定性层把未同批更新的映射页面作为 `suspect` 交给事实层，而不是直接放行或直接判 stale。"},
         {"id": "classifies_accurate_refactor_verified", "description": "准确声明判 verified", "text": "事实层核对当前代码后确认 GET 路径、可选 limit 参数、200 响应和 400 错误声明仍准确，最终判为 `verified`。"},
         {"id": "does_not_force_noop_doc_edit", "description": "不强制无意义编辑", "text": "报告明确纯实现重构无需为了同 diff 更新而编辑准确文档。"},
-        {"id": "does_not_block_for_unchanged_accurate_doc", "description": "不因未改文档阻塞", "text": "release 建议不因 required doc 未同批修改而 blocked；判断依据是事实层 verified，而不是是否产生文档 diff。"}
+        {"id": "does_not_block_for_unchanged_accurate_doc", "description": "不因未改文档判 stale", "text": "页面不因 required doc 未同批修改而判 `stale`；整体阶段若 blocked，只能归因于 fixture 缺少完整 release-version surface 证据，且不得返回 `ready_for_tag` 或盖章。"}
       ]
     },
     {
       "id": "eval-004-audit-all-verified",
       "name": "全部 verified 后统一盖章",
-      "description": "验证显式 base/target 与 v1.1.0 版本锚下，完整影响域全部 verified 才统一更新页面和 release metadata。",
-      "prompt": "以显式 base `a1b2c3d`、target `b2c3d4e` 和待发布版本锚 `v1.1.0` 审计 fixture。全部核对完成后持久化报告；仅在完整影响域全部 verified 时执行统一盖章。",
-      "expected_output": "两张受审 API 页面均 verified，统一将其 last_verified_version 更新为 v1.1.0，同步 releases.json，并写入 audit-v1.1.0.md。",
+      "description": "验证维护者确认的 target_release_version 下，完整影响域全部 verified 且只读 release metadata 一致时，在隔离事务内生成完整 candidate/discovery producer schema，不修改 releases.json。",
+      "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`，显式 `base_ref` 为 `a1b2c3d`、`target_ref` 为 `b2c3d4e`，且匹配 tag 尚不存在。请审计 fixture；仅在完整影响域和所有 release-version surfaces 全部通过时统一盖章并持久化报告。`.meta/releases.json` 由 #116 维护，本审计只能读取核对。",
+      "expected_output": "两张受审 API 页面均 verified；带 v 的目标版本、Release Notes/索引/releases.json 与无 v 的 package.json 先按来源校验再规范化为同一 SemVer；四页统一盖章集在隔离 candidate 内回读，只读核对 releases.json；candidate record 只写 candidate_verified 和完整 producer schema，经两次 staged gate 与 anchor commit 确认后再生成固定 discovery handoff，handoff commit 集成并回读后才返回 ready_for_tag，且不表述为已发布。",
       "workspace": "workspace/eval-004-audit-all-verified",
       "assertions": [
         {"id": "verifies_complete_affected_set", "description": "完整影响域全部 verified", "text": "确定性层纳入 change-map 命中的两个 required docs，事实层逐页核对并将完整影响域全部判为 `verified`，无 unresolved evidence gap。"},
-        {"id": "stamps_all_pages_together", "description": "统一更新受审页面", "text": "只有全部 verified 后，才在同一次审计操作中把两张受审页面的 `last_verified_version` 统一更新为 `v1.1.0`。"},
-        {"id": "synchronizes_release_metadata", "description": "同步 release metadata", "text": "统一盖章同步更新 `docs/site/.meta/releases.json` 的 `latest`、`released` 与 `verifiedDocs`，其中 `verifiedDocs` 以受审文档路径为 key、`v1.1.0` 版本字符串为 value。"},
-        {"id": "persists_versioned_report", "description": "写入版本化审计报告", "text": "报告持久化到 `docs/site/.meta/audit/audit-v1.1.0.md`，包含显式 base、target、版本锚、证据、结论和复核命令。"}
+        {"id": "stamps_all_pages_together", "description": "统一更新受审页面和 release Markdown", "text": "只有全部 verified 后，才在同一次审计操作中把两张受审 API 页面、Release Notes 页和 Markdown 索引的 `last_verified_version` 统一更新为 `v1.1.0`。"},
+        {"id": "verifies_release_metadata_read_only", "description": "只读核对 release metadata", "text": "核对 `docs/site/.meta/releases.json` 与 `target_release_version` 一致，但不创建或修改该文件；其内容归 #116 维护。"},
+        {"id": "normalizes_mixed_version_forms", "description": "按来源规范化混合版本形态", "text": "要求 `target_release_version`、Release Notes/索引和 `.meta/releases.json` 使用带 `v` 形态，`package.json` 的 `version` 使用无 `v` 形态；将 `v1.1.0` 与 `1.1.0` 分别校验并规范化为同一 SemVer 后判等，不因合法前缀差异阻塞。"},
+        {"id": "persists_candidate_producer_schema", "description": "candidate producer schema 完整且不提前成功", "text": "在隔离 worktree 的固定路径 `docs/site/.meta/audit/audit-v1.1.0.md` 原子生成 candidate record：包含 schema/attempt/phase、不可变 base/target commit、目标版本与 diff 语义、影响与统一盖章集、逐页 target-tree mode/type/blob、章前/章后值、claim 与精确代码/测试 blob 证据、章后 SHA-256、完整版本来源 inventory（含 actual-tag pending 项）的六字段 locator contract、raw/normalized/path/mode/type/blob/hash/比较结果、canonical-json-rfc8259-sorted-v1 算法与实算 inventory/prior-lineage SHA-256 digest、两次 staged gate inventory、回读与命令；结论只能是 `candidate_verified`，不得包含 `ready_for_tag`、成功时间、所在 commit/tree 或 post-commit 结果。"},
+        {"id": "anchors_candidate_then_discovers_success", "description": "anchor 确认后才生成固定 discovery handoff", "text": "candidate 最终字节通过第二次 staged gate 后才创建 post-stamp anchor commit，并对 target_ref..anchor 的 raw metadata、status、type、mode、path、content、tree 和 candidate blob 完整确认；随后才在固定路径 `docs/site/.meta/audit/handoffs/pre-tag-v1.1.0.md` 写入 `ready_for_tag` discovery schema，创建并确认只含该路径的 handoff commit，外部包补充 handoff commit/tree/path/blob，正常 fast-forward 集成且回读通过后才对 #120 返回 `ready_for_tag`。"}
       ]
     },
     {
       "id": "eval-005-audit-doc-only-error",
       "name": "拦截纯文档错误声明",
       "description": "验证没有代码 diff 时，变更的正式文档页面仍直接进入影响域并由事实层拦截错误声明。",
-      "prompt": "审计 fixture 中已确认的 base `c1d2e3f` 到 target `d2e3f4a` 范围，版本锚为 `v1.1.0`。该范围只有正式文档变更；请仍执行完整事实核对，持久化报告并给出 release 建议。",
+      "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`。审计 fixture 中已确认的 `base_ref` `c1d2e3f` 到 `target_ref` `d2e3f4a` 范围。该范围只有正式文档变更；请仍执行完整事实核对，持久化报告并给出阶段结果。",
       "expected_output": "直接纳入纯文档变更页面，以 related_code 定位事实，发现新写的 DELETE 声明与代码冲突，判 mismatch 并 blocked，不因无代码 diff 放行。",
       "workspace": "workspace/eval-005-audit-doc-only-error",
       "assertions": [
         {"id": "includes_doc_only_change", "description": "纯文档变更直接入影响域", "text": "确定性层将 changed files 中的 `docs/site/api/catalog.md` 直接加入影响域，即使没有任何代码 diff 或 change-map 代码命中。"},
         {"id": "uses_related_code_for_fact_check", "description": "按 related_code 核对事实", "text": "事实层使用页面 `related_code` 圈定 `src/catalog/routes.txt`，不因 diff 中没有代码文件而跳过 ground truth 核对。"},
         {"id": "classifies_doc_only_conflict_mismatch", "description": "纯文档错误判 mismatch", "text": "新文档声明 `DELETE /catalog/items/{item_id}`，当前代码只提供 GET；报告保留声明、事实、证据和影响并判为 `mismatch`。"},
-        {"id": "blocks_despite_no_code_diff", "description": "无代码 diff 仍阻塞", "text": "release 建议为 blocked 且不盖章，明确不能因为无代码 diff 而放行错误文档。"}
+        {"id": "blocks_despite_no_code_diff", "description": "无代码 diff 仍阻塞", "text": "pre-tag 阶段结果为 `blocked` 且不盖章，明确不能因为无代码 diff 而放行错误文档，也不返回 `ready_for_tag`。"}
       ]
     },
     {
       "id": "eval-006-audit-no-version-anchor",
-      "name": "无版本锚继续审计但不盖章",
-      "description": "验证没有 tag、Release 或显式版本锚时仍审计确认范围，使用 target 短 SHA 命名报告，并保持 last_verified_version 为 unverified 而不盖章。",
-      "prompt": "审计已确认的 base `e1f2a3b` 到真实 target commit `7c9e2af` 范围。宿主没有 tag、GitHub Release 或任何显式版本锚；请继续审计并持久化报告，不要发明版本，并保持页面的 unverified 状态不盖章。",
-      "expected_output": "页面事实结论仍为 verified，报告写 version_anchor: unavailable，并回退为 audit-7c9e2af.md；last_verified_version 保持 unverified，不修改 releases.json。",
+      "name": "缺少目标版本时阻塞写入",
+      "description": "验证没有维护者明确确认的 target_release_version 时只能做只读诊断，阶段结果 blocked，禁止报告持久化和版本盖章。",
+      "prompt": "审计已确认的 `base_ref` `e1f2a3b` 到真实 `target_ref` commit `7c9e2af` 范围。宿主没有 tag、GitHub Release，也没有维护者明确确认的 `target_release_version`。请按 docs-audit 新模型处理：可以给出只读诊断，但不要从 ref 或分支推测版本。",
+      "expected_output": "阶段结果 blocked；可描述只读事实诊断，但不持久化版本化审计报告，不使用 target SHA 回退命名，不盖章、不修改 releases.json。",
       "workspace": "workspace/eval-006-audit-no-version-anchor",
       "assertions": [
-        {"id": "audits_without_version_anchor", "description": "无锚仍执行审计", "text": "在无 tag、Release 或显式版本锚时仍对已确认 base/target 范围执行确定性层和事实层，并给出真实审核结论。"},
-        {"id": "records_anchor_unavailable", "description": "报告明确版本锚不可用", "text": "持久化报告使用机器可读文本 `version_anchor: unavailable`，不得用 unknown、分支名或推断版本代替。"},
-        {"id": "uses_target_sha_report_name", "description": "使用 target 短 SHA 回退命名", "text": "报告写入 `docs/site/.meta/audit/audit-7c9e2af.md`，使用 fixture 提供的真实 target short SHA。"},
-        {"id": "does_not_write_version_stamp", "description": "无锚保持 unverified 不盖章", "text": "即使页面结论为 verified，也不把 `last_verified_version` 从 `unverified` 改成版本号，而是保留 `unverified`，并且不修改 `.meta/releases.json`；不得因缺少版本锚而删除该必填字段。"}
+        {"id": "blocks_without_target_release_version", "description": "缺少目标版本即阻塞", "text": "缺少维护者明确确认的 `target_release_version` 时阶段结果为 `blocked`，不得返回 `ready_for_tag` 或 `release_verified`。"},
+        {"id": "allows_read_only_diagnostic", "description": "仅允许只读诊断", "text": "可以基于已确认的 base/target 范围描述只读 affected-page 与事实诊断，但不得把诊断包装成成功的 pre-tag audit。"},
+        {"id": "does_not_persist_report_without_target", "description": "无目标版本不持久化报告", "text": "不创建 `docs/site/.meta/audit/audit-7c9e2af.md` 或其他版本化审计报告，也不使用 target SHA 作为报告命名回退。"},
+        {"id": "does_not_write_version_stamp", "description": "无目标版本保持 unverified", "text": "保持页面 `last_verified_version: unverified`，不盖章且不修改 `.meta/releases.json`；不得从 ref、分支或上下文发明版本。"}
       ]
     },
     {
       "id": "eval-007-frontmatter-contract-fixtures",
       "name": "审计 frontmatter 契约合法与非法页面组",
       "description": "验证 docs-audit 在读取等效确认的 release 审计入口凭据后，与生成端使用同一 frontmatter 契约：一个合法 API 页面进入事实层，四个非法页面按具体契约错误判 stale 并阻塞 release。",
-      "prompt": "`release-entry.md` 提供了已确认的 pending release 版本上下文、显式 base/target、审计请求与证据清单。请据此对 fixture 站点执行 docs-audit frontmatter 判定并给出审计结论。逐页使用 docs-agent 的 frontmatter 契约真源核对字段合法性；对合法页面继续进入事实层，对非法页面记录具体 stale 原因，并给出 release 是否可以 proceed 的结论。不要修复 fixture。",
-      "expected_output": "先接受 release-entry.md 的等效确认入口凭据并解析 base/target 与 pending release 上下文；合法 API 页面通过 frontmatter 校验并进入事实层；doc_type: standard、related_code: []、缺 last_verified_version、owners: [] 四个页面分别因对应契约错误记为 stale；release blocked 且不得 proceed，判定与 bootstrap 生成端校验逻辑一致。",
+      "prompt": "`release-entry.md` 提供了维护者明确确认的 `target_release_version`、显式 `base_ref`/`target_ref`、pre-tag 审计请求与证据清单。请据此对 fixture 站点执行 docs-audit frontmatter 判定并给出阶段结果。逐页使用 docs-agent 的 frontmatter 契约真源核对字段合法性；对合法页面继续进入事实层，对非法页面记录具体 stale 原因。不要修复 fixture。",
+      "expected_output": "先接受 release-entry.md 的等效确认入口凭据并分别解析 target_release_version、base_ref 与 target_ref；合法 API 页面通过 frontmatter 校验并进入事实层；doc_type: standard、related_code: []、缺 last_verified_version、owners: [] 四个页面分别因对应契约错误记为 stale；pre-tag audit blocked、不得返回 ready_for_tag 且不得局部盖章。",
       "workspace": "workspace/eval-007-frontmatter-contract-fixtures",
       "assertions": [
-        {"id": "accepts_confirmed_audit_entry", "description": "接受等效确认的审计入口凭据", "text": "读取 `release-entry.md`，接受其中 pending release `v0.4.0`、显式 base `4a1b2c3` 与 target `7c9e2af`、审计请求及证据清单作为 docs-audit 的等效确认入口，并在该范围内执行审计。"},
+        {"id": "accepts_confirmed_audit_entry", "description": "接受等效确认的审计入口凭据", "text": "读取 `release-entry.md`，接受其中维护者明确确认的 `target_release_version: v0.4.0`、显式 `base_ref: 4a1b2c3` 与 `target_ref: 7c9e2af`、pre-tag 审计请求及证据清单作为 docs-audit 的等效确认入口。"},
         {"id": "rejects_standard_doc_type", "description": "拒绝 standard 文档类型", "text": "将 `docs/site/api/invalid-standard-doc-type.md` 因 `doc_type: standard` 不在允许的 landing、release、design、api、database、ops、product 集合中判为 `stale`。"},
         {"id": "rejects_empty_related_code", "description": "拒绝空 related_code", "text": "将 `docs/site/api/invalid-empty-related-code.md` 因所有页面都要求 `related_code` 为非空字符串数组而判为 `stale`。"},
         {"id": "rejects_missing_last_verified_version", "description": "拒绝缺少版本核验字段", "text": "将 `docs/site/api/invalid-missing-last-verified-version.md` 因无条件必填的 `last_verified_version` 缺失而判为 `stale`。"},
         {"id": "rejects_empty_owners", "description": "拒绝空 owners", "text": "将 `docs/site/api/invalid-empty-owners.md` 因 `owners` 不是非空字符串数组而判为 `stale`。"},
         {"id": "accepts_valid_api_page", "description": "合法 API 页面进入事实层", "text": "确认 `docs/site/api/valid-catalog.md` 的七个必填字段和值均合法，通过 frontmatter 校验并进入事实层核对 `src/catalog/routes.txt`。"},
-        {"id": "blocks_release_for_invalid_frontmatter", "description": "非法 frontmatter 阻塞 release", "text": "四个非法页面均作为 `stale` 保留在影响域时，release 结论为 blocked 且不得 `proceed`，也不得对合法页面局部盖章。"},
-        {"id": "uses_shared_contract_source", "description": "审计端与生成端同源", "text": "明确以 docs-agent 的 `frontmatter-contract.md` 为判定真源，并确认 docs-audit 结论与 docs-site-bootstrap 内嵌 frontmatter 校验逻辑一致。"}
+        {"id": "blocks_release_for_invalid_frontmatter", "description": "非法 frontmatter 阻塞 pre-tag audit", "text": "四个非法页面均作为 `stale` 保留在影响域时，阶段结果为 `blocked`，不得返回 `ready_for_tag`，也不得对合法页面局部盖章。"},
+        {"id": "uses_shared_contract_source", "description": "审计端与生成端同源", "text": "明确以 docs-agent 的 `frontmatter-contract.md` 为判定真源，并确认 docs-audit 结论与 docs-site-bootstrap 交付宿主的 `check-frontmatter.mjs` 校验逻辑一致。"}
+      ]
+    },
+    {
+      "id": "eval-008-pre-tag-success",
+      "name": "Tag 前完整核验并统一盖章",
+      "description": "验证维护者已确认 target_release_version、匹配 tag 尚不存在且完整影响域和版本表面均 verified 时，通过隔离 candidate、两次 staged gate、anchor 与 discovery handoff 的完整事务返回 ready_for_tag。",
+      "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已明确确认 `target_release_version: v1.2.0`，`base_ref: v1.1.0`、`target_ref: release-head`，且同名 tag 尚不存在。核对完整受影响页面、#116 handoff、Release Notes、索引、`.meta/releases.json` 和宿主版本事实；全部通过后，在从 target_ref 创建的隔离 worktree 中统一盖章并生成只含 candidate_verified 的候选记录。对初稿和原子替换后的最终记录各执行一次完整 raw metadata staged gate；创建并确认 anchor commit 后，才写固定 discovery handoff、创建并确认 handoff commit。只有正常 fast-forward 集成和回读也通过才向 #120 handoff。",
+      "expected_output": "完整影响域和 release surface 全部 verified；版本来源规范化为同一 SemVer；隔离 candidate 的四页统一盖章与 candidate record 通过两次完整 staged gate，candidate 不含 ready_for_tag；anchor commit 的提交后 raw metadata/content/tree/blob 确认通过后才生成固定 discovery handoff，handoff commit 由外部包锚定并正常 fast-forward 集成；最终集成回读后才返回 ready_for_tag，且明确不表示已发布。",
+      "workspace": "workspace/eval-008-pre-tag-success",
+      "assertions": [
+        {"id": "accepts_confirmed_version_without_tag", "description": "tag 不存在仍可执行 pre-tag", "text": "分别记录 `base_ref`、`target_ref` 和维护者确认的 `target_release_version: v1.2.0`；不因同名 tag 尚不存在而阻塞。"},
+        {"id": "verifies_complete_set_and_surfaces", "description": "完整集合和版本表面通过", "text": "将 change-map 要求的两张 API 页面纳入完整影响域并逐页判为 `verified`，同时核对 #116 handoff、Release Notes、索引、`.meta/releases.json` 与宿主版本事实；Release Notes 与索引 Markdown 也先完成事实核验。"},
+        {"id": "normalizes_mixed_version_forms", "description": "按来源规范化混合版本形态", "text": "要求 `target_release_version`、Release Notes/索引和 `.meta/releases.json` 使用带 `v` 的 `v1.2.0`，`package.json` 的 `version` 使用无 `v` 的 `1.2.0`；分别校验来源形态并规范化为同一 SemVer 后判等，不把合法前缀差异误判为 blocked。"},
+        {"id": "records_pre_stamp_values", "description": "报告记录盖章前值", "text": "审计报告逐页记录统一盖章集的盖章前 `last_verified_version`：catalog-items 与索引为 `v1.1.0`，catalog-status 与 Release Notes 页为 `unverified`，且不新增 `baseline_verified_version` frontmatter。"},
+        {"id": "stamps_complete_set_atomically", "description": "受影响页与 release Markdown 统一盖章", "text": "只在所有条件通过后，将两张受影响 API 页面、`docs/site/release-notes/v1.2.0.md` 和 `docs/site/release-notes/index.md` 的 `last_verified_version` 在一次审计操作中统一更新为 `v1.2.0` 并回读核对；不修改 `.meta/releases.json`。"},
+        {"id": "builds_isolated_candidate_transaction", "description": "候选只在隔离事务中构建", "text": "从精确 `target_ref` commit 创建隔离临时 worktree/branch 和以该 tree 初始化的 index；四页统一盖章与固定 candidate 路径只在隔离环境构建，宿主分支、工作区和 index 在全部 candidate 检查通过前保持捕获状态。"},
+        {"id": "candidate_record_has_no_ready_result", "description": "candidate schema 完整但不提前 ready", "text": "candidate record 包含完整 producer schema、四页章前/章后值与精确字节 SHA-256、含 actual-tag pending 项且带 selector/extractor 的版本来源 inventory、canonical JSON 算法与实算 inventory/prior-lineage digest、差异 inventory、回读和命令，结论只能为 `candidate_verified`；不得包含 `ready_for_tag`、成功时间、所在 commit/tree identity 或 post-commit confirmation。"},
+        {"id": "validates_two_complete_staged_gates", "description": "初稿与最终记录各走完整 raw metadata gate", "text": "第一次 stage 只包含四张授权 stamp 页与固定 candidate 路径，并检查 raw old/new mode、对象 type、禁用 rename/copy folding 的 name-status、summary 和 full binary patch；四页必须保持原路径、普通 blob、原 mode、状态 M 且只改一行 `last_verified_version`，record 只能在固定路径以 100644 ordinary blob 的 A/M 出现。原子替换最终 candidate 后再次执行完全相同的 gate，拒绝 R/C/D/T、mode-only、可执行位、symlink、gitlink、路径交换、额外 hunk 或其他路径。"},
+        {"id": "confirms_anchor_commit_before_discovery", "description": "anchor commit 确认通过才写 discovery", "text": "最终 staged gate 通过后创建 post-stamp anchor commit，并对 `target_ref..anchor_commit` 重跑 raw metadata、status、type、mode、path、content 检查，验证 anchor tree、candidate blob 与 `git show` 回读；任一失败不产生 final handoff。"},
+        {"id": "persists_fixed_discovery_handoff", "description": "固定 discovery handoff 携带 anchor", "text": "仅在 anchor 确认后写 `docs/site/.meta/audit/handoffs/pre-tag-v1.2.0.md`，其中包含 schema/attempt/phase/version、不可变 refs、`phase_result: ready_for_tag`、结果时间、source inventory digest、anchor commit/tree、candidate path/blob、post-commit confirmation、handoff 路径 preimage、prior lineage、无自引用 handoff blob 的 current entry 与新 digest；只 stage 该 100644 ordinary blob，创建并确认 handoff commit，外部包补充 handoff commit/tree/path/blob。"},
+        {"id": "returns_ready_only_after_integration", "description": "最终集成后才向下游 ready", "text": "只有宿主 release branch 仍等于 target_ref、捕获的 worktree/index fingerprints 未变，临时分支正常 fast-forward 集成，且集成后的 handoff commit/tree/discovery blob 回读通过后，才暴露外部包并向 #120 返回 `ready_for_tag`。FF 后回读失败时，仅在 CAS 证明 branch 仍等于刚集成 handoff commit 才回退 target_ref 并恢复/验证 fingerprints；并发移动不得覆盖，须报告残留 ref/commit 与人工命令。"},
+        {"id": "returns_ready_for_tag_not_published", "description": "返回正确阶段状态", "text": "pre-tag 结果为 `ready_for_tag`，并明确该状态只表示可创建 tag，不表示版本已经发布或 release verified。"}
+      ]
+    },
+    {
+      "id": "eval-009-pre-tag-blocked",
+      "name": "Tag 前任一 scope 内工作区差异阻塞",
+      "description": "验证任一落入审计范围、授权写路径或 required evidence inventory 的 staged、unstaged、untracked 差异均只能诊断并 blocked，不限于被用作事实证据的修改。",
+      "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已确认 `target_release_version: v1.2.0`；当前工作区同时有尚未提交的实现证据、受影响页面修改、授权 audit record 草稿和 required version source 修改，均不在 `target_ref: release-head` 的 tree 中。请判断这些差异能否参与通过，并给出完整重跑条件。",
+      "expected_output": "逐项识别 scope 内 staged/unstaged/untracked 差异并直接 blocked；所有通过依据只从精确 target_ref tree 的普通 blob 读取，不得盖章、构建 candidate、写 discovery 或返回 ready_for_tag；要求先处理并提交所有 scope 内差异、更新 target_ref 后从头完整重跑。",
+      "workspace": "workspace/eval-009-pre-tag-blocked",
+      "assertions": [
+        {"id": "requires_exact_target_tree_blobs", "description": "通过证据必须来自精确 target_ref tree", "text": "通过依据只能是精确 `target_ref` tree 中已提交的普通 blob；工作区、index、untracked 或 later-branch bytes 只能作为诊断上下文，不能因内容也存在于祖先或看似匹配而放行。"},
+        {"id": "blocks_every_in_scope_worktree_delta", "description": "scope 内任一工作区差异直接阻塞", "text": "读取 fixture 的 porcelain inventory，逐项识别 staged `src/catalog/routes.txt`、unstaged `docs/site/api/catalog-items.md`、untracked `docs/site/.meta/audit/audit-v1.2.0.md` 和 modified `package.json`；它们分别落入事实证据、受影响页面、授权写路径、required version-source inventory，任一项都足以令阶段 `blocked`，不要求调用方先声称它是通过证据。"},
+        {"id": "performs_zero_audit_writes", "description": "发现 scope 内差异后零审计写入", "text": "blocked 分支不得把页面判为 verified、不得盖章、不得创建隔离 candidate/anchor/discovery/handoff commit，也不得返回 `ready_for_tag`；保持宿主分支、工作区和 index 原状。"},
+        {"id": "requires_clean_commit_update_ref_and_rerun", "description": "要求处理全部差异后完整重跑", "text": "明确下一步是维护者先保留并提交或移出全部 scope 内差异，更新 `target_ref` 为包含最终预期内容的 commit，确认 scope 内工作区/index 干净，再从输入解析开始重新执行完整 pre-tag audit；不得局部续跑或补证。"}
+      ]
+    },
+    {
+      "id": "eval-010-post-tag-match",
+      "name": "Tag 后 handoff 优先与 tag-tree 固定路径兜底",
+      "description": "验证 post-tag 优先校验外部 handoff 包；包缺失或 squash 后 SHA 不可解析时，从 peeled tag tree 固定 discovery 路径重建 anchor 并只用 Git object reads，最终原子持久化。",
+      "prompt": "执行 fixture 中定义的 post-tag audit。先按外部 pre-tag handoff 包定位；再走 fixture 指定的 fresh clone/squash 分支，模拟 handoff commit SHA 不可解析但实际 `v1.2.0` peeled tag tree 保留固定 discovery artifact。两条定位路径都必须交叉验证同一 candidate/anchor/tree/version 证据，只从 tag tree 读页面与版本来源，并说明 post-tag 记录的原子持久化门禁。",
+      "expected_output": "外部包可用时优先验证 handoff commit/tree/path/blob；SHA 不可解析时从 tag tree 的固定 pre-tag-v1.2.0.md 读取 discovery，按其 path preimage 重建 anchor tree 并交叉验证 candidate blob/schema/convergence；所有页面和版本来源只从 peeled tag tree object 读取。全部检查后才隔离生成、单路径 stage/commit/readback/integrate post-tag 记录，成功才返回 release_verified。",
+      "workspace": "workspace/eval-010-post-tag-match",
+      "assertions": [
+        {"id": "prefers_and_validates_external_handoff", "description": "外部 handoff 包优先且完整校验", "text": "外部 package 可用时优先校验其 handoff commit/tree/path/blob 与提交版 `docs/site/.meta/audit/handoffs/pre-tag-v1.2.0.md`，再核对 discovery 中的 anchor commit/tree、candidate path/blob、post-commit confirmation 和 `ready_for_tag`；package 与 tag artifact 冲突时 blocked，不静默 fallback。"},
+        {"id": "falls_back_to_fixed_tag_tree_artifact", "description": "squash 或 fresh clone 时固定路径兜底", "text": "当外部 package 缺失或 handoff/anchor SHA 因 squash/fresh clone 不可解析时，只从 peeled tag tree 固定路径 `docs/site/.meta/audit/handoffs/pre-tag-v1.2.0.md` 读取 discovery；用其中记录的 prior mode/blob 或 absent 恢复 discovery path preimage，重建 tree 必须等于记录的 anchor tree，并校验 tag-tree candidate blob、完整 schema、canonical digest 与 convergence evidence。Prior ledger 可有多个历史 attempt，但必须恰好一个 current pre-tag attempt；零个或多个 current 均 blocked。"},
+        {"id": "reads_candidate_without_ready_from_anchor", "description": "candidate 本身不作为最终成功 authority", "text": "candidate 只从可用 anchor commit 或 peeled tag tree 中 byte-identical candidate blob 读取，必须包含 Section 5 producer schema、canonical-json-rfc8259-sorted-v1 规则下可复算的 inventory/prior-lineage digest 与 `candidate_verified`，不得要求它自带 `ready_for_tag`；最终 ready authority 来自已复算 lineage digest 的 discovery。"},
+        {"id": "resolves_actual_tag_commit", "description": "解析实际 tag commit 与 tree", "text": "入口与集成前两次解析 actual tag tuple `(tag_ref_target_object_id, peeled_commit, peeled_tree)` 并要求一致；annotated tag 首项为 tag object，lightweight tag 首项为直接 commit，两种均支持；不得只比较 tag 名、版本字符串或 commit identity。"},
+        {"id": "binds_tag_tree_to_validated_handoff_tree", "description": "commit identity 可变但 tree 语义严格", "text": "实际 tag commit 可因 squash 不同于 anchor/handoff commit，但 tag tree 必须等于 package handoff tree，或精确等于重建 anchor tree 加唯一已验证 discovery-path delta；任何其他 tree delta 都 blocked，commit SHA 相等不能单独放行。"},
+        {"id": "uses_tag_tree_object_reads_only", "description": "页面与版本来源只读 tag tree objects", "text": "从 peeled tag commit 对每张 stamped page 和每个 required version-source path 做 Git object reads，验证 ordinary blob type/mode、存在性、精确 SHA-256、raw form 和 component-wise case-sensitive SemVer identity；当前工作区或 later branch bytes 只能诊断，不能支持 release_verified。"},
+        {"id": "normalizes_mixed_version_forms", "description": "post-tag 规范化版本事实", "text": "实际 tag、Release Notes/索引和 `.meta/releases.json` 使用带 `v` 的 `v1.2.0`，`package.json` 使用无 `v` 的 `1.2.0`；按来源校验后规范化为同一 SemVer 再判等。"},
+        {"id": "returns_release_verified", "description": "返回 tag 后成功状态", "text": "证据完整一致时 post-tag 阶段结果为 `release_verified`，不退化为 `ready_for_tag`。"},
+        {"id": "persists_post_tag_atomically", "description": "post-tag 结果隔离原子持久化", "text": "要求维护者确认 `release_evidence_branch_ref` 与不可变 expected head；全部决策检查后才从该 head 建隔离事务并原子生成固定 `audit-v1.2.0-post-tag.md`，schema-check 后只 stage 该 100644 ordinary blob并完成 metadata/content convergence、commit 和 blob 回读；仅当精确 branch 仍等于 expected head 且 worktree/index fingerprints 未变时 normal fast-forward 并复核 commit/tree/path/blob。FF 后复核失败仅在 CAS 证明 branch 仍等于刚集成 commit 时回退 expected head；并发移动不覆盖而报告残留与人工命令。任一失败都清理/恢复且不得暴露 release_verified。"},
+        {"id": "does_not_regenerate_or_restamp", "description": "只复核不重新生成", "text": "只写独立 post-tag 核对记录；不重新生成 Release Notes、索引、release metadata、GitHub Release 内容或文档盖章。"}
+      ]
+    },
+    {
+      "id": "eval-011-post-tag-mismatch",
+      "name": "Tag 名正确但混入未审计代码",
+      "description": "验证 same-version 累计 lineage ledger 唯一性、tag tree 漂移、当前副本篡改抵抗，以及 blocked post-tag 记录的隔离持久化失败恢复。",
+      "prompt": "执行 fixture 中定义的 post-tag audit。可信 pre-tag handoff 锚定的提交版记录完整正确，但当前路径副本已被篡改；实际 tag 名是 `v1.2.0`，所有已记录页面和版本面内容都未变，但 tag 在已验证 integrated handoff/release tree 之后又混入一个新增源代码文件的 commit，导致 tag tree 与 handoff tree 不同。请以提交版记录为准，按严格 tree equality 给出阶段结果和差异摘要；不要执行 tag 操作或重写 release 内容。",
+      "expected_output": "先验证 attempt 2 的 candidate prior ledger 与 discovery 累计 ledger/digest 单调、唯一且 current tuple 自洽；squash 时不要求旧对象可达，只有与最终 tag tree 匹配的 current attempt 可 active。报告当前 pre-tag 副本与锚定 blob 不一致，新增代码使 tag tree 不等仍 blocked。blocked 结果按独立事务写入 audit-v1.2.0-post-tag.md；若持久化失败则恢复 path/index 并保持 tag 与 pre-tag lineage 不变；给出两条维护者救济。",
+      "workspace": "workspace/eval-011-post-tag-mismatch",
+      "assertions": [
+        {"id": "reads_anchored_record_not_tampered_copy", "description": "从盖章后 commit 读取记录抵抗篡改", "text": "使用可信 pre-tag handoff 的盖章后 SHA 执行等价于 `git show 3333333:docs/site/.meta/audit/audit-v1.2.0.md` 的读取，以 fixture 提供的提交版记录为权威；明确报告当前 pre-tag 路径副本已被篡改且与提交版不同，不使用当前副本的伪造字段，并排除独立 post-tag 记录的存在。"},
+        {"id": "accepts_correct_tag_name_but_checks_tree", "description": "tag 名正确仍严格检查 tree", "text": "保留实际 tag 与 `target_release_version` 均为 `v1.2.0` 的事实，同时解析 tag commit/tree并区分 anchor tree 与后续 integrated handoff tree，确认 tag tree 与 external package 的 handoff tree 不同；不得因 tag 名正确直接放行。"},
+        {"id": "validates_cumulative_attempt_lineage", "description": "same-version rerun lineage 必须唯一自洽", "text": "按 canonical-json-rfc8259-sorted-v1 对 exact prior/current tuple 字段重算 SHA-256：验证 attempt 2 candidate 持久化 attempt 1 prior ledger/digest，discovery 复制 prior ledger并追加无自引用 handoff blob 的 current tuple与新 digest，外部包补 discovery blob；拒绝非单调/重复 attempt、digest 断链、tuple 冲突、零个或多个 current pre-tag attempt。旧 blob 永不编辑；squash 不要求旧对象可达。只有 current 与最终 tag tree 匹配时才可 release-active；本例 tree 漂移，因此唯一 current 必须非 release-active并 blocked。"},
+        {"id": "rejects_unaudited_tag_delta", "description": "已审计路径未变也拒绝新代码增量", "text": "确认所有已记录页面与版本面内容哈希均未变，但 tag 相对已验证 integrated handoff/release tree 新增 `src/catalog/export-v2.py`；严格 tree inequality 一律 `blocked`，报告 name-status 差异摘要，不得用逐项重算已记录路径的结果降级放行。"},
+        {"id": "normalizes_mixed_version_forms", "description": "版本规范化不掩盖 tree 漂移", "text": "实际 tag、Release Notes/索引和 `.meta/releases.json` 的 `v1.2.0` 与 `package.json` 的 `1.2.0` 按来源校验并规范化为同一 SemVer；版本一致不能覆盖 tag tree 不等。"},
+        {"id": "invalidates_pre_tag_handoff", "description": "内容漂移阻断旧 ready_for_tag", "text": "说明 tag commit 未绑定到已审计内容，既有 `ready_for_tag` 不可升级，阶段结果为 `blocked`。"},
+        {"id": "offers_two_maintainer_remedies", "description": "报告两条维护者救济路径", "text": "blocked 报告同时给出两条由维护者选择的路径：(a) 宿主删除或移动错误 tag 后，以同一 `target_release_version: v1.2.0`、实际待发布内容为新 `target_ref` 完整重跑 pre-tag，并仅在新 candidate/discovery 的累计 ledger 中把旧 attempt 记为被替代，不修改旧 blob；(b) 放弃 `v1.2.0`，明确确认新的 `target_release_version`，并以实际待发布内容为新 `target_ref` 完整重跑 pre-tag。"},
+        {"id": "allows_pre_tag_reentry_after_selection", "description": "维护者选定救济后允许 pre-tag 重入", "text": "说明 tree/locator/schema/blob/hash/type/lineage/version 任一原因使 pre-tag authority 或 tag binding 无效时，维护者可选择救济；宿主必须先在 docs-audit 外删除或移动无效 tag并记录该状态，之后才重新进入完整 pre-tag。无效 tag 仍解析到目标版本时保持 post-tag blocked；不能把 tag 曾存在本身当成永久阻塞。"},
+        {"id": "persists_blocked_in_separate_post_tag_record", "description": "blocked 写独立 post-tag 记录且锚定 lineage 不变", "text": "全部检查后才把 attempt/lineage、tree inequality、raw mode/type/object/name-status/full patch 差异摘要、两条救济和 `blocked` 结论原子写入 `audit-v1.2.0-post-tag.md`；不追加或修改任何 candidate/discovery 锚定 blob，后续重跑重新执行 locator 与内容检查。"},
+        {"id": "restores_failed_blocked_persistence", "description": "blocked 持久化失败也必须恢复", "text": "若 post-tag blocked 记录的 write/stage/commit/readback/integration 任一步失败，删除隔离 attempt；FF 已发生时仅在 CAS 证明 evidence branch 仍等于刚集成 commit 才回退 expected head，并发移动不得覆盖。按捕获 bytes/mode/type 恢复或移除 host path/index，验证 branch SHA、porcelain v2、raw staged/unstaged diff 与 hashes 回到 pre-write fingerprint；保持 tag 和 pre-tag lineage 不变。恢复无法证明时列残留与人工命令，禁止 release_verified。"},
+        {"id": "does_not_rewrite_or_operate_tag", "description": "不重生成内容且 docs-audit 不操作 tag", "text": "docs-audit 只裁定、记录漂移与维护者选择；不修改页面盖章，不重生成 Release Notes、索引、`.meta/releases.json` 或 GitHub Release 内容，也不自行创建、删除或移动 tag。"}
+      ]
+    },
+    {
+      "id": "eval-012-staged-metadata-rollback",
+      "name": "Staged mode/type/symlink/rename/delete 越界与事务回滚",
+      "description": "验证两次 staged gate 和 committed gate 都检查 raw mode/type/status/path/full patch，并在任一收敛失败时清除隔离 attempt、恢复宿主指纹且不留下半盖章状态。",
+      "prompt": "执行 fixture 描述的 pre-tag candidate 收敛检查。初始 staged gate 看似只涉及白名单，但 raw metadata 显示可执行位、ordinary blob 到 symlink 的 type change、rename 和 delete；原子替换 final record 后还有额外 symlink path。请逐项裁定，并说明 staged gate blocked 后如何恢复和验证宿主状态。",
+      "expected_output": "完整 raw metadata/name-status/full patch 检出 mode、type/symlink、rename、delete 与额外路径越界并 blocked；不得创建 anchor/discovery 或返回 ready_for_tag。删除隔离 worktree/ref，恢复任何误触宿主 path/index 到捕获 bytes/mode/type，移除草稿并用 branch SHA、porcelain v2、raw diffs、types/modes/hashes 证明无半盖章残留。",
+      "workspace": "workspace/eval-012-staged-metadata-rollback",
+      "assertions": [
+        {"id": "checks_raw_metadata_not_only_content", "description": "收敛检查覆盖原始 metadata", "text": "初始和最终 staged gate 均同时读取 raw old/new mode 与 object identity/type、禁用 rename/copy folding 的 name-status、summary 和 full binary patch；不得只比较授权路径列表或文本行。"},
+        {"id": "rejects_mode_type_symlink_rename_delete", "description": "拒绝所有 metadata 与路径语义越界", "text": "根据 fixture 拒绝 stamp 页 100644→100755 executable-bit 变化、100644 ordinary blob→120000 symlink 的 T 变化、R/C rename/copy、D 删除、path swap、gitlink、record 非 100644 ordinary blob、额外 symlink path；白名单路径名相同也不能覆盖 mode/type 越界。"},
+        {"id": "applies_same_gate_after_commit", "description": "提交后确认覆盖同一差异维度", "text": "若 staged 两关通过，`target_ref..anchor_commit` 和 anchor→handoff commit 仍必须重跑相同 raw/status/type/mode/path/content/full-patch 检查；committed 时点发现 mode、type、rename/copy/delete、symlink、gitlink 或额外路径同样使 candidate invalid。"},
+        {"id": "rolls_back_failed_candidate_transaction", "description": "staged 收敛失败恢复隔离事务", "text": "任一 staged gate blocked 时删除隔离 worktree 和 temporary ref，不创建 candidate/anchor/handoff commit；若误触宿主授权路径或 index，按 pre-write bytes/mode/type 恢复，移除本 attempt untracked record/discovery 草稿，不覆盖无关用户变化。"},
+        {"id": "proves_no_half_stamp_residue", "description": "恢复后验证无半盖章残留", "text": "恢复后验证 host branch SHA、`git status --porcelain=v2`、staged/unstaged raw diffs、每条相关 path 的 mode/type/hash 与捕获状态完全一致；不能证明恢复则继续 blocked，列出残留路径/index entries 与人工恢复命令并禁止 tag 创建。"}
+      ]
+    },
+    {
+      "id": "eval-013-version-normalization-boundaries",
+      "name": "SemVer 预发布、大小写与多来源缺失边界",
+      "description": "验证预发布/构建标识完整保留、带 v 来源只接受单个小写 v、组件大小写敏感，以及多个 required source 缺失或非法时一次报告全部 blocker。",
+      "prompt": "按 fixture 的 version cases 执行 pre-tag 与 post-tag version-source normalization 边界检查。不要宽松修正 `V`/`vv`/缺 v，不要丢失 `-rc.1` 或 build metadata，也不要在发现首个缺失来源后停止。",
+      "expected_output": "合法 v1.2.0-rc.1+Build.7 与无 v 1.2.0-rc.1+Build.7 规范化为同一完整 identity；RC/rc、Build/build、前缀 V/vv/缺 v、预发布或 build 丢失均 blocked。对 Release Notes、releases.json、marketplace 与 package 多个缺失/非法来源逐项报告，pre-tag/post-tag 均不得用其他有效来源补值。",
+      "workspace": "workspace/eval-013-version-normalization-boundaries",
+      "assertions": [
+        {"id": "preserves_prerelease_and_build_identity", "description": "预发布和 build 组件不丢失", "text": "严格解析 `v1.2.0-rc.1+Build.7` 与无前缀 `1.2.0-rc.1+Build.7`，只按 source contract 移除一个前导小写 v，并保留 `rc.1` 与 `Build.7` 形成完整 normalized identity；不能用仅比较 SemVer precedence 的方式忽略 build metadata。"},
+        {"id": "enforces_source_specific_prefix_forms", "description": "严格执行来源前缀形态", "text": "target/tag/Release Notes/index/releases.json 的版本值必须恰有一个小写 `v`；`V1.2.0-rc.1`、`vv1.2.0-rc.1` 或 `1.2.0-rc.1` 均 invalid。marketplace metadata.version 与 package.json version 必须无 v，带 v 同样 blocked，不做静默修正。"},
+        {"id": "compares_semver_components_case_sensitively", "description": "SemVer identity 组件大小写敏感", "text": "`rc.1` 不等于 `RC.1`，`Build.7` 不等于 `build.7`；大小写差异、缺失 prerelease 或缺失 build component 均为 normalized inequality，pre-tag/post-tag 都 blocked。"},
+        {"id": "reports_all_missing_or_invalid_sources", "description": "多来源缺失与非法值全部报告", "text": "按入口声明的完整 `{source_id,locator_kind,locator,selector,extractor,required_raw_form}` inventory 检查每一项；fixture 中缺失 Release Notes index、releases.json 值为空、marketplace metadata.version 缺失、package.json 为非法 loose version时一次报告全部 blocker，不在首错停止，也不从另一来源补造或替换。"},
+        {"id": "persists_and_reuses_exact_inventory", "description": "pre-tag producer 与 post-tag consumer inventory 一致", "text": "pre-tag candidate 持久化每个 required source（含 actual-tag pending 项）的六字段 locator contract、raw/normalized identity、target-tree path/mode/type/blob/hash、比较结果，并按 canonical-json-rfc8259-sorted-v1 对 source_id 排序的 exact 六字段数组重算小写 SHA-256 digest；post-tag 消费同一 inventory，从 peeled tag tree/tag ref 复核并再次重算。多版本文件只用持久化 selector；缺 selector、多匹配、unknown extractor 或 digest 不等均 blocked。"}
       ]
     }
   ]

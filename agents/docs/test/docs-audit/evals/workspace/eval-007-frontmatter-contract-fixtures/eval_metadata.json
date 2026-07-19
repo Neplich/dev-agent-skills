@@ -2,8 +2,8 @@
   "eval_id": "eval-007-frontmatter-contract-fixtures",
   "eval_name": "frontmatter-contract-fixtures",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-007-frontmatter-contract-fixtures",
-  "skill_availability_goal": "Verify that docs-audit accepts an equivalent confirmed release audit entry and that docs-audit and docs-site-bootstrap classify the same valid and invalid frontmatter fixtures consistently from the shared docs-agent contract.",
-  "prompt": "`release-entry.md` 提供了已确认的 pending release 版本上下文、显式 base/target、审计请求与证据清单。请据此对 fixture 站点执行 docs-audit frontmatter 判定并给出审计结论。逐页使用 docs-agent 的 frontmatter 契约真源核对字段合法性；对合法页面继续进入事实层，对非法页面记录具体 stale 原因，并给出 release 是否可以 proceed 的结论。不要修复 fixture。",
+  "skill_availability_goal": "Verify that docs-audit accepts a maintainer-confirmed pre-tag audit entry and classifies valid and invalid frontmatter consistently with the shared docs-agent contract and the host validator delivered by docs-site-bootstrap.",
+  "prompt": "`release-entry.md` 提供了维护者明确确认的 `target_release_version`、显式 `base_ref`/`target_ref`、pre-tag 审计请求与证据清单。请据此对 fixture 站点执行 docs-audit frontmatter 判定并给出阶段结果。逐页使用 docs-agent 的 frontmatter 契约真源核对字段合法性；对合法页面继续进入事实层，对非法页面记录具体 stale 原因。不要修复 fixture。",
   "fixture_context": [
     "release-entry.md",
     "docs/site/standards/change-map.yaml",

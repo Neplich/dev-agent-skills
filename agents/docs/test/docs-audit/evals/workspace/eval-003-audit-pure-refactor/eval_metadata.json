@@ -3,7 +3,7 @@
   "eval_name": "audit-pure-refactor",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-003-audit-pure-refactor",
   "skill_availability_goal": "Verify that a change-map hit caused only by implementation refactoring is fact-checked and classified verified without a no-op documentation edit.",
-  "prompt": "审计 fixture 中已确认的 base `81a2b3c` 到 target `92d3e4f` 范围，版本锚为 `v1.1.0`。请核对命中映射但未更新的 API 页面，持久化报告并给出 release 建议；不要为满足同 diff 更新而改写准确文档。",
+  "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`。审计 fixture 中已确认的 `base_ref` `81a2b3c` 到 `target_ref` `92d3e4f` 范围。请核对命中映射但未更新的 API 页面；只评估页面事实结论，不要为满足同 diff 更新而改写准确文档，也不要在缺少 Release Notes 等版本表面时宣称 `ready_for_tag`。",
   "fixture_context": [
     ".eval/actual-diff.patch",
     "docs/site/standards/change-map.yaml",

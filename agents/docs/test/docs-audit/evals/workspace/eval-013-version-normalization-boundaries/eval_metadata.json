@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval-013-version-normalization-boundaries",
+  "eval_name": "version-normalization-boundaries",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-013-version-normalization-boundaries",
+  "skill_availability_goal": "Verify strict source-specific SemVer forms, prerelease and build preservation, case-sensitive identity, exhaustive multi-source blockers, and identical pre-tag/post-tag inventory.",
+  "prompt": "按 fixture 的 version cases 执行 pre-tag 与 post-tag version-source normalization 边界检查。不要宽松修正 `V`/`vv`/缺 v，不要丢失 prerelease/build，也不要在首个缺失来源后停止。",
+  "fixture_context": [
+    ".eval/version-cases.md"
+  ]
+}

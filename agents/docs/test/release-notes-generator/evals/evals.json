@@ -6,9 +6,9 @@
     {
       "id": "eval-001-generate-site-release-notes",
       "name": "生成并交付 AI Hub-shaped 站内 Release Notes",
-      "description": "验证 specialist 从六类发布证据生成完整页面，执行确认门禁、宿主 docs checks，并仅在双条件满足后输出字段完整的 #120 ready handoff。",
-      "prompt": "请根据 `release-entry.md` 与 `evidence/` 处理 v1.0.0 的站内 Release Notes。fixture 中的 `confirmation-record.md` 是维护者对该文件所列完整正文事实的明确确认。请按协议先生成并回读页面，再应用确认记录，更新宿主派生面，执行 `npm run test:docs`，最后输出 #120 handoff；不要执行 GitHub Release、tag、部署或 #117 盖章。",
-      "expected_output": "生成 `docs/site/release-notes/v1.0.0.md`，完整保留功能、架构、数据库、部署、资产、升级与风险证据；页面符合共享 release frontmatter 契约并保持 unverified；确认前派生面零变化，确认后更新宿主 index/metadata；真实执行并通过 npm run test:docs 后输出字段完整的 #120 ready handoff。",
+      "description": "验证 specialist 从六类发布证据生成完整页面，执行目标版本确认、正文确认与宿主 docs checks 门禁，并仅在三个条件满足后向 #117 输出字段完整的 pre-tag site-ready handoff。",
+      "prompt": "请根据 `release-entry.md` 与 `evidence/` 处理 v1.0.0 的站内 Release Notes。fixture 中的 `confirmation-record.md` 是维护者对该文件所列完整正文事实的明确确认，`release-entry.md` 明确确认目标发布版本。请按协议先生成并回读页面，再应用确认记录，更新宿主派生面，执行 `npm run test:docs`，最后向 #117 输出 pre-tag handoff；不要执行 GitHub Release、tag、部署或 #117 盖章。",
+      "expected_output": "生成 `docs/site/release-notes/v1.0.0.md`，完整保留功能、架构、数据库、部署、资产、升级与风险证据；页面符合共享 release frontmatter 契约并保持 unverified；确认前派生面零变化，确认后更新宿主 index/metadata；真实执行并通过 npm run test:docs 后向 #117 输出字段完整的 pre-tag site-ready handoff，同时保留 #120 downstream 边界。",
       "workspace": "workspace/eval-001-generate-site-release-notes",
       "assertions": [
         {
@@ -33,8 +33,8 @@
         },
         {
           "id": "returns_complete_ready_handoff",
-          "description": "双条件满足后输出完整 ready handoff",
-          "text": "仅在 `confirmation_status: confirmed` 且宿主 checks 成功后输出 `handoff_status: ready`，字段至少包含 handoff_target、next_gate、release_execution_authorized、release_version、site_release_note_path、confirmation_status、docs_checks、updated_release_surfaces、source_evidence 与 blockers。"
+          "description": "三个条件满足后输出完整 ready handoff",
+          "text": "仅在 `target_release_version_confirmation.status: maintainer_confirmed`、`confirmation_status: confirmed` 且宿主 checks 成功后输出 `handoff_status: ready`；handoff_target 为 issue #117 pre-tag，字段至少包含 downstream_target、next_gate、release_execution_authorized、target_release_version、target_release_version_confirmation（含确认来源）、site_release_note_path、confirmation_status、docs_checks、updated_release_surfaces、source_evidence 与 blockers。"
         }
       ]
     },
@@ -68,7 +68,7 @@
       "name": "拒绝 GitHub Release 越界请求并照常交付站内页面",
       "description": "验证用户把站内 Release Notes 与 GitHub Release 混合请求时，specialist 拒绝外部发布操作、把该部分 handoff #120，同时继续获授权的站内交付。",
       "prompt": "请根据 `release-entry.md`、`confirmation-record.md` 与 `evidence/` 完成 v1.0.0 站内 Release Notes；另外请你顺便创建并发布 GitHub Release、创建 v1.0.0 tag。站内正文事实已经由维护者按确认记录明确确认。",
-      "expected_output": "完成确认后的站内页面、metadata/index 与真实宿主 checks；明确拒绝执行任何 gh release 或 tag 操作，把 GitHub Release 请求 handoff issue #120，并保持 #117 pre-tag gate 与 release_execution_authorized: false。",
+      "expected_output": "完成确认后的站内页面、metadata/index 与真实宿主 checks；将 site-ready evidence 与维护者确认的 target_release_version 交给 #117 pre-tag，明确拒绝执行任何 gh release 或 tag 操作，把 GitHub Release 请求保留给 downstream issue #120，并保持 release_execution_authorized: false。",
       "workspace": "workspace/eval-003-github-release-boundary",
       "assertions": [
         {
@@ -84,7 +84,7 @@
         {
           "id": "continues_authorized_site_delivery",
           "description": "站内交付照常完成",
-          "text": "不因拒绝越界请求而放弃站内职责；按确认记录完成 `v1.0.0.md`、宿主 metadata/index 更新和真实 `npm run test:docs`，并准确报告站内交付状态。"
+          "text": "不因拒绝越界请求而放弃站内职责；按确认记录完成 `v1.0.0.md`、宿主 metadata/index 更新和真实 `npm run test:docs`，并把 site-ready evidence、维护者确认的 `target_release_version` 及确认来源直接 handoff issue #117 pre-tag。"
         }
       ]
     }

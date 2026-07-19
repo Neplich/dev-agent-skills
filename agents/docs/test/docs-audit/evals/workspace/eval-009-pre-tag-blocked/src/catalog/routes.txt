@@ -1,0 +1,11 @@
+ROUTE GET /catalog/items
+AUTH public
+QUERY locale required nonblank
+QUERY limit optional default=20 max=100
+SUCCESS 200 {"items": []}
+
+ROUTE GET /catalog/status
+AUTH service-token required
+QUERY none
+SUCCESS 200 {"status": "ready"}
+ERROR 401 {"code": "unauthorized"}

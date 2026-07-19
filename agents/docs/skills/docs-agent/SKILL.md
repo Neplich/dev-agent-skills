@@ -67,8 +67,10 @@ authoritative specialist contract.
   current-state documentation
 - `docs-agent:release-notes-generator` - Generate, confirm, index, and validate
   a host site's versioned Release Notes before the GitHub Release handoff
-- `docs-agent:docs-audit` - Audit formal documentation before release and
-  produce the release recommendation, evidence report, and version stamp
+- `docs-agent:docs-audit` - Use a maintainer-confirmed
+  `target_release_version` for pre-tag audit and unified stamping, returning
+  `ready_for_tag`, then verify the actual tag post-tag and return
+  `release_verified` or `blocked`
 
 ## Routing Signals
 
@@ -84,8 +86,8 @@ Route by the requested documentation outcome, not literal phrasing.
   confirm its body, update release metadata and indexes, and validate it before
   the GitHub Release handoff
   -> `release-notes-generator`
-- Audit formal docs for release readiness or verify release documentation
-  coverage
+- Audit formal docs before tag creation or verify the same release facts after
+  the actual tag exists
   -> `docs-audit`
 
 ## Specialist Gate Pointers

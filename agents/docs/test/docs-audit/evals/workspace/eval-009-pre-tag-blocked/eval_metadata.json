@@ -1,0 +1,23 @@
+{
+  "eval_id": "eval-009-pre-tag-blocked",
+  "eval_name": "pre-tag-blocked",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-009-pre-tag-blocked",
+  "skill_availability_goal": "Verify that every staged, unstaged, or untracked delta within audit scope, authorized write paths, or the required evidence inventory blocks success even when it was not offered as passing evidence.",
+  "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已确认 `target_release_version: v1.2.0`；当前工作区同时有尚未提交的实现证据、受影响页面修改、授权 audit record 草稿和 required version source 修改，均不在 `target_ref: release-head` 的 tree 中。请判断这些差异能否参与通过，并给出完整重跑条件。",
+  "execution_cleanup": [
+    "docs/site/.meta/audit"
+  ],
+  "fixture_context": [
+    ".eval/actual-diff.patch",
+    ".eval/in-scope-worktree-status.porcelain-v2",
+    ".eval/release-context.md",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/api/catalog-items.md",
+    "docs/site/api/catalog-status.md",
+    "docs/site/release-notes/v1.2.0.md",
+    "docs/site/release-notes/index.md",
+    "docs/site/.meta/releases.json",
+    "package.json",
+    "src/catalog/routes.txt"
+  ]
+}

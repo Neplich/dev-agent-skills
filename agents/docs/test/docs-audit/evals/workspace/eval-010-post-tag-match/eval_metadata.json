@@ -1,0 +1,22 @@
+{
+  "eval_id": "eval-010-post-tag-match",
+  "eval_name": "post-tag-match",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-010-post-tag-match",
+  "skill_availability_goal": "Verify external handoff priority, deterministic fixed-path fallback after squash or unavailable SHAs, tag-tree object reads, strict tree semantics, and atomic post-tag persistence.",
+  "prompt": "执行 fixture 中定义的 post-tag audit。先按外部 pre-tag handoff 包定位；再走 fixture 指定的 fresh clone/squash 分支，模拟 handoff commit SHA 不可解析但 peeled tag tree 保留固定 discovery artifact。两条路径交叉验证同一 candidate/anchor/tree/version 证据，并说明 post-tag 原子持久化门禁。",
+  "execution_cleanup": [
+    "docs/site/.meta/audit/audit-v1.2.0-post-tag.md"
+  ],
+  "fixture_context": [
+    ".eval/release-context.md",
+    ".eval/tag-commit-tree.txt",
+    "docs/site/.meta/audit/handoffs/pre-tag-v1.2.0.md",
+    "docs/site/.meta/audit/audit-v1.2.0.md",
+    "docs/site/api/catalog-items.md",
+    "docs/site/api/catalog-status.md",
+    "docs/site/release-notes/v1.2.0.md",
+    "docs/site/release-notes/index.md",
+    "docs/site/.meta/releases.json",
+    "package.json"
+  ]
+}

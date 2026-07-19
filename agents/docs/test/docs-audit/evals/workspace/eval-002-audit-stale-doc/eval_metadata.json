@@ -3,7 +3,7 @@
   "eval_name": "audit-stale-doc",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-002-audit-stale-doc",
   "skill_availability_goal": "Verify that a missing same-diff documentation update is suspect first and becomes stale only after factual confirmation.",
-  "prompt": "审计 fixture 中已确认的 base `6a1b2c3` 到 target `7d6e5f4` 范围，版本锚为 `v1.1.0`。请执行确定性层和事实层，持久化报告并给出 release 建议；不要同步文档。",
+  "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`。审计 fixture 中已确认的 `base_ref` `6a1b2c3` 到 `target_ref` `7d6e5f4` 范围。请执行确定性层和事实层，持久化报告并给出阶段结果；不要同步文档。",
   "fixture_context": [
     ".eval/actual-diff.patch",
     "docs/site/standards/change-map.yaml",

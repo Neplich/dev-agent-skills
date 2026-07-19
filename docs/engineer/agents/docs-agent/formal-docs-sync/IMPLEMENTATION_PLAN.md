@@ -1,7 +1,7 @@
 ---
 title: "Formal Docs Sync 多类型扩展实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.4.0"
+version: "0.4.1"
 status: Implemented
 author: "Neplich Codex"
 date: "2026-07-19"
@@ -17,6 +17,9 @@ related_trd: "docs/engineer/agents/docs-agent/formal-docs-sync/TRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/121"
 changelog:
+  - version: "0.4.1"
+    date: "2026-07-19"
+    changes: "记录 issue #117 target_release_version handoff 收紧后的邻接 fresh 回归"
   - version: "0.4.0"
     date: "2026-07-19"
     changes: "记录 S2c 维护者决策：eval-010 改为语义 handoff 断言并完成 fresh validation，S2 门禁解除"
@@ -221,3 +224,8 @@ uv run scripts/check_doc_contract.py
   从 41 → 42 并修改 Release Notes 正文、index 与 metadata，形成明确行为对照。
 - S2 已完成，eval-010 阻塞已解除，可以继续 commit、push、PR 与 CI 交付；仍不自动
   merge、tag、release 或部署。
+- Issue #117 A2 将成功 handoff 收紧为“仅在维护者已确认 `target_release_version` 时
+  进入 pre-tag，否则保持 `unverified` 并 blocked 等待 release context”后，受影响的
+  eval-001、007、008、009 已重新生成 fresh with-skill / without-skill，并由独立 judge
+  评审为 4/4 case、21/21 assertions PASS；父仓库 Git metadata 可见性仅作为已记录的
+  harness limitation，不影响语义结论。

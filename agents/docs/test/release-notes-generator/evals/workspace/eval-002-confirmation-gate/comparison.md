@@ -7,35 +7,39 @@
 
 ## Test Set / Fixture Version
 
-- Fixture: `issue-126-r3-lockfile-v1`
-- 评估基线：PR #126 R3 working tree
-- Harness：`tmp/eval-runs/126-r3-docs-release/eval-002-confirmation-gate/`
-- Fresh validation：当前会话全新 subagent 先执行 with-skill，再以同一 prompt 和 pristine fixture 作 fresh zero-skill 对照判断；未复用历史 baseline。
+- Fixture version: `issue #117 cross-doc audit 2026-07-19`
+- Fresh run: `tmp/eval-runs/117-adjacent/release-notes-generator/eval-002-confirmation-gate/`
+- Source head: `00c9741dabc24f6b6df377c69c42adb989722648` plus the current issue #117 working tree
 
 ## Latest Result
 
-**PASS（3/3 assertions）** — 未确认时只生成完整候选页，index、metadata 与导航保持零变化，handoff 明确 blocked/unconfirmed 并等待维护者确认。
+**PASS（3/3 assertions）** — with-skill 只生成并完整展示候选页，index、metadata、导航零变化，明确 blocked/unconfirmed 并等待维护者确认。
+
+## Assertions
+
+- `keeps_derived_surfaces_unchanged`：PASS。哈希与 diff 证明 index、`.meta/releases.json`、导航配置及 `.generated` 均未变化。
+- `reports_unconfirmed_not_ready`：PASS。报告 `confirmation_status: unconfirmed`、`handoff_status: blocked`，没有把候选页描述为 ready。
+- `waits_for_explicit_confirmation`：PASS。完整展示正文、证据与确认后计划路径，不模拟确认，也不执行确认后检查或派生写入。
 
 ## With-Skill Behavior
 
-- `keeps_derived_surfaces_unchanged`：PASS。scratch git 仅出现候选 `v1.0.0.md` 与运行期依赖，`release-notes/index.md`、`.meta/releases.json` 和导航配置无 diff。
-- `reports_unconfirmed_not_ready`：PASS。候选正文没有被描述为 #120 ready；状态停在 `confirmation_status: unconfirmed` / blocked。
-- `waits_for_explicit_confirmation`：PASS。候选页完整覆盖六类证据并列出来源；fixture 没有确认记录，没有模拟确认或执行确认后的派生写入。
-- 确定性入口：在干净依赖状态执行 `npm ci --ignore-scripts` 成功。未确认流程不把 docs check 当作 release-ready 证据；一次 harness preflight 在候选页生成前因专用测试找不到 `v1.0.0.md` 为 73/74，此结果不改变确认门禁判定。
+- 候选页保持 `last_verified_version: unverified`；结构化 handoff 明确两个 blocker。
+- `npm ci` 与 `npm run test:docs` 正确保留在确认后阶段，本轮均记录为 `not_run`。
 
 ## Without-Skill Baseline
 
-- 来源：当前 fresh subagent 对同 prompt/pristine fixture 的 zero-skill control 直接判断；control 不读取或应用目标 skill 与 Docs Agent README。
-- 宿主 README 明示未确认不得改 index/metadata/navigation，因此对照可发现基本门禁；但没有目标 skill 的结构化 blocked handoff 与 #120/#117 边界，输出稳定性较弱。
+- 来源：同一 prompt 与 pristine fixture 的本轮 fresh `without_skill`；不含目标 skill、Docs README、旧 comparison 或 with-skill 输出，未复用历史 baseline。
+- baseline 保持派生面不变并 blocked，但实际运行了确认后宿主检查，且最终输出没有展示完整候选正文、确认后修改计划与结构化 blocked handoff，因此确认门禁表达不完整。
 
 ## Failures
 
-- 无 assertion failure。preflight 的缺候选页失败发生在候选生成前，只作为 harness 时序诊断保留，不作为 release-ready check。
+- 无 with-skill assertion failure。
+- Harness limitation：父仓库 Git 元数据仅向 baseline 暴露文件名/状态，未读取目标 skill/README 内容；未改变确认前后时序判断。后续应隔离 scratch Git 元数据。
 
 ## Next Steps
 
-- 未确认 eval 的 fixture preflight 应在候选页面物化后运行，或明确排除依赖目标页面的专用测试。
+- 保持“候选展示与明确确认”作为派生写入和宿主 ready 检查的前置门禁。
 
 ## Runtime Artifact Policy
 
-- 候选页、依赖目录、命令输出和 scratch git 仅保留在 `tmp/eval-runs/126-r3-docs-release/`，不提交到 git。
+- 候选页、candidate、transcript、manifest、diff 与状态仅位于 `tmp/eval-runs/117-adjacent/`，不提交到 git。

@@ -1,7 +1,7 @@
 ---
 title: "Release Notes Generator 实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.3.0"
+version: "0.4.0"
 status: Implemented
 author: "Neplich Codex"
 date: "2026-07-19"
@@ -15,7 +15,11 @@ related_prd: "docs/pm/agents/docs-agent/release-notes-generator/PRD.md"
 related_trd: "docs/engineer/agents/docs-agent/release-notes-generator/TRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/116"
+  - "https://github.com/Neplich/dev-agent-skills/issues/117"
 changelog:
+  - version: "0.4.0"
+    date: "2026-07-19"
+    changes: "对齐 #117 pre-tag 消费面：site-ready handoff 显式传递维护者确认的 target_release_version 与确认来源"
   - version: "0.3.0"
     date: "2026-07-19"
     changes: "完成 R2 eval、fresh validation、全面自查和 PR 交付前验证"
@@ -38,8 +42,8 @@ changelog:
 
 | 阶段 | 交付 | 完成证据 | 状态 |
 | --- | --- | --- | --- |
-| R1 — Skill 与注册 | 新增 Docs specialist、七步协议、确认与检查双门禁、#120 handoff、docs-agent 分流、README/AGENTS/marketplace/skills-lock 注册，以及 PM/Docs 同名 skill 的 Codex 扁平安装兼容。 | R1 commit `a273a00`；仓库 checker 与 CI 同款 pytest 通过。 | Implemented |
-| R2 — Eval 与全面自查 | 新增 3 个 specialist eval 和 router `eval-004`；基于 #122 资产提供可真实执行 `npm run test:docs` 的 fixture；刷新 docs-agent 全部 4 个 router eval 的 fresh 证据；修复入口、frontmatter、消费契约、注册描述、安装器测试和文档链 findings。 | 本轮 fresh with/without、独立 judge 7/7 case、25/25 assertions PASS；成功路径 docs checks exit 0；durable comparison 已更新。 | Implemented |
+| R1 — Skill 与注册 | 新增 Docs specialist、七步协议、确认与检查双门禁、site-ready handoff、docs-agent 分流、README/AGENTS/marketplace/skills-lock 注册，以及 PM/Docs 同名 skill 的 Codex 扁平安装兼容。 | R1 commit `a273a00`；仓库 checker 与 CI 同款 pytest 通过。 | Implemented |
+| R2 — Eval 与全面自查 | 新增 3 个 specialist eval 和 router `eval-004`；基于 #122 资产提供可真实执行 `npm run test:docs` 的 fixture；刷新 docs-agent 全部 4 个 router eval 的 fresh 证据；修复入口、frontmatter、消费契约、注册描述、安装器测试和文档链 findings。issue #117 A2 对齐 site-ready handoff 的直接消费字段。 | 原 R2 fresh with/without、独立 judge 7/7 case、25/25 assertions PASS；#117 A2 对相关 3 个 specialist 与 2 个 router eval 重新生成 fresh 对照，5/5 case、18/18 assertions PASS。 | Implemented |
 
 ```mermaid
 flowchart LR
@@ -88,7 +92,8 @@ Docs `1 + 4`、全仓 33 specialist 计数和同名 source 解析一致。PM 侧
 ## 5. 职责边界
 
 - #116 只交付站内 Release Notes 页面、确认后的索引/metadata、宿主 docs checks 和
-  site-ready handoff。
+  直接面向 #117 pre-tag audit 的 site-ready handoff；handoff 显式携带维护者确认的
+  `target_release_version` 与确认来源。
 - #117 继续拥有 pre-tag/post-tag audit 与 `last_verified_version` 统一盖章。
 - #120 继续拥有 GitHub Release、compare/PR/贡献者信息、tag 与独立批准门禁。
 - #121 继续拥有 API/database/design/ops/product 等一般正式文档同步。
@@ -121,7 +126,9 @@ AI Hub-shaped 成功路径另在隔离 workspace 执行 `npm run test:docs`。PR
 
 ## 7. 结果与残余限制
 
-- Fresh judge 结论：7/7 case、25/25 assertions PASS。
+- Fresh judge 结论：原 R2 为 7/7 case、25/25 assertions PASS；issue #117 A2 的
+  site-ready handoff 邻接回归为 5/5 case、18/18 assertions PASS，均使用新的
+  without-skill baseline。
 - 3 个 specialist with-skill 均在独立 Git 宿主的 `docs/site` 使用 #122 原版命令执行
   `GITHUB_BASE_SHA=HEAD npm run test:docs`，退出码为 0、74/74 tests PASS；eval-002
   只把该结果作为 harness preflight，正式 handoff 仍为 blocked/checks not-run，派生面
