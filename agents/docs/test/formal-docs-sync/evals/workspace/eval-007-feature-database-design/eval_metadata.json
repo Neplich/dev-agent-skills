@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-007-feature-database-design",
+  "eval_name": "feature-database-design",
+  "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-007-feature-database-design",
+  "skill_availability_goal": "Verify confirmed multi-type feature synchronization for database and design after the design closeout gate.",
+  "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行 `workspace-access` 的 database + design 正式文档同步。design closeout 证据已完整提供且本批页面与映射均已获维护者确认。请只加载目标类型规则，核对 schema、代码、diff 与测试，更新页面和 change map，执行宿主 `npm run test:docs`，再输出 #117 handoff。",
+  "fixture_context": ["pm-handoff.md", "docs/pm/workspace-access/PRD.md", "docs/engineer/workspace-access/", ".eval/", "src/workspace_access/", "tests/test_workspace_access.py", "docs/site/"],
+  "execution_cleanup": ["docs/site/.generated", "sync-report.md"]
+}

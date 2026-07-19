@@ -1,269 +1,217 @@
 # Formal Docs Sync — Internal Instructions
 
-Detailed execution guidance for `formal-docs-sync`. The public contract lives
-in `../SKILL.md`; this file defines node evidence, scope derivation,
-current-state writing, backfill batching, change-map growth, and reporting.
+Authoritative common execution entry for `formal-docs-sync`. The public entry
+gate and mode selection live in `../SKILL.md`. This file defines the common
+eight-step host-site contract and routing to type-specific modules.
 
-## 1. Three-Node Protocol
+## Progressive Loading
 
-| Node | Entry credentials and evidence | Product target output | MVP output |
-| --- | --- | --- | --- |
-| Feature delivery | Approved PRD; Confirmed TRD impact evidence from frontmatter `related_code` or the impacted modules/interfaces section; confirmed `IMPLEMENTATION_PLAN.md`; actual diff and tests | API, database, and design docs plus change-map updates; feature-level design output is subject to the Section 2 closeout gate | API docs and API `code_glob` entries only |
-| Deployment verification | TRD deployment surface; deployment configuration; verification commands and results; environment differences | Operations runbook and necessary release-preparation entries | Future iteration; not part of MVP acceptance |
-| Release | Release scope; verified version or tag; changelog and release-process documents; audit conclusion | Product manual; versioned site Release Notes are produced by `docs-agent:release-notes-generator`, and sync only verifies that existing site pages agree with the placement and version context. GitHub Release bodies and operations remain with `pm-agent:release-notes-generator` until issue #120 changes that ownership | Future iteration; not part of MVP acceptance |
+After resolving the mode, identify the confirmed target document types. For a
+single-type task, read this file plus exactly one matching module:
 
-Existing-system backfill is the fourth execution mode in Section 4. It does not
-require a feature implementation plan and shares the same evidence, writing,
-map-growth, and confirmation disciplines.
+| `doc_type` | Type module |
+| --- | --- |
+| `api` | `types/api/INSTRUCTIONS.md` |
+| `database` | `types/database/INSTRUCTIONS.md` |
+| `design` | `types/design/INSTRUCTIONS.md` |
+| `ops` | `types/ops/INSTRUCTIONS.md` |
+| `product` | `types/product/INSTRUCTIONS.md` |
 
-## 2. Design Delivery Closeout Gate
+For a confirmed multi-type scope, load only the modules that occur in that
+scope. Do not read the other type modules. The host files under
+`docs/site/standards/templates/` are the only template source; these modules
+contain evidence and output rules, not duplicate template bodies.
 
-In feature-delivery mode, complete this checklist before proposing any write to
-a feature-level `docs/site/design/**` page. Items 1–6 must refer to the same
-`feature_path`; item 7 runs only after they all pass.
+## Common Eight-Step Host-Site Contract
 
-- [ ] **Approved PRD.** Read `docs/pm/{feature_path}/PRD.md`; verify that it
-  exists, is Approved, and its feature metadata resolves to the same
-  `feature_path` as the delivery scope.
-- [ ] **Confirmed TRD with traceable impact scope.** Read
-  `docs/engineer/{feature_path}/TRD.md`; verify that it exists, is Confirmed,
-  matches the same `feature_path`, and identifies the affected code through
-  frontmatter `related_code` or an impacted-modules/interfaces section.
-- [ ] **Confirmed implementation plan.** Read
-  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`; verify that it exists,
-  matches the same `feature_path`, and records maintainer or user confirmation
-  for the delivery scope.
-- [ ] **Entire delivery scope completed.** Inspect every plan scope entry for
-  this delivery and its recorded status; pass only when all are complete and
-  none remain `pending`, `blocked`, `deferred`, `TODO`, a stub, or otherwise
-  unimplemented.
-- [ ] **Code and diff cover the declared scope.** Compare the actual code and
-  diff with every applicable plan scope entry and the TRD impact scope; pass
-  only when the implementation covers both. A process document's own claim of
-  completion is not evidence of implementation.
-- [ ] **All required tests executed and passed.** Compare the plan's required
-  tests with execution records and results; pass only when every required test
-  was actually run and passed. Any relevant `failed`, `blocked`, `unknown`, or
-  unexplained `skipped` result fails the gate. When the plan or `change_tier`
-  requires QA or E2E evidence, verify that evidence was completed and passed
-  as well.
-- [ ] **Existing candidate-scope confirmation completed.** After items 1–6
-  pass, follow Section 3 and present the candidate design pages, code scope,
-  evidence, exclusions, and unresolved items. Write only after the maintainer
-  confirms that bounded scope.
+Run all eight steps in order for every mode.
 
-Reuse the existing `feature-implementor` closeout evidence shape: completed
-plan scope statuses, actual diff coverage, and test execution records. Do not
-invent a separate evidence format. Missing or inaccessible evidence is an
-evidence gap and blocks the gate.
+### 1. Read the host standards entry
 
-For a blocked result, list each failed checklist item with its missing or
-conflicting evidence, current owner, and next action. Do not write provisional
-designs, future-state descriptions, implementation drafts, or a partial design
-body while blocked.
+Verify the host already has `docs/site/`, its standards, and
+`docs/site/standards/change-map.yaml`. Read
+`docs/site/standards/index.md` or the host's equivalent standards entry before
+proposing writes. If the foundation is absent, stop with zero site writes and
+offer a `docs-site-bootstrap` handoff; do not create a partial site.
 
-Treat each feature-level design page and its corresponding design change-map
-entry as one atomic write scope. If any checklist item fails, neither may
-change. If the gate and scope confirmation pass, write them in the same bounded
-operation.
+### 2. Read only the target-type templates and modules
 
-The design body may state only the current state jointly demonstrated by final
-code and passing tests. After writing, read the page back and check every key
-design claim against that final code and test evidence. Keep new or changed
-pages at `last_verified_version: unverified`; only `docs-audit` stamps the
-final verified version.
+For each confirmed target type, follow the host standards entry to its
+corresponding file under `docs/site/standards/templates/`, then load the one
+matching type module above. The host template, including its unique
+`docs-scaffold` block, is authoritative. Never embed, reconstruct, or maintain
+a second template body in this skill.
 
-This gate does not apply to design directories, indexes, or empty templates
-pre-created by `docs-site-bootstrap`. Design backfill is not enabled; define a
-separate gate before enabling it. This gate does not change the existing node
-behavior for API, database, operations, product, or release-note output.
+When a confirmed new page is needed and the host exposes `npm run new:doc`,
+prefer that deterministic scaffold entry. Supply only confirmed frontmatter,
+path, and optional change-map inputs; do not use it for Release Notes.
 
-## 3. Five-Step Synchronization Protocol
+### 3. Apply the change map
 
-Run these steps for feature delivery, deployment verification, and release.
+Resolve candidate impact scope from the confirmed evidence chain in this
+order when available: TRD `related_code`, TRD impacted modules/interfaces or
+deployment surface, confirmed implementation-plan entries, then the actual
+diff. Corroborate with current code, tests, schema, configuration, and command
+results.
 
-### Step 1: Establish the candidate impact scope
+Read `docs/site/standards/change-map.yaml`, match confirmed code paths against
+`code_glob`, and apply each entry's own `exclude`. Read only matched
+`required_docs` and necessary indexes. If no mapping exists, propose the target
+page, code glob, trigger, required docs, and exclusions together; do not infer
+a wider site scope.
 
-Start with the handoff and resolve candidate code scope in this order:
+Merge entries with the same `code_glob`; preserve unknown fields and unrelated
+entries; deduplicate and stably sort lists. An exclusion narrows only its own
+glob. Treat repository-relative page paths as required, and exclude
+`docs/site/.meta/**` from formal-page discovery and change-map targets.
 
-1. TRD frontmatter `related_code`, when present
-2. the TRD impacted-module, interface, or deployment-surface sections
-3. confirmed `IMPLEMENTATION_PLAN.md` scope entries
-4. the actual diff
+### 4. Confirm the bounded candidate scope
 
-Use actual code, diff, tests, schemas, routes, deployment configuration, and
-verification results to corroborate the scope. Process documents and formal
-docs do not replace current code and test facts.
+Before writing, show the maintainer:
 
-If all four impact-scope sources are absent, stop and send a gap packet to
-`engineer-agent:trd-gen`. Name the missing impact evidence and affected node;
-do not infer a scope ad hoc. If evidence conflicts, report each source and the
-conflict, then stop before writing until the owning role resolves it.
+- selected mode and accepted entry basis;
+- candidate pages and types;
+- code paths and globs;
+- evidence for each page;
+- feature owner or owning team when the feature catalog provides one;
+- proposed change-map, index, or host-required navigation delta;
+- explicit exclusions, unresolved discrepancies, and out-of-batch scope.
 
-### Step 2: Resolve affected formal docs
+Wait for confirmation. Treat every page and its corresponding change-map entry
+as one atomic confirmed scope. Existing-system backfill runs one finite batch
+at a time and requires a new confirmation before the next batch.
 
-Read `docs/site/standards/change-map.yaml` and match the confirmed code paths
-against its `code_glob` keys while applying each entry's `exclude` list. Read
-only the matched `required_docs` and the indexes needed to locate them.
+### 5. Write only the confirmed scope and read it back
 
-When no entry exists, select the target document type from the node protocol,
-propose a target page and a new `code_glob`, and include both in the scope
-confirmation. Do not broaden the request into unrelated documentation.
+Create or update only confirmed pages, their map entries, and necessary
+indexes or host-required navigation. Preserve unrelated and manually
+maintained content. Write the stable current state, replacing superseded
+claims; never add implementation diaries, ticket timelines, before/after
+narration, or unsupported future state.
 
-### Step 3: Confirm and write the bounded scope
+Read every changed page and map entry back. Verify that page paths exist, map
+globs and exclusions have the intended reach, lists are stable, and every
+material statement is supported. Contradictory or missing evidence is a
+blocker, not permission to guess.
 
-Before writing, present:
+### 6. Apply the shared contract and leave pages unverified
 
-- target node and accepted entry basis
-- candidate code paths and globs
-- formal pages to create or update
-- evidence sources to verify each page
-- explicit exclusions and unresolved discrepancies
+Read and consume, without redefining it:
 
-Wait for maintainer confirmation. Then update only the confirmed affected
-pages and preserve unrelated pages. Rewrite the body as the current stable
-system state: remove statements superseded by current facts and do not append
-a chronological "what changed in this update" narrative.
+`agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md`
 
-### Step 4: Read back and verify facts
+Apply that contract to every created or updated formal page. Set
+`last_verified_version: unverified` on every new or changed page. This skill
+must not stamp a release version, redefine frontmatter fields, or add a dynamic
+host schema.
 
-Read back the generated or updated pages and compare every material claim with
-the current evidence. Depending on the node, verify routes, methods, auth,
-path/query/body parameters, schemas, response and error shapes, fields, tests,
-deployment steps, commands, environment differences, and release/version
-context.
+### 7. Run host documentation checks
 
-Apply the authoritative default frontmatter contract from
-`agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md` to
-every new or updated formal page.
+Read required commands from the host `docs/site/package.json`, repository
+guidance, or CI. Run all host-required docs checks and record command, working
+directory, exit status, and result. For an AI Hub-shaped VitePress host, run
+`npm run test:docs` in `docs/site/`. Do not migrate or reproduce AI Hub-specific
+non-VitePress logic.
 
-For new or changed formal pages, use `last_verified_version: unverified` until
-the audit capability verifies the complete affected set. Sync must not stamp a
-release version. Unsupported or contradictory claims remain unresolved and
-block completion of that page rather than being guessed.
+If required dependencies are absent, use only the host's deterministic locked
+installation path. A failed, missing, or unverifiable required check blocks
+completion; do not repair unrelated code or deployment state to hide it.
 
-### Step 5: Grow the map and report the handoff
+### 8. Handoff to docs audit
 
-Add or correct the confirmed change-map entries, then read the file and changed
-pages back to verify:
+After all required checks pass, hand the complete affected set to
+`docs-agent:docs-audit` (issue #117) for fact audit and unified version
+stamping. A sync report is not a stamp or release authorization. If checks
+fail, return a blocked handoff with the exact evidence.
 
-- each glob matches the intended code scope
-- exclusions narrow only their own glob
-- every `required_docs` path exists and belongs to the confirmed scope
-- map ordering and lists are stable
+## Mode Rules
 
-Report changed docs, evidence, map delta, unresolved discrepancies, and the
-recommended next lifecycle node or collaboration owner.
+### Feature delivery
 
-## 4. Existing-System Backfill Protocol
+Synchronize only implementation-affected API, database, design, and product
+pages and their confirmed map/index/navigation deltas. A page is applicable
+only when its type module's evidence checks pass. Design pages also require the
+Design Delivery Closeout Gate below.
 
-Backfill creates a reviewed current-state API baseline in bounded batches.
+### Deployment verification
 
-1. **Prefer the feature catalog.** If a PM `feature-catalog` artifact exists,
-   use its feature to code-path to owner relationships as the first scope map.
-   Verify every referenced path against the current repository.
-2. **Discover before proposing when no catalog exists.** Scan API entry points,
-   schema definitions, handlers, and contract tests to form a candidate module
-   list. Do not generate repository-wide docs from the scan.
-3. **Split and confirm batches.** With a catalog, default to one catalog module
-   per batch. Without one, default to one API surface, normally a top-level
-   route group. A batch should cover about one business module or no more than
-   roughly five API pages. For each batch, present its `code_glob` values,
-   proposed API pages, evidence entry points, and out-of-batch scope, then wait
-   for maintainer confirmation.
-4. **Generate the current-state baseline.** For the confirmed batch only,
-   extract real paths, methods, authentication, request parameters and bodies,
-   success responses, error structures, and supporting tests. Mark unsupported
-   claims unresolved instead of guessing them.
-5. **Seed and read back the change map.** Write API `code_glob` seed entries in
-   the same batch. Read them back and verify the globs match the intended code
-   and `required_docs` point to the generated API pages.
-6. **Report and request the next batch.** Report coverage, exclusions,
-   unresolved evidence, and remaining candidate batches. Request confirmation
-   before starting the next batch; never silently expand the confirmed scope.
+Synchronize ops runbooks, upgrade instructions, rollback instructions,
+environment variables, startup methods, Helm/Compose behavior, and related
+current operational facts only when confirmed configuration, commands, results,
+and environment differences support them. Never turn a deployment plan or an
+unexecuted command into current state.
 
-If no reliable API fact can be established from routes, schemas, handlers, or
-contract tests, stop before writing that page and report the batch as
-unresolved with the evidence needed to continue.
+### Release
 
-## 5. Change-Map Write Rules
+Synchronize only affected product and ops pages and reconcile their material
+claims with the confirmed release version evidence. Do not generate or edit a
+Release Notes body, its index, `.meta/releases.json`, or Release Notes
+navigation. Handoff all such work to `docs-agent:release-notes-generator`
+(issue #116). For a direct Release Notes request, stop with zero site writes
+and pass the confirmed version, scope, evidence, and requested site surfaces to
+that specialist immediately; do not ask for separate permission to perform
+the routing handoff. Do not prepare or operate a GitHub Release.
 
-Apply these rules to `docs/site/standards/change-map.yaml`:
+### Existing-system backfill
 
-- Merge entries that use the same `code_glob`; do not create duplicate keys.
-- Merge, deduplicate, and stably sort `required_docs`.
-- Preserve an existing `trigger` and `exclude` unless confirmed evidence
-  requires a scoped correction; make any correction visible in the map delta.
-- Stably sort new list values so repeated execution does not reorder them.
-- Never delete unknown or manually maintained entries merely because the
-  current scope did not produce them.
-- Treat every `required_docs` path as repository-root relative.
-- An `exclude` list narrows only the entry that owns it.
-- Exclude `docs/site/.meta/**` from formal-page discovery, navigation,
-  frontmatter processing, and `required_docs` update decisions. `.meta/` is a
-  machine-consumption area, not a formal documentation page set.
+Support finite confirmed batches for all five types. Prefer a PM feature
+catalog and the existing change map. Without a mapping, bounded discovery may
+propose one coherent page group plus its map entries, but must not expand into
+a repository-wide scan or full-site generation. Preserve the feature owner or
+owning team from the catalog in the proposed batch when present. Execute one
+confirmed batch, report remaining candidates, and wait for confirmation before
+another batch.
 
-After every write, parse and read back the map rather than relying only on the
-edit operation's success.
+## Design Delivery Closeout Gate
 
-## 6. Latest-State (Current-State) Discipline and Trust Model
+Before proposing a feature-delivery write to `docs/site/design/**`, verify all
+of the following for the same `feature_path`:
 
-Follow the shared consumption contract maintained by pm-agent at:
+1. Approved PRD;
+2. Confirmed TRD with traceable impacted modules or `related_code`;
+3. confirmed `IMPLEMENTATION_PLAN.md`;
+4. all plan scope complete, with no pending, blocked, deferred, TODO, or stub;
+5. actual code and diff cover the plan and TRD impact scope;
+6. every required test, including applicable QA/E2E evidence, ran and passed;
+7. the Step 4 candidate scope is confirmed.
 
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`
+Reuse `feature-implementor` closeout evidence; do not invent another format.
+If any item is absent, conflicting, failed, skipped without explanation, or
+unverifiable, report the failed item, owner, and next action and make zero
+changes to both the design page and its change-map entry. A passing gate still
+permits only current-state design evidenced by final code and passing tests.
 
-Apply its trust model while producing formal docs:
+## Trust and Boundaries
 
-- Use formal documentation as a map to relevant context, while treating code
-  and tests as ground truth for current behavior.
-- If a document claim conflicts with code or test facts, preserve the document
-  path, claim, code fact, and impact in the discrepancy report. Do not let the
-  document override the fact and do not silently ignore the conflict.
-- Compare `last_verified_version` with the current version context. If the
-  anchors differ or cannot be compared, lower trust and broaden code/test
-  verification instead of rejecting the document outright.
-- Treat `last_verified_version: unverified` as the lowest-trust state and
-  verify every material claim against code or tests.
+Follow the trust model in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`:
+formal docs guide discovery, while current code and tests are ground truth.
+Lower trust for an older or `unverified` page and broaden verification. Preserve
+document claim, code/test fact, evidence path, and impact for discrepancies.
 
-Write pages as latest/current state:
+This specialist does not define frontmatter, stamp versions, initialize or
+deploy a site, edit Release Notes surfaces, create or move tags, create or
+publish GitHub Releases, publish images, update Helm, deploy software, copy AI
+Hub paths or business facts, migrate AI Hub non-VitePress logic, or introduce
+dynamic schemas. It does not create duplicate type specialists.
 
-- State stable behavior, interfaces, constraints, and operations directly.
-- Replace obsolete claims when current evidence supersedes them.
-- Do not add implementation diaries, ticket timelines, author conversations,
-  or "before/after" release narration to a formal reference page.
-- Keep uncertainty explicit as an unresolved item with its required evidence
-  and owner; never turn an assumption into a current-state fact.
+## Report Shape
 
-## 7. Missing-Site Behavior
-
-Before proposing writes, verify that the host has the formal documentation
-foundation under `docs/site/`, including its standards and change map. If it is
-absent, explain that synchronization cannot safely write into an undefined
-site structure and offer an explicit `docs-site-bootstrap` handoff.
-
-Do not initialize the site, copy a scaffold, or create partial formal-doc paths
-without the user's explicit bootstrap request and the bootstrap specialist's
-own gate.
-
-## 8. Per-Batch Report
-
-Use this minimum report shape after each synchronization scope or backfill
-batch:
+After each scope or backfill batch, report:
 
 ```markdown
 ## Formal docs sync result
 
-- Mode / node: <feature | deployment | release | backfill>
-- Confirmed scope: <code paths, globs, pages, exclusions>
+- Mode: <feature delivery | deployment verification | release | existing-system backfill>
+- Confirmed scope: <pages, code paths, globs, exclusions>
+- Loaded type modules: <api / database / design / ops / product>
 - Changed docs: <paths or none>
-- Evidence: <code, tests, deployment, or release sources checked>
-- Change-map delta: <added, merged, corrected, or none>
-- Read-back verification: <glob and required-doc result>
-- Unresolved discrepancies: <claim, fact, impact, owner, unblock evidence>
-- Coverage and remaining gaps: <completed and deferred surfaces>
-- Recommended next step: <next batch, lifecycle node, or collaboration owner>
+- Evidence and read-back: <sources checked and result>
+- Change-map / index / navigation delta: <delta or none>
+- Host docs checks: <commands, cwd, and results>
+- Unresolved discrepancies: <items, owners, next evidence or none>
+- Coverage and remaining batches: <summary>
+- Handoff: <docs-audit (issue #117) ready/blocked, or
+  release-notes-generator (issue #116) with the confirmed version, scope,
+  evidence, and requested site surfaces when applicable>
 ```
-
-Do not begin the next backfill batch from this report without maintainer
-confirmation. Role-level `auto-continue` may automate cross-role handoff, but
-it does not waive the specialist's explicit per-batch confirmation gate.

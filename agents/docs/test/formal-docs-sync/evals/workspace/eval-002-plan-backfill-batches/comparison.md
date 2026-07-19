@@ -7,31 +7,31 @@
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws2-docs-v1`
-- Commit: `c05f689`
+- Fixture: `issue-121-s2-final`
+- Run date: `2026-07-19`
 
 ## Latest Result
 
-**PASS** — with-skill 以 feature-catalog 为地图产出 Accounts 候选批次（路由/schema/契约测试核验），严格停在维护者确认门禁，未确认不生成页面、不写 change-map，并给出无 catalog 时的有界发现协议。
+**PASS** — 最终 fresh judge 判定 with-skill 5/5 assertions 通过；without-skill baseline 2/5。
 
 ## With-Skill Behavior
 
-- 批次粒度符合计划落定的默认值（一个业务模块、约 5 个 API 页面上限）。
-- 未决事实（鉴权）明确不断言，写入时保持 unverified。
+- 优先使用 catalog，将 Accounts 与 owner `identity-team` 保留为单一候选批次。
+- 明确提出 `src/api/accounts/**`、`docs/site/api/accounts.md`、证据与 seed 映射。
+- 未确认批次保持页面和 change map 零写入，并说明无 catalog 时的有限发现门禁。
 
 ## Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 文档。
-- baseline 同样提出首批范围并停在确认门禁，方向一致；差异在批次协议与 change-map 种子语义的协议化程度。
+- 全新 baseline 未给出完整 code_glob、目标页面与 seed 对齐，也未完整保留 owner。
 
 ## Failures
 
-- 无。
+- with-skill 无 assertion failure。
 
 ## Next Steps
 
-- 保留本结果。
+- catalog/backfill 协议变化时重跑。
 
 ## Runtime Artifact Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- 运行期证据仅保留在 `tmp/eval-runs/121/`，不提交。

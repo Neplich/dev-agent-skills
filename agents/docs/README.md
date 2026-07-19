@@ -26,7 +26,7 @@ release documentation audit requests to the matching documentation specialist.
 | --- | --- | --- |
 | `docs-agent` | Formal documentation request routing | Specialist selection or a bounded blocked handoff |
 | `docs-site-bootstrap` | The maintainer explicitly asks to initialize a formal documentation site | A technology-neutral `docs/site/` foundation and standards |
-| `formal-docs-sync` | A confirmed feature, deployment, release, or existing system needs formal documentation synchronization or backfill | Current-state formal docs and `change-map.yaml` updates; the v0.3.0 accepted automation surface is API documentation only |
+| `formal-docs-sync` | A confirmed feature, deployment, release, or existing system needs formal documentation synchronization or backfill | Current-state API, database, design, ops, and product docs with their `change-map.yaml` updates; v0.3.0 was limited to API automation |
 | `release-notes-generator` | A confirmed release needs a versioned page in the host documentation site before GitHub Release preparation | Confirmed `vX.Y.Z.md`, release metadata/index updates, successful docs checks, and the issue #120 ready handoff |
 | `docs-audit` | Release readiness requires formal-document coverage and fact verification | Version-scoped audit report, release recommendation, and unified version stamp when all pages are verified |
 
@@ -41,19 +41,19 @@ release documentation audit requests to the matching documentation specialist.
 
 ## `formal-docs-sync` Capability Boundary (v0.3.0)
 
-The v0.3.0 accepted automation surface is API documentation only. This is the
-current acceptance boundary, not the final product boundary of
-`formal-docs-sync`.
+The v0.3.0 accepted automation surface was API documentation only. Issue
+[#121](https://github.com/Neplich/dev-agent-skills/issues/121) has since
+expanded the accepted synchronization surface to API, database, design, ops,
+and product current-state documentation.
 
-- Feature delivery and existing-system backfill are accepted for API pages and
-  API `code_glob` entries only.
-- Deployment verification and release modes currently focus on evidence
-  checking, scope judgment, and handoff; they do not yet provide a fully
-  accepted synchronization surface.
-- Database, design, ops, and product formal docs still require manual
-  maintenance or a separate handoff; multi-type synchronization migration is
-  tracked in [#121](https://github.com/Neplich/dev-agent-skills/issues/121) and
-  is not shipped in v0.3.0.
+- Feature delivery synchronizes affected API, database, design, and applicable
+  product pages; design pages remain subject to the delivery closeout gate.
+- Deployment verification synchronizes evidenced current ops, upgrade, and
+  rollback facts, without presenting plans as current state.
+- Release mode synchronizes only affected product and ops pages and reconciles
+  them with confirmed version facts.
+- Existing-system backfill supports one maintainer-confirmed finite batch
+  across any of the five document types.
 - Release notes are not part of `formal-docs-sync`; the dedicated
   `release-notes-generator` owns their site generation, confirmation, release
   metadata/index updates, validation, and issue #120 handoff.

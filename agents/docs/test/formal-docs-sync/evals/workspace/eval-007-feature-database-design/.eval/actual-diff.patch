@@ -1,0 +1,12 @@
+diff --git a/src/workspace_access/schema.sql b/src/workspace_access/schema.sql
+new file mode 100644
+--- /dev/null
++++ b/src/workspace_access/schema.sql
+@@
++CREATE TABLE workspace_memberships (... UNIQUE (workspace_id, user_id));
+diff --git a/src/workspace_access/repository.py b/src/workspace_access/repository.py
+new file mode 100644
+diff --git a/src/workspace_access/service.py b/src/workspace_access/service.py
+new file mode 100644
+diff --git a/tests/test_workspace_access.py b/tests/test_workspace_access.py
+new file mode 100644

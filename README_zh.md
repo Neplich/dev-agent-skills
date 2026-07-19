@@ -89,7 +89,7 @@ python3 scripts/install_codex_skills.py --routers-only
 | `qa-agent` | 规范验收、探索测试、缺陷分析、回归验证 | 5 (`1 + 4`) | 仅 PM handoff | [qa](./agents/qa/README_zh.md) |
 | `devops-agent` | 部署规划、CI/CD、环境配置审计、故障手册 | 5 (`1 + 4`) | 仅 PM handoff | [devops](./agents/devops/README_zh.md) |
 | `security-agent` | 应用安全、授权审查、依赖风险、隐私数据流 | 5 (`1 + 4`) | 仅 PM handoff | [security](./agents/security/README_zh.md) |
-| `docs-agent` | 正式文档分流、站点初始化、证据驱动同步（v0.3.0 已验收自动化范围仅 API 文档）、站内 Release Notes 与发版审计 | 5 (`1 + 4`) | 仅 PM handoff | [docs](./agents/docs/README.md) |
+| `docs-agent` | 正式文档分流、站点初始化、证据驱动的 API/database/design/ops/product 同步（#121 已在 v0.3.0 仅 API 的基础上扩展）、站内 Release Notes 与发版审计 | 5 (`1 + 4`) | 仅 PM handoff | [docs](./agents/docs/README.md) |
 
 > [!TIP]
 > 直接用户入口使用 `/pm-agent`。PM 会先分类请求，范围明确后再 handoff 到下游 role router 或 specialist skill。
