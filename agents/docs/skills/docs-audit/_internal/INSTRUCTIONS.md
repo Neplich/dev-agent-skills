@@ -1,33 +1,46 @@
 # Docs Audit — Internal Instructions
 
 Detailed execution guidance for `docs-audit`. The public entry and release
-gates live in `../SKILL.md`; this file defines baseline resolution, the
-deterministic and factual layers, report persistence, unified stamping, and
-release handoff.
+gates live in `../SKILL.md`; this file defines two-phase baseline resolution,
+the deterministic and factual layers, report persistence, unified stamping,
+and release handoff.
 
-## 1. Resolve Base, Target, and Version Anchor
+## 1. Resolve Inputs and Audit Phase
 
-Resolve the audit baseline before computing impact:
+Resolve the three independent audit inputs before computing impact:
 
-1. Use caller-supplied base and target when both are explicit and confirmed.
-2. Otherwise use the most recent release tag as base and the pending-release
-   `HEAD` as target.
+1. Resolve `base_ref`, the code-comparison start. Use the caller-supplied ref
+   when explicit; otherwise use the most recent release tag. It is a Git ref or
+   commit only and does not describe publication state.
+2. Resolve `target_ref`, the code-comparison end. Use the caller-supplied ref
+   when explicit; otherwise use pending-release `HEAD`. It is a Git ref or
+   commit only and is not the target release version.
 3. Include confirmed working-tree changes when they are explicitly part of the
    audit scope.
-4. Resolve the stampable version anchor independently from the diff endpoints:
-   use the confirmed tag or GitHub Release for the pending release.
+4. Resolve `target_release_version` independently. It is the exact version
+   whose documentation is being audited and the pre-tag unified-stamp anchor.
+   A maintainer must confirm it explicitly; do not infer it from a ref, branch,
+   filename, package metadata, or surrounding context, and do not accept
+   `unknown`. The matching tag does not need to exist during pre-tag audit.
 
-If there is no tag, Release, or explicit version anchor, continue auditing the
-confirmed working scope. Set `version_anchor: unavailable`, identify the real
-target commit when one exists, and never substitute `unknown`, a branch name,
-or an inferred version. Do not stamp `last_verified_version` or write release
-metadata without a usable tag or Release anchor. Existing pages retain their
-current `last_verified_version`; new pages use `unverified`, and the field must
-never be omitted.
+If `target_release_version` is missing, inferred, `unknown`, or lacks explicit
+maintainer confirmation, return `blocked` before report persistence or any
+write. If a default ref cannot be resolved, name the missing ref rather than
+inventing a commit range.
 
-Record the exact resolved base and target in the report. If a default base
-cannot be resolved, state that directly rather than inventing a commit range;
-use the confirmed working-scope evidence available for the audit.
+Select exactly one phase:
+
+- **Pre-tag:** tag creation is still pending. Run Sections 2-6 and return
+  `ready_for_tag` only after the complete affected set and every required
+  release-version surface pass.
+- **Post-tag:** the actual tag exists. Run Section 7 against the persisted,
+  still-valid pre-tag record. Do not rerun generation or unified stamping.
+
+When no confirmed release version exists, a read-only diagnostic fact review
+may still describe the affected pages, but the audit result remains `blocked`:
+it cannot persist a versioned audit report, produce a phase success, or alter
+stamps. Existing values remain unchanged and new pages remain `unverified`,
+preserving issue #118 semantics.
 
 ## 2. Deterministic Layer
 
@@ -176,44 +189,83 @@ variables, deployment commands, and rollback steps that apply to the page.
 When evidence is insufficient, record the evidence gap as a blocker and do not
 guess a `verified` conclusion or stamp the affected set.
 
-## 4. Final Status and Release Recommendation
+## 4. Pre-tag Audit
+
+Run the pre-tag protocol in this order:
+
+1. Confirm `base_ref`, `target_ref`, and the maintainer-confirmed
+   `target_release_version` as separate inputs.
+2. Use the complete `base_ref..target_ref` endpoint diff plus any explicitly
+   included working-tree scope to resolve the full affected-page set through
+   the deterministic layer.
+3. Verify every affected document through the fact layer. Also verify the
+   issue #116 ready handoff and its confirmed Release Notes page, the host's
+   Release Notes index, `docs/site/.meta/releases.json`, and host version facts
+   against `target_release_version`. Audit verifies these release surfaces; it
+   does not generate Release Notes or create or maintain release metadata.
+4. Record each affected page's current `last_verified_version` in the audit
+   report before any stamp write. This is the historical baseline for this run;
+   do not add `baseline_verified_version` or any other baseline frontmatter.
+5. Only when the complete affected set is `verified`, all evidence is complete,
+   and all release surfaces agree may Section 6 update every affected page's
+   `last_verified_version` together to `target_release_version`.
+6. Permit that unified stamp even when no matching tag exists yet.
+7. After read-back proves the complete stamp, return `ready_for_tag`. This
+   means ready for tag creation, never already published or released.
+
+Return `blocked` with no stamp when any of the following is true:
+
+- `target_release_version` is missing;
+- the target version was inferred from a branch name, `target_ref`, or context;
+- the target version is `unknown`;
+- the target version lacks explicit maintainer confirmation;
+- any affected page is `stale`, `mismatch`, remains unverified after fact
+  review, or lacks sufficient evidence; or
+- Release Notes, the version index, release metadata, or host version facts do
+  not match `target_release_version`.
+
+Here, “remains unverified” is a factual verification outcome caused by missing
+evidence; the valid frontmatter value `last_verified_version: unverified` does
+not itself make a page stale or block it from becoming factually `verified`.
+
+Never stamp only a `verified` subset. If `target_release_version` changes after
+the audit, the report, unified stamp conclusion, and `ready_for_tag` result are
+immediately invalid; rerun the complete pre-tag audit for the new value.
+
+### Final page status
 
 Assign final statuses from this table after fact verification:
 
-| Status | Decision rule | Release recommendation |
+| Status | Decision rule | Pre-tag effect |
 | --- | --- | --- |
-| `verified` | Every material declaration has current code or test evidence and no omission was found. | Proceed for this item; stamp only when the complete affected set is verified. |
+| `verified` | Every material declaration has current code or test evidence and no omission was found. | Eligible for complete-set evaluation; stamp only when every affected page is verified. |
 | `stale` | Fact-layer review confirms that a material declaration is no longer synchronized with current code, or a frontmatter field is invalid. An older release anchor or `unverified` only lowers trust and broadens verification; it is advanced by unified stamping after the complete affected set is verified. | Blocked; synchronize and re-audit the documentation. |
 | `mismatch` | A document declaration directly conflicts with current code or test fact. | Blocked; confirm whether documentation or implementation must change, then re-audit. |
 
-Any `stale`, `mismatch`, or unresolved evidence gap blocks the release audit.
+Any `stale`, `mismatch`, page that remains unverified after fact review, or
+unresolved evidence gap blocks the release audit.
 Return a concrete to-do item with an owner or required evidence for every
-blocker. A complete set of `verified` conclusions yields a proceed
-recommendation for the audited scope. When its version anchor is unavailable,
-keep the verified audit result but explicitly list establishing the release
-anchor as outstanding release context; do not convert that gap into a fake
-stamp.
+blocker. A complete set of `verified` conclusions is necessary but not
+sufficient for `ready_for_tag`: all release-version surfaces must also agree
+with the confirmed `target_release_version`.
 
 ## 5. Persist the Audit Report
 
-Write the report under `docs/site/.meta/audit/`. Use:
-
-- `audit-{version}.md` when a confirmed tag or Release version anchor exists;
-- `audit-{target-short-sha}.md` when the version anchor is unavailable.
-
-Use the real target commit's short SHA for the fallback. If the audited working
-scope has no resolvable target commit, stop before inventing a filename and
-report the missing target evidence. Audit reports are in `.meta/` and do not
-require the standard seven-field frontmatter.
+Write the report under `docs/site/.meta/audit/` as
+`audit-{target_release_version}.md`. The version comes only from the explicit,
+maintainer-confirmed input. Do not derive the filename from a branch or ref.
+Audit reports are in `.meta/` and do not require the standard seven-field
+frontmatter.
 
 Include at least:
 
 ```markdown
 # Formal documentation audit
 
-- Base: <resolved base or unavailable>
-- Target: <resolved target and short SHA>
-- Version anchor: <tag/Release or unavailable>
+- Audit phase: pre-tag
+- base_ref: <resolved base ref and commit>
+- target_ref: <resolved target ref and commit>
+- target_release_version: <maintainer-confirmed version>
 - Diff semantics: <two-dot endpoint diff or explicitly requested three-dot merge-base diff>
 - Changed files: <name-status inventory>
 - Change-map matches: <file, code_glob, exclude, trigger, required_docs>
@@ -224,59 +276,94 @@ Include at least:
 
 ## Per-document evidence
 
-<page, claims, code/test evidence, impact, deterministic findings, final status>
+<page, pre-stamp last_verified_version, claims, code/test evidence, impact, deterministic findings, final status>
+
+## Release-version surfaces
+
+<#116 handoff, Release Notes, version index, releases.json, and host version facts>
 
 ## Conclusion
 
 - Status summary: <verified / stale / mismatch counts and evidence gaps>
 - Blocking items: <to-do list or none>
-- Release recommendation: <proceed or blocked>
+- Phase result: <ready_for_tag or blocked>
 - Review commands: <commands sufficient to reproduce diff, validation, and evidence checks>
 ```
 
-In the stored report, use the machine-readable spelling
-`version_anchor: unavailable` when no anchor exists, even if the surrounding
-report is prose. Read the report back after writing and verify the endpoints,
-inventory, evidence, statuses, blockers, and commands.
+Read the report back after writing and verify the three independent inputs,
+inventory, pre-stamp baselines, release surfaces, evidence, statuses, blockers,
+commands, and phase result.
 
 ## 6. Unified Version Stamp
 
-Stamp only when both conditions are true:
+Stamp only during a valid pre-tag audit and only when all conditions are true:
 
 1. every page in the complete affected set has a final `verified` conclusion
    and there is no unresolved evidence gap; and
-2. a confirmed tag or GitHub Release version anchor exists.
+2. Release Notes, the version index, `docs/site/.meta/releases.json`, and host
+   version facts all match the maintainer-confirmed `target_release_version`.
 
 Then, in one audit operation:
 
 - update every affected page's `last_verified_version` from `unverified` or an
-  older anchor to the current tag or Release;
-- synchronize `docs/site/.meta/releases.json` to the same verified version
-  context, storing `verifiedDocs` as document-path keys mapped to verified
-  version strings; and
-- read all affected pages and release metadata back to verify that the stamp
-  is complete and consistent.
+  older anchor to `target_release_version`; and
+- read all affected pages back to verify that the complete stamp is consistent.
 
 Do not stamp a verified subset when another page is `stale`, `mismatch`, or
-blocked by missing evidence. Do not partially update `.meta/releases.json`.
-When the version anchor is unavailable, do not stamp
-`last_verified_version` and do not alter release metadata. Keep each page's
-existing value; new pages remain `unverified`, and the field must not be
-omitted.
+blocked by `unverified` or missing evidence. The matching tag is not required
+for this pre-tag write. Do not modify `.meta/releases.json`; issue #116 owns
+that content, while this audit only verifies it. Outside a valid pre-tag audit,
+keep each page's existing value; new pages remain `unverified`, and the field
+must not be omitted.
 
-## 7. Release Handoff
+## 7. Post-tag Audit
 
-Return the persisted audit report and one release recommendation:
+Run the post-tag protocol in this order:
 
-- **Proceed:** every affected page is `verified`; identify whether unified
-  stamping completed, or state that no stamp was written because the version
-  anchor is unavailable.
+1. Read and resolve the actual tag; a missing tag is a blocker.
+2. Read the persisted pre-tag record, including `base_ref`, `target_ref`,
+   `target_release_version`, the complete-set stamp result, pre-stamp values,
+   evidence, and `ready_for_tag` conclusion.
+3. Verify that the actual tag, `target_release_version`, confirmed Release
+   Notes, version index, `docs/site/.meta/releases.json`, and host version facts
+   all match exactly.
+4. Return `release_verified` only when the pre-tag record remains valid and all
+   evidence is complete and consistent.
+5. Return `blocked` when any value differs, the tag is missing, the pre-tag
+   record was invalidated by a target-version change, or evidence is missing.
+
+Post-tag audit performs final consistency verification only. Do not regenerate
+Release Notes, indexes, release metadata, documentation, GitHub Release
+content, or unified stamps.
+
+Persist or append a post-tag section to the same audit record without erasing
+the pre-tag evidence. Record the actual tag, checked surfaces, evidence,
+blockers, review commands, and `release_verified` or `blocked` result.
+
+## 8. Release Handoff and Responsibility Boundaries
+
+Return the persisted audit report and exactly one phase result:
+
+- **`ready_for_tag`:** pre-tag audit passed and the complete affected set was
+  stamped to `target_release_version`; do not call the version published.
+- **`release_verified`:** post-tag audit proved the actual tag and all release
+  surfaces match the still-valid pre-tag record.
 - **Blocked:** list every `stale`, `mismatch`, and evidence-gap item with the
   document, fact, impact, required action, and responsible owner when known.
 
-The audit conclusion is release-handoff evidence. It does not create release
-notes, publish a release, or repair documentation or code on its own. Route
-documentation synchronization to `formal-docs-sync`, product ambiguity to
-`pm-agent`, and implementation ambiguity to the appropriate engineering
-owner; wait for confirmation unless applicable `auto-continue` authorization
-already exists.
+Issue #116 owns Release Notes generation and confirmation, its index and
+required navigation, and release metadata content; consume its ready handoff
+as evidence. Issue #118 owns the shared frontmatter contract, including the
+required `last_verified_version` field and `unverified` value. Issue #120 may
+prepare a GitHub Release draft only after `ready_for_tag`, and may publish only
+after the actual tag exists, this audit returns `release_verified`, and the
+maintainer approves publication. The host repository owns target-version
+confirmation, tag creation, deterministic CI, and release execution.
+
+This audit does not generate Release Notes, maintain `.meta/releases.json`,
+create or publish a GitHub Release, create or move tags, modify an AI Hub
+workflow, invent a dynamic host-version schema, or treat
+`last_verified_version` as publication state. Route documentation repair to
+`formal-docs-sync`, product ambiguity to `pm-agent`, and implementation
+ambiguity to the appropriate engineering owner; wait for confirmation unless
+applicable `auto-continue` authorization already exists.
