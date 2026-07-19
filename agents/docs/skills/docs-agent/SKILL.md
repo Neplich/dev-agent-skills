@@ -1,6 +1,6 @@
 ---
 name: docs-agent
-description: "Downstream documentation router invoked after pm-agent handoff. Classifies confirmed formal documentation scope across site bootstrap, synchronization, backfill, and release audit, then delegates to documentation specialists."
+description: "Downstream documentation router invoked after pm-agent handoff. Classifies confirmed formal documentation scope across site bootstrap, synchronization, backfill, site Release Notes, and release audit, then delegates to documentation specialists."
 visibility: internal
 ---
 
@@ -17,7 +17,8 @@ preserves confirmed scope and evidence through the handoff.
 - checking for a PM handoff packet, an equivalent confirmed document chain, or
   the selected specialist's documented entry basis
 - routing explicit site initialization to `docs-site-bootstrap`, synchronization
-  or backfill to `formal-docs-sync`, and release audit to `docs-audit`
+  or backfill to `formal-docs-sync`, site Release Notes delivery to
+  `release-notes-generator`, and release audit to `docs-audit`
 - owning the default formal-document frontmatter contract at
   `_internal/_shared/frontmatter-contract.md`, which specialist producers and
   auditors consume together
@@ -63,6 +64,8 @@ authoritative specialist contract.
   formal documentation site
 - `docs-agent:formal-docs-sync` - Synchronize confirmed feature, deployment, or
   release facts, or backfill existing formal API documentation
+- `docs-agent:release-notes-generator` - Generate, confirm, index, and validate
+  a host site's versioned Release Notes before the GitHub Release handoff
 - `docs-agent:docs-audit` - Audit formal documentation before release and
   produce the release recommendation, evidence report, and version stamp
 
@@ -76,6 +79,10 @@ Route by the requested documentation outcome, not literal phrasing.
   existing formal docs; document the current API state; backfill an inherited
   codebase
   -> `formal-docs-sync`
+- Generate or update a versioned page under the host site's Release Notes,
+  confirm its body, update release metadata and indexes, and validate it before
+  the GitHub Release handoff
+  -> `release-notes-generator`
 - Audit formal docs for release readiness or verify release documentation
   coverage
   -> `docs-audit`
@@ -86,6 +93,8 @@ Route by the requested documentation outcome, not literal phrasing.
   `docs-site-bootstrap/SKILL.md` and its internal instructions.
 - Synchronization and backfill behavior is authoritative in
   `formal-docs-sync/SKILL.md` and its internal instructions.
+- Site Release Notes behavior is authoritative in
+  `release-notes-generator/SKILL.md` and its internal instructions.
 - Release audit behavior is authoritative in
   `docs-audit/SKILL.md` and its internal instructions.
 

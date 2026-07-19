@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-001-confirmed-release-handoff",
+  "eval_name": "confirmed-release-handoff",
+  "workspace_root": "agents/docs/test/release-notes-generator/evals/workspace/eval-001-confirmed-release-handoff",
+  "skill_availability_goal": "Verify the seven-step site Release Notes flow, confirmation gate, docs checks, and issue #120 ready handoff boundary.",
+  "prompt": "请根据 `release-entry.md` 处理 v0.4.0 的站内 Release Notes。遵守正文确认、metadata/index 更新、宿主 docs checks 和 #120 handoff 门禁；不要执行 GitHub Release、tag 或部署操作。"
+}

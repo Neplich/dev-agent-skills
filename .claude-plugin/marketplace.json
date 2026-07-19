@@ -93,13 +93,14 @@
     },
     {
       "name": "docs-agent",
-      "description": "Downstream documentation capability invoked after pm-agent handoff for confirmed formal documentation bootstrap, synchronization, backfill, and release audit.",
+      "description": "Downstream documentation capability invoked after pm-agent handoff for confirmed formal documentation bootstrap, synchronization, backfill, site Release Notes, and release audit.",
       "source": "./agents/docs",
       "strict": true,
       "skills": [
         "./skills/docs-agent",
         "./skills/docs-site-bootstrap",
         "./skills/formal-docs-sync",
+        "./skills/release-notes-generator",
         "./skills/docs-audit"
       ]
     }

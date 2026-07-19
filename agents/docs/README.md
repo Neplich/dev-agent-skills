@@ -2,8 +2,8 @@
 
 `docs-agent` is the seventh role Agent and the owner of the formal
 documentation layer. It routes explicit documentation-site bootstrap,
-evidence-backed synchronization and backfill, and release documentation audit
-requests to the matching documentation specialist.
+evidence-backed synchronization and backfill, site Release Notes delivery, and
+release documentation audit requests to the matching documentation specialist.
 
 > [!IMPORTANT]
 > Docs Agent is a downstream capability. It starts from a PM handoff packet, an
@@ -15,9 +15,9 @@ requests to the matching documentation specialist.
 | Item | Details |
 | --- | --- |
 | Entry skill | `docs-agent` |
-| Specialist skills | 3 |
+| Specialist skills | 4 |
 | Main inputs | PM handoff context, approved product documents, confirmed engineering documents, code and test evidence, deployment evidence, release context |
-| Main outputs | Formal documentation-site scaffolding, current-state formal docs, change-map updates, release audit reports |
+| Main outputs | Formal documentation-site scaffolding, current-state formal docs, change-map updates, confirmed site Release Notes, release audit reports |
 | Collaboration | Downstream of confirmed PM, Engineer, QA, and DevOps evidence; supports release readiness without replacing their role contracts |
 
 ## Skills
@@ -27,6 +27,7 @@ requests to the matching documentation specialist.
 | `docs-agent` | Formal documentation request routing | Specialist selection or a bounded blocked handoff |
 | `docs-site-bootstrap` | The maintainer explicitly asks to initialize a formal documentation site | A technology-neutral `docs/site/` foundation and standards |
 | `formal-docs-sync` | A confirmed feature, deployment, release, or existing system needs formal documentation synchronization or backfill | Current-state formal docs and `change-map.yaml` updates; the v0.3.0 accepted automation surface is API documentation only |
+| `release-notes-generator` | A confirmed release needs a versioned page in the host documentation site before GitHub Release preparation | Confirmed `vX.Y.Z.md`, release metadata/index updates, successful docs checks, and the issue #120 ready handoff |
 | `docs-audit` | Release readiness requires formal-document coverage and fact verification | Version-scoped audit report, release recommendation, and unified version stamp when all pages are verified |
 
 ## Routing Rules
@@ -34,6 +35,8 @@ requests to the matching documentation specialist.
 - Explicit formal documentation-site initialization: use `docs-site-bootstrap`.
 - Feature, deployment, or release synchronization, or existing-system backfill:
   use `formal-docs-sync`.
+- Versioned site Release Notes generation, confirmation, indexing, and docs
+  validation: use `release-notes-generator`.
 - Release documentation audit: use `docs-audit`.
 
 ## `formal-docs-sync` Capability Boundary (v0.3.0)
@@ -51,9 +54,9 @@ current acceptance boundary, not the final product boundary of
   maintenance or a separate handoff; multi-type synchronization migration is
   tracked in [#121](https://github.com/Neplich/dev-agent-skills/issues/121) and
   is not shipped in v0.3.0.
-- Release notes are not part of `formal-docs-sync`; a dedicated documentation
-  release-notes skill is tracked in
-  [#116](https://github.com/Neplich/dev-agent-skills/issues/116).
+- Release notes are not part of `formal-docs-sync`; the dedicated
+  `release-notes-generator` owns their site generation, confirmation, release
+  metadata/index updates, validation, and issue #120 handoff.
 
 ## Collaboration Position
 
@@ -69,7 +72,8 @@ flowchart LR
     QA --> Docs
     DevOps["DevOps: deployment evidence"] --> Docs
     Release["Release context"] --> Docs
-    Docs --> Audit["Formal documentation audit"]
+    Docs --> Notes["Site Release Notes"]
+    Notes --> Audit["Formal documentation audit"]
 ```
 
 At closeout, the router follows the PM safety-net contract to recommend the

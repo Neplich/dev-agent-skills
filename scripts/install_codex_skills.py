@@ -99,7 +99,7 @@ def parse_skill_specs(root: Path) -> list[SkillSpec]:
         raise ValueError("marketplace must contain a non-empty plugins array")
 
     specs: list[SkillSpec] = []
-    seen: dict[str, Path] = {}
+    seen: dict[str, tuple[str, int, Path]] = {}
 
     for plugin_index, plugin in enumerate(plugins):
         if not isinstance(plugin, dict):
@@ -124,9 +124,11 @@ def parse_skill_specs(root: Path) -> list[SkillSpec]:
 
             if not (skill_source / "SKILL.md").is_file():
                 raise ValueError(f"{skill_source}: missing SKILL.md")
-            if skill_name in seen:
+            previous = seen.get(skill_name)
+            if previous is not None and previous[0] == plugin_name:
                 raise ValueError(
-                    f"duplicate skill target name {skill_name!r}: {seen[skill_name]} and {skill_source}"
+                    f"duplicate skill target name {skill_name!r} in plugin {plugin_name!r}: "
+                    f"{previous[2]} and {skill_source}"
                 )
 
             try:
@@ -134,15 +136,22 @@ def parse_skill_specs(root: Path) -> list[SkillSpec]:
             except ValueError as exc:
                 raise ValueError(f"{skill_source}: skill source must be inside repository root") from exc
 
-            seen[skill_name] = skill_source
-            specs.append(
-                SkillSpec(
-                    plugin_name=plugin_name,
-                    skill_name=skill_name,
-                    source=skill_source,
-                    source_rel=source_rel,
-                )
+            spec = SkillSpec(
+                plugin_name=plugin_name,
+                skill_name=skill_name,
+                source=skill_source,
+                source_rel=source_rel,
             )
+            if previous is None:
+                seen[skill_name] = (plugin_name, len(specs), skill_source)
+                specs.append(spec)
+            else:
+                # Claude plugins namespace skills by plugin, while the Codex
+                # installer exposes one flat target per SKILL.md basename. Keep
+                # both sources in the hidden mirror and let the later marketplace
+                # plugin select the flat target, matching skills-lock resolution.
+                specs[previous[1]] = spec
+                seen[skill_name] = (plugin_name, previous[1], skill_source)
 
     return specs
 

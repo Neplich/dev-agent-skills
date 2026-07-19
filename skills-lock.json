@@ -32,9 +32,9 @@
       "computedHash": "a10b972b640f14a52764d5f98fc69e9059aeca0ebb37ef9dd12aaf301c089fe2"
     },
     "release-notes-generator": {
-      "source": "agents/product_manager/skills/release-notes-generator",
+      "source": "agents/docs/skills/release-notes-generator",
       "sourceType": "local",
-      "computedHash": "9d49595994ab467d1284aaadb61a3b3f838f3fa89e901b07798139cc788a75d4"
+      "computedHash": "a83720fd62d350d3657fcc8c33049085cbe8d9b9a64c7250bdf0134ca5d5a7e7"
     },
     "roadmap-generator": {
       "source": "agents/product_manager/skills/roadmap-generator",
@@ -179,7 +179,7 @@
     "docs-agent": {
       "source": "agents/docs/skills/docs-agent",
       "sourceType": "local",
-      "computedHash": "cf38a2cdac9b4baee119a06074d2ecaf6a8b13782a08b264a2cecfbb80b6daac"
+      "computedHash": "c8cc1d215ee232dc773f5f2f146ce81a1e0be8d7e34bf4b18cda51825b25bcac"
     },
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",

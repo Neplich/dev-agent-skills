@@ -62,11 +62,11 @@ def marketplace_data() -> dict:
 
 
 def marketplace_skill_names() -> list[str]:
-    names: list[str] = []
+    names: set[str] = set()
     for plugin in marketplace_data()["plugins"]:
         plugin_source = ROOT / plugin["source"]
         for skill_path in plugin["skills"]:
-            names.append((plugin_source / skill_path).resolve().name)
+            names.add((plugin_source / skill_path).resolve().name)
     return sorted(names)
 
 
@@ -75,12 +75,15 @@ def router_skill_names() -> list[str]:
 
 
 def skill_source_rel(skill_name: str) -> Path:
+    matched: Path | None = None
     for plugin in marketplace_data()["plugins"]:
         plugin_source = (ROOT / plugin["source"]).resolve()
         for skill_path in plugin["skills"]:
             source = (plugin_source / skill_path).resolve()
             if source.name == skill_name:
-                return source.relative_to(ROOT)
+                matched = source.relative_to(ROOT)
+    if matched is not None:
+        return matched
     raise AssertionError(f"unknown skill {skill_name}")
 
 
@@ -123,6 +126,10 @@ def test_default_install_creates_hidden_mirror_and_relative_skill_symlinks(tmp_p
     assert marker["source"] == ROOT.resolve().as_posix()
     assert_relative_mirror_link(target, "pm-agent")
     assert_relative_mirror_link(target, "debugger")
+    assert_relative_mirror_link(target, "release-notes-generator")
+    assert skill_source_rel("release-notes-generator") == Path(
+        "agents/docs/skills/release-notes-generator"
+    )
 
 
 def test_routers_only_links_only_router_skills_but_keeps_full_hidden_mirror(tmp_path: Path) -> None:
