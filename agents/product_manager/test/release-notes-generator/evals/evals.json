@@ -158,16 +158,21 @@
     },
     {
       "id": "eval-004-docs-site-release-output",
-      "name": "文档站存在时切换发布说明输出",
-      "description": "验证存在 docs/site/release-notes 时发布说明写入站点目录，同时保留仓库版本归档契约",
-      "prompt": "请为 v1.4.0 生成发布说明。仓库已经包含文档站，请按当前仓库约定给出应写入的目标路径，并保留版本化 changelog 归档与根索引要求。",
-      "expected_output": "发布说明输出到 docs/site/release-notes，同时继续维护版本化 changelog 归档及根 CHANGELOG 索引。",
+      "name": "文档站与 GitHub Release 双输出边界",
+      "description": "验证 PM specialist 保留客户公告、版本归档和 GitHub Release 工作，同时把站内版本页完整交给 Docs specialist",
+      "prompt": "请为 v1.4.0 准备客户公告和 GitHub Release 正文。仓库已经包含文档站，并且还需要 docs/site/release-notes/v1.4.0.md；请按当前仓库职责边界给出处理方案，并保留版本化 changelog 归档与根索引要求。",
+      "expected_output": "继续完成 PM 侧客户公告、GitHub Release 正文和 changelog 契约；不直接写站内版本页，而是把版本、scope、证据、宿主与所需输出交给 docs-agent:release-notes-generator。",
       "workspace": "workspace/eval-004-docs-site-release-output",
       "assertions": [
         {
-          "id": "writes_release_notes_to_site",
-          "description": "站点存在时写入站点发布说明目录",
-          "text": "检测到 `docs/site/release-notes/` 后，面向读者的 v1.4.0 发布说明目标切换为该目录下的版本页面，而不是只输出到旧位置。"
+          "id": "hands_off_site_release_notes_to_docs",
+          "description": "站内版本页交给 Docs specialist",
+          "text": "识别 `docs/site/release-notes/v1.4.0.md` 属于 `docs-agent:release-notes-generator`，不由 PM specialist 直接创建或更新；handoff 保留确认版本、release scope、证据、目标宿主与 required output。"
+        },
+        {
+          "id": "retains_pm_github_release_work",
+          "description": "GitHub Release 工作仍由 PM specialist 承担",
+          "text": "继续准备客户公告和 GitHub Release 正文；在 issue #120 完成前，不把 GitHub Release body、draft/publish 或 tag-aware preparation 迁给 Docs specialist。"
         },
         {
           "id": "preserves_versioned_changelog_archive",
@@ -182,7 +187,7 @@
         {
           "id": "keeps_existing_release_evidence_contract",
           "description": "保留既有发布证据契约",
-          "text": "站点路径切换不取消来源审计、目标 tag 审计范围、面向用户的价值说明和变更明细等既有 release-notes 契约。"
+          "text": "站内 handoff 不取消 PM 侧来源审计、目标 tag 审计范围、面向用户的价值说明和变更明细等既有 release-notes 契约，也不把 GitHub Release 工作提前迁出 PM。"
         }
       ],
       "files": []

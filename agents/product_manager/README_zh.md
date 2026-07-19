@@ -28,7 +28,7 @@
 | `competitive-brief` | 竞品定位、差距分析、市场扫描 | 竞品简报、定位机会、风险与建议 |
 | `competitive-intelligence` | 销售向 battlecard、deal support | HTML battlecard、竞品对比矩阵 |
 | `changelog-generator` | 面向开发者的版本变化整理 | `docs/changelog/changelog-v{version}.md` |
-| `release-notes-generator` | 面向用户或客户的发版说明 | 用户友好的 release notes |
+| `release-notes-generator` | 面向客户的公告与 issue #120 完成前的 GitHub Release 工作 | 用户友好的公告或 GitHub Release 正文；站内版本页交给 Docs |
 | `roadmap-generator` | milestone、issue、版本计划整理 | `docs/roadmap.md` |
 | `github-reader` | 项目状态、backlog、PR 队列、release blocker | GitHub 项目健康报告 |
 
@@ -39,7 +39,9 @@
 - 竞品研究、定位差距、市场扫描：使用 `competitive-brief`
 - 销售 battlecard 或 deal support：使用 `competitive-intelligence`
 - 开发者视角版本变化：使用 `changelog-generator`
-- 用户视角版本公告：使用 `release-notes-generator`
+- 面向客户的公告和 GitHub Release 工作：使用 `release-notes-generator`
+- `docs/site/release-notes/` 站内版本页：交给
+  `docs-agent:release-notes-generator`
 - 路线图、milestone 规划：使用 `roadmap-generator`
 - GitHub 项目状态、PR/Issue 队列、release blocker：使用 `github-reader`
 
@@ -52,7 +54,7 @@ flowchart LR
     Idea["用户想法 / 项目状态"] --> PM["pm-agent"]
     PM --> Spec["idea-to-spec"]
     PM --> GitHub["github-reader"]
-    PM --> Release["changelog / release notes"]
+    PM --> Release["changelog / 发布公告"]
     Spec --> Designer["designer-agent"]
     Spec --> Engineer["engineer-agent"]
 ```

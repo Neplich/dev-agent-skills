@@ -4,7 +4,7 @@
     "name": "Neplich"
   },
   "metadata": {
-    "description": "PM-first agent skill marketplace with one public pm-agent entry and downstream PM-orchestrated engineering, QA, DevOps, design, and security capabilities",
+    "description": "PM-first agent skill marketplace with one public pm-agent entry and downstream PM-orchestrated engineering, QA, DevOps, design, security, and documentation capabilities",
     "version": "0.3.0"
   },
   "plugins": [
@@ -93,13 +93,14 @@
     },
     {
       "name": "docs-agent",
-      "description": "Downstream documentation capability invoked after pm-agent handoff for confirmed formal documentation bootstrap, synchronization, backfill, and release audit.",
+      "description": "Downstream documentation capability invoked after pm-agent handoff for confirmed formal documentation bootstrap, synchronization, backfill, site Release Notes, and release audit.",
       "source": "./agents/docs",
       "strict": true,
       "skills": [
         "./skills/docs-agent",
         "./skills/docs-site-bootstrap",
         "./skills/formal-docs-sync",
+        "./skills/release-notes-generator",
         "./skills/docs-audit"
       ]
     }

@@ -12,5 +12,5 @@
     "docs/site/standards/change-map.yaml",
     "docs/site/.meta/releases.json"
   ],
-  "omitted_target_assumption": "All other targets from the 38-asset packaged inventory are present and byte-identical in the isolated evaluation host; they are omitted only to keep the committed fixture small."
+  "omitted_target_assumption": "All other targets from the 40-asset packaged inventory are present and byte-identical in the isolated evaluation host; they are omitted only to keep the committed fixture small."
 }

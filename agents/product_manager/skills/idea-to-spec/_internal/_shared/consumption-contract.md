@@ -5,6 +5,15 @@
 - 仅当宿主存在 `docs/site/standards/change-map.yaml` 时启用本契约。
 - 宿主不存在该文件时，静默沿用当前代码探索方式，不追问用户是否需要建站，也不引入额外前置步骤。
 
+## Release Notes 归属
+
+- `docs/site/release-notes/` 下的版本页、正文确认、metadata、索引和站点校验由
+  `docs-agent:release-notes-generator` 负责。
+- 面向客户的发布公告、GitHub Release 正文与 GitHub Release 操作在 issue #120
+  完成前仍由 `pm-agent:release-notes-generator` 负责。
+- 消费 change map 只用于缩小证据读取范围，不改变上述站内与 GitHub Release
+  边界。
+
 ## 读取协议
 
 1. 从任务输入中识别功能、模块、文件或代码路径等任务落点。

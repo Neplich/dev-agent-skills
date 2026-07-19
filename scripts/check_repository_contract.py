@@ -507,14 +507,19 @@ def marketplace_skill_sources(root: Path, errors: list[ContractError]) -> dict[s
     if not isinstance(plugins, list):
         return {}
 
-    sources: dict[str, str] = {}
+    raw_sources: list[tuple[str, str, str]] = []
     for plugin in plugins:
         if not isinstance(plugin, dict):
             continue
 
+        plugin_name = plugin.get("name")
         source = plugin.get("source")
         skills = plugin.get("skills")
-        if not isinstance(source, str) or not isinstance(skills, list):
+        if (
+            not isinstance(plugin_name, str)
+            or not isinstance(source, str)
+            or not isinstance(skills, list)
+        ):
             continue
 
         for skill in skills:
@@ -525,7 +530,27 @@ def marketplace_skill_sources(root: Path, errors: list[ContractError]) -> dict[s
                 rel = skill_dir.relative_to(root).as_posix()
             except ValueError:
                 continue
-            sources[skill_dir.name] = rel
+            raw_sources.append((plugin_name, skill_dir.name, rel))
+
+    basename_counts: dict[str, int] = {}
+    for _, skill_name, _ in raw_sources:
+        basename_counts[skill_name] = basename_counts.get(skill_name, 0) + 1
+
+    sources: dict[str, str] = {}
+    for plugin_name, skill_name, rel in raw_sources:
+        lock_name = skill_name
+        if basename_counts[skill_name] > 1:
+            plugin_qualifier = plugin_name.removesuffix("-agent")
+            lock_name = f"{plugin_qualifier}-{skill_name}"
+
+        if lock_name in sources:
+            add_error(
+                errors,
+                path,
+                f"duplicate resolved lock skill identity {lock_name!r}",
+            )
+            continue
+        sources[lock_name] = rel
 
     return sources
 

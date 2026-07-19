@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-002-confirmation-gate",
+  "eval_name": "confirmation-gate",
+  "workspace_root": "agents/docs/test/release-notes-generator/evals/workspace/eval-002-confirmation-gate",
+  "skill_availability_goal": "Verify zero derived-surface writes and a blocked handoff while the Release Notes body remains unconfirmed.",
+  "prompt": "请根据 release-entry.md 与 evidence/ 生成 v1.0.0 候选稿；正文尚未确认，请执行到确认门禁并报告状态。",
+  "fixture_context": ["release-entry.md", "evidence/", "docs/site/package.json", "docs/site/scripts/", "docs/site/standards/", "docs/site/release-notes/README.md", "docs/site/release-notes/v0.9.0.md", "docs/site/.meta/releases.json"],
+  "execution_cleanup": ["docs/site/release-notes/v1.0.0.md", "docs/site/.generated", "handoff.yaml"]
+}

@@ -87,7 +87,16 @@ gh api repos/{OWNER}/{REPO}/compare/{PREV_TAG}...{THIS_TAG}
 
 Use `reference/release-outline.md` for the release body. Match the repository's existing release style before introducing a new outline.
 
-宿主存在 `docs/site/release-notes/` 时，将 release notes 写入该站点目录；不存在时完全保留既有输出路径和行为，不新增配置项。
+This PM specialist does not create or update versioned pages under
+`docs/site/release-notes/`. When the requested output includes a formal-site
+Release Notes page, preserve the confirmed version, release scope, evidence,
+target host, and required output in a handoff to
+`docs-agent:release-notes-generator`. Continue only the PM-owned customer
+announcement or GitHub Release body/workflow requested by the user.
+
+Until issue #120 is completed, GitHub Release bodies, draft/publish operations,
+and tag-aware release preparation remain in this PM specialist. A site Release
+Notes handoff does not authorize or replace those GitHub operations.
 
 Default rules:
 

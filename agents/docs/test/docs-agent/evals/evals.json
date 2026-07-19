@@ -82,6 +82,36 @@
           "text": "仅指向 `docs-audit/SKILL.md` 及其内部指令作为权威执行 gate，不在 router 输出中复制 base/target、确定性层、事实层、三态或统一盖章协议。"
         }
       ]
+    },
+    {
+      "id": "eval-004-route-release-notes",
+      "name": "站内 Release Notes 请求分流",
+      "description": "验证 router 接受完整 Release Notes 入口依据，保留 handoff 上下文并只指向 release-notes-generator 的权威 gate。",
+      "prompt": "请根据 `release-handoff.md` 处理 v1.0.0 的站内 Release Notes 请求。只完成 Docs Agent 的入口检查和分流，不执行 specialist 工作。",
+      "expected_output": "接受完整 entry basis，选择 release-notes-generator，保留版本、scope、宿主、证据与输出上下文，并仅引用 specialist gate，不复制确认、metadata、checks 或 #120 handoff 执行协议。",
+      "workspace": "workspace/eval-004-route-release-notes",
+      "assertions": [
+        {
+          "id": "accepts_release_notes_entry_basis",
+          "description": "接受完整 Release Notes 入口依据",
+          "text": "识别 `release-handoff.md` 已提供目标宿主、确认版本和 scope、证据来源以及站内 Release Notes 与下游 handoff 输出要求，满足 specialist entry basis。"
+        },
+        {
+          "id": "routes_release_notes_generator",
+          "description": "正确分流到新 specialist",
+          "text": "选择 `release-notes-generator`，不改派 `formal-docs-sync`、`docs-audit` 或 `docs-site-bootstrap`，也不把 GitHub Release 交付当作 router 当前执行范围。"
+        },
+        {
+          "id": "preserves_handoff_context",
+          "description": "保留入口上下文",
+          "text": "保留 request_type、change_tier、feature_path、release_version、release_scope、host_repository、source_documents、evidence_sources、required_output 与 blockers_risks。"
+        },
+        {
+          "id": "references_release_notes_gate_only",
+          "description": "仅指向 specialist gate",
+          "text": "仅指向 `release-notes-generator/SKILL.md` 及其内部指令作为权威执行 gate，不在 router 输出中复制七步流程、正文确认、metadata/index、docs checks 或 #120 handoff 的详细协议。"
+        }
+      ]
     }
   ]
 }

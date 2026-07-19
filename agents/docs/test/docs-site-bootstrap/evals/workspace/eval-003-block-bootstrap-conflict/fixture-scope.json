@@ -7,5 +7,5 @@
     "docs/site/.meta/releases.json"
   ],
   "known_conflict": "docs/site/standards/index.md differs from the packaged source asset and has no prior kept-as-is decision",
-  "omitted_target_assumption": "All other targets from the 38-asset packaged inventory classify as missing or byte-identical; the fixture materializes only enough state to verify conflict behavior."
+  "omitted_target_assumption": "All other targets from the 40-asset packaged inventory classify as missing or byte-identical; the fixture materializes only enough state to verify conflict behavior."
 }
