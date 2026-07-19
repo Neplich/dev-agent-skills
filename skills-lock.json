@@ -4,12 +4,12 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "fad1743870b729a0c834c1519df0bd08ab864402df4e306fa3381165c730c8ea"
+      "computedHash": "3d3018a24217325866dbd2afb7e5e2050e9cc4616c8249f136bb11ea7dc39680"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "bdfc99eaf76d5e41be5c1b2d05a4247e1f2a10df1d38f1c5816c6b0f3678998a"
+      "computedHash": "ba9b41225cb1778e3da077d811a50d23d8393be9e0ff9b8910f44ad75bbbe370"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
@@ -34,7 +34,7 @@
     "release-notes-generator": {
       "source": "agents/docs/skills/release-notes-generator",
       "sourceType": "local",
-      "computedHash": "a566917d3b733c0ed92c2f44ae448bece1cb26dd59170799ee2ba63add728e15"
+      "computedHash": "8f88e114c699c92c10b7e52abeccb6db46b195f204b3e02b3a9823180fd2c30b"
     },
     "roadmap-generator": {
       "source": "agents/product_manager/skills/roadmap-generator",
@@ -184,12 +184,12 @@
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",
       "sourceType": "local",
-      "computedHash": "aa7078724f381f1b47b39b259d3665d4c25033d817bb1d869e321290ee6d0d7f"
+      "computedHash": "4a600acad321363a1bb9500ae21626de98b0ab2395fcc03f82099ec64ded06f9"
     },
     "formal-docs-sync": {
       "source": "agents/docs/skills/formal-docs-sync",
       "sourceType": "local",
-      "computedHash": "7d72218011a57d138f3366f534a30b231cefd883db5436f98d341d0607274ca6"
+      "computedHash": "9a5c80d4d76d810327edb974374087eef0b5755ecb6b0562383686e50b9b7f88"
     },
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",

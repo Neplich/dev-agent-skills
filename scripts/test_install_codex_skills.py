@@ -61,13 +61,32 @@ def marketplace_data() -> dict:
     return json.loads(MARKETPLACE.read_text(encoding="utf-8"))
 
 
-def marketplace_skill_names() -> list[str]:
-    names: set[str] = set()
+def marketplace_skill_sources() -> list[tuple[str, Path]]:
+    sources: list[tuple[str, Path]] = []
     for plugin in marketplace_data()["plugins"]:
         plugin_source = ROOT / plugin["source"]
         for skill_path in plugin["skills"]:
-            names.add((plugin_source / skill_path).resolve().name)
-    return sorted(names)
+            sources.append((plugin["name"], (plugin_source / skill_path).resolve()))
+    return sources
+
+
+def marketplace_skill_map() -> dict[str, Path]:
+    sources = marketplace_skill_sources()
+    basename_counts: dict[str, int] = {}
+    for _, source in sources:
+        basename_counts[source.name] = basename_counts.get(source.name, 0) + 1
+
+    result: dict[str, Path] = {}
+    for plugin_name, source in sources:
+        install_name = source.name
+        if basename_counts[source.name] > 1:
+            install_name = f"{plugin_name.removesuffix('-agent')}-{source.name}"
+        result[install_name] = source.relative_to(ROOT)
+    return result
+
+
+def marketplace_skill_names() -> list[str]:
+    return sorted(marketplace_skill_map())
 
 
 def router_skill_names() -> list[str]:
@@ -75,16 +94,10 @@ def router_skill_names() -> list[str]:
 
 
 def skill_source_rel(skill_name: str) -> Path:
-    matched: Path | None = None
-    for plugin in marketplace_data()["plugins"]:
-        plugin_source = (ROOT / plugin["source"]).resolve()
-        for skill_path in plugin["skills"]:
-            source = (plugin_source / skill_path).resolve()
-            if source.name == skill_name:
-                matched = source.relative_to(ROOT)
-    if matched is not None:
-        return matched
-    raise AssertionError(f"unknown skill {skill_name}")
+    try:
+        return marketplace_skill_map()[skill_name]
+    except KeyError as exc:
+        raise AssertionError(f"unknown skill {skill_name}") from exc
 
 
 def scanned_skill_entries(skill_root: Path) -> list[str]:
@@ -126,10 +139,23 @@ def test_default_install_creates_hidden_mirror_and_relative_skill_symlinks(tmp_p
     assert marker["source"] == ROOT.resolve().as_posix()
     assert_relative_mirror_link(target, "pm-agent")
     assert_relative_mirror_link(target, "debugger")
-    assert_relative_mirror_link(target, "release-notes-generator")
-    assert skill_source_rel("release-notes-generator") == Path(
+    assert_relative_mirror_link(target, "pm-release-notes-generator")
+    assert_relative_mirror_link(target, "docs-release-notes-generator")
+    assert not (target / "release-notes-generator").exists()
+    assert skill_source_rel("pm-release-notes-generator") == Path(
+        "agents/product_manager/skills/release-notes-generator"
+    )
+    assert skill_source_rel("docs-release-notes-generator") == Path(
         "agents/docs/skills/release-notes-generator"
     )
+    assert (
+        "pm-agent:release-notes-generator is explicitly callable as "
+        "pm-release-notes-generator"
+    ) in result.stdout
+    assert (
+        "docs-agent:release-notes-generator is explicitly callable as "
+        "docs-release-notes-generator"
+    ) in result.stdout
     assert (
         target
         / MIRROR_DIR
@@ -168,6 +194,27 @@ def test_duplicate_skill_basename_within_one_plugin_is_rejected(tmp_path: Path) 
 
     assert result.returncode == 1
     assert "duplicate skill target name 'duplicate' in plugin 'pm-agent'" in result.stderr
+
+
+def test_reinstall_removes_obsolete_managed_unqualified_collision_alias(tmp_path: Path) -> None:
+    target = tmp_path / "skills"
+
+    first = run_installer(target)
+    assert first.returncode == 0, first.stderr + first.stdout
+
+    obsolete = target / "release-notes-generator"
+    obsolete.symlink_to(
+        Path(MIRROR_DIR) / "agents/docs/skills/release-notes-generator",
+        target_is_directory=True,
+    )
+
+    second = run_installer(target)
+
+    assert second.returncode == 0, second.stderr + second.stdout
+    assert "Removed obsolete unqualified collision aliases:" in second.stdout
+    assert not obsolete.exists()
+    assert_relative_mirror_link(target, "pm-release-notes-generator")
+    assert_relative_mirror_link(target, "docs-release-notes-generator")
 
 
 def test_routers_only_links_only_router_skills_but_keeps_full_hidden_mirror(tmp_path: Path) -> None:

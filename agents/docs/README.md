@@ -106,7 +106,8 @@ plugins:
 
 - `pm-agent` for request classification, approved release scope, feature
   catalogs, and the shared handoff contract; site Release Notes are owned by
-  this Agent's `release-notes-generator`
+  this Agent's `release-notes-generator`, while customer announcements and
+  GitHub Release work remain with PM until issue #120
 - `engineer-agent` for confirmed TRDs, implementation plans, code evidence, and
   unresolved technical impact scope
 - `qa-agent` for validation evidence

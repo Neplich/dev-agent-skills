@@ -7,35 +7,35 @@
 
 ## Test Set / Fixture Version
 
-- Fixture: `issue-116-r2-ai-hub-shaped-v2`
-- 资产：完整复用 issue #122 `assets/docs/site/**` 权威骨架与 package/scripts
-- 评估基线：`a273a00` 加本轮 issue #116 R2 working tree
-- Harness：`tmp/eval-runs/116-round2/` 的全新双方结果、独立 git repo 与全新 judge
+- Fixture: `issue-126-r3-lockfile-v1`
+- 评估基线：PR #126 R3 working tree
+- Harness：`tmp/eval-runs/126-r3-docs-release/eval-002-confirmation-gate/`
+- Fresh validation：当前会话全新 subagent 先执行 with-skill，再以同一 prompt 和 pristine fixture 作 fresh zero-skill 对照判断；未复用历史 baseline。
 
 ## Latest Result
 
-**PASS（3/3 assertions）** — 未确认时只生成完整候选页，index、metadata 与导航保持零变化；handoff 明确 blocked/unconfirmed 并等待确认。权威 #122 checks 的 74/74 结果仅作为 harness preflight，不是 release-ready 证据。
+**PASS（3/3 assertions）** — 未确认时只生成完整候选页，index、metadata 与导航保持零变化，handoff 明确 blocked/unconfirmed 并等待维护者确认。
 
 ## With-Skill Behavior
 
-- `keeps_derived_surfaces_unchanged`：PASS。未确认 SHA 记录与当前复算均证明 index、metadata、三份 VitePress config 等于 pristine；无派生面 diff。
-- `reports_unconfirmed_not_ready`：PASS。`confirmation_status: unconfirmed`、`handoff_status: blocked`、正式 `docs_checks: not_run`，updated surfaces 全为空。
-- `waits_for_explicit_confirmation`：PASS。展示完整六类正文、来源、风险与确认后路径，fixture 无确认记录，候选没有模拟确认。
-- Harness preflight：在隔离 git repo 执行 `GITHUB_BASE_SHA=HEAD npm run test:docs`，exit 0、74/74；单列为 `release_ready_evidence: false`。
+- `keeps_derived_surfaces_unchanged`：PASS。scratch git 仅出现候选 `v1.0.0.md` 与运行期依赖，`release-notes/index.md`、`.meta/releases.json` 和导航配置无 diff。
+- `reports_unconfirmed_not_ready`：PASS。候选正文没有被描述为 #120 ready；状态停在 `confirmation_status: unconfirmed` / blocked。
+- `waits_for_explicit_confirmation`：PASS。候选页完整覆盖六类证据并列出来源；fixture 没有确认记录，没有模拟确认或执行确认后的派生写入。
+- 确定性入口：在干净依赖状态执行 `npm ci --ignore-scripts` 成功。未确认流程不把 docs check 当作 release-ready 证据；一次 harness preflight 在候选页生成前因专用测试找不到 `v1.0.0.md` 为 73/74，此结果不改变确认门禁判定。
 
 ## Without-Skill Baseline
 
-- 来源：round2 同 prompt/fixture 全新生成，零 skill/README，未复用 round1。
-- baseline 在正文未确认时先行写入 index 与 metadata，也没有 blocked/unconfirmed handoff。
+- 来源：当前 fresh subagent 对同 prompt/pristine fixture 的 zero-skill control 直接判断；control 不读取或应用目标 skill 与 Docs Agent README。
+- 宿主 README 明示未确认不得改 index/metadata/navigation，因此对照可发现基本门禁；但没有目标 skill 的结构化 blocked handoff 与 #120/#117 边界，输出稳定性较弱。
 
 ## Failures
 
-- 无 assertion failure；独立 judge 未发现 harness 或协议缺陷。
+- 无 assertion failure。preflight 的缺候选页失败发生在候选生成前，只作为 harness 时序诊断保留，不作为 release-ready check。
 
 ## Next Steps
 
-- 保持正式 docs checks 与 harness preflight 分离，防止未确认候选被误报 ready。
+- 未确认 eval 的 fixture preflight 应在候选页面物化后运行，或明确排除依赖目标页面的专用测试。
 
 ## Runtime Artifact Policy
 
-- round2 运行期文件只保留在 `tmp/eval-runs/116-round2/`，不提交到 git。
+- 候选页、依赖目录、命令输出和 scratch git 仅保留在 `tmp/eval-runs/126-r3-docs-release/`，不提交到 git。

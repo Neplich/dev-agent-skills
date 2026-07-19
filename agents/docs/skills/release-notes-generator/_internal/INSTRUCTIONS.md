@@ -98,6 +98,10 @@ specialist 也不得把目标版本写入该字段以绕过审计时序。额外
 从宿主 `docs/site/package.json`、仓库脚本、贡献指南或 CI 读取权威命令，不自创
 替代检查。记录每条命令、工作目录、退出状态和结果摘要。
 
+- `package.json` 声明外部依赖且宿主尚未安装依赖时，必须先读取 lockfile；存在
+  `package-lock.json` 时执行 `npm ci --ignore-scripts` 作为确定性安装入口并记录
+  结果，然后再运行 required checks。依赖存在但没有适用 lockfile 或其他宿主
+  明确的确定性安装入口时，停止并把 handoff 标记为 blocked，不做临时无锁安装。
 - AI Hub-shaped 宿主必须在 `docs/site/` 对应工作目录执行与其 VitePress CI
   一致的 `npm run test:docs`。
 - 宿主定义额外 required docs checks 时一并执行。

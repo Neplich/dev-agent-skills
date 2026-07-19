@@ -32,6 +32,7 @@ TEST_REFERENCE_RE = re.compile(
 class SkillSpec:
     plugin_name: str
     skill_name: str
+    install_name: str
     source: Path
     source_rel: Path
 
@@ -59,6 +60,8 @@ class PreflightPlan:
     unselected_skipped: list[ExistingTarget]
     legacy_remove: list[Path]
     legacy_skipped: list[Path]
+    collision_legacy_remove: list[Path]
+    collision_legacy_skipped: list[Path]
 
 
 def repo_root() -> Path:
@@ -98,8 +101,8 @@ def parse_skill_specs(root: Path) -> list[SkillSpec]:
     if not isinstance(plugins, list) or not plugins:
         raise ValueError("marketplace must contain a non-empty plugins array")
 
-    specs: list[SkillSpec] = []
-    seen: dict[str, tuple[str, int, Path]] = {}
+    raw_specs: list[SkillSpec] = []
+    seen_within_plugin: dict[tuple[str, str], Path] = {}
 
     for plugin_index, plugin in enumerate(plugins):
         if not isinstance(plugin, dict):
@@ -124,11 +127,12 @@ def parse_skill_specs(root: Path) -> list[SkillSpec]:
 
             if not (skill_source / "SKILL.md").is_file():
                 raise ValueError(f"{skill_source}: missing SKILL.md")
-            previous = seen.get(skill_name)
-            if previous is not None and previous[0] == plugin_name:
+            duplicate_key = (plugin_name, skill_name)
+            previous = seen_within_plugin.get(duplicate_key)
+            if previous is not None:
                 raise ValueError(
                     f"duplicate skill target name {skill_name!r} in plugin {plugin_name!r}: "
-                    f"{previous[2]} and {skill_source}"
+                    f"{previous} and {skill_source}"
                 )
 
             try:
@@ -139,19 +143,40 @@ def parse_skill_specs(root: Path) -> list[SkillSpec]:
             spec = SkillSpec(
                 plugin_name=plugin_name,
                 skill_name=skill_name,
+                install_name=skill_name,
                 source=skill_source,
                 source_rel=source_rel,
             )
-            if previous is None:
-                seen[skill_name] = (plugin_name, len(specs), skill_source)
-                specs.append(spec)
-            else:
-                # Claude plugins namespace skills by plugin, while the Codex
-                # installer exposes one flat target per SKILL.md basename. Keep
-                # both sources in the hidden mirror and let the later marketplace
-                # plugin select the flat target, matching skills-lock resolution.
-                specs[previous[1]] = spec
-                seen[skill_name] = (plugin_name, previous[1], skill_source)
+            seen_within_plugin[duplicate_key] = skill_source
+            raw_specs.append(spec)
+
+    basename_counts: dict[str, int] = {}
+    for spec in raw_specs:
+        basename_counts[spec.skill_name] = basename_counts.get(spec.skill_name, 0) + 1
+
+    specs: list[SkillSpec] = []
+    install_names: dict[str, SkillSpec] = {}
+    for spec in raw_specs:
+        install_name = spec.skill_name
+        if basename_counts[spec.skill_name] > 1:
+            plugin_qualifier = spec.plugin_name.removesuffix("-agent")
+            install_name = f"{plugin_qualifier}-{spec.skill_name}"
+
+        qualified = SkillSpec(
+            plugin_name=spec.plugin_name,
+            skill_name=spec.skill_name,
+            install_name=install_name,
+            source=spec.source,
+            source_rel=spec.source_rel,
+        )
+        conflict = install_names.get(install_name)
+        if conflict is not None:
+            raise ValueError(
+                f"duplicate resolved install name {install_name!r}: "
+                f"{conflict.source} and {spec.source}"
+            )
+        install_names[install_name] = qualified
+        specs.append(qualified)
 
     return specs
 
@@ -302,7 +327,7 @@ def build_preflight_plan(
     routers_only: bool,
     force: bool,
 ) -> PreflightPlan:
-    selected_names = {spec.skill_name for spec in selected_specs}
+    selected_names = {spec.install_name for spec in selected_specs}
     selected_existing: list[ExistingTarget] = []
     selected_skipped: list[ExistingTarget] = []
     unselected_remove: list[ExistingTarget] = []
@@ -310,7 +335,7 @@ def build_preflight_plan(
     force_conflicts: list[Path] = []
 
     for spec in selected_specs:
-        target = target_root / spec.skill_name
+        target = target_root / spec.install_name
         if not (target.exists() or target.is_symlink()):
             continue
 
@@ -325,10 +350,10 @@ def build_preflight_plan(
 
     if routers_only:
         for spec in all_specs:
-            if spec.skill_name in selected_names:
+            if spec.install_name in selected_names:
                 continue
 
-            target = target_root / spec.skill_name
+            target = target_root / spec.install_name
             if not (target.exists() or target.is_symlink()):
                 continue
 
@@ -364,12 +389,27 @@ def build_preflight_plan(
         else:
             legacy_skipped.append(legacy)
 
+    collision_legacy_remove: list[Path] = []
+    collision_legacy_skipped: list[Path] = []
+    collision_basenames = {
+        spec.skill_name for spec in all_specs if spec.install_name != spec.skill_name
+    }
+    for basename in sorted(collision_basenames):
+        target = target_root / basename
+        if not (target.exists() or target.is_symlink()):
+            continue
+        if is_owned_skill_target(target, target_root):
+            collision_legacy_remove.append(target)
+        else:
+            collision_legacy_skipped.append(target)
+
     planned_removals: list[Path] = []
     if mirror.exists() or mirror.is_symlink():
         planned_removals.append(mirror)
     planned_removals.extend(existing.target for existing in selected_existing)
     planned_removals.extend(existing.target for existing in unselected_remove)
     planned_removals.extend(legacy_remove)
+    planned_removals.extend(collision_legacy_remove)
     validate_removals_do_not_touch_source(root, planned_removals)
 
     return PreflightPlan(
@@ -379,6 +419,8 @@ def build_preflight_plan(
         unselected_skipped=unselected_skipped,
         legacy_remove=legacy_remove,
         legacy_skipped=legacy_skipped,
+        collision_legacy_remove=collision_legacy_remove,
+        collision_legacy_skipped=collision_legacy_skipped,
     )
 
 
@@ -496,11 +538,11 @@ def install_selected_skill(
     plan: PreflightPlan,
     force: bool,
 ) -> InstallResult:
-    target = target_root / skill.skill_name
-    skipped = {existing.skill.skill_name: existing for existing in plan.selected_skipped}
-    existing = {existing.skill.skill_name: existing for existing in plan.selected_existing}
+    target = target_root / skill.install_name
+    skipped = {existing.skill.install_name: existing for existing in plan.selected_skipped}
+    existing = {existing.skill.install_name: existing for existing in plan.selected_existing}
 
-    if skill.skill_name in skipped:
+    if skill.install_name in skipped:
         return InstallResult(
             skill=skill,
             status="skipped",
@@ -508,7 +550,7 @@ def install_selected_skill(
             message="target exists but is not owned by this installer; left unchanged",
         )
 
-    existed = skill.skill_name in existing
+    existed = skill.install_name in existing
     was_checkout_symlink = existed and is_checkout_symlink(target)
 
     if target.exists() or target.is_symlink():
@@ -563,10 +605,22 @@ def render_results(
 
     for result in results:
         print(
-            f"- {result.status}: {result.skill.skill_name} "
+            f"- {result.status}: {result.skill.install_name} "
             f"({result.skill.plugin_name}) <- {result.skill.source_rel.as_posix()} -> {result.target} "
             f"[{result.message}]"
         )
+
+    qualified_results = [
+        result for result in results if result.skill.install_name != result.skill.skill_name
+    ]
+    if qualified_results:
+        print()
+        print("Qualified aliases for colliding skill names:")
+        for result in qualified_results:
+            print(
+                f"- {result.skill.plugin_name}:{result.skill.skill_name} "
+                f"is explicitly callable as {result.skill.install_name}"
+            )
 
     counts: dict[str, int] = {}
     for result in results:
@@ -593,6 +647,18 @@ def render_results(
         for path in plan.legacy_skipped:
             print(f"- skipped: {path}")
 
+    if plan.collision_legacy_remove:
+        print()
+        print("Removed obsolete unqualified collision aliases:")
+        for path in plan.collision_legacy_remove:
+            print(f"- removed: {path}")
+
+    if plan.collision_legacy_skipped:
+        print()
+        print("WARNING: skipped unowned unqualified collision aliases:")
+        for path in plan.collision_legacy_skipped:
+            print(f"- skipped: {path}")
+
     if routers_only:
         print()
         print("WARNING: --routers-only installed only role router skills.")
@@ -607,13 +673,13 @@ def render_results(
             print()
             print("Removed unselected managed skills for --routers-only:")
             for existing in plan.unselected_remove:
-                print(f"- removed: {existing.skill.skill_name} ({existing.skill.plugin_name}) -> {existing.target}")
+                print(f"- removed: {existing.skill.install_name} ({existing.skill.plugin_name}) -> {existing.target}")
 
         if plan.unselected_skipped:
             print()
             print("WARNING: skipped unowned unselected skill names for --routers-only:")
             for existing in plan.unselected_skipped:
-                print(f"- skipped: {existing.skill.skill_name} -> {existing.target}")
+                print(f"- skipped: {existing.skill.install_name} -> {existing.target}")
 
     if manifests:
         print()
@@ -666,6 +732,8 @@ def main(argv: list[str]) -> int:
         target_root.mkdir(parents=True, exist_ok=True)
 
         for path in plan.legacy_remove:
+            remove_existing(path)
+        for path in plan.collision_legacy_remove:
             remove_existing(path)
         for existing in plan.unselected_remove:
             remove_existing(existing.target)

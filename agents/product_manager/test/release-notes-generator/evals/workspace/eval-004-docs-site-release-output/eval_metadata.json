@@ -2,8 +2,8 @@
   "eval_id": "eval-004-docs-site-release-output",
   "eval_name": "docs-site-release-output",
   "workspace_root": "agents/product_manager/test/release-notes-generator/evals/workspace/eval-004-docs-site-release-output",
-  "skill_availability_goal": "Verify that release-notes-generator writes reader-facing notes to an existing docs site while preserving versioned changelog archival contracts.",
-  "prompt": "请为 v1.4.0 生成发布说明。仓库已经包含文档站，请按当前仓库约定给出应写入的目标路径，并保留版本化 changelog 归档与根索引要求。",
+  "skill_availability_goal": "Verify that PM release-notes-generator keeps customer announcement, GitHub Release, and changelog work while handing the formal-site version page to docs-agent:release-notes-generator.",
+  "prompt": "请为 v1.4.0 准备客户公告和 GitHub Release 正文。仓库已经包含文档站，并且还需要 docs/site/release-notes/v1.4.0.md；请按当前仓库职责边界给出处理方案，并保留版本化 changelog 归档与根索引要求。",
   "fixture_context": [
     "src/release/version.txt",
     "docs/site/standards/change-map.yaml",

@@ -225,7 +225,8 @@ status. Name the repository or release evidence in `source_documents` and do not
 use `N/A` to skip feature-path clarification for product feature work.
 
 PM-only specialist routes such as `feature_catalog`, `competitive_research`,
-`battlecard`, `changelog`, `release_notes`, `roadmap`, and `repo_status` do not
+`battlecard`, `changelog`, customer-announcement or GitHub-Release
+`release_notes`, `roadmap`, and `repo_status` do not
 require a cross-role handoff packet when they stay inside PM. For non-feature
 repository, release, or market context, set feature-scope fields to `N/A`, keep
 `feature_path_evidence: []`, and continue with the selected PM specialist
@@ -240,8 +241,8 @@ instead of blocking or inventing a feature path.
 | Confirmed acceptance, exploratory, bug analysis, smoke, retest, or regression work | `QA` | Test basis, expected behavior, environment, affected flows, result format. |
 | Confirmed deployment, CI/CD, environment, Docker, Helm, release readiness, rollback, or runbook work | `DevOps` | Environment, release target, rollback expectation, operational risk. |
 | Confirmed AppSec, auth/authz, dependency, secret, privacy, upload, webhook, or data-flow review | `Security` | Risk surface, assets, permissions, data categories, remediation expectations. |
-| Confirmed formal documentation site bootstrap, post-feature / post-deployment / post-release formal-docs synchronization, existing formal-docs backfill, or release documentation audit | `Docs` | Source feature / deployment / release evidence, formal-docs scope, target site or pages, synchronization or audit output; `docs-agent` routes bootstrap, synchronization, backfill, and audit to the matching specialist. |
-| Inherited-project feature inventory, competitive research, battlecards, changelogs, release notes, roadmaps, or repository status | Named PM specialist | PM-owned route context only: selected specialist, source repository or release context, optional `N/A` feature scope for non-feature work, and any follow-up handoff condition. |
+| Confirmed formal documentation site bootstrap, post-feature / post-deployment / post-release formal-docs synchronization, existing formal-docs backfill, versioned `docs/site/release-notes/` delivery, or release documentation audit | `Docs` | Source feature / deployment / release evidence, formal-docs scope, target site or pages, synchronization, site Release Notes, or audit output; `docs-agent` routes the request to the matching specialist. |
+| Inherited-project feature inventory, competitive research, battlecards, changelogs, customer announcements, GitHub Release bodies/operations, roadmaps, or repository status | Named PM specialist | PM-owned route context only: selected specialist, source repository or release context, optional `N/A` feature scope for non-feature work, and any follow-up handoff condition. GitHub Release work remains with PM until issue #120. |
 | New feature, existing update, unclear scope, or expectation change not yet confirmed | PM specialist | Keep the request in PM; do not send a ready handoff packet. |
 
 PRD, TRD, implementation plans, QA reports, and other role-owned process

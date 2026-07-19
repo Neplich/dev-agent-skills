@@ -10,7 +10,7 @@ current-state writing, backfill batching, change-map growth, and reporting.
 | --- | --- | --- | --- |
 | Feature delivery | Approved PRD; Confirmed TRD impact evidence from frontmatter `related_code` or the impacted modules/interfaces section; confirmed `IMPLEMENTATION_PLAN.md`; actual diff and tests | API, database, and design docs plus change-map updates; feature-level design output is subject to the Section 2 closeout gate | API docs and API `code_glob` entries only |
 | Deployment verification | TRD deployment surface; deployment configuration; verification commands and results; environment differences | Operations runbook and necessary release-preparation entries | Future iteration; not part of MVP acceptance |
-| Release | Release scope; verified version or tag; changelog and release-process documents; audit conclusion | Product manual; release-note content is produced by `pm-agent:release-notes-generator`, and sync only verifies that the existing release notes are placed under the formal site when present and agree with the version context | Future iteration; not part of MVP acceptance |
+| Release | Release scope; verified version or tag; changelog and release-process documents; audit conclusion | Product manual; versioned site Release Notes are produced by `docs-agent:release-notes-generator`, and sync only verifies that existing site pages agree with the placement and version context. GitHub Release bodies and operations remain with `pm-agent:release-notes-generator` until issue #120 changes that ownership | Future iteration; not part of MVP acceptance |
 
 Existing-system backfill is the fourth execution mode in Section 4. It does not
 require a feature implementation plan and shares the same evidence, writing,

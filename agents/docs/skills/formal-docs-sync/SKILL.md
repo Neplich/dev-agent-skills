@@ -26,9 +26,11 @@ Direct invocation does not bypass the mode-specific gate.
   results, and known environment differences.
 - **Release:** require confirmed release scope, a verified version or tag,
   changelog and release-process evidence, and the documentation audit
-  conclusion. Release-note content remains owned by
-  `pm-agent:release-notes-generator`; this skill only verifies its placement
-  and version context.
+  conclusion. Versioned pages under `docs/site/release-notes/` are owned by
+  `docs-agent:release-notes-generator`; this skill only verifies their
+  placement and version context. GitHub Release bodies and operations remain
+  with `pm-agent:release-notes-generator` until issue #120 changes that
+  ownership.
 - **Existing-system backfill:** accept an explicit maintainer backfill request,
   a confirmed repository target, and either a PM feature catalog or permission
   to perform the bounded discovery pass. An implementation plan is not required
