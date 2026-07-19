@@ -109,15 +109,16 @@
       "id": "eval-008-pre-tag-success",
       "name": "Tag 前完整核验并统一盖章",
       "description": "验证维护者已确认 target_release_version、匹配 tag 尚不存在且完整影响域和版本表面均 verified 时统一盖章并返回 ready_for_tag。",
-      "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已明确确认 `target_release_version: v1.2.0`，`base_ref: v1.1.0`、`target_ref: release-head`，且同名 tag 尚不存在。核对完整受影响页面、#116 handoff、Release Notes、索引、`.meta/releases.json` 和宿主版本事实；全部通过后统一盖章、逐页回读，并把盖章结果与内容证据原子回写同一持久化报告。",
-      "expected_output": "完整影响域全部 verified，统一盖章为 v1.2.0 并回读；同一记录含盖章页面、章前/章后值、页面与版本面内容哈希、审计 target_ref、盖章后 HEAD、ready_for_tag 与时间；只读核对 releases.json，且明确不表示已发布。",
+      "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已明确确认 `target_release_version: v1.2.0`，`base_ref: v1.1.0`、`target_ref: release-head`，且同名 tag 尚不存在。核对完整受影响页面、#116 handoff、Release Notes、索引、`.meta/releases.json` 和宿主版本事实；全部通过后，把受影响页面与本次 verified 且含 `last_verified_version` 的 Release Notes/索引 Markdown 组成统一盖章集，逐页回读，并将完整盖章与成功审计记录放入宿主 release PR 分支上的同一个普通盖章后 commit。",
+      "expected_output": "完整影响域和 release surface 全部 verified，两张 API 页、Release Notes 页及其 Markdown 索引统一盖章为 v1.2.0 并回读；成功记录与这些盖章由同一普通盖章后 commit 引入，可信 pre-tag handoff 以 commit SHA/tree hash/记录路径/blob hash 锚定提交版记录，记录含各页章后内容哈希；只读核对 releases.json，返回 ready_for_tag 且明确不表示已发布。",
       "workspace": "workspace/eval-008-pre-tag-success",
       "assertions": [
         {"id": "accepts_confirmed_version_without_tag", "description": "tag 不存在仍可执行 pre-tag", "text": "分别记录 `base_ref`、`target_ref` 和维护者确认的 `target_release_version: v1.2.0`；不因同名 tag 尚不存在而阻塞。"},
-        {"id": "verifies_complete_set_and_surfaces", "description": "完整集合和版本表面通过", "text": "将 change-map 要求的两张 API 页面纳入完整影响域并逐页判为 `verified`，同时核对 #116 handoff、Release Notes、索引、`.meta/releases.json` 与宿主版本事实均为 `v1.2.0`。"},
-        {"id": "records_pre_stamp_values", "description": "报告记录盖章前值", "text": "审计报告逐页记录盖章前的 `last_verified_version`：catalog-items 为 `v1.1.0`，catalog-status 为 `unverified`，且不新增 `baseline_verified_version` frontmatter。"},
-        {"id": "stamps_complete_set_atomically", "description": "完整集合统一盖章", "text": "只在所有条件通过后，将两张受影响页面的 `last_verified_version` 在一次审计操作中统一更新为 `v1.2.0` 并回读核对；不修改 `.meta/releases.json`。"},
-        {"id": "persists_stamp_and_content_evidence", "description": "成功后原子持久化盖章与内容证据", "text": "逐页回读通过后，原子回写并回读同一 `audit-v1.2.0.md`：记录两张盖章页面清单、各自章前/章后 `last_verified_version`、章后精确字节 SHA-256，Release Notes、索引、`.meta/releases.json` 与宿主版本事实文件的路径和 SHA-256，审计 `target_ref` commit、盖章后 `HEAD`、最终 `ready_for_tag` 与结果时间；任一步失败不得写成功结论。"},
+        {"id": "verifies_complete_set_and_surfaces", "description": "完整集合和版本表面通过", "text": "将 change-map 要求的两张 API 页面纳入完整影响域并逐页判为 `verified`，同时核对 #116 handoff、Release Notes、索引、`.meta/releases.json` 与宿主版本事实均为 `v1.2.0`；Release Notes 与索引 Markdown 也先完成事实核验。"},
+        {"id": "records_pre_stamp_values", "description": "报告记录盖章前值", "text": "审计报告逐页记录统一盖章集的盖章前 `last_verified_version`：catalog-items 与索引为 `v1.1.0`，catalog-status 与 Release Notes 页为 `unverified`，且不新增 `baseline_verified_version` frontmatter。"},
+        {"id": "stamps_complete_set_atomically", "description": "受影响页与 release Markdown 统一盖章", "text": "只在所有条件通过后，将两张受影响 API 页面、`docs/site/release-notes/v1.2.0.md` 和 `docs/site/release-notes/index.md` 的 `last_verified_version` 在一次审计操作中统一更新为 `v1.2.0` 并回读核对；不修改 `.meta/releases.json`。"},
+        {"id": "commits_stamp_and_record_together", "description": "盖章与成功记录落同一普通 commit", "text": "完整统一盖章集与成功 `audit-v1.2.0.md` 由宿主 release PR 分支上的同一个普通盖章后 commit 引入；不得只锚定工作区，也不得把盖章和记录拆到不同 commit。"},
+        {"id": "persists_stamp_and_content_evidence", "description": "可信 handoff 锚定提交版记录与内容证据", "text": "成功记录从盖章后 commit 回读，包含四张统一盖章页面清单、各自章前/章后 `last_verified_version` 与章后精确字节 SHA-256，其他版本面路径和 SHA-256、审计 `target_ref` commit、最终 `ready_for_tag` 与结果时间；commit 创建后，可信 pre-tag handoff 持久化盖章后 commit SHA、tree hash、记录路径和 blob hash。记录不得自包含其所在 commit/tree identity，任一步失败不得写成功结论。"},
         {"id": "returns_ready_for_tag_not_published", "description": "返回正确阶段状态", "text": "pre-tag 结果为 `ready_for_tag`，并明确该状态只表示可创建 tag，不表示版本已经发布或 release verified。"}
       ]
     },
@@ -138,14 +139,14 @@
     {
       "id": "eval-010-post-tag-match",
       "name": "Tag 后版本事实完全一致",
-      "description": "验证 tag commit 与 pre-tag 记录的全部页面和版本面内容哈希一致时返回 release_verified。",
-      "prompt": "执行 fixture 中定义的 post-tag audit。读取已有 pre-tag 审计记录并解析实际 `v1.2.0` tag commit；快路径不成立时，在 tag commit 处逐项重算受影响页面和版本面内容哈希，与记录比较。只做最终复核，不重新生成内容或盖章。",
-      "expected_output": "实际 tag commit 虽不同于盖章后 HEAD 且 tree 不同，但 tag commit 处所有记录路径的内容哈希完全匹配 pre-tag 审计态，内容绑定成立并返回 release_verified；只追加 post-tag 证据。",
+      "description": "验证 tag commit 的 tree hash 与记录的盖章后 tree hash 相等时按快路径返回 release_verified。",
+      "prompt": "执行 fixture 中定义的 post-tag audit。从 pre-tag handoff 锚定的盖章后 commit 读取记录，并解析实际 `v1.2.0` tag commit；按 Git tree hash 语义判断快路径。只做最终复核，不重新生成内容或盖章。",
+      "expected_output": "实际 tag commit 虽不同于盖章后 commit，但其 tree hash 与记录的盖章后 tree hash 相等，快路径内容绑定成立并返回 release_verified；只追加 post-tag 证据。",
       "workspace": "workspace/eval-010-post-tag-match",
       "assertions": [
-        {"id": "reads_valid_pre_tag_record", "description": "严格读取成功 pre-tag 记录", "text": "读取 `audit-v1.2.0.md` 中与 pre-tag 成功回写严格对应的字段：审计 `target_ref` commit、盖章后 `HEAD`、盖章页面清单、逐页章前/章后值、页面和版本面 SHA-256、`ready_for_tag` 与结果时间；不从当前文件补造缺失字段。"},
-        {"id": "resolves_actual_tag_commit", "description": "解析实际 tag commit", "text": "解析实际 tag `v1.2.0` 指向的 commit，并记录其与盖章后 `HEAD`/tree 的快路径比较结果；不得只比较 tag 名与版本字符串。"},
-        {"id": "binds_tag_commit_by_content", "description": "一般路径逐项重算内容哈希", "text": "因 tag commit 不等于盖章后 `HEAD` 且 tree 不同，走一般路径，在 tag commit 处逐项重算两张受影响页面、Release Notes、索引、`.meta/releases.json` 与宿主版本事实文件的精确字节 SHA-256；路径集合与 pre-tag 记录完全一致，因此内容绑定成立。"},
+        {"id": "reads_valid_pre_tag_record", "description": "从可信 handoff 锚定的 commit 严格读取记录", "text": "使用可信 pre-tag handoff 的盖章后 commit SHA、tree hash、记录路径和 blob hash，通过 `git show <盖章后SHA>:docs/site/.meta/audit/audit-v1.2.0.md` 读取并校验提交版记录；记录要求审计 `target_ref`、统一盖章页面清单及逐页章前/章后值和 SHA-256、其他版本面 SHA-256、`ready_for_tag` 与结果时间，不从工作区补造字段。"},
+        {"id": "resolves_actual_tag_commit", "description": "解析实际 tag commit 与 tree", "text": "解析实际 tag `v1.2.0` 指向的 commit 及其 Git tree hash；不得只比较 tag 名、版本字符串或 commit identity。"},
+        {"id": "binds_tag_commit_by_tree_hash", "description": "仅以 tree hash 相等命中快路径", "text": "实际 tag commit 虽不同于盖章后 commit，但 tag commit tree hash 与记录的盖章后 tree hash 完全相等，因此命中快路径并建立内容绑定；不得因 commit SHA 相等单独放行。"},
         {"id": "returns_release_verified", "description": "返回 tag 后成功状态", "text": "证据完整一致时 post-tag 阶段结果为 `release_verified`，不退化为 `ready_for_tag`。"},
         {"id": "does_not_regenerate_or_restamp", "description": "只复核不重新生成", "text": "只向既有审计记录追加 post-tag 核对证据；不重新生成 Release Notes、索引、release metadata、GitHub Release 内容或文档盖章。"}
       ]
@@ -153,16 +154,18 @@
     {
       "id": "eval-011-post-tag-mismatch",
       "name": "Tag 名正确但审计内容漂移",
-      "description": "验证实际 tag 名正确但 tag commit 内容与 pre-tag 审计态漂移时 blocked，并要求重跑 pre-tag。",
-      "prompt": "执行 fixture 中定义的 post-tag audit。已有完整 pre-tag 记录针对 `target_release_version: v1.2.0` 且曾返回 `ready_for_tag`，实际 tag 名也是 `v1.2.0`，但 tag commit 不同于盖章后 HEAD/tree，且其中 catalog-status 页面内容已漂移。请逐项重算内容哈希并给出阶段结果；不要重写 release 内容来消除冲突。",
-      "expected_output": "实际 tag 名 v1.2.0 正确，但 tag commit 处 catalog-status 内容哈希与 pre-tag 记录不一致，内容绑定失败并返回 blocked；要求完整重跑 pre-tag，不返回 release_verified，不重生成内容或重盖章。",
+      "description": "验证 tag 内容漂移时 blocked，提交版记录抵抗当前副本篡改，并给出两条只由维护者执行的救济路径。",
+      "prompt": "执行 fixture 中定义的 post-tag audit。可信 pre-tag handoff 锚定的提交版记录完整正确，但当前路径副本已被篡改；实际 tag 名是 `v1.2.0`，tag tree 与盖章后 tree 不同，且 tag commit 中 catalog-status 页面内容漂移。请以提交版记录为准逐项重算内容哈希并给出阶段结果；不要执行 tag 操作或重写 release 内容。",
+      "expected_output": "报告当前副本与提交版记录不一致并以 `git show <盖章后SHA>:<记录路径>` 的提交版为准；catalog-status 哈希漂移导致 blocked；给维护者同版本纠正 tag 后重跑（旧记录 superseded）或放弃版本并确认新版本完整重跑两条选择，docs-audit 不自行删除、移动或创建 tag。",
       "workspace": "workspace/eval-011-post-tag-mismatch",
       "assertions": [
-        {"id": "accepts_correct_tag_name_but_checks_commit", "description": "tag 名正确仍检查 commit 内容", "text": "保留实际 tag 与 `target_release_version` 均为 `v1.2.0` 的事实，同时解析 tag commit 并确认其不等于记录的盖章后 `HEAD` 且 tree 不同；不得因 tag 名正确直接放行。"},
+        {"id": "reads_anchored_record_not_tampered_copy", "description": "从盖章后 commit 读取记录抵抗篡改", "text": "使用可信 pre-tag handoff 的盖章后 SHA 执行等价于 `git show 3333333:docs/site/.meta/audit/audit-v1.2.0.md` 的读取，以 fixture 提供的提交版记录为权威；明确报告当前路径副本已被篡改且与提交版不同，不使用当前副本的伪造字段。"},
+        {"id": "accepts_correct_tag_name_but_checks_commit", "description": "tag 名正确仍检查 commit 内容", "text": "保留实际 tag 与 `target_release_version` 均为 `v1.2.0` 的事实，同时解析 tag commit/tree 并确认 tag tree 与提交版记录的盖章后 tree 不同；不得因 tag 名正确直接放行。"},
         {"id": "detects_audited_content_drift", "description": "逐项哈希识别审计内容漂移", "text": "在 tag commit 处逐项重算记录中的页面和版本面 SHA-256，明确 `docs/site/api/catalog-status.md` 哈希与 pre-tag 审计态不一致，其余路径匹配也不能掩盖该漂移。"},
         {"id": "invalidates_pre_tag_handoff", "description": "内容漂移阻断旧 ready_for_tag", "text": "说明 tag commit 未绑定到已审计内容，既有 `ready_for_tag` 不可升级，阶段结果为 `blocked`。"},
-        {"id": "does_not_return_release_verified", "description": "不返回成功状态并要求重跑", "text": "不得返回 `release_verified`，必须要求按当前 tag 内容重新执行完整 pre-tag audit，而不是仅重新确认 tag 名。"},
-        {"id": "does_not_rewrite_release_content", "description": "不重生成内容掩盖冲突", "text": "不修改页面盖章，不重生成 Release Notes、索引、`.meta/releases.json`、GitHub Release 内容，也不创建或移动 tag。"}
+        {"id": "offers_two_maintainer_remedies", "description": "报告两条维护者救济路径", "text": "blocked 报告同时给出两条由维护者选择的路径：(a) 宿主删除或移动错误 tag 后，以同一 `target_release_version: v1.2.0` 完整重跑 pre-tag，并把旧记录标为 `superseded`；(b) 放弃 `v1.2.0`，明确确认新的 `target_release_version` 并完整重跑 pre-tag。"},
+        {"id": "allows_pre_tag_reentry_after_selection", "description": "维护者选定救济后允许 pre-tag 重入", "text": "说明存在 tag 但其内容绑定已判漂移且维护者已明确选择救济路径时，可在记录选择与宿主 tag 状态后重新进入完整 pre-tag；不能把 tag 曾存在本身当成永久阻塞。"},
+        {"id": "does_not_rewrite_or_operate_tag", "description": "不重生成内容且 docs-audit 不操作 tag", "text": "docs-audit 只裁定、记录漂移与维护者选择；不修改页面盖章，不重生成 Release Notes、索引、`.meta/releases.json` 或 GitHub Release 内容，也不自行创建、删除或移动 tag。"}
       ]
     }
   ]

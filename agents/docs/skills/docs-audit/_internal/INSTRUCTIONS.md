@@ -36,6 +36,14 @@ Select exactly one phase:
 - **Post-tag:** the actual tag exists. Run Section 7 against the persisted,
   still-valid pre-tag record. Do not rerun generation or unified stamping.
 
+An existing tag normally selects post-tag. One narrow exception permits
+pre-tag re-entry: post-tag has already classified the tag's content binding as
+drifted, the maintainer has explicitly selected one of the remediation paths
+in Section 7, and any required tag deletion or movement is performed by the
+host maintainer outside docs-audit. Record that selection and the resulting
+tag state before starting the complete pre-tag protocol; docs-audit never
+deletes, moves, or creates a tag.
+
 When no confirmed release version exists, a read-only diagnostic fact review
 may still describe the affected pages, but the audit result remains `blocked`:
 it cannot persist a versioned audit report, produce a phase success, or alter
@@ -203,25 +211,43 @@ Run the pre-tag protocol in this order:
    Release Notes index, `docs/site/.meta/releases.json`, and host version facts
    against `target_release_version`. Audit verifies these release surfaces; it
    does not generate Release Notes or create or maintain release metadata.
-4. Record each affected page's current `last_verified_version` in the audit
-   report before any stamp write. This is the historical baseline for this run;
-   do not add `baseline_verified_version` or any other baseline frontmatter.
-5. Only when the complete affected set is `verified`, all evidence is complete,
-   and all release surfaces agree may Section 6 update every affected page's
-   `last_verified_version` together to `target_release_version`.
-6. Permit that unified stamp even when no matching tag exists yet.
-7. After read-back proves the complete stamp, compute SHA-256 over the exact
-   post-stamp bytes of every affected page and every release-version surface,
+4. Define the unified stamp set as the union of the complete affected-page set
+   and every Markdown release-version surface verified by this run that carries
+   `last_verified_version`, including the target-version Release Notes page and
+   its Markdown index. Deduplicate paths. Non-Markdown release metadata and host
+   version facts remain verified, hashed, read-only surfaces.
+5. Record each unified-stamp page's current `last_verified_version` in the
+   audit report before any stamp write. This is the historical baseline for
+   this run; do not add `baseline_verified_version` or any other baseline
+   frontmatter.
+6. Only when every page in the unified stamp set is factually `verified`, all
+   evidence is complete, and all release surfaces agree may Section 6 update
+   every unified-stamp page's `last_verified_version` together to
+   `target_release_version`.
+7. Permit that unified stamp even when no matching tag exists yet.
+8. After read-back proves the complete stamp, compute SHA-256 over the exact
+   post-stamp bytes of every unified-stamp page and every other file-backed
+   release-version surface,
    including the confirmed Release Notes page, its version index,
    `docs/site/.meta/releases.json`, the issue #116 handoff when file-backed,
-   and each file backing the host version facts. Record the audited
-   `target_ref` commit and the post-stamp `HEAD` commit with those hashes.
-8. Atomically replace the same persisted pre-tag record with the successful
-   stamp result: stamped-page list, each page's pre-stamp and post-stamp
-   `last_verified_version`, post-stamp page hashes, release-surface hashes,
-   audited `target_ref`, post-stamp `HEAD`, final `ready_for_tag`, and result
-   time. Read this final record back before returning `ready_for_tag`. This
-   means ready for tag creation, never already published or released.
+   and each file backing the host version facts.
+9. Atomically replace the same persisted pre-tag record with the successful
+   stamp result: unified-stamp page list, each page's pre-stamp and post-stamp
+   `last_verified_version`, post-stamp page hashes, other release-surface
+   hashes, audited `target_ref`, final `ready_for_tag`, and result time.
+10. Stage the complete unified-stamp set and that successful audit-record update
+    together and create one ordinary commit on the host release PR branch (the
+    **post-stamp commit**). The stamp and successful record must be introduced
+    by that same commit, not left only in the working tree or split across
+    commits. After Git creates the commit, persist a trusted pre-tag handoff
+    anchor containing the post-stamp commit SHA, its resolved Git tree hash,
+    the record path, and that path's Git blob hash. The committed record itself
+    must contain every unified-stamp page's post-stamp content hash; it cannot
+    self-contain its own commit or tree identity. Read the record back from the
+    anchored commit with `git show <post-stamp-commit>:<record-path>`, verify its
+    blob hash and the handoff's commit/tree anchor, and only then return
+    `ready_for_tag`. A working-tree state is never a valid anchor. This means
+    ready for tag creation, never already published or released.
 
 Return `blocked` with no stamp when any of the following is true:
 
@@ -241,8 +267,8 @@ not itself make a page stale or block it from becoming factually `verified`.
 Never stamp only a `verified` subset. If `target_release_version` changes after
 the audit, the report, unified stamp conclusion, and `ready_for_tag` result are
 immediately invalid; rerun the complete pre-tag audit for the new value.
-If stamping, page read-back, hashing, atomic record replacement, or final
-record read-back fails, return `blocked`. The persisted record may retain
+If stamping, page read-back, hashing, atomic record replacement, post-stamp
+commit creation, or committed-record read-back fails, return `blocked`. The persisted record may retain
 diagnostic or pre-stamp evidence, but it must not contain a successful stamp
 conclusion, `ready_for_tag`, or a success time.
 
@@ -252,8 +278,8 @@ Assign final statuses from this table after fact verification:
 
 | Status | Decision rule | Pre-tag effect |
 | --- | --- | --- |
-| `verified` | Every material declaration has current code or test evidence and no omission was found. | Eligible for complete-set evaluation; stamp only when every affected page is verified. |
-| `stale` | Fact-layer review confirms that a material declaration is no longer synchronized with current code, or a frontmatter field is invalid. An older release anchor or `unverified` only lowers trust and broadens verification; it is advanced by unified stamping after the complete affected set is verified. | Blocked; synchronize and re-audit the documentation. |
+| `verified` | Every material declaration has current code or test evidence and no omission was found. | Eligible for unified-set evaluation; stamp only when every page in the unified stamp set is verified. |
+| `stale` | Fact-layer review confirms that a material declaration is no longer synchronized with current code, or a frontmatter field is invalid. An older release anchor or `unverified` only lowers trust and broadens verification; it is advanced by unified stamping after the complete unified stamp set is verified. | Blocked; synchronize and re-audit the documentation. |
 | `mismatch` | A document declaration directly conflicts with current code or test fact. | Blocked; confirm whether documentation or implementation must change, then re-audit. |
 
 Any `stale`, `mismatch`, page that remains unverified after fact review, or
@@ -300,11 +326,11 @@ Include at least:
 
 - Hash algorithm: SHA-256 over exact file bytes
 - Audited target_ref: <resolved target_ref commit>
-- Post-stamp HEAD: <HEAD resolved after successful page stamping and read-back>
+- Record path: <repository-relative audit record path committed with the stamp>
 - Stamped pages: <path, pre-stamp last_verified_version, post-stamp last_verified_version, post-stamp SHA-256>
 - Release-surface content evidence: <surface, path, post-stamp SHA-256>
 - Stamp read-back: <complete / failed>
-- Atomic record read-back: <complete / failed>
+- Committed record read-back: <git show from post-stamp commit complete / failed>
 - Ready result time: <timestamp written only on success>
 
 ## Conclusion
@@ -319,24 +345,35 @@ Read the report back after writing and verify the three independent inputs,
 inventory, pre-stamp baselines, release surfaces, evidence, statuses, blockers,
 commands, and phase result.
 
+After the ordinary post-stamp commit is created, persist its commit SHA, tree
+hash, this record path, and this record's Git blob hash in the trusted pre-tag
+handoff. This external anchor avoids a Git self-reference: the record cannot
+contain the identity of the commit or tree that contains the record.
+
 ## 6. Unified Version Stamp
 
 Stamp only during a valid pre-tag audit and only when all conditions are true:
 
-1. every page in the complete affected set has a final `verified` conclusion
+1. every page in the unified stamp set has a final `verified` conclusion
    and there is no unresolved evidence gap; and
 2. Release Notes, the version index, `docs/site/.meta/releases.json`, and host
    version facts all match the maintainer-confirmed `target_release_version`.
 
 Then, in one audit operation:
 
-- update every affected page's `last_verified_version` from `unverified` or an
-  older anchor to `target_release_version`; and
-- read all affected pages back to verify that the complete stamp is consistent;
-- hash the exact post-stamp bytes of every affected page and file-backed
+- update every page in the unified stamp set (the affected-page set union all
+  verified Markdown release surfaces carrying `last_verified_version`) from
+  `unverified` or an older anchor to `target_release_version`; and
+- read all unified-stamp pages back to verify that the complete stamp is consistent;
+- hash the exact post-stamp bytes of every unified-stamp page and file-backed
   release-version surface; and
 - atomically write the successful stamp fields and `ready_for_tag` result back
-  to the same pre-tag record, then read that record back.
+  to the same pre-tag record; and
+- commit the full stamp set and successful record together as one ordinary
+  post-stamp commit on the host release PR branch, then verify the committed
+  record and persist the trusted handoff tuple `(post-stamp commit SHA, tree
+  hash, record path, record blob hash)`. Do not use an uncommitted working tree
+  as the successful record anchor.
 
 Do not stamp a verified subset when another page is `stale`, `mismatch`, or
 blocked by `unverified` or missing evidence. The matching tag is not required
@@ -351,15 +388,23 @@ Run the post-tag protocol in this order:
 
 1. Read the actual tag and resolve its peeled commit; a missing tag or
    unresolvable tag commit is a blocker.
-2. Read the persisted pre-tag record. Require the exact fields written by the
-   successful pre-tag path: `base_ref`, audited `target_ref` commit,
-   `target_release_version`, post-stamp `HEAD`, stamped-page list, per-page
+2. Take the post-stamp commit SHA from the trusted pre-tag handoff and read the
+   persisted pre-tag record from that anchor with
+   `git show <post-stamp-commit>:<record-path>`. Do not use the working-tree
+   record or a later revision as the authority. If the current-path copy differs
+   from the committed record, report the difference and continue with the
+   committed record. Require the exact fields written by the successful pre-tag
+   path: `base_ref`, audited `target_ref` commit,
+   `target_release_version`, unified-stamp page list, per-page
    pre/post `last_verified_version`, every post-stamp page and release-surface
    SHA-256, `ready_for_tag`, and its result time. Missing fields are evidence
-   gaps, not values to reconstruct from current files.
+   gaps, not values to reconstruct from current files. Independently require
+   the trusted handoff's post-stamp tree hash, record path, and record blob hash;
+   verify that the `git show` bytes match that blob before consuming the record.
 3. Bind the tag commit to the recorded audited content:
-   - Fast path: binding holds when the peeled tag commit equals the recorded
-     post-stamp `HEAD`, or their resolved Git trees are identical.
+   - Fast path: resolve the peeled tag commit's Git tree hash. Binding holds
+     only when that tree hash equals the recorded post-stamp tree hash. Commit
+     identity alone is not a separate fast-path condition.
    - General path: at the peeled tag commit, read every recorded affected page
      and release-surface path (for example with
      `git show <tag-commit>:<path>`), recompute SHA-256 over those exact bytes,
@@ -371,10 +416,16 @@ Run the post-tag protocol in this order:
    also match exactly.
 5. Return `release_verified` only when content binding succeeds, the pre-tag
    record remains valid, and all evidence is complete and consistent.
-6. Return `blocked` and require a complete pre-tag rerun when any recorded path
-   is missing or any content hash drifts, including when the tag name is
-   correct. Also return `blocked` when the tag is missing, the pre-tag record
-   was invalidated, or evidence is missing.
+6. Return `blocked` when any recorded path is missing or any content hash
+   drifts, including when the tag name is correct. The report must present two
+   maintainer-selected remediation paths: (a) the host maintainer deletes or
+   moves the incorrect tag, reruns the complete pre-tag audit with the same
+   `target_release_version`, and the old record is marked `superseded`; or (b)
+   the maintainer abandons that version, confirms a new
+   `target_release_version`, and reruns the complete pre-tag audit. docs-audit
+   records and adjudicates the selected path only; it never deletes, moves, or
+   creates a tag. Also return `blocked` when the tag is missing, the pre-tag
+   record was invalidated, or evidence is missing.
 
 Post-tag audit performs final consistency verification only. Do not regenerate
 Release Notes, indexes, release metadata, documentation, GitHub Release
@@ -388,8 +439,8 @@ blockers, review commands, and `release_verified` or `blocked` result.
 
 Return the persisted audit report and exactly one phase result:
 
-- **`ready_for_tag`:** pre-tag audit passed and the complete affected set was
-  stamped to `target_release_version`; do not call the version published.
+- **`ready_for_tag`:** pre-tag audit passed and the complete unified stamp set
+  was stamped to `target_release_version`; do not call the version published.
 - **`release_verified`:** post-tag audit proved the actual tag and all release
   surfaces match the still-valid pre-tag record.
 - **Blocked:** list every `stale`, `mismatch`, and evidence-gap item with the

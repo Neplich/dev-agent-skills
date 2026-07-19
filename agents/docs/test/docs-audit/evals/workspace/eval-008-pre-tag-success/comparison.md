@@ -7,42 +7,49 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: A3 / 2026-07-19
-- Assertions: 6
+- Fixture version: A4 / 2026-07-19
+- Assertions: 7
 
 ## Latest Result
 
-**PASS — 6 / 6 assertions passed.** Fresh with-skill 候选在 tag 尚不存在时完成完整 pre-tag 核验，将两页统一盖章为 `v1.2.0` 并回读，把盖章结果及页面/版本面哈希原子持久化后返回不代表已发布的 `ready_for_tag`。
+**PASS — 7 / 7 assertions passed.** 本轮 fresh with-skill agent 将完整影响域和 release surfaces 判为 `verified`，把两张 API 页、Release Notes 页及其 Markdown 索引统一盖章为 `v1.2.0`，并确认四页盖章与成功记录由同一普通 post-stamp commit 引入、可信外部 handoff 锚定提交版记录，最终返回不代表已发布的 `ready_for_tag`。
+
+本轮 fresh without-skill baseline 同样通过 7 / 7 assertions，未观察到可识别的语义增益。这不是 baseline 失败，而是 fixture 的 `release-context.md` 已直接陈述关键协议和预期操作，当前用例区分度不足。
+
+## With-Skill Behavior
+
+- 来源：当前会话中的 fresh with-skill agent；先读取当前 `docs-audit` skill、内部指令、eval prompt/assertions 与 fixture，严格未读取任何 `comparison.md`。
+- 行为摘要：分别解析 `base_ref: v1.1.0`、`target_ref: release-head`/`2222222` 与维护者确认的 `target_release_version: v1.2.0`；核对两张 API 页、#116 handoff、Release Notes、索引、只读 releases.json 和 package version；记录四页章前值并统一盖章；把四页和成功记录放入同一普通 commit，通过 commit/tree/record path/blob 的外部 handoff anchor 回读提交版记录；结果为 `ready_for_tag`，明确不表示已发布。
+
+## Without-Skill Baseline
+
+- 来源：当前会话中 `fork_turns=none` 的 fresh agent；只读取本例 prompt、assertions 与 fixture，严禁读取 skill、Agent README、任何 comparison 或历史 baseline。
+- 行为摘要：同样满足 7 / 7 assertions，完成四页统一盖章、同 commit 边界、可信外部锚点与 `ready_for_tag` 语义判断。
+- 对比结论：with-skill 与 without-skill 均为满分，未显示技能带来的可识别语义增益；主要原因是 fixture context 已直接给出统一盖章集、同 commit 要求、外部 handoff tuple 及状态语义。
 
 ## Assertion Results
 
 | Assertion | Result | Evidence summary |
 | --- | --- | --- |
-| `accepts_confirmed_version_without_tag` | PASS | 分别记录 base `v1.1.0`、target `release-head`/`2222222` 与维护者确认的 `v1.2.0`，未因同名 tag 缺失阻塞。 |
-| `verifies_complete_set_and_surfaces` | PASS | 两张 change-map required docs 均判 `verified`；#116 handoff、Release Notes、索引、releases.json 与 package version 全部对齐 `v1.2.0`。 |
-| `records_pre_stamp_values` | PASS | 报告记录 items=`v1.1.0`、status=`unverified`，运行副本未新增 `baseline_verified_version`。 |
-| `stamps_complete_set_atomically` | PASS | 两页在完整集合通过后同时更新为 `v1.2.0` 并回读；releases.json 与 pristine fixture 无差异。 |
-| `persists_stamp_and_content_evidence` | PASS | 同一报告包含两页清单、章前/章后值、页面与 #116 handoff、Release Notes、索引、metadata、package 的精确字节 SHA-256、target commit、post-stamp HEAD、结果时间和两类 read-back；judge 回算全部哈希匹配。 |
-| `returns_ready_for_tag_not_published` | PASS | 结果为 `ready_for_tag`，并明确只表示可以创建 tag，不表示发布或 post-tag `release_verified`。 |
-
-## With-Skill Behavior
-
-- 来源：本轮 fresh with-skill，使用应用 `docs-audit` 与 Docs README 后的同一 prompt 和 pristine 隔离副本；证据位于 `tmp/eval-runs/128-a3-20260719-213128/with_skill/eval-008-pre-tag-success/`。
-- 实际变更仅为两张受影响 API 页面统一盖章、创建同版本审计记录及运行期输出；未改写 Release Notes、索引或 metadata。
-
-## Without-Skill Baseline
-
-- 来源：本轮 `fork_turns=none` 的独立 fresh baseline，仅读取本例 prompt/assertions 与 pristine fixture；证据位于 `tmp/eval-runs/128-a3-20260719-213128/without_skill/eval-008-pre-tag-success/`，未复用历史 baseline。
-- baseline 也完成 6 / 6 assertions：统一盖章、完整记录断言明确要求的页面与版本面哈希，并保持 metadata 只读；本例未显示行为差距。
+| `accepts_confirmed_version_without_tag` | PASS | 分别记录 base、target 与维护者确认的 `v1.2.0`；同名 tag 缺失未阻塞 pre-tag。 |
+| `verifies_complete_set_and_surfaces` | PASS | change-map 要求的两张 API 页及 #116 handoff、Release Notes、索引、releases.json、package version 全部对齐并通过事实核验。 |
+| `records_pre_stamp_values` | PASS | 四页章前值为 items=`v1.1.0`、status=`unverified`、Release Notes=`unverified`、索引=`v1.1.0`，且未引入 `baseline_verified_version`。 |
+| `stamps_complete_set_atomically` | PASS | 两张 API 页、Release Notes 与索引统一更新为 `v1.2.0` 并回读；releases.json 保持只读。 |
+| `commits_stamp_and_record_together` | PASS | 四页完整盖章集和成功 `audit-v1.2.0.md` 由同一普通 post-stamp commit 引入，没有拆分或仅锚定工作区。 |
+| `persists_stamp_and_content_evidence` | PASS | 提交版记录包含四页章前/章后值和精确字节 SHA-256、其他版本面哈希、audited target commit、`ready_for_tag` 与时间；外部 handoff 持久化 commit SHA、tree、record path 与 blob hash。 |
+| `returns_ready_for_tag_not_published` | PASS | pre-tag 结果为 `ready_for_tag`，明确只表示可创建 tag，不表示版本已发布或已完成 post-tag 验证。 |
 
 ## Failures
 
-- 无 assertion failure。fixture 以合成 commit 和文件证据模拟宿主 pre-tag 状态，证据范围已披露。
+- 无 assertion failure。
+- 评测设计限制：without-skill 也满分，说明本例不能证明技能增益；fixture 将关键协议直接写入 release context，使 baseline 可以逐项复述并执行预期行为。
 
 ## Next Steps
 
-- 保留本结果；原子成功回写、内容哈希集合或 `ready_for_tag` 语义变化时重跑。
+- 后续提高 fixture 区分度：减少 release context 中对正确流程和结论的直接提示，改为提供更原始的 Git/文件证据，让候选自行推导统一盖章集、commit 边界、可信锚点及阶段状态。
+- 当上述 fixture 调整或 pre-tag 协议变化时，重新运行 fresh with-skill / without-skill 配对验证。
 
 ## Runtime Artifact Policy
 
-- 本轮 `candidate-output.md`、`run-summary.md`、隔离盖章页面与审计报告只保留在 `tmp/eval-runs/128-a3-20260719-213128/`，不提交；durable 产物仅为本 `comparison.md`。
+- 本轮证据来自当前会话 fresh agents 的消息内结果；未生成、引用或提交任何 runtime artifact，也未复用历史临时路径或 baseline。
+- durable 产物仅为本 `comparison.md`。

@@ -1,5 +1,8 @@
 # Formal documentation audit
 
+> TAMPERED CURRENT COPY: this working-tree/later-revision copy is not the
+> record committed by the trusted post-stamp commit.
+
 - Audit phase: pre-tag
 - base_ref: `v1.1.0` (`1111111`)
 - target_ref: `release-head` (`2222222`)
@@ -8,7 +11,8 @@
 - Complete affected set: `docs/site/api/catalog-items.md`, `docs/site/api/catalog-status.md`
 - Hash algorithm: SHA-256 over exact file bytes
 - Audited target_ref commit: `2222222`
-- Post-stamp HEAD: `3333333`
+- Post-stamp commit SHA: `9999999`
+- Post-stamp tree hash: `9999999999999999999999999999999999999999`
 
 ## Per-document evidence
 
@@ -33,6 +37,6 @@
 ## Conclusion
 
 - Blocking items: none at pre-tag time
-- Phase result: `ready_for_tag`
+- Phase result: `release_verified`
 - Meaning: ready for tag creation, not published.
 - Review commands: `git diff --name-status v1.1.0 release-head`; host docs checks; release-surface version checks.
