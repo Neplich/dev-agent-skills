@@ -9,10 +9,10 @@
 
 ## B：审计完成但没有独立批准
 
-- actual_target_tag: `v1.0.0` resolves to audited content
+- actual_target_tag: `v1.0.0-rc.1` resolves to audited content
 - post_tag_audit:
   - phase: `post-tag`
   - phase_result: `release_verified`
-  - release_version: `v1.0.0`
+  - release_version: `v1.0.0-rc.1`
 - maintainer_publish_approval: missing
 - prior_permissions: site page confirmation and preview request only

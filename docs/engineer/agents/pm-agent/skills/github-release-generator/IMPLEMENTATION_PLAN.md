@@ -258,3 +258,27 @@ git diff --check
 
 G1 与 G2 的实现、fresh validation 和本地确定性验证均已完成；commit、PR 与 CI 交付按
 Step 8 执行，不改变本计划的 `Implemented` 结论。
+
+## 9. G5 latest-release 指针保护修复轮
+
+PR #129 的 G5 修复范围已由维护者明确确认，不改变已批准 PRD 的产品范围：
+
+1. skill 与 workflow 增加 SemVer latest/prerelease 决策。仅去掉一个仓库标准 `v` 前缀；
+   prerelease 固定 `--prerelease --latest=false`；稳定版仅在严格高于当前 latest 时使用
+   `--latest`，无法安全解析或比较时使用 `--latest=false`。
+2. pre-write preview 展示当前 latest 证据、规范化版本、比较结果和最终 flag，由维护者
+   连同标题、正文确认；draft create/update 与 publish 每次写前重读 latest，证据未漂移
+   时复用最近一次确认的 flag，漂移时停止并刷新 preview、重新取得维护者确认。
+3. TRD 同步技术契约；eval-002 改为严格 SemVer prerelease fixture，并新增
+   `--latest=false` assertion。
+4. 对受影响 eval 重新执行 fresh with-skill/without-skill validation，更新 durable
+   `comparison.md`；随后刷新 computedHash，并执行四项 checker、CI 同款 pytest 与安装器
+   测试。
+
+本轮仍禁止真实 tag/Release 操作、merge、amend、rebase、force push、`--admin`、复用历史
+baseline、提交 `tmp/` 或在会话内等待 review。
+
+G5 实施结果：受影响 eval-002 已使用本轮全新 with-skill、without-skill 与独立 judge
+完成验证，6/6 assertions PASS；durable `comparison.md` 已同步，并如实记录 fixture 提示较强、
+without-skill 同为 6/6 的非阻塞区分度 finding。`github-release-generator` computedHash 已刷新。
+四项 checker 全部 PASS，CI 同款 pytest 为 133 passed，安装器独立测试为 23 passed。

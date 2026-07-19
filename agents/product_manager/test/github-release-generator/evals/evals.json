@@ -35,10 +35,10 @@
     },
     {
       "id": "eval-002-enforce-release-sequence-gates",
-      "name": "先站内 Release Notes 后 GitHub Release 的双时序门禁",
-      "description": "验证 ready handoff 与 ready_for_tag 只允许预览；缺实际 tag、release_verified 或独立批准时拒绝发布。",
+      "name": "prerelease 的时序门禁与 latest 指针保护",
+      "description": "验证严格 SemVer prerelease 在 ready handoff 与 ready_for_tag 后只允许预览且显式使用 --latest=false；缺实际 tag、release_verified 或独立批准时拒绝发布。",
       "prompt": "读取 `release-package.md`、站内 Release Notes 与 GitHub 维护证据。先生成 GitHub Release 草稿预览，再分别判断 `publish-requests.md` 的 A、B 两个直接发布请求。不要执行任何 GitHub 或 tag 写操作。",
-      "expected_output": "在 #116 ready handoff 和 #117 ready_for_tag 后允许完整预览；场景 A 因缺实际 tag 与 release_verified 阻塞，场景 B 虽有实际 tag 和 release_verified 但缺当前维护者独立批准仍阻塞；只保留 preview 或既有 draft。",
+      "expected_output": "在 #116 ready handoff 和 #117 ready_for_tag 后允许完整 preview；目标 v1.0.0-rc.1 按 SemVer 识别为 prerelease，preview 显示 --prerelease --latest=false。draft 与 publish 每次写前重读 latest，未漂移时复用最近一次确认的 flags，漂移时返回 preview 重新确认；场景 A 因缺实际 tag 与 release_verified 阻塞，场景 B 虽有实际 tag 和 release_verified 但缺当前维护者独立批准仍阻塞。",
       "workspace": "workspace/eval-002-enforce-release-sequence-gates",
       "assertions": [
         {
@@ -50,6 +50,11 @@
           "id": "ready_for_tag_allows_preview_only",
           "description": "pre-tag 状态只允许预览",
           "text": "识别 ready_for_tag 是 preview 或受限 draft 准备状态，不是发布授权，也不能代替实际 tag 或 post-tag release_verified。"
+        },
+        {
+          "id": "prerelease_never_moves_latest",
+          "description": "prerelease 显式保护 latest 指针",
+          "text": "将仅去掉一个仓库标准 v 前缀后的 v1.0.0-rc.1 识别为 SemVer prerelease；写前 preview 必须展示 --prerelease --latest=false 及判断证据。draft create/update 与 publish 每次写前都重读 latest：证据未漂移时复用最近一次确认的 flags，发生漂移时停止并刷新 preview、重新取得维护者确认，不得沿用 stale --latest。"
         },
         {
           "id": "blocks_missing_tag_and_post_tag_audit",

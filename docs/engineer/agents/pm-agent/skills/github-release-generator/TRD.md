@@ -86,6 +86,24 @@ skill 必须先验证以下字段和证据：
 仍使用仓库真实 tag 字面值。版本不存在、范围为空且无法解释、范围交叉或事实不一致时
 停止，不猜测 previous tag。
 
+### 3.3 latest 与 prerelease 决策
+
+写入 preview 前必须生成一份可复核且后续不可放宽的发布分类：
+
+- 仅按仓库实际 tag 约定去掉至多一个标准 `v` 前缀，再按 SemVer 解析目标版本与当前
+  latest Release；不连续剥离多个前缀，也不把任意前导字符当作版本前缀。
+- 目标版本存在任意 SemVer prerelease 后缀（包括 `-rc`、`-fix` 等）时，固定使用
+  `--prerelease --latest=false`。
+- 目标为稳定版本时，先只读当前 latest GitHub Release；仅当目标 SemVer 可安全解析且
+  严格大于当前 latest SemVer 时使用 `--prerelease=false --latest`。相等、低于、当前
+  latest 缺失或任一版本无法安全解析/比较时，使用 `--prerelease=false --latest=false`。
+- preview 必须展示原始 tag、规范化版本、当前 latest tag/URL、比较结果及最终两个 flag，
+  由维护者连同标题和正文一起确认。
+- draft create/update 与 publish 每次写入前都重新只读当前 latest Release，并按同一规则
+  复核比较结论；只有证据与最近一次已确认 preview 完全一致时，命令才复用其中的显式
+  prerelease/latest flag。latest tag 或比较结论漂移时必须停止、刷新 preview 并重新取得
+  维护者确认，不得沿用 stale flag 或静默计算成更宽松的 latest 结论。
+
 ## 4. #117 时序状态机
 
 ### 4.1 pre-tag 消费
@@ -106,13 +124,15 @@ skill 必须先验证以下字段和证据：
 在 `ready_for_tag` 后：
 
 1. 读取站内 Release Notes、GitHub compare 和相邻 Release 风格。
-2. 生成标题与正文预览，标明事实来源与补充链接。
+2. 生成标题与正文预览，标明事实来源与补充链接；同时标明目标版本分类、当前 latest
+   Release 证据、SemVer 比较结果以及将用于写入的显式 prerelease/latest flag。
 3. 仅在用户明确要求时创建或更新 draft；无现有 draft 且实际 tag 不存在时只保留完整
    draft 预览，因为 GitHub CLI/API 的 release create 会连带创建缺失 tag。
 4. 已有 draft 可在证明 tag 状态不变的前提下更新；新建远端 draft 必须使用
-   `--verify-tag` 绑定已经存在的 tag。
-5. 写入后用 `gh release view` 或 Connector 回读 tag、name、body、`isDraft` 和 URL，并
-   比较写前写后的远端 tag 状态。
+   `--verify-tag` 绑定已经存在的 tag。任一 draft 写入前重新读取当前 latest Release；若
+   与已确认 preview 的 latest 证据或比较结果不一致，返回 preview 重新确认。
+5. 写入后用 `gh release view` 或 Connector 回读 tag、name、body、`isDraft`、
+   `isPrerelease`、latest 决策和 URL，并比较写前写后的远端 tag 状态。
 6. 若操作会创建或移动 Git tag，必须停止；本 skill 不拥有 tag。
 
 ### 4.3 publish 状态
@@ -129,8 +149,12 @@ post-tag handoff 必须对应同一 `target_release_version` 和实际 tag，并
 authority、实际 tag 与版本来源的复核结论。任何 `blocked`、tag 缺失/移动或版本不一致
 都禁止发布。此前对生成 Release Notes 或创建 draft 的批准不能复用为发布批准。
 
-发布后再次回读并核对 tag、标题、正文、draft/published 状态、发布时间和 URL；回读失败
-或不一致必须报告失败，不宣称发布完成。
+发布写入前还必须重新只读当前 latest Release 并复核 SemVer 比较。latest 指针或比较结论
+相对已确认 preview 发生变化时，原 latest 决策失效，必须刷新 preview 并重新取得维护者
+确认；不得使用 stale 的 `--latest`。
+
+发布后再次回读并核对 tag、标题、正文、draft/published 状态、prerelease/latest 状态、
+发布时间和 URL；回读失败或不一致必须报告失败，不宣称发布完成。
 
 ## 5. 内容转换规则
 

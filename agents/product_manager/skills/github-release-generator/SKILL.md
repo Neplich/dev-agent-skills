@@ -77,9 +77,23 @@ invalid, version-mismatched, or blocked audit evidence returns to
    facts.
 2. Audit the complete compare range, merged PRs, commits, and contributors.
 3. Read adjacent GitHub Releases and the repository's release conventions.
-4. Add compare, representative PR or commit, and contributor links without
+4. Remove at most one repository-standard `v` prefix from the target and
+   current latest tag, parse both as SemVer, and decide the explicit latest and
+   prerelease flags. Every SemVer prerelease uses `--prerelease --latest=false`.
+   For a stable version, read the current latest Release and use `--latest`
+   only when the target SemVer is strictly greater; otherwise use
+   `--latest=false`. An absent, non-SemVer, or otherwise unsafe comparison must
+   use `--latest=false`.
+5. Add compare, representative PR or commit, and contributor links without
    replacing the confirmed facts with a raw maintenance-data list.
-5. Show the complete title and body preview before any GitHub write.
+6. Show the complete title and body preview, version-normalization evidence,
+   current latest Release evidence, and the exact latest/prerelease decision
+   before any GitHub write. The maintainer must confirm this decision with the
+   preview. Before each draft or publish write, re-read the current latest
+   Release and require it to match the preview evidence. Drift invalidates the
+   decision: stop, refresh the preview, and obtain new maintainer confirmation.
+   A write uses the flags from the most recently confirmed preview and never
+   silently promotes them.
 
 GitHub evidence may add traceability and formatting, not new or contradictory
 version facts. If it exposes an omission or conflict, block and return the page
@@ -89,14 +103,16 @@ to `docs-agent:release-notes-generator` for renewed confirmation and checks.
 
 Create or update a draft only when the user explicitly requests that mutation
 after seeing the preview. The permission to prepare content is not permission
-to write a draft. If no remote draft and no actual tag exists, keep the full
+to write a draft. Re-read the current latest Release immediately before the
+write; any change from the confirmed preview blocks mutation until a refreshed
+preview is confirmed. If no remote draft and no actual tag exists, keep the full
 draft as a preview and block remote creation: GitHub release creation would
 also create the missing tag, which this skill does not own. An existing remote
 draft may be updated only after proving the remote tag state is unchanged; a
 new remote draft may be created only for an already-existing tag. After any
-draft write, read it back and verify the tag, title, body, `isDraft`, URL, and
-unchanged remote tag state. Report any mismatch as a failed write; do not
-describe it as complete.
+draft write, read it back and verify the tag, title, body, `isDraft`,
+`isPrerelease`, latest decision, URL, and unchanged remote tag state. Report
+any mismatch as a failed write; do not describe it as complete.
 
 ## Publish Gate
 
@@ -112,8 +128,14 @@ draft cannot be reused as publish approval. A missing or moved tag, invalidated
 pre-tag authority, blocked post-tag audit, version mismatch, or absent approval
 prohibits publication.
 
+Immediately before publishing, re-read the current latest Release. If its tag
+or the resulting SemVer comparison differs from the confirmed preview, stop
+and require a refreshed preview and new confirmation; do not publish with a
+stale `--latest` decision.
+
 After publishing, read the GitHub Release back and verify its tag, title, body,
-draft/published state, publication time, and URL before reporting success.
+draft/published state, prerelease/latest state, publication time, and URL
+before reporting success.
 
 ## Role Boundary
 
@@ -132,6 +154,7 @@ This skill must not:
 ## Output
 
 Report the accepted handoff and audit evidence, normalized version and compare
-range, fact-source page, preview, requested mutation, readback results, and any
-blocker with its next owner. A preview is not a draft, `ready_for_tag` is not a
-publication state, and `release_verified` is not publish approval.
+range, fact-source page, current latest evidence, confirmed latest/prerelease
+decision, preview, requested mutation, readback results, and any blocker with
+its next owner. A preview is not a draft, `ready_for_tag` is not a publication
+state, and `release_verified` is not publish approval.
