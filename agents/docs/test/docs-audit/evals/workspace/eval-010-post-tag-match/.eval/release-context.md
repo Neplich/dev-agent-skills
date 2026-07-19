@@ -28,3 +28,7 @@ post-stamp commit, its tree equals the tree hash stored by the trusted handoff,
 so the audit must use the tree-hash fast path. Commit identity alone is not a
 fast path. The audit must not create or move the tag. The source-specific `v`
 prefix difference is valid and must be normalized before equality comparison.
+The result is written only to
+`docs/site/.meta/audit/audit-v1.2.0-post-tag.md`. The anchored
+`audit-v1.2.0.md` blob remains unchanged, and every later post-tag rerun reads
+that same blob again.

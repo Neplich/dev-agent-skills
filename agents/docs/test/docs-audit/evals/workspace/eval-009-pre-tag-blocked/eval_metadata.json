@@ -2,15 +2,14 @@
   "eval_id": "eval-009-pre-tag-blocked",
   "eval_name": "pre-tag-blocked",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-009-pre-tag-blocked",
-  "skill_availability_goal": "Verify that a post-stamp commit containing an unrelated preexisting staged source path is blocked by full diff convergence and never returns ready_for_tag.",
-  "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已确认 `target_release_version: v1.2.0`，完整影响域和版本表面均可验证，但提交前已有无关的 `src/catalog/debug-trace.txt` 变更被 staged，并随统一盖章和审计记录进入盖章后 commit。必须核对 `target_ref` 到该 commit 的完整文件清单和逐文件内容差异。",
+  "skill_availability_goal": "Verify that uncommitted working-tree content cannot serve as passing fact evidence and requires commit, target_ref update, and a complete rerun.",
+  "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已确认 `target_release_version: v1.2.0`，但要求以工作区尚未提交的 `src/catalog/routes.txt` 修改证明新 dispatcher 已实现；该修改不在当前 `target_ref: release-head` 可达内容中。请判断该证据能否作为通过依据并给出下一步。",
   "execution_cleanup": [
     "docs/site/.meta/audit"
   ],
   "fixture_context": [
     ".eval/actual-diff.patch",
     ".eval/release-context.md",
-    ".eval/post-stamp-diff.patch",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/catalog-items.md",
     "docs/site/api/catalog-status.md",
@@ -18,7 +17,6 @@
     "docs/site/release-notes/index.md",
     "docs/site/.meta/releases.json",
     "package.json",
-    "src/catalog/debug-trace.txt",
     "src/catalog/routes.txt"
   ]
 }

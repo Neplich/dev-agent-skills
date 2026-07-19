@@ -37,8 +37,12 @@ trusted pre-tag handoff anchors the committed record with commit SHA, tree hash,
 record path, and record blob hash; the record does not self-contain its commit
 or tree identity. Working-tree state is not an anchor. The source-specific `v`
 prefix difference is valid and must be normalized before equality comparison.
-Before returning `ready_for_tag`, the full `target_ref` to post-stamp commit
-file inventory and every file's content diff contain only the audit record and
-the four unified-stamp pages; each page changes only its
-`last_verified_version` field line. The audit record persists this inventory
-and a passed convergence conclusion.
+After writing the four stamp files, the audit stages only the four pages and
+the pre-tag record path. Before any successful result, success time, or
+`ready_for_tag` is written, the complete staged diff against `target_ref`
+contains only those authorized paths and each page changes only its
+`last_verified_version` field line. Only after that gate passes is the success
+record finalized and committed with the stamp. The post-commit confirmation is
+then expected to pass. Its success belongs to the trusted handoff/external
+delivery evidence rather than the anchored pre-tag blob; only both gates allow
+the issue #120 handoff.

@@ -2,8 +2,8 @@
   "eval_id": "eval-008-pre-tag-success",
   "eval_name": "pre-tag-success",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-008-pre-tag-success",
-  "skill_availability_goal": "Verify source-specific version normalization, one-commit stamping, and full target_ref-to-post-stamp diff convergence evidence before returning ready_for_tag.",
-  "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已明确确认 `target_release_version: v1.2.0`，`base_ref: v1.1.0`、`target_ref: release-head`，且同名 tag 尚不存在。核对完整受影响页面、#116 handoff、Release Notes、索引、`.meta/releases.json` 和宿主版本事实；全部通过后，把受影响页面与本次 verified 且含 `last_verified_version` 的 Release Notes/索引 Markdown 组成统一盖章集，逐页回读，并将完整盖章与成功审计记录放入宿主 release PR 分支上的同一个普通盖章后 commit；返回 ready_for_tag 前记录并核对 target_ref 到该 commit 的完整差异只含授权盖章字段与审计记录。",
+  "skill_availability_goal": "Verify staged convergence before any success record, one-commit stamping, post-commit confirmation, and handoff only after both gates pass.",
+  "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已明确确认 `target_release_version: v1.2.0`，`base_ref: v1.1.0`、`target_ref: release-head`，且同名 tag 尚不存在。全部事实通过后，先写统一盖章并只 stage 授权路径，在写入任何 ready_for_tag 成功记录前校验 staged diff；通过后才将成功记录与盖章放入同一普通 commit，再做 target_ref 到该 commit 的确认性复核。两关均通过才向 #120 handoff。",
   "execution_cleanup": [
     "docs/site/.meta/audit/audit-v1.2.0.md"
   ],

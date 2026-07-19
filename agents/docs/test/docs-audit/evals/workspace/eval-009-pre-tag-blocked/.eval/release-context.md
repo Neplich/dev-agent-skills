@@ -1,10 +1,9 @@
-# Pre-tag release context with an unrelated staged delta
+# Pre-tag release context with uncommitted fact evidence
 
 - audit_phase: `pre-tag`
 - base_ref: `v1.1.0`
 - target_ref: `release-head`
 - target_ref_commit: `2222222`
-- post_stamp_commit: `5555555`
 - target_release_version: `v1.2.0`
 - target_release_version_confirmation: maintainer-confirmed
 - matching_tag_status: absent
@@ -13,10 +12,15 @@
 - release_notes_index: `docs/site/release-notes/index.md`
 - release_metadata: `docs/site/.meta/releases.json` (read-only)
 - host_version_fact: `package.json` version `1.2.0`
-- unrelated_preexisting_staged_path: `src/catalog/debug-trace.txt`
+- required_fact: new table dispatcher implementation
+- target_ref_fact: `release-head` still contains the legacy dispatcher
+- uncommitted_worktree_evidence: `.eval/actual-diff.patch` changes the legacy
+  dispatcher to the table dispatcher, but is not reachable from `target_ref`
 
-All page facts and release-version surfaces are consistent. The post-stamp
-commit includes the authorized four-page `last_verified_version` stamp and
-audit record, but it also includes the unrelated staged source change shown in
-`.eval/post-stamp-diff.patch`. The full commit must therefore be blocked even
-though the fact audit and stamping operation otherwise succeed.
+The maintainer asks the auditor to use the uncommitted patch as proof that the
+new dispatcher exists. Release-version surfaces are otherwise consistent, but
+passing fact evidence must be committed content reachable from `target_ref`.
+The patch may be described diagnostically and cannot make an affected page
+`verified`. The audit must block before stamping and require the maintainer to
+commit the change, update `target_ref` to the containing commit, and rerun the
+complete pre-tag audit.

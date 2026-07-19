@@ -15,8 +15,11 @@ Resolve the three independent audit inputs before computing impact:
 2. Resolve `target_ref`, the code-comparison end. Use the caller-supplied ref
    when explicit; otherwise use pending-release `HEAD`. It is a Git ref or
    commit only and is not the target release version.
-3. Include confirmed working-tree changes when they are explicitly part of the
-   audit scope.
+3. Include confirmed working-tree changes only as diagnostic scope. During a
+   pre-tag audit they may expand the changed-files inventory and affected-page
+   set, but they cannot support a passing fact conclusion. If they are needed
+   as evidence, require the maintainer to commit them, update `target_ref`, and
+   rerun the complete pre-tag audit.
 4. Resolve `target_release_version` independently. It is the exact version
    whose documentation is being audited and the pre-tag unified-stamp anchor.
    A maintainer must confirm it explicitly; do not infer it from a ref, branch,
@@ -84,9 +87,10 @@ git diff --name-status <base> <target>
 ```
 
 Preserve change status and path. Add only those working-tree changes that were
-confirmed as part of the scope. The combined set is the report's changed-files
-inventory. Use the two-dot endpoint diff by default. Only when the caller
-explicitly requests merge-base semantics, use
+confirmed as diagnostic scope. The combined set is the report's changed-files
+inventory, but uncommitted entries are never passing fact evidence in pre-tag.
+Use the two-dot endpoint diff by default. Only when the caller explicitly
+requests merge-base semantics, use
 `git diff --name-status <base>...<target>` and state that three-dot semantic in
 the report.
 
@@ -224,9 +228,15 @@ Run the pre-tag protocol in this order:
 
 1. Confirm `base_ref`, `target_ref`, and the maintainer-confirmed
    `target_release_version` as separate inputs.
-2. Use the complete `base_ref..target_ref` endpoint diff plus any explicitly
-   included working-tree scope to resolve the full affected-page set through
-   the deterministic layer.
+2. Use the complete `base_ref..target_ref` endpoint diff to resolve the full
+   affected-page set through the deterministic layer. Every code,
+   configuration, test, handoff, and other fact used as passing evidence must
+   be committed content reachable from the resolved `target_ref`. An
+   uncommitted working-tree change may be reported as diagnostic context, but
+   it is never passing evidence. When a maintainer supplies such a change as
+   evidence, return `blocked`, require it to be committed, require
+   `target_ref` to be updated to that commit, and rerun the complete pre-tag
+   audit.
 3. Verify every affected document through the fact layer. Also verify the
    issue #116 ready handoff and its confirmed Release Notes page, the host's
    Release Notes index, `docs/site/.meta/releases.json`, and host version facts
@@ -253,47 +263,64 @@ Run the pre-tag protocol in this order:
    including the confirmed Release Notes page, its version index,
    `docs/site/.meta/releases.json`, the issue #116 handoff when file-backed,
    and each file backing the host version facts.
-9. Atomically replace the same persisted pre-tag record with the successful
-   stamp result: unified-stamp page list, each page's pre-stamp and post-stamp
-   `last_verified_version`, post-stamp page hashes, other release-surface
-   hashes, audited `target_ref`, final `ready_for_tag`, and result time.
-10. Before commit creation, compare the complete staged candidate against the
-    resolved audited `target_ref`. Authorize only the unified-stamp pages and
-    verified Markdown release-version surfaces, whose content diff may change
-    only the `last_verified_version` field line, plus the audit record path
-    itself. Persist the candidate difference file list and convergence result
-    in the audit record, then stage that final record. Any other path, or any
-    other content hunk in an authorized Markdown page, is an unaudited delta;
-    this includes unrelated content that was already staged before the audit.
-11. Stage the complete unified-stamp set and that successful audit-record update
-    together and create one ordinary commit on the host release PR branch (the
+9. Write the complete unified-stamp files, then stage only the explicitly
+   authorized paths: the unified-stamp pages and the versioned pre-tag audit
+   record path. Do not inherit the caller's existing index as part of the
+   audit candidate.
+10. Before writing any successful result, success time, or `ready_for_tag`
+    field, compare the complete staged candidate against the resolved audited
+    `target_ref`. Authorize page content changes only on the
+    `last_verified_version` field line; the versioned pre-tag audit record is
+    the only other authorized path. Any other path or content hunk is an
+    unaudited delta, including unrelated content that was already staged before
+    the audit. Return `blocked` immediately, do not create the post-stamp
+    commit, and do not write a successful audit record or trusted handoff.
+11. Only after the staged convergence gate passes, atomically write the
+    successful pre-tag record with the candidate difference inventory and
+    passed conclusion, unified-stamp page list, each page's pre-stamp and
+    post-stamp `last_verified_version`, post-stamp page hashes, other
+    release-surface hashes, audited `target_ref`, final `ready_for_tag`, and
+    result time. Stage that final record with the already staged complete stamp
+    set and create one ordinary commit on the host release PR branch (the
     **post-stamp commit**). The stamp and successful record must be introduced
     by that same commit, not left only in the working tree or split across
-    commits. After Git creates the commit, persist a trusted pre-tag handoff
-    anchor containing the post-stamp commit SHA, its resolved Git tree hash,
-    the record path, and that path's Git blob hash. The committed record itself
-    must contain every unified-stamp page's post-stamp content hash; it cannot
-    self-contain its own commit or tree identity. Read the record back from the
-    anchored commit with `git show <post-stamp-commit>:<record-path>`, verify its
-    blob hash and the handoff's commit/tree anchor. Before returning
-    `ready_for_tag`, compute `git diff --name-only <target-ref-commit>
-    <post-stamp-commit>` and inspect the complete content diff for every listed
-    file. The actual commit diff must match the persisted convergence inventory
-    and the same authorization rules from step 10. Any out-of-scope path or
-    non-`last_verified_version` change in an authorized page returns `blocked`
-    and is listed in the report; do not create a trusted ready handoff. A
-    working-tree state is never a valid anchor. This means ready for tag
-    creation, never already published or released.
+    commits.
+12. After Git creates the commit, confirm the committed result by computing
+    `git diff --name-only <target-ref-commit> <post-stamp-commit>` and inspecting
+    every file's complete content diff under the same authorization rules from
+    step 10. This confirmation is expected to pass because the staged
+    candidate already passed. If it unexpectedly fails, return `blocked`, do
+    not create a trusted handoff, and write the failure and complete difference
+    evidence to the independent versioned supplemental record
+    `docs/site/.meta/audit/audit-{target_release_version}-pre-tag-post-commit-blocked.md`.
+    Never append to or modify the committed pre-tag anchor record after this
+    failure.
+13. Only when both the pre-commit staged convergence gate and the post-commit
+    confirmation pass, persist a trusted pre-tag handoff anchor containing the
+    post-stamp commit SHA, its resolved Git tree hash, the record path, and that
+    path's Git blob hash. The committed record itself must contain every
+    unified-stamp page's post-stamp content hash; it cannot self-contain its own
+    commit or tree identity. Read the record back from the anchored commit with
+    `git show <post-stamp-commit>:<record-path>`, verify its blob hash and the
+    handoff's commit/tree anchor, then and only then return `ready_for_tag` to
+    issue #120. A working-tree state is never a valid anchor. This means ready
+    for tag creation, never already published or released.
 
 Return `blocked` and do not return `ready_for_tag` when any of the following is
 true. Failures detected before the unified write must leave every page
-unstamped; a convergence failure detected only after commit creation leaves no
-trusted successful handoff and must persist the blocked difference evidence:
+unstamped. A staged convergence failure after writing the stamp leaves no
+commit, no successful record, and no trusted handoff. An unexpected
+post-commit confirmation failure leaves no trusted successful handoff and must
+persist blocked evidence only in the independent supplemental record without
+modifying the committed pre-tag anchor:
 
 - `target_release_version` is missing;
 - the target version was inferred from a branch name, `target_ref`, or context;
 - the target version is `unknown`;
 - the target version lacks explicit maintainer confirmation;
+- any fact used as passing evidence is absent from the committed content
+  reachable from `target_ref`, including maintainer-supplied uncommitted
+  working-tree evidence;
 - any affected page is `stale`, `mismatch`, remains unverified after fact
   review, or lacks sufficient evidence; or
 - Release Notes, the version index, release metadata, or host version facts
@@ -309,12 +336,13 @@ not itself make a page stale or block it from becoming factually `verified`.
 Never stamp only a `verified` subset. If `target_release_version` changes after
 the audit, the report, unified stamp conclusion, and `ready_for_tag` result are
 immediately invalid; rerun the complete pre-tag audit for the new value.
-If stamping, page read-back, hashing, atomic record replacement, post-stamp
-commit creation, commit-difference convergence, or committed-record read-back
-fails, return `blocked`. Persist the difference inventory, out-of-scope paths
-or content hunks, and blocked conclusion in the audit record. The record may
-retain diagnostic or pre-stamp evidence, but it must not contain a successful
-stamp conclusion, `ready_for_tag`, or a success time.
+If stamping, page read-back, hashing, staged-difference convergence, atomic
+record replacement, post-stamp commit creation, post-commit confirmation, or
+committed-record read-back fails, return `blocked`. Before commit creation,
+persist only diagnostic or pre-stamp evidence and never a successful stamp
+conclusion, `ready_for_tag`, or success time. After commit creation, persist an
+unexpected confirmation failure only in the independent supplemental record;
+never rewrite the anchored pre-tag record.
 
 ### Final page status
 
@@ -373,9 +401,14 @@ Include at least:
 - Record path: <repository-relative audit record path committed with the stamp>
 - Stamped pages: <path, pre-stamp last_verified_version, post-stamp last_verified_version, post-stamp SHA-256>
 - Release-surface content evidence: <surface, path, post-stamp SHA-256>
-- Post-stamp convergence: <target_ref to post-stamp commit file inventory,
-  authorized category, per-file content-diff result, out-of-scope differences,
-  and passed or blocked conclusion>
+- Pre-commit staged convergence: <target_ref to staged candidate file
+  inventory, authorized category, per-file content-diff result, out-of-scope
+  differences, and passed conclusion; a blocked candidate has no successful
+  record>
+- Post-commit confirmation: <not written back to this anchored pre-tag record;
+  a passed confirmation belongs to the trusted handoff/external delivery
+  evidence, while an unexpected failure is written only to the independent
+  supplemental record>
 - Stamp read-back: <complete / failed>
 - Committed record read-back: <git show from post-stamp commit complete / failed>
 - Ready result time: <timestamp written only on success>
@@ -415,19 +448,23 @@ Then, in one audit operation:
 - read all unified-stamp pages back to verify that the complete stamp is consistent;
 - hash the exact post-stamp bytes of every unified-stamp page and file-backed
   release-version surface; and
-- atomically write the successful stamp fields and `ready_for_tag` result back
-  to the same pre-tag record; and
+- stage only the unified-stamp pages and versioned pre-tag record, then validate
+  the complete staged diff against `target_ref` before writing any success
+  field; and
+- only after staged convergence passes, atomically write the successful stamp
+  fields and `ready_for_tag` result back to the same pre-tag record; and
 - commit the full stamp set and successful record together as one ordinary
   post-stamp commit on the host release PR branch, then verify the committed
   record and persist the trusted handoff tuple `(post-stamp commit SHA, tree
   hash, record path, record blob hash)`. Do not use an uncommitted working tree
   as the successful record anchor; and
-- before returning `ready_for_tag`, compare the full `target_ref` to
-  post-stamp-commit file inventory and every content diff. Permit only the
-  audit record plus `last_verified_version` field-line changes in unified-stamp
-  or verified Markdown release-version pages. Persist the inventory and
-  convergence conclusion in the audit record. Any other path or hunk,
-  including unrelated content staged before commit creation, is `blocked`.
+- after commit creation, confirm the full `target_ref` to post-stamp-commit file
+  inventory and every content diff. Permit only the audit record plus
+  `last_verified_version` field-line changes in unified-stamp or verified
+  Markdown release-version pages. Any unexpected failure is `blocked`, is
+  written to the independent versioned supplemental record, and must not
+  modify the anchored pre-tag record or produce a handoff. Only both passed
+  gates permit the issue #120 handoff.
 
 Do not stamp a verified subset when another page is `stale`, `mismatch`, or
 blocked by `unverified` or missing evidence. The matching tag is not required
@@ -445,9 +482,11 @@ Run the post-tag protocol in this order:
 2. Take the post-stamp commit SHA from the trusted pre-tag handoff and read the
    persisted pre-tag record from that anchor with
    `git show <post-stamp-commit>:<record-path>`. Do not use the working-tree
-   record or a later revision as the authority. If the current-path copy differs
-   from the committed record, report the difference and continue with the
-   committed record. Require the exact fields written by the successful pre-tag
+   record or a later revision as the authority. If the current-path pre-tag
+   copy differs from the committed record, report the difference and continue
+   with the committed record. The independent versioned post-tag record is a
+   separate path and its presence must be excluded from this current-copy
+   comparison. Require the exact fields written by the successful pre-tag
    path: `base_ref`, audited `target_ref` commit,
    `target_release_version`, unified-stamp page list, per-page
    pre/post `last_verified_version`, every post-stamp page and release-surface
@@ -490,11 +529,14 @@ Post-tag audit performs final consistency verification only. Do not regenerate
 Release Notes, indexes, release metadata, documentation, GitHub Release
 content, or unified stamps.
 
-Persist or append a post-tag section to the same audit record without erasing
-the pre-tag evidence. Record the actual tag and peeled commit, actual and
-anchored tree hashes, tree-equality result, any name-status difference summary,
-each version source's raw and normalized values, checked surfaces, evidence,
-blockers, review commands, and `release_verified` or `blocked` result.
+Persist the post-tag result only to the separate versioned record
+`docs/site/.meta/audit/audit-{target_release_version}-post-tag.md`. Never append
+to or modify the anchored pre-tag record. Record the actual tag and peeled
+commit, actual and anchored tree hashes, tree-equality result, any name-status
+difference summary, each version source's raw and normalized values, checked
+surfaces, evidence, blockers, review commands, and `release_verified` or
+`blocked` result. Every post-tag rerun must continue to read the unchanged
+pre-tag blob from the trusted handoff anchor.
 
 ## 8. Release Handoff and Responsibility Boundaries
 

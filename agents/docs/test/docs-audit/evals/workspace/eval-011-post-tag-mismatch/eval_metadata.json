@@ -2,9 +2,11 @@
   "eval_id": "eval-011-post-tag-mismatch",
   "eval_name": "post-tag-mismatch",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-011-post-tag-mismatch",
-  "skill_availability_goal": "Verify anchored-record tamper resistance, strict tree equality, and both maintainer-only remediation paths when a tag adds unaudited code even though every recorded path is unchanged.",
+  "skill_availability_goal": "Verify anchored-record tamper resistance, strict tree equality, separate post-tag persistence, unchanged pre-tag blob, and both maintainer-only remediation paths.",
   "prompt": "执行 fixture 中定义的 post-tag audit。可信 pre-tag handoff 锚定的提交版记录完整正确，但当前路径副本已被篡改；实际 tag 名是 `v1.2.0`，所有已记录页面和版本面内容都未变，但 tag 在盖章后又混入一个新增源代码文件的 commit，导致 tag tree 与盖章后 tree 不同。请以提交版记录为准，按严格 tree equality 给出阶段结果和差异摘要；不要执行 tag 操作或重写 release 内容。",
-  "execution_cleanup": [],
+  "execution_cleanup": [
+    "docs/site/.meta/audit/audit-v1.2.0-post-tag.md"
+  ],
   "fixture_context": [
     ".eval/release-context.md",
     ".eval/committed-audit-v1.2.0.md",

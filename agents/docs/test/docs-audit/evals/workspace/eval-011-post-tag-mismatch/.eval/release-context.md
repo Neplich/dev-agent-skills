@@ -42,3 +42,8 @@ rerun. Both reruns use the actual content intended for release as the new
 surface or create, delete, or move a tag. The source-specific `v` prefix
 difference is valid after SemVer normalization and cannot override tree
 inequality.
+The post-tag `blocked` result must be written to the independent
+`docs/site/.meta/audit/audit-v1.2.0-post-tag.md` path. Its presence is not a
+change to the current pre-tag path and must be excluded from the current-copy
+comparison. The anchored pre-tag blob remains unchanged and is reused by every
+post-tag rerun.
