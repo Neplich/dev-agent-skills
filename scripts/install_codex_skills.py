@@ -62,6 +62,7 @@ class PreflightPlan:
     legacy_skipped: list[Path]
     collision_legacy_remove: list[Path]
     collision_legacy_skipped: list[Path]
+    obsolete_managed_remove: list[Path]
 
 
 def repo_root() -> Path:
@@ -403,6 +404,20 @@ def build_preflight_plan(
         else:
             collision_legacy_skipped.append(target)
 
+    obsolete_managed_remove: list[Path] = []
+    current_install_names = {spec.install_name for spec in all_specs}
+    reserved_names = {
+        MIRROR_DIR_NAME,
+        LEGACY_AGGREGATE_DIR,
+        *collision_basenames,
+    }
+    if target_root.is_dir():
+        for target in sorted(target_root.iterdir()):
+            if target.name in current_install_names or target.name in reserved_names:
+                continue
+            if is_owned_skill_target(target, target_root):
+                obsolete_managed_remove.append(target)
+
     planned_removals: list[Path] = []
     if mirror.exists() or mirror.is_symlink():
         planned_removals.append(mirror)
@@ -410,6 +425,7 @@ def build_preflight_plan(
     planned_removals.extend(existing.target for existing in unselected_remove)
     planned_removals.extend(legacy_remove)
     planned_removals.extend(collision_legacy_remove)
+    planned_removals.extend(obsolete_managed_remove)
     validate_removals_do_not_touch_source(root, planned_removals)
 
     return PreflightPlan(
@@ -421,6 +437,7 @@ def build_preflight_plan(
         legacy_skipped=legacy_skipped,
         collision_legacy_remove=collision_legacy_remove,
         collision_legacy_skipped=collision_legacy_skipped,
+        obsolete_managed_remove=obsolete_managed_remove,
     )
 
 
@@ -659,6 +676,12 @@ def render_results(
         for path in plan.collision_legacy_skipped:
             print(f"- skipped: {path}")
 
+    if plan.obsolete_managed_remove:
+        print()
+        print("Removed obsolete managed skill aliases:")
+        for path in plan.obsolete_managed_remove:
+            print(f"- removed: {path}")
+
     if routers_only:
         print()
         print("WARNING: --routers-only installed only role router skills.")
@@ -734,6 +757,8 @@ def main(argv: list[str]) -> int:
         for path in plan.legacy_remove:
             remove_existing(path)
         for path in plan.collision_legacy_remove:
+            remove_existing(path)
+        for path in plan.obsolete_managed_remove:
             remove_existing(path)
         for existing in plan.unselected_remove:
             remove_existing(existing.target)

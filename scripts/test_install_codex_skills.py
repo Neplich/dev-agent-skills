@@ -251,6 +251,97 @@ def test_reinstall_removes_obsolete_managed_unqualified_collision_alias(tmp_path
     )
 
 
+def test_upgrade_removes_obsolete_managed_qualified_aliases(tmp_path: Path) -> None:
+    checkout = tmp_path / "checkout"
+    make_minimal_checkout(checkout)
+    for role in ("product_manager", "docs"):
+        skill = checkout / f"agents/{role}/skills/release-notes-generator"
+        skill.mkdir(parents=True)
+        (skill / "SKILL.md").write_text(
+            "---\nname: release-notes-generator\n---\n",
+            encoding="utf-8",
+        )
+
+    marketplace_path = checkout / ".claude-plugin/marketplace.json"
+    marketplace = json.loads(marketplace_path.read_text(encoding="utf-8"))
+    marketplace["plugins"][0]["skills"].append("./skills/release-notes-generator")
+    marketplace["plugins"].append(
+        {
+            "name": "docs-agent",
+            "source": "./agents/docs",
+            "skills": ["./skills/release-notes-generator"],
+        }
+    )
+    marketplace_path.write_text(json.dumps(marketplace), encoding="utf-8")
+
+    target = tmp_path / "skills"
+
+    def run_checkout_installer() -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [
+                sys.executable,
+                str(checkout / "scripts/install_codex_skills.py"),
+                "--target",
+                str(target),
+            ],
+            cwd=checkout,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+    old_install = run_checkout_installer()
+    assert old_install.returncode == 0, old_install.stderr + old_install.stdout
+    assert (target / "pm-release-notes-generator").is_symlink()
+    assert (target / "docs-release-notes-generator").is_symlink()
+
+    new_skill = checkout / "agents/product_manager/skills/github-release-generator"
+    new_skill.mkdir()
+    (new_skill / "SKILL.md").write_text(
+        "---\nname: github-release-generator\n---\n",
+        encoding="utf-8",
+    )
+    shutil.rmtree(checkout / "agents/product_manager/skills/release-notes-generator")
+    marketplace["plugins"][0]["skills"] = [
+        "./skills/pm-agent",
+        "./skills/github-release-generator",
+    ]
+    marketplace_path.write_text(json.dumps(marketplace), encoding="utf-8")
+
+    upgraded = run_checkout_installer()
+
+    assert upgraded.returncode == 0, upgraded.stderr + upgraded.stdout
+    assert "Removed obsolete managed skill aliases:" in upgraded.stdout
+    assert not (target / "pm-release-notes-generator").exists()
+    assert not (target / "pm-release-notes-generator").is_symlink()
+    assert not (target / "docs-release-notes-generator").exists()
+    assert not (target / "docs-release-notes-generator").is_symlink()
+    assert not (
+        target / MIRROR_DIR / "agents/product_manager/skills/release-notes-generator"
+    ).exists()
+    assert (target / "github-release-generator").resolve(strict=True) == (
+        target / MIRROR_DIR / "agents/product_manager/skills/github-release-generator"
+    )
+    assert (target / "release-notes-generator").resolve(strict=True) == (
+        target / MIRROR_DIR / "agents/docs/skills/release-notes-generator"
+    )
+
+
+def test_upgrade_preserves_unowned_obsolete_alias_name(tmp_path: Path) -> None:
+    target = tmp_path / "skills"
+    unowned = target / "pm-release-notes-generator"
+    unowned.mkdir(parents=True)
+    sentinel = unowned / "SKILL.md"
+    sentinel.write_text("user-owned skill", encoding="utf-8")
+
+    result = run_installer(target)
+
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert sentinel.read_text(encoding="utf-8") == "user-owned skill"
+    assert unowned.is_dir()
+    assert not unowned.is_symlink()
+
+
 def test_routers_only_links_only_router_skills_but_keeps_full_hidden_mirror(tmp_path: Path) -> None:
     target = tmp_path / "skills"
 
