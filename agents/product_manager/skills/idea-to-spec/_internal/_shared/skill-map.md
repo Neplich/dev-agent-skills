@@ -317,6 +317,56 @@ workflow, or blocked handoff report.
   path, not a silent refusal and not permission to execute downstream work
   without the missing basis.
 
+### Security-to-Docs Evidence Handoff and Audit Rerun
+
+This subsection is the authoritative cross-role rule for when Security
+conclusions enter the formal documentation layer. Security uses the same Docs
+handoff every other role uses: it hands the evidence to `docs-agent`, and the
+documentation specialists apply their own entry gates, sync modes, and audit
+rules. This rule declares the trigger and the evidence only; it defines no
+documentation workflow of its own and no parallel owner map. The handoff is
+conditional: not every security review reaches Docs.
+
+**Trigger conditions.** Hand off to `Docs` only when a confirmed Security
+conclusion — a review finding, or a Security re-review confirming that a
+remediation has landed — establishes that at least one of the following has
+changed:
+
+- formal-documentation facts under `docs/site/`: documented current-state API,
+  database, design, ops, or product behavior, for example authentication
+  requirements, permission rules, data handling, or endpoint behavior
+- externally visible behavior of the system
+- operational or deployment facts, for example hardening steps, required
+  environment configuration, or rollback behavior
+- release readiness
+
+**Non-trigger conditions.** Do not hand off to Docs when the security review
+finds no issues, when findings and fixes stay internal without changing any of
+the trigger categories above (formal-documentation facts, externally visible
+behavior, operational or deployment facts, or release readiness), or when the
+only outputs are Security-owned process reports under
+`docs/security/{feature_path}/`. Those reports remain process documents owned
+by Security.
+
+**Handoff evidence.** A triggered handoff gives `docs-agent` the Security review
+or remediation evidence — the report under `docs/security/{feature_path}/` for
+feature-scoped work, or the repo-wide audit evidence when the security scope is
+repo-wide (`N/A` feature scope) — together with the affected scope (`feature_path`
+values or a repo-wide marker, affected formal document types across api /
+database / design / ops / product, and a short summary of which fact changed)
+and the affected release version when release readiness is impacted.
+
+**Downstream action.** `docs-agent` routes the evidence into the applicable
+`formal-docs-sync` to update the affected current-state pages. Whether that
+work then needs a `docs-audit` pass — and every execution detail such as sync
+mode and entry-basis selection, the `target_release_version` precondition,
+pre-tag versus post-tag behavior, and whether the work closes at sync, reports
+blocked, or needs a new release version — belongs to `formal-docs-sync` and
+`docs-audit` under their existing gates. Once the facts change, an affected
+release's existing `docs-audit` result is no longer authoritative, and those
+specialists own how a current result is re-established. This rule mandates no
+audit route, adds no mode or rerun mechanics, and creates no parallel owner map.
+
 ## 9. Phase and Situation Routing
 
 | Phase / Situation | Primary internal skill | Alternative / follow-up |
