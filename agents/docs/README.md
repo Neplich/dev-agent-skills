@@ -19,7 +19,7 @@ release documentation audit requests to the matching documentation specialist.
 | --- | --- |
 | Entry skill | `docs-agent` |
 | Specialist skills | 4 |
-| Main inputs | PM handoff context, approved product documents, confirmed engineering documents, code and test evidence, deployment evidence, fact-changing security remediation evidence, release context |
+| Main inputs | PM handoff context, approved product documents, confirmed engineering documents, code and test evidence, deployment evidence, fact-changing security conclusion or remediation evidence, release context |
 | Main outputs | Formal documentation-site scaffolding, current-state formal docs, change-map updates, confirmed site Release Notes, release audit reports |
 | Collaboration | Downstream of confirmed PM, Engineer, QA, and DevOps evidence; supports release readiness without replacing their role contracts |
 
@@ -75,7 +75,7 @@ flowchart LR
     Engineer --> Docs["Docs Agent: formal current-state docs"]
     QA --> Docs
     DevOps["DevOps: deployment evidence"] --> Docs
-    Security["Security: fact-changing remediation evidence"] -.-> Docs
+    Security["Security: fact-changing conclusion or remediation evidence"] -.-> Docs
     Release["Release context"] --> Docs
     Docs --> Notes["Site Release Notes"]
     Notes --> Audit["Formal documentation audit"]

@@ -365,14 +365,24 @@ reused as-is.
 affected current-state pages, then rerun `docs-audit` for the affected release.
 Do not rerun `docs-audit` before the facts are synchronized.
 
-**Sync mode mapping.** A triggered handoff enters `formal-docs-sync` through
-one of its existing entry modes and adds no new mode: deployment verification
-for operational or deployment facts, feature delivery when the affected scope
-has its confirmed feature document chain, release mode for release-scoped
-reconciliation, and otherwise a maintainer-confirmed finite backfill batch
-limited to the affected pages. If no mode's entry basis can be satisfied,
-report the sync as blocked with the missing basis instead of skipping the
-rerun rule.
+**Sync mode mapping and precedence.** A triggered handoff enters
+`formal-docs-sync` through one of its existing entry modes and adds no new
+mode. Map by the affected fact surface: feature delivery when the affected
+scope has its confirmed feature document chain (Approved PRD, Confirmed TRD,
+plan, diff, tests); deployment verification for operational or deployment
+facts backed by confirmed deployment evidence; release mode for release-scoped
+reconciliation against confirmed version facts; otherwise a
+maintainer-confirmed finite backfill batch limited to the affected pages. A
+pure Security remediation that satisfies none of the feature, deployment, or
+release entry bases — for example a repo-wide dependency patch or a
+configuration hardening fix — uses the maintainer-confirmed backfill batch as
+its default path once the maintainer confirms that affected-page batch. When a
+single handoff matches more than one mode — for example a configuration
+correction found during release readiness that is both operational and
+release-scoped — select exactly one mode by this precedence: release, then
+deployment verification, then feature delivery, then maintainer-confirmed
+backfill. If the selected mode's entry basis cannot be satisfied, report the
+sync as blocked with the missing basis instead of skipping the rerun rule.
 
 The Downstream Owner Map and the collaboration chain stay unchanged; this rule
 only adds a conditional `Security -> Docs` evidence path and does not create a

@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "d0ae9f91cf38480bad807fa1c6f873e450428a4a910655827d7621d5f3473e8e"
+      "computedHash": "ab3644a2f0c2be7e9a687d8d5d5476d896b1df40bcf757586103a2ae6719aa96"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
