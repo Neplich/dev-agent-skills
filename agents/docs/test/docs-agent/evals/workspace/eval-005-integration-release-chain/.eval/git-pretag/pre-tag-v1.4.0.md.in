@@ -1,0 +1,26 @@
+# Pre-tag discovery handoff
+
+- schema_version: `1.0`
+- attempt: `1`
+- phase: `pre-tag`
+- target_release_version: `v1.4.0`
+- base_ref_commit: `{{BASE_COMMIT}}`
+- target_ref_commit: `{{TARGET_COMMIT}}`
+- phase_result: `ready_for_tag`
+- result_time: `2026-07-20T09:15:00+08:00`
+- version_source_inventory_digest: `sha256:{{INVENTORY_DIGEST}}`
+- anchor_commit: `{{ANCHOR_COMMIT}}`
+- anchor_tree: `{{ANCHOR_TREE}}`
+- candidate_record_path: `docs/site/.meta/audit/audit-v1.4.0.md`
+- candidate_record_blob: `{{CANDIDATE_BLOB}}`
+- post_commit_confirmation: `passed`
+- post_commit_confirmation_time: `2026-07-20T09:14:00+08:00`
+- discovery_path_preimage: `absent`
+- prior_attempt_lineage: `[]`
+- previous_lineage_digest: `sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`
+- lineage_canonical_json: `{{LINEAGE_JSON}}`
+- current_entry: `(attempt=1, anchor_commit={{ANCHOR_COMMIT}}, anchor_tree={{ANCHOR_TREE}}, record_path=docs/site/.meta/audit/audit-v1.4.0.md, record_blob={{CANDIDATE_BLOB}}, previous_lineage_digest=sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945)`
+- lineage_digest_algorithm: `canonical-json-rfc8259-sorted-v1`
+- lineage_digest: `sha256:{{LINEAGE_DIGEST}}`
+- immediately_superseded_attempt: none
+- current_handoff_blob: omitted to avoid self-reference; resolve from the handoff commit or tag tree

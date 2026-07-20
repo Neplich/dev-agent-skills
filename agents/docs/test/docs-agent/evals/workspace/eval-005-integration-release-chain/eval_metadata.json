@@ -3,12 +3,16 @@
   "eval_name": "integration-release-chain",
   "workspace_root": "agents/docs/test/docs-agent/evals/workspace/eval-005-integration-release-chain",
   "skill_availability_goal": "Verify the complete AI Hub-shaped docs release chain from the shared host contract and confirmed site Release Notes through pre-tag and post-tag audit to a gated GitHub Release handoff, without tag or Release mutation.",
-  "prompt": "维护者已在 `release-chain-entry.md` 中确认 `target_release_version`、不可变 base/target ref 与本次从文档审计推进到 GitHub Release handoff 的范围。请读取该文件列出的 AI Hub-shaped 宿主证据，先执行 pre-tag 文档审计并形成可追溯的 `ready_for_tag` 锚定记录，再依据 `.eval/simulated-tag.md` 执行 post-tag 树绑定与版本规范化核验。最后产出给 `github-release-generator` 的结构化 handoff，明确三项上游门禁与仍需独立维护者发布批准。不得创建、移动或删除 tag，不得创建、修改或发布真实 GitHub Release。",
+  "prompt": "维护者已在 `release-chain-entry.md` 中确认 `target_release_version`、runtime-local immutable refs 与本次从文档审计推进到 GitHub Release handoff 的范围。先在 runner 复制出的隔离 workspace 执行 `sh .eval/setup-git-fixture.sh`，再从 `.eval/runtime-git-evidence.md` 和实际 Git object reads 解析 base/target/统一盖章/handoff/tag/evidence-branch head；不得把 Markdown 声明当作对象存在的替代证据。请先核验 pre-tag `ready_for_tag` 锚定记录，再依据 `.eval/simulated-tag.md` 执行 post-tag 树绑定、版本规范化与 evidence branch expected-head/CAS 核验。最后产出给 `github-release-generator` 的结构化 handoff，明确三项上游门禁与仍需独立维护者发布批准。除 setup 脚本在隔离 fixture 内创建 synthetic refs/tag 外，不得创建、移动或删除宿主或远端 tag，不得创建、修改或发布真实 GitHub Release。",
   "fixture_context": [
     "release-chain-entry.md",
     "release-notes-handoff.md",
     ".eval/ref-evidence.md",
     ".eval/simulated-tag.md",
+    ".eval/setup-git-fixture.sh",
+    ".eval/git-base/",
+    ".eval/git-pretag/",
+    ".eval/git-posttag/",
     "docs/pm/ai-search/PRD.md",
     "docs/engineer/ai-search/TRD.md",
     "docs/engineer/ai-search/IMPLEMENTATION_PLAN.md",
@@ -18,6 +22,8 @@
     "package.json"
   ],
   "execution_cleanup": [
+    ".git",
+    ".eval/runtime-git-evidence.md",
     "outputs",
     "docs/site/.generated",
     "docs/site/.meta/audit"

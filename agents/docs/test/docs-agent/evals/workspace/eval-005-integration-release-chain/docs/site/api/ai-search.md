@@ -6,7 +6,7 @@ stage: release
 owners:
   - ai-platform
 related_code:
-  - src/search/**
+  - src/search/routes.ts
   - tests/search-api.test.ts
 last_verified_version: unverified
 ---

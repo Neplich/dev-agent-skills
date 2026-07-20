@@ -6,4 +6,4 @@
 - command: `npm run test:docs`
 - cwd: `docs/site`
 - result: passed
-- source: immutable target ref `2222222222222222222222222222222222222222`
+- source: runtime immutable target ref `refs/heads/fixture-target` (resolve exact commit after `.eval/setup-git-fixture.sh`; commands are rerun from that detached target workspace)
