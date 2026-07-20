@@ -14,7 +14,7 @@
 | --- | --- |
 | 入口 skill | `docs-agent` |
 | Specialist skills | 4 个 |
-| 主要输入 | PM handoff 上下文、已批准的产品文档、已确认的工程文档、代码和测试证据、部署证据、发布上下文 |
+| 主要输入 | PM handoff 上下文、已批准的产品文档、已确认的工程文档、代码和测试证据、部署证据、改变事实的 Security 整改证据、发布上下文 |
 | 主要输出 | 正式文档站点脚手架、当前状态的正式文档、change-map 更新、已确认的站内 Release Notes、发布审计报告 |
 | 协作关系 | 位于已确认的 PM、Engineer、QA 和 DevOps 证据下游；在不取代其角色契约的前提下支持发布就绪 |
 
@@ -56,6 +56,7 @@ flowchart LR
     Engineer --> Docs["Docs Agent：正式的当前状态文档"]
     QA --> Docs
     DevOps["DevOps：部署证据"] --> Docs
+    Security["Security：改变事实的整改证据"] -.-> Docs
     Release["发布上下文"] --> Docs
     Docs --> Notes["站内 Release Notes"]
     Notes --> Audit["正式文档审计"]
@@ -81,5 +82,6 @@ Docs Agent 依赖可能作为独立插件打包的同级能力：
 - `engineer-agent` 用于已确认的 TRD、实施计划、代码证据和未解决的技术影响范围
 - `qa-agent` 用于验证证据
 - `devops-agent` 用于部署和运维证据
+- `security-agent` 用于已确认且改变事实的 Security 结论与整改证据，并遵循共享 skill map 中条件式的 `Security-to-Docs Evidence Handoff and Audit Rerun` 规则
 
 如果所需目标不可用，Docs Agent 会识别缺失的阶段和插件，将该阶段标记为 blocked，并且不会执行缺失角色的工作。

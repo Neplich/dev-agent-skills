@@ -317,6 +317,54 @@ workflow, or blocked handoff report.
   path, not a silent refusal and not permission to execute downstream work
   without the missing basis.
 
+### Security-to-Docs Evidence Handoff and Audit Rerun
+
+This subsection is the authoritative cross-role rule for how Security
+conclusions enter the formal documentation layer. The handoff is conditional:
+not every security review reaches Docs.
+
+**Trigger conditions.** Hand off to `Docs` only when a confirmed Security
+conclusion or completed remediation changes at least one of:
+
+- formal-documentation facts: documented current-state API, database, design,
+  ops, or product behavior under `docs/site/`, for example authentication
+  requirements, permission rules, data handling, or endpoint behavior
+- externally visible behavior of the system
+- operational or deployment facts, for example hardening steps, required
+  environment configuration, or rollback behavior
+- release readiness: a previously issued `ready_for_tag` or `release_verified`
+  conclusion no longer reflects current facts
+
+**Non-trigger conditions.** Do not hand off to Docs when the security review
+finds no issues, when findings and fixes stay internal without changing any
+documented fact or externally visible behavior, or when the only outputs are
+Security-owned process reports under `docs/security/{feature_path}/`. Those
+reports remain process documents owned by Security.
+
+**Handoff evidence.** A triggered handoff gives Docs:
+
+- the Security review or remediation report path under
+  `docs/security/{feature_path}/`
+- remediation evidence: merged PR or commit references plus Engineer or DevOps
+  verification results
+- the affected scope: `feature_path` values, affected formal document types
+  (api / database / design / ops / product), and a short summary of which fact
+  changed
+- the affected release version when release readiness is impacted
+
+**Audit invalidation.** When a trigger condition holds, existing `docs-audit`
+results covering the affected scope are stale: a pre-tag `ready_for_tag` stamp
+or post-tag `release_verified` conclusion for the pending release must not be
+reused as-is.
+
+**Rerun order.** First run the applicable `formal-docs-sync` mode to update the
+affected current-state pages, then rerun `docs-audit` for the affected release.
+Do not rerun `docs-audit` before the facts are synchronized.
+
+The Downstream Owner Map and the collaboration chain stay unchanged; this rule
+only adds a conditional `Security -> Docs` evidence path and does not create a
+parallel owner map.
+
 ## 9. Phase and Situation Routing
 
 | Phase / Situation | Primary internal skill | Alternative / follow-up |

@@ -111,6 +111,7 @@ flowchart LR
     Engineer --> Docs
     QA --> Docs
     DevOps --> Docs
+    Security -. "Fact-changing remediation evidence" .-> Docs
 ```
 
 Engineering guardrails for PRD/TRD alignment, implementation planning, and QA E2E handoff are documented in the [Engineer Agent guide](./agents/engineer/README.md).

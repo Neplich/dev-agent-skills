@@ -44,7 +44,7 @@ PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent →
   PRD      UI/UX Spec        TRD          Test Report  Deploy Config  Security Review
   BRD      Visual System   Code Changes                  CI/CD
 
-PM / Engineer / QA / DevOps → Docs Agent（正式文档生产 / 审计）
+PM / Engineer / QA / DevOps / Security（条件式）→ Docs Agent（正式文档生产 / 审计）
                                   ↓
                              Formal Docs
 ```
@@ -64,6 +64,7 @@ PM / Engineer / QA / DevOps → Docs Agent（正式文档生产 / 审计）
 
 - 6 个现有 Agent 按 `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md` 消费宿主正式文档
 - Docs Agent 读取 `docs/pm/{feature_path}/`、`docs/engineer/{feature_path}/TRD.md` 与代码证据
+- Security 结论或整改改变正式文档事实、对外行为、运维事实或发版就绪状态时，按 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` 的 `Security-to-Docs Evidence Handoff and Audit Rerun` 规则把证据交给 Docs Agent；受影响范围的旧 docs-audit 结论失效，先执行适用的 `formal-docs-sync` 再重跑 `docs-audit`
 - Engineer 读取 `docs/pm/{feature_path}/` 和 `docs/design/{feature_path}/`
 - QA 读取 `docs/pm/{feature_path}/` 和实现代码
 - QA 在进行广泛项目探索前，先读取已有的 `docs/qa/e2e/{feature_path}/TEST_SUITE.md`、`FLOW_INDEX.md`、`cases/*.md` 和 `scripts/*.spec.md`
