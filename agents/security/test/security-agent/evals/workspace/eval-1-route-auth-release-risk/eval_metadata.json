@@ -3,8 +3,10 @@
   "eval_name": "route-auth-release-risk",
   "workspace_root": "agents/security/test/security-agent/evals/workspace/eval-1-route-auth-release-risk",
   "skill_availability_goal": "Verify that security-agent routes an auth-centered release risk request to authz-reviewer and keeps dependency audit as a follow-up.",
-  "prompt": "用户说：登录和权限模型重构准备上线，重点担心 admin 越权，同时也想知道依赖有没有漏洞。先做安全路由，不要直接写修复方案。",
+  "prompt": "pm-agent 已完成入口分类，并附 PM handoff packet（见 workspace `PM_HANDOFF.md` 与正式源文档 `docs/pm/auth-model/PRD.md`）路由到 security-agent。用户原始诉求：登录和权限模型重构准备上线，重点担心 admin 越权，同时也想知道依赖有没有漏洞。先做安全路由，不要直接写修复方案。",
   "fixture_context": [
+    "PM_HANDOFF.md",
+    "docs/pm/auth-model/PRD.md",
     "docs/security/auth-model.md",
     "package.json"
   ]
