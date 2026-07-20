@@ -1,0 +1,25 @@
+title: 文档变更映射
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - docs/site
+last_verified_version: unverified
+
+# Entry schema:
+# change_map:
+#   "<repository-relative code_glob>":
+#     required_docs:
+#       - docs/site/<section>/<page>.md
+#     trigger: <when a code change requires documentation review>
+#     exclude:
+#       - "<optional glob that narrows only this entry>"
+change_map:
+  "src/search/**":
+    required_docs:
+      - docs/site/api/ai-search.md
+    trigger: 搜索路由、参数、响应或错误契约变化时复核 AI 搜索 API 页面
+    exclude:
+      - "src/search/**/*.bench.ts"
