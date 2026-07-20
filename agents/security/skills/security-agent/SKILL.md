@@ -102,7 +102,7 @@ security outcome.
   narrowest plausible review instead of bouncing the request.
 - If fixes are needed, keep the security output focused on evidence and hand the
   remediation back to `engineer-agent` or `devops-agent` as appropriate.
-- If the confirmed conclusion or completed remediation changes formal documentation facts, externally visible behavior, operational facts, or release readiness, additionally hand the evidence to `docs-agent` per the `Security-to-Docs Evidence Handoff and Audit Rerun` rule in `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`. `docs-agent` first runs the applicable `formal-docs-sync`; when the change affects an already-audited or pending release, that release's existing `docs-audit` result is stale and `docs-audit` reruns after the sync, while a pure current-state correction with no affected release completes at `formal-docs-sync`.
+- After a routed security specialist produces its conclusion or remediation evidence, evaluate this handoff at closeout: if that confirmed conclusion or completed remediation changes formal documentation facts, externally visible behavior, operational facts, or release readiness, hand the evidence to `docs-agent` per the `Security-to-Docs Evidence Handoff and Audit Rerun` rule in `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`. `docs-agent` and the documentation specialists own the `formal-docs-sync` and `docs-audit` steps under their own gates.
 
 ## Missing Handoff Target
 
