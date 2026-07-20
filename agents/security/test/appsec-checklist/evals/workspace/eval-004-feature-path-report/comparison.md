@@ -8,7 +8,7 @@
 - Test case: Feature Path Security Report
 - Workspace: `workspace/eval-004-feature-path-report`
 - Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
-- Latest result: PASS（4/4 assertions PASS）- fresh subagent validation completed on 2026-07-21
+- Latest result: PASS（5/5 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
@@ -24,6 +24,7 @@
 - PASS：报告落 `docs/security/chat-interface/messages/history/search/appsec-checklist.md`。
 - PASS：frontmatter 含完整 feature_path/parent_feature/feature_level。
 - PASS：未创建 history-search 等同义顶层目录。
+- PASS：断言于第二轮 review 后补充；行为证据来自 2026-07-21 同一轮 fresh subagent validation——with_skill candidate 在该轮已展示此行为（mapped 场景正确升级回 pm-agent）。
 
 ## With Skill Behavior
 

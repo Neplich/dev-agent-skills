@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "9d0c2e670a68a8f44c56e34a951d60c0d06b70267a75d9085b478e2d331ea9e1"
+      "computedHash": "3dc92dfdcfba66651bbffdd4aa207e6cd47cd730215eb4ab8041612aade3d1c1"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
@@ -164,22 +164,22 @@
     "appsec-checklist": {
       "source": "agents/security/skills/appsec-checklist",
       "sourceType": "local",
-      "computedHash": "745720f5f92546dbd751e251192eb850ef9748a5cefa11409920e48289df1354"
+      "computedHash": "d444ded222728c1326d55565db818d985cb3216ece345e62e1c3ffa0b9e4b138"
     },
     "authz-reviewer": {
       "source": "agents/security/skills/authz-reviewer",
       "sourceType": "local",
-      "computedHash": "28bb10f98886217355406ea62b79d6ddd679307743e259238c90311961f9e6b9"
+      "computedHash": "7f0af472405f3e25a145cfaff1a687c2bd8b2c727416801b9684651c6126d7f1"
     },
     "dependency-risk-auditor": {
       "source": "agents/security/skills/dependency-risk-auditor",
       "sourceType": "local",
-      "computedHash": "9ed50e10de47c046a4af8d8db8516b44e41534efd32af3f86b0cd6b5e4368b29"
+      "computedHash": "10ae8ca03532b10ceca6ecf770df65afa87f86d8998804c841572251ed29e1ca"
     },
     "privacy-surface-mapper": {
       "source": "agents/security/skills/privacy-surface-mapper",
       "sourceType": "local",
-      "computedHash": "42228186efba71fbb61cae6c7abc8390484239db6e696bae9e007f9032976d55"
+      "computedHash": "1630510e12434a1edbdee1a391b3514d7a88efc46ade9e04f9f2055306ce38fb"
     },
     "docs-agent": {
       "source": "agents/docs/skills/docs-agent",

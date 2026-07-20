@@ -8,7 +8,7 @@
 - Test case: Mapped Client Dependency Documentation
 - Workspace: `workspace/eval-004-mapped-client-dependency`
 - Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
-- Latest result: PASS（3/3 assertions PASS）- fresh subagent validation completed on 2026-07-21
+- Latest result: PASS（4/4 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
@@ -23,6 +23,7 @@
 - PASS：change-map 反查只读 `docs/site/api/network-client.md`。
 - PASS：识别文档声称 2.1.0、清单固定 1.4.0 的矛盾，以清单事实评估风险。
 - PASS：识别 unverified，版本结论以清单为准并要求核验制品来源。
+- PASS：断言于第二轮 review 后补充；行为证据来自 2026-07-21 同一轮 fresh subagent validation——with_skill candidate 在该轮已展示此行为（mapped 场景正确升级回 pm-agent）。
 
 ## With Skill Behavior
 

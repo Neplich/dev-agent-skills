@@ -31,11 +31,16 @@
           "description": "结构化风险产物",
           "text": "必须声明预期输出是结构化 review、风险矩阵、证据和修复建议，而不是直接代码补丁。"
         },
-        {
-          "id": "hands_off_remediation",
-          "description": "修复 handoff",
-          "text": "必须说明如果发现修复项，应交给 `engineer-agent` 或 `devops-agent` 处理 remediation。"
-        }
+    {
+      "id": "hands_off_remediation",
+      "description": "修复 handoff",
+      "text": "必须说明如果发现修复项，应交给 `engineer-agent` 或 `devops-agent` 处理 remediation。"
+    },
+    {
+      "id": "evaluates_escalation_to_pm_at_closeout",
+      "description": "closeout 时评估结论升级",
+      "text": "必须说明在 closeout 时按 `Security Conclusion Escalation to PM` 评估 Security 自有的确认结论；路由阶段尚无确认结论时不触发升级，且不把证据直接交给 `docs-agent`、不由 Security 自行创建 issue。"
+    }
       ]
     }
   ]

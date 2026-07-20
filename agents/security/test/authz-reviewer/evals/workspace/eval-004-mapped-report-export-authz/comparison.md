@@ -8,7 +8,7 @@
 - Test case: Mapped Report Export Authorization
 - Workspace: `workspace/eval-004-mapped-report-export-authz`
 - Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
-- Latest result: PASS（3/3 assertions PASS）- fresh subagent validation completed on 2026-07-21
+- Latest result: PASS（4/4 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
@@ -23,6 +23,7 @@
 - PASS：change-map 反查只读 `docs/site/api/report-export.md`。
 - PASS：识别文档声称仅 admin 可导出、代码实际放行 analyst 的矛盾，以代码事实评估越权。
 - PASS：识别 unverified，扩大代码核证而非采信文档。
+- PASS：断言于第二轮 review 后补充；行为证据来自 2026-07-21 同一轮 fresh subagent validation——with_skill candidate 在该轮已展示此行为（mapped 场景正确升级回 pm-agent）。
 
 ## With Skill Behavior
 

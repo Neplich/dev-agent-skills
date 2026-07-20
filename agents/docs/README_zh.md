@@ -57,6 +57,7 @@ flowchart LR
     QA --> Docs
     DevOps["DevOps：部署证据"] --> Docs
     Security["Security：改变事实的结论或整改证据"] -. "结论升级回 PM" .-> PM
+    PM -. "正常 PM handoff packet" .-> Docs
     Release["发布上下文"] --> Docs
     Docs --> Notes["站内 Release Notes"]
     Notes --> Audit["正式文档审计"]

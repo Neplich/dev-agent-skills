@@ -76,6 +76,7 @@ flowchart LR
     QA --> Docs
     DevOps["DevOps: deployment evidence"] --> Docs
     Security["Security: fact-changing conclusion or remediation evidence"] -. "Conclusion escalation to PM" .-> PM
+    PM -. "PM handoff packet" .-> Docs
     Release["Release context"] --> Docs
     Docs --> Notes["Site Release Notes"]
     Notes --> Audit["Formal documentation audit"]

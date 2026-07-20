@@ -348,7 +348,10 @@ by Security.
 to `pm-agent`, which classifies the entry and files the issue. The trigger is
 Security's own conclusion; Security does not wait for a separate Engineer or
 DevOps return handoff. Security must not hand evidence directly to `docs-agent`,
-file the issue itself, or modify documentation.
+file the issue itself, or modify formal documentation (`docs/site/` or
+documentation owned by other roles). Security-owned process reports under
+`docs/security/{feature_path}/` remain required escalation evidence and are not
+restricted by this prohibition.
 
 **Evidence payload.** Include the Security report under
 `docs/security/{feature_path}/` for feature-scoped work, or repo-wide audit
@@ -359,12 +362,13 @@ the affected release version when release readiness is impacted. When the
 conclusion confirms remediation for an existing tracking issue, the evidence
 payload must include the original issue number or link.
 
-**Downstream action.** `pm-agent` classifies the issue as a bug, formal
-documentation, security, or release decision. After the user confirms the entry
-classification, `pm-agent` uses `gh issue create` to create the tracking issue
-and owns its lifecycle. Remediation is dispatched through the normal cross-role
-handoff packet. After remediation lands, route the work back to Security for
-re-review. When Security returns the re-review conclusion to PM, PM updates and
+**Downstream action.** `pm-agent` classifies the issue with request type
+`bug_report`, `formal_docs`, `security`, or `deployment`; release-readiness
+impacts map to `deployment`. After the user confirms the entry classification,
+`pm-agent` uses `gh issue create` to create the tracking issue and owns its
+lifecycle. Remediation is dispatched through the normal cross-role handoff
+packet. After remediation lands, route the work back to Security for re-review.
+When Security returns the re-review conclusion to PM, PM updates and
 closes the original issue rather than creating a duplicate; only a conclusion
 without an existing tracking issue creates a new issue. Any Docs work reaches a
 documentation specialist only through a PM handoff packet and follows that

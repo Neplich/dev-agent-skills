@@ -8,7 +8,7 @@
 - Test case: route-auth-release-risk
 - Workspace: `workspace/eval-1-route-auth-release-risk`
 - Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
-- Latest result: PASS（5/5 assertions PASS）- fresh subagent validation completed on 2026-07-21
+- Latest result: PASS（6/6 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
@@ -25,6 +25,7 @@
 - PASS：完整列出认证流程、角色权限矩阵、敏感路由、测试证据与依赖清单（#140 fixture 使入口 gate 通过）。
 - PASS：结构化 review 报告归档 `docs/security/auth-model/`，非补丁。
 - PASS：代码修复交 `engineer-agent`，依赖/部署交 `devops-agent`。
+- PASS：断言于第二轮 review 后补充；行为证据来自 2026-07-21 同一轮 fresh subagent validation——with_skill candidate 在该轮已展示此行为（路由阶段不触发升级）。
 
 ## With Skill Behavior
 
