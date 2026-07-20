@@ -1,37 +1,46 @@
-# Consumption Regression Comparison
+# Eval Result: eval-005-mapped-search-security
 
 ## Evaluation Target
 
+- Agent: `security`
 - Skill: `appsec-checklist`
 - Eval: `eval-005-mapped-search-security`
+- Test case: Mapped Search Security Documentation
+- Workspace: `workspace/eval-005-mapped-search-security`
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PASS（3/3 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws1-consumption-v1`
-- Commit: `0b000b9`
+- Schema: `evals.json` v1.0
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
-## Latest Result
+## Assertions
 
-**PASS** — with-skill 发现 Critical 级 SQL 注入（字符串插值），文档声称的参数化查询被核证为与代码不符的 unverified 声明，安全结论完全以代码为准。
+- PASS：change-map 反查后只读命中 `docs/site/api/user-search.md`，不遍历。
+- PASS：识别文档声称参数化查询、代码实际字符串插值的矛盾，以代码事实判 [CRITICAL] 注入。
+- PASS：识别 `last_verified_version: unverified`，关键判断全部回代码核证。
 
-## With-Skill Behavior
+## With Skill Behavior
 
-- 命中映射文档后以 search-handler.js 核证，拒绝把 unverified 文档的安全声明当作保证。
-- 产出结构化安全报告：证据、攻击向量、影响上限、参数化修复方案与回归建议，未修改业务代码。
+按 consumption-contract 精准读取并以代码事实为准。closeout 验证（#141 核心）：确认结论改变 `docs/site/` 正式文档事实，candidate 按 `Security Conclusion Escalation to PM` 把结论与证据**回交 pm-agent 分类并提 issue**；未直交 docs-agent、未自建 issue、未修改文档；随后 Safety-Net Closeout 等待用户确认。
 
-## Without-Skill Baseline
+## Without Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
-- baseline 同样发现注入与文档不符，安全判断合格，但证据组织为叙述式，未按契约形成结构化分歧记录。
+fresh baseline 发现同一注入与文档矛盾（fixture 驱动），但无 change-map 消费纪律、无 unverified 信任模型、无升级/closeout 语义。
 
 ## Failures
 
-- 无。
+无。
 
 ## Next Steps
 
-- 保留本结果；后续 fixture 可增加干扰文档以放大行为差距。
+- 无阻塞项。
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

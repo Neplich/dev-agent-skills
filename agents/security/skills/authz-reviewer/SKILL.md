@@ -154,3 +154,13 @@ app.delete('/api/users/:id', requireRole('admin'), async (req, res) => {
 });
 \`\`\`
 ```
+
+## Closeout
+
+After reaching a confirmed review conclusion, including on a direct invocation,
+evaluate the `Security Conclusion Escalation to PM` rule in the shared skill
+map. When it triggers, return the conclusion and evidence to `pm-agent` for
+classification and issue filing; do not hand evidence directly to `docs-agent`,
+file the issue yourself, or modify documentation. Then apply `Safety-Net
+Closeout and Auto-Continue` from the shared skill map to recommend the next step
+and wait for user confirmation.

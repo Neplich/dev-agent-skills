@@ -1,37 +1,46 @@
-# Consumption Regression Comparison
+# Eval Result: eval-004-mapped-report-export-authz
 
 ## Evaluation Target
 
+- Agent: `security`
 - Skill: `authz-reviewer`
 - Eval: `eval-004-mapped-report-export-authz`
+- Test case: Mapped Report Export Authorization
+- Workspace: `workspace/eval-004-mapped-report-export-authz`
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PASS（3/3 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws1-consumption-v1`
-- Commit: `0b000b9`
+- Schema: `evals.json` v1.0
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
-## Latest Result
+## Assertions
 
-**PASS** — with-skill 核证出文档'仅 admin'与代码'admin+analyst'的权限分歧并评估越权影响，unverified 文档不被采信为权威策略，且无 feature_path 时不越权落档审查文档。
+- PASS：change-map 反查只读 `docs/site/api/report-export.md`。
+- PASS：识别文档声称仅 admin 可导出、代码实际放行 analyst 的矛盾，以代码事实评估越权。
+- PASS：识别 unverified，扩大代码核证而非采信文档。
 
-## With-Skill Behavior
+## With Skill Behavior
 
-- 命中映射文档后回权限代码核证角色清单，分歧以文档/代码/影响/可信度限制结构化输出。
-- 权限设计意图正确交回负责人确认（可能是代码越权也可能是文档过期），并遵守 feature_path 门禁不擅自创建 docs/security 产物。
+结论克制：不单方面裁定 admin-only 是否为预期，交 owner 确认意图；feature_path 未确认故不落档、不自建顶层目录。closeout 验证（#141 核心）：确认结论改变 `docs/site/` 正式文档事实，candidate 按 `Security Conclusion Escalation to PM` 把结论与证据**回交 pm-agent 分类并提 issue**；未直交 docs-agent、未自建 issue、未修改文档；随后 Safety-Net Closeout 等待用户确认。
 
-## Without-Skill Baseline
+## Without Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
-- baseline 权限分析质量高（含对象级授权与身份可信度风险），但分歧记录未按契约结构化，落档边界由临场判断。
+fresh baseline 同样发现 analyst 越权矛盾（fixture 驱动），但无 change-map 纪律、无 unverified 信任模型、无升级/closeout 语义。
 
 ## Failures
 
-- 无。
+无。
 
 ## Next Steps
 
-- 保留本结果；后续 fixture 可增加干扰文档以放大行为差距。
+- 无阻塞项。
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

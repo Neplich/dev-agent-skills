@@ -4,12 +4,12 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "fdfb0835f91f23b570e7434d044a009e0d1c39435ac7ac6868ba88c45a07c747"
+      "computedHash": "229b5cff943ceafd2c6a765289b521892c51c9e5feaac588f5e8b604f598c324"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "9c376d3bfac4a4debbd572a30f07a3ad3c2b91586db848673c0762523b159db4"
+      "computedHash": "c5e9f3e0497b441dca8ae1e9b6389cb8660d835101c66b366c066a4401122702"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
@@ -159,27 +159,27 @@
     "security-agent": {
       "source": "agents/security/skills/security-agent",
       "sourceType": "local",
-      "computedHash": "97a799c923000a0df69fb1dcdfdec2cd0d628c158709c39aade490f44598e41c"
+      "computedHash": "06ee02abdb86e2649b2a138fc906ad49d303716def161aa28edbda7f37624710"
     },
     "appsec-checklist": {
       "source": "agents/security/skills/appsec-checklist",
       "sourceType": "local",
-      "computedHash": "0d8d8f307df5a732346641132f84c66024474359ef257418aa064b4005f18ad0"
+      "computedHash": "745720f5f92546dbd751e251192eb850ef9748a5cefa11409920e48289df1354"
     },
     "authz-reviewer": {
       "source": "agents/security/skills/authz-reviewer",
       "sourceType": "local",
-      "computedHash": "f25f9b4667c340d1dce2cb3202eba04ea914b5eb1a8cdf6b8d13e064fa098ea0"
+      "computedHash": "28bb10f98886217355406ea62b79d6ddd679307743e259238c90311961f9e6b9"
     },
     "dependency-risk-auditor": {
       "source": "agents/security/skills/dependency-risk-auditor",
       "sourceType": "local",
-      "computedHash": "31e269b7f2cc357ffaa4da07b4a319e5e0fbdc4324d36e5d71019d997ad2a376"
+      "computedHash": "9ed50e10de47c046a4af8d8db8516b44e41534efd32af3f86b0cd6b5e4368b29"
     },
     "privacy-surface-mapper": {
       "source": "agents/security/skills/privacy-surface-mapper",
       "sourceType": "local",
-      "computedHash": "e96d6aeeb3cc5edb03e6f1aa62a9a708f398fbb1c83018c6af436fa270e17735"
+      "computedHash": "42228186efba71fbb61cae6c7abc8390484239db6e696bae9e007f9032976d55"
     },
     "docs-agent": {
       "source": "agents/docs/skills/docs-agent",

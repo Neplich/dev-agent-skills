@@ -1,48 +1,46 @@
-# Eval Result: pm-agent-route-deployment-request
+# Eval Result: eval-005-route-deployment-request
 
 ## Evaluation Target
 
+- Agent: `product_manager`
 - Skill: `pm-agent`
+- Eval: `eval-005-route-deployment-request`
 - Test case: route-deployment-request
-- Test set: PM entry evals for issue #52 / FR-006 scenario 5; PR #98 trigger-description routing check
-- Entry: workspace `eval-5-route-deployment-request`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08
+- Workspace: `workspace/eval-5-route-deployment-request`
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PASS（3/3 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: repo-wide CI and release-readiness request
-- Expected output: classify as `deployment`, allow repo-wide `N/A` feature fields, and prepare DevOps handoff with operational scope.
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
 ## Assertions
 
-- PASS `request_type_deployment`: CI and release-readiness work is classified as `deployment`.
-- PASS `repo_wide_scope_allowed`: Confirmed repository-level non-feature work can use `N/A` feature fields and empty `feature_path_evidence`.
-- PASS `devops_handoff_packet`: DevOps handoff requires operational goal, environment, release scope, rollback needs, and risks.
+- PASS `request_type_deployment`
+- PASS `repo_wide_scope_allowed`
+- PASS `devops_handoff_packet`
 
 ## With Skill Behavior
 
-- Fresh subagent applied the current-branch `pm-agent` SKILL.md and Product Manager Agent README.
-- The router maps repo-level CI and pre-launch checks to `request_type: deployment`.
-- Because the work is confirmed as repository-level and not feature-scoped, feature fields may use `N/A` and `feature_path_evidence: []`.
-- It prepares DevOps handoff only after recording operational goal, environment, release scope, rollback needs, and risks; PM does not directly create CI or deployment configuration.
+分类 `deployment`；repo-wide 正确取 `N/A` feature scope；DevOps packet 要素齐全。
 
 ## Without Skill Baseline
 
-- Fresh without_skill baseline was regenerated on 2026-07-08 from the eval prompt and fixture README only; it did not reuse historical baseline text and did not apply `pm-agent` SKILL.md or the Product Manager Agent README.
-- The generic baseline can identify CI and launch readiness as DevOps/deployment work, but may jump into CI configuration advice and omit the PM handoff packet, `change_tier`, repo-wide `N/A` feature-scope rule, and full DevOps handoff context.
+fresh baseline 凭通用常识给出合理的分类/流程建议，但未使用 canonical request_type / change_tier 契约词汇，无 handoff packet 结构、无入口门禁与 fast lane 边界语义。
 
 ## Failures
 
-- None. The current `pm-agent` protocol satisfies deployment classification and repo-wide scope assertions.
-- No routing regression found from the PR #98 trigger-description changes.
+无。
 
 ## Next Steps
 
-- Keep this eval as PM entry coverage for deployment and CI routing.
-- Re-run fresh validation if repo-wide feature-scope handling, DevOps handoff packet fields, or entry trigger descriptions change.
+- 无阻塞项。
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were committed. The validating subagent did not create runtime files.
-- If future transcripts, verdicts, timing data, outputs, or diagnostics are generated, keep them under `tmp/eval-runs/pm-agent-20260708/eval-005/` or another isolated scratch path and do not commit them.
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

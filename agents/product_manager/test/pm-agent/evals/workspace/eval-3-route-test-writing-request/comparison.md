@@ -1,48 +1,46 @@
-# Eval Result: pm-agent-route-test-writing-request
+# Eval Result: eval-003-route-test-writing-request
 
 ## Evaluation Target
 
+- Agent: `product_manager`
 - Skill: `pm-agent`
+- Eval: `eval-003-route-test-writing-request`
 - Test case: route-test-writing-request
-- Test set: PM entry evals for issue #52 / FR-006 scenario 3; PR #98 trigger-description routing check
-- Entry: workspace `eval-3-route-test-writing-request`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08
+- Workspace: `workspace/eval-3-route-test-writing-request`
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PASS（3/3 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: test-writing request without confirmed test basis
-- Expected output: classify as `validation`, name PRD / TRD / IMPLEMENTATION_PLAN or existing acceptance evidence, then hand off QA or Engineer/test-writer only after expectations are stable.
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
 ## Assertions
 
-- PASS `request_type_validation`: The request is classified as `validation` / test verification work.
-- PASS `test_basis_first`: The route requires PRD, TRD, confirmed implementation plan, or existing acceptance evidence as the test basis.
-- PASS `qa_or_test_writer_handoff`: QA or Engineer/test-writer handoff waits until expectations and source documents are stable.
+- PASS `request_type_validation`
+- PASS `test_basis_first`
+- PASS `qa_or_test_writer_handoff`
 
 ## With Skill Behavior
 
-- Fresh subagent applied the current-branch `pm-agent` SKILL.md and Product Manager Agent README.
-- The router classifies the order-refund exception-branch test request as `validation`.
-- It does not treat the request as ready for direct test writing because the source basis is not confirmed.
-- It requires PRD, TRD, confirmed IMPLEMENTATION_PLAN, or existing acceptance evidence before handoff to `qa-agent` or `engineer-agent` test-writer path.
+分类 `validation`；先确认测试依据文档；依据稳定后才 handoff QA/test-writer。
 
 ## Without Skill Baseline
 
-- Fresh without_skill baseline was regenerated on 2026-07-08 from the eval prompt and fixture README only; it did not reuse historical baseline text and did not apply `pm-agent` SKILL.md or the Product Manager Agent README.
-- The generic baseline tends to ask about refund rules, exception lists, APIs, and desired test types, and may suggest QA or a test engineer, but it does not reliably produce `request_type: validation`, `change_tier`, a PM handoff packet, or the formal test-basis gate.
+fresh baseline 凭通用常识给出合理的分类/流程建议，但未使用 canonical request_type / change_tier 契约词汇，无 handoff packet 结构、无入口门禁与 fast lane 边界语义。
 
 ## Failures
 
-- None. The current `pm-agent` protocol satisfies the validation and test-basis assertions.
-- No routing regression found from the PR #98 trigger-description changes.
+无。
 
 ## Next Steps
 
-- Keep this eval as PM entry coverage for test-writing requests.
-- Re-run fresh validation if QA or Engineer/test-writer handoff criteria, test-basis rules, or entry trigger descriptions change.
+- 无阻塞项。
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were committed. The validating subagent did not create runtime files.
-- If future transcripts, verdicts, timing data, outputs, or diagnostics are generated, keep them under `tmp/eval-runs/pm-agent-20260708/eval-003/` or another isolated scratch path and do not commit them.
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

@@ -1,49 +1,46 @@
-# Eval Result: pm-agent-change-tier-hotfix-abuse-blocked
+# Eval Result: eval-012-change-tier-hotfix-abuse-blocked
 
 ## Evaluation Target
 
+- Agent: `product_manager`
 - Skill: `pm-agent`
+- Eval: `eval-012-change-tier-hotfix-abuse-blocked`
 - Test case: change-tier-hotfix-abuse-blocked
-- Test set: change-tier contract evals for PR #98 trigger-description revision / issue #55 / FR-008
-- Entry: workspace `eval-12-change-tier-hotfix-abuse-blocked`
-- Latest result: PASS - PR #98 trigger-description revision fresh Codex subagent validation completed on 2026-07-08
+- Workspace: `workspace/eval-12-change-tier-hotfix-abuse-blocked`
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PASS（3/3 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: membership trial duration change mislabeled as hotfix to skip PM
-- Expected output: reject hotfix abuse, identify expectation / business-rule change, and block or return to PM for scope and expectation confirmation.
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
 ## Assertions
 
-- PASS `reject_hotfix_abuse`: The route explicitly rejects treating the request as `hotfix`.
-- PASS `expectation_change_standard`: Changing the trial duration from 7 days to 30 days is a business-rule expectation change and must be classified as `standard` or higher.
-- PASS `block_or_return_pm`: The request is blocked or returned to PM for scope and expectation confirmation, not handed directly to implementation or fast merge.
+- PASS `reject_hotfix_abuse`
+- PASS `expectation_change_standard`
+- PASS `block_or_return_pm`
 
 ## With Skill Behavior
 
-- Applying `pm-agent`, the Product Manager Agent README, and the `AGENTS.md` change-tier contract, the correct answer is that this cannot be handled as a `hotfix`.
-- The request changes approved product expectations for membership trial duration, so the safe classification is `standard` or higher rather than a lightweight typo/config fix.
-- The route blocks the attempted PM bypass: it keeps the request on the PM path for scope and expectation confirmation before any downstream engineering handoff.
-- No delivery fast lane is available because the user is asking for an expectation change, not a confirmed already-scoped delivery/status action.
+拒绝 hotfix 滥用；预期变更按 standard+；blocked 并回 PM。
 
 ## Without Skill Baseline
 
-- Fresh without_skill baseline regenerated on 2026-07-08 from the same prompt and fixture without applying or referencing `pm-agent` or the Product Manager Agent README.
-- A generic assistant could treat the 7-day to 30-day edit as a small constant/config change and say it can proceed as a quick hotfix if tests pass, possibly with only a lightweight note to confirm stakeholders.
-- That baseline may miss the hotfix-abuse pattern: it does not reliably classify the change as product expectation work or block direct implementation before PM alignment.
+fresh baseline 凭通用常识给出合理的分类/流程建议，但未使用 canonical request_type / change_tier 契约词汇，无 handoff packet 结构、无入口门禁与 fast lane 边界语义。
 
 ## Failures
 
-- None for the with_skill run. The current `pm-agent` protocol satisfies all hotfix-abuse assertions after the PR #98 trigger-description revision.
-- The without_skill baseline remains contrast evidence only and is not used as the pass/fail authority.
+无。
 
 ## Next Steps
 
-- Keep this eval as coverage for attempts to misuse `hotfix`.
-- Re-run fresh validation if `pm-agent` trigger descriptions, request classification, or change-tier abuse handling changes again.
+- 无阻塞项。
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed in this run.
-- If future transcripts, verdicts, timing, outputs, or diagnostics are needed, keep them outside git under `tmp/eval-runs/eval-012-change-tier-hotfix-abuse-blocked/`.
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

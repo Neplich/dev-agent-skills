@@ -82,6 +82,6 @@ Docs Agent 依赖可能作为独立插件打包的同级能力：
 - `engineer-agent` 用于已确认的 TRD、实施计划、代码证据和未解决的技术影响范围
 - `qa-agent` 用于验证证据
 - `devops-agent` 用于部署和运维证据
-- `security-agent` 用于已确认且改变事实的 Security 结论与整改证据，并遵循共享 skill map 中条件式的 `Security-to-Docs Evidence Handoff and Audit Rerun` 规则
+- Security 结论不再直接作为 Docs 入口依据；源自 Security 的文档工作由 `pm-agent` 分类并提 issue 后，通过正常 PM handoff packet 到达 Docs
 
 如果所需目标不可用，Docs Agent 会识别缺失的阶段和插件，将该阶段标记为 blocked，并且不会执行缺失角色的工作。

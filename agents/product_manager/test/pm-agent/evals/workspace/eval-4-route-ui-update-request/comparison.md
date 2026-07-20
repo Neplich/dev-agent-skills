@@ -1,48 +1,46 @@
-# Eval Result: pm-agent-route-ui-update-request
+# Eval Result: eval-004-route-ui-update-request
 
 ## Evaluation Target
 
+- Agent: `product_manager`
 - Skill: `pm-agent`
+- Eval: `eval-004-route-ui-update-request`
 - Test case: route-ui-update-request
-- Test set: PM entry evals for issue #52 / FR-006 scenario 4; PR #98 trigger-description routing check
-- Entry: workspace `eval-4-route-ui-update-request`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08
+- Workspace: `workspace/eval-4-route-ui-update-request`
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PASS（3/3 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: frontend UI update request with ambiguous PM / Designer / Engineer ownership
-- Expected output: classify as `design` or `existing_update`, decide whether PM expectation update, Designer artifact, or Engineer implementation is needed, and delay implementation until alignment is complete.
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
 ## Assertions
 
-- PASS `request_type_design_or_update`: The request is classified as `design` or `existing_update`, not direct frontend implementation.
-- PASS `pm_designer_engineer_decision`: The route separates PM expectation updates, Designer deliverables, and Engineer implementation readiness.
-- PASS `implementation_waits_for_alignment`: Frontend implementation waits for PM / TRD / design alignment before Engineer handoff.
+- PASS `request_type_design_or_update`
+- PASS `pm_designer_engineer_decision`
+- PASS `implementation_waits_for_alignment`
 
 ## With Skill Behavior
 
-- Fresh subagent applied the current-branch `pm-agent` SKILL.md and Product Manager Agent README.
-- The router classifies the settings-page layout and interaction update as `design` or `existing_update`; it does not send the work straight to frontend implementation.
-- Because the request may alter existing product expectations, `change_tier` tends toward `standard` rather than `hotfix`.
-- The route first checks whether PM expectations or PRD / DECISIONS need alignment, then sends design artifacts to Designer when needed, and only hands off Engineer frontend implementation after PM / TRD / design alignment.
+分类 `design`/`existing_update`；PM/Designer/Engineer 决策链正确；实现等待对齐。
 
 ## Without Skill Baseline
 
-- Fresh without_skill baseline was regenerated on 2026-07-08 from the eval prompt and fixture README only; it did not reuse historical baseline text and did not apply `pm-agent` SKILL.md or the Product Manager Agent README.
-- The generic baseline may still prefer design first and engineering after the layout is clear, but it does not reliably enforce `change_tier`, PM handoff gates, or the explicit PRD / TRD / design alignment requirement.
+fresh baseline 凭通用常识给出合理的分类/流程建议，但未使用 canonical request_type / change_tier 契约词汇，无 handoff packet 结构、无入口门禁与 fast lane 边界语义。
 
 ## Failures
 
-- None. The current `pm-agent` protocol satisfies the UI routing assertions.
-- No routing regression found from the PR #98 trigger-description changes.
+无。
 
 ## Next Steps
 
-- Keep this eval as PM entry coverage for UI update routing.
-- Re-run fresh validation if Designer or Engineer handoff boundaries, UI update routing, or entry trigger descriptions change.
+- 无阻塞项。
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were committed. The validating subagent did not create runtime files.
-- If future transcripts, verdicts, timing data, outputs, or diagnostics are generated, keep them under `tmp/eval-runs/pm-agent-20260708/eval-004/` or another isolated scratch path and do not commit them.
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

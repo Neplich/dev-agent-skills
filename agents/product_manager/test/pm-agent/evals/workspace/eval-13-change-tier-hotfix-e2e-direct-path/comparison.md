@@ -1,49 +1,46 @@
-# Eval Result: pm-agent-change-tier-hotfix-e2e-direct-path
+# Eval Result: eval-013-change-tier-hotfix-e2e-direct-path
 
 ## Evaluation Target
 
+- Agent: `product_manager`
 - Skill: `pm-agent`
+- Eval: `eval-013-change-tier-hotfix-e2e-direct-path`
 - Test case: change-tier-hotfix-e2e-direct-path
-- Test set: change-tier contract evals for issue #55 / FR-008
-- Entry: workspace `eval-13-change-tier-hotfix-e2e-direct-path`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 after the PR #98 trigger description revision.
+- Workspace: `workspace/eval-13-change-tier-hotfix-e2e-direct-path`
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PASS（3/3 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: login empty-state copy hotfix with QA/E2E scope question
-- Expected output: limit hotfix QA/E2E to directly affected path, still record verification evidence and blocked checks, and avoid full-suite requirement unless risk escalates.
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
 ## Assertions
 
-- PASS `hotfix_direct_path_only`: Hotfix QA/E2E coverage can focus on the directly affected login empty-state path.
-- PASS `evidence_still_required`: Verification evidence, result, and blocked checks remain required.
-- PASS `no_full_suite_required`: A full E2E suite is not required unless risk or scope escalates to `standard` / `major`.
+- PASS `hotfix_direct_path_only`
+- PASS `evidence_still_required`
+- PASS `no_full_suite_required`
 
 ## With Skill Behavior
 
-- Applied `pm-agent`, the Product Manager Agent README, and the AGENTS.md change-tier / QA E2E contracts to the prompt: "这是一个 hotfix，只修登录页空状态文案；请判断 QA/E2E 是否还要做，以及覆盖范围怎么定。"
-- The correct PM classification is `hotfix` only if the copy change does not alter approved PRD/TRD expectations and can be covered by one direct verification path.
-- QA/E2E is still required as verification evidence, but the coverage can be limited to the directly affected login empty-state path.
-- The response must record the validation result, evidence source, and any blocked checks; it should not ask for a full E2E suite unless risk, expectation change, or scope ambiguity upgrades the work to `standard` / `major`.
+hotfix QA 限直接路径；证据要求不削弱；无需全量套件。
 
 ## Without Skill Baseline
 
-- Fresh without_skill baseline regenerated on 2026-07-08 with the same prompt and fixture, without applying or referencing `pm-agent` or the Product Manager Agent README.
-- A generic assistant response is likely to say the copy-only hotfix needs only a quick smoke check or manual review of the login empty state. It may recommend checking the affected page and maybe a screenshot, but it is less likely to name the repository's change-tier contract, require blocked-check recording, or state the escalation condition to `standard` / `major`.
-- The baseline may also overcorrect by suggesting a broader login regression suite because login is important, without distinguishing the direct affected path from full E2E coverage.
+fresh baseline 凭通用常识给出合理的分类/流程建议，但未使用 canonical request_type / change_tier 契约词汇，无 handoff packet 结构、无入口门禁与 fast lane 边界语义。
 
 ## Failures
 
-- None. The current `pm-agent` trigger description, change-tier contract, and QA E2E gate language satisfy all hotfix E2E assertions after the PR #98 trigger description revision.
-- New without_skill baseline generation succeeded, so this result is not reusing the previous comparison baseline.
+无。
 
 ## Next Steps
 
-- Keep this eval as coverage for hotfix QA/E2E scoping.
-- Re-run fresh validation if QA E2E gates or change-tier rules change.
-- If future trigger-description changes affect validation, delivery, or hotfix wording, refresh this comparison with a new without_skill baseline.
+- 无阻塞项。
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git; if produced later, they must stay under `tmp/eval-runs/eval-013-change-tier-hotfix-e2e-direct-path/` and remain unstaged.
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

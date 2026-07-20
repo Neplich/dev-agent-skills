@@ -1,50 +1,48 @@
-# Eval Result: pm-agent-route-greenfield-product-request
+# Eval Result: eval-001-route-greenfield-product-request
 
 ## Evaluation Target
 
+- Agent: `product_manager`
 - Skill: `pm-agent`
+- Eval: `eval-001-route-greenfield-product-request`
 - Test case: route-greenfield-product-request
-- Test set: PM entry evals for issue #52 / FR-006 scenario 1; PR #98 trigger-description routing check
-- Entry: workspace `eval-1-route-greenfield-product-request`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08
+- Workspace: `workspace/eval-1-route-greenfield-product-request`
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PASS（5/5 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: empty-workspace product idea request
-- Expected output: route to `idea-to-spec`, keep the PM-first boundary, name the PM artifacts and downstream handoff points.
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
 ## Assertions
 
-- PASS `route_to_idea_to_spec`: `pm-agent` selects `idea-to-spec` as the narrowest PM route for product discovery, scope shaping, and spec creation.
-- PASS `pm_first_guardrail`: The empty-workspace product idea is kept out of `engineer-agent` and project scaffolding unless the user explicitly bypasses PM.
-- PASS `context_to_collect`: The route names user goals, core flows, scope boundaries, acceptance criteria, and open questions as the next PM context.
-- PASS `expected_pm_artifacts`: The PM outputs are PRD, BRD, and DECISIONS; TRD remains an Engineer-owned follow-up after requirements stabilize.
-- PASS `handoff_boundary`: Designer or Engineer handoff only happens after PM scope is stable.
+- PASS `route_to_idea_to_spec`
+- PASS `pm_first_guardrail`
+- PASS `context_to_collect`
+- PASS `expected_pm_artifacts`
+- PASS `handoff_boundary`
 
 ## With Skill Behavior
 
-- Fresh subagent applied the current-branch `pm-agent` SKILL.md and Product Manager Agent README.
-- The router treats the empty or near-empty AI chat assistant request as PM-first and routes it to `pm-agent:idea-to-spec`.
-- It blocks direct `engineer-agent` handoff or project scaffolding because the user is still describing product behavior and explicitly asked not to write code.
-- It names the context to collect: user goal, core chat flow, conversation-history scope, acceptance criteria, open questions, PRD / BRD / DECISIONS output, and later `engineer-agent:trd-gen` after scope is stable.
+分类 `new_feature`、PM-first 拦截空目录直进工程、`idea-to-spec` 主 route、上下文清单与 PM 产物边界完整。
 
 ## Without Skill Baseline
 
-- Fresh without_skill baseline was regenerated on 2026-07-08 from the eval prompt and fixture README only; it did not reuse historical baseline text and did not apply `pm-agent` SKILL.md or the Product Manager Agent README.
-- The generic baseline tends to recommend first clarifying requirements or a product spec before design and development, but it does not reliably name `idea-to-spec`, the PM-first guardrail, PRD / BRD / DECISIONS, TRD ownership, or delayed Designer / Engineer handoff.
+fresh baseline 凭通用常识给出合理的分类/流程建议，但未使用 canonical request_type / change_tier 契约词汇，无 handoff packet 结构、无入口门禁与 fast lane 边界语义。
 
 ## Failures
 
-- None. All assertions are satisfied by the current `pm-agent` routing and PM-first guardrail.
-- No routing regression found from the PR #98 trigger-description changes.
+无。
 
 ## Next Steps
 
-- Keep this eval as PM entry coverage for empty-workspace product ideas.
-- Re-run fresh validation only when `pm-agent`, `idea-to-spec`, PM handoff rules, or entry trigger descriptions change.
+- 无阻塞项。
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were committed. The validating subagent did not create runtime files.
-- If future transcripts, verdicts, timing data, outputs, or diagnostics are generated, keep them under `tmp/eval-runs/pm-agent-20260708/eval-001/` or another isolated scratch path and do not commit them.
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

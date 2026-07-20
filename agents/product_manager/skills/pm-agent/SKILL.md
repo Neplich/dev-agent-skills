@@ -74,6 +74,8 @@ Treat `pm-agent` as the first stop for all user-side starting points, including:
 - deployment, CI/CD, environment, Docker, Helm, release, rollback, or runbook work
 - security, auth/authz, login, dependency, secret, privacy, data-flow, webhook,
   upload, or permission-risk reviews
+- security conclusion escalations returned to PM for entry classification and
+  issue filing
 - formal documentation site bootstrap, post-feature / deployment / release
   synchronization, existing formal-docs backfill, or release documentation audit
 - GitHub issue, PR, milestone, release, changelog, roadmap, or repo status work
