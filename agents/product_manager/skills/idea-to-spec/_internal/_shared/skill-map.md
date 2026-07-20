@@ -328,7 +328,9 @@ documentation workflow of its own and no parallel owner map. The handoff is
 conditional: not every security review reaches Docs.
 
 **Trigger conditions.** Hand off to `Docs` only when a confirmed Security
-conclusion or completed remediation changes at least one of:
+conclusion — a review finding, or a Security re-review confirming that a
+remediation has landed — establishes that at least one of the following has
+changed:
 
 - formal-documentation facts under `docs/site/`: documented current-state API,
   database, design, ops, or product behavior, for example authentication
@@ -339,10 +341,12 @@ conclusion or completed remediation changes at least one of:
 - release readiness
 
 **Non-trigger conditions.** Do not hand off to Docs when the security review
-finds no issues, when findings and fixes stay internal without changing any
-documented fact or externally visible behavior, or when the only outputs are
-Security-owned process reports under `docs/security/{feature_path}/`. Those
-reports remain process documents owned by Security.
+finds no issues, when findings and fixes stay internal without changing any of
+the trigger categories above (formal-documentation facts, externally visible
+behavior, operational or deployment facts, or release readiness), or when the
+only outputs are Security-owned process reports under
+`docs/security/{feature_path}/`. Those reports remain process documents owned
+by Security.
 
 **Handoff evidence.** A triggered handoff gives `docs-agent` the Security review
 or remediation evidence — the report under `docs/security/{feature_path}/` for
@@ -353,15 +357,15 @@ database / design / ops / product, and a short summary of which fact changed)
 and the affected release version when release readiness is impacted.
 
 **Downstream action.** `docs-agent` routes the evidence into the applicable
-`formal-docs-sync` to update the affected current-state pages, and into
-`docs-audit` when a release is affected. `formal-docs-sync` and `docs-audit` own
-every execution detail under their existing gates — sync mode and entry-basis
-selection, the `target_release_version` precondition, pre-tag versus post-tag
-behavior, and whether a correction closes at sync, reports blocked, or needs a
-new release version. Once the facts change, an affected release's existing
-`docs-audit` result is no longer authoritative, and those specialists own how a
-current result is re-established. This rule adds no mode, no rerun mechanics, and
-no parallel owner map.
+`formal-docs-sync` to update the affected current-state pages. Whether that
+work then needs a `docs-audit` pass — and every execution detail such as sync
+mode and entry-basis selection, the `target_release_version` precondition,
+pre-tag versus post-tag behavior, and whether the work closes at sync, reports
+blocked, or needs a new release version — belongs to `formal-docs-sync` and
+`docs-audit` under their existing gates. Once the facts change, an affected
+release's existing `docs-audit` result is no longer authoritative, and those
+specialists own how a current result is re-established. This rule mandates no
+audit route, adds no mode or rerun mechanics, and creates no parallel owner map.
 
 ## 9. Phase and Situation Routing
 

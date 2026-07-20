@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "75786bc215499782cd0e08142b45c55d7519989f3e59d2a0e5e78d3dff2315a1"
+      "computedHash": "9c376d3bfac4a4debbd572a30f07a3ad3c2b91586db848673c0762523b159db4"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
@@ -159,7 +159,7 @@
     "security-agent": {
       "source": "agents/security/skills/security-agent",
       "sourceType": "local",
-      "computedHash": "d10bf13b3df041247a8c4d448853a62ae1f8a2dd18111160436eb934dadb5d36"
+      "computedHash": "97a799c923000a0df69fb1dcdfdec2cd0d628c158709c39aade490f44598e41c"
     },
     "appsec-checklist": {
       "source": "agents/security/skills/appsec-checklist",
