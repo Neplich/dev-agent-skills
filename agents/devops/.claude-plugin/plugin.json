@@ -1,6 +1,6 @@
 {
   "name": "devops-agent",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Downstream DevOps capability invoked after pm-agent handoff for confirmed deployment planning, CI/CD automation, environment audits, release readiness, rollback, and runbook preparation.",
   "author": {
     "name": "Neplich"
