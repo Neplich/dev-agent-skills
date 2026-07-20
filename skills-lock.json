@@ -4,12 +4,12 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "229b5cff943ceafd2c6a765289b521892c51c9e5feaac588f5e8b604f598c324"
+      "computedHash": "799e97f941b8aba18b0e26a74fee1c3463961692208dffd52e51f9a5187a616d"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "c5e9f3e0497b441dca8ae1e9b6389cb8660d835101c66b366c066a4401122702"
+      "computedHash": "9d0c2e670a68a8f44c56e34a951d60c0d06b70267a75d9085b478e2d331ea9e1"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
@@ -159,7 +159,7 @@
     "security-agent": {
       "source": "agents/security/skills/security-agent",
       "sourceType": "local",
-      "computedHash": "06ee02abdb86e2649b2a138fc906ad49d303716def161aa28edbda7f37624710"
+      "computedHash": "945817aed345f1183bc23ec66b5ab6b5bf59b196e083bf22023048cb708a1f43"
     },
     "appsec-checklist": {
       "source": "agents/security/skills/appsec-checklist",
@@ -184,7 +184,7 @@
     "docs-agent": {
       "source": "agents/docs/skills/docs-agent",
       "sourceType": "local",
-      "computedHash": "5ef79433cb010ee0a46322378985137691f5c1a4163a0e67ff136d2442b46d92"
+      "computedHash": "c6332a92662f54f9487a10bc824c868e9e927f20b277462a9dd3aedd3d5fcba9"
     },
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",
@@ -194,7 +194,7 @@
     "formal-docs-sync": {
       "source": "agents/docs/skills/formal-docs-sync",
       "sourceType": "local",
-      "computedHash": "49b3daf702fdab69a9a407e8739649c092bc04eb40d65db7394617ab723066ea"
+      "computedHash": "c064edbed4cf16c3755b22a549d18ad3be8aed2691b6902646fad538ed40d464"
     },
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",
