@@ -28,6 +28,7 @@ uv run --with pytest pytest \
   agents/qa/test/test_qa_run_eval.py \
   agents/designer/test/test_designer_run_eval.py \
   agents/devops/test/test_devops_run_eval.py \
+  agents/docs/test/test_docs_run_eval.py \
   agents/test_doc_contract.py \
   agents/test_eval_contract.py \
   scripts/test_install_codex_skills.py
@@ -48,11 +49,14 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 # Designer eval diagnostics
 uv run agents/designer/test/run_all_evals.py
 
+# Docs eval diagnostics
+uv run agents/docs/test/run_all_evals.py
+
 # QA model eval
 uv run agents/qa/test/run_all_evals.py
 ```
 
-涉及 skill 行为、routing、eval fixture 或 release readiness 的变更，按 [AGENTS.md](./AGENTS.md#skill-测试) 的 eval 策略执行。GitHub Actions 的 `Manual Evals` workflow 可选择 `all`、`designer` 或 `qa`；QA eval 需要仓库 `OPENAI_API_KEY` secret。
+涉及 skill 行为、routing、eval fixture 或 release readiness 的变更，按 [AGENTS.md](./AGENTS.md#skill-测试) 的 eval 策略执行。GitHub Actions 的 `Manual Evals` workflow 可选择 `all`、`designer`、`docs` 或 `qa`；QA eval 需要仓库 `OPENAI_API_KEY` secret。
 
 ## Eval 维护清单
 
