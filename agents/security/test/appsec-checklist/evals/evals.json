@@ -116,11 +116,16 @@
           "description": "报告 frontmatter 包含 feature path 字段",
           "text": "报告 frontmatter 必须包含 `feature_path: chat-interface/messages/history/search`、`parent_feature: chat-interface/messages/history` 和 `feature_level: 4`。"
         },
-        {
-          "id": "does_not_invent_feature_directory",
-          "description": "路径不清时回 PM/Engineer",
-          "text": "如果 feature_path 不清或同路径 PRD/TRD/实施计划缺失，必须回 PM/Engineer 对齐，而不是自建同义顶层目录。"
-        }
+    {
+      "id": "does_not_invent_feature_directory",
+      "description": "路径不清时回 PM/Engineer",
+      "text": "如果 feature_path 不清或同路径 PRD/TRD/实施计划缺失，必须回 PM/Engineer 对齐，而不是自建同义顶层目录。"
+    },
+    {
+      "id": "escalates_fact_changing_conclusion_to_pm",
+      "description": "改变正式文档事实的结论升级",
+      "text": "确认结论改变正式文档事实时，必须把结论与证据回交 `pm-agent` 分类并创建 issue，不直接交给 `docs-agent`、不由 Security 自行创建 issue；Security 自有的 `docs/security/` 过程报告除外，仍必须作为升级证据产出。"
+    }
       ]
     },
     {
@@ -141,11 +146,16 @@
           "description": "以处理器代码核对查询参数安全声明",
           "text": "关键安全结论回到 src/api/search-handler.js；识别文档声称使用参数化查询、代码实际直接插值 query 的不一致，并以代码事实评估风险。"
         },
-        {
-          "id": "treats_unverified_as_low_trust",
-          "description": "将 unverified 搜索文档按最低信任处理",
-          "text": "识别 required_docs 的 last_verified_version 为 unverified，对所有关键安全判断扩大代码核证，而不是直接采信文档或拒绝读取。"
-        }
+    {
+      "id": "treats_unverified_as_low_trust",
+      "description": "将 unverified 搜索文档按最低信任处理",
+      "text": "识别 required_docs 的 last_verified_version 为 unverified，对所有关键安全判断扩大代码核证，而不是直接采信文档或拒绝读取。"
+    },
+    {
+      "id": "escalates_fact_changing_conclusion_to_pm",
+      "description": "改变正式文档事实的结论升级",
+      "text": "确认结论改变正式文档事实时，必须把结论与证据回交 `pm-agent` 分类并创建 issue，不直接交给 `docs-agent`、不由 Security 自行创建 issue；Security 自有的 `docs/security/` 过程报告除外，仍必须作为升级证据产出。"
+    }
       ]
     }
   ]

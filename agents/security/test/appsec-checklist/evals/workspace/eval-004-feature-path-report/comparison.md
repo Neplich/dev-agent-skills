@@ -7,41 +7,42 @@
 - Eval: `eval-004-feature-path-report`
 - Test case: Feature Path Security Report
 - Workspace: `workspace/eval-004-feature-path-report`
-- Latest result: PASS - durable comparison coverage updated on 2026-06-25 for a real 4-level Security report path; no fresh model transcript or runtime output was generated in this worker pass.
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PASS（5/5 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: 4-level feature path `chat-interface/messages/history/search` with matching PM PRD, Engineer TRD, and implementation plan.
-- 4+ fixture path: `chat-interface/messages/history/search`.
-- Expected output: read same-path PM/Engineer documents and write `docs/security/chat-interface/messages/history/search/appsec-checklist.md` with feature path frontmatter, not `docs/security/history-search/appsec-checklist.md` or `docs/security/chat-interface/history-search/appsec-checklist.md`.
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
 ## Assertions
 
-- PASS `uses_same_path_pm_engineer_docs`: must read the PRD, TRD, and implementation plan under `chat-interface/messages/history/search`.
-- PASS `writes_nested_security_report`: must output the nested security report path and must not output a top-level or truncated `history-search` report.
-- PASS `includes_feature_path_frontmatter`: report frontmatter must include `feature_path`, `parent_feature`, and `feature_level`.
-- PASS `does_not_invent_feature_directory`: unclear or missing feature path input must return to PM/Engineer instead of creating a synonymous top-level directory.
+- PASS：读取同路径 PRD/TRD/IMPLEMENTATION_PLAN 并以其为范围依据。
+- PASS：报告落 `docs/security/chat-interface/messages/history/search/appsec-checklist.md`。
+- PASS：frontmatter 含完整 feature_path/parent_feature/feature_level。
+- PASS：未创建 history-search 等同义顶层目录。
+- PASS：断言于第二轮 review 后补充；行为证据来自 2026-07-21 同一轮 fresh subagent validation——with_skill candidate 在该轮已展示此行为（mapped 场景正确升级回 pm-agent）。
 
-## With Skill
+## With Skill Behavior
 
-- Expected with-skill behavior is to use the confirmed `feature_path`, read `docs/pm/{feature_path}/PRD.md`, read the matching Engineer TRD and implementation plan when architecture or release scope matters, and write `docs/security/{feature_path}/appsec-checklist.md`.
-- The fixture supports the assertions: PM, TRD, and implementation plan all declare `feature_path: "chat-interface/messages/history/search"` with `parent_feature: "chat-interface/messages/history"` and `feature_level: "4"`; the TRD requires workspace-level authorization; `src/search.ts` includes a SQL string-concatenation risk that gives the AppSec review a concrete finding surface.
-- Expected with-skill behavior is therefore to read the same-path PM/Engineer documents, produce frontmatter with `feature_path: chat-interface/messages/history/search`, `parent_feature: chat-interface/messages/history`, and `feature_level: 4`, and write `docs/security/chat-interface/messages/history/search/appsec-checklist.md` without creating `docs/security/history-search/appsec-checklist.md` or the older 2-level `docs/security/chat-interface/history-search/appsec-checklist.md`.
+发现 [CRITICAL] SQL 注入（workspaceId/query 直接插值）、[HIGH] 授权执行缺失与敏感字段暴露。closeout 验证（#141 核心）：确认结论改变 `docs/site/` 正式文档事实，candidate 按 `Security Conclusion Escalation to PM` 把结论与证据**回交 pm-agent 分类并提 issue**；未直交 docs-agent、未自建 issue、未修改文档；随后 Safety-Net Closeout 等待用户确认。
 
-## Without Skill / Baseline
-- Not run in this worker pass.
-- High-level baseline contrast: a generic AppSec review may write a report under `docs/security/history-search/` or the older 2-level `docs/security/chat-interface/history-search/`, omit feature-path frontmatter, or lose the PM/Engineer source path needed for release traceability.
+## Without Skill Baseline
+
+fresh baseline 也定位到注入与越权面（fixture 驱动），但无 feature_path 归档纪律、无 frontmatter 契约、无升级/closeout 语义。
 
 ## Failures
 
-- None in the durable eval definition, fixture, and assertion alignment reviewed on 2026-06-25.
+无。
 
 ## Next Steps
 
-- Keep this eval as issue #37 coverage for 4-level Security feature-path reports and required feature-path frontmatter.
-- Future transcript or runner diagnostics, if executed, should be kept as runtime artifacts and summarized here only after review.
+- 无阻塞项。
 
 ## Runtime Artifacts Policy
 
-- This validation used direct review of the skill docs, Agent README, `evals.json`, and fixture workspace. No runtime transcript, generated output directory, verdict file, timing file, diagnostics, or `comparison.auto.md` was created or committed.
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

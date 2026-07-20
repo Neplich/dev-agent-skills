@@ -111,7 +111,7 @@ flowchart LR
     Engineer --> Docs
     QA --> Docs
     DevOps --> Docs
-    Security -. "改变事实的结论或整改证据" .-> Docs
+    Security -. "结论升级回 PM" .-> PM
 ```
 
 PRD/TRD 对齐、实现计划确认和 QA E2E handoff 等工程门禁见 [Engineer Agent 文档](./agents/engineer/README_zh.md)。

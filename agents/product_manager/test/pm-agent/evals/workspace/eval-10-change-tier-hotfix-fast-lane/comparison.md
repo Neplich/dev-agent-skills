@@ -1,48 +1,46 @@
-# Eval Result: pm-agent-change-tier-hotfix-fast-lane
+# Eval Result: eval-010-change-tier-hotfix-fast-lane
 
 ## Evaluation Target
 
+- Agent: `product_manager`
 - Skill: `pm-agent`
+- Eval: `eval-010-change-tier-hotfix-fast-lane`
 - Test case: change-tier-hotfix-fast-lane
-- Test set: change-tier contract evals for issue #55 / FR-008
-- Entry: workspace `eval-10-change-tier-hotfix-fast-lane`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 after PR #98 trigger-description revisions.
+- Workspace: `workspace/eval-10-change-tier-hotfix-fast-lane`
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PASS（3/3 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: README link fix that does not change approved behavior and has local verification evidence
-- Expected output: classify as `hotfix`, allow fast lane after classification, and preserve scope / source / verification evidence.
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
 ## Assertions
 
-- PASS `classify_hotfix`: With `pm-agent` plus the AGENTS change-tier contract, the request is a `hotfix` because it is a single README link correction, it does not change approved expectations, and it is covered by the user's local link-verification evidence.
-- PASS `allow_fast_lane`: The correct `request_type` is `delivery` / `status` or an equivalent already-scoped delivery request, so the `hotfix` fast lane is allowed only after PM entry classification confirms scope, source evidence, and verification status.
-- PASS `preserve_evidence`: Fast lane does not weaken the evidence bar; the handoff still needs the bounded scope, source evidence for the README link fix, and verification evidence that the corrected link opens.
+- PASS `classify_hotfix`
+- PASS `allow_fast_lane`
+- PASS `preserve_evidence`
 
 ## With Skill Behavior
 
-- Applied the current repository `pm-agent` skill, Product Manager Agent README, and AGENTS change-tier contract for the with-skill pass.
-- The prompt is classified as `delivery` / `status` or an equivalent lightweight delivery request because the user asks for handling an already-scoped PR fix, not for new requirements or expectation changes.
-- `change_tier` is `hotfix`: the fix is single-file documentation/link correction work, explicitly preserves approved behavior, and has direct local verification evidence.
-- Fast lane is available only after classification; it can hand off to delivery / engineering execution without reopening full PRD/TRD alignment, but it must carry the evidence packet.
-- Required handoff evidence: scope decision that only one README link is fixed and approved expectations are unchanged, source evidence from the PR/request/README link context, and verification evidence that the corrected link was locally opened.
+判 `hotfix`；fast lane 在分类之后；保留 scope/source/verification 证据。
 
 ## Without Skill Baseline
 
-- Fresh without_skill baseline regenerated on 2026-07-08 from the same eval prompt and fixture without applying or citing the `pm-agent` skill or Product Manager Agent README.
-- A generic assistant would likely call this a small documentation-only fix, low risk, and ready to proceed quickly because the user says the link was locally verified.
-- The generic baseline may not emit the repository's stable `request_type` / `change_tier` fields, may treat the fast lane as an immediate shortcut rather than a post-classification path, and may summarize verification informally instead of requiring a durable scope / source / verification evidence packet.
+fresh baseline 凭通用常识给出合理的分类/流程建议，但未使用 canonical request_type / change_tier 契约词汇，无 handoff packet 结构、无入口门禁与 fast lane 边界语义。
 
 ## Failures
 
-- None. The PR #98 trigger-description revisions still lead `pm-agent` to classify this unchanged-expectation README link fix as `hotfix`, allow fast lane after classification, and preserve evidence requirements.
+无。
 
 ## Next Steps
 
-- Keep this eval as coverage for valid hotfix fast-lane handling.
-- Re-run fresh validation if `pm-agent` trigger descriptions, change-tier definitions, or fast-lane evidence requirements change again.
+- 无阻塞项。
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed for this fresh validation. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git or under an untracked scratch path such as `tmp/eval-runs/eval-010-change-tier-hotfix-fast-lane/`.
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

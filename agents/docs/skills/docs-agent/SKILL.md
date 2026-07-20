@@ -42,6 +42,10 @@ Before routing, require one of:
 
 The PM-side packet fields and cross-role behavior are defined in
 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+Security-originated evidence, including security reports and remediation
+evidence, is not an equivalent confirmed document chain. It may enter Docs only
+with a PM handoff packet after `Security Conclusion Escalation to PM`
+classification and issue filing.
 
 If none of these entry bases is present, softly guide the request through
 `pm-agent` for classification and prerequisite context. A partially satisfied

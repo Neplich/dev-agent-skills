@@ -1,37 +1,47 @@
-# Consumption Regression Comparison
+# Eval Result: eval-004-mapped-client-dependency
 
 ## Evaluation Target
 
+- Agent: `security`
 - Skill: `dependency-risk-auditor`
 - Eval: `eval-004-mapped-client-dependency`
+- Test case: Mapped Client Dependency Documentation
+- Workspace: `workspace/eval-004-mapped-client-dependency`
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PASS（4/4 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws1-consumption-v1`
-- Commit: `0b000b9`
+- Schema: `evals.json` v1.0
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
-## Latest Result
+## Assertions
 
-**PASS** — with-skill 识别清单 1.4.0、unverified 文档 2.1.0、公开 npm 最新 1.1.8 的三方版本矛盾，审计以制品来源确认为前提，无法确认时阻止发布。
+- PASS：change-map 反查只读 `docs/site/api/network-client.md`。
+- PASS：识别文档声称 2.1.0、清单固定 1.4.0 的矛盾，以清单事实评估风险。
+- PASS：识别 unverified，版本结论以清单为准并要求核验制品来源。
+- PASS：断言于第二轮 review 后补充；行为证据来自 2026-07-21 同一轮 fresh subagent validation——with_skill candidate 在该轮已展示此行为（mapped 场景正确升级回 pm-agent）。
 
-## With-Skill Behavior
+## With Skill Behavior
 
-- 命中映射文档后核证依赖清单与公开源版本，unverified 文档版本不被采信为升级依据。
-- 产出分级修复建议（P0 制品来源/SBOM 核验、P1 替换评估与文档修正），审计未修改文件。
+repo 级审计正确取 `N/A` feature scope、不落档；要求核验 1.4.0 制品来源与 advisory。closeout 验证（#141 核心）：确认结论改变 `docs/site/` 正式文档事实，candidate 按 `Security Conclusion Escalation to PM` 把结论与证据**回交 pm-agent 分类并提 issue**；未直交 docs-agent、未自建 issue、未修改文档；随后 Safety-Net Closeout 等待用户确认。
 
-## Without-Skill Baseline
+## Without Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
-- baseline 依赖分析质量同样很高（锁文件/SBOM/验收面完整），差异主要在消费路径未按 change-map 契约组织与分歧记录格式。
+fresh baseline 发现同一版本漂移（fixture 驱动），但无 change-map 纪律、无 unverified 信任模型、无升级/closeout 语义。
 
 ## Failures
 
-- 无。
+无。
 
 ## Next Steps
 
-- 保留本结果；后续 fixture 可增加干扰文档以放大行为差距。
+- 无阻塞项。
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

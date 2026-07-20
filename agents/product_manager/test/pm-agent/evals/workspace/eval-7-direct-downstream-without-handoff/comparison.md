@@ -1,48 +1,46 @@
-# Eval Result: pm-agent-direct-downstream-without-handoff
+# Eval Result: eval-007-direct-downstream-without-handoff
 
 ## Evaluation Target
 
+- Agent: `product_manager`
 - Skill: `pm-agent`
+- Eval: `eval-007-direct-downstream-without-handoff`
 - Test case: direct-downstream-without-handoff
-- Test set: PM entry evals for issue #52 / FR-006 scenario 7; PR #98 trigger-description routing check
-- Entry: workspace `eval-7-direct-downstream-without-handoff`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08
+- Workspace: `workspace/eval-7-direct-downstream-without-handoff`
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PASS（3/3 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: direct downstream role-router request without PM handoff context
-- Expected output: reject direct downstream execution, return to `pm-agent`, and require PM handoff packet or equivalent confirmed docs.
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
 ## Assertions
 
-- PASS `reject_direct_downstream`: The request cannot directly enter `engineer-agent`, code modification, or downstream execution.
-- PASS `return_to_pm_agent`: The route returns to `pm-agent` for request type, scope, feature path, and handoff readiness classification.
-- PASS `require_handoff_or_docs`: Downstream role routers require a PM handoff packet or equivalent confirmed source documents.
+- PASS `reject_direct_downstream`
+- PASS `return_to_pm_agent`
+- PASS `require_handoff_or_docs`
 
 ## With Skill Behavior
 
-- Fresh subagent applied the current-branch `pm-agent` SKILL.md, Product Manager Agent README, and relevant AGENTS.md downstream gate guidance.
-- The router / downstream entry gate rejects the user's attempt to directly use `engineer-agent` and start code changes for a settings-page layout adjustment.
-- Because PM handoff packet, equivalent confirmed document chain, and specialist entry basis are missing, the request returns to `pm-agent` for `request_type`, scope, `feature_path`, `change_tier`, and handoff readiness classification.
-- Only after PM classification and confirmed source documents can the work be handed to the matching role router.
+拒绝直进下游；温和引导回 pm-agent 分类；要求 packet 或等价确认文档链。
 
 ## Without Skill Baseline
 
-- Fresh without_skill baseline was regenerated on 2026-07-08 from the eval prompt and fixture README only; it did not reuse historical baseline text and did not apply `pm-agent` SKILL.md or the Product Manager Agent README.
-- The baseline also tends to reject immediate implementation because the fixture README says missing-handoff downstream requests should return to `pm-agent`, but it does not reliably provide the full PM handoff packet fields, `change_tier`, or downstream gate rationale.
+fresh baseline 凭通用常识给出合理的分类/流程建议，但未使用 canonical request_type / change_tier 契约词汇，无 handoff packet 结构、无入口门禁与 fast lane 边界语义。
 
 ## Failures
 
-- None. The current PM entry gate satisfies all direct-downstream defense assertions.
-- No routing regression found from the PR #98 trigger-description changes.
+无。
 
 ## Next Steps
 
-- Keep this eval as PM entry coverage for direct role-router bypass attempts.
-- Re-run fresh validation if downstream role-router entry gates, PM handoff readiness rules, or entry trigger descriptions change.
+- 无阻塞项。
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were committed. The validating subagent did not create runtime files.
-- If future transcripts, verdicts, timing data, outputs, or diagnostics are generated, keep them under `tmp/eval-runs/pm-agent-20260708/eval-007/` or another isolated scratch path and do not commit them.
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

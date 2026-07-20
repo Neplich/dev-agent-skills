@@ -75,7 +75,8 @@ flowchart LR
     Engineer --> Docs["Docs Agent: formal current-state docs"]
     QA --> Docs
     DevOps["DevOps: deployment evidence"] --> Docs
-    Security["Security: fact-changing conclusion or remediation evidence"] -.-> Docs
+    Security["Security: fact-changing conclusion or remediation evidence"] -. "Conclusion escalation to PM" .-> PM
+    PM -. "PM handoff packet" .-> Docs
     Release["Release context"] --> Docs
     Docs --> Notes["Site Release Notes"]
     Notes --> Audit["Formal documentation audit"]
@@ -117,7 +118,9 @@ plugins:
   unresolved technical impact scope
 - `qa-agent` for validation evidence
 - `devops-agent` for deployment and operational evidence
-- `security-agent` for confirmed fact-changing security conclusions and remediation evidence, following the conditional `Security-to-Docs Evidence Handoff and Audit Rerun` rule in the shared skill map
+- Security conclusions are not a direct Docs entry basis; security-originated
+  documentation work reaches Docs through a normal PM handoff packet after
+  `pm-agent` classifies the conclusion and files an issue
 
 If a required target is unavailable, Docs Agent identifies the missing stage
 and plugin, marks that stage blocked, and does not perform the missing role's

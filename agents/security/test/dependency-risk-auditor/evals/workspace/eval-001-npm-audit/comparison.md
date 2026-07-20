@@ -7,40 +7,41 @@
 - Eval: `eval-001-npm-audit`
 - Test case: NPM Dependency Audit
 - Workspace: `workspace/eval-001-npm-audit`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PARTIAL（入口门禁触发，assertions 无法展开）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Test audit of Node.js project with vulnerable dependencies
-- Expected output: Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
 ## Assertions
 
-- `dependency_inventory`: 识别依赖生态、关键包和风险来源
-- `risk_classification`: 区分漏洞、废弃、过期或供应链风险并说明严重度
-- `evidence`: 引用依赖文件、版本或已知风险作为证据
-- `upgrade_plan`: 给出升级、替换或缓解建议
+- BLOCKED `dependency_inventory`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
+- BLOCKED `risk_classification`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
+- BLOCKED `evidence`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
+- BLOCKED `upgrade_plan`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
 
-## With Skill
+## With Skill Behavior
 
-Observed behavior:
+fresh candidate 严格按更新后的 SKILL.md 执行：入口门禁判定缺少 PM handoff packet、已确认 feature_path 与可审查 fixture（workspace 仅含 eval_metadata 与历史 comparison），正确将请求温和退回 `pm-agent` 分类，不执行 npm 依赖漏洞审计 审查、不臆造证据。closeout 行为符合 #141 新契约：Security Conclusion Escalation to PM 已评估且**正确不触发**（无 confirmed conclusion），Safety-Net Closeout 引导回 pm-agent 并等待确认。
 
-- 当前 skill 要求识别 package.json/package-lock.json，运行或模拟 npm audit，按 CVE/版本/严重度分析并给出升级或缓解建议。
+## Without Skill Baseline
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+fresh baseline 未读 skill 文档，给出通用npm 依赖漏洞审计方法论与优先级建议；无入口门禁、无升级/closeout 语义。
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+断言全部无法判定（fixture 阻塞）。根因与 issue #140 同类：workspace 缺 PM handoff packet / 已确认上下文 / 可审查代码或配置 fixture，fresh candidate 依 PM Handoff Entry Gate 正确退回 pm-agent。属 **fixture/prompt 场景缺陷，非 skill 引导缺陷**，与 #141 closeout 改动无关（同 skill 的 mapped eval 全 PASS）。
 
 ## Next Steps
 
-- 无需修改当前 skill 指令。
+- 按 #143 为本 eval workspace 补齐已确认上下文 fixture（PM handoff packet 或等价确认文档链 + 可审查样本），或调整 prompt/assertion 明确入口前提，修正后重跑。
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

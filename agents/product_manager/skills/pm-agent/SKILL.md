@@ -26,6 +26,9 @@ execution.
   status, planning, and release communication
 - handing off confirmed design, engineering, QA, DevOps, security, formal documentation, or delivery
   work to the appropriate downstream role agent
+- creating tracking issues with `gh issue create` after user-confirmed entry
+  classification, including Security conclusion escalation, and managing their
+  lifecycle
 - asking at most one route-level clarification question when the target outcome
   is truly ambiguous
 
@@ -74,6 +77,8 @@ Treat `pm-agent` as the first stop for all user-side starting points, including:
 - deployment, CI/CD, environment, Docker, Helm, release, rollback, or runbook work
 - security, auth/authz, login, dependency, secret, privacy, data-flow, webhook,
   upload, or permission-risk reviews
+- security conclusion escalations returned to PM for entry classification and
+  issue filing
 - formal documentation site bootstrap, post-feature / deployment / release
   synchronization, existing formal-docs backfill, or release documentation audit
 - GitHub issue, PR, milestone, release, changelog, roadmap, or repo status work

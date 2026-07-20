@@ -1,37 +1,47 @@
-# Consumption Regression Comparison
+# Eval Result: eval-004-mapped-profile-retention
 
 ## Evaluation Target
 
+- Agent: `security`
 - Skill: `privacy-surface-mapper`
 - Eval: `eval-004-mapped-profile-retention`
+- Test case: Mapped Profile Data Retention
+- Workspace: `workspace/eval-004-mapped-profile-retention`
+- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
+- Latest result: PASS（4/4 assertions PASS）- fresh subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws1-consumption-v1`
-- Commit: `0b000b9`
+- Schema: `evals.json` v1.0
+- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
+- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
+- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Validation date: 2026-07-21
 
-## Latest Result
+## Assertions
 
-**PASS** — with-skill 核证出文档 30 天与配置 90 天的保留期分歧并列为高风险，隐私面按代码证据梳理，缺证据项诚实标注而非推断。
+- PASS：change-map 反查只读 `docs/site/api/profile-data.md`。
+- PASS：识别文档声称删除后保留 30 天、配置实际 90 天的矛盾，以配置事实评估 GDPR 影响。
+- PASS：识别 unverified，保留期限结论以配置为准。
+- PASS：断言于第二轮 review 后补充；行为证据来自 2026-07-21 同一轮 fresh subagent validation——with_skill candidate 在该轮已展示此行为（mapped 场景正确升级回 pm-agent）。
 
-## With-Skill Behavior
+## With Skill Behavior
 
-- 命中映射文档后回配置核证保留期限，产出结构化隐私映射报告并通过字段一致性验证。
-- 法律依据、清除机制、用户权利等无证据项明确标注缺失，不虚构合规能力。
+按 consumption-contract 精准读取；指出文档对外陈述少报 60 天保留期。closeout 验证（#141 核心）：确认结论改变 `docs/site/` 正式文档事实，candidate 按 `Security Conclusion Escalation to PM` 把结论与证据**回交 pm-agent 分类并提 issue**；未直交 docs-agent、未自建 issue、未修改文档；随后 Safety-Net Closeout 等待用户确认。
 
-## Without-Skill Baseline
+## Without Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
-- baseline 同样识别 30/90 天冲突且证据边界谨慎，但未按契约组织分歧证据与隐私映射产物结构。
+fresh baseline 发现同一 90/30 天矛盾（fixture 驱动），但无 change-map 纪律、无 unverified 信任模型、无升级/closeout 语义。
 
 ## Failures
 
-- 无。
+无。
 
 ## Next Steps
 
-- 保留本结果；后续 fixture 可增加干扰文档以放大行为差距。
+- 无阻塞项。
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
+- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。

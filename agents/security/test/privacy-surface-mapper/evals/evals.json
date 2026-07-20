@@ -111,11 +111,16 @@
           "description": "以处理配置核对删除后的保留期限",
           "text": "关键隐私结论回到 src/privacy/profile-processing.yaml；识别文档声称删除后保留 30 天、配置实际为 90 天的不一致，并以配置事实评估合规影响。"
         },
-        {
-          "id": "treats_unverified_as_low_trust",
-          "description": "将 unverified 隐私文档按最低信任处理",
-          "text": "识别 required_docs 的 last_verified_version 为 unverified，对所有关键隐私判断扩大代码或配置核证，而不是直接采信文档或拒绝读取。"
-        }
+    {
+      "id": "treats_unverified_as_low_trust",
+      "description": "将 unverified 隐私文档按最低信任处理",
+      "text": "识别 required_docs 的 last_verified_version 为 unverified，对所有关键隐私判断扩大代码或配置核证，而不是直接采信文档或拒绝读取。"
+    },
+    {
+      "id": "escalates_fact_changing_conclusion_to_pm",
+      "description": "改变正式文档事实的结论升级",
+      "text": "确认结论改变正式文档事实时，必须把结论与证据回交 `pm-agent` 分类并创建 issue，不直接交给 `docs-agent`、不由 Security 自行创建 issue；Security 自有的 `docs/security/` 过程报告除外，仍必须作为升级证据产出。"
+    }
       ]
     }
   ]
