@@ -345,8 +345,12 @@ reports remain process documents owned by Security.
 
 - the Security review or remediation report path under
   `docs/security/{feature_path}/`
-- remediation evidence: merged PR or commit references plus Engineer or DevOps
-  verification results
+- for remediation-triggered handoffs: remediation evidence — merged PR or
+  commit references plus Engineer or DevOps verification results
+- for conclusion-triggered handoffs, where a confirmed Security conclusion
+  shows a documented fact is already wrong or stale before any remediation
+  lands: the confirmed review evidence identifying the mismatched facts;
+  remediation evidence is not required to start the documentation correction
 - the affected scope: `feature_path` values, affected formal document types
   (api / database / design / ops / product), and a short summary of which fact
   changed
@@ -360,6 +364,15 @@ reused as-is.
 **Rerun order.** First run the applicable `formal-docs-sync` mode to update the
 affected current-state pages, then rerun `docs-audit` for the affected release.
 Do not rerun `docs-audit` before the facts are synchronized.
+
+**Sync mode mapping.** A triggered handoff enters `formal-docs-sync` through
+one of its existing entry modes and adds no new mode: deployment verification
+for operational or deployment facts, feature delivery when the affected scope
+has its confirmed feature document chain, release mode for release-scoped
+reconciliation, and otherwise a maintainer-confirmed finite backfill batch
+limited to the affected pages. If no mode's entry basis can be satisfied,
+report the sync as blocked with the missing basis instead of skipping the
+rerun rule.
 
 The Downstream Owner Map and the collaboration chain stay unchanged; this rule
 only adds a conditional `Security -> Docs` evidence path and does not create a
