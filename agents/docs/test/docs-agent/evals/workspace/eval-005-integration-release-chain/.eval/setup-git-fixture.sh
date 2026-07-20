@@ -1,4 +1,6 @@
 #!/bin/sh
+# Pin the fixture repository to SHA-1 because the raw-delta gates below
+# intentionally validate 40-character object IDs.
 set -eu
 
 fixture_root=$(pwd -P)
@@ -474,7 +476,7 @@ cp "$fixture_root/.eval/git-base/docs/site/release-notes/index.md" "$fixture_roo
 cp "$fixture_root/.eval/git-base/docs/site/.meta/releases.json" "$fixture_root/docs/site/.meta/releases.json"
 cp "$fixture_root/.eval/git-base/package.json" "$fixture_root/package.json"
 
-git init -q -b fixture-caller
+git init -q -b fixture-caller --object-format=sha1
 git config user.name "Docs Eval Fixture"
 git config user.email "docs-eval@example.invalid"
 git add --all
