@@ -9,7 +9,7 @@ version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-07-20"
 generated_by: "prd-gen"
 related_docs:
   - "agents/product_manager/README.md"
@@ -83,7 +83,7 @@ changelog:
 | `competitive-brief` | 竞品研究、定位比较、市场扫描、messaging gaps |
 | `competitive-intelligence` | 销售 battlecard、deal support、objection handling、interactive HTML battlecard |
 | `changelog-generator` | 开发者视角 changelog、released/unreleased/full regeneration |
-| `release-notes-generator` | 用户视角 release notes、draft release、publish release |
+| `github-release-generator` | 站内 Release Notes 与审计门禁完成后的 GitHub Release preview、draft、publish |
 | `roadmap-generator` | roadmap、milestone、version planning、后续优先级同步 |
 | `github-reader` | GitHub repo health、issue/PR/milestone/backlog/release blockers |
 
@@ -115,7 +115,7 @@ flowchart LR
     Decision --> competitive_brief["competitive-brief"]
     Decision --> competitive_intelligence["competitive-intelligence"]
     Decision --> changelog_generator["changelog-generator"]
-    Decision --> release_notes_generator["release-notes-generator"]
+    Decision --> github_release_generator["github-release-generator"]
     Decision --> roadmap_generator["roadmap-generator"]
     Decision --> github_reader["github-reader"]
     Decision --> Output["选中最窄 PM specialist 后同轮进入该 skill workflow；仅路由目标真正不清时问一个路由级澄清问题。"]

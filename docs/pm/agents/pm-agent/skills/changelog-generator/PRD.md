@@ -9,7 +9,7 @@ version: "1.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-07-20"
 generated_by: "prd-iteration"
 related_docs:
   - "agents/product_manager/README.md"
@@ -55,7 +55,8 @@ changelog:
 - 不把 `changelog-generator` 的 specialist 行为泛化成整个 `pm-agent` 的能力。
 - 不把 repository contract 或 eval 误写成每次 runtime 必跑步骤，除非当前 skill 明确要求。
 - 不把所有 `docs:`、`test:`、`ci:` PR 都强制纳入 changelog；低价值内部维护变更仍可省略。
-- 不替代 release-notes-generator 的用户公告写作；本 skill 只维护 changelog 条目。
+- 不替代 `docs-agent:release-notes-generator` 的用户版本说明写作或
+  `github-release-generator` 的 GitHub Release 工作；本 skill 只维护 changelog 条目。
 
 ## 用户画像
 
@@ -84,7 +85,7 @@ changelog:
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
 | FR-S04 | Artifact Output | 创建或更新 docs/changelog/changelog-v{version}.md、docs/changelog/changelog-unreleased.md，或 Full regeneration 的 per-version files；根 CHANGELOG.md 只做索引。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `pm-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
-| FR-S06 | Handoff | 用户视角公告交 release-notes-generator；项目状态交 github-reader；in-scope changelog 可结束。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
+| FR-S06 | Handoff | 用户视角版本说明交 `docs-agent:release-notes-generator`；GitHub Release 交 `github-release-generator`；项目状态交 github-reader；in-scope changelog 可结束。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
 | FR-S08 | Semantic Inclusion | `docs:`、`test:`、`ci:`、`build:` 和 `style:` PR 不得仅凭标题前缀无条件跳过；必须在 PR body、标题和可得文件上下文中判断是否影响 skill 行为、routing、eval fixture、durable comparison、installation、marketplace、release workflow、CI gate 或协作边界。 | P0 | 当 PR body 明确描述上述影响时，条目可以进入 Added / Changed / Fixed / Security 等合适 section，并保留 PR 链接。 |
 | FR-S09 | Low-Value Omission | 传统应用仓库或低价值维护 PR 仍可省略，例如拼写修复、README 排版、内部测试重命名、CI 版本 bump 或无用户可见影响的脚本维护。 | P0 | eval 必须覆盖低价值 docs/test/ci 仍被跳过的样例，避免 changelog 噪音回归。 |

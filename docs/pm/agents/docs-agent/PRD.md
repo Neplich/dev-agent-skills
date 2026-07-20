@@ -5,25 +5,29 @@ feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.4.0"
+version: "1.4.1"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
-last_updated: "2026-07-19"
+last_updated: "2026-07-20"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/105"
   - "https://github.com/Neplich/dev-agent-skills/issues/112"
   - "https://github.com/Neplich/dev-agent-skills/issues/117"
+  - "https://github.com/Neplich/dev-agent-skills/issues/120"
 related_docs:
   - "AGENTS.md"
   - ".claude-plugin/marketplace.json"
-  - "agents/product_manager/skills/release-notes-generator/SKILL.md"
+  - "agents/product_manager/skills/github-release-generator/SKILL.md"
   - "agents/product_manager/skills/changelog-generator/SKILL.md"
   - "agents/engineer/skills/codebase-analyzer/SKILL.md"
   - "agents/engineer/skills/debugger/SKILL.md"
   - "agents/engineer/skills/feature-implementor/SKILL.md"
   - "scripts/check_doc_contract.py"
 changelog:
+  - version: "1.4.1"
+    date: "2026-07-20"
+    changes: "对齐 #120：站内 Release Notes 归 Docs specialist，GitHub Release 归 PM github-release-generator"
   - version: "1.0.0"
     date: "2026-07-14"
     changes: "Initial draft"
@@ -94,7 +98,7 @@ changelog:
 ## 非目标
 
 - 不建立独立于 git tag / GitHub Release 的文档版本方案，不做多版本站点快照。
-- 不接管 `pm-agent` 的 release 沟通职责；`release-notes-generator` 与 `changelog-generator` 归属不变；站点存在时仅 release-notes 输出目标指向站点 `release-notes/` 目录，changelog 版本归档仍按既有契约留在 `docs/changelog/`。
+- `docs-agent:release-notes-generator` 负责生成、确认和校验站内 Release Notes；PM `github-release-generator` 只在站内 ready handoff 与发版审计门禁通过后处理 GitHub Release，`changelog-generator` 的版本归档仍按既有契约留在 `docs/changelog/`。
 - 不把 VitePress 或 npm 依赖强加给宿主项目；bootstrap 仅在用户显式请求时执行。
 - 不把站点渲染纳入本仓库 PR 必跑校验链；渲染是宿主项目的运行时关注点。
 - 不改变过程文档（`docs/pm/`、`docs/engineer/` 等）的既有契约与路径。

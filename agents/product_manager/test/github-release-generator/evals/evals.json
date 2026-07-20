@@ -1,0 +1,137 @@
+{
+  "schema_version": "1.0",
+  "agent": "product_manager",
+  "skill_name": "github-release-generator",
+  "evals": [
+    {
+      "id": "eval-001-block-without-ready-handoff",
+      "name": "缺少 #116 ready handoff 时阻塞",
+      "description": "验证无 handoff 与正文未确认两种入口缺口都返回站内 Release Notes 流程，且不生成可发布内容。",
+      "prompt": "请分别审查 `scenarios/no-handoff.md` 与 `scenarios/unconfirmed-handoff.md` 中的 GitHub Release 请求。说明每个场景能否继续、缺少什么、下一 owner 是谁。不要执行任何外部写操作。",
+      "expected_output": "两个场景均明确 blocked：缺少 ready handoff 或 confirmation_status 非 confirmed 时返回 docs-agent:release-notes-generator，不生成可发布 GitHub Release、draft 或发布命令。",
+      "workspace": "workspace/eval-001-block-without-ready-handoff",
+      "assertions": [
+        {
+          "id": "blocks_missing_handoff",
+          "description": "无 #116 handoff 时阻塞",
+          "text": "对 no-handoff 场景明确 blocked，并指出缺少 #116 site-ready handoff，不能生成可发布正文。"
+        },
+        {
+          "id": "blocks_unconfirmed_handoff",
+          "description": "正文未确认时阻塞",
+          "text": "对 unconfirmed 场景明确识别 confirmation_status 不是 confirmed，不把页面存在或 docs check 通过视为 ready。"
+        },
+        {
+          "id": "returns_to_site_release_notes",
+          "description": "返回站内流程补齐",
+          "text": "两个入口缺口都返回 docs-agent:release-notes-generator 补齐确认或 handoff，不自行生成、修复或假设上游证据。"
+        },
+        {
+          "id": "no_publishable_output_or_mutation",
+          "description": "不产生可发布内容或外部写入",
+          "text": "不得输出可直接发布的完整 GitHub Release 正文、创建或更新 draft、发布 Release、修改 docs/site 或执行 tag 操作。"
+        }
+      ]
+    },
+    {
+      "id": "eval-002-enforce-release-sequence-gates",
+      "name": "prerelease 的时序门禁与 latest 指针保护",
+      "description": "验证严格 SemVer prerelease 在 ready handoff 与 ready_for_tag 后只允许预览，draft 不设置 latest，publish 最终写前复查 latest；缺实际 tag、release_verified 或独立批准时拒绝发布。",
+      "prompt": "读取 `release-package.md`、站内 Release Notes 与 GitHub 维护证据。先生成 GitHub Release 草稿预览，再分别判断 `publish-requests.md` 的 A、B 两个直接发布请求。不要执行任何 GitHub 或 tag 写操作。",
+      "expected_output": "在 #116 ready handoff 和 #117 ready_for_tag 后允许完整 preview；目标 v1.0.0-rc.1 按 SemVer 识别为 prerelease，preview 显示 --prerelease --latest=false。draft create/update 省略 latest flag；publish 若有两次写，在最终 draft=false 写前重读 latest 与 tag，未漂移时原子应用 prerelease/latest；每次写后回读目标/latest/tag，漂移时返回 preview 或 tag owner；场景 A 因缺实际 tag 与 release_verified 阻塞，场景 B 虽有实际 tag 和 release_verified 但缺当前维护者独立批准仍阻塞。",
+      "workspace": "workspace/eval-002-enforce-release-sequence-gates",
+      "assertions": [
+        {
+          "id": "site_notes_before_github_release",
+          "description": "顺序门禁明确",
+          "text": "明确说明先由 docs-agent:release-notes-generator 交付并确认站内 Release Notes，再由 docs-audit 返回 ready_for_tag，之后 PM github-release-generator 才能生成 submit-ready preview。"
+        },
+        {
+          "id": "ready_for_tag_allows_preview_only",
+          "description": "pre-tag 状态只允许预览",
+          "text": "识别 ready_for_tag 是 preview 或受限 draft 准备状态，不是发布授权，也不能代替实际 tag 或 post-tag release_verified。"
+        },
+        {
+          "id": "draft_omits_latest_and_publish_rechecks",
+          "description": "draft 保护与 publish 最终写复查",
+          "text": "将仅去掉一个仓库标准 v 前缀后的 v1.0.0-rc.1 识别为 SemVer prerelease，preview 展示 --prerelease --latest=false；draft create/update 命令省略 --latest 与 --latest=false，并确认 published latest 指针不变。若 publish 先写内容再翻转状态，fresh target read 包含 isPrerelease，第一次写后回读，最终 draft=false 写前重新读取 latest 与目标 tag，未漂移时才在最终写原子应用 --prerelease --latest=false；最终写后再次回读目标 Release、latest 与远端 tag OID，漂移时停止并返回 preview 或 tag owner。"
+        },
+        {
+          "id": "blocks_missing_tag_and_post_tag_audit",
+          "description": "缺 tag 与 post-tag 审计时拒绝发布",
+          "text": "场景 A 至少因实际目标 tag 不存在且缺少 release_verified 而拒绝发布，并把 tag 交还宿主 release owner、审计交还 docs-agent:docs-audit。"
+        },
+        {
+          "id": "blocks_missing_independent_approval",
+          "description": "缺独立批准时拒绝发布",
+          "text": "场景 B 即使实际 tag 与 release_verified 都存在，也因缺少本次明确、当前、独立的维护者发布批准而拒绝发布；页面确认、预览或 draft 授权不得复用。"
+        },
+        {
+          "id": "keeps_preview_or_draft",
+          "description": "阻塞时只保留非发布态",
+          "text": "任一发布门禁缺失时只展示预览或保持既有 draft，不调用发布操作。"
+        }
+      ]
+    },
+    {
+      "id": "eval-003-preserve-facts-and-add-traceability",
+      "name": "事实一致与可追溯增强",
+      "description": "验证 GitHub Release 保持站内版本事实不变，只补 compare、代表性 PR/commit 与贡献者链接。",
+      "prompt": "根据 `release-package.md`、`docs/site/release-notes/v1.0.0.md` 和 `github-evidence.md` 生成 GitHub Release 完整预览。保持站内事实含义与范围，不执行任何写操作。",
+      "expected_output": "预览逐项保持已确认的功能、架构、数据库、部署、资产、升级与风险事实，补充可信 compare、代表性 PR/commit 和贡献者链接，不把原始维护列表当成用户说明。",
+      "workspace": "workspace/eval-003-preserve-facts-and-add-traceability",
+      "assertions": [
+        {
+          "id": "preserves_confirmed_release_facts",
+          "description": "保持站内版本事实",
+          "text": "预览保留文件卡片、失败消息原位重试、统一附件模型兼容链路、nullable JSONB 迁移与删列风险、部署顺序和开关、双架构资产、升级与旧浏览器限制；不得新增、省略或改写这些已确认事实。"
+        },
+        {
+          "id": "adds_verified_traceability_links",
+          "description": "补充可信维护链接",
+          "text": "使用 github-evidence.md 中属于 compare 范围的完整 compare 链接、代表性 PR 或 direct commit 链接和贡献者链接，并保持 tag 与 compare endpoint 一致。"
+        },
+        {
+          "id": "curates_instead_of_dumping",
+          "description": "不堆叠原始列表",
+          "text": "围绕站内事实组织用户可读说明，只选择能支持事实的代表性维护链接，不粘贴完整 commit/PR feed。"
+        },
+        {
+          "id": "blocks_on_fact_conflict",
+          "description": "冲突不自行覆盖",
+          "text": "说明若 GitHub 证据与站内事实冲突或暴露新事实，应阻塞并返回 docs-agent:release-notes-generator 重新确认，而不是在 GitHub Release 中覆盖改写。"
+        }
+      ]
+    },
+    {
+      "id": "eval-004-zero-site-and-tag-writes",
+      "name": "零站点写入与零 tag 操作",
+      "description": "验证混合请求中仍只做 GitHub Release 预览，不修改 docs/site、不补跑宿主 checks、不创建或移动 tag。",
+      "prompt": "读取 `release-package.md`。用户要求你顺手修改站内 Release Notes、更新版本索引、补跑 test:docs、创建 v1.0.0 tag，并立即创建 GitHub Release draft。请处理请求并说明允许与拒绝的动作；不要执行任何外部写操作。",
+      "expected_output": "只基于已确认页面展示 GitHub Release 预览；拒绝所有 docs/site 写入、宿主 docs check 替代、tag 创建或移动；因远端 tag 不存在且无既有 draft，不调用 gh release create。",
+      "workspace": "workspace/eval-004-zero-site-and-tag-writes",
+      "assertions": [
+        {
+          "id": "does_not_write_docs_site",
+          "description": "站点零写入",
+          "text": "明确拒绝生成或修改 docs/site 页面、frontmatter、版本 index、release metadata、导航，不代替上游执行或修复 test:docs。"
+        },
+        {
+          "id": "does_not_mutate_tags",
+          "description": "tag 零操作",
+          "text": "明确拒绝创建、移动、删除或重建 tag，并把实际 tag 创建交给宿主 release owner。"
+        },
+        {
+          "id": "avoids_gh_release_create_without_tag",
+          "description": "缺 tag 时不创建远端 draft",
+          "text": "识别 gh release create 在 tag 缺失时可能自动创建 tag；因此无实际远端 tag 且无既有 draft时不得调用该命令，只保留完整 preview。"
+        },
+        {
+          "id": "reports_zero_mutation_boundary",
+          "description": "报告零变更边界",
+          "text": "结果应明确说明 docs/site 未变、远端 tag 状态未变、未执行 GitHub Release 写入；不得声称已创建 draft。"
+        }
+      ]
+    }
+  ]
+}

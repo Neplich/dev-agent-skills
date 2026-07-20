@@ -139,27 +139,19 @@ def test_default_install_creates_hidden_mirror_and_relative_skill_symlinks(tmp_p
     assert marker["source"] == ROOT.resolve().as_posix()
     assert_relative_mirror_link(target, "pm-agent")
     assert_relative_mirror_link(target, "debugger")
-    assert_relative_mirror_link(target, "pm-release-notes-generator")
-    assert_relative_mirror_link(target, "docs-release-notes-generator")
-    assert not (target / "release-notes-generator").exists()
-    assert skill_source_rel("pm-release-notes-generator") == Path(
-        "agents/product_manager/skills/release-notes-generator"
+    assert_relative_mirror_link(target, "github-release-generator")
+    assert_relative_mirror_link(target, "release-notes-generator")
+    assert skill_source_rel("github-release-generator") == Path(
+        "agents/product_manager/skills/github-release-generator"
     )
-    assert skill_source_rel("docs-release-notes-generator") == Path(
+    assert skill_source_rel("release-notes-generator") == Path(
         "agents/docs/skills/release-notes-generator"
     )
-    assert (
-        "pm-agent:release-notes-generator is explicitly callable as "
-        "pm-release-notes-generator"
-    ) in result.stdout
-    assert (
-        "docs-agent:release-notes-generator is explicitly callable as "
-        "docs-release-notes-generator"
-    ) in result.stdout
+    assert "Qualified aliases for colliding skill names:" not in result.stdout
     assert (
         target
         / MIRROR_DIR
-        / "agents/product_manager/skills/release-notes-generator/SKILL.md"
+        / "agents/product_manager/skills/github-release-generator/SKILL.md"
     ).is_file()
     assert (
         target / MIRROR_DIR / "agents/docs/skills/release-notes-generator/SKILL.md"
@@ -197,24 +189,203 @@ def test_duplicate_skill_basename_within_one_plugin_is_rejected(tmp_path: Path) 
 
 
 def test_reinstall_removes_obsolete_managed_unqualified_collision_alias(tmp_path: Path) -> None:
+    checkout = tmp_path / "checkout"
+    make_minimal_checkout(checkout)
+    for role in ("product_manager", "docs"):
+        skill = checkout / f"agents/{role}/skills/shared-release"
+        skill.mkdir(parents=True)
+        (skill / "SKILL.md").write_text(
+            "---\nname: shared-release\n---\n",
+            encoding="utf-8",
+        )
+
+    marketplace_path = checkout / ".claude-plugin/marketplace.json"
+    marketplace = json.loads(marketplace_path.read_text(encoding="utf-8"))
+    marketplace["plugins"][0]["skills"].append("./skills/shared-release")
+    marketplace["plugins"].append(
+        {
+            "name": "docs-agent",
+            "source": "./agents/docs",
+            "skills": ["./skills/shared-release"],
+        }
+    )
+    marketplace_path.write_text(json.dumps(marketplace), encoding="utf-8")
+
     target = tmp_path / "skills"
 
-    first = run_installer(target)
-    assert first.returncode == 0, first.stderr + first.stdout
+    def run_checkout_installer() -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [
+                sys.executable,
+                str(checkout / "scripts/install_codex_skills.py"),
+                "--target",
+                str(target),
+            ],
+            cwd=checkout,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
 
-    obsolete = target / "release-notes-generator"
+    first = run_checkout_installer()
+    assert first.returncode == 0, first.stderr + first.stdout
+    assert (target / "pm-shared-release").is_symlink()
+    assert (target / "docs-shared-release").is_symlink()
+
+    obsolete = target / "shared-release"
     obsolete.symlink_to(
-        Path(MIRROR_DIR) / "agents/docs/skills/release-notes-generator",
+        Path(MIRROR_DIR) / "agents/docs/skills/shared-release",
         target_is_directory=True,
     )
 
-    second = run_installer(target)
+    second = run_checkout_installer()
 
     assert second.returncode == 0, second.stderr + second.stdout
     assert "Removed obsolete unqualified collision aliases:" in second.stdout
     assert not obsolete.exists()
-    assert_relative_mirror_link(target, "pm-release-notes-generator")
-    assert_relative_mirror_link(target, "docs-release-notes-generator")
+    assert (target / "pm-shared-release").resolve(strict=True) == (
+        target / MIRROR_DIR / "agents/product_manager/skills/shared-release"
+    )
+    assert (target / "docs-shared-release").resolve(strict=True) == (
+        target / MIRROR_DIR / "agents/docs/skills/shared-release"
+    )
+
+
+def test_upgrade_removes_obsolete_managed_qualified_aliases(tmp_path: Path) -> None:
+    checkout = tmp_path / "checkout"
+    make_minimal_checkout(checkout)
+    for role in ("product_manager", "docs"):
+        skill = checkout / f"agents/{role}/skills/release-notes-generator"
+        skill.mkdir(parents=True)
+        (skill / "SKILL.md").write_text(
+            "---\nname: release-notes-generator\n---\n",
+            encoding="utf-8",
+        )
+
+    marketplace_path = checkout / ".claude-plugin/marketplace.json"
+    marketplace = json.loads(marketplace_path.read_text(encoding="utf-8"))
+    marketplace["plugins"][0]["skills"].append("./skills/release-notes-generator")
+    marketplace["plugins"].append(
+        {
+            "name": "docs-agent",
+            "source": "./agents/docs",
+            "skills": ["./skills/release-notes-generator"],
+        }
+    )
+    marketplace_path.write_text(json.dumps(marketplace), encoding="utf-8")
+
+    target = tmp_path / "skills"
+
+    def run_checkout_installer() -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [
+                sys.executable,
+                str(checkout / "scripts/install_codex_skills.py"),
+                "--target",
+                str(target),
+            ],
+            cwd=checkout,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+    old_install = run_checkout_installer()
+    assert old_install.returncode == 0, old_install.stderr + old_install.stdout
+    assert (target / "pm-release-notes-generator").is_symlink()
+    assert (target / "docs-release-notes-generator").is_symlink()
+
+    new_skill = checkout / "agents/product_manager/skills/github-release-generator"
+    new_skill.mkdir()
+    (new_skill / "SKILL.md").write_text(
+        "---\nname: github-release-generator\n---\n",
+        encoding="utf-8",
+    )
+    shutil.rmtree(checkout / "agents/product_manager/skills/release-notes-generator")
+    marketplace["plugins"][0]["skills"] = [
+        "./skills/pm-agent",
+        "./skills/github-release-generator",
+    ]
+    marketplace_path.write_text(json.dumps(marketplace), encoding="utf-8")
+
+    upgraded = run_checkout_installer()
+
+    assert upgraded.returncode == 0, upgraded.stderr + upgraded.stdout
+    assert "Removed obsolete managed skill aliases:" in upgraded.stdout
+    assert not (target / "pm-release-notes-generator").exists()
+    assert not (target / "pm-release-notes-generator").is_symlink()
+    assert not (target / "docs-release-notes-generator").exists()
+    assert not (target / "docs-release-notes-generator").is_symlink()
+    assert not (
+        target / MIRROR_DIR / "agents/product_manager/skills/release-notes-generator"
+    ).exists()
+    assert (target / "github-release-generator").resolve(strict=True) == (
+        target / MIRROR_DIR / "agents/product_manager/skills/github-release-generator"
+    )
+    assert (target / "release-notes-generator").resolve(strict=True) == (
+        target / MIRROR_DIR / "agents/docs/skills/release-notes-generator"
+    )
+
+
+def test_upgrade_preserves_unowned_obsolete_alias_name(tmp_path: Path) -> None:
+    target = tmp_path / "skills"
+    unowned = target / "pm-release-notes-generator"
+    unowned.mkdir(parents=True)
+    sentinel = unowned / "SKILL.md"
+    sentinel.write_text("user-owned skill", encoding="utf-8")
+
+    result = run_installer(target)
+
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert sentinel.read_text(encoding="utf-8") == "user-owned skill"
+    assert unowned.is_dir()
+    assert not unowned.is_symlink()
+
+
+def test_upgrade_preserves_unmanaged_checkout_symlink_for_obsolete_alias(
+    tmp_path: Path,
+) -> None:
+    target = tmp_path / "skills"
+    first = run_installer(target)
+    assert first.returncode == 0, first.stderr + first.stdout
+
+    custom_checkout = tmp_path / "custom-checkout"
+    write_dev_agent_marketplace_marker(custom_checkout)
+    custom_skill = custom_checkout / "agents/custom/skills/release-notes-generator"
+    custom_skill.mkdir(parents=True)
+    (custom_skill / "SKILL.md").write_text(
+        "---\nname: release-notes-generator\n---\n",
+        encoding="utf-8",
+    )
+    custom_alias = target / "pm-release-notes-generator"
+    custom_alias.symlink_to(custom_skill, target_is_directory=True)
+
+    upgraded = run_installer(target)
+
+    assert upgraded.returncode == 0, upgraded.stderr + upgraded.stdout
+    assert "Removed obsolete managed skill aliases:" not in upgraded.stdout
+    assert custom_alias.is_symlink()
+    assert custom_alias.resolve(strict=True) == custom_skill
+
+
+def test_reinstall_removes_dangling_obsolete_mirror_symlink(tmp_path: Path) -> None:
+    target = tmp_path / "skills"
+    first = run_installer(target)
+    assert first.returncode == 0, first.stderr + first.stdout
+
+    obsolete = target / "obsolete-skill"
+    obsolete.symlink_to(
+        Path(MIRROR_DIR) / "agents/product_manager/skills/removed-skill",
+        target_is_directory=True,
+    )
+    assert obsolete.is_symlink()
+    assert not obsolete.exists()
+
+    upgraded = run_installer(target)
+
+    assert upgraded.returncode == 0, upgraded.stderr + upgraded.stdout
+    assert "Removed obsolete managed skill aliases:" in upgraded.stdout
+    assert not obsolete.is_symlink()
 
 
 def test_routers_only_links_only_router_skills_but_keeps_full_hidden_mirror(tmp_path: Path) -> None:
@@ -295,6 +466,26 @@ def test_unowned_hidden_mirror_directory_errors_without_partial_changes(tmp_path
         assert not (target / "pm-agent").exists()
 
 
+def test_unowned_hidden_mirror_symlink_errors_without_deleting_target(tmp_path: Path) -> None:
+    target = tmp_path / "skills"
+    target.mkdir()
+    custom_checkout = tmp_path / "custom-checkout"
+    write_dev_agent_marketplace_marker(custom_checkout)
+    sentinel = custom_checkout / "keep.txt"
+    sentinel.write_text("keep", encoding="utf-8")
+    mirror = target / MIRROR_DIR
+    mirror.symlink_to(custom_checkout, target_is_directory=True)
+
+    result = run_installer(target)
+
+    assert result.returncode == 1
+    assert "target contains a hidden mirror path that is not owned by this installer" in result.stderr
+    assert mirror.is_symlink()
+    assert mirror.resolve(strict=True) == custom_checkout
+    assert sentinel.read_text(encoding="utf-8") == "keep"
+    assert not (target / "pm-agent").exists()
+
+
 def test_unowned_selected_directory_is_skipped_without_force(tmp_path: Path) -> None:
     target = tmp_path / "skills"
     unowned = target / "pm-agent"
@@ -337,7 +528,7 @@ def test_force_errors_on_unowned_unselected_directory_without_partial_changes(tm
     assert not (target / MIRROR_DIR).exists()
 
 
-def test_checkout_symlink_is_migrated_to_hidden_mirror_symlink(tmp_path: Path) -> None:
+def test_unmanaged_checkout_symlink_for_selected_skill_is_preserved(tmp_path: Path) -> None:
     target = tmp_path / "skills"
     target.mkdir(parents=True)
     old_checkout = tmp_path / "old-checkout"
@@ -349,12 +540,13 @@ def test_checkout_symlink_is_migrated_to_hidden_mirror_symlink(tmp_path: Path) -
     result = run_installer(target)
 
     assert result.returncode == 0, result.stderr + result.stdout
-    assert "migrated: debugger" in result.stdout
-    assert_relative_mirror_link(target, "debugger")
-    assert is_under(target / "debugger", target / MIRROR_DIR)
+    assert "skipped: debugger" in result.stdout
+    assert (target / "debugger").is_symlink()
+    assert (target / "debugger").resolve(strict=True) == checkout_target
+    assert (target / MIRROR_DIR / skill_source_rel("debugger") / "SKILL.md").is_file()
 
 
-def test_selected_source_checkout_symlink_migrates_without_deleting_checkout(tmp_path: Path) -> None:
+def test_selected_source_checkout_symlink_is_preserved(tmp_path: Path) -> None:
     target = tmp_path / "skills"
     target.mkdir(parents=True)
     checkout_target = ROOT / skill_source_rel("debugger")
@@ -363,15 +555,15 @@ def test_selected_source_checkout_symlink_migrates_without_deleting_checkout(tmp
     result = run_installer(target)
 
     assert result.returncode == 0, result.stderr + result.stdout
-    assert "migrated: debugger" in result.stdout
-    assert_relative_mirror_link(target, "debugger")
-    assert is_under(target / "debugger", target / MIRROR_DIR)
+    assert "skipped: debugger" in result.stdout
+    assert (target / "debugger").is_symlink()
+    assert (target / "debugger").resolve(strict=True) == checkout_target
     assert checkout_target.is_dir()
     assert (checkout_target / "SKILL.md").is_file()
     assert INSTALLER.is_file()
 
 
-def test_owned_legacy_aggregate_symlink_is_removed_before_install(tmp_path: Path) -> None:
+def test_unmanaged_legacy_aggregate_checkout_symlink_is_preserved(tmp_path: Path) -> None:
     target = tmp_path / "skills"
     target.mkdir(parents=True)
     old_checkout = tmp_path / "old-checkout"
@@ -381,12 +573,13 @@ def test_owned_legacy_aggregate_symlink_is_removed_before_install(tmp_path: Path
     result = run_installer(target)
 
     assert result.returncode == 0, result.stderr + result.stdout
-    assert "Removed legacy aggregate entries:" in result.stdout
-    assert not (target / "dev-agent-skills").exists()
+    assert "WARNING: skipped unowned legacy aggregate entries:" in result.stdout
+    assert (target / "dev-agent-skills").is_symlink()
+    assert (target / "dev-agent-skills").resolve(strict=True) == old_checkout
     assert_relative_mirror_link(target, "pm-agent")
 
 
-def test_source_checkout_inside_legacy_aggregate_delete_path_errors_without_deleting(
+def test_source_checkout_inside_legacy_aggregate_path_is_preserved(
     tmp_path: Path,
 ) -> None:
     target = tmp_path / "skills"
@@ -408,13 +601,13 @@ def test_source_checkout_inside_legacy_aggregate_delete_path_errors_without_dele
         check=False,
     )
 
-    assert result.returncode == 1
-    assert "安装源 checkout 位于目标删除路径内" in result.stderr
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert "WARNING: skipped unowned legacy aggregate entries:" in result.stdout
     assert sentinel.read_text(encoding="utf-8") == "keep local checkout"
     assert (checkout / ".claude-plugin/marketplace.json").is_file()
     assert (checkout / "agents/product_manager/skills/pm-agent/SKILL.md").is_file()
-    assert not (target / MIRROR_DIR).exists()
-    assert not (target / "pm-agent").exists()
+    assert (target / MIRROR_DIR).is_dir()
+    assert_relative_mirror_link(target, "pm-agent")
 
 
 def test_mirror_does_not_contain_plugin_manifests(tmp_path: Path) -> None:

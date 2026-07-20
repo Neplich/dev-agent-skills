@@ -34,7 +34,7 @@ execution.
 - running the full design or document-writing protocol itself
 - duplicating the domain logic of `idea-to-spec`, `feature-catalog`,
   `competitive-brief`, `competitive-intelligence`, `changelog-generator`,
-  `release-notes-generator`, `roadmap-generator`, or `github-reader`
+  `github-release-generator`, `roadmap-generator`, or `github-reader`
 - continuing into design implementation, engineering execution, QA, DevOps, or
   security work
 - letting empty-workspace product ideas skip PM discovery and go straight to
@@ -47,8 +47,8 @@ execution.
 - `pm-agent:competitive-brief` - Competitive analysis, positioning, market comparison
 - `pm-agent:competitive-intelligence` - Sales-facing battlecards and deal support
 - `pm-agent:changelog-generator` - Developer-facing changelog generation from GitHub
-- `pm-agent:release-notes-generator` - Customer-facing announcements and
-  GitHub Release bodies/operations until issue #120
+- `pm-agent:github-release-generator` - GitHub Release preview, draft, and
+  approved publication after the Docs release gates pass
 - `pm-agent:roadmap-generator` - Roadmap creation or sync from GitHub planning signals
 - `pm-agent:github-reader` - GitHub status, milestones, backlog, PR queue, blockers
 
@@ -96,7 +96,7 @@ these stable `request_type` values in routing notes and handoff packets.
 | `delivery` / `status` | Confirm already-scoped change scope, verification state, CI/review status, and requested delivery action. | Engineer / delivery can use the fast lane only for known work whose scope is already confirmed. Repo health, backlog, PR queue, release-readiness planning, and blockers route to `repo_status` / `github-reader`. |
 | `feature_catalog` | Route inherited-project inventory and feature-profile work to `feature-catalog`. | Stay in PM until the catalog or feature profile is maintainer-confirmed. |
 | `competitive_research` / `battlecard` | Route market comparison to `competitive-brief` and sales battlecards to `competitive-intelligence`. | Stay in PM unless follow-up roadmap, messaging, or implementation work needs a separate handoff. |
-| `changelog` / `release_notes` | Route developer-facing changelog work to `changelog-generator`; route customer announcements and GitHub Release work to the PM `release-notes-generator`; route versioned `docs/site/release-notes/` pages to `docs-agent:release-notes-generator`. | PM-only communication stays in PM. Site Release Notes require a Docs handoff; GitHub Release execution remains PM-owned until issue #120. |
+| `changelog` / `release_notes` | Route developer-facing changelog work to `changelog-generator`; route site or user-facing version notes to `docs-agent:release-notes-generator`; route GitHub Release preview, draft, or publication to PM `github-release-generator`. | Site Release Notes require a Docs handoff and successful release gates before the PM GitHub Release specialist acts. |
 | `roadmap` / `repo_status` | Route planning, milestones, backlog, PR queue, blockers, and repository health to `roadmap-generator` or `github-reader`. | Stay in PM unless confirmed downstream execution is requested. |
 
 New requirements, expectation changes, and unclear scope stay on the PM path.
@@ -122,10 +122,11 @@ Route by the user's intended PM outcome, not by literal wording.
   -> `competitive-intelligence`
 - Changelog, what changed, unreleased changes, version history, "这个版本改了什么"
   -> `changelog-generator`
-- Customer-facing release announcements, GitHub Release bodies or operations,
-  "发版公告", "GitHub Release", "what's new"
-  -> PM `release-notes-generator`
-- Versioned formal-site pages under `docs/site/release-notes/`, including their
+- GitHub Release bodies, previews, drafts, or publication operations,
+  "GitHub Release", "GitHub 发版页"
+  -> PM `github-release-generator`
+- Customer-facing release announcements, "what's new", "发版公告", or
+  versioned formal-site pages under `docs/site/release-notes/`, including their
   confirmation, metadata, index, and docs checks
   -> hand off to `docs-agent:release-notes-generator`
 - Roadmap, future planning, upcoming work, milestone-driven planning,
@@ -165,8 +166,8 @@ Route by the user's intended PM outcome, not by literal wording.
 | 竞品分析、定位比较、市场情报 | `competitive-brief` |
 | 销售 battlecard、deal support | `competitive-intelligence` |
 | changelog、版本差异、未发布改动 | `changelog-generator` |
-| 面向客户的发布公告、GitHub Release 正文或操作 | PM `release-notes-generator` |
-| `docs/site/release-notes/` 版本页 | `docs-agent:release-notes-generator` |
+| GitHub Release 正文、预览、draft 或发布操作 | PM `github-release-generator` |
+| 面向用户的版本说明、发布公告、`docs/site/release-notes/` 版本页 | `docs-agent:release-notes-generator` |
 | 路线图、里程碑规划、后续优先级 | `roadmap-generator` |
 | 项目状态、milestone 进度、backlog、PR 队列、阻塞项 | `github-reader` |
 
@@ -176,8 +177,8 @@ If the request is PM-shaped but underspecified, use these defaults:
 - if it is about current repo/project state -> `github-reader`
 - if it is about communicating shipped work -> choose
   `changelog-generator` for developer-facing output and
-  PM `release-notes-generator` for customer announcements or GitHub Release
-  work; use `docs-agent:release-notes-generator` for a formal-site version page
+  `docs-agent:release-notes-generator` for site or user-facing version notes;
+  use PM `github-release-generator` only for the GitHub Release page workflow
 
 ## PM-First Guardrail
 
@@ -240,8 +241,7 @@ actually tied to a product feature.
 
 PM-only specialist routing does not require this cross-role packet. For
 `feature_catalog`, `competitive_research`, `battlecard`, `changelog`,
-customer-announcement or GitHub-Release `release_notes`, `roadmap`, and
-`repo_status`, record the selected PM skill,
+GitHub-Release `release_notes`, `roadmap`, and `repo_status`, record the selected PM skill,
 `request_type`, source context, and follow-up handoff condition. If the request
 is not tied to a product feature, use `N/A` for feature-scope fields instead of
 blocking or inventing a `feature_path`.
@@ -253,8 +253,8 @@ Use these only when the user clearly wants the broader PM workflow:
 - 接手项目先建功能目录再收敛需求 -> `feature-catalog` -> `idea-to-spec`
 - 完整产品规划 -> `idea-to-spec` -> `competitive-brief` -> `roadmap-generator`
 - 先看项目状态再做规划 -> `github-reader` -> `roadmap-generator`
-- 先整理变更再写对外公告或 GitHub Release -> `changelog-generator` -> PM `release-notes-generator`
-- 先做产品收敛再准备对外公告 -> `idea-to-spec` -> PM `release-notes-generator`
+- 先整理变更再写 GitHub Release -> `changelog-generator` -> PM `github-release-generator`
+- 先做产品收敛再准备用户版本说明 -> `idea-to-spec` -> `docs-agent:release-notes-generator`
 
 Do not expand into a multi-skill PM chain unless the broader follow-up is
 explicitly requested or strongly implied by the user's end goal.
