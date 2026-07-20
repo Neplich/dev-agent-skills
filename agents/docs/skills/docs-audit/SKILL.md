@@ -1,6 +1,6 @@
 ---
 name: docs-audit
-description: "Internal documentation specialist—not a direct entry point. Invoked by docs-agent to audit formal documentation against current code and test evidence before release."
+description: "Internal documentation specialist—not a direct entry point. Invoked by docs-agent to audit formal documentation against current code and test evidence, covering pre-tag release audit and post-tag release verification."
 visibility: internal
 ---
 

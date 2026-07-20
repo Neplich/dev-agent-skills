@@ -5,6 +5,9 @@ documentation layer. It routes explicit documentation-site bootstrap,
 evidence-backed synchronization and backfill, site Release Notes delivery, and
 release documentation audit requests to the matching documentation specialist.
 
+> [!NOTE]
+> Other languages: [中文](./README_zh.md)
+
 > [!IMPORTANT]
 > Docs Agent is a downstream capability. It starts from a PM handoff packet, an
 > equivalent confirmed document chain, or the entry basis defined by the

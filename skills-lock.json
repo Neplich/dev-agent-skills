@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "98784a91499097d8cf6987438a4d11fc744dbbed47cd4d62745325f9b55e4c7a"
+      "computedHash": "902249a5851b285b1ab33f2b402245e0816c1004ee32d7f8a56680b9081048b6"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
@@ -199,7 +199,7 @@
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",
       "sourceType": "local",
-      "computedHash": "a41dbef3eafd665441af30e2f4d5162b3605b7ee272d0cfb4787cdd56b53f6f1"
+      "computedHash": "6b08376a65d6e63dc427d50539ef4bbbcf0d064fda9f36cbda7a97cdbf83faaa"
     }
   }
 }
