@@ -281,7 +281,7 @@ do not perform that downstream role's responsibilities yourself.
 
 ## 8. Safety-Net Closeout and Auto-Continue
 
-This is the cross-role public behavior shared by the six dispatchers. It
+This is the cross-role public behavior shared by the seven dispatchers (the PM dispatcher plus the six downstream role routers). It
 applies after the current role finishes its scoped task, selected specialist
 workflow, or blocked handoff report.
 
