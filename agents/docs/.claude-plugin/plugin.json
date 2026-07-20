@@ -1,6 +1,6 @@
 {
   "name": "docs-agent",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Downstream documentation capability invoked after pm-agent handoff for confirmed formal documentation bootstrap, synchronization, backfill, and release audit.",
   "author": {
     "name": "Neplich"
