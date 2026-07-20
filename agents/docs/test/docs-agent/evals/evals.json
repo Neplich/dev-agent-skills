@@ -112,6 +112,56 @@
           "text": "仅指向 `release-notes-generator/SKILL.md` 及其内部指令作为权威执行 gate，不在 router 输出中复制七步流程、正文确认、metadata/index、docs checks 或 #120 handoff 的详细协议。"
         }
       ]
+    },
+    {
+      "id": "eval-005-integration-release-chain",
+      "name": "AI Hub-shaped 文档发布全链集成",
+      "description": "验证 docs-agent 从宿主正式页面契约、模板脚手架、多类型同步证据与已确认站内 Release Notes，连续完成 pre-tag/post-tag 文档审计并形成受门禁约束的 GitHub Release handoff。",
+      "prompt": "维护者已在 `release-chain-entry.md` 中确认 `target_release_version`、runtime-local immutable refs 与本次从文档审计推进到 GitHub Release handoff 的范围。先在 runner 复制出的隔离 workspace 执行 `sh .eval/setup-git-fixture.sh`，核验 pre-tag 与 post-tag 分别使用独立临时 worktree、caller worktree/index 未污染、临时 worktree/ref 已清理，并从 `.eval/runtime-git-evidence.md` 和实际 Git object reads 解析 base/target/统一盖章/handoff/tag/evidence-branch head；不得把 Markdown 声明当作对象存在的替代证据。请先以两次 staged gate 和 committed delta gate 核验 pre-tag `ready_for_tag` 锚定记录，再依据 `.eval/simulated-tag.md` 以单路径 staged/committed gate 执行 post-tag 树绑定、版本规范化与 evidence branch expected-head/CAS 核验。最后产出给 `github-release-generator` 的结构化 handoff，明确三项上游门禁与仍需独立维护者发布批准。除 setup 脚本在隔离 fixture 内创建 synthetic refs/tag 外，不得创建、移动或删除宿主或远端 tag，不得创建、修改或发布真实 GitHub Release。",
+      "expected_output": "完整核验正式页面 frontmatter、宿主五模板与脚手架、API 同步页面/change-map、站内 Release Notes handoff、pre-tag 差异与统一盖章、post-tag tag-tree/version 一致性；仅在证据齐备时返回 ready_for_tag 与 release_verified，并形成仍受维护者发布批准约束的 github-release-generator handoff，全程零真实 tag/Release 写入。",
+      "workspace": "workspace/eval-005-integration-release-chain",
+      "assertions": [
+        {
+          "id": "validates_shared_frontmatter_contract",
+          "description": "全站页面与模板豁免使用同一 frontmatter 契约",
+          "text": "逐页核对 `docs/site/**/*.md`（排除 `.meta/**`）的七个必填字段和枚举；五个 `standards/templates/*.md` 分别使用 api、database、design、ops、product 目标 doc_type，只做 frontmatter 与模板结构完整性核查，不把占位正文交给类型事实检查。"
+        },
+        {
+          "id": "uses_host_templates_and_scaffold",
+          "description": "宿主模板与脚手架是唯一写作基础",
+          "text": "确认五类模板、`scripts/scaffold-doc.mjs`、`npm run new:doc` 与 `package.json` 脚本来自宿主 #122 scaffold，并将宿主模板视为唯一模板源，不在 skill 输出或 fixture 中内嵌第二套模板正文。"
+        },
+        {
+          "id": "reconciles_api_sync_and_change_map",
+          "description": "API 同步页面与 change-map 一致",
+          "text": "以已确认 PRD/TRD/IMPLEMENTATION_PLAN 摘要、当前代码和测试为证据，核对 `docs/site/api/ai-search.md` 的 GET `/api/search` 契约；要求 `src/search/routes.ts` 明确定义 method/path/handler 与 `SearchItem` 响应类型，并在 clamp 前拒绝非整数/非有限 limit；`tests/search-api.test.ts` 直接断言 HTTP 注册信息、200/400 body、上下界 clamp、fractional/NaN/Infinity 拒绝与空白 q，并确认 change-map 的 code_glob、exclude、trigger、required_docs 精确覆盖该页面。"
+        },
+        {
+          "id": "accepts_confirmed_site_release_notes_handoff",
+          "description": "站内 Release Notes handoff 完备且归属正确",
+          "text": "核对 `release-notes-handoff.md` 包含维护者确认版本、confirmation_status: confirmed、页面、metadata、index、成功 docs checks、版本来源 inventory 与证据；明确这些站内产物归 `docs-agent:release-notes-generator`，GitHub Release 归 `github-release-generator`。"
+        },
+        {
+          "id": "completes_pre_tag_ready_for_tag",
+          "description": "pre-tag 差异收敛、统一盖章并锚定 ready_for_tag",
+          "text": "先在隔离 runtime workspace 执行 `.eval/setup-git-fixture.sh`，并确认 pre-tag 候选在 `git worktree add` 创建的独立临时 worktree 中构造、caller 固定停在 pristine target 且与 release branch 分离、caller worktree/index 在集成前后不变、临时 worktree/ref 已清理；再用 `git rev-parse`、`git cat-file`、`git diff`、`git show`、`git ls-tree` 解析不可变 base/target/anchor/handoff 对象，核对 changed files、change-map 与完整影响集；只在 API 页面、Release Notes 页面和版本索引全部 verified，候选两次 staged gate 与 committed delta gate 均证明仅有三个单字段盖章和固定 candidate record 后，才确认 candidate/discovery ordinary blobs、commit/tree/path/blob、release branch expected-old-value CAS fast-forward 与集成回读，并接受 phase_result: ready_for_tag。candidate 的 version-source binding、discovery current-entry 与 lineage digest 必须由同一组 target_release_version/source anchor SHA/digest 变量一次派生，candidate、discovery、post-tag 三份记录显式互指路径/锚字段，setup 末尾执行全等 self-check。"
+        },
+        {
+          "id": "completes_post_tag_release_verified",
+          "description": "模拟 tag 通过树绑定和版本规范化后 release_verified",
+          "text": "post-tag 优先消费可信 pre-tag handoff，实际解析 `refs/tags/v1.4.0` 的 tag object、peeled commit/tree并与已验证 handoff commit/tree/path/blob 绑定；按来源严格校验 v1.4.0 与 1.4.0 的 raw form 后规范化为同一 SemVer，核对同一 inventory 且不重生成或重盖章。必须先生成并校验第二次 tag tuple 与 evidence branch observed/expected-head 证据，只有两项均通过后才能调用成功记录渲染函数；成功记录内部 `Decision evidence` 必须早于 `Conclusion`，任何中间产物不得先出现 `phase_result: release_verified`。独立 post-tag 结果随后在另一临时 worktree 中原子构造，通过单路径 `100644` ordinary blob、完整 schema、raw/name-status/summary/full-binary staged 与 committed gate，并证明 caller worktree/index 未变化及临时 worktree/ref 已清理；仅在精确 ref 仍等于 expected head 时按 CAS/normal fast-forward 集成并 readback。另核对 `.eval/git-posttag/audit-v1.4.0-post-tag-blocked.md.in` 的失败证据在前、blocked 结论在后且绝不含 release_verified 成功结论。"
+        },
+        {
+          "id": "hands_off_three_gates_to_github_release",
+          "description": "GitHub Release handoff 明示三门禁与独立批准",
+          "text": "最终 handoff 指向 `pm-agent:github-release-generator`，明确同版本的 confirmed site Release Notes handoff、ready_for_tag、release_verified 三项证据齐备；同时声明真实发布仍须维护者单独、当前批准，release_verified 不是发布授权。"
+        },
+        {
+          "id": "preserves_no_mutation_boundaries",
+          "description": "不越权操作 tag 或 GitHub Release",
+          "text": "全程只读取模拟 tag 证据并产出审计/handoff 结果，不创建、移动、删除或重建 tag，不创建、更新或发布真实 GitHub Release，并报告远端 tag 与 Release 均零写入。"
+        }
+      ]
     }
   ]
 }

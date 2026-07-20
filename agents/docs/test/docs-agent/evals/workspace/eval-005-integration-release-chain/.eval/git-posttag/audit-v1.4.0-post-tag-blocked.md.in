@@ -1,0 +1,28 @@
+# Post-tag formal documentation audit — blocked sample
+
+- schema_version: `1.0`
+- attempt: `1`
+- phase: `post-tag`
+- target_release_version: `v1.4.0`
+
+## Decision evidence
+
+- tag_ref: `refs/tags/v1.4.0`
+- entry_tag_tuple: `({{TAG_OBJECT}}, {{TAG_COMMIT}}, {{TAG_TREE}})`
+- pre_integration_tag_tuple: `({{MOVED_TAG_OBJECT}}, {{MOVED_TAG_COMMIT}}, {{MOVED_TAG_TREE}})`
+- second_tag_tuple_validation: `failed`
+- release_evidence_branch_ref: `refs/heads/release-evidence/v1.4.0`
+- release_evidence_expected_head: `{{EVIDENCE_EXPECTED_HEAD}}`
+- release_evidence_observed_head_before_record: `{{EVIDENCE_OBSERVED_HEAD}}`
+- expected_head_validation: `failed`
+
+## Conclusion
+
+- phase_result: `blocked`
+- blockers: `[tag_tuple_moved, release_evidence_expected_head_mismatch]`
+- release_verified_emitted: `false`
+- tag_mutations: `0`
+- remote_writes: `0`
+- github_release_writes: `0`
+
+This sample describes the failure path only. It is never integrated into the evidence branch and must never emit a successful phase result.

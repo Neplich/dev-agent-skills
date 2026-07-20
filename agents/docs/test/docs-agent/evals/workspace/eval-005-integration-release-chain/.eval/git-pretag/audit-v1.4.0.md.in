@@ -1,0 +1,52 @@
+# Formal documentation audit
+
+- schema_version: `1.0`
+- attempt: `1`
+- phase: `pre-tag`
+- base_ref_commit: `{{BASE_COMMIT}}`
+- target_ref_commit: `{{TARGET_COMMIT}}`
+- target_release_version: `v1.4.0` (maintainer-confirmed)
+- source_binding_target_release_version: `{{TARGET_RELEASE_VERSION}}`
+- source_binding_anchor_sha: `{{SOURCE_ANCHOR_SHA}}`
+- source_binding_digest: `sha256:{{SOURCE_DIGEST}}`
+- discovery_record_path: `docs/site/.meta/audit/handoffs/pre-tag-v1.4.0.md`
+- post_tag_record_path: `docs/site/.meta/audit/audit-v1.4.0-post-tag.md`
+- diff_semantics: two-dot endpoint diff
+- prior_attempt_lineage: `[]`
+- prior_lineage_digest: `sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`
+- immediately_superseded_attempt: none
+
+## Impact and evidence
+
+- Changed files: `src/search/routes.ts`, `tests/search-api.test.ts`, `docs/site/api/ai-search.md`, `docs/site/standards/change-map.yaml`, `docs/site/release-notes/v1.4.0.md`, `docs/site/release-notes/index.md`, `docs/site/.meta/releases.json`, `package.json`.
+- Raw changed-file inventory (`git diff --raw --no-abbrev --no-renames`): `{{BASE_TARGET_RAW}}`.
+- Name-status changed-file inventory (`git diff --name-status --no-renames`): `{{BASE_TARGET_NAME_STATUS}}`.
+- Change-map delta inventory: one `M 100644/blob/{{CHANGE_MAP_BASE_BLOB}} -> 100644/blob/{{CHANGE_MAP_TARGET_BLOB}}`; full binary patch SHA-256 `{{CHANGE_MAP_PATCH_SHA256}}`; adds exactly `src/search/** -> docs/site/api/ai-search.md` with the declared exclude/trigger; no deleted or modified prior mapping.
+- Unified stamp set: `docs/site/api/ai-search.md`, `docs/site/release-notes/v1.4.0.md`, `docs/site/release-notes/index.md`.
+- API implementation evidence: `src/search/routes.ts@{{ROUTE_BLOB}}` defines `GET /api/search`, handler and `SearchItem`, rejects non-integer/non-finite limits before clamping; `tests/search-api.test.ts@{{TEST_BLOB}}` asserts registration, response bodies, both clamp boundaries, fractional/NaN/Infinity rejection and blank query rejection.
+- API page: claim checklist `method GET`, `path /api/search`, `auth none declared by fixture`, query `q/limit`, success `200 {items,limit}`, missing query and invalid-limit `400 {error}`, no streaming/upload/download; target mode/type/blob `100644/blob/{{API_TARGET_BLOB}}`; evidence route/test blobs above; pre/post stamp `unverified` -> `v1.4.0`; candidate mode/type/blob `100644/blob/{{API_STAMP_BLOB}}`; post-stamp SHA-256 `{{API_STAMP_SHA256}}`; final `verified`.
+- Release Notes: target mode/type/blob `100644/blob/{{RELEASE_TARGET_BLOB}}`; pre/post stamp `unverified` -> `v1.4.0`; candidate mode/type/blob `100644/blob/{{RELEASE_STAMP_BLOB}}`; post-stamp SHA-256 `{{RELEASE_STAMP_SHA256}}`; final `verified`.
+- Release index: target mode/type/blob `100644/blob/{{INDEX_TARGET_BLOB}}`; pre/post stamp `unverified` -> `v1.4.0`; candidate mode/type/blob `100644/blob/{{INDEX_STAMP_BLOB}}`; post-stamp SHA-256 `{{INDEX_STAMP_SHA256}}`; final `verified`.
+
+## Version sources and convergence
+
+- Canonical inventory algorithm: `canonical-json-rfc8259-sorted-v1`; exact canonical JSON: `{{INVENTORY_JSON}}`.
+- Canonical inventory digest: `sha256:{{INVENTORY_DIGEST}}`.
+- `actual_tag`: locator kind `git-ref`, locator `refs/tags/v1.4.0`, selector `tag-name`, extractor `git-tag-name-v1`, required raw form `vX.Y.Z`, pre-tag value `pending_expected_absent`.
+- `target_version`: locator kind `handoff`, locator `release-notes-handoff.md`, selector `target_release_version`, extractor `handoff-field-v1`, raw `v1.4.0`, normalized `1.4.0`, passed.
+- `release_notes`: locator kind `git-file`, locator `docs/site/release-notes/v1.4.0.md`, selector `heading[h1].release-version`, extractor `markdown-release-heading-v1`, candidate `100644/blob/{{RELEASE_STAMP_BLOB}}`, SHA-256 `{{RELEASE_STAMP_SHA256}}`, raw `v1.4.0`, normalized `1.4.0`, passed.
+- `release_index`: locator kind `git-file`, locator `docs/site/release-notes/index.md`, selector `entry[v1.4.0].version`, extractor `markdown-release-index-v1`, candidate `100644/blob/{{INDEX_STAMP_BLOB}}`, SHA-256 `{{INDEX_STAMP_SHA256}}`, raw `v1.4.0`, normalized `1.4.0`, passed.
+- `release_metadata`: locator kind `git-file`, locator `docs/site/.meta/releases.json`, selector `/latest`, extractor `json-pointer-rfc6901-v1`, target `100644/blob/{{METADATA_TARGET_BLOB}}`, SHA-256 `{{METADATA_TARGET_SHA256}}`, raw `v1.4.0`, normalized `1.4.0`, passed.
+- `host_package`: locator kind `git-file`, locator `package.json`, selector `/version`, extractor `json-pointer-rfc6901-v1`, target `100644/blob/{{PACKAGE_TARGET_BLOB}}`, SHA-256 `{{PACKAGE_TARGET_SHA256}}`, raw `1.4.0`, normalized `1.4.0`, passed.
+- Candidate version-source binding: `(target_release_version={{TARGET_RELEASE_VERSION}}, anchor_sha={{SOURCE_ANCHOR_SHA}}, digest=sha256:{{SOURCE_DIGEST}})`; discovery and post-tag consumers must reproduce this tuple exactly.
+- All target evidence paths resolve as `100644` ordinary blobs from `{{TARGET_COMMIT}}`.
+- Initial staged inventory: `M 100644/blob/{{API_TARGET_BLOB}} -> 100644/blob/{{API_STAMP_BLOB}} docs/site/api/ai-search.md`; `M 100644/blob/{{RELEASE_TARGET_BLOB}} -> 100644/blob/{{RELEASE_STAMP_BLOB}} docs/site/release-notes/v1.4.0.md`; `M 100644/blob/{{INDEX_TARGET_BLOB}} -> 100644/blob/{{INDEX_STAMP_BLOB}} docs/site/release-notes/index.md`; `A absent -> 100644/blob/self docs/site/.meta/audit/audit-v1.4.0.md` (self object supplied by anchor readback, not embedded recursively). Name-status is exactly `M,M,M,A`; summary contains only the candidate create; full binary patch decision `passed`; rename/copy disabled; no delete/type/mode-only/symlink/gitlink/path-swap/extra-path delta.
+- Final staged inventory after atomic candidate replacement: the same exact four paths, statuses, modes, types and stamp blob ids; candidate self blob is confirmed by the committed anchor/readback rather than self-referenced in its own bytes; raw, name-status, summary and full binary patch decision again `passed` with zero unauthorized delta. `.eval/runtime-git-evidence.md` supplies the post-commit `target..anchor` full-patch digest for independent readback, not as a self-referential candidate field.
+- Stamp read-back: all three pages equal `v1.4.0`.
+
+## Conclusion
+
+- Blocking items: none.
+- Candidate conclusion: `candidate_verified`.
+- Reproducible checks: `git diff {{BASE_COMMIT}} {{TARGET_COMMIT}}`, `git diff --cached --raw --no-renames`, `git diff --cached --name-status --no-renames`, `git diff --cached --summary`, `git diff --cached --binary`, `git cat-file`, `git show`, `git ls-tree`, host `npm run test:api`, and `(cd docs/site && npm run test:docs)`.
+- This candidate does not itself claim `ready_for_tag` or publication.
