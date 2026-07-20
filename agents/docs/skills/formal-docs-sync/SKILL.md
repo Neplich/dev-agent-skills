@@ -17,6 +17,9 @@ Require a PM handoff packet or an equivalent confirmed entry basis for exactly
 one mode. The PM packet definition lives in
 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
 Direct invocation does not waive this gate.
+Security-originated evidence is not an equivalent entry basis for any mode. If
+there is no PM handoff packet, stop and guide the request back to `pm-agent` for
+classification under `Security Conclusion Escalation to PM` and issue filing.
 
 - **Feature delivery:** require an Approved PRD, a Confirmed TRD with traceable
   impact scope, a confirmed `IMPLEMENTATION_PLAN.md`, the actual diff, and

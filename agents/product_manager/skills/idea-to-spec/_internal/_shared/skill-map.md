@@ -355,13 +355,18 @@ file the issue itself, or modify documentation.
 evidence for repo-wide scope. Also include the affected scope (`feature_path`
 values or a repo-wide marker), affected formal document types across api /
 database / design / ops / product, a short summary of which fact changed, and
-the affected release version when release readiness is impacted.
+the affected release version when release readiness is impacted. When the
+conclusion confirms remediation for an existing tracking issue, the evidence
+payload must include the original issue number or link.
 
 **Downstream action.** `pm-agent` classifies the issue as a bug, formal
-documentation, security, or release decision and tracks it through completion.
-Remediation is dispatched through the normal cross-role handoff packet. After
-remediation lands, route the work back to Security for re-review and close the
-issue only after Security confirms the result. Any Docs work reaches a
+documentation, security, or release decision. After the user confirms the entry
+classification, `pm-agent` uses `gh issue create` to create the tracking issue
+and owns its lifecycle. Remediation is dispatched through the normal cross-role
+handoff packet. After remediation lands, route the work back to Security for
+re-review. When Security returns the re-review conclusion to PM, PM updates and
+closes the original issue rather than creating a duplicate; only a conclusion
+without an existing tracking issue creates a new issue. Any Docs work reaches a
 documentation specialist only through a PM handoff packet and follows that
 specialist's existing gates.
 

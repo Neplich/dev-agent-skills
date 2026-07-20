@@ -75,7 +75,7 @@ flowchart LR
     Engineer --> Docs["Docs Agent: formal current-state docs"]
     QA --> Docs
     DevOps["DevOps: deployment evidence"] --> Docs
-    Security["Security: fact-changing conclusion or remediation evidence"] -.-> Docs
+    Security["Security: fact-changing conclusion or remediation evidence"] -. "Conclusion escalation to PM" .-> PM
     Release["Release context"] --> Docs
     Docs --> Notes["Site Release Notes"]
     Notes --> Audit["Formal documentation audit"]

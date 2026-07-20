@@ -100,8 +100,13 @@ security outcome.
   plausible and the expected report would materially differ.
 - If the user names a risky surface but not the exact review type, choose the
   narrowest plausible review instead of bouncing the request.
-- If fixes are needed, keep the security output focused on evidence and hand the
-  remediation back to `engineer-agent` or `devops-agent` as appropriate.
+- If fixes are needed and the conclusion does not trigger `Security Conclusion
+  Escalation to PM` because the finding stays internal without changing formal
+  documentation facts, externally visible behavior, operational facts, or
+  release readiness, keep the security output focused on evidence and hand the
+  remediation directly to `engineer-agent` or `devops-agent` as appropriate.
+  Conclusions that trigger the escalation always return to `pm-agent`, which
+  dispatches remediation through the issue lifecycle.
 - At Security closeout, evaluate Security's own confirmed conclusion — a review finding, or a Security re-review confirming that a remediation has landed — against the `Security Conclusion Escalation to PM` rule in `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`. If that conclusion establishes that formal documentation facts, externally visible behavior, operational facts, or release readiness have changed, return the conclusion and evidence to `pm-agent` for entry classification and issue filing. The trigger is Security's own conclusion; Security does not wait on a separate Engineer or DevOps return handoff and does not hand evidence directly to `docs-agent`.
 
 ## Missing Handoff Target

@@ -26,6 +26,9 @@ execution.
   status, planning, and release communication
 - handing off confirmed design, engineering, QA, DevOps, security, formal documentation, or delivery
   work to the appropriate downstream role agent
+- creating tracking issues with `gh issue create` after user-confirmed entry
+  classification, including Security conclusion escalation, and managing their
+  lifecycle
 - asking at most one route-level clarification question when the target outcome
   is truly ambiguous
 
