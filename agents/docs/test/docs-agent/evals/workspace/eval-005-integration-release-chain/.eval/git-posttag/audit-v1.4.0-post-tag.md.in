@@ -4,34 +4,55 @@
 - attempt: `1`
 - phase: `post-tag`
 - target_release_version: `v1.4.0`
-- phase_result: `release_verified`
 - result_time: `2026-07-20T09:20:00+08:00`
+
+## Decision evidence
+
+- source_binding_target_release_version: `{{TARGET_RELEASE_VERSION}}`
+- source_binding_anchor_sha: `{{SOURCE_ANCHOR_SHA}}`
+- source_binding_digest: `sha256:{{SOURCE_DIGEST}}`
 - tag_ref: `refs/tags/v1.4.0`
 - tag_ref_target_object_id: `{{TAG_OBJECT}}`
 - peeled_tag_commit: `{{TAG_COMMIT}}`
 - peeled_tag_tree: `{{TAG_TREE}}`
 - entry_tag_tuple: `({{TAG_OBJECT}}, {{TAG_COMMIT}}, {{TAG_TREE}})`
-- pre_integration_tag_tuple: `({{TAG_OBJECT}}, {{TAG_COMMIT}}, {{TAG_TREE}})`
+- pre_integration_tag_ref_target_object_id: `{{PRE_INTEGRATION_TAG_OBJECT}}`
+- pre_integration_peeled_tag_commit: `{{PRE_INTEGRATION_TAG_COMMIT}}`
+- pre_integration_peeled_tag_tree: `{{PRE_INTEGRATION_TAG_TREE}}`
+- pre_integration_tag_tuple: `({{PRE_INTEGRATION_TAG_OBJECT}}, {{PRE_INTEGRATION_TAG_COMMIT}}, {{PRE_INTEGRATION_TAG_TREE}})`
+- second_tag_tuple_validation: `passed`
 - locator_mode: `handoff`
 - handoff_commit: `{{HANDOFF_COMMIT}}`
 - handoff_tree: `{{HANDOFF_TREE}}`
 - handoff_path: `docs/site/.meta/audit/handoffs/pre-tag-v1.4.0.md`
 - handoff_blob: `{{HANDOFF_BLOB}}`
+- discovery_anchor_commit: `{{HANDOFF_COMMIT}}`
 - candidate_record_path: `docs/site/.meta/audit/audit-v1.4.0.md`
 - candidate_record_blob: `{{CANDIDATE_BLOB}}`
+- candidate_anchor_commit: `{{ANCHOR_COMMIT}}`
+- candidate_discovery_record_path: `docs/site/.meta/audit/handoffs/pre-tag-v1.4.0.md`
+- candidate_post_tag_record_path: `docs/site/.meta/audit/audit-v1.4.0-post-tag.md`
 - version_source_inventory_digest: `sha256:{{INVENTORY_DIGEST}}`
 - lineage_digest: `sha256:{{LINEAGE_DIGEST}}`
+- inventory_recomputed_from_tag_candidate: `passed`
+- lineage_recomputed_from_tag_handoff: `passed`
 - tag_tree_equals_handoff_tree: `true`
 - candidate_schema_check: `passed`
 - candidate_blob_readback: `passed`
 - stamped_page_blob_and_sha256_checks: `passed`
+- strict_source_selector_and_raw_form_checks: `passed`
 - version_raw_forms: tag/target/release-notes/index/releases metadata `v1.4.0`; package `1.4.0`
 - normalized_semver: `1.4.0`; component-wise case-sensitive equality `passed`
 - release_evidence_branch_ref: `refs/heads/release-evidence/v1.4.0`
 - release_evidence_expected_head: `{{EVIDENCE_EXPECTED_HEAD}}`
+- release_evidence_observed_head_before_record: `{{EVIDENCE_OBSERVED_HEAD}}`
+- expected_head_validation: `passed`
 - expected_head_check_before_commit: `passed`
 - isolated_commit_parent: `{{EVIDENCE_EXPECTED_HEAD}}`
 - staged_inventory: one `A absent -> 100644/blob/self docs/site/.meta/audit/audit-v1.4.0-post-tag.md`; no extra path or metadata delta
+- staged_convergence: raw/name-status/summary/full-binary single-path gate `passed`
+- committed_convergence: expected-head-to-result raw/name-status/summary/full-binary single-path gate and result blob readback `passed`
+- decision_checks_completed_before_record: `passed`
 - command_evidence:
   - `git rev-parse refs/tags/v1.4.0`
   - `git rev-parse 'refs/tags/v1.4.0^{}'`
@@ -41,6 +62,10 @@
   - `git cat-file -t {{HANDOFF_BLOB}} && git cat-file -t {{CANDIDATE_BLOB}}`
   - `git show {{HANDOFF_COMMIT}}:docs/site/.meta/audit/handoffs/pre-tag-v1.4.0.md`
   - `git show {{HANDOFF_COMMIT}}:docs/site/.meta/audit/audit-v1.4.0.md`
+  - `git show {{TAG_COMMIT}}:docs/site/.meta/audit/audit-v1.4.0.md` and recompute canonical inventory SHA-256
+  - `git show {{TAG_COMMIT}}:docs/site/.meta/audit/handoffs/pre-tag-v1.4.0.md` and recompute lineage SHA-256
+  - exact selector reads for tag name, handoff target_release_version, release heading, release index entry, releases.json /latest, and package.json /version
+  - SHA-256 reads for API page, Release Notes page, release index, releases metadata, and package from {{TAG_COMMIT}}
   - `git show {{TAG_COMMIT}}:docs/site/release-notes/v1.4.0.md | grep -F '# v1.4.0'`
   - `git show {{TAG_COMMIT}}:docs/site/release-notes/index.md | grep -F 'v1.4.0'`
   - `git show {{TAG_COMMIT}}:docs/site/.meta/releases.json | grep -F '"latest": "v1.4.0"'`
@@ -48,8 +73,14 @@
   - `git show {{TAG_COMMIT}}:docs/site/release-notes/v1.4.0.md | shasum -a 256 && git show {{TAG_COMMIT}}:docs/site/release-notes/index.md | shasum -a 256 && git show {{TAG_COMMIT}}:docs/site/.meta/releases.json | shasum -a 256 && git show {{TAG_COMMIT}}:package.json | shasum -a 256`
   - `git diff --raw --no-abbrev --no-renames {{HANDOFF_COMMIT}} {{TAG_COMMIT}} && git diff --name-status --no-renames {{HANDOFF_COMMIT}} {{TAG_COMMIT}} && git diff --binary {{HANDOFF_COMMIT}} {{TAG_COMMIT}}`
   - `git rev-parse refs/heads/release-evidence/v1.4.0`
+  - `git diff --cached --raw --no-abbrev --no-renames && git diff --cached --name-status --no-renames && git diff --cached --summary --no-renames && git diff --cached --binary --no-renames`
+  - `git diff --raw --no-abbrev --no-renames {{EVIDENCE_EXPECTED_HEAD}} $(git rev-parse HEAD) && git diff --name-status --no-renames {{EVIDENCE_EXPECTED_HEAD}} $(git rev-parse HEAD) && git diff --summary --no-renames {{EVIDENCE_EXPECTED_HEAD}} $(git rev-parse HEAD) && git diff --binary --no-renames {{EVIDENCE_EXPECTED_HEAD}} $(git rev-parse HEAD)`
   - `git update-ref refs/heads/release-evidence/v1.4.0 "$(git rev-parse HEAD)" {{EVIDENCE_EXPECTED_HEAD}}`
   - `git rev-parse refs/heads/release-evidence/v1.4.0^{tree} && git rev-parse refs/heads/release-evidence/v1.4.0:docs/site/.meta/audit/audit-v1.4.0-post-tag.md`
+
+## Conclusion
+
+- phase_result: `release_verified`
 - blockers: `[]`
 - tag_mutations: `0`
 - remote_writes: `0`

@@ -14,6 +14,8 @@
 - git_fixture_evidence: `.eval/runtime-git-evidence.md`
 - base_ref: `refs/heads/fixture-base`
 - target_ref: `refs/heads/fixture-target`
+- caller_ref: `refs/heads/fixture-caller`
+- release_branch_ref: `refs/heads/fixture-build`
 - release_evidence_branch_ref: `refs/heads/release-evidence/v1.4.0`
 - release_evidence_expected_head: 从 `.eval/runtime-git-evidence.md` 读取 setup 在写入前捕获的 caller-confirmed head，并验证结果 commit 父节点、最终分支 head 与 blob readback
 - diff_semantics: `two-dot endpoint diff`

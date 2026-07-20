@@ -6,6 +6,11 @@
 - base_ref_commit: `{{BASE_COMMIT}}`
 - target_ref_commit: `{{TARGET_COMMIT}}`
 - target_release_version: `v1.4.0` (maintainer-confirmed)
+- source_binding_target_release_version: `{{TARGET_RELEASE_VERSION}}`
+- source_binding_anchor_sha: `{{SOURCE_ANCHOR_SHA}}`
+- source_binding_digest: `sha256:{{SOURCE_DIGEST}}`
+- discovery_record_path: `docs/site/.meta/audit/handoffs/pre-tag-v1.4.0.md`
+- post_tag_record_path: `docs/site/.meta/audit/audit-v1.4.0-post-tag.md`
 - diff_semantics: two-dot endpoint diff
 - prior_attempt_lineage: `[]`
 - prior_lineage_digest: `sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`
@@ -33,6 +38,7 @@
 - `release_index`: locator kind `git-file`, locator `docs/site/release-notes/index.md`, selector `entry[v1.4.0].version`, extractor `markdown-release-index-v1`, candidate `100644/blob/{{INDEX_STAMP_BLOB}}`, SHA-256 `{{INDEX_STAMP_SHA256}}`, raw `v1.4.0`, normalized `1.4.0`, passed.
 - `release_metadata`: locator kind `git-file`, locator `docs/site/.meta/releases.json`, selector `/latest`, extractor `json-pointer-rfc6901-v1`, target `100644/blob/{{METADATA_TARGET_BLOB}}`, SHA-256 `{{METADATA_TARGET_SHA256}}`, raw `v1.4.0`, normalized `1.4.0`, passed.
 - `host_package`: locator kind `git-file`, locator `package.json`, selector `/version`, extractor `json-pointer-rfc6901-v1`, target `100644/blob/{{PACKAGE_TARGET_BLOB}}`, SHA-256 `{{PACKAGE_TARGET_SHA256}}`, raw `1.4.0`, normalized `1.4.0`, passed.
+- Candidate version-source binding: `(target_release_version={{TARGET_RELEASE_VERSION}}, anchor_sha={{SOURCE_ANCHOR_SHA}}, digest=sha256:{{SOURCE_DIGEST}})`; discovery and post-tag consumers must reproduce this tuple exactly.
 - All target evidence paths resolve as `100644` ordinary blobs from `{{TARGET_COMMIT}}`.
 - Initial staged inventory: `M 100644/blob/{{API_TARGET_BLOB}} -> 100644/blob/{{API_STAMP_BLOB}} docs/site/api/ai-search.md`; `M 100644/blob/{{RELEASE_TARGET_BLOB}} -> 100644/blob/{{RELEASE_STAMP_BLOB}} docs/site/release-notes/v1.4.0.md`; `M 100644/blob/{{INDEX_TARGET_BLOB}} -> 100644/blob/{{INDEX_STAMP_BLOB}} docs/site/release-notes/index.md`; `A absent -> 100644/blob/self docs/site/.meta/audit/audit-v1.4.0.md` (self object supplied by anchor readback, not embedded recursively). Name-status is exactly `M,M,M,A`; summary contains only the candidate create; full binary patch decision `passed`; rename/copy disabled; no delete/type/mode-only/symlink/gitlink/path-swap/extra-path delta.
 - Final staged inventory after atomic candidate replacement: the same exact four paths, statuses, modes, types and stamp blob ids; candidate self blob is confirmed by the committed anchor/readback rather than self-referenced in its own bytes; raw, name-status, summary and full binary patch decision again `passed` with zero unauthorized delta. `.eval/runtime-git-evidence.md` supplies the post-commit `target..anchor` full-patch digest for independent readback, not as a self-referential candidate field.
