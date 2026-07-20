@@ -319,9 +319,13 @@ workflow, or blocked handoff report.
 
 ### Security-to-Docs Evidence Handoff and Audit Rerun
 
-This subsection is the authoritative cross-role rule for how Security
-conclusions enter the formal documentation layer. The handoff is conditional:
-not every security review reaches Docs.
+This subsection is the authoritative cross-role rule for when Security
+conclusions enter the formal documentation layer. Security uses the same Docs
+handoff every other role uses: it hands the evidence to `docs-agent`, which
+routes the applicable documentation specialist, and each specialist applies its
+own existing entry gate. This rule adds no new `formal-docs-sync` mode, no mode
+precedence, and no parallel owner map. The handoff is conditional: not every
+security review reaches Docs.
 
 **Trigger conditions.** Hand off to `Docs` only when a confirmed Security
 conclusion or completed remediation changes at least one of:
@@ -341,52 +345,35 @@ documented fact or externally visible behavior, or when the only outputs are
 Security-owned process reports under `docs/security/{feature_path}/`. Those
 reports remain process documents owned by Security.
 
-**Handoff evidence.** A triggered handoff gives Docs:
+**Handoff evidence.** A triggered handoff gives `docs-agent`:
 
-- the Security review or remediation report path under
-  `docs/security/{feature_path}/`
-- for remediation-triggered handoffs: remediation evidence — merged PR or
-  commit references plus Engineer or DevOps verification results
-- for conclusion-triggered handoffs, where a confirmed Security conclusion
-  shows a documented fact is already wrong or stale before any remediation
-  lands: the confirmed review evidence identifying the mismatched facts;
-  remediation evidence is not required to start the documentation correction
-- the affected scope: `feature_path` values, affected formal document types
-  (api / database / design / ops / product), and a short summary of which fact
-  changed
+- the Security review or remediation evidence: the report under
+  `docs/security/{feature_path}/` for feature-scoped work, or the repo-wide
+  audit evidence when the security scope is repo-wide (`N/A` feature scope)
+- for remediation-triggered handoffs, remediation evidence — merged PR or
+  commit references plus Engineer or DevOps verification results; for
+  conclusion-triggered handoffs, where a confirmed Security conclusion shows a
+  documented fact is already wrong or stale before any remediation lands, the
+  confirmed review evidence identifying the mismatched facts is enough to start
+  the correction
+- the affected scope: `feature_path` values or a repo-wide marker, affected
+  formal document types (api / database / design / ops / product), and a short
+  summary of which fact changed
 - the affected release version when release readiness is impacted
 
-**Audit invalidation.** When a trigger condition holds, existing `docs-audit`
-results covering the affected scope are stale: a pre-tag `ready_for_tag` stamp
-or post-tag `release_verified` conclusion for the pending release must not be
-reused as-is.
-
-**Rerun order.** First run the applicable `formal-docs-sync` mode to update the
-affected current-state pages, then rerun `docs-audit` for the affected release.
-Do not rerun `docs-audit` before the facts are synchronized.
-
-**Sync mode mapping and precedence.** A triggered handoff enters
-`formal-docs-sync` through one of its existing entry modes and adds no new
-mode. Map by the affected fact surface: feature delivery when the affected
-scope has its confirmed feature document chain (Approved PRD, Confirmed TRD,
-plan, diff, tests); deployment verification for operational or deployment
-facts backed by confirmed deployment evidence; release mode for release-scoped
-reconciliation against confirmed version facts; otherwise a
-maintainer-confirmed finite backfill batch limited to the affected pages. A
-pure Security remediation that satisfies none of the feature, deployment, or
-release entry bases — for example a repo-wide dependency patch or a
-configuration hardening fix — uses the maintainer-confirmed backfill batch as
-its default path once the maintainer confirms that affected-page batch. When a
-single handoff matches more than one mode — for example a configuration
-correction found during release readiness that is both operational and
-release-scoped — select exactly one mode by this precedence: release, then
-deployment verification, then feature delivery, then maintainer-confirmed
-backfill. If the selected mode's entry basis cannot be satisfied, report the
-sync as blocked with the missing basis instead of skipping the rerun rule.
-
-The Downstream Owner Map and the collaboration chain stay unchanged; this rule
-only adds a conditional `Security -> Docs` evidence path and does not create a
-parallel owner map.
+**Audit invalidation and rerun.** When a trigger changes facts covered by an
+already-audited or pending release, the existing `docs-audit` result for that
+release is stale and must not be reused as-is. Following the same order every
+role uses, `docs-agent` first routes the applicable `formal-docs-sync` to
+update the affected current-state pages, then reruns `docs-audit` for that
+release. `formal-docs-sync` and `docs-audit` each select their own mode, scope,
+and preconditions under their existing entry gates — including which sync mode
+fits the affected document types and the maintainer-confirmed
+`target_release_version` that `docs-audit` requires — and each reports blocked
+under its own rules when a basis is missing. A pure current-state correction
+with no affected release completes at `formal-docs-sync` and does not force a
+`docs-audit` rerun. The Downstream Owner Map and the collaboration chain stay
+unchanged; this rule only adds a conditional `Security -> Docs` evidence path.
 
 ## 9. Phase and Situation Routing
 
