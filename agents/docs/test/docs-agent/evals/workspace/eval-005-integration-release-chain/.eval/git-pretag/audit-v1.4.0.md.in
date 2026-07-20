@@ -18,8 +18,8 @@
 - Name-status changed-file inventory (`git diff --name-status --no-renames`): `{{BASE_TARGET_NAME_STATUS}}`.
 - Change-map delta inventory: one `M 100644/blob/{{CHANGE_MAP_BASE_BLOB}} -> 100644/blob/{{CHANGE_MAP_TARGET_BLOB}}`; full binary patch SHA-256 `{{CHANGE_MAP_PATCH_SHA256}}`; adds exactly `src/search/** -> docs/site/api/ai-search.md` with the declared exclude/trigger; no deleted or modified prior mapping.
 - Unified stamp set: `docs/site/api/ai-search.md`, `docs/site/release-notes/v1.4.0.md`, `docs/site/release-notes/index.md`.
-- API implementation evidence: `src/search/routes.ts@{{ROUTE_BLOB}}` defines `GET /api/search`, handler and `SearchItem`; `tests/search-api.test.ts@{{TEST_BLOB}}` asserts registration and response bodies.
-- API page: claim checklist `method GET`, `path /api/search`, `auth none declared by fixture`, query `q/limit`, success `200 {items,limit}`, error `400 {error}`, no streaming/upload/download; target mode/type/blob `100644/blob/{{API_TARGET_BLOB}}`; evidence route/test blobs above; pre/post stamp `unverified` -> `v1.4.0`; candidate mode/type/blob `100644/blob/{{API_STAMP_BLOB}}`; post-stamp SHA-256 `{{API_STAMP_SHA256}}`; final `verified`.
+- API implementation evidence: `src/search/routes.ts@{{ROUTE_BLOB}}` defines `GET /api/search`, handler and `SearchItem`, rejects non-integer/non-finite limits before clamping; `tests/search-api.test.ts@{{TEST_BLOB}}` asserts registration, response bodies, both clamp boundaries, fractional/NaN/Infinity rejection and blank query rejection.
+- API page: claim checklist `method GET`, `path /api/search`, `auth none declared by fixture`, query `q/limit`, success `200 {items,limit}`, missing query and invalid-limit `400 {error}`, no streaming/upload/download; target mode/type/blob `100644/blob/{{API_TARGET_BLOB}}`; evidence route/test blobs above; pre/post stamp `unverified` -> `v1.4.0`; candidate mode/type/blob `100644/blob/{{API_STAMP_BLOB}}`; post-stamp SHA-256 `{{API_STAMP_SHA256}}`; final `verified`.
 - Release Notes: target mode/type/blob `100644/blob/{{RELEASE_TARGET_BLOB}}`; pre/post stamp `unverified` -> `v1.4.0`; candidate mode/type/blob `100644/blob/{{RELEASE_STAMP_BLOB}}`; post-stamp SHA-256 `{{RELEASE_STAMP_SHA256}}`; final `verified`.
 - Release index: target mode/type/blob `100644/blob/{{INDEX_TARGET_BLOB}}`; pre/post stamp `unverified` -> `v1.4.0`; candidate mode/type/blob `100644/blob/{{INDEX_STAMP_BLOB}}`; post-stamp SHA-256 `{{INDEX_STAMP_SHA256}}`; final `verified`.
 
@@ -42,5 +42,5 @@
 
 - Blocking items: none.
 - Candidate conclusion: `candidate_verified`.
-- Reproducible checks: `git diff {{BASE_COMMIT}} {{TARGET_COMMIT}}`, `git diff --cached --raw --no-renames`, `git diff --cached --name-status --no-renames`, `git diff --cached --summary`, `git diff --cached --binary`, `git cat-file`, `git show`, `git ls-tree`, and host `npm run test:docs`.
+- Reproducible checks: `git diff {{BASE_COMMIT}} {{TARGET_COMMIT}}`, `git diff --cached --raw --no-renames`, `git diff --cached --name-status --no-renames`, `git diff --cached --summary`, `git diff --cached --binary`, `git cat-file`, `git show`, `git ls-tree`, host `npm run test:api`, and `(cd docs/site && npm run test:docs)`.
 - This candidate does not itself claim `ready_for_tag` or publication.

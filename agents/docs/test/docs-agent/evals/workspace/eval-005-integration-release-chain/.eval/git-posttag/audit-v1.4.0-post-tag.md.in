@@ -10,6 +10,7 @@
 - tag_ref_target_object_id: `{{TAG_OBJECT}}`
 - peeled_tag_commit: `{{TAG_COMMIT}}`
 - peeled_tag_tree: `{{TAG_TREE}}`
+- entry_tag_tuple: `({{TAG_OBJECT}}, {{TAG_COMMIT}}, {{TAG_TREE}})`
 - pre_integration_tag_tuple: `({{TAG_OBJECT}}, {{TAG_COMMIT}}, {{TAG_TREE}})`
 - locator_mode: `handoff`
 - handoff_commit: `{{HANDOFF_COMMIT}}`
@@ -31,6 +32,24 @@
 - expected_head_check_before_commit: `passed`
 - isolated_commit_parent: `{{EVIDENCE_EXPECTED_HEAD}}`
 - staged_inventory: one `A absent -> 100644/blob/self docs/site/.meta/audit/audit-v1.4.0-post-tag.md`; no extra path or metadata delta
+- command_evidence:
+  - `git rev-parse refs/tags/v1.4.0`
+  - `git rev-parse 'refs/tags/v1.4.0^{}'`
+  - `git rev-parse 'refs/tags/v1.4.0^{tree}'`
+  - `git rev-parse '{{HANDOFF_COMMIT}}^{tree}'`
+  - `git ls-tree {{TAG_COMMIT}} -- docs/site/.meta/audit/handoffs/pre-tag-v1.4.0.md docs/site/.meta/audit/audit-v1.4.0.md docs/site/release-notes/v1.4.0.md docs/site/release-notes/index.md docs/site/.meta/releases.json package.json`
+  - `git cat-file -t {{HANDOFF_BLOB}} && git cat-file -t {{CANDIDATE_BLOB}}`
+  - `git show {{HANDOFF_COMMIT}}:docs/site/.meta/audit/handoffs/pre-tag-v1.4.0.md`
+  - `git show {{HANDOFF_COMMIT}}:docs/site/.meta/audit/audit-v1.4.0.md`
+  - `git show {{TAG_COMMIT}}:docs/site/release-notes/v1.4.0.md | grep -F '# v1.4.0'`
+  - `git show {{TAG_COMMIT}}:docs/site/release-notes/index.md | grep -F 'v1.4.0'`
+  - `git show {{TAG_COMMIT}}:docs/site/.meta/releases.json | grep -F '"latest": "v1.4.0"'`
+  - `git show {{TAG_COMMIT}}:package.json | grep -F '"version": "1.4.0"'`
+  - `git show {{TAG_COMMIT}}:docs/site/release-notes/v1.4.0.md | shasum -a 256 && git show {{TAG_COMMIT}}:docs/site/release-notes/index.md | shasum -a 256 && git show {{TAG_COMMIT}}:docs/site/.meta/releases.json | shasum -a 256 && git show {{TAG_COMMIT}}:package.json | shasum -a 256`
+  - `git diff --raw --no-abbrev --no-renames {{HANDOFF_COMMIT}} {{TAG_COMMIT}} && git diff --name-status --no-renames {{HANDOFF_COMMIT}} {{TAG_COMMIT}} && git diff --binary {{HANDOFF_COMMIT}} {{TAG_COMMIT}}`
+  - `git rev-parse refs/heads/release-evidence/v1.4.0`
+  - `git update-ref refs/heads/release-evidence/v1.4.0 "$(git rev-parse HEAD)" {{EVIDENCE_EXPECTED_HEAD}}`
+  - `git rev-parse refs/heads/release-evidence/v1.4.0^{tree} && git rev-parse refs/heads/release-evidence/v1.4.0:docs/site/.meta/audit/audit-v1.4.0-post-tag.md`
 - blockers: `[]`
 - tag_mutations: `0`
 - remote_writes: `0`

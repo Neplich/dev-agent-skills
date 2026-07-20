@@ -16,7 +16,34 @@ if [ -e "$fixture_root/.git" ]; then
 fi
 
 fixture_tmp=$(mktemp -d "${TMPDIR:-/tmp}/docs-eval-005.XXXXXX")
-trap 'rm -rf "$fixture_tmp"' EXIT HUP INT TERM
+pre_tag_transaction_ref=refs/heads/fixture-pre-tag-transaction
+post_tag_transaction_ref=refs/heads/fixture-post-tag-transaction
+
+cleanup() {
+  status=$?
+  trap - EXIT HUP INT TERM
+  if git rev-parse --git-dir >/dev/null 2>&1; then
+    git switch -q --detach "${target_commit:-HEAD}" 2>/dev/null || true
+    git update-ref -d "$pre_tag_transaction_ref" 2>/dev/null || true
+    git update-ref -d "$post_tag_transaction_ref" 2>/dev/null || true
+  fi
+  rm -rf "$fixture_tmp"
+  exit "$status"
+}
+trap cleanup EXIT HUP INT TERM
+
+require_committed_blob() {
+  commit=$1
+  path=$2
+  expected_blob=$3
+  mode=$(git ls-tree "$commit" -- "$path" | awk '{print $1}')
+  type=$(git ls-tree "$commit" -- "$path" | awk '{print $2}')
+  blob=$(git ls-tree "$commit" -- "$path" | awk '{print $3}')
+  if [ "$mode" != 100644 ] || [ "$type" != blob ] || [ "$blob" != "$expected_blob" ]; then
+    echo "invalid committed blob: $commit:$path" >&2
+    exit 1
+  fi
+}
 
 for path in \
   src/search/routes.ts \
@@ -69,6 +96,7 @@ GIT_AUTHOR_DATE='2026-07-20T01:05:00Z' GIT_COMMITTER_DATE='2026-07-20T01:05:00Z'
   git commit -q -m 'fixture: v1.4.0 release target'
 target_commit=$(git rev-parse HEAD)
 git branch fixture-target "$target_commit"
+git switch -q -c fixture-pre-tag-transaction "$target_commit"
 
 for path in \
   docs/site/api/ai-search.md \
@@ -103,6 +131,14 @@ index_stamp_blob=$(git hash-object docs/site/release-notes/index.md)
 api_stamp_blob=$(git hash-object docs/site/api/ai-search.md)
 inventory_json='[{"extractor":"git-tag-name-v1","locator":"refs/tags/v1.4.0","locator_kind":"git-ref","required_raw_form":"vX.Y.Z","selector":"tag-name","source_id":"actual_tag"},{"extractor":"json-pointer-rfc6901-v1","locator":"package.json","locator_kind":"git-file","required_raw_form":"X.Y.Z","selector":"/version","source_id":"host_package"},{"extractor":"markdown-release-index-v1","locator":"docs/site/release-notes/index.md","locator_kind":"git-file","required_raw_form":"vX.Y.Z","selector":"entry[v1.4.0].version","source_id":"release_index"},{"extractor":"json-pointer-rfc6901-v1","locator":"docs/site/.meta/releases.json","locator_kind":"git-file","required_raw_form":"vX.Y.Z","selector":"/latest","source_id":"release_metadata"},{"extractor":"markdown-release-heading-v1","locator":"docs/site/release-notes/v1.4.0.md","locator_kind":"git-file","required_raw_form":"vX.Y.Z","selector":"heading[h1].release-version","source_id":"release_notes"},{"extractor":"handoff-field-v1","locator":"release-notes-handoff.md","locator_kind":"handoff","required_raw_form":"vX.Y.Z","selector":"target_release_version","source_id":"target_version"}]'
 inventory_digest=$(printf '%s' "$inventory_json" | shasum -a 256 | awk '{print $1}')
+require_committed_blob "$target_commit" src/search/routes.ts "$route_blob"
+require_committed_blob "$target_commit" tests/search-api.test.ts "$test_blob"
+require_committed_blob "$target_commit" docs/site/api/ai-search.md "$api_target_blob"
+require_committed_blob "$target_commit" docs/site/standards/change-map.yaml "$change_map_target_blob"
+require_committed_blob "$target_commit" docs/site/release-notes/v1.4.0.md "$release_target_blob"
+require_committed_blob "$target_commit" docs/site/release-notes/index.md "$index_target_blob"
+require_committed_blob "$target_commit" docs/site/.meta/releases.json "$metadata_target_blob"
+require_committed_blob "$target_commit" package.json "$package_target_blob"
 mkdir -p docs/site/.meta/audit/handoffs
 sed \
   -e "s/{{BASE_COMMIT}}/$base_commit/g" \
@@ -160,6 +196,33 @@ handoff_commit=$(git rev-parse HEAD)
 handoff_tree=$(git rev-parse 'HEAD^{tree}')
 handoff_blob=$(git rev-parse 'HEAD:docs/site/.meta/audit/handoffs/pre-tag-v1.4.0.md')
 git branch fixture-pre-tag-handoff "$handoff_commit"
+
+if [ "$(git rev-parse "$anchor_commit^")" != "$target_commit" ] || [ "$(git rev-parse "$handoff_commit^")" != "$anchor_commit" ]; then
+  echo "pre-tag transaction parent chain is invalid" >&2
+  exit 1
+fi
+if [ "$(git cat-file -t "$candidate_blob")" != blob ] || [ "$(git cat-file -t "$handoff_blob")" != blob ]; then
+  echo "pre-tag record object type is invalid" >&2
+  exit 1
+fi
+if ! git show "$anchor_commit:docs/site/.meta/audit/audit-v1.4.0.md" | grep -Fq -- '- Candidate conclusion: `candidate_verified`.' ||
+   ! git show "$handoff_commit:docs/site/.meta/audit/handoffs/pre-tag-v1.4.0.md" | grep -Fq -- '- phase_result: `ready_for_tag`' ||
+   ! git show "$handoff_commit:docs/site/.meta/audit/handoffs/pre-tag-v1.4.0.md" | grep -Fq -- "- anchor_commit: \`$anchor_commit\`" ||
+   ! git show "$handoff_commit:docs/site/.meta/audit/handoffs/pre-tag-v1.4.0.md" | grep -Fq -- "- candidate_record_blob: \`$candidate_blob\`"; then
+  echo "pre-tag committed record readback is invalid" >&2
+  exit 1
+fi
+if [ "$(git rev-parse refs/heads/fixture-build)" != "$target_commit" ]; then
+  echo "fixture release branch moved before pre-tag integration" >&2
+  exit 1
+fi
+git update-ref refs/heads/fixture-build "$handoff_commit" "$target_commit"
+if [ "$(git rev-parse refs/heads/fixture-build)" != "$handoff_commit" ]; then
+  git update-ref refs/heads/fixture-build "$target_commit" "$handoff_commit" || true
+  echo "pre-tag integration readback failed" >&2
+  exit 1
+fi
+
 git branch release-evidence/v1.4.0 "$handoff_commit"
 git tag v1.4.0 "$handoff_commit"
 tag_object=$(git rev-parse refs/tags/v1.4.0)
@@ -167,7 +230,7 @@ tag_commit=$(git rev-parse 'refs/tags/v1.4.0^{}')
 tag_tree=$(git rev-parse 'refs/tags/v1.4.0^{tree}')
 evidence_head=$(git rev-parse refs/heads/release-evidence/v1.4.0)
 
-git switch -q release-evidence/v1.4.0
+git switch -q -c fixture-post-tag-transaction "$evidence_head"
 sed \
   -e "s/{{TAG_OBJECT}}/$tag_object/g" \
   -e "s/{{TAG_COMMIT}}/$tag_commit/g" \
@@ -184,10 +247,54 @@ git add docs/site/.meta/audit/audit-v1.4.0-post-tag.md
 GIT_AUTHOR_DATE='2026-07-20T01:20:00Z' GIT_COMMITTER_DATE='2026-07-20T01:20:00Z' \
   git commit -q -m 'fixture: persist v1.4.0 post-tag audit'
 post_tag_commit=$(git rev-parse HEAD)
-post_tag_tree=$(git rev-parse 'HEAD^{tree}')
-post_tag_blob=$(git rev-parse 'HEAD:docs/site/.meta/audit/audit-v1.4.0-post-tag.md')
-post_tag_parent=$(git rev-parse 'HEAD^')
+post_tag_tree=$(git rev-parse "$post_tag_commit^{tree}")
+post_tag_blob=$(git rev-parse "$post_tag_commit:docs/site/.meta/audit/audit-v1.4.0-post-tag.md")
+post_tag_parent=$(git rev-parse "$post_tag_commit^")
+
+require_committed_blob "$tag_commit" docs/site/.meta/audit/handoffs/pre-tag-v1.4.0.md "$handoff_blob"
+require_committed_blob "$tag_commit" docs/site/.meta/audit/audit-v1.4.0.md "$candidate_blob"
+require_committed_blob "$tag_commit" docs/site/release-notes/v1.4.0.md "$release_stamp_blob"
+require_committed_blob "$tag_commit" docs/site/release-notes/index.md "$index_stamp_blob"
+require_committed_blob "$tag_commit" docs/site/.meta/releases.json "$metadata_target_blob"
+require_committed_blob "$tag_commit" package.json "$package_target_blob"
+if ! git show "$tag_commit:docs/site/release-notes/v1.4.0.md" | grep -Fq '# v1.4.0' ||
+   ! git show "$tag_commit:docs/site/release-notes/index.md" | grep -Fq 'v1.4.0' ||
+   ! git show "$tag_commit:docs/site/.meta/releases.json" | grep -Fq '"latest": "v1.4.0"' ||
+   ! git show "$tag_commit:package.json" | grep -Fq '"version": "1.4.0"'; then
+  echo "post-tag version source parsing failed" >&2
+  exit 1
+fi
+if ! git diff --quiet "$handoff_commit" "$tag_commit" -- || [ "$tag_tree" != "$handoff_tree" ]; then
+  echo "post-tag handoff and tag trees diverged" >&2
+  exit 1
+fi
+
+pre_integration_tag_object=$(git rev-parse refs/tags/v1.4.0)
+pre_integration_tag_commit=$(git rev-parse 'refs/tags/v1.4.0^{}')
+pre_integration_tag_tree=$(git rev-parse 'refs/tags/v1.4.0^{tree}')
+if [ "$pre_integration_tag_object" != "$tag_object" ] || [ "$pre_integration_tag_commit" != "$tag_commit" ] || [ "$pre_integration_tag_tree" != "$tag_tree" ]; then
+  echo "synthetic tag tuple moved before post-tag integration" >&2
+  exit 1
+fi
+if [ "$(git rev-parse refs/heads/release-evidence/v1.4.0)" != "$evidence_head" ]; then
+  echo "release evidence branch moved before post-tag integration" >&2
+  exit 1
+fi
+if [ "$post_tag_parent" != "$evidence_head" ] || [ "$(git cat-file -t "$post_tag_blob")" != blob ] ||
+   ! git show "$post_tag_commit:docs/site/.meta/audit/audit-v1.4.0-post-tag.md" | grep -Fq -- '- phase_result: `release_verified`' ||
+   ! git show "$post_tag_commit:docs/site/.meta/audit/audit-v1.4.0-post-tag.md" | grep -Fq -- "- release_evidence_expected_head: \`$evidence_head\`" ||
+   ! git show "$post_tag_commit:docs/site/.meta/audit/audit-v1.4.0-post-tag.md" | grep -Fq -- '- command_evidence:'; then
+  echo "post-tag transaction record readback is invalid" >&2
+  exit 1
+fi
+git update-ref refs/heads/release-evidence/v1.4.0 "$post_tag_commit" "$evidence_head"
 final_evidence_head=$(git rev-parse refs/heads/release-evidence/v1.4.0)
+final_evidence_blob=$(git rev-parse "$final_evidence_head:docs/site/.meta/audit/audit-v1.4.0-post-tag.md")
+if [ "$final_evidence_head" != "$post_tag_commit" ] || [ "$final_evidence_blob" != "$post_tag_blob" ]; then
+  git update-ref refs/heads/release-evidence/v1.4.0 "$evidence_head" "$post_tag_commit" || true
+  echo "post-tag integration readback failed" >&2
+  exit 1
+fi
 
 git switch -q --detach "$target_commit"
 
@@ -212,6 +319,9 @@ printf '%s\n' \
   "- tag_ref_target_object_id: \`$tag_object\`" \
   "- peeled_tag_commit: \`$tag_commit\`" \
   "- peeled_tag_tree: \`$tag_tree\`" \
+  "- pre_integration_tag_ref_target_object_id: \`$pre_integration_tag_object\`" \
+  "- pre_integration_peeled_tag_commit: \`$pre_integration_tag_commit\`" \
+  "- pre_integration_peeled_tag_tree: \`$pre_integration_tag_tree\`" \
   "- release_evidence_branch_ref: \`refs/heads/release-evidence/v1.4.0\`" \
   "- release_evidence_expected_head: \`$evidence_head\`" \
   "- post_tag_result_commit: \`$post_tag_commit\`" \
@@ -228,7 +338,7 @@ if git diff --quiet "$base_commit" "$target_commit" --; then
   echo "fixture base and target unexpectedly have no diff" >&2
   exit 1
 fi
-if [ "$tag_tree" != "$handoff_tree" ] || [ "$evidence_head" != "$handoff_commit" ] || [ "$post_tag_parent" != "$evidence_head" ] || [ "$final_evidence_head" != "$post_tag_commit" ]; then
+if [ "$tag_tree" != "$handoff_tree" ] || [ "$evidence_head" != "$handoff_commit" ] || [ "$post_tag_parent" != "$evidence_head" ] || [ "$final_evidence_head" != "$post_tag_commit" ] || [ "$final_evidence_blob" != "$post_tag_blob" ]; then
   echo "fixture ref/tree invariant failed" >&2
   exit 1
 fi

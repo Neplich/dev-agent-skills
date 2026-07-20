@@ -134,7 +134,7 @@
         {
           "id": "reconciles_api_sync_and_change_map",
           "description": "API 同步页面与 change-map 一致",
-          "text": "以已确认 PRD/TRD/IMPLEMENTATION_PLAN 摘要、当前代码和测试为证据，核对 `docs/site/api/ai-search.md` 的 GET `/api/search` 契约；要求 `src/search/routes.ts` 明确定义 method/path/handler 与 `SearchItem` 响应类型，`tests/search-api.test.ts` 直接断言 HTTP 注册信息、200/400 body 与 limit clamp，并确认 change-map 的 code_glob、exclude、trigger、required_docs 精确覆盖该页面。"
+          "text": "以已确认 PRD/TRD/IMPLEMENTATION_PLAN 摘要、当前代码和测试为证据，核对 `docs/site/api/ai-search.md` 的 GET `/api/search` 契约；要求 `src/search/routes.ts` 明确定义 method/path/handler 与 `SearchItem` 响应类型，并在 clamp 前拒绝非整数/非有限 limit；`tests/search-api.test.ts` 直接断言 HTTP 注册信息、200/400 body、上下界 clamp、fractional/NaN/Infinity 拒绝与空白 q，并确认 change-map 的 code_glob、exclude、trigger、required_docs 精确覆盖该页面。"
         },
         {
           "id": "accepts_confirmed_site_release_notes_handoff",

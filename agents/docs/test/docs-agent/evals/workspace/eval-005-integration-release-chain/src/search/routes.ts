@@ -8,7 +8,12 @@ export type SearchResponse =
   | { status: 400; body: { error: string } };
 
 export function searchRoute(query: { q?: string; limit?: number }): SearchResponse {
-  if (!query.q?.trim()) return { status: 400, body: { error: "q is required" } };
+  if (typeof query.q !== "string" || !query.q.trim()) {
+    return { status: 400, body: { error: "q is required" } };
+  }
+  if (query.limit !== undefined && !Number.isInteger(query.limit)) {
+    return { status: 400, body: { error: "limit must be an integer" } };
+  }
   const limit = Math.min(Math.max(query.limit ?? 10, 1), 20);
   return { status: 200, body: { items: [], limit } };
 }

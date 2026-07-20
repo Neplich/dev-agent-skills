@@ -26,6 +26,7 @@ last_verified_version: unverified
 
 - 成功：`200 { items: SearchItem[], limit: number }`。
 - 查询为空：`400 { error: "q is required" }`。
+- `limit` 不是有限整数：`400 { error: "limit must be an integer" }`。
 
 ## 证据
 
