@@ -10,11 +10,11 @@
 - Fixture version: `issue #117 cross-doc audit 2026-07-19`（fixture 未变化）
 - 本轮触发：issue #131 将 `docs-audit` frontmatter description 扩展为同时覆盖 pre-tag release audit 与 post-tag release verification 后的 routing 复验（2026-07-20）
 - Fresh run：仓库外隔离 scratch Git 仓库（session scratchpad `eval-131-e003/`）
-- Source head: `6040de9`（#131 与 #132 合并后的 main）
+- Source head: `6040de9`，即 PR #137（关闭 issue #131，含本次复验针对的 `docs-audit` description 变更）的 squash 合并 commit；PR #136（关闭 issue #132）已在其之前合并
 
 ## Latest Result
 
-**PASS（3/3 assertions）** — with-skill 接受等效确认 release chain，正确路由 `docs-agent:docs-audit`，只引用 specialist 权威执行 gate；并基于 fixture 中的实际版本 tag 主动区分出 post-tag release verification 入口语义，说明新 description 的双阶段表述被 router 正确消费。
+**PASS（3/3 assertions）** — with-skill 接受等效确认 release chain，正确路由 `docs-agent:docs-audit`，只引用 specialist 权威执行 gate。`docs-audit` description 扩展为双阶段表述后，router 分流语义无回归。
 
 ## Assertions
 
@@ -25,7 +25,7 @@
 ## With-Skill Behavior
 
 - fresh candidate 读取 main 上当前 `docs-agent` router SKILL.md、Docs README 与 `docs-audit` 新 frontmatter description，仅做入口检查、分流与上下文保留。
-- 额外观察：candidate 依据 fixture 提供的实际 tag 判断应进入 post-tag verification，而非 pre-tag audit——这是 #131 description 变更后的预期新语义。
+- 边界说明：candidate 输出中出现的 pre-tag/post-tag phase 建议不作为本 comparison 的通过证据——phase 判定归 `docs-audit` specialist 权威 gate，且 fixture 只含 Markdown 字段、无可核验的实际 git tag；本 eval 只验证 router 分流行为。
 
 ## Without-Skill Baseline
 
