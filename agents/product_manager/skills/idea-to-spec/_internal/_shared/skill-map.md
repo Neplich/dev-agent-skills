@@ -354,8 +354,11 @@ reports remain process documents owned by Security.
   commit references plus Engineer or DevOps verification results; for
   conclusion-triggered handoffs, where a confirmed Security conclusion shows a
   documented fact is already wrong or stale before any remediation lands, the
-  confirmed review evidence identifying the mismatched facts is enough to start
-  the correction
+  confirmed review evidence identifying the mismatched facts is the basis for
+  the correction, which enters `formal-docs-sync` through a maintainer-confirmed
+  bounded backfill (or another mode when that mode's entry basis is independently
+  met); `formal-docs-sync` still applies its own backfill confirmation and scope
+  gate
 - the affected scope: `feature_path` values or a repo-wide marker, affected
   formal document types (api / database / design / ops / product), and a short
   summary of which fact changed
