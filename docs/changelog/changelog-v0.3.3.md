@@ -23,9 +23,9 @@ last_updated: 2026-07-22
 
 ## Skill Eval 汇总（v0.3.3 发版前）
 
-本节以当前 eval 定义契约的 canonical `agents/{agent}/test/{skill}/evals/workspace/{eval}/comparison.md` 为统计范围，按 skill 去重汇总最新结论。共核对 **152** 份 canonical durable comparison：**126 PASS、26 PARTIAL**；未按现行 `evals/workspace` 合同归档的 legacy workspace comparison 不纳入本表。
+本节按 marketplace 当前注册的 **40 个 skill** 逐一汇总最新结论：39 个 skill 使用现行 eval 定义契约下 canonical `agents/{agent}/test/{skill}/evals/workspace/{eval}/comparison.md` 的 152 份 durable comparison；尚未迁移到 canonical 路径的 `roadmap-generator` 使用其 3 份当前 legacy workspace comparison。共核对 **155** 份当前结论：**129 PASS、26 PARTIAL**；已有 canonical 结论的 skill 不重复计入旧迭代 legacy comparison。
 
-| Agent | Skill（eval 范围） | Canonical durable comparison 数 | 最新结论 |
+| Agent | Skill（eval 范围） | 纳入汇总的 durable comparison 数 | 最新结论 |
 | --- | --- | ---: | --- |
 | Designer | `designer-agent` | 3 | 3 PASS |
 | Designer | `ui-ux-design` | 3 | 1 PASS、2 PARTIAL |
@@ -56,6 +56,7 @@ last_updated: 2026-07-22
 | Product Manager | `github-release-generator`（eval-001–005） | 5 | 5/5 PASS（21/21 assertions） |
 | Product Manager | `idea-to-spec` | 1 | 1 PASS |
 | Product Manager | `pm-agent` router（eval-001–014） | 14 | 14/14 PASS（45/45 assertions） |
+| Product Manager | `roadmap-generator`（legacy workspace） | 3 | 3 PASS |
 | QA | `bug-analyzer` | 3 | 3 PASS |
 | QA | `exploratory-tester` | 3 | 3 PASS |
 | QA | `qa-agent` | 3 | 3 PASS |
@@ -66,6 +67,6 @@ last_updated: 2026-07-22
 | Security | `authz-reviewer`（eval-001–004） | 4 | 4/4 PASS（16/16 assertions） |
 | Security | `dependency-risk-auditor`（eval-001–004） | 4 | 4/4 PASS（16/16 assertions） |
 | Security | `privacy-surface-mapper`（eval-001–004） | 4 | 4/4 PASS（16/16 assertions） |
-| **合计** | **39 个 skill 分组** | **152** | **126 PASS、26 PARTIAL** |
+| **合计** | **40 个 marketplace skill 分组** | **155** | **129 PASS、26 PARTIAL** |
 
 本版本直接涉及的复验结果为：`github-release-generator` 的 4 个既有 eval 复验 **18/18 assertions PASS**，新增 eval-005 复验 **3/3 assertions PASS**；四个 Security specialist 的 12 个薄 fixture eval 复验 **48/48 assertions PASS**；`docs-site-bootstrap`、`formal-docs-sync`、`release-notes-generator` 与 `docs-agent` 的 12 个相关 eval 复验全部 PASS。以上均已在对应 PR 合并时完成 fresh `with_skill` / `without_skill` 成对复验并更新各自 `comparison.md`；本版本仅汇总并复用这些已提交结论，不重跑 skill eval。表中其余 **26 个 PARTIAL** 沿用各 skill 既有 durable 结论，主要记录历史 comparison 未生成 fresh `without_skill` baseline 等证据缺口，不是本版回归。
