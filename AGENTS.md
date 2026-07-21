@@ -57,7 +57,7 @@ PM / Engineer / QA / DevOps（条件式）→ Docs Agent（正式文档生产 / 
 - 下游安全网包含前置与收尾两面：缺少 PM handoff packet、等效已确认文档链或 specialist entry basis 时，温和引导用户经 `pm-agent` 补齐前置；完成当前事项后，主动建议协作链下一步并等待确认，用户已授权 `auto-continue` 时可连续推进直到链路结束或用户喊停。
 - 跨角色收尾与 `auto-continue` 的权威定义在 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` 的 `Safety-Net Closeout and Auto-Continue` 节；`AGENTS.md` 只保留入口契约和指针。
 - SKILL.md frontmatter 的 `visibility: internal` 是声明层标记，Claude Code 与 Codex 都不消费该字段，不隐藏 slash 命令也不阻止显式直调；`pm-agent` 是默认入口，下游标记为 `internal` 仅表示非默认入口。
-- 6 个 role router 只保留入口凭据检查和分流指针，其中 `docs-agent` 分流正式文档站点 bootstrap、API/database/design/ops/product 当前事实 sync、站内 Release Notes 和 audit；PM `github-release-generator` 只在站内 Release Notes 已确认且 docs-audit 门禁通过后生成 GitHub Release；具体执行 gate 的权威副本留在对应 specialist `SKILL.md`，例如 `feature-implementor` 的 PRD/TRD/plan/archive gate、`debugger` 的 expected-behavior gate、QA specialist 的 E2E gate，以及 Designer/DevOps/Security/Docs specialist 的 feature-scope gate。
+- 6 个 role router 只保留入口凭据检查和分流指针，其中 `docs-agent` 分流正式文档站点 bootstrap、API/database/design/ops/product 当前事实 sync、站内 Release Notes 和 audit；PM `github-release-generator` 按 SKILL.md 的宿主文档站适用性判断生成 GitHub Release：有文档站宿主要求站内 Release Notes 已确认且 docs-audit 门禁通过；无文档站宿主降级为维护者确认的版本事实源与维护者显式批准；具体执行 gate 的权威副本留在对应 specialist `SKILL.md`，例如 `feature-implementor` 的 PRD/TRD/plan/archive gate、`debugger` 的 expected-behavior gate、QA specialist 的 E2E gate，以及 Designer/DevOps/Security/Docs specialist 的 feature-scope gate。
 - 直接调用下游且没有 PM handoff packet、等效已确认文档链或 specialist entry basis 时，不执行下游协议，应温和引导用户经 `pm-agent` 补齐前置并完成入口分类；唯一例外是用户直接请求 `project-bootstrap` 且明确要求跳过 PM 并立即 scaffold，此时可进入 `project-bootstrap` 的最小脚手架 override。
 
 **文档依赖**
@@ -94,7 +94,6 @@ PM / Engineer / QA / DevOps（条件式）→ Docs Agent（正式文档生产 / 
 - PR 创建后的更新默认追加新 commit 并普通 push；除非用户明确要求整理提交历史，否则不要 amend、rebase 或 force push。
 - 创建 PR 后不要直接合并；必须等待维护者明确确认“可以合并”后再执行 merge / squash / rebase 合并操作。
 - 当前仓库仍处于早期维护阶段，暂不新增 Release CI；发布前使用手动 release checklist：确认 `.claude-plugin/marketplace.json` 的 `metadata.version` 已更新为目标版本且不带 `v` 前缀，确认 `docs/changelog/changelog-v{version}.md` 存在并已被根 `CHANGELOG.md` 索引，tag 使用 `v` 前缀 SemVer，PR 必跑 CI 全部通过，必要时手动触发 eval workflow 并记录结果；每次使用 tag 发版时，按 skill 维度汇总 skill eval 后的 `comparison.md` 最新结论。每次 tag 发版后，由 `pm-agent → github-release-generator` 使用 skill 流程自动创建 GitHub Release draft，并直接交维护者审批；draft 的发布（publish）仍必须等待维护者显式批准。不要自动上传 marketplace package，也不要配置 release bot bypass tag ruleset。
-- `github-release-generator` 的 #116/#117 双态审计 handoff 门禁面向拥有正式文档站的宿主仓库；本仓库（skill marketplace）自身发版不适用该门禁，以本节手动 release checklist 和维护者显式批准作为发布依据。
 
 ### 变更分级契约
 

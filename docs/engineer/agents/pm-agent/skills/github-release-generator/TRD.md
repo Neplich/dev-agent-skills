@@ -5,15 +5,16 @@ feature: "skill-github-release-generator"
 feature_path: "agents/pm-agent/skills/github-release-generator"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
-version: "1.1.0"
+version: "1.2.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-20"
-last_updated: "2026-07-21"
+last_updated: "2026-07-22"
 generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/github-release-generator/PRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/120"
+  - "https://github.com/Neplich/dev-agent-skills/issues/154"
 related_docs:
   - "docs/engineer/agents/docs-agent/release-notes-generator/TRD.md"
   - "agents/docs/skills/release-notes-generator/SKILL.md"
@@ -39,13 +40,19 @@ related_docs:
 
 ```mermaid
 flowchart LR
-    Site["docs release-notes-generator\nconfirmed + docs checks passed"] --> H116["#116 ready handoff"]
+    Applicability{"initialized docs site?"}
+    Applicability -->|"yes"| Site["docs release-notes-generator\nconfirmed + docs checks passed"]
+    Applicability -->|"no"| Fallback["maintainer-confirmed\nversion fact source"]
+    Site --> H116["#116 ready handoff"]
     H116 --> Pre["docs-audit pre-tag"]
     Pre -->|"ready_for_tag"| GR["PM github-release-generator"]
+    Fallback --> GR
     GR --> Preview["preview / draft"]
-    Tag["actual tag"] --> Post["docs-audit post-tag"]
+    Preview --> Path{"documentation-site gate applicable?"}
+    Tag["actual tag"] --> Path
+    Path -->|"yes"| Post["docs-audit post-tag"]
     Post -->|"release_verified"| Gate["publish gate"]
-    Preview --> Gate
+    Path -->|"no: fallback evidence valid"| Gate
     Approval["maintainer explicit approval"] --> Gate
     Gate --> Publish["publish + readback"]
 ```
@@ -56,9 +63,16 @@ flowchart LR
 
 ## 3. 入口数据契约
 
-### 3.1 #116 site-ready handoff
+### 3.1 #116 site-ready handoff 与门禁适用性
 
-skill 必须先验证以下字段和证据：
+skill 在验证 handoff 前必须先判定宿主是否存在已初始化正式文档站。适用性判断同时要求：
+
+- 仓库存在 `docs/site/`；
+- 宿主具备 #116 站内 Release Notes 能力链，可合法生成后续 #117 双态审计 handoff。
+
+判断依据、结论与所选门禁路径必须写入预览和最终报告，不得把“门禁不适用”表述为
+“门禁已通过”。当两个条件均成立时，#116/#117 handoff 门禁适用，既有语义与强度不变，
+skill 必须验证以下字段和证据：
 
 | 字段 | 要求 | 失败处理 |
 | --- | --- | --- |
@@ -71,6 +85,12 @@ skill 必须先验证以下字段和证据：
 
 读取页面后计算或记录内容摘要，后续预览、draft 和发布回读都以同一已确认版本事实为
 基线。GitHub compare/PR/commit 只能增加追溯链接、贡献者和页面格式，不能覆盖页面事实。
+
+当宿主没有已初始化正式文档站时，#116/#117 handoff 门禁整体不适用，不得仅因 handoff
+缺失而返回 blocked。此路径降级为维护者已确认的版本事实源（例如已确认 changelog）加
+每次远端写入前的维护者显式批准；预览和最终报告必须列出无 `docs/site/` 或缺少 #116
+能力链的证据、所使用的版本事实源及降级结论。若无法取得可信且已确认的版本事实源，
+仍须 blocked，不能从 GitHub 数据、文件名或历史 Release 臆造版本事实。
 
 ### 3.2 版本和 compare 范围
 
@@ -106,9 +126,16 @@ skill 必须先验证以下字段和证据：
 
 ## 4. #117 时序状态机
 
+本状态机先消费 §3.1 的适用性结论。已初始化正式文档站进入既有 #116/#117 双态路径；
+有文档站但 handoff 缺失、无效、版本不匹配或 audit 证据含 blocker 时，继续返回
+`docs-agent:docs-audit` 并禁止 draft mutation，强度不变。无文档站进入降级路径，不要求
+无法合法产生的双态 handoff，但必须以维护者已确认的版本事实源建立预览，并在每次写入
+前取得维护者显式批准。
+
 ### 4.1 pre-tag 消费
 
-生成可提交预览或创建/更新 draft 前，必须消费可信 pre-tag handoff 包，并至少核对：
+当 §3.1 判定门禁适用时，生成可提交预览或创建/更新 draft 前必须消费可信 pre-tag
+handoff 包，并至少核对：
 
 - `phase: pre-tag`、`phase_result: ready_for_tag`；
 - 与 #116 一致的 `target_release_version`；
@@ -117,17 +144,20 @@ skill 必须先验证以下字段和证据：
 - handoff 包符合 docs-audit 当前对外 schema，且没有 blocker。
 
 这些字段的完整权威定义留在 `docs-audit/_internal/INSTRUCTIONS.md`，本 skill 不复制、
-生成或修复该 handoff。缺失、冲突或 `blocked` 时返回 docs-audit。
+生成或修复该 handoff。适用路径中缺失、冲突或 `blocked` 时返回 docs-audit。无文档站
+降级路径不消费 pre-tag handoff，改为核对 §3.1 已确认版本事实源，并把降级依据写入预览。
 
 ### 4.2 draft 状态
 
-在 `ready_for_tag` 后：
+适用路径在 `ready_for_tag` 后、无文档站降级路径在维护者确认版本事实源后：
 
-1. 读取站内 Release Notes、GitHub compare 和 `reference/release-outline.md` 结构定义。
+1. 适用路径读取站内 Release Notes；无文档站降级路径读取维护者已确认的版本事实源。两条
+   路径均读取 GitHub compare 和 `reference/release-outline.md` 结构定义。
 2. 生成标题与正文预览，标明事实来源与补充链接；同时标明目标版本分类、当前 latest
    Release 证据、SemVer 比较结果以及将用于写入的显式 prerelease/latest flag。
-3. 仅在用户明确要求时创建或更新 draft；无现有 draft 且实际 tag 不存在时只保留完整
-   draft 预览，因为 GitHub CLI/API 的 release create 会连带创建缺失 tag。
+3. 仅在用户明确要求时创建或更新 draft；无文档站降级路径还必须在本次写入前取得维护者
+   显式批准。无现有 draft 且实际 tag 不存在时只保留完整 draft 预览，因为 GitHub CLI/API
+   的 release create 会连带创建缺失 tag。
 4. 已有 draft 可在证明 tag 状态不变的前提下更新；新建远端 draft 必须使用
    `--verify-tag` 绑定已经存在的 tag。任一 draft 写入前重新读取当前 latest Release；若
    与已确认 preview 的 latest 证据或比较结果不一致，返回 preview 重新确认。
@@ -144,13 +174,19 @@ skill 必须先验证以下字段和证据：
 
 ```text
 actual_tag_exists
-AND post_tag_phase_result == release_verified
+AND applicable_version_fact_source_remains_valid
+AND (
+  documentation_site_gate_not_applicable
+  OR post_tag_phase_result == release_verified
+)
 AND maintainer_publish_approval == explicit_and_current
 ```
 
-post-tag handoff 必须对应同一 `target_release_version` 和实际 tag，并携带/引用可信 pre-tag
-authority、实际 tag 与版本来源的复核结论。任何 `blocked`、tag 缺失/移动或版本不一致
-都禁止发布。此前对生成 Release Notes 或创建 draft 的批准不能复用为发布批准。
+适用路径中的 post-tag handoff 必须对应同一 `target_release_version` 和实际 tag，并携带/
+引用可信 pre-tag authority、实际 tag 与版本来源的复核结论。任何 `blocked`、tag 缺失/移动
+或版本不一致都禁止发布。无文档站降级路径不要求 post-tag handoff，但实际 tag、维护者
+已确认的版本事实源和本次 publish 写入前的维护者显式批准仍缺一不可。两条路径中，此前
+对生成预览或创建 draft 的批准都不能复用为发布批准。
 
 若发布需要先更新标题/正文/prerelease，第一次写仅更新仍为 draft 的内容且不携带 latest
 flag，随后立即回读。最终 `draft=false` 写入前必须再次读取 latest Release 与目标 tag OID；
@@ -168,16 +204,16 @@ post-tag audit，不自动修 tag。
 
 | 输入 | 处理 | 输出 |
 | --- | --- | --- |
-| 已确认站内 Release Notes | 保持功能、架构、数据库、部署、资产、升级和风险事实 | GitHub Release 用户说明主体 |
+| 适用路径下已确认的版本事实源 | 有文档站读取站内 Release Notes，无文档站读取维护者确认的降级事实源；保持功能、架构、数据库、部署、资产、升级和风险事实 | GitHub Release 用户说明主体 |
 | compare | 生成完整 compare 链接，校验发布范围 | 页尾追溯链接 |
 | merged PR | 选择与正文事实对应的代表性 PR | 重点条目的 PR 链接 |
 | commit | 用于范围审计和必要的精确追溯 | 不输出未经整理的原始 commit dump |
 | contributor | 从已纳入条目和 compare 中归并 | 项目既有风格的贡献者署名 |
 | `reference/release-outline.md` | 作为标题与正文结构的唯一来源，不读取或继承相邻 Release 格式 | 内部质量证据只进入 changelog 的 Skill Eval 汇总，不进入用户向 GitHub Release 正文 |
 
-正文不得新增站内页面未确认的产品事实。若 GitHub 证据揭示页面遗漏或冲突，停止生成
-并将差异交回 `docs-agent:release-notes-generator` 重新确认和校验；不能在 GitHub Release
-中单边修正。
+正文不得新增适用版本事实源未确认的产品事实。若 GitHub 证据揭示遗漏或冲突，停止生成；
+有文档站宿主将差异交回 `docs-agent:release-notes-generator` 重新确认和校验，无文档站宿主
+将降级事实源交回维护者重新确认；不能在 GitHub Release 中单边修正。
 
 ## 6. 文件级设计
 

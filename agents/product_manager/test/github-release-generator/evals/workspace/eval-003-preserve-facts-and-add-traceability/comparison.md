@@ -4,50 +4,52 @@
 
 - Skill: `github-release-generator`
 - Test case: fact preservation and curated GitHub traceability
-- Latest result: PASS - 2026-07-21 issue #146 fresh paired validation 完成，with-skill 4/4 assertions 通过
+- Latest result: **PASS** - 2026-07-22 issue #154 r2 fresh paired validation；with-skill 4/4、without-skill 4/4 assertions 通过
 
 ## Review Context
 
-- Review issue: #146
+- Review issue: #154
 - Final judge: 当前会话中的 fresh Codex validation agent
-- 两条 lane 分别由全新 worker 生成；judge 在两侧完成前未读取历史 `comparison.md`。
+- 独立 verdict 在读取 durable `comparison.md` 前完成，且未读取旧首轮 tmp；证据来自当前 skill/reference、eval fixture 与 issue #154 r2 fresh 双侧 candidate。
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: AI Hub-shaped confirmed release page、pre-tag audited range、intended final compare 与 curated GitHub evidence
-- Runtime evidence: `tmp/eval-runs/issue-146/{with_skill,without_skill}/eval-003-preserve-facts-and-add-traceability/`
+- Fixture: AI Hub confirmed release page、pre-tag audited range、intended final compare 与 curated GitHub evidence
+- With-skill evidence: `tmp/eval-runs/issue-154/r2-final/with_skill/eval-003-preserve-facts-and-add-traceability/candidate-output.md`
+- Without-skill evidence: `tmp/eval-runs/issue-154/r2/without_skill/eval-003-preserve-facts-and-add-traceability/candidate-output.md`
+- Judge verdict: `tmp/eval-runs/issue-154/r2-final/judge/verdict.md`
 
 ## Assertions
 
-- PASS `preserves_confirmed_release_facts`: 文件卡片、原位重试、统一附件模型与旧文本兼容、nullable JSONB 与删列风险、部署顺序与开关、双架构资产、升级和旧浏览器限制均逐项保留。
-- PASS `adds_verified_traceability_links`: 使用 fixture 范围内 compare、PR #116/#117、direct commit `8b6a1f2` 与贡献者链接，并区分 pre-tag audited endpoint 与 tag 存在后的 final endpoint。
-- PASS `curates_instead_of_dumping`: 围绕站内事实组织说明，仅选代表性维护链接，未粘贴其余 18 个格式化、依赖与测试 commit。
-- PASS `blocks_on_fact_conflict`: 明确 GitHub 证据冲突或暴露新事实时返回 `docs-agent:release-notes-generator`，不在 GitHub Release 中覆盖站内事实。
+- PASS `preserves_confirmed_release_facts`: 双侧都保留两项独立用户功能、统一附件兼容链路、nullable/backfill 数据库事实与删列风险、部署顺序/开关、双架构/static asset、升级步骤和旧浏览器限制。
+- PASS `adds_verified_traceability_links`: 双侧都使用同一窗口的 final compare、PR #116/#117、direct commit `8b6a1f2` 与贡献者链接。
+- PASS `curates_instead_of_dumping`: 双侧都只选择支撑已确认事实的代表性链接，明确排除其余 maintenance feed。
+- PASS `blocks_on_fact_conflict`: 双侧都在 GitHub 证据冲突或暴露新事实时返回 `docs-agent:release-notes-generator`，不自行覆盖或扩写。
 
 ## With Skill Behavior
 
-- 以 confirmed site page 为唯一版本事实源，GitHub evidence 仅用于 compare 与代表性维护链接增强。
-- 在 pre-tag 状态使用 `v0.9.0...8b6a1f2` 作为当前已审计 compare，同时把 `v0.9.0...v1.0.0` 标为实际 tag 存在后的 final compare。
-- 对 fixture 未提供的 current latest 使用 `--latest=false` 安全回退，只生成 preview，未扩张为写入。
+- 接受 confirmed site page 为事实源并记录 handoff/window；GitHub evidence 只增强 traceability。
+- 生成完整 outline preview，区分 pre-tag audited compare 与 future final compare。
+- current latest 缺失时保守使用 `--latest=false`，只预览不写入。
 
 ## Without Skill Baseline
 
-- 2026-07-21 使用同一 prompt、assertions、expected output、metadata 与 fixture 全新生成；未读取 skill、Agent README、with-skill 证据或历史 comparison。
-- baseline 同样 4/4 assertions PASS，完整保留事实、精选链接并声明冲突回流。
-- 主要差异：baseline 直接使用 intended final compare `v0.9.0...v1.0.0`；with-skill 按当前 pre-tag 证据区分 audited compare 与 future final compare，阶段语义更严格。当前 assertions 的区分度为 0/4。
+- 来源：issue #154 fresh baseline，使用同一 prompt 和 fixture，未读取或应用 skill、Agent README、with-skill 输出或历史 comparison。
+- 行为：同样 4/4 assertions PASS，完整保留事实、精选链接并声明冲突回流。
+- 差异：baseline 没有 release-outline 的标题/日期 framing，也未报告 current latest 缺失下的 prerelease/latest 决定；这些不是本 eval 当前 assertions 的失败条件。
 
-## Failures
+## Failures / Findings
 
-- 无 assertion failure 或 blocker。
-- 非阻塞 finding：assertions 与 fixture 已直接给出事实清单、精选链接和冲突处理要求，fresh baseline 同样全部通过，未证明 skill 相对 baseline 的断言增益。
+- 无 with-skill assertion failure 或 blocker。
+- 非阻塞 finding：assertions 与 fixture 已直接给出事实清单、精选链接和冲突处理，baseline 也全部通过。
 
 ## Next Steps
 
-- 当事实源优先级、pre-tag/final compare 规则或 traceability outline 变化时重新执行 paired validation。
-- 若要提升区分度，可让 baseline 从较少提示的维护 feed 自行判断事实边界与冲突回流。
+- 当事实源优先级、compare 双态或 traceability outline 变化时重新执行 paired validation。
+- 若需评估完整 preview 协议增益，可增加 exact title/date 与 latest/prerelease evidence assertions。
 
 ## Runtime Artifacts Policy
 
-- 本轮 candidate、worker observations 与 manifest 仅位于 `tmp/eval-runs/issue-146/`，作为短期运行期证据。
-- 不提交 transcript、candidate、worker observations、manifest、verdict、outputs、timing 或 diagnostics；长期结果仅保留本 `comparison.md`。
+- issue #154 双侧 candidates 与 judge verdict 位于上列精确 r2 scratch 路径，是短期诊断产物，不提交。
+- 长期只保留本 `comparison.md`；不提交 transcript、candidate、manifest、verdict、outputs、timing、run status 或 diagnostics。

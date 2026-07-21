@@ -1,9 +1,11 @@
 # GitHub Release Outline
 
-The confirmed site Release Notes are the version fact source. Preserve their
-functional, architecture, database, deployment, asset, upgrade, compatibility,
-and risk facts. GitHub data may add traceability and repository-native format;
-it must not add, omit, or rewrite release facts.
+Use the fact source selected by the `SKILL.md` applicability gate: confirmed
+site Release Notes for a site-enabled host, or the maintainer-confirmed fallback
+fact source for a site-less host. Preserve its functional, architecture,
+database, deployment, asset, upgrade, compatibility, and risk facts. GitHub
+data may add traceability and repository-native format; it must not add, omit,
+or rewrite release facts.
 
 ## GitHub Release Name
 
@@ -21,13 +23,13 @@ only the bare tag.
 ```markdown
 # Release Notes - {THIS_TAG} ({YYYY-MM-DD})
 
-{站内 Release Notes 已确认的版本主题。}
+{适用版本事实源已确认的版本主题。}
 
 ## 重点更新
 
 ### {已确认的重点}
 
-{保持站内事实，按需补代表性 PR/commit 链接。}
+{保持已确认事实，按需补代表性 PR/commit 链接。}
 
 ## 其他改进
 
@@ -35,7 +37,7 @@ only the bare tag.
 
 ## 升级说明
 
-{保持站内升级、兼容性和风险事实。}
+{保持已确认的升级、兼容性和风险事实。}
 
 ## 变更明细
 
@@ -46,7 +48,7 @@ only the bare tag.
 
 ## Conversion Rules
 
-- Preserve the site's release-note facts and their logical relationships; this outline determines the section order of the user-facing body.
+- Preserve the applicable confirmed version facts and their logical relationships; this outline determines the section order of the user-facing body.
 - Preserve risk qualifiers when summarizing confirmed facts. In particular, do
   not describe a migration as reversible or rollback-safe when the confirmed
   notes state that rollback deletes data or requires a backup.
@@ -55,18 +57,19 @@ only the bare tag.
 - Mention contributors using the repository's existing style.
 - Put the complete compare link after the curated detail section.
 - Do not paste the full PR or commit feed as the user-facing narrative.
-- Do not add a product claim that is absent from the confirmed site page.
+- Do not add a product claim that is absent from the applicable confirmed fact source.
 - Keep internal quality evidence, including skill eval results, assertion counts,
   review rounds, and QA evidence summaries, only in the repository changelog's
   Skill Eval summary. Do not include it in the user-facing GitHub Release body,
   and do not let adjacent Release presentation habits introduce sections beyond
   this outline's four sections: 重点更新, 其他改进, 升级说明, and 变更明细.
-- If GitHub evidence contradicts or materially extends the page, block and
-  return it to Docs for renewed confirmation instead of editing around it.
+- If GitHub evidence contradicts or materially extends the fact source, block.
+  Return site Release Notes to Docs, or a site-less fallback source to the
+  maintainer, for renewed confirmation instead of editing around it.
 
 ## Traceability Checks
 
 For each linked item, verify that it belongs to the declared compare range and
-supports a fact already present in the site Release Notes. Direct commits may
+supports a fact already present in the applicable confirmed fact source. Direct commits may
 use a short SHA and author when no PR exists. Contributor attribution must come
 from the included PR or commit evidence, not inference.
