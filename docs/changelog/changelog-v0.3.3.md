@@ -23,9 +23,9 @@ last_updated: 2026-07-22
 
 ## Skill Eval 汇总（v0.3.3 发版前）
 
-本节逐一核对当前仓库已提交的 durable `comparison.md`，按 skill 去重汇总最新结论。共核对 **152** 份 durable comparison：**126 PASS、26 PARTIAL**。
+本节以当前 eval 定义契约的 canonical `agents/{agent}/test/{skill}/evals/workspace/{eval}/comparison.md` 为统计范围，按 skill 去重汇总最新结论。共核对 **152** 份 canonical durable comparison：**126 PASS、26 PARTIAL**；未按现行 `evals/workspace` 合同归档的 legacy workspace comparison 不纳入本表。
 
-| Agent | Skill（eval 范围） | Durable comparison 数 | 最新结论 |
+| Agent | Skill（eval 范围） | Canonical durable comparison 数 | 最新结论 |
 | --- | --- | ---: | --- |
 | Designer | `designer-agent` | 3 | 3 PASS |
 | Designer | `ui-ux-design` | 3 | 1 PASS、2 PARTIAL |
