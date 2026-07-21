@@ -1,0 +1,16 @@
+{
+  "eval_id": "eval-005-outline-sections-quality-exclusion",
+  "eval_name": "outline-sections-quality-exclusion",
+  "workspace_root": "agents/product_manager/test/github-release-generator/evals/workspace/eval-005-outline-sections-quality-exclusion",
+  "skill_availability_goal": "Verify that the release outline remains the only body section source and internal quality evidence stays out of the user-facing GitHub Release.",
+  "prompt": "根据 `release-package.md`、`docs/site/release-notes/v1.0.0.md` 和 `github-evidence.md` 生成 GitHub Release 完整预览。保持站内事实含义与范围，不执行任何写操作。",
+  "fixture_context": [
+    "release-package.md",
+    "github-evidence.md",
+    "docs/site/release-notes/v1.0.0.md"
+  ],
+  "execution_cleanup": [
+    "release-preview.md",
+    "release-action.md"
+  ]
+}

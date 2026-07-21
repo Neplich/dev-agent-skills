@@ -47,6 +47,9 @@ only the bare tag.
 ## Conversion Rules
 
 - Preserve the site's release-note facts and their logical relationships; this outline determines the section order of the user-facing body.
+- Preserve risk qualifiers when summarizing confirmed facts. In particular, do
+  not describe a migration as reversible or rollback-safe when the confirmed
+  notes state that rollback deletes data or requires a backup.
 - Preserve conventional prefixes from PR titles or commit subjects.
 - Link major confirmed highlights to representative PRs or commits.
 - Mention contributors using the repository's existing style.
