@@ -7,7 +7,7 @@
       "id": "eval-001-gdpr",
       "name": "GDPR Compliance Check",
       "description": "Test privacy mapping for user data collection",
-      "prompt": "Map the personal data collection and check GDPR compliance.",
+      "prompt": "pm-agent has completed entry classification and routed this confirmed `data-collection` security scope to privacy-surface-mapper. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/data-collection/PRD.md`. Map the personal data collection and check GDPR compliance.",
       "workspace": "workspace/eval-001-gdpr",
       "expected_output": "Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.",
       "assertions": [
@@ -37,7 +37,7 @@
       "id": "eval-002-user-rights",
       "name": "User Rights Implementation",
       "description": "Test checking of user data rights implementation",
-      "prompt": "Check if user rights (access, deletion, export) are implemented.",
+      "prompt": "pm-agent has completed entry classification and routed this confirmed `user-rights` security scope to privacy-surface-mapper. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/user-rights/PRD.md`. Check if user rights (access, deletion, export) are implemented.",
       "workspace": "workspace/eval-002-user-rights",
       "expected_output": "Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.",
       "assertions": [
@@ -67,7 +67,7 @@
       "id": "eval-003-third-party",
       "name": "Third-Party Data Sharing",
       "description": "Test mapping of third-party data sharing",
-      "prompt": "Identify all third-party services receiving user data.",
+      "prompt": "pm-agent has completed entry classification and routed this confirmed `third-party-sharing` security scope to privacy-surface-mapper. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/third-party-sharing/PRD.md`. Identify all third-party services receiving user data.",
       "workspace": "workspace/eval-003-third-party",
       "expected_output": "Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.",
       "assertions": [

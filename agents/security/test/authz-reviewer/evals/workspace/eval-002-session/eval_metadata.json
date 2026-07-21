@@ -3,5 +3,10 @@
   "eval_name": "Session Management",
   "workspace_root": "agents/security/test/authz-reviewer/evals/workspace/eval-002-session",
   "skill_availability_goal": "Test review of session security configuration",
-  "prompt": "Check the session management security."
+  "prompt": "pm-agent has completed entry classification and routed this request to authz-reviewer. The PM handoff packet is in workspace `PM_HANDOFF.md`, and the confirmed feature_path is `session-management`. Check the session management security, using the confirmed PRD and code fixture as evidence.",
+  "fixture_context": [
+    "PM_HANDOFF.md",
+    "docs/pm/session-management/PRD.md",
+    "src/auth/session-store.js"
+  ]
 }

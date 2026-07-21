@@ -3,5 +3,10 @@
   "eval_name": "SQL Injection Vulnerability",
   "workspace_root": "agents/security/test/appsec-checklist/evals/workspace/eval-001-sql-injection",
   "skill_availability_goal": "Test detection of SQL injection vulnerability in user search",
-  "prompt": "Review the security of this user search API endpoint."
+  "prompt": "pm-agent 已完成入口分类并路由至 appsec-checklist；PM handoff packet 见 workspace `PM_HANDOFF.md`，已确认 feature_path 为 `user-search`。Review the security of this user search API endpoint.",
+  "fixture_context": [
+    "PM_HANDOFF.md",
+    "docs/pm/user-search/PRD.md",
+    "src/api/user-search.js"
+  ]
 }

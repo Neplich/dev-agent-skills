@@ -3,5 +3,10 @@
   "eval_name": "JWT Implementation",
   "workspace_root": "agents/security/test/authz-reviewer/evals/workspace/eval-003-jwt",
   "skill_availability_goal": "Test review of JWT token security",
-  "prompt": "Review the JWT authentication implementation."
+  "prompt": "pm-agent has completed entry classification and routed this request to authz-reviewer. The PM handoff packet is in workspace `PM_HANDOFF.md`, and the confirmed feature_path is `jwt-auth`. Review the JWT authentication implementation, using the confirmed PRD and code fixture as evidence.",
+  "fixture_context": [
+    "PM_HANDOFF.md",
+    "docs/pm/jwt-auth/PRD.md",
+    "src/auth/jwt.js"
+  ]
 }

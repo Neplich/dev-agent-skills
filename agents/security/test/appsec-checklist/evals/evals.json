@@ -7,7 +7,7 @@
       "id": "eval-001-sql-injection",
       "name": "SQL Injection Vulnerability",
       "description": "Test detection of SQL injection vulnerability in user search",
-      "prompt": "Review the security of this user search API endpoint.",
+      "prompt": "pm-agent 已完成入口分类并路由至 appsec-checklist；PM handoff packet 见 workspace `PM_HANDOFF.md`，已确认 feature_path 为 `user-search`。Review the security of this user search API endpoint.",
       "workspace": "workspace/eval-001-sql-injection",
       "expected_output": "Structured application security checklist with prioritized findings, affected surfaces, evidence, impact, and remediation guidance.",
       "assertions": [
@@ -37,7 +37,7 @@
       "id": "eval-002-auth-bypass",
       "name": "Authentication Bypass",
       "description": "Test detection of missing authentication on admin endpoint",
-      "prompt": "Check the security of the admin panel endpoints.",
+      "prompt": "pm-agent 已完成入口分类并路由至 appsec-checklist；PM handoff packet 见 workspace `PM_HANDOFF.md`，已确认 feature_path 为 `admin-panel`。Check the security of the admin panel endpoints.",
       "workspace": "workspace/eval-002-auth-bypass",
       "expected_output": "Structured application security checklist with prioritized findings, affected surfaces, evidence, impact, and remediation guidance.",
       "assertions": [
@@ -67,7 +67,7 @@
       "id": "eval-003-xss",
       "name": "XSS Vulnerability",
       "description": "Test detection of XSS in comment rendering",
-      "prompt": "Review the security of the comment display feature.",
+      "prompt": "pm-agent 已完成入口分类并路由至 appsec-checklist；PM handoff packet 见 workspace `PM_HANDOFF.md`，已确认 feature_path 为 `comment-display`。Review the security of the comment display feature.",
       "workspace": "workspace/eval-003-xss",
       "expected_output": "Structured application security checklist with prioritized findings, affected surfaces, evidence, impact, and remediation guidance.",
       "assertions": [

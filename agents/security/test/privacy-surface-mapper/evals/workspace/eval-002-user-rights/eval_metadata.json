@@ -3,5 +3,10 @@
   "eval_name": "User Rights Implementation",
   "workspace_root": "agents/security/test/privacy-surface-mapper/evals/workspace/eval-002-user-rights",
   "skill_availability_goal": "Test checking of user data rights implementation",
-  "prompt": "Check if user rights (access, deletion, export) are implemented."
+  "prompt": "pm-agent has completed entry classification and routed this confirmed `user-rights` security scope to privacy-surface-mapper. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/user-rights/PRD.md`. Check if user rights (access, deletion, export) are implemented.",
+  "fixture_context": [
+    "PM_HANDOFF.md",
+    "docs/pm/user-rights/PRD.md",
+    "src/api/user-rights.js"
+  ]
 }

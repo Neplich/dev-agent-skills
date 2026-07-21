@@ -3,5 +3,10 @@
   "eval_name": "Role-Based Access Control",
   "workspace_root": "agents/security/test/authz-reviewer/evals/workspace/eval-001-rbac",
   "skill_availability_goal": "Test review of RBAC implementation in multi-role app",
-  "prompt": "Review the authorization logic for this admin/user/guest system."
+  "prompt": "pm-agent has completed entry classification and routed this request to authz-reviewer. The PM handoff packet is in workspace `PM_HANDOFF.md`, and the confirmed feature_path is `auth-model`. Review the authorization logic for this admin/user/guest system, using the confirmed PRD and code fixture as evidence.",
+  "fixture_context": [
+    "PM_HANDOFF.md",
+    "docs/pm/auth-model/PRD.md",
+    "src/access/admin-policy.js"
+  ]
 }

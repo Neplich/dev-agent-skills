@@ -1,0 +1,9 @@
+{
+  "name": "abandoned-dependency-fixture",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "node-uuid": "1.4.8",
+    "request": "2.88.2"
+  }
+}

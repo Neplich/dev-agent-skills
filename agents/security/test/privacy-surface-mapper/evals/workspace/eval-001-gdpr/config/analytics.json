@@ -1,0 +1,7 @@
+{
+  "provider": "ExampleAnalytics",
+  "enabledByDefault": true,
+  "consentRequired": false,
+  "retentionDays": null,
+  "fields": ["userId", "email", "ipAddress", "eventName"]
+}

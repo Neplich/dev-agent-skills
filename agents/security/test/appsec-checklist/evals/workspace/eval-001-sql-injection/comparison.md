@@ -7,41 +7,42 @@
 - Eval: `eval-001-sql-injection`
 - Test case: SQL Injection Vulnerability
 - Workspace: `workspace/eval-001-sql-injection`
-- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
-- Latest result: PARTIAL（入口门禁触发，assertions 无法展开）- fresh subagent validation completed on 2026-07-21
+- Review context: issue #143 thin fixture 补齐后的 Fresh Codex 复验
+- Latest result: PASS（4/4 assertions）- fresh Codex paired validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
-- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
-- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Prompt/fixture: issue #143 当前 fixture；包含 `PM_HANDOFF.md`、`docs/pm/user-search/PRD.md` 与 `src/api/user-search.js`
+- Fresh run: 当前会话中新启动的 fresh Codex validator 在 `tmp/eval-runs/issue-143/batch-a` 建立隔离副本；with_skill 读取当前 `appsec-checklist` 与 Security Agent README，without_skill 对同 prompt/fixture 不读取或应用 skill/Agent README，并于本轮重新生成 baseline，未读取历史 comparison、未复用历史 baseline
+- Source head: `test/issue-143-security-thin-fixtures` (`d70a8c4`)
 - Validation date: 2026-07-21
 
 ## Assertions
 
-- BLOCKED `security_findings`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
-- BLOCKED `evidence_and_impact`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
-- BLOCKED `severity_rationale`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
-- BLOCKED `remediation`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
+- PASS `security_findings`：识别 `src/api/user-search.js:3-4` 中查询参数直接插入原始 SQL 的可利用 SQL 注入
+- PASS `evidence_and_impact`：定位 source-to-sink 路径，并说明越权读取用户目录及潜在完整性、可用性影响
+- PASS `severity_rationale`：按直接可利用路径和 skill 分级规则判为 Critical
+- PASS `remediation`：给出参数化 `LIKE` 查询、通配符语义约束及恶意输入回归验证步骤
 
 ## With Skill Behavior
 
-fresh candidate 严格按更新后的 SKILL.md 执行：入口门禁判定缺少 PM handoff packet、已确认 feature_path 与可审查 fixture（workspace 仅含 eval_metadata 与历史 comparison），正确将请求温和退回 `pm-agent` 分类，不执行 SQL 注入 审查、不臆造证据。closeout 行为符合 #141 新契约：Security Conclusion Escalation to PM 已评估且**正确不触发**（无 confirmed conclusion），Safety-Net Closeout 引导回 pm-agent 并等待确认。
+Fresh candidate 通过 PM handoff gate 后按 `feature_path=user-search` 精准读取 PRD 与代码。报告以 Critical finding 形式给出 `req.query.name` 到 SQL 执行的代码位置、示例攻击语义、资产影响和参数化修复，并补充 quote/comment/boolean/wildcard/畸形输入验证；同时遵守只审查不改代码、结论回 PM 分类且修复交 Engineer 的边界。
 
 ## Without Skill Baseline
 
-fresh baseline 未读 skill 文档，给出通用SQL 注入方法论与优先级建议；无入口门禁、无升级/closeout 语义。
+本轮 fresh baseline 仅使用同一 prompt 与 fixture 重新生成，未读取 skill、Security Agent README 或历史 comparison。Baseline 同样识别 SQL 注入、Critical 严重度、影响和参数化修复，满足 4/4 assertions；但输出更像单项漏洞答复，未形成完整 checklist，也未体现 Security→PM closeout 与角色交付边界。
 
 ## Failures
 
-断言全部无法判定（fixture 阻塞）。根因与 issue #140 同类：workspace 缺 PM handoff packet / 已确认上下文 / 可审查代码或配置 fixture，fresh candidate 依 PM Handoff Entry Gate 正确退回 pm-agent。属 **fixture/prompt 场景缺陷，非 skill 引导缺陷**，与 #141 closeout 改动无关（同 skill 的 mapped eval 全 PASS）。
+- 无 assertion failure。
+- 未发现基础设施阻塞；issue #143 补齐的 handoff、PRD 与代码 fixture 已解除旧版入口阻塞。
 
 ## Next Steps
 
-- 按 #143 为本 eval workspace 补齐已确认上下文 fixture（PM handoff packet 或等价确认文档链 + 可审查样本），或调整 prompt/assertion 明确入口前提，修正后重跑。
+- 当前 eval 无需修正；后续 skill 或 fixture 行为变更时，继续执行同 prompt 的 fresh Codex paired run，并重新生成 without_skill baseline。
 
 ## Runtime Artifacts Policy
 
-- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
-- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。
+- 本轮隔离副本、candidate/baseline 证据与临时输出仅位于 `tmp/eval-runs/issue-143/batch-a`，验证后删除，不提交到 git。
+- Runtime transcripts、verdicts、timing、diagnostics、lockfile 及 with_skill / without_skill 目录均不得提交；durable 结果仅为本 `comparison.md`。

@@ -7,41 +7,42 @@
 - Eval: `eval-002-session`
 - Test case: Session Management
 - Workspace: `workspace/eval-002-session`
-- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
-- Latest result: PARTIAL（入口门禁触发，assertions 无法展开）- fresh subagent validation completed on 2026-07-21
+- Review context: issue #143 thin fixture 补全后的复验
+- Latest result: PASS（4/4 assertions）- fresh Codex subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
-- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
-- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Prompt/fixture: issue #143 当前提交；包含 `PM_HANDOFF.md`、已确认的 `docs/pm/session-management/PRD.md` 与 `src/auth/session-store.js`
+- Fresh run: 当前会话中的 fresh Codex validator 在 `tmp/eval-runs/issue-143/batch-b/eval-002-session/` 建立隔离副本，先运行 with_skill，再基于同一 prompt/fixture 全新生成 without_skill baseline；baseline 未读取或应用 skill 文档、Agent README、历史 comparison，也未复用历史结果
+- Source head: `test/issue-143-security-thin-fixtures`
 - Validation date: 2026-07-21
 
 ## Assertions
 
-- BLOCKED `authorization_model`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
-- BLOCKED `access_control_findings`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
-- BLOCKED `evidence_and_impact`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
-- BLOCKED `remediation`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
+- PASS `authorization_model`：识别 anonymous 与 authenticated-user 对资料/账户设置的边界，并梳理创建、解析、过期、退出的关键会话路径
+- PASS `access_control_findings`：指出递增会话 ID 可预测、无 30 分钟闲置过期、logout 未删除服务端会话三项缺陷
+- PASS `evidence_and_impact`：引用 `src/auth/session-store.js` 的计数器、Map 记录、读取和退出逻辑，说明会话枚举、账户冒用与退出后重放风险
+- PASS `remediation`：给出 CSPRNG 会话 ID、登录轮换、服务端过期、logout 删除记录和 Cookie 标志建议，并覆盖猜测、超时、退出重放回归测试
 
 ## With Skill Behavior
 
-fresh candidate 严格按更新后的 SKILL.md 执行：入口门禁判定缺少 PM handoff packet、已确认 feature_path 与可审查 fixture（workspace 仅含 eval_metadata 与历史 comparison），正确将请求温和退回 `pm-agent` 分类，不执行 会话管理 审查、不臆造证据。closeout 行为符合 #141 新契约：Security Conclusion Escalation to PM 已评估且**正确不触发**（无 confirmed conclusion），Safety-Net Closeout 引导回 pm-agent 并等待确认。
+with_skill 通过 PM handoff gate 后，按 authz-reviewer 的会话生命周期检查拆分审查证据。输出分别对可预测 ID、无过期、无服务端注销定为 HIGH，区分了 fixture 可确认事实与 Cookie 标志、登录调用方等未提供证据，并给出直接对应 PRD 验收边界的修复和回归方案，4 条 assertion 全部满足。
 
 ## Without Skill Baseline
 
-fresh baseline 未读 skill 文档，给出通用会话管理方法论与优先级建议；无入口门禁、无升级/closeout 语义。
+without_skill baseline 由本轮 fresh Codex validator 在独立副本中重新生成，仅使用同一 prompt 与 fixture。baseline 也识别匿名/已认证边界及三项会话缺陷，说明账户冒用后果并提出随机 ID、过期和服务端注销测试，4 条 assertion 全部满足；相比 with_skill，对生命周期阶段和证据缺口的结构化说明较少。
 
 ## Failures
 
-断言全部无法判定（fixture 阻塞）。根因与 issue #140 同类：workspace 缺 PM handoff packet / 已确认上下文 / 可审查代码或配置 fixture，fresh candidate 依 PM Handoff Entry Gate 正确退回 pm-agent。属 **fixture/prompt 场景缺陷，非 skill 引导缺陷**，与 #141 closeout 改动无关（同 skill 的 mapped eval 全 PASS）。
+- 无 assertion failure。
+- Cookie 响应层和登录调用方不在 fixture 中，因此只能提出验证项，不能断言其当前实现状态。
 
 ## Next Steps
 
-- 按 #143 为本 eval workspace 补齐已确认上下文 fixture（PM handoff packet 或等价确认文档链 + 可审查样本），或调整 prompt/assertion 明确入口前提，修正后重跑。
+- 保持当前最小 fixture；后续若把 Cookie 标志或登录轮换纳入 assertion，应先补相应响应层或调用方证据再复验。
 
 ## Runtime Artifacts Policy
 
-- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
-- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。
+- 本轮 candidate、baseline 与命令输出仅位于 `tmp/eval-runs/issue-143/batch-b/`，验证后删除，不提交到 git。
+- Runtime transcripts、verdicts、timing、diagnostics、with_skill / without_skill 输出及其他 scratch 产物均不得提交；长期结果仅保留本 `comparison.md`。
