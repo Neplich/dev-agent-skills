@@ -7,41 +7,42 @@
 - Eval: `eval-003-third-party`
 - Test case: Third-Party Data Sharing
 - Workspace: `workspace/eval-003-third-party`
-- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
-- Latest result: PARTIAL（入口门禁触发，assertions 无法展开）- fresh subagent validation completed on 2026-07-21
+- Review context: issue #143
+- Latest result: PASS（4/4 assertions）- fresh Codex paired validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
-- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
-- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Prompt/fixture: issue #143 当前 fixture；包含 `PM_HANDOFF.md`、`docs/pm/third-party-sharing/PRD.md`、`src/integrations/user-events.js` 与 `config/vendors.json`
+- Fresh run: 当前会话中新启动的 fresh Codex validator 在 `tmp/eval-runs/issue-143/batch-c/eval-003-third-party/` 的隔离副本中成对运行；with-skill 读取当前 specialist SKILL.md、Security README 与共享 closeout 契约，without-skill 仅以同一 prompt/fixture 重新生成 baseline，未读取历史 comparison，未复用历史 baseline
+- Source head: `test/issue-143-security-thin-fixtures`
 - Validation date: 2026-07-21
 
 ## Assertions
 
-- BLOCKED `data_inventory`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
-- BLOCKED `sharing_and_retention`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
-- BLOCKED `user_rights`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
-- BLOCKED `compliance_gaps`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
+- PASS `data_inventory`：逐供应商识别 ExampleAnalytics 的 userId/邮箱/IP/pageUrl、ExampleAds 的邮箱/最近购买金额、ExamplePay 的支付客户 ID/邮箱/内部用户 ID，并关联分析、广告受众和支付客户同步目的
+- PASS `sharing_and_retention`：核对美国地域、730/2555 天保留、广告保留为空、分析删除 API 缺失、广告删除支持未知和支付删除 API 可用但未编排等第三方风险
+- PASS `user_rights`：检查访问、导出、更正、删除和同意传播；明确分析无法通过 API 删除、广告未知、支付仅有能力但未接入工作流，且所有供应商均无完整权利传播证据
+- PASS `compliance_gaps`：给出广告默认无同意、合法基础/跨境保障、字段最小化、长或未定义保留、供应商清单和可测试权利传播等分级整改建议
 
 ## With Skill Behavior
 
-fresh candidate 严格按更新后的 SKILL.md 执行：入口门禁判定缺少 PM handoff packet、已确认 feature_path 与可审查 fixture（workspace 仅含 eval_metadata 与历史 comparison），正确将请求温和退回 `pm-agent` 分类，不执行 第三方数据共享枚举 审查、不臆造证据。closeout 行为符合 #141 新契约：Security Conclusion Escalation to PM 已评估且**正确不触发**（无 confirmed conclusion），Safety-Net Closeout 引导回 pm-agent 并等待确认。
+with-skill 输出将代码发送字段与供应商配置逐一交叉核对，形成供应商、字段、目的、地域、保留、删除能力和用户权利的完整映射。它识别了无条件调用与广告默认启用/无需同意，区分 `deletionApi=true` 和“删除流程已实现”，并对未知地域、保留和删除支持保持证据边界。输出也遵守 `docs/security/third-party-sharing/privacy-map.md` 报告落点与 Engineer/DevOps/PM handoff。
 
 ## Without Skill Baseline
 
-fresh baseline 未读 skill 文档，给出通用第三方数据共享枚举方法论与优先级建议；无入口门禁、无升级/closeout 语义。
+本轮 baseline 在独立 `without_skill` 副本中，仅依据同一 prompt 与 fixture 新生成。它同样枚举三个供应商及精确字段，覆盖目的、地域、保留、同意、删除/用户权利和整改建议，4/4 assertions 均满足；但未形成正式的数据流/权利矩阵，也缺少报告归档和跨角色 closeout。
 
 ## Failures
 
-断言全部无法判定（fixture 阻塞）。根因与 issue #140 同类：workspace 缺 PM handoff packet / 已确认上下文 / 可审查代码或配置 fixture，fresh candidate 依 PM Handoff Entry Gate 正确退回 pm-agent。属 **fixture/prompt 场景缺陷，非 skill 引导缺陷**，与 #141 closeout 改动无关（同 skill 的 mapped eval 全 PASS）。
+- with-skill 与 without-skill 均无 assertion failure。
+- 对照 fixture 信息明确，baseline 已能覆盖核心风险；skill 的增益主要体现在交叉核证、未知项边界、结构化报告和职责闭环。
 
 ## Next Steps
 
-- 按 #143 为本 eval workspace 补齐已确认上下文 fixture（PM handoff packet 或等价确认文档链 + 可审查样本），或调整 prompt/assertion 明确入口前提，修正后重跑。
+- 本 eval 无需修改 assertions 或 expected_output；后续 fixture 或 skill 行为变化时继续执行新的 fresh Codex paired run，并重新生成 baseline。
 
 ## Runtime Artifacts Policy
 
-- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
-- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。
+- 本轮 paired 输出与临时隔离副本仅用于判定，完成后删除 `tmp/eval-runs/issue-143/batch-c`。
+- 不提交 with_skill、without_skill、transcript、verdict、timing、output、diagnostics 或其他运行期产物；durable result 仅为本 `comparison.md`。

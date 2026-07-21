@@ -7,7 +7,7 @@
       "id": "eval-001-rbac",
       "name": "Role-Based Access Control",
       "description": "Test review of RBAC implementation in multi-role app",
-      "prompt": "Review the authorization logic for this admin/user/guest system.",
+      "prompt": "pm-agent has completed entry classification and routed this request to authz-reviewer. The PM handoff packet is in workspace `PM_HANDOFF.md`, and the confirmed feature_path is `auth-model`. Review the authorization logic for this admin/user/guest system, using the confirmed PRD and code fixture as evidence.",
       "workspace": "workspace/eval-001-rbac",
       "expected_output": "Structured authorization review that identifies access-control risks, affected roles or resources, evidence, severity, and remediation guidance.",
       "assertions": [
@@ -37,7 +37,7 @@
       "id": "eval-002-session",
       "name": "Session Management",
       "description": "Test review of session security configuration",
-      "prompt": "Check the session management security.",
+      "prompt": "pm-agent has completed entry classification and routed this request to authz-reviewer. The PM handoff packet is in workspace `PM_HANDOFF.md`, and the confirmed feature_path is `session-management`. Check the session management security, using the confirmed PRD and code fixture as evidence.",
       "workspace": "workspace/eval-002-session",
       "expected_output": "Structured authorization review that identifies access-control risks, affected roles or resources, evidence, severity, and remediation guidance.",
       "assertions": [
@@ -67,7 +67,7 @@
       "id": "eval-003-jwt",
       "name": "JWT Implementation",
       "description": "Test review of JWT token security",
-      "prompt": "Review the JWT authentication implementation.",
+      "prompt": "pm-agent has completed entry classification and routed this request to authz-reviewer. The PM handoff packet is in workspace `PM_HANDOFF.md`, and the confirmed feature_path is `jwt-auth`. Review the JWT authentication implementation, using the confirmed PRD and code fixture as evidence.",
       "workspace": "workspace/eval-003-jwt",
       "expected_output": "Structured authorization review that identifies access-control risks, affected roles or resources, evidence, severity, and remediation guidance.",
       "assertions": [

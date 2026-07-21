@@ -7,41 +7,42 @@
 - Eval: `eval-001-rbac`
 - Test case: Role-Based Access Control
 - Workspace: `workspace/eval-001-rbac`
-- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
-- Latest result: PARTIAL（入口门禁触发，assertions 无法展开）- fresh subagent validation completed on 2026-07-21
+- Review context: issue #143 thin fixture 补全后的复验
+- Latest result: PASS（4/4 assertions）- fresh Codex subagent validation completed on 2026-07-21
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
-- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
-- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
+- Prompt/fixture: issue #143 当前提交；包含 `PM_HANDOFF.md`、已确认的 `docs/pm/auth-model/PRD.md` 与 `src/access/admin-policy.js`
+- Fresh run: 当前会话中的 fresh Codex validator 在 `tmp/eval-runs/issue-143/batch-b/eval-001-rbac/` 建立隔离副本，先运行 with_skill，再基于同一 prompt/fixture 全新生成 without_skill baseline；baseline 未读取或应用 skill 文档、Agent README、历史 comparison，也未复用历史结果
+- Source head: `test/issue-143-security-thin-fixtures`
 - Validation date: 2026-07-21
 
 ## Assertions
 
-- BLOCKED `authorization_model`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
-- BLOCKED `access_control_findings`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
-- BLOCKED `evidence_and_impact`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
-- BLOCKED `remediation`：fixture 缺确认上下文，入口门禁触发，断言无法展开判定
+- PASS `authorization_model`：列出 guest、user、admin 与公开页面、本人资料、管理审计日志、角色管理的权限边界，并定位审计日志授权路径
+- PASS `access_control_findings`：识别 `x-user-role` 为客户端可控输入，直接作为 admin 身份依据会形成越权
+- PASS `evidence_and_impact`：引用 `src/access/admin-policy.js` 的角色判断与返回路径，说明任意调用者可伪造 admin 并读取管理审计数据
+- PASS `remediation`：建议改用服务端认证主体、入口剥离外部身份头、默认拒绝，并覆盖伪造角色和有效 admin 的回归测试
 
 ## With Skill Behavior
 
-fresh candidate 严格按更新后的 SKILL.md 执行：入口门禁判定缺少 PM handoff packet、已确认 feature_path 与可审查 fixture（workspace 仅含 eval_metadata 与历史 comparison），正确将请求温和退回 `pm-agent` 分类，不执行 RBAC/授权 审查、不臆造证据。closeout 行为符合 #141 新契约：Security Conclusion Escalation to PM 已评估且**正确不触发**（无 confirmed conclusion），Safety-Net Closeout 引导回 pm-agent 并等待确认。
+with_skill 读取 `agents/security/README.md` 与 `authz-reviewer/SKILL.md` 后，通过 PM handoff gate，按 PRD 形成角色权限矩阵并回到代码核证。输出将客户端可控角色头定为 HIGH，明确了受影响角色、管理审计资源、证据位置、未提供实现的边界，以及交回 Engineer 的修复和回归验证范围，4 条 assertion 全部满足。
 
 ## Without Skill Baseline
 
-fresh baseline 未读 skill 文档，给出通用RBAC/授权方法论与优先级建议；无入口门禁、无升级/closeout 语义。
+without_skill baseline 由本轮 fresh Codex validator 在独立副本中重新生成，仅使用 eval prompt、PM handoff、PRD 与代码 fixture。baseline 同样识别 guest/user/admin 边界、伪造 `x-user-role` 的高风险越权、审计日志影响及服务端可信身份修复方案，4 条 assertion 全部满足；相比 with_skill，权限矩阵和审查边界表达更简略。
 
 ## Failures
 
-断言全部无法判定（fixture 阻塞）。根因与 issue #140 同类：workspace 缺 PM handoff packet / 已确认上下文 / 可审查代码或配置 fixture，fresh candidate 依 PM Handoff Entry Gate 正确退回 pm-agent。属 **fixture/prompt 场景缺陷，非 skill 引导缺陷**，与 #141 closeout 改动无关（同 skill 的 mapped eval 全 PASS）。
+- 无 assertion failure。
+- fixture 未包含本人资料和角色管理实现；with_skill 将其标记为未评估，不影响本 eval 对管理审计授权路径的判定。
 
 ## Next Steps
 
-- 按 #143 为本 eval workspace 补齐已确认上下文 fixture（PM handoff packet 或等价确认文档链 + 可审查样本），或调整 prompt/assertion 明确入口前提，修正后重跑。
+- 保持当前 prompt、PM handoff、PRD 与最小代码 fixture；后续修改授权审查协议或 fixture 时重新执行 fresh paired run。
 
 ## Runtime Artifacts Policy
 
-- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
-- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。
+- 本轮 candidate、baseline、npm/命令输出等运行期证据仅位于 `tmp/eval-runs/issue-143/batch-b/`，验证后删除，不提交到 git。
+- Runtime transcripts、verdicts、timing、diagnostics、with_skill / without_skill 输出及其他 scratch 产物均不得提交；长期结果仅保留本 `comparison.md`。

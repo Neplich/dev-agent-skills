@@ -1,0 +1,20 @@
+{
+  "analytics": {
+    "provider": "ExampleAnalytics",
+    "region": "us",
+    "retentionDays": 730,
+    "deletionApi": false
+  },
+  "advertising": {
+    "provider": "ExampleAds",
+    "enabledByDefault": true,
+    "consentRequired": false,
+    "retentionDays": null
+  },
+  "payments": {
+    "provider": "ExamplePay",
+    "region": "us",
+    "retentionDays": 2555,
+    "deletionApi": true
+  }
+}

@@ -3,5 +3,10 @@
   "eval_name": "XSS Vulnerability",
   "workspace_root": "agents/security/test/appsec-checklist/evals/workspace/eval-003-xss",
   "skill_availability_goal": "Test detection of XSS in comment rendering",
-  "prompt": "Review the security of the comment display feature."
+  "prompt": "pm-agent 已完成入口分类并路由至 appsec-checklist；PM handoff packet 见 workspace `PM_HANDOFF.md`，已确认 feature_path 为 `comment-display`。Review the security of the comment display feature.",
+  "fixture_context": [
+    "PM_HANDOFF.md",
+    "docs/pm/comment-display/PRD.md",
+    "src/ui/comment-display.js"
+  ]
 }

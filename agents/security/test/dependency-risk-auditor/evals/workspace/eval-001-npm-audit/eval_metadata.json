@@ -3,5 +3,10 @@
   "eval_name": "NPM Dependency Audit",
   "workspace_root": "agents/security/test/dependency-risk-auditor/evals/workspace/eval-001-npm-audit",
   "skill_availability_goal": "Test audit of Node.js project with vulnerable dependencies",
-  "prompt": "Audit the dependencies for security vulnerabilities."
+  "prompt": "pm-agent has completed entry classification and routed this confirmed `dependency-inventory` security scope to dependency-risk-auditor. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/dependency-inventory/PRD.md`. Audit the dependencies for security vulnerabilities.",
+  "fixture_context": [
+    "PM_HANDOFF.md",
+    "docs/pm/dependency-inventory/PRD.md",
+    "package.json"
+  ]
 }

@@ -1,0 +1,9 @@
+{
+  "name": "dependency-audit-fixture",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "lodash": "4.17.15",
+    "minimist": "0.0.8"
+  }
+}

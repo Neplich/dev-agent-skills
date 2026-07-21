@@ -7,7 +7,7 @@
       "id": "eval-001-npm-audit",
       "name": "NPM Dependency Audit",
       "description": "Test audit of Node.js project with vulnerable dependencies",
-      "prompt": "Audit the dependencies for security vulnerabilities.",
+      "prompt": "pm-agent has completed entry classification and routed this confirmed `dependency-inventory` security scope to dependency-risk-auditor. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/dependency-inventory/PRD.md`. Audit the dependencies for security vulnerabilities.",
       "workspace": "workspace/eval-001-npm-audit",
       "expected_output": "Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.",
       "assertions": [
@@ -37,7 +37,7 @@
       "id": "eval-002-abandoned",
       "name": "Abandoned Packages",
       "description": "Test detection of abandoned/outdated packages",
-      "prompt": "Check for abandoned or outdated dependencies.",
+      "prompt": "pm-agent has completed entry classification and routed this confirmed `dependency-inventory` security scope to dependency-risk-auditor. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/dependency-inventory/PRD.md`. Check for abandoned or outdated dependencies.",
       "workspace": "workspace/eval-002-abandoned",
       "expected_output": "Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.",
       "assertions": [
@@ -67,7 +67,7 @@
       "id": "eval-003-python",
       "name": "Python Dependency Audit",
       "description": "Test audit of Python project dependencies",
-      "prompt": "Review Python dependencies for security issues.",
+      "prompt": "pm-agent has completed entry classification and routed this confirmed `dependency-inventory` security scope to dependency-risk-auditor. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/dependency-inventory/PRD.md`. Review Python dependencies for security issues.",
       "workspace": "workspace/eval-003-python",
       "expected_output": "Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.",
       "assertions": [

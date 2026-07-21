@@ -3,5 +3,10 @@
   "eval_name": "Abandoned Packages",
   "workspace_root": "agents/security/test/dependency-risk-auditor/evals/workspace/eval-002-abandoned",
   "skill_availability_goal": "Test detection of abandoned/outdated packages",
-  "prompt": "Check for abandoned or outdated dependencies."
+  "prompt": "pm-agent has completed entry classification and routed this confirmed `dependency-inventory` security scope to dependency-risk-auditor. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/dependency-inventory/PRD.md`. Check for abandoned or outdated dependencies.",
+  "fixture_context": [
+    "PM_HANDOFF.md",
+    "docs/pm/dependency-inventory/PRD.md",
+    "package.json"
+  ]
 }
