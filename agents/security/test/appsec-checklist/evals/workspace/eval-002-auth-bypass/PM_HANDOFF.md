@@ -14,6 +14,7 @@ feature_path_evidence:
     reason: 该 PRD 已确认管理端点仅限管理员访问及本次认证审查范围，是 admin-panel 的正式产品依据。
 source_documents:
   - docs/pm/admin-panel/PRD.md
+  - src/app.js
   - src/api/admin-routes.js
 scope_decision:
   summary: 审查管理面板路由是否在进入处理器前强制认证和管理员授权，并给出风险分级与修复建议。
