@@ -4,40 +4,50 @@
 
 - Skill: `github-release-generator`
 - Test case: fact preservation and curated GitHub traceability
-- Latest result: PASS - 2026-07-20 fresh paired validation 与独立 judge 完成，4/4 assertions 通过
+- Latest result: PASS - 2026-07-21 issue #146 fresh paired validation 完成，with-skill 4/4 assertions 通过
+
+## Review Context
+
+- Review issue: #146
+- Final judge: 当前会话中的 fresh Codex validation agent
+- 两条 lane 分别由全新 worker 生成；judge 在两侧完成前未读取历史 `comparison.md`。
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: AI Hub-shaped confirmed seven-category page 与 scoped GitHub evidence
-- Runtime evidence: `tmp/eval-runs/120/eval-003-preserve-facts-and-add-traceability/`
+- Fixture: AI Hub-shaped confirmed release page、pre-tag audited range、intended final compare 与 curated GitHub evidence
+- Runtime evidence: `tmp/eval-runs/issue-146/{with_skill,without_skill}/eval-003-preserve-facts-and-add-traceability/`
 
 ## Assertions
 
-- PASS `preserves_confirmed_release_facts`: 七类已确认事实逐项保留，未新增、省略或泛化改写。
-- PASS `adds_verified_traceability_links`: 使用范围内 compare、PR、direct commit 和贡献者链接，并区分 pre-tag/final endpoint。
-- PASS `curates_instead_of_dumping`: 只列代表性维护证据，未堆叠其余 18 个维护 commit。
-- PASS `blocks_on_fact_conflict`: 冲突或新事实返回 Docs 重新确认，不在 GitHub Release 中覆盖。
+- PASS `preserves_confirmed_release_facts`: 文件卡片、原位重试、统一附件模型与旧文本兼容、nullable JSONB 与删列风险、部署顺序与开关、双架构资产、升级和旧浏览器限制均逐项保留。
+- PASS `adds_verified_traceability_links`: 使用 fixture 范围内 compare、PR #116/#117、direct commit `8b6a1f2` 与贡献者链接，并区分 pre-tag audited endpoint 与 tag 存在后的 final endpoint。
+- PASS `curates_instead_of_dumping`: 围绕站内事实组织说明，仅选代表性维护链接，未粘贴其余 18 个格式化、依赖与测试 commit。
+- PASS `blocks_on_fact_conflict`: 明确 GitHub 证据冲突或暴露新事实时返回 `docs-agent:release-notes-generator`，不在 GitHub Release 中覆盖站内事实。
 
 ## With Skill Behavior
 
-- 以站内页面为事实源，保留功能、架构、兼容、数据库、部署、资产、升级与风险语义。
-- GitHub evidence 仅用于追溯与格式增强；完整维护 feed 被审计但不直接作为用户说明。
-- 预览模式保持 `docs/site/`、GitHub 与 tag 零写入。
+- 以 confirmed site page 为唯一版本事实源，GitHub evidence 仅用于 compare 与代表性维护链接增强。
+- 在 pre-tag 状态使用 `v0.9.0...8b6a1f2` 作为当前已审计 compare，同时把 `v0.9.0...v1.0.0` 标为实际 tag 存在后的 final compare。
+- 对 fixture 未提供的 current latest 使用 `--latest=false` 安全回退，只生成 preview，未扩张为写入。
 
 ## Without Skill Baseline
 
-- 同一 prompt/fixture 于 2026-07-20 全新生成，未应用或引用 skill、README、旧 baseline 或历史 comparison。
-- baseline 能保留多数事实与链接，但未说明冲突回流，也未明确筛除无用户事实增益的完整维护 feed；with-skill 显示明确协议增益。
+- 2026-07-21 使用同一 prompt、assertions、expected output、metadata 与 fixture 全新生成；未读取 skill、Agent README、with-skill 证据或历史 comparison。
+- baseline 同样 4/4 assertions PASS，完整保留事实、精选链接并声明冲突回流。
+- 主要差异：baseline 直接使用 intended final compare `v0.9.0...v1.0.0`；with-skill 按当前 pre-tag 证据区分 audited compare 与 future final compare，阶段语义更严格。当前 assertions 的区分度为 0/4。
 
 ## Failures
 
-- 无。独立 judge 未发现 skill、fixture、harness 或断言问题。
+- 无 assertion failure 或 blocker。
+- 非阻塞 finding：assertions 与 fixture 已直接给出事实清单、精选链接和冲突处理要求，fresh baseline 同样全部通过，未证明 skill 相对 baseline 的断言增益。
 
 ## Next Steps
 
-- 当事实源优先级、compare 规则或 traceability outline 变化时重新执行 paired validation。
+- 当事实源优先级、pre-tag/final compare 规则或 traceability outline 变化时重新执行 paired validation。
+- 若要提升区分度，可让 baseline 从较少提示的维护 feed 自行判断事实边界与冲突回流。
 
 ## Runtime Artifacts Policy
 
-- 本轮 `with_skill.md`、`without_skill.md` 与 `verdict.md` 仅位于 `tmp/eval-runs/120/`，不提交 transcript、verdict、with_skill、without_skill、outputs 或 diagnostics。
+- 本轮 candidate、worker observations 与 manifest 仅位于 `tmp/eval-runs/issue-146/`，作为短期运行期证据。
+- 不提交 transcript、candidate、worker observations、manifest、verdict、outputs、timing 或 diagnostics；长期结果仅保留本 `comparison.md`。
