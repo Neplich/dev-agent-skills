@@ -54,15 +54,10 @@ It includes:
 
 ### Codex
 
-```bash
-git clone https://github.com/Neplich/dev-agent-skills.git ~/.agents/dev-agent-skills
-cd ~/.agents/dev-agent-skills
+Tell Codex:
 
-# Install all role router and specialist skills by default.
-python3 scripts/install_codex_skills.py
-
-# Optional minimal mode: expose only the seven role router skills.
-python3 scripts/install_codex_skills.py --routers-only
+```text
+Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/heads/main/.codex/INSTALL.md
 ```
 
 Implementation details and troubleshooting are in the [Codex Guide](./docs/README.codex.md).
