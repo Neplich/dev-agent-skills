@@ -1,15 +1,16 @@
 # GitHub Release Workflow
 
-Use this workflow only after the `SKILL.md` issue #116 entry gate and issue
-#117 `ready_for_tag` gate pass for the same version.
+Use this workflow only after the `SKILL.md` applicability gate selects and
+validates the release path: the issue #116/#117 handoff path for a site-enabled
+host, or the maintainer-confirmed fallback fact-source path for a site-less host.
 
 ## Modes
 
 | Mode | Required intent and evidence | Allowed mutation |
 | --- | --- | --- |
-| Preview | Complete #116 handoff and `ready_for_tag` | None |
-| Draft | Preview shown and user explicitly requests create/update | Update an existing draft without tag mutation, or create a draft only when the actual tag already exists |
-| Publish | Actual tag, `release_verified`, and separate maintainer approval | Publish the approved draft |
+| Preview | Site-enabled: complete #116 handoff and `ready_for_tag`; site-less: confirmed fallback fact source and recorded downgrade basis | None |
+| Draft | Preview shown and user explicitly requests create/update; site-less writes also require explicit, current maintainer approval | Update an existing draft without tag mutation, or create a draft only when the actual tag already exists |
+| Publish | Actual tag and separate maintainer approval, plus site-enabled `release_verified` or revalidated site-less fallback evidence | Publish the approved draft |
 
 ## Release Variables
 
@@ -18,7 +19,8 @@ Use this workflow only after the `SKILL.md` issue #116 entry gate and issue
   for comparison or titles that intentionally normalize it.
 - `PREV_TAG`: exact previous release tag.
 - `TARGET_REF`: immutable pre-tag target commit from the trusted
-  `ready_for_tag` handoff.
+  `ready_for_tag` handoff, or compatible release-window evidence for the
+  confirmed site-less fallback.
 - `LATEST_FLAG`: the preview-confirmed, publish-only literal `--latest` or
   `--latest=false`; draft writes omit both forms.
 - `PRERELEASE_FLAG`: the preview-confirmed literal `--prerelease` for a SemVer
@@ -26,7 +28,8 @@ Use this workflow only after the `SKILL.md` issue #116 entry gate and issue
 - `TARGET_TAG_OID`: the exact remote object ID read for `THIS_TAG`; any change
   between writes is tag drift and blocks further mutation.
 
-Verify `release_version` (or #116's canonical `target_release_version`),
+Verify the applicable fact-source version (`release_version`, #116's canonical
+`target_release_version`, or the confirmed site-less fallback version),
 `THIS_TAG`, `PREV_TAG`, `TARGET_REF`, and the compare endpoints as one release
 window. Do not infer a missing previous tag or use mutable `HEAD` as a
 substitute for `TARGET_REF`.
@@ -44,8 +47,10 @@ gh release view {THIS_TAG} --json tagName,name,body,isDraft,isPrerelease,publish
 gh api repos/{OWNER}/{REPO}/compare/{PREV_TAG}...{TARGET_REF}
 ```
 
-Before preview or draft, verify the trusted pre-tag handoff states
-`phase_result: ready_for_tag` for the same release version. This workflow never
+Before preview or draft, verify that a site-enabled host's trusted pre-tag
+handoff states `phase_result: ready_for_tag` for the same release version, or
+that a site-less host's confirmed fallback fact source and downgrade basis
+remain valid. This workflow never
 creates, moves, deletes, or recreates `THIS_TAG`. After the actual tag exists,
 re-run the compare against `PREV_TAG...THIS_TAG` and require the tag to resolve
 to the audited release content before publication.
@@ -89,21 +94,24 @@ silently recompute a more permissive decision.
 Build the complete title and body using `release-outline.md`. Show the preview
 and identify:
 
-- the confirmed site Release Notes path;
+- the applicable confirmed fact source and either its site path or site-less downgrade basis;
 - the exact compare range;
 - the PR, commit, and contributor links added for traceability; and
 - the target classification, current latest evidence, SemVer comparison, and
   exact `LATEST_FLAG` / `PRERELEASE_FLAG`; and
-- any GitHub evidence conflict that must return to Docs.
+- any GitHub evidence conflict that must return to Docs for a site-enabled host
+  or to the maintainer for a site-less host.
 
 Do not mutate GitHub while the requested action is preview-only or ambiguous.
 
 ## Create Or Update A Draft
 
 Only after the user explicitly requests the draft mutation, read the current
-release, current latest Release, and remote tag state. Record `TARGET_TAG_OID`
-and require the latest tag and comparison result to equal the most recently
-confirmed preview. Drift returns to Preview for renewed confirmation. If the
+release, current latest Release, and remote tag state. For a site-less host,
+obtain explicit, current maintainer approval for this write and revalidate the
+fallback fact source and downgrade basis immediately before writing. Record
+`TARGET_TAG_OID` and require the latest tag and comparison result to equal the
+most recently confirmed preview. Drift returns to Preview for renewed confirmation. If the
 Release is already published, do not downgrade it; report its current state and
 route any content correction through a new approved publish cycle. If an
 existing draft already matches the title, body, and prerelease state, perform no
@@ -156,8 +164,10 @@ Before any publish write, verify all of the following again:
 - the freshly read current latest Release and SemVer comparison still equal
   the most recently confirmed preview; drift returns to Preview for renewed
   maintainer confirmation;
-- the issue #117 post-tag handoff states `phase: post-tag` and
-  `phase_result: release_verified` for the same version;
+- for a site-enabled host, the issue #117 post-tag handoff states `phase: post-tag`
+  and `phase_result: release_verified` for the same version; for a site-less
+  host, the recorded downgrade basis, confirmed fact source, and compatible
+  version evidence remain valid;
 - the draft readback matches the approved preview; and
 - the draft matches the preview-confirmed prerelease decision and has never
   been assigned latest while still draft; and
@@ -242,10 +252,13 @@ create a second Release or re-flip an already published one.
 
 ## Blocked Outcomes
 
-- Missing or unconfirmed page, docs check gap, or page/GitHub fact conflict:
-  return to `docs-agent:release-notes-generator`.
-- Missing or invalid `ready_for_tag` / `release_verified`: return to
-  `docs-agent:docs-audit`.
+- Site-enabled host with a missing or unconfirmed page, docs check gap, or
+  page/GitHub fact conflict: return to `docs-agent:release-notes-generator`.
+- Site-enabled host with missing or invalid `ready_for_tag` / `release_verified`:
+  return to `docs-agent:docs-audit`.
+- Site-less host with a missing, unconfirmed, or conflicting fallback fact
+  source, invalid downgrade basis, or missing pre-write approval: return to
+  `pm-agent` / the maintainer.
 - Unclear version or compare range: return to `pm-agent`.
 - Missing tag: host release owner creates the tag outside this skill.
 - Missing publish approval: keep the draft unchanged.

@@ -40,13 +40,19 @@ related_docs:
 
 ```mermaid
 flowchart LR
-    Site["docs release-notes-generator\nconfirmed + docs checks passed"] --> H116["#116 ready handoff"]
+    Applicability{"initialized docs site?"}
+    Applicability -->|"yes"| Site["docs release-notes-generator\nconfirmed + docs checks passed"]
+    Applicability -->|"no"| Fallback["maintainer-confirmed\nversion fact source"]
+    Site --> H116["#116 ready handoff"]
     H116 --> Pre["docs-audit pre-tag"]
     Pre -->|"ready_for_tag"| GR["PM github-release-generator"]
+    Fallback --> GR
     GR --> Preview["preview / draft"]
-    Tag["actual tag"] --> Post["docs-audit post-tag"]
+    Preview --> Path{"documentation-site gate applicable?"}
+    Tag["actual tag"] --> Path
+    Path -->|"yes"| Post["docs-audit post-tag"]
     Post -->|"release_verified"| Gate["publish gate"]
-    Preview --> Gate
+    Path -->|"no: fallback evidence valid"| Gate
     Approval["maintainer explicit approval"] --> Gate
     Gate --> Publish["publish + readback"]
 ```
@@ -198,16 +204,16 @@ post-tag audit，不自动修 tag。
 
 | 输入 | 处理 | 输出 |
 | --- | --- | --- |
-| 已确认站内 Release Notes | 保持功能、架构、数据库、部署、资产、升级和风险事实 | GitHub Release 用户说明主体 |
+| 适用路径下已确认的版本事实源 | 有文档站读取站内 Release Notes，无文档站读取维护者确认的降级事实源；保持功能、架构、数据库、部署、资产、升级和风险事实 | GitHub Release 用户说明主体 |
 | compare | 生成完整 compare 链接，校验发布范围 | 页尾追溯链接 |
 | merged PR | 选择与正文事实对应的代表性 PR | 重点条目的 PR 链接 |
 | commit | 用于范围审计和必要的精确追溯 | 不输出未经整理的原始 commit dump |
 | contributor | 从已纳入条目和 compare 中归并 | 项目既有风格的贡献者署名 |
 | `reference/release-outline.md` | 作为标题与正文结构的唯一来源，不读取或继承相邻 Release 格式 | 内部质量证据只进入 changelog 的 Skill Eval 汇总，不进入用户向 GitHub Release 正文 |
 
-正文不得新增站内页面未确认的产品事实。若 GitHub 证据揭示页面遗漏或冲突，停止生成
-并将差异交回 `docs-agent:release-notes-generator` 重新确认和校验；不能在 GitHub Release
-中单边修正。
+正文不得新增适用版本事实源未确认的产品事实。若 GitHub 证据揭示遗漏或冲突，停止生成；
+有文档站宿主将差异交回 `docs-agent:release-notes-generator` 重新确认和校验，无文档站宿主
+将降级事实源交回维护者重新确认；不能在 GitHub Release 中单边修正。
 
 ## 6. 文件级设计
 
