@@ -123,7 +123,7 @@ skill 必须先验证以下字段和证据：
 
 在 `ready_for_tag` 后：
 
-1. 读取站内 Release Notes、GitHub compare 和相邻 Release 风格。
+1. 读取站内 Release Notes、GitHub compare 和 `reference/release-outline.md` 结构定义。
 2. 生成标题与正文预览，标明事实来源与补充链接；同时标明目标版本分类、当前 latest
    Release 证据、SemVer 比较结果以及将用于写入的显式 prerelease/latest flag。
 3. 仅在用户明确要求时创建或更新 draft；无现有 draft 且实际 tag 不存在时只保留完整

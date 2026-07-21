@@ -46,7 +46,7 @@ only the bare tag.
 
 ## Conversion Rules
 
-- Keep the site's release-note ordering.
+- Preserve the site's release-note facts and their logical relationships; this outline determines the section order of the user-facing body.
 - Preserve conventional prefixes from PR titles or commit subjects.
 - Link major confirmed highlights to representative PRs or commits.
 - Mention contributors using the repository's existing style.
