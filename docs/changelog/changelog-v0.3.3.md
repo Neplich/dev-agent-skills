@@ -23,49 +23,13 @@ last_updated: 2026-07-22
 
 ## Skill Eval 汇总（v0.3.3 发版前）
 
-本节逐一核对当前仓库已提交的 durable `comparison.md`，按 skill 去重汇总最新结论。共核对 **152** 份 durable comparison：**126 PASS、26 PARTIAL**。
+本版本复用各 PR 合并时已经完成并写入 durable `comparison.md` 的 fresh `with_skill` / `without_skill` 成对复验结果，不在发版环节重复运行 eval。
 
-| Agent | Skill（eval 范围） | Durable comparison 数 | 最新结论 |
-| --- | --- | ---: | --- |
-| Designer | `designer-agent` | 3 | 3 PASS |
-| Designer | `ui-ux-design` | 3 | 1 PASS、2 PARTIAL |
-| Designer | `visual-design` | 1 | 1 PARTIAL |
-| DevOps | `cicd-bootstrap` | 2 | 1 PASS、1 PARTIAL |
-| DevOps | `deployment-planner` | 3 | 1 PASS、2 PARTIAL |
-| DevOps | `devops-agent` | 1 | 1 PASS |
-| DevOps | `env-config-auditor` | 1 | 1 PASS |
-| DevOps | `incident-playbook-writer` | 2 | 1 PASS、1 PARTIAL |
-| Docs | `docs-agent`（router eval-001–004；integration eval-005） | 5 | router：4/4 PASS（14/14 assertions）；integration：1/1 PASS（8/8 with-skill assertions） |
-| Docs | `docs-audit`（eval-001–013） | 13 | 13/13 PASS（81/81 assertions） |
-| Docs | `docs-site-bootstrap`（eval-001–003） | 3 | 3/3 PASS（12/12 assertions） |
-| Docs | `formal-docs-sync`（eval-001–010） | 10 | 10/10 PASS（42/42 assertions） |
-| Docs | `release-notes-generator`（eval-001–003） | 3 | 3/3 PASS（11/11 assertions） |
-| Engineer | `codebase-analyzer` | 3 | 1 PASS、2 PARTIAL |
-| Engineer | `debugger` | 5 | 3 PASS、2 PARTIAL |
-| Engineer | `delivery` | 1 | 1 PARTIAL |
-| Engineer | `engineer-agent` | 4 | 4 PASS |
-| Engineer | `feature-implementor` | 14 | 14 PASS |
-| Engineer | `project-bootstrap` | 2 | 2 PARTIAL |
-| Engineer | `test-writer` | 2 | 1 PASS、1 PARTIAL |
-| Engineer | `trd-gen` | 5 | 2 PASS、3 PARTIAL |
-| Product Manager | `changelog-generator` | 3 | 3 PARTIAL |
-| Product Manager | `competitive-brief` | 1 | 1 PARTIAL |
-| Product Manager | `competitive-intelligence` | 1 | 1 PARTIAL |
-| Product Manager | `feature-catalog` | 4 | 4 PASS |
-| Product Manager | `github-reader` | 4 | 1 PASS、3 PARTIAL |
-| Product Manager | `github-release-generator`（eval-001–005） | 5 | 5/5 PASS（21/21 assertions） |
-| Product Manager | `idea-to-spec` | 1 | 1 PASS |
-| Product Manager | `pm-agent` router（eval-001–014） | 14 | 14/14 PASS（45/45 assertions） |
-| QA | `bug-analyzer` | 3 | 3 PASS |
-| QA | `exploratory-tester` | 3 | 3 PASS |
-| QA | `qa-agent` | 3 | 3 PASS |
-| QA | `regression-suite` | 3 | 3 PASS |
-| QA | `spec-based-tester` | 3 | 3 PASS |
-| Security | `security-agent` router（eval-001） | 1 | 1/1 PASS（6/6 assertions） |
-| Security | `appsec-checklist`（eval-001–005） | 5 | 5/5 PASS（21/21 assertions） |
-| Security | `authz-reviewer`（eval-001–004） | 4 | 4/4 PASS（16/16 assertions） |
-| Security | `dependency-risk-auditor`（eval-001–004） | 4 | 4/4 PASS（16/16 assertions） |
-| Security | `privacy-surface-mapper`（eval-001–004） | 4 | 4/4 PASS（16/16 assertions） |
-| **合计** | **39 个 skill 分组** | **152** | **126 PASS、26 PARTIAL** |
+| Agent | Skill（eval 范围） | 复验结论 |
+| --- | --- | --- |
+| Product Manager | `github-release-generator`（既有 eval-001–004） | 4/4 eval PASS，18/18 assertions PASS |
+| Product Manager | `github-release-generator`（新增 eval-005） | 1/1 eval PASS，3/3 assertions PASS |
+| Security | `appsec-checklist`、`authz-reviewer`、`dependency-risk-auditor`、`privacy-surface-mapper`（各 eval-001–003） | 12/12 eval PASS，48/48 assertions PASS |
+| Docs | `docs-site-bootstrap`（3 个）、`formal-docs-sync`（5 个）、`release-notes-generator`（3 个）、`docs-agent`（1 个 integration） | 12/12 eval PASS |
 
-本版本直接涉及的复验结果为：`github-release-generator` 的 4 个既有 eval 复验 **18/18 assertions PASS**，新增 eval-005 复验 **3/3 assertions PASS**；四个 Security specialist 的 12 个薄 fixture eval 复验 **48/48 assertions PASS**；`docs-site-bootstrap`、`formal-docs-sync`、`release-notes-generator` 与 `docs-agent` 的 12 个相关 eval 复验全部 PASS。以上均已在对应 PR 合并时完成 fresh `with_skill` / `without_skill` 成对复验并更新各自 `comparison.md`；本版本仅汇总并复用这些已提交结论，不重跑 skill eval。表中其余 **26 个 PARTIAL** 沿用各 skill 既有 durable 结论，主要记录历史 comparison 未生成 fresh `without_skill` baseline 等证据缺口，不是本版回归。
+以上结果均已在对应 PR 合并时完成 fresh 成对复验并更新各自 `comparison.md`；本版本仅汇总并复用这些已提交结论，不重跑 skill eval。
