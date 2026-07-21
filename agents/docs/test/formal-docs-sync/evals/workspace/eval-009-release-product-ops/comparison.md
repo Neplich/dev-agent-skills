@@ -4,44 +4,51 @@
 
 - Skill: `formal-docs-sync`
 - Eval: `eval-009-release-product-ops`
+- Review context: issue #150
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue #117 cross-doc audit 2026-07-19`
-- Fresh run: `tmp/eval-runs/117-adjacent/formal-docs-sync/eval-009-release-product-ops/`
-- Source head: `00c9741dabc24f6b6df377c69c42adb989722648` plus the current issue #117 working tree
+- Fixture version: `issue-150 fresh-paired group-b v1`
+- Actual validation date: `2026-07-21`
+- Fresh run: `tmp/eval-runs/issue-150/group-b/eval-009-release-product-ops/`
+- Both lanes started from independent copies of the same pristine fixture.
 
 ## Latest Result
 
-**PASS（5/5 assertions）** — with-skill 仅同步 v1.5.0 受影响的 product/ops 当前页，Release Notes surfaces 零变化，两页保持 `unverified`，并携带维护者确认版本及来源 handoff #117 pre-tag。
+**PASS（with-skill 5/5；fresh without-skill 5/5）** — with-skill 仅同步 v1.5.0 受影响的 product/ops 页面，既有两个 change-map entries 保持准确，Release Notes surfaces 零变化，两页保持 `unverified`，并在真实宿主检查通过后向 #117 输出维护者确认版本 handoff。fresh baseline 也满足全部 assertions，因此本用例证明协议可执行，但未显示相对 uplift。
 
 ## Assertions
 
-- `limits_release_to_affected_product_ops`：PASS。只修改 dashboard product/runtime ops 两页；现有映射准确，无其他类型扩张。
-- `reconciles_confirmed_version_facts`：PASS。核对上限 25、v1.5.0 镜像与配置，排除旧值及 v1.5.1 计划。
-- `preserves_release_notes_surfaces`：PASS。Release Notes 正文、index、metadata、navigation 零变化，并指向 #116 owner。
-- `keeps_release_pages_unverified`：PASS。两页均为 `last_verified_version: unverified`，未自行盖 v1.5.0。
-- `runs_release_host_checks_and_handoffs`：PASS。`npm run test:docs` 73/73 通过；handoff 明确 `target_release_version: v1.5.0`、维护者确认来源与 complete affected set。
+- `limits_release_to_affected_product_ops`: PASS。只修改 `product/dashboard-limits.md` 与 `ops/dashboard-runtime.md`；对应两个既有映射已准确，无 API、database、design 或无关页面扩张。
+- `reconciles_confirmed_version_facts`: PASS。代码、配置和 release tests 共同证明上限 25、镜像 `registry.example/ai-hub:v1.5.0`，并排除 10、v1.4.0 与未确认 v1.5.1。
+- `preserves_release_notes_surfaces`: PASS。Release Notes 正文、index、metadata、navigation 与 pristine fixture 字节一致，并明确指向 `docs-agent:release-notes-generator` #116。
+- `keeps_release_pages_unverified`: PASS。两页均回读为 `last_verified_version: unverified`。
+- `runs_release_host_checks_and_handoffs`: PASS。在 `docs/site` 执行 `RELEASE_VERSION=v1.4.0 npm run test:docs`，退出 0、74/74 tests；handoff 包含完整 affected set、`target_release_version: v1.5.0` 与 `release-handoff.md` 维护者确认来源。
 
 ## With-Skill Behavior
 
-- 只读取 product/ops 类型模块，未操作 GitHub Release、tag、部署或 Release Notes。
-- #117 handoff 进入 pre-tag，版本来自 `release-handoff.md` 的维护者确认，而非 branch/ref 推测。
+- 读取公共八步 contract 及 product/ops 两个类型模块；未加载无关类型模块。
+- 先使用 lockfile 执行 `npm ci --ignore-scripts`，再运行宿主检查；版本参数只用于校验当前未改动 release metadata，不用 Git ref 推测目标版本。
+- 不操作 Release Notes、tag、GitHub Release 或部署。
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：同一 prompt 与 pristine fixture 的本轮 fresh `without_skill`；不含目标 skill、Docs README、旧 comparison 或 with-skill 输出，未复用历史 baseline。
-- baseline 完成主要页面事实、保持 Release Notes 零变化并通过检查，但 handoff 没有维护者确认来源，反而报告“version anchor unavailable”，未稳定满足新的 `target_release_version` pre-tag 消费面。
+- 来源：同一 prompt/assertions 与独立 pristine fixture 的本轮 fresh `without_skill`；在生成期间未读取目标 SKILL、Docs README、internal/shared 指令、旧 comparison 或历史输出。
+- baseline 也只更新两页、保留准确映射和 Release Notes 零变化，页面保持 `unverified`，并真实通过相同 74 tests；其结构化响应包含 #117 affected set、维护者确认来源与 #116 边界。
+- 结果：5/5 PASS；未复用历史 baseline。
 
 ## Failures
 
-- 无 with-skill assertion failure。
-- Harness limitation：baseline 父仓库 Git 命令只暴露文件名/状态，未读取目标 skill/README 内容；未影响版本来源与 handoff 字段判断。后续应隔离 scratch Git 元数据。
+- With-skill assertion failures: none。
+- Without-skill assertion failures: none。
+- Comparative limitation: prompt/assertions 与 fixture 已充分显式给出范围、版本事实和 handoff 字段，fresh baseline 也能完整执行。
 
 ## Next Steps
 
-- 保持 release mode 的 product/ops 窄范围、Release Notes 零写入与确认版本来源回归。
+- 保持 release mode 的 product/ops 窄范围、Release Notes 零写入、`unverified` 和明确版本确认来源作为回归门禁。
+- 如需衡量 uplift，另增缺失或冲突 release evidence 的阻塞型 eval。
 
 ## Runtime Artifact Policy
 
-- workspace 副本、依赖、candidate、transcript、manifest、diff 与状态仅位于 `tmp/eval-runs/117-adjacent/`，不提交到 git。
+- 两 lane workspace、依赖、页面副本、响应与测试日志仅位于 `tmp/eval-runs/issue-150/group-b/eval-009-release-product-ops/`，不提交。
+- 本 `comparison.md` 是唯一 durable eval 结果。

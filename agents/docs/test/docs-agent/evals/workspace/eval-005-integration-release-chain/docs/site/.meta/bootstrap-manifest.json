@@ -7,7 +7,7 @@
     "docs/site/.vitepress/config.internal.ts": "created",
     "docs/site/.vitepress/config.public.ts": "created",
     "docs/site/.vitepress/config.shared.ts": "created",
-    "docs/site/.vitepress/theme/MermaidRenderer.vue": "created",
+    "docs/site/.vitepress/theme/Mermaid.vue": "created",
     "docs/site/.vitepress/theme/custom.css": "created",
     "docs/site/.vitepress/theme/index.ts": "created",
     "docs/site/api/index.md": "created",

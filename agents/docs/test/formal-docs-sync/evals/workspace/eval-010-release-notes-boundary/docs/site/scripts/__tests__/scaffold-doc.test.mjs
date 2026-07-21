@@ -702,7 +702,7 @@ test('attachChildLifecycle closes the watcher and propagates the child exit code
 
 test('dev watcher rebuilds copied VitePress and public assets', () => {
   for (const path of [
-    '.vitepress/config.shared.ts', '.vitepress/theme/MermaidRenderer.vue',
+    '.vitepress/config.shared.ts', '.vitepress/theme/Mermaid.vue',
     '.vitepress/theme/custom.css', 'public/images/diagram.svg'
   ]) {
     assert.equal(shouldPrepareForChange(path), true, path);
@@ -710,6 +710,23 @@ test('dev watcher rebuilds copied VitePress and public assets', () => {
   assert.equal(shouldPrepareForChange('.vitepress/cache/deps.json'), false);
   assert.equal(shouldPrepareForChange('.vitepress/dist/index.html'), false);
   assert.equal(shouldPrepareForChange('scripts/dev-site.mjs'), false);
+});
+
+test('VitePress Mermaid scaffold uses fence components without DOM scanning', async () => {
+  const config = await readFile(resolve(SITE_SOURCE, '.vitepress/config.shared.ts'), 'utf8');
+  const component = await readFile(resolve(SITE_SOURCE, '.vitepress/theme/Mermaid.vue'), 'utf8');
+  const theme = await readFile(resolve(SITE_SOURCE, '.vitepress/theme/index.ts'), 'utf8');
+
+  assert.match(config, /renderer\.rules\.fence/);
+  assert.match(config, /language\s*===\s*['"]mermaid['"]/);
+  assert.match(component, /import\(['"]mermaid['"]\)/);
+  assert.match(component, /watch\(isDark/);
+  assert.match(component, /mermaid-\$\{sequence\+\+\}/);
+  assert.match(theme, /app\.component\(['"]Mermaid['"],\s*Mermaid\)/);
+
+  for (const source of [config, component, theme]) {
+    assert.doesNotMatch(source, /querySelectorAll\(['"]pre > code\.language-mermaid['"]\)/);
+  }
 });
 
 test('attachChildLifecycle handles spawn errors and signal exit codes', async (context) => {

@@ -4,42 +4,48 @@
 
 - Skill: `release-notes-generator`
 - Eval: `eval-002-confirmation-gate`
+- Review context: issue #150
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue #117 cross-doc audit 2026-07-19`
-- Fresh run: `tmp/eval-runs/117-adjacent/release-notes-generator/eval-002-confirmation-gate/`
-- Source head: `00c9741dabc24f6b6df377c69c42adb989722648` plus the current issue #117 working tree
+- Fixture version: `issue-150 fresh-paired group-b v1`
+- Actual validation date: `2026-07-21`
+- Fresh run: `tmp/eval-runs/issue-150/group-b/eval-002-confirmation-gate/`
+- Both lanes started from independent copies of the same pristine fixture.
 
 ## Latest Result
 
-**PASS（3/3 assertions）** — with-skill 只生成并完整展示候选页，index、metadata、导航零变化，明确 blocked/unconfirmed 并等待维护者确认。
+**PASS（with-skill 3/3；fresh without-skill 3/3）** — with-skill 只生成并展示候选正文，index、metadata 与 navigation 保持 pristine 字节，结构化报告 `unconfirmed` / `blocked` 并等待明确确认。fresh baseline 也通过 3/3，本用例未显示相对 uplift。
 
 ## Assertions
 
-- `keeps_derived_surfaces_unchanged`：PASS。哈希与 diff 证明 index、`.meta/releases.json`、导航配置及 `.generated` 均未变化。
-- `reports_unconfirmed_not_ready`：PASS。报告 `confirmation_status: unconfirmed`、`handoff_status: blocked`，没有把候选页描述为 ready。
-- `waits_for_explicit_confirmation`：PASS。完整展示正文、证据与确认后计划路径，不模拟确认，也不执行确认后检查或派生写入。
+- `keeps_derived_surfaces_unchanged`: PASS。结果与 pristine fixture 的 `release-notes/index.md`、`.meta/releases.json` 字节一致，未修改 navigation。
+- `reports_unconfirmed_not_ready`: PASS。明确 `confirmation_status: unconfirmed` 与 `handoff_status: blocked`，未把候选页存在描述为 ready。
+- `waits_for_explicit_confirmation`: PASS。展示完整六类候选正文与来源，列出确认后计划路径，明确等待用户或维护者确认，未模拟确认。
 
 ## With-Skill Behavior
 
-- 候选页保持 `last_verified_version: unverified`；结构化 handoff 明确两个 blocker。
-- `npm ci` 与 `npm run test:docs` 正确保留在确认后阶段，本轮均记录为 `not_run`。
+- 候选页采用七字段 release frontmatter，并保持 `last_verified_version: unverified`。
+- 未运行确认后的派生写入或 ready 流程，也未执行 GitHub Release、tag、部署或 #117 盖章。
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：同一 prompt 与 pristine fixture 的本轮 fresh `without_skill`；不含目标 skill、Docs README、旧 comparison 或 with-skill 输出，未复用历史 baseline。
-- baseline 保持派生面不变并 blocked，但实际运行了确认后宿主检查，且最终输出没有展示完整候选正文、确认后修改计划与结构化 blocked handoff，因此确认门禁表达不完整。
+- 来源：同一 prompt/assertions 与独立 pristine fixture 的本轮 fresh `without_skill`；生成期间未读取目标 skill/Agent 指令、旧 comparison 或历史输出。
+- baseline 也保持三类派生面零变化，输出 blocked/unconfirmed，完整展示正文、证据与确认后路径。
+- 结果：3/3 PASS；未复用历史 baseline。
 
 ## Failures
 
-- 无 with-skill assertion failure。
-- Harness limitation：父仓库 Git 元数据仅向 baseline 暴露文件名/状态，未读取目标 skill/README 内容；未改变确认前后时序判断。后续应隔离 scratch Git 元数据。
+- With-skill assertion failures: none。
+- Without-skill assertion failures: none。
+- Comparative limitation: prompt、README 与 assertions 直接声明未确认时的零写入门禁。
 
 ## Next Steps
 
-- 保持“候选展示与明确确认”作为派生写入和宿主 ready 检查的前置门禁。
+- 保持“完整候选展示 + 明确确认”作为任何派生写入与 ready handoff 的前置门禁。
+- 如需测 uplift，加入含模糊批准语句或正文修订后旧确认失效的 case。
 
 ## Runtime Artifact Policy
 
-- 候选页、candidate、transcript、manifest、diff 与状态仅位于 `tmp/eval-runs/117-adjacent/`，不提交到 git。
+- 候选页、响应与 isolated workspace 仅位于 `tmp/eval-runs/issue-150/group-b/eval-002-confirmation-gate/`，不提交。
+- 本 `comparison.md` 是唯一 durable eval 结果。
