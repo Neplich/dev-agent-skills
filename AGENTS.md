@@ -94,6 +94,7 @@ PM / Engineer / QA / DevOps（条件式）→ Docs Agent（正式文档生产 / 
 - PR 创建后的更新默认追加新 commit 并普通 push；除非用户明确要求整理提交历史，否则不要 amend、rebase 或 force push。
 - 创建 PR 后不要直接合并；必须等待维护者明确确认“可以合并”后再执行 merge / squash / rebase 合并操作。
 - 当前仓库仍处于早期维护阶段，暂不新增 Release CI；发布前使用手动 release checklist：确认 `.claude-plugin/marketplace.json` 的 `metadata.version` 已更新为目标版本且不带 `v` 前缀，确认 `docs/changelog/changelog-v{version}.md` 存在并已被根 `CHANGELOG.md` 索引，tag 使用 `v` 前缀 SemVer，PR 必跑 CI 全部通过，必要时手动触发 eval workflow 并记录结果；每次使用 tag 发版时，按 skill 维度汇总 skill eval 后的 `comparison.md` 最新结论。每次 tag 发版后，由 `pm-agent → github-release-generator` 使用 skill 流程自动创建 GitHub Release draft，并直接交维护者审批；draft 的发布（publish）仍必须等待维护者显式批准。不要自动上传 marketplace package，也不要配置 release bot bypass tag ruleset。
+- `github-release-generator` 的 #116/#117 双态审计 handoff 门禁面向拥有正式文档站的宿主仓库；本仓库（skill marketplace）自身发版不适用该门禁，以本节手动 release checklist 和维护者显式批准作为发布依据。
 
 ### 变更分级契约
 
