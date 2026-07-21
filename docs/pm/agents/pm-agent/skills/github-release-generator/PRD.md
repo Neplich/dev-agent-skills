@@ -5,14 +5,15 @@ feature: "skill-github-release-generator"
 feature_path: "agents/pm-agent/skills/github-release-generator"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
-version: "1.0.0"
+version: "1.1.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-20"
-last_updated: "2026-07-21"
+last_updated: "2026-07-22"
 generated_by: "idea-to-spec"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/120"
+  - "https://github.com/Neplich/dev-agent-skills/issues/154"
 related_docs:
   - "docs/pm/agents/docs-agent/release-notes-generator/PRD.md"
   - "docs/engineer/agents/docs-agent/release-notes-generator/TRD.md"
@@ -76,14 +77,14 @@ docs-agent；issue #117 已将发版审计拆成 pre-tag `ready_for_tag` 与 pos
 
 | ID | 需求 | 优先级 | 验收条件 |
 | --- | --- | --- | --- |
-| FR-001 | #116 ready handoff 入口门禁 | P0 | 必须包含 `release_version`、`site_release_note_path`、`confirmation_status: confirmed`、宿主 docs check 命令及成功结果、已更新索引/元数据说明和来源证据；任一缺失即 blocked |
+| FR-001 | #116 ready handoff 入口门禁 | P0 | 仅当宿主存在已初始化正式文档站（存在 `docs/site/` 且具备 #116 站内 Release Notes 能力链）时生效，并要求 `release_version`、`site_release_note_path`、`confirmation_status: confirmed`、宿主 docs check 成功结果、索引/元数据说明和来源证据完整；有文档站但任一项缺失即 blocked。无文档站时 #116/#117 handoff 门禁整体不适用，降级为维护者已确认的版本事实源与每次写入前的维护者显式批准；缺少可信事实源仍 blocked |
 | FR-002 | 版本与 compare 对齐 | P0 | 目标版本、目标 tag、上一版本 tag 和 compare 范围可互相验证；无法对齐时返回站内 Release Notes/发版范围流程补齐 |
-| FR-003 | #117 pre-tag 门禁 | P0 | 仅在可信 pre-tag handoff 返回 `ready_for_tag` 后生成可提交预览或创建/更新 draft |
+| FR-003 | #117 pre-tag 门禁 | P0 | 仅当宿主存在已初始化正式文档站时，才要求可信 pre-tag handoff 返回 `ready_for_tag` 后生成可提交预览或创建/更新 draft；无文档站时不因缺少 #116/#117 handoff 阻塞预览，但必须记录降级依据，并以维护者已确认的版本事实源作为预览基线，任何 draft 写入仍须本次维护者显式批准 |
 | FR-004 | 事实一致性 | P0 | 读取已确认站内 Release Notes，保留功能、架构、数据库、部署、资产、升级和风险事实，不覆盖改写 |
 | FR-005 | GitHub 可追溯性 | P0 | 补充完整 compare、代表性 PR/commit 和贡献者链接，且不以原始清单替代用户版本说明 |
 | FR-006 | 结构来源与预览 | P0 | 以 `reference/release-outline.md` 作为标题与正文结构的唯一来源，不读取或继承相邻 GitHub Release 格式；任何 draft 写入前先展示标题与正文预览；eval 结果、assertion 计数、review 轮次、QA 证据汇总等内部质量证据只进入 changelog 的 Skill Eval 汇总，不进入用户向 GitHub Release 正文 |
 | FR-007 | draft 生命周期 | P0 | `ready_for_tag` 后可生成完整 draft 预览；仅在用户明确要求且不产生 tag 副作用时创建或更新远端 draft，缺少现有 draft 与实际 tag 时保持预览并阻塞远端创建；写后回读并核对 tag、标题、正文、draft 状态和远端 tag 零变化 |
-| FR-008 | 发布三重门禁 | P0 | 实际 tag 存在、#117 post-tag 为 `release_verified`、维护者另行明确批准，三者齐备才可发布 |
+| FR-008 | 发布三重门禁 | P0 | 宿主存在已初始化正式文档站时，实际 tag、#117 post-tag `release_verified` 与维护者另行明确批准三者齐备才可发布，既有强度不变；无文档站时 #116/#117 handoff 门禁不适用，发布仍要求实际 tag、维护者已确认的版本事实源及本次写入前的维护者显式批准，并在最终报告记录降级依据 |
 | FR-009 | 发布后验证 | P0 | 发布后回读 GitHub Release，核对 tag、标题、正文、draft/published 状态和 URL |
 | FR-010 | 职责边界 | P0 | 全程不触碰站内页面、tag、镜像、Helm 或部署，不替代 Docs 校验 |
 | FR-011 | skill 更名与路由拆分 | P0 | PM 旧目录、注册和 PM 侧指针替换为 `github-release-generator`；Docs 侧旧名保持不变 |

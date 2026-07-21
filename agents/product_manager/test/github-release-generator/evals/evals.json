@@ -157,6 +157,36 @@
           "text": "预览保留文件卡片、失败消息原位重试、统一附件模型兼容链路、nullable JSONB 迁移与删列风险、部署顺序和开关、双架构资产、升级与旧浏览器限制；不得新增、省略或改写这些已确认事实。"
         }
       ]
+    },
+    {
+      "id": "eval-006-site-less-degraded-gate",
+      "name": "无文档站宿主降级双态审计门禁",
+      "description": "验证无 docs/site 且无 #116 站内 Release Notes 能力链时，缺少 #116/#117 handoff 不阻塞可信版本事实源的完整预览，但仍保持逐次维护者批准和事实源缺失时的阻塞语义。",
+      "prompt": "读取 `release-package.md`、`docs/changelog/changelog-v1.4.0.md`、`evidence/version-bump.md` 与 `scenarios/no-confirmed-fact-source.md`。对可信事实源场景生成 GitHub Release 完整预览，并判断无可信事实源场景能否继续。不要执行 draft、publish、tag、文档或任何其他写操作。",
+      "expected_output": "可信事实源场景因宿主无 docs/site 且无 #116 站内 Release Notes 能力链，将 #116/#117 双态审计 handoff 门禁判为不适用并生成完整 preview，显式记录降级依据、已确认 changelog 与版本 bump 证据；预览交维护者批准且不执行任何写入。无可信版本事实源场景保持 blocked，不臆造版本事实。",
+      "workspace": "workspace/eval-006-site-less-degraded-gate",
+      "assertions": [
+        {
+          "id": "proceeds_without_handoff_when_site_absent",
+          "description": "无文档站时缺 handoff 仍可预览",
+          "text": "确认宿主无 docs/site 且无 #116 站内 Release Notes 能力链后，不因缺少 #116/#117 handoff 而阻塞可信事实源场景，并生成 GitHub Release 完整预览。"
+        },
+        {
+          "id": "records_downgrade_basis",
+          "description": "显式记录门禁降级依据",
+          "text": "产出明确记录宿主无已初始化正式文档站、docs/site 与 #116 能力链均不存在，因此双态审计 handoff 门禁整体不适用，并列出已确认 changelog 与版本 bump 证据。"
+        },
+        {
+          "id": "still_requires_maintainer_approval",
+          "description": "仍要求维护者逐次批准",
+          "text": "只生成预览并交维护者批准；不得创建或更新 draft、发布 Release、修改 tag 或文档，并说明每次后续远端写入前都需要维护者明确、当前的批准。"
+        },
+        {
+          "id": "blocks_without_confirmed_fact_source",
+          "description": "无可信版本事实源时阻塞",
+          "text": "对无文档站且无维护者确认版本事实源的第二场景明确 blocked，不从 commit、版本号或候选摘要臆造发布事实。"
+        }
+      ]
     }
   ]
 }
