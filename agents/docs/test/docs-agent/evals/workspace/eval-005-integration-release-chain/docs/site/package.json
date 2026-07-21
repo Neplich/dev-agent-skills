@@ -22,7 +22,7 @@
     "gray-matter": "^4.0.3",
     "mermaid": "^11.4.1",
     "picomatch": "^4.0.2",
-    "vitepress": "^1.6.3",
+    "vitepress": "1.6.4",
     "yaml": "^2.7.0"
   }
 }
