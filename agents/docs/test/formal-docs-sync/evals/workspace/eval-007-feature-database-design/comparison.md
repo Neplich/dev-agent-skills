@@ -4,45 +4,50 @@
 
 - Skill: `formal-docs-sync`
 - Eval: `eval-007-feature-database-design`
+- Review context: issue #150 fresh paired eval group A
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue #117 cross-doc audit 2026-07-19`
-- Fresh run: `tmp/eval-runs/117-adjacent/formal-docs-sync/eval-007-feature-database-design/`
-- Source head: `00c9741dabc24f6b6df377c69c42adb989722648` plus the current issue #117 working tree
+- Fixture: pristine `workspace/eval-007-feature-database-design` snapshot used by issue #150
+- Evidence set: confirmed feature handoff, Approved PRD, Confirmed TRD/plan, closeout, actual diff, passed test record, schema, repository, service, and tests
+- Actual validation date: `2026-07-21`
 
 ## Latest Result
 
-**PASS（6/6 assertions）** — with-skill 通过七项 design closeout，只同步 database/design 当前状态和原子映射，两页保持 `unverified`，宿主检查通过后正确交接 #117。
+**PASS (6/6 assertions)** — the with-skill lane passed all seven design-closeout checks, atomically synchronized database/design current state and their shared map entry, passed host checks, and handed off #117.
 
 ## Assertions
 
-- `loads_only_database_design_contracts`：PASS。读取 standards、change map、database/design 模板与对应两个类型模块，未读取其他类型模块内容。
-- `passes_design_closeout_gate`：PASS。逐项核对 PRD、TRD、计划完成度、diff、required tests 与候选范围确认，七项全部通过后才写入。
-- `synchronizes_database_current_state`：PASS。记录组合唯一约束、三种 role、必填 `created_at` 与应用层逻辑引用，不虚构外键。
-- `synchronizes_delivered_design`：PASS。记录 workspace/user 顺序校验和 repository upsert，不写 inherited role 或未来架构。
-- `updates_atomic_map_and_unverified_pages`：PASS。两页和共享 change-map 原子更新、回读并稳定排序，均保持 `unverified`。
-- `runs_host_checks_and_handoffs_audit`：PASS。锁定安装后 `npm run test:docs` 73/73 通过，并 handoff #117 complete affected set。
+- `loads_only_database_design_contracts`: PASS. This eval loaded the standards entry, change map, database/design host templates, and only the database/design type modules.
+- `passes_design_closeout_gate`: PASS. Approved PRD, Confirmed TRD, confirmed plan, all-complete scope, full diff coverage, all required tests passed, and maintainer-confirmed candidate scope were checked before writes.
+- `synchronizes_database_current_state`: PASS. The page records the unique workspace-user pair, three allowed roles, required timestamp, and application-validated logical references without inventing foreign keys.
+- `synchronizes_delivered_design`: PASS. The page shows workspace then user validation before repository upsert and explicitly excludes inherited roles.
+- `updates_atomic_map_and_unverified_pages`: PASS. The two pages and `src/workspace_access/**` required-doc list were updated/read back as one scope, stably ordered, and both pages remain `unverified`.
+- `runs_host_checks_and_handoffs_audit`: PASS. `npm run test:docs` exited `0` with 74/74 Node tests passing, followed by a complete-set `docs-agent:docs-audit` (#117) handoff.
 
 ## With-Skill Behavior
 
-- 没有维护者确认的 `target_release_version`，因此 pre-tag audit 明确 blocked，未推测版本或盖章。
-- 初次检查因锁定依赖未安装失败，随后按 lockfile 安装并完整重跑成功，失败证据未被隐藏。
+- Applied database and design evidence contracts without loading API, ops, or product rules for this eval.
+- Pristine comparison shows exactly three intended content deltas: the database page, design page, and shared change-map entry; all unrelated docs and manual map fields remained unchanged.
+- The #117 handoff is ready for content audit but pre-tag stamping remains blocked until a maintainer confirms `target_release_version`.
+- The runtime Git wrapper isolated the fixture from the outer worktree's exact tag while preserving all other Git-backed affected checks.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：同一 prompt 与 pristine fixture 的本轮 fresh `without_skill`；不含目标 skill、Docs README、旧 comparison 或 with-skill 输出，未复用历史 baseline。
-- baseline 能生成正确页面、映射并通过检查，但没有读取类型模块的 progressive-loading 证据，最终报告也没有逐项展开七项 closeout 与确认版本缺失时的 blocked pre-tag 语义。
+- Source: fresh `without_skill` lane from the same pristine fixture and prompt/assertions; it did not read the target skill, Docs README, internal instructions, old comparison, or with-skill output.
+- The strong fixture let the baseline produce correct database/design pages and map, keep both pages unverified, and pass host checks.
+- It did not load the type-specific host contracts or explicitly prove all seven design-closeout gates before writing; baseline result: PARTIAL (4/6 assertions).
 
 ## Failures
 
-- 无 with-skill assertion failure。
-- Harness limitation：父仓库 Git 元数据仅暴露文件名/状态，未读取目标 skill/README 内容；未影响页面事实、原子范围或盖章边界判断。后续应隔离 scratch Git 元数据。
+- No with-skill assertion failures.
+- Dependency installation reported 3 audit advisories but did not fail installation or host checks; they are outside this eval's assertions.
 
 ## Next Steps
 
-- 保持 design closeout、原子 map/page 更新与缺少确认版本时 blocked 的联合回归。
+- Keep this PASS. Continue treating the seven-item design closeout, atomic page/map update, host checks, and confirmed-version audit gate as one regression unit.
 
 ## Runtime Artifact Policy
 
-- workspace 副本、依赖、candidate、transcript、manifest、diff 与状态仅位于 `tmp/eval-runs/117-adjacent/`，不提交到 git。
+- Both runtime lanes, installed dependencies, edited pages, test output, and isolation tooling remain under `tmp/eval-runs/issue-150/group-a/`.
+- Only this comparison is durable; no runtime output, transcript, candidate, verdict, timing, diagnostics, `node_modules`, or generated site is submitted.

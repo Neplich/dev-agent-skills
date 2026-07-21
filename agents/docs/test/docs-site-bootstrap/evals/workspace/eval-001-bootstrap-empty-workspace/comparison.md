@@ -4,43 +4,51 @@
 
 - Skill: `docs-site-bootstrap`
 - Eval: `eval-001-bootstrap-empty-workspace`
+- Review context: issue #150 fresh paired eval group A
 
 ## Test Set / Fixture Version
 
-- Fixture: `issue-126-r3-assets-40-v1`
-- Asset snapshot: PR #126 R3 工作树中的 40 项权威 bootstrap assets
-- Fresh validation date: `2026-07-19`
-- Execution cleanup: 隔离空宿主 `docs/site`
+- Fixture: pristine empty host from `workspace/eval-001-bootstrap-empty-workspace`
+- Asset snapshot: current 40-file `assets/docs/site/` inventory
+- Actual validation date: `2026-07-21`
+- Execution cleanup: isolated lane started without `docs/site/`
 
 ## Latest Result
 
-**PASS（R3 fresh）** — 本轮全新 with-skill 执行、同 prompt/fixture 的全新 without-skill baseline 与 assertion judge 已完成。6 条 assertions 全部 PASS；新增 `package-lock.json` 与 `release-notes/README.md` 已纳入 inventory、manifest、read-back 和 zero-diff 检查。
+**PASS (6/6 assertions)** — the fresh with-skill lane created the complete bounded scaffold, generated and read back a 40-entry manifest, passed host checks, and demonstrated a zero-content-diff repeat classification.
+
+## Assertions
+
+- `creates_complete_inventory`: PASS. All 40 packaged assets were copied byte-for-byte; manifest parsing returned 40 sorted `created` entries.
+- `delivers_deterministic_scaffold_assets`: PASS. `package.json` has exactly one `new:doc`; the scaffold script and test exist; each of five templates has exactly one `docs-scaffold` block and all five are indexed.
+- `validates_seven_frontmatter_fields`: PASS. `npm run test:docs` passed the shared frontmatter checker, including the allowed `doc_type` set and non-empty array requirements.
+- `writes_only_docs_site`: PASS. The generated scaffold and runtime manifest were confined to the isolated `docs/site/` root.
+- `requires_explicit_opt_in`: PASS. Execution relied on the prompt's explicit repository, fixed root, full scaffold, and manifest authorization; the skill gate would stop before writes without that basis.
+- `reports_manifest_readback`: PASS. The manifest was parsed successfully and a checksum dry-run found no file-content delta on repeat classification; only directory timestamps were observable.
 
 ## With-Skill Behavior
 
-- 入口依据完整：prompt 明确确认当前 fixture 仓库、固定 `docs/site/` 根、完整 scaffold 与 manifest；缺少任一显式 opt-in 时必须在写入前停止。
-- 从权威 assets 逐字节物化 40/40 个静态目标，另生成 1 个 runtime manifest；40 项 asset mismatch 为 0，manifest 的 `files` 覆盖 40 项且 disposition 均为 `created`。
-- `package-lock.json` 与 `release-notes/README.md` 均已物化；17 个 Markdown 页面通过七字段 frontmatter checker，`doc_type`、数组字段和 `last_verified_version` 契约均通过。
-- `package.json` 只有一个 `new:doc` 命令，scaffold 实现与测试存在；五个模板各含恰好一个 `docs-scaffold` 区块并全部由 `standards/index.md` 索引。
-- 在隔离宿主执行 `npm ci --ignore-scripts` 后，`npm run test:docs` 全部通过：frontmatter、strict affected、version metadata 和 Node tests 73/73 通过。
-- 排除运行期 `node_modules` 后，首次完成快照与再次完整分类后的 41 文件 SHA-256 清单一致；manifest `createdAt` 与 40 项持久状态不变，重复执行为 zero-diff。
+- Read the Docs Agent boundary, bootstrap skill, internal 40-file inventory, manifest protocol, and shared frontmatter contract only after the explicit opt-in gate passed.
+- Copied 40/40 static assets exactly and created `.meta/bootstrap-manifest.json` with stable sorted paths and `createdAt`.
+- Ran `npm ci --ignore-scripts`, then `npm run test:docs` in the isolated `docs/site/`; exit status was `0`, with 74/74 Node tests passing.
+- The isolated fixture initially inherited the outer worktree's exact tag `v0.3.2`. The final run used a runtime-only Git wrapper that makes only `git describe --exact-match` unavailable while delegating every other Git command, preventing an unrelated ancestor tag from contaminating fixture version checks.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：本轮全新 baseline，使用相同原始 prompt 与 cleanup 后空 fixture；生成时不读取或应用目标 skill、`_internal/INSTRUCTIONS.md`、Docs Agent README、旧 comparison 或 with-skill 结果。
-- baseline 因 prompt 本身没有提供 packaged inventory、asset bytes 或 manifest 状态协议而停止写入，未臆造 scaffold；因此没有 40 项资产、规定的 manifest、Release Notes 规范、脚手架测试或 read-back 证据。
-- baseline 保住了目标根边界，但不能满足完整资产与确定性 scaffold assertions；它仅作为本轮对照输入，不替代 with-skill 判定。
+- Source: fresh `without_skill` lane from the same pristine empty fixture and the same eval prompt/assertions; it did not read the target `SKILL.md`, Docs README, internal instructions, old comparison, or with-skill output.
+- The baseline independently found the packaged assets, produced the 40-file scaffold and manifest, and passed the same isolated host checks; it satisfied 6/6 assertions.
+- Its artifact result was correct, but it lacked the skill's authoritative explanation of persistent manifest dispositions, conflict-state transitions, and safety-net handoff behavior.
 
 ## Failures
 
-- 无 assertion failure 或阻断项。
-- `npm ci` 报告依赖树中 3 条 audit advisory（2 moderate、1 high），但安装退出码为 0，且 `npm run test:docs` 全绿；这不属于本 eval 的资产确定性或功能 assertion failure。
+- No assertion failures.
+- `npm ci` reported 3 audit advisories (2 moderate, 1 high); installation and required docs checks still exited `0`, so this is not a failure of the evaluated bootstrap behavior.
 
 ## Next Steps
 
-- 保留本轮 fresh PASS。后续若 40 项 inventory、frontmatter 契约、脚手架行为或 manifest 状态机变化，重新生成同 prompt 的 fresh with/without validation。
+- Keep this PASS as the issue #150 fresh result. Re-run paired validation whenever the 40-file inventory, frontmatter contract, manifest state machine, or scaffold tests change.
 
 ## Runtime Artifact Policy
 
-- 本轮隔离宿主、hash 快照、依赖安装与测试输出仅位于 `tmp/eval-runs/pr126-r3-20260719-1256/eval-001/`，不提交到 git。
-- 长期提交结果仅为本 `comparison.md`；`node_modules`、responses、verdicts、日志和 diagnostics 均保持运行期隔离。
+- Runtime lanes, `node_modules`, manifests, test output, and the isolation wrapper remain under `tmp/eval-runs/issue-150/group-a/` and are not durable repository artifacts.
+- Only this `comparison.md` is retained; no transcript, candidate, verdict, timing, diagnostics, build output, or runtime dependency directory is submitted.

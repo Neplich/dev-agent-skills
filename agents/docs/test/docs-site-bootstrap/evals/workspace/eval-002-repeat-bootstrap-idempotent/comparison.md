@@ -4,43 +4,46 @@
 
 - Skill: `docs-site-bootstrap`
 - Eval: `eval-002-repeat-bootstrap-idempotent`
+- Review context: issue #150 fresh paired eval group A
 
 ## Test Set / Fixture Version
 
-- Fixture: `issue-122-assets-v2-c5r`，本轮 omitted assumption 已对齐 40 项 inventory
-- Asset snapshot: PR #126 R3 工作树中的 40 项权威 bootstrap assets
-- Fresh validation date: `2026-07-19`
-- Materialized scope: durable fixture 的 9 个代表性目标；隔离运行态实际物化完整 40 项
+- Fixture: `issue-122-assets-v2-c5r`
+- Scope: 9 materialized targets; all omitted targets are explicitly assumed present and byte-identical to the current 40-file inventory
+- Actual validation date: `2026-07-21`
 
 ## Latest Result
 
-**PASS（R3 fresh）** — 本轮全新 with-skill、同 prompt/fixture 的全新 without-skill baseline 与 assertion judge 已闭合证据链。`produces_zero_diff`、`reports_skipped_identical`、`preserves_existing_state` 三条 assertions 全部 PASS。
+**PASS (3/3 assertions)** — the with-skill repeat classification preserved the existing manifest and host state with zero file-content changes.
+
+## Assertions
+
+- `produces_zero_diff`: PASS. All materialized targets compared byte-identical to packaged assets; no file was rewritten and `createdAt` remained `2026-07-16T08:00:00+08:00`.
+- `reports_skipped_identical`: PASS. The nine representative paths remain persisted as `skipped-identical` in the existing manifest.
+- `preserves_existing_state`: PASS. `standards/change-map.yaml`, `.meta/releases.json`, standards pages, templates, and all other fixture content remained unchanged.
 
 ## With-Skill Behavior
 
-- 完整读取并应用入口、opt-in、40 项 inventory、manifest、回读与 zero-diff 协议。
-- durable fixture 的 9 个物化目标与当前资产逐字节一致，mismatch 为 0；隔离宿主进一步物化完整 40 项，包括新增 `package-lock.json` 与 `release-notes/README.md`。
-- 完整运行态 40/40 项均分类为 `skipped-identical`；manifest 保持 `createdAt: 2026-07-16T08:00:00+08:00`，40 项状态均为 `skipped-identical`，SHA-256 为 `d2724b25ef44f1388eaa6ae2c0cd57429ad9d13e7b928559de1f0669a1dadf49`。
-- 排除运行期 `node_modules` 后，重复执行前后 41 文件 SHA-256 清单完全一致；`standards/change-map.yaml`、`.meta/releases.json` 和既有正式页面均未重置。
-- 在完整隔离宿主执行 `npm ci --ignore-scripts` 与 `npm run test:docs` 成功；frontmatter、strict affected、version metadata 和 Node tests 73/73 全部通过。
+- Applied the 40-file inventory and manifest persistence rules while honoring the fixture's explicit omitted-target equivalence assumption.
+- Byte comparisons for the nine materialized targets all returned equal; manifest read-back showed the original timestamp and dispositions.
+- The fixture intentionally omits scripts and most of the complete site, so `npm run test:docs` is not executable for this minimal idempotency case. Validation used exact asset comparisons, manifest parsing, and before/after content checks as required by the fixture scope.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：本轮全新 baseline，使用相同原始 prompt、durable fixture 与 `fixture-scope.json`；明确不读取或应用目标 skill、内部指令、Docs Agent README、旧 comparison 或 with-skill 结果。
-- baseline 依据 fixture 明示的 40 项等价假设，检查 9 个物化目标与既有 manifest 后不写任何文件，报告 `createdAt` 不变和内容 zero-diff。
-- baseline 能保守维持宿主状态，但不能独立给出权威 asset-to-host mapping、完整 manifest 状态机或逐项 read-back；这些差异显示 skill 提供了可执行协议。
-- baseline 仅作为对照输入，不替代 with-skill 的 assertion 判定。
+- Source: fresh `without_skill` lane from the same pristine fixture and prompt/assertions; it did not read the target skill, Docs README, internal instructions, old comparison, or with-skill output.
+- The baseline also compared the representative assets and preserved the manifest and host state, satisfying 3/3 assertions.
+- It did not independently supply the skill's complete persistent-disposition and future-conflict semantics, but that gap did not change this fixture's idempotency result.
 
 ## Failures
 
-- 无 assertion failure 或阻断项。
-- `npm ci` 报告 3 条非阻断 audit advisory；安装和全部 docs tests 仍成功，不影响本 eval 的幂等性结论。
+- No assertion failures or blocked checks.
+- Host docs tests are not applicable to this deliberately minimized fixture because its scripts and full package are not materialized.
 
 ## Next Steps
 
-- 保留本轮 fresh PASS。后续若 inventory、物化清单、manifest 状态机或幂等分类变化，重新生成同 prompt 的 fresh with/without validation。
+- Keep this PASS. Re-run if the inventory, representative targets, omitted-target assumption, or manifest disposition rules change.
 
 ## Runtime Artifact Policy
 
-- 本轮隔离宿主、hash 快照、依赖安装与测试输出仅位于 `tmp/eval-runs/pr126-r3-20260719-1256/eval-002/`，不提交到 git。
-- 长期提交结果仅为本 `comparison.md`；`node_modules`、responses、verdicts、日志和 diagnostics 均保持运行期隔离。
+- Runtime copies and byte-comparison output stay under `tmp/eval-runs/issue-150/group-a/` and are not submitted.
+- Only this durable comparison is retained; no runtime output, dependencies, transcript, candidate, verdict, timing, or diagnostics are committed.

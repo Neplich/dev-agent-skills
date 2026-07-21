@@ -4,44 +4,49 @@
 
 - Skill: `formal-docs-sync`
 - Eval: `eval-001-sync-feature-api`
+- Review context: issue #150 fresh paired eval group A
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue #117 cross-doc audit 2026-07-19`
-- Fresh run: `tmp/eval-runs/117-adjacent/formal-docs-sync/eval-001-sync-feature-api/`
-- Source head: `00c9741dabc24f6b6df377c69c42adb989722648` plus the current issue #117 working tree
+- Fixture: pristine `workspace/eval-001-sync-feature-api` snapshot used by issue #150
+- Evidence set: confirmed PM handoff, Approved PRD, Confirmed TRD and plan, actual diff, route/schema source, and contract test
+- Actual validation date: `2026-07-21`
 
 ## Latest Result
 
-**PASS（5/5 assertions）** — with-skill 仅同步命中的 Search API 页面，从代码与测试恢复当前事实，保留 change-map 人工条目并将页面置为 `unverified`。
+**PASS (5/5 assertions)** — the with-skill lane synchronized only the mapped Search API page from current implementation evidence, preserved unrelated mappings and pages, and kept the changed page unverified.
 
 ## Assertions
 
-- `updates_only_mapped_api_doc`：PASS。diff 只修改 `docs/site/api/search.md`，database 与其他页面零变化。
-- `extracts_current_api_facts`：PASS。记录 `GET /api/search`、必填 `q`、可选 `limit` 和 400 `invalid_query`，不延续旧路径。
-- `merges_map_without_deleting_unknown`：PASS。现有映射无需文本变更，`plugins/manual/**` 及其 trigger/exclude 保留。
-- `keeps_confirmed_type_scope`：PASS。识别五类型能力但本轮只读取 API 模块、API 模板与目标证据，没有读取其他类型模块内容。
-- `marks_changed_page_unverified`：PASS。页面写成 current state，`last_verified_version: unverified`。
+- `updates_only_mapped_api_doc`: PASS. The only pristine-fixture content delta was `docs/site/api/search.md`; the database page and every unrelated page remained unchanged.
+- `extracts_current_api_facts`: PASS. The page records `GET /api/search`, required `q`, optional `limit` with its default and bounds, and HTTP 400 `invalid_query` from route/schema/test evidence.
+- `merges_map_without_deleting_unknown`: PASS. The existing `src/api/**` mapping needed no text delta; `plugins/manual/**`, its trigger, and exclude remain intact.
+- `keeps_confirmed_type_scope`: PASS. The execution recognized the five-type skill surface but loaded and applied only the host API template and API type module for this confirmed batch.
+- `marks_changed_page_unverified`: PASS. The current-state API page has `last_verified_version: unverified` and no release stamp.
 
 ## With-Skill Behavior
 
-- 锁定安装后在 `docs/site/` 真实执行 `npm run test:docs`，73/73 通过。
-- 因缺少维护者确认的 `target_release_version`，#117 pre-tag handoff 正确 blocked，不从分支或 ref 推测版本。
+- Followed the feature-delivery entry chain, standards entry, change map, confirmed one-page candidate scope, API evidence rules, shared frontmatter contract, read-back, checks, and audit handoff sequence.
+- Ran `npm ci --ignore-scripts` and `npm run test:docs` in the isolated `docs/site/`; exit status was `0` and 74/74 Node tests passed.
+- Handed the complete affected set to `docs-agent:docs-audit` (#117). Pre-tag audit remains blocked until a maintainer confirms `target_release_version`; no version was inferred.
+- A runtime-only Git wrapper suppressed only the outer worktree's unrelated exact-tag discovery and delegated all other Git commands, so the isolated fixture's `latest: null` was checked without ancestor-tag contamination.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：同一 prompt 与 pristine fixture 的本轮 fresh `without_skill`；不含目标 skill、Docs README、旧 comparison 或 with-skill 输出，未复用历史 baseline。
-- baseline 完成主要 API 内容与宿主检查，但没有建立“五类型能力下只加载 API 模块”的 progressive-loading 证据，也仅静态核证 Python 测试。
+- Source: fresh `without_skill` lane from the same pristine fixture and prompt/assertions; it did not read the target skill, Docs README, internal instructions, old comparison, or with-skill output.
+- The baseline updated the correct page with accurate API facts, preserved the manual map entry, kept `unverified`, and passed host checks.
+- It did not establish the skill's five-type capability boundary and API-only progressive-loading evidence or the version-confirmation semantics of the #117 handoff; baseline result: PARTIAL (4/5 assertions).
 
 ## Failures
 
-- 无 with-skill assertion failure。
-- Harness limitation：baseline 的父仓库 Git 命令可见文件名/状态，未读取目标 skill 或 README 内容；未影响目标页面、类型加载与 handoff 判断。后续应隔离 scratch Git 元数据。
+- No with-skill assertion failures.
+- `npm ci` reported 3 dependency audit advisories, but required host checks exited `0`; advisories are outside this eval's sync assertions.
 
 ## Next Steps
 
-- 保持单类型 progressive loading、`unverified` 与无确认版本时 blocked 的回归门禁。
+- Keep this PASS and retain API-only progressive loading, current-code ground truth, `unverified`, and confirmed-version audit gating as a joint regression.
 
 ## Runtime Artifact Policy
 
-- workspace 副本、依赖、candidate、transcript、manifest、diff 与状态仅位于 `tmp/eval-runs/117-adjacent/`，不提交到 git。
+- Both lanes, installed dependencies, edited fixture copies, test output, and the isolation wrapper remain under `tmp/eval-runs/issue-150/group-a/`.
+- Only this comparison is durable; no runtime page, transcript, candidate, verdict, timing, diagnostics, `node_modules`, or build output is submitted.
