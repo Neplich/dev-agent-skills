@@ -5,8 +5,6 @@ functional, architecture, database, deployment, asset, upgrade, compatibility,
 and risk facts. GitHub data may add traceability and repository-native format;
 it must not add, omit, or rewrite release facts.
 
-Match adjacent GitHub Releases before using this fallback outline.
-
 ## GitHub Release Name
 
 For this repository, use:
@@ -18,7 +16,7 @@ v{VERSION} - {概括性简述}
 The summary should reflect about three confirmed highlights and must not be
 only the bare tag.
 
-## Fallback Body
+## Body
 
 ```markdown
 # Release Notes - {THIS_TAG} ({YYYY-MM-DD})
@@ -48,14 +46,21 @@ only the bare tag.
 
 ## Conversion Rules
 
-- Keep the site's release-note ordering unless adjacent GitHub Releases require
-  a harmless presentation adjustment.
+- Preserve the site's release-note facts and their logical relationships; this outline determines the section order of the user-facing body.
+- Preserve risk qualifiers when summarizing confirmed facts. In particular, do
+  not describe a migration as reversible or rollback-safe when the confirmed
+  notes state that rollback deletes data or requires a backup.
 - Preserve conventional prefixes from PR titles or commit subjects.
 - Link major confirmed highlights to representative PRs or commits.
 - Mention contributors using the repository's existing style.
 - Put the complete compare link after the curated detail section.
 - Do not paste the full PR or commit feed as the user-facing narrative.
 - Do not add a product claim that is absent from the confirmed site page.
+- Keep internal quality evidence, including skill eval results, assertion counts,
+  review rounds, and QA evidence summaries, only in the repository changelog's
+  Skill Eval summary. Do not include it in the user-facing GitHub Release body,
+  and do not let adjacent Release presentation habits introduce sections beyond
+  this outline's four sections: 重点更新, 其他改进, 升级说明, and 变更明细.
 - If GitHub evidence contradicts or materially extends the page, block and
   return it to Docs for renewed confirmation instead of editing around it.
 

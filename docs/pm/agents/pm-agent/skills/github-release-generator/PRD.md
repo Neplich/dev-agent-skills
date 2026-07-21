@@ -9,7 +9,7 @@ version: "1.0.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-20"
-last_updated: "2026-07-20"
+last_updated: "2026-07-21"
 generated_by: "idea-to-spec"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/120"
@@ -81,7 +81,7 @@ docs-agent；issue #117 已将发版审计拆成 pre-tag `ready_for_tag` 与 pos
 | FR-003 | #117 pre-tag 门禁 | P0 | 仅在可信 pre-tag handoff 返回 `ready_for_tag` 后生成可提交预览或创建/更新 draft |
 | FR-004 | 事实一致性 | P0 | 读取已确认站内 Release Notes，保留功能、架构、数据库、部署、资产、升级和风险事实，不覆盖改写 |
 | FR-005 | GitHub 可追溯性 | P0 | 补充完整 compare、代表性 PR/commit 和贡献者链接，且不以原始清单替代用户版本说明 |
-| FR-006 | 风格匹配与预览 | P0 | 读取相邻 GitHub Release 和项目规范；任何 draft 写入前先展示标题与正文预览 |
+| FR-006 | 结构来源与预览 | P0 | 以 `reference/release-outline.md` 作为标题与正文结构的唯一来源，不读取或继承相邻 GitHub Release 格式；任何 draft 写入前先展示标题与正文预览；eval 结果、assertion 计数、review 轮次、QA 证据汇总等内部质量证据只进入 changelog 的 Skill Eval 汇总，不进入用户向 GitHub Release 正文 |
 | FR-007 | draft 生命周期 | P0 | `ready_for_tag` 后可生成完整 draft 预览；仅在用户明确要求且不产生 tag 副作用时创建或更新远端 draft，缺少现有 draft 与实际 tag 时保持预览并阻塞远端创建；写后回读并核对 tag、标题、正文、draft 状态和远端 tag 零变化 |
 | FR-008 | 发布三重门禁 | P0 | 实际 tag 存在、#117 post-tag 为 `release_verified`、维护者另行明确批准，三者齐备才可发布 |
 | FR-009 | 发布后验证 | P0 | 发布后回读 GitHub Release，核对 tag、标题、正文、draft/published 状态和 URL |

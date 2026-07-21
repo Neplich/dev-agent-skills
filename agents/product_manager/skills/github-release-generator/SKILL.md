@@ -76,17 +76,16 @@ invalid, version-mismatched, or blocked audit evidence returns to
    architecture, database, deployment, asset, upgrade, compatibility, and risk
    facts.
 2. Audit the complete compare range, merged PRs, commits, and contributors.
-3. Read adjacent GitHub Releases and the repository's release conventions.
-4. Remove at most one repository-standard `v` prefix from the target and
+3. Remove at most one repository-standard `v` prefix from the target and
    current latest tag, parse both as SemVer, and decide the explicit latest and
    prerelease flags. Every SemVer prerelease uses `--prerelease --latest=false`.
    For a stable version, read the current latest Release and use `--latest`
    only when the target SemVer is strictly greater; otherwise use
    `--latest=false`. An absent, non-SemVer, or otherwise unsafe comparison must
    use `--latest=false`.
-5. Add compare, representative PR or commit, and contributor links without
+4. Add compare, representative PR or commit, and contributor links without
    replacing the confirmed facts with a raw maintenance-data list.
-6. Show the complete title and body preview, version-normalization evidence,
+5. Show the complete title and body preview, version-normalization evidence,
    current latest Release evidence, and the exact latest/prerelease decision
    before any GitHub write. The maintainer must confirm this decision with the
    preview. Before each draft write and immediately before the final publish

@@ -9,7 +9,7 @@ version: "1.1.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-20"
-last_updated: "2026-07-20"
+last_updated: "2026-07-21"
 generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/github-release-generator/PRD.md"
 related_issues:
@@ -80,7 +80,6 @@ skill 必须先验证以下字段和证据：
 - 上一发布 tag `previous_tag`；
 - tag 尚不存在时使用 `previous_tag...target_ref` 审计范围；tag 存在后复核其指向已审计内容，并生成 `previous_tag...target_tag` 最终 compare URL；
 - compare 中的 merged PR、commit 和 contributor 集合；
-- 相邻已发布 GitHub Release 的标题/正文风格。
 
 对带 `v` 与不带 `v` 的来源先执行 SemVer 规范化比较，但 Git 命令和 GitHub Release
 仍使用仓库真实 tag 字面值。版本不存在、范围为空且无法解释、范围交叉或事实不一致时
@@ -124,7 +123,7 @@ skill 必须先验证以下字段和证据：
 
 在 `ready_for_tag` 后：
 
-1. 读取站内 Release Notes、GitHub compare 和相邻 Release 风格。
+1. 读取站内 Release Notes、GitHub compare 和 `reference/release-outline.md` 结构定义。
 2. 生成标题与正文预览，标明事实来源与补充链接；同时标明目标版本分类、当前 latest
    Release 证据、SemVer 比较结果以及将用于写入的显式 prerelease/latest flag。
 3. 仅在用户明确要求时创建或更新 draft；无现有 draft 且实际 tag 不存在时只保留完整
@@ -174,7 +173,7 @@ post-tag audit，不自动修 tag。
 | merged PR | 选择与正文事实对应的代表性 PR | 重点条目的 PR 链接 |
 | commit | 用于范围审计和必要的精确追溯 | 不输出未经整理的原始 commit dump |
 | contributor | 从已纳入条目和 compare 中归并 | 项目既有风格的贡献者署名 |
-| 相邻 Release | 提取标题、章节和链接格式 | 与项目既有 GitHub Release 风格一致 |
+| `reference/release-outline.md` | 作为标题与正文结构的唯一来源，不读取或继承相邻 Release 格式 | 内部质量证据只进入 changelog 的 Skill Eval 汇总，不进入用户向 GitHub Release 正文 |
 
 正文不得新增站内页面未确认的产品事实。若 GitHub 证据揭示页面遗漏或冲突，停止生成
 并将差异交回 `docs-agent:release-notes-generator` 重新确认和校验；不能在 GitHub Release

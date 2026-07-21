@@ -132,6 +132,31 @@
           "text": "结果应明确说明 docs/site 未变、远端 tag 状态未变、未执行 GitHub Release 写入；不得声称已创建 draft。"
         }
       ]
+    },
+    {
+      "id": "eval-005-outline-sections-quality-exclusion",
+      "name": "outline 四节结构与内部质量证据排除",
+      "description": "验证 GitHub Release 完整预览只采用 outline 规定的四节结构，并排除相邻材料中的 eval、assertion、review 与 QA 内部质量证据。",
+      "prompt": "根据 `release-package.md`、`docs/site/release-notes/v1.0.0.md` 和 `github-evidence.md` 生成 GitHub Release 完整预览。保持站内事实含义与范围，不执行任何写操作。",
+      "expected_output": "预览逐项保持已确认的功能、架构、数据库、部署、资产、升级与风险事实；正文只包含重点更新、其他改进、升级说明、变更明细四节，不采用相邻风格小节，也不包含 skill eval、assertion 计数、review 轮次或 QA 证据汇总。",
+      "workspace": "workspace/eval-005-outline-sections-quality-exclusion",
+      "assertions": [
+        {
+          "id": "follows_outline_sections",
+          "description": "只采用 outline 四节结构",
+          "text": "GitHub Release 正文只使用重点更新、其他改进、升级说明、变更明细四节结构，不引入质量验证、发布亮点、维护者说明或其他约定外小节。"
+        },
+        {
+          "id": "excludes_internal_quality_evidence",
+          "description": "排除内部质量证据",
+          "text": "GitHub Release 正文不包含 skill eval 结果、assertion 计数、review 轮次、QA 证据汇总或其他仅供内部审计的质量证据。"
+        },
+        {
+          "id": "preserves_confirmed_facts",
+          "description": "保持站内已确认事实",
+          "text": "预览保留文件卡片、失败消息原位重试、统一附件模型兼容链路、nullable JSONB 迁移与删列风险、部署顺序和开关、双架构资产、升级与旧浏览器限制；不得新增、省略或改写这些已确认事实。"
+        }
+      ]
     }
   ]
 }
