@@ -364,7 +364,7 @@
         {
           "id": "continues_confirmed_classes",
           "description": "继续 Development 与 Docker 已确认范围",
-          "text": "在候选原子范围已确认的前提下继续生成 Development 与 Docker 页面、共享环境参数中仅有证据的适用映射，以及各自 change-map 条目，不因第三类阻塞而停止全部批次。"
+          "text": "在候选原子范围已确认的前提下继续生成 Development 页面、Docker `index.md` 与镜像来源权威页 `docs/site/ops/deployment/docker/image-sources.md`，由 Docker 索引链接该权威页；共享环境参数只写有证据的适用映射，change-map 包含 Development、Docker 索引及 Docker 镜像来源权威页的对应条目，不因第三类阻塞而停止全部批次。"
         },
         {
           "id": "creates_no_placeholder_commands",
