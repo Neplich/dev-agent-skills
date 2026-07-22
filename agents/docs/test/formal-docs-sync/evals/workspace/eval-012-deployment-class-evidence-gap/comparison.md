@@ -4,42 +4,45 @@
 
 - Skill: `formal-docs-sync`
 - Eval: `eval-012-deployment-class-evidence-gap`
-- Review context: PR #166 third-round P2 fresh paired validation and fresh Codex judge
+- Review context: PR #166 fourth-round P2 fresh paired validation and fresh Codex judge
 
 ## Test Set / Fixture Version
 
-- Fixture: verified Development/Docker evidence plus an unexecuted Kubernetes plan and no cluster authority; tightened Docker image-authority assertion and host test
+- Fixture: verified Development/Docker evidence plus an unexecuted Kubernetes plan and no cluster authority; tightened deployment-root/shared-environment assertion and host test
 - Actual validation date: `2026-07-22`
 
 ## Latest Result
 
-**PASS (4/4 assertions)** — the fresh with-skill lane blocked only Kubernetes/Helm, continued the confirmed Development/Docker scope, generated the Docker `image-sources.md` authority with its index link and change-map entry, and passed `npm run test:docs` with 3/3 tests. The fresh judge independently reran both lanes and confirmed all assertions.
+**PASS (4/4 assertions)** — the fresh with-skill lane blocked only Kubernetes/Helm, generated the deployment root, shared environment authority, Development/Docker pages and Docker image authority with all required links and change-map entries, and passed `npm run test:docs` with 3/3 tests. The fresh judge independently reran both lanes and confirmed all with-skill assertions.
 
 ## With-Skill Behavior
 
 - Used settings/tests to constrain shared environment fields to evidenced Development/Docker applicability.
-- Generated separate Development and Docker contracts plus the Docker image authority; the Docker index links the authority and `deploy/docker/**` maps it atomically.
-- Created the shared environment authority and deployment root index; no Kubernetes/Helm directory, command, map entry or success claim was created.
+- Generated the required five-page atomic scope: deployment root, shared `environment-reference.md`, Development index, Docker index and Docker `image-sources.md`.
+- Linked the deployment root to both confirmed classes and the shared authority, linked both class pages back to the shared authority, linked the Docker image authority, and covered all five pages in the change map.
+- Kept complete and separate prerequisites, commands, success criteria, rollback and troubleshooting for Development and Docker; no Kubernetes/Helm directory, command, map entry or success claim was created.
 - Reported the missing Chart, values, template, permission, image and execution evidence, kept pages `unverified`, and preserved the #117 version gate.
 
 ## Fresh Without-Skill Baseline
 
 - Source: fresh lane from the same pristine fixture and `eval_metadata.json` prompt without the target skill, Agent README, eval definition, comparisons or with-skill output.
-- It passed 4/4 assertions and 3/3 tests, including the tightened Docker image-authority page, index-link and change-map checks.
-- It remained weaker than the skill lane: it omitted the shared `environment-reference.md`, deployment root index, complete deployment classification fields, image provenance gaps, compliant Ops-index frontmatter, and the formal #117 handoff.
+- It passed the same 3/3 host tests and generated all five required pages, links and change-map paths, but the fresh judge rated it **PARTIAL (3/4 assertions)**.
+- It failed `keeps_class_boundaries`: the Development page omitted rollback and troubleshooting, while the Docker page omitted troubleshooting.
+- It also inferred a literal `docker compose ... up -d` command not recorded by the fixture, left the updated Ops index without the required frontmatter, and omitted the formal #117 handoff.
 
 ## Failures
 
 - No with-skill assertion failures.
-- The fresh judge noted that the with-skill rollback prose restates an executable `up -d` step while the fixture records only a successful rollback to the digest; this is outside the current assertions and did not change the result.
-- Input hashes and matching metadata prove the paired fixture and prompt; the baseline's prohibited-read boundary is supported by its isolated workspace and report but not by a complete file-access audit.
+- The baseline failed one assertion even though its 3/3 deterministic host tests passed; those tests do not cover category-level rollback/troubleshooting completeness or report classification.
+- Matching fixture, metadata, template and test hashes prove the paired inputs. The judge found no lane transcript at review time, so generation-process and prohibited-read provenance rely on workspace isolation and lane reports rather than a complete file-access audit.
 
 ## Next Steps
 
-- Keep this PASS; the tightened assertion and host test now prevent a candidate that omits Docker `image-sources.md`, its Docker-index link, or its change-map entry from passing.
+- Keep this PASS; the tightened assertion and host test now reject candidates that omit the deployment root, shared environment authority, their links, or any of the five required change-map paths.
+- Preserve the semantic assertion review because the deterministic host tests do not by themselves detect incomplete per-class runbooks.
 - Require new evidence and a separately confirmed batch before Kubernetes/Helm documentation is created.
 
 ## Runtime Artifact Policy
 
-- Paired lanes, transcripts, reports, generated pages and judge verdict remain under `tmp/eval-runs/pr166-review-round3-20260722-2034/` and are not submitted.
+- Paired lanes, reports, available transcript and judge verdict remain under `tmp/eval-runs/pr166-review-round4-20260722-2053/` and are not submitted.
 - Only this comparison is durable.
