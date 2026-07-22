@@ -11,8 +11,10 @@
 - Fixture version: `issue-160 product information architecture v2`
 - Evidence: confirmed two-domain catalog, implementation, acceptance tests, and a seeded unrelated change-map entry with `exclude` plus an unknown field
 - Fresh run: `tmp/eval-runs/pr-165-review-fix-20260722-200100/product/`
-- Generation method: both lanes received the same eval prompt and pristine
-  fixture without assertions; only with-skill received the target contract.
+- Generation method: both generators received the same eval prompt and pristine
+  fixture and were expressly prohibited from reading the staged `evals.json` or
+  assertions; only with-skill received the target contract. The independent
+  judge read the assertions after generation.
 - Actual validation date: `2026-07-22`
 
 ## Latest Result
@@ -65,8 +67,10 @@ observable output and handoff behaviors.
 
 ## Fresh Without-Skill Baseline
 
-- Source: a new pristine fixture copy with the same eval prompt, assertions,
-  metadata, and seeded map; it did not contain or read the target skill, old
+- Source: a new pristine fixture copy with the same eval prompt, metadata, and
+  seeded map. Its generation prompt expressly prohibited reading the staged
+  `evals.json` or assertions, which were applied only by the independent judge
+  after generation; it did not contain or read the target skill, old
   comparison, with-skill output, or historical baseline.
 - Result: 5/9 PARTIAL. It creates the full tree and accurate task content, but
   fails contract loading, stable and atomic mapping, auditable host-check
