@@ -1,6 +1,18 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 import test from 'node:test';
+
+function assertLinksTo(source, target) {
+  const body = readFileSync(source, 'utf8');
+  const expected = resolve(target);
+  const linked = [...body.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)].some((match) => {
+    const link = match[1].split('#')[0];
+    const resolved = resolve(dirname(source), link);
+    return resolved === expected || resolve(resolved, 'index.md') === expected;
+  });
+  assert.equal(linked, true, `${source} -> ${target}`);
+}
 
 test('confirmed classes exist and blocked class has no page', () => {
   assert.equal(existsSync('ops/deployment/index.md'), true);
@@ -12,17 +24,14 @@ test('confirmed classes exist and blocked class has no page', () => {
 });
 
 test('confirmed deployment pages link their authorities and appear in the change map', () => {
-  const root = readFileSync('ops/deployment/index.md', 'utf8');
-  const development = readFileSync('ops/deployment/development/index.md', 'utf8');
-  const docker = readFileSync('ops/deployment/docker/index.md', 'utf8');
   const map = readFileSync('standards/change-map.yaml', 'utf8');
 
-  assert.match(root, /\(environment-reference\.md\)/);
-  assert.match(root, /\(development\/index\.md\)/);
-  assert.match(root, /\(docker\/index\.md\)/);
-  assert.match(development, /\(\.\.\/environment-reference\.md\)/);
-  assert.match(docker, /\(\.\.\/environment-reference\.md\)/);
-  assert.match(docker, /\(image-sources\.md\)/);
+  assertLinksTo('ops/deployment/index.md', 'ops/deployment/environment-reference.md');
+  assertLinksTo('ops/deployment/index.md', 'ops/deployment/development/index.md');
+  assertLinksTo('ops/deployment/index.md', 'ops/deployment/docker/index.md');
+  assertLinksTo('ops/deployment/development/index.md', 'ops/deployment/environment-reference.md');
+  assertLinksTo('ops/deployment/docker/index.md', 'ops/deployment/environment-reference.md');
+  assertLinksTo('ops/deployment/docker/index.md', 'ops/deployment/docker/image-sources.md');
   for (const path of [
     'docs/site/ops/deployment/index.md',
     'docs/site/ops/deployment/environment-reference.md',
