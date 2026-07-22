@@ -77,14 +77,18 @@ glob. Treat repository-relative page paths as required, and exclude
 Before writing, show the maintainer:
 
 - selected mode and accepted entry basis;
-- candidate pages and types; for API and database, render the complete proposed
-  parent/child tree, including every ancestor index, relationship page, and
-  leaf page;
-- code paths and globs;
-- evidence for each page;
-- feature owner or owning team when the feature catalog provides one;
+- the complete candidate parent-child tree, including every necessary
+  `index.md`, relationship page, leaf page, and document type;
+- the reader task, owner or owning team, evidence, and code paths / `code_glob`
+  for every page;
+- links from each root through every confirmed leaf, Product / Design
+  bidirectional links where applicable, and links to authoritative API,
+  database, or ops pages;
 - proposed change-map, index, or host-required navigation delta;
-- explicit exclusions, unresolved discrepancies, and out-of-batch scope.
+- explicit exclusions for every page, unresolved discrepancies, and
+  out-of-batch scope;
+- for an existing stable path, the migration, redirect, and link-repair scope
+  instead of a silent move.
 
 For every proposed API or database node, pair the parent, child or page path
 with its code glob, owner, classification or relationship evidence, change-map
@@ -98,8 +102,9 @@ at a time and requires a new confirmation before the next batch.
 
 ### 5. Write only the confirmed scope and read it back
 
-Create or update only confirmed pages, their map entries, and necessary
-indexes or host-required navigation. Preserve unrelated and manually
+Create or update only confirmed pages, their map entries, every necessary
+ancestor index, bidirectional link, and host-required navigation as one atomic
+scope. Preserve unrelated and manually
 maintained content. Write the stable current state, replacing superseded
 claims; never add implementation diaries, ticket timelines, before/after
 narration, or unsupported future state.
@@ -200,10 +205,16 @@ complete subtree rather than an isolated leaf. Its confirmed batch includes
 all ancestor indexes, necessary relationship overviews, recursive navigation,
 and change-map entries even when those support files span several paths.
 
+For Product or Design backfill, each finite batch must be one navigable,
+boundary-complete subtree. A batch is not complete when a confirmed leaf cannot
+be reached from the type root, an index copies leaf content, or a required
+cross-document link is missing.
+
 ## Design Delivery Closeout Gate
 
-Before proposing a feature-delivery write to `docs/site/design/**`, verify all
-of the following for the same `feature_path`:
+Before proposing each feature-delivery write to `docs/site/design/**`, verify
+all of the following for that page's same `feature_path` and evidenced atomic
+scope:
 
 1. Approved PRD;
 2. Confirmed TRD with traceable impacted modules or `related_code`;
@@ -216,8 +227,11 @@ of the following for the same `feature_path`:
 Reuse `feature-implementor` closeout evidence; do not invent another format.
 If any item is absent, conflicting, failed, skipped without explanation, or
 unverifiable, report the failed item, owner, and next action and make zero
-changes to both the design page and its change-map entry. A passing gate still
-permits only current-state design evidenced by final code and passing tests.
+changes to that design page, its change-map entry, and page-specific index /
+navigation / reciprocal-link delta. Other independently evidenced and
+confirmed pages may proceed; never fill the blocked page's gap with future
+design elsewhere. A passing gate still permits only current-state design
+evidenced by final code and passing tests.
 
 ## Trust and Boundaries
 

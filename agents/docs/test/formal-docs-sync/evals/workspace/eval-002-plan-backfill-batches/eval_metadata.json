@@ -1,18 +1,23 @@
 {
   "eval_id": "eval-002-plan-backfill-batches",
-  "eval_name": "plan-backfill-batches",
+  "eval_name": "product-information-architecture-backfill",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-002-plan-backfill-batches",
-  "skill_availability_goal": "Verify catalog-first bounded API backfill planning proposes a complete domain/index/route-leaf subtree and makes no writes before per-batch confirmation.",
-  "prompt": "维护者明确请求为当前 fixture 仓库回填存量 API 文档。请优先读取 `docs/pm/feature-catalog.md`、既有 API 页面与 change map，按功能域目录、index 和接口叶子提出第一批完整候选树，但本轮不要确认或执行该批次；同时说明如果仓库没有 catalog，应怎样形成候选范围。",
+  "skill_availability_goal": "Verify a confirmed Product backfill creates a navigable domain-feature-task hierarchy while an unconfirmed API backfill remains a complete read-only candidate subtree.",
+  "prompt": "按 `backfill-confirmation.md` 已确认的 existing-system backfill 批次同步 Product 正式文档：用 feature catalog、当前实现和验收测试核证两个产品域，生成完整父子目录、各级 index 与独立用户任务页，更新 change map，运行宿主 `npm run test:docs`，再输出 #117 handoff。同时为尚未确认的 Accounts API 回填只提出 `api/index.md → accounts/index.md → get-account.md` 完整候选树，逐节点说明 code glob、证据、owner、映射和排除项，保持 Accounts API 零写入与既有 Billing 子树不变；并说明没有 catalog 时如何形成候选范围。",
   "fixture_context": [
     "docs/pm/feature-catalog.md",
+    "backfill-confirmation.md",
     "src/api/accounts/routes.py",
     "src/api/accounts/schemas.py",
     "tests/contract/test_accounts_api.py",
     "src/api/billing/routes.py",
+    "src/product/workspace_management/invitations.py",
+    "src/product/analytics/dashboard.py",
+    "tests/acceptance/test_product_tasks.py",
     "docs/site/api/index.md",
     "docs/site/api/billing/index.md",
     "docs/site/api/billing/list-invoices.md",
-    "docs/site/standards/change-map.yaml"
-  ]
+    "docs/site/"
+  ],
+  "execution_cleanup": ["docs/site/.generated", "sync-report.md"]
 }

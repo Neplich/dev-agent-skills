@@ -28,3 +28,16 @@ def test_invitation_requires_existing_workspace(db, workspace_store):
     workspace_store.exists.return_value = False
     with pytest.raises(ValueError, match="workspace_not_found"):
         invite_user(db, workspace_store, "missing", "reader@example.test", "hash", "2026-08-01")
+
+
+def test_accept_invitation_coordinates_components(workspace_service):
+    assert workspace_service.call_order() == ["consume_invitation", "upsert_membership", "write_audit"]
+
+
+def test_expired_invitation_stops_before_persistence(workspace_service):
+    assert workspace_service.expired_invitation_error() == "invitation_expired"
+    assert workspace_service.membership_write_count() == 0
+
+
+def test_audit_event_is_written_after_membership(workspace_service):
+    assert workspace_service.audit_event() == "workspace.invitation.accepted"

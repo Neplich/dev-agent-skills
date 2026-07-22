@@ -24,7 +24,29 @@ Read the design template linked from the host standards entry—normally
 `docs/site/standards/templates/feature-design.md`—and consume its single
 `docs-scaffold` block for a new page. Do not copy the template into this skill.
 
-Use a real code map and Mermaid flow only where final code and tests support
-them. Link authoritative API and database pages instead of duplicating their
-full contracts. Treat each design page and its design change-map entry as one
-atomic scope; a failed closeout gate changes neither.
+Derive the hierarchy from stable system / domain / subsystem / component
+ownership, then corroborate it with `feature_path`, TRD impact scope, final
+code, and tests. Do not derive pages from file count.
+
+- `docs/site/design/index.md` is only the system map, domain boundaries, and
+  global navigation.
+- Give every domain and non-leaf design node an `index.md` that states
+  responsibility, non-goals, children, adjacent modules, and authority
+  evidence without repeating child content.
+- Separate independently owned components from cross-component control/data
+  flows and from security, authorization, error-ownership, or recovery
+  boundaries when each has an independent reader task or maintenance cycle.
+- Keep one authority page for a cross-domain capability and link to it from
+  other domains.
+- Every component page links its participating flows; every flow page links
+  back to all participating components. Link authoritative API and Database
+  pages rather than repeating complete paths, payloads, fields, or constraints.
+
+For the candidate scope, show the complete parent-child tree and, per page,
+reader task, owner, evidence, code glob, change-map delta, links, and
+exclusions. Use a real code map and Mermaid flow only where final code and
+tests support them. Apply the Design Delivery Closeout Gate page by page.
+Treat each page, its required ancestor-index / navigation / reciprocal-link
+delta, and its design change-map entry as one atomic scope; a failed page gate
+changes none of those surfaces but does not block independently evidenced
+pages. Never place a blocked page's future design in another page.
