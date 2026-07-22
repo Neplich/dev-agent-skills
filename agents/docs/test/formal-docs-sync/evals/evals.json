@@ -216,9 +216,9 @@
     {
       "id": "eval-008-deployment-ops-upgrade",
       "name": "Deployment verification 同步 Ops 与 Upgrade 当前事实",
-      "description": "验证部署模式只根据已执行配置和结果同步 runbook、升级及回滚，不把部署计划写成现状。",
-      "prompt": "按 `deployment-handoff.md` 的已确认 deployment verification 范围同步 `docs/site/ops/ai-hub-upgrade.md`。请对照 Compose 配置、已执行命令和结果、环境差异及 `deployment-plan.md`，只写当前可执行事实；页面与映射已确认。完成后运行宿主 `npm run test:docs` 并输出 #117 handoff。",
-      "expected_output": "更新单一 ops 页面及映射，写入已验证的 Compose 启动、升级、健康检查和回滚步骤；明确排除仍在计划中的 Kubernetes 路径；保持 unverified，通过 docs checks 后 handoff docs-audit。",
+      "description": "验证 deployment verification 只根据已执行配置和结果，把 Docker runbook、升级及回滚同步到 `ops/deployment/` 当前页面树，不把部署计划写成现状。",
+      "prompt": "按 `deployment-handoff.md` 的已确认 deployment verification 范围同步 `docs/site/ops/deployment/`。请对照 `.env.example`、Compose 配置、已执行命令和结果、环境差异及 `deployment-plan.md`，生成 deployment 根索引、共享 environment reference、Docker 类别 runbook 与 image sources，只写当前可执行事实；页面、链接与映射原子范围已确认。完成后运行宿主 `npm run test:docs` 并输出 #117 handoff。",
+      "expected_output": "生成 deployment 根索引、共享 environment-reference、Docker 类别 index 与 image-sources，并更新 Ops 导航及 `deploy/**` 映射；写入已验证的 Compose 启动、升级、健康检查和回滚事实，明确排除仍在计划中的 Kubernetes/Helm 路径；保持 unverified，通过 docs checks 后 handoff docs-audit。",
       "workspace": "workspace/eval-008-deployment-ops-upgrade",
       "assertions": [
         {
@@ -228,8 +228,8 @@
         },
         {
           "id": "writes_current_ops_upgrade_rollback",
-          "description": "同步当前 runbook、升级与回滚",
-          "text": "页面准确记录 `AI_HUB_IMAGE` 默认 `registry.example/ai-hub:v1.4.2`、Compose 启动/升级、`/healthz` 返回 200 的成功标准，以及回滚到 `v1.4.1` 后重新检查健康状态。"
+          "description": "同步当前 Docker runbook、镜像、升级与回滚",
+          "text": "Docker 类别页面准确记录 Compose 启动/升级、`/healthz` 返回 200 的成功标准，以及回滚到 `v1.4.1` 后重新检查健康状态；`docker/image-sources.md` 记录 `AI_HUB_IMAGE` 默认 `registry.example/ai-hub:v1.4.2` 及其 Compose 证据。"
         },
         {
           "id": "does_not_promote_plan_to_current_state",
@@ -237,9 +237,9 @@
           "text": "明确将 `deployment-plan.md` 中尚未执行的 Kubernetes/Helm 迁移排除在当前正式文档之外；不得写成已支持、已部署或可执行现状。"
         },
         {
-          "id": "keeps_ops_scope_atomic_and_unverified",
-          "description": "Ops 页面与映射原子更新",
-          "text": "只更新 `docs/site/ops/ai-hub-upgrade.md` 与 `deploy/**` 对应 change-map 条目，回读核对并保持页面 `last_verified_version: unverified`；不修改 product、design、database 或 Release Notes。"
+          "id": "writes_current_deployment_tree_atomically",
+          "description": "当前部署页面树、链接与映射原子更新",
+          "text": "生成 `docs/site/ops/deployment/index.md`、共享 `environment-reference.md`、`docker/index.md` 与 `docker/image-sources.md`，Ops 索引、deployment 根索引和 Docker 类别索引链接到对应权威页面；`deploy/**` change-map 条目覆盖这四页并保留既有 exclude。所有新页面保持 `last_verified_version: unverified`，不修改 product、design、database 或 Release Notes。"
         },
         {
           "id": "runs_ops_host_checks_and_handoffs",
