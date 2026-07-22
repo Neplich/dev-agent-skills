@@ -16,15 +16,15 @@ Maintainer confirmation: confirmed for implementation and closeout.
 
 | ID | Scope | Status |
 | --- | --- | --- |
-| SCOPE-01 | Add membership schema and unique workspace-user constraint | Complete |
-| SCOPE-02 | Validate logical workspace/user references before repository upsert | Complete |
-| SCOPE-03 | Add schema, repository, and service tests | Complete |
+| SCOPE-01 | Add workspace, membership, and invitation schema with current constraints and indexes | Complete |
+| SCOPE-02 | Add physical workspace foreign keys and validate the logical user reference before membership upsert | Complete |
+| SCOPE-03 | Add membership and invitation repository/service paths and tests | Complete |
 
 ## Required Tests
 
-- `test_membership_schema_constraints`
-- `test_assign_role_validates_references`
-- `test_assign_role_upserts_membership`
+- `test_workspace_domain_schema_constraints`
+- `test_assign_role_validates_logical_user_reference`
+- `test_invitation_requires_existing_workspace`
 
 ## Closeout
 

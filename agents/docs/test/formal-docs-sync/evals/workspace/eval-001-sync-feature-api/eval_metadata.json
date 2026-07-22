@@ -1,20 +1,25 @@
 {
   "eval_id": "eval-001-sync-feature-api",
-  "eval_name": "sync-feature-api",
+  "eval_name": "nested-api-backfill",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api",
-  "skill_availability_goal": "Verify bounded feature-mode API synchronization from confirmed process context and current code/test facts.",
-  "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行正式文档同步。维护者已确认本批只处理 `src/api/search.py`、`src/api/schemas.py` 与命中的 `docs/site/api/search.md`；请从 fixture 代码、测试和 diff 核证后写入，并合并 change-map。",
+  "skill_availability_goal": "Verify a confirmed API backfill creates a complete two-domain nested subtree with exact evidence, mappings, and recursive navigation.",
+  "prompt": "维护者已在 `pm-handoff.md` 和 `backfill-confirmation.md` 确认本次 API backfill 的完整候选树。请按 feature catalog、route/schema/handler 和 contract tests 核证 identity/sessions 与 billing 两个功能域，使用宿主现有嵌套脚手架与递归导航能力原子生成完整 API 子树、更新 change map，执行 `npm run test:docs`、public/internal build 并输出 #117 handoff。",
   "fixture_context": [
     "pm-handoff.md",
-    "docs/pm/search-api/PRD.md",
-    "docs/engineer/search-api/TRD.md",
-    "docs/engineer/search-api/IMPLEMENTATION_PLAN.md",
-    ".eval/actual-diff.patch",
-    "src/api/search.py",
-    "src/api/schemas.py",
-    "tests/contract/test_search_api.py",
-    "docs/site/standards/change-map.yaml",
-    "docs/site/api/search.md",
-    "docs/site/database/search-index.md"
+    "backfill-confirmation.md",
+    "docs/pm/feature-catalog.md",
+    "src/api/identity/sessions/",
+    "src/api/billing/",
+    "tests/contract/",
+    "docs/site/standards/",
+    "docs/site/api/index.md",
+    "docs/site/api/search.md"
+  ],
+  "execution_cleanup": [
+    "docs/site/.generated",
+    "docs/site/.vitepress/generated",
+    "docs/site/api/identity",
+    "docs/site/api/billing",
+    "sync-report.md"
   ]
 }

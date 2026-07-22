@@ -4,50 +4,54 @@
 
 - Skill: `formal-docs-sync`
 - Eval: `eval-007-feature-database-design`
-- Review context: issue #150 fresh paired eval group A
+- Review context: issue #159 database/schema/domain/entity information architecture
 
 ## Test Set / Fixture Version
 
-- Fixture: pristine `workspace/eval-007-feature-database-design` snapshot used by issue #150
-- Evidence set: confirmed feature handoff, Approved PRD, Confirmed TRD/plan, closeout, actual diff, passed test record, schema, repository, service, and tests
-- Actual validation date: `2026-07-21`
+- Fixture: current pristine `workspace/eval-007-feature-database-design` snapshot for issue #159
+- Evidence set: confirmed handoff and candidate scope, Approved PRD, Confirmed TRD/plan, complete closeout, actual diff, passed tests, schema, repository, service, API page, and host standards
+- Actual validation date: `2026-07-22`
+- Isolation: fresh `codex exec` copied the same fixture into independent lanes; start manifests matched with a zero-byte diff, and historical comparisons were excluded
 
 ## Latest Result
 
-**PASS (6/6 assertions)** — the with-skill lane passed all seven design-closeout checks, atomically synchronized database/design current state and their shared map entry, passed host checks, and handed off #117.
+**PASS (9/9 assertions)** — the with-skill lane produced the complete database/schema/domain/entity subtree, relationship overview, bidirectional links, explicit physical-versus-logical relation semantics, delivered design page, and atomic map update.
 
 ## Assertions
 
-- `loads_only_database_design_contracts`: PASS. This eval loaded the standards entry, change map, database/design host templates, and only the database/design type modules.
-- `passes_design_closeout_gate`: PASS. Approved PRD, Confirmed TRD, confirmed plan, all-complete scope, full diff coverage, all required tests passed, and maintainer-confirmed candidate scope were checked before writes.
-- `synchronizes_database_current_state`: PASS. The page records the unique workspace-user pair, three allowed roles, required timestamp, and application-validated logical references without inventing foreign keys.
-- `synchronizes_delivered_design`: PASS. The page shows workspace then user validation before repository upsert and explicitly excludes inherited roles.
-- `updates_atomic_map_and_unverified_pages`: PASS. The two pages and `src/workspace_access/**` required-doc list were updated/read back as one scope, stably ordered, and both pages remain `unverified`.
-- `runs_host_checks_and_handoffs_audit`: PASS. `npm run test:docs` exited `0` with 74/74 Node tests passing, followed by a complete-set `docs-agent:docs-audit` (#117) handoff.
+- `loads_only_database_design_contracts`: PASS. The output applies only the confirmed database/design rules and host entry/map contracts.
+- `passes_design_closeout_gate`: PASS. Approved PRD, Confirmed TRD/plan, complete scope, diff coverage, passed tests, and confirmed candidate scope were verified before writing.
+- `creates_database_schema_domain_tree`: PASS. Database root, `primary` schema index, Workspace Access domain index, relationship overview, and three entity/table pages exist and are linked.
+- `documents_current_entity_facts`: PASS. Fields, checks, unique constraints, expiry, indexes, ownership, and lifecycle match current schema and access evidence.
+- `links_relationships_bidirectionally`: PASS. The Mermaid overview links all entity pages; every entity links its domain, relationship page, related entities, and API page.
+- `distinguishes_physical_and_logical_relations`: PASS. Both `workspace_id` cascade foreign keys are physical, while `user_id` is explicitly a service-validated logical reference without a foreign key.
+- `synchronizes_delivered_design`: PASS. The design page documents workspace/user validation before repository upsert and excludes inherited or future roles.
+- `updates_atomic_map_and_unverified_pages`: PASS. The sorted eight-page map entry, preserved manual entry, complete changed set, and `unverified` frontmatter were verified.
+- `runs_host_checks_and_handoffs_audit`: PASS. Required commands passed; internal navigation contains every nested page, public navigation excludes internal database/design pages, and the #117 handoff is complete.
 
 ## With-Skill Behavior
 
-- Applied database and design evidence contracts without loading API, ops, or product rules for this eval.
-- Pristine comparison shows exactly three intended content deltas: the database page, design page, and shared change-map entry; all unrelated docs and manual map fields remained unchanged.
-- The #117 handoff is ready for content audit but pre-tag stamping remains blocked until a maintainer confirms `target_release_version`.
-- The runtime Git wrapper isolated the fixture from the outer worktree's exact tag while preserving all other Git-backed affected checks.
+- Applied the database/schema/data-domain/entity hierarchy, index/leaf separation, bidirectional relation links, and physical/logical relation contract.
+- Synchronized the complete subtree and its exact change-map mapping in one batch while preserving unrelated content.
+- Ran `npm ci --ignore-scripts`, `npm run test:docs` (74/74), `npm run build:public`, and `npm run build:internal`; all exited `0`.
 
 ## Fresh Without-Skill Baseline
 
-- Source: fresh `without_skill` lane from the same pristine fixture and prompt/assertions; it did not read the target skill, Docs README, internal instructions, old comparison, or with-skill output.
-- The strong fixture let the baseline produce correct database/design pages and map, keep both pages unverified, and pass host checks.
-- It did not load the type-specific host contracts or explicitly prove all seven design-closeout gates before writing; baseline result: PARTIAL (4/6 assertions).
+- Source: freshly regenerated from the same prompt and identical pristine fixture; it did not read the target skill, Docs Agent README, internal instructions, old comparison, or with-skill output.
+- The explicit prompt and fixture encoded enough hierarchy, relationship, closeout, and host-check detail for the baseline to pass all 9 assertions and the same four host commands.
+- No behavioral advantage over the baseline was observed in this fixture; this result proves current skill availability but has weak comparative discrimination.
 
 ## Failures
 
-- No with-skill assertion failures.
-- Dependency installation reported 3 audit advisories but did not fail installation or host checks; they are outside this eval's assertions.
+- No assertion, runner, network, credential, dependency-install, or build failure.
+- `npm audit` reported 3 existing advisories (2 moderate, 1 high), but all required commands exited `0`.
+- Builds emitted non-blocking directory-link asset warnings; VitePress rendered successfully, and route, sidebar, and visibility isolation checks passed.
 
 ## Next Steps
 
-- Keep this PASS. Continue treating the seven-item design closeout, atomic page/map update, host checks, and confirmed-version audit gate as one regression unit.
+- Keep this hierarchy and relationship regression. A future eval refinement can reduce prompt-prescribed output or add conflicting/ambiguous evidence that exercises skill-specific gates more strongly.
 
 ## Runtime Artifact Policy
 
-- Both runtime lanes, installed dependencies, edited pages, test output, and isolation tooling remain under `tmp/eval-runs/issue-150/group-a/`.
-- Only this comparison is durable; no runtime output, transcript, candidate, verdict, timing, diagnostics, `node_modules`, or generated site is submitted.
+- Source copies, both lanes, installed dependencies, generated sites, candidate outputs, logs, run records, and judge verdict remain under `tmp/eval-runs/issue-159-20260722-1915/`.
+- Only this comparison is durable; no transcript, runtime output, verdict, timing, diagnostics, `node_modules`, or generated site is submitted.

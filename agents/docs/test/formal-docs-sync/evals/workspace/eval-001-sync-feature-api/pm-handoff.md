@@ -1,22 +1,21 @@
-# Confirmed feature-delivery handoff
+# Confirmed existing-system backfill handoff
 
-- request_type: `delivery`
-- change_tier: `standard`
-- feature_path: `search-api`
-- feature: `search-api`
-- parent_feature: `N/A`
-- feature_level: `1`
+- request_type: `formal_docs`
+- change_tier: `major`
+- feature_path: `agents/docs-agent/formal-docs-information-architecture`
+- feature: `formal-docs-information-architecture`
+- parent_feature: `agents/docs-agent`
+- feature_level: `2`
 - feature_path_evidence:
-  - source: `docs/pm/search-api/PRD.md`
-    reason: The approved level-1 PRD owns the delivered search API surface.
+  - source: `docs/pm/feature-catalog.md`
+    reason: The confirmed catalog records the API feature tree, owners, routes, and evidence paths.
 - source_documents:
-  - `docs/pm/search-api/PRD.md` (Approved)
-  - `docs/engineer/search-api/TRD.md` (Confirmed)
-  - `docs/engineer/search-api/IMPLEMENTATION_PLAN.md` (Confirmed)
-- scope_decision: Synchronize only the implemented search HTTP API surface; approved expectations are unchanged and database, operations, design, product, and release documentation are out of scope.
-- downstream_owner: `delivery`
-- required_output: Bring `docs/site/api/search.md` to current state and merge its API change-map entry.
-- evidence: `.eval/actual-diff.patch`, route/schema source, and passing contract test.
-- exclusions: database indexing, operations, design, product, and release documentation.
-- batch_confirmation: The maintainer explicitly confirms this one-page API scope for execution.
-- blockers_risks: Preserve unrelated pages and the manually maintained plugin map entry.
+  - `docs/pm/feature-catalog.md` (Confirmed)
+  - `backfill-confirmation.md` (Maintainer confirmed)
+- scope_decision: Backfill one finite API batch containing the Identity / Sessions and Billing subtrees; existing Search API and all non-API sections remain out of batch.
+- downstream_owner: `Docs`
+- required_output: Create the confirmed nested API subtree, exact change-map entries, recursive navigation, host-check evidence, and a docs-audit handoff.
+- exclusions: `src/api/internal/**`, `docs/site/api/search.md`, database, design, ops, product, and release documentation.
+- blockers_risks: Do not move the stable Search API page; preserve unknown change-map fields.
+
+The maintainer explicitly requested existing-system API backfill, confirmed the host repository, and approved the finite candidate tree recorded in `backfill-confirmation.md`.

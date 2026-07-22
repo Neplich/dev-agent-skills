@@ -5,36 +5,41 @@
   "evals": [
     {
       "id": "eval-001-sync-feature-api",
-      "name": "Feature 模式精准同步 API 正式文档",
-      "description": "验证已确认 feature evidence chain 下只更新 change-map 命中的 API 页面，并以代码和测试为事实源。",
-      "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行正式文档同步。维护者已确认本批只处理 `src/api/search.py`、`src/api/schemas.py` 与命中的 `docs/site/api/search.md`；请从 fixture 代码、测试和 diff 核证后写入，并合并 change-map。",
-      "expected_output": "只更新 search API 页面，准确记录路径、参数和错误；保留未知人工映射及无关文档；不声称 database/ops 自动同步完成。",
+      "name": "Backfill 模式按功能树生成 API 子树",
+      "description": "验证已确认的 API backfill 批次交付两个功能域、一个两级子功能、各级索引和可定位的 route 叶子页。",
+      "prompt": "维护者已在 `pm-handoff.md` 和 `backfill-confirmation.md` 确认本次 API backfill 的完整候选树。请按 feature catalog、route/schema/handler 和 contract tests 核证 identity/sessions 与 billing 两个功能域，使用宿主现有嵌套脚手架与递归导航能力原子生成完整 API 子树、更新 change map，执行 `npm run test:docs`、public/internal build 并输出 #117 handoff。",
+      "expected_output": "生成 `api/identity/sessions/` 两级子功能与 `api/billing/` 功能域，包含根/功能域/子功能 index 和每条 route 可定位的叶子页；不移动无关稳定页；不同 code glob 精确映射到对应子树并保留未知字段；宿主检查与双视图构建通过。",
       "workspace": "workspace/eval-001-sync-feature-api",
       "assertions": [
         {
-          "id": "updates_only_mapped_api_doc",
-          "description": "只更新命中 API 页面",
-          "text": "根据 TRD related_code、plan scope、actual diff 与 change-map，只更新 `docs/site/api/search.md`；不修改 `docs/site/database/search-index.md` 或其他无关页面。"
+          "id": "creates_complete_nested_api_tree",
+          "description": "生成两功能域与两级子功能",
+          "text": "交付 `docs/site/api/index.md`、`identity/index.md`、`identity/sessions/index.md`、`identity/sessions/create-session.md`、`identity/sessions/revoke-session.md`、`billing/index.md` 和 `billing/list-invoices.md`；叶子页不全部落在 `docs/site/api/*.md`。"
         },
         {
-          "id": "extracts_current_api_facts",
-          "description": "从代码和测试提取 API 事实",
-          "text": "以路由、schema、handler 与 contract test 为 ground truth，记录 `GET /api/search`、必填 query 参数 `q`、可选 `limit` 及 400 `invalid_query` 错误，不延续 fixture 文档中的旧路径或猜测。"
+          "id": "makes_every_route_navigable_and_complete",
+          "description": "所有 fixture route 可逐级定位",
+          "text": "API 根索引逐级链接到每个功能域、sessions 子功能和三个 route 叶子页；每个叶子页都以 route/schema/handler/contract test 证据完整记录 method、path、鉴权、请求、响应和错误。"
         },
         {
-          "id": "merges_map_without_deleting_unknown",
-          "description": "合并映射且保留人工未知条目",
-          "text": "合并相同 `code_glob` 的 required_docs 并稳定去重排序，保留 `plugins/manual/**` 人工未知条目及其 trigger、exclude，不因当前 scope 未命中而删除。"
+          "id": "maps_code_globs_to_exact_subtrees",
+          "description": "不同 code glob 映射精确子树",
+          "text": "`src/api/identity/sessions/**` 与 `src/api/billing/**` 分别映射到对应父级 index 和 route 叶子页，并保留 `plugins/manual/**` 的未知字段、trigger 和 exclude；列表稳定去重排序。"
         },
         {
-          "id": "keeps_confirmed_type_scope",
-          "description": "在五类能力中保持本次 API 范围",
-          "text": "识别 formal-docs-sync 当前可处理 API、database、design、ops、product 五类正式文档，但本次已确认范围只命中并加载 API 类型；不把其他四类能力误报为本次已同步。"
+          "id": "uses_evidence_based_split_rules",
+          "description": "分类和拆分均有证据",
+          "text": "根据 feature catalog、route prefix/tag、handler owner 和 contract tests 确定 identity/sessions 与 billing 父子层级；不以源码文件数或页面长度机械拆分，也不移动无关稳定 `api/search.md`。"
         },
         {
-          "id": "marks_changed_page_unverified",
-          "description": "新状态等待审计验证",
-          "text": "将变更后的 API 页面写成稳定 current state，并保持 `last_verified_version: unverified`，不由 sync 盖 release 版本。"
+          "id": "keeps_api_batch_atomic_and_unverified",
+          "description": "完整子树与映射原子更新",
+          "text": "根/功能域/子功能 index、叶子页、导航和 change-map 作为同一已确认批次写入并回读；索引不复制叶子 contract，所有变更页保持 `last_verified_version: unverified`。"
+        },
+        {
+          "id": "passes_nested_host_navigation_checks",
+          "description": "嵌套子树通过宿主检查和双视图导航",
+          "text": "在 `docs/site/` 执行并通过 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal`，确认 public/internal 递归导航包含全部嵌套页，然后输出 `docs-agent:docs-audit` #117 handoff。"
         }
       ]
     },
@@ -175,10 +180,10 @@
     },
     {
       "id": "eval-007-feature-database-design",
-      "name": "Feature 模式同步 Database 与 Design 当前状态",
-      "description": "验证已确认 feature delivery 在 design closeout 全通过后，按宿主模板和 change map 原子同步 database 与 design 页面。",
-      "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行 `workspace-access` 的 database + design 正式文档同步。design closeout 证据已完整提供且本批页面与映射均已获维护者确认。请只加载目标类型规则，核对 schema、代码、diff 与测试，更新页面和 change map，执行宿主 `npm run test:docs`，再输出 #117 handoff。",
-      "expected_output": "只更新 workspace-access 的 database 与 design 页面及原子映射；准确写入当前 schema、逻辑关系和最终控制流，不写未来态；两页保持 unverified，真实通过宿主 docs checks 后 handoff docs-audit。",
+      "name": "Feature 模式同步分层 Database 子树与 Design",
+      "description": "验证已确认 feature delivery 按数据库/schema、数据域、关系总览和实体页原子同步 database 子树，并保留 design closeout 门禁。",
+      "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行 `workspace-access` 的 database + design 正式文档同步。design closeout 证据已完整提供，维护者已确认 `database/primary/workspace-access/` 完整候选树、design 页面和映射。请只加载 database/design 规则，核对当前 schema、repository/service、diff 与测试，原子更新各级 index、relationships、实体/表页、design 页和 change map，执行宿主 `npm run test:docs`与 public/internal build，再输出 #117 handoff。",
+      "expected_output": "在 `database/primary/workspace-access/` 生成数据域 index、relationships 和 workspaces/workspace-memberships/workspace-invitations 实体页，与数据库根索引、primary 索引及 design 页原子同步；关系总览和实体页双向链接，明确区分物理外键与逻辑引用；通过宿主检查和双视图构建后 handoff docs-audit。",
       "workspace": "workspace/eval-007-feature-database-design",
       "assertions": [
         {
@@ -192,9 +197,24 @@
           "text": "逐项核对 Approved PRD、Confirmed TRD、已确认计划、全部 scope complete、diff 覆盖、全部 required tests passed 及已确认候选范围，确认 design closeout 七项均通过后才写入。"
         },
         {
-          "id": "synchronizes_database_current_state",
-          "description": "从 schema 与测试写入数据库当前事实",
-          "text": "将 `docs/site/database/workspace-access.md` 更新为当前 `workspace_memberships` schema：`(workspace_id, user_id)` 唯一约束、`role` 仅允许 owner/editor/viewer、`created_at` 必填；明确 workspace/user 是由应用层验证的逻辑引用，不虚构物理外键。"
+          "id": "creates_database_schema_domain_tree",
+          "description": "按数据库/schema、数据域与实体组织",
+          "text": "生成并逐级链接 `database/index.md`、`database/primary/index.md`、`database/primary/workspace-access/index.md`、`relationships.md`、`workspaces.md`、`workspace-memberships.md` 和 `workspace-invitations.md`；不再把所有 schema 压入单个 `database/workspace-access.md`。"
+        },
+        {
+          "id": "documents_current_entity_facts",
+          "description": "从 schema 与读写证据写入当前事实",
+          "text": "三个实体/表页准确记录当前字段、约束、索引、owner 和生命周期：membership 保持 `(workspace_id, user_id)` 唯一约束和 owner/editor/viewer check，invitation 保持 token 唯一约束与 expires_at；不把 migration 历史当成当前 schema。"
+        },
+        {
+          "id": "links_relationships_bidirectionally",
+          "description": "关系总览与实体页双向链接",
+          "text": "`relationships.md` 的有证据 Mermaid 总览链接三个实体/表页；每个表页反向链接数据域 index、关系页、相关表和 `docs/site/api/workspace-access.md`。"
+        },
+        {
+          "id": "distinguishes_physical_and_logical_relations",
+          "description": "物理外键与逻辑引用明确区分",
+          "text": "明确 `workspace_memberships.workspace_id` 和 `workspace_invitations.workspace_id` 是 schema 中带 CASCADE 的物理外键；`workspace_memberships.user_id` 仅是 service 验证的跨域逻辑引用，Mermaid 和正文均不将其虚构为 FK。"
         },
         {
           "id": "synchronizes_delivered_design",
@@ -203,13 +223,13 @@
         },
         {
           "id": "updates_atomic_map_and_unverified_pages",
-          "description": "页面与映射原子更新并等待审计",
-          "text": "两页及 `src/workspace_access/**` 对应 change-map required_docs 作为同一确认范围更新、回读并稳定排序；两页均为 `last_verified_version: unverified`，不执行版本盖章。"
+          "description": "Database 子树、Design 与映射原子更新",
+          "text": "所有 database index/relationships/实体页、design 页和 `src/workspace_access/**` change-map required_docs 作为同一确认范围更新、回读并稳定排序；保留无关人工条目，所有变更页均为 `last_verified_version: unverified`。"
         },
         {
           "id": "runs_host_checks_and_handoffs_audit",
           "description": "真实执行宿主检查并 handoff #117",
-          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，记录命令、cwd、退出状态和结果；随后把完整 affected set handoff 给 `docs-agent:docs-audit`（#117）。"
+          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal`；internal 递归导航包含全部嵌套 database 页，public 导航正确排除 internal database 页；随后把完整 affected set handoff 给 `docs-agent:docs-audit`（#117）。"
         }
       ]
     },

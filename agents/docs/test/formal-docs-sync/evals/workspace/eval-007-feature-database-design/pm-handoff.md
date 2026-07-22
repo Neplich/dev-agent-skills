@@ -10,9 +10,10 @@
   - `docs/pm/workspace-access/PRD.md` (Approved)
   - `docs/engineer/workspace-access/TRD.md` (Confirmed)
   - `docs/engineer/workspace-access/IMPLEMENTATION_PLAN.md` (Confirmed and closed out)
-- scope_decision: Synchronize only the delivered workspace-membership database and feature-design current state.
-- required_output: Update `docs/site/database/workspace-access.md`, `docs/site/design/workspace-access.md`, and their `src/workspace_access/**` mapping atomically.
+  - `candidate-scope-confirmation.md` (Maintainer confirmed)
+- scope_decision: Synchronize only the delivered workspace-access database domain and feature-design current state.
+- required_output: Atomically create the confirmed `docs/site/database/primary/workspace-access/` subtree, update the database root and primary indexes, update `docs/site/design/workspace-access.md`, and merge their `src/workspace_access/**` mapping.
 - evidence: `.eval/actual-diff.patch`, `.eval/test-results.md`, schema, repository, service, and tests.
-- exclusions: API, ops, product, Release Notes, inherited roles, and all other features.
-- candidate_scope_confirmation: The maintainer explicitly confirms both pages and their shared change-map entry for writing.
+- exclusions: The existing API page body, ops, product, Release Notes, inherited roles, identity-domain table documentation, and all other features.
+- candidate_scope_confirmation: The maintainer explicitly confirms the full tree, owners, evidence, mappings, and exclusions in `candidate-scope-confirmation.md`.
 - blockers_risks: The design page may be written only after all closeout evidence is independently verified.

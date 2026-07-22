@@ -4,49 +4,51 @@
 
 - Skill: `formal-docs-sync`
 - Eval: `eval-001-sync-feature-api`
-- Review context: issue #150 fresh paired eval group A
+- Review context: issue #159 API nested information architecture
 
 ## Test Set / Fixture Version
 
-- Fixture: pristine `workspace/eval-001-sync-feature-api` snapshot used by issue #150
-- Evidence set: confirmed PM handoff, Approved PRD, Confirmed TRD and plan, actual diff, route/schema source, and contract test
-- Actual validation date: `2026-07-21`
+- Fixture: current pristine `workspace/eval-001-sync-feature-api` snapshot for issue #159
+- Evidence set: confirmed backfill scope, feature catalog, route prefixes and tags, handlers, schemas, contract tests, existing stable API page, and host standards
+- Actual validation date: `2026-07-22`
+- Isolation: fresh `codex exec` copied the same fixture into independent lanes; start manifests matched with a zero-byte diff, and historical comparisons were excluded
 
 ## Latest Result
 
-**PASS (5/5 assertions)** — the with-skill lane synchronized only the mapped Search API page from current implementation evidence, preserved unrelated mappings and pages, and kept the changed page unverified.
+**PASS (6/6 assertions)** — the with-skill lane produced a complete nested API subtree for two functional domains, including the two-level Identity/Sessions branch, exact leaf contracts, recursive navigation, and atomic change-map coverage.
 
 ## Assertions
 
-- `updates_only_mapped_api_doc`: PASS. The only pristine-fixture content delta was `docs/site/api/search.md`; the database page and every unrelated page remained unchanged.
-- `extracts_current_api_facts`: PASS. The page records `GET /api/search`, required `q`, optional `limit` with its default and bounds, and HTTP 400 `invalid_query` from route/schema/test evidence.
-- `merges_map_without_deleting_unknown`: PASS. The existing `src/api/**` mapping needed no text delta; `plugins/manual/**`, its trigger, and exclude remain intact.
-- `keeps_confirmed_type_scope`: PASS. The execution recognized the five-type skill surface but loaded and applied only the host API template and API type module for this confirmed batch.
-- `marks_changed_page_unverified`: PASS. The current-state API page has `last_verified_version: unverified` and no release stamp.
+- `creates_complete_nested_api_tree`: PASS. The API root, Identity and Billing domain indexes, Sessions child index, two session route leaves, and invoice route leaf all exist.
+- `makes_every_route_navigable_and_complete`: PASS. Parent indexes and generated public/internal sidebars reach each leaf; leaf pages contain method, path, auth, request, response, errors, owner, and direct evidence.
+- `maps_code_globs_to_exact_subtrees`: PASS. Billing and Sessions code globs map to separate sorted page sets while existing unknown change-map fields remain intact.
+- `uses_evidence_based_split_rules`: PASS. Catalog, route prefix/tag, ownership, and tests support the hierarchy; the existing Search page remains byte-identical.
+- `keeps_api_batch_atomic_and_unverified`: PASS. Pages, ancestor navigation, and map entries changed as one complete subtree, and changed pages remain `unverified`.
+- `passes_nested_host_navigation_checks`: PASS. Locked install, docs tests, public build, internal build, recursive sidebar checks, and the complete #117 handoff all passed.
 
 ## With-Skill Behavior
 
-- Followed the feature-delivery entry chain, standards entry, change map, confirmed one-page candidate scope, API evidence rules, shared frontmatter contract, read-back, checks, and audit handoff sequence.
-- Ran `npm ci --ignore-scripts` and `npm run test:docs` in the isolated `docs/site/`; exit status was `0` and 74/74 Node tests passed.
-- Handed the complete affected set to `docs-agent:docs-audit` (#117). Pre-tag audit remains blocked until a maintainer confirms `target_release_version`; no version was inferred.
-- A runtime-only Git wrapper suppressed only the outer worktree's unrelated exact-tag discovery and delegated all other Git commands, so the isolated fixture's `latest: null` was checked without ancestor-tag contamination.
+- Loaded the API type contract and applied the repository's index/leaf responsibilities, lower-kebab-case paths, evidence rules, and full-subtree delivery rule.
+- Created two functional domains and one nested subfeature instead of flattening every endpoint under `docs/site/api/*.md`.
+- Ran `npm ci --ignore-scripts`, `npm run test:docs` (74/74), `npm run build:public`, and `npm run build:internal`; all exited `0`.
 
 ## Fresh Without-Skill Baseline
 
-- Source: fresh `without_skill` lane from the same pristine fixture and prompt/assertions; it did not read the target skill, Docs README, internal instructions, old comparison, or with-skill output.
-- The baseline updated the correct page with accurate API facts, preserved the manual map entry, kept `unverified`, and passed host checks.
-- It did not establish the skill's five-type capability boundary and API-only progressive-loading evidence or the version-confirmation semantics of the #117 handoff; baseline result: PARTIAL (4/5 assertions).
+- Source: freshly regenerated from the same prompt and identical pristine fixture; it did not read the target skill, Docs Agent README, internal instructions, old comparison, or with-skill output.
+- The explicit prompt, confirmed tree, and detailed host standards were sufficient for the baseline to pass all 6 assertions and the same four host commands.
+- No behavioral advantage over the baseline was observed in this fixture; this result proves current skill availability but has weak comparative discrimination.
 
 ## Failures
 
-- No with-skill assertion failures.
-- `npm ci` reported 3 dependency audit advisories, but required host checks exited `0`; advisories are outside this eval's sync assertions.
+- No assertion, runner, network, credential, dependency-install, or build failure.
+- `npm audit` reported 3 existing advisories (2 moderate, 1 high), but all required commands exited `0`.
+- Builds emitted non-blocking warnings because the asset copier treats directory-style Markdown links as non-file asset references; VitePress rendered successfully and generated routes/sidebars were verified.
 
 ## Next Steps
 
-- Keep this PASS and retain API-only progressive loading, current-code ground truth, `unverified`, and confirmed-version audit gating as a joint regression.
+- Keep this nested-tree regression. A future eval refinement can reduce prompt-prescribed output or introduce ambiguous evidence so skill-specific scope and split decisions become more discriminative.
 
 ## Runtime Artifact Policy
 
-- Both lanes, installed dependencies, edited fixture copies, test output, and the isolation wrapper remain under `tmp/eval-runs/issue-150/group-a/`.
-- Only this comparison is durable; no runtime page, transcript, candidate, verdict, timing, diagnostics, `node_modules`, or build output is submitted.
+- Source copies, both lanes, installed dependencies, generated sites, candidate outputs, logs, run records, and judge verdict remain under `tmp/eval-runs/issue-159-20260722-1915/`.
+- Only this comparison is durable; no transcript, runtime output, verdict, timing, diagnostics, `node_modules`, or generated site is submitted.

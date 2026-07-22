@@ -16,4 +16,4 @@ related_code:
 
 # Workspace Access TRD
 
-`workspace_memberships` owns the role assignment. Workspace and user records remain in separately owned stores, so the service validates both identities before the repository upserts the membership. No physical foreign keys are introduced by this feature.
+The primary database owns `workspaces`, `workspace_memberships`, and `workspace_invitations` in the workspace-access data domain. Memberships and invitations have physical foreign keys to `workspaces` with `ON DELETE CASCADE`. User identity remains owned by the separate identity domain, so `workspace_memberships.user_id` is a logical reference validated by the service rather than a physical foreign key. The service validates user identity before the repository upserts membership; invitation tokens are stored as unique hashes with explicit expiry.

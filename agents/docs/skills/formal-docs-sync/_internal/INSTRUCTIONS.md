@@ -60,6 +60,13 @@ Read `docs/site/standards/change-map.yaml`, match confirmed code paths against
 page, code glob, trigger, required docs, and exclusions together; do not infer
 a wider site scope.
 
+For API and database scopes, map each distinct code glob to the exact affected
+subtree pages rather than to a section-wide aggregate. Include every necessary
+ancestor `index.md` and database relationship page in `required_docs` when that
+code path can change their navigation or relationship summary. One subtree may
+use multiple entries when route groups, schemas, stores, or owners have
+different evidence boundaries.
+
 Merge entries with the same `code_glob`; preserve unknown fields and unrelated
 entries; deduplicate and stably sort lists. An exclusion narrows only its own
 glob. Treat repository-relative page paths as required, and exclude
@@ -70,12 +77,20 @@ glob. Treat repository-relative page paths as required, and exclude
 Before writing, show the maintainer:
 
 - selected mode and accepted entry basis;
-- candidate pages and types;
+- candidate pages and types; for API and database, render the complete proposed
+  parent/child tree, including every ancestor index, relationship page, and
+  leaf page;
 - code paths and globs;
 - evidence for each page;
 - feature owner or owning team when the feature catalog provides one;
 - proposed change-map, index, or host-required navigation delta;
 - explicit exclusions, unresolved discrepancies, and out-of-batch scope.
+
+For every proposed API or database node, pair the parent, child or page path
+with its code glob, owner, classification or relationship evidence, change-map
+delta, and exclusions. Paths must use lower kebab-case. If an existing stable
+host path would move, show a separate migration plan and wait for its explicit
+confirmation; the sync batch itself is not migration permission.
 
 Wait for confirmation. Treat every page and its corresponding change-map entry
 as one atomic confirmed scope. Existing-system backfill runs one finite batch
@@ -88,6 +103,12 @@ indexes or host-required navigation. Preserve unrelated and manually
 maintained content. Write the stable current state, replacing superseded
 claims; never add implementation diaries, ticket timelines, before/after
 narration, or unsupported future state.
+
+Treat an API or database subtree as one atomic confirmed scope: leaf pages,
+all ancestor indexes, database relationship pages, recursive navigation, and
+change-map entries either update together or remain unchanged. Index pages
+only state scope, ownership or shared boundaries, relationship summaries, and
+navigation; they must not duplicate leaf contracts or entity field tables.
 
 Read every changed page and map entry back. Verify that page paths exist, map
 globs and exclusions have the intended reach, lists are stable, and every
@@ -112,6 +133,11 @@ guidance, or CI. Run all host-required docs checks and record command, working
 directory, exit status, and result. For an AI Hub-shaped VitePress host, run
 `npm run test:docs` in `docs/site/`. Do not migrate or reproduce AI Hub-specific
 non-VitePress logic.
+
+When API or database pages are nested, also verify that the host's public and
+internal recursive navigation generation includes every confirmed page and
+that all parent/child and relationship links resolve. Use the host's existing
+navigation/build commands; do not introduce a second generator.
 
 If required dependencies are absent, use only the host's deterministic locked
 installation path. A failed, missing, or unverifiable required check blocks
@@ -165,6 +191,11 @@ a repository-wide scan or full-site generation. Preserve the feature owner or
 owning team from the catalog in the proposed batch when present. Execute one
 confirmed batch, report remaining candidates, and wait for confirmation before
 another batch.
+
+For API and database backfill, one coherent page group means a navigable,
+complete subtree rather than an isolated leaf. Its confirmed batch includes
+all ancestor indexes, necessary relationship overviews, recursive navigation,
+and change-map entries even when those support files span several paths.
 
 ## Design Delivery Closeout Gate
 
