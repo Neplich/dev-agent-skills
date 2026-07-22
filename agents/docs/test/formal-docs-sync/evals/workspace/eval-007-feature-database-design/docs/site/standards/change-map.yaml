@@ -16,4 +16,16 @@ last_verified_version: unverified
 #     trigger: <when a code change requires documentation review>
 #     exclude:
 #       - "<optional glob that narrows only this entry>"
-change_map: {}
+change_map:
+  "plugins/manual/**":
+    required_docs:
+      - docs/site/product/manual-integrations.md
+    trigger: manually maintained integration changes
+    exclude:
+      - "plugins/manual/examples/**"
+  "src/workspace_access/**":
+    required_docs:
+      - docs/site/database/workspace-access.md
+    trigger: workspace membership schema or orchestration changes
+    exclude:
+      - "src/workspace_access/experimental/**"

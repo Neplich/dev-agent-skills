@@ -45,13 +45,18 @@ relationship-dense domain must also contain `relationships.md` (or a confirmed
 host-equivalent) with an evidence-backed relationship overview and links to
 every represented entity/table page.
 
-Each entity/table page must link back to its data-domain index and, only when
-the confirmed subtree contains one, its relationship overview; link to related entity/table pages and relevant feature/API pages,
-and record current fields, constraints, indexes, read/write owners, lifecycle,
-and code evidence. Separate physical foreign keys from logical references in
-both prose and Mermaid labels. When the schema has no physical foreign key,
-name the application/store/test evidence for the logical reference and never
-draw or describe it as an FK.
+Every entity/table page must link back to its data-domain index and, only when
+the confirmed subtree contains one, its relationship overview. Every such page
+also links its related entity/table pages and each relevant feature/API
+authority page; do not treat an entity with fewer direct operations as an
+exception. When the confirmed domain exposes both a feature-level API authority
+and an entity-specific API authority, every entity page links the feature-level
+authority and the affected entity page additionally links its specific API.
+Record current fields, constraints, indexes, read/write owners,
+lifecycle, and code evidence. Separate physical foreign keys from logical
+references in both prose and Mermaid labels. When the schema has no physical
+foreign key, name the application/store/test evidence for the logical reference
+and never draw or describe it as an FK.
 
 Before writing, present the complete database candidate tree. Pair every
 database/schema node, domain index, relationship page, and entity/table page

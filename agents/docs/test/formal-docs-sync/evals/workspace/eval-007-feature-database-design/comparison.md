@@ -8,90 +8,124 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue-160 design information architecture v3`
-- Evidence: Approved PRD、Confirmed TRD、已关闭计划、actual diff、可执行
-  pytest fixture、schema、invitation service、membership repository 与 audit writer
+- Fixture version: `issue-164 Database information architecture + issue-160 Design information architecture union`
+- Evidence: approved PRD, confirmed TRD, closed implementation plan, actual diff,
+  executable fixture tests, schema, invitation service, membership repository,
+  audit writer, stable-path seed and unrelated manual mapping
 - Fresh paired run:
-  `tmp/eval-runs/pr-165-review-round3d-20260722-210000/eval-007/`
+  `tmp/eval-runs/pr-165-rebase-20260722-232227/eval-007/`
+- Generation method: both generators received the same eval prompt and pristine
+  fixture. Only with-skill received the common contract and Database/Design type
+  modules; a fresh independent `codex exec` judge applied the exact 12 assertion
+  semantics without adding stronger per-glob API requirements.
 - Actual validation date: `2026-07-22`
 
 ## Latest Result
 
-**PASS（with-skill 8/8；fresh without-skill 6/8）** — 全新 paired judge
-确认 with-skill 已逐页执行七项 Design Delivery Closeout Gate，并在正式写入前固化
-运行期矩阵；每个相关 `code_glob` 也分别包含页面、互链面和全部已变更祖先
-index 的原子映射闭包。两条 lane 的 required pytest 均为 4/4，宿主检查均为
-74/74。
+**PASS（with-skill 12/12；fresh without-skill 5/12）** — with-skill passed the
+Design closeout gate before writing, refreshed the stable Database path and
+complete nested subtree, maintained reciprocal authority links and per-glob
+atomic mapping closure, and produced the complete #117 docs-audit handoff.
 
 ## Assertions
 
 - `loads_only_database_design_contracts`: with-skill PASS；without-skill FAIL。
-  只有 with-skill 有 common、Database 与 Design 模块的实际加载证据。
-- `passes_design_closeout_gate`: 两边 PASS。两条 lane 均在正式写入前生成未覆盖的
-  runtime-only `sync-report.md`，包含 9 个拟写 Design 页面 × 7 项门禁的逐页证据、
-  生成时间和写前 clean changed-path 状态。
-- `synchronizes_database_current_state`: 两边 PASS。Database 页面准确记录组合唯一、
-  允许角色、必填时间、逻辑引用及不存在物理外键。
-- `creates_domain_component_flow_tree`: 两边 PASS。系统/领域索引、组件、唯一流程、
-  授权边界与兼容入口完整。
-- `keeps_reciprocal_and_authority_links`: 两边 PASS。组件和流程双向链接，Design 只链接
-  API/Database 权威页而不复制完整 contract。
-- `keeps_cross_domain_authority_unique`: 两边 PASS。邀请接受流程只有一份权威正文，
-  Audit Log 通过链接引用。
+  Only with-skill loaded and applied the common, Database and Design modules.
+- `passes_design_closeout_gate`: with-skill PASS；without-skill FAIL。
+  With-skill's runtime-only `sync-report.md` records the pre-write changed-path
+  state and the seven closeout checks for all nine proposed Design pages; the
+  baseline has no equivalent evidence.
+- `creates_database_schema_domain_tree`: both PASS. Both generated the Database
+  root, Primary system, workspace-access domain, relationships and three entity
+  pages with hierarchical navigation.
+- `refreshes_confirmed_stable_path`: with-skill PASS；without-skill FAIL。
+  Both refreshed the stable page's old facts, but only with-skill preserved it
+  in the broad seed while appending the complete confirmed nested subtree.
+- `documents_current_entity_facts`: both PASS. Both accurately documented
+  fields, owners, indexes, lifecycle, membership constraints and invitation
+  token/expiry facts.
+- `links_relationships_bidirectionally`: with-skill PASS；without-skill FAIL。
+  With-skill's relationship and entity pages link both ways and every entity
+  links the feature-level Workspace Access API authority; the baseline does not.
+- `distinguishes_physical_and_logical_relations`: both PASS. Both distinguish
+  the two CASCADE workspace foreign keys from the service-validated logical user
+  reference in prose and Mermaid.
+- `creates_domain_component_flow_tree`: both PASS. Both generated the Design
+  root, two domains, three components, invitation-acceptance flow,
+  authorization boundary and compatible flat entry.
+- `keeps_reciprocal_and_authority_links`: with-skill PASS；without-skill FAIL。
+  Both link components and flow reciprocally, but only with-skill also links the
+  required stable Database authority without copying its contract.
+- `keeps_cross_domain_authority_unique`: both PASS. The cross-domain flow has
+  one authoritative page and Audit Log links to it rather than duplicating it.
 - `updates_atomic_map_and_unverified_pages`: with-skill PASS；without-skill FAIL。
-  with-skill 对每个相关 glob 单独纳入叶子/兼容页、互链面、Design 根、各级已变更
-  祖先 index 及 Database 祖先/权威页；without-skill 只在整体并集上看似覆盖，逐条
-  mapping 闭包仍有缺口。未知 `plugins/manual/**` 条目均被保留，所有改页均为
-  `unverified`。
-- `runs_host_checks_and_handoffs_audit`: 两边 PASS。宿主检查和 #117 handoff 均完整。
+  With-skill preserves the manual entry, expands the stable broad seed to the
+  full subtree, and gives each invitation, repository/schema and audit glob its
+  corresponding leaf or compatibility pages, affected ancestors, reciprocal
+  pages and Database authority. The baseline's closures remain incomplete.
+- `runs_host_checks_and_handoffs_audit`: with-skill PASS；without-skill FAIL。
+  Both report successful docs tests and public/internal builds, but only
+  with-skill supplies the explicit `docs-agent:docs-audit` #117 handoff with the
+  complete affected set, evidence and version blocker.
 
 ## With-Skill Behavior
 
-- 只加载 common contract 与 Database、Design 类型模块。
-- 在任何 `docs/site/**` 或 change-map 写入前固化逐页七项 closeout matrix；写后未
-  覆盖该运行期证据。
-- 生成准确的 Database 当前事实、已确认 Design 分层、双向互链、唯一跨领域权威页。
-- 按每个 `code_glob` 生成完整原子 mapping closure；共享祖先在相关 mapping 中重复
-  显式出现，而不是依赖其他 mapping 的并集。
+- Loaded only the common contract plus Database and Design type modules.
+- Captured the nine-page Design closeout matrix before any formal-page or
+  change-map write and kept the report runtime-only.
+- Refreshed the stable Database page, built the full schema/domain/entity tree,
+  and generated the confirmed Design domain/component/flow hierarchy.
+- Preserved reciprocal links, unique cross-domain authority and complete atomic
+  mappings while retaining unrelated manual-map fields.
+- Passed 74/74 docs tests plus public/internal builds and prepared the complete
+  #117 handoff, blocked only on an unconfirmed `target_release_version`.
 
 ## Fresh Without-Skill Baseline
 
-- Source: 同一 prompt、fixture、metadata、完整 evals 与 assertions 的全新 pristine
-  copy；不包含或读取目标 skill、with-skill 输出、旧 comparison 或历史 baseline。
-- Result: 6/8 PARTIAL。页面内容、逐页 closeout 与测试能够通过，但缺少目标类型模块
-  加载证据，且逐 `code_glob` 的原子映射闭包不完整。
-- Skill-specific uplift: +2 assertions，即 +25 percentage points。
+- Source: a new pristine fixture copy with the same prompt and fixture. It did
+  not read or apply the target skill, old comparison, with-skill output or any
+  historical baseline.
+- Result: 5/12 PARTIAL. It produced accurate entity facts, the main Database and
+  Design trees, physical/logical relation semantics and unique flow authority,
+  but failed seven contract-specific closeout, linking, mapping and handoff
+  assertions.
+- Skill-specific uplift: +7 assertions, or +58.3 percentage points.
 
 ## Required Test Reproduction
 
-全新 judge 在两条原 lane 根目录分别运行：
-
-`PYTHONDONTWRITEBYTECODE=1 uv run --with pytest python -m pytest tests/test_workspace_access.py -q -p no:cacheprovider`
-
-- with-skill: exit `0`，`4 passed`
-- without-skill: exit `0`，`4 passed`
-
-judge 还在两条 lane 的只读临时副本中分别运行：
-
-`GITHUB_BASE_SHA=HEAD npm run test:docs`
-
-- with-skill: exit `0`，Node `74 passed, 0 failed`
-- without-skill: exit `0`，Node `74 passed, 0 failed`
+- Both generators ran `npm run test:docs`: exit `0`, Node `74 passed, 0 failed`.
+- Both generators ran and passed `npm run build:public` and
+  `npm run build:internal`; generated internal routes include all nested Database
+  pages and public navigation excludes internal Database/Design pages.
+- The independent judge performed read-only route, sidebar, link, frontmatter,
+  mapping, timestamp and handoff checks. The judge did not rerun build commands
+  that would modify `.generated`.
+- Generator-side pytest reproduction was unavailable because pytest could not
+  be installed in the isolated environment; the confirmed fixture test evidence
+  remained an input fact and this was not an assertion failure.
 
 ## Failures
 
-- With-skill: 无；8 条 assertions 全部通过。
-- Without-skill: `loads_only_database_design_contracts`、
-  `updates_atomic_map_and_unverified_pages`。
+- With-skill assertion failures: none.
+- Without-skill assertion failures: `loads_only_database_design_contracts`,
+  `passes_design_closeout_gate`, `refreshes_confirmed_stable_path`,
+  `links_relationships_bidirectionally`,
+  `keeps_reciprocal_and_authority_links`,
+  `updates_atomic_map_and_unverified_pages`, and
+  `runs_host_checks_and_handoffs_audit`.
 
 ## Next Steps
 
-- 当前 eval 无待修复 assertion；保留逐页写前证据与逐 mapping closure 作为后续回归
-  门禁。
+- Keep the stable-path expansion, per-glob mapping closure and pre-write Design
+  closeout evidence together as the merged Database/Design regression unit.
+- Keep the unrelated manual mapping and broad `src/workspace_access/**` seed so
+  unknown-field preservation and full subtree expansion remain observable.
 
 ## Runtime Artifact Policy
 
-- 两条 lane、依赖、candidate outputs、judge verdict、日志和临时测试副本只保留在
-  `tmp/eval-runs/` 或 `/tmp`，不提交。
-- 仅本 `comparison.md` 为 durable result；不提交 `with_skill/`、`without_skill/`、
-  transcript、verdict、timing、diagnostics、dependency、generated-site 或 cache artifact。
+- Both lanes, dependencies, candidate outputs, judge verdict, logs and temporary
+  test/build products remain under `tmp/eval-runs/` or `/tmp` and are not
+  submitted.
+- Only this `comparison.md` is durable; no `with_skill/`, `without_skill/`,
+  transcript, verdict, timing, diagnostics, dependency, generated-site or cache
+  artifact is committed.

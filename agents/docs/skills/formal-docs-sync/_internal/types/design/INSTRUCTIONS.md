@@ -55,7 +55,10 @@ report may summarize it but cannot replace that ordering evidence.
 For every Design `code_glob`, list the complete atomic mapping closure in
 `required_docs`: each affected leaf or compatibility page, the Design root and
 every changed domain/subsystem ancestor `index.md` needed to reach it, plus the
-pages whose reciprocal links change. Treat that closure, its navigation/link
-delta, and its change-map entry as one atomic scope. A failed page row changes
-none of those surfaces but does not block independently evidenced pages. Never
-place a blocked page's future design in another page.
+pages whose reciprocal links change. When a mapped component participates in a
+cross-component flow, its closure also includes the API and Database authority
+pages linked by that flow; each participating code glob carries this closure
+independently rather than relying on another glob's union. Treat that closure,
+its navigation/link delta, and its change-map entry as one atomic scope. A
+failed page row changes none of those surfaces but does not block independently
+evidenced pages. Never place a blocked page's future design in another page.

@@ -267,7 +267,9 @@ dynamic schemas. It does not create duplicate type specialists.
 
 ## Report Shape
 
-After each scope or backfill batch, report:
+After each scope or backfill batch, report every field below explicitly. Do not
+omit the loaded-module line or replace it with an implicit claim that the
+output followed the relevant rules:
 
 ```markdown
 ## Formal docs sync result
