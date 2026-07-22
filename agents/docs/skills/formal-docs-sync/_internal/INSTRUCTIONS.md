@@ -134,9 +134,12 @@ directory, exit status, and result. For an AI Hub-shaped VitePress host, run
 `npm run test:docs` in `docs/site/`. Do not migrate or reproduce AI Hub-specific
 non-VitePress logic.
 
-When API or database pages are nested, also verify that the host's public and
-internal recursive navigation generation includes every confirmed page and
-that all parent/child and relationship links resolve. Use the host's existing
+When API or database pages are nested, also verify each confirmed page only in
+the recursive navigation targets allowed by its `visibility`: public
+navigation includes `public` and `both` pages, while internal navigation
+includes every `public`, `internal`, and `both` page. Verify that all
+parent/child and relationship links resolve. Never change a page's
+`visibility` merely to satisfy navigation checks. Use the host's existing
 navigation/build commands; do not introduce a second generator.
 
 If required dependencies are absent, use only the host's deterministic locked
