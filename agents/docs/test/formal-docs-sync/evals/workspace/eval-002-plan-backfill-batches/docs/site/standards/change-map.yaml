@@ -7,4 +7,13 @@ owners:
 related_code: []
 last_verified_version: unverified
 
-change_map: {}
+change_map:
+  "src/api/billing/**":
+    required_docs:
+      - docs/site/api/billing/index.md
+      - docs/site/api/billing/list-invoices.md
+      - docs/site/api/index.md
+    trigger: Billing route, request, response, or error behavior changes
+    exclude:
+      - "src/api/billing/internal/**"
+    review_policy: billing-owner-approval

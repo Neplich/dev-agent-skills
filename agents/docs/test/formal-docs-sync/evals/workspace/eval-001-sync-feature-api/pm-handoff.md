@@ -1,22 +1,21 @@
-# Confirmed feature-delivery handoff
+# Confirmed existing-system backfill handoff
 
-- request_type: `delivery`
-- change_tier: `standard`
-- feature_path: `search-api`
-- feature: `search-api`
-- parent_feature: `N/A`
-- feature_level: `1`
+- request_type: `formal_docs`
+- change_tier: `major`
+- feature_path: `agents/docs-agent/formal-docs-information-architecture`
+- feature: `formal-docs-information-architecture`
+- parent_feature: `agents/docs-agent`
+- feature_level: `2`
 - feature_path_evidence:
-  - source: `docs/pm/search-api/PRD.md`
-    reason: The approved level-1 PRD owns the delivered search API surface.
+  - source: `docs/pm/feature-catalog.md`
+    reason: The confirmed catalog records the API feature tree, owners, routes, and evidence paths.
 - source_documents:
-  - `docs/pm/search-api/PRD.md` (Approved)
-  - `docs/engineer/search-api/TRD.md` (Confirmed)
-  - `docs/engineer/search-api/IMPLEMENTATION_PLAN.md` (Confirmed)
-- scope_decision: Synchronize only the implemented search HTTP API surface; approved expectations are unchanged and database, operations, design, product, and release documentation are out of scope.
-- downstream_owner: `delivery`
-- required_output: Bring `docs/site/api/search.md` to current state and merge its API change-map entry.
-- evidence: `.eval/actual-diff.patch`, route/schema source, and passing contract test.
-- exclusions: database indexing, operations, design, product, and release documentation.
-- batch_confirmation: The maintainer explicitly confirms this one-page API scope for execution.
-- blockers_risks: Preserve unrelated pages and the manually maintained plugin map entry.
+  - `docs/pm/feature-catalog.md` (Confirmed)
+  - `backfill-request.md` (Maintainer request; candidate batch not confirmed)
+- scope_decision: Perform bounded discovery for a first finite API backfill batch bounded to the Identity / Sessions catalog branch and present its candidate pages and mappings for confirmation; Billing, existing Search API, and all non-API sections remain out of batch.
+- downstream_owner: `Docs`
+- required_output: Propose one evidence-backed nested API subtree and exact change-map entries, then wait for maintainer confirmation with zero site writes.
+- exclusions: Billing, `src/api/internal/**`, `docs/site/api/search.md`, database, design, ops, product, and release documentation.
+- blockers_risks: Do not move the stable Search API page; preserve unknown change-map fields.
+
+The maintainer explicitly requested existing-system API backfill and confirmed the host repository. This handoff authorizes bounded discovery only; it does not confirm any candidate tree or write scope.
