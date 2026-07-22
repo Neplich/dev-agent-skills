@@ -31,8 +31,11 @@ Run all eight steps in order for every mode.
 Verify the host already has `docs/site/`, its standards, and
 `docs/site/standards/change-map.yaml`. Read
 `docs/site/standards/index.md` or the host's equivalent standards entry before
-proposing writes. If the foundation is absent, stop with zero site writes and
-offer a `docs-site-bootstrap` handoff; do not create a partial site.
+proposing writes, then follow that entry and read its document-granularity
+contract—normally `docs/site/standards/doc-granularity.md`. The standards entry
+does not substitute for the granularity file. If the foundation or linked
+granularity contract is absent, stop with zero site writes and offer a
+`docs-site-bootstrap` handoff; do not create a partial site.
 
 ### 2. Read only the target-type templates and modules
 
@@ -106,6 +109,13 @@ change-map entry as one atomic confirmed scope. Existing-system backfill runs
 one finite batch at a time and requires a new confirmation before the next
 batch.
 
+Materialize this as a per-`code_glob` checklist rather than reasoning from the
+union of all entries. For each row, mark the affected leaf or compatibility
+pages, every changed type root and ancestor `index.md`, relationship and
+reciprocal-link pages, and linked authority pages. A shared ancestor may repeat
+in multiple rows. A row is incomplete when any applicable category is absent,
+even if another exact or broader glob contains that page.
+
 ### 5. Write only the confirmed scope and read it back
 
 Create or update only confirmed pages, their map entries, every necessary
@@ -114,6 +124,13 @@ scope. Before writing, verify each affected `code_glob.required_docs` equals
 its confirmed mapping closure; after writing, verify it again against the
 changed paths. A shared ancestor index may occur in more than one affected
 entry and must not be omitted merely because another glob also maps it.
+For a confirmed multi-type atomic scope, verify every affected row contains the
+complete closure of every type changed by that atomic scope, including a row
+whose source file directly belongs to only one type. For example, every broad
+or exact invitation, repository/schema, service, or audit row in a Database +
+Design delivery includes both changed roots and both ancestor chains, not only
+the Design pages plus one Database authority page. Do not reclassify the audit
+row as Design-only after the combined candidate scope was confirmed.
 Preserve unrelated and manually
 maintained content. Write the stable current state, replacing superseded
 claims; never add implementation diaries, ticket timelines, before/after
