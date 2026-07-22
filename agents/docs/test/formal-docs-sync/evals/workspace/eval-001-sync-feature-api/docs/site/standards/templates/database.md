@@ -38,7 +38,7 @@ last_verified_version: unverified
 
 # {{title}}
 
-[返回所属数据域](./) · [查看关系总览](./relationships.md)
+[返回所属数据域](./)<!-- 仅当已确认的数据域子树包含 relationships.md 时保留： · [查看关系总览](./relationships.md) -->
 
 ## 范围与所有权
 

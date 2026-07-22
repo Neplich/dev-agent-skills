@@ -5,41 +5,41 @@
   "evals": [
     {
       "id": "eval-001-sync-feature-api",
-      "name": "Backfill 模式按功能树生成 API 子树",
-      "description": "验证已确认的 API backfill 批次交付两个功能域、一个两级子功能、各级索引和可定位的 route 叶子页。",
-      "prompt": "维护者已在 `pm-handoff.md` 和 `backfill-confirmation.md` 确认本次 API backfill 的完整候选树。请按 feature catalog、route/schema/handler 和 contract tests 核证 identity/sessions 与 billing 两个功能域，使用宿主现有嵌套脚手架与递归导航能力原子生成完整 API 子树、更新 change map，执行 `npm run test:docs`、public/internal build 并输出 #117 handoff。",
-      "expected_output": "生成 `api/identity/sessions/` 两级子功能与 `api/billing/` 功能域，包含根/功能域/子功能 index 和每条 route 可定位的叶子页；不移动无关稳定页；不同 code glob 精确映射到对应子树并保留未知字段；宿主检查与双视图构建通过。",
+      "name": "Backfill 模式提出 API 功能树候选批次",
+      "description": "验证未确认写入范围的 API backfill 请求先经过模式选择、证据驱动的信息架构和逐节点候选范围确认，不提前写入或 handoff。",
+      "prompt": "维护者通过 `pm-handoff.md` 请求为当前既有文档站回填 API，但 `backfill-request.md` 只授权 bounded discovery，不是候选批次确认。请读取 fixture 的 feature catalog、现有 change map、route/schema/handler 与 contract tests，按正式同步协议的候选确认结构提出第一批有限范围供维护者确认。本轮不要替维护者确认范围，也不要写入文档站。",
+      "expected_output": "选择 existing-system backfill 模式并仅加载 API 契约；从证据推导首批 Identity / Sessions 的完整候选树，以逐节点结构展示 parent、page、code glob、owner、分类证据、change-map delta 和 exclusions；将 Billing、稳定 Search 页与非 API 范围留在批次外，保持 fixture 零写入并等待明确确认，不运行写后检查或输出 #117 handoff。",
       "workspace": "workspace/eval-001-sync-feature-api",
       "assertions": [
         {
-          "id": "creates_complete_nested_api_tree",
-          "description": "生成两功能域与两级子功能",
-          "text": "交付 `docs/site/api/index.md`、`identity/index.md`、`identity/sessions/index.md`、`identity/sessions/create-session.md`、`identity/sessions/revoke-session.md`、`billing/index.md` 和 `billing/list-invoices.md`；叶子页不全部落在 `docs/site/api/*.md`。"
+          "id": "selects_backfill_mode_and_api_contract",
+          "description": "按入口证据选择 backfill 并仅加载 API 契约",
+          "text": "将请求判定为 `existing-system backfill` 而不是 feature delivery，接受显式维护者请求、既有 host 与 feature catalog 作为 bounded-discovery entry basis；读取 host standards entry、change map、API template 和 API type module，不读取或应用 database、design、ops、product 类型模块。"
         },
         {
-          "id": "makes_every_route_navigable_and_complete",
-          "description": "所有 fixture route 可逐级定位",
-          "text": "API 根索引逐级链接到每个功能域、sessions 子功能和三个 route 叶子页；每个叶子页都以 route/schema/handler/contract test 证据完整记录 method、path、鉴权、请求、响应和错误。"
+          "id": "derives_complete_api_candidate_tree",
+          "description": "从功能和接口证据推导完整候选树",
+          "text": "候选树包含 `docs/site/api/index.md`、`identity/index.md`、`identity/sessions/index.md`、`identity/sessions/create-session.md` 和 `identity/sessions/revoke-session.md`；以 catalog 父子关系、route prefix/tag、owner、schema 和 contract tests 解释层级，不按源码文件数或页面长度机械拆分，并将不同 owner/lifecycle 的 Billing 留到后续批次。"
         },
         {
-          "id": "maps_code_globs_to_exact_subtrees",
-          "description": "不同 code glob 映射精确子树",
-          "text": "`src/api/identity/sessions/**` 与 `src/api/billing/**` 分别映射到对应父级 index 和 route 叶子页，并保留 `plugins/manual/**` 的未知字段、trigger 和 exclude；列表稳定去重排序。"
+          "id": "presents_per_node_confirmation_matrix",
+          "description": "逐节点展示 skill 特有候选确认结构",
+          "text": "在写入前以可交叉对应的逐节点矩阵和 mapping section，为每个 domain、subfeature、index 和 route leaf 配对 parent、完整 page path、精确 code glob 或代码边界、owner、分类或 route 证据、proposed change-map delta 与 exclusions；同时展示完整 parent/child tree、明确 unresolved discrepancies 和 out-of-batch scope 后等待确认，不要求所有字段必须压在同一张表内。"
         },
         {
-          "id": "uses_evidence_based_split_rules",
-          "description": "分类和拆分均有证据",
-          "text": "根据 feature catalog、route prefix/tag、handler owner 和 contract tests 确定 identity/sessions 与 billing 父子层级；不以源码文件数或页面长度机械拆分，也不移动无关稳定 `api/search.md`。"
+          "id": "proposes_exact_atomic_change_map",
+          "description": "按代码边界提出原子 change-map 映射",
+          "text": "以 catalog 的 `src/api/identity/sessions/**` 边界或更精确的 routes/schemas/contract-test entries 提出 required_docs，并确保能改变页面集合或导航的 route 映射覆盖两个 leaf、Sessions/Identity/API ancestor index 和递归导航；说明确认后页面与 map 原子更新、列表稳定去重排序，并保留 `plugins/manual/**` 的未知 `review_hint`、trigger、exclude 及全部无关条目。"
         },
         {
-          "id": "keeps_api_batch_atomic_and_unverified",
-          "description": "完整子树与映射原子更新",
-          "text": "根/功能域/子功能 index、叶子页、导航和 change-map 作为同一已确认批次写入并回读；索引不复制叶子 contract，所有变更页保持 `last_verified_version: unverified`。"
+          "id": "preserves_stable_paths_and_scope_boundaries",
+          "description": "稳定路径与批次边界不被隐式扩大",
+          "text": "将 Billing、既有 `docs/site/api/search.md` 及其 change-map 映射标为 out-of-batch 且保持不动；database、design、ops、product、release 和 `src/api/internal/**` 均明确排除；若稳定路径需要移动，要求单独迁移计划与显式确认。"
         },
         {
-          "id": "passes_nested_host_navigation_checks",
-          "description": "嵌套子树通过宿主检查和双视图导航",
-          "text": "在 `docs/site/` 执行并通过 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal`，确认 public/internal 递归导航包含全部嵌套页，然后输出 `docs-agent:docs-audit` #117 handoff。"
+          "id": "keeps_unconfirmed_batch_read_only",
+          "description": "候选批次未确认时零写入且不提前 handoff",
+          "text": "明确指出 `backfill-request.md` 和本轮请求都不是 candidate-scope confirmation；不创建或修改页面、change-map、index 或导航，不开始下一批，不运行写后 host checks，也不输出 `docs-agent:docs-audit` #117 handoff；停在维护者对完整候选树与映射的一次明确确认。"
         }
       ]
     },
