@@ -8,83 +8,93 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue-160 product information architecture v1`
-- Evidence: confirmed two-domain catalog, backfill confirmation, current Product implementation, and acceptance tests
-- Fresh run: `tmp/eval-runs/issue-160-run-a/product/`
+- Fixture version: `issue-160 product information architecture v2`
+- Evidence: confirmed two-domain catalog, implementation, acceptance tests, and a seeded unrelated change-map entry with `exclude` plus an unknown field
+- Fresh run: `tmp/eval-runs/pr-165-review-fix-20260722-200100/product/`
+- Generation method: both lanes received the same eval prompt and pristine
+  fixture without assertions; only with-skill received the target contract.
 - Actual validation date: `2026-07-22`
 
 ## Latest Result
 
-**PASS（with-skill 6/6；fresh without-skill 6/6）** — with-skill generated a
-navigable seven-page Product tree for two domains, kept invitations as a
-two-level feature with two independent task pages, mapped both code globs,
-passed host checks, and prepared the #117 handoff. The baseline also satisfied
-all assertions, so this fixture proves availability but no assertion-level
-uplift.
+**PASS（with-skill 9/9；fresh without-skill 5/9）** — both lanes generated the
+confirmed seven-page Product tree, but with-skill additionally preserved the
+atomic ancestor mapping and stable ordering, recorded auditable host-check
+evidence, and blocked pre-tag audit until a maintainer confirms the target
+version. The baseline failed four skill-specific assertions, including three
+observable output and handoff behaviors.
 
 ## Assertions
 
-- `creates_complete_product_tree`: PASS. Product root, two domain indexes,
-  invitations index, and three task pages were generated; invite and accept
-  remain separate.
-- `keeps_every_task_navigable`: PASS. Every task is reachable from the root and
-  each index is limited to scope, roles, relationships, and navigation.
-- `writes_evidence_backed_task_behavior`: PASS. Permissions, the three-pending
-  limit, duplicate/expired/invalid feedback, recovery actions, dashboard role,
-  empty state, and retry all match implementation and acceptance evidence.
-- `updates_product_map_atomically`: PASS. Workspace-management and analytics
-  globs map to their corresponding complete subtrees and ancestor root.
-- `links_authorities_without_copying_contracts`: PASS. Task pages link parent,
-  Design, API, Database, and Ops authorities without duplicating contracts or
-  creating role-based duplicate trees.
-- `runs_product_host_checks`: PASS. The fresh judge reran
-  `GITHUB_BASE_SHA=HEAD npm run test:docs`: exit `0`, 74/74 Node tests; all
-  pages remain `unverified` and the #117 pre-tag step waits for a maintainer-
-  confirmed target version.
+- `loads_only_product_contract`: with-skill PASS; without-skill FAIL. Only the
+  with-skill lane had and applied the common contract and Product module; no
+  other type module was available.
+- `creates_complete_product_tree`: both PASS. Product root, two domain indexes,
+  invitations index, and three independent task pages were generated.
+- `keeps_every_task_navigable`: both PASS. Every task is reachable from the
+  root, while indexes remain navigation and scope pages.
+- `records_confirmed_non_leaf_scope`: both PASS. Across the non-leaf pages,
+  audience, catalog owner, children, adjacent capabilities, and exclusions are
+  retained.
+- `writes_evidence_backed_task_behavior`: both PASS. Permissions, limits,
+  feedback, recovery, empty state, and retry match code and acceptance tests.
+- `updates_product_map_atomically`: with-skill PASS; without-skill FAIL.
+  With-skill stably sorts globs and `required_docs`, includes Product root and
+  necessary ancestor indexes, and preserves the seeded unrelated entry,
+  `exclude`, and `review_policy`; the baseline is unsorted and omits the root
+  from both mappings.
+- `links_authorities_without_copying_contracts`: both PASS. Task pages link the
+  parent and cross-type authority entries without duplicating contracts.
+- `runs_product_host_checks`: with-skill PASS; without-skill FAIL. Disposable
+  copies both passed 74/74 Node tests and all pages remain `unverified`, but the
+  baseline did not record cwd and explicit exit status as required evidence.
+- `blocks_audit_without_confirmed_version`: with-skill PASS; without-skill FAIL.
+  With-skill's #117 handoff contains the affected set, evidence, exclusions,
+  and covered batch and states that pre-tag audit cannot begin before a
+  maintainer confirms `target_release_version`; the baseline closes as complete
+  without that gate.
 
 ## With-Skill Behavior
 
-- Loaded only the Product type module after the common contract.
-- Preserved both catalog owners and made roles, adjacent domains, exclusions,
-  and reader tasks explicit in non-leaf indexes.
-- Stably sorted change-map globs and required docs.
-- Kept the page/index/link/map batch atomic and returned a version-context
-  blocked #117 pre-tag handoff rather than stamping a version.
+- Loaded the common eight-step contract and only the Product type module.
+- Preserved the confirmed domain-feature-task hierarchy and non-leaf scope
+  semantics.
+- Stably sorted change-map globs and document lists while preserving unknown
+  data.
+- Kept the pre-tag audit handoff blocked instead of inferring a version.
 
 ## Fresh Without-Skill Baseline
 
-- Source: independent pristine copy with the same eval definition, prompt, and
-  fixture; it contained no `.eval-skill`, old comparison, with-skill output, or
-  historical baseline.
-- Result: 6/6 PASS. Its indexes had weaker role/exclusion detail, its map was
-  not stably sorted, and its #117 blocked semantics were less explicit, but
-  those differences did not fail the current assertions.
-- The baseline final response mentioned generic PM/Docs routing; directory and
-  hash evidence showed no access to the target `formal-docs-sync` skill.
+- Source: a new pristine fixture copy with the same eval prompt, assertions,
+  metadata, and seeded map; it did not contain or read the target skill, old
+  comparison, with-skill output, or historical baseline.
+- Result: 5/9 PARTIAL. It creates the full tree and accurate task content, but
+  fails contract loading, stable and atomic mapping, auditable host-check
+  recording, and the missing-version audit gate.
+- Skill-specific uplift: +4 assertions, or +44.4 percentage points; three of
+  the four gains are observable generated-output or handoff behaviors.
 
 ## Failures
 
 - With-skill assertion failures: none.
-- Without-skill assertion failures: none.
-- Non-blocking harness note: plain `npm run test:docs` exited `1` because the
-  synthetic inner repository has only one root commit and cannot infer
-  `HEAD^1`. The judge independently reran with explicit
-  `GITHUB_BASE_SHA=HEAD`; strict affected checks still included working-tree
-  and untracked candidate pages and passed 74/74.
+- Without-skill assertion failures: `loads_only_product_contract`,
+  `updates_product_map_atomically`, `runs_product_host_checks`, and
+  `blocks_audit_without_confirmed_version`.
+- The single-commit fixture required `GITHUB_BASE_SHA=HEAD`; strict affected
+  checks still included working-tree and untracked candidate pages.
 
 ## Next Steps
 
-- Keep this PASS. A future differentiation-focused fixture may seed unknown
-  change-map fields and unrelated entries, require stable sorting explicitly,
-  or introduce evidence that tempts role-duplicated trees or contract copying.
-- The eval harness should set an explicit base for single-commit synthetic
-  repositories.
+- Keep the module-access, confirmed non-leaf scope, stable-map, and blocked
+  handoff assertions together as the Product backfill regression unit.
+- Keep the seeded unrelated map entry so unknown-field and exclusion
+  preservation remain observable.
 
 ## Runtime Artifact Policy
 
-- Both lanes, candidate outputs, installed dependencies, judge verdict, logs,
-  and isolated rerun copies remain under `tmp/eval-runs/issue-160-run-a/` or
-  ephemeral `/tmp` and are not submitted.
+- Both lanes, candidate outputs, dependencies, judge verdict, logs, and
+  disposable rerun copies remain under `tmp/eval-runs/` or `/tmp` and are not
+  submitted.
 - Only this `comparison.md` is durable; no `with_skill/`, `without_skill/`,
-  transcript, candidate output, verdict, timing, run status, diagnostics,
-  `node_modules`, generated site, or cache is committed.
+  transcript, verdict, timing, diagnostics, dependency, generated-site, or
+  cache artifact is committed.

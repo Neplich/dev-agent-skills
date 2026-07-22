@@ -11,6 +11,7 @@ def test_workspace_domain_schema_constraints():
     assert "UNIQUE (workspace_id, user_id)" in schema
     assert "token_hash TEXT NOT NULL UNIQUE" in schema
     assert "expires_at TEXT NOT NULL" in schema
+    assert "created_at TEXT NOT NULL" in schema
 
 
 def test_assign_role_validates_logical_user_reference(db, workspace_store, user_store):

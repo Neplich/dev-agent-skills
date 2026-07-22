@@ -8,92 +8,98 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue-160 design information architecture v1`
-- Evidence: Approved PRD, Confirmed TRD, closed plan, actual diff, four passed
-  tests, schema, invitation service, membership repository, and audit writer
-- Fresh run: `tmp/eval-runs/issue-160-run-a/design/`
+- Fixture version: `issue-160 design information architecture v2`
+- Evidence: Approved PRD, Confirmed TRD, closed plan, actual diff, committed
+  pytest fixtures, schema, invitation service, membership repository, and audit writer
+- Fresh run: `tmp/eval-runs/pr-165-review-fix-20260722-194449/design/`
 - Actual validation date: `2026-07-22`
 
 ## Latest Result
 
-**PASS（with-skill 8/8；fresh without-skill 5/8）** — with-skill passed every
-page-level closeout gate, generated two Design domains, three component pages,
-one cross-component authoritative flow and one boundary page, maintained
-reciprocal and API/Database authority links, closed the atomic change-map tree,
-and passed host checks. The baseline produced strong content but missed three
-skill-specific governance assertions.
+**PARTIAL（with-skill 6/8；fresh without-skill 5/8）** — the previously
+un-runnable required tests are now reproducible: both fresh lanes and the
+independent judge ran the requested command with 4/4 passing. Both lanes also
+passed the locked host checks with 74/74 Node tests. The fresh judge found two
+remaining behavioral gaps in the generated candidates: neither recorded a
+page-by-page seven-item Design closeout matrix, and neither completed every
+necessary ancestor-index mapping atomically.
 
 ## Assertions
 
-- `loads_only_database_design_contracts`: PASS. The lane loaded the standards,
-  granularity, change map, Database/Design templates, and only those two type
-  modules; API remained a link target.
-- `passes_design_closeout_gate`: PASS. All nine changed Design pages, including
-  root and compatibility pages, were checked against the same seven-item
-  completion evidence chain before writing.
-- `synchronizes_database_current_state`: PASS. The authority page records the
-  unique workspace-user pair, allowed roles, required timestamp, logical
-  references, and absence of physical foreign keys.
-- `creates_domain_component_flow_tree`: PASS. Design root, Workspace Access and
-  Audit Log indexes, three components, invitation-acceptance flow, authorization
-  boundary, and flat-path compatibility entry were created or updated.
-- `keeps_reciprocal_and_authority_links`: PASS. All three components link the
-  flow, the flow links them back, and Design links API/Database authority pages
-  without copying full contracts.
-- `keeps_cross_domain_authority_unique`: PASS. Invitation acceptance has one
-  authority page under Workspace Access; Audit Log links it without duplication.
-- `updates_atomic_map_and_unverified_pages`: PASS. Invitation, repository,
-  schema, service, and audit globs include corresponding leaf pages and required
-  ancestor indexes while preserving the unrelated manual entry; all 11 changed
-  formal pages remain `unverified`.
-- `runs_host_checks_and_handoffs_audit`: PASS. The fresh judge reran
-  `GITHUB_BASE_SHA=HEAD npm run test:docs`: exit `0`, 74/74 tests, followed by
-  a complete #117 affected-set handoff that waits for confirmed release context.
+- `loads_only_database_design_contracts`: with-skill PASS; without-skill FAIL.
+  Only with-skill had verifiable access to the common contract and the
+  Database/Design modules.
+- `passes_design_closeout_gate`: both FAIL. The evidence chain is complete, but
+  the candidates summarize all pages together instead of recording each
+  proposed Design page against all seven closeout items.
+- `synchronizes_database_current_state`: both PASS. The page records the unique
+  workspace-user pair, allowed roles, required timestamp, logical references,
+  and absence of physical foreign keys.
+- `creates_domain_component_flow_tree`: both PASS. The expected roots, domains,
+  components, flow, boundary, and compatibility entry exist.
+- `keeps_reciprocal_and_authority_links`: both PASS. Components and flow link
+  reciprocally, while API/Database remain authority links.
+- `keeps_cross_domain_authority_unique`: both PASS. Invitation acceptance has
+  one authority page; Audit Log only references it.
+- `updates_atomic_map_and_unverified_pages`: both FAIL. Changed ancestor indexes
+  are not consistently included in the relevant code-glob mappings; all
+  changed pages do remain `unverified`.
+- `runs_host_checks_and_handoffs_audit`: both PASS. Disposable locked installs
+  passed frontmatter, strict affected, version metadata, and 74/74 Node tests,
+  followed by #117 handoff.
 
 ## With-Skill Behavior
 
-- Applied the Design Delivery Closeout Gate to every actual Design write rather
-  than only leaf pages.
-- Kept the old flat Design URL as a compatibility entry and repaired root/domain
-  navigation in the same confirmed scope.
-- Preserved one cross-domain authority and reciprocal component-flow links.
-- Included the necessary Design root, domain, and Database indexes in the
-  page-specific atomic change-map closure.
+- Loaded only the Database and Design type contracts after the common entry.
+- Produced accurate Database facts, the confirmed Design hierarchy, reciprocal
+  flow/component links, and a unique cross-domain authority.
+- Did not produce a verifiable page-by-page closeout matrix and did not include
+  every changed ancestor index in the atomic change-map closure.
 
 ## Fresh Without-Skill Baseline
 
-- Source: independent pristine copy with the same eval definition, prompt, and
-  fixture; it contained no target skill, Docs README, old comparison,
-  with-skill output, or historical baseline.
-- Result: 5/8 PASS. It produced correct Database facts, hierarchy, links,
-  authority boundaries, compatibility entry, and 74/74 host checks.
-- Failures: it did not load the Database/Design type modules, reported closeout
-  for only 7 of 9 changed Design pages, and omitted required ancestor indexes
-  from several change-map entries.
+- Source: a new pristine copy with the same prompt, assertions, metadata, code,
+  committed test support, and evidence; it did not contain or read the target
+  skill, old comparison, with-skill output, or historical baseline.
+- Result: 5/8 PARTIAL. It shares the two candidate-output failures and also
+  cannot satisfy the target-module loading assertion.
+- Skill-specific uplift: +1 assertion, or +12.5 percentage points.
+
+## Required Test Reproduction
+
+From each lane root, the independent judge ran:
+
+`PYTHONDONTWRITEBYTECODE=1 uv run --with pytest python -m pytest -p no:cacheprovider tests/test_workspace_access.py -q`
+
+- with-skill: exit `0`, `4 passed`
+- without-skill: exit `0`, `4 passed`
+
+The durable fixture command requested by the review also passes from the
+fixture root:
+
+`uv run --with pytest python -m pytest tests/test_workspace_access.py -q`
+
+Result: exit `0`, `4 passed`.
 
 ## Failures
 
-- With-skill assertion failures: none.
-- Without-skill assertion failures:
-  `loads_only_database_design_contracts`, `passes_design_closeout_gate`, and
+- With-skill: `passes_design_closeout_gate`,
   `updates_atomic_map_and_unverified_pages`.
-- Non-blocking harness note: the synthetic inner repository needed explicit
-  `GITHUB_BASE_SHA=HEAD`; the judge independently reran strict affected checks
-  and all 74 Node tests successfully.
+- Without-skill: the same two assertions plus
+  `loads_only_database_design_contracts`.
+- Required pytest and host-check reproducibility are no longer failures.
 
 ## Next Steps
 
-- Keep this PASS and retain page-level closeout plus ancestor-index map closure
-  as one regression unit.
-- A future deterministic assertion may compare the actual changed Design page
-  set with the page-gate matrix and mechanically require ancestor indexes for
-  every mapped leaf.
+- Retain the committed `tests/conftest.py` support and executable test evidence.
+- A later skill-behavior change should make the per-page gate matrix and full
+  ancestor-index map closure deterministic before this eval can return PASS.
 
 ## Runtime Artifact Policy
 
-- Both lanes, candidate outputs, installed dependencies, judge verdict, logs,
-  and isolated rerun copies remain under `tmp/eval-runs/issue-160-run-a/` or
-  ephemeral `/tmp` and are not submitted.
+- Both lanes, dependencies, candidate outputs, judge verdicts, logs, and
+  disposable test copies remain under `tmp/eval-runs/` or `/tmp` and are not
+  submitted.
 - Only this `comparison.md` is durable; no `with_skill/`, `without_skill/`,
-  transcript, candidate output, verdict, timing, run status, diagnostics,
-  `node_modules`, generated site, or cache is committed.
+  transcript, verdict, timing, diagnostics, dependency, generated-site, or
+  cache artifact is committed.

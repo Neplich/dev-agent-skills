@@ -16,4 +16,11 @@ last_verified_version: unverified
 #     trigger: <when a code change requires documentation review>
 #     exclude:
 #       - "<optional glob that narrows only this entry>"
-change_map: {}
+change_map:
+  "src/support/manual_content/**":
+    required_docs:
+      - docs/site/ops/index.md
+    trigger: Preserve the manually maintained support mapping during Product backfill.
+    exclude:
+      - "src/support/manual_content/archive/**"
+    review_policy: manual-owner-approval

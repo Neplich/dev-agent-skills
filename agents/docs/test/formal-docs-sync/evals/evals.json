@@ -52,6 +52,11 @@
       "workspace": "workspace/eval-002-plan-backfill-batches",
       "assertions": [
         {
+          "id": "loads_scoped_api_product_contracts",
+          "description": "按两个子任务加载必要合同",
+          "text": "执行证据显示先应用 formal-docs-sync 的公共八步合同，再加载 Product 类型模块执行已确认 Product 回填，并加载 API 类型模块规划未确认 Accounts 候选树；不得读取或应用 database、design、ops 类型模块，也不得仅凭 eval prompt 自行重建这些 skill 合同。"
+        },
+        {
           "id": "prefers_catalog_scope",
           "description": "优先使用 feature catalog",
           "text": "先用 catalog 中 feature 到 code path 到 owner 的关系选出 `accounts` 单模块第一批，并核对引用路径真实存在；将已有嵌套页面和映射的 Billing 标为 out-of-batch，不静默并入或重写。"
@@ -87,6 +92,11 @@
           "text": "Product 根索引链接两个域，workspace-management 域链接 invitations，invitations index 链接 invite-member 与 accept-invitation，analytics index 链接 view-dashboard；各级 index 只说明范围与导航，不复制任务正文。"
         },
         {
+          "id": "records_confirmed_non_leaf_scope",
+          "description": "非叶子页面保留已确认候选 scope 语义",
+          "text": "Product 根、两个产品域和 invitations 功能 index 共同反映已确认候选 scope：明确适用角色或受众、catalog owner、子节点、相邻能力和本批排除项；不得只提供裸链接，也不得把角色拆成重复目录。"
+        },
+        {
           "id": "writes_evidence_backed_task_behavior",
           "description": "任务行为由实现和验收证据支持",
           "text": "邀请页记录 owner/admin 权限、3 个 pending 上限、重复邀请反馈与 revoke/resend 恢复；接受页记录 expired/invalid 反馈与请求新邀请恢复；仪表盘页记录 analyst 可见性、empty state、加载失败 retry，且不写 fixture 未支持的行为。"
@@ -94,7 +104,7 @@
         {
           "id": "updates_product_map_atomically",
           "description": "不同 code glob 映射对应 Product 子树",
-          "text": "分别用 `src/product/workspace_management/**` 与 `src/product/analytics/**` 映射对应子树页面，页面、祖先 index、链接与 change-map 原子更新；保留未知字段和无关条目。"
+          "text": "分别用 `src/product/workspace_management/**` 与 `src/product/analytics/**` 映射对应子树页面，页面、祖先 index、链接与 change-map 原子更新；合并后按 code glob 和各自 required_docs 做稳定语义排序，并原样保留 fixture 已有无关条目、exclude 与未知字段。"
         },
         {
           "id": "links_authorities_without_copying_contracts",
@@ -105,6 +115,11 @@
           "id": "runs_product_host_checks",
           "description": "嵌套 Product 页面通过宿主检查",
           "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，记录命令、cwd 与退出状态；所有新改页面保持 `last_verified_version: unverified`，随后 handoff #117。"
+        },
+        {
+          "id": "blocks_audit_without_confirmed_version",
+          "description": "缺少确认版本时阻塞 pre-tag 审计",
+          "text": "#117 handoff 列出完整 affected set、证据、排除项和已覆盖批次；因 fixture 没有维护者确认的 `target_release_version`，必须明确标为 blocked 并等待该确认，不得声称 pre-tag audit ready、可直接盖章或从分支/ref 推断版本。"
         }
       ]
     },
