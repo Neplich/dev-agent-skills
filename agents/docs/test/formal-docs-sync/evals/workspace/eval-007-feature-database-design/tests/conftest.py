@@ -1,9 +1,31 @@
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 
 from src.workspace_access.service import accept_invitation
+
+
+@pytest.fixture
+def db():
+    database = Mock()
+    database.execute.return_value = {"role": "editor"}
+    return database
+
+
+@pytest.fixture
+def workspace_store():
+    store = Mock()
+    store.exists.return_value = True
+    return store
+
+
+@pytest.fixture
+def user_store():
+    store = Mock()
+    store.exists.return_value = True
+    return store
 
 
 @pytest.fixture

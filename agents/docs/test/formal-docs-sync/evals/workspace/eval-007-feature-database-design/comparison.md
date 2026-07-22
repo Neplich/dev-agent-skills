@@ -10,19 +10,20 @@
 
 - Fixture version: `issue-164 Database information architecture + issue-160 Design information architecture union`
 - Evidence: approved PRD, confirmed TRD, closed implementation plan, actual diff,
-  executable fixture tests, schema, invitation service, membership repository,
-  audit writer, stable-path seed and unrelated manual mapping
+  seven executable fixture tests with complete result rows, schema, invitation
+  service, membership repository, audit writer, stable-path seed and unrelated
+  manual mapping
 - Fresh paired run:
-  `tmp/eval-runs/pr-165-rebase-20260722-232227/eval-007/`
+  `tmp/eval-runs/pr-165-review-closeout-20260723-012626/eval-007/`
 - Generation method: both generators received the same eval prompt and pristine
   fixture. Only with-skill received the common contract and Database/Design type
   modules; a fresh independent `codex exec` judge applied the exact 12 assertion
   semantics without adding stronger per-glob API requirements.
-- Actual validation date: `2026-07-22`
+- Actual validation date: `2026-07-23`
 
 ## Latest Result
 
-**PASS（with-skill 12/12；fresh without-skill 5/12）** — with-skill passed the
+**PASS（with-skill 12/12；fresh without-skill 8/12）** — with-skill passed the
 Design closeout gate before writing, refreshed the stable Database path and
 complete nested subtree, maintained reciprocal authority links and per-glob
 atomic mapping closure, and produced the complete #117 docs-audit handoff.
@@ -38,9 +39,9 @@ atomic mapping closure, and produced the complete #117 docs-audit handoff.
 - `creates_database_schema_domain_tree`: both PASS. Both generated the Database
   root, Primary system, workspace-access domain, relationships and three entity
   pages with hierarchical navigation.
-- `refreshes_confirmed_stable_path`: with-skill PASS；without-skill FAIL。
-  Both refreshed the stable page's old facts, but only with-skill preserved it
-  in the broad seed while appending the complete confirmed nested subtree.
+- `refreshes_confirmed_stable_path`: both PASS.
+  Both refreshed the stable page's old facts, marked it `unverified`, and kept
+  its change-map coverage while preserving the path.
 - `documents_current_entity_facts`: both PASS. Both accurately documented
   fields, owners, indexes, lifecycle, membership constraints and invitation
   token/expiry facts.
@@ -53,9 +54,9 @@ atomic mapping closure, and produced the complete #117 docs-audit handoff.
 - `creates_domain_component_flow_tree`: both PASS. Both generated the Design
   root, two domains, three components, invitation-acceptance flow,
   authorization boundary and compatible flat entry.
-- `keeps_reciprocal_and_authority_links`: with-skill PASS；without-skill FAIL。
-  Both link components and flow reciprocally, but only with-skill also links the
-  required stable Database authority without copying its contract.
+- `keeps_reciprocal_and_authority_links`: both PASS. Both link components and
+  flow reciprocally and link the invitation API plus stable Database authority
+  without copying either contract.
 - `keeps_cross_domain_authority_unique`: both PASS. The cross-domain flow has
   one authoritative page and Audit Log links to it rather than duplicating it.
 - `updates_atomic_map_and_unverified_pages`: with-skill PASS；without-skill FAIL。
@@ -63,10 +64,9 @@ atomic mapping closure, and produced the complete #117 docs-audit handoff.
   full subtree, and gives each invitation, repository/schema and audit glob its
   corresponding leaf or compatibility pages, affected ancestors, reciprocal
   pages and Database authority. The baseline's closures remain incomplete.
-- `runs_host_checks_and_handoffs_audit`: with-skill PASS；without-skill FAIL。
-  Both report successful docs tests and public/internal builds, but only
-  with-skill supplies the explicit `docs-agent:docs-audit` #117 handoff with the
-  complete affected set, evidence and version blocker.
+- `runs_host_checks_and_handoffs_audit`: both PASS. Both actually passed 74/74
+  docs tests and public/internal builds, kept internal-only pages out of public
+  navigation, and produced a #117 docs-audit handoff.
 
 ## With-Skill Behavior
 
@@ -77,19 +77,19 @@ atomic mapping closure, and produced the complete #117 docs-audit handoff.
   and generated the confirmed Design domain/component/flow hierarchy.
 - Preserved reciprocal links, unique cross-domain authority and complete atomic
   mappings while retaining unrelated manual-map fields.
-- Passed 74/74 docs tests plus public/internal builds and prepared the complete
-  #117 handoff, blocked only on an unconfirmed `target_release_version`.
+- Passed 74/74 docs tests plus public/internal builds, and prepared the complete
+  #117 handoff blocked only on an unconfirmed `target_release_version`.
 
 ## Fresh Without-Skill Baseline
 
 - Source: a new pristine fixture copy with the same prompt and fixture. It did
   not read or apply the target skill, old comparison, with-skill output or any
   historical baseline.
-- Result: 5/12 PARTIAL. It produced accurate entity facts, the main Database and
-  Design trees, physical/logical relation semantics and unique flow authority,
-  but failed seven contract-specific closeout, linking, mapping and handoff
-  assertions.
-- Skill-specific uplift: +7 assertions, or +58.3 percentage points.
+- Result: 8/12 PARTIAL. It produced accurate entity facts, the main Database and
+  Design trees, stable-path refresh, reciprocal flow/authority links, unique
+  flow authority, host-check evidence and a #117 handoff, but failed four
+  contract-specific loading, closeout, entity-linking and mapping assertions.
+- Skill-specific uplift: +4 assertions, or +33.3 percentage points.
 
 ## Required Test Reproduction
 
@@ -97,27 +97,30 @@ atomic mapping closure, and produced the complete #117 docs-audit handoff.
 - Both generators ran and passed `npm run build:public` and
   `npm run build:internal`; generated internal routes include all nested Database
   pages and public navigation excludes internal Database/Design pages.
-- The independent judge performed read-only route, sidebar, link, frontmatter,
-  mapping, timestamp and handoff checks. The judge did not rerun build commands
-  that would modify `.generated`.
-- Generator-side pytest reproduction was unavailable because pytest could not
-  be installed in the isolated environment; the confirmed fixture test evidence
-  remained an input fact and this was not an assertion failure.
+- The independent judge ran
+  `PYTHONDONTWRITEBYTECODE=1 uv run --with pytest python -m pytest tests/test_workspace_access.py -q -p no:cacheprovider`
+  in both lanes; each returned `7 passed in 0.01s`, matching all six required
+  implementation-plan rows plus the supplemental supported-role row.
+- The judge also performed route, sidebar, link, frontmatter, mapping, timestamp
+  and handoff checks without rerunning build commands that would overwrite
+  `.generated`.
+- The with-skill generator's earlier pytest attempts omitted `--with pytest`
+  and could not start; the judge's successful required command establishes that
+  this was a command-selection error rather than a fixture or implementation
+  test failure.
 
 ## Failures
 
 - With-skill assertion failures: none.
 - Without-skill assertion failures: `loads_only_database_design_contracts`,
-  `passes_design_closeout_gate`, `refreshes_confirmed_stable_path`,
-  `links_relationships_bidirectionally`,
-  `keeps_reciprocal_and_authority_links`,
-  `updates_atomic_map_and_unverified_pages`, and
-  `runs_host_checks_and_handoffs_audit`.
+  `passes_design_closeout_gate`, `links_relationships_bidirectionally`, and
+  `updates_atomic_map_and_unverified_pages`.
 
 ## Next Steps
 
-- Keep the stable-path expansion, per-glob mapping closure and pre-write Design
-  closeout evidence together as the merged Database/Design regression unit.
+- Keep the complete required-test result table, per-glob mapping closure and
+  pre-write Design closeout evidence together as the merged Database/Design
+  regression unit.
 - Keep the unrelated manual mapping and broad `src/workspace_access/**` seed so
   unknown-field preservation and full subtree expansion remain observable.
 
