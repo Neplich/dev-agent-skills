@@ -202,9 +202,9 @@
           "text": "生成并逐级链接 `database/index.md`、`database/primary/index.md`、`database/primary/workspace-access/index.md`、`relationships.md`、`workspaces.md`、`workspace-memberships.md` 和 `workspace-invitations.md`；新子树不再把所有 schema 压入单页。"
         },
         {
-          "id": "preserves_unapproved_stable_path",
-          "description": "未确认迁移计划时保留稳定路径并同步当前事实",
-          "text": "由于候选范围没有单独确认的迁移计划，`docs/site/database/workspace-access.md` 保持原路径，且内容更新为当前 schema、repository/service 与测试支持的事实，或保留该路径并重定向到新的权威子树页；`src/workspace_access/**` 的 change-map required_docs 保留该稳定页并追加已确认新子树。不得删除或未经确认搬迁稳定路径，也不得保留与当前证据矛盾的旧事实。"
+          "id": "refreshes_confirmed_stable_path",
+          "description": "保留稳定路径并将同步前旧事实刷新为当前事实",
+          "text": "fixture 中 `docs/site/database/workspace-access.md` 起始为 `last_verified_version: v0.9.0`，并包含允许重复 membership、任意 role、两个标识符均为物理外键的过时事实。with-skill 输出必须保持该路径，将旧事实替换为当前 schema、repository/service 与测试支持的唯一约束、owner/editor/viewer role、物理 workspace 外键和逻辑 user 引用，并把变更页标记为 `last_verified_version: unverified`；或保留该路径并重定向到包含这些当前事实的权威子树页。`src/workspace_access/**` 的 change-map required_docs 必须保留该稳定页并追加已确认新子树；不得仅保留文件而不刷新内容，也不得删除或未经确认搬迁稳定路径。"
         },
         {
           "id": "documents_current_entity_facts",
