@@ -75,6 +75,9 @@ Before writing, show the maintainer:
 - evidence for each page;
 - feature owner or owning team when the feature catalog provides one;
 - proposed change-map, index, or host-required navigation delta;
+- for ops deployment scope, the Development / Docker / Kubernetes-Helm
+  classification, support/evidence status, target page tree, per-class code
+  globs, environment differences, and any aggregate-page path/link migration;
 - explicit exclusions, unresolved discrepancies, and out-of-batch scope.
 
 Wait for confirmation. Treat every page and its corresponding change-map entry
@@ -143,7 +146,14 @@ Synchronize ops runbooks, upgrade instructions, rollback instructions,
 environment variables, startup methods, Helm/Compose behavior, and related
 current operational facts only when confirmed configuration, commands, results,
 and environment differences support them. Never turn a deployment plan or an
-unexecuted command into current state.
+unexecuted command into current state. Classify Development, Docker, and
+Kubernetes/Helm independently and keep their pages, evidence, code globs, and
+change-map entries separate. A blocked or unsupported class does not prevent an
+otherwise confirmed atomic scope from continuing, but it must be reported with
+the missing evidence and must not receive placeholder commands. When replacing
+an aggregate deployment page, confirm its path migration, inbound/internal link
+repairs, map delta, navigation delta, and duplicate-content consolidation as one
+atomic scope.
 
 ### Release
 

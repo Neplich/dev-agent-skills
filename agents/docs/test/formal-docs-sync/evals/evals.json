@@ -312,6 +312,101 @@
           "text": "不创建 tag，不生成或发布 GitHub Release，不把 #120 外部发布职责混入站内 handoff。"
         }
       ]
+    },
+    {
+      "id": "eval-011-deployment-three-class-backfill",
+      "name": "Deployment backfill 拆分三类 Ops 文档",
+      "description": "验证同时具备 Development、Docker 与 Kubernetes/Helm 真实证据时生成共享参数参考和三个独立部署目录。",
+      "prompt": "按 `backfill-handoff.md` 已确认的 existing-system backfill 批次同步部署文档。fixture 同时提供源码开发、Compose、镜像、Helm Chart、values、配置读取和执行结果证据；候选页面树、每类 code glob、change-map 与导航原子范围均已确认。请生成 `ops/deployment/` 三分类文档，运行宿主 `npm run test:docs`，并报告每类证据与 #117 handoff。",
+      "expected_output": "生成 deployment 根索引、共享 environment-reference、development/docker/kubernetes-helm 三个独立目录及权威子页；环境参数与镜像/Chart/values 事实均交叉核证，不复制聚合 runbook，不混用命令。",
+      "workspace": "workspace/eval-011-deployment-three-class-backfill",
+      "assertions": [
+        {
+          "id": "creates_three_class_page_tree",
+          "description": "生成固定三分类页面树",
+          "text": "生成 `docs/site/ops/deployment/index.md`、共享 `environment-reference.md`、`development/index.md` 与 `image-build.md`、`docker/index.md` 与 `image-sources.md`、`kubernetes-helm/index.md`、`image-sources.md`、`chart-package.md` 与 `values-reference.md`；根索引只提供支持状态、选择指引和导航。"
+        },
+        {
+          "id": "cross_checks_environment_reference",
+          "description": "环境变量参考跨事实源生成",
+          "text": "从 `.env.example`、`src/settings.py` 的读取与约束、Compose/Helm 映射及 `tests/test_settings.py` 交叉生成参数表，逐项记录用途、类型、必填性、默认值、约束、适用方式、安全示例、Secret 属性、生效方式和证据，并指出 `LEGACY_TIMEOUT` 已废弃。"
+        },
+        {
+          "id": "separates_class_specific_contracts",
+          "description": "三类部署边界与权威子页独立",
+          "text": "Development 只写源码启动与已验证开发镜像构建；Docker 只写 Compose、volume/network/port/migration/health/升级回滚及 Docker 镜像来源；Kubernetes/Helm 只写 namespace、values、Secret/ConfigMap、hook/Job、rollout/rollback、集群镜像来源、真实 Chart 包树和 values 参数参考，三类各有自己的前置、命令、成功标准、回滚和故障处理。"
+        },
+        {
+          "id": "maps_each_class_atomically",
+          "description": "每类证据、code glob 与 change-map 原子对应",
+          "text": "分别用 `scripts/dev/**`、`deploy/docker/**`、`deploy/helm/**` 等真实范围映射 Development、Docker、Kubernetes/Helm 页面，保留无关与未知 change-map 字段；页面、索引、导航和映射作为已确认原子范围写入并回读。"
+        },
+        {
+          "id": "runs_nested_docs_checks",
+          "description": "嵌套导航与链接通过宿主检查",
+          "text": "在 `docs/site/` 运行并通过 `npm run test:docs`，确认 public/internal 递归导航与内部链接覆盖所有嵌套页面，保持页面 `last_verified_version: unverified` 后 handoff #117。"
+        }
+      ]
+    },
+    {
+      "id": "eval-012-deployment-class-evidence-gap",
+      "name": "部署类别证据缺口局部阻塞",
+      "description": "验证缺少 Kubernetes/Helm 配置和执行证据时只阻塞该类，继续已确认 Development 与 Docker 范围且不生成占位命令。",
+      "prompt": "按 `backfill-handoff.md` 的已确认 existing-system backfill 批次处理部署文档。fixture 有 Development 与 Docker 的完整配置和执行证据，但只有一份未执行的 Kubernetes 计划，没有 Chart、values、模板、kubeconfig 权限或验证结果。请分类报告并只写已确认范围。",
+      "expected_output": "明确将 Kubernetes/Helm 分类为 blocked，列出所需证据；继续 Development 与 Docker 原子范围，不创建 Kubernetes/Helm 页面或占位命令。",
+      "workspace": "workspace/eval-012-deployment-class-evidence-gap",
+      "assertions": [
+        {
+          "id": "blocks_only_missing_class",
+          "description": "只阻塞缺证据的 Kubernetes/Helm 类别",
+          "text": "将 Kubernetes/Helm 标记为 `blocked`，说明缺少 Chart、values、模板消费点、集群权限和执行验证；不把未执行计划或网络可达当作支持证据。"
+        },
+        {
+          "id": "continues_confirmed_classes",
+          "description": "继续 Development 与 Docker 已确认范围",
+          "text": "在候选原子范围已确认的前提下继续生成 Development 与 Docker 页面、共享环境参数中仅有证据的适用映射，以及各自 change-map 条目，不因第三类阻塞而停止全部批次。"
+        },
+        {
+          "id": "creates_no_placeholder_commands",
+          "description": "不为阻塞类别生成占位事实",
+          "text": "不创建 `docs/site/ops/deployment/kubernetes-helm/`，不写 `helm install`、namespace、values、imagePullSecrets 或成功状态占位内容；在报告中列出补齐该类所需证据。"
+        },
+        {
+          "id": "keeps_class_boundaries",
+          "description": "Docker 与 Development 不吸收 Helm 内容",
+          "text": "Development 与 Docker 页面分别维护自己的前置、命令、成功标准、回滚和故障处理，不把 Kubernetes 计划塞入 Docker 页面，也不从同名镜像 tag 推断集群来源。"
+        }
+      ]
+    },
+    {
+      "id": "eval-013-deployment-aggregate-migration",
+      "name": "聚合部署页迁移到三分类结构",
+      "description": "验证已有单页 runbook 迁移时原子处理路径、链接、change-map、导航和重复内容归并。",
+      "prompt": "按 `migration-handoff.md` 已确认的迁移范围，把现有 `docs/site/ops/deployment.md` 拆为三分类结构。fixture 提供聚合页、引用它的站内链接、旧 change-map 和三类证据；路径迁移、链接修复、映射、导航与重复内容归并均已获维护者确认。请执行迁移并运行 `npm run test:docs`。",
+      "expected_output": "删除旧聚合页，将事实归并到根索引、共享参数页和三个独立目录；修复所有站内链接、导航与 change-map，保留未知字段并通过文档检查。",
+      "workspace": "workspace/eval-013-deployment-aggregate-migration",
+      "assertions": [
+        {
+          "id": "migrates_aggregate_path",
+          "description": "迁移旧聚合页且不保留重复正文",
+          "text": "移除 `docs/site/ops/deployment.md`，创建 `docs/site/ops/deployment/` 页面树；共享环境事实只保留在 `environment-reference.md`，根索引和三类页面不复制旧聚合正文。"
+        },
+        {
+          "id": "repairs_inbound_and_internal_links",
+          "description": "修复站内入链和嵌套内部链接",
+          "text": "将 `docs/site/ops/index.md` 与 `docs/site/product/runtime.md` 等旧 `deployment.md` 入链更新到新权威页面，并确保子页间相对链接可解析。"
+        },
+        {
+          "id": "updates_change_map_without_data_loss",
+          "description": "按类别更新映射并保留未知字段",
+          "text": "把旧聚合 required_docs 拆为 Development、Docker、Kubernetes/Helm 各自页面及共享参数页，稳定合并列表并保留旧条目的未知字段、exclude 和无关映射。"
+        },
+        {
+          "id": "updates_navigation_atomically",
+          "description": "导航与迁移原子更新",
+          "text": "递归 public/internal 导航、页面移动、链接修复、change-map delta 和重复内容归并作为同一已确认范围更新；`npm run test:docs` 通过且没有指向旧聚合页的残留链接。"
+        }
+      ]
     }
   ]
 }

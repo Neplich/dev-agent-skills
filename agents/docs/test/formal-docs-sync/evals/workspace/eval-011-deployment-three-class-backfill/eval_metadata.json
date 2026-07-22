@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-011-deployment-three-class-backfill",
+  "eval_name": "deployment-three-class-backfill",
+  "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-011-deployment-three-class-backfill",
+  "skill_availability_goal": "Verify evidence-backed deployment backfill produces shared environment reference plus separate Development, Docker, and Kubernetes/Helm documentation trees.",
+  "prompt": "按 `backfill-handoff.md` 已确认的 existing-system backfill 批次同步部署文档。fixture 同时提供源码开发、Compose、镜像、Helm Chart、values、配置读取和执行结果证据；候选页面树、每类 code glob、change-map 与导航原子范围均已确认。请生成 `ops/deployment/` 三分类文档，运行宿主 `npm run test:docs`，并报告每类证据与 #117 handoff。",
+  "fixture_context": ["backfill-handoff.md", ".env.example", "src/settings.py", "tests/test_settings.py", "scripts/dev/start.sh", "Dockerfile", "deploy/docker/compose.yaml", "deploy/helm/app/", ".eval/", "docs/site/"],
+  "execution_cleanup": ["docs/site/ops/deployment", "docs/site/.generated", "sync-report.md"]
+}
