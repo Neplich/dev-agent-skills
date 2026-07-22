@@ -2,8 +2,8 @@
   "eval_id": "eval-007-feature-database-design",
   "eval_name": "feature-database-design",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-007-feature-database-design",
-  "skill_availability_goal": "Verify confirmed feature synchronization creates a database/schema/domain/entity subtree with bidirectional physical/logical relationship navigation while preserving the design closeout gate.",
-  "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行 `workspace-access` 的 database + design 正式文档同步。design closeout 证据已完整提供，维护者已确认 `database/primary/workspace-access/` 完整候选树、design 页面和映射。请只加载 database/design 规则，核对当前 schema、repository/service、diff 与测试，原子更新各级 index、relationships、实体/表页、design 页和 change map，执行宿主 `npm run test:docs`与 public/internal build，再输出 #117 handoff。",
+  "skill_availability_goal": "Verify confirmed feature synchronization creates a database/schema/domain/entity subtree with bidirectional physical/logical relationship navigation, preserves an existing stable flat page without an approved migration plan, and preserves the design closeout gate.",
+  "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行 `workspace-access` 的 database + design 正式文档同步。design closeout 证据已完整提供，维护者已确认 `database/primary/workspace-access/` 完整候选树、design 页面和映射；现有 `database/workspace-access.md` 是已验证稳定路径，本批没有单独确认的迁移计划，必须保留旧页及其映射。请只加载 database/design 规则，核对当前 schema、repository/service、diff 与测试，原子更新各级 index、relationships、实体/表页、design 页和 change map，执行宿主 `npm run test:docs`与 public/internal build，再输出 #117 handoff。",
   "fixture_context": [
     "pm-handoff.md",
     "candidate-scope-confirmation.md",
@@ -13,6 +13,7 @@
     "src/workspace_access/",
     "tests/test_workspace_access.py",
     "docs/site/api/workspace-access.md",
+    "docs/site/database/workspace-access.md",
     "docs/site/"
   ],
   "execution_cleanup": [

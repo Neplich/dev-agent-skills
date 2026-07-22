@@ -12,3 +12,8 @@ diff --git a/src/workspace_access/service.py b/src/workspace_access/service.py
 new file mode 100644
 diff --git a/tests/test_workspace_access.py b/tests/test_workspace_access.py
 new file mode 100644
+
+# Documentation precondition outside the delivered implementation diff:
+# docs/site/database/workspace-access.md and its src/workspace_access/**
+# change-map entry already exist at a verified stable path. This delivery has
+# no separately confirmed migration plan for either artifact.

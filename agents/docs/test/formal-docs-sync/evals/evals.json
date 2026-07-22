@@ -181,9 +181,9 @@
     {
       "id": "eval-007-feature-database-design",
       "name": "Feature 模式同步分层 Database 子树与 Design",
-      "description": "验证已确认 feature delivery 按数据库/schema、数据域、关系总览和实体页原子同步 database 子树，并保留 design closeout 门禁。",
-      "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行 `workspace-access` 的 database + design 正式文档同步。design closeout 证据已完整提供，维护者已确认 `database/primary/workspace-access/` 完整候选树、design 页面和映射。请只加载 database/design 规则，核对当前 schema、repository/service、diff 与测试，原子更新各级 index、relationships、实体/表页、design 页和 change map，执行宿主 `npm run test:docs`与 public/internal build，再输出 #117 handoff。",
-      "expected_output": "在 `database/primary/workspace-access/` 生成数据域 index、relationships 和 workspaces/workspace-memberships/workspace-invitations 实体页，与数据库根索引、primary 索引及 design 页原子同步；关系总览和实体页双向链接，明确区分物理外键与逻辑引用；通过宿主检查和双视图构建后 handoff docs-audit。",
+      "description": "验证已确认 feature delivery 按数据库/schema、数据域、关系总览和实体页原子同步 database 子树，在无迁移计划时保留已验证稳定路径，并保留 design closeout 门禁。",
+      "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行 `workspace-access` 的 database + design 正式文档同步。design closeout 证据已完整提供，维护者已确认 `database/primary/workspace-access/` 完整候选树、design 页面和映射；现有 `database/workspace-access.md` 是已验证稳定路径，本批没有单独确认的迁移计划，必须保留旧页及其映射。请只加载 database/design 规则，核对当前 schema、repository/service、diff 与测试，原子更新各级 index、relationships、实体/表页、design 页和 change map，执行宿主 `npm run test:docs`与 public/internal build，再输出 #117 handoff。",
+      "expected_output": "在保留 `database/workspace-access.md` 稳定旧页及其映射的前提下，于 `database/primary/workspace-access/` 生成数据域 index、relationships 和 workspaces/workspace-memberships/workspace-invitations 实体页，与数据库根索引、primary 索引及 design 页原子同步；关系总览和实体页双向链接，明确区分物理外键与逻辑引用；通过宿主检查和双视图构建后 handoff docs-audit。",
       "workspace": "workspace/eval-007-feature-database-design",
       "assertions": [
         {
@@ -199,7 +199,12 @@
         {
           "id": "creates_database_schema_domain_tree",
           "description": "按数据库/schema、数据域与实体组织",
-          "text": "生成并逐级链接 `database/index.md`、`database/primary/index.md`、`database/primary/workspace-access/index.md`、`relationships.md`、`workspaces.md`、`workspace-memberships.md` 和 `workspace-invitations.md`；不再把所有 schema 压入单个 `database/workspace-access.md`。"
+          "text": "生成并逐级链接 `database/index.md`、`database/primary/index.md`、`database/primary/workspace-access/index.md`、`relationships.md`、`workspaces.md`、`workspace-memberships.md` 和 `workspace-invitations.md`；新子树不再把所有 schema 压入单页。"
+        },
+        {
+          "id": "preserves_unapproved_stable_path",
+          "description": "未确认迁移计划时保留稳定页与映射",
+          "text": "由于候选范围没有单独确认的迁移计划，`docs/site/database/workspace-access.md` 保持原路径与原内容，`src/workspace_access/**` 的 change-map required_docs 保留该稳定页并追加已确认新子树；不得删除、搬迁或隐式取代旧页。"
         },
         {
           "id": "documents_current_entity_facts",
