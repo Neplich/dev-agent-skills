@@ -14,19 +14,20 @@
   service, membership repository, audit writer, stable-path seed and unrelated
   manual mapping
 - Fresh paired run:
-  `tmp/eval-runs/pr-165-review-closeout-20260723-012626/eval-007/`
+  `tmp/eval-runs/pr-165-review-consumption-20260723-015600/eval-007/`
 - Generation method: both generators received the same eval prompt and pristine
   fixture. Only with-skill received the common contract and Database/Design type
   modules; a fresh independent `codex exec` judge applied the exact 12 assertion
-  semantics without adding stronger per-glob API requirements.
+  semantics to both generated workspaces.
 - Actual validation date: `2026-07-23`
 
 ## Latest Result
 
-**PASS（with-skill 12/12；fresh without-skill 8/12）** — with-skill passed the
+**PARTIAL（with-skill 10/12；fresh without-skill 8/12）** — with-skill passed the
 Design closeout gate before writing, refreshed the stable Database path and
-complete nested subtree, maintained reciprocal authority links and per-glob
-atomic mapping closure, and produced the complete #117 docs-audit handoff.
+complete nested subtree, and produced the #117 docs-audit handoff. It did not
+fully satisfy the entity-to-API reverse-link requirement or the per-code-glob
+atomic ancestor mapping closure.
 
 ## Assertions
 
@@ -45,9 +46,10 @@ atomic mapping closure, and produced the complete #117 docs-audit handoff.
 - `documents_current_entity_facts`: both PASS. Both accurately documented
   fields, owners, indexes, lifecycle, membership constraints and invitation
   token/expiry facts.
-- `links_relationships_bidirectionally`: with-skill PASS；without-skill FAIL。
-  With-skill's relationship and entity pages link both ways and every entity
-  links the feature-level Workspace Access API authority; the baseline does not.
+- `links_relationships_bidirectionally`: both FAIL. Both relationship pages and
+  entity pages mostly link in both directions, but `workspace-invitations.md`
+  omits the required feature-level Workspace Access API link; the baseline also
+  omits it from `workspaces.md`.
 - `distinguishes_physical_and_logical_relations`: both PASS. Both distinguish
   the two CASCADE workspace foreign keys from the service-validated logical user
   reference in prose and Mermaid.
@@ -59,11 +61,11 @@ atomic mapping closure, and produced the complete #117 docs-audit handoff.
   without copying either contract.
 - `keeps_cross_domain_authority_unique`: both PASS. The cross-domain flow has
   one authoritative page and Audit Log links to it rather than duplicating it.
-- `updates_atomic_map_and_unverified_pages`: with-skill PASS；without-skill FAIL。
-  With-skill preserves the manual entry, expands the stable broad seed to the
-  full subtree, and gives each invitation, repository/schema and audit glob its
-  corresponding leaf or compatibility pages, affected ancestors, reciprocal
-  pages and Database authority. The baseline's closures remain incomplete.
+- `updates_atomic_map_and_unverified_pages`: both FAIL. With-skill preserves the
+  manual entry, stable ordering and `unverified` pages, but the invitation,
+  repository, service and audit globs do not each contain the complete Database
+  root, Primary root and data-domain ancestor closure. The baseline also leaves
+  incomplete closures and unstable ordering.
 - `runs_host_checks_and_handoffs_audit`: both PASS. Both actually passed 74/74
   docs tests and public/internal builds, kept internal-only pages out of public
   navigation, and produced a #117 docs-audit handoff.
@@ -75,8 +77,9 @@ atomic mapping closure, and produced the complete #117 docs-audit handoff.
   change-map write and kept the report runtime-only.
 - Refreshed the stable Database page, built the full schema/domain/entity tree,
   and generated the confirmed Design domain/component/flow hierarchy.
-- Preserved reciprocal links, unique cross-domain authority and complete atomic
-  mappings while retaining unrelated manual-map fields.
+- Preserved unique cross-domain authority and unrelated manual-map fields, but
+  left one required entity-to-API reverse link and several per-glob ancestor
+  mapping closures incomplete.
 - Passed 74/74 docs tests plus public/internal builds, and prepared the complete
   #117 handoff blocked only on an unconfirmed `target_release_version`.
 
@@ -89,7 +92,7 @@ atomic mapping closure, and produced the complete #117 docs-audit handoff.
   Design trees, stable-path refresh, reciprocal flow/authority links, unique
   flow authority, host-check evidence and a #117 handoff, but failed four
   contract-specific loading, closeout, entity-linking and mapping assertions.
-- Skill-specific uplift: +4 assertions, or +33.3 percentage points.
+- Skill-specific uplift: +2 assertions, or +16.7 percentage points.
 
 ## Required Test Reproduction
 
@@ -104,23 +107,25 @@ atomic mapping closure, and produced the complete #117 docs-audit handoff.
 - The judge also performed route, sidebar, link, frontmatter, mapping, timestamp
   and handoff checks without rerunning build commands that would overwrite
   `.generated`.
-- The with-skill generator's earlier pytest attempts omitted `--with pytest`
-  and could not start; the judge's successful required command establishes that
-  this was a command-selection error rather than a fixture or implementation
-  test failure.
+- The updated harness proves the success sequence
+  `find_invitation → mark_consumed → upsert_membership → write_audit`; the
+  expired branch stops after lookup with zero membership and audit writes.
 
 ## Failures
 
-- With-skill assertion failures: none.
+- With-skill assertion failures: `links_relationships_bidirectionally` and
+  `updates_atomic_map_and_unverified_pages`.
 - Without-skill assertion failures: `loads_only_database_design_contracts`,
   `passes_design_closeout_gate`, `links_relationships_bidirectionally`, and
   `updates_atomic_map_and_unverified_pages`.
 
 ## Next Steps
 
-- Keep the complete required-test result table, per-glob mapping closure and
-  pre-write Design closeout evidence together as the merged Database/Design
-  regression unit.
+- Keep the complete required-test result table and pre-write Design closeout
+  evidence together as the merged Database/Design regression unit.
+- In a separately scoped skill/eval change, make every entity page link the
+  feature-level Workspace Access API and make each affected exact code glob
+  carry the required Database ancestor closure before expecting 12/12.
 - Keep the unrelated manual mapping and broad `src/workspace_access/**` seed so
   unknown-field preservation and full subtree expansion remain observable.
 

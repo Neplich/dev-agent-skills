@@ -51,11 +51,11 @@ class WorkspaceServiceHarness:
 
         class InvitationStore:
             def find(self, token):
-                harness._call_order.append("consume_invitation")
+                harness._call_order.append("find_invitation")
                 return invitation
 
             def mark_consumed(self, token):
-                return None
+                harness._call_order.append("mark_consumed")
 
         class Database:
             def execute(self, statement, parameters):
@@ -89,6 +89,12 @@ class WorkspaceServiceHarness:
 
     def membership_write_count(self):
         return self._membership_writes
+
+    def recorded_call_order(self):
+        return self._call_order
+
+    def audit_event_count(self):
+        return len(self._audit_events)
 
     def audit_event(self):
         self._run()
