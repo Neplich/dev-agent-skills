@@ -4,18 +4,18 @@
 
 - Skill: `formal-docs-sync`
 - Eval: `eval-007-feature-database-design`
-- Review context: PR #164 visibility-aware navigation and current-fact stable-path repair
+- Review context: PR #164 fourth-review candidate-scope confirmation repair
 
 ## Test Set / Fixture Version
 
-- Fixture: current pristine `workspace/eval-007-feature-database-design` snapshot after the PR #164 third-review repair
+- Fixture: current pristine `workspace/eval-007-feature-database-design` snapshot after the PR #164 fourth-review repair; the confirmed write scope explicitly includes refreshing the stable page to current facts or redirecting it in place, while deletion, movement, and migration remain excluded
 - Evidence set: confirmed handoff and candidate scope, Approved PRD, Confirmed TRD/plan, complete closeout, actual diff, passed test record, schema, repository, service, API page, stable database path, change-map entry, and host standards
 - Actual validation date: `2026-07-22`
 - Isolation: fresh `codex exec` copied the same fixture without historical comparison into independent with-skill and without-skill lanes; a third fresh read-only `codex exec` judge checked both final workspaces, logs, and generated navigation
 
 ## Latest Result
 
-**PASS (10/10 assertions)** — the with-skill lane retained the stable `docs/site/database/workspace-access.md` path and mapping while keeping its content aligned with current evidence, generated the complete database/schema/domain/entity subtree, preserved every page's visibility, and passed all content, navigation, host-check, and handoff assertions.
+**PASS (10/10 assertions)** — the with-skill lane retained the stable `docs/site/database/workspace-access.md` path and mapping while refreshing its confirmed content to current evidence, generated the complete database/schema/domain/entity subtree, preserved every page's visibility, and passed all content, navigation, host-check, and handoff assertions.
 
 ## Assertions
 
@@ -41,20 +41,20 @@
 
 - Source: freshly regenerated from the same prompt and identical pristine fixture; it did not read the target skill, Docs Agent README, internal/shared skill instructions, historical comparison, or with-skill output.
 - The baseline also retained the stable path with current content, produced the database/design subtree, maintained the map, passed the three host commands, and generated correct visibility-filtered navigation.
-- The fresh judge rated the baseline 9.5/10: all general delivery assertions passed, while the target-module loading assertion was partial because the baseline was forbidden from reading the database/design type modules.
+- The fresh judge rated the baseline 9.0/10: all general delivery assertions passed, while target-module loading was partial because the baseline was forbidden from reading the database/design type modules, and the #117 handoff was partial because it did not explicitly block stamping while waiting for a maintainer-confirmed `target_release_version`.
 
 ## Failures
 
 - With-skill: no assertion, host-check, build, navigation, or handoff failure.
-- Without-skill: no general delivery failure; target-module loading was partial by baseline design.
-- Non-blocking: an extra with-skill `uv run pytest` attempt could not start because the isolated fixture does not install pytest. The fixture's supplied required-test record remained passed, and all three required host documentation commands succeeded.
-- Non-blocking: dependency vulnerability notices and an existing VitePress template asset warning did not fail tests, links, or either build.
+- Without-skill: no general delivery failure; target-module loading and the release-context-specific #117 handoff gate were partial.
+- Non-blocking: the fixture's supplied required-test record remained passed, and all three required host documentation commands succeeded; Python pytest was not rerun in this validation.
+- Non-blocking: dependency vulnerability notices and two unchanged VitePress template placeholder warnings did not fail tests, links, or either build. The with-skill lane removed all target-page link warnings before its final internal build.
 
 ## Next Steps
 
-- Keep the visibility-target rule and the stable-path/current-fact assertion together as regression guards: a page must remain available only in allowed navigation targets, and path stability must never preserve superseded facts.
+- Keep candidate confirmation, the stable-path/current-fact assertion, and the visibility-target rule together as regression guards: confirmed content refresh must not imply permission to delete, move, or migrate the stable path, and each page must remain available only in allowed navigation targets.
 
 ## Runtime Artifact Policy
 
-- Source copy, both isolated lanes, installed dependencies, generated sites, candidate outputs, logs, and fresh judge verdict remain under `tmp/eval-runs/issue-159-review3-20260722-202944/` and are not submitted.
+- Source copy, both isolated lanes, installed dependencies, generated sites, candidate outputs, logs, and fresh judge verdict remain under `tmp/eval-runs/issue-159-review4-zWwkYx/` and are not submitted.
 - Only this `comparison.md` is durable; no transcript, candidate output, verdict, timing, diagnostics, dependency directory, or generated site is tracked.
