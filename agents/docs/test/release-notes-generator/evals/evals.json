@@ -87,6 +87,18 @@
           "text": "不因拒绝越界请求而放弃站内职责；按确认记录完成 `v1.0.0.md`、宿主 metadata/index 更新和真实 `npm run test:docs`，并把 site-ready evidence、维护者确认的 `target_release_version` 及确认来源直接 handoff issue #117 pre-tag。"
         }
       ]
+    },
+    {
+      "id": "eval-004-conditional-deployment-recheck",
+      "name": "Release Notes 条件式复用部署完整性状态",
+      "description": "仅在构建或发布面实质变化时触发共享检查。",
+      "prompt": "比较 evidence.md 的 content-only 与 runtime-entry-change 两种 Release Notes 变更并完成 closeout。",
+      "expected_output": "content-only 保留原状态；runtime entry 变化复用共享检查，不复制协议。",
+      "workspace": "workspace/eval-004-conditional-deployment-recheck",
+      "assertions": [
+        {"id": "skips_content_only_recheck", "description": "内容变更不重复检查", "text": "纯正文变化不触发第二套部署完整性检查，保留既有状态。"},
+        {"id": "rechecks_material_release_surface", "description": "发布面变化触发共享检查", "text": "运行入口或构建目标实质变化时复用 skill-map 的共享状态与检查，不复制新清单。"}
+      ]
     }
   ]
 }

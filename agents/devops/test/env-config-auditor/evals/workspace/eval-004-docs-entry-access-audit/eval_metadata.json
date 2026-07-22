@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-004-docs-entry-access-audit",
+  "eval_name": "docs-entry-access-audit",
+  "workspace_root": "agents/devops/test/env-config-auditor/evals/workspace/eval-004-docs-entry-access-audit",
+  "skill_availability_goal": "Verify per-environment Public and Internal entry, access-control, and evidence handling.",
+  "prompt": "读取 evidence.md，对 Public/Internal 在 staging/production 的入口配置进行只读审计。",
+  "fixture_context": ["evidence.md"],
+  "execution_cleanup": ["deploy/ENV_AUDIT.md", "with_skill", "without_skill", "outputs", "diagnostics", "transcript.md", "subagent-verdict.md", "run_status.json", "timing.json"]
+}

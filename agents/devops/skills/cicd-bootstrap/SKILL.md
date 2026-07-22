@@ -44,6 +44,13 @@ Before writing CI/CD config, inspect:
 
 If CI/CD already exists, prefer targeted updates over full regeneration.
 
+For every documentation image unit confirmed by `deployment-planner`, preserve
+the host project's immutable version/tag policy, required architectures,
+registry convention, and release triggers. Add build and publish validation per
+variant, and verify the published manifest or digest through the host's
+established mechanism. A workflow definition alone is not publication
+evidence.
+
 If the release path is feature-scoped but the `feature_path` is unclear, do not
 create a synonymous top-level `docs/devops/{name}/` folder. Return to PM for
 PRD/path clarification or Engineer for missing or stale TRD/implementation
@@ -182,3 +189,5 @@ Output:
 - Feature-scoped release plans or CI/CD readiness notes belong under
   `docs/devops/{feature_path}/...`
 - Do not invent generic lint/test/build commands when the repository already exposes canonical commands
+- Writing workflow changes does not authorize commit, push, image publication,
+  or deployment; obtain those permissions separately

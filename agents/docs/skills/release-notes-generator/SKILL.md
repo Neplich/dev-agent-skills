@@ -105,3 +105,8 @@ produce a ready handoff. At closeout, follow the safety-net behavior
 in `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
 and wait for confirmation before another role acts unless the applicable
 `auto-continue` authorization already exists.
+
+If the confirmed Release Notes work materially changes a documentation build
+target, navigation or assets, release scope, or runtime entry, invoke and
+report the shared documentation-site deployment completeness state. Otherwise
+preserve the prior state without rerunning or duplicating that protocol.

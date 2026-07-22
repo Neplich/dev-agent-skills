@@ -102,6 +102,19 @@
           "text": "对 last_verified_version: unverified 按最低信任处理，关键部署参数必须由代码或测试证据确认。"
         }
       ]
+    },
+    {
+      "id": "eval-004-docs-build-variant-matrix",
+      "name": "docs-build-variant-matrix",
+      "description": "文档站部署单元完整性门禁枚举全部构建变体。",
+      "prompt": "根据 evidence.md 生成只包含计划与矩阵的部署完整性结果，不编写 CI。",
+      "expected_output": "逐一列出 Public、Internal 与 Preview 的 build/image/Compose/Helm/health/runtime 处置。",
+      "workspace": "workspace/eval-004-docs-build-variant-matrix",
+      "assertions": [
+        {"id": "enumerates_all_docs_variants", "description": "枚举全部文档构建变体", "text": "矩阵必须包含 Public、Internal 和宿主 Preview，不能只覆盖 Public/Internal 后宣称完整。"},
+        {"id": "covers_deployment_unit_chain", "description": "覆盖部署单元链路", "text": "每个变体核对 build target/context/static entry、镜像单元、Compose、Deployment/Service/Ingress 或 Gateway、values、健康检查和运行入口。"},
+        {"id": "hands_units_to_cicd", "description": "将镜像单元交给 CI/CD", "text": "为每个变体记录 integrated/alternative/deferred/blocked 处置，并把确认镜像单元交给 cicd-bootstrap，不在本 skill 写 workflow。"}
+      ]
     }
   ]
 }

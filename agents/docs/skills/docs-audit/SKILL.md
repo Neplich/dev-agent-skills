@@ -114,3 +114,8 @@ safety-net behavior in
 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
 Wait for confirmation before another role acts unless the user has enabled the
 applicable continuation.
+
+Reuse and refresh the shared documentation-site deployment completeness state
+only when the audit establishes a material change to a documentation build
+target, resource, runtime entry, or publication scope. Otherwise preserve the
+prior state without starting a second check protocol.

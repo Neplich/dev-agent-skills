@@ -44,6 +44,13 @@ Before generating anything, inspect:
 
 If `deploy/` already exists, prefer extension or targeted iteration over blind regeneration.
 
+For a documentation-site completeness handoff, enumerate Public, Internal, and
+every host-specific build variant before writing. Build a per-variant matrix of
+build target, context, static entry, image unit, Compose topology, Kubernetes /
+Helm resources, health checks, and runtime entry. Do not claim completeness
+until every variant has an explicit integrated, alternative-hosted, deferred,
+or blocked disposition.
+
 If the request appears feature-scoped but the `feature_path` is unclear, do not
 invent a new top-level DevOps directory. Return to PM for PRD/path clarification
 or to Engineer when the TRD or implementation plan is missing or inconsistent.
@@ -250,3 +257,5 @@ Output:
 - Prefer executable config over prose-only explanation
 - Add `README.md` files only where they help someone use the generated deployment assets
 - Do not automatically create CI/CD config here; hand off to `cicd-bootstrap` when needed
+- Hand every confirmed documentation image unit and variant matrix to
+  `cicd-bootstrap`; do not implement its CI/CD rules here

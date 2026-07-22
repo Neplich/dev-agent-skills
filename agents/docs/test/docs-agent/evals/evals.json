@@ -162,6 +162,18 @@
           "text": "全程只读取模拟 tag 证据并产出审计/handoff 结果，不创建、移动、删除或重建 tag，不创建、更新或发布真实 GitHub Release，并报告远端 tag 与 Release 均零写入。"
         }
       ]
+    },
+    {
+      "id": "eval-006-preserve-independent-hosting",
+      "name": "保留已确认替代托管状态",
+      "description": "验证 Docs router 保留 not_applicable 证据与用户决策。",
+      "prompt": "根据 evidence.md 的静态对象存储托管决策完成 Docs closeout。",
+      "expected_output": "复核替代托管仍有效，记录 not_applicable、证据、变体和 owner，不路由 DevOps。",
+      "workspace": "workspace/eval-006-preserve-independent-hosting",
+      "assertions": [
+        {"id": "preserves_not_applicable_evidence", "description": "保留替代托管证据", "text": "确认宿主不采用文档镜像交付且维护者确认的替代托管仍有效，报告 not_applicable、证据路径、覆盖变体和下一 owner。"},
+        {"id": "does_not_open_devops_handoff", "description": "不误路由 DevOps", "text": "有效 not_applicable 决策不生成 repo-wide deployment handoff；若决策失效才重新询问用户。"}
+      ]
     }
   ]
 }
