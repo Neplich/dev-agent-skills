@@ -45,8 +45,17 @@ code, and tests. Do not derive pages from file count.
 For the candidate scope, show the complete parent-child tree and, per page,
 reader task, owner, evidence, code glob, change-map delta, links, and
 exclusions. Use a real code map and Mermaid flow only where final code and
-tests support them. Apply the Design Delivery Closeout Gate page by page.
-Treat each page, its required ancestor-index / navigation / reciprocal-link
-delta, and its design change-map entry as one atomic scope; a failed page gate
-changes none of those surfaces but does not block independently evidenced
-pages. Never place a blocked page's future design in another page.
+tests support them. Apply the Design Delivery Closeout Gate page by page and
+show the required page-by-seven-item matrix before writing; each cell names its
+evidence and pass/fail status, so a feature-level summary cannot substitute for
+page-level closeout. Preserve the common gate's runtime-only pre-write matrix
+and changed-path snapshot before touching any formal page or map; the final
+report may summarize it but cannot replace that ordering evidence.
+
+For every Design `code_glob`, list the complete atomic mapping closure in
+`required_docs`: each affected leaf or compatibility page, the Design root and
+every changed domain/subsystem ancestor `index.md` needed to reach it, plus the
+pages whose reciprocal links change. Treat that closure, its navigation/link
+delta, and its change-map entry as one atomic scope. A failed page row changes
+none of those surfaces but does not block independently evidenced pages. Never
+place a blocked page's future design in another page.

@@ -96,15 +96,25 @@ delta, and exclusions. Paths must use lower kebab-case. If an existing stable
 host path would move, show a separate migration plan and wait for its explicit
 confirmation; the sync batch itself is not migration permission.
 
-Wait for confirmation. Treat every page and its corresponding change-map entry
-as one atomic confirmed scope. Existing-system backfill runs one finite batch
-at a time and requires a new confirmation before the next batch.
+Wait for confirmation. For each matched `code_glob`, show one atomic mapping
+closure: every leaf or compatibility page that the glob can affect, every
+ancestor `index.md` changed to keep those pages reachable, and every required
+navigation or reciprocal-link surface. Put that complete closure in the
+entry's `required_docs`; do not confirm a page while leaving a changed ancestor
+index mapped only implicitly. Treat the pages, links, navigation, and
+change-map entry as one atomic confirmed scope. Existing-system backfill runs
+one finite batch at a time and requires a new confirmation before the next
+batch.
 
 ### 5. Write only the confirmed scope and read it back
 
 Create or update only confirmed pages, their map entries, every necessary
 ancestor index, bidirectional link, and host-required navigation as one atomic
-scope. Preserve unrelated and manually
+scope. Before writing, verify each affected `code_glob.required_docs` equals
+its confirmed mapping closure; after writing, verify it again against the
+changed paths. A shared ancestor index may occur in more than one affected
+entry and must not be omitted merely because another glob also maps it.
+Preserve unrelated and manually
 maintained content. Write the stable current state, replacing superseded
 claims; never add implementation diaries, ticket timelines, before/after
 narration, or unsupported future state.
@@ -224,14 +234,22 @@ scope:
 6. every required test, including applicable QA/E2E evidence, ran and passed;
 7. the Step 4 candidate scope is confirmed.
 
-Reuse `feature-implementor` closeout evidence; do not invent another format.
-If any item is absent, conflicting, failed, skipped without explanation, or
-unverifiable, report the failed item, owner, and next action and make zero
-changes to that design page, its change-map entry, and page-specific index /
-navigation / reciprocal-link delta. Other independently evidenced and
-confirmed pages may proceed; never fill the blocked page's gap with future
-design elsewhere. A passing gate still permits only current-state design
-evidenced by final code and passing tests.
+Reuse `feature-implementor` closeout evidence; do not invent another evidence
+format. Before any write, render a page-level closeout matrix with one row for
+every proposed Design page and one explicit status/evidence reference for each
+of items 1-7 above. An aggregate feature-level statement such as "all pages
+pass" is not sufficient. Before the first formal page or change-map write,
+persist that matrix, its generation time, and the pre-write changed-path state
+to a runtime-only `sync-report.md` outside `docs/site/`. Do not overwrite this
+pre-write evidence after formal writes begin, and never submit it as a durable
+eval or repository artifact. If any cell or this ordering evidence is absent,
+conflicting, failed, skipped without explanation, or unverifiable, report the
+failed item, owner, and next action and make zero changes to that design page
+and its atomic mapping closure (change-map entry, changed ancestor indexes,
+navigation, and reciprocal links).
+Other independently evidenced and confirmed page rows may proceed; never fill
+the blocked page's gap with future design elsewhere. A passing row still
+permits only current-state design evidenced by final code and passing tests.
 
 ## Trust and Boundaries
 

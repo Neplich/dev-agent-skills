@@ -239,7 +239,7 @@
         {
           "id": "passes_design_closeout_gate",
           "description": "同一 feature_path 的 design closeout 全通过",
-          "text": "对每个拟写 Design 页面逐项核对 Approved PRD、Confirmed TRD、已确认计划、全部 scope complete、diff 覆盖、全部 required tests passed 及已确认候选范围；任一页失败只阻塞该页的 map/index/link 原子范围。"
+          "text": "在首个正式页面或 change-map 写入前，将逐页 closeout matrix、生成时间和写前 changed-path 状态固化到 runtime-only `sync-report.md`：每个拟写 Design 页面各占一行，并分别记录 Approved PRD、Confirmed TRD、已确认计划、全部 scope complete、diff 覆盖、全部 required tests passed 及已确认候选范围七项的状态和证据；写入开始后不得覆盖这份时序证据，不得用最终 feature 级汇总替代，也不得提交该运行期文件。任一页失败只阻塞该页的 map/index/link 原子范围。"
         },
         {
           "id": "creates_database_schema_domain_tree",
@@ -284,7 +284,7 @@
         {
           "id": "updates_atomic_map_and_unverified_pages",
           "description": "Database 子树、Design 与映射原子更新",
-          "text": "所有 database index/relationships/实体页与 Design 页面原子更新；不同 workspace invitation、repository/schema 与 audit code glob 映射到对应 Design 子树和 database authority 页，`src/workspace_access/**` 的 required_docs 同时保留稳定页并追加已确认新子树；回读并稳定排序，保留未知字段和无关人工条目，所有变更页均为 `last_verified_version: unverified`。"
+          "text": "所有 database index/relationships/实体页与 Design 页面原子更新；不同 workspace invitation、repository/schema 与 audit code glob 的 required_docs 分别包含对应叶子或兼容页面、因其变化的 Database 与 Design 根及各级祖先 index、互链页面和 database authority 页，`src/workspace_access/**` 同时保留稳定页并追加已确认新子树；共享祖先可出现在多个相关映射中。回读并稳定排序，保留未知字段和无关人工条目，所有变更页均为 `last_verified_version: unverified`。"
         },
         {
           "id": "runs_host_checks_and_handoffs_audit",
