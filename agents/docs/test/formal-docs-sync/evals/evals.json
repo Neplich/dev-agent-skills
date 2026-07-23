@@ -69,7 +69,7 @@
         {
           "id": "keeps_unconfirmed_batch_read_only",
           "description": "未确认批次不写入",
-          "text": "本轮不创建或修改 Accounts 页面、API root、既有 Billing 子树和 `change-map.yaml`，不开始第二批，也不把显式 backfill 请求误当作 batch confirmation。"
+          "text": "本轮不创建或修改 Accounts 页面、API root、既有 Billing 子树，以及 `change-map.yaml` 中未确认的 Accounts 条目或既有 Billing 条目；已确认 Product 批次仍须按要求更新自身映射。不开始第二批，也不把显式 backfill 请求误当作 batch confirmation。"
         },
         {
           "id": "aligns_seed_with_page",

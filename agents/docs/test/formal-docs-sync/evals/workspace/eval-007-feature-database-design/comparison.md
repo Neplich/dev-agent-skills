@@ -14,7 +14,7 @@
   invitation service, membership repository, audit writer, stable-path seed and
   unrelated manual mapping.
 - Fresh paired run:
-  `tmp/eval-runs/pr-165-eval007-pass-20260723-024628/eval-007/`
+  `tmp/eval-runs/pr-165-consistency-final-20260723-0940/eval-007/`
 - Generation method: both generators received the same eval prompt and pristine
   fixture. Only with-skill received the current common contract and
   Database/Design type modules. Neither generator received assertions,
@@ -26,12 +26,12 @@
 
 ## Latest Result
 
-**PASS（with-skill 12/12；fresh without-skill 6/12）** — with-skill satisfies
+**PASS（with-skill 12/12；fresh without-skill 5/12）** — with-skill satisfies
 all Database/Design hierarchy, current-fact, reciprocal-link, authority,
 closeout, atomic mapping, host-check and handoff assertions. The fresh baseline
 still fails the target skill's standards-entry loading, pre-write page-level
-closeout, stable-path subtree mapping, entity reverse-link, per-glob atomic
-closure and docs-audit handoff behaviors.
+closeout, stable-path subtree mapping, entity reverse-link, stable authority
+link, per-glob atomic closure and docs-audit handoff behaviors.
 
 ## Assertions
 
@@ -65,9 +65,10 @@ closure and docs-audit handoff behaviors.
 - `creates_domain_component_flow_tree`: both PASS. Both generated the Design
   root, two domains, three components, invitation-acceptance flow,
   authorization boundary and compatible flat entry.
-- `keeps_reciprocal_and_authority_links`: both PASS. Components and flow link
-  reciprocally, and Design links the invitation API plus the preserved stable
-  Database authority without copying either contract.
+- `keeps_reciprocal_and_authority_links`: with-skill PASS；without-skill FAIL。
+  Both link components and flow reciprocally, but only with-skill links the
+  preserved stable Database authority from participating Design pages; the
+  baseline links nested Database pages instead.
 - `keeps_cross_domain_authority_unique`: both PASS. The cross-domain flow has
   one authoritative page under workspace-access; Audit Log only references it.
 - `updates_atomic_map_and_unverified_pages`: with-skill PASS；without-skill
@@ -103,11 +104,12 @@ closure and docs-audit handoff behaviors.
 - Source: a new pristine fixture copy with the same prompt. It did not read or
   apply the target skill, Agent README, old comparison, with-skill output or a
   historical baseline.
-- Result: 6/12 PARTIAL. It produced the main Database/Design trees, current
+- Result: 5/12 PARTIAL. It produced the main Database/Design trees, current
   entity facts, correct relation semantics, main Design authority structure and
-  successful host builds, but failed six skill-specific loading, closeout,
-  stable mapping, reverse-link, atomic-closure and handoff behaviors.
-- Skill-specific uplift: +6 assertions, or +50 percentage points.
+  successful host builds, but failed seven skill-specific loading, closeout,
+  stable mapping, reverse-link, stable authority-link, atomic-closure and
+  handoff behaviors.
+- Skill-specific uplift: +7 assertions, or +58.3 percentage points.
 
 ## Stability Rationale
 
@@ -136,8 +138,10 @@ the generator summary.
 
 - The independent judge ran
   `PYTHONDONTWRITEBYTECODE=1 uv run --with pytest python -m pytest tests/test_workspace_access.py -q -p no:cacheprovider`
-  in both lanes; each returned `7 passed in 0.00s` and matched all seven rows in
+  in both lanes; each returned `7 passed in 0.01s` and matched all seven rows in
   `.eval/test-results.md`.
+- The judge also confirmed `.eval/actual-diff.patch` covers schema, repository,
+  invitation consumption, service orchestration, audit writer and test paths.
 - The harness proves the success sequence
   `find_invitation → mark_consumed → upsert_membership → write_audit`; the
   expired branch stops after lookup with no consume, membership or audit write.
@@ -149,8 +153,9 @@ the generator summary.
 
 - With-skill: none.
 - Without-skill: standards-entry loading, pre-write page-level closeout,
-  stable-path broad mapping expansion, complete entity reverse links,
-  per-code-glob atomic closure, and explicit complete-set docs-audit handoff.
+  stable-path refresh/mapping expansion, complete entity reverse links, stable
+  Database authority links, per-code-glob atomic closure, and explicit
+  complete-set docs-audit handoff.
 - Non-blocking: locked dependencies report two moderate and one high advisory;
   this eval does not modify dependencies. Existing template asset and VitePress
   chunk-size warnings do not fail links, tests or builds.

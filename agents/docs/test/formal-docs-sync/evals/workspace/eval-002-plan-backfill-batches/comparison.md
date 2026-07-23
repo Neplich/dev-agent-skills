@@ -13,16 +13,18 @@
   implementation and acceptance tests, plus seeded unrelated change-map entries
   with `exclude` and unknown fields
 - Fresh paired run:
-  `tmp/eval-runs/pr-165-rebase-20260722-225436/eval-002/`
+  `tmp/eval-runs/pr-165-consistency-final-20260723-0940/eval-002/`
 - Generation method: both generators received the same eval prompt and pristine
   fixture. Only with-skill received the common contract and scoped API/Product
-  modules; a fresh independent `codex exec` judge applied all 14 assertions to
-  both completed lanes.
-- Actual validation date: `2026-07-22`
+  modules. Neither generator received assertions, historical comparison, an old
+  baseline or the other lane's output. A fresh independent `codex exec` judge
+  applied all 14 assertions after generation and reran Product acceptance tests
+  in both completed lanes.
+- Actual validation date: `2026-07-23`
 
 ## Latest Result
 
-**PASS（with-skill 14/14；fresh without-skill 9/14）** — with-skill preserved
+**PASS（with-skill 14/14；fresh without-skill 11/14）** — with-skill preserved
 the confirmed Product hierarchy and existing Billing material, kept the
 unconfirmed Accounts batch read-only, produced the required parent/child batch
 proposal, updated the Product mappings atomically, and blocked #117 audit until
@@ -34,12 +36,12 @@ a maintainer confirms `target_release_version`.
   Only with-skill applied the common contract and scoped API/Product modules.
 - `prefers_catalog_scope`: both PASS. Both selected Accounts as the first
   catalog-backed API batch and excluded Billing from that proposal.
-- `presents_batch_before_write`: with-skill PASS；without-skill FAIL。
-  With-skill presented an explicit parent/child tree with per-node owner, glob,
-  evidence, mapping and exclusions; the baseline omitted the strict tree and
-  parent expression.
+- `presents_batch_before_write`: both PASS. Both presented the full three-level
+  candidate tree and per-node parent, owner, glob, evidence, mapping delta,
+  exclusions and confirmation gate.
 - `keeps_unconfirmed_batch_read_only`: both PASS. Neither lane wrote Accounts
-  pages or mappings, and both preserved the existing API root and Billing pages.
+  pages or map entries, and both preserved the existing API root, Billing pages
+  and Billing map entry while updating only the confirmed Product mappings.
 - `aligns_seed_with_page`: both PASS. Both aligned the proposed Accounts seed
   with the three-page candidate closure and preserved Billing map metadata.
 - `handles_missing_catalog_semantically`: both PASS. Both proposed bounded API
@@ -49,9 +51,9 @@ a maintainer confirms `target_release_version`.
   Product tree without collapsing the two invitation tasks.
 - `keeps_every_task_navigable`: both PASS. All task leaves remain reachable
   through the confirmed root/domain/feature hierarchy.
-- `records_confirmed_non_leaf_scope`: with-skill PASS；without-skill FAIL。
-  The baseline omitted required audience, catalog-owner, adjacent-capability or
-  exclusion facts from non-leaf Product pages.
+- `records_confirmed_non_leaf_scope`: both PASS. Both recorded audience/roles,
+  catalog owners, child navigation, adjacent capabilities and exclusions on
+  the non-leaf Product pages.
 - `writes_evidence_backed_task_behavior`: both PASS. Permissions, limits,
   feedback, recovery, empty state and retry behavior match the fixture evidence.
 - `updates_product_map_atomically`: with-skill PASS；without-skill FAIL。
@@ -79,22 +81,28 @@ a maintainer confirms `target_release_version`.
 - Source: a new pristine fixture copy with the same prompt and fixture. It did
   not read or apply the target skill, old comparison, with-skill output or any
   historical baseline.
-- Result: 9/14 PARTIAL. It preserved Billing, kept Accounts read-only, generated
-  seven Product pages and passed host checks, but failed scoped contract loading,
-  the strict API proposal tree, complete non-leaf Product scope, stable atomic
-  mapping and the missing-version audit gate.
-- Skill-specific uplift: +5 assertions, or +35.7 percentage points.
+- Result: 11/14 PARTIAL. It preserved Billing, kept Accounts read-only,
+  generated seven Product pages, presented the complete API proposal and passed
+  host checks, but failed scoped contract loading, stable semantic map sorting
+  and the missing-version audit gate.
+- Skill-specific uplift: +3 assertions, or +21.4 percentage points.
+
+## Required Test Reproduction
+
+- The independent judge ran
+  `PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 uv run --python 3.12 --with pytest python -m pytest tests/acceptance/test_product_tasks.py -q -p no:cacheprovider`
+  in both lanes; each returned `2 passed in 0.01s`.
+- Both generators ran `npm run test:docs`; each completed 74/74 host tests with
+  exit code 0.
 
 ## Failures
 
 - With-skill assertion failures: none.
 - Without-skill assertion failures: `loads_scoped_api_product_contracts`,
-  `presents_batch_before_write`, `records_confirmed_non_leaf_scope`,
   `updates_product_map_atomically`, and
   `blocks_audit_without_confirmed_version`.
-- Judge infrastructure required the available Python 3.12 for fixture behavior
-  assertions because the system Python 3.9 cannot parse `str | None`; this did
-  not affect either lane's result.
+- The judge used Python 3.12 because the system Python 3.9 cannot parse the
+  fixture's `str | None` annotation; both lanes used the same command.
 
 ## Next Steps
 
@@ -102,6 +110,8 @@ a maintainer confirms `target_release_version`.
   assertions together as the merged regression unit.
 - Keep seeded Billing and unrelated map entries so preservation of exclusions
   and unknown fields remains observable.
+- Keep the explicit read-only candidate-loading rule so API candidate planning
+  uses the API module without gaining write authorization.
 
 ## Runtime Artifact Policy
 

@@ -6,8 +6,13 @@ eight-step host-site contract and routing to type-specific modules.
 
 ## Progressive Loading
 
-After resolving the mode, identify the confirmed target document types. For a
-single-type task, read this file plus exactly one matching module:
+After resolving the mode, identify the confirmed write types and every
+explicitly requested read-only candidate-planning type. Load the matching
+module for both kinds of target so an unconfirmed candidate still follows its
+type-specific evidence, hierarchy, and mapping rules. Loading a module for
+read-only planning never authorizes writes; the candidate remains blocked on
+the confirmation gate. For a single-type task, read this file plus exactly one
+matching module:
 
 | `doc_type` | Type module |
 | --- | --- |
@@ -17,8 +22,8 @@ single-type task, read this file plus exactly one matching module:
 | `ops` | `types/ops/INSTRUCTIONS.md` |
 | `product` | `types/product/INSTRUCTIONS.md` |
 
-For a confirmed multi-type scope, load only the modules that occur in that
-scope. Do not read the other type modules. The host files under
+For a multi-type write or candidate-planning scope, load only the modules that
+occur in that scope. Do not read the other type modules. The host files under
 `docs/site/standards/templates/` are the only template source; these modules
 contain evidence and output rules, not duplicate template bodies.
 
