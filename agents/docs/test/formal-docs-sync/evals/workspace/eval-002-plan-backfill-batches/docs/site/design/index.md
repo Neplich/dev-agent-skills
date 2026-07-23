@@ -1,6 +1,6 @@
 ---
 title: 系统设计
-visibility: internal
+visibility: both
 doc_type: landing
 stage: dev
 owners:

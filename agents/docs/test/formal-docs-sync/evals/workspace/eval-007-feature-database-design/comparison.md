@@ -10,18 +10,19 @@
 
 - Fixture version: `issue-164 Database information architecture + issue-160 Design information architecture union`
 - Evidence: Approved PRD, Confirmed TRD, closed implementation plan, actual
-  diff, seven executable fixture tests with complete result rows, schema,
-  invitation service, membership repository, audit writer, stable-path seed and
-  unrelated manual mapping.
+  diff, 11 named executable fixture tests / 12 pytest cases with complete result
+  rows, schema, guarded invitation creation and consumption, authenticated-user
+  membership persistence, real audit writer, stable-path seed and unrelated
+  manual mapping.
 - Fresh paired run:
-  `tmp/eval-runs/pr-165-consistency-final-20260723-0940/eval-007/`
+  `tmp/eval-runs/pr-165-final-fresh-20260723-1215/eval-007-r3/`
 - Generation method: both generators received the same eval prompt and pristine
   fixture. Only with-skill received the current common contract and
   Database/Design type modules. Neither generator received assertions,
   historical comparison, an old baseline or the other lane's output.
 - Judge method: a fresh independent `codex exec` read the exact 12 assertions
-  after generation, inspected both actual workspaces and event logs, and reran
-  the required fixture pytest in each lane.
+  after generation, inspected both actual workspaces and prompt isolation, and
+  reran the fixture pytest plus all host checks/builds in each lane.
 - Actual validation date: `2026-07-23`
 
 ## Latest Result
@@ -31,7 +32,7 @@ all Database/Design hierarchy, current-fact, reciprocal-link, authority,
 closeout, atomic mapping, host-check and handoff assertions. The fresh baseline
 still fails the target skill's standards-entry loading, pre-write page-level
 closeout, stable-path subtree mapping, entity reverse-link, stable authority
-link, per-glob atomic closure and docs-audit handoff behaviors.
+link, per-glob atomic closure and missing-version handoff behaviors.
 
 ## Assertions
 
@@ -81,9 +82,9 @@ link, per-glob atomic closure and docs-audit handoff behaviors.
   mappings contain only partial local subsets.
 - `runs_host_checks_and_handoffs_audit`: with-skill PASS；without-skill FAIL。
   Both passed 74/74 docs tests and public/internal builds with correct recursive
-  visibility. Only with-skill explicitly handed the complete affected set to
-  `docs-agent:docs-audit` and kept pre-tag stamping blocked on an unconfirmed
-  `target_release_version`.
+  visibility. With-skill kept the #117 pre-tag audit blocked on the unconfirmed
+  `target_release_version`; the baseline incorrectly reported `READY` without a
+  confirmed target version.
 
 ## With-Skill Behavior
 
@@ -105,10 +106,10 @@ link, per-glob atomic closure and docs-audit handoff behaviors.
   apply the target skill, Agent README, old comparison, with-skill output or a
   historical baseline.
 - Result: 5/12 PARTIAL. It produced the main Database/Design trees, current
-  entity facts, correct relation semantics, main Design authority structure and
+  entity facts, correct relation semantics, unique cross-domain flow and
   successful host builds, but failed seven skill-specific loading, closeout,
   stable mapping, reverse-link, stable authority-link, atomic-closure and
-  handoff behaviors.
+  missing-version handoff behaviors.
 - Skill-specific uplift: +7 assertions, or +58.3 percentage points.
 
 ## Stability Rationale
@@ -138,24 +139,31 @@ the generator summary.
 
 - The independent judge ran
   `PYTHONDONTWRITEBYTECODE=1 uv run --with pytest python -m pytest tests/test_workspace_access.py -q -p no:cacheprovider`
-  in both lanes; each returned `7 passed in 0.01s` and matched all seven rows in
-  `.eval/test-results.md`.
+  in both lanes using an isolated copied uv cache; each returned `12 passed in
+  0.02s` and matched all 11 named result rows in `.eval/test-results.md`.
+- The controller reran the same exact command after judging; both lanes again
+  returned `12 passed in 0.02s`.
 - The judge also confirmed `.eval/actual-diff.patch` covers schema, repository,
   invitation consumption, service orchestration, audit writer and test paths.
 - The harness proves the success sequence
   `find_invitation → mark_consumed → upsert_membership → write_audit`; the
-  expired branch stops after lookup with no consume, membership or audit write.
+  invalid and expired branches stop after lookup with no consume, membership or
+  audit write. Owner and platform-admin creation reach repository persistence,
+  a viewer raises `PermissionError('invitation_forbidden')`, the accepted role
+  is applied to the authenticated user, and the real `AuditWriter` payload is
+  asserted.
 - Both generators ran `npm run test:docs`, `npm run build:public` and
   `npm run build:internal`; all commands exited `0`. Internal navigation contains
-  all nested Database/Design pages and public navigation excludes them.
+  all 17 nested Database/Design pages, public navigation excludes them, and the
+  judge resolved all 119 with-skill local links and all 70 baseline local links.
 
 ## Failures
 
 - With-skill: none.
-- Without-skill: standards-entry loading, pre-write page-level closeout,
-  stable-path refresh/mapping expansion, complete entity reverse links, stable
-  Database authority links, per-code-glob atomic closure, and explicit
-  complete-set docs-audit handoff.
+- Without-skill: standards-entry/type-module loading, pre-write page-level
+  closeout, stable-path mapping expansion, complete entity reverse links,
+  stable Database authority links, per-code-glob atomic closure and the
+  missing-version audit gate.
 - Non-blocking: locked dependencies report two moderate and one high advisory;
   this eval does not modify dependencies. Existing template asset and VitePress
   chunk-size warnings do not fail links, tests or builds.

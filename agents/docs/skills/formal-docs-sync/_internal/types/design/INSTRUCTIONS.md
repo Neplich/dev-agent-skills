@@ -1,6 +1,7 @@
 # Design Sync Instructions
 
-Load this module only when the confirmed scope contains `doc_type: design`.
+Load this module only when a confirmed write scope or an explicitly requested
+read-only candidate-planning scope contains `doc_type: design`.
 
 ## Evidence Checks
 

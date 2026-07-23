@@ -1,7 +1,27 @@
-def create_invitation(actor_role, invitation_store, workspace_id, email, role):
+from .repository import create_invitation as persist_invitation
+
+
+def create_invitation(
+    actor_role,
+    db,
+    invitation_id,
+    workspace_id,
+    email,
+    role,
+    token_hash,
+    expires_at,
+):
     if actor_role not in {"owner", "admin"}:
         raise PermissionError("invitation_forbidden")
-    return invitation_store.create(workspace_id, email, role)
+    return persist_invitation(
+        db,
+        invitation_id,
+        workspace_id,
+        email,
+        role,
+        token_hash,
+        expires_at,
+    )
 
 
 def consume_invitation(invitation_store, token):

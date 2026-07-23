@@ -1,6 +1,6 @@
 ---
 title: 数据库文档
-visibility: internal
+visibility: both
 doc_type: landing
 stage: dev
 owners:

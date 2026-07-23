@@ -44,9 +44,10 @@ granularity contract is absent, stop with zero site writes and offer a
 
 ### 2. Read only the target-type templates and modules
 
-For each confirmed target type, follow the host standards entry to its
-corresponding file under `docs/site/standards/templates/`, then load the one
-matching type module above. The host template, including its unique
+For each confirmed write type or explicitly requested read-only candidate-
+planning type, follow the host standards entry to its corresponding file under
+`docs/site/standards/templates/`, then load the one matching type module above.
+The host template, including its unique
 `docs-scaffold` block, is authoritative. Never embed, reconstruct, or maintain
 a second template body in this skill.
 
@@ -171,8 +172,8 @@ directory, exit status, and result. For an AI Hub-shaped VitePress host, run
 `npm run test:docs` in `docs/site/`. Do not migrate or reproduce AI Hub-specific
 non-VitePress logic.
 
-When API or database pages are nested, also verify each confirmed page only in
-the recursive navigation targets allowed by its `visibility`: public
+When API, Database, Product, or Design pages are nested, also verify each
+confirmed page only in the recursive navigation targets allowed by its `visibility`: public
 navigation includes `public` and `both` pages, while internal navigation
 includes every `public`, `internal`, and `both` page. Verify that all
 parent/child and relationship links resolve. Never change a page's

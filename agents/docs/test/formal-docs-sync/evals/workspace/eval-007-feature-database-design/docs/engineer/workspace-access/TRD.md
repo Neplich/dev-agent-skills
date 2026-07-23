@@ -3,9 +3,9 @@ feature: workspace-access
 feature_path: workspace-access
 parent_feature: null
 feature_level: 1
-version: 1.0.0
+version: 1.0.1
 date: 2026-07-17
-last_updated: 2026-07-22
+last_updated: 2026-07-23
 status: Confirmed
 related_prd: docs/pm/workspace-access/PRD.md
 related_code:
@@ -24,8 +24,11 @@ The primary database owns `workspaces`, `workspace_memberships`, and `workspace_
 `MembershipRepository` to upsert `workspace_memberships` and calls the
 separately owned `AuditWriter` after persistence. The invitation acceptance
 flow crosses the workspace-access and audit-log domains. The database page owns
-field and constraint details; the API page owns the HTTP contract.
+field and constraint details; the API page owns the HTTP contract. Invitation
+records persist the target workspace role, while the accepting user's identity
+comes from the authenticated service call rather than the invitation record.
 
-The authorization boundary is fail-closed: only owners and admins may create
-invitations, and only a valid unexpired token may reach membership persistence.
+The authorization boundary is fail-closed: only workspace owners and platform
+admins may create invitations, and only a valid unexpired token may reach
+membership persistence.
 Inherited roles and future notification retries remain outside this delivery.

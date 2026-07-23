@@ -4,6 +4,7 @@ from unittest.mock import Mock
 
 import pytest
 
+from src.audit.event_writer import AuditWriter
 from src.workspace_access.service import accept_invitation
 
 
@@ -40,10 +41,9 @@ class WorkspaceServiceHarness:
         self._membership_writes = 0
         self._audit_events = []
 
-    def _run(self, *, expired=False):
+    def _run(self, *, expired=False, found=True, user_id="user-1"):
         invitation = SimpleNamespace(
             workspace_id="workspace-1",
-            user_id="user-1",
             role="editor",
             expired=expired,
         )
@@ -52,7 +52,7 @@ class WorkspaceServiceHarness:
         class InvitationStore:
             def find(self, token):
                 harness._call_order.append("find_invitation")
-                return invitation
+                return invitation if found else None
 
             def mark_consumed(self, token):
                 harness._call_order.append("mark_consumed")
@@ -67,13 +67,13 @@ class WorkspaceServiceHarness:
                     "role": parameters[2],
                 }
 
-        class AuditWriter:
-            def write(self, event_type, workspace_id, user_id):
+        class AuditSink:
+            def append(self, event):
                 harness._call_order.append("write_audit")
-                harness._audit_events.append(event_type)
+                harness._audit_events.append(event)
 
         return accept_invitation(
-            Database(), InvitationStore(), AuditWriter(), "token-1"
+            Database(), InvitationStore(), AuditWriter(AuditSink()), "token-1", user_id
         )
 
     def call_order(self):
@@ -83,6 +83,13 @@ class WorkspaceServiceHarness:
     def expired_invitation_error(self):
         try:
             self._run(expired=True)
+        except ValueError as error:
+            return str(error)
+        return None
+
+    def invalid_invitation_error(self):
+        try:
+            self._run(found=False)
         except ValueError as error:
             return str(error)
         return None
@@ -99,6 +106,9 @@ class WorkspaceServiceHarness:
     def audit_event(self):
         self._run()
         return self._audit_events[-1]
+
+    def membership_for_user(self, user_id):
+        return self._run(user_id=user_id)
 
 
 @pytest.fixture

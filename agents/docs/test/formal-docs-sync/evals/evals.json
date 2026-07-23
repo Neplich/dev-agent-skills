@@ -47,8 +47,8 @@
       "id": "eval-002-plan-backfill-batches",
       "name": "并行验证 API 候选规划与 Product 分层回填",
       "description": "验证 backfill 同时保留 API 完整候选子树的确认门禁，以及已确认 Product 批次从产品域到独立用户任务的分层同步契约。",
-      "prompt": "按 `backfill-confirmation.md` 已确认的 existing-system backfill 批次同步 Product 正式文档：用 feature catalog、当前实现和验收测试核证两个产品域，生成完整父子目录、各级 index 与独立用户任务页，更新 change map，运行宿主 `npm run test:docs`，再输出 #117 handoff。同时为尚未确认的 Accounts API 回填只提出 `api/index.md → accounts/index.md → get-account.md` 完整候选树，逐节点说明 code glob、证据、owner、映射和排除项，保持 Accounts API 零写入与既有 Billing 子树不变；并说明没有 catalog 时如何形成候选范围。",
-      "expected_output": "生成可从 Product 根索引逐级定位的 workspace-management/invitations 与 analytics 子树，邀请、接受邀请和查看仪表盘各自成页且行为有证据支持；原子更新 Product 映射与链接并通过宿主检查。同时按 catalog 规划 Accounts API 完整候选树但不写入，保留既有 Billing 子树和映射，并说明无 catalog 时先扫描 API surface 再确认。",
+      "prompt": "按 `backfill-confirmation.md` 已确认的 existing-system backfill 批次同步 Product 正式文档：用 feature catalog、当前实现和验收测试核证两个产品域，生成完整父子目录、各级 index 与独立用户任务页，更新 change map，在 `docs/site/` 运行宿主 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal` 并核对 Product 双视图递归导航与链接，再输出 #117 handoff。同时为尚未确认的 Accounts API 回填只提出 `api/index.md → accounts/index.md → get-account.md` 完整候选树，逐节点说明 code glob、证据、owner、映射和排除项，保持 Accounts API 零写入与既有 Billing 子树不变；并说明没有 catalog 时如何形成候选范围。",
+      "expected_output": "生成可从 Product 根索引逐级定位的 workspace-management/invitations 与 analytics 子树，邀请、接受邀请和查看仪表盘各自成页且行为有证据支持；原子更新 Product 映射与链接，按 visibility 通过 public/internal 递归导航、链接和宿主检查。同时按 catalog 规划 Accounts API 完整候选树但不写入，保留既有 Billing 子树和映射，并说明无 catalog 时先扫描 API surface 再确认。",
       "workspace": "workspace/eval-002-plan-backfill-batches",
       "assertions": [
         {
@@ -114,7 +114,7 @@
         {
           "id": "runs_product_host_checks",
           "description": "嵌套 Product 页面通过宿主检查",
-          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，记录命令、cwd 与退出状态；所有新改页面保持 `last_verified_version: unverified`，随后 handoff #117。"
+          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal`，记录每条命令、cwd 与退出状态；按每页 visibility 核对 Product 根、域、功能和任务页只进入允许的 public/internal 递归导航，并验证全部父子与权威链接均可解析；所有新改页面保持 `last_verified_version: unverified`，随后 handoff #117。"
         },
         {
           "id": "blocks_audit_without_confirmed_version",
@@ -289,7 +289,7 @@
         {
           "id": "runs_host_checks_and_handoffs_audit",
           "description": "真实执行宿主检查并 handoff #117",
-          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal`；internal 递归导航包含全部嵌套 database 页，public 导航正确排除 internal database 页；随后把完整 affected set handoff 给 `docs-agent:docs-audit`（#117）。"
+          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal`；按 visibility 核对 internal 递归导航包含全部嵌套 Database/Design 页、public 导航正确排除 internal Database/Design 页，并验证全部父子、关系、组件、流程和权威链接均可解析；随后把完整 affected set handoff 给 `docs-agent:docs-audit`（#117）。"
         }
       ]
     },
