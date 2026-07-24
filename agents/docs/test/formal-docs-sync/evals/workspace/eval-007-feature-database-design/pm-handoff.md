@@ -11,9 +11,11 @@
   - `docs/engineer/workspace-access/TRD.md` (Confirmed)
   - `docs/engineer/workspace-access/IMPLEMENTATION_PLAN.md` (Confirmed and closed out)
   - `candidate-scope-confirmation.md` (Maintainer confirmed)
+  - `design-scope-confirmation.md` (Maintainer confirmed)
 - scope_decision: Synchronize only the delivered workspace-access database domain and feature-design current state.
-- required_output: Atomically create the confirmed `docs/site/database/primary/workspace-access/` subtree, update the database root and primary indexes, update `docs/site/design/workspace-access.md`, and merge their `src/workspace_access/**` mapping.
-- evidence: `.eval/actual-diff.patch`, `.eval/test-results.md`, schema, repository, service, and tests.
+- required_output: Atomically create the confirmed `docs/site/database/primary/workspace-access/` subtree, update the database root and primary indexes, create the confirmed two-domain Design hierarchy and reciprocal links, and merge the page-specific mappings.
+- evidence: `.eval/actual-diff.patch`, `.eval/test-results.md`, schema, invitation service, membership repository, audit writer, and tests.
 - exclusions: The existing API page body, ops, product, Release Notes, inherited roles, identity-domain table documentation, and all other features.
-- candidate_scope_confirmation: The maintainer explicitly confirms the full tree, owners, evidence, mappings, and exclusions in `candidate-scope-confirmation.md`.
-- blockers_risks: The design page may be written only after all closeout evidence is independently verified.
+- authority_pages: Link `docs/site/api/workspace-invitations.md` and `docs/site/database/workspace-access.md`; do not copy their complete contracts into Design.
+- candidate_scope_confirmation: The maintainer explicitly confirms the Database tree in `candidate-scope-confirmation.md` and the complete Design tree in `design-scope-confirmation.md`, including owners, evidence, page-specific mappings, reciprocal and authority links, navigation deltas, exclusions, and stable-path compatibility.
+- blockers_risks: Apply the Design Delivery Closeout Gate to every proposed Design page. A failed page blocks only that page and its map/index/link delta.

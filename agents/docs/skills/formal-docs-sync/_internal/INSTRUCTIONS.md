@@ -6,8 +6,13 @@ eight-step host-site contract and routing to type-specific modules.
 
 ## Progressive Loading
 
-After resolving the mode, identify the confirmed target document types. For a
-single-type task, read this file plus exactly one matching module:
+After resolving the mode, identify the confirmed write types and every
+explicitly requested read-only candidate-planning type. Load the matching
+module for both kinds of target so an unconfirmed candidate still follows its
+type-specific evidence, hierarchy, and mapping rules. Loading a module for
+read-only planning never authorizes writes; the candidate remains blocked on
+the confirmation gate. For a single-type task, read this file plus exactly one
+matching module:
 
 | `doc_type` | Type module |
 | --- | --- |
@@ -17,8 +22,8 @@ single-type task, read this file plus exactly one matching module:
 | `ops` | `types/ops/INSTRUCTIONS.md` |
 | `product` | `types/product/INSTRUCTIONS.md` |
 
-For a confirmed multi-type scope, load only the modules that occur in that
-scope. Do not read the other type modules. The host files under
+For a multi-type write or candidate-planning scope, load only the modules that
+occur in that scope. Do not read the other type modules. The host files under
 `docs/site/standards/templates/` are the only template source; these modules
 contain evidence and output rules, not duplicate template bodies.
 
@@ -31,14 +36,18 @@ Run all eight steps in order for every mode.
 Verify the host already has `docs/site/`, its standards, and
 `docs/site/standards/change-map.yaml`. Read
 `docs/site/standards/index.md` or the host's equivalent standards entry before
-proposing writes. If the foundation is absent, stop with zero site writes and
-offer a `docs-site-bootstrap` handoff; do not create a partial site.
+proposing writes, then follow that entry and read its document-granularity
+contract—normally `docs/site/standards/doc-granularity.md`. The standards entry
+does not substitute for the granularity file. If the foundation or linked
+granularity contract is absent, stop with zero site writes and offer a
+`docs-site-bootstrap` handoff; do not create a partial site.
 
 ### 2. Read only the target-type templates and modules
 
-For each confirmed target type, follow the host standards entry to its
-corresponding file under `docs/site/standards/templates/`, then load the one
-matching type module above. The host template, including its unique
+For each confirmed write type or explicitly requested read-only candidate-
+planning type, follow the host standards entry to its corresponding file under
+`docs/site/standards/templates/`, then load the one matching type module above.
+The host template, including its unique
 `docs-scaffold` block, is authoritative. Never embed, reconstruct, or maintain
 a second template body in this skill.
 
@@ -77,14 +86,18 @@ glob. Treat repository-relative page paths as required, and exclude
 Before writing, show the maintainer:
 
 - selected mode and accepted entry basis;
-- candidate pages and types; for API and database, render the complete proposed
-  parent/child tree, including every ancestor index, relationship page, and
-  leaf page;
-- code paths and globs;
-- evidence for each page;
-- feature owner or owning team when the feature catalog provides one;
+- the complete candidate parent-child tree, including every necessary
+  `index.md`, relationship page, leaf page, and document type;
+- the reader task, owner or owning team, evidence, and code paths / `code_glob`
+  for every page;
+- links from each root through every confirmed leaf, Product / Design
+  bidirectional links where applicable, and links to authoritative API,
+  database, or ops pages;
 - proposed change-map, index, or host-required navigation delta;
-- explicit exclusions, unresolved discrepancies, and out-of-batch scope.
+- explicit exclusions for every page, unresolved discrepancies, and
+  out-of-batch scope;
+- for an existing stable path, the migration, redirect, and link-repair scope
+  instead of a silent move.
 
 For every proposed API or database node, pair the parent, child or page path
 with its code glob, owner, classification or relationship evidence, change-map
@@ -92,14 +105,39 @@ delta, and exclusions. Paths must use lower kebab-case. If an existing stable
 host path would move, show a separate migration plan and wait for its explicit
 confirmation; the sync batch itself is not migration permission.
 
-Wait for confirmation. Treat every page and its corresponding change-map entry
-as one atomic confirmed scope. Existing-system backfill runs one finite batch
-at a time and requires a new confirmation before the next batch.
+Wait for confirmation. For each matched `code_glob`, show one atomic mapping
+closure: every leaf or compatibility page that the glob can affect, every
+ancestor `index.md` changed to keep those pages reachable, and every required
+navigation or reciprocal-link surface. Put that complete closure in the
+entry's `required_docs`; do not confirm a page while leaving a changed ancestor
+index mapped only implicitly. Treat the pages, links, navigation, and
+change-map entry as one atomic confirmed scope. Existing-system backfill runs
+one finite batch at a time and requires a new confirmation before the next
+batch.
+
+Materialize this as a per-`code_glob` checklist rather than reasoning from the
+union of all entries. For each row, mark the affected leaf or compatibility
+pages, every changed type root and ancestor `index.md`, relationship and
+reciprocal-link pages, and linked authority pages. A shared ancestor may repeat
+in multiple rows. A row is incomplete when any applicable category is absent,
+even if another exact or broader glob contains that page.
 
 ### 5. Write only the confirmed scope and read it back
 
-Create or update only confirmed pages, their map entries, and necessary
-indexes or host-required navigation. Preserve unrelated and manually
+Create or update only confirmed pages, their map entries, every necessary
+ancestor index, bidirectional link, and host-required navigation as one atomic
+scope. Before writing, verify each affected `code_glob.required_docs` equals
+its confirmed mapping closure; after writing, verify it again against the
+changed paths. A shared ancestor index may occur in more than one affected
+entry and must not be omitted merely because another glob also maps it.
+For a confirmed multi-type atomic scope, verify every affected row contains the
+complete closure of every type changed by that atomic scope, including a row
+whose source file directly belongs to only one type. For example, every broad
+or exact invitation, repository/schema, service, or audit row in a Database +
+Design delivery includes both changed roots and both ancestor chains, not only
+the Design pages plus one Database authority page. Do not reclassify the audit
+row as Design-only after the combined candidate scope was confirmed.
+Preserve unrelated and manually
 maintained content. Write the stable current state, replacing superseded
 claims; never add implementation diaries, ticket timelines, before/after
 narration, or unsupported future state.
@@ -134,8 +172,8 @@ directory, exit status, and result. For an AI Hub-shaped VitePress host, run
 `npm run test:docs` in `docs/site/`. Do not migrate or reproduce AI Hub-specific
 non-VitePress logic.
 
-When API or database pages are nested, also verify each confirmed page only in
-the recursive navigation targets allowed by its `visibility`: public
+When API, Database, Product, or Design pages are nested, also verify each
+confirmed page only in the recursive navigation targets allowed by its `visibility`: public
 navigation includes `public` and `both` pages, while internal navigation
 includes every `public`, `internal`, and `both` page. Verify that all
 parent/child and relationship links resolve. Never change a page's
@@ -200,10 +238,16 @@ complete subtree rather than an isolated leaf. Its confirmed batch includes
 all ancestor indexes, necessary relationship overviews, recursive navigation,
 and change-map entries even when those support files span several paths.
 
+For Product or Design backfill, each finite batch must be one navigable,
+boundary-complete subtree. A batch is not complete when a confirmed leaf cannot
+be reached from the type root, an index copies leaf content, or a required
+cross-document link is missing.
+
 ## Design Delivery Closeout Gate
 
-Before proposing a feature-delivery write to `docs/site/design/**`, verify all
-of the following for the same `feature_path`:
+Before proposing each feature-delivery write to `docs/site/design/**`, verify
+all of the following for that page's same `feature_path` and evidenced atomic
+scope:
 
 1. Approved PRD;
 2. Confirmed TRD with traceable impacted modules or `related_code`;
@@ -213,10 +257,21 @@ of the following for the same `feature_path`:
 6. every required test, including applicable QA/E2E evidence, ran and passed;
 7. the Step 4 candidate scope is confirmed.
 
-Reuse `feature-implementor` closeout evidence; do not invent another format.
-If any item is absent, conflicting, failed, skipped without explanation, or
-unverifiable, report the failed item, owner, and next action and make zero
-changes to both the design page and its change-map entry. A passing gate still
+Reuse `feature-implementor` closeout evidence; do not invent another evidence
+format. Before any write, render a page-level closeout matrix with one row for
+every proposed Design page and one explicit status/evidence reference for each
+of items 1-7 above. An aggregate feature-level statement such as "all pages
+pass" is not sufficient. Before the first formal page or change-map write,
+persist that matrix, its generation time, and the pre-write changed-path state
+to a runtime-only `sync-report.md` outside `docs/site/`. Do not overwrite this
+pre-write evidence after formal writes begin, and never submit it as a durable
+eval or repository artifact. If any cell or this ordering evidence is absent,
+conflicting, failed, skipped without explanation, or unverifiable, report the
+failed item, owner, and next action and make zero changes to that design page
+and its atomic mapping closure (change-map entry, changed ancestor indexes,
+navigation, and reciprocal links).
+Other independently evidenced and confirmed page rows may proceed; never fill
+the blocked page's gap with future design elsewhere. A passing row still
 permits only current-state design evidenced by final code and passing tests.
 
 ## Trust and Boundaries
@@ -235,7 +290,9 @@ dynamic schemas. It does not create duplicate type specialists.
 
 ## Report Shape
 
-After each scope or backfill batch, report:
+After each scope or backfill batch, report every field below explicitly. Do not
+omit the loaded-module line or replace it with an implicit claim that the
+output followed the relevant rules:
 
 ```markdown
 ## Formal docs sync result

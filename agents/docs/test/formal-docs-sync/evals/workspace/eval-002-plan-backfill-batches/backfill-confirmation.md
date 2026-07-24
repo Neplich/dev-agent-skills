@@ -1,0 +1,21 @@
+# Confirmed Product backfill batch
+
+- Mode: `existing-system backfill`
+- Product tree:
+  - `product/index.md`
+    - `workspace-management/index.md`
+      - `invitations/index.md`
+        - `invite-member.md`
+        - `accept-invitation.md`
+    - `analytics/index.md`
+      - `view-dashboard.md`
+- Owners: `collaboration-team` for workspace management; `insights-team` for analytics.
+- Reader tasks: navigate each domain; invite a member; accept an invitation; view dashboard activity.
+- Evidence: confirmed feature catalog, current implementation, and acceptance tests.
+- Mapping:
+  - `src/product/workspace_management/**` -> the workspace-management subtree.
+  - `src/product/analytics/**` -> the analytics subtree.
+- Links: every task is reachable from `product/index.md`; task pages link their parent and relevant Design/API/Database/Ops authority indexes without copying contracts.
+- Exclusions: billing, workspace deletion, exports, role-based duplicate trees, future behavior, and all non-Product writes.
+- Stable paths: no Product leaf path exists yet, so no migration or redirect is required.
+- Confirmation: the maintainer confirms the full tree, pages, mappings, links, navigation, and exclusions as one finite batch.

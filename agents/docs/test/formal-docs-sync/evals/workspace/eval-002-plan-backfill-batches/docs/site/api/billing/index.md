@@ -1,6 +1,6 @@
 ---
 title: Billing API
-visibility: internal
+visibility: both
 doc_type: api
 stage: dev
 owners:

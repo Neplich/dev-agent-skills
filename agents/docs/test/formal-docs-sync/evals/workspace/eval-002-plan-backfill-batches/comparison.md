@@ -4,106 +4,134 @@
 
 - Skill: `formal-docs-sync`
 - Eval: `eval-002-plan-backfill-batches`
-- Mode / type: `existing-system backfill` / API
+- Mode / types: `existing-system backfill` / API + Product
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue-159 API information architecture review 8 standards refresh`
-- Standards refresh: the fixture now uses the current packaged
-  `docs/site/standards/doc-granularity.md`,
-  `docs/site/standards/templates/api-template.md`, and
-  `docs/site/standards/templates/database.md`; catalog, change map, existing
-  API pages, routes, schemas, and tests remain the eval's host-scenario data.
-- Evidence: confirmed Accounts/Billing catalog, Accounts route/schema/contract
-  tests, existing nested Billing API subtree, and seeded Billing change-map
-  entry with `exclude` plus unknown `review_policy`.
-- Fresh run: `tmp/eval-runs/issue-159-review8-eval002-ELZH4E/`
-- Generation method: independent pristine fixture copies without historical
-  comparison; both lanes received the same eval prompt and assertions. Only
-  with-skill read and applied the Docs Agent, current `formal-docs-sync` API
-  contracts, and the refreshed host standards. A third fresh Codex judge read
-  both final responses, fixture evidence, and recursive SHA-256 manifests.
-- Actual validation date: `2026-07-22`
+- Fixture version: `issue-164 API information architecture + issue-160 Product information architecture union`
+- Evidence: confirmed Accounts/Billing API catalog, two-domain Product catalog,
+  implementation and acceptance tests covering allowed roles, limits, duplicate
+  invitations, invalid/expired tokens, empty state and retry, plus seeded
+  unrelated change-map entries with `exclude` and unknown fields
+- Fresh paired run:
+  `tmp/eval-runs/pr-165-final-fresh-20260723-1215/eval-002-r3/`
+- Generation method: both generators received the same eval prompt and pristine
+  fixture. Only with-skill received the common contract and scoped API/Product
+  modules. Neither generator received assertions, historical comparison, an old
+  baseline or the other lane's output. A fresh independent `codex exec` judge
+  applied all 14 assertions after generation and reran Product acceptance tests
+  in both completed lanes.
+- Actual validation date: `2026-07-23`
 
 ## Latest Result
 
-**PASS（with-skill 5/5；fresh without-skill 3/5）** — with-skill consumed the
-refreshed host standards and proposed the complete
-`api/index.md → accounts/index.md → get-account.md` subtree. It supplied every
-required per-node confirmation field, treated all three pages and the Accounts
-seed as one atomic candidate scope, preserved the existing Billing mapping
-fields, and stopped before writes. The fresh judge found no infrastructure
-blocker.
+**PASS（with-skill 14/14；fresh without-skill 7/14）** — with-skill preserved
+the confirmed Product hierarchy and existing Billing material, kept the
+unconfirmed Accounts batch read-only, produced the required parent/child batch
+proposal, updated the Product mappings atomically, and blocked #117 audit until
+a maintainer confirms `target_release_version`.
 
 ## Assertions
 
-- `prefers_catalog_scope`: both PASS. Both selected Accounts from the catalog,
-  verified the referenced paths, preserved owner `identity-team`, and kept the
-  existing nested Billing subtree out of batch.
-- `presents_batch_before_write`: with-skill PASS; without-skill FAIL.
-  With-skill paired every root/domain/leaf node with its parent, path, owner,
-  code boundary, evidence, map delta, exclusions, and out-of-batch scope before
-  waiting for confirmation. The baseline showed the correct tree but did not
-  provide a change-map delta and explicit out-of-batch scope for every node.
-- `keeps_unconfirmed_batch_read_only`: both PASS. Both stopped before changing
-  Accounts pages, the API root, Billing pages, or `change-map.yaml`, and neither
-  treated the explicit backfill request as candidate-scope confirmation.
-- `aligns_seed_with_page`: with-skill PASS; without-skill FAIL. With-skill's
-  Accounts seed covers the API root, Accounts index, and route leaf, keeps the
-  page/index/map scope atomic, and explicitly preserves the Billing trigger,
-  exclude, and unknown `review_policy`. The baseline correctly preserved
-  Billing but invented unsupported
-  `review_policy: identity-owner-approval` for Accounts.
-- `handles_missing_catalog_semantically`: both PASS. Both keep discovery
-  bounded to one top-level route group, form a complete ancestor-index-to-leaf
-  subtree from route/schema/handler/test evidence, and wait for confirmation.
+- `loads_scoped_api_product_contracts`: with-skill PASS；without-skill FAIL。
+  Only with-skill applied the common contract and scoped API/Product modules.
+- `prefers_catalog_scope`: both PASS. Both selected Accounts as the first
+  catalog-backed API batch and excluded Billing from that proposal.
+- `presents_batch_before_write`: with-skill PASS；without-skill FAIL。
+  With-skill presented the full three-level candidate tree and per-node parent,
+  owner, precise `src/api/accounts/**` glob, evidence, mapping delta, exclusions
+  and confirmation gate. The baseline used the over-broad `src/api/**` boundary
+  for the API root and omitted its explicit parent field.
+- `keeps_unconfirmed_batch_read_only`: both PASS. Neither lane wrote Accounts
+  pages or map entries, and both preserved the existing API root, Billing pages
+  and Billing map entry while updating only the confirmed Product mappings.
+- `aligns_seed_with_page`: both PASS. Both aligned the proposed Accounts seed
+  with the three-page candidate closure and preserved Billing map metadata.
+- `handles_missing_catalog_semantically`: both PASS. Both proposed bounded API
+  discovery and a maintainer confirmation gate rather than repository-wide
+  generation.
+- `creates_complete_product_tree`: both PASS. Both generated the seven-page
+  Product tree without collapsing the two invitation tasks.
+- `keeps_every_task_navigable`: with-skill PASS；without-skill FAIL。Both lanes
+  keep every task reachable, but the baseline Invitations index repeats task
+  permissions and limits instead of remaining a scope-and-navigation index.
+- `records_confirmed_non_leaf_scope`: with-skill PASS；without-skill FAIL。
+  With-skill recorded audience/roles, both catalog owners, child navigation,
+  adjacent capabilities and exclusions on every non-leaf Product page. The
+  baseline Product root retained the generic docs owner and its Analytics index
+  omitted the applicable audience/roles.
+- `writes_evidence_backed_task_behavior`: both PASS. Permissions, limits,
+  feedback, recovery, valid/invalid/expired states, dashboard result states and
+  retry behavior in both lanes match the final implementation and acceptance
+  evidence without claiming real email delivery.
+- `updates_product_map_atomically`: with-skill PASS；without-skill FAIL。
+  With-skill gives each Product glob its complete, stable Product and linked
+  authority closure with exclusions. The baseline omits authority pages and
+  exclusions and does not keep the glob/doc lists stably ordered.
+- `links_authorities_without_copying_contracts`: both PASS. Task pages link
+  parent and cross-type authorities without duplicating their contracts.
+- `runs_product_host_checks`: with-skill PASS；without-skill FAIL。Both lanes
+  passed 74/74 docs tests and both builds, but only with-skill recorded each
+  required command with its `docs/site/` cwd and exit status while keeping all
+  seven Product pages `unverified`.
+- `blocks_audit_without_confirmed_version`: with-skill PASS；without-skill FAIL。
+  Only with-skill explicitly blocked pre-tag audit pending a maintainer-confirmed
+  `target_release_version`.
 
 ## With-Skill Behavior
 
-- Loaded the Docs Agent entry context, `formal-docs-sync` common contract, only
-  the API type module, and the fixture's refreshed standards entry,
-  granularity rules, API template, and change map.
-- Applied the refreshed host rules rather than bypassing them: root/domain
-  indexes contain scope and navigation, one route receives one leaf, and the
-  complete navigable subtree and map seed remain atomic.
-- Proposed a directly auditable per-node confirmation matrix and preserved all
-  seeded Billing mapping fields without inventing an Accounts review policy.
-- Stopped at candidate-scope confirmation with zero writes, no host checks, no
-  second batch, and no premature docs-audit handoff.
+- Loaded the common eight-step contract and only the scoped API/Product modules.
+- Preserved the existing Billing subtree and map metadata while keeping the
+  proposed Accounts batch at zero writes until whole-batch confirmation.
+- Generated the full Product tree with evidence-backed task behavior, complete
+  non-leaf scope and stable atomic mappings.
+- Kept the #117 pre-tag audit handoff blocked instead of inferring a version.
 
 ## Fresh Without-Skill Baseline
 
-- Source: a second independent pristine fixture copy with the same eval prompt
-  and assertions; it did not read the target skill, Docs Agent README,
-  internal/shared instructions, historical comparison, with-skill output, or
-  other eval outputs.
-- Result: 3/5 PASS. It selected the correct nested Accounts tree, respected the
-  batch boundary, remained read-only, and handled missing-catalog discovery
-  semantically.
-- It failed the skill-specific per-node confirmation completeness and proposed
-  an Accounts review-policy value unsupported by the fixture evidence.
+- Source: a new pristine fixture copy with the same prompt and fixture. It did
+  not read or apply the target skill, old comparison, with-skill output or any
+  historical baseline.
+- Result: 7/14 PARTIAL. It preserved Billing, kept Accounts read-only and
+  generated seven Product pages, but failed scoped contract loading, the exact
+  API proposal boundary, index-content separation, complete non-leaf Product
+  scope, atomic Product/authority mapping, complete host-check reporting and the
+  missing-version audit gate.
+- Skill-specific uplift: +7 assertions, or +50.0 percentage points.
+
+## Required Test Reproduction
+
+- The independent judge ran
+  `PYTHONPATH=. UV_CACHE_DIR=<isolated-cache> uvx --from pytest pytest -q tests/acceptance/test_product_tasks.py`
+  in both completed lanes; each returned `2 passed`.
+- The judge also reran `npm run test:docs`, `npm run build:public` and
+  `npm run build:internal` in both lanes. Each lane passed 74/74 docs tests and
+  both builds with exit code 0; all Product and linked authority pages resolved
+  in both views without dead links.
 
 ## Failures
 
 - With-skill assertion failures: none.
-- Without-skill assertion failures: `presents_batch_before_write` and
-  `aligns_seed_with_page`.
-- Infrastructure blockers: none. Recursive SHA-256 manifest comparisons
-  confirmed both lane workspaces were byte-identical to the source fixture and
-  to each other, excluding the intentionally omitted durable comparison.
+- Without-skill assertion failures: `loads_scoped_api_product_contracts`,
+  `presents_batch_before_write`, `keeps_every_task_navigable`,
+  `records_confirmed_non_leaf_scope`, `updates_product_map_atomically`,
+  `runs_product_host_checks`, and `blocks_audit_without_confirmed_version`.
+- The isolated pytest cache downloaded its missing Pygments dependency, then
+  both lanes completed with the same command and selector.
 
 ## Next Steps
 
-- Keep eval-002's standards copies synchronized with the packaged bootstrap
-  assets whenever API/database information-architecture rules change.
-- Re-run this paired validation whenever API hierarchy, candidate-scope, host
-  standards consumption, or change-map atomicity rules change.
+- Keep the API proposal/read-only assertions and Product hierarchy/mapping
+  assertions together as the merged regression unit.
+- Keep seeded Billing and unrelated map entries so preservation of exclusions
+  and unknown fields remains observable.
+- Keep the explicit read-only candidate-loading rule so API candidate planning
+  uses the API module without gaining write authorization.
 
 ## Runtime Artifact Policy
 
-- Both copied lanes, final responses, fresh judge verdict, and session/runtime
-  evidence remain under
-  `tmp/eval-runs/issue-159-review8-eval002-ELZH4E/` and are not submitted.
+- Both lanes, candidate outputs, dependencies, judge verdict, logs and disposable
+  rerun copies remain under `tmp/eval-runs/` or `/tmp` and are not submitted.
 - Only this `comparison.md` is durable; no `with_skill/`, `without_skill/`,
-  transcript, verdict, timing, run status, diagnostics, dependency, generated
-  site, cache artifact, or other runtime output is committed.
+  transcript, verdict, timing, diagnostics, dependency, generated-site or cache
+  artifact is committed.

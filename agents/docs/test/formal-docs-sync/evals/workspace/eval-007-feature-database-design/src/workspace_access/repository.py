@@ -6,9 +6,18 @@ def upsert_membership(db, workspace_id, user_id, role):
     )
 
 
-def create_invitation(db, invitation_id, workspace_id, email, token_hash, expires_at):
+def create_invitation(
+    db,
+    invitation_id,
+    workspace_id,
+    email,
+    role,
+    token_hash,
+    expires_at,
+):
     return db.execute(
         "INSERT INTO workspace_invitations "
-        "(id, workspace_id, invited_email, token_hash, expires_at) VALUES (?, ?, ?, ?, ?)",
-        (invitation_id, workspace_id, email, token_hash, expires_at),
+        "(id, workspace_id, invited_email, role, token_hash, expires_at) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
+        (invitation_id, workspace_id, email, role, token_hash, expires_at),
     )

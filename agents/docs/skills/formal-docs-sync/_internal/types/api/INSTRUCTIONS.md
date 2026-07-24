@@ -1,6 +1,7 @@
 # API Sync Instructions
 
-Load this module only when the confirmed scope contains `doc_type: api`.
+Load this module only when a confirmed write scope or an explicitly requested
+read-only candidate-planning scope contains `doc_type: api`.
 
 ## Evidence Checks
 
@@ -38,6 +39,13 @@ and contract tests. Use `docs/site/api/index.md` only for global scope and
 top-level domain navigation. Give every feature domain and every intermediate
 subfeature its own directory and `index.md`; use lower kebab-case for all new
 segments.
+
+If no feature catalog exists, first scan API entry points, route prefixes and
+tags, schemas, handler ownership, and contract tests. Use that evidence to form
+one bounded top-level route group with every ancestor index and route leaf;
+show the per-node code glob, owner gap, page, mapping delta, and exclusions,
+then wait for confirmation. Discovery without a catalog never authorizes
+whole-repository generation or immediate writes.
 
 Leaf pages normally represent one independently understandable route. Merge a
 tight route group only when all routes share the same reader task, owner,

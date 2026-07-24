@@ -20,6 +20,7 @@ CREATE TABLE workspace_invitations (
   id TEXT PRIMARY KEY,
   workspace_id TEXT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   invited_email TEXT NOT NULL,
+  role TEXT NOT NULL CHECK (role IN ('owner', 'editor', 'viewer')),
   token_hash TEXT NOT NULL UNIQUE,
   expires_at TEXT NOT NULL,
   accepted_at TEXT,
