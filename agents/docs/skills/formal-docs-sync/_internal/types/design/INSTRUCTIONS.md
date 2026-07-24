@@ -27,13 +27,21 @@ Read the design template linked from the host standards entry—normally
 
 Derive the hierarchy from stable system / domain / subsystem / component
 ownership, then corroborate it with `feature_path`, TRD impact scope, final
-code, and tests. Do not derive pages from file count.
+code, and tests. Treat every non-leaf design node as recursively nestable:
+system -> domain -> subsystem -> deeper subsystem -> (continue for every
+confirmed ownership boundary) -> component or independently maintained
+structure / flow / boundary leaf. The confirmed ownership tree and
+multi-segment `feature_path` determine the depth; never cap it at a fixed number
+of subsystem levels, invent intermediate levels, or derive pages from file
+count.
 
 - `docs/site/design/index.md` is only the system map, domain boundaries, and
   global navigation.
-- Give every domain and non-leaf design node an `index.md` that states
-  responsibility, non-goals, children, adjacent modules, and authority
-  evidence without repeating child content.
+- Give every domain and every design node that has children, at any depth, its
+  own `index.md`. Each such index states that node's responsibility, non-goals,
+  owner, children, adjacent modules, exclusions, authority evidence, and
+  downward navigation without repeating descendant content or substituting for
+  a descendant index.
 - Separate independently owned components from cross-component control/data
   flows and from security, authorization, error-ownership, or recovery
   boundaries when each has an independent reader task or maintenance cycle.
@@ -51,13 +59,16 @@ code, and tests. Do not derive pages from file count.
 
 For the candidate scope, show the complete parent-child tree and, per page,
 reader task, owner, evidence, code glob, change-map delta, links, and
-exclusions. Use a real code map and Mermaid flow only where final code and
-tests support them. Apply the Design Delivery Closeout Gate page by page and
-show the required page-by-seven-item matrix before writing; each cell names its
-evidence and pass/fail status, so a feature-level summary cannot substitute for
-page-level closeout. Preserve the common gate's runtime-only pre-write matrix
-and changed-path snapshot before touching any formal page or map; the final
-report may summarize it but cannot replace that ordering evidence.
+exclusions. For every leaf, enumerate the full ancestor chain from the Design
+root through every confirmed non-leaf subsystem, create or update each ancestor
+`index.md`, and verify every parent links its direct children. Use a real code
+map and Mermaid flow only where final code and tests support them. Apply the
+Design Delivery Closeout Gate page by page and show the required
+page-by-seven-item matrix before writing; each cell names its evidence and
+pass/fail status, so a feature-level summary cannot substitute for page-level
+closeout. Preserve the common gate's runtime-only pre-write matrix and
+changed-path snapshot before touching any formal page or map; the final report
+may summarize it but cannot replace that ordering evidence.
 
 For every Design `code_glob`, list the complete atomic mapping closure in
 `required_docs`: each affected leaf or compatibility page, the Design root and

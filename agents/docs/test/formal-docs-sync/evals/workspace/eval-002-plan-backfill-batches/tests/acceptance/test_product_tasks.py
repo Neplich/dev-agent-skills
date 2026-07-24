@@ -1,5 +1,9 @@
 from src.product.analytics.dashboard import view_dashboard
-from src.product.workspace_management.invitations import accept_invitation, invite_member
+from src.product.workspace_management.invitations import (
+    accept_invitation,
+    invite_member,
+    manage_pending_invitation,
+)
 
 
 def test_invitation_tasks_expose_limits_feedback_and_recovery():
@@ -29,6 +33,43 @@ def test_invitation_tasks_expose_limits_feedback_and_recovery():
     assert expired["recovery"] == "Request a new invitation."
     assert invalid["message"] == "Invitation is invalid."
     assert invalid["recovery"] == "Open the latest invitation email or contact an owner."
+
+
+def test_pending_invitation_management_supports_resend_revoke_and_recovery():
+    resent = manage_pending_invitation(
+        "admin", "pending@example.com", "resend"
+    )
+    revoked = manage_pending_invitation(
+        "owner", "pending@example.com", "revoke"
+    )
+    forbidden = manage_pending_invitation(
+        "viewer", "pending@example.com", "revoke"
+    )
+    missing = manage_pending_invitation(
+        "owner", "missing@example.com", "resend", invitation_exists=False
+    )
+    unsupported = manage_pending_invitation(
+        "owner", "pending@example.com", "archive"
+    )
+
+    assert resent == {
+        "ok": True,
+        "status": "pending",
+        "email": "pending@example.com",
+        "action": "resent",
+    }
+    assert revoked == {
+        "ok": True,
+        "status": "revoked",
+        "email": "pending@example.com",
+        "action": "revoked",
+    }
+    assert forbidden["message"] == "Only owners and admins can manage invitations."
+    assert forbidden["recovery"] == "Ask a workspace owner for access."
+    assert missing["message"] == "Pending invitation not found."
+    assert missing["recovery"] == "Refresh the invitation list."
+    assert unsupported["message"] == "Unsupported invitation action."
+    assert unsupported["recovery"] == "Choose resend or revoke."
 
 
 def test_dashboard_roles_empty_state_and_retry():

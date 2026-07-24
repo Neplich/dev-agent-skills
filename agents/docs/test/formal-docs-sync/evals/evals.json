@@ -46,9 +46,9 @@
     {
       "id": "eval-002-plan-backfill-batches",
       "name": "并行验证 API 候选规划与 Product 分层回填",
-      "description": "验证 backfill 同时保留 API 完整候选子树的确认门禁，以及已确认 Product 批次从产品域到独立用户任务的分层同步契约。",
-      "prompt": "按 `backfill-confirmation.md` 已确认的 existing-system backfill 批次同步 Product 正式文档：用 feature catalog、当前实现和验收测试核证两个产品域，生成完整父子目录、各级 index 与独立用户任务页，更新 change map，在 `docs/site/` 运行宿主 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal` 并核对 Product 双视图递归导航与链接，再输出 #117 handoff。同时为尚未确认的 Accounts API 回填只提出 `api/index.md → accounts/index.md → get-account.md` 完整候选树，逐节点说明 code glob、证据、owner、映射和排除项，保持 Accounts API 零写入与既有 Billing 子树不变；并说明没有 catalog 时如何形成候选范围。",
-      "expected_output": "生成可从 Product 根索引逐级定位的 workspace-management/invitations 与 analytics 子树，邀请、接受邀请和查看仪表盘各自成页且行为有证据支持；原子更新 Product 映射与链接，按 visibility 通过 public/internal 递归导航、链接和宿主检查。同时按 catalog 规划 Accounts API 完整候选树但不写入，保留既有 Billing 子树和映射，并说明无 catalog 时先扫描 API surface 再确认。",
+      "description": "验证 backfill 同时保留 API 完整候选子树的确认门禁，以及已确认 Product 批次从产品域经两级子功能递归到独立用户任务的分层同步契约。",
+      "prompt": "按 `backfill-confirmation.md` 已确认的 existing-system backfill 批次同步 Product 正式文档：用 feature catalog、当前实现和验收测试核证两个产品域，其中 workspace-management 必须按 `invitations → member-invitations / invitation-acceptance → 用户任务` 生成两级子功能、每级 index 和独立任务页，analytics 保持浅层；更新 change map，在 `docs/site/` 运行宿主 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal` 并核对 Product 双视图任意深度递归导航与链接，再输出 #117 handoff。同时为尚未确认的 Accounts API 回填只提出 `api/index.md → accounts/index.md → get-account.md` 完整候选树，逐节点说明 code glob、证据、owner、映射和排除项，保持 Accounts API 零写入与既有 Billing 子树不变；并说明没有 catalog 时如何形成候选范围。",
+      "expected_output": "生成可从 Product 根索引逐级定位的 workspace-management/invitations 两级子功能树与浅层 analytics 子树；member-invitations、invitation-acceptance 各有自己的 index，邀请成员、管理待处理邀请、接受邀请和查看仪表盘各自成页且行为有代码与验收证据支持；原子更新每个代码层级的 Product 祖先闭包映射与链接，按 visibility 通过 public/internal 任意深度递归导航、链接和宿主检查。同时按 catalog 规划 Accounts API 完整候选树但不写入，保留既有 Billing 子树和映射，并说明无 catalog 时先扫描 API surface 再确认。",
       "workspace": "workspace/eval-002-plan-backfill-batches",
       "assertions": [
         {
@@ -84,27 +84,27 @@
         {
           "id": "creates_complete_product_tree",
           "description": "生成完整 Product 父子目录",
-          "text": "生成 `product/index.md`、两个产品域 index、`workspace-management/invitations/index.md` 以及三个独立任务页；邀请与接受邀请不得合并成单个 handbook。"
+          "text": "生成 `product/index.md`、两个产品域 index、一级子功能 `workspace-management/invitations/index.md`、二级子功能 `member-invitations/index.md` 与 `invitation-acceptance/index.md`，以及 `invite-member.md`、`manage-pending-invitation.md`、`accept-invitation.md`、`view-dashboard.md` 四个独立任务页；不得省略任一非叶 index，也不得把独立任务合并成 handbook。"
         },
         {
           "id": "keeps_every_task_navigable",
           "description": "每项功能和任务均可逐级定位",
-          "text": "Product 根索引链接两个域，workspace-management 域链接 invitations，invitations index 链接 invite-member 与 accept-invitation，analytics index 链接 view-dashboard；各级 index 只说明范围与导航，不复制任务正文。"
+          "text": "Product 根索引链接两个域；workspace-management 域链接 invitations；invitations index 只链接两个二级子功能；member-invitations index 链接 invite-member 与 manage-pending-invitation；invitation-acceptance index 链接 accept-invitation；analytics index 链接 view-dashboard。每条任务路径必须按根→域→一级子功能→二级子功能→任务逐级可达，各级 index 只承担本节点范围与直接子节点导航，不复制任务正文或跳过中间层。"
         },
         {
           "id": "records_confirmed_non_leaf_scope",
           "description": "非叶子页面保留已确认候选 scope 语义",
-          "text": "Product 根、两个产品域和 invitations 功能 index 共同反映已确认候选 scope：明确适用角色或受众、catalog owner、子节点、相邻能力和本批排除项；不得只提供裸链接，也不得把角色拆成重复目录。"
+          "text": "Product 根、两个产品域、一级 invitations index，以及 member-invitations 和 invitation-acceptance 两个二级子功能 index 都反映各自已确认 scope：明确适用角色或受众、catalog owner、直接子节点、相邻能力和本批排除项；不得只提供裸链接、用祖先 scope 代替后代 scope，或把角色拆成重复目录。"
         },
         {
           "id": "writes_evidence_backed_task_behavior",
           "description": "任务行为由实现和验收证据支持",
-          "text": "邀请页记录 owner/admin 权限、3 个 pending 上限、重复邀请反馈与 revoke/resend 恢复；接受页记录 expired/invalid 反馈与请求新邀请恢复；仪表盘页记录 analyst 可见性、empty state、加载失败 retry，且不写 fixture 未支持的行为。"
+          "text": "邀请成员页记录 owner/admin 权限、3 个 pending 上限与重复邀请反馈；管理待处理邀请页记录 owner/admin 可 resend/revoke、无记录时刷新恢复和非法 action 反馈；接受页记录 valid 成功及 expired/invalid 反馈与请求新邀请恢复；仪表盘页记录 analyst 可见性、empty state、加载失败 retry。每项主张都能定位到对应模块函数和 acceptance test，且不写 fixture 未支持的行为。"
         },
         {
           "id": "updates_product_map_atomically",
           "description": "不同 code glob 映射对应 Product 子树",
-          "text": "分别用 `src/product/workspace_management/**` 与 `src/product/analytics/**` 映射对应子树页面，页面、祖先 index、链接与 change-map 原子更新；合并后按 code glob 和各自 required_docs 做稳定语义排序，并原样保留 fixture 已有无关条目、exclude 与未知字段。"
+          "text": "用 `src/product/workspace_management/**`、`src/product/workspace_management/invitations/**`、两个二级子功能的精确模块 glob 与 `src/product/analytics/**` 映射对应子树；每个 glob 自己的 required_docs 都包含从 `product/index.md` 经所有中间层 index 到其任务叶子的完整祖先闭包及相关权威入口，不能依赖 broad glob 的并集补缺。页面、逐级导航、链接与 change-map 原子更新；合并后按 code glob 和各自 required_docs 稳定排序，并原样保留 fixture 已有无关条目、exclude 与未知字段。"
         },
         {
           "id": "links_authorities_without_copying_contracts",

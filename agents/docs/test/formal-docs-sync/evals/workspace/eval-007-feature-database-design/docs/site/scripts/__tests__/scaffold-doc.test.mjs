@@ -673,13 +673,47 @@ test('replaceGeneratedDirectory preserves the previous tree when preparation fai
 });
 
 test('buildSidebar uses code-point ordering independent of locale data', () => {
-  const pages = ['ä.md', 'Z.md'].map((relativePath) => ({
+  const pages = ['index.md', 'ä.md', 'Z.md'].map((relativePath) => ({
     relativePath: `api/${relativePath}`,
-    route: `/api/${relativePath.slice(0, -3)}`,
+    route: relativePath === 'index.md'
+      ? '/api/'
+      : `/api/${relativePath.slice(0, -3)}`,
     data: { title: relativePath, visibility: 'both' }
   }));
-  const items = buildSidebar(pages, 'public')['/api/'][0].items;
+  const items = buildSidebar(pages, 'public')['/api/'][0].items[0].items;
   assert.deepEqual(items.map((item) => item.text), ['Z.md', 'ä.md']);
+});
+
+test('buildSidebar recursively nests indexes and leaves at arbitrary depth', () => {
+  const paths = [
+    ['product/index.md', 'Product'],
+    ['product/workspace-management/index.md', 'Workspace Management'],
+    ['product/workspace-management/invitations/index.md', 'Invitations'],
+    [
+      'product/workspace-management/invitations/member-invitations/index.md',
+      'Member Invitations'
+    ],
+    [
+      'product/workspace-management/invitations/member-invitations/invite-member.md',
+      'Invite a member'
+    ]
+  ];
+  const pages = paths.map(([relativePath, title]) => ({
+    relativePath,
+    route: relativePath.endsWith('/index.md')
+      ? `/${relativePath.slice(0, -9)}/`
+      : `/${relativePath.slice(0, -3)}`,
+    data: { title, visibility: 'both' }
+  }));
+  const product = buildSidebar(pages, 'public')['/product/'][0].items[0];
+  assert.equal(product.text, 'Product');
+  assert.equal(product.items[0].text, 'Workspace Management');
+  assert.equal(product.items[0].items[0].text, 'Invitations');
+  assert.equal(product.items[0].items[0].items[0].text, 'Member Invitations');
+  assert.equal(
+    product.items[0].items[0].items[0].items[0].link,
+    '/product/workspace-management/invitations/member-invitations/invite-member'
+  );
 });
 
 test('attachChildLifecycle closes the watcher and propagates the child exit code', () => {
