@@ -117,5 +117,5 @@ applicable continuation.
 
 Reuse and refresh the shared documentation-site deployment completeness state
 only when the audit establishes a material change to a documentation build
-target, resource, runtime entry, or publication scope. Otherwise preserve the
-prior state without starting a second check protocol.
+target, navigation or assets, release scope, or runtime entry. Otherwise
+preserve the prior state without starting a second check protocol.
