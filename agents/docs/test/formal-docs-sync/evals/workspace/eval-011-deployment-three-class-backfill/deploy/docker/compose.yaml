@@ -1,0 +1,13 @@
+services:
+  app:
+    image: registry.example/app:v2.0.0@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    env_file: ../../.env.example
+    ports: ["8080:8080"]
+    depends_on: [db]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/healthz')"]
+  db:
+    image: postgres:17@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    volumes: ["app-data:/var/lib/postgresql/data"]
+volumes:
+  app-data: {}

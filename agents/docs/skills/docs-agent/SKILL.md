@@ -24,6 +24,8 @@ preserves confirmed scope and evidence through the handoff.
   auditors consume together
 - pointing to each specialist's authoritative gate without copying it
 - applying the PM safety-net closeout after the current work finishes
+- preserving a documentation-site deployment-completeness result, its evidence,
+  covered build variants, missing links, drift, and conditional handoff pointer
 
 `docs-agent` is not responsible for:
 
@@ -122,6 +124,11 @@ When routing is complete:
   unavailable
 - state the accepted entry basis and the expected documentation artifact
 - preserve unresolved evidence or ownership gaps for the selected specialist
+- when a specialist triggers the documentation-site deployment-completeness
+  safety-net, preserve its stable status, evidence paths, covered variants,
+  missing links, drift, user decision, and shared-protocol handoff pointer;
+  report the result and return confirmed remediation to `pm-agent` without
+  editing deployment assets or performing delivery
 - after the current role or specialist finishes, apply the cross-role
   safety-net closeout in
   `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`

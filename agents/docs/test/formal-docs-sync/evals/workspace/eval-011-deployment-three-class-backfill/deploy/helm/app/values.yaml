@@ -1,0 +1,12 @@
+image:
+  repository: registry.example/app
+  tag: v2.0.0
+  digest: sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+service:
+  port: 8080
+env:
+  LOG_LEVEL: info
+secret:
+  existingSecret: app-runtime

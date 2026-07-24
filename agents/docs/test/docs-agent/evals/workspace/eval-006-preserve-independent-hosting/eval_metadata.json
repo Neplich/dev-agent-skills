@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-006-preserve-independent-hosting",
+  "eval_name": "preserve-independent-hosting",
+  "workspace_root": "agents/docs/test/docs-agent/evals/workspace/eval-006-preserve-independent-hosting",
+  "skill_availability_goal": "Verify that a still-valid alternative hosting decision is retained as not_applicable.",
+  "prompt": "根据 evidence.md 的静态对象存储托管决策完成 Docs closeout。",
+  "fixture_context": ["evidence.md"],
+  "execution_cleanup": ["with_skill", "without_skill", "outputs", "diagnostics", "transcript.md", "subagent-verdict.md", "run_status.json", "timing.json"]
+}

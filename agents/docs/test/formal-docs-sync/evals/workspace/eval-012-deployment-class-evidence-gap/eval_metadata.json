@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-012-deployment-class-evidence-gap",
+  "eval_name": "deployment-class-evidence-gap",
+  "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-012-deployment-class-evidence-gap",
+  "skill_availability_goal": "Verify missing Kubernetes/Helm evidence blocks only that class without placeholder commands while confirmed Development and Docker scope continues.",
+  "prompt": "按 `backfill-handoff.md` 的已确认 existing-system backfill 批次处理部署文档。fixture 有 Development 与 Docker 的完整配置和执行证据，但只有一份未执行的 Kubernetes 计划，没有 Chart、values、模板、kubeconfig 权限或验证结果。请分类报告并只写已确认范围。",
+  "fixture_context": ["backfill-handoff.md", ".env.example", "src/settings.py", "tests/test_settings.py", "scripts/dev/start.sh", "deploy/docker/compose.yaml", "kubernetes-plan.md", ".eval/", "docs/site/"],
+  "execution_cleanup": ["docs/site/ops/deployment", "docs/site/.generated", "sync-report.md"]
+}

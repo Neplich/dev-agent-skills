@@ -42,6 +42,13 @@ Before auditing, inspect the narrowest relevant context:
 
 If the repo has no durable deployment/config context yet, suggest running `deployment-planner` first.
 
+For every documentation runtime variant and environment, verify Public DNS and
+TLS; Internal authentication, network restriction, or equivalent access
+control; ports; probes and health checks; service, Ingress or Gateway values;
+secret and config references; and environment differences. Record `unknown`
+where runtime or permission evidence is unavailable. A reachable endpoint or a
+documented domain is not sufficient evidence.
+
 If a feature-scoped audit lacks a clear `feature_path`, do not create a new
 top-level `docs/devops/{name}/` directory. Return to PM for PRD/path
 clarification or Engineer for missing or stale TRD/implementation plan.
@@ -132,10 +139,15 @@ Output:
 
 - the audit report path
 - the highest-risk missing or unsafe config items
+- per-variant documentation environment coverage and its residual owner
 - whether the next likely step is:
   - `deployment-planner`
   - `cicd-bootstrap`
   - direct Engineer follow-up for missing runtime config
+
+For the documentation-site completeness chain, hand only landed and verified
+operational facts to `docs-agent:formal-docs-sync`; do not edit formal
+documentation in this specialist.
 
 ## Edge Cases
 

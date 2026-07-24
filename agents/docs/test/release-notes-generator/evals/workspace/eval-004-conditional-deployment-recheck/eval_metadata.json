@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-004-conditional-deployment-recheck",
+  "eval_name": "conditional-deployment-recheck",
+  "workspace_root": "agents/docs/test/release-notes-generator/evals/workspace/eval-004-conditional-deployment-recheck",
+  "skill_availability_goal": "Verify Release Notes reuses deployment completeness only for material build or publication changes.",
+  "prompt": "比较 evidence.md 的 content-only 与 runtime-entry-change 两种 Release Notes 变更并完成 closeout。",
+  "fixture_context": ["evidence.md"],
+  "execution_cleanup": ["with_skill", "without_skill", "outputs", "diagnostics", "transcript.md", "subagent-verdict.md", "run_status.json", "timing.json"]
+}

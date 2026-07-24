@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  template:
+    spec:
+      imagePullSecrets: {{ .Values.imagePullSecrets | toJson }}
+      containers:
+        - name: app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}@{{ .Values.image.digest }}"
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          env:
+            - name: LOG_LEVEL
+              value: {{ .Values.env.LOG_LEVEL | quote }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.secret.existingSecret }}

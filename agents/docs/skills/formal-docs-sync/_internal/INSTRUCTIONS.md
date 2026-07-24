@@ -94,6 +94,9 @@ Before writing, show the maintainer:
   bidirectional links where applicable, and links to authoritative API,
   database, or ops pages;
 - proposed change-map, index, or host-required navigation delta;
+- for ops deployment scope, the Development / Docker / Kubernetes-Helm
+  classification, support/evidence status, target page tree, per-class code
+  globs, environment differences, and any aggregate-page path/link migration;
 - explicit exclusions for every page, unresolved discrepancies, and
   out-of-batch scope;
 - for an existing stable path, the migration, redirect, and link-repair scope
@@ -184,6 +187,12 @@ If required dependencies are absent, use only the host's deterministic locked
 installation path. A failed, missing, or unverifiable required check blocks
 completion; do not repair unrelated code or deployment state to hide it.
 
+After host checks pass for an existing-site content batch, and before the audit
+handoff, run the shared documentation-site deployment completeness recheck.
+This remains read-only even when the content update did not intentionally touch
+deployment files. Reuse the shared status and checklist, report unchanged
+`integrated` evidence or drift, and do not create a second protocol here.
+
 ### 8. Handoff to docs audit
 
 After all required checks pass, hand the complete affected set and evidence to
@@ -210,7 +219,14 @@ Synchronize ops runbooks, upgrade instructions, rollback instructions,
 environment variables, startup methods, Helm/Compose behavior, and related
 current operational facts only when confirmed configuration, commands, results,
 and environment differences support them. Never turn a deployment plan or an
-unexecuted command into current state.
+unexecuted command into current state. Classify Development, Docker, and
+Kubernetes/Helm independently and keep their pages, evidence, code globs, and
+change-map entries separate. A blocked or unsupported class does not prevent an
+otherwise confirmed atomic scope from continuing, but it must be reported with
+the missing evidence and must not receive placeholder commands. When replacing
+an aggregate deployment page, confirm its path migration, inbound/internal link
+repairs, map delta, navigation delta, and duplicate-content consolidation as one
+atomic scope.
 
 ### Release
 
@@ -304,6 +320,8 @@ output followed the relevant rules:
 - Evidence and read-back: <sources checked and result>
 - Change-map / index / navigation delta: <delta or none>
 - Host docs checks: <commands, cwd, and results>
+- Deployment completeness: <shared status, variants, evidence paths, missing
+  links or drift, user decision, and next owner>
 - Unresolved discrepancies: <items, owners, next evidence or none>
 - Coverage and remaining batches: <summary>
 - Handoff: <docs-audit (issue #117) ready, or blocked while waiting for confirmed

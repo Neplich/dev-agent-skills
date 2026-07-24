@@ -1,0 +1,4 @@
+change_map:
+  "src/product/**":
+    required_docs: [docs/site/product/index.md]
+    trigger: product changes

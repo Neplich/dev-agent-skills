@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-004-deployment-completeness-trigger",
+  "eval_name": "deployment-completeness-trigger",
+  "workspace_root": "agents/docs/test/docs-site-bootstrap/evals/workspace/eval-004-deployment-completeness-trigger",
+  "skill_availability_goal": "Verify first-bootstrap and re-bootstrap deployment completeness closeout without expanding delivery authorization.",
+  "prompt": "读取 evidence.md 的三个建站场景，分别给出部署完整性状态、证据、用户确认和下一步；只做只读检查。",
+  "fixture_context": ["evidence.md"],
+  "execution_cleanup": ["with_skill", "without_skill", "outputs", "diagnostics", "transcript.md", "subagent-verdict.md", "run_status.json", "timing.json"]
+}

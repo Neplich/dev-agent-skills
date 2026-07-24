@@ -92,6 +92,20 @@
           "text": "针对冲突明确给出 overwrite、显式 merge 和保留现有文件三种选择；仅在用户选择保留后才把该路径记为 `kept-as-is`。"
         }
       ]
+    },
+    {
+      "id": "eval-004-deployment-completeness-trigger",
+      "name": "首次与重复建站触发部署完整性检查",
+      "description": "验证首次已集成、首次未集成和重新 bootstrap 漂移三个 closeout 场景。",
+      "prompt": "读取 evidence.md 的三个建站场景，分别给出部署完整性状态、证据、用户确认和下一步；只做只读检查。",
+      "expected_output": "首次已集成报告 integrated；首次未集成报告 not_integrated 并要求三选一；重复 bootstrap 漂移报告 partial 并重新询问 DevOps handoff，且不扩大交付授权。",
+      "workspace": "workspace/eval-004-deployment-completeness-trigger",
+      "assertions": [
+        {"id": "classifies_first_bootstrap_integrated", "description": "首次已集成状态正确", "text": "首次完整建站在用户确认 durable commit 后枚举 Public/Internal，并以真实 Docker、CI、Compose/Helm、入口证据判为 integrated，展示证据且不重复执行 DevOps。"},
+        {"id": "asks_first_bootstrap_choice", "description": "首次未集成要求三选一", "text": "镜像化宿主未包含文档站时判为 not_integrated，并明确询问全部变体纳入、独立托管 not_applicable、或暂缓并保留 blocker 三个选择。"},
+        {"id": "rechecks_rebootstrap_drift", "description": "重新建站发现漂移", "text": "重复 bootstrap 后重新读取配置，识别 Internal 启动路径漂移并判为 partial，重新询问是否进入 PM 到 DevOps 补齐链路。"},
+        {"id": "preserves_authorization_boundary", "description": "不扩大交付授权", "text": "只读检查和内容/commit 确认不授权 push、镜像发布或部署，也不让 Docs 修改 Docker、CI/CD、Compose 或 Helm。"}
+      ]
     }
   ]
 }

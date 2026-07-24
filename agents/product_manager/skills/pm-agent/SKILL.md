@@ -153,6 +153,12 @@ Route by the user's intended PM outcome, not by literal wording.
 - Deployment, CI/CD, Docker, Helm, environment configuration, release readiness,
   rollback, or runbook requests with confirmed operational scope
   -> hand off to `devops-agent`
+- A user-confirmed documentation-site image-delivery gap returned by the shared
+  safety-net is repo-wide `deployment` work. Preserve the check in
+  `source_documents` and `blockers_risks`, use `N/A` feature fields only for the
+  confirmed repository-wide scope, and hand off to DevOps in the shared ordered
+  chain. Independent hosting or deferral remains a recorded decision or
+  blocker, not a ready DevOps handoff.
 - Security review, authorization, dependency risk, secrets, privacy, webhook,
   upload, login, or data-flow risk requests with confirmed security scope
   -> hand off to `security-agent`

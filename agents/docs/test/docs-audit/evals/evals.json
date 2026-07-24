@@ -213,6 +213,18 @@
         {"id": "reports_all_missing_or_invalid_sources", "description": "多来源缺失与非法值全部报告", "text": "按入口声明的完整 `{source_id,locator_kind,locator,selector,extractor,required_raw_form}` inventory 检查每一项；fixture 中缺失 Release Notes index、releases.json 值为空、marketplace metadata.version 缺失、package.json 为非法 loose version时一次报告全部 blocker，不在首错停止，也不从另一来源补造或替换。"},
         {"id": "persists_and_reuses_exact_inventory", "description": "pre-tag producer 与 post-tag consumer inventory 一致", "text": "pre-tag candidate 持久化每个 required source（含 actual-tag pending 项）的六字段 locator contract、raw/normalized identity、target-tree path/mode/type/blob/hash、比较结果，并按 canonical-json-rfc8259-sorted-v1 对 source_id 排序的 exact 六字段数组重算小写 SHA-256 digest；post-tag 消费同一 inventory，从 peeled tag tree/tag ref 复核并再次重算。多版本文件只用持久化 selector；缺 selector、多匹配、unknown extractor 或 digest 不等均 blocked。"}
       ]
+    },
+    {
+      "id": "eval-014-conditional-deployment-recheck",
+      "name": "Release audit 条件式复用部署完整性状态",
+      "description": "审计只在发现构建或发布运行面变化时刷新共享状态。",
+      "prompt": "比较 evidence.md 的事实盖章与 build-target-change 两个 audit affected set。",
+      "expected_output": "普通盖章保留状态；build target 变化刷新共享状态且不改部署资产。",
+      "workspace": "workspace/eval-014-conditional-deployment-recheck",
+      "assertions": [
+        {"id": "preserves_state_for_no_surface_change", "description": "无发布面变化不重检", "text": "仅版本事实盖章且构建/发布面不变时保留既有完整性状态。"},
+        {"id": "refreshes_shared_state_for_material_change", "description": "构建面变化刷新共享状态", "text": "affected set 改变文档 build target 或 runtime/publication surface 时复用共享检查并刷新状态，不创建第二协议或修改部署资产。"}
+      ]
     }
   ]
 }

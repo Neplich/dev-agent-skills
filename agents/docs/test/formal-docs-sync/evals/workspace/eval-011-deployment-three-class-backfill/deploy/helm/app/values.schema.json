@@ -1,0 +1,1 @@
+{"type":"object","properties":{"image":{"type":"object"},"service":{"type":"object"},"env":{"type":"object"},"secret":{"type":"object"}},"required":["image","service","secret"]}

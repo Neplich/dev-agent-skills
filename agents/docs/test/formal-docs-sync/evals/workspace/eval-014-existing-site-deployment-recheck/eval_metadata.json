@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-014-existing-site-deployment-recheck",
+  "eval_name": "existing-site-deployment-recheck",
+  "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-014-existing-site-deployment-recheck",
+  "skill_availability_goal": "Verify post-sync read-only rechecks for fully integrated and partially covered existing sites.",
+  "prompt": "按 evidence.md 完成内容同步 closeout，只读复核两套老站配置并报告部署完整性；不要修改部署资产。",
+  "fixture_context": ["evidence.md"],
+  "execution_cleanup": ["with_skill", "without_skill", "outputs", "diagnostics", "transcript.md", "subagent-verdict.md", "run_status.json", "timing.json"]
+}

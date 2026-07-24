@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-013-deployment-aggregate-migration",
+  "eval_name": "deployment-aggregate-migration",
+  "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-013-deployment-aggregate-migration",
+  "skill_availability_goal": "Verify an existing aggregate deployment page migrates atomically to the three-class tree with links, navigation, change-map, and duplicate facts reconciled.",
+  "prompt": "按 `migration-handoff.md` 已确认的迁移范围，把现有 `docs/site/ops/deployment.md` 拆为三分类结构。fixture 提供聚合页、引用它的站内链接、旧 change-map 和三类证据；路径迁移、链接修复、映射、导航与重复内容归并均已获维护者确认。请执行迁移并运行 `npm run test:docs`。",
+  "fixture_context": ["migration-handoff.md", "deployment-evidence.md", "docs/site/ops/deployment.md", "docs/site/ops/index.md", "docs/site/product/runtime.md", "docs/site/standards/change-map.yaml", "docs/site/package.json"],
+  "execution_cleanup": ["docs/site/ops/deployment", "docs/site/.generated", "sync-report.md"]
+}

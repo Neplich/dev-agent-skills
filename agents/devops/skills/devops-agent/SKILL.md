@@ -46,6 +46,12 @@ are defined in
 - Preserve confirmed feature scope and source documents for feature-scoped
   work; preserve `N/A` feature scope for confirmed repo-wide CI, deployment,
   release automation, or status work.
+- Accept the shared documentation-site safety-net's user-confirmed repo-wide
+  deployment packet with `N/A` feature scope and its completeness evidence.
+  Route that complete remediation in dependency order:
+  `deployment-planner` -> `cicd-bootstrap` -> `env-config-auditor` ->
+  `docs-agent:formal-docs-sync`. This explicit confirmed chain is not an
+  underspecified request expanded by the router.
 - Full feature-path, repo-wide, and output-location gates live in the selected
   DevOps specialist; this router only keeps the entry check and pointer.
 
@@ -132,3 +138,7 @@ When routing is complete:
   (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
   next step, request confirmation before continuing, and honor user-enabled
   `auto-continue`
+- for the documentation-site chain, return only landed and verified operational
+  facts to `formal-docs-sync`; DevOps does not edit formal documentation, and
+  the handoff does not imply commit, push, image-publication, or deployment
+  authorization
