@@ -1,0 +1,22 @@
+# Confirmed Design information architecture
+
+- `design/index.md`
+  - `workspace-access/index.md`
+    - `components/invitation-service.md`
+    - `components/membership-repository.md`
+    - `flows/invitation-acceptance.md`
+    - `authorization-boundary.md`
+  - `audit-log/index.md`
+    - `event-writer.md`
+- Reader tasks: locate domain ownership; understand each component; trace the cross-component acceptance flow; verify authorization/error ownership.
+- Owners: `platform-team` for workspace access; `security-team` for audit log.
+- Evidence: Approved PRD, Confirmed TRD, closed plan, final diff, passed tests, and current code.
+- Code globs and mappings:
+  - `src/workspace_access/invitations.py` -> invitation component, acceptance flow, authorization boundary.
+  - `src/workspace_access/repository.py` and `schema.sql` -> membership component, acceptance flow, database authority page.
+  - `src/audit/**` -> audit domain, event writer, acceptance flow.
+- Reciprocal links: both workspace components and audit writer link the acceptance flow; the flow links all three components.
+- Authority links: Design pages link the API and Database pages; field tables, payloads, status codes, and full schema constraints stay on those authority pages.
+- Cross-domain authority: the acceptance flow is authoritative under workspace access; audit-log links it and does not duplicate it.
+- Migration: replace the previous flat `design/workspace-access.md` body with a compatibility link to `design/workspace-access/index.md`; repair root navigation in the same atomic scope.
+- Exclusions: inherited roles, future notification retries, API/database contract duplication, product/ops/Release Notes, and all future architecture.

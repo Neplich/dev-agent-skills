@@ -1,0 +1,5 @@
+services:
+  app:
+    image: registry.example/app:v2.0.0@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    env_file: ../../.env.example
+    ports: ["8080:8080"]

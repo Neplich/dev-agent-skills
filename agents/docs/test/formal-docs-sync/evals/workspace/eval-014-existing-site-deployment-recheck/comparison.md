@@ -3,7 +3,7 @@
 ## Evaluation Target
 
 - Skill: `formal-docs-sync`
-- Eval: `eval-011-existing-site-deployment-recheck`
+- Eval: `eval-014-existing-site-deployment-recheck`
 - Review context: issue #162 fresh paired validation
 
 ## Test Set / Fixture Version
@@ -19,7 +19,7 @@
 ## With-Skill Behavior
 
 - 老站完整时保持 integrated 且不重放 DevOps；仅 Public 覆盖时判 partial 并只读返回 PM。
-- Candidate source: fresh `tmp/eval-runs/issue-162/with_skill/eval-011-existing-site-deployment-recheck/candidate-output.md`.
+- Candidate source: fresh `tmp/eval-runs/issue-162/with_skill/eval-014-existing-site-deployment-recheck/candidate-output.md`.
 
 ## Fresh Without-Skill Baseline
 

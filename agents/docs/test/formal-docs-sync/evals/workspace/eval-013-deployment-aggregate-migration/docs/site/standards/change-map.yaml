@@ -1,0 +1,15 @@
+change_map:
+  "scripts/dev/**":
+    required_docs: [docs/site/ops/deployment.md]
+    trigger: source startup changes
+    exclude: [scripts/dev/examples/**]
+    custom_owner_field: preserve-me
+  "deploy/docker/**":
+    required_docs: [docs/site/ops/deployment.md]
+    trigger: Compose changes
+  "deploy/helm/**":
+    required_docs: [docs/site/ops/deployment.md]
+    trigger: Chart changes
+  "src/product/**":
+    required_docs: [docs/site/product/runtime.md]
+    trigger: product changes

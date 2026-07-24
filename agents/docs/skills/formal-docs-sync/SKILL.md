@@ -25,9 +25,11 @@ classification under `Security Conclusion Escalation to PM` and issue filing.
   impact scope, a confirmed `IMPLEMENTATION_PLAN.md`, the actual diff, and
   required test results. Feature-level design pages additionally require the
   existing design closeout gate described in `_internal/INSTRUCTIONS.md`.
-- **Deployment verification:** require confirmed deployment scope, the TRD
-  deployment surface, deployment configuration, verification commands and
-  results, and known environment differences.
+- **Deployment verification:** require confirmed deployment scope classified
+  as Development, Docker, and Kubernetes/Helm, the TRD deployment surface,
+  deployment configuration, verification commands and results, and known
+  environment differences. Missing evidence blocks only the affected class;
+  never replace it with placeholder commands.
 - **Release:** require confirmed release scope, verified version evidence,
   changelog and release-process evidence, and audit context. This mode does not
   own Release Notes.
@@ -46,7 +48,7 @@ the site.
 | Mode | Confirmed synchronization surface |
 | --- | --- |
 | Feature delivery | Affected API, database, design, and product pages, with their change-map entries and only necessary indexes or host-required navigation. |
-| Deployment verification | Current ops, upgrade, and rollback facts, with their change-map entries and only necessary indexes or host-required navigation. |
+| Deployment verification | Current Development, Docker, and Kubernetes/Helm ops, upgrade, and rollback facts under `ops/deployment/`, with a shared environment reference, per-class change-map entries, and only necessary indexes or host-required navigation. |
 | Release | Only affected product and ops pages, reconciled with confirmed version facts. Release Notes body, index, metadata, and navigation belong to `docs-agent:release-notes-generator`. |
 | Existing-system backfill | One maintainer-confirmed finite batch of API, database, design, ops, or product current-state pages. Prefer a feature catalog and existing change map; never expand bounded discovery into full-site generation. |
 
@@ -60,7 +62,8 @@ After the gate and mode are resolved, load `_internal/INSTRUCTIONS.md` and
 follow its eight-step host-site contract, mode rules, change-map discipline,
 boundaries, and report shape. For each target type, load only the corresponding
 `_internal/types/<type>/INSTRUCTIONS.md`; do not read the other four type
-modules unless they enter the confirmed scope.
+modules unless they enter the confirmed write scope or an explicitly requested
+read-only candidate-planning scope.
 
 After every completed existing-site content batch, apply the shared read-only
 documentation-site deployment completeness recheck in the Safety-Net closeout.

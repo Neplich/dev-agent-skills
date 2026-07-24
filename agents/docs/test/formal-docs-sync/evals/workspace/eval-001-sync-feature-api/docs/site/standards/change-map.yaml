@@ -14,9 +14,14 @@ change_map:
     trigger: manually maintained integration contract changes
     exclude:
       - "plugins/manual/examples/**"
-  "src/api/**":
+    review_hint: preserve this unknown manual field
+  "src/api/search.py":
     required_docs:
       - docs/site/api/search.md
     trigger: API route, schema, request, response, or error behavior changes
     exclude:
       - "src/api/internal/**"
+  "src/api/schemas.py":
+    required_docs:
+      - docs/site/api/search.md
+    trigger: Search API response schema changes

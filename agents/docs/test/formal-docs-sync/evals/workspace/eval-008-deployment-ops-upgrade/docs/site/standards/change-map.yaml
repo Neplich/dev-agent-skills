@@ -19,7 +19,10 @@ last_verified_version: unverified
 change_map:
   "deploy/**":
     required_docs:
-      - docs/site/ops/ai-hub-upgrade.md
+      - docs/site/ops/deployment/docker/image-sources.md
+      - docs/site/ops/deployment/docker/index.md
+      - docs/site/ops/deployment/environment-reference.md
+      - docs/site/ops/deployment/index.md
     trigger: runtime configuration, startup, upgrade, health, or rollback changes
     exclude:
       - "deploy/examples/**"

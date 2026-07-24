@@ -189,12 +189,12 @@
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",
       "sourceType": "local",
-      "computedHash": "4bd7d42805c94cb91ddb8ce2b98041490ce60d00afcbd02a3bf4f18fcbf05fb3"
+      "computedHash": "2c2d669e7a16e1ec4584e72ee85b2ed73bcc5743cd178ece4fcdf62c37a06b11"
     },
     "formal-docs-sync": {
       "source": "agents/docs/skills/formal-docs-sync",
       "sourceType": "local",
-      "computedHash": "9f9ea7321dc49ba6e957b1d73f3fc0dfbbb726d021ac6f1c92399cfb9cf00809"
+      "computedHash": "451f64c4e91492786e01137319db348e170c0e2eab944113c106644600187bdc"
     },
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",
