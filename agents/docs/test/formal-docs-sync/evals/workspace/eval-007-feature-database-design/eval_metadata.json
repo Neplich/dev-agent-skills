@@ -1,9 +1,28 @@
 {
   "eval_id": "eval-007-feature-database-design",
-  "eval_name": "feature-database-design",
+  "eval_name": "feature-database-design-information-architecture",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-007-feature-database-design",
-  "skill_availability_goal": "Verify confirmed multi-type feature synchronization for database and design after the design closeout gate.",
-  "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行 `workspace-access` 的 database + design 正式文档同步。design closeout 证据已完整提供且本批页面与映射均已获维护者确认。请只加载目标类型规则，核对 schema、代码、diff 与测试，更新页面和 change map，执行宿主 `npm run test:docs`，再输出 #117 handoff。",
-  "fixture_context": ["pm-handoff.md", "docs/pm/workspace-access/PRD.md", "docs/engineer/workspace-access/", ".eval/", "src/workspace_access/", "tests/test_workspace_access.py", "docs/site/"],
-  "execution_cleanup": ["docs/site/.generated", "sync-report.md"]
+  "skill_availability_goal": "Verify confirmed feature synchronization creates a database/schema/domain/entity subtree plus a two-domain Design hierarchy with reciprocal links and authority boundaries, while preserving and refreshing the stable flat database path.",
+  "prompt": "按 `pm-handoff.md`、`candidate-scope-confirmation.md` 和 `design-scope-confirmation.md` 已确认的 feature delivery 范围执行 `workspace-access` 的 database + design 正式文档同步。保留并刷新现有稳定 `database/workspace-access.md`，生成 `database/primary/workspace-access/` 完整子树；逐页核验 design closeout，生成完整系统/领域索引、组件、跨组件流程和授权边界页，链接 API/Database 权威页而不复制 contract；原子更新页面、导航和 change map，执行宿主 `npm run test:docs`、public/internal build，再输出 #117 handoff。",
+  "fixture_context": [
+    "pm-handoff.md",
+    "candidate-scope-confirmation.md",
+    "design-scope-confirmation.md",
+    "docs/pm/workspace-access/PRD.md",
+    "docs/engineer/workspace-access/",
+    ".eval/",
+    "src/workspace_access/",
+    "src/audit/",
+    "tests/test_workspace_access.py",
+    "docs/site/api/workspace-access.md",
+    "docs/site/api/workspace-invitations.md",
+    "docs/site/database/workspace-access.md",
+    "docs/site/"
+  ],
+  "execution_cleanup": [
+    "docs/site/.generated",
+    "docs/site/.vitepress/generated",
+    "docs/site/database/primary",
+    "sync-report.md"
+  ]
 }

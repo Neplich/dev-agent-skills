@@ -62,4 +62,5 @@ After the gate and mode are resolved, load `_internal/INSTRUCTIONS.md` and
 follow its eight-step host-site contract, mode rules, change-map discipline,
 boundaries, and report shape. For each target type, load only the corresponding
 `_internal/types/<type>/INSTRUCTIONS.md`; do not read the other four type
-modules unless they enter the confirmed scope.
+modules unless they enter the confirmed write scope or an explicitly requested
+read-only candidate-planning scope.

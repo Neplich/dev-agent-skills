@@ -4,39 +4,39 @@
 
 - Skill: `docs-site-bootstrap`
 - Eval: `eval-002-repeat-bootstrap-idempotent`
-- Review context: PR #166 P1 fixture refresh
+- Review context: cumulative API, Database, Product, Design, and Ops deployment layering fixture refresh from PR #164 and PR #166
 
 ## Test Set / Fixture Version
 
-- Fixture: `issue-122-assets-v2-c5r`
+- Fixture: `2026-07-ops` (cumulative from `issue-122-assets-v2-c5r`)
 - Scope: 9 materialized targets; all omitted targets are explicitly assumed present and byte-identical to the current 40-file inventory
 - Dependency fact under review: the representative `package.json` VitePress declaration is pinned exactly to `1.6.4`
-- Asset refresh under review: materialized `standards/templates/ops-runbook.md` includes the current deployment section; `ops/index.md` and `standards/doc-granularity.md` remain covered by the explicit omitted-target assumption
+- Asset refresh under review: materialized `standards/templates/api-template.md`, `standards/templates/database.md`, and `standards/templates/ops-runbook.md` match the current packaged assets; Product, Design, and Ops deployment layering in `standards/doc-granularity.md` plus `ops/index.md` remain covered by the explicit omitted-target assumption
 - Actual validation date: `2026-07-22`
 
 ## Latest Result
 
-**PASS (3/3 assertions)** — the fresh with-skill repeat classification found all nine materialized targets byte-identical to the current packaged assets, preserved the existing manifest dispositions and original `createdAt`, and produced zero content changes.
+**PASS (3/3 assertions)** — fresh subagent revalidation across the cumulative API, Database, Product, Design, and Ops deployment layering refresh found all nine materialized targets byte-identical to the current packaged assets, preserved the existing manifest dispositions and original `createdAt`, and produced zero content changes.
 
 ## Assertions
 
 - `produces_zero_diff`: PASS. All nine materialized targets compared byte-identical to packaged assets; before/after SHA-256 sets and manifest hash `0bb02c44054da996a17a489f0453ced2c03cde6b9bf757d4a035ac5f3e90017b` matched, and `createdAt` remained `2026-07-16T08:00:00+08:00`.
-- `reports_skipped_identical`: PASS. The nine representative paths remain persisted as `skipped-identical` in the existing manifest; materialized `ops-runbook.md` and its current asset share SHA-256 `038a8578d48f5d40bd4db74de96e1013524dba94e25f26f763285bd943ab88e4`.
+- `reports_skipped_identical`: PASS. The nine representative paths remain persisted as `skipped-identical` in the existing manifest; refreshed `api-template.md`, `database.md`, and `ops-runbook.md` respectively match current assets at SHA-256 `d5186c628d6b9967f9343b22ac60e7b2a275ee70085523c133859cf696153231`, `da5fecfea765dce8cac4e0289d0371d34eca5bf6038589d024da8ae8946ff424`, and `038a8578d48f5d40bd4db74de96e1013524dba94e25f26f763285bd943ab88e4`.
 - `preserves_existing_state`: PASS. `standards/change-map.yaml`, `.meta/releases.json`, standards pages, templates, package metadata, manifest, and all other fixture content remained unchanged.
 
 ## With-Skill Behavior
 
-- Source: fresh PR #166 validation lane under `tmp/eval-runs/issue-161-review/eval-002/with_skill`, executed by a new `codex exec` subagent using the current target skill, required internal inventory rules, the eval prompt, and a copied minimal fixture.
+- Source: fresh PR #164 review round 7 and PR #166 validation lanes under `tmp/eval-runs/pr164-review7-s4MWVn/with_skill` and `tmp/eval-runs/issue-161-review/eval-002/with_skill`, each executed by a new `codex exec` validation subagent using the current target skill, required internal inventory rules, the eval prompt, and a copied minimal fixture.
 - Applied the 40-file inventory and persistent manifest rules while honoring the fixture's explicit omitted-target byte-equivalence assumption.
 - Exact comparisons for all nine materialized targets returned equal; manifest read-back preserved all nine `skipped-identical` dispositions and the original timestamp.
-- The refreshed materialized `ops-runbook.md` matched the current packaged asset exactly. The other two bootstrap assets changed by this PR, `ops/index.md` and `standards/doc-granularity.md`, are not materialized targets and remain within the fixture's explicit omitted-target byte-equivalence assumption.
+- The refreshed materialized `api-template.md`, `database.md`, and `ops-runbook.md` matched their current packaged assets exactly. Product, Design, and Ops deployment layering in `standards/doc-granularity.md` plus `ops/index.md` are not materialized targets and remain within the fixture's explicit omitted-target byte-equivalence assumption.
 - The representative package declares VitePress exactly as `1.6.4` and remained byte-identical to the current packaged asset.
 - The fixture intentionally omits scripts, the lockfile, and most of the complete site, so host tests and builds are not applicable. Validation used exact asset comparisons, manifest parsing, and before/after content hashes; no complete-host checks are claimed.
 
 ## Fresh Without-Skill Baseline
 
-- Source: a fresh baseline lane under `tmp/eval-runs/issue-161-review/eval-002/without_skill`, regenerated by the same new `codex exec` validation subagent with the identical prompt and copied fixture; target skill, Docs README, internal instructions, packaged assets, old comparison, and with-skill output were prohibited in this lane.
-- Result: `PARTIAL / NO-OP`. It confirmed the nine materialized files, existing manifest shape and dispositions, fixed `createdAt`, and an unchanged before/after hash set, but could not perform a real bootstrap without the target protocol or asset bytes.
+- Source: fresh baseline lanes under `tmp/eval-runs/pr164-review7-s4MWVn/without_skill` and `tmp/eval-runs/issue-161-review/eval-002/without_skill`, each regenerated by its corresponding new `codex exec` validation subagent with the identical prompt and copied fixture; target skill, Docs README, internal instructions, packaged assets, old comparison, and with-skill output were prohibited in these lanes.
+- Result: `PARTIAL / NO-OP`. It confirmed the nine materialized files, existing manifest shape and dispositions, fixed `createdAt`, and an unchanged before/after hash set, but could not perform a real asset-aware bootstrap without the target protocol or asset bytes.
 - No historical baseline was reused. It could observe the fixture's existing `skipped-identical` declarations but could not independently prove host-to-asset byte equality; the with-skill lane supplied the authoritative inventory and asset-mapping evidence needed for the complete PASS.
 
 ## Failures
@@ -51,5 +51,5 @@
 
 ## Runtime Artifact Policy
 
-- Runtime copies, checksums, lane evidence, and the subagent verdict remain under `tmp/eval-runs/issue-161-review/eval-002/` and are not submitted.
+- Runtime copies, checksums, lane reports, and subagent verdicts remain under `tmp/eval-runs/pr164-review7-s4MWVn/` and `tmp/eval-runs/issue-161-review/eval-002/` and are not submitted.
 - Only this durable comparison is retained; no runtime output, dependency directory, generated site, transcript, candidate, verdict, timing, or diagnostics are committed.

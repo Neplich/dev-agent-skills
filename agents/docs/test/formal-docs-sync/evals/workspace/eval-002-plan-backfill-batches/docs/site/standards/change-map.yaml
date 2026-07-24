@@ -1,10 +1,35 @@
 title: 文档变更映射
 visibility: internal
-doc_type: standard
+doc_type: design
 stage: dev
 owners:
   - docs
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: unverified
 
-change_map: {}
+# Entry schema:
+# change_map:
+#   "<repository-relative code_glob>":
+#     required_docs:
+#       - docs/site/<section>/<page>.md
+#     trigger: <when a code change requires documentation review>
+#     exclude:
+#       - "<optional glob that narrows only this entry>"
+change_map:
+  "src/api/billing/**":
+    required_docs:
+      - docs/site/api/billing/index.md
+      - docs/site/api/billing/list-invoices.md
+      - docs/site/api/index.md
+    trigger: Billing route, request, response, or error behavior changes
+    exclude:
+      - "src/api/billing/internal/**"
+    review_policy: billing-owner-approval
+  "src/support/manual_content/**":
+    required_docs:
+      - docs/site/ops/index.md
+    trigger: Preserve the manually maintained support mapping during Product backfill.
+    exclude:
+      - "src/support/manual_content/archive/**"
+    review_policy: manual-owner-approval

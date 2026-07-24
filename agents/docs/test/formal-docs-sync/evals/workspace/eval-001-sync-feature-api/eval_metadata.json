@@ -1,20 +1,25 @@
 {
   "eval_id": "eval-001-sync-feature-api",
-  "eval_name": "sync-feature-api",
+  "eval_name": "nested-api-backfill-scope-confirmation",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api",
-  "skill_availability_goal": "Verify bounded feature-mode API synchronization from confirmed process context and current code/test facts.",
-  "prompt": "按 `pm-handoff.md` 已确认的 feature delivery 范围执行正式文档同步。维护者已确认本批只处理 `src/api/search.py`、`src/api/schemas.py` 与命中的 `docs/site/api/search.md`；请从 fixture 代码、测试和 diff 核证后写入，并合并 change-map。",
+  "skill_availability_goal": "Verify an unconfirmed API backfill request is routed through evidence-based hierarchy and per-node candidate-scope confirmation before any write or audit handoff.",
+  "prompt": "维护者通过 `pm-handoff.md` 请求为当前既有文档站回填 API，但 `backfill-request.md` 只授权 bounded discovery，不是候选批次确认。请读取 fixture 的 feature catalog、现有 change map、route/schema/handler 与 contract tests，按正式同步协议的候选确认结构提出第一批有限范围供维护者确认。本轮不要替维护者确认范围，也不要写入文档站。",
   "fixture_context": [
     "pm-handoff.md",
-    "docs/pm/search-api/PRD.md",
-    "docs/engineer/search-api/TRD.md",
-    "docs/engineer/search-api/IMPLEMENTATION_PLAN.md",
-    ".eval/actual-diff.patch",
-    "src/api/search.py",
-    "src/api/schemas.py",
-    "tests/contract/test_search_api.py",
-    "docs/site/standards/change-map.yaml",
-    "docs/site/api/search.md",
-    "docs/site/database/search-index.md"
+    "backfill-request.md",
+    "docs/pm/feature-catalog.md",
+    "src/api/identity/sessions/",
+    "src/api/billing/",
+    "tests/contract/",
+    "docs/site/standards/",
+    "docs/site/api/index.md",
+    "docs/site/api/search.md"
+  ],
+  "execution_cleanup": [
+    "docs/site/.generated",
+    "docs/site/.vitepress/generated",
+    "docs/site/api/identity",
+    "docs/site/api/billing",
+    "sync-report.md"
   ]
 }

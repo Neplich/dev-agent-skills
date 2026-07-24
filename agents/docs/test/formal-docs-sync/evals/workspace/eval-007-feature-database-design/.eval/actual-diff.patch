@@ -3,10 +3,29 @@ new file mode 100644
 --- /dev/null
 +++ b/src/workspace_access/schema.sql
 @@
-+CREATE TABLE workspace_memberships (... UNIQUE (workspace_id, user_id));
++CREATE TABLE workspaces (...);
++CREATE TABLE workspace_memberships (... workspace_id REFERENCES workspaces(id) ON DELETE CASCADE, UNIQUE (workspace_id, user_id));
++CREATE TABLE workspace_invitations (... workspace_id REFERENCES workspaces(id) ON DELETE CASCADE, role TEXT NOT NULL CHECK (...), token_hash TEXT NOT NULL UNIQUE, expires_at TEXT NOT NULL);
 diff --git a/src/workspace_access/repository.py b/src/workspace_access/repository.py
 new file mode 100644
+diff --git a/src/workspace_access/invitations.py b/src/workspace_access/invitations.py
+new file mode 100644
+# owner/admin fail-closed invitation authorization delegates to repository persistence
 diff --git a/src/workspace_access/service.py b/src/workspace_access/service.py
+new file mode 100644
+# invite_user passes actor_role through the guarded invitation creation path
+# invitation acceptance applies the persisted role to the authenticated user ID
+diff --git a/src/audit/event_writer.py b/src/audit/event_writer.py
 new file mode 100644
 diff --git a/tests/test_workspace_access.py b/tests/test_workspace_access.py
 new file mode 100644
+diff --git a/tests/conftest.py b/tests/conftest.py
+new file mode 100644
+
+# Documentation precondition outside the delivered implementation diff:
+# docs/site/database/workspace-access.md starts at the verified v0.9.0 stable
+# path with stale duplicate-membership, arbitrary-role, and physical-user-FK
+# claims. The separately confirmed documentation candidate scope authorizes an
+# in-place current-fact refresh or redirect and preserves its
+# src/workspace_access/** change-map entry. It does not authorize deletion,
+# movement, or migration of that stable path.
