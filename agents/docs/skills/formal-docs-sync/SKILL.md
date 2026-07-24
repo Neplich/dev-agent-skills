@@ -64,3 +64,9 @@ boundaries, and report shape. For each target type, load only the corresponding
 `_internal/types/<type>/INSTRUCTIONS.md`; do not read the other four type
 modules unless they enter the confirmed write scope or an explicitly requested
 read-only candidate-planning scope.
+
+After every completed existing-site content batch, apply the shared read-only
+documentation-site deployment completeness recheck in the Safety-Net closeout.
+Report evidence and drift and return any user-confirmed gap to `pm-agent`; do
+not repair Docker, CI/CD, Compose, Helm, ingress, or runtime configuration. This
+does not change the five-type contract above.

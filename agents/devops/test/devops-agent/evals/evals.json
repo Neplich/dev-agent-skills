@@ -37,6 +37,19 @@
           "text": "因为用户要求先做路由，不能直接新增 `.github/workflows` 文件。"
         }
       ]
+    },
+    {
+      "id": "eval-002-route-docs-site-completeness-chain",
+      "name": "route-docs-site-completeness-chain",
+      "description": "接受 PM 的 repo-wide 文档站部署完整性 handoff。",
+      "prompt": "读取 pm-handoff.md，只做 DevOps 路由并保留授权边界。",
+      "expected_output": "按 deployment-planner 到 cicd-bootstrap 到 env-config-auditor 再回 formal-docs-sync 的顺序路由。",
+      "workspace": "workspace/eval-002-route-docs-site-completeness-chain",
+      "assertions": [
+        {"id": "accepts_repo_wide_docs_handoff", "description": "接受 repo-wide handoff", "text": "接受 request_type deployment、N/A feature scope 和完整性证据，不把它退回 feature_path 澄清。"},
+        {"id": "routes_dependency_order", "description": "保持依赖顺序", "text": "明确 deployment-planner -> cicd-bootstrap -> env-config-auditor -> docs-agent:formal-docs-sync 的条件式完整链路。"},
+        {"id": "preserves_role_and_authority_boundaries", "description": "保持角色与授权边界", "text": "DevOps 不修改正式文档，最终只返回已验证事实；handoff 不自动授权 commit、push、镜像发布或部署。"}
+      ]
     }
   ]
 }

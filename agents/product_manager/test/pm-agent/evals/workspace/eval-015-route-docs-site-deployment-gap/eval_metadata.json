@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-015-route-docs-site-deployment-gap",
+  "eval_name": "route-docs-site-deployment-gap",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-015-route-docs-site-deployment-gap",
+  "skill_availability_goal": "Verify unknown evidence handling and the confirmed repo-wide deployment handoff.",
+  "prompt": "处理 evidence.md 中先 unknown、后补齐证据并确认纳入的文档站完整性报告。",
+  "fixture_context": ["evidence.md"],
+  "execution_cleanup": ["with_skill", "without_skill", "outputs", "diagnostics", "transcript.md", "subagent-verdict.md", "run_status.json", "timing.json"]
+}

@@ -62,6 +62,19 @@
           "text": "识别 last_verified_version: unverified，所有关键 CI 步骤必须由代码或测试配置核证。"
         }
       ]
+    },
+    {
+      "id": "eval-003-docs-image-release-rules",
+      "name": "docs-image-release-rules",
+      "description": "补齐确认纳入的文档镜像构建与发布验证规则。",
+      "prompt": "根据 deployment-handoff.md 审查拟议 CI/CD 变更并报告每个文档镜像单元的规则。",
+      "expected_output": "Public/Internal 镜像使用宿主不可变版本、架构、registry、触发器和 manifest/digest 验证。",
+      "workspace": "workspace/eval-003-docs-image-release-rules",
+      "assertions": [
+        {"id": "preserves_host_image_policy", "description": "沿用宿主镜像策略", "text": "Public 与 Internal 均沿用不可变版本、registry 约定、release trigger 和仓库声明的 amd64/arm64 架构。"},
+        {"id": "verifies_each_published_variant", "description": "逐变体验证发布结果", "text": "每个镜像单元都有 build/publish validation，并用宿主既有机制核对已发布 manifest 或 digest；workflow 存在不等于已发布。"},
+        {"id": "keeps_delivery_authority_separate", "description": "交付授权独立", "text": "写 workflow 不自动授权 commit、push、镜像发布或部署。"}
+      ]
     }
   ]
 }

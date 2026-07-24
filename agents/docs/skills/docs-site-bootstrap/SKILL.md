@@ -71,6 +71,15 @@ repository.
 
 ## Output
 
+After a first complete bootstrap, run the shared read-only documentation-site
+deployment completeness check only after the durable bootstrap changes are
+committed and the user confirms that commit. After every completed
+re-bootstrap, including an idempotent run, rerun the check for drift. Present
+the shared stable result and require one of its three user decisions: integrate
+all build variants, retain confirmed independent hosting, or defer with an
+explicit blocker. Bootstrap completion does not authorize commit, push, image
+publication, or deployment.
+
 Report:
 
 - confirmed host repository and generated root
@@ -79,6 +88,8 @@ Report:
 - unresolved conflicts and available resolution choices
 - manifest path and read-back result
 - whether a repeat run would be zero-diff
+- deployment-completeness status, evidence, discovered build variants, user
+  decision, or the pending post-commit trigger
 - recommended handoff to `formal-docs-sync`, then wait for confirmation
 
 At closeout, follow the safety-net behavior in

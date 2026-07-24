@@ -487,6 +487,19 @@
           "text": "递归 public/internal 导航、页面移动、链接修复、change-map delta 和重复内容归并作为同一已确认范围更新；`npm run test:docs` 通过且没有指向旧聚合页的残留链接。"
         }
       ]
+    },
+    {
+      "id": "eval-014-existing-site-deployment-recheck",
+      "name": "老站内容更新后复核完整与部分覆盖",
+      "description": "验证老站更新后的 integrated 与 Public/Internal partial 场景。",
+      "prompt": "按 evidence.md 完成内容同步 closeout，只读复核两套老站配置并报告部署完整性；不要修改部署资产。",
+      "expected_output": "完整场景保持 integrated 且不重放 DevOps；部分场景因仅 Public 被覆盖而为 partial，并返回 PM 确认。",
+      "workspace": "workspace/eval-014-existing-site-deployment-recheck",
+      "assertions": [
+        {"id": "reports_existing_site_integrated", "description": "老站仍完整", "text": "内容更新后重新核对 Public/Internal 构建和启动链路，证据未漂移时报告 integrated、列出证据并不重复执行 DevOps。"},
+        {"id": "detects_partial_variant_coverage", "description": "识别仅 Public 覆盖", "text": "Public 有镜像/CI/编排而 Internal 缺少 CI 与启动入口时必须枚举两者并判为 partial，不能宣称完整。"},
+        {"id": "returns_gap_to_pm_read_only", "description": "只读返回 PM", "text": "询问是否由 pm-agent 生成 repo-wide deployment handoff；formal-docs-sync 不修改 Dockerfile、workflow、Compose、Helm 或执行部署。"}
+      ]
     }
   ]
 }

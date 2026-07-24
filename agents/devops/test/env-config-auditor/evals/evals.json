@@ -82,6 +82,19 @@
           "text": "识别 last_verified_version: unverified，不以文档单独判定配置覆盖完整，关键结论必须由代码或测试核证。"
         }
       ]
+    },
+    {
+      "id": "eval-004-docs-entry-access-audit",
+      "name": "docs-entry-access-audit",
+      "description": "核对文档站域名、TLS、Internal 访问控制和环境差异。",
+      "prompt": "读取 evidence.md，对 Public/Internal 在 staging/production 的入口配置进行只读审计。",
+      "expected_output": "逐环境报告 DNS/TLS、认证或网络限制、端口、探针、Ingress/Gateway、配置引用与未知项。",
+      "workspace": "workspace/eval-004-docs-entry-access-audit",
+      "assertions": [
+        {"id": "audits_public_and_internal_access", "description": "审计 Public 与 Internal 入口", "text": "Public 核对 DNS/TLS；Internal 核对认证、网络限制或等效访问控制，并逐一覆盖 staging/production。"},
+        {"id": "audits_runtime_environment_differences", "description": "核对运行环境差异", "text": "核对端口、探针/健康检查、Service/Ingress/Gateway values、secret/config 引用和环境差异。"},
+        {"id": "does_not_overclaim_missing_evidence", "description": "缺证据不误判", "text": "权限或运行证据缺失时记录 unknown；可达 endpoint 或文档域名本身不能证明集成，并只把落地验证事实交 formal-docs-sync。"}
+      ]
     }
   ]
 }

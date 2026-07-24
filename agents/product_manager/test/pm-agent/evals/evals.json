@@ -367,6 +367,19 @@
           "text": "不得把 PM owner 命名为 release-notes-generator；该朴素名在此路由中只表示 docs-agent specialist。"
         }
       ]
+    },
+    {
+      "id": "eval-015-route-docs-site-deployment-gap",
+      "name": "文档站证据不足与确认纳入路由",
+      "description": "验证 unknown 阻塞和用户确认后的 repo-wide deployment handoff。",
+      "prompt": "处理 evidence.md 中先 unknown、后补齐证据并确认纳入的文档站完整性报告。",
+      "expected_output": "unknown 不推断集成；证据补齐且用户确认后生成 N/A feature scope 的 deployment packet 并交 DevOps。",
+      "workspace": "workspace/eval-015-route-docs-site-deployment-gap",
+      "assertions": [
+        {"id": "blocks_unknown_evidence", "description": "证据不足保持 unknown", "text": "缺少 CI 或环境权限证据时报告 unknown、指明缺口，不按 integrated 或 ready handoff 处理。"},
+        {"id": "builds_repo_wide_deployment_packet", "description": "生成 repo-wide deployment handoff", "text": "用户确认纳入后使用 request_type deployment、N/A feature fields、空 feature_path_evidence，并在 source_documents/blockers_risks 保留真实检查证据。"},
+        {"id": "routes_ordered_devops_chain", "description": "路由有序 DevOps 链", "text": "按 deployment-planner、cicd-bootstrap、env-config-auditor、formal-docs-sync 顺序 handoff；最后 Docs 只同步已落地且验证的运维事实。"}
+      ]
     }
   ]
 }

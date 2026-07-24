@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-002-route-docs-site-completeness-chain",
+  "eval_name": "route-docs-site-completeness-chain",
+  "workspace_root": "agents/devops/test/devops-agent/evals/workspace/eval-002-route-docs-site-completeness-chain",
+  "skill_availability_goal": "Verify acceptance and ordered routing of the repo-wide documentation deployment packet.",
+  "prompt": "读取 pm-handoff.md，只做 DevOps 路由并保留授权边界。",
+  "fixture_context": ["pm-handoff.md"],
+  "execution_cleanup": ["with_skill", "without_skill", "outputs", "diagnostics", "transcript.md", "subagent-verdict.md", "run_status.json", "timing.json"]
+}

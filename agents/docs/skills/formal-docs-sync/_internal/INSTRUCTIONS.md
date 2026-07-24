@@ -187,6 +187,12 @@ If required dependencies are absent, use only the host's deterministic locked
 installation path. A failed, missing, or unverifiable required check blocks
 completion; do not repair unrelated code or deployment state to hide it.
 
+After host checks pass for an existing-site content batch, and before the audit
+handoff, run the shared documentation-site deployment completeness recheck.
+This remains read-only even when the content update did not intentionally touch
+deployment files. Reuse the shared status and checklist, report unchanged
+`integrated` evidence or drift, and do not create a second protocol here.
+
 ### 8. Handoff to docs audit
 
 After all required checks pass, hand the complete affected set and evidence to
@@ -314,6 +320,8 @@ output followed the relevant rules:
 - Evidence and read-back: <sources checked and result>
 - Change-map / index / navigation delta: <delta or none>
 - Host docs checks: <commands, cwd, and results>
+- Deployment completeness: <shared status, variants, evidence paths, missing
+  links or drift, user decision, and next owner>
 - Unresolved discrepancies: <items, owners, next evidence or none>
 - Coverage and remaining batches: <summary>
 - Handoff: <docs-audit (issue #117) ready, or blocked while waiting for confirmed

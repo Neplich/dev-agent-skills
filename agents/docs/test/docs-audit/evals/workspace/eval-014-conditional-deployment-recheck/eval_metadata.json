@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-014-conditional-deployment-recheck",
+  "eval_name": "conditional-deployment-recheck",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-014-conditional-deployment-recheck",
+  "skill_availability_goal": "Verify docs audit refreshes deployment completeness only for material build or publication changes.",
+  "prompt": "比较 evidence.md 的事实盖章与 build-target-change 两个 audit affected set。",
+  "fixture_context": ["evidence.md"],
+  "execution_cleanup": ["with_skill", "without_skill", "outputs", "diagnostics", "transcript.md", "subagent-verdict.md", "run_status.json", "timing.json"]
+}

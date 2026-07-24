@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-003-docs-image-release-rules",
+  "eval_name": "docs-image-release-rules",
+  "workspace_root": "agents/devops/test/cicd-bootstrap/evals/workspace/eval-003-docs-image-release-rules",
+  "skill_availability_goal": "Verify CI/CD coverage and publication validation for every confirmed documentation image unit.",
+  "prompt": "根据 deployment-handoff.md 审查拟议 CI/CD 变更并报告每个文档镜像单元的规则。",
+  "fixture_context": ["deployment-handoff.md"],
+  "execution_cleanup": [".github/workflows", "with_skill", "without_skill", "outputs", "diagnostics", "transcript.md", "subagent-verdict.md", "run_status.json", "timing.json"]
+}
