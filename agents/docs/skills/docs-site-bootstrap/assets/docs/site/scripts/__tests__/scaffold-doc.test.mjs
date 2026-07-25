@@ -673,13 +673,77 @@ test('replaceGeneratedDirectory preserves the previous tree when preparation fai
 });
 
 test('buildSidebar uses code-point ordering independent of locale data', () => {
-  const pages = ['ä.md', 'Z.md'].map((relativePath) => ({
+  const pages = ['index.md', 'ä.md', 'Z.md'].map((relativePath) => ({
     relativePath: `api/${relativePath}`,
-    route: `/api/${relativePath.slice(0, -3)}`,
+    route: relativePath === 'index.md'
+      ? '/api/'
+      : `/api/${relativePath.slice(0, -3)}`,
     data: { title: relativePath, visibility: 'both' }
   }));
-  const items = buildSidebar(pages, 'public')['/api/'][0].items;
+  const items = buildSidebar(pages, 'public')['/api/'][0].items[0].items;
   assert.deepEqual(items.map((item) => item.text), ['Z.md', 'ä.md']);
+});
+
+test('buildSidebar recursively nests indexes and leaves at arbitrary depth', () => {
+  const paths = [
+    ['product/index.md', 'Product'],
+    ['product/workspace-management/index.md', 'Workspace Management'],
+    ['product/workspace-management/invitations/index.md', 'Invitations'],
+    [
+      'product/workspace-management/invitations/member-invitations/index.md',
+      'Member Invitations'
+    ],
+    [
+      'product/workspace-management/invitations/member-invitations/invite-member.md',
+      'Invite a member'
+    ]
+  ];
+  const pages = paths.map(([relativePath, title]) => ({
+    relativePath,
+    route: relativePath.endsWith('/index.md')
+      ? `/${relativePath.slice(0, -9)}/`
+      : `/${relativePath.slice(0, -3)}`,
+    data: { title, visibility: 'both' }
+  }));
+  const product = buildSidebar(pages, 'public')['/product/'][0].items[0];
+  assert.equal(product.text, 'Product');
+  assert.equal(product.items[0].text, 'Workspace Management');
+  assert.equal(product.items[0].items[0].text, 'Invitations');
+  assert.equal(product.items[0].items[0].items[0].text, 'Member Invitations');
+  assert.equal(
+    product.items[0].items[0].items[0].items[0].link,
+    '/product/workspace-management/invitations/member-invitations/invite-member'
+  );
+});
+
+test('buildSidebar preserves a flat page alongside a same-named subtree index', () => {
+  const paths = [
+    ['design/index.md', 'Design'],
+    ['design/workspace-access.md', 'Workspace Access Compatibility'],
+    ['design/workspace-access/index.md', 'Workspace Access'],
+    ['design/workspace-access/roles.md', 'Workspace Roles']
+  ];
+  const pages = paths.map(([relativePath, title]) => ({
+    relativePath,
+    route: relativePath.endsWith('/index.md')
+      ? `/${relativePath.slice(0, -9)}/`
+      : `/${relativePath.slice(0, -3)}`,
+    data: { title, visibility: 'both' }
+  }));
+  const items = buildSidebar(pages, 'internal')['/design/'][0].items[0].items;
+  const flatPage = items.find((item) => item.link === '/design/workspace-access');
+  const subtree = items.find((item) => item.link === '/design/workspace-access/');
+
+  assert.deepEqual(flatPage, {
+    text: 'Workspace Access Compatibility',
+    link: '/design/workspace-access'
+  });
+  assert.equal(subtree.text, 'Workspace Access');
+  assert.equal(subtree.link, '/design/workspace-access/');
+  assert.deepEqual(subtree.items, [{
+    text: 'Workspace Roles',
+    link: '/design/workspace-access/roles'
+  }]);
 });
 
 test('attachChildLifecycle closes the watcher and propagates the child exit code', () => {

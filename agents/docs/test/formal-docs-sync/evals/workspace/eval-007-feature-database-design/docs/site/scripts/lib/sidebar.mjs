@@ -10,15 +10,66 @@ const SECTION_LABELS = {
   'release-notes': '发布说明'
 };
 
+function node() {
+  return { page: null, children: new Map(), leaves: new Map() };
+}
+
+function compareText(left, right) {
+  return left < right ? -1 : left > right ? 1 : 0;
+}
+
+function sidebarItems(current) {
+  const childItems = [
+    ...[...current.children.entries()].map(([key, child]) => ({ key, child })),
+    ...[...current.leaves.entries()].map(([key, page]) => ({ key, page }))
+  ]
+    .sort(({ key: left }, { key: right }) => compareText(left, right))
+    .flatMap(({ key, child, page }) => {
+      const items = page
+        ? [{ text: page.data.title, link: page.route }]
+        : sidebarItems(child);
+      return items.length ? items : [{ text: key, items: [] }];
+    });
+  const result = [];
+  if (current.page) {
+    result.push({
+      text: current.page.data.title,
+      link: current.page.route,
+      ...(childItems.length ? { items: childItems } : {})
+    });
+    return result;
+  }
+  return childItems;
+}
+
+function sectionTree(pages, section) {
+  const root = node();
+  for (const page of pages) {
+    const relative = page.relativePath.slice(section.length + 1);
+    const segments = relative.split('/');
+    const file = segments.pop();
+    let current = root;
+    for (const segment of segments) {
+      if (!current.children.has(segment)) current.children.set(segment, node());
+      current = current.children.get(segment);
+    }
+    if (file === 'index.md') {
+      current.page = page;
+    } else {
+      const leaf = file.replace(/\.md$/i, '');
+      current.leaves.set(leaf, page);
+    }
+  }
+  return root;
+}
+
 export function buildSidebar(pages, target) {
   const sidebar = {};
   for (const section of SECTION_ORDER) {
-    const items = pages
+    const sectionPages = pages
       .filter((page) => page.relativePath.startsWith(`${section}/`))
-      .filter((page) => visibleFor(page.data.visibility, target))
-      .sort((left, right) => left.relativePath < right.relativePath ? -1
-        : left.relativePath > right.relativePath ? 1 : 0)
-      .map((page) => ({ text: page.data.title, link: page.route }));
+      .filter((page) => visibleFor(page.data.visibility, target));
+    const items = sidebarItems(sectionTree(sectionPages, section));
     if (items.length) {
       sidebar[`/${section}/`] = [{ text: SECTION_LABELS[section], items }];
     }
