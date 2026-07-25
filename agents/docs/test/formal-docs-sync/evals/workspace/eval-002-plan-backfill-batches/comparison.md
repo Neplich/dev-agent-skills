@@ -67,7 +67,7 @@ and blocked #117 pre-tag audit until a maintainer confirms
 - `links_authorities_without_copying_contracts`: both PASS. All four task pages
   link parent and authority pages without copying contracts.
 - `runs_product_host_checks`: with-skill PASS；without-skill FAIL。
-  Both lanes passed 75 docs tests and both builds, and their public/internal
+  Both lanes passed 76 docs tests and both builds, and their public/internal
   sidebars include all ten Product pages with maximum nesting depth five and
   zero unresolved local links. Only with-skill recorded every command, docs
   site cwd, and final exit status as required by the assertion.
@@ -106,7 +106,7 @@ and blocked #117 pre-tag audit until a maintainer confirms
   in both lanes; each returned `3 passed`.
 - The judge reran `npm run test:docs`, `npm run build:public`, and
   `npm run build:internal` in both lanes; each returned exit code 0, and each
-  docs test run passed 75/75 tests.
+  docs test run passed 76/76 tests.
 - Both generated views contained all ten Product nodes at the expected
   recursive depths, and independent link parsing found zero broken links.
 

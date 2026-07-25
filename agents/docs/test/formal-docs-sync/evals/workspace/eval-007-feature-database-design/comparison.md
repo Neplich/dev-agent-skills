@@ -26,7 +26,7 @@
   document-writing subagent.
 - Judge method: a new independent `codex exec` judge first read the current 12
   assertions after generation, inspected both actual workspaces, and reran
-  fixture pytest, 75 docs tests, both builds, recursive navigation, link, and
+  fixture pytest, 76 docs tests, both builds, recursive navigation, link, and
   per-glob closure checks.
 - Actual validation date: `2026-07-23`
 
@@ -102,7 +102,7 @@ not weaken existing component/flow behavior.
   `PYTHONDONTWRITEBYTECODE=1 uv run --with pytest python -m pytest tests/test_workspace_access.py -q -p no:cacheprovider`
   in both lanes; each returned `12 passed`.
 - It reran `npm run test:docs`, `npm run build:public`, and
-  `npm run build:internal`; each lane passed 75/75 docs tests and both builds.
+  `npm run build:internal`; each lane passed 76/76 docs tests and both builds.
 - Internal navigation contained 16 Database/Design routes at maximum depth
   four; public contained zero internal routes. Independent parsing found zero
   broken links.
