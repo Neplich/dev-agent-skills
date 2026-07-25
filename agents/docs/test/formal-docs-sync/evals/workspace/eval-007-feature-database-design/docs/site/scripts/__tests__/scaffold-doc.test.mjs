@@ -716,6 +716,36 @@ test('buildSidebar recursively nests indexes and leaves at arbitrary depth', () 
   );
 });
 
+test('buildSidebar preserves a flat page alongside a same-named subtree index', () => {
+  const paths = [
+    ['design/index.md', 'Design'],
+    ['design/workspace-access.md', 'Workspace Access Compatibility'],
+    ['design/workspace-access/index.md', 'Workspace Access'],
+    ['design/workspace-access/roles.md', 'Workspace Roles']
+  ];
+  const pages = paths.map(([relativePath, title]) => ({
+    relativePath,
+    route: relativePath.endsWith('/index.md')
+      ? `/${relativePath.slice(0, -9)}/`
+      : `/${relativePath.slice(0, -3)}`,
+    data: { title, visibility: 'both' }
+  }));
+  const items = buildSidebar(pages, 'internal')['/design/'][0].items[0].items;
+  const flatPage = items.find((item) => item.link === '/design/workspace-access');
+  const subtree = items.find((item) => item.link === '/design/workspace-access/');
+
+  assert.deepEqual(flatPage, {
+    text: 'Workspace Access Compatibility',
+    link: '/design/workspace-access'
+  });
+  assert.equal(subtree.text, 'Workspace Access');
+  assert.equal(subtree.link, '/design/workspace-access/');
+  assert.deepEqual(subtree.items, [{
+    text: 'Workspace Roles',
+    link: '/design/workspace-access/roles'
+  }]);
+});
+
 test('attachChildLifecycle closes the watcher and propagates the child exit code', () => {
   const child = new EventEmitter();
   child.kill = () => {};

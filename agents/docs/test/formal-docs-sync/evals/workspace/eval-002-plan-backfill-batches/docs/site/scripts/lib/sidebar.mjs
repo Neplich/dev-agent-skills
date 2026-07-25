@@ -11,7 +11,7 @@ const SECTION_LABELS = {
 };
 
 function node() {
-  return { page: null, children: new Map() };
+  return { page: null, children: new Map(), leaves: new Map() };
 }
 
 function compareText(left, right) {
@@ -19,25 +19,27 @@ function compareText(left, right) {
 }
 
 function sidebarItems(current) {
+  const childItems = [
+    ...[...current.children.entries()].map(([key, child]) => ({ key, child })),
+    ...[...current.leaves.entries()].map(([key, page]) => ({ key, page }))
+  ]
+    .sort(({ key: left }, { key: right }) => compareText(left, right))
+    .flatMap(({ key, child, page }) => {
+      const items = page
+        ? [{ text: page.data.title, link: page.route }]
+        : sidebarItems(child);
+      return items.length ? items : [{ text: key, items: [] }];
+    });
   const result = [];
   if (current.page) {
     result.push({
       text: current.page.data.title,
       link: current.page.route,
-      ...(current.children.size ? {
-        items: [...current.children.entries()]
-          .sort(([left], [right]) => compareText(left, right))
-          .flatMap(([, child]) => sidebarItems(child))
-      } : {})
+      ...(childItems.length ? { items: childItems } : {})
     });
     return result;
   }
-  for (const [segment, child] of [...current.children.entries()]
-    .sort(([left], [right]) => compareText(left, right))) {
-    const items = sidebarItems(child);
-    result.push(...(items.length ? items : [{ text: segment, items: [] }]));
-  }
-  return result;
+  return childItems;
 }
 
 function sectionTree(pages, section) {
@@ -55,8 +57,7 @@ function sectionTree(pages, section) {
       current.page = page;
     } else {
       const leaf = file.replace(/\.md$/i, '');
-      if (!current.children.has(leaf)) current.children.set(leaf, node());
-      current.children.get(leaf).page = page;
+      current.leaves.set(leaf, page);
     }
   }
   return root;
