@@ -1,20 +1,17 @@
 {
   "name": "acme-web",
   "private": true,
+  "type": "module",
   "engines": {
     "node": "22.x"
   },
   "scripts": {
-    "lint": "eslint src",
-    "test": "node --test",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "next": "15.4.4",
-    "react": "19.1.0"
+    "lint": "eslint src test eslint.config.js",
+    "test": "NODE_ENV=test node --test",
+    "build": "node --check src/server.js",
+    "start": "node src/server.js"
   },
   "devDependencies": {
-    "eslint": "9.31.0"
+    "eslint": "10.8.0"
   }
 }

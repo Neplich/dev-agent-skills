@@ -8,6 +8,10 @@
   "fixture_context": [
     "PM_HANDOFF.md",
     "package.json",
+    "package-lock.json",
+    "eslint.config.js",
+    "src/server.js",
+    "test/server.test.js",
     "deploy/docker/Dockerfile",
     "deploy/docker/docker-compose.staging.yml"
   ]
