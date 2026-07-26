@@ -8,7 +8,7 @@
 - Test case: single-version-mode
 - Workspace: `workspace/eval-002-single-version-mode`
 - Classification: `(c)` 依赖实时 GitHub 数据。该场景必须读取目标仓库当时的 release、相邻 tag compare、merged PR 和 author；静态 mock 不能替代真实复验。
-- Latest result: PARTIAL - 2026-07-26 的 fresh `with_skill` / `without_skill` 已由当前会话中的同一个 fresh Codex subagent 顺序完成两次独立实时查询，并分别在隔离 scratch 中实际写入、回读和清理目标文件。with-skill 正确过滤唯一的 bot release PR 及 compare 中的 bot commits，但其 `## [v0.120.0]` 标题不满足现有 assertion 要求的 `## [x.y.z]`，因此为 3 PASS / 1 FAIL / 1 NOT EXERCISED；without-skill 为 4 PASS / 1 NOT EXERCISED。
+- Latest result: PARTIAL - 2026-07-26 的 fresh `with_skill` / `without_skill` 已由当前会话中的同一个 fresh Codex subagent 顺序完成两次独立实时查询，并分别在隔离 scratch 中实际写入、回读和清理目标文件。with-skill 正确过滤唯一的 bot release PR 及 compare 中的 bot commits，但其 `## [v0.120.0]` 标题不满足现有 assertion 要求的 `## [x.y.z]`，因此为 2 PASS / 1 FAIL / 2 NOT EXERCISED；without-skill 为 3 PASS / 2 NOT EXERCISED。
 
 ## Test Set / Fixture Version
 
@@ -52,7 +52,7 @@
 | `x_y_z_yyyy_mm_dd` | FAIL | PASS | assertion 明确要求 `## [x.y.z] - YYYY-MM-DD`。with-skill 按当前 specialist Step 6 模板生成 `## [v0.120.0]`，多出 `v` 前缀；without-skill 生成 `## [0.120.0]`。本轮不放宽 assertion，也不修改 specialist。 |
 | `release_tag` | PASS | PASS | 两者均以实时最新 tag `v0.120.0` 为来源。 |
 | `pr_conventional_commit` | NOT EXERCISED | NOT EXERCISED | 当前窗口没有普通 PR。`#1780` 是 bot release PR；baseline 的三条内容来自其 body，不是普通 PR title 清洗样本，不能把该断言判为 PASS。 |
-| `breaking_change_breaking` | PASS | PASS | 当前 PR body 和 tag compare 均无 breaking marker；条件未触发，两者都未虚构 `⚠️ BREAKING:`。 |
+| `breaking_change_breaking` | NOT EXERCISED | NOT EXERCISED | 当前 PR body 和 tag compare 均无 breaking marker；未触发时不虚构前缀不能证明两者在出现 breaking change 时会正确添加 `⚠️ BREAKING:`。 |
 | `section` | PASS | PASS | with-skill 过滤全部 bot 来源后不生成任何空 section；baseline 只生成有内容的 `Added`。 |
 
 ## With Skill
@@ -103,7 +103,7 @@ Candidate behavior summary:
 ## Failures
 
 - 格式契约不一致：现有 eval assertion / expected output 要求 `## [x.y.z] - YYYY-MM-DD`，但 specialist Step 6 的新建版本文件模板要求 `## [v{VERSION}] - YYYY-MM-DD`。with-skill 忠实生成后者，严格 judge 必须把 `x_y_z_yyyy_mm_dd` 判为 `FAIL`；本轮按约束不修改 specialist 或放宽 assertion。
-- 覆盖限制：实时窗口唯一 PR `#1780` 是应过滤的 bot release PR，tag compare commits 也均为 bot 作者；`pr_conventional_commit` 没有普通 PR 样本，因此总体结论保持 `PARTIAL`。
+- 覆盖限制：实时窗口唯一 PR `#1780` 是应过滤的 bot release PR，tag compare commits 也均为 bot 作者；`pr_conventional_commit` 没有普通 PR 样本，且窗口没有 breaking marker，`breaking_change_breaking` 的触发分支同样未覆盖，因此总体结论保持 `PARTIAL`。
 - baseline 未应用 bot filter，把 `#1780` 当作 changelog PR attribution 和链接；这是 without-skill 行为差异，不是 with-skill failure。
 - 两个 arm 均已实际写入、回读并清理隔离 scratch 中的目标文件；文件产出行为不再是未验证覆盖项。
 - 没有外部服务失败。
@@ -118,7 +118,7 @@ Candidate behavior summary:
 ## Next Steps
 
 - 由维护者在本 issue 范围外决定统一版本标题契约：修改 specialist 模板或另起经批准的 eval 契约变更；在此之前不得把 `## [v{VERSION}]` 判为满足 `## [x.y.z]`。
-- 后续在 latest-release 窗口出现非 bot PR 后，按相同 no-leak 流程重新抓取并实际覆盖 `pr_conventional_commit`。
+- 后续在 latest-release 窗口出现非 bot PR 或 breaking marker 后，按相同 no-leak 流程重新抓取并实际覆盖 `pr_conventional_commit` 与 `breaking_change_breaking`。
 
 ## Runtime Artifacts Policy
 
