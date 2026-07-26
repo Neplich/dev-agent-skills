@@ -3,5 +3,10 @@
   "eval_name": "prd-to-engineer-trd",
   "workspace_root": "agents/engineer/test/trd-gen/evals/workspace/eval-001-prd-to-engineer-trd",
   "skill_availability_goal": "Verifies that trd-gen owns technical planning after PRD confirmation and stops before implementation.",
-  "prompt": "PM 已经确认 docs/pm/capture-loop/PRD.md 和 docs/pm/capture-loop/DECISIONS.md。请进入 Engineer 阶段，编写 TRD，并说明后续如何移交给 feature-implementor。"
+  "prompt": "PM 已经确认 docs/pm/capture-loop/PRD.md 和 docs/pm/capture-loop/DECISIONS.md。请进入 Engineer 阶段，编写 TRD，并说明后续如何移交给 feature-implementor。",
+  "fixture_context": [
+    "docs/pm/capture-loop/PRD.md",
+    "docs/pm/capture-loop/DECISIONS.md",
+    "README.md"
+  ]
 }

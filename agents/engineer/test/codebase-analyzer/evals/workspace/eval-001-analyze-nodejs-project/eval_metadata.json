@@ -3,5 +3,14 @@
   "eval_name": "analyze-nodejs-project",
   "workspace_root": "agents/engineer/test/codebase-analyzer/evals/workspace/eval-001-analyze-nodejs-project",
   "skill_availability_goal": "Verifies that codebase-analyzer handles analyze-nodejs-project and produces the expected role-specific artifact.",
-  "prompt": "分析这个 Node.js 项目的代码库结构、技术栈和编码规范"
+  "prompt": "engineer-agent 已确认需要 repo-level Project Profile，入口依据见 workspace `ENGINEERING_CONTEXT.md`。分析这个 Node.js 项目的代码库结构、技术栈和编码规范",
+  "feature_path": "N/A",
+  "fixture_context": [
+    "ENGINEERING_CONTEXT.md",
+    "package.json",
+    "src/server.js",
+    "test/server.test.js",
+    "eslint.config.js",
+    ".prettierrc.json"
+  ]
 }

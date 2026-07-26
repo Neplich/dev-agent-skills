@@ -7,39 +7,37 @@
 - Eval: `eval-001-write-tests-from-spec`
 - Test case: write-tests-from-spec
 - Workspace: `workspace/eval-001-write-tests-from-spec`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - 2026-07-26 fresh paired validation completed; with_skill and fresh without_skill both satisfied 3/3 assertions.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that test-writer handles write-tests-from-spec and produces the expected role-specific artifact.
+- Fixture: approved test spec, implementation code, existing test pattern, and runnable package scripts
 - Expected output: 测试文件 + 测试运行结果
 
 ## Assertions
 
-- `test_spec`: 测试覆盖 Test Spec
-- `assertion_2`: 测试通过
-- `assertion_3`: 遵循项目测试规范
+- PASS `test_spec`: with_skill 覆盖 test spec 的 4/4 场景，包括不调用 repository 与保留错误 identity。
+- PASS `assertion_2`: `npm test` 报告 5 passed、0 failed。
+- PASS `assertion_3`: 使用现有 `test/services/*.test.js`、`node:test` 和 `node:assert/strict` 规范。
 
 ## With Skill
 
-Observed behavior:
-
-- 当前 SKILL.md 要先读 Test Spec，覆盖所有场景，按现有测试框架和命名结构写测试，并运行测试报告通过状态和覆盖矩阵。
+- 新增与现有模式一致的 notification service 测试，明确记录 spec 场景到测试的追踪关系。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+
+- 2026-07-26 使用同一 prompt 和 fixture 重新生成 fresh baseline，未读取或应用 test-writer skill、Agent README、历史 comparison 或旧 baseline。
+- baseline 同样满足 3/3 assertions并通过相同测试命令；批准的 test spec 足够明确，因此没有 assertion-level 增益。
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- 无 assertion failure。
 
 ## Next Steps
 
-- 无需修改当前 skill 指令。
+- 保留 spec 全覆盖、真实运行和项目规范三项门禁。
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- Runtime transcripts, verdicts, timing, outputs, and diagnostics were generated only in an ignored scratch workspace and are not committed.

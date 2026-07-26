@@ -1,0 +1,9 @@
+{
+  "name": "acme-platform",
+  "private": true,
+  "packageManager": "pnpm@10.13.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

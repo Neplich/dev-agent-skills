@@ -52,7 +52,7 @@
       "id": "eval-003-professional",
       "name": "Professional Design System",
       "description": "Create a professional design system for enterprise software",
-      "prompt": "Create a visual design system for an enterprise analytics platform. Target: corporate users, trustworthy and authoritative.",
+      "prompt": "pm-agent 已完成入口分类并路由至 visual-design；确认 handoff 见 workspace `PM_HANDOFF.md`，已确认 `feature_path: enterprise-analytics`。Create a visual design system for an enterprise analytics platform. Target: corporate users, trustworthy and authoritative.",
       "workspace": "workspace/eval-003-professional",
       "expected_output": "面向企业软件的专业视觉系统文档，强调可信和可访问性，并在设计交接处停止",
       "assertions": [

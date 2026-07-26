@@ -7,44 +7,44 @@
 - Eval: `eval-001-nextjs-web-app`
 - Test case: nextjs-web-app
 - Workspace: `workspace/eval-001-nextjs-web-app`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - 2026-07-26 fresh paired validation completed; with_skill and fresh without_skill both satisfied 8/8 assertions.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that deployment-planner handles nextjs-web-app and produces the expected role-specific artifact.
+- Fixture: confirmed repo-wide deployment handoff, Next.js manifest, and health endpoint
 - Expected output: 在 deploy/ 目录下生成三个子目录，每个包含 README.md 和相应的配置文件
 
 ## Assertions
 
-- `deploy_local_readme_md`: deploy/local/README.md 存在
-- `deploy_local_env_example_database_url_redis_url`: deploy/local/.env.example 包含 DATABASE_URL 和 REDIS_URL
-- `deploy_local_start_sh`: deploy/local/start.sh 可执行
-- `deploy_docker_dockerfile`: deploy/docker/Dockerfile 存在
-- `deploy_docker_docker_compose_yml_app_postgres_redis`: deploy/docker/docker-compose.yml 包含 app、postgres、redis 三个服务
-- `deploy_helm_chart_yaml`: deploy/helm/Chart.yaml 存在
-- `deploy_helm_values_yaml_replicacount`: deploy/helm/values.yaml 包含 replicaCount 配置
-- `deploy_helm_templates_deployment_yaml`: deploy/helm/templates/deployment.yaml 存在
+- PASS `deploy_local_readme_md`: 生成 local README。
+- PASS `deploy_local_env_example_database_url_redis_url`: local env 包含 `DATABASE_URL` 与 `REDIS_URL`。
+- PASS `deploy_local_start_sh`: local start script 可执行。
+- PASS `deploy_docker_dockerfile`: 生成 Dockerfile。
+- PASS `deploy_docker_docker_compose_yml_app_postgres_redis`: Compose 包含 app、postgres、redis。
+- PASS `deploy_helm_chart_yaml`: 生成 Helm Chart。
+- PASS `deploy_helm_values_yaml_replicacount`: values 包含 `replicaCount`。
+- PASS `deploy_helm_templates_deployment_yaml`: 生成 deployment template。
 
 ## With Skill
 
-Observed behavior:
-
-- 当前 skill 明确生成 deploy/local、deploy/docker、deploy/helm 三类部署资产；Next.js + PostgreSQL + Redis 场景下会包含 DATABASE_URL、REDIS_URL、start.sh、Dockerfile、app/postgres/redis compose 服务、Helm Chart、values replicaCount 和 deployment template。
+- 除满足 8 项断言外，还提供 multi-stage/non-root 镜像、依赖健康门禁、持久卷、外部服务 values、probes 与 resources。
+- with_skill 与 baseline 的 Compose 均通过 `config --quiet`。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+
+- 2026-07-26 使用同一 prompt 和 fixture 重新生成 fresh baseline，未读取或应用 deployment-planner skill、Agent README、历史 comparison 或旧 baseline。
+- baseline 同样满足 8/8 assertions，但镜像加固、健康门禁和 Helm 运行约束较简略。
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- 无 assertion failure。
+- 环境中没有 Helm，未运行 `helm lint`；当前 assertions 对 skill 增益的区分度有限。
 
 ## Next Steps
 
-- 无需修改当前 skill 指令。
+- 保留 local、Docker、Helm 三目标覆盖。
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- Runtime transcripts, verdicts, timing, outputs, and diagnostics were generated only in an ignored scratch workspace and are not committed.

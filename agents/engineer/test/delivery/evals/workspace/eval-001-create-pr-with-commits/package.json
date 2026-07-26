@@ -1,0 +1,8 @@
+{
+  "name": "notification-labels",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

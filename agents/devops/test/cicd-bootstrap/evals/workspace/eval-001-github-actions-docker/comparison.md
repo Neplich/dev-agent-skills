@@ -7,41 +7,41 @@
 - Eval: `eval-001-github-actions-docker`
 - Test case: github-actions-docker
 - Workspace: `workspace/eval-001-github-actions-docker`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - 2026-07-26 fresh paired validation completed; with_skill and fresh without_skill both satisfied 5/5 assertions.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that cicd-bootstrap handles github-actions-docker and produces the expected role-specific artifact.
+- Fixture: confirmed repo-wide handoff, real package commands, Dockerfile, and staging Compose target
 - Expected output: 生成 GitHub Actions workflows，包含 CI 和 staging 部署
 
 ## Assertions
 
-- `github_workflows_ci_yml`: .github/workflows/ci.yml 存在
-- `ci_yml_lint_test_build`: ci.yml 包含 lint、test、build 步骤
-- `github_workflows_deploy_staging_yml`: .github/workflows/deploy-staging.yml 存在
-- `deploy_staging_yml_push_to_main`: deploy-staging.yml 触发条件是 push to main
-- `deploy_secrets_md_secrets`: deploy/SECRETS.md 文档存在，列出需要的 secrets
+- PASS `github_workflows_ci_yml`: with_skill 生成 `.github/workflows/ci.yml`。
+- PASS `ci_yml_lint_test_build`: CI 包含 lint、test、build。
+- PASS `github_workflows_deploy_staging_yml`: 生成 `.github/workflows/deploy-staging.yml`。
+- PASS `deploy_staging_yml_push_to_main`: staging workflow 由 push 到 main 触发。
+- PASS `deploy_secrets_md_secrets`: 生成 `deploy/SECRETS.md` 并列出 secret 名称。
 
 ## With Skill
 
-Observed behavior:
-
-- 当前 skill 覆盖 GitHub + Docker CI/CD 场景：会检查现有部署目标和命令，生成 PR CI workflow、main 分支 staging 部署 workflow，并把所需 secrets 记录到 deploy/SECRETS.md。
+- 除满足 5 项断言外，还加入最小权限、并发控制、部署前验证与不可变 SHA 镜像引用。
+- workflow YAML 解析通过。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+
+- 2026-07-26 使用同一 prompt 和 fixture 重新生成 fresh baseline，未读取或应用 cicd-bootstrap skill、Agent README、历史 comparison 或旧 baseline。
+- baseline 同样满足 5/5 assertions，但权限、并发和部署安全门禁较简略。
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- 无 assertion failure。
+- 未真实触发 GitHub Actions，环境中没有 `actionlint`；当前 assertions 对 skill 增益的区分度有限。
 
 ## Next Steps
 
-- 无需修改当前 skill 指令。
+- 保留当前 CI/CD 产物断言，并在后续单独评估是否需要增强安全门禁断言。
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- Runtime transcripts, verdicts, timing, outputs, and diagnostics were generated only in an ignored scratch workspace and are not committed.

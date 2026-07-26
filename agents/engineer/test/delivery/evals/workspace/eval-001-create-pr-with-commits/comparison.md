@@ -7,40 +7,39 @@
 - Eval: `eval-001-create-pr-with-commits`
 - Test case: create-pr-with-commits
 - Workspace: `workspace/eval-001-create-pr-with-commits`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS (4/4 assertions) - fresh Codex paired validation completed on 2026-07-26
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that delivery handles create-pr-with-commits and produces the expected role-specific artifact.
-- Expected output: 分支创建 + 提交 + PR 创建 + CI 检查
+- Fixture: completed-work handoff, PM reference, changed source/test, passing test command and CI workflow
+- Fresh run: both isolated copies initialized local git repositories, created a feature branch and Conventional Commit, ran `npm test`, and pushed to local bare remotes under `tmp/eval-runs/issue-158-round1/engineer-a/`
+- External policy: no real GitHub PR or CI run was created; PR body and CI-check steps were assessed semantically
 
 ## Assertions
 
-- `assertion_1`: 创建功能分支
-- `assertion_2`: 有意义的提交
-- `pr`: PR 包含必要信息
-- `ci`: 检查 CI 状态
+- PASS `assertion_1`: creates a project-conformant feature branch.
+- PASS `assertion_2`: creates a Conventional Commit.
+- PASS `pr`: proposed PR body includes summary, PM document, Issue #123 and passing tests.
+- PASS `ci`: explicitly checks PR CI after creation.
 
-## With Skill
+## With Skill Behavior
 
-Observed behavior:
+The candidate verified scope and tests, staged only scoped files, created the branch/commit/push simulation, and produced a complete PR checklist and CI follow-up.
 
-- 当前 SKILL.md 覆盖 git 状态检查、按项目规范建分支、定向 stage、Conventional Commit、PR body 含摘要/PM 文档/测试状态，并在创建 PR 后检查 CI。
+## Without Skill Baseline
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+The fresh baseline also satisfied 4/4 assertions. The skill adds a more explicit staged-scope review and CI evidence structure, but the assertions do not distinguish it.
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- With-skill and baseline: none.
+- Limitation: real `gh pr create` and hosted CI were intentionally not executed in the fixture sandbox.
 
 ## Next Steps
 
-- 无需修改当前 skill 指令。
+Keep the external-side-effect limitation explicit in future paired runs.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+Scratch `.git` directories, local bare remotes, responses and diagnostics are ignored and not committed.

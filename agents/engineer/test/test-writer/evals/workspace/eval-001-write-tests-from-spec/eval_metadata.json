@@ -3,5 +3,11 @@
   "eval_name": "write-tests-from-spec",
   "workspace_root": "agents/engineer/test/test-writer/evals/workspace/eval-001-write-tests-from-spec",
   "skill_availability_goal": "Verifies that test-writer handles write-tests-from-spec and produces the expected role-specific artifact.",
-  "prompt": "根据 docs/test-spec.md 为 NotificationService 编写测试"
+  "prompt": "根据 docs/test-spec.md 为 NotificationService 编写测试",
+  "fixture_context": [
+    "docs/test-spec.md",
+    "package.json",
+    "src/services/notification-service.js",
+    "test/services/health-service.test.js"
+  ]
 }

@@ -7,7 +7,7 @@
       "id": "eval-001-nextjs-web-app",
       "name": "nextjs-web-app",
       "description": "Verifies that deployment-planner handles nextjs-web-app and produces the expected role-specific artifact.",
-      "prompt": "我有一个 Next.js 项目，使用 PostgreSQL 数据库和 Redis 缓存。帮我生成 local、docker、helm 三种部署配置。",
+      "prompt": "pm-agent 已完成项目级部署入口分类并路由至 deployment-planner；确认 handoff 见 workspace `PM_HANDOFF.md`，本任务为 `feature_path: N/A` 的 repo-wide deployment。我的 Next.js 项目使用 PostgreSQL 数据库和 Redis 缓存。帮我生成 local、docker、helm 三种部署配置。",
       "workspace": "workspace/eval-001-nextjs-web-app",
       "expected_output": "在 deploy/ 目录下生成三个子目录，每个包含 README.md 和相应的配置文件",
       "assertions": [
@@ -57,7 +57,7 @@
       "id": "eval-002-python-api-only",
       "name": "python-api-only",
       "description": "Verifies that deployment-planner handles python-api-only and produces the expected role-specific artifact.",
-      "prompt": "我有一个 FastAPI 项目，只需要 API 服务，不需要数据库。生成部署配置。",
+      "prompt": "pm-agent 已完成项目级部署入口分类并路由至 deployment-planner；确认 handoff 见 workspace `PM_HANDOFF.md`，本任务为 `feature_path: N/A` 的 repo-wide deployment。我的 FastAPI 项目只需要 API 服务，不需要数据库。生成部署配置，且不要添加数据库服务、变量或初始化步骤。",
       "workspace": "workspace/eval-002-python-api-only",
       "expected_output": "生成简化的部署配置，不包含数据库相关内容",
       "assertions": [

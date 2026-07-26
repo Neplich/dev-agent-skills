@@ -7,55 +7,40 @@
 - Eval: `eval-002-repair-plan-confirmation-gate`
 - Test case: repair-plan-confirmation-gate
 - Workspace: `workspace/eval-002-repair-plan-confirmation-gate`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation on 2026-06-23
+- Latest result: PASS (5/5 assertions) - fresh Codex paired validation completed on 2026-07-26
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that debugger writes a repair implementation plan only after
-  the user asks for it, then waits for plan confirmation before fixing.
-- Expected output: 修复实施计划 + 文件范围 + 验证命令 + sub-agent 拆分判断 + 等待用户确认，不直接修复
+- Fixture: confirmed PRD/TRD, reproducible failing test, target source, package command, and `BUG_ANALYSIS.md`
+- Fresh run: isolated paired copies under `tmp/eval-runs/issue-158-round1/engineer-a/`; the failing command reproduced `Unsupported notification status: archived`
+- Source branch: `test/issue-158-round1-thin-fixtures`
 
-## With Skill
+## Assertions
 
-Current `SKILL.md` satisfies all assertions:
+- PASS `writes_repair_plan`: lists the minimal source/test files, archived branch fix, and targeted/full test commands.
+- PASS `records_fix_split_decision`: explicitly records that the small two-file repair does not need a sub-agent split.
+- PASS `waits_for_plan_confirmation`: asks for exact plan confirmation before implementation.
+- PASS `e2e_handoff_requires_confirmed_plan`: records PRD/TRD alignment, changed files, commands and `docs/qa/e2e/notifications/`, while forbidding pre-confirmation E2E edits.
+- PASS `does_not_apply_fix`: does not claim code, test or verification changes.
 
-- Fresh Codex subagent validation on 2026-06-23 read the current skill docs, Engineer README, eval definition, fixture metadata/context, and this comparison; all listed assertions are satisfied.
-  `debugger` can produce a repair implementation plan only after planning is
-  requested, records sub-agent split judgment, and waits for exact plan
-  confirmation before any code, test, or E2E update.
-- `writes_repair_plan`: Repair Plan Gate requires a repair plan with problem,
-  root cause, location, impact, PRD/TRD alignment conclusion and source document
-  paths, files or modules expected to change, minimal repair approach, and
-  regression tests or verification commands.
-- `records_fix_split_decision`: Repair Plan Gate requires stating whether an
-  implementation/validation sub-agent split is needed.
-- `waits_for_plan_confirmation`: Repair Plan Gate and Step 6 require presenting
-  the plan and waiting for user confirmation before fixing.
-- `e2e_handoff_requires_confirmed_plan`: Repair Plan Gate requires the plan to
-  include PRD/TRD alignment conclusion, target files or modules, verification
-  commands, and a suggested QA E2E function directory when E2E coverage may be
-  affected. It also blocks updates to E2E TC, scripts, or results until the
-  exact repair plan is confirmed.
-- `does_not_apply_fix`: Repair Plan Gate prohibits applying the fix, updating
-  tests, updating E2E TC, updating E2E scripts or results, or delegating
-  implementation until the exact repair plan is confirmed.
+## With Skill Behavior
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing,
-  evidence, and artifact expectations are preserved.
+The candidate accepted the confirmed root cause, produced only the requested repair plan, preserved the plan gate and defined the later QA handoff without changing runtime files.
+
+## Without Skill Baseline
+
+The fresh baseline produced a plausible repair plan and waited for confirmation, but omitted the split decision and the confirmed-plan-dependent QA E2E handoff. Baseline result: 3/5 assertions.
 
 ## Failures
 
-- None.
+- With-skill: none.
+- Baseline: `records_fix_split_decision` and `e2e_handoff_requires_confirmed_plan` failed.
 
 ## Next Steps
 
-- None for this eval.
+Retain this case as the positive repair-planning gate fixture.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be
-  committed.
+Paired responses and reproduction diagnostics remain in ignored scratch space and are not committed.
