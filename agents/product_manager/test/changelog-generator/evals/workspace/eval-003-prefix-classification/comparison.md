@@ -7,8 +7,8 @@
 - Eval: `eval-003-prefix-classification`
 - Test case: prefix-classification
 - Workspace: `workspace/eval-003-prefix-classification`
-- Evaluation time: 2026-07-26 15:32:35 CST (+0800)
-- Latest result: PASS - fresh `with_skill` 满足 13/13 assertions；独立生成的 fresh `without_skill` baseline 满足 12/13，暴露出 breaking `feat!` 章节归属差异。
+- Evaluation time: 2026-07-26 16:21:37 CST (+0800)
+- Latest result: PASS - same-agent fresh `with_skill` 与 fresh `without_skill` baseline 均满足 13/13 assertions；本轮未观察到两 arm 的行为差异。
 
 ## Test Set / Fixture Version
 
@@ -19,11 +19,11 @@
 
 ## No-Answer-Key Fresh Method
 
-本轮 fresh Codex evaluator 按以下隔离顺序执行，候选锁定前不读取答案键：
+本轮由同一个 fresh Codex evaluator 按以下隔离顺序执行；未委派其他 agent，候选锁定前不读取答案键：
 
 1. 生成阶段首先只读取 workspace 的 `eval_metadata.json`，从中取得完整原始 prompt；未读取 `evals.json`、`expected_output`、assertions 或旧 `comparison.md`。
-2. `with_skill` 阶段读取当前 `agents/product_manager/README.md` 与 `agents/product_manager/skills/changelog-generator/SKILL.md`，仅依据原始 prompt 和 skill 契约独立生成并锁定候选。
-3. `without_skill` 阶段仅依据同一份原始 prompt 独立生成并锁定 baseline；未读取或应用 Agent README、skill、`evals.json`、assertions、`expected_output` 或旧 comparison。
+2. `with_skill` 阶段读取完整的当前 `agents/product_manager/README.md` 与 `agents/product_manager/skills/changelog-generator/SKILL.md`，仅依据原始 prompt 和 skill 契约独立生成并锁定候选。
+3. 同一 evaluator 随后进入 `without_skill` 阶段，仅依据同一份原始 prompt 与通用 Keep a Changelog 语义独立生成并锁定 baseline；该阶段未读取或应用 Agent README、skill、`evals.json`、assertions、`expected_output` 或旧 comparison。
 4. 两份候选都锁定后，才读取 `evals.json` 中本用例的 assertions、expected output 与旧 comparison，并逐项 judge；judge 阶段没有反向修改候选。
 
 候选、transcript 与 judge diagnostics 均未写入仓库。
@@ -47,14 +47,14 @@
 
 锁定 baseline 的行为摘要：
 
-- Added：`#101 Add OAuth2 login support`
-- Changed：`#104 Reduce API response time by caching`、`#105 ⚠️ BREAKING: Redesign plugin configuration API`、`#106 Update release notes generator publishing workflow`、`#107 Tighten changelog-generator eval contract`、`#108 Require repository and eval contract checks before release`
+- Added：`#105 ⚠️ BREAKING: Redesign plugin configuration API`（置顶）、`#101 Add OAuth2 login support`
+- Changed：`#104 Reduce API response time by caching`、`#106 Update release notes generator publishing workflow`、`#107 Tighten changelog-generator eval contract`、`#108 Require repository and eval contract checks before release`
 - Fixed：`#102 Resolve crash when token expires`、`#111 Correct button alignment on mobile`
 - Removed：`#112 Drop Python 3.7 support`
 - Security：`#113 Patch XSS vulnerability in template renderer`
 - 跳过：`#103`、`#114`、`#109`、`#110`
 
-结论：12/13 assertions 通过。baseline 单凭 prompt 也能完成 docs/test/ci 的语义筛选和多数 conventional prefix 分类，但把描述“重设计既有 API”的 breaking `feat! #105` 按语义放入 Changed；当前 skill 契约要求 `feat!` 仍归 Added，并以 `⚠️ BREAKING` 标记，因此 `feat_added_breaking` 未通过。
+结论：13/13 assertions 通过。baseline 单凭 prompt 与通用 Keep a Changelog 语义，也将 conventional `feat! #105` 保留在 Added 并添加 breaking 标记，同时完成 docs/test/ci 的语义筛选；本轮没有观察到 skill 相对 baseline 的行为增益。
 
 ## Assertion Review
 
@@ -65,7 +65,7 @@
 | `chore_deps` | 跳过 #103 | 相同 | Both PASS |
 | `build_deps_skipped` | 跳过 #114 | 相同 | Both PASS |
 | `perf_changed` | #104 进入 Changed | 相同 | Both PASS |
-| `feat_added_breaking` | #105 进入 Added，带 `⚠️ BREAKING` 且置顶 | #105 带 breaking 标记但进入 Changed | With skill PASS / Baseline FAIL |
+| `feat_added_breaking` | #105 进入 Added，带 `⚠️ BREAKING` 且置顶 | 相同 | Both PASS |
 | `docs_release_workflow_changed` | 根据正文将 #106 纳入 Changed | 相同 | Both PASS |
 | `test_eval_contract_changed` | 根据正文将 #107 纳入 Changed | 相同 | Both PASS |
 | `ci_release_gate_changed` | 根据正文将 #108 纳入 Changed | 相同 | Both PASS |
@@ -76,14 +76,13 @@
 
 ## Failures
 
-- `with_skill` 无 assertion failure。
-- `without_skill` baseline 未满足 `feat_added_breaking`：breaking 标记正确，但章节错误地归入 Changed，而不是 Added。
-- 旧 comparison 的 baseline 描述受答案键污染：它声称生成时使用了 assertions，并把 baseline 记录成与 expected output 完全一致。本轮已用严格的 no-answer-key 顺序重新生成候选并纠正该记录；未复用旧 baseline。
+- `with_skill` 与 `without_skill` baseline 均无 assertion failure。
+- 本轮 same-agent fresh baseline 与历史记录不同：本轮在读取答案键前已将 `feat! #105` 锁定为 Added，而不是 Changed。canonical comparison 已按本轮真实结果纠正，未复用或迁就历史 baseline。
 
 ## Risks / Next Steps
 
 - 本用例使用 prompt 内嵌的确定性 PR 数据，不验证 GitHub API、`gh` CLI、分页或日期窗口行为；这些能力由 changelog-generator 的实时数据 eval 覆盖。
-- prompt 已直接给出 docs/test/ci 需要按正文语义判断的要求，因此 baseline 在这部分同样通过并不削弱用例有效性；本轮差异表明 skill 对 breaking conventional prefix 的明确映射提供了可观察增益。
+- prompt 已直接给出 docs/test/ci 需要按正文语义判断的要求，并且 conventional `feat!` 的 Added 归类可由通用知识正确推导，因此 baseline 全部通过是合理结果；该用例本轮证明 skill 行为满足契约，但未证明相对无 skill baseline 的可观察增益。
 - 保留此用例作为 conventional prefix、breaking change 和低优先级前缀语义审查的回归覆盖。
 
 ## Runtime Artifact Policy

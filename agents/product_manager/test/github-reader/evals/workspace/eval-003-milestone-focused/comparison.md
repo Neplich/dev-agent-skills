@@ -8,7 +8,7 @@
 - Test case: milestone-focused
 - Workspace: `workspace/eval-003-milestone-focused`
 - Classification: `(c) 依赖实时外部数据`。该场景验证 specialist 是否通过 `gh` 查询真实 GitHub milestone；静态 fixture 会把时效性场景降级成 mock，因而不补造 fixture。
-- Latest result: **PASS**。2026-07-26 的 fresh paired validation 中，with-skill 在其独立实时查询结果上满足 3/3 assertions；fresh without-skill baseline 也独立查询 GitHub，满足 2/3，未采用 skill 规定的 emoji 状态标识。
+- Latest result: **PASS**。2026-07-26 的 same-agent fresh paired validation 中，with-skill 在第一次独立实时查询结果上满足 3/3 assertions；fresh without-skill baseline 在第二次独立查询结果上满足 2/3，未采用 skill 规定的 emoji 状态标识。
 
 ## Test Set / Fixture Version
 
@@ -16,18 +16,18 @@
 - Prompt: `看一下 facebook/react 最近的 milestone，哪个进度最慢或者已经逾期了？`
 - Expected output: Milestone 状态报告，识别出进度最慢或逾期的 milestone，给出具体数据支撑
 - Fixture basis: prompt 与 `eval_metadata.json` 已足够定义目标仓库和查询意图；业务证据必须在运行时从 GitHub API 获取。
-- Fresh run: with-skill 由当前会话读取 PM Agent README 与 `github-reader` skill 后生成；without-skill 由 `fork_turns=none` 的全新 Codex subagent 仅凭原始 prompt 独立生成。两边均为本轮新查询、新生成，未复用历史 baseline。
-- No-leak control: baseline 启动并锁定结果之前，执行者没有读取 `evals.json`、assertions、expected output 或旧 `comparison.md`；baseline 子代理没有收到 skill、Agent README、with-skill 候选、父级 API snapshot 或答案键。
+- Fresh run: 当前会话中的同一个 fresh Codex agent 先读取 PM Agent README 与 `github-reader` skill，完成并锁定 with-skill；随后明确停止应用这些指令，仅凭 metadata 中的原始 prompt 完成并锁定新的 without-skill baseline。两边均为本轮新查询、新生成，未复用历史 baseline。
+- No-leak control: 两条 arm 全部锁定之前，执行者只读取 `eval_metadata.json` 中的 prompt，以及 with-skill arm 必需的 PM Agent README 和 specialist skill；没有读取 `evals.json`、assertions、expected output 或旧 `comparison.md`。第二条 arm 没有复用第一次查询的响应或候选文本，而是再次独立调用 `gh`；两条 arm 锁定后才读取答案键并由同一 agent 亲自 judge。
 
 ## Live Data Snapshot
 
-- With-skill fetched at: `2026-07-26 15:47:38–15:47:50 CST (+0800)`。
-- Without-skill fetched at: `2026-07-26 15:48:13–15:48:55 CST (+0800)`。
-- Access path: 两条路径分别使用已认证的 `gh` CLI 调用 GitHub REST API，没有共享预制 snapshot。
+- With-skill fetched at: `2026-07-26 16:29:36 CST (+0800)`。
+- Without-skill fetched at: `2026-07-26 16:29:52 CST (+0800)`。
+- Access path: 两条路径由同一个 fresh agent 分别使用已认证的 `gh` CLI 调用 GitHub REST API；每条 arm 都发起自己的网络请求，没有共享预制 snapshot 或运行期文件。
 - Repository resolution: 输入 `facebook/react`，GitHub 返回 canonical repository `react/react`（default branch `main`）。
 - With-skill query scope: 仓库身份与全部 open milestones；按 focused-query 规则没有抓取无关 issue/PR 队列。
-- Without-skill query scope: 全部 open milestones、全部历史 milestones、milestone `#40` 详情及其 11 个关联 Issue/PR。
-- API fields retained for judgment: `title`, `state`, `open_issues`, `closed_issues`, `due_on`, `created_at`, `updated_at`, `html_url`。
+- Without-skill query scope: 再次独立查询全部 open milestones，并在该次响应上独立计算完成率。
+- API fields retained for judgment: with-skill 保留 `number`, `title`, `state`, `open_issues`, `closed_issues`, `due_on`, `created_at`, `updated_at`, `html_url`；without-skill 保留回答 prompt 所需的 `number`, `title`, `state`, `open_issues`, `closed_issues`, `completion_pct`, `due_on`, `html_url`。
 
 Open milestone snapshot:
 
@@ -50,7 +50,7 @@ The live data does not support an overdue claim: the only open milestone has no 
 Fresh with-skill behavior:
 
 - 读取 PM Agent README 与当前 `github-reader` skill，判定为 milestone-focused query，仅抓取所需 milestone 数据。
-- 通过 `gh` 解析目标仓库，并保留抓取时间、查询范围和用于计算的 API 字段。
+- 先通过 `gh repo view facebook/react` 解析目标仓库，再通过独立的 `gh api .../milestones` 请求取得全部 open milestones，并保留抓取时间、查询范围和用于计算的 API 字段。
 - 将 `19.0.0` 报告为 `5/11 (54.5%)`、`⚪ 无截止日期`；明确指出“无截止日期”不等于逾期。
 - 在只有一个 open milestone 的真实数据边界下，明确说明 `19.0.0` 是当前 active 集合中进度最慢，而不是虚构另一个比较对象。
 - 按 focused-query 协议停止在 milestone 数据，没有为满足格式而扩展抓取无关 issue/PR 队列。
@@ -59,9 +59,9 @@ Fresh with-skill behavior:
 
 Fresh without-skill behavior:
 
-- `fork_turns=none` 子代理在不读取或应用 `github-reader` skill、PM Agent README、eval 判分材料或父级查询结果的条件下，仅使用原始 prompt 独立调用 `gh`。
+- 同一个 fresh agent 在 with-skill 锁定后停止应用 `github-reader` skill 和 PM Agent README，仅凭原始 prompt 发起第二次独立 `gh api` 请求；此时仍未读取 eval 判分材料、旧 comparison 或答案键。
 - 正确识别 canonical repository、唯一 open milestone、54.5% 完成率以及无可证实的逾期 milestone。
-- 额外核对全部历史 milestones 和 `#40` 的 11 个关联 Issue/PR；这些是 baseline 自己的实时查询，不是父级 snapshot。
+- 该 arm 直接在自己的 API 响应上计算完成率并按完成率排序，没有复用 with-skill 的响应或派生值。
 - 结论仍有事实依据，因此通过 assertions 1 和 2。
 - 采用普通文本“无截止日期”，没有 skill 规定的 emoji 状态标识，因此不满足 assertion 3。
 
@@ -81,7 +81,7 @@ Fresh without-skill behavior:
 ## Next Steps
 
 - 无需修改 fixture、`eval_metadata.json`、`evals.json` 或 specialist `SKILL.md`。
-- 后续 fresh eval 继续让两条路径在相邻时间窗内各自实时查询，并分别记录抓取时间与查询范围；不得把父级 snapshot 或候选答案传给 baseline。
+- 后续 fresh eval 继续让同一个 fresh agent 按顺序锁定两条路径，在相邻时间窗内各自实时查询，并分别记录抓取时间与查询范围；两条 arm 锁定前不得读取答案键，也不得把第一条 arm 的 API 响应或候选答案作为第二条 arm 的输入。
 
 ## Runtime Artifacts Policy
 
