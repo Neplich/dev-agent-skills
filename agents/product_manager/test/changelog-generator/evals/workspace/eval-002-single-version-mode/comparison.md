@@ -8,7 +8,7 @@
 - Test case: `single-version-mode`
 - Workspace: `workspace/eval-002-single-version-mode`
 - Classification: `(c) 依赖实时外部数据`。本用例必须读取目标仓库当时的 release、相邻版本窗口、merged PR、author 与 tag compare。
-- Latest result: **PASS** — fresh with-skill 正确选中实时最新 release `v0.120.0`，生成 assertion 当前要求的 `## [v0.120.0] - 2026-07-24`，过滤唯一 bot release PR 与 compare 中的 bot commits，并在没有 eligible 内容时省略所有空 section。本轮实际触发的 assertions 全部 PASS；普通 PR 标题清洗和 breaking marker 因实时窗口无相应样本而为 `NOT EXERCISED`，作为覆盖限制记录，不降级已验证行为。
+- Latest result: **PARTIAL** — fresh with-skill 正确选中实时最新 release `v0.120.0`，生成 assertion 当前要求的 `## [v0.120.0] - 2026-07-24`，过滤唯一 bot release PR 与 compare 中的 bot commits，并在没有 eligible 内容时省略所有空 section。本轮实际触发的 `v_version_yyyy_mm_dd`、`release_tag`、`section` 均确认 PASS；`pr_conventional_commit` 与 `breaking_change_breaking` 因实时窗口没有 eligible 普通 PR 或 breaking marker 而为 `NOT EXERCISED`，覆盖不完整，不能通过伪造 fixture 或条目补足，因此整体结论保持 `PARTIAL`。
 
 ## Test Set / Fixture Version
 
@@ -95,14 +95,14 @@ Fresh source: 仅原始 prompt 与第二次独立 live 查询；未复用旧 bas
 ## Failures
 
 - 未发现已触发路径的 with-skill 回归。
-- Coverage gap：实时窗口没有 eligible 普通 PR 或 breaking marker，`pr_conventional_commit` 与 `breaking_change_breaking` 为 `NOT EXERCISED`。
+- Coverage gap：实时窗口没有 eligible 普通 PR 或 breaking marker，`pr_conventional_commit` 与 `breaking_change_breaking` 为 `NOT EXERCISED`，结论必须保持 `PARTIAL`。
 - without-skill 未满足带 `v` 的版本标题 assertion，且未过滤 bot release PR；这是 fresh baseline 行为，不是 with-skill failure。
 - GitHub API、认证、网络和目标仓库访问均成功，无 external dependency blocker。
 
 ## Next Steps
 
-- 无需修改 skill 或 eval assertion；当前带 `v` 标题契约已经一致。
-- 后续 latest release 窗口出现 eligible 普通 PR 或 breaking marker 时，重新执行同一 no-leak fresh pair以覆盖剩余两条 assertion。
+- 不补造 fixture、窗口外 PR 或 breaking marker。
+- 后续 latest release 窗口出现 eligible 普通 PR 或 breaking marker 时，重新执行同一 no-leak fresh pair，实际覆盖剩余两条 assertion。
 
 ## Runtime Artifact Policy
 
