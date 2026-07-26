@@ -27,4 +27,4 @@ non_goals:
   - 修改功能范围
 ```
 
-本 fixture 是隔离的交付输入。Fresh validation 可以在 scratch copy 初始化本地 git 并评审外部 PR/CI 操作协议；不得把运行期 `.git`、transcript 或模拟 PR 产物提交到 canonical workspace。
+本 fixture 是隔离的交付输入。Fresh validation 必须在 scratch copy 中完成本地测试、真实远程 branch/commit/push、临时 GitHub PR 创建和 hosted CI 终态检查；临时 PR 不得合并，复验后应关闭 PR 并删除远程 branch。不得把运行期 `.git`、transcript、diagnostics 或临时 PR 产物提交到 canonical workspace。
