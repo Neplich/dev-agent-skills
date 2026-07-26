@@ -44,12 +44,12 @@
       "description": "Verifies that changelog-generator handles single-version-mode and produces the expected role-specific artifact.",
       "prompt": "在 https://github.com/anthropics/anthropic-sdk-python 仓库，帮我生成最新 release 版本的 changelog 条目，使用 Keep a Changelog 格式，包含该版本对应的所有 PR 引用，并写入 docs/changelog/changelog-v{version}.md。",
       "workspace": "workspace/eval-002-single-version-mode",
-      "expected_output": "生成最新 release tag 的版本块，格式为 ## [x.y.z] - YYYY-MM-DD，包含该版本窗口内的 PR，分组写入，每条带 PR 链接，并写入 docs/changelog/changelog-v{version}.md",
+      "expected_output": "生成最新 release tag 的版本块，格式为 ## [v{VERSION}] - YYYY-MM-DD，包含该版本窗口内的 PR，分组写入，每条带 PR 链接，并写入 docs/changelog/changelog-v{version}.md",
       "assertions": [
         {
-          "id": "x_y_z_yyyy_mm_dd",
-          "description": "输出包含版本号和日期，格式 ## [x.y.z] - YYYY-MM-DD",
-          "text": "输出包含版本号和日期，格式 ## [x.y.z] - YYYY-MM-DD"
+          "id": "v_version_yyyy_mm_dd",
+          "description": "输出包含带 v 前缀的版本号和日期，格式 ## [v{VERSION}] - YYYY-MM-DD",
+          "text": "输出包含带 v 前缀的版本号和日期，格式 ## [v{VERSION}] - YYYY-MM-DD"
         },
         {
           "id": "release_tag",
