@@ -8,7 +8,7 @@
 - Test case: unreleased-mode
 - Workspace: `workspace/eval-001-unreleased-mode`
 - Classification: `(c) 依赖实时外部数据`。Prompt 要求读取 `anthropics/anthropic-sdk-python` 当前的 GitHub Release、merged PR 和 tag-to-main 状态；静态 fixture 或 mock 会改变被测场景，因此本轮不补 fixture。
-- Latest result: **PASS** — 本轮 fresh with-skill 与 fresh without-skill 分别独立查询 GitHub，均确认最新 release `v0.120.0` 后没有 merged PR，且 `v0.120.0...main` 为 identical。两者均生成真实的空 Unreleased 结果，没有为满足 PR-link assertion 编造条目。
+- Latest result: **PARTIAL** — 本轮 fresh with-skill 与 fresh without-skill 分别独立查询 GitHub，均确认最新 release `v0.120.0` 后没有 merged PR，且 `v0.120.0...main` 为 identical。两者均生成真实的空 Unreleased 结果；`unreleased` 与目标文件 assertions 通过，但 PR 链接、bot 过滤和维护变更过滤因没有候选样本而未被实际覆盖。
 
 ## Test Set / Fixture Version
 
@@ -44,9 +44,9 @@
 | Assertion | With skill | Without skill | Fresh judgment |
 | --- | --- | --- | --- |
 | `unreleased` | PASS | PASS | 两个候选都包含 `## [Unreleased]`。 |
-| `pr` | PASS（空集合） | PASS（空集合） | 窗口内没有条目；没有缺失链接的条目，也没有伪造 PR。本快照未正向覆盖非空 PR 的链接格式。 |
-| `bot_pr_dependabot` | PASS（空集合） | PASS（空集合） | 精确窗口内没有 bot PR 候选；两个候选均未引入窗口外的 release PR。 |
-| `chore_ci_test` | PASS（空集合） | PASS（空集合） | 精确窗口内没有 `chore` / `ci` / `test` 候选。当前 skill 对 `docs` / `test` / `ci` 采用语义审查，不是一概跳过；本窗口无法进一步区分。 |
+| `pr` | NOT EXERCISED | NOT EXERCISED | 窗口内没有条目。本快照无法正向验证非空 PR 的链接格式，不能把空集合当作可用性 PASS。 |
+| `bot_pr_dependabot` | NOT EXERCISED | NOT EXERCISED | 精确窗口内没有 bot PR 候选；未引入窗口外 PR 不等于实际执行了 bot 过滤。 |
+| `chore_ci_test` | NOT EXERCISED | NOT EXERCISED | 精确窗口内没有 `chore` / `ci` / `test` 候选，无法验证维护变更过滤或当前 skill 的语义审查。 |
 | `versioned_changelog_file` | PASS | PASS | 两次运行都把 artifact target 明确设为 `docs/changelog/changelog-unreleased.md`；根据 eval 运行期产物策略未写回 canonical fixture。 |
 
 ## With Skill
@@ -99,8 +99,8 @@ Observed behavior:
 
 ## Failures
 
-- 无 assertion failure。
-- Coverage caveat：live 窗口为空，因此 `pr`、`bot_pr_dependabot`、`chore_ci_test` 只有空集合证据，未正向验证非空 PR 的链接、bot 排除和低优先级前缀语义审查。不能通过伪造 fixture 或条目补足这种实时覆盖。
+- 未发现已执行分支的 skill 行为回归。
+- Coverage gap：live 窗口为空，因此 `pr`、`bot_pr_dependabot`、`chore_ci_test` 均为 `NOT EXERCISED`，未正向验证非空 PR 的链接、bot 排除和低优先级前缀语义审查。总体结论保持 `PARTIAL`，不能通过伪造 fixture 或条目补足这种实时覆盖。
 
 ## External Dependency Failure Policy
 
@@ -111,7 +111,7 @@ Observed behavior:
 ## Next Steps
 
 - 无需补 fixture 或修改 skill。
-- 外部仓库可能在 comparison 提交后立即产生新 release 或 merged PR；本结论只对应上面的两个独立抓取窗口，未来复验必须重新抓取并记录新时间点，不能把本 snapshot 当作固定事实。
+- 外部仓库可能在 comparison 提交后立即产生新 release 或 merged PR；未来出现非空 Unreleased 窗口时，应重新抓取并实际覆盖 PR 链接、bot 过滤和维护变更过滤，不能把本 snapshot 当作固定事实。
 
 ## Runtime Artifacts Policy
 
