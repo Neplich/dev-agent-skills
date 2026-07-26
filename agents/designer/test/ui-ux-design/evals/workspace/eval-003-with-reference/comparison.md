@@ -7,38 +7,38 @@
 - Eval: `eval-003-with-reference`
 - Test case: Design with Reference Website
 - Workspace: `workspace/eval-003-with-reference`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - 2026-07-26 fresh paired validation completed; with_skill and fresh without_skill both satisfied 2/2 assertions.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Design UI/UX using a reference website for style inspiration
+- Fixture: confirmed PM handoff, approved PRD, and a current stable-pattern record derived from the Linear reference
 - Expected output: 基于参考网站模式提炼出的 UI/UX 设计文档，包含参考分析与交互规格，并在设计交接处停止
 
 ## Assertions
 
-- `assertion_1`: 分析参考网站
-- `assertion_2`: 交接而非实现
+- PASS `assertion_1`: with_skill 分析参考网站的信息架构、布局节奏和交互模式。
+- PASS `assertion_2`: with_skill 交付设计规格后停止，没有进入前端实现。
 
 ## With Skill
 
-Observed behavior:
-
-- 当前 SKILL.md 明确在提供参考 URL 时提炼布局、信息架构和交互模式，并在设计文档完成后停止，不进入前端实现。
+- 生成 `docs/design/productivity-app-landing/ui-ux-spec.md`，提炼 Linear 的信息架构、布局节奏和交互模式，并明确禁止照搬品牌与视觉资产。
+- 提供用户旅程、布局与状态规格，停止在设计交接。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+
+- 2026-07-26 使用同一 prompt 和 fixture 重新生成 fresh baseline，未读取或应用 designer skill、Agent README、历史 comparison 或旧 baseline。
+- baseline 同样满足 2/2 assertions，能够根据稳定 reference 记录提炼结构和交互并停止实现；相较 with_skill，可执行规格深度较弱。
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- 无 assertion failure。
+- 当前 assertions 对 skill 增益的区分度有限，增益主要体现在参考边界和规格深度。
 
 ## Next Steps
 
-- 保留该 eval 覆盖 reference analysis 与 handoff 结论。
+- 保留该 eval 对 reference analysis、禁止照搬和设计 handoff 的覆盖。
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- Runtime transcripts, verdicts, timing, outputs, and diagnostics were generated only in an ignored scratch workspace and are not committed.

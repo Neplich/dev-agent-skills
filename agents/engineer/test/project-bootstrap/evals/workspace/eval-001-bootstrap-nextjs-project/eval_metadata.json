@@ -3,5 +3,8 @@
   "eval_name": "bootstrap-nextjs-project",
   "workspace_root": "agents/engineer/test/project-bootstrap/evals/workspace/eval-001-bootstrap-nextjs-project",
   "skill_availability_goal": "Verifies that project-bootstrap handles bootstrap-nextjs-project and produces the expected role-specific artifact.",
-  "prompt": "根据 docs/trd.md 初始化一个 Next.js 项目"
+  "prompt": "根据 docs/trd.md 初始化一个 Next.js 项目",
+  "fixture_context": [
+    "docs/trd.md"
+  ]
 }

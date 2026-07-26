@@ -7,38 +7,36 @@
 - Eval: `eval-002-detect-monorepo`
 - Test case: detect-monorepo
 - Workspace: `workspace/eval-002-detect-monorepo`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS (2/2 assertions) - fresh Codex paired validation completed on 2026-07-26
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that codebase-analyzer handles detect-monorepo and produces the expected role-specific artifact.
-- Expected output: Monorepo 判断结果，如果是则列出 packages/apps 子项目
+- Fixture: repo-level Engineering context, root workspaces metadata, `pnpm-workspace.yaml`, and three package manifests
+- Fresh run: isolated paired copies under `tmp/eval-runs/issue-158-round1/engineer-a/`; baseline was regenerated from the same prompt and fixture
+- Source branch: `test/issue-158-round1-thin-fixtures`
 
 ## Assertions
 
-- `assertion_1`: 明确判断
-- `assertion_2`: 子项目列表
+- PASS `assertion_1`: explicitly identifies a pnpm monorepo from both workspace markers.
+- PASS `assertion_2`: lists `apps/web`, `apps/api`, and `packages/shared`.
 
-## With Skill
+## With Skill Behavior
 
-Observed behavior:
+The candidate tied the monorepo conclusion to both root manifests and reported every discovered workspace path with package evidence.
 
-- 当前 SKILL.md 要检查 monorepo indicators，并在 monorepo edge case 中分析 root workspace 和 packages/apps；可明确判断并列出子项目路径。
+## Without Skill Baseline
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+The fresh baseline also satisfied 2/2 assertions. The fixture makes the classification explicit; the skill adds evidence structure but no assertion-level gain.
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- With-skill and baseline: none.
 
 ## Next Steps
 
-- 如后续增强 fixture，可补充实际 workspace 配置。
+Keep the eval as a stable positive monorepo detection case.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+Paired outputs and scratch copies are ignored runtime artifacts and are not committed.

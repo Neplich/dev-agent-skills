@@ -7,7 +7,7 @@
       "id": "eval-001-analyze-nodejs-project",
       "name": "analyze-nodejs-project",
       "description": "Verifies that codebase-analyzer handles analyze-nodejs-project and produces the expected role-specific artifact.",
-      "prompt": "分析这个 Node.js 项目的代码库结构、技术栈和编码规范",
+      "prompt": "engineer-agent 已确认需要 repo-level Project Profile，入口依据见 workspace `ENGINEERING_CONTEXT.md`。分析这个 Node.js 项目的代码库结构、技术栈和编码规范",
       "workspace": "workspace/eval-001-analyze-nodejs-project",
       "expected_output": "结构化的 Project Profile，包含技术栈识别、目录结构、编码规范、依赖分析、架构模式",
       "assertions": [
@@ -37,7 +37,7 @@
       "id": "eval-002-detect-monorepo",
       "name": "detect-monorepo",
       "description": "Verifies that codebase-analyzer handles detect-monorepo and produces the expected role-specific artifact.",
-      "prompt": "这个项目是 monorepo 吗？如果是，列出所有子项目",
+      "prompt": "engineer-agent 已确认需要 repo-level Project Profile，入口依据见 workspace `ENGINEERING_CONTEXT.md`。这个项目是 monorepo 吗？如果是，列出所有子项目",
       "workspace": "workspace/eval-002-detect-monorepo",
       "expected_output": "Monorepo 判断结果，如果是则列出 packages/apps 子项目",
       "assertions": [

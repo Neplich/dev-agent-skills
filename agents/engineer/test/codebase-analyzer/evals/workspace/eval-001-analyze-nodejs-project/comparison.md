@@ -7,40 +7,39 @@
 - Eval: `eval-001-analyze-nodejs-project`
 - Test case: analyze-nodejs-project
 - Workspace: `workspace/eval-001-analyze-nodejs-project`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS (4/4 assertions) - fresh Codex paired validation completed on 2026-07-26
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that codebase-analyzer handles analyze-nodejs-project and produces the expected role-specific artifact.
-- Expected output: 结构化的 Project Profile，包含技术栈识别、目录结构、编码规范、依赖分析、架构模式
+- Fixture: `ENGINEERING_CONTEXT.md`, Node/Express manifest, source/test samples, ESLint and Prettier configs
+- Fresh run: isolated `with_skill` and newly generated `without_skill` copies under `tmp/eval-runs/issue-158-round1/engineer-a/`; no historical comparison or baseline was used
+- Source branch: `test/issue-158-round1-thin-fixtures`
 
 ## Assertions
 
-- `assertion_1`: 识别技术栈
-- `assertion_2`: 目录结构分析
-- `assertion_3`: 编码规范检测
-- `yaml`: 输出 YAML 格式
+- PASS `assertion_1`: YAML profile identifies JavaScript, Node.js 22, Express 5.1.0 and npm 11.4.2.
+- PASS `assertion_2`: profile lists `src/` and `test/`.
+- PASS `assertion_3`: profile records `eslint.config.js` and `.prettierrc.json`.
+- PASS `yaml`: Project Profile is emitted as YAML.
 
-## With Skill
+## With Skill Behavior
 
-Observed behavior:
+The candidate used the repo-level Engineer context and real project markers, sampled source and tests, and produced the full Project Profile schema without inventing feature scope.
 
-- 当前 SKILL.md 明确要求扫描项目结构、识别 package manager/framework/language、提取 lint/format 规范，并以 YAML Project Profile 输出 source_dirs、test_dirs 等字段，满足断言。
+## Without Skill Baseline
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+The fresh baseline identified the same stack, directories and lint/format tools, but returned prose and a table rather than YAML. Baseline result: 3/4 assertions.
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- With-skill: none.
+- Baseline: `yaml` failed.
 
 ## Next Steps
 
-- 保留无运行期产物策略。
+Keep the fixture and assertions unchanged; regenerate both sides when project-profile behavior changes.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+Runtime outputs remain under ignored `tmp/eval-runs/issue-158-round1/` and are not committed. The durable result is this comparison only.

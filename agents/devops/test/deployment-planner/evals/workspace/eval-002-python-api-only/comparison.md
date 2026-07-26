@@ -7,39 +7,39 @@
 - Eval: `eval-002-python-api-only`
 - Test case: python-api-only
 - Workspace: `workspace/eval-002-python-api-only`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - 2026-07-26 fresh paired validation completed; with_skill and fresh without_skill both satisfied 3/3 assertions.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that deployment-planner handles python-api-only and produces the expected role-specific artifact.
+- Fixture: confirmed API-only deployment handoff, FastAPI manifest, and health endpoint with an explicit no-database boundary
 - Expected output: 生成简化的部署配置，不包含数据库相关内容
 
 ## Assertions
 
-- `deploy_local_env_example_database_url`: deploy/local/.env.example 不包含 DATABASE_URL
-- `deploy_docker_docker_compose_yml_app`: deploy/docker/docker-compose.yml 只有 app 服务
-- `deploy_local_start_sh`: deploy/local/start.sh 不包含数据库初始化步骤
+- PASS `deploy_local_env_example_database_url`: local env 不包含 `DATABASE_URL`。
+- PASS `deploy_docker_docker_compose_yml_app`: Compose 仅包含 app 服务。
+- PASS `deploy_local_start_sh`: start script 不包含数据库初始化。
 
 ## With Skill
 
-Observed behavior:
-
-- 当前 skill 的 no database edge case 要求跳过数据库相关配置；FastAPI API-only 场景可生成简化部署配置，不包含 DATABASE_URL，不添加数据库服务，也不写数据库初始化步骤。
+- 满足 3 项负向边界断言，并额外提供 non-root 镜像、healthcheck 和 Helm probes/resources。
+- Compose 解析通过。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+
+- 2026-07-26 使用同一 prompt 和 fixture 重新生成 fresh baseline，未读取或应用 deployment-planner skill、Agent README、历史 comparison 或旧 baseline。
+- baseline 同样满足 3/3 assertions，没有引入数据库变量、服务或初始化步骤。
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- 无 assertion failure。
+- 环境中没有 Helm，未运行 `helm lint`；当前 assertions 对 skill 增益的区分度有限。
 
 ## Next Steps
 
-- 无需修改当前 skill 指令。
+- 保留 API-only 的 no-database 负向覆盖。
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- Runtime transcripts, verdicts, timing, outputs, and diagnostics were generated only in an ignored scratch workspace and are not committed.

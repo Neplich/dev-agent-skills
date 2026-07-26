@@ -3,5 +3,14 @@
   "eval_name": "detect-monorepo",
   "workspace_root": "agents/engineer/test/codebase-analyzer/evals/workspace/eval-002-detect-monorepo",
   "skill_availability_goal": "Verifies that codebase-analyzer handles detect-monorepo and produces the expected role-specific artifact.",
-  "prompt": "这个项目是 monorepo 吗？如果是，列出所有子项目"
+  "prompt": "engineer-agent 已确认需要 repo-level Project Profile，入口依据见 workspace `ENGINEERING_CONTEXT.md`。这个项目是 monorepo 吗？如果是，列出所有子项目",
+  "feature_path": "N/A",
+  "fixture_context": [
+    "ENGINEERING_CONTEXT.md",
+    "package.json",
+    "pnpm-workspace.yaml",
+    "apps/web/package.json",
+    "apps/api/package.json",
+    "packages/shared/package.json"
+  ]
 }

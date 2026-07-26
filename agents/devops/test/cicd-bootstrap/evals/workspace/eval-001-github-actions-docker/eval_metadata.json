@@ -3,5 +3,16 @@
   "eval_name": "github-actions-docker",
   "workspace_root": "agents/devops/test/cicd-bootstrap/evals/workspace/eval-001-github-actions-docker",
   "skill_availability_goal": "Verifies that cicd-bootstrap handles github-actions-docker and produces the expected role-specific artifact.",
-  "prompt": "我的项目在 GitHub，使用 Docker 部署。帮我搭建 CI/CD 流程：PR 时运行测试，main 分支合并后自动部署到 staging。"
+  "prompt": "pm-agent 已完成项目级 CI/CD 入口分类并路由至 cicd-bootstrap；确认 handoff 见 workspace `PM_HANDOFF.md`，本任务为 `feature_path: N/A` 的 repo-wide automation。我的项目在 GitHub，使用 Docker 部署。帮我搭建 CI/CD 流程：PR 时运行测试，main 分支合并后自动部署到 staging。",
+  "feature_path": "N/A",
+  "fixture_context": [
+    "PM_HANDOFF.md",
+    "package.json",
+    "package-lock.json",
+    "eslint.config.js",
+    "src/server.js",
+    "test/server.test.js",
+    "deploy/docker/Dockerfile",
+    "deploy/docker/docker-compose.staging.yml"
+  ]
 }

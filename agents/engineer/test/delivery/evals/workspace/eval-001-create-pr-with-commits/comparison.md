@@ -7,40 +7,39 @@
 - Eval: `eval-001-create-pr-with-commits`
 - Test case: create-pr-with-commits
 - Workspace: `workspace/eval-001-create-pr-with-commits`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS (4/4 assertions) - fresh Codex paired validation completed on 2026-07-26
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that delivery handles create-pr-with-commits and produces the expected role-specific artifact.
-- Expected output: 分支创建 + 提交 + PR 创建 + CI 检查
+- Fixture: completed-work handoff, PM reference, changed source/test, passing test command and CI workflow
+- Fresh run: both isolated copies created a feature branch and Conventional Commit, ran `npm test`, pushed a remote branch, opened a real temporary GitHub PR, and waited for hosted CI.
+- Hosted evidence: with_skill [PR #170](https://github.com/Neplich/dev-agent-skills/pull/170) at `129da903c5a2be7d25d53ed58ab28d7ab77459d5`; fresh without_skill [PR #169](https://github.com/Neplich/dev-agent-skills/pull/169) at `602726696738d32095ee63225837946e247b7152`.
+- Cleanup: both temporary PRs were closed without merge after validation and both remote branches were deleted.
 
 ## Assertions
 
-- `assertion_1`: 创建功能分支
-- `assertion_2`: 有意义的提交
-- `pr`: PR 包含必要信息
-- `ci`: 检查 CI 状态
+- PASS `assertion_1`: creates a project-conformant feature branch.
+- PASS `assertion_2`: creates a Conventional Commit.
+- PASS `pr`: each side created a real GitHub PR whose body includes a summary, canonical PM document, Issue #123 and passing tests.
+- PASS `ci`: each side waited for hosted `repository-contract`, `eval-contract`, `doc-contract` and `python-tests`; all eight checks completed with `SUCCESS`.
 
-## With Skill
+## With Skill Behavior
 
-Observed behavior:
+The candidate verified scope and tests, staged only scoped files, completed branch/commit/push/PR delivery, and waited for all hosted CI checks before reporting success.
 
-- 当前 SKILL.md 覆盖 git 状态检查、按项目规范建分支、定向 stage、Conventional Commit、PR body 含摘要/PM 文档/测试状态，并在创建 PR 后检查 CI。
+## Without Skill Baseline
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+The fresh baseline independently created PR #169 and waited for all four hosted CI checks, so it also satisfied 4/4 assertions. The skill adds a more explicit staged-scope review and CI evidence structure, but the assertions do not distinguish it.
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- With-skill and baseline: none.
 
 ## Next Steps
 
-- 无需修改当前 skill 指令。
+Keep the temporary-PR cleanup rule and hosted CI evidence requirement explicit in future paired runs.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+Scratch `.git` directories, responses and diagnostics are ignored and not committed. Temporary PRs are retained only as closed GitHub evidence; their remote branches were deleted.

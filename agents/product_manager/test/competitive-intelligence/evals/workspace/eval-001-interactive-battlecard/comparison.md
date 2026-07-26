@@ -7,39 +7,39 @@
 - Eval: `eval-001-interactive-battlecard`
 - Test case: interactive-battlecard
 - Workspace: `workspace/eval-001-interactive-battlecard`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - 2026-07-26 fresh paired validation completed; with_skill and fresh without_skill both satisfied 3/3 assertions.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that competitive-intelligence creates an evidence-aware interactive battlecard plan.
+- Fixture: confirmed seller context and an official-source competitive pack for Notion, Superhuman Docs, and Airtable
 - Expected output: 面向销售的 battlecard 输出，包含竞品卡片、功能/定价/定位对比、近期变化、反驳话术和证据来源说明。
 
 ## Assertions
 
-- `battlecard`: 形成 battlecard 结构
-- `sales_context`: 面向销售场景
-- `freshness`: 处理近期变化
+- PASS `battlecard`: with_skill 提供跨竞品矩阵和逐竞品卡片。
+- PASS `sales_context`: with_skill 包含 objections、talk tracks、landmine questions 和定位建议。
+- PASS `freshness`: with_skill 标注 2026-04-27 至 2026-07-26 的 90 天窗口，并提示实时核验易变事实。
 
 ## With Skill
 
-Observed behavior:
-
-- 当前 skill 明确产出交互式 HTML battlecard，包含竞品卡片、横向矩阵、功能/定价/定位、近 90 天发布、talk tracks、objection handling 和 freshness 说明，满足断言。
+- 生成自包含的交互式 HTML，提供 tabs、逐卡官方链接和 fact/inference 标签。
+- 2026-07-26 fresh validator 核验官方定价、更新和品牌迁移资料；没有把 Airtable 窗口内未确认的发布事件虚构为产品发布。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+
+- 2026-07-26 使用同一 prompt 和 fixture 重新生成 fresh baseline，未读取或应用 competitive-intelligence skill、Agent README、历史 comparison 或旧 baseline。
+- baseline 同样满足 3/3 assertions，包含矩阵、竞品段落、objections 和 freshness；相较 with_skill，交互性、销售落地性和证据标注较弱。
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- 无 assertion failure。
+- 竞品事实具有时效性，后续实际使用仍需按输出提示实时复核。
 
 ## Next Steps
 
-- 实际运行若缺少本方公司信息，应先确认 seller context 或显式使用占位。
+- 保留 seller context、官方来源、近 90 天窗口和 fact/inference 边界。
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- Runtime transcripts, verdicts, timing, generated HTML, outputs, and diagnostics were kept only in an ignored scratch workspace and are not committed.

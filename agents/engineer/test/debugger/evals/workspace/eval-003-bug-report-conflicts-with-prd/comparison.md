@@ -7,58 +7,40 @@
 - Eval: `eval-003-bug-report-conflicts-with-prd`
 - Test case: bug-report-conflicts-with-prd
 - Workspace: `workspace/eval-003-bug-report-conflicts-with-prd`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation on 2026-06-23
+- Latest result: PASS (5/5 assertions) - fresh Codex paired validation completed on 2026-07-26
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that debugger hands off to PM when a reported bug is
-  actually a request to change approved PRD/TRD behavior.
-- Expected output: 识别用户期望与 PRD/TRD 冲突，停止修复路径，交回
-  `pm-agent:idea-to-spec` 的 `existing-project-update` 路径更新 PRD 或产品决策记录并同步 TRD，不产出修复计划或代码改动。
+- Fixture: same-path confirmed PRD and TRD that both exclude archived notifications from active
+- Fresh run: isolated paired copies under `tmp/eval-runs/issue-158-round1/engineer-a/`; no historical baseline was reused
+- Source branch: `test/issue-158-round1-thin-fixtures`
 
-## With Skill
+## Assertions
 
-Current `SKILL.md` satisfies all assertions:
+- PASS `detects_prd_conflict`: classifies the report as `requirement_change`.
+- PASS `hands_off_to_pm_update`: names `pm-agent:idea-to-spec` and the `existing-project-update` lane, then requires TRD synchronization.
+- PASS `blocks_e2e_when_expectation_changes`: blocks new E2E expectations until PRD/decision, TRD and confirmed implementation plan align.
+- PASS `does_not_produce_repair_plan`: produces no repair plan, code or test change.
+- PASS `blocks_explicit_skip_override`: states that a skip request remains a blocker/risk, not authorization.
 
-- Fresh Codex subagent validation on 2026-06-23 read the current skill docs, Engineer README, eval definition, fixture metadata/context, and this comparison; all listed assertions are satisfied.
-  `debugger` routes approved PRD/TRD conflicts back to PM, blocks E2E
-  expectation changes until PRD/TRD/IMPLEMENTATION_PLAN alignment is complete,
-  and no longer treats explicit PRD-alignment skip requests as permission for
-  repair planning or implementation.
-- `detects_prd_conflict`: Step 0 requires reading approved PRD/TRD and stopping
-  when the user's requested behavior conflicts with those expected-behavior
-  documents.
-- `hands_off_to_pm_update`: Step 0 requires handing off to
-  `pm-agent:idea-to-spec` using the `existing-project-update` lane when the
-  requested behavior conflicts with approved PRD/TRD.
-- `blocks_e2e_when_expectation_changes`: Step 0 blocks writing the new
-  expectation into `docs/qa/e2e/**` until PM updates the PRD or product decision
-  record, TRD is synchronized, and a confirmed
-  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` exists.
-- `does_not_produce_repair_plan`: Step 0 says to stop before repair planning
-  for a PRD/TRD conflict; Core Principle and Repair Plan Gate prohibit fixing
-  before the repair plan flow is confirmed.
-- `blocks_explicit_skip_override`: Step 0 treats a user request to skip PRD
-  alignment as a blocker or risk note, not as permission to continue into repair
-  planning, implementation, or E2E updates.
+## With Skill Behavior
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing,
-  evidence, and artifact expectations are preserved.
+The candidate used the durable expectation chain, stopped before reproduction or repair, and gave the exact PM update route and downstream gates.
+
+## Without Skill Baseline
+
+The fresh baseline noticed the PRD conflict and declined to fix, but did not name the exact PM lane, the E2E blocker chain, or the skip-override rule. Baseline result: 2/5 assertions.
 
 ## Failures
 
-- None.
+- With-skill: none.
+- Baseline: `hands_off_to_pm_update`, `blocks_e2e_when_expectation_changes`, and `blocks_explicit_skip_override` failed.
 
 ## Next Steps
 
-- Keep this eval covering PRD/TRD conflict routing, E2E expectation-change
-  blocking, and explicit PRD-alignment skip blocking.
+Keep this as the requirement-change negative path.
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be
-  committed.
+Only this durable comparison is committed; paired responses stay in ignored scratch space.

@@ -3,5 +3,13 @@
   "eval_name": "create-pr-with-commits",
   "workspace_root": "agents/engineer/test/delivery/evals/workspace/eval-001-create-pr-with-commits",
   "skill_availability_goal": "Verifies that delivery handles create-pr-with-commits and produces the expected role-specific artifact.",
-  "prompt": "代码已完成，创建 PR 并关联 Issue #123"
+  "prompt": "已完成工作的 scope、changed files 与验证状态见 workspace `DELIVERY_HANDOFF.md`。代码已完成，创建 PR 并关联 Issue #123",
+  "fixture_context": [
+    "DELIVERY_HANDOFF.md",
+    "docs/pm/notifications/PRD.md",
+    "package.json",
+    "src/notification-status.js",
+    "test/notification-status.test.js",
+    ".github/workflows/ci.yml"
+  ]
 }

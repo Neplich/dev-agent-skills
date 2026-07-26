@@ -7,42 +7,42 @@
 - Eval: `eval-001-docker-rollback`
 - Test case: docker-rollback
 - Workspace: `workspace/eval-001-docker-rollback`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
+- Latest result: PASS - 2026-07-26 fresh paired validation completed; with_skill and fresh without_skill both satisfied 6/6 assertions.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that incident-playbook-writer handles docker-rollback and produces the expected role-specific artifact.
+- Fixture: confirmed repo-wide incident handoff and real Docker Compose rollback context
 - Expected output: 生成运维手册，包含回滚、故障响应、排查指南
 
 ## Assertions
 
-- `deploy_rollback_md`: deploy/ROLLBACK.md 存在
-- `rollback_md_docker`: ROLLBACK.md 包含 docker 回滚命令
-- `deploy_incident_response_md`: deploy/INCIDENT_RESPONSE.md 存在
-- `incident_response_md`: INCIDENT_RESPONSE.md 包含常见故障场景
-- `deploy_troubleshooting_md`: deploy/TROUBLESHOOTING.md 存在
-- `deploy_on_call_md`: deploy/ON_CALL.md 存在
+- PASS `deploy_rollback_md`: 生成 `deploy/ROLLBACK.md`。
+- PASS `rollback_md_docker`: 回滚文档包含绑定 fixture 的 Docker 命令。
+- PASS `deploy_incident_response_md`: 生成 incident response 文档。
+- PASS `incident_response_md`: 覆盖常见故障场景。
+- PASS `deploy_troubleshooting_md`: 生成 troubleshooting 文档。
+- PASS `deploy_on_call_md`: 生成 on-call 文档。
 
 ## With Skill
 
-Observed behavior:
-
-- 当前 skill 对 Docker 部署回滚和故障处理有明确产物要求：deploy/ROLLBACK.md、deploy/INCIDENT_RESPONSE.md、deploy/TROUBLESHOOTING.md、deploy/ON_CALL.md，并要求回滚命令、常见故障场景和排查命令绑定实际 Docker 部署方式。
+- 满足 6 项断言，并额外覆盖回滚前置条件、中止规则、P1/P2 响应、角色升级、证据保留与 closeout。
+- 输入 Compose 配置解析通过。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+
+- 2026-07-26 使用同一 prompt 和 fixture 重新生成 fresh baseline，未读取或应用 incident-playbook-writer skill、Agent README、历史 comparison 或旧 baseline。
+- baseline 同样满足 6/6 assertions，但前置条件、响应分级与证据闭环较简略。
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- 无 assertion failure。
+- 未执行真实回滚或故障演练；当前 assertions 对 skill 增益的区分度有限。
 
 ## Next Steps
 
-- 无需修改当前 skill 指令。
+- 保留四份运维文档和真实 Docker 命令覆盖。
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- Runtime transcripts, verdicts, timing, outputs, and diagnostics were generated only in an ignored scratch workspace and are not committed.

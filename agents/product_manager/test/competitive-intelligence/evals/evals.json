@@ -7,7 +7,7 @@
       "id": "eval-001-interactive-battlecard",
       "name": "interactive-battlecard",
       "description": "Verifies that competitive-intelligence creates an evidence-aware interactive battlecard plan.",
-      "prompt": "帮我调研 Notion、Coda、Airtable 三个竞品，输出可用于销售沟通的 battlecard，包含功能对比、定价信号、近期发布和 objection handling。",
+      "prompt": "本方销售背景和已有竞品资料见 workspace `SELLER_CONTEXT.md` 与 `COMPETITIVE_SOURCE_PACK.md`；近期信息仍须按最新公开来源核验。帮我调研 Notion、Coda、Airtable 三个竞品，输出可用于销售沟通的 battlecard，包含功能对比、定价信号、近期发布和 objection handling。",
       "workspace": "workspace/eval-001-interactive-battlecard",
       "expected_output": "面向销售的 battlecard 输出，包含竞品卡片、功能/定价/定位对比、近期变化、反驳话术和证据来源说明。",
       "assertions": [

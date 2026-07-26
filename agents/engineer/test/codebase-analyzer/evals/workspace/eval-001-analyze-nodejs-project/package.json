@@ -1,0 +1,22 @@
+{
+  "name": "orders-api",
+  "version": "1.0.0",
+  "type": "module",
+  "packageManager": "npm@11.4.2",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test",
+    "lint": "eslint .",
+    "format": "prettier --check ."
+  },
+  "dependencies": {
+    "express": "5.1.0"
+  },
+  "devDependencies": {
+    "eslint": "9.31.0",
+    "prettier": "3.6.2"
+  }
+}

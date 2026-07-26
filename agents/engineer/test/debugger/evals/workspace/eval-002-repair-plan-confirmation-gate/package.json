@@ -1,0 +1,8 @@
+{
+  "name": "notifications-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

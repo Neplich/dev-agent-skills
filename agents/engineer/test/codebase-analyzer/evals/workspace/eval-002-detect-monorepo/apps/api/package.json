@@ -1,0 +1,7 @@
+{
+  "name": "@acme/api",
+  "private": true,
+  "dependencies": {
+    "fastify": "5.4.0"
+  }
+}

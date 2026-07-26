@@ -7,48 +7,42 @@
 - Eval: `eval-001-prd-to-engineer-trd`
 - Test case: prd-to-engineer-trd
 - Workspace: `workspace/eval-001-prd-to-engineer-trd`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation on 2026-06-23
+- Latest result: PASS - 2026-07-26 fresh paired validation completed; with_skill satisfied 6/6 assertions and fresh without_skill satisfied 4/6.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Verifies that trd-gen owns technical planning after PRD confirmation and stops before implementation.
+- Fixture: confirmed capture-loop PRD, resolved product decisions, and repository context
 - Expected output: 生成或更新 docs/engineer/{feature_path}/TRD.md，明确 TRD 确认后再移交 feature-implementor 编写实现计划文档，不进入代码实现。
 
 ## Assertions
 
-- `engineer_owns_trd`: TRD 属于 Engineer 产物
-- `prd_confirmed_handoff`: PRD 确认后再进入 TRD
-- `document_subagent`: 文档编写委派
-- `implementation_plan_handoff`: TRD 后移交实现计划
-- `qa_e2e_after_confirmed_plan`: E2E 在确认计划后交接
-- `no_code_implementation`: 不直接进入实现
+- PASS `engineer_owns_trd`: TRD 明确为 Engineer 产物。
+- PASS `prd_confirmed_handoff`: 先确认 PRD 与 decisions，再进入 TRD。
+- PASS `document_subagent`: 文档写作由 fresh document-writing sub-agent 执行，主进程复核。
+- PASS `implementation_plan_handoff`: TRD 确认后才移交 feature-implementor，并指向精确计划路径。
+- PASS `qa_e2e_after_confirmed_plan`: QA E2E 需 confirmed TRD、confirmed plan、implemented/verified 与 handoff packet。
+- PASS `no_code_implementation`: 没有进入代码实现。
 
 ## With Skill
 
-Observed behavior:
-
-- Fresh Codex subagent validation on 2026-06-23 read the current skill docs, Engineer README, eval definition, fixture metadata/context, and this comparison; all listed assertions are satisfied.
-- 当前 `SKILL.md` 明确 `trd-gen` 是 Engineer-owned technical planning skill，写入 `docs/engineer/{feature_path}/TRD.md`，且 Engineer README 也将 `trd-gen` 定义为 PRD / DECISIONS 确认后的技术计划编写产物。
-- 当前 `SKILL.md` 要求 PRD、产品决策或验收范围不稳定时停止并交回 `pm-agent:idea-to-spec`；checkpoint language 明确 “PRD 已确认，当前进入 Engineer TRD 阶段”。
-- 当前 `SKILL.md` 要求所有 TRD 编写和修订在可用时委派给 fresh document-writing sub-agent，主进程保留源上下文、最终判断和返回后的审查。
-- 当前 `SKILL.md` 要求 TRD 由 maintainer 确认后才显式移交 `feature-implementor`，并由 `feature-implementor` 编写 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 后再进入实现。
-- 当前 `SKILL.md` 对 gap packet 和 handoff 的约束说明，在 TRD 确认或 open questions 被明确接受为非阻塞前，不得路由到 `feature-implementor`、`debugger` 或 QA E2E 文档更新；因此 TRD 请求不会直接触发代码完成后的 QA E2E 文档补充。
-- 当前 `SKILL.md` 明确 `trd-gen` 不负责代码实现，也不负责 TRD approval 后的 implementation plan 文档；handoff 文案要求未经用户确认不得继续实现。
+- fresh document-writing sub-agent 生成 `docs/engineer/capture-loop/TRD.md`，主 validator 复核。
+- 对 fixture 尚未提供的队列能力、幂等语义和真实验证命令保留 owner 与 unblock condition，没有隐藏未知。
 
 ## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+
+- 2026-07-26 使用同一 prompt 和 fixture 重新生成 fresh baseline，未读取或应用 trd-gen skill、Agent README、历史 comparison 或旧 baseline。
+- baseline 满足 Engineer ownership、PRD 确认、计划 handoff 与 no-code 4 项；没有执行 document sub-agent 委派，也没有保持完整 QA E2E sequencing，因此为 4/6。
 
 ## Failures
 
-- None found.
+- with_skill 无 assertion failure。
+- baseline 在 `document_subagent` 和 `qa_e2e_after_confirmed_plan` 上失败。
 
 ## Next Steps
 
-- 保持该 eval 覆盖 PM 到 TRD 的 handoff，以及 TRD 确认后才进入 IMPLEMENTATION_PLAN 和 QA E2E 文档补充的门禁。
+- 保留文档委派、计划 handoff 和 QA E2E sequencing 的可测增益。
 
 ## Runtime Artifacts Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- Runtime transcripts, verdicts, timing, generated TRD, outputs, and diagnostics were kept only in an ignored scratch workspace and are not committed.
