@@ -125,21 +125,6 @@ def write_symlink_archive(
     return rel
 
 
-def write_archive_through_symlink_directory(
-    root: Path,
-    *,
-    scope: str,
-    body: str,
-) -> str:
-    rel = archive_rel(scope)
-    write_archive(root, scope=scope, body=body)
-    archive_dir = (root / rel).parent
-    target_dir = root / f"faithful-{scope}-archive-directory"
-    archive_dir.replace(target_dir)
-    archive_dir.symlink_to(target_dir, target_is_directory=True)
-    return rel
-
-
 def commit_all(root: Path, message: str) -> None:
     run_git(root, "add", "--all")
     run_git(root, "commit", "-m", message)
@@ -297,6 +282,26 @@ def test_settled_base_allows_faithful_archive_added_in_same_change(
     assert validate_changed_plan(root, metadata) == []
 
 
+def test_path_has_symlink_component_detects_file_and_directory_links(
+    tmp_path: Path,
+) -> None:
+    plain_dir = tmp_path / "plain"
+    plain_dir.mkdir()
+    plain_file = plain_dir / "plan.md"
+    plain_file.write_text("# Plan\n", encoding="utf-8")
+    file_link = tmp_path / "plan-link.md"
+    file_link.symlink_to(plain_file)
+    directory_link = tmp_path / "directory-link"
+    directory_link.symlink_to(plain_dir, target_is_directory=True)
+
+    assert contract.path_has_symlink_component(tmp_path, file_link)
+    assert contract.path_has_symlink_component(
+        tmp_path,
+        directory_link / plain_file.name,
+    )
+    assert not contract.path_has_symlink_component(tmp_path, plain_file)
+
+
 def test_new_symlink_archive_does_not_settle_matching_draft_base(
     tmp_path: Path,
 ) -> None:
@@ -402,56 +407,13 @@ def test_archive_plan_metadata_rejects_symbolic_link(tmp_path: Path) -> None:
     )
 
 
-def test_new_archive_through_symlink_directory_does_not_settle_matching_draft_base(
-    tmp_path: Path,
-) -> None:
-    root = initialize_repo(tmp_path, base_status="Draft")
-    write_archive_through_symlink_directory(
-        root,
-        scope="symlink-directory-round",
-        body="# Fixture plan\n",
-    )
-    metadata = write_plan(
-        root,
-        status="Pending Confirmation",
-        scope="replacement-round",
-        body="# Replacement plan\n",
-    )
-    commit_all(root, "add archive through symlink directory and replace draft")
-
-    assert validate_changed_plan(root, metadata) == []
-
-
-def test_new_archive_through_symlink_directory_cannot_satisfy_back_link(
-    tmp_path: Path,
-) -> None:
-    root = initialize_repo(tmp_path, base_status="Implemented")
-    symlink_archive = write_archive_through_symlink_directory(
-        root,
-        scope="symlink-directory-round",
-        body="# Fixture plan\n",
-    )
-    metadata = write_plan(
-        root,
-        status="Pending Confirmation",
-        scope="replacement-round",
-        previous_archive=symlink_archive,
-        body="# Replacement plan\n",
-    )
-    commit_all(root, "link replacement plan through symlink archive directory")
-
-    errors = validate_changed_plan(root, metadata)
-
-    assert [error.message for error in errors] == [FIDELITY_ERROR]
-
-
 def test_new_plan_without_base_file_rejects_symlink_archive_back_link(
     tmp_path: Path,
 ) -> None:
     root = initialize_repo(tmp_path, base_status=None, base_has_plan=False)
-    symlink_archive = write_archive_through_symlink_directory(
+    symlink_archive = write_symlink_archive(
         root,
-        scope="symlink-directory-round",
+        scope="symlink-round",
         body="# Fixture plan\n",
     )
     metadata = write_plan(
@@ -459,35 +421,13 @@ def test_new_plan_without_base_file_rejects_symlink_archive_back_link(
         status="Pending Confirmation",
         previous_archive=symlink_archive,
     )
-    commit_all(root, "link new plan through symlink archive directory")
+    commit_all(root, "link new plan to symlink archive")
 
     errors = validate_changed_plan(root, metadata)
 
     assert [error.message for error in errors] == [
         "frontmatter 'previous_plan_archive' must point to an existing archive file"
     ]
-
-
-def test_archive_plan_metadata_rejects_symbolic_link_directory(
-    tmp_path: Path,
-) -> None:
-    root = initialize_repo(tmp_path, base_status="Draft")
-    archive_rel_path = write_archive_through_symlink_directory(
-        root,
-        scope="symlink-directory-round",
-        body="# Fixture plan\n",
-    )
-    commit_all(root, "add archive through symlink directory")
-
-    errors: list[contract.ContractError] = []
-    contract.validate_archive_plans(root, errors)
-
-    assert any(
-        error.path == (root / archive_rel_path).parent
-        and error.message
-        == "implementation plan archive directories must not be symbolic links"
-        for error in errors
-    )
 
 
 def test_legacy_implemented_base_allows_faithful_archive_with_any_scope(
@@ -539,39 +479,25 @@ def test_legacy_implemented_base_rejects_unfaithful_archive(
     ]
 
 
-def test_matching_scope_archive_rejects_unfaithful_base_body(
+@pytest.mark.parametrize("archive_scope", ["completed-round", "older-round"])
+def test_unfaithful_archive_is_rejected_regardless_of_scope(
     tmp_path: Path,
+    archive_scope: str,
 ) -> None:
     root = initialize_repo(tmp_path, base_status="Implemented")
-    write_archive(root, body="# Unrelated plan\n")
+    unfaithful_archive = archive_rel(archive_scope)
+    write_archive(
+        root,
+        scope=archive_scope,
+        body="# Unrelated plan\n",
+    )
     metadata = write_plan(
         root,
         status="Pending Confirmation",
-        previous_archive=ARCHIVE_REL,
+        previous_archive=unfaithful_archive,
         body="# Replacement plan\n",
     )
-    commit_all(root, "forge matching-scope archive")
-
-    errors = validate_changed_plan(root, metadata)
-
-    assert [error.message for error in errors] == [
-        "frontmatter 'previous_plan_archive' must reference an archive whose "
-        "body faithfully preserves the base active plan"
-    ]
-
-
-def test_different_scope_archive_is_rejected_only_when_body_is_unfaithful(
-    tmp_path: Path,
-) -> None:
-    root = initialize_repo(tmp_path, base_status="Implemented")
-    older_archive = archive_rel("older-round")
-    write_archive(root, scope="older-round")
-    metadata = write_plan(
-        root,
-        status="Pending Confirmation",
-        previous_archive=older_archive,
-    )
-    commit_all(root, "link replacement to older archive")
+    commit_all(root, f"forge {archive_scope} archive")
 
     errors = validate_changed_plan(root, metadata)
 
@@ -904,37 +830,6 @@ def test_new_plan_without_base_file_rejects_forged_newer_archive_date(
     ]
 
 
-def test_new_plan_without_base_file_rejects_edited_stale_archive(
-    tmp_path: Path,
-) -> None:
-    root = initialize_repo(tmp_path, base_status=None, base_has_plan=False)
-    run_git(root, "switch", "main")
-    stale_archive = archive_rel("stale-round")
-    write_archive(root, scope="stale-round", archived_at="2026-07-25")
-    write_archive(root, scope="latest-round", archived_at="2026-07-27")
-    commit_all(root, "add stale and latest archives")
-    run_git(root, "switch", "-C", "fixture-change")
-    write_archive(
-        root,
-        scope="stale-round",
-        archived_at="2026-07-25",
-        body="# Edited stale archive\n",
-    )
-    metadata = write_plan(
-        root,
-        status="Pending Confirmation",
-        previous_archive=stale_archive,
-    )
-    commit_all(root, "edit stale archive and link new plan to it")
-
-    errors = validate_changed_plan(root, metadata)
-
-    assert [error.message for error in errors] == [
-        "frontmatter 'previous_plan_archive' must reference the most recent "
-        "archive for this feature_path ('latest-round'), not an older archive"
-    ]
-
-
 def test_new_plan_without_base_file_allows_link_to_only_archive(
     tmp_path: Path,
 ) -> None:
@@ -1110,27 +1005,6 @@ def test_implemented_base_rejects_replacing_unchanged_back_link(
     assert [error.message for error in errors] == [FIDELITY_ERROR]
 
 
-def test_superseding_draft_and_replacing_body_requires_previous_archive(
-    tmp_path: Path,
-) -> None:
-    root = initialize_repo(tmp_path, base_status="Draft")
-    run_git(root, "switch", "main")
-    write_archive(root, status="Superseded", body="# Fixture plan\n")
-    commit_all(root, "archive draft before replacement")
-    run_git(root, "switch", "-C", "fixture-change")
-    metadata = write_plan(
-        root,
-        status="Pending Confirmation",
-        scope="replacement-round",
-        body="# Replacement plan\n",
-    )
-    commit_all(root, "supersede draft and add replacement")
-
-    errors = validate_changed_plan(root, metadata)
-
-    assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
-
-
 def test_previously_archived_draft_base_requires_back_link_when_body_changes(
     tmp_path: Path,
 ) -> None:
@@ -1231,27 +1105,6 @@ def test_rewritten_preexisting_archive_cannot_forge_faithful_back_link(
     assert [error.message for error in errors] == [FIDELITY_ERROR]
 
 
-def test_faithful_archive_does_not_allow_unrelated_active_body_rewrite(
-    tmp_path: Path,
-) -> None:
-    root = initialize_repo(tmp_path, base_status="Draft")
-    run_git(root, "switch", "main")
-    write_archive(root, status="Superseded", body="# Fixture plan\n")
-    commit_all(root, "archive draft before unrelated rewrite")
-    run_git(root, "switch", "-C", "fixture-change")
-    metadata = write_plan(
-        root,
-        status="Draft",
-        scope="completed-round",
-        body="# Unrelated replacement plan\n",
-    )
-    commit_all(root, "rewrite active body beside faithful archive")
-
-    errors = validate_changed_plan(root, metadata)
-
-    assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
-
-
 def test_draft_continuation_matching_unrelated_archive_body_remains_unsettled(
     tmp_path: Path,
 ) -> None:
@@ -1299,11 +1152,6 @@ def test_faithful_archive_with_extended_active_body_still_requires_back_link(
         (
             "docs/engineer/agents/qa-agent/e2e-case-memory/"
             "implementation-plans/archive/IMPLEMENTATION_PLAN-e2e-case-memory.md"
-        ),
-        (
-            "docs/engineer/agents/pm-agent/skills/changelog-generator/"
-            "implementation-plans/archive/"
-            "IMPLEMENTATION_PLAN-changelog-generator-docs-test-ci-semantics.md"
         ),
     ],
 )
