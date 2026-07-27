@@ -471,6 +471,27 @@ def test_new_plan_without_base_file_requires_back_link_when_archive_history_exis
     ]
 
 
+def test_new_plan_cannot_hide_base_archive_history_by_deleting_archives(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status=None, base_has_plan=False)
+    run_git(root, "switch", "main")
+    write_archive(root)
+    commit_all(root, "add historical archive")
+    run_git(root, "switch", "-C", "fixture-change")
+    (root / ARCHIVE_REL).unlink()
+    metadata = write_plan(root, status="Pending Confirmation")
+    commit_all(root, "delete archive history and add an unlinked active plan")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [
+        "frontmatter 'previous_plan_archive' must be non-empty because this "
+        "feature_path already has archived plan history; a new active plan must "
+        "link to the previous archive"
+    ]
+
+
 def test_new_plan_and_matching_archive_in_same_change_requires_back_link(
     tmp_path: Path,
 ) -> None:
@@ -498,14 +519,14 @@ def test_scope_less_unfinished_base_is_settled_by_faithful_archive(
     root = initialize_repo(tmp_path, base_status="Draft")
     run_git(root, "switch", "main")
     write_plan(root, status="Pending Confirmation", scope=None)
-    commit_all(root, "add legacy pending plan without scope")
-    run_git(root, "switch", "-C", "fixture-change")
     write_archive(
         root,
         scope="legacy-pending-round",
         status="Superseded",
         body="# Fixture plan\n",
     )
+    commit_all(root, "add archived legacy pending plan without scope")
+    run_git(root, "switch", "-C", "fixture-change")
     metadata = write_plan(
         root,
         status="Pending Confirmation",
@@ -691,6 +712,24 @@ def test_draft_closeout_with_faithful_archive_allows_status_only_progression(
     assert validate_changed_plan(root, metadata) == []
 
 
+def test_previously_archived_draft_allows_status_only_progression(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    run_git(root, "switch", "main")
+    write_archive(root, body="# Fixture plan\n")
+    commit_all(root, "archive draft before status progression")
+    run_git(root, "switch", "-C", "fixture-change")
+    metadata = write_plan(
+        root,
+        status="Implemented",
+        scope="completed-round",
+    )
+    commit_all(root, "advance archived draft status without changing its body")
+
+    assert validate_changed_plan(root, metadata) == []
+
+
 def test_implemented_base_with_unchanged_body_allows_frontmatter_only_update(
     tmp_path: Path,
 ) -> None:
@@ -736,7 +775,10 @@ def test_superseding_draft_and_replacing_body_requires_previous_archive(
     tmp_path: Path,
 ) -> None:
     root = initialize_repo(tmp_path, base_status="Draft")
+    run_git(root, "switch", "main")
     write_archive(root, status="Superseded", body="# Fixture plan\n")
+    commit_all(root, "archive draft before replacement")
+    run_git(root, "switch", "-C", "fixture-change")
     metadata = write_plan(
         root,
         status="Pending Confirmation",
@@ -776,11 +818,56 @@ def test_previously_archived_draft_base_requires_back_link_when_body_changes(
     assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
 
 
+def test_rewriting_previously_archived_draft_and_archive_cannot_bypass_back_link(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    run_git(root, "switch", "main")
+    archive_scope = "previously-settled-draft"
+    original_body = "# Original settled plan\n"
+    write_plan(
+        root,
+        status="Draft",
+        scope=archive_scope,
+        body=original_body,
+    )
+    write_archive(
+        root,
+        scope=archive_scope,
+        status="Superseded",
+        body=original_body,
+    )
+    commit_all(root, "archive draft before the feature change")
+    run_git(root, "switch", "-C", "fixture-change")
+
+    forged_body = "# Forged replacement plan\n"
+    write_archive(
+        root,
+        scope=archive_scope,
+        status="Superseded",
+        body=forged_body,
+    )
+    metadata = write_plan(
+        root,
+        status="Draft",
+        scope=archive_scope,
+        body=forged_body,
+    )
+    commit_all(root, "rewrite active plan and its historical archive")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
+
+
 def test_faithful_archive_does_not_allow_unrelated_active_body_rewrite(
     tmp_path: Path,
 ) -> None:
     root = initialize_repo(tmp_path, base_status="Draft")
+    run_git(root, "switch", "main")
     write_archive(root, status="Superseded", body="# Fixture plan\n")
+    commit_all(root, "archive draft before unrelated rewrite")
+    run_git(root, "switch", "-C", "fixture-change")
     metadata = write_plan(
         root,
         status="Draft",
@@ -818,7 +905,10 @@ def test_faithful_archive_with_extended_active_body_still_requires_back_link(
     tmp_path: Path,
 ) -> None:
     root = initialize_repo(tmp_path, base_status="Draft")
+    run_git(root, "switch", "main")
     write_archive(root, status="Superseded", body="# Fixture plan\n")
+    commit_all(root, "archive draft before closeout extension")
+    run_git(root, "switch", "-C", "fixture-change")
     metadata = write_plan(
         root,
         status="Draft",
@@ -930,6 +1020,15 @@ def test_missing_base_ref_does_not_add_archive_linkage_error(tmp_path: Path) -> 
     )
 
     assert errors == []
+
+
+def test_archive_files_at_ref_returns_empty_for_missing_tree_or_invalid_ref(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+
+    assert contract.archive_files_at_ref(root, "main", "missing-feature") == []
+    assert contract.archive_files_at_ref(root, "missing-ref", FEATURE_PATH) == []
 
 
 def test_invalid_base_plan_frontmatter_blocks_archive_linkage_validation(

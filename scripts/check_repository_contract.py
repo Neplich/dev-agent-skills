@@ -1184,27 +1184,54 @@ def parsed_markdown_body(path: Path) -> str | None:
     return parsed[1] if parsed is not None else None
 
 
-def feature_path_any_archive_matches_body(
+def archive_files_at_ref(
     root: Path,
+    ref: str,
+    feature_path: str,
+) -> list[str]:
+    archive_prefix = f"docs/engineer/{feature_path}/implementation-plans/archive/"
+    output = git_output(
+        root, ["ls-tree", "-r", "--name-only", ref, "--", archive_prefix]
+    )
+    if output is None:
+        return []
+    return [line for line in output.splitlines() if line]
+
+
+def feature_path_plan_archive_scopes_at_ref(
+    root: Path,
+    ref: str,
+    feature_path: str,
+) -> set[str]:
+    scopes: set[str] = set()
+    for rel in archive_files_at_ref(root, ref, feature_path):
+        match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel)
+        if match is not None:
+            scopes.add(match.group("scope"))
+    return scopes
+
+
+def feature_path_any_archive_matches_body_at_ref(
+    root: Path,
+    ref: str,
     feature_path: str,
     target_body: str,
 ) -> bool:
-    archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
-    if not archive_dir.is_dir():
-        return False
-    for candidate in archive_dir.glob("IMPLEMENTATION_PLAN-*.md"):
-        if not candidate.is_file():
+    for rel in archive_files_at_ref(root, ref, feature_path):
+        if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel) is None:
             continue
-        candidate_rel = candidate.relative_to(root).as_posix()
-        if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel) is None:
+        content = content_at_ref(root, ref, rel)
+        if content is None:
             continue
-        if parsed_markdown_body(candidate) == target_body:
+        parsed = parse_markdown_frontmatter(root / rel, content, errors=None)
+        if parsed is not None and parsed[1] == target_body:
             return True
     return False
 
 
 def active_plan_base_round(
     root: Path,
+    base_ref: str,
     path: Path,
     feature_path: str,
     metadata: dict[str, str],
@@ -1224,8 +1251,8 @@ def active_plan_base_round(
     base_metadata, base_body = base_parsed
 
     base_status = base_metadata.get("status", "")
-    already_archived = feature_path_any_archive_matches_body(
-        root, feature_path, base_body
+    already_archived = feature_path_any_archive_matches_body_at_ref(
+        root, base_ref, feature_path, base_body
     )
     settled = base_status == "Implemented" or already_archived
 
@@ -1265,7 +1292,11 @@ def validate_active_plan_archive_linkage(
 
         base_content = content_at_ref(root, base_ref, rel)
         if base_content is None:
-            archive_scopes = feature_path_plan_archive_scopes(root, feature_path)
+            archive_scopes = feature_path_plan_archive_scopes(
+                root, feature_path
+            ) | feature_path_plan_archive_scopes_at_ref(
+                root, base_ref, feature_path
+            )
             if not archive_scopes:
                 return
             add_error(
@@ -1276,6 +1307,7 @@ def validate_active_plan_archive_linkage(
             return
         base_round = active_plan_base_round(
             root,
+            base_ref,
             path,
             feature_path,
             metadata,
@@ -1339,6 +1371,7 @@ def validate_active_plan_archive_linkage(
 
     base_round = active_plan_base_round(
         root,
+        base_ref,
         path,
         feature_path,
         metadata,
