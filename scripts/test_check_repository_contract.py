@@ -79,6 +79,7 @@ def write_archive(
     *,
     scope: str = "completed-round",
     status: str = "Archived",
+    archived_at: str = "2026-07-27",
     body: str = "# Archived fixture plan\n",
 ) -> None:
     archive_path = root / archive_rel(scope)
@@ -92,6 +93,7 @@ def write_archive(
         "---\n"
         f'implementation_scope: "{scope}"\n'
         f'status: "{status}"\n'
+        f'archived_at: "{archived_at}"\n'
         f"{superseded_reason}"
         "---\n\n"
         f"{body}",
@@ -425,7 +427,7 @@ def test_new_plan_without_base_file_requires_back_link_when_archive_history_exis
     ]
 
 
-def test_new_plan_and_matching_archive_in_same_change_allow_missing_back_link(
+def test_new_plan_and_matching_archive_in_same_change_requires_back_link(
     tmp_path: Path,
 ) -> None:
     root = initialize_repo(tmp_path, base_status=None, base_has_plan=False)
@@ -437,10 +439,191 @@ def test_new_plan_and_matching_archive_in_same_change_allow_missing_back_link(
     )
     commit_all(root, "add plan and matching archive")
 
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [
+        "frontmatter 'previous_plan_archive' must be non-empty because this "
+        "feature_path already has archived plan history; a new active plan must "
+        "link to the previous archive"
+    ]
+
+
+def test_scope_less_unfinished_base_with_faithful_archive_requires_back_link(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    run_git(root, "switch", "main")
+    write_plan(root, status="Pending Confirmation", scope=None)
+    commit_all(root, "add legacy pending plan without scope")
+    run_git(root, "switch", "-C", "fixture-change")
+    write_archive(
+        root,
+        scope="legacy-pending-round",
+        status="Superseded",
+        body="# Fixture plan\n",
+    )
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        scope="replacement-round",
+        body="# Replacement plan\n",
+    )
+    commit_all(root, "supersede legacy pending plan and add replacement")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [
+        "frontmatter 'previous_plan_archive' must be non-empty because the base "
+        "round for this active plan is completed, regressed, or being archived "
+        "in this change; link the new plan to that archive"
+    ]
+
+
+def test_scope_less_unfinished_base_ignores_unfaithful_changed_archive(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    run_git(root, "switch", "main")
+    write_plan(root, status="Pending Confirmation", scope=None)
+    commit_all(root, "add legacy pending plan without scope")
+    run_git(root, "switch", "-C", "fixture-change")
+    write_archive(
+        root,
+        scope="unrelated-round",
+        status="Superseded",
+        body="# Unrelated plan\n",
+    )
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        scope="replacement-round",
+        body="# Expanded current plan\n",
+    )
+    commit_all(root, "continue legacy plan beside unrelated archive")
+
     assert validate_changed_plan(root, metadata) == []
 
 
-def test_new_plan_without_base_file_allows_link_to_any_existing_archive(
+def test_scope_less_unfinished_base_allows_faithful_same_change_closeout(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    run_git(root, "switch", "main")
+    write_plan(root, status="Draft", scope=None)
+    commit_all(root, "add legacy draft plan without scope")
+    run_git(root, "switch", "-C", "fixture-change")
+    write_archive(
+        root,
+        scope="legacy-draft-round",
+        status="Superseded",
+        body="# Fixture plan\n",
+    )
+    metadata = write_plan(
+        root,
+        status="Draft",
+        scope=None,
+        body="# Fixture plan\n\n## Closeout\n\nThis round was superseded.\n",
+    )
+    commit_all(root, "close out legacy draft in the same change")
+
+    assert validate_changed_plan(root, metadata) == []
+
+
+def test_scope_less_unfinished_base_with_archive_history_allows_faithful_link(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    run_git(root, "switch", "main")
+    write_archive(root, scope="older-round", archived_at="2026-07-25")
+    write_plan(root, status="Pending Confirmation", scope=None)
+    commit_all(root, "add archive history and legacy pending plan")
+    run_git(root, "switch", "-C", "fixture-change")
+    current_archive = archive_rel("legacy-pending-round")
+    write_archive(
+        root,
+        scope="legacy-pending-round",
+        status="Superseded",
+        archived_at="2026-07-27",
+        body="# Fixture plan\n",
+    )
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        scope="replacement-round",
+        previous_archive=current_archive,
+        body="# Replacement plan\n",
+    )
+    commit_all(root, "archive legacy pending plan after older history")
+
+    assert validate_changed_plan(root, metadata) == []
+
+
+def test_new_plan_without_base_file_rejects_link_to_older_archive(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status=None, base_has_plan=False)
+    run_git(root, "switch", "main")
+    older_archive = archive_rel("older-round")
+    write_archive(root, scope="older-round", archived_at="2026-07-25")
+    write_archive(root, scope="newer-round", archived_at="2026-07-26")
+    commit_all(root, "add two historical archives")
+    run_git(root, "switch", "-C", "fixture-change")
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        previous_archive=older_archive,
+    )
+    commit_all(root, "link new plan to older archive")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [
+        "frontmatter 'previous_plan_archive' must reference the most recent "
+        "archive for this feature_path ('newer-round'), not an older archive"
+    ]
+
+
+def test_new_plan_without_base_file_allows_link_to_latest_archive(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status=None, base_has_plan=False)
+    run_git(root, "switch", "main")
+    write_archive(root, scope="older-round", archived_at="2026-07-25")
+    newer_archive = archive_rel("newer-round")
+    write_archive(root, scope="newer-round", archived_at="2026-07-26")
+    commit_all(root, "add two historical archives")
+    run_git(root, "switch", "-C", "fixture-change")
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        previous_archive=newer_archive,
+    )
+    commit_all(root, "link new plan to latest archive")
+
+    assert validate_changed_plan(root, metadata) == []
+
+
+def test_new_plan_without_base_file_allows_link_to_changed_archive(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status=None, base_has_plan=False)
+    run_git(root, "switch", "main")
+    write_archive(root, scope="older-round", archived_at="2026-07-25")
+    commit_all(root, "add historical archive")
+    run_git(root, "switch", "-C", "fixture-change")
+    changed_archive = archive_rel("current-round")
+    write_archive(root, scope="current-round", archived_at="2026-07-27")
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        previous_archive=changed_archive,
+    )
+    commit_all(root, "add current archive and linked plan")
+
+    assert validate_changed_plan(root, metadata) == []
+
+
+def test_new_plan_without_base_file_allows_link_to_only_archive(
     tmp_path: Path,
 ) -> None:
     root = initialize_repo(
@@ -454,7 +637,7 @@ def test_new_plan_without_base_file_allows_link_to_any_existing_archive(
         status="Pending Confirmation",
         previous_archive=ARCHIVE_REL,
     )
-    commit_all(root, "link new plan to archive history")
+    commit_all(root, "link new plan to only archive")
 
     assert validate_changed_plan(root, metadata) == []
 

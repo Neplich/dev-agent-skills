@@ -1163,6 +1163,62 @@ def feature_path_changed_plan_archive_scopes(
     return scopes
 
 
+def feature_path_changed_archive_body_match(
+    root: Path,
+    feature_path: str,
+    changed_engineer_docs: set[str],
+    target_body: str,
+) -> bool:
+    """Return True if a changed archive for this feature path matches target_body.
+
+    Matching regardless of scope lets closure detection work for legacy active
+    plans that predate the implementation_scope field.
+    """
+    prefix = f"docs/engineer/{feature_path}/implementation-plans/archive/"
+    for rel in changed_engineer_docs:
+        if not rel.startswith(prefix):
+            continue
+        if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel) is None:
+            continue
+        candidate = root / rel
+        if not candidate.is_file():
+            continue
+        if parsed_markdown_body(candidate) == target_body:
+            return True
+    return False
+
+
+def feature_path_latest_archive_scope(root: Path, feature_path: str) -> str | None:
+    archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
+    if not archive_dir.is_dir():
+        return None
+    latest_scope: str | None = None
+    latest_date = ""
+    for candidate in sorted(archive_dir.glob("IMPLEMENTATION_PLAN-*.md")):
+        if not candidate.is_file():
+            continue
+        candidate_rel = candidate.relative_to(root).as_posix()
+        match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel)
+        if match is None:
+            continue
+        try:
+            content = candidate.read_text(encoding="utf-8")
+        except (OSError, UnicodeError):
+            continue
+        parsed = parse_markdown_frontmatter(
+            candidate, content, errors=None
+        )
+        if parsed is None:
+            continue
+        archived_at = parsed[0].get("archived_at", "")
+        if not DATE_RE.fullmatch(archived_at):
+            continue
+        if archived_at >= latest_date:
+            latest_date = archived_at
+            latest_scope = match.group("scope")
+    return latest_scope
+
+
 def parsed_markdown_body(path: Path) -> str | None:
     try:
         content = path.read_text(encoding="utf-8")
@@ -1202,6 +1258,8 @@ def active_plan_base_round(
     )
     base_round_closing_now = (
         bool(base_scope) and base_scope in changed_archive_scopes
+    ) or feature_path_changed_archive_body_match(
+        root, feature_path, changed_engineer_docs, base_body
     )
     status_regressed_from_implemented = (
         base_status == "Implemented" and current_status != "Implemented"
@@ -1219,15 +1277,9 @@ def active_plan_base_round(
     ):
         if body == base_body:
             allows_unlinked_same_change_closeout = True
-        elif base_round_closing_now and base_scope:
-            archive_rel = (
-                f"docs/engineer/{feature_path}/implementation-plans/archive/"
-                f"IMPLEMENTATION_PLAN-{base_scope}.md"
-            )
-            archive_path = root / archive_rel
-            if (
-                archive_path.is_file()
-                and parsed_markdown_body(archive_path) == base_body
+        elif base_round_closing_now:
+            if feature_path_changed_archive_body_match(
+                root, feature_path, changed_engineer_docs, base_body
             ):
                 allows_unlinked_same_change_closeout = True
 
@@ -1260,11 +1312,6 @@ def validate_active_plan_archive_linkage(
         if base_content is None:
             archive_scopes = feature_path_plan_archive_scopes(root, feature_path)
             if not archive_scopes:
-                return
-            changed_archive_scopes = feature_path_changed_plan_archive_scopes(
-                root, feature_path, changed_engineer_docs
-            )
-            if metadata.get("implementation_scope") in changed_archive_scopes:
                 return
             add_error(
                 errors,
@@ -1329,6 +1376,19 @@ def validate_active_plan_archive_linkage(
 
     base_content = content_at_ref(root, base_ref, rel)
     if base_content is None:
+        changed_archive_scopes = feature_path_changed_plan_archive_scopes(
+            root, feature_path, changed_engineer_docs
+        )
+        if archive_match.group("scope") in changed_archive_scopes:
+            return
+        latest_scope = feature_path_latest_archive_scope(root, feature_path)
+        if latest_scope is not None and archive_match.group("scope") != latest_scope:
+            add_error(
+                errors,
+                path,
+                "frontmatter 'previous_plan_archive' must reference the most recent "
+                f"archive for this feature_path ({latest_scope!r}), not an older archive",
+            )
         return
 
     base_round = active_plan_base_round(
