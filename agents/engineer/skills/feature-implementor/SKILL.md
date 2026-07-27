@@ -100,7 +100,14 @@ is recorded, ask the user to choose exactly one of two options: archive the
 completed plan then create a new active plan, or archive the old plan as
 `Superseded` with a reason then create a new active plan. If the active plan
 status is not `Implemented`, continue updating that current plan with a version
-bump instead of forcing archival.
+bump by default instead of forcing archival or asking for an archive decision.
+Only when the user or maintainer explicitly abandons that plan may it be
+archived as `Superseded` with `superseded_reason` before creating a new active
+plan, using the same archive metadata requirements as the `Implemented` branch.
+If no active plan exists but the feature path has archive history, the new
+active plan must set `previous_plan_archive` to the most recent archive. A
+genuinely new feature path with neither an active plan nor archive history does
+not need that backlink.
 
 Plan form strength follows `change_tier` from the PM handoff or `AGENTS.md`.
 `hotfix` may use the lightweight plan form allowed by the repository contract;

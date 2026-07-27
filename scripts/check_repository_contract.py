@@ -872,7 +872,7 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
         parsed = parse_markdown_frontmatter(path, path.read_text(), errors)
         if parsed is None:
             continue
-        metadata, _ = parsed
+        metadata, body = parsed
 
         for field in ("feature", "version", "status", "date", "last_updated"):
             value = metadata.get(field)
@@ -939,6 +939,7 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
             rel,
             feature_path,
             metadata,
+            body,
             base_ref,
             rel in changed_engineer_docs,
             changed_engineer_docs,
@@ -1125,6 +1126,19 @@ def validate_archive_plan_metadata(
         )
 
 
+def feature_path_plan_archive_scopes(root: Path, feature_path: str) -> set[str]:
+    archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
+    scopes: set[str] = set()
+    if not archive_dir.is_dir():
+        return scopes
+    for candidate in archive_dir.glob("IMPLEMENTATION_PLAN-*.md"):
+        candidate_rel = candidate.relative_to(root).as_posix()
+        match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel)
+        if match is not None:
+            scopes.add(match.group("scope"))
+    return scopes
+
+
 def feature_path_changed_plan_archive_scopes(
     root: Path,
     feature_path: str,
@@ -1146,6 +1160,7 @@ def validate_active_plan_archive_linkage(
     rel: str,
     feature_path: str,
     metadata: dict[str, str],
+    body: str,
     base_ref: str | None,
     plan_changed: bool,
     changed_engineer_docs: set[str],
@@ -1159,6 +1174,19 @@ def validate_active_plan_archive_linkage(
 
         base_content = content_at_ref(root, base_ref, rel)
         if base_content is None:
+            archive_scopes = feature_path_plan_archive_scopes(root, feature_path)
+            if not archive_scopes:
+                return
+            changed_archive_scopes = feature_path_changed_plan_archive_scopes(
+                root, feature_path, changed_engineer_docs
+            )
+            if metadata.get("implementation_scope") in changed_archive_scopes:
+                return
+            add_error(
+                errors,
+                path,
+                "frontmatter 'previous_plan_archive' must be non-empty because this feature_path already has archived plan history; a new active plan must link to the previous archive",
+            )
             return
         base_parsed = parse_markdown_frontmatter(path, base_content, errors=None)
         base_metadata = base_parsed[0] if base_parsed is not None else {}
@@ -1173,8 +1201,20 @@ def validate_active_plan_archive_linkage(
         changed_archive_scopes = feature_path_changed_plan_archive_scopes(
             root, feature_path, changed_engineer_docs
         )
-        if metadata.get("implementation_scope") in changed_archive_scopes:
-            return
+        implementation_scope = metadata.get("implementation_scope")
+        if implementation_scope in changed_archive_scopes:
+            archive_rel = (
+                f"docs/engineer/{feature_path}/implementation-plans/archive/"
+                f"IMPLEMENTATION_PLAN-{implementation_scope}.md"
+            )
+            archive_path = root / archive_rel
+            archive_parsed = parse_markdown_frontmatter(
+                archive_path,
+                archive_path.read_text(encoding="utf-8"),
+                errors=None,
+            )
+            if archive_parsed is not None and body == archive_parsed[1]:
+                return
 
         add_error(
             errors,

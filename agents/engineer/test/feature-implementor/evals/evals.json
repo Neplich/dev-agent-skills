@@ -549,6 +549,41 @@
       ]
     },
     {
+      "id": "eval-017-abandoned-draft-can-be-superseded",
+      "name": "abandoned-draft-can-be-superseded",
+      "description": "Verifies that feature-implementor preserves the explicit abandonment path for a non-Implemented active plan by archiving it as Superseded before creating a linked replacement plan.",
+      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现有退款原因码实施计划不再继续，维护者明确要求废弃这一轮并为新的退款审核流程创建下一份实施计划。请进入 feature-implementor 处理计划，先不要改代码。",
+      "expected_output": "主动读取现有 status 为 Draft 的 active IMPLEMENTATION_PLAN.md；由于维护者已明确废弃，允许将该未完成计划以 Superseded 归档并记录 superseded_reason 和完整归档 metadata，再创建带 previous_plan_archive 的新 active plan；不得把默认继续更新当前 Draft 计划作为本次处理结果，编码前仍等待确认。",
+      "workspace": "workspace/eval-017-abandoned-draft-can-be-superseded",
+      "assertions": [
+        {
+          "id": "reads_unfinished_active_plan",
+          "description": "读取未完成活跃计划",
+          "text": "输出必须读取 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`，识别 `status: Draft`、当前路径和 `implementation_scope: refund-reason-codes`。"
+        },
+        {
+          "id": "detects_explicit_abandonment",
+          "description": "识别明确废弃信号",
+          "text": "输出必须识别维护者已明确表示当前未完成计划不再继续，因此本次走显式废弃路径，而不是默认继续更新 Draft 计划。"
+        },
+        {
+          "id": "archives_as_superseded",
+          "description": "归档为 Superseded",
+          "text": "输出必须允许把当前计划归档为 `Superseded`，要求非空 `superseded_reason`，并保留 `implementation_scope`、`archived_at`、`archive_approved_by`、`source_plan` 及原计划 metadata。"
+        },
+        {
+          "id": "links_replacement_plan",
+          "description": "回链新计划",
+          "text": "输出必须要求新的 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md` 通过 `previous_plan_archive` 指向同 feature_path 的 Superseded 归档文件。"
+        },
+        {
+          "id": "waits_before_coding",
+          "description": "编码前等待确认",
+          "text": "输出不得修改代码；归档处理和新实施计划写明后，仍须等待用户确认再编码。"
+        }
+      ]
+    },
+    {
       "id": "eval-014-mapped-session-plan-evidence",
       "name": "使用映射文档核证会话实现计划",
       "description": "验证实施计划准备命中 change-map 后精准读取低信任文档并回代码核证",

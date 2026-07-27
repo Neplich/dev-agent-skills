@@ -44,6 +44,7 @@ def write_plan(
     scope: str = "next-round",
     version: str = "0.2.0",
     previous_archive: str | None = None,
+    body: str = "# Fixture plan\n",
 ) -> dict[str, str]:
     metadata = {
         "feature": FEATURE_PATH,
@@ -60,8 +61,21 @@ def write_plan(
     path = root / PLAN_REL
     path.parent.mkdir(parents=True, exist_ok=True)
     frontmatter = "\n".join(f'{key}: "{value}"' for key, value in metadata.items())
-    path.write_text(f"---\n{frontmatter}\n---\n\n# Fixture plan\n", encoding="utf-8")
+    path.write_text(f"---\n{frontmatter}\n---\n\n{body}", encoding="utf-8")
     return metadata
+
+
+def write_archive(root: Path, *, body: str = "# Archived fixture plan\n") -> None:
+    archive_path = root / ARCHIVE_REL
+    archive_path.parent.mkdir(parents=True, exist_ok=True)
+    archive_path.write_text(
+        "---\n"
+        'implementation_scope: "completed-round"\n'
+        'status: "Archived"\n'
+        "---\n\n"
+        f"{body}",
+        encoding="utf-8",
+    )
 
 
 def commit_all(root: Path, message: str) -> None:
@@ -74,6 +88,7 @@ def initialize_repo(
     *,
     base_status: str | None,
     base_has_plan: bool = True,
+    base_has_archive: bool = False,
 ) -> Path:
     root = tmp_path / "repo"
     root.mkdir()
@@ -84,6 +99,8 @@ def initialize_repo(
         write_plan(root, status=base_status, scope="completed-round")
     else:
         (root / "README.md").write_text("# Fixture\n", encoding="utf-8")
+    if base_has_archive:
+        write_archive(root)
     commit_all(root, "base")
     run_git(root, "switch", "-c", "fixture-change")
     return root
@@ -97,6 +114,12 @@ def validate_changed_plan(
     assert base_ref == run_git(root, "merge-base", "HEAD", "main")
     changed_docs = set(contract.changed_files_against(root, base_ref))
     assert PLAN_REL in changed_docs
+    parsed = contract.parse_markdown_frontmatter(
+        root / PLAN_REL,
+        (root / PLAN_REL).read_text(encoding="utf-8"),
+        errors=None,
+    )
+    assert parsed is not None
 
     errors: list[contract.ContractError] = []
     contract.validate_active_plan_archive_linkage(
@@ -104,6 +127,7 @@ def validate_changed_plan(
         PLAN_REL,
         FEATURE_PATH,
         metadata,
+        parsed[1],
         base_ref,
         True,
         changed_docs,
@@ -163,9 +187,7 @@ def test_non_implemented_base_allows_plan_update_without_archive(tmp_path: Path)
 
 def test_implemented_base_allows_valid_previous_archive(tmp_path: Path) -> None:
     root = initialize_repo(tmp_path, base_status="Implemented")
-    archive_path = root / ARCHIVE_REL
-    archive_path.parent.mkdir(parents=True)
-    archive_path.write_text("# Archived fixture plan\n", encoding="utf-8")
+    write_archive(root)
     metadata = write_plan(
         root,
         status="Pending Confirmation",
@@ -184,11 +206,47 @@ def test_new_plan_without_base_file_does_not_require_archive(tmp_path: Path) -> 
     assert validate_changed_plan(root, metadata) == []
 
 
-def test_closeout_archive_in_same_change_allows_missing_back_link(tmp_path: Path) -> None:
+def test_new_plan_without_base_file_requires_back_link_when_archive_history_exists(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(
+        tmp_path,
+        base_status=None,
+        base_has_plan=False,
+        base_has_archive=True,
+    )
+    metadata = write_plan(root, status="Pending Confirmation")
+    commit_all(root, "add next plan without archive link")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [
+        "frontmatter 'previous_plan_archive' must be non-empty because this "
+        "feature_path already has archived plan history; a new active plan must "
+        "link to the previous archive"
+    ]
+
+
+def test_new_plan_and_matching_archive_in_same_change_allow_missing_back_link(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status=None, base_has_plan=False)
+    write_archive(root)
+    metadata = write_plan(
+        root,
+        status="Implemented",
+        scope="completed-round",
+    )
+    commit_all(root, "add plan and matching archive")
+
+    assert validate_changed_plan(root, metadata) == []
+
+
+def test_closeout_archive_matching_scope_and_body_allows_missing_back_link(
+    tmp_path: Path,
+) -> None:
     root = initialize_repo(tmp_path, base_status="Implemented")
-    archive_path = root / ARCHIVE_REL
-    archive_path.parent.mkdir(parents=True)
-    archive_path.write_text("# Archived fixture plan\n", encoding="utf-8")
+    write_archive(root, body="# Fixture plan\n")
     metadata = write_plan(
         root,
         status="Implemented",
@@ -200,6 +258,28 @@ def test_closeout_archive_in_same_change_allows_missing_back_link(tmp_path: Path
     assert validate_changed_plan(root, metadata) == []
 
 
+def test_closeout_archive_matching_scope_but_different_body_requires_back_link(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Implemented")
+    write_archive(root, body="# Archived fixture plan\n")
+    metadata = write_plan(
+        root,
+        status="Implemented",
+        scope="completed-round",
+        version="0.3.0",
+        body="# New fixture plan\n",
+    )
+    commit_all(root, "reuse archive scope for a different plan")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [
+        "frontmatter 'previous_plan_archive' must be non-empty because the active plan "
+        "status on the base ref is 'Implemented'; archive that plan before modifying it"
+    ]
+
+
 def test_missing_base_ref_does_not_add_archive_linkage_error(tmp_path: Path) -> None:
     root = tmp_path / "repo"
     root.mkdir()
@@ -209,6 +289,12 @@ def test_missing_base_ref_does_not_add_archive_linkage_error(tmp_path: Path) -> 
     metadata = write_plan(root, status="Pending Confirmation")
     commit_all(root, "add plan without main ref")
     assert contract.implementation_plan_base_ref(root) is None
+    parsed = contract.parse_markdown_frontmatter(
+        root / PLAN_REL,
+        (root / PLAN_REL).read_text(encoding="utf-8"),
+        errors=None,
+    )
+    assert parsed is not None
 
     errors: list[contract.ContractError] = []
     contract.validate_active_plan_archive_linkage(
@@ -216,6 +302,7 @@ def test_missing_base_ref_does_not_add_archive_linkage_error(tmp_path: Path) -> 
         PLAN_REL,
         FEATURE_PATH,
         metadata,
+        parsed[1],
         None,
         True,
         {PLAN_REL},

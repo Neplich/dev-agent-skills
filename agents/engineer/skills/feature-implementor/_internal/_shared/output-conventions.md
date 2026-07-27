@@ -78,8 +78,16 @@ Before creating or replacing an active plan on a `feature_path`:
    archiving it as completed before creating a new plan, or archiving it as
    `Superseded` with a reason before creating a new plan.
 3. If the active plan status is not `Implemented`, continue updating that
-   current plan and bump its version; do not force archival merely because the
-   active entry exists.
+   current plan and bump its version by default; do not force archival or ask
+   for an archive decision merely because the active entry exists. If the user
+   or maintainer explicitly abandons the unfinished plan, it may instead be
+   archived as `Superseded` with `superseded_reason` before a new active plan is
+   created, using the same archive metadata requirements as the `Implemented`
+   branch.
+4. If no active plan exists, inspect the feature path's archive history. A new
+   active plan must record `previous_plan_archive` pointing to the most recent
+   archive when history exists; no backlink is required for a genuinely new
+   feature path with no archive history.
 
 When archiving after closeout and user/maintainer approval:
 
@@ -96,8 +104,10 @@ When archiving after closeout and user/maintainer approval:
    original `feature`, `feature_path`, `parent_feature`, `feature_level`,
    `related_prd`, `related_trd`, `version`, `date`, `last_updated`, and `author`.
 4. When a new active plan is created after archival, add
-   `previous_plan_archive` to its frontmatter pointing to the archive file. Omit
-   `previous_plan_archive` when continuing to update the current plan.
+   `previous_plan_archive` to its frontmatter pointing to the archive file. This
+   also applies when the archive and new active plan are written in the same
+   change. Omit `previous_plan_archive` when continuing to update the current
+   plan.
 
 ## Commit Granularity
 

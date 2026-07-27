@@ -1264,7 +1264,7 @@ class EvalContractTests(unittest.TestCase):
             rendered,
         )
 
-    def test_repository_contract_accepts_missing_previous_plan_archive_when_base_has_no_active_plan(self):
+    def test_repository_contract_requires_previous_plan_archive_when_base_has_history_only(self):
         checker = load_repository_checker_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -1285,7 +1285,13 @@ class EvalContractTests(unittest.TestCase):
             errors = []
             checker.validate_implementation_plan_metadata(root, errors)
 
-        self.assertEqual([], errors)
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "frontmatter 'previous_plan_archive' must be non-empty because this "
+            "feature_path already has archived plan history; a new active plan "
+            "must link to the previous archive",
+            rendered,
+        )
 
     def test_repository_contract_accepts_missing_previous_plan_archive_for_closeout_archived_scope(self):
         checker = load_repository_checker_module()
