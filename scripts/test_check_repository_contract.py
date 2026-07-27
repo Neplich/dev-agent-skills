@@ -124,6 +124,22 @@ def test_active_plan_status_is_unconditionally_required(tmp_path: Path) -> None:
     )
 
 
+def test_active_plan_status_rejects_noncanonical_value(tmp_path: Path) -> None:
+    root = initialize_repo(tmp_path, base_status="Implementd")
+
+    errors: list[contract.ContractError] = []
+    contract.validate_implementation_plan_metadata(root, errors)
+
+    assert any(
+        error.message
+        == (
+            "frontmatter 'status' must be one of: 'Draft', 'Historical', "
+            "'Implemented', 'Legacy', 'Pending Confirmation'"
+        )
+        for error in errors
+    )
+
+
 def test_implemented_base_requires_previous_archive(tmp_path: Path) -> None:
     root = initialize_repo(tmp_path, base_status="Implemented")
     metadata = write_plan(root, status="Draft")

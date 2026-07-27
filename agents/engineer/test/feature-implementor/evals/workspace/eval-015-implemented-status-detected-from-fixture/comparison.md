@@ -7,7 +7,10 @@
 - Eval: `eval-015-implemented-status-detected-from-fixture`
 - Test case: implemented-status-detected-from-fixture
 - Workspace: `workspace/eval-015-implemented-status-detected-from-fixture`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-27
+- Latest result: PARTIAL - the 2026-07-27 fresh validation still covers reading
+  frontmatter, detecting `Implemented`, and blocking overwrite, but the
+  handling-options assertion changed from three choices to two and has not been
+  rerun.
 
 ## Test Set / Fixture Version
 
@@ -26,38 +29,34 @@
   `status: Implemented`, and `implementation_scope: full-refund-flow`.
 - PASS `blocks_direct_overwrite`: it stops before creating or overwriting an
   active plan.
-- PASS `offers_three_handling_options`: it asks for archive-then-create,
-  continue-with-version-bump, or Superseded-with-reason.
+- NOT RERUN `offers_implemented_handling_options`: the current assertion
+  requires archive-then-create or Superseded-then-create and forbids continuing
+  an `Implemented` plan.
 - PASS `does_not_implement_code`: it makes no code or implementation claim.
 
 ## With Skill Behavior
 
-The fresh with-skill validator read the Engineer entry and feature-implementor
-planner instructions, inspected the fixture active plan, and stopped at the
-archive gate. It reported the active path, completed status, and scope, then
-presented exactly the three supported handling choices and waited without
-writing a plan or code.
+The prior fresh with-skill validator read the Engineer entry and
+feature-implementor planner instructions, inspected the fixture active plan,
+and stopped at the archive gate. Its three-choice result is historical and
+does not validate the current two-choice rule.
 
 ## Without Skill Baseline
 
-A separate fresh zero-exposure subagent received only the eval prompt, fixture,
-and assertions. It did not read the feature-implementor skill, internal
-instructions, or Engineer README and did not reuse a historical baseline. It
-also passed all five assertions by deriving `status: Implemented` from the
-fixture and presenting the same three choices.
+The prior fresh zero-exposure baseline predates the current two-choice
+assertion and cannot serve as the required fresh baseline for a rerun.
 
 ## Failures
 
-- None.
-- The paired run showed no visible behavior difference: fixture README and
-  metadata make the expected three-option handling rule easy for a generic
-  baseline to infer, so this eval confirms correctness but has limited
-  with-skill differentiation.
+- The current two-choice handling assertion has not received fresh with-skill
+  and without-skill validation.
 
 ## Next Steps
 
 - Keep the case focused on discovering `Implemented` from frontmatter rather
   than from a prompt hint.
+- Rerun fresh with-skill and without-skill validation before treating the
+  updated handling assertion as PASS.
 - If stronger differentiation is needed later, reduce rule-level hints in the
   fixture README and metadata without weakening the real active-plan evidence.
 

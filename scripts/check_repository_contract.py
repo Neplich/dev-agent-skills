@@ -42,6 +42,13 @@ IMPLEMENTATION_PLAN_ARCHIVE_RE = re.compile(
     rf"IMPLEMENTATION_PLAN-(?P<scope>{FEATURE_PATH_SEGMENT_PATTERN})\.md$"
 )
 IMPLEMENTATION_SCOPE_RE = re.compile(rf"^{FEATURE_PATH_SEGMENT_PATTERN}$")
+ACTIVE_PLAN_STATUS_VALUES = {
+    "Draft",
+    "Historical",
+    "Implemented",
+    "Legacy",
+    "Pending Confirmation",
+}
 ARCHIVE_STATUS_VALUES = {"Archived", "Superseded"}
 PM_PRD_RE = re.compile(
     rf"^docs/pm/"
@@ -871,6 +878,17 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
             value = metadata.get(field)
             if not isinstance(value, str) or not value.strip():
                 add_error(errors, path, f"frontmatter {field!r} must be non-empty")
+
+        status = metadata.get("status", "")
+        if status and status not in ACTIVE_PLAN_STATUS_VALUES:
+            allowed_statuses = ", ".join(
+                repr(value) for value in sorted(ACTIVE_PLAN_STATUS_VALUES)
+            )
+            add_error(
+                errors,
+                path,
+                f"frontmatter 'status' must be one of: {allowed_statuses}",
+            )
 
         version = metadata.get("version", "")
         if version and not SEMVER_RE.fullmatch(version):

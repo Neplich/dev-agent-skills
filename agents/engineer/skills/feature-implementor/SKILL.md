@@ -96,11 +96,11 @@ Before creating or replacing an active plan, scan
 `implementation-plans/archive/` directory.
 
 If an active plan exists with `status: "Implemented"` and no handling decision
-is recorded, ask the user to choose exactly one: archive the completed plan
-then create a new active plan, continue updating the current plan with a
-version bump, or archive the old plan as `Superseded` with a reason then create
-a new active plan. If the active plan status is not `Implemented`, continue
-updating that current plan with a version bump instead of forcing archival.
+is recorded, ask the user to choose exactly one of two options: archive the
+completed plan then create a new active plan, or archive the old plan as
+`Superseded` with a reason then create a new active plan. If the active plan
+status is not `Implemented`, continue updating that current plan with a version
+bump instead of forcing archival.
 
 Plan form strength follows `change_tier` from the PM handoff or `AGENTS.md`.
 `hotfix` may use the lightweight plan form allowed by the repository contract;
