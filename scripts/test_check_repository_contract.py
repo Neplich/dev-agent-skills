@@ -125,6 +125,21 @@ def write_symlink_archive(
     return rel
 
 
+def write_archive_through_symlink_directory(
+    root: Path,
+    *,
+    scope: str,
+    body: str,
+) -> str:
+    rel = archive_rel(scope)
+    write_archive(root, scope=scope, body=body)
+    archive_dir = (root / rel).parent
+    target_dir = root / f"faithful-{scope}-archive-directory"
+    archive_dir.replace(target_dir)
+    archive_dir.symlink_to(target_dir, target_is_directory=True)
+    return rel
+
+
 def commit_all(root: Path, message: str) -> None:
     run_git(root, "add", "--all")
     run_git(root, "commit", "-m", message)
@@ -339,6 +354,29 @@ def test_new_symlink_archive_cannot_satisfy_faithful_back_link(
         body="# Replacement plan\n",
     )
     commit_all(root, "link replacement plan to symlink archive")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [FIDELITY_ERROR]
+
+
+def test_new_archive_through_symlink_directory_cannot_satisfy_back_link(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Implemented")
+    symlink_archive = write_archive_through_symlink_directory(
+        root,
+        scope="symlink-directory-round",
+        body="# Fixture plan\n",
+    )
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        scope="replacement-round",
+        previous_archive=symlink_archive,
+        body="# Replacement plan\n",
+    )
+    commit_all(root, "link replacement plan through symlink archive directory")
 
     errors = validate_changed_plan(root, metadata)
 
