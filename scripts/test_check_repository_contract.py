@@ -383,6 +383,28 @@ def test_new_archive_through_symlink_directory_cannot_satisfy_back_link(
     assert [error.message for error in errors] == [FIDELITY_ERROR]
 
 
+def test_archive_plan_metadata_rejects_symbolic_link_directory(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    archive_rel_path = write_archive_through_symlink_directory(
+        root,
+        scope="symlink-directory-round",
+        body="# Fixture plan\n",
+    )
+    commit_all(root, "add archive through symlink directory")
+
+    errors: list[contract.ContractError] = []
+    contract.validate_archive_plans(root, errors)
+
+    assert any(
+        error.path == (root / archive_rel_path).parent
+        and error.message
+        == "implementation plan archive directories must not be symbolic links"
+        for error in errors
+    )
+
+
 def test_new_regular_faithful_archive_still_satisfies_back_link(
     tmp_path: Path,
 ) -> None:
