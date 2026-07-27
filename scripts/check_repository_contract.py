@@ -1194,10 +1194,14 @@ def validate_active_plan_archive_linkage(
         else:
             base_metadata, base_body = base_parsed
 
-        if body == base_body:
+        base_status = base_metadata.get("status", "")
+        current_status = metadata.get("status", "")
+        status_regressed_from_implemented = (
+            base_status == "Implemented" and current_status != "Implemented"
+        )
+        if body == base_body and not status_regressed_from_implemented:
             return
 
-        base_status = base_metadata.get("status", "")
         base_scope = base_metadata.get("implementation_scope", "")
         changed_archive_scopes = feature_path_changed_plan_archive_scopes(
             root, feature_path, changed_engineer_docs

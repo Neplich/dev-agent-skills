@@ -263,6 +263,26 @@ def test_new_plan_and_matching_archive_in_same_change_allow_missing_back_link(
     assert validate_changed_plan(root, metadata) == []
 
 
+def test_implemented_base_with_unchanged_body_rejects_status_regression(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Implemented")
+    metadata = write_plan(
+        root,
+        status="Draft",
+        scope="completed-round",
+    )
+    commit_all(root, "regress implemented plan status")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [
+        "frontmatter 'previous_plan_archive' must be non-empty because the base "
+        "round for this active plan is completed or is being archived in this "
+        "change; link the new plan to that archive"
+    ]
+
+
 def test_implemented_base_with_unchanged_body_allows_frontmatter_only_update(
     tmp_path: Path,
 ) -> None:
