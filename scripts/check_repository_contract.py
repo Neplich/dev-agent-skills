@@ -1155,6 +1155,68 @@ def feature_path_changed_plan_archive_scopes(
     return scopes
 
 
+def required_previous_plan_archive_scope(
+    root: Path,
+    path: Path,
+    feature_path: str,
+    metadata: dict[str, str],
+    body: str,
+    base_content: str,
+    changed_engineer_docs: set[str],
+    errors: list[ContractError],
+) -> str | None:
+    base_parsed = parse_markdown_frontmatter(path, base_content, errors=None)
+    if base_parsed is None:
+        add_error(
+            errors,
+            path,
+            "cannot validate active plan archive linkage because the base plan "
+            "frontmatter is invalid",
+        )
+        return None
+    base_metadata, base_body = base_parsed
+
+    base_status = base_metadata.get("status", "")
+    current_status = metadata.get("status", "")
+    base_scope = base_metadata.get("implementation_scope", "")
+    current_scope = metadata.get("implementation_scope", "")
+    changed_archive_scopes = feature_path_changed_plan_archive_scopes(
+        root, feature_path, changed_engineer_docs
+    )
+    base_round_closing_now = base_scope in changed_archive_scopes
+    status_regressed_from_implemented = (
+        base_status == "Implemented" and current_status != "Implemented"
+    )
+    round_requires_closure_handling = (
+        base_status == "Implemented"
+        or base_round_closing_now
+        or status_regressed_from_implemented
+    )
+    if not round_requires_closure_handling:
+        return None
+
+    if current_scope == base_scope and not status_regressed_from_implemented:
+        if body == base_body:
+            return None
+
+        if base_round_closing_now:
+            archive_rel = (
+                f"docs/engineer/{feature_path}/implementation-plans/archive/"
+                f"IMPLEMENTATION_PLAN-{base_scope}.md"
+            )
+            archive_path = root / archive_rel
+            if archive_path.is_file():
+                archive_parsed = parse_markdown_frontmatter(
+                    archive_path,
+                    archive_path.read_text(encoding="utf-8"),
+                    errors=None,
+                )
+                if archive_parsed is not None and archive_parsed[1] == base_body:
+                    return None
+
+    return base_scope
+
+
 def validate_active_plan_archive_linkage(
     root: Path,
     rel: str,
@@ -1188,34 +1250,25 @@ def validate_active_plan_archive_linkage(
                 "frontmatter 'previous_plan_archive' must be non-empty because this feature_path already has archived plan history; a new active plan must link to the previous archive",
             )
             return
-        base_parsed = parse_markdown_frontmatter(path, base_content, errors=None)
-        if base_parsed is None:
-            base_metadata, base_body = {}, ""
-        else:
-            base_metadata, base_body = base_parsed
-
-        base_status = base_metadata.get("status", "")
-        current_status = metadata.get("status", "")
-        status_regressed_from_implemented = (
-            base_status == "Implemented" and current_status != "Implemented"
+        required_scope = required_previous_plan_archive_scope(
+            root,
+            path,
+            feature_path,
+            metadata,
+            body,
+            base_content,
+            changed_engineer_docs,
+            errors,
         )
-        if body == base_body and not status_regressed_from_implemented:
-            return
-
-        base_scope = base_metadata.get("implementation_scope", "")
-        changed_archive_scopes = feature_path_changed_plan_archive_scopes(
-            root, feature_path, changed_engineer_docs
-        )
-        base_round_closing_now = base_scope in changed_archive_scopes
-        if base_status != "Implemented" and not base_round_closing_now:
+        if required_scope is None:
             return
 
         add_error(
             errors,
             path,
             "frontmatter 'previous_plan_archive' must be non-empty because the base "
-            "round for this active plan is completed or is being archived in this "
-            "change; link the new plan to that archive",
+            "round for this active plan is completed, regressed, or being archived "
+            "in this change; link the new plan to that archive",
         )
         return
 
@@ -1236,11 +1289,42 @@ def validate_active_plan_archive_linkage(
         )
         return
 
-    if not (root / previous_archive).exists():
+    archive_path = root / previous_archive
+    if not archive_path.is_file():
         add_error(
             errors,
             path,
             "frontmatter 'previous_plan_archive' must point to an existing archive file",
+        )
+        return
+
+    if not plan_changed or base_ref is None:
+        return
+
+    base_content = content_at_ref(root, base_ref, rel)
+    if base_content is None:
+        return
+
+    required_scope = required_previous_plan_archive_scope(
+        root,
+        path,
+        feature_path,
+        metadata,
+        body,
+        base_content,
+        changed_engineer_docs,
+        errors,
+    )
+    if required_scope is None:
+        return
+
+    if archive_match.group("scope") != required_scope:
+        add_error(
+            errors,
+            path,
+            "frontmatter 'previous_plan_archive' must reference the archive for "
+            f"the base active plan scope {required_scope!r}, not an earlier or unrelated "
+            "archive",
         )
 
 

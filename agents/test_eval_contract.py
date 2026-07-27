@@ -1389,8 +1389,8 @@ class EvalContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn(
             "frontmatter 'previous_plan_archive' must be non-empty because the "
-            "base round for this active plan is completed or is being archived "
-            "in this change; link the new plan to that archive",
+            "base round for this active plan is completed, regressed, or being "
+            "archived in this change; link the new plan to that archive",
             rendered,
         )
 
