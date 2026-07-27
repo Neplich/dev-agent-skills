@@ -73,9 +73,12 @@ under `docs/engineer/{feature_path}/implementation-plans/archive/`.
 Before creating or replacing an active plan on a `feature_path`:
 
 1. Scan for an existing active plan and the archive directory.
-2. If an active plan exists and no handling decision was recorded, do not
-   overwrite it; ask the user to archive it, continue updating it, or archive it
-   as `Superseded` with a reason.
+2. If an active plan exists with `status: "Implemented"` and no handling
+   decision was recorded, do not overwrite it; ask the user to archive it,
+   continue updating it, or archive it as `Superseded` with a reason.
+3. If the active plan status is not `Implemented`, continue updating that
+   current plan and bump its version; do not force archival merely because the
+   active entry exists.
 
 When archiving after closeout and user/maintainer approval:
 

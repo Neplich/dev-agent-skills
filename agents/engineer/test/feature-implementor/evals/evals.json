@@ -474,6 +474,81 @@
       ]
     },
     {
+      "id": "eval-015-implemented-status-detected-from-fixture",
+      "name": "implemented-status-detected-from-fixture",
+      "description": "Verifies that feature-implementor reads an existing active plan frontmatter, recognizes status Implemented without the prompt revealing it, and stops at the three-option archive gate.",
+      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现在要在这个功能上做下一轮更新，请进入 feature-implementor 创建下一份实施计划，先不要改代码。",
+      "expected_output": "主动读取现有 active IMPLEMENTATION_PLAN.md 的 frontmatter，识别 status 为 Implemented，在覆盖前停下并要求用户从归档后新建、继续更新当前计划、归档为 Superseded 三种方式中选择。",
+      "workspace": "workspace/eval-015-implemented-status-detected-from-fixture",
+      "assertions": [
+        {
+          "id": "reads_active_plan_frontmatter",
+          "description": "主动读取 active plan frontmatter",
+          "text": "输出必须基于 fixture 中 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md` 的 frontmatter 判断当前计划状态，而不是依赖 prompt 直接提供完成态结论。"
+        },
+        {
+          "id": "detects_implemented_status",
+          "description": "识别 Implemented 状态",
+          "text": "输出必须明确识别现有 active plan 的 `status: Implemented`、路径和 `implementation_scope`。"
+        },
+        {
+          "id": "blocks_direct_overwrite",
+          "description": "阻止直接覆盖",
+          "text": "输出不得直接覆盖或创建下一份 active plan；在处理决定确认前必须停下。"
+        },
+        {
+          "id": "offers_three_handling_options",
+          "description": "提供三种处理选项",
+          "text": "输出必须要求用户从“归档完成计划后新建”“继续更新当前计划并 bump version”“归档为 Superseded 并记录原因后新建”三种方式中选择。"
+        },
+        {
+          "id": "does_not_implement_code",
+          "description": "不直接实施代码",
+          "text": "输出不得修改代码或声称已开始实现。"
+        }
+      ]
+    },
+    {
+      "id": "eval-016-draft-status-continues-current-plan",
+      "name": "draft-status-continues-current-plan",
+      "description": "Verifies that feature-implementor reads an existing active plan frontmatter, recognizes a non-Implemented Draft status without the prompt revealing it, and continues the current plan with a version bump instead of forcing archival.",
+      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现在要在这个功能上做下一轮更新，请进入 feature-implementor 创建下一份实施计划，先不要改代码。",
+      "expected_output": "主动读取现有 active IMPLEMENTATION_PLAN.md 的 frontmatter，识别 status 为 Draft，继续更新固定 active 入口并 bump version，不强制要求归档或 previous_plan_archive，更新计划后等待用户确认再编码。",
+      "workspace": "workspace/eval-016-draft-status-continues-current-plan",
+      "assertions": [
+        {
+          "id": "reads_active_plan_frontmatter",
+          "description": "主动读取 active plan frontmatter",
+          "text": "输出必须基于 fixture 中 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md` 的 frontmatter 判断当前计划状态，而不是依赖 prompt 直接提供状态结论。"
+        },
+        {
+          "id": "detects_non_implemented_status",
+          "description": "识别非 Implemented 状态",
+          "text": "输出必须明确识别现有 active plan 的 `status: Draft`，并判断当前轮次尚未完成。"
+        },
+        {
+          "id": "continues_current_plan",
+          "description": "继续当前计划",
+          "text": "输出必须继续更新固定入口 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`，而不是创建第二个 active plan。"
+        },
+        {
+          "id": "bumps_plan_version",
+          "description": "提升计划版本",
+          "text": "输出必须要求对当前计划的实质性更新同步 bump `version` 并更新 `last_updated`。"
+        },
+        {
+          "id": "does_not_force_archive_link",
+          "description": "不强制归档回链",
+          "text": "输出不得把归档或 `previous_plan_archive` 作为继续 Draft 计划的前置条件。"
+        },
+        {
+          "id": "waits_before_coding",
+          "description": "编码前等待确认",
+          "text": "输出必须在更新实施计划后等待用户确认，不得直接修改代码。"
+        }
+      ]
+    },
+    {
       "id": "eval-014-mapped-session-plan-evidence",
       "name": "使用映射文档核证会话实现计划",
       "description": "验证实施计划准备命中 change-map 后精准读取低信任文档并回代码核证",

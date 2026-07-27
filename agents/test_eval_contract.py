@@ -1111,6 +1111,7 @@ class EvalContractTests(unittest.TestCase):
                 'parent_feature: "chat-interface"\n'
                 'feature_level: "2"\n'
                 'version: "0.1.0"\n'
+                'status: "Pending Confirmation"\n'
                 'date: "2026-06-23"\n'
                 'last_updated: "2026-06-23"\n'
                 'implementation_scope: "initial-rollout"\n'
@@ -1192,6 +1193,7 @@ class EvalContractTests(unittest.TestCase):
         root: Path,
         plan_extra_frontmatter: str = "",
         implementation_scope: str = "initial-rollout",
+        status: str = "Pending Confirmation",
     ) -> Path:
         plan = root / "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md"
         prd = root / "docs/pm/chat-interface/history-search/PRD.md"
@@ -1230,6 +1232,7 @@ class EvalContractTests(unittest.TestCase):
             'parent_feature: "chat-interface"\n'
             'feature_level: "2"\n'
             'version: "0.1.0"\n'
+            f'status: "{status}"\n'
             'date: "2026-06-23"\n'
             'last_updated: "2026-06-23"\n'
             f'implementation_scope: "{implementation_scope}"\n'
@@ -1261,7 +1264,7 @@ class EvalContractTests(unittest.TestCase):
             rendered,
         )
 
-    def test_repository_contract_rejects_missing_previous_plan_archive_for_replacement_scope(self):
+    def test_repository_contract_accepts_missing_previous_plan_archive_when_base_has_no_active_plan(self):
         checker = load_repository_checker_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -1282,23 +1285,43 @@ class EvalContractTests(unittest.TestCase):
             errors = []
             checker.validate_implementation_plan_metadata(root, errors)
 
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn(
-            "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path and 'implementation_scope' does not match any archive scope added or updated in this change",
-            rendered,
-        )
+        self.assertEqual([], errors)
 
     def test_repository_contract_accepts_missing_previous_plan_archive_for_closeout_archived_scope(self):
         checker = load_repository_checker_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
-            init_git_main(root)
+            subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True)
+            plan = self._write_history_search_plan_fixture(
+                root,
+                implementation_scope="initial-rollout",
+                status="Implemented",
+            )
+            subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "-c",
+                    "user.name=Test User",
+                    "-c",
+                    "user.email=test@example.com",
+                    "commit",
+                    "-m",
+                    "base",
+                ],
+                cwd=root,
+                check=True,
+                stdout=subprocess.DEVNULL,
+            )
+            subprocess.run(["git", "switch", "-c", "feature"], cwd=root, check=True)
             # Closeout flow: the changed active plan carries the same
             # implementation_scope as its archive copy created in the same
             # change set, so no previous_plan_archive back link is required.
             plan = self._write_history_search_plan_fixture(
-                root, implementation_scope="initial-rollout"
+                root,
+                implementation_scope="initial-rollout",
+                status="Implemented",
             )
             archive = (
                 root
@@ -1322,10 +1345,15 @@ class EvalContractTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
-            # The archive already exists on the main baseline; the feature
-            # branch only changes the active plan and reuses the archived
-            # scope, so the closeout exemption must not apply.
+            # The archive and an Implemented active plan already exist on the
+            # main baseline. The feature branch changes only the active plan,
+            # so the closeout exemption must not apply.
             subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True)
+            plan = self._write_history_search_plan_fixture(
+                root,
+                implementation_scope="initial-rollout",
+                status="Implemented",
+            )
             archive = (
                 root
                 / "docs/engineer/chat-interface/history-search"
@@ -1333,9 +1361,7 @@ class EvalContractTests(unittest.TestCase):
             )
             archive.parent.mkdir(parents=True)
             archive.write_text("# Archived Plan\n")
-            subprocess.run(
-                ["git", "add", archive.relative_to(root).as_posix()], cwd=root, check=True
-            )
+            subprocess.run(["git", "add", "-A"], cwd=root, check=True)
             subprocess.run(
                 [
                     "git",
@@ -1353,7 +1379,9 @@ class EvalContractTests(unittest.TestCase):
             )
             subprocess.run(["git", "switch", "-c", "feature"], cwd=root, check=True)
             plan = self._write_history_search_plan_fixture(
-                root, implementation_scope="initial-rollout"
+                root,
+                implementation_scope="search-filters-v2",
+                status="Pending Confirmation",
             )
             subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
 
@@ -1362,7 +1390,7 @@ class EvalContractTests(unittest.TestCase):
 
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn(
-            "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path and 'implementation_scope' does not match any archive scope added or updated in this change",
+            "frontmatter 'previous_plan_archive' must be non-empty because the active plan status on the base ref is 'Implemented'; archive that plan before modifying it",
             rendered,
         )
 
@@ -1671,6 +1699,7 @@ class EvalContractTests(unittest.TestCase):
                 'parent_feature: "a/b/c"\n'
                 'feature_level: "4"\n'
                 'version: "0.1.0"\n'
+                'status: "Pending Confirmation"\n'
                 'date: "2026-06-23"\n'
                 'last_updated: "2026-06-23"\n'
                 'implementation_scope: "initial-rollout"\n'
@@ -1736,6 +1765,7 @@ class EvalContractTests(unittest.TestCase):
                     f'parent_feature: "{parent_feature}"\n'
                     f'feature_level: "{feature_level}"\n'
                     'version: "0.1.0"\n'
+                    'status: "Pending Confirmation"\n'
                     'date: "2026-06-25"\n'
                     'last_updated: "2026-06-25"\n'
                     'implementation_scope: "initial-rollout"\n'

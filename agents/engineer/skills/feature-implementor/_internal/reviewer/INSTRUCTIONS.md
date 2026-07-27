@@ -96,9 +96,10 @@ For each P0 acceptance criterion in PRD:
 
 ### 7. Implementation Plan Archive Consistency
 
-- [ ] If a new active plan replaced an existing one, the old plan was archived
-      or explicitly kept as a continued update, per the pre-plan archive scan
-      decision
+- [ ] If a new active plan replaced an existing `status: "Implemented"` plan,
+      the old plan was archived or explicitly kept as a continued update, per
+      the pre-plan archive scan decision; a non-`Implemented` active plan was
+      continued with a version bump rather than forcibly archived
 - [ ] Archival happened only after closeout was complete and user/maintainer
       approval was recorded
 - [ ] Archive plans live under

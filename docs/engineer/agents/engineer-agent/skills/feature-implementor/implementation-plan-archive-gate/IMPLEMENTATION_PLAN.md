@@ -1,8 +1,8 @@
 ---
 title: "IMPLEMENTATION_PLAN 归档门禁 status 触发修正实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.0"
-status: "Pending Confirmation"
+version: "0.2.0"
+status: "Implemented"
 author: "Neplich Codex"
 date: "2026-07-27"
 last_updated: "2026-07-27"
@@ -40,10 +40,10 @@ docs/engineer/agents/engineer-agent/skills/feature-implementor/implementation-pl
 | Gate | Status | Evidence |
 | --- | --- | --- |
 | PRD alignment | 已确认，无需修改 | FR-005 / US-002 已覆盖不得直接覆盖已完成计划的产品意图。 |
-| TRD alignment | 已更新，等待本计划确认 | TRD `0.2.0` 定义 base-ref `status` 分支、收口归档例外和校验范围。 |
+| TRD alignment | 已确认并实现 | TRD `0.2.0` 定义的 base-ref `status` 分支、收口归档例外和校验范围已落地。 |
 | Feature path gate | 已通过 | PRD、TRD、本计划和上一份归档使用相同 `feature_path`。 |
 | Previous plan archive | 已完成 | 本计划 frontmatter 的 `previous_plan_archive` 指向同一 `feature_path` 的归档文件。 |
-| Implementation plan | 等待用户确认 | `status: "Pending Confirmation"`；确认前不实施。 |
+| Implementation plan | 已实施 | 用户确认后完成 Step 1-7，`status: "Implemented"`。 |
 | UI design gate | 不适用 | 本次不涉及产品 UI 或视觉变化。 |
 
 ### 1.2 成功标准
@@ -165,10 +165,10 @@ flowchart TD
 - `agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md`
 - `agents/engineer/skills/feature-implementor/SKILL.md`
 
-当前文本已要求发现 active 计划且没有处理决定时停下并让用户选择归档、继续更新或
-Superseded，也已约定继续更新时 bump 版本、归档后新计划写
-`previous_plan_archive`。下一轮原则上不修改这些文件；只有发现其措辞与
-`status` 必填或 base-ref 分支规则冲突时，才做最小修正并记录理由。
+复核发现现有文本把任何 active 计划都强制进入三选一，与 base `status` 非
+`Implemented` 时继续当前计划的规则冲突，因此已最小修改三个 internal instructions
+和 `SKILL.md`：仅 `Implemented` active plan 强制三选一，非 `Implemented` 计划继续
+更新并 bump 版本。
 
 ### Step 4: 新增 eval 定义、fixture 与 durable comparison
 
@@ -183,7 +183,7 @@ Superseded，也已约定继续更新时 bump 版本、归档后新计划写
 必须能构造 base ref 与 HEAD 差异，覆盖实际 checker 调用路径；不得把运行期产物提交到
 fixture。
 
-skill 行为或 eval fixture 变更后，先请求用户确认是否执行对应 skill eval。用户确认后：
+skill 行为或 eval fixture 变更后执行对应 skill eval。本轮用户已确认实施与 eval：
 
 - 由 fresh Codex subagent 基于同一 prompt 和 fixture 运行 with-skill。
 - 不读取或应用 skill / Agent README，重新生成本轮新的 without_skill baseline。
@@ -196,9 +196,9 @@ skill 行为或 eval fixture 变更后，先请求用户确认是否执行对应
 确认 `skills-lock.json` 中 `feature-implementor` 的条目使用 `computedHash`
 跟踪 `agents/engineer/skills/feature-implementor`：
 
-- skill 目录没有实际变更时，不修改 lockfile。
-- skill 文档或 internal instructions 因冲突需要最小修正时，使用仓库既有刷新流程更新
-  `feature-implementor` 的 `computedHash`，并核对仅预期条目变化。
+- skill 文档和 internal instructions 已因上述冲突做最小修正。
+- 已使用仓库既有 hash 算法更新 `feature-implementor` 的 `computedHash`，并核对
+  `skills-lock.json` 仅该条目变化。
 
 ### Step 6: 验证和 closeout
 
@@ -211,25 +211,18 @@ uv run scripts/check_eval_artifacts.py
 uv run scripts/check_doc_contract.py
 ```
 
-运行确定性 pytest：
+运行 CI 同款确定性 pytest 清单，并显式纳入新增的
+`scripts/test_check_repository_contract.py`。
 
-```bash
-uv run --with pytest pytest agents/test_eval_contract.py
-```
+同时运行 `git diff --check`，并根据实际变更补充 checker 的针对性回归验证。本轮已完成：
 
-同时运行 `git diff --check`，并根据实际变更补充 checker 的针对性回归验证。完成后更新
-本计划：
-
-- 将 `status` 更新为 `Implemented`；
-- 记录实际变更文件和未修改文件的复核结论；
-- 记录每条验证命令的 PASS / FAIL / BLOCKED；
-- 记录 eval / fresh subagent validation 结果及 durable `comparison.md` 路径；
-- 记录剩余风险和下一 owner；
-- 按用户确认执行 closeout / archive gate。
+- `status` 已更新为 `Implemented`；
+- 实际变更、验证、eval 与剩余风险记录见第 8 节；
+- 本轮新活跃计划已通过用户确认，不在本次 closeout 后再次归档。
 
 ## 5. Sub-Agent 分工
 
-下一轮按复杂实现与验证分工执行：
+本轮已按复杂实现与验证分工执行：
 
 | Role | Scope | Output |
 | --- | --- | --- |
@@ -248,9 +241,60 @@ uv run --with pytest pytest agents/test_eval_contract.py
 | eval 只验证文本、不经过真实 git 差异 | 无法覆盖 merge-base 缺口 | fixture 构造 base/HEAD 状态并调用真实 repository contract 路径。 |
 | 不必要修改 skill 文档扩大范围 | 产生无关 hash 和行为漂移 | 先复核，只有发现与 TRD `0.2.0` 冲突时才最小修改并刷新 lockfile。 |
 
-## 7. 待确认决策
+## 7. 已确认决策
 
-本计划采用已确认的技术设计，不新增产品或架构决策。用户需要确认是否按上述范围进入下一轮实现；
-在确认前不修改代码、eval fixture、eval 定义或 lockfile。
+本计划采用已确认的技术设计，不新增产品或架构决策。用户已确认按上述范围实施，并授权执行
+eval-015、eval-016 的 fresh with-skill / without-skill 成对验证。
 
-确认后加载 implementor 开始编码。
+## 8. 实施结果
+
+### 8.1 实际变更
+
+| Path | Result |
+| --- | --- |
+| `scripts/check_repository_contract.py` | `status` 成为 active plan 无条件必填字段；归档回链改为以 base ref active plan 的 `status: Implemented` 触发，并保留 closeout 同提交例外。 |
+| `scripts/test_check_repository_contract.py` | 新增 10 个真实临时 git repo pytest，覆盖缺少 status、base Implemented 缺回链、base 非 Implemented、合法回链、base 文件不存在、无 base ref、closeout 例外及三类非法回链。 |
+| `agents/test_eval_contract.py` | 为既有正向 fixture 补充 active plan `status`，并将旧 archive-directory 触发断言迁移到 base `Implemented` 新语义。 |
+| `.github/workflows/ci.yml` | 将新增 repository contract pytest 纳入显式 `python-tests` 清单。 |
+| `agents/engineer/skills/feature-implementor/SKILL.md` | 最小修正 active plan 分支：仅 `Implemented` 强制三选一，非 `Implemented` 继续当前计划。 |
+| `agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md` | 已修改；旧文案会把非 `Implemented` active plan 也强制归档决策，与新规则冲突。 |
+| `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md` | 已修改；planner 现在读取 active `status` 并区分三选一与继续更新。 |
+| `agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md` | 已修改；review checklist 同步区分已完成计划替换与未完成计划续写。 |
+| `agents/engineer/test/feature-implementor/evals/evals.json` | 新增 eval-015、eval-016，不修改 eval-012、eval-013。 |
+| `agents/engineer/test/feature-implementor/evals/workspace/eval-015-implemented-status-detected-from-fixture/` | 新增 `status: Implemented` fixture 和 durable `comparison.md`。 |
+| `agents/engineer/test/feature-implementor/evals/workspace/eval-016-draft-status-continues-current-plan/` | 新增 `status: Draft` fixture 和 durable `comparison.md`。 |
+| `skills-lock.json` | 仅刷新 `feature-implementor.computedHash`。 |
+
+PRD 未修改；eval-012、eval-013 的定义与 fixture 未修改。
+
+### 8.2 Fresh eval 结果
+
+| Eval | Latest result | Evidence |
+| --- | --- | --- |
+| eval-015 | PASS；with-skill 5/5，fresh zero-exposure without-skill 5/5 | `agents/engineer/test/feature-implementor/evals/workspace/eval-015-implemented-status-detected-from-fixture/comparison.md` |
+| eval-016 | PASS；with-skill 6/6，fresh zero-exposure without-skill 6/6 | `agents/engineer/test/feature-implementor/evals/workspace/eval-016-draft-status-continues-current-plan/comparison.md` |
+
+两轮 baseline 均由全新 sub-agent 生成，未读取 feature-implementor skill、internal
+instructions 或 Engineer README；未提交 transcript、verdict、timing、diagnostics、
+with_skill / without_skill 等运行期产物。
+
+### 8.3 验证结果
+
+| Command | Result |
+| --- | --- |
+| `uv run scripts/check_repository_contract.py` | PASS |
+| `uv run scripts/check_eval_contract.py` | PASS |
+| `uv run scripts/check_eval_artifacts.py` | PASS |
+| `uv run scripts/check_doc_contract.py` | PASS |
+| CI 同款显式 pytest 清单 + `scripts/test_check_repository_contract.py` | PASS，143 passed |
+| `git diff --check` | PASS |
+| 独立 validation sub-agent | PASS；closeout 前为 conditional pass，完成本节后无代码或测试阻塞项。 |
+
+### 8.4 剩余风险与下一 owner
+
+- eval-015、eval-016 的 without-skill baseline 也全部通过，说明 fixture 与 assertions
+  对通用模型提示较充分；这不影响目标行为正确性，但 skill 增益区分度有限，已在两份
+  `comparison.md` 如实记录。
+- 当前 CI 使用显式 pytest 文件清单；本轮已加入新测试文件，后续新增 scripts 级测试仍需
+  同步维护该清单。
+- 下一 owner 为 Engineer delivery：提交、推送、创建 PR 并等待 CI；未经维护者确认不合并。

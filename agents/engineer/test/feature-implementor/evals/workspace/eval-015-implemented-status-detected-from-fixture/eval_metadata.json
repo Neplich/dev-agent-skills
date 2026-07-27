@@ -1,0 +1,12 @@
+{
+  "eval_id": "eval-015-implemented-status-detected-from-fixture",
+  "eval_name": "implemented-status-detected-from-fixture",
+  "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-015-implemented-status-detected-from-fixture",
+  "skill_availability_goal": "Verify that feature-implementor reads active plan frontmatter, detects status Implemented without a prompt hint, and stops at the three-option archive gate.",
+  "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现在要在这个功能上做下一轮更新，请进入 feature-implementor 创建下一份实施计划，先不要改代码。",
+  "fixture_context": [
+    "docs/pm/payment-refund/PRD.md",
+    "docs/engineer/payment-refund/TRD.md",
+    "docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md"
+  ]
+}

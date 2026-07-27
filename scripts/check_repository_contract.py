@@ -867,7 +867,7 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
             continue
         metadata, _ = parsed
 
-        for field in ("feature", "version", "date", "last_updated"):
+        for field in ("feature", "version", "status", "date", "last_updated"):
             value = metadata.get(field)
             if not isinstance(value, str) or not value.strip():
                 add_error(errors, path, f"frontmatter {field!r} must be non-empty")
@@ -921,6 +921,7 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
             rel,
             feature_path,
             metadata,
+            base_ref,
             rel in changed_engineer_docs,
             changed_engineer_docs,
             errors,
@@ -1106,19 +1107,6 @@ def validate_archive_plan_metadata(
         )
 
 
-def feature_path_plan_archive_scopes(root: Path, feature_path: str) -> set[str]:
-    archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
-    scopes: set[str] = set()
-    if not archive_dir.is_dir():
-        return scopes
-    for candidate in archive_dir.glob("IMPLEMENTATION_PLAN-*.md"):
-        candidate_rel = candidate.relative_to(root).as_posix()
-        match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel)
-        if match is not None:
-            scopes.add(match.group("scope"))
-    return scopes
-
-
 def feature_path_changed_plan_archive_scopes(
     root: Path,
     feature_path: str,
@@ -1140,6 +1128,7 @@ def validate_active_plan_archive_linkage(
     rel: str,
     feature_path: str,
     metadata: dict[str, str],
+    base_ref: str | None,
     plan_changed: bool,
     changed_engineer_docs: set[str],
     errors: list[ContractError],
@@ -1147,26 +1136,33 @@ def validate_active_plan_archive_linkage(
     path = root / rel
     previous_archive = metadata.get("previous_plan_archive")
     if not isinstance(previous_archive, str) or not previous_archive.strip():
-        # Only replacement plans created or rewritten after an archive exists
-        # must record the back link; an unchanged active plan (for example the
-        # copy-archived source plan left in place) is allowed to omit it.
-        # A changed active plan whose 'implementation_scope' matches an
-        # archive scope added or updated in this same change set is the
-        # just-archived source plan (closeout evidence and approved archive
-        # copy landing together), not a replacement plan, so it may also omit
-        # the back link. Archives that already existed on the base ref and are
-        # untouched in this change do not grant that exemption.
-        if plan_changed:
-            archive_scopes = feature_path_plan_archive_scopes(root, feature_path)
-            changed_archive_scopes = feature_path_changed_plan_archive_scopes(
-                root, feature_path, changed_engineer_docs
-            )
-            if archive_scopes and metadata.get("implementation_scope") not in changed_archive_scopes:
-                add_error(
-                    errors,
-                    path,
-                    "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path and 'implementation_scope' does not match any archive scope added or updated in this change",
-                )
+        if not plan_changed or base_ref is None:
+            return
+
+        base_content = content_at_ref(root, base_ref, rel)
+        if base_content is None:
+            return
+        base_parsed = parse_markdown_frontmatter(path, base_content, errors=None)
+        base_metadata = base_parsed[0] if base_parsed is not None else {}
+        base_status = base_metadata.get("status", "")
+        if base_status != "Implemented":
+            return
+
+        # The base status identifies replacement attempts reliably; comparing
+        # implementation_scope values would allow a broad or reused scope to
+        # bypass the gate. The scope is only used for the narrow case where the
+        # completed active plan and its matching archive land in one change.
+        changed_archive_scopes = feature_path_changed_plan_archive_scopes(
+            root, feature_path, changed_engineer_docs
+        )
+        if metadata.get("implementation_scope") in changed_archive_scopes:
+            return
+
+        add_error(
+            errors,
+            path,
+            "frontmatter 'previous_plan_archive' must be non-empty because the active plan status on the base ref is 'Implemented'; archive that plan before modifying it",
+        )
         return
 
     archive_match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(previous_archive)
