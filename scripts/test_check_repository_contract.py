@@ -43,6 +43,7 @@ def write_plan(
     status: str | None,
     scope: str = "next-round",
     version: str = "0.2.0",
+    last_updated: str = "2026-07-27",
     previous_archive: str | None = None,
     body: str = "# Fixture plan\n",
 ) -> dict[str, str]:
@@ -50,7 +51,7 @@ def write_plan(
         "feature": FEATURE_PATH,
         "version": version,
         "date": "2026-07-27",
-        "last_updated": "2026-07-27",
+        "last_updated": last_updated,
         "implementation_scope": scope,
     }
     if status is not None:
@@ -65,13 +66,24 @@ def write_plan(
     return metadata
 
 
-def write_archive(root: Path, *, body: str = "# Archived fixture plan\n") -> None:
+def write_archive(
+    root: Path,
+    *,
+    status: str = "Archived",
+    body: str = "# Archived fixture plan\n",
+) -> None:
     archive_path = root / ARCHIVE_REL
     archive_path.parent.mkdir(parents=True, exist_ok=True)
+    superseded_reason = (
+        'superseded_reason: "The round was abandoned."\n'
+        if status == "Superseded"
+        else ""
+    )
     archive_path.write_text(
         "---\n"
         'implementation_scope: "completed-round"\n'
-        'status: "Archived"\n'
+        f'status: "{status}"\n'
+        f"{superseded_reason}"
         "---\n\n"
         f"{body}",
         encoding="utf-8",
@@ -164,22 +176,31 @@ def test_active_plan_status_rejects_noncanonical_value(tmp_path: Path) -> None:
     )
 
 
-def test_implemented_base_requires_previous_archive(tmp_path: Path) -> None:
+def test_implemented_base_with_changed_body_requires_previous_archive(
+    tmp_path: Path,
+) -> None:
     root = initialize_repo(tmp_path, base_status="Implemented")
-    metadata = write_plan(root, status="Draft")
+    metadata = write_plan(root, status="Draft", body="# Replacement plan\n")
     commit_all(root, "rewrite active plan")
 
     errors = validate_changed_plan(root, metadata)
 
     assert [error.message for error in errors] == [
-        "frontmatter 'previous_plan_archive' must be non-empty because the active plan "
-        "status on the base ref is 'Implemented'; archive that plan before modifying it"
+        "frontmatter 'previous_plan_archive' must be non-empty because the base "
+        "round for this active plan is completed or is being archived in this "
+        "change; link the new plan to that archive"
     ]
 
 
-def test_non_implemented_base_allows_plan_update_without_archive(tmp_path: Path) -> None:
+def test_draft_base_with_changed_body_allows_continued_update_without_archive(
+    tmp_path: Path,
+) -> None:
     root = initialize_repo(tmp_path, base_status="Draft")
-    metadata = write_plan(root, status="Pending Confirmation")
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        body="# Expanded fixture plan\n",
+    )
     commit_all(root, "update draft plan")
 
     assert validate_changed_plan(root, metadata) == []
@@ -242,41 +263,63 @@ def test_new_plan_and_matching_archive_in_same_change_allow_missing_back_link(
     assert validate_changed_plan(root, metadata) == []
 
 
-def test_closeout_archive_matching_scope_and_body_allows_missing_back_link(
+def test_implemented_base_with_unchanged_body_allows_frontmatter_only_update(
     tmp_path: Path,
 ) -> None:
     root = initialize_repo(tmp_path, base_status="Implemented")
-    write_archive(root, body="# Fixture plan\n")
     metadata = write_plan(
         root,
         status="Implemented",
         scope="completed-round",
-        version="0.3.0",
+        last_updated="2026-07-28",
     )
-    commit_all(root, "close out plan and add archive")
+    commit_all(root, "update closeout metadata")
 
     assert validate_changed_plan(root, metadata) == []
 
 
-def test_closeout_archive_matching_scope_but_different_body_requires_back_link(
+def test_superseding_draft_and_replacing_body_requires_previous_archive(
     tmp_path: Path,
 ) -> None:
-    root = initialize_repo(tmp_path, base_status="Implemented")
-    write_archive(root, body="# Archived fixture plan\n")
+    root = initialize_repo(tmp_path, base_status="Draft")
+    write_archive(root, status="Superseded", body="# Fixture plan\n")
     metadata = write_plan(
         root,
-        status="Implemented",
-        scope="completed-round",
-        version="0.3.0",
-        body="# New fixture plan\n",
+        status="Pending Confirmation",
+        scope="replacement-round",
+        body="# Replacement plan\n",
     )
-    commit_all(root, "reuse archive scope for a different plan")
+    commit_all(root, "supersede draft and add replacement")
 
     errors = validate_changed_plan(root, metadata)
 
     assert [error.message for error in errors] == [
-        "frontmatter 'previous_plan_archive' must be non-empty because the active plan "
-        "status on the base ref is 'Implemented'; archive that plan before modifying it"
+        "frontmatter 'previous_plan_archive' must be non-empty because the base "
+        "round for this active plan is completed or is being archived in this "
+        "change; link the new plan to that archive"
+    ]
+
+
+def test_matching_rewritten_active_and_archive_bodies_cannot_bypass_back_link(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Implemented")
+    forged_body = "# Forged replacement plan\n"
+    write_archive(root, body=forged_body)
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        scope="completed-round",
+        body=forged_body,
+    )
+    commit_all(root, "rewrite active plan and archive with matching new body")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [
+        "frontmatter 'previous_plan_archive' must be non-empty because the base "
+        "round for this active plan is completed or is being archived in this "
+        "change; link the new plan to that archive"
     ]
 
 

@@ -1189,37 +1189,29 @@ def validate_active_plan_archive_linkage(
             )
             return
         base_parsed = parse_markdown_frontmatter(path, base_content, errors=None)
-        base_metadata = base_parsed[0] if base_parsed is not None else {}
-        base_status = base_metadata.get("status", "")
-        if base_status != "Implemented":
+        if base_parsed is None:
+            base_metadata, base_body = {}, ""
+        else:
+            base_metadata, base_body = base_parsed
+
+        if body == base_body:
             return
 
-        # The base status identifies replacement attempts reliably; comparing
-        # implementation_scope values would allow a broad or reused scope to
-        # bypass the gate. The scope is only used for the narrow case where the
-        # completed active plan and its matching archive land in one change.
+        base_status = base_metadata.get("status", "")
+        base_scope = base_metadata.get("implementation_scope", "")
         changed_archive_scopes = feature_path_changed_plan_archive_scopes(
             root, feature_path, changed_engineer_docs
         )
-        implementation_scope = metadata.get("implementation_scope")
-        if implementation_scope in changed_archive_scopes:
-            archive_rel = (
-                f"docs/engineer/{feature_path}/implementation-plans/archive/"
-                f"IMPLEMENTATION_PLAN-{implementation_scope}.md"
-            )
-            archive_path = root / archive_rel
-            archive_parsed = parse_markdown_frontmatter(
-                archive_path,
-                archive_path.read_text(encoding="utf-8"),
-                errors=None,
-            )
-            if archive_parsed is not None and body == archive_parsed[1]:
-                return
+        base_round_closing_now = base_scope in changed_archive_scopes
+        if base_status != "Implemented" and not base_round_closing_now:
+            return
 
         add_error(
             errors,
             path,
-            "frontmatter 'previous_plan_archive' must be non-empty because the active plan status on the base ref is 'Implemented'; archive that plan before modifying it",
+            "frontmatter 'previous_plan_archive' must be non-empty because the base "
+            "round for this active plan is completed or is being archived in this "
+            "change; link the new plan to that archive",
         )
         return
 
