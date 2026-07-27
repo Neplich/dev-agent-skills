@@ -1145,25 +1145,20 @@ def feature_path_plan_archive_scopes(root: Path, feature_path: str) -> set[str]:
     return scopes
 
 
-def feature_path_latest_archive_scopes(root: Path, feature_path: str) -> set[str]:
-    archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
-    if not archive_dir.is_dir():
-        return set()
+def feature_path_latest_archive_scopes(
+    root: Path,
+    base_ref: str,
+    feature_path: str,
+) -> set[str]:
     scopes_by_date: dict[str, set[str]] = {}
-    for candidate in archive_dir.glob("IMPLEMENTATION_PLAN-*.md"):
-        if not candidate.is_file():
-            continue
-        candidate_rel = candidate.relative_to(root).as_posix()
-        match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel)
+    for rel in feature_path_archive_files(root, base_ref, feature_path):
+        match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel)
         if match is None:
             continue
-        try:
-            content = candidate.read_text(encoding="utf-8")
-        except (OSError, UnicodeError):
+        content = archive_content_trusted(root, base_ref, rel)
+        if content is None:
             continue
-        parsed = parse_markdown_frontmatter(
-            candidate, content, errors=None
-        )
+        parsed = parse_markdown_frontmatter(root / rel, content, errors=None)
         if parsed is None:
             continue
         archived_at = parsed[0].get("archived_at", "")
@@ -1173,6 +1168,23 @@ def feature_path_latest_archive_scopes(root: Path, feature_path: str) -> set[str
     if not scopes_by_date:
         return set()
     return scopes_by_date[max(scopes_by_date)]
+
+
+def feature_path_archive_files_in_worktree(
+    root: Path,
+    feature_path: str,
+) -> set[str]:
+    archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
+    if not archive_dir.is_dir():
+        return set()
+    archive_files: set[str] = set()
+    for candidate in archive_dir.glob("IMPLEMENTATION_PLAN-*.md"):
+        if not candidate.is_file():
+            continue
+        candidate_rel = candidate.relative_to(root).as_posix()
+        if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel) is not None:
+            archive_files.add(candidate_rel)
+    return archive_files
 
 
 def parsed_markdown_body(path: Path) -> str | None:
@@ -1198,6 +1210,38 @@ def archive_files_at_ref(
     return [line for line in output.splitlines() if line]
 
 
+def feature_path_archive_files(
+    root: Path,
+    base_ref: str,
+    feature_path: str,
+) -> list[str]:
+    return sorted(
+        set(archive_files_at_ref(root, base_ref, feature_path))
+        | feature_path_archive_files_in_worktree(root, feature_path)
+    )
+
+
+def archive_content_trusted(
+    root: Path,
+    base_ref: str,
+    archive_rel: str,
+) -> str | None:
+    """Return the file content to trust for an archive path: its base_ref
+    snapshot if it already existed there (immune to same-change rewrites),
+    otherwise its current working-tree content (genuinely new this change,
+    nothing to tamper with)."""
+    base_content = content_at_ref(root, base_ref, archive_rel)
+    if base_content is not None:
+        return base_content
+    path = root / archive_rel
+    if not path.is_file():
+        return None
+    try:
+        return path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError):
+        return None
+
+
 def feature_path_plan_archive_scopes_at_ref(
     root: Path,
     ref: str,
@@ -1211,16 +1255,14 @@ def feature_path_plan_archive_scopes_at_ref(
     return scopes
 
 
-def feature_path_any_archive_matches_body_at_ref(
+def feature_path_any_archive_matches_body(
     root: Path,
-    ref: str,
+    base_ref: str,
     feature_path: str,
     target_body: str,
 ) -> bool:
-    for rel in archive_files_at_ref(root, ref, feature_path):
-        if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel) is None:
-            continue
-        content = content_at_ref(root, ref, rel)
+    for rel in feature_path_archive_files(root, base_ref, feature_path):
+        content = archive_content_trusted(root, base_ref, rel)
         if content is None:
             continue
         parsed = parse_markdown_frontmatter(root / rel, content, errors=None)
@@ -1251,7 +1293,7 @@ def active_plan_base_round(
     base_metadata, base_body = base_parsed
 
     base_status = base_metadata.get("status", "")
-    already_archived = feature_path_any_archive_matches_body_at_ref(
+    already_archived = feature_path_any_archive_matches_body(
         root, base_ref, feature_path, base_body
     )
     settled = base_status == "Implemented" or already_archived
@@ -1358,7 +1400,9 @@ def validate_active_plan_archive_linkage(
 
     base_content = content_at_ref(root, base_ref, rel)
     if base_content is None:
-        latest_scopes = feature_path_latest_archive_scopes(root, feature_path)
+        latest_scopes = feature_path_latest_archive_scopes(
+            root, base_ref, feature_path
+        )
         if latest_scopes and archive_match.group("scope") not in latest_scopes:
             latest_scope_list = ", ".join(repr(scope) for scope in sorted(latest_scopes))
             add_error(
@@ -1382,7 +1426,17 @@ def validate_active_plan_archive_linkage(
     if base_round is None or not base_round.settled or base_round.content_unchanged:
         return
 
-    if parsed_markdown_body(archive_path) != base_round.body:
+    archive_content = archive_content_trusted(root, base_ref, previous_archive)
+    archive_parsed = (
+        parse_markdown_frontmatter(
+            archive_path,
+            archive_content,
+            errors=None,
+        )
+        if archive_content is not None
+        else None
+    )
+    if archive_parsed is None or archive_parsed[1] != base_round.body:
         add_error(
             errors,
             path,
