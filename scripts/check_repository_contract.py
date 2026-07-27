@@ -89,10 +89,8 @@ class ContractError:
 @dataclass(frozen=True)
 class ActivePlanBaseRound:
     body: str
-    scope: str
-    status: str
-    requires_closure: bool
-    allows_unlinked_same_change_closeout: bool
+    settled: bool
+    content_unchanged: bool
 
 
 def repo_root() -> Path:
@@ -951,7 +949,6 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
             body,
             base_ref,
             rel in changed_engineer_docs,
-            changed_engineer_docs,
             errors,
         )
 
@@ -1148,22 +1145,6 @@ def feature_path_plan_archive_scopes(root: Path, feature_path: str) -> set[str]:
     return scopes
 
 
-def feature_path_changed_plan_archive_scopes(
-    root: Path,
-    feature_path: str,
-    changed_engineer_docs: set[str],
-) -> set[str]:
-    scopes: set[str] = set()
-    for candidate_rel in changed_engineer_docs:
-        match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel)
-        if match is None or match.group("feature_path") != feature_path:
-            continue
-        if not (root / candidate_rel).exists():
-            continue
-        scopes.add(match.group("scope"))
-    return scopes
-
-
 def feature_path_latest_archive_scopes(root: Path, feature_path: str) -> set[str]:
     archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
     if not archive_dir.is_dir():
@@ -1203,6 +1184,25 @@ def parsed_markdown_body(path: Path) -> str | None:
     return parsed[1] if parsed is not None else None
 
 
+def feature_path_any_archive_matches_body(
+    root: Path,
+    feature_path: str,
+    target_body: str,
+) -> bool:
+    archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
+    if not archive_dir.is_dir():
+        return False
+    for candidate in archive_dir.glob("IMPLEMENTATION_PLAN-*.md"):
+        if not candidate.is_file():
+            continue
+        candidate_rel = candidate.relative_to(root).as_posix()
+        if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel) is None:
+            continue
+        if parsed_markdown_body(candidate) == target_body:
+            return True
+    return False
+
+
 def active_plan_base_round(
     root: Path,
     path: Path,
@@ -1210,7 +1210,6 @@ def active_plan_base_round(
     metadata: dict[str, str],
     body: str,
     base_content: str,
-    changed_engineer_docs: set[str],
     errors: list[ContractError],
 ) -> ActivePlanBaseRound | None:
     base_parsed = parse_markdown_frontmatter(path, base_content, errors=None)
@@ -1225,48 +1224,22 @@ def active_plan_base_round(
     base_metadata, base_body = base_parsed
 
     base_status = base_metadata.get("status", "")
-    current_status = metadata.get("status", "")
-    base_scope = base_metadata.get("implementation_scope", "")
-    current_scope = metadata.get("implementation_scope", "")
-    changed_archive_scopes = feature_path_changed_plan_archive_scopes(
-        root, feature_path, changed_engineer_docs
+    already_archived = feature_path_any_archive_matches_body(
+        root, feature_path, base_body
     )
-    base_round_closing_now = bool(base_scope) and base_scope in changed_archive_scopes
-    status_regressed_from_implemented = (
-        base_status == "Implemented" and current_status != "Implemented"
+    settled = base_status == "Implemented" or already_archived
+
+    content_unchanged = (
+        body == base_body
+        and metadata.get("status", "") == base_status
+        and metadata.get("previous_plan_archive", "")
+        == base_metadata.get("previous_plan_archive", "")
     )
-    round_requires_closure_handling = (
-        base_status == "Implemented"
-        or base_round_closing_now
-        or status_regressed_from_implemented
-    )
-    allows_unlinked_same_change_closeout = False
-    if (
-        round_requires_closure_handling
-        and current_scope == base_scope
-        and not status_regressed_from_implemented
-    ):
-        if body == base_body:
-            allows_unlinked_same_change_closeout = True
-        elif base_round_closing_now and base_scope and base_body:
-            archive_rel = (
-                f"docs/engineer/{feature_path}/implementation-plans/archive/"
-                f"IMPLEMENTATION_PLAN-{base_scope}.md"
-            )
-            archive_path = root / archive_rel
-            if (
-                body.startswith(base_body)
-                and archive_path.is_file()
-                and parsed_markdown_body(archive_path) == base_body
-            ):
-                allows_unlinked_same_change_closeout = True
 
     return ActivePlanBaseRound(
         body=base_body,
-        scope=base_scope,
-        status=base_status,
-        requires_closure=round_requires_closure_handling,
-        allows_unlinked_same_change_closeout=allows_unlinked_same_change_closeout,
+        settled=settled,
+        content_unchanged=content_unchanged,
     )
 
 
@@ -1278,7 +1251,6 @@ def validate_active_plan_archive_linkage(
     body: str,
     base_ref: str | None,
     plan_changed: bool,
-    changed_engineer_docs: set[str],
     errors: list[ContractError],
 ) -> None:
     path = root / rel
@@ -1305,22 +1277,17 @@ def validate_active_plan_archive_linkage(
             metadata,
             body,
             base_content,
-            changed_engineer_docs,
             errors,
         )
-        if (
-            base_round is None
-            or not base_round.requires_closure
-            or base_round.allows_unlinked_same_change_closeout
-        ):
+        if base_round is None or not base_round.settled or base_round.content_unchanged:
             return
 
         add_error(
             errors,
             path,
             "frontmatter 'previous_plan_archive' must be non-empty because the base "
-            "round for this active plan is completed, regressed, or being archived "
-            "in this change; link the new plan to that archive",
+            "round for this active plan is already settled and its content has "
+            "changed; link the new plan to an archive that faithfully preserves it",
         )
         return
 
@@ -1355,11 +1322,6 @@ def validate_active_plan_archive_linkage(
 
     base_content = content_at_ref(root, base_ref, rel)
     if base_content is None:
-        changed_archive_scopes = feature_path_changed_plan_archive_scopes(
-            root, feature_path, changed_engineer_docs
-        )
-        if archive_match.group("scope") in changed_archive_scopes:
-            return
         latest_scopes = feature_path_latest_archive_scopes(root, feature_path)
         if latest_scopes and archive_match.group("scope") not in latest_scopes:
             latest_scope_list = ", ".join(repr(scope) for scope in sorted(latest_scopes))
@@ -1378,23 +1340,9 @@ def validate_active_plan_archive_linkage(
         metadata,
         body,
         base_content,
-        changed_engineer_docs,
         errors,
     )
-    if base_round is None or not base_round.requires_closure:
-        return
-
-    if body == base_round.body and metadata.get("status", "") == base_round.status:
-        return
-
-    if base_round.scope and archive_match.group("scope") != base_round.scope:
-        add_error(
-            errors,
-            path,
-            "frontmatter 'previous_plan_archive' must reference the archive for "
-            f"the base active plan scope {base_round.scope!r}, not an earlier or unrelated "
-            "archive",
-        )
+    if base_round is None or not base_round.settled or base_round.content_unchanged:
         return
 
     if parsed_markdown_body(archive_path) != base_round.body:

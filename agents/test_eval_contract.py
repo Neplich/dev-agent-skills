@@ -1337,27 +1337,19 @@ class EvalContractTests(unittest.TestCase):
 
         self.assertEqual([], errors)
 
-    def test_repository_contract_rejects_missing_previous_plan_archive_for_base_archived_scope(self):
+    def test_repository_contract_rejects_missing_backlink_for_settled_base_plan(self):
         checker = load_repository_checker_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
-            # The archive and an Implemented active plan already exist on the
-            # main baseline. The feature branch replaces the active-plan body,
-            # so it must link the new round even though the archive predates it.
+            # An Implemented active plan already exists on the main baseline.
+            # Replacing its body must link the new round to a faithful archive.
             subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True)
             plan = self._write_history_search_plan_fixture(
                 root,
                 implementation_scope="initial-rollout",
                 status="Implemented",
             )
-            archive = (
-                root
-                / "docs/engineer/chat-interface/history-search"
-                / "implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"
-            )
-            archive.parent.mkdir(parents=True)
-            archive.write_text("# Archived Plan\n")
             subprocess.run(["git", "add", "-A"], cwd=root, check=True)
             subprocess.run(
                 [
@@ -1389,8 +1381,8 @@ class EvalContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn(
             "frontmatter 'previous_plan_archive' must be non-empty because the "
-            "base round for this active plan is completed, regressed, or being "
-            "archived in this change; link the new plan to that archive",
+            "base round for this active plan is already settled and its content "
+            "has changed; link the new plan to an archive that faithfully preserves it",
             rendered,
         )
 

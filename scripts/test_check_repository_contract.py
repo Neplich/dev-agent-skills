@@ -24,6 +24,15 @@ ARCHIVE_REL = (
     f"docs/engineer/{FEATURE_PATH}/implementation-plans/archive/"
     "IMPLEMENTATION_PLAN-completed-round.md"
 )
+REQUIRED_BACKLINK_ERROR = (
+    "frontmatter 'previous_plan_archive' must be non-empty because the base "
+    "round for this active plan is already settled and its content has changed; "
+    "link the new plan to an archive that faithfully preserves it"
+)
+FIDELITY_ERROR = (
+    "frontmatter 'previous_plan_archive' must reference an archive whose body "
+    "faithfully preserves the base active plan"
+)
 
 
 def archive_rel(scope: str) -> str:
@@ -173,7 +182,6 @@ def validate_changed_plan(
         parsed[1],
         base_ref,
         True,
-        changed_docs,
         errors,
     )
     return errors
@@ -221,11 +229,7 @@ def test_implemented_base_with_changed_body_requires_previous_archive(
 
     errors = validate_changed_plan(root, metadata)
 
-    assert [error.message for error in errors] == [
-        "frontmatter 'previous_plan_archive' must be non-empty because the base "
-        "round for this active plan is completed, regressed, or being archived "
-        "in this change; link the new plan to that archive"
-    ]
+    assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
 
 
 def test_draft_base_with_changed_body_allows_continued_update_without_archive(
@@ -242,13 +246,19 @@ def test_draft_base_with_changed_body_allows_continued_update_without_archive(
     assert validate_changed_plan(root, metadata) == []
 
 
-def test_previous_archive_matching_base_scope_is_allowed(tmp_path: Path) -> None:
+def test_faithful_previous_archive_with_any_scope_is_allowed(tmp_path: Path) -> None:
     root = initialize_repo(tmp_path, base_status="Implemented")
-    write_archive(root, body="# Fixture plan\n")
+    faithful_archive = archive_rel("descriptive-label-only")
+    write_archive(
+        root,
+        scope="descriptive-label-only",
+        body="# Fixture plan\n",
+    )
     metadata = write_plan(
         root,
         status="Pending Confirmation",
-        previous_archive=ARCHIVE_REL,
+        previous_archive=faithful_archive,
+        body="# Replacement plan\n",
     )
     commit_all(root, "archive completed plan and add replacement")
 
@@ -325,7 +335,7 @@ def test_matching_scope_archive_rejects_unfaithful_base_body(
     ]
 
 
-def test_previous_archive_for_older_scope_cannot_replace_base_round_archive(
+def test_different_scope_archive_is_rejected_only_when_body_is_unfaithful(
     tmp_path: Path,
 ) -> None:
     root = initialize_repo(tmp_path, base_status="Implemented")
@@ -340,11 +350,7 @@ def test_previous_archive_for_older_scope_cannot_replace_base_round_archive(
 
     errors = validate_changed_plan(root, metadata)
 
-    assert [error.message for error in errors] == [
-        "frontmatter 'previous_plan_archive' must reference the archive for "
-        "the base active plan scope 'completed-round', not an earlier or "
-        "unrelated archive"
-    ]
+    assert [error.message for error in errors] == [FIDELITY_ERROR]
 
 
 def test_unchanged_active_plan_keeps_link_to_prior_round(tmp_path: Path) -> None:
@@ -374,7 +380,6 @@ def test_unchanged_active_plan_keeps_link_to_prior_round(tmp_path: Path) -> None
         parsed[1],
         contract.implementation_plan_base_ref(root),
         False,
-        set(),
         errors,
     )
 
@@ -417,11 +422,7 @@ def test_implemented_plan_status_regression_cannot_reuse_prior_round_link(
 
     errors = validate_changed_plan(root, metadata)
 
-    assert [error.message for error in errors] == [
-        "frontmatter 'previous_plan_archive' must reference the archive for "
-        "the base active plan scope 'current-round', not an earlier or unrelated "
-        "archive"
-    ]
+    assert [error.message for error in errors] == [FIDELITY_ERROR]
 
 
 def test_draft_continuation_keeps_link_to_prior_round(tmp_path: Path) -> None:
@@ -491,7 +492,7 @@ def test_new_plan_and_matching_archive_in_same_change_requires_back_link(
     ]
 
 
-def test_scope_less_unfinished_base_does_not_infer_closeout_from_archive(
+def test_scope_less_unfinished_base_is_settled_by_faithful_archive(
     tmp_path: Path,
 ) -> None:
     root = initialize_repo(tmp_path, base_status="Draft")
@@ -513,7 +514,9 @@ def test_scope_less_unfinished_base_does_not_infer_closeout_from_archive(
     )
     commit_all(root, "supersede legacy pending plan and add replacement")
 
-    assert validate_changed_plan(root, metadata) == []
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
 
 
 def test_new_plan_without_base_file_rejects_link_to_older_archive(
@@ -582,7 +585,7 @@ def test_new_plan_allows_link_to_any_archive_tied_for_latest_date(
     assert validate_changed_plan(root, metadata) == []
 
 
-def test_new_plan_without_base_file_allows_link_to_changed_archive(
+def test_new_plan_without_base_file_allows_link_to_same_change_latest_archive(
     tmp_path: Path,
 ) -> None:
     root = initialize_repo(tmp_path, base_status=None, base_has_plan=False)
@@ -590,16 +593,47 @@ def test_new_plan_without_base_file_allows_link_to_changed_archive(
     write_archive(root, scope="older-round", archived_at="2026-07-25")
     commit_all(root, "add historical archive")
     run_git(root, "switch", "-C", "fixture-change")
-    changed_archive = archive_rel("current-round")
+    current_archive = archive_rel("current-round")
     write_archive(root, scope="current-round", archived_at="2026-07-27")
     metadata = write_plan(
         root,
         status="Pending Confirmation",
-        previous_archive=changed_archive,
+        previous_archive=current_archive,
     )
     commit_all(root, "add current archive and linked plan")
 
     assert validate_changed_plan(root, metadata) == []
+
+
+def test_new_plan_without_base_file_rejects_edited_stale_archive(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status=None, base_has_plan=False)
+    run_git(root, "switch", "main")
+    stale_archive = archive_rel("stale-round")
+    write_archive(root, scope="stale-round", archived_at="2026-07-25")
+    write_archive(root, scope="latest-round", archived_at="2026-07-27")
+    commit_all(root, "add stale and latest archives")
+    run_git(root, "switch", "-C", "fixture-change")
+    write_archive(
+        root,
+        scope="stale-round",
+        archived_at="2026-07-25",
+        body="# Edited stale archive\n",
+    )
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        previous_archive=stale_archive,
+    )
+    commit_all(root, "edit stale archive and link new plan to it")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [
+        "frontmatter 'previous_plan_archive' must reference the most recent "
+        "archive for this feature_path ('latest-round'), not an older archive"
+    ]
 
 
 def test_new_plan_without_base_file_allows_link_to_only_archive(
@@ -634,11 +668,7 @@ def test_implemented_base_with_unchanged_body_rejects_status_regression(
 
     errors = validate_changed_plan(root, metadata)
 
-    assert [error.message for error in errors] == [
-        "frontmatter 'previous_plan_archive' must be non-empty because the base "
-        "round for this active plan is completed, regressed, or being archived "
-        "in this change; link the new plan to that archive"
-    ]
+    assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
 
 
 def test_implemented_base_with_unchanged_body_allows_frontmatter_only_update(
@@ -656,6 +686,32 @@ def test_implemented_base_with_unchanged_body_allows_frontmatter_only_update(
     assert validate_changed_plan(root, metadata) == []
 
 
+def test_implemented_base_rejects_replacing_unchanged_back_link(
+    tmp_path: Path,
+) -> None:
+    root, prior_archive = initialize_repo_with_prior_link(
+        tmp_path,
+        base_status="Implemented",
+    )
+    unrelated_archive = archive_rel("unrelated-round")
+    write_archive(
+        root,
+        scope="unrelated-round",
+        body="# Unrelated archived plan\n",
+    )
+    metadata = write_plan(
+        root,
+        status="Implemented",
+        scope="current-round",
+        previous_archive=unrelated_archive,
+    )
+    commit_all(root, f"replace backlink {prior_archive} with unrelated archive")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [FIDELITY_ERROR]
+
+
 def test_superseding_draft_and_replacing_body_requires_previous_archive(
     tmp_path: Path,
 ) -> None:
@@ -671,11 +727,33 @@ def test_superseding_draft_and_replacing_body_requires_previous_archive(
 
     errors = validate_changed_plan(root, metadata)
 
-    assert [error.message for error in errors] == [
-        "frontmatter 'previous_plan_archive' must be non-empty because the base "
-        "round for this active plan is completed, regressed, or being archived "
-        "in this change; link the new plan to that archive"
-    ]
+    assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
+
+
+def test_previously_archived_draft_base_requires_back_link_when_body_changes(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    run_git(root, "switch", "main")
+    write_archive(
+        root,
+        scope="previously-settled-draft",
+        status="Superseded",
+        body="# Fixture plan\n",
+    )
+    commit_all(root, "archive draft in an earlier change")
+    run_git(root, "switch", "-C", "fixture-change")
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        scope="replacement-round",
+        body="# Replacement plan\n",
+    )
+    commit_all(root, "replace previously archived draft")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
 
 
 def test_faithful_archive_does_not_allow_unrelated_active_body_rewrite(
@@ -693,14 +771,30 @@ def test_faithful_archive_does_not_allow_unrelated_active_body_rewrite(
 
     errors = validate_changed_plan(root, metadata)
 
-    assert [error.message for error in errors] == [
-        "frontmatter 'previous_plan_archive' must be non-empty because the base "
-        "round for this active plan is completed, regressed, or being archived "
-        "in this change; link the new plan to that archive"
-    ]
+    assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
 
 
-def test_superseding_draft_with_faithful_archive_allows_closeout_body_update(
+def test_draft_continuation_matching_unrelated_archive_body_remains_unsettled(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    coincidental_body = "# Coincidental next-round body\n"
+    write_archive(
+        root,
+        scope="unrelated-history",
+        body=coincidental_body,
+    )
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        body=coincidental_body,
+    )
+    commit_all(root, "continue draft with body matching unrelated history")
+
+    assert validate_changed_plan(root, metadata) == []
+
+
+def test_faithful_archive_with_extended_active_body_still_requires_back_link(
     tmp_path: Path,
 ) -> None:
     root = initialize_repo(tmp_path, base_status="Draft")
@@ -713,38 +807,59 @@ def test_superseding_draft_with_faithful_archive_allows_closeout_body_update(
     )
     commit_all(root, "supersede draft with closeout note")
 
-    assert validate_changed_plan(root, metadata) == []
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
 
 
 @pytest.mark.parametrize(
-    "historical_scope",
-    ["e2e-case-memory", "changelog-generator-docs-test-ci-semantics"],
+    "source_archive_rel",
+    [
+        (
+            "docs/engineer/agents/qa-agent/e2e-case-memory/"
+            "implementation-plans/archive/IMPLEMENTATION_PLAN-e2e-case-memory.md"
+        ),
+        (
+            "docs/engineer/agents/pm-agent/skills/changelog-generator/"
+            "implementation-plans/archive/"
+            "IMPLEMENTATION_PLAN-changelog-generator-docs-test-ci-semantics.md"
+        ),
+    ],
 )
-def test_backfilled_historical_scope_uses_normal_status_replacement_linkage(
+def test_backfilled_real_archive_body_settles_matching_draft_base(
     tmp_path: Path,
-    historical_scope: str,
+    source_archive_rel: str,
 ) -> None:
+    source_archive = Path(__file__).parents[1] / source_archive_rel
+    source_body = contract.parsed_markdown_body(source_archive)
+    assert source_body is not None
+
     root = initialize_repo(tmp_path, base_status="Draft")
     run_git(root, "switch", "main")
-    write_plan(root, status="Implemented", scope=historical_scope)
-    commit_all(root, f"add implemented {historical_scope} plan")
-    run_git(root, "switch", "-C", "fixture-change")
-    historical_archive = archive_rel(historical_scope)
+    write_plan(
+        root,
+        status="Draft",
+        scope="backfilled-history",
+        body=source_body,
+    )
     write_archive(
         root,
-        scope=historical_scope,
-        body="# Fixture plan\n",
+        scope="backfilled-history",
+        body=source_body,
     )
+    commit_all(root, f"backfill archive from {source_archive.name}")
+    run_git(root, "switch", "-C", "fixture-change")
     metadata = write_plan(
         root,
         status="Pending Confirmation",
-        scope=f"{historical_scope}-next",
-        previous_archive=historical_archive,
+        scope="next-round",
         body="# Replacement plan\n",
     )
-    commit_all(root, f"archive and replace {historical_scope} plan")
+    commit_all(root, "replace draft backed by real historical archive body")
 
-    assert validate_changed_plan(root, metadata) == []
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
 
 
 def test_matching_rewritten_active_and_archive_bodies_cannot_bypass_back_link(
@@ -763,11 +878,7 @@ def test_matching_rewritten_active_and_archive_bodies_cannot_bypass_back_link(
 
     errors = validate_changed_plan(root, metadata)
 
-    assert [error.message for error in errors] == [
-        "frontmatter 'previous_plan_archive' must be non-empty because the base "
-        "round for this active plan is completed, regressed, or being archived "
-        "in this change; link the new plan to that archive"
-    ]
+    assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
 
 
 def test_missing_base_ref_does_not_add_archive_linkage_error(tmp_path: Path) -> None:
@@ -795,7 +906,6 @@ def test_missing_base_ref_does_not_add_archive_linkage_error(tmp_path: Path) -> 
         parsed[1],
         None,
         True,
-        {PLAN_REL},
         errors,
     )
 
@@ -855,10 +965,7 @@ def test_previous_archive_without_frontmatter_reports_fidelity_error(
 
     errors = validate_changed_plan(root, metadata)
 
-    assert [error.message for error in errors] == [
-        "frontmatter 'previous_plan_archive' must reference an archive whose "
-        "body faithfully preserves the base active plan"
-    ]
+    assert [error.message for error in errors] == [FIDELITY_ERROR]
 
 
 @pytest.mark.parametrize(
