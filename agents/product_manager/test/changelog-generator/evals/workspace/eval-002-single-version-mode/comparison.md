@@ -5,67 +5,59 @@
 - Agent: `product_manager`
 - Skill: `changelog-generator`
 - Eval: `eval-002-single-version-mode`
-- Test case: single-version-mode
+- Test case: `single-version-mode`
 - Workspace: `workspace/eval-002-single-version-mode`
-- Classification: `(c)` 依赖实时 GitHub 数据。该场景必须读取目标仓库当时的 release、相邻 tag compare、merged PR 和 author；静态 mock 不能替代真实复验。
-- Latest result: PARTIAL - 2026-07-26 的 fresh `with_skill` / `without_skill` 已由当前会话中的同一个 fresh Codex subagent 顺序完成两次独立实时查询，并分别在隔离 scratch 中实际写入、回读和清理目标文件。with-skill 正确过滤唯一的 bot release PR 及 compare 中的 bot commits，但其 `## [v0.120.0]` 标题不满足现有 assertion 要求的 `## [x.y.z]`，因此为 2 PASS / 1 FAIL / 2 NOT EXERCISED；without-skill 为 3 PASS / 2 NOT EXERCISED。
+- Classification: `(c) 依赖实时外部数据`。本用例必须读取目标仓库当时的 release、相邻版本窗口、merged PR、author 与 tag compare。
+- Latest result: **PARTIAL** — fresh with-skill 正确选中实时最新 release `v0.120.0`，生成 assertion 当前要求的 `## [v0.120.0] - 2026-07-24`，过滤唯一 bot release PR 与 compare 中的 bot commits，并在没有 eligible 内容时省略所有空 section。本轮实际触发的 `v_version_yyyy_mm_dd`、`release_tag`、`section` 均确认 PASS；`pr_conventional_commit` 与 `breaking_change_breaking` 因实时窗口没有 eligible 普通 PR 或 breaking marker 而为 `NOT EXERCISED`，覆盖不完整，不能通过伪造 fixture 或条目补足，因此整体结论保持 `PARTIAL`。
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0。
-- Fixture: 仅包含 eval metadata；不新增静态 GitHub 快照。
-- Expected output: 生成最新 release tag 的版本块，格式为 `## [x.y.z] - YYYY-MM-DD`，包含该版本窗口内符合 skill 收录规则的 PR，分组写入，并以 `docs/changelog/changelog-v{version}.md` 为目标路径。
-- Fresh pair: 当前 fresh Codex subagent 先生成并锁定 `with_skill`，再由同一个 subagent 不应用 specialist skill 或 Product Manager README，仅凭原始 prompt 重新查询并锁定新的 `without_skill` baseline；没有复用历史 baseline。
+- Fixture: `eval_metadata.json` 中的原始 prompt；未添加静态 GitHub snapshot 或 mock。
+- Expected output: 最新 release 的版本块，标题为 `## [v{VERSION}] - YYYY-MM-DD`，目标为 `docs/changelog/changelog-v{version}.md`。
+- Fresh pair date: 2026-07-26（Asia/Shanghai）。
 
-## No-Leak Execution
+## Fresh / No-Leak Method
 
-- `with_skill` 生成前只读取本用例 `eval_metadata.json` 的原始 prompt，随后完整读取 Product Manager README 与 `changelog-generator/SKILL.md`；未读取 `evals.json`、assertions、expected output 或旧 comparison。
-- `with_skill` 的 live snapshot 和候选先锁定；随后同一个 fresh subagent 进入 baseline arm，不应用先前读取的 specialist skill 或 Product Manager README，仅依据原始 prompt 独立选择查询并生成候选。
-- baseline 未读取 `evals.json`、assertions、expected output 或旧 comparison，也未接收预计算 snapshot；它重新调用 `gh` 获取当时的 release 和 PR 数据。
-- 两个候选都锁定后，同一个 fresh subagent 才读取 assertions 和旧 comparison 并亲自完成 fresh judge。
-- 两个 arm 分别在独立临时目录实际写入并回读 `docs/changelog/changelog-v0.120.0.md`，确认内容后清理临时目录；本轮没有启动第二个 subagent，也没有持久化或提交 transcript、candidate、verdict、timing、outputs 或 diagnostics。
+1. 两个 arm 生成前，只从各自 workspace 的 `eval_metadata.json` 取得原始 prompt；没有读取 `evals.json`、assertions、expected output 或旧 comparison。
+2. with-skill arm 完整读取 Product Manager README、`changelog-generator/SKILL.md` 及其 Conventional Commit reference，独立查询 release、PR window 与 tag compare；候选先写入并回读 `tmp/eval-runs/issue173-fresh-eval/with-skill/eval-002/` 后锁定。
+3. without-skill arm 不读取、不应用该 README 或 skill，不读取 with-skill scratch，只依据原始 prompt重新查询 live GitHub；全新 baseline 写入并回读 `tmp/eval-runs/issue173-fresh-eval/without-skill/eval-002/` 后锁定。
+4. 两臂锁定后才读取本轮 `evals.json` 与旧 comparison，由当前 fresh Codex subagent逐 assertion judge。两臂也都在各自隔离 scratch 的 canonical target path 实际创建并回读目标文件。
 
 ## Independent Live Data Snapshots
 
 ### With Skill
 
-- 抓取时间：2026-07-26 16:38:41 `+08:00`（Asia/Shanghai）。
-- 仓库：`anthropics/anthropic-sdk-python`，默认分支 `main`。
-- 最新 release：`v0.120.0`，发布时间 `2026-07-24T16:32:34Z`。
-- 前一 release：`v0.119.0`，发布时间 `2026-07-23T17:34:23Z`。
-- PR 窗口：`2026-07-23T17:34:23Z..2026-07-24T16:32:34Z`。
-- 窗口内 merged PR：仅 `#1780`，标题 `release: 0.120.0`，合并于 `2026-07-24T16:31:59Z`；author 为 `app/stainless-app`，GitHub 标记 `is_bot: true`。
-- Tag compare：[`v0.119.0...v0.120.0`](https://github.com/anthropics/anthropic-sdk-python/compare/v0.119.0...v0.120.0) 为 `ahead_by: 2`。功能提交 `70c0a64581e7` 与 release 提交 `60c64fba5c2b` 的 author 均为 `stainless-app[bot]`。
-- 外部服务失败：无。
+- Fetch time: `2026-07-26T22:47:36+08:00`。
+- Repository: `anthropics/anthropic-sdk-python`；default branch `main`。
+- Latest release: `v0.120.0`，published `2026-07-24T16:32:34Z`。
+- Previous release: `v0.119.0`，published `2026-07-23T17:34:23Z`。
+- Exact window: `2026-07-23T17:34:23Z < mergedAt <= 2026-07-24T16:32:34Z`。
+- Merged PRs: only `#1780`, `release: 0.120.0`, merged `2026-07-24T16:31:59Z`; author `app/stainless-app`, GitHub `is_bot: true`。
+- Compare fallback `v0.119.0...v0.120.0`: 2 commits；`70c0a64` 与 `60c64fb` 的 author 都是 `stainless-app[bot]`。
+- Eligible PRs / commits after skill filtering: 0 / 0。
 
 ### Without Skill
 
-- 抓取时间：2026-07-26 16:39:20 `+08:00`（Asia/Shanghai）。
-- baseline 独立确认最新 release `v0.120.0`、前一 release `v0.119.0` 及相同发布时间。
-- baseline 独立查询 merged PR，确认最新 release 对应的自动 release PR 为 `#1780`，其正文列出 3 项 Features。
-- 外部服务失败：无。
+- Fetch time: `2026-07-26T22:48:30+08:00`。
+- 独立确认 latest `v0.120.0`、previous `v0.119.0` 及相同发布时间。
+- 独立查询相同精确窗口，得到唯一 merged PR `#1780`；其 body 列出 3 项 API Features。
+- baseline 未应用 skill 的 bot author filtering，因此保留 `#1780` 作为三条 feature 的 PR 引用。
+- 两臂均无 external dependency failure，查询期间未观察到 release/window 漂移。
 
 ## Assertions
 
-| Assertion | With skill | Without skill | Fresh judge conclusion |
+| Assertion | With skill | Without skill | Fresh judgment |
 | --- | --- | --- | --- |
-| `x_y_z_yyyy_mm_dd` | FAIL | PASS | assertion 明确要求 `## [x.y.z] - YYYY-MM-DD`。with-skill 按当前 specialist Step 6 模板生成 `## [v0.120.0]`，多出 `v` 前缀；without-skill 生成 `## [0.120.0]`。本轮不放宽 assertion，也不修改 specialist。 |
-| `release_tag` | PASS | PASS | 两者均以实时最新 tag `v0.120.0` 为来源。 |
-| `pr_conventional_commit` | NOT EXERCISED | NOT EXERCISED | 当前窗口没有普通 PR。`#1780` 是 bot release PR；baseline 的三条内容来自其 body，不是普通 PR title 清洗样本，不能把该断言判为 PASS。 |
-| `breaking_change_breaking` | NOT EXERCISED | NOT EXERCISED | 当前 PR body 和 tag compare 均无 breaking marker；未触发时不虚构前缀不能证明两者在出现 breaking change 时会正确添加 `⚠️ BREAKING:`。 |
-| `section` | PASS | PASS | with-skill 过滤全部 bot 来源后不生成任何空 section；baseline 只生成有内容的 `Added`。 |
+| `v_version_yyyy_mm_dd` | PASS | FAIL | with-skill 输出 `## [v0.120.0] - 2026-07-24`，满足当前带 `v` assertion；baseline 输出 `## [0.120.0] - 2026-07-24`，缺少 `v`。 |
+| `release_tag` | PASS | PASS | 两臂的版本来源均为实时最新 tag `v0.120.0`。 |
+| `pr_conventional_commit` | NOT EXERCISED | NOT EXERCISED | 当前窗口没有 eligible 普通 PR title；`#1780` 是 bot release PR，baseline 条目来自其 body features，不能作为 conventional PR title 清洗样本。 |
+| `breaking_change_breaking` | NOT EXERCISED | NOT EXERCISED | PR body 与 tag compare 均无 breaking marker；不能虚构 `⚠️ BREAKING` 来制造覆盖。 |
+| `section` | PASS | PASS | with-skill 过滤全部 bot 来源后不生成空 section；baseline 只生成有内容的 `Added`。 |
 
-## With Skill
+## With Skill Behavior
 
-Observed behavior:
-
-- 按 specialist 流程用 `gh` 确认目标仓库、最新和前一 release，并用发布时间建立单版本窗口。
-- 查询窗口内 merged PR，识别唯一的 `#1780` 为 bot release PR，并按 author 为 bot 或 login 以 `[bot]` 结尾的规则排除，未把它作为 changelog attribution 或链接。
-- 因过滤后没有 PR，按 edge case 查询 tag compare；compare 中的两条 commits 也都是 `stainless-app[bot]` 作者，继续排除。
-- 生成 specialist 当前模板规定的 `## [v0.120.0]` header 与 `_No user-facing changes (dependency updates and internal maintenance only)._`，不生成空 section，也不链接被过滤的 `#1780`；该 header 与现有 eval assertion 的无 `v` 格式冲突。
-- 在隔离临时目录 `/tmp/issue158-eval002-with-skill.D56BxK/` 中实际写入并回读 `docs/changelog/changelog-v0.120.0.md`，确认内容后清理整个临时目录；未把 runtime candidate 写入 eval fixture。
-
-Candidate behavior summary:
+Fresh source: 原始 prompt、Product Manager README、完整 `changelog-generator` 协议与第一次独立 live 查询。
 
 ```markdown
 # Changelog - v0.120.0
@@ -75,52 +67,45 @@ Candidate behavior summary:
 _No user-facing changes (dependency updates and internal maintenance only)._
 ```
 
-## Without Skill / Baseline
+- 使用 release published times 构建 latest/previous 精确窗口。
+- 识别并过滤唯一的 GitHub App bot release PR `#1780`。
+- 按少量/无 PR edge case 查询 tag compare，并继续过滤两条 bot-authored commits。
+- 没有 eligible 内容时使用 no-user-facing-changes fallback，不生成空 section 或被过滤 PR 的引用。
+- 当前带 `v` 的版本标题与修正后的 assertion 一致。
 
-Observed behavior:
+## Fresh Without-Skill Baseline
 
-- 同一个 fresh subagent 在 baseline arm 中仅按原始 prompt 重新查询 GitHub，没有应用 specialist skill、Product Manager README 或任何 eval answer key。
-- 独立选中 `v0.120.0`，并从自动 release PR `#1780` 的正文提取 3 项 Features。
-- 将三项功能写入 `Added`，每项都引用 `#1780`；该候选没有 specialist 的 bot author 过滤，因此与 with-skill 形成有效行为差异。
-- baseline 的条目不是普通 PR title 清洗样本，所以不满足 `pr_conventional_commit` 的实际覆盖条件。
-- 在独立隔离临时目录 `/tmp/issue158-eval002-without-skill.3uD2q4/` 中实际写入并回读 `docs/changelog/changelog-v0.120.0.md`，确认内容后清理整个临时目录；其版本块标题为 `## [0.120.0] - 2026-07-24`。
-- 这是本轮新生成的 baseline，不是历史输出或 with-skill 候选的改写。
-
-Candidate behavior summary:
+Fresh source: 仅原始 prompt 与第二次独立 live 查询；未复用旧 baseline、with-skill snapshot 或历史 comparison 的实时事实。
 
 ```markdown
-# Changelog - v0.120.0
+# Changelog
 
 ## [0.120.0] - 2026-07-24
 
 ### Added
 
-- **api:** Add claude-opus-5 model ([#1780](https://github.com/anthropics/anthropic-sdk-python/pull/1780))
-- **api:** Add tool addition/removal blocks and tool_change events ([#1780](https://github.com/anthropics/anthropic-sdk-python/pull/1780))
-- **api:** Expand client-side fallback credit token types and add server-side fallbacks default option ([#1780](https://github.com/anthropics/anthropic-sdk-python/pull/1780))
+- Add Claude Opus 5 model ([#1780](https://github.com/anthropics/anthropic-sdk-python/pull/1780))
+- Add tool addition/removal blocks and tool change events ([#1780](https://github.com/anthropics/anthropic-sdk-python/pull/1780))
+- Expand client-side fallback credit token types and add server-side fallbacks default option ([#1780](https://github.com/anthropics/anthropic-sdk-python/pull/1780))
 ```
+
+- baseline 从自动 release PR body 提取三项 Features 并保留唯一 PR 引用。
+- baseline 没有 specialist 的 bot filtering，也没有带 `v` 的版本标题，因此与 with-skill 形成可观察行为差异。
 
 ## Failures
 
-- 格式契约不一致：现有 eval assertion / expected output 要求 `## [x.y.z] - YYYY-MM-DD`，但 specialist Step 6 的新建版本文件模板要求 `## [v{VERSION}] - YYYY-MM-DD`。with-skill 忠实生成后者，严格 judge 必须把 `x_y_z_yyyy_mm_dd` 判为 `FAIL`；本轮按约束不修改 specialist 或放宽 assertion。
-- 覆盖限制：实时窗口唯一 PR `#1780` 是应过滤的 bot release PR，tag compare commits 也均为 bot 作者；`pr_conventional_commit` 没有普通 PR 样本，且窗口没有 breaking marker，`breaking_change_breaking` 的触发分支同样未覆盖，因此总体结论保持 `PARTIAL`。
-- baseline 未应用 bot filter，把 `#1780` 当作 changelog PR attribution 和链接；这是 without-skill 行为差异，不是 with-skill failure。
-- 两个 arm 均已实际写入、回读并清理隔离 scratch 中的目标文件；文件产出行为不再是未验证覆盖项。
-- 没有外部服务失败。
-
-## External Dependency and Failure Triage
-
-- 数据依赖：GitHub API / `gh` CLI、目标仓库 release、PR 搜索、author bot 标记和 compare endpoint；这些数据会随新 release 发布而变化。
-- 外部服务失败：认证失败、限流、DNS / TLS / 网络错误、GitHub 5xx、目标仓库暂时不可访问，或抓取过程中 latest release 指针变化。此时应记录命令、时间、退出码和错误，结果标为 `BLOCKED`，不能判为 skill 回归或真实空集合。
-- Skill 回归或契约偏差：GitHub 数据可读取且 snapshot 自洽时，选错最新或前一 release、窗口边界错误、未过滤 bot PR/commit、过滤后又把 bot PR 作为条目 attribution 或链接、漏查 tag compare、错误生成空 section、发现 breaking marker 却未加 `⚠️ BREAKING:`，或生成不满足现有 eval assertion 的版本标题。
-- 时效风险：release、PR、author 和发布说明均为实时公开数据；后续复验必须重新记录抓取时间、tag/window 和实际样本，不能把本次 `v0.120.0` 快照当作永久 fixture。
+- 未发现已触发路径的 with-skill 回归。
+- Coverage gap：实时窗口没有 eligible 普通 PR 或 breaking marker，`pr_conventional_commit` 与 `breaking_change_breaking` 为 `NOT EXERCISED`，结论必须保持 `PARTIAL`。
+- without-skill 未满足带 `v` 的版本标题 assertion，且未过滤 bot release PR；这是 fresh baseline 行为，不是 with-skill failure。
+- GitHub API、认证、网络和目标仓库访问均成功，无 external dependency blocker。
 
 ## Next Steps
 
-- 由维护者在本 issue 范围外决定统一版本标题契约：修改 specialist 模板或另起经批准的 eval 契约变更；在此之前不得把 `## [v{VERSION}]` 判为满足 `## [x.y.z]`。
-- 后续在 latest-release 窗口出现非 bot PR 或 breaking marker 后，按相同 no-leak 流程重新抓取并实际覆盖 `pr_conventional_commit` 与 `breaking_change_breaking`。
+- 不补造 fixture、窗口外 PR 或 breaking marker。
+- 后续 latest release 窗口出现 eligible 普通 PR 或 breaking marker 时，重新执行同一 no-leak fresh pair，实际覆盖剩余两条 assertion。
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime changelog candidates, transcripts, verdicts, timing, outputs, and diagnostics are ephemeral and must not be committed.
-- Durable result only: this canonical `comparison.md`; `eval_metadata.json` remains unchanged。
+- 本轮候选、snapshot 和 canonical target 只写入 git 忽略的 `tmp/eval-runs/issue173-fresh-eval/`，完成评审后全部删除。
+- 不提交 candidate、transcript、verdict、timing、outputs 或 diagnostics。
+- 仅持久化本 `comparison.md` 的事实摘要与 fresh judge 结论。
