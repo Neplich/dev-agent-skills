@@ -99,8 +99,14 @@ If an active plan exists with `status: "Implemented"` and no handling decision
 is recorded, ask the user to choose exactly one of two options: archive the
 completed plan then create a new active plan, or archive the old plan as
 `Superseded` with a reason then create a new active plan. If the active plan
-status is not `Implemented`, continue updating that current plan with a version
+status is not `Implemented` and no archive on the same feature path faithfully
+preserves its current body, continue updating that current plan with a version
 bump by default instead of forcing archival or asking for an archive decision.
+If such a faithful archive already exists, treat the current round as settled
+and ask the user to choose exactly one of three options: archive it then create
+a new active plan, continue updating it while redeclaring
+`previous_plan_archive` to that faithful archive, or archive it as `Superseded`
+with a reason then create a new active plan.
 Only when the user or maintainer explicitly abandons that plan may it be
 archived as `Superseded` with `superseded_reason` before creating a new active
 plan, using the same archive metadata requirements as the `Implemented` branch.

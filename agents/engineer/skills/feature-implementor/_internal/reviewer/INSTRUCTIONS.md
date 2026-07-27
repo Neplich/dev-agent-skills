@@ -99,9 +99,12 @@ For each P0 acceptance criterion in PRD:
 - [ ] If a new active plan replaced an existing `status: "Implemented"` plan,
       the old plan was archived as completed or as `Superseded` with a reason,
       per the pre-plan archive scan decision; a non-`Implemented` active plan
-      was continued with a version bump by default, or was archived as
-      `Superseded` with `superseded_reason` only after the user or maintainer
-      explicitly abandoned it
+      was continued with a version bump by default only when no archive on the
+      same feature path faithfully preserved its current body; if such an
+      archive existed, the round was treated as settled and the user chose to
+      archive then create a new plan, continue while redeclaring
+      `previous_plan_archive` to that faithful archive, or archive as
+      `Superseded` with a reason then create a new plan
 - [ ] Archival happened only after closeout was complete and user/maintainer
       approval was recorded
 - [ ] Archive plans live under
