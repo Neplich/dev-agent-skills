@@ -90,6 +90,7 @@ class ContractError:
 class ActivePlanBaseRound:
     body: str
     scope: str
+    status: str
     requires_closure: bool
     allows_unlinked_same_change_closeout: bool
 
@@ -1163,38 +1164,12 @@ def feature_path_changed_plan_archive_scopes(
     return scopes
 
 
-def feature_path_changed_archive_body_match(
-    root: Path,
-    feature_path: str,
-    changed_engineer_docs: set[str],
-    target_body: str,
-) -> bool:
-    """Return True if a changed archive for this feature path matches target_body.
-
-    Matching regardless of scope lets closure detection work for legacy active
-    plans that predate the implementation_scope field.
-    """
-    prefix = f"docs/engineer/{feature_path}/implementation-plans/archive/"
-    for rel in changed_engineer_docs:
-        if not rel.startswith(prefix):
-            continue
-        if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel) is None:
-            continue
-        candidate = root / rel
-        if not candidate.is_file():
-            continue
-        if parsed_markdown_body(candidate) == target_body:
-            return True
-    return False
-
-
-def feature_path_latest_archive_scope(root: Path, feature_path: str) -> str | None:
+def feature_path_latest_archive_scopes(root: Path, feature_path: str) -> set[str]:
     archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
     if not archive_dir.is_dir():
-        return None
-    latest_scope: str | None = None
-    latest_date = ""
-    for candidate in sorted(archive_dir.glob("IMPLEMENTATION_PLAN-*.md")):
+        return set()
+    scopes_by_date: dict[str, set[str]] = {}
+    for candidate in archive_dir.glob("IMPLEMENTATION_PLAN-*.md"):
         if not candidate.is_file():
             continue
         candidate_rel = candidate.relative_to(root).as_posix()
@@ -1213,10 +1188,10 @@ def feature_path_latest_archive_scope(root: Path, feature_path: str) -> str | No
         archived_at = parsed[0].get("archived_at", "")
         if not DATE_RE.fullmatch(archived_at):
             continue
-        if archived_at >= latest_date:
-            latest_date = archived_at
-            latest_scope = match.group("scope")
-    return latest_scope
+        scopes_by_date.setdefault(archived_at, set()).add(match.group("scope"))
+    if not scopes_by_date:
+        return set()
+    return scopes_by_date[max(scopes_by_date)]
 
 
 def parsed_markdown_body(path: Path) -> str | None:
@@ -1256,11 +1231,7 @@ def active_plan_base_round(
     changed_archive_scopes = feature_path_changed_plan_archive_scopes(
         root, feature_path, changed_engineer_docs
     )
-    base_round_closing_now = (
-        bool(base_scope) and base_scope in changed_archive_scopes
-    ) or feature_path_changed_archive_body_match(
-        root, feature_path, changed_engineer_docs, base_body
-    )
+    base_round_closing_now = bool(base_scope) and base_scope in changed_archive_scopes
     status_regressed_from_implemented = (
         base_status == "Implemented" and current_status != "Implemented"
     )
@@ -1277,15 +1248,23 @@ def active_plan_base_round(
     ):
         if body == base_body:
             allows_unlinked_same_change_closeout = True
-        elif base_round_closing_now:
-            if feature_path_changed_archive_body_match(
-                root, feature_path, changed_engineer_docs, base_body
+        elif base_round_closing_now and base_scope and base_body:
+            archive_rel = (
+                f"docs/engineer/{feature_path}/implementation-plans/archive/"
+                f"IMPLEMENTATION_PLAN-{base_scope}.md"
+            )
+            archive_path = root / archive_rel
+            if (
+                body.startswith(base_body)
+                and archive_path.is_file()
+                and parsed_markdown_body(archive_path) == base_body
             ):
                 allows_unlinked_same_change_closeout = True
 
     return ActivePlanBaseRound(
         body=base_body,
         scope=base_scope,
+        status=base_status,
         requires_closure=round_requires_closure_handling,
         allows_unlinked_same_change_closeout=allows_unlinked_same_change_closeout,
     )
@@ -1381,13 +1360,14 @@ def validate_active_plan_archive_linkage(
         )
         if archive_match.group("scope") in changed_archive_scopes:
             return
-        latest_scope = feature_path_latest_archive_scope(root, feature_path)
-        if latest_scope is not None and archive_match.group("scope") != latest_scope:
+        latest_scopes = feature_path_latest_archive_scopes(root, feature_path)
+        if latest_scopes and archive_match.group("scope") not in latest_scopes:
+            latest_scope_list = ", ".join(repr(scope) for scope in sorted(latest_scopes))
             add_error(
                 errors,
                 path,
                 "frontmatter 'previous_plan_archive' must reference the most recent "
-                f"archive for this feature_path ({latest_scope!r}), not an older archive",
+                f"archive for this feature_path ({latest_scope_list}), not an older archive",
             )
         return
 
@@ -1402,6 +1382,9 @@ def validate_active_plan_archive_linkage(
         errors,
     )
     if base_round is None or not base_round.requires_closure:
+        return
+
+    if body == base_round.body and metadata.get("status", "") == base_round.status:
         return
 
     if base_round.scope and archive_match.group("scope") != base_round.scope:

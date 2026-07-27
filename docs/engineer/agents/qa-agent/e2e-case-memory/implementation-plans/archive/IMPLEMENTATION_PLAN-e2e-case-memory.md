@@ -2,7 +2,7 @@
 title: "QA Agent E2E 用例沉淀与复用实施计划"
 type: IMPLEMENTATION_PLAN
 version: "1.0.0"
-status: Pending Confirmation
+status: "Archived"
 author: "Neplich Codex"
 date: "2026-06-03"
 generated_by: "feature-implementor"
@@ -10,6 +10,10 @@ feature: "qa-e2e-case-memory"
 feature_path: "agents/qa-agent/e2e-case-memory"
 parent_feature: "agents/qa-agent"
 feature_level: "3"
+implementation_scope: "e2e-case-memory"
+archived_at: "2026-07-27"
+archive_approved_by: "Neplich"
+source_plan: "docs/engineer/agents/qa-agent/e2e-case-memory/IMPLEMENTATION_PLAN.md"
 last_updated: "2026-06-03"
 related_prd: "docs/pm/agents/qa-agent/e2e-case-memory/PRD.md"
 related_trd: "docs/engineer/agents/qa-agent/e2e-case-memory/TRD.md"
@@ -21,6 +25,8 @@ related_issues:
 ---
 
 # QA Agent E2E 用例沉淀与复用实施计划
+
+归档说明：原 `status` 为 `Pending Confirmation`，经核实关联 issue 均已 CLOSED，按 `Archived` 归档。
 
 ## 1. 实施上下文
 

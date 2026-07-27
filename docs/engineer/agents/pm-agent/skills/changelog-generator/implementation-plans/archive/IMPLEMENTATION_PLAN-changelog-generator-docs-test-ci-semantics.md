@@ -2,7 +2,7 @@
 title: "changelog-generator docs/test/ci 语义判断实施计划"
 type: IMPLEMENTATION_PLAN
 version: "0.1.0"
-status: Pending Confirmation
+status: "Archived"
 author: "Neplich Codex"
 date: "2026-06-15"
 last_updated: "2026-06-15"
@@ -11,6 +11,10 @@ feature: "skill-changelog-generator"
 feature_path: "agents/pm-agent/skills/changelog-generator"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
+implementation_scope: "changelog-generator-docs-test-ci-semantics"
+archived_at: "2026-07-27"
+archive_approved_by: "Neplich"
+source_plan: "docs/engineer/agents/pm-agent/skills/changelog-generator/IMPLEMENTATION_PLAN.md"
 related_prd: "docs/pm/agents/pm-agent/skills/changelog-generator/PRD.md"
 related_trd: "docs/engineer/agents/pm-agent/skills/changelog-generator/TRD.md"
 related_issues:
@@ -18,6 +22,8 @@ related_issues:
 ---
 
 # changelog-generator docs/test/ci 语义判断实施计划
+
+归档说明：原 `status` 为 `Pending Confirmation`，经核实关联 issue 均已 CLOSED，按 `Archived` 归档。
 
 ## 1. 实施上下文
 
