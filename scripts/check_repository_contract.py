@@ -1229,9 +1229,13 @@ def active_plan_base_round(
     )
     settled = base_status == "Implemented" or already_archived
 
+    status_regressed = (
+        base_status == "Implemented"
+        and metadata.get("status", "") != "Implemented"
+    )
     content_unchanged = (
         body == base_body
-        and metadata.get("status", "") == base_status
+        and not status_regressed
         and metadata.get("previous_plan_archive", "")
         == base_metadata.get("previous_plan_archive", "")
     )

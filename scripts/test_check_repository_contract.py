@@ -655,20 +655,40 @@ def test_new_plan_without_base_file_allows_link_to_only_archive(
     assert validate_changed_plan(root, metadata) == []
 
 
+@pytest.mark.parametrize(
+    "regressed_status",
+    ["Draft", "Historical", "Legacy", "Pending Confirmation"],
+)
 def test_implemented_base_with_unchanged_body_rejects_status_regression(
     tmp_path: Path,
+    regressed_status: str,
 ) -> None:
     root = initialize_repo(tmp_path, base_status="Implemented")
     metadata = write_plan(
         root,
-        status="Draft",
+        status=regressed_status,
         scope="completed-round",
     )
-    commit_all(root, "regress implemented plan status")
+    commit_all(root, f"regress implemented plan status to {regressed_status}")
 
     errors = validate_changed_plan(root, metadata)
 
     assert [error.message for error in errors] == [REQUIRED_BACKLINK_ERROR]
+
+
+def test_draft_closeout_with_faithful_archive_allows_status_only_progression(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    write_archive(root, body="# Fixture plan\n")
+    metadata = write_plan(
+        root,
+        status="Implemented",
+        scope="completed-round",
+    )
+    commit_all(root, "close out draft with faithful archive")
+
+    assert validate_changed_plan(root, metadata) == []
 
 
 def test_implemented_base_with_unchanged_body_allows_frontmatter_only_update(

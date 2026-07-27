@@ -111,8 +111,12 @@ When archiving after closeout and user/maintainer approval:
 4. When a new active plan is created after archival, add
    `previous_plan_archive` to its frontmatter pointing to the archive file. This
    also applies when the archive and new active plan are written in the same
-   change. Omit `previous_plan_archive` when continuing to update the current
-   plan.
+   change. When continuing to update the current plan, omit
+   `previous_plan_archive` only while the round remains unsettled: its status is
+   not `Implemented` and no archive on the same feature path faithfully
+   preserves its current body. If the round is already settled by either
+   condition, continuing it requires redeclaring `previous_plan_archive` to the
+   faithful archive.
 
 ## Commit Granularity
 
