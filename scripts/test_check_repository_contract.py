@@ -48,7 +48,7 @@ def write_plan(
     root: Path,
     *,
     status: str | None,
-    scope: str = "next-round",
+    scope: str | None = "next-round",
     version: str = "0.2.0",
     last_updated: str = "2026-07-27",
     previous_archive: str | None = None,
@@ -59,8 +59,9 @@ def write_plan(
         "version": version,
         "date": "2026-07-27",
         "last_updated": last_updated,
-        "implementation_scope": scope,
     }
+    if scope is not None:
+        metadata["implementation_scope"] = scope
     if status is not None:
         metadata["status"] = status
     if previous_archive is not None:
@@ -241,7 +242,7 @@ def test_draft_base_with_changed_body_allows_continued_update_without_archive(
 
 def test_previous_archive_matching_base_scope_is_allowed(tmp_path: Path) -> None:
     root = initialize_repo(tmp_path, base_status="Implemented")
-    write_archive(root)
+    write_archive(root, body="# Fixture plan\n")
     metadata = write_plan(
         root,
         status="Pending Confirmation",
@@ -250,6 +251,76 @@ def test_previous_archive_matching_base_scope_is_allowed(tmp_path: Path) -> None
     commit_all(root, "archive completed plan and add replacement")
 
     assert validate_changed_plan(root, metadata) == []
+
+
+def test_legacy_implemented_base_allows_faithful_archive_with_any_scope(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    run_git(root, "switch", "main")
+    write_plan(root, status="Implemented", scope=None)
+    commit_all(root, "add legacy implemented plan without scope")
+    run_git(root, "switch", "-C", "fixture-change")
+    legacy_archive = archive_rel("legacy-round")
+    write_archive(root, scope="legacy-round", body="# Fixture plan\n")
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        scope="replacement-round",
+        previous_archive=legacy_archive,
+        body="# Replacement plan\n",
+    )
+    commit_all(root, "faithfully archive legacy plan and add replacement")
+
+    assert validate_changed_plan(root, metadata) == []
+
+
+def test_legacy_implemented_base_rejects_unfaithful_archive(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    run_git(root, "switch", "main")
+    write_plan(root, status="Implemented", scope=None)
+    commit_all(root, "add legacy implemented plan without scope")
+    run_git(root, "switch", "-C", "fixture-change")
+    legacy_archive = archive_rel("legacy-round")
+    write_archive(root, scope="legacy-round", body="# Unrelated plan\n")
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        scope="replacement-round",
+        previous_archive=legacy_archive,
+        body="# Replacement plan\n",
+    )
+    commit_all(root, "forge archive for legacy plan")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [
+        "frontmatter 'previous_plan_archive' must reference an archive whose "
+        "body faithfully preserves the base active plan"
+    ]
+
+
+def test_matching_scope_archive_rejects_unfaithful_base_body(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Implemented")
+    write_archive(root, body="# Unrelated plan\n")
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        previous_archive=ARCHIVE_REL,
+        body="# Replacement plan\n",
+    )
+    commit_all(root, "forge matching-scope archive")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [
+        "frontmatter 'previous_plan_archive' must reference an archive whose "
+        "body faithfully preserves the base active plan"
+    ]
 
 
 def test_previous_archive_for_older_scope_cannot_replace_base_round_archive(
@@ -549,6 +620,29 @@ def test_previous_archive_path_must_be_a_file(tmp_path: Path) -> None:
 
     assert [error.message for error in errors] == [
         "frontmatter 'previous_plan_archive' must point to an existing archive file"
+    ]
+
+
+def test_previous_archive_without_frontmatter_reports_fidelity_error(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Implemented")
+    archive_path = root / ARCHIVE_REL
+    archive_path.parent.mkdir(parents=True)
+    archive_path.write_text("", encoding="utf-8")
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        previous_archive=ARCHIVE_REL,
+        body="# Replacement plan\n",
+    )
+    commit_all(root, "link replacement to empty archive")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [
+        "frontmatter 'previous_plan_archive' must reference an archive whose "
+        "body faithfully preserves the base active plan"
     ]
 
 

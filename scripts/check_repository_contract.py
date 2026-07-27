@@ -86,6 +86,14 @@ class ContractError:
         return f"{rel}: {self.message}"
 
 
+@dataclass(frozen=True)
+class ActivePlanBaseRound:
+    body: str
+    scope: str
+    requires_closure: bool
+    allows_unlinked_same_change_closeout: bool
+
+
 def repo_root() -> Path:
     return Path(__file__).resolve().parents[1]
 
@@ -1155,7 +1163,16 @@ def feature_path_changed_plan_archive_scopes(
     return scopes
 
 
-def required_previous_plan_archive_scope(
+def parsed_markdown_body(path: Path) -> str | None:
+    try:
+        content = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError):
+        return None
+    parsed = parse_markdown_frontmatter(path, content, errors=None)
+    return parsed[1] if parsed is not None else None
+
+
+def active_plan_base_round(
     root: Path,
     path: Path,
     feature_path: str,
@@ -1164,7 +1181,7 @@ def required_previous_plan_archive_scope(
     base_content: str,
     changed_engineer_docs: set[str],
     errors: list[ContractError],
-) -> str | None:
+) -> ActivePlanBaseRound | None:
     base_parsed = parse_markdown_frontmatter(path, base_content, errors=None)
     if base_parsed is None:
         add_error(
@@ -1183,7 +1200,9 @@ def required_previous_plan_archive_scope(
     changed_archive_scopes = feature_path_changed_plan_archive_scopes(
         root, feature_path, changed_engineer_docs
     )
-    base_round_closing_now = base_scope in changed_archive_scopes
+    base_round_closing_now = (
+        bool(base_scope) and base_scope in changed_archive_scopes
+    )
     status_regressed_from_implemented = (
         base_status == "Implemented" and current_status != "Implemented"
     )
@@ -1192,29 +1211,32 @@ def required_previous_plan_archive_scope(
         or base_round_closing_now
         or status_regressed_from_implemented
     )
-    if not round_requires_closure_handling:
-        return None
-
-    if current_scope == base_scope and not status_regressed_from_implemented:
+    allows_unlinked_same_change_closeout = False
+    if (
+        round_requires_closure_handling
+        and current_scope == base_scope
+        and not status_regressed_from_implemented
+    ):
         if body == base_body:
-            return None
-
-        if base_round_closing_now:
+            allows_unlinked_same_change_closeout = True
+        elif base_round_closing_now and base_scope:
             archive_rel = (
                 f"docs/engineer/{feature_path}/implementation-plans/archive/"
                 f"IMPLEMENTATION_PLAN-{base_scope}.md"
             )
             archive_path = root / archive_rel
-            if archive_path.is_file():
-                archive_parsed = parse_markdown_frontmatter(
-                    archive_path,
-                    archive_path.read_text(encoding="utf-8"),
-                    errors=None,
-                )
-                if archive_parsed is not None and archive_parsed[1] == base_body:
-                    return None
+            if (
+                archive_path.is_file()
+                and parsed_markdown_body(archive_path) == base_body
+            ):
+                allows_unlinked_same_change_closeout = True
 
-    return base_scope
+    return ActivePlanBaseRound(
+        body=base_body,
+        scope=base_scope,
+        requires_closure=round_requires_closure_handling,
+        allows_unlinked_same_change_closeout=allows_unlinked_same_change_closeout,
+    )
 
 
 def validate_active_plan_archive_linkage(
@@ -1250,7 +1272,7 @@ def validate_active_plan_archive_linkage(
                 "frontmatter 'previous_plan_archive' must be non-empty because this feature_path already has archived plan history; a new active plan must link to the previous archive",
             )
             return
-        required_scope = required_previous_plan_archive_scope(
+        base_round = active_plan_base_round(
             root,
             path,
             feature_path,
@@ -1260,7 +1282,11 @@ def validate_active_plan_archive_linkage(
             changed_engineer_docs,
             errors,
         )
-        if required_scope is None:
+        if (
+            base_round is None
+            or not base_round.requires_closure
+            or base_round.allows_unlinked_same_change_closeout
+        ):
             return
 
         add_error(
@@ -1305,7 +1331,7 @@ def validate_active_plan_archive_linkage(
     if base_content is None:
         return
 
-    required_scope = required_previous_plan_archive_scope(
+    base_round = active_plan_base_round(
         root,
         path,
         feature_path,
@@ -1315,16 +1341,25 @@ def validate_active_plan_archive_linkage(
         changed_engineer_docs,
         errors,
     )
-    if required_scope is None:
+    if base_round is None or not base_round.requires_closure:
         return
 
-    if archive_match.group("scope") != required_scope:
+    if base_round.scope and archive_match.group("scope") != base_round.scope:
         add_error(
             errors,
             path,
             "frontmatter 'previous_plan_archive' must reference the archive for "
-            f"the base active plan scope {required_scope!r}, not an earlier or unrelated "
+            f"the base active plan scope {base_round.scope!r}, not an earlier or unrelated "
             "archive",
+        )
+        return
+
+    if parsed_markdown_body(archive_path) != base_round.body:
+        add_error(
+            errors,
+            path,
+            "frontmatter 'previous_plan_archive' must reference an archive whose "
+            "body faithfully preserves the base active plan",
         )
 
 
