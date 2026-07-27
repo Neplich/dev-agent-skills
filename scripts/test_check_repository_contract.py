@@ -110,6 +110,36 @@ def write_archive(
     )
 
 
+def write_symlink_archive(
+    root: Path,
+    *,
+    scope: str,
+    body: str,
+) -> str:
+    rel = archive_rel(scope)
+    write_archive(root, scope=scope, body=body)
+    archive_path = root / rel
+    target_path = root / f"faithful-{scope}-target.md"
+    archive_path.replace(target_path)
+    archive_path.symlink_to(target_path)
+    return rel
+
+
+def write_archive_through_symlink_directory(
+    root: Path,
+    *,
+    scope: str,
+    body: str,
+) -> str:
+    rel = archive_rel(scope)
+    write_archive(root, scope=scope, body=body)
+    archive_dir = (root / rel).parent
+    target_dir = root / f"faithful-{scope}-archive-directory"
+    archive_dir.replace(target_dir)
+    archive_dir.symlink_to(target_dir, target_is_directory=True)
+    return rel
+
+
 def commit_all(root: Path, message: str) -> None:
     run_git(root, "add", "--all")
     run_git(root, "commit", "-m", message)
@@ -265,6 +295,199 @@ def test_settled_base_allows_faithful_archive_added_in_same_change(
     commit_all(root, "archive completed plan and add replacement")
 
     assert validate_changed_plan(root, metadata) == []
+
+
+def test_new_symlink_archive_does_not_settle_matching_draft_base(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    write_symlink_archive(
+        root,
+        scope="symlink-round",
+        body="# Fixture plan\n",
+    )
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        scope="replacement-round",
+        body="# Replacement plan\n",
+    )
+    commit_all(root, "add symlink archive and replace draft plan")
+
+    assert validate_changed_plan(root, metadata) == []
+
+
+def test_new_symlink_archive_cannot_satisfy_faithful_back_link(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Implemented")
+    symlink_archive = write_symlink_archive(
+        root,
+        scope="symlink-round",
+        body="# Fixture plan\n",
+    )
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        scope="replacement-round",
+        previous_archive=symlink_archive,
+        body="# Replacement plan\n",
+    )
+    commit_all(root, "link replacement plan to symlink archive")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [FIDELITY_ERROR]
+
+
+def test_new_regular_faithful_archive_still_satisfies_back_link(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Implemented")
+    regular_archive = archive_rel("regular-round")
+    write_archive(
+        root,
+        scope="regular-round",
+        body="# Fixture plan\n",
+    )
+    assert not (root / regular_archive).is_symlink()
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        scope="replacement-round",
+        previous_archive=regular_archive,
+        body="# Replacement plan\n",
+    )
+    commit_all(root, "link replacement plan to regular faithful archive")
+
+    assert validate_changed_plan(root, metadata) == []
+
+
+def test_active_plan_metadata_rejects_symbolic_link(tmp_path: Path) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    plan_path = root / PLAN_REL
+    target_path = root / "active-plan-target.md"
+    plan_path.replace(target_path)
+    plan_path.symlink_to(target_path)
+    commit_all(root, "replace active plan with symlink")
+
+    errors: list[contract.ContractError] = []
+    contract.validate_implementation_plan_metadata(root, errors)
+
+    assert any(
+        error.path == plan_path
+        and error.message
+        == "active implementation plan path must not contain a symbolic link"
+        for error in errors
+    )
+
+
+def test_archive_plan_metadata_rejects_symbolic_link(tmp_path: Path) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    symlink_archive = write_symlink_archive(
+        root,
+        scope="symlink-round",
+        body="# Fixture plan\n",
+    )
+    commit_all(root, "add symlink archive")
+
+    errors: list[contract.ContractError] = []
+    contract.validate_archive_plans(root, errors)
+
+    assert any(
+        error.path == root / symlink_archive
+        and error.message
+        == "archived implementation plan path must not contain a symbolic link"
+        for error in errors
+    )
+
+
+def test_new_archive_through_symlink_directory_does_not_settle_matching_draft_base(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    write_archive_through_symlink_directory(
+        root,
+        scope="symlink-directory-round",
+        body="# Fixture plan\n",
+    )
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        scope="replacement-round",
+        body="# Replacement plan\n",
+    )
+    commit_all(root, "add archive through symlink directory and replace draft")
+
+    assert validate_changed_plan(root, metadata) == []
+
+
+def test_new_archive_through_symlink_directory_cannot_satisfy_back_link(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Implemented")
+    symlink_archive = write_archive_through_symlink_directory(
+        root,
+        scope="symlink-directory-round",
+        body="# Fixture plan\n",
+    )
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        scope="replacement-round",
+        previous_archive=symlink_archive,
+        body="# Replacement plan\n",
+    )
+    commit_all(root, "link replacement plan through symlink archive directory")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [FIDELITY_ERROR]
+
+
+def test_new_plan_without_base_file_rejects_symlink_archive_back_link(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status=None, base_has_plan=False)
+    symlink_archive = write_archive_through_symlink_directory(
+        root,
+        scope="symlink-directory-round",
+        body="# Fixture plan\n",
+    )
+    metadata = write_plan(
+        root,
+        status="Pending Confirmation",
+        previous_archive=symlink_archive,
+    )
+    commit_all(root, "link new plan through symlink archive directory")
+
+    errors = validate_changed_plan(root, metadata)
+
+    assert [error.message for error in errors] == [
+        "frontmatter 'previous_plan_archive' must point to an existing archive file"
+    ]
+
+
+def test_archive_plan_metadata_rejects_symbolic_link_directory(
+    tmp_path: Path,
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    archive_rel_path = write_archive_through_symlink_directory(
+        root,
+        scope="symlink-directory-round",
+        body="# Fixture plan\n",
+    )
+    commit_all(root, "add archive through symlink directory")
+
+    errors: list[contract.ContractError] = []
+    contract.validate_archive_plans(root, errors)
+
+    assert any(
+        error.path == (root / archive_rel_path).parent
+        and error.message
+        == "implementation plan archive directories must not be symbolic links"
+        for error in errors
+    )
 
 
 def test_legacy_implemented_base_allows_faithful_archive_with_any_scope(

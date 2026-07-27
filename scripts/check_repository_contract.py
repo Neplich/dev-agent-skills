@@ -41,6 +41,11 @@ IMPLEMENTATION_PLAN_ARCHIVE_RE = re.compile(
     rf"/implementation-plans/archive/"
     rf"IMPLEMENTATION_PLAN-(?P<scope>{FEATURE_PATH_SEGMENT_PATTERN})\.md$"
 )
+IMPLEMENTATION_PLAN_ARCHIVE_DIRECTORY_RE = re.compile(
+    rf"^docs/engineer/"
+    rf"{FEATURE_PATH_SEGMENT_PATTERN}(?:/{FEATURE_PATH_SEGMENT_PATTERN})*?"
+    rf"/implementation-plans(?:/archive)?$"
+)
 IMPLEMENTATION_SCOPE_RE = re.compile(rf"^{FEATURE_PATH_SEGMENT_PATTERN}$")
 ACTIVE_PLAN_STATUS_VALUES = {
     "Draft",
@@ -116,6 +121,20 @@ def is_safe_relative_path(value: str) -> bool:
         return False
     path = Path(value)
     return not path.is_absolute() and ".." not in path.parts
+
+
+def path_has_symlink_component(root: Path, path: Path) -> bool:
+    try:
+        relative_parts = path.relative_to(root).parts
+    except ValueError:
+        return True
+
+    current = root
+    for part in relative_parts:
+        current /= part
+        if current.is_symlink():
+            return True
+    return False
 
 
 def validate_claude_symlink(root: Path, errors: list[ContractError]) -> None:
@@ -859,7 +878,7 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
         if rel.startswith("docs/engineer/")
         and rel.endswith("/IMPLEMENTATION_PLAN.md")
         and not is_legacy_artifact_path(rel)
-        and (root / rel).exists()
+        and ((root / rel).exists() or (root / rel).is_symlink())
     ]
 
     base_ref = implementation_plan_base_ref(root)
@@ -867,6 +886,13 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
 
     for rel in implementation_plans:
         path = root / rel
+        if path_has_symlink_component(root, path):
+            add_error(
+                errors,
+                path,
+                "active implementation plan path must not contain a symbolic link",
+            )
+            continue
         feature_path = implementation_plan_feature_path(rel)
         if feature_path is None:
             add_error(
@@ -1068,6 +1094,14 @@ def validate_archive_plan_metadata(
     feature_path = match.group("feature_path")
     scope = match.group("scope")
 
+    if path_has_symlink_component(root, path):
+        add_error(
+            errors,
+            path,
+            "archived implementation plan path must not contain a symbolic link",
+        )
+        return
+
     parsed = parse_markdown_frontmatter(path, path.read_text(), errors)
     if parsed is None:
         return
@@ -1135,7 +1169,7 @@ def validate_archive_plan_metadata(
 def feature_path_plan_archive_scopes(root: Path, feature_path: str) -> set[str]:
     archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
     scopes: set[str] = set()
-    if not archive_dir.is_dir():
+    if path_has_symlink_component(root, archive_dir) or not archive_dir.is_dir():
         return scopes
     for candidate in archive_dir.glob("IMPLEMENTATION_PLAN-*.md"):
         candidate_rel = candidate.relative_to(root).as_posix()
@@ -1175,7 +1209,7 @@ def feature_path_archive_files_in_worktree(
     feature_path: str,
 ) -> set[str]:
     archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
-    if not archive_dir.is_dir():
+    if path_has_symlink_component(root, archive_dir) or not archive_dir.is_dir():
         return set()
     archive_files: set[str] = set()
     for candidate in archive_dir.glob("IMPLEMENTATION_PLAN-*.md"):
@@ -1234,7 +1268,7 @@ def archive_content_trusted(
     if base_content is not None:
         return base_content
     path = root / archive_rel
-    if not path.is_file():
+    if path_has_symlink_component(root, path) or not path.is_file():
         return None
     try:
         return path.read_text(encoding="utf-8")
@@ -1400,6 +1434,13 @@ def validate_active_plan_archive_linkage(
 
     base_content = content_at_ref(root, base_ref, rel)
     if base_content is None:
+        if path_has_symlink_component(root, archive_path):
+            add_error(
+                errors,
+                path,
+                "frontmatter 'previous_plan_archive' must point to an existing archive file",
+            )
+            return
         latest_scopes = feature_path_latest_archive_scopes(
             root, base_ref, feature_path
         )
@@ -1449,7 +1490,18 @@ def validate_archive_plans(root: Path, errors: list[ContractError]) -> None:
     for rel in tracked_files(root):
         if is_legacy_artifact_path(rel):
             continue
-        if not (root / rel).exists():
+        path = root / rel
+        if (
+            path.is_symlink()
+            and IMPLEMENTATION_PLAN_ARCHIVE_DIRECTORY_RE.fullmatch(rel)
+        ):
+            add_error(
+                errors,
+                path,
+                "implementation plan archive directories must not be symbolic links",
+            )
+            continue
+        if not path.exists() and not path.is_symlink():
             continue
         if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel) is None:
             if (
@@ -1459,7 +1511,7 @@ def validate_archive_plans(root: Path, errors: list[ContractError]) -> None:
             ):
                 add_error(
                     errors,
-                    root / rel,
+                    path,
                     "implementation-plans/archive only allows IMPLEMENTATION_PLAN-<scope>.md with a lower kebab-case scope",
                 )
             continue
