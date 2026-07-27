@@ -1,294 +1,256 @@
 ---
-title: "IMPLEMENTATION_PLAN 归档门禁实施计划"
+title: "IMPLEMENTATION_PLAN 归档门禁 status 触发修正实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.2.2"
-status: Implemented
+version: "0.1.0"
+status: "Pending Confirmation"
 author: "Neplich Codex"
-date: "2026-07-01"
-last_updated: "2026-07-02"
+date: "2026-07-27"
+last_updated: "2026-07-27"
 generated_by: "feature-implementor"
 feature: "implementation-plan-archive-gate"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate"
 parent_feature: "agents/engineer-agent/skills/feature-implementor"
 feature_level: "5"
-implementation_scope: "implementation-plan-archive-gate"
+implementation_scope: "archive-status-trigger-hardening"
+previous_plan_archive: "docs/engineer/agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate/implementation-plans/archive/IMPLEMENTATION_PLAN-implementation-plan-archive-gate.md"
 related_prd: "docs/pm/agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate/PRD.md"
 related_trd: "docs/engineer/agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate/TRD.md"
-related_issue: "https://github.com/Neplich/dev-agent-skills/issues/54"
+related_issue: "https://github.com/Neplich/dev-agent-skills/issues/172"
+change_tier: "standard"
 ---
 
-# IMPLEMENTATION_PLAN 归档门禁实施计划
+# IMPLEMENTATION_PLAN 归档门禁 status 触发修正实施计划
 
 ## 1. 实施上下文
 
-本计划承接 GitHub issue #54、
-`docs/pm/agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate/PRD.md`
-和 `docs/engineer/agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate/TRD.md`。
-目标是在 `feature-implementor` 中补齐 Implementation Plan Archive Gate，防止同一
-`feature_path` 的后续实施计划直接覆盖旧计划。
+本计划承接 GitHub issue
+[#172](https://github.com/Neplich/dev-agent-skills/issues/172)、现有 PRD 的
+FR-005 / US-002，以及 TRD `0.2.0` 的技术设计修正。产品意图保持不变：
+同一 `feature_path` 的已完成实施计划不得被下一轮功能更新直接覆盖；本轮只修正
+repository contract 的机器判断机制，使其覆盖“第一次归档前直接改写 active 计划”的缺口。
 
-### 1.1 当前门禁状态
+上一份已完成计划已归档到：
+
+```text
+docs/engineer/agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate/implementation-plans/archive/IMPLEMENTATION_PLAN-implementation-plan-archive-gate.md
+```
+
+### 1.1 门禁状态
 
 | Gate | Status | Evidence |
 | --- | --- | --- |
-| PRD alignment | 已补齐 issue 级 PRD | `docs/pm/agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate/PRD.md` |
-| TRD alignment | 已补齐 issue 级 TRD | `docs/engineer/agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate/TRD.md` |
-| Feature path gate | 已通过 | PRD/TRD/本计划均使用 `agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate` |
-| UI design gate | 不适用 | 本次不涉及产品 UI 或视觉变化 |
-| Implementation plan | 已确认并实施 | 本文件 |
-| Code / skill edits | 已完成 | 见下方实施结果 |
-| Deterministic checks | 已通过 | 见下方验证命令 |
-| Skill eval / fresh subagent validation | 已通过 | eval-012 / eval-013 fresh subagent validation 均 PASS，见各自 durable comparison.md |
+| PRD alignment | 已确认，无需修改 | FR-005 / US-002 已覆盖不得直接覆盖已完成计划的产品意图。 |
+| TRD alignment | 已更新，等待本计划确认 | TRD `0.2.0` 定义 base-ref `status` 分支、收口归档例外和校验范围。 |
+| Feature path gate | 已通过 | PRD、TRD、本计划和上一份归档使用相同 `feature_path`。 |
+| Previous plan archive | 已完成 | 本计划 frontmatter 的 `previous_plan_archive` 指向同一 `feature_path` 的归档文件。 |
+| Implementation plan | 等待用户确认 | `status: "Pending Confirmation"`；确认前不实施。 |
+| UI design gate | 不适用 | 本次不涉及产品 UI 或视觉变化。 |
 
 ### 1.2 成功标准
 
-- 当前活跃计划入口仍为 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。
-- archive 目录和 `IMPLEMENTATION_PLAN-<scope>.md` 命名被正式定义。
-- `feature-implementor` 创建新计划前会扫描同 `feature_path` 的旧计划。
-- closeout 后只有经用户或维护者确认才允许归档。
-- repository contract 能校验 archive metadata 和 `previous_plan_archive`。
-- eval 覆盖未归档旧计划阻塞新计划，以及归档后允许创建下一份计划。
+- 活跃 `IMPLEMENTATION_PLAN.md` 的 `status` 成为 repository contract 无条件必填字段。
+- checker 以 merge-base 上 active 计划是否存在及其 `status` 为触发依据，不以 archive
+  目录是否已有历史归档或 `implementation_scope` 是否变化作为触发依据。
+- base ref 上不存在 active 计划时，按新增计划处理。
+- base ref 上 `status` 非 `Implemented` 时，允许继续修订当前计划且无需
+  `previous_plan_archive`，但必须正常 bump `version` 和 `last_updated`。
+- base ref 上 `status` 为 `Implemented` 且本次修改 active 计划时，必须提供指向存在且
+  `feature_path` 一致归档文件的 `previous_plan_archive`。
+- 本次变更同时完成“标记完成 + 落地归档副本”时，若 HEAD 的
+  `implementation_scope` 命中本次新增或更新的归档 scope，允许省略
+  `previous_plan_archive`。
+- 新增 eval 覆盖 base `Implemented` 缺回链被拦截，以及 base 非 `Implemented`
+  继续更新被放行。
 
-## 2. 范围
+## 2. 实施范围
 
-### 2.1 必改文件
+### 2.1 计划修改
 
 | Path | Operation | Change |
 | --- | --- | --- |
-| `docs/pm/agents/engineer-agent/skills/feature-implementor/PRD.md` | Modify | 新增 `Implementation Plan Archive Gate` 产品契约、workflow 和验收标准。 |
-| `AGENTS.md` | Modify | 为实施计划归档增加窄例外，说明 archive 计划不违反“除 changelog 外不创建多个版本化文件”。 |
-| `agents/engineer/skills/feature-implementor/SKILL.md` | Modify | 在 plan creation 前增加旧计划扫描，在 closeout 后增加 archive gate。 |
-| `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md` | Modify | 写计划前检查已有活跃计划，并要求用户选择归档、继续更新或 Superseded。 |
-| `agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md` | Modify | 交付前检查 closeout/archive 状态和 `previous_plan_archive`。 |
-| `agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md` | Modify | 定义 archive path、frontmatter、状态值和活跃计划 linkage。 |
-| `scripts/check_repository_contract.py` | Modify | 支持 archive plan path、metadata 校验和 active/archive linkage 校验。 |
-| `agents/engineer/test/feature-implementor/evals/evals.json` | Modify | 新增 archive gate 回归 eval。 |
-| `agents/engineer/test/feature-implementor/evals/workspace/eval-012-implementation-plan-archive-preflight/` | Create | 未归档旧计划阻塞新计划的 fixture 和 durable `comparison.md`。 |
-| `agents/engineer/test/feature-implementor/evals/workspace/eval-013-implementation-plan-archive-allows-next-plan/` | Create | 已归档旧计划允许下一份计划的 fixture 和 durable `comparison.md`。 |
-| `skills-lock.json` | Modify | 刷新 `feature-implementor` computed hash。 |
+| `scripts/check_repository_contract.py` | Modify | 将 `status` 加入活跃计划必填 metadata；重写 `validate_active_plan_archive_linkage`，以 merge-base 快照中的 active 计划存在性和 `status` 执行分支判断，并保留同提交 closeout + archive 例外。 |
+| `agents/engineer/test/feature-implementor/evals/evals.json` | Modify | 新增 `eval-015` 和 `eval-016` 的定义与语义断言。 |
+| `agents/engineer/test/feature-implementor/evals/workspace/eval-015-*` | Create | 提供 base ref 已为 `Implemented`、修改 active 但缺少 `previous_plan_archive` 的 fixture 和 durable `comparison.md`。 |
+| `agents/engineer/test/feature-implementor/evals/workspace/eval-016-*` | Create | 提供 base ref 非 `Implemented`、继续更新 active 且不声明 `previous_plan_archive` 的 fixture 和 durable `comparison.md`。 |
+| `agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md` | Review; modify only if required | 复核 active `status` 和 base-ref 判断的措辞；现有归档三选一、版本 bump 与回链规则已经对齐，除非发现与 TRD `0.2.0` 冲突，否则不修改。 |
+| `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md` | Review; modify only if required | 复核 pre-plan archive scan；现有三选一门禁已经对齐，除非发现与新 contract 分支冲突，否则不修改。 |
+| `agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md` | Review; modify only if required | 复核 archive linkage checklist；除非发现与新 contract 分支冲突，否则不修改。 |
+| `skills-lock.json` | Conditional Modify | 仅当 `agents/engineer/skills/feature-implementor/` 内的 skill 文档或 internal instructions 实际发生变更时，刷新 `feature-implementor` 的 `computedHash`。 |
 
 ### 2.2 非目标
 
-- 不批量迁移历史 `IMPLEMENTATION_PLAN.md`。
-- 不修改 QA E2E 归档目录规则。
-- 不改变 release changelog 归档策略。
+- 不修改 PRD；FR-005 / US-002 的产品意图不变。
+- 不使用 `implementation_scope` 是否变化作为触发条件。
+- 不批量迁移或改写其他 feature 的历史实施计划。
+- 不改变 archive 路径、归档状态枚举或用户三选一决策流程。
 - 不提交 eval 运行期产物，例如 transcript、diagnostics、outputs、timing 或 run status。
 
 ## 3. 实施流程
 
 ```mermaid
 flowchart TD
-    Start["用户确认本计划"] --> ParentPRD["更新 feature-implementor PRD"]
-    ParentPRD --> Agents["更新 AGENTS.md 窄例外"]
-    Agents --> Skill["更新 public SKILL archive gate"]
-    Skill --> Planner["更新 planner pre-plan archive scan"]
-    Planner --> Reviewer["更新 reviewer archive 检查"]
-    Reviewer --> Output["更新 output conventions"]
-    Output --> Contract["更新 repository contract"]
-    Contract --> Evals["新增 eval-012 / eval-013 fixture"]
-    Evals --> Lock["刷新 skills-lock.json"]
-    Lock --> Checks["运行确定性检查"]
-    Checks --> Closeout["同步本 IMPLEMENTATION_PLAN closeout"]
+    Confirm["用户确认本计划"] --> Split["建立 implementation / validation sub-agent 分工"]
+    Split --> Metadata["active plan status 必填校验"]
+    Metadata --> BaseRef["读取 merge-base 上 active plan 快照"]
+    BaseRef --> Exists{"base ref 上 active plan 存在？"}
+    Exists -->|否| NewPlan["按新增计划处理"]
+    Exists -->|是| BaseStatus{"base status 是 Implemented？"}
+    BaseStatus -->|否| Continue["允许继续更新，无需 previous_plan_archive"]
+    BaseStatus -->|是| Closeout{"HEAD scope 命中本次新增或更新的归档 scope？"}
+    Closeout -->|是| ArchiveException["按 closeout + archive 同提交例外放行"]
+    Closeout -->|否| Link["要求 previous_plan_archive 且校验存在性和 feature_path"]
+    NewPlan --> Evals["新增 eval-015 / eval-016"]
+    Continue --> Evals
+    ArchiveException --> Evals
+    Link --> Evals
+    Evals --> Checks["运行契约脚本、pytest 和 fresh eval validation"]
+    Checks --> CloseoutPlan["同步本计划 closeout"]
 ```
 
 ## 4. 文件级步骤
 
-### Step 1: 更新 owning PRD
+### Step 1: 增加 active plan `status` 必填校验
 
-修改 `docs/pm/agents/engineer-agent/skills/feature-implementor/PRD.md`：
+修改 `scripts/check_repository_contract.py` 的
+`validate_implementation_plan_metadata`：
 
-- `version` 从 `1.4.0` 提升到 `1.5.0`。
-- `last_updated` 更新为实施日期。
-- `related_docs` 增加本 issue 的 PRD/TRD。
-- 新增 `FR-S12 Implementation Plan Archive Gate`。
-- 当前实现工作流在 closeout 后增加 archive gate。
-- 验收标准增加新计划前旧计划处理和 archive metadata 检查。
+- 将 `status` 加入活跃计划 frontmatter 的无条件必填字段。
+- 沿用当前 metadata 错误收集和报告方式，不引入额外状态枚举或无关迁移。
+- 保持 archive metadata 校验逻辑不变。
 
 验证：
 
-- 不把 archive gate 写成替代 closeout gate。
-- 不改变 `IMPLEMENTATION_PLAN.md` 当前活跃入口。
+- 缺少 `status` 的 active 计划被 repository contract 明确拦截。
+- 仓库当前活跃计划均有 `status`，新增校验不造成无关批量失败。
 
-### Step 2: 更新 `AGENTS.md`
+### Step 2: 重写 active/archive linkage 判断
 
-在文档组织规则中增加窄例外：
+修改 `scripts/check_repository_contract.py` 的
+`validate_active_plan_archive_linkage`：
 
-- 实施计划归档允许使用
-  `docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`。
-- 该目录只保存经 closeout 和审批的历史计划，当前入口仍为
-  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。
+1. 复用 `implementation_plan_base_ref(root)` 取得当前 HEAD 与
+   `origin/main` / `main` 的 merge-base。
+2. 通过 `content_at_ref(root, ref, rel)` 读取 base ref 上同一路径 active
+   计划；返回 `None` 时按新增计划处理。
+3. base 内容存在时，使用
+   `parse_markdown_frontmatter(path, content, errors=None)` 只解析快照
+   frontmatter，不把历史内容的解析问题写入当前错误列表。
+4. base `status` 非 `Implemented` 时，允许继续修订或追加 active 计划，
+   不要求 `previous_plan_archive`；现有版本契约继续要求正常 bump
+   `version` 和 `last_updated`。
+5. base `status` 为 `Implemented` 且本次修改 active 计划时，要求
+   `previous_plan_archive` 指向存在且 `feature_path` 一致的 archive 文件。
+6. 保留 closeout + archive 同提交例外：若 HEAD 的
+   `implementation_scope` 命中本次变更中新增或更新的 archive scope，
+   允许省略 `previous_plan_archive`。
 
-验证：
-
-- 只添加一条简短规则，不扩写无关流程。
-
-### Step 3: 更新 `feature-implementor/SKILL.md`
-
-修改 public skill contract：
-
-- 在 PRD/TRD alignment 后、planner 写计划前增加旧计划扫描规则。
-- 发现同 `feature_path` 已有未归档计划时，必须先询问用户处理方式。
-- 在 closeout gate 后增加 archive gate。
-- 说明归档需要用户或维护者批准。
-- 说明新计划引用 `previous_plan_archive`。
-
-验证：
-
-- 不削弱 plan confirmation gate。
-- 不要求每次实现都必须归档；允许继续更新当前计划。
-
-### Step 4: 更新 internal modules
-
-修改 planner：
-
-- 写计划前读取当前 `IMPLEMENTATION_PLAN.md`。
-- 输出旧计划路径、状态、范围和可选处理方式。
-- 没有处理决定时 blocked，不写新计划。
-- 归档后写新计划时记录 `previous_plan_archive`。
-
-修改 reviewer：
-
-- closeout 通过后检查 archive 状态。
-- 如果本次创建下一份计划，校验旧计划已归档或已明确 Superseded。
-- 如果声明 `previous_plan_archive`，校验路径和 feature metadata。
-
-修改 output conventions：
-
-- 定义 active plan metadata 中的 `implementation_scope` 和 `previous_plan_archive`。
-- 定义 archive plan metadata。
-- 明确 `Archived` 与 `Superseded` 状态含义。
-
-### Step 5: 更新 repository contract
-
-修改 `scripts/check_repository_contract.py`：
-
-- 新增 archive path regex。
-- 扫描 active plans 和 archive plans。
-- 校验 archive metadata：
-  - `implementation_scope`
-  - `status: Archived | Superseded`
-  - `archived_at`
-  - `archive_approved_by`
-  - `source_plan`
-  - `superseded_reason`（仅 `Superseded` 必填）
-- 校验 active plan 的 `previous_plan_archive`：
-  - 路径存在；
-  - 指向同一 `feature_path`；
-  - archive metadata 有效。
-- 对新增或修改后的 active plan 校验 `implementation_scope`。
+明确不以 `implementation_scope` 是否变化或 archive 目录是否已有历史归档作为
+触发条件；scope 只用于识别正确归档动作本身的例外。
 
 验证：
 
-- 新增 archive 计划不会被现有 active plan path regex 误报。
-- 历史旧计划不因缺少新字段而批量失败。
+- 第一次归档前直接改写 base `Implemented` active 计划会失败。
+- base 非 `Implemented` 的同轮计划更新会通过。
+- 已有历史 archive 但 base active 尚未完成时，不会误要求回链。
+- closeout + archive 同提交仍可通过。
+- 声明 `previous_plan_archive` 时，现有路径存在性与同 `feature_path`
+  linkage 校验仍然生效。
 
-### Step 6: 新增 eval 覆盖
+### Step 3: 复核 skill 与 internal instructions
 
-新增 `eval-012-implementation-plan-archive-preflight`：
+复核以下文件：
 
-- workspace 已有 PRD/TRD 和未归档活跃计划。
-- prompt 要求创建同 `feature_path` 的下一份计划。
-- 期望输出 blocked，并要求用户选择归档、继续更新或 Superseded。
+- `agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md`
+- `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md`
+- `agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md`
+- `agents/engineer/skills/feature-implementor/SKILL.md`
 
-新增 `eval-013-implementation-plan-archive-allows-next-plan`：
+当前文本已要求发现 active 计划且没有处理决定时停下并让用户选择归档、继续更新或
+Superseded，也已约定继续更新时 bump 版本、归档后新计划写
+`previous_plan_archive`。下一轮原则上不修改这些文件；只有发现其措辞与
+`status` 必填或 base-ref 分支规则冲突时，才做最小修正并记录理由。
 
-- workspace 已有 archive plan。
-- prompt 要求创建同 `feature_path` 的下一份计划。
-- 期望输出允许写新活跃计划，并要求 `previous_plan_archive`。
+### Step 4: 新增 eval 定义、fixture 与 durable comparison
 
-断言共同要求：
+在 `agents/engineer/test/feature-implementor/evals/evals.json` 新增：
 
-- 当前活跃入口不变。
-- archive path 使用 `implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`。
-- 不提交运行期 eval artifacts。
+- `eval-015`：base ref 上 active `status: "Implemented"`，本次改动 active
+  且缺少 `previous_plan_archive`；期望 repository contract 拦截。
+- `eval-016`：base ref 上 active `status` 非 `Implemented`，本次继续更新
+  active 且不声明 `previous_plan_archive`；期望 repository contract 放行。
 
-### Step 7: 刷新 lockfile
+为两个 eval 分别创建独立 workspace fixture 和 durable `comparison.md`。fixture
+必须能构造 base ref 与 HEAD 差异，覆盖实际 checker 调用路径；不得把运行期产物提交到
+fixture。
 
-修改 skill 文档或 internal instructions 后刷新 `skills-lock.json` 中
-`feature-implementor` 的 computed hash。
+skill 行为或 eval fixture 变更后，先请求用户确认是否执行对应 skill eval。用户确认后：
 
-### Step 8: 验证和 closeout
+- 由 fresh Codex subagent 基于同一 prompt 和 fixture 运行 with-skill。
+- 不读取或应用 skill / Agent README，重新生成本轮新的 without_skill baseline。
+- 基于 assertions、with-skill、without_skill 和上下文给出最终判断。
+- 同一轮更新 `eval-015`、`eval-016` 的 durable `comparison.md`。
+- baseline 无法生成或评审时，明确记录其对 Latest result 的影响，不复用历史 baseline。
 
-运行确定性检查：
+### Step 5: 条件式刷新 `skills-lock.json`
+
+确认 `skills-lock.json` 中 `feature-implementor` 的条目使用 `computedHash`
+跟踪 `agents/engineer/skills/feature-implementor`：
+
+- skill 目录没有实际变更时，不修改 lockfile。
+- skill 文档或 internal instructions 因冲突需要最小修正时，使用仓库既有刷新流程更新
+  `feature-implementor` 的 `computedHash`，并核对仅预期条目变化。
+
+### Step 6: 验证和 closeout
+
+按仓库要求运行四项契约脚本：
 
 ```bash
-git diff --check
 uv run scripts/check_repository_contract.py
 uv run scripts/check_eval_contract.py
 uv run scripts/check_eval_artifacts.py
+uv run scripts/check_doc_contract.py
+```
+
+运行确定性 pytest：
+
+```bash
 uv run --with pytest pytest agents/test_eval_contract.py
 ```
 
-实施完成后更新本计划：
+同时运行 `git diff --check`，并根据实际变更补充 checker 的针对性回归验证。完成后更新
+本计划：
 
-- frontmatter `status: "Implemented"`；
-- 实施结果；
-- deterministic checks 命令和结果；
-- eval / fresh subagent validation 的 skipped、blocked 或 durable comparison 结果；
-- 剩余风险和下一步。
+- 将 `status` 更新为 `Implemented`；
+- 记录实际变更文件和未修改文件的复核结论；
+- 记录每条验证命令的 PASS / FAIL / BLOCKED；
+- 记录 eval / fresh subagent validation 结果及 durable `comparison.md` 路径；
+- 记录剩余风险和下一 owner；
+- 按用户确认执行 closeout / archive gate。
 
 ## 5. Sub-Agent 分工
 
-本次变更触及 public skill、internal instructions、contract checker、eval fixture
-和 lockfile，建议触发复杂 coding split。
+下一轮按复杂实现与验证分工执行：
 
 | Role | Scope | Output |
 | --- | --- | --- |
-| Implementation worker | 更新文档契约、skill 指令、contract checker、eval fixture 和 lockfile。 | 变更文件清单、确定性检查结果、未解决问题。 |
-| Validation worker | 对照 PRD/TRD/本计划检查 archive gate 是否完整，重点看路径、metadata、eval 和 no-regression。 | pass/fail、blocking findings、残余风险。 |
-| Main process | 保留 issue #54、PRD/TRD、仓库规则和最终交付判断。 | closeout、测试说明、是否请求运行 eval。 |
+| Implementation sub-agent | 实现 `status` 必填校验和 base-ref linkage 分支，新增 eval 定义、fixture 和 comparison；仅在发现冲突时最小修改 skill instructions，并按条件刷新 lockfile。 | 变更文件、实现说明、验证结果和未解决问题。 |
+| Validation sub-agent | 独立对照 issue #172、PRD、TRD `0.2.0` 和本计划审查分支行为、归档例外、fixture 覆盖与 no-regression。 | pass/fail、blocking findings、残余风险。 |
+| Main process | 保留范围、用户确认、fresh eval gate、最终 closeout 与 Git 交付判断。 | 汇总结论和后续 handoff。 |
 
 ## 6. 风险与处理
 
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
-| checker 不能完全判断语义覆盖 | 仍可能发生人工误用 | 用 `implementation_scope`、`previous_plan_archive` 做机器门禁，planner gate 做语义门禁。 |
-| Superseded 与 Archived 混用 | 历史计划状态不清 | output conventions 明确完成态用 `Archived`，废弃态用 `Superseded`。 |
-| 归档规则导致小改动流程过重 | 维护成本上升 | 保留“继续更新当前计划”选项。 |
-| eval fixture 写入运行期产物 | contract 失败 | 只提交 eval 定义、fixture metadata 和 durable `comparison.md`。 |
+| base ref 无法解析或选择错误 | checker 可能漏报或误报 | 复用 `implementation_plan_base_ref`，为 base 文件不存在、状态分支和 merge-base 场景增加 fixture。 |
+| 历史 active plan 的 `status` 缺失或不是 `Implemented` | 进入继续更新分支 | HEAD `status` 无条件必填；base 快照只解析不污染当前错误列表，并按“不是 `Implemented`”分支处理。 |
+| closeout 归档动作被误判为覆盖 | 正确归档提交无法通过 | 保留 HEAD scope 命中本次新增或更新 archive scope 的窄例外。 |
+| `implementation_scope` 被重新用作主触发条件 | 笼统 scope 可持续绕过门禁 | 测试明确以 base `status` 为主分支；scope 仅用于 closeout + archive 例外。 |
+| eval 只验证文本、不经过真实 git 差异 | 无法覆盖 merge-base 缺口 | fixture 构造 base/HEAD 状态并调用真实 repository contract 路径。 |
+| 不必要修改 skill 文档扩大范围 | 产生无关 hash 和行为漂移 | 先复核，只有发现与 TRD `0.2.0` 冲突时才最小修改并刷新 lockfile。 |
 
-## 7. 实施结果
+## 7. 待确认决策
 
-本计划已按第 4 节文件级步骤实施完成。
+本计划采用已确认的技术设计，不新增产品或架构决策。用户需要确认是否按上述范围进入下一轮实现；
+在确认前不修改代码、eval fixture、eval 定义或 lockfile。
 
-### 变更文件
-
-| Path | Operation | 说明 |
-| --- | --- | --- |
-| `AGENTS.md` | Modify | 增加实施计划归档窄例外，限定仅适用于归档目录。 |
-| `docs/pm/agents/engineer-agent/skills/feature-implementor/PRD.md` | Modify | bump 到 1.5.0，新增 FR-S12 archive gate、workflow 节点和 AC-05。 |
-| `agents/engineer/skills/feature-implementor/SKILL.md` | Modify | 新增 Implementation Plan Archive Gate（pre-plan 扫描 + post-closeout 归档）。 |
-| `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md` | Modify | 写计划前 pre-plan archive scan 和三选一处理。 |
-| `agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md` | Modify | 新增 archive 一致性 checklist 和自检表行。 |
-| `agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md` | Modify | 定义归档路径、metadata、状态枚举和 `previous_plan_archive`。 |
-| `scripts/check_repository_contract.py` | Modify | 新增归档路径 regex、metadata 校验、状态枚举硬校验和 `previous_plan_archive` linkage 校验。 |
-| `agents/engineer/test/feature-implementor/evals/evals.json` | Modify | 新增 eval-012、eval-013。 |
-| `agents/engineer/test/feature-implementor/evals/workspace/eval-012-*` | Create | 未归档旧计划阻塞新计划 fixture 和 durable comparison（PASS）。 |
-| `agents/engineer/test/feature-implementor/evals/workspace/eval-013-*` | Create | 归档后允许新计划 fixture 和 durable comparison（PASS）。 |
-| `skills-lock.json` | Modify | 刷新 `feature-implementor` computedHash。 |
-
-### 验证命令与结果
-
-```bash
-git diff --cached --check                                  # PASS
-uv run scripts/check_repository_contract.py                # PASS
-uv run scripts/check_eval_contract.py                      # PASS: schema v1.0
-uv run scripts/check_eval_artifacts.py                     # PASS: no tracked runtime artifacts
-uv run --with pytest pytest agents/test_eval_contract.py   # 36 passed
-```
-
-补充验证：用临时 git 仓库确认归档校验对非法 `status`、`implementation_scope` 与文件名不一致、非法 `archived_at` 日期和错误 `source_plan` 均会报错，不是空跑。
-
-### Skill eval / fresh subagent validation
-
-已运行并通过。eval-012、eval-013 均由 fresh Codex subagent validation 执行：with-skill 运行读取并应用 `feature-implementor` 验证新增 archive gate 行为；全新 without_skill baseline 在不读取 skill / Engineer README 的条件下重新生成对照基线。
-
-- `eval-012-implementation-plan-archive-preflight`：PASS。with-skill 五条断言全 PASS；baseline 在 `offers_three_handling_options` FAIL、多条 PARTIAL，说明通用实现规划不能可靠提供归档三选一门禁。
-- `eval-013-implementation-plan-archive-allows-next-plan`：PASS。with-skill 五条断言全 PASS；baseline 在 `records_previous_plan_archive` FAIL、多条 PARTIAL，说明归档 linkage 纪律依赖本 skill 规则。
-
-两份结论已回填对应 durable `comparison.md` 并暂存。运行期 transcript、diagnostics、outputs 等产物未入库。
-
-### 剩余风险与下一步
-
-- 无未闭合项。archive gate 的文档契约、机器门禁和 eval 回归均已就绪并通过。
-- contract checker 只做机器可判断的路径和 metadata 门禁；“继续更新 vs 新建下一份计划”的语义判断仍由 planner gate 和用户确认负责。
+确认后加载 implementor 开始编码。
