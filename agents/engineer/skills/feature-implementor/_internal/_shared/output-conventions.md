@@ -73,9 +73,26 @@ under `docs/engineer/{feature_path}/implementation-plans/archive/`.
 Before creating or replacing an active plan on a `feature_path`:
 
 1. Scan for an existing active plan and the archive directory.
-2. If an active plan exists and no handling decision was recorded, do not
-   overwrite it; ask the user to archive it, continue updating it, or archive it
-   as `Superseded` with a reason.
+2. If an active plan exists with `status: "Implemented"` and no handling
+   decision was recorded, do not overwrite it; ask the user to choose between
+   archiving it as completed before creating a new plan, or archiving it as
+   `Superseded` with a reason before creating a new plan.
+3. If the active plan status is not `Implemented` and no archive on the same
+   feature path faithfully preserves its current body, continue updating that
+   current plan and bump its version by default; do not force archival or ask
+   for an archive decision merely because the active entry exists. If such a
+   faithful archive already exists, treat the current round as settled and ask
+   the user to choose exactly one of three options: archive it then create a new
+   active plan, continue updating it while redeclaring `previous_plan_archive`
+   to that faithful archive, or archive it as `Superseded` with a reason then
+   create a new active plan. If the user or maintainer explicitly abandons the
+   unfinished plan, it may instead be archived as `Superseded` with
+   `superseded_reason` before a new active plan is created, using the same
+   archive metadata requirements as the `Implemented` branch.
+4. If no active plan exists, inspect the feature path's archive history. A new
+   active plan must record `previous_plan_archive` pointing to the most recent
+   archive when history exists; no backlink is required for a genuinely new
+   feature path with no archive history.
 
 When archiving after closeout and user/maintainer approval:
 
@@ -92,8 +109,14 @@ When archiving after closeout and user/maintainer approval:
    original `feature`, `feature_path`, `parent_feature`, `feature_level`,
    `related_prd`, `related_trd`, `version`, `date`, `last_updated`, and `author`.
 4. When a new active plan is created after archival, add
-   `previous_plan_archive` to its frontmatter pointing to the archive file. Omit
-   `previous_plan_archive` when continuing to update the current plan.
+   `previous_plan_archive` to its frontmatter pointing to the archive file. This
+   also applies when the archive and new active plan are written in the same
+   change. When continuing to update the current plan, omit
+   `previous_plan_archive` only while the round remains unsettled: its status is
+   not `Implemented` and no archive on the same feature path faithfully
+   preserves its current body. If the round is already settled by either
+   condition, continuing it requires redeclaring `previous_plan_archive` to the
+   faithful archive.
 
 ## Commit Granularity
 

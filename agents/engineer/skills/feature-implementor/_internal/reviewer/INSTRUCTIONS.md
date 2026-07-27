@@ -96,9 +96,15 @@ For each P0 acceptance criterion in PRD:
 
 ### 7. Implementation Plan Archive Consistency
 
-- [ ] If a new active plan replaced an existing one, the old plan was archived
-      or explicitly kept as a continued update, per the pre-plan archive scan
-      decision
+- [ ] If a new active plan replaced an existing `status: "Implemented"` plan,
+      the old plan was archived as completed or as `Superseded` with a reason,
+      per the pre-plan archive scan decision; a non-`Implemented` active plan
+      was continued with a version bump by default only when no archive on the
+      same feature path faithfully preserved its current body; if such an
+      archive existed, the round was treated as settled and the user chose to
+      archive then create a new plan, continue while redeclaring
+      `previous_plan_archive` to that faithful archive, or archive as
+      `Superseded` with a reason then create a new plan
 - [ ] Archival happened only after closeout was complete and user/maintainer
       approval was recorded
 - [ ] Archive plans live under
@@ -109,6 +115,10 @@ For each P0 acceptance criterion in PRD:
       archives also include `superseded_reason`
 - [ ] When the new active plan declares `previous_plan_archive`, that path
       exists and points to an archive file on the same `feature_path`
+- [ ] If no active plan existed but the feature path already had archive
+      history, the new active plan declares `previous_plan_archive` pointing to
+      the most recent archive, including when archival and new-plan creation
+      happened in the same change
 
 ## Output
 

@@ -1111,6 +1111,7 @@ class EvalContractTests(unittest.TestCase):
                 'parent_feature: "chat-interface"\n'
                 'feature_level: "2"\n'
                 'version: "0.1.0"\n'
+                'status: "Pending Confirmation"\n'
                 'date: "2026-06-23"\n'
                 'last_updated: "2026-06-23"\n'
                 'implementation_scope: "initial-rollout"\n'
@@ -1192,6 +1193,9 @@ class EvalContractTests(unittest.TestCase):
         root: Path,
         plan_extra_frontmatter: str = "",
         implementation_scope: str = "initial-rollout",
+        status: str = "Pending Confirmation",
+        last_updated: str = "2026-06-23",
+        body: str = "# History Search Plan\n",
     ) -> Path:
         plan = root / "docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md"
         prd = root / "docs/pm/chat-interface/history-search/PRD.md"
@@ -1230,14 +1234,15 @@ class EvalContractTests(unittest.TestCase):
             'parent_feature: "chat-interface"\n'
             'feature_level: "2"\n'
             'version: "0.1.0"\n'
+            f'status: "{status}"\n'
             'date: "2026-06-23"\n'
-            'last_updated: "2026-06-23"\n'
+            f'last_updated: "{last_updated}"\n'
             f'implementation_scope: "{implementation_scope}"\n'
             'related_prd: "docs/pm/chat-interface/history-search/PRD.md"\n'
             'related_trd: "docs/engineer/chat-interface/history-search/TRD.md"\n'
             f"{plan_extra_frontmatter}"
             "---\n\n"
-            "# History Search Plan\n"
+            f"{body}"
         )
         return plan
 
@@ -1261,7 +1266,7 @@ class EvalContractTests(unittest.TestCase):
             rendered,
         )
 
-    def test_repository_contract_rejects_missing_previous_plan_archive_for_replacement_scope(self):
+    def test_repository_contract_requires_previous_plan_archive_when_base_has_history_only(self):
         checker = load_repository_checker_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -1284,58 +1289,68 @@ class EvalContractTests(unittest.TestCase):
 
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn(
-            "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path and 'implementation_scope' does not match any archive scope added or updated in this change",
+            "frontmatter 'previous_plan_archive' must be non-empty because this "
+            "feature_path already has archived plan history; a new active plan "
+            "must link to the previous archive",
             rendered,
         )
 
-    def test_repository_contract_accepts_missing_previous_plan_archive_for_closeout_archived_scope(self):
+    def test_repository_contract_accepts_frontmatter_only_update_for_implemented_base(self):
         checker = load_repository_checker_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
-            init_git_main(root)
-            # Closeout flow: the changed active plan carries the same
-            # implementation_scope as its archive copy created in the same
-            # change set, so no previous_plan_archive back link is required.
+            subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True)
             plan = self._write_history_search_plan_fixture(
-                root, implementation_scope="initial-rollout"
+                root,
+                implementation_scope="initial-rollout",
+                status="Implemented",
             )
-            archive = (
-                root
-                / "docs/engineer/chat-interface/history-search"
-                / "implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"
-            )
-            archive.parent.mkdir(parents=True)
-            archive.write_text("# Archived Plan\n")
-            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
+            subprocess.run(["git", "add", "-A"], cwd=root, check=True)
             subprocess.run(
-                ["git", "add", archive.relative_to(root).as_posix()], cwd=root, check=True
+                [
+                    "git",
+                    "-c",
+                    "user.name=Test User",
+                    "-c",
+                    "user.email=test@example.com",
+                    "commit",
+                    "-m",
+                    "base",
+                ],
+                cwd=root,
+                check=True,
+                stdout=subprocess.DEVNULL,
             )
+            subprocess.run(["git", "switch", "-c", "feature"], cwd=root, check=True)
+            # Administrative metadata changes keep the active-plan body
+            # identical to the completed base round and need no back link.
+            plan = self._write_history_search_plan_fixture(
+                root,
+                status="Implemented",
+                last_updated="2026-06-24",
+            )
+            subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
 
             errors = []
             checker.validate_implementation_plan_metadata(root, errors)
 
         self.assertEqual([], errors)
 
-    def test_repository_contract_rejects_missing_previous_plan_archive_for_base_archived_scope(self):
+    def test_repository_contract_rejects_missing_backlink_for_settled_base_plan(self):
         checker = load_repository_checker_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
-            # The archive already exists on the main baseline; the feature
-            # branch only changes the active plan and reuses the archived
-            # scope, so the closeout exemption must not apply.
+            # An Implemented active plan already exists on the main baseline.
+            # Replacing its body must link the new round to a faithful archive.
             subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True)
-            archive = (
-                root
-                / "docs/engineer/chat-interface/history-search"
-                / "implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"
+            plan = self._write_history_search_plan_fixture(
+                root,
+                implementation_scope="initial-rollout",
+                status="Implemented",
             )
-            archive.parent.mkdir(parents=True)
-            archive.write_text("# Archived Plan\n")
-            subprocess.run(
-                ["git", "add", archive.relative_to(root).as_posix()], cwd=root, check=True
-            )
+            subprocess.run(["git", "add", "-A"], cwd=root, check=True)
             subprocess.run(
                 [
                     "git",
@@ -1353,7 +1368,10 @@ class EvalContractTests(unittest.TestCase):
             )
             subprocess.run(["git", "switch", "-c", "feature"], cwd=root, check=True)
             plan = self._write_history_search_plan_fixture(
-                root, implementation_scope="initial-rollout"
+                root,
+                implementation_scope="search-filters-v2",
+                status="Pending Confirmation",
+                body="# History Search Filters V2 Plan\n",
             )
             subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
 
@@ -1362,7 +1380,9 @@ class EvalContractTests(unittest.TestCase):
 
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn(
-            "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path and 'implementation_scope' does not match any archive scope added or updated in this change",
+            "frontmatter 'previous_plan_archive' must be non-empty because the "
+            "base round for this active plan is already settled and its content "
+            "has changed; link the new plan to an archive that faithfully preserves it",
             rendered,
         )
 
@@ -1671,6 +1691,7 @@ class EvalContractTests(unittest.TestCase):
                 'parent_feature: "a/b/c"\n'
                 'feature_level: "4"\n'
                 'version: "0.1.0"\n'
+                'status: "Pending Confirmation"\n'
                 'date: "2026-06-23"\n'
                 'last_updated: "2026-06-23"\n'
                 'implementation_scope: "initial-rollout"\n'
@@ -1736,6 +1757,7 @@ class EvalContractTests(unittest.TestCase):
                     f'parent_feature: "{parent_feature}"\n'
                     f'feature_level: "{feature_level}"\n'
                     'version: "0.1.0"\n'
+                    'status: "Pending Confirmation"\n'
                     'date: "2026-06-25"\n'
                     'last_updated: "2026-06-25"\n'
                     'implementation_scope: "initial-rollout"\n'

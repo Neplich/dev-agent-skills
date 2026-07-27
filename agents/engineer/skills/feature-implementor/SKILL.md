@@ -95,10 +95,25 @@ Before creating or replacing an active plan, scan
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` and its
 `implementation-plans/archive/` directory.
 
-If an active plan exists and no handling decision is recorded, ask the user to
-choose exactly one: archive completed plan then create new active plan,
-continue updating the current plan with a version bump, or archive the old plan
-as `Superseded` with a reason then create a new active plan.
+If an active plan exists with `status: "Implemented"` and no handling decision
+is recorded, ask the user to choose exactly one of two options: archive the
+completed plan then create a new active plan, or archive the old plan as
+`Superseded` with a reason then create a new active plan. If the active plan
+status is not `Implemented` and no archive on the same feature path faithfully
+preserves its current body, continue updating that current plan with a version
+bump by default instead of forcing archival or asking for an archive decision.
+If such a faithful archive already exists, treat the current round as settled
+and ask the user to choose exactly one of three options: archive it then create
+a new active plan, continue updating it while redeclaring
+`previous_plan_archive` to that faithful archive, or archive it as `Superseded`
+with a reason then create a new active plan.
+Only when the user or maintainer explicitly abandons that plan may it be
+archived as `Superseded` with `superseded_reason` before creating a new active
+plan, using the same archive metadata requirements as the `Implemented` branch.
+If no active plan exists but the feature path has archive history, the new
+active plan must set `previous_plan_archive` to the most recent archive. A
+genuinely new feature path with neither an active plan nor archive history does
+not need that backlink.
 
 Plan form strength follows `change_tier` from the PM handoff or `AGENTS.md`.
 `hotfix` may use the lightweight plan form allowed by the repository contract;

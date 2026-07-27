@@ -41,7 +41,19 @@ IMPLEMENTATION_PLAN_ARCHIVE_RE = re.compile(
     rf"/implementation-plans/archive/"
     rf"IMPLEMENTATION_PLAN-(?P<scope>{FEATURE_PATH_SEGMENT_PATTERN})\.md$"
 )
+IMPLEMENTATION_PLAN_ARCHIVE_DIRECTORY_RE = re.compile(
+    rf"^docs/engineer/"
+    rf"{FEATURE_PATH_SEGMENT_PATTERN}(?:/{FEATURE_PATH_SEGMENT_PATTERN})*?"
+    rf"/implementation-plans(?:/archive)?$"
+)
 IMPLEMENTATION_SCOPE_RE = re.compile(rf"^{FEATURE_PATH_SEGMENT_PATTERN}$")
+ACTIVE_PLAN_STATUS_VALUES = {
+    "Draft",
+    "Historical",
+    "Implemented",
+    "Legacy",
+    "Pending Confirmation",
+}
 ARCHIVE_STATUS_VALUES = {"Archived", "Superseded"}
 PM_PRD_RE = re.compile(
     rf"^docs/pm/"
@@ -79,6 +91,13 @@ class ContractError:
         return f"{rel}: {self.message}"
 
 
+@dataclass(frozen=True)
+class ActivePlanBaseRound:
+    body: str
+    settled: bool
+    content_unchanged: bool
+
+
 def repo_root() -> Path:
     return Path(__file__).resolve().parents[1]
 
@@ -102,6 +121,20 @@ def is_safe_relative_path(value: str) -> bool:
         return False
     path = Path(value)
     return not path.is_absolute() and ".." not in path.parts
+
+
+def path_has_symlink_component(root: Path, path: Path) -> bool:
+    try:
+        relative_parts = path.relative_to(root).parts
+    except ValueError:
+        return True
+
+    current = root
+    for part in relative_parts:
+        current /= part
+        if current.is_symlink():
+            return True
+    return False
 
 
 def validate_claude_symlink(root: Path, errors: list[ContractError]) -> None:
@@ -845,7 +878,7 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
         if rel.startswith("docs/engineer/")
         and rel.endswith("/IMPLEMENTATION_PLAN.md")
         and not is_legacy_artifact_path(rel)
-        and (root / rel).exists()
+        and ((root / rel).exists() or (root / rel).is_symlink())
     ]
 
     base_ref = implementation_plan_base_ref(root)
@@ -853,6 +886,13 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
 
     for rel in implementation_plans:
         path = root / rel
+        if path_has_symlink_component(root, path):
+            add_error(
+                errors,
+                path,
+                "active implementation plan path must not contain a symbolic link",
+            )
+            continue
         feature_path = implementation_plan_feature_path(rel)
         if feature_path is None:
             add_error(
@@ -865,12 +905,23 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
         parsed = parse_markdown_frontmatter(path, path.read_text(), errors)
         if parsed is None:
             continue
-        metadata, _ = parsed
+        metadata, body = parsed
 
-        for field in ("feature", "version", "date", "last_updated"):
+        for field in ("feature", "version", "status", "date", "last_updated"):
             value = metadata.get(field)
             if not isinstance(value, str) or not value.strip():
                 add_error(errors, path, f"frontmatter {field!r} must be non-empty")
+
+        status = metadata.get("status", "")
+        if status and status not in ACTIVE_PLAN_STATUS_VALUES:
+            allowed_statuses = ", ".join(
+                repr(value) for value in sorted(ACTIVE_PLAN_STATUS_VALUES)
+            )
+            add_error(
+                errors,
+                path,
+                f"frontmatter 'status' must be one of: {allowed_statuses}",
+            )
 
         version = metadata.get("version", "")
         if version and not SEMVER_RE.fullmatch(version):
@@ -921,8 +972,9 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
             rel,
             feature_path,
             metadata,
+            body,
+            base_ref,
             rel in changed_engineer_docs,
-            changed_engineer_docs,
             errors,
         )
 
@@ -1042,6 +1094,14 @@ def validate_archive_plan_metadata(
     feature_path = match.group("feature_path")
     scope = match.group("scope")
 
+    if path_has_symlink_component(root, path):
+        add_error(
+            errors,
+            path,
+            "archived implementation plan path must not contain a symbolic link",
+        )
+        return
+
     parsed = parse_markdown_frontmatter(path, path.read_text(), errors)
     if parsed is None:
         return
@@ -1109,7 +1169,7 @@ def validate_archive_plan_metadata(
 def feature_path_plan_archive_scopes(root: Path, feature_path: str) -> set[str]:
     archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
     scopes: set[str] = set()
-    if not archive_dir.is_dir():
+    if path_has_symlink_component(root, archive_dir) or not archive_dir.is_dir():
         return scopes
     for candidate in archive_dir.glob("IMPLEMENTATION_PLAN-*.md"):
         candidate_rel = candidate.relative_to(root).as_posix()
@@ -1119,20 +1179,175 @@ def feature_path_plan_archive_scopes(root: Path, feature_path: str) -> set[str]:
     return scopes
 
 
-def feature_path_changed_plan_archive_scopes(
+def feature_path_latest_archive_scopes(
+    root: Path,
+    base_ref: str,
+    feature_path: str,
+) -> set[str]:
+    scopes_by_date: dict[str, set[str]] = {}
+    for rel in feature_path_archive_files(root, base_ref, feature_path):
+        match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel)
+        if match is None:
+            continue
+        content = archive_content_trusted(root, base_ref, rel)
+        if content is None:
+            continue
+        parsed = parse_markdown_frontmatter(root / rel, content, errors=None)
+        if parsed is None:
+            continue
+        archived_at = parsed[0].get("archived_at", "")
+        if not DATE_RE.fullmatch(archived_at):
+            continue
+        scopes_by_date.setdefault(archived_at, set()).add(match.group("scope"))
+    if not scopes_by_date:
+        return set()
+    return scopes_by_date[max(scopes_by_date)]
+
+
+def feature_path_archive_files_in_worktree(
     root: Path,
     feature_path: str,
-    changed_engineer_docs: set[str],
+) -> set[str]:
+    archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
+    if path_has_symlink_component(root, archive_dir) or not archive_dir.is_dir():
+        return set()
+    archive_files: set[str] = set()
+    for candidate in archive_dir.glob("IMPLEMENTATION_PLAN-*.md"):
+        if not candidate.is_file():
+            continue
+        candidate_rel = candidate.relative_to(root).as_posix()
+        if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel) is not None:
+            archive_files.add(candidate_rel)
+    return archive_files
+
+
+def parsed_markdown_body(path: Path) -> str | None:
+    try:
+        content = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError):
+        return None
+    parsed = parse_markdown_frontmatter(path, content, errors=None)
+    return parsed[1] if parsed is not None else None
+
+
+def archive_files_at_ref(
+    root: Path,
+    ref: str,
+    feature_path: str,
+) -> list[str]:
+    archive_prefix = f"docs/engineer/{feature_path}/implementation-plans/archive/"
+    output = git_output(
+        root, ["ls-tree", "-r", "--name-only", ref, "--", archive_prefix]
+    )
+    if output is None:
+        return []
+    return [line for line in output.splitlines() if line]
+
+
+def feature_path_archive_files(
+    root: Path,
+    base_ref: str,
+    feature_path: str,
+) -> list[str]:
+    return sorted(
+        set(archive_files_at_ref(root, base_ref, feature_path))
+        | feature_path_archive_files_in_worktree(root, feature_path)
+    )
+
+
+def archive_content_trusted(
+    root: Path,
+    base_ref: str,
+    archive_rel: str,
+) -> str | None:
+    """Return the file content to trust for an archive path: its base_ref
+    snapshot if it already existed there (immune to same-change rewrites),
+    otherwise its current working-tree content (genuinely new this change,
+    nothing to tamper with)."""
+    base_content = content_at_ref(root, base_ref, archive_rel)
+    if base_content is not None:
+        return base_content
+    path = root / archive_rel
+    if path_has_symlink_component(root, path) or not path.is_file():
+        return None
+    try:
+        return path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError):
+        return None
+
+
+def feature_path_plan_archive_scopes_at_ref(
+    root: Path,
+    ref: str,
+    feature_path: str,
 ) -> set[str]:
     scopes: set[str] = set()
-    for candidate_rel in changed_engineer_docs:
-        match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(candidate_rel)
-        if match is None or match.group("feature_path") != feature_path:
-            continue
-        if not (root / candidate_rel).exists():
-            continue
-        scopes.add(match.group("scope"))
+    for rel in archive_files_at_ref(root, ref, feature_path):
+        match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel)
+        if match is not None:
+            scopes.add(match.group("scope"))
     return scopes
+
+
+def feature_path_any_archive_matches_body(
+    root: Path,
+    base_ref: str,
+    feature_path: str,
+    target_body: str,
+) -> bool:
+    for rel in feature_path_archive_files(root, base_ref, feature_path):
+        content = archive_content_trusted(root, base_ref, rel)
+        if content is None:
+            continue
+        parsed = parse_markdown_frontmatter(root / rel, content, errors=None)
+        if parsed is not None and parsed[1] == target_body:
+            return True
+    return False
+
+
+def active_plan_base_round(
+    root: Path,
+    base_ref: str,
+    path: Path,
+    feature_path: str,
+    metadata: dict[str, str],
+    body: str,
+    base_content: str,
+    errors: list[ContractError],
+) -> ActivePlanBaseRound | None:
+    base_parsed = parse_markdown_frontmatter(path, base_content, errors=None)
+    if base_parsed is None:
+        add_error(
+            errors,
+            path,
+            "cannot validate active plan archive linkage because the base plan "
+            "frontmatter is invalid",
+        )
+        return None
+    base_metadata, base_body = base_parsed
+
+    base_status = base_metadata.get("status", "")
+    already_archived = feature_path_any_archive_matches_body(
+        root, base_ref, feature_path, base_body
+    )
+    settled = base_status == "Implemented" or already_archived
+
+    status_regressed = (
+        base_status == "Implemented"
+        and metadata.get("status", "") != "Implemented"
+    )
+    content_unchanged = (
+        body == base_body
+        and not status_regressed
+        and metadata.get("previous_plan_archive", "")
+        == base_metadata.get("previous_plan_archive", "")
+    )
+
+    return ActivePlanBaseRound(
+        body=base_body,
+        settled=settled,
+        content_unchanged=content_unchanged,
+    )
 
 
 def validate_active_plan_archive_linkage(
@@ -1140,33 +1355,52 @@ def validate_active_plan_archive_linkage(
     rel: str,
     feature_path: str,
     metadata: dict[str, str],
+    body: str,
+    base_ref: str | None,
     plan_changed: bool,
-    changed_engineer_docs: set[str],
     errors: list[ContractError],
 ) -> None:
     path = root / rel
     previous_archive = metadata.get("previous_plan_archive")
     if not isinstance(previous_archive, str) or not previous_archive.strip():
-        # Only replacement plans created or rewritten after an archive exists
-        # must record the back link; an unchanged active plan (for example the
-        # copy-archived source plan left in place) is allowed to omit it.
-        # A changed active plan whose 'implementation_scope' matches an
-        # archive scope added or updated in this same change set is the
-        # just-archived source plan (closeout evidence and approved archive
-        # copy landing together), not a replacement plan, so it may also omit
-        # the back link. Archives that already existed on the base ref and are
-        # untouched in this change do not grant that exemption.
-        if plan_changed:
-            archive_scopes = feature_path_plan_archive_scopes(root, feature_path)
-            changed_archive_scopes = feature_path_changed_plan_archive_scopes(
-                root, feature_path, changed_engineer_docs
+        if not plan_changed or base_ref is None:
+            return
+
+        base_content = content_at_ref(root, base_ref, rel)
+        if base_content is None:
+            archive_scopes = feature_path_plan_archive_scopes(
+                root, feature_path
+            ) | feature_path_plan_archive_scopes_at_ref(
+                root, base_ref, feature_path
             )
-            if archive_scopes and metadata.get("implementation_scope") not in changed_archive_scopes:
-                add_error(
-                    errors,
-                    path,
-                    "frontmatter 'previous_plan_archive' must be non-empty when implementation-plans/archive already contains archived plans for this feature_path and 'implementation_scope' does not match any archive scope added or updated in this change",
-                )
+            if not archive_scopes:
+                return
+            add_error(
+                errors,
+                path,
+                "frontmatter 'previous_plan_archive' must be non-empty because this feature_path already has archived plan history; a new active plan must link to the previous archive",
+            )
+            return
+        base_round = active_plan_base_round(
+            root,
+            base_ref,
+            path,
+            feature_path,
+            metadata,
+            body,
+            base_content,
+            errors,
+        )
+        if base_round is None or not base_round.settled or base_round.content_unchanged:
+            return
+
+        add_error(
+            errors,
+            path,
+            "frontmatter 'previous_plan_archive' must be non-empty because the base "
+            "round for this active plan is already settled and its content has "
+            "changed; link the new plan to an archive that faithfully preserves it",
+        )
         return
 
     archive_match = IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(previous_archive)
@@ -1186,11 +1420,69 @@ def validate_active_plan_archive_linkage(
         )
         return
 
-    if not (root / previous_archive).exists():
+    archive_path = root / previous_archive
+    if not archive_path.is_file():
         add_error(
             errors,
             path,
             "frontmatter 'previous_plan_archive' must point to an existing archive file",
+        )
+        return
+
+    if not plan_changed or base_ref is None:
+        return
+
+    base_content = content_at_ref(root, base_ref, rel)
+    if base_content is None:
+        if path_has_symlink_component(root, archive_path):
+            add_error(
+                errors,
+                path,
+                "frontmatter 'previous_plan_archive' must point to an existing archive file",
+            )
+            return
+        latest_scopes = feature_path_latest_archive_scopes(
+            root, base_ref, feature_path
+        )
+        if latest_scopes and archive_match.group("scope") not in latest_scopes:
+            latest_scope_list = ", ".join(repr(scope) for scope in sorted(latest_scopes))
+            add_error(
+                errors,
+                path,
+                "frontmatter 'previous_plan_archive' must reference the most recent "
+                f"archive for this feature_path ({latest_scope_list}), not an older archive",
+            )
+        return
+
+    base_round = active_plan_base_round(
+        root,
+        base_ref,
+        path,
+        feature_path,
+        metadata,
+        body,
+        base_content,
+        errors,
+    )
+    if base_round is None or not base_round.settled or base_round.content_unchanged:
+        return
+
+    archive_content = archive_content_trusted(root, base_ref, previous_archive)
+    archive_parsed = (
+        parse_markdown_frontmatter(
+            archive_path,
+            archive_content,
+            errors=None,
+        )
+        if archive_content is not None
+        else None
+    )
+    if archive_parsed is None or archive_parsed[1] != base_round.body:
+        add_error(
+            errors,
+            path,
+            "frontmatter 'previous_plan_archive' must reference an archive whose "
+            "body faithfully preserves the base active plan",
         )
 
 
@@ -1198,7 +1490,18 @@ def validate_archive_plans(root: Path, errors: list[ContractError]) -> None:
     for rel in tracked_files(root):
         if is_legacy_artifact_path(rel):
             continue
-        if not (root / rel).exists():
+        path = root / rel
+        if (
+            path.is_symlink()
+            and IMPLEMENTATION_PLAN_ARCHIVE_DIRECTORY_RE.fullmatch(rel)
+        ):
+            add_error(
+                errors,
+                path,
+                "implementation plan archive directories must not be symbolic links",
+            )
+            continue
+        if not path.exists() and not path.is_symlink():
             continue
         if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel) is None:
             if (
@@ -1208,7 +1511,7 @@ def validate_archive_plans(root: Path, errors: list[ContractError]) -> None:
             ):
                 add_error(
                     errors,
-                    root / rel,
+                    path,
                     "implementation-plans/archive only allows IMPLEMENTATION_PLAN-<scope>.md with a lower kebab-case scope",
                 )
             continue

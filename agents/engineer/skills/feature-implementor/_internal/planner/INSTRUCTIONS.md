@@ -64,15 +64,31 @@ Before writing a new or replacement active plan, run the pre-plan archive scan:
    exists and read its frontmatter and closeout status.
 2. Check `docs/engineer/{feature_path}/implementation-plans/archive/` for prior
    archived plans.
-3. If no active plan exists, continue planning and create the new plan.
-4. If an active plan exists and no handling decision has been recorded, stop and
-   report the existing plan path, status, and scope, then ask the user to choose
-   one of: archive the completed plan then create a new plan, continue updating
-   the current plan, or archive the old plan as `Superseded` with a reason then
-   create a new plan. Do not overwrite the active plan while the decision is
-   unresolved.
-5. When a new active plan is created after archival, record
-   `previous_plan_archive` in its frontmatter pointing to the archive file.
+3. If no active plan exists, check whether that feature path has archive
+   history. If it does, continue planning but record `previous_plan_archive` in
+   the new plan pointing to the most recent archive; if it does not, create the
+   new plan without a backlink.
+4. If an active plan exists with `status: "Implemented"` and no handling
+   decision has been recorded, stop and report the existing plan path, status,
+   and scope, then ask the user to choose one of two options: archive the
+   completed plan then create a new plan, or archive the old plan as
+   `Superseded` with a reason then create a new plan. Do not overwrite the
+   active plan while the decision is unresolved.
+5. If the active plan status is not `Implemented` and no archive on the same
+   feature path faithfully preserves its current body, continue updating that
+   current plan with a version bump by default; do not require archival or ask
+   for an archive decision before the same plan is complete. If such a faithful
+   archive already exists, treat the current round as settled and ask the user
+   to choose exactly one of three options: archive it then create a new active
+   plan, continue updating it while redeclaring `previous_plan_archive` to that
+   faithful archive, or archive it as `Superseded` with a reason then create a
+   new active plan. Only when the user or maintainer explicitly says that the
+   current plan is abandoned may it be archived as `Superseded` with
+   `superseded_reason` before creating a new active plan, using the same archive
+   metadata requirements as the `Implemented` branch.
+6. When a new active plan is created after archival, record
+   `previous_plan_archive` in its frontmatter pointing to the archive file,
+   including when the archive and new plan are written in the same change.
 
 From PRD:
 - List all P0 user stories and acceptance criteria

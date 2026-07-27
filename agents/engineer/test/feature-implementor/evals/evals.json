@@ -409,7 +409,7 @@
       "description": "Verifies that feature-implementor runs the pre-plan archive scan and blocks a direct overwrite when an unarchived active IMPLEMENTATION_PLAN already exists on the same feature_path.",
       "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要新增部分退款能力。docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md 已存在且是上一轮全额退款的完成态计划，尚未归档。请进入 feature-implementor 为部分退款创建下一份实施计划，先不要改代码。",
       "workspace": "workspace/eval-012-implementation-plan-archive-preflight",
-      "expected_output": "运行 pre-plan archive 扫描，识别同 feature_path 已有未归档活跃计划，阻止直接覆盖，报告旧计划路径/状态/范围，并要求用户在归档后新建、继续更新、归档为 Superseded 三种处理方式中选择，不直接改代码。",
+      "expected_output": "运行 pre-plan archive 扫描，识别同 feature_path 已有未归档且 status 为 Implemented 的活跃计划，阻止直接覆盖，报告旧计划路径/状态/范围，并要求用户在归档完成计划后新建、归档为 Superseded 后新建两种处理方式中选择，不直接改代码。",
       "assertions": [
         {
           "id": "runs_pre_plan_archive_scan",
@@ -422,9 +422,9 @@
           "text": "输出不得直接覆盖或替换现有活跃 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`，在处理方式未确定前不得写入新计划。"
         },
         {
-          "id": "offers_three_handling_options",
-          "description": "提供三种处理选项",
-          "text": "输出必须要求用户在“归档旧计划后新建”“继续更新当前计划”“归档为 Superseded 并记录原因”这三种处理方式中选择。"
+          "id": "offers_implemented_handling_options",
+          "description": "提供完成态计划的两种处理选项",
+          "text": "输出必须要求用户在“归档完成计划后新建”“归档为 Superseded 并记录原因后新建”两种处理方式中选择，不得提供继续更新 status 为 Implemented 的当前计划这一选项。"
         },
         {
           "id": "keeps_active_entry_fixed",
@@ -470,6 +470,116 @@
           "id": "waits_for_user_confirmation",
           "description": "等待计划确认",
           "text": "输出必须要求用户确认新实施计划后再开始编码，不得直接修改代码。"
+        }
+      ]
+    },
+    {
+      "id": "eval-015-implemented-status-detected-from-fixture",
+      "name": "implemented-status-detected-from-fixture",
+      "description": "Verifies that feature-implementor reads an existing active plan frontmatter, recognizes status Implemented without the prompt revealing it, and stops at the two-option archive gate.",
+      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现在要在这个功能上做下一轮更新，请进入 feature-implementor 创建下一份实施计划，先不要改代码。",
+      "expected_output": "主动读取现有 active IMPLEMENTATION_PLAN.md 的 frontmatter，识别 status 为 Implemented，在覆盖前停下并要求用户从归档完成计划后新建、归档为 Superseded 后新建两种方式中选择。",
+      "workspace": "workspace/eval-015-implemented-status-detected-from-fixture",
+      "assertions": [
+        {
+          "id": "reads_active_plan_frontmatter",
+          "description": "主动读取 active plan frontmatter",
+          "text": "输出必须基于 fixture 中 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md` 的 frontmatter 判断当前计划状态，而不是依赖 prompt 直接提供完成态结论。"
+        },
+        {
+          "id": "detects_implemented_status",
+          "description": "识别 Implemented 状态",
+          "text": "输出必须明确识别现有 active plan 的 `status: Implemented`、路径和 `implementation_scope`。"
+        },
+        {
+          "id": "blocks_direct_overwrite",
+          "description": "阻止直接覆盖",
+          "text": "输出不得直接覆盖或创建下一份 active plan；在处理决定确认前必须停下。"
+        },
+        {
+          "id": "offers_implemented_handling_options",
+          "description": "提供完成态计划的两种处理选项",
+          "text": "输出必须要求用户从“归档完成计划后新建”“归档为 Superseded 并记录原因后新建”两种方式中选择，不得提供继续更新 status 为 Implemented 的当前计划这一选项。"
+        },
+        {
+          "id": "does_not_implement_code",
+          "description": "不直接实施代码",
+          "text": "输出不得修改代码或声称已开始实现。"
+        }
+      ]
+    },
+    {
+      "id": "eval-016-draft-status-continues-current-plan",
+      "name": "draft-status-continues-current-plan",
+      "description": "Verifies that feature-implementor reads an existing active plan frontmatter, recognizes a non-Implemented Draft status without the prompt revealing it, and continues the current plan with a version bump instead of forcing archival.",
+      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现在要在这个功能上做下一轮更新，请进入 feature-implementor 创建下一份实施计划，先不要改代码。",
+      "expected_output": "主动读取现有 active IMPLEMENTATION_PLAN.md 的 frontmatter，识别 status 为 Draft，继续更新固定 active 入口并 bump version，不强制要求归档或 previous_plan_archive，更新计划后等待用户确认再编码。",
+      "workspace": "workspace/eval-016-draft-status-continues-current-plan",
+      "assertions": [
+        {
+          "id": "reads_active_plan_frontmatter",
+          "description": "主动读取 active plan frontmatter",
+          "text": "输出必须基于 fixture 中 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md` 的 frontmatter 判断当前计划状态，而不是依赖 prompt 直接提供状态结论。"
+        },
+        {
+          "id": "detects_non_implemented_status",
+          "description": "识别非 Implemented 状态",
+          "text": "输出必须明确识别现有 active plan 的 `status: Draft`，并判断当前轮次尚未完成。"
+        },
+        {
+          "id": "continues_current_plan",
+          "description": "继续当前计划",
+          "text": "输出必须继续更新固定入口 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`，而不是创建第二个 active plan。"
+        },
+        {
+          "id": "bumps_plan_version",
+          "description": "提升计划版本",
+          "text": "输出必须要求对当前计划的实质性更新同步 bump `version` 并更新 `last_updated`。"
+        },
+        {
+          "id": "does_not_force_archive_link",
+          "description": "不强制归档回链",
+          "text": "输出不得把归档或 `previous_plan_archive` 作为继续 Draft 计划的前置条件。"
+        },
+        {
+          "id": "waits_before_coding",
+          "description": "编码前等待确认",
+          "text": "输出必须在更新实施计划后等待用户确认，不得直接修改代码。"
+        }
+      ]
+    },
+    {
+      "id": "eval-017-abandoned-draft-can-be-superseded",
+      "name": "abandoned-draft-can-be-superseded",
+      "description": "Verifies that feature-implementor preserves the explicit abandonment path for a non-Implemented active plan by archiving it as Superseded before creating a linked replacement plan.",
+      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现有退款原因码实施计划不再继续，维护者明确要求废弃这一轮并为新的退款审核流程创建下一份实施计划。请进入 feature-implementor 处理计划，先不要改代码。",
+      "expected_output": "主动读取现有 status 为 Draft 的 active IMPLEMENTATION_PLAN.md；由于维护者已明确废弃，允许将该未完成计划以 Superseded 归档并记录 superseded_reason 和完整归档 metadata，再创建带 previous_plan_archive 的新 active plan；不得把默认继续更新当前 Draft 计划作为本次处理结果，编码前仍等待确认。",
+      "workspace": "workspace/eval-017-abandoned-draft-can-be-superseded",
+      "assertions": [
+        {
+          "id": "reads_unfinished_active_plan",
+          "description": "读取未完成活跃计划",
+          "text": "输出必须读取 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`，识别 `status: Draft`、当前路径和 `implementation_scope: refund-reason-codes`。"
+        },
+        {
+          "id": "detects_explicit_abandonment",
+          "description": "识别明确废弃信号",
+          "text": "输出必须识别维护者已明确表示当前未完成计划不再继续，因此本次走显式废弃路径，而不是默认继续更新 Draft 计划。"
+        },
+        {
+          "id": "archives_as_superseded",
+          "description": "归档为 Superseded",
+          "text": "输出必须允许把当前计划归档为 `Superseded`，要求非空 `superseded_reason`，并保留 `implementation_scope`、`archived_at`、`archive_approved_by`、`source_plan` 及原计划 metadata。"
+        },
+        {
+          "id": "links_replacement_plan",
+          "description": "回链新计划",
+          "text": "输出必须要求新的 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md` 通过 `previous_plan_archive` 指向同 feature_path 的 Superseded 归档文件。"
+        },
+        {
+          "id": "waits_before_coding",
+          "description": "编码前等待确认",
+          "text": "输出不得修改代码；归档处理和新实施计划写明后，仍须等待用户确认再编码。"
         }
       ]
     },

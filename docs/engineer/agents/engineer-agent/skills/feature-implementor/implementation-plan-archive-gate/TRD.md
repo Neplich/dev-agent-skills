@@ -1,11 +1,11 @@
 ---
 title: "IMPLEMENTATION_PLAN 归档门禁 TRD"
 type: TRD
-version: "0.1.3"
+version: "0.2.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-01"
-last_updated: "2026-07-04"
+last_updated: "2026-07-27"
 generated_by: "trd-gen"
 feature: "implementation-plan-archive-gate"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate"
@@ -21,6 +21,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md"
   - "scripts/check_repository_contract.py"
 changelog:
+  - version: "0.2.0"
+    date: "2026-07-27"
+    changes: "Fix issue #172 by making active-plan status mandatory and using the merge-base active-plan status, rather than archive history or scope-name changes, to trigger previous_plan_archive linkage"
   - version: "0.1.3"
     date: "2026-07-04"
     changes: "Limit the closeout back-link exemption to archives added or updated in the same change set; pre-existing base archives no longer grant it"
@@ -58,10 +61,11 @@ changelog:
 | Planner module | `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md` | 写计划前检查同 `feature_path` 下是否存在未归档活跃计划。 |
 | Reviewer module | `agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md` | 交付前检查 closeout 与 archive 状态一致。 |
 | Output conventions | `agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md` | 定义归档路径、metadata、状态值和 `previous_plan_archive`。 |
-| Repository contract | `scripts/check_repository_contract.py` | 识别归档路径，校验 active/archive plan metadata 和链接关系。 |
-| Eval contract | `agents/engineer/test/feature-implementor/evals/evals.json` | 增加 archive gate 回归 eval。 |
-| Eval fixtures | `agents/engineer/test/feature-implementor/evals/workspace/eval-012-*`, `eval-013-*` | 增加未归档阻塞和归档后允许新计划的 fixture 与 comparison。 |
-| Skill lock | `skills-lock.json` | 刷新 `feature-implementor` computed hash。 |
+| Repository contract | `scripts/check_repository_contract.py` | 将 active plan 的 `status` 设为必填 metadata；以 merge-base 上 active plan 的存在性和 `status` 重写 archive linkage 判断，并保留 closeout + archive 同提交例外。 |
+| Eval contract | `agents/engineer/test/feature-implementor/evals/evals.json` | 保留 archive workflow eval，并新增 base `Implemented` 拦截和 base 非 `Implemented` 放行的 repository contract 回归 eval。 |
+| Eval fixtures | `agents/engineer/test/feature-implementor/evals/workspace/eval-012-*`, `eval-013-*`, `eval-015-*`, `eval-016-*` | 保留既有 archive workflow fixture；新增两组可构造 base ref / HEAD 差异的 fixture 与 durable `comparison.md`。 |
+| Skill instructions | `agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md`, planner / reviewer `INSTRUCTIONS.md` | 现有三选一处理、继续更新与归档回链规则原则上保持不变；实施时仅复核与 base-ref `status` 契约是否冲突。 |
+| Skill lock | `skills-lock.json` | 仅当 `feature-implementor` skill 目录实际变更时刷新 `computedHash`。 |
 
 ## 3. 架构设计
 
@@ -101,14 +105,23 @@ docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md
 
 ```yaml
 implementation_scope: "<lower-kebab-scope>"
+status: "<planning-or-closeout-status>"
 previous_plan_archive: "docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md"
 ```
 
 规则：
 
 - `implementation_scope` 描述当前计划范围，使用 lower kebab-case。
-- `previous_plan_archive` 仅在同一 `feature_path` 存在上一份归档计划时必填。
-- 如果用户选择继续更新当前计划，不写 `previous_plan_archive`，但必须正常 bump `version` 和 `last_updated`。
+- `status` 是 repository contract 对 active plan 无条件机器校验的必填字段，也是判断
+  当前改动属于“继续修订未完成计划”还是“已完成计划后的下一轮计划”的依据。
+- `previous_plan_archive` 的必填性由 merge-base 上同一路径 active plan 的存在性和
+  `status` 决定，而不是由 archive 目录是否已有历史归档决定。
+- 如果用户选择继续更新当前计划，且 merge-base 上的 `status` 不是
+  `Implemented`，可不写 `previous_plan_archive`，但必须正常 bump `version` 和
+  `last_updated`。
+- 如果 merge-base 上的 `status` 是 `Implemented`，本次又修改 active plan，则必须
+  声明合法的 `previous_plan_archive`，除非本次改动本身属于第 5 节定义的
+  closeout + archive 同提交例外。
 
 ### 4.2 归档计划
 
@@ -153,13 +166,17 @@ superseded_reason: "<reason>"
 | `IMPLEMENTATION_PLAN_ARCHIVE_RE` | 匹配 archive 目录和 `<scope>`。 |
 | Archive metadata validator | 校验必填字段、日期、状态值、scope 与文件名一致、`source_plan` 指向活跃入口，以及必填的 `feature_path`、`parent_feature`、`feature_level` 与归档所在 `feature_path` 一致。 |
 | Active plan linkage validator | 当活跃计划声明 `previous_plan_archive` 时，校验文件存在且 feature metadata 一致。 |
-| Changed active plan guard | 对新增或明显替换的活跃计划，要求 `implementation_scope`；若声明上一份归档，则必须通过 linkage validator。当同 `feature_path` 已存在归档且变更计划未声明 `previous_plan_archive` 时，按 `implementation_scope` 区分：命中「本次变更集中新增或更新的归档」的 scope 视为刚被归档的源计划（closeout 与归档同提交），不要求回链；未命中任何本次变更中的归档 scope（包括只命中 base 上已存在且本次未动的历史归档）视为归档后的替换新计划，必须回链。 |
+| Changed active plan guard | 先复用 `implementation_plan_base_ref(root)` 取得 HEAD 与 `origin/main` / `main` 的 merge-base，再用 `content_at_ref(root, ref, rel)` 读取 base ref 上同一路径 active plan。base 内容为 `None` 时按新增计划处理；base 内容存在时通过 `parse_markdown_frontmatter(path, content, errors=None)` 只解析历史 frontmatter。若 base `status` 不是 `Implemented`，允许继续修订或追加原计划，不要求 `previous_plan_archive`，但仍须按现有版本契约 bump `version` 和 `last_updated`。若 base `status` 是 `Implemented` 且本次修改 active plan，则必须声明 `previous_plan_archive`，由 linkage validator 校验目标文件存在且 `feature_path` 一致。窄例外：若本次改动同时完成 closeout + archive，且 HEAD 的 `implementation_scope` 命中本次变更中新增或更新的 archive scope，则这是正确归档动作本身，可省略 `previous_plan_archive`。 |
 | Path allowlist | 允许 archive 目录下的 `IMPLEMENTATION_PLAN-<scope>.md`，避免被现有 active-plan path check 误报。 |
 
 语义说明：
 
 - checker 负责可机器判断的路径和 metadata 约束。
 - 是否“继续更新当前计划”还是“创建下一份计划”仍由 planner gate 和用户确认判断。
+- `implementation_scope` 是否变化不得作为 guard 的触发条件；笼统或未改名的 scope
+  不能成为绕过门禁的路径。scope 只用于识别 closeout + archive 同提交例外。
+- archive 目录中是否已有历史归档也不得作为 guard 的触发条件；第一次归档前直接改写
+  base `Implemented` active plan 必须被覆盖。
 - 对历史无 `implementation_scope` 的旧计划不做批量失败；当旧计划被触及时由新规则收口。
 
 ## 6. Skill 行为设计
@@ -196,17 +213,20 @@ reviewer 在 handoff 或 delivery 前检查：
 
 ## 7. Eval 设计
 
-新增两个 eval：
+在既有两个 archive workflow eval 基础上，新增两个 repository contract 回归 eval：
 
 | Eval | Scenario | Expected Behavior |
 | --- | --- | --- |
 | `eval-012-implementation-plan-archive-preflight` | 同一 `feature_path` 已存在未归档 `IMPLEMENTATION_PLAN.md`，用户要求创建新计划。 | skill 阻止直接覆盖，列出旧计划状态和三种处理选项。 |
 | `eval-013-implementation-plan-archive-allows-next-plan` | 旧计划已 closeout 并归档，新请求创建下一份计划。 | skill 允许创建新活跃计划，并要求记录 `previous_plan_archive`。 |
+| `eval-015-active-plan-base-implemented-requires-archive-link` | base ref 上 active plan 的 `status` 已是 `Implemented`，本次修改 active plan，但没有声明 `previous_plan_archive`。 | repository contract 拦截改动，要求提供存在且 `feature_path` 一致的归档回链。 |
+| `eval-016-active-plan-base-in-progress-allows-update` | base ref 上 active plan 的 `status` 不是 `Implemented`，本次继续修订 active plan，正常 bump `version` 和 `last_updated`，但不声明 `previous_plan_archive`。 | repository contract 放行合法的同轮计划更新。 |
 
 每个 eval fixture 应包含：
 
 - PRD / TRD；
 - 活跃或归档计划；
+- 对 `eval-015` / `eval-016`，能够构造并验证 base ref 与 HEAD 差异的 git fixture；
 - `comparison.md` durable 结果；
 - 必要的 `eval_metadata.json`，但不提交运行期产物。
 
@@ -219,6 +239,7 @@ git diff --check
 uv run scripts/check_repository_contract.py
 uv run scripts/check_eval_contract.py
 uv run scripts/check_eval_artifacts.py
+uv run scripts/check_doc_contract.py
 uv run --with pytest pytest agents/test_eval_contract.py
 ```
 
@@ -234,9 +255,11 @@ uv run --with pytest pytest agents/test_eval_contract.py
 - closeout gate 继续生效；
 - archive 目录不再作为新计划前置门禁的一部分。
 
-## 10. 开放技术问题
+## 10. 已决技术结论
 
-| # | Question | Owner | Resolution |
-| --- | --- | --- | --- |
-| 1 | `previous_plan_archive` 是否需要在所有新计划中出现，还是仅在存在上一份归档计划时出现？ | Maintainer | Proposed: 仅存在上一份归档计划时必填。 |
-| 2 | 对没有 `implementation_scope` 的历史计划，contract checker 是否只在文件被修改时要求补齐？ | Maintainer | Proposed: yes，避免批量迁移。 |
+| # | Decision | Rationale |
+| --- | --- | --- |
+| 1 | `previous_plan_archive` 的强制条件由 merge-base 上 active plan 的存在性和 `status` 决定。 | 覆盖第一次归档前直接改写已完成计划的场景，不依赖 archive 历史。 |
+| 2 | `implementation_scope` 是否变化不作为 guard 触发条件。 | scope 命名可能保持笼统或不变，不能可靠表示是否进入下一轮计划。 |
+| 3 | base `status` 非 `Implemented` 时允许继续更新；base `status` 为 `Implemented` 且 active 被修改时要求合法回链。 | 与 planner 已有“继续更新当前计划”和“归档后新建”两条合法路径一致。 |
+| 4 | HEAD scope 命中本次新增或更新 archive scope 时保留 closeout + archive 同提交例外。 | 正确归档动作本身不应被误判为绕过归档门禁。 |

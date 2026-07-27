@@ -74,7 +74,7 @@
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
       "sourceType": "local",
-      "computedHash": "6b79c49731fea6200103ba029bcff5161774701c0a838726607130aab627cfe7"
+      "computedHash": "35adeb6258d8ae854d3c6dae794e3aefceff155bca2dfb36c8435fcee70985c2"
     },
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",
