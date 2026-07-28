@@ -8,7 +8,7 @@
       "name": "Backfill 模式提出 API 功能树候选批次",
       "description": "验证未确认写入范围的 API backfill 请求先经过模式选择、证据驱动的信息架构和逐节点候选范围确认，不提前写入或 handoff。",
       "prompt": "维护者通过 `pm-handoff.md` 请求为当前既有文档站回填 API，但 `backfill-request.md` 只授权 bounded discovery，不是候选批次确认。请读取 fixture 的 feature catalog、现有 change map、route/schema/handler 与 contract tests，按正式同步协议的候选确认结构提出第一批有限范围供维护者确认。本轮不要替维护者确认范围，也不要写入文档站。",
-      "expected_output": "选择 existing-system backfill 模式并仅加载 API 契约；从证据推导首批 Identity / Sessions 的完整候选树，以逐节点结构展示 parent、page、code glob、owner、分类证据、change-map delta 和 exclusions；将 Billing、稳定 Search 页与非 API 范围留在批次外，保持 fixture 零写入并等待明确确认，不运行写后检查或输出 #117 handoff。",
+      "expected_output": "选择 existing-system backfill 模式并仅加载 API 契约；从证据推导首批 Identity / Sessions 的完整候选树，以逐节点结构展示 parent、page、code glob、owner、分类证据、change-map delta 和 exclusions；将 Billing、稳定 Search 页与非 API 范围留在批次外，保持 fixture 零写入并等待明确确认，不运行写后检查或输出 `docs-agent:docs-audit` handoff。",
       "workspace": "workspace/eval-001-sync-feature-api",
       "assertions": [
         {
@@ -39,7 +39,7 @@
         {
           "id": "keeps_unconfirmed_batch_read_only",
           "description": "候选批次未确认时零写入且不提前 handoff",
-          "text": "明确指出 `backfill-request.md` 和本轮请求都不是 candidate-scope confirmation；不创建或修改页面、change-map、index 或导航，不开始下一批，不运行写后 host checks，也不输出 `docs-agent:docs-audit` #117 handoff；停在维护者对完整候选树与映射的一次明确确认。"
+          "text": "明确指出 `backfill-request.md` 和本轮请求都不是 candidate-scope confirmation；不创建或修改页面、change-map、index 或导航，不开始下一批，不运行写后 host checks，也不输出 `docs-agent:docs-audit` handoff；停在维护者对完整候选树与映射的一次明确确认。"
         }
       ]
     },
@@ -47,7 +47,7 @@
       "id": "eval-002-plan-backfill-batches",
       "name": "并行验证 API 候选规划与 Product 分层回填",
       "description": "验证 backfill 同时保留 API 完整候选子树的确认门禁，以及已确认 Product 批次从产品域经两级子功能递归到独立用户任务的分层同步契约。",
-      "prompt": "按 `backfill-confirmation.md` 已确认的 existing-system backfill 批次同步 Product 正式文档：用 feature catalog、当前实现和验收测试核证两个产品域，其中 workspace-management 必须按 `invitations → member-invitations / invitation-acceptance → 用户任务` 生成两级子功能、每级 index 和独立任务页，analytics 保持浅层；更新 change map，在 `docs/site/` 运行宿主 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal` 并核对 Product 双视图任意深度递归导航与链接，再输出 #117 handoff。同时为尚未确认的 Accounts API 回填只提出 `api/index.md → accounts/index.md → get-account.md` 完整候选树，逐节点说明 code glob、证据、owner、映射和排除项，保持 Accounts API 零写入与既有 Billing 子树不变；并说明没有 catalog 时如何形成候选范围。",
+      "prompt": "按 `backfill-confirmation.md` 已确认的 existing-system backfill 批次同步 Product 正式文档：用 feature catalog、当前实现和验收测试核证两个产品域，其中 workspace-management 必须按 `invitations → member-invitations / invitation-acceptance → 用户任务` 生成两级子功能、每级 index 和独立任务页，analytics 保持浅层；更新 change map，在 `docs/site/` 运行宿主 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal` 并核对 Product 双视图任意深度递归导航与链接，再输出 `docs-agent:docs-audit` handoff。同时为尚未确认的 Accounts API 回填只提出 `api/index.md → accounts/index.md → get-account.md` 完整候选树，逐节点说明 code glob、证据、owner、映射和排除项，保持 Accounts API 零写入与既有 Billing 子树不变；并说明没有 catalog 时如何形成候选范围。",
       "expected_output": "生成可从 Product 根索引逐级定位的 workspace-management/invitations 两级子功能树与浅层 analytics 子树；member-invitations、invitation-acceptance 各有自己的 index，邀请成员、管理待处理邀请、接受邀请和查看仪表盘各自成页且行为有代码与验收证据支持；原子更新每个代码层级的 Product 祖先闭包映射与链接，按 visibility 通过 public/internal 任意深度递归导航、链接和宿主检查。同时按 catalog 规划 Accounts API 完整候选树但不写入，保留既有 Billing 子树和映射，并说明无 catalog 时先扫描 API surface 再确认。",
       "workspace": "workspace/eval-002-plan-backfill-batches",
       "assertions": [
@@ -114,12 +114,12 @@
         {
           "id": "runs_product_host_checks",
           "description": "嵌套 Product 页面通过宿主检查",
-          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal`，记录每条命令、cwd 与退出状态；按每页 visibility 核对 Product 根、域、功能和任务页只进入允许的 public/internal 递归导航，并验证全部父子与权威链接均可解析；所有新改页面保持 `last_verified_version: unverified`，随后 handoff #117。"
+          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal`，记录每条命令、cwd 与退出状态；按每页 visibility 核对 Product 根、域、功能和任务页只进入允许的 public/internal 递归导航，并验证全部父子与权威链接均可解析；所有新改页面保持 `last_verified_version: unverified`，随后 handoff `docs-agent:docs-audit`。"
         },
         {
           "id": "blocks_audit_without_confirmed_version",
           "description": "缺少确认版本时阻塞 pre-tag 审计",
-          "text": "#117 handoff 列出完整 affected set、证据、排除项和已覆盖批次；因 fixture 没有维护者确认的 `target_release_version`，必须明确标为 blocked 并等待该确认，不得声称 pre-tag audit ready、可直接盖章或从分支/ref 推断版本。"
+          "text": "`docs-agent:docs-audit` handoff 列出完整 affected set、证据、排除项和已覆盖批次；因 fixture 没有维护者确认的 `target_release_version`，必须明确标为 blocked 并等待该确认，不得声称 pre-tag audit ready、可直接盖章或从分支/ref 推断版本。"
         }
       ]
     },
@@ -227,7 +227,7 @@
       "id": "eval-007-feature-database-design",
       "name": "Feature 模式同步 Database 与分层 Design 当前状态",
       "description": "验证已确认 feature delivery 同时生成 Database 的数据库/schema/数据域/实体完整子树和 Design 的领域/组件/流程/边界层级，并保留稳定路径、双向链接和权威边界。",
-      "prompt": "按 `pm-handoff.md`、`candidate-scope-confirmation.md` 和 `design-scope-confirmation.md` 已确认的 feature delivery 范围执行 `workspace-access` 的 database + design 正式文档同步。保留并刷新现有稳定 `database/workspace-access.md`，生成 `database/primary/workspace-access/` 完整子树；逐页核验 design closeout，生成完整系统/领域索引、组件、跨组件流程和授权边界页，链接 API/Database 权威页而不复制 contract；原子更新页面、导航和 change map，执行宿主 `npm run test:docs`、public/internal build，再输出 #117 handoff。",
+      "prompt": "按 `pm-handoff.md`、`candidate-scope-confirmation.md` 和 `design-scope-confirmation.md` 已确认的 feature delivery 范围执行 `workspace-access` 的 database + design 正式文档同步。保留并刷新现有稳定 `database/workspace-access.md`，生成 `database/primary/workspace-access/` 完整子树；逐页核验 design closeout，生成完整系统/领域索引、组件、跨组件流程和授权边界页，链接 API/Database 权威页而不复制 contract；原子更新页面、导航和 change map，执行宿主 `npm run test:docs`、public/internal build，再输出 `docs-agent:docs-audit` handoff。",
       "expected_output": "在保留并刷新稳定 Database 页面与映射的同时，生成数据库根、primary、workspace-access 数据域、relationships 和三个实体页；生成 workspace-access 与 audit-log 两个 Design 领域及组件、邀请接受流程和授权边界页，保持关系/组件/流程双向链接与 API/Database 权威边界，通过宿主检查和双视图构建后 handoff docs-audit。",
       "workspace": "workspace/eval-007-feature-database-design",
       "assertions": [
@@ -288,8 +288,8 @@
         },
         {
           "id": "runs_host_checks_and_handoffs_audit",
-          "description": "真实执行宿主检查并 handoff #117",
-          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal`；按 visibility 核对 internal 递归导航包含全部嵌套 Database/Design 页、public 导航正确排除 internal Database/Design 页，并验证全部父子、关系、组件、流程和权威链接均可解析；随后把完整 affected set handoff 给 `docs-agent:docs-audit`（#117）。"
+          "description": "真实执行宿主检查并 handoff `docs-agent:docs-audit`",
+          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal`；按 visibility 核对 internal 递归导航包含全部嵌套 Database/Design 页、public 导航正确排除 internal Database/Design 页，并验证全部父子、关系、组件、流程和权威链接均可解析；随后把完整 affected set handoff 给 `docs-agent:docs-audit`。"
         }
       ]
     },
@@ -297,7 +297,7 @@
       "id": "eval-008-deployment-ops-upgrade",
       "name": "Deployment verification 同步 Ops 与 Upgrade 当前事实",
       "description": "验证 deployment verification 只根据已执行配置和结果，把 Docker runbook、升级及回滚同步到 `ops/deployment/` 当前页面树，不把部署计划写成现状。",
-      "prompt": "按 `deployment-handoff.md` 的已确认 deployment verification 范围同步 `docs/site/ops/deployment/`。请对照 `.env.example`、Compose 配置、已执行命令和结果、环境差异及 `deployment-plan.md`，生成 deployment 根索引、共享 environment reference、Docker 类别 runbook 与 image sources，只写当前可执行事实；页面、链接与映射原子范围已确认。完成后运行宿主 `npm run test:docs` 并输出 #117 handoff。",
+      "prompt": "按 `deployment-handoff.md` 的已确认 deployment verification 范围同步 `docs/site/ops/deployment/`。请对照 `.env.example`、Compose 配置、已执行命令和结果、环境差异及 `deployment-plan.md`，生成 deployment 根索引、共享 environment reference、Docker 类别 runbook 与 image sources，只写当前可执行事实；页面、链接与映射原子范围已确认。完成后运行宿主 `npm run test:docs` 并输出 `docs-agent:docs-audit` handoff。",
       "expected_output": "生成 deployment 根索引、共享 environment-reference、Docker 类别 index 与 image-sources，并更新 Ops 导航及 `deploy/**` 映射；写入已验证的 Compose 启动、升级、健康检查和回滚事实，明确排除仍在计划中的 Kubernetes/Helm 路径；保持 unverified，通过 docs checks 后 handoff docs-audit。",
       "workspace": "workspace/eval-008-deployment-ops-upgrade",
       "assertions": [
@@ -324,7 +324,7 @@
         {
           "id": "runs_ops_host_checks_and_handoffs",
           "description": "真实通过宿主检查并 handoff",
-          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，准确记录结果，然后 handoff `docs-agent:docs-audit`（#117），不执行部署。"
+          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，准确记录结果，然后 handoff `docs-agent:docs-audit`，不执行部署。"
         }
       ]
     },
@@ -332,7 +332,7 @@
       "id": "eval-009-release-product-ops",
       "name": "Release 模式只同步受影响 Product 与 Ops",
       "description": "验证 release scope 只更新与 v1.5.0 事实一致的 product/ops 当前页面，并保持 Release Notes 与 metadata 边界。",
-      "prompt": "按 `release-handoff.md` 的已确认 v1.5.0 release 范围同步仍受影响的 product 与 ops 正式页面。请核对 release scope、版本证据、实现/配置、测试和审计上下文，只更新 change map 命中的页面，执行宿主 `npm run test:docs`，再输出 #117 handoff。不要生成或编辑 Release Notes。",
+      "prompt": "按 `release-handoff.md` 的已确认 v1.5.0 release 范围同步仍受影响的 product 与 ops 正式页面。请核对 release scope、版本证据、实现/配置、测试和审计上下文，只更新 change map 命中的页面，执行宿主 `npm run test:docs`，再输出 `docs-agent:docs-audit` handoff。不要生成或编辑 Release Notes。",
       "expected_output": "只更新 dashboard product 页面与 runtime ops 页面及其映射，内容与 v1.5.0 已确认事实一致；Release Notes 正文/index/metadata/navigation 零变化，两页保持 unverified，通过检查后 handoff docs-audit。",
       "workspace": "workspace/eval-009-release-product-ops",
       "assertions": [
@@ -349,17 +349,17 @@
         {
           "id": "preserves_release_notes_surfaces",
           "description": "Release Notes 相关面零变化",
-          "text": "不创建或编辑 Release Notes 正文、`release-notes/index.md`、`.meta/releases.json` 或 Release Notes navigation；如需该交付，指向 `docs-agent:release-notes-generator`（#116）。"
+          "text": "不创建或编辑 Release Notes 正文、`release-notes/index.md`、`.meta/releases.json` 或 Release Notes navigation；如需该交付，指向 `docs-agent:release-notes-generator`。"
         },
         {
           "id": "keeps_release_pages_unverified",
-          "description": "同步页面仍等待 #117 盖章",
+          "description": "同步页面仍等待 `docs-agent:docs-audit` 盖章",
           "text": "product 与 ops 页面均保持 `last_verified_version: unverified`，不因 release mode 或版本证据自行写入 v1.5.0 盖章。"
         },
         {
           "id": "runs_release_host_checks_and_handoffs",
           "description": "真实通过宿主检查并 handoff",
-          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，记录命令/cwd/退出状态，随后将两页完整 affected set、维护者确认的 `target_release_version: v1.5.0` 及确认来源 handoff `docs-agent:docs-audit`（#117）进入 pre-tag；不得从分支名或 Git ref 推测版本。"
+          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，记录命令/cwd/退出状态，随后将两页完整 affected set、维护者确认的 `target_release_version: v1.5.0` 及确认来源 handoff `docs-agent:docs-audit` 进入 pre-tag；不得从分支名或 Git ref 推测版本。"
         }
       ]
     },
@@ -389,7 +389,7 @@
         {
           "id": "does_not_operate_github_release",
           "description": "不越界执行 GitHub Release",
-          "text": "不创建 tag，不生成或发布 GitHub Release，不把 #120 外部发布职责混入站内 handoff。"
+          "text": "不创建 tag，不生成或发布 GitHub Release，不把 `pm-agent:github-release-generator` 外部发布职责混入站内 handoff。"
         }
       ]
     },
@@ -397,7 +397,7 @@
       "id": "eval-011-deployment-three-class-backfill",
       "name": "Deployment backfill 拆分三类 Ops 文档",
       "description": "验证同时具备 Development、Docker 与 Kubernetes/Helm 真实证据时生成共享参数参考和三个独立部署目录。",
-      "prompt": "按 `backfill-handoff.md` 已确认的 existing-system backfill 批次同步部署文档。fixture 同时提供源码开发、Compose、镜像、Helm Chart、values、配置读取和执行结果证据；候选页面树、每类 code glob、change-map 与导航原子范围均已确认。请生成 `ops/deployment/` 三分类文档，运行宿主 `npm run test:docs`，并报告每类证据与 #117 handoff。",
+      "prompt": "按 `backfill-handoff.md` 已确认的 existing-system backfill 批次同步部署文档。fixture 同时提供源码开发、Compose、镜像、Helm Chart、values、配置读取和执行结果证据；候选页面树、每类 code glob、change-map 与导航原子范围均已确认。请生成 `ops/deployment/` 三分类文档，运行宿主 `npm run test:docs`，并报告每类证据与 `docs-agent:docs-audit` handoff。",
       "expected_output": "生成 deployment 根索引、共享 environment-reference、development/docker/kubernetes-helm 三个独立目录及权威子页；环境参数与镜像/Chart/values 事实均交叉核证，不复制聚合 runbook，不混用命令。",
       "workspace": "workspace/eval-011-deployment-three-class-backfill",
       "assertions": [
@@ -424,7 +424,7 @@
         {
           "id": "runs_nested_docs_checks",
           "description": "嵌套导航与链接通过宿主检查",
-          "text": "在 `docs/site/` 运行并通过 `npm run test:docs`，确认 public/internal 递归导航与内部链接覆盖所有嵌套页面，保持页面 `last_verified_version: unverified` 后 handoff #117。"
+          "text": "在 `docs/site/` 运行并通过 `npm run test:docs`，确认 public/internal 递归导航与内部链接覆盖所有嵌套页面，保持页面 `last_verified_version: unverified` 后 handoff `docs-agent:docs-audit`。"
         }
       ]
     },

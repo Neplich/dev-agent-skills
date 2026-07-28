@@ -88,7 +88,7 @@
       "name": "站内 Release Notes 请求分流",
       "description": "验证 router 接受完整 Release Notes 入口依据，保留 handoff 上下文并只指向 release-notes-generator 的权威 gate。",
       "prompt": "请根据 `release-handoff.md` 处理 v1.0.0 的站内 Release Notes 请求。只完成 Docs Agent 的入口检查和分流，不执行 specialist 工作。",
-      "expected_output": "接受完整 entry basis，选择 release-notes-generator，保留版本、scope、宿主、证据与输出上下文，并仅引用 specialist gate，不复制确认、metadata、checks 或 #120 handoff 执行协议。",
+      "expected_output": "接受完整 entry basis，选择 release-notes-generator，保留版本、scope、宿主、证据与输出上下文，并仅引用 specialist gate，不复制确认、metadata、checks 或 `pm-agent:github-release-generator` handoff 执行协议。",
       "workspace": "workspace/eval-004-route-release-notes",
       "assertions": [
         {
@@ -109,7 +109,7 @@
         {
           "id": "references_release_notes_gate_only",
           "description": "仅指向 specialist gate",
-          "text": "仅指向 `release-notes-generator/SKILL.md` 及其内部指令作为权威执行 gate，不在 router 输出中复制七步流程、正文确认、metadata/index、docs checks 或 #120 handoff 的详细协议。"
+          "text": "仅指向 `release-notes-generator/SKILL.md` 及其内部指令作为权威执行 gate，不在 router 输出中复制七步流程、正文确认、metadata/index、docs checks 或 `pm-agent:github-release-generator` handoff 的详细协议。"
         }
       ]
     },
