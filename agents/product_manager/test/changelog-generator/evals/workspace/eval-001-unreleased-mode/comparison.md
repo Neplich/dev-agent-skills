@@ -8,7 +8,10 @@
 - Test case: `unreleased-mode`
 - Workspace: `workspace/eval-001-unreleased-mode`
 - Classification: `(c) 依赖实时外部数据`。原始 prompt 要求读取 `anthropics/anthropic-sdk-python` 当前 GitHub Release 与 merged PR；静态 fixture 会改变本用例。
-- Latest result: **PARTIAL** — fresh with-skill 与 fresh without-skill 都确认 `v0.120.0` 发布后没有 merged PR。两臂均正确生成 `## [Unreleased]` 并写入目标路径，但 PR 链接、bot 过滤和维护类 PR 过滤没有实时候选可覆盖，均为 `NOT EXERCISED`，不能用空集合伪装成 PASS。
+- Behavior result: **PASS** — fresh with-skill 与 fresh without-skill 都确认 `v0.120.0` 发布后没有 merged PR。with-skill 在实际触发的 `unreleased` 与 `versioned_changelog_file` assertions 上均满足要求，未发现行为回归。
+- Coverage result: **PARTIAL** — `pr`、`bot_pr_dependabot`、`chore_ci_test` 均为 **NOT EXERCISED**：实时窗口没有 merged PR，因此没有 PR 链接、bot PR 或维护类 PR 候选可覆盖，不能用空集合伪装成 PASS。
+- Overall result: **PASS (partial coverage)**。
+- 证据来源：2026-07-26 fresh run（沿用既有记录，本轮仅做结果模型迁移，未重新执行 eval）。
 
 ## Test Set / Fixture Version
 
@@ -78,7 +81,7 @@ _No changes have been merged since v0.120.0._
 ## Failures
 
 - 未发现已触发路径的 with-skill 回归。
-- Coverage gap：`pr`、`bot_pr_dependabot`、`chore_ci_test` 缺少实时候选，结论必须保持 `PARTIAL`。
+- Coverage gap：`pr`、`bot_pr_dependabot`、`chore_ci_test` 缺少实时候选，Coverage result 保持 `PARTIAL`，Overall result 为 `PASS (partial coverage)`。
 - GitHub API、认证、网络和目标仓库访问均成功，无 external dependency blocker。
 
 ## Next Steps
