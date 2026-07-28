@@ -6,7 +6,15 @@
 - Eval: `eval-009-pre-tag-blocked`
 - Validation time: `2026-07-20 00:00:33 CST`
 - Fixture: 本轮工作区中的 `evals.json` prompt/assertions、`eval_metadata.json` 及其列出的 pristine fixture 文件
-- Latest result: **PASS（4/4 assertions）**
+- Latest result: **BLOCKED** (fixture drift — 待 fresh re-baseline)
+
+## Fixture Drift Notice
+
+fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，本次未执行 fresh re-baseline。旧 PASS 反映变更前 run；在下一次 fresh validation 完成前，不得将其作为当前 fixture 的验证证据。
+
+## Historical results
+
+- 2026-07-20（fixture 身份文本变更前）：**PASS（4/4 assertions）**
 
 ## Run sources
 

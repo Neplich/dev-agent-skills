@@ -15,5 +15,5 @@
   - `docs/site/release-notes/index.md`
   - `docs/site/.meta/releases.json`
 - source_evidence: `evidence/*.md`
-- issue_116_handoff_status: blocked
+- site_release_notes_handoff_status: blocked
 - blocker: 维护者尚未确认完整页面正文

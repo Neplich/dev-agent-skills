@@ -21,10 +21,15 @@ fixture copy after fully reading `agents/docs/skills/docs-audit/SKILL.md`,
 
 ## Latest result
 
-**PASS** — `with_skill` satisfies **6/6** assertions. The fresh
-`without_skill` baseline satisfies **4/6** assertions. The skill-specific delta
-is the complete canonical candidate producer schema and the mandatory
-anchor/discovery/handoff/integration success chain.
+Latest result: **BLOCKED** (fixture drift — 待 fresh re-baseline)
+
+## Fixture Drift Notice
+
+fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，本次未执行 fresh re-baseline。旧 PASS 反映变更前 run；在下一次 fresh validation 完成前，不得将其作为当前 fixture 的验证证据。
+
+## Historical results
+
+- 2026-07-20（fixture 身份文本变更前）：**PASS** — `with_skill` satisfies **6/6** assertions. The fresh `without_skill` baseline satisfies **4/6** assertions. The skill-specific delta is the complete canonical candidate producer schema and the mandatory anchor/discovery/handoff/integration success chain.
 
 ## Canonical digest verification
 

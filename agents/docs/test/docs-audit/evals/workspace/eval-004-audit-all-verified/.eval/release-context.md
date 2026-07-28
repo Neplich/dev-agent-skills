@@ -14,7 +14,7 @@
 - target_release_version: `v1.1.0`
 - target_release_version_confirmation: maintainer-confirmed
 - matching_tag_status: absent
-- issue_116_handoff: ready
+- site_release_notes_handoff: ready
 - release_notes: `docs/site/release-notes/v1.1.0.md`
 - release_notes_index: `docs/site/release-notes/index.md`
 - release_metadata: `docs/site/.meta/releases.json` (read-only audit surface)
