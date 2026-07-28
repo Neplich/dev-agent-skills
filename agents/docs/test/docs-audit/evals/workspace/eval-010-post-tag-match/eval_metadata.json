@@ -2,8 +2,8 @@
   "eval_id": "eval-010-post-tag-match",
   "eval_name": "post-tag-match",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-010-post-tag-match",
-  "skill_availability_goal": "Verify external handoff priority, deterministic fixed-path fallback after squash or unavailable SHAs, tag-tree object reads, strict tree semantics, and atomic post-tag persistence.",
-  "prompt": "执行 fixture 中定义的 post-tag audit。先按外部 pre-tag handoff 包定位；再走 fixture 指定的 fresh clone/squash 分支，模拟 handoff commit SHA 不可解析但 peeled tag tree 保留固定 discovery artifact。两条路径交叉验证同一 candidate/anchor/tree/version 证据，并说明 post-tag 原子持久化门禁。",
+  "skill_availability_goal": "Measure whether docs-audit separates content verification from the confirmed durable-result credential when commit objects have different availability.",
+  "prompt": "对 `.eval/release-context.md` 指向的 `v1.2.0` 发布证据执行 post-tag 文档审计。分别评估 direct-handoff 与 fresh-clone 两个场景，给出每个场景的结论、决定性证据、持久化边界和下一步。fixture 只读，不执行真实 tag、branch 或 release 写入。",
   "execution_cleanup": [
     "docs/site/.meta/audit/audit-v1.2.0-post-tag.md"
   ],

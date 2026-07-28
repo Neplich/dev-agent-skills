@@ -4,58 +4,66 @@
 
 - Skill: `docs-audit`
 - Eval: `eval-013-version-normalization-boundaries`
-- Validation time: `2026-07-20 00:23:28 CST`
-- Target behavior: pre-tag/post-tag 的严格 SemVer 来源形态、完整 identity、canonical version-source inventory digest 与 actual-tag pending 边界。
+- Scenario: 多来源版本 identity、selector 边界与跨阶段 inventory 完整性
+- Review context: issue #177 sub-batch 4b
 
 ## Test Set / Fixture Version
 
-- Fixture version: current working-tree fixture / 2026-07-20
-- Fixture source: `evals.json` 中 eval-013 的 prompt/assertions、`eval_metadata.json` 与 `.eval/version-cases.md`。
-- Assertions: 5
-- Inventory sources: 7（`index`、`marketplace`、`notes`、`package`、`releases`、`tag`、`target`）。
-- Fresh pair: 本会话先在不读取或应用 `docs-audit` skill、内部指令、Docs Agent README 与旧 comparison 的条件下生成 baseline；随后读取完整 skill 指令，并针对同一份 pristine fixture 重新生成 with-skill 结果。
+- Fixture version: `issue-177 discrimination restore round-1`
+- Validation time: `2026-07-28 22:48:16 CST`
+- Runtime: `tmp/eval-runs/issue-177/docs-audit/round-1/`
+- Assertions: 5，全部实际触发
 
 ## Latest Result
 
-**PASS — fresh with-skill 5 / 5 assertions passed.** 候选只对要求前缀的来源移除恰好一个小写 `v`，严格保留 `rc.1` 与 `Build.7`，并按大小写敏感的完整 SemVer identity 比较。`V`、`vv`、缺 `v`、unprefixed source 带 `v`、缺失 prerelease/build、大小写差异、缺失或非法来源全部 `blocked`。
+- Behavior result: **PASS**
+- Coverage result: **FULL**（5/5 assertions exercised）
+- Overall result: PASS
+- With-skill: **5/5 PASS**
+- Fresh without-skill: **3/5 PASS、2/5 FAIL**
+- Relative uplift: **+2 assertions**
 
-Fresh without-skill baseline 同为 **5 / 5**。两次评审都按 `source_id` 排序 7 个 exact 六字段对象，并以 RFC 8259 UTF-8、对象键排序、compact JSON、无 trailing newline 重算 1333 字节 canonical input；结果均为 `sha256:e511aca5591ef721dbe1095876fe9b718e7434a83a48e14de1e0f845124cced6`，与 fixture 一致。pre-tag 保留 `tag` 来源的完整六字段 locator contract，并记录 `pre_tag_value: pending_expected_absent`；post-tag 消费同一 inventory 后再填入实际 tag raw value，不把 pending 状态加入六字段 digest input。
+两臂都保留 prerelease/build/case identity，并逐来源识别 raw form、缺失、歧义 selector 和 unknown extractor。with-skill 额外要求 pre-tag inventory 预先包含 future actual-tag source 并记录 pending state，post-tag 只能消费同一 inventory；同时给出可独立重算的 canonical inventory digest。baseline 把 tag 当作 post-tag 新增来源，且没有提供稳定 serialization/digest 算法。
+
+## Leakage Surface Analysis
+
+重做前，prompt、assertions 和 `version-cases.md` 直接给出前缀算法、完整 expected identity、case/build 判定、全部 blocker、六字段 inventory、canonical serialization、预计算 digest 和 pre/post producer-consumer 答案。
+
+重做后，fixture 只保留 source locator table、pre/post observed source ids 和 observation sets，不给 expected identity、valid/invalid 标签、canonical rules、digest 或阶段裁定。
+
+## Redesign
+
+- prompt 只要求分别给出两阶段 identity、全部 blocker、持久化证据与结论。
+- assertions 改为完整 identity、source contract、全量 blocker、跨阶段 inventory binding 和 reproducible integrity 五个语义结果。
+- 删除预计算 digest、canonical 答案、invalid 原因标签和 producer/consumer 指令。
+- 增加 phase-boundary 变体：pre-tag declared source ids 缺少 future `tag`，post-tag observations 才出现该来源。
+- 保留多版本 index 的双匹配、absent JSON Pointer 与 unknown extractor 原始观测。
+- 将历史 issue locator 替换为 `docs-agent:release-notes-generator`。
 
 ## Assertion Results
 
-| Assertion | With skill | Without skill | Evidence summary |
+| Assertion | With skill | Without skill | Fresh judgment |
 | --- | --- | --- | --- |
-| `preserves_prerelease_and_build_identity` | PASS | PASS | 两者均把带前缀和无前缀合法值规范化为完整 `1.2.0-rc.1+Build.7`，保留 prerelease/build，并拒绝用忽略 build metadata 的 precedence 比较代替 identity equality。 |
-| `enforces_source_specific_prefix_forms` | PASS | PASS | 两者均要求 target/tag/Release Notes/index/releases.json 恰有一个小写 `v`，拒绝 `V`、`vv` 和缺 `v`；marketplace/package 必须无 `v`，不做静默修正。 |
-| `compares_semver_components_case_sensitively` | PASS | PASS | 两者均判定 `rc.1 != RC.1`、`Build.7 != build.7`，并把缺失 prerelease 或 build component 视为 pre-tag/post-tag blocker。 |
-| `reports_all_missing_or_invalid_sources` | PASS | PASS | 两者均遍历完整 source inventory，一次报告缺失 Release Notes index、空 releases.json value、缺失 marketplace version 与非法 package loose version，不在首错停止，也不从有效来源补值。 |
-| `persists_and_reuses_exact_inventory` | PASS | PASS | 两者均重算 exact 六字段 canonical inventory digest 为 `sha256:e511aca5591ef721dbe1095876fe9b718e7434a83a48e14de1e0f845124cced6`；pre-tag 持久化 7 个来源并将 actual tag 标为 `pending_expected_absent`，post-tag 消费同一 inventory，从 peeled tag tree/tag ref 复核并再次重算。缺 selector、多匹配、unknown extractor 或 digest 不等均 blocked。 |
+| `preserves_complete_version_identity` | PASS | PASS | 两臂均保留 prerelease、build metadata 与大小写。 |
+| `enforces_each_source_contract` | PASS | PASS | 两臂均逐来源拒绝 raw-form、selector 与 extractor 问题。 |
+| `reports_all_version_blockers` | PASS | PASS | 两臂均覆盖缺失、非法、歧义和 identity 不一致类别。 |
+| `binds_pre_and_post_tag_inventory` | PASS | FAIL | skill arm要求 pre-tag 固定 future tag pending source；baseline 将 tag 当作 post-tag 新增来源。 |
+| `makes_inventory_integrity_reproducible` | PASS | FAIL | skill arm给出 canonical JSON、稳定排序、digest 重算和篡改阻塞；baseline 只有字段列表。 |
 
-## With-Skill Behavior
+## Fresh Validation Method
 
-- 来源：本会话 fresh with-skill 评审；读取当前 `docs-audit` SKILL、完整内部协议、Docs Agent README、eval 定义和 pristine fixture。
-- 结果：5 / 5。skill 明确定义来源专属 raw form、严格 SemVer identity、六字段 digest input、actual-tag pre-tag pending 状态及 pre-tag producer / post-tag consumer 对称契约。
-- Digest 核验：按 `source_id` 排序 exact 六字段数组后生成 1333 字节 canonical JSON，无 trailing newline；SHA-256 为 `e511aca5591ef721dbe1095876fe9b718e7434a83a48e14de1e0f845124cced6`，与 fixture 声明完全一致。
-- 裁定：合法 pair 归一到完整 identity；fixture 中每个独立 invalid case 均单独报告为 blocker。任何来源缺失、raw form 非法、identity 不等或 inventory digest 不等时，pre-tag 不得 `ready_for_tag`，post-tag 不得 `release_verified`。
+- 两臂锁定前只读取同一 prompt 和 `version-cases.md`，未读取 assertions、expected output、旧 comparison 或对方输出。
+- with-skill arm读取完整 Docs/docs-audit 指令；without-skill arm隔离这些内容。
+- fresh judge 在 SHA-256 锁定后才读取 assertions。
+- with-skill SHA-256：`210a4836d46b095ef9ad18943784c5dcc55df4c9693a46a1351010c3bdab11b3`；without-skill：`e053ee70e2330b8c7b5138a57bdb1ce189170489dd169b5d182bf2fd8a068d9b`。
 
-## Without-Skill Fresh Baseline
+## Failures And Limitations
 
-- 来源：本会话全新 baseline；只读取 eval prompt/assertions、`eval_metadata.json` 和 version-cases fixture，未读取或应用 skill、Docs Agent README、历史 baseline或旧 comparison。
-- 结果：5 / 5。baseline 能按测试输入中的明确清单执行严格 parse、全量 blocker 汇总、exact digest 重算、actual-tag pending 记录及 producer/consumer inventory 复用。
-- Digest 核验：同一 7-source、1333-byte canonical input 重算为 `sha256:e511aca5591ef721dbe1095876fe9b718e7434a83a48e14de1e0f845124cced6`。
-- 对比结论：skill 把这些要求固化为可复用协议，但测试输入已直接暴露完整答案边界，未产生额外 assertion 得分。
-
-## Failures and Limitations
-
-- With-skill 无失败；without-skill 无 assertion 失败；inventory 声明摘要与两次独立重算均一致，因此未触发 mismatch FAIL。
-- fixture 为合成 version case 清单，没有真实 tag peel、Git object read 或 release surface 文件树。
-- baseline 5 / 5 表明本例区分度不足；当前结果验证 skill 遵守协议，不证明未使用 skill 时通常会遗漏这些边界。
-
-## Next Steps
-
-- 后续如增强 eval 区分度，可把 source inventory 分散到真实 fixture 文件并减少 assertion 对规范化算法的直接提示，再用 Git harness 验证 peeled tag tree、raw form、mode/type/blob/hash 与 inventory digest。
+- with-skill 无失败；Coverage FULL。
+- source table 仍暴露 raw forms、selector 和 extractor，所以 baseline 可恢复 3/5；区分度来自跨阶段 future-tag binding 与 canonical integrity。
+- 第一轮即达到区分度，无需第二轮。
 
 ## Runtime Artifact Policy
 
-- 本轮未创建 transcript、candidate output、subagent verdict、timing、diagnostics、with-skill/without-skill 目录或其他 runtime artifact。
-- Durable 结果仅为本 `comparison.md`；未复用历史 baseline。
+- runtime responses 和 judge verdict 仅保存在 `tmp/eval-runs/issue-177/docs-audit/round-1/`，不提交。
+- 本 `comparison.md` 是唯一 durable 结果。
