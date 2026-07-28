@@ -201,6 +201,7 @@ Skill eval 是 Agent skill 的可用性测试。它们必须验证 skill 能被�
 - `comparison.md` 应包含 evaluation target、test set 或 fixture version、latest result、with-skill behavior、without_skill baseline 的运行来源与行为摘要、failures、next steps 和 runtime artifact policy。`Latest result` 使用两个维度：**Behavior result（行为正确性）**记录 skill 在本轮实际触发的路径上是否满足 assertions、是否存在回归，取值为 `PASS` / `FAIL`；**Coverage result（场景覆盖）**记录本轮运行实际覆盖了多少 assertion 场景，取值为 `FULL` / `PARTIAL`，取 `PARTIAL` 时必须列出未覆盖 assertion 及原因。
 - 依赖实时外部数据的 eval，如果外部仓库当时缺少特定实体，例如 open milestone、eligible 普通 PR、bot PR、维护类 PR 或 breaking marker，导致 assertion 未触发，则该 assertion 记为 `NOT EXERCISED`，只计入 Coverage result，不得计入 Behavior result 的 `FAIL`。
 - 整体结论按两个维度组合：Behavior `FAIL` 时为 `FAIL`；Behavior `PASS` + Coverage `FULL` 时为 `PASS`；Behavior `PASS` + Coverage `PARTIAL` 时为 `PASS (partial coverage)`。
+- `comparison.md` 结果区必须包含一行 `Overall result: <PASS | PASS (partial coverage) | FAIL | BLOCKED>`，供 `scripts/summarize_eval_results.py` 解析。
 - 发版或 review 汇总引用 comparison 结论时，必须能仅从 Behavior result 与 Coverage result 区分 skill 回归和实时样本缺口。新执行或刷新的 `comparison.md` 必须使用该两维结果模型。
 - Baseline 的作用是为 comparison 提供不使用 skill 时的对照输入，不是独立的机器判定对象。Behavior result 与 Coverage result 是 sub-agent、fresh judge 或人工 reviewer 基于 with-skill、without_skill、assertions 和上下文得出的结论；deterministic contract checker 只校验 eval 定义、workspace、durable `comparison.md` 和 runtime artifact 策略，不根据 baseline 自由文本判断结果。
 - Python eval 测试不能依赖上一次 eval run 的运行期输出。使用临时目录或最小 fixtures，避免跨测试根目录出现重复测试模块名，确保 pytest 能在同一进程中收集它们；提交 eval 变更前运行 `uv run scripts/check_eval_artifacts.py`

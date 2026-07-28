@@ -2,7 +2,7 @@
 """汇总各 skill 最新 eval 结论，输出 changelog 的 Skill Eval 汇总表。
 
 按每个 skill 的 evals.json 中 workspace 字段定位 durable comparison.md，
-提取 Latest result 结论（PASS / PARTIAL / BLOCKED），按 skill 分组统计。
+优先提取两维模型的 Overall result，兼容旧格式 Latest result，按 skill 分组统计。
 """
 import glob
 import json
@@ -24,6 +24,17 @@ def find_comparison(test_dir, workspace):
 
 def extract_result(path):
     text = open(path, encoding="utf-8").read()
+    m = re.search(
+        r"^[ \t]*(?:[-+*][ \t]+)?[ \t*]*Overall [Rr]esult[ \t*]*"
+        r"[：:][ \t*]*"
+        r"(PASS[ \t]*\([ \t]*partial coverage[ \t]*\)|PASS|FAIL|BLOCKED)",
+        text,
+        re.M,
+    )
+    if m:
+        if m.group(1) != "PASS" and m.group(1).startswith("PASS"):
+            return "PARTIAL"
+        return m.group(1)
     m = re.search(r"Latest [Rr]esult[：:]\s*\**\s*(PASS|PARTIAL|BLOCKED)", text)
     if m:
         return m.group(1)
@@ -38,7 +49,7 @@ def extract_result(path):
 def main():
     rows = []
     total_files = 0
-    total_stat = {"PASS": 0, "PARTIAL": 0, "BLOCKED": 0, "UNKNOWN": 0}
+    total_stat = {"PASS": 0, "PARTIAL": 0, "FAIL": 0, "BLOCKED": 0, "UNKNOWN": 0}
     missing = []
     for evals_path in sorted(glob.glob(os.path.join(ROOT, "agents/*/test/*/evals/evals.json"))):
         test_dir = os.path.dirname(os.path.dirname(evals_path))
@@ -46,7 +57,7 @@ def main():
         agent = rel.split(os.sep)[1]
         skill = os.path.basename(test_dir)
         data = json.load(open(evals_path, encoding="utf-8"))
-        stat = {"PASS": 0, "PARTIAL": 0, "BLOCKED": 0, "UNKNOWN": 0}
+        stat = {"PASS": 0, "PARTIAL": 0, "FAIL": 0, "BLOCKED": 0, "UNKNOWN": 0}
         n = 0
         for ev in data["evals"]:
             comp = find_comparison(test_dir, ev["workspace"])
@@ -60,7 +71,11 @@ def main():
         for k in total_stat:
             total_stat[k] += stat[k]
         total_files += n
-        parts = [f"{stat[k]} {k}" for k in ("PASS", "PARTIAL", "BLOCKED", "UNKNOWN") if stat[k]]
+        parts = [
+            f"{stat[k]} {k}"
+            for k in ("PASS", "PARTIAL", "FAIL", "BLOCKED", "UNKNOWN")
+            if stat[k]
+        ]
         rows.append((agent, skill, n, "、".join(parts) if parts else "-"))
     for agent, skill, n, summary in rows:
         print(f"| {agent} | `{skill}` | {n} | {summary} |")
