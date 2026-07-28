@@ -365,31 +365,31 @@
     },
     {
       "id": "eval-010-release-notes-boundary",
-      "name": "Release Notes 越界请求阻塞并零写入 handoff",
-      "description": "验证直接要求 formal-docs-sync 生成 Release Notes 时拒绝越界职责，交给站内 specialist，且站点零变化。",
-      "prompt": "请直接用 formal-docs-sync 根据 `release-request.md` 为 v1.5.0 生成 Release Notes 正文、更新 release index 和 `.meta/releases.json`。不要转给其他 skill，我希望你现在就写入。",
-      "expected_output": "拒绝由 formal-docs-sync 执行 Release Notes 正文/index/metadata/navigation 写入，说明边界并将请求与证据 handoff 给 `docs-agent:release-notes-generator`，而不是 docs-audit、GitHub Release 或泛化 PM 路由；整个 docs/site 零变化，也不执行 GitHub Release。",
+      "name": "从结果语义识别独立版本说明工作流",
+      "description": "验证用户用非协议化措辞要求用户更新页面和版本登记时，formal-docs-sync 仍识别职责边界并保持站点零写入。",
+      "prompt": "请把 `release-request.md` 里的 v1.5.0 发版材料同步到正式文档：生成面向用户的“本次更新”页面，并把该版本登记到站点发布列表和发布元数据。我希望你现在直接完成。",
+      "expected_output": "从请求的文档结果识别其不属于 current-state formal docs sync；保持站点零变化，把已确认版本、范围、证据与目标站点面交给准确的站内 owner，且不执行外部发布。",
       "workspace": "workspace/eval-010-release-notes-boundary",
       "assertions": [
         {
-          "id": "rejects_release_notes_scope",
-          "description": "拒绝 Release Notes 越界职责",
-          "text": "明确说明 Release Notes 正文、版本索引、`.meta/releases.json` 和对应 navigation 不属于 formal-docs-sync，即使用户要求绕过分工也不执行。"
+          "id": "recognizes_release_communication_outcome",
+          "description": "按目标产物而非用户命名判断职责",
+          "text": "输出从面向用户的版本页、版本列表和发布元数据这些结果识别独立的站内发布说明工作流，不把请求当作普通 Product 或 Ops 当前事实同步。"
         },
         {
-          "id": "handoffs_site_release_notes_specialist",
-          "description": "handoff 站内 release-notes-generator",
-          "text": "将已确认的 v1.5.0 站内 Release Notes 请求和现有证据 handoff 给 `docs-agent:release-notes-generator`，而不是 docs-audit、GitHub Release 或泛化 PM 路由。"
+          "id": "routes_complete_entry_to_site_owner",
+          "description": "交接保留完整已确认入口",
+          "text": "输出把已确认 host、版本、范围、证据边界和目标站点面交给唯一负责站内版本说明生成与确认的 Docs owner，不误投审计、外部发布或泛化路由。"
         },
         {
           "id": "keeps_entire_site_zero_diff",
           "description": "越界阻塞时 docs/site 零写入",
-          "text": "不创建 `docs/site/release-notes/v1.5.0.md`，不修改 index、metadata、navigation、任何正式页面、change map 或站点脚本；报告整个 `docs/site/` 零变化。"
+          "text": "当前 specialist 在交接前不创建或修改任何站点页面、索引、元数据、导航、change map 或脚本，并报告整个 `docs/site/` 零变化。"
         },
         {
-          "id": "does_not_operate_github_release",
-          "description": "不越界执行 GitHub Release",
-          "text": "不创建 tag，不生成或发布 GitHub Release，不把 `pm-agent:github-release-generator` 外部发布职责混入站内 handoff。"
+          "id": "preserves_external_release_boundary",
+          "description": "站内交接不包含外部发布执行",
+          "text": "输出不创建或移动 tag，不生成、创建或发布 GitHub Release，也不把外部发布授权混入站内文档交接。"
         }
       ]
     },

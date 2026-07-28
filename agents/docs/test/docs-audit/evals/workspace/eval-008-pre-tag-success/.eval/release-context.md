@@ -16,7 +16,7 @@
 - target_release_version: `v1.2.0`
 - target_release_version_confirmation: maintainer-confirmed
 - matching_tag_status: absent
-- issue_116_handoff: ready
+- site_release_notes_handoff: ready
 - release_notes: `docs/site/release-notes/v1.2.0.md`
 - release_notes_index: `docs/site/release-notes/index.md`
 - release_metadata: `docs/site/.meta/releases.json` (read-only audit surface)
@@ -65,4 +65,4 @@ this 100644 discovery blob; the external release package records that handoff
 commit/tree/path/blob. The host branch may accept the temporary branch only by
 normal fast-forward while its branch, worktree, and index fingerprints still
 match the captured state. Integration and readback are the final gate before
-the issue #120 handoff.
+the `pm-agent:github-release-generator` handoff.

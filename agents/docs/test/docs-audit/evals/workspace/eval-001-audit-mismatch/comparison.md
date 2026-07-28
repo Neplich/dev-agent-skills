@@ -7,7 +7,7 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: issue #117 A2 / 2026-07-19
+- Fixture version: docs-audit A2 / 2026-07-19
 - Assertions: 4
 
 ## Latest Result

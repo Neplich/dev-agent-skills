@@ -1,6 +1,6 @@
 # Release Package
 
-## Issue #116 site-ready handoff
+## `docs-agent:release-notes-generator` site-ready handoff
 
 - handoff_status: ready
 - release_version: `v1.0.0-rc.1`
@@ -9,9 +9,9 @@
 - confirmation_status: `confirmed`
 - docs_checks: `npm run test:docs` from `docs/site`, exit 0
 - updated_release_surfaces: `docs/site/release-notes/index.md`, `docs/site/.meta/releases.json`, generated navigation
-- source_evidence: six-category release evidence recorded by issue #116
+- source_evidence: six-category release evidence recorded by `docs-agent:release-notes-generator`
 
-## Issue #117 pre-tag handoff
+## `docs-agent:docs-audit` pre-tag handoff
 
 - phase: `pre-tag`
 - phase_result: `ready_for_tag`

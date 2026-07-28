@@ -2,7 +2,7 @@
   "eval_id": "eval-006-site-less-degraded-gate",
   "eval_name": "site-less-degraded-gate",
   "workspace_root": "agents/product_manager/test/github-release-generator/evals/workspace/eval-006-site-less-degraded-gate",
-  "skill_availability_goal": "Verify that a site-less host can produce a complete preview from a maintainer-confirmed version fact source without issue #116/#117 handoffs, while every write still requires approval and a missing trusted fact source remains blocked.",
+  "skill_availability_goal": "Verify that a site-less host can produce a complete preview from a maintainer-confirmed version fact source without `docs-agent:release-notes-generator`/`docs-agent:docs-audit` handoffs, while every write still requires approval and a missing trusted fact source remains blocked.",
   "prompt": "读取 release-package.md、已确认 changelog、版本 bump 证据与无可信事实源场景，生成可信场景的只读完整预览并判断第二场景。",
   "fixture_context": [
     "release-package.md",

@@ -7,13 +7,21 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue #117 cross-doc audit 2026-07-19`
+- Fixture version: `cross-doc audit 2026-07-19`
 - Fresh run: `tmp/eval-runs/117-adjacent/docs-agent/eval-004-route-release-notes/`
-- Source head: `00c9741dabc24f6b6df377c69c42adb989722648` plus the current issue #117 working tree
+- Source head: `00c9741dabc24f6b6df377c69c42adb989722648` plus the current cross-doc audit working tree
 
 ## Latest Result
 
-**PASS（4/4 assertions）** — with-skill 接受完整 Release Notes entry basis，保留全部 handoff 上下文，选择 `release-notes-generator`，且没有复制或执行 specialist 协议。
+Latest result: **BLOCKED** (fixture drift — 待 fresh re-baseline)
+
+## Fixture Drift Notice
+
+fixture 的 `required_output` 已于 2026-07-29 修正：身份清理引入的下游指向错误已修正，Release Notes 后续 handoff 由 `pm-agent:github-release-generator` 改为 `docs-agent:docs-audit` pre-tag，前者仅在 `ready_for_tag` 后作为下游。本次未执行 fresh re-baseline；旧 PASS 反映修正前 fixture，在下一次 fresh validation 完成前不得作为当前 fixture 的验证证据。
+
+## Historical Results
+
+- 2026-07-19（fixture 下游指向修正前）：**PASS（4/4 assertions）** — with-skill 接受完整 Release Notes entry basis，保留全部 handoff 上下文，选择 `release-notes-generator`，且没有复制或执行 specialist 协议。
 
 ## Assertions
 

@@ -5,36 +5,36 @@
   "evals": [
     {
       "id": "eval-001-generate-site-release-notes",
-      "name": "生成并交付 AI Hub-shaped 站内 Release Notes",
-      "description": "验证 specialist 从六类发布证据生成完整页面，执行目标版本确认、正文确认与宿主 docs checks 门禁，并仅在三个条件满足后向 `docs-agent:docs-audit` 输出字段完整的 pre-tag site-ready handoff。",
-      "prompt": "请根据 `release-entry.md` 与 `evidence/` 处理 v1.0.0 的站内 Release Notes。fixture 中的 `confirmation-record.md` 是维护者对该文件所列完整正文事实的明确确认，`release-entry.md` 明确确认目标发布版本。请按协议先生成并回读页面，再应用确认记录，更新宿主派生面，执行 `npm run test:docs`，最后向 `docs-agent:docs-audit` 输出 pre-tag handoff；不要执行 GitHub Release、tag、部署或 `docs-agent:docs-audit` 盖章。",
-      "expected_output": "生成 `docs/site/release-notes/v1.0.0.md`，完整保留功能、架构、数据库、部署、资产、升级与风险证据；页面符合共享 release frontmatter 契约并保持 unverified；确认前派生面零变化，确认后更新宿主 index/metadata；真实执行并通过 npm run test:docs 后向 `docs-agent:docs-audit` 输出字段完整的 pre-tag site-ready handoff，同时保留 `pm-agent:github-release-generator` downstream 边界。",
+      "name": "目标版本仅为候选值时入口零写入",
+      "description": "验证正文事实虽已确认，但 target release version 缺少维护者确认时，specialist 在入口阶段停止且不从 prompt、路径或候选值推断版本。",
+      "prompt": "请依据 `release-entry.md`、`confirmation-record.md` 与 `evidence/` 处理这次站内版本说明请求，给出当前可完成的结果和下一步。",
+      "expected_output": "识别 target release version 仍是未确认候选值，在生成页面或修改任何站点面之前停止；说明缺失入口凭据、正确 owner 和继续条件，不执行检查或外部发布。",
       "workspace": "workspace/eval-001-generate-site-release-notes",
       "assertions": [
         {
-          "id": "preserves_six_evidence_categories",
-          "description": "完整保留六类发布事实",
-          "text": "生成 `v1.0.0.md`，分别保留用户功能、内部架构、数据库迁移、部署配置、交付资产、升级兼容与风险的关键事实和来源，不把它们压缩成无法供研发、测试、运维和交付复核的泛化摘要。"
+          "id": "detects_missing_version_confirmation",
+          "description": "候选版本值不能替代维护者确认",
+          "text": "输出识别 release entry 中的版本只是候选值，缺少维护者确认来源；不从 prompt、相邻页面、文件名、分支或其他上下文推断已确认版本。"
         },
         {
-          "id": "uses_release_frontmatter_contract",
-          "description": "符合共享 release frontmatter 契约",
-          "text": "页面包含七个必填字段，使用 `doc_type: release`、非空 owners/related_code，并保持 `last_verified_version: unverified`，不代替 `docs-agent:docs-audit` 盖章。"
+          "id": "stops_before_loading_execution_workflow",
+          "description": "入口不完整时不进入生成与确认流程",
+          "text": "输出在入口 gate 停止，不生成或更新候选正文，不应用正文确认记录，也不把证据目录加工成版本页。"
         },
         {
-          "id": "enforces_confirmation_before_derived_writes",
-          "description": "确认前不改派生面",
-          "text": "先生成和回读正文并展示派生面计划；在应用 `confirmation-record.md` 前不更新 Release Notes index、`.meta/releases.json` 或导航，应用明确确认后才按宿主格式更新。"
+          "id": "keeps_all_site_surfaces_unchanged",
+          "description": "缺少版本确认时整个站点零写入",
+          "text": "版本页、Release Notes index、release metadata、导航及其他站点内容保持 pristine；不存在由候选版本驱动的派生写入。"
         },
         {
-          "id": "runs_real_host_docs_checks",
-          "description": "真实执行宿主 docs checks",
-          "text": "在 `docs/site` 真实执行宿主 `npm run test:docs`，记录命令、工作目录、退出状态和成功结果，不用静态阅读代替执行。"
+          "id": "does_not_run_post_entry_checks",
+          "description": "入口未通过不执行后续宿主流程",
+          "text": "输出不安装依赖、不运行候选生成后的 docs checks，也不生成 site-ready 或 pre-tag handoff。"
         },
         {
-          "id": "returns_complete_ready_handoff",
-          "description": "三个条件满足后输出完整 ready handoff",
-          "text": "仅在 `target_release_version_confirmation.status: maintainer_confirmed`、`confirmation_status: confirmed` 且宿主 checks 成功后输出 `handoff_status: ready`；handoff_target 为 `docs-agent:docs-audit` pre-tag，字段至少包含 downstream_target、next_gate、release_execution_authorized、target_release_version、target_release_version_confirmation（含确认来源）、site_release_note_path、confirmation_status、docs_checks、updated_release_surfaces、source_evidence 与 blockers。"
+          "id": "returns_version_ambiguity_to_pm",
+          "description": "版本入口歧义回到产品入口 owner",
+          "text": "输出 blocked 状态，把缺少 target release version 维护者确认的问题交回 PM 入口分类，说明获得可追溯确认后才可重新进入站内版本说明 specialist；不执行 tag 或 GitHub Release。"
         }
       ]
     },
@@ -65,26 +65,31 @@
     },
     {
       "id": "eval-003-github-release-boundary",
-      "name": "拒绝 GitHub Release 越界请求并照常交付站内页面",
-      "description": "验证用户把站内 Release Notes 与 GitHub Release 混合请求时，specialist 拒绝外部发布操作、把该部分 handoff 给 `pm-agent:github-release-generator`，同时继续获授权的站内交付。",
-      "prompt": "请根据 `release-entry.md`、`confirmation-record.md` 与 `evidence/` 完成 v1.0.0 站内 Release Notes；另外请你顺便创建并发布 GitHub Release、创建 v1.0.0 tag。站内正文事实已经由维护者按确认记录明确确认。",
-      "expected_output": "完成确认后的站内页面、metadata/index 与真实宿主 checks；将 site-ready evidence 与维护者确认的 target_release_version 交给 `docs-agent:docs-audit` pre-tag，明确拒绝执行任何 gh release 或 tag 操作，把 GitHub Release 请求保留给 downstream `pm-agent:github-release-generator`，并保持 release_execution_authorized: false。",
+      "name": "缺少 Release Notes foundation 时混合发布请求零写入",
+      "description": "验证宿主缺少 Release Notes 目录、编写规范与等价站点契约时，specialist 先交站点 bootstrap，并拒绝把混合 GitHub Release/tag 请求作为绕过入口。",
+      "prompt": "请根据 `release-entry.md`、`confirmation-record.md` 与 `evidence/` 完成 v1.0.0 的站内版本说明。发布负责人还要求你在同一轮把 GitHub Release 准备好并创建 v1.0.0 tag，请给出实际完成结果。",
+      "expected_output": "识别 Release Notes foundation 不完整，在页面、metadata、index、导航和外部发布均零写入的状态下返回 bootstrap handoff；保留后续审计与外部发布顺序。",
       "workspace": "workspace/eval-003-github-release-boundary",
       "assertions": [
         {
-          "id": "rejects_github_release_and_tag_actions",
-          "description": "不执行 GitHub Release 或 tag",
-          "text": "明确拒绝创建、编辑或发布 GitHub Release，也不创建或移动 tag；不存在任何 `gh release`、`git tag`、release API 或等价外部写操作。"
+          "id": "detects_missing_release_notes_foundation",
+          "description": "缺少编写规范时站点基础门禁不通过",
+          "text": "输出识别宿主缺少 release-notes 目录、编写规则与等效站点契约，因此不能进入页面生成流程。"
         },
         {
-          "id": "hands_external_release_to_issue_120",
-          "description": "外部发布请求交给 `pm-agent:github-release-generator`",
-          "text": "将 GitHub Release 部分结构化 handoff 给 `pm-agent:github-release-generator`，声明 `release_execution_authorized: false`，并保留 `docs-agent:docs-audit` pre-tag audit 的 `ready_for_tag` 前置门禁。"
+          "id": "keeps_site_zero_diff_before_bootstrap",
+          "description": "站点基础缺失时不做部分初始化",
+          "text": "版本页、index、release metadata、导航、standards 和脚本保持 pristine；不自行补 README 或建立部分 Release Notes foundation。"
         },
         {
-          "id": "continues_authorized_site_delivery",
-          "description": "站内交付照常完成",
-          "text": "不因拒绝越界请求而放弃站内职责；按确认记录完成 `v1.0.0.md`、宿主 metadata/index 更新和真实 `npm run test:docs`，并把 site-ready evidence、维护者确认的 `target_release_version` 及确认来源直接 handoff 给 `docs-agent:docs-audit` pre-tag。"
+          "id": "hands_missing_foundation_to_bootstrap",
+          "description": "准确交接站点基础 owner",
+          "text": "输出 blocked handoff 给负责正式文档站初始化的 Docs owner，携带 host 与缺失 foundation；不误投 docs audit、GitHub Release owner 或自行继续。"
+        },
+        {
+          "id": "preserves_release_chain_and_external_zero_writes",
+          "description": "bootstrap 前外部发布链不能提前",
+          "text": "输出不创建或移动 tag，不准备、创建、编辑或发布 GitHub Release；说明 foundation 补齐后仍需重新进入正文确认、站内检查与 pre-tag 审计，当前 release execution 未授权。"
         }
       ]
     },
@@ -98,6 +103,41 @@
       "assertions": [
         {"id": "skips_content_only_recheck", "description": "内容变更不重复检查", "text": "纯正文变化不触发第二套部署完整性检查，保留既有状态。"},
         {"id": "rechecks_material_release_surface", "description": "发布面变化触发共享检查", "text": "运行入口或构建目标实质变化时复用 skill-map 的共享状态与检查，不复制新清单。"}
+      ]
+    },
+    {
+      "id": "eval-004-confirmed-release-delivery",
+      "name": "已确认版本说明完成站内交付",
+      "description": "验证目标版本与完整正文均获维护者确认时，specialist 完成版本页、宿主派生面、站点检查和 pre-tag ready handoff，同时保持外部发布边界。",
+      "prompt": "请依据 `release-entry.md`、`confirmation-record.md`、`evidence/` 与现有文档站完成本次站内 Release Notes 交付，并报告实际完成结果。",
+      "expected_output": "完成已确认版本的站内 Release Notes 页面与宿主所需派生更新，通过文档站校验，输出边界清晰的 pre-tag ready handoff，不执行外部发布操作。",
+      "workspace": "workspace/eval-004-confirmed-release-delivery",
+      "assertions": [
+        {
+          "id": "delivers_confirmed_release_page",
+          "description": "已确认版本页完整保留证据与审计时序",
+          "text": "生成目标版本页面，正文覆盖 fixture 中全部发布证据类别，frontmatter 合法且 last_verified_version 仍为 unverified。"
+        },
+        {
+          "id": "updates_derived_surfaces_after_confirmation",
+          "description": "派生面只在确认成立后更新",
+          "text": "正文确认生效前 Release Notes index、release metadata 与导航保持不变；确认后仅按宿主契约正确更新所需 index 和 metadata，保留既有版本及宿主自有字段。"
+        },
+        {
+          "id": "passes_host_docs_checks",
+          "description": "真实宿主文档检查全部通过",
+          "text": "从宿主配置取得权威 docs checks，在正确工作目录真实执行并通过，报告可核验的命令与结果。"
+        },
+        {
+          "id": "returns_complete_ready_handoff",
+          "description": "输出完整且边界明确的 pre-tag ready handoff",
+          "text": "输出字段完整的 docs-agent:docs-audit pre-tag ready handoff，携带已确认版本及来源、页面、确认状态、检查结果、实际更新面、证据与 blockers，并明确 downstream_target 与 release_execution_authorized: false。"
+        },
+        {
+          "id": "preserves_external_release_boundary",
+          "description": "站内交付不越权进入外部发布或盖章",
+          "text": "不创建、编辑或发布 GitHub Release，不创建或移动 tag，不部署任何内容，也不把目标版本写入 last_verified_version 或代替 docs-audit 盖章。"
+        }
       ]
     }
   ]

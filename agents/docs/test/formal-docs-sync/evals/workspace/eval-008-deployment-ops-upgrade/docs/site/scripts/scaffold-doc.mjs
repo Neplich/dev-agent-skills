@@ -14,7 +14,7 @@ import { REPO_ROOT, SITE_ROOT, toPosix } from './lib/paths.mjs';
 const exec = promisify(execFile);
 const START = '<!-- docs-scaffold:start -->';
 const END = '<!-- docs-scaffold:end -->';
-const RELEASE_HANDOFF = 'Release Notes are not supported by new:doc; use the independent Release Notes Skill from issue #116.';
+const RELEASE_HANDOFF = 'Release Notes are not supported by new:doc; use the independent Release Notes Skill from `docs-agent:release-notes-generator`.';
 const TYPES = {
   api: { directory: 'api', template: 'api-template.md' },
   database: { directory: 'database', template: 'database.md' },

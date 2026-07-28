@@ -325,7 +325,7 @@ test('scaffoldDocument rejects a broken target symlink even with overwrite autho
   assert.equal((await lstat(target)).isSymbolicLink(), true);
 });
 
-test('scaffoldDocument rejects missing #118 inputs and incomplete change-map input', async (context) => {
+test('scaffoldDocument rejects missing frontmatter-contract inputs and incomplete change-map input', async (context) => {
   await context.test('missing owner', async () => {
     const fixture = await createFixture();
     const input = options();
@@ -498,19 +498,19 @@ test('missingParentDirectories uses Windows path semantics for rollback boundari
   ]);
 });
 
-test('scaffoldDocument rejects release notes and hands off to issue #116', async () => {
+test('scaffoldDocument rejects release notes and hands off to `docs-agent:release-notes-generator`', async () => {
   const fixture = await createFixture();
   const input = options('release-notes');
   input.path = 'docs/site/release-notes/v1.md';
   await assert.rejects(
     scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
-    /Release Notes Skill from issue #116/
+    /Release Notes Skill from `docs-agent:release-notes-generator`/
   );
   const pathInput = options('api');
   pathInput.path = 'docs/site/release-notes/v1.md';
   await assert.rejects(
     scaffoldDocument(pathInput, { ...fixture, runDocsChecks: noChecks }),
-    /Release Notes Skill from issue #116/
+    /Release Notes Skill from `docs-agent:release-notes-generator`/
   );
 });
 

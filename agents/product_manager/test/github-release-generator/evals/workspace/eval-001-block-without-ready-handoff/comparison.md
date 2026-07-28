@@ -3,8 +3,16 @@
 ## Evaluation Target
 
 - Skill: `github-release-generator`
-- Test case: missing and unconfirmed issue #116 handoff
-- Latest result: **PASS** - 2026-07-22 issue #154 r2 fresh paired validation；with-skill 4/4、without-skill 4/4 assertions 通过
+- Test case: missing and unconfirmed `docs-agent:release-notes-generator` handoff
+- Latest result: **BLOCKED** (fixture drift — 待 fresh re-baseline)
+
+## Fixture Drift Notice
+
+fixture 身份文本已于 2026-07-28 从 issue 编号更新为 skill 名，本次未执行 fresh re-baseline。旧 PASS 反映变更前 run；在下一次 fresh validation 完成前，不得将其作为当前 fixture 的验证证据。
+
+## Historical Results
+
+- 2026-07-22（fixture 身份文本变更前）：**PASS** - issue #154 r2 fresh paired validation；with-skill 4/4、without-skill 4/4 assertions 通过
 
 ## Review Context
 

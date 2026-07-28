@@ -7,7 +7,7 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue #117 cross-doc audit 2026-07-19`（fixture 未变化）
+- Fixture version: `cross-doc audit 2026-07-19`（fixture 未变化）
 - 本轮触发：issue #131 将 `docs-audit` frontmatter description 扩展为同时覆盖 pre-tag release audit 与 post-tag release verification 后的 routing 复验（2026-07-20）
 - Fresh run：仓库外隔离 scratch Git 仓库（session scratchpad `eval-131-e003/`）
 - Source head: `6040de9`，即 PR #137（关闭 issue #131，含本次复验针对的 `docs-audit` description 变更）的 squash 合并 commit；PR #136（关闭 issue #132）已在其之前合并
