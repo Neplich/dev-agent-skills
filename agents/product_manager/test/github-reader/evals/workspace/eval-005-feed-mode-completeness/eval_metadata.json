@@ -1,0 +1,7 @@
+{
+  "eval_id": "eval-005-feed-mode-completeness",
+  "eval_name": "feed-mode-completeness",
+  "workspace_root": "agents/product_manager/test/github-reader/evals/workspace/eval-005-feed-mode-completeness",
+  "skill_availability_goal": "验证 Feed mode 输出机器可读 YAML 块且完整性信号与报告声明一致",
+  "prompt": "我是 roadmap-generator，需要 anthropics/anthropic-sdk-python 的当前仓库状态作为结构化输入，请给我完整状态数据"
+}
