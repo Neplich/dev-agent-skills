@@ -7,42 +7,40 @@
 - Eval: `eval-002-existing-project-update`
 - Test case: existing-project-update
 - Workspace: `workspace/iteration-1/eval-2-existing-project-update`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
+- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: approved notification-center PRD, DECISIONS, and Engineer TRD covering a polling baseline and event-driven migration direction
-- Expected output: recognize `existing-project-update`, summarize delta and blast radius first, prefer `change-impactor` / iteration over full regeneration, and name affected docs.
+- Fixture: approved notification-center PRD, DECISIONS, and Engineer TRD covering polling plus the confirmed event-driven migration direction.
+- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
 
-## Assertions
+## Latest Result
 
-- `update`: recognize existing update
-- `delta_blast_radius`: start with delta and blast radius
-- `assertion_3`: prefer iteration over rewrite
-- `assertion_4`: name affected feature docs or document types
+**PASS** — all 4 assertions passed. The response recognizes an `existing-project-update`, explains the delta and blast radius first, prefers `change-impactor` plus targeted iteration, and names every affected document path.
 
-## With Skill
+## With-Skill Behavior
 
-- `idea-to-spec` selects `existing-project-update` when approved behavior, rollout, or scope changes.
-- The shared skill map requires `change-impactor` first when blast radius is unclear, then targeted iteration rather than full regeneration.
-- The fixture docs establish the affected paths: `docs/pm/notification-center/PRD.md`, `docs/pm/notification-center/DECISIONS.md`, and `docs/engineer/notification-center/TRD.md`.
-- The current docs preserve the hybrid event-driven transition and rejected permanent polling-only option, so the update path can describe delta, impacted docs, and revision order without reopening unrelated decisions.
+- Preserved the confirmed `hybrid transition` and the rejected permanent polling-only option instead of silently reopening decision history.
+- Mapped impact to `DECISIONS.md`, PM PRD, Engineer TRD, and later QA coverage.
+- Routed Engineer TRD revision to `engineer-agent:trd-gen` and avoided full regeneration.
+- Advanced only the fallback user-behavior decision.
 
-## Without Skill / without_skill Baseline
+## Without-Skill Baseline
 
-- The baseline read the eval item and fixture before target skill docs. A generic response could treat the request as a net-new design or rewrite the PRD/TRD wholesale.
-- It may miss the decision-history requirement to revise or retire the prior polling decision instead of silently replacing it.
+- Source: fresh isolated subagent run using the same prompt and fixture without the target skill, PM Agent README, internal instructions, or historical comparison.
+- The baseline also identified a targeted update and the three main documents, but did not name `change-impactor`, `prd-iteration`, or the dependency-ordered lifecycle route.
 
 ## Failures
 
-- None. The current `idea-to-spec` and `change-impactor` routing satisfy all update assertions.
+- No assertion failures or baseline blockers.
+- PR #163's Docs deployment-completeness closeout did not apply to this feature update and caused no regression.
 
 ## Next Steps
 
-- Keep this eval as existing-project update coverage.
-- Re-run fresh validation if change impact, iteration ordering, or document-memory rules change.
+- Keep this eval as coverage for decision-history preservation and targeted update routing.
+- Re-run when impact analysis, iteration ownership, or Docs closeout rules change.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.
+- Responses, verdicts, timing, and diagnostics remain under `tmp/eval-runs/idea-to-spec-v0.3.4/` and are not committed.

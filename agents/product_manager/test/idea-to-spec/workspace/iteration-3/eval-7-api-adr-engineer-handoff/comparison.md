@@ -7,42 +7,40 @@
 - Eval: `eval-007-api-adr-engineer-handoff`
 - Test case: api-adr-engineer-handoff
 - Workspace: `workspace/iteration-3/eval-7-api-adr-engineer-handoff`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
+- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: confirmed PM PRD at `docs/pm/chat-interface/history-search/PRD.md`
-- Expected output: PM does not generate Engineer API or ADR docs directly; it hands a feature path packet to `engineer-agent:trd-gen` and mirrors output paths under `docs/engineer/chat-interface/history-search/`.
+- Fixture: confirmed PM PRD at `docs/pm/chat-interface/history-search/PRD.md`; stale Engineer output paths were excluded through `execution_cleanup`.
+- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
 
-## Assertions
+## Latest Result
 
-- `does_not_use_pm_api_adr_generators`: API and ADR are Engineer-owned
-- `routes_to_trd_gen`: next owner is `engineer-agent:trd-gen`
-- `engineer_paths_mirror_feature_path`: Engineer outputs mirror `chat-interface/history-search`
-- `handoff_contains_feature_path_evidence`: handoff packet includes feature path fields, PRD path, and API / ADR context
+**PASS** — all 4 assertions passed. The response keeps API and ADR Engineer-owned, routes them to `engineer-agent:trd-gen`, mirrors the complete feature path, and includes the required evidence and decision context.
 
-## With Skill
+## With-Skill Behavior
 
-- The shared `idea-to-spec` skill map routes API and ADR generation to `engineer-agent:trd-gen`; PM internal API / ADR resources are not used to create Engineer-owned documents.
-- The confirmed PRD provides `feature_path=chat-interface/history-search`, `parent_feature=chat-interface`, and `feature_level=2`.
-- The required Engineer-owned outputs are under `docs/engineer/chat-interface/history-search/`, including `API.md` and `ADR-*.md`, not `docs/engineer/history-search/`.
-- The handoff packet carries `feature_path`, `parent_feature`, `feature_level`, PRD source path, API goals, and search-index decision background.
+- Explicitly prohibited PM internal `api-gen` / `adr-gen` from creating Engineer artifacts.
+- Required `docs/engineer/chat-interface/history-search/API.md` and same-directory `ADR-*.md`.
+- Included standard cross-role packet fields, the approved PRD path, API scope, ADR decision background, and unresolved technical evidence.
+- Did not fabricate scale, latency, storage, or index-selection facts.
 
-## Without Skill / without_skill Baseline
+## Without-Skill Baseline
 
-- The baseline read the eval item and fixture before target skill docs. A generic PM response could directly draft API and ADR documents from the PRD.
-- It may also choose a terminal-only Engineer path such as `docs/engineer/history-search/`, losing the confirmed feature-path mirror.
+- Source: fresh isolated subagent run using the same prompt and cleaned fixture without the target skill, PM Agent README, internal instructions, or historical comparison.
+- The baseline retained Engineer ownership and the parent path, but did not route to `engineer-agent:trd-gen` and proposed an `ADR/` subdirectory instead of the canonical same-directory `ADR-*.md` shape.
 
 ## Failures
 
-- None. The current `idea-to-spec` ownership and handoff rules satisfy all API / ADR assertions.
+- No assertion failures or baseline blockers.
+- PR #163's Docs deployment-completeness closeout did not apply to this PM-to-Engineer handoff and caused no ownership regression.
 
 ## Next Steps
 
-- Keep this eval as PM coverage for Engineer-owned API / ADR handoff and path mirroring.
-- Re-run fresh validation if API / ADR ownership or Engineer handoff paths change.
+- Keep this eval as API / ADR ownership and full-path mirroring coverage.
+- Re-run when Engineer handoff ownership, canonical filenames, or Docs closeout routing changes.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.
+- Responses, verdicts, timing, and diagnostics remain under `tmp/eval-runs/idea-to-spec-v0.3.4/` and are not committed.

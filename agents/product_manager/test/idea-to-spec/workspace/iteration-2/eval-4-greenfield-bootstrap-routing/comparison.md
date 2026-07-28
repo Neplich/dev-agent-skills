@@ -7,42 +7,40 @@
 - Eval: `eval-004-greenfield-bootstrap-routing`
 - Test case: greenfield-bootstrap-routing
 - Workspace: `workspace/iteration-2/eval-4-greenfield-bootstrap-routing`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
+- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: empty-workspace AI chat assistant request; `eval_metadata.json` lists `PRD.md` as execution cleanup for stale runtime output
-- Expected output: Phase 0 empty-workspace context summary, PM-first `greenfield-discovery` or `greenfield-bootstrap`, no code scaffold, and PM documentation next step.
+- Fixture: empty-workspace AI chat assistant request; stale root `PRD.md` was excluded through `execution_cleanup`.
+- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
 
-## Assertions
+## Latest Result
 
-- `assertion_1`: empty workspace / docs context first
-- `pm_first_lane`: PM-first lane selection
-- `pm_first`: no direct engineering scaffold
-- `assertion_4`: document-oriented next step
+**PASS** — all 4 assertions passed. The response starts with the empty-workspace context, selects a PM-first `greenfield-bootstrap` lane, explicitly rejects engineering scaffolding, and names durable PM documents as the next step.
 
-## With Skill
+## With-Skill Behavior
 
-- `idea-to-spec` requires Phase 0 context detection and keeps empty product requests in PM lanes unless the user explicitly opts out.
-- Because the user asks for PRD shaping rather than code, the correct lane is `greenfield-bootstrap` or a `greenfield-discovery` first step that may load `project-init` for durable docs.
-- `project-init` creates documentation scaffolding only when appropriate and records API / ADR needs as Engineer handoff, not immediate code scaffolding.
-- The stale `PRD.md` listed in `execution_cleanup` does not weaken the expected behavior; fresh validation treats cleanup metadata as a signal not to reuse prior runtime output as the answer.
+- Did not reuse the stale root PRD or infer an existing stack.
+- Explicitly avoided `npm create vite`, `create-next-app`, and equivalent scaffolds.
+- Proposed `project-init`, `DECISIONS.md`, and `PRD.md` only after the first product-positioning decision is confirmed.
+- Kept the proposed `feature_path` provisional.
 
-## Without Skill / without_skill Baseline
+## Without-Skill Baseline
 
-- The baseline read the eval item and fixture before target skill docs. A generic response could run or recommend `create-next-app`, `npm create vite`, or another scaffold because the layout is concrete.
-- It could also accept stale `PRD.md` content without first stating empty-workspace context or PM-first routing.
+- Source: fresh isolated subagent run using the same prompt and cleaned fixture without the target skill, PM Agent README, internal instructions, or historical comparison.
+- The baseline also avoided engineering setup, but immediately produced a broad PRD skeleton and multiple unresolved questions; the with-skill response follows the single-decision and durable-doc gate more strictly.
 
 ## Failures
 
-- None. The current `idea-to-spec` and `project-init` contract satisfies all greenfield bootstrap routing assertions.
+- No assertion failures or baseline blockers.
+- PR #163's post-Docs deployment completeness check did not apply because no docs-site bootstrap or confirmed commit occurred.
 
 ## Next Steps
 
-- Keep this eval as PM-first coverage for empty-workspace app requests.
-- Re-run fresh validation if project-init or stale runtime cleanup behavior changes.
+- Keep this eval as PM-first empty-workspace routing coverage.
+- Re-run when `project-init`, execution cleanup, or Docs completion routing changes.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.
+- Responses, verdicts, timing, and diagnostics remain under `tmp/eval-runs/idea-to-spec-v0.3.4/` and are not committed.

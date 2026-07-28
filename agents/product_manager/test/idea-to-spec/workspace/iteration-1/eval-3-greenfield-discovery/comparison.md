@@ -7,41 +7,39 @@
 - Eval: `eval-003-greenfield-discovery`
 - Test case: greenfield-discovery
 - Workspace: `workspace/iteration-1/eval-3-greenfield-discovery`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
+- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: vague team knowledge Q&A idea with minimal notes and no formal docs or technical stack
-- Expected output: stay in `greenfield-discovery`, avoid full PRD/TRD generation, use one-decision discovery, and recommend document generation only after direction stabilizes.
+- Fixture: near-empty team knowledge Q&A workspace with minimal notes, no formal PM docs, and no selected stack.
+- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
 
-## Assertions
+## Latest Result
 
-- `assertion_1`: no complete document on the first turn
-- `assertion_2`: use exploratory single-decision protocol
-- `assertion_3`: recommend documentation after the direction stabilizes
+**PASS** — all 3 assertions passed. The response stays in `greenfield-discovery`, avoids premature PRD/TRD generation, advances one discovery decision, and defers durable documentation until the direction stabilizes.
 
-## With Skill
+## With-Skill Behavior
 
-- `idea-to-spec` maps vague ideas and near-empty workspaces to `greenfield-discovery`.
-- Its non-negotiable protocol blocks immediate full PRD/TRD generation and advances one decision point at a time.
-- It keeps the feature path unresolved until problem, users, scope, constraints, and assumptions are stable enough to document.
-- It can recommend future PRD / DECISIONS documentation, but only after the discovery direction is confirmed.
+- Reported the near-empty context and avoided assumptions about knowledge sources, permissions, or answer-quality metrics.
+- Compared three primary use cases with trade-offs and asked only for the first scenario decision.
+- Deferred `feature_path`, `DECISIONS.md`, and PRD creation until problem, user, and MVP boundaries are stable.
 
-## Without Skill / without_skill Baseline
+## Without-Skill Baseline
 
-- The baseline read the eval item and fixture before target skill docs. A generic PM response could produce a premature PRD outline or implementation plan from the vague idea.
-- It may ask several broad questions at once rather than using a single focused decision point.
+- Source: fresh isolated subagent run using the same prompt and fixture without the target skill, PM Agent README, internal instructions, or historical comparison.
+- The baseline also avoided a premature PRD and asked one target-user question; the with-skill response additionally makes the lane, feature-path timing, and durable-memory contract explicit.
 
 ## Failures
 
-- None. The current `idea-to-spec` protocol satisfies all greenfield discovery assertions.
+- No assertion failures or baseline blockers.
+- PR #163's conditional Docs closeout was not triggered during discovery and caused no regression.
 
 ## Next Steps
 
-- Keep this eval as first-turn discovery discipline coverage.
-- Re-run fresh validation if greenfield lane selection or document timing changes.
+- Keep this eval as first-turn greenfield discovery coverage.
+- Re-run when lane selection, single-decision progression, or document timing changes.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.
+- Responses, verdicts, timing, and diagnostics remain under `tmp/eval-runs/idea-to-spec-v0.3.4/` and are not committed.
