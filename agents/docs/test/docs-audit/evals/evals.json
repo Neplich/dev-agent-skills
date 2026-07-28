@@ -167,7 +167,7 @@
       "workspace": "workspace/eval-011-post-tag-mismatch",
       "assertions": [
         {"id": "uses_immutable_pre_tag_authority", "description": "漂移副本不能替代可信 pre-tag authority", "text": "输出识别并使用 fixture 中的不可变 pre-tag authority，明确隔离当前路径副本和独立 post-tag 结果。"},
-        {"id": "validates_current_attempt_history", "description": "same-version 历史只产生一个可判断的当前 attempt", "text": "输出验证当前 attempt 与累计历史自洽，并根据最终发布绑定判断其是否可作为本次 release authority。"},
+        {"id": "validates_current_attempt_history", "description": "same-version 历史只产生一个可判断的当前 attempt", "text": "输出核对当前 attempt 与累计历史的一致性；发现不一致时，必须判定该 attempt 不可作为本次 release authority 并保持 `blocked`，不得忽略历史矛盾直接采信当前 attempt。"},
         {"id": "rejects_complete_release_tree_drift", "description": "局部文件一致不能掩盖未审计发布增量", "text": "输出报告实际 tag 相对已审计发布内容的完整差异，并保持 `blocked`，不以 tag 名或已记录路径哈希一致代替发布内容绑定。"},
         {"id": "offers_safe_maintainer_recovery", "description": "补救选择保持版本确认与 tag 权限边界", "text": "输出给维护者同版本修复与改用新版本两类可执行选择，并明确重新进入审计的前置条件及 owner 边界。"},
         {"id": "persists_blocked_without_corrupting_authority", "description": "阻塞证据的持久化失败不会破坏既有 authority", "text": "输出把 blocked 结果与 pre-tag authority 分离；说明持久化故障的恢复条件，并且任何未完成写入都不会产生成功状态或改动既有发布证据。"}

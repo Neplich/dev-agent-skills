@@ -66,3 +66,7 @@
 
 - runtime responses 和 judge verdict 仅保存在 `tmp/eval-runs/issue-177/docs-audit/round-1/`，不提交。
 - 本 `comparison.md` 是唯一 durable 结果。
+
+## Next Steps
+
+- 本 assertion 措辞在本轮 review 后做了澄清性对齐，判定语义与已记录的 fresh run 一致，未重新执行 eval。
