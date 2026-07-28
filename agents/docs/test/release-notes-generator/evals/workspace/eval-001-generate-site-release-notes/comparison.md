@@ -9,10 +9,11 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue-177 discrimination restore round-2`
-- Validation time: `2026-07-28 23:36:25 CST`
-- Runtime: `tmp/eval-runs/issue-177/docs-release-evals/round-2/`
-- with-skill 只在入口门禁读取公开 SKILL；without-skill 不读取目标 skill、Agent README、assertions、旧 comparison、round-1 或 with-skill 输出。
+- Fixture version: `issue-177 target-version confirmation clarification round-3`
+- Validation time: `2026-07-29 00:17:54 CST`
+- Runtime: `tmp/eval-runs/issue-177/docs-release-evals/round-3-eval-001/`
+- with-skill 读取公开 SKILL 和 Docs Agent README；入口未通过，因此未加载内部执行流程。
+- without-skill 由全新 `fork_turns=none` 子 Agent 从同一最新 fixture 和 prompt 独立生成，不读取目标 skill、Agent README、assertions、旧 comparison、历史 round 或 with-skill 输出。
 
 ## Latest Result
 
@@ -31,44 +32,49 @@
 
 第二轮改测公开入口 gate：fixture 提供 `target_release_version: v1.0.0`，但来源只是 release coordinator planning note，没有维护者确认记录。正文确认与 evidence 仍存在，用于验证它们不能替代版本入口凭据。
 
+Review 指出第二轮 `confirmation-record.md` 仍以“维护者确认 v1.0.0 页面”描述正文事实，并使用 `confirmation_status: confirmed`，与 `release-entry.md` 的“没有维护者版本确认记录”冲突。第三轮把该记录改为版本无关的 Release Notes 正文事实确认，并显式声明 `target_release_version_confirmation: not_confirmed`，使正文确认和目标版本确认成为无歧义的两个凭据。
+
 ## Redesign
 
 - prompt 不再写出版本值、执行步骤或 handoff 字段。
 - assertions 检查版本确认主体、入口 stop point、全站零写入、不运行后置流程和 PM return。
-- fixture 只保留协调者候选版本及缺少维护者来源这一原始身份事实。
+- release entry 只把版本标为协调者候选值；confirmation record 只确认正文事实，并显式不确认目标版本。
 
 ## Assertion Results
 
 | Assertion | With skill | Without skill | Fresh judgment |
 | --- | --- | --- | --- |
-| `detects_missing_version_confirmation` | PASS | PASS | 两侧均识别协调者 planning note 不是维护者确认。 |
-| `stops_before_loading_execution_workflow` | PASS | PASS | 两侧均未生成候选或应用正文确认；baseline 的后置检查违规单独计分。 |
-| `keeps_all_site_surfaces_unchanged` | PASS | PASS | 两侧正式站点均零差异。 |
-| `does_not_run_post_entry_checks` | PASS | FAIL | with-skill 在入口停止；baseline 安装依赖并运行 `test:docs`，因缺页面得到 74/75。 |
-| `returns_version_ambiguity_to_pm` | PASS | FAIL | with-skill blocked 并返回 `pm-agent` 补齐确认；baseline 只要求维护者确认，未回 PM 且越过入口跑检查。 |
+| `detects_missing_version_confirmation` | PASS | PASS | 两侧均识别协调者 planning note 只是候选来源，正文事实确认不构成目标版本确认。 |
+| `stops_before_loading_execution_workflow` | PASS | FAIL | with-skill 停在入口且未生成候选；baseline 加工六份 evidence 并输出完整“版本待确认”正文，越过入口 stop point。 |
+| `keeps_all_site_surfaces_unchanged` | PASS | PASS | 两侧 `docs/site/` 前后 SHA-256 manifest 一致，版本页、index、metadata 和导航均零差异。 |
+| `does_not_run_post_entry_checks` | PASS | PASS | 两侧均未安装依赖、运行 docs checks 或生成 site-ready / pre-tag handoff。 |
+| `returns_version_ambiguity_to_pm` | PASS | FAIL | with-skill blocked 并返回 `pm-agent` 补齐可追溯版本确认；baseline 只直接要求维护者确认，未回 PM，且已生成正文。 |
 
 ## With-Skill Behavior
 
-- 未加载内部七步流程，未生成页面、未应用 body confirmation、未安装依赖或运行 docs checks。
+- 识别 body confirmation 与 target version confirmation 是两个独立凭据。
+- 未加载内部七步流程，未生成候选或页面、未应用 body confirmation、未安装依赖或运行 docs checks。
 - 返回 PM 补齐可追溯维护者版本确认，tag/GitHub Release 零写入。
-- Response SHA-256: `b57b255d584902f0d22002d192a50a050fcbf32cdb5f46c1090baa6c6f66d3a8`。
+- Response SHA-256: `3fa99a9eaae344df5dedfc96344a99f0714e27f624051caec3b94803f803faf9`。
 
 ## Fresh Without-Skill Baseline
 
-- baseline 也保持站点零写入，但越过入口执行 locked install 与 `npm run test:docs`，后者因 `v1.0.0.md` 不存在失败。
-- baseline 没有把入口歧义交回 PM owner。
-- Response SHA-256: `02ce0644dec4cf342d0085e94dec7ad1ceb477cba1a4a141a51cb46915c0c539`。
+- baseline 也识别版本未确认并保持站点零写入，且没有运行后置 checks。
+- baseline 越过入口 stop point，把 evidence 加工成完整的版本无关正文；后续只直接要求维护者确认，没有把入口歧义交回 PM owner。
+- Response SHA-256: `b77a596122f0992c1523fc631c981c4c0c9cc1dc9f7392251d8ad72cb5a84377`。
 
 ## Failures And Iterations
 
 - Round 1：with-skill 3/5、baseline 3/5；with-skill 自身两条 FAIL，Behavior FAIL。
 - Round 2：with-skill 5/5、baseline 3/5；Behavior PASS、Coverage FULL。
+- Round 3：澄清正文确认记录不确认目标版本后，with-skill 5/5、fresh baseline 3/5；Behavior PASS、Coverage FULL。
 - Round-1 问题来自错误 assertion 语义，不把失败篡改为 PASS。
-- 基础设施失败：none；baseline 的 74/75 是被测业务行为，不是 infrastructure failure。
+- Round-2 fixture 的确认记录同时绑定 v1.0.0 和标记 confirmed，可能被合理解释为维护者版本确认来源；Round-3 已消除该证据矛盾。
+- 基础设施失败：none。
 
 ## Next Steps
 
-- 保持版本确认主体与 stop point 为入口回归；不要把 body confirmation 当作 target version confirmation。
+- 保持正文确认与目标版本确认的显式分离，并继续以入口 stop point 和 PM return 作为核心回归。
 
 ## Runtime Artifact Policy
 
