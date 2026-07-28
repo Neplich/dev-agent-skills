@@ -2,7 +2,8 @@
 """汇总各 skill 最新 eval 结论，输出 changelog 的 Skill Eval 汇总表。
 
 按每个 skill 的 evals.json 中 workspace 字段定位 durable comparison.md，
-提取 Latest result 结论（PASS / PARTIAL / BLOCKED），按 skill 分组统计。
+优先提取两维模型的 Overall result，分别统计 PASS、PASS (partial coverage)、
+FAIL、BLOCKED；兼容旧格式 Latest result 的 PASS、PARTIAL、BLOCKED，并保留 UNKNOWN。
 """
 import glob
 import json
@@ -11,6 +12,10 @@ import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RESULT_KEYS = ("PASS", "PASS_PARTIAL", "PARTIAL", "FAIL", "BLOCKED", "UNKNOWN")
+RESULT_LABELS = {
+    "PASS_PARTIAL": "PASS (partial coverage)",
+}
 
 
 def find_comparison(test_dir, workspace):
@@ -24,6 +29,17 @@ def find_comparison(test_dir, workspace):
 
 def extract_result(path):
     text = open(path, encoding="utf-8").read()
+    m = re.search(
+        r"^[ \t]*(?:[-+*][ \t]+)?[ \t*]*Overall [Rr]esult[ \t*]*"
+        r"[：:][ \t*]*"
+        r"(PASS[ \t]*\([ \t]*partial coverage[ \t]*\)|PASS|FAIL|BLOCKED)",
+        text,
+        re.M,
+    )
+    if m:
+        if m.group(1) != "PASS" and m.group(1).startswith("PASS"):
+            return "PASS_PARTIAL"
+        return m.group(1)
     m = re.search(r"Latest [Rr]esult[：:]\s*\**\s*(PASS|PARTIAL|BLOCKED)", text)
     if m:
         return m.group(1)
@@ -38,7 +54,7 @@ def extract_result(path):
 def main():
     rows = []
     total_files = 0
-    total_stat = {"PASS": 0, "PARTIAL": 0, "BLOCKED": 0, "UNKNOWN": 0}
+    total_stat = {key: 0 for key in RESULT_KEYS}
     missing = []
     for evals_path in sorted(glob.glob(os.path.join(ROOT, "agents/*/test/*/evals/evals.json"))):
         test_dir = os.path.dirname(os.path.dirname(evals_path))
@@ -46,7 +62,7 @@ def main():
         agent = rel.split(os.sep)[1]
         skill = os.path.basename(test_dir)
         data = json.load(open(evals_path, encoding="utf-8"))
-        stat = {"PASS": 0, "PARTIAL": 0, "BLOCKED": 0, "UNKNOWN": 0}
+        stat = {key: 0 for key in RESULT_KEYS}
         n = 0
         for ev in data["evals"]:
             comp = find_comparison(test_dir, ev["workspace"])
@@ -60,12 +76,20 @@ def main():
         for k in total_stat:
             total_stat[k] += stat[k]
         total_files += n
-        parts = [f"{stat[k]} {k}" for k in ("PASS", "PARTIAL", "BLOCKED", "UNKNOWN") if stat[k]]
+        parts = [
+            f"{stat[k]} {RESULT_LABELS.get(k, k)}"
+            for k in RESULT_KEYS
+            if stat[k]
+        ]
         rows.append((agent, skill, n, "、".join(parts) if parts else "-"))
     for agent, skill, n, summary in rows:
         print(f"| {agent} | `{skill}` | {n} | {summary} |")
     print(f"\n共 {len(rows)} 个 skill 分组、{total_files} 份 comparison："
-          + "、".join(f"{v} {k}" for k, v in total_stat.items() if v))
+          + "、".join(
+              f"{v} {RESULT_LABELS.get(k, k)}"
+              for k, v in total_stat.items()
+              if v
+          ))
     if missing:
         print("\n缺 comparison.md:", file=sys.stderr)
         for m in missing:

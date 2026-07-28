@@ -8,7 +8,10 @@
 - Test case: Full status
 - Workspace: `workspace/eval-001-full-status`
 - Classification: `(c)` 依赖实时外部数据；验证 `github-reader` 是否通过已认证 `gh` 获取真实仓库状态。
-- Latest result: **PARTIAL** — 当前会话中的 fresh validator 严格按 no-leak 顺序生成并锁定两个独立 live arm 后才读取 assertions。with-skill 满足 4/5 assertions，without-skill 满足 3/5。唯一 with-skill failure 是目标仓库没有 open milestone，因而无法生成 assertion 要求的“有标题、进度百分比”的表格；skill 正确执行了“暂无 milestone” edge case，没有虚构数据。
+- Behavior result: **PASS** — 当前会话中的 fresh validator 严格按 no-leak 顺序生成并锁定两个独立 live arm 后才读取 assertions。with-skill 在实际触发的 4 条 assertions 上满足 4/4，未发现行为回归；原记录的 4/5 来自将未触发的 `milestone` 计入分母。without-skill 原记录为 3/5。
+- Coverage result: **PARTIAL** — `milestone` 为 **NOT EXERCISED**：目标仓库当时没有 open milestone，无法触发 assertion 要求的“有标题、进度百分比”的表格；skill 正确执行了“暂无 milestone” edge case，没有虚构数据。
+- Overall result: **PASS (partial coverage)**。
+- 证据来源：2026-07-28 fresh run（沿用既有记录，本轮仅做结果模型迁移，未重新执行 eval）。
 
 ## Test Set / Fixture Version
 
@@ -71,7 +74,7 @@ baseline 只依据原始 prompt 重新查询 GitHub：
 
 | Assertion | With skill | Without skill | Fresh judge 结论 |
 | --- | --- | --- | --- |
-| `milestone`：包含有标题、进度百分比的 Milestone 表格 | **FAIL（场景前提不成立）** | **FAIL（场景前提不成立）** | 两个独立查询均返回 0 个 open milestone。现行 skill 要求此时说明“暂无 milestone”而不是虚构表格。 |
+| `milestone`：包含有标题、进度百分比的 Milestone 表格 | **NOT EXERCISED** | **NOT EXERCISED** | 两个独立查询均返回 0 个 open milestone，场景前提不成立。现行 skill 要求此时说明“暂无 milestone”而不是虚构表格。 |
 | `pr`：PR 队列区分待 review 和已合并 | **PASS** | **FAIL** | with-skill 单列人工待 Review 和近 14 天 merged；baseline 只报告 open PR 队列。 |
 | `assertion_3`：末尾有数字化健康摘要 | **PASS** | **PASS** | with-skill 有独立健康摘要；baseline 的总体判断也用 open issue、open PR 与等待时长数字归纳风险。 |
 | `pr_2`：PR 条目使用 `[#NUMBER](URL)` | **PASS** | **PASS** | 两份报告的具体 PR 条目都符合要求。 |
@@ -79,13 +82,14 @@ baseline 只依据原始 prompt 重新查询 GitHub：
 
 ## Failures
 
-- with-skill 唯一 failure 为 `milestone` live-data/assertion mismatch：查询成功，但仓库没有 assertion 假定的实体。生成虚假 milestone 或百分比会违反 skill。
+- 未发现已触发路径的 with-skill 回归。
+- Coverage gap：`milestone` live-data/assertion mismatch；查询成功，但仓库没有 assertion 假定的实体，因此记为 `NOT EXERCISED`。生成虚假 milestone 或百分比会违反 skill。
 - without-skill 额外失败 `pr`：没有查询或展示 merged PR，无法区分待 review 与已合并。
 - GitHub、网络、认证和仓库访问均成功，本轮不是 infrastructure failure，也没有发现 Full status 数据完整性回归。
 
 ## Next Steps
 
-- 保持 **PARTIAL**，不为满足 `milestone` assertion 而虚构数据。
+- 保持 Behavior result **PASS**、Coverage result **PARTIAL** 和 Overall result **PASS (partial coverage)**，不为满足 `milestone` assertion 而虚构数据。
 - 若维护者希望“无 milestone”也是成功场景，应另行调整 assertion，使其接受明确的 edge-case 声明；本轮不修改 eval 定义。
 - 后续 fresh run 必须重新查询 live GitHub，不复用本轮快照。
 

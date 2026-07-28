@@ -70,4 +70,5 @@ jobs:
             agents/test_doc_contract.py \
             agents/test_eval_contract.py \
             scripts/test_install_codex_skills.py \
+            scripts/test_summarize_eval_results.py \
             scripts/test_check_repository_contract.py

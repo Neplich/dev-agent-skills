@@ -198,8 +198,12 @@ Skill eval 是 Agent skill 的可用性测试。它们必须验证 skill 能被�
 - `eval_metadata.json` 不应声明 `validation_method`；skill eval 默认按当前流程执行 fresh subagent validation。`subagent-verdict.md` 只是 Codex 或 Claude Code subagent validation 的运行期诊断产物，不能提交，也不能写入 metadata output 字段作为 runner 必检产物
 - eval runner 默认将运行期文件写入隔离的 scratch workspace，例如 `tmp/eval-runs/...`，再只把人工确认后的最新结果汇总回 `comparison.md`。模型 eval transcripts、verdicts、timing data 和 diagnostics 可作为短期 CI artifact 上传用于排查，但不要提交到 git
 - PR 评论或对话中的 eval 结论必须与已提交或拟提交的 `comparison.md` 保持一致。
-- `comparison.md` 应包含 evaluation target、test set 或 fixture version、latest result、with-skill behavior、without_skill baseline 的运行来源与行为摘要、failures、next steps 和 runtime artifact policy
-- Baseline 的作用是为 comparison 提供不使用 skill 时的对照输入，不是独立的机器判定对象。`Latest result` 是 sub-agent、fresh judge 或人工 reviewer 基于 with-skill、without_skill、assertions 和上下文得出的结论；deterministic contract checker 只校验 eval 定义、workspace、durable `comparison.md` 和 runtime artifact 策略，不根据 baseline 自由文本判断 PASS、PARTIAL 或 BLOCKED。
+- `comparison.md` 应包含 evaluation target、test set 或 fixture version、latest result、with-skill behavior、without_skill baseline 的运行来源与行为摘要、failures、next steps 和 runtime artifact policy。`Latest result` 使用两个维度：**Behavior result（行为正确性）**记录 skill 在本轮实际触发的路径上是否满足 assertions、是否存在回归，取值为 `PASS` / `FAIL`；**Coverage result（场景覆盖）**记录本轮运行实际覆盖了多少 assertion 场景，取值为 `FULL` / `PARTIAL`，取 `PARTIAL` 时必须列出未覆盖 assertion 及原因。
+- 依赖实时外部数据的 eval，如果外部仓库当时缺少特定实体，例如 open milestone、eligible 普通 PR、bot PR、维护类 PR 或 breaking marker，导致 assertion 未触发，则该 assertion 记为 `NOT EXERCISED`，只计入 Coverage result，不得计入 Behavior result 的 `FAIL`。
+- 整体结论按两个维度组合：Behavior `FAIL` 时为 `FAIL`；Behavior `PASS` + Coverage `FULL` 时为 `PASS`；Behavior `PASS` + Coverage `PARTIAL` 时为 `PASS (partial coverage)`。
+- `comparison.md` 结果区必须包含一行 `Overall result: <PASS | PASS (partial coverage) | FAIL | BLOCKED>`，供 `scripts/summarize_eval_results.py` 解析。
+- 发版或 review 汇总引用 comparison 结论时，必须能仅从 Behavior result 与 Coverage result 区分 skill 回归和实时样本缺口。新执行或刷新的 `comparison.md` 必须使用该两维结果模型。
+- Baseline 的作用是为 comparison 提供不使用 skill 时的对照输入，不是独立的机器判定对象。Behavior result 与 Coverage result 是 sub-agent、fresh judge 或人工 reviewer 基于 with-skill、without_skill、assertions 和上下文得出的结论；deterministic contract checker 只校验 eval 定义、workspace、durable `comparison.md` 和 runtime artifact 策略，不根据 baseline 自由文本判断结果。
 - Python eval 测试不能依赖上一次 eval run 的运行期输出。使用临时目录或最小 fixtures，避免跨测试根目录出现重复测试模块名，确保 pytest 能在同一进程中收集它们；提交 eval 变更前运行 `uv run scripts/check_eval_artifacts.py`
 - PR 必跑校验顺序是 `repository-contract -> eval-contract -> doc-contract -> python-tests`；先运行 `uv run scripts/check_repository_contract.py`，再运行 `uv run scripts/check_eval_contract.py` 和 `uv run scripts/check_eval_artifacts.py`，再运行 `uv run scripts/check_doc_contract.py`，最后运行确定性 pytest 命令
 - 模型 eval 不作为 required status check；但只要实际执行 skill eval，默认应包含模型 transcript 生成/检查。涉及 skill 行为、routing、eval fixture 或 release 前变更时，管理员应在合并前手动触发 eval workflow，并把 transcript 结果和 subagent validation 结果一起作为 merge 判断依据
