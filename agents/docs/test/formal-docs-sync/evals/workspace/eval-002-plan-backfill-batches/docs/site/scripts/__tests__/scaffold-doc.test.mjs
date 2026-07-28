@@ -325,7 +325,7 @@ test('scaffoldDocument rejects a broken target symlink even with overwrite autho
   assert.equal((await lstat(target)).isSymbolicLink(), true);
 });
 
-test('scaffoldDocument rejects missing #118 inputs and incomplete change-map input', async (context) => {
+test('scaffoldDocument rejects missing frontmatter-contract inputs and incomplete change-map input', async (context) => {
   await context.test('missing owner', async () => {
     const fixture = await createFixture();
     const input = options();

@@ -34,7 +34,7 @@
 
 **PASS（with-skill 12/12；fresh without-skill 6/12）** — with-skill satisfies
 all Database/Design hierarchy, current-fact, reciprocal-link, stable authority,
-closeout, atomic mapping, recursive navigation, host-check, and #117 handoff
+closeout, atomic mapping, recursive navigation, host-check, and `docs-agent:docs-audit` handoff
 assertions. The arbitrary-depth Design wording and sidebar implementation did
 not weaken existing component/flow behavior.
 
@@ -93,7 +93,7 @@ not weaken existing component/flow behavior.
   output, or a historical baseline.
 - Result: 6/12 PARTIAL. It generated the main page trees and current facts, but
   failed contract loading, pre-write closeout, stable-path subtree mapping,
-  entity reverse links, per-glob atomic closure, and the #117 gate.
+  entity reverse links, per-glob atomic closure, and the `docs-agent:docs-audit` gate.
 - Skill-specific uplift: +6 assertions, or +50.0 percentage points.
 
 ## Required Test Reproduction

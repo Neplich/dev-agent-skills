@@ -8,7 +8,7 @@
 ## Test Set / Fixture Version
 
 - Fixture: `ws2-docs-v1`
-- 评估基线：`a273a00` 加本轮 issue #116 R2 working tree
+- 评估基线：`a273a00` 加本轮 cross-doc sync R2 working tree
 - Harness：完整 router harness、fresh zero-skill baseline 与独立 judge
 
 ## Latest Result

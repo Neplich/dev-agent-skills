@@ -33,7 +33,7 @@
 the complete two-level Product feature tree, kept every task reachable through
 five structurally nested sidebar levels, preserved the read-only Accounts and
 Billing surfaces, retained independently complete Product mapping closures,
-and blocked #117 pre-tag audit until a maintainer confirms
+and blocked `docs-agent:docs-audit` pre-tag work until a maintainer confirms
 `target_release_version`.
 
 ## Assertions
@@ -72,7 +72,7 @@ and blocked #117 pre-tag audit until a maintainer confirms
   zero unresolved local links. Only with-skill recorded every command, docs
   site cwd, and final exit status as required by the assertion.
 - `blocks_audit_without_confirmed_version`: with-skill PASS；without-skill
-  FAIL。Only with-skill explicitly blocked #117 pre-tag work pending a
+  FAIL。Only with-skill explicitly blocked `docs-agent:docs-audit` pre-tag work pending a
   maintainer-confirmed target version.
 
 ## With-Skill Behavior
@@ -85,7 +85,7 @@ and blocked #117 pre-tag audit until a maintainer confirms
   Billing/manual entries, while keeping Accounts at zero writes.
 - Used the host's arbitrary-depth sidebar generator in both views and kept all
   changed pages `last_verified_version: unverified`.
-- Returned the complete #117 affected set but correctly blocked pre-tag audit
+- Returned the complete `docs-agent:docs-audit` affected set but correctly blocked pre-tag audit
   on the missing `target_release_version`.
 
 ## Fresh Without-Skill Baseline

@@ -7,7 +7,7 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: issue #117 A2 / 2026-07-19
+- Fixture version: docs-audit A2 / 2026-07-19
 - Assertions: 4
 
 ## Latest Result
@@ -21,7 +21,7 @@
 | `sends_refactor_suspect_to_fact_layer` | PASS | change-map 命中且文档未同批更新时先标 `suspect`，继续事实核对。 |
 | `classifies_accurate_refactor_verified` | PASS | GET 路径、limit、200、400、鉴权、流式和文件行为逐项与代码一致，页面 `verified`。 |
 | `does_not_force_noop_doc_edit` | PASS | 报告明确实现重构未改变 API，无需为同 diff 编辑准确文档。 |
-| `does_not_block_for_unchanged_accurate_doc` | PASS | 页面未因“未修改”判 stale；整体只因 #116 handoff、Release Notes、索引、metadata 和宿主版本事实缺失而 blocked。 |
+| `does_not_block_for_unchanged_accurate_doc` | PASS | 页面未因“未修改”判 stale；整体只因 `docs-agent:release-notes-generator` handoff、Release Notes、索引、metadata 和宿主版本事实缺失而 blocked。 |
 
 ## With-Skill Behavior
 

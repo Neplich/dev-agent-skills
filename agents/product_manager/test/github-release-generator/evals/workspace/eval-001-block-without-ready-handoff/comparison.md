@@ -3,7 +3,7 @@
 ## Evaluation Target
 
 - Skill: `github-release-generator`
-- Test case: missing and unconfirmed issue #116 handoff
+- Test case: missing and unconfirmed `docs-agent:release-notes-generator` handoff
 - Latest result: **BLOCKED** (fixture drift — 待 fresh re-baseline)
 
 ## Fixture Drift Notice

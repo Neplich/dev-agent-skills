@@ -33,7 +33,7 @@
 - Chose existing-system backfill rather than feature delivery and treated the maintainer request as discovery authorization rather than write confirmation.
 - Proposed one coherent Identity / Sessions subtree with all ancestor indexes and two independently locatable route leaves.
 - Presented the full candidate scope and an ancestor-aware atomic change-map delta, preserved manual unknown fields and stable Search mappings, and kept Billing and all non-API surfaces out of batch.
-- Stopped before writes, host checks, the next batch, or a `docs-agent:docs-audit` #117 handoff.
+- Stopped before writes, host checks, the next batch, or a `docs-agent:docs-audit` handoff.
 
 ## Fresh Without-Skill Baseline
 

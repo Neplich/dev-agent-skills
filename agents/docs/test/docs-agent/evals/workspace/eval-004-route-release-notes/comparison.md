@@ -7,9 +7,9 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue #117 cross-doc audit 2026-07-19`
+- Fixture version: `cross-doc audit 2026-07-19`
 - Fresh run: `tmp/eval-runs/117-adjacent/docs-agent/eval-004-route-release-notes/`
-- Source head: `00c9741dabc24f6b6df377c69c42adb989722648` plus the current issue #117 working tree
+- Source head: `00c9741dabc24f6b6df377c69c42adb989722648` plus the current cross-doc audit working tree
 
 ## Latest Result
 

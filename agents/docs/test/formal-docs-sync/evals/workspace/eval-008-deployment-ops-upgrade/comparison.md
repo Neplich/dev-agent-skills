@@ -14,7 +14,7 @@
 
 ## Latest Result
 
-**PASS (5/5 assertions)** — the fresh with-skill lane generated the deployment root index, shared environment reference, Docker runbook and image authority; synchronized only executed startup, upgrade, health and rollback facts; excluded the unexecuted Kubernetes/Helm plan; passed `npm run test:docs` with 76/76 tests; and returned the #117 handoff blocked on a maintainer-confirmed target version. The fresh Codex judge independently reran both lanes and confirmed all assertions.
+**PASS (5/5 assertions)** — the fresh with-skill lane generated the deployment root index, shared environment reference, Docker runbook and image authority; synchronized only executed startup, upgrade, health and rollback facts; excluded the unexecuted Kubernetes/Helm plan; passed `npm run test:docs` with 76/76 tests; and returned the `docs-agent:docs-audit` handoff blocked on a maintainer-confirmed target version. The fresh Codex judge independently reran both lanes and confirmed all assertions.
 
 ## Assertions
 
@@ -22,20 +22,20 @@
 - `writes_current_ops_upgrade_rollback`: PASS. The Docker runbook records development/staging startup, the `v1.4.2` pull and upgrade, `/healthz` HTTP 200 success, and rollback to `v1.4.1`; `docker/image-sources.md` owns the image coordinates and evidence boundary.
 - `does_not_promote_plan_to_current_state`: PASS. Kubernetes/Helm remains an unsupported, unexecuted plan with no page or placeholder command.
 - `writes_current_deployment_tree_atomically`: PASS. All four required pages exist and link to their authorities; the existing Ops navigation and `deploy/**` mapping cover them while preserving `deploy/examples/**`; all new pages remain `unverified`, and unrelated sections are unchanged.
-- `runs_ops_host_checks_and_handoffs`: PASS. The judge reran `npm run test:docs` in both lanes, each exiting `0` with 76/76 tests; the with-skill report hands off #117 without executing deployment and blocks version stamping until a maintainer confirms `target_release_version`.
+- `runs_ops_host_checks_and_handoffs`: PASS. The judge reran `npm run test:docs` in both lanes, each exiting `0` with 76/76 tests; the with-skill report hands off to `docs-agent:docs-audit` without executing deployment and blocks version stamping until a maintainer confirms `target_release_version`.
 
 ## With-Skill Behavior
 
 - Used `doc_type: ops` throughout the deployment tree and produced the full environment-reference contract: type, requiredness, default, constraints, applicable class, safe example, sensitivity, activation timing, and evidence.
 - Classified Development as out-of-scope, Docker as supported, and Kubernetes/Helm as unsupported; it also named missing image provenance, architecture, authentication, offline-source, logging, and data-check evidence without inventing commands.
 - Kept the legacy single-page shape absent and treated the four pages, internal links, Ops navigation, and change map as one confirmed atomic scope.
-- Preserved the formal #117 gate: missing confirmed release context leaves the handoff blocked and all pages `last_verified_version: unverified`.
+- Preserved the formal `docs-agent:docs-audit` gate: missing confirmed release context leaves the handoff blocked and all pages `last_verified_version: unverified`.
 
 ## Fresh Without-Skill Baseline
 
 - Source: a fresh lane copied from the same pristine input and run with the same `eval_metadata.json` prompt; it was instructed not to read the target skill, Agent README, eval definitions, comparison, with-skill output, or historical runs.
 - The baseline also generated the four-page tree, recorded the executed Docker upgrade and rollback, excluded Kubernetes/Helm, and passed 76/76 tests.
-- It was weaker than the skill lane: the root used `doc_type: landing`, the environment table omitted the complete ops contract fields, deployment-class and missing-evidence reporting was unstructured, and the #117 handoff did not explicitly enforce the maintainer-confirmed-version blocked state.
+- It was weaker than the skill lane: the root used `doc_type: landing`, the environment table omitted the complete ops contract fields, deployment-class and missing-evidence reporting was unstructured, and the `docs-agent:docs-audit` handoff did not explicitly enforce the maintainer-confirmed-version blocked state.
 
 ## Positioning Against Eval-011/012/013
 

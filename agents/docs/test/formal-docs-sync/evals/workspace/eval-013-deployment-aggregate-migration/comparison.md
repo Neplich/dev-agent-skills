@@ -19,7 +19,7 @@
 
 - Moved shared `APP_PORT` facts to the environment authority, repaired Ops/Product inbound links, split maps by class and preserved `exclude`, unknown fields and unrelated entries.
 - Limited the migration to evidence retained by the fixture; it did not invent image, Chart, values or exact command child pages from a summary.
-- Kept changed pages `unverified` and returned the #117 handoff blocked on a confirmed target version.
+- Kept changed pages `unverified` and returned the `docs-agent:docs-audit` handoff blocked on a confirmed target version.
 
 ## Fresh Without-Skill Baseline
 
