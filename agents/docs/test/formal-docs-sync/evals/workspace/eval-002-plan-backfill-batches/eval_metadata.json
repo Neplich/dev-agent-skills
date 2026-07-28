@@ -3,7 +3,7 @@
   "eval_name": "product-information-architecture-backfill",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-002-plan-backfill-batches",
   "skill_availability_goal": "Verify a confirmed Product backfill creates a recursively navigable domain-to-two-level-feature-to-task hierarchy while an unconfirmed API backfill remains a complete read-only candidate subtree.",
-  "prompt": "按 `backfill-confirmation.md` 已确认的 existing-system backfill 批次同步 Product 正式文档：用 feature catalog、当前实现和验收测试核证两个产品域，其中 workspace-management 必须按 `invitations → member-invitations / invitation-acceptance → 用户任务` 生成两级子功能、每级 index 和独立任务页，analytics 保持浅层；更新 change map，在 `docs/site/` 运行宿主 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal` 并核对 Product 双视图任意深度递归导航与链接，再输出 #117 handoff。同时为尚未确认的 Accounts API 回填只提出 `api/index.md → accounts/index.md → get-account.md` 完整候选树，逐节点说明 code glob、证据、owner、映射和排除项，保持 Accounts API 零写入与既有 Billing 子树不变；并说明没有 catalog 时如何形成候选范围。",
+  "prompt": "按 `backfill-confirmation.md` 已确认的 existing-system backfill 批次同步 Product 正式文档：用 feature catalog、当前实现和验收测试核证两个产品域，其中 workspace-management 必须按 `invitations → member-invitations / invitation-acceptance → 用户任务` 生成两级子功能、每级 index 和独立任务页，analytics 保持浅层；更新 change map，在 `docs/site/` 运行宿主 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal` 并核对 Product 双视图任意深度递归导航与链接，再输出 `docs-agent:docs-audit` handoff。同时为尚未确认的 Accounts API 回填只提出 `api/index.md → accounts/index.md → get-account.md` 完整候选树，逐节点说明 code glob、证据、owner、映射和排除项，保持 Accounts API 零写入与既有 Billing 子树不变；并说明没有 catalog 时如何形成候选范围。",
   "fixture_context": [
     "docs/pm/feature-catalog.md",
     "backfill-confirmation.md",

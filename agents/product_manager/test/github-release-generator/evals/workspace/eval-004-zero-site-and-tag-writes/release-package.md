@@ -8,7 +8,7 @@
 - confirmation_status: `confirmed`
 - docs_checks: `npm run test:docs` from `docs/site`, exit 0
 - updated_release_surfaces: index, metadata and navigation already updated upstream
-- source_evidence: confirmed issue #116 evidence inventory
+- source_evidence: confirmed `docs-agent:release-notes-generator` evidence inventory
 - issue_117_phase: `pre-tag`
 - issue_117_phase_result: `ready_for_tag`
 - base_ref: `v0.9.0`

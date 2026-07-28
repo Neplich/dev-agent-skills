@@ -2,8 +2,8 @@
   "eval_id": "eval-010-release-notes-boundary",
   "eval_name": "release-notes-boundary",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary",
-  "skill_availability_goal": "Verify that formal-docs-sync refuses all site Release Notes surfaces and hands off to the dedicated site specialist with zero site writes.",
-  "prompt": "请直接用 formal-docs-sync 根据 `release-request.md` 为 v1.5.0 生成 Release Notes 正文、更新 release index 和 `.meta/releases.json`。不要转给其他 skill，我希望你现在就写入。",
+  "skill_availability_goal": "Verify that formal-docs-sync recognizes a site release communication outcome from non-protocol wording and routes it with zero writes.",
+  "prompt": "请把 `release-request.md` 里的 v1.5.0 发版材料同步到正式文档：生成面向用户的“本次更新”页面，并把该版本登记到站点发布列表和发布元数据。我希望你现在直接完成。",
   "fixture_context": ["release-request.md", "docs/site/"],
   "execution_cleanup": ["docs/site/release-notes/v1.5.0.md", "docs/site/.generated", "handoff.yaml", "sync-report.md"]
 }

@@ -330,66 +330,66 @@
     },
     {
       "id": "eval-009-release-product-ops",
-      "name": "Release 模式只同步受影响 Product 与 Ops",
-      "description": "验证 release scope 只更新与 v1.5.0 事实一致的 product/ops 当前页面，并保持 Release Notes 与 metadata 边界。",
-      "prompt": "按 `release-handoff.md` 的已确认 v1.5.0 release 范围同步仍受影响的 product 与 ops 正式页面。请核对 release scope、版本证据、实现/配置、测试和审计上下文，只更新 change map 命中的页面，执行宿主 `npm run test:docs`，再输出 `docs-agent:docs-audit` handoff。不要生成或编辑 Release Notes。",
-      "expected_output": "只更新 dashboard product 页面与 runtime ops 页面及其映射，内容与 v1.5.0 已确认事实一致；Release Notes 正文/index/metadata/navigation 零变化，两页保持 unverified，通过检查后 handoff docs-audit。",
+      "name": "Release 模式阻止未确认的 Product 原子闭包与冲突 Ops",
+      "description": "验证 release reconciliation 在 Product 叶子需要未确认的 ancestor/index 映射闭包、Ops 又存在原始证据冲突时保持零写入并分别报告 blocker。",
+      "prompt": "请依据 `release-handoff.md` 及其指向的证据完成本次正式文档同步，报告实际可写范围、未解决差异、检查结果和后续 handoff。",
+      "expected_output": "识别 Product 叶子与祖先索引/映射的原子闭包尚未确认，同时识别 Ops 原始证据冲突；不以局部证据或 release 摘要越过任一门禁，保持站点零写入并分别报告下一动作。",
       "workspace": "workspace/eval-009-release-product-ops",
       "assertions": [
         {
-          "id": "limits_release_to_affected_product_ops",
-          "description": "Release 仅同步受影响 product/ops",
-          "text": "根据 release scope、diff 与 change map，只更新 `docs/site/product/dashboard-limits.md` 和 `docs/site/ops/dashboard-runtime.md` 及其映射；不扩张到 API、database、design 或无关站点页面。"
+          "id": "detects_unconfirmed_product_mapping_closure",
+          "description": "叶子页证据闭合不等于原子范围已确认",
+          "text": "输出识别 Product 叶子若更新就必须同时修改缺失直接链接的祖先索引和对应 change-map closure，而现有维护者确认只覆盖叶子候选；在补充并确认完整闭包前不得写 Product 页面、索引或映射。"
         },
         {
-          "id": "reconciles_confirmed_version_facts",
-          "description": "逐项核对 v1.5.0 版本事实",
-          "text": "用 `release-evidence.md`、代码、配置和测试交叉核对：v1.5.0 当前 dashboard 上限为 25，runtime 镜像为 `registry.example/ai-hub:v1.5.0`，不得延续旧的 10 或 v1.4.0，也不得写入未确认的 v1.5.1 计划。"
+          "id": "keeps_conflicting_ops_candidate_unchanged",
+          "description": "Ops 摘要不能覆盖冲突的原始证据",
+          "text": "输出识别 release 摘要与实际 runtime 配置、验证结果之间的不一致；Ops 页面和映射保持不变，不把未执行或未验证的 runtime 声明写成当前状态。"
         },
         {
           "id": "preserves_release_notes_surfaces",
           "description": "Release Notes 相关面零变化",
-          "text": "不创建或编辑 Release Notes 正文、`release-notes/index.md`、`.meta/releases.json` 或 Release Notes navigation；如需该交付，指向 `docs-agent:release-notes-generator`。"
+          "text": "整个站内版本说明交付面保持不变；本次 current-state 同步不吸收独立的版本说明职责。"
         },
         {
-          "id": "keeps_release_pages_unverified",
-          "description": "同步页面仍等待 `docs-agent:docs-audit` 盖章",
-          "text": "product 与 ops 页面均保持 `last_verified_version: unverified`，不因 release mode 或版本证据自行写入 v1.5.0 盖章。"
+          "id": "keeps_entire_site_zero_diff",
+          "description": "两个独立 blocker 下站点保持零写入",
+          "text": "Product 原子闭包未确认且 Ops 事实冲突时，不修改任何正式页面、index、change map、Release Notes surface 或站点脚本。"
         },
         {
-          "id": "runs_release_host_checks_and_handoffs",
-          "description": "真实通过宿主检查并 handoff",
-          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，记录命令/cwd/退出状态，随后将两页完整 affected set、维护者确认的 `target_release_version: v1.5.0` 及确认来源 handoff `docs-agent:docs-audit` 进入 pre-tag；不得从分支名或 Git ref 推测版本。"
+          "id": "separates_scope_and_technical_blockers",
+          "description": "不同 blocker 返回不同下一动作",
+          "text": "输出把 Product 的候选闭包确认缺口与 Ops 的技术证据缺口分开，分别说明需要的确认/证据和 owner；不运行写后宿主检查，也不输出可进入发布审计的成功 handoff。"
         }
       ]
     },
     {
       "id": "eval-010-release-notes-boundary",
-      "name": "Release Notes 越界请求阻塞并零写入 handoff",
-      "description": "验证直接要求 formal-docs-sync 生成 Release Notes 时拒绝越界职责，交给站内 specialist，且站点零变化。",
-      "prompt": "请直接用 formal-docs-sync 根据 `release-request.md` 为 v1.5.0 生成 Release Notes 正文、更新 release index 和 `.meta/releases.json`。不要转给其他 skill，我希望你现在就写入。",
-      "expected_output": "拒绝由 formal-docs-sync 执行 Release Notes 正文/index/metadata/navigation 写入，说明边界并将请求与证据 handoff 给 `docs-agent:release-notes-generator`，而不是 docs-audit、GitHub Release 或泛化 PM 路由；整个 docs/site 零变化，也不执行 GitHub Release。",
+      "name": "从结果语义识别独立版本说明工作流",
+      "description": "验证用户用非协议化措辞要求用户更新页面和版本登记时，formal-docs-sync 仍识别职责边界并保持站点零写入。",
+      "prompt": "请把 `release-request.md` 里的 v1.5.0 发版材料同步到正式文档：生成面向用户的“本次更新”页面，并把该版本登记到站点发布列表和发布元数据。我希望你现在直接完成。",
+      "expected_output": "从请求的文档结果识别其不属于 current-state formal docs sync；保持站点零变化，把已确认版本、范围、证据与目标站点面交给准确的站内 owner，且不执行外部发布。",
       "workspace": "workspace/eval-010-release-notes-boundary",
       "assertions": [
         {
-          "id": "rejects_release_notes_scope",
-          "description": "拒绝 Release Notes 越界职责",
-          "text": "明确说明 Release Notes 正文、版本索引、`.meta/releases.json` 和对应 navigation 不属于 formal-docs-sync，即使用户要求绕过分工也不执行。"
+          "id": "recognizes_release_communication_outcome",
+          "description": "按目标产物而非用户命名判断职责",
+          "text": "输出从面向用户的版本页、版本列表和发布元数据这些结果识别独立的站内发布说明工作流，不把请求当作普通 Product 或 Ops 当前事实同步。"
         },
         {
-          "id": "handoffs_site_release_notes_specialist",
-          "description": "handoff 站内 release-notes-generator",
-          "text": "将已确认的 v1.5.0 站内 Release Notes 请求和现有证据 handoff 给 `docs-agent:release-notes-generator`，而不是 docs-audit、GitHub Release 或泛化 PM 路由。"
+          "id": "routes_complete_entry_to_site_owner",
+          "description": "交接保留完整已确认入口",
+          "text": "输出把已确认 host、版本、范围、证据边界和目标站点面交给唯一负责站内版本说明生成与确认的 Docs owner，不误投审计、外部发布或泛化路由。"
         },
         {
           "id": "keeps_entire_site_zero_diff",
           "description": "越界阻塞时 docs/site 零写入",
-          "text": "不创建 `docs/site/release-notes/v1.5.0.md`，不修改 index、metadata、navigation、任何正式页面、change map 或站点脚本；报告整个 `docs/site/` 零变化。"
+          "text": "当前 specialist 在交接前不创建或修改任何站点页面、索引、元数据、导航、change map 或脚本，并报告整个 `docs/site/` 零变化。"
         },
         {
-          "id": "does_not_operate_github_release",
-          "description": "不越界执行 GitHub Release",
-          "text": "不创建 tag，不生成或发布 GitHub Release，不把 `pm-agent:github-release-generator` 外部发布职责混入站内 handoff。"
+          "id": "preserves_external_release_boundary",
+          "description": "站内交接不包含外部发布执行",
+          "text": "输出不创建或移动 tag，不生成、创建或发布 GitHub Release，也不把外部发布授权混入站内文档交接。"
         }
       ]
     },

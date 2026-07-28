@@ -23,8 +23,8 @@ confirmed_by: repository-maintainer
 
 ## 变更明细
 
-- 双态审计 handoff 降级只适用于无 `docs/site/` 且无 #116 站内 Release Notes 能力链的宿主。
-- 有正式文档站的宿主继续执行原有 #116/#117 门禁。
+- 双态审计 handoff 降级只适用于无 `docs/site/` 且无 `docs-agent:release-notes-generator` 站内 Release Notes 能力链的宿主。
+- 有正式文档站的宿主继续执行原有 `docs-agent:release-notes-generator`/`docs-agent:docs-audit` 门禁。
 - 每次 draft 或 publish 写入前仍需维护者显式、当前的批准。
 
 ## 兼容性与风险

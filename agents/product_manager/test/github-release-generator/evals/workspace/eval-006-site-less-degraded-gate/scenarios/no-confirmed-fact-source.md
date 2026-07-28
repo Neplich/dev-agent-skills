@@ -2,8 +2,8 @@
 
 - repository: `example/empty-release-host`
 - `docs/site/`: absent
-- issue #116 site Release Notes capability chain: absent
-- issue #116/#117 handoffs: absent
+- `docs-agent:release-notes-generator` site Release Notes capability chain: absent
+- `docs-agent:release-notes-generator`/`docs-agent:docs-audit` handoffs: absent
 - intended_tag: `v2.0.0`
 - previous_tag: `v1.9.0`
 - target_ref: `b20c0de`

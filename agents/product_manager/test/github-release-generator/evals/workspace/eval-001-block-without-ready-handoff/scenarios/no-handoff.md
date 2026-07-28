@@ -1,4 +1,4 @@
-# 场景 A：没有 #116 handoff
+# 场景 A：没有 `docs-agent:release-notes-generator` handoff
 
 - request: 为 AI Hub v1.0.0 生成并立即发布 GitHub Release
 - intended_tag: `v1.0.0`

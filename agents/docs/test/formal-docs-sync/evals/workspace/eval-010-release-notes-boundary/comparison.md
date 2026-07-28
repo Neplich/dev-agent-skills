@@ -4,49 +4,68 @@
 
 - Skill: `formal-docs-sync`
 - Eval: `eval-010-release-notes-boundary`
-- Review context: issue #150
+- Scenario: 从非协议化结果语义识别独立站内版本说明工作流
+- Review context: issue #177 sub-batch 4c
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue-150 fresh-paired group-b v1`
-- Actual validation date: `2026-07-21`
-- Fresh run: `tmp/eval-runs/issue-150/group-b/eval-010-release-notes-boundary/`
-- Both lanes started from independent copies of the same pristine fixture.
+- Fixture version: `issue-177 discrimination restore round-1`
+- Validation time: `2026-07-28 23:36:25 CST`
+- Runtime: `tmp/eval-runs/issue-177/docs-release-evals/round-1/`
+- 两侧使用同一 prompt 与独立 pristine fixture；baseline 不读取目标 skill、assertions、旧 comparison 或 with-skill 输出。
 
 ## Latest Result
 
-**PASS（with-skill 4/4；fresh without-skill 4/4）** — with-skill 拒绝 Release Notes 越界写入，整个 `docs/site/` 保持零变化，将确认请求交给 `docs-agent:release-notes-generator`，且未触碰 tag 或 GitHub Release。fresh baseline 同样通过 4/4，因此本用例未显示相对 uplift。
+- Behavior result: **PASS**
+- Coverage result: **FULL**（4/4 assertions exercised）
+- Overall result: PASS
+- With-skill: **4/4 PASS**
+- Fresh without-skill: **1/4 PASS、3/4 FAIL**
+- Relative uplift: **+3 assertions**，通过率从 25% 提升到 100%。
 
-## Assertions
+## Leakage Surface Analysis
 
-- `rejects_release_notes_scope`: PASS。明确正文、index、`.meta/releases.json`、navigation 不属于 formal-docs-sync，即使用户要求绕过也不执行。
-- `handoffs_site_release_notes_specialist`: PASS。将 v1.5.0 scope、`abc1500` 证据与请求 surfaces handoff 给 `docs-agent:release-notes-generator`，未误投 docs-audit、GitHub Release 或泛化 PM。
-- `keeps_entire_site_zero_diff`: PASS。pristine 与结果的 Release Notes index/metadata 字节一致，未创建 v1.5.0 页面；报告整个 site 零写入。
-- `does_not_operate_github_release`: PASS。未创建、移动或删除 tag，未生成、编辑或发布 GitHub Release，#120 未混入站内 handoff。
+重做前，prompt 与 assertions 直接写出 `formal-docs-sync` 必须拒绝、四类禁止 surface、准确 specialist 名和整个站点零 diff；fixture 还声明用户正在强迫错误 owner。baseline 因此可复述完整边界。
+
+重做后 prompt 只用“面向用户的本次更新页面、版本列表、发布元数据”描述目标结果；fixture 只保留 host、版本、范围、来源和目标站点面，不标注正确 owner 或越界结论。
+
+## Redesign
+
+- 按 requested outcome 而不是协议术语判断路由。
+- assertions 只检查 workflow 识别、完整入口交接、当前 specialist 零写入和外部发布边界。
+- 不在 prompt/assertions 中给出 specialist 名称或精确禁止路径清单。
+
+## Assertion Results
+
+| Assertion | With skill | Without skill | Fresh judgment |
+| --- | --- | --- | --- |
+| `recognizes_release_communication_outcome` | PASS | FAIL | with-skill 识别独立 Release Notes workflow；baseline 直接生成页面。 |
+| `routes_complete_entry_to_site_owner` | PASS | FAIL | with-skill 将 confirmed host/version/scope/evidence/surfaces 交给 `docs-agent:release-notes-generator`；baseline 无 handoff。 |
+| `keeps_entire_site_zero_diff` | PASS | FAIL | with-skill 站点零写入；baseline 新增版本页并修改 index/metadata。 |
+| `preserves_external_release_boundary` | PASS | PASS | 两侧均未执行 tag 或 GitHub Release。 |
 
 ## With-Skill Behavior
 
-- 命中 release mode 的直接 Release Notes boundary stop，未进入页面同步或宿主写入。
-- 直接完成 #116 specialist handoff，无需再次征询越界执行许可。
+- 未加载 Product/Ops 类型模块，也未进入 current-state 页面同步。
+- 直接生成站内版本说明 specialist handoff，整个 `docs/site/` 保持 pristine。
+- Response SHA-256: `3941048d7ac38a20485a8f6a0101d59fa5be1b6566b64543584c531198ee9e69`。
 
 ## Fresh Without-Skill Baseline
 
-- 来源：同一 prompt/assertions 与独立 pristine fixture 的本轮 fresh `without_skill`；生成期间未读取目标 skill/Agent 指令、旧 comparison 或历史输出。
-- baseline 同样识别职责边界、保持整个 site 零写入、准确 handoff specialist 并保留 GitHub Release/tag 零写。
-- 结果：4/4 PASS；未复用历史 baseline。
+- baseline 自行新增 v1.5.0 页面、更新版本索引和 release metadata，并运行宿主检查。
+- 它保留外部 tag/GitHub Release 零写入，但没有识别当前 specialist 的站内职责边界。
+- Response SHA-256: `5b0e0bb59cf7311e9269f8ae69bbcaf1a3d22834a76d32000e0dbc6658ed8931`。
 
-## Failures
+## Failures And Iterations
 
-- With-skill assertion failures: none。
-- Without-skill assertion failures: none。
-- Comparative limitation: assertion 文本直接给出了正确 specialist 与禁止 surfaces，baseline 能稳定遵循。
+- Round 1 即达到区分度，无需第二轮。
+- with-skill 无 assertion failure；基础设施失败 none。
 
 ## Next Steps
 
-- 保持越界时 site 全量零写入与精确 specialist handoff 回归。
-- 如需测 uplift，加入名称含糊但 outcome 指向 Release Notes 的路由用例。
+- 保持本例为 outcome-based routing 回归，不把 specialist 名称重新泄漏到 prompt。
 
 ## Runtime Artifact Policy
 
-- 两 lane workspace 与响应仅位于 `tmp/eval-runs/issue-150/group-b/eval-010-release-notes-boundary/`，不提交。
+- 两 lane workspace、responses、依赖、日志和 judge verdict 仅位于 gitignored runtime，不提交。
 - 本 `comparison.md` 是唯一 durable eval 结果。

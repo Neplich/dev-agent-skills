@@ -4,10 +4,10 @@
 
 - repository: `example/skill-marketplace`
 - `docs/site/`: absent
-- issue #116 site Release Notes capability chain: absent
+- `docs-agent:release-notes-generator` site Release Notes capability chain: absent
 - formal documentation site status: not initialized
-- issue #116 site-ready handoff: absent
-- issue #117 pre-tag and post-tag audit handoffs: absent
+- `docs-agent:release-notes-generator` site-ready handoff: absent
+- `docs-agent:docs-audit` pre-tag and post-tag audit handoffs: absent
 
 The repository uses a maintainer-approved versioned changelog and a manual
 release checklist. Absence of the handoffs is expected for this host and is not
