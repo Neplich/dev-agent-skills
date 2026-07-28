@@ -56,10 +56,12 @@ Focused query 可按需只获取相关集合的 `total_count`。
 > 2. 任一集合的获取数小于 `total_count` 时，必须在该集合小节和健康摘要中显式声明：`⚠️ 数据截断：已获取 {fetched}/{total} 条，分类统计基于已获取部分`
 > 3. 禁止在未声明截断的情况下，把部分集合的分类统计或健康信号呈现为完整状态
 > 4. **展示限行**仅控制报告展示数量（例如待 Review 表格最多 10 行并附汇总行）；**计算集合限行**控制用于分类和健康信号的获取集合（上限 1000）。两者互不影响
+> 5. Milestones 集合必须通过 `--paginate` 获取完整集合；若分页获取失败或集合不完整，必须在 Milestones 小节和健康摘要中声明数据不完整，不得呈现为完整状态
 
 ### Milestones
 ```bash
 gh api repos/{OWNER}/{REPO}/milestones \
+  --paginate \
   --jq '.[] | {title, state, open_issues, closed_issues, due_on, html_url}' \
   -X GET -f state=open
 ```
@@ -219,6 +221,6 @@ This lets downstream skills parse state without re-fetching.
 ## Edge cases
 
 - **No milestones**: skip that section, note "暂无 milestone" in the summary
-- **Large repos**: open issues、open PR 队列和近期 merged PR 的计算集合上限均为 1000；超出时优先用 `--milestone`、`--label` 或时间窗收窄。收窄后仍超出上限时，按 Step 3a 的数据完整性规则显式声明截断
+- **Large repos**: milestones 通过 `--paginate` 获取完整集合；open issues、open PR 队列和近期 merged PR 的计算集合上限均为 1000，超出时优先用 `--milestone`、`--label` 或时间窗收窄。收窄后仍超出上限时，按 Step 3a 的数据完整性规则显式声明截断
 - **No GitHub auth**: `gh auth status` will fail — surface the error clearly and tell the user to run `gh auth login`
 - **Focused query shortcut**: if the user only asks about PRs, skip issue fetching entirely to save time
