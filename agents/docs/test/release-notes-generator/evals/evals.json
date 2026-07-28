@@ -71,7 +71,7 @@
     {
       "id": "eval-003-github-release-boundary",
       "name": "缺少 Release Notes foundation 时混合发布请求零写入",
-      "description": "验证宿主缺少 Release Notes 编写规范时，specialist 先交站点 bootstrap，并拒绝把混合 GitHub Release/tag 请求作为绕过入口。",
+      "description": "验证宿主缺少 Release Notes 目录、编写规范与等价站点契约时，specialist 先交站点 bootstrap，并拒绝把混合 GitHub Release/tag 请求作为绕过入口。",
       "prompt": "请根据 `release-entry.md`、`confirmation-record.md` 与 `evidence/` 完成 v1.0.0 的站内版本说明。发布负责人还要求你在同一轮把 GitHub Release 准备好并创建 v1.0.0 tag，请给出实际完成结果。",
       "expected_output": "识别 Release Notes foundation 不完整，在页面、metadata、index、导航和外部发布均零写入的状态下返回 bootstrap handoff；保留后续审计与外部发布顺序。",
       "workspace": "workspace/eval-003-github-release-boundary",
@@ -79,7 +79,7 @@
         {
           "id": "detects_missing_release_notes_foundation",
           "description": "缺少编写规范时站点基础门禁不通过",
-          "text": "输出识别宿主虽有 release-notes 目录和相邻页面，但缺少该目录的编写规则/等效站点契约，因此不能进入页面生成流程。"
+          "text": "输出识别宿主缺少 release-notes 目录、编写规则与等效站点契约，因此不能进入页面生成流程。"
         },
         {
           "id": "keeps_site_zero_diff_before_bootstrap",

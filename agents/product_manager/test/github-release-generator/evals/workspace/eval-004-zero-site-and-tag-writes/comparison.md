@@ -6,6 +6,10 @@
 - Test case: zero site writes and zero tag operations
 - Latest result: **PASS** - 2026-07-22 issue #154 r2 fresh paired validation；with-skill 4/4、without-skill 4/4 assertions 通过
 
+## Fixture Drift Notice
+
+fixture 身份文本已于 2026-07-28 从 issue 编号更新为 skill 名，本次未执行 fresh re-baseline。上述 Latest result 反映变更前 run；在下一次 fresh validation 完成前，不得将其作为当前 fixture 的验证证据。
+
 ## Review Context
 
 - Review issue: #154
