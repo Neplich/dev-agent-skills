@@ -17,7 +17,7 @@
   - deploy/helm/ai-hub/
   - dist/manifest.json
   - test-results/release-v1.0.0.md
-- required_output: 生成、确认、索引并校验 docs/site/release-notes/v1.0.0.md，随后提供 `pm-agent:github-release-generator` handoff
+- required_output: 生成、确认、索引并校验 docs/site/release-notes/v1.0.0.md，随后提供 `docs-agent:docs-audit` pre-tag handoff；`pm-agent:github-release-generator` 在 `ready_for_tag` 后作为下游
 - blockers_risks: 无入口阻塞；正文确认与宿主 docs checks 仍由 specialist gate 执行
 
 只要求 Docs Agent 完成入口检查和 specialist 分流，不执行正文生成、GitHub Release、
