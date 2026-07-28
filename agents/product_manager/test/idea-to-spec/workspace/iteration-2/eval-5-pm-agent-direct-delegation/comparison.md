@@ -7,41 +7,40 @@
 - Eval: `eval-005-pm-agent-direct-delegation`
 - Test case: pm-agent-direct-delegation
 - Workspace: `workspace/iteration-2/eval-5-pm-agent-direct-delegation`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
+- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: `/pm-agent` entry command for a greenfield AI chat assistant idea
-- Expected output: route through PM entry, immediately continue into `idea-to-spec` requirement shaping, and avoid dispatcher-only meta-answer.
+- Fixture: `/pm-agent` entry command for a near-empty AI chat assistant product request.
+- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
 
-## Assertions
+## Latest Result
 
-- `dispatcher`: dispatcher directly drills into `idea-to-spec`
-- `skill`: no "do you want me to invoke" handoff question
-- `pm`: same response continues product positioning, MVP, scope, or requirement shaping
+**PASS** — all 3 assertions passed. The PM dispatcher immediately continues into `idea-to-spec` context detection and requirement shaping instead of stopping at a routing answer or asking whether to invoke the specialist.
 
-## With Skill
+## With-Skill Behavior
 
-- `pm-agent` treats the request as a PM-first new product idea and selects `idea-to-spec`.
-- The downstream execution contract says the dispatcher must immediately continue with the selected PM skill in the same response.
-- It must not stop at a meta-routing answer, ask whether to invoke `idea-to-spec`, or tell the user to run a manual sub-skill command.
-- The expected next behavior is `idea-to-spec` Phase 0 context summary and requirement-shaping prompt for the left-history / right-chat product.
+- Explicitly classified the request through the PM entry and directly entered `idea-to-spec`.
+- Selected `greenfield-discovery` despite the concrete two-column layout.
+- Continued in the same response with three product-positioning options and one confirmation point.
+- Did not request a manual `/pm-agent:idea-to-spec` invocation.
 
-## Without Skill / without_skill Baseline
+## Without-Skill Baseline
 
-- The baseline read the eval item and fixture before target skill docs. A generic dispatcher could only recommend `idea-to-spec` and wait for user confirmation.
-- It may not continue into product positioning, MVP scope, or requirement questions in the same turn.
+- Source: fresh isolated subagent run using the same prompt and fixture without the target skill, PM Agent README, internal instructions, or historical comparison.
+- The baseline also produced reasonable PM content, but did not demonstrate the tested PM dispatcher-to-specialist direct-delegation contract.
 
 ## Failures
 
-- None. The current `pm-agent` downstream execution contract and `idea-to-spec` entry behavior satisfy all delegation assertions.
+- No assertion failures or baseline blockers.
+- PR #163's Docs deployment-completeness closeout did not apply and did not interrupt same-turn PM routing.
 
 ## Next Steps
 
-- Keep this eval as coverage for PM dispatcher direct delegation.
-- Re-run fresh validation if `pm-agent` routing output behavior changes.
+- Keep this eval as coverage for direct PM dispatcher delegation.
+- Re-run when PM downstream execution or Docs closeout routing changes.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.
+- Responses, verdicts, timing, and diagnostics remain under `tmp/eval-runs/idea-to-spec-v0.3.4/` and are not committed.

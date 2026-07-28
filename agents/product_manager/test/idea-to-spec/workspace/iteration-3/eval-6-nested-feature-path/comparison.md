@@ -7,42 +7,41 @@
 - Eval: `eval-006-nested-feature-path`
 - Test case: nested-feature-path
 - Workspace: `workspace/iteration-3/eval-6-nested-feature-path`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
+- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: approved PM PRDs for `chat-interface`, `chat-interface/messages`, and `chat-interface/messages/history`
-- Expected output: scan existing PRDs, resolve search under `chat-interface/messages/history/search`, avoid parallel / truncated paths, and include feature path fields in the handoff packet.
+- Fixture: approved PRDs for `chat-interface`, `chat-interface/messages`, and `chat-interface/messages/history`; all candidate stale child paths were excluded through `execution_cleanup`.
+- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
 
-## Assertions
+## Latest Result
 
-- `scan_existing_prds`: scan or read existing PM PRDs first
-- `nested_feature_path`: resolve to `chat-interface/messages/history/search`
-- `no_parallel_top_level`: do not choose `docs/pm/history-search/PRD.md` or `docs/pm/chat-interface/history-search/PRD.md`
-- `handoff_fields`: include `feature_path`, `feature`, `parent_feature`, `feature_level`, and `feature_path_evidence`
+**PASS** — all 4 assertions passed. The response scans the existing PRD chain, resolves `chat-interface/messages/history/search`, rejects parallel or truncated paths, and supplies all required feature-path fields with structured evidence.
 
-## With Skill
+## With-Skill Behavior
 
-- `idea-to-spec` requires scanning `docs/pm/**/PRD.md` before choosing or writing a feature folder.
-- The fixture establishes an approved parent chain: `chat-interface` -> `chat-interface/messages` -> `chat-interface/messages/history`.
-- Message history search is a child under the confirmed history feature, so the correct `feature_path` is `chat-interface/messages/history/search`, with `feature=search`, `parent_feature=chat-interface/messages/history`, and `feature_level=4`.
-- The handoff packet must include the feature path fields and `{source, reason}` evidence from the existing PRDs.
+- Read the complete three-level parent chain before choosing a child path.
+- Produced `feature=search`, `parent_feature=chat-interface/messages/history`, and `feature_level=4`.
+- Used `{source, reason}` entries for `feature_path_evidence`.
+- Kept the handoff not ready until search scope is confirmed and asked only one scope question.
 
-## Without Skill / without_skill Baseline
+## Without-Skill Baseline
 
-- The baseline read the eval item and fixture before target skill docs. A generic response could choose the shorter display-name path `docs/pm/history-search/PRD.md` or reuse the older two-level `docs/pm/chat-interface/history-search/PRD.md`.
-- It may also omit `parent_feature`, `feature_level`, or structured `feature_path_evidence`.
+- Source: fresh isolated subagent run using the same prompt and cleaned fixture without the target skill, PM Agent README, internal instructions, or historical comparison.
+- The baseline found the correct four-level path, but used plain path strings instead of `{source, reason}` evidence and non-standard route / owner fields.
 
 ## Failures
 
-- None. The current `idea-to-spec` feature document memory rules satisfy all nested feature path assertions.
+- No assertion failures or baseline blockers.
+- Non-blocking observation: the with-skill response formatted a not-ready PM continuation like a cross-role packet and used `downstream_owner: PM`, which is outside the cross-role owner enum. Because it explicitly marked the handoff not ready and all declared assertions passed, the result remains PASS.
+- PR #163's Docs deployment-completeness closeout was not triggered and caused no feature-path regression.
 
 ## Next Steps
 
-- Keep this eval as issue #37 coverage for multi-level PM feature ownership.
-- Re-run fresh validation if feature path inheritance or handoff fields change.
+- Keep this eval as multi-level feature ownership and handoff-evidence coverage.
+- Consider tightening a future assertion for not-ready PM packet shape and the `downstream_owner` enum.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.
+- Responses, verdicts, timing, and diagnostics remain under `tmp/eval-runs/idea-to-spec-v0.3.4/` and are not committed.

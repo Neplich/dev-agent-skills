@@ -7,43 +7,40 @@
 - Eval: `eval-001-existing-project-feature-design`
 - Test case: existing-project-feature-design
 - Workspace: `workspace/iteration-1/eval-1-existing-project-feature`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
+- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: existing web app with partial docs, app catalog TRD, and working app-tags PM draft / DECISIONS docs
-- Expected output: start with context summary, advance one decision point, present 2-3 options and trade-offs, progress by section, and use `DECISIONS.md` / feature docs as durable memory.
+- Fixture: cleaned existing Web app workspace with Next.js markers and an app-catalog TRD; stale `docs/pm/app-tags/` output was excluded through `execution_cleanup`.
+- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
 
-## Assertions
+## Latest Result
 
-- `assertion_1`: context detection first
-- `assertion_2`: one decision point at a time
-- `assertion_3`: key trade-offs include 2-3 options
-- `section`: section-based confirmation
-- `assertion_5`: durable memory through `DECISIONS.md` or feature docs
+**PASS** — all 5 assertions passed. The with-skill response starts with context detection, advances one section and one decision point, presents three options with trade-offs, and names `DECISIONS.md` / PM feature docs as durable memory.
 
-## With Skill
+## With-Skill Behavior
 
-- `idea-to-spec` requires Phase 0 workspace and document context detection before formal design, then selects `existing-project-feature` for an existing repo adding app tags.
-- The non-negotiable protocol requires one decision point per turn, 2-3 options with trade-offs when choices matter, and section-based progression.
-- The fixture has an existing app catalog TRD plus `docs/pm/app-tags/DECISIONS.md` and `design.md`; with skill, those documents are treated as durable memory rather than ignored or overwritten.
-- New or updated formal PM docs must preserve `feature_path=app-tags`, `feature=app-tags`, `parent_feature=N/A`, and `feature_level=1`.
+- Identified the lane as `existing-project-feature` and used the cleaned workspace state rather than prior output.
+- Compared discovery/filtering, admin classification, and combined scope with explicit benefits, costs, and a recommendation.
+- Required confirmation of Section 1 before moving to the next decision.
+- Reserved `docs/pm/app-tags/DECISIONS.md`, `design.md`, and `PRD.md` for confirmed decisions.
 
-## Without Skill / without_skill Baseline
+## Without-Skill Baseline
 
-- The baseline read the eval item and fixture before target skill docs. A generic PM response could jump straight to a full design or implementation plan before context detection and confirmation.
-- It may not enforce one decision per turn, section confirmation, or durable decision logging in `DECISIONS.md`.
+- Source: fresh isolated subagent run using the same prompt and cleaned fixture; it did not read or apply the target skill, PM Agent README, internal instructions, or historical comparison.
+- The baseline also inspected context and offered three options, but did not explicitly use the section protocol or name `DECISIONS.md`; the with-skill response follows the tested protocol and memory contract more completely.
 
 ## Failures
 
-- None. The current `idea-to-spec` protocol satisfies all first-turn and durable-memory assertions.
+- No assertion failures or baseline blockers.
+- PR #163's conditional Documentation Site Deployment Completeness closeout was not triggered and caused no regression.
 
 ## Next Steps
 
 - Keep this eval focused on first-turn PM design discipline.
-- Add a separate multi-turn artifact eval only if final PRD / DECISIONS generation needs automated content validation.
+- Re-run fresh validation when conversation protocol, durable-memory rules, or Docs closeout routing changes.
 
 ## Runtime Artifacts Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, timing, outputs, and diagnostics must remain outside git.
+- Responses, verdicts, timing, and diagnostics remain under `tmp/eval-runs/idea-to-spec-v0.3.4/` and are not committed.
