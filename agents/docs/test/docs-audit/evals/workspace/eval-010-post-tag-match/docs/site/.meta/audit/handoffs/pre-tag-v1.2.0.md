@@ -8,18 +8,18 @@
 - target_ref_commit: `2222222`
 - phase_result: `ready_for_tag`
 - result_time: `2026-07-19T10:05:00+08:00`
-- version_source_inventory_digest: `sha256:bd935efb92eedfb3facbfe867542687802159c700fa73dee1d2a896deac041a8`
+- version_source_inventory_digest: `sha256:ccacbc6c9c5d3b76a67a15f97b33c6256a2ab7d5e5f73767c8bbee2c063425e8`
 - anchor_commit: `3333333`
 - anchor_tree: `4444444444444444444444444444444444444444`
 - candidate_record_path: `docs/site/.meta/audit/audit-v1.2.0.md`
-- candidate_record_blob: `6bc99b264aae1474108df063c93073ce1f88d00f`
+- candidate_record_blob: `7427efa7a68e8aa531b2559bf75a5a38ce59d2b1`
 - post_commit_confirmation: `passed`
 - post_commit_confirmation_time: `2026-07-19T10:04:00+08:00`
 - discovery_path_preimage: `absent`
 - prior_attempt_lineage: `[]`
 - digest_algorithm: `canonical-json-rfc8259-sorted-v1`
 - previous_lineage_digest: `sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`
-- current_entry: `(attempt=1, anchor_commit=3333333, anchor_tree=4444444444444444444444444444444444444444, record_path=docs/site/.meta/audit/audit-v1.2.0.md, record_blob=6bc99b264aae1474108df063c93073ce1f88d00f, previous_lineage_digest=sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945)`
-- lineage_digest: `sha256:207291263efab078cada72fa90060fe7318c1daadb4220a05eee92368edefa5c`
+- current_entry: `(attempt=1, anchor_commit=3333333, anchor_tree=4444444444444444444444444444444444444444, record_path=docs/site/.meta/audit/audit-v1.2.0.md, record_blob=7427efa7a68e8aa531b2559bf75a5a38ce59d2b1, previous_lineage_digest=sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945)`
+- lineage_digest: `sha256:cec44e237c801f069583f048cecad14f8758ce3d778f71a23b166407146937f3`
 - immediately_superseded_attempt: none
 - current_handoff_blob: omitted to avoid self-reference; supplied by external package

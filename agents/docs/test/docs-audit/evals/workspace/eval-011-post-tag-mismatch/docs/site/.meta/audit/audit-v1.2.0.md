@@ -1,7 +1,6 @@
 # Formal documentation audit
 
-> TAMPERED CURRENT COPY: this working-tree/later-revision copy is not the
-> record committed by the trusted post-stamp commit.
+> Current checkout copy captured after the pre-tag handoff commit.
 
 - Audit phase: pre-tag
 - base_ref: `v1.1.0` (`1111111`)
@@ -21,7 +20,7 @@
 
 ## Release-version surfaces
 
-- #116 handoff: ready for `v1.2.0`
+- `docs-agent:release-notes-generator` handoff: ready for `v1.2.0`
 - `docs/site/release-notes/v1.2.0.md`: SHA-256 `f159690c0f8a816db8efbc2fdb2146ed73f2b04f43fdda4d79e2bd13bd746a77`
 - `docs/site/release-notes/index.md`: SHA-256 `88fc254cad95a0a023f125419e5fc3eed7649cda6c99be890019b55d6f1cb248`
 - `docs/site/.meta/releases.json`: SHA-256 `0a9cc1bda146381fd73264801d7510cedfbb9ff42f766e3b5b9cf9e0be7388ca`
