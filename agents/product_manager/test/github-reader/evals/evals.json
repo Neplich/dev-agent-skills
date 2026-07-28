@@ -112,6 +112,31 @@
           "text": "将 `last_verified_version: unverified` 按最低信任处理，不把文档中的 JSON 支持直接作为已交付状态。"
         }
       ]
+    },
+    {
+      "id": "eval-005-feed-mode-completeness",
+      "name": "feed-mode-completeness",
+      "description": "验证 Feed mode 输出机器可读 YAML 块且完整性信号与报告声明一致",
+      "prompt": "我是 roadmap-generator，需要 anthropics/anthropic-sdk-python 的当前仓库状态作为结构化输入，请给我完整状态数据",
+      "workspace": "workspace/eval-005-feed-mode-completeness",
+      "expected_output": "Markdown 报告后附 `---` 分隔的 `github_reader_data` YAML 块，包含总数类字段；若报告声明了截断或总数不完整，YAML 必须有对应 `truncated_collections` / `incomplete_totals` 字段",
+      "assertions": [
+        {
+          "id": "feed_yaml_present",
+          "description": "包含 Feed mode YAML 数据块",
+          "text": "输出在 Markdown 报告后包含 `github_reader_data` YAML 块，并提供 open issue 总数等关键字段"
+        },
+        {
+          "id": "completeness_signals_consistent",
+          "description": "完整性信号与报告声明一致",
+          "text": "YAML 中的总数类字段与报告声明的数据基础一致；报告声明截断或不完整时，YAML 必须出现对应 `truncated_collections` / `incomplete_totals` 字段"
+        },
+        {
+          "id": "totals_not_fabricated",
+          "description": "总数来自实际查询",
+          "text": "YAML 总数来自实际查询的 search `total_count`，不以获取集合长度冒充"
+        }
+      ]
     }
   ]
 }
