@@ -330,36 +330,36 @@
     },
     {
       "id": "eval-009-release-product-ops",
-      "name": "Release 模式阻止未确认的 Product 原子闭包与冲突 Ops",
-      "description": "验证 release reconciliation 在 Product 叶子需要未确认的 ancestor/index 映射闭包、Ops 又存在原始证据冲突时保持零写入并分别报告 blocker。",
-      "prompt": "请依据 `release-handoff.md` 及其指向的证据完成本次正式文档同步，报告实际可写范围、未解决差异、检查结果和后续 handoff。",
-      "expected_output": "识别 Product 叶子与祖先索引/映射的原子闭包尚未确认，同时识别 Ops 原始证据冲突；不以局部证据或 release 摘要越过任一门禁，保持站点零写入并分别报告下一动作。",
+      "name": "Release 模式只同步受影响 Product 与 Ops",
+      "description": "验证 release scope 只更新与 v1.5.0 事实一致的 product/ops 当前页面，并保持 Release Notes 与 metadata 边界。",
+      "prompt": "按 `release-handoff.md` 的已确认 v1.5.0 release 范围同步仍受影响的 product 与 ops 正式页面。请核对 release scope、版本证据、实现/配置、测试和审计上下文，只更新 change map 命中的页面，执行宿主 `npm run test:docs`，再输出 `docs-agent:docs-audit` handoff。不要生成或编辑 Release Notes。",
+      "expected_output": "只更新 dashboard product 页面与 runtime ops 页面及其映射，内容与 v1.5.0 已确认事实一致；Release Notes 正文/index/metadata/navigation 零变化，两页保持 unverified，通过检查后 handoff docs-audit。",
       "workspace": "workspace/eval-009-release-product-ops",
       "assertions": [
         {
-          "id": "detects_unconfirmed_product_mapping_closure",
-          "description": "叶子页证据闭合不等于原子范围已确认",
-          "text": "输出识别 Product 叶子若更新就必须同时修改缺失直接链接的祖先索引和对应 change-map closure，而现有维护者确认只覆盖叶子候选；在补充并确认完整闭包前不得写 Product 页面、索引或映射。"
+          "id": "limits_release_to_affected_product_ops",
+          "description": "Release 仅同步受影响 product/ops",
+          "text": "根据 release scope、diff 与 change map，只更新 `docs/site/product/dashboard-limits.md` 和 `docs/site/ops/dashboard-runtime.md` 及其映射；不扩张到 API、database、design 或无关站点页面。"
         },
         {
-          "id": "keeps_conflicting_ops_candidate_unchanged",
-          "description": "Ops 摘要不能覆盖冲突的原始证据",
-          "text": "输出识别 release 摘要与实际 runtime 配置、验证结果之间的不一致；Ops 页面和映射保持不变，不把未执行或未验证的 runtime 声明写成当前状态。"
+          "id": "reconciles_confirmed_version_facts",
+          "description": "逐项核对 v1.5.0 版本事实",
+          "text": "用 `release-evidence.md`、代码、配置和测试交叉核对：v1.5.0 当前 dashboard 上限为 25，runtime 镜像为 `registry.example/ai-hub:v1.5.0`，不得延续旧的 10 或 v1.4.0，也不得写入未确认的 v1.5.1 计划。"
         },
         {
           "id": "preserves_release_notes_surfaces",
           "description": "Release Notes 相关面零变化",
-          "text": "整个站内版本说明交付面保持不变；本次 current-state 同步不吸收独立的版本说明职责。"
+          "text": "不创建或编辑 Release Notes 正文、`release-notes/index.md`、`.meta/releases.json` 或 Release Notes navigation；如需该交付，指向 `docs-agent:release-notes-generator`。"
         },
         {
-          "id": "keeps_entire_site_zero_diff",
-          "description": "两个独立 blocker 下站点保持零写入",
-          "text": "Product 原子闭包未确认且 Ops 事实冲突时，不修改任何正式页面、index、change map、Release Notes surface 或站点脚本。"
+          "id": "keeps_release_pages_unverified",
+          "description": "同步页面仍等待 `docs-agent:docs-audit` 盖章",
+          "text": "product 与 ops 页面均保持 `last_verified_version: unverified`，不因 release mode 或版本证据自行写入 v1.5.0 盖章。"
         },
         {
-          "id": "separates_scope_and_technical_blockers",
-          "description": "不同 blocker 返回不同下一动作",
-          "text": "输出把 Product 的候选闭包确认缺口与 Ops 的技术证据缺口分开，分别说明需要的确认/证据和 owner；不运行写后宿主检查，也不输出可进入发布审计的成功 handoff。"
+          "id": "runs_release_host_checks_and_handoffs",
+          "description": "真实通过宿主检查并 handoff",
+          "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，记录命令/cwd/退出状态，随后将两页完整 affected set、维护者确认的 `target_release_version: v1.5.0` 及确认来源 handoff `docs-agent:docs-audit` 进入 pre-tag；不得从分支名或 Git ref 推测版本。"
         }
       ]
     },

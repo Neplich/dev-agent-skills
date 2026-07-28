@@ -4,72 +4,55 @@
 
 - Skill: `formal-docs-sync`
 - Eval: `eval-009-release-product-ops`
-- Scenario: release 模式下未确认的 Product 原子 mapping closure 与冲突 Ops 证据
-- Review context: PR #187 review follow-up
+- Review context: issue #150
 
 ## Test Set / Fixture Version
 
-- Fixture version: `issue-177 release evidence consistency fix round-3`
-- Validation time: `2026-07-29 00:54:06 CST`
-- Runtime: `tmp/eval-runs/issue-177/docs-release-evals/round-3-eval-009/`
-- 修正原因：旧 fixture 把 release coordination 的 `v1.5.0` 候选期望误述成 `deploy/dashboard.env` 的 checked-in 状态，而实际配置为 `v1.4.0`。本轮把该 bullet 改为候选配置描述，保留“候选 `v1.5.0` 尚未与 checked-in `v1.4.0` 配置及 runtime 验证调和”的冲突语义。
-- with-skill 与 fresh baseline 使用同一修正后 fixture 和 prompt；with-skill 读取目标 skill、Docs README 及 Product/Ops 模块，fresh baseline 不读取或应用这些材料、assertions、旧 comparison、历史 baseline 或 with-skill 输出。
+- Fixture version: `issue-150 fresh-paired group-b v1`
+- Actual validation date: `2026-07-21`
+- Fresh run: `tmp/eval-runs/issue-150/group-b/eval-009-release-product-ops/`
+- Both lanes started from independent copies of the same pristine fixture.
 
 ## Latest Result
 
-- Behavior result: **PASS**
-- Coverage result: **FULL**（5/5 assertions exercised）
-- Overall result: PASS
-- With-skill: **5/5 PASS**
-- Fresh without-skill baseline: **5/5 PASS**
-- Relative uplift: **0 assertions**，通过率同为 100%。
-- Discrimination: **本轮无 assertion 级区分度**。
+**PASS（with-skill 5/5；fresh without-skill 5/5）** — with-skill 仅同步 v1.5.0 受影响的 product/ops 页面，既有两个 change-map entries 保持准确，Release Notes surfaces 零变化，两页保持 `unverified`，并在真实宿主检查通过后向 #117 输出维护者确认版本 handoff。fresh baseline 也满足全部 assertions，因此本用例证明协议可执行，但未显示相对 uplift。
 
-## Fixture Consistency Repair
+## Assertions
 
-- `release-evidence.md` 不再声称 checked-in `deploy/dashboard.env` 已 pin `v1.5.0`。
-- release coordination 仍明确提出把 `AI_HUB_IMAGE` 提升到 `v1.5.0` 的候选期望。
-- checked-in `deploy/dashboard.env` 保持 `AI_HUB_IMAGE=registry.example/ai-hub:v1.4.0`，且测试证据仍没有 runtime 配置检查。
-- 因此 Ops blocker 现在来自清晰的“候选期望 vs checked-in 配置 vs 缺失 runtime 验证”三方未调和事实，不再依赖自相矛盾的摘要表述。
-
-## Assertion Results
-
-| Assertion | With skill | Fresh baseline | Fresh judgment |
-| --- | --- | --- | --- |
-| `detects_unconfirmed_product_mapping_closure` | PASS | PASS | 两侧都识别 Product 叶子虽有实现/验收证据，但维护者未确认 ancestor index、直接导航和 expanded change-map closure，因此 Product 零写入。 |
-| `keeps_conflicting_ops_candidate_unchanged` | PASS | PASS | 两侧都识别候选 `v1.5.0`、checked-in `v1.4.0` 和缺失 runtime 检查之间的冲突，并保持 Ops 页面及 mapping 不变。 |
-| `preserves_release_notes_surfaces` | PASS | PASS | 两侧都保留独立 Release Notes owner，未修改正文、索引、metadata 或导航。 |
-| `keeps_entire_site_zero_diff` | PASS | PASS | 两侧最终 `docs/site` 的 43 个文件逐项一致，没有正式页面、index、change map、Release Notes surface 或脚本差异。 |
-| `separates_scope_and_technical_blockers` | PASS | PASS | 两侧都分别返回 Product scope confirmation 与 Ops runtime evidence blocker，并只描述解除 blocker 后的未来审计路径。baseline 的额外检查是零写入后的只读诊断，不构成写后成功检查或成功审计 handoff。 |
+- `limits_release_to_affected_product_ops`: PASS。只修改 `product/dashboard-limits.md` 与 `ops/dashboard-runtime.md`；对应两个既有映射已准确，无 API、database、design 或无关页面扩张。
+- `reconciles_confirmed_version_facts`: PASS。代码、配置和 release tests 共同证明上限 25、镜像 `registry.example/ai-hub:v1.5.0`，并排除 10、v1.4.0 与未确认 v1.5.1。
+- `preserves_release_notes_surfaces`: PASS。Release Notes 正文、index、metadata、navigation 与 pristine fixture 字节一致，并明确指向 `docs-agent:release-notes-generator` #116。
+- `keeps_release_pages_unverified`: PASS。两页均回读为 `last_verified_version: unverified`。
+- `runs_release_host_checks_and_handoffs`: PASS。在 `docs/site` 执行 `RELEASE_VERSION=v1.4.0 npm run test:docs`，退出 0、74/74 tests；handoff 包含完整 affected set、`target_release_version: v1.5.0` 与 `release-handoff.md` 维护者确认来源。
 
 ## With-Skill Behavior
 
-- 在 Step 4 写前候选确认门禁停止，Product、Ops、ancestor index、change map 与 Release Notes surfaces 均保持 pristine。
-- 明确要求逐 `code_glob` 的 leaf、ancestor、直接导航、authority link 和 `required_docs` 原子闭包。
-- 分开报告 Product scope-confirmation gap 和 Ops evidence gap，没有运行写后宿主检查，也没有输出成功审计 handoff。
-- Response SHA-256: `5925b23a6caad5e863b5d85710743e32c4cc99eaffd7b083b0176a7c2de648c0`。
+- 读取公共八步 contract 及 product/ops 两个类型模块；未加载无关类型模块。
+- 先使用 lockfile 执行 `npm ci --ignore-scripts`，再运行宿主检查；版本参数只用于校验当前未改动 release metadata，不用 Git ref 推测目标版本。
+- 不操作 Release Notes、tag、GitHub Release 或部署。
 
 ## Fresh Without-Skill Baseline
 
-- baseline 独立识别 Product ancestor/index closure 未确认，并把实际可写范围收缩为零。
-- baseline 独立识别候选 `v1.5.0` 与 checked-in `v1.4.0` 冲突以及缺失 runtime 配置验证，保持 Ops 零写入。
-- baseline 运行 frontmatter、站点单元测试和显式版本检查作为未变站点的只读诊断；它没有把这些检查用于验证写入或形成成功审计 handoff。
-- Response SHA-256: `2229a3739b37ccfa9554281b70be551c111faf0e13e6c3b2fb9ac7ab0658cf69`。
+- 来源：同一 prompt/assertions 与独立 pristine fixture 的本轮 fresh `without_skill`；在生成期间未读取目标 SKILL、Docs README、internal/shared 指令、旧 comparison 或历史输出。
+- baseline 也只更新两页、保留准确映射和 Release Notes 零变化，页面保持 `unverified`，并真实通过相同 74 tests；其结构化响应包含 #117 affected set、维护者确认来源与 #116 边界。
+- 结果：5/5 PASS；未复用历史 baseline。
 
-## Failures And Iterations
+## Failures
 
-- Round 1：with-skill 5/5、baseline 5/5；原始场景无区分度。
-- Round 2：with-skill 5/5、baseline 1/5；但后续 review 发现 release evidence 把 checked-in `v1.4.0` 配置误述为 `v1.5.0`，fixture 自相矛盾。
-- Round 3：修正证据表述后，with-skill 5/5、fresh baseline 5/5；行为正确性保持 PASS，但 assertion 级区分度降为 0。
-- Round 3 首次 baseline 因初始路径枚举暴露了 with-skill 运行期文件名而作废；替换用的全新 baseline 从独立 workspace 起步，未读取或列举禁读路径，其结果才用于本 comparison。
-- 基础设施失败：none。
+- With-skill assertion failures: none。
+- Without-skill assertion failures: none。
+- Comparative limitation: prompt/assertions 与 fixture 已充分显式给出范围、版本事实和 handoff 字段，fresh baseline 也能完整执行。
 
 ## Next Steps
 
-- 保持本 fixture 的证据一致性修复，避免验证者把候选 `v1.5.0` 误读为 checked-in 事实。
-- 本轮无行为回归，但现有 assertions 无法区分 skill 与 fresh baseline；后续若要恢复区分度，应单独 redesign prompt/fixture/assertions，并重新执行完整 paired validation，不能恢复旧的矛盾表述。
+- 保持 release mode 的 product/ops 窄范围、Release Notes 零写入、`unverified` 和明确版本确认来源作为回归门禁。
+- 如需衡量 uplift，另增缺失或冲突 release evidence 的阻塞型 eval。
 
 ## Runtime Artifact Policy
 
-- responses、workspace 副本、依赖、日志和 judge verdict 仅位于 gitignored `tmp/eval-runs/issue-177/docs-release-evals/round-3-eval-009/`，不提交。
+- 两 lane workspace、依赖、页面副本、响应与测试日志仅位于 `tmp/eval-runs/issue-150/group-b/eval-009-release-product-ops/`，不提交。
 - 本 `comparison.md` 是唯一 durable eval 结果。
+
+## 磨平记录（2026-07-29）
+
+维护者裁定本 eval 的零区分度属于模型能力进步磨平（(b) 类），批次 4 的重写已回滚。该 eval 作为 [issue #188](https://github.com/neplich/dev-agent-skills/issues/188) 的 skill 能力审查标本保留原样；在 #188 得出审查结论前不重做本 eval。

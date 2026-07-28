@@ -40,31 +40,26 @@
     },
     {
       "id": "eval-002-confirmation-gate",
-      "name": "自动化 review approval 不能替代正文确认",
-      "description": "验证 fixture 只有自动化文档检查的 approved 记录时，specialist 不把机器 review 状态当作用户或维护者对完整正文的明确确认。",
-      "prompt": "请根据 `release-entry.md`、`confirmation-record.md` 与 `evidence/` 继续处理 v1.0.0 站内版本说明，并报告当前交付状态。",
-      "expected_output": "生成并展示当前候选，区分自动化 review approval 与正文确认；在用户或维护者明确确认完整正文前保持派生面不变并输出 blocked。",
+      "name": "正文未确认时阻塞派生写入",
+      "description": "验证候选正文尚未获得用户或维护者确认时，metadata、index 和导航保持零变化，handoff 不得 ready。",
+      "prompt": "请根据 `release-entry.md` 与 `evidence/` 生成 v1.0.0 的站内 Release Notes 候选稿。目前正文尚未获得确认。请执行到确认门禁并报告状态，不要假设确认，也不要执行 GitHub Release、tag、部署或 `docs-agent:docs-audit` 盖章。",
+      "expected_output": "可以生成并展示候选版本页，但保持宿主 Release Notes index、`.meta/releases.json` 与导航零变化；handoff 为 blocked/not-ready，明确等待正文确认且不运行确认后的派生写入或 ready 流程。",
       "workspace": "workspace/eval-002-confirmation-gate",
       "assertions": [
         {
-          "id": "generates_complete_candidate",
-          "description": "机器 review 不阻止候选生成与展示",
-          "text": "输出生成并展示基于当前 evidence 的完整候选正文及来源边界，但不把候选存在当作确认。"
-        },
-        {
-          "id": "rejects_automated_approval_as_body_confirmation",
-          "description": "自动化检查通过不是正文确认",
-          "text": "输出识别 confirmation record 的 actor 是 automation、结论只表示结构检查通过；当前正文仍为 unconfirmed，必须等待用户或维护者明确确认完整正文。"
-        },
-        {
           "id": "keeps_derived_surfaces_unchanged",
-          "description": "重新确认前派生面零写入",
-          "text": "版本索引、发布元数据和导航保持原样；自动化 approved 状态不触发任何依赖正文确认的派生更新。"
+          "description": "未确认时派生面零写入",
+          "text": "不修改 `docs/site/release-notes/index.md`、`docs/site/.meta/releases.json` 或任何导航文件，并明确这些路径必须等正文确认。"
         },
         {
-          "id": "reports_reconfirmation_blocker",
-          "description": "handoff 准确停在人工正文确认",
-          "text": "输出 blocked/not-ready 状态，列出缺少用户/维护者正文确认、确认后计划修改的站点面与下一责任人，不进入 docs audit 或外部发布。"
+          "id": "reports_unconfirmed_not_ready",
+          "description": "handoff 明确非 ready",
+          "text": "报告 `confirmation_status: unconfirmed` 且 `handoff_status: blocked` 或等价 not-ready 状态，不把候选页面存在描述为 `pm-agent:github-release-generator` ready。"
+        },
+        {
+          "id": "waits_for_explicit_confirmation",
+          "description": "明确等待确认",
+          "text": "展示完整候选正文、来源证据和确认后计划修改的路径，并明确等待用户或维护者确认；不自行假设、模拟或代替确认。"
         }
       ]
     },

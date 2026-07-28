@@ -4,6 +4,6 @@
 | --- | --- | --- |
 | Workspace can create dashboards until count 25 | PASSED | `abc1500` |
 | Count 25 blocks another dashboard | PASSED | `abc1500` |
+| Runtime configuration exposes image v1.5.0 and limit 25 | PASSED | `abc1500` |
 
-No runtime image/configuration verification result is present. No v1.5.1
-behavior was tested or approved.
+All release-scope checks ran and passed. No v1.5.1 behavior was tested or approved.
