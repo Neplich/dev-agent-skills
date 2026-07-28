@@ -43,20 +43,21 @@ Run only what the scope requires. Commands below are the full toolkit — use se
 Full status / Feed mode 下，在获取各计算集合前，必须先通过 search API 取得精确总数。先计算近 14 天窗口的 `{DATE}`，再执行：
 
 ```bash
-gh api search/issues -X GET -f q='repo:{OWNER}/{REPO} is:issue is:open' --jq '.total_count'
-gh api search/issues -X GET -f q='repo:{OWNER}/{REPO} is:pr is:open' --jq '.total_count'
-gh api search/issues -X GET -f q='repo:{OWNER}/{REPO} is:pr is:merged merged:>{DATE}' --jq '.total_count'
-gh api search/issues -X GET -f q='repo:{OWNER}/{REPO} is:issue is:closed closed:>{DATE}' --jq '.total_count'
+gh api search/issues -X GET -f q='repo:{OWNER}/{REPO} is:issue is:open' --jq '{total_count, incomplete_results}'
+gh api search/issues -X GET -f q='repo:{OWNER}/{REPO} is:pr is:open' --jq '{total_count, incomplete_results}'
+gh api search/issues -X GET -f q='repo:{OWNER}/{REPO} is:pr is:merged merged:>{DATE}' --jq '{total_count, incomplete_results}'
+gh api search/issues -X GET -f q='repo:{OWNER}/{REPO} is:issue is:closed closed:>{DATE}' --jq '{total_count, incomplete_results}'
 ```
 
 Focused query 可按需只获取相关集合的 `total_count`。
 
 > **[强制规则] 数据完整性声明：**
 > 1. 健康摘要与汇总数字一律以 Step 3a 的 `total_count` 为准，不得用获取集合长度冒充总数
-> 2. 任一集合的获取数小于 `total_count` 时，必须在该集合小节和健康摘要中显式声明：`⚠️ 数据截断：已获取 {fetched}/{total} 条，分类统计基于已获取部分`
-> 3. 禁止在未声明截断的情况下，把部分集合的分类统计或健康信号呈现为完整状态
-> 4. **展示限行**仅控制报告展示数量（例如待 Review 表格最多 10 行并附汇总行）；**计算集合限行**控制用于分类和健康信号的获取集合（上限 1000）。两者互不影响
-> 5. Milestones 集合必须通过 `--paginate` 获取完整集合；若分页获取失败或集合不完整，必须在 Milestones 小节和健康摘要中声明数据不完整，不得呈现为完整状态
+> 2. 任一 search 查询返回 `incomplete_results: true` 时，对应集合的总数必须标注「GitHub 标记结果不完整（incomplete_results），总数为参考值」，不得呈现为精确总数；健康摘要中相关数字带同样限定
+> 3. 任一集合的获取数小于 `total_count` 时，必须在该集合小节和健康摘要中显式声明：`⚠️ 数据截断：已获取 {fetched}/{total} 条，分类统计基于已获取部分`
+> 4. 禁止在未声明截断的情况下，把部分集合的分类统计或健康信号呈现为完整状态
+> 5. **展示限行**仅控制报告展示数量（例如待 Review 表格最多 10 行并附汇总行）；**计算集合限行**控制用于分类和健康信号的获取集合（上限 1000）。两者互不影响
+> 6. Milestones 集合必须通过 `--paginate` 获取完整集合；若分页获取失败或集合不完整，必须在 Milestones 小节和健康摘要中声明数据不完整，不得呈现为完整状态
 
 ### Milestones
 ```bash
