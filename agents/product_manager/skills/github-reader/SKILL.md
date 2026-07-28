@@ -202,6 +202,7 @@ github_reader_data:
   merged_prs_14d_total: 4
   closed_issues_14d_total: 3
   truncated_collections: []
+  incomplete_totals: []
   milestones:
     - title: v2.0
       completion_pct: 60
@@ -215,7 +216,7 @@ github_reader_data:
   stale_issues: 2
 ```
 
-健康数字字段（如 `open_issues_total`、`open_prs_total`、`merged_prs_14d_total`、`closed_issues_14d_total`）必须使用 Step 3a 的 `total_count`。任一计算集合被截断时，必须把集合名加入 `truncated_collections`（例如 `[open_issues, open_prs]`），让下游消费方能识别数据完整性。
+健康数字字段（如 `open_issues_total`、`open_prs_total`、`merged_prs_14d_total`、`closed_issues_14d_total`）必须使用 Step 3a 的 `total_count`。任一计算集合被截断时，必须把集合名加入 `truncated_collections`（例如 `[open_issues, open_prs]`）；任一 search 返回 `incomplete_results: true`，或 milestones 分页失败/集合不完整时，必须把对应集合名加入 `incomplete_totals`（例如 `[open_issues, milestones]`），告知下游对应总数为参考值。两个字段在无触发时均可省略。
 
 This lets downstream skills parse state without re-fetching.
 

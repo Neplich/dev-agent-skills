@@ -49,7 +49,7 @@
     "github-reader": {
       "source": "agents/product_manager/skills/github-reader",
       "sourceType": "local",
-      "computedHash": "258c86bd73dc1872a2cccbec74bcaa641494a6862260872340e3ee9edfe59b7e"
+      "computedHash": "b4686f9e76aeb4001a6d456d18d834bf4b04ef07d9b8431638374a31e27651be"
     },
     "engineer-agent": {
       "source": "agents/engineer/skills/engineer-agent",
