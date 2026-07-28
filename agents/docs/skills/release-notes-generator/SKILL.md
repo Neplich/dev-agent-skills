@@ -62,18 +62,19 @@ This specialist owns only the documentation-site Release Notes delivery:
 - updating host release metadata, indexes, and necessary navigation after
   confirmation;
 - running host documentation checks; and
-- producing the structured site-ready handoff consumed by issue #117 pre-tag
-  audit, while preserving issue #120 as the downstream GitHub Release owner.
+- producing the structured site-ready handoff consumed by
+  `docs-agent:docs-audit` pre-tag audit, while preserving
+  `pm-agent:github-release-generator` as the downstream GitHub Release owner.
 
 The ready handoff proves only that the site Release Notes are confirmed and
-validated. Send it directly to issue #117 pre-tag audit with the explicitly
-maintainer-confirmed `target_release_version` and its confirmation source.
-Issue #120 may not prepare a GitHub Release draft until #117 returns
-`ready_for_tag`.
+validated. Send it directly to `docs-agent:docs-audit` pre-tag audit with the
+explicitly maintainer-confirmed `target_release_version` and its confirmation
+source. `pm-agent:github-release-generator` may not prepare a GitHub Release
+draft until `docs-agent:docs-audit` returns `ready_for_tag`.
 
 It does not create, edit, or publish a GitHub Release; create or move a tag;
 publish images; update Helm; deploy software; initialize a documentation site;
-or perform the version-stamping sequence owned by issue #117.
+or perform the version-stamping sequence owned by `docs-agent:docs-audit`.
 `formal-docs-sync` remains responsible for other formal documentation types and
 must not absorb this Release Notes workflow.
 
@@ -95,9 +96,10 @@ Report:
 - evidence sources used and unresolved evidence gaps;
 - metadata, indexes, and navigation changed after confirmation;
 - host documentation check commands and results; and
-- a `ready` or `blocked` site-ready handoff for issue #117, including the
-  maintainer-confirmed `target_release_version` and confirmation source; issue
-  #120 remains the downstream owner after `ready_for_tag`.
+- a `ready` or `blocked` site-ready handoff for `docs-agent:docs-audit`,
+  including the maintainer-confirmed `target_release_version` and confirmation
+  source; `pm-agent:github-release-generator` remains the downstream owner
+  after `ready_for_tag`.
 
 Only an explicitly maintainer-confirmed `target_release_version`,
 `confirmation_status: confirmed`, and successful host docs checks together can

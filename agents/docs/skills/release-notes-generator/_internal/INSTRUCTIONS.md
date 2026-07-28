@@ -60,7 +60,7 @@ PRD/TRD/实施计划、实际代码和配置 diff、数据库迁移、测试结�
 - `related_code`：非空字符串数组，列出本次版本证据覆盖的仓库相对路径或 glob；
 - `last_verified_version: unverified`。
 
-`last_verified_version` 的统一版本盖章归 issue #117。即使目标版本已经确认，本
+`last_verified_version` 的统一版本盖章归 `docs-agent:docs-audit`。即使目标版本已经确认，本
 specialist 也不得把目标版本写入该字段以绕过审计时序。额外 frontmatter 字段
 只能来自宿主现有契约。
 
@@ -110,15 +110,15 @@ specialist 也不得把目标版本写入该字段以绕过审计时序。额外
 检查失败时保留真实失败证据，不把部分通过描述为 ready，也不越界修改代码、
 部署配置或其他角色文档来掩盖失败。
 
-## 7. 输出 Issue #117 Pre-tag Handoff
+## 7. 输出 docs-audit Pre-tag Handoff
 
 输出结构化 handoff，至少包含：
 
 ```yaml
-handoff_target: "issue #117 / docs-audit pre-tag"
-downstream_target: "issue #120 / github-release-generator"
+handoff_target: "docs-agent:docs-audit / pre-tag"
+downstream_target: "pm-agent:github-release-generator"
 handoff_status: ready # 或 blocked
-next_gate: "issue #117 pre-tag audit"
+next_gate: "docs-audit pre-tag audit"
 release_execution_authorized: false
 target_release_version: "vX.Y.Z"
 target_release_version_confirmation:
@@ -148,9 +148,11 @@ blockers: []
 `handoff_status` 才能是 `ready`。其他情况一律为 `blocked`，并准确列出目标版本缺少
 维护者确认、未确认正文、失败/未执行检查、版本不一致或证据缺口。
 
-该 handoff 只证明站内 Release Notes 已确认且校验通过，应直接交给 issue #117 执行
-pre-tag audit；它也是 #120 的必要上游证据，但不是 GitHub Release 执行授权。只有
-#117 返回 `ready_for_tag` 后，#120 才可继续准备 GitHub Release 草稿。本 specialist 不
+该 handoff 只证明站内 Release Notes 已确认且校验通过，应直接交给
+`docs-agent:docs-audit` 执行 pre-tag audit；它也是
+`pm-agent:github-release-generator` 的必要上游证据，但不是 GitHub Release 执行授权。只有
+`docs-agent:docs-audit` 返回 `ready_for_tag` 后，`pm-agent:github-release-generator`
+才可继续准备 GitHub Release 草稿。本 specialist 不
 创建、编辑或发布 GitHub Release，不收集 GitHub Release 专用的 PR、贡献者或
-compare 信息，不创建或移动 tag。issue #117 的 pre-tag/post-tag 审计与统一盖章
+compare 信息，不创建或移动 tag。`docs-agent:docs-audit` 的 pre-tag/post-tag 审计与统一盖章
 不能由本 handoff 代替。

@@ -21,7 +21,8 @@ Read both references before acting:
   readback gates.
 
 Apply reference requirements according to the host applicability decision in
-this file. Their site Release Notes, issue #116 handoff, `ready_for_tag`, and
+this file. Their site Release Notes, `release-notes-generator` handoff,
+`ready_for_tag`, and
 `release_verified` premises apply only when the documentation-site gate is
 applicable. For a site-less host, substitute the confirmed fallback fact source
 and the alternate pre-tag/post-tag evidence defined here; this file's
@@ -32,19 +33,21 @@ readback protections remain in force on both paths.
 ## Host Documentation-Site Applicability
 
 Determine and record whether the host has an initialized formal documentation
-site before applying either the issue #116 entry gate or the issue #117 pre-tag
-and post-tag audit gates. Inspect repository evidence for `docs/site/` and the
-host's issue #116 site Release Notes capability chain. Record the evidence and
+site before applying either the `release-notes-generator` entry gate or the
+`docs-audit` pre-tag and post-tag audit gates. Inspect repository evidence for
+`docs/site/` and the host's `release-notes-generator` site Release Notes
+capability chain. Record the evidence and
 the applicability result in every preview and final report.
 
-- If `docs/site/` exists and the issue #116 site Release Notes capability chain
+- If `docs/site/` exists and the `release-notes-generator` site Release Notes capability chain
   is initialized, treat the dual-state audit handoff gates as applicable. A
   missing or invalid handoff, version mismatch, or audit blocker is not a reason
   to downgrade: preserve the existing blocked behavior and return the work to
   the named Docs owner.
-- If either `docs/site/` or the issue #116 site Release Notes capability chain
+- If either `docs/site/` or the `release-notes-generator` site Release Notes capability chain
   is absent, the host does not have an initialized formal documentation site;
-  treat the issue #116/#117 handoff gates as not applicable and record the
+  treat the `release-notes-generator` / `docs-audit` handoff gates as not
+  applicable and record the
   missing prerequisite or prerequisites as the downgrade basis. Do not infer a
   downgrade from an absent handoff alone or from ambiguous repository evidence.
 
@@ -52,20 +55,21 @@ For a site-less host, require a maintainer-confirmed version fact source, such
 as a confirmed versioned changelog, together with compatible version-bump and
 release-window evidence. Block when that source is missing, unconfirmed,
 incomplete, or conflicts with the target version; never invent version facts.
-When the fallback is valid, the absence of issue #116/#117 handoffs does not
-block a preview. Before every GitHub Release write, including each draft create
+When the fallback is valid, the absence of `release-notes-generator` /
+`docs-audit` handoffs does not block a preview. Before every GitHub Release
+write, including each draft create
 or update and the final publish write, show the current preview and downgrade
 basis and obtain explicit, current maintainer approval. Revalidate the fallback
 fact source, version evidence, tag state, and downgrade basis immediately before
 the write. Record the downgrade basis and readback result in the final report.
 
-## Entry Gate: Issue #116 Ready Handoff
+## Entry Gate: Site Release Notes Ready Handoff
 
 For hosts where the documentation-site gate is applicable, require the complete
 site-ready handoff produced by
 `docs-agent:release-notes-generator`, including:
 
-- `release_version` (mapped to the #116 canonical
+- `release_version` (mapped to the `release-notes-generator` canonical
   `target_release_version` when that field name is used) and a readable
   `site_release_note_path`;
 - `confirmation_status: confirmed`;
@@ -103,8 +107,8 @@ Never guess a previous tag or silently replace the confirmed release scope.
 ## Pre-Tag Gate: `ready_for_tag`
 
 For hosts where the documentation-site gate is applicable, before generating a
-submit-ready preview or creating or updating a draft, require the trusted issue
-#117 pre-tag handoff for the same version with:
+submit-ready preview or creating or updating a draft, require the trusted
+`docs-audit` pre-tag handoff for the same version with:
 
 - `phase: pre-tag`;
 - `phase_result: ready_for_tag`;
@@ -173,7 +177,7 @@ Publish only when all three conditions are independently satisfied for the
 same version:
 
 1. the actual target tag exists;
-2. for a site-enabled host, issue #117 post-tag audit returns
+2. for a site-enabled host, `docs-audit` post-tag audit returns
    `release_verified`; for a site-less host, the recorded downgrade basis,
    maintainer-confirmed fact source, and compatible version evidence remain
    valid immediately before publication; and

@@ -1,14 +1,15 @@
 # GitHub Release Workflow
 
 Use this workflow only after the `SKILL.md` applicability gate selects and
-validates the release path: the issue #116/#117 handoff path for a site-enabled
-host, or the maintainer-confirmed fallback fact-source path for a site-less host.
+validates the release path: the `release-notes-generator` / `docs-audit`
+handoff path for a site-enabled host, or the maintainer-confirmed fallback
+fact-source path for a site-less host.
 
 ## Modes
 
 | Mode | Required intent and evidence | Allowed mutation |
 | --- | --- | --- |
-| Preview | Site-enabled: complete #116 handoff and `ready_for_tag`; site-less: confirmed fallback fact source and recorded downgrade basis | None |
+| Preview | Site-enabled: complete `release-notes-generator` handoff and `ready_for_tag`; site-less: confirmed fallback fact source and recorded downgrade basis | None |
 | Draft | Preview shown and user explicitly requests create/update; site-less writes also require explicit, current maintainer approval | Update an existing draft without tag mutation, or create a draft only when the actual tag already exists |
 | Publish | Actual tag and separate maintainer approval, plus site-enabled `release_verified` or revalidated site-less fallback evidence | Publish the approved draft |
 
@@ -28,8 +29,9 @@ host, or the maintainer-confirmed fallback fact-source path for a site-less host
 - `TARGET_TAG_OID`: the exact remote object ID read for `THIS_TAG`; any change
   between writes is tag drift and blocks further mutation.
 
-Verify the applicable fact-source version (`release_version`, #116's canonical
-`target_release_version`, or the confirmed site-less fallback version),
+Verify the applicable fact-source version (`release_version`,
+`release-notes-generator`'s canonical `target_release_version`, or the
+confirmed site-less fallback version),
 `THIS_TAG`, `PREV_TAG`, `TARGET_REF`, and the compare endpoints as one release
 window. Do not infer a missing previous tag or use mutable `HEAD` as a
 substitute for `TARGET_REF`.
@@ -164,7 +166,7 @@ Before any publish write, verify all of the following again:
 - the freshly read current latest Release and SemVer comparison still equal
   the most recently confirmed preview; drift returns to Preview for renewed
   maintainer confirmation;
-- for a site-enabled host, the issue #117 post-tag handoff states `phase: post-tag`
+- for a site-enabled host, the `docs-audit` post-tag handoff states `phase: post-tag`
   and `phase_result: release_verified` for the same version; for a site-less
   host, the recorded downgrade basis, confirmed fact source, and compatible
   version evidence remain valid;

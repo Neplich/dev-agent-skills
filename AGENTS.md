@@ -105,7 +105,7 @@ PM / Engineer / QA / DevOps（条件式）→ Docs Agent（正式文档生产 / 
 | `standard` | 常规功能实现、现有功能行为调整、多文件重构 | 有对应 `feature_path`；预期可能变化，需要 PRD/TRD 对齐 |
 | `major` | 跨角色大功能、新增 agent/skill、契约面变更、发布 | 影响多个角色文档、marketplace 注册表或 contract 脚本 |
 
-判定入口：PM 唯一入口（issue #52）落地前，由承接请求的 skill 按上表自判并在产出中记录 `change_tier`；#52 落地后由 `pm-agent` 在入口分类时判级，并把 `change_tier` 写入 handoff packet，fast lane 判定直接引用本契约的 `hotfix` 判定。判定信号不满足、预期可能变化或无法判级时，一律按 `standard` 处理；试图以 `hotfix` 名义跳过预期变更对齐的请求必须 blocked 或回 PM。
+判定入口：由 `pm-agent` 在入口分类时判级，并把 `change_tier` 写入 handoff packet，fast lane 判定直接引用本契约的 `hotfix` 判定。判定信号不满足、预期可能变化或无法判级时，一律按 `standard` 处理；试图以 `hotfix` 名义跳过预期变更对齐的请求必须 blocked 或回 PM。
 
 各门禁按等级取强度：
 
@@ -114,7 +114,7 @@ PM / Engineer / QA / DevOps（条件式）→ Docs Agent（正式文档生产 / 
 | plan gate（`feature-implementor`） | 允许轻量计划形态：在现有活跃计划中追加 scope 条目或使用简化模板，具体形态由 TRD 阶段确定；仍需一次用户确认 | 维持完整 `IMPLEMENTATION_PLAN.md` 确认流程 |
 | closeout / archive gate（archive gate 见 issue #54） | 合并 closeout 与归档为一次确认 | 维持独立审批 |
 | QA E2E 门禁 | 只要求验证直接影响路径并追加结果 | 维持 PRD/TRD 预期对齐门禁 |
-| PM entry gate（issue #52 落地后生效） | 与交付类请求（delivery / 状态查询）走 fast lane，分类后立即放行 | 新需求、预期变更、范围不清一律留在 PM |
+| PM entry gate | 与交付类请求（delivery / 状态查询）走 fast lane，分类后立即放行 | 新需求、预期变更、范围不清一律留在 PM |
 
 skill eval 的 Fresh Sub-Agent 门禁作用于 skill 自身的测试流程，不参与本分级。
 

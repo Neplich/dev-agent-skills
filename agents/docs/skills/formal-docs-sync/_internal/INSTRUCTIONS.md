@@ -196,7 +196,7 @@ deployment files. Reuse the shared status and checklist, report unchanged
 ### 8. Handoff to docs audit
 
 After all required checks pass, hand the complete affected set and evidence to
-`docs-agent:docs-audit` (issue #117). Enter pre-tag audit only when a maintainer
+`docs-agent:docs-audit`. Enter pre-tag audit only when a maintainer
 has explicitly confirmed `target_release_version`; include that value and its
 confirmation source in the handoff. Otherwise keep every changed page
 `last_verified_version: unverified`, return a blocked handoff that explicitly
@@ -233,8 +233,8 @@ atomic scope.
 Synchronize only affected product and ops pages and reconcile their material
 claims with the confirmed release version evidence. Do not generate or edit a
 Release Notes body, its index, `.meta/releases.json`, or Release Notes
-navigation. Handoff all such work to `docs-agent:release-notes-generator`
-(issue #116). For a direct Release Notes request, stop with zero site writes
+navigation. Handoff all such work to `docs-agent:release-notes-generator`.
+For a direct Release Notes request, stop with zero site writes
 and pass the confirmed version, scope, evidence, and requested site surfaces to
 that specialist immediately; do not ask for separate permission to perform
 the routing handoff. Do not prepare or operate a GitHub Release.
@@ -324,9 +324,9 @@ output followed the relevant rules:
   links or drift, user decision, and next owner>
 - Unresolved discrepancies: <items, owners, next evidence or none>
 - Coverage and remaining batches: <summary>
-- Handoff: <docs-audit (issue #117) ready, or blocked while waiting for confirmed
+- Handoff: <docs-audit ready, or blocked while waiting for confirmed
   target_release_version; include its maintainer confirmation source when
   available, or
-  release-notes-generator (issue #116) with the confirmed version, scope,
+  release-notes-generator with the confirmed version, scope,
   evidence, and requested site surfaces when applicable>
 ```

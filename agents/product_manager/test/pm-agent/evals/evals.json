@@ -341,7 +341,7 @@
     {
       "id": "eval-014-route-site-notes-and-github-release",
       "name": "route-site-notes-and-github-release",
-      "description": "Verifies that pm-agent splits site/user-facing Release Notes from GitHub Release page work after the issue #120 rename.",
+      "description": "Verifies that pm-agent splits site/user-facing Release Notes from GitHub Release page work after the Release Notes / GitHub Release ownership split.",
       "prompt": "请分别为以下两个请求选择最窄 owner：A. 为 v1.0.0 编写并落位 docs/site/release-notes/ 的用户版本说明；B. 基于已确认站内版本说明生成 GitHub Release 预览。说明顺序与交接边界，不要实际写文件或发布。",
       "workspace": "workspace/eval-14-route-site-notes-and-github-release",
       "expected_output": "A handoff docs-agent:release-notes-generator；B route PM github-release-generator，且 B 必须等待 A 的 confirmed ready handoff 与 release audit gates。",

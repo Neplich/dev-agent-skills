@@ -91,7 +91,7 @@ case-sensitive, including pre-release and build identifiers; SemVer precedence
 that ignores build metadata is not sufficient. Sources requiring a prefix
 accept exactly one lowercase `v`; `V`, `vv`, or a missing prefix is invalid.
 Record both the raw source value and the normalized value in the audit
-evidence. The confirmed entry or issue #116 handoff must also declare the
+evidence. The confirmed entry or `docs-agent:release-notes-generator` handoff must also declare the
 complete required version-source inventory as
 `{source_id, locator_kind, locator, selector, extractor, required_raw_form}`.
 For a Git file, `locator` is its repository path and `selector` is an exact
@@ -319,7 +319,7 @@ Run the protocol in this order:
    the `target_ref` tree. Any in-scope staged, unstaged, or untracked content is
    diagnostic-only and blocks success until committed into a new `target_ref`
    and the complete audit is rerun.
-3. Verify the issue #116 handoff, every declared version source, and every
+3. Verify the `docs-agent:release-notes-generator` handoff, every declared version source, and every
    affected page. Define the unified stamp set as the affected-page set union
    every verified Markdown release surface carrying `last_verified_version`.
    Record pre-stamp values. Non-Markdown sources remain read-only hashed facts.
@@ -376,7 +376,7 @@ Run the protocol in this order:
     the host release branch still equals `target_ref` and its captured
     worktree/index fingerprints are unchanged. Verify the integrated branch
     resolves to the handoff commit/tree and committed discovery blob. Only then
-    expose the external package and return `ready_for_tag` to issue #120. A
+    expose the external package and return `ready_for_tag` to `pm-agent:github-release-generator`. A
     squash or merge may later change commit identity, but the released tree must
     preserve the validated tree semantics in Section 7. If post-FF readback
     fails, update the host branch back to `target_ref` only when compare-and-
@@ -489,7 +489,7 @@ Then, in one audit operation:
 Do not stamp a verified subset when another page is `stale`, `mismatch`, remains
 factually unverified after review, or has missing evidence. The literal
 frontmatter value `unverified` is not by itself a blocker. The matching tag is not required
-for this pre-tag write. Do not modify `.meta/releases.json`; issue #116 owns
+for this pre-tag write. Do not modify `.meta/releases.json`; `docs-agent:release-notes-generator` owns
 that content, while this audit only verifies it. Outside a valid pre-tag audit,
 keep each page's existing value; new pages remain `unverified`, and the field
 must not be omitted.
@@ -598,10 +598,10 @@ Return the persisted audit report and exactly one phase result:
 - **Blocked:** list every `stale`, `mismatch`, and evidence-gap item with the
   document, fact, impact, required action, and responsible owner when known.
 
-Issue #116 owns Release Notes generation and confirmation, its index and
+`docs-agent:release-notes-generator` owns Release Notes generation and confirmation, its index and
 required navigation, and release metadata content; consume its ready handoff
 as evidence. Issue #118 owns the shared frontmatter contract, including the
-required `last_verified_version` field and `unverified` value. Issue #120 may
+required `last_verified_version` field and `unverified` value. `pm-agent:github-release-generator` may
 prepare a GitHub Release draft only after `ready_for_tag`, and may publish only
 after the actual tag exists, this audit returns `release_verified`, and the
 maintainer approves publication. The host repository owns target-version
