@@ -5,96 +5,92 @@
 - Agent: `product_manager`
 - Skill: `github-reader`
 - Eval: `eval-001-full-status`
-- Test case: full-status
+- Test case: Full status
 - Workspace: `workspace/eval-001-full-status`
-- Classification: `(c)` 依赖实时外部数据。该用例验证 `github-reader` 能否通过 `gh` 读取公共仓库现状，不应增加静态 mock fixture 冒充真实运行。
-- Latest result: **PARTIAL** — 本轮由当前会话中的同一个 fresh Codex subagent 按 no-leak 顺序重新生成 `with_skill` 与新的 `without_skill`。with-skill 满足 3/4 assertions；目标仓库实时不存在 milestone，现行 skill 要求跳过空表并说明“暂无 milestone”，因此既有 `milestone` assertion 的场景前提不成立。该项不是 GitHub 读取或 skill 行为回归。
+- Classification: `(c)` 依赖实时外部数据；验证 `github-reader` 是否通过已认证 `gh` 获取真实仓库状态。
+- Latest result: **PARTIAL** — 当前会话中的 fresh validator 严格按 no-leak 顺序生成并锁定两个独立 live arm 后才读取 assertions。with-skill 满足 4/5 assertions，without-skill 满足 3/5。唯一 with-skill failure 是目标仓库没有 open milestone，因而无法生成 assertion 要求的“有标题、进度百分比”的表格；skill 正确执行了“暂无 milestone” edge case，没有虚构数据。
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: 只有 prompt 与 metadata，没有静态 GitHub 快照；这符合实时数据场景。
+- Fixture: `eval-001-full-status` 当前 prompt 与 metadata；不包含静态 GitHub 快照。
 - Prompt: `帮我看一下 anthropics/anthropic-sdk-python 现在的项目状态，包括 milestone 进度、open issue 数量和 PR 队列情况`
-- Fresh repository: `anthropics/anthropic-sdk-python`
-- Live dependency: GitHub API、网络与已认证 `gh` CLI。
-- with-skill queried at: `2026-07-26T16:23:33+08:00`（Asia/Shanghai；首次 repo metadata 请求发生一次 TLS handshake timeout，随后在同一 arm 内重试成功）
-- without-skill queried at: `2026-07-26T16:25:45+08:00`（Asia/Shanghai）
-- Query window for recent activity: `2026-07-12` 至各自抓取时点（近 14 天）。
+- Live repository: `anthropics/anthropic-sdk-python`
+- Live dependency: GitHub API、网络、已认证 `gh` CLI。
+- Fixture/eval revision: 2026-07-28 工作树中的当前 `eval_metadata.json` 与 `evals.json`。
+- with-skill query: 2026-07-28 17:58:04–17:58:50 CST。
+- without-skill query: 2026-07-28 18:00:11–18:00:40 CST。
+- with-skill recent-activity window: `>2026-07-14` 至查询时点。
 
-## Same-Agent No-Leak Fresh Validation Method
+## Fresh Validation Method
 
-1. 当前会话中的唯一 fresh Codex subagent 先只从 `eval_metadata.json` 提取原始 prompt，未读取 `evals.json`、assertions、expected output 或旧 `comparison.md`。
-2. 同一 agent 的 with-skill arm 随后完整读取 Product Manager Agent README 与当前 `github-reader/SKILL.md`，自行用 `gh` 查询 prompt 指定仓库并锁定候选结果。
-3. with-skill 锁定后，同一 agent 切换到 without-skill arm；该 arm 不应用 skill 或 README，只凭原始 prompt 重新独立调用 `gh`，未使用父代理预计算 snapshot，也未复用 with-skill 的查询结果。
-4. 两个 arm 均锁定后，同一 fresh agent 才读取 canonical eval 定义、assertions、expected output 与旧 comparison，并亲自按当前 assertions 评审。
-5. 两个 arm 分别查询 GitHub，没有共享预计算快照；运行期 transcript、verdict、diagnostics 或 outputs 均未落盘。
+1. 先只读取 `eval_metadata.json` 提取原始 prompt；未读取 `evals.json`、旧 comparison 或 assertions。
+2. with-skill arm 完整读取当前 `github-reader/SKILL.md` 与 Product Manager Agent README，使用已认证 `gh` 独立查询，并把命令、时间、原始 JSON、最终报告保存到隔离 runtime 目录后以 SHA-256 锁定。
+3. 锁定 with-skill 后，without-skill arm 不读取或应用 skill/README，只凭原始 prompt 重新调用 `gh`，保存独立命令、时间、原始 JSON、报告并锁定；没有复用 with-skill 查询结果。
+4. 两个 arm 均锁定并通过 checksum 复核后，才读取 eval-001 当前 5 条 assertions 与旧 comparison，逐条判定。
+5. canonical fixture 中只更新本 `comparison.md`；运行期证据未纳入 git。
 
-## Independent Live Snapshots and Drift
+## Independent Live Snapshots
 
-| 指标 | With skill（16:23:33 起） | Without skill（16:25:45） | 漂移判断 |
+| 指标 | With skill | Without skill | 漂移判断 |
 | --- | ---: | ---: | --- |
 | Open milestones | 0 | 0 | 无漂移 |
-| Open issues（排除 PR） | 144 | 144 | 无漂移 |
-| Open PRs | 212 | 212 | 无漂移 |
+| Open issues | 143 | 143 | 无漂移 |
+| Open PRs | 213 | 213 | 无漂移 |
 | Draft PRs | 6 | 6 | 无漂移 |
-| Changes requested | 2 | 2 | 无漂移 |
+| Changes Requested | 2 | 2 | 无漂移 |
 
-- with-skill 按当前 skill 的互斥展示规则统计：人工非草稿且非 `CHANGES_REQUESTED` 的待 Review `204` 个、草稿 `6` 个、需作者跟进 `2` 个、bot `0` 个；近 14 天 merged PR `6` 个、closed issue `1` 个。
-- without-skill 报告 `204` 个 `REVIEW_REQUIRED`、`3` 个 approved、`2` 个 changes requested、`3` 个无 review decision，并统计到 `206` 个非草稿 PR。这里是分类口径不同，不是仓库状态漂移。
-- with-skill 还统计 open issue 中无 assignee `141` 个、超过 30 天未更新 `111` 个，以及等待超过 90 天的人工非草稿且非 `CHANGES_REQUESTED` PR `83` 个。
-- 两次查询相隔约 2 分钟，核心计数一致；本 comparison 只证明上述抓取时点，后续复验必须重新查询。
+with-skill 通过 Search API `total_count` 与独立计算集合确认：
 
-## Fresh With Skill
+- Open issues 143/143、open PRs 213/213。
+- 近 14 天 merged PRs 6/6、closed issues 1/1。
+- 所有集合均未截断。
+- Open issues 中无 assignee 140 个、30 天未更新 111 个。
+- PR 互斥分类为：bot 0、draft 6、Changes Requested 2、其余人工待 Review 205；其中等待超过 90 天 87 个。
 
-fresh with-skill 应用当前 Full status 流程，结果包括：
+without-skill 从独立 `gh list --limit 1000` 返回集合统计 143 个 open issue 与 213 个 open PR；PR 原始 review 分布为非草稿 Review Required 198、Changes Requested 2、Approved 3、无 decision 4，另有 draft 6。两个集合的返回量均小于 1000 上限。
 
-- 正确识别指定仓库，并从 GitHub 获取 milestone、open issue、open PR、近 14 天 merged PR 与近 14 天 closed issue 数据。
-- API 返回 0 个 milestone；按 skill 的 `No milestones` edge case 不生成虚假进度表，并明确说明当前暂无 milestone。
-- Open Issues 按“无 Milestone”归纳，并提供总数、无 assignee 与 stale 风险数字。
-- PR 队列按互斥顺序区分 bot、草稿、changes requested 与其余待 Review；待 Review 最多展示 10 条，条目带 `[#NUMBER](URL)` 链接，超出部分用汇总说明。
-- 单列近 14 天 merged PR，并在末尾给出 open issue、open PR、milestone、近期活动与长期积压的数字化健康摘要。
+## With-Skill Behavior
 
-## Fresh Without Skill / Baseline
+- 正确识别 Full status scope，并查询 repo metadata、精确集合总数、open milestones、open issues、open PRs、近 14 天 merged PRs 与 closed issues。
+- 仓库没有 open milestone；报告明确写“暂无 open milestone”，未虚构进度百分比。
+- Open Issues 给出 143 的精确总数、milestone 分组、无 assignee 与 stale 风险。
+- PR 按 bot → draft → Changes Requested → 待 Review 的互斥顺序分类；待 Review 表格限制为 10 条且包含标签列，具体条目使用 `[#NUMBER](URL)`。
+- 单列近 14 天已合并 PR，并在末尾给出数字化健康摘要、截断状态及长期积压风险。
 
-同一 fresh agent 的 baseline arm 未应用 `github-reader` skill 与 Product Manager Agent README，只凭原始 prompt 重新实时查询后返回：
+## Without-Skill Baseline
 
-- 0 个开放及已关闭 milestone、144 个 open issue、212 个 open PR。
-- 给出 6 个 draft、206 个非草稿，以及 204 `REVIEW_REQUIRED`、3 approved、2 changes requested、3 无 review decision 的通用 PR 数字，并列出最老 10 个 open PR 的 number、author、createdAt 与原始 URL。
-- 没有另查近期 merged PR，因而没有把当前待 review 与已合并 PR 分区；具体 PR 也未格式化为 `[#NUMBER](URL)`。
-- 给出含关键数字的总体判断，但未覆盖 with-skill 的 stale、unassigned、bot 隔离、10 行展示规则与近期 closed issue 口径。
+baseline 只依据原始 prompt 重新查询 GitHub：
+
+- 报告 0 个 open milestone、143 个 open issue、213 个 open PR，并指出 140 个 issue 未分配。
+- 把 open PR 按原始 review decision 与 draft 状态分类，列出最老 5 个 PR，具体条目使用正确 Markdown 链接。
+- 提供包含关键数字的风险判断，并声明查询使用最多 1000 条的集合且实际返回均小于上限。
+- 没有查询近期 merged PR，因此没有把“待 review”与“已合并”分区；也没有 with-skill 的 Search API 精确总数、stale issue、bot 隔离、10 行展示和近期 closed issue 口径。
 
 ## Assertion Results
 
 | Assertion | With skill | Without skill | Fresh judge 结论 |
 | --- | --- | --- | --- |
-| `milestone`：包含有标题、进度百分比的 Milestone 表格 | **FAIL（场景前提不成立）** | **FAIL（场景前提不成立）** | 两次 API 查询均返回 0 个 milestone。现行 skill 要求此时不生成空表；不能虚构进度百分比。 |
-| `pr`：PR 队列区分待 review 和已合并 | **PASS** | **FAIL** | with-skill 单列当前待 Review 与近 14 天 merged；baseline 只描述当前 open PR。 |
-| `assertion_3`：末尾有数字化健康摘要 | **PASS** | **PASS** | 两者均以数字总结状态；with-skill 的风险及近期活动口径更完整。 |
-| `pr_2`：PR 条目使用 `[#NUMBER](URL)` | **PASS** | **FAIL** | with-skill 的具体 PR 条目使用正确链接格式；baseline 虽返回 number 与原始 URL，但未组成 assertion 要求的 Markdown 链接。 |
+| `milestone`：包含有标题、进度百分比的 Milestone 表格 | **FAIL（场景前提不成立）** | **FAIL（场景前提不成立）** | 两个独立查询均返回 0 个 open milestone。现行 skill 要求此时说明“暂无 milestone”而不是虚构表格。 |
+| `pr`：PR 队列区分待 review 和已合并 | **PASS** | **FAIL** | with-skill 单列人工待 Review 和近 14 天 merged；baseline 只报告 open PR 队列。 |
+| `assertion_3`：末尾有数字化健康摘要 | **PASS** | **PASS** | with-skill 有独立健康摘要；baseline 的总体判断也用 open issue、open PR 与等待时长数字归纳风险。 |
+| `pr_2`：PR 条目使用 `[#NUMBER](URL)` | **PASS** | **PASS** | 两份报告的具体 PR 条目都符合要求。 |
+| `data_completeness`：总数、分类及截断有明确数据基础 | **PASS** | **PASS** | with-skill 明确给出四组 fetched/total 且均无截断；baseline 明确说明集合上限与实际返回均小于上限，分类基于该完整返回集合。 |
 
-## Failures and Interpretation
+## Failures
 
-- 唯一 with-skill failure 是 `milestone`。GitHub 查询成功，但仓库没有 assertion 假定的实体；伪造 milestone 表或百分比会违反当前 skill。
-- same-agent fresh pair 消除了历史 baseline 与父代理预计算快照共用所造成的 answer-key / snapshot leakage：两个 arm 本轮各自实时查询，且同一 agent 在两个候选均锁定后才读取答案键并亲自 judge。
-- 未修改 fixture、`evals.json`、assertions 或 specialist `SKILL.md`。
-
-## External Failure vs Skill Regression
-
-- **外部服务 / 基础设施失败**：GitHub API 超时、限流、DNS/网络不可达、`gh` 未认证、目标仓库不可访问或分页未完成。此类情况应记为 `BLOCKED` 或 infrastructure failure，不能判定 skill 回归。
-- **Skill 回归**：外部查询成功且返回有效数据，但 with-skill 漏查 prompt 要求的 scope、错误计算数量、未分页导致截断、PR 分类错误、把 bot 混入人工队列、缺少近期 merged 分区、健康摘要或正确链接。
-- **Live-data/assertion mismatch**：查询成功但仓库没有 assertion 假定的实体。本轮为 milestone 不存在，应保留真实 edge-case 输出并把该 assertion 记为场景前提不成立。
-
-## Time-Sensitivity Risk
-
-GitHub 数据会随 issue、PR、review 与 milestone 状态立即变化。本 comparison 不把任何数字作为固定 expected value；未来运行必须记录仓库、两条路径各自的精确抓取时间、查询窗口与独立快照，并区分真实漂移、分类口径差异和外部服务失败。
+- with-skill 唯一 failure 为 `milestone` live-data/assertion mismatch：查询成功，但仓库没有 assertion 假定的实体。生成虚假 milestone 或百分比会违反 skill。
+- without-skill 额外失败 `pr`：没有查询或展示 merged PR，无法区分待 review 与已合并。
+- GitHub、网络、认证和仓库访问均成功，本轮不是 infrastructure failure，也没有发现 Full status 数据完整性回归。
 
 ## Next Steps
 
-- 本轮无需增加 fixture；保留实时 GitHub 查询设计。
-- 在“不放宽 assertion”的本任务约束下，结果如实保持 `PARTIAL`。若维护者以后希望无 milestone 时也能通过，需要另行评估 assertion 是否接受 skill 已定义的 edge case。
+- 保持 **PARTIAL**，不为满足 `milestone` assertion 而虚构数据。
+- 若维护者希望“无 milestone”也是成功场景，应另行调整 assertion，使其接受明确的 edge-case 声明；本轮不修改 eval 定义。
+- 后续 fresh run 必须重新查询 live GitHub，不复用本轮快照。
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- 没有向 canonical workspace 写入 transcripts、verdicts、timing、outputs 或 diagnostics。
-- durable 结果只保留本 `comparison.md` 中必要的两份独立快照、行为摘要与 fresh judge 结论。
-- 后续运行仍应把临时产物留在隔离 scratch 环境，并只将人工确认后的最新结论汇总回 canonical `comparison.md`。
+- runtime 命令、时间、原始 JSON、两个报告、checksums 与 verdict 保存在 `tmp/eval-runs/github-reader-eval-001-2026-07-28/`，不纳入 git。
+- canonical workspace 不保存 transcripts、raw outputs、timing、diagnostics 或 verdict；durable 结果仅更新本 `comparison.md`。
+- fresh validation 过程未修改 canonical fixture、`evals.json` 或 specialist `SKILL.md`；本 issue 的协议与 assertion 修改由主流程维护。

@@ -30,6 +30,11 @@
           "id": "pr_2",
           "description": "PR 链接格式正确",
           "text": "PR 条目带有 GitHub 链接，格式为 [#NUMBER](URL)"
+        },
+        {
+          "id": "data_completeness",
+          "description": "声明数据完整性",
+          "text": "输出中各集合的总数与分类统计有明确的数据基础声明；若任何集合的获取数小于实际总数，必须显式标注截断，不得把部分数据呈现为完整状态"
         }
       ]
     },
