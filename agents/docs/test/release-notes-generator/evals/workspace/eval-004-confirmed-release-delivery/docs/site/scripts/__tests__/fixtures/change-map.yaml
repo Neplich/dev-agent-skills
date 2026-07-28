@@ -1,0 +1,17 @@
+title: Fixture change map
+visibility: internal
+doc_type: design
+stage: dev
+owners:
+  - docs
+related_code:
+  - docs/site
+last_verified_version: unverified
+custom_top_level: keep-me
+
+change_map:
+  manual/**:
+    required_docs:
+      - docs/site/product/manual.md
+    trigger: Keep this manual entry
+    custom_rule_field: keep-me

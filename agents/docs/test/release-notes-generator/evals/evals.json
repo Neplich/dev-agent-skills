@@ -109,6 +109,41 @@
         {"id": "skips_content_only_recheck", "description": "内容变更不重复检查", "text": "纯正文变化不触发第二套部署完整性检查，保留既有状态。"},
         {"id": "rechecks_material_release_surface", "description": "发布面变化触发共享检查", "text": "运行入口或构建目标实质变化时复用 skill-map 的共享状态与检查，不复制新清单。"}
       ]
+    },
+    {
+      "id": "eval-004-confirmed-release-delivery",
+      "name": "已确认版本说明完成站内交付",
+      "description": "验证目标版本与完整正文均获维护者确认时，specialist 完成版本页、宿主派生面、站点检查和 pre-tag ready handoff，同时保持外部发布边界。",
+      "prompt": "请依据 `release-entry.md`、`confirmation-record.md`、`evidence/` 与现有文档站完成本次站内 Release Notes 交付，并报告实际完成结果。",
+      "expected_output": "完成已确认版本的站内 Release Notes 页面与宿主所需派生更新，通过文档站校验，输出边界清晰的 pre-tag ready handoff，不执行外部发布操作。",
+      "workspace": "workspace/eval-004-confirmed-release-delivery",
+      "assertions": [
+        {
+          "id": "delivers_confirmed_release_page",
+          "description": "已确认版本页完整保留证据与审计时序",
+          "text": "生成目标版本页面，正文覆盖 fixture 中全部发布证据类别，frontmatter 合法且 last_verified_version 仍为 unverified。"
+        },
+        {
+          "id": "updates_derived_surfaces_after_confirmation",
+          "description": "派生面只在确认成立后更新",
+          "text": "正文确认生效前 Release Notes index、release metadata 与导航保持不变；确认后仅按宿主契约正确更新所需 index 和 metadata，保留既有版本及宿主自有字段。"
+        },
+        {
+          "id": "passes_host_docs_checks",
+          "description": "真实宿主文档检查全部通过",
+          "text": "从宿主配置取得权威 docs checks，在正确工作目录真实执行并通过，报告可核验的命令与结果。"
+        },
+        {
+          "id": "returns_complete_ready_handoff",
+          "description": "输出完整且边界明确的 pre-tag ready handoff",
+          "text": "输出字段完整的 docs-agent:docs-audit pre-tag ready handoff，携带已确认版本及来源、页面、确认状态、检查结果、实际更新面、证据与 blockers，并明确 downstream_target 与 release_execution_authorized: false。"
+        },
+        {
+          "id": "preserves_external_release_boundary",
+          "description": "站内交付不越权进入外部发布或盖章",
+          "text": "不创建、编辑或发布 GitHub Release，不创建或移动 tag，不部署任何内容，也不把目标版本写入 last_verified_version 或代替 docs-audit 盖章。"
+        }
+      ]
     }
   ]
 }
