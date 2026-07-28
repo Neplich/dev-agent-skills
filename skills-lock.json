@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "246b93e0baee2ac56118f0f3e99ec9749307566d9f74e92b6e6c2c175a117d1c"
+      "computedHash": "9fd10a3bb0bbae66c4a22085cf983309dc3bc6beb82a68c1e9232459a24ac508"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
@@ -34,12 +34,12 @@
     "github-release-generator": {
       "source": "agents/product_manager/skills/github-release-generator",
       "sourceType": "local",
-      "computedHash": "a6d5853883a79154f3b6c066cc9054641fb59bdc39c0de120817321cda026481"
+      "computedHash": "e2a8e78460c75cee7bac894defb11939a0251ee4693179d5c9b188a4b09af33a"
     },
     "release-notes-generator": {
       "source": "agents/docs/skills/release-notes-generator",
       "sourceType": "local",
-      "computedHash": "1c543eff856c022ba4c8f86bbf0701768373362a4b73cb77ec1e6d0043c3b389"
+      "computedHash": "32aa148c5844b1698454e3bfb13c2328ff955aa17347db03886a7cd082418833"
     },
     "roadmap-generator": {
       "source": "agents/product_manager/skills/roadmap-generator",
@@ -194,12 +194,12 @@
     "formal-docs-sync": {
       "source": "agents/docs/skills/formal-docs-sync",
       "sourceType": "local",
-      "computedHash": "2a28438503a262cae6f57c63817d99c887d5d6b705477c92cedc7cf38990ab63"
+      "computedHash": "10aa84f55734e6cacd55c933a4aab95eb257c02e27277f585a92b1a17e39552e"
     },
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",
       "sourceType": "local",
-      "computedHash": "3399b8c64e3206762d6ad6970e3e39c714fba2a8321987b74c5de02846da2bac"
+      "computedHash": "b5993b0009ce90b548042d6fbc599ec613f3b4cde18afd718b10963eccd54114"
     }
   }
 }

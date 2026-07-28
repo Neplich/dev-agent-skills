@@ -30,7 +30,7 @@ release documentation audit requests to the matching documentation specialist.
 | `docs-agent` | Formal documentation request routing | Specialist selection or a bounded blocked handoff |
 | `docs-site-bootstrap` | The maintainer explicitly asks to initialize a formal documentation site | A technology-neutral `docs/site/` foundation and standards |
 | `formal-docs-sync` | A confirmed feature, deployment, release, or existing system needs formal documentation synchronization or backfill | Current-state API, database, design, ops, and product docs with their `change-map.yaml` updates; v0.3.0 was limited to API automation |
-| `release-notes-generator` | A confirmed release needs a versioned page in the host documentation site before GitHub Release preparation | Confirmed `vX.Y.Z.md`, release metadata/index updates, successful docs checks, and a site-ready evidence handoff to issue #117 pre-tag audit; issue #120 remains the downstream GitHub Release owner |
+| `release-notes-generator` | A confirmed release needs a versioned page in the host documentation site before GitHub Release preparation | Confirmed `vX.Y.Z.md`, release metadata/index updates, successful docs checks, and a site-ready evidence handoff to `docs-agent:docs-audit` pre-tag audit; `pm-agent:github-release-generator` remains the downstream GitHub Release owner |
 | `docs-audit` | Release readiness requires formal-document coverage and fact verification before and after tag creation | With a maintainer-confirmed `target_release_version`, pre-tag returns `ready_for_tag` after complete-set stamping; post-tag returns `release_verified` or `blocked` after checking the actual tag |
 
 ## Routing Rules
@@ -44,10 +44,8 @@ release documentation audit requests to the matching documentation specialist.
 
 ## `formal-docs-sync` Capability Boundary (v0.3.0)
 
-The v0.3.0 accepted automation surface was API documentation only. Issue
-[#121](https://github.com/Neplich/dev-agent-skills/issues/121) has since
-expanded the accepted synchronization surface to API, database, design, ops,
-and product current-state documentation.
+The current accepted synchronization surface covers API, database, design,
+ops, and product current-state documentation.
 
 - Feature delivery synchronizes affected API, database, design, and applicable
   product pages; design pages remain subject to the delivery closeout gate.
@@ -59,8 +57,9 @@ and product current-state documentation.
   across any of the five document types.
 - Release notes are not part of `formal-docs-sync`; the dedicated
   `release-notes-generator` owns their site generation, confirmation, release
-  metadata/index updates, validation, and issue #117 pre-tag handoff; issue #120
-  remains the downstream GitHub Release owner after `ready_for_tag`.
+  metadata/index updates, validation, and `docs-agent:docs-audit` pre-tag
+  handoff; `pm-agent:github-release-generator` remains the downstream GitHub
+  Release owner after `ready_for_tag`.
 
 ## Collaboration Position
 

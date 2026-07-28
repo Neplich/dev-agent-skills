@@ -185,7 +185,7 @@ yourself.
 
 When `pm-agent` or `idea-to-spec` sends work to Designer, Engineer, QA, DevOps,
 Security, Docs, delivery, or another non-PM owner, use this cross-role packet. This
-section is the authoritative PM-side field definition for issue #52.
+section is the authoritative PM-side field definition for the PM handoff packet.
 
 Required fields:
 
