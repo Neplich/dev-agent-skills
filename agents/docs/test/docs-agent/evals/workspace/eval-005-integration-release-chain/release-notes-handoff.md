@@ -1,18 +1,16 @@
-# Issue #116 site Release Notes handoff
+# docs-agent:release-notes-generator site Release Notes handoff
 
 ```yaml
-handoff_target: "issue #117 / docs-audit pre-tag"
-downstream_target: "issue #120 / github-release-generator"
+handoff_target: "docs-agent:docs-audit / pre-tag"
+downstream_target: "pm-agent:github-release-generator"
 handoff_status: ready
-next_gate: "issue #117 pre-tag audit"
+next_gate: "docs-agent:docs-audit pre-tag"
 release_execution_authorized: false
 target_release_version: "v1.4.0"
 target_release_version_confirmation:
   status: maintainer_confirmed
   source: "maintainer-approval/release-v1.4.0@2026-07-20T09:00:00+08:00"
 site_release_note_path: "docs/site/release-notes/v1.4.0.md"
-confirmation_status: confirmed
-confirmation_source: "maintainer-approval/site-release-notes-v1.4.0@2026-07-20T09:10:00+08:00"
 docs_checks:
   - command: "npm run test:docs"
     cwd: "docs/site"
@@ -76,4 +74,4 @@ required_version_sources:
 blockers: []
 ```
 
-站内页面、metadata、index、正文确认和 docs checks 由 `docs-agent:release-notes-generator` 所有。该 handoff 不是 GitHub Release 执行授权；`github-release-generator` 只能在同版本 `ready_for_tag` 后准备预览，并在实际 tag、`release_verified` 和维护者独立发布批准全部存在后发布。
+站内页面、metadata、index、正文确认和 docs checks 由 `docs-agent:release-notes-generator` 所有。该 handoff 不是 GitHub Release 执行授权；`pm-agent:github-release-generator` 只能在同版本 `ready_for_tag` 后准备预览，并在实际 tag、`release_verified` 和维护者独立发布批准全部存在后发布。
