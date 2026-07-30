@@ -1,37 +1,51 @@
-# Consumption Regression Comparison
+# Eval Result: eval-003-mapped-doc-regression
 
 ## Evaluation Target
 
 - Skill: `regression-suite`
 - Eval: `eval-003-mapped-doc-regression`
+- Prompt target: 由 change-map 收敛搜索阈值回归范围并以代码确定实际值。
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws1-consumption-v1`
-- Commit: `0b000b9`
+- Eval schema: `evals.json` v1.0
+- Fixture version: repository commit `778b042`
+- Fresh run: `2026-07-30 19:26:38 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/regression-suite/evals/workspace/eval-3-mapped-doc-regression/`
+- `eval_metadata.json` 未声明 `execution_cleanup`。
 
 ## Latest Result
 
-**PASS** — with-skill 以代码阈值 3 核证出文档声明 2 的分歧，回归判定诚实标记 blocked（缺证据链），并制定锚定代码事实的定向边界范围。
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+- 无 `NOT EXERCISED` assertion。
+- 非 E2E 路径变更检查：prompt 只要求回归范围与阈值判断，没有要求持久化报告；`docs/qa/{feature_path}/regression-verification.md` 未覆盖。
+
+Overall result: PASS
+
+## Assertion Results
+
+- PASS `reads_mapped_docs_first`: change-map 将范围收窄到 `search-query.md`，未遍历其他文档。
+- PASS `verifies_against_code`: 代码阈值 3、文档阈值 2 分开记录，并围绕 2/3 边界设计直接路径。
+- PASS `treats_unverified_as_low_trust`: `unverified` 文档不作为 pass/release-ready 的独立依据。
 
 ## With-Skill Behavior
 
-- 命中映射文档后回规则文件核证阈值，分歧结构化记录且不采信 unverified 文档值。
-- 回归门禁行为正确：缺 feature_path/PRD/TRD/实施计划与原始失败证据时不宣称验证通过，产出结构化回归报告。
+候选以代码值 3 为事实，同时保留目标预期仍需确认的边界，没有把过时文档直接当回归 oracle。
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
-- baseline 同样静态确认阈值并区分 hotfix/预期变更路径，判断合格，但报告组织与证据结构较松散。
+同一 prompt/fixture 的全新 baseline 已生成，未读取 skill、QA README 或历史 baseline。candidate/verdict 均成功；baseline 也满足三条 assertions，semantic verdict 为 PASS。
 
 ## Failures
 
-- 无。
+- 无 assertion failure。
 
 ## Next Steps
 
-- 保留本结果；后续 fixture 可增加干扰文档以放大行为差距。
+- PR-B 非 E2E 路径需独立持久化报告 fixture；本次不改现有 eval。
 
 ## Runtime Artifact Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/`，返回码均为 0、无 timeout。
+- Runtime 不提交；durable 结果仅为本文件。

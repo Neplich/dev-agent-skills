@@ -2,47 +2,51 @@
 
 ## Evaluation Target
 
-- Agent: `qa`
 - Skill: `qa-agent`
 - Eval: `eval-003-feature-path-missing-plan-blocked`
-- Test case: feature-path-missing-plan-blocked
-- Workspace: `workspace/eval-3-feature-path-missing-plan-blocked`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 for PR #98 trigger description routing review.
+- Prompt target: 识别同路径上下文与缺 implementation plan blocker。
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Fixture: same-path PRD/TRD and QA E2E function tree for `account/profile/preferences`, with no confirmed implementation plan.
-- Context read before applying the skill: `AGENTS.md`, `agents/qa/README.md`, `agents/qa/skills/qa-agent/SKILL.md`, `evals.json`, workspace `eval_metadata.json`, `docs/pm/account/profile/preferences/PRD.md`, `docs/engineer/account/profile/preferences/TRD.md`, `docs/qa/e2e/account/profile/preferences/TEST_SUITE.md`, and `FLOW_INDEX.md`.
-- Runtime evidence: fresh subagent artifacts were generated under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-003-feature-path-missing-plan-blocked/`.
+- Eval schema: `evals.json` v1.0
+- Fixture version: repository commit `778b042`
+- Fresh run: `2026-07-30 19:26:38 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/qa-agent/evals/workspace/eval-3-feature-path-missing-plan-blocked/`
+- `eval_metadata.json` 未声明 `execution_cleanup`。
 
-## Assertions
+## Latest Result
 
-- PASS `reads_same_feature_path`: the route preserves `account/profile/preferences`, reads same-path PRD/TRD, and keeps the QA E2E function tree under the same path.
-- PASS `blocks_missing_plan`: missing `docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md` is a blocker, with next owner `engineer-agent:feature-implementor`.
-- PASS `no_e2e_mutation_or_execution`: no E2E acceptance TC is created, updated, or executed without the confirmed implementation plan.
-- PASS `keeps_single_route`: the router keeps one narrow QA route and treats the missing plan as the blocker instead of invoking multiple QA skills or entering implementation repair.
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+- 所有 assertion 场景均已触发；无 `NOT EXERCISED` assertion。
+- 变更点检查：候选直接执行了 specialist 的 implementation-plan gate 并复述详细 E2E 状态，没有仅保留 specialist 门禁指针。
 
-## With Skill Behavior
+Overall result: FAIL
 
-`qa-agent` satisfies the expected blocked behavior after the PR #98 trigger description edits. The with-skill run selected the single route `qa-agent:spec-based-tester`, resolved `feature_path` as `account/profile/preferences`, read same-path PRD/TRD and the QA E2E function tree, and marked the QA work blocked because `docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md` is missing. It pointed the next owner to `engineer-agent:feature-implementor` and did not create, update, or execute E2E acceptance TC.
+## Assertion Results
 
-## Without Skill Baseline
+- PASS `reads_same_feature_path`: 正确保留 `account/profile/preferences` 及同路径 PRD/TRD/QA 功能树。
+- PASS `blocks_missing_plan`: 缺 `IMPLEMENTATION_PLAN.md` 时 blocked，next owner 为 `engineer-agent:feature-implementor`。
+- PASS `no_e2e_mutation_or_execution`: 没有创建、更新或执行验收 TC。
+- PASS `keeps_single_route`: 选择单一 `spec-based-tester` route，未进入实现修复。
 
-Fresh baseline generated on 2026-07-08 from the eval prompt and fixture files only, without applying `qa-agent`, the QA Agent README, historical `comparison.md`, or any previous baseline. The baseline also paused TC creation or execution because the fixture clearly signals a missing implementation plan, but it did not fully preserve the repo-specific single QA route, next owner, and E2E gate details.
+## With-Skill Behavior
+
+blocked 是正确产品行为，四条 assertions 也全部满足；但 router 自己展开并裁决了 specialist 的详细 plan/E2E 门禁，与当前 `qa-agent` 只保留 gate pointer 的职责边界冲突，因此 Behavior 判 FAIL。
+
+## Fresh Without-Skill Baseline
+
+本轮 baseline 使用同一 prompt 与 fixture 新生成，未读取 skill、QA README 或历史 baseline。candidate/verdict 均成功；baseline 同样识别缺 plan 并 blocked，semantic verdict 为 PASS。
 
 ## Failures
 
-- None found. The blocked route is the expected pass condition for this eval.
-- PR #98 did not regress same-path feature handling, missing-plan blocking, or the no-E2E-mutation boundary.
+- PR-B router 指针收敛未在该候选中生效；输出仍复述 specialist 门禁细节。
 
 ## Next Steps
 
-- Keep this eval as regression coverage for missing implementation-plan blocking before E2E acceptance mutation or execution.
-- Product workflow represented by the fixture should continue only after `engineer-agent:feature-implementor` supplies the confirmed same-path implementation plan.
+- 后续 eval 应把“router 只选择 route、声明权威指针；specialist 再做详细门禁”设为显式 assertion。
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime artifacts were created only under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-003-feature-path-missing-plan-blocked/`.
-- Generated `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence only and must not be committed.
-- Durable committed evidence for this run is this `comparison.md`.
+- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/` 目录，返回码均为 0、无 timeout。
+- Runtime 产物不提交；durable 结果仅为本文件。

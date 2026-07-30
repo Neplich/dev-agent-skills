@@ -2,49 +2,56 @@
 
 ## Evaluation Target
 
-- Agent: `qa`
 - Skill: `qa-agent`
 - Eval: `eval-001-route-mixed-qa-request`
-- Test case: route-mixed-qa-request
-- Workspace: `workspace/eval-1-route-mixed-qa-request`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 for PR #98 trigger description routing review.
+- Prompt target: 对登录重构验收请求与 intermittent CI 失败先做单一路由，不执行测试。
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Fixture: login refresh implementation with PM acceptance question and intermittent CI failure evidence.
-- Context read before applying the skill: `AGENTS.md`, `agents/qa/README.md`, `agents/qa/skills/qa-agent/SKILL.md`, `evals.json`, workspace `eval_metadata.json`, `docs/pm/login-refresh/PRD.md`, `docs/engineer/login-refresh/TRD.md`, `docs/qa/e2e/auth/login/login-refresh/TEST_SUITE.md`, `FLOW_INDEX.md`, `implementation/changes.md`, and `ci/login-intermittent-failure.log`.
-- Runtime evidence: fresh subagent artifacts were generated under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-001-route-mixed-qa-request/`.
+- Eval schema: `evals.json` v1.0
+- Fixture version: repository commit `778b042`
+- Fresh run: `2026-07-30 19:26:38 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/qa-agent/evals/workspace/eval-1-route-mixed-qa-request/`
+- `eval_metadata.json` 未声明 `execution_cleanup`。
 
-## Assertions
+## Latest Result
 
-- PASS `assertion_1`: the primary QA route is `spec-based-tester` because PM asks whether an implementation can enter documented acceptance; the intermittent CI failure remains a risk note or possible `bug-analyzer` follow-up.
-- PASS `assertion_2`: downstream context includes PM/spec, TRD, implementation changes, CI failure log, QA E2E memory, environment constraints, and test command constraints.
-- PASS `qa`: E2E work reads the function-tree memory set under `docs/qa/e2e/{feature_path}/`, including suite, flow index, cases, scripts, prior results, and reports.
-- PASS `e2e_execution_protocol`: E2E routing requires scenario and platform version, blocks missing versions instead of writing `unknown`, selects repo harness > Chrome plugin / browser connector > Playwright fallback, and delegates TC execution to subagents.
-- PASS `credential_and_report_refs`: credential storage uses `references/e2e-credential-store.md` and `.qa/e2e/accounts.local.json`; summary reporting uses `references/e2e-test-report.md`.
-- PASS `alignment_and_plan_gate`: existing-feature and code-complete E2E updates require same-path PRD, TRD, product decisions when present, and confirmed `IMPLEMENTATION_PLAN.md`; gaps return to PM, `trd-gen`, or `feature-implementor`.
-- PASS `assertion_4`: expected artifacts include route decision, requirement matrix, execution path, evidence references, risk notes, blockers, and defect handoff notes.
-- PASS `assertion_5`: only one primary QA route is selected; the intermittent failure is not promoted to a confirmed bug without stronger evidence.
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+- 所有 assertion 场景均已触发；无 `NOT EXERCISED` assertion。
+- 变更点检查：with-skill 输出只声明 specialist 的权威门禁指针，未复述完整门禁细节，符合当前 `qa-agent` router 的收敛目标；但这与本 eval 仍要求 router 展开 E2E、凭据/报告和对齐门禁细节的 assertions 发生直接冲突。
 
-## With Skill Behavior
+Overall result: FAIL
 
-`qa-agent` satisfies the mixed QA routing contract after the PR #98 trigger description edits. The with-skill run selected the single primary route `qa-agent:spec-based-tester` because the current evidence outcome is documented acceptance readiness. It preserved the intermittent CI failure as a risk note or possible `bug-analyzer` follow-up, not a confirmed bug, and carried the required PM/spec, TRD, implementation changes, CI evidence, QA E2E memory, platform-version gate, execution-entry priority, credential/report references, and PRD/TRD/implementation-plan gate into the selected specialist. It did not execute tests or invoke multiple QA skills.
+## Assertion Results
 
-## Without Skill Baseline
+- PASS `assertion_1`: 选择单一主 route `spec-based-tester`，并说明其最符合文档化验收 outcome。
+- FAIL `assertion_2`: 列出了 PRD、TRD、实现变更和 CI 日志，但没有显式列出环境说明与测试命令。
+- FAIL `qa`: 仅列出 `TEST_SUITE.md`、`FLOW_INDEX.md`，完整 `cases/`、`scripts/`、历史 `results/`、`_reports/` 只由 specialist 指针承接，未满足 assertion 的字面展开要求。
+- FAIL `e2e_execution_protocol`: 当前 router 正确保留指针，但未按旧 assertion 逐项复述场景、平台版本、`unknown` 禁止、执行入口与 subagent 规则。
+- FAIL `credential_and_report_refs`: 当前 router 正确保留 credential/report 指针，但未按旧 assertion 展开两个 reference 与本地凭据路径。
+- FAIL `alignment_and_plan_gate`: 当前 router 正确保留 PRD/TRD/plan 指针，但未按旧 assertion 展开各 gap 的 next owner。
+- PASS `assertion_4`: 预期 artifact 包含 requirement matrix、evidence references、risk notes 与 defect handoff notes。
+- PASS `assertion_5`: 未并行调用多个 specialist，intermittent 失败保持 risk/follow-up，不冒充 confirmed bug。
 
-Fresh baseline generated on 2026-07-08 from the eval prompt and fixture files only, without applying `qa-agent`, the QA Agent README, historical `comparison.md`, or any previous baseline. The baseline gave a plausible generic acceptance-validation recommendation, but omitted several repo-specific protocol details: the complete E2E memory read set, platform-version blocking rule, credential/report references, and missing implementation-plan owner.
+## With-Skill Behavior
+
+with-skill 候选选择 `spec-based-tester`，保留 CI 风险边界并停止在路由阶段。它体现了 PR-B 的 router 指针收敛，但无法同时满足仍要求复制 specialist 协议的旧 assertions，因此 Behavior 判 FAIL。
+
+## Fresh Without-Skill Baseline
+
+本轮 baseline 使用同一 prompt 与 fixture 于隔离 scratch 重新生成；未读取 `qa-agent` SKILL、QA README 或历史 baseline。它选择 `bug-analyzer`，候选与 verdict 均生成成功，但同样缺少 repo-specific specialist 门禁，semantic verdict 为 FAIL。
 
 ## Failures
 
-- None found. PR #98 did not regress mixed QA single-route selection, E2E gate preservation, risk handling for intermittent CI evidence, or the no-direct-execution boundary.
+- Router 新契约与当前 eval 的细节展开 assertions 不一致。
+- 上下文传递未显式包含环境说明与测试命令。
 
 ## Next Steps
 
-- Keep this eval as regression coverage for mixed QA requests, single-route selection, and E2E gate preservation.
+- 后续由维护者决定是把 assertions 收敛为“权威指针存在且不复述”，还是恢复 router 细节；本次 eval 不修改 fixture。
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime artifacts were created only under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-001-route-mixed-qa-request/`.
-- Generated `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence only and must not be committed.
-- Durable committed evidence for this run is this `comparison.md`.
+- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/` 目录，返回码均为 0、无 timeout。
+- Runtime 产物不提交；durable 结果仅为本文件。

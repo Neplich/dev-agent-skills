@@ -2,46 +2,54 @@
 
 ## Evaluation Target
 
-- Agent: `qa`
 - Skill: `exploratory-tester`
 - Eval: `eval-001-explore-web-app`
-- Test case: explore-web-app
-- Workspace: `workspace/eval-1-explore-web-app`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Validation method: fresh Codex subagent review; baseline was derived before reading `exploratory-tester` or QA README, then with-skill behavior was checked against `SKILL.md`, `agents/qa/README.md`, direct shared references, eval assertions, and fixture evidence.
+- Prompt target: 基于搜索刷新上下文制定并执行探索协议。
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Expected output: 探索测试报告，包含发现的问题列表和复现路径
-- Fixture context: search-refresh PRD, `SearchPanel`, `FilterPills`, `ResultsList`, QA environment note, `TEST_SUITE.md`, `FLOW_INDEX.md`, and `cases/TC-001-filter-results.md`.
-- Scenario and version: `feature-update`, platform version `v0.9.0-dev`.
+- Eval schema: `evals.json` v1.0
+- Fixture version: repository commit `778b042`
+- Fresh run: `2026-07-30 19:26:38 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/exploratory-tester/evals/workspace/eval-1-explore-web-app/`
+- `eval_metadata.json` 未声明 `execution_cleanup`。
 
-## Without Skill Baseline
+## Latest Result
 
-- A generic exploratory answer would likely begin browser probing or list ad hoc checks without first building a charter from PM context, changed surface, known risks, and environment constraints.
-- It could skip the existing `docs/qa/e2e/search/results/filtering/` memory and create a duplicate filter-results TC instead of updating `TC-001-filter-results`.
-- It might not separate observed defects, suspicious unconfirmed signals, and gaps not explored.
-- It could ignore that browser execution depends on `QA_BASE_URL`, and it would be less likely to state repo harness > Chrome plugin / browser connector > Playwright fallback as the execution-entry order.
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+- 所有 assertions 均可由静态 preflight/blocked 输出判定；无 `NOT EXERCISED`。
+- 非 E2E 路径变更检查：该 fixture 是 E2E `feature-update` 场景，未触发 `docs/qa/{feature_path}/exploratory-report.md`。
 
-## With Skill Behavior
+Overall result: FAIL
 
-- PASS: `exploratory-tester` requires a charter before interaction, including surface, timebox source, heuristics, and escalation signals. The fixture supplies the changed search surfaces and keyboard-focus risk needed for that charter.
-- PASS: Existing QA memory is primary. The skill requires reading `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/*.md`, `scripts/*.spec.md`, prior `results/`, and `_reports/`; absent scripts/results/reports must be recorded instead of silently skipped.
-- PASS: The fixture's existing `TC-001-filter-results` covers the filter-results flow. The skill requires updating the existing TC, script, or `FLOW_INDEX.md` when the same flow is found, and keeps one-off observations in the exploratory report.
-- PASS: For existing-feature exploration, reusable TC creation/update/execution remains gated by same-path PRD/TRD expectation alignment and a confirmed `IMPLEMENTATION_PLAN.md`; fixture-level browser execution is also blocked unless `QA_BASE_URL` is present.
-- PASS: The report contract separates observed issues, suspicious but unconfirmed signals, gaps not explored, exploration path covered, evidence used, and recommended next actions.
+## Assertion Results
+
+- FAIL `assertion_1`: charter 有 surface、heuristics、escalation signals，但缺少上下文给出的 timebox，且未说明重试时由何来源确定 timebox。
+- PASS `assertion_2`: 读取 suite、flow、既有 TC，复用同义流程并避免重复 TC。
+- FAIL `assertion_3`: changed surface 与 nearby risks 正确，但 timebox 来源未闭环。
+- PASS `assertion_4`: observed、unconfirmed、gaps 三层清楚，未把风险当缺陷。
+- PASS `assertion_5`: 输出是 chartered exploration，不是随机点击日志。
+- PASS `assertion_6`: 含 charter、timebox 状态、covered path、evidence 与 next actions。
+- PASS `deduplicates_existing_flows`: 复用 `TC-001-filter-results`，只建议增量更新。
+
+## With-Skill Behavior
+
+缺少 `QA_BASE_URL` 时停止浏览器执行是正确 blocked 行为；FAIL 仅来自 timebox 契约未闭环，而非“没有实跑”。
+
+## Fresh Without-Skill Baseline
+
+同一 prompt/fixture 的全新 baseline 已生成，未读取 skill、QA README 或历史 baseline。candidate/verdict 均成功；baseline 同样缺 timebox 来源，semantic verdict 为 FAIL。
 
 ## Failures
 
-- None identified. The current skill contract satisfies all eval assertions for chartering, QA memory reuse, scope/timebox discipline, evidence layering, chartered exploration, handoff-ready output, and duplicate TC avoidance.
+- 未给出上下文驱动 timebox，也未指出重试时确定 timebox 的来源。
 
 ## Next Steps
 
-- No fixture or skill change is required from this eval.
-- A real execution should record any missing `scripts/`, prior `results/`, `_reports/`, `QA_BASE_URL`, TRD, or implementation-plan gates as blocked before browser or E2E execution.
+- 后续候选在执行被 URL 阻塞时仍应声明“未启动执行 timebox”，并指出由用户或 handoff 提供的时长决定重试 timebox。
 
 ## Runtime Artifact Policy
 
-- No runtime artifacts were created for this validation.
-- Do not commit transcripts, verdicts, timing files, diagnostics, `with_skill/`, `without_skill/`, `outputs/`, or `comparison.auto.md`.
+- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/`，返回码均为 0、无 timeout。
+- Runtime 不提交；durable 结果仅为本文件。

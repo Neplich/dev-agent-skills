@@ -2,49 +2,54 @@
 
 ## Evaluation Target
 
-- Agent: `qa`
 - Skill: `spec-based-tester`
 - Eval: `eval-002-boundary-test-generation`
-- Test case: boundary-test-generation
-- Workspace: `workspace/eval-2-boundary-test-generation`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Validation method: fresh Codex subagent review; baseline was derived before reading `spec-based-tester` or QA README, then with-skill behavior was checked against `SKILL.md`, `agents/qa/README.md`, direct shared references, eval assertions, and fixture evidence.
+- Prompt target: 对登录表单边界做同路径门禁后的结构化验证。
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Expected output: 结构化边界验证报告，包含 requirement matrix、execution path、evidence references、risk notes 和 handoff decision
-- Fixture context: `docs/pm/login-refresh/PRD.md`, `docs/engineer/login-refresh/TRD.md`, `implementation/changes.md`, `docs/qa/e2e/auth/login/login-form/TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/TC-001-login-boundaries.md`, `scripts/TC-001-login-boundaries.spec.md`, and `package.json`.
-- Scenario and version: `feature-update`, platform version `v1.2.0-rc.1`.
+- Eval schema: `evals.json` v1.0
+- Fixture version: repository commit `778b042`
+- Fresh run: `2026-07-30 19:26:38 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/spec-based-tester/evals/workspace/eval-2-boundary-test-generation/`
+- `eval_metadata.json` 未声明 `execution_cleanup`。
 
-## Without Skill Baseline
+## Latest Result
 
-- A generic boundary-test answer would likely enumerate empty values, long strings, special characters, invalid email, and locked-account checks, then run `npm test` without a formal preflight.
-- It might skip existing QA memory and recreate cases from the prompt.
-- It could treat missing browser URL or missing confirmed implementation plan as a minor caveat instead of a blocked gate.
-- It would be more likely to hand off assumed failures to bug analysis without confirmed reproducible evidence.
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+- `assertion_3` 为 **NOT EXERCISED**：缺 confirmed `IMPLEMENTATION_PLAN.md` 已合法阻塞实际边界执行，不能要求候选越过门禁实跑。
+- 非 E2E 路径变更检查：该 fixture 是 E2E `feature-update`，未触发 `docs/qa/{feature_path}/spec-validation.md`。
 
-## With Skill Behavior
+Overall result: FAIL
 
-- PASS: `spec-based-tester` requires PRD, TRD, implementation context, repository test commands, and QA function-tree files before execution.
-- PASS: Existing QA memory at `docs/qa/e2e/auth/login/login-form/` is primary. The provided `TC-001-login-boundaries` and matching script cover empty values, overlong input, special characters, invalid email format, and locked-account state.
-- PASS: The narrowest execution path is the repo harness `npm test -- login-boundaries`, referenced by TRD, `TEST_SUITE.md`, and the script. Chrome plugin / browser connector is only for visible assertions the harness cannot cover; standalone Playwright remains fallback.
-- PASS: The validation report must include requirement matrix, execution path, evidence references, risk notes, blocked items, and handoff decision, with each boundary marked `pass`, `fail`, `blocked`, or `assumed`.
-- PASS: Platform version `v1.2.0-rc.1` is present, so versioned result/archive paths are available and must not use `unknown`.
-- PASS: The direct hotfix or feature-update boundary is tight: validate changed login form behavior and direct impact paths, not release-wide E2E coverage.
-- PASS: The alignment-plan gate is enforced. Because the fixture does not include `docs/engineer/login-refresh/IMPLEMENTATION_PLAN.md`, real execution or E2E documentation update should be blocked and routed to `engineer-agent:feature-implementor` rather than fabricating boundary validation results.
-- PASS: Handoff to `bug-analyzer` is allowed only for confirmed reproducible failures with evidence; missing environment, blocked checks, assumptions, and unstable observations stay in the QA report.
+## Assertion Results
+
+- PASS `assertion_1`: preflight 记录范围、输入约束、环境假设、缺 plan、缺 URL、缺历史结果等 blocker。
+- PASS `assertion_2`: 先读 suite、flow、case、script，并显式记录 results/reports 缺失。
+- NOT EXERCISED `assertion_3`: 计划门禁阻止实际边界执行；候选正确把五类边界保留为 assumed。
+- PASS `assertion_4`: 每项使用 pass/assumed/blocked 且有 evidence reference。
+- PASS `assertion_5`: 包含 requirement matrix、execution path、evidence、risk、handoff。
+- PASS `assertion_6`: 不把 assumed/blocked 当 bug，列出未覆盖风险。
+- FAIL `alignment_plan_gate`: 正确发现缺 `IMPLEMENTATION_PLAN.md`，但没有把 next owner 指向 `engineer-agent:feature-implementor`；下一步反而建议补 URL 后直接执行，遗漏 plan 必须先补齐的顺序。
+
+## With-Skill Behavior
+
+候选正确停止执行并诚实标记 assumed/blocked；核心失败是缺 plan 后的 next-owner 与恢复顺序错误。
+
+## Fresh Without-Skill Baseline
+
+同一 prompt/fixture 的全新 baseline 已生成，未读取 skill、QA README 或历史 baseline。candidate/verdict 均成功；baseline 完全遗漏 plan gate，semantic verdict 为 FAIL。
 
 ## Failures
 
-- None identified. The current skill contract satisfies all eval assertions for scope and assumptions, function-tree priority, boundary execution, evidence/status layering, required report structure, risk handoff, alignment-plan gate, and direct feature-update scope.
+- 缺 plan 没有交还 `engineer-agent:feature-implementor`，恢复步骤错误。
 
 ## Next Steps
 
-- No fixture or skill change is required from this eval.
-- A real run should provide the confirmed implementation plan before executing or archiving E2E boundary evidence; browser-only checks also require a deployed app URL such as `QA_BASE_URL`.
+- 先确认同路径 implementation plan，再谈 harness 或 URL 执行。
 
 ## Runtime Artifact Policy
 
-- No runtime artifacts were created for this validation.
-- Do not commit transcripts, verdicts, timing files, diagnostics, `with_skill/`, `without_skill/`, `outputs/`, or `comparison.auto.md`.
+- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/`，返回码均为 0、无 timeout。
+- Runtime 不提交；durable 结果仅为本文件。

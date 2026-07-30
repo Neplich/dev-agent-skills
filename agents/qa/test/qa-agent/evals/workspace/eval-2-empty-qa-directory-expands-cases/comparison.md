@@ -2,49 +2,54 @@
 
 ## Evaluation Target
 
-- Agent: `qa`
 - Skill: `qa-agent`
 - Eval: `eval-002-empty-qa-directory-expands-cases`
-- Test case: empty-qa-directory-expands-cases
-- Workspace: `workspace/eval-2-empty-qa-directory-expands-cases`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 for PR #98 trigger description routing review.
+- Prompt target: 对已有但无 TC 的 E2E 功能树做路由与执行协议说明。
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Fixture: existing empty E2E function tree for profile settings plus source files and QA environment notes.
-- Context read before applying the skill: `AGENTS.md`, `agents/qa/README.md`, `agents/qa/skills/qa-agent/SKILL.md`, `evals.json`, workspace `eval_metadata.json`, `docs/qa/e2e/account/profile-settings/profile-form/TEST_SUITE.md`, `FLOW_INDEX.md`, `environment/qa-env.md`, `src/routes/profile-settings.md`, `src/pages/ProfileSettingsPage.tsx`, and `src/components/ProfileSettingsForm.tsx`.
-- Runtime evidence: fresh subagent artifacts were generated under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-002-empty-qa-directory-expands-cases/`.
+- Eval schema: `evals.json` v1.0
+- Fixture version: repository commit `778b042`
+- Fresh run: `2026-07-30 19:26:38 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/qa-agent/evals/workspace/eval-2-empty-qa-directory-expands-cases/`
+- `eval_metadata.json` 未声明 `execution_cleanup`。
 
-## Assertions
+## Latest Result
 
-- PASS `assertion_1`: the route recognizes that the QA function tree exists but has no executable TC and must not be treated as existing coverage.
-- PASS `assertion_2`: because the user confirmed a feature-update and authorized exploration, the downstream route should inspect target files and environment notes instead of asking whether exploration is allowed.
-- PASS `assertion_3`: exploration must update `TEST_SUITE.md` and `FLOW_INDEX.md` with files explored, discovered route/form/commands, coverage meaning, and assumptions.
-- PASS `e2e`: each new E2E case must be stored as `cases/TC-NNN-<short-slug>.md` with a matching `scripts/TC-NNN-<short-slug>.spec.md`, without plaintext secrets.
-- PASS `assertion_5`: validation is TC-driven, feature-update scope stays on the changed feature and direct impacts, and execution entry follows repo harness > Chrome plugin / browser connector > Playwright fallback.
-- PASS `version_and_subagent_gate`: platform version is required before execution; missing version blocks execution and reports go to `_reports/{platform-version}/test-reports-{test-time}.md` only after a real version is known.
-- PASS `assertion_6`: the router selects one narrow QA route and does not expand QA routing into implementation repair or multiple QA specialists.
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+- 所有 assertion 场景均已触发；无 `NOT EXERCISED` assertion。
+- 变更点检查：候选逐项复述了 specialist 的完整 E2E memory、平台版本、执行入口、subagent、凭据和报告规则，没有保持“router 只保留权威指针”的 PR-B 目标。
 
-## With Skill Behavior
+Overall result: FAIL
 
-`qa-agent` satisfies the empty-directory E2E route after the PR #98 trigger description edits. The with-skill run selected a single primary route, `qa-agent:spec-based-tester`, recognized that `docs/qa/e2e/account/profile-settings/profile-form/` exists but has no executable TC, required targeted exploration of route, page, form, environment, harness, and test-command context, and required updates to `TEST_SUITE.md`, `FLOW_INDEX.md`, independent `cases/TC-NNN-<short-slug>.md`, and matching `scripts/TC-NNN-<short-slug>.spec.md` before TC-driven execution. It preserved the feature-update scope, execution-entry priority, subagent execution rule, and platform-version blocker; missing platform version blocks execution and forbids `unknown` result paths.
+## Assertion Results
 
-## Without Skill Baseline
+- PASS `assertion_1`: 正确识别空功能树不是现有覆盖。
+- PASS `assertion_2`: 用户已授权探索，要求读取目标源文件与环境说明。
+- PASS `assertion_3`: 要求更新 `TEST_SUITE.md`、`FLOW_INDEX.md` 并记录探索证据。
+- PASS `e2e`: 给出独立 TC/script 路径并禁止明文凭据。
+- PASS `assertion_5`: 要求基于新增 TC 执行并保留 repo harness > Chrome/browser > Playwright 顺序。
+- PASS `version_and_subagent_gate`: 平台版本缺失时 blocked，不写 `unknown`，TC 交给 subagent，报告路径正确。
+- PASS `assertion_6`: 选择单一 `exploratory-tester` route，未进入实现修复。
 
-Fresh baseline generated on 2026-07-08 from the eval prompt and fixture files only, without applying `qa-agent`, the QA Agent README, historical `comparison.md`, or any previous baseline. The baseline recognized a need to inspect code and add tests, but lacked the complete function-tree persistence contract, repo harness > Chrome / browser connector > Playwright execution priority, default subagent execution, report path rules, and `unknown` prohibition.
+## With-Skill Behavior
+
+候选满足现有七条 assertions，但输出把 specialist 协议完整复制进 router；这违反当前 `qa-agent` 的 `Output Behavior` 指针契约，属于本次行为变更的直接回归，因此 Behavior 判 FAIL。
+
+## Fresh Without-Skill Baseline
+
+本轮 baseline 使用同一 prompt 与 fixture 新生成，未读取 skill、QA README 或历史 baseline。candidate/verdict 均成功；baseline 也复制了大部分 specialist 细节，但遗漏测试命令与完整探索沉淀字段，semantic verdict 为 FAIL。
 
 ## Failures
 
-- None found. Missing platform version is the expected execution blocker for this fixture, not a router failure.
-- PR #98 did not regress empty-directory expansion, E2E persistence, version-gated execution, or QA route boundaries.
+- PR-B router 指针收敛未在该候选中生效，输出仍复述 specialist 门禁细节。
 
 ## Next Steps
 
-- Keep this eval as regression coverage for empty E2E function-tree expansion and version-gated execution.
+- 保留 assertions 结果与 router 契约失败的双重事实；后续应让 eval prompt/judge 明确验证“只输出指针”。
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime artifacts were created only under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-002-empty-qa-directory-expands-cases/`.
-- Generated `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence only and must not be committed.
-- Durable committed evidence for this run is this `comparison.md`.
+- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/` 目录，返回码均为 0、无 timeout。
+- Runtime 产物不提交；durable 结果仅为本文件。

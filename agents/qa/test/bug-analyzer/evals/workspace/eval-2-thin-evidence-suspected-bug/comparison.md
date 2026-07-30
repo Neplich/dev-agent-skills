@@ -1,45 +1,52 @@
-# Eval Result: bug-analyzer-thin-evidence-suspected-bug
+# Eval Result: eval-002-thin-evidence-suspected-bug
 
 ## Evaluation Target
 
-- Agent: `qa`
 - Skill: `bug-analyzer`
 - Eval: `eval-002-thin-evidence-suspected-bug`
-- Test case: thin-evidence-suspected-bug
-- Workspace: `workspace/eval-2-thin-evidence-suspected-bug`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Validation method: fresh Codex subagent review; baseline was derived before reading `bug-analyzer` or QA README, then with-skill behavior was checked against `SKILL.md`, `agents/qa/README.md`, direct shared references, eval assertions, and fixture evidence.
+- Prompt target: 薄证据用户反馈不得升级为 confirmed bug。
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Prompt: 用户只提供一句反馈：偶尔点击保存后页面好像没反应，没有截图、日志、复现步骤、环境信息或版本号。请分析是否能生成 Bug 报告。
-- Fixture context: `feedback/customer-note.md`
-- Evidence present: one customer note describing intermittent save non-response, with no screenshot or exact steps.
+- Eval schema: `evals.json` v1.0
+- Fixture version: repository commit `778b042`
+- Fresh run: `2026-07-30 19:26:38 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/bug-analyzer/evals/workspace/eval-2-thin-evidence-suspected-bug/`
+- `eval_metadata.json` 未声明 `execution_cleanup`。
 
-## Without Skill Baseline
+## Latest Result
 
-- A generic response could prematurely write a confirmed bug report from the customer note.
-- It might fail to separate an observed customer complaint from a reproducible failing scenario.
-- It would likely omit a structured missing-evidence list and could recommend issue creation before confidence is high enough.
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+- 无 `NOT EXERCISED` assertion。
+- 非 E2E 路径变更检查：该场景只允许调查 note/补证清单，不生成正式非 E2E Bug 报告，因此 `docs/qa/{feature_path}/bug-*.md` 分支未触发。
 
-## With Skill Behavior
+Overall result: PASS
 
-- PASS: `bug-analyzer` explicitly classifies thin reports as `suspected / needs more evidence`; it must not label this fixture `confirmed and reproducible` or `confirmed but environment-sensitive`.
-- PASS: The skill requires missing evidence to be stated rather than guessed, including exact failing scenario, reproduction steps, environment/version, console output, network output, screenshot, trace, and build context.
-- PASS: The report structure covers classification, evidence status, confidence statement, missing evidence, and recommended next evidence.
-- PASS: The output boundary is an investigation note or evidence request. It avoids creating a confirmed bug artifact or GitHub issue from this fixture.
+## Assertion Results
+
+- PASS `assertion_1`: 分类为 `suspected / needs more evidence`。
+- PASS `assertion_2`: 完整列出 failing scenario、步骤、环境/版本、console/network、截图与 trace 缺口。
+- PASS `assertion_3`: 包含 classification、evidence status、confidence、missing evidence、recommended evidence。
+- PASS `assertion_4`: 未创建 GitHub issue 或 confirmed bug，只建议本地调查 note。
+
+## With-Skill Behavior
+
+候选保持低置信度与证据门槛，清楚说明当前只能形成调查型分析，未越权生成 confirmed bug。
+
+## Fresh Without-Skill Baseline
+
+同一 prompt/fixture 的全新 baseline 已生成，未读取 skill、QA README 或历史 baseline。candidate/verdict 均成功；baseline 也满足四条 assertions，semantic verdict 为 PASS。
 
 ## Failures
 
-- None identified. The current skill contract satisfies all eval assertions for thin-evidence handling, evidence gaps, structured output, and persistence boundaries.
+- 无。
 
 ## Next Steps
 
-- No fixture or skill change is required from this eval.
-- If this scenario is handled in production, collect steps, version, environment, console/network output, screenshot or trace before escalating.
+- 保留为薄证据边界回归用例；正式非 E2E 输出路径需由另一 fixture 覆盖。
 
 ## Runtime Artifact Policy
 
-- No runtime artifacts were created for this validation.
-- Do not commit transcripts, verdicts, timing files, diagnostics, `with_skill/`, `without_skill/`, `outputs/`, or `comparison.auto.md`.
+- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/`，返回码均为 0、无 timeout。
+- Runtime 不提交；durable 结果仅为本文件。

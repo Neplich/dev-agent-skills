@@ -1,48 +1,55 @@
-# Eval Result: bug-analyzer-analyze-test-failure
+# Eval Result: eval-001-analyze-test-failure
 
 ## Evaluation Target
 
-- Agent: `qa`
 - Skill: `bug-analyzer`
 - Eval: `eval-001-analyze-test-failure`
-- Test case: analyze-test-failure
-- Workspace: `workspace/eval-1-analyze-test-failure`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Validation method: fresh Codex subagent review; baseline was derived before reading `bug-analyzer` or QA README, then with-skill behavior was checked against `SKILL.md`, `agents/qa/README.md`, direct shared references, eval assertions, and fixture evidence.
+- Prompt target: 从登录 500 测试失败形成证据化 Bug 报告。
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Prompt: 分析测试失败：登录表单提交后返回 500 错误，生成 Bug 报告
-- Fixture context: `logs/test-failure.log` and `environment/build.md`
-- Evidence present: `POST /api/login 500`, login-form test name, Chromium console error, trace unavailable, branch `login-refresh`, commit `fixture-only`, and local acceptance harness environment.
+- Eval schema: `evals.json` v1.0
+- Fixture version: repository commit `778b042`
+- Fresh run: `2026-07-30 19:26:38 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/bug-analyzer/evals/workspace/eval-1-analyze-test-failure/`
+- `eval_metadata.json` 未声明 `execution_cleanup`。
 
-## Without Skill Baseline
+## Latest Result
 
-- A generic QA response would likely turn the HTTP 500 into a confirmed bug report immediately, with weaker separation between reproducibility, evidence completeness, and severity.
-- It might omit explicit gaps such as missing stack trace, screenshot, network payload, trace file, release channel, and repeated reproduction proof.
-- It could choose GitHub issue creation by default instead of first selecting the repo-appropriate durable Markdown artifact.
-- It would be less likely to gate reusable E2E regression coverage behind `docs/qa/e2e/{feature_path}/cases/TC-NNN-<short-slug>.md`, matching `scripts/`, PRD/TRD alignment, and a confirmed implementation plan when the TC becomes acceptance coverage.
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+- 所有 assertion 场景均已判定；无外部实时样本缺口。
+- 非 E2E 路径变更检查：`assertion_4` 已触发 durable output 选择，但候选只给出报告正文，没有声明 `docs/qa/{feature_path}/bug-<short-slug>.md`；因此本轮未证明新路径行为。
 
-## With Skill Behavior
+Overall result: FAIL
 
-- PASS: `bug-analyzer` accepts the test failure log plus build context as enough QA evidence for a defect intake, while still recording missing trace and supporting artifacts as evidence gaps.
-- PASS: The skill requires failing scenario, source evidence, console/network/test output, and environment/build context before classification.
-- PASS: The classification vocabulary separates evidence status from confidence: `confirmed and reproducible`, `confirmed but environment-sensitive`, and `suspected / needs more evidence` are distinct from severity.
-- PASS: The report contract includes severity rationale, confidence statement, reproduction steps, expected/actual behavior, evidence references, and implementation or release impact.
-- PASS: Durable output defaults to a local Markdown artifact unless repo workflow or the user explicitly requires GitHub issue tracking.
-- PASS: Confirmed E2E reproduction that should become reusable regression coverage must use `docs/qa/e2e/{feature_path}/cases/TC-NNN-<short-slug>.md` plus matching `scripts/TC-NNN-<short-slug>.spec.md`; acceptance-style TC creation or update requires same-path PRD/TRD expectation alignment and a confirmed `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`.
+## Assertion Results
+
+- FAIL `assertion_1`: 已读取 failing scenario、500、console 与 build context，并注明 trace 不可用；但未明确记录截图、服务端 stack、完整 network output 等证据的存在/缺失，摄取清单不完整。
+- PASS `assertion_2`: 使用 `confirmed but environment-sensitive`，并将 evidence status 与 confidence 分开。
+- PASS `assertion_3`: severity 有影响理由，confidence 独立陈述。
+- FAIL `assertion_4`: 正确避免 GitHub-first，但没有给出可审计的本地 durable 文件路径，未覆盖 PR-B 新的非 E2E 路径。
+- FAIL `assertion_5`: 当前 feature_path 与 plan 对齐材料不足时，应明确把 reusable E2E TC 沉淀标为 blocked；候选既未创建/引用 TC+script，也未记录该 blocker。
+- PASS `assertion_6`: 包含 release impact 与 evidence references。
+
+## With-Skill Behavior
+
+候选对分类、严重度、置信度和发布影响处理正确，但证据缺口、durable 路径和 reusable E2E coverage blocker 不完整，故 Behavior FAIL。
+
+## Fresh Without-Skill Baseline
+
+同一 prompt/fixture 的全新 baseline 已在隔离目录生成，未读取 skill、QA README 或历史 baseline。candidate/verdict 均成功；baseline 过度判断为 `confirmed and reproducible`，且同样未处理 reusable TC，semantic verdict 为 FAIL。
 
 ## Failures
 
-- None identified. The current skill contract satisfies all eval assertions for evidence intake, classification, severity/confidence separation, durable output choice, reusable E2E path rules, and impact framing.
+- 未给出 `docs/qa/{feature_path}/bug-<short-slug>.md`。
+- 未完整记录证据缺口与 reusable E2E coverage blocker。
 
 ## Next Steps
 
-- No fixture or skill change is required from this eval.
-- If a real report is produced later, keep the current missing artifacts visible instead of inflating confidence.
+- 后续 fixture 应提供明确 `feature_path` 并把非 E2E 路径设为显式 assertion，以直接覆盖 PR-B 路径变更。
 
 ## Runtime Artifact Policy
 
-- No runtime artifacts were created for this validation.
-- Do not commit transcripts, verdicts, timing files, diagnostics, `with_skill/`, `without_skill/`, `outputs/`, or `comparison.auto.md`.
+- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/`，返回码均为 0、无 timeout。
+- Runtime 不提交；durable 结果仅为本文件。
