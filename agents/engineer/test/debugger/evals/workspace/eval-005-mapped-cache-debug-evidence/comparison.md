@@ -1,37 +1,49 @@
-# Consumption Regression Comparison
+# Eval Result: eval-005-mapped-cache-debug-evidence
 
 ## Evaluation Target
 
+- Agent: `engineer`
 - Skill: `debugger`
 - Eval: `eval-005-mapped-cache-debug-evidence`
+- Workspace: `workspace/eval-005-mapped-cache-debug-evidence`
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws1-consumption-v1`
-- Commit: `0b000b9`
+- Schema: `evals.json` v1.0
+- Fixture：`ws1-consumption-v1`
+- 日期：2026-07-30
+- Fresh run：`tmp/eval-runs/issue-196-l2-2-debugger-20260730-220643/`
+- paired candidates 均为本轮隔离新生成。
 
-## Latest Result
+## Assertion Results
 
-**PASS** — with-skill 发现文档 300 秒与配置 60 秒的 TTL 分歧，并按新增专属规则拒绝以 unverified API 文档单独确立预期，回 PM 对齐后才分类缺陷。
+- PASS `reads_mapped_docs_first`：根据 `src/cache/**` 的 change-map 精准读取 `docs/site/api/cache.md`，未遍历无关文档。
+- PASS `verifies_against_code`：以 `src/cache/ttl.txt` 核证实现为 fixed 60 秒，并结构化对照文档 300 秒。
+- PASS `treats_unverified_as_low_trust`：明确 `last_verified_version: unverified` 为最低信任，不能单独建立批准预期。
 
 ## With-Skill Behavior
 
-- 命中映射文档后回配置核证 TTL，结构化区分文档声明与代码事实。
-- 精确执行 WS1 新增的 expected-behavior 规则：unverified API contract 不能单独作为已批准预期，正确停在 missing_docs → 回 PM 的分支。
+候选使用映射文档定位、代码事实定性，确认 60/300 秒分歧，同时把“应修代码还是文档”停在 `missing_docs` 的预期对齐边界。
 
 ## Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
-- baseline 也确认了配置不一致并谨慎处理归因，但没有明确的预期依据判定规则，对文档采信边界是临场把握。
+来源为本轮隔离子代理使用相同 prompt 与 fixture 生成，未接触 skill、Engineer README 或 with-skill。baseline 同样精准读取映射文档、以代码核证 TTL，并明确 unverified 最低信任，满足 3/3 assertions。
 
 ## Failures
 
-- 无。
+- With-skill：无。
+- Baseline：无；本轮没有 assertion 级行为差异。
+
+## Latest Result
+
+- Behavior result: PASS
+- Coverage result: FULL
+- Overall result: PASS
 
 ## Next Steps
 
-- 保留本结果；后续 fixture 可增加干扰文档以放大行为差距。
+保留映射消费与低信任文档覆盖；如需测量 skill 增益，可加入无关文档干扰或移除 prompt 中的明确诊断导向。
 
 ## Runtime Artifact Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+候选、verdict 和诊断只存放于 ignored runtime 目录，不提交；本文件是 durable 结果。

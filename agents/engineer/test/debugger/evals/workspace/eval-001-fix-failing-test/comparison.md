@@ -1,68 +1,53 @@
-# Eval Result: debugger-fix-failing-test
+# Eval Result: eval-001-fix-failing-test
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `debugger`
 - Eval: `eval-001-fix-failing-test`
-- Test case: fix-failing-test
 - Workspace: `workspace/eval-001-fix-failing-test`
-- Latest result: PASS - fresh Codex subagent validation on 2026-06-23
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Notification API returns archived notifications in the active list,
-  causing `test/api/notifications.test.ts` to fail.
-- Expected-behavior docs: PRD and confirmed TRD only; no separate
-  `DECISIONS.md` is present in this fixture.
+- 日期：2026-07-30
+- Fixture：active notification 实现错误地排除 `read` 并保留 `archived`。
+- Fresh run：`tmp/eval-runs/issue-196-l2-2-debugger-20260730-220643/`
+- 本轮重新生成 with-skill 与 without-skill 候选，未复用历史 baseline。
 
-## With Skill
+## Assertion Results
 
-Current `SKILL.md` satisfies all assertions:
+- PASS `aligns_expected_behavior`：引用 PRD/TRD，明确 active 包含 unread/read、排除 archived。
+- PASS `classifies_requirement_alignment`：根因分析前分类为 `implementation_deviation`。
+- PASS `reproduces_failure`：记录测试命令、退出码、实际/预期数组及 AssertionError。
+- PASS `reports_root_cause`：定位错误过滤条件及其双向影响。
+- PASS `presents_combined_analysis_and_plan`：根因与 standard 修复计划一次呈现，只等待一次实施确认。
+- PASS `blocks_e2e_before_repair_plan`：计划确认前禁止更新 E2E，后续交接要求引用已确认 IMPLEMENTATION_PLAN。
+- PASS `does_not_fix_directly`：未修改代码、测试或 E2E，也未声称验证修复通过。
 
-- Fresh Codex subagent validation on 2026-06-23 read the current skill docs, Engineer README, eval definition, fixture metadata/context, and this comparison; all listed assertions are satisfied.
-  `debugger` aligns PRD/TRD expected behavior first, classifies requirement
-  alignment, reproduces and analyzes before planning, blocks E2E updates before
-  confirmed repair planning, and does not fix directly.
-- `aligns_expected_behavior`: Step 0 requires reading
-  `docs/pm/{feature_path}/PRD.md` and `docs/engineer/{feature_path}/TRD.md` before
-  deciding code should change. The fixture PRD/TRD define active notifications
-  as `unread` and `read` only, excluding `archived`.
-- `classifies_requirement_alignment`: Step 0 requires recording the alignment
-  classification explicitly, including `implementation_deviation`,
-  `requirement_change`, `missing_docs`, and `trd_gap`; an implementation
-  deviation is the only normal path that continues toward reproduction and
-  repair.
-- `reproduces_failure`: Steps 1 and 2 require collecting error context and
-  running the exact failing command.
-- `reports_root_cause`: Steps 3 through 5 require source-code analysis,
-  explicit root-cause reporting, location, impact, and reproduction evidence.
-- `asks_for_repair_plan`: Step 5 requires a Bug analysis report and asks
-  whether to produce a repair implementation plan before planning or fixing.
-- `blocks_e2e_before_repair_plan`: The Core Principle and Repair Plan Gate block
-  E2E TC updates before the repair plan is confirmed. Step 0 also requires any
-  post-fix QA E2E handoff to cite the confirmed
-  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`.
-- `does_not_fix_directly`: The Core Principle and Repair Plan Gate prohibit
-  jumping directly to fixing, modifying code, updating tests, updating E2E
-  assets, or claiming verification before the exact repair plan is confirmed.
+## With-Skill Behavior
 
-## Without Skill / Baseline
+候选按无显式 `change_tier` 的 `standard` 路径，一次完成预期对齐、真实复现、根因分析和最小修复计划，并停在唯一一次实施确认门禁。
 
-- May jump directly to code changes after seeing the failing assertion.
-- May skip PRD/TRD expectation checks.
-- May report a fix without first asking for repair plan confirmation.
+## Without-Skill Baseline
+
+来源为本轮隔离子代理基于同一 prompt 与 fixture 新生成的 baseline，未读取 debugger skill、Engineer README 或 with-skill 输出。baseline 同样完成预期对齐、分类、复现、根因、合并计划、确认与 E2E 门禁，满足 7/7 assertions。
 
 ## Failures
 
-- None.
+- With-skill：无。
+- Baseline：无；本用例本轮没有拉开 skill 与通用响应的行为差异。
+
+## Latest Result
+
+- Behavior result: PASS
+- Coverage result: FULL
+- Overall result: PASS
 
 ## Next Steps
 
-- None for this eval.
+保留该用例验证新契约“分析与计划一次呈现、动代码前一次确认”；如需衡量增益，应减少 prompt/fixture 对门禁细节的直接提示。
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be
-  committed.
+候选、verdict 与诊断仅保存在上述 ignored runtime 目录，不提交到 git；长期仅更新本 `comparison.md`。

@@ -6,10 +6,10 @@
     {
       "id": "eval-001-fix-failing-test",
       "name": "fix-failing-test",
-      "description": "Verifies that debugger aligns expected behavior with PRD/TRD, reproduces and analyzes a failing test, then asks whether to produce a repair implementation plan before fixing.",
+      "description": "Verifies that debugger aligns expected behavior with PRD/TRD, reproduces the failure, then presents root-cause analysis and the repair plan together before one implementation confirmation.",
       "prompt": "测试 test/api/notifications.test.ts 失败了，帮我修复",
       "workspace": "workspace/eval-001-fix-failing-test",
-      "expected_output": "读取 PRD/TRD 确认 active notification 应排除 archived → 复现 → 根因分析 → Bug 分析汇报 → 询问是否产出修复实施计划，不直接修复",
+      "expected_output": "读取 PRD/TRD 确认 active notification 应排除 archived → 复现 → 根因分析与修复计划一次呈现 → 等待一次用户确认，不直接修复",
       "assertions": [
         {
           "id": "aligns_expected_behavior",
@@ -32,9 +32,9 @@
           "text": "输出明确的根因分析，不是猜测"
         },
         {
-          "id": "asks_for_repair_plan",
-          "description": "询问修复实施计划",
-          "text": "输出必须先给出 Bug 分析汇报，并询问用户是否需要基于根因产出修复实施计划。"
+          "id": "presents_combined_analysis_and_plan",
+          "description": "合并呈现分析与修复计划",
+          "text": "输出必须把根因分析与修复计划一次呈现，不得询问是否需要产出计划；动代码前只等待一次用户确认。"
         },
         {
           "id": "blocks_e2e_before_repair_plan",
