@@ -5,41 +5,51 @@
 - Agent: `devops`
 - Skill: `deployment-planner`
 - Eval: `eval-002-python-api-only`
-- Test case: python-api-only
 - Workspace: `workspace/eval-002-python-api-only`
-- Latest result: PASS - 2026-07-26 fresh paired validation completed; with_skill and fresh without_skill both satisfied 3/3 assertions.
+- Validation: 2026-07-31 fresh paired Codex subagent validation
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: confirmed API-only deployment handoff, FastAPI manifest, and health endpoint with an explicit no-database boundary
-- Expected output: 生成简化的部署配置，不包含数据库相关内容
+- Fixture: confirmed API-only handoff, FastAPI manifest, health endpoint, and explicit no-database boundary
+- With-skill source: `tmp/eval-runs/issue-196-l2-1-20260731-0008/with_skill/eval-002-python-api-only/`
+- Fresh baseline source: `tmp/eval-runs/issue-196-l2-1-20260731-0008/without_skill_fresh2/eval-002-python-api-only/`
 
-## Assertions
+## Latest Result
 
-- PASS `deploy_local_env_example_database_url`: local env 不包含 `DATABASE_URL`。
-- PASS `deploy_docker_docker_compose_yml_app`: Compose 仅包含 app 服务。
-- PASS `deploy_local_start_sh`: start script 不包含数据库初始化。
+- Behavior result: PASS
+- Coverage result: FULL
+- All 3 with-skill assertions were exercised and passed.
 
-## With Skill
+Overall result: PASS
 
-- 满足 3 项负向边界断言，并额外提供 non-root 镜像、healthcheck 和 Helm probes/resources。
-- Compose 解析通过。
+## Assertion Results
 
-## Without Skill / Baseline
+- PASS `deploy_local_env_example_database_url`: generated local `.env.example` contains only `PORT` and no `DATABASE_URL`.
+- PASS `deploy_docker_docker_compose_yml_app`: generated `docker-compose.yml` defines only the `app` service.
+- PASS `deploy_local_start_sh`: generated executable `start.sh` contains no database, Redis, migration, or initialization step.
 
-- 2026-07-26 使用同一 prompt 和 fixture 重新生成 fresh baseline，未读取或应用 deployment-planner skill、Agent README、历史 comparison 或旧 baseline。
-- baseline 同样满足 3/3 assertions，没有引入数据库变量、服务或初始化步骤。
+## With-Skill Behavior
+
+- The output generated the confirmed local, Docker, and Helm targets while preserving the API-only boundary across all assets.
+- It did not invent a persistence dependency, related environment variable, or initialization step.
+
+## Fresh Without-Skill Baseline
+
+- The valid fresh baseline used the same prompt and pristine fixture without reading or applying the target skill or DevOps Agent README.
+- Its prose preserved the no-database semantic boundary, but it satisfied 0/3 exact artifact assertions: local `.env.example` and `start.sh` were absent, and the Compose artifact was named `compose.yaml` with service key `api`, not the asserted `docker-compose.yml` containing only `app`.
+- The earlier `tmp/eval-runs/issue-196-l2-1-20260731-0008/without_skill/` run is excluded because its isolation was invalid; none of its output informed this result.
 
 ## Failures
 
-- 无 assertion failure。
-- 环境中没有 Helm，未运行 `helm lint`；当前 assertions 对 skill 增益的区分度有限。
+- No with-skill assertion failure or validation blocker.
+- The valid baseline preserved the broad no-database behavior but missed all three exact generated-artifact contracts.
 
 ## Next Steps
 
-- 保留 API-only 的 no-database 负向覆盖。
+- Keep this negative-boundary regression case and its exact artifact checks.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics were generated only in an ignored scratch workspace and are not committed.
+- Runtime candidates, generated files, transcripts, results, and diagnostics remain under ignored `tmp/eval-runs/` paths and are not copied into the durable fixture.
+- Only this durable `comparison.md` is updated.

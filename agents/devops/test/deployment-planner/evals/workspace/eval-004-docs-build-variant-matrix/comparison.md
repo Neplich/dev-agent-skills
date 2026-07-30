@@ -1,41 +1,57 @@
-# Skill Eval Comparison
+# Eval Result: eval-004-docs-build-variant-matrix
 
 ## Evaluation Target
 
+- Agent: `devops`
 - Skill: `deployment-planner`
 - Eval: `eval-004-docs-build-variant-matrix`
-- Review context: issue #162 fresh paired validation
+- Workspace: `workspace/eval-004-docs-build-variant-matrix`
+- Validation: 2026-07-31 fresh paired Codex subagent validation
 
 ## Test Set / Fixture Version
 
-- Fixture: issue #162 scenario evidence in this workspace
-- Validation date: 2026-07-22
-- Execution cleanup: all declared runtime paths were absent from pristine scratch fixtures
+- Schema: `evals.json` v1.0
+- Fixture: documentation host evidence for Public, Internal, and Preview build variants
+- With-skill source: `tmp/eval-runs/issue-196-l2-1-20260731-0008/with_skill/eval-004-docs-build-variant-matrix/`
+- Fresh baseline source: `tmp/eval-runs/issue-196-l2-1-20260731-0008/without_skill_fresh2/eval-004-docs-build-variant-matrix/`
 
 ## Latest Result
 
-**PASS (3/3 assertions)** — fresh Codex subagent semantic review.
+- Behavior result: PASS
+- Coverage result: FULL
+- All 3 with-skill assertions were exercised and passed.
+
+Overall result: PASS
+
+## Assertion Results
+
+- PASS `enumerates_all_docs_variants`: the matrix includes Public, Internal, and host Preview and does not claim completeness.
+- PASS `covers_deployment_unit_chain`: each row covers build target, context, static entry, image unit, Compose, Kubernetes/Helm resources and values, health check, runtime entry, and disposition.
+- PASS `hands_units_to_cicd`: every variant receives an explicit integrated or blocked disposition, confirmed image coverage is handed to `cicd-bootstrap`, and no workflow is created.
 
 ## With-Skill Behavior
 
-- 矩阵覆盖 Public/Internal/Preview 及完整 deployment-unit 字段，逐变体处置并交 CI/CD。
-- Candidate source: fresh `tmp/eval-runs/issue-162/with_skill/eval-004-docs-build-variant-matrix/candidate-output.md`.
+- The output makes missing evidence explicit instead of inventing deployment details and correctly concludes that overall completeness is blocked.
+- Public, Internal, and Preview remain visible through the full deployment-unit chain, including the non-production Preview variant.
+- The blockers recorded in the runtime result are fixture evidence gaps and expected matrix dispositions, not eval execution blockers or assertion failures.
 
 ## Fresh Without-Skill Baseline
 
-- PARTIAL (1/3)；列出三个变体，但缺 context/static entry、K8s resources、values、health、runtime 与稳定处置。
-- The same prompt and pristine fixture were used; no historical baseline, target skill, Agent README, shared skill-map, old comparison, or with-skill output was used to compose it.
+- The valid fresh baseline used the same prompt and pristine fixture without reading or applying the target skill or DevOps Agent README.
+- It satisfied 1/3 assertions by enumerating all three variants.
+- It omitted build context, static entry, named image units, Kubernetes resource chain, values, health checks, and runtime entry, and it did not hand confirmed image units to `cicd-bootstrap` with canonical per-variant dispositions.
+- The earlier `tmp/eval-runs/issue-196-l2-1-20260731-0008/without_skill/` run is excluded because its isolation was invalid; none of its output informed this result.
 
 ## Failures
 
-- baseline 部署单元矩阵不完整。
-- No with-skill assertion failure or runner/credential blocker.
+- No with-skill assertion failure or eval execution blocker.
+- The valid baseline missed deployment-unit-chain completeness and CI/CD handoff assertions.
 
 ## Next Steps
 
-- Keep this regression case; strengthen fixture ambiguity later where the baseline already passes.
+- Keep this completeness-gate regression case; fixture evidence gaps should continue to produce explicit blocked dispositions without reducing assertion coverage.
 
 ## Runtime Artifact Policy
 
-- Runtime candidates, copied fixtures, verdict, status, and diagnostics remain under `tmp/eval-runs/issue-162/` and are not committed.
-- Only this durable comparison, eval definition, metadata, and fixture evidence are submitted.
+- Runtime candidates, results, transcripts, and diagnostics remain under ignored `tmp/eval-runs/` paths and are not copied into the durable fixture.
+- Only this durable `comparison.md` is updated.

@@ -100,6 +100,11 @@
           "id": "treats_unverified_as_low_trust",
           "description": "未核证运行时文档最低信任",
           "text": "对 last_verified_version: unverified 按最低信任处理，关键部署参数必须由代码或测试证据确认。"
+        },
+        {
+          "id": "omits_unselected_targets",
+          "description": "不生成未选择的部署目标",
+          "text": "目标矩阵仅包含容器化部署建议；不得生成 deploy/local 或 deploy/helm 资产。"
         }
       ]
     },
