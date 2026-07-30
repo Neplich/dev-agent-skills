@@ -79,7 +79,7 @@
     "debugger": {
       "source": "agents/engineer/skills/debugger",
       "sourceType": "local",
-      "computedHash": "76c6c86e2672f86a0a8dfa0a758944403886fd7bdb9f8811eb039c2984e34666"
+      "computedHash": "1459ef437e6cd686e7b7abdb8d28e306fb54e247afb9d25fd6321c89fc71a9d4"
     },
     "delivery": {
       "source": "agents/engineer/skills/delivery",

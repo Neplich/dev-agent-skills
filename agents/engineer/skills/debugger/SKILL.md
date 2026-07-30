@@ -6,10 +6,9 @@ visibility: internal
 
 # Debugger
 
-Systematically reproduce, diagnose, and fix bugs. Follows a strict process:
-align expected behavior first, reproduce the failure, analyze the root cause,
-report the bug analysis, plan the repair with user confirmation, then fix
-minimally and verify.
+Systematically reproduce, diagnose, and fix bugs: align expected behavior,
+reproduce the failure, analyze the root cause, present the analysis and repair
+plan together, get user confirmation, then fix minimally and verify.
 
 ## When to Use
 
@@ -25,13 +24,12 @@ minimally and verify.
 **Never guess.** Follow this order strictly:
 
 ```
-Align Expected Behavior → Reproduce → Analyze → Report → Repair Plan → Confirm → Fix → Verify
+Align Expected Behavior → Reproduce → Analyze → Report + Repair Plan → Confirm → Fix → Verify
 ```
 
 Do NOT jump to fixing. Do NOT propose or apply a fix before understanding the
 expected behavior, root cause, reporting the analysis, and getting confirmation
-on the repair plan. Do NOT create or update E2E test cases before the repair
-plan is confirmed.
+on the repair plan. Do NOT create or update E2E test cases before the plan is confirmed.
 
 ## PM Handoff Entry Gate
 
@@ -65,10 +63,14 @@ asks not to use sub-agents.
 
 ## Repair Plan Gate
 
-After the root cause is confirmed, output the bug analysis report first and ask
-whether the user wants a repair implementation plan. Do not write code yet.
+After confirming the root cause, output the bug analysis and repair plan
+together without asking whether to produce the plan. Do not write code yet.
 
-If the user confirms, produce a repair plan that includes:
+Consume `change_tier` from the PM handoff packet. When an equivalent confirmed
+document chain satisfies the entry gate without a handoff packet, default to
+`standard` per the contract in `AGENTS.md` (变更分级契约). For `hotfix`, the
+plan may be one sentence covering root cause and repair approach plus the
+verification command. For `standard` and `major`, include:
 
 - problem, root cause, location, and impact
 - PRD/TRD alignment conclusion and source document paths
@@ -81,9 +83,9 @@ If the user confirms, produce a repair plan that includes:
 - whether implementation/validation sub-agent split is needed
 - risks, blockers, and forbidden areas
 
-Present the repair plan and wait for user confirmation. Do not apply the fix,
-update tests, update E2E TC, update E2E scripts or results, or delegate
-implementation until the user confirms the exact repair plan.
+Present the combined analysis and tier-appropriate plan, then wait for one user
+confirmation. Until then, do not apply the fix, update tests or E2E artifacts,
+or delegate implementation.
 
 ## Step 0 — Align expected behavior with PRD / TRD
 
@@ -233,12 +235,12 @@ Before fixing, state the root cause clearly:
 **影响**: <what else might be affected>
 ```
 
-## Step 5 — Report and ask for repair planning
+## Step 5 — Report analysis and repair plan
 
-After confirming the root cause, report the analysis before planning or fixing:
+Report the analysis and tier-appropriate repair plan together before fixing:
 
 ```text
-## Bug 分析汇报
+## Bug 分析与修复计划
 
 - **问题**: <what's happening>
 - **预期依据**: <PRD / TRD paths and sections, optional decisions, or blocked alignment gap>
@@ -246,19 +248,6 @@ After confirming the root cause, report the analysis before planning or fixing:
 - **位置**: <file:line>
 - **影响**: <what else might be affected>
 - **复现证据**: <command/action and observed failure>
-
-是否需要我基于这个根因产出修复实施计划？
-```
-
-Wait for the user's answer before producing a repair plan. If the user does not
-confirm, stop after the analysis report.
-
-## Step 6 — Produce repair implementation plan
-
-Only after the user confirms repair planning, produce the plan:
-
-```text
-## 修复实施计划
 
 ### 文件变更清单
 - 修改 `<path>` — <minimal fix and why>
@@ -275,9 +264,10 @@ Only after the user confirms repair planning, produce the plan:
 确认后开始修复？
 ```
 
-Wait for user confirmation before fixing.
+For `hotfix`, compress the template as described in the gate above. For
+`standard` and `major`, keep it in full. Wait for one confirmation before fixing.
 
-## Step 7 — Implement minimal fix
+## Step 6 — Implement minimal fix
 
 Fix the root cause with the smallest possible change:
 
@@ -291,7 +281,7 @@ the root cause and repair plan are confirmed. The task must include the failing
 command, confirmed root cause, confirmed repair plan, owned files or modules,
 forbidden areas, and the requirement not to revert unrelated changes.
 
-## Step 8 — Verify fix
+## Step 7 — Verify fix
 
 Run the previously failing command:
 
@@ -316,7 +306,7 @@ It should check the failure evidence, root-cause fit, regression coverage,
 repository rules, unrelated changes, and residual risk. It must not broaden the
 fix scope.
 
-## Step 9 — Report
+## Step 8 — Report
 
 ```text
 ## 修复报告

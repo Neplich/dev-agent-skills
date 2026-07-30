@@ -9,7 +9,7 @@ version: "1.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-07-30"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -84,9 +84,8 @@ changelog:
 - Align Expected Behavior
 - Reproduce
 - Analyze
-- Report and ask for repair planning
-- Repair Plan after confirmation
-- Confirm repair plan
+- Report analysis and repair plan together
+- Confirm
 - Fix
 - Verify
 - Final Report
@@ -117,13 +116,12 @@ flowchart LR
     Context --> Step1["Align Expected Behavior"]
     Step1 --> Step2["Reproduce"]
     Step2 --> Step3["Analyze"]
-    Step3 --> Step4["Report and ask for repair planning"]
-    Step4 --> Step5["Repair Plan after confirmation"]
-    Step5 --> Step6["Confirm repair plan"]
-    Step6 --> Step7["Fix"]
-    Step7 --> Step8["Verify"]
-    Step8 --> Step9["Final Report"]
-    Step9 --> Artifact["输出具体产物或 blocked 结果"]
+    Step3 --> Step4["Report analysis and repair plan together"]
+    Step4 --> Step5["Confirm"]
+    Step5 --> Step6["Fix"]
+    Step6 --> Step7["Verify"]
+    Step7 --> Step8["Final Report"]
+    Step8 --> Artifact["输出具体产物或 blocked 结果"]
     Artifact --> Handoff["交接或结束"]
 ```
 
