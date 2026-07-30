@@ -29,7 +29,7 @@ Align Expected Behavior → Reproduce → Analyze → Report + Repair Plan → C
 
 Do NOT jump to fixing. Do NOT propose or apply a fix before understanding the
 expected behavior, root cause, reporting the analysis, and getting confirmation
-on the repair plan. Do NOT update E2E test cases before the plan is confirmed.
+on the repair plan. Do NOT create or update E2E test cases before the plan is confirmed.
 
 ## PM Handoff Entry Gate
 
