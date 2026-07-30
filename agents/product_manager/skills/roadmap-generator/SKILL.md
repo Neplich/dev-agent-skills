@@ -267,8 +267,8 @@ Gantt chart rules:
 
 - **No milestones**: skip milestone sections, only output Backlog section, suggest user create milestones
 - **No issues**: output milestone titles with descriptions only, note "暂无关联 issue"
-- **No due dates on any milestone**: skip Mermaid chart, classify all as ⚪ 未排期
-- **Mixed: some milestones have dates, some don't**: dated ones go into timeline phases, undated ones go to ⚪ 未排期
+- **No due dates on any milestone**: skip Mermaid chart; apply semver semantic inference and list unmatched milestones for user confirmation instead of blanket-classifying as 未排期
+- **Mixed: some milestones have dates, some don't**: dated ones go into timeline phases; undated ones go through semantic inference, with unmatched ones listed for user confirmation
 - **Very large backlog (100+ unassigned issues)**: cap at 20, show count summary
 - **Update mode with no existing roadmap**: fall back to Generate mode silently
 - **No GitHub auth**: surface error clearly, tell user to run `gh auth login`

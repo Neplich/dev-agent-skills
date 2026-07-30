@@ -39,7 +39,7 @@
     "roadmap-generator": {
       "source": "agents/product_manager/skills/roadmap-generator",
       "sourceType": "local",
-      "computedHash": "c0686addd0ae88a5c28b35c2314309fd09d4aab2505fe6cc24c56a2ba5b055c9"
+      "computedHash": "531823781545bfdad9a3f2e67c978f4596bb7730fbfc4560580a8ac15bb6f0bf"
     },
     "github-reader": {
       "source": "agents/product_manager/skills/github-reader",
