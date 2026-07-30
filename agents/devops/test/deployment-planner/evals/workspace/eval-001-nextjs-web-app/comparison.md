@@ -5,46 +5,56 @@
 - Agent: `devops`
 - Skill: `deployment-planner`
 - Eval: `eval-001-nextjs-web-app`
-- Test case: nextjs-web-app
 - Workspace: `workspace/eval-001-nextjs-web-app`
-- Latest result: PASS - 2026-07-26 fresh paired validation completed; with_skill and fresh without_skill both satisfied 8/8 assertions.
+- Validation: 2026-07-31 fresh paired Codex subagent validation
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: confirmed repo-wide deployment handoff, Next.js manifest, and health endpoint
-- Expected output: 在 deploy/ 目录下生成三个子目录，每个包含 README.md 和相应的配置文件
+- Fixture: confirmed repo-wide handoff, Next.js manifest, and health endpoint
+- With-skill source: `tmp/eval-runs/issue-196-l2-1-20260731-0008/with_skill/eval-001-nextjs-web-app/`
+- Fresh baseline source: `tmp/eval-runs/issue-196-l2-1-20260731-0008/without_skill_fresh2/eval-001-nextjs-web-app/`
 
-## Assertions
+## Latest Result
 
-- PASS `deploy_local_readme_md`: 生成 local README。
-- PASS `deploy_local_env_example_database_url_redis_url`: local env 包含 `DATABASE_URL` 与 `REDIS_URL`。
-- PASS `deploy_local_start_sh`: local start script 可执行。
-- PASS `deploy_docker_dockerfile`: 生成 Dockerfile。
-- PASS `deploy_docker_docker_compose_yml_app_postgres_redis`: Compose 包含 app、postgres、redis。
-- PASS `deploy_helm_chart_yaml`: 生成 Helm Chart。
-- PASS `deploy_helm_values_yaml_replicacount`: values 包含 `replicaCount`。
-- PASS `deploy_helm_templates_deployment_yaml`: 生成 deployment template。
+- Behavior result: PASS
+- Coverage result: FULL
+- All 8 with-skill assertions were exercised and passed.
 
-## With Skill
+Overall result: PASS
 
-- 除满足 8 项断言外，还提供 multi-stage/non-root 镜像、依赖健康门禁、持久卷、外部服务 values、probes 与 resources。
-- with_skill 与 baseline 的 Compose 均通过 `config --quiet`。
+## Assertion Results
 
-## Without Skill / Baseline
+- PASS `deploy_local_readme_md`: `generated/deploy/local/README.md` exists.
+- PASS `deploy_local_env_example_database_url_redis_url`: local `.env.example` contains both `DATABASE_URL` and `REDIS_URL`.
+- PASS `deploy_local_start_sh`: `generated/deploy/local/start.sh` exists and has executable mode `-rwxr-xr-x`.
+- PASS `deploy_docker_dockerfile`: `generated/deploy/docker/Dockerfile` exists.
+- PASS `deploy_docker_docker_compose_yml_app_postgres_redis`: `docker-compose.yml` defines exactly the required `app`, `postgres`, and `redis` services.
+- PASS `deploy_helm_chart_yaml`: `generated/deploy/helm/Chart.yaml` exists.
+- PASS `deploy_helm_values_yaml_replicacount`: Helm values define `replicaCount`.
+- PASS `deploy_helm_templates_deployment_yaml`: the Helm deployment template exists.
 
-- 2026-07-26 使用同一 prompt 和 fixture 重新生成 fresh baseline，未读取或应用 deployment-planner skill、Agent README、历史 comparison 或旧 baseline。
-- baseline 同样满足 8/8 assertions，但镜像加固、健康门禁和 Helm 运行约束较简略。
+## With-Skill Behavior
+
+- The output derived the explicit local, Docker, and Helm target matrix from the handoff and generated all required artifacts.
+- It preserved the handoff boundary: Compose includes PostgreSQL and Redis, while Helm deploys only the application and injects external dependency addresses.
+
+## Fresh Without-Skill Baseline
+
+- The valid fresh baseline used the same prompt and pristine fixture without reading or applying the target skill or DevOps Agent README.
+- It satisfied 6/8 exact artifact assertions. It omitted `deploy/local/start.sh` and named the Compose file `compose.yaml` instead of the asserted `docker-compose.yml`, although the alternate Compose file did contain the three required services.
+- The earlier `tmp/eval-runs/issue-196-l2-1-20260731-0008/without_skill/` run is excluded because its isolation was invalid; none of its output informed this result.
 
 ## Failures
 
-- 无 assertion failure。
-- 环境中没有 Helm，未运行 `helm lint`；当前 assertions 对 skill 增益的区分度有限。
+- No with-skill assertion failure or validation blocker.
+- The valid baseline missed two exact artifact-contract assertions.
 
 ## Next Steps
 
-- 保留 local、Docker、Helm 三目标覆盖。
+- Keep this target-matrix and exact-artifact regression case.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics were generated only in an ignored scratch workspace and are not committed.
+- Runtime candidates, generated files, transcripts, results, and diagnostics remain under ignored `tmp/eval-runs/` paths and are not copied into the durable fixture.
+- Only this durable `comparison.md` is updated.

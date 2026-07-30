@@ -6,7 +6,9 @@ visibility: internal
 
 # Deployment Planner
 
-Generate three deployment configurations based on project requirements: local development, Docker containerization, and Kubernetes (Helm) orchestration.
+Generate deployment configurations for the confirmed target matrix. Local
+development, Docker containerization, and Kubernetes (Helm) orchestration are
+available targets, not defaults.
 
 ## When to Use
 
@@ -36,11 +38,19 @@ Before generating anything, inspect:
 
 - the current codebase shape and runtime stack
 - relevant engineering docs and PM deployment requirements when they exist
+- the deployment target matrix
 - whether `deploy/` already exists
 - whether the work is repo-wide or feature-scoped
 - for feature-scoped work, the confirmed `feature_path` and the matching
   `docs/engineer/{feature_path}/TRD.md` and
   `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
+
+Determine the target matrix before generating any files. When the TRD or PM
+handoff packet explicitly names deployment targets, generate only those
+targets. Otherwise, infer targets only when existing deployment assets such as
+`deploy/` or CI configuration provide sufficient evidence. If neither source
+defines the targets clearly, ask the user which targets are required. Never
+default to generating local, Docker, and Helm together.
 
 If `deploy/` already exists, prefer extension or targeted iteration over blind regeneration.
 
@@ -61,6 +71,7 @@ Read from engineering docs, PM docs, or ask the user:
 - **Tech stack**: Language, framework, database
 - **Scale**: Expected users, traffic volume
 - **Environment needs**: staging/production split
+- **Deployment targets**: Local, Docker, Kubernetes/Helm, or another confirmed target
 - **Dependencies**: External services, databases
 
 ## Step 1 — Analyze Project Requirements
@@ -81,89 +92,86 @@ If no durable deployment requirements exist, ask the user:
 2. What runtime/language does it use?
 3. Does it need a database? Which one?
 4. Any external services required?
+5. Which deployment targets are required?
 
-## Step 2 — Create Local Development Setup (`deploy/local/`)
+## Step 2 — Local Development Target Reference (`deploy/local/`)
 
-Generate files for local development:
+When the target matrix includes local development, generated assets must
+document prerequisites and dependencies, quick start and startup behavior,
+required environment variables, and database setup or migrations when needed.
 
-### 2.1 Create `deploy/local/README.md`
+Reference structure:
+```
+deploy/local/
+├── README.md
+├── .env.example
+└── start.sh
+```
 
-Document:
-- Prerequisites (Node.js version, Python version, etc.)
-- Quick start commands
-- Environment variables needed
-- Database setup instructions
-
-### 2.2 Create `deploy/local/.env.example`
-
-Template with all required environment variables:
+An environment example may include:
 ```
 DATABASE_URL=postgresql://localhost:5432/myapp_dev
 REDIS_URL=redis://localhost:6379
 API_KEY=your_api_key_here
 ```
 
-### 2.3 Create `deploy/local/start.sh`
-
-Startup script that:
+The startup entry should:
 - Checks prerequisites
 - Starts database (if needed)
 - Runs migrations
 - Starts the application
 
-## Step 3 — Create Docker Setup (`deploy/docker/`)
+## Step 3 — Docker Target Reference (`deploy/docker/`)
 
-Generate Docker containerization files:
+When the target matrix includes Docker, generated assets must document Docker
+and Compose prerequisites, build and run commands, port mappings, volume
+mounts, environment variables, and service dependencies.
 
-### 3.1 Create `deploy/docker/README.md`
+Reference structure:
+```
+deploy/docker/
+├── README.md
+├── Dockerfile
+├── docker-compose.yml
+└── .env.example
+```
 
-Document:
-- Docker and docker-compose installation
-- Build and run commands
-- Port mappings
-- Volume mounts
-
-### 3.2 Create `deploy/docker/Dockerfile`
-
-Multi-stage build optimized for production:
+The Dockerfile should:
 - Use official base images
 - Install dependencies
 - Copy application code
 - Set up non-root user
 - Expose ports
 
-### 3.3 Create `deploy/docker/docker-compose.yml`
-
-Define services:
+The Compose setup should define:
 - Application container
 - Database container (if needed)
 - Redis/cache (if needed)
 - Network configuration
 - Volume persistence
 
-### 3.4 Create `deploy/docker/.env.example`
+## Step 4 — Kubernetes/Helm Target Reference (`deploy/helm/`)
 
-Docker-specific environment variables
+When the target matrix includes Kubernetes/Helm, generated assets must document
+Helm prerequisites, chart installation, configuration options, scaling, and
+runtime dependencies.
 
-## Step 4 — Create Kubernetes/Helm Setup (`deploy/helm/`)
+Reference structure:
+```
+deploy/helm/
+├── README.md
+├── Chart.yaml
+├── values.yaml
+└── templates/
+    ├── deployment.yaml
+    ├── service.yaml
+    ├── ingress.yaml
+    ├── configmap.yaml
+    ├── secret.yaml
+    └── hpa.yaml
+```
 
-Generate Helm charts for K8s deployment:
-
-### 4.1 Create `deploy/helm/README.md`
-
-Document:
-- Helm installation
-- Chart installation commands
-- Configuration options
-- Scaling instructions
-
-### 4.2 Create `deploy/helm/Chart.yaml`
-
-Helm chart metadata
-
-### 4.3 Create `deploy/helm/values.yaml`
-
-Default configuration:
+Default values should cover:
 - Replica count
 - Image repository and tag
 - Resource limits (CPU, memory)
@@ -171,9 +179,7 @@ Default configuration:
 - Ingress configuration
 - Environment variables
 
-### 4.4 Create `deploy/helm/templates/`
-
-K8s resource templates:
+Kubernetes resource templates should cover:
 - `deployment.yaml` - Application deployment
 - `service.yaml` - Service definition
 - `ingress.yaml` - Ingress rules (if needed)
@@ -183,36 +189,15 @@ K8s resource templates:
 
 ## Step 5 — Verify Directory Structure
 
-Ensure all files are created:
+Verify only the targets selected in the target matrix:
 
 ```bash
 tree deploy/
 ```
 
-Expected structure:
-```
-deploy/
-├── local/
-│   ├── README.md
-│   ├── .env.example
-│   └── start.sh
-├── docker/
-│   ├── README.md
-│   ├── Dockerfile
-│   ├── docker-compose.yml
-│   └── .env.example
-└── helm/
-    ├── README.md
-    ├── Chart.yaml
-    ├── values.yaml
-    └── templates/
-        ├── deployment.yaml
-        ├── service.yaml
-        ├── ingress.yaml
-        ├── configmap.yaml
-        ├── secret.yaml
-        └── hpa.yaml
-```
+Compare the result with the selected target reference structures and confirm
+that each target includes its required usage, environment, startup, and
+dependency information.
 
 ## Step 6 — Summary
 
@@ -220,22 +205,11 @@ Output:
 ```
 ## 部署配置生成完成
 
-已创建三种部署方案：
+目标矩阵：
+- <target>: <created path and startup/install command>
 
-### Local 开发环境
-- 位置: `deploy/local/`
-- 启动: `cd deploy/local && ./start.sh`
-- 用途: 本地开发调试
-
-### Docker 容器化
-- 位置: `deploy/docker/`
-- 启动: `cd deploy/docker && docker-compose up`
-- 用途: 一键部署，环境一致性
-
-### Kubernetes (Helm)
-- 位置: `deploy/helm/`
-- 安装: `helm install myapp ./deploy/helm`
-- 用途: 生产环境，高可用，自动扩展
+未选择的目标：
+- <target>: <reason omitted>
 
 ### 下一步建议
 - 使用 `cicd-bootstrap` skill 搭建自动化部署流程
@@ -247,6 +221,8 @@ Output:
 - **No database**: Skip database-related configurations
 - **Monorepo**: Generate separate configs for each service
 - **Existing deploy/ directory**: Ask user before overwriting
+- **Target not selected**: Do not generate Helm when Kubernetes is absent from
+  the target matrix, or Docker assets when containerization is absent
 - **Unsupported tech stack**: Search for official deployment guides
 
 ## Output Rules

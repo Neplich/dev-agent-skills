@@ -1,37 +1,57 @@
-# Consumption Regression Comparison
+# Eval Result: eval-003-mapped-doc-deployment
 
 ## Evaluation Target
 
+- Agent: `devops`
 - Skill: `deployment-planner`
 - Eval: `eval-003-mapped-doc-deployment`
+- Workspace: `workspace/eval-003-mapped-doc-deployment`
+- Validation: 2026-07-31 fresh paired Codex subagent validation
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws1-consumption-v1`
-- Commit: `0b000b9`
+- Schema: `evals.json` v1.0
+- Fixture: `change-map.yaml`, mapped unverified runtime document, and conflicting code configuration
+- With-skill source: `tmp/eval-runs/issue-196-l2-1-20260731-0008/with_skill/eval-003-mapped-doc-deployment/`
+- Fresh baseline source: `tmp/eval-runs/issue-196-l2-1-20260731-0008/without_skill_fresh2/eval-003-mapped-doc-deployment/`
 
 ## Latest Result
 
-**PASS** — with-skill 以配置文件 8081 为部署事实、识别文档 8080 声明为分歧并给出健康检查/流量转发失败的具体影响，部署方案锚定代码证据。
+- Behavior result: PASS
+- Coverage result: FULL
+- All 4 with-skill assertions were exercised and passed.
+
+Overall result: PASS
+
+## Assertion Results
+
+- PASS `reads_mapped_docs_first`: the recorded read order is change-map, mapped runtime document, then code verification; the output reports no unrelated site-doc traversal.
+- PASS `verifies_against_code`: the output identifies documentation port 8080 versus code port 8081 and explains health-check and traffic-routing impact.
+- PASS `treats_unverified_as_low_trust`: it explicitly treats `last_verified_version: unverified` as lowest trust and uses code to confirm the critical port.
+- PASS `omits_unselected_targets`: the matrix contains only containerization advice, creates no deploy assets, and explicitly omits local and Helm targets.
 
 ## With-Skill Behavior
 
-- 命中映射文档后以 server.conf 核证端口，分歧以文档/代码/影响/建议表结构化输出。
-- 部署拓扑图与配置基于代码事实 8081，不采信 unverified 文档端口。
+- The output followed the change-map consumption path, separated documentation claims from verified code facts, and based the deployment advice on port 8081.
+- It kept the output to the requested minimal container recommendation instead of generating unselected deployment targets.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
-- baseline 同样识别端口冲突并锚定实际配置，工程判断合格，但分歧记录为叙述式，未按契约形成结构化证据。
+- The valid fresh baseline used the same prompt and pristine fixture without reading or applying the target skill, DevOps Agent README, or consumption contract.
+- It satisfied 2/4 assertions: it correctly selected code port 8081 and generated no unselected assets.
+- It did not satisfy the mapped-doc-first assertion because its recorded read order began with the mapped document before the change-map. It also called the document stale but did not explicitly connect the `unverified` marker to the lowest-trust rule for critical parameters.
+- The earlier `tmp/eval-runs/issue-196-l2-1-20260731-0008/without_skill/` run is excluded because its isolation was invalid; none of its output informed this result.
 
 ## Failures
 
-- 无。
+- No with-skill assertion failure or validation blocker.
+- The valid baseline missed the contract-specific read-order and unverified-trust assertions.
 
 ## Next Steps
 
-- 保留本结果；后续 fixture 可增加干扰文档以放大行为差距。
+- Keep this case to preserve the change-map-first and low-trust verification behavior.
 
 ## Runtime Artifact Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- Runtime candidates, results, transcripts, and diagnostics remain under ignored `tmp/eval-runs/` paths and are not copied into the durable fixture.
+- Only this durable `comparison.md` is updated.
