@@ -122,7 +122,7 @@ Pick the durable output that matches the repo workflow and the user request.
 - For E2E-related defects, prefer the function-tree report path:
   `docs/qa/e2e/{feature_path}/_reports/{platform-version}/test-reports-{test-time}.md`
 - For non-E2E defects where the repo has no stronger convention, use
-  `docs/qa-reports/YYYY-MM-DD-<feature>-bug-<short-slug>.md`
+  `docs/qa/{feature_path}/bug-<short-slug>.md`
 - Use a GitHub issue only when the repository workflow explicitly wants issue tracking or the user requested an issue
 
 Do not assume GitHub issue creation is the primary output. Do not mutate code, commit changes, or invent a delivery workflow as part of this skill.

@@ -271,7 +271,7 @@ Report paths:
   `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md`
 
 For non-E2E spec validation where the repo has no stronger reporting path, use
-`docs/qa-reports/YYYY-MM-DD-<feature>-spec-validation.md`.
+`docs/qa/{feature_path}/spec-validation.md`.
 
 The report should include:
 

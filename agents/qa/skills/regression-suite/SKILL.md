@@ -232,7 +232,7 @@ Use a durable output path that matches repo context.
   `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md` for
   `release`
 - For non-E2E regression where the repo has no stronger convention, use
-  `docs/qa-reports/YYYY-MM-DD-<feature>-regression-verification.md`
+  `docs/qa/{feature_path}/regression-verification.md`
 - Use a GitHub issue only when the repo workflow or user request explicitly wants issue tracking
 
 Do not commit changes, do not mutate code, and do not assume a GitHub-first workflow.
