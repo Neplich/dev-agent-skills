@@ -78,7 +78,7 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 
 | Agent | 关注范围 | Skills | 调用方式 | 文档 |
 | --- | --- | :---: | --- | --- |
-| `pm-agent` | 需求收敛、spec、竞品、路线图、带门禁的 GitHub Release、GitHub 项目状态 | 9 (`1 + 8`) | 直接入口：`/pm-agent` | [product_manager](./agents/product_manager/README_zh.md) |
+| `pm-agent` | 需求收敛、spec、竞品、路线图、带门禁的 GitHub Release、GitHub 项目状态 | 8 (`1 + 7`) | 直接入口：`/pm-agent` | [product_manager](./agents/product_manager/README_zh.md) |
 | `designer-agent` | UX 流程、信息架构、线框、视觉系统、设计交接 | 3 (`1 + 2`) | 仅 PM handoff | [designer](./agents/designer/README_zh.md) |
 | `engineer-agent` | 代码库分析、TRD 生成、项目初始化、功能实现、测试、调试、交付 | 8 (`1 + 7`) | 仅 PM handoff | [engineer](./agents/engineer/README_zh.md) |
 | `qa-agent` | 规范验收、探索测试、缺陷分析、回归验证 | 5 (`1 + 4`) | 仅 PM handoff | [qa](./agents/qa/README_zh.md) |

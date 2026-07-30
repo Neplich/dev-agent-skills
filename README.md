@@ -78,7 +78,7 @@ Downstream role routers and specialist skills remain installed as PM-orchestrate
 
 | Agent | Focus | Skills | Invocation | Docs |
 | --- | --- | :---: | --- | --- |
-| `pm-agent` | Requirements, specs, competitor research, roadmap, gated GitHub Release generation, GitHub project status | 9 (`1 + 8`) | Direct entry: `/pm-agent` | [product_manager](./agents/product_manager/README.md) |
+| `pm-agent` | Requirements, specs, competitor research, roadmap, gated GitHub Release generation, GitHub project status | 8 (`1 + 7`) | Direct entry: `/pm-agent` | [product_manager](./agents/product_manager/README.md) |
 | `designer-agent` | UX flows, information architecture, wireframes, visual systems, design handoff | 3 (`1 + 2`) | PM handoff only | [designer](./agents/designer/README.md) |
 | `engineer-agent` | Codebase analysis, TRD generation, project bootstrap, feature implementation, tests, debugging, delivery | 8 (`1 + 7`) | PM handoff only | [engineer](./agents/engineer/README.md) |
 | `qa-agent` | Spec validation, exploratory testing, bug analysis, regression verification | 5 (`1 + 4`) | PM handoff only | [qa](./agents/qa/README.md) |
