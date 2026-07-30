@@ -119,7 +119,7 @@
     "deployment-planner": {
       "source": "agents/devops/skills/deployment-planner",
       "sourceType": "local",
-      "computedHash": "1bee4e3ae951695abb4da941764855e30b2fb0fec9352c810d026ce8035c8c09"
+      "computedHash": "e4a2c8896011d8c1c4aff8a45978bf10f51a19b7dc6f1fa7f49bdba4041c79a3"
     },
     "cicd-bootstrap": {
       "source": "agents/devops/skills/cicd-bootstrap",
