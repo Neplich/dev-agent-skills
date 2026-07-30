@@ -2,48 +2,56 @@
 
 ## Evaluation Target
 
-- Agent: `qa`
 - Skill: `spec-based-tester`
 - Eval: `eval-001-test-from-spec`
-- Test case: test-from-spec
-- Workspace: `workspace/eval-1-test-from-spec`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Validation method: fresh Codex subagent review; baseline was derived before reading `spec-based-tester` or QA README, then with-skill behavior was checked against `SKILL.md`, `agents/qa/README.md`, direct shared references, eval assertions, and fixture evidence.
+- Prompt target: 从 checkout discount test spec 选择并报告规范验证。
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Expected output: 测试报告，包含通过/失败统计和失败用例详情
-- Fixture context: `docs/test-spec.md`, `docs/prd.md`, `docs/trd.md`, `docs/qa/e2e/commerce/checkout/discount-code/TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/TC-001-discount-code.md`, and `package.json`.
-- Scenario and version: `feature-update`, platform version `v0.3.0-dev`.
+- Eval schema: `evals.json` v1.0
+- Fixture version: repository commit `cdfc879`
+- Fresh run: `2026-07-30 19:56:59 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-spec-20260730-195659-eval001/qa/agents/qa/test/spec-based-tester/evals/workspace/eval-1-test-from-spec/`
+- `eval_metadata.json` 未声明 `execution_cleanup`。
 
-## Without Skill Baseline
+## Latest Result
 
-- A generic spec-test answer would likely run the obvious `npm test` command or summarize expected checks without first recording scope, environment assumptions, unknowns, and blocked checks.
-- It might not reuse the existing `docs/qa/e2e/commerce/checkout/discount-code/` function-tree memory before considering new cases.
-- It could treat missing scripts, previous results, or reports as irrelevant instead of recording them as absent.
-- It would be more likely to turn blocked or assumed observations into bugs without confirmed reproducible evidence.
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+- `e2e` 的“新增/补充 TC”分支为 **NOT EXERCISED**：fixture 已有 TC，本轮未扩充。
+- `versioned_report_archive` 的真实 result/snapshot/report 写入分支为 **NOT EXERCISED**：本轮没有产品测试结果；场景与版本确认子项已覆盖。
 
-## With Skill Behavior
+Overall result: FAIL
 
-- PASS: `spec-based-tester` requires reading the test spec, PRD, TRD, repository instructions, implementation context when available, and existing QA memory before execution.
-- PASS: The fixture has an existing `TC-001-discount-code` in the function-tree QA directory, so the skill reuses that TC as the primary scope and does not fall back to a legacy single-level QA directory.
-- PASS: Missing `scripts/*.spec.md`, prior `results/`, and `_reports/` must be recorded as absent or blocked rather than skipped; any future E2E script must use `scripts/TC-NNN-<short-slug>.spec.md`.
-- PASS: The narrowest execution path is the repo harness `npm test -- checkout-discount`, referenced by both TRD and `TEST_SUITE.md`; Chrome plugin / browser connector and standalone Playwright are lower-priority fallbacks.
-- PASS: Requirement matrix statuses are limited to `pass`, `fail`, `blocked`, or `assumed`, with evidence references and notes for each requirement.
-- PASS: E2E execution requires scenario and platform version. This fixture has `feature-update` and `v0.3.0-dev`, so archive/report paths are versioned and never use `unknown`.
-- PASS: Handoff to `bug-analyzer` is allowed only for confirmed reproducible failures with evidence; blocked, assumed, flaky, or thin-evidence items remain in the QA report.
+## Assertion Results
+
+- FAIL `assertion_1`: 候选引用了 test spec、PRD、TRD 和 `package.json`，但未把缺失变更说明、环境假设、未知项和 blocked 检查整理成执行前基线。
+- FAIL `assertion_2`: 候选引用了 suite、flow 和既有 TC，但未明确声明复用该 TC，也未记录缺失的 `scripts/*.spec.md`、历史 `results/` 与 `_reports/`。
+- PASS `assertion_3`: 选择 repo harness `npm test -- checkout-discount`，没有臆造浏览器或 Playwright 入口。
+- PASS `assertion_4`: requirement matrix 使用 `blocked`，未把未执行项写成失败或缺陷。
+- PASS `assertion_5`: 包含 requirement matrix、execution path、evidence references 和 risk notes，并保留逐项状态与说明。
+- NOT EXERCISED `e2e`: 未新增或补充 TC；现有单文件 TC 被正确引用，没有发现约束回归。
+- PASS `versioned_report_archive`: 已确认 `feature-update` 与 `v0.3.0-dev`；没有执行结果时未伪造 archive。实际归档分支未覆盖。
+- PASS `assertion_7`: 没有把 blocked/unknown 项交给 `bug-analyzer`。
+
+## With-Skill Behavior
+
+候选正确收敛范围、选择 repo harness、输出结构化证据并诚实保持 blocked。Behavior 仍为 FAIL，因为 preflight 没有完整记录上下文缺口和 QA memory 缺失项，无法证明按 specialist 协议完成执行前检查。
+
+## Fresh Without-Skill Baseline
+
+同一 prompt/fixture 的全新 baseline 已生成，未读取或应用 skill 与 QA README。candidate 和 fresh judge 均成功；baseline 同样遗漏变更说明状态、执行前未知项以及 `scripts`、历史 `results/`、`_reports/` 的缺失记录，semantic verdict 为 FAIL。
 
 ## Failures
 
-- None identified. The current skill contract satisfies all eval assertions for context baseline, E2E memory reuse, execution-path choice, result grading, structured evidence, single-file E2E constraints, versioned report archive, and bug handoff boundary.
+- 执行前基线未显式记录变更说明缺失、环境假设、未知项与 blocked 检查。
+- 未完整记录 QA memory 的读取/缺失状态，也未明确声明复用既有 TC。
 
 ## Next Steps
 
-- No fixture or skill change is required from this eval.
-- If this eval is later executed as real E2E, add or confirm a matching script file before script-based replay, and keep absent historical results/reports visible in the preflight.
+- 后续候选应在执行前逐项记录 fixture 已读来源与缺失项，再进入执行路径和 requirement matrix。
 
 ## Runtime Artifact Policy
 
-- No runtime artifacts were created for this validation.
-- Do not commit transcripts, verdicts, timing files, diagnostics, `with_skill/`, `without_skill/`, `outputs/`, or `comparison.auto.md`.
+- 两条 candidate、两条 fresh judge verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/`；所有 Codex 调用返回码为 0，且无 timeout。
+- Runtime 不提交；durable 结果仅为本文件。

@@ -40,6 +40,11 @@
           "id": "assertion_6",
           "description": "影响说明",
           "text": "报告要包含 implementation impact 或 release impact，并保留 evidence references 以便后续追踪"
+        },
+        {
+          "id": "non_e2e_report_path",
+          "description": "非 E2E 报告路径",
+          "text": "该场景没有 E2E 用例树或版本化 E2E 执行要求，fallback Bug 报告必须落在 docs/qa/{feature_path}/ 下，文件名不得包含日期，并且不得使用 docs/qa-reports/。"
         }
       ]
     },

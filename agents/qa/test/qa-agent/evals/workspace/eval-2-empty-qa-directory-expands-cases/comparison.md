@@ -2,49 +2,51 @@
 
 ## Evaluation Target
 
-- Agent: `qa`
 - Skill: `qa-agent`
 - Eval: `eval-002-empty-qa-directory-expands-cases`
-- Test case: empty-qa-directory-expands-cases
-- Workspace: `workspace/eval-2-empty-qa-directory-expands-cases`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 for PR #98 trigger description routing review.
+- Prompt target: 对已有但无 TC 的 E2E 功能树做路由与执行协议说明。
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Fixture: existing empty E2E function tree for profile settings plus source files and QA environment notes.
-- Context read before applying the skill: `AGENTS.md`, `agents/qa/README.md`, `agents/qa/skills/qa-agent/SKILL.md`, `evals.json`, workspace `eval_metadata.json`, `docs/qa/e2e/account/profile-settings/profile-form/TEST_SUITE.md`, `FLOW_INDEX.md`, `environment/qa-env.md`, `src/routes/profile-settings.md`, `src/pages/ProfileSettingsPage.tsx`, and `src/components/ProfileSettingsForm.tsx`.
-- Runtime evidence: fresh subagent artifacts were generated under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-002-empty-qa-directory-expands-cases/`.
+- Eval schema: `evals.json` v1.0
+- Fixture version: repository commit `cdfc879` plus current working-tree assertion alignment
+- Fresh run: `2026-07-30 19:56:24 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-qa-agent-20260730-195624/eval-002-empty-qa-directory-expands-cases/`
+- `eval_metadata.json` 未声明 `execution_cleanup`。
 
-## Assertions
+## Latest Result
 
-- PASS `assertion_1`: the route recognizes that the QA function tree exists but has no executable TC and must not be treated as existing coverage.
-- PASS `assertion_2`: because the user confirmed a feature-update and authorized exploration, the downstream route should inspect target files and environment notes instead of asking whether exploration is allowed.
-- PASS `assertion_3`: exploration must update `TEST_SUITE.md` and `FLOW_INDEX.md` with files explored, discovered route/form/commands, coverage meaning, and assumptions.
-- PASS `e2e`: each new E2E case must be stored as `cases/TC-NNN-<short-slug>.md` with a matching `scripts/TC-NNN-<short-slug>.spec.md`, without plaintext secrets.
-- PASS `assertion_5`: validation is TC-driven, feature-update scope stays on the changed feature and direct impacts, and execution entry follows repo harness > Chrome plugin / browser connector > Playwright fallback.
-- PASS `version_and_subagent_gate`: platform version is required before execution; missing version blocks execution and reports go to `_reports/{platform-version}/test-reports-{test-time}.md` only after a real version is known.
-- PASS `assertion_6`: the router selects one narrow QA route and does not expand QA routing into implementation repair or multiple QA specialists.
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+- 所有 assertion 场景均已触发；无 `NOT EXERCISED` assertion。
+- 变更点检查：with-skill 输出识别空功能树并传递探索上下文，同时只声明 specialist 权威门禁指针，未展开协议。
 
-## With Skill Behavior
+Overall result: PASS
 
-`qa-agent` satisfies the empty-directory E2E route after the PR #98 trigger description edits. The with-skill run selected a single primary route, `qa-agent:spec-based-tester`, recognized that `docs/qa/e2e/account/profile-settings/profile-form/` exists but has no executable TC, required targeted exploration of route, page, form, environment, harness, and test-command context, and required updates to `TEST_SUITE.md`, `FLOW_INDEX.md`, independent `cases/TC-NNN-<short-slug>.md`, and matching `scripts/TC-NNN-<short-slug>.spec.md` before TC-driven execution. It preserved the feature-update scope, execution-entry priority, subagent execution rule, and platform-version blocker; missing platform version blocks execution and forbids `unknown` result paths.
+## Assertion Results
 
-## Without Skill Baseline
+- PASS `assertion_1`: 正确识别空功能树不是现有覆盖。
+- PASS `assertion_2`: 用户已授权探索，要求读取目标源文件、环境说明与仓库现有测试配置/命令，没有重复询问或直接 blocked。
+- PASS `specialist_gate_pointer`: 声明 `exploratory-tester` 的 E2E memory、platform version、credential、execution entry、PRD/TRD/implementation plan 与 blocked-condition 权威门禁适用；没有展开协议。
+- PASS `assertion_6`: 选择单一 `exploratory-tester` route，未进入实现修复。
 
-Fresh baseline generated on 2026-07-08 from the eval prompt and fixture files only, without applying `qa-agent`, the QA Agent README, historical `comparison.md`, or any previous baseline. The baseline recognized a need to inspect code and add tests, but lacked the complete function-tree persistence contract, repo harness > Chrome / browser connector > Playwright execution priority, default subagent execution, report path rules, and `unknown` prohibition.
+## With-Skill Behavior
+
+候选选择单一 `exploratory-tester` route，识别空目录不是覆盖，并在用户已授权的前提下传递目标代码、环境和测试命令发现任务。输出没有复制平台版本、凭据、执行入口或 blocked-condition 的具体协议。
+
+## Fresh Without-Skill Baseline
+
+本轮 baseline 使用同一 prompt 与 fixture 新生成，未读取或应用 skill、QA README，也未复用历史 baseline。它能识别空目录并选择单一路由，但直接展开 platform version、credential、execution entry、subagent 与报告协议，违反当前指针断言。
 
 ## Failures
 
-- None found. Missing platform version is the expected execution blocker for this fixture, not a router failure.
-- PR #98 did not regress empty-directory expansion, E2E persistence, version-gated execution, or QA route boundaries.
+- 无 with-skill assertion 失败。
 
 ## Next Steps
 
-- Keep this eval as regression coverage for empty E2E function-tree expansion and version-gated execution.
+- 保持 router 只传递探索上下文和权威门禁指针；由 specialist 执行实际用例扩充与验证协议。
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime artifacts were created only under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-002-empty-qa-directory-expands-cases/`.
-- Generated `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence only and must not be committed.
-- Durable committed evidence for this run is this `comparison.md`.
+- 新生成的 with-skill / without-skill candidate 与 verdict 均在上述 `tmp/eval-runs/` 目录。
+- Runtime 产物不提交；durable 结果仅为本文件。

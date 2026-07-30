@@ -1,37 +1,51 @@
-# Consumption Regression Comparison
+# Eval Result: eval-003-mapped-doc-exploration
 
 ## Evaluation Target
 
 - Skill: `exploratory-tester`
 - Eval: `eval-003-mapped-doc-exploration`
+- Prompt target: 以 change-map 缩小结账超时探索范围并由代码核证。
 
 ## Test Set / Fixture Version
 
-- Fixture: `ws1-consumption-v1`
-- Commit: `0b000b9`
+- Eval schema: `evals.json` v1.0
+- Fixture version: repository commit `778b042`
+- Fresh run: `2026-07-30 19:26:38 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/exploratory-tester/evals/workspace/eval-3-mapped-doc-exploration/`
+- `eval_metadata.json` 未声明 `execution_cleanup`。
 
 ## Latest Result
 
-**PASS** — with-skill 发现文档 15 分钟与代码 10 分钟的超时分歧并结构化记录，探索章程以代码事实为主探针、文档值为兼容探针，同时正确识别 E2E 持久化资产缺失。
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+- 无 `NOT EXERCISED` assertion。
+- 非 E2E 路径变更检查：prompt 只要求探索章程与边界，没有要求持久化报告；`docs/qa/{feature_path}/exploratory-report.md` 未覆盖。
+
+Overall result: PASS
+
+## Assertion Results
+
+- PASS `reads_mapped_docs_first`: 通过 change-map 只读取 checkout session 文档。
+- PASS `verifies_against_code`: 明确文档 15 分钟、代码 10 分钟，并以 10 分钟设计边界。
+- PASS `treats_unverified_as_low_trust`: `unverified` 文档仅作低信任线索，关键假设回到代码。
 
 ## With-Skill Behavior
 
-- 命中映射文档后回代码规则核证超时值，分歧以文档声明/代码事实/影响表结构化输出。
-- 探索设计不把 unverified 文档值当预期，PM 确认前只作为兼容性探针；并按 QA 契约说明 E2E 资产沉淀路径与执行入口优先级。
+候选覆盖 9:59、10:00、10:01 等直接边界，并把文档冲突、运行时未验证与推荐下一步清楚分开。
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
-- baseline 也识别了 10/15 分钟差异并建议确认预期，但分歧记录为叙述式，未形成契约格式的证据结构。
+同一 prompt/fixture 的全新 baseline 已生成，未读取 skill、QA README 或历史 baseline。candidate/verdict 均成功；baseline 也满足三条 assertions，semantic verdict 为 PASS。
 
 ## Failures
 
-- 无。
+- 无 assertion failure。
 
 ## Next Steps
 
-- 保留本结果；后续 fixture 可增加干扰文档以放大行为差距。
+- PR-B 非 E2E 报告路径需要独立的持久化报告 fixture；本次不改现有 eval。
 
 ## Runtime Artifact Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/`，返回码均为 0、无 timeout。
+- Runtime 不提交；durable 结果仅为本文件。

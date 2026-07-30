@@ -220,7 +220,7 @@ Report paths:
   `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md`
 
 For non-E2E exploratory reports where the repo has no stronger convention, use
-`docs/qa-reports/YYYY-MM-DD-<feature>-exploratory-report.md`.
+`docs/qa/{feature_path}/exploratory-report.md`.
 
 The report must be concise, handoff-ready, and clearly separate these sections:
 

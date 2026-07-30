@@ -89,27 +89,27 @@
     "qa-agent": {
       "source": "agents/qa/skills/qa-agent",
       "sourceType": "local",
-      "computedHash": "da8e090f4d177603e98e401cbe2ab16ea22561ec87bd9c557b760668cc555b67"
+      "computedHash": "b5c98fe91caca56f7f8d0601038501538f153f3459f7a03c992b940916b17ff5"
     },
     "exploratory-tester": {
       "source": "agents/qa/skills/exploratory-tester",
       "sourceType": "local",
-      "computedHash": "17acd406eba037ce820b7d06abf39c87a3c4d4784b05c84f36153b293fcdb0ba"
+      "computedHash": "19249a06f099107a6ceeac31b2cf0ba58c8f6bc6bf1c9febfbfc4cfe39c8a851"
     },
     "spec-based-tester": {
       "source": "agents/qa/skills/spec-based-tester",
       "sourceType": "local",
-      "computedHash": "c86f7a079707efcad34d086aeeceb138d61b692a37e1c65d8e78d12987e326f0"
+      "computedHash": "6601376729dc484464e57239ff0098c8ac8af352c84acb93eb0a55b689509ffe"
     },
     "bug-analyzer": {
       "source": "agents/qa/skills/bug-analyzer",
       "sourceType": "local",
-      "computedHash": "00f47147836c31573d885b266081f2d63557d97208f6abf1f204284dff36afad"
+      "computedHash": "f80e7bd39447ad47c5e3e03231591d8675bedf0df19a020d7dc82950cfa6609f"
     },
     "regression-suite": {
       "source": "agents/qa/skills/regression-suite",
       "sourceType": "local",
-      "computedHash": "8ab2e598880eb3199552bf10cedc88bf68c559e8d4bd6cfbca5073a234db3e57"
+      "computedHash": "5aafc0a0907e9c013a7b840ac21d8eb4da4a256346b1fab8c5d72c750c474563"
     },
     "devops-agent": {
       "source": "agents/devops/skills/devops-agent",

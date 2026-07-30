@@ -22,24 +22,9 @@
           "text": "必须列出下游 skill 需要先读取的 PM/spec、实现变更、CI 失败信息、环境说明和测试命令，而不是直接假设浏览器或端口"
         },
         {
-          "id": "qa",
-          "description": "QA 用例记忆",
-          "text": "如果是独立 QA 或 E2E 请求，必须要求下游先读取 docs/qa/e2e/{feature_path}/TEST_SUITE.md、FLOW_INDEX.md、cases/*.md、scripts/*.spec.md、历史 results/ 和 _reports/，而不是旧的单层 QA 目录。"
-        },
-        {
-          "id": "e2e_execution_protocol",
-          "description": "E2E 执行协议",
-          "text": "E2E 路由必须要求先确认测试场景和平台版本；版本缺失时 blocked 且不得写入 unknown；执行入口按 repo harness > Chrome plugin / browser connector > Playwright fallback 选择；单个 E2E TC 也默认由 subagent 执行，主 agent 负责拆分和汇总。"
-        },
-        {
-          "id": "credential_and_report_refs",
-          "description": "账号与报告 reference",
-          "text": "如果用户提供平台账号、SSH 账号或其他凭据，输出必须要求按本 skill 目录下的 references/e2e-credential-store.md upsert 到 .qa/e2e/accounts.local.json，测试文档只引用账号 ID；主 agent 汇总报告必须使用 e2e-test-report.md reference 的固定字段和路径。"
-        },
-        {
-          "id": "alignment_and_plan_gate",
-          "description": "PRD/TRD 与实施计划门禁",
-          "text": "如果请求来自现有功能变更、bug 修复或代码完成后的 E2E 文档补充，必须先检查同一 feature_path 下的 PRD/TRD、存在的产品决策记录和已确认的 IMPLEMENTATION_PLAN.md；预期变化回 PM，TRD gap 回 trd-gen，缺 plan 回 feature-implementor，文档缺失 blocked。"
+          "id": "specialist_gate_pointer",
+          "description": "Specialist 权威门禁指针",
+          "text": "路由输出必须声明选中的 specialist，并指出该 specialist 的权威 E2E memory、platform version、credential、execution entry、PRD/TRD/implementation plan 与 blocked-condition 门禁适用；不得在 qa-agent 路由输出中展开或复述这些门禁的具体协议，展开复述应判 FAIL。"
         },
         {
           "id": "assertion_4",
@@ -72,24 +57,9 @@
           "text": "因为用户已确认有新功能更新并授权探索，必须要求下游主动读取目标项目文件、环境说明和测试命令来扩充用例，而不是再次询问是否可以探索或直接返回 blocked"
         },
         {
-          "id": "assertion_3",
-          "description": "探索记录沉淀",
-          "text": "必须要求更新 docs/qa/e2e/account/profile-settings/profile-form/TEST_SUITE.md 和 FLOW_INDEX.md，记录探索过的文件、发现的路由/表单/命令、覆盖含义和待确认假设。"
-        },
-        {
-          "id": "e2e",
-          "description": "E2E 用例创建",
-          "text": "必须将每个新增 E2E 测试用例单独保存为 docs/qa/e2e/account/profile-settings/profile-form/cases/TC-NNN-<short-slug>.md，并把对应可执行或半可执行流程脚本保存为 scripts/TC-NNN-<short-slug>.spec.md；脚本不得包含明文账号、密码、token、cookie、session、SSH 密码或 SSH key。"
-        },
-        {
-          "id": "assertion_5",
-          "description": "用例驱动执行",
-          "text": "必须声明执行验证要基于新建的 TC 和 script；feature-update 场景只覆盖更新功能和直接影响路径；执行入口必须先判断 repo harness，无法覆盖时使用 Chrome 插件 / browser connector，Chrome 不可用时才使用 Playwright 兜底。"
-        },
-        {
-          "id": "version_and_subagent_gate",
-          "description": "版本与 subagent 门禁",
-          "text": "执行前必须确认测试平台版本；缺失时 blocked 并询问用户，不得使用 unknown 目录；所有 E2E TC 默认交给 subagent 执行，主 agent 最终按 e2e-test-report.md 生成 feature-update 报告到功能目录 _reports/{platform-version}/test-reports-{test-time}.md。"
+          "id": "specialist_gate_pointer",
+          "description": "Specialist 权威门禁指针",
+          "text": "路由输出必须声明选中的 specialist，并指出该 specialist 的权威 E2E memory、platform version、credential、execution entry、PRD/TRD/implementation plan 与 blocked-condition 门禁适用；不得在 qa-agent 路由输出中展开或复述这些门禁的具体协议，展开复述应判 FAIL。"
         },
         {
           "id": "assertion_6",
@@ -112,19 +82,14 @@
           "text": "必须把 `account/profile/preferences` 作为 feature_path，读取同路径 PRD 和 TRD，并保留 QA E2E 功能树 `docs/qa/e2e/account/profile/preferences/`。"
         },
         {
-          "id": "blocks_missing_plan",
-          "description": "缺实施计划 blocked",
-          "text": "缺少 `docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md` 时必须标记 blocked，并把 next owner 指向 `engineer-agent:feature-implementor` 补齐实施计划。"
-        },
-        {
-          "id": "no_e2e_mutation_or_execution",
-          "description": "不更新或执行验收 TC",
-          "text": "在缺已确认实施计划时，不得创建、更新或执行 E2E acceptance TC，也不得把 QA 功能树空目录当作可执行覆盖。"
+          "id": "specialist_gate_pointer",
+          "description": "Specialist 权威门禁指针",
+          "text": "路由输出必须声明选中的 specialist，并指出该 specialist 的权威 E2E memory、platform version、credential、execution entry、PRD/TRD/implementation plan 与 blocked-condition 门禁适用；不得在 qa-agent 路由输出中展开或复述缺计划后的阻塞、交接或执行协议，展开复述应判 FAIL。"
         },
         {
           "id": "keeps_single_route",
           "description": "单一路由",
-          "text": "必须选择一个最窄 QA route，并把缺 plan 作为 blocker，而不是并行调用多个 QA skill 或进入实现修复。"
+          "text": "必须选择一个最窄 QA route，而不是并行调用多个 QA skill、执行 specialist 协议或进入实现修复。"
         }
       ]
     }

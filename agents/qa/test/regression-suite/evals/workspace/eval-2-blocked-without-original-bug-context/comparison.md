@@ -1,46 +1,53 @@
-# Eval Result: regression-suite-blocked-without-original-bug-context
+# Eval Result: eval-002-blocked-without-original-bug-context
 
 ## Evaluation Target
 
-- Agent: `qa`
 - Skill: `regression-suite`
 - Eval: `eval-002-blocked-without-original-bug-context`
-- Test case: blocked-without-original-bug-context
-- Workspace: `workspace/eval-2-blocked-without-original-bug-context`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Validation method: fresh Codex subagent review; baseline was derived before reading `regression-suite` or QA README, then with-skill behavior was checked against `SKILL.md`, `agents/qa/README.md`, direct shared references, eval assertions, and fixture evidence.
+- Prompt target: 原始 bug、修复与环境均缺失时给出 blocked 回归结论。
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Prompt: 复测上周修过的支付按钮问题，但仓库里找不到原始 bug 报告、失败证据、修复 PR 或可用测试环境。请给出回归验证结论。
-- Fixture context: `notes/missing-context.md`
-- Evidence present: explicit note that original bug report, failing evidence, fix PR, test command, and QA environment are unavailable.
+- Eval schema: `evals.json` v1.0
+- Fixture version: repository commit `778b042`
+- Fresh run: `2026-07-30 19:26:38 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/regression-suite/evals/workspace/eval-2-blocked-without-original-bug-context/`
+- `eval_metadata.json` 未声明 `execution_cleanup`。
 
-## Without Skill Baseline
+## Latest Result
 
-- A generic regression response might provide speculative retest steps and a soft recommendation instead of an explicit blocked conclusion.
-- It could treat "no evidence of failure" as enough for progress, omitting original failure recheck and fixed-behavior status.
-- It would be less likely to block platform-version archive paths and might not distinguish local feature-update checks from release-wide E2E conclusions.
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+- 所有 blocked assertions 均由 fixture 明确触发；无 `NOT EXERCISED`。
+- 非 E2E 路径变更检查：没有足够 `feature_path` 或 fix evidence 生成正式报告，`docs/qa/{feature_path}/regression-verification.md` 分支未触发。
 
-## With Skill Behavior
+Overall result: PASS
 
-- PASS: `regression-suite` requires original failure evidence, fix context, expected behavior, and a scoped regression target. The fixture lacks all of these, so the correct result is blocked.
-- PASS: Original failure recheck, fixed behavior, adjacent regression checks, platform version confirmation, and PRD/TRD/implementation-plan alignment must be `blocked` or `not executed`, never `pass`.
-- PASS: The blocked report still includes original failure recheck, fixed behavior, adjacent regression checks, release recommendation, and evidence confidence.
-- PASS: Release recommendation must be `blocked` or `needs more verification`; absent failures do not imply release readiness.
-- PASS: The skill requires platform version and environment before archiving results, avoids `unknown`, and does not treat an unscoped local retest as a release-wide E2E result.
+## Assertion Results
+
+- PASS `assertion_1`: 先指出原始 bug、失败证据、修复 PR 与环境缺失，不做泛化回归。
+- PASS `blocked`: original failure、fixed behavior、adjacent checks、平台版本与对齐均 blocked/not executed。
+- PASS `assertion_3`: 所需结构与 confidence 完整。
+- PASS `assertion_4`: recommendation 为 blocked，不建议 release ready。
+- PASS `no_unknown_or_unscoped_release`: 不使用 `unknown`，不冒充 release 全量，并列出恢复证据。
+
+## With-Skill Behavior
+
+候选把“资料缺失”与“新回归”分开，明确恢复验证所需输入；合法 blocked 满足全部 assertions。
+
+## Fresh Without-Skill Baseline
+
+同一 prompt/fixture 的全新 baseline 已生成，未读取 skill、QA README 或历史 baseline。candidate/verdict 均成功，baseline 也满足全部 assertions，semantic verdict 为 PASS。
 
 ## Failures
 
-- None identified. The current skill contract satisfies all eval assertions for missing original evidence, blocked status, structured blocked output, release boundary, and avoiding `unknown` or unscoped release conclusions.
+- 无。
 
 ## Next Steps
 
-- No fixture or skill change is required from this eval.
-- To unblock a real run, provide the original bug report, failing evidence, fix PR or implementation notes, expected behavior, QA environment, scenario, and platform version.
+- 只有补齐原始 bug、修复证据、环境、版本和预期后才重启回归。
 
 ## Runtime Artifact Policy
 
-- No runtime artifacts were created for this validation.
-- Do not commit transcripts, verdicts, timing files, diagnostics, `with_skill/`, `without_skill/`, `outputs/`, or `comparison.auto.md`.
+- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/`，返回码均为 0、无 timeout。
+- Runtime 不提交；durable 结果仅为本文件。

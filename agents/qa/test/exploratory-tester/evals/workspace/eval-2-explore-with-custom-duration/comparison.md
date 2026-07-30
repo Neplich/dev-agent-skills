@@ -2,48 +2,53 @@
 
 ## Evaluation Target
 
-- Agent: `qa`
 - Skill: `exploratory-tester`
 - Eval: `eval-002-explore-with-custom-duration`
-- Test case: explore-with-custom-duration
-- Workspace: `workspace/eval-2-explore-with-custom-duration`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Validation method: fresh Codex subagent review; baseline was derived before reading `exploratory-tester` or QA README, then with-skill behavior was checked against `SKILL.md`, `agents/qa/README.md`, direct shared references, eval assertions, and fixture evidence.
+- Prompt target: 使用用户给定 5 分钟 timebox 探索 settings 变更面。
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Expected output: 5 分钟探索测试报告
-- Fixture context: settings-panel PRD, `SettingsPanel`, `EmailPreferenceForm`, shared toast notifications, QA environment note, `TEST_SUITE.md`, and `FLOW_INDEX.md`.
-- Target and timebox: `https://qa.example.test/settings`, 5 minutes.
-- Scenario and version: `feature-update`, platform version missing.
+- Eval schema: `evals.json` v1.0
+- Fixture version: repository commit `778b042`
+- Fresh run: `2026-07-30 19:26:38 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/exploratory-tester/evals/workspace/eval-2-explore-with-custom-duration/`
+- `eval_metadata.json` 未声明 `execution_cleanup`。
 
-## Without Skill Baseline
+## Latest Result
 
-- A generic exploratory answer might honor the 5-minute phrase but skip the function-tree QA memory and platform-version gate.
-- It could start browser automation against the URL before confirming reachability, execution entry, platform version, or subagent delegation.
-- It might create a new save/cancel TC without first updating `FLOW_INDEX.md` or checking for existing equivalent cases.
-- It would be less likely to keep console/network anomalies as unconfirmed signals unless reproduction evidence is strong enough.
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+- 平台版本缺失触发预期 blocker；没有 assertion 因该 blocker 被遗漏。
+- 非 E2E 路径变更检查：这是 E2E `feature-update` 场景，未触发 `docs/qa/{feature_path}/exploratory-report.md`。
 
-## With Skill Behavior
+Overall result: PASS
 
-- PASS: `exploratory-tester` uses the user-provided 5-minute timebox exactly and builds the charter from URL, changed surface, environment note, and toast-risk context.
-- PASS: The skill requires reading `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/*.md`, `scripts/*.spec.md`, prior `results/`, and `_reports/`; absent cases/scripts/results/reports are recorded as gaps.
-- PASS: The fixture explicitly lacks a platform version. The correct with-skill result is blocked before E2E execution, never an `unknown` archive path.
-- PASS: Execution-entry precedence is repo harness > Chrome plugin / browser connector > Playwright fallback, and executable E2E TC are delegated to subagents by default while the main agent owns scope and summary.
-- PASS: Because this is an existing-feature exploration, reusable TC creation/update/execution also remains blocked until same-path PRD/TRD expectation alignment and a confirmed implementation plan are available.
-- PASS: The report must separate observed issues, suspicious but unconfirmed signals, gaps not explored, evidence references, risk notes, and recommended next actions.
+## Assertion Results
+
+- PASS `assertion_1`: 使用 URL 与 5 分钟建立 charter，记录 changed surface、环境和未验证的实际加载/登录/交互前提。
+- PASS `assertion_2`: 完整记录 suite、flow、缺失 cases/scripts/results/reports，确认 `feature-update`，并说明扩充路径。
+- PASS `version_entry_and_subagent`: 平台版本缺失时 blocked，列出执行入口顺序、未选择入口原因和 subagent 默认。
+- PASS `assertion_3`: confirmed blocker、unconfirmed signals、uncovered areas 分层，未伪造 console/network/page-crash 结果。
+- PASS `assertion_4`: 明确实际路径停在只读 preflight，并提供 evidence references；合法 blocked 不要求虚构浏览器步骤。
+- PASS `assertion_5`: 风险 notes 与后续 QA/bug-analyzer 条件清楚。
+
+## With-Skill Behavior
+
+候选完整执行了 blocked preflight；没有平台版本时不开始 5 分钟执行是正确行为，不应因缺少实际 UI 证据判为行为失败。
+
+## Fresh Without-Skill Baseline
+
+同一 prompt/fixture 的全新 baseline 已生成，未读取 skill、QA README 或历史 baseline。candidate/verdict 均成功；baseline 缺完整 memory、entry 和 subagent 协议，semantic verdict 为 FAIL。
 
 ## Failures
 
-- None identified. The current skill contract satisfies all eval assertions for context-driven scope, E2E memory confirmation, platform-version blocking, execution-entry precedence, subagent default, anomaly layering, evidence output, and risk handoff.
+- 无。
 
 ## Next Steps
 
-- No fixture or skill change is required from this eval.
-- A real execution should ask for platform version before any E2E run and keep URL reachability, TRD, implementation-plan, and missing TC/script gaps visible.
+- 提供平台版本后才可开始真实 5 分钟探索；本 eval 保留为 blocked-preflight 回归。
 
 ## Runtime Artifact Policy
 
-- No runtime artifacts were created for this validation.
-- Do not commit transcripts, verdicts, timing files, diagnostics, `with_skill/`, `without_skill/`, `outputs/`, or `comparison.auto.md`.
+- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/`，返回码均为 0、无 timeout。
+- Runtime 不提交；durable 结果仅为本文件。

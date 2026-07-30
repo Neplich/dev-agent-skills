@@ -106,30 +106,15 @@ When routing is complete:
 
 - state which QA skill should handle the request
 - state the expected evidence artifact for the route
-- for E2E, list the complete QA memory read set before any execution:
-  `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/*.md`, `scripts/*.spec.md`, prior
-  `results/`, and `_reports/`
-- for E2E, state scenario, function-tree scope, platform version status,
-  subagent execution plan, selected execution entry, and why the selected entry
-  follows repo harness > Chrome plugin / browser connector > Playwright fallback
-- for E2E, state the credential handling reference
-  `references/e2e-credential-store.md`, the local
-  store `.qa/e2e/accounts.local.json`, and the summary report reference
-  `references/e2e-test-report.md`
-- for existing-feature changes, bug fixes, or code-complete E2E documentation
-  updates, state the same-path PRD, TRD, and confirmed
-  `IMPLEMENTATION_PLAN.md` gate explicitly; expectation changes return to PM,
-  TRD gaps return to `engineer-agent:trd-gen`, and missing implementation plans
-  return to `engineer-agent:feature-implementor`; state the resolved
-  `change_tier` and the gate strength it selects per the `AGENTS.md`
-  变更分级契约
-- if E2E is blocked by missing platform version, credentials, environment,
-  unclear `feature_path`, PRD/TRD alignment, or confirmed
-  `IMPLEMENTATION_PLAN.md`, report the blocker and next owner instead of
-  creating or executing TC
+- state that the selected QA specialist's authoritative E2E memory,
+  feature-path, platform-version, credential, execution-entry,
+  PRD/TRD/implementation-plan, and blocked-condition gates apply
 - after the routed skill or role stage completes, apply the cross-role
   safety-net closeout defined in
   `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
   (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
   next step, request confirmation before continuing, and honor user-enabled
   `auto-continue`
+
+Do not expand these pointers into duplicated specialist protocols inside this
+router.
