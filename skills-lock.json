@@ -39,7 +39,7 @@
     "roadmap-generator": {
       "source": "agents/product_manager/skills/roadmap-generator",
       "sourceType": "local",
-      "computedHash": "2d17e65f21990fb38513f47ae04857c7d74f7ddeb844280cc69becad21a390e3"
+      "computedHash": "c0686addd0ae88a5c28b35c2314309fd09d4aab2505fe6cc24c56a2ba5b055c9"
     },
     "github-reader": {
       "source": "agents/product_manager/skills/github-reader",
@@ -134,7 +134,7 @@
     "incident-playbook-writer": {
       "source": "agents/devops/skills/incident-playbook-writer",
       "sourceType": "local",
-      "computedHash": "b3e26bcfc005c71bbd95a8323952c83550fc512f3ce5a87a8f2a9e9b2b372fcf"
+      "computedHash": "d3a3c3da939620d57422b64f63710f0a6e476288a7ca15ea4e527a8b02a970f6"
     },
     "designer-agent": {
       "source": "agents/designer/skills/designer-agent",
@@ -149,7 +149,7 @@
     "visual-design": {
       "source": "agents/designer/skills/visual-design",
       "sourceType": "local",
-      "computedHash": "e5851d959b70e6751f337fe296c602becaf13b49f139c72ef73ec78c14e0b5c1"
+      "computedHash": "69102eaccf10f83b2d2a6802fa34c632a4647ed751a7eae5a29a942b4a6229b3"
     },
     "security-agent": {
       "source": "agents/security/skills/security-agent",

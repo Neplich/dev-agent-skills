@@ -56,73 +56,55 @@ ls deploy/docker/ deploy/helm/ 2>/dev/null
 
 Also inspect whether local-only deployment exists and whether rollback is even meaningful for the current setup.
 
-## Step 2 — Create Rollback Playbook
+## Step 2 — Confirm Requested Playbooks
 
-### 2.1 Create `deploy/ROLLBACK.md`
+Before generating files, confirm which playbooks the user needs:
 
-For Docker deployment:
-- How to rollback to previous image version
-- Database migration rollback steps
-- Cache clearing procedures
+- `deploy/ROLLBACK.md` — rollback guidance
+- `deploy/INCIDENT_RESPONSE.md` — incident response
+- `deploy/TROUBLESHOOTING.md` — troubleshooting
+- `deploy/ON_CALL.md` — on-call guidance
 
-For Helm deployment:
-- `helm rollback` command
-- Check rollback status
-- Verify application health
+If the user has not named the required playbooks, present these four candidates
+and ask them to select. Do not generate all four by default. Generate only the
+files the user explicitly selects.
 
-## Step 3 — Create Incident Response Guide
+For each selected playbook, verify that the repository and operational context
+provide enough evidence to write actionable guidance. If evidence is missing,
+do not generate it. Report the gap and name the evidence needed, such as
+monitoring and alerts for incident response or an established rotation and
+escalation mechanism for on-call guidance.
 
-### 3.1 Create `deploy/INCIDENT_RESPONSE.md`
+## Step 3 — Write Selected Playbooks
 
-Common scenarios:
-- **Application Down**: Health check, logs, restart procedure
-- **Database Connection Failed**: Check credentials, network, restart
-- **High CPU/Memory**: Identify cause, scale up, restart
-- **Deployment Failed**: Rollback steps, log collection
+- `deploy/ROLLBACK.md` must include the supported rollback actions and recovery
+  checks. Database migration rollback, cache clearing, previous-image restore,
+  and `helm rollback` are example topics to include only when applicable.
+- `deploy/INCIDENT_RESPONSE.md` must include evidence-backed incident scenarios,
+  detection and investigation steps, recovery actions, and restoration checks.
+  Application, database, resource, and deployment failures are example
+  scenarios, not a required fixed structure.
+- `deploy/TROUBLESHOOTING.md` must include repository-specific diagnostic
+  entrypoints, status, log and resource checks, plus escalation or recovery
+  conditions. Container log, status, shell, CPU, memory, and disk commands are
+  example content to adapt to the configured runtime.
+- `deploy/ON_CALL.md` must include established escalation contacts, actionable
+  alerts and thresholds, response-time expectations, and communication
+  channels. Monitoring, rotation, and escalation evidence are required before
+  generating it.
 
-## Step 4 — Create Troubleshooting Guide
+## Step 4 — Summary
 
-### 4.1 Create `deploy/TROUBLESHOOTING.md`
-
-Debug commands:
-- View logs: `docker logs` / `kubectl logs`
-- Check status: `docker ps` / `kubectl get pods`
-- Access shell: `docker exec` / `kubectl exec`
-- Check resources: CPU, memory, disk usage
-
-## Step 5 — Create On-Call Guide
-
-### 5.1 Create `deploy/ON_CALL.md`
-
-Document:
-- Escalation contacts
-- Critical alerts and thresholds
-- Response time expectations
-- Communication channels
-
-## Step 6 — Summary
-
-Output:
-```
-## 运维手册生成完成
-
-已创建以下文档：
-
-- `deploy/ROLLBACK.md` - 回滚操作指南
-- `deploy/INCIDENT_RESPONSE.md` - 故障响应流程
-- `deploy/TROUBLESHOOTING.md` - 问题排查手册
-- `deploy/ON_CALL.md` - 值班指南
-
-### 建议
-- 团队成员熟悉这些流程
-- 定期演练回滚操作
-```
+Summarize only the files actually created and any requested files that were
+blocked by missing evidence. A list of created paths and a separate list of
+blocked paths with their missing evidence is one acceptable example; the exact
+summary structure is not fixed.
 
 ## Edge Cases
 
 - **No deploy/ directory**: Create it first
 - **Custom deployment**: Ask for specific procedures
-- **Multiple services**: Generate separate playbooks
+- **Multiple services**: Generate separate playbooks only when explicitly requested
 
 ## Output Rules
 
@@ -131,3 +113,4 @@ Output:
   `docs/devops/{feature_path}/...`
 - Tie instructions to the repository's actual deployment methods and commands
 - Do not generate generic on-call prose detached from the configured runtime
+- Generate only the playbooks explicitly selected by the user
