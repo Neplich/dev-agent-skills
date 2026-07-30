@@ -9,47 +9,57 @@
 ## Test Set / Fixture Version
 
 - Eval schema: `evals.json` v1.0
-- Fixture version: repository commit `778b042`
-- Fresh run: `2026-07-30 19:26:38 +0800`
-- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/bug-analyzer/evals/workspace/eval-1-analyze-test-failure/`
+- Fixture version: repository commit `cdfc879` + current PR-B `evals.json` assertion update
+- Fresh run: `2026-07-30 19:56:59 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-bug-explore-20260730-195659/bug-analyzer/eval-001/`
 - `eval_metadata.json` 未声明 `execution_cleanup`。
 
 ## Latest Result
 
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **FULL**
-- 所有 assertion 场景均已判定；无外部实时样本缺口。
-- 非 E2E 路径变更检查：`assertion_4` 已触发 durable output 选择，但候选只给出报告正文，没有声明 `docs/qa/{feature_path}/bug-<short-slug>.md`；因此本轮未证明新路径行为。
+- 当前 7 条 assertion 全部被新 with-skill 候选直接覆盖，无 `NOT EXERCISED`。
+- 本轮按新增 `non_e2e_report_path` 判定非 E2E fallback：候选明确使用
+  `docs/qa/authentication/login/bug-login-form-500.md`，文件名无日期且不使用
+  `docs/qa-reports/`。
 
-Overall result: FAIL
+Overall result: PASS
 
 ## Assertion Results
 
-- FAIL `assertion_1`: 已读取 failing scenario、500、console 与 build context，并注明 trace 不可用；但未明确记录截图、服务端 stack、完整 network output 等证据的存在/缺失，摄取清单不完整。
+- PASS `assertion_1`: 摄取 failing scenario、500、console、branch/commit/environment，并逐项标明 server stack、response body、截图、trace、runtime、flags 等证据缺口。
 - PASS `assertion_2`: 使用 `confirmed but environment-sensitive`，并将 evidence status 与 confidence 分开。
 - PASS `assertion_3`: severity 有影响理由，confidence 独立陈述。
-- FAIL `assertion_4`: 正确避免 GitHub-first，但没有给出可审计的本地 durable 文件路径，未覆盖 PR-B 新的非 E2E 路径。
-- FAIL `assertion_5`: 当前 feature_path 与 plan 对齐材料不足时，应明确把 reusable E2E TC 沉淀标为 blocked；候选既未创建/引用 TC+script，也未记录该 blocker。
+- PASS `assertion_4`: 选择 repo 内本地 Markdown artifact，明确不做 GitHub-first。
+- PASS `assertion_5`: 当前不满足 reusable E2E 沉淀条件；候选明确将 TC/script 创建标为 blocked，并列出缺失的 feature path、PRD/TRD/plan、platform 与用例树。
 - PASS `assertion_6`: 包含 release impact 与 evidence references。
+- PASS `non_e2e_report_path`: 使用 `docs/qa/{feature_path}/bug-<short-slug>.md`
+  形态，文件名无日期且未使用旧 `docs/qa-reports/`。
 
 ## With-Skill Behavior
 
-候选对分类、严重度、置信度和发布影响处理正确，但证据缺口、durable 路径和 reusable E2E coverage blocker 不完整，故 Behavior FAIL。
+候选完整分离 evidence status、confidence 与 severity，保留可追踪 fixture 引用，
+对证据缺口、release impact、reusable E2E blocker 和 PR-B 新非 E2E 路径均给出
+直接证据，Behavior PASS。
 
 ## Fresh Without-Skill Baseline
 
-同一 prompt/fixture 的全新 baseline 已在隔离目录生成，未读取 skill、QA README 或历史 baseline。candidate/verdict 均成功；baseline 过度判断为 `confirmed and reproducible`，且同样未处理 reusable TC，semantic verdict 为 FAIL。
+同一 prompt/fixture 在本轮隔离目录重新生成 baseline，未读取或应用
+`bug-analyzer`、QA README 或历史 baseline。它把一次 fixture 直接写成已确认缺陷，
+GitHub-first，未分离 evidence status / confidence，未声明 repo durable path，也未处理
+reusable E2E gate；baseline 仅作为 comparison 输入，不决定 with-skill Behavior。
 
 ## Failures
 
-- 未给出 `docs/qa/{feature_path}/bug-<short-slug>.md`。
-- 未完整记录证据缺口与 reusable E2E coverage blocker。
+- 无 with-skill assertion failure。
 
 ## Next Steps
 
-- 后续 fixture 应提供明确 `feature_path` 并把非 E2E 路径设为显式 assertion，以直接覆盖 PR-B 路径变更。
+- 可在后续 fixture 中提供正式 handoff `feature_path`，使报告路径无需从登录场景收敛为
+  `authentication/login`；这不影响本轮路径契约判定。
 
 ## Runtime Artifact Policy
 
-- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/`，返回码均为 0、无 timeout。
+- 新 `with_skill.md`、`without_skill.md` 与 `verdict.md` 仅保存在上述
+  `tmp/eval-runs/`；未复用历史 candidate 或 baseline。
 - Runtime 不提交；durable 结果仅为本文件。

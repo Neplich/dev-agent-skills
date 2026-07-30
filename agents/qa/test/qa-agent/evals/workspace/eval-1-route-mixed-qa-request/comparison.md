@@ -9,49 +9,45 @@
 ## Test Set / Fixture Version
 
 - Eval schema: `evals.json` v1.0
-- Fixture version: repository commit `778b042`
-- Fresh run: `2026-07-30 19:26:38 +0800`
-- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/qa-agent/evals/workspace/eval-1-route-mixed-qa-request/`
+- Fixture version: repository commit `cdfc879` plus current working-tree assertion alignment
+- Fresh run: `2026-07-30 19:56:24 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-qa-agent-20260730-195624/eval-001-route-mixed-qa-request/`
 - `eval_metadata.json` 未声明 `execution_cleanup`。
 
 ## Latest Result
 
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **FULL**
 - 所有 assertion 场景均已触发；无 `NOT EXERCISED` assertion。
-- 变更点检查：with-skill 输出只声明 specialist 的权威门禁指针，未复述完整门禁细节，符合当前 `qa-agent` router 的收敛目标；但这与本 eval 仍要求 router 展开 E2E、凭据/报告和对齐门禁细节的 assertions 发生直接冲突。
+- 变更点检查：with-skill 输出声明所选 specialist 及权威门禁适用，只保留指针，未展开 specialist 协议。
 
-Overall result: FAIL
+Overall result: PASS
 
 ## Assertion Results
 
-- PASS `assertion_1`: 选择单一主 route `spec-based-tester`，并说明其最符合文档化验收 outcome。
-- FAIL `assertion_2`: 列出了 PRD、TRD、实现变更和 CI 日志，但没有显式列出环境说明与测试命令。
-- FAIL `qa`: 仅列出 `TEST_SUITE.md`、`FLOW_INDEX.md`，完整 `cases/`、`scripts/`、历史 `results/`、`_reports/` 只由 specialist 指针承接，未满足 assertion 的字面展开要求。
-- FAIL `e2e_execution_protocol`: 当前 router 正确保留指针，但未按旧 assertion 逐项复述场景、平台版本、`unknown` 禁止、执行入口与 subagent 规则。
-- FAIL `credential_and_report_refs`: 当前 router 正确保留 credential/report 指针，但未按旧 assertion 展开两个 reference 与本地凭据路径。
-- FAIL `alignment_and_plan_gate`: 当前 router 正确保留 PRD/TRD/plan 指针，但未按旧 assertion 展开各 gap 的 next owner。
-- PASS `assertion_4`: 预期 artifact 包含 requirement matrix、evidence references、risk notes 与 defect handoff notes。
+- PASS `assertion_1`: 选择单一主 route `spec-based-tester`，并说明文档化验收是当前最窄 evidence outcome。
+- PASS `assertion_2`: 显式列出 PRD、TRD、实现变更、CI 日志、环境约束与 `npm test -- login`，未假设端口。
+- PASS `specialist_gate_pointer`: 声明 `spec-based-tester` 的 E2E memory、platform version、credential、execution entry、PRD/TRD/implementation plan 与 blocked-condition 权威门禁适用；没有展开协议。
+- PASS `assertion_4`: 预期 artifact 包含 requirement matrix、execution path、evidence references、结果/覆盖、risk notes 与 follow-up。
 - PASS `assertion_5`: 未并行调用多个 specialist，intermittent 失败保持 risk/follow-up，不冒充 confirmed bug。
 
 ## With-Skill Behavior
 
-with-skill 候选选择 `spec-based-tester`，保留 CI 风险边界并停止在路由阶段。它体现了 PR-B 的 router 指针收敛，但无法同时满足仍要求复制 specialist 协议的旧 assertions，因此 Behavior 判 FAIL。
+with-skill 候选选择 `spec-based-tester`，完整传递 fixture 上下文，保留 CI 风险边界并停止在路由阶段。门禁只以权威 specialist 指针声明，没有复制具体执行、凭据或阻塞协议。
 
 ## Fresh Without-Skill Baseline
 
-本轮 baseline 使用同一 prompt 与 fixture 于隔离 scratch 重新生成；未读取 `qa-agent` SKILL、QA README 或历史 baseline。它选择 `bug-analyzer`，候选与 verdict 均生成成功，但同样缺少 repo-specific specialist 门禁，semantic verdict 为 FAIL。
+本轮 baseline 使用同一 prompt 与 fixture 于隔离 scratch 重新生成；未读取或应用 `qa-agent` SKILL、QA README，也未复用历史 baseline。它选择 `bug-analyzer`，偏离文档化验收主 outcome，且没有声明 repo-specific specialist 权威门禁指针。
 
 ## Failures
 
-- Router 新契约与当前 eval 的细节展开 assertions 不一致。
-- 上下文传递未显式包含环境说明与测试命令。
+- 无 with-skill assertion 失败。
 
 ## Next Steps
 
-- 后续由维护者决定是把 assertions 收敛为“权威指针存在且不复述”，还是恢复 router 细节；本次 eval 不修改 fixture。
+- 保持 router 指针契约；后续 specialist 负责执行其权威门禁与测试协议。
 
 ## Runtime Artifact Policy
 
-- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/` 目录，返回码均为 0、无 timeout。
+- 新生成的 with-skill / without-skill candidate 与 verdict 均在上述 `tmp/eval-runs/` 目录。
 - Runtime 产物不提交；durable 结果仅为本文件。

@@ -9,44 +9,43 @@
 ## Test Set / Fixture Version
 
 - Eval schema: `evals.json` v1.0
-- Fixture version: repository commit `778b042`
-- Fresh run: `2026-07-30 19:26:38 +0800`
-- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/qa-agent/evals/workspace/eval-3-feature-path-missing-plan-blocked/`
+- Fixture version: repository commit `cdfc879` plus current working-tree assertion alignment
+- Fresh run: `2026-07-30 19:56:24 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-qa-agent-20260730-195624/eval-003-feature-path-missing-plan-blocked/`
 - `eval_metadata.json` 未声明 `execution_cleanup`。
 
 ## Latest Result
 
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **FULL**
 - 所有 assertion 场景均已触发；无 `NOT EXERCISED` assertion。
-- 变更点检查：候选直接执行了 specialist 的 implementation-plan gate 并复述详细 E2E 状态，没有仅保留 specialist 门禁指针。
+- 变更点检查：with-skill 输出保留同路径上下文，只声明 specialist 权威门禁适用，没有展开缺计划后的阻塞、交接或执行协议。
 
-Overall result: FAIL
+Overall result: PASS
 
 ## Assertion Results
 
 - PASS `reads_same_feature_path`: 正确保留 `account/profile/preferences` 及同路径 PRD/TRD/QA 功能树。
-- PASS `blocks_missing_plan`: 缺 `IMPLEMENTATION_PLAN.md` 时 blocked，next owner 为 `engineer-agent:feature-implementor`。
-- PASS `no_e2e_mutation_or_execution`: 没有创建、更新或执行验收 TC。
+- PASS `specialist_gate_pointer`: 声明 `spec-based-tester` 的 E2E memory、platform version、credential、execution entry、PRD/TRD/implementation plan 与 blocked-condition 权威门禁适用；没有复述缺计划后的协议。
 - PASS `keeps_single_route`: 选择单一 `spec-based-tester` route，未进入实现修复。
 
 ## With-Skill Behavior
 
-blocked 是正确产品行为，四条 assertions 也全部满足；但 router 自己展开并裁决了 specialist 的详细 plan/E2E 门禁，与当前 `qa-agent` 只保留 gate pointer 的职责边界冲突，因此 Behavior 判 FAIL。
+候选把 `account/profile/preferences` 及同路径文档完整传给单一 `spec-based-tester`，并停止在 router 边界。它没有代替 specialist 裁决 implementation-plan gate，也没有复述缺计划后的交接或执行协议。
 
 ## Fresh Without-Skill Baseline
 
-本轮 baseline 使用同一 prompt 与 fixture 新生成，未读取 skill、QA README 或历史 baseline。candidate/verdict 均成功；baseline 同样识别缺 plan 并 blocked，semantic verdict 为 PASS。
+本轮 baseline 使用同一 prompt 与 fixture 新生成，未读取或应用 skill、QA README，也未复用历史 baseline。它识别 feature path 和缺失 plan，但直接裁决 blocked，并复述 Engineer 交接、平台版本、凭据、执行环境与 subagent 协议，违反当前指针断言。
 
 ## Failures
 
-- PR-B router 指针收敛未在该候选中生效；输出仍复述 specialist 门禁细节。
+- 无 with-skill assertion 失败。
 
 ## Next Steps
 
-- 后续 eval 应把“router 只选择 route、声明权威指针；specialist 再做详细门禁”设为显式 assertion。
+- 保持 router 只选择 route、传递同路径上下文并声明权威指针；具体门禁判断由 specialist 执行。
 
 ## Runtime Artifact Policy
 
-- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/` 目录，返回码均为 0、无 timeout。
+- 新生成的 with-skill / without-skill candidate 与 verdict 均在上述 `tmp/eval-runs/` 目录。
 - Runtime 产物不提交；durable 结果仅为本文件。

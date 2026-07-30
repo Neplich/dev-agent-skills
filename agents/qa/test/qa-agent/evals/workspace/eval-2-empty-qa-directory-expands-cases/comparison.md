@@ -9,47 +9,44 @@
 ## Test Set / Fixture Version
 
 - Eval schema: `evals.json` v1.0
-- Fixture version: repository commit `778b042`
-- Fresh run: `2026-07-30 19:26:38 +0800`
-- Runtime directory: `tmp/eval-runs/issue-196-pr-b-20260730-192638/qa/agents/qa/test/qa-agent/evals/workspace/eval-2-empty-qa-directory-expands-cases/`
+- Fixture version: repository commit `cdfc879` plus current working-tree assertion alignment
+- Fresh run: `2026-07-30 19:56:24 +0800`
+- Runtime directory: `tmp/eval-runs/issue-196-pr-b-qa-agent-20260730-195624/eval-002-empty-qa-directory-expands-cases/`
 - `eval_metadata.json` 未声明 `execution_cleanup`。
 
 ## Latest Result
 
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **FULL**
 - 所有 assertion 场景均已触发；无 `NOT EXERCISED` assertion。
-- 变更点检查：候选逐项复述了 specialist 的完整 E2E memory、平台版本、执行入口、subagent、凭据和报告规则，没有保持“router 只保留权威指针”的 PR-B 目标。
+- 变更点检查：with-skill 输出识别空功能树并传递探索上下文，同时只声明 specialist 权威门禁指针，未展开协议。
 
-Overall result: FAIL
+Overall result: PASS
 
 ## Assertion Results
 
 - PASS `assertion_1`: 正确识别空功能树不是现有覆盖。
-- PASS `assertion_2`: 用户已授权探索，要求读取目标源文件与环境说明。
-- PASS `assertion_3`: 要求更新 `TEST_SUITE.md`、`FLOW_INDEX.md` 并记录探索证据。
-- PASS `e2e`: 给出独立 TC/script 路径并禁止明文凭据。
-- PASS `assertion_5`: 要求基于新增 TC 执行并保留 repo harness > Chrome/browser > Playwright 顺序。
-- PASS `version_and_subagent_gate`: 平台版本缺失时 blocked，不写 `unknown`，TC 交给 subagent，报告路径正确。
+- PASS `assertion_2`: 用户已授权探索，要求读取目标源文件、环境说明与仓库现有测试配置/命令，没有重复询问或直接 blocked。
+- PASS `specialist_gate_pointer`: 声明 `exploratory-tester` 的 E2E memory、platform version、credential、execution entry、PRD/TRD/implementation plan 与 blocked-condition 权威门禁适用；没有展开协议。
 - PASS `assertion_6`: 选择单一 `exploratory-tester` route，未进入实现修复。
 
 ## With-Skill Behavior
 
-候选满足现有七条 assertions，但输出把 specialist 协议完整复制进 router；这违反当前 `qa-agent` 的 `Output Behavior` 指针契约，属于本次行为变更的直接回归，因此 Behavior 判 FAIL。
+候选选择单一 `exploratory-tester` route，识别空目录不是覆盖，并在用户已授权的前提下传递目标代码、环境和测试命令发现任务。输出没有复制平台版本、凭据、执行入口或 blocked-condition 的具体协议。
 
 ## Fresh Without-Skill Baseline
 
-本轮 baseline 使用同一 prompt 与 fixture 新生成，未读取 skill、QA README 或历史 baseline。candidate/verdict 均成功；baseline 也复制了大部分 specialist 细节，但遗漏测试命令与完整探索沉淀字段，semantic verdict 为 FAIL。
+本轮 baseline 使用同一 prompt 与 fixture 新生成，未读取或应用 skill、QA README，也未复用历史 baseline。它能识别空目录并选择单一路由，但直接展开 platform version、credential、execution entry、subagent 与报告协议，违反当前指针断言。
 
 ## Failures
 
-- PR-B router 指针收敛未在该候选中生效，输出仍复述 specialist 门禁细节。
+- 无 with-skill assertion 失败。
 
 ## Next Steps
 
-- 保留 assertions 结果与 router 契约失败的双重事实；后续应让 eval prompt/judge 明确验证“只输出指针”。
+- 保持 router 只传递探索上下文和权威门禁指针；由 specialist 执行实际用例扩充与验证协议。
 
 ## Runtime Artifact Policy
 
-- 两条 candidate、两条 verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/` 目录，返回码均为 0、无 timeout。
+- 新生成的 with-skill / without-skill candidate 与 verdict 均在上述 `tmp/eval-runs/` 目录。
 - Runtime 产物不提交；durable 结果仅为本文件。
