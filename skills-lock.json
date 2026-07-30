@@ -24,7 +24,7 @@
     "changelog-generator": {
       "source": "agents/product_manager/skills/changelog-generator",
       "sourceType": "local",
-      "computedHash": "67c7057f79afba8a21a5aba9878a507a9bdd065c63c11d5bb54295fbda294986"
+      "computedHash": "530d1acfe38e0c302676df280d385e8dd0fd727d86f7b364ccd3ad97c3974aca"
     },
     "github-release-generator": {
       "source": "agents/product_manager/skills/github-release-generator",
@@ -74,7 +74,7 @@
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",
       "sourceType": "local",
-      "computedHash": "240871ab25cd82440f77ec555678167db48fccad15465518ee1c285f977752a2"
+      "computedHash": "c92589d37d986b56f609a23ebb4ae705d46a982332ef7cd1bfdd399157b6b2a8"
     },
     "debugger": {
       "source": "agents/engineer/skills/debugger",

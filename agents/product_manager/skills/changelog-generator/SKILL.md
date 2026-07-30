@@ -58,7 +58,7 @@ git log --format='%H%x09%s' PREV_TAG..TARGET_TAG
 
 As a remote alternative, use `gh api repos/{owner}/{repo}/compare/PREV_TAG...TARGET_TAG`.
 
-Extract PR numbers from squash-merge subjects ending in `(#NNN)`, then run `gh pr view NNN --json number,title,body,author,labels,state` for classification and grouping. Keep commits without an associated PR in a separate **Direct commits** group instead of dropping them.
+Extract PR numbers from squash-merge subjects ending in `(#NNN)` and from merge-commit subjects like `Merge pull request #NNN from ...`, then run `gh pr view NNN --json number,title,body,author,labels,state` for classification and grouping. Keep commits without an associated PR in a separate **Direct commits** group instead of dropping them.
 
 Only when the repository has no tags at all, use the first-release fallback:
 

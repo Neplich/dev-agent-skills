@@ -34,6 +34,8 @@ Use the PM-side packet definition in
 Locate the Test Spec:
 
 ```bash
+# Canonical QA E2E suite for the feature
+ls docs/qa/e2e/{feature_path}/TEST_SUITE.md docs/qa/e2e/{feature_path}/FLOW_INDEX.md 2>/dev/null
 ls docs/qa/{feature_path}/test-spec*.md docs/qa/{feature_path}/tspecs*.md docs/qa/{feature_path}/TEST_SPEC*.md 2>/dev/null
 # Legacy level-1 fallback
 ls docs/test-spec*.md docs/tspecs*.md docs/TEST_SPEC*.md 2>/dev/null

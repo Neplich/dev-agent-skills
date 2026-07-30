@@ -24,7 +24,7 @@
 | --- | --- | --- |
 | `devops-agent` | DevOps request routing | Specialist selection and execution path |
 | `deployment-planner` | New or updated deployment config, containers, Kubernetes/Helm | `deploy/local/`, `deploy/docker/`, `deploy/helm/` |
-| `cicd-bootstrap` | GitHub Actions / GitLab CI / release workflow | CI/CD configuration files |
+| `cicd-bootstrap` | GitHub Actions / release workflow | CI/CD configuration files |
 | `env-config-auditor` | Environment variables, secrets, runtime config coverage | Config audit report and gap list |
 | `incident-playbook-writer` | Rollback, troubleshooting, on-call preparation | Runbook and incident playbook |
 
@@ -49,7 +49,6 @@ deploy/
 When needed, DevOps may also update:
 
 - `.github/workflows/`
-- `.gitlab-ci.yml`
 - `docs/devops/{feature_path}/`
 
 Feature-scoped DevOps work consumes an existing `feature_path` from PM/Engineer
