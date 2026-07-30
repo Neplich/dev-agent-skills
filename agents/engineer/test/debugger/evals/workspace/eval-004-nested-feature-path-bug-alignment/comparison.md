@@ -39,8 +39,10 @@
 ## Latest Result
 
 - Behavior result: PASS
-- Coverage result: FULL
-- Overall result: PASS
+- Coverage result: PARTIAL
+- Overall result: PASS (partial coverage)
+
+未覆盖说明：`classifies_before_repair_plan` 仅以候选形式触发——with-skill 记录了 `implementation_deviation` 候选但因 fixture 缺少实现与复现证据而停在证据收集阶段，未完整执行分类决策。fixture 补充失败样例后该断言才能完整覆盖。
 
 ## Next Steps
 
