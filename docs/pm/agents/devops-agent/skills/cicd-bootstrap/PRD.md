@@ -9,7 +9,7 @@ version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-07-30"
 generated_by: "prd-gen"
 related_docs:
   - "agents/devops/README.md"
@@ -76,7 +76,7 @@ changelog:
 ### 当前实现工作流
 
 - 检查 deploy/ 和现有 pipeline
-- 选择 GitHub Actions/GitLab CI 等平台
+- 选择 GitHub Actions 平台
 - 生成 workflow 和 secrets 文档
 - 按用户验证意图和平台能力执行 git diff、dry-run 或 manual verification 清单
 - 不默认创建 throwaway commits
@@ -106,7 +106,7 @@ flowchart LR
     Request["用户请求"] --> Match["匹配 skill trigger"]
     Match --> Context["读取/确认实现契约上下文"]
     Context --> Step1["检查 deploy/ 和现有 pipeline"]
-    Step1 --> Step2["选择 GitHub Actions/GitLab CI 等平台"]
+    Step1 --> Step2["选择 GitHub Actions 平台"]
     Step2 --> Step3["生成 workflow 和 secrets 文档"]
     Step3 --> Step4["git diff/dry-run/manual verification"]
     Step4 --> Step5["不默认创建 throwaway commits"]

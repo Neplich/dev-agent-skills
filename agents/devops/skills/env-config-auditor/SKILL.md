@@ -57,8 +57,8 @@ clarification or Engineer for missing or stale TRD/implementation plan.
 
 Search codebase for env var usage:
 ```bash
-grep -r "process.env\." --include="*.js" --include="*.ts" || \
-grep -r "os.getenv" --include="*.py" || \
+grep -r "process.env\." --include="*.js" --include="*.ts"
+grep -r "os.getenv" --include="*.py"
 grep -r "os.Getenv" --include="*.go"
 ```
 

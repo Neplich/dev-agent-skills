@@ -4,7 +4,7 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "7017ca0f6d0d0e865262ad37809d99f5e3fea3bea453589589d98f48ae8f8947"
+      "computedHash": "8032988da335fb585468d40432ba53dfdbd4a2bba124ae5759ecd58b02aeb8b7"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
@@ -19,17 +19,12 @@
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",
       "sourceType": "local",
-      "computedHash": "e90bcf026420c25a9c999313a80312782cbd4b04e0e27f3b02c7d5827c96de84"
-    },
-    "competitive-intelligence": {
-      "source": "agents/product_manager/skills/competitive-intelligence",
-      "sourceType": "local",
-      "computedHash": "3cf55f79aa3ed884315ad27863203965f5a424beb5843d9d7978726c18f30b40"
+      "computedHash": "8f4feb06f5a9fcd9f5f5edde93f7ace667a998ee577995bc4fd304d3638d32ed"
     },
     "changelog-generator": {
       "source": "agents/product_manager/skills/changelog-generator",
       "sourceType": "local",
-      "computedHash": "a10b972b640f14a52764d5f98fc69e9059aeca0ebb37ef9dd12aaf301c089fe2"
+      "computedHash": "530d1acfe38e0c302676df280d385e8dd0fd727d86f7b364ccd3ad97c3974aca"
     },
     "github-release-generator": {
       "source": "agents/product_manager/skills/github-release-generator",
@@ -79,7 +74,7 @@
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",
       "sourceType": "local",
-      "computedHash": "b353900852718984629e36040a577506814b6e061eef215c1b17cea925090ca5"
+      "computedHash": "c92589d37d986b56f609a23ebb4ae705d46a982332ef7cd1bfdd399157b6b2a8"
     },
     "debugger": {
       "source": "agents/engineer/skills/debugger",
@@ -129,12 +124,12 @@
     "cicd-bootstrap": {
       "source": "agents/devops/skills/cicd-bootstrap",
       "sourceType": "local",
-      "computedHash": "941269381d67a71d3dd44ced8c3d41c3520bc8b2b75a51a512ca05becdc3d9c3"
+      "computedHash": "0a10bfb35ed315972eb8c2472a91783b153e3920a13c954bef4591374eebfcab"
     },
     "env-config-auditor": {
       "source": "agents/devops/skills/env-config-auditor",
       "sourceType": "local",
-      "computedHash": "30eed41ce575b45a0cb0537064004338fd2a74fba3f6e63fa6440bcf986a24f4"
+      "computedHash": "25d896a969404e70a28356c023ee2a970717a078372a8920b9be6310e1bd3145"
     },
     "incident-playbook-writer": {
       "source": "agents/devops/skills/incident-playbook-writer",

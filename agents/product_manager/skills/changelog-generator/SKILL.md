@@ -35,29 +35,38 @@ Resolve the target changelog path before writing:
 
 If the target file already exists, read it before making changes so you can do a surgical update instead of a full overwrite.
 
-## Step 2 — Fetch releases
+## Step 2 — Determine the reachable commit range
 
 ```bash
+git describe --tags --abbrev=0 HEAD
+git describe --tags --abbrev=0 TARGET_TAG^
 gh release list --json tagName,publishedAt,name --order desc --limit 100
 ```
 
-Build a sorted list of `(tag, date)` pairs. This lets you determine the date window for each version's PRs.
+Use tags to select the commit range; release dates are metadata for the rendered version heading, not the primary change-selection boundary.
 
-For **Unreleased** mode: the window is `merged:>LATEST_RELEASE_DATE`.
-For **New version** mode: the window is `merged:PREV_RELEASE_DATE..THIS_RELEASE_DATE`.
-For **Full** mode: repeat for every adjacent tag pair, plus an Unreleased section.
+- For **Unreleased** mode: use `LATEST_TAG..HEAD`.
+- For **New version** mode: use `PREV_TAG..TARGET_TAG`. If the target is not tagged yet, use `PREV_TAG..HEAD`.
+- For **Full** mode: repeat for every adjacent tag pair and use `LATEST_TAG..HEAD` for Unreleased.
+- For the first tag, where no previous tag exists, use `git log TARGET_TAG` to include every commit reachable from that tag.
 
-## Step 3 — Fetch PRs per window
+## Step 3 — Fetch reachable commits and PR metadata
 
 ```bash
-gh pr list \
-  --state merged \
-  --json number,title,body,mergedAt,author \
-  --search "merged:START_DATE..END_DATE" \
-  --limit 200
+git log --format='%H%x09%s' PREV_TAG..TARGET_TAG
 ```
 
-Paginate if needed (add `--limit 200` and re-query with narrower windows for dense histories).
+As a remote alternative, use `gh api repos/{owner}/{repo}/compare/PREV_TAG...TARGET_TAG`.
+
+Extract PR numbers from squash-merge subjects ending in `(#NNN)` and from merge-commit subjects like `Merge pull request #NNN from ...`, then run `gh pr view NNN --json number,title,body,author,labels,state` for classification and grouping. Keep commits without an associated PR in a separate **Direct commits** group instead of dropping them.
+
+Only when the repository has no tags at all, use the first-release fallback:
+
+```bash
+gh pr list --state merged --json number,title,body,mergedAt,author,labels --search "merged:<=END_DATE" --limit 200
+```
+
+Paginate or narrow the fallback date window if the first release has more than 200 merged PRs.
 
 **Skip these PRs/commits automatically:**
 - Author is a bot: `dependabot`, `renovate`, `github-actions`, or any login ending in `[bot]`
@@ -120,6 +129,7 @@ Group entries by section in this order (omit empty sections):
 ### Removed
 ### Fixed
 ### Security
+### Direct commits
 ```
 
 Each entry:
@@ -173,12 +183,12 @@ Always create `docs/changelog/` if it doesn't exist.
 
 ## Edge Cases
 
-- **Few or no PRs in a version window**: some repos (e.g. SDK generators) push changes as direct commits rather than PRs. Fall back to `gh api repos/{owner}/{repo}/compare/PREV_TAG...THIS_TAG` to get all commits, then classify commit messages by the same prefix rules.
+- **Few or no associated PRs in a tag range**: keep the reachable commits in **Direct commits** and classify their subjects by the same prefix rules.
 - **PR number referenced but not merged**: when a commit message references `#NUMBER` but the PR was not actually merged (e.g. it's an issue reference), use `/issues/NUMBER` in the link instead of `/pull/NUMBER`. Verify with `gh pr view NUMBER --json state` if unsure.
 - **More than 40 PRs in one release**: group closely related entries (e.g., multiple "add X field to Y" PRs) into a single summarized line, keeping all PR links. Note the grouping.
 - **Squash merges with generic titles** like "Merge PR #42": fall back to reading the PR description for context.
 - **Tags without a corresponding GitHub Release**: still work — use the tag date from `gh api repos/{owner}/{repo}/git/refs/tags` if `gh release list` doesn't have it.
-- **First release (no previous tag)**: include all PRs merged up to the release date.
+- **Repository has no tags yet**: use the first-release merged-date fallback; after the first tag exists, return to commit reachability.
 
 ## Reference
 

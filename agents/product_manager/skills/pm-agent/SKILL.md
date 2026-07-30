@@ -36,8 +36,8 @@ execution.
 
 - running the full design or document-writing protocol itself
 - duplicating the domain logic of `idea-to-spec`, `feature-catalog`,
-  `competitive-brief`, `competitive-intelligence`, `changelog-generator`,
-  `github-release-generator`, `roadmap-generator`, or `github-reader`
+  `competitive-brief`, `changelog-generator`, `github-release-generator`,
+  `roadmap-generator`, or `github-reader`
 - continuing into design implementation, engineering execution, QA, DevOps, or
   security work
 - letting empty-workspace product ideas skip PM discovery and go straight to
@@ -48,7 +48,6 @@ execution.
 - `pm-agent:idea-to-spec` - Product discovery, scope shaping, spec creation, spec updates
 - `pm-agent:feature-catalog` - Take-over feature catalog and project feature profile for existing codebases
 - `pm-agent:competitive-brief` - Competitive analysis, positioning, market comparison
-- `pm-agent:competitive-intelligence` - Sales-facing battlecards and deal support
 - `pm-agent:changelog-generator` - Developer-facing changelog generation from GitHub
 - `pm-agent:github-release-generator` - GitHub Release preview, draft, and
   approved publication after the Docs release gates pass
@@ -100,7 +99,7 @@ these stable `request_type` values in routing notes and handoff packets.
 | `formal_docs` | Distinguish formal documentation site work from role-owned process documents such as PRD, TRD, implementation plans, and QA reports. | Docs receives a bounded bootstrap, synchronization, backfill, or release documentation audit packet and routes it to the matching specialist. |
 | `delivery` / `status` | Confirm already-scoped change scope, verification state, CI/review status, and requested delivery action. | Engineer / delivery can use the fast lane only for known work whose scope is already confirmed. Repo health, backlog, PR queue, release-readiness planning, and blockers route to `repo_status` / `github-reader`. |
 | `feature_catalog` | Route inherited-project inventory and feature-profile work to `feature-catalog`. | Stay in PM until the catalog or feature profile is maintainer-confirmed. |
-| `competitive_research` / `battlecard` | Route market comparison to `competitive-brief` and sales battlecards to `competitive-intelligence`. | Stay in PM unless follow-up roadmap, messaging, or implementation work needs a separate handoff. |
+| `competitive_research` / `battlecard` | Route market comparison and battlecards to `competitive-brief`. | Stay in PM unless follow-up roadmap, messaging, or implementation work needs a separate handoff. |
 | `changelog` / `release_notes` | Route developer-facing changelog work to `changelog-generator`; route site or user-facing version notes to `docs-agent:release-notes-generator`; route GitHub Release preview, draft, or publication to PM `github-release-generator`. | Site Release Notes require a Docs handoff and successful release gates before the PM GitHub Release specialist acts. |
 | `roadmap` / `repo_status` | Route planning, milestones, backlog, PR queue, blockers, and repository health to `roadmap-generator` or `github-reader`. | Stay in PM unless confirmed downstream execution is requested. |
 
@@ -122,9 +121,6 @@ Route by the user's intended PM outcome, not by literal wording.
 - Competitor research, positioning comparison, market scan, messaging gaps,
   "竞品分析", "我们和 X 怎么比"
   -> `competitive-brief`
-- Sales battlecard, objection handling, deal support, field enablement,
-  "battlecard", "销售怎么讲我们和 X 的差异"
-  -> `competitive-intelligence`
 - Changelog, what changed, unreleased changes, version history, "这个版本改了什么"
   -> `changelog-generator`
 - GitHub Release bodies, previews, drafts, or publication operations,
@@ -175,7 +171,6 @@ Route by the user's intended PM outcome, not by literal wording.
 | 新想法、新功能、空/新仓库里的产品想法、范围收敛、已有 spec 更新 | `idea-to-spec` |
 | 接手已有项目、建立功能目录、功能画像、梳理现有功能 | `feature-catalog` |
 | 竞品分析、定位比较、市场情报 | `competitive-brief` |
-| 销售 battlecard、deal support | `competitive-intelligence` |
 | changelog、版本差异、未发布改动 | `changelog-generator` |
 | GitHub Release 正文、预览、draft 或发布操作 | PM `github-release-generator` |
 | 面向用户的版本说明、发布公告、`docs/site/release-notes/` 版本页 | `docs-agent:release-notes-generator` |

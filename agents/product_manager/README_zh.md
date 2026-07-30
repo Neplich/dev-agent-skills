@@ -13,7 +13,7 @@
 | 项目 | 内容 |
 | --- | --- |
 | 入口 skill | `pm-agent` |
-| Specialist skills | 8 个 |
+| Specialist skills | 7 个 |
 | 主要输入 | 用户想法、本地 `docs/`、代码库现状、GitHub Issues / PRs / Milestones / Releases |
 | 主要输出 | `docs/pm/{feature_path}/`、`docs/roadmap.md`、`docs/changelog/changelog-v{version}.md`、`docs/release-notes/` |
 | 下游协作 | `designer-agent`、`engineer-agent` |
@@ -26,7 +26,6 @@
 | `idea-to-spec` | 产品想法、空仓库 app 请求、已有功能变更、spec 更新 | `PRD.md`、`BRD.md`、`DECISIONS.md`、Engineer handoff |
 | `feature-catalog` | 接手已有项目、建立功能目录、项目功能画像 | 功能目录草案、`docs/pm/FEATURE_CATALOG.md`、`prd-gen`/`trd-gen` handoff |
 | `competitive-brief` | 竞品定位、差距分析、市场扫描 | 竞品简报、定位机会、风险与建议 |
-| `competitive-intelligence` | 销售向 battlecard、deal support | HTML battlecard、竞品对比矩阵 |
 | `changelog-generator` | 面向开发者的版本变化整理 | `docs/changelog/changelog-v{version}.md` |
 | `github-release-generator` | 已确认站内版本说明和发版审计后的 GitHub Release 工作 | 可追溯预览或 draft；实际 tag 与 post-tag 审计通过后经批准发布 |
 | `roadmap-generator` | milestone、issue、版本计划整理 | `docs/roadmap.md` |
@@ -37,7 +36,6 @@
 - 想法收敛、范围定义、PRD/BRD/DECISIONS：使用 `idea-to-spec`
 - 接手已有项目、建立功能目录、功能画像：使用 `feature-catalog`
 - 竞品研究、定位差距、市场扫描：使用 `competitive-brief`
-- 销售 battlecard 或 deal support：使用 `competitive-intelligence`
 - 开发者视角版本变化：使用 `changelog-generator`
 - GitHub Release 预览、draft 或经批准发布：完成 Docs 发版门禁后使用
   `github-release-generator`
