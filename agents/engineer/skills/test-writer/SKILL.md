@@ -34,6 +34,8 @@ Use the PM-side packet definition in
 Locate the Test Spec:
 
 ```bash
+ls docs/qa/{feature_path}/test-spec*.md docs/qa/{feature_path}/tspecs*.md docs/qa/{feature_path}/TEST_SPEC*.md 2>/dev/null
+# Legacy level-1 fallback
 ls docs/test-spec*.md docs/tspecs*.md docs/TEST_SPEC*.md 2>/dev/null
 ```
 
@@ -126,7 +128,7 @@ cargo test      # Rust
 - **Test failures**: For each failure, determine:
   - Is this a **code bug**? → Flag it and recommend `debugger` skill
   - Is this a **test bug**? → Fix the test and re-run
-  - Is this a **missing dependency**? → Install and re-run
+  - Is this a **missing dependency**? → Ask the user before installing, then install and re-run
 
 ## Step 6 — Report
 

@@ -1,6 +1,6 @@
 ---
 name: cicd-bootstrap
-description: "Internal DevOps specialist—not a direct entry point. Invoked by devops-agent after pm-agent handoff to add or update CI/CD automation, GitHub Actions, GitLab CI, and release workflow configuration."
+description: "Internal DevOps specialist—not a direct entry point. Invoked by devops-agent after pm-agent handoff to add or update CI/CD automation, GitHub Actions, and release workflow configuration."
 visibility: internal
 ---
 
@@ -12,7 +12,7 @@ Generate CI/CD pipeline configurations that automate testing, building, and depl
 
 - Deployment configs exist in `deploy/` directory
 - User wants to automate the deployment process
-- Need to set up GitHub Actions or GitLab CI
+- Need to set up GitHub Actions
 - Project is ready for continuous deployment
 - Existing CI/CD must be extended for a new service, worker, environment, or release path
 - Existing workflows must be updated after deployment architecture or target changes
@@ -34,7 +34,7 @@ Use the PM-side packet definition in
 
 Before writing CI/CD config, inspect:
 
-- whether `.github/workflows/` or `.gitlab-ci.yml` already exists
+- whether `.github/workflows/` already exists
 - which deployment targets exist under `deploy/`
 - which test/build commands are actually present in the repo
 - whether the task is repo-wide automation or specific to one release path
@@ -59,7 +59,6 @@ plan.
 ## Input Requirements
 
 Detect or ask:
-- **Git platform**: GitHub or GitLab
 - **Deployment target**: Which deployment method to use (docker/helm)
 - **Environments**: staging and/or production
 - **Deployment triggers**: On PR merge, on tag, manual
@@ -68,7 +67,7 @@ Detect or ask:
 
 Check which platform:
 ```bash
-ls .github/ 2>/dev/null && echo "GitHub" || ls .gitlab-ci.yml 2>/dev/null && echo "GitLab"
+ls .github/ 2>/dev/null
 ```
 
 Check available deployment methods:
@@ -107,16 +106,7 @@ Deploy to production on tag creation:
 - Deploy to production
 - Create GitHub release
 
-## Step 3 — Create GitLab CI Config (if GitLab)
-
-### 3.1 Create `.gitlab-ci.yml`
-
-Define stages and jobs:
-- **test stage**: lint, test, build
-- **deploy-staging stage**: auto-deploy on main
-- **deploy-production stage**: manual trigger or on tag
-
-## Step 4 — Configure Secrets
+## Step 3 — Configure Secrets
 
 Document required secrets in a durable operational path:
 
@@ -129,10 +119,7 @@ For GitHub Actions:
 - `KUBECONFIG` (if using K8s)
 - `STAGING_SERVER` / `PRODUCTION_SERVER` (if using SSH)
 
-For GitLab CI:
-- Add secrets in Settings → CI/CD → Variables
-
-## Step 5 — Validate The Pipeline Definition
+## Step 4 — Validate The Pipeline Definition
 
 If the user wants an active validation, suggest or perform the safest available non-destructive verification path. Do not create throwaway commits by default.
 
@@ -144,7 +131,7 @@ git diff -- .github/workflows/
 
 If a dry-run tool exists for the chosen CI platform, use it. Otherwise summarize what still requires manual verification in the hosting platform.
 
-## Step 6 — Summary
+## Step 5 — Summary
 
 Output:
 ```
@@ -153,7 +140,7 @@ Output:
 已创建自动化部署流程：
 
 ### CI Pipeline
-- 位置: `.github/workflows/ci.yml` 或 `.gitlab-ci.yml`
+- 位置: `.github/workflows/ci.yml`
 - 触发: 每次 PR 提交
 - 步骤: lint → test → build
 
@@ -184,7 +171,6 @@ Output:
 
 - Primary outputs belong in repo-native CI/CD locations:
   - `.github/workflows/`
-  - `.gitlab-ci.yml`
 - Secrets documentation should be durable and reviewable
 - Feature-scoped release plans or CI/CD readiness notes belong under
   `docs/devops/{feature_path}/...`

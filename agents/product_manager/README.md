@@ -13,7 +13,7 @@
 | Item | Details |
 | --- | --- |
 | Entry skill | `pm-agent` |
-| Specialist skills | 8 |
+| Specialist skills | 7 |
 | Main inputs | User ideas, local `docs/`, repository state, GitHub Issues / PRs / Milestones / Releases |
 | Main outputs | `docs/pm/{feature_path}/`, `docs/roadmap.md`, `docs/changelog/changelog-v{version}.md`, `docs/release-notes/` |
 | Downstream agents | `designer-agent`, `engineer-agent` |
@@ -26,7 +26,6 @@
 | `idea-to-spec` | Product ideas, empty-repo app requests, feature changes, spec updates | `PRD.md`, `BRD.md`, `DECISIONS.md`, Engineer handoff |
 | `feature-catalog` | Project take-over, feature directory and feature profile for existing code | Feature catalog draft, `docs/pm/FEATURE_CATALOG.md`, `prd-gen`/`trd-gen` handoff |
 | `competitive-brief` | Competitor positioning, gap analysis, market scan | Competitive brief, positioning opportunities, risks |
-| `competitive-intelligence` | Sales battlecards and deal support | HTML battlecard, competitor comparison matrix |
 | `changelog-generator` | Developer-facing version change summaries | `docs/changelog/changelog-v{version}.md` |
 | `github-release-generator` | GitHub Release work after confirmed site Release Notes and release audits | Traceable preview or draft; approved publication after the tag and post-tag audit |
 | `roadmap-generator` | Milestones, issues, and version planning | `docs/roadmap.md` |
@@ -37,7 +36,6 @@
 - Idea shaping, scope definition, PRD/BRD/DECISIONS: use `idea-to-spec`
 - Project take-over, feature catalog, feature profile for an existing repo: use `feature-catalog`
 - Competitor research, positioning gaps, market scans: use `competitive-brief`
-- Sales battlecards or deal support: use `competitive-intelligence`
 - Developer-facing version changes: use `changelog-generator`
 - GitHub Release preview, draft, or approved publication: use
   `github-release-generator` after the Docs release gates pass.

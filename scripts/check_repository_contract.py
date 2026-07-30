@@ -76,6 +76,11 @@ BLOCKED_TRACKED_PATTERNS = (
 )
 PLACEHOLDER_AUTHOR_VALUES = {"AI Assistant", "TBD", "TODO", "Unknown", "N/A"}
 TEMPLATE_PLACEHOLDER_RE = re.compile(r"<[^<>]+>")
+QUALIFIED_SKILL_REFERENCE_RE = re.compile(
+    r"(?<![a-z0-9-])([a-z0-9]+(?:-[a-z0-9]+)*-agent):([a-z0-9]+(?:-[a-z0-9]+)*)(?![a-z0-9-])"
+)
+MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
+INLINE_CODE_RE = re.compile(r"`([^`\n]+)`")
 
 
 @dataclass
@@ -586,6 +591,48 @@ def marketplace_skill_sources(root: Path, errors: list[ContractError]) -> dict[s
         sources[lock_name] = rel
 
     return sources
+
+
+def validate_skill_references(root: Path, errors: list[ContractError]) -> None:
+    marketplace_path = root / ".claude-plugin" / "marketplace.json"
+    payload = load_json(marketplace_path, errors)
+    registered: set[tuple[str, str]] = set()
+    if isinstance(payload, dict) and isinstance(payload.get("plugins"), list):
+        for plugin in payload["plugins"]:
+            if not isinstance(plugin, dict):
+                continue
+            plugin_name = plugin.get("name")
+            source = plugin.get("source")
+            skills = plugin.get("skills")
+            if not isinstance(plugin_name, str) or not isinstance(source, str) or not isinstance(skills, list):
+                continue
+            for skill in skills:
+                if isinstance(skill, str):
+                    registered.add((plugin_name, (root / source / skill).name))
+
+    for skill_doc in sorted(root.glob("agents/*/skills/*/SKILL.md")):
+        content = skill_doc.read_text()
+        # Bare skill names are intentionally ignored because internal module names would produce false positives.
+        for match in QUALIFIED_SKILL_REFERENCE_RE.finditer(content):
+            reference = match.group(0)
+            if (match.group(1), match.group(2)) not in registered:
+                add_error(errors, skill_doc, f"qualified skill reference {reference!r} is not registered")
+
+        prose = re.sub(r"(?ms)^```.*?^```[ \t]*$", "", content)
+        candidates = [match.group(1).strip().split()[0] for match in MARKDOWN_LINK_RE.finditer(prose)]
+        candidates.extend(
+            value
+            for match in INLINE_CODE_RE.finditer(prose)
+            if re.fullmatch(r"\.\.?/[^\s]+", value := match.group(1).strip())
+        )
+        for reference in candidates:
+            reference = reference.strip("<>").split("#", 1)[0]
+            if not reference or "{" in reference or reference.startswith(("/", "#")):
+                continue
+            if re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", reference):
+                continue
+            if not (skill_doc.parent / reference).resolve().exists():
+                add_error(errors, skill_doc, f"relative path reference {reference!r} does not exist")
 
 
 def tracked_files_under(root: Path, rel_dir: str) -> list[str]:
@@ -1579,6 +1626,7 @@ def validate_all(root: Path | None = None) -> list[ContractError]:
     errors: list[ContractError] = []
     validate_claude_symlink(root, errors)
     validate_marketplace(root, errors)
+    validate_skill_references(root, errors)
     validate_skill_visibility(root, errors)
     validate_skills_lock(root, errors)
     validate_feature_document_metadata(root, errors)
