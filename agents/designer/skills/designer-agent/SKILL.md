@@ -73,30 +73,16 @@ packet or equivalent confirmed PM/design documents with a stable
 - `designer-agent:ui-ux-design` - UX flows, page structure, IA, layouts, wireframes, interaction notes
 - `designer-agent:visual-design` - Reference-backed visual design system, components, typography, color, UX quality rules, copy style
 
-## Routing Signals
+## Default Routes
 
 Route by the design outcome the user wants.
 
-- User journeys, flows, screens, page structure, navigation, form design,
-  wireframes, information architecture, redesigning a workflow, reference-site
-  interaction patterns, "流程怎么设计", "页面怎么拆", "做 wireframe"
-  -> `ui-ux-design`
-- Engineer-sourced UI maintenance or frontend-update design handoff, with a
-  confirmed `feature_path` and a design gap for page structure, interaction, or
-  visual deliverables
-  -> `ui-ux-design` and, when visual rules are affected, `visual-design`
-- Visual direction, aesthetic system, product-appropriate style, color,
-  typography, component styling, UX quality rules, anti-patterns, tone of
-  voice, brand feel, "风格怎么定", "视觉系统", "组件视觉规范"
-  -> `visual-design`
-
-## Default Routes
-
-| Design Outcome | Primary Skill |
-| --- | --- |
-| UX 流程、页面结构、信息架构、线框、交互规范 | `ui-ux-design` |
-| 视觉风格、设计系统、颜色、字体、组件规范、UX 质量规则、反模式、文案语气 | `visual-design` |
-| 需求模糊但明显是设计问题 | `ui-ux-design` |
+| Design Outcome | Primary Skill | 信号示例 |
+| --- | --- | --- |
+| UX 流程、页面结构、信息架构、线框、交互规范 | `ui-ux-design` | User journeys, flows, screens, page structure, navigation, form design, wireframes, information architecture, redesigning a workflow, reference-site interaction patterns, "流程怎么设计", "页面怎么拆", "做 wireframe" |
+| 已确认 `feature_path` 且存在页面结构、交互或视觉交付缺口的 Engineer UI 维护/前端更新设计 handoff | `ui-ux-design` and, when visual rules are affected, `visual-design` | Engineer-sourced UI maintenance or frontend-update design handoff, with a confirmed `feature_path` and a design gap for page structure, interaction, or visual deliverables |
+| 视觉风格、设计系统、颜色、字体、组件规范、UX 质量规则、反模式、文案语气 | `visual-design` | Visual direction, aesthetic system, product-appropriate style, color, typography, component styling, UX quality rules, anti-patterns, tone of voice, brand feel, "风格怎么定", "视觉系统", "组件视觉规范" |
+| 范围已确认但设计类型模糊 | `ui-ux-design` | Design-shaped request with confirmed scope but an underspecified design type |
 
 If the request is design-shaped but underspecified, default to
 `ui-ux-design` first. Use `visual-design` as the primary route only when the

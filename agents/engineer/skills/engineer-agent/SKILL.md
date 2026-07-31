@@ -136,47 +136,19 @@ sub-agents.
 - `engineer-agent:debugger` - Reproduce, diagnose, and fix bugs or failing builds/tests
 - `engineer-agent:delivery` - Branch, commit, push, and create PRs for completed work
 
-## Routing Signals
+## Default Routes
 
 Route by the engineering outcome the user wants, not by literal phrasing.
 
-- Repo understanding, technical due diligence, "这个项目怎么组织的",
-  "技术栈是什么", "接手这个仓库"
-  -> `codebase-analyzer`
-- Technical planning from confirmed PRD and product decisions, TRD creation or
-  revision, architecture plan, implementation blueprint, "写 TRD", "技术方案",
-  "技术计划", "工程设计", "API 文档", "接口规范", "ADR", "架构决策"
-  -> `trd-gen`
-- New project setup, greenfield bootstrap, scaffolding from a TRD, approved PM
-  docs, or an explicit "skip PM and just scaffold" request, "初始化项目",
-  "搭个骨架", "起一个服务"
-  -> `project-bootstrap`
-- Feature implementation, code changes, requirement delivery, design-to-code,
-  frontend code updates, UI implementation, interface optimization, scoped
-  refactors in service of a requirement, "实现功能", "落地设计",
-  "更新前端代码", "改 UI", "优化界面实现", "把这个需求做掉", "改造这块逻辑"
-  -> after the existing feature alignment gate passes, `feature-implementor`
-- Test coverage, acceptance tests, unit/integration tests, "补测试",
-  "加 coverage", "验证实现"
-  -> `test-writer`
-- Bug fixing, failing tests, broken builds, runtime regressions, hotfixes,
-  "为什么挂了", "修 bug", "debug 一下", "CI 炸了"
-  -> after the expected behavior is aligned against PRD / TRD, `debugger`
-- Branching, commits, pushes, PR creation, delivery wrapping,
-  "提交代码", "提 PR", "push 上去"
-  -> `delivery`
-
-## Default Routes
-
-| Engineering Outcome | Primary Skill |
-| --- | --- |
-| 理解仓库、技术栈、约束、现有模式 | `codebase-analyzer` |
-| PRD 确认后的技术计划、TRD/API/ADR 编写或更新 | `trd-gen` |
-| 新项目/新服务初始化、脚手架搭建（已具备 TRD / 稳定 spec / 显式跳过 PM） | `project-bootstrap` |
-| 实现需求、改行为、按 spec 或设计落地、为需求做重构 | `feature-implementor` |
-| 补测试、补 coverage、把实现转成自动化验证 | `test-writer` |
-| 修 bug、查失败、定位构建/运行/测试异常 | `debugger` |
-| commit / push / branch / PR / 交付收尾 | `delivery` |
+| Engineering Outcome | Primary Skill | 信号示例 |
+| --- | --- | --- |
+| 理解仓库、技术栈、约束、现有模式 | `codebase-analyzer` | Repo understanding, technical due diligence, "这个项目怎么组织的", "技术栈是什么", "接手这个仓库" |
+| PRD 确认后的技术计划、TRD/API/ADR 编写或更新 | `trd-gen` | Technical planning from confirmed PRD and product decisions, TRD creation or revision, architecture plan, implementation blueprint, "写 TRD", "技术方案", "技术计划", "工程设计", "API 文档", "接口规范", "ADR", "架构决策" |
+| 新项目/新服务初始化、脚手架搭建（已确认 TRD / 已批准 PM 文档 / 显式跳过 PM） | `project-bootstrap` | New project setup, greenfield bootstrap, scaffolding from a confirmed TRD, approved PM docs, or an explicit "skip PM and just scaffold" request, "初始化项目", "搭个骨架", "起一个服务" |
+| 实现需求、改行为、按 spec 或设计落地、设计转代码、前端/UI 实现与优化、为需求做重构 | after the existing feature alignment gate passes, `feature-implementor` | Feature implementation, code changes, requirement delivery, design-to-code, frontend code updates, UI implementation, interface optimization, scoped refactors in service of a requirement, "实现功能", "落地设计", "更新前端代码", "改 UI", "优化界面实现", "把这个需求做掉", "改造这块逻辑" |
+| 补测试、补 coverage、把实现转成自动化验证 | `test-writer` | Test coverage, acceptance tests, unit/integration tests, "补测试", "加 coverage", "验证实现" |
+| 修 bug、查失败、定位构建/运行/测试异常、线上回归、hotfix | after the expected behavior is aligned against PRD / TRD, `debugger` | Bug fixing, failing tests, broken builds, runtime regressions, hotfixes, "为什么挂了", "修 bug", "debug 一下", "CI 炸了" |
+| commit / push / branch / PR / 交付收尾 | `delivery` | Branching, commits, pushes, PR creation, delivery wrapping, "提交代码", "提 PR", "push 上去" |
 
 If the request is engineering-shaped but underspecified, use these defaults:
 

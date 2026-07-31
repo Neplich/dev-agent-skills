@@ -53,31 +53,16 @@ defined in
 - `security-agent:dependency-risk-auditor` - Dependency, CVE, abandonment, and supply-chain risk audit
 - `security-agent:privacy-surface-mapper` - Personal data mapping, privacy obligations, compliance surfaces
 
-## Routing Signals
+## Default Routes
 
 Route by the security outcome the user wants.
 
-- Broad security review, release-gate pass, risky surface scan, input handling,
-  secrets exposure, uploads, API review, "安全过一遍", "上线前检查"
-  -> `appsec-checklist`
-- Login, sessions, roles, permissions, multi-tenant access, RBAC/ABAC,
-  "权限模型", "鉴权", "admin 能不能越权"
-  -> `authz-reviewer`
-- Dependency CVEs, package risk, supply chain, abandoned packages,
-  "依赖有没有洞", "npm audit", "供应链风险"
-  -> `dependency-risk-auditor`
-- PII mapping, consent, retention, deletion/export rights, data sharing,
-  GDPR/CCPA-style privacy review, "隐私合规", "个人数据在哪收集"
-  -> `privacy-surface-mapper`
-
-## Default Routes
-
-| Security Outcome | Primary Skill |
-| --- | --- |
-| 泛应用安全检查、发布前安全 gate、风险面扫描 | `appsec-checklist` |
-| 登录、session、角色权限、越权风险审查 | `authz-reviewer` |
-| 依赖漏洞、废弃包、供应链风险 | `dependency-risk-auditor` |
-| 隐私数据采集、处理面、GDPR/CCPA 风险 | `privacy-surface-mapper` |
+| Security Outcome | Primary Skill | 信号示例 |
+| --- | --- | --- |
+| 泛应用安全检查、发布前安全 gate、风险面扫描 | `appsec-checklist` | Broad security review, release-gate pass, risky surface scan, input handling, secrets exposure, uploads, API review, "安全过一遍", "上线前检查" |
+| 登录、session、角色权限、越权风险审查 | `authz-reviewer` | Login, sessions, roles, permissions, multi-tenant access, RBAC/ABAC, "权限模型", "鉴权", "admin 能不能越权" |
+| 依赖漏洞、废弃包、供应链风险 | `dependency-risk-auditor` | Dependency CVEs, package risk, supply chain, abandoned packages, "依赖有没有洞", "npm audit", "供应链风险" |
+| 隐私数据采集、处理面、GDPR/CCPA 风险 | `privacy-surface-mapper` | PII mapping, consent, retention, deletion/export rights, data sharing, GDPR/CCPA-style privacy review, "隐私合规", "个人数据在哪收集" |
 
 If the request is security-shaped but underspecified, default to
 `appsec-checklist` unless the user clearly centers the request on auth, deps,
