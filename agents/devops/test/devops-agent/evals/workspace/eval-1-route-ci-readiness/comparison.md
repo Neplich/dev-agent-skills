@@ -7,51 +7,63 @@
 - Eval: `eval-001-route-ci-readiness`
 - Test case: route-ci-readiness
 - Workspace: `workspace/eval-1-route-ci-readiness`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 for PR #98 trigger description routing review.
+- Review context: issue #196 L2-4 router single-source convergence
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: existing `deploy/docker` path with missing GitHub Actions PR gate and later config/runbook concerns.
-- Validation date: 2026-07-08.
-- Review context: PR #98 trigger description routing review.
-- Context read before applying the skill: `AGENTS.md`, `agents/devops/README.md`, `agents/devops/skills/devops-agent/SKILL.md`, `evals.json`, workspace `eval_metadata.json`, `deploy/docker/README.md`, and `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+- Fixture: existing `deploy/docker` path with a missing GitHub Actions PR gate and later config/runbook concerns.
+- Validation date: 2026-07-31.
+- With-skill source: fresh candidate generated after reading `agents/devops/README.md`, `agents/devops/skills/devops-agent/SKILL.md`, `evals.json`, `eval_metadata.json`, and `deploy/docker/README.md`.
+- Without-skill source: fresh candidate regenerated from the same prompt and fixture only, without reading or applying the DevOps Agent README, target skill, with-skill candidate, historical comparison, or prior baseline.
+
+## Latest Result
+
+- Behavior result: **FAIL**
+- Coverage result: **FULL** (5/5 assertions exercised)
+- Overall result: FAIL
+
+The failure is an actual contract/fixture conflict, not a missing live sample: the prompt does not provide the PM handoff required by the current router, while `routes_primary_to_cicd` requires immediate specialist routing.
 
 ## Assertions
 
-- PASS `routes_primary_to_cicd`: the current missing PR gate routes to `cicd-bootstrap`.
-- PASS `keeps_deployment_context`: the existing `deploy/docker` context is preserved rather than replaced with greenfield deployment planning.
-- PASS `names_followups`: environment coverage remains an `env-config-auditor` follow-up and rollback docs remain an `incident-playbook-writer` follow-up.
-- PASS `does_not_run_all_skills`: the route separates the current primary route from later DevOps checks.
-- PASS `does_not_write_workflow`: route-only work does not create `.github/workflows` files.
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_primary_to_cicd` | FAIL | The with-skill result returns the current request to `pm-agent` because no PM handoff packet or equivalent confirmed operational context is present. It names `cicd-bootstrap` only as the route after that gate, not as the current primary route required by the assertion. |
+| `keeps_deployment_context` | PASS | It preserves the existing `deploy/docker` evidence and explicitly avoids restarting deployment work from zero. |
+| `names_followups` | PASS | It names `env-config-auditor` and `incident-playbook-writer` as later checks. |
+| `does_not_run_all_skills` | PASS | It separates the gate/current decision from the proposed primary route and follow-up checks, without executing the full chain. |
+| `does_not_write_workflow` | PASS | It explicitly does not add `.github/workflows` files. |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-`devops-agent` satisfies the CI readiness route. The eval provides confirmed route-only DevOps context: the service already has `deploy/docker`, and the missing piece is GitHub Actions PR readiness. The router selects the narrow current owner `cicd-bootstrap`, carries forward `deploy/docker`, and does not restart deployment planning from zero.
+The router applies its downstream PM handoff entry gate before specialist routing. It therefore returns the request to `pm-agent`, preserves the existing Docker deployment context, and explains that the confirmed DevOps route would then start with `cicd-bootstrap`, followed by configuration audit and an on-demand incident playbook. It does not write workflow files or expand into all DevOps specialists.
 
-The router names `env-config-auditor` for later environment-variable coverage review and `incident-playbook-writer` for later rollback documentation. Those remain explicit follow-ups, not automatic execution. The route-only instruction prevents writing `.github/workflows` files during this eval.
+The L2-4 single-table route source is sufficient for the CI/CD, configuration-audit, and rollback signal recognition. This eval does not require or assume a separate Routing Signals list.
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-Fresh `without_skill` baseline generated on 2026-07-08 from only the eval prompt and fixture facts, without applying `agents/devops/README.md`, `agents/devops/skills/devops-agent/SKILL.md`, historical `comparison.md`, or any old baseline output.
+The fresh baseline directly selects `cicd-bootstrap` from the concrete GitHub Actions gap, carries the existing `deploy/docker` context forward, names `env-config-auditor` and `incident-playbook-writer` as follow-ups, and declines to write workflow files. It satisfies all five eval assertions.
 
-A generic no-skill response would likely recognize GitHub Actions as important and may mention environment-variable review and rollback docs. It is weaker on the skill-specific behavior: it may blur routing with implementation, sketch workflow YAML despite "不要直接写 workflow", restart deployment planning despite existing `deploy/docker`, or bundle CI, config audit, and runbook work into one broad DevOps pass instead of selecting `cicd-bootstrap` now and naming the other two as follow-ups.
+For this fixture, the baseline is more aligned with the asserted immediate route because it does not apply the target skill's PM handoff gate. This difference must not be interpreted as stronger governance behavior; it exposes that the current assertion and prompt do not jointly cover the router's entry contract.
 
 ## Failures
 
-- None found.
-- No PR #98 trigger description routing regression found: CI readiness still routes to `cicd-bootstrap`; config audit and runbook work remain follow-ups; no workflow files are written.
+- With-skill failure: `routes_primary_to_cicd`.
+- Root cause: missing PM handoff/equivalent confirmed context in the fixture conflicts with the current downstream entry gate.
+- No assertion was marked `NOT EXERCISED`; all five behaviors were observable.
+- No runtime, credential, or external-service blocker occurred.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for DevOps primary-route selection and follow-up separation.
-- Keep the PR #98 trigger description behavior covered by checking that DevOps trigger text still preserves route-only behavior, existing deployment context, and explicit follow-up separation.
+- Align this eval through the owning contract decision: either add a valid PM handoff/equivalent confirmed operational context to the fixture or change the expected route to the PM entry gate. Do not silently bypass the gate in the candidate.
+- Retain the existing checks for current-route/follow-up separation, Docker context preservation, and route-only authorization.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime evidence for this validation was written only under `tmp/eval-runs/2026-07-08-router-trigger-batch4-final/eval-001-route-ci-readiness/`:
+- Fresh paired evidence is stored only under `tmp/eval-runs/issue-196-l2-3-4/devops-agent/eval-001-route-ci-readiness/`:
   - `with_skill.md`
   - `without_skill.md`
-  - `verdict.md`
-- These files are scratch runtime artifacts and must not be committed.
-- Runtime transcripts, verdicts, timing, output directories, diagnostics, and generated with_skill / without_skill files must not be copied into the fixture workspace.
+  - `judge.md`
+- These scratch files are not committed.
+- Runtime transcripts, candidates, verdicts, timing, status, diagnostics, and generated output directories must not be copied into the fixture workspace.

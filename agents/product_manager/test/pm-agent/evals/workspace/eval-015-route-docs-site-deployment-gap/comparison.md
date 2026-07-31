@@ -4,38 +4,36 @@
 
 - Skill: `pm-agent`
 - Eval: `eval-015-route-docs-site-deployment-gap`
-- Review context: issue #162 fresh paired validation
+- Review context: issue #196 L2-4 fresh paired validation
 
 ## Test Set / Fixture Version
 
-- Fixture: issue #162 scenario evidence in this workspace
-- Validation date: 2026-07-22
-- Execution cleanup: all declared runtime paths were absent from pristine scratch fixtures
+- Schema: `evals.json` v1.0; current evidence fixture
+- Validation date: 2026-07-31
+- Sources: fresh with-skill session `019fb589-672e-7bc0-95ff-2ada072730dd`; fresh isolated baseline session `019fb58b-f4fa-7232-abda-91612bafb9a3`
 
 ## Latest Result
 
-**PASS (3/3 assertions)** — fresh Codex subagent semantic review.
+- Behavior result: FAIL (2/3 assertions)
+- Coverage result: FULL (3/3 assertions exercised)
+- Overall result: FAIL
 
 ## With-Skill Behavior
 
-- unknown 阶段不误判；补证并确认后生成 N/A feature scope 的 repo-wide deployment packet 与完整有序链。
-- Candidate source: fresh `tmp/eval-runs/issue-162/with_skill/eval-015-route-docs-site-deployment-gap/candidate-output.md`.
+Kept insufficient evidence `unknown`, then produced a repo-wide `deployment` packet with N/A feature scope, empty feature-path evidence, real source evidence, and authorization blockers. It handed off only generically to DevOps.
 
 ## Fresh Without-Skill Baseline
 
-- PARTIAL (1/3)；阻塞 unknown，但缺结构化 packet 字段、formal-docs-sync 收尾和 verified-only 约束。
-- The same prompt and pristine fixture were used; no historical baseline, target skill, Agent README, shared skill-map, old comparison, or with-skill output was used to compose it.
+Correctly preserved `unknown` and the authorization boundary, but produced neither the structured deployment packet nor the ordered DevOps/Docs chain.
 
 ## Failures
 
-- baseline 缺 packet contract 与完整 ordered chain。
-- No with-skill assertion failure or runner/credential blocker.
+- FAIL `routes_ordered_devops_chain`: the candidate did not name `deployment-planner → cicd-bootstrap → env-config-auditor → formal-docs-sync` or the verified-facts-only Docs closeout.
 
 ## Next Steps
 
-- Keep this regression case; strengthen fixture ambiguity later where the baseline already passes.
+- Restore the explicit ordered chain in the candidate behavior without inventing deployment authorization.
 
 ## Runtime Artifact Policy
 
-- Runtime candidates, copied fixtures, verdict, status, and diagnostics remain under `tmp/eval-runs/issue-162/` and are not committed.
-- Only this durable comparison, eval definition, metadata, and fixture evidence are submitted.
+- Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-015-route-docs-site-deployment-gap/` and are not committed.

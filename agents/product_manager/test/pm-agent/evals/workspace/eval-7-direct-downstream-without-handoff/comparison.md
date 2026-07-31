@@ -1,46 +1,39 @@
-# Eval Result: eval-007-direct-downstream-without-handoff
+# Skill Eval Comparison
 
 ## Evaluation Target
 
-- Agent: `product_manager`
 - Skill: `pm-agent`
 - Eval: `eval-007-direct-downstream-without-handoff`
-- Test case: direct-downstream-without-handoff
-- Workspace: `workspace/eval-7-direct-downstream-without-handoff`
-- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
-- Latest result: PASS（3/3 assertions PASS）- fresh subagent validation completed on 2026-07-21
+- Review context: issue #196 L2-4 fresh paired validation
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
-- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
-- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
-- Validation date: 2026-07-21
+- Schema: `evals.json` v1.0; current prompt and fixture
+- Validation date: 2026-07-31
+- Sources: fresh with-skill session `019fb589-672e-7bc0-95ff-2ada072730dd`; fresh isolated baseline session `019fb58b-f4fa-7232-abda-91612bafb9a3`
 
-## Assertions
+## Latest Result
 
-- PASS `reject_direct_downstream`
-- PASS `return_to_pm_agent`
-- PASS `require_handoff_or_docs`
+- Behavior result: PASS (3/3 assertions)
+- Coverage result: FULL (3/3 assertions exercised)
+- Overall result: PASS
 
-## With Skill Behavior
+## With-Skill Behavior
 
-拒绝直进下游；温和引导回 pm-agent 分类；要求 packet 或等价确认文档链。
+Rejected direct Engineer execution, returned to pm-agent for request type, scope, feature path and readiness, and required confirmed source documents plus a handoff.
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-fresh baseline 凭通用常识给出合理的分类/流程建议，但未使用 canonical request_type / change_tier 契约词汇，无 handoff packet 结构、无入口门禁与 fast lane 边界语义。
+Also blocked implementation and returned to PM, but did not enumerate feature-path/readiness classification or the equivalent-document contract.
 
 ## Failures
 
-无。
+- None.
 
 ## Next Steps
 
-- 无阻塞项。
+- None.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
-- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。
+- Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-007-direct-downstream-without-handoff/` and are not committed.

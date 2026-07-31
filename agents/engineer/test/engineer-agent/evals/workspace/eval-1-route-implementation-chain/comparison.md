@@ -7,42 +7,55 @@
 - Eval: `eval-001-route-implementation-chain`
 - Test case: route-implementation-chain
 - Workspace: `workspace/eval-1-route-implementation-chain`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 for PR #98 trigger description routing review.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: existing service with an approved billing webhook TRD and a route-only request for implementation, tests, QA E2E handoff, and delivery.
-- Context read before applying the skill: `AGENTS.md`, `agents/engineer/README.md`, `agents/engineer/skills/engineer-agent/SKILL.md`, `evals.json`, workspace `README.md`, `eval_metadata.json`, `docs/engineer/billing-webhook/TRD.md`, and `src/billing-webhook.md`.
-- Runtime evidence: fresh subagent artifacts were generated under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-001-route-implementation-chain/`.
+- Fixture: existing service with a billing webhook TRD and a route-only implementation, test, QA E2E handoff, and delivery request.
+- Fresh validation date: 2026-07-31.
+- With-skill source: current `agents/engineer/README.md`, current `agents/engineer/skills/engineer-agent/SKILL.md`, the eval definition, and the fixture README, metadata, TRD, and code notes.
+- Without-skill source: the same original prompt and fixture only; it was regenerated without reading or applying the skill, Agent README, with-skill output, old comparison, or a previous baseline.
+
+## Latest Result
+
+- Behavior result: PASS
+- Coverage result: FULL
+- Overall result: PASS
+
+All 6 current assertions were exercised and passed in the with-skill run.
 
 ## Assertions
 
-- PASS `starts_with_codebase_context`: the route starts with `codebase-analyzer` to establish repository structure, stack, constraints, and existing patterns.
-- PASS `routes_implementation_to_feature_implementor`: implementation is routed to `feature-implementor` after confirmed TRD context, with `IMPLEMENTATION_PLAN.md` as the required planning gate.
-- PASS `routes_tests_to_test_writer`: test coverage is a distinct `test-writer` route before delivery.
-- PASS `routes_qa_e2e_handoff`: post-implementation handoff must include PRD or PM source, TRD, confirmed `IMPLEMENTATION_PLAN.md`, changed files, verification commands, risks, and `docs/qa/e2e/{feature_path}/`.
-- PASS `routes_delivery_last`: `delivery` remains the last step for commit, push, or PR work.
-- PASS `does_not_execute_directly`: the route-only prompt does not authorize code edits, test runs, commits, pushes, or PR creation.
+- PASS `starts_with_codebase_context`: starts with `codebase-analyzer` to establish repository structure, stack, constraints, and existing patterns.
+- PASS `routes_implementation_to_feature_implementor`: routes confirmed implementation to `feature-implementor` with the PRD/TRD and confirmed plan gate.
+- PASS `routes_tests_to_test_writer`: keeps test coverage as a distinct `test-writer` stage.
+- PASS `routes_qa_e2e_handoff`: requires the full QA E2E handoff package before QA.
+- PASS `routes_delivery_last`: leaves `delivery` last for commit, push, and PR wrap-up.
+- PASS `does_not_execute_directly`: performs route-only work.
 
 ## With Skill Behavior
 
-`engineer-agent` satisfies the full route chain after the PR #98 trigger description edits. The with-skill run treated the prompt as route-only, started with `codebase-analyzer`, routed implementation to `feature-implementor` using the confirmed TRD and requiring a confirmed `docs/engineer/billing-webhook/IMPLEMENTATION_PLAN.md`, routed tests to `test-writer`, required the QA E2E handoff package before QA work, and placed `delivery` last for commit, push, and PR wrap-up. It did not perform implementation, run tests, create a commit, push, or open a PR.
+The route starts with `codebase-analyzer`, checks the missing same-path PM entry basis rather than treating a fixture TRD as blanket implementation authorization, then gives the conditional implementation stage to `feature-implementor` with a confirmed `IMPLEMENTATION_PLAN.md`. It keeps `test-writer`, the QA E2E handoff check, and `delivery` in the required order and does not execute.
 
 ## Without Skill Baseline
 
-Fresh baseline generated on 2026-07-08 from the eval prompt and fixture files only, without applying `engineer-agent`, the Engineer README, historical `comparison.md`, or any previous baseline. The baseline preserved a generic read-plan-implement-test-PR order, but lacked repository-specific specialist routing, the mandatory implementation-plan confirmation, and the QA E2E handoff-package requirement.
+The fresh baseline preserves a generic inspect-plan-implement-test-PR sequence and obeys the no-execution request, but it does not name the Engineer specialists, require the repository-specific implementation-plan gate, or include the QA E2E handoff package. Baseline assertion result: 1/6.
+
+## L2-4 Coverage Observation
+
+This scenario exercises the general `feature-implementor` chain, but its prompt does not trigger the new frontend/UI signal wording, the three project-bootstrap entry alternatives, or debugger runtime-regression/hotfix signals. These absent change-surface signals were not fabricated; they do not reduce this eval's assertion coverage.
 
 ## Failures
 
-- None found. PR #98 did not regress route-only implementation-chain routing, specialist ordering, QA E2E handoff preservation, or the no-direct-execution boundary.
+- None.
 
 ## Next Steps
 
 - Keep this eval as regression coverage for route-only implementation chains and QA E2E handoff preservation.
+- Add or revise assertions only through a separately scoped change if direct project-bootstrap or debugger signal coverage is required.
 
 ## Runtime Artifacts Policy
 
-- Runtime artifacts were created only under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-001-route-implementation-chain/`.
-- Generated `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence only and must not be committed.
-- Durable committed evidence for this run is this `comparison.md`.
+- Fresh runtime evidence is under `tmp/eval-runs/issue-196-l2-3-l2-4/engineer-agent/eval-001-route-implementation-chain/`.
+- `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence and must not be committed.
+- This `comparison.md` is the only durable result.

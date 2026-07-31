@@ -7,43 +7,59 @@
 - Eval: `eval-001-route-auth-release-risk`
 - Test case: route-auth-release-risk
 - Workspace: `workspace/eval-1-route-auth-release-risk`
-- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
-- Latest result: PASS（6/6 assertions PASS）- fresh subagent validation completed on 2026-07-21
+- Review context: issue #196 L2-4 router 单表收敛后的全量复验
+- Validation date: 2026-07-31
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
-- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
-- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
-- Validation date: 2026-07-21
+- Prompt/fixture: 与当前 `evals.json`、`PM_HANDOFF.md`、`docs/pm/auth-model/PRD.md`、`docs/security/auth-model.md`、`package.json` 一致。
+- with_skill source: fresh Codex candidate；完整读取并应用当前 `agents/security/README.md` 与 `agents/security/skills/security-agent/SKILL.md` 后，仅读取本 eval fixture。
+- without_skill source: 同一 prompt 与独立 fixture copy 的 fresh Codex baseline；未读取或应用 Security README、security-agent skill、with_skill、旧 comparison 或 judge，未复用历史 baseline。
+- Runner: Codex CLI 0.144.6，`gpt-5.6-sol`。
+- Runtime root: `tmp/eval-runs/issue-196-l2-3-4/security-agent/eval-001-route-auth-release-risk/`。
+
+## Latest Result
+
+- Behavior result: **FAIL**（4/6 assertions PASS）
+- Coverage result: **FULL**（6/6 assertions 均被当前场景触发并完成判定）
+- Overall result: FAIL
 
 ## Assertions
 
-- PASS：主 route `authz-reviewer`，命中路由信号并说明不走 `appsec-checklist` 兜底。
-- PASS：`dependency-risk-auditor` 明确后续链，不扩链。
-- PASS：完整列出认证流程、角色权限矩阵、敏感路由、测试证据与依赖清单（#140 fixture 使入口 gate 通过）。
-- PASS：结构化 review 报告归档 `docs/security/auth-model/`，非补丁。
-- PASS：代码修复交 `engineer-agent`，依赖/部署交 `devops-agent`。
-- PASS：断言于第二轮 review 后补充；行为证据来自 2026-07-21 同一轮 fresh subagent validation——with_skill candidate 在该轮已展示此行为（路由阶段不触发升级）。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_primary_to_authz` | PASS | with_skill 明确选择 `security-agent:authz-reviewer` 为主审，并以登录、session、角色权限、admin 越权和敏感路由为证据。 |
+| `names_dependency_followup` | PASS | with_skill 明确将 `security-agent:dependency-risk-auditor` 作为第二顺序的后续专项，未混入权限审查。 |
+| `collects_security_context` | FAIL | with_skill 提及登录/session、角色权限、敏感路由和 `package.json`，但没有明确声明下游必须读取完整的认证流程、角色权限矩阵、敏感路由、测试证据和依赖清单；尤其未形成断言要求的完整上下文输入清单。 |
+| `structured_risk_output` | PASS | with_skill 要求结构化风险报告，记录风险等级、证据、影响和修复建议，并明确不输出代码或配置补丁。 |
+| `hands_off_remediation` | PASS | with_skill 将应用鉴权整改交 `engineer-agent`，依赖、构建或部署整改交 `devops-agent`。 |
+| `evaluates_escalation_to_pm_at_closeout` | FAIL | with_skill 说明安全结论改变发版就绪状态或正式产品事实时回 `pm-agent`，也说明当前尚未执行审查；但没有明确把 closeout 判定锚定为 Security 自有的确认结论，也没有明确声明不得直交 `docs-agent`、不得由 Security 自行创建 issue，未满足该复合断言。 |
 
 ## With Skill Behavior
 
-入口 gate 凭 #140 的 PM_HANDOFF fixture 通过；路由与上下文清单同前 PASS。**#141 closeout 新行为验证**：candidate 评估 `Security Conclusion Escalation to PM` 并**正确不触发**（路由阶段尚无 confirmed conclusion），表述中不再出现直交 docs-agent 的路径；Safety-Net Closeout 建议下一步并等待确认。
+with_skill 通过 PM handoff 入口门禁，保留 `auth-model` feature scope，并正确使用当前单张 Default Routes 表中的语义信号完成路由；本场景不要求也未生成独立 Routing Signals 列表。它把 admin 越权审查精确路由到 `authz-reviewer`，把依赖漏洞保留为 `dependency-risk-auditor` 后续，给出 `docs/security/auth-model/` 下的两份预期报告路径，并保持“安全报告而非实现补丁”的职责边界。
+
+不足在于：候选没有完整枚举下游所需的五类安全上下文，也没有完整陈述 closeout 的 Security 自有确认结论触发条件与禁止路径。因此本轮属于真实行为回归/遗漏，不因 router 单表改造而放宽。
 
 ## Without Skill Baseline
 
-fresh baseline 给出通用优先级划分，未命名 canonical route，无入口门禁与升级/closeout 语义（借到 PM_HANDOFF fixture 的 handoff 线索，差异点同前披露）。
+fresh baseline 能直接从 PM handoff 与 PRD 推断两段审查顺序：先认证/授权，再依赖供应链；还较完整地列出 session、角色矩阵、敏感路由、测试证据、依赖树、结构化风险报告和 Engineer/DevOps 整改归属。其主要缺口是没有命名 canonical `authz-reviewer` / `dependency-risk-auditor`，没有 Security router 的入口、归档和 closeout 契约。
+
+with_skill 相比 baseline 在 specialist 精确命名、报告路径和 PM 升级方向上更明确；baseline 在一般安全上下文展开上反而更完整。该差异不足以抵消 with_skill 的两项断言失败。
 
 ## Failures
 
-无。#141 契约修订后 routing 与 closeout 语义均正确（Regression PASS）。
+- `collects_security_context`：缺少断言要求的完整下游输入清单，尤其没有明确包含认证流程、角色权限矩阵、敏感路由、测试证据和依赖清单五项。
+- `evaluates_escalation_to_pm_at_closeout`：未完整说明 closeout 针对 Security 自有确认结论；未明确禁止证据直交 `docs-agent` 和 Security 自行创建 issue。
 
 ## Next Steps
 
-- 无阻塞项。
+- 后续修订候选输出协议时，确保路由结论显式保留完整安全上下文输入清单。
+- closeout 表述需完整覆盖 Security 自有确认结论、路由阶段无结论不升级、回 PM 分类/建 issue，以及不直交 Docs、不由 Security 自建 issue。
+- 本轮不改 skill 文档或 eval 断言；仅如实记录 issue #196 全量重跑结果。
 
 ## Runtime Artifacts Policy
 
-- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
-- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。
+- 本轮 candidate、fresh baseline、prompt、fixture copy 与 judge 仅位于 `tmp/eval-runs/issue-196-l2-3-4/security-agent/eval-001-route-auth-release-risk/`，不提交到 git。
+- 提交范围仅包含 canonical `comparison.md`；不提交 with_skill / without_skill、transcript、verdict、timing、diagnostics 或其他运行期文件。
