@@ -14,6 +14,7 @@
 
 ## Latest Result
 
+- Latest result: PASS
 - Behavior result: PASS (3/3 assertions)
 - Coverage result: FULL (3/3 assertions exercised)
 - Overall result: PASS
@@ -34,6 +35,6 @@ Also required business and acceptance evidence, but omitted the canonical `valid
 
 - None.
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
 - Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-003-route-test-writing-request/` and are not committed.

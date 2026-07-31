@@ -14,6 +14,7 @@
 
 ## Latest Result
 
+- Latest result: PASS
 - Behavior result: PASS (3/3 assertions)
 - Coverage result: FULL (3/3 assertions exercised)
 - Overall result: PASS
@@ -34,6 +35,6 @@ Also satisfied all three assertions using general product-governance reasoning; 
 
 - None.
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
 - Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-012-change-tier-hotfix-abuse-blocked/` and are not committed.

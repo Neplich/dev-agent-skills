@@ -15,6 +15,7 @@
 
 ## Latest Result
 
+- Latest result: PASS
 - Behavior result: PASS (5/5 assertions)
 - Coverage result: FULL (5/5 assertions exercised)
 - Overall result: PASS
@@ -35,6 +36,6 @@ Also chose PM discovery first, but did not identify the canonical `idea-to-spec`
 
 - Keep as a greenfield entry regression case.
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
 - Paired runtime outputs stay under `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-001-route-greenfield-product-request/` and are not committed.

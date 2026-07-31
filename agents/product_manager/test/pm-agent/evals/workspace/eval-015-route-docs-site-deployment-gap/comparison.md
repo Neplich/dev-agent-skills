@@ -14,6 +14,7 @@
 
 ## Latest Result
 
+- Latest result: FAIL
 - Behavior result: FAIL (2/3 assertions)
 - Coverage result: FULL (3/3 assertions exercised)
 - Overall result: FAIL
@@ -34,6 +35,6 @@ Correctly preserved `unknown` and the authorization boundary, but produced neith
 
 - Restore the explicit ordered chain in the candidate behavior without inventing deployment authorization.
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
 - Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-015-route-docs-site-deployment-gap/` and are not committed.

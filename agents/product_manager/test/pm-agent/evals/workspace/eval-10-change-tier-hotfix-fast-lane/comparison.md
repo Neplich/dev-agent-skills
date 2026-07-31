@@ -14,6 +14,7 @@
 
 ## Latest Result
 
+- Latest result: PASS
 - Behavior result: PASS (3/3 assertions)
 - Coverage result: FULL (3/3 assertions exercised)
 - Overall result: PASS
@@ -34,6 +35,6 @@ Also passed the three behavioral points; it mislabeled `request_type` as hotfix,
 
 - Consider a future assertion for stable `request_type` if that distinction is required.
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
 - Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-010-change-tier-hotfix-fast-lane/` and are not committed.

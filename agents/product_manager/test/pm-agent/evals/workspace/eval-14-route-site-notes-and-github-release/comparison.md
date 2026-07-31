@@ -14,6 +14,7 @@
 
 ## Latest Result
 
+- Latest result: PASS
 - Behavior result: PASS (4/4 assertions)
 - Coverage result: FULL (4/4 assertions exercised)
 - Overall result: PASS
@@ -34,6 +35,6 @@ Preserved the sequence and avoided collapsing the tasks, but omitted both canoni
 
 - None.
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
 - Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-014-route-site-notes-and-github-release/` and are not committed.

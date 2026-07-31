@@ -14,6 +14,7 @@
 
 ## Latest Result
 
+- Latest result: PASS
 - Behavior result: PASS (3/3 assertions)
 - Coverage result: FULL (3/3 assertions exercised)
 - Overall result: PASS
@@ -34,6 +35,6 @@ Reached the same broad PM → Designer → Engineer sequence but did not name th
 
 - Keep the frontend/UI routing signal in this regression case.
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
 - Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-004-route-ui-update-request/` and are not committed.

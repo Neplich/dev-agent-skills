@@ -14,6 +14,7 @@
 
 ## Latest Result
 
+- Latest result: PASS
 - Behavior result: PASS (3/3 assertions)
 - Coverage result: FULL (3/3 assertions exercised)
 - Overall result: PASS
@@ -34,6 +35,6 @@ Also blocked implementation and returned to PM, but did not enumerate feature-pa
 
 - None.
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
 - Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-007-direct-downstream-without-handoff/` and are not committed.
