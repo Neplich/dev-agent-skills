@@ -90,9 +90,10 @@ Organize milestones into timeline phases:
 When `due_on` is null, infer the planning horizon from semver semantics:
 patch releases are near-term, minor releases are medium-term, and versions
 clearly beyond the repository's current release horizon are far-future.
-List milestones that cannot be matched by these semantics and ask the user to
-confirm their phase; do not automatically place them in an unscheduled
-fallback.
+Milestones explicitly named `Backlog`, `Unplanned`, or `未排期` are self-evidently
+unscheduled and need no confirmation. List other milestones that cannot be
+matched by these semantics and ask the user to confirm their phase; do not
+automatically place them in an unscheduled fallback.
 
 Apply semantic inference **only when `due_on` is null**. If `due_on` exists, always use date-based classification.
 
@@ -164,7 +165,7 @@ Write to `docs/roadmap.md` using this structure:
 
 ---
 
-## ⚪ 未排期
+## ⚪ 未排期（仅显式未排期或经用户确认的条目）
 
 ### [{MILESTONE_TITLE}]({MILESTONE_URL})
 
