@@ -43,7 +43,7 @@ The fresh baseline preserves a generic inspect-plan-implement-test-PR sequence a
 
 ## L2-4 Coverage Observation
 
-This scenario exercises the general `feature-implementor` chain, but its prompt does not trigger the new frontend/UI signal wording, the three project-bootstrap entry alternatives, or debugger runtime-regression/hotfix signals. These absent change-surface signals were not fabricated; they do not reduce this eval's assertion coverage.
+This scenario exercises the general `feature-implementor` chain, but its prompt does not trigger the new frontend/UI signal wording or debugger runtime-regression/hotfix signals. These absent change-surface signals were not fabricated; they do not reduce this eval's assertion coverage.
 
 ## Failures
 
@@ -52,7 +52,7 @@ This scenario exercises the general `feature-implementor` chain, but its prompt 
 ## Next Steps
 
 - Keep this eval as regression coverage for route-only implementation chains and QA E2E handoff preservation.
-- Add or revise assertions only through a separately scoped change if direct project-bootstrap or debugger signal coverage is required.
+- Add or revise assertions only through a separately scoped change if direct debugger signal coverage is required.
 
 ## Runtime Artifacts Policy
 

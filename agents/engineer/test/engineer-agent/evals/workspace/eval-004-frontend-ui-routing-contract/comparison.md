@@ -44,7 +44,7 @@ The fresh baseline recognizes a frontend implementation request, reads the exact
 
 ## L2-4 Coverage Observation
 
-This scenario directly exercises and passes the corrected `feature-implementor` frontend/UI signal. No current engineer-agent eval triggers the project-bootstrap alternatives (confirmed TRD, approved PM docs, explicit skip-PM override) or debugger runtime-regression/hotfix signals. Those two change groups are therefore NOT EXERCISED in the aggregate L2-4 change-surface review; they were not fabricated. The current eval's seven assertion scenarios are fully covered.
+This scenario directly exercises and passes the corrected `feature-implementor` frontend/UI signal. No current engineer-agent eval triggers debugger runtime-regression/hotfix signals. That change group is therefore NOT EXERCISED in the aggregate L2-4 change-surface review; it was not fabricated. The current eval's seven assertion scenarios are fully covered.
 
 ## Failures
 
@@ -53,7 +53,7 @@ This scenario directly exercises and passes the corrected `feature-implementor` 
 ## Next Steps
 
 - Keep this eval as direct regression coverage for frontend/UI implementation routing.
-- Add direct project-bootstrap and debugger signal cases only in a separately approved eval-scope change.
+- Add direct debugger signal cases only in a separately approved eval-scope change.
 
 ## Runtime Artifacts Policy
 

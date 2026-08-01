@@ -4,7 +4,7 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "13285eec695204f5a0280476d2fe2eeab09b01dfaec457acbbc6d7f5bc32eeb4"
+      "computedHash": "01e71bb00cf58ae5807a15cc548ac986803c1a801f8278b01bf300c1cc9d07b6"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
@@ -49,22 +49,17 @@
     "engineer-agent": {
       "source": "agents/engineer/skills/engineer-agent",
       "sourceType": "local",
-      "computedHash": "26db6b139a3f8f964c16427f397288f2e4fe88b538bb4e0f34d87def2179e7e4"
+      "computedHash": "3c50d07e8d1acc43b87e79028704d1e65a22a80667b89c61b0c08d3d7899af0b"
     },
     "codebase-analyzer": {
       "source": "agents/engineer/skills/codebase-analyzer",
       "sourceType": "local",
-      "computedHash": "180163449f082d237ba637623a346ab673e89ba638e133825ab8f615512c5d4d"
+      "computedHash": "ea693b49b1e9b1248c8cba10b42c5169ed319608f490041a28a62103709c8b98"
     },
     "trd-gen": {
       "source": "agents/engineer/skills/trd-gen",
       "sourceType": "local",
       "computedHash": "d270b28b21b7188aaed7a848adc196fd6fa77b2f497cb8c02da40bf1b2e277dc"
-    },
-    "project-bootstrap": {
-      "source": "agents/engineer/skills/project-bootstrap",
-      "sourceType": "local",
-      "computedHash": "eca4da296bd6f5eb7617197a0fe6bb894384d239da994bf04c9703585dbe718b"
     },
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
@@ -84,7 +79,7 @@
     "delivery": {
       "source": "agents/engineer/skills/delivery",
       "sourceType": "local",
-      "computedHash": "c6e61ef987ff47956e1b7b35e89c339b21581770dbfa84dea5e01afa57e2c5e8"
+      "computedHash": "bc8b79bc1401a6a80e3cb83362006ffa7f858d1924c48524d39a0dc268267a00"
     },
     "qa-agent": {
       "source": "agents/qa/skills/qa-agent",

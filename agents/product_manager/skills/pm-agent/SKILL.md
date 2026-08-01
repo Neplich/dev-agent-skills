@@ -21,7 +21,7 @@ execution.
 - classifying non-PM requests before handoff so downstream execution has a
   confirmed scope, source documents, and `change_tier`
 - intercepting empty-workspace or new-repo product requests before they jump
-  straight into engineering bootstrap
+  straight into engineering execution
 - sequencing multiple PM skills when the request clearly spans discovery,
   status, planning, and release communication
 - handing off confirmed design, engineering, QA, DevOps, security, formal documentation, or delivery
@@ -41,7 +41,7 @@ execution.
 - continuing into design implementation, engineering execution, QA, DevOps, or
   security work
 - letting empty-workspace product ideas skip PM discovery and go straight to
-  code scaffolding unless the user explicitly asks to bypass PM
+  engineering execution
 
 ## Available PM Skills
 
@@ -145,8 +145,7 @@ If the request is PM-shaped but underspecified, use these defaults:
 - Mentions of pages, panels, left-right layout, chat UI, or rough interaction
   ideas do not by themselves make the request engineering work.
 - Only point the next step to `engineer-agent` after PM requirements are stable
-  enough for implementation, or when the user explicitly says to skip PM and
-  scaffold code immediately.
+  enough for implementation.
 
 ## Change Tier Assessment
 

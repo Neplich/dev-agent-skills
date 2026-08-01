@@ -10,7 +10,7 @@ feature: "engineer-agent-subagent-division"
 feature_path: "agents/engineer-agent/subagent-division"
 parent_feature: "agents/engineer-agent"
 feature_level: "3"
-last_updated: "2026-05-15"
+last_updated: "2026-08-01"
 related_prd: "docs/pm/agents/engineer-agent/subagent-division/PRD.md"
 related_docs:
   - "docs/pm/agents/engineer-agent/subagent-division/DECISIONS.md"
@@ -30,8 +30,6 @@ changelog:
 本实施文档承接 `docs/pm/agents/engineer-agent/subagent-division/PRD.md`，目标是在 Engineer Agent 的复杂编码路径中落地“主进程保留上下文、实现 sub-agent 编码、验收 sub-agent 审查”的协作模式。
 
 第一版实施不新增公开 marketplace Agent，不改变现有 skill 目录结构，也不把所有工程任务强制拆分。MVP 重点覆盖 `engineer-agent` dispatcher、`feature-implementor` 和 `debugger` 三处指导，并新增一个真实 eval 场景验证文档驱动实现与独立验收行为。
-
-`project-bootstrap` 是否纳入 MVP 仍是 PM 文档中的待确认问题。实施默认不修改 `project-bootstrap` 行为，仅在文档和 eval 中保留后续扩展入口。
 
 ## 2. 架构概览
 
@@ -377,7 +375,6 @@ uv run scripts/check_eval_artifacts.py
 
 | 风险 / 技术债 | 影响 | 缓解方式 | 时机 |
 | --- | --- | --- | --- |
-| `project-bootstrap` 暂不覆盖，复杂 bootstrap 任务仍可能不拆分。 | 中 | 在 MVP 验证后单独评估并补 eval。 | Phase 4 |
 | 各 specialist skill 中的规则可能表述不一致。 | 中 | 使用同一组触发条件、委派契约和最终输出字段。 | Phase 1 |
 | Eval 过度依赖文本措辞。 | 高 | 使用语义断言，检查行为而不是精确句子。 | Phase 2 |
 | 模型 eval 运行成本较高。 | 中 | PR 必跑只放确定性检查，模型 eval 由维护者合并前手动触发。 | Phase 3 |
@@ -386,7 +383,6 @@ uv run scripts/check_eval_artifacts.py
 
 | # | 问题 | Owner | 截止点 |
 | --- | --- | --- | --- |
-| 1 | `project-bootstrap` 是否纳入第一版实施？ | PM / Engineer maintainer | 修改 specialist skill 前 |
 | 2 | 是否需要同步修改 `AGENTS.md`，还是只改 Engineer skill 文档和 eval？ | Maintainer | 提交前 |
 | 3 | 模型 eval 的实际运行入口使用现有脚本还是手动 sub-agent validation？ | Maintainer | 运行 eval 前 |
 | 4 | `comparison.md` 是否需要记录本次模型 eval 的具体日期和 runner 版本？ | Maintainer | 更新 comparison 前 |

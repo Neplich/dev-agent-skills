@@ -9,7 +9,7 @@ version: "1.2.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-24"
+last_updated: "2026-08-01"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -90,7 +90,6 @@ changelog:
 |---|---|
 | `codebase-analyzer` | 理解项目根、技术栈、架构、约定、依赖和 CI/CD |
 | `trd-gen` | PRD/产品决策稳定后的 TRD 或 TRD gap packet |
-| `project-bootstrap` | 已有 TRD/approved PM docs 后初始化项目，或用户显式 skip PM scaffold override |
 | `feature-implementor` | TRD 确认后先写 IMPLEMENTATION_PLAN 并获确认，再实现；前端 UI 更新需先完成设计交付物检查 |
 | `test-writer` | 补测试；无 Test Spec 时可从 PRD/API/code 推导 |
 | `debugger` | 失败日志、构建失败、GitHub bug issue；先对齐期望、复现、分析、repair plan、确认，再修复 |
@@ -122,7 +121,6 @@ flowchart LR
     Context --> Decision{"选择一个最窄主 route"}
     Decision --> codebase_analyzer["codebase-analyzer"]
     Decision --> trd_gen["trd-gen"]
-    Decision --> project_bootstrap["project-bootstrap"]
     Decision --> feature_implementor["feature-implementor"]
     Decision --> test_writer["test-writer"]
     Decision --> debugger["debugger"]

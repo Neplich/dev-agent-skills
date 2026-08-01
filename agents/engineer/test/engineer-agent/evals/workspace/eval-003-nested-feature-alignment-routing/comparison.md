@@ -42,7 +42,7 @@ The fresh baseline preserves the exact nested paths, recognizes that the request
 
 ## L2-4 Coverage Observation
 
-This scenario validates nested feature alignment rather than the changed frontend/UI, project-bootstrap, or debugger signal groups. No unrelated signal was fabricated, and all current assertions were still exercised.
+This scenario validates nested feature alignment rather than the changed frontend/UI or debugger signal groups. No unrelated signal was fabricated, and all current assertions were still exercised.
 
 ## Failures
 

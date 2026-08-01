@@ -9,7 +9,7 @@ version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-08-01"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -71,7 +71,7 @@ changelog:
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
 | FR-S04 | Artifact Output | 结构化 project_profile YAML，包含 path、tech_stack、architecture、conventions、dependencies、ci_cd、docs。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `engineer-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
-| FR-S06 | Handoff | 空项目或需求未定回 pm-agent:idea-to-spec；已有规格可给 project-bootstrap、trd-gen 或后续 Engineer skill。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
+| FR-S06 | Handoff | 空项目回 `pm-agent` 正常分类；已有项目按分析结果交给 `trd-gen` 或后续 Engineer skill。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
 
 ## 当前实现对齐

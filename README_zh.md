@@ -5,7 +5,7 @@
 面向软件交付全流程的多 Agent 技能市场。
 
 [![Agents](https://img.shields.io/badge/agents-7-blue)](#agents)
-[![Skills](https://img.shields.io/badge/skills-39-green)](#agents)
+[![Skills](https://img.shields.io/badge/skills-38-green)](#agents)
 [![License](https://img.shields.io/badge/license-Apache%202.0-orange)](LICENSE)
 
 `pm-agent` • `designer-agent` • `engineer-agent` • `qa-agent` • `devops-agent` • `security-agent` • `docs-agent`
@@ -24,7 +24,7 @@
 仓库内容包括：
 
 - 1 个公开 PM 入口 skill，加 6 个下游 role router
-- 32 个内部 specialist skills，覆盖产品、工程、QA、DevOps、设计、安全和正式文档细分任务
+- 31 个内部 specialist skills，覆盖产品、工程、QA、DevOps、设计、安全和正式文档细分任务
 - Claude Code marketplace 配置
 - Codex 原生 skill discovery 安装入口
 - Agent 级 eval fixtures 与本地验证脚本
@@ -80,7 +80,7 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 | --- | --- | :---: | --- | --- |
 | `pm-agent` | 需求收敛、spec、竞品、路线图、带门禁的 GitHub Release、GitHub 项目状态 | 8 (`1 + 7`) | 直接入口：`/pm-agent` | [product_manager](./agents/product_manager/README_zh.md) |
 | `designer-agent` | UX 流程、信息架构、线框、视觉系统、设计交接 | 3 (`1 + 2`) | 仅 PM handoff | [designer](./agents/designer/README_zh.md) |
-| `engineer-agent` | 代码库分析、TRD 生成、项目初始化、功能实现、测试、调试、交付 | 8 (`1 + 7`) | 仅 PM handoff | [engineer](./agents/engineer/README_zh.md) |
+| `engineer-agent` | 代码库分析、TRD 生成、功能实现、测试、调试、交付 | 7 (`1 + 6`) | 仅 PM handoff | [engineer](./agents/engineer/README_zh.md) |
 | `qa-agent` | 规范验收、探索测试、缺陷分析、回归验证 | 5 (`1 + 4`) | 仅 PM handoff | [qa](./agents/qa/README_zh.md) |
 | `devops-agent` | 部署规划、CI/CD、环境配置审计、故障手册 | 5 (`1 + 4`) | 仅 PM handoff | [devops](./agents/devops/README_zh.md) |
 | `security-agent` | 应用安全、授权审查、依赖风险、隐私数据流 | 5 (`1 + 4`) | 仅 PM handoff | [security](./agents/security/README_zh.md) |

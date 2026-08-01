@@ -1,6 +1,6 @@
 # Engineer Agent
 
-`engineer-agent` 是工程角色的 dispatcher skill，负责把代码库分析、TRD 生成、项目初始化、功能实现、测试补齐、缺陷修复和交付收尾请求路由到合适的工程 specialist skill。
+`engineer-agent` 是工程角色的 dispatcher skill，负责把代码库分析、TRD 生成、功能实现、测试补齐、缺陷修复和交付收尾请求路由到合适的工程 specialist skill。
 
 > [!NOTE]
 > 其他语言：[English](./README.md)
@@ -13,7 +13,7 @@
 | 项目 | 内容 |
 | --- | --- |
 | 入口 skill | `engineer-agent` |
-| Specialist skills | 7 个 |
+| Specialist skills | 6 个 |
 | 主要输入 | PM 文档、可选设计文档、现有代码库、测试结果、失败日志 |
 | 主要输出 | TRD、实现计划、代码变更、测试、工程文档、Git commit / PR |
 | 上下游协作 | 上游 `pm-agent` / `designer-agent`，下游 `qa-agent` / `devops-agent` / `security-agent` |
@@ -25,7 +25,6 @@
 | `engineer-agent` | 工程请求入口与路由 | 下游 skill 选择与执行路径 |
 | `codebase-analyzer` | 接手现有仓库、理解结构和约束 | Project Profile、技术栈与架构摘要 |
 | `trd-gen` | PRD / DECISIONS 确认后的技术计划、API 文档和 ADR 编写 | `docs/engineer/{feature_path}/TRD.md`，可选 `API.md` / `ADR-*.md` |
-| `project-bootstrap` | 基于已确认 PRD/TRD 初始化项目 | 项目骨架、基础配置、启动说明 |
 | `feature-implementor` | 按已确认 TRD 或设计文档实现功能 | `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`、代码变更、必要工程文档 |
 | `test-writer` | 补单测、集成测试或验证覆盖 | 测试文件、测试运行证据 |
 | `debugger` | 复现、定位、修复 bug 或失败构建 | 最小修复、回归验证证据 |
@@ -35,7 +34,6 @@
 
 - 理解仓库、技术栈、架构边界：使用 `codebase-analyzer`
 - PRD 确认后编写或更新技术计划、API 文档或 ADR：使用 `trd-gen`
-- 新项目或新服务初始化：使用 `project-bootstrap`
 - 功能实现、行为变更、按设计落地：使用 `feature-implementor`
 - 前端代码更新、UI 实现或设计落地：先进入 Engineer；只有设计交付物缺失或过期时才 handoff 到 Designer
 - 测试补齐、覆盖率、验证实现：使用 `test-writer`

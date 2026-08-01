@@ -15,7 +15,6 @@ ROLE_ROUTER_SKILLS = [
 SPECIALIST_GATE_SKILLS = [
     ROOT / "agents/engineer/skills/feature-implementor/SKILL.md",
     ROOT / "agents/engineer/skills/debugger/SKILL.md",
-    ROOT / "agents/engineer/skills/project-bootstrap/SKILL.md",
     ROOT / "agents/engineer/skills/trd-gen/SKILL.md",
     ROOT / "agents/engineer/skills/test-writer/SKILL.md",
     ROOT / "agents/engineer/skills/codebase-analyzer/SKILL.md",
@@ -239,17 +238,6 @@ def test_engineer_router_preserves_specialist_specific_entry_basis():
             "requires same-path PRD, TRD",
         ],
     )
-    assert_contains_all(
-        skill_text,
-        [
-            "directly requests `project-bootstrap`",
-            "explicitly says to skip",
-            "PM and scaffold anyway",
-            "route to `project-bootstrap`",
-        ],
-    )
-
-
 def test_specialist_gates_block_direct_bypass():
     for path in SPECIALIST_GATE_SKILLS:
         skill_text = path.read_text()

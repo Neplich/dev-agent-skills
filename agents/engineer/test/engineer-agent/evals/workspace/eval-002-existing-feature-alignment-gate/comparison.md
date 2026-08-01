@@ -43,7 +43,7 @@ The fresh baseline recognizes that the behavior may require product confirmation
 
 ## L2-4 Coverage Observation
 
-This scenario validates existing-feature alignment. It does not trigger the new frontend/UI, project-bootstrap, or debugger signal wording, and no unrelated signal was invented. That does not reduce coverage of this eval's current assertions.
+This scenario validates existing-feature alignment. It does not trigger the new frontend/UI or debugger signal wording, and no unrelated signal was invented. That does not reduce coverage of this eval's current assertions.
 
 ## Failures
 
