@@ -323,7 +323,7 @@ Create `docs/design/{feature_path}/visual-system.md` with this structure:
 [Font families, scale, weights]
 
 ## 4. Spacing
-[8px grid scale]
+[Spacing scale and its derivation from product density, brand inputs, and platform conventions]
 
 ## 5. Component Styles
 [Buttons, inputs, cards, etc.]

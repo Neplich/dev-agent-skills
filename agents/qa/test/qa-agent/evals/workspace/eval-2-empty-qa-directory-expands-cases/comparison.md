@@ -2,51 +2,61 @@
 
 ## Evaluation Target
 
+- Agent: `qa`
 - Skill: `qa-agent`
 - Eval: `eval-002-empty-qa-directory-expands-cases`
-- Prompt target: 对已有但无 TC 的 E2E 功能树做路由与执行协议说明。
+- Test case: empty-qa-directory-expands-cases
+- Workspace: `workspace/eval-2-empty-qa-directory-expands-cases`
+- Review context: PR #204 / issue #196 eval assertion alignment fix round
 
 ## Test Set / Fixture Version
 
-- Eval schema: `evals.json` v1.0
-- Fixture version: repository commit `c664869`
-- Fresh run: `2026-07-31 08:22:36 +0800`
-- Runtime directory: `tmp/eval-runs/issue-196-l2-3-4/qa-agent/eval-002-empty-qa-directory-expands-cases/`
-- `eval_metadata.json` 未声明 `execution_cleanup`。
+- Schema: `evals.json` v1.0
+- Fixture base: repository commit `f808d82`, with the approved pointer-style `assertion_2` alignment in this fix round.
+- Fixture: existing but empty `docs/qa/e2e/account/profile-settings/profile-form/` tree, target route/page/form files, and QA environment guidance.
+- Validation date: `2026-08-01 09:57:18 +0800`.
+- With-skill source: fresh candidate generated after fully reading `agents/qa/README.md`, `agents/qa/skills/qa-agent/SKILL.md`, the current `evals.json`, `eval_metadata.json`, and every fixture file.
+- Without-skill source: fresh candidate generated from the same prompt and an independent fixture copy only; it did not read or apply the QA Agent README or target skill and did not reuse the with-skill candidate, old comparison, or historical baseline.
 
 ## Latest Result
 
-- Behavior result: **FAIL**
-- Coverage result: **FULL**
-- 所有 assertion 场景均已触发；无 `NOT EXERCISED` assertion。
-- router 单表契约已触发：with-skill 依据含「信号示例」列的 `Default Routes` 单表选择主 route；未要求或伪造独立信号列表。
+- Behavior result: **PASS**
+- Coverage result: **FULL** (4/4 assertions exercised)
+- No assertion was `NOT EXERCISED`.
 
-Overall result: FAIL
+Overall result: PASS
 
 ## Assertion Results
 
-- PASS `assertion_1`: 正确识别空功能树不是现有覆盖。
-- FAIL `assertion_2`: 用户已授权探索，候选要求读取目标源文件、环境说明与现有 QA 索引，没有重复询问或直接 blocked；但没有显式要求下游发现或读取仓库测试命令，未满足该 assertion 的全部要素。
-- PASS `specialist_gate_pointer`: 声明 `spec-based-tester` 的 E2E memory、platform version、credential、execution entry、PRD/TRD/implementation plan 与 blocked-condition 权威门禁适用；没有展开协议。
-- PASS `assertion_6`: 选择单一 `spec-based-tester` route，未进入实现修复。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | The with-skill candidate recognizes that the existing feature tree has no active TC, reusable flow, or case, does not treat the empty directory as coverage, and preserves the full `account/profile-settings/profile-form` path instead of falling back to a single-level directory. |
+| `assertion_2` | PASS | It passes the target source files, QA indexes, environment guidance, confirmed `feature-update` scenario, and exploration authorization to the specialist; it declares the specialist's authoritative gates applicable without asking again for exploration permission or returning immediately blocked. |
+| `specialist_gate_pointer` | PASS | It selects `spec-based-tester` and points to that specialist's authoritative E2E memory, platform-version, credential, execution-entry, PRD/TRD/implementation-plan, and blocked-condition gates without reproducing their internal protocol. |
+| `assertion_6` | PASS | It keeps a single `spec-based-tester` primary route and does not run another QA skill or enter implementation repair. |
 
 ## With-Skill Behavior
 
-候选从单张路由表选择 `spec-based-tester`，识别空目录不是覆盖，并在用户已授权的前提下传递目标代码、环境和现有 QA 索引读取任务。输出没有复制平台版本、凭据、执行入口或 blocked-condition 的具体协议，但遗漏了显式的仓库测试命令发现/读取要求。
+The fresh candidate chooses `spec-based-tester` as the narrowest route for turning the confirmed feature update into traceable E2E acceptance evidence. It identifies the empty functional tree correctly, passes the targeted project and environment context downstream, describes the expected durable TC/index/script evidence, and keeps specialist execution rules behind the authoritative gate pointer.
 
 ## Fresh Without-Skill Baseline
 
-本轮 baseline 使用同一 prompt 与 fixture 新生成，未读取或应用 skill、QA README、with-skill 候选或旧 comparison，也未复用历史 baseline。它能识别空目录并提出 TC/脚本补齐步骤，但没有命名一个受约束的 QA specialist，末尾又建议同时做 exploratory testing；它还展开 platform version、账号和执行阻塞细节，缺少 router 指针边界。
+The fresh baseline identifies the empty tree and proposes creating cases before execution, but it does not name a constrained repository specialist. It also expands platform-version, environment, and execution blocking details and suggests both exploratory and acceptance testing, so it lacks the router's single-route and pointer boundaries. This contrast supports the with-skill PASS without treating the baseline as a separate machine verdict.
 
 ## Failures
 
-- `assertion_2`：with-skill 未显式要求下游发现或读取仓库测试命令。
+- None.
+- The previous `assertion_2` failure is removed by aligning it with the router's specialist-gate pointer contract; the router is no longer required to reproduce specialist-internal test-command discovery details.
+- No runtime, credential, or external-service blocker occurred.
 
 ## Next Steps
 
-- 下一轮候选在不展开 specialist 协议的前提下，把“发现并读取仓库现有测试命令”作为传递给 specialist 的上下文要求。
+- No eval-specific correction is required.
+- Retain the pointer-style assertion and keep specialist protocol details out of future `qa-agent` router candidates.
 
 ## Runtime Artifact Policy
 
-- 新生成的 with-skill / without-skill candidate 与 verdict 均在上述 `tmp/eval-runs/` 目录。
-- Runtime 产物不提交；durable 结果仅为本文件。
+- Fresh paired evidence is stored only under `tmp/eval-runs/pr-204-fix-round-20260801/qa-agent/eval-002-empty-qa-directory-expands-cases/`.
+- The runtime directory contains independent `with_fixture/` and `without_fixture/` copies plus `with_skill.md`, `without_skill.md`, and `judge.md`.
+- Runtime candidates, fixture copies, verdicts, transcripts, timing, status, diagnostics, and generated outputs are scratch artifacts and are not committed.
+- The durable committed result is this `comparison.md` only.

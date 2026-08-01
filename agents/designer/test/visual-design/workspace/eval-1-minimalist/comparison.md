@@ -4,77 +4,44 @@
 
 - Skill: `visual-design`
 - Eval: `eval-001-minimalist`
-- Test set / fixture version: `evals.json` schema `1.0` on 2026-07-31;
-  `workspace/eval-1-minimalist/eval_metadata.json`
-- Fresh run root:
-  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-001-minimalist/`
+- Test set / fixture version: `evals.json` schema `1.0` on 2026-08-01; fixture includes a confirmed PM handoff with `feature_path: minimalist-productivity-app`
+- Fresh run root: `tmp/eval-runs/pr-204-fix-round-20260801/visual-design/eval-001-minimalist/`
 
 ## Latest result
 
-- Behavior result: **FAIL**
-- Coverage result: **PARTIAL**
-- Overall result: FAIL
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+- Overall result: PASS
 
-Coverage is partial because `assertion_3` (“如果需要实现”) was not exercised: the run stopped
-at the missing PM handoff / confirmed `feature_path` gate before an implementable visual system
-existed.
+All three assertions were exercised against the reachable design-generation path.
 
 ## Run sources
 
-- With skill:
-  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-001-minimalist/with_skill/candidate-output.md`
-  was generated fresh after reading Designer README, `visual-design/SKILL.md`, the current eval
-  definition, and this fixture metadata.
-- Without skill:
-  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-001-minimalist/without_skill/baseline-output.md`
-  was regenerated from the original prompt and fixture only, without reading or applying the
-  skill, Designer README, with-skill output, or an earlier comparison.
-- Fresh judge:
-  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-001-minimalist/judge.md`.
+- With skill: `with_skill/docs/design/minimalist-productivity-app/visual-system.md` and `with_skill/candidate-output.md` under the fresh run root were generated after reading the current Designer README, router, `visual-design` skill, current eval definition, complete fixture, and required local references. `with_skill/outputs/design-system-search.md` records the fresh local lookup and its scoped adaptation.
+- Without skill: `without_skill/outputs/design-notes.md` was regenerated from an independent copy of the original prompt and fixture only, without applying the Designer README, router, `visual-design` skill, prior baseline, with-skill output, or old comparison.
+- Fresh judge: `judge.md` under the fresh run root records assertion-level decisions.
 
-## With-skill behavior
+## With-skill behavior and assertion evidence
 
-The skill enforced its entry and feature-path gates. Because the prompt and fixture supply neither
-a PM/design handoff nor a confirmed `feature_path`, it returned the request to `pm-agent` and
-created no design artifact. It stayed strictly design-only.
+- `assertion_1`: **PASS** — the artifact is written at the confirmed canonical path `docs/design/minimalist-productivity-app/visual-system.md`; it defines purposeful colors, a role-based type scale, a density-derived spacing scale, and dimensioned button/input/panel/task-row rules.
+- `assertion_2`: **PASS** — the artifact and response contain no design-token code, CSS/component implementation, engineering task decomposition, or test command.
+- `assertion_3`: **PASS** — `## Design Handoff` explicitly states “Designer stops here. Next role: `engineer-agent`.”
 
-Assertion results:
-
-- `assertion_1`: **FAIL** — no canonical `visual-system.md` could be written without inventing a
-  feature path.
-- `assertion_2`: **PASS** — no token code, CSS/component implementation, task decomposition, or
-  test commands were produced.
-- `assertion_3`: **NOT EXERCISED** — implementation handoff was not yet applicable.
+The run also exercises the repaired size-system behavior: font sizes, line heights, weights, spacing, and component dimensions are derived from professional productivity density and platform conventions rather than copied as unexplained defaults.
 
 ## Fresh without-skill baseline
 
-The baseline generated a standalone visual note with a coherent color system, type scale, compact
-spacing progression, component dimensions, copy guidance, accessibility requirements, and a
-generic engineering handoff. It did not know or enforce the repository's PM/feature-path gate and
-did not write the canonical path.
-
-## Font-size and spacing internalization observation
-
-On the narrow “font-size/spacing system rationality” dimension, the baseline is stronger than the
-blocked with-skill output because it actually derives a 28/20/16/14 role scale and a compact
-4-point progression from the professional productivity context. The with-skill run provides no
-type/spacing system because the required handoff is absent. This is fixture/gate behavior, not
-evidence that the skill internalized the new density-derived rule.
+The fresh baseline produces useful generic colors, type sizes, spacing, component sizes, and accessibility advice. It does not write the repository's canonical feature-scoped artifact, use the local reference lookup, or explicitly name the `engineer-agent` role boundary. The comparison therefore distinguishes repository protocol and reference-backed synthesis from generally plausible design advice.
 
 ## Failures
 
-- The output assertion requires a document whose path comes from a confirmed `feature_path`, but
-  this fixture supplies no handoff or feature path.
-- The implementation-handoff assertion is conditional and was not triggered.
+- None.
 
 ## Next steps
 
-- Align the fixture with the current entry gate by adding a confirmed PM/design handoff and
-  `feature_path`, or change the assertion set to evaluate the expected blocked route.
-- Re-run both fresh candidates after that alignment; do not reinterpret this run as a generated
-  design-system pass.
+- No skill or fixture correction is required from this run.
+- Keep the confirmed PM handoff in the fixture so future runs continue to exercise the intended generation path.
 
 ## Runtime artifact policy
 
-Candidates, baselines, and judge diagnostics remain under `tmp/eval-runs/` and are not committed.
-Only this durable `comparison.md` is committed.
+Candidates, fresh baseline, lookup evidence, independent input copies, and judge diagnostics remain under `tmp/eval-runs/` and are not committed. Only this durable `comparison.md` is committed.

@@ -4,69 +4,43 @@
 
 - Skill: `visual-design`
 - Eval: `eval-002-playful`
-- Test set / fixture version: `evals.json` schema `1.0` on 2026-07-31;
-  `workspace/eval-2-reference-design-system/eval_metadata.json`
-- Fresh run root:
-  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-002-playful/`
+- Test set / fixture version: `evals.json` schema `1.0` on 2026-08-01; fixture includes a confirmed PM handoff with `feature_path: enterprise-analytics-platform`
+- Fresh run root: `tmp/eval-runs/pr-204-fix-round-20260801/visual-design/eval-002-playful/`
 
 ## Latest result
 
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **FULL**
-- Overall result: FAIL
+- Overall result: PASS
+
+Both assertions were exercised against the reachable reference-driven generation path.
 
 ## Run sources
 
-- With skill:
-  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-002-playful/with_skill/candidate-output.md`
-  was generated fresh after reading Designer README, `visual-design/SKILL.md`, current eval
-  definitions, and fixture metadata.
-- Without skill:
-  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-002-playful/without_skill/baseline-output.md`
-  was regenerated from the same original prompt and fixture only, without the skill, Designer
-  README, with output, or old comparison.
-- Fresh judge:
-  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-002-playful/judge.md`.
+- With skill: `with_skill/outputs/design-system-search.md`, `with_skill/docs/design/enterprise-analytics-platform/visual-system.md`, and `with_skill/candidate-output.md` under the fresh run root were generated after reading the current Designer README, router, `visual-design` skill, current eval definition, complete fixture, and required local references. The lookup evidence comes from a fresh run of the local Design System Data helper.
+- Without skill: `without_skill/outputs/design-notes.md` was regenerated from an independent copy of the original prompt and fixture only, without applying the Designer README, router, `visual-design` skill, prior baseline, with-skill output, or old comparison.
+- Fresh judge: `judge.md` under the fresh run root records assertion-level decisions.
 
-## With-skill behavior
+## With-skill behavior and assertion evidence
 
-The skill stopped before reference lookup and document generation because the fixture has no
-PM/design handoff and no confirmed `feature_path`. It did not fabricate a synonym directory or
-claim a database result. It produced no implementation content.
+- `design_system_data`: **PASS** — fresh lookup evidence records the Data-Dense Dashboard result, palette, typography, effects, and anti-patterns. The artifact contains `## 1. Reference-Driven Design System`, identifies `Product category: Enterprise Analytics Dashboard`, selects `Recommended pattern: Data-Dense Dashboard` and `Style direction: Data-Dense + Minimal Trust`, cites Design System Data, and defines color, typography, UX-quality, and anti-pattern sections.
+- `assertion_2`: **PASS** — the artifact stops at `## Design Handoff`, names `engineer-agent` as the next role, and contains no CSS/Tailwind/React/shadcn code, install command, or engineering task decomposition.
 
-Assertion results:
-
-- `design_system_data`: **FAIL** — no query record or reference-driven design artifact was
-  generated after the entry gate blocked the run.
-- `assertion_2`: **PASS** — the output contains no CSS/Tailwind/React/shadcn code, install command,
-  or engineering task list.
+The artifact adapts rather than blindly copies the query: it rejects the helper's landing-page framing for the confirmed in-product scope and combines its data-dense evidence with the local enterprise product pattern. Font roles, spacing, and component dimensions are derived from high-frequency desktop analytics density.
 
 ## Fresh without-skill baseline
 
-The baseline honestly reported that the supplied fixture does not identify a local database path.
-It still inferred a professional data-dense dashboard, conservative semantic colors, readable
-typography, accessibility rules, and enterprise-specific anti-patterns, then stopped without
-implementation. It did not claim a real local query or produce the canonical design artifact.
-
-## Font-size and spacing internalization observation
-
-Neither output exercised a complete font-size/spacing system. The with-skill run was gate-blocked,
-and the baseline stayed at typography/density principles without numeric role definitions.
-Accordingly, this eval provides no discriminative evidence for the new density-derived
-font-size/spacing contract.
+The fresh baseline provides a clean professional dashboard direction and generic accessibility advice but explicitly lacks a real local database path or query result. It does not produce the repository's canonical artifact or reference-backed product/style rationale. This preserves the intended contrast without reusing historical baseline text.
 
 ## Failures
 
-- The scenario does not provide the handoff and feature path needed to trigger the asserted local
-  reference lookup and `visual-system.md` generation.
+- None.
 
 ## Next steps
 
-- Add a confirmed handoff and `feature_path` fixture if this eval is intended to test the
-  reference-driven generation path; otherwise align the assertions to the expected gate block.
-- Preserve the requirement that a real lookup result—not a fabricated reference—is evaluated.
+- No skill or fixture correction is required from this run.
+- Preserve the confirmed PM handoff and the requirement for real local lookup evidence in future runs.
 
 ## Runtime artifact policy
 
-Candidates, baselines, and judge diagnostics remain under `tmp/eval-runs/` and are not committed.
-Only this durable `comparison.md` is committed.
+Candidates, fresh baseline, lookup evidence, independent input copies, and judge diagnostics remain under `tmp/eval-runs/` and are not committed. Only this durable `comparison.md` is committed.

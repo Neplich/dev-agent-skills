@@ -149,7 +149,7 @@
     "visual-design": {
       "source": "agents/designer/skills/visual-design",
       "sourceType": "local",
-      "computedHash": "69102eaccf10f83b2d2a6802fa34c632a4647ed751a7eae5a29a942b4a6229b3"
+      "computedHash": "9efe083e173ca4dc5a6fdf5ab0371d105ab84fa264c262c05df67c1719b0930c"
     },
     "security-agent": {
       "source": "agents/security/skills/security-agent",
