@@ -16,6 +16,7 @@
 
 ## Latest Result
 
+- Latest result: PASS
 - Behavior result: **PASS**（3/3 assertions PASS）
 - Coverage result: **FULL**（3/3 assertions 均被当前场景触发并完成判定）
 - Overall result: PASS
