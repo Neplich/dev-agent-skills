@@ -55,27 +55,16 @@ defined in
 - `qa-agent:bug-analyzer` - Failure triage, reproduction notes, and detailed bug reports
 - `qa-agent:regression-suite` - Regression verification after fixes or before release
 
-## Routing Signals
+## Default Routes
 
 Route by the evidence outcome the user wants.
 
-- 文档化验收、规范验证、"按需求验收", "按 spec 测", "这个实现符合 PRD 吗"
-  -> `spec-based-tester`
-- 探索式发现、冒烟、边界发现、"探索一下", "随便走一遍", "找潜在问题"
-  -> `exploratory-tester`
-- 失败复现、缺陷写作、归因整理、"帮我复现", "分析这个 bug", "写 bug 报告"
-  -> `bug-analyzer`
-- 修复验证、回归扫测、已知问题复核、"复测", "回归验证", "确认修复没反弹"
-  -> `regression-suite`
-
-## Default Routes
-
-| QA Outcome | Primary Skill |
-| --- | --- |
-| 文档化验收、规范验证 | `spec-based-tester` |
-| 探索式发现、冒烟、边界发现 | `exploratory-tester` |
-| 失败复现、缺陷写作、归因整理 | `bug-analyzer` |
-| 修复验证、回归扫测、已知问题复核 | `regression-suite` |
+| QA Outcome | Primary Skill | 信号示例 |
+| --- | --- | --- |
+| 文档化验收、规范验证 | `spec-based-tester` | "按需求验收", "按 spec 测", "这个实现符合 PRD 吗" |
+| 探索式发现、冒烟、边界发现 | `exploratory-tester` | "探索一下", "随便走一遍", "找潜在问题" |
+| 失败复现、缺陷写作、归因整理 | `bug-analyzer` | "帮我复现", "分析这个 bug", "写 bug 报告" |
+| 修复验证、回归扫测、已知问题复核 | `regression-suite` | "复测", "回归验证", "确认修复没反弹" |
 
 If the request is QA-shaped but underspecified, use these defaults:
 

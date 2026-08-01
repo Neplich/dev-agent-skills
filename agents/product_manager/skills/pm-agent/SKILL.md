@@ -106,76 +106,27 @@ these stable `request_type` values in routing notes and handoff packets.
 New requirements, expectation changes, and unclear scope stay on the PM path.
 Do not route them to downstream execution as `hotfix`.
 
-## Routing Signals
+## Default Routes
 
 Route by the user's intended PM outcome, not by literal wording.
 
-- Product discovery, feature framing, scope convergence, requirement shaping,
-  spec creation, spec updates, empty/new repo app ideas, "把想法变成文档",
-  "收敛需求", "定义边界", "空目录里做个产品", "先别写代码先做 PRD"
-  -> `idea-to-spec`
-- Taking over an existing project, mapping what features it has today,
-  building a feature directory or feature inventory before new specs,
-  "建立功能目录", "功能画像", "接手项目先梳理功能", "这个项目现在有哪些功能"
-  -> `feature-catalog`
-- Competitor research, positioning comparison, market scan, messaging gaps,
-  "竞品分析", "我们和 X 怎么比"
-  -> `competitive-brief`
-- Changelog, what changed, unreleased changes, version history, "这个版本改了什么"
-  -> `changelog-generator`
-- GitHub Release bodies, previews, drafts, or publication operations,
-  "GitHub Release", "GitHub 发版页"
-  -> PM `github-release-generator`
-- Customer-facing release announcements, "what's new", "发版公告", or
-  versioned formal-site pages under `docs/site/release-notes/`, including their
-  confirmation, metadata, index, and docs checks
-  -> hand off to `docs-agent:release-notes-generator`
-- Roadmap, future planning, upcoming work, milestone-driven planning,
-  "路线图", "接下来做什么", "版本规划"
-  -> `roadmap-generator`
-- Repo health, milestone progress, issue backlog, review queue, release blockers,
-  "项目状态", "有哪些 PR 卡住", "release ready 吗"
-  -> `github-reader`
-- UX flow, UI structure, visual-system, page design, or reference-style requests
-  with confirmed product scope
-  -> hand off to `designer-agent`
-- Technical planning, implementation, code changes, debugging, tests, delivery,
-  commits, pushes, PRs, or codebase analysis requests with confirmed
-  PM/technical scope
-  -> hand off to `engineer-agent`
-- Validation, acceptance, exploratory testing, bug analysis, smoke testing, or
-  regression verification with confirmed expectations
-  -> hand off to `qa-agent`
-- Deployment, CI/CD, Docker, Helm, environment configuration, release readiness,
-  rollback, or runbook requests with confirmed operational scope
-  -> hand off to `devops-agent`
-- A user-confirmed documentation-site image-delivery gap returned by the shared
-  safety-net is repo-wide `deployment` work. Preserve the check in
-  `source_documents` and `blockers_risks`, use `N/A` feature fields only for the
-  confirmed repository-wide scope, and hand off to DevOps in the shared ordered
-  chain. Independent hosting or deferral remains a recorded decision or
-  blocker, not a ready DevOps handoff.
-- Security review, authorization, dependency risk, secrets, privacy, webhook,
-  upload, login, or data-flow risk requests with confirmed security scope
-  -> hand off to `security-agent`
-- Formal documentation site bootstrap, post-feature / deployment / release
-  synchronization, existing formal-docs backfill, or release documentation audit
-  with confirmed source scope -> hand off to `docs-agent`; keep PRD, TRD,
-  implementation plans, QA reports, and other process documents with their
-  owning roles
-
-## Default Routes
-
-| PM Outcome | Primary Skill |
-| --- | --- |
-| 新想法、新功能、空/新仓库里的产品想法、范围收敛、已有 spec 更新 | `idea-to-spec` |
-| 接手已有项目、建立功能目录、功能画像、梳理现有功能 | `feature-catalog` |
-| 竞品分析、定位比较、市场情报 | `competitive-brief` |
-| changelog、版本差异、未发布改动 | `changelog-generator` |
-| GitHub Release 正文、预览、draft 或发布操作 | PM `github-release-generator` |
-| 面向用户的版本说明、发布公告、`docs/site/release-notes/` 版本页 | `docs-agent:release-notes-generator` |
-| 路线图、里程碑规划、后续优先级 | `roadmap-generator` |
-| 项目状态、milestone 进度、backlog、PR 队列、阻塞项 | `github-reader` |
+| PM Outcome | Primary Skill | 信号示例 |
+| --- | --- | --- |
+| 新想法、新功能、空/新仓库里的产品想法、范围收敛、已有 spec 更新 | `idea-to-spec` | Product discovery, feature framing, scope convergence, requirement shaping, spec creation, spec updates, empty/new repo app ideas, "把想法变成文档", "收敛需求", "定义边界", "空目录里做个产品", "先别写代码先做 PRD" |
+| 接手已有项目、建立功能目录、功能画像、梳理现有功能 | `feature-catalog` | Taking over an existing project, mapping what features it has today, building a feature directory or feature inventory before new specs, "建立功能目录", "功能画像", "接手项目先梳理功能", "这个项目现在有哪些功能" |
+| 竞品分析、定位比较、市场情报 | `competitive-brief` | Competitor research, positioning comparison, market scan, messaging gaps, "竞品分析", "我们和 X 怎么比" |
+| changelog、版本差异、未发布改动 | `changelog-generator` | Changelog, what changed, unreleased changes, version history, "这个版本改了什么" |
+| GitHub Release 正文、预览、draft 或发布操作 | PM `github-release-generator` | GitHub Release bodies, previews, drafts, or publication operations, "GitHub Release", "GitHub 发版页" |
+| 面向用户的版本说明、发布公告、`docs/site/release-notes/` 版本页 | `docs-agent:release-notes-generator` | Customer-facing release announcements, "what's new", "发版公告", or versioned formal-site pages under `docs/site/release-notes/`, including their confirmation, metadata, index, and docs checks |
+| 路线图、里程碑规划、后续优先级 | `roadmap-generator` | Roadmap, future planning, upcoming work, milestone-driven planning, "路线图", "接下来做什么", "版本规划" |
+| 项目状态、milestone 进度、backlog、PR 队列、阻塞项 | `github-reader` | Repo health, milestone progress, issue backlog, review queue, release blockers, "项目状态", "有哪些 PR 卡住", "release ready 吗" |
+| 已确认产品范围的 UX 流程、UI 结构、视觉系统、页面或参考风格设计 | hand off to `designer-agent` | UX flow, UI structure, visual-system, page design, or reference-style requests with confirmed product scope |
+| 已确认 PM/技术范围的技术计划、实现、代码修改、调试、测试或交付 | hand off to `engineer-agent` | Technical planning, implementation, code changes, debugging, tests, delivery, commits, pushes, PRs, or codebase analysis requests with confirmed PM/technical scope |
+| 已确认预期的验收、探索测试、缺陷分析、冒烟或回归验证 | hand off to `qa-agent` | Validation, acceptance, exploratory testing, bug analysis, smoke testing, or regression verification with confirmed expectations |
+| 已确认运维范围的部署、CI/CD、Docker、Helm、环境配置、发布就绪、回滚或 runbook | hand off to `devops-agent` | Deployment, CI/CD, Docker, Helm, environment configuration, release readiness, rollback, or runbook requests with confirmed operational scope |
+| shared safety-net 返回且用户已确认的文档站镜像交付缺口 | hand off to `devops-agent` as repo-wide `deployment` work | A user-confirmed documentation-site image-delivery gap returned by the shared safety-net is repo-wide `deployment` work. Preserve the check in `source_documents` and `blockers_risks`, use `N/A` feature fields only for the confirmed repository-wide scope, and hand off to DevOps in the shared ordered chain. Independent hosting or deferral remains a recorded decision or blocker, not a ready DevOps handoff. |
+| 已确认安全范围的安全审查、鉴权、依赖风险、secret、隐私、webhook、上传、登录或数据流风险 | hand off to `security-agent` | Security review, authorization, dependency risk, secrets, privacy, webhook, upload, login, or data-flow risk requests with confirmed security scope |
+| 已确认来源范围的正式文档站初始化、功能/部署/发版后同步、已有文档回填或发版文档审计 | hand off to `docs-agent` | Formal documentation site bootstrap, post-feature / deployment / release synchronization, existing formal-docs backfill, or release documentation audit with confirmed source scope; keep PRD, TRD, implementation plans, QA reports, and other process documents with their owning roles |
 
 If the request is PM-shaped but underspecified, use these defaults:
 

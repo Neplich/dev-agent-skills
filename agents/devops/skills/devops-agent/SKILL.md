@@ -62,31 +62,16 @@ are defined in
 - `devops-agent:env-config-auditor` - Environment variable, config, and secret coverage audits
 - `devops-agent:incident-playbook-writer` - Rollback, runbook, and operational procedure docs
 
-## Routing Signals
+## Default Routes
 
 Route by the operational outcome the user wants.
 
-- Deployment setup, Docker, Helm, runtime packaging, local/dev/prod deployment
-  assets, "怎么部署", "补 deploy", "容器化", "加 helm"
-  -> `deployment-planner`
-- CI/CD, workflows, pipelines, release automation, build-and-deploy paths,
-  "配 GitHub Actions", "上 CI", "自动部署"
-  -> `cicd-bootstrap`
-- Env vars, secrets coverage, config drift, missing runtime settings,
-  "缺环境变量", "检查配置", "对齐 secrets"
-  -> `env-config-auditor`
-- Rollback guides, incident runbooks, on-call procedures, operational docs,
-  "回滚手册", "故障手册", "runbook", "发布出问题怎么办"
-  -> `incident-playbook-writer`
-
-## Default Routes
-
-| DevOps Outcome | Primary Skill |
-| --- | --- |
-| 新建或扩展部署配置、容器化、运行时打包、`deploy/` 资产 | `deployment-planner` |
-| CI/CD、workflow、pipeline、发布自动化 | `cicd-bootstrap` |
-| 环境变量、secrets、配置覆盖率、运行时配置审计 | `env-config-auditor` |
-| 回滚文档、故障排查手册、运维 runbook | `incident-playbook-writer` |
+| DevOps Outcome | Primary Skill | 信号示例 |
+| --- | --- | --- |
+| 新建或扩展部署配置、容器化、运行时打包、`deploy/` 资产 | `deployment-planner` | Deployment setup, Docker, Helm, runtime packaging, local/dev/prod deployment assets, "怎么部署", "补 deploy", "容器化", "加 helm" |
+| CI/CD、workflow、pipeline、发布自动化 | `cicd-bootstrap` | CI/CD, workflows, pipelines, release automation, build-and-deploy paths, "配 GitHub Actions", "上 CI", "自动部署" |
+| 环境变量、secrets、配置覆盖率、运行时配置审计 | `env-config-auditor` | Env vars, secrets coverage, config drift, missing runtime settings, "缺环境变量", "检查配置", "对齐 secrets" |
+| 回滚文档、故障排查手册、运维 runbook | `incident-playbook-writer` | Rollback guides, incident runbooks, on-call procedures, operational docs, "回滚手册", "故障手册", "runbook", "发布出问题怎么办" |
 
 If the request is DevOps-shaped but underspecified, use these defaults:
 

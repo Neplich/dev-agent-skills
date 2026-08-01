@@ -204,34 +204,20 @@ Choose font pairings that match product tone and reading density:
 - Heading: [Font Name] - Display/headings
 - Body: [Font Name] - Body text, UI
 - Mono: [Monospace Font] - Code, technical content
-
-### Font Scale
-- Display: 48px / 56px line-height / 700 weight
-- H1: 36px / 44px / 700
-- H2: 30px / 38px / 600
-- H3: 24px / 32px / 600
-- H4: 20px / 28px / 600
-- Body Large: 18px / 28px / 400
-- Body: 16px / 24px / 400
-- Body Small: 14px / 20px / 400
-- Caption: 12px / 16px / 400
 ```
 
+The output must declare a type scale, including the intended text roles and
+their font size, line height, and weight. Derive the scale from product
+information density, brand inputs, and target-platform conventions. When no
+brand input exists, derive reasonable values from product density instead of
+applying product-independent defaults.
 
 ### Step 8: Define Spacing System
 
-```markdown
-## Spacing Scale
-
-Based on 8px grid:
-- xs: 4px
-- sm: 8px
-- md: 16px
-- lg: 24px
-- xl: 32px
-- 2xl: 48px
-- 3xl: 64px
-```
+The output must declare a spacing system and explain how its values follow from
+product information density, brand inputs, and target-platform conventions.
+When no brand input exists, derive reasonable values from product density
+instead of applying a product-independent fixed grid.
 
 ### Step 9: Define Component Styles
 
@@ -242,13 +228,13 @@ Based on 8px grid:
 - Primary: [background] [text color] [padding] [border-radius]
 - Secondary: [styles]
 - Ghost: [styles]
-- Sizes: sm (32px), md (40px), lg (48px)
+- Sizes: [size roles and values]
 
 ### Input Fields
 - Border: [color] [width]
 - Focus: [border color] [shadow]
 - Error: [border color]
-- Height: 40px (md), 48px (lg)
+- Height: [size roles and values]
 
 ### Cards
 - Background: [color]
@@ -257,6 +243,11 @@ Based on 8px grid:
 - Padding: [spacing]
 - Border radius: [value]
 ```
+
+The output must declare component dimensions for the components it defines and
+explain how they follow from product information density, brand inputs, and
+target-platform conventions. When no brand input exists, derive reasonable
+values from product density instead of applying product-independent defaults.
 
 
 ### Step 10: Define UX Quality Rules
@@ -332,7 +323,7 @@ Create `docs/design/{feature_path}/visual-system.md` with this structure:
 [Font families, scale, weights]
 
 ## 4. Spacing
-[8px grid scale]
+[Spacing scale and its derivation from product density, brand inputs, and platform conventions]
 
 ## 5. Component Styles
 [Buttons, inputs, cards, etc.]

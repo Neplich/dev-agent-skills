@@ -7,42 +7,54 @@
 - Eval: `eval-002-existing-feature-alignment-gate`
 - Test case: existing-feature-alignment-gate
 - Workspace: `workspace/eval-002-existing-feature-alignment-gate`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08 for PR #98 trigger description routing review.
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: small existing-feature behavior change request for Notification Center archived items.
-- Context read before applying the skill: `AGENTS.md`, `agents/engineer/README.md`, `agents/engineer/skills/engineer-agent/SKILL.md`, `evals.json`, and workspace `eval_metadata.json`.
-- Runtime evidence: fresh subagent artifacts were generated under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-002-existing-feature-alignment-gate/`.
+- Fresh validation date: 2026-07-31.
+- With-skill source: current `agents/engineer/README.md`, current `agents/engineer/skills/engineer-agent/SKILL.md`, eval definition, and workspace metadata.
+- Without-skill source: the same original prompt and fixture only; it was regenerated without reading or applying the skill, Agent README, with-skill output, old comparison, or a previous baseline.
+
+## Latest Result
+
+- Behavior result: PASS
+- Coverage result: FULL
+- Overall result: PASS
+
+All 6 current assertions were exercised and passed in the with-skill run.
 
 ## Assertions
 
-- PASS `reads_product_and_engineer_docs`: the route requires same-feature PM PRD, Engineer TRD, and existing product decision records before implementation routing.
-- PASS `classifies_expectation_change`: archived notifications appearing in the active list is treated as a possible approved-expectation change, not as an automatic small code edit.
-- PASS `routes_to_existing_project_update`: expectation conflicts return to `pm-agent:idea-to-spec` through the `existing-project-update` lane.
-- PASS `routes_trd_gap_to_trd_gen`: missing, stale, or incomplete TRD coverage is handed to `engineer-agent:trd-gen` with a TRD gap packet.
-- PASS `requires_plan_after_alignment`: implementation can proceed only after PRD/TRD alignment and still requires a confirmed implementation plan.
-- PASS `does_not_route_directly_to_implementation`: the user's request to skip alignment is not accepted as permission to enter coding or planning directly.
+- PASS `reads_product_and_engineer_docs`: requires same-feature PRD, TRD, and existing product decision records.
+- PASS `classifies_expectation_change`: treats archived items entering active as a possible approved-expectation change.
+- PASS `routes_to_existing_project_update`: sends conflicts to `pm-agent:idea-to-spec` through `existing-project-update`.
+- PASS `routes_trd_gap_to_trd_gen`: sends missing, stale, or incomplete technical coverage to `engineer-agent:trd-gen` with a gap packet.
+- PASS `requires_plan_after_alignment`: keeps the confirmed implementation-plan gate after alignment.
+- PASS `does_not_route_directly_to_implementation`: does not accept "small change" as permission to bypass alignment.
 
 ## With Skill Behavior
 
-`engineer-agent` satisfies the existing-feature alignment gate after the PR #98 trigger description edits. The with-skill run first entered the existing-feature PRD/TRD alignment gate, required same-feature `PRD.md`, `TRD.md`, and present `DECISIONS.md` or product decision records, classified archived notifications appearing in the active list as a possible approved-expectation change, routed conflicts to `pm-agent:idea-to-spec` via `existing-project-update`, routed TRD gaps to `engineer-agent:trd-gen`, and kept `feature-implementor` blocked until alignment plus a confirmed `IMPLEMENTATION_PLAN.md`.
+The route requires the PRD, TRD, and present decision records before selecting implementation. It identifies the requested active/archived behavior as a possible expectation change, distinguishes PM conflict from a TRD gap, and leaves `feature-implementor` blocked until same-path alignment and a confirmed implementation plan exist.
 
 ## Without Skill Baseline
 
-Fresh baseline generated on 2026-07-08 from the eval prompt, workspace metadata, and generic engineering judgment only, without applying `engineer-agent`, the Engineer README, or any previous baseline. The baseline tended to treat the request as small engineering work and only lightly suggested checking PRD/TRD; it did not reliably enforce product decision records, PM existing-project-update routing, TRD gap packet handling, or a mandatory confirmed implementation plan after alignment.
+The fresh baseline recognizes that the behavior may require product confirmation and generically asks for PRD/TRD review. It omits decision records, the named PM existing-project-update lane, the TRD gap packet and specialist, and the mandatory confirmed implementation-plan gate. Baseline assertion result: 1/6.
+
+## L2-4 Coverage Observation
+
+This scenario validates existing-feature alignment. It does not trigger the new frontend/UI, project-bootstrap, or debugger signal wording, and no unrelated signal was invented. That does not reduce coverage of this eval's current assertions.
 
 ## Failures
 
-- None found. PR #98 did not regress existing-feature expectation alignment, TRD gap routing, or the block on user attempts to bypass PRD/TRD gates.
+- None.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for existing-feature PRD/TRD alignment and user attempts to bypass PM updates.
+- Keep this eval as regression coverage for existing-feature alignment and user attempts to bypass PM/TRD gates.
 
 ## Runtime Artifacts Policy
 
-- Runtime artifacts were created only under `tmp/eval-runs/2026-07-08-router-trigger-batch3/eval-002-existing-feature-alignment-gate/`.
-- Generated `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence only and must not be committed.
-- Durable committed evidence for this run is this `comparison.md`.
+- Fresh runtime evidence is under `tmp/eval-runs/issue-196-l2-3-l2-4/engineer-agent/eval-002-existing-feature-alignment-gate/`.
+- `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence and must not be committed.
+- This `comparison.md` is the only durable result.

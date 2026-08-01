@@ -9,7 +9,7 @@
       "description": "Verifies that incident-playbook-writer handles docker-rollback and produces the expected role-specific artifact.",
       "prompt": "pm-agent 已完成项目级运维入口分类并路由至 incident-playbook-writer；确认 handoff 见 workspace `PM_HANDOFF.md`，本任务为 `feature_path: N/A` 的 repo-wide rollback/runbook work。我的项目使用 Docker 部署，请基于 workspace 中现有 Docker 配置生成故障处理和回滚手册。",
       "workspace": "workspace/eval-001-docker-rollback",
-      "expected_output": "生成运维手册，包含回滚、故障响应、排查指南",
+      "expected_output": "仅生成用户明确请求且有仓库证据支撑的回滚与故障响应手册，不默认生成排查和值班文档",
       "assertions": [
         {
           "id": "deploy_rollback_md",
@@ -32,14 +32,9 @@
           "text": "INCIDENT_RESPONSE.md 包含常见故障场景"
         },
         {
-          "id": "deploy_troubleshooting_md",
-          "description": "deploy/TROUBLESHOOTING.md 存在",
-          "text": "deploy/TROUBLESHOOTING.md 存在"
-        },
-        {
-          "id": "deploy_on_call_md",
-          "description": "deploy/ON_CALL.md 存在",
-          "text": "deploy/ON_CALL.md 存在"
+          "id": "does_not_generate_unrequested_playbooks",
+          "description": "不默认生成未请求的 playbook",
+          "text": "只生成用户明确请求且有证据支撑的 ROLLBACK.md 与 INCIDENT_RESPONSE.md；不得默认生成 TROUBLESHOOTING.md 或 ON_CALL.md"
         }
       ]
     },

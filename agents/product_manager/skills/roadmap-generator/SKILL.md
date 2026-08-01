@@ -87,18 +87,13 @@ Organize milestones into timeline phases:
 
 ### Semantic inference for no-date milestones
 
-When `due_on` is null, infer phase from the milestone **name pattern**:
-
-| Name pattern | Inferred phase | Rationale |
-|---|---|---|
-| Patch version: `v1.2.3`, `1.26.2`, `go1.25.9`, `v0.22.1` | 🔧 当前补丁 | Patch releases are typically imminent |
-| Minor/major version: `v2.0`, `go1.27`, `v1.114.0` (higher minor) | 🚀 下一版本 | Next planned release |
-| Far-future major: `v3.0`, `go1.28` (2+ versions ahead) | 🔵 远期规划 | Longer horizon |
-| Tool/sub-project version: `gopls/v0.23.0`, `tools/v1.2` | 🛠️ 工具生态 | Sub-project versioning |
-| Named: `Backlog`, `Unplanned`, `backlog`, `unplanned`, `未排期` | ⚪ 未排期 | Explicitly unscheduled |
-| Named: `On Deck`, `Next`, `Planned` | 🟡 近期计划 | Queued for planning |
-| Named: `Proposal`, `RFC`, `Ideas` | 💡 提案 | Pre-planning ideas |
-| Anything else with no date | ⚪ 未排期 | Default fallback |
+When `due_on` is null, infer the planning horizon from semver semantics:
+patch releases are near-term, minor releases are medium-term, and versions
+clearly beyond the repository's current release horizon are far-future.
+Milestones explicitly named `Backlog`, `Unplanned`, or `未排期` are self-evidently
+unscheduled and need no confirmation. List other milestones that cannot be
+matched by these semantics and ask the user to confirm their phase; do not
+automatically place them in an unscheduled fallback.
 
 Apply semantic inference **only when `due_on` is null**. If `due_on` exists, always use date-based classification.
 
@@ -112,20 +107,10 @@ If any issues have a `release-blocker` label, create a dedicated section at the 
 ```
 
 **Step 2: Group remaining issues by domain area.**
-First try label-based domain grouping (use the most specific domain label):
-- Labels containing `auth`, `login`, `oauth` → 🔐 认证
-- Labels containing `ui`, `ux`, `design`, `theme`, `layout` → 🎨 界面
-- Labels containing `mcp`, `plugin`, `extension` → 🔌 扩展
-- Labels containing `terminal`, `shell`, `cli` → 💻 终端
-- Labels containing `perf`, `performance`, `speed` → ⚡ 性能
-- Labels containing `security`, `cve`, `vuln` → 🛡️ 安全
-- Labels containing `docs`, `documentation` → 📖 文档
-- Labels `bug`, `fix`, `regression` → 🐛 修复
-- Labels `feature`, `enhancement` → ✨ 新功能
-- Labels `tech-debt`, `refactor`, `chore`, `debt` → 🔧 技术优化
-- Everything else → 📝 其他
-
-If fewer than 3 distinct domain groups exist, fall back to bug/feature/tech-debt/其他 grouping.
+Infer domain groups from the repository's label semantics, preferring the most
+specific domain label when an issue has several labels. List labels whose
+domain meaning cannot be matched and ask the user to confirm their grouping;
+do not automatically place them in an “other” fallback.
 
 ## Step 5 — Format the output
 
@@ -180,7 +165,7 @@ Write to `docs/roadmap.md` using this structure:
 
 ---
 
-## ⚪ 未排期
+## ⚪ 未排期（仅显式未排期或经用户确认的条目）
 
 ### [{MILESTONE_TITLE}]({MILESTONE_URL})
 
@@ -283,8 +268,8 @@ Gantt chart rules:
 
 - **No milestones**: skip milestone sections, only output Backlog section, suggest user create milestones
 - **No issues**: output milestone titles with descriptions only, note "暂无关联 issue"
-- **No due dates on any milestone**: skip Mermaid chart, classify all as ⚪ 未排期
-- **Mixed: some milestones have dates, some don't**: dated ones go into timeline phases, undated ones go to ⚪ 未排期
+- **No due dates on any milestone**: skip Mermaid chart; apply semver semantic inference and list unmatched milestones for user confirmation instead of blanket-classifying as 未排期
+- **Mixed: some milestones have dates, some don't**: dated ones go into timeline phases; undated ones go through semantic inference, with unmatched ones listed for user confirmation
 - **Very large backlog (100+ unassigned issues)**: cap at 20, show count summary
 - **Update mode with no existing roadmap**: fall back to Generate mode silently
 - **No GitHub auth**: surface error clearly, tell user to run `gh auth login`

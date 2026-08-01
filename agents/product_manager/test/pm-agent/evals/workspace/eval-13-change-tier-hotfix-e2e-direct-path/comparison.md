@@ -1,46 +1,51 @@
-# Eval Result: eval-013-change-tier-hotfix-e2e-direct-path
+# Skill Eval Comparison
 
 ## Evaluation Target
 
-- Agent: `product_manager`
 - Skill: `pm-agent`
 - Eval: `eval-013-change-tier-hotfix-e2e-direct-path`
-- Test case: change-tier-hotfix-e2e-direct-path
-- Workspace: `workspace/eval-13-change-tier-hotfix-e2e-direct-path`
-- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
-- Latest result: PASS（3/3 assertions PASS）- fresh subagent validation completed on 2026-07-21
+- Review context: PR #204 eval alignment fix round
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
-- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
-- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
-- Validation date: 2026-07-21
+- Schema: `evals.json` v1.0; current prompt and fixture
+- Validation date: 2026-08-01
+- with_skill source: fresh Codex validator，完整读取并应用当前 `agents/product_manager/README.md`、`agents/product_manager/skills/pm-agent/SKILL.md` 与共享 handoff/closeout 契约后，读取独立 fixture copy。
+- without_skill source: 同一原始 prompt 与另一份独立 fixture copy 的全新 Codex baseline；未读取或应用目标 README/skill，未复用旧 baseline、旧 comparison 或 with_skill 输出。
+- Runtime root: `tmp/eval-runs/pr-204-fix-round-20260801/pm-agent/eval-013-change-tier-hotfix-e2e-direct-path/`。
+
+## Latest Result
+
+- Latest result: PASS
+- Behavior result: **PASS**（3/3 assertions PASS）
+- Coverage result: **FULL**（3/3 assertions 均被当前场景触发并完成判定）
+- Overall result: PASS
 
 ## Assertions
 
-- PASS `hotfix_direct_path_only`
-- PASS `evidence_still_required`
-- PASS `no_full_suite_required`
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `hotfix_direct_path_only` | PASS | with_skill 明确把 QA/E2E 限定为登录页空状态文案及最邻近展示路径，并使用 directly affected path 表述。 |
+| `evidence_still_required` | PASS | with_skill 明确要求追加 verification evidence、执行结果，以及所有未执行 blocked checks、阻塞原因和后续处理。 |
+| `no_full_suite_required` | PASS | with_skill 明确 hotfix 不要求完整 E2E suite；只有行为预期、范围或风险升级为 `standard` / `major` 时才扩大门禁。 |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-hotfix QA 限直接路径；证据要求不削弱；无需全量套件。
+with_skill 先约束 hotfix 判定只适用于已批准预期不变、单一文案且一条直接路径可验证的范围，然后保留 QA 证据要求，把覆盖限制到直接影响路径。它没有把 hotfix 解释为免测，也没有扩大到全量登录或整站回归；同时完整补上上一轮遗漏的 blocked checks 记录要求，并以 specialist 权威门禁指针完成 QA handoff。
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-fresh baseline 凭通用常识给出合理的分类/流程建议，但未使用 canonical request_type / change_tier 契约词汇，无 handoff packet 结构、无入口门禁与 fast lane 边界语义。
+fresh baseline 能从常识推断纯文案修复只需局部页面验证、不必运行全量 E2E，并建议保留截图或测试结果。它没有明确要求记录 blocked checks，也没有给出 `change_tier` 升级门禁或 QA specialist 权威门禁指针。with_skill 因此在证据闭环和仓库契约上有明确增益。
 
 ## Failures
 
-无。
+- 无。
 
 ## Next Steps
 
-- 无阻塞项。
+- 无 eval 行为修复项；保持当前 hotfix 直接影响路径与证据记录契约。
 
 ## Runtime Artifacts Policy
 
-- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
-- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。
+- 本轮 candidate、fresh baseline、fixture copies 与 judge 仅位于 `tmp/eval-runs/pr-204-fix-round-20260801/pm-agent/eval-013-change-tier-hotfix-e2e-direct-path/`，不提交到 git。
+- 提交范围仅包含 canonical `comparison.md`；不提交 with_skill / without_skill、transcript、verdict、timing、diagnostics 或其他运行期文件。

@@ -1,45 +1,47 @@
-# Eval Result: eval-001-minimalist
+# Evaluation Comparison: Minimalist Design System
 
-## Evaluation Target
+## Evaluation target
 
-- Agent: `designer`
 - Skill: `visual-design`
 - Eval: `eval-001-minimalist`
-- Test case: Minimalist Design System
-- Workspace: `workspace/eval-1-minimalist`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
+- Test set / fixture version: `evals.json` schema `1.0` on 2026-08-01; fixture includes a confirmed PM handoff with `feature_path: minimalist-productivity-app`
+- Fresh run root: `tmp/eval-runs/pr-204-fix-round-20260801/visual-design/eval-001-minimalist/`
 
-## Test Set / Fixture Version
+## Latest result
 
-- Schema: `evals.json` v1.0
-- Fixture: Create a minimalist design system for a productivity app
-- Expected output: 完整的视觉系统文档，包含色彩、字体、间距、组件样式和文案规范，并在设计交接处停止
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+- Overall result: PASS
 
-## Assertions
+All three assertions were exercised against the reachable design-generation path.
 
-- `assertion_1`: 产出视觉系统文档
-- `assertion_2`: 只做视觉规范不做实现
-- `assertion_3`: 提示交给工程
+## Run sources
 
-## With Skill
+- With skill: `with_skill/docs/design/minimalist-productivity-app/visual-system.md` and `with_skill/candidate-output.md` under the fresh run root were generated after reading the current Designer README, router, `visual-design` skill, current eval definition, complete fixture, and required local references. `with_skill/outputs/design-system-search.md` records the fresh local lookup and its scoped adaptation.
+- Without skill: `without_skill/outputs/design-notes.md` was regenerated from an independent copy of the original prompt and fixture only, without applying the Designer README, router, `visual-design` skill, prior baseline, with-skill output, or old comparison.
+- Fresh judge: `judge.md` under the fresh run root records assertion-level decisions.
 
-Observed behavior:
+## With-skill behavior and assertion evidence
 
-- 当前 SKILL.md 要求产出 visual-system.md，包含颜色、字体、间距、组件和文案规则，并禁止 design token 落地代码、CSS/组件实现、工程任务或测试命令。
+- `assertion_1`: **PASS** — the artifact is written at the confirmed canonical path `docs/design/minimalist-productivity-app/visual-system.md`; it defines purposeful colors, a role-based type scale, a density-derived spacing scale, and dimensioned button/input/panel/task-row rules.
+- `assertion_2`: **PASS** — the artifact and response contain no design-token code, CSS/component implementation, engineering task decomposition, or test command.
+- `assertion_3`: **PASS** — `## Design Handoff` explicitly states “Designer stops here. Next role: `engineer-agent`.”
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+The run also exercises the repaired size-system behavior: font sizes, line heights, weights, spacing, and component dimensions are derived from professional productivity density and platform conventions rather than copied as unexplained defaults.
+
+## Fresh without-skill baseline
+
+The fresh baseline produces useful generic colors, type sizes, spacing, component sizes, and accessibility advice. It does not write the repository's canonical feature-scoped artifact, use the local reference lookup, or explicitly name the `engineer-agent` role boundary. The comparison therefore distinguishes repository protocol and reference-backed synthesis from generally plausible design advice.
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- None.
 
-## Next Steps
+## Next steps
 
-- 保持 durable comparison 为 PASS 结论。
+- No skill or fixture correction is required from this run.
+- Keep the confirmed PM handoff in the fixture so future runs continue to exercise the intended generation path.
 
-## Runtime Artifacts Policy
+## Runtime artifact policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+Candidates, fresh baseline, lookup evidence, independent input copies, and judge diagnostics remain under `tmp/eval-runs/` and are not committed. Only this durable `comparison.md` is committed.

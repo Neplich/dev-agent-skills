@@ -1,44 +1,78 @@
-# Eval Result: eval-003-professional
+# Evaluation Comparison: Professional Design System
 
-## Evaluation Target
+## Evaluation target
 
-- Agent: `designer`
 - Skill: `visual-design`
 - Eval: `eval-003-professional`
-- Test case: Professional Design System
-- Workspace: `workspace/eval-003-professional`
-- Latest result: PASS - 2026-07-26 fresh paired validation completed; with_skill and fresh without_skill both satisfied 2/2 assertions.
+- Test set / fixture version: `evals.json` schema `1.0` on 2026-07-31;
+  `evals/workspace/eval-003-professional/eval_metadata.json`, `PM_HANDOFF.md`, and PRD
+- Fresh run root:
+  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-003-professional/`
 
-## Test Set / Fixture Version
+## Latest result
 
-- Schema: `evals.json` v1.0
-- Fixture: confirmed PM handoff and approved PRD for an enterprise analytics visual system
-- Expected output: 面向企业软件的专业视觉系统文档，强调可信和可访问性，并在设计交接处停止
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+- Overall result: PASS
 
-## Assertions
+## Run sources
 
-- PASS `assertion_1`: with_skill 明确覆盖 WCAG AA 对比度与企业数据层级。
-- PASS `assertion_2`: with_skill 只交付视觉规范，没有输出实现代码。
+- With skill:
+  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-003-professional/with_skill/`
+  was generated fresh after reading Designer README, `visual-design/SKILL.md`, its linked local
+  design references, the current eval definition, handoff, PRD, and fixture metadata. The local
+  Design System Data helper was run and its mismatched lexical suggestions were reconciled against
+  the confirmed product context.
+- Without skill:
+  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-003-professional/without_skill/baseline-output.md`
+  was regenerated from the original prompt, PM handoff, and PRD only, without reading or applying
+  the skill, Designer README, with output, or old comparison.
+- Fresh judge:
+  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-003-professional/judge.md`.
 
-## With Skill
+## With-skill behavior
 
-- 实际执行 Design System Data 检索后生成视觉系统，覆盖 WCAG 4.5:1/3:1、表格、图表、告警、状态与反模式。
-- 仅交付设计规范和工程 handoff 要点，不进入实现。
+The with-skill artifact defines a restrained enterprise analytics system with explicit WCAG 4.5:1
+and 3:1 thresholds, dense-workbench hierarchy, status rules that do not rely on color, and
+table/chart/filter/alert coverage. It derives typography, spacing, and component dimensions from
+desktop information density and names conditions under which touch-first dimensions must change.
+It stops at the Designer-to-Engineer handoff without implementation content.
 
-## Without Skill / Baseline
+Assertion results:
 
-- 2026-07-26 使用同一 prompt 和 fixture 重新生成 fresh baseline，未读取或应用 visual-design skill、Agent README、历史 comparison 或旧 baseline。
-- baseline 同样满足 2/2 assertions，覆盖 WCAG 与数据层级并保持设计止点；相较 with_skill，reference-driven rationale 和企业数据组件完整度较弱。
+- `assertion_1`: **PASS** — WCAG thresholds and enterprise hierarchy are explicit.
+- `assertion_2`: **PASS** — there is no component code, style-file change, or engineering command.
+
+## Fresh without-skill baseline
+
+The baseline independently produced an accessible enterprise analytics system. It selected nearly
+the same trust palette, type roles, compact spacing progression, and desktop control dimensions,
+and tied those values to dense analytical work. It stayed design-only, though it lacked the
+canonical feature-scoped artifact structure, detailed state/component coverage, source
+reconciliation, and exact Designer handoff wording.
+
+## Font-size and spacing internalization observation
+
+The with-skill and baseline are substantively tied on “font-size/spacing system rationality.” Both
+derive a 28/20/16/14/12 hierarchy, 14/20 dense body/control role, 36 px controls, and a
+`4, 8, 12, 16, 24, 32` progression from the same high-density desktop context. The skill adds
+clearer per-role rationale, compact/default variants, and a platform-change condition, but the
+baseline already satisfies the core semantic derivation. Therefore this case has **insufficient
+discriminative power** for the L2-3 internalization dimension; the PASS is an assertion result,
+not evidence of a meaningful with-skill advantage.
 
 ## Failures
 
-- 无 assertion failure。
-- 当前 assertions 对 skill 增益的区分度有限，增益主要体现在设计依据和组件覆盖深度。
+None for the current assertions.
 
-## Next Steps
+## Next steps
 
-- 保留该 eval 对可访问性、企业数据组件和不落代码边界的覆盖。
+- Keep the PASS result, while treating the tied baseline as decision evidence.
+- If stronger discrimination is needed, use a fixture whose brand or platform constraints require
+  departing from familiar dense-dashboard values and assert the reasoning rather than a particular
+  numeric scale.
 
-## Runtime Artifacts Policy
+## Runtime artifact policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics were generated only in an ignored scratch workspace and are not committed.
+Candidates, baselines, helper output, and judge diagnostics remain under `tmp/eval-runs/` and are
+not committed. Only this durable `comparison.md` is committed.

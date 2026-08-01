@@ -378,7 +378,7 @@
       "assertions": [
         {"id": "blocks_unknown_evidence", "description": "证据不足保持 unknown", "text": "缺少 CI 或环境权限证据时报告 unknown、指明缺口，不按 integrated 或 ready handoff 处理。"},
         {"id": "builds_repo_wide_deployment_packet", "description": "生成 repo-wide deployment handoff", "text": "用户确认纳入后使用 request_type deployment、N/A feature fields、空 feature_path_evidence，并在 source_documents/blockers_risks 保留真实检查证据。"},
-        {"id": "routes_ordered_devops_chain", "description": "路由有序 DevOps 链", "text": "按 deployment-planner、cicd-bootstrap、env-config-auditor、formal-docs-sync 顺序 handoff；最后 Docs 只同步已落地且验证的运维事实。"}
+        {"id": "routes_devops_ordered_chain", "description": "按依赖顺序路由 DevOps 与 Docs", "text": "按依赖顺序 handoff：devops-agent:deployment-planner → devops-agent:cicd-bootstrap → devops-agent:env-config-auditor → docs-agent:formal-docs-sync；最终 Docs 步只同步已落地且验证的运维事实。"}
       ]
     }
   ]

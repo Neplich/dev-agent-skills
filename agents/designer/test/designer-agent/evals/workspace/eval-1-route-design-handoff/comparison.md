@@ -5,52 +5,65 @@
 - Agent: `designer`
 - Skill: `designer-agent`
 - Eval: `eval-001-route-design-handoff`
-- Test case: route-design-handoff
 - Workspace: `workspace/eval-1-route-design-handoff`
-- Review context: PR #98 trigger description routing review
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-08
+- Review context: issue #196 L2-4 router single-table convergence
+- Latest run: fresh paired Codex validation on 2026-07-31
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: billing notifications design route with a user request to also write React components.
-- Fixture context: `docs/pm/billing-notifications/PRD.md`, which establishes billing notification settings for channels, thresholds, and escalation preferences.
-- Context read before applying the skill: `AGENTS.md`, `agents/designer/README.md`, `agents/designer/skills/designer-agent/SKILL.md`, `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`, `evals.json`, workspace `eval_metadata.json`, and `docs/pm/billing-notifications/PRD.md`.
+- Prompt and assertions: current `agents/designer/test/designer-agent/evals/evals.json`
+- Fixture: `docs/pm/billing-notifications/PRD.md`
+- With-skill source: current Designer README, `designer-agent/SKILL.md`, eval definition, fixture, and the referenced PM handoff/closeout contract; historical comparison was not read before candidate generation.
+- Without-skill source: the same prompt and fixture in an isolated directory, without reading or applying Designer README, `designer-agent/SKILL.md`, with-skill output, assertions, historical comparison, or an old baseline.
 
-## Assertions
+## Latest Result
 
-- PASS `routes_ux_first`: the route starts with `ui-ux-design` for flow, page structure, IA, wireframes, and interaction states.
-- PASS `routes_visual_followup`: visual styling, component rules, colors, typography, and tone route to `visual-design` as the follow-up.
-- PASS `uses_real_output_filenames`: design outputs are `docs/design/billing-notifications/ui-ux-spec.md` and `docs/design/billing-notifications/visual-system.md`.
-- PASS `stops_before_code`: Designer does not write React components, tests, scripts, deployment files, shell commands, code patches, or implementation task lists.
-- PASS `hands_off_to_engineer`: implementation is explicitly handed to `engineer-agent` after design completion.
+- Behavior result: PASS
+- Coverage result: FULL (5/5 declared assertions exercised)
+- Overall result: PASS
 
-## With Skill Behavior
+The L2-4 fallback for “范围已确认但设计类型模糊” is present in the current single `Default Routes` table. This fixture asks explicitly for both flow and visual style, so it does not exercise that fallback; no fallback behavior was inferred or counted as dynamic evidence.
 
-`designer-agent` satisfies the design-only route. It treats `docs/pm/billing-notifications/PRD.md` as an equivalent confirmed PM document chain with stable feature path `billing-notifications`, then selects the narrow design sequence `ui-ux-design` -> `visual-design` because the request asks for both settings page flow and visual style.
+## Assertion Results
 
-The with-skill route writes or updates only durable design deliverables under `docs/design/billing-notifications/`: `ui-ux-spec.md` for UX flow, page structure, information architecture, wireframes, and interaction states; `visual-system.md` for visual style, component rules, colors, typography, and copy tone. It refuses the requested React component implementation in the Designer stage and stops at a handoff to `engineer-agent`.
+| Assertion | With skill | Without skill | Evidence |
+| --- | --- | --- | --- |
+| `routes_ux_first` | PASS | FAIL | With skill explicitly starts with `ui-ux-design`; baseline gives generic design steps without the repository specialist route. |
+| `routes_visual_followup` | PASS | FAIL | With skill explicitly follows with `visual-design`; baseline describes visual work but does not name the specialist. |
+| `uses_real_output_filenames` | PASS | FAIL | With skill names both canonical files; baseline names no durable design output file. |
+| `stops_before_code` | PASS | PASS | Both honor the prompt's explicit no-implementation boundary. |
+| `hands_off_to_engineer` | PASS | FAIL | With skill explicitly hands implementation to `engineer-agent`; baseline only stops before implementation. |
 
-## Without Skill Baseline
+## With-Skill Behavior
 
-Source: fresh without-skill baseline generated on 2026-07-08 in `tmp/eval-runs/2026-07-08-router-trigger-batch4-final/eval-001-route-design-handoff/without_skill.md`.
+The candidate preserves `billing-notifications`, routes `ui-ux-design` before
+`visual-design`, names `docs/design/billing-notifications/ui-ux-spec.md` and
+`docs/design/billing-notifications/visual-system.md`, refuses React, tests,
+scripts, and deployment work, and hands implementation to `engineer-agent`.
+All 5 assertions pass.
 
-The baseline used only the eval prompt and fixture's general billing notification settings context. It did not read or apply `agents/designer/README.md`, `agents/designer/skills/designer-agent/SKILL.md`, historical `comparison.md`, or any previous baseline output.
+## Without-Skill Baseline
 
-Without the router skill, a generic response can likely honor the explicit "不要进入实现" instruction and describe settings-page flow plus visual style. It does not reliably name `ui-ux-design` first, name `visual-design` second, use the durable filenames `docs/design/billing-notifications/ui-ux-spec.md` and `docs/design/billing-notifications/visual-system.md`, or identify `engineer-agent` as the handoff owner.
+The fresh baseline gives a reasonable generic design sequence and obeys the
+explicit request not to implement React. It does not express the repository's
+specialist names, canonical artifact filenames, or named Engineer handoff.
+This provides useful differentiation on router-specific behavior.
 
 ## Failures
 
-- None found. All eval assertions pass in the with-skill run.
-- The without-skill baseline remains weaker on router-specific guarantees, especially specialist sequence, durable file names, and named Engineer handoff.
+- None in the with-skill candidate.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for Designer trigger-description routing, design-only boundaries, durable design artifact naming, and implementation handoff behavior.
-- No follow-up action is required for this eval result.
+- Keep this eval as regression coverage for the two-specialist sequence, durable artifact names, design-only boundary, and Engineer handoff.
+- Add a separate fixture only if maintainers later choose to dynamically cover the confirmed-scope/ambiguous-design fallback; this run does not fabricate that scenario.
 
 ## Runtime Artifacts Policy
 
-- Runtime evidence for this run is stored only under `tmp/eval-runs/2026-07-08-router-trigger-batch4-final/eval-001-route-design-handoff/`.
-- The runtime files are `with_skill.md`, `without_skill.md`, and `verdict.md`.
-- These runtime artifacts, transcripts, verdicts, timing files, output directories, diagnostics, and generated with_skill / without_skill files must not be committed.
+Paired runtime evidence is stored only under
+`tmp/eval-runs/issue-196-l2-3-4/designer-agent/eval-001-route-design-handoff/`
+as `with_skill/candidate-output.md` and
+`without_skill/baseline-output.md`. Runtime outputs, transcripts, verdicts,
+timing data, and diagnostics must not be committed. This `comparison.md` is the
+durable result.
