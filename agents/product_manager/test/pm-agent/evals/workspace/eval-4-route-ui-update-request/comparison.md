@@ -1,40 +1,31 @@
-# Skill Eval Comparison
+# pm-agent Eval Comparison: eval-004
 
-## Evaluation Target
+## Evaluation target
 
 - Skill: `pm-agent`
-- Eval: `eval-004-route-ui-update-request`
-- Review context: issue #196 L2-4 fresh paired validation
+- Test: `eval-004-route-ui-update-request`
+- Fixture version: current `README.md` and `eval_metadata.json` at 2026-08-01 13:12 +0800
+- Fresh run: same prompt/fixture, newly generated with-skill and without-skill responses; no reused baseline.
 
-## Test Set / Fixture Version
+## Latest result:
 
-- Schema: `evals.json` v1.0; current prompt and fixture
-- Validation date: 2026-07-31
-- Sources: fresh with-skill session `019fb589-672e-7bc0-95ff-2ada072730dd`; fresh isolated baseline session `019fb58b-f4fa-7232-abda-91612bafb9a3`
-
-## Latest Result
-
-- Latest result: PASS
-- Behavior result: PASS (3/3 assertions)
-- Coverage result: FULL (3/3 assertions exercised)
+- Behavior result: PASS — all 3 assertions passed.
+- Coverage result: FULL — 3/3 assertion scenarios were exercised.
 - Overall result: PASS
 
-## With-Skill Behavior
+## With-skill behavior
 
-Classified `existing_update`, separated PM expectation alignment, Designer artifacts, and Engineer frontend implementation, and required PM/TRD/design alignment before code.
+Classified the request as `design` / `existing_update`, separated PM expectation work, Designer artifacts, and Engineer implementation, and held implementation until PM/TRD/design alignment.
 
-## Fresh Without-Skill Baseline
+## Without-skill baseline
 
-Reached the same broad PM → Designer → Engineer sequence but did not name the canonical request type.
+The fresh baseline split design and frontend work but did not preserve the PM expectation and TRD/design alignment gates.
 
-## Failures
+## Failures and next steps
 
-- None.
-
-## Next Steps
-
-- Keep the frontend/UI routing signal in this regression case.
+- Failures: none.
+- Next steps: none for this fixture.
 
 ## Runtime Artifacts Policy
 
-- Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-004-route-ui-update-request/` and are not committed.
+Runtime evidence is isolated under `tmp/eval-runs/issue-196-project-bootstrap-removal-20260801-131022/pm-agent/eval-004-route-ui-update-request/` and is not committed.

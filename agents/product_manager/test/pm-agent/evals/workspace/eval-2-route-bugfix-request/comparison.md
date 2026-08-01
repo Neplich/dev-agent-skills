@@ -1,40 +1,31 @@
-# Skill Eval Comparison
+# pm-agent Eval Comparison: eval-002
 
-## Evaluation Target
+## Evaluation target
 
 - Skill: `pm-agent`
-- Eval: `eval-002-route-bugfix-request`
-- Review context: issue #196 L2-4 fresh paired validation
+- Test: `eval-002-route-bugfix-request`
+- Fixture version: current `README.md` and `eval_metadata.json` at 2026-08-01 13:12 +0800
+- Fresh run: new with-skill response and new without-skill baseline generated from the same prompt and fixture; no historical baseline was reused.
 
-## Test Set / Fixture Version
+## Latest result:
 
-- Schema: `evals.json` v1.0; current prompt and fixture
-- Validation date: 2026-07-31
-- Sources: fresh with-skill session `019fb589-672e-7bc0-95ff-2ada072730dd`; fresh isolated baseline session `019fb58b-f4fa-7232-abda-91612bafb9a3`
-
-## Latest Result
-
-- Latest result: PASS
-- Behavior result: PASS (3/3 assertions)
-- Coverage result: FULL (3/3 assertions exercised)
+- Behavior result: PASS — all 3 assertions passed.
+- Coverage result: FULL — 3/3 assertion scenarios were exercised.
 - Overall result: PASS
 
-## With-Skill Behavior
+## With-skill behavior
 
-Classified `bug_report`, required approved PRD/TRD expectation checks, and gated Engineer/debugger handoff on a confirmed implementation deviation.
+Classified `bug_report`, required approved PRD/TRD or equivalent expectation and reproduction evidence first, and allowed Engineer/debugger handoff only after confirming an implementation deviation.
 
-## Fresh Without-Skill Baseline
+## Without-skill baseline
 
-Preserved expectation-first debugging semantics, but used generic “bug fix” wording rather than the canonical request type and provided a less structured handoff.
+Fresh baseline used only the prompt and fixture. It moved from reproduction directly to technical diagnosis without the approved-expectation gate.
 
-## Failures
+## Failures and next steps
 
-- None.
-
-## Next Steps
-
-- Keep the expectation-first gate explicit.
+- Failures: none.
+- Next steps: none for this fixture.
 
 ## Runtime Artifacts Policy
 
-- Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-002-route-bugfix-request/`; only this comparison is durable.
+Fresh responses and verdict live only under `tmp/eval-runs/issue-196-project-bootstrap-removal-20260801-131022/pm-agent/eval-002-route-bugfix-request/` and are not committed.

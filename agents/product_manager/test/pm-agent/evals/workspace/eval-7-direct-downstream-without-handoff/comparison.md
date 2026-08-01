@@ -1,40 +1,31 @@
-# Skill Eval Comparison
+# pm-agent Eval Comparison: eval-007
 
-## Evaluation Target
+## Evaluation target
 
 - Skill: `pm-agent`
-- Eval: `eval-007-direct-downstream-without-handoff`
-- Review context: issue #196 L2-4 fresh paired validation
+- Test: `eval-007-direct-downstream-without-handoff`
+- Fixture version: current `README.md` and `eval_metadata.json` at 2026-08-01 13:12 +0800
+- Fresh run: same prompt/fixture, newly generated with-skill and without-skill responses; no reused baseline.
 
-## Test Set / Fixture Version
+## Latest result:
 
-- Schema: `evals.json` v1.0; current prompt and fixture
-- Validation date: 2026-07-31
-- Sources: fresh with-skill session `019fb589-672e-7bc0-95ff-2ada072730dd`; fresh isolated baseline session `019fb58b-f4fa-7232-abda-91612bafb9a3`
-
-## Latest Result
-
-- Latest result: PASS
-- Behavior result: PASS (3/3 assertions)
-- Coverage result: FULL (3/3 assertions exercised)
+- Behavior result: PASS — all 3 assertions passed.
+- Coverage result: FULL — 3/3 assertion scenarios were exercised.
 - Overall result: PASS
 
-## With-Skill Behavior
+## With-skill behavior
 
-Rejected direct Engineer execution, returned to pm-agent for request type, scope, feature path and readiness, and required confirmed source documents plus a handoff.
+Rejected direct Engineer/code execution, returned the request to `pm-agent` for request type, scope, feature path, and readiness classification, and required a PM handoff or equivalent confirmed document chain before downstream routing.
 
-## Fresh Without-Skill Baseline
+## Without-skill baseline
 
-Also blocked implementation and returned to PM, but did not enumerate feature-path/readiness classification or the equivalent-document contract.
+The fresh baseline accepted the user's direct-engineering instruction and proposed code inspection, demonstrating the gate value.
 
-## Failures
+## Failures and next steps
 
-- None.
-
-## Next Steps
-
-- None.
+- Failures: none.
+- Next steps: none for this fixture.
 
 ## Runtime Artifacts Policy
 
-- Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-007-direct-downstream-without-handoff/` and are not committed.
+Runtime evidence is isolated under `tmp/eval-runs/issue-196-project-bootstrap-removal-20260801-131022/pm-agent/eval-007-direct-downstream-without-handoff/` and is not committed.

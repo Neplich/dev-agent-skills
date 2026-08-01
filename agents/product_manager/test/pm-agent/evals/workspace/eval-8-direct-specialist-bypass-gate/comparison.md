@@ -1,40 +1,31 @@
-# Skill Eval Comparison
+# pm-agent Eval Comparison: eval-008
 
-## Evaluation Target
+## Evaluation target
 
 - Skill: `pm-agent`
-- Eval: `eval-008-direct-specialist-bypass-gate`
-- Review context: issue #196 L2-4 fresh paired validation
+- Test: `eval-008-direct-specialist-bypass-gate`
+- Fixture version: current `README.md` and `eval_metadata.json` at 2026-08-01 13:12 +0800
+- Fresh run: same prompt/fixture, newly generated with-skill and without-skill responses; no reused baseline.
 
-## Test Set / Fixture Version
+## Latest result:
 
-- Schema: `evals.json` v1.0; current prompt and fixture
-- Validation date: 2026-07-31
-- Sources: fresh with-skill session `019fb589-672e-7bc0-95ff-2ada072730dd`; fresh isolated baseline session `019fb58b-f4fa-7232-abda-91612bafb9a3`
-
-## Latest Result
-
-- Latest result: PASS
-- Behavior result: PASS (3/3 assertions)
-- Coverage result: FULL (3/3 assertions exercised)
+- Behavior result: PASS — all 3 assertions passed.
+- Coverage result: FULL — 3/3 assertion scenarios were exercised.
 - Overall result: PASS
 
-## With-Skill Behavior
+## With-skill behavior
 
-Applied the direct-specialist gate, blocked plan/code work, returned to PM, and correctly placed IMPLEMENTATION_PLAN creation after confirmed PRD/TRD rather than requiring a pre-existing plan.
+Applied the specialist entry gate, required a PM handoff or equivalent confirmed PRD/TRD and current implementation scope, correctly stated that an existing plan is not the entry prerequisite, blocked plan/code/test work, and returned to PM classification.
 
-## Fresh Without-Skill Baseline
+## Without-skill baseline
 
-Blocked implementation and returned to PM, but its wording treated the missing implementation plan as part of the pre-entry deficiency and did not distinguish plan-as-output.
+The fresh baseline blocked immediate coding but incorrectly treated a pre-existing implementation plan as a prerequisite and did not identify the PM specialist-entry contract.
 
-## Failures
+## Failures and next steps
 
-- None.
-
-## Next Steps
-
-- Preserve the explicit plan-as-output wording in future runs.
+- Failures: none.
+- Next steps: none for this fixture.
 
 ## Runtime Artifacts Policy
 
-- Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-008-direct-specialist-bypass-gate/` and are not committed.
+Runtime evidence is isolated under `tmp/eval-runs/issue-196-project-bootstrap-removal-20260801-131022/pm-agent/eval-008-direct-specialist-bypass-gate/` and is not committed.
