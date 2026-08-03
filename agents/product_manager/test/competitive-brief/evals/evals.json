@@ -27,6 +27,36 @@
           "text": "对无法确认的信息标记为假设或需要进一步验证，而不是编造确定结论"
         }
       ]
+    },
+    {
+      "id": "eval-002-battlecard-mode",
+      "name": "battlecard 信号路由直接产出单页 battlecard",
+      "description": "验证 pm-agent 以 battlecard 信号路由的初始请求时，competitive-brief 直接产出单页 battlecard（Quick Overview / Their Pitch / Strengths / Weaknesses / Objection Handling / Landmines / Win-Loss Themes），不输出完整 brief，且不再询问是否创建 battlecard。",
+      "prompt": "pm-agent 以 `battlecard` 信号路由了你的请求：请为 Linear 和 Jira 各产出一页式 battlecard。不要输出完整竞品 brief。可用网络检索获取事实，无法确认的信息标记为假设。",
+      "workspace": "workspace/eval-002-battlecard-mode",
+      "expected_output": "为 Linear 和 Jira 各产出一页式 battlecard，单页字段覆盖 Quick Overview / Their Pitch / Strengths / Weaknesses / Objection Handling / Landmines / Win-Loss Themes；不输出完整竞品 brief 的结构章节；标注研究日期并区分事实与推断；不询问是否创建 battlecard。",
+      "assertions": [
+        {
+          "id": "battlecard_fields",
+          "description": "单页 battlecard 字段齐全",
+          "text": "对每家竞品产出单页 battlecard，覆盖 Quick Overview（他们做什么/目标客户/定价模型摘要/近期动态）、Their Pitch（自我描述/口号/top 3 差异点）、Strengths（如实）、Weaknesses、Objection Handling（话术与回应）、Landmines to Set、Landmines to Defuse 与 Win/Loss Themes。"
+        },
+        {
+          "id": "no_full_brief",
+          "description": "不输出完整竞品 brief",
+          "text": "battlecard 信号路由时不输出完整竞品 brief 的结构章节（执行摘要、竞品画像全节、messaging gap 分析、机会/威胁/行动项等完整 brief 章节），只输出单页 battlecard 产物。"
+        },
+        {
+          "id": "evidence_boundary",
+          "description": "区分事实与推断并标注研究日期",
+          "text": "标注研究日期与来源类别；对无法确认的信息标记为假设或需进一步验证，不编造确定结论。"
+        },
+        {
+          "id": "no_battlecard_offer",
+          "description": "不再询问是否创建 battlecard",
+          "text": "battlecard 信号路由的初始请求本身就是 battlecard，输出后不得再询问「是否需要创建 battlecard」或把 battlecard 作为后续追加项。"
+        }
+      ]
     }
   ]
 }

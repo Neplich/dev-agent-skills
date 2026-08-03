@@ -69,7 +69,7 @@ changelog:
 | FR-S01 | Trigger Matching | `competitive-brief` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `competitive-brief` SKILL.md 一致。 |
 | FR-S02 | Context Intake | 竞品名称必填；本方产品/公司上下文推荐；focus areas 可选，缺省覆盖全部。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
-| FR-S04 | Artifact Output | 竞品简报、定位机会、messaging gaps、威胁和建议，包含 research date 和 freshness note。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
+| FR-S04 | Artifact Output | 完整 brief 模式产出竞品简报、定位机会、messaging gaps、威胁和建议；`battlecard` 信号路由的初始请求按 FR-S06 直接产出单页 battlecard，不再输出完整 brief；两种模式都包含 research date 和 freshness note。 | P0 | 未阻塞时按请求模式产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `pm-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | pm-agent 以 `battlecard` 信号路由的初始请求直接产出单页 battlecard（Quick Overview / Their Pitch / Strengths / Weaknesses / Objection Handling / Landmines / Win-Loss Themes），不输出完整 brief；其他请求产出完整 brief，battlecard 可随后追加一页；继续深挖或 monitoring plan 可留在本 skill；产品规划交 idea-to-spec。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
@@ -78,7 +78,8 @@ changelog:
 
 ### 当前实现工作流
 
-- 用公开 web research 收集 primary/secondary sources
+- `battlecard` 信号路由的初始请求：直接产出单页 battlecard（Quick Overview / Their Pitch / Strengths / Weaknesses / Objection Handling / Landmines / Win-Loss Themes），不输出完整 brief，不询问是否创建 battlecard
+- 其他请求：用公开 web research 收集 primary/secondary sources
 - 覆盖近 6 个月新闻、价格、评论和内容策略
 - 比较定位、messaging 和机会缺口
 - 输出研究日期、来源类别和风险说明
@@ -105,7 +106,11 @@ changelog:
 ```mermaid
 flowchart LR
     Request["用户请求"] --> Match["匹配 skill trigger"]
-    Match --> Context["读取/确认实现契约上下文"]
+    Match --> Route{"请求信号为 battlecard？"}
+    Route -- 是 --> BC["直接产出单页 battlecard（Quick Overview / Pitch / Strengths / Weaknesses / Objection Handling / Landmines / Win-Loss Themes）"]
+    BC --> BCDate["输出研究日期、来源类别和风险说明"]
+    BCDate --> Artifact["输出单页 battlecard 产物"]
+    Route -- 否 --> Context["读取/确认实现契约上下文"]
     Context --> Step1["用公开 web research 收集 primary/secondary sources"]
     Step1 --> Step2["覆盖近 6 个月新闻、价格、评论和内容策略"]
     Step2 --> Step3["比较定位、messaging 和机会缺口"]
