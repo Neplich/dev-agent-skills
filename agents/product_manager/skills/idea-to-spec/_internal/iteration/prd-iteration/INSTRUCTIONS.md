@@ -30,8 +30,10 @@ Apply changes to an existing PRD while maintaining version history and quality s
 1. **Read current document**: Parse existing PRD, extract version metadata and
    `feature_path` metadata. If missing on an old single-level PRD, infer level
    1 from the containing folder. Reconcile `child_features` on every updated
-   PRD: initialize it to `"N/A"` when absent, or refresh it from the current
-   direct child directories under `docs/pm/{feature_path}/`.
+   PRD: derive the current direct child feature paths from the subdirectories
+   under `docs/pm/{feature_path}/` and their frontmatter first, refresh the
+   field from that derivation, and use `"N/A"` only when no direct children
+   exist.
 
 2. **Analyze changes**: Classify the change request:
    - Fix validation issues (CRITICAL first, then WARNING)

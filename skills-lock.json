@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "753dc7b92b898d94c833f8ce710eced30455d8539e25c433909619d31fe39f1f"
+      "computedHash": "a822d3ddae277de109409a596b92ac7fd4fbf3f84e3c6459bb34f3fd02c02044"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
@@ -59,7 +59,7 @@
     "trd-gen": {
       "source": "agents/engineer/skills/trd-gen",
       "sourceType": "local",
-      "computedHash": "2f9bfc8ba63414c82f67df184431da93d8632dd2022232cbbd8865666642a12c"
+      "computedHash": "6e66f0cb2bed9591b63048192bb135375923621c7f05dd263a23c2ee801ddf6b"
     },
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
