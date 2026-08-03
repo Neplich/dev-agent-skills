@@ -23,10 +23,10 @@
 | Skill | 适用场景 | 主要产物 |
 | --- | --- | --- |
 | `devops-agent` | DevOps 请求入口与路由 | 下游 skill 选择与执行路径 |
-| `deployment-planner` | 新建或扩展部署配置、容器化、K8s/Helm | `deploy/local/`、`deploy/docker/`、`deploy/helm/` |
+| `deployment-planner` | 新建或扩展部署配置、容器化、K8s/Helm | 按已确认目标矩阵生成的 `deploy/` 产物（local / docker / helm 为可选目标，非默认组合） |
 | `cicd-bootstrap` | GitHub Actions / release workflow | CI/CD 配置文件 |
 | `env-config-auditor` | 环境变量、secrets、运行时配置覆盖率 | 配置审计报告、缺口清单 |
-| `incident-playbook-writer` | 回滚、故障排查、on-call 准备 | runbook、incident playbook |
+| `incident-playbook-writer` | 回滚、故障排查、on-call 准备 | 仅用户明确选择且证据充分的 runbook 与 incident playbook |
 
 ## 路由规则
 
@@ -38,6 +38,9 @@
 默认规则：如果核心问题是“让系统可部署”，从 `deployment-planner` 开始；如果已有部署但缺自动化，从 `cicd-bootstrap` 开始。
 
 ## 部署产物模型
+
+local、Docker、Helm 是可选部署目标，不是默认组合。只生成 TRD、PM handoff packet、
+现有部署资产或用户确认的目标。完整布局如下：
 
 ```text
 deploy/

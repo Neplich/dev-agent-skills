@@ -23,10 +23,10 @@
 | Skill | When to use | Main output |
 | --- | --- | --- |
 | `devops-agent` | DevOps request routing | Specialist selection and execution path |
-| `deployment-planner` | New or updated deployment config, containers, Kubernetes/Helm | `deploy/local/`, `deploy/docker/`, `deploy/helm/` |
+| `deployment-planner` | New or updated deployment config, containers, Kubernetes/Helm | `deploy/` assets for the confirmed target matrix (local / docker / helm are options, not defaults) |
 | `cicd-bootstrap` | GitHub Actions / release workflow | CI/CD configuration files |
 | `env-config-auditor` | Environment variables, secrets, runtime config coverage | Config audit report and gap list |
-| `incident-playbook-writer` | Rollback, troubleshooting, on-call preparation | Runbook and incident playbook |
+| `incident-playbook-writer` | Rollback, troubleshooting, on-call preparation | Only the user-selected, evidence-backed runbooks and incident playbooks |
 
 ## Routing Rules
 
@@ -38,6 +38,10 @@
 Default rule: if the core question is "how do we deploy it?", start with `deployment-planner`. If deployment already exists but automation is missing, start with `cicd-bootstrap`.
 
 ## Deployment Artifact Model
+
+Local, Docker, and Helm are available targets, not a default bundle. Generate
+only the targets confirmed by the TRD, the PM handoff packet, existing
+deployment assets, or the user. The full layout looks like:
 
 ```text
 deploy/
