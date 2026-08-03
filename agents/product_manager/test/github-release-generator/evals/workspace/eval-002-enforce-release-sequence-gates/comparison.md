@@ -27,7 +27,7 @@
 - PASS `site_notes_before_github_release`：明确站内 Release Notes 确认 → pre-tag docs-audit `ready_for_tag` → submit-ready preview 的顺序；without-skill FAIL（直接展示预览，未交代顺序门禁）
 - PASS `ready_for_tag_allows_preview_only`：`ready_for_tag` 只允许 preview 或另行批准的受限 draft 准备，不替代 tag、`release_verified` 或发布批准；without-skill FAIL
 - PASS `draft_omits_latest_and_publish_rechecks`：正确识别 prerelease 并展示 `--prerelease --latest=false`；draft 省略 latest flag、两次写间回读、最终写前 latest/tag OID 复查、最终原子应用与写后再回读，漂移时停止和路由；without-skill FAIL（仅有高层 Prerelease/Latest 结论）
-- PASS `blocks_missing_tag_and_post_tag_audit`：场景 A 因实际 tag 与 `release_verified` 缺失 blocked，分别返回 host release owner 与 `docs-agent:docs-audit`；without-skill 缺 post-tag 审计 owner 表述（PASS/部分）
+- PASS `blocks_missing_tag_and_post_tag_audit`：场景 A 因实际 tag 与 `release_verified` 缺失 blocked，分别返回 host release owner 与 `docs-agent:docs-audit`；without-skill 同 PASS（以通用表述把 tag 与审计流程交回对应 owner）
 - PASS `blocks_missing_independent_approval`：场景 B 拒绝复用页面确认或 preview 请求作为当前独立 publish approval；without-skill 同 PASS
 - PASS `keeps_preview_or_draft`：缺任一门禁时只保留 preview 或既有 draft；without-skill 同 PASS
 

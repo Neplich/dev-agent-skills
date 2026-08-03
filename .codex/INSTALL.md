@@ -78,17 +78,23 @@ if [ -d "$CLONE_ROOT/.git" ]; then
       echo "error: $CLONE_ROOT has uncommitted or untracked changes; commit or stash them before a pinned install" >&2
       exit 1
     fi
-    git -C "$CLONE_ROOT" fetch --tags origin
-    git -C "$CLONE_ROOT" checkout "$TARGET_TAG"
+    git -C "$CLONE_ROOT" fetch --tags origin || { echo "error: fetch failed; aborting pinned install" >&2; exit 1; }
+    git -C "$CLONE_ROOT" rev-parse --verify "refs/tags/$TARGET_TAG^{commit}" >/dev/null \
+      || { echo "error: release tag $TARGET_TAG not found; aborting pinned install" >&2; exit 1; }
+    git -C "$CLONE_ROOT" checkout "$TARGET_TAG" || { echo "error: cannot checkout $TARGET_TAG; aborting pinned install" >&2; exit 1; }
+    test "$(git -C "$CLONE_ROOT" rev-parse HEAD)" = "$(git -C "$CLONE_ROOT" rev-parse "$TARGET_TAG^{commit}")" \
+      || { echo "error: checkout verification failed for $TARGET_TAG; aborting pinned install" >&2; exit 1; }
   else
     # A previous pinned install leaves a detached HEAD; return to main first
     # so the unpinned update applies to the branch and not a detached state.
-    git -C "$CLONE_ROOT" checkout main 2>/dev/null || true
-    git -C "$CLONE_ROOT" pull --ff-only
+    git -C "$CLONE_ROOT" checkout main || { echo "error: cannot switch to main; aborting update" >&2; exit 1; }
+    git -C "$CLONE_ROOT" pull --ff-only || { echo "error: update failed; aborting install" >&2; exit 1; }
   fi
 else
   mkdir -p "$(dirname "$CLONE_ROOT")"
   if [ -n "$TARGET_TAG" ]; then
+    git ls-remote --tags origin "refs/tags/$TARGET_TAG" >/dev/null \
+      || { echo "error: release tag $TARGET_TAG not found on origin; aborting pinned install" >&2; exit 1; }
     git clone --branch "$TARGET_TAG" https://github.com/Neplich/dev-agent-skills.git "$CLONE_ROOT"
   else
     git clone https://github.com/Neplich/dev-agent-skills.git "$CLONE_ROOT"

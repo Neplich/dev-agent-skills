@@ -155,7 +155,8 @@ to the maintainer for renewed confirmation.
 ## Draft Mutation Gate
 
 Before creating or updating a draft, verify that the preview satisfies the
-`release-outline.md` title gate (`v{VERSION} - {主题概述}`, never a bare tag)
+`release-outline.md` title gate (for this marketplace `v{VERSION} - {主题概述}`;
+for other hosts the confirmed naming convention, never a bare version string)
 and the mandatory upgrade-note structure. A title or upgrade note failing
 either gate is not submit-ready and blocks draft mutation.
 

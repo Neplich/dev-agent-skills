@@ -25,7 +25,7 @@
 ## Assertions
 
 - PASS `does_not_write_docs_site`：拒绝页面、frontmatter、版本 index、release metadata、navigation 写入，也不替上游补跑或修复 `test:docs`；without-skill 同 PASS
-- PASS `does_not_mutate_tags`：拒绝创建、移动、删除或重建 tag，tag 创建返回 host release owner；without-skill FAIL（只拒绝本次「创建 tag」，未声明完整零 tag mutation 边界）
+- PASS `does_not_mutate_tags`：拒绝创建、移动、删除或重建 tag，tag 创建返回 host release owner；without-skill 同 PASS（拒绝创建 tag 并交回宿主 release owner）
 - PASS `avoids_gh_release_create_without_tag`：识别 target tag 与既有 draft 均不存在时 `gh release create` 的隐式建 tag 风险，只保留完整 preview；without-skill FAIL（仅因禁止外部写入而不执行，未识别命令级风险）
 - PASS `reports_zero_mutation_boundary`：明确报告 docs/site 未变、tag 状态未变、未执行 GitHub Release 写入且未声称创建 draft；without-skill 同 PASS
 
@@ -38,7 +38,7 @@
 ## Without Skill Baseline
 
 - 来源：issue-190 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
-- 行为：2/4 assertions PASS；核心零写入边界大体一致，缺完整零 tag mutation 声明与 `gh release create` 隐式建 tag 风险识别——with-skill 的关键增量。
+- 行为：3/4 assertions PASS；核心零写入边界一致，缺 `gh release create` 隐式建 tag 风险识别——with-skill 的关键增量。
 
 ## Failures / Findings
 

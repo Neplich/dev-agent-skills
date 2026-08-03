@@ -18,10 +18,12 @@ v{VERSION} - {主题概述}
 The summary should reflect about three confirmed highlights and must not be
 only the bare tag.
 
-**Gate**: the title must match the `v{VERSION} - {主题概述}` shape. A title
-missing the topic summary, a bare `v{VERSION}` tag, or a summary unrelated to
-the confirmed facts is not a submit-ready preview: it must not be delivered for
-maintainer approval, and no draft may be created or updated with it.
+**Gate**: for this marketplace the title must match the
+`v{VERSION} - {主题概述}` shape. For any other host, follow the host's
+confirmed release-naming convention; no additional format gate applies. In
+either case a title that is only a bare version string is not a submit-ready
+preview: it must not be delivered for maintainer approval, and no draft may
+be created or updated with it.
 
 ## Body
 
@@ -77,21 +79,31 @@ maintainer approval, and no draft may be created or updated with it.
 The `## 升级说明` section is mandatory and must follow this fixed structure.
 A placeholder sentence, or a missing instruction subsection that applies to
 the host, is not a submit-ready upgrade note and blocks draft creation or
-update. For this marketplace the three instruction subsections are all
-mandatory; for other hosts only the subsections applicable to the confirmed
-fact source are required.
+update. For this marketplace, every instruction subsection whose target tag
+is verified to support it, and the closing sentence, are mandatory; for other
+hosts the upgrade note follows the confirmed fact source without invented
+client-installation subsections or shell commands.
 
 1. **简述**：首段为固定结构，内容受已确认事实源约束。仅当事实源同时确认
-   无新增 plugin、plugin 集合与当前 7 个 role plugin 一致、且无破坏性变更
-   时（本仓库 marketplace 发版即此语境），以「无破坏性变更，也没有新增
-   plugin。7 个 role plugin 均更新到 `v{VERSION}`。」开头；存在破坏性变更
-   或事实源不完整支持该句时，按事实源如实改写（新增数量、plugin 集合按
-   已确认 marketplace 事实推导），不得新增事实源之外的发布声明；随后按需
-   追加「注意 N 项契约/输出变化」段落，写明生效范围与影响面。
+   无新增 plugin、plugin 集合与目标版本 `.claude-plugin/marketplace.json`
+   注册的 role plugins 一致（当前形态为 7 个）、且无破坏性变更时（本仓库
+   marketplace 发版即此语境），以「无破坏性变更，也没有新增 plugin。N 个
+   role plugin 均更新到 `v{VERSION}`。」开头（N 按目标版本 manifest 推导，
+   当前为 7）；存在破坏性变更或事实源不完整支持该句时，按事实源如实改写
+   （新增数量、plugin 集合按已确认 marketplace 事实推导），不得新增事实源
+   之外的发布声明；随后按需追加「注意 N 项契约/输出变化」段落，写明生效
+   范围与影响面。
 2. **指令**：`### Claude Code`、`### Codex` 与 `### Kimi Code` 三个小节。
-   仅当宿主是本 marketplace（dev-agent-skills）发版时，内容为以下固定模板
-   （逐字使用，不随版本内容裁剪或增删）；其他宿主不适用这些安装命令，按
-   已确认事实源给出对应的升级动作，或省略不适用的小节：
+   仅当宿主是本 marketplace（dev-agent-skills）发版时使用；指令列表与数量
+   以目标版本 `.claude-plugin/marketplace.json` 注册的 role plugins 为准
+   （下方 7 行是当前形态，逐字使用，不随版本内容裁剪或增删；manifest
+   变化时按 manifest 推导列表）。Claude Code 小节仅适用于本 marketplace
+   当前发布（`/plugin update` 无版本 pin，无法固定历史版本）；为历史 tag
+   重跑正文时省略该小节并说明平台限制。Codex 指令仅在目标 release 的 tag
+   包含 `TARGET_TAG` 安装支持时使用，Kimi 指令仅在目标 release 的 tag 包含
+   `.kimi-plugin/plugin.json` 时使用；历史或能力不完整的 tag 按目标 tag
+   实际内容给出升级方式或省略该小节。其他宿主不适用这些安装命令，按
+   已确认事实源给出对应的升级动作，不生成空壳小节：
 
    ```text
    /plugin marketplace update dev-agent-skills
@@ -113,11 +125,11 @@ fact source are required.
    /plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/v{VERSION}
    ```
 
-3. **收尾句**：收尾句必须存在。仅当事实源确认无新增 plugin 且 plugin
-   集合与当前 7 个 role plugin 一致时，以「更新仓库后重新运行安装器，
-   即可同步全部 7 个 role plugin 的 `v{VERSION}` 能力。」结束；其他宿主
-   按事实源给出对应的升级动作收尾，不得写事实源之外的安装器或 plugin
-   声明。
+3. **收尾句**：本 marketplace 宿主的收尾句必须存在。仅当事实源确认无
+   新增 plugin 且 plugin 集合与目标版本 manifest 一致时，以「更新仓库后
+   重新运行安装器，即可同步全部 N 个 role plugin 的 `v{VERSION}` 能力。」
+   结束（N 按 manifest 推导，当前为 7）；其他宿主按事实源给出对应的升级
+   动作收尾或省略，不得写事实源之外的安装器或 plugin 声明。
 
 ## Traceability Checks
 
