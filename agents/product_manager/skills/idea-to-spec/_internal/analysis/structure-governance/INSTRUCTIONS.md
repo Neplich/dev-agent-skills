@@ -76,7 +76,10 @@ Record each finding with a report-local ID, severity, confidence, evidence,
 rationale, affected roles, and references:
 
 1. **Overlong document**
-   - Any document over 500 total lines is a critical structure finding.
+   - Any active document over 500 total lines is a critical structure finding.
+     Exclude archived and legacy evidence — `implementation-plans/archive/**`
+     and `_legacy/**` keep their historical meaning and are never overlong or
+     L2b findings.
    - Also record the other L2b signals: at least 3 independent domains, at
      least 15 US/FR table rows, or sections clearly owned by different child
      features. Signals require evaluation, never an automatic split.

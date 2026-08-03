@@ -136,10 +136,10 @@ For an approved structural change:
   updates and any PM directory move are handed back to `pm-agent:idea-to-spec`;
   trd-gen never edits PM documents or moves PM directories
 - on the Engineer side, synchronize `feature_path`, `parent_feature`,
-  `feature_level`, and `related_docs` on every affected Engineer-owned artifact
-  (TRD, API, and ADR documents) so they mirror the confirmed PRD child paths,
-  and hand active implementation plan alignment to
-  `engineer-agent:feature-implementor`
+  `feature_level`, `related_docs`, `related_prd`, and any other applicable
+  `related_*` path fields on every affected Engineer-owned artifact (TRD, API,
+  and ADR documents) so they mirror the confirmed PRD child paths, and hand
+  active implementation plan alignment to `engineer-agent:feature-implementor`
 - use `git mv` for Engineer directory moves, renames, and the main
   identity-carrying file in a pure split; additional child documents may be
   created normally
