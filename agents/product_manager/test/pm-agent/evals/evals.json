@@ -376,9 +376,56 @@
       "expected_output": "unknown 不推断集成；证据补齐且用户确认后生成 N/A feature scope 的 deployment packet 并交 DevOps。",
       "workspace": "workspace/eval-015-route-docs-site-deployment-gap",
       "assertions": [
-        {"id": "blocks_unknown_evidence", "description": "证据不足保持 unknown", "text": "缺少 CI 或环境权限证据时报告 unknown、指明缺口，不按 integrated 或 ready handoff 处理。"},
-        {"id": "builds_repo_wide_deployment_packet", "description": "生成 repo-wide deployment handoff", "text": "用户确认纳入后使用 request_type deployment、N/A feature fields、空 feature_path_evidence，并在 source_documents/blockers_risks 保留真实检查证据。"},
-        {"id": "routes_devops_ordered_chain", "description": "按依赖顺序路由 DevOps 与 Docs", "text": "按依赖顺序 handoff：devops-agent:deployment-planner → devops-agent:cicd-bootstrap → devops-agent:env-config-auditor → docs-agent:formal-docs-sync；最终 Docs 步只同步已落地且验证的运维事实。"}
+        {
+          "id": "blocks_unknown_evidence",
+          "description": "证据不足保持 unknown",
+          "text": "缺少 CI 或环境权限证据时报告 unknown、指明缺口，不按 integrated 或 ready handoff 处理。"
+        },
+        {
+          "id": "builds_repo_wide_deployment_packet",
+          "description": "生成 repo-wide deployment handoff",
+          "text": "用户确认纳入后使用 request_type deployment、N/A feature fields、空 feature_path_evidence，并在 source_documents/blockers_risks 保留真实检查证据。"
+        },
+        {
+          "id": "routes_devops_ordered_chain",
+          "description": "按依赖顺序路由 DevOps 与 Docs",
+          "text": "按依赖顺序 handoff：devops-agent:deployment-planner → devops-agent:cicd-bootstrap → devops-agent:env-config-auditor → docs-agent:formal-docs-sync；最终 Docs 步只同步已落地且验证的运维事实。"
+        }
+      ]
+    },
+    {
+      "id": "eval-016-route-document-structure-governance",
+      "name": "route-document-structure-governance",
+      "description": "Verifies pm-agent routes whole-tree structure audit requests to idea-to-spec:structure-governance with read-only semantics.",
+      "prompt": "帮我梳理一下整个 docs 文档功能树，看看有没有超长文档、孤儿目录或跨角色路径漂移，给我一份结构治理报告。",
+      "workspace": "workspace/eval-016-route-document-structure-governance",
+      "expected_output": "主 route 指向 idea-to-spec:structure-governance 的只读结构梳理；报告以 HTML 落运行期 tmp 并在对话中给结论摘要；任何合并/拆分/移动建议需用户确认并按 major 处理，不在梳理中执行。",
+      "assertions": [
+        {
+          "id": "routes_to_structure_governance",
+          "description": "路由到结构治理模块",
+          "text": "主 route 指向 idea-to-spec:structure-governance，而不是 prd-iteration、feature-catalog 或下游角色 agent"
+        },
+        {
+          "id": "read_only_audit",
+          "description": "只读语义",
+          "text": "明确结构梳理为只读动作，不改动任何文档"
+        },
+        {
+          "id": "report_form",
+          "description": "报告形态",
+          "text": "报告以 HTML 写入运行期 tmp 目录（不提交 git），并在对话中给出结论摘要"
+        },
+        {
+          "id": "scope_six_role_dirs",
+          "description": "六角色目录覆盖",
+          "text": "梳理范围覆盖 docs/pm、docs/engineer、docs/design、docs/qa、docs/devops、docs/security 六个角色目录"
+        },
+        {
+          "id": "structural_change_requires_confirmation",
+          "description": "结构变更需确认",
+          "text": "合并/拆分/移动建议必须等用户确认后按 change_tier major 另行执行，不在梳理报告中直接执行"
+        }
       ]
     }
   ]
