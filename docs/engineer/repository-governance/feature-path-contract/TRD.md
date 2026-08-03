@@ -379,7 +379,7 @@ feature_level: 1
 
 只要实际执行 skill eval 或 fresh Codex subagent validation，就必须在同一轮变更中更新对应 durable `comparison.md`。运行期产物继续写入隔离 scratch workspace，不提交 transcript、outputs、diagnostics 或 `comparison.auto.md`。
 
-issue #197 当前阶段不新增或执行 eval；L2b 与结构治理 eval 在后续独立阶段补充。
+issue #197 已新增并执行两项 eval：`eval-009-prd-iteration-split-proposal`（L2b 拆分提案入口）与 `eval-016-route-document-structure-governance`（结构治理路由入口）；fresh subagent 验证均为 Behavior PASS / Coverage FULL，durable `comparison.md` 已同轮更新。
 
 ## 9. 验证策略
 
