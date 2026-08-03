@@ -9,7 +9,7 @@
 - source_evidence: confirmed six-category evidence
 - docs_audit_pre_tag_handoff (historical, same version v0.9.0):
   - phase: `pre-tag`
-  - result: `ready_for_tag`
+  - phase_result: `ready_for_tag`
   - target_ref: `7a8b9c0d`（历史 pre-tag 审计时的不可变 target commit）
   - base_ref: `v0.8.0`
   - status: 已完成（历史事实，tag 创建前已通过）

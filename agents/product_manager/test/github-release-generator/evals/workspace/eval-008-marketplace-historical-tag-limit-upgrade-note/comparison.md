@@ -28,9 +28,9 @@
 
 - PASS `title_matches_marketplace_format`：历史 tag 标题为 `v0.9.0 - 原位重试、附件链路兼容与双架构交付`，仍为强格式且概述与事实相关；without-skill FAIL（`Dev Agent Skills v0.9.0`）
 - PASS `upgrade_note_first_sentence_derived`：简述句 N=6 由 v0.9.0 manifest 推导（而非当前 7 个）；without-skill FAIL（使用「升级与风险」混合小节，首段非要求首句）
-- PASS `claude_section_omitted_with_platform_limit`：历史 tag 重跑省略 `### Claude Code` 并说明 durable 正文无法承诺固定 `v0.9.0`；固定版本替代路径只在目标 tag 实际存在已验证能力时点名，本 fixture 中 Codex/Kimi 均无固定版本能力，正文明确声明「该 tag 无已验证的固定版本安装路径」；without-skill 同 PASS（baseline 已内化该条件省略与无路径声明，属模型通用审慎）
-- PASS `codex_section_omitted_without_target_tag_support`：目标 tag 无 TARGET_TAG 支持时省略 `### Codex` 小节，不臆造安装指令；without-skill 同 PASS
-- PASS `kimi_section_omitted_without_plugin_json`：无 `.kimi-plugin/plugin.json` 时省略 `### Kimi Code` 小节，不生成空壳或 `/plugins install` 命令；without-skill 同 PASS
+- PASS `claude_section_omitted_with_platform_limit`：历史 tag 重跑省略 `### Claude Code` 并说明 durable 正文无法承诺固定 `v0.9.0`；固定版本替代路径只在目标 tag 实际存在已验证能力时点名，本 fixture 中 Codex/Kimi 均无固定版本能力，正文明确声明「该 tag 无已验证的固定版本安装路径」；without-skill FAIL（保留 `### Claude Code` 小节并作一般性说明，未形成「无已验证固定版本安装路径」统一声明）
+- PASS `codex_section_omitted_without_target_tag_support`：目标 tag 无 TARGET_TAG 支持时省略 `### Codex` 小节，不臆造安装指令；without-skill FAIL（生成了 `### Codex` 小节并推荐普通安装，未按断言省略）
+- PASS `kimi_section_omitted_without_plugin_json`：无 `.kimi-plugin/plugin.json` 时省略 `### Kimi Code` 小节，不生成空壳或 `/plugins install` 命令；without-skill FAIL（仍生成 `### Kimi Code` 小节，构成断言禁止的空壳能力说明）
 - PASS `closing_sentence_derived`：以「更新仓库后重新运行安装器，即可同步全部 6 个 role plugin 的 `v0.9.0` 能力。」收尾，N=6 与历史 manifest 一致；without-skill FAIL（无固定收尾句）
 
 ## With Skill Behavior
