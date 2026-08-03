@@ -17,6 +17,7 @@ feature: <leaf feature slug>
 feature_path: <multi-level feature path>
 parent_feature: <parent feature path or "N/A">
 feature_level: <positive integer path depth>
+child_features: <list of direct child feature paths, or "N/A">
 reviewers: []
 ```
 
@@ -24,7 +25,10 @@ Feature-scoped PRDs must be written to `docs/pm/{feature_path}/PRD.md`.
 `feature_path` is the canonical cross-role key and supports one or more
 slash-separated lower kebab-case segments. `feature` is the leaf slug for
 compatibility; `parent_feature` is `N/A` for level 1 and the parent path for
-deeper features; `feature_level` must equal the number of path segments. Legacy
+deeper features; `feature_level` must equal the number of path segments.
+`child_features` is the parent PRD's child-feature index: it lists direct child
+feature paths (or `N/A`) and must be updated together with the path metadata
+above on any confirmed split or move. Legacy
 single-level PRDs without these fields may be read as level-1 features, but new
 or updated PRDs must include them.
 

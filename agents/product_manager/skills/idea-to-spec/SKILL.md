@@ -45,6 +45,7 @@ Choose one lane during Phase 0:
 | `greenfield-bootstrap` | empty workspace and durable docs are needed now | load `_internal/orchestration/project-init/INSTRUCTIONS.md` |
 | `existing-project-feature` | existing repo adds a new capability | stay here until requirements or architecture stabilize |
 | `existing-project-update` | approved behavior, docs, rollout, or scope must change | load `_internal/analysis/change-impactor/INSTRUCTIONS.md` first when impact is unclear |
+| `structure-governance` | read-only feature-tree or cross-role document-structure audit | load `_internal/analysis/structure-governance/INSTRUCTIONS.md` |
 | `pipeline` | user explicitly wants the full document workflow | load `_internal/orchestration/flow/INSTRUCTIONS.md` |
 | `diff-only` | user only needs revision comparison | load `_internal/analysis/version-differ/INSTRUCTIONS.md` |
 

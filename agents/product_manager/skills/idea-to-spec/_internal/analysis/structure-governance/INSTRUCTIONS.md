@@ -119,7 +119,7 @@ structural action. Every recommendation includes:
 - **Mirror impact**: affected paths in `docs/pm`, `docs/engineer`,
   `docs/design`, `docs/qa/e2e`, `docs/devops`, and `docs/security`, including
   explicit `no artifact found` entries.
-- **Reference impact**: metadata, parent PRD child-feature index, `related_docs`,
+- **Reference impact**: metadata, parent PRD `child_features` index, `related_docs`,
   `related_prd`, `related_trd`, and other direct links that would need updates.
 - **Approval needed**: the user decision required before execution.
 
@@ -133,7 +133,7 @@ existing document flow.
 The report must state these constraints for any later approved implementation:
 
 1. A move or split synchronizes `feature_path`, `parent_feature`,
-   `feature_level`, `related_docs`, and the parent PRD child-feature index.
+   `feature_level`, `related_docs`, and the parent PRD `child_features` index.
 2. Directory moves and file renames use `git mv`; never replace them with
    create-plus-delete. In a pure split, use `git mv` for the file that carries
    the original document body, then create additional child documents normally.

@@ -115,7 +115,7 @@ When a proposal is confirmed:
 
 - Treat the structural change as `change_tier: major`.
 - Update `feature_path`, `parent_feature`, `feature_level`, `related_docs`, and
-  the parent PRD's child-feature index together.
+  the parent PRD's `child_features` index together.
 - Use `git mv` for every directory move or file rename. For a pure split, use
   `git mv` for the file that carries the source document's main identity; create
   additional child documents normally.

@@ -133,7 +133,7 @@ For an approved structural change:
 
 - treat it as `change_tier: major`
 - synchronize `feature_path`, `parent_feature`, `feature_level`, `related_docs`,
-  and the parent PRD child-feature index
+  and the parent PRD `child_features` index
 - use `git mv` for directory moves, renames, and the main identity-carrying file
   in a pure split; additional child documents may be created normally
 - require a confirmed mirror handling decision before moving a PM directory
