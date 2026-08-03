@@ -14,7 +14,7 @@
 - Fresh run: `2026-08-03 11:58:20 +0800`
 - Runtime directory: `tmp/eval-runs/issue-198-brd/pm/eval-001-route-greenfield-product-request/`
 
-## Latest Result
+## Latest result:
 
 - Behavior result: PASS — all 5 assertions passed.
 - Coverage result: FULL — 5/5 assertion scenarios were exercised; no `NOT EXERCISED` items.
@@ -45,6 +45,6 @@ The baseline was newly generated in this run from the same prompt and fixture, w
 
 - Keep this eval as the direct dispatcher regression gate for the BRD-free greenfield artifact chain.
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
 - Fresh responses and judge notes remain under `tmp/eval-runs/issue-198-brd/pm/eval-001-route-greenfield-product-request/` and are not committed.

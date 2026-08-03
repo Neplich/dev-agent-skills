@@ -59,7 +59,7 @@ Use it to:
    - webapp / mobile: PRD + E2E TEST_SUITE; optional API / ADR handoff
    - api: PRD + E2E TEST_SUITE; API / ADR handoff
    - library: E2E TEST_SUITE; optional ADR handoff
-   - data-pipeline: optional ADR handoff
+   - data-pipeline: PRD; optional ADR handoff
 2. **Create directory structure**:
    ```text
    docs/
