@@ -103,3 +103,9 @@ baseline 也指出两项威胁：Linear 已直接把传统协调工具描述为�
 
 - Runtime transcripts、完整模型输出、verdicts、timing、网页快照、outputs 与 diagnostics 不提交到 git。
 - Durable 产物仅更新本 `comparison.md`；本轮未修改 fixture、metadata、skill 或 eval 定义。
+
+## 2026-08-03 变更后回归（issue #188）
+
+- 变更：删除 Analysis Frameworks 节并保留 Battlecard Mode 条件模式（A 维实测确认磨平）。
+- 验证：L3 A 维 with/without 实测确认磨平（judge 独立判定，证据 `tmp/eval-runs/issue-188-l3/`）；删除后以原 eval prompt + fixture 重跑 with-skill，fresh judge 逐条判定原断言全部 PASS（3/3 PASS），Behavior result **PASS**，**无回归**（证据 `tmp/eval-runs/issue-188-regress/`）。
+

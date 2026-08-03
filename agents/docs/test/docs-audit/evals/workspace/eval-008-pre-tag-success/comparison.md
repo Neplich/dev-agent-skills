@@ -5,7 +5,7 @@
 - Agent: `docs-agent`
 - Skill: `docs-audit`
 - Eval: `eval-008-pre-tag-success`
-- Validation time: `2026-07-20 00:23:47 +0800`
+- Validation time: `2026-08-03 22:40:00 +0800`（fresh re-baseline，issue #188）
 - Scope: full pre-tag candidate transaction, canonical inventory/genesis digests, actual-tag pending contract, two staged gates, anchor/discovery commits, integration readback, and post-FF CAS rollback.
 
 ## Test set and method
@@ -22,14 +22,16 @@ fixture copy after fully reading `agents/docs/skills/docs-audit/SKILL.md`,
 ## Latest result
 
 Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
+- Overall result: PASS
 
 ## Fixture Drift Notice
 
-fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 判定 Behavior PASS / Coverage FULL，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；旧 PASS 反映变更前 run 的历史记录，不再是唯一证据来源。
+fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 PASS 反映变更前 run。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 独立判定，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；本节保留作为历史记录。
 
 ## Historical results
 
-- 2026-07-20（fixture 身份文本变更前）：**PASS** — `with_skill` satisfies **12/12** assertions. The fresh `without_skill` baseline satisfies **10/12** assertions. The two skill-specific gaps are independent canonical digest production inside the candidate schema and the complete concurrency-safe CAS rollback contract after post-FF readback failure.
+- 2026-08-03（fixture 身份文本更新后 fresh re-baseline，issue #188）：**PASS** — `with_skill` satisfies **12/12** assertions；fresh `without_skill` baseline satisfies **7/12** assertions。本轮覆盖 full pre-tag candidate transaction, isolated worktree, two staged gates, anchor/discovery commits, and FF integration。
+- 2026-07-20（fixture 身份文本变更前）：旧 run 结果，按 Fixture Drift Notice 不再作为当前证据。
 
 ## Canonical digest verification
 

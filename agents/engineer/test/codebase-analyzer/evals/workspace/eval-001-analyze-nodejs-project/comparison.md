@@ -43,3 +43,9 @@ Keep the fixture and assertions unchanged; regenerate both sides when project-pr
 ## Runtime Artifacts Policy
 
 Runtime outputs remain under ignored `tmp/eval-runs/issue-158-round1/` and are not committed. The durable result is this comparison only.
+
+## 2026-08-03 变更后回归（issue #188）
+
+- 变更：删除 Step 3 技术栈 marker 表、Step 4 lint 工具表、Step 6 架构模式表（A 维实测确认磨平）。
+- 验证：L3 A 维 with/without 实测确认磨平（judge 独立判定，证据 `tmp/eval-runs/issue-188-l3/`）；删除后以原 eval prompt + fixture 重跑 with-skill，fresh judge 逐条判定原断言全部 PASS（4/4 PASS），Behavior result **PASS**，**无回归**（证据 `tmp/eval-runs/issue-188-regress/`）。
+

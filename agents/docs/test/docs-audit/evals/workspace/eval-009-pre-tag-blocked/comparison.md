@@ -4,13 +4,14 @@
 
 - Skill: `docs-audit`
 - Eval: `eval-009-pre-tag-blocked`
-- Validation time: `2026-07-20 00:00:33 CST`
+- Validation time: `2026-08-03 22:40:00 +0800`（fresh re-baseline，issue #188）
 - Fixture: 本轮工作区中的 `evals.json` prompt/assertions、`eval_metadata.json` 及其列出的 pristine fixture 文件
 - Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
+- Overall result: PASS
 
 ## Fixture Drift Notice
 
-fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 判定 Behavior PASS / Coverage FULL，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；旧 PASS 反映变更前 run 的历史记录，不再是唯一证据来源。
+fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 PASS 反映变更前 run。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 独立判定，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；本节保留作为历史记录。
 
 ## Historical results
 

@@ -51,3 +51,9 @@
 ## Runtime Artifact Policy
 
 候选、verdict 与诊断仅保存在上述 ignored runtime 目录，不提交到 git；长期仅更新本 `comparison.md`。
+
+## 2026-08-03 变更后回归（issue #188）
+
+- 变更：删除 Common root cause patterns 根因表（A 维实测确认磨平）。
+- 验证：L3 A 维 with/without 实测确认磨平（judge 独立判定，证据 `tmp/eval-runs/issue-188-l3/`）；删除后以原 eval prompt + fixture 重跑 with-skill，fresh judge 逐条判定原断言全部 PASS（7/7 PASS），Behavior result **PASS**，**无回归**（证据 `tmp/eval-runs/issue-188-regress/`）。
+

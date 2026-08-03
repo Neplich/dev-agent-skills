@@ -150,6 +150,21 @@ For each competitor:
 - Quick wins (things you can act on this week)
 - Strategic moves (longer-term positioning or content investments)
 
+## Battlecard Mode
+
+当 pm-agent 以 `battlecard` 信号路由初始请求时，直接产出单页 battlecard 产物，不做完整 brief；基于已有研究或现场补充检索，覆盖每家竞品：
+
+- **Quick Overview**：他们做什么、目标客户、定价模型摘要、近期关键动态
+- **Their Pitch**：自我描述、主要口号、声称的 top 3 差异点
+- **Strengths（如实）**：真正有竞争力的地方、客户好评点、领先的能力
+- **Weaknesses**：一致的客户抱怨、技术限制、能力缺口
+- **Objection Handling**：预期会听到的反对话术与建议回应
+- **Landmines to Set**：引导客户早期暴露其痛点的提问
+- **Landmines to Defuse**：竞品可能引导客户问你的问题与应对
+- **Win/Loss Themes**：赢单与丢单的常见原因、偏好各自的客户类型
+
+无法确认的信息标记为假设或需验证，不编造确定结论；标注研究日期。
+
 ## Output
 
 Present the full competitive brief with clear formatting. Note the date of the research so the user knows the freshness of the data.

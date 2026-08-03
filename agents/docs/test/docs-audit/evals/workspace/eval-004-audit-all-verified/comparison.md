@@ -5,7 +5,7 @@
 - Agent: `docs-agent`
 - Skill: `docs-audit`
 - Eval: `eval-004-audit-all-verified`
-- Validation time: `2026-07-20 00:23:47 +0800`
+- Validation time: `2026-08-03 22:40:00 +0800`（fresh re-baseline，issue #188）
 - Scope: complete affected-set verification, canonical version-source inventory and genesis digests, unified stamping, candidate/anchor/discovery transaction, and integration-gated `ready_for_tag`.
 
 ## Test set and method
@@ -22,14 +22,16 @@ fixture copy after fully reading `agents/docs/skills/docs-audit/SKILL.md`,
 ## Latest result
 
 Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
+- Overall result: PASS
 
 ## Fixture Drift Notice
 
-fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 判定 Behavior PASS / Coverage FULL，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；旧 PASS 反映变更前 run 的历史记录，不再是唯一证据来源。
+fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 PASS 反映变更前 run。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 独立判定，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；本节保留作为历史记录。
 
 ## Historical results
 
-- 2026-07-20（fixture 身份文本变更前）：**PASS** — `with_skill` satisfies **6/6** assertions. The fresh `without_skill` baseline satisfies **4/6** assertions. The skill-specific delta is the complete canonical candidate producer schema and the mandatory anchor/discovery/handoff/integration success chain.
+- 2026-08-03（fixture 身份文本更新后 fresh re-baseline，issue #188）：**PASS** — `with_skill` satisfies **6/6** assertions；fresh `without_skill` baseline satisfies **4/6** assertions。本轮覆盖 complete affected-set verification, canonical version-source inventory, unified stamping, and candidate/anchor/discovery/integration-gated ready_for_tag。
+- 2026-07-20（fixture 身份文本变更前）：旧 run 结果，按 Fixture Drift Notice 不再作为当前证据。
 
 ## Canonical digest verification
 
