@@ -1,7 +1,7 @@
 ---
 title: "PRD/TRD 多级功能目录契约 TRD"
 type: TRD
-version: "1.1.0"
+version: "1.2.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-23"
@@ -19,12 +19,15 @@ related_docs:
   - "agents/product_manager/skills/idea-to-spec/SKILL.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md"
+  - "agents/product_manager/skills/idea-to-spec/_internal/_shared/quality-rules.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md"
+  - "agents/product_manager/skills/idea-to-spec/_internal/analysis/structure-governance/INSTRUCTIONS.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/gen/api-gen/INSTRUCTIONS.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/gen/adr-gen/INSTRUCTIONS.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/iteration/prd-iteration/INSTRUCTIONS.md"
+  - "agents/product_manager/skills/idea-to-spec/_internal/iteration/trd-iteration/INSTRUCTIONS.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/orchestration/project-init/INSTRUCTIONS.md"
   - "agents/engineer/skills/engineer-agent/SKILL.md"
   - "agents/engineer/skills/trd-gen/SKILL.md"
@@ -45,6 +48,9 @@ changelog:
   - version: "1.1.0"
     date: "2026-06-25"
     changes: "补充仓库治理和跨 Agent 协作 namespace 的技术规则，并明确 legacy artifact 校验边界"
+  - version: "1.2.0"
+    date: "2026-08-03"
+    changes: "新增 L2b 拆分评估、只读结构治理扫描与受控移动技术契约"
 ---
 
 # PRD/TRD 多级功能目录契约 TRD
@@ -53,7 +59,9 @@ changelog:
 
 本 TRD 承接 `docs/pm/repository-governance/feature-path-contract/PRD.md` 和 GitHub issue #37。PM 范围已经明确：将 `{feature-name}` 升级为允许多级的 `{feature_path}`，并防止 PRD、TRD、`IMPLEMENTATION_PLAN.md` 生成到错误的并列目录。
 
-本 TRD 只定义技术契约、影响范围、门禁和验证策略，不进入实现。后续应由 `feature-implementor` 基于本 TRD 生成 `docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md`，实施计划确认后再修改 skill 文档、内部指令、eval 或锁文件。
+GitHub issue #197 进一步要求在 PRD/TRD 跨越多个明确子功能边界时形成 L2b 拆分提案，并新增只读的跨角色功能树梳理入口。拆分评估、报告生成和实际结构变更必须分离：前两者只读，后者在用户确认后按 `major` 执行。
+
+issue #197 的当前实施范围是更新已确认的 skill 指令、路由、PRD/TRD 和锁文件；不新增或执行 eval，也不实际拆分、移动宿主文档目录。
 
 ## 2. 技术概览
 
@@ -85,6 +93,8 @@ flowchart TD
 - 仓库自身 Agent/Skill 治理 PRD 保留 `docs/pm/agents/{agent}/skills/{skill}/PRD.md` 的 `skills` 目录段；该路径按统一多级口径处理。
 - `repository-governance/...` 和 `agent-collaboration/...` 是合法顶层 namespace，分别承载仓库规则和跨 Agent 协作文档。
 - `_legacy/` 只保存历史证据，不参与 canonical PRD/TRD/Plan 镜像校验，但必须具备 legacy frontmatter。
+- L2a 只在同一 feature 目录拆支撑文档；L2b 命中任一信号时只生成子路径树、章节迁移映射和下游镜像影响清单，等待用户确认。
+- `structure-governance` 只读扫描六个角色过程文档目录，在运行期 tmp 生成 HTML 报告；`docs/site/` 不在其职责范围。
 
 ## 3. Feature Path 数据契约
 
@@ -152,6 +162,21 @@ engineer_outputs:
   adr: docs/engineer/chat-interface/history-search/ADR-001-search-index.md
 ```
 
+### 3.5 L2b 拆分提案契约
+
+PRD iteration、TRD iteration 和 `trd-gen` 在应用内容变更后、完成版本更新前，按以下任一信号启动评估：
+
+1. 文档总行数大于 500 行。
+2. 独立产品或技术领域数不少于 3 个。
+3. PRD 的 `US-*` 与 `FR-*` 表格行数合计不少于 15 行。
+4. 章节内容可明确归属不同子功能边界。
+
+提案是只读中间结果，固定包含：以当前 feature 为根的建议子
+`feature_path` 树、源章节到父/子文档的迁移映射，以及
+`docs/pm`、`docs/engineer`、`docs/design`、`docs/qa/e2e`、`docs/devops`、
+`docs/security` 的镜像影响清单。TRD 子树只能镜像已确认的 PRD 子树；
+用户拒绝提案时保留当前路径并继续原版本流程。
+
 ## 4. 解析与扫描算法
 
 ### 4.1 PM 生成前扫描
@@ -211,6 +236,25 @@ engineer_outputs:
 - 如果 PM 稳定但 TRD 缺失或冲突，回 `trd-gen`。
 - 如果缺少已确认 `IMPLEMENTATION_PLAN.md`，不更新 E2E TC。
 
+### 4.5 只读结构治理扫描
+
+`structure-governance` 使用以下流程：
+
+1. 递归扫描 `docs/pm`、`docs/engineer`、`docs/design`、`docs/qa`、
+   `docs/devops`、`docs/security`，读取路径、frontmatter、标题、文档类型、
+   `related_*` 和行数；不扫描 `docs/site/`。
+2. 以 `docs/pm` 为归属来源构建功能树，再投影 Engineer、Design、QA E2E、
+   DevOps 和 Security 镜像。QA E2E 只识别既有 `TEST_SUITE.md`、
+   `FLOW_INDEX.md`、`cases/`、`scripts/`、`results/` 与 `_reports/` 资产。
+3. 检测超长、并列错位、重复、孤儿、跨角色镜像缺失或漂移，并为每个
+   finding 保存证据路径、判定依据和影响面。
+4. 生成合并、L2a/L2b 拆分或移动建议；建议不修改任何源文档。
+5. 将自包含 HTML 报告写入运行期 tmp 目录，并在对话中输出问题数量、
+   高优先级结论、建议摘要和报告路径。
+
+扫描和报告属于只读动作，不改变 `change_tier`；只有确认执行其中的结构
+建议时，才按 `major` 进入正常 PRD/TRD iteration 和下游 owner 流程。
+
 ## 5. 目录镜像规则
 
 | 文档类型 | 路径 |
@@ -254,10 +298,18 @@ feature_level: 1
 当发现子功能已经被生成成并列一级目录时：
 
 1. 不自动移动历史目录。
-2. 先输出路径冲突分析，列出现有目录、期望目录、引用方和潜在影响。
-3. 由维护者确认是否迁移。
-4. 迁移时必须同步 PRD/TRD/IMPLEMENTATION_PLAN 的 `related_*` 引用、frontmatter 和相关 eval fixture。
-5. 没有维护者确认时，只阻止后续错误生成，并在 handoff 中记录冲突。
+2. 先输出路径冲突分析，列出现有目录、期望目录、章节迁移映射、引用方和
+   PM/Engineer/Design/QA E2E/DevOps/Security 镜像影响。
+3. PM 目录移动前必须由维护者确认是否迁移及每个镜像的处理方式；没有确认
+   时只阻止后续错误生成，并在 handoff 中记录冲突。
+4. 目录移动和文件重命名使用 `git mv`，不得以新建文件后删除原文件替代。
+   纯拆分时，承接原文档主体身份的文件也使用 `git mv`，新增子文档正常创建。
+5. 迁移时同步 `feature_path`、`parent_feature`、`feature_level`、
+   `related_docs`、其他 `related_*` 引用和父 PRD 子功能索引。
+6. `implementation-plans/archive/` 中的计划保持归档语义；QA `results/`
+   历史只追加不覆盖。
+7. 每个源章节必须可追溯到目标父/子文档，并在受影响文档 changelog 记录
+   迁移，禁止静默丢失内容。
 
 ### 6.3 Legacy Artifact 归档规则
 
@@ -291,10 +343,14 @@ feature_level: 1
 | P0 | `agents/product_manager/skills/idea-to-spec/SKILL.md` | 将 feature document memory 和 deliverable shapes 从 `{feature-name}` 升级为 `{feature_path}`。 |
 | P0 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` | Handoff packet 增加 feature path 字段和路径证据。 |
 | P0 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` | 增加生成前扫描、父功能识别、no directory drift 规则。 |
+| P0 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/quality-rules.md` | 将 `> 500` 行 CRITICAL 指向 L2b 拆分评估出口。 |
+| P0 | `agents/product_manager/skills/idea-to-spec/_internal/analysis/structure-governance/INSTRUCTIONS.md` | 新增六角色只读结构扫描与运行期 HTML 报告。 |
 | P0 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md` | 定义 `docs/<agent-short>/{feature_path}/<DOC>.md` 和 frontmatter 字段。 |
 | P0 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/*.md` | 为 PRD/DECISIONS/TEST_SPEC 等 schema 补 feature path 字段。 |
 | P0 | `agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md` | PRD 生成前扫描 `docs/pm/**/PRD.md`，路径不清时 blocked。 |
 | P0 | `agents/product_manager/skills/idea-to-spec/_internal/iteration/prd-iteration/INSTRUCTIONS.md` | 更新已有 PRD 时校验路径和 frontmatter 一致。 |
+| P0 | `agents/product_manager/skills/idea-to-spec/_internal/iteration/trd-iteration/INSTRUCTIONS.md` | 将 TRD 拆分评估和 PRD 镜像要求写入 Engineer handoff。 |
+| P0 | `agents/product_manager/skills/pm-agent/SKILL.md` | 新增文档结构治理 request type 与只读/iteration 路由。 |
 | P0 | `agents/engineer/skills/engineer-agent/SKILL.md` | Existing Feature Alignment Gate 改为 feature path。 |
 | P0 | `agents/engineer/skills/trd-gen/SKILL.md` | TRD 输出路径和 handoff 语言升级为 `{feature_path}`。 |
 | P0 | `agents/engineer/skills/trd-gen/_internal/trd-schema.md` | 增加 feature path frontmatter 和 `related_prd` 镜像校验。 |
@@ -322,6 +378,8 @@ feature_level: 1
 | legacy compatibility | 旧单层 fixture 无 `feature_path`。 | 作为一级功能读取，不误报缺字段。 |
 
 只要实际执行 skill eval 或 fresh Codex subagent validation，就必须在同一轮变更中更新对应 durable `comparison.md`。运行期产物继续写入隔离 scratch workspace，不提交 transcript、outputs、diagnostics 或 `comparison.auto.md`。
+
+issue #197 当前阶段不新增或执行 eval；L2b 与结构治理 eval 在后续独立阶段补充。
 
 ## 9. 验证策略
 
@@ -369,17 +427,19 @@ rg -n "legacy_of:|legacy_reason:|superseded_by:" docs --glob "*/_legacy/**/*.md"
 | Risk | 自动父功能匹配过度自信会把文档放入错误父目录。 | Engineer | Yes |
 | Risk | 只更新 PM/Engineer，未更新下游消费方，会让 Design/QA/DevOps/Security 继续漂移。 | Engineer | Yes |
 | Risk | 只更新文档不更新 eval，会导致规则后续回退。 | Engineer | Yes |
+| Risk | 结构报告被当作移动授权，会让只读扫描越过确认门禁。 | PM | Yes |
 | Decision | `feature_path` 支持多级统一口径；合法深度由功能树决定，不因超过三级而 blocked。 | Maintainer | No |
 | Decision | `repository-governance/...` 和 `agent-collaboration/...` 是合法顶层 namespace；二级主题可使用保留 namespace 作为 `parent_feature`。 | Maintainer | No |
 | Decision | 旧实施计划优先并入新的父功能路径；只作为历史证据保留时放入 `_legacy/` 并标记 `legacy_of`、`legacy_reason`、`superseded_by`。 | Maintainer | No |
 | Assumption | 旧单层目录不批量迁移，只有确认误放、触及时补字段，或按 legacy artifact 规则归档。 | Maintainer | No |
 | Decision | 新文档继续保留 `feature` 作为兼容字段；`feature_path` 是完整路径主键，一级功能时二者可以相同，嵌套功能时 `feature` 使用末级 slug。 | Engineer | No |
-| Open Question | 是否需要新增 repository contract 检查 feature path frontmatter 与目录路径一致。 | Maintainer | No |
+| Decision | L2b 任一信号只触发评估；提案确认前不执行拆分，拒绝后保持原路径。 | Maintainer | No |
+| Decision | 结构建议执行按 `major` 处理，目录移动和重命名使用 `git mv`，不新增迁移脚本。 | Maintainer | No |
 
 ## 13. Feature-Implementor 交接条件
 
 - Confirmed PRD path: `docs/pm/repository-governance/feature-path-contract/PRD.md`
 - Confirmed TRD path: `docs/engineer/repository-governance/feature-path-contract/TRD.md`
 - Expected implementation plan path: `docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md`
-- Boundary: 本 TRD 不进入实现，不修改 skill 文档、eval 或锁文件。
-- Required next step: `feature-implementor` 基于本 TRD 生成详细实施计划，并在用户确认后再进入各模块修改。
+- Boundary: issue #197 仅修改已确认的指令、路由、PRD/TRD 与锁文件，不实现 eval，不执行真实文档拆分或迁移。
+- Required implementation: 按 L2b、只读结构治理和受控移动契约更新指定 skill，并通过仓库确定性检查。

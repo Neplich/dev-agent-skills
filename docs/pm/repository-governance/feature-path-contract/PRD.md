@@ -1,7 +1,7 @@
 ---
 title: "PRD/TRD 多级功能目录契约 PRD"
 type: PRD
-version: "1.1.0"
+version: "1.2.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-23"
@@ -17,9 +17,13 @@ related_docs:
   - "agents/product_manager/skills/idea-to-spec/SKILL.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md"
+  - "agents/product_manager/skills/idea-to-spec/_internal/_shared/quality-rules.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md"
+  - "agents/product_manager/skills/idea-to-spec/_internal/analysis/structure-governance/INSTRUCTIONS.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/iteration/prd-iteration/INSTRUCTIONS.md"
+  - "agents/product_manager/skills/idea-to-spec/_internal/iteration/trd-iteration/INSTRUCTIONS.md"
+  - "agents/product_manager/skills/pm-agent/SKILL.md"
   - "agents/engineer/skills/engineer-agent/SKILL.md"
   - "agents/engineer/skills/trd-gen/SKILL.md"
   - "agents/engineer/skills/trd-gen/_internal/trd-schema.md"
@@ -39,6 +43,9 @@ changelog:
   - version: "1.1.0"
     date: "2026-06-25"
     changes: "补充仓库治理和跨 Agent 协作 namespace，并明确 legacy artifact 归档契约"
+  - version: "1.2.0"
+    date: "2026-08-03"
+    changes: "新增 L2b 子 feature_path 拆分评估、提案确认、只读结构梳理与受控移动契约"
 ---
 
 # PRD/TRD 多级功能目录契约 PRD
@@ -50,6 +57,8 @@ GitHub issue #37 已确认当前文档目录契约存在跨 PM 和 Engineer 链�
 典型场景是已有一级功能 `Chat Interface`，新增子功能 `Chat History Search` 时，文档应落在 `Chat Interface` 下的子功能目录，而不是在 `docs/pm/` 或 `docs/engineer/` 下创建一个新的并列顶层目录。
 
 QA E2E 已经使用功能树模型。PM、Engineer、TRD、实施计划和 QA E2E 链路需要升级到同一套多级 `feature_path` 语义，避免需求、技术设计、实施计划和后续 QA 资产之间发生目录漂移。
+
+GitHub issue #197 在此基础上补充功能树的演进机制：当单个 PRD/TRD 已跨越多个可独立归属的子功能时，系统需要先给出可审查的拆分提案，而不是只在同一目录增加支撑文档或自动移动目录；维护者还需要一个只读入口查看六个角色过程文档的功能树、镜像缺口和结构问题。
 
 ## 2. 目标与非目标
 
@@ -64,6 +73,8 @@ QA E2E 已经使用功能树模型。PM、Engineer、TRD、实施计划和 QA E2
 7. 增加 eval 覆盖，防止后续 skill 回退为错误并列目录生成。
 8. 正式定义仓库治理和跨 Agent 协作类文档的顶层 namespace，避免治理文档继续落在松散一级目录。
 9. 明确 legacy artifact 的归档路径、frontmatter 字段和 repository contract 处理方式。
+10. 区分同目录支撑文档拆分（L2a）与子 `feature_path` 拆分评估（L2b），并让 PRD/TRD iteration 在变更落盘后检查 L2b 信号。
+11. 提供只读文档结构治理入口，生成跨角色功能树现状、问题和调整建议，不直接修改任何文档。
 
 ### 非目标
 
@@ -72,6 +83,7 @@ QA E2E 已经使用功能树模型。PM、Engineer、TRD、实施计划和 QA E2
 3. 不把 QA E2E 目录模型改回单层路径；QA E2E 统一使用 `docs/qa/e2e/{feature_path}/`。
 4. 不让 `feature-implementor` 在缺少 PRD/TRD 路径对齐时自行补写需求或技术设计。
 5. 不自动猜测模糊父功能；无法确认时应询问用户或 blocked。
+6. 结构梳理不扫描或重构 `docs/site/`，不改变 QA E2E 现有资产契约，也不自动执行报告中的合并、拆分或移动建议。
 
 ## 3. 用户画像
 
@@ -95,6 +107,8 @@ QA E2E 已经使用功能树模型。PM、Engineer、TRD、实施计划和 QA E2
 | US-007 | 作为维护者，我希望 API 文档和 ADR 由 Engineer 生成，以便 PM 不越界写工程文档。 | P0 | PM 只输出 API / ADR 背景和 handoff；Engineer 在 `docs/engineer/{feature_path}/` 下生成 `API.md` 与 `ADR-*.md`。 |
 | US-008 | 作为维护者，我希望仓库规则类文档归入 `repository-governance/...`，以便目录契约、eval 证据和 CI 规则不散落为同级功能。 | P0 | `repository-governance/{topic}` 是合法 feature namespace，并可被 PM、Engineer 和下游目录镜像。 |
 | US-009 | 作为维护者，我希望跨 Agent 协作文档归入 `agent-collaboration/...`，以便 handoff、分工和协作规则不被误归到单个 Agent。 | P0 | `agent-collaboration/{topic}` 是合法 feature namespace，并要求下游使用同一 `feature_path`。 |
+| US-010 | 作为维护者，我希望超长或跨域 PRD/TRD 先形成子功能树拆分提案，以便在移动内容前审查边界和下游影响。 | P0 | 任一 L2b 信号命中时输出子 `feature_path` 树、章节迁移映射和镜像影响清单，并等待确认。 |
+| US-011 | 作为维护者，我希望只读梳理六个角色文档目录，以便识别超长、错位、重复、孤儿和镜像漂移。 | P0 | 结构治理仅在运行期 tmp 写 HTML 报告，对话返回摘要，不修改仓库文档。 |
 
 ## 5. 功能需求
 
@@ -117,6 +131,11 @@ QA E2E 已经使用功能树模型。PM、Engineer、TRD、实施计划和 QA E2
 | FR-015 | Repository Governance Namespace | 仓库级规则、目录契约、eval 证据规则、CI 和 repository contract 文档使用 `repository-governance/{topic}`。 | P0 | `repository-governance/feature-path-contract`、`repository-governance/eval-baseline-evidence-contract` 这类路径合法；`parent_feature` 为 `repository-governance`。 |
 | FR-016 | Agent Collaboration Namespace | 多个 Agent 之间的交接、分工、路由和协作门禁文档使用 `agent-collaboration/{topic}`。 | P0 | `agent-collaboration/frontend-ui-routing-contract` 这类路径合法；下游产物镜像同一 `feature_path`。 |
 | FR-017 | Legacy Artifact 归档 | 旧实施计划优先并入新的父功能路径；作为历史证据保留时放入父功能目录下 `_legacy/` 子目录。 | P0 | legacy 文件必须标记 `legacy_of`、`legacy_reason`、`superseded_by`；repository contract 默认不按 canonical PRD/TRD/Plan 校验 `_legacy/`，但应检查 legacy 字段完整性。 |
+| FR-018 | L2a / L2b 分流 | L2a 继续用于同一 feature 内的支撑文档；L2b 用于评估是否形成子 `feature_path`。 | P0 | L2a 保持同目录、固定文件名和 `related_docs` 登记；L2b 不自动拆分。 |
+| FR-019 | L2b 信号与提案 | 总行数 `> 500`、独立领域数 `>= 3`、PRD 的 US/FR 表格行数合计 `>= 15`，或章节可明确归属不同子功能时触发评估。 | P0 | 提案包含子路径树、章节迁移映射，以及 PM 到 Engineer/Design/QA E2E/DevOps/Security 的镜像影响清单。 |
+| FR-020 | 提案确认门禁 | 拆分或移动只有在用户确认提案与镜像处理方式后执行。 | P0 | 用户拒绝时保持当前路径并继续原流程；只读提示和报告不构成结构变更授权。 |
+| FR-021 | 只读结构治理 | 扫描 `docs/pm`、`docs/engineer`、`docs/design`、`docs/qa`、`docs/devops`、`docs/security` 的功能树和关系。 | P0 | 报告列出功能树、问题、依据、影响面和合并/拆分/移动建议；排除 `docs/site/`。 |
+| FR-022 | 受控迁移 | 确认后的移动保持 metadata、索引、归档和历史结果语义。 | P0 | 使用 `git mv`；同步路径字段、`related_docs` 和父 PRD 子功能索引；归档计划仍归档，QA `results/` 只追加，迁移内容在 changelog 可追溯。 |
 
 ## 6. 用户流程
 
@@ -146,6 +165,20 @@ flowchart TD
     E --> F{"PRD/TRD feature_path 是否一致？"}
     F -->|否| T["回 engineer-agent:trd-gen 修正"]
     F -->|是| G["写入 docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md"]
+```
+
+### L2b 拆分评估
+
+```mermaid
+flowchart TD
+    A["PRD/TRD 应用内容变更"] --> B{"是否命中任一 L2b 信号？"}
+    B -->|否| C["按原流程版本化与验证"]
+    B -->|是| D["生成子 feature_path 树"]
+    D --> E["映射章节迁移目标"]
+    E --> F["列出六角色镜像影响"]
+    F --> G{"用户是否确认？"}
+    G -->|否| C
+    G -->|是| H["按 major 结构变更执行"]
 ```
 
 ## 7. 数据模型
@@ -208,6 +241,11 @@ repository contract 对 `_legacy/` 的处理应与 canonical PRD/TRD/Plan 分开
 默认跳过 canonical 路径镜像校验，或使用专门规则检查 `legacy_of`、
 `legacy_reason`、`superseded_by` 是否存在且非空。
 
+全量结构治理只读取六个角色过程文档目录。QA 资产按
+`docs/qa/e2e/{feature_path}/` 的 `TEST_SUITE.md`、`FLOW_INDEX.md`、`cases/`、
+`scripts/`、`results/` 和 `_reports/` 识别，不改变其目录或追加规则；
+`docs/site/` 由 Docs Agent 负责，不纳入本入口的重构范围。
+
 ## 9. 验收标准
 
 | ID | 验收标准 | 验证方式 |
@@ -220,6 +258,10 @@ repository contract 对 `_legacy/` 的处理应与 canonical PRD/TRD/Plan 分开
 | AC-006 | API / ADR 请求不会由 PM 直接生成 Engineer 文档。 | `idea-to-spec` 与 `trd-gen` eval 覆盖 Engineer handoff、输出路径和禁止 PM 内部 `api-gen` / `adr-gen`。 |
 | AC-007 | `repository-governance/...` 和 `agent-collaboration/...` 被识别为合法顶层 namespace。 | repository contract 或静态检查接受这两个 namespace 下的 PRD/TRD/Plan 镜像路径。 |
 | AC-008 | plan-only legacy artifact 有明确处置记录。 | `_legacy/` 文件具备 `legacy_of`、`legacy_reason`、`superseded_by`，且 canonical 扫描不把它们当作活跃计划。 |
+| AC-009 | 任一 L2b 信号只触发拆分评估，不自动拆分。 | 审查 PRD/TRD iteration 与 `trd-gen` 指令中的确认门禁。 |
+| AC-010 | L2b 提案包含子路径树、章节迁移映射和完整镜像影响清单。 | 对照 `gen-conventions.md` 的提案输出契约。 |
+| AC-011 | 结构治理扫描六个角色目录并保持只读。 | 报告只写运行期 tmp；git 工作树中的文档不因扫描发生变化。 |
+| AC-012 | 确认后的移动不丢内容、不破坏归档和 QA 历史。 | 检查 `git mv` 记录、frontmatter/索引同步、changelog 迁移记录及 QA `results/` 追加语义。 |
 
 ## 10. 发布计划与里程碑
 
@@ -239,6 +281,8 @@ repository contract 对 `_legacy/` 的处理应与 canonical PRD/TRD/Plan 分开
 | 旧文档缺少新字段。 | 读取旧项目时误 blocked。 | 单层旧目录视为一级功能，触及时补齐字段。 |
 | TRD 或实施计划路径与 PRD 漂移。 | 后续实现基于错误需求。 | 生成前强制校验路径、frontmatter 和 `related_prd`。 |
 | eval 只检查字符串，不检查语义路径。 | 仍可能生成错误目录。 | 使用语义断言检查父功能识别、blocked 和 handoff 包。 |
+| 自动拆分破坏正在进行的下游工作。 | 引用失效、归档语义或 QA 历史被改写。 | L2b 只提案；移动前确认镜像处理，执行时使用 `git mv` 并保持归档与追加语义。 |
+| 结构报告被误当作执行授权。 | 只读审计间接触发大范围移动。 | 报告明确只读；结构性调整另按 `major` 走提案确认和正常角色 handoff。 |
 
 ## 12. 假设与待确认问题
 
@@ -249,4 +293,4 @@ repository contract 对 `_legacy/` 的处理应与 canonical PRD/TRD/Plan 分开
 | Decision | 旧实施计划优先并入新的父功能路径；仅作为历史证据保留时归档到父功能目录下 `_legacy/`，并标记 `legacy_of`、`legacy_reason`、`superseded_by`。 | Maintainer | No |
 | Assumption | 旧单层目录不批量迁移，只在触及时补字段、迁入确认父功能，或按 legacy artifact 规则归档。 | Maintainer | No |
 | Assumption | 新文档继续保留 `feature` 作为兼容字段；`feature_path` 是完整路径主键，一级功能时二者可以相同，嵌套功能时 `feature` 使用末级 slug。 | Engineer | No |
-| Open Question | 是否需要为已误放的历史目录提供一次性迁移脚本，还是仅通过人工 PR 迁移。 | Maintainer | No |
+| Decision | 不新增迁移脚本；确认后的目录移动和文件重命名使用 `git mv`，纯拆分的主体承接文件同样使用 `git mv`。 | Maintainer | No |
