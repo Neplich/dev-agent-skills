@@ -15,7 +15,7 @@
 | Entry skill | `pm-agent` |
 | Specialist skills | 7 |
 | Main inputs | User ideas, local `docs/`, repository state, GitHub Issues / PRs / Milestones / Releases |
-| Main outputs | `docs/pm/{feature_path}/`, `docs/roadmap.md`, `docs/changelog/changelog-v{version}.md`, `docs/release-notes/` |
+| Main outputs | `docs/pm/{feature_path}/`, `docs/roadmap.md`, `docs/changelog/changelog-v{version}.md` |
 | Downstream agents | `designer-agent`, `engineer-agent` |
 
 ## Skills
@@ -79,7 +79,10 @@ Repository-level PM artifacts can use:
 
 - `docs/roadmap.md`
 - `docs/changelog/changelog-v{version}.md`
-- `docs/release-notes/`
+
+Site Release Notes are owned by `docs-agent:release-notes-generator` under the
+host site's `docs/site/release-notes/`; PM only produces GitHub Releases via
+`github-release-generator`.
 
 ## Collaboration Boundary
 

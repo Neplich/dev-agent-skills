@@ -15,7 +15,7 @@
 | 入口 skill | `pm-agent` |
 | Specialist skills | 7 个 |
 | 主要输入 | 用户想法、本地 `docs/`、代码库现状、GitHub Issues / PRs / Milestones / Releases |
-| 主要输出 | `docs/pm/{feature_path}/`、`docs/roadmap.md`、`docs/changelog/changelog-v{version}.md`、`docs/release-notes/` |
+| 主要输出 | `docs/pm/{feature_path}/`、`docs/roadmap.md`、`docs/changelog/changelog-v{version}.md` |
 | 下游协作 | `designer-agent`、`engineer-agent` |
 
 ## Skill 清单
@@ -79,7 +79,9 @@ Repo 级 PM 产物可以放在：
 
 - `docs/roadmap.md`
 - `docs/changelog/changelog-v{version}.md`
-- `docs/release-notes/`
+
+站内 Release Notes 归 `docs-agent:release-notes-generator`，写入宿主站点的
+`docs/site/release-notes/`；PM 只通过 `github-release-generator` 产出 GitHub Release。
 
 ## 协作边界
 
