@@ -33,13 +33,13 @@
 
 ## Without Skill Baseline
 
-- 来源：2026-08-03 fresh baseline（同 prompt，未读 skill）；1/4 assertions PASS（no_full_brief、evidence_boundary、no_battlecard_offer 内化，battlecard_fields 因缺指定字段 FAIL）。
+- 来源：2026-08-03 fresh baseline（同 prompt，未读 skill）；3/4 assertions PASS（no_full_brief、evidence_boundary、no_battlecard_offer 被 baseline 内化，battlecard_fields 因缺指定字段 FAIL——唯一区分项）。
 - 区分度：结构契约（单页字段清单）保持 skill 增量；范围与证据边界已被 baseline 内化。
 
 ## Failures / Findings
 
 - 无 with-skill assertion failure；无 NOT EXERCISED；Coverage FULL。
-- 零区分度观察（no_full_brief/evidence_boundary/no_battlecard_offer 被 baseline 白捡）：属模型通用审慎；Battlecard Mode 的增量在固定字段清单。
+- 零区分度观察（no_full_brief/evidence_boundary/no_battlecard_offer 被 baseline 白捡，3/4）：属模型通用审慎；Battlecard Mode 的增量在固定字段清单（battlecard_fields 保持区分度）。
 
 ## Next Steps
 
