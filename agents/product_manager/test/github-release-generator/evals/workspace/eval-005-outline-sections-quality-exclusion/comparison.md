@@ -4,8 +4,8 @@
 
 - Skill: `github-release-generator`
 - Test case: outline 四节结构、内部质量证据排除与风险事实保持
-- Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-- Overall result: PASS
+- Latest result: **PASS**（Behavior: PASS / Coverage: PARTIAL）
+- Overall result: PASS (partial coverage)
 
 ## Review Context
 
@@ -13,7 +13,7 @@
 - Date: 2026-08-03
 - Final judge: 当前会话中的 fresh Codex validation agent
 - Judge 独立读取当前 skill、两份 reference、eval 定义/metadata/fixture 与 issue-190 fresh 双侧 candidate；verdict 完成前未读取 durable `comparison.md` 或旧 run tmp。
-- Coverage override（judge 后人工复核）：终版 judge 判定 Coverage FULL（5 条断言均有判定）；按仓库 Coverage 定义（「本轮实际覆盖了多少 assertion 场景」），`title_matches_gate` 与 `upgrade_note_fixed_structure` 的 marketplace 正向分支在本非 marketplace fixture 下未执行，属场景缺口，曾调整为 PARTIAL。**2026-08-03（#220）已由新增 eval-007 / eval-008 承接执行 marketplace 正向分支**（标题强格式、三小节指令模板、plugin 列表推导、TARGET_TAG/Kimi 能力条件、固定收尾句，双侧 fresh 验证 Behavior PASS / Coverage FULL，见对应 workspace comparison.md），本 eval 的 5 条断言在自身 fixture 范围内全部执行，Coverage 恢复 FULL。Behavior PASS 与判定依据不受影响。
+- Coverage override（judge 后人工复核）：终版 judge 判定 Coverage FULL（5 条断言均有判定）；按仓库 Coverage 定义（「本轮实际覆盖了多少 assertion 场景」），`title_matches_gate` 与 `upgrade_note_fixed_structure` 的 marketplace 正向分支在本非 marketplace fixture 下未执行，属场景缺口，Coverage 为 PARTIAL。**2026-08-03（#220）marketplace 正向分支已由新增 eval-007 / eval-008 独立承接执行**（标题强格式、三小节指令模板、plugin 列表推导、TARGET_TAG/Kimi 能力条件、固定收尾句，双侧 fresh 验证 Behavior PASS / Coverage FULL，见对应 workspace comparison.md）；本 eval 自身 fixture 未执行 marketplace 分支的场景缺口仍按仓库 Coverage 定义记录为 PARTIAL，套件级覆盖由 eval-007/008 补足。Behavior PASS 与判定依据不受影响。
 
 ## Test Set / Fixture Version
 
@@ -46,7 +46,7 @@
 
 - 无 with-skill assertion failure。
 - issue-190 首轮 judge finding（已解决）：升级说明固定结构曾被无条件套入不含 plugin 事实的宿主场景；模板条件化后 with-skill 不再臆造 plugin 声明。
-- **Coverage PARTIAL 已消解（#220）**：`title_matches_gate` 与 `upgrade_note_fixed_structure` 的 marketplace 正向分支（`vX.Y.Z - 概述` 强格式、三小节指令模板、按 marketplace.json 推导的 plugin 列表、TARGET_TAG/Kimi 能力条件）此前在本非 marketplace fixture 下未执行；已由 eval-007（能力齐全）与 eval-008（历史 tag 能力不完整）承接执行，双侧 fresh 验证通过，本 eval Coverage 恢复 FULL。
+- **Coverage PARTIAL（#220 承接记录）**：`title_matches_gate` 与 `upgrade_note_fixed_structure` 的 marketplace 正向分支（`vX.Y.Z - 概述` 强格式、三小节指令模板、按 marketplace.json 推导的 plugin 列表、TARGET_TAG/Kimi 能力条件）在本非 marketplace fixture 下未执行，Coverage 保持 PARTIAL；正向分支已由 eval-007（能力齐全）与 eval-008（历史 tag 能力不完整）独立承接执行，双侧 fresh 验证 Behavior PASS / Coverage FULL，本 eval 的 PARTIAL 是自身场景缺口记录，不表示套件级缺口。
 
 ## Next Steps
 

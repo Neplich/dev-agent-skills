@@ -7,8 +7,9 @@
 - docs_checks: `npm run test:docs` from `docs/site`, exit 0
 - updated_release_surfaces: index, releases metadata and generated navigation updated
 - source_evidence: confirmed six-category evidence
-- docs_audit_pre_tag_phase: `post-tag`
+- docs_audit_pre_tag_phase: `post-tag`（历史重跑；同版本 pre-tag 审计已通过，见下）
 - docs_audit_pre_tag_result: `release_verified`
+- docs_audit_pre_tag_handoff_history: 同版本 v0.9.0 的 pre-tag 审计 handoff 已存在且为 `ready_for_tag`（历史事实，tag 创建前已通过）
 - base_ref: `v0.8.0`
 - target_ref: `v0.9.0`
 - intended_tag: `v0.9.0`

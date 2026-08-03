@@ -1,5 +1,7 @@
 # GitHub 维护证据
 
+> **证据确认声明**：本证据包是维护者已确认的输入——下列 PR 与 commit 链接已验证属于声明的 compare 范围、且支持站内已确认事实源中的事实（验证已完成，作为已审计输入处理，不需要执行者重新实时验证）。
+
 ## Release window
 
 - repository: `Neplich/dev-agent-skills`
