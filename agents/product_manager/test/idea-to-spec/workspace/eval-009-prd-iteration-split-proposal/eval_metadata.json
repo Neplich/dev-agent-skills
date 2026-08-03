@@ -1,0 +1,6 @@
+{
+  "eval_id": "eval-009-prd-iteration-split-proposal",
+  "eval_name": "prd-iteration-split-proposal",
+  "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/eval-009-prd-iteration-split-proposal",
+  "prompt": "当前 docs/pm/notification-center/PRD.md 已确认，现在要把提醒策略从轮询改成事件驱动。请更新这版 PRD。"
+}

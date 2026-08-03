@@ -32,9 +32,16 @@ Follow `_internal/_shared/gen-conventions.md` for standard workflow, failure han
 - **Naming**: `docs/pm/<feature_path>/PRD.md`
 - **Feature path gate**: before writing, scan `docs/pm/**/PRD.md`, resolve a
   multi-level `feature_path`, and include `feature_path`, `feature`,
-  `parent_feature`, and `feature_level` in frontmatter. If the request may be a
-  child feature but parent ownership is unclear, blocked/clarify instead of
-  creating a new top-level PRD.
+  `parent_feature`, `feature_level`, and `child_features` in frontmatter. If the
+  request may be a child feature but parent ownership is unclear,
+  blocked/clarify instead of creating a new top-level PRD. When the resolved
+  path nests under an existing parent PRD, refresh the parent PRD's
+  `child_features` in the same change by deriving the full direct child list
+  from the parent's current subdirectories (including the new child) — never
+  only append the new path to a possibly missing or stale field. Refreshing the
+  parent is a content update: bump the parent PRD version per
+  `_internal/_shared/output-conventions.md`, refresh `last_updated`, and add a
+  changelog entry in the same change.
 
 ## Workflow Details
 
@@ -84,6 +91,7 @@ feature_path: social-login
 feature: social-login
 parent_feature: N/A
 feature_level: 1
+child_features: "N/A"
 changelog:
   - version: "1.0.0"
     date: "2025-01-15"

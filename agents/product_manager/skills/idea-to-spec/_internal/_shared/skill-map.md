@@ -32,6 +32,7 @@ decision, before deciding which internal instruction resource to load.
 | Empty workspace and the user wants durable docs now | `greenfield-bootstrap` | Load `project-init` |
 | Existing repo, adding a new feature or module | `existing-project-feature` | Stay in `idea-to-spec` until requirements or architecture stabilize |
 | Existing repo, changing approved behavior / scope / rollout | `existing-project-update` | Load `change-impactor`, then route to iteration |
+| Existing repo, read-only feature-tree or cross-role document-structure audit | `structure-governance` | Load `structure-governance` and write only a runtime HTML report |
 | User explicitly wants the full document chain | `pipeline` | Load `flow` |
 | User only wants a document diff or comparison | `diff-only` | Load `version-differ` |
 
@@ -84,6 +85,7 @@ document state.
 | Change impact analysis | `change-impactor` | `_internal/analysis/change-impactor/INSTRUCTIONS.md` | A change request may affect one or more existing docs |
 | Traceability review | `trace-check` | `_internal/analysis/trace-check/INSTRUCTIONS.md` | Need coverage or mapping review after generation / iteration |
 | Version diff | `version-differ` | `_internal/analysis/version-differ/INSTRUCTIONS.md` | Need comparison only, not editing |
+| Document structure governance | `structure-governance` | `_internal/analysis/structure-governance/INSTRUCTIONS.md` | Need a read-only feature-tree inventory, structure problem list, and merge / split / move recommendations |
 | PRD generation | `prd-gen` | `_internal/gen/prd-gen/INSTRUCTIONS.md` | Requirements and flows are stable |
 | TRD generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | PRD and product decisions are stable; explicit Engineer handoff is needed |
 | ADR generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | A technical decision needs durable Engineer-owned rationale |
@@ -190,7 +192,7 @@ Required fields:
 
 | Field | Meaning |
 | --- | --- |
-| `request_type` | Stable request class: `new_feature`, `existing_update`, `bug_report`, `design`, `validation`, `deployment`, `security`, `formal_docs`, `delivery`, `status`, `feature_catalog`, `competitive_research`, `battlecard`, `changelog`, `release_notes`, `roadmap`, or `repo_status`. |
+| `request_type` | Stable request class: `new_feature`, `existing_update`, `bug_report`, `design`, `validation`, `deployment`, `security`, `formal_docs`, `document_structure_governance`, `delivery`, `status`, `feature_catalog`, `competitive_research`, `battlecard`, `changelog`, `release_notes`, `roadmap`, or `repo_status`. |
 | `change_tier` | `hotfix`, `standard`, or `major`, using the 变更分级契约 in `AGENTS.md` as the single definition source. |
 | `feature_path` | Canonical multi-level feature path, `unresolved` when PM clarification must continue, or `N/A` for confirmed non-feature repo-wide work. |
 | `feature` | Terminal feature slug, compatible legacy feature value, or `N/A` for confirmed non-feature repo-wide work. |
@@ -445,6 +447,7 @@ specialist's existing gates.
 | Existing repo, technical design needed after PRD confirmation | `engineer-agent:trd-gen` | Engineer-owned API / ADR docs through `trd-gen`, then matching validators after Engineer TRD confirmation |
 | Existing repo, one approved PM doc needs revision | Matching PM `*-iteration` | Matching validator; Engineer-owned TRD/API/ADR revisions hand off to `engineer-agent:trd-gen` |
 | Existing repo, multiple docs need coordinated revision | `change-impactor` -> `iteration-coordinator` | `trace-check` and `version-differ` after updates |
+| Existing repo, feature-tree and cross-role structure audit | `structure-governance` | If a split proposal is later confirmed, return through matching iteration and normal downstream handoffs |
 | QA assets or regression mapping needed | `tspecs-gen` | `tspecs-validator` or `trace-check` |
 | Full end-to-end pipeline requested | `flow` | Narrower gen / validator steps if the user backs off |
 | Diff only | `version-differ` | `trace-check` if the issue is coverage rather than versioning |
@@ -473,6 +476,7 @@ specialist's existing gates.
 | API | `engineer-agent:trd-gen` | `api-validator` | hand off to `engineer-agent:trd-gen` for revisions |
 | ADR | `engineer-agent:trd-gen` | `adr-validator` | hand off to `engineer-agent:trd-gen` for revisions |
 | TEST_SPEC | `tspecs-gen` | `tspecs-validator` | `tspecs-iteration` |
+| Cross-role feature tree | N/A | `structure-governance` read-only report | Confirmed split / move returns to PRD iteration, then mirrors through each owning role |
 
 ## 12. Shared References
 

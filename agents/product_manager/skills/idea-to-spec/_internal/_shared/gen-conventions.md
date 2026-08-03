@@ -48,6 +48,8 @@ Every gen skill follows this 6-step workflow:
   corresponding `DECISIONS.md` is updated in the same feature folder
 - **Feature path fields**: New formal feature-scoped documents include
   `feature_path`, `feature`, `parent_feature`, and `feature_level`
+- **PRD child index**: New or updated PRDs include `child_features`, using
+  `N/A` when the PRD has no direct child features
 - **Line limit**: Keep output under 500 lines, including frontmatter
 - **Section limit**: Keep each section under 80 lines; split or compress if
   exceeded
@@ -62,7 +64,8 @@ level:
 | Level | Trigger | Action |
 | --- | --- | --- |
 | L1: Section compression | Single section > 80 lines | Keep summary in place and move details to an appendix or sibling doc |
-| L2: Multi-document split | Total > 500 lines OR `>= 3` independent domains | Split into feature-scoped sibling docs in the same folder |
+| L2a: Same-folder supporting-doc split | One document is too long, but all content belongs to one feature domain | Split into feature-scoped sibling docs in the same folder |
+| L2b: Child `feature_path` split assessment | Any L2b signal below is met | Propose a child feature tree and wait for user confirmation; do not split automatically |
 | L3: Incremental output | Extremely complex requirements | Use `design.md` or staged docs, then expand section by section |
 
 ### L1: Section Compression Rules
@@ -74,7 +77,7 @@ level:
 - Mermaid diagrams over 40 lines -> keep a simplified diagram inline and move
   the full version to an appendix
 
-### L2: Multi-Document Split Rules
+### L2a: Same-Folder Supporting-Document Split Rules
 
 - Keep the files in the same feature folder
 - Use fixed filenames for canonical docs, not versioned filenames
@@ -82,6 +85,51 @@ level:
   unreadable
 - Record supporting doc links in the main document frontmatter `related_docs`
   field
+
+### L2b: Child Feature Path Split Assessment
+
+Run a split assessment when any one of these signals is present:
+
+1. The document has more than 500 total lines, including frontmatter.
+2. The document contains at least 3 independent product or technical domains.
+3. The PRD contains at least 15 user-story or requirement rows across its
+   `US-*` and `FR-*` tables.
+4. Section content has clear ownership boundaries that map to different child
+   features, even when no numeric threshold is met.
+
+A signal starts an assessment; it never authorizes an automatic split. The
+assessment must present one proposal containing:
+
+- a recommended child `feature_path` tree rooted at the current feature
+- a section migration map from every source section to its proposed target
+  document, including content that remains in the parent
+- a downstream mirror impact list for `docs/engineer/`, `docs/design/`,
+  `docs/qa/e2e/`, `docs/devops/`, and `docs/security/`, using `docs/pm/` as the
+  feature-path source
+- the evidence for each boundary and the expected effect on existing links,
+  active work, archived plans, and QA history
+
+Wait for explicit user confirmation before changing paths or documents. If the
+user rejects the proposal, keep the current `feature_path` and continue with
+L1 or L2a as appropriate.
+
+When a proposal is confirmed:
+
+- Treat the structural change as `change_tier: major`.
+- Update `feature_path`, `parent_feature`, `feature_level`, `related_docs`, and
+  the parent PRD's `child_features` index together.
+- Use `git mv` for every directory move or file rename. For a pure split, use
+  `git mv` for the file that carries the source document's main identity; create
+  additional child documents normally.
+- Before moving a PM directory, present the downstream mirror impact list and
+  do not move it until the mirror handling decision is confirmed.
+- Preserve the archive meaning of
+  `docs/engineer/{feature_path}/implementation-plans/archive/`; do not promote
+  archived plans back to active inputs during a move.
+- Append QA `results/` history; never overwrite or rewrite historical results.
+- Keep every source section traceable to a target document and record the
+  migration in each affected document's changelog. No content may disappear
+  silently.
 
 ### L3: Incremental Output Rules
 
@@ -136,7 +184,8 @@ Run this gate before writing `PRD.md`, `DECISIONS.md`, or PM
 
 1. Scan `docs/pm/**/PRD.md`, supporting multi-level feature paths.
 2. Read each PRD's `feature_path`, `feature`, `parent_feature`,
-   `feature_level`, `title`, `related_issue`, and `related_docs` when present.
+   `feature_level`, `child_features`, `title`, `related_issue`, and
+   `related_docs` when present.
 3. For old single-level PRDs without `feature_path`, infer
    `feature_path=<folder>`, `parent_feature=N/A`, and `feature_level=1`.
 4. Decide whether the request is a level-1 feature or belongs under an existing

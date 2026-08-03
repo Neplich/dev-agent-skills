@@ -232,6 +232,41 @@
           "text": "明确降低 `last_verified_version: unverified` 文档的信任，需求现状与影响范围均以代码证据复核。"
         }
       ]
+    },
+    {
+      "id": "eval-009-prd-iteration-split-proposal",
+      "name": "prd-iteration-split-proposal",
+      "description": "Verifies prd-iteration evaluates L2b split signals after applying a change and presents a confirmation-gated split proposal instead of restructuring automatically.",
+      "prompt": "当前 docs/pm/notification-center/PRD.md 已确认，现在要把提醒策略从轮询改成事件驱动。请更新这版 PRD。",
+      "workspace": "workspace/eval-009-prd-iteration-split-proposal",
+      "expected_output": "应用轮询改事件驱动的变更后，识别 L2b 信号命中（≥3 独立领域、≥15 US/FR 行），输出拆分提案（子 feature_path 树 + 章节迁移映射 + 下游镜像影响清单）并等待用户确认；未确认前不拆分、不移动、不新建子文档。",
+      "assertions": [
+        {
+          "id": "applies_requested_change",
+          "description": "应用请求的变更",
+          "text": "先把提醒策略从轮询改成事件驱动的变更实际应用到 PRD（产出更新后的 PRD 内容），而不是只做结构评估或只口头给出变更方案"
+        },
+        {
+          "id": "detects_l2b_signals",
+          "description": "识别 L2b 信号命中",
+          "text": "明确识别 PRD 命中 L2b 拆分信号（≥3 独立领域、≥15 US/FR 表格行、>500 行中的至少一项）"
+        },
+        {
+          "id": "presents_split_proposal",
+          "description": "输出完整拆分提案",
+          "text": "拆分提案包含建议子 feature_path 树、章节迁移映射和下游镜像影响清单（docs/engineer、docs/design、docs/qa/e2e、docs/devops、docs/security）"
+        },
+        {
+          "id": "waits_for_confirmation",
+          "description": "提案-确认制",
+          "text": "明确等待用户确认后才执行拆分；未确认前不拆分、不用 git mv 移动、不新建子 feature_path 文档"
+        },
+        {
+          "id": "rejection_keeps_current_flow",
+          "description": "拒绝语义",
+          "text": "说明或体现用户拒绝提案时保持当前 feature_path 并按现流程继续（版本 bump 与校验）"
+        }
+      ]
     }
   ]
 }

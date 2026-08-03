@@ -118,7 +118,7 @@ Validators MUST check document length and flag violations:
 
 | Check | Threshold | Severity | Action |
 |-------|-----------|----------|--------|
-| Total document lines | > 500 lines | CRITICAL | Must split into multiple documents (L2) or compress sections (L1) |
+| Total document lines | > 500 lines | CRITICAL | Must evaluate a child `feature_path` split (L2b); if rejected or not appropriate, split same-folder supporting docs (L2a) or compress sections (L1) |
 | Single section without sub-headings | > 80 lines | WARNING | Should split into sub-sections or move details to Appendix |
 | Table rows in a single table | > 20 rows | WARNING | Should summarize + move full table to Appendix |
 | Supporting docs missing from `related_docs` | When sibling docs exist | CRITICAL | Main document must reference supporting docs via stable paths |

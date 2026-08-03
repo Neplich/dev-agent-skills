@@ -29,7 +29,11 @@ Apply changes to an existing PRD while maintaining version history and quality s
 
 1. **Read current document**: Parse existing PRD, extract version metadata and
    `feature_path` metadata. If missing on an old single-level PRD, infer level
-   1 from the containing folder.
+   1 from the containing folder. Reconcile `child_features` on every updated
+   PRD: derive the current direct child feature paths from the subdirectories
+   under `docs/pm/{feature_path}/` and their frontmatter first, refresh the
+   field from that derivation, and use `"N/A"` only when no direct children
+   exist.
 
 2. **Analyze changes**: Classify the change request:
    - Fix validation issues (CRITICAL first, then WARNING)
@@ -41,16 +45,25 @@ Apply changes to an existing PRD while maintaining version history and quality s
    existing parallel directory is misplaced, stop and present a path conflict
    summary instead of silently editing the wrong PRD.
 
-4. **Bump version**: Per `_internal/_shared/output-conventions.md`:
+4. **Evaluate L2b split signals**: After applying the requested content change,
+   evaluate the four L2b signals in `_internal/_shared/gen-conventions.md`:
+   total lines `> 500`, at least 3 independent domains, at least 15 combined
+   `US-*` / `FR-*` table rows, or sections with clear child-feature ownership.
+   If any signal is met, present the required child `feature_path` tree,
+   section migration map, and downstream mirror impact list, then wait for
+   explicit user confirmation. Do not move or split files while waiting. If the
+   user rejects the proposal, keep the current path and continue this workflow.
+
+5. **Bump version**: Per `_internal/_shared/output-conventions.md`:
    - Typo/formatting → PATCH
    - New/updated content → MINOR
    - Scope change → MAJOR
 
-5. **Update changelog**: Add entry to both frontmatter and inline changelog.
+6. **Update changelog**: Add entry to both frontmatter and inline changelog.
 
-6. **Run inline validation**: Apply `prd-validator` checks to the updated document. Report any remaining issues.
+7. **Run inline validation**: Apply `prd-validator` checks to the updated document. Report any remaining issues.
 
-7. **Present**: Show a diff summary of changes + the full updated document.
+8. **Present**: Show a diff summary of changes + the full updated document.
 
 ## Output Contract
 
@@ -67,6 +80,8 @@ Apply changes to an existing PRD while maintaining version history and quality s
 - Requested change belongs under a different parent feature → return to
   `idea-to-spec` path clarification or create a PM handoff; do not update the
   current PRD as if it owned the child feature
+- L2b proposal is pending confirmation → preserve the current document and
+  path; a proposal or read-only assessment is not permission to restructure
 - Conflicting changes → ask user to prioritize
 - Changes would remove required sections → warn and ask for confirmation
 - Post-iteration validation still FAIL → present issues and suggest next iteration
