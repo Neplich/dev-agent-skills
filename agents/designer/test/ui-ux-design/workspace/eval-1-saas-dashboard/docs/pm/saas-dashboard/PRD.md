@@ -1,3 +1,17 @@
+---
+title: "saas-dashboard — Product Requirements Document"
+type: PRD
+feature: "saas-dashboard"
+feature_path: "saas-dashboard"
+parent_feature: ""
+feature_level: "1"
+version: "0.1.0"
+status: Confirmed
+author: "PM Fixture"
+date: "2026-08-03"
+last_updated: "2026-08-03"
+---
+
 # PRD: SaaS Dashboard
 
 ## Goal

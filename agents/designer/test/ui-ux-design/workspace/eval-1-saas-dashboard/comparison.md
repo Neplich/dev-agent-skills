@@ -11,9 +11,9 @@
 ## Test Set or Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture version: `chore/198-remove-brd-branch working tree, eval-001 fixture repaired`
-- Fresh run time: `2026-08-03 12:25:58 +0800`
-- Runtime directory: `tmp/eval-runs/issue-215-saas-dashboard/`
+- Fixture version: `chore/198-remove-brd-chain working tree, eval-001 fixture repaired with formal frontmatter`
+- Fresh run time: `2026-08-03 12:35:48 +0800`
+- Runtime directory: `tmp/eval-runs/issue-215-saas-dashboard-r2/`
 - Fixture: prompt, workspace README, and confirmed PM spec at `docs/pm/saas-dashboard/PRD.md`
 
 ## Latest Result
@@ -22,7 +22,7 @@
 - Coverage result: **FULL**
 Overall result: PASS
 
-All three assertions were evaluated and passed. The repaired fixture supplies the confirmed `saas-dashboard` feature path and PM scope needed for the skill to produce the canonical design artifact.
+All three assertions were evaluated and passed in this fresh paired run. The repaired fixture's formal PRD frontmatter supplies the confirmed `saas-dashboard` feature path and PM scope needed for the skill to produce the canonical design artifact.
 
 ## Assertion Results
 
@@ -38,7 +38,7 @@ All three assertions were evaluated and passed. The repaired fixture supplies th
 
 ## Fresh Without-Skill Baseline
 
-- This baseline was newly generated in this run from the same prompt and repaired fixture only; it did not read or apply the Designer README, `ui-ux-design` skill, with-skill output, historical baseline, or prior comparison.
+- This baseline was newly generated in this run from the same prompt and repaired fixture only; it did not read or apply the Designer README, `ui-ux-design` skill, with-skill output, historical baseline, or prior comparison. No historical baseline was reused.
 - It provides generic sidebar, project/task, member, activity, responsive, and state suggestions, but does not produce the canonical repository artifact or a Mermaid journey, ASCII layouts, or complete component inventory.
 - It stops loosely before development but does not name `engineer-agent` or state the skill's hard no-implementation boundary. The paired run therefore has clear behavioral differentiation.
 
