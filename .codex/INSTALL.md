@@ -74,8 +74,8 @@ do. Omit it for a plain latest install.
 ```bash
 if [ -d "$CLONE_ROOT/.git" ]; then
   if [ -n "$TARGET_TAG" ]; then
-    if ! git -C "$CLONE_ROOT" diff --quiet; then
-      echo "error: $CLONE_ROOT has uncommitted changes; commit or stash them before a pinned install" >&2
+    if [ -n "$(git -C "$CLONE_ROOT" status --porcelain)" ]; then
+      echo "error: $CLONE_ROOT has uncommitted or untracked changes; commit or stash them before a pinned install" >&2
       exit 1
     fi
     git -C "$CLONE_ROOT" fetch --tags origin
