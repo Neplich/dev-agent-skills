@@ -66,10 +66,10 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 ### Kimi Code
 
 ```text
-/plugins install https://github.com/Neplich/dev-agent-skills
+/plugins install https://github.com/Neplich/dev-agent-skills/tree/main
 ```
 
-仓库内置 `.kimi-plugin/plugin.json` manifest：7 个角色 skill 目录注册为单个插件，`pm-agent` 随会话启动自动加载（`sessionStart.skill`）。需要不可变版本时用 `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/vX.Y.Z` 固定 tag。
+仓库内置 `.kimi-plugin/plugin.json` manifest：7 个角色 skill 目录注册为单个插件，`pm-agent` 随会话启动自动加载（`sessionStart.skill`）。注意：裸仓库 URL 安装的是最新 GitHub Release，在包含 Kimi manifest 的版本发布前请使用上面的 `tree/main` 形式；发布后可改用 `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/vX.Y.Z` 固定不可变版本。
 
 已按 Codex 方式安装到 `~/.agents/skills/` 的 skill 也会被 Kimi Code 自动扫描到；推荐优先使用上面的原生插件方式。
 
