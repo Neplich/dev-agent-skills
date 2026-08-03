@@ -24,9 +24,9 @@
 
 ## Assertions
 
-- PASS `blocks_missing_handoff`：无 handoff 场景明确 blocked，指出缺少已就绪的站内 Release Notes handoff，不能生成可发布正文；without-skill 同 PASS
+- PASS `blocks_missing_handoff`：无 handoff 场景明确 blocked，指出缺少已就绪的站内 Release Notes handoff，不能生成可发布正文；without-skill FAIL（泛称 handoff/文档 owner，未点名 `docs-agent:release-notes-generator`）
 - PASS `blocks_unconfirmed_handoff`：识别 `confirmation_status: unconfirmed`，docs check 与页面存在不替代正文确认；without-skill 同 PASS
-- PASS `returns_to_site_release_notes`：两个场景返回 `docs-agent:release-notes-generator` 补齐确认或 handoff，不自行补证；without-skill 以等价语义返回站内 Notes owner
+- PASS `returns_to_site_release_notes`：两个场景返回 `docs-agent:release-notes-generator` 补齐确认或 handoff，不自行补证；without-skill FAIL（仅用「文档 owner」泛称，未点名具体 owner）
 - PASS `no_publishable_output_or_mutation`：未生成可发布正文或发布命令，未创建 draft/tag、未执行写入；without-skill 同 PASS
 
 ## With Skill Behavior
@@ -36,12 +36,12 @@
 ## Without Skill Baseline
 
 - 来源：issue-190 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
-- 行为：核心阻塞语义与 with-skill 一致（4/4 assertions PASS）；差异仅为 owner 名称与零写入边界表述完整度。未见规则泄漏迹象，属模型已内化的「未确认事实不可发布」通用安全原则。
+- 行为：2/4 assertions PASS；能识别阻塞语义与零写入边界，但两次入口缺口均未点名 `docs-agent:release-notes-generator` 这一仓库特有 owner——精确 owner 路由是 with-skill 的有效增量。未见规则泄漏迹象。
 
 ## Failures / Findings
 
-- 无 assertion failure。
-- 非阻塞 finding：本 eval 为「模型已内化」用例（without-skill 全过），区分度低但无泄漏；可作为 #188 正增量审查的数据点。
+- 无 with-skill assertion failure。
+- 非阻塞 finding：baseline 已内化通用阻塞与零写入语义（2/4 PASS），但两次入口缺口均未点名 `docs-agent:release-notes-generator` 这一仓库特有 owner——精确 owner 路由是 with-skill 的增量。
 
 ## Next Steps
 

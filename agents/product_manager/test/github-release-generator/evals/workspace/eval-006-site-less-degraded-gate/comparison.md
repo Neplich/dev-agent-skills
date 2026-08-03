@@ -25,7 +25,7 @@
 ## Assertions
 
 - PASS `proceeds_without_handoff_when_site_absent`：证明 `docs/site/` 与站内 Release Notes 能力链均不存在后，将双态审计 handoff 判为不适用，并从可信事实源生成完整 preview；without-skill 同 PASS
-- PASS `records_downgrade_basis`：明确记录正式站点未初始化、两项缺失、confirmed changelog、version bump、tag/ref/range 与无冲突证据；without-skill 同 PASS
+- PASS `records_downgrade_basis`：明确记录正式站点未初始化、两项缺失、confirmed changelog、version bump、tag/ref/range 与无冲突证据；without-skill FAIL（记录了语义依据与证据，未点名 `docs-agent:release-notes-generator` 能力链）
 - PASS `still_requires_maintainer_approval`：只生成 preview，未执行 draft/publish/tag/docs 写入，并说明每次未来远端写入都要取得明确、当前、不可复用的批准；without-skill 同 PASS
 - PASS `blocks_without_confirmed_fact_source`：对第二场景明确 blocked，拒绝从 proposed version、commit subjects 或 unconfirmed summary 臆造事实；without-skill 同 PASS
 
@@ -38,12 +38,12 @@
 ## Without Skill Baseline
 
 - 来源：issue-190 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
-- 行为：4/4 assertions PASS；降级语义与 with-skill 一致。未见规则泄漏迹象，属模型可从 fixture 显式事实推导的通用门禁。
+- 行为：3/4 assertions PASS；降级核心语义与 with-skill 一致，但未点名 `docs-agent:release-notes-generator` 能力链这一仓库特有判据。未见规则泄漏迹象，属模型可从 fixture 显式事实推导的通用门禁。
 
 ## Failures / Findings
 
-- 无 assertion failure。
-- 非阻塞 finding：本 eval 为「模型已内化」用例（without-skill 全过），区分度低但无泄漏；可作为 #188 正增量审查的数据点。
+- 无 with-skill assertion failure。
+- 非阻塞 finding：多数降级语义已被模型内化（3/4 PASS），但「无 `docs/site/` 且无站内 Release Notes 能力链」的精确判据点名未内化——该仓库特有判据是 with-skill 的增量。
 
 ## Next Steps
 

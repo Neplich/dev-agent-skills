@@ -72,17 +72,23 @@ must match a specific released version, as the Release upgrade instructions
 do. Omit it for a plain latest install.
 
 ```bash
+REPO_URL="https://github.com/Neplich/dev-agent-skills.git"
 if [ -d "$CLONE_ROOT/.git" ]; then
+  if [ -n "$(git -C "$CLONE_ROOT" status --porcelain)" ]; then
+    echo "error: $CLONE_ROOT has uncommitted or untracked changes; commit or stash them before installing" >&2
+    exit 1
+  fi
   if [ -n "$TARGET_TAG" ]; then
-    if [ -n "$(git -C "$CLONE_ROOT" status --porcelain)" ]; then
-      echo "error: $CLONE_ROOT has uncommitted or untracked changes; commit or stash them before a pinned install" >&2
-      exit 1
-    fi
-    git -C "$CLONE_ROOT" fetch --tags origin || { echo "error: fetch failed; aborting pinned install" >&2; exit 1; }
-    git -C "$CLONE_ROOT" rev-parse --verify "refs/tags/$TARGET_TAG^{commit}" >/dev/null \
-      || { echo "error: release tag $TARGET_TAG not found; aborting pinned install" >&2; exit 1; }
-    git -C "$CLONE_ROOT" checkout "$TARGET_TAG" || { echo "error: cannot checkout $TARGET_TAG; aborting pinned install" >&2; exit 1; }
-    test "$(git -C "$CLONE_ROOT" rev-parse HEAD)" = "$(git -C "$CLONE_ROOT" rev-parse "$TARGET_TAG^{commit}")" \
+    git ls-remote --exit-code --tags "$REPO_URL" "refs/tags/${TARGET_TAG}" >/dev/null \
+      || { echo "error: release tag $TARGET_TAG not found on origin; aborting pinned install" >&2; exit 1; }
+    # Fetch from the verified URL into the local tag ref so the checkout and
+    # identity checks always read the official object, not a stale or forged
+    # local tag or an unverified origin remote.
+    git -C "$CLONE_ROOT" fetch "$REPO_URL" "refs/tags/${TARGET_TAG}:refs/tags/${TARGET_TAG}" \
+      || { echo "error: fetch failed; aborting pinned install" >&2; exit 1; }
+    git -C "$CLONE_ROOT" checkout --detach "refs/tags/${TARGET_TAG}^{commit}" \
+      || { echo "error: cannot checkout $TARGET_TAG; aborting pinned install" >&2; exit 1; }
+    test "$(git -C "$CLONE_ROOT" rev-parse HEAD)" = "$(git -C "$CLONE_ROOT" rev-parse "refs/tags/${TARGET_TAG}^{commit}")" \
       || { echo "error: checkout verification failed for $TARGET_TAG; aborting pinned install" >&2; exit 1; }
   else
     # A previous pinned install leaves a detached HEAD; return to main first
@@ -93,11 +99,15 @@ if [ -d "$CLONE_ROOT/.git" ]; then
 else
   mkdir -p "$(dirname "$CLONE_ROOT")"
   if [ -n "$TARGET_TAG" ]; then
-    git ls-remote --tags origin "refs/tags/$TARGET_TAG" >/dev/null \
+    git ls-remote --exit-code --tags "$REPO_URL" "refs/tags/${TARGET_TAG}" >/dev/null \
       || { echo "error: release tag $TARGET_TAG not found on origin; aborting pinned install" >&2; exit 1; }
-    git clone --branch "$TARGET_TAG" https://github.com/Neplich/dev-agent-skills.git "$CLONE_ROOT"
+    git clone "$REPO_URL" "$CLONE_ROOT"
+    git -C "$CLONE_ROOT" checkout --detach "refs/tags/${TARGET_TAG}^{commit}" \
+      || { echo "error: cannot checkout $TARGET_TAG; aborting pinned install" >&2; exit 1; }
+    test "$(git -C "$CLONE_ROOT" rev-parse HEAD)" = "$(git -C "$CLONE_ROOT" rev-parse "refs/tags/${TARGET_TAG}^{commit}")" \
+      || { echo "error: checkout verification failed for $TARGET_TAG; aborting pinned install" >&2; exit 1; }
   else
-    git clone https://github.com/Neplich/dev-agent-skills.git "$CLONE_ROOT"
+    git clone "$REPO_URL" "$CLONE_ROOT"
   fi
 fi
 ```

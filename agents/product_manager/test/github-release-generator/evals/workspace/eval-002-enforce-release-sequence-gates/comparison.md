@@ -27,7 +27,7 @@
 - PASS `site_notes_before_github_release`：明确站内 Release Notes 确认 → pre-tag docs-audit `ready_for_tag` → submit-ready preview 的顺序；without-skill FAIL（直接展示预览，未交代顺序门禁）
 - PASS `ready_for_tag_allows_preview_only`：`ready_for_tag` 只允许 preview 或另行批准的受限 draft 准备，不替代 tag、`release_verified` 或发布批准；without-skill FAIL
 - PASS `draft_omits_latest_and_publish_rechecks`：正确识别 prerelease 并展示 `--prerelease --latest=false`；draft 省略 latest flag、两次写间回读、最终写前 latest/tag OID 复查、最终原子应用与写后再回读，漂移时停止和路由；without-skill FAIL（仅有高层 Prerelease/Latest 结论）
-- PASS `blocks_missing_tag_and_post_tag_audit`：场景 A 因实际 tag 与 `release_verified` 缺失 blocked，分别返回 host release owner 与 `docs-agent:docs-audit`；without-skill 同 PASS（以通用表述把 tag 与审计流程交回对应 owner）
+- PASS `blocks_missing_tag_and_post_tag_audit`：场景 A 因实际 tag 与 `release_verified` 缺失 blocked，分别返回 host release owner 与 `docs-agent:docs-audit`；without-skill FAIL（泛称 tag owner/post-tag audit，未点名 `docs-agent:docs-audit`）
 - PASS `blocks_missing_independent_approval`：场景 B 拒绝复用页面确认或 preview 请求作为当前独立 publish approval；without-skill 同 PASS
 - PASS `keeps_preview_or_draft`：缺任一门禁时只保留 preview 或既有 draft；without-skill 同 PASS
 
@@ -40,7 +40,7 @@
 ## Without Skill Baseline
 
 - 来源：issue-190 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
-- 行为：3/6 assertions PASS；缺顺序门禁、`ready_for_tag` 权限边界、draft latest 保护与最终写复查序列——这些正是 with-skill 的协议增量。
+- 行为：2/6 assertions PASS；缺顺序门禁、`ready_for_tag` 权限边界、draft latest 保护、最终写复查序列与精确 owner 路由——这些正是 with-skill 的协议增量。
 
 ## Failures / Findings
 
