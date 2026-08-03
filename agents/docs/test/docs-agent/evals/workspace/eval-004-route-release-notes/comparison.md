@@ -13,11 +13,11 @@
 
 ## Latest Result
 
-Latest result: **BLOCKED** (fixture drift — 待 fresh re-baseline)
+Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
 
 ## Fixture Drift Notice
 
-fixture 的 `required_output` 已于 2026-07-29 修正：身份清理引入的下游指向错误已修正，Release Notes 后续 handoff 由 `pm-agent:github-release-generator` 改为 `docs-agent:docs-audit` pre-tag，前者仅在 `ready_for_tag` 后作为下游。本次未执行 fresh re-baseline；旧 PASS 反映修正前 fixture，在下一次 fresh validation 完成前不得作为当前 fixture 的验证证据。
+fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 判定 Behavior PASS / Coverage FULL，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；旧 PASS 反映变更前 run 的历史记录，不再是唯一证据来源。
 
 ## Historical Results
 

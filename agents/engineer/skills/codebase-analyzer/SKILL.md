@@ -60,17 +60,7 @@ Identify:
 
 ## Step 3 — Identify tech stack
 
-Read the primary manifest file to determine:
-
-| Marker File | Stack | Package Manager |
-|-------------|-------|-----------------|
-| `package.json` | Node.js / TypeScript | npm / yarn / pnpm / bun |
-| `go.mod` | Go | go modules |
-| `Cargo.toml` | Rust | cargo |
-| `pyproject.toml` / `requirements.txt` | Python | pip / poetry / uv |
-| `pom.xml` / `build.gradle` | Java / Kotlin | maven / gradle |
-| `Gemfile` | Ruby | bundler |
-| `composer.json` | PHP | composer |
+Read the primary manifest file to determine the language, runtime and package manager.
 
 Detect the framework from dependencies:
 - **Node.js**: next, express, fastify, nestjs, react, vue, angular, svelte
@@ -82,20 +72,7 @@ Also check for TypeScript (`tsconfig.json`) and monorepo indicators (`pnpm-works
 
 ## Step 4 — Extract coding conventions
 
-Check for these config files and summarize what they enforce:
-
-| Tool | Config Files |
-|------|-------------|
-| ESLint | `.eslintrc*`, `eslint.config.*` |
-| Prettier | `.prettierrc*`, `prettier.config.*` |
-| Biome | `biome.json` |
-| Ruff | `ruff.toml`, `pyproject.toml [tool.ruff]` |
-| Black | `pyproject.toml [tool.black]` |
-| golangci-lint | `.golangci.yml` |
-| rustfmt | `rustfmt.toml` |
-| EditorConfig | `.editorconfig` |
-
-Also sample 2-3 existing source files to detect:
+Check for lint and formatter config files and summarize what they enforce. Also sample 2-3 existing source files to detect:
 - Naming style (camelCase / snake_case / PascalCase)
 - Import ordering convention
 - Comment style and density
@@ -113,16 +90,7 @@ Read the manifest file and categorize:
 
 ## Step 6 — Identify architecture patterns
 
-Based on directory structure and code samples, classify:
-
-| Pattern | Indicators |
-|---------|-----------|
-| MVC | `controllers/`, `models/`, `views/` directories |
-| Layered | `services/`, `repositories/`, `handlers/` directories |
-| Feature-based | Directories named after features with co-located files |
-| Monorepo | `packages/`, `apps/` with workspace config |
-| Serverless | `functions/`, `api/` routes, serverless config |
-| Microservices | Multiple `services/` with independent configs |
+Based on directory structure and code samples, classify the architecture pattern (e.g., MVC, layered, feature-based, monorepo, serverless, microservices).
 
 ## Step 7 — Check CI/CD configuration
 
