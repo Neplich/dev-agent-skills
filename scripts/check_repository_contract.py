@@ -1621,6 +1621,75 @@ def validate_tracked_file_policy(root: Path, errors: list[ContractError]) -> Non
             add_error(errors, root / rel, "tracked file is blocked by repository policy")
 
 
+KIMI_PLUGIN_NAME_RE = re.compile(r"[a-z0-9][a-z0-9_-]{0,63}")
+
+
+def validate_kimi_plugin(root: Path, errors: list[ContractError]) -> None:
+    path = root / ".kimi-plugin" / "plugin.json"
+    if not path.exists():
+        add_error(errors, path, "kimi plugin manifest must exist")
+        return
+
+    payload = load_json(path, errors)
+    if not isinstance(payload, dict):
+        add_error(errors, path, "top-level payload must be an object")
+        return
+
+    name = payload.get("name")
+    if not isinstance(name, str) or not KIMI_PLUGIN_NAME_RE.fullmatch(name):
+        add_error(
+            errors,
+            path,
+            "name must match [a-z0-9][a-z0-9_-]{0,63}",
+        )
+
+    marketplace = load_json(root / ".claude-plugin" / "marketplace.json", errors)
+    metadata_version: Any = None
+    if isinstance(marketplace, dict):
+        metadata = marketplace.get("metadata")
+        if isinstance(metadata, dict):
+            metadata_version = metadata.get("version")
+    if isinstance(metadata_version, str) and payload.get("version") != metadata_version:
+        add_error(
+            errors,
+            path,
+            f"version must match marketplace metadata.version {metadata_version!r}",
+        )
+
+    skills = payload.get("skills")
+    # Kimi 官方示例允许单字符串形态（"skills": "./skills/"），归一化为列表再校验
+    if isinstance(skills, str):
+        skills = [skills]
+    if not isinstance(skills, list) or not skills:
+        add_error(errors, path, "skills must be a non-empty list of './' paths")
+    else:
+        for entry in skills:
+            if (
+                not isinstance(entry, str)
+                or not entry.startswith("./")
+                or not is_safe_relative_path(entry[2:])
+            ):
+                add_error(errors, path, f"skills entry {entry!r} must be a safe './' relative path")
+            elif not (root / entry).is_dir():
+                add_error(errors, path, f"skills path {entry!r} does not exist")
+
+    session_start = payload.get("sessionStart")
+    if session_start is not None:
+        session_skill = session_start.get("skill") if isinstance(session_start, dict) else None
+        if not isinstance(session_skill, str) or not session_skill:
+            add_error(errors, path, "sessionStart.skill must be a non-empty string")
+        elif not any(
+            skill_dir.name == session_skill and (skill_dir / "SKILL.md").exists()
+            for skill_dir in root.glob("agents/*/skills/*")
+            if skill_dir.is_dir()
+        ):
+            add_error(
+                errors,
+                path,
+                f"sessionStart.skill {session_skill!r} has no matching agents/*/skills/ directory",
+            )
+
+
 def validate_all(root: Path | None = None) -> list[ContractError]:
     root = root or repo_root()
     errors: list[ContractError] = []
@@ -1635,6 +1704,7 @@ def validate_all(root: Path | None = None) -> list[ContractError]:
     validate_legacy_artifact_metadata(root, errors)
     validate_formal_document_author(root, errors)
     validate_tracked_file_policy(root, errors)
+    validate_kimi_plugin(root, errors)
     return errors
 
 

@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -1402,3 +1403,123 @@ def test_previous_archive_is_always_validated(
 
     assert len(errors) == 1
     assert expected_message in errors[0].message
+
+
+def write_kimi_fixture(
+    root: Path,
+    *,
+    manifest: dict | None,
+    marketplace_version: str = "0.3.5",
+    skill_dir: str = "agents/product_manager/skills/pm-agent",
+) -> Path:
+    (root / ".claude-plugin").mkdir(parents=True, exist_ok=True)
+    (root / ".claude-plugin" / "marketplace.json").write_text(
+        json.dumps({"metadata": {"version": marketplace_version}})
+    )
+    if skill_dir is not None:
+        skill_path = root / skill_dir
+        skill_path.mkdir(parents=True, exist_ok=True)
+        (skill_path / "SKILL.md").write_text("---\nname: pm-agent\n---\n")
+    if manifest is not None:
+        (root / ".kimi-plugin").mkdir(parents=True, exist_ok=True)
+        (root / ".kimi-plugin" / "plugin.json").write_text(json.dumps(manifest))
+    return root
+
+
+def valid_kimi_manifest() -> dict:
+    return {
+        "name": "dev-agent-skills",
+        "version": "0.3.5",
+        "skills": ["./agents/product_manager/skills/"],
+        "sessionStart": {"skill": "pm-agent"},
+    }
+
+
+def test_kimi_plugin_valid_manifest_passes(tmp_path: Path) -> None:
+    root = write_kimi_fixture(tmp_path, manifest=valid_kimi_manifest())
+
+    errors: list = []
+    contract.validate_kimi_plugin(root, errors)
+
+    assert errors == []
+
+
+def test_kimi_plugin_missing_manifest_fails(tmp_path: Path) -> None:
+    root = write_kimi_fixture(tmp_path, manifest=None)
+
+    errors: list = []
+    contract.validate_kimi_plugin(root, errors)
+
+    assert len(errors) == 1
+    assert "must exist" in errors[0].message
+
+
+def test_kimi_plugin_version_must_match_marketplace(tmp_path: Path) -> None:
+    manifest = valid_kimi_manifest()
+    manifest["version"] = "0.0.1"
+    root = write_kimi_fixture(tmp_path, manifest=manifest)
+
+    errors: list = []
+    contract.validate_kimi_plugin(root, errors)
+
+    assert len(errors) == 1
+    assert "version must match marketplace metadata.version" in errors[0].message
+
+
+def test_kimi_plugin_name_pattern_enforced(tmp_path: Path) -> None:
+    manifest = valid_kimi_manifest()
+    manifest["name"] = "Dev-Agent-Skills"
+    root = write_kimi_fixture(tmp_path, manifest=manifest)
+
+    errors: list = []
+    contract.validate_kimi_plugin(root, errors)
+
+    assert len(errors) == 1
+    assert "name must match" in errors[0].message
+
+
+def test_kimi_plugin_skills_path_must_exist(tmp_path: Path) -> None:
+    manifest = valid_kimi_manifest()
+    manifest["skills"] = ["./agents/missing/skills/"]
+    root = write_kimi_fixture(tmp_path, manifest=manifest)
+
+    errors: list = []
+    contract.validate_kimi_plugin(root, errors)
+
+    assert len(errors) == 1
+    assert "does not exist" in errors[0].message
+
+
+def test_kimi_plugin_session_start_skill_must_exist(tmp_path: Path) -> None:
+    manifest = valid_kimi_manifest()
+    manifest["sessionStart"] = {"skill": "unknown-skill"}
+    root = write_kimi_fixture(tmp_path, manifest=manifest)
+
+    errors: list = []
+    contract.validate_kimi_plugin(root, errors)
+
+    assert len(errors) == 1
+    assert "sessionStart.skill" in errors[0].message
+
+
+def test_kimi_plugin_single_string_skills_form_accepted(tmp_path: Path) -> None:
+    manifest = valid_kimi_manifest()
+    manifest["skills"] = "./agents/product_manager/skills/"
+    root = write_kimi_fixture(tmp_path, manifest=manifest)
+
+    errors: list = []
+    contract.validate_kimi_plugin(root, errors)
+
+    assert errors == []
+
+
+def test_kimi_plugin_session_start_skill_glob_metachar_rejected(tmp_path: Path) -> None:
+    manifest = valid_kimi_manifest()
+    manifest["sessionStart"] = {"skill": "[p]m-agent"}
+    root = write_kimi_fixture(tmp_path, manifest=manifest)
+
+    errors: list = []
+    contract.validate_kimi_plugin(root, errors)
+
+    assert len(errors) == 1
+    assert "sessionStart.skill" in errors[0].message

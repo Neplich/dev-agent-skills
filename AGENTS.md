@@ -33,7 +33,7 @@
 **市场注册**
 
 - `.claude-plugin/marketplace.json` 定义所有 Agent 及其 skills
-- `.claude-plugin/marketplace.json` 的 `metadata.version` 必须等于当前仓库 release 版本但不带 `v` 前缀；每次创建 release tag 前，先把该字段更新到目标版本，并确认存在对应 `docs/changelog/changelog-v{version}.md` 与根 `CHANGELOG.md` 索引
+- `.claude-plugin/marketplace.json` 的 `metadata.version` 必须等于当前仓库 release 版本但不带 `v` 前缀；每次创建 release tag 前，先把该字段更新到目标版本，并确认存在对应 `docs/changelog/changelog-v{version}.md` 与根 `CHANGELOG.md` 索引。`.kimi-plugin/plugin.json` 的 `version` 必须与 `metadata.version` 保持一致（由 `check_repository_contract.py` 强制校验）
 - `skills-lock.json` 保存已安装 skill 的元数据
 
 ### Agent 协作流
