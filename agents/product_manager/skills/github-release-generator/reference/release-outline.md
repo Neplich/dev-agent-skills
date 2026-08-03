@@ -78,14 +78,17 @@ The `## 升级说明` section is mandatory and must follow this fixed structure
 verbatim. A placeholder sentence or a missing instruction subsection is not a
 submit-ready upgrade note and blocks draft creation or update.
 
-1. **简述**：首段为固定结构，内容受已确认事实源约束。当事实源确认该宿主
-   的 plugin 更新事实时（本仓库 marketplace 发版即此语境），以「无破坏性
-   变更，也没有新增 plugin。7 个 role plugin 均更新到 `v{VERSION}`。」开头；
-   存在破坏性变更或事实源不含 plugin 更新事实时，按事实源如实改写，不得
-   新增事实源之外的发布声明；随后按需追加「注意 N 项契约/输出变化」段落，
-   写明生效范围与影响面。
-2. **指令**：`### Claude Code`、`### Codex` 与 `### Kimi Code` 三个小节，
-   内容为以下固定模板（逐字使用，不随版本内容裁剪或增删）：
+1. **简述**：首段为固定结构，内容受已确认事实源约束。仅当事实源同时确认
+   无新增 plugin、plugin 集合与当前 7 个 role plugin 一致、且无破坏性变更
+   时（本仓库 marketplace 发版即此语境），以「无破坏性变更，也没有新增
+   plugin。7 个 role plugin 均更新到 `v{VERSION}`。」开头；存在破坏性变更
+   或事实源不完整支持该句时，按事实源如实改写（新增数量、plugin 集合按
+   已确认 marketplace 事实推导），不得新增事实源之外的发布声明；随后按需
+   追加「注意 N 项契约/输出变化」段落，写明生效范围与影响面。
+2. **指令**：`### Claude Code`、`### Codex` 与 `### Kimi Code` 三个小节。
+   仅当宿主是本 marketplace（dev-agent-skills）发版时，内容为以下固定模板
+   （逐字使用，不随版本内容裁剪或增删）；其他宿主不适用这些安装命令，按
+   已确认事实源给出对应的升级动作，或省略不适用的小节：
 
    ```text
    /plugin marketplace update dev-agent-skills
@@ -104,13 +107,14 @@ submit-ready upgrade note and blocks draft creation or update.
    ```
 
    ```text
-   /plugins install https://github.com/Neplich/dev-agent-skills/tree/main
+   /plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/v{VERSION}
    ```
 
-3. **收尾句**：收尾句必须存在。事实源确认 plugin 更新事实时，以「更新
-   仓库后重新运行安装器，即可同步全部 7 个 role plugin 的 `v{VERSION}`
-   能力。」结束；其他宿主按事实源给出对应的升级动作收尾，不得写事实源
-   之外的安装器或 plugin 声明。
+3. **收尾句**：收尾句必须存在。仅当事实源确认无新增 plugin 且 plugin
+   集合与当前 7 个 role plugin 一致时，以「更新仓库后重新运行安装器，
+   即可同步全部 7 个 role plugin 的 `v{VERSION}` 能力。」结束；其他宿主
+   按事实源给出对应的升级动作收尾，不得写事实源之外的安装器或 plugin
+   声明。
 
 ## Traceability Checks
 

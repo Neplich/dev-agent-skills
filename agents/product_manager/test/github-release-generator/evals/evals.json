@@ -138,7 +138,7 @@
       "name": "outline 四节结构与内部质量证据排除",
       "description": "验证 GitHub Release 完整预览只采用 outline 规定的四节结构、标题符合 vX.Y.Z - 主题概述 门禁、升级说明按固定结构呈现，并排除相邻材料中的 eval、assertion、review 与 QA 内部质量证据。",
       "prompt": "根据 `release-package.md`、`docs/site/release-notes/v1.0.0.md` 和 `github-evidence.md` 生成 GitHub Release 完整预览。保持站内事实含义与范围，不执行任何写操作。",
-      "expected_output": "预览逐项保持已确认的功能、架构、数据库、部署、资产、升级与风险事实；标题为 v1.0.0 - 与已确认事实主题相关的概述，非裸 tag；正文只包含重点更新、其他改进、升级说明、变更明细四节，不采用相邻风格小节，也不包含 skill eval、assertion 计数、review 轮次或 QA 证据汇总；升级说明按固定结构完整呈现（无破坏性变更开头句、Claude Code/Codex/Kimi Code 三小节、收尾句），不只写占位句。",
+      "expected_output": "预览逐项保持已确认的功能、架构、数据库、部署、资产、升级与风险事实；标题为 v1.0.0 - 与已确认事实主题相关的概述，非裸 tag；正文只包含重点更新、其他改进、升级说明、变更明细四节，不采用相邻风格小节，也不包含 skill eval、assertion 计数、review 轮次或 QA 证据汇总；升级说明按固定结构完整呈现（简述、Claude Code/Codex/Kimi Code 三小节、收尾句俱在），plugin 更新类声明只在已确认事实源支持时使用（本 fixture 事实源不含 plugin 更新事实，不得臆造），不只写占位句。",
       "workspace": "workspace/eval-005-outline-sections-quality-exclusion",
       "assertions": [
         {
