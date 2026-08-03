@@ -27,6 +27,7 @@
 - 31 个内部 specialist skills，覆盖产品、工程、QA、DevOps、设计、安全和正式文档细分任务
 - Claude Code marketplace 配置
 - Codex 原生 skill discovery 安装入口
+- Kimi Code 原生插件 manifest
 - Agent 级 eval fixtures 与本地验证脚本
 
 > [!NOTE]
@@ -61,6 +62,16 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 ```
 
 实现原理与排障见 [Codex Guide](./docs/README.codex.md)。
+
+### Kimi Code
+
+```text
+/plugins install https://github.com/Neplich/dev-agent-skills
+```
+
+仓库内置 `.kimi-plugin/plugin.json` manifest：7 个角色 skill 目录注册为单个插件，`pm-agent` 随会话启动自动加载（`sessionStart.skill`）。需要不可变版本时用 `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/vX.Y.Z` 固定 tag。
+
+已按 Codex 方式安装到 `~/.agents/skills/` 的 skill 也会被 Kimi Code 自动扫描到；推荐优先使用上面的原生插件方式。
 
 ## 使用示例
 
