@@ -11,46 +11,45 @@
 ## Test Set or Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture version: HEAD `a452319`
-- Fresh run time: `2026-08-03 11:58:33 +0800`
-- Runtime directory: `tmp/eval-runs/issue-198-brd/designer/ui-ux-design/eval-001-saas-dashboard/`
-- Fixture: prompt plus `eval_metadata.json`; no PM handoff, PRD, or confirmed `feature_path`
+- Fixture version: `chore/198-remove-brd-branch working tree, eval-001 fixture repaired`
+- Fresh run time: `2026-08-03 12:25:58 +0800`
+- Runtime directory: `tmp/eval-runs/issue-215-saas-dashboard/`
+- Fixture: prompt, workspace README, and confirmed PM spec at `docs/pm/saas-dashboard/PRD.md`
 
 ## Latest Result
 
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **FULL**
-Overall result: FAIL
+Overall result: PASS
 
-All three assertions were evaluated. The failure is an existing fixture/assertion entry-basis mismatch, not a BRD-removal regression: the current skill correctly refuses to invent the feature-scoped output path.
+All three assertions were evaluated and passed. The repaired fixture supplies the confirmed `saas-dashboard` feature path and PM scope needed for the skill to produce the canonical design artifact.
 
 ## Assertion Results
 
-- `assertion_1`: **FAIL** — the assertion requires `docs/design/{feature_path}/ui-ux-spec.md` from a confirmed `feature_path`, but the fixture supplies no handoff, PRD, or path. Writing the artifact would violate the PM handoff and feature-path gates.
-- `assertion_2`: **PASS** — the gated response produces no code change, engineering steps, or test execution.
-- `assertion_3`: **PASS** — it explains that eventual implementation belongs to `engineer-agent`, while the immediate missing prerequisite returns to PM.
+- `assertion_1`: **PASS** — the PRD confirms `feature_path: saas-dashboard`; the with-skill run writes `docs/design/saas-dashboard/ui-ux-spec.md` and includes a Mermaid user journey, ASCII layouts, and interaction behaviors.
+- `assertion_2`: **PASS** — the artifact and response remain design-only and explicitly exclude code changes, engineering implementation steps, and test execution.
+- `assertion_3`: **PASS** — the design handoff and response explicitly identify `engineer-agent` as the next role if implementation continues.
 
 ## With-Skill Behavior
 
-- Stops at the PM handoff entry gate and does not fabricate a design path.
-- Keeps the response design-only and preserves the eventual Designer-to-Engineer boundary.
-- Does not request, read, or cite BRD; BRD removal causes no behavioral difference in the reached gate path.
+- Reads the confirmed PM spec and resolves the canonical output path as `docs/design/saas-dashboard/ui-ux-spec.md`.
+- Produces the expected structured specification: user journey, page inventory, desktop/tablet ASCII layouts, component list, interaction and state behavior, responsive design, and design handoff.
+- Stops at the Designer boundary without code, implementation-task decomposition, or test execution, and routes any continuation to `engineer-agent`.
 
 ## Fresh Without-Skill Baseline
 
-- This baseline was newly generated in this run from the same prompt and fixture only; it did not apply the Designer README, `ui-ux-design` skill, with-skill output, historical baseline, or prior comparison.
-- It provides generic sidebar, project/task, member, activity, responsive, and state suggestions, but misses the repository handoff/path gate and canonical artifact requirement.
-- It also contains no BRD reference.
+- This baseline was newly generated in this run from the same prompt and repaired fixture only; it did not read or apply the Designer README, `ui-ux-design` skill, with-skill output, historical baseline, or prior comparison.
+- It provides generic sidebar, project/task, member, activity, responsive, and state suggestions, but does not produce the canonical repository artifact or a Mermaid journey, ASCII layouts, or complete component inventory.
+- It stops loosely before development but does not name `engineer-agent` or state the skill's hard no-implementation boundary. The paired run therefore has clear behavioral differentiation.
 
 ## Failures
 
-- `assertion_1` cannot pass with the current fixture because the required confirmed `feature_path` is absent.
-- Per task boundary, the fixture and assertion were not modified.
+- None. No assertion was unexercised, so coverage is full.
 
 ## Next Steps
 
-- Fix the fixture in a separate authorized change by adding an equivalent confirmed PM handoff or PRD with canonical `feature_path`, then rerun this case.
-- No Designer skill change is indicated by this result.
+- Keep the repaired fixture changes with the owning Issue #215 / PR #214 work.
+- No `ui-ux-design` skill change is indicated by this result.
 
 ## Runtime Artifact Policy
 

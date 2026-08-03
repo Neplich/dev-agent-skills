@@ -2,9 +2,9 @@
   "eval_id": "eval-001-saas-dashboard",
   "eval_name": "saas-dashboard-design-structure",
   "workspace_root": "agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard",
-  "prompt": "Design the UI/UX for a project management dashboard. Users need to view projects, tasks, team members, and activity timeline. Target audience: small teams (5-20 people).",
+  "prompt": "PM 已经产出 saas-dashboard 的 PRD（docs/pm/saas-dashboard/PRD.md）：项目管理 dashboard，用户需要查看 projects、tasks、team members 和 activity timeline，目标用户为 5-20 人小团队。请 designer agent 阅读该 spec，补充 UI/UX 设计文档。设计完成后停止在 handoff，不要直接开始修改代码或输出实现步骤。",
   "with_skill_outputs": [
-    "with_skill/docs/design/ui-ux-spec.md"
+    "with_skill/docs/design/saas-dashboard/ui-ux-spec.md"
   ],
   "without_skill_outputs": [
     "without_skill/outputs/design-notes.md"
@@ -13,7 +13,7 @@
     {
       "id": "with_skill_has_structured_spec",
       "description": "With skill output contains the expected UI/UX spec structure",
-      "target": "with_skill/docs/design/ui-ux-spec.md",
+      "target": "with_skill/docs/design/saas-dashboard/ui-ux-spec.md",
       "all_of": [
         "# UI/UX Design Specification",
         "## 2. User Journey",
