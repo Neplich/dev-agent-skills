@@ -36,7 +36,7 @@
 ## With Skill Behavior
 
 - 完整应用 skill 与 reference：标题强格式、简述句 N=6 按历史 manifest 推导、三小节按目标 tag 实际能力条件省略（Claude 省略 + durable 平台限制说明、Codex 无 TARGET_TAG 省略、Kimi 无 manifest 省略）、无固定版本安装路径时明确声明、收尾句 N=6。
-- 保持站内事实与排除内部质量证据；preview only，无任何写操作；无运行期产物残留。
+- 保持站内事实与排除内部质量证据；preview only，无任何写操作；fixture 无 `release-preview.md`/`release-action.md` 残留。
 
 ## Without Skill Baseline
 
