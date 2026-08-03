@@ -31,7 +31,9 @@ uv run --with pytest pytest \
   agents/docs/test/test_docs_run_eval.py \
   agents/test_doc_contract.py \
   agents/test_eval_contract.py \
-  scripts/test_install_codex_skills.py
+  scripts/test_install_codex_skills.py \
+  scripts/test_summarize_eval_results.py \
+  scripts/test_check_repository_contract.py
 ```
 
 可选 JSON 静态格式检查：
