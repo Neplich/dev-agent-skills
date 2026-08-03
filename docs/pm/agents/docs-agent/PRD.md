@@ -268,7 +268,7 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 | 2 | audit 报告归档路径：沿用 QA `_reports/{platform-version}/` 先例，还是站点 `.meta/` 或 `docs/docs/`？ | Maintainer | 2026-07-14 | 归档到宿主站点 `docs/site/.meta/audit/audit-{version}.md`；`.meta/` 为机器消费区，不进导航、不受 frontmatter 校验约束 |
 | 3 | `visibility` 双站点是否进入 MVP，还是先单站点、双站点后置？ | Maintainer | 2026-07-14 | visibility 双站点全进 MVP：bootstrap 骨架内置 visibility 过滤生成脚本、public / internal 双首页与双站点配置 |
 | 4 | bootstrap 是否额外生成宿主项目本地维护 skill（仿 `hub-docs-maintainer`），还是逻辑全部留在 marketplace skill？ | Maintainer | 2026-07-14 | 不生成宿主本地维护 skill；逻辑全部留在 marketplace 的 `formal-docs-sync`，宿主差异落 `standards/` 与 change-map 数据层 |
-| 5 | `pm-agent` release 类 skill 输出目标切换到站点 `release-notes/` 的触发条件与向后兼容方式？ | Maintainer | 2026-07-14 | 按站点存在性自动切换：宿主存在 `docs/site/release-notes/` 时 release 类 skill 输出指向站点目录，不存在时维持现状，无配置项；切换范围仅限 release-notes 输出，changelog 归档路径不变 |
+| 5 | `pm-agent` release 类 skill 输出目标切换到站点 `release-notes/` 的触发条件与向后兼容方式？ | Maintainer | 2026-07-14 | release 类产物按 owner 拆分：站内 Release Notes 固定由 `docs-agent:release-notes-generator` 写入 `docs/site/release-notes/`，站点基础缺失时不初始化该路径；GitHub Release 由 PM `github-release-generator` 生成；无文档站宿主时使用维护者确认的版本事实源，不再回退到旧 `docs/release-notes/` 路径；changelog 归档路径不变 |
 | 6 | MVP 的 sync 链路只覆盖 api 文档是否成立，database / ops 的迭代切分点？ | Maintainer | 2026-07-14 | MVP 仅覆盖 api 链路（feature 落地节点）；database、ops 作为后续两次迭代 |
 | 7 | 存量回填落在 bootstrap、独立 skill 还是 sync 模式？ | Maintainer | 2026-07-14 | 作为 formal-docs-sync 的第四模式；复用同一套模板映射、写作纪律与 change-map 生长逻辑 |
 | 8 | 存量回填是否进 MVP，覆盖范围如何切？ | Maintainer | 2026-07-14 | 进 MVP，api 链路先行；database、ops 回填随各自迭代补齐 |

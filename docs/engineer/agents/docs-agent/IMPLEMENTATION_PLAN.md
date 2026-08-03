@@ -5,7 +5,7 @@ version: "0.6.0"
 status: Draft
 author: "Neplich Claude"
 date: "2026-07-15"
-last_updated: "2026-07-19"
+last_updated: "2026-08-03"
 feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
 parent_feature: "agents"
@@ -101,7 +101,7 @@ TRD 第 13 节的两个 Open Question 在本计划中落定如下：
 | 修改 | `agents/designer/skills/ui-ux-design/SKILL.md` | 为需要读取现有产品与界面事实的 Designer specialist 增加一行消费契约指针。 |
 | 修改 | `agents/security/skills/{appsec-checklist,authz-reviewer,dependency-risk-auditor,privacy-surface-mapper}/SKILL.md` | 为 4 个 Security specialist 增加一行消费契约指针。 |
 | 修改 | `agents/engineer/skills/debugger/SKILL.md` | 在通用指针之外，把命中的 API contract 纳入 expected-behavior 依据来源之一，并保留与 Approved PRD/TRD、测试和代码证据的一致性门禁。 |
-| 修改 | `agents/product_manager/skills/release-notes-generator/SKILL.md` | 仅按 `docs/site/release-notes/` 存在性切换 release-notes 输出目标；站点不存在时保持原路径和行为。 |
+| 修改 | `agents/docs/skills/release-notes-generator/SKILL.md`（已从 PM 迁入 docs-agent） | release-notes 输出目标固定为宿主站点 `docs/site/release-notes/`；站点基础缺失时不初始化该路径，无站点宿主由 PM `github-release-generator` 消费维护者确认的版本事实源。 |
 | 修改 | `agents/product_manager/test/{feature-catalog,github-reader,idea-to-spec,release-notes-generator}/evals/evals.json`、`agents/engineer/test/{codebase-analyzer,trd-gen,feature-implementor,debugger,test-writer}/evals/evals.json`、`agents/qa/test/{spec-based-tester,exploratory-tester,bug-analyzer,regression-suite}/evals/evals.json`、`agents/devops/test/{deployment-planner,env-config-auditor,incident-playbook-writer,cicd-bootstrap}/evals/evals.json`、`agents/designer/test/ui-ux-design/evals/evals.json`、`agents/security/test/{appsec-checklist,authz-reviewer,dependency-risk-auditor,privacy-surface-mapper}/evals/evals.json` | 为上述消费侧 skill 增补命中 change-map、无站点、旧版本三类语义 assertions；这些 eval 定义当前均存在。 |
 | 新增 | 上述 eval 目录各自的 `workspace/<新增消费回归用例>/**`（含 durable `comparison.md`） | 为三类消费行为建立隔离 fixture；新用例编号在 PR 1 依据各 `evals.json` 的现有最大编号顺延，避免覆盖既有 workspace。 |
 | 修改 | `skills-lock.json` | 刷新 PR 1 中所有被修改 skill 的 `computedHash`。 |
