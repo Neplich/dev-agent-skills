@@ -9,7 +9,7 @@
 
 ## Review Context
 
-- Issue: #220（marketplace 正向分支 eval 覆盖）；第 2 轮为 PR #221 review 意见修复后重跑
+- Issue: #220（marketplace 正向分支 eval 覆盖）；第 3 轮为 outline 收尾句规则与断言最终修订后验证（无固定版本路径不承诺同步该 tag 能力、mock 证据声明、完整 pre-tag handoff）
 - Date: 2026-08-03
 - Final judge: 当前会话中的 fresh Codex validation agent
 - Judge 独立读取当前 skill、reference、eval 定义/metadata/fixture 与 fresh 双侧 candidate；verdict 完成前未读取 durable `comparison.md` 或旧 run tmp。
@@ -20,9 +20,9 @@
 
 - Schema: `evals.json` v1.0
 - Fixture: 伪造 dev-agent-skills marketplace 历史 tag（v0.9.0，6 role plugins、无 TARGET_TAG 支持、无 Kimi manifest；含同版本 pre-tag ready_for_tag 历史与 post-tag release_verified）、confirmed site Release Notes、curated GitHub evidence（维护者已确认）
-- With-skill evidence: `tmp/eval-runs/issue-220-r2/with_skill/eval-008-marketplace-historical-tag-limit-upgrade-note/candidate-output.md`
-- Without-skill evidence: `tmp/eval-runs/issue-220-r2/without_skill/eval-008-marketplace-historical-tag-limit-upgrade-note/candidate-output.md`
-- Judge verdict: `tmp/eval-runs/issue-220-r2/judge/verdict.md`
+- With-skill evidence: `tmp/eval-runs/issue-220-r3/with_skill/eval-008-marketplace-historical-tag-limit-upgrade-note/candidate-output.md`
+- Without-skill evidence: `tmp/eval-runs/issue-220-r3/without_skill/eval-008-marketplace-historical-tag-limit-upgrade-note/candidate-output.md`
+- Judge verdict: `tmp/eval-runs/issue-220-r3/judge/verdict.md`
 
 ## Assertions
 
@@ -41,13 +41,13 @@
 ## Without Skill Baseline
 
 - 来源：issue-220-r2 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
-- 行为：3/6 assertions PASS。已内化「按历史 tag 实际能力做条件省略」与「无固定版本路径时明确声明」的核心安全意图（三项省略断言直接 PASS），也能从 fixture 识别 6 个 plugin 与能力边界；但未呈现标题强格式、升级说明固定首句与固定收尾句——3 条断言保持 skill 增量区分度。
+- 行为：0/6 assertions PASS（第 3 轮，修正后断言与最终 fixture）。未省略 `### Claude Code`/`### Codex`/`### Kimi Code` 小节（保留为一般性说明），也未呈现标题强格式、固定首句与「无固定版本路径」条件化收尾——6 条断言全部保持 skill 增量区分度。
 
 ## Failures / Findings
 
 - 无 with-skill assertion failure。
 - 无 NOT EXERCISED；全部 6 条断言由本地 fixture 完整触发，Coverage FULL。
-- 零区分度观察（Codex/Kimi 条件省略被 baseline 白捡）：属「模型已内化」而非规则泄漏，与 #188 审查方向一致；skill 保留价值在标题强格式、固定首句/收尾句的 manifest 推导、durable 平台限制说明等断言上。
+- 区分度观察：第 3 轮修正断言后，条件省略断言（Claude/Codex/Kimi 小节省略与「无固定版本路径」声明）在 without-skill 侧也 FAIL（baseline 保留小节或未形成统一声明），skill 增量覆盖全部 6 条断言；此前第 2 轮观察到 Codex/Kimi 省略被 baseline 白捡的现象随断言收紧而消失。
 
 ## Next Steps
 

@@ -9,7 +9,7 @@
 
 ## Review Context
 
-- Issue: #220（marketplace 正向分支 eval 覆盖）
+- Issue: #220（marketplace 正向分支 eval 覆盖）；第 3 轮为 outline 收尾句规则修订后最终验证（无固定版本路径不承诺同步该 tag 能力）
 - Date: 2026-08-03
 - Final judge: 当前会话中的 fresh Codex validation agent
 - Judge 独立读取当前 skill、reference、eval 定义/metadata/fixture 与 issue-220 fresh 双侧 candidate；verdict 完成前未读取 durable `comparison.md` 或旧 run tmp。
@@ -19,9 +19,9 @@
 
 - Schema: `evals.json` v1.0
 - Fixture: 伪造 dev-agent-skills marketplace 宿主目标 tag（v1.0.0，7 role plugins、TARGET_TAG 支持、Kimi manifest 存在）、confirmed site Release Notes、curated GitHub evidence
-- With-skill evidence: `tmp/eval-runs/issue-220/with_skill/eval-007-marketplace-full-capability-upgrade-note/candidate-output.md`
-- Without-skill evidence: `tmp/eval-runs/issue-220/without_skill/eval-007-marketplace-full-capability-upgrade-note/candidate-output.md`
-- Judge verdict: `tmp/eval-runs/issue-220/judge/verdict.md`
+- With-skill evidence: `tmp/eval-runs/issue-220-r3/with_skill/eval-007-marketplace-full-capability-upgrade-note/candidate-output.md`
+- Without-skill evidence: `tmp/eval-runs/issue-220-r3/without_skill/eval-007-marketplace-full-capability-upgrade-note/candidate-output.md`
+- Judge verdict: `tmp/eval-runs/issue-220-r3/judge/verdict.md`
 
 ## Assertions
 
@@ -41,7 +41,7 @@
 ## Without Skill Baseline
 
 - 来源：issue-220 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
-- 行为：0/7 assertions PASS。能从 fixture 识别 7 个 plugin、TARGET_TAG 与 Kimi manifest 事实，也能保持站内事实与排除内部质量证据，但未组织成断言要求的强标题、三小节可执行升级模板与固定收尾句——标题强格式、逐字命令模板、durable 平台限制说明与收尾句保持明确 skill 增量区分度。
+- 行为：1/7 assertions PASS（第 3 轮，修正后断言与最终 fixture）。仅 `plugin_list_derived_from_manifest` 满足（能按 manifest 列出 7 个 plugin）；标题强格式、固定首句、三小节逐字命令模板、收尾句均缺失——skill 增量区分度明确。
 
 ## Failures / Findings
 
