@@ -12,7 +12,9 @@ parent_feature: "repository-governance"
 feature_level: "2"
 child_features: "N/A"
 last_updated: "2026-08-03"
-related_issue: "https://github.com/Neplich/dev-agent-skills/issues/37"
+related_issues:
+  - "https://github.com/Neplich/dev-agent-skills/issues/37"
+  - "https://github.com/Neplich/dev-agent-skills/issues/197"
 related_docs:
   - "AGENTS.md"
   - "agents/product_manager/skills/idea-to-spec/SKILL.md"

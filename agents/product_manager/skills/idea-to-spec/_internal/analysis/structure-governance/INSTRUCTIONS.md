@@ -141,6 +141,9 @@ The report must state these constraints for any later approved implementation:
    `feature_level`, `related_docs`, and the parent PRD `child_features` index.
    For a reparenting move, update both sides: remove the child from the old
    parent PRD's `child_features` and add it to the new parent PRD's index.
+   Reserved parent namespaces (`repository-governance`, `agent-collaboration`)
+   act as parents without a physical root PRD — skip the parent index update
+   when the parent side is one of them.
 2. Directory moves and file renames use `git mv`; never replace them with
    create-plus-delete. In a pure split, use `git mv` for the file that carries
    the original document body, then create additional child documents normally.
@@ -154,7 +157,11 @@ The report must state these constraints for any later approved implementation:
    document, and each changed formal document records the migration in its
    frontmatter changelog.
 7. Treat the approved structural implementation as `change_tier: major` and
-   route it through the normal PM handoff and confirmation gates. The audit,
+   route it through the normal PM handoff and confirmation gates. Every move
+   names a per-role owner: PM paths go to `idea-to-spec`, Engineer artifacts to
+   `trd-gen` (active plans to `feature-implementor`), and Design, QA, DevOps,
+   and Security mirrors to their owning role agents; each owner moves only its
+   own role's directory with `git mv` after user confirmation. The audit,
    prompts, and report themselves remain read-only.
 
 This module never performs the moves itself.

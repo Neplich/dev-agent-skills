@@ -10,9 +10,9 @@
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture version: current uncommitted workspace atop HEAD `74c3b26`. The workspace includes the review fixes that exclude `implementation-plans/archive/**` and `_legacy/**` from active overlong/L2b governance evidence, make child-PRD generation reconcile the parent `child_features` index from the complete direct-child set, and synchronize `related_prd` plus other applicable `related_*` path fields during approved Engineer structure changes. This fixture remains the confirmed level-1 `notification-center` PRD with no direct child directories, 3 explicit domains, 10 user stories, 8 functional requirements, and a polling-based Engineer TRD. The case directly exercises derive-first `child_features` reconciliation and the expanded downstream reference-impact proposal; it does not create a child PRD, so the `prd-gen` parent-index write path is present in the evaluated workspace but not independently exercised here.
-- Fresh run: `2026-08-03 17:44:54 +0800`
-- Runtime directory: `tmp/eval-runs/issue-197-evals-r7/eval-009/`
+- Fixture version: current uncommitted workspace atop HEAD `5af2134`. The workspace includes the latest review fixes: reserved namespace parents (`repository-governance` / `agent-collaboration`) need no physical root PRD or parent-index update; approved moves have per-role owners and each owner uses `git mv` only for its own directory; child-PRD creation refreshes the complete parent index and also bumps the parent version, refreshes `last_updated`, and adds changelog; contract PRD/TRD use `related_issues` and include issue #197. The eval fixture remains the confirmed level-1 `notification-center` PRD with no child directory, 3 domains, 10 user stories, 8 functional requirements, and a polling-based Engineer TRD. The case exercises the L2b gate and records the parent-update/per-role-owner constraints in the proposal; it does not create a child PRD or use a reserved namespace, so those positive execution paths are not separate assertions here.
+- Fresh run: `2026-08-03 18:05:27 +0800`
+- Runtime directory: `tmp/eval-runs/issue-197-evals-r8/eval-009/`
 
 ## Latest Result
 
@@ -22,23 +22,23 @@
 
 ## Assertion Results
 
-- `applies_requested_change`: PASS — the with-skill run produced a complete PRD candidate in `updated-PRD.md`; FR-02, Delivery Strategy, and AC-2 now specify event publication, subscribed consumers, removal of polling, and a 10-second urgent-delivery criterion. Direct children were derived from the fixture tree first, and `child_features: N/A` remains only because no direct child path exists.
-- `detects_l2b_signals`: PASS — the with-skill response explicitly counted 3 independent domains and 18 combined US/FR rows as two L2b signals, while recording that the document is below 500 lines.
-- `presents_split_proposal`: PASS — the response proposed `notification-center/delivery-strategy`, `notification-center/subscription-management`, and `notification-center/channel-configuration`; mapped parent-retained and child-bound content; and listed impacts for `docs/engineer`, `docs/design`, `docs/qa/e2e`, `docs/devops`, and `docs/security`. The Engineer impact explicitly covers TRD/API/ADR metadata, `related_prd`, other applicable `related_*` paths, active-plan ownership, and archive preservation.
-- `waits_for_confirmation`: PASS — the response states that no split, child-PRD creation, `git mv`, or downstream mirror move occurs before explicit confirmation, and an approved restructure proceeds separately as `change_tier: major`.
-- `rejection_keeps_current_flow`: PASS — rejection preserves `feature_path: notification-center` and resumes the normal `1.3.0 -> 1.4.0` version bump, changelog update, inline validation, and event-driven Engineer alignment without creating a child tree.
+- `applies_requested_change`: PASS — the with-skill run produced a complete PRD candidate in `updated-PRD.md`; FR-02, Delivery Strategy, and AC-2 now specify event publication, subscribed consumers, removal of polling, and a measurable 10-second urgent-delivery path. Direct children were derived from the fixture first, so `child_features: N/A` remains correct.
+- `detects_l2b_signals`: PASS — the response explicitly measured 3 independent domains and 18 combined US/FR rows, while noting the candidate is below 500 lines.
+- `presents_split_proposal`: PASS — the proposal contains three child `feature_path` values, maps all parent-retained and child-bound content, and lists impacts for `docs/engineer`, `docs/design`, `docs/qa/e2e`, `docs/devops`, and `docs/security`. It also names the current per-role owners, Engineer reference synchronization, archive preservation, QA history preservation, and the complete parent-index/version/date/changelog update required if child PRDs are later created.
+- `waits_for_confirmation`: PASS — no split, child document, `git mv`, or mirror move was performed; approval would start a separate `change_tier: major` flow.
+- `rejection_keeps_current_flow`: PASS — rejection preserves `feature_path: notification-center` and resumes the normal `1.3.0 -> 1.4.0` bump, changelog, validation, and Engineer TRD alignment on the current path.
 
 ## With-Skill Behavior
 
-The run first reconciled the actual feature tree and found no direct children, then applied the requested event-driven delta to a complete PRD candidate before evaluating structure. It measured both fixture-backed L2b signals, proposed a traceable three-child tree, supplied a five-root downstream impact list, and kept all structural actions behind explicit confirmation. The proposal reflects the current review fixes by treating parent indexes as complete derived sets, naming `related_prd` and other applicable `related_*` fields in Engineer alignment, and preserving archived implementation plans as historical rather than active evidence. The candidate remains on the current path and version while the structural decision is pending.
+The run first reconciled the fixture tree, then applied the event-driven product delta to a complete candidate before evaluating structure. It measured both fixture-backed L2b signals, proposed a traceable three-child tree, covered all five downstream mirror roots, assigned later work to the correct role owners, and kept every structural action behind explicit confirmation. The candidate stays at version `1.3.0` while the split decision is pending; rejection follows the ordinary iteration closeout.
 
 ## Fresh Without-Skill Baseline
 
-The baseline was newly generated in this run from the same prompt and fixture without reading or applying `idea-to-spec`, the Product Manager README, internal instructions, the historical comparison, or prior runtime output. It supplied concrete event-driven replacements for FR-02, Delivery Strategy, AC-2, the suggested version bump, and later TRD alignment, so `applies_requested_change` passed. It did not count L2b signals, propose child paths with content and five-root mirror maps, establish a confirmation gate, or define the rejection path. Baseline result: 1/5 assertions passed.
+The baseline was newly generated in this run from the same prompt and fixture without reading or applying `idea-to-spec`, Product Manager README, internal instructions, historical comparison, or prior runtime output. It proposed concrete event-driven changes to FR-02, Delivery Strategy, and AC-2 plus a version bump and TRD follow-up, so `applies_requested_change` passed. It did not measure L2b signals, propose the child tree/content map/five-root mirror impact, establish a confirmation gate, or define rejection semantics. Baseline result: 1/5 assertions passed.
 
 ## Judge Conclusion
 
-The fresh judge compared the current fixture, full with-skill PRD candidate, with-skill response, newly generated baseline, and all five assertions. The content delta exists in the candidate itself; the two L2b signals are measured from fixture evidence; the child tree, content map, and downstream impacts are explicit; and both confirmation and rejection semantics are exercised. Therefore Behavior is PASS and Coverage is FULL. The baseline contrast shows that generic PRD editing covers the requested content delta but omits the repository-specific L2b governance behavior.
+The judge compared the current fixture, full with-skill PRD candidate and response, newly generated baseline, and all five assertions. The requested content delta exists in the candidate; the two L2b signals are directly measurable; the proposal contains the required tree, mapping, mirror impact, and current execution constraints; and both confirmation and rejection paths are explicit. Behavior is PASS and Coverage is FULL. The baseline contrast shows that generic PRD editing handles the content change but omits repository-specific structure governance.
 
 ## Failures
 
@@ -47,9 +47,9 @@ The fresh judge compared the current fixture, full with-skill PRD candidate, wit
 
 ## Next Steps
 
-- Keep this eval as regression coverage for applied PRD content, derive-first child indexing, L2b proposal gating, full downstream reference impact, and rejection semantics.
-- The `prd-gen` reconcile-first write path and archive/legacy exclusion are represented by the current workspace rules but need their own fixture evidence if direct assertion coverage is required.
+- Keep this eval as regression coverage for applied PRD content, L2b proposal gating, full downstream impact, current per-role ownership constraints, and rejection semantics.
+- Use separate fixture assertions if direct positive coverage is needed for reserved namespace parents, actual child-PRD parent version/date/changelog updates, or contract `related_issues` metadata.
 
 ## Runtime Artifact(s) Policy
 
-- The complete with-skill response and PRD candidate, newly generated without-skill baseline, and explicit judge record remain under `tmp/eval-runs/issue-197-evals-r7/eval-009/` and are not committed.
+- The complete with-skill response and PRD candidate, newly generated baseline, and explicit judge record remain under `tmp/eval-runs/issue-197-evals-r8/eval-009/` and are not committed.
