@@ -2,7 +2,7 @@
 title: "feature_path 自主拆分与结构治理实施计划"
 type: IMPLEMENTATION_PLAN
 version: "1.0.0"
-status: Pending Confirmation
+status: Implemented
 author: "Neplich Claude"
 date: "2026-08-03"
 last_updated: "2026-08-03"
@@ -27,7 +27,7 @@ changelog:
 
 ## 1. 实施上下文
 
-本计划为补录。issue #197（PRD/TRD 多级 `feature_path` 自主拆分与结构梳理机制）属契约面 `major` 变更，按仓库「变更分级契约」应先产出完整实施计划并确认后再实施；实际执行以 issue 内已确认设计与维护者逐轮确认为范围依据直接实施，review（PR #218 P1 意见）指出后按门禁要求补录本计划，状态记为 Pending Confirmation，待维护者批准后转为 Implemented。
+本计划为补录。issue #197（PRD/TRD 多级 `feature_path` 自主拆分与结构梳理机制）属契约面 `major` 变更，按仓库「变更分级契约」应先产出完整实施计划并确认后再实施；实际执行以 issue 内已确认设计与维护者逐轮确认为范围依据直接实施，review（PR #218 P1 意见）指出后按门禁要求补录本计划，状态经维护者批准（2026-08-03，PR #218 对话内）转为 Implemented，plan gate 以事后确认闭环。
 
 ## 2. 已交付范围
 
