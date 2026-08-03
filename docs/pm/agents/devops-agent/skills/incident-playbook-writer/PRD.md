@@ -66,7 +66,7 @@ changelog:
 | FR-S01 | Trigger Matching | `incident-playbook-writer` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `incident-playbook-writer` SKILL.md 一致。 |
 | FR-S02 | Context Intake | deploy/ 部署方式、CI/CD 与运维入口、repo-wide/feature/release 范围、已有 runbook；feature-scoped runbook 还必须消费已确认 `feature_path`、`docs/engineer/{feature_path}/TRD.md` 和 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`；告警线索只在 incident-aftercare 场景必需。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；`feature_path` 或 Engineer 文档不清时回 PM/Engineer，不自建同义顶层目录。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
-| FR-S04 | Artifact Output | repo-wide runbook 创建或扩展 deploy/ROLLBACK.md、deploy/INCIDENT_RESPONSE.md、deploy/TROUBLESHOOTING.md、deploy/ON_CALL.md；feature-scoped rollback/release/incident supplement 写入 `docs/devops/{feature_path}/...`。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
+| FR-S04 | Artifact Output | repo-wide runbook 只创建或扩展用户明确选择且证据充分的 deploy/ 文档（候选为 deploy/ROLLBACK.md、deploy/INCIDENT_RESPONSE.md、deploy/TROUBLESHOOTING.md、deploy/ON_CALL.md，不默认全量生成）；证据不足时不生成该文档，报告缺口与所需证据。feature-scoped rollback/release/incident supplement 写入 `docs/devops/{feature_path}/...`。 | P0 | 未阻塞时产出与用户选择一致的 artifact；证据不足或 blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `devops-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | DevOps follow-up 到 deployment-planner/cicd-bootstrap/env-config-auditor；越界交 engineer-agent、pm-agent、security-agent。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
@@ -77,7 +77,8 @@ changelog:
 
 - 识别 Docker/Helm/local/custom 部署方式
 - 处理 no deploy/custom/multiple services edge cases
-- 创建或扩展 4 类 deploy 文档
+- 确认用户需要的 playbook（未指定时给出四类候选请用户选择）
+- 只创建或扩展已选择且证据充分的 deploy 文档；证据不足时报告缺口与所需证据
 - 总结运行入口和验证方式
 - feature-scoped runbook 使用 `feature_path` 写入 `docs/devops/{feature_path}/...`
 
@@ -106,8 +107,9 @@ flowchart LR
     Match --> Context["读取/确认实现契约上下文"]
     Context --> Step1["识别 Docker/Helm/local/custom 部署方式"]
     Step1 --> Step2["处理 no deploy/custom/multiple services edge cases"]
-    Step2 --> Step3["创建或扩展 4 类 deploy 文档"]
-    Step3 --> Step4["总结运行入口和验证方式"]
+    Step2 --> Step3["确认用户选择的 playbook"]
+    Step3 --> Step3b["创建或扩展已选择且证据充分的 deploy 文档"]
+    Step3b --> Step4["总结运行入口和验证方式"]
     Step4 --> Artifact["输出具体产物或 blocked 结果"]
     Artifact --> Handoff["交接或结束"]
 ```

@@ -66,7 +66,7 @@ changelog:
 | FR-S01 | Trigger Matching | `deployment-planner` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `deployment-planner` SKILL.md 一致。 |
 | FR-S02 | Context Intake | 服务结构、运行方式、scale、staging/production、依赖/外部服务、是否已有 deploy/、repo-wide vs feature-scoped、部署约束；feature-scoped work 还必须消费已确认 `feature_path`、`docs/engineer/{feature_path}/TRD.md` 和 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；`feature_path` 或 Engineer 文档不清时回 PM/Engineer，不自建同义顶层目录。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
-| FR-S04 | Artifact Output | 创建或更新实际 deploy/ 文件：deploy/local、deploy/docker、deploy/helm；feature-scoped 部署说明或 readiness notes 写入 `docs/devops/{feature_path}/...`；只有只读/缺上下文/用户限制时才 blocked 或给计划。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
+| FR-S04 | Artifact Output | 按已确认的部署目标矩阵创建或更新对应 deploy/ 文件；deploy/local、deploy/docker、deploy/helm 是可选目标而非默认组合，禁止默认同时生成三套。目标由 TRD 或 PM handoff packet 明确时只生成这些目标；仅当现有部署资产提供充分证据时才推断目标；两者都不明确时向用户确认目标。feature-scoped 部署说明或 readiness notes 写入 `docs/devops/{feature_path}/...`；只有只读/缺上下文/用户限制时才 blocked 或给计划。 | P0 | 未阻塞时产出与确认目标矩阵一致的 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `devops-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
 | FR-S06 | Handoff | CI/CD 到 cicd-bootstrap；配置完整性到 env-config-auditor；运行手册到 incident-playbook-writer；代码/安全问题到 Engineer/Security。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
@@ -76,7 +76,7 @@ changelog:
 ### 当前实现工作流
 
 - 检查现有 deploy/ 资产
-- 判断范围和部署目标
+- 确认范围和部署目标矩阵（TRD/handoff 明确的目标优先；证据不足时向用户确认，不默认生成三套）
 - 已有 deploy/ 时 targeted iteration
 - 生成 executable config
 - 验证或说明手动验证步骤
