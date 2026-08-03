@@ -6,6 +6,29 @@
 - Skill: `debugger`
 - Eval: `eval-001-fix-failing-test`
 - Workspace: `workspace/eval-001-fix-failing-test`
+- Latest result: **PASS**（Behavior: PASS / Coverage: FULL）- 2026-08-03 #188 删除后 paired 回归（with-skill 7/7 / without-skill 2/7，judge 独立判定）
+- Overall result: PASS
+
+## Test Set / Fixture Version
+
+- Schema: `evals.json` v1.0
+- 日期：2026-08-03（#188 删除后 paired 回归）
+- Fixture：active notification 实现错误地排除 `read` 并保留 `archived`（隔离副本 `tmp/eval-runs/issue-188-regress/`）
+- With-skill evidence: `tmp/eval-runs/issue-188-regress/with_skill/debugger-eval-001/candidate-output.md`
+- Without-skill evidence: `tmp/eval-runs/issue-188-regress/without_skill/debugger-eval-001/candidate-output.md`
+- Judge verdict: `tmp/eval-runs/issue-188-regress/judge/verdict-paired.md`
+
+
+## Historical Results
+
+# Eval Result: eval-001-fix-failing-test
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-001-fix-failing-test`
+- Workspace: `workspace/eval-001-fix-failing-test`
 
 ## Test Set / Fixture Version
 
@@ -57,4 +80,3 @@
 - 变更：删除 Common root cause patterns 根因表（A 维实测确认磨平）。
 - 验证：删除后 paired 回归（fresh 双侧，judge 独立判定）：with-skill 7/7 PASS、without-skill 2/7 PASS（PRD/TRD 精确引用、分类、合并计划、确认停点、E2E/计划门禁保持明确区分）。
 - 验证：L3 A 维 with/without 实测确认磨平（judge 独立判定，证据 `tmp/eval-runs/issue-188-l3/`）；删除后以原 eval prompt + fixture 重跑 with-skill，fresh judge 逐条判定原断言全部 PASS（7/7 PASS），Behavior result **PASS**，**无回归**（证据 `tmp/eval-runs/issue-188-regress/`）。
-

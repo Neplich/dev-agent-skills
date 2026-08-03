@@ -102,6 +102,4 @@ ordering in future edits.
 
 ## Runtime artifact policy
 
-No runtime artifact was written or committed. The two runs used disposable
-fixture copies; this durable `comparison.md` is the only eval-004 output
-updated by this validation.
+- Runtime artifacts（双侧 candidate、judge verdict、隔离目录执行产物）在本次 fresh re-baseline 中真实生成，位于被 gitignore 覆盖的 `tmp/eval-runs/issue-188-docs/`；未提交到 git。长期 durable 产物仅为本 `comparison.md`。

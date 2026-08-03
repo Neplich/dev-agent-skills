@@ -7,6 +7,29 @@
 - Eval: `eval-001-positioning-gap-brief`
 - Test case: positioning-gap-brief
 - Workspace: `workspace/eval-001-positioning-gap-brief`
+- Latest result: **PASS**（Behavior: PASS / Coverage: FULL）- 2026-08-03 #188 删除后 paired 回归（with-skill 3/3 / without-skill 3/3，judge 独立判定；原断言双侧零区分，skill 增量在扩展内容）
+- Overall result: PASS
+
+## Test Set / Fixture Version
+
+- Schema: `evals.json` v1.0
+- 日期：2026-08-03（#188 删除后 paired 回归，live 联网研究）
+- With-skill evidence: `tmp/eval-runs/issue-188-regress/with_skill/competitive-brief-eval-001/candidate-output.md`
+- Without-skill evidence: `tmp/eval-runs/issue-188-regress/without_skill/competitive-brief-eval-001/candidate-output.md`
+- Judge verdict: `tmp/eval-runs/issue-188-regress/judge/verdict-paired.md`
+
+
+## Historical Results
+
+# Eval Result: eval-001-positioning-gap-brief
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `competitive-brief`
+- Eval: `eval-001-positioning-gap-brief`
+- Test case: positioning-gap-brief
+- Workspace: `workspace/eval-001-positioning-gap-brief`
 - Classification: (c) 依赖实时公开网页研究。该场景验证从当前公开来源提炼竞品定位与 messaging gap，不应以静态 mock 或网页快照替代真实联网研究。
 - Latest result: PASS - 2026-07-26
 - Overall result: PASS 的 fresh same-agent judge 先后锁定独立联网研究的 `with_skill` 与新 `without_skill` baseline，再读取答案键逐项判定；两者均满足全部 assertions，with-skill 对公开事实、策略推断和待验证的我方定位假设给出了更系统的边界。
@@ -110,4 +133,3 @@ baseline 也指出两项威胁：Linear 已直接把传统协调工具描述为�
 - 变更：删除 Analysis Frameworks 节并保留 Battlecard Mode 条件模式（A 维实测确认磨平）。
 - 验证：删除后 paired 回归（fresh 双侧，judge 独立判定）：with-skill 3/3 PASS、without-skill 3/3 PASS（原断言双侧零区分，skill 增量在近期动态/机会/威胁/行动项等扩展内容）。
 - 验证：L3 A 维 with/without 实测确认磨平（judge 独立判定，证据 `tmp/eval-runs/issue-188-l3/`）；删除后以原 eval prompt + fixture 重跑 with-skill，fresh judge 逐条判定原断言全部 PASS（3/3 PASS），Behavior result **PASS**，**无回归**（证据 `tmp/eval-runs/issue-188-regress/`）。
-

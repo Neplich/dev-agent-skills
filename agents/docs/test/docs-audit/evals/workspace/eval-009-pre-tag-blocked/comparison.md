@@ -54,4 +54,4 @@ fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 
 
 ## Runtime artifact policy
 
-本轮仅持久化此 `comparison.md`。未创建或提交 `with_skill/`、`without_skill/`、transcript、candidate output、subagent verdict、timing、run status、diagnostics 或其他临时/runtime 产物。
+- Runtime artifacts（双侧 candidate、judge verdict、隔离目录执行产物）在本次 fresh re-baseline 中真实生成，位于被 gitignore 覆盖的 `tmp/eval-runs/issue-188-docs/`；未提交到 git。长期 durable 产物仅为本 `comparison.md`。
