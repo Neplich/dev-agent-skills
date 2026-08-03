@@ -39,7 +39,7 @@ fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 
 ## Without-Skill Baseline
 
 - 来源：同一 prompt 与 pristine fixture 的本轮 fresh `without_skill`；不含目标 skill、Docs README、旧 comparison 或 with-skill 输出，未复用历史 baseline。
-- baseline 能识别大方向，但未命名 `release-notes-generator`、未完整保留 request/host 等字段，也未引用权威 gate，协议稳定性明显较弱。
+- baseline 已命名并正确路由 `docs-agent:release-notes-generator`（accepts 与 routes 两条断言 PASS），但未完整保留 handoff context（缺 `host_repository`、原始 `release_scope`），且复制了 specialist 流程、未引用权威 gate——2/4 PASS。
 
 ## Failures
 
