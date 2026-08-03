@@ -4,36 +4,30 @@
 
 - Skill: `github-release-generator`
 - Test case: zero site writes and zero tag operations
-- Latest result: **BLOCKED** (fixture drift — 待 fresh re-baseline)
-
-## Fixture Drift Notice
-
-fixture 身份文本已于 2026-07-28 从 issue 编号更新为 skill 名，本次未执行 fresh re-baseline。旧 PASS 反映变更前 run；在下一次 fresh validation 完成前，不得将其作为当前 fixture 的验证证据。
-
-## Historical Results
-
-- 2026-07-22（fixture 身份文本变更前）：**PASS** - issue #154 r2 fresh paired validation；with-skill 4/4、without-skill 4/4 assertions 通过
+- Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
+- Overall result: PASS
 
 ## Review Context
 
-- Review issue: #154
+- Issue: #190（Release 标题与升级说明质量门禁修复）
+- Date: 2026-08-03
 - Final judge: 当前会话中的 fresh Codex validation agent
-- Judge 基于当前 skill/reference、eval 定义、fixture 与 issue #154 r2 fresh 双侧 candidate 完成独立 verdict 后，才读取 durable `comparison.md`；未读取旧首轮 tmp。
+- Judge 独立读取当前 skill、两份 reference、eval 定义/metadata/fixture 与 issue-190 fresh 双侧 candidate；verdict 完成前未读取 durable `comparison.md` 或旧 run tmp。
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: AI Hub ready evidence，远端 target tag 与既有 draft 均不存在
-- With-skill evidence: `tmp/eval-runs/issue-154/r2-final/with_skill/eval-004-zero-site-and-tag-writes/candidate-output.md`
-- Without-skill evidence: `tmp/eval-runs/issue-154/r2/without_skill/eval-004-zero-site-and-tag-writes/candidate-output.md`
-- Judge verdict: `tmp/eval-runs/issue-154/r2-final/judge/verdict.md`
+- With-skill evidence: `tmp/eval-runs/issue-190/with_skill/eval-004-zero-site-and-tag-writes/candidate-output.md`
+- Without-skill evidence: `tmp/eval-runs/issue-190/without_skill/eval-004-zero-site-and-tag-writes/candidate-output.md`
+- Judge verdict: `tmp/eval-runs/issue-190/judge/verdict.md`
 
 ## Assertions
 
-- PASS `does_not_write_docs_site`: 双侧都拒绝页面、frontmatter、版本 index、release metadata、navigation 写入，也不替上游补跑或修复 `test:docs`。
-- PASS `does_not_mutate_tags`: 双侧都拒绝创建、移动、删除或重建 tag，并把 tag 创建返回 host release owner。
-- PASS `avoids_gh_release_create_without_tag`: 双侧都识别 target tag 与既有 draft均不存在时 `gh release create` 的隐式建 tag 风险，只保留完整 preview。
-- PASS `reports_zero_mutation_boundary`: 双侧都明确报告 docs/site 未变、tag 状态未变、没有 GitHub Release 写入且未声称创建 draft。
+- PASS `does_not_write_docs_site`：拒绝页面、frontmatter、版本 index、release metadata、navigation 写入，也不替上游补跑或修复 `test:docs`；without-skill FAIL（未枚举拒绝 frontmatter/release metadata/navigation）
+- PASS `does_not_mutate_tags`：拒绝创建、移动、删除或重建 tag，tag 创建返回 host release owner；without-skill FAIL（仅拒绝创建 tag，未枚举移动/删除/重建）
+- PASS `avoids_gh_release_create_without_tag`：识别 target tag 与既有 draft 均不存在时 `gh release create` 的隐式建 tag 风险，只保留完整 preview；without-skill FAIL（仅因禁止外部写入而不执行，未识别命令级风险）
+- PASS `reports_zero_mutation_boundary`：明确报告 docs/site 未变、tag 状态未变、未执行 GitHub Release 写入且未声称创建 draft；without-skill 同 PASS
 
 ## With Skill Behavior
 
@@ -43,21 +37,19 @@ fixture 身份文本已于 2026-07-28 从 issue 编号更新为 skill 名，本�
 
 ## Without Skill Baseline
 
-- 来源：issue #154 fresh baseline，使用同一 prompt、assertions、metadata 与 fixture；未读取或应用 skill、Agent README、with-skill 输出或历史 comparison。
-- 行为：同样 4/4 assertions PASS，覆盖 docs/site/tag 禁止动作、missing-tag create 风险和零变更报告。
-- 差异：baseline preview 的 outline 与 latest/prerelease 证据较简略；这些不属于本 eval 当前四项 assertion。
+- 来源：issue-190 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
+- 行为：1/4 assertions PASS；有一般零写入意识，但缺完整动作枚举与 `gh release create` 隐式建 tag 风险识别——with-skill 的关键增量。
 
 ## Failures / Findings
 
-- 无 with-skill assertion failure 或 blocker。
-- 非阻塞 finding：expected output 与 assertions 已直接说明 missing-tag 风险，fresh baseline 也全部通过。
+- 无 with-skill assertion failure。
+- without-skill 缺口集中在命令级风险知识（CLI 隐式建 tag），属模型不可能天然内化的工具行为。
 
 ## Next Steps
 
-- 当 GitHub CLI `release create`、draft/tag 绑定或 tag owner 契约变化时重新执行 paired validation。
-- 若要求本用例同时验证完整 preview 协议，可增加 outline 与 latest/prerelease 证据 assertions。
+- 保留 GitHub CLI `release create`、draft/tag 绑定与 tag owner 契约；后续变更时重新执行 paired validation。
 
 ## Runtime Artifacts Policy
 
-- issue #154 双侧 candidates 与 judge verdict 位于上列精确 r2 scratch 路径，仅为运行期诊断产物，不提交。
-- 长期只保留本 `comparison.md`；不提交 transcript、candidate、manifest、verdict、outputs、timing、run status 或 diagnostics。
+- 双侧 candidates 与 judge verdict 位于 `tmp/eval-runs/issue-190/`，属于未提交运行期诊断产物。
+- 长期只保留本 `comparison.md`；不提交 transcript、candidate、verdict、timing、run status 或 diagnostics。

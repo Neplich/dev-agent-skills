@@ -136,9 +136,9 @@
     {
       "id": "eval-005-outline-sections-quality-exclusion",
       "name": "outline 四节结构与内部质量证据排除",
-      "description": "验证 GitHub Release 完整预览只采用 outline 规定的四节结构，并排除相邻材料中的 eval、assertion、review 与 QA 内部质量证据。",
+      "description": "验证 GitHub Release 完整预览只采用 outline 规定的四节结构、标题符合 vX.Y.Z - 主题概述 门禁、升级说明按固定结构呈现，并排除相邻材料中的 eval、assertion、review 与 QA 内部质量证据。",
       "prompt": "根据 `release-package.md`、`docs/site/release-notes/v1.0.0.md` 和 `github-evidence.md` 生成 GitHub Release 完整预览。保持站内事实含义与范围，不执行任何写操作。",
-      "expected_output": "预览逐项保持已确认的功能、架构、数据库、部署、资产、升级与风险事实；正文只包含重点更新、其他改进、升级说明、变更明细四节，不采用相邻风格小节，也不包含 skill eval、assertion 计数、review 轮次或 QA 证据汇总。",
+      "expected_output": "预览逐项保持已确认的功能、架构、数据库、部署、资产、升级与风险事实；标题不是仅版本号的无语义裸标题（本 fixture 为非 marketplace 宿主且未定义明确标题惯例，含事实主题概述或遵循宿主惯例均为合格）；正文只包含重点更新、其他改进、升级说明、变更明细四节，不采用相邻风格小节，也不包含 skill eval、assertion 计数、review 轮次或 QA 证据汇总；升级说明按固定结构完整呈现（简述与适用时的指令小节/收尾句），本 fixture 事实源未确认 coding-agent 客户端升级入口时不得生成空壳小节或臆造安装命令，plugin 更新类声明只在已确认事实源支持时使用（本 fixture 事实源不含 plugin 更新事实，不得臆造），不只写占位句。",
       "workspace": "workspace/eval-005-outline-sections-quality-exclusion",
       "assertions": [
         {
@@ -155,6 +155,16 @@
           "id": "preserves_confirmed_facts",
           "description": "保持站内已确认事实",
           "text": "预览保留文件卡片、失败消息原位重试、统一附件模型兼容链路、nullable JSONB 迁移与删列风险、部署顺序和开关、双架构资产、升级与旧浏览器限制；不得新增、省略或改写这些已确认事实。"
+        },
+        {
+          "id": "title_matches_gate",
+          "description": "标题非裸版本号",
+          "text": "preview 标题不是仅版本号的无语义裸标题；本 marketplace 场景标题应为 `vX.Y.Z - {主题概述}`，非 marketplace 场景遵循宿主已确认命名惯例（本 fixture 未定义明确标题惯例，非裸版本号即为合格）。"
+        },
+        {
+          "id": "upgrade_note_fixed_structure",
+          "description": "升级说明按固定结构呈现且不空壳化",
+          "text": "「升级说明」按固定结构完整呈现（简述与适用时的指令小节/收尾句），不得只写占位句；本 fixture 为非 marketplace 宿主（example/ai-hub），事实源未确认任何 coding-agent 客户端升级入口时，不得生成 `### Claude Code`/`### Codex`/`### Kimi Code` 空壳小节或臆造安装命令，按已确认事实源呈现升级动作；plugin 更新类声明（如「无破坏性变更，也没有新增 plugin。7 个 role plugin 均更新到 `v1.0.0`。」及安装器收尾句）只在已确认事实源支持时使用，fixture 事实源不含 plugin 更新事实时不得臆造，并保留已确认的升级、兼容性与风险事实。"
         }
       ]
     },
