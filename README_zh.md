@@ -73,6 +73,8 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 
 已按 Codex 方式安装到 `~/.agents/skills/` 的 skill 也会被 Kimi Code 自动扫描到；推荐优先使用上面的原生插件方式。
 
+**同时使用 Codex 与 Kimi Code？** 只走 Codex 安装路径（`~/.agents/skills/`）：Kimi Code 会自动扫描该目录，一份副本两个宿主共读，保持单一事实源。若同时再装 Kimi 插件，每个 skill 会产生两份同名副本——实时跟踪工作区的软链 vs `~/.kimi-code/plugins/managed/` 下的安装快照——版本可能漂移。注意：Kimi 的 generic skill 目录组互斥，若 `~/.config/agents/skills/` 存在会遮蔽 `~/.agents/skills/`，此时需在 Kimi 的 `config.toml` 中把 `~/.agents/skills/` 加入 `extra_skill_dirs`。 取舍说明：Codex 路径下 Kimi 只有普通 skill 发现，插件的 `sessionStart.skill` 自动加载 `pm-agent` 不生效；如需保留会话启动的 PM 入口，可在会话开始时手动 `/skill:pm-agent`，或改用插件并接受上面的双副本注意事项。
+
 ## 使用示例
 
 ```text
