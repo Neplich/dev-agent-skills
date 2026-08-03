@@ -441,5 +441,5 @@ rg -n "legacy_of:|legacy_reason:|superseded_by:" docs --glob "*/_legacy/**/*.md"
 - Confirmed PRD path: `docs/pm/repository-governance/feature-path-contract/PRD.md`
 - Confirmed TRD path: `docs/engineer/repository-governance/feature-path-contract/TRD.md`
 - Expected implementation plan path: `docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md`
-- Boundary: issue #197 仅修改已确认的指令、路由、PRD/TRD 与锁文件，不实现 eval，不执行真实文档拆分或迁移。
+- Boundary: issue #197 仅修改已确认的指令、路由、PRD/TRD 与锁文件，并新增 `eval-009-prd-iteration-split-proposal`、`eval-016-route-document-structure-governance` 两项 eval（fresh 验证均 PASS/FULL）；不执行真实文档拆分或迁移。
 - Required implementation: 按 L2b、只读结构治理和受控移动契约更新指定 skill，并通过仓库确定性检查。
