@@ -106,7 +106,7 @@ fact source are required.
    ```
 
    ```text
-   Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/tags/v{VERSION}/.codex/INSTALL.md
+   Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/tags/v{VERSION}/.codex/INSTALL.md, setting TARGET_TAG=v{VERSION} so the clone or update stays pinned to this release
    ```
 
    ```text

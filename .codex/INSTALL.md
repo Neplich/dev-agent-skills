@@ -67,12 +67,25 @@ SKILL_ROOT="$PROJECT_ROOT/.agents/skills"
 
 ### 2. Clone Or Update The Repository
 
+Set `TARGET_TAG` to a release tag (for example `v0.3.6`) when this install
+must match a specific released version, as the Release upgrade instructions
+do. Omit it for a plain latest install.
+
 ```bash
 if [ -d "$CLONE_ROOT/.git" ]; then
-  git -C "$CLONE_ROOT" pull --ff-only
+  if [ -n "$TARGET_TAG" ]; then
+    git -C "$CLONE_ROOT" fetch --tags origin
+    git -C "$CLONE_ROOT" checkout "$TARGET_TAG"
+  else
+    git -C "$CLONE_ROOT" pull --ff-only
+  fi
 else
   mkdir -p "$(dirname "$CLONE_ROOT")"
-  git clone https://github.com/Neplich/dev-agent-skills.git "$CLONE_ROOT"
+  if [ -n "$TARGET_TAG" ]; then
+    git clone --branch "$TARGET_TAG" https://github.com/Neplich/dev-agent-skills.git "$CLONE_ROOT"
+  else
+    git clone https://github.com/Neplich/dev-agent-skills.git "$CLONE_ROOT"
+  fi
 fi
 ```
 
