@@ -78,7 +78,7 @@ if [ -d "$CLONE_ROOT/.git" ]; then
     echo "error: $CLONE_ROOT has uncommitted or untracked changes; commit or stash them before installing" >&2
     exit 1
   fi
-  if [ -n "$TARGET_TAG" ]; then
+  if [ -n "${TARGET_TAG:-}" ]; then
     git ls-remote --exit-code --tags "$REPO_URL" "refs/tags/${TARGET_TAG}" >/dev/null \
       || { echo "error: release tag $TARGET_TAG not found on origin; aborting pinned install" >&2; exit 1; }
     # Fetch from the verified URL into the local tag ref so the checkout and
@@ -98,7 +98,7 @@ if [ -d "$CLONE_ROOT/.git" ]; then
   fi
 else
   mkdir -p "$(dirname "$CLONE_ROOT")"
-  if [ -n "$TARGET_TAG" ]; then
+  if [ -n "${TARGET_TAG:-}" ]; then
     git ls-remote --exit-code --tags "$REPO_URL" "refs/tags/${TARGET_TAG}" >/dev/null \
       || { echo "error: release tag $TARGET_TAG not found on origin; aborting pinned install" >&2; exit 1; }
     git clone "$REPO_URL" "$CLONE_ROOT"
