@@ -211,16 +211,6 @@ Read the relevant source code. Start from the error location and trace upward:
 3. **Read related code**: What state could cause this failure?
 4. **Check recent changes**: `git log --oneline -10 -- <file>` and `git diff HEAD~5 -- <file>`
 
-Common root cause patterns:
-
-| Error Type | Likely Cause | Where to Look |
-|-----------|-------------|---------------|
-| TypeError / nil pointer | Missing null check or wrong type | Input validation, API response handling |
-| Import/module not found | Wrong path, missing export | Import statements, package.json exports |
-| Test assertion failure | Logic error or wrong expected value | Both test and implementation |
-| Build failure | Type mismatch, missing dependency | Type definitions, package manifest |
-| Timeout | Async issue, infinite loop | Promises, goroutines, event handlers |
-
 ## Step 4 — Identify and confirm root cause
 
 Before fixing, state the root cause clearly:

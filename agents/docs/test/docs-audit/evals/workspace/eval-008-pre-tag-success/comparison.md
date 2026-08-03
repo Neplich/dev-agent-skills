@@ -5,31 +5,33 @@
 - Agent: `docs-agent`
 - Skill: `docs-audit`
 - Eval: `eval-008-pre-tag-success`
-- Validation time: `2026-07-20 00:23:47 +0800`
+- Validation time: `2026-08-03 22:40:00 +0800`（fresh re-baseline，issue #188）
 - Scope: full pre-tag candidate transaction, canonical inventory/genesis digests, actual-tag pending contract, two staged gates, anchor/discovery commits, integration readback, and post-FF CAS rollback.
 
 ## Test set and method
 
 This is a fresh paired validation against the current 12 assertions. The
-`without_skill` baseline ran first from a pristine fixture copy and read only
-the current eval definition, metadata, prompt, and fixture files. It did not
-read the Docs Agent README, `docs-audit` skill instructions, prior comparison,
-or historical output. The `with_skill` run then started from a second pristine
-fixture copy after fully reading `agents/docs/skills/docs-audit/SKILL.md`,
-`agents/docs/skills/docs-audit/_internal/INSTRUCTIONS.md`, and
-`agents/docs/README.md`.
+`with_skill` and `without_skill` runs (2026-08-03, #188) each started from their own pristine fixture copy in
+isolated directories (`tmp/eval-runs/issue-188-docs/with_skill/` and `tmp/eval-runs/issue-188-docs/without_skill/`),
+executed independently without reading each other's outputs. The `without_skill` baseline read only
+the current eval definition, metadata, prompt, and fixture files, and did not read the Docs Agent README,
+`docs-audit` skill instructions, prior comparison, or historical output. The `with_skill` run read
+`agents/docs/skills/docs-audit/SKILL.md`, `agents/docs/skills/docs-audit/_internal/INSTRUCTIONS.md`, and
+`agents/docs/README.md` before executing. The fresh judge then read the frozen bilateral candidates and
+the assertions, and produced the verdict in `tmp/eval-runs/issue-188-docs/judge/verdict.md`.
 
 ## Latest result
 
-Latest result: **BLOCKED** (fixture drift — 待 fresh re-baseline)
+Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
+- Overall result: PASS
 
 ## Fixture Drift Notice
 
-fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，本次未执行 fresh re-baseline。旧 PASS 反映变更前 run；在下一次 fresh validation 完成前，不得将其作为当前 fixture 的验证证据。
+fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 PASS 反映变更前 run。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 独立判定，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；本节保留作为历史记录。
 
 ## Historical results
 
-- 2026-07-20（fixture 身份文本变更前）：**PASS** — `with_skill` satisfies **12/12** assertions. The fresh `without_skill` baseline satisfies **10/12** assertions. The two skill-specific gaps are independent canonical digest production inside the candidate schema and the complete concurrency-safe CAS rollback contract after post-FF readback failure.
+- 2026-07-20（fixture 身份文本变更前）：旧 run 结果，按 Fixture Drift Notice 不再作为当前证据。
 
 ## Canonical digest verification
 
@@ -59,18 +61,18 @@ does not represent publication or a failed version comparison.
 
 | Assertion | without_skill | with_skill | Evidence summary |
 | --- | --- | --- | --- |
-| `accepts_confirmed_version_without_tag` | PASS | PASS | Keeps `base_ref: v1.1.0`, `target_ref: release-head`, and confirmed `v1.2.0` distinct; absent future tag does not block pre-tag. |
-| `verifies_complete_set_and_surfaces` | PASS | PASS | Exactly **2/2 API pages** are affected and verified; #116 handoff, Release Notes, index, releases metadata, and host package facts also pass. |
-| `normalizes_mixed_version_forms` | PASS | PASS | Required `v1.2.0` sources and package `1.2.0` pass source-form validation and normalize to one case-sensitive SemVer identity. |
-| `records_pre_stamp_values` | PASS | PASS | Exact four values are retained: `v1.1.0`, `unverified`, `unverified`, `v1.1.0`; no `baseline_verified_version` is added. |
-| `stamps_complete_set_atomically` | PASS | PASS | Exactly **4 pages** are stamped and read back together as `v1.2.0`; `.meta/releases.json` remains read-only. |
-| `builds_isolated_candidate_transaction` | PASS | PASS | Candidate work occurs from the immutable target commit in an isolated worktree/branch/index; captured host state stays untouched before integration. |
-| `candidate_record_has_no_ready_result` | FAIL | PASS | Baseline follows the visible happy-path schema but cannot independently reconstruct the exact six-entry canonical inventory, recompute both SHA-256 digests, or prove the literal values rather than echo them. The skill-guided candidate recomputes exact inventory/genesis digests, persists actual-tag pending, and excludes premature final authority. |
-| `validates_two_complete_staged_gates` | PASS | PASS | Initial and final candidate bytes each pass raw mode/type, unfolded name-status, summary, and full binary-patch checks with no unauthorized path or hunk. |
-| `confirms_anchor_commit_before_discovery` | PASS | PASS | Discovery is forbidden until target-to-anchor raw metadata/content/tree/blob and `git show` readback all pass. |
-| `persists_fixed_discovery_handoff` | PASS | PASS | Fixed discovery contains anchor and candidate identities plus lineage fields without self-reference; only its 100644 blob is committed and the external package supplies handoff commit/tree/path/blob. |
-| `returns_ready_only_after_integration` | FAIL | PASS | Baseline waits for FF/readback on the happy path but lacks the full post-FF failure contract. The skill requires CAS proof against the just-integrated handoff commit before rollback, target-ref restoration plus fingerprint verification, and non-overwrite/residual-ref/manual-command handling on concurrent movement. |
-| `returns_ready_for_tag_not_published` | PASS | PASS | Final state means tag creation is allowed; it is not publication or `release_verified`. |
+| `accepts_confirmed_version_without_tag` | PASS | PASS | 双侧都分别记录 `v1.1.0`、`release-head` 与维护者确认的 `v1.2.0`，并把同名 tag 不存在视为正常 pre-tag 状态。 |
+| `verifies_complete_set_and_surfaces` | PASS | PASS | 双侧均覆盖 change-map 命中的两张 API 页、release-notes handoff、Release Notes、索引、只读 releases metadata 与宿主版本；with-skill 逐页记录 target blob 和 verified 事实。 |
+| `normalizes_mixed_version_forms` | PASS | PASS | 双侧均校验 `v1.2.0` 与 `package.json` 的 `1.2.0` 来源形态，并在规范化后判等。 |
+| `records_pre_stamp_values` | FAIL | PASS | with-skill 精确记录四页章前值 `v1.1.0 / unverified / unverified / v1.1.0`，且页面未新增 `baseline_verified_version`；without-skill 只列最终 stamp，未持久化四个章前值。 |
+| `stamps_complete_set_atomically` | PASS | PASS | 双侧实际四页均更新为 `v1.2.0` 且 releases metadata 未改；with-skill anchor commit 显示四页各只改一行 stamp 并与 candidate 同批提交。 |
+| `builds_isolated_candidate_transaction` | FAIL | PASS | with-skill 存在从精确 target commit 建立的 `.git/audit-worktree-v1.2.0` 与独立 branch/index，宿主仅在最终 FF 后移动；without-skill 只是普通复制目录，无 worktree/target-tree index/宿主指纹证据。 |
+| `candidate_record_has_no_ready_result` | FAIL | PASS | with-skill 固定 record 含完整逐页证据/hash、actual-tag pending inventory、canonical/prior-lineage digest、差异 inventory 与命令，且全文无 `ready_for_tag`、结果时间、anchor 或 post-commit 字段；without-skill record 缺完整 producer/gate/回读内容。 |
+| `validates_two_complete_staged_gates` | FAIL | PASS | with-skill 留存 gate1 与最终 gate2 full-index patch，只含四张 100644 stamp 页和固定 candidate；without-skill 未执行或持久化两次 staged gate。 |
+| `confirms_anchor_commit_before_discovery` | FAIL | PASS | with-skill anchor 的 parent 是精确 target，candidate blob、tree 与 target→anchor delta 均可回读，discovery 只在后续 commit 出现；without-skill 无 anchor 或 discovery。 |
+| `persists_fixed_discovery_handoff` | FAIL | PASS | with-skill 固定 discovery 实际存在，含 phase/version/refs、`ready_for_tag`、时间、inventory digest、anchor/candidate identity、post-commit confirmation、preimage、current 与 lineage digest，handoff commit 只新增该 100644 blob；without-skill 无此产物与提交。 |
+| `returns_ready_only_after_integration` | FAIL | PASS | with-skill 宿主分支最终同指 handoff commit，candidate 记录 FF 前指纹复核、FF 后 commit/tree/blob 回读及失败时 CAS 边界，随后才返回 ready；without-skill 未集成也未返回 ready。 |
+| `returns_ready_for_tag_not_published` | FAIL | PASS | with-skill 最终为 `ready_for_tag`，并明确仅允许创建 tag、不是 published 或 `release_verified`；without-skill 仅返回 `candidate_verified`，不满足成功场景的阶段结果。 |
 
 ## With-skill behavior
 
@@ -97,9 +99,8 @@ and prohibits tag creation.
 
 ## Failures
 
-- `with_skill`: none.
-- `without_skill`: `candidate_record_has_no_ready_result` and
-  `returns_ready_only_after_integration` fail.
+- `with_skill`: none。
+- `without_skill`: 4/12 PASS（accepts_confirmed_version_without_tag、verifies_complete_set_and_surfaces、normalizes_mixed_version_forms、stamps_complete_set_atomically）；其余 8 条 FAIL（records_pre_stamp_values、builds_isolated_candidate_transaction、candidate_record_has_no_ready_result、validates_two_complete_staged_gates、confirms_anchor_commit_before_discovery、persists_fixed_discovery_handoff、returns_ready_only_after_integration、returns_ready_for_tag_not_published）——隔离事务、双 staged gate、anchor/discovery、FF 集成与阶段结果语义保持 with-skill 专属增量。
 
 ## Next steps
 
@@ -109,6 +110,4 @@ post-FF CAS rollback language in future protocol edits.
 
 ## Runtime artifact policy
 
-No runtime artifact was written or committed. The two runs used disposable
-fixture copies; this durable `comparison.md` is the only eval-008 output
-updated by this validation.
+- Runtime artifacts（双侧 candidate、judge verdict、隔离目录执行产物）在本次 fresh re-baseline 中真实生成，位于被 gitignore 覆盖的 `tmp/eval-runs/issue-188-docs/`；未提交到 git。长期 durable 产物仅为本 `comparison.md`。

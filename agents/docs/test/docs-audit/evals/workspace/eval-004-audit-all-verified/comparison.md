@@ -5,31 +5,33 @@
 - Agent: `docs-agent`
 - Skill: `docs-audit`
 - Eval: `eval-004-audit-all-verified`
-- Validation time: `2026-07-20 00:23:47 +0800`
+- Validation time: `2026-08-03 22:40:00 +0800`（fresh re-baseline，issue #188）
 - Scope: complete affected-set verification, canonical version-source inventory and genesis digests, unified stamping, candidate/anchor/discovery transaction, and integration-gated `ready_for_tag`.
 
 ## Test set and method
 
 This is a fresh paired validation against the current 6 assertions. The
-`without_skill` baseline ran first from a pristine fixture copy and read only
-the current eval definition, metadata, prompt, and fixture files. It did not
-read the Docs Agent README, `docs-audit` skill instructions, prior comparison,
-or historical output. The `with_skill` run then started from a second pristine
-fixture copy after fully reading `agents/docs/skills/docs-audit/SKILL.md`,
-`agents/docs/skills/docs-audit/_internal/INSTRUCTIONS.md`, and
-`agents/docs/README.md`.
+`with_skill` and `without_skill` runs (2026-08-03, #188) each started from their own pristine fixture copy in
+isolated directories (`tmp/eval-runs/issue-188-docs/with_skill/` and `tmp/eval-runs/issue-188-docs/without_skill/`),
+executed independently without reading each other's outputs. The `without_skill` baseline read only
+the current eval definition, metadata, prompt, and fixture files, and did not read the Docs Agent README,
+`docs-audit` skill instructions, prior comparison, or historical output. The `with_skill` run read
+`agents/docs/skills/docs-audit/SKILL.md`, `agents/docs/skills/docs-audit/_internal/INSTRUCTIONS.md`, and
+`agents/docs/README.md` before executing. The fresh judge then read the frozen bilateral candidates and
+the assertions, and produced the verdict in `tmp/eval-runs/issue-188-docs/judge/verdict.md`.
 
 ## Latest result
 
-Latest result: **BLOCKED** (fixture drift — 待 fresh re-baseline)
+Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
+- Overall result: PASS
 
 ## Fixture Drift Notice
 
-fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，本次未执行 fresh re-baseline。旧 PASS 反映变更前 run；在下一次 fresh validation 完成前，不得将其作为当前 fixture 的验证证据。
+fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 PASS 反映变更前 run。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 独立判定，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；本节保留作为历史记录。
 
 ## Historical results
 
-- 2026-07-20（fixture 身份文本变更前）：**PASS** — `with_skill` satisfies **6/6** assertions. The fresh `without_skill` baseline satisfies **4/6** assertions. The skill-specific delta is the complete canonical candidate producer schema and the mandatory anchor/discovery/handoff/integration success chain.
+- 2026-07-20（fixture 身份文本变更前）：旧 run 结果，按 Fixture Drift Notice 不再作为当前证据。
 
 ## Canonical digest verification
 
@@ -99,6 +101,4 @@ ordering in future edits.
 
 ## Runtime artifact policy
 
-No runtime artifact was written or committed. The two runs used disposable
-fixture copies; this durable `comparison.md` is the only eval-004 output
-updated by this validation.
+- Runtime artifacts（双侧 candidate、judge verdict、隔离目录执行产物）在本次 fresh re-baseline 中真实生成，位于被 gitignore 覆盖的 `tmp/eval-runs/issue-188-docs/`；未提交到 git。长期 durable 产物仅为本 `comparison.md`。

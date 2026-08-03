@@ -7,17 +7,18 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: `cross-doc audit 2026-07-19`
-- Fresh run: `tmp/eval-runs/117-adjacent/docs-agent/eval-004-route-release-notes/`
-- Source head: `00c9741dabc24f6b6df377c69c42adb989722648` plus the current cross-doc audit working tree
+- Fixture version: `release-handoff.md`（fixture 身份文本 2026-07-29 更新后）
+- Fresh run（2026-08-03，#188）：`tmp/eval-runs/issue-188-docs/with_skill/eval-004-route-release-notes/candidate-output.md` 与 `tmp/eval-runs/issue-188-docs/without_skill/eval-004-route-release-notes/candidate-output.md`
+- Judge verdict: `tmp/eval-runs/issue-188-docs/judge/verdict.md`
 
 ## Latest Result
 
-Latest result: **BLOCKED** (fixture drift — 待 fresh re-baseline)
+Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
+- Overall result: PASS
 
 ## Fixture Drift Notice
 
-fixture 的 `required_output` 已于 2026-07-29 修正：身份清理引入的下游指向错误已修正，Release Notes 后续 handoff 由 `pm-agent:github-release-generator` 改为 `docs-agent:docs-audit` pre-tag，前者仅在 `ready_for_tag` 后作为下游。本次未执行 fresh re-baseline；旧 PASS 反映修正前 fixture，在下一次 fresh validation 完成前不得作为当前 fixture 的验证证据。
+fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 PASS 反映变更前 run。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 独立判定，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；本节保留作为历史记录。
 
 ## Historical Results
 
@@ -38,7 +39,7 @@ fixture 的 `required_output` 已于 2026-07-29 修正：身份清理引入的�
 ## Without-Skill Baseline
 
 - 来源：同一 prompt 与 pristine fixture 的本轮 fresh `without_skill`；不含目标 skill、Docs README、旧 comparison 或 with-skill 输出，未复用历史 baseline。
-- baseline 能识别大方向，但未命名 `release-notes-generator`、未完整保留 request/host 等字段，也未引用权威 gate，协议稳定性明显较弱。
+- baseline 已命名并正确路由 `docs-agent:release-notes-generator`（accepts 与 routes 两条断言 PASS），但未完整保留 handoff context（缺 `host_repository`、原始 `release_scope`），且复制了 specialist 流程、未引用权威 gate——2/4 PASS。
 
 ## Failures
 
@@ -51,4 +52,4 @@ fixture 的 `required_output` 已于 2026-07-29 修正：身份清理引入的�
 
 ## Runtime Artifact Policy
 
-- candidate、transcript、manifest、diff 与状态文件仅保留在 `tmp/eval-runs/117-adjacent/`，不提交到 git。
+- candidate、transcript、manifest、diff 与状态文件仅保留在 `tmp/eval-runs/issue-188-docs/`，不提交到 git。
