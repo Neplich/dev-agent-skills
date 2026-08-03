@@ -1,0 +1,24 @@
+# Release Package
+
+- site_release_notes_handoff_status: ready
+- release_version: `v0.9.0`（历史 tag 重跑，post-tag，实际 tag 已存在）
+- site_release_note_path: `docs/site/release-notes/v0.9.0.md`
+- confirmation_status: `confirmed`
+- docs_checks: `npm run test:docs` from `docs/site`, exit 0
+- updated_release_surfaces: index, releases metadata and generated navigation updated
+- source_evidence: confirmed six-category evidence
+- docs_audit_pre_tag_handoff (historical, same version v0.9.0):
+  - phase: `pre-tag`
+  - phase_result: `ready_for_tag`
+  - target_ref: `7a8b9c0d`（历史 pre-tag 审计时的不可变 target commit）
+  - base_ref: `v0.8.0`
+  - status: 已完成（历史事实，tag 创建前已通过）
+- docs_audit_post_tag_phase: `post-tag`
+- docs_audit_post_tag_result: `release_verified`
+- base_ref: `v0.8.0`
+- target_ref: `v0.9.0`
+- intended_tag: `v0.9.0`
+- requested_mode: preview only
+- host: dev-agent-skills marketplace（Claude Code + Codex + Kimi Code 三宿主）
+- target_content: 目标 tag 无 `.kimi-plugin/plugin.json`；`.codex/INSTALL.md` 为旧版、不含 TARGET_TAG 安装支持（见工作区对应文件）
+- upgrade_facts: 无新增 plugin；plugin 集合与 v0.9.0 `.claude-plugin/marketplace.json` 注册一致（6 个）；无破坏性变更

@@ -132,10 +132,14 @@ client-installation subsections or shell commands.
    ```
 
 3. **收尾句**：本 marketplace 宿主的收尾句必须存在。仅当事实源确认无
-   新增 plugin 且 plugin 集合与目标版本 manifest 一致时，以「更新仓库后
-   重新运行安装器，即可同步全部 N 个 role plugin 的 `v{VERSION}` 能力。」
-   结束（N 按 manifest 推导，当前为 7）；其他宿主按事实源给出对应的升级
-   动作收尾或省略，不得写事实源之外的安装器或 plugin 声明。
+   新增 plugin、plugin 集合与目标版本 manifest 一致，且目标版本存在已
+   验证的固定版本安装路径（如 `.codex/INSTALL.md` 含 `TARGET_TAG` 支持）
+   时，以「更新仓库后重新运行安装器，即可同步全部 N 个 role plugin 的
+   `v{VERSION}` 能力。」结束（N 按 manifest 推导，当前为 7）；目标版本
+   无已验证固定版本安装路径时，不得承诺同步该 tag 能力，收尾句改为如实
+   声明「该 tag 无已验证的固定版本安装路径，按默认分支（main）更新」或
+   按事实源给出对应的升级动作收尾；其他宿主按事实源给出对应的升级动作
+   收尾或省略，不得写事实源之外的安装器或 plugin 声明。
 
 ## Traceability Checks
 

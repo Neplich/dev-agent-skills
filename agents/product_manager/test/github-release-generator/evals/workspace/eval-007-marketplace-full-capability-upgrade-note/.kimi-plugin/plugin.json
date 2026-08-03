@@ -1,0 +1,29 @@
+{
+  "name": "dev-agent-skills",
+  "version": "1.0.0",
+  "description": "PM-first agent skill marketplace with one public pm-agent entry and downstream PM-orchestrated engineering, QA, DevOps, design, security, and documentation capabilities",
+  "keywords": [
+    "agent-skills",
+    "pm-agent",
+    "marketplace"
+  ],
+  "homepage": "https://github.com/Neplich/dev-agent-skills",
+  "interface": {
+    "displayName": "Dev Agent Skills",
+    "shortDescription": "PM-first multi-agent skill marketplace: PM entry with downstream engineering, QA, DevOps, design, security, and docs agents",
+    "developerName": "Neplich",
+    "websiteURL": "https://github.com/Neplich/dev-agent-skills"
+  },
+  "skills": [
+    "./agents/product_manager/skills/",
+    "./agents/designer/skills/",
+    "./agents/engineer/skills/",
+    "./agents/qa/skills/",
+    "./agents/devops/skills/",
+    "./agents/security/skills/",
+    "./agents/docs/skills/"
+  ],
+  "sessionStart": {
+    "skill": "pm-agent"
+  }
+}
