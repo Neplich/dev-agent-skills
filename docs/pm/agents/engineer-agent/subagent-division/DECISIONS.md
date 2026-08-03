@@ -10,7 +10,7 @@ feature: "engineer-agent-subagent-division"
 feature_path: "agents/engineer-agent/subagent-division"
 parent_feature: "agents/engineer-agent"
 feature_level: "3"
-last_updated: "2026-05-15"
+last_updated: "2026-08-01"
 related_docs:
   - "docs/pm/agents/engineer-agent/subagent-division/PRD.md"
 changelog:
@@ -37,13 +37,12 @@ changelog:
 | --- | --- | --- |
 | A-001 | Engineer Agent 的运行环境支持当前会话中的 sub-agent 能力。 | 如果不支持，需要降级为结构化 handoff 指令，而不是实际委派执行。 |
 | A-002 | 现有 specialist skill 可以在不修改 marketplace 公开结构的情况下更新。 | 如果需要调整 marketplace metadata，范围会扩大到 registry 和 lockfile。 |
-| A-003 | 一个代表性 eval 足以先验证 MVP 行为。 | 如果不足，需要为 `debugger` 和 `project-bootstrap` 路径补充更多 eval。 |
+| A-003 | 一个代表性 eval 足以先验证 MVP 行为。 | 如果不足，需要为 `debugger` 路径补充更多 eval。 |
 
 ## 待确认问题
 
 | ID | 问题 | Owner | 截止点 | 结论 |
 | --- | --- | --- | --- | --- |
-| Q-001 | `project-bootstrap` 是否纳入 MVP，还是在 `feature-implementor` 和 `debugger` 后再处理？ | PM / Engineer maintainer | 实施前 | 待确认 |
 | Q-002 | 默认触发 sub-agent 分工的复杂度阈值应如何定义？ | Engineer maintainer | 实施前 | 待确认 |
 | Q-003 | 当本地确定性测试和验收 sub-agent 都可用时，验收应在测试前还是测试后执行？ | Engineer maintainer | 实施前 | 待确认 |
 

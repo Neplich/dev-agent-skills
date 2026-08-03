@@ -1,40 +1,31 @@
-# Skill Eval Comparison
+# pm-agent Eval Comparison: eval-012
 
-## Evaluation Target
+## Evaluation target
 
 - Skill: `pm-agent`
-- Eval: `eval-012-change-tier-hotfix-abuse-blocked`
-- Review context: issue #196 L2-4 fresh paired validation
+- Test: `eval-012-change-tier-hotfix-abuse-blocked`
+- Fixture version: current `README.md` and `eval_metadata.json` at 2026-08-01 13:12 +0800
+- Fresh run: same prompt/fixture, newly generated with-skill and without-skill responses; no reused baseline.
 
-## Test Set / Fixture Version
+## Latest result:
 
-- Schema: `evals.json` v1.0; current prompt and fixture
-- Validation date: 2026-07-31
-- Sources: fresh with-skill session `019fb589-672e-7bc0-95ff-2ada072730dd`; fresh isolated baseline session `019fb58b-f4fa-7232-abda-91612bafb9a3`
-
-## Latest Result
-
-- Latest result: PASS
-- Behavior result: PASS (3/3 assertions)
-- Coverage result: FULL (3/3 assertions exercised)
+- Behavior result: PASS — all 3 assertions passed.
+- Coverage result: FULL — 3/3 assertion scenarios were exercised.
 - Overall result: PASS
 
-## With-Skill Behavior
+## With-skill behavior
 
-Rejected hotfix abuse, classified the expectation change as `existing_update`/`standard`, and kept the request blocked on the PM path.
+Explicitly rejected hotfix abuse, classified the business-rule change as `standard` or higher, blocked downstream execution, and returned it to PM scope and expectation confirmation.
 
-## Fresh Without-Skill Baseline
+## Without-skill baseline
 
-Also satisfied all three assertions using general product-governance reasoning; assertion-level differentiation is limited.
+The fresh baseline advised product confirmation but did not explicitly enforce classification or the no-direct-handoff gate.
 
-## Failures
+## Failures and next steps
 
-- None.
-
-## Next Steps
-
-- None.
+- Failures: none.
+- Next steps: none for this fixture.
 
 ## Runtime Artifacts Policy
 
-- Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-012-change-tier-hotfix-abuse-blocked/` and are not committed.
+Runtime evidence is isolated under `tmp/eval-runs/issue-196-project-bootstrap-removal-20260801-131022/pm-agent/eval-012-change-tier-hotfix-abuse-blocked/` and is not committed.

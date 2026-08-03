@@ -197,4 +197,4 @@ If CI fails:
 - **Merge conflicts with main**: Report the conflict and ask the user how to resolve (rebase, merge, or manual).
 - **Large number of changes**: If > 20 files changed, suggest splitting into multiple PRs if the changes can be logically separated.
 - **Draft PR**: If the user says the work isn't complete, use `gh pr create --draft`.
-- **No CI configured**: Note the absence and suggest adding CI with `project-bootstrap`.
+- **No CI configured**: Note the absence in the delivery summary.

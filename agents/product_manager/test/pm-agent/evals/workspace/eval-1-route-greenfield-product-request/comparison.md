@@ -1,41 +1,31 @@
-# Skill Eval Comparison
+# pm-agent Eval Comparison: eval-001
 
-## Evaluation Target
+## Evaluation target
 
 - Skill: `pm-agent`
-- Eval: `eval-001-route-greenfield-product-request`
-- Review context: issue #196 L2-4 fresh paired validation
+- Test: `eval-001-route-greenfield-product-request`
+- Fixture version: current `README.md` and `eval_metadata.json` at 2026-08-01 13:12 +0800
+- Fresh run: new with-skill response and new without-skill baseline generated from the same prompt and fixture; no historical baseline was reused.
 
-## Test Set / Fixture Version
+## Latest result:
 
-- Schema: `evals.json` v1.0; current prompt and fixture
-- Validation date: 2026-07-31
-- With-skill source: fresh Codex session `019fb589-672e-7bc0-95ff-2ada072730dd`
-- Without-skill source: fresh isolated Codex session `019fb58b-f4fa-7232-abda-91612bafb9a3`; no skill, Agent README, assertions, with output, or prior comparison was provided
-
-## Latest Result
-
-- Latest result: PASS
-- Behavior result: PASS (5/5 assertions)
-- Coverage result: FULL (5/5 assertions exercised)
+- Behavior result: PASS — all 5 assertions passed.
+- Coverage result: FULL — 5/5 assertion scenarios were exercised.
 - Overall result: PASS
 
-## With-Skill Behavior
+## With-skill behavior
 
-Selected `idea-to-spec`, enforced the empty-workspace PM-first boundary, named the discovery context and PRD/BRD/DECISIONS outputs, and placed TRD/implementation after scope confirmation.
+Selected `idea-to-spec`, explicitly enforced the no-skip-PM contract after `project-bootstrap` removal, named the required discovery context and PM artifacts, kept TRD with `engineer-agent:trd-gen`, and delayed Designer/Engineer handoff until requirements stabilize.
 
-## Fresh Without-Skill Baseline
+## Without-skill baseline
 
-Also chose PM discovery first, but did not identify the canonical `idea-to-spec` route or the complete PM artifact/TRD ownership contract.
+Fresh baseline used only the prompt and fixture. It recommended generic requirement analysis and later design/development, but did not identify the no-override PM entry contract, the full artifact ownership split, or the explicit normal-classification return path.
 
-## Failures
+## Failures and next steps
 
-- None.
-
-## Next Steps
-
-- Keep as a greenfield entry regression case.
+- Failures: none.
+- Next steps: none for this fixture.
 
 ## Runtime Artifacts Policy
 
-- Paired runtime outputs stay under `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-001-route-greenfield-product-request/` and are not committed.
+Fresh responses and the verdict were written only under `tmp/eval-runs/issue-196-project-bootstrap-removal-20260801-131022/pm-agent/eval-001-route-greenfield-product-request/`; runtime artifacts are not durable repository outputs.

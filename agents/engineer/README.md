@@ -1,6 +1,6 @@
 # Engineer Agent
 
-`engineer-agent` is the engineering-role dispatcher skill. It routes codebase analysis, TRD generation, project bootstrap, feature implementation, test coverage, debugging, and delivery requests to the right engineering specialist skill.
+`engineer-agent` is the engineering-role dispatcher skill. It routes codebase analysis, TRD generation, feature implementation, test coverage, debugging, and delivery requests to the right engineering specialist skill.
 
 > [!NOTE]
 > Other languages: [中文](./README_zh.md)
@@ -13,7 +13,7 @@
 | Item | Details |
 | --- | --- |
 | Entry skill | `engineer-agent` |
-| Specialist skills | 7 |
+| Specialist skills | 6 |
 | Main inputs | PM documents, optional design documents, existing codebase, test results, failure logs |
 | Main outputs | TRDs, implementation plans, code changes, tests, engineering docs, Git commits / PRs |
 | Collaboration | Upstream `pm-agent` / `designer-agent`; downstream `qa-agent` / `devops-agent` / `security-agent` |
@@ -25,7 +25,6 @@
 | `engineer-agent` | Engineering request routing | Specialist selection and execution path |
 | `codebase-analyzer` | Taking over an existing repo, understanding structure and constraints | Project profile, stack and architecture summary |
 | `trd-gen` | Writing technical plans, API docs, and ADRs after PRD / DECISIONS are confirmed | `docs/engineer/{feature_path}/TRD.md`, optional `API.md` / `ADR-*.md` |
-| `project-bootstrap` | Initializing a project from approved PRD/TRD | Project skeleton, base config, startup notes |
 | `feature-implementor` | Implementing a confirmed TRD or design document | `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`, code changes, necessary docs |
 | `test-writer` | Adding unit, integration, or validation coverage | Test files, test execution evidence |
 | `debugger` | Reproducing, diagnosing, and fixing bugs or build failures | Minimal fix, regression evidence |
@@ -35,7 +34,6 @@
 
 - Understand repository structure, stack, and architecture boundaries: use `codebase-analyzer`
 - Write or update the technical plan, API docs, or ADRs after PRD confirmation: use `trd-gen`
-- Bootstrap a new project or service: use `project-bootstrap`
 - Implement features, behavior changes, or design handoff: use `feature-implementor`
 - Frontend code updates, UI implementation, or design-to-code: enter through Engineer; hand off to Designer only when design deliverables are missing or stale
 - Add tests, coverage, or implementation validation: use `test-writer`

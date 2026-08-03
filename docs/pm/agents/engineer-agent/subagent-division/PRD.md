@@ -10,7 +10,7 @@ feature: "engineer-agent-subagent-division"
 feature_path: "agents/engineer-agent/subagent-division"
 parent_feature: "agents/engineer-agent"
 feature_level: "3"
-last_updated: "2026-06-15"
+last_updated: "2026-08-01"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/12"
 related_docs:
   - "docs/pm/agents/engineer-agent/subagent-division/DECISIONS.md"
@@ -79,7 +79,7 @@ Engineer Agent 负责代码库分析、功能实现、测试补充、问题修�
 | FR-003 | 主进程职责 | 保留主进程作为协调者和最终整合者。 | P0 | 指导中说明主进程保留 PM 文档、设计文档、仓库规则、实现边界、测试证据、风险和最终交付说明。 |
 | FR-004 | 实现 sub-agent 契约 | 定义实现委派必须包含的内容。 | P0 | 委派任务必须包含负责文件或模块、预期行为、测试期望、禁止触碰区域，以及不得回退无关改动。 |
 | FR-005 | 验收 sub-agent 契约 | 定义验收委派必须包含的内容。 | P0 | 验收必须检查源需求、设计约束、仓库规则、测试结果、角色边界和遗留风险。 |
-| FR-006 | Specialist skill 覆盖 | 更新复杂编码阶段相关 Engineer Agent dispatcher 和 specialist skill 指导。 | P0 | `engineer-agent`、`feature-implementor`、`debugger` 指导体现 implementation/validation split；TRD 文档编写委派属于相邻能力，`project-bootstrap` 是否纳入由实施决策确认。 |
+| FR-006 | Specialist skill 覆盖 | 更新复杂编码阶段相关 Engineer Agent dispatcher 和 specialist skill 指导。 | P0 | `engineer-agent`、`feature-implementor`、`debugger` 指导体现 implementation/validation split；TRD 文档编写委派属于相邻能力。 |
 | FR-007 | 仓库文档对齐 | 让仓库级指导与新的 Engineer Agent 行为保持一致。 | P1 | 仓库级文档描述该分工模式，但不改变角色归属。 |
 | FR-008 | Eval 覆盖 | 新增或更新至少一个“文档驱动实现 + 独立验收”的 eval。 | P0 | Eval 断言检查触发行为、实现委派质量、验收依据和最终整合总结。 |
 
@@ -172,7 +172,7 @@ erDiagram
 | 类型 | 描述 | 如果不成立的影响 |
 | --- | --- | --- |
 | 假设 | 当前会话支持 sub-agent 执行能力。 | 如果不支持，需要降级为明确的结构化 handoff 语言。 |
-| 假设 | `feature-implementor` 和 `debugger` 足以覆盖 MVP。 | 如果 `project-bootstrap` 必须纳入，实施和 eval 范围会扩大。 |
+| 假设 | `feature-implementor` 和 `debugger` 足以覆盖 MVP。 | 如果不成立，实施和 eval 范围需要重新确认。 |
 | 约束 | 仓库变更应保持小范围，不做无关重构。 | PR 只应触及相关指导、文档、eval 和 fixture。 |
 | 约束 | Eval 变更必须遵循共享 `evals.json` schema version `1.0`。 | 无效 eval 定义会阻塞仓库契约检查。 |
 | 约束 | 不提交运行期 eval 产物。 | Transcript、outputs、diagnostics 等生成物不得进入 git。 |
@@ -193,7 +193,6 @@ erDiagram
 | Phase 1 | 更新 Engineer Agent dispatcher 和 MVP specialist 指导，覆盖复杂编码任务。 | TBD | Engineer maintainer |
 | Phase 2 | 增加真实 eval fixture 和断言，覆盖文档驱动实现与独立验收。 | TBD | Engineer maintainer |
 | Phase 3 | 运行确定性仓库检查，并在维护者确认后运行相关模型 eval。 | TBD | Maintainer |
-| Phase 4 | 复盘 `project-bootstrap` 是否需要同样模式，再决定是否扩大范围。 | TBD | PM / Engineer maintainer |
 
 ## 14. 风险与缓解
 
@@ -209,7 +208,6 @@ erDiagram
 
 | # | 问题 | Owner | 截止点 | 结论 |
 | --- | --- | --- | --- | --- |
-| 1 | `project-bootstrap` 是否纳入 MVP，还是作为后续阶段？ | PM / Engineer maintainer | 实施前 | 待确认 |
 | 2 | 默认触发阈值应基于文件数量、模块数量、是否存在 PM/design 文档，还是组合启发式？ | Engineer maintainer | 实施前 | 待确认 |
 | 3 | 当确定性测试和验收 sub-agent 都可用时，验收应在测试前还是测试后执行？ | Engineer maintainer | 实施前 | 待确认 |
 | 4 | 使用该工作流时，最终交付说明是否必须包含独立的“验收结论”行？ | PM / Engineer maintainer | 实施前 | 待确认 |

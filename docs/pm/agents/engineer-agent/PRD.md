@@ -9,7 +9,7 @@ version: "1.2.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-24"
+last_updated: "2026-08-01"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -39,7 +39,7 @@ changelog:
 
 ## 背景
 
-`engineer-agent` 是 Engineer Agent 的统一入口，负责代码库分析、TRD、项目初始化、功能实现、测试、调试和交付。它的产品目标是把用户的角色级请求分流到一个最小足够的 specialist skill，而不是把一次请求扩展成全量流水线。
+`engineer-agent` 是 Engineer Agent 的统一入口，负责代码库分析、TRD、功能实现、测试、调试和交付。它的产品目标是把用户的角色级请求分流到一个最小足够的 specialist skill，而不是把一次请求扩展成全量流水线。
 
 ## 目标
 
@@ -68,8 +68,8 @@ changelog:
 
 | ID | User Story | Priority | Acceptance Criteria |
 |----|-----------|----------|---------------------|
-| US-A01 | 作为用户，我想通过 `engineer-agent` 进入代码库分析、TRD、项目初始化、功能实现、测试、调试和交付流程，以便获得最小足够的 specialist 处理。 | P0 | 给定匹配请求，输出一个主 route、选择理由和下一步产物。 |
-| US-A02 | 作为维护者，我想确认 route matrix 不自路由、不全量执行，以便和 eval 保持一致。 | P0 | 流程图只从 dispatcher 指向 specialist：`codebase-analyzer`, `trd-gen`, `project-bootstrap`, `feature-implementor`, `test-writer`, `debugger`, `delivery`。 |
+| US-A01 | 作为用户，我想通过 `engineer-agent` 进入代码库分析、TRD、功能实现、测试、调试和交付流程，以便获得最小足够的 specialist 处理。 | P0 | 给定匹配请求，输出一个主 route、选择理由和下一步产物。 |
+| US-A02 | 作为维护者，我想确认 route matrix 不自路由、不全量执行，以便和 eval 保持一致。 | P0 | 流程图只从 dispatcher 指向 specialist：`codebase-analyzer`, `trd-gen`, `feature-implementor`, `test-writer`, `debugger`, `delivery`。 |
 | US-A03 | 作为下游 Agent，我想收到明确 handoff，以便继续工作时不重猜上下文。 | P1 | handoff 包含 target、source docs、blocked reason 或 expected output。 |
 
 ## 功能需求
@@ -77,7 +77,7 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-A00 | Entry Dispatcher | `engineer-agent` 必须作为入口 dispatcher，负责激活角色级流程。 | P0 | README、marketplace 和 entry SKILL 都指向 `engineer-agent`。 |
-| FR-A01 | Route Matrix | Dispatcher 必须只选择一个最小主 route，除非用户明确要求更广链路。 | P0 | 主 route 属于 `codebase-analyzer`, `trd-gen`, `project-bootstrap`, `feature-implementor`, `test-writer`, `debugger`, `delivery`，不包含 `engineer-agent` 自身。 |
+| FR-A01 | Route Matrix | Dispatcher 必须只选择一个最小主 route，除非用户明确要求更广链路。 | P0 | 主 route 属于 `codebase-analyzer`, `trd-gen`, `feature-implementor`, `test-writer`, `debugger`, `delivery`，不包含 `engineer-agent` 自身。 |
 | FR-A02 | Context Boundary | Dispatcher 只收集路由所需上下文；实现/审查/测试细节由被选 specialist 收集。 | P0 | 缺少内容级上下文不会让入口停在元路由。 |
 | FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任。 | P0 | Dispatcher 输出预期产物类型，不伪装成 specialist report。 |
 | FR-A04 | Handoff | 需求变化回 pm-agent:idea-to-spec；设计交付物回 designer-agent；工程完成后按情况给 qa-agent、devops-agent、security-agent；QA E2E handoff 包含 PRD/TRD、确认的 IMPLEMENTATION_PLAN、变更文件、验证命令、风险和建议目录。 | P0 | Handoff 指向 owning skill/agent，并说明输入包和期望输出。 |
@@ -92,7 +92,6 @@ changelog:
 |---|---|
 | `codebase-analyzer` | 理解项目根、技术栈、架构、约定、依赖和 CI/CD |
 | `trd-gen` | PRD/产品决策稳定后的 TRD 或 TRD gap packet |
-| `project-bootstrap` | 已有 TRD/approved PM docs 后初始化项目，或用户显式 skip PM scaffold override |
 | `feature-implementor` | TRD 确认后先写 IMPLEMENTATION_PLAN 并获确认，再实现；前端 UI 更新在设计交付物覆盖后进入本 route |
 | `test-writer` | 补测试；无 Test Spec 时可从 PRD/API/code 推导 |
 | `debugger` | 失败日志、构建失败、GitHub bug issue；先对齐期望、复现、分析、repair plan、确认，再修复 |
@@ -124,7 +123,6 @@ flowchart LR
     Context --> Decision{"选择一个最窄主 route"}
     Decision --> codebase_analyzer["codebase-analyzer"]
     Decision --> trd_gen["trd-gen"]
-    Decision --> project_bootstrap["project-bootstrap"]
     Decision --> feature_implementor["feature-implementor"]
     Decision --> test_writer["test-writer"]
     Decision --> debugger["debugger"]

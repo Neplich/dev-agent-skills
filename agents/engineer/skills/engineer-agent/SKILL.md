@@ -1,6 +1,6 @@
 ---
 name: engineer-agent
-description: "Downstream engineering router invoked after pm-agent handoff. Classifies confirmed engineering scope across codebase analysis, TRD generation, bootstrap, implementation, tests, debugging, delivery, and UI implementation, then delegates to engineering specialists."
+description: "Downstream engineering router invoked after pm-agent handoff. Classifies confirmed engineering scope across codebase analysis, TRD generation, implementation, tests, debugging, delivery, and UI implementation, then delegates to engineering specialists."
 visibility: internal
 ---
 
@@ -14,8 +14,8 @@ repo context, and current delivery stage.
 
 `engineer-agent` is responsible for:
 
-- identifying whether the request is about understanding, scaffolding,
-  implementing, testing, debugging, or delivering code
+- identifying whether the request is about understanding, implementing,
+  testing, debugging, or delivering code
 - selecting the narrowest downstream engineering skill
 - owning technical planning after PM requirements are confirmed
 - owning API documentation and ADR routing after PM scope is confirmed
@@ -78,8 +78,8 @@ packet fields are defined in
 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
 
 - If the user directly invokes `engineer-agent`, `feature-implementor`,
-  `debugger`, `test-writer`, `project-bootstrap`, or `delivery` without a
-  packet, equivalent specialist entry basis, or explicit bootstrap override,
+  `debugger`, `test-writer`, or `delivery` without a packet or equivalent
+  specialist entry basis,
   do not execute the engineering workflow; return the request to `pm-agent`
   for classification.
 - If a packet is present, preserve its `request_type`, `change_tier`,
@@ -91,12 +91,9 @@ packet fields are defined in
   requires same-path PRD, TRD, and confirmed implementation scope; `debugger`,
   `test-writer`, `delivery`, and `codebase-analyzer` use their own documented
   expected-behavior, test-basis, completed-work, or project-context gates.
-- If the user directly requests `project-bootstrap` and explicitly says to skip
-  PM and scaffold anyway, route to `project-bootstrap`; that specialist owns
-  the override path and minimum stack questions.
-- Detailed PRD/TRD, repair, bootstrap, plan, and closeout gates live in the
-  selected specialist (`feature-implementor`, `debugger`, `project-bootstrap`,
-  `trd-gen`, or `test-writer`); this router points to them instead of copying
+- Detailed PRD/TRD, repair, plan, and closeout gates live in the selected
+  specialist (`feature-implementor`, `debugger`, `trd-gen`, or `test-writer`);
+  this router points to them instead of copying
   their full gate text.
 
 All Engineer document-writing tasks, including TRD and implementation plan
@@ -130,7 +127,6 @@ sub-agents.
 
 - `engineer-agent:codebase-analyzer` - Understand repo structure, stack, conventions, constraints
 - `engineer-agent:trd-gen` - Write or update Engineer-owned TRDs, API docs, and ADRs after PRD confirmation
-- `engineer-agent:project-bootstrap` - Scaffold or initialize a new project from a TRD, approved PM docs, or explicit bootstrap override
 - `engineer-agent:feature-implementor` - Implement features, behavior changes, and scoped refactors
 - `engineer-agent:test-writer` - Add or update automated tests and coverage
 - `engineer-agent:debugger` - Reproduce, diagnose, and fix bugs or failing builds/tests
@@ -144,7 +140,6 @@ Route by the engineering outcome the user wants, not by literal phrasing.
 | --- | --- | --- |
 | 理解仓库、技术栈、约束、现有模式 | `codebase-analyzer` | Repo understanding, technical due diligence, "这个项目怎么组织的", "技术栈是什么", "接手这个仓库" |
 | PRD 确认后的技术计划、TRD/API/ADR 编写或更新 | `trd-gen` | Technical planning from confirmed PRD and product decisions, TRD creation or revision, architecture plan, implementation blueprint, "写 TRD", "技术方案", "技术计划", "工程设计", "API 文档", "接口规范", "ADR", "架构决策" |
-| 新项目/新服务初始化、脚手架搭建（已确认 TRD / 已批准 PM 文档 / 显式跳过 PM） | `project-bootstrap` | New project setup, greenfield bootstrap, scaffolding from a confirmed TRD, approved PM docs, or an explicit "skip PM and just scaffold" request, "初始化项目", "搭个骨架", "起一个服务" |
 | 实现需求、改行为、按 spec 或设计落地、设计转代码、前端/UI 实现与优化、为需求做重构 | after the existing feature alignment gate passes, `feature-implementor` | Feature implementation, code changes, requirement delivery, design-to-code, frontend code updates, UI implementation, interface optimization, scoped refactors in service of a requirement, "实现功能", "落地设计", "更新前端代码", "改 UI", "优化界面实现", "把这个需求做掉", "改造这块逻辑" |
 | 补测试、补 coverage、把实现转成自动化验证 | `test-writer` | Test coverage, acceptance tests, unit/integration tests, "补测试", "加 coverage", "验证实现" |
 | 修 bug、查失败、定位构建/运行/测试异常、线上回归、hotfix | after the expected behavior is aligned against PRD / TRD, `debugger` | Bug fixing, failing tests, broken builds, runtime regressions, hotfixes, "为什么挂了", "修 bug", "debug 一下", "CI 炸了" |
@@ -164,20 +159,17 @@ If the request is engineering-shaped but underspecified, use these defaults:
 
 ## PM Handoff Guardrail
 
-- If the workspace is empty or near-empty and the user is still describing
-  product behavior, layout, flows, or scope, do not select
-  `project-bootstrap` yet.
+- If the workspace is empty or near-empty and the user is describing product
+  behavior, layout, flows, scope, initialization, or scaffolding, hand off to
+  `pm-agent` for normal classification.
 - Mentions like "做一个 AI 对话助手", "左边会话列表右边聊天区", or similar app
   shape requests are PM-first unless the stack and scope are already settled.
-- `project-bootstrap` starts only when there is a TRD, approved PM docs, or the
-  user explicitly says to skip PM and scaffold code immediately.
 
 ## Common Multi-Skill Chains
 
 Use these only when the user clearly wants the broader workflow:
 
 - 现有项目完整开发流程 -> `codebase-analyzer` -> `trd-gen` -> `feature-implementor` -> `test-writer` -> `delivery`
-- 新项目落地（PRD 已确认） -> `trd-gen` -> `project-bootstrap` -> `feature-implementor` -> `test-writer` -> `delivery`
 - bug 修复闭环 -> PRD / TRD expected-behavior alignment -> `debugger` -> `test-writer` -> `delivery`
 - 已完成实现补交付 -> `test-writer` -> `delivery`
 
@@ -194,9 +186,8 @@ validation conclusion, tests run, and residual risks when that split is used.
   materially route to different outputs and repo context cannot answer it.
 - If the repo needs understanding before implementation, prefer
   `codebase-analyzer` first rather than asking broad exploratory questions.
-- If the workspace is empty/new and no TRD or approved PM docs exist yet, point
-  the user to `pm-agent:idea-to-spec` unless they explicitly instruct you to
-  skip PM and scaffold immediately.
+- If the workspace is empty/new, point the user to `pm-agent` for normal
+  classification.
 - If the user is actually asking for QA validation, security review, design
   deliverables, or deployment work, route the engineering portion only and make
   the next handoff explicit to `qa-agent`, `security-agent`,

@@ -1,40 +1,31 @@
-# Skill Eval Comparison
+# pm-agent Eval Comparison: eval-014
 
-## Evaluation Target
+## Evaluation target
 
 - Skill: `pm-agent`
-- Eval: `eval-014-route-site-notes-and-github-release`
-- Review context: issue #196 L2-4 fresh paired validation
+- Test: `eval-014-route-site-notes-and-github-release`
+- Fixture version: current `README.md` and `eval_metadata.json` at 2026-08-01 13:12 +0800
+- Fresh run: same prompt/fixture, newly generated with-skill and without-skill responses; no reused baseline.
 
-## Test Set / Fixture Version
+## Latest result:
 
-- Schema: `evals.json` v1.0; current prompt and fixture
-- Validation date: 2026-07-31
-- Sources: fresh with-skill session `019fb589-672e-7bc0-95ff-2ada072730dd`; fresh isolated baseline session `019fb58b-f4fa-7232-abda-91612bafb9a3`
-
-## Latest Result
-
-- Latest result: PASS
-- Behavior result: PASS (4/4 assertions)
-- Coverage result: FULL (4/4 assertions exercised)
+- Behavior result: PASS — all 4 assertions passed.
+- Coverage result: FULL — 4/4 assertion scenarios were exercised.
 - Overall result: PASS
 
-## With-Skill Behavior
+## With-skill behavior
 
-Routed site notes to `docs-agent:release-notes-generator`, GitHub Release work to PM `github-release-generator`, and preserved the ready-handoff/release-audit sequence without reviving the old PM name.
+Routed site notes to `docs-agent:release-notes-generator`, GitHub Release preview to PM `github-release-generator`, preserved site-ready and audit gates, and did not revive the old PM skill name.
 
-## Fresh Without-Skill Baseline
+## Without-skill baseline
 
-Preserved the sequence and avoided collapsing the tasks, but omitted both canonical specialist owner names.
+The fresh baseline preserved generic ordering but did not identify the exact specialist names, ownership prohibitions, or audit gate.
 
-## Failures
+## Failures and next steps
 
-- None.
-
-## Next Steps
-
-- None.
+- Failures: none.
+- Next steps: none for this fixture.
 
 ## Runtime Artifacts Policy
 
-- Runtime outputs remain in `tmp/eval-runs/issue-196-l2-3-4/pm-agent/eval-014-route-site-notes-and-github-release/` and are not committed.
+Runtime evidence is isolated under `tmp/eval-runs/issue-196-project-bootstrap-removal-20260801-131022/pm-agent/eval-014-route-site-notes-and-github-release/` and is not committed.

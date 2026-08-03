@@ -19,7 +19,7 @@
         {
           "id": "pm_first_guardrail",
           "description": "空目录 PM-first 边界",
-          "text": "必须识别空目录里的产品想法不能直接进入 `engineer-agent` 或项目脚手架，除非用户明确要求跳过 PM。"
+          "text": "必须识别空目录里的产品想法没有 skip-PM override，任何直跳工程执行的请求都必须返回 `pm-agent` 正常分类。"
         },
         {
           "id": "context_to_collect",
