@@ -94,7 +94,7 @@
     "spec-based-tester": {
       "source": "agents/qa/skills/spec-based-tester",
       "sourceType": "local",
-      "computedHash": "6601376729dc484464e57239ff0098c8ac8af352c84acb93eb0a55b689509ffe"
+      "computedHash": "7ee53250b1c6071ad0d7fb389ac2fe14858619902b26f0ab2683dd6a4d9dd482"
     },
     "bug-analyzer": {
       "source": "agents/qa/skills/bug-analyzer",
