@@ -28,7 +28,7 @@
 - PASS `excludes_internal_quality_evidence`：双侧都排除 skill eval、assertion 数、review 轮次与 QA 汇总
 - PASS `preserves_confirmed_facts`：双侧都保留两项独立功能、统一附件兼容链路、nullable JSONB 迁移与删列风险、部署顺序和开关、双架构资产、升级步骤及旧浏览器限制
 - PASS `title_matches_gate`（issue-190 新增）：标题为 `v1.0.0 - 文件卡片、原位重试与统一附件交付`，满足版本加主题概述格式、非裸 tag；without-skill FAIL（`AI Hub v1.0.0` 不符合）
-- PASS `upgrade_note_fixed_structure`（issue-190 新增）：升级说明含实质简述、`### Claude Code`/`### Codex`/`### Kimi Code` 三个指令小节与收尾句，未臆造 fixture 之外的 plugin 更新声明；without-skill FAIL（仅普通升级段落）
+- PASS `upgrade_note_fixed_structure`（issue-190 新增）：升级说明含实质简述、按宿主适用性呈现的指令小节（非 marketplace 宿主按事实源给出升级动作、可省略不适用小节，无空壳小节）与收尾句，未臆造 fixture 之外的 plugin 更新声明；without-skill FAIL（仅普通升级段落）
 
 ## With Skill Behavior
 

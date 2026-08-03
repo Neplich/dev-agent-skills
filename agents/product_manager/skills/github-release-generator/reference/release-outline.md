@@ -74,9 +74,12 @@ maintainer approval, and no draft may be created or updated with it.
 
 ## Upgrade Note Template
 
-The `## 升级说明` section is mandatory and must follow this fixed structure
-verbatim. A placeholder sentence or a missing instruction subsection is not a
-submit-ready upgrade note and blocks draft creation or update.
+The `## 升级说明` section is mandatory and must follow this fixed structure.
+A placeholder sentence, or a missing instruction subsection that applies to
+the host, is not a submit-ready upgrade note and blocks draft creation or
+update. For this marketplace the three instruction subsections are all
+mandatory; for other hosts only the subsections applicable to the confirmed
+fact source are required.
 
 1. **简述**：首段为固定结构，内容受已确认事实源约束。仅当事实源同时确认
    无新增 plugin、plugin 集合与当前 7 个 role plugin 一致、且无破坏性变更
@@ -103,7 +106,7 @@ submit-ready upgrade note and blocks draft creation or update.
    ```
 
    ```text
-   Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/heads/main/.codex/INSTALL.md
+   Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/tags/v{VERSION}/.codex/INSTALL.md
    ```
 
    ```text
