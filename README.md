@@ -73,6 +73,8 @@ The repository ships a `.kimi-plugin/plugin.json` manifest: all seven role skill
 
 Skills previously installed Codex-style into `~/.agents/skills/` are also discovered by Kimi Code automatically; the native plugin above is the recommended path.
 
+**Using both Codex and Kimi Code?** Install only via the Codex path (`~/.agents/skills/`): Kimi Code discovers that directory automatically, so one copy serves both hosts as a single source of truth. Installing the Kimi plugin alongside it creates two same-named copies per skill — a live symlink tree versus an install-time snapshot under `~/.kimi-code/plugins/managed/` — whose versions can drift apart.
+
 ## Usage Examples
 
 ```text
