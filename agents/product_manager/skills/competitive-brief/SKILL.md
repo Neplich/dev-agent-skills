@@ -167,7 +167,7 @@ For each competitor:
 
 ## Output
 
-Present the full competitive brief with clear formatting. Note the date of the research so the user knows the freshness of the data.
+在 Battlecard Mode（pm-agent 以 `battlecard` 信号路由的初始请求）下，只输出单页 battlecard 产物，不再输出完整 brief，也不询问是否创建 battlecard。其他请求输出完整 competitive brief。无论哪种模式，都注明研究日期，让用户知道数据的时效性。
 
 After the brief, ask:
 

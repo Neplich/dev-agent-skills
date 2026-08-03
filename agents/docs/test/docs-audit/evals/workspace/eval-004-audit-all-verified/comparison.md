@@ -11,13 +11,14 @@
 ## Test set and method
 
 This is a fresh paired validation against the current 6 assertions. The
-`without_skill` baseline ran first from a pristine fixture copy and read only
-the current eval definition, metadata, prompt, and fixture files. It did not
-read the Docs Agent README, `docs-audit` skill instructions, prior comparison,
-or historical output. The `with_skill` run then started from a second pristine
-fixture copy after fully reading `agents/docs/skills/docs-audit/SKILL.md`,
-`agents/docs/skills/docs-audit/_internal/INSTRUCTIONS.md`, and
-`agents/docs/README.md`.
+`with_skill` and `without_skill` runs (2026-08-03, #188) each started from their own pristine fixture copy in
+isolated directories (`tmp/eval-runs/issue-188-docs/with_skill/` and `tmp/eval-runs/issue-188-docs/without_skill/`),
+executed independently without reading each other's outputs. The `without_skill` baseline read only
+the current eval definition, metadata, prompt, and fixture files, and did not read the Docs Agent README,
+`docs-audit` skill instructions, prior comparison, or historical output. The `with_skill` run read
+`agents/docs/skills/docs-audit/SKILL.md`, `agents/docs/skills/docs-audit/_internal/INSTRUCTIONS.md`, and
+`agents/docs/README.md` before executing. The fresh judge then read the frozen bilateral candidates and
+the assertions, and produced the verdict in `tmp/eval-runs/issue-188-docs/judge/verdict.md`.
 
 ## Latest result
 

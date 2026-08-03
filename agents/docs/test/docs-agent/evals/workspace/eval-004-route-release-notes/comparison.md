@@ -7,9 +7,9 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: `cross-doc audit 2026-07-19`
-- Fresh run: `tmp/eval-runs/117-adjacent/docs-agent/eval-004-route-release-notes/`
-- Source head: `00c9741dabc24f6b6df377c69c42adb989722648` plus the current cross-doc audit working tree
+- Fixture version: `release-handoff.md`（fixture 身份文本 2026-07-29 更新后）
+- Fresh run（2026-08-03，#188）：`tmp/eval-runs/issue-188-docs/with_skill/eval-004-route-release-notes/candidate-output.md` 与 `tmp/eval-runs/issue-188-docs/without_skill/eval-004-route-release-notes/candidate-output.md`
+- Judge verdict: `tmp/eval-runs/issue-188-docs/judge/verdict.md`
 
 ## Latest Result
 
@@ -52,4 +52,4 @@ fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 
 
 ## Runtime Artifact Policy
 
-- candidate、transcript、manifest、diff 与状态文件仅保留在 `tmp/eval-runs/117-adjacent/`，不提交到 git。
+- candidate、transcript、manifest、diff 与状态文件仅保留在 `tmp/eval-runs/issue-188-docs/`，不提交到 git。

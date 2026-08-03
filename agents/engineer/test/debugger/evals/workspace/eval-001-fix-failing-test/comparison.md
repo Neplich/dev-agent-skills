@@ -55,5 +55,6 @@
 ## 2026-08-03 变更后回归（issue #188）
 
 - 变更：删除 Common root cause patterns 根因表（A 维实测确认磨平）。
+- 验证：删除后 paired 回归（fresh 双侧，judge 独立判定）：with-skill 7/7 PASS、without-skill 2/7 PASS（PRD/TRD 精确引用、分类、合并计划、确认停点、E2E/计划门禁保持明确区分）。
 - 验证：L3 A 维 with/without 实测确认磨平（judge 独立判定，证据 `tmp/eval-runs/issue-188-l3/`）；删除后以原 eval prompt + fixture 重跑 with-skill，fresh judge 逐条判定原断言全部 PASS（7/7 PASS），Behavior result **PASS**，**无回归**（证据 `tmp/eval-runs/issue-188-regress/`）。
 

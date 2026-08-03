@@ -19,9 +19,10 @@ fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 
 
 ## Run sources
 
-- `without_skill`: fresh baseline；先仅读取本例 prompt、assertions、metadata 与 fixture，未读取或应用 docs-audit skill、Docs Agent README 或旧 `comparison.md`。
-- `with_skill`: fresh candidate；baseline 冻结后完整读取 `docs-audit/SKILL.md`、`docs-audit/_internal/INSTRUCTIONS.md` 与 `agents/docs/README.md`，并在同 prompt/pristine fixture 下重新判断。
-- 本轮没有复用历史 baseline、旧 comparison 内容或历史运行产物。
+- 2026-08-03（#188）fresh re-baseline：`with_skill` 与 `without_skill` 各自在隔离目录（`tmp/eval-runs/issue-188-docs/with_skill/` 与 `tmp/eval-runs/issue-188-docs/without_skill/`）的 pristine fixture 副本中独立执行，互不读取对方输出。
+- `without_skill`: fresh baseline；仅读取本例 prompt、assertions、metadata 与 fixture，未读取或应用 docs-audit skill、Docs Agent README 或旧 `comparison.md`。
+- `with_skill`: fresh candidate；完整读取 `docs-audit/SKILL.md`、`docs-audit/_internal/INSTRUCTIONS.md` 与 `agents/docs/README.md`，并在同 prompt/pristine fixture 下执行。
+- fresh judge 读取冻结的双侧 candidate 与 assertions 判定（`tmp/eval-runs/issue-188-docs/judge/verdict.md`）；本轮没有复用历史 baseline、旧 comparison 内容或历史运行产物。
 
 ## Assertion review
 
