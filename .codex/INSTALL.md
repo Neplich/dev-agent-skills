@@ -74,9 +74,16 @@ do. Omit it for a plain latest install.
 ```bash
 if [ -d "$CLONE_ROOT/.git" ]; then
   if [ -n "$TARGET_TAG" ]; then
+    if ! git -C "$CLONE_ROOT" diff --quiet; then
+      echo "error: $CLONE_ROOT has uncommitted changes; commit or stash them before a pinned install" >&2
+      exit 1
+    fi
     git -C "$CLONE_ROOT" fetch --tags origin
     git -C "$CLONE_ROOT" checkout "$TARGET_TAG"
   else
+    # A previous pinned install leaves a detached HEAD; return to main first
+    # so the unpinned update applies to the branch and not a detached state.
+    git -C "$CLONE_ROOT" checkout main 2>/dev/null || true
     git -C "$CLONE_ROOT" pull --ff-only
   fi
 else

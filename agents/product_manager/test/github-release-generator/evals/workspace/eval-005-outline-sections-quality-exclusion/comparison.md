@@ -39,7 +39,7 @@
 ## Without Skill Baseline
 
 - 来源：issue-190 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
-- 行为：3/5 assertions PASS；能保留事实与排除内部质量证据，但不遵守四节 outline、标题格式门禁与升级说明固定结构——新增两条断言在 without-skill 侧保持区分度。
+- 行为：2/5 assertions PASS；能保留事实与排除内部质量证据，但不遵守四节 outline、标题格式门禁与升级说明固定结构——新增两条断言在 without-skill 侧保持区分度。
 
 ## Failures / Findings
 

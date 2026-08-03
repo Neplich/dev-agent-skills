@@ -40,7 +40,7 @@
 ## Without Skill Baseline
 
 - 来源：issue-190 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
-- 行为：4/6 assertions PASS；缺顺序门禁、`ready_for_tag` 权限边界、draft latest 保护与最终写复查序列——这些正是 with-skill 的协议增量。
+- 行为：3/6 assertions PASS；缺顺序门禁、`ready_for_tag` 权限边界、draft latest 保护与最终写复查序列——这些正是 with-skill 的协议增量。
 
 ## Failures / Findings
 
