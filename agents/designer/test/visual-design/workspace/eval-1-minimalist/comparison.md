@@ -1,47 +1,56 @@
-# Evaluation Comparison: Minimalist Design System
+# Eval Result: eval-001-minimalist
 
-## Evaluation target
+## Evaluation Target
 
+- Agent: `designer`
 - Skill: `visual-design`
 - Eval: `eval-001-minimalist`
-- Test set / fixture version: `evals.json` schema `1.0` on 2026-08-01; fixture includes a confirmed PM handoff with `feature_path: minimalist-productivity-app`
-- Fresh run root: `tmp/eval-runs/pr-204-fix-round-20260801/visual-design/eval-001-minimalist/`
+- Test case: Minimalist Design System
+- Workspace: `workspace/eval-1-minimalist`
 
-## Latest result
+## Test Set or Fixture Version
+
+- Schema: `evals.json` v1.0
+- Fixture version: HEAD `a452319`
+- Fresh run time: `2026-08-03 11:58:33 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/designer/visual-design/eval-001-minimalist/`
+- Fixture: confirmed PM handoff with `feature_path: minimalist-productivity-app`
+
+## Latest Result
 
 - Behavior result: **PASS**
 - Coverage result: **FULL**
-- Overall result: PASS
+Overall result: PASS
 
-All three assertions were exercised against the reachable design-generation path.
+All three assertions were exercised on the reachable visual-system generation path.
 
-## Run sources
+## Assertion Results
 
-- With skill: `with_skill/docs/design/minimalist-productivity-app/visual-system.md` and `with_skill/candidate-output.md` under the fresh run root were generated after reading the current Designer README, router, `visual-design` skill, current eval definition, complete fixture, and required local references. `with_skill/outputs/design-system-search.md` records the fresh local lookup and its scoped adaptation.
-- Without skill: `without_skill/outputs/design-notes.md` was regenerated from an independent copy of the original prompt and fixture only, without applying the Designer README, router, `visual-design` skill, prior baseline, with-skill output, or old comparison.
-- Fresh judge: `judge.md` under the fresh run root records assertion-level decisions.
+- `assertion_1`: **PASS** — the candidate targets `docs/design/minimalist-productivity-app/visual-system.md` and covers color, typography, spacing, and dimensioned components.
+- `assertion_2`: **PASS** — it includes no token code, CSS/component implementation, engineering task decomposition, or test command.
+- `assertion_3`: **PASS** — implementation is explicitly handed to `engineer-agent`.
 
-## With-skill behavior and assertion evidence
+## With-Skill Behavior
 
-- `assertion_1`: **PASS** — the artifact is written at the confirmed canonical path `docs/design/minimalist-productivity-app/visual-system.md`; it defines purposeful colors, a role-based type scale, a density-derived spacing scale, and dimensioned button/input/panel/task-row rules.
-- `assertion_2`: **PASS** — the artifact and response contain no design-token code, CSS/component implementation, engineering task decomposition, or test command.
-- `assertion_3`: **PASS** — `## Design Handoff` explicitly states “Designer stops here. Next role: `engineer-agent`.”
+- Runs the local Design System Data helper, keeps useful flat/low-noise cues, and rejects its unconfirmed App Store landing framing for this productivity product.
+- Produces a restrained, accessible, density-derived visual system and strips raw helper CSS/imports from the design artifact.
+- Uses confirmed audience and goals from the PM handoff; it neither requires nor cites BRD, so removal causes no tested behavior difference.
 
-The run also exercises the repaired size-system behavior: font sizes, line heights, weights, spacing, and component dimensions are derived from professional productivity density and platform conventions rather than copied as unexplained defaults.
+## Fresh Without-Skill Baseline
 
-## Fresh without-skill baseline
-
-The fresh baseline produces useful generic colors, type sizes, spacing, component sizes, and accessibility advice. It does not write the repository's canonical feature-scoped artifact, use the local reference lookup, or explicitly name the `engineer-agent` role boundary. The comparison therefore distinguishes repository protocol and reference-backed synthesis from generally plausible design advice.
+- This baseline was newly generated in this run from only the same prompt and PM handoff; it did not apply the Designer README, skill, local references, with-skill output, or old comparison.
+- It gives plausible minimalist visual notes and remains code-free, but does not perform the local reference lookup or consistently produce the canonical artifact and role handoff.
+- It contains no BRD reference.
 
 ## Failures
 
-- None.
+- None. The first helper attempt was blocked by the default `uv` cache path; rerunning unchanged with `UV_CACHE_DIR=/tmp/issue-198-uv-cache` succeeded and produced fresh lookup evidence.
 
-## Next steps
+## Next Steps
 
-- No skill or fixture correction is required from this run.
-- Keep the confirmed PM handoff in the fixture so future runs continue to exercise the intended generation path.
+- No skill or fixture correction is required for this case.
 
-## Runtime artifact policy
+## Runtime Artifact Policy
 
-Candidates, fresh baseline, lookup evidence, independent input copies, and judge diagnostics remain under `tmp/eval-runs/` and are not committed. Only this durable `comparison.md` is committed.
+- Runtime candidates, fresh baseline, helper diagnostics, and judge evidence remain under the ignored runtime directory and are not committed.
+- Only this durable `comparison.md` is updated.

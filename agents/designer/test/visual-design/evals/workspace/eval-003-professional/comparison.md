@@ -1,78 +1,55 @@
-# Evaluation Comparison: Professional Design System
+# Eval Result: eval-003-professional
 
-## Evaluation target
+## Evaluation Target
 
+- Agent: `designer`
 - Skill: `visual-design`
 - Eval: `eval-003-professional`
-- Test set / fixture version: `evals.json` schema `1.0` on 2026-07-31;
-  `evals/workspace/eval-003-professional/eval_metadata.json`, `PM_HANDOFF.md`, and PRD
-- Fresh run root:
-  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-003-professional/`
+- Test case: Professional Design System
+- Workspace: `workspace/eval-003-professional`
 
-## Latest result
+## Test Set or Fixture Version
+
+- Schema: `evals.json` v1.0
+- Fixture version: HEAD `a452319`
+- Fresh run time: `2026-08-03 11:58:33 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/designer/visual-design/eval-003-professional/`
+- Fixture: confirmed PM handoff and PRD for `enterprise-analytics`
+
+## Latest Result
 
 - Behavior result: **PASS**
 - Coverage result: **FULL**
-- Overall result: PASS
+Overall result: PASS
 
-## Run sources
+Both assertions were exercised on the reachable visual-system generation path.
 
-- With skill:
-  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-003-professional/with_skill/`
-  was generated fresh after reading Designer README, `visual-design/SKILL.md`, its linked local
-  design references, the current eval definition, handoff, PRD, and fixture metadata. The local
-  Design System Data helper was run and its mismatched lexical suggestions were reconciled against
-  the confirmed product context.
-- Without skill:
-  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-003-professional/without_skill/baseline-output.md`
-  was regenerated from the original prompt, PM handoff, and PRD only, without reading or applying
-  the skill, Designer README, with output, or old comparison.
-- Fresh judge:
-  `tmp/eval-runs/issue-196-l2-3-4/visual-design/eval-003-professional/judge.md`.
+## Assertion Results
 
-## With-skill behavior
+- `assertion_1`: **PASS** — the candidate states WCAG 4.5:1 normal-text and 3:1 large-text/UI-boundary thresholds and defines a clear enterprise data hierarchy.
+- `assertion_2`: **PASS** — it contains no component code, style-file change, or engineering command.
 
-The with-skill artifact defines a restrained enterprise analytics system with explicit WCAG 4.5:1
-and 3:1 thresholds, dense-workbench hierarchy, status rules that do not rely on color, and
-table/chart/filter/alert coverage. It derives typography, spacing, and component dimensions from
-desktop information density and names conditions under which touch-first dimensions must change.
-It stops at the Designer-to-Engineer handoff without implementation content.
+## With-Skill Behavior
 
-Assertion results:
+- Reconciles the helper's Enterprise Gateway/Trust & Authority result with the PRD's in-product, data-dense dashboard scope.
+- Targets `docs/design/enterprise-analytics/visual-system.md` with accessible colors, authoritative typography, compact spacing, dimensioned tables/charts/filters/alerts, explicit states, and Engineer handoff.
+- Reads audience, product goals, and visual tone from PRD and never requests or cites BRD; removal causes no tested behavior difference.
 
-- `assertion_1`: **PASS** — WCAG thresholds and enterprise hierarchy are explicit.
-- `assertion_2`: **PASS** — there is no component code, style-file change, or engineering command.
+## Fresh Without-Skill Baseline
 
-## Fresh without-skill baseline
-
-The baseline independently produced an accessible enterprise analytics system. It selected nearly
-the same trust palette, type roles, compact spacing progression, and desktop control dimensions,
-and tied those values to dense analytical work. It stayed design-only, though it lacked the
-canonical feature-scoped artifact structure, detailed state/component coverage, source
-reconciliation, and exact Designer handoff wording.
-
-## Font-size and spacing internalization observation
-
-The with-skill and baseline are substantively tied on “font-size/spacing system rationality.” Both
-derive a 28/20/16/14/12 hierarchy, 14/20 dense body/control role, 36 px controls, and a
-`4, 8, 12, 16, 24, 32` progression from the same high-density desktop context. The skill adds
-clearer per-role rationale, compact/default variants, and a platform-change condition, but the
-baseline already satisfies the core semantic derivation. Therefore this case has **insufficient
-discriminative power** for the L2-3 internalization dimension; the PASS is an assertion result,
-not evidence of a meaningful with-skill advantage.
+- This baseline was newly generated in this run from only the same prompt, PM handoff, and PRD; it did not apply the Designer README, skill, local helper/references, with-skill output, or old comparison.
+- It independently meets the broad accessibility and design-only assertions but lacks lookup reconciliation, canonical artifact depth, and exact role handoff.
+- It contains no BRD reference.
 
 ## Failures
 
-None for the current assertions.
+- None. The first helper attempt was blocked by the default `uv` cache path; rerunning unchanged with `UV_CACHE_DIR=/tmp/issue-198-uv-cache` succeeded.
 
-## Next steps
+## Next Steps
 
-- Keep the PASS result, while treating the tied baseline as decision evidence.
-- If stronger discrimination is needed, use a fixture whose brand or platform constraints require
-  departing from familiar dense-dashboard values and assert the reasoning rather than a particular
-  numeric scale.
+- No skill or fixture correction is required for this case.
 
-## Runtime artifact policy
+## Runtime Artifact Policy
 
-Candidates, baselines, helper output, and judge diagnostics remain under `tmp/eval-runs/` and are
-not committed. Only this durable `comparison.md` is committed.
+- Runtime candidates, fresh baseline, helper diagnostics, and judge evidence remain under the ignored runtime directory and are not committed.
+- Only this durable `comparison.md` is updated.

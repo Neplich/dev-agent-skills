@@ -18,7 +18,6 @@ feature_path: <multi-level feature path>
 parent_feature: <parent feature path or "N/A">
 feature_level: <positive integer path depth>
 reviewers: []
-related_brd: <filename or "N/A">
 ```
 
 Feature-scoped PRDs must be written to `docs/pm/{feature_path}/PRD.md`.
@@ -37,7 +36,6 @@ preserve the `skills` segment in `feature_path`, set
 ### 2. Background & Motivation
 
 - Problem statement with user/business context
-- Link to BRD if available
 - **Quality**: Must clearly state the *user pain* being addressed.
 
 ### 3. Goals & Non-Goals

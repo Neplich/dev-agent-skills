@@ -9,7 +9,7 @@ Every validator skill follows this workflow:
 
 1. **Load references**: Read the corresponding schema from
 `_internal/_shared/doc-schemas/`. Use the canonical filenames:
-   `brd-schema.md`, `prd-schema.md`, `trd-schema.md`, `adr-schema.md`,
+   `prd-schema.md`, `trd-schema.md`, `adr-schema.md`,
    `api-schema.md`, and `test-spec-schema.md`. Also load
 `_internal/_shared/quality-rules.md`.
 
@@ -21,7 +21,7 @@ Every validator skill follows this workflow:
 
 5. **Run type-specific checks**: Apply the checks defined in each validator's own INSTRUCTIONS.md (CRITICAL / WARNING / SUGGESTION).
 
-6. **Cross-check** (if related documents provided): Verify alignment between documents (e.g., PRD goals map to BRD objectives, TRD covers all PRD endpoints).
+6. **Cross-check** (if related documents provided): Verify alignment between documents (e.g., TRD covers all PRD endpoints).
 
 7. **Calculate overall score**: Apply weights from quality-rules.md.
 
@@ -37,7 +37,7 @@ All validators produce:
   ```markdown
   ## Validation Report
   - Document: <filename>
-  - Type: <BRD/PRD/TRD/ADR/API/TEST_SPEC>
+  - Type: <PRD/TRD/ADR/API/TEST_SPEC>
   - Overall Score: X.X / 5
   - Status: <PASS/NEEDS_WORK/FAIL>
 

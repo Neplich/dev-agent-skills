@@ -14,7 +14,7 @@
 | --- | --- |
 | 入口 skill | `designer-agent` |
 | Specialist skills | 2 个 |
-| 主要输入 | 已确认的 `docs/pm/{feature_path}/PRD.md`、`BRD.md`、`DECISIONS.md`、可选 `docs/engineer/{feature_path}/TRD.md`、参考网站或品牌线索 |
+| 主要输入 | 已确认的 `docs/pm/{feature_path}/PRD.md`、`DECISIONS.md`、可选 `docs/engineer/{feature_path}/TRD.md`、参考网站或品牌线索 |
 | 主要输出 | `docs/design/{feature_path}/ui-ux-spec.md`、`visual-system.md` |
 | 核心边界 | 只做设计文档，不生成代码、测试、脚本、部署配置 |
 

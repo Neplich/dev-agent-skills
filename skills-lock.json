@@ -4,17 +4,17 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "01e71bb00cf58ae5807a15cc548ac986803c1a801f8278b01bf300c1cc9d07b6"
+      "computedHash": "584196c4a81dffb2f9857fbdd8313c8369424641ff7a4fb76d6f3349d8a42793"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "9fd10a3bb0bbae66c4a22085cf983309dc3bc6beb82a68c1e9232459a24ac508"
+      "computedHash": "2947da42a815daf8cf8a56c55300655a257f0b15b67580bfe8830a98d6621a3f"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
       "sourceType": "local",
-      "computedHash": "36ea1a75e8baebee566966da35043ae605758b1632d780285f63ae9fbcf0470a"
+      "computedHash": "7f9550f63655cde1faff8dc5e7132f9663ff91c44585750f4557e37b0bb0ba26"
     },
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",
@@ -49,7 +49,7 @@
     "engineer-agent": {
       "source": "agents/engineer/skills/engineer-agent",
       "sourceType": "local",
-      "computedHash": "3c50d07e8d1acc43b87e79028704d1e65a22a80667b89c61b0c08d3d7899af0b"
+      "computedHash": "2eb51eab8c3b3a11e990cbc5526d19278b5580da8b20d3260fe7a1e25fc2ac7f"
     },
     "codebase-analyzer": {
       "source": "agents/engineer/skills/codebase-analyzer",
@@ -59,12 +59,12 @@
     "trd-gen": {
       "source": "agents/engineer/skills/trd-gen",
       "sourceType": "local",
-      "computedHash": "d270b28b21b7188aaed7a848adc196fd6fa77b2f497cb8c02da40bf1b2e277dc"
+      "computedHash": "f621a750b03bccbb2697b13dda712ecdca50ac4ff61671996476158ca28ab718"
     },
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
       "sourceType": "local",
-      "computedHash": "35adeb6258d8ae854d3c6dae794e3aefceff155bca2dfb36c8435fcee70985c2"
+      "computedHash": "e3ef42485e5f8f85203cbcf1df9a351aee97f6cde9095d9e7681e5cffdc31432"
     },
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",
@@ -139,12 +139,12 @@
     "ui-ux-design": {
       "source": "agents/designer/skills/ui-ux-design",
       "sourceType": "local",
-      "computedHash": "d73aa29f98f9452615093c695c0ca91fd631814edbe68fcf1e3c13e6579bec73"
+      "computedHash": "8d170b87f80a1fc0adaeea7b0436e212699d42c935e8db80f986bb64802dfa9f"
     },
     "visual-design": {
       "source": "agents/designer/skills/visual-design",
       "sourceType": "local",
-      "computedHash": "9efe083e173ca4dc5a6fdf5ab0371d105ab84fa264c262c05df67c1719b0930c"
+      "computedHash": "99e8442136f2c5f75e7bb714726b2ab8c3dfe97d73b37e4b3ccebc950d68d114"
     },
     "security-agent": {
       "source": "agents/security/skills/security-agent",

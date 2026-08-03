@@ -9,7 +9,7 @@ version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-08-03"
 generated_by: "prd-gen"
 related_docs:
   - "agents/designer/README.md"
@@ -67,7 +67,7 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-S01 | Trigger Matching | `ui-ux-design` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `ui-ux-design` SKILL.md 一致。 |
-| FR-S02 | Context Intake | 已确认 `feature_path` 下的 PRD/BRD/DECISIONS、可选 Engineer TRD、已有设计文档、品牌线索；参考网站可选，可选择无参考原创设计。 | P0 | 路径或父功能不清时回 PM；可推导上下文不应被写成硬门槛。 |
+| FR-S02 | Context Intake | 已确认 `feature_path` 下的 PRD/DECISIONS、可选 Engineer TRD、已有设计文档、品牌线索；参考网站可选，可选择无参考原创设计。 | P0 | 路径或父功能不清时回 PM；可推导上下文不应被写成硬门槛。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
 | FR-S04 | Artifact Output | 创建/更新 `docs/design/{feature_path}/ui-ux-spec.md`。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner；不得创建同义顶层 design 目录。 |
 | FR-S05 | Boundary Guard | 不生成 code patch、implementation checklist、shell command、file-by-file coding instructions 或 Engineer skill 调用。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |

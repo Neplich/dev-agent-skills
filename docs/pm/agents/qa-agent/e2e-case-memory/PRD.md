@@ -10,7 +10,7 @@ feature: "qa-e2e-case-memory"
 feature_path: "agents/qa-agent/e2e-case-memory"
 parent_feature: "agents/qa-agent"
 feature_level: "3"
-last_updated: "2026-06-15"
+last_updated: "2026-08-03"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/18"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/18"
@@ -29,7 +29,6 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/SKILL.md"
   - "agents/engineer/skills/debugger/SKILL.md"
   - "agents/engineer/skills/trd-gen/SKILL.md"
-related_brd: "N/A"
 changelog:
   - version: "1.0.0"
     date: "2026-05-19"

@@ -11,17 +11,15 @@ Generate a comprehensive Product Requirements Document following the standardize
 
 - Defining product requirements for a new feature or product
 - Standardizing an informal spec into a proper PRD
-- Converting BRD business objectives into actionable product requirements
 - **Differs from** `idea-to-spec`: idea-to-spec is a dialogue-driven flow that shapes requirements and handoff context; prd-gen focuses solely on standardized product requirements
 - **Tip**: Use `idea-to-spec` (explore mode) first to shape ideas, then `prd-gen` to formalize into a standalone PRD
 
 ## Inputs
 
 - **Required**:
-  - `product_description`: What to build (text, BRD, or design doc)
+  - `product_description`: What to build (text or design doc)
 - **Optional**:
   - `target_users`: User personas or audience description
-  - `related_brd`: BRD document to extract objectives from
   - `existing_prd`: Previous PRD version to build upon
   - `constraints`: Technical or business constraints
 
@@ -86,7 +84,6 @@ feature_path: social-login
 feature: social-login
 parent_feature: N/A
 feature_level: 1
-related_brd: "N/A"
 changelog:
   - version: "1.0.0"
     date: "2025-01-15"

@@ -7,29 +7,38 @@
 - Eval: `eval-001-implement-from-prd-trd`
 - Test case: implement-from-prd-trd
 - Workspace: `workspace/eval-001-implement-from-prd-trd`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture files read before skill use: `eval_metadata.json` and the `eval-001-implement-from-prd-trd` item in `evals.json`.
-- Fixture note: this workspace stores metadata only; the PRD/TRD paths are supplied by the eval prompt and expected output.
-- Expected output: produce or update `docs/engineer/notification-center/IMPLEMENTATION_PLAN.md` with file change list, implementation order, plan metadata rules, and a user confirmation gate; do not code directly.
+- Fixture: metadata-only case whose prompt supplies the confirmed `notification-center` PRD/TRD paths and whose expected output defines the planning behavior.
+- Fixture version: current HEAD `a452319`.
+- Fresh run time: `2026-08-03 11:58:13 +0800`.
+- Runtime directory: `tmp/eval-runs/issue-198-brd/engineer/20260803-115813/feature-implementor/eval-001-implement-from-prd-trd/`.
+- Expected output: produce or update `docs/engineer/notification-center/IMPLEMENTATION_PLAN.md` with the file change list, implementation order, metadata rules, and user-confirmation gate; do not code directly.
 
-## Assertions
+## Latest Result
 
-- PASS `writes_implementation_plan`: the skill contract requires `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`, file list, order, verification, alignment result, metadata, and split decision before implementation.
-- PASS `requires_user_confirmation`: planner and implementor both stop until the exact implementation plan is presented and confirmed.
-- PASS `does_not_implement_directly`: Phase 2 code work is gated behind plan confirmation.
-- PASS `maintains_plan_metadata`: planner and output conventions require `version`, `last_updated`, `feature_path`, `parent_feature`, `feature_level`, `related_prd`, and `related_trd`, with version/date maintenance rules.
+- Behavior result: PASS
+- Coverage result: FULL
+- Overall result: PASS
 
-## With Skill Behavior
+All 4 assertions were exercised and passed. Removing BRD from the planner input list did not weaken PRD/TRD alignment, durable plan metadata, or the pre-code confirmation gate.
 
-Fresh with-skill validation read `agents/engineer/skills/feature-implementor/SKILL.md`, `agents/engineer/README.md`, planner instructions, implementor entry gate, shared coding rules, reviewer instructions, and output conventions. The current skill keeps the PM handoff entry gate intact: direct specialist invocation cannot bypass PM handoff or the equivalent confirmed document chain. Given the eval prompt declares PRD and TRD inputs for `notification-center`, the correct with-skill response is to enter Phase 1 planning, write the durable implementation plan path, include file changes and implementation order, state metadata maintenance requirements, and wait for user confirmation before loading implementor instructions or modifying code.
+## Assertion Results
 
-## Without Skill Baseline
+- PASS `writes_implementation_plan`: identifies `docs/engineer/notification-center/IMPLEMENTATION_PLAN.md` and requires a source-traceable file list, ordered implementation steps, tests, and verification before implementation.
+- PASS `requires_user_confirmation`: stops after presenting the exact plan and requires explicit user confirmation before loading the implementation phase.
+- PASS `does_not_implement_directly`: does not claim code changes, implementation execution, tests, or self-review have occurred.
+- PASS `maintains_plan_metadata`: requires an initial `version`, `last_updated`, feature-path linkage, and synchronized version/date updates for substantive plan changes while allowing typo-only edits not to bump the version.
 
-The fresh without-skill baseline was summarized from the eval item and metadata before reading `feature-implementor` or Engineer README. A generic implementation response could treat the prompt as permission to start coding, provide only an informal checklist, or omit frontmatter/version rules. It might still mention a plan because the expected output asks for one, but it would not reliably enforce the durable `IMPLEMENTATION_PLAN.md` gate, exact metadata contract, or Phase 2 confirmation boundary.
+## With-Skill Behavior
+
+The fresh with-skill run applies the planner phase only, carries the prompt-declared same-path PRD/TRD through the fixture's metadata-only convention, and states the full alignment checks required in a real host workspace. It produces the durable plan path, the required file-list and dependency-order behavior, verification and delegation fields, and the frontmatter maintenance contract, then waits for confirmation without coding. The planner now consumes PRD plus `DECISIONS.md` or equivalent product decisions and TRD; no removed BRD prerequisite remains.
+
+## Fresh Without-Skill Baseline
+
+The without-skill baseline was newly generated in this run from the same prompt and fixture without applying `feature-implementor`, the Engineer README, with-skill output, historical comparison, or any prior baseline. It suggests reading the specs and planning before implementation, but does not require the durable plan path, exact metadata/version rules, or a hard confirmation boundary. Baseline assertion result: 1/4.
 
 ## Failures
 
@@ -37,9 +46,10 @@ The fresh without-skill baseline was summarized from the eval item and metadata 
 
 ## Next Steps
 
-- Keep this eval focused on the confirmed PRD/TRD to implementation-plan gate, metadata maintenance, and no-direct-code boundary.
+- Keep this eval focused on the PRD/TRD-to-plan gate, plan metadata maintenance, and no-direct-code boundary after BRD removal.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- This validation did not create runtime artifacts.
-- Runtime transcripts, verdicts, timing files, outputs, diagnostics, run status files, and `comparison.auto.md` must not be committed.
+- Fresh runtime evidence is under `tmp/eval-runs/issue-198-brd/engineer/20260803-115813/feature-implementor/eval-001-implement-from-prd-trd/`.
+- `with_skill.md`, `without_skill.md`, and `verdict.md` are ignored scratch evidence and must not be committed.
+- This `comparison.md` is the only durable result for this case.

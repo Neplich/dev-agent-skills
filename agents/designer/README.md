@@ -14,7 +14,7 @@
 | --- | --- |
 | Entry skill | `designer-agent` |
 | Specialist skills | 2 |
-| Main inputs | Confirmed `docs/pm/{feature_path}/PRD.md`, `BRD.md`, `DECISIONS.md`, optional `docs/engineer/{feature_path}/TRD.md`, reference sites, brand cues |
+| Main inputs | Confirmed `docs/pm/{feature_path}/PRD.md`, `DECISIONS.md`, optional `docs/engineer/{feature_path}/TRD.md`, reference sites, brand cues |
 | Main outputs | `docs/design/{feature_path}/ui-ux-spec.md`, `visual-system.md` |
 | Core boundary | Design documents only; no code, tests, scripts, or deployment config |
 

@@ -70,7 +70,7 @@ Use the PM-side packet definition in
 
 ```mermaid
 flowchart LR
-    PM["pm-agent: PRD / BRD / product decisions confirmed"] --> Handoff["Explicit handoff to engineer-agent:trd-gen"]
+    PM["pm-agent: PRD / product decisions confirmed"] --> Handoff["Explicit handoff to engineer-agent:trd-gen"]
     Handoff --> PathGate["Resolve feature_path from docs/pm/{feature_path}/PRD.md"]
     PathGate --> TRD["trd-gen writes docs/engineer/{feature_path}/TRD.md"]
     TRD --> OptionalDocs["API.md / ADR-*.md when in scope"]
@@ -122,7 +122,7 @@ sub-agent capabilities are available.
 The main process keeps the source context and final judgment. The delegated
 document-writing task must include:
 
-- PRD, BRD, `DECISIONS.md` when present, equivalent product decisions, design
+- PRD, `DECISIONS.md` when present, equivalent product decisions, design
   docs, and relevant issue links
 - current codebase and repository constraints
 - any TRD gap packet from the finder, including affected components, data flow,
@@ -148,7 +148,6 @@ before asking for TRD confirmation.
   - resolved `feature_path`, `parent_feature`, and `feature_level` from the PRD
     or PM handoff
 - Optional:
-  - BRD
   - design specs
   - existing API / ADR / deployment docs
   - issue or PR references

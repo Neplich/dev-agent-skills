@@ -5,42 +5,44 @@
 - Agent: `product_manager`
 - Skill: `pm-agent` -> `idea-to-spec`
 - Eval: `eval-005-pm-agent-direct-delegation`
-- Test case: pm-agent-direct-delegation
 - Workspace: `workspace/iteration-2/eval-5-pm-agent-direct-delegation`
 
 ## Test Set / Fixture Version
 
-- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: `/pm-agent` entry command for a near-empty AI chat assistant product request.
-- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
+- Fixture version: HEAD `a452319`; `/pm-agent` entry for a near-empty AI assistant product request.
+- Fresh run: `2026-08-03 11:58:20 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/pm/eval-005-pm-agent-direct-delegation/`
 
 ## Latest Result
 
-**PASS** — all 3 assertions passed. The PM dispatcher immediately continues into `idea-to-spec` context detection and requirement shaping instead of stopping at a routing answer or asking whether to invoke the specialist.
+- Behavior result: PASS — all 3 assertions passed.
+- Coverage result: FULL — 3/3 assertion scenarios were exercised; no `NOT EXERCISED` items.
+- Overall result: PASS
+
+## Assertion Results
+
+- `dispatcher`: PASS — classifies through `pm-agent` and continues directly into `idea-to-spec` context shaping.
+- `skill`: PASS — does not ask whether to invoke the specialist or require a manual command.
+- `pm`: PASS — continues in the same turn with product-positioning and MVP-boundary discovery.
 
 ## With-Skill Behavior
 
-- Explicitly classified the request through the PM entry and directly entered `idea-to-spec`.
-- Selected `greenfield-discovery` despite the concrete two-column layout.
-- Continued in the same response with three product-positioning options and one confirmation point.
-- Did not request a manual `/pm-agent:idea-to-spec` invocation.
+The response selected `greenfield-discovery`, compared three product-positioning options, and stopped at one confirmation point. It describes the PM output as PRD/DECISIONS and contains no BRD generation, validation, or iteration behavior.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- Source: fresh isolated subagent run using the same prompt and fixture without the target skill, PM Agent README, internal instructions, or historical comparison.
-- The baseline also produced reasonable PM content, but did not demonstrate the tested PM dispatcher-to-specialist direct-delegation contract.
+The baseline was newly generated in this run from the same prompt and fixture, without reading or applying either target skill, Product Manager README, internal instructions, or historical comparison. It produced reasonable feature ideas but did not demonstrate dispatcher-to-specialist same-turn delegation or durable artifact ownership.
 
 ## Failures
 
 - No assertion failures or baseline blockers.
-- PR #163's Docs deployment-completeness closeout did not apply and did not interrupt same-turn PM routing.
+- BRD removal caused no routing regression.
 
 ## Next Steps
 
-- Keep this eval as coverage for direct PM dispatcher delegation.
-- Re-run when PM downstream execution or Docs closeout routing changes.
+- Keep this eval as coverage for direct PM delegation into the simplified PRD/DECISIONS chain.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Responses, verdicts, timing, and diagnostics remain under `tmp/eval-runs/idea-to-spec-v0.3.4/` and are not committed.
+- Fresh responses and judge notes remain under `tmp/eval-runs/issue-198-brd/pm/eval-005-pm-agent-direct-delegation/` and are not committed.

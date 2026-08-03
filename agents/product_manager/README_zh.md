@@ -23,7 +23,7 @@
 | Skill | 适用场景 | 主要产物 |
 | --- | --- | --- |
 | `pm-agent` | PM 请求入口与路由 | 下游 skill 选择与执行路径 |
-| `idea-to-spec` | 产品想法、空仓库 app 请求、已有功能变更、spec 更新 | `PRD.md`、`BRD.md`、`DECISIONS.md`、Engineer handoff |
+| `idea-to-spec` | 产品想法、空仓库 app 请求、已有功能变更、spec 更新 | `PRD.md`、`DECISIONS.md`、Engineer handoff |
 | `feature-catalog` | 接手已有项目、建立功能目录、项目功能画像 | 功能目录草案、`docs/pm/FEATURE_CATALOG.md`、`prd-gen`/`trd-gen` handoff |
 | `competitive-brief` | 竞品定位、差距分析、市场扫描 | 竞品简报、定位机会、风险与建议 |
 | `changelog-generator` | 面向开发者的版本变化整理 | `docs/changelog/changelog-v{version}.md` |
@@ -33,7 +33,7 @@
 
 ## 路由规则
 
-- 想法收敛、范围定义、PRD/BRD/DECISIONS：使用 `idea-to-spec`
+- 想法收敛、范围定义、PRD/DECISIONS：使用 `idea-to-spec`
 - 接手已有项目、建立功能目录、功能画像：使用 `feature-catalog`
 - 竞品研究、定位差距、市场扫描：使用 `competitive-brief`
 - 开发者视角版本变化：使用 `changelog-generator`
@@ -67,7 +67,6 @@ docs/
 └── pm/
     └── {feature_path}/
         ├── PRD.md
-        ├── BRD.md
         └── DECISIONS.md
 ```
 
@@ -87,7 +86,7 @@ Repo 级 PM 产物可以放在：
 
 - PM Agent 可以产出需求、业务、技术约束和决策文档。
 - PM Agent 不直接实现代码、测试、部署配置或安全修复。
-- Designer 主要消费 `PRD.md`、`BRD.md`、`DECISIONS.md`。
+- Designer 主要消费 `PRD.md`、`DECISIONS.md`。
 - Engineer 消费 PM 文档后，通过 `engineer-agent:trd-gen` 负责 `docs/engineer/{feature_path}/TRD.md`。
 
 ## 本地维护

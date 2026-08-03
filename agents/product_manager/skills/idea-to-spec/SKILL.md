@@ -77,7 +77,7 @@ feature folder, scan `docs/pm/**/PRD.md`:
   as level-1 features for read compatibility.
 
 Feature-scoped PM docs use `docs/pm/{feature_path}/DECISIONS.md`, `PRD.md`,
-`BRD.md`, and temporary `design.md` drafts before formal design docs split out.
+and temporary `design.md` drafts before formal design docs split out.
 
 New formal PM documents must include `feature_path`, `feature`,
 `parent_feature`, and `feature_level` frontmatter.

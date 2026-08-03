@@ -5,41 +5,44 @@
 - Agent: `product_manager`
 - Skill: `idea-to-spec`
 - Eval: `eval-003-greenfield-discovery`
-- Test case: greenfield-discovery
 - Workspace: `workspace/iteration-1/eval-3-greenfield-discovery`
 
 ## Test Set / Fixture Version
 
-- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: near-empty team knowledge Q&A workspace with minimal notes, no formal PM docs, and no selected stack.
-- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
+- Fixture version: HEAD `a452319`; near-empty knowledge Q&A workspace with minimal notes, no formal PM docs, and no selected stack.
+- Fresh run: `2026-08-03 11:58:20 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/pm/eval-003-greenfield-discovery/`
 
 ## Latest Result
 
-**PASS** — all 3 assertions passed. The response stays in `greenfield-discovery`, avoids premature PRD/TRD generation, advances one discovery decision, and defers durable documentation until the direction stabilizes.
+- Behavior result: PASS — all 3 assertions passed.
+- Coverage result: FULL — 3/3 assertion scenarios were exercised; no `NOT EXERCISED` items.
+- Overall result: PASS
+
+## Assertion Results
+
+- `assertion_1`: PASS — does not generate a full PRD or TRD in the first turn.
+- `assertion_2`: PASS — selects `greenfield-discovery` and asks one use-case decision.
+- `assertion_3`: PASS — defers PRD/DECISIONS formalization until direction stabilizes.
 
 ## With-Skill Behavior
 
-- Reported the near-empty context and avoided assumptions about knowledge sources, permissions, or answer-quality metrics.
-- Compared three primary use cases with trade-offs and asked only for the first scenario decision.
-- Deferred `feature_path`, `DECISIONS.md`, and PRD creation until problem, user, and MVP boundaries are stable.
+The response explicitly avoided assumptions about users, sources, permissions, and metrics, compared three primary-use-case options, and stopped at one confirmation point. The post-discovery artifact chain is PRD plus DECISIONS; no BRD stage appears.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- Source: fresh isolated subagent run using the same prompt and fixture without the target skill, PM Agent README, internal instructions, or historical comparison.
-- The baseline also avoided a premature PRD and asked one target-user question; the with-skill response additionally makes the lane, feature-path timing, and durable-memory contract explicit.
+The baseline was newly generated in this run from the same prompt and fixture, without reading or applying the target skill, Product Manager README, internal instructions, or historical comparison. It avoided an immediate PRD but asked several discovery questions in parallel and did not make lane or durable-memory timing explicit.
 
 ## Failures
 
 - No assertion failures or baseline blockers.
-- PR #163's conditional Docs closeout was not triggered during discovery and caused no regression.
+- BRD removal caused no behavioral regression.
 
 ## Next Steps
 
-- Keep this eval as first-turn greenfield discovery coverage.
-- Re-run when lane selection, single-decision progression, or document timing changes.
+- Keep this eval as coverage for greenfield discovery discipline and direct PRD/DECISIONS formalization after scope stability.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Responses, verdicts, timing, and diagnostics remain under `tmp/eval-runs/idea-to-spec-v0.3.4/` and are not committed.
+- Fresh responses and judge notes remain under `tmp/eval-runs/issue-198-brd/pm/eval-003-greenfield-discovery/` and are not committed.

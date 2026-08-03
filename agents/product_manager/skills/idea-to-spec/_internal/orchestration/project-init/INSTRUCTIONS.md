@@ -27,7 +27,7 @@ empty workspace needs durable documentation scaffolding.
 - **Optional**:
   - `project_type`: webapp / mobile / api / library / data-pipeline (affects
     which doc types to include)
-  - `doc_types`: Override which PM / QA documents to create -> BRD / PRD /
+  - `doc_types`: Override which PM / QA documents to create -> PRD /
     E2E TEST_SUITE (default: all applicable). API and ADR requests are recorded
     as Engineer handoff items for `engineer-agent:trd-gen`, not created by
     `project-init`.
@@ -56,10 +56,10 @@ Use it to:
 1. **Determine doc set**: Based on `project_type`, select PM-created and QA
    scaffold document types. API and ADR are Engineer-owned and must be listed
    as `engineer-agent:trd-gen` handoff items instead of PM-created stubs:
-   - webapp / mobile: BRD + PRD + E2E TEST_SUITE; optional API / ADR handoff
+   - webapp / mobile: PRD + E2E TEST_SUITE; optional API / ADR handoff
    - api: PRD + E2E TEST_SUITE; API / ADR handoff
    - library: E2E TEST_SUITE; optional ADR handoff
-   - data-pipeline: BRD; optional ADR handoff
+   - data-pipeline: PRD; optional ADR handoff
 2. **Create directory structure**:
    ```text
    docs/
@@ -73,7 +73,7 @@ Use it to:
    └─ security/{feature_path}/
    ```
 3. **Generate stub documents**:
-   - For BRD / PRD / E2E TEST_SUITE, create a stub document with:
+   - For PRD / E2E TEST_SUITE, create a stub document with:
      - Complete YAML frontmatter (version `0.1.0`, status `Draft`)
      - All required section headings from the corresponding schema
      - `[TODO]` placeholders for content
@@ -88,7 +88,6 @@ Use it to:
 
    | Doc Type | Shared Schema |
    | --- | --- |
-   | BRD | `_internal/_shared/doc-schemas/brd-schema.md` |
    | PRD | `_internal/_shared/doc-schemas/prd-schema.md` |
    | E2E TEST_SUITE | `_internal/_shared/doc-schemas/test-spec-schema.md` |
 4. **Create index file**: Generate `docs/README.md` with:
@@ -138,7 +137,6 @@ docs/
 ├─ pm/
 │  └─ smart-checkout/
 │     ├─ DECISIONS.md                     (decision log stub)
-│     ├─ BRD.md                           (BRD stub)
 │     └─ PRD.md                           (PRD stub)
 ├─ engineer/
 │  └─ smart-checkout/
@@ -163,10 +161,9 @@ docs/
       └─ SECURITY_REVIEW.md               (security review stub)
 
 Suggested next steps:
-1. Run `brd-gen` to flesh out `docs/pm/smart-checkout/BRD.md`
-2. Run `prd-gen` to define `docs/pm/smart-checkout/PRD.md`
-3. Update `docs/pm/smart-checkout/DECISIONS.md` as decisions are confirmed
-4. Hand off to `engineer-agent:trd-gen` to write `docs/engineer/smart-checkout/TRD.md`
-5. Let `engineer-agent:trd-gen` create API / ADR docs under `docs/engineer/smart-checkout/` when the confirmed scope requires them
-6. Run `tspecs-gen` after PRD and TRD are confirmed
+1. Run `prd-gen` to define `docs/pm/smart-checkout/PRD.md`
+2. Update `docs/pm/smart-checkout/DECISIONS.md` as decisions are confirmed
+3. Hand off to `engineer-agent:trd-gen` to write `docs/engineer/smart-checkout/TRD.md`
+4. Let `engineer-agent:trd-gen` create API / ADR docs under `docs/engineer/smart-checkout/` when the confirmed scope requires them
+5. Run `tspecs-gen` after PRD and TRD are confirmed
 ```

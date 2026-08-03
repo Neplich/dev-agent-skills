@@ -35,7 +35,7 @@ repo context, and current delivery stage.
 
 ## Planning Handoff
 
-After `pm-agent` confirms the PRD / BRD and any product decision records, route
+After `pm-agent` confirms the PRD and any product decision records, route
 technical planning to `trd-gen`. TRD belongs to Engineer and is written to
 `docs/engineer/{feature_path}/TRD.md`, mirroring the confirmed PM path
 `docs/pm/{feature_path}/PRD.md`.

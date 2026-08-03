@@ -5,42 +5,45 @@
 - Agent: `product_manager`
 - Skill: `idea-to-spec`
 - Eval: `eval-002-existing-project-update`
-- Test case: existing-project-update
 - Workspace: `workspace/iteration-1/eval-2-existing-project-update`
 
 ## Test Set / Fixture Version
 
-- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: approved notification-center PRD, DECISIONS, and Engineer TRD covering polling plus the confirmed event-driven migration direction.
-- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
+- Fixture version: HEAD `a452319`; approved notification-center PRD, DECISIONS, and Engineer TRD covering polling and the confirmed event-driven migration direction.
+- Fresh run: `2026-08-03 11:58:20 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/pm/eval-002-existing-project-update/`
 
 ## Latest Result
 
-**PASS** — all 4 assertions passed. The response recognizes an `existing-project-update`, explains the delta and blast radius first, prefers `change-impactor` plus targeted iteration, and names every affected document path.
+- Behavior result: PASS — all 4 assertions passed.
+- Coverage result: FULL — 4/4 assertion scenarios were exercised; no `NOT EXERCISED` items.
+- Overall result: PASS
+
+## Assertion Results
+
+- `update`: PASS — classifies the request as `existing-project-update`.
+- `delta_blast_radius`: PASS — states the delivery-model delta, affected behaviors, compatibility, rollback, tests, and documents before updates.
+- `assertion_3`: PASS — prefers `change-impactor` and targeted iteration instead of regeneration.
+- `assertion_4`: PASS — names the affected DECISIONS, PRD, Engineer TRD, and later QA paths.
 
 ## With-Skill Behavior
 
-- Preserved the confirmed `hybrid transition` and the rejected permanent polling-only option instead of silently reopening decision history.
-- Mapped impact to `DECISIONS.md`, PM PRD, Engineer TRD, and later QA coverage.
-- Routed Engineer TRD revision to `engineer-agent:trd-gen` and avoided full regeneration.
-- Advanced only the fallback user-behavior decision.
+The response preserved the confirmed hybrid transition and rejected permanent polling-only history, then routed PM changes to targeted PRD/DECISIONS iteration and Engineer-owned TRD changes to `engineer-agent:trd-gen`. The retired BRD layer was absent; business delta and decisions flow directly into PRD and DECISIONS.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- Source: fresh isolated subagent run using the same prompt and fixture without the target skill, PM Agent README, internal instructions, or historical comparison.
-- The baseline also identified a targeted update and the three main documents, but did not name `change-impactor`, `prd-iteration`, or the dependency-ordered lifecycle route.
+The baseline was newly generated in this run from the same prompt and fixture, without reading or applying the target skill, Product Manager README, internal instructions, or historical comparison. It identified the main documents and preferred incremental edits, but did not consistently apply `change-impactor`, `prd-iteration`, Engineer ownership, or decision-history preservation.
 
 ## Failures
 
 - No assertion failures or baseline blockers.
-- PR #163's Docs deployment-completeness closeout did not apply to this feature update and caused no regression.
+- BRD removal caused no behavioral regression.
 
 ## Next Steps
 
-- Keep this eval as coverage for decision-history preservation and targeted update routing.
-- Re-run when impact analysis, iteration ownership, or Docs closeout rules change.
+- Keep this eval as coverage for delta-first impact analysis and targeted PRD/DECISIONS updates.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Responses, verdicts, timing, and diagnostics remain under `tmp/eval-runs/idea-to-spec-v0.3.4/` and are not committed.
+- Fresh responses and judge notes remain under `tmp/eval-runs/issue-198-brd/pm/eval-002-existing-project-update/` and are not committed.

@@ -72,7 +72,7 @@ Overall = Completeness × 0.30 + Consistency × 0.25 + Clarity × 0.25 + Testabi
 ## Validation Report
 
 - **Document**: <filename>
-- **Type**: BRD / PRD / TRD / ADR / API / TEST_SPEC
+- **Type**: PRD / TRD / ADR / API / TEST_SPEC
 - **Schema Version**: <version of schema used>
 - **Overall Score**: X.X / 5
 - **Status**: PASS / NEEDS_WORK / FAIL

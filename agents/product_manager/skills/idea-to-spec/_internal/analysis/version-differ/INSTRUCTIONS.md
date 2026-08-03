@@ -1,6 +1,6 @@
 ---
 name: version-differ
-description: Compare two versions of the same document and produce a structured diff report. Use when users say "compare versions", "diff documents", "what changed", "version diff", "document comparison", or need to understand section-by-section differences between two versions of a BRD, PRD, TRD, or other project document.
+description: Compare two versions of the same document and produce a structured diff report. Use when users say "compare versions", "diff documents", "what changed", "version diff", "document comparison", or need to understand section-by-section differences between two versions of a PRD, TRD, or other project document.
 ---
 
 # Version Differ

@@ -1,37 +1,56 @@
-# Consumption Regression Comparison
+# Eval Result: eval-005-mapped-notification-ui
 
 ## Evaluation Target
 
+- Agent: `designer`
 - Skill: `ui-ux-design`
 - Eval: `eval-005-mapped-notification-ui`
+- Test case: Mapped Notification UI Documentation
+- Workspace: `workspace/eval-005-mapped-notification-ui`
 
-## Test Set / Fixture Version
+## Test Set or Fixture Version
 
-- Fixture: `ws1-consumption-v1`
-- Commit: `0b000b9`
+- Schema: `evals.json` v1.0
+- Fixture version: HEAD `a452319`
+- Fresh run time: `2026-08-03 11:58:33 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/designer/ui-ux-design/eval-005-mapped-notification-ui/`
+- Fixture: `change-map.yaml`, mapped notification document, and notification-preferences HTML
 
 ## Latest Result
 
-**PASS** — with-skill 完整执行消费链（change-map 反查 → 读映射文档 → 回 HTML 核证默认状态分歧 → unverified 以代码为准），随后正确停在 Designer 的 PM handoff 门禁，未越权产出设计文档。
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+All three consumption-contract assertions were exercised.
+
+## Assertion Results
+
+- `reads_mapped_docs_first`: **PASS** — the task path is reverse-mapped to the sole required document, with no unrelated formal-doc traversal.
+- `verifies_against_code`: **PASS** — the document says enabled by default while the checkbox lacks `checked`, so the current static markup is unchecked.
+- `treats_unverified_as_low_trust`: **PASS** — `last_verified_version: unverified` triggers code verification of every key claim rather than blind trust or refusal.
 
 ## With-Skill Behavior
 
-- 核证出文档声称默认开启 vs checkbox 无 checked 属性的分歧并结构化记录。
-- 门禁行为最合规：缺 PM handoff packet 与 feature_path 时拒绝猜测 feature 路径写设计文档，回 pm-agent 补齐。
+- Preserves a structured discrepancy containing the documentation claim, HTML fact, and design impact.
+- Correctly stops at the PM handoff/feature-path gate instead of inventing a design artifact path.
+- The reached consumption and gate behavior does not use BRD; its removal causes no difference.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
-- baseline 走 pm-agent → designer-agent 链产出了设计文档，流程可用但越过了 handoff 凭据缺失的门禁，也未按契约组织分歧证据。
+- This baseline was newly generated in this run from only the same prompt and fixture; it did not apply the Designer README, skill, consumption contract, with-skill output, or old comparison.
+- It notices the unchecked HTML control but does not systematically establish mapped-document-first ordering, lowest trust for `unverified`, or structured discrepancy evidence.
+- It contains no BRD reference.
 
 ## Failures
 
-- 无。
+- None.
 
 ## Next Steps
 
-- 保留本结果；后续 fixture 可增加干扰文档以放大行为差距。
+- No skill or fixture correction is required for this case.
 
 ## Runtime Artifact Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- Runtime candidates, fresh baseline, and judge evidence remain under the ignored runtime directory and are not committed.
+- Only this durable `comparison.md` is updated.

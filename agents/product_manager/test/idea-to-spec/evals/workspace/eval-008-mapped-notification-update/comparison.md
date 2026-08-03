@@ -1,4 +1,4 @@
-# Consumption Regression Comparison
+# Eval Result: eval-008-mapped-notification-update
 
 ## Evaluation Target
 
@@ -9,37 +9,40 @@
 
 ## Test Set / Fixture Version
 
-- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: mapped notification source, `change-map.yaml`, an `unverified` notification API page, and `channels.txt` with email as the only enabled channel.
-- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
+- Fixture version: HEAD `a452319`; notification source, change map, `unverified` API page, and email-only code fact.
+- Fresh run: `2026-08-03 11:58:20 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/pm/eval-008-mapped-notification-update/`
 
 ## Latest Result
 
-**PASS** — all 3 assertions passed. With-skill precisely followed the change map, verified the current channel from code, reported the webhook documentation drift, and treated `unverified` documentation as lowest trust.
+- Behavior result: PASS — all 3 assertions passed.
+- Coverage result: FULL — 3/3 assertion scenarios were exercised; no `NOT EXERCISED` items.
+- Overall result: PASS
+
+## Assertion Results
+
+- `reads_mapped_docs_first`: PASS — maps `src/notifications/` to and reads only `docs/site/api/notifications.md`.
+- `verifies_against_code`: PASS — treats `channels.txt` email-only state as ground truth and reports webhook drift.
+- `treats_unverified_as_low_trust`: PASS — explicitly gives the unverified page the lowest trust and rechecks all key facts in code.
 
 ## With-Skill Behavior
 
-- 从 `src/notifications/` 反查 `change-map.yaml`，只读取命中的 `docs/site/api/notifications.md`。
-- 以 `src/notifications/channels.txt` 的 email-only 事实作为 ground truth，没有用文档覆盖代码。
-- 结构化说明 webhook 分歧、SMS delta 与影响范围，不虚构供应商、接口或数据模型。
-- 正确停在一个产品范围决策点。
+The response preserves the mapped-document-first and code-ground-truth protocol, structures the email/webhook discrepancy, and frames SMS as an `existing-project-update` whose stable product facts belong in PRD/DECISIONS. No BRD stage or artifact appears.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：本次 fresh 严格隔离子代理，使用相同 prompt 与 fixture，未读取或应用目标 skill、PM Agent README、内部指令或历史 comparison。
-- baseline 也正确使用映射、降低 `unverified` 文档信任并回代码核证；fixture 的事实线索本身较强。baseline 仅作为对照，不影响 with-skill 对三条 assertions 的直接满足。
+The baseline was newly generated in this run from the same prompt and fixture, without reading or applying the target skill, Product Manager README, internal instructions, or historical comparison. Strong fixture cues led it to the correct factual discrepancy, but it did not establish the same precise consumption order, trust model, or single-decision update protocol.
 
 ## Failures
 
-- 无 assertion failure 或 baseline blocker。
-- PR #163 新增的部署完整性收尾在本场景不触发：这里只消费 `docs/site` 证据，没有完成 Docs content batch、bootstrap、Release Notes 或构建入口变更；未发现回归。
+- No assertion failures or baseline blockers.
+- BRD removal caused no evidence-consumption regression.
 
 ## Next Steps
 
-- 保留本用例作为 change-map、代码 ground truth 与文档信任模型的回归覆盖。
-- 后续可加入无关站点页面，进一步验证精准读取边界。
+- Keep this eval as coverage for change-map consumption and code verification feeding directly into PRD/DECISIONS scope.
 
 ## Runtime Artifact Policy
 
-- with/without responses、verdict、timing 与 diagnostics 仅保留在 `tmp/eval-runs/idea-to-spec-v0.3.4/`，不提交到 git。
+- Fresh responses and judge notes remain under `tmp/eval-runs/issue-198-brd/pm/eval-008-mapped-notification-update/` and are not committed.

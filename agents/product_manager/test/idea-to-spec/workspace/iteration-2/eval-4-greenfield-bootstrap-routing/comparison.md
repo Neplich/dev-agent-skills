@@ -5,42 +5,45 @@
 - Agent: `product_manager`
 - Skill: `idea-to-spec`
 - Eval: `eval-004-greenfield-bootstrap-routing`
-- Test case: greenfield-bootstrap-routing
 - Workspace: `workspace/iteration-2/eval-4-greenfield-bootstrap-routing`
 
 ## Test Set / Fixture Version
 
-- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: empty-workspace AI chat assistant request; stale root `PRD.md` was excluded through `execution_cleanup`.
-- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
+- Fixture version: HEAD `a452319`; empty-workspace AI assistant request with stale root `PRD.md` excluded by `execution_cleanup`.
+- Fresh run: `2026-08-03 11:58:20 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/pm/eval-004-greenfield-bootstrap-routing/`
 
 ## Latest Result
 
-**PASS** — all 4 assertions passed. The response starts with the empty-workspace context, selects a PM-first `greenfield-bootstrap` lane, explicitly rejects engineering scaffolding, and names durable PM documents as the next step.
+- Behavior result: PASS — all 4 assertions passed.
+- Coverage result: FULL — 4/4 assertion scenarios were exercised; no `NOT EXERCISED` items.
+- Overall result: PASS
+
+## Assertion Results
+
+- `assertion_1`: PASS — reports an empty workspace, undetermined stack, and no current docs after cleanup.
+- `pm_first_lane`: PASS — selects PM-first `greenfield-bootstrap`.
+- `pm_first`: PASS — explicitly avoids engineering scaffold commands.
+- `assertion_4`: PASS — routes to `project-init`, PRD skeleton, and DECISIONS after one product decision.
 
 ## With-Skill Behavior
 
-- Did not reuse the stale root PRD or infer an existing stack.
-- Explicitly avoided `npm create vite`, `create-next-app`, and equivalent scaffolds.
-- Proposed `project-init`, `DECISIONS.md`, and `PRD.md` only after the first product-positioning decision is confirmed.
-- Kept the proposed `feature_path` provisional.
+The response did not reuse stale root output or start implementation. It kept the feature path provisional, used a single product-positioning decision, and described the durable bootstrap as PRD/DECISIONS only. Removing BRD therefore produces the intended simplified document chain.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- Source: fresh isolated subagent run using the same prompt and cleaned fixture without the target skill, PM Agent README, internal instructions, or historical comparison.
-- The baseline also avoided engineering setup, but immediately produced a broad PRD skeleton and multiple unresolved questions; the with-skill response follows the single-decision and durable-doc gate more strictly.
+The baseline was newly generated in this run from the same prompt and cleaned fixture, without reading or applying the target skill, Product Manager README, internal instructions, or historical comparison. It respected the no-code request but drafted a broad PRD skeleton immediately and expanded multiple unresolved topics at once.
 
 ## Failures
 
 - No assertion failures or baseline blockers.
-- PR #163's post-Docs deployment completeness check did not apply because no docs-site bootstrap or confirmed commit occurred.
+- BRD removal caused the expected artifact-chain difference, not a regression: bootstrap no longer includes any BRD step.
 
 ## Next Steps
 
-- Keep this eval as PM-first empty-workspace routing coverage.
-- Re-run when `project-init`, execution cleanup, or Docs completion routing changes.
+- Keep this eval as coverage for empty-workspace PM-first routing and the PRD/DECISIONS bootstrap contract.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Responses, verdicts, timing, and diagnostics remain under `tmp/eval-runs/idea-to-spec-v0.3.4/` and are not committed.
+- Fresh responses and judge notes remain under `tmp/eval-runs/issue-198-brd/pm/eval-004-greenfield-bootstrap-routing/` and are not committed.

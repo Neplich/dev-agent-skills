@@ -23,7 +23,7 @@
 | Skill | When to use | Main output |
 | --- | --- | --- |
 | `pm-agent` | PM request routing | Specialist selection and execution path |
-| `idea-to-spec` | Product ideas, empty-repo app requests, feature changes, spec updates | `PRD.md`, `BRD.md`, `DECISIONS.md`, Engineer handoff |
+| `idea-to-spec` | Product ideas, empty-repo app requests, feature changes, spec updates | `PRD.md`, `DECISIONS.md`, Engineer handoff |
 | `feature-catalog` | Project take-over, feature directory and feature profile for existing code | Feature catalog draft, `docs/pm/FEATURE_CATALOG.md`, `prd-gen`/`trd-gen` handoff |
 | `competitive-brief` | Competitor positioning, gap analysis, market scan | Competitive brief, positioning opportunities, risks |
 | `changelog-generator` | Developer-facing version change summaries | `docs/changelog/changelog-v{version}.md` |
@@ -33,7 +33,7 @@
 
 ## Routing Rules
 
-- Idea shaping, scope definition, PRD/BRD/DECISIONS: use `idea-to-spec`
+- Idea shaping, scope definition, PRD/DECISIONS: use `idea-to-spec`
 - Project take-over, feature catalog, feature profile for an existing repo: use `feature-catalog`
 - Competitor research, positioning gaps, market scans: use `competitive-brief`
 - Developer-facing version changes: use `changelog-generator`
@@ -67,7 +67,6 @@ docs/
 └── pm/
     └── {feature_path}/
         ├── PRD.md
-        ├── BRD.md
         └── DECISIONS.md
 ```
 
@@ -88,7 +87,7 @@ host site's `docs/site/release-notes/`; PM only produces GitHub Releases via
 
 - PM Agent can produce requirement, business, technical constraints, and decision documents.
 - PM Agent does not implement code, tests, deployment config, or security fixes.
-- Designer mainly consumes `PRD.md`, `BRD.md`, and `DECISIONS.md`.
+- Designer mainly consumes `PRD.md` and `DECISIONS.md`.
 - Engineer consumes PM docs, then owns `docs/engineer/{feature_path}/TRD.md` through `engineer-agent:trd-gen`.
 
 ## Collaboration Dependencies

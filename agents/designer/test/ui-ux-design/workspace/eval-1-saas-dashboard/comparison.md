@@ -7,39 +7,51 @@
 - Eval: `eval-001-saas-dashboard`
 - Test case: SaaS Dashboard Design
 - Workspace: `workspace/eval-1-saas-dashboard`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
-## Test Set / Fixture Version
+## Test Set or Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Design UI/UX for a project management SaaS dashboard
-- Expected output: 结构化的 UI/UX 设计文档，包含用户流程、页面布局、组件清单和响应式说明，并在设计交接处停止
+- Fixture version: `chore/198-remove-brd-chain working tree, eval-001 fixture repaired with formal frontmatter`
+- Fresh run time: `2026-08-03 12:35:48 +0800`
+- Runtime directory: `tmp/eval-runs/issue-215-saas-dashboard-r2/`
+- Fixture: prompt, workspace README, and confirmed PM spec at `docs/pm/saas-dashboard/PRD.md`
 
-## Assertions
+## Latest Result
 
-- `assertion_1`: 产出设计文档
-- `assertion_2`: 只做设计不做实现
-- `assertion_3`: 提示下一角色
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-## With Skill
+All three assertions were evaluated and passed in this fresh paired run. The repaired fixture's formal PRD frontmatter supplies the confirmed `saas-dashboard` feature path and PM scope needed for the skill to produce the canonical design artifact.
 
-Observed behavior:
+## Assertion Results
 
-- 当前 SKILL.md 要求产出 ui-ux-spec.md，覆盖用户旅程、ASCII 布局、组件、交互和响应式，并明确停在 design handoff，可满足 dashboard eval assertions。
+- `assertion_1`: **PASS** — the PRD confirms `feature_path: saas-dashboard`; the with-skill run writes `docs/design/saas-dashboard/ui-ux-spec.md` and includes a Mermaid user journey, ASCII layouts, and interaction behaviors.
+- `assertion_2`: **PASS** — the artifact and response remain design-only and explicitly exclude code changes, engineering implementation steps, and test execution.
+- `assertion_3`: **PASS** — the design handoff and response explicitly identify `engineer-agent` as the next role if implementation continues.
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+## With-Skill Behavior
+
+- Reads the confirmed PM spec and resolves the canonical output path as `docs/design/saas-dashboard/ui-ux-spec.md`.
+- Produces the expected structured specification: user journey, page inventory, desktop/tablet ASCII layouts, component list, interaction and state behavior, responsive design, and design handoff.
+- Stops at the Designer boundary without code, implementation-task decomposition, or test execution, and routes any continuation to `engineer-agent`.
+
+## Fresh Without-Skill Baseline
+
+- This baseline was newly generated in this run from the same prompt and repaired fixture only; it did not read or apply the Designer README, `ui-ux-design` skill, with-skill output, historical baseline, or prior comparison. No historical baseline was reused.
+- It provides generic sidebar, project/task, member, activity, responsive, and state suggestions, but does not produce the canonical repository artifact or a Mermaid journey, ASCII layouts, or complete component inventory.
+- It stops loosely before development but does not name `engineer-agent` or state the skill's hard no-implementation boundary. The paired run therefore has clear behavioral differentiation.
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- None. No assertion was unexercised, so coverage is full.
 
 ## Next Steps
 
-- 保持 durable comparison 为 PASS 结论。
+- Keep the repaired fixture changes with the owning Issue #215 / PR #214 work.
+- No `ui-ux-design` skill change is indicated by this result.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- Paired-run notes and judge evidence remain only under the ignored runtime directory and are not committed.
+- Only this durable `comparison.md` is updated.

@@ -20,7 +20,7 @@ Every gen skill follows this 6-step workflow:
 
 3. **Load schema**: Reference the corresponding schema in
    `_internal/_shared/doc-schemas/`.
-   Use the canonical filenames: `brd-schema.md`, `prd-schema.md`,
+   Use the canonical filenames: `prd-schema.md`,
    `trd-schema.md`, `adr-schema.md`, `api-schema.md`, and
    `test-spec-schema.md`. Skip this step for utility skills
    (`mermaid-gen`, `weekly-report-gen`) that have no formal schema.
@@ -131,7 +131,7 @@ Use these markers only when needed:
 
 ## Feature Path Gate
 
-Run this gate before writing `PRD.md`, `BRD.md`, `DECISIONS.md`, or PM
+Run this gate before writing `PRD.md`, `DECISIONS.md`, or PM
 `design.md`:
 
 1. Scan `docs/pm/**/PRD.md`, supporting multi-level feature paths.

@@ -2,7 +2,7 @@
   "eval_id": "eval-004-pm-spec-handoff",
   "eval_name": "pm-spec-handoff-stops-before-implementation",
   "workspace_root": "agents/designer/test/ui-ux-design/workspace/eval-4-pm-spec-handoff",
-  "prompt": "PM 已经产出 billing-notification-settings 的 PRD/BRD/DECISIONS/TRD。请 designer agent 阅读这些 spec，并基于现有设置页补充 UI/UX 设计文档。设计完成后停止在 handoff，不要直接开始修改代码或输出实现步骤。",
+  "prompt": "PM 已经产出 billing-notification-settings 的 PRD/DECISIONS/TRD。请 designer agent 阅读这些 spec，并基于现有设置页补充 UI/UX 设计文档。设计完成后停止在 handoff，不要直接开始修改代码或输出实现步骤。",
   "with_skill_outputs": [
     "with_skill/docs/design/billing-notification-settings/ui-ux-spec.md"
   ],
