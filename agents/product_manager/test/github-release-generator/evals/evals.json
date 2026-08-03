@@ -197,6 +197,91 @@
           "text": "对无文档站且无维护者确认版本事实源的第二场景明确 blocked，不从 commit、版本号或候选摘要臆造发布事实。"
         }
       ]
+    },
+    {
+      "id": "eval-007-marketplace-full-capability-upgrade-note",
+      "name": "marketplace 当前 tag 能力齐全的标题强格式与升级说明正向分支",
+      "description": "验证本 marketplace 宿主目标 tag 能力齐全（7 个 role plugins、.codex/INSTALL.md 含 TARGET_TAG 支持、含 .kimi-plugin/plugin.json）时，标题符合 vX.Y.Z - 主题概述 强格式，升级说明三小节齐备、指令列表按 manifest 推导、收尾句存在。",
+      "prompt": "根据 `release-package.md`、`docs/site/release-notes/v1.0.0.md` 和 `github-evidence.md` 生成 GitHub Release 完整预览。本仓库为 dev-agent-skills marketplace 宿主，目标 tag 的宿主插件内容见工作区 `.claude-plugin/marketplace.json`、`.codex/INSTALL.md` 与 `.kimi-plugin/plugin.json`。保持站内事实含义与范围，不执行任何写操作。",
+      "expected_output": "标题为 `v1.0.0 - {主题概述}` 强格式；正文四节中「升级说明」按固定结构呈现：简述句（无破坏性变更，也没有新增 plugin。7 个 role plugin 均更新到 `v1.0.0`。）、### Claude Code 小节（9 行指令 + 无版本 pin 限制说明）、### Codex 小节（引用目标 tag 的 .codex/INSTALL.md 并设 TARGET_TAG=v1.0.0）、### Kimi Code 小节（/plugins install 目标 release URL）与收尾句（更新仓库后重新运行安装器，即可同步全部 7 个 role plugin 的 `v1.0.0` 能力。）；plugin 指令列表按目标版本 marketplace.json 推导。",
+      "workspace": "workspace/eval-007-marketplace-full-capability-upgrade-note",
+      "assertions": [
+        {
+          "id": "title_matches_marketplace_format",
+          "description": "标题符合 marketplace 强格式",
+          "text": "preview 标题为 `v1.0.0 - {主题概述}` 形态，概述非空、与已确认事实相关，不是裸版本号或空泛占位；标题不合格时不得生成可提交 preview 或 draft。"
+        },
+        {
+          "id": "upgrade_note_first_sentence",
+          "description": "简述句按事实源与 manifest 推导",
+          "text": "「升级说明」首段以「无破坏性变更，也没有新增 plugin。7 个 role plugin 均更新到 `v1.0.0`。」开头（N=7 由目标版本 `.claude-plugin/marketplace.json` 推导），不得新增事实源之外的发布声明。"
+        },
+        {
+          "id": "claude_section_verbatim",
+          "description": "Claude Code 小节逐字指令与无版本 pin 限制说明",
+          "text": "`### Claude Code` 小节存在，指令为 `/plugin marketplace update dev-agent-skills`、7 行 `/plugin update {role}@dev-agent-skills`（pm-agent、designer-agent、engineer-agent、qa-agent、devops-agent、security-agent、docs-agent）与 `/reload-plugins`，并明确说明 `/plugin update` 无版本 pin、durable 正文无法承诺 `v1.0.0` 固定安装，固定版本需改用 Codex 或 Kimi 路径。"
+        },
+        {
+          "id": "codex_section_pinned_install",
+          "description": "Codex 小节使用 TARGET_TAG 固定安装",
+          "text": "`### Codex` 小节存在（目标 tag 内容含 TARGET_TAG 安装支持），指令引用 `https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/tags/v1.0.0/.codex/INSTALL.md` 并设 `TARGET_TAG=v1.0.0`。"
+        },
+        {
+          "id": "kimi_section_plugin_install",
+          "description": "Kimi Code 小节使用 release URL 安装",
+          "text": "`### Kimi Code` 小节存在（目标 tag 含 `.kimi-plugin/plugin.json`），指令为 `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/v1.0.0`。"
+        },
+        {
+          "id": "plugin_list_derived_from_manifest",
+          "description": "指令列表按 marketplace.json 推导",
+          "text": "指令列表的数量与成员以目标版本 `.claude-plugin/marketplace.json` 注册的 role plugins 为准（共 7 个），不随正文裁剪或增删。"
+        },
+        {
+          "id": "closing_sentence_present",
+          "description": "收尾句存在",
+          "text": "升级说明以「更新仓库后重新运行安装器，即可同步全部 7 个 role plugin 的 `v1.0.0` 能力。」收尾（N 按 manifest 推导）。"
+        }
+      ]
+    },
+    {
+      "id": "eval-008-marketplace-historical-tag-limit-upgrade-note",
+      "name": "marketplace 历史 tag 能力不完整时的条件省略",
+      "description": "验证本 marketplace 宿主历史 tag 能力不完整（6 个 role plugins、.codex/INSTALL.md 无 TARGET_TAG 支持、无 .kimi-plugin/plugin.json）时，标题仍为强格式，缺失能力的 Codex/Kimi 小节省略且不臆造安装命令，Claude 小节省略并说明平台限制，收尾句 N 按目标版本 manifest 推导。",
+      "prompt": "根据 `release-package.md`、`docs/site/release-notes/v0.9.0.md` 和 `github-evidence.md` 生成 GitHub Release 完整预览。本仓库为 dev-agent-skills marketplace 宿主，历史 tag v0.9.0 的宿主插件内容见工作区 `.claude-plugin/marketplace.json` 与 `.codex/INSTALL.md`（该版本无 `.kimi-plugin/plugin.json`）。保持站内事实含义与范围，不执行任何写操作。",
+      "expected_output": "标题为 `v0.9.0 - {主题概述}` 强格式；升级说明按固定结构呈现：简述句按 v0.9.0 manifest 推导（6 个 role plugin 均更新到 `v0.9.0`）；`### Claude Code` 小节省略并在正文说明平台限制（/plugin update 无版本 pin，durable 正文无法承诺 v0.9.0 固定安装，固定版本改用 Codex 或 Kimi 路径）；`### Codex` 小节省略（该版本 .codex/INSTALL.md 不含 TARGET_TAG 安装支持）；`### Kimi Code` 小节省略（该版本无 .kimi-plugin/plugin.json）；收尾句存在且 N=6。不生成空壳小节或臆造安装命令。",
+      "workspace": "workspace/eval-008-marketplace-historical-tag-limit-upgrade-note",
+      "assertions": [
+        {
+          "id": "title_matches_marketplace_format",
+          "description": "历史 tag 标题仍为 marketplace 强格式",
+          "text": "preview 标题为 `v0.9.0 - {主题概述}` 形态，概述非空、与已确认事实相关，不是裸版本号或空泛占位；标题不合格时不得生成可提交 preview 或 draft。"
+        },
+        {
+          "id": "upgrade_note_first_sentence_derived",
+          "description": "简述句按目标版本 manifest 推导",
+          "text": "「升级说明」首段以「无破坏性变更，也没有新增 plugin。6 个 role plugin 均更新到 `v0.9.0`。」开头（N=6 由 v0.9.0 `.claude-plugin/marketplace.json` 推导，而非当前 7 个），不得新增事实源之外的发布声明。"
+        },
+        {
+          "id": "claude_section_omitted_with_platform_limit",
+          "description": "历史 tag 重跑省略 Claude 小节并说明平台限制",
+          "text": "历史 tag 重跑正文时省略 `### Claude Code` 小节，并在正文说明平台限制：`/plugin update` 无版本 pin、durable 正文无法承诺 `v0.9.0` 固定安装，固定版本需改用 Codex 或 Kimi 路径。"
+        },
+        {
+          "id": "codex_section_omitted_without_target_tag_support",
+          "description": "目标 tag 无 TARGET_TAG 支持时省略 Codex 小节",
+          "text": "目标 tag 的 `.codex/INSTALL.md` 不含 TARGET_TAG 安装支持时省略 `### Codex` 小节，不臆造 INSTALL.md fetch 或 TARGET_TAG 设置指令。"
+        },
+        {
+          "id": "kimi_section_omitted_without_plugin_json",
+          "description": "目标 tag 无 Kimi manifest 时省略 Kimi 小节",
+          "text": "目标 tag 无 `.kimi-plugin/plugin.json` 时省略 `### Kimi Code` 小节，不生成空壳小节，也不臆造 `/plugins install` 命令。"
+        },
+        {
+          "id": "closing_sentence_derived",
+          "description": "收尾句存在且 N 按 manifest 推导",
+          "text": "升级说明以「更新仓库后重新运行安装器，即可同步全部 6 个 role plugin 的 `v0.9.0` 能力。」收尾（N=6 按 v0.9.0 manifest 推导）。"
+        }
+      ]
     }
   ]
 }

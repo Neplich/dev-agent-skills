@@ -1,0 +1,19 @@
+{
+  "eval_id": "eval-007-marketplace-full-capability-upgrade-note",
+  "eval_name": "marketplace-full-capability-upgrade-note",
+  "workspace_root": "agents/product_manager/test/github-release-generator/evals/workspace/eval-007-marketplace-full-capability-upgrade-note",
+  "skill_availability_goal": "Verify the marketplace positive branch: strong vX.Y.Z - summary title gate, three instruction subsections derived from the target-tag marketplace manifest, and the closing installer sentence.",
+  "prompt": "根据 `release-package.md`、`docs/site/release-notes/v1.0.0.md` 和 `github-evidence.md` 生成 GitHub Release 完整预览。本仓库为 dev-agent-skills marketplace 宿主，目标 tag 的宿主插件内容见工作区 `.claude-plugin/marketplace.json`、`.codex/INSTALL.md` 与 `.kimi-plugin/plugin.json`。保持站内事实含义与范围，不执行任何写操作。",
+  "fixture_context": [
+    "release-package.md",
+    "github-evidence.md",
+    "docs/site/release-notes/v1.0.0.md",
+    ".claude-plugin/marketplace.json",
+    ".codex/INSTALL.md",
+    ".kimi-plugin/plugin.json"
+  ],
+  "execution_cleanup": [
+    "release-preview.md",
+    "release-action.md"
+  ]
+}
