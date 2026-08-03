@@ -10,9 +10,9 @@
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture version: current HEAD `5fcfa17`; confirmed `notification-center` PRD with 3 explicit domains, 10 user stories, 8 functional requirements, and a polling-based Engineer TRD.
-- Fresh run: `2026-08-03 14:13:16 +0800`
-- Runtime directory: `tmp/eval-runs/issue-197-evals/idea-to-spec/eval-009-prd-iteration-split-proposal/`
+- Fixture version: current workspace atop HEAD `160faaf`; the four level-1 fixture documents have the uncommitted schema correction `parent_feature: "N/A"`. This case contains a confirmed `notification-center` PRD with 3 explicit domains, 10 user stories, 8 functional requirements, and a polling-based Engineer TRD.
+- Fresh run: `2026-08-03 15:02:31 +0800`
+- Runtime directory: `tmp/eval-runs/issue-197-evals-r3/idea-to-spec/eval-009-prd-iteration-split-proposal/`
 
 ## Latest Result
 
@@ -30,7 +30,7 @@
 
 ## With-Skill Behavior
 
-The response applies the requested product delta before evaluating structure, uses the actual fixture counts to trigger L2b, and produces a confirmation-gated proposal with a complete parent/child content map. It preserves PM/Engineer ownership boundaries, records absent downstream artifacts as `no artifact found`, and does not modify or restructure the fixture while the proposal is pending.
+The response recognizes the corrected level-1 metadata (`parent_feature: N/A`), applies the requested product delta before evaluating structure, uses the actual fixture counts to trigger L2b, and produces a confirmation-gated proposal with a complete parent/child content map. It preserves PM/Engineer ownership boundaries, records absent downstream artifacts as `no artifact found`, and does not modify or restructure the fixture while the proposal is pending.
 
 ## Fresh Without-Skill Baseline
 
@@ -47,4 +47,4 @@ The baseline was newly generated in this run from the same prompt and fixture wi
 
 ## Runtime Artifact(s) Policy
 
-- Fresh with-skill response, newly generated without-skill baseline, and judge notes remain under `tmp/eval-runs/issue-197-evals/idea-to-spec/eval-009-prd-iteration-split-proposal/` and are not committed.
+- Fresh with-skill response, newly generated without-skill baseline, and judge notes remain under `tmp/eval-runs/issue-197-evals-r3/idea-to-spec/eval-009-prd-iteration-split-proposal/` and are not committed.
