@@ -19,11 +19,13 @@ The summary should reflect about three confirmed highlights (non-blocking
 writing recommendation) and must not be only the bare tag.
 
 **Gate**: for this marketplace the title must match the
-`v{VERSION} - {主题概述}` shape. For any other host, follow the host's
-confirmed release-naming convention; no additional format gate applies. In
-either case a title that is only a bare version string is not a submit-ready
-preview: it must not be delivered for maintainer approval, and no draft may
-be created or updated with it.
+`v{VERSION} - {主题概述}` shape, and the summary must be non-empty and
+related to the confirmed facts (a bare version string or a vacuous summary
+is not submit-ready). For any other host, follow the host's confirmed
+release-naming convention; no additional format gate applies. In either case
+a title that is only a bare version string is not a submit-ready preview: it
+must not be delivered for maintainer approval, and no draft may be created or
+updated with it.
 
 ## Body
 
@@ -97,9 +99,11 @@ client-installation subsections or shell commands.
    仅当宿主是本 marketplace（dev-agent-skills）发版时使用；指令列表与数量
    以目标版本 `.claude-plugin/marketplace.json` 注册的 role plugins 为准
    （下方 7 行是当前形态，逐字使用，不随版本内容裁剪或增删；manifest
-   变化时按 manifest 推导列表）。Claude Code 小节仅适用于本 marketplace
-   当前发布（`/plugin update` 无版本 pin，无法固定历史版本）；为历史 tag
-   重跑正文时省略该小节并说明平台限制。Codex 指令仅在该版本对应内容包含
+   变化时按 manifest 推导列表）。Claude Code 小节更新到 marketplace 当前
+   版本（`/plugin update` 无版本 pin，正文为 durable 发布物，无法承诺
+   `v{VERSION}` 固定安装）；正文中须明确该限制，需要固定版本时改用
+   Codex 或 Kimi 路径；为历史 tag 重跑正文时省略该小节并说明平台限制。
+   Codex 指令仅在该版本对应内容包含
    `TARGET_TAG` 安装支持时使用，Kimi 指令仅在该版本对应内容包含
    `.kimi-plugin/plugin.json` 时使用——能力判断以已审计的 `target_ref`
    （pre-tag，tag 尚不存在时）或目标 tag（post-tag / 历史重跑）的仓库
