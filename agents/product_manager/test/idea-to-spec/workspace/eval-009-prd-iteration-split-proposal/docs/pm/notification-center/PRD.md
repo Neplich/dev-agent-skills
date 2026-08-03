@@ -5,6 +5,7 @@ feature: "notification-center"
 feature_path: "notification-center"
 parent_feature: "N/A"
 feature_level: "1"
+child_features: "N/A"
 version: "1.3.0"
 status: Confirmed
 author: "PM Fixture"

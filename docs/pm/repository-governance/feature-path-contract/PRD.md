@@ -10,6 +10,7 @@ feature: "feature-path-contract"
 feature_path: "repository-governance/feature-path-contract"
 parent_feature: "repository-governance"
 feature_level: "2"
+child_features: "N/A"
 last_updated: "2026-08-03"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/37"
 related_docs:
@@ -118,7 +119,7 @@ GitHub issue #197 在此基础上补充功能树的演进机制：当单个 PRD/
 | FR-002 | PM 生成前扫描 | PM 文档生成或更新前读取 `docs/pm/**/PRD.md` 和存在的 `DECISIONS.md`。 | P0 | 新需求属于已有父功能时，不创建新的顶层目录；无法判断时 blocked 或澄清。 |
 | FR-003 | PM 产物路径 | PRD、DECISIONS 和 PM working draft 使用 `docs/pm/{feature_path}/`。 | P0 | `PRD.md`、`DECISIONS.md`、`design.md` 均在同一 PM feature path 下。 |
 | FR-004 | Engineer 路径镜像 | Engineer TRD 和实施计划镜像 PM feature path。 | P0 | TRD 写入 `docs/engineer/{feature_path}/TRD.md`，实施计划写入 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。 |
-| FR-005 | Frontmatter 追踪字段 | 正式文档 frontmatter 增加 `feature_path`、`parent_feature`、`feature_level`。 | P0 | 新建或实质更新的 PRD/TRD/IMPLEMENTATION_PLAN 都包含这些字段；旧文档缺字段时按兼容规则读取。 |
+| FR-005 | Frontmatter 追踪字段 | 正式文档 frontmatter 增加 `feature_path`、`parent_feature`、`feature_level`；PRD 另维护 `child_features` 直接子功能索引。 | P0 | 新建或实质更新的 PRD/TRD/IMPLEMENTATION_PLAN 都包含路径字段，新建或实质更新的 PRD 还包含 `child_features`；旧文档缺字段时按兼容规则读取。 |
 | FR-006 | 交接包 | PM 到 Engineer、TRD 到 Implementor 的交接包携带路径证据。 | P0 | 交接包包含 `feature_path`、`parent_feature`、`feature_level`、`feature_path_evidence`、来源文档。 |
 | FR-007 | 实施计划门禁 | `feature-implementor` 在写实施计划前校验 PRD/TRD 路径一致。 | P0 | 缺 PRD 回 `pm-agent:idea-to-spec`；缺 TRD 或 TRD stale 回 `engineer-agent:trd-gen`；路径冲突 blocked。 |
 | FR-008 | Debugger 对齐 | `debugger` 读取现有功能预期时使用 feature path。 | P0 | bug 修复前按 `docs/pm/{feature_path}/PRD.md` 和 `docs/engineer/{feature_path}/TRD.md` 对齐预期。 |
@@ -189,6 +190,7 @@ flowchart TD
 | `feature` | string | 兼容字段，推荐等于 `feature_path` 的最后一级 slug 或历史一级功能 slug。 |
 | `parent_feature` | string 或 `N/A` | 父级 feature path；一级功能使用 `N/A`。 |
 | `feature_level` | integer | 功能层级，取值为任意正整数，必须等于 `feature_path` 段数。 |
+| `child_features` | list 或 `N/A` | PRD 的直接子功能路径索引；没有直接子功能时使用 `N/A`。 |
 | `feature_path_evidence` | list | 路径归属证据，例如匹配到的父 PRD、用户明确确认、issue 引用或 DECISIONS 记录。 |
 
 Agent/Skill 治理 PRD 使用同一多级口径：`docs/pm/agents/{agent}/skills/{skill}/PRD.md`

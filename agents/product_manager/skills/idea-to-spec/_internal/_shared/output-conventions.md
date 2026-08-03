@@ -15,6 +15,7 @@ feature: "<terminal-feature-slug>"
 feature_path: "<multi-level-feature-path>"
 parent_feature: "<parent-feature-path-or-N/A>"
 feature_level: "<positive-integer-path-depth>"
+child_features: "<direct-child-feature-paths-or-N/A>" # PRD only; omit for other document types
 version: "1.0.0"
 status: Draft | In Review | Approved | Superseded | Deprecated
 author: "<generation requester display name + agent platform name>"
@@ -44,6 +45,7 @@ changelog:
 | feature | Yes for new feature-scoped docs | Terminal feature slug or compatible legacy feature value |
 | parent_feature | Yes for new feature-scoped docs | Parent feature path, or `N/A` for level 1 |
 | feature_level | Yes for new feature-scoped docs | Positive integer matching `feature_path` depth |
+| child_features | Yes for new or updated PRDs | Direct child feature paths, or `N/A` when the PRD has no direct children |
 | related_docs | No | List of related document paths |
 | changelog | Yes | Version history entries |
 

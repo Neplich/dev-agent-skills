@@ -117,6 +117,7 @@ flowchart TD
 | `feature` | 必填 | 现有值保留 | 兼容字段；新文档建议使用末级 slug，完整路径由 `feature_path` 表达。 |
 | `parent_feature` | 必填 | 一级旧文档推导为 `N/A` | 父 feature path；一级功能为 `N/A`。 |
 | `feature_level` | 必填 | 从路径段数推导 | 任意正整数，必须等于 `feature_path` 段数。 |
+| `child_features` | PRD 必填 | 缺失时保留为 legacy 未声明 | 父 PRD 的直接子功能路径索引；没有直接子功能时为 `N/A`，不写入 TRD frontmatter。 |
 | `related_prd` | TRD/Plan 必填 | 现有路径保留并校验 | 必须指向同一 `feature_path` 的 PRD。 |
 | `related_trd` | Plan 必填 | 现有路径保留并校验 | 必须指向同一 `feature_path` 的 TRD。 |
 
@@ -184,7 +185,7 @@ PRD iteration、TRD iteration 和 `trd-gen` 在应用内容变更后、完成版
 `idea-to-spec`、`prd-gen`、`prd-iteration`、`iteration-coordinator` 和相关 PM generator 在写入 PRD、DECISIONS 或 PM draft 前执行：
 
 1. 扫描 `docs/pm/**/PRD.md`，深度支持多级 feature path。
-2. 读取每个 PRD 的 frontmatter：`feature_path`、`feature`、`parent_feature`、`feature_level`、`title`、`related_issue`、`related_docs`。
+2. 读取每个 PRD 的 frontmatter：`feature_path`、`feature`、`parent_feature`、`feature_level`、`child_features`、`title`、`related_issue`、`related_docs`。
 3. 对缺少 `feature_path` 的旧单层 PRD，从 `docs/pm/{feature}/PRD.md` 推导 `feature_path={feature}`、`feature_level=1`。
 4. 根据用户请求、issue 标题/正文、现有 PRD 标题、DECISIONS 和目录路径判断是否属于已有父功能。
 5. 只有在父功能证据明确或用户明确确认时，生成子路径。

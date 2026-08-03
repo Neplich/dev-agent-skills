@@ -48,6 +48,8 @@ Every gen skill follows this 6-step workflow:
   corresponding `DECISIONS.md` is updated in the same feature folder
 - **Feature path fields**: New formal feature-scoped documents include
   `feature_path`, `feature`, `parent_feature`, and `feature_level`
+- **PRD child index**: New or updated PRDs include `child_features`, using
+  `N/A` when the PRD has no direct child features
 - **Line limit**: Keep output under 500 lines, including frontmatter
 - **Section limit**: Keep each section under 80 lines; split or compress if
   exceeded
@@ -182,7 +184,8 @@ Run this gate before writing `PRD.md`, `DECISIONS.md`, or PM
 
 1. Scan `docs/pm/**/PRD.md`, supporting multi-level feature paths.
 2. Read each PRD's `feature_path`, `feature`, `parent_feature`,
-   `feature_level`, `title`, `related_issue`, and `related_docs` when present.
+   `feature_level`, `child_features`, `title`, `related_issue`, and
+   `related_docs` when present.
 3. For old single-level PRDs without `feature_path`, infer
    `feature_path=<folder>`, `parent_feature=N/A`, and `feature_level=1`.
 4. Decide whether the request is a level-1 feature or belongs under an existing
