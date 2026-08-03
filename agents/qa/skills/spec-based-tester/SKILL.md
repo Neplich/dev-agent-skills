@@ -275,7 +275,22 @@ For non-E2E spec validation where the repo has no stronger reporting path, use
 
 The report should include:
 
-### 1) Validation summary
+### 1) Preflight baseline
+
+Carry the preflight record into the report so the execution basis is visible:
+
+- Scope and feature path
+- Environment and platform version status
+- Unknowns and blocked checks
+- Same-path PRD/TRD/confirmed `IMPLEMENTATION_PLAN.md` gate status when the
+  request comes from an existing-feature change, bug fix, or code-complete E2E
+  documentation update
+- QA memory read status for `TEST_SUITE.md`, `FLOW_INDEX.md`, `cases/*.md`,
+  `scripts/*.spec.md`, prior `results/`, and `_reports/` — record each source
+  as read or absent
+- Whether reusable TC exist and whether they are reused
+
+### 2) Validation summary
 
 - Scope
 - Environment
@@ -283,7 +298,7 @@ The report should include:
 - What was validated
 - What was not validated
 
-### 2) Requirement matrix
+### 3) Requirement matrix
 
 For each in-scope requirement or acceptance point, record:
 
@@ -293,7 +308,7 @@ For each in-scope requirement or acceptance point, record:
 - Evidence
 - Notes
 
-### 3) Confirmed failures only
+### 4) Confirmed failures only
 
 List only failures that were directly reproduced and evidenced.
 
@@ -302,11 +317,18 @@ List only failures that were directly reproduced and evidenced.
 - Do not turn assumptions into bugs.
 - Do not escalate flaky or ambiguous observations as confirmed defects unless you explicitly call out the uncertainty and why the result is not stable.
 
-### 4) Blocked items
+### 5) Blocked items
 
-List blocked checks separately with the exact blocker.
+List blocked checks separately with the exact blocker, the next owner, and the
+recovery order. For document-gate blockers, name the owning specialist and
+resume only after the missing document is confirmed on the same feature path:
 
-### 5) Release or implementation risks
+- Missing or unclear PRD → `pm-agent:idea-to-spec`
+- Missing, stale, or mis-pathed TRD → `engineer-agent:trd-gen`
+- Missing, stale, or mis-pathed confirmed implementation plan →
+  `engineer-agent:feature-implementor`
+
+### 6) Release or implementation risks
 
 Call out any risks that need handoff even if they are not confirmed bugs, such as:
 
