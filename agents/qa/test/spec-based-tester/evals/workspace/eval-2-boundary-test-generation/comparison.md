@@ -9,18 +9,18 @@
 ## Test Set / Fixture Version
 
 - Eval schema: `evals.json` v1.0
-- Fixture version: repository commit `cdfc879`
-- Fresh run: `2026-07-30 20:02:13 +0800`
-- Runtime directory: `tmp/eval-runs/issue-196-pr-b-spec-20260730-200213-eval002/qa/agents/qa/test/spec-based-tester/evals/workspace/eval-2-boundary-test-generation/`
+- Fixture version: repository commit `2506764`
+- Fresh run: `2026-08-03 11:20:59 +0800`
+- Runtime directory: `tmp/eval-runs/issue-201-spec-based-tester/eval-002-boundary-test-generation/`
 - `eval_metadata.json` 未声明 `execution_cleanup`。
 
 ## Latest Result
 
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **PARTIAL**
 - `assertion_3` 为 **NOT EXERCISED**：缺 confirmed `IMPLEMENTATION_PLAN.md` 已合法阻塞实际边界执行，不能要求候选越过门禁实跑。
 
-Overall result: FAIL
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
@@ -30,25 +30,25 @@ Overall result: FAIL
 - PASS `assertion_4`: 每项使用 `assumed` 或 `blocked`，并提供可追踪 evidence references。
 - PASS `assertion_5`: 包含 requirement matrix、execution path、evidence references、risk notes 和 handoff decision。
 - PASS `assertion_6`: 没有把 assumed/blocked 项当成缺陷，且列出未覆盖风险。
-- FAIL `alignment_plan_gate`: 正确发现缺 `IMPLEMENTATION_PLAN.md` 并标记 blocked，但没有把 next owner 指向 `engineer-agent:feature-implementor`；后续建议反而先补 `QA_BASE_URL` 并执行 harness，遗漏必须先补齐 plan 的恢复顺序。
+- PASS `alignment_plan_gate`: 确认 `login-refresh` 下 PRD/TRD 对齐，识别同路径 `IMPLEMENTATION_PLAN.md` 缺失并标记 blocked；`Blocked items` 明确将 next owner 指向 `engineer-agent:feature-implementor`，恢复顺序为先确认 plan、再核对环境并执行 repo harness。
 
 ## With-Skill Behavior
 
-候选正确执行了文档与 QA memory preflight，也没有伪造边界结果。核心回归仍是实施计划门禁的 handoff 不完整：识别 blocker 后没有交还权威 owner，且恢复步骤顺序错误。
+候选正确执行文档与 QA memory preflight，没有伪造边界结果；修复后的 `Blocked items` 模板把缺 plan 的 owner 和恢复顺序接入最终报告。此前失败的 `alignment_plan_gate` 本轮通过，其余此前通过的断言无回归。
 
 ## Fresh Without-Skill Baseline
 
-同一 prompt/fixture 的全新 baseline 已生成，未读取或应用 skill 与 QA README。candidate 和 fresh judge 均成功；baseline 完全没有识别缺失的 `IMPLEMENTATION_PLAN.md`，只以测试环境和 `QA_BASE_URL` 为 blocker，因而同样不满足 `alignment_plan_gate`，semantic verdict 为 FAIL。
+同一 prompt/fixture 的 without-skill baseline 已在本轮重新生成，未读取或应用 skill 与 QA README，且未复用历史 baseline。它只把测试环境和 `QA_BASE_URL` 作为 blocker，没有识别缺失的 `IMPLEMENTATION_PLAN.md`、next owner 或 plan-first 恢复顺序，因此不满足 `alignment_plan_gate`。
 
 ## Failures
 
-- 缺 plan 后没有交还 `engineer-agent:feature-implementor`，恢复步骤错误。
+- 无 behavior failure。
 
 ## Next Steps
 
-- 先补齐并确认同路径 `IMPLEMENTATION_PLAN.md`，再恢复 repo harness 或浏览器验证。
+- 若需覆盖 `assertion_3` 的实际边界执行分支，应在补齐并确认同路径 `IMPLEMENTATION_PLAN.md` 后另行执行；本轮保持 fixture 与门禁原状。
 
 ## Runtime Artifact Policy
 
-- 两条 candidate、两条 fresh judge verdict、diagnostics 与 `comparison.auto.md` 均在上述 `tmp/eval-runs/`；所有 Codex 调用返回码为 0，且无 timeout。
+- 本轮 with-skill 候选、重新生成的 without-skill baseline 与 judge 笔记均在上述 `tmp/eval-runs/`。
 - Runtime 不提交；durable 结果仅为本文件。
