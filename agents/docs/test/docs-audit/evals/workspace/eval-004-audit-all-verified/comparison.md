@@ -31,7 +31,6 @@ fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 
 
 ## Historical results
 
-- 2026-08-03（fixture 身份文本更新后 fresh re-baseline，issue #188）：**PASS** — `with_skill` satisfies **6/6** assertions；fresh `without_skill` baseline satisfies **4/6** assertions。本轮覆盖 complete affected-set verification, canonical version-source inventory, unified stamping, and candidate/anchor/discovery/integration-gated ready_for_tag。
 - 2026-07-20（fixture 身份文本变更前）：旧 run 结果，按 Fixture Drift Notice 不再作为当前证据。
 
 ## Canonical digest verification
