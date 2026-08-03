@@ -1657,6 +1657,9 @@ def validate_kimi_plugin(root: Path, errors: list[ContractError]) -> None:
         )
 
     skills = payload.get("skills")
+    # Kimi 官方示例允许单字符串形态（"skills": "./skills/"），归一化为列表再校验
+    if isinstance(skills, str):
+        skills = [skills]
     if not isinstance(skills, list) or not skills:
         add_error(errors, path, "skills must be a non-empty list of './' paths")
     else:

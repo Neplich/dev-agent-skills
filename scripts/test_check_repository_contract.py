@@ -1500,3 +1500,14 @@ def test_kimi_plugin_session_start_skill_must_exist(tmp_path: Path) -> None:
 
     assert len(errors) == 1
     assert "sessionStart.skill" in errors[0].message
+
+
+def test_kimi_plugin_single_string_skills_form_accepted(tmp_path: Path) -> None:
+    manifest = valid_kimi_manifest()
+    manifest["skills"] = "./agents/product_manager/skills/"
+    root = write_kimi_fixture(tmp_path, manifest=manifest)
+
+    errors: list = []
+    contract.validate_kimi_plugin(root, errors)
+
+    assert errors == []
