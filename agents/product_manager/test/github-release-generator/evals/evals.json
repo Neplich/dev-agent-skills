@@ -279,7 +279,7 @@
         {
           "id": "closing_sentence_derived",
           "description": "收尾句存在且 N 按 manifest 推导",
-          "text": "升级说明的收尾句存在：目标 tag 无已验证固定版本安装路径时，不得承诺「更新仓库后重新运行安装器，即可同步全部 6 个 role plugin 的 `v0.9.0` 能力」；应明确声明该 tag 无已验证的固定版本安装路径并按默认分支（main）更新（N=6 由 v0.9.0 manifest 推导，可在声明中提及 plugin 数量）。"
+          "text": "升级说明的收尾句存在且必须包含由 v0.9.0 manifest 推导的 6 个 role plugin 数量；目标 tag 无已验证固定版本安装路径时，不得承诺「更新仓库后重新运行安装器，即可同步全部 6 个 role plugin 的 `v0.9.0` 能力」，应明确声明该 tag 无已验证的固定版本安装路径并按默认分支（main）更新。"
         }
       ]
     }
