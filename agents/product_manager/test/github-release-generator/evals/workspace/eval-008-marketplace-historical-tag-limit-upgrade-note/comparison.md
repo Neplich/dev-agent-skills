@@ -56,5 +56,5 @@
 
 ## Runtime Artifacts Policy
 
-- 双侧 candidates 与 judge verdict 位于 `tmp/eval-runs/issue-220-r2/`，属于未提交运行期诊断产物。
+- 双侧 candidates 与 judge verdict 位于 `tmp/eval-runs/issue-220-r3/`（r2 为第 2 轮历史轮次，仅作历史参考），属于未提交运行期诊断产物。
 - 长期只保留本 `comparison.md`；不提交 transcript、candidate、verdict、timing、run status 或 diagnostics。
