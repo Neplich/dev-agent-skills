@@ -30,7 +30,7 @@
 - PASS `claude_section_verbatim`：`### Claude Code` 小节含 `/plugin marketplace update`、7 行 `/plugin update {role}@dev-agent-skills`、`/reload-plugins` 与无版本 pin 限制说明；without-skill FAIL（只有概括说明，无小节与逐字命令）
 - PASS `codex_section_pinned_install`：`### Codex` 引用目标 tag raw `INSTALL.md` URL 并设 `TARGET_TAG=v1.0.0`；without-skill FAIL（只概述安装方式）
 - PASS `kimi_section_plugin_install`：`### Kimi Code` 含 `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/v1.0.0`；without-skill FAIL（未呈现小节与命令）
-- PASS `plugin_list_derived_from_manifest`：指令列表恰好覆盖 fixture manifest 7 个 role plugin，无增删；without-skill FAIL（叙述中列出 7 个但无指令列表，未证明按 manifest 推导）
+- PASS `plugin_list_derived_from_manifest`：指令列表恰好覆盖 fixture manifest 7 个 role plugin，无增删；without-skill PASS（按 manifest 列出 7 个 plugin，成员一致——第 3 轮 without-skill 唯一满足的断言）
 - PASS `closing_sentence_present`：以「更新仓库后重新运行安装器，即可同步全部 7 个 role plugin 的 `v1.0.0` 能力。」收尾；without-skill FAIL（无固定收尾句）
 
 ## With Skill Behavior
@@ -55,5 +55,5 @@
 
 ## Runtime Artifacts Policy
 
-- 双侧 candidates 与 judge verdict 位于 `tmp/eval-runs/issue-220/`，属于未提交运行期诊断产物。
+- 双侧 candidates 与 judge verdict 位于 `tmp/eval-runs/issue-220-r3/`，属于未提交运行期诊断产物。
 - 长期只保留本 `comparison.md`；不提交 transcript、candidate、verdict、timing、run status 或 diagnostics。

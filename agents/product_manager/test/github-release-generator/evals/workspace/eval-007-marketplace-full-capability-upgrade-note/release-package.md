@@ -7,8 +7,9 @@
 - docs_checks: `npm run test:docs` from `docs/site`, exit 0
 - updated_release_surfaces: index, releases metadata and generated navigation updated
 - source_evidence: confirmed six-category evidence
-- docs_audit_pre_tag_phase: `pre-tag`
-- docs_audit_pre_tag_result: `ready_for_tag`
+- docs_audit_pre_tag_handoff:
+  - phase: `pre-tag`
+  - phase_result: `ready_for_tag`
 - base_ref: `v0.9.0`
 - target_ref: `8b6a1f2`
 - intended_tag: `v1.0.0`

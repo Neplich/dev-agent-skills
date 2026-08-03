@@ -29,7 +29,7 @@
     "github-release-generator": {
       "source": "agents/product_manager/skills/github-release-generator",
       "sourceType": "local",
-      "computedHash": "65e6b582e5acd451cab7db35c34ddfe7716b364cedb5443b44f3c6aab3d6c184"
+      "computedHash": "847d535825f99618d00c5f5e2b58a95454dbd25d1eb12008221b47095af1c32c"
     },
     "release-notes-generator": {
       "source": "agents/docs/skills/release-notes-generator",

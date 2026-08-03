@@ -31,7 +31,7 @@
 - PASS `claude_section_omitted_with_platform_limit`：历史 tag 重跑省略 `### Claude Code` 并说明 durable 正文无法承诺固定 `v0.9.0`；固定版本替代路径只在目标 tag 实际存在已验证能力时点名，本 fixture 中 Codex/Kimi 均无固定版本能力，正文明确声明「该 tag 无已验证的固定版本安装路径」；without-skill FAIL（保留 `### Claude Code` 小节并作一般性说明，未形成「无已验证固定版本安装路径」统一声明）
 - PASS `codex_section_omitted_without_target_tag_support`：目标 tag 无 TARGET_TAG 支持时省略 `### Codex` 小节，不臆造安装指令；without-skill FAIL（生成了 `### Codex` 小节并推荐普通安装，未按断言省略）
 - PASS `kimi_section_omitted_without_plugin_json`：无 `.kimi-plugin/plugin.json` 时省略 `### Kimi Code` 小节，不生成空壳或 `/plugins install` 命令；without-skill FAIL（仍生成 `### Kimi Code` 小节，构成断言禁止的空壳能力说明）
-- PASS `closing_sentence_derived`：以「更新仓库后重新运行安装器，即可同步全部 6 个 role plugin 的 `v0.9.0` 能力。」收尾，N=6 与历史 manifest 一致；without-skill FAIL（无固定收尾句）
+- PASS `closing_sentence_derived`：收尾明确声明该 tag 无已验证固定版本安装路径、6 个 plugin 按默认分支（main）更新且无法固定到 `v0.9.0`，不承诺同步该 tag 能力；without-skill FAIL（无固定收尾句）
 
 ## With Skill Behavior
 
@@ -40,7 +40,7 @@
 
 ## Without Skill Baseline
 
-- 来源：issue-220-r2 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
+- 来源：issue-220-r3 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
 - 行为：0/6 assertions PASS（第 3 轮，修正后断言与最终 fixture）。未省略 `### Claude Code`/`### Codex`/`### Kimi Code` 小节（保留为一般性说明），也未呈现标题强格式、固定首句与「无固定版本路径」条件化收尾——6 条断言全部保持 skill 增量区分度。
 
 ## Failures / Findings
