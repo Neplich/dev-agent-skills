@@ -1,31 +1,50 @@
-# pm-agent Eval Comparison: eval-001
+# Eval Result: eval-001-route-greenfield-product-request
 
-## Evaluation target
+## Evaluation Target
 
+- Agent: `product_manager`
 - Skill: `pm-agent`
-- Test: `eval-001-route-greenfield-product-request`
-- Fixture version: current `README.md` and `eval_metadata.json` at 2026-08-01 13:12 +0800
-- Fresh run: new with-skill response and new without-skill baseline generated from the same prompt and fixture; no historical baseline was reused.
+- Eval: `eval-001-route-greenfield-product-request`
+- Workspace: `workspace/eval-1-route-greenfield-product-request`
 
-## Latest result:
+## Test Set / Fixture Version
+
+- Schema: `evals.json` v1.0
+- Fixture version: HEAD `a452319`; current near-empty greenfield README and eval metadata with the BRD-free artifact assertion.
+- Fresh run: `2026-08-03 11:58:20 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/pm/eval-001-route-greenfield-product-request/`
+
+## Latest Result
 
 - Behavior result: PASS — all 5 assertions passed.
-- Coverage result: FULL — 5/5 assertion scenarios were exercised.
+- Coverage result: FULL — 5/5 assertion scenarios were exercised; no `NOT EXERCISED` items.
 - Overall result: PASS
 
-## With-skill behavior
+## Assertion Results
 
-Selected `idea-to-spec`, explicitly enforced the no-skip-PM contract after `project-bootstrap` removal, named the required discovery context and PM artifacts, kept TRD with `engineer-agent:trd-gen`, and delayed Designer/Engineer handoff until requirements stabilize.
+- `route_to_idea_to_spec`: PASS — selects `idea-to-spec` as the narrowest PM route.
+- `pm_first_guardrail`: PASS — enforces normal `pm-agent` classification and no skip-PM override.
+- `context_to_collect`: PASS — names goals, core flow, boundaries, acceptance criteria, and open decisions.
+- `expected_pm_artifacts`: PASS — explicitly limits PM artifacts to PRD/DECISIONS and assigns TRD to `engineer-agent:trd-gen`.
+- `handoff_boundary`: PASS — delays Designer/Engineer handoff until requirements stabilize.
 
-## Without-skill baseline
+## With-Skill Behavior
 
-Fresh baseline used only the prompt and fixture. It recommended generic requirement analysis and later design/development, but did not identify the no-override PM entry contract, the full artifact ownership split, or the explicit normal-classification return path.
+The dispatcher correctly keeps the empty-workspace request on the PM path, defines the required discovery context, and states the updated artifact ownership contract. The former BRD output is absent exactly as required by issue #198.
 
-## Failures and next steps
+## Fresh Without-Skill Baseline
 
-- Failures: none.
-- Next steps: none for this fixture.
+The baseline was newly generated in this run from the same prompt and fixture, without reading or applying the target skill, Product Manager README, internal instructions, or historical comparison. It advised requirements work before implementation but omitted the explicit no-override classification contract and complete PRD/DECISIONS versus Engineer TRD ownership split.
 
-## Runtime Artifacts Policy
+## Failures
 
-Fresh responses and the verdict were written only under `tmp/eval-runs/issue-196-project-bootstrap-removal-20260801-131022/pm-agent/eval-001-route-greenfield-product-request/`; runtime artifacts are not durable repository outputs.
+- No assertion failures or baseline blockers.
+- BRD removal caused the expected behavior difference: the PM artifact list no longer contains BRD.
+
+## Next Steps
+
+- Keep this eval as the direct dispatcher regression gate for the BRD-free greenfield artifact chain.
+
+## Runtime Artifact Policy
+
+- Fresh responses and judge notes remain under `tmp/eval-runs/issue-198-brd/pm/eval-001-route-greenfield-product-request/` and are not committed.

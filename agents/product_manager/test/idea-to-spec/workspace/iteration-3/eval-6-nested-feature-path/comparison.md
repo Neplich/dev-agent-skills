@@ -5,43 +5,45 @@
 - Agent: `product_manager`
 - Skill: `idea-to-spec`
 - Eval: `eval-006-nested-feature-path`
-- Test case: nested-feature-path
 - Workspace: `workspace/iteration-3/eval-6-nested-feature-path`
 
 ## Test Set / Fixture Version
 
-- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: approved PRDs for `chat-interface`, `chat-interface/messages`, and `chat-interface/messages/history`; all candidate stale child paths were excluded through `execution_cleanup`.
-- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
+- Fixture version: HEAD `a452319`; approved three-level PRD chain with all candidate stale child paths excluded by `execution_cleanup`.
+- Fresh run: `2026-08-03 11:58:20 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/pm/eval-006-nested-feature-path/`
 
 ## Latest Result
 
-**PASS** — all 4 assertions passed. The response scans the existing PRD chain, resolves `chat-interface/messages/history/search`, rejects parallel or truncated paths, and supplies all required feature-path fields with structured evidence.
+- Behavior result: PASS — all 4 assertions passed.
+- Coverage result: FULL — 4/4 assertion scenarios were exercised; no `NOT EXERCISED` items.
+- Overall result: PASS
+
+## Assertion Results
+
+- `scan_existing_prds`: PASS — reads the complete `chat-interface/messages/history` PRD ancestry.
+- `nested_feature_path`: PASS — resolves `chat-interface/messages/history/search` with parent and level metadata.
+- `no_parallel_top_level`: PASS — rejects all parallel and truncated candidate directories.
+- `handoff_fields`: PASS — includes `feature_path`, `feature`, `parent_feature`, `feature_level`, and structured `feature_path_evidence`.
 
 ## With-Skill Behavior
 
-- Read the complete three-level parent chain before choosing a child path.
-- Produced `feature=search`, `parent_feature=chat-interface/messages/history`, and `feature_level=4`.
-- Used `{source, reason}` entries for `feature_path_evidence`.
-- Kept the handoff not ready until search scope is confirmed and asked only one scope question.
+The response uses the existing PRD chain as the authoritative ownership evidence, proposes a child PRD and DECISIONS directory only under the confirmed parent, and keeps the handoff not ready until search scope is confirmed. No BRD context is required or emitted.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- Source: fresh isolated subagent run using the same prompt and cleaned fixture without the target skill, PM Agent README, internal instructions, or historical comparison.
-- The baseline found the correct four-level path, but used plain path strings instead of `{source, reason}` evidence and non-standard route / owner fields.
+The baseline was newly generated in this run from the same prompt and cleaned fixture, without reading or applying the target skill, Product Manager README, internal instructions, or historical comparison. It found the correct four-level path but used weaker path-only evidence and did not consistently preserve the not-ready PM gate.
 
 ## Failures
 
 - No assertion failures or baseline blockers.
-- Non-blocking observation: the with-skill response formatted a not-ready PM continuation like a cross-role packet and used `downstream_owner: PM`, which is outside the cross-role owner enum. Because it explicitly marked the handoff not ready and all declared assertions passed, the result remains PASS.
-- PR #163's Docs deployment-completeness closeout was not triggered and caused no feature-path regression.
+- BRD removal caused no feature-path or handoff regression; ownership is fully established by PRDs.
 
 ## Next Steps
 
-- Keep this eval as multi-level feature ownership and handoff-evidence coverage.
-- Consider tightening a future assertion for not-ready PM packet shape and the `downstream_owner` enum.
+- Keep this eval as coverage for PRD-based nested feature ownership after BRD removal.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Responses, verdicts, timing, and diagnostics remain under `tmp/eval-runs/idea-to-spec-v0.3.4/` and are not committed.
+- Fresh responses and judge notes remain under `tmp/eval-runs/issue-198-brd/pm/eval-006-nested-feature-path/` and are not committed.

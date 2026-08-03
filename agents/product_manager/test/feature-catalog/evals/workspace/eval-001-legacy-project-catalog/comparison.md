@@ -5,45 +5,46 @@
 - Agent: `product_manager`
 - Skill: `feature-catalog`
 - Eval: `eval-001-legacy-project-catalog`
-- Test case: legacy-project-catalog
 - Workspace: `workspace/eval-001-legacy-project-catalog`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Node.js commerce backend with no PM docs and code evidence for auth, orders, notifications, model, and tests
-- Expected output: pending-confirmation feature catalog draft with evidence, confidence, open questions, related code paths, and a maintainer confirmation gate; no formal catalog or PRD before confirmation.
+- Fixture version: HEAD `a452319`; Node.js commerce backend with no PM docs and shallow-scan evidence for authentication, orders, notifications, model, and tests.
+- Fresh run: `2026-08-03 11:58:20 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/pm/eval-001-legacy-project-catalog/`
 
-## Assertions
+## Latest Result
 
-- `draft_before_formal_docs`: draft first, no formal PM docs before confirmation
-- `evidence_and_confidence`: candidate entries include evidence categories and confidence
-- `business_capability_naming`: business capability names, not copied code directory names
-- `open_questions_present`: unresolved ownership or boundary questions are explicit
-- `confirmation_gate`: output stops by asking maintainers to confirm feature paths
+- Behavior result: PASS — all 5 assertions passed.
+- Coverage result: FULL — 5/5 assertion scenarios were exercised; no `NOT EXERCISED` items.
+- Overall result: PASS
 
-## With Skill
+## Assertion Results
 
-- The `feature-catalog` protocol first scans existing PM docs, then README and shallow code entry points when no Project Profile exists.
-- For this fixture it can produce a visible pending-confirmation draft with candidates such as login/authentication, order management, and order status notifications, backed by `src/routes/auth.js`, `src/routes/orders.js`, `src/services/order-service.js`, `src/services/notification-job.js`, `src/models/order.js`, and `test/orders.test.js`.
-- Because the evidence comes from a lightweight fallback scan, confidence is conservative and open questions remain for maintainer confirmation.
-- It stops at the confirmation gate and does not write `docs/pm/FEATURE_CATALOG.md` or any `docs/pm/{feature_path}/PRD.md`.
+- `draft_before_formal_docs`: PASS — produces a visibly pending draft and writes no catalog or PRD.
+- `evidence_and_confidence`: PASS — each candidate includes actual evidence categories, related paths, and conservative confidence.
+- `business_capability_naming`: PASS — names authentication, order management, and order status notifications as business capabilities.
+- `open_questions_present`: PASS — records ownership and boundary uncertainty instead of presenting guesses as facts.
+- `confirmation_gate`: PASS — stops with one maintainer confirmation request before formal docs or handoff.
 
-## Without Skill / without_skill Baseline
+## With-Skill Behavior
 
-- The baseline read the eval item and fixture before target skill docs. A generic project scan could list routes and services, but may copy code directory names directly into feature names.
-- It may generate a polished catalog or PRD immediately, omit confidence and open questions, or skip the explicit maintainer confirmation gate.
+The response used the documented lightweight scan because no Project Profile exists, grouped evidence by business capability, capped shallow-scan candidates at low confidence, and stopped before writing `docs/pm/FEATURE_CATALOG.md`. After confirmation, the spec handoff is directly to PRD/DECISIONS and later Engineer TRD; no BRD step remains.
+
+## Fresh Without-Skill Baseline
+
+The baseline was newly generated in this run from the same prompt and fixture, without reading or applying the target skill, Product Manager README, internal instructions, or historical comparison. It found the same broad modules but organized them more mechanically, used inconsistent confidence, and lacked the explicit maintainer confirmation gate.
 
 ## Failures
 
-- None. The current `feature-catalog` public and internal protocol satisfies the draft, evidence, naming, uncertainty, and confirmation assertions.
+- No assertion failures or baseline blockers.
+- BRD removal caused the expected handoff-chain difference, not a regression: confirmed catalog entries now proceed directly to PRD/DECISIONS.
 
 ## Next Steps
 
-- Keep this eval as coverage for inherited projects with no PM documentation.
-- Re-run fresh validation if shallow-scan confidence rules or confirmation-gate behavior changes.
+- Keep this eval as coverage for legacy feature discovery and the BRD-free confirmation-to-spec handoff.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- No runtime artifacts were created or committed. Transcripts, verdicts, outputs, timing, and diagnostics must remain outside git; the durable result is this `comparison.md`.
+- Fresh responses and judge notes remain under `tmp/eval-runs/issue-198-brd/pm/eval-001-legacy-project-catalog/` and are not committed.

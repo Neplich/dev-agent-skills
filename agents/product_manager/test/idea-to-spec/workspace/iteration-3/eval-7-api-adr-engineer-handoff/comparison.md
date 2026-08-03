@@ -5,42 +5,45 @@
 - Agent: `product_manager`
 - Skill: `idea-to-spec`
 - Eval: `eval-007-api-adr-engineer-handoff`
-- Test case: api-adr-engineer-handoff
 - Workspace: `workspace/iteration-3/eval-7-api-adr-engineer-handoff`
 
 ## Test Set / Fixture Version
 
-- Evaluation date: `2026-07-28`
 - Schema: `evals.json` v1.0
-- Fixture: confirmed PM PRD at `docs/pm/chat-interface/history-search/PRD.md`; stale Engineer output paths were excluded through `execution_cleanup`.
-- Run: fresh Codex evaluator with a separately isolated, newly generated `without_skill` baseline.
+- Fixture version: HEAD `a452319`; confirmed PM PRD at `docs/pm/chat-interface/history-search/PRD.md`, with stale Engineer paths excluded by `execution_cleanup`.
+- Fresh run: `2026-08-03 11:58:20 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/pm/eval-007-api-adr-engineer-handoff/`
 
 ## Latest Result
 
-**PASS** — all 4 assertions passed. The response keeps API and ADR Engineer-owned, routes them to `engineer-agent:trd-gen`, mirrors the complete feature path, and includes the required evidence and decision context.
+- Behavior result: PASS — all 4 assertions passed.
+- Coverage result: FULL — 4/4 assertion scenarios were exercised; no `NOT EXERCISED` items.
+- Overall result: PASS
+
+## Assertion Results
+
+- `does_not_use_pm_api_adr_generators`: PASS — states that API and ADR are Engineer-owned and PM must not generate them.
+- `routes_to_trd_gen`: PASS — explicitly hands off to `engineer-agent:trd-gen`.
+- `engineer_paths_mirror_feature_path`: PASS — requires `API.md` and `ADR-*.md` under the full Engineer feature path.
+- `handoff_contains_feature_path_evidence`: PASS — includes the feature metadata, approved PRD path, API needs, and ADR decision context.
 
 ## With-Skill Behavior
 
-- Explicitly prohibited PM internal `api-gen` / `adr-gen` from creating Engineer artifacts.
-- Required `docs/engineer/chat-interface/history-search/API.md` and same-directory `ADR-*.md`.
-- Included standard cross-role packet fields, the approved PRD path, API scope, ADR decision background, and unresolved technical evidence.
-- Did not fabricate scale, latency, storage, or index-selection facts.
+The response preserves the PM/Engineer boundary, uses the confirmed PRD as the source of product truth, and leaves unknown technical constraints as blockers rather than fabricating them. It does not use BRD as a handoff source or lifecycle stage.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- Source: fresh isolated subagent run using the same prompt and cleaned fixture without the target skill, PM Agent README, internal instructions, or historical comparison.
-- The baseline retained Engineer ownership and the parent path, but did not route to `engineer-agent:trd-gen` and proposed an `ADR/` subdirectory instead of the canonical same-directory `ADR-*.md` shape.
+The baseline was newly generated in this run from the same prompt and cleaned fixture, without reading or applying the target skill, Product Manager README, internal instructions, or historical comparison. It retained general Engineer ownership but omitted the precise `engineer-agent:trd-gen` route and preferred a non-canonical ADR subdirectory.
 
 ## Failures
 
 - No assertion failures or baseline blockers.
-- PR #163's Docs deployment-completeness closeout did not apply to this PM-to-Engineer handoff and caused no ownership regression.
+- BRD removal caused no ownership, path, or handoff regression.
 
 ## Next Steps
 
-- Keep this eval as API / ADR ownership and full-path mirroring coverage.
-- Re-run when Engineer handoff ownership, canonical filenames, or Docs closeout routing changes.
+- Keep this eval as coverage for Engineer-owned API/ADR handoff from a confirmed PRD.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Responses, verdicts, timing, and diagnostics remain under `tmp/eval-runs/idea-to-spec-v0.3.4/` and are not committed.
+- Fresh responses and judge notes remain under `tmp/eval-runs/issue-198-brd/pm/eval-007-api-adr-engineer-handoff/` and are not committed.

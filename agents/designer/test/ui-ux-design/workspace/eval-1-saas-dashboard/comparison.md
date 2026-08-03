@@ -7,39 +7,52 @@
 - Eval: `eval-001-saas-dashboard`
 - Test case: SaaS Dashboard Design
 - Workspace: `workspace/eval-1-saas-dashboard`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
-## Test Set / Fixture Version
+## Test Set or Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Design UI/UX for a project management SaaS dashboard
-- Expected output: 结构化的 UI/UX 设计文档，包含用户流程、页面布局、组件清单和响应式说明，并在设计交接处停止
+- Fixture version: HEAD `a452319`
+- Fresh run time: `2026-08-03 11:58:33 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/designer/ui-ux-design/eval-001-saas-dashboard/`
+- Fixture: prompt plus `eval_metadata.json`; no PM handoff, PRD, or confirmed `feature_path`
 
-## Assertions
+## Latest Result
 
-- `assertion_1`: 产出设计文档
-- `assertion_2`: 只做设计不做实现
-- `assertion_3`: 提示下一角色
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
 
-## With Skill
+All three assertions were evaluated. The failure is an existing fixture/assertion entry-basis mismatch, not a BRD-removal regression: the current skill correctly refuses to invent the feature-scoped output path.
 
-Observed behavior:
+## Assertion Results
 
-- 当前 SKILL.md 要求产出 ui-ux-spec.md，覆盖用户旅程、ASCII 布局、组件、交互和响应式，并明确停在 design handoff，可满足 dashboard eval assertions。
+- `assertion_1`: **FAIL** — the assertion requires `docs/design/{feature_path}/ui-ux-spec.md` from a confirmed `feature_path`, but the fixture supplies no handoff, PRD, or path. Writing the artifact would violate the PM handoff and feature-path gates.
+- `assertion_2`: **PASS** — the gated response produces no code change, engineering steps, or test execution.
+- `assertion_3`: **PASS** — it explains that eventual implementation belongs to `engineer-agent`, while the immediate missing prerequisite returns to PM.
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+## With-Skill Behavior
+
+- Stops at the PM handoff entry gate and does not fabricate a design path.
+- Keeps the response design-only and preserves the eventual Designer-to-Engineer boundary.
+- Does not request, read, or cite BRD; BRD removal causes no behavioral difference in the reached gate path.
+
+## Fresh Without-Skill Baseline
+
+- This baseline was newly generated in this run from the same prompt and fixture only; it did not apply the Designer README, `ui-ux-design` skill, with-skill output, historical baseline, or prior comparison.
+- It provides generic sidebar, project/task, member, activity, responsive, and state suggestions, but misses the repository handoff/path gate and canonical artifact requirement.
+- It also contains no BRD reference.
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- `assertion_1` cannot pass with the current fixture because the required confirmed `feature_path` is absent.
+- Per task boundary, the fixture and assertion were not modified.
 
 ## Next Steps
 
-- 保持 durable comparison 为 PASS 结论。
+- Fix the fixture in a separate authorized change by adding an equivalent confirmed PM handoff or PRD with canonical `feature_path`, then rerun this case.
+- No Designer skill change is indicated by this result.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- Paired-run notes and judge evidence remain only under the ignored runtime directory and are not committed.
+- Only this durable `comparison.md` is updated.

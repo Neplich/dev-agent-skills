@@ -7,39 +7,50 @@
 - Eval: `eval-004-pm-spec-handoff`
 - Test case: PM Spec Handoff Stops Before Implementation
 - Workspace: `workspace/eval-4-pm-spec-handoff`
-- Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
-- Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
-## Test Set / Fixture Version
+## Test Set or Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: Read existing PM spec and current UI context, then stop at design handoff instead of drifting into implementation
-- Expected output: 读取 PM spec 和现有页面上下文后，产出设计文档并明确停止在 design handoff，不进入工程实现
+- Fixture version: HEAD `a452319`
+- Fresh run time: `2026-08-03 11:58:33 +0800`
+- Runtime directory: `tmp/eval-runs/issue-198-brd/designer/ui-ux-design/eval-004-pm-spec-handoff/`
+- Fixture: PRD, DECISIONS, TRD, current Settings shell/page; BRD fixture removed at current HEAD
 
-## Assertions
+## Latest Result
 
-- `spec`: spec 只作为设计输入
-- `assertion_2`: 完成后交给工程
-- `assertion_3`: 禁止实现漂移
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-## With Skill
+All three assertions were exercised on the reachable design-generation path.
 
-Observed behavior:
+## Assertion Results
 
-- 当前 SKILL.md 和 Designer README 都说明 PM spec 只能作为设计输入，不授权实现；eval workspace 的 PM/TRD/现有页面上下文支持产出 handoff doc，并明确交给 engineer-agent。
+- `spec`: **PASS** — PRD, DECISIONS, TRD, and current UI context are explicitly treated as design input only, not implementation authorization.
+- `assertion_2`: **PASS** — the candidate completes the design handoff and names `engineer-agent` as the next implementation owner.
+- `assertion_3`: **PASS** — it contains no code edits, implementation steps, test commands, or patch actions.
 
-## Without Skill / Baseline
-- BLOCKED: No actual without_skill baseline result is recorded for this historical comparison. This file is not treated as a full eval PASS until a baseline result is generated and written here.
-- This comparison records whether the skill-specific protocol, routing, evidence, or artifact expectations are preserved.
+## With-Skill Behavior
+
+- Produces the canonical `docs/design/billing-notification-settings/ui-ux-spec.md` behavior with workspace-admin journey, event toggles, recipient alias, non-color urgent cues, loading/empty/save states, and reuse of the existing Settings shell.
+- Respects the TRD warning not to hard-code unconfirmed API field assumptions.
+- Reads only PRD/DECISIONS/TRD for product and technical context and never looks for or cites BRD. Removing BRD causes no assertion-level behavior difference.
+
+## Fresh Without-Skill Baseline
+
+- This baseline was newly generated in this run from only the same prompt and fixture files; it did not apply the Designer README, skill, with-skill result, historical baseline, or prior comparison.
+- The explicit prompt keeps it code-free and it proposes similar settings controls, but it is less explicit about canonical artifact ownership and role boundaries.
+- It also uses no BRD.
 
 ## Failures
 
-- None found in fresh Codex subagent validation.
+- None.
 
 ## Next Steps
 
-- 保持该 eval 防止 Designer 读取 PM/TRD 后漂移到实现。
+- No skill or fixture correction is required for the current assertions.
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics should not be committed.
+- Runtime candidates, fresh baseline, and judge evidence remain under the ignored runtime directory and are not committed.
+- Only this durable `comparison.md` is updated.
