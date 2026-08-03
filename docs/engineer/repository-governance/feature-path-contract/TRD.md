@@ -61,7 +61,7 @@ changelog:
 
 GitHub issue #197 进一步要求在 PRD/TRD 跨越多个明确子功能边界时形成 L2b 拆分提案，并新增只读的跨角色功能树梳理入口。拆分评估、报告生成和实际结构变更必须分离：前两者只读，后者在用户确认后按 `major` 执行。
 
-issue #197 的当前实施范围是更新已确认的 skill 指令、路由、PRD/TRD 和锁文件；不新增或执行 eval，也不实际拆分、移动宿主文档目录。
+issue #197 的当前实施范围是更新已确认的 skill 指令、路由、PRD/TRD 和锁文件，并新增两项 eval（`eval-009-prd-iteration-split-proposal`、`eval-016-route-document-structure-governance`，fresh 验证均 PASS/FULL）；不实际拆分、移动宿主文档目录。
 
 ## 2. 技术概览
 
