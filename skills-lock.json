@@ -19,7 +19,7 @@
     "competitive-brief": {
       "source": "agents/product_manager/skills/competitive-brief",
       "sourceType": "local",
-      "computedHash": "b5106e5b3da3e18d4491fccc40ec0cbce0b30c12979dc1fe57296661eac36c4c"
+      "computedHash": "5d3810254e02fbfe927c63fa8eb307fdc761f519cf5a4ea573be7f2bd1f89064"
     },
     "changelog-generator": {
       "source": "agents/product_manager/skills/changelog-generator",
