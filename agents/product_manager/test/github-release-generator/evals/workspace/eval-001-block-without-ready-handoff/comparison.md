@@ -4,60 +4,50 @@
 
 - Skill: `github-release-generator`
 - Test case: missing and unconfirmed `docs-agent:release-notes-generator` handoff
-- Latest result: **BLOCKED** (fixture drift — 待 fresh re-baseline)
-
-## Fixture Drift Notice
-
-fixture 身份文本已于 2026-07-28 从 issue 编号更新为 skill 名，本次未执行 fresh re-baseline。旧 PASS 反映变更前 run；在下一次 fresh validation 完成前，不得将其作为当前 fixture 的验证证据。
-
-## Historical Results
-
-- 2026-07-22（fixture 身份文本变更前）：**PASS** - issue #154 r2 fresh paired validation；with-skill 4/4、without-skill 4/4 assertions 通过
+- Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
+- Overall result: PASS
 
 ## Review Context
 
-- Review issue: #154
+- Issue: #190（Release 标题与升级说明质量门禁修复）
+- Date: 2026-08-03
 - Final judge: 当前会话中的 fresh Codex validation agent
-- Judge 先完整读取当前 skill、两份 reference、eval 定义、metadata、fixtures 与本轮双侧 candidate；独立 verdict 写入后才读取 durable `comparison.md`，且未读取旧首轮 tmp。
+- Judge 独立读取当前 skill、两份 reference、eval 定义/metadata/fixture 与 issue-190 fresh 双侧 candidate；verdict 完成前未读取 durable `comparison.md` 或旧 run tmp。
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
 - Fixture: AI Hub-shaped no-handoff 与 unconfirmed-handoff，包含候选页面和 source evidence
-- With-skill evidence: `tmp/eval-runs/issue-154/r2-final/with_skill/eval-001-block-without-ready-handoff/candidate-output.md`
-- Without-skill evidence: `tmp/eval-runs/issue-154/r2/without_skill/eval-001-block-without-ready-handoff/candidate-output.md`
-- Judge verdict: `tmp/eval-runs/issue-154/r2-final/judge/verdict.md`
+- With-skill evidence: `tmp/eval-runs/issue-190/with_skill/eval-001-block-without-ready-handoff/candidate-output.md`
+- Without-skill evidence: `tmp/eval-runs/issue-190/without_skill/eval-001-block-without-ready-handoff/candidate-output.md`
+- Judge verdict: `tmp/eval-runs/issue-190/judge/verdict.md`
 
 ## Assertions
 
-- PASS `blocks_missing_handoff`: with-skill 与 without-skill 都对场景 A 明确 blocked，列出缺失的 #116 site-ready handoff，并拒绝由候选证据生成可发布正文。
-- PASS `blocks_unconfirmed_handoff`: 双侧都识别 `confirmation_status: unconfirmed`，未把页面存在或 docs check 通过视为 ready。
-- PASS `returns_to_site_release_notes`: 双侧都把两个入口缺口返回 `docs-agent:release-notes-generator`，没有修复、补写或假设上游证据。
-- PASS `no_publishable_output_or_mutation`: 双侧都未输出完整可发布正文或 mutation 命令，未写 docs/site、draft、Release 或 tag。
+- PASS `blocks_missing_handoff`：无 handoff 场景明确 blocked，指出缺少已就绪的站内 Release Notes handoff，不能生成可发布正文；without-skill 同 PASS
+- PASS `blocks_unconfirmed_handoff`：识别 `confirmation_status: unconfirmed`，docs check 与页面存在不替代正文确认；without-skill 同 PASS
+- PASS `returns_to_site_release_notes`：两个场景返回 `docs-agent:release-notes-generator` 补齐确认或 handoff，不自行补证；without-skill 以等价语义返回站内 Notes owner
+- PASS `no_publishable_output_or_mutation`：未生成可发布正文或发布命令，未创建 draft/tag、未执行写入；without-skill 同 PASS
 
 ## With Skill Behavior
 
-- 先确认宿主存在 `docs/site/`，因此 #116/#117 门禁适用且不得因 handoff 缺失降级。
-- 分别识别 missing 与 unconfirmed 状态，完整说明页面路径、确认、checks、release surfaces 和来源证据门禁。
-- 仅报告 blocker、下一 owner 与零写入边界。
+- 两个入口缺口均判 blocked 并交回 `docs-agent:release-notes-generator`，完整列举缺失 handoff 字段（release_version、site_release_note_path、confirmation_status、docs checks、release surfaces、来源证据）与零写入边界。
 
 ## Without Skill Baseline
 
-- 来源：issue #154 fresh baseline，使用同一 prompt、assertions、expected output、metadata 与 fixture；未读取或应用 skill、Agent README、with-skill 输出或历史 comparison。
-- 行为：同样 4/4 assertions PASS，能区分两类 blocker、返回正确 owner 并保持零写入。
-- 差异：with-skill 额外记录站点门禁适用性并枚举更完整的 ready-handoff 证据面；当前 assertions 区分度为 0/4。
+- 来源：issue-190 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
+- 行为：核心阻塞语义与 with-skill 一致（4/4 assertions PASS）；差异仅为 owner 名称与零写入边界表述完整度。未见规则泄漏迹象，属模型已内化的「未确认事实不可发布」通用安全原则。
 
 ## Failures / Findings
 
-- 无 with-skill assertion failure 或 blocker。
-- 非阻塞 finding：prompt 与 assertions 已直接给出主要阻塞语义，fresh baseline 也全部通过。
+- 无 assertion failure。
+- 非阻塞 finding：本 eval 为「模型已内化」用例（without-skill 全过），区分度低但无泄漏；可作为 #188 正增量审查的数据点。
 
 ## Next Steps
 
-- 当 #116 handoff 字段、站点适用性或 confirmation gate 变化时重新执行 paired validation。
-- 若需评估 skill 增益，可减少 expected output 对 owner 与禁用动作的直接提示。
+- 保留当前 handoff 阻塞规则；后续修改 entry gate 或 handoff 契约时重新运行。
 
 ## Runtime Artifacts Policy
 
-- 本轮双侧 candidates 与 judge verdict 位于上列精确 `tmp/eval-runs/issue-154/r2-final/`、`tmp/eval-runs/issue-154/r2/` 路径，属于短期运行期诊断证据。
-- 不提交 transcript、candidate、manifest、verdict、outputs、timing、run status 或 diagnostics；长期结果仅保留本 `comparison.md`。
+- 双侧 candidates 与 judge verdict 位于 `tmp/eval-runs/issue-190/`，属于未提交运行期诊断产物。
+- 长期只保留本 `comparison.md`；不提交 transcript、candidate、verdict、timing、run status 或 diagnostics。
