@@ -10,7 +10,7 @@ Every generated formal document MUST begin with a YAML frontmatter block:
 ```yaml
 ---
 title: "<Document Title>"
-type: BRD | PRD | TRD | ADR | API | TEST_SPEC | DECISIONS
+type: PRD | TRD | ADR | API | TEST_SPEC | DECISIONS
 feature: "<terminal-feature-slug>"
 feature_path: "<multi-level-feature-path>"
 parent_feature: "<parent-feature-path-or-N/A>"
@@ -105,7 +105,6 @@ features.
 ### Canonical PM Filenames
 
 - `DECISIONS.md`
-- `BRD.md`
 - `PRD.md`
 - `design.md` for interim PM drafts only
 

@@ -9,7 +9,7 @@ parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-15"
+last_updated: "2026-08-03"
 generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/idea-to-spec/PRD.md"
 related_docs:
@@ -58,7 +58,6 @@ flowchart LR
 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md` | PM formal document frontmatter source of truth | Define the traceable author format and forbid generic AI names. | `idea-to-spec` PRD FR-S04 / FR-S08 |
 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/*.md` | PM doc schema examples | Replace generic `author: <name>` guidance with traceable author wording. | `idea-to-spec` PRD FR-S08 |
 | `agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md` | PRD generation example | Replace `AI Assistant` with `Neplich Codex`. | issue #32 |
-| `agents/product_manager/skills/idea-to-spec/_internal/gen/brd-gen/INSTRUCTIONS.md` | BRD generation example | Replace `AI Assistant` with `Neplich Codex`. | issue #32 |
 | `agents/engineer/skills/trd-gen/_internal/trd-schema.md` | Engineer TRD metadata schema | Add author metadata guidance. | `trd-gen` PRD FR-S08 |
 | `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md` | Implementation plan metadata workflow | Require traceable author when creating or maintaining plans. | `feature-implementor` PRD FR-S08 |
 | `scripts/check_repository_contract.py` | Deterministic repository contract | Detect empty or placeholder author values in tracked formal Markdown frontmatter without platform-name enumeration. | issue #32 acceptance |

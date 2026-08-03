@@ -1,6 +1,6 @@
 # Workflow: new-feature
 
-Full feature documentation pipeline from business case to test
+Full feature documentation pipeline from product requirements to test
 specifications.
 
 ## Steps
@@ -9,14 +9,8 @@ specifications.
 name: new-feature
 description: Complete documentation pipeline for a new feature
 steps:
-  - skill: brd-gen
-    input_from: context
-    output_key: brd
-  - skill: brd-validator
-    input_from: brd
-    gate: true
   - skill: prd-gen
-    input_from: brd
+    input_from: context
     output_key: prd
   - skill: prd-validator
     input_from: prd
@@ -34,7 +28,7 @@ steps:
     input_from: test_specs
     gate: true
   - skill: trace-check
-    input_from: [brd, prd, trd, test_specs]
+    input_from: [prd, trd, test_specs]
     output_key: trace_report
 ```
 

@@ -1,12 +1,12 @@
 # Workflow: quick-spec
 
-Lightweight spec generation — skips BRD, produces PRD + Engineer TRD handoff.
+Lightweight spec generation — produces PRD + Engineer TRD handoff.
 
 ## Steps
 
 ```yaml
 name: quick-spec
-description: Fast PRD generation with Engineer TRD handoff without BRD
+description: Fast PRD generation with Engineer TRD handoff
 steps:
   - skill: prd-gen
     input_from: context

@@ -84,7 +84,6 @@ document state.
 | Change impact analysis | `change-impactor` | `_internal/analysis/change-impactor/INSTRUCTIONS.md` | A change request may affect one or more existing docs |
 | Traceability review | `trace-check` | `_internal/analysis/trace-check/INSTRUCTIONS.md` | Need coverage or mapping review after generation / iteration |
 | Version diff | `version-differ` | `_internal/analysis/version-differ/INSTRUCTIONS.md` | Need comparison only, not editing |
-| BRD generation | `brd-gen` | `_internal/gen/brd-gen/INSTRUCTIONS.md` | Business case or stakeholder alignment is stable |
 | PRD generation | `prd-gen` | `_internal/gen/prd-gen/INSTRUCTIONS.md` | Requirements and flows are stable |
 | TRD generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | PRD and product decisions are stable; explicit Engineer handoff is needed |
 | ADR generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | A technical decision needs durable Engineer-owned rationale |
@@ -235,7 +234,7 @@ instead of blocking or inventing a feature path.
 
 | Routing condition | downstream_owner | Required packet emphasis |
 | --- | --- | --- |
-| Confirmed UX, UI, information architecture, wireframes, or visual-system work | `Designer` | PM scope, source PRD / BRD, design goal, target users, required design artifact. |
+| Confirmed UX, UI, information architecture, wireframes, or visual-system work | `Designer` | PM scope, source PRD, design goal, target users, required design artifact. |
 | Confirmed TRD, implementation, debugging, tests, code review, commit, push, PR, or delivery work | `Engineer` or `delivery` | PRD / TRD / implementation-plan source docs, `change_tier`, verification expectations, delivery state. |
 | Confirmed acceptance, exploratory, bug analysis, smoke, retest, or regression work | `QA` | Test basis, expected behavior, environment, affected flows, result format. |
 | Confirmed deployment, CI/CD, environment, Docker, Helm, release readiness, rollback, or runbook work | `DevOps` | Environment, release target, rollback expectation, operational risk. |
@@ -442,7 +441,6 @@ specialist's existing gates.
 | Phase / Situation | Primary internal skill | Alternative / follow-up |
 | --- | --- | --- |
 | Empty workspace, durable docs needed | `project-init` | Stay in `idea-to-spec` for lightweight validation only |
-| Business case, ROI, or stakeholder alignment needed | `brd-gen` | Stay in `idea-to-spec` for a brief validation memo |
 | Existing repo, new feature requirements stable | `prd-gen` | `prd-validator` after generation |
 | Existing repo, technical design needed after PRD confirmation | `engineer-agent:trd-gen` | Engineer-owned API / ADR docs through `trd-gen`, then matching validators after Engineer TRD confirmation |
 | Existing repo, one approved PM doc needs revision | Matching PM `*-iteration` | Matching validator; Engineer-owned TRD/API/ADR revisions hand off to `engineer-agent:trd-gen` |
@@ -458,7 +456,7 @@ specialist's existing gates.
 - If exactly one core doc is affected, use the matching `*-iteration` skill
   directly instead of `iteration-coordinator`.
 - If multiple docs are affected, use this order by default:
-  - BRD -> PRD -> TRD -> API -> TEST_SPEC
+  - PRD -> TRD -> API -> TEST_SPEC
   - ADR handoffs to `engineer-agent:trd-gen` run in parallel when a decision record is affected
 - After multi-doc updates, prefer `trace-check` before closing the loop.
 - Regenerate from scratch only when:
@@ -470,7 +468,6 @@ specialist's existing gates.
 
 | Document Type | Generator | Validator | Iteration |
 | --- | --- | --- | --- |
-| BRD | `brd-gen` | `brd-validator` | `brd-iteration` |
 | PRD | `prd-gen` | `prd-validator` | `prd-iteration` |
 | TRD | `engineer-agent:trd-gen` | `trd-validator` | hand off to `engineer-agent:trd-gen` for revisions |
 | API | `engineer-agent:trd-gen` | `api-validator` | hand off to `engineer-agent:trd-gen` for revisions |

@@ -42,7 +42,7 @@
 PM Agent → Designer Agent → Engineer Agent → QA Agent → DevOps Agent → Security Agent
    ↓           ↓               ↓              ↓           ↓              ↓
   PRD      UI/UX Spec        TRD          Test Report  Deploy Config  Security Review
-  BRD      Visual System   Code Changes                  CI/CD
+           Visual System   Code Changes                  CI/CD
 
 PM / Engineer / QA / DevOps（条件式）→ Docs Agent（正式文档生产 / 审计）
                                   ↓
@@ -69,7 +69,7 @@ PM / Engineer / QA / DevOps（条件式）→ Docs Agent（正式文档生产 / 
 - QA 读取 `docs/pm/{feature_path}/` 和实现代码
 - QA 在进行广泛项目探索前，先读取已有的 `docs/qa/e2e/{feature_path}/TEST_SUITE.md`、`FLOW_INDEX.md`、`cases/*.md` 和 `scripts/*.spec.md`
 - DevOps 读取 `docs/engineer/{feature_path}/TRD.md`
-- Designer 读取 `docs/pm/{feature_path}/PRD.md` 和 `docs/pm/{feature_path}/BRD.md`
+- Designer 读取 `docs/pm/{feature_path}/PRD.md`
 - Security 读取 `docs/pm/{feature_path}/` 和代码库
 
 **角色边界**

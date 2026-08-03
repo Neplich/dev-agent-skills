@@ -24,7 +24,7 @@
 - 已确认决策写入 `docs/pm/{feature_path}/DECISIONS.md`
 - 已收敛 section 增量写入 PM 文档
 - 每个阶段结束后做一次文档收束，正文只保留当前有效设计
-- 写入 PRD/BRD/DECISIONS/design.md 前扫描 `docs/pm/**/PRD.md`，确认多级
+- 写入 PRD/DECISIONS/design.md 前扫描 `docs/pm/**/PRD.md`，确认多级
   `feature_path`；父功能不清楚时先澄清或 blocked，不创建新的并列顶层目录
 
 ## 逻辑路线图
@@ -91,7 +91,6 @@ feature 文档统一采用短命名体系：
 
 - `docs/pm/{feature_path}/DECISIONS.md`
 - `docs/pm/{feature_path}/PRD.md`
-- `docs/pm/{feature_path}/BRD.md`
 - `docs/pm/{feature_path}/design.md`
 - `docs/design/{feature_path}/...`
 - `docs/engineer/{feature_path}/...`

@@ -59,7 +59,7 @@ evidence-chain fallback instead of blocking solely on this field.
 
 ### 2. Source Context
 
-- PRD, BRD, DECISIONS, design docs, issue links, and repo paths used as input.
+- PRD, DECISIONS, design docs, issue links, and repo paths used as input.
 - Explicit note that PM scope is an input, not something TRD changes.
 
 ### 3. Technical Overview

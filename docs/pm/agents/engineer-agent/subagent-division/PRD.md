@@ -10,11 +10,10 @@ feature: "engineer-agent-subagent-division"
 feature_path: "agents/engineer-agent/subagent-division"
 parent_feature: "agents/engineer-agent"
 feature_level: "3"
-last_updated: "2026-08-01"
+last_updated: "2026-08-03"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/12"
 related_docs:
   - "docs/pm/agents/engineer-agent/subagent-division/DECISIONS.md"
-related_brd: "N/A"
 changelog:
   - version: "1.0.1"
     date: "2026-06-15"

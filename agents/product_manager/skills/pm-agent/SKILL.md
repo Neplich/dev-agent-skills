@@ -249,7 +249,7 @@ do not perform the missing agent's responsibilities yourself.
 - When routing feature-scoped PM work to `idea-to-spec`, preserve any known
   `feature_path` context. If the request may be a child feature, let
   `idea-to-spec` scan `docs/pm/**/PRD.md` and resolve parent ownership before
-  any PRD/BRD/DECISIONS/design output is created.
+  any PRD/DECISIONS/design output is created.
 - Only remain at the routing layer when a single clarification question is
   required to disambiguate two materially different PM outcomes.
 

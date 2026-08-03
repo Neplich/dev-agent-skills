@@ -1,6 +1,6 @@
 ---
 name: change-impactor
-description: Analyze the impact of a proposed change across project documents. Use when users say "impact analysis", "change impact", "what does this change affect", "dependency analysis", "ripple effect", or need to understand which BRDs, PRDs, TRDs, and test specs are affected by a proposed change.
+description: Analyze the impact of a proposed change across project documents. Use when users say "impact analysis", "change impact", "what does this change affect", "dependency analysis", "ripple effect", or need to understand which PRDs, TRDs, and test specs are affected by a proposed change.
 ---
 
 # Change Impact Analyzer
@@ -20,7 +20,7 @@ Scan project documents to identify all artifacts affected by a proposed change.
   - `change_proposal`: Description of the proposed change
 - **Optional**:
   - `docs_directory`: Path to scan for project documents (default: current directory)
-  - `doc_types`: Which document types to scan — BRD / PRD / TRD / ADR / API / TEST_SPEC (default: all)
+  - `doc_types`: Which document types to scan — PRD / TRD / ADR / API / TEST_SPEC (default: all)
 
 ## Workflow
 
@@ -29,7 +29,6 @@ Scan project documents to identify all artifacts affected by a proposed change.
 2. **Scan documents**: Find all project documents in the directory (by YAML frontmatter `type` field or filename patterns).
 
 3. **Build dependency graph**: Map relationships between documents:
-   - BRD → PRD (business objectives → product requirements)
    - PRD → TRD (product requirements → technical design)
    - PRD → TEST_SPEC (requirements → test cases)
    - TRD → API (technical design → API contracts)

@@ -55,8 +55,7 @@ yourself.
 ### Step 1: Gather Context
 
 1. **Read PM documents** from `docs/pm/{feature_path}/`:
-   - BRD: brand tone, target audience, business goals
-   - PRD: product type and features
+   - PRD: product type, features, brand tone, target audience, business goals
    - DECISIONS: confirmed design constraints and trade-offs
    - TRD: platform constraints that affect presentation choices
    - UI/UX spec (if exists): component list

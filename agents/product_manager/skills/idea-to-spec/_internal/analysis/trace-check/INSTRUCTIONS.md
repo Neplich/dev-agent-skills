@@ -1,6 +1,6 @@
 ---
 name: trace-check
-description: Check traceability across BRD, PRD, TRD, and test specifications. Use when users say "traceability check", "trace matrix", "requirement tracing", "coverage gap", "requirements mapping", or need to verify that every business requirement maps through product requirements to technical design and test cases.
+description: Check traceability across PRD, TRD, and test specifications. Use when users say "traceability check", "trace matrix", "requirement tracing", "coverage gap", "requirements mapping", or need to verify that every product requirement maps through technical design to test cases.
 ---
 
 # Traceability Checker
@@ -9,7 +9,7 @@ Build and verify a traceability matrix across the full document chain.
 
 ## When to use
 
-- Need to verify end-to-end requirement coverage (BRD → PRD → TRD → Tests)
+- Need to verify end-to-end requirement coverage (PRD → TRD → Tests)
 - Identify gaps where requirements lack downstream coverage
 - Audit before a milestone to ensure nothing was missed
 - **Analysis only** — produces a report, does not modify documents
@@ -17,19 +17,17 @@ Build and verify a traceability matrix across the full document chain.
 ## Inputs
 
 - **Required** (at least 2):
-  - `brd`: Business Requirements Document
   - `prd`: Product Requirements Document
   - `trd`: Technical Requirements Document
   - `test_specs`: Test specification document
 - **Optional**:
-  - `trace_depth`: Which levels to check — `brd→prd` / `prd→trd` / `prd→tests` / `full` (default: full)
+  - `trace_depth`: Which levels to check — `prd→trd` / `prd→tests` / `full` (default: full)
 
 ## Workflow
 
 1. **Parse documents**: Extract requirement IDs, feature IDs, user story IDs, test case IDs from each document.
 
 2. **Build trace links**: Map relationships:
-   - BRD objectives → PRD features/user stories
    - PRD requirements → TRD components/APIs
    - PRD requirements → Test cases
    - TRD APIs → API documentation
@@ -41,7 +39,7 @@ Build and verify a traceability matrix across the full document chain.
 
 4. **Generate traceability matrix**:
    ```
-   | BRD Objective | PRD Requirement | TRD Component | Test Cases | Status |
+   | PRD Requirement | TRD Component | Test Cases | Status |
    ```
 
 5. **Summarize findings**: Coverage percentage, gap list, orphan list.
@@ -54,12 +52,11 @@ Build and verify a traceability matrix across the full document chain.
   ## Traceability Report
 
   ### Coverage Summary
-  - BRD → PRD: X% (N/M objectives traced)
   - PRD → TRD: X% (N/M requirements traced)
   - PRD → Tests: X% (N/M requirements tested)
 
   ### Traceability Matrix
-  | BRD ID | PRD ID | TRD ID | Test ID | Status |
+  | PRD ID | TRD ID | Test ID | Status |
 
   ### Forward Gaps (Missing Coverage)
   | Source ID | Source Doc | Missing In | Severity |
@@ -86,6 +83,6 @@ Build and verify a traceability matrix across the full document chain.
 
 ### Example 1
 
-**User**: Check traceability across our BRD, PRD, and test specs for the user auth feature.
+**User**: Check traceability across our PRD, TRD, and test specs for the user auth feature.
 
-**Expected Output**: Traceability matrix showing BRD objectives BO-01..BO-03 mapping to PRD user stories US-01..US-08, with test cases TC-001..TC-015. Gaps: "BO-03 (compliance) has no PRD coverage", "US-07 has no test cases". Coverage: BRD→PRD 67%, PRD→Tests 85%.
+**Expected Output**: Traceability matrix showing PRD user stories US-01..US-08 mapping to TRD components and test cases TC-001..TC-015. Gap: "US-07 has no test cases". Coverage: PRD→TRD 100%, PRD→Tests 85%.

@@ -13,8 +13,8 @@ after the lane is already classified as an end-to-end workflow request.
 
 ## When to use
 
-- Need to run a standard multi-step document pipeline (for example BRD -> PRD
-  -> Engineer TRD handoff -> Tests)
+- Need to run a standard multi-step document pipeline (for example PRD ->
+  Engineer TRD handoff -> Tests)
 - Want to automate a repeatable process across multiple skills
 - Setting up a complete documentation suite for a feature
 - Prefer `idea-to-spec` first if the user's goals, scope, or constraints are
@@ -28,7 +28,7 @@ after the lane is already classified as an end-to-end workflow request.
   - `workflow`: Name of a predefined workflow or custom step list
   - `context`: Input context passed to the first skill in the chain
 - **Optional**:
-  - `skip_steps`: Steps to skip (for example skip BRD if it already exists)
+  - `skip_steps`: Steps to skip
   - `stop_after`: Stop after a specific step
   - `validate`: Run validators after each gen step (default: true)
   - `handoff_packet`: Stabilized context from `idea-to-spec` or another
@@ -54,19 +54,17 @@ Defined in `references/workflows/`:
 ### `new-feature`
 
 Full feature documentation pipeline:
-1. `brd-gen` -> BRD
-2. `brd-validator` -> Validate BRD
-3. `prd-gen` (input: BRD) -> PRD
-4. `prd-validator` -> Validate PRD
-5. `engineer-agent:trd-gen` (input: confirmed PRD) -> TRD
-6. `trd-validator` -> Validate TRD
-7. `tspecs-gen` (input: PRD + TRD) -> TEST_SPEC
-8. `tspecs-validator` -> Validate TEST_SPEC
-9. `trace-check` (input: all docs) -> Traceability Report
+1. `prd-gen` -> PRD
+2. `prd-validator` -> Validate PRD
+3. `engineer-agent:trd-gen` (input: confirmed PRD) -> TRD
+4. `trd-validator` -> Validate TRD
+5. `tspecs-gen` (input: PRD + TRD) -> TEST_SPEC
+6. `tspecs-validator` -> Validate TEST_SPEC
+7. `trace-check` (input: all docs) -> Traceability Report
 
 ### `quick-spec`
 
-Lightweight spec generation (skips BRD):
+Lightweight spec generation:
 1. `prd-gen` -> PRD
 2. `prd-validator` -> Validate
 3. `engineer-agent:trd-gen` (input: confirmed PRD) -> TRD
@@ -159,7 +157,6 @@ Architecture decision:
 **User**: Run the `new-feature` workflow for a "user notification system".
 
 **Expected Output**:
-1. Generated BRD (score: 4.1 PASS)
-2. Generated PRD from BRD (score: 3.8 NEEDS_WORK - missing NFR metrics)
-3. Pause: "PRD needs work. Run `prd-iteration` to fix, or continue?"
-4. Continue based on the user's choice
+1. Generated PRD (score: 3.8 NEEDS_WORK - missing NFR metrics)
+2. Pause: "PRD needs work. Run `prd-iteration` to fix, or continue?"
+3. Continue based on the user's choice

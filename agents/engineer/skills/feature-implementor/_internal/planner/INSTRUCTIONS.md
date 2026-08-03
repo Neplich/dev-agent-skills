@@ -12,7 +12,7 @@ including small, single-file, and spec-backed bug-fix changes routed into
 
 ## Input
 
-- PM documents: PRD, BRD, and DECISIONS or product decision records when present
+- PM documents: PRD and DECISIONS or product decision records when present
 - Engineer documents: confirmed TRD, API Spec, ADR
 - Project Profile (from codebase-analyzer)
 - Existing-feature alignment result from the public `feature-implementor`

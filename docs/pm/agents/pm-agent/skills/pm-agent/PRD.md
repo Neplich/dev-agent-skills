@@ -9,7 +9,7 @@ version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-07-30"
+last_updated: "2026-08-03"
 generated_by: "prd-gen"
 related_docs:
   - "agents/product_manager/README.md"
@@ -79,7 +79,7 @@ changelog:
 
 | Route | Current Implementation Trigger |
 |---|---|
-| `idea-to-spec` | 想法收敛、PRD/BRD/DECISIONS、existing-project feature/update、空仓库产品定义 |
+| `idea-to-spec` | 想法收敛、PRD/DECISIONS、existing-project feature/update、空仓库产品定义 |
 | `competitive-brief` | 竞品研究、定位比较、市场扫描、messaging gaps |
 | `changelog-generator` | 开发者视角 changelog、released/unreleased/full regeneration |
 | `github-release-generator` | 站内 Release Notes 与审计门禁完成后的 GitHub Release preview、draft、publish |

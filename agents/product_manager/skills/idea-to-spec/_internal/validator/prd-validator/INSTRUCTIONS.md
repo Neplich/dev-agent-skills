@@ -20,14 +20,12 @@ Validate a PRD document against the standardized schema and quality rules.
   - `prd_document`: The PRD to validate (file path or inline content)
 - **Optional**:
   - `strict_mode`: Treat warnings as errors (default: false)
-  - `related_brd`: BRD to cross-check alignment
 
 ## Conventions
 
 Follow `_internal/_shared/validator-conventions.md` for standard workflow, output format, failure handling, and safety boundaries.
 
 - **Schema**: `_internal/_shared/doc-schemas/prd-schema.md`
-- **Cross-check**: If BRD provided, verify all BRD objectives map to PRD features.
 
 ## PRD-Specific Checks
 
@@ -39,7 +37,6 @@ Follow `_internal/_shared/validator-conventions.md` for standard workflow, outpu
 | Non-goals | WARNING | Must list at least 1 non-goal |
 | NFR metrics | WARNING | NFRs must have numeric targets |
 | Open questions | WARNING | Should have owners and deadlines |
-| BRD alignment | WARNING | If BRD provided, all BRD objectives must map to PRD features |
 
 
 ## Examples

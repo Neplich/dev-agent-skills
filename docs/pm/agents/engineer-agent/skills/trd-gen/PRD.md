@@ -9,7 +9,7 @@ version: "1.2.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-08-03"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -76,7 +76,7 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-S01 | Trigger Matching | `trd-gen` 必须覆盖当前实现的触发场景，而不是只复述 frontmatter 摘要。 | P0 | 匹配场景与 parent dispatcher 和 `trd-gen` SKILL.md 一致。 |
-| FR-S02 | Context Intake | confirmed PRD 或等价需求、DECISIONS.md 或等价确认决策、repo path/current context；BRD/design/issue/PR references 可选。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
+| FR-S02 | Context Intake | confirmed PRD 或等价需求、DECISIONS.md 或等价确认决策、repo path/current context；design/issue/PR references 可选。 | P0 | 缺少真正阻塞的上下文时才澄清或 blocked；可推导上下文不应被写成硬门槛。 |
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
 | FR-S04 | Artifact Output | 未阻塞时创建/更新 `docs/engineer/{feature_path}/TRD.md`，并满足 `_internal/trd-schema.md`；blocked 时说明原因。 | P0 | TRD 镜像 `docs/pm/{feature_path}/PRD.md`，并写入 `feature_path`、`parent_feature`、`feature_level` 和匹配的 `related_prd`。 |
 | FR-S05 | Boundary Guard | 不接管 `engineer-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |

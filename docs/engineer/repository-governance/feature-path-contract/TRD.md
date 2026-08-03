@@ -10,7 +10,7 @@ feature: "feature-path-contract"
 feature_path: "repository-governance/feature-path-contract"
 parent_feature: "repository-governance"
 feature_level: "2"
-last_updated: "2026-06-25"
+last_updated: "2026-08-03"
 related_prd: "docs/pm/repository-governance/feature-path-contract/PRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/37"
 related_docs:
@@ -22,7 +22,6 @@ related_docs:
   - "agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/prd-schema.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md"
-  - "agents/product_manager/skills/idea-to-spec/_internal/gen/brd-gen/INSTRUCTIONS.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/gen/api-gen/INSTRUCTIONS.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/gen/adr-gen/INSTRUCTIONS.md"
   - "agents/product_manager/skills/idea-to-spec/_internal/iteration/prd-iteration/INSTRUCTIONS.md"
@@ -157,7 +156,7 @@ engineer_outputs:
 
 ### 4.1 PM 生成前扫描
 
-`idea-to-spec`、`prd-gen`、`prd-iteration`、`iteration-coordinator` 和相关 PM generator 在写入 PRD、BRD、DECISIONS 或 PM draft 前执行：
+`idea-to-spec`、`prd-gen`、`prd-iteration`、`iteration-coordinator` 和相关 PM generator 在写入 PRD、DECISIONS 或 PM draft 前执行：
 
 1. 扫描 `docs/pm/**/PRD.md`，深度支持多级 feature path。
 2. 读取每个 PRD 的 frontmatter：`feature_path`、`feature`、`parent_feature`、`feature_level`、`title`、`related_issue`、`related_docs`。
@@ -217,7 +216,6 @@ engineer_outputs:
 | 文档类型 | 路径 |
 | --- | --- |
 | PM PRD | `docs/pm/{feature_path}/PRD.md` |
-| PM BRD | `docs/pm/{feature_path}/BRD.md` |
 | PM DECISIONS | `docs/pm/{feature_path}/DECISIONS.md` |
 | PM draft | `docs/pm/{feature_path}/design.md` |
 | Engineer TRD | `docs/engineer/{feature_path}/TRD.md` |
@@ -294,7 +292,7 @@ feature_level: 1
 | P0 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` | Handoff packet 增加 feature path 字段和路径证据。 |
 | P0 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md` | 增加生成前扫描、父功能识别、no directory drift 规则。 |
 | P0 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md` | 定义 `docs/<agent-short>/{feature_path}/<DOC>.md` 和 frontmatter 字段。 |
-| P0 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/*.md` | 为 PRD/BRD/DECISIONS/TEST_SPEC 等 schema 补 feature path 字段。 |
+| P0 | `agents/product_manager/skills/idea-to-spec/_internal/_shared/doc-schemas/*.md` | 为 PRD/DECISIONS/TEST_SPEC 等 schema 补 feature path 字段。 |
 | P0 | `agents/product_manager/skills/idea-to-spec/_internal/gen/prd-gen/INSTRUCTIONS.md` | PRD 生成前扫描 `docs/pm/**/PRD.md`，路径不清时 blocked。 |
 | P0 | `agents/product_manager/skills/idea-to-spec/_internal/iteration/prd-iteration/INSTRUCTIONS.md` | 更新已有 PRD 时校验路径和 frontmatter 一致。 |
 | P0 | `agents/engineer/skills/engineer-agent/SKILL.md` | Existing Feature Alignment Gate 改为 feature path。 |

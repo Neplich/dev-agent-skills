@@ -10,7 +10,7 @@ feature: "feature-path-contract"
 feature_path: "repository-governance/feature-path-contract"
 parent_feature: "repository-governance"
 feature_level: "2"
-last_updated: "2026-06-25"
+last_updated: "2026-08-03"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/37"
 related_docs:
   - "AGENTS.md"
@@ -78,7 +78,7 @@ QA E2E 已经使用功能树模型。PM、Engineer、TRD、实施计划和 QA E2
 | 用户画像 | 描述 | 核心诉求 | 痛点 |
 | --- | --- | --- | --- |
 | 仓库维护者 | 维护 Agent skill 行为、文档契约和 eval 的人。 | 文档产物按功能树稳定归档，便于 review 和 release。 | 子功能被写成并列目录后，需要人工追踪和修正。 |
-| PM Agent 使用者 | 通过 `idea-to-spec` 生成或更新 PRD/BRD/DECISIONS。 | 新功能和子功能能落到正确位置。 | 父功能不清楚时，Agent 可能直接创建错误顶层目录。 |
+| PM Agent 使用者 | 通过 `idea-to-spec` 生成或更新 PRD/DECISIONS。 | 新功能和子功能能落到正确位置。 | 父功能不清楚时，Agent 可能直接创建错误顶层目录。 |
 | Engineer Agent 使用者 | 从 PRD 生成 TRD、实施计划和代码执行任务。 | TRD 和实施计划镜像 PM 路径。 | 缺少路径门禁会让实现基于错误文档。 |
 | Skill 作者 | 维护 PM、Engineer、QA、Design、DevOps、Security skill。 | 跨 skill 的路径规则一致、可测试。 | 每个 skill 自行解释 feature，会产生路径漂移。 |
 
@@ -102,7 +102,7 @@ QA E2E 已经使用功能树模型。PM、Engineer、TRD、实施计划和 QA E2
 | --- | --- | --- | --- | --- |
 | FR-001 | Feature Path 模型 | 使用允许多级的 `feature_path` 表示功能归属。 | P0 | 合法路径为一个或多个 lower kebab-case 目录段，例如 `chat-interface`、`chat-interface/history-search`、`chat-interface/history-search/export/reporting`。 |
 | FR-002 | PM 生成前扫描 | PM 文档生成或更新前读取 `docs/pm/**/PRD.md` 和存在的 `DECISIONS.md`。 | P0 | 新需求属于已有父功能时，不创建新的顶层目录；无法判断时 blocked 或澄清。 |
-| FR-003 | PM 产物路径 | PRD、BRD、DECISIONS 和 PM working draft 使用 `docs/pm/{feature_path}/`。 | P0 | `PRD.md`、`BRD.md`、`DECISIONS.md`、`design.md` 均在同一 PM feature path 下。 |
+| FR-003 | PM 产物路径 | PRD、DECISIONS 和 PM working draft 使用 `docs/pm/{feature_path}/`。 | P0 | `PRD.md`、`DECISIONS.md`、`design.md` 均在同一 PM feature path 下。 |
 | FR-004 | Engineer 路径镜像 | Engineer TRD 和实施计划镜像 PM feature path。 | P0 | TRD 写入 `docs/engineer/{feature_path}/TRD.md`，实施计划写入 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。 |
 | FR-005 | Frontmatter 追踪字段 | 正式文档 frontmatter 增加 `feature_path`、`parent_feature`、`feature_level`。 | P0 | 新建或实质更新的 PRD/TRD/IMPLEMENTATION_PLAN 都包含这些字段；旧文档缺字段时按兼容规则读取。 |
 | FR-006 | 交接包 | PM 到 Engineer、TRD 到 Implementor 的交接包携带路径证据。 | P0 | 交接包包含 `feature_path`、`parent_feature`、`feature_level`、`feature_path_evidence`、来源文档。 |
@@ -178,7 +178,6 @@ Agent/Skill 治理 PRD 使用同一多级口径：`docs/pm/agents/{agent}/skills
 | 角色 | 产物 | 目标路径 |
 | --- | --- | --- |
 | PM | PRD | `docs/pm/{feature_path}/PRD.md` |
-| PM | BRD | `docs/pm/{feature_path}/BRD.md` |
 | PM | DECISIONS | `docs/pm/{feature_path}/DECISIONS.md` |
 | PM | working draft | `docs/pm/{feature_path}/design.md` |
 | Engineer | TRD | `docs/engineer/{feature_path}/TRD.md` |

@@ -1,6 +1,6 @@
 ---
 name: iteration-coordinator
-description: Coordinate multi-document iteration when a change affects multiple project documents. Use when users say "update all docs", "cascade change", "multi-doc iteration", "propagate changes", "sync documents", or need to apply a change across BRD, PRD, TRD, and test specs while maintaining consistency.
+description: Coordinate multi-document iteration when a change affects multiple project documents. Use when users say "update all docs", "cascade change", "multi-doc iteration", "propagate changes", "sync documents", or need to apply a change across PRD, TRD, and test specs while maintaining consistency.
 ---
 
 # Iteration Coordinator
@@ -15,8 +15,8 @@ likely broader than a single artifact.
 
 ## When to use
 
-- A change affects multiple documents (for example scope change impacts BRD,
-  PRD, TRD)
+- A change affects multiple documents (for example scope change impacts PRD
+  and TRD)
 - After `change-impactor` identifies multiple documents needing updates
 - After `idea-to-spec` or stakeholder review stabilizes a change request that
   now needs to be propagated across the doc set
@@ -43,7 +43,7 @@ Before selecting per-document iteration or validator skills, read
 
 Use it to:
 
-- select the direct lifecycle owner for BRD / PRD / TRD / API / ADR /
+- select the direct lifecycle owner for PRD / TRD / API / ADR /
   TEST_SPEC
 - keep update ordering aligned with `idea-to-spec` and `flow`
 - decide when fallback regeneration is actually necessary
@@ -57,7 +57,7 @@ Use it to:
    clarification before running iterations.
 2. **Plan iteration sequence**: Order documents by dependency using the shared
    lifecycle map:
-   - BRD -> PRD -> TRD -> API -> TEST_SPEC
+   - PRD -> TRD -> API -> TEST_SPEC
   - ADR handoffs to `engineer-agent:trd-gen` run in parallel if affected
 3. **Iterate sequentially**: For each affected document in order:
    - Show the user what will change in this document

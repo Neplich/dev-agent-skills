@@ -72,7 +72,7 @@
       "id": "eval-004-pm-spec-handoff",
       "name": "PM Spec Handoff Stops Before Implementation",
       "description": "Read existing PM spec and current UI context, then stop at design handoff instead of drifting into implementation",
-      "prompt": "PM 已经产出 billing-notification-settings 的 PRD/BRD/DECISIONS/TRD。请 designer agent 阅读这些 spec，并基于现有设置页补充 UI/UX 设计文档。设计完成后停止在 handoff，不要直接开始修改代码或输出实现步骤。",
+      "prompt": "PM 已经产出 billing-notification-settings 的 PRD/DECISIONS/TRD。请 designer agent 阅读这些 spec，并基于现有设置页补充 UI/UX 设计文档。设计完成后停止在 handoff，不要直接开始修改代码或输出实现步骤。",
       "workspace": "workspace/eval-4-pm-spec-handoff",
       "expected_output": "读取 PM spec 和现有页面上下文后，产出设计文档并明确停止在 design handoff，不进入工程实现",
       "assertions": [

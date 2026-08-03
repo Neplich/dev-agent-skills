@@ -32,7 +32,7 @@ Detailed execution guidance lives in `_internal/INSTRUCTIONS.md`.
 - To shape a new idea or converge requirements — that is `pm-agent:idea-to-spec`
 - To scan tech stack, dependencies, or conventions — that is
   `engineer-agent:codebase-analyzer`; this skill consumes its Project Profile
-- To write PRD/BRD/DECISIONS content — confirmed features go to `prd-gen`
+- To write PRD/DECISIONS content — confirmed features go to `prd-gen`
   (inside `idea-to-spec`)
 - To design or implement code, tests, or deployment for the cataloged features
 
@@ -158,7 +158,7 @@ next step instead of performing that role's work yourself.
 | --- | --- |
 | Tech stack, conventions, `feature_inventory` scan | `engineer-agent:codebase-analyzer` |
 | Feature catalog draft, confirmation gate, `docs/pm/FEATURE_CATALOG.md` | `feature-catalog` (this skill) |
-| Requirement shaping, PRD/BRD/DECISIONS creation and updates | `pm-agent:idea-to-spec` (`prd-gen`) |
+| Requirement shaping, PRD/DECISIONS creation and updates | `pm-agent:idea-to-spec` (`prd-gen`) |
 | Engineer TRD mirroring under `docs/engineer/{feature_path}/` | `engineer-agent:trd-gen` |
 
 ## Edge Cases

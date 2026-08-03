@@ -9,7 +9,7 @@ version: "1.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-07-30"
+last_updated: "2026-08-03"
 generated_by: "prd-gen"
 related_docs:
   - "agents/product_manager/README.md"
@@ -74,7 +74,7 @@ changelog:
 | FR-A02 | Context Boundary | Dispatcher 只收集路由所需上下文；实现/审查/测试细节由被选 specialist 收集。 | P0 | 缺少内容级上下文不会让入口停在元路由。 |
 | FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任；PM 主输出路径必须覆盖 `docs/pm/{feature_path}/`、`docs/roadmap.md` 和 `docs/changelog/changelog-v{version}.md`。站内 Release Notes 归 `docs-agent:release-notes-generator`（`docs/site/release-notes/`），PM 侧 `github-release-generator` 只消费已确认的版本事实。 | P0 | Dispatcher 输出预期产物路径和类型，不伪装成 specialist report。 |
 | FR-A04 | Handoff | UI/UX 产物交给 designer-agent；PM 范围稳定后通过 engineer-agent:trd-gen 进入工程；非 PM 范围按 owning agent 转交。 | P0 | Handoff 指向 owning skill/agent，并说明输入包、`feature_path` 证据和期望输出。 |
-| FR-A05 | Feature Path Routing | 当请求需要 PRD/BRD/DECISIONS/design.md 时，PM 入口必须把请求交给 `idea-to-spec` 解析合法多级 `feature_path`。 | P0 | 子功能不直接生成并列顶层 PM 目录；父功能不清楚时 blocked 或澄清。 |
+| FR-A05 | Feature Path Routing | 当请求需要 PRD/DECISIONS/design.md 时，PM 入口必须把请求交给 `idea-to-spec` 解析合法多级 `feature_path`。 | P0 | 子功能不直接生成并列顶层 PM 目录；父功能不清楚时 blocked 或澄清。 |
 
 ## 当前实现对齐
 
@@ -82,7 +82,7 @@ changelog:
 
 | Route | Current Implementation Trigger |
 |---|---|
-| `idea-to-spec` | 想法收敛、PRD/BRD/DECISIONS、existing-project feature/update、空仓库产品定义 |
+| `idea-to-spec` | 想法收敛、PRD/DECISIONS、existing-project feature/update、空仓库产品定义 |
 | `competitive-brief` | 竞品研究、定位比较、市场扫描、messaging gaps |
 | `changelog-generator` | 开发者视角 changelog、released/unreleased/full regeneration |
 | `github-release-generator` | 站内 Release Notes 与审计门禁完成后的 GitHub Release preview、draft、publish |
