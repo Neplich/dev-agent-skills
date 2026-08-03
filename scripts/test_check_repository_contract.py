@@ -1511,3 +1511,15 @@ def test_kimi_plugin_single_string_skills_form_accepted(tmp_path: Path) -> None:
     contract.validate_kimi_plugin(root, errors)
 
     assert errors == []
+
+
+def test_kimi_plugin_session_start_skill_glob_metachar_rejected(tmp_path: Path) -> None:
+    manifest = valid_kimi_manifest()
+    manifest["sessionStart"] = {"skill": "[p]m-agent"}
+    root = write_kimi_fixture(tmp_path, manifest=manifest)
+
+    errors: list = []
+    contract.validate_kimi_plugin(root, errors)
+
+    assert len(errors) == 1
+    assert "sessionStart.skill" in errors[0].message

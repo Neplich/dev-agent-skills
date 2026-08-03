@@ -1678,7 +1678,11 @@ def validate_kimi_plugin(root: Path, errors: list[ContractError]) -> None:
         session_skill = session_start.get("skill") if isinstance(session_start, dict) else None
         if not isinstance(session_skill, str) or not session_skill:
             add_error(errors, path, "sessionStart.skill must be a non-empty string")
-        elif not list(root.glob(f"agents/*/skills/{session_skill}/SKILL.md")):
+        elif not any(
+            skill_dir.name == session_skill and (skill_dir / "SKILL.md").exists()
+            for skill_dir in root.glob("agents/*/skills/*")
+            if skill_dir.is_dir()
+        ):
             add_error(
                 errors,
                 path,
