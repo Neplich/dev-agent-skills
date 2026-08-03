@@ -116,8 +116,8 @@ and any open questions are explicitly accepted as non-blocking.
 ## L2b Split Assessment
 
 After drafting or applying TRD changes and before finalizing its version, assess
-the four L2b signals defined in PM
-`_internal/_shared/gen-conventions.md`: more than 500 total lines, at least 3
+the four L2b signals defined in
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md`: more than 500 total lines, at least 3
 independent domains, at least 15 related PRD `US-*` / `FR-*` rows, or sections
 with clear child-feature ownership. A signal requires an assessment, not an
 automatic split.
@@ -132,11 +132,15 @@ keep the current path and continue the existing TRD workflow.
 For an approved structural change:
 
 - treat it as `change_tier: major`
-- synchronize `feature_path`, `parent_feature`, `feature_level`, `related_docs`,
-  and the parent PRD `child_features` index
-- use `git mv` for directory moves, renames, and the main identity-carrying file
-  in a pure split; additional child documents may be created normally
-- require a confirmed mirror handling decision before moving a PM directory
+- PM-side updates stay with their owner: parent PRD `child_features` index
+  updates and any PM directory move are handed back to `pm-agent:idea-to-spec`;
+  trd-gen never edits PM documents or moves PM directories
+- on the Engineer side, synchronize `feature_path`, `parent_feature`,
+  `feature_level`, and `related_docs` on affected TRD documents so they mirror
+  the confirmed PRD child paths
+- use `git mv` for Engineer directory moves, renames, and the main
+  identity-carrying file in a pure split; additional child documents may be
+  created normally
 - keep archived implementation plans under
   `implementation-plans/archive/` archived, append rather than overwrite QA
   `results/`, and record every content migration in the affected changelogs

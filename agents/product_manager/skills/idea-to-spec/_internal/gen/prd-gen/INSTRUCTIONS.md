@@ -34,7 +34,9 @@ Follow `_internal/_shared/gen-conventions.md` for standard workflow, failure han
   multi-level `feature_path`, and include `feature_path`, `feature`,
   `parent_feature`, `feature_level`, and `child_features` in frontmatter. If the
   request may be a child feature but parent ownership is unclear,
-  blocked/clarify instead of creating a new top-level PRD.
+  blocked/clarify instead of creating a new top-level PRD. When the resolved
+  path nests under an existing parent PRD, add the new child path to the parent
+  PRD's `child_features` in the same change.
 
 ## Workflow Details
 

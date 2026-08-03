@@ -244,7 +244,7 @@
         {
           "id": "applies_requested_change",
           "description": "应用请求的变更",
-          "text": "先把提醒策略从轮询改成事件驱动的变更应用到 PRD 或明确给出变更方案，而不是只做结构评估"
+          "text": "先把提醒策略从轮询改成事件驱动的变更实际应用到 PRD（产出更新后的 PRD 内容），而不是只做结构评估或只口头给出变更方案"
         },
         {
           "id": "detects_l2b_signals",

@@ -65,8 +65,10 @@ Scan all six role roots:
 
 Do not require a physical parent PRD for reserved namespace parents whose
 existing contract permits the namespace itself to act as the parent. Do not
-mistake `docs/engineer/{feature_path}/implementation-plans/archive/` for a child
-feature: it is archived implementation-plan storage within the owning feature.
+mistake `docs/engineer/{feature_path}/implementation-plans/archive/` or
+`docs/engineer/{parent_feature}/_legacy/**` for a child
+feature: they are archived implementation-plan storage and legacy evidence
+within the owning feature, not active feature nodes.
 
 ### 2. Detect structure problems
 
@@ -134,6 +136,8 @@ The report must state these constraints for any later approved implementation:
 
 1. A move or split synchronizes `feature_path`, `parent_feature`,
    `feature_level`, `related_docs`, and the parent PRD `child_features` index.
+   For a reparenting move, update both sides: remove the child from the old
+   parent PRD's `child_features` and add it to the new parent PRD's index.
 2. Directory moves and file renames use `git mv`; never replace them with
    create-plus-delete. In a pure split, use `git mv` for the file that carries
    the original document body, then create additional child documents normally.
