@@ -100,10 +100,10 @@ Before writing, show the maintainer:
 - explicit exclusions for every page, unresolved discrepancies, and
   out-of-batch scope;
 - for an existing stable path, the migration, redirect, and link-repair scope
-  instead of a silent move.
+  instead of a silent move;
 - for every loaded nested-hierarchy type module, the flat-hierarchy drift
   result and, when it is positive for a parent this batch writes into, the
-  one-time migration proposal defined below;
+  one-time migration proposal defined below.
 
 For every proposed API or database node, pair the parent, child or page path
 with its code glob, owner, classification or relationship evidence, change-map
