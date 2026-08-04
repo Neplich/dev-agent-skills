@@ -7,7 +7,6 @@ export default mergeConfig(shared, defineConfig({
   themeConfig: {
     nav: [
       { text: '产品', link: '/product/' },
-      { text: 'API', link: '/api/' },
       { text: '发布说明', link: '/release-notes/' }
     ],
     sidebar
