@@ -31,6 +31,14 @@ responses, errors, and evidence that actually apply. Remove empty placeholder
 sections or rows rather than presenting them as facts. Keep API pages and their
 API change-map entries in the same confirmed write/read-back scope.
 
+Set `visibility: internal` for new or synced API pages and indexes, including
+`docs/site/api/index.md`, unless the confirmed write scope explicitly
+authorizes external developer access and states `public` or `both`. For an
+existing ancestor index, this default applies only when the ancestor has no
+existing `public` or `both` descendant outside the current batch; otherwise
+keep the ancestor's existing visibility so out-of-batch public pages remain
+reachable from the API root through public navigation.
+
 ## Information Architecture
 
 Derive the path hierarchy from confirmed `feature_path` or feature catalog
