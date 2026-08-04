@@ -71,7 +71,13 @@ database/schema node, domain index, relationship page, and entity/table page
 with its parent, code glob, owner, schema/relationship evidence, change-map
 delta, and exclusions. After confirmation, update the full navigable subtree,
 bidirectional links, navigation, and map entries atomically. Existing stable
-paths require a separately confirmed migration plan before movement.
+paths require a separately confirmed migration plan before movement, and that
+plan must be proposed rather than silently withheld: when the common
+flat-hierarchy drift check finds two or more pages directly under
+`docs/site/database/` that instance, schema, or data-domain evidence places
+under one missing database/schema or data-domain node, propose that migration in
+the same confirmation instead of appending this batch's pages to the Database
+root.
 
 For every affected Database `code_glob`, expand `required_docs` independently
 to the complete Database closure: its affected entity/table or compatibility

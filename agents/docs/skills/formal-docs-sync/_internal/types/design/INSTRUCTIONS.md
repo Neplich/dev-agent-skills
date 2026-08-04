@@ -93,3 +93,11 @@ again after reading the map back. Treat that closure, its navigation/link
 delta, and its change-map entry as one atomic scope. A failed page row changes
 none of those surfaces but does not block independently evidenced pages. Never
 place a blocked page's future design in another page.
+
+Existing stable flat pages move only under a separately confirmed migration
+plan, and drift is still reported rather than tolerated: when the common
+flat-hierarchy drift check finds two or more pages directly under
+`docs/site/design/` that ownership-boundary, `feature_path`, or TRD impact
+evidence places under one missing domain or subsystem node, propose that
+migration in the same confirmation instead of appending this batch's pages to
+the Design root.
