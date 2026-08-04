@@ -149,6 +149,20 @@ share one common non-root parent that has no existing directory and `index.md`.
 This higher bar keeps out-of-batch observation from pressing a restructure on a
 small or deliberately flat section.
 
+A root-level page is already resolved and is not drift when either of the
+following holds and the report names its evidence:
+
+- a maintainer explicitly confirmed that it stays at the type root—an existing
+  stable authority page whose refresh, in-place redirect, or preserved mapping
+  belongs to a confirmed scope that excludes its movement;
+- it is a verified compatibility or redirect stub whose canonical target page
+  already exists, which is what a completed migration leaves behind on a host
+  without redirect support.
+
+Neither exception may rest on an unsourced claim that something was confirmed:
+cite the confirmation or the existing canonical target. A full legacy page that
+merely looks settled is still drift.
+
 When drift is positive for a parent this batch writes into, present a one-time
 migration proposal inside the same Step 4 confirmation: the target subtree with
 every `index.md`, each old path to new path mapping, the inbound-link,

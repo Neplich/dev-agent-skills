@@ -12,7 +12,7 @@
 - Scenario: 宿主 API 根下 6 个稳定页面按 feature catalog 分属三个一级功能域却全部平铺，本批次要同步一个属于其中一个域的新会话消息 API 页；维护者只确认了新页面同步，未确认任何路径迁移
 - Evidence set: PM handoff、actual diff、feature catalog、Approved PRD、Confirmed TRD、完成态实施计划、路由与 schema 源码、contract tests、既有 change map（含手工未知字段条目）、现有扁平 API 页与 host standards
 - Actual validation date: `2026-08-05`
-- Isolation: 三条互相独立的全新 `codex exec` 会话——`with_skill`、`without_skill`、judge，符合 `AGENTS.md` 的 Eval runner 约束（隔离全新上下文 + 独立评审方）。两条 lane 复制同一份 pristine fixture（排除 `comparison.md` 与 `eval_metadata.json`）到 `tmp/eval-runs/issue-225-20260805-r2/` 下各自目录；`without_skill` lane 被显式禁止读取任何 agent skill 文档、Agent README、仓库指导文件与历史 eval 结果；judge 以只读会话独立核对零写入，不采信任一 lane 的自述
+- Isolation: 三条互相独立的全新 `codex exec` 会话——`with_skill`、`without_skill`、judge，符合 `AGENTS.md` 的 Eval runner 约束（隔离全新上下文 + 独立评审方）。两条 lane 复制同一份 pristine fixture（排除 `comparison.md` 与 `eval_metadata.json`）到 `tmp/eval-runs/issue-225-20260805-r3/` 下各自目录；`without_skill` lane 被显式禁止读取任何 agent skill 文档、Agent README、仓库指导文件与历史 eval 结果；judge 以只读会话独立核对零写入，不采信任一 lane 的自述
 
 ## Latest Result
 
@@ -55,9 +55,10 @@ Overall result: PASS
 ## Next Steps
 
 - 保持 fixture 中「三个域各 2 页平铺 + 只确认新增一页」的结构：它同时考验触发（本批次域）与克制（批次外域），是本 eval 区分度的来源。
-- 本 eval 未覆盖「父目录已存在、旧扁平页仍在根」这一回流场景的独立断言；该场景由 `_internal/INSTRUCTIONS.md` 的本批次判定条款覆盖，如需固化为回归保护，应新增独立 eval 而不是扩大本 eval 范围。
+- 本 eval 不覆盖两类 resolved-page 例外：维护者已确认保留在类型根的稳定权威页，以及 canonical 目标已存在的兼容 stub。前者由 `eval-007-feature-database-design` 的定向回归验证覆盖，后者目前只有规则约束；如需固化为回归保护，应新增独立 eval 而不是扩大本 eval 范围。
+- 本 eval 同样不覆盖「父目录已存在、旧扁平页仍在根」这一回流场景的独立断言，该场景由 `_internal/INSTRUCTIONS.md` 的本批次判定条款约束。
 
 ## Runtime Artifact Policy
 
-- 两条 lane 的 fixture 副本、lane 输出、judge verdict 与运行日志保留在 `tmp/eval-runs/issue-225-20260805-r2/` 与会话 scratchpad 中，不提交。
+- 两条 lane 的 fixture 副本、lane 输出、judge verdict 与运行日志保留在 `tmp/eval-runs/issue-225-20260805-r3/` 与会话 scratchpad 中，不提交。
 - 仅本 `comparison.md` 作为 durable result 提交；transcript、candidate output、verdict、timing、diagnostics 与生成站点均不入 git。

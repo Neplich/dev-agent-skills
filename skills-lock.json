@@ -184,7 +184,7 @@
     "formal-docs-sync": {
       "source": "agents/docs/skills/formal-docs-sync",
       "sourceType": "local",
-      "computedHash": "bccb3388aec140dedbf5c60b0bbd9c51847095b1e610334e6c0f5000de8244ba"
+      "computedHash": "0d4b0c8a07cdf76fe4043f99d107288ac221f550ba685eafe41932dd372e17b5"
     },
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",

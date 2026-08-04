@@ -122,6 +122,25 @@ not weaken existing component/flow behavior.
   the independent judge verified the final pristine retry and recorded this
   caveat separately from assertion results.
 
+## Targeted Regression Verification (2026-08-05)
+
+- Trigger: issue #225 added a flat-hierarchy drift check whose in-batch tier
+  treats a single evidenced root-level page as drift. This fixture keeps
+  `docs/site/database/workspace-access.md` at the type root by explicit
+  confirmation while the same batch writes `database/primary/`, so the new rule
+  could have demanded a migration proposal for a path whose non-migration was
+  already confirmed.
+- Method: one fresh `codex exec` with-skill lane on an isolated copy of this
+  fixture, using the existing eval prompt.
+- Result: no spurious proposal. The lane refreshed the stable page in place,
+  reported `Hierarchy drift` as the confirmed stable page plus the confirmed
+  Design compatibility entry with no unhandled root-level page, and left the
+  stable path unmoved. Host checks ran after `npm ci`.
+- Scope: this is a targeted regression check for one risk, not a revalidation.
+  No new `without_skill` baseline was generated and the twelve assertions were
+  not rejudged, so `Latest Result` above is unchanged and this section does not
+  restate it.
+
 ## Next Steps
 
 - Keep arbitrary-depth sidebar generation and its deterministic test shared by

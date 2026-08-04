@@ -67,8 +67,10 @@ Notes content, index, metadata, and navigation remain outside this module and
 must be handed to `docs-agent:release-notes-generator`.
 
 Existing stable flat pages move only under a separately confirmed migration
-plan, and that constraint never justifies leaving drift unreported: when the
-common flat-hierarchy drift check finds two or more pages directly under
-`docs/site/product/` that the feature catalog or their `feature_path` segments
-place under one missing domain or feature node, propose that migration in the
-same confirmation instead of appending this batch's pages to the Product root.
+plan, and that constraint never justifies leaving drift unreported: run the
+common flat-hierarchy drift check with its own two-tier threshold and
+resolved-page exceptions rather than a narrower product-specific trigger. For
+this type, the evidence that places a page directly under `docs/site/product/`
+beneath a domain or feature node is the feature catalog and the page's
+`feature_path` segments. Propose the resulting migration in the same
+confirmation instead of appending this batch's pages to the Product root.

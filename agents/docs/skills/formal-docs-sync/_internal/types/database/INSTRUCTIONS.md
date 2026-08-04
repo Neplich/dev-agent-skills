@@ -72,12 +72,15 @@ with its parent, code glob, owner, schema/relationship evidence, change-map
 delta, and exclusions. After confirmation, update the full navigable subtree,
 bidirectional links, navigation, and map entries atomically. Existing stable
 paths require a separately confirmed migration plan before movement, and that
-plan must be proposed rather than silently withheld: when the common
-flat-hierarchy drift check finds two or more pages directly under
-`docs/site/database/` that instance, schema, or data-domain evidence places
-under one missing database/schema or data-domain node, propose that migration in
-the same confirmation instead of appending this batch's pages to the Database
-root.
+plan must be proposed rather than silently withheld: run the common
+flat-hierarchy drift check with its own two-tier threshold and resolved-page
+exceptions rather than a narrower database-specific trigger. For this type, the
+evidence that places a page directly under `docs/site/database/` beneath a
+database/schema or data-domain node is instance, schema, and data-domain
+boundary. A stable root-level authority page that a confirmed scope keeps in
+place—refreshed, redirected in place, or mapping-preserved—is a resolved page,
+not drift. Propose the resulting migration in the same confirmation instead of
+appending this batch's pages to the Database root.
 
 For every affected Database `code_glob`, expand `required_docs` independently
 to the complete Database closure: its affected entity/table or compatibility
