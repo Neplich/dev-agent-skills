@@ -500,6 +500,41 @@
         {"id": "detects_partial_variant_coverage", "description": "识别仅 Public 覆盖", "text": "Public 有镜像/CI/编排而 Internal 缺少 CI 与启动入口时必须枚举两者并判为 partial，不能宣称完整。"},
         {"id": "returns_gap_to_pm_read_only", "description": "只读返回 PM", "text": "询问是否由 pm-agent 生成 repo-wide deployment handoff；formal-docs-sync 不修改 Dockerfile、workflow、Compose、Helm 或执行部署。"}
       ]
+    },
+    {
+      "id": "eval-015-flat-hierarchy-migration-proposal",
+      "name": "扁平历史页面触发一次性迁移提案",
+      "description": "验证宿主已有同功能域页面平铺在类型根目录时，agent 在写入前主动给出一次性迁移提案，不静默沿用扁平结构，也不擅自搬迁既有页面。",
+      "prompt": "维护者已通过 `pm-handoff.md` 确认本次 feature delivery 范围：把新上线的会话消息 API 同步到文档站。fixture 提供 PRD、Confirmed TRD、已完成的实施计划、路由与 schema 代码、通过的 contract tests，以及现有文档站。请按正式同步协议完成本批次的候选范围确认。本轮不要替维护者确认范围，也不要写入文档站。",
+      "expected_output": "在候选范围确认中点名 `docs/site/api/` 下同域页面平铺且缺少中间目录，给出目标树、旧新路径映射、入链与导航 delta、change-map delta、排除项与维护者选项；本批次新页面按目标层级落位待确认，批次外 drift 只读报告，站点零改动。",
+      "workspace": "workspace/eval-015-flat-hierarchy-migration-proposal",
+      "assertions": [
+        {
+          "id": "detects_flat_hierarchy_drift",
+          "description": "写入前完成扁平层级 drift 检查",
+          "text": "在提出候选范围前识别 `docs/site/api/` 下的扁平 drift，点名 `research-conversations.md` 与 `graph-search.md` 属于同一个缺失的知识发现与应用域节点，并说明判定依据来自 feature catalog、`feature_path`、route prefix/tag、`related_code` 或 owner 等已确认证据，而不是页面正文。"
+        },
+        {
+          "id": "proposes_migration_before_write",
+          "description": "同一次确认里给出一次性迁移提案",
+          "text": "在写入前的同一次候选范围确认里给出迁移提案：含每级 `index.md` 的目标子树、每个旧路径到新路径的映射、入链与递归导航 delta、change-map `required_docs` delta、排除项及理由，以及本批次新页面在目标树中的位置；并给出「迁移与本批次一起确认 / 只确认本批次 / 全部推迟」三个决策选项后等待确认。"
+        },
+        {
+          "id": "does_not_deepen_flat_layout",
+          "description": "不加深扁平结构也不擅自搬迁",
+          "text": "未获迁移确认前不移动任何既有页面，也不把本批次新的会话消息页面追加到 `docs/site/api/` 一级；本轮对文档站零写入，不执行写入后的 read-back、host docs checks 或 docs-audit handoff。"
+        },
+        {
+          "id": "reports_out_of_batch_drift_read_only",
+          "description": "批次外 drift 只读报告",
+          "text": "把知识建设与维护、平台治理与运行两组批次外 drift 作为只读观察报告，列出页面清单与建议目标节点，并明确它们不在本次确认范围内；不提出全站重构，也不对其做任何改动。"
+        },
+        {
+          "id": "loads_only_api_contract",
+          "description": "仅加载 API 类型契约并显式报告 drift 结论",
+          "text": "只加载 API 类型模块与 host API 模板，不读取或应用 database、design、ops、product 类型模块；报告中显式给出已加载模块与 Hierarchy drift 结论字段。"
+        }
+      ]
     }
   ]
 }
