@@ -211,8 +211,8 @@ Skill eval 是 Agent skill 的可用性测试。它们必须验证 skill 能被�
 
 **Eval runner 约束**
 
-- 最终 eval 验证必须由当前会话中的全新 Codex subagent 直接执行。Subagent 应读取 skill 文档、相关 Agent README、eval fixture workspace 和 `evals.json`，先在应用 skill 的条件下运行 `with_skill`，再在不读取或应用该 skill / Agent README 的条件下重新生成新的 `without_skill` baseline，并基于可用证据判断 skill 行为是否满足 eval assertions
-- 不要把后台 CLI transcript 生成当作 eval pass/fail 的事实来源。CLI 生成的 transcripts 只能作为诊断产物保留，最终可用性判断必须来自 subagent validation
+- 最终 eval 验证必须在与被测会话隔离的全新上下文中直接执行。当前会话中的全新 Codex subagent，以及每条 lane 各自独立启动的全新 `codex exec` 会话，都是被接受的形态；两者本质相同，都是在干净上下文里执行。执行方应重新读取 skill 文档、相关 Agent README、eval fixture workspace 和 `evals.json`，先在应用 skill 的条件下运行 `with_skill`，再在不读取或应用该 skill / Agent README 的条件下重新生成新的 `without_skill` baseline，并基于可用证据判断 skill 行为是否满足 eval assertions
+- 不要把批量 transcript 生成脚本的输出当作 eval pass/fail 的事实来源。这类 transcripts 只能作为诊断产物保留。最终可用性判断必须来自上述隔离执行，并由独立评审方（fresh subagent 或独立 judge 会话）对照 assertions 得出；被测 lane 的自评不能充当判定，评审方必须独立核对零写入等关键事实而不是采信 lane 自述
 - Baseline outputs 是 comparison 证据输入。不要为了隐藏 transcript-generation 失败，把 eval 弱化成可选 `without_skill`，也不要复用历史 baseline 充当本次 Fresh Sub-Agent 结果；如果新的 `without_skill` baseline 没有成功生成或无法被 subagent 评审，应由 subagent 或 reviewer 在 `comparison.md` 中说明其对 `Latest result` 的影响。
 - 旧 transcript 生成仍用于 comparison artifacts 时，优先使用结构化输出并提取最终结果字段，不要依赖纯文本 stdout
 - 在隔离临时 workspace 中生成 transcripts，不要直接写入已提交的 eval fixture。历史输出或已生成 PM docs 可能污染 empty-workspace routing 等上下文敏感用例

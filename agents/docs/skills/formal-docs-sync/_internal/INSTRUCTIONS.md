@@ -135,13 +135,19 @@ Run this check for every loaded type module that defines a nested hierarchy
 scope. List the existing page paths directly under that type root and read only
 their frontmatter; never read page bodies for this check.
 
-Drift is positive when all of the following hold:
+For a parent this batch writes into, drift is positive as soon as one or more
+non-`index.md` pages sit directly under the type root and confirmed evidence—
+feature catalog, `feature_path`, route prefix or tag, schema or instance
+boundary, `related_code`, or owner—places them under that parent. This holds
+whether or not the parent directory and its `index.md` already exist: a parent
+created by an earlier "confirm only this batch" decision never turns the pages
+left behind at the type root into an acceptable layout, and one legacy page is
+enough because this batch has already settled that the parent belongs there.
 
-- two or more non-`index.md` pages sit directly under the type root;
-- confirmed evidence—feature catalog, `feature_path`, route prefix or tag,
-  schema or instance boundary, `related_code`, or owner—places at least two of
-  them under one common non-root parent of that type's target hierarchy;
-- that parent has no existing directory and `index.md`.
+For any other parent, drift is positive when two or more such root-level pages
+share one common non-root parent that has no existing directory and `index.md`.
+This higher bar keeps out-of-batch observation from pressing a restructure on a
+small or deliberately flat section.
 
 When drift is positive for a parent this batch writes into, present a one-time
 migration proposal inside the same Step 4 confirmation: the target subtree with
@@ -149,10 +155,11 @@ every `index.md`, each old path to new path mapping, the inbound-link,
 navigation, and change-map `required_docs` delta, the excluded pages with
 reasons, and where this batch's new pages land in the target tree. Offer three
 decisions and recommend the first: confirm the migration and this batch as one
-atomic scope; confirm only this batch; or defer both. Under the second and third
-decisions move no existing page, and never append a new page to the type root
-merely to match the existing flat layout—write it at its target depth and report
-the coexisting flat pages as an unresolved discrepancy.
+atomic scope; confirm only this batch; or defer both. Under the second decision
+write this batch's new pages at their target depth and report the coexisting
+flat pages as an unresolved discrepancy. Under the third decision write nothing.
+Neither decision moves an existing page, and neither ever appends a new page to
+the type root merely to match the existing flat layout.
 
 Report every drifted parent outside this batch as a read-only observation with
 its page list and proposed target node. Do not expand the confirmed scope,
