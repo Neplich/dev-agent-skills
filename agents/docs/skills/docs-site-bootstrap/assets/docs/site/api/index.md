@@ -1,6 +1,6 @@
 ---
 title: API 文档
-visibility: both
+visibility: internal
 doc_type: landing
 stage: dev
 owners:

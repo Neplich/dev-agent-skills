@@ -18,5 +18,4 @@ last_verified_version: unverified
 ## 内容入口
 
 - [产品说明](/product/)
-- [API 文档](/api/)
 - [发布说明](/release-notes/)
