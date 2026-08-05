@@ -100,7 +100,10 @@ Before writing, show the maintainer:
 - explicit exclusions for every page, unresolved discrepancies, and
   out-of-batch scope;
 - for an existing stable path, the migration, redirect, and link-repair scope
-  instead of a silent move.
+  instead of a silent move;
+- for every loaded nested-hierarchy type module, the flat-hierarchy drift
+  result and, when it is positive for a parent this batch writes into, the
+  one-time migration proposal defined below.
 
 For every proposed API or database node, pair the parent, child or page path
 with its code glob, owner, classification or relationship evidence, change-map
@@ -124,6 +127,59 @@ pages, every changed type root and ancestor `index.md`, relationship and
 reciprocal-link pages, and linked authority pages. A shared ancestor may repeat
 in multiple rows. A row is incomplete when any applicable category is absent,
 even if another exact or broader glob contains that page.
+
+#### Flat-hierarchy drift check
+
+Run this check for every loaded type module that defines a nested hierarchy
+(`api`, `database`, `design`, `product`) before presenting the Step 4 candidate
+scope. List the existing page paths directly under that type root and read only
+their frontmatter; never read page bodies for this check.
+
+For a parent this batch writes into, drift is positive as soon as one or more
+non-`index.md` pages sit directly under the type root and confirmed evidence—
+feature catalog, `feature_path`, route prefix or tag, schema or instance
+boundary, `related_code`, or owner—places them under that parent. This holds
+whether or not the parent directory and its `index.md` already exist: a parent
+created by an earlier "confirm only this batch" decision never turns the pages
+left behind at the type root into an acceptable layout, and one legacy page is
+enough because this batch has already settled that the parent belongs there.
+
+For any other parent, drift is positive when two or more such root-level pages
+share one common non-root parent that has no existing directory and `index.md`.
+This higher bar keeps out-of-batch observation from pressing a restructure on a
+small or deliberately flat section.
+
+A root-level page is already resolved and is not drift when either of the
+following holds and the report names its evidence:
+
+- a maintainer explicitly confirmed that it stays at the type root—an existing
+  stable authority page whose refresh, in-place redirect, or preserved mapping
+  belongs to a confirmed scope that excludes its movement;
+- it is a verified compatibility or redirect stub whose canonical target page
+  already exists, which is what a completed migration leaves behind on a host
+  without redirect support.
+
+Neither exception may rest on an unsourced claim that something was confirmed:
+cite the confirmation or the existing canonical target. A full legacy page that
+merely looks settled is still drift.
+
+When drift is positive for a parent this batch writes into, present a one-time
+migration proposal inside the same Step 4 confirmation: the target subtree with
+every `index.md`, each old path to new path mapping, the inbound-link,
+navigation, and change-map `required_docs` delta, the excluded pages with
+reasons, and where this batch's new pages land in the target tree. Offer three
+decisions and recommend the first: confirm the migration and this batch as one
+atomic scope; confirm only this batch; or defer both. Under the second decision
+write this batch's new pages at their target depth and report the coexisting
+flat pages as an unresolved discrepancy. Under the third decision write nothing.
+Neither decision moves an existing page, and neither ever appends a new page to
+the type root merely to match the existing flat layout.
+
+Report every drifted parent outside this batch as a read-only observation with
+its page list and proposed target node. Do not expand the confirmed scope,
+propose a site-wide restructure, or move anything without confirmation. When the
+evidence does not support a common parent, report the observation and propose no
+migration. A silent flat layout is not an acceptable outcome of this check.
 
 ### 5. Write only the confirmed scope and read it back
 
@@ -319,6 +375,8 @@ output followed the relevant rules:
 - Changed docs: <paths or none>
 - Evidence and read-back: <sources checked and result>
 - Change-map / index / navigation delta: <delta or none>
+- Hierarchy drift: <none | drifted parents, proposed target nodes, maintainer
+  decision, remaining out-of-batch drift>
 - Host docs checks: <commands, cwd, and results>
 - Deployment completeness: <shared status, variants, evidence paths, missing
   links or drift, user decision, and next owner>

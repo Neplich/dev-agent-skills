@@ -71,4 +71,11 @@ subfeature, index, and leaf, show its parent, page path, code glob, owner,
 classification evidence, proposed change-map delta, and exclusions. After
 confirmation, write the complete subtree atomically with its indexes,
 navigation, and map entries. Do not move an existing stable flat page without
-a separately confirmed migration plan.
+a separately confirmed migration plan, and do not let that constraint end in
+silence: run the common flat-hierarchy drift check with its own two-tier
+threshold and resolved-page exceptions rather than a narrower API-specific
+trigger. For this type, the evidence that places a page directly under
+`docs/site/api/` beneath a domain or subfeature node is route prefix or tag,
+handler ownership, and catalog classification. Propose the resulting migration
+in the same confirmation instead of appending this batch's pages to the API
+root.

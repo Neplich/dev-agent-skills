@@ -1,0 +1,33 @@
+diff --git a/src/api/knowledge_discovery/conversations/messages.py b/src/api/knowledge_discovery/conversations/messages.py
+new file mode 100644
+--- /dev/null
++++ b/src/api/knowledge_discovery/conversations/messages.py
+@@
++router = APIRouter(
++    prefix="/api/knowledge-discovery/conversations/{conversation_id}/messages",
++    tags=["knowledge-discovery", "conversations"],
++)
++
++@router.post("", response_model=MessageResponse, status_code=status.HTTP_201_CREATED)
++def create_message(conversation_id: str, payload: CreateMessageRequest, ...):
++    if conversation_id == "forbidden":
++        raise HTTPException(status_code=403, detail={"code": "conversation_forbidden"})
++
++@router.get("", response_model=list[MessageResponse])
++def list_messages(conversation_id: str, ...):
++    if conversation_id == "forbidden":
++        raise HTTPException(status_code=403, detail={"code": "conversation_forbidden"})
+diff --git a/src/api/knowledge_discovery/conversations/schemas.py b/src/api/knowledge_discovery/conversations/schemas.py
+new file mode 100644
+--- /dev/null
++++ b/src/api/knowledge_discovery/conversations/schemas.py
+@@
++class CreateMessageRequest(BaseModel):
++    content: str = Field(min_length=1, max_length=4000)
++
++class MessageResponse(BaseModel):
++    id: str
++    conversation_id: str
++    content: str
+diff --git a/tests/contract/test_conversation_messages_api.py b/tests/contract/test_conversation_messages_api.py
+new file mode 100644
