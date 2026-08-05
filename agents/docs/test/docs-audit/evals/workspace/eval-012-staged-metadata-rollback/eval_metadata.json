@@ -2,8 +2,7 @@
   "eval_id": "eval-012-staged-metadata-rollback",
   "eval_name": "staged-metadata-rollback",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-012-staged-metadata-rollback",
-  "skill_availability_goal": "Measure whether docs-audit catches non-content candidate drift and proves transaction rollback without leaking the convergence protocol.",
-  "prompt": "审查 `.eval/` 中的 pre-tag candidate 快照，给出该 attempt 是否可继续、决定性证据、失败后的清理范围与成功状态边界。fixture 只读，不实际修改 Git worktree、index 或 ref。",
+  "prompt": "请审查 `.eval/` 中的待发布快照，判断本次尝试是否可以继续，并说明决定性证据和后续处理。工作区内容只读，不实际修改 Git worktree、index 或 ref。",
   "execution_cleanup": [
     "docs/site/.meta/audit/audit-v1.2.0.md",
     "docs/site/.meta/audit/handoffs/pre-tag-v1.2.0.md"

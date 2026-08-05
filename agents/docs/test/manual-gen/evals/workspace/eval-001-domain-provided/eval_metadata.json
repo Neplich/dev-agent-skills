@@ -2,8 +2,7 @@
   "eval_id": "eval-001-domain-provided",
   "eval_name": "domain-provided-bounded-manual",
   "workspace_root": "agents/docs/test/manual-gen/evals/workspace/eval-001-domain-provided",
-  "skill_availability_goal": "Verify a maintainer-provided domain leads to a bounded, evidence-backed manual capture without entering the local-start branch.",
-  "prompt": "维护者已提供截图环境 https://mermaid.live/，并确认本批只为匿名使用者记录一条基础编辑与预览流程。宿主文档站基础、manual 模板和 change map 均已存在。请按 manual-gen 协议执行；截图和生成页面只能写入隔离运行目录，不得写回 eval fixture。",
+  "prompt": "维护者已提供可访问环境 https://mermaid.live/，并确认本批只为匿名使用者记录一条基础编辑与预览流程。宿主文档站基础与手册模板已经存在，范围已经定好，不用再跟我确认。请完成这批图文用户手册。",
   "environment": {
     "kind": "maintainer_provided_domain",
     "url": "https://mermaid.live/",

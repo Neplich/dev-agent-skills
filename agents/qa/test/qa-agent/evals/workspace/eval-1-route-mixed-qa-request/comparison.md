@@ -21,7 +21,9 @@
 - 所有 assertion 场景均已触发；无 `NOT EXERCISED` assertion。
 - router 单表契约已触发：with-skill 依据 `Default Routes` 中含「信号示例」列的单表完成路由；未要求或伪造独立信号列表。
 
-Overall result: PASS
+Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## Assertion Results
 

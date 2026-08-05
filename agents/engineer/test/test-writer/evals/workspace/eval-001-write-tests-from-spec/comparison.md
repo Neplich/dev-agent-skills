@@ -8,6 +8,9 @@
 - Test case: write-tests-from-spec
 - Workspace: `workspace/eval-001-write-tests-from-spec`
 - Latest result: PASS - 2026-07-26 fresh paired validation completed; with_skill and fresh without_skill both satisfied 3/3 assertions.
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## Test Set / Fixture Version
 

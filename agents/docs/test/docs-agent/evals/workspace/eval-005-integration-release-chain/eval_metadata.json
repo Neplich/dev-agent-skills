@@ -2,8 +2,7 @@
   "eval_id": "eval-005-integration-release-chain",
   "eval_name": "integration-release-chain",
   "workspace_root": "agents/docs/test/docs-agent/evals/workspace/eval-005-integration-release-chain",
-  "skill_availability_goal": "Verify that docs-agent can distinguish a merely plausible release chain from one that has valid Docs audit authority and stable post-tag evidence before GitHub Release handoff.",
-  "prompt": "请依据 `release-chain-entry.md` 及其指向的 fixture 证据，评估 v1.4.0 文档发布链当前能否交给 GitHub Release 阶段。给出结论、阻塞项和下一责任人。只允许在 runner 复制出的隔离 workspace 中准备并读取 synthetic fixture，不执行任何真实 tag 或 GitHub Release 写入。",
+  "prompt": "请依据 `release-chain-entry.md` 及其指向的证据，评估 v1.4.0 文档发布链当前能否继续，并给出结论、阻塞项和下一责任人。不要执行任何真实 tag 或 GitHub Release 写入。",
   "fixture_context": [
     "release-chain-entry.md",
     "release-notes-handoff.md",

@@ -7,7 +7,7 @@
       "id": "eval-001-prd-to-engineer-trd",
       "name": "prd-to-engineer-trd",
       "description": "Verifies that trd-gen owns technical planning after PRD confirmation and stops before implementation.",
-      "prompt": "PM 已经确认 docs/pm/capture-loop/PRD.md 和 docs/pm/capture-loop/DECISIONS.md。请进入 Engineer 阶段，编写 TRD，并说明后续如何移交给 feature-implementor。",
+      "prompt": "PM 已经确认 docs/pm/capture-loop/PRD.md 和 docs/pm/capture-loop/DECISIONS.md。请准备这个功能的技术方案。",
       "workspace": "workspace/eval-001-prd-to-engineer-trd",
       "expected_output": "生成或更新 docs/engineer/{feature_path}/TRD.md，明确 TRD 确认后再移交 feature-implementor 编写实现计划文档，不进入代码实现。",
       "assertions": [
@@ -47,7 +47,7 @@
       "id": "eval-002-resolve-trd-gap-packet",
       "name": "resolve-trd-gap-packet",
       "description": "Verifies that trd-gen owns completing a missing or stale TRD after another skill reports a clear gap packet.",
-      "prompt": "feature-implementor 发现 docs/engineer/capture-loop/TRD.md 缺失，已交回 workspace `TRD_GAP_PACKET.md`：需要决定受影响组件、Capture 事件数据流、队列重试验证命令、发布/回滚风险和错误处理策略。PM 的 docs/pm/capture-loop/PRD.md 已确认。请进入 trd-gen，不要写代码。",
+      "prompt": "workspace `TRD_GAP_PACKET.md` 记录了当前缺少的技术决策，PM 的 docs/pm/capture-loop/PRD.md 已确认。请补齐技术方案。",
       "workspace": "workspace/eval-002-resolve-trd-gap-packet",
       "expected_output": "确认发现者负责说明缺口，trd-gen 负责补完整 docs/engineer/capture-loop/TRD.md；逐项处理 gap packet 中的组件、数据流、验证命令、发布风险和错误处理策略，不进入实现计划或代码。",
       "assertions": [
@@ -82,7 +82,7 @@
       "id": "eval-003-nested-prd-to-engineer-trd",
       "name": "nested-prd-to-engineer-trd",
       "description": "Verifies that trd-gen mirrors a 4-level PRD feature_path when writing the Engineer TRD.",
-      "prompt": "PM 已经确认 docs/pm/chat-interface/messages/history/search/PRD.md，frontmatter 中 feature_path 是 chat-interface/messages/history/search。请进入 Engineer TRD 阶段，编写对应 TRD，不要写实现计划或代码。",
+      "prompt": "PM 已经确认 docs/pm/chat-interface/messages/history/search/PRD.md，其中记录的功能路径是 chat-interface/messages/history/search。请编写对应技术方案。",
       "workspace": "workspace/eval-003-nested-prd-to-engineer-trd",
       "expected_output": "生成或更新 docs/engineer/chat-interface/messages/history/search/TRD.md，TRD frontmatter 包含 feature_path、parent_feature、feature_level，related_prd 指向 docs/pm/chat-interface/messages/history/search/PRD.md，并说明 TRD 确认后再移交 feature-implementor。",
       "assertions": [
@@ -117,7 +117,7 @@
       "id": "eval-004-api-adr-owned-by-engineer",
       "name": "api-adr-owned-by-engineer",
       "description": "Verifies that trd-gen owns API and ADR docs after PM scope is confirmed and mirrors the PRD feature_path.",
-      "prompt": "PM 已确认 docs/pm/chat-interface/history-search/PRD.md。请进入 Engineer 阶段，为聊天历史搜索补 TRD、API 文档和一份搜索索引选型 ADR。不要写实现计划或代码。",
+      "prompt": "PM 已确认 docs/pm/chat-interface/history-search/PRD.md。请为聊天历史搜索补技术方案、API 文档和一份搜索索引选型 ADR。",
       "workspace": "workspace/eval-004-api-adr-owned-by-engineer",
       "expected_output": "确认 `trd-gen` 负责 Engineer-owned TRD、API.md 和 ADR-*.md；输出路径都在 docs/engineer/chat-interface/history-search/ 下；保留 feature_path、parent_feature、feature_level 和 related_prd；不调用 PM 内部 api-gen/adr-gen，也不写 IMPLEMENTATION_PLAN.md 或代码。",
       "assertions": [
@@ -152,7 +152,7 @@
       "id": "eval-005-mapped-upload-trd-evidence",
       "name": "使用映射文档核证上传模块 TRD 现状",
       "description": "验证 TRD 生成命中 change-map 后使用文档导航并以代码核证技术现状",
-      "prompt": "请为 `src/upload/` 增加分片上传能力准备 TRD，先确认当前接口行为与技术差距；不要进入实现。",
+      "prompt": "请为 `src/upload/` 增加分片上传能力准备技术方案，并先确认当前接口行为与技术差距。",
       "expected_output": "读取命中的上传 API 页面，以代码核证当前能力，并将文档分歧作为 TRD 决策证据。",
       "workspace": "workspace/eval-005-mapped-upload-trd-evidence",
       "assertions": [

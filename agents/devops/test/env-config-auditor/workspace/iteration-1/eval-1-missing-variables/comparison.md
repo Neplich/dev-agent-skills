@@ -8,6 +8,9 @@
 - Test case: missing-variables
 - Workspace: `workspace/iteration-1/eval-1-missing-variables`
 - Latest result: PARTIAL - prior skill validation evidence is preserved; without_skill baseline was not generated for this historical comparison.
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 - Prior validation note: fresh Codex subagent validation completed on 2026-06-02
 
 ## Test Set / Fixture Version

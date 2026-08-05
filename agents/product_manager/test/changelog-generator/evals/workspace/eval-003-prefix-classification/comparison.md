@@ -9,6 +9,9 @@
 - Workspace: `workspace/eval-003-prefix-classification`
 - Evaluation time: 2026-07-26 16:21:37 CST (+0800)
 - Latest result: PASS - same-agent fresh `with_skill` 与 fresh `without_skill` baseline 均满足 13/13 assertions；本轮未观察到两 arm 的行为差异。
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## Test Set / Fixture Version
 

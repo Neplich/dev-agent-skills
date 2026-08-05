@@ -10,7 +10,9 @@
 - Classification: `(c)` 依赖实时外部数据；验证 `github-reader` 是否通过已认证 `gh` 获取真实仓库状态。
 - Behavior result: **PASS** — 当前会话中的 fresh validator 严格按 no-leak 顺序生成并锁定两个独立 live arm 后才读取 assertions。with-skill 在实际触发的 4 条 assertions 上满足 4/4，未发现行为回归；原记录的 4/5 来自将未触发的 `milestone` 计入分母。without-skill 原记录为 3/5。
 - Coverage result: **PARTIAL** — `milestone` 为 **NOT EXERCISED**：目标仓库当时没有 open milestone，无法触发 assertion 要求的“有标题、进度百分比”的表格；skill 正确执行了“暂无 milestone” edge case，没有虚构数据。
-- Overall result: **PASS (partial coverage)**。
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+。
 - 证据来源：2026-07-28 fresh run（沿用既有记录，本轮仅做结果模型迁移，未重新执行 eval）。
 
 ## Test Set / Fixture Version

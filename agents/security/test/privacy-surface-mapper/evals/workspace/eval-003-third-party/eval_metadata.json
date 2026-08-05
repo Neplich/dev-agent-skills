@@ -2,7 +2,6 @@
   "eval_id": "eval-003-third-party",
   "eval_name": "Third-Party Data Sharing",
   "workspace_root": "agents/security/test/privacy-surface-mapper/evals/workspace/eval-003-third-party",
-  "skill_availability_goal": "Test mapping of third-party data sharing",
   "prompt": "pm-agent has completed entry classification and routed this confirmed `third-party-sharing` security scope to privacy-surface-mapper. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/third-party-sharing/PRD.md`. Identify all third-party services receiving user data.",
   "fixture_context": [
     "PM_HANDOFF.md",

@@ -9,6 +9,9 @@
 - Workspace: `workspace/eval-002-focused-pr-query`
 - Classification: `(c) 依赖实时外部数据`。prompt、expected output、assertions 和 metadata 已足以定义 focused PR 查询；场景证据必须来自 GitHub 当前状态，不应添加静态 mock fixture。
 - Latest result: **PASS** — 本轮由同一个 fresh Codex agent 完成 no-leak 双臂复验和最终 judge；with-skill 与 without-skill 均真实查询 `cli/cli`，且都满足 3 条 assertions。
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## Test Set / Fixture Version
 

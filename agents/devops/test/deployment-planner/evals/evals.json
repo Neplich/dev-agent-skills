@@ -57,7 +57,7 @@
       "id": "eval-002-python-api-only",
       "name": "python-api-only",
       "description": "Verifies that deployment-planner handles python-api-only and produces the expected role-specific artifact.",
-      "prompt": "pm-agent 已完成项目级部署入口分类并路由至 deployment-planner；确认 handoff 见 workspace `PM_HANDOFF.md`，本任务为 `feature_path: N/A` 的 repo-wide deployment。我的 FastAPI 项目只需要 API 服务，不需要数据库。生成部署配置，且不要添加数据库服务、变量或初始化步骤。",
+      "prompt": "我的 FastAPI 项目只需要 API 服务，没有数据库或其他持久化依赖。请生成部署配置。",
       "workspace": "workspace/eval-002-python-api-only",
       "expected_output": "生成简化的部署配置，不包含数据库相关内容",
       "assertions": [
@@ -112,7 +112,7 @@
       "id": "eval-004-docs-build-variant-matrix",
       "name": "docs-build-variant-matrix",
       "description": "文档站部署单元完整性门禁枚举全部构建变体。",
-      "prompt": "根据 evidence.md 生成只包含计划与矩阵的部署完整性结果，不编写 CI。",
+      "prompt": "根据 evidence.md 评估文档站各构建变体的部署安排。",
       "expected_output": "逐一列出 Public、Internal 与 Preview 的 build/image/Compose/Helm/health/runtime 处置。",
       "workspace": "workspace/eval-004-docs-build-variant-matrix",
       "assertions": [

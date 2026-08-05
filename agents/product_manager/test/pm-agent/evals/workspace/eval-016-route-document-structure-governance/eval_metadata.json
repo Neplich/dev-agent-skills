@@ -2,5 +2,5 @@
   "eval_id": "eval-016-route-document-structure-governance",
   "eval_name": "route-document-structure-governance",
   "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-016-route-document-structure-governance",
-  "prompt": "帮我梳理一下整个 docs 文档功能树，看看有没有超长文档、孤儿目录或跨角色路径漂移，给我一份结构治理报告。"
+  "prompt": "请只读检查 docs 下各角色的文档组织，找出过长文档、孤立目录和不同角色间路径不一致的问题，并给我一份报告。"
 }

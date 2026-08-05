@@ -52,7 +52,7 @@
       "id": "eval-002-repair-plan-confirmation-gate",
       "name": "repair-plan-confirmation-gate",
       "description": "Verifies that debugger writes a repair implementation plan only after the user asks for it, then waits for plan confirmation before fixing.",
-      "prompt": "已确认的预期文档链和复现根因见 workspace `BUG_ANALYSIS.md`、`docs/pm/notifications/PRD.md` 与 `docs/engineer/notifications/TRD.md`。test/api/notifications.test.ts 的失败已经复现，根因确认是 notification status 没有处理 archived。请基于这个根因产出修复实施计划，但先不要改代码。",
+      "prompt": "已确认的预期文档和复现根因见 workspace `BUG_ANALYSIS.md`、`docs/pm/notifications/PRD.md` 与 `docs/engineer/notifications/TRD.md`。test/api/notifications.test.ts 的失败已经复现，根因确认是 notification status 没有处理 archived。请准备修复方案。",
       "workspace": "workspace/eval-002-repair-plan-confirmation-gate",
       "expected_output": "修复实施计划 + 文件范围 + 验证命令 + sub-agent 拆分判断 + 等待用户确认，不直接修复",
       "assertions": [
@@ -122,7 +122,7 @@
       "id": "eval-004-nested-feature-path-bug-alignment",
       "name": "nested-feature-path-bug-alignment",
       "description": "Verifies that debugger aligns expected behavior against 4-level PRD/TRD feature_path documents before repair planning.",
-      "prompt": "用户说：Message History Search 的搜索结果排序不对，这是 bug，请修一下。相关预期文档在 docs/pm/chat-interface/messages/history/search/PRD.md 和 docs/engineer/chat-interface/messages/history/search/TRD.md。请先按 debugger 流程处理，不要直接修复。",
+      "prompt": "用户说：Message History Search 的搜索结果排序不对，这是 bug，请修一下。相关预期文档在 docs/pm/chat-interface/messages/history/search/PRD.md 和 docs/engineer/chat-interface/messages/history/search/TRD.md。",
       "workspace": "workspace/eval-004-nested-feature-path-bug-alignment",
       "expected_output": "先读取 docs/pm/chat-interface/messages/history/search/PRD.md 和 docs/engineer/chat-interface/messages/history/search/TRD.md，对齐 feature_path、parent_feature、feature_level 和 related_prd，再分类为 implementation_deviation / requirement_change / missing_docs / trd_gap；不直接修复。",
       "assertions": [
@@ -157,7 +157,7 @@
       "id": "eval-005-mapped-cache-debug-evidence",
       "name": "使用映射文档诊断缓存过期问题",
       "description": "验证调试任务命中 change-map 后用低信任文档定位并以代码证据诊断",
-      "prompt": "请诊断 `src/cache/` 中缓存比预期更早过期的问题，说明复现依据和根因；不要直接修复。",
+      "prompt": "请诊断 `src/cache/` 中缓存比预期更早过期的问题，并说明复现依据和根因。",
       "expected_output": "读取命中的缓存 API 页面，以代码核证 TTL 行为并报告文档与实现分歧。",
       "workspace": "workspace/eval-005-mapped-cache-debug-evidence",
       "assertions": [

@@ -32,7 +32,7 @@
       "id": "eval-002-battlecard-mode",
       "name": "battlecard 信号路由直接产出单页 battlecard",
       "description": "验证 pm-agent 以 battlecard 信号路由的初始请求时，competitive-brief 直接产出单页 battlecard（Quick Overview / Their Pitch / Strengths / Weaknesses / Objection Handling / Landmines / Win-Loss Themes），不输出完整 brief，且不再询问是否创建 battlecard。",
-      "prompt": "pm-agent 以 `battlecard` 信号路由了你的请求：请为 Linear 和 Jira 各产出一页式 battlecard。不要输出完整竞品 brief。可用网络检索获取事实，无法确认的信息标记为假设。",
+      "prompt": "请为 Linear 和 Jira 各准备一页便于销售对比使用的竞争资料。可用网络检索获取事实，无法确认的信息标记为假设。",
       "workspace": "workspace/eval-002-battlecard-mode",
       "expected_output": "为 Linear 和 Jira 各产出一页式 battlecard，单页字段覆盖 Quick Overview / Their Pitch / Strengths / Weaknesses / Objection Handling / Landmines / Win-Loss Themes；不输出完整竞品 brief 的结构章节；标注研究日期并区分事实与推断；不询问是否创建 battlecard。",
       "assertions": [

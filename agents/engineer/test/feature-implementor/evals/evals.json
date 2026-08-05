@@ -82,7 +82,7 @@
       "id": "eval-003-missing-trd-handoff",
       "name": "missing-trd-handoff",
       "description": "Verifies that feature-implementor stops before implementation when the Engineer TRD is missing and hands back a complete TRD gap packet to trd-gen.",
-      "prompt": "请根据 docs/pm/capture-loop/PRD.md 实现 Capture Loop 队列重试能力。当前 workspace 没有 docs/engineer/capture-loop/TRD.md；请判断下一步，不要直接写代码。",
+      "prompt": "请根据 docs/pm/capture-loop/PRD.md 实现 Capture Loop 队列重试能力。当前 workspace 没有 docs/engineer/capture-loop/TRD.md。",
       "workspace": "workspace/eval-003-missing-trd-handoff",
       "expected_output": "识别缺少已确认 Engineer TRD，停止实现计划和代码实现，明确 handoff 给 engineer-agent:trd-gen 编写 docs/engineer/capture-loop/TRD.md，并列出 TRD gap packet：受影响组件、数据流/API/集成影响、验证命令、发布风险和错误处理策略等缺失技术决策；同时说明发现者负责说明缺口，trd-gen 负责补完整 TRD。",
       "assertions": [
@@ -117,7 +117,7 @@
       "id": "eval-004-small-change-plan-gate",
       "name": "small-change-plan-gate",
       "description": "Verifies that a small single-file implementation still confirms PRD alignment, produces an implementation plan, records the sub-agent split decision, and waits for confirmation.",
-      "prompt": "docs/pm/settings-label/PRD.md 和 docs/engineer/settings-label/TRD.md 已确认。请把设置页按钮文案从「保存」改成「保存设置」，这是一个单文件小改动。请进入 feature-implementor。",
+      "prompt": "docs/pm/settings-label/PRD.md 和 docs/engineer/settings-label/TRD.md 已确认。请把设置页按钮文案从「保存」改成「保存设置」，这是一个单文件小改动。",
       "workspace": "workspace/eval-004-small-change-plan-gate",
       "expected_output": "确认 PRD/TRD 已覆盖该文案变更，产出简短 IMPLEMENTATION_PLAN.md，说明无需复杂 sub-agent 拆分，等待用户确认，不直接修改代码。",
       "assertions": [
@@ -157,7 +157,7 @@
       "id": "eval-005-existing-behavior-change-needs-pm",
       "name": "existing-behavior-change-needs-pm",
       "description": "Verifies that feature-implementor stops before implementation planning when a small existing-feature change would alter approved PRD/TRD behavior or an existing product decision.",
-      "prompt": "docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都规定 active 列表排除 archived。现在请进入 feature-implementor，把 active 列表改成包含 archived；这是一个很小的单文件改动。",
+      "prompt": "docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都规定 active 列表排除 archived。现在请把 active 列表改成包含 archived；这是一个很小的单文件改动。",
       "workspace": "workspace/eval-005-existing-behavior-change-needs-pm",
       "expected_output": "识别这是改变已批准预期，停止创建 IMPLEMENTATION_PLAN.md，交回 pm-agent:idea-to-spec existing-project-update 更新 PRD 或产品决策记录，再同步 TRD。",
       "assertions": [
@@ -192,7 +192,7 @@
       "id": "eval-006-small-bug-fix-plan-gate",
       "name": "small-bug-fix-plan-gate",
       "description": "Verifies that a small spec-backed bug fix routed into feature-implementor still writes an implementation plan and waits for confirmation.",
-      "prompt": "debugger 已确认通知中心 active 列表没有排除 archived 是实现偏离 PRD/TRD，不是需求变更；根因是 src/api/notifications.ts 的过滤条件少了 archived。现在请进入 feature-implementor 落地这个单文件小 bug fix，但先不要改代码。",
+      "prompt": "通知中心 active 列表没有排除 archived，已经确认这是实现偏离 PRD/TRD，不是需求变更；根因是 src/api/notifications.ts 的过滤条件少了 archived。请修复这个单文件问题。",
       "workspace": "workspace/eval-006-small-bug-fix-plan-gate",
       "expected_output": "基于已确认 PRD/TRD 和 debugger 根因，产出或更新 docs/engineer/notifications/IMPLEMENTATION_PLAN.md，记录 PRD 对齐、文件范围、验证命令和无需复杂 sub-agent 拆分，等待用户确认，不直接修复。",
       "assertions": [
@@ -227,7 +227,7 @@
       "id": "eval-007-missing-nested-trd-handoff",
       "name": "missing-nested-trd-handoff",
       "description": "Verifies that feature-implementor blocks implementation planning for a nested PRD when the mirrored Engineer TRD is missing.",
-      "prompt": "请根据 docs/pm/chat-interface/history-search/PRD.md 实现 Chat History Search。该 PRD 的 feature_path 是 chat-interface/history-search，但 workspace 没有 docs/engineer/chat-interface/history-search/TRD.md。请判断下一步，不要写 IMPLEMENTATION_PLAN 或代码。",
+      "prompt": "请根据 docs/pm/chat-interface/history-search/PRD.md 实现 Chat History Search。该 PRD 记录的功能路径是 chat-interface/history-search，但 workspace 没有 docs/engineer/chat-interface/history-search/TRD.md。",
       "workspace": "workspace/eval-007-missing-nested-trd-handoff",
       "expected_output": "识别缺少 docs/engineer/chat-interface/history-search/TRD.md，停止 IMPLEMENTATION_PLAN 和代码实现，回 engineer-agent:trd-gen，并携带 feature_path、parent_feature、feature_level、PRD 路径和预期 TRD 路径。",
       "assertions": [
@@ -257,7 +257,7 @@
       "id": "eval-008-feature-path-mismatch-blocked",
       "name": "feature-path-mismatch-blocked",
       "description": "Verifies that feature-implementor blocks implementation planning when PRD and TRD feature paths do not match.",
-      "prompt": "请根据 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/TRD.md 实现 Chat History Search。PRD feature_path 是 chat-interface/history-search，但 TRD feature_path 是 chat-interface。请判断下一步，不要写 IMPLEMENTATION_PLAN 或代码。",
+      "prompt": "请根据 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/TRD.md 实现 Chat History Search。两份文档记录的功能路径不一致：PRD 是 chat-interface/history-search，TRD 是 chat-interface。",
       "workspace": "workspace/eval-008-feature-path-mismatch-blocked",
       "expected_output": "识别 PRD/TRD feature_path、parent_feature、feature_level 或 related_prd 不一致，停止写 IMPLEMENTATION_PLAN，blocked 或交回 engineer-agent:trd-gen 修正 TRD。",
       "assertions": [
@@ -287,7 +287,7 @@
       "id": "eval-009-ui-design-handoff-gate",
       "name": "ui-design-handoff-gate",
       "description": "Verifies that feature-implementor checks design deliverables before planning frontend UI changes and blocks when design inputs are missing or conflicting.",
-      "prompt": "docs/pm/customer-portal/profile-settings/PRD.md 和 docs/engineer/customer-portal/profile-settings/TRD.md 已确认。请进入 feature-implementor，更新设置页前端 UI 的信息层级和主按钮样式；当前 workspace 没有 docs/design/customer-portal/profile-settings/ui-ux-spec.md 或 visual-system.md。先不要改代码。",
+      "prompt": "docs/pm/customer-portal/profile-settings/PRD.md 和 docs/engineer/customer-portal/profile-settings/TRD.md 已确认。请更新设置页前端 UI 的信息层级和主按钮样式；当前 workspace 没有对应的 UI/UX 或视觉设计文档。",
       "workspace": "workspace/eval-009-ui-design-handoff-gate",
       "expected_output": "识别这是前端 UI 行为和视觉变化，先检查同 feature_path 的设计交付物；因 UI/UX 和 visual-system 缺失，停止创建 IMPLEMENTATION_PLAN.md，handoff 回 engineer-agent -> designer-agent 补齐设计；设计完成后仍需再写 IMPLEMENTATION_PLAN 并等待用户确认。",
       "assertions": [
@@ -327,7 +327,7 @@
       "id": "eval-010-implementation-plan-closeout-sync",
       "name": "implementation-plan-closeout-sync",
       "description": "Verifies that feature-implementor detects and blocks stale IMPLEMENTATION_PLAN closeout state after implementation is marked complete.",
-      "prompt": "docs/pm/sample-feature/PRD.md、docs/engineer/sample-feature/TRD.md 和 docs/engineer/sample-feature/IMPLEMENTATION_PLAN.md 都存在。实现和 deterministic checks 已完成，IMPLEMENTATION_PLAN frontmatter 已是 status: Implemented，但正文仍写 Implementation plan 待用户确认、Code / skill edits 未开始、Eval execution 待确认，并写模型 eval 尚未执行。请进入 feature-implementor 做实施收尾检查，不要继续 delivery。",
+      "prompt": "docs/pm/sample-feature/PRD.md、docs/engineer/sample-feature/TRD.md 和 docs/engineer/sample-feature/IMPLEMENTATION_PLAN.md 都存在。实现和检查已完成，计划 frontmatter 已是 status: Implemented，但正文仍写计划待确认、代码和 skill 修改未开始、eval 执行待确认，并写模型 eval 尚未执行。请检查并完成实施收尾。",
       "workspace": "workspace/eval-010-implementation-plan-closeout-sync",
       "expected_output": "识别 IMPLEMENTATION_PLAN 的 frontmatter 完成态与正文计划期状态矛盾，阻止 QA handoff 或 delivery，要求更新实施结果区、状态表、deterministic checks 命令和结果、eval / comparison 记录或 skipped / blocked 原因，并保持运行期 eval 产物不入库。",
       "assertions": [
@@ -367,7 +367,7 @@
       "id": "eval-011-four-level-feature-path-plan-gate",
       "name": "four-level-feature-path-plan-gate",
       "description": "Verifies that feature-implementor accepts matching 4-level PRD/TRD documents, writes the mirrored IMPLEMENTATION_PLAN path, and waits for confirmation before coding.",
-      "prompt": "docs/pm/chat-interface/messages/history/search/PRD.md 和 docs/engineer/chat-interface/messages/history/search/TRD.md 已确认。请进入 feature-implementor，为消息历史搜索实现写实施计划；先不要改代码。",
+      "prompt": "docs/pm/chat-interface/messages/history/search/PRD.md 和 docs/engineer/chat-interface/messages/history/search/TRD.md 已确认。请实现消息历史搜索。",
       "workspace": "workspace/eval-011-four-level-feature-path-plan-gate",
       "expected_output": "确认 PRD/TRD 的 feature_path 都是 chat-interface/messages/history/search，产出 docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md，记录 feature_path、parent_feature、feature_level、文件范围和验证命令，等待用户确认后再编码。",
       "assertions": [
@@ -407,7 +407,7 @@
       "id": "eval-012-implementation-plan-archive-preflight",
       "name": "implementation-plan-archive-preflight",
       "description": "Verifies that feature-implementor runs the pre-plan archive scan and blocks a direct overwrite when an unarchived active IMPLEMENTATION_PLAN already exists on the same feature_path.",
-      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要新增部分退款能力。docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md 已存在且是上一轮全额退款的完成态计划，尚未归档。请进入 feature-implementor 为部分退款创建下一份实施计划，先不要改代码。",
+      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要新增部分退款能力。docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md 已存在且是上一轮全额退款的完成态计划，尚未归档。",
       "workspace": "workspace/eval-012-implementation-plan-archive-preflight",
       "expected_output": "运行 pre-plan archive 扫描，识别同 feature_path 已有未归档且 status 为 Implemented 的活跃计划，阻止直接覆盖，报告旧计划路径/状态/范围，并要求用户在归档完成计划后新建、归档为 Superseded 后新建两种处理方式中选择，不直接改代码。",
       "assertions": [
@@ -442,7 +442,7 @@
       "id": "eval-013-implementation-plan-archive-allows-next-plan",
       "name": "implementation-plan-archive-allows-next-plan",
       "description": "Verifies that feature-implementor allows creating a next active plan once the prior plan is archived, requires previous_plan_archive linkage, and keeps the active entry fixed.",
-      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要新增部分退款能力。上一轮全额退款计划已经 closeout 并归档到 docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md，当前没有活跃的 docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md。请进入 feature-implementor 为部分退款创建下一份实施计划，先不要改代码。",
+      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要新增部分退款能力。上一轮全额退款计划已归档到 docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md，当前没有活跃计划。",
       "workspace": "workspace/eval-013-implementation-plan-archive-allows-next-plan",
       "expected_output": "识别上一份计划已归档、当前无活跃计划阻塞，允许创建新的 docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md，要求新计划 frontmatter 记录 previous_plan_archive 指向归档文件，活跃入口保持不变，等待用户确认后再编码。",
       "assertions": [
@@ -477,7 +477,7 @@
       "id": "eval-015-implemented-status-detected-from-fixture",
       "name": "implemented-status-detected-from-fixture",
       "description": "Verifies that feature-implementor reads an existing active plan frontmatter, recognizes status Implemented without the prompt revealing it, and stops at the two-option archive gate.",
-      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现在要在这个功能上做下一轮更新，请进入 feature-implementor 创建下一份实施计划，先不要改代码。",
+      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现在要在这个功能上做下一轮更新。",
       "expected_output": "主动读取现有 active IMPLEMENTATION_PLAN.md 的 frontmatter，识别 status 为 Implemented，在覆盖前停下并要求用户从归档完成计划后新建、归档为 Superseded 后新建两种方式中选择。",
       "workspace": "workspace/eval-015-implemented-status-detected-from-fixture",
       "assertions": [
@@ -512,7 +512,7 @@
       "id": "eval-016-draft-status-continues-current-plan",
       "name": "draft-status-continues-current-plan",
       "description": "Verifies that feature-implementor reads an existing active plan frontmatter, recognizes a non-Implemented Draft status without the prompt revealing it, and continues the current plan with a version bump instead of forcing archival.",
-      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现在要在这个功能上做下一轮更新，请进入 feature-implementor 创建下一份实施计划，先不要改代码。",
+      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现在要在这个功能上做下一轮更新。",
       "expected_output": "主动读取现有 active IMPLEMENTATION_PLAN.md 的 frontmatter，识别 status 为 Draft，继续更新固定 active 入口并 bump version，不强制要求归档或 previous_plan_archive，更新计划后等待用户确认再编码。",
       "workspace": "workspace/eval-016-draft-status-continues-current-plan",
       "assertions": [
@@ -552,7 +552,7 @@
       "id": "eval-017-abandoned-draft-can-be-superseded",
       "name": "abandoned-draft-can-be-superseded",
       "description": "Verifies that feature-implementor preserves the explicit abandonment path for a non-Implemented active plan by archiving it as Superseded before creating a linked replacement plan.",
-      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现有退款原因码实施计划不再继续，维护者明确要求废弃这一轮并为新的退款审核流程创建下一份实施计划。请进入 feature-implementor 处理计划，先不要改代码。",
+      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现有退款原因码实施计划不再继续，维护者明确要求废弃这一轮并为新的退款审核流程继续工作。",
       "expected_output": "主动读取现有 status 为 Draft 的 active IMPLEMENTATION_PLAN.md；由于维护者已明确废弃，允许将该未完成计划以 Superseded 归档并记录 superseded_reason 和完整归档 metadata，再创建带 previous_plan_archive 的新 active plan；不得把默认继续更新当前 Draft 计划作为本次处理结果，编码前仍等待确认。",
       "workspace": "workspace/eval-017-abandoned-draft-can-be-superseded",
       "assertions": [
@@ -587,7 +587,7 @@
       "id": "eval-014-mapped-session-plan-evidence",
       "name": "使用映射文档核证会话实现计划",
       "description": "验证实施计划准备命中 change-map 后精准读取低信任文档并回代码核证",
-      "prompt": "请为 `src/session/` 增加会话续期准备实施计划；先核对当前超时行为，不要直接修改代码。",
+      "prompt": "请为 `src/session/` 增加会话续期，并先核对当前超时行为。",
       "expected_output": "读取映射的会话 API 文档，以代码验证当前超时并将分歧纳入计划证据。",
       "workspace": "workspace/eval-014-mapped-session-plan-evidence",
       "assertions": [

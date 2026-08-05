@@ -6,6 +6,9 @@
 - Test case: site-first、draft latest 隔离、publish 漂移复查与 publication triple gate
 - Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
 - Overall result: PASS
+- Discrimination note: 修复后隔离重跑（2026-08-05）with/without 均满足全部断言。成因：宿主 release-package.md 天然承载门禁字段（ready_for_tag/release_verified/预览语义），baseline 可从中推断；skill 特有差异（内联完整预览正文、版本标准化、PRERELEASE_FLAG 推导）未落入断言粒度，建议后续增强断言。按 AGENTS.md 泄漏判定表属「规则天然存在于 skill 交付物」。
+
+- Overall result: PASS
 
 ## Review Context
 

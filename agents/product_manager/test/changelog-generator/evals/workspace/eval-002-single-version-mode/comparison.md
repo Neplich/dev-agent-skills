@@ -10,7 +10,9 @@
 - Classification: `(c) 依赖实时外部数据`。本用例必须读取目标仓库当时的 release、相邻版本窗口、merged PR、author 与 tag compare。
 - Behavior result: **PASS** — fresh with-skill 正确选中实时最新 release `v0.120.0`，生成 assertion 当前要求的 `## [v0.120.0] - 2026-07-24`，过滤唯一 bot release PR 与 compare 中的 bot commits，并在没有 eligible 内容时省略所有空 section。本轮实际触发的 `v_version_yyyy_mm_dd`、`release_tag`、`section` 均确认 PASS，未发现行为回归。
 - Coverage result: **PARTIAL** — `pr_conventional_commit` 与 `breaking_change_breaking` 均为 **NOT EXERCISED**：实时窗口没有 eligible 普通 PR 或 breaking marker，不能通过伪造 fixture 或条目补足。
-- Overall result: **PASS (partial coverage)**。
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+。
 - 证据来源：2026-07-26 fresh run（沿用既有记录，本轮仅做结果模型迁移，未重新执行 eval）。
 
 ## Test Set / Fixture Version

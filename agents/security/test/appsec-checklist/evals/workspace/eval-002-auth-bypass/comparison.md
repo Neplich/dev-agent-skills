@@ -9,6 +9,9 @@
 - Workspace: `workspace/eval-002-auth-bypass`
 - Review context: PR #149 第二轮 review 修复，保留 issue #143 上下文
 - Latest result: PASS（4/4 assertions）- fresh paired validation completed on 2026-07-21
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## Test Set / Fixture Version
 

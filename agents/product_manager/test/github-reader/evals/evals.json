@@ -92,7 +92,7 @@
       "id": "eval-004-mapped-export-status-context",
       "name": "结合映射文档汇总导出模块状态",
       "description": "验证仓库状态读取命中 change-map 后使用低信任文档导航并以代码证据校验",
-      "prompt": "请结合仓库内证据汇总 `src/export/` 模块的当前交付状态与风险，不要扩展到其他模块。",
+      "prompt": "请根据仓库内的现有证据，汇总 `src/export/` 模块当前的交付状态与风险。",
       "expected_output": "精准读取导出 API 文档，以代码核证实现状态并指出文档与实现不一致。",
       "workspace": "workspace/eval-004-mapped-export-status-context",
       "assertions": [

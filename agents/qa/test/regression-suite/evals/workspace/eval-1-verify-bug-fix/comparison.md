@@ -21,7 +21,9 @@
 - 缺同路径 PRD/TRD/plan 已触发预期 blocker；无 `NOT EXERCISED` assertion。
 - 非 E2E 路径变更检查：fixture 是 E2E `feature-update` 回归，未触发 `docs/qa/{feature_path}/regression-verification.md`。
 
-Overall result: PASS
+Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## Assertion Results
 

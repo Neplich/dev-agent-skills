@@ -2,8 +2,7 @@
   "eval_id": "eval-013-version-normalization-boundaries",
   "eval_name": "version-normalization-boundaries",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-013-version-normalization-boundaries",
-  "skill_availability_goal": "Measure whether docs-audit builds a lossless, source-bound and reproducible release-version identity across phases.",
-  "prompt": "审查 `.eval/version-cases.md` 中的版本来源与观测值。分别给出 pre-tag 和 post-tag 的有效 identity、全部 blocker、持久化证据要求与阶段结论。不要修改 fixture。",
+  "prompt": "请审查 `.eval/version-cases.md` 中的版本来源与观测值，分别给出发布前和发布后的检查结论。不要修改工作区内容。",
   "fixture_context": [
     ".eval/version-cases.md"
   ]

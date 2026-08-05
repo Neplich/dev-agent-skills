@@ -10,7 +10,9 @@
 - Classification: `(c) 依赖实时外部数据`。原始 prompt 要求读取 `anthropics/anthropic-sdk-python` 当前 GitHub Release 与 merged PR；静态 fixture 会改变本用例。
 - Behavior result: **PASS** — fresh with-skill 与 fresh without-skill 都确认 `v0.120.0` 发布后没有 merged PR。with-skill 在实际触发的 `unreleased` 与 `versioned_changelog_file` assertions 上均满足要求，未发现行为回归。
 - Coverage result: **PARTIAL** — `pr`、`bot_pr_dependabot`、`chore_ci_test` 均为 **NOT EXERCISED**：实时窗口没有 merged PR，因此没有 PR 链接、bot PR 或维护类 PR 候选可覆盖，不能用空集合伪装成 PASS。
-- Overall result: **PASS (partial coverage)**。
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+。
 - 证据来源：2026-07-26 fresh run（沿用既有记录，本轮仅做结果模型迁移，未重新执行 eval）。
 
 ## Test Set / Fixture Version

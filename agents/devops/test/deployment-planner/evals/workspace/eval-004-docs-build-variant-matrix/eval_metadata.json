@@ -2,8 +2,7 @@
   "eval_id": "eval-004-docs-build-variant-matrix",
   "eval_name": "docs-build-variant-matrix",
   "workspace_root": "agents/devops/test/deployment-planner/evals/workspace/eval-004-docs-build-variant-matrix",
-  "skill_availability_goal": "Verify the deployment-unit completeness gate enumerates every documentation build variant.",
-  "prompt": "根据 evidence.md 生成只包含计划与矩阵的部署完整性结果，不编写 CI。",
+  "prompt": "根据 evidence.md 评估文档站各构建变体的部署安排。",
   "fixture_context": ["evidence.md"],
   "execution_cleanup": ["deploy", "with_skill", "without_skill", "outputs", "diagnostics", "transcript.md", "subagent-verdict.md", "run_status.json", "timing.json"]
 }

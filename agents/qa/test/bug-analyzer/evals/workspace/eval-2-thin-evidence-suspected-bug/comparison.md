@@ -21,7 +21,9 @@
 - 无 `NOT EXERCISED` assertion。
 - 非 E2E 路径变更检查：该场景只允许调查 note/补证清单，不生成正式非 E2E Bug 报告，因此 `docs/qa/{feature_path}/bug-*.md` 分支未触发。
 
-Overall result: PASS
+Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## Assertion Results
 

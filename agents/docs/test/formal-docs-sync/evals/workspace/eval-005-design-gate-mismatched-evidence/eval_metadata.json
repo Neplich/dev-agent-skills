@@ -2,7 +2,6 @@
   "eval_id": "eval-005-design-gate-mismatched-evidence",
   "eval_name": "design-gate-mismatched-evidence",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-005-design-gate-mismatched-evidence",
-  "skill_availability_goal": "Verify that conflicting request and document feature paths block design synchronization and route to the owning roles.",
   "prompt": "按 `pm-handoff.md` 请求同步 `preferences-summary` feature 的 `docs/site/design/**`。请先核验 PRD、TRD、计划、代码、diff 与测试是否都属于同一 feature_path；本轮没有额外范围确认。",
   "fixture_context": [
     "pm-handoff.md",

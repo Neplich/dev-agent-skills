@@ -2,8 +2,7 @@
   "eval_id": "eval-017-abandoned-draft-can-be-superseded",
   "eval_name": "abandoned-draft-can-be-superseded",
   "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-017-abandoned-draft-can-be-superseded",
-  "skill_availability_goal": "Verify that feature-implementor distinguishes explicit abandonment from the default Draft continuation path and preserves Superseded archival with a linked replacement plan.",
-  "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现有退款原因码实施计划不再继续，维护者明确要求废弃这一轮并为新的退款审核流程创建下一份实施计划。请进入 feature-implementor 处理计划，先不要改代码。",
+  "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现有退款原因码实施计划不再继续，维护者明确要求废弃这一轮并为新的退款审核流程继续工作。",
   "fixture_context": [
     "docs/pm/payment-refund/PRD.md",
     "docs/engineer/payment-refund/TRD.md",

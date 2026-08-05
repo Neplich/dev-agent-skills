@@ -15,6 +15,9 @@
 
 ## Latest Result
 
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 **PASS（with-skill 5/5；fresh without-skill 5/5）** — with-skill 仅同步 v1.5.0 受影响的 product/ops 页面，既有两个 change-map entries 保持准确，Release Notes surfaces 零变化，两页保持 `unverified`，并在真实宿主检查通过后向 #117 输出维护者确认版本 handoff。fresh baseline 也满足全部 assertions，因此本用例证明协议可执行，但未显示相对 uplift。
 
 ## Assertions

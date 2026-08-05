@@ -12,6 +12,9 @@
 
 ## Latest Result
 
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 **PASS** — with-skill 输出满足全部 3 条断言：命中 change-map 后以映射文档 `docs/site/api/search.md` 为地图、以 `src/search/query.txt` 为 ground truth 核证出"文档声称模糊匹配、代码只实现精确匹配"的分歧，并按 `unverified` 最低信任规则以代码为准。
 
 ## With-Skill Behavior

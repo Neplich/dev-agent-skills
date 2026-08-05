@@ -2,8 +2,7 @@
   "eval_id": "eval-001-route-design-handoff",
   "eval_name": "route-design-handoff",
   "workspace_root": "agents/designer/test/designer-agent/evals/workspace/eval-1-route-design-handoff",
-  "skill_availability_goal": "Verify that designer-agent routes UX and visual work while stopping before implementation.",
-  "prompt": "用户说：根据 docs/pm/billing-notifications/PRD.md 设计设置页流程和视觉风格，顺手把 React 组件也写了。先做设计路由，不要进入实现。",
+  "prompt": "用户说：根据 docs/pm/billing-notifications/PRD.md 设计设置页流程和视觉风格，顺手把 React 组件也写了。",
   "fixture_context": [
     "docs/pm/billing-notifications/PRD.md"
   ]

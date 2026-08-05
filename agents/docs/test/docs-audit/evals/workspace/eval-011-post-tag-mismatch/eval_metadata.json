@@ -2,8 +2,7 @@
   "eval_id": "eval-011-post-tag-mismatch",
   "eval_name": "post-tag-mismatch",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-011-post-tag-mismatch",
-  "skill_availability_goal": "Measure whether docs-audit preserves immutable authority and safe recovery when the current copy and final release content diverge.",
-  "prompt": "对 `.eval/release-context.md` 指向的 `v1.2.0` 发布证据执行 post-tag 文档审计。给出结论、决定性差异、可持久化结果以及维护者可执行的后续选择。fixture 只读，不执行真实 tag、branch 或 release 写入。",
+  "prompt": "请根据 `.eval/release-context.md` 中的 `v1.2.0` 发布证据完成文档审计，并说明决定性差异与后续选择。工作区内容只读，不执行真实 tag、branch 或 release 写入。",
   "execution_cleanup": [
     "docs/site/.meta/audit/audit-v1.2.0-post-tag.md"
   ],

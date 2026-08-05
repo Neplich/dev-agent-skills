@@ -2,7 +2,6 @@
   "eval_id": "eval-001-test-from-spec",
   "eval_name": "test-from-spec",
   "workspace_root": "agents/qa/test/spec-based-tester/evals/workspace/eval-1-test-from-spec",
-  "skill_availability_goal": "Verify that spec-based-tester reads documented test context before selecting an execution path.",
   "prompt": "根据 docs/test-spec.md 执行规范测试",
   "fixture_context": [
     "docs/test-spec.md",

@@ -42,7 +42,7 @@
       "id": "eval-002-confirmation-gate",
       "name": "正文未确认时阻塞派生写入",
       "description": "验证候选正文尚未获得用户或维护者确认时，metadata、index 和导航保持零变化，handoff 不得 ready。",
-      "prompt": "请根据 `release-entry.md` 与 `evidence/` 生成 v1.0.0 的站内 Release Notes 候选稿。目前正文尚未获得确认。请执行到确认门禁并报告状态，不要假设确认，也不要执行 GitHub Release、tag、部署或 `docs-agent:docs-audit` 盖章。",
+      "prompt": "请根据 `release-entry.md` 与 `evidence/` 准备 v1.0.0 的站内版本说明。目前正文尚未获得确认。",
       "expected_output": "可以生成并展示候选版本页，但保持宿主 Release Notes index、`.meta/releases.json` 与导航零变化；handoff 为 blocked/not-ready，明确等待正文确认且不运行确认后的派生写入或 ready 流程。",
       "workspace": "workspace/eval-002-confirmation-gate",
       "assertions": [
@@ -97,7 +97,7 @@
       "id": "eval-004-conditional-deployment-recheck",
       "name": "Release Notes 条件式复用部署完整性状态",
       "description": "仅在构建或发布面实质变化时触发共享检查。",
-      "prompt": "比较 evidence.md 的 content-only 与 runtime-entry-change 两种 Release Notes 变更并完成 closeout。",
+      "prompt": "比较 evidence.md 中两种站内版本说明变更并完成本次工作收尾。",
       "expected_output": "content-only 保留原状态；runtime entry 变化复用共享检查，不复制协议。",
       "workspace": "workspace/eval-004-conditional-deployment-recheck",
       "assertions": [

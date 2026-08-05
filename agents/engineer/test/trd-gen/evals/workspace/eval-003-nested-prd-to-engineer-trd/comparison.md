@@ -8,6 +8,9 @@
 - Test case: nested-prd-to-engineer-trd
 - Workspace: `workspace/eval-003-nested-prd-to-engineer-trd`
 - Latest result: PASS - durable comparison coverage updated on 2026-06-25 for a real 4-level PRD -> TRD mirror path; no fresh model transcript or runtime output was generated in this worker pass.
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## Test Set / Fixture Version
 

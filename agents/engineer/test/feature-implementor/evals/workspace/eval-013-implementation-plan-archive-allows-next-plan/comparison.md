@@ -8,6 +8,9 @@
 - Test case: implementation-plan-archive-allows-next-plan
 - Workspace: `workspace/eval-013-implementation-plan-archive-allows-next-plan`
 - Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## Test Set / Fixture Version
 

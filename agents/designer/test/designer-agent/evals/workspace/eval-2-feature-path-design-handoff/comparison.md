@@ -21,7 +21,9 @@
 
 - Behavior result: PASS
 - Coverage result: FULL (4/4 declared assertions exercised)
-- Overall result: PASS
+Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 The current prompt supplies a precise four-level feature path and asks for UI/UX and visual artifacts. It therefore does not exercise the L2-4 “范围已确认但设计类型模糊” fallback; no fallback result is inferred from this fixture.
 

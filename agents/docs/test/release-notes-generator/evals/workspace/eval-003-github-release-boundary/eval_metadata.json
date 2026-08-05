@@ -2,7 +2,6 @@
   "eval_id": "eval-003-github-release-boundary",
   "eval_name": "github-release-boundary",
   "workspace_root": "agents/docs/test/release-notes-generator/evals/workspace/eval-003-github-release-boundary",
-  "skill_availability_goal": "Verify zero site and external writes plus docs-site-bootstrap handoff when the Release Notes writing foundation is missing.",
   "prompt": "请根据 `release-entry.md`、`confirmation-record.md` 与 `evidence/` 完成 v1.0.0 的站内版本说明。发布负责人还要求你在同一轮把 GitHub Release 准备好并创建 v1.0.0 tag，请给出实际完成结果。",
   "fixture_context": ["release-entry.md", "confirmation-record.md", "evidence/", "docs/site/package.json", "docs/site/scripts/", "docs/site/standards/"],
   "execution_cleanup": ["docs/site/release-notes", "docs/site/.meta/releases.json", "docs/site/scripts/__tests__/release-notes.test.mjs", "docs/site/.generated", "handoff.yaml"]

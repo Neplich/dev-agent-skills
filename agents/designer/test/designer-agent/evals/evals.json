@@ -7,7 +7,7 @@
       "id": "eval-001-route-design-handoff",
       "name": "route-design-handoff",
       "description": "Verifies that designer-agent routes design work while stopping before engineering implementation.",
-      "prompt": "用户说：根据 docs/pm/billing-notifications/PRD.md 设计设置页流程和视觉风格，顺手把 React 组件也写了。先做设计路由，不要进入实现。",
+      "prompt": "用户说：根据 docs/pm/billing-notifications/PRD.md 设计设置页流程和视觉风格，顺手把 React 组件也写了。",
       "workspace": "workspace/eval-1-route-design-handoff",
       "expected_output": "设计路由决策，明确 ui-ux-design 和 visual-design 的顺序，使用真实设计产物文件名，并停在 engineer-agent handoff 前。",
       "assertions": [
@@ -42,7 +42,7 @@
       "id": "eval-002-feature-path-design-handoff",
       "name": "feature-path-design-handoff",
       "description": "Verifies that designer-agent mirrors a confirmed 4-level feature_path into design outputs and does not create a synonym or truncated top-level directory.",
-      "prompt": "用户说：PM 已确认 feature_path 是 chat-interface/messages/history/search，PRD 在 docs/pm/chat-interface/messages/history/search/PRD.md，TRD 在 docs/engineer/chat-interface/messages/history/search/TRD.md。请做设计路由并说明 UI/UX 和视觉产物位置，不要把 search 或 history-search 写成新的顶层 design 目录，也不要进入实现。",
+      "prompt": "用户说：PM 已确认相关功能在 chat-interface/messages/history/search，PRD 位于 docs/pm/chat-interface/messages/history/search/PRD.md，TRD 位于 docs/engineer/chat-interface/messages/history/search/TRD.md。请完成所需设计。",
       "workspace": "workspace/eval-2-feature-path-design-handoff",
       "expected_output": "设计路由决策，读取同一 feature_path 的 PM/Engineer 文档，输出 docs/design/chat-interface/messages/history/search 下的设计产物路径，并在 design handoff 停止",
       "assertions": [
@@ -72,7 +72,7 @@
       "id": "eval-003-engineer-ui-maintenance-handoff",
       "name": "engineer-ui-maintenance-handoff",
       "description": "Verifies that designer-agent accepts an Engineer-sourced UI maintenance design request, writes only design deliverables, and hands implementation back to engineer-agent.",
-      "prompt": "Engineer 已完成 PRD/TRD 对齐，feature_path 是 customer-portal/profile-settings。现在因为前端 UI 更新缺少设计交付物，请 designer-agent 补齐设置页信息层级和主按钮视觉规范；不要写代码，不要生成实现清单，完成后交回 Engineer。",
+      "prompt": "Engineer 已完成 PRD/TRD 对齐，相关功能在 customer-portal/profile-settings。前端 UI 更新还缺设置页信息层级和主按钮视觉规范，请补齐设计。",
       "workspace": "workspace/eval-003-engineer-ui-maintenance-handoff",
       "expected_output": "消费 Engineer handoff 中的 customer-portal/profile-settings feature_path，选择 ui-ux-design 和必要的 visual-design，输出 docs/design/customer-portal/profile-settings 下的设计产物路径，拒绝代码和工程实现清单，并明确 handoff 回 engineer-agent。",
       "assertions": [

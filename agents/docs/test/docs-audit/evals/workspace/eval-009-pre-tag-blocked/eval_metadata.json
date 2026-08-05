@@ -2,8 +2,7 @@
   "eval_id": "eval-009-pre-tag-blocked",
   "eval_name": "pre-tag-blocked",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-009-pre-tag-blocked",
-  "skill_availability_goal": "Verify that every staged, unstaged, or untracked delta within audit scope, authorized write paths, or the required evidence inventory blocks success even when it was not offered as passing evidence.",
-  "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已确认 `target_release_version: v1.2.0`；当前工作区同时有尚未提交的实现证据、受影响页面修改、授权 audit record 草稿和 required version source 修改，均不在 `target_ref: release-head` 的 tree 中。请判断这些差异能否参与通过，并给出完整重跑条件。",
+  "prompt": "请审计工作区中定义的待发布版本。维护者已确认 `target_release_version: v1.2.0`；当前工作区有尚未提交的实现证据、受影响页面修改、审计记录草稿和版本来源修改，均不在 `target_ref: release-head` 的 tree 中。请判断这些差异能否参与审计通过，并说明如何重新检查。",
   "execution_cleanup": [
     "docs/site/.meta/audit"
   ],
