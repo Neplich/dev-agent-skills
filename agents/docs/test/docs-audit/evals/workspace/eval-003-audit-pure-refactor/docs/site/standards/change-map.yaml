@@ -1,10 +1,11 @@
 title: Documentation change map
 visibility: internal
-doc_type: standard
+doc_type: design
 stage: release
 owners:
   - documentation-team
-related_code: []
+related_code:
+  - docs/site
 last_verified_version: v1.0.0
 
 change_map:
