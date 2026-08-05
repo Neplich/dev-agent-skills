@@ -58,7 +58,7 @@ PM / Engineer / QA / DevOps（条件式）→ Docs Agent（正式文档生产 / 
 - 下游安全网包含前置与收尾两面：缺少 PM handoff packet、等效已确认文档链或 specialist entry basis 时，温和引导用户经 `pm-agent` 补齐前置；完成当前事项后，主动建议协作链下一步并等待确认，用户已授权 `auto-continue` 时可连续推进直到链路结束或用户喊停。
 - 跨角色收尾与 `auto-continue` 的权威定义在 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` 的 `Safety-Net Closeout and Auto-Continue` 节；`AGENTS.md` 只保留入口契约和指针。
 - SKILL.md frontmatter 的 `visibility: internal` 是声明层标记，Claude Code 与 Codex 都不消费该字段，不隐藏 slash 命令也不阻止显式直调；`pm-agent` 是默认入口，下游标记为 `internal` 仅表示非默认入口。
-- 6 个 role router 只保留入口凭据检查和分流指针，其中 `docs-agent` 分流正式文档站点 bootstrap、API/database/design/ops/product 当前事实 sync、站内 Release Notes 和 audit；PM `github-release-generator` 按 SKILL.md 的宿主文档站适用性判断生成 GitHub Release：有文档站宿主要求站内 Release Notes 已确认且 docs-audit 门禁通过；无文档站宿主降级为维护者确认的版本事实源与维护者显式批准；具体执行 gate 的权威副本留在对应 specialist `SKILL.md`，例如 `feature-implementor` 的 PRD/TRD/plan/archive gate、`debugger` 的 expected-behavior gate、QA specialist 的 E2E gate，以及 Designer/DevOps/Security/Docs specialist 的 feature-scope gate。
+- 6 个 role router 只保留入口凭据检查和分流指针，其中 `docs-agent` 分流正式文档站点 bootstrap、API/database/design/ops/product 当前事实 sync、基于运行界面截图的图文用户操作手册、站内 Release Notes 和 audit；PM `github-release-generator` 按 SKILL.md 的宿主文档站适用性判断生成 GitHub Release：有文档站宿主要求站内 Release Notes 已确认且 docs-audit 门禁通过；无文档站宿主降级为维护者确认的版本事实源与维护者显式批准；具体执行 gate 的权威副本留在对应 specialist `SKILL.md`，例如 `feature-implementor` 的 PRD/TRD/plan/archive gate、`debugger` 的 expected-behavior gate、QA specialist 的 E2E gate，以及 Designer/DevOps/Security/Docs specialist 的 feature-scope gate。
 - 直接调用下游且没有 PM handoff packet、等效已确认文档链或 specialist entry basis 时，不执行下游协议，应温和引导用户经 `pm-agent` 补齐前置并完成入口分类；脚手架请求同样走正常 PM 分类。
 
 **文档依赖**
@@ -145,6 +145,29 @@ skill eval 的 Fresh Sub-Agent 门禁作用于 skill 自身的测试流程，不
 5. 使用新 skill 元数据更新 `skills-lock.json`
 
 6. 添加 eval 测试，并对比使用 skill 与不使用 skill 的结果
+
+### 新增或重命名 Skill 的同步面
+
+向既有 Agent 增加一个 specialist 时，改动会扇出到注册、路由、发现、文档、eval 和过程文档六个面。任一面漏改都不会被契约脚本拦住，但会让 skill 在实际使用中不可达或不可信。按下表逐项核对，不要只改「主要」文件。
+
+| 面 | 必改项 |
+| --- | --- |
+| 注册 | `.claude-plugin/marketplace.json` 的 `skills` 数组；`skills-lock.json` 条目与 `computedHash` |
+| 路由 | router `SKILL.md` 的 Available Skills、Routing Signals、Specialist Gate Pointers、Role Boundary 中列举 specialist 的那句 |
+| **发现** | `.claude-plugin/marketplace.json` 的 agent `description`；router `SKILL.md` 的 frontmatter `description`；`AGENTS.md` 中描述该 router 分流范围的根路由指针句 |
+| 仓库指导 | `AGENTS.md` 的该 Agent specialist 计数与 Specialist skills 总数 |
+| Agent 文档 | `agents/{agent}/README.md` 的 skills 表、计数与 **Routing Rules 小节**；`README_zh.md` 同步 |
+| eval | 新 skill 自己的 evals；**router 的路由 eval**；被本次改动影响的既有 skill 的断言与其 durable `comparison.md` |
+| 过程文档 | PRD/TRD/实施计划的触点表与禁止区必须与实际 diff 一致；父 PRD 的 `child_features` 与其中描述注册面的行 |
+
+加粗项是最容易漏的：
+
+- **发现层**决定客户端在读正文之前是否会选中这个 skill。计数和正文改全了、描述没改，等于新能力在元数据层不存在。
+- **router 路由 eval** 缺失时，路由分支写错也能全绿通过。
+- **既有 skill 的 eval 与 comparison**：本次改动若扩展了它们断言依赖的契约（例如资产数量、类型枚举），旧断言会 stale，旧 `comparison.md` 会让发版评审读到过时结论。此时保留历史结论并标注其适用的旧契约，`Overall result` 记为 `BLOCKED` 待重跑，不要伪造成新的 PASS。
+- **过程文档与实际 diff 的一致性**：计划里写成禁止区、实际却改了的文件，会让后续维护者按文档回退掉必要修改。
+
+扩展共享契约（如 `doc_type` 枚举）时，还要同步其全部副本：权威定义、消费方 skill 中的复制表、以及 `docs-site-bootstrap` 交付给宿主的脚本资产与模板。交付给宿主的脚本副本不会随 marketplace 更新自动升级，存量宿主需重跑 bootstrap，PR 中要说明这一点。
 
 ### Skill 设计原则
 

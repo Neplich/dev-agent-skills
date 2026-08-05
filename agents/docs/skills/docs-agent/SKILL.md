@@ -1,6 +1,6 @@
 ---
 name: docs-agent
-description: "Downstream documentation router invoked after pm-agent handoff. Classifies confirmed formal documentation scope across site bootstrap, synchronization, backfill, site Release Notes, and release audit, then delegates to documentation specialists."
+description: "Downstream documentation router invoked after pm-agent handoff. Classifies confirmed formal documentation scope across site bootstrap, synchronization, backfill, illustrated user operation manuals from real running interfaces, site Release Notes, and release audit, then delegates to documentation specialists."
 visibility: internal
 ---
 
