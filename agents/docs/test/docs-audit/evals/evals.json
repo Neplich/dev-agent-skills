@@ -98,7 +98,7 @@
       "workspace": "workspace/eval-007-frontmatter-contract-fixtures",
       "assertions": [
         {"id": "accepts_confirmed_audit_entry", "description": "接受等效确认的审计入口凭据", "text": "读取 `release-entry.md`，接受其中维护者明确确认的 `target_release_version: v0.4.0`、显式 `base_ref: 4a1b2c3` 与 `target_ref: 7c9e2af`、pre-tag 审计请求及证据清单作为 docs-audit 的等效确认入口。"},
-        {"id": "rejects_standard_doc_type", "description": "拒绝 standard 文档类型", "text": "将 `docs/site/api/invalid-standard-doc-type.md` 因 `doc_type: standard` 不在允许的 landing、release、design、api、database、ops、product 集合中判为 `stale`。"},
+        {"id": "rejects_standard_doc_type", "description": "拒绝 standard 文档类型", "text": "将 `docs/site/api/invalid-standard-doc-type.md` 因 `doc_type: standard` 不在允许的 landing、release、design、api、database、ops、product、manual 集合中判为 `stale`。"},
         {"id": "rejects_empty_related_code", "description": "拒绝空 related_code", "text": "将 `docs/site/api/invalid-empty-related-code.md` 因所有页面都要求 `related_code` 为非空字符串数组而判为 `stale`。"},
         {"id": "rejects_missing_last_verified_version", "description": "拒绝缺少版本核验字段", "text": "将 `docs/site/api/invalid-missing-last-verified-version.md` 因无条件必填的 `last_verified_version` 缺失而判为 `stale`。"},
         {"id": "rejects_empty_owners", "description": "拒绝空 owners", "text": "将 `docs/site/api/invalid-empty-owners.md` 因 `owners` 不是非空字符串数组而判为 `stale`。"},

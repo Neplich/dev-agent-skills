@@ -8,7 +8,7 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: `manual-gen-v0.1.0`
+- Fixture version: `manual-gen-v0.1.1`
 - Environment fixture: no domain environment; local-start consent not yet provided
 - Validation status: not executed as of `2026-08-05`
 

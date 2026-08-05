@@ -8,7 +8,7 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: `manual-gen-v0.1.0`
+- Fixture version: `manual-gen-v0.1.1`
 - Environment fixture: domain unavailable; local startup explicitly refused; no existing screenshots
 - Validation status: not executed as of `2026-08-05`
 

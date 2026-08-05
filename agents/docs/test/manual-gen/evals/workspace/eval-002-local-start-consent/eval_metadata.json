@@ -8,7 +8,7 @@
     "kind": "no_domain_environment",
     "domain_available": false,
     "local_start_consent": "not_yet_provided",
-    "host_checks_execution": "docs/site/package.json provides command definitions only; install the host-locked dependencies in the isolated runtime before Step 7, otherwise report Step 7 as blocked"
+    "host_checks_execution": "run npm run test:docs from docs/site; the command is self-contained and checks the materialized fixture assets without an install step"
   },
   "fixture_context": [
     "pm-handoff.md",

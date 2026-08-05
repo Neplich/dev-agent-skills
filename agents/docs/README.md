@@ -2,8 +2,9 @@
 
 `docs-agent` is the seventh role Agent and the owner of the formal
 documentation layer. It routes explicit documentation-site bootstrap,
-evidence-backed synchronization and backfill, site Release Notes delivery, and
-release documentation audit requests to the matching documentation specialist.
+evidence-backed synchronization and backfill, illustrated user operation
+manuals from real running interfaces, site Release Notes delivery, and release
+documentation audit requests to the matching documentation specialist.
 
 > [!NOTE]
 > Other languages: [中文](./README_zh.md)
@@ -20,7 +21,7 @@ release documentation audit requests to the matching documentation specialist.
 | Entry skill | `docs-agent` |
 | Specialist skills | 5 |
 | Main inputs | PM handoff context, approved product documents, confirmed engineering documents, code and test evidence, deployment evidence, fact-changing security conclusion or remediation evidence, release context |
-| Main outputs | Formal documentation-site scaffolding, current-state formal docs, change-map updates, confirmed site Release Notes, release audit reports |
+| Main outputs | Formal documentation-site scaffolding, current-state formal docs, illustrated user operation manuals with screenshot assets, change-map updates, confirmed site Release Notes, release audit reports |
 | Collaboration | Downstream of confirmed PM, Engineer, QA, and DevOps evidence; supports release readiness without replacing their role contracts |
 
 ## Skills

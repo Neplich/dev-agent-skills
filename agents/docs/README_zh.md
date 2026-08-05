@@ -1,6 +1,6 @@
 # Docs Agent
 
-`docs-agent` 是第七个角色 Agent，也是正式文档层的所有者。它将明确的文档站点 bootstrap、基于证据的同步与回填、站内 Release Notes 交付，以及发布文档审计请求路由到匹配的文档 specialist。
+`docs-agent` 是第七个角色 Agent，也是正式文档层的所有者。它将明确的文档站点 bootstrap、基于证据的同步与回填、基于真实运行界面的图文用户操作手册、站内 Release Notes 交付，以及发布文档审计请求路由到匹配的文档 specialist。
 
 > [!NOTE]
 > 其他语言：[English](./README.md)
@@ -15,7 +15,7 @@
 | 入口 skill | `docs-agent` |
 | Specialist skills | 5 个 |
 | 主要输入 | PM handoff 上下文、已批准的产品文档、已确认的工程文档、代码和测试证据、部署证据、改变事实的 Security 结论或整改证据、发布上下文 |
-| 主要输出 | 正式文档站点脚手架、当前状态的正式文档、change-map 更新、已确认的站内 Release Notes、发布审计报告 |
+| 主要输出 | 正式文档站点脚手架、当前状态的正式文档、带截图资产的图文用户操作手册、change-map 更新、已确认的站内 Release Notes、发布审计报告 |
 | 协作关系 | 位于已确认的 PM、Engineer、QA 和 DevOps 证据下游；在不取代其角色契约的前提下支持发布就绪 |
 
 ## Skill 清单

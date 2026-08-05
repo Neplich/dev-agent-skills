@@ -79,7 +79,8 @@ Treat `pm-agent` as the first stop for all user-side starting points, including:
 - security conclusion escalations returned to PM for entry classification and
   issue filing
 - formal documentation site bootstrap, post-feature / deployment / release
-  synchronization, existing formal-docs backfill, or release documentation audit
+  synchronization, existing formal-docs backfill, illustrated user operation
+  manuals from real running interfaces, or release documentation audit
 - GitHub issue, PR, milestone, release, changelog, roadmap, or repo status work
 
 ## Request Classification Protocol

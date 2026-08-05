@@ -5,7 +5,7 @@
 Multi-agent skills for the full software delivery lifecycle.
 
 [![Agents](https://img.shields.io/badge/agents-7-blue)](#agents)
-[![Skills](https://img.shields.io/badge/skills-38-green)](#agents)
+[![Skills](https://img.shields.io/badge/skills-39-green)](#agents)
 [![License](https://img.shields.io/badge/license-Apache%202.0-orange)](LICENSE)
 
 `pm-agent` • `designer-agent` • `engineer-agent` • `qa-agent` • `devops-agent` • `security-agent` • `docs-agent`
@@ -24,7 +24,7 @@ This repository publishes seven role-based agents from one marketplace/source, c
 It includes:
 
 - 1 public PM entry skill plus 6 downstream role routers
-- 31 internal specialist skills across product, engineering, QA, DevOps, design, security, and formal documentation work
+- 32 internal specialist skills across product, engineering, QA, DevOps, design, security, and formal documentation work
 - Claude Code marketplace configuration
 - Codex native skill discovery installation instructions
 - Kimi Code native plugin manifest

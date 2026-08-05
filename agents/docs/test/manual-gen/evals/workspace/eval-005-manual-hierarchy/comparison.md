@@ -4,11 +4,11 @@
 
 - Skill: `manual-gen`
 - Eval: `eval-005-manual-hierarchy`
-- Target behavior: express platform, business, and operation semantics while keeping the operation layer reproducible for its target role
+- Target behavior: express platform, business, and operation semantics while keeping the operation layer reproducible for its target role, then keep the page unverified and return a blocked audit handoff until the maintainer confirms `target_release_version`
 
 ## Test Set / Fixture Version
 
-- Fixture version: `manual-gen-v0.1.0`
+- Fixture version: `manual-gen-v0.1.1`
 - Environment fixture: `https://mermaid.live/`, one bounded anonymous diagram-author task batch
 - Capture script: `scripts/capture-hierarchy-task.spec.md`
 - Validation status: not executed as of `2026-08-05`
@@ -23,7 +23,7 @@ Overall result: BLOCKED
 
 ## With-Skill Behavior
 
-- Not observed. The future lane must adapt hierarchy labels and paths to host evidence while preserving the three required semantic levels.
+- Not observed. The future lane must adapt hierarchy labels and paths to host evidence while preserving the three required semantic levels, then stop the docs-audit handoff as blocked because the prompt has no confirmed release version.
 - No fixed business module name, directory tree, screenshot, manual page, or navigation result is asserted by this durable file.
 
 ## Fresh Without-Skill Baseline

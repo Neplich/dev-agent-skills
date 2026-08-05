@@ -4,11 +4,11 @@
 
 - Skill: `manual-gen`
 - Eval: `eval-004-share-link-identifier`
-- Target behavior: document the real export and share flow while keeping the environment-specific pako payload out of durable text
+- Target behavior: document the real export and share flow while keeping the environment-specific pako payload out of durable text, then keep the page unverified and return a blocked audit handoff until the maintainer confirms `target_release_version`
 
 ## Test Set / Fixture Version
 
-- Fixture version: `manual-gen-v0.1.0`
+- Fixture version: `manual-gen-v0.1.1`
 - Environment fixture: `https://mermaid.live/`, anonymous export and share flow
 - Capture script: `scripts/capture-export-share.spec.md`
 - Validation status: not executed as of `2026-08-05`
@@ -23,7 +23,7 @@ Overall result: BLOCKED
 
 ## With-Skill Behavior
 
-- Not observed. The future lane must capture the real flow in scratch space and let the judge inspect all durable text for accidental pako payload disclosure.
+- Not observed. The future lane must capture the real flow in scratch space, let the judge inspect all durable text for accidental pako payload disclosure, and stop the docs-audit handoff as blocked because the prompt has no confirmed release version.
 - This file contains no share URL, generated payload, screenshot, manual page, or claimed viewport evidence.
 
 ## Fresh Without-Skill Baseline

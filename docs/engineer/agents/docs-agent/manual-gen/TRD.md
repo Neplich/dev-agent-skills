@@ -1,7 +1,7 @@
 ---
 title: "Manual Gen TRD"
 type: TRD
-version: "0.1.3"
+version: "0.1.4"
 status: Approved
 author: "Neplich Claude Code"
 date: "2026-08-05"
@@ -28,6 +28,9 @@ related_code:
   - ".claude-plugin/marketplace.json"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.4"
+    date: "2026-08-05"
+    changes: "自审收敛：同步当前 PRD 版本，补齐 per-agent manifest、依赖 eval 与 fixture 命令契约触点"
   - version: "0.1.3"
     date: "2026-08-05"
     changes: "注册表补发现层与 PM 入口触点；截图卫生收窄为排除任务无关浮层，保留操作步骤依赖的菜单与对话框"
@@ -46,7 +49,7 @@ changelog:
 
 ## 1. 来源、范围与分级
 
-本 TRD 把 `docs/pm/agents/docs-agent/manual-gen/PRD.md`（v1.0.1，FR-M01~M16）转换为可实施设计。PRD 由 issue #226 及其维护者决策记录蒸馏而来。
+本 TRD 把 `docs/pm/agents/docs-agent/manual-gen/PRD.md`（v1.0.2，FR-M01~M16）转换为可实施设计。PRD 由 issue #226 及其维护者决策记录蒸馏而来。
 
 本 feature 新增一个 specialist、扩展 `docs-agent` 拥有的共享 frontmatter 契约、修改 `docs-site-bootstrap` 交付给宿主的脚本资产，并改动 marketplace 注册表，按仓库「变更分级契约」判定为 `change_tier: major`。
 
@@ -97,10 +100,11 @@ manual: { directory: 'manual', template: 'manual-guide.md' }
 
 ## 4. manual 模板与根索引
 
-新增两个宿主资产文件，形态对齐现有五类：
+新增两个宿主资产文件，并同步模板入口索引，形态对齐现有五类：
 
 - `assets/docs/site/standards/templates/manual-guide.md`：模板页自身 frontmatter 用 `doc_type: manual`，正文说明写作纪律，`<!-- docs-scaffold:start -->` / `end` 之间是唯一的 `md` fence 骨架。
 - `assets/docs/site/manual/index.md`：类型根索引，`doc_type: landing`，与 `api/index.md`、`product/index.md` 等既有根索引一致。
+- `assets/docs/site/standards/index.md`：模板入口从五项更新为六项，并链接 `manual-guide.md`。
 
 `docs-scaffold` 块固化 PRD FR-M08 的七项字段：
 
@@ -182,12 +186,13 @@ agents/docs/skills/manual-gen/
 | 文件 | 改动 |
 |---|---|
 | `.claude-plugin/marketplace.json` | `docs-agent` 的 `skills` 数组增加 `./skills/manual-gen`；agent `description` 加图文手册能力 |
+| `agents/docs/.claude-plugin/plugin.json` | per-agent plugin `description` 加图文手册能力 |
 | `skills-lock.json` | 增加 manual-gen 条目；`computedHash` 由契约脚本随 SKILL.md 改动刷新，属同一变更 |
 | `agents/docs/skills/docs-agent/SKILL.md` | Available Skills、Routing Signals、Specialist Gate Pointers 三处各加一条；frontmatter `description` 与 Role Boundary 列举句同步 |
-| `agents/docs/README.md` / `README_zh.md` | skills 表、Specialist skills 计数 4 → 5、Routing Rules 小节 |
+| `agents/docs/README.md` / `README_zh.md` | 能力摘要与主要输出补图文手册；skills 表、Specialist skills 计数 4 → 5、Routing Rules 小节同步 |
 | `AGENTS.md` | `docs-agent` skill 数 4 → 5，Specialist skills 总数 31 → 32，根路由指针句加手册分流 |
-| 根 `README.md` / `README_zh.md` | 顶层 Agent 表的 Docs Agent 行 `5 (1 + 4)` → `6 (1 + 5)` 并补图文手册能力 |
-| `agents/product_manager/skills/pm-agent/SKILL.md` | Downstream Role Handoff Targets、`formal_docs` 分类行、Default Routes 三处补图文手册 |
+| 根 `README.md` / `README_zh.md` | Skills 徽章 38 → 39、概览 specialist 总数 31 → 32；顶层 Agent 表的 Docs Agent 行 `5 (1 + 4)` → `6 (1 + 5)` 并补图文手册能力 |
+| `agents/product_manager/skills/pm-agent/SKILL.md` | Downstream Role Handoff Targets、User Entry Coverage、`formal_docs` 分类行、Default Routes 四处补图文手册 |
 
 `docs-agent` 路由信号措辞：按「基于运行界面截图生成或更新站内图文用户操作手册」分流，与 `formal-docs-sync` 的「同步当前事实」在证据链上区分，避免两者路由重叠。
 
@@ -205,6 +210,8 @@ agents/docs/test/manual-gen/evals/
 ```
 
 每个 workspace 含 `eval_metadata.json`、`comparison.md`、环境描述文件，以及需要 Playwright 采集的用例对应的 `scripts/*.spec.md`。
+
+共享契约变更的依赖 eval 同批同步：`docs-agent` router 增加 manual 路由用例；`docs-audit` 增加 manual 事实审计并更新 frontmatter 枚举用例；`docs-site-bootstrap` 更新资产计数、枚举断言及旧 comparison 的待重跑状态。manual-gen fixture 的 `docs/site/package.json` 只声明 fixture 内可直接运行的自包含 `test:docs`，不引用未物化的宿主 `scripts/` 树。
 
 **执行入口**：优先 Playwright，绕开 `codex exec` 与 Codex app Chrome 扩展的宿主差异，保证 with-skill 与新生成的 `without_skill` baseline 都能在同一入口下运行。
 

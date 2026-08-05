@@ -1,7 +1,7 @@
 ---
 title: "Manual Gen 实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.4.0"
+version: "0.5.0"
 status: Implemented
 author: "Neplich Claude Code"
 date: "2026-08-05"
@@ -18,6 +18,9 @@ related_trd: "docs/engineer/agents/docs-agent/manual-gen/TRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/226"
 changelog:
+  - version: "0.5.0"
+    date: "2026-08-05"
+    changes: "自审收敛：修复 fixture 命令、版本引用、发现描述、聚合计数与 stale eval，并补齐过程文档触点"
   - version: "0.4.0"
     date: "2026-08-05"
     changes: "批次 C 补齐发现层与 PM 入口触点（C1/C3/C6 描述、C7 根 README、C8 pm-agent 分类），并收窄截图卫生的浮层排除范围"
@@ -41,12 +44,14 @@ changelog:
 
 | 项 | 结果 |
 |---|---|
-| PRD 对齐 | `already_approved` — `docs/pm/agents/docs-agent/manual-gen/PRD.md` v1.0.1，FR-M01~M16 与 US-M01~M10 覆盖本次全部改动 |
-| TRD | `docs/engineer/agents/docs-agent/manual-gen/TRD.md` v0.1.2，`related_prd` 指向同 feature path 的 PRD |
+| PRD 对齐 | `already_approved` — `docs/pm/agents/docs-agent/manual-gen/PRD.md` v1.0.2，FR-M01~M16 与 US-M01~M10 覆盖本次全部改动 |
+| TRD | `docs/engineer/agents/docs-agent/manual-gen/TRD.md` v0.1.4，`related_prd` 指向同 feature path 的 PRD |
 | Feature path 门禁 | PRD / TRD / 本计划三者 `feature_path`、`parent_feature`、`feature_level` 一致 |
 | Archive 扫描 | 新 feature path，无 active plan 也无 archive history，不需要 `previous_plan_archive` |
 | UI 设计门禁 | 不适用。本次产出是 skill 契约文档与宿主脚本资产，不改动任何前端页面结构、交互流程或视觉系统，无需 Designer 输入 |
 | `change_tier` | `major`，保持完整计划确认流程 |
+
+父级 `docs/pm/agents/docs-agent/PRD.md` 的 `child_features` 与 marketplace 注册计数属于已批准的 PM 输入同步；TRD 与本计划自身属于本轮过程文档，不重复列入实现批次。其余 `main` 至当前工作树的总差异均由下列 A～D 批次覆盖。
 
 ## 2. 交付批次
 
@@ -68,6 +73,7 @@ changelog:
 | A10 | `agents/docs/skills/docs-site-bootstrap/assets/docs/site/.vitepress/config.internal.ts` | 修改 — internal 顶部 `nav` 增加 `/manual/` 入口 | TRD §3 / FR-M10 |
 | A11 | `agents/docs/skills/docs-site-bootstrap/assets/docs/site/index.public.md` | 修改 — public 落地页增加操作手册链接 | TRD §3 / FR-M10 |
 | A12 | `agents/docs/skills/docs-site-bootstrap/assets/docs/site/index.internal.md` | 修改 — internal 落地页增加操作手册链接 | TRD §3 / FR-M10 |
+| A13 | `agents/docs/skills/docs-site-bootstrap/assets/docs/site/standards/index.md` | 修改 — 模板入口计数改为六项并链接 manual 模板 | TRD §4 / FR-M11 |
 
 依赖：A3 的 `SECTION_ORDER` 需与 A4 的 `SECTION_LABELS` 同批次改，否则 sidebar 生成时取到 `undefined` 标签。
 
@@ -97,11 +103,12 @@ changelog:
 | C1 | `.claude-plugin/marketplace.json` | 修改 — `docs-agent.skills` 加 `./skills/manual-gen`；**agent `description` 加图文手册能力** | TRD §8 |
 | C2 | `skills-lock.json` | 修改 — 加 manual-gen 条目，`computedHash` 随契约脚本刷新 | TRD §8 |
 | C3 | `agents/docs/skills/docs-agent/SKILL.md` | 修改 — Available Skills、Routing Signals、Specialist Gate Pointers 各加一条；**frontmatter `description` 与 Role Boundary 列举句同步** | TRD §8 |
-| C4 | `agents/docs/README.md` | 修改 — skills 表、Specialist skills 计数 4 → 5、**Routing Rules 小节** | TRD §8 |
-| C5 | `agents/docs/README_zh.md` | 修改 — 同步 skills 表、计数与 Routing Rules | TRD §8 |
+| C4 | `agents/docs/README.md` | 修改 — 能力摘要与主要输出补图文手册；skills 表、Specialist skills 计数 4 → 5、**Routing Rules 小节**同步 | TRD §8 |
+| C5 | `agents/docs/README_zh.md` | 修改 — 同步能力摘要、主要输出、skills 表、计数与 Routing Rules | TRD §8 |
 | C6 | `AGENTS.md` | 修改 — `docs-agent` skill 数 4 → 5，Specialist skills 总数 31 → 32，**根路由指针句加手册分流** | TRD §8 |
-| C7 | 根 `README.md` / `README_zh.md` | 修改 — 顶层 Agent 表的 Docs Agent 行由 `5 (1 + 4)` 改为 `6 (1 + 5)` 并补图文手册能力 | TRD §8 |
-| C8 | `agents/product_manager/skills/pm-agent/SKILL.md` | 修改 — Downstream Role Handoff Targets、`formal_docs` 分类行、Default Routes 三处补图文手册，使默认用户入口能分类该请求 | TRD §8 |
+| C7 | 根 `README.md` / `README_zh.md` | 修改 — Skills 徽章 38 → 39、概览 specialist 总数 31 → 32；顶层 Agent 表由 `5 (1 + 4)` 改为 `6 (1 + 5)` 并补图文手册能力 | TRD §8 |
+| C8 | `agents/product_manager/skills/pm-agent/SKILL.md` | 修改 — Downstream Role Handoff Targets、User Entry Coverage、`formal_docs` 分类行、Default Routes 四处补图文手册，使默认用户入口能分类该请求 | TRD §8 |
+| C9 | `agents/docs/.claude-plugin/plugin.json` | 修改 — per-agent plugin `description` 补图文手册能力 | TRD §8 |
 
 依赖：批次 B 完成（`skills-lock.json` 的 hash 依赖 SKILL.md 最终内容）。
 
@@ -119,6 +126,9 @@ C1、C3、C6、C7、C8 属发现层：客户端与 PM 入口在读正文前先�
 | D4 | `.../workspace/eval-003-no-environment-blocked/` | 新建 — 同上，环境描述标明环境不可用 | TRD §9 |
 | D5 | `.../workspace/eval-004-share-link-identifier/` | 新建 — 同上，覆盖导出与分享流程 | TRD §9 |
 | D6 | `.../workspace/eval-005-manual-hierarchy/` | 新建 — 同上，判定三层次语义 | TRD §9 |
+| D7 | `agents/docs/test/docs-agent/evals/**` | 修改 — 增加 manual-gen 路由用例及 durable comparison | TRD §9 |
+| D8 | `agents/docs/test/docs-audit/evals/**` | 修改 — 增加 manual 事实审计，更新 frontmatter 枚举断言与受影响 comparison | TRD §9 |
+| D9 | `agents/docs/test/docs-site-bootstrap/evals/**` | 修改 — 同步 42 项资产、六模板、manual 枚举与旧 comparison 待重跑状态 | TRD §9 |
 
 依赖：批次 B 完成。
 
@@ -172,8 +182,8 @@ skill 行为验证（fresh subagent validation 与 `without_skill` baseline）�
 |---|---|---|
 | A | 同步 `manual` frontmatter 枚举与审计副本，接入 scaffold、bootstrap inventory、唯一 manual 模板与类型根索引 | Implemented |
 | B | 新增 `manual-gen` 入口门禁、条件式环境协商与八步截图证据执行契约 | Implemented |
-| C | 完成 router、marketplace、skills-lock、双语 README 与仓库计数注册 | Implemented |
-| D | 新增 5 个语义 eval、5 份 metadata、5 份未执行 comparison 与 3 个 Playwright 脚本片段 | Implemented |
+| C | 完成 router、root/per-agent marketplace、skills-lock、双语 README 与仓库计数注册 | Implemented |
+| D | 新增 5 个 manual-gen 语义 eval，并同步 router、audit、bootstrap 的依赖 eval 与 durable comparison | Implemented |
 
 ### 7.2 验证结果
 
@@ -183,7 +193,8 @@ skill 行为验证（fresh subagent validation 与 `without_skill` baseline）�
 | `UV_CACHE_DIR=/tmp/manual-gen-uv-cache uv run scripts/check_eval_contract.py` | PASS |
 | `UV_CACHE_DIR=/tmp/manual-gen-uv-cache uv run scripts/check_eval_artifacts.py` | PASS |
 | `UV_CACHE_DIR=/tmp/manual-gen-uv-cache uv run scripts/check_doc_contract.py` | PASS |
-| CI 同款 `uv run --with pytest pytest ...` | PASS：213 passed（Claude 主进程本机复跑。codex 会话内该命令因 sandbox 禁止访问 PyPI 而 BLOCKED，属环境限制，非实现缺陷） |
+| CI 同款 `uv run --with pytest pytest ...` | 历史 PASS：213 passed；本次自审重跑 BLOCKED：网络沙箱禁止访问 PyPI，当前环境无可复用 pytest，未产生测试失败 |
+| 5 个 manual-gen fixture 的 `npm run test:docs` | PASS：每个命令均只检查本 fixture 已物化的 manual 根索引、change map 与 manual 模板，无 install 步骤或缺失脚本引用 |
 | 临时宿主初始化 | PASS：复制 `docs-site-bootstrap` 交付资产（42 个文件），`git init` 后建立两个 commit |
 | 临时宿主 `npm ci --offline --ignore-scripts` | PASS：从本地缓存安装锁定依赖 |
 | `npm run new:doc -- --type manual --path docs/site/manual/diagram-authoring/create-first-diagram.md --title "创建第一张图表" --visibility both --stage dev --owner docs --related-code "src/routes/editor/**"` | PASS：输出 `"dryRun": false`、`"docType": "manual"`、`"lastVerifiedVersion": "unverified"`，页面真实落盘 |
@@ -199,5 +210,6 @@ skill 行为验证（fresh subagent validation 与 `without_skill` baseline）�
 - 本轮按实施范围只创建 durable eval 资产，未执行 fresh subagent validation，也未生成新的 `without_skill` baseline；5 份 `comparison.md` 均如实记录 `Overall result: BLOCKED`。
 - 未创建或跟踪截图、lane、transcript、verdict、timing、status、diagnostics 等运行期 eval 产物。
 - 独立核验发现并修复一处实现缺陷：`manual-guide.md` 的 `docs-scaffold` 块内原含完整 Markdown 图片语法 `![...](./step-1-example.png)`，指向不存在的文件。宿主 `prepare-site.mjs` 的 `referencedAssets()` 以纯文本正则提取引用，不区分 fence 内外，会在每次站点构建产生一条 `file does not exist` 警告。现有五类模板均无图片引用，属本次新引入。已改为不构成可解析图片语法的描述式说明，复测捕获引用数为 0，并同步刷新 `docs-site-bootstrap` 的 `computedHash`。
-- 残余验证缺口是 Playwright live selector 尚待 fresh eval 实际验证；没有已知实现缺口。
+- 本次自审修复了 fixture 命令自相矛盾、版本引用、发现描述与计数、stale eval、截图卫生断言及过程文档触点等已核实问题；当前没有已知实现缺口。
+- 残余验证缺口是 Playwright live selector 与本轮更新后的 eval assertions 尚待 fresh paired eval 实际验证；CI 同款 pytest 本轮也因网络沙箱无法获取 pytest 而未重跑成功。
 - 下一 owner 为维护者：按仓库 Fresh Sub-Agent 门禁决定何时执行 5 个 eval；本轮不 commit、不 push、不建 PR。

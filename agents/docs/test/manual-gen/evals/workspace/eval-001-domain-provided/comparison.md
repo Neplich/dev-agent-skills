@@ -4,11 +4,11 @@
 
 - Skill: `manual-gen`
 - Eval: `eval-001-domain-provided`
-- Target behavior: use a maintainer-provided domain to produce one bounded, evidence-backed illustrated manual batch without entering the local-start branch
+- Target behavior: use a maintainer-provided domain to produce one bounded, evidence-backed illustrated manual batch without entering the local-start branch, then keep it unverified and return a blocked audit handoff until the maintainer confirms `target_release_version`
 
 ## Test Set / Fixture Version
 
-- Fixture version: `manual-gen-v0.1.0`
+- Fixture version: `manual-gen-v0.1.1`
 - Environment fixture: `https://mermaid.live/`, anonymous access, maintainer-provided domain
 - Capture script: `scripts/capture-basic-editing.spec.md`
 - Validation status: not executed as of `2026-08-05`
@@ -23,7 +23,7 @@ Overall result: BLOCKED
 
 ## With-Skill Behavior
 
-- Not observed. A fresh isolated lane must read and apply `manual-gen`, use the provided domain, and keep all generated pages and screenshots in scratch space.
+- Not observed. A fresh isolated lane must read and apply `manual-gen`, use the provided domain, keep all generated pages and screenshots in scratch space, and stop the docs-audit handoff as blocked because the prompt has no confirmed release version.
 - No screenshot, manual page, change-map delta, viewport evidence, host-check result, or handoff is claimed by this durable file.
 
 ## Fresh Without-Skill Baseline

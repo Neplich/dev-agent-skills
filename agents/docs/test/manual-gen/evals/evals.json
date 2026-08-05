@@ -8,7 +8,7 @@
       "name": "域名环境下生成有限范围图文手册",
       "description": "验证维护者已提供可访问域名时，skill 使用真实运行界面证据完成范围确认、视口校验、有限采集与正式文档 handoff。",
       "prompt": "维护者已提供截图环境 https://mermaid.live/，并确认本批只为匿名使用者记录一条基础编辑与预览流程。宿主文档站基础、manual 模板和 change map 均已存在。请按 manual-gen 协议执行；截图和生成页面只能写入隔离运行目录，不得写回 eval fixture。",
-      "expected_output": "在已提供的域名环境中先展示并确认有限页面树，选择符合三级优先级的执行入口，分别记录 1920×1080 视口设定与实际回读，基于真实界面生成图文操作手册，运行宿主检查和渲染验收后 handoff docs-audit；报告剩余候选且不扩大范围。",
+      "expected_output": "在已提供的域名环境中先展示并确认有限页面树，选择符合三级优先级的执行入口，分别记录 1920×1080 视口设定与实际回读，基于真实界面生成图文操作手册并运行宿主检查和渲染验收；由于没有维护者确认的 target_release_version，页面保持 unverified，返回等待发版上下文的 blocked docs-audit handoff；报告剩余候选且不扩大范围。",
       "workspace": "workspace/eval-001-domain-provided",
       "assertions": [
         {
@@ -29,7 +29,7 @@
         {
           "id": "captures_sanitized_product_evidence",
           "description": "截图只保留一致且洁净的产品界面",
-          "text": "截图来自真实运行界面，同批保持统一视口、缩放、主题和导航状态，去除浏览器外壳、加载态、菜单及促销或营销临时浮层，不使用无关示例图。"
+          "text": "截图来自真实运行界面，同批保持统一视口、缩放、主题和导航状态，去除浏览器外壳、加载态及与已确认操作无关的菜单、促销或营销临时浮层；保留步骤本身依赖的菜单或对话框作为产品证据，不使用无关示例图。"
         },
         {
           "id": "writes_evidence_bounded_manual",
@@ -38,8 +38,8 @@
         },
         {
           "id": "checks_render_and_handoffs_audit",
-          "description": "宿主检查与渲染验收后正确交接",
-          "text": "记录宿主 docs 检查及渲染目视验收的权威命令、工作目录、执行状态与结果；依赖可用且检查通过时，确认截图可见、图文对应、导航可达后 handoff docs-agent:docs-audit；锁定依赖不可用时如实在第 7 步 blocked，不跳过检查、不编造结果、不把未执行的渲染验收或 handoff 标为完成；不生成 Release Notes、不发版。"
+          "description": "宿主检查与渲染验收后遵守版本交接门禁",
+          "text": "记录宿主 docs 检查及渲染目视验收的权威命令、工作目录、执行状态与结果；检查通过且截图可见、图文对应、导航可达后，因 prompt 未提供维护者确认的 target_release_version，页面保持 unverified，并返回明确等待发版上下文的 blocked docs-agent:docs-audit handoff；检查失败时如实在第 7 步 blocked，不跳过检查、不编造结果；不生成 Release Notes、不发版。"
         }
       ]
     },
@@ -108,7 +108,7 @@
       "name": "导出分享手册隐藏环境长串标识",
       "description": "验证导出与分享流程以真实界面为证据，同时不把分享链接中的 pako 编码串原样写入正文、图注或报告。",
       "prompt": "维护者提供 https://mermaid.live/，并确认本批覆盖匿名用户的导出与分享流程。分享动作会产生包含 pako 编码串的长链接。请基于真实界面生成该批手册，截图与页面只写隔离运行目录。",
-      "expected_output": "采集真实的导出与分享界面，保留可复现的控件与结果说明；分享链接只描述用途或使用脱敏占位，不在正文、图注、报告或持久化元数据中复制 pako 编码串，并完成视口、截图卫生、检查与 handoff 契约。",
+      "expected_output": "采集真实的导出与分享界面，保留可复现的控件与结果说明；分享链接只描述用途或使用脱敏占位，不在正文、图注、报告或持久化元数据中复制 pako 编码串，并完成视口、截图卫生与宿主检查；由于没有维护者确认的 target_release_version，页面保持 unverified，返回等待发版上下文的 blocked docs-audit handoff。",
       "workspace": "workspace/eval-004-share-link-identifier",
       "assertions": [
         {
@@ -129,7 +129,7 @@
         {
           "id": "preserves_capture_and_audit_contract",
           "description": "视口、卫生、验收与交接契约不因分享场景弱化",
-          "text": "仍分别记录 1920×1080 设定和实际回读，清除浏览器外壳与临时营销浮层，页面保持 unverified，并记录宿主检查与渲染验收的权威命令、工作目录、执行状态和结果；依赖可用且检查通过时 handoff docs-agent:docs-audit，锁定依赖不可用时如实在第 7 步 blocked，不跳过检查、不编造结果、不把未执行的渲染验收或 handoff 标为完成。"
+          "text": "仍分别记录 1920×1080 设定和实际回读，清除浏览器外壳与无关临时营销浮层，保留分享步骤依赖的菜单或对话框，页面保持 unverified，并记录宿主检查与渲染验收的权威命令、工作目录、执行状态和结果；检查通过后因 prompt 未提供维护者确认的 target_release_version，返回明确等待发版上下文的 blocked docs-agent:docs-audit handoff；检查失败时如实在第 7 步 blocked，不跳过检查、不编造结果。"
         }
       ]
     },
@@ -138,7 +138,7 @@
       "name": "手册呈现平台业务操作三层语义",
       "description": "验证手册按平台定位、业务场景和可执行操作三个层次组织，并让目标角色可以依据可见界面和预期结果复现任务。",
       "prompt": "维护者提供 https://mermaid.live/，并确认一个覆盖匿名图表作者基础任务的有限批次。请按宿主既有信息架构组织手册，使读者能从平台定位下钻到业务场景和具体操作；不要预设业务模块名称或硬编码新的站点目录。",
-      "expected_output": "候选树与成品在语义上体现平台层、业务层、操作层：平台层解释定位、对象和角色边界，业务层解释场景、目的和能力关系，操作层提供真实界面支持的可复现步骤与结果；层级适配宿主现状并通过导航和渲染验收。",
+      "expected_output": "候选树与成品在语义上体现平台层、业务层、操作层：平台层解释定位、对象和角色边界，业务层解释场景、目的和能力关系，操作层提供真实界面支持的可复现步骤与结果；层级适配宿主现状并通过导航和渲染验收。由于没有维护者确认的 target_release_version，页面保持 unverified，返回等待发版上下文的 blocked docs-audit handoff。",
       "workspace": "workspace/eval-005-manual-hierarchy",
       "assertions": [
         {
@@ -159,7 +159,7 @@
         {
           "id": "keeps_hierarchy_navigable_and_evidence_backed",
           "description": "三层导航可达且由真实证据支持",
-          "text": "候选确认体现三个语义层次可逐级导航，操作页截图来自实际 1920×1080 回读通过的界面，related_code 可定位，且页面与资产只覆盖维护者确认的单批范围；记录宿主渲染验收的权威命令、工作目录、执行状态和结果，依赖可用时以渲染证明导航可达，锁定依赖不可用时如实在第 7 步 blocked，不编造导航或渲染通过。"
+          "text": "候选确认体现三个语义层次可逐级导航，操作页截图来自实际 1920×1080 回读通过的界面，related_code 可定位，且页面与资产只覆盖维护者确认的单批范围；记录宿主渲染验收的权威命令、工作目录、执行状态和结果，依赖可用时以渲染证明导航可达；因 prompt 未提供维护者确认的 target_release_version，页面保持 unverified，并返回明确等待发版上下文的 blocked docs-agent:docs-audit handoff；检查失败时如实在第 7 步 blocked，不编造导航或渲染通过。"
         }
       ]
     }
