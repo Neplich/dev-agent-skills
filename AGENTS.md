@@ -157,6 +157,7 @@ skill eval 的 Fresh Sub-Agent 门禁作用于 skill 自身的测试流程，不
 | **发现** | `.claude-plugin/marketplace.json` 的 agent `description`；router `SKILL.md` 的 frontmatter `description`；`AGENTS.md` 中描述该 router 分流范围的根路由指针句 |
 | 仓库指导 | `AGENTS.md` 的该 Agent specialist 计数与 Specialist skills 总数 |
 | Agent 文档 | `agents/{agent}/README.md` 的 skills 表、计数与 **Routing Rules 小节**；`README_zh.md` 同步 |
+| 顶层入口 | 根 `README.md` / `README_zh.md` 的 Agent 表计数与能力描述；**`pm-agent/SKILL.md` 的 handoff targets、请求分类行与 Default Routes** |
 | eval | 新 skill 自己的 evals；**router 的路由 eval**；被本次改动影响的既有 skill 的断言与其 durable `comparison.md` |
 | 过程文档 | PRD/TRD/实施计划的触点表与禁止区必须与实际 diff 一致；父 PRD 的 `child_features` 与其中描述注册面的行 |
 
@@ -164,6 +165,7 @@ skill eval 的 Fresh Sub-Agent 门禁作用于 skill 自身的测试流程，不
 
 - **发现层**决定客户端在读正文之前是否会选中这个 skill。计数和正文改全了、描述没改，等于新能力在元数据层不存在。
 - **router 路由 eval** 缺失时，路由分支写错也能全绿通过。
+- **PM 入口分类**：`pm-agent` 是默认用户入口，用户不点名 skill 时全部经它分类。下游 router 认识新 specialist，但 PM 的分类词典里没有对应说法时，该能力对普通用户不可达。
 - **既有 skill 的 eval 与 comparison**：本次改动若扩展了它们断言依赖的契约（例如资产数量、类型枚举），旧断言会 stale，旧 `comparison.md` 会让发版评审读到过时结论。此时保留历史结论并标注其适用的旧契约，`Overall result` 记为 `BLOCKED` 待重跑，不要伪造成新的 PASS。
 - **过程文档与实际 diff 的一致性**：计划里写成禁止区、实际却改了的文件，会让后续维护者按文档回退掉必要修改。
 

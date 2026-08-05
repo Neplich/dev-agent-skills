@@ -1,7 +1,7 @@
 ---
 title: "Manual Gen TRD"
 type: TRD
-version: "0.1.2"
+version: "0.1.3"
 status: Approved
 author: "Neplich Claude Code"
 date: "2026-08-05"
@@ -28,6 +28,9 @@ related_code:
   - ".claude-plugin/marketplace.json"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.3"
+    date: "2026-08-05"
+    changes: "注册表补发现层与 PM 入口触点；截图卫生收窄为排除任务无关浮层，保留操作步骤依赖的菜单与对话框"
   - version: "0.1.2"
     date: "2026-08-05"
     changes: "修正站点导航触点：侧边栏自动生成，顶部导航与落地页链接需更新双站点配置和索引"
@@ -178,11 +181,13 @@ agents/docs/skills/manual-gen/
 
 | 文件 | 改动 |
 |---|---|
-| `.claude-plugin/marketplace.json` | `docs-agent` 的 `skills` 数组增加 `./skills/manual-gen` |
+| `.claude-plugin/marketplace.json` | `docs-agent` 的 `skills` 数组增加 `./skills/manual-gen`；agent `description` 加图文手册能力 |
 | `skills-lock.json` | 增加 manual-gen 条目；`computedHash` 由契约脚本随 SKILL.md 改动刷新，属同一变更 |
-| `agents/docs/skills/docs-agent/SKILL.md` | Available Skills、Routing Signals、Specialist Gate Pointers 三处各加一条 |
-| `agents/docs/README.md` | Specialist skills 计数 4 → 5 |
-| `AGENTS.md` | `docs-agent` skill 数 4 → 5，Specialist skills 总数 31 → 32 |
+| `agents/docs/skills/docs-agent/SKILL.md` | Available Skills、Routing Signals、Specialist Gate Pointers 三处各加一条；frontmatter `description` 与 Role Boundary 列举句同步 |
+| `agents/docs/README.md` / `README_zh.md` | skills 表、Specialist skills 计数 4 → 5、Routing Rules 小节 |
+| `AGENTS.md` | `docs-agent` skill 数 4 → 5，Specialist skills 总数 31 → 32，根路由指针句加手册分流 |
+| 根 `README.md` / `README_zh.md` | 顶层 Agent 表的 Docs Agent 行 `5 (1 + 4)` → `6 (1 + 5)` 并补图文手册能力 |
+| `agents/product_manager/skills/pm-agent/SKILL.md` | Downstream Role Handoff Targets、`formal_docs` 分类行、Default Routes 三处补图文手册 |
 
 `docs-agent` 路由信号措辞：按「基于运行界面截图生成或更新站内图文用户操作手册」分流，与 `formal-docs-sync` 的「同步当前事实」在证据链上区分，避免两者路由重叠。
 

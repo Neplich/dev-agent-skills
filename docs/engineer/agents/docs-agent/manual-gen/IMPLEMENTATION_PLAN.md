@@ -1,7 +1,7 @@
 ---
 title: "Manual Gen 实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.3.1"
+version: "0.4.0"
 status: Implemented
 author: "Neplich Claude Code"
 date: "2026-08-05"
@@ -18,6 +18,9 @@ related_trd: "docs/engineer/agents/docs-agent/manual-gen/TRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/226"
 changelog:
+  - version: "0.4.0"
+    date: "2026-08-05"
+    changes: "批次 C 补齐发现层与 PM 入口触点（C1/C3/C6 描述、C7 根 README、C8 pm-agent 分类），并收窄截图卫生的浮层排除范围"
   - version: "0.3.1"
     date: "2026-08-05"
     changes: "修正导航触点与上游版本对齐，记录 manual 脚手架真实写入和宿主检查的端到端验证结果"
@@ -91,14 +94,18 @@ changelog:
 
 | # | 文件 | 动作 | 来源 |
 |---|---|---|---|
-| C1 | `.claude-plugin/marketplace.json` | 修改 — `docs-agent.skills` 加 `./skills/manual-gen` | TRD §8 |
+| C1 | `.claude-plugin/marketplace.json` | 修改 — `docs-agent.skills` 加 `./skills/manual-gen`；**agent `description` 加图文手册能力** | TRD §8 |
 | C2 | `skills-lock.json` | 修改 — 加 manual-gen 条目，`computedHash` 随契约脚本刷新 | TRD §8 |
-| C3 | `agents/docs/skills/docs-agent/SKILL.md` | 修改 — Available Skills、Routing Signals、Specialist Gate Pointers 各加一条 | TRD §8 |
-| C4 | `agents/docs/README.md` | 修改 — Specialist skills 计数 4 → 5 | TRD §8 |
-| C5 | `agents/docs/README_zh.md`（若存在） | 修改 — 同步计数 | TRD §8 |
-| C6 | `AGENTS.md` | 修改 — `docs-agent` skill 数 4 → 5，Specialist skills 总数 31 → 32 | TRD §8 |
+| C3 | `agents/docs/skills/docs-agent/SKILL.md` | 修改 — Available Skills、Routing Signals、Specialist Gate Pointers 各加一条；**frontmatter `description` 与 Role Boundary 列举句同步** | TRD §8 |
+| C4 | `agents/docs/README.md` | 修改 — skills 表、Specialist skills 计数 4 → 5、**Routing Rules 小节** | TRD §8 |
+| C5 | `agents/docs/README_zh.md` | 修改 — 同步 skills 表、计数与 Routing Rules | TRD §8 |
+| C6 | `AGENTS.md` | 修改 — `docs-agent` skill 数 4 → 5，Specialist skills 总数 31 → 32，**根路由指针句加手册分流** | TRD §8 |
+| C7 | 根 `README.md` / `README_zh.md` | 修改 — 顶层 Agent 表的 Docs Agent 行由 `5 (1 + 4)` 改为 `6 (1 + 5)` 并补图文手册能力 | TRD §8 |
+| C8 | `agents/product_manager/skills/pm-agent/SKILL.md` | 修改 — Downstream Role Handoff Targets、`formal_docs` 分类行、Default Routes 三处补图文手册，使默认用户入口能分类该请求 | TRD §8 |
 
 依赖：批次 B 完成（`skills-lock.json` 的 hash 依赖 SKILL.md 最终内容）。
+
+C1、C3、C6、C7、C8 属发现层：客户端与 PM 入口在读正文前先按这些描述选路，只改正文与计数会让新能力在元数据层不可达。
 
 路由信号措辞按证据链区分：`manual-gen` 是「基于运行界面截图生成或更新站内图文用户操作手册」，`formal-docs-sync` 是「同步当前事实」，避免路由重叠。
 

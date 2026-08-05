@@ -89,8 +89,14 @@ the site's responsive mobile layout.
 
 Keep the same viewport, zoom, theme, and navigation state throughout one
 manual. Capture product content only. Exclude browser tabs, address bar,
-toolbars, window borders, loading states, open menus, translation popups,
-promotional banners, marketing dialogs, and other temporary overlays.
+toolbars, window borders, loading states, translation popups, promotional
+banners, marketing dialogs, and other overlays unrelated to the documented
+task.
+
+A menu or dialog that is itself part of the confirmed operation is product
+evidence, not an overlay to remove: when a step opens an export, share, or
+similar control, capture that expanded menu or dialog as the step's visible
+interface. Exclude only overlays that no confirmed step depends on.
 
 Use test data by default. Hide tokens, keys, email addresses, personal
 information, costs, and invocation logs. Do not copy environment-specific long

@@ -4,7 +4,7 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "a3e366cf13fadefec19161aeb4a080bfb805098910468e4f1b518c9de6eb20fa"
+      "computedHash": "fa1fee1e5e3c416a4c2aed46a7ea2dc5ec72e27ceb3aa40ecbb5bc9e4f0b32ad"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
@@ -189,7 +189,7 @@
     "manual-gen": {
       "source": "agents/docs/skills/manual-gen",
       "sourceType": "local",
-      "computedHash": "7219f4b3e2e544861166b37d3c60a09c952f56cea25a61d1c9c2f13928788830"
+      "computedHash": "80660b5716969d16709d1b0703ab72feba3f5bf20dafc6784e148df3f85d7bfc"
     },
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",
