@@ -7,7 +7,7 @@
       "id": "eval-001-explore-web-app",
       "name": "explore-web-app",
       "description": "Verifies that exploratory-tester handles explore-web-app and produces the expected role-specific artifact.",
-      "prompt": "对当前可访问的目标应用进行探索测试，基于产品上下文、变更范围和环境说明发现潜在问题并验证探索协议",
+      "prompt": "对当前可访问的目标应用进行探索测试，基于产品上下文、变更范围和环境说明发现潜在问题。",
       "workspace": "workspace/eval-1-explore-web-app",
       "expected_output": "探索测试报告，包含发现的问题列表和复现路径",
       "assertions": [

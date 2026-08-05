@@ -2,8 +2,7 @@
   "eval_id": "eval-015-flat-hierarchy-migration-proposal",
   "eval_name": "flat-hierarchy-migration-proposal",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-015-flat-hierarchy-migration-proposal",
-  "skill_availability_goal": "Verify flat API pages with confirmed common-domain evidence trigger a one-time migration proposal in candidate-scope confirmation without moving pages or deepening the flat layout.",
-  "prompt": "维护者已通过 `pm-handoff.md` 确认本次 feature delivery 范围：把新上线的会话消息 API 同步到文档站。fixture 提供 PRD、Confirmed TRD、已完成的实施计划、路由与 schema 代码、通过的 contract tests，以及现有文档站。请按正式同步协议完成本批次的候选范围确认。本轮不要替维护者确认范围，也不要写入文档站。",
+  "prompt": "维护者已通过 `pm-handoff.md` 确认本次范围：把新上线的会话消息 API 同步到文档站。工作区提供 PRD、TRD、已完成的实施计划、路由与 schema 代码、通过的 contract tests，以及现有文档站。请先提出本次修改范围供维护者确认。",
   "fixture_context": [
     "pm-handoff.md",
     "docs/pm/feature-catalog.md",

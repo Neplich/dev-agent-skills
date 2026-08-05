@@ -12,6 +12,9 @@
 
 ## Latest Result
 
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 **PASS** — with-skill 以接口证据核查发现代码 10 MB 与文档 20 MB 的上限冲突，按 gate 停在 PM 决策点补齐产品基线，未带着未验证预期起草 TRD。
 
 ## With-Skill Behavior

@@ -9,6 +9,9 @@
 - Workspace: `workspace/eval-004-api-adr-owned-by-engineer`
 - Evaluation date: 2026-07-26
 - Latest result: PASS - 本轮由当前会话中同一个 fresh Codex subagent 按 no-answer-key 顺序重新生成并锁定 `with_skill` 与新的 `without_skill` baseline；fresh judge 判定 `with_skill` 满足 5/5 assertions，baseline 满足 3/5。skill 的增益体现在明确的 Engineer ownership、完整路径元数据与 `related_prd` 契约。
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## Test Set / Fixture Version
 

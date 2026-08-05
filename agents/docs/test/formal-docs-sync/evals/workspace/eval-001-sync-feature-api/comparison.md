@@ -16,6 +16,9 @@
 
 ## Latest Result
 
+- Overall result: PASS
+- Discrimination note: 修复后隔离重跑（2026-08-05，fresh 会话、workspace 仓库外拷贝）with/without 均满足全部断言。成因：宿主 handoff 材料（pm-handoff.md 的 required_output、change-map.yaml 模板、feature-catalog）天然承载候选树/change-map/零写入结构，按 AGENTS.md 泄漏判定表属「规则天然存在于 skill 交付物」，非泄漏缺陷，如实记录。skill 特有行为差异（新增页面 internal 收紧、change-map exclude 完整性）未落入断言粒度，建议后续增强断言。
+
 **PASS (with skill 6/6; without skill 3/6)** — the skill lane satisfied the full unconfirmed-batch protocol, while the fresh baseline retained only generic tree derivation, scope protection, and read-only behavior. Comparative discrimination is restored.
 
 ## Assertions

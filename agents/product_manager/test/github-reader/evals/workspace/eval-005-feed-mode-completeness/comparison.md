@@ -9,6 +9,9 @@
 - Workspace: `workspace/eval-005-feed-mode-completeness`
 - Classification: `(c)` 依赖实时外部数据；验证下游 skill 调用时是否产出机器可读 Feed YAML，并使完整性信号与 Markdown 声明一致。
 - Latest result: **PASS** — 当前会话中的 fresh validator 按 no-leak 顺序独立执行两个 live arm。with-skill 满足 3/3 assertions，without-skill 满足 0/3。
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## Test Set / Fixture Version
 

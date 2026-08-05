@@ -20,7 +20,9 @@
 
 - Behavior result: **PASS**
 - Coverage result: **FULL**
-Overall result: PASS
+Overall result: BLOCKED
+- Blocking reason: test
+
 
 All three assertions were evaluated and passed in this fresh paired run. The repaired fixture's formal PRD frontmatter supplies the confirmed `saas-dashboard` feature path and PM scope needed for the skill to produce the canonical design artifact.
 

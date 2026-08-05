@@ -7,7 +7,7 @@
       "id": "eval-001-audit-mismatch",
       "name": "审计文档与代码直接冲突",
       "description": "验证 API 文档声明与当前代码事实直接冲突时判定 mismatch，并阻塞 release 且不盖章。",
-      "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`。审计 fixture 中已确认的 `base_ref` `4a1b2c3` 到 `target_ref` `5d6e7f8` 范围。请执行两层 docs audit，以代码为 ground truth，持久化报告并给出阶段结果；不要修复文档或代码。",
+      "prompt": "维护者确认本次检查的目标版本为 `v1.1.0`，范围是已确认的 `base_ref` `4a1b2c3` 到 `target_ref` `5d6e7f8`。请审计正式文档，以代码为事实依据，保存报告并给出结果。",
       "expected_output": "命中映射 API 页面，指出 POST 文档声明与 GET 代码事实的冲突，结论为 mismatch，pre-tag audit blocked，列出证据且不写版本盖章。",
       "workspace": "workspace/eval-001-audit-mismatch",
       "assertions": [
@@ -21,7 +21,7 @@
       "id": "eval-002-audit-stale-doc",
       "name": "审计映射命中文档确实过期",
       "description": "验证代码新增必填参数而 required_docs 未同批更新时，先记 suspect，再由事实层确认 stale 并阻塞。",
-      "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`。审计 fixture 中已确认的 `base_ref` `6a1b2c3` 到 `target_ref` `7d6e5f4` 范围。请执行确定性层和事实层，持久化报告并给出阶段结果；不要同步文档。",
+      "prompt": "维护者确认本次检查的目标版本为 `v1.1.0`，范围是已确认的 `base_ref` `6a1b2c3` 到 `target_ref` `7d6e5f4`。请审计正式文档，保存报告并给出结果。",
       "expected_output": "未同批更新的映射页面先标 suspect，事实核对确认缺少新增必填 locale 参数后判 stale，pre-tag audit blocked 且不盖章。",
       "workspace": "workspace/eval-002-audit-stale-doc",
       "assertions": [
@@ -35,7 +35,7 @@
       "id": "eval-003-audit-pure-refactor",
       "name": "审计纯实现重构",
       "description": "验证 diff 虽命中 change-map，但外部 API 声明仍准确时由 suspect 转为 verified，且不强制无意义文档编辑。",
-      "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`。审计 fixture 中已确认的 `base_ref` `81a2b3c` 到 `target_ref` `92d3e4f` 范围。请核对命中映射但未更新的 API 页面；只评估页面事实结论，不要为满足同 diff 更新而改写准确文档，也不要在缺少 Release Notes 等版本表面时宣称 `ready_for_tag`。",
+      "prompt": "维护者确认本次检查的目标版本为 `v1.1.0`，范围是已确认的 `base_ref` `81a2b3c` 到 `target_ref` `92d3e4f`。请核对受影响但未更新的 API 页面并给出审计结论。",
       "expected_output": "映射命中页面先为 suspect，经事实层确认方法、路径、参数和响应未变后判 verified，不要求编辑文档；整体 pre-tag audit 因 fixture 未提供完整版本表面证据而 blocked，不盖章。",
       "workspace": "workspace/eval-003-audit-pure-refactor",
       "assertions": [
@@ -49,7 +49,7 @@
       "id": "eval-004-audit-all-verified",
       "name": "全部 verified 后统一盖章",
       "description": "验证维护者确认的 target_release_version 下，完整影响域全部 verified 且只读 release metadata 一致时，在隔离事务内生成完整 candidate/discovery producer schema，不修改 releases.json。",
-      "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`，显式 `base_ref` 为 `a1b2c3d`、`target_ref` 为 `b2c3d4e`，且匹配 tag 尚不存在。请审计 fixture；仅在完整影响域和所有 release-version surfaces 全部通过时统一盖章并持久化报告。`.meta/releases.json` 由 `docs-agent:release-notes-generator` 维护，本审计只能读取核对。",
+      "prompt": "维护者确认本次检查的目标版本为 `v1.1.0`，`base_ref` 为 `a1b2c3d`、`target_ref` 为 `b2c3d4e`，且匹配 tag 尚不存在。请审计正式文档并保存报告。",
       "expected_output": "两张受审 API 页面均 verified；带 v 的目标版本、Release Notes/索引/releases.json 与无 v 的 package.json 先按来源校验再规范化为同一 SemVer；四页统一盖章集在隔离 candidate 内回读，只读核对 releases.json；candidate record 只写 candidate_verified 和完整 producer schema，经两次 staged gate 与 anchor commit 确认后再生成固定 discovery handoff，handoff commit 集成并回读后才返回 ready_for_tag，且不表述为已发布。",
       "workspace": "workspace/eval-004-audit-all-verified",
       "assertions": [
@@ -65,7 +65,7 @@
       "id": "eval-005-audit-doc-only-error",
       "name": "拦截纯文档错误声明",
       "description": "验证没有代码 diff 时，变更的正式文档页面仍直接进入影响域并由事实层拦截错误声明。",
-      "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.1.0`。审计 fixture 中已确认的 `base_ref` `c1d2e3f` 到 `target_ref` `d2e3f4a` 范围。该范围只有正式文档变更；请仍执行完整事实核对，持久化报告并给出阶段结果。",
+      "prompt": "维护者确认本次检查的目标版本为 `v1.1.0`，范围是已确认的 `base_ref` `c1d2e3f` 到 `target_ref` `d2e3f4a`，该范围只有正式文档变更。请完成审计并给出结果。",
       "expected_output": "直接纳入纯文档变更页面，以 related_code 定位事实，发现新写的 DELETE 声明与代码冲突，判 mismatch 并 blocked，不因无代码 diff 放行。",
       "workspace": "workspace/eval-005-audit-doc-only-error",
       "assertions": [
@@ -79,7 +79,7 @@
       "id": "eval-006-audit-no-version-anchor",
       "name": "缺少目标版本时阻塞写入",
       "description": "验证没有维护者明确确认的 target_release_version 时只能做只读诊断，阶段结果 blocked，禁止报告持久化和版本盖章。",
-      "prompt": "审计已确认的 `base_ref` `e1f2a3b` 到真实 `target_ref` commit `7c9e2af` 范围。宿主没有 tag、GitHub Release，也没有维护者明确确认的 `target_release_version`。请按 docs-audit 新模型处理：可以给出只读诊断，但不要从 ref 或分支推测版本。",
+      "prompt": "请审计已确认的 `base_ref` `e1f2a3b` 到真实 `target_ref` commit `7c9e2af` 范围。宿主没有 tag、GitHub Release，也没有维护者确认的目标版本。",
       "expected_output": "阶段结果 blocked；可描述只读事实诊断，但不持久化版本化审计报告，不使用 target SHA 回退命名，不盖章、不修改 releases.json。",
       "workspace": "workspace/eval-006-audit-no-version-anchor",
       "assertions": [
@@ -93,7 +93,7 @@
       "id": "eval-007-frontmatter-contract-fixtures",
       "name": "审计 frontmatter 契约合法与非法页面组",
       "description": "验证 docs-audit 在读取等效确认的 release 审计入口凭据后，与生成端使用同一 frontmatter 契约：一个合法 API 页面进入事实层，四个非法页面按具体契约错误判 stale 并阻塞 release。",
-      "prompt": "`release-entry.md` 提供了维护者明确确认的 `target_release_version`、显式 `base_ref`/`target_ref`、pre-tag 审计请求与证据清单。请据此对 fixture 站点执行 docs-audit frontmatter 判定并给出阶段结果。逐页使用 docs-agent 的 frontmatter 契约真源核对字段合法性；对合法页面继续进入事实层，对非法页面记录具体 stale 原因。不要修复 fixture。",
+      "prompt": "`release-entry.md` 提供了维护者确认的目标版本、明确的 `base_ref`、`target_ref`、审计请求与证据清单。请据此审计工作区中的文档站并给出结果。",
       "expected_output": "先接受 release-entry.md 的等效确认入口凭据并分别解析 target_release_version、base_ref 与 target_ref；合法 API 页面通过 frontmatter 校验并进入事实层；doc_type: standard、related_code: []、缺 last_verified_version、owners: [] 四个页面分别因对应契约错误记为 stale；pre-tag audit blocked、不得返回 ready_for_tag 且不得局部盖章。",
       "workspace": "workspace/eval-007-frontmatter-contract-fixtures",
       "assertions": [
@@ -111,7 +111,7 @@
       "id": "eval-008-pre-tag-success",
       "name": "Tag 前完整核验并统一盖章",
       "description": "验证维护者已确认 target_release_version、匹配 tag 尚不存在且完整影响域和版本表面均 verified 时，通过隔离 candidate、两次 staged gate、anchor 与 discovery handoff 的完整事务返回 ready_for_tag。",
-      "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已明确确认 `target_release_version: v1.2.0`，`base_ref: v1.1.0`、`target_ref: release-head`，且同名 tag 尚不存在。核对完整受影响页面、release-notes-generator handoff、Release Notes、索引、`.meta/releases.json` 和宿主版本事实；全部通过后，在从 target_ref 创建的隔离 worktree 中统一盖章并生成只含 candidate_verified 的候选记录。对初稿和原子替换后的最终记录各执行一次完整 raw metadata staged gate；创建并确认 anchor commit 后，才写固定 discovery handoff、创建并确认 handoff commit。只有正常 fast-forward 集成和回读也通过才向 `pm-agent:github-release-generator` handoff。",
+      "prompt": "请审计工作区中定义的待发布版本。维护者已确认 `target_release_version: v1.2.0`、`base_ref: v1.1.0`、`target_ref: release-head`，且同名 tag 尚不存在。",
       "expected_output": "完整影响域和 release surface 全部 verified；版本来源规范化为同一 SemVer；隔离 candidate 的四页统一盖章与 candidate record 通过两次完整 staged gate，candidate 不含 ready_for_tag；anchor commit 的提交后 raw metadata/content/tree/blob 确认通过后才生成固定 discovery handoff，handoff commit 由外部包锚定并正常 fast-forward 集成；最终集成回读后才返回 ready_for_tag，且明确不表示已发布。",
       "workspace": "workspace/eval-008-pre-tag-success",
       "assertions": [
@@ -133,7 +133,7 @@
       "id": "eval-009-pre-tag-blocked",
       "name": "Tag 前任一 scope 内工作区差异阻塞",
       "description": "验证任一落入审计范围、授权写路径或 required evidence inventory 的 staged、unstaged、untracked 差异均只能诊断并 blocked，不限于被用作事实证据的修改。",
-      "prompt": "执行 fixture 中定义的 pre-tag audit。维护者已确认 `target_release_version: v1.2.0`；当前工作区同时有尚未提交的实现证据、受影响页面修改、授权 audit record 草稿和 required version source 修改，均不在 `target_ref: release-head` 的 tree 中。请判断这些差异能否参与通过，并给出完整重跑条件。",
+      "prompt": "请审计工作区中定义的待发布版本。维护者已确认 `target_release_version: v1.2.0`；当前工作区有尚未提交的实现证据、受影响页面修改、审计记录草稿和版本来源修改，均不在 `target_ref: release-head` 的 tree 中。请判断这些差异能否参与审计通过，并说明如何重新检查。",
       "expected_output": "逐项识别 scope 内 staged/unstaged/untracked 差异并直接 blocked；所有通过依据只从精确 target_ref tree 的普通 blob 读取，不得盖章、构建 candidate、写 discovery 或返回 ready_for_tag；要求先处理并提交所有 scope 内差异、更新 target_ref 后从头完整重跑。",
       "workspace": "workspace/eval-009-pre-tag-blocked",
       "assertions": [
@@ -147,7 +147,7 @@
       "id": "eval-010-post-tag-match",
       "name": "Tag 后 handoff 优先与 tag-tree 固定路径兜底",
       "description": "验证 post-tag 在直接 handoff 与 fresh-clone 对象缺失两种输入下，能从原始 release evidence 独立建立可信结论。",
-      "prompt": "对 `.eval/release-context.md` 指向的 `v1.2.0` 发布证据执行 post-tag 文档审计。分别评估 direct-handoff 与 fresh-clone 两个场景，给出每个场景的结论、决定性证据、持久化边界和下一步。fixture 只读，不执行真实 tag、branch 或 release 写入。",
+      "prompt": "请根据 `.eval/release-context.md` 中的 `v1.2.0` 发布证据完成文档审计，分别评估直接交接与全新克隆两种场景。工作区内容只读，不执行真实 tag、branch 或 release 写入。",
       "expected_output": "两个场景都能验证不可变发布内容，但因独立 post-tag evidence branch 未获维护者确认而返回 `blocked`；输出保留已通过的 authority/tree/version 证据，并说明缺失的持久化凭据与不可变上游边界。",
       "workspace": "workspace/eval-010-post-tag-match",
       "assertions": [
@@ -162,7 +162,7 @@
       "id": "eval-011-post-tag-mismatch",
       "name": "Tag 名正确但混入未审计代码",
       "description": "验证 post-tag 面对当前副本漂移、same-version 历史和未审计 tag 增量时，能维持可信 authority 并安全阻塞。",
-      "prompt": "对 `.eval/release-context.md` 指向的 `v1.2.0` 发布证据执行 post-tag 文档审计。给出结论、决定性差异、可持久化结果以及维护者可执行的后续选择。fixture 只读，不执行真实 tag、branch 或 release 写入。",
+      "prompt": "请根据 `.eval/release-context.md` 中的 `v1.2.0` 发布证据完成文档审计，并说明决定性差异与后续选择。工作区内容只读，不执行真实 tag、branch 或 release 写入。",
       "expected_output": "识别可信 pre-tag authority 与当前副本的差异，并因实际发布内容包含未审计增量而返回 `blocked`；保留既有 evidence，给出安全的结果记录和维护者补救边界。",
       "workspace": "workspace/eval-011-post-tag-mismatch",
       "assertions": [
@@ -177,7 +177,7 @@
       "id": "eval-012-staged-metadata-rollback",
       "name": "Staged mode/type/symlink/rename/delete 越界与事务回滚",
       "description": "验证 pre-tag candidate 面对非文本 Git 变更和失败事务时，能阻止越界并证明宿主状态未受污染。",
-      "prompt": "审查 `.eval/` 中的 pre-tag candidate 快照，给出该 attempt 是否可继续、决定性证据、失败后的清理范围与成功状态边界。fixture 只读，不实际修改 Git worktree、index 或 ref。",
+      "prompt": "请审查 `.eval/` 中的待发布快照，判断本次尝试是否可以继续，并说明决定性证据和后续处理。工作区内容只读，不实际修改 Git worktree、index 或 ref。",
       "expected_output": "该 candidate 因越出授权内容变更而 `blocked`；输出覆盖决定性 Git 证据、隔离 attempt 清理和宿主状态恢复证明，且不产生 anchor、handoff 或 `ready_for_tag`。",
       "workspace": "workspace/eval-012-staged-metadata-rollback",
       "assertions": [
@@ -192,7 +192,7 @@
       "id": "eval-013-version-normalization-boundaries",
       "name": "SemVer 预发布、大小写与多来源缺失边界",
       "description": "验证 pre-tag 与 post-tag 对多来源版本事实建立稳定、无损且可复核的 identity。",
-      "prompt": "审查 `.eval/version-cases.md` 中的版本来源与观测值。分别给出 pre-tag 和 post-tag 的有效 identity、全部 blocker、持久化证据要求与阶段结论。不要修改 fixture。",
+      "prompt": "请审查 `.eval/version-cases.md` 中的版本来源与观测值，分别给出发布前和发布后的检查结论。不要修改工作区内容。",
       "expected_output": "合法来源形成同一完整版本 identity；所有缺失、非法或不一致的来源都被独立报告并阻止阶段成功，且 pre-tag 产出的来源绑定可由 post-tag 对实际发布对象复核。",
       "workspace": "workspace/eval-013-version-normalization-boundaries",
       "assertions": [
@@ -219,7 +219,7 @@
       "id": "eval-015-manual-page-evidence",
       "name": "手册页面截图与导航事实审计",
       "description": "验证 manual 页面事实层逐项检查截图存在且可解析、图注与步骤对应、导航可达和敏感信息脱敏。",
-      "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.3.0`，确认来源为本 eval prompt。审计 fixture 中已确认的 `base_ref` `1a2b3c4` 到 `target_ref` `5d6e7f8` 范围仅变更一张 manual 页面及其截图。请执行 docs-audit 事实层检查，逐项报告截图、图注、导航与脱敏结论；fixture 未提供完整 release-version surfaces，不要盖章或返回 `ready_for_tag`，不要修复 fixture。",
+      "prompt": "维护者确认本次检查的目标版本为 `v1.3.0`，范围是已确认的 `base_ref` `1a2b3c4` 到 `target_ref` `5d6e7f8`，只变更一张用户手册页面及其截图。请审计这次变更；工作区没有提供完整的版本发布材料。",
       "expected_output": "manual 页面因第二步截图缺失、第一步图注与操作不符、页面未从手册导航到达且正文和截图含应脱敏的测试标识而 blocked；报告逐项保留证据，页面维持 unverified。",
       "workspace": "workspace/eval-015-manual-page-evidence",
       "assertions": [

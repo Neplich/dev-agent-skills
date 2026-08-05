@@ -2,7 +2,6 @@
   "eval_id": "eval-003-with-reference",
   "eval_name": "Design with Reference Website",
   "workspace_root": "agents/designer/test/ui-ux-design/evals/workspace/eval-003-with-reference",
-  "skill_availability_goal": "Design UI/UX using a reference website for style inspiration",
   "prompt": "pm-agent 已完成入口分类并路由至 ui-ux-design；确认 handoff 见 workspace `PM_HANDOFF.md`，已确认 `feature_path: productivity-app-landing`。Use the confirmed PRD and `references/linear-app-patterns.md` as the stable reference basis. Design a landing page for a productivity app. Reference website: https://linear.app for clean, modern aesthetic.",
   "fixture_context": [
     "PM_HANDOFF.md",

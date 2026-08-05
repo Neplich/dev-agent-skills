@@ -37,7 +37,7 @@
       "id": "eval-002-feature-path-audit",
       "name": "feature-path-audit",
       "description": "Verifies that env-config-auditor uses a confirmed 4-level feature_path and does not create a synonymous or truncated DevOps report directory.",
-      "prompt": "对 chat-interface/messages/history/search 这个功能做环境配置审计。仓库里已经有 docs/pm/chat-interface/messages/history/search/PRD.md、docs/engineer/chat-interface/messages/history/search/TRD.md 和 docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md。请把 feature-scoped 报告写到正确的 DevOps 路径；如果路径不清就应回 PM/Engineer，而不是新建并列目录。",
+      "prompt": "对 chat-interface/messages/history/search 这个功能做环境配置审计。仓库里已有 docs/pm/chat-interface/messages/history/search/PRD.md、docs/engineer/chat-interface/messages/history/search/TRD.md 和 docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md。",
       "workspace": "workspace/eval-002-feature-path-audit",
       "expected_output": "读取同一 feature_path 下的 PM/Engineer 文档，输出 docs/devops/chat-interface/messages/history/search/ENV_AUDIT.md，不生成 docs/devops/history-search/ENV_AUDIT.md 或 docs/devops/chat-interface/history-search/ENV_AUDIT.md。",
       "assertions": [
@@ -91,9 +91,21 @@
       "expected_output": "逐环境报告 DNS/TLS、认证或网络限制、端口、探针、Ingress/Gateway、配置引用与未知项。",
       "workspace": "workspace/eval-004-docs-entry-access-audit",
       "assertions": [
-        {"id": "audits_public_and_internal_access", "description": "审计 Public 与 Internal 入口", "text": "Public 核对 DNS/TLS；Internal 核对认证、网络限制或等效访问控制，并逐一覆盖 staging/production。"},
-        {"id": "audits_runtime_environment_differences", "description": "核对运行环境差异", "text": "核对端口、探针/健康检查、Service/Ingress/Gateway values、secret/config 引用和环境差异。"},
-        {"id": "does_not_overclaim_missing_evidence", "description": "缺证据不误判", "text": "权限或运行证据缺失时记录 unknown；可达 endpoint 或文档域名本身不能证明集成，并只把落地验证事实交 formal-docs-sync。"}
+        {
+          "id": "audits_public_and_internal_access",
+          "description": "审计 Public 与 Internal 入口",
+          "text": "Public 核对 DNS/TLS；Internal 核对认证、网络限制或等效访问控制，并逐一覆盖 staging/production。"
+        },
+        {
+          "id": "audits_runtime_environment_differences",
+          "description": "核对运行环境差异",
+          "text": "核对端口、探针/健康检查、Service/Ingress/Gateway values、secret/config 引用和环境差异。"
+        },
+        {
+          "id": "does_not_overclaim_missing_evidence",
+          "description": "缺证据不误判",
+          "text": "权限或运行证据缺失时记录 unknown；可达 endpoint 或文档域名本身不能证明集成，并只把落地验证事实交 formal-docs-sync。"
+        }
       ]
     }
   ]

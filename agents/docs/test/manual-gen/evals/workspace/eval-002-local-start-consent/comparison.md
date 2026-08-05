@@ -21,7 +21,9 @@
 - Behavior result: `PASS` — with_skill 在本轮实际触发的路径上满足对应 assertions，无回归。
 - Coverage result: `FULL` — 本 eval 的全部 assertion 场景均已触发。
 
-Overall result: PASS
+Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## With-Skill Behavior
 

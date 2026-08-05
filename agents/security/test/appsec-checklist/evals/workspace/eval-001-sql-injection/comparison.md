@@ -9,6 +9,9 @@
 - Workspace: `workspace/eval-001-sql-injection`
 - Review context: issue #143 thin fixture 补齐后的 Fresh Codex 复验
 - Latest result: PASS（4/4 assertions）- fresh Codex paired validation completed on 2026-07-21
+- Overall result: PASS
+- Discrimination note: 修复后隔离重跑（2026-08-05）with/without 均满足全部断言。成因：模型基线能力已覆盖通用安全审查（识别注入/严重度/修复建议），按 AGENTS.md 泄漏判定表属「模型基线能力覆盖」，记为 skill 生命周期信号交 issue 审查，不硬修。
+
 
 ## Test Set / Fixture Version
 

@@ -2,7 +2,7 @@
   "eval_id": "eval-001-saas-dashboard",
   "eval_name": "saas-dashboard-design-structure",
   "workspace_root": "agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard",
-  "prompt": "PM 已经产出 saas-dashboard 的 PRD（docs/pm/saas-dashboard/PRD.md）：项目管理 dashboard，用户需要查看 projects、tasks、team members 和 activity timeline，目标用户为 5-20 人小团队。请 designer agent 阅读该 spec，补充 UI/UX 设计文档。设计完成后停止在 handoff，不要直接开始修改代码或输出实现步骤。",
+  "prompt": "PM 已经产出 saas-dashboard 的 PRD（docs/pm/saas-dashboard/PRD.md）：项目管理 dashboard，用户需要查看 projects、tasks、team members 和 activity timeline，目标用户为 5-20 人小团队。请阅读该文档并补充 UI/UX 设计。",
   "with_skill_outputs": [
     "with_skill/docs/design/saas-dashboard/ui-ux-spec.md"
   ],

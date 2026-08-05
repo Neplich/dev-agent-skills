@@ -7,7 +7,7 @@
       "id": "eval-001-bootstrap-empty-workspace",
       "name": "空 workspace 显式初始化完整文档站",
       "description": "验证明确 opt-in 的空仓库会得到完整资产清单、manifest、合法 frontmatter、确定性文档脚手架和路径边界。",
-      "prompt": "我明确确认在当前 fixture 仓库初始化正式文档站，固定目标为 `docs/site/`，并同意创建完整 scaffold 与 bootstrap manifest。请执行 bootstrap 并报告 read-back 与重复执行结果。",
+      "prompt": "我确认在当前仓库的 `docs/site/` 初始化正式文档站。请完成初始化，并检查结果和重复执行时的变化。",
       "expected_output": "从 assets/docs/site 复制完整资产清单并生成 bootstrap manifest；所有 Markdown 页面满足 7 字段 frontmatter；交付确定性 new:doc 脚手架；写入仅限 docs/site。",
       "workspace": "workspace/eval-001-bootstrap-empty-workspace",
       "assertions": [
@@ -47,7 +47,7 @@
       "id": "eval-002-repeat-bootstrap-idempotent",
       "name": "已完成 bootstrap 重复执行保持零差异",
       "description": "使用代表性完整状态 fixture 验证字节一致的模板和稳定 manifest 不被改写。",
-      "prompt": "请在此已完成 bootstrap 的 fixture 上重复运行 docs-site-bootstrap。`fixture-scope.json` 说明了最小化 fixture 的等价范围；未物化的资产目标视为与 `assets/docs/site/` 源资产字节一致。请报告文件分类、manifest 状态和 git 内容差异。",
+      "prompt": "请在这个已完成建站的工作区中再次执行初始化。`fixture-scope.json` 说明了最小化测试范围，未包含的资产与 `assets/docs/site/` 源资产一致。请报告执行结果和 Git 内容差异。",
       "expected_output": "所有代表性目标分类为 skipped-identical，既有 manifest 时间戳不变，重复运行产生零内容差异。",
       "workspace": "workspace/eval-002-repeat-bootstrap-idempotent",
       "assertions": [
@@ -72,7 +72,7 @@
       "id": "eval-003-block-bootstrap-conflict",
       "name": "冲突页面阻塞隐式覆盖",
       "description": "验证宿主 standards/index.md 与模板不同时列出完整冲突并等待逐文件决策。",
-      "prompt": "请在此已部分建站的 fixture 上补齐 bootstrap。`fixture-scope.json` 描述代表性目标，其中宿主已定制 `docs/site/standards/index.md`。请先做完整分类并按冲突 gate 处理。",
+      "prompt": "请在这个已部分建站的工作区中补齐文档站。`fixture-scope.json` 描述了范围，其中宿主已定制 `docs/site/standards/index.md`。",
       "expected_output": "列出 standards/index.md 冲突并 blocked，不覆盖或规范化宿主内容，给出 overwrite、merge、kept-as-is 三种显式选择。",
       "workspace": "workspace/eval-003-block-bootstrap-conflict",
       "assertions": [
@@ -97,7 +97,7 @@
       "id": "eval-004-deployment-completeness-trigger",
       "name": "首次与重复建站触发部署完整性检查",
       "description": "验证首次已集成、首次未集成和重新 bootstrap 漂移三个 closeout 场景。",
-      "prompt": "读取 evidence.md 的三个建站场景，分别给出部署完整性状态、证据、用户确认和下一步；只做只读检查。",
+      "prompt": "读取 evidence.md 中的三个建站场景，分别检查文档站能否完整交付，并说明证据和下一步。只做只读检查。",
       "expected_output": "首次已集成报告 integrated；首次未集成报告 not_integrated 并要求三选一；重复 bootstrap 漂移报告 partial 并重新询问 DevOps handoff，且不扩大交付授权。",
       "workspace": "workspace/eval-004-deployment-completeness-trigger",
       "assertions": [

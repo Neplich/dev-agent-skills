@@ -2,8 +2,7 @@
   "eval_id": "eval-001-block-without-ready-handoff",
   "eval_name": "block-without-ready-handoff",
   "workspace_root": "agents/product_manager/test/github-release-generator/evals/workspace/eval-001-block-without-ready-handoff",
-  "skill_availability_goal": "Verify that missing and unconfirmed `docs-agent:release-notes-generator` handoffs both block publishable GitHub Release content and return to the site Release Notes owner.",
-  "prompt": "分别审查 scenarios/no-handoff.md 与 scenarios/unconfirmed-handoff.md，不执行外部写入。",
+  "prompt": "请分别审查 `scenarios/no-handoff.md` 与 `scenarios/unconfirmed-handoff.md` 中的 GitHub Release 请求，并说明每个场景当前能否继续。",
   "fixture_context": [
     "scenarios/no-handoff.md",
     "scenarios/unconfirmed-handoff.md",

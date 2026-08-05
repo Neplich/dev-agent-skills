@@ -8,6 +8,9 @@
 - Test case: abandoned-draft-can-be-superseded
 - Workspace: `workspace/eval-017-abandoned-draft-can-be-superseded`
 - Latest result: PASS - fresh Codex validation completed on 2026-07-27 with
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
   5/5 assertions passing for both with-skill and zero-exposure without-skill
   runs.
 

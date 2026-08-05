@@ -12,6 +12,9 @@
 
 ## Latest Result
 
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 **PASS** — with-skill 输出满足全部 3 条断言：精准读取映射文档、回到代码核证年付差异，并将 `unverified` 文档按最低信任处理。
 
 ## With-Skill Behavior

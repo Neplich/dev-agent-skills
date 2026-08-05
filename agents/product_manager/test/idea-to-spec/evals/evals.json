@@ -152,7 +152,7 @@
       "id": "eval-006-nested-feature-path",
       "name": "nested-feature-path",
       "description": "Verifies that idea-to-spec scans existing PM PRDs and routes a child feature under a confirmed 4-level parent feature_path instead of creating a truncated or parallel top-level directory.",
-      "prompt": "已有 Web 应用已经有 Chat Interface 和 Message History 的 PRD。现在要新增消息历史搜索。请先看项目文档，判断应该更新或生成哪些 PM 文档，并给出后续 handoff 包。",
+      "prompt": "已有 Web 应用已经有 Chat Interface 和 Message History 的 PRD。现在要新增消息历史搜索。请先看项目文档，判断应该更新或生成哪些 PM 文档。",
       "workspace": "workspace/iteration-3/eval-6-nested-feature-path",
       "expected_output": "扫描 docs/pm/**/PRD.md；识别已有父功能 chat-interface/messages/history；将消息历史搜索解析为 feature_path=chat-interface/messages/history/search；不创建 docs/pm/history-search/PRD.md 或 docs/pm/chat-interface/history-search/PRD.md；handoff packet 包含 feature_path、feature、parent_feature、feature_level 和 feature_path_evidence。",
       "assertions": [
@@ -182,7 +182,7 @@
       "id": "eval-007-api-adr-engineer-handoff",
       "name": "api-adr-engineer-handoff",
       "description": "Verifies that idea-to-spec does not generate Engineer API or ADR docs directly and instead hands stable scope to engineer-agent:trd-gen.",
-      "prompt": "PM 范围已经稳定：docs/pm/chat-interface/history-search/PRD.md 已确认。现在需要为这个功能补 API 文档和一份搜索索引选型 ADR。请判断由谁生成、输出到哪里，并给出 handoff 包。",
+      "prompt": "PM 范围已经稳定：docs/pm/chat-interface/history-search/PRD.md 已确认。现在需要为这个功能补 API 文档和一份搜索索引选型 ADR。请判断由谁生成、输出到哪里。",
       "workspace": "workspace/iteration-3/eval-7-api-adr-engineer-handoff",
       "expected_output": "不直接调用 PM 内部 api-gen 或 adr-gen，不直接写 docs/engineer 文档；输出给 engineer-agent:trd-gen 的 handoff 包，要求 Engineer 在 docs/engineer/chat-interface/history-search/ 下生成 API.md 和 ADR-*.md，并携带 feature_path、parent_feature、feature_level、PRD 路径和决策背景。",
       "assertions": [

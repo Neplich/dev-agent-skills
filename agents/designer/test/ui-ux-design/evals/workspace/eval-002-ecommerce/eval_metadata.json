@@ -2,7 +2,6 @@
   "eval_id": "eval-002-ecommerce",
   "eval_name": "E-commerce Product Page",
   "workspace_root": "agents/designer/test/ui-ux-design/evals/workspace/eval-002-ecommerce",
-  "skill_availability_goal": "Design UI/UX for an e-commerce product listing and detail pages",
   "prompt": "pm-agent 已完成入口分类并路由至 ui-ux-design；确认 handoff 见 workspace `PM_HANDOFF.md`，已确认 `feature_path: handmade-crafts-store`。Design the UI/UX for an e-commerce site selling handmade crafts. Need product listing, filters, product detail page, and shopping cart. Target: mobile-first design.",
   "fixture_context": [
     "PM_HANDOFF.md",

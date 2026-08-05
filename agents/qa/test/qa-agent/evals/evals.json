@@ -7,7 +7,7 @@
       "id": "eval-001-route-mixed-qa-request",
       "name": "route-mixed-qa-request",
       "description": "Verifies that qa-agent handles route-mixed-qa-request and produces the expected role-specific artifact.",
-      "prompt": "用户说：这个登录重构已经按 docs/pm/login-refresh/PRD.md 实现了，但 CI 里有一个 intermittent 失败，同时 PM 想知道是否可以进入验收。请先做 QA 路由，不要直接执行测试。",
+      "prompt": "用户说：这个登录重构已经按 docs/pm/login-refresh/PRD.md 实现了，但 CI 里有一个 intermittent 失败，同时 PM 想知道是否可以进入验收。请处理这个 QA 请求。",
       "workspace": "workspace/eval-1-route-mixed-qa-request",
       "expected_output": "QA 路由决策，明确选择最窄的下游 QA skill、选择理由、需要读取的上下文和预期 evidence artifact",
       "assertions": [
@@ -42,7 +42,7 @@
       "id": "eval-002-empty-qa-directory-expands-cases",
       "name": "empty-qa-directory-expands-cases",
       "description": "Verifies that qa-agent handles empty-qa-directory-expands-cases and produces the expected role-specific artifact.",
-      "prompt": "用户说：请对 profile-settings 做一次 E2E QA。docs/qa/e2e/account/profile-settings/profile-form/ 功能目录已经存在，但 TEST_SUITE.md、FLOW_INDEX.md 和 cases/ 里没有任何测试用例。我确认这是 feature-update 场景且功能有新更新，请主动探索项目文件来补充测试用例，然后基于新建的用例执行验证。先做 QA 路由和执行协议说明。",
+      "prompt": "用户说：请对 profile-settings 做一次 E2E QA。docs/qa/e2e/account/profile-settings/profile-form/ 已存在，但 TEST_SUITE.md、FLOW_INDEX.md 和 cases/ 里没有测试用例。我确认这个功能有新更新，请主动查看项目文件并完成验证。",
       "workspace": "workspace/eval-2-empty-qa-directory-expands-cases",
       "expected_output": "QA 路由决策与执行协议，明确空 E2E 功能树目录需要触发目标文件探索、更新 TEST_SUITE.md 和 FLOW_INDEX.md、创建独立 TC 与 script 文件，并要求后续验证基于这些用例执行",
       "assertions": [
@@ -72,7 +72,7 @@
       "id": "eval-003-feature-path-missing-plan-blocked",
       "name": "feature-path-missing-plan-blocked",
       "description": "Verifies that qa-agent blocks code-complete E2E acceptance work when same-path PRD/TRD exist but the confirmed implementation plan is missing.",
-      "prompt": "用户说：account/profile/preferences 已经开发完成，请基于 docs/pm/account/profile/preferences/PRD.md 和 docs/engineer/account/profile/preferences/TRD.md 更新并执行 E2E 验收 TC。docs/qa/e2e/account/profile/preferences/ 目录也存在。先做 QA 路由和门禁判断。",
+      "prompt": "用户说：account/profile/preferences 已经开发完成，请基于 docs/pm/account/profile/preferences/PRD.md 和 docs/engineer/account/profile/preferences/TRD.md 更新并执行 E2E 验收。docs/qa/e2e/account/profile/preferences/ 目录也存在。",
       "workspace": "workspace/eval-3-feature-path-missing-plan-blocked",
       "expected_output": "QA 路由决策必须识别 feature_path account/profile/preferences，读取同路径 PRD/TRD 和 QA 功能树，但因为缺少 docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md 而 blocked，不创建、更新或执行 E2E acceptance TC",
       "assertions": [

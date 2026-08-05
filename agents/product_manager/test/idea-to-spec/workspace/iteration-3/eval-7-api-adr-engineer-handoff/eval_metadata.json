@@ -2,7 +2,7 @@
   "eval_id": "eval-007-api-adr-engineer-handoff",
   "eval_name": "api-adr-engineer-handoff",
   "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-3/eval-7-api-adr-engineer-handoff",
-  "prompt": "PM 范围已经稳定：docs/pm/chat-interface/history-search/PRD.md 已确认。现在需要为这个功能补 API 文档和一份搜索索引选型 ADR。请判断由谁生成、输出到哪里，并给出 handoff 包。",
+  "prompt": "PM 范围已经稳定：docs/pm/chat-interface/history-search/PRD.md 已确认。现在需要为这个功能补 API 文档和一份搜索索引选型 ADR。请判断由谁生成、输出到哪里。",
   "fixture_context": [
     "docs/pm/chat-interface/history-search/PRD.md"
   ],

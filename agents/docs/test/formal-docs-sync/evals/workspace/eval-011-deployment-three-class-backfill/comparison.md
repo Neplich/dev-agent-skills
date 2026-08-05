@@ -13,6 +13,9 @@
 
 ## Latest Result
 
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 **PASS (5/5 assertions)** — the fresh with-skill lane generated the complete three-class tree, evidence-backed shared environment reference, per-class maps and navigation, and passed `npm run test:docs` with 3/3 tests. The fresh judge independently reran the check.
 
 ## With-Skill Behavior

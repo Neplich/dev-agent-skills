@@ -29,6 +29,9 @@
 
 ## Latest Result
 
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 **PASS（with-skill 14/14；fresh without-skill 9/14）** — with-skill generated
 the complete two-level Product feature tree, kept every task reachable through
 five structurally nested sidebar levels, preserved the read-only Accounts and

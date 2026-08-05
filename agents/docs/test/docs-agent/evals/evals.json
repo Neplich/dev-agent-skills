@@ -7,7 +7,7 @@
       "id": "eval-001-route-formal-docs-sync",
       "name": "完整 PM handoff 路由到正式文档同步",
       "description": "验证 router 接受完整 PM handoff packet，并只引用 specialist 权威 gate 分流到 formal-docs-sync。",
-      "prompt": "请根据 `pm-handoff.md` 处理已完成搜索 API 实现后的正式文档同步请求。只完成 Docs Agent 的入口检查和分流，不执行 specialist 工作。",
+      "prompt": "请根据 `pm-handoff.md` 处理已完成搜索 API 实现后的正式文档同步请求。",
       "expected_output": "接受完整 PM handoff，选择 formal-docs-sync，保留 packet 字段，并以路径指针引用 specialist gate 而不复制其执行协议。",
       "workspace": "workspace/eval-001-route-formal-docs-sync",
       "assertions": [
@@ -62,7 +62,7 @@
       "id": "eval-003-route-release-audit",
       "name": "发版文档审计分流",
       "description": "验证 router 接受等效确认文档链后，将发版审计请求分流到 docs-audit。",
-      "prompt": "请基于 `release-entry.md` 对 v0.4.0 做发版正式文档审计，并给出下一步 handoff。只完成 Docs Agent 的入口检查和分流，不执行 specialist 工作。",
+      "prompt": "请基于 `release-entry.md` 对 v0.4.0 做发版正式文档审计，并说明下一步。",
       "expected_output": "接受等效确认文档链，选择 docs-audit，保留版本与 release 证据，并以路径指针引用 specialist gate 而不复制审计协议。",
       "workspace": "workspace/eval-003-route-release-audit",
       "assertions": [
@@ -87,7 +87,7 @@
       "id": "eval-004-route-release-notes",
       "name": "站内 Release Notes 请求分流",
       "description": "验证 router 接受完整 Release Notes 入口依据，保留 handoff 上下文并只指向 release-notes-generator 的权威 gate。",
-      "prompt": "请根据 `release-handoff.md` 处理 v1.0.0 的站内 Release Notes 请求。只完成 Docs Agent 的入口检查和分流，不执行 specialist 工作。",
+      "prompt": "请根据 `release-handoff.md` 处理 v1.0.0 的站内版本说明请求。",
       "expected_output": "接受完整 entry basis，选择 release-notes-generator，保留版本、scope、宿主、证据与输出上下文，并仅引用 specialist gate，不复制确认、metadata、checks 或 `pm-agent:github-release-generator` handoff 执行协议。",
       "workspace": "workspace/eval-004-route-release-notes",
       "assertions": [
@@ -117,7 +117,7 @@
       "id": "eval-005-integration-release-chain",
       "name": "AI Hub-shaped 文档发布全链集成",
       "description": "验证 docs-agent 能从原始仓库与发布证据判断文档发布链是否具备进入 GitHub Release 阶段的资格，并在上游权威或并发一致性不足时停在正确 owner。",
-      "prompt": "请依据 `release-chain-entry.md` 及其指向的 fixture 证据，评估 v1.4.0 文档发布链当前能否交给 GitHub Release 阶段。给出结论、阻塞项和下一责任人。只允许在 runner 复制出的隔离 workspace 中准备并读取 synthetic fixture，不执行任何真实 tag 或 GitHub Release 写入。",
+      "prompt": "请依据 `release-chain-entry.md` 及其指向的证据，评估 v1.4.0 文档发布链当前能否继续，并给出结论、阻塞项和下一责任人。不要执行任何真实 tag 或 GitHub Release 写入。",
       "expected_output": "基于原始文档与 Git 对象证据判断发布链当前状态；不把声明或局部通过当成完整门禁，明确阻塞原因、责任边界和可继续条件，并保持真实 tag 与 GitHub Release 零写入。",
       "workspace": "workspace/eval-005-integration-release-chain",
       "assertions": [
@@ -162,7 +162,7 @@
       "id": "eval-006-preserve-independent-hosting",
       "name": "保留已确认替代托管状态",
       "description": "验证 Docs router 保留 not_applicable 证据与用户决策。",
-      "prompt": "根据 evidence.md 的静态对象存储托管决策完成 Docs closeout。",
+      "prompt": "根据 evidence.md 的静态对象存储托管决策完成本次文档工作收尾。",
       "expected_output": "复核替代托管仍有效，记录 not_applicable、证据、变体和 owner，不路由 DevOps。",
       "workspace": "workspace/eval-006-preserve-independent-hosting",
       "assertions": [
@@ -174,7 +174,7 @@
       "id": "eval-007-route-manual-gen",
       "name": "截图操作手册请求分流",
       "description": "验证 router 接受有效入口凭据后，将真实运行界面截图驱动的操作手册请求分流到 manual-gen，并停在 specialist gate。",
-      "prompt": "请根据 `manual-handoff.md` 处理图文用户操作手册请求。只完成 Docs Agent 的入口检查和分流，不执行 specialist 工作。",
+      "prompt": "请根据 `manual-handoff.md` 处理图文用户操作手册请求。",
       "expected_output": "接受完整入口凭据，选择 manual-gen，保留宿主、范围、运行界面证据与输出要求，并仅指向 specialist gate，不协商环境、不采集截图、不写手册。",
       "workspace": "workspace/eval-007-route-manual-gen",
       "assertions": [

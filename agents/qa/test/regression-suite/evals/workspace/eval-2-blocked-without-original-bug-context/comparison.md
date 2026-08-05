@@ -21,7 +21,9 @@
 - 所有 blocked assertions 均由 fixture 明确触发；无 `NOT EXERCISED`。
 - 非 E2E 路径变更检查：没有足够 `feature_path` 或 fix evidence 生成正式报告，`docs/qa/{feature_path}/regression-verification.md` 分支未触发。
 
-Overall result: PASS
+Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## Assertion Results
 

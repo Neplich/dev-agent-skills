@@ -8,6 +8,9 @@
 - Test case: implementation-plan-archive-preflight
 - Workspace: `workspace/eval-012-implementation-plan-archive-preflight`
 - Latest result: PARTIAL - the 2026-07-05 fresh validation still covers archive
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
   scanning and overwrite blocking, but the handling-options assertion changed
   from three choices to two and has not been rerun.
 

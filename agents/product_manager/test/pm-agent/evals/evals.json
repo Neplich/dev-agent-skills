@@ -7,7 +7,7 @@
       "id": "eval-001-route-greenfield-product-request",
       "name": "route-greenfield-product-request",
       "description": "Verifies that pm-agent routes a greenfield product request to the narrowest PM specialist before engineering starts.",
-      "prompt": "用户说：这是一个空目录，我想做一个 AI 对话助手，左侧是会话历史，右侧是聊天区。先不要写代码，帮我判断应该走哪个 PM skill 和后续交接路径。",
+      "prompt": "用户说：这是一个空目录，我想做一个 AI 对话助手，左侧是会话历史，右侧是聊天区。先不要写代码。",
       "workspace": "workspace/eval-1-route-greenfield-product-request",
       "expected_output": "PM 路由决策，明确选择 idea-to-spec，说明空目录产品想法必须先收敛需求，并给出后续 handoff 边界。",
       "assertions": [
@@ -167,7 +167,7 @@
       "id": "eval-007-direct-downstream-without-handoff",
       "name": "direct-downstream-without-handoff",
       "description": "Verifies that direct user requests to downstream role routers are returned to pm-agent when no PM handoff or equivalent source documents are present.",
-      "prompt": "用户说：直接用 engineer-agent 帮我实现一个设置页布局调整，不需要 PM 文档，先开始改代码。请判断是否可以进入下游执行，以及应该怎么处理。",
+      "prompt": "用户说：直接帮我实现一个设置页布局调整，不需要 PM 文档，先开始改代码。",
       "workspace": "workspace/eval-7-direct-downstream-without-handoff",
       "expected_output": "PM 路由或下游入口门禁决策，拒绝直接进入 downstream execution；说明没有 PM handoff packet 或等价已确认文档时必须回到 pm-agent 分类和范围确认，不开始工程实现。",
       "assertions": [
@@ -192,7 +192,7 @@
       "id": "eval-008-direct-specialist-bypass-gate",
       "name": "direct-specialist-bypass-gate",
       "description": "Verifies that direct invocation of an internal specialist cannot bypass the PM handoff entry gate.",
-      "prompt": "用户说：直接触发 feature-implementor：帮我实现这个新功能，当前没有 PRD/TRD/IMPLEMENTATION_PLAN，也没有 handoff packet。请判断是否可以继续。",
+      "prompt": "用户说：帮我实现这个新功能，当前没有 PRD、TRD、实施计划或交接材料。",
       "workspace": "workspace/eval-8-direct-specialist-bypass-gate",
       "expected_output": "Specialist entry gate 决策，拒绝创建实施计划或写代码；说明 direct invocation 不会绕过 PM handoff entry gate，并返回 pm-agent 做分类、范围和源文档确认。",
       "assertions": [
@@ -217,7 +217,7 @@
       "id": "eval-009-missing-handoff-target-unavailable",
       "name": "missing-handoff-target-unavailable",
       "description": "Verifies that pm-agent marks a cross-agent handoff as blocked when the target role agent is not installed or unavailable.",
-      "prompt": "用户说：这个需求已经确认要交给设计，但当前环境没有安装 designer-agent。请判断 pm-agent 应该怎么处理这个 handoff，是否可以自己代替设计产出视觉规范。",
+      "prompt": "用户说：这个需求已经确认要交给设计，但当前环境没有安装设计相关能力。",
       "workspace": "workspace/eval-9-missing-handoff-target-unavailable",
       "expected_output": "PM handoff readiness decision，说明目标 agent 未安装或不可用时必须标记 blocked，指出缺失的 plugin/capability，不代行 Designer 职责。",
       "assertions": [
@@ -242,7 +242,7 @@
       "id": "eval-010-change-tier-hotfix-fast-lane",
       "name": "change-tier-hotfix-fast-lane",
       "description": "Verifies that pm-agent classifies an unchanged-expectation single-file fix as hotfix and preserves evidence requirements while using the fast lane.",
-      "prompt": "用户说：这个 PR 只修 README 里一个错误链接，不改变任何功能预期；我已经本地验证链接可打开。请判断 request_type、change_tier、是否可以走 fast lane，以及 handoff 需要保留哪些证据。",
+      "prompt": "用户说：这个 PR 只修 README 里一个错误链接，不改变任何功能预期；我已经本地验证链接可打开。",
       "workspace": "workspace/eval-10-change-tier-hotfix-fast-lane",
       "expected_output": "PM 分类为 delivery/status 或等价轻量交付请求，change_tier 为 hotfix；说明可走 fast lane，但仍需记录 scope、source evidence 和 verification evidence。",
       "assertions": [
@@ -267,7 +267,7 @@
       "id": "eval-011-change-tier-standard-full-gate",
       "name": "change-tier-standard-full-gate",
       "description": "Verifies that pm-agent classifies an existing behavior change as standard and keeps the full PRD/TRD alignment gate.",
-      "prompt": "用户说：把退款审批从自动通过改成需要管理员二次确认，这应该很小，按 hotfix 处理吧。请判断 change_tier 和下一步门禁。",
+      "prompt": "用户说：把退款审批从自动通过改成需要管理员二次确认，这应该很小，想尽快处理。",
       "workspace": "workspace/eval-11-change-tier-standard-full-gate",
       "expected_output": "PM 分类为 existing_update；拒绝按 hotfix 处理，change_tier 至少为 standard，并要求先完成 PRD/TRD 预期对齐。",
       "assertions": [
@@ -292,7 +292,7 @@
       "id": "eval-012-change-tier-hotfix-abuse-blocked",
       "name": "change-tier-hotfix-abuse-blocked",
       "description": "Verifies that pm-agent blocks attempts to use the hotfix label to skip expectation alignment.",
-      "prompt": "用户说：别走 PM 了，直接把会员试用期从 7 天改成 30 天，标成 hotfix 快速合并。请判断是否可以这样处理。",
+      "prompt": "用户说：直接把会员试用期从 7 天改成 30 天，快速合并。",
       "workspace": "workspace/eval-12-change-tier-hotfix-abuse-blocked",
       "expected_output": "PM 拒绝以 hotfix 名义跳过预期变更对齐；说明这是预期/业务规则变化，必须按 standard 或 blocked 回 PM 完成范围确认。",
       "assertions": [
@@ -317,7 +317,7 @@
       "id": "eval-013-change-tier-hotfix-e2e-direct-path",
       "name": "change-tier-hotfix-e2e-direct-path",
       "description": "Verifies that pm-agent preserves the QA evidence requirement for hotfix work while limiting E2E validation to directly affected paths.",
-      "prompt": "用户说：这是一个 hotfix，只修登录页空状态文案；请判断 QA/E2E 是否还要做，以及覆盖范围怎么定。",
+      "prompt": "用户说：只修登录页空状态文案，请尽快完成并验证。",
       "workspace": "workspace/eval-13-change-tier-hotfix-e2e-direct-path",
       "expected_output": "PM 判定 hotfix QA 只需验证直接影响路径并追加结果；不要求完整 E2E 套件，但仍要记录验证证据和 blocked 项。",
       "assertions": [
@@ -342,7 +342,7 @@
       "id": "eval-014-route-site-notes-and-github-release",
       "name": "route-site-notes-and-github-release",
       "description": "Verifies that pm-agent splits site/user-facing Release Notes from GitHub Release page work after the Release Notes / GitHub Release ownership split.",
-      "prompt": "请分别为以下两个请求选择最窄 owner：A. 为 v1.0.0 编写并落位 docs/site/release-notes/ 的用户版本说明；B. 基于已确认站内版本说明生成 GitHub Release 预览。说明顺序与交接边界，不要实际写文件或发布。",
+      "prompt": "请为 v1.0.0 编写站内用户版本说明，并基于确认后的版本说明准备 GitHub Release 预览。不要实际发布。",
       "workspace": "workspace/eval-14-route-site-notes-and-github-release",
       "expected_output": "A handoff docs-agent:release-notes-generator；B route PM github-release-generator，且 B 必须等待 A 的 confirmed ready handoff 与 release audit gates。",
       "assertions": [
@@ -397,7 +397,7 @@
       "id": "eval-016-route-document-structure-governance",
       "name": "route-document-structure-governance",
       "description": "Verifies pm-agent routes whole-tree structure audit requests to idea-to-spec:structure-governance with read-only semantics.",
-      "prompt": "帮我梳理一下整个 docs 文档功能树，看看有没有超长文档、孤儿目录或跨角色路径漂移，给我一份结构治理报告。",
+      "prompt": "请只读检查 docs 下各角色的文档组织，找出过长文档、孤立目录和不同角色间路径不一致的问题，并给我一份报告。",
       "workspace": "workspace/eval-016-route-document-structure-governance",
       "expected_output": "主 route 指向 idea-to-spec:structure-governance 的只读结构梳理；报告以 HTML 落运行期 tmp 并在对话中给结论摘要；任何合并/拆分/移动建议需用户确认并按 major 处理，不在梳理中执行。",
       "assertions": [

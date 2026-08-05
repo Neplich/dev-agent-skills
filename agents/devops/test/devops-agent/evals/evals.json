@@ -7,7 +7,7 @@
       "id": "eval-001-route-ci-readiness",
       "name": "route-ci-readiness",
       "description": "Verifies that devops-agent routes CI readiness work to the narrowest DevOps specialist and keeps follow-ups explicit.",
-      "prompt": "用户说：这个服务已经有 deploy/docker 目录，但还没有 GitHub Actions PR 门禁；另外我担心环境变量和回滚文档也不完整。先做 DevOps 路由，不要直接写 workflow。",
+      "prompt": "用户说：这个服务已经有 deploy/docker 目录，但还没有 GitHub Actions PR 检查；另外我担心环境变量和回滚文档也不完整。请处理这个请求。",
       "workspace": "workspace/eval-1-route-ci-readiness",
       "expected_output": "DevOps 路由决策，明确 CI/CD 是当前主 route，配置审计和 runbook 是后续检查，而不是一次性直接执行所有 DevOps skill。",
       "assertions": [
@@ -42,7 +42,7 @@
       "id": "eval-002-route-docs-site-completeness-chain",
       "name": "route-docs-site-completeness-chain",
       "description": "接受 PM 的 repo-wide 文档站部署完整性 handoff。",
-      "prompt": "读取 pm-handoff.md，只做 DevOps 路由并保留授权边界。",
+      "prompt": "请根据 pm-handoff.md 处理文档站部署完整性请求。",
       "expected_output": "按 deployment-planner 到 cicd-bootstrap 到 env-config-auditor 再回 formal-docs-sync 的顺序路由。",
       "workspace": "workspace/eval-002-route-docs-site-completeness-chain",
       "assertions": [

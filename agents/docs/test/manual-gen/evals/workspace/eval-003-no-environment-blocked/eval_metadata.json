@@ -2,8 +2,7 @@
   "eval_id": "eval-003-no-environment-blocked",
   "eval_name": "no-environment-blocked-no-fabrication",
   "workspace_root": "agents/docs/test/manual-gen/evals/workspace/eval-003-no-environment-blocked",
-  "skill_availability_goal": "Verify unavailable domain and refused local startup produce a truthful blocked result with no fabricated UI evidence.",
-  "prompt": "宿主文档站基础存在，但没有可访问的域名环境；维护者也明确拒绝启动本地环境。现有仓库只有产品需求文字，没有运行界面截图。请处理本次 manual-gen 请求。",
+  "prompt": "宿主文档站基础存在，但没有可访问的域名环境；维护者也明确拒绝启动本地环境。现有仓库只有产品需求文字，没有运行界面截图。请处理这次图文用户手册请求。",
   "environment": {
     "kind": "unavailable",
     "domain_available": false,

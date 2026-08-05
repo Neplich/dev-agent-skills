@@ -5,6 +5,9 @@
 - Skill: `github-release-generator`
 - Test case: marketplace 当前 tag 能力齐全的标题强格式与升级说明正向分支
 - Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 - Overall result: PASS
 
 ## Review Context

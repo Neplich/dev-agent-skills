@@ -9,6 +9,9 @@
 - Workspace: `workspace/eval-003-milestone-focused`
 - Classification: `(c) 依赖实时外部数据`。该场景验证 specialist 是否通过 `gh` 查询真实 GitHub milestone；静态 fixture 会把时效性场景降级成 mock，因而不补造 fixture。
 - Latest result: **PASS**。2026-07-26 的 same-agent fresh paired validation 中，with-skill 在第一次独立实时查询结果上满足 3/3 assertions；fresh without-skill baseline 在第二次独立查询结果上满足 2/3，未采用 skill 规定的 emoji 状态标识。
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 
 ## Test Set / Fixture Version
 

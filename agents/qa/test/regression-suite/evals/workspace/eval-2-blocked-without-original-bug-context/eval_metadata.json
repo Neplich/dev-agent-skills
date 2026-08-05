@@ -2,7 +2,6 @@
   "eval_id": "eval-002-blocked-without-original-bug-context",
   "eval_name": "blocked-without-original-bug-context",
   "workspace_root": "agents/qa/test/regression-suite/evals/workspace/eval-2-blocked-without-original-bug-context",
-  "skill_availability_goal": "Verify that regression-suite returns blocked when original bug and fix context are unavailable.",
   "prompt": "复测上周修过的支付按钮问题，但仓库里找不到原始 bug 报告、失败证据、修复 PR 或可用测试环境。请给出回归验证结论。",
   "fixture_context": [
     "notes/missing-context.md"

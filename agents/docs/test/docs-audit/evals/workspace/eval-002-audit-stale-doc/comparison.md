@@ -12,6 +12,9 @@
 
 ## Latest Result
 
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 **PASS — 4 / 4 assertions passed.** Fresh with-skill 候选先标 `suspect`，再以新增必填 `locale` 和 `invalid_locale` 错误证据确认 `stale`，pre-tag `blocked` 且零盖章。
 
 ## Assertion Results

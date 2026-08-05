@@ -2,7 +2,6 @@
   "eval_id": "eval-004-confirmed-release-delivery",
   "eval_name": "confirmed-release-delivery",
   "workspace_root": "agents/docs/test/release-notes-generator/evals/workspace/eval-004-confirmed-release-delivery",
-  "skill_availability_goal": "Verify the complete successful site Release Notes delivery path after maintainer confirmation.",
   "prompt": "请依据 `release-entry.md`、`confirmation-record.md`、`evidence/` 与现有文档站完成本次站内 Release Notes 交付，并报告实际完成结果。",
   "fixture_context": ["release-entry.md", "confirmation-record.md", "evidence/", "docs/site/package.json", "docs/site/package-lock.json", "docs/site/scripts/", "docs/site/standards/", "docs/site/release-notes/README.md", "docs/site/release-notes/index.md", "docs/site/release-notes/v0.9.0.md", "docs/site/.meta/releases.json"],
   "execution_cleanup": ["docs/site/node_modules", "docs/site/.generated", "docs/site/release-notes/v1.0.0.md", "handoff.yaml"]

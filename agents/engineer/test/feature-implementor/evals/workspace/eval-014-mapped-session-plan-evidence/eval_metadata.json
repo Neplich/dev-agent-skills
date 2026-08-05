@@ -2,8 +2,7 @@
   "eval_id": "eval-014-mapped-session-plan-evidence",
   "eval_name": "mapped-session-plan-evidence",
   "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-014-mapped-session-plan-evidence",
-  "skill_availability_goal": "Verify that feature-implementor reads mapped unverified documentation and validates plan-critical behavior against code.",
-  "prompt": "请为 `src/session/` 增加会话续期准备实施计划；先核对当前超时行为，不要直接修改代码。",
+  "prompt": "请为 `src/session/` 增加会话续期，并先核对当前超时行为。",
   "fixture_context": [
     "src/session/config.txt",
     "docs/site/standards/change-map.yaml",

@@ -12,6 +12,9 @@
 
 ## Latest Result
 
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 **PASS** — with-skill 输出满足全部 3 条断言：按 `src/export/` 落点聚焦读取映射文档 `docs/site/api/export.md`、以 `src/export/handler.txt` 核证出"文档声称支持 JSON 但实现声明只有 CSV"的分歧并给出交付风险，`unverified` 文档不作为已交付依据。
 
 ## With-Skill Behavior

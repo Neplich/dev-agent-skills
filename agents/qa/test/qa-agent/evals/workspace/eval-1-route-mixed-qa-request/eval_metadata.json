@@ -2,8 +2,7 @@
   "eval_id": "eval-001-route-mixed-qa-request",
   "eval_name": "route-mixed-qa-request",
   "workspace_root": "agents/qa/test/qa-agent/evals/workspace/eval-1-route-mixed-qa-request",
-  "skill_availability_goal": "Verify that qa-agent routes a mixed QA request to the narrowest downstream QA skill before execution.",
-  "prompt": "用户说：这个登录重构已经按 docs/pm/login-refresh/PRD.md 实现了，但 CI 里有一个 intermittent 失败，同时 PM 想知道是否可以进入验收。请先做 QA 路由，不要直接执行测试。",
+  "prompt": "用户说：这个登录重构已经按 docs/pm/login-refresh/PRD.md 实现了，但 CI 里有一个 intermittent 失败，同时 PM 想知道是否可以进入验收。请处理这个 QA 请求。",
   "fixture_context": [
     "docs/pm/login-refresh/PRD.md",
     "docs/engineer/login-refresh/TRD.md",

@@ -32,7 +32,7 @@
       "id": "eval-002-playful",
       "name": "Reference-Driven Design System",
       "description": "Create a design system using local Design System Data plus local design-only boundary references",
-      "prompt": "Create a visual design system for an enterprise analytics platform. Target users are operations leaders and analysts. The output should use local Design System Data to choose product pattern, style direction, color system, typography, UX quality rules, and anti-patterns. Stop at design handoff and do not produce implementation code.",
+      "prompt": "Create a visual design system for an enterprise analytics platform. Target users are operations leaders and analysts. Use the local Design System Data as supporting context.",
       "workspace": "workspace/eval-2-reference-design-system",
       "expected_output": "基于本地 Design System Data 的视觉系统文档，包含产品类型推理、风格/配色/字体推荐、UX 质量规则和反模式，并在设计交接处停止",
       "assertions": [

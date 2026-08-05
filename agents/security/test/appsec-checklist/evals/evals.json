@@ -97,7 +97,7 @@
       "id": "eval-004-feature-path-report",
       "name": "Feature Path Security Report",
       "description": "Verifies that appsec-checklist reads same-path PM/Engineer documents and writes a 4-level feature_path security report.",
-      "prompt": "对 chat-interface/messages/history/search 做发布前应用安全检查。仓库中已有 docs/pm/chat-interface/messages/history/search/PRD.md、docs/engineer/chat-interface/messages/history/search/TRD.md 和 docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md。请输出 feature-scoped 安全报告；不要把 search 或 history-search 写成顶层 feature。",
+      "prompt": "对 chat-interface/messages/history/search 做发布前应用安全检查。仓库中已有 docs/pm/chat-interface/messages/history/search/PRD.md、docs/engineer/chat-interface/messages/history/search/TRD.md 和 docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md。",
       "workspace": "workspace/eval-004-feature-path-report",
       "expected_output": "读取同一 feature_path 下的 PM/Engineer 文档，输出 docs/security/chat-interface/messages/history/search/appsec-checklist.md，frontmatter 包含 feature_path，不生成 docs/security/history-search/appsec-checklist.md 或 docs/security/chat-interface/history-search/appsec-checklist.md。",
       "assertions": [

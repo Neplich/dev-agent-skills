@@ -12,6 +12,9 @@
 
 ## Latest Result
 
+- Overall result: BLOCKED
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
 **PASS** — with-skill 以 pipeline.rules 的 verify 命令核证出文档声称 test 的分歧，CI 配置锚定代码事实，且在平台不明时不落盘 workflow 文件。
 
 ## With-Skill Behavior

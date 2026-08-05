@@ -2,8 +2,7 @@
   "eval_id": "eval-010-post-tag-match",
   "eval_name": "post-tag-match",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-010-post-tag-match",
-  "skill_availability_goal": "Measure whether docs-audit separates content verification from the confirmed durable-result credential when commit objects have different availability.",
-  "prompt": "对 `.eval/release-context.md` 指向的 `v1.2.0` 发布证据执行 post-tag 文档审计。分别评估 direct-handoff 与 fresh-clone 两个场景，给出每个场景的结论、决定性证据、持久化边界和下一步。fixture 只读，不执行真实 tag、branch 或 release 写入。",
+  "prompt": "请根据 `.eval/release-context.md` 中的 `v1.2.0` 发布证据完成文档审计，分别评估直接交接与全新克隆两种场景。工作区内容只读，不执行真实 tag、branch 或 release 写入。",
   "execution_cleanup": [
     "docs/site/.meta/audit/audit-v1.2.0-post-tag.md"
   ],
