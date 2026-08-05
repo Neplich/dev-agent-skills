@@ -1,0 +1,28 @@
+{
+  "eval_id": "eval-003-no-environment-blocked",
+  "eval_name": "no-environment-blocked-no-fabrication",
+  "workspace_root": "agents/docs/test/manual-gen/evals/workspace/eval-003-no-environment-blocked",
+  "skill_availability_goal": "Verify unavailable domain and refused local startup produce a truthful blocked result with no fabricated UI evidence.",
+  "prompt": "宿主文档站基础存在，但没有可访问的域名环境；维护者也明确拒绝启动本地环境。现有仓库只有产品需求文字，没有运行界面截图。请处理本次 manual-gen 请求。",
+  "environment": {
+    "kind": "unavailable",
+    "domain_available": false,
+    "local_start_consent": "refused",
+    "existing_interface_evidence": false,
+    "host_checks_execution": "run npm run test:docs from docs/site; the command is self-contained and checks the materialized fixture assets without an install step"
+  },
+  "fixture_context": [
+    "pm-handoff.md",
+    "docs/site/standards/index.md",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/standards/templates/manual-guide.md",
+    "docs/site/manual/index.md",
+    "docs/site/package.json"
+  ],
+  "execution_cleanup": [
+    "with_skill",
+    "without_skill",
+    "baseline",
+    "outputs"
+  ]
+}

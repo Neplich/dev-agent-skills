@@ -3,6 +3,7 @@ import { SECTION_ORDER, visibleFor } from './pages.mjs';
 const SECTION_LABELS = {
   standards: '文档规范',
   product: '产品',
+  manual: '操作手册',
   design: '设计',
   api: 'API',
   database: '数据库',

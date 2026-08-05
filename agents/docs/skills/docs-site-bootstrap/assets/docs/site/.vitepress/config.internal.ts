@@ -8,6 +8,7 @@ export default mergeConfig(shared, defineConfig({
     nav: [
       { text: '规范', link: '/standards/' },
       { text: '产品', link: '/product/' },
+      { text: '操作手册', link: '/manual/' },
       { text: '设计', link: '/design/' },
       { text: 'API', link: '/api/' },
       { text: '数据库', link: '/database/' },

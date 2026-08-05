@@ -7,19 +7,27 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: docs-audit A2 / 2026-07-19
+- Fixture version: docs-audit A3 / 2026-08-05
 - Assertions: 8
 
 ## Latest Result
 
-**PASS — 8 / 8 assertions passed.** Fresh with-skill 候选接受维护者确认的等效入口，按共享 frontmatter 真源得到 1 个合法页面 `verified`、4 个非法页面 `stale`，pre-tag `blocked` 且不局部盖章。
+- Behavior result: `BLOCKED` — 本轮把共享 `doc_type` 合法集合从七项扩展为包含 `manual` 的八项后，尚未执行 fresh with-skill、同轮 fresh without-skill baseline 与独立 judge。
+- Coverage result: `PARTIAL` — 下述 8 / 8 PASS 是 2026-07-19 七项枚举契约的历史结果；当前八项枚举契约均未重跑。
+- Blocking reason: 旧 PASS 不能证明当前 `manual` 枚举已被 docs-audit 与 bootstrap validator 一致消费。
+
+Overall result: BLOCKED
+
+### Historical result for the former contract
+
+**PASS — 8 / 8 assertions passed.** Fresh with-skill 候选接受维护者确认的等效入口，按当时共享 frontmatter 真源得到 1 个合法页面 `verified`、4 个非法页面 `stale`，pre-tag `blocked` 且不局部盖章。
 
 ## Assertion Results
 
 | Assertion | Result | Evidence summary |
 | --- | --- | --- |
 | `accepts_confirmed_audit_entry` | PASS | 从 `release-entry.md` 分别解析 `v0.4.0`、base `4a1b2c3`、target `7c9e2af`、pre-tag 请求和证据清单，未从 ref 推断版本。 |
-| `rejects_standard_doc_type` | PASS | `doc_type: standard` 不在合法枚举中，页面判 `stale`。 |
+| `rejects_standard_doc_type` | PASS | 在旧七项合法枚举契约下，`doc_type: standard` 不在合法枚举中，页面判 `stale`。 |
 | `rejects_empty_related_code` | PASS | `related_code: []` 违反非空字符串数组契约，页面判 `stale`。 |
 | `rejects_missing_last_verified_version` | PASS | 缺少无条件必填的 `last_verified_version`，页面判 `stale`。 |
 | `rejects_empty_owners` | PASS | `owners: []` 违反非空字符串数组契约，页面判 `stale`。 |
@@ -43,7 +51,7 @@
 
 ## Next Steps
 
-- 保留本结果；入口 gate、共享 frontmatter 契约或 bootstrap validator 变化时重跑。
+- 使用当前包含 `manual` 的八项枚举契约重跑 fresh with-skill lane、同轮 fresh without-skill baseline 与独立 judge；验证后再替换 `BLOCKED`。
 
 ## Runtime Artifact Policy
 

@@ -58,7 +58,7 @@ PM / Engineer / QA / DevOps（条件式）→ Docs Agent（正式文档生产 / 
 - 下游安全网包含前置与收尾两面：缺少 PM handoff packet、等效已确认文档链或 specialist entry basis 时，温和引导用户经 `pm-agent` 补齐前置；完成当前事项后，主动建议协作链下一步并等待确认，用户已授权 `auto-continue` 时可连续推进直到链路结束或用户喊停。
 - 跨角色收尾与 `auto-continue` 的权威定义在 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` 的 `Safety-Net Closeout and Auto-Continue` 节；`AGENTS.md` 只保留入口契约和指针。
 - SKILL.md frontmatter 的 `visibility: internal` 是声明层标记，Claude Code 与 Codex 都不消费该字段，不隐藏 slash 命令也不阻止显式直调；`pm-agent` 是默认入口，下游标记为 `internal` 仅表示非默认入口。
-- 6 个 role router 只保留入口凭据检查和分流指针，其中 `docs-agent` 分流正式文档站点 bootstrap、API/database/design/ops/product 当前事实 sync、站内 Release Notes 和 audit；PM `github-release-generator` 按 SKILL.md 的宿主文档站适用性判断生成 GitHub Release：有文档站宿主要求站内 Release Notes 已确认且 docs-audit 门禁通过；无文档站宿主降级为维护者确认的版本事实源与维护者显式批准；具体执行 gate 的权威副本留在对应 specialist `SKILL.md`，例如 `feature-implementor` 的 PRD/TRD/plan/archive gate、`debugger` 的 expected-behavior gate、QA specialist 的 E2E gate，以及 Designer/DevOps/Security/Docs specialist 的 feature-scope gate。
+- 6 个 role router 只保留入口凭据检查和分流指针，其中 `docs-agent` 分流正式文档站点 bootstrap、API/database/design/ops/product 当前事实 sync、基于运行界面截图的图文用户操作手册、站内 Release Notes 和 audit；PM `github-release-generator` 按 SKILL.md 的宿主文档站适用性判断生成 GitHub Release：有文档站宿主要求站内 Release Notes 已确认且 docs-audit 门禁通过；无文档站宿主降级为维护者确认的版本事实源与维护者显式批准；具体执行 gate 的权威副本留在对应 specialist `SKILL.md`，例如 `feature-implementor` 的 PRD/TRD/plan/archive gate、`debugger` 的 expected-behavior gate、QA specialist 的 E2E gate，以及 Designer/DevOps/Security/Docs specialist 的 feature-scope gate。
 - 直接调用下游且没有 PM handoff packet、等效已确认文档链或 specialist entry basis 时，不执行下游协议，应温和引导用户经 `pm-agent` 补齐前置并完成入口分类；脚手架请求同样走正常 PM 分类。
 
 **文档依赖**
@@ -146,6 +146,31 @@ skill eval 的 Fresh Sub-Agent 门禁作用于 skill 自身的测试流程，不
 
 6. 添加 eval 测试，并对比使用 skill 与不使用 skill 的结果
 
+### 新增或重命名 Skill 的同步面
+
+向既有 Agent 增加一个 specialist 时，改动会扇出到注册、路由、发现、文档、eval 和过程文档六个面。任一面漏改都不会被契约脚本拦住，但会让 skill 在实际使用中不可达或不可信。按下表逐项核对，不要只改「主要」文件。
+
+| 面 | 必改项 |
+| --- | --- |
+| 注册 | `.claude-plugin/marketplace.json` 的 `skills` 数组；`skills-lock.json` 条目与 `computedHash` |
+| 路由 | router `SKILL.md` 的 Available Skills、Routing Signals、Specialist Gate Pointers、Role Boundary 中列举 specialist 的那句 |
+| **发现** | `.claude-plugin/marketplace.json` 的 agent `description`；router `SKILL.md` 的 frontmatter `description`；`AGENTS.md` 中描述该 router 分流范围的根路由指针句 |
+| 仓库指导 | `AGENTS.md` 的该 Agent specialist 计数与 Specialist skills 总数 |
+| Agent 文档 | `agents/{agent}/README.md` 的 skills 表、计数与 **Routing Rules 小节**；`README_zh.md` 同步 |
+| 顶层入口 | 根 `README.md` / `README_zh.md` 的 Agent 表计数与能力描述；**`pm-agent/SKILL.md` 的 handoff targets、请求分类行与 Default Routes** |
+| eval | 新 skill 自己的 evals；**router 的路由 eval**；被本次改动影响的既有 skill 的断言与其 durable `comparison.md` |
+| 过程文档 | PRD/TRD/实施计划的触点表与禁止区必须与实际 diff 一致；父 PRD 的 `child_features` 与其中描述注册面的行 |
+
+加粗项是最容易漏的：
+
+- **发现层**决定客户端在读正文之前是否会选中这个 skill。计数和正文改全了、描述没改，等于新能力在元数据层不存在。
+- **router 路由 eval** 缺失时，路由分支写错也能全绿通过。
+- **PM 入口分类**：`pm-agent` 是默认用户入口，用户不点名 skill 时全部经它分类。下游 router 认识新 specialist，但 PM 的分类词典里没有对应说法时，该能力对普通用户不可达。
+- **既有 skill 的 eval 与 comparison**：本次改动若扩展了它们断言依赖的契约（例如资产数量、类型枚举），旧断言会 stale，旧 `comparison.md` 会让发版评审读到过时结论。此时保留历史结论并标注其适用的旧契约，`Overall result` 记为 `BLOCKED` 待重跑，不要伪造成新的 PASS。
+- **过程文档与实际 diff 的一致性**：计划里写成禁止区、实际却改了的文件，会让后续维护者按文档回退掉必要修改。
+
+扩展共享契约（如 `doc_type` 枚举）时，还要同步其全部副本：权威定义、消费方 skill 中的复制表、以及 `docs-site-bootstrap` 交付给宿主的脚本资产与模板。交付给宿主的脚本副本不会随 marketplace 更新自动升级，存量宿主需重跑 bootstrap，PR 中要说明这一点。
+
 ### Skill 设计原则
 
 - **文档驱动**：skill 消费和产出 Markdown 文档
@@ -174,51 +199,84 @@ skill eval 的 Fresh Sub-Agent 门禁作用于 skill 自身的测试流程，不
 
 ### Skill 测试
 
-每个 skill 应包含：
+每个 skill 包含 `test/{skill-name}/evals/evals.json`、eval workspace，以及每个 eval 的 `comparison.md`（使用与不使用 skill 的最新持久化对比结果）。
 
-- `test/{skill-name}/evals/evals.json`，作为 eval case 定义
-- `test/{skill-name}/workspace/...` 或 `test/{skill-name}/evals/workspace/...`，在 eval 需要 fixture 时作为 eval workspace
-- 每个 eval 都必须有显式 workspace，并包含 `comparison.md`，作为使用 skill 与不使用 skill 的最新持久化对比结果
+Skill eval 是可用性测试：验证 skill 能被触发、协议可执行、能产出该角色预期的结构化产物。断言检查 skill 特有行为——上下文读取、执行路径选择、证据处理、阻塞假设、handoff 边界，而不是泛化回答质量。
 
-Skill eval 是 Agent skill 的可用性测试。它们必须验证 skill 能被触发、协议可执行，并能产出该角色预期的结构化产物。Eval 断言应检查 skill 特有行为，例如上下文读取、执行路径选择、证据处理、阻塞假设和 handoff 边界，而不是只检查泛化回答质量。
-
-- 每次更新 skill 文档、内部指令或会影响 skill 行为的测试 fixture 后，必须主动询问是否运行对应 skill 的 eval；用户确认后默认执行模型 transcript 生成/检查和全新 Codex subagent validation，并按产物策略更新结果。Fresh Sub-Agent 门禁：每次通过 fresh Codex subagent validation 执行 skill eval 时，必须基于同一份 eval prompt 和 fixture 重新生成新的 `without_skill` baseline，不得复用历史 baseline；`without_skill` 运行结果作为 comparison 的 baseline 对照输入。只要实际执行了 skill eval 或 fresh Codex subagent validation，就必须在同一轮变更中更新对应 durable `comparison.md`；如果无法生成新的 baseline、没有可更新文件或不适用，必须写明 blocked 或不适用原因。若缺少 runner、凭据或外部服务导致 transcript 无法生成，必须明确记录 blocked 原因，不能静默降级成只读静态验证。
+更新 skill 文档、内部指令或影响 skill 行为的 fixture 后，主动询问是否运行对应 eval。实际执行过 eval 就必须在同一轮变更中更新 durable `comparison.md`；无法生成 baseline、没有可更新文件或不适用时，写明 blocked 或不适用原因。缺少 runner、凭据或外部服务导致无法执行时明确记 blocked，不得静默降级成只读静态验证。
 
 **Eval 定义契约**
 
-- 所有 Agent skill eval 定义必须使用共享的 `evals.json` schema version `1.0`；不允许 Agent 专属 schema 例外
-- 每个 `evals.json` 必须位于 `agents/{agent}/test/{skill-name}/evals/evals.json`，设置顶层 `schema_version`、`agent`、`skill_name` 和非空 `evals`，并保持 `skill_name` 与 `agents/{agent}/skills/{skill-name}/SKILL.md` 对齐
-- 每个 eval item 必须包含字符串 `id`，格式为 `eval-NNN-short-slug`，并包含非空 `name`、`description`、`prompt`、`expected_output`、显式 `workspace`（值必须为 `workspace/...`）以及非空对象形式 assertions
-- 每个 assertion 必须包含 lower snake_case `id`、非空 `description` 和非空语义化 `text`；不允许使用纯字符串 assertion
-- 提交 eval 定义变更前运行 `uv run scripts/check_eval_contract.py`
+- 使用共享 `evals.json` schema version `1.0`，不允许 Agent 专属例外
+- 位于 `agents/{agent}/test/{skill-name}/evals/evals.json`，顶层含 `schema_version`、`agent`、`skill_name`、非空 `evals`；`skill_name` 与对应 `SKILL.md` 对齐
+- 每个 eval item 含 `id`（格式 `eval-NNN-short-slug`）、非空 `name`/`description`/`prompt`/`expected_output`、显式 `workspace`（值为 `workspace/...`）、非空对象形式 assertions
+- 每个 assertion 含 lower snake_case `id`、非空 `description` 和非空语义化 `text`；不允许纯字符串 assertion
+- 优先语义断言，避免脆弱的精确字符串检查。语言或格式可合理变化时（如本地化、等价的 lane label），保持预期语义即可
+- 提交前运行 `uv run scripts/check_eval_contract.py`
+
+**Eval 执行契约**
+
+- 最终验证必须在与被测会话隔离的全新上下文中执行。全新 Codex subagent 与各自独立启动的 `codex exec` 会话都可接受，本质都是干净上下文。
+- 每轮必须重新生成 `without_skill` baseline，**不得复用历史 baseline**，也不得为掩盖执行失败把 baseline 弱化成可选项。
+- 判定由独立评审方（fresh subagent 或独立 judge）对照 assertions 得出。**被测 lane 的自评不算判定**，评审方须独立核对零写入等关键事实。批量 transcript 生成脚本的输出只是诊断产物，不是 pass/fail 事实来源。
+- 运行期文件写隔离 scratch workspace（如 `tmp/eval-runs/...`），不得写入已提交 fixture——历史输出会污染 empty-workspace 这类上下文敏感用例。每轮运行前需清理的路径用 `eval_metadata.json` 的 `execution_cleanup` 声明。
+- 只在实际存在 deterministic runner 时声明 run diagnostics（command、cwd、timeout、return code 等），便于区分基础设施失败与 assertion 失败。
+
+**Eval prompt 与 lane 隔离契约**
+
+`with_skill` 与 `without_skill` 的**唯一变量是「是否加载被测 skill 文档」**：prompt 逐字相同，可见 fixture 完全相同。任何把 skill 规则提前透给 baseline 的做法都会让两条 lane 拉不开差距，eval 失去判别力。
+
+prompt 写成自然用户目标。判据：*删掉这句话，一个不懂 skill 协议的 agent 就不知道该怎么做了——那它就是泄漏。*
+
+| 不得写进 prompt | 应当写进 prompt |
+| --- | --- |
+| 协议名与步骤名：「按八步契约执行」 | 自然目标：「写一份用户操作手册，要有操作步骤和对应截图」 |
+| 行为规则与禁令：「不要替维护者确认」「保持零启动命令」 | 环境客观事实：「当前没有可通过域名访问的部署环境」 |
+| skill 专有分类术语：「这是 feature-update 场景」 | 入口凭据：「pm-agent 已分类并路由至此，packet 见 `PM_HANDOFF.md`」 |
+| 产物字段清单、目录分层、命名规范、工具与参数 | 自然授权：「范围我已经定好了，不用再跟我确认」 |
+
+最后一行是测试**需要用户确认的门禁**的正确方式：用真实用户会说的话表达授权，而不是「Step N 门禁视为已通过」这类协议术语——后者直接把门禁的存在告诉了 baseline。
+
+lane 可见素材只给宿主环境事实，评测脚手架一律不给：`eval_metadata.json` 含评判意图，运行目录中应物理移除；`pm-handoff.md` 的 `required_output` 写产出形态而非期望行为，`blockers_risks` 写客观风险而非禁令；专为 eval 造的、写着答案的示例脚本不进 lane 目录。宿主本来就该有的资产（文档站模板、standards、已有配置）**不算泄漏**——baseline 会不会主动去翻、翻到了会不会照做，本身就是要观测的行为差异。
+
+零区分度先判成因，不得为制造区分度而伪造结果或弱化断言：
+
+| 成因 | 动作 |
+| --- | --- |
+| prompt 或 fixture 规则泄漏 | 修 eval，按上表改成自然表述 |
+| 规则天然存在于 skill 交付物（模板、脚手架本就承载字段与命名） | 不是缺陷。如实记录，观测重心移到门禁与纪律类断言 |
+| 模型基线能力已覆盖该行为 | 记为 skill 生命周期信号交 issue 审查，不硬修 |
 
 **Eval 产物策略**
 
-- 提交 eval 定义、metadata、fixtures、README 文件和最新 `comparison.md`；不要提交运行期产物，例如 `with_skill/`、`without_skill/`、`baseline/`、`iteration2/`、`outputs/`、`comparison.auto.md`、`transcript.md`、`candidate-output.md`、`subagent-verdict.md`、`timing.json`、`run_status.json` 或 diagnostics 目录
-- `with_skill_outputs`、`without_skill_outputs` 和 baseline output metadata 只作为 deterministic runner 能真实生成或检查的运行期产物预期，不代表这些文件必须存在于已提交 workspace 中。`with_skill_outputs` 可作为 runner 门禁；`without_skill_outputs` 和 baseline output metadata 是 baseline 对照证据，只报告不作为 deterministic runner 失败条件。无 deterministic 产物的 eval 不要声明 runner output；长期提交的结果是 `comparison.md`；新的 metadata schema 应显式区分 runtime-output 字段和 durable-result 字段
-- `eval_metadata.json` 不应声明 `validation_method`；skill eval 默认按当前流程执行 fresh subagent validation。`subagent-verdict.md` 只是 Codex 或 Claude Code subagent validation 的运行期诊断产物，不能提交，也不能写入 metadata output 字段作为 runner 必检产物
-- eval runner 默认将运行期文件写入隔离的 scratch workspace，例如 `tmp/eval-runs/...`，再只把人工确认后的最新结果汇总回 `comparison.md`。模型 eval transcripts、verdicts、timing data 和 diagnostics 可作为短期 CI artifact 上传用于排查，但不要提交到 git
-- PR 评论或对话中的 eval 结论必须与已提交或拟提交的 `comparison.md` 保持一致。
-- `comparison.md` 应包含 evaluation target、test set 或 fixture version、latest result、with-skill behavior、without_skill baseline 的运行来源与行为摘要、failures、next steps 和 runtime artifact policy。`Latest result` 使用两个维度：**Behavior result（行为正确性）**记录 skill 在本轮实际触发的路径上是否满足 assertions、是否存在回归，取值为 `PASS` / `FAIL`；**Coverage result（场景覆盖）**记录本轮运行实际覆盖了多少 assertion 场景，取值为 `FULL` / `PARTIAL`，取 `PARTIAL` 时必须列出未覆盖 assertion 及原因。
-- 依赖实时外部数据的 eval，如果外部仓库当时缺少特定实体，例如 open milestone、eligible 普通 PR、bot PR、维护类 PR 或 breaking marker，导致 assertion 未触发，则该 assertion 记为 `NOT EXERCISED`，只计入 Coverage result，不得计入 Behavior result 的 `FAIL`。
-- 整体结论按两个维度组合：Behavior `FAIL` 时为 `FAIL`；Behavior `PASS` + Coverage `FULL` 时为 `PASS`；Behavior `PASS` + Coverage `PARTIAL` 时为 `PASS (partial coverage)`。
-- `comparison.md` 结果区必须包含一行 `Overall result: <PASS | PASS (partial coverage) | FAIL | BLOCKED>`，供 `scripts/summarize_eval_results.py` 解析。
-- 发版或 review 汇总引用 comparison 结论时，必须能仅从 Behavior result 与 Coverage result 区分 skill 回归和实时样本缺口。新执行或刷新的 `comparison.md` 必须使用该两维结果模型。
-- Baseline 的作用是为 comparison 提供不使用 skill 时的对照输入，不是独立的机器判定对象。Behavior result 与 Coverage result 是 sub-agent、fresh judge 或人工 reviewer 基于 with-skill、without_skill、assertions 和上下文得出的结论；deterministic contract checker 只校验 eval 定义、workspace、durable `comparison.md` 和 runtime artifact 策略，不根据 baseline 自由文本判断结果。
-- Python eval 测试不能依赖上一次 eval run 的运行期输出。使用临时目录或最小 fixtures，避免跨测试根目录出现重复测试模块名，确保 pytest 能在同一进程中收集它们；提交 eval 变更前运行 `uv run scripts/check_eval_artifacts.py`
-- PR 必跑校验顺序是 `repository-contract -> eval-contract -> doc-contract -> python-tests`；先运行 `uv run scripts/check_repository_contract.py`，再运行 `uv run scripts/check_eval_contract.py` 和 `uv run scripts/check_eval_artifacts.py`，再运行 `uv run scripts/check_doc_contract.py`，最后运行确定性 pytest 命令
-- 模型 eval 不作为 required status check；但只要实际执行 skill eval，默认应包含模型 transcript 生成/检查。涉及 skill 行为、routing、eval fixture 或 release 前变更时，管理员应在合并前手动触发 eval workflow，并把 transcript 结果和 subagent validation 结果一起作为 merge 判断依据
+- 提交 eval 定义、metadata、fixtures、README 与最新 `comparison.md`。不提交运行期产物：`with_skill/`、`without_skill/`、`baseline/`、`outputs/`、`comparison.auto.md`、`transcript.md`、`candidate-output.md`、`subagent-verdict.md`、`timing.json`、`run_status.json`、diagnostics 目录
+- metadata 中的 `with_skill_outputs` / `without_skill_outputs` 只是 deterministic runner 的运行期产物预期，不要求存在于已提交 workspace。`with_skill_outputs` 可作 runner 门禁；baseline 类输出只报告，不作失败条件。无 deterministic 产物的 eval 不声明 runner output
+- `eval_metadata.json` 不声明 `validation_method`；skill eval 默认执行 fresh subagent validation
+- 模型 transcript、verdict、timing、diagnostics 可作短期 CI artifact 上传排查，但不入 git
+- PR 评论或对话中的 eval 结论必须与已提交或拟提交的 `comparison.md` 一致
+- Python eval 测试不得依赖上次运行的输出；用临时目录或最小 fixture，避免跨测试根目录重名模块。提交前运行 `uv run scripts/check_eval_artifacts.py`
 
-**Eval runner 约束**
+**Eval 结果模型**
 
-- 最终 eval 验证必须在与被测会话隔离的全新上下文中直接执行。当前会话中的全新 Codex subagent，以及每条 lane 各自独立启动的全新 `codex exec` 会话，都是被接受的形态；两者本质相同，都是在干净上下文里执行。执行方应重新读取 skill 文档、相关 Agent README、eval fixture workspace 和 `evals.json`，先在应用 skill 的条件下运行 `with_skill`，再在不读取或应用该 skill / Agent README 的条件下重新生成新的 `without_skill` baseline，并基于可用证据判断 skill 行为是否满足 eval assertions
-- 不要把批量 transcript 生成脚本的输出当作 eval pass/fail 的事实来源。这类 transcripts 只能作为诊断产物保留。最终可用性判断必须来自上述隔离执行，并由独立评审方（fresh subagent 或独立 judge 会话）对照 assertions 得出；被测 lane 的自评不能充当判定，评审方必须独立核对零写入等关键事实而不是采信 lane 自述
-- Baseline outputs 是 comparison 证据输入。不要为了隐藏 transcript-generation 失败，把 eval 弱化成可选 `without_skill`，也不要复用历史 baseline 充当本次 Fresh Sub-Agent 结果；如果新的 `without_skill` baseline 没有成功生成或无法被 subagent 评审，应由 subagent 或 reviewer 在 `comparison.md` 中说明其对 `Latest result` 的影响。
-- 旧 transcript 生成仍用于 comparison artifacts 时，优先使用结构化输出并提取最终结果字段，不要依赖纯文本 stdout
-- 在隔离临时 workspace 中生成 transcripts，不要直接写入已提交的 eval fixture。历史输出或已生成 PM docs 可能污染 empty-workspace routing 等上下文敏感用例
-- 对每次运行前必须从临时 workspace 删除的路径，使用 `eval_metadata.json` 中的 `execution_cleanup`，例如 stale `PRD.md`、`docs/pm/` 或 prior output folders
-- 只有实际存在 deterministic runner 流程时才声明和持久化 run diagnostics，例如 command、cwd、timeout、return code 和 stdout length，便于区分基础设施失败和 assertion 失败
-- 优先使用语义断言，避免脆弱的精确字符串检查。行为在语言或格式上可以合理变化时，例如本地化或等价的 PM-first lane labels，只要保持预期路由语义即可接受
+`comparison.md` 含 evaluation target、fixture version、latest result、with-skill 行为、`without_skill` baseline 的运行来源与行为摘要、failures、next steps、runtime artifact policy。
+
+`Latest result` 分两维，结果区必须含一行 `Overall result: <PASS | PASS (partial coverage) | FAIL | BLOCKED>` 供 `scripts/summarize_eval_results.py` 解析：
+
+| 维度 | 含义 | 取值 |
+| --- | --- | --- |
+| Behavior result | 本轮实际触发的路径上是否满足 assertions、有无回归 | `PASS` / `FAIL` |
+| Coverage result | 本轮实际覆盖了多少 assertion 场景 | `FULL` / `PARTIAL`（取 `PARTIAL` 须列出未覆盖项及原因） |
+
+组合规则：Behavior `FAIL` → `FAIL`；Behavior `PASS` + Coverage `FULL` → `PASS`；Behavior `PASS` + Coverage `PARTIAL` → `PASS (partial coverage)`。
+
+依赖实时外部数据的 eval，若外部当时缺少特定实体（open milestone、eligible PR、breaking marker 等）导致 assertion 未触发，记 `NOT EXERCISED`，只计入 Coverage，不得计入 Behavior 的 `FAIL`。发版或 review 汇总引用结论时，必须能仅从两维区分 skill 回归与实时样本缺口。
+
+Baseline 是 comparison 的对照输入，不是独立的机器判定对象。两维结果由 subagent、fresh judge 或人工 reviewer 基于 with_skill、without_skill、assertions 与上下文得出；deterministic contract checker 只校验 eval 定义、workspace、durable `comparison.md` 与产物策略，不根据 baseline 自由文本判断结果。
+
+**校验与 CI**
+
+- PR 必跑顺序：`repository-contract` → `eval-contract` → `doc-contract` → `python-tests`，即 `check_repository_contract.py` → `check_eval_contract.py` 与 `check_eval_artifacts.py` → `check_doc_contract.py` → 确定性 pytest
+- 模型 eval 不作 required status check。涉及 skill 行为、routing、eval fixture 或发版前变更时，管理员应在合并前手动触发 eval workflow，把 transcript 与 subagent validation 结果一并作为 merge 依据
 
 ### 文档版本维护
 
@@ -245,9 +303,9 @@ Skill eval 是 Agent skill 的可用性测试。它们必须验证 skill 能被�
 - `devops-agent` - 4 个 specialist skills
 - `designer-agent` - 2 个 specialist skills
 - `security-agent` - 4 个 specialist skills
-- `docs-agent` - 4 个 specialist skills
+- `docs-agent` - 5 个 specialist skills
 
-**Specialist skills 总数：** 31
+**Specialist skills 总数：** 32
 
 **计划中的 Agent**
 

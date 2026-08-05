@@ -5,11 +5,11 @@ import { readText, SITE_ROOT, toPosix } from './paths.mjs';
 
 export const VISIBILITIES = new Set(['public', 'internal', 'both']);
 export const DOC_TYPES = new Set([
-  'landing', 'release', 'design', 'api', 'database', 'ops', 'product'
+  'landing', 'release', 'design', 'api', 'database', 'ops', 'product', 'manual'
 ]);
 export const STAGES = new Set(['draft', 'dev', 'ops', 'release']);
 export const SECTION_ORDER = [
-  'standards', 'product', 'design', 'api', 'database', 'ops', 'release-notes'
+  'standards', 'product', 'manual', 'design', 'api', 'database', 'ops', 'release-notes'
 ];
 export const IGNORE_GLOBS = [
   '**/.meta/**', '**/.generated/**', '**/.vitepress/cache/**',

@@ -20,7 +20,7 @@ All seven fields are unconditionally required.
 | --- | --- | --- |
 | `title` | Non-empty string | Human-readable page title. |
 | `visibility` | `public`, `internal`, or `both` | Controls public and internal site inclusion. |
-| `doc_type` | `landing`, `release`, `design`, `api`, `database`, `ops`, or `product` | Selects the page category; no other value is valid. |
+| `doc_type` | `landing`, `release`, `design`, `api`, `database`, `ops`, `product`, or `manual` | Selects the page category; no other value is valid. |
 | `stage` | `draft`, `dev`, `ops`, or `release` | Records the page lifecycle stage. |
 | `owners` | Non-empty array of strings | Identifies the roles or teams responsible for the page. |
 | `related_code` | Non-empty array of strings | Defines the code and test evidence scope for every page type. |
@@ -37,13 +37,15 @@ All seven fields are unconditionally required.
   metadata are validated by the change-map toolchain owned by issue #122,
   matching the AI Hub baseline behavior. Template pages under
   `standards/templates/` follow the AI Hub precedent and use their target
-  `doc_type` (`api`, `database`, `design`, `ops`, or `product`). Template pages
-  participate in internal-page validation, while their `doc_type` identifies
-  the target page type represented by the template. They are reusable
+  `doc_type` (`api`, `database`, `design`, `ops`, `product`, or `manual`).
+  Template pages participate in internal-page validation, while their
+  `doc_type` identifies the target page type represented by the template. They are reusable
   placeholder artifacts, so that target `doc_type` does not make the template
   itself subject to type-specific fact checks.
 - `last_verified_version` is always required. Use `unverified` when the page
   has not been verified or no version anchor is available.
+- Manual pages use `doc_type: manual` under the independent root
+  `docs/site/manual/`, which is peer to the other five formal document types.
 - `last_verified_version` records the version against which the page content
   was verified; it does not describe release status. The stamping sequence is
   owned by `docs-audit`.

@@ -18,4 +18,5 @@ last_verified_version: unverified
 ## 内容入口
 
 - [产品说明](/product/)
+- [操作手册](/manual/)
 - [发布说明](/release-notes/)

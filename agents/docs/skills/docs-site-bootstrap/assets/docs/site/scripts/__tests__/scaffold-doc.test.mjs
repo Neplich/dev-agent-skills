@@ -31,7 +31,8 @@ const TYPE_CASES = [
   ['database', 'database'],
   ['design', 'design'],
   ['ops', 'ops'],
-  ['product', 'product']
+  ['product', 'product'],
+  ['manual', 'manual']
 ];
 
 async function createFixture() {

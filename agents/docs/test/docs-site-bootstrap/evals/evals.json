@@ -14,17 +14,17 @@
         {
           "id": "creates_complete_inventory",
           "description": "生成清单完整",
-          "text": "清点并逐字节复制 `assets/docs/site/` 中的完整静态资产清单，并生成 `docs/site/.meta/bootstrap-manifest.json`；manifest files 覆盖所有已处理静态资产。"
+          "text": "清点并逐字节复制 `assets/docs/site/` 中的完整 42 项静态资产清单，并生成 `docs/site/.meta/bootstrap-manifest.json`；manifest files 覆盖所有已处理静态资产。"
         },
         {
           "id": "delivers_deterministic_scaffold_assets",
           "description": "交付确定性文档脚手架资产",
-          "text": "交付站点包含 package.json 中唯一的 `new:doc` 命令、`scripts/scaffold-doc.mjs` 和 `scripts/__tests__/scaffold-doc.test.mjs`；五个 standards/templates Markdown 文件各含恰好一个 `docs-scaffold` 区块，且全部被 `standards/index.md` 索引。"
+          "text": "交付站点包含 package.json 中唯一的 `new:doc` 命令、`scripts/scaffold-doc.mjs` 和 `scripts/__tests__/scaffold-doc.test.mjs`；六个 standards/templates Markdown 文件各含恰好一个 `docs-scaffold` 区块，且全部被 `standards/index.md` 索引。"
         },
         {
           "id": "validates_seven_frontmatter_fields",
           "description": "frontmatter 七字段合法",
-          "text": "每个正式 Markdown 页面均包含合法的 title、visibility、doc_type、stage、owners、related_code、last_verified_version；doc_type 只能取 landing、release、design、api、database、ops、product，不允许 standard；所有页面的 owners 与 related_code 均为非空字符串数组；last_verified_version 必填且允许为 unverified。"
+          "text": "每个正式 Markdown 页面均包含合法的 title、visibility、doc_type、stage、owners、related_code、last_verified_version；doc_type 只能取 landing、release、design、api、database、ops、product、manual，不允许 standard；所有页面的 owners 与 related_code 均为非空字符串数组；last_verified_version 必填且允许为 unverified。"
         },
         {
           "id": "writes_only_docs_site",

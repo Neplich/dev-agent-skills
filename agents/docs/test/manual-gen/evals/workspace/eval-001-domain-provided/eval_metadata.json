@@ -1,0 +1,29 @@
+{
+  "eval_id": "eval-001-domain-provided",
+  "eval_name": "domain-provided-bounded-manual",
+  "workspace_root": "agents/docs/test/manual-gen/evals/workspace/eval-001-domain-provided",
+  "skill_availability_goal": "Verify a maintainer-provided domain leads to a bounded, evidence-backed manual capture without entering the local-start branch.",
+  "prompt": "维护者已提供截图环境 https://mermaid.live/，并确认本批只为匿名使用者记录一条基础编辑与预览流程。宿主文档站基础、manual 模板和 change map 均已存在。请按 manual-gen 协议执行；截图和生成页面只能写入隔离运行目录，不得写回 eval fixture。",
+  "environment": {
+    "kind": "maintainer_provided_domain",
+    "url": "https://mermaid.live/",
+    "authentication": "not_required",
+    "confirmed_scope": "anonymous basic editing and preview flow",
+    "host_checks_execution": "run npm run test:docs from docs/site; the command is self-contained and checks the materialized fixture assets without an install step"
+  },
+  "fixture_context": [
+    "pm-handoff.md",
+    "docs/site/standards/index.md",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/standards/templates/manual-guide.md",
+    "docs/site/manual/index.md",
+    "docs/site/package.json",
+    "scripts/capture-basic-editing.spec.md"
+  ],
+  "execution_cleanup": [
+    "with_skill",
+    "without_skill",
+    "baseline",
+    "outputs"
+  ]
+}

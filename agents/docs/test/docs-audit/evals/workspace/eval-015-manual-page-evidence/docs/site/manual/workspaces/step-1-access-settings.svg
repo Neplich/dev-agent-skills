@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#f5f5f5"/>
+  <rect x="40" y="40" width="560" height="280" rx="8" fill="#ffffff" stroke="#cccccc"/>
+  <text x="72" y="92" font-family="sans-serif" font-size="24">工作区访问设置</text>
+  <text x="72" y="144" font-family="sans-serif" font-size="18">测试令牌：token-demo-redact-me</text>
+  <rect x="72" y="188" width="180" height="44" rx="4" fill="#2563eb"/>
+  <text x="104" y="216" font-family="sans-serif" font-size="16" fill="#ffffff">保存权限</text>
+</svg>

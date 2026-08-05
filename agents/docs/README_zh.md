@@ -1,6 +1,6 @@
 # Docs Agent
 
-`docs-agent` 是第七个角色 Agent，也是正式文档层的所有者。它将明确的文档站点 bootstrap、基于证据的同步与回填、站内 Release Notes 交付，以及发布文档审计请求路由到匹配的文档 specialist。
+`docs-agent` 是第七个角色 Agent，也是正式文档层的所有者。它将明确的文档站点 bootstrap、基于证据的同步与回填、基于真实运行界面的图文用户操作手册、站内 Release Notes 交付，以及发布文档审计请求路由到匹配的文档 specialist。
 
 > [!NOTE]
 > 其他语言：[English](./README.md)
@@ -13,9 +13,9 @@
 | 项目 | 详情 |
 | --- | --- |
 | 入口 skill | `docs-agent` |
-| Specialist skills | 4 个 |
+| Specialist skills | 5 个 |
 | 主要输入 | PM handoff 上下文、已批准的产品文档、已确认的工程文档、代码和测试证据、部署证据、改变事实的 Security 结论或整改证据、发布上下文 |
-| 主要输出 | 正式文档站点脚手架、当前状态的正式文档、change-map 更新、已确认的站内 Release Notes、发布审计报告 |
+| 主要输出 | 正式文档站点脚手架、当前状态的正式文档、带截图资产的图文用户操作手册、change-map 更新、已确认的站内 Release Notes、发布审计报告 |
 | 协作关系 | 位于已确认的 PM、Engineer、QA 和 DevOps 证据下游；在不取代其角色契约的前提下支持发布就绪 |
 
 ## Skill 清单
@@ -25,6 +25,7 @@
 | `docs-agent` | 正式文档请求路由 | Specialist 选择或有明确边界的 blocked handoff |
 | `docs-site-bootstrap` | 维护者明确要求初始化正式文档站点 | 技术中立的 `docs/site/` 基础和标准 |
 | `formal-docs-sync` | 已确认的功能、部署、发布或现有系统需要同步或回填正式文档 | 当前状态的 API、数据库、设计、运维和产品文档及其 `change-map.yaml` 更新；v0.3.0 仅限 API 自动化 |
+| `manual-gen` | 已确认的有限范围需要基于真实运行界面生成图文用户操作手册 | 手册页面、同级截图资产和可交给文档审计的 change-map 更新 |
 | `release-notes-generator` | 已确认的发布需要在准备 GitHub Release 之前，在宿主文档站点中生成版本化页面 | 已确认的 `vX.Y.Z.md`、发布元数据/索引更新、成功的文档检查，以及面向 `docs-agent:docs-audit` pre-tag 审计的站点就绪证据 handoff；`pm-agent:github-release-generator` 仍是下游 GitHub Release 所有者 |
 | `docs-audit` | 发布就绪要求在创建 tag 前后进行正式文档覆盖度与事实核验 | 在维护者确认 `target_release_version` 后，pre-tag 在完成完整集合标记后返回 `ready_for_tag`；post-tag 在检查实际 tag 后返回 `release_verified` 或 `blocked` |
 
@@ -32,6 +33,7 @@
 
 - 明确初始化正式文档站点：使用 `docs-site-bootstrap`。
 - 功能、部署或发布同步，或现有系统回填：使用 `formal-docs-sync`。
+- 基于真实运行界面截图生成图文用户操作手册：使用 `manual-gen`。
 - 生成、确认和索引版本化的站内 Release Notes，并进行文档验证：使用 `release-notes-generator`。
 - 发布文档审计：使用 `docs-audit`。
 

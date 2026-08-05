@@ -220,7 +220,7 @@ Check the seven required fields and their constraints:
 | --- | --- |
 | `title` | non-empty string |
 | `visibility` | `public`, `internal`, or `both` |
-| `doc_type` | `landing`, `release`, `design`, `api`, `database`, `ops`, or `product` |
+| `doc_type` | `landing`, `release`, `design`, `api`, `database`, `ops`, `product`, or `manual` |
 | `stage` | `draft`, `dev`, `ops`, or `release` |
 | `owners` | non-empty string array |
 | `related_code` | non-empty string array of repository-relative paths or globs for every `doc_type` |
@@ -285,6 +285,18 @@ For every affected API page, verify at least:
 - streaming behavior and file upload or download behavior, when applicable
 
 Use routes, handlers, schemas, tests, and other direct implementation evidence.
+
+For every affected manual page, verify at least:
+
+- every numbered operation step references a corresponding screenshot that
+  exists and can be parsed as an image; a missing step screenshot blocks
+  stamping that manual page;
+- each screenshot caption corresponds to its numbered operation step;
+- the manual page is reachable through the host navigation; and
+- screenshots, captions, body text, frontmatter, and persistent metadata contain
+  no token, key, email address, personal information, cost, invocation log, or
+  environment-specific long identifier.
+
 For other document types, verify the material schema fields, environment
 variables, deployment commands, and rollback steps that apply to the page.
 When evidence is insufficient, record the evidence gap as a blocker and do not

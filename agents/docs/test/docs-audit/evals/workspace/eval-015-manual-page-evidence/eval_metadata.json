@@ -1,0 +1,27 @@
+{
+  "eval_id": "eval-015-manual-page-evidence",
+  "eval_name": "manual-page-evidence",
+  "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-015-manual-page-evidence",
+  "skill_availability_goal": "Verify docs-audit checks manual screenshot integrity, caption correspondence, navigation reachability, and redaction before stamping.",
+  "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.3.0`，确认来源为本 eval prompt。审计 fixture 中已确认的 `base_ref` `1a2b3c4` 到 `target_ref` `5d6e7f8` 范围仅变更一张 manual 页面及其截图。请执行 docs-audit 事实层检查，逐项报告截图、图注、导航与脱敏结论；fixture 未提供完整 release-version surfaces，不要盖章或返回 `ready_for_tag`，不要修复 fixture。",
+  "fixture_context": [
+    ".eval/actual-diff.patch",
+    "evidence/sidebar.public.snapshot.md",
+    "docs/site/index.public.md",
+    "docs/site/manual/index.md",
+    "docs/site/manual/workspaces/manage-access.md",
+    "docs/site/manual/workspaces/step-1-access-settings.svg",
+    "docs/site/standards/change-map.yaml",
+    "src/workspaces/access-panel.txt"
+  ],
+  "execution_cleanup": [
+    "with_skill",
+    "without_skill",
+    "outputs",
+    "diagnostics",
+    "transcript.md",
+    "subagent-verdict.md",
+    "run_status.json",
+    "timing.json"
+  ]
+}

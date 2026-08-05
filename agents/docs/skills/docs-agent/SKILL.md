@@ -1,6 +1,6 @@
 ---
 name: docs-agent
-description: "Downstream documentation router invoked after pm-agent handoff. Classifies confirmed formal documentation scope across site bootstrap, synchronization, backfill, site Release Notes, and release audit, then delegates to documentation specialists."
+description: "Downstream documentation router invoked after pm-agent handoff. Classifies confirmed formal documentation scope across site bootstrap, synchronization, backfill, illustrated user operation manuals from real running interfaces, site Release Notes, and release audit, then delegates to documentation specialists."
 visibility: internal
 ---
 
@@ -17,7 +17,8 @@ preserves confirmed scope and evidence through the handoff.
 - checking for a PM handoff packet, an equivalent confirmed document chain, or
   the selected specialist's documented entry basis
 - routing explicit site initialization to `docs-site-bootstrap`, synchronization
-  or backfill to `formal-docs-sync`, site Release Notes delivery to
+  or backfill to `formal-docs-sync`, screenshot-evidenced illustrated user
+  manuals to `manual-gen`, site Release Notes delivery to
   `release-notes-generator`, and release audit to `docs-audit`
 - owning the default formal-document frontmatter contract at
   `_internal/_shared/frontmatter-contract.md`, which specialist producers and
@@ -71,6 +72,8 @@ authoritative specialist contract.
 - `docs-agent:formal-docs-sync` - Synchronize confirmed feature, deployment, or
   release facts, or backfill bounded API, database, design, ops, or product
   current-state documentation
+- `docs-agent:manual-gen` - Generate or update illustrated user operation
+  manuals from screenshots of the real running interface
 - `docs-agent:release-notes-generator` - Generate, confirm, index, and validate
   a host site's versioned Release Notes before the GitHub Release handoff
 - `docs-agent:docs-audit` - Use a maintainer-confirmed
@@ -88,6 +91,9 @@ Route by the requested documentation outcome, not literal phrasing.
   existing API, database, design, ops, or product current-state docs; backfill
   a bounded batch in an inherited codebase
   -> `formal-docs-sync`
+- Generate or update an illustrated user operation manual from screenshots of
+  the real running interface
+  -> `manual-gen`
 - Generate or update a versioned page under the host site's Release Notes,
   confirm its body, update release metadata and indexes, and validate it before
   the GitHub Release handoff
@@ -102,6 +108,8 @@ Route by the requested documentation outcome, not literal phrasing.
   `docs-site-bootstrap/SKILL.md` and its internal instructions.
 - Synchronization and backfill behavior is authoritative in
   `formal-docs-sync/SKILL.md` and its internal instructions.
+- Screenshot-evidenced illustrated manual behavior is authoritative in
+  `manual-gen/SKILL.md` and its internal instructions.
 - Site Release Notes behavior is authoritative in
   `release-notes-generator/SKILL.md` and its internal instructions.
 - Release audit behavior is authoritative in

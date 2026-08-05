@@ -98,7 +98,7 @@
       "workspace": "workspace/eval-007-frontmatter-contract-fixtures",
       "assertions": [
         {"id": "accepts_confirmed_audit_entry", "description": "接受等效确认的审计入口凭据", "text": "读取 `release-entry.md`，接受其中维护者明确确认的 `target_release_version: v0.4.0`、显式 `base_ref: 4a1b2c3` 与 `target_ref: 7c9e2af`、pre-tag 审计请求及证据清单作为 docs-audit 的等效确认入口。"},
-        {"id": "rejects_standard_doc_type", "description": "拒绝 standard 文档类型", "text": "将 `docs/site/api/invalid-standard-doc-type.md` 因 `doc_type: standard` 不在允许的 landing、release、design、api、database、ops、product 集合中判为 `stale`。"},
+        {"id": "rejects_standard_doc_type", "description": "拒绝 standard 文档类型", "text": "将 `docs/site/api/invalid-standard-doc-type.md` 因 `doc_type: standard` 不在允许的 landing、release、design、api、database、ops、product、manual 集合中判为 `stale`。"},
         {"id": "rejects_empty_related_code", "description": "拒绝空 related_code", "text": "将 `docs/site/api/invalid-empty-related-code.md` 因所有页面都要求 `related_code` 为非空字符串数组而判为 `stale`。"},
         {"id": "rejects_missing_last_verified_version", "description": "拒绝缺少版本核验字段", "text": "将 `docs/site/api/invalid-missing-last-verified-version.md` 因无条件必填的 `last_verified_version` 缺失而判为 `stale`。"},
         {"id": "rejects_empty_owners", "description": "拒绝空 owners", "text": "将 `docs/site/api/invalid-empty-owners.md` 因 `owners` 不是非空字符串数组而判为 `stale`。"},
@@ -213,6 +213,21 @@
       "assertions": [
         {"id": "preserves_state_for_no_surface_change", "description": "无发布面变化不重检", "text": "仅版本事实盖章且构建/发布面不变时保留既有完整性状态。"},
         {"id": "refreshes_shared_state_for_material_change", "description": "构建面变化刷新共享状态", "text": "affected set 改变文档 build target 或 runtime/publication surface 时复用共享检查并刷新状态，不创建第二协议或修改部署资产。"}
+      ]
+    },
+    {
+      "id": "eval-015-manual-page-evidence",
+      "name": "手册页面截图与导航事实审计",
+      "description": "验证 manual 页面事实层逐项检查截图存在且可解析、图注与步骤对应、导航可达和敏感信息脱敏。",
+      "prompt": "维护者明确确认本次 pre-tag audit 的 `target_release_version` 为 `v1.3.0`，确认来源为本 eval prompt。审计 fixture 中已确认的 `base_ref` `1a2b3c4` 到 `target_ref` `5d6e7f8` 范围仅变更一张 manual 页面及其截图。请执行 docs-audit 事实层检查，逐项报告截图、图注、导航与脱敏结论；fixture 未提供完整 release-version surfaces，不要盖章或返回 `ready_for_tag`，不要修复 fixture。",
+      "expected_output": "manual 页面因第二步截图缺失、第一步图注与操作不符、页面未从手册导航到达且正文和截图含应脱敏的测试标识而 blocked；报告逐项保留证据，页面维持 unverified。",
+      "workspace": "workspace/eval-015-manual-page-evidence",
+      "assertions": [
+        {"id": "checks_step_screenshot_files", "description": "逐步检查截图存在且可解析", "text": "输出确认第一步引用的 SVG 可作为图像解析，同时指出第二步引用的 PNG 不存在；不能只因页面含一张有效图片就跳过逐步截图完整性检查。"},
+        {"id": "checks_caption_step_correspondence", "description": "核对图注与编号步骤对应", "text": "输出指出第一步要求打开访问设置，但其图注描述删除工作区确认框，二者不对应。"},
+        {"id": "checks_manual_navigation_reachability", "description": "核对手册页面导航可达", "text": "输出依据 public 落地页、manual 根索引和 `evidence/sidebar.public.snapshot.md` 的生成后侧边栏快照均未包含目标页面，判定目标 manual 页面无法通过宿主导航到达。"},
+        {"id": "checks_manual_redaction", "description": "核对页面和截图脱敏", "text": "输出识别正文中的测试邮箱和截图中的测试 token 均属于必须脱敏的内容，并保留具体证据位置。"},
+        {"id": "blocks_manual_stamp", "description": "任一手册事实缺陷阻止盖章", "text": "输出将该 manual 页面判为 blocked 或非 verified，保持 `last_verified_version: unverified`，且不返回 `ready_for_tag`。"}
       ]
     }
   ]

@@ -21,13 +21,13 @@ issue #122 的 change-map 工具链。
 
 ## 2. 完整 Inventory
 
-静态 inventory 是下方资产索引中的 40 个文件。另加一个仅运行时目标：
+静态 inventory 是下方资产索引中的 42 个文件。另加一个仅运行时目标：
 
 - `docs/site/.meta/bootstrap-manifest.json`
 
 inventory 覆盖 npm 项目、七个入口脚本及其最小 helper、脚手架测试与 fixture、
-共享/public/internal VitePress 配置、主题与 Mermaid 渲染、两个首页、七个
-section 首页、三页 standards、五类内容模板、Release Notes 编写规范、
+共享/public/internal VitePress 配置、主题与 Mermaid 渲染、两个首页、八个
+section 首页、三页 standards、六类内容模板、Release Notes 编写规范、
 空 change map 和 release metadata。
 
 静态资产遵循以下发布规则：
@@ -87,7 +87,7 @@ manifest 形状如下；`createdAt` 只在首次创建时写入，zero-change �
 
 ## 5. 写入顺序
 
-1. 从下方索引构建 40 个静态目标，加上运行时 manifest，形成完整 inventory。
+1. 从下方索引构建 42 个静态目标，加上运行时 manifest，形成完整 inventory。
 2. 读取或在内存建立 manifest；解析失败时停止。
 3. 对全部静态目标完成 missing / identical / kept-as-is / conflict 分类。
 4. 汇总全部冲突并取得逐项决定；未授权的差异文件不得写入。
@@ -137,6 +137,7 @@ manifest 形状如下；`createdAt` 只在首次创建时写入，zero-change �
 | `assets/docs/site/database/index.md` | `docs/site/database/index.md` |
 | `assets/docs/site/design/index.md` | `docs/site/design/index.md` |
 | `assets/docs/site/product/index.md` | `docs/site/product/index.md` |
+| `assets/docs/site/manual/index.md` | `docs/site/manual/index.md` |
 | `assets/docs/site/ops/index.md` | `docs/site/ops/index.md` |
 | `assets/docs/site/release-notes/README.md` | `docs/site/release-notes/README.md` |
 | `assets/docs/site/release-notes/index.md` | `docs/site/release-notes/index.md` |
@@ -148,6 +149,7 @@ manifest 形状如下；`createdAt` 只在首次创建时写入，zero-change �
 | `assets/docs/site/standards/templates/feature-design.md` | `docs/site/standards/templates/feature-design.md` |
 | `assets/docs/site/standards/templates/ops-runbook.md` | `docs/site/standards/templates/ops-runbook.md` |
 | `assets/docs/site/standards/templates/product-handbook.md` | `docs/site/standards/templates/product-handbook.md` |
+| `assets/docs/site/standards/templates/manual-guide.md` | `docs/site/standards/templates/manual-guide.md` |
 | `assets/docs/site/standards/change-map.yaml` | `docs/site/standards/change-map.yaml` |
 | `assets/docs/site/.meta/releases.json` | `docs/site/.meta/releases.json` |
 

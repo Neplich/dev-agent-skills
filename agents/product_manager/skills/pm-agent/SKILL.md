@@ -61,7 +61,7 @@ execution.
 - `qa-agent` - confirmed acceptance, exploratory, bug analysis, or regression validation work
 - `devops-agent` - confirmed deployment, CI/CD, environment, release readiness, rollback, or runbook work
 - `security-agent` - confirmed AppSec, auth/authz, dependency, privacy, or data-flow review work
-- `docs-agent` - confirmed formal documentation site bootstrap, synchronization, backfill, or release documentation audit work
+- `docs-agent` - confirmed formal documentation site bootstrap, synchronization, backfill, illustrated user operation manuals from real running interfaces, or release documentation audit work
 
 ## User Entry Coverage
 
@@ -79,7 +79,8 @@ Treat `pm-agent` as the first stop for all user-side starting points, including:
 - security conclusion escalations returned to PM for entry classification and
   issue filing
 - formal documentation site bootstrap, post-feature / deployment / release
-  synchronization, existing formal-docs backfill, or release documentation audit
+  synchronization, existing formal-docs backfill, illustrated user operation
+  manuals from real running interfaces, or release documentation audit
 - GitHub issue, PR, milestone, release, changelog, roadmap, or repo status work
 
 ## Request Classification Protocol
@@ -96,7 +97,7 @@ these stable `request_type` values in routing notes and handoff packets.
 | `validation` | Confirm the test basis: PRD, TRD, confirmed implementation plan, or existing acceptance record. | QA / test-writer receives the work only after expectations are stable and source docs are named. |
 | `deployment` | Record operational goal, environment, release scope, rollback needs, and risks. | DevOps receives a bounded deployment / CI / release-readiness packet. |
 | `security` | Record risk surface, assets, permissions, data flow, and remediation expectations. | Security receives a bounded review packet with scope and required output. |
-| `formal_docs` | Distinguish formal documentation site work from role-owned process documents such as PRD, TRD, implementation plans, and QA reports. | Docs receives a bounded bootstrap, synchronization, backfill, or release documentation audit packet and routes it to the matching specialist. |
+| `formal_docs` | Distinguish formal documentation site work from role-owned process documents such as PRD, TRD, implementation plans, and QA reports. | Docs receives a bounded bootstrap, synchronization, backfill, illustrated user operation manual, or release documentation audit packet and routes it to the matching specialist. |
 | `document_structure_governance` | Route a read-only feature-tree inventory or structure audit to `idea-to-spec` structure governance; route a concrete split proposal or confirmed structure change to the existing-project iteration lane. | Read-only audits stay in PM and produce a runtime report; structural execution requires a user-confirmed proposal and is classified `major` before downstream handoff. |
 | `delivery` / `status` | Confirm already-scoped change scope, verification state, CI/review status, and requested delivery action. | Engineer / delivery can use the fast lane only for known work whose scope is already confirmed. Repo health, backlog, PR queue, release-readiness planning, and blockers route to `repo_status` / `github-reader`. |
 | `feature_catalog` | Route inherited-project inventory and feature-profile work to `feature-catalog`. | Stay in PM until the catalog or feature profile is maintainer-confirmed. |
@@ -128,7 +129,7 @@ Route by the user's intended PM outcome, not by literal wording.
 | 已确认运维范围的部署、CI/CD、Docker、Helm、环境配置、发布就绪、回滚或 runbook | hand off to `devops-agent` | Deployment, CI/CD, Docker, Helm, environment configuration, release readiness, rollback, or runbook requests with confirmed operational scope |
 | shared safety-net 返回且用户已确认的文档站镜像交付缺口 | hand off to `devops-agent` as repo-wide `deployment` work | A user-confirmed documentation-site image-delivery gap returned by the shared safety-net is repo-wide `deployment` work. Preserve the check in `source_documents` and `blockers_risks`, use `N/A` feature fields only for the confirmed repository-wide scope, and hand off to DevOps in the shared ordered chain. Independent hosting or deferral remains a recorded decision or blocker, not a ready DevOps handoff. |
 | 已确认安全范围的安全审查、鉴权、依赖风险、secret、隐私、webhook、上传、登录或数据流风险 | hand off to `security-agent` | Security review, authorization, dependency risk, secrets, privacy, webhook, upload, login, or data-flow risk requests with confirmed security scope |
-| 已确认来源范围的正式文档站初始化、功能/部署/发版后同步、已有文档回填或发版文档审计 | hand off to `docs-agent` | Formal documentation site bootstrap, post-feature / deployment / release synchronization, existing formal-docs backfill, or release documentation audit with confirmed source scope; keep PRD, TRD, implementation plans, QA reports, and other process documents with their owning roles |
+| 已确认来源范围的正式文档站初始化、功能/部署/发版后同步、已有文档回填、基于运行界面截图的图文用户操作手册或发版文档审计 | hand off to `docs-agent` | Formal documentation site bootstrap, post-feature / deployment / release synchronization, existing formal-docs backfill, screenshot-evidenced illustrated user operation manuals, or release documentation audit with confirmed source scope; keep PRD, TRD, implementation plans, QA reports, and other process documents with their owning roles |
 
 If the request is PM-shaped but underspecified, use these defaults:
 
