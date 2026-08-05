@@ -1,7 +1,7 @@
 ---
 title: "Manual Gen 实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.3.0"
+version: "0.3.1"
 status: Implemented
 author: "Neplich Claude Code"
 date: "2026-08-05"
@@ -18,6 +18,9 @@ related_trd: "docs/engineer/agents/docs-agent/manual-gen/TRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/226"
 changelog:
+  - version: "0.3.1"
+    date: "2026-08-05"
+    changes: "修正导航触点与上游版本对齐，记录 manual 脚手架真实写入和宿主检查的端到端验证结果"
   - version: "0.3.0"
     date: "2026-08-05"
     changes: "独立核验：修正 pytest 记录为本机 213 passed，如实记录 codex 委派分工，补记模板资产引用缺陷的发现与修复"
@@ -35,8 +38,8 @@ changelog:
 
 | 项 | 结果 |
 |---|---|
-| PRD 对齐 | `already_approved` — `docs/pm/agents/docs-agent/manual-gen/PRD.md` v1.0.0，FR-M01~M16 与 US-M01~M10 覆盖本次全部改动 |
-| TRD | `docs/engineer/agents/docs-agent/manual-gen/TRD.md` v0.1.0，`related_prd` 指向同 feature path 的 PRD |
+| PRD 对齐 | `already_approved` — `docs/pm/agents/docs-agent/manual-gen/PRD.md` v1.0.1，FR-M01~M16 与 US-M01~M10 覆盖本次全部改动 |
+| TRD | `docs/engineer/agents/docs-agent/manual-gen/TRD.md` v0.1.2，`related_prd` 指向同 feature path 的 PRD |
 | Feature path 门禁 | PRD / TRD / 本计划三者 `feature_path`、`parent_feature`、`feature_level` 一致 |
 | Archive 扫描 | 新 feature path，无 active plan 也无 archive history，不需要 `previous_plan_archive` |
 | UI 设计门禁 | 不适用。本次产出是 skill 契约文档与宿主脚本资产，不改动任何前端页面结构、交互流程或视觉系统，无需 Designer 输入 |
@@ -58,10 +61,16 @@ changelog:
 | A6 | `agents/docs/skills/docs-site-bootstrap/assets/docs/site/standards/templates/manual-guide.md` | 新建 — 模板页，唯一 `docs-scaffold` 块，固化七项字段 | TRD §4 / FR-M08、FR-M11 |
 | A7 | `agents/docs/skills/docs-site-bootstrap/assets/docs/site/manual/index.md` | 新建 — 类型根索引，`doc_type: landing` | TRD §4 / FR-M11 |
 | A8 | `agents/docs/skills/docs-site-bootstrap/_internal/INSTRUCTIONS.md` | 修改 — 骨架目录清单补 `manual` | TRD §4 / FR-M11 |
+| A9 | `agents/docs/skills/docs-site-bootstrap/assets/docs/site/.vitepress/config.public.ts` | 修改 — public 顶部 `nav` 增加 `/manual/` 入口 | TRD §3 / FR-M10 |
+| A10 | `agents/docs/skills/docs-site-bootstrap/assets/docs/site/.vitepress/config.internal.ts` | 修改 — internal 顶部 `nav` 增加 `/manual/` 入口 | TRD §3 / FR-M10 |
+| A11 | `agents/docs/skills/docs-site-bootstrap/assets/docs/site/index.public.md` | 修改 — public 落地页增加操作手册链接 | TRD §3 / FR-M10 |
+| A12 | `agents/docs/skills/docs-site-bootstrap/assets/docs/site/index.internal.md` | 修改 — internal 落地页增加操作手册链接 | TRD §3 / FR-M10 |
 
 依赖：A3 的 `SECTION_ORDER` 需与 A4 的 `SECTION_LABELS` 同批次改，否则 sidebar 生成时取到 `undefined` 标签。
 
-**禁止区**：`.vitepress/config.*.ts`（导航自动生成，零改动）、`prepare-site.mjs`（截图复用既有 `referencedAssets()`）。
+侧边栏由 `SECTION_ORDER` 与 `SECTION_LABELS` 自动生成；顶部 nav 与落地页链接是手写内容，按 A9~A12 更新。
+
+**禁止区**：`prepare-site.mjs`（截图复用既有 `referencedAssets()`）。
 
 ### 批次 B — skill 本体
 
@@ -135,7 +144,7 @@ skill 行为验证（fresh subagent validation 与 `without_skill` baseline）�
 - 禁止新增抽象层或基类、重试与退避、缓存、降级开关、feature flag、新配置项、包装函数、事件钩子、监控埋点、额外日志层。
 - 不为不可能发生的场景写错误处理，不预留扩展点，不做防御式空值兜底。
 - 沿用相邻文件的既有写法与分层：skill 文档对齐 `formal-docs-sync` 与 `release-notes-generator` 的结构，宿主资产对齐现有五类模板与根索引。
-- 不改动 `formal-docs-sync` 的五类契约与八步流程，不改 `.vitepress/config.*.ts`，不改 `prepare-site.mjs`。
+- 不改动 `formal-docs-sync` 的五类契约与八步流程，不改 `prepare-site.mjs`。
 - 量级预期：净新增约 800–1100 行，不新增抽象层。实际偏离明显时停下核对范围。
 
 ## 6. 阻塞项与风险
@@ -145,6 +154,7 @@ skill 行为验证（fresh subagent validation 与 `without_skill` baseline）�
 | 五处枚举同步遗漏会让手册页在宿主校验中失败 | 批次 A 作为独立批次先完成并单独验证 |
 | `SECTION_ORDER` 与 `SECTION_LABELS` 不同步会让 sidebar 取到 `undefined` | 两处在同一批次内改，验证时检查生成的 sidebar |
 | 宿主脚本改动无本仓库 pytest 覆盖 | 在临时站点上实测一次并记录结果 |
+| 临时宿主无法为 strict affected check 确定 Git 基线 | `check-affected.mjs` 的候选基线是 `origin/HEAD` 或 `HEAD^1`；只有单个 commit 的临时仓库两者都不存在，建立两个 commit 后即可通过 |
 | eval 依赖外部站点 mermaid.live | 不可访问时该轮记 blocked；断言无触发条件时记 `NOT EXERCISED` |
 
 ## 7. Closeout
@@ -167,13 +177,15 @@ skill 行为验证（fresh subagent validation 与 `without_skill` baseline）�
 | `UV_CACHE_DIR=/tmp/manual-gen-uv-cache uv run scripts/check_eval_artifacts.py` | PASS |
 | `UV_CACHE_DIR=/tmp/manual-gen-uv-cache uv run scripts/check_doc_contract.py` | PASS |
 | CI 同款 `uv run --with pytest pytest ...` | PASS：213 passed（Claude 主进程本机复跑。codex 会话内该命令因 sandbox 禁止访问 PyPI 而 BLOCKED，属环境限制，非实现缺陷） |
+| 临时宿主初始化 | PASS：复制 `docs-site-bootstrap` 交付资产（42 个文件），`git init` 后建立两个 commit |
 | 临时宿主 `npm ci --offline --ignore-scripts` | PASS：从本地缓存安装锁定依赖 |
-| 临时宿主 `npm run new:doc -- --type manual ... --dry-run` | PASS：输出 `docType: manual` 与 `lastVerifiedVersion: unverified` |
-| 临时宿主 `npm run check:frontmatter` | PASS |
-| 临时宿主 `npm run prepare:nav` | PASS：public/internal 导航均生成“操作手册”分区 |
+| `npm run new:doc -- --type manual --path docs/site/manual/diagram-authoring/create-first-diagram.md --title "创建第一张图表" --visibility both --stage dev --owner docs --related-code "src/routes/editor/**"` | PASS：输出 `"dryRun": false`、`"docType": "manual"`、`"lastVerifiedVersion": "unverified"`，页面真实落盘 |
+| `new:doc` 内部 `npm run test:docs` | PASS：`check:frontmatter`、`check:affected --strict`、`check:version` 与 `node --test` 全部通过 |
+| 独立 `npm run check:frontmatter` | PASS：`Frontmatter check passed` |
+| `npm run prepare:nav` | PASS：生成的 `.generated/.navigation/sidebar.public.mjs` 中 `/manual/` 分区正确包含新页 `/manual/diagram-authoring/create-first-diagram`，层级为“操作手册 → 根索引 → 创建第一张图表” |
+| 生成页面检查 | PASS：frontmatter 七字段合法（`doc_type: manual`、`last_verified_version: unverified`），正文含完整七项字段骨架 |
 
-完整临时 `new:doc` 写入曾进入宿主原子校验事务，但临时目录没有 committed Git base，
-strict affected check 无法确定基线并阻塞；事务按既有机制回滚，未把临时页留在仓库。
+结论：批次 A 的五处枚举改动、manual 模板与脚手架类型映射已端到端验证可用。`check-affected.mjs` 的候选基线是 `origin/HEAD` 或 `HEAD^1`；只有单个 commit 的临时仓库两者都不存在，因此无法确定基线，建立两个 commit 后即可通过。
 
 ### 7.3 Eval、残余风险与下一 owner
 

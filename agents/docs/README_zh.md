@@ -33,6 +33,7 @@
 
 - 明确初始化正式文档站点：使用 `docs-site-bootstrap`。
 - 功能、部署或发布同步，或现有系统回填：使用 `formal-docs-sync`。
+- 基于真实运行界面截图生成图文用户操作手册：使用 `manual-gen`。
 - 生成、确认和索引版本化的站内 Release Notes，并进行文档验证：使用 `release-notes-generator`。
 - 发布文档审计：使用 `docs-audit`。
 

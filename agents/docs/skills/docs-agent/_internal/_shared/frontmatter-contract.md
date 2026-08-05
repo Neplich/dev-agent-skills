@@ -37,9 +37,9 @@ All seven fields are unconditionally required.
   metadata are validated by the change-map toolchain owned by issue #122,
   matching the AI Hub baseline behavior. Template pages under
   `standards/templates/` follow the AI Hub precedent and use their target
-  `doc_type` (`api`, `database`, `design`, `ops`, or `product`). Template pages
-  participate in internal-page validation, while their `doc_type` identifies
-  the target page type represented by the template. They are reusable
+  `doc_type` (`api`, `database`, `design`, `ops`, `product`, or `manual`).
+  Template pages participate in internal-page validation, while their
+  `doc_type` identifies the target page type represented by the template. They are reusable
   placeholder artifacts, so that target `doc_type` does not make the template
   itself subject to type-specific fact checks.
 - `last_verified_version` is always required. Use `unverified` when the page

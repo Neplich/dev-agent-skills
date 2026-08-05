@@ -39,6 +39,8 @@ release documentation audit requests to the matching documentation specialist.
 - Explicit formal documentation-site initialization: use `docs-site-bootstrap`.
 - Feature, deployment, or release synchronization, or existing-system backfill:
   use `formal-docs-sync`.
+- Illustrated user operation manuals based on screenshots of the real running
+  interface: use `manual-gen`.
 - Versioned site Release Notes generation, confirmation, indexing, and docs
   validation: use `release-notes-generator`.
 - Release documentation audit: use `docs-audit`.

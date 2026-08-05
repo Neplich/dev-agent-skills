@@ -9,14 +9,23 @@
 ## Test Set / Fixture Version
 
 - Fixture: pristine empty host from `workspace/eval-001-bootstrap-empty-workspace`
-- Asset snapshot: current 40-file `assets/docs/site/` inventory
+- Historical asset snapshot: 40-file `assets/docs/site/` inventory
+- Current contract: 42 packaged assets and six templates
 - Dependency fact under review: the VitePress declaration is pinned exactly to `1.6.4` in both `package.json` and the root and resolved entries of `package-lock.json`
 - Actual validation date: `2026-07-22`
 - Execution cleanup: isolated lane started without `docs/site/`
 
 ## Latest Result
 
-**PASS (6/6 assertions)** — the fresh with-skill lane created the complete bounded scaffold, generated and read back a sorted 40-entry manifest, passed the applicable host checks and both site builds with VitePress 1.6.4, and demonstrated a zero-content-diff repeat classification.
+**PASS (6/6 assertions)** — the historical fresh with-skill lane created the complete bounded scaffold for the then-current 40-asset, five-template contract, generated and read back a sorted 40-entry manifest, passed the applicable host checks and both site builds with VitePress 1.6.4, and demonstrated a zero-content-diff repeat classification.
+
+Overall result: BLOCKED
+
+## Current Asset-Set Drift
+
+- The retained PASS above is the historical issue #155 result for the former 40-asset, five-template inventory.
+- The current packaged asset set contains 42 assets and six templates after adding `standards/templates/manual-guide.md` and `manual/index.md`.
+- This changed inventory has not received fresh with-skill, same-run without-skill baseline, and independent judge validation, so the historical PASS does not establish the current result and no current PASS conclusion is claimed.
 
 ## Assertions
 
@@ -49,7 +58,8 @@
 
 ## Next Steps
 
-- Retain this PASS as the issue #155 result. Re-run paired validation whenever the packaged inventory, dependency declarations, manifest state machine, frontmatter contract, or scaffold tests change.
+- Retain the PASS only as the historical issue #155 result for the 40-asset, five-template contract.
+- Run fresh paired validation for the current 42-asset, six-template contract, including a newly generated `without_skill` baseline, before replacing the BLOCKED result.
 
 ## Runtime Artifact Policy
 

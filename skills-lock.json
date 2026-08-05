@@ -174,7 +174,7 @@
     "docs-agent": {
       "source": "agents/docs/skills/docs-agent",
       "sourceType": "local",
-      "computedHash": "2865fd00a3d399e44f4608ea721f91f97643e3def793a711c95e327477fcfa72"
+      "computedHash": "fabe5641ed1d90f7182a978ceaf14a4bbda6b52cc1992be985432fcd5c731cbd"
     },
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",
@@ -189,7 +189,7 @@
     "manual-gen": {
       "source": "agents/docs/skills/manual-gen",
       "sourceType": "local",
-      "computedHash": "3911c34a5a665c831f5d15832a0bdf6142fdd9e42627e5a00e46d3a2eede7731"
+      "computedHash": "7219f4b3e2e544861166b37d3c60a09c952f56cea25a61d1c9c2f13928788830"
     },
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",

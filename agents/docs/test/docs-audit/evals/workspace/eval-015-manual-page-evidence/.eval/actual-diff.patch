@@ -1,0 +1,14 @@
+diff --git a/docs/site/manual/workspaces/manage-access.md b/docs/site/manual/workspaces/manage-access.md
+new file mode 100644
+--- /dev/null
++++ b/docs/site/manual/workspaces/manage-access.md
+@@ -0,0 +1,34 @@
++doc_type: manual
++last_verified_version: unverified
++The page adds two numbered operations and their screenshot references.
+diff --git a/docs/site/manual/workspaces/step-1-access-settings.svg b/docs/site/manual/workspaces/step-1-access-settings.svg
+new file mode 100644
+--- /dev/null
++++ b/docs/site/manual/workspaces/step-1-access-settings.svg
+@@ -0,0 +1,8 @@
++A parseable screenshot fixture containing a test token that requires redaction.

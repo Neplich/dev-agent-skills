@@ -159,9 +159,14 @@ report the missing evidence. Do not mark the manual complete.
 
 After all confirmed writes, read-back checks, host checks, and visual
 acceptance pass, hand the complete affected page, screenshot, mapping, index,
-navigation, and evidence set to `docs-agent:docs-audit`. Keep every new or
-updated page at `last_verified_version: unverified`; only `docs-audit` may
-apply a verified version anchor.
+navigation, and evidence set to `docs-agent:docs-audit`. Enter pre-tag audit
+only when a maintainer has explicitly confirmed `target_release_version`;
+include that value and its confirmation source in the handoff. Otherwise keep
+every new or updated page at `last_verified_version: unverified`, return a
+blocked handoff that explicitly waits for confirmed release context, and never
+infer a version from refs, branch names, or other context. A manual generation
+report is not a stamp or release authorization. Only `docs-audit` may apply a
+verified version anchor.
 
 If the environment, login state, feature availability, screenshot permission,
 eligible execution entry, viewport read-back, host check, or rendering
@@ -196,5 +201,5 @@ interface, or substitute an unrelated example image.
 - 渲染验收结果：<目视检查页面及结果>
 - 阻塞项：<事项、owner、缺失证据、下一步，或 none>
 - 剩余候选：<批次外角色、场景或页面>
-- handoff：<携带完整 affected evidence 的 docs-agent:docs-audit ready，或 blocked>
+- handoff：<docs-audit ready，或等待维护者确认 target_release_version 的 blocked；ready 时包含该值与确认来源>
 ```

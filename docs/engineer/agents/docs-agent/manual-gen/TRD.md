@@ -1,7 +1,7 @@
 ---
 title: "Manual Gen TRD"
 type: TRD
-version: "0.1.1"
+version: "0.1.2"
 status: Approved
 author: "Neplich Claude Code"
 date: "2026-08-05"
@@ -28,6 +28,9 @@ related_code:
   - ".claude-plugin/marketplace.json"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.2"
+    date: "2026-08-05"
+    changes: "修正站点导航触点：侧边栏自动生成，顶部导航与落地页链接需更新双站点配置和索引"
   - version: "0.1.1"
     date: "2026-08-05"
     changes: "记录维护者确认并批准 TRD，同步已提供域名环境时不重复提问的技术契约"
@@ -65,7 +68,7 @@ flowchart TB
 
 ## 3. 正式文档层扩展
 
-`doc_type` 枚举与站点分区在 skill 契约层和宿主脚本资产层各有副本，必须同批次同步。经实际核对，改动点为五处而非 PRD 概述的四处，且**不含 `.vitepress/config.*.ts`**：
+`doc_type` 枚举与站点分区在 skill 契约层和宿主脚本资产层各有副本，必须同批次同步。经实际核对，类型枚举与侧边栏分区涉及五处；顶部导航与落地页的手写链接另涉及四处：
 
 | # | 文件 | 改动 | 说明 |
 |---|---|---|---|
@@ -74,10 +77,14 @@ flowchart TB
 | 3 | `.../assets/docs/site/scripts/lib/pages.mjs:7` | `DOC_TYPES` Set 加 `'manual'` | `check:frontmatter` 实际校验点 |
 | 4 | `.../assets/docs/site/scripts/lib/pages.mjs:11` | `SECTION_ORDER` 加 `'manual'` | 页面收集与分区顺序 |
 | 5 | `.../assets/docs/site/scripts/lib/sidebar.mjs:3` | `SECTION_LABELS` 加 `manual: '操作手册'` | 侧边导航标签 |
+| 6 | `.../assets/docs/site/.vitepress/config.public.ts` | 顶部 `nav` 增加 `/manual/` 入口 | public 站顶部导航为手写配置 |
+| 7 | `.../assets/docs/site/.vitepress/config.internal.ts` | 顶部 `nav` 增加 `/manual/` 入口 | internal 站顶部导航为手写配置 |
+| 8 | `.../assets/docs/site/index.public.md` | 落地页增加操作手册链接 | public 站落地页为手写内容 |
+| 9 | `.../assets/docs/site/index.internal.md` | 落地页增加操作手册链接 | internal 站落地页为手写内容 |
 
 `SECTION_ORDER` 中 `manual` 插入到 `product` 之后、`design` 之前：手册与产品文档同属面向用户的阅读入口，紧邻可减少读者在导航中的跳跃。
 
-**导航无需改 VitePress 配置。** `sidebar.mjs` 由 `SECTION_ORDER` 与 `SECTION_LABELS` 驱动自动生成，`config.shared.ts` 不维护分区列表。PRD「接口与文件触点」中列出的 `.vitepress/config.*.ts` 经核对不在改动面内。
+侧边栏由 `SECTION_ORDER` 与 `SECTION_LABELS` 驱动自动生成，不需要手写 sidebar 配置；`config.shared.ts` 也不维护分区列表。但 public / internal 顶部 `nav` 与两个落地页入口均为手写内容，因此需要同步修改 `config.public.ts`、`config.internal.ts`、`index.public.md` 与 `index.internal.md`。这四处是 PRD「导航分区」要求在宿主站点中的具体实现触点。
 
 脚手架注册在 `scaffold-doc.mjs:18` 的 `TYPES` 映射增加一条：
 

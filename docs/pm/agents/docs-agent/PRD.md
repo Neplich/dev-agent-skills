@@ -10,7 +10,7 @@ child_features:
   - "agents/docs-agent/formal-docs-sync"
   - "agents/docs-agent/manual-gen"
   - "agents/docs-agent/release-notes-generator"
-version: "1.5.0"
+version: "1.5.1"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
@@ -30,6 +30,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/SKILL.md"
   - "scripts/check_doc_contract.py"
 changelog:
+  - version: "1.5.1"
+    date: "2026-08-05"
+    changes: "同步 marketplace 当前注册面为同名 router 与 5 个 specialist"
   - version: "1.5.0"
     date: "2026-08-05"
     changes: "补齐 child_features 直接子功能索引，并纳入新增子功能 manual-gen（issue #226）"
@@ -236,7 +239,7 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 | 维护者确认的 `target_release_version` | Read | pre-tag 统一盖章使用的目标版本；不得从 Git ref 或分支名推测 |
 | 宿主 git tag / GitHub Release | Read | diff 基准与 post-tag 最终一致性复核；pre-tag 不要求同名 tag 已存在 |
 | `docs/engineer/{feature_path}/TRD.md` | File read | sync 的影响域证据（frontmatter related_code 或影响模块章节）与变更事实来源 |
-| `.claude-plugin/marketplace.json` | File write | 注册 docs-agent 与 4 个 skill 路径（同名 router + 3 个 specialist） |
+| `.claude-plugin/marketplace.json` | File write | 注册 docs-agent 与 6 个 skill 路径（同名 router + 5 个 specialist） |
 
 ## 假设与约束
 
