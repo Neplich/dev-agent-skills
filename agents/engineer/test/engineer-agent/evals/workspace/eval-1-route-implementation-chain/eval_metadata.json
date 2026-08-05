@@ -2,7 +2,7 @@
   "eval_id": "eval-001-route-implementation-chain",
   "eval_name": "route-implementation-chain",
   "workspace_root": "agents/engineer/test/engineer-agent/evals/workspace/eval-1-route-implementation-chain",
-  "prompt": "用户说：请接手这个仓库，按 docs/engineer/billing-webhook/TRD.md 实现 webhook 重试逻辑，补测试，最后提交 PR。",
+  "prompt": "用户说：请接手这个仓库，按 docs/engineer/billing-webhook/TRD.md 实现 webhook 重试逻辑，补测试，最后提交 PR。先做工程路由，不要直接改代码。",
   "fixture_context": [
     "README.md",
     "docs/engineer/billing-webhook/TRD.md",

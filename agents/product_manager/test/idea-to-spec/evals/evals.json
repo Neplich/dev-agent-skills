@@ -97,7 +97,7 @@
       "id": "eval-004-greenfield-bootstrap-routing",
       "name": "greenfield-bootstrap-routing",
       "description": "Verifies that idea-to-spec handles greenfield-bootstrap-routing and produces the expected role-specific artifact.",
-      "prompt": "这是一个空目录。我想做一个 AI 对话助手，左侧是会话列表，右侧是聊天区。请先帮我梳理需求并形成初步产品文档。",
+      "prompt": "这是一个空目录。我想做一个 AI 对话助手，左侧是会话列表，右侧是聊天区。先不要直接初始化项目，先帮我梳理需求并落成 PRD 骨架。",
       "workspace": "workspace/iteration-2/eval-4-greenfield-bootstrap-routing",
       "expected_output": "先输出空工作区 context summary；识别为 PM-first 的 greenfield-discovery 或 greenfield-bootstrap 路径；保持在 PM/idea-to-spec 路径里，不直接运行脚手架；明确下一步是需求澄清、PRD/DECISIONS 文档化或等价的 PM 动作，而不是工程实现。",
       "assertions": [
@@ -182,7 +182,7 @@
       "id": "eval-007-api-adr-engineer-handoff",
       "name": "api-adr-engineer-handoff",
       "description": "Verifies that idea-to-spec does not generate Engineer API or ADR docs directly and instead hands stable scope to engineer-agent:trd-gen.",
-      "prompt": "PM 范围已经稳定：docs/pm/chat-interface/history-search/PRD.md 已确认。现在需要为这个功能补 API 文档和一份搜索索引选型 ADR。",
+      "prompt": "PM 范围已经稳定：docs/pm/chat-interface/history-search/PRD.md 已确认。现在需要为这个功能补 API 文档和一份搜索索引选型 ADR。请判断由谁生成、输出到哪里。",
       "workspace": "workspace/iteration-3/eval-7-api-adr-engineer-handoff",
       "expected_output": "不直接调用 PM 内部 api-gen 或 adr-gen，不直接写 docs/engineer 文档；输出给 engineer-agent:trd-gen 的 handoff 包，要求 Engineer 在 docs/engineer/chat-interface/history-search/ 下生成 API.md 和 ADR-*.md，并携带 feature_path、parent_feature、feature_level、PRD 路径和决策背景。",
       "assertions": [
