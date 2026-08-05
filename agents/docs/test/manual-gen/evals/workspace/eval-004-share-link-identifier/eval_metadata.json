@@ -1,0 +1,23 @@
+{
+  "eval_id": "eval-004-share-link-identifier",
+  "eval_name": "share-link-long-identifier-redaction",
+  "workspace_root": "agents/docs/test/manual-gen/evals/workspace/eval-004-share-link-identifier",
+  "skill_availability_goal": "Verify export and share documentation remains reproducible while omitting the environment-specific pako payload from durable text.",
+  "prompt": "维护者提供 https://mermaid.live/，并确认本批覆盖匿名用户的导出与分享流程。分享动作会产生包含 pako 编码串的长链接。请基于真实界面生成该批手册，截图与页面只写隔离运行目录。",
+  "environment": {
+    "kind": "maintainer_provided_domain",
+    "url": "https://mermaid.live/",
+    "authentication": "not_required",
+    "confirmed_scope": "anonymous export and share flow",
+    "sensitive_fixture": "environment-specific pako payload in generated share URL"
+  },
+  "fixture_context": [
+    "scripts/capture-export-share.spec.md"
+  ],
+  "execution_cleanup": [
+    "with_skill",
+    "without_skill",
+    "baseline",
+    "outputs"
+  ]
+}

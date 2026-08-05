@@ -1,0 +1,22 @@
+{
+  "eval_id": "eval-005-manual-hierarchy",
+  "eval_name": "platform-business-operation-hierarchy",
+  "workspace_root": "agents/docs/test/manual-gen/evals/workspace/eval-005-manual-hierarchy",
+  "skill_availability_goal": "Verify the manual expresses platform, business, and operation semantics without asserting fixed module names or directory paths.",
+  "prompt": "维护者提供 https://mermaid.live/，并确认一个覆盖匿名图表作者基础任务的有限批次。请按宿主既有信息架构组织手册，使读者能从平台定位下钻到业务场景和具体操作；不要预设业务模块名称或硬编码新的站点目录。",
+  "environment": {
+    "kind": "maintainer_provided_domain",
+    "url": "https://mermaid.live/",
+    "authentication": "not_required",
+    "confirmed_scope": "one bounded anonymous diagram-author task batch"
+  },
+  "fixture_context": [
+    "scripts/capture-hierarchy-task.spec.md"
+  ],
+  "execution_cleanup": [
+    "with_skill",
+    "without_skill",
+    "baseline",
+    "outputs"
+  ]
+}

@@ -98,6 +98,7 @@
         "./skills/docs-agent",
         "./skills/docs-site-bootstrap",
         "./skills/formal-docs-sync",
+        "./skills/manual-gen",
         "./skills/release-notes-generator",
         "./skills/docs-audit"
       ]

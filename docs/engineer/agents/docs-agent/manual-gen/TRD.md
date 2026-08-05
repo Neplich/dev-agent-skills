@@ -1,0 +1,243 @@
+---
+title: "Manual Gen TRD"
+type: TRD
+version: "0.1.0"
+status: Draft
+author: "Neplich Claude Code"
+date: "2026-08-05"
+last_updated: "2026-08-05"
+generated_by: "trd-gen"
+feature: "manual-gen"
+feature_path: "agents/docs-agent/manual-gen"
+parent_feature: "agents/docs-agent"
+feature_level: "3"
+related_prd: "docs/pm/agents/docs-agent/manual-gen/PRD.md"
+related_issues:
+  - "https://github.com/Neplich/dev-agent-skills/issues/226"
+related_code:
+  - "agents/docs/skills/manual-gen/**"
+  - "agents/docs/test/manual-gen/**"
+  - "agents/docs/skills/docs-agent/SKILL.md"
+  - "agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md"
+  - "agents/docs/skills/docs-audit/_internal/INSTRUCTIONS.md"
+  - "agents/docs/skills/docs-site-bootstrap/assets/docs/site/scripts/lib/pages.mjs"
+  - "agents/docs/skills/docs-site-bootstrap/assets/docs/site/scripts/lib/sidebar.mjs"
+  - "agents/docs/skills/docs-site-bootstrap/assets/docs/site/scripts/scaffold-doc.mjs"
+  - "agents/docs/skills/docs-site-bootstrap/assets/docs/site/standards/templates/manual-guide.md"
+  - "agents/docs/skills/docs-site-bootstrap/assets/docs/site/manual/index.md"
+  - ".claude-plugin/marketplace.json"
+  - "skills-lock.json"
+changelog:
+  - version: "0.1.0"
+    date: "2026-08-05"
+    changes: "定义 manual-gen skill 结构、doc_type manual 类型层扩展、截图资产复用路径与 eval 组织"
+---
+
+# Manual Gen TRD
+
+## 1. 来源、范围与分级
+
+本 TRD 把 `docs/pm/agents/docs-agent/manual-gen/PRD.md`（v1.0.0，FR-M01~M16）转换为可实施设计。PRD 由 issue #226 及其维护者决策记录蒸馏而来。
+
+本 feature 新增一个 specialist、扩展 `docs-agent` 拥有的共享 frontmatter 契约、修改 `docs-site-bootstrap` 交付给宿主的脚本资产，并改动 marketplace 注册表，按仓库「变更分级契约」判定为 `change_tier: major`。
+
+范围内的两条独立工作面：**类型层扩展**（`doc_type: manual` 与站点资产）与 **skill 本体**。前者是后者的写入前置，必须先落地。
+
+## 2. 技术结构
+
+```mermaid
+flowchart TB
+    Router["docs-agent router"] --> Gate["manual-gen SKILL.md<br/>入口门禁 + 环境协商"]
+    Gate --> Env{"运行环境"}
+    Env -->|域名| Exec["_internal/INSTRUCTIONS.md<br/>执行契约"]
+    Env -->|本地已同意| Exec
+    Env -->|无环境 / 未同意| Blocked["blocked"]
+    Exec --> Entry["三级执行入口<br/>AGENTS.md:169"]
+    Entry --> Shot["视口设定 → 回读校验 → 采集"]
+    Shot --> Write["写入 docs/site/manual/**<br/>+ 同级截图资产"]
+    Write --> Checks["宿主 docs checks<br/>+ 渲染目视验收"]
+    Checks --> Audit["docs-agent:docs-audit"]
+    Tmpl["docs-site-bootstrap<br/>manual 模板 / 根索引 / 类型注册"] -.唯一模板源.-> Write
+```
+
+## 3. 正式文档层扩展
+
+`doc_type` 枚举与站点分区在 skill 契约层和宿主脚本资产层各有副本，必须同批次同步。经实际核对，改动点为五处而非 PRD 概述的四处，且**不含 `.vitepress/config.*.ts`**：
+
+| # | 文件 | 改动 | 说明 |
+|---|---|---|---|
+| 1 | `agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md:23` | `doc_type` 枚举加 `manual` | 权威定义 |
+| 2 | `agents/docs/skills/docs-audit/_internal/INSTRUCTIONS.md:223` | 同步枚举表副本 | 审计判定依据 |
+| 3 | `.../assets/docs/site/scripts/lib/pages.mjs:7` | `DOC_TYPES` Set 加 `'manual'` | `check:frontmatter` 实际校验点 |
+| 4 | `.../assets/docs/site/scripts/lib/pages.mjs:11` | `SECTION_ORDER` 加 `'manual'` | 页面收集与分区顺序 |
+| 5 | `.../assets/docs/site/scripts/lib/sidebar.mjs:3` | `SECTION_LABELS` 加 `manual: '操作手册'` | 侧边导航标签 |
+
+`SECTION_ORDER` 中 `manual` 插入到 `product` 之后、`design` 之前：手册与产品文档同属面向用户的阅读入口，紧邻可减少读者在导航中的跳跃。
+
+**导航无需改 VitePress 配置。** `sidebar.mjs` 由 `SECTION_ORDER` 与 `SECTION_LABELS` 驱动自动生成，`config.shared.ts` 不维护分区列表。PRD「接口与文件触点」中列出的 `.vitepress/config.*.ts` 经核对不在改动面内。
+
+脚手架注册在 `scaffold-doc.mjs:18` 的 `TYPES` 映射增加一条：
+
+```js
+manual: { directory: 'manual', template: 'manual-guide.md' }
+```
+
+## 4. manual 模板与根索引
+
+新增两个宿主资产文件，形态对齐现有五类：
+
+- `assets/docs/site/standards/templates/manual-guide.md`：模板页自身 frontmatter 用 `doc_type: manual`，正文说明写作纪律，`<!-- docs-scaffold:start -->` / `end` 之间是唯一的 `md` fence 骨架。
+- `assets/docs/site/manual/index.md`：类型根索引，`doc_type: landing`，与 `api/index.md`、`product/index.md` 等既有根索引一致。
+
+`docs-scaffold` 块固化 PRD FR-M08 的七项字段：
+
+```text
+## 适用范围
+- 适用角色：
+- 前置条件：
+
+## 操作步骤
+1. 步骤与可见界面说明
+   ![图注](./<screenshot>.png)
+
+## 预期结果
+
+## 注意事项与异常处理
+```
+
+模板是唯一模板源。`manual-gen` 通过宿主 `standards/` 入口读取该模板，skill 内不维护第二份模板正文。
+
+## 5. 截图资产落盘
+
+**复用现有机制，零新增。** `prepare-site.mjs` 的 `referencedAssets()` 已经收集页面中以相对路径引用的非 `.md` 文件，并带边界保护：拒绝站外路径、排除区路径、非真实文件，逐条给出 `warnSkippedAsset` 原因。收集结果与 `public/**` 一并复制进构建产物。
+
+因此截图落点定为**手册页同级相对路径**，例如 `docs/site/manual/<业务>/<操作>/step-1-<slug>.png`，页面内以 `./step-1-<slug>.png` 引用。这样：
+
+- 截图随页面移动，不产生跨目录的悬空引用；
+- 无需新建 `public/` 子目录约定，无需改 `prepare-site.mjs`；
+- 截图随站点构建打包，读者访问的文档与截图属同一构建版本，与 PRD 决议 5「不新增过期告警机制」一致。
+
+命名规则：`step-<序号>-<lower-kebab-case 描述>.png`，序号对应操作条目的编号步骤。
+
+## 6. skill 本体结构
+
+```text
+agents/docs/skills/manual-gen/
+├── SKILL.md                    # 入口门禁 + 环境协商协议 + 执行指针
+└── _internal/
+    └── INSTRUCTIONS.md         # 执行契约
+```
+
+单层 `_internal`，不建 `types/` 子模块——手册只有一种产物形态，不存在 `formal-docs-sync` 那样的五类分支，建子模块属于无依据的抽象。
+
+`SKILL.md` frontmatter：`name: manual-gen`、`visibility: internal`、`description` 按仓库约定写明「Internal documentation specialist—not a direct entry point」并避免用户触发语（`check_doc_contract.py` 校验该项）。
+
+**职责切分**：`SKILL.md` 只承载入口门禁与环境协商协议（这两步决定是否继续，必须在加载执行契约前完成）；`_internal/INSTRUCTIONS.md` 承载采集、写入、验收、报告的完整执行契约。
+
+`_internal/INSTRUCTIONS.md` 的执行步骤：
+
+1. 读宿主标准入口与 `change-map.yaml`，确认站点基础存在（缺失则返回 `docs-site-bootstrap` handoff，零站点写入）
+2. 读 manual 模板与既有 `docs/site/manual/**` 结构
+3. 在已确认环境中梳理角色、业务场景与操作流程
+4. 展示候选范围与页面树，等待确认（未确认零写入）
+5. 设定视口 → 回读校验 → 采集截图（含卫生处理）
+6. 写入手册页与截图资产，生长 change-map 条目
+7. 运行宿主 docs 检查 + 渲染目视验收
+8. handoff 至 `docs-audit`，`last_verified_version` 保持 `unverified`
+
+## 7. 环境协商与视口回读的指令层设计
+
+这两条是 PRD 中最容易被模型「推断掉」的约束，需要在指令层用可观察产物固定。
+
+**环境协商（FR-M02）。** 协商顺序写成带前置条件的分支，而非并列选项：
+
+- 第一问固定为域名环境，不得与本地启动合并成一个二选一问题；
+- 本地启动分支的进入条件是「无可用域名环境」或「用户明确要求本地」二者之一成立，否则不得询问；
+- 启动命令的执行条件是用户对本地启动的明确同意，指令层写为「未获明确同意前不得执行任何启动命令」，并要求报告中回显同意来源。
+
+**视口回读（FR-M03）。** 要求产出两条独立证据而非一条：
+
+- 设定证据：设定命令与目标值 1920×1080；
+- 回读证据：从运行环境读回的实际视口尺寸数值。
+
+指令层明确「回读结果必须来自运行环境的实际读数，不得由设定值推断」，并要求回读数值与 1920×1080 不符时停止采集。报告模板中这两项是分列字段，缺任一项即视为未完成该步骤。此约束的来源是实测：浏览器工具的 `desktop` 预设落到 691×837 视口并触发站点响应式移动布局。
+
+**执行入口（FR-M04）。** 直接引用 `AGENTS.md:169` 的三级优先级与 QA 三个 skill 中的权威副本，不复制判定细则，不新增第四种契约。指令层只要求说明所选入口为何覆盖当前采集需求。
+
+## 8. 注册与计数
+
+| 文件 | 改动 |
+|---|---|
+| `.claude-plugin/marketplace.json` | `docs-agent` 的 `skills` 数组增加 `./skills/manual-gen` |
+| `skills-lock.json` | 增加 manual-gen 条目；`computedHash` 由契约脚本随 SKILL.md 改动刷新，属同一变更 |
+| `agents/docs/skills/docs-agent/SKILL.md` | Available Skills、Routing Signals、Specialist Gate Pointers 三处各加一条 |
+| `agents/docs/README.md` | Specialist skills 计数 4 → 5 |
+| `AGENTS.md` | `docs-agent` skill 数 4 → 5，Specialist skills 总数 31 → 32 |
+
+`docs-agent` 路由信号措辞：按「基于运行界面截图生成或更新站内图文用户操作手册」分流，与 `formal-docs-sync` 的「同步当前事实」在证据链上区分，避免两者路由重叠。
+
+## 9. eval 组织
+
+```text
+agents/docs/test/manual-gen/evals/
+├── evals.json
+└── workspace/
+    ├── eval-001-domain-provided/
+    ├── eval-002-local-start-consent/
+    ├── eval-003-no-environment-blocked/
+    ├── eval-004-share-link-identifier/
+    └── eval-005-manual-hierarchy/
+```
+
+每个 workspace 含 `eval_metadata.json`、`comparison.md`、环境描述文件，以及需要 Playwright 采集的用例对应的 `scripts/*.spec.md`。
+
+**执行入口**：优先 Playwright，绕开 `codex exec` 与 Codex app Chrome 扩展的宿主差异，保证 with-skill 与新生成的 `without_skill` baseline 都能在同一入口下运行。
+
+**Playwright 脚本形态**：按 QA 既有约定使用 `*.spec.md`，保证重复执行一致，不含明文账号、密码、token、cookie、session 或 SSH 凭据。落点是本 eval workspace，不是宿主项目的 `docs/qa/e2e/`。
+
+**产物边界**：截图与手册页产物是运行期产物，写隔离 scratch workspace，不入库。fixture 只保留环境描述、Playwright 脚本与期望的手册结构骨架。`evals.json` 不声明截图类 runner output。
+
+**断言取向**：一律语义判断。不比对具体目录结构，不断言手册划分出哪几个业务模块或模块叫什么名字。`eval-005` 判定的是「目录是否呈现平台定位、业务场景、可执行操作三个层次，且操作层步骤可被目标角色复现」。
+
+**外部数据源**：eval 运行环境为 `https://mermaid.live/`。站点改版导致断言无触发条件时记 `NOT EXERCISED`，计入 Coverage result，不计入 Behavior result 的 `FAIL`。`eval-004` 依赖分享链接中的 pako 编码串，因此其覆盖范围必须包含导出与分享流程。
+
+## 10. 验证策略
+
+| 层 | 手段 | 命令 |
+|---|---|---|
+| 仓库契约 | 注册表、skill 结构、lock hash、eval 定义、文档 frontmatter | `uv run scripts/check_repository_contract.py` → `check_eval_contract.py` → `check_eval_artifacts.py` → `check_doc_contract.py` |
+| 确定性测试 | 现有 pytest 套件不回归 | 仓库既有 pytest 命令 |
+| 宿主脚本 | manual 类型在宿主校验链中可用 | 在临时 bootstrap 出的站点上创建手册页并运行宿主 docs 检查 |
+| skill 行为 | 五个 eval 场景 | fresh subagent validation + 本轮新生成的 `without_skill` baseline |
+
+宿主脚本层改动（`pages.mjs`、`sidebar.mjs`、`scaffold-doc.mjs`）属于交付给宿主的资产，本仓库的 pytest 不直接覆盖其运行时行为，需在临时站点上实测一次并记录结果。
+
+## 11. 实施约束与非目标
+
+- 只实现 PRD 逐条列出的改动；不新增抽象层或基类、重试与退避、缓存、降级开关、feature flag、新配置项、包装函数、事件钩子、监控埋点或额外日志层。
+- 不修改 `formal-docs-sync` 的五类契约与八步流程，不修改 `release-notes-generator` 与 `docs-audit` 的既有职责。
+- 不实现浏览器自动化框架、应用启动脚本或部署环境。
+- 不为截图过期新增告警机制或第二套变更检测协议。
+- 不在本 feature 内统一仓库 `-generator` 后缀命名（issue #230）。
+- 量级预期：净新增约 800–1100 行，不新增抽象层。实际偏离明显时先停下核对范围。
+
+## 12. 风险与假设
+
+| 项 | 类型 | 内容 | 影响 |
+|---|---|---|---|
+| 枚举五处同步 | 风险 | 任一处遗漏会让手册页在宿主 `check:frontmatter` 中失败 | 类型层作为独立批次先落地并单独验证 |
+| 存量宿主脚本升级 | 假设 | 已 bootstrap 宿主通过重跑 `docs-site-bootstrap` 获得 manual 支持，复用其幂等与 keep/overwrite 机制 | 宿主本地改过脚本时进入既有冲突决策流程，不新增机制 |
+| 截图引用被 `referencedAssets` 拒绝 | 风险 | 引用路径若指向站外或排除区，截图不会进入构建产物 | 落点定为页面同级，天然在 `docs/site` 内；`warnSkippedAsset` 输出纳入渲染验收检查项 |
+| 视口回读被推断 | 风险 | 模型以「已设定」代替实际读数 | 报告模板分列设定与回读两个字段，缺任一项视为未完成 |
+| eval 依赖外部站点 | 假设 | mermaid.live 在 eval 执行期可访问且界面稳定 | 不可访问时该轮记 blocked；界面改版导致断言无触发条件时记 `NOT EXERCISED` |
+
+## 13. 开放技术问题
+
+| # | 问题 | Owner | 阻塞性 |
+|---|------|-------|--------|
+| 1 | `SECTION_LABELS` 的 `manual` 中文标签定为「操作手册」，是否与宿主既有用词冲突 | Maintainer | 非阻塞，宿主可在自己的资产副本中改 |
+| 2 | 类型层扩展与 skill 本体是否拆两个 PR 交付 | Maintainer | 非阻塞，影响交付节奏不影响设计 |
+
+## 14. Handoff 条件
+
+TRD 经维护者确认后移交 `engineer-agent:feature-implementor`，基于本文件编写 `docs/engineer/agents/docs-agent/manual-gen/IMPLEMENTATION_PLAN.md`，确认后再进入实现。实施计划需按第 3 节到第 9 节的工作面切分批次，类型层扩展排在 skill 本体之前。

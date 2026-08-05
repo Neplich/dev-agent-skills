@@ -220,7 +220,7 @@ Check the seven required fields and their constraints:
 | --- | --- |
 | `title` | non-empty string |
 | `visibility` | `public`, `internal`, or `both` |
-| `doc_type` | `landing`, `release`, `design`, `api`, `database`, `ops`, or `product` |
+| `doc_type` | `landing`, `release`, `design`, `api`, `database`, `ops`, `product`, or `manual` |
 | `stage` | `draft`, `dev`, `ops`, or `release` |
 | `owners` | non-empty string array |
 | `related_code` | non-empty string array of repository-relative paths or globs for every `doc_type` |

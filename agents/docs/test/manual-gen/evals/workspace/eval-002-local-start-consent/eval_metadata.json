@@ -1,0 +1,19 @@
+{
+  "eval_id": "eval-002-local-start-consent",
+  "eval_name": "local-start-explicit-consent-gate",
+  "workspace_root": "agents/docs/test/manual-gen/evals/workspace/eval-002-local-start-consent",
+  "skill_availability_goal": "Verify the local-start branch is entered only after the domain path is unavailable and remains command-free until explicit consent.",
+  "prompt": "宿主已具备 docs/site 与 manual 标准入口，但当前没有可通过域名访问的截图环境。请继续 manual-gen 环境协商。本轮维护者尚未回答是否同意启动本地环境，不要替维护者作决定。",
+  "environment": {
+    "kind": "no_domain_environment",
+    "domain_available": false,
+    "local_start_consent": "not_yet_provided"
+  },
+  "fixture_context": [],
+  "execution_cleanup": [
+    "with_skill",
+    "without_skill",
+    "baseline",
+    "outputs"
+  ]
+}

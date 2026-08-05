@@ -20,7 +20,8 @@ const TYPES = {
   database: { directory: 'database', template: 'database.md' },
   design: { directory: 'design', template: 'feature-design.md' },
   ops: { directory: 'ops', template: 'ops-runbook.md' },
-  product: { directory: 'product', template: 'product-handbook.md' }
+  product: { directory: 'product', template: 'product-handbook.md' },
+  manual: { directory: 'manual', template: 'manual-guide.md' }
 };
 const VISIBILITIES = new Set(['public', 'internal', 'both']);
 const STAGES = new Set(['draft', 'dev', 'ops', 'release']);

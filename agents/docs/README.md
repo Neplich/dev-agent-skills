@@ -18,7 +18,7 @@ release documentation audit requests to the matching documentation specialist.
 | Item | Details |
 | --- | --- |
 | Entry skill | `docs-agent` |
-| Specialist skills | 4 |
+| Specialist skills | 5 |
 | Main inputs | PM handoff context, approved product documents, confirmed engineering documents, code and test evidence, deployment evidence, fact-changing security conclusion or remediation evidence, release context |
 | Main outputs | Formal documentation-site scaffolding, current-state formal docs, change-map updates, confirmed site Release Notes, release audit reports |
 | Collaboration | Downstream of confirmed PM, Engineer, QA, and DevOps evidence; supports release readiness without replacing their role contracts |
@@ -30,6 +30,7 @@ release documentation audit requests to the matching documentation specialist.
 | `docs-agent` | Formal documentation request routing | Specialist selection or a bounded blocked handoff |
 | `docs-site-bootstrap` | The maintainer explicitly asks to initialize a formal documentation site | A technology-neutral `docs/site/` foundation and standards |
 | `formal-docs-sync` | A confirmed feature, deployment, release, or existing system needs formal documentation synchronization or backfill | Current-state API, database, design, ops, and product docs with their `change-map.yaml` updates; v0.3.0 was limited to API automation |
+| `manual-gen` | A confirmed bounded scope needs an illustrated user operation manual based on the real running interface | Manual pages, colocated screenshots, and change-map updates ready for documentation audit |
 | `release-notes-generator` | A confirmed release needs a versioned page in the host documentation site before GitHub Release preparation | Confirmed `vX.Y.Z.md`, release metadata/index updates, successful docs checks, and a site-ready evidence handoff to `docs-agent:docs-audit` pre-tag audit; `pm-agent:github-release-generator` remains the downstream GitHub Release owner |
 | `docs-audit` | Release readiness requires formal-document coverage and fact verification before and after tag creation | With a maintainer-confirmed `target_release_version`, pre-tag returns `ready_for_tag` after complete-set stamping; post-tag returns `release_verified` or `blocked` after checking the actual tag |
 

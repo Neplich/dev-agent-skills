@@ -5,11 +5,16 @@ feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.4.1"
+child_features:
+  - "agents/docs-agent/docs-authoring-foundation"
+  - "agents/docs-agent/formal-docs-sync"
+  - "agents/docs-agent/manual-gen"
+  - "agents/docs-agent/release-notes-generator"
+version: "1.5.0"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
-last_updated: "2026-07-20"
+last_updated: "2026-08-05"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/105"
   - "https://github.com/Neplich/dev-agent-skills/issues/112"
@@ -25,6 +30,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/SKILL.md"
   - "scripts/check_doc_contract.py"
 changelog:
+  - version: "1.5.0"
+    date: "2026-08-05"
+    changes: "补齐 child_features 直接子功能索引，并纳入新增子功能 manual-gen（issue #226）"
   - version: "1.4.1"
     date: "2026-07-20"
     changes: "对齐 #120：站内 Release Notes 归 Docs specialist，GitHub Release 归 PM github-release-generator"

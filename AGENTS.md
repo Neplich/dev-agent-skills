@@ -245,9 +245,9 @@ Skill eval 是 Agent skill 的可用性测试。它们必须验证 skill 能被�
 - `devops-agent` - 4 个 specialist skills
 - `designer-agent` - 2 个 specialist skills
 - `security-agent` - 4 个 specialist skills
-- `docs-agent` - 4 个 specialist skills
+- `docs-agent` - 5 个 specialist skills
 
-**Specialist skills 总数：** 31
+**Specialist skills 总数：** 32
 
 **计划中的 Agent**
 
