@@ -1,0 +1,14 @@
+{
+  "name": "formal-docs-site",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "check:frontmatter": "node scripts/check-frontmatter.mjs",
+    "check:affected": "node scripts/check-affected.mjs",
+    "check:version": "node scripts/check-version.mjs",
+    "test:docs": "npm run check:frontmatter && npm run check:affected -- --strict && npm run check:version && node --test scripts/__tests__/*.test.mjs",
+    "new:doc": "node scripts/scaffold-doc.mjs"
+  },
+  "dependencies": { "fast-glob": "^3.3.3", "gray-matter": "^4.0.3", "picomatch": "^4.0.2", "yaml": "^2.7.0" }
+}

@@ -1,8 +1,8 @@
 ---
 title: "Manual Gen TRD"
 type: TRD
-version: "0.1.0"
-status: Draft
+version: "0.1.1"
+status: Approved
 author: "Neplich Claude Code"
 date: "2026-08-05"
 last_updated: "2026-08-05"
@@ -28,6 +28,9 @@ related_code:
   - ".claude-plugin/marketplace.json"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.1"
+    date: "2026-08-05"
+    changes: "记录维护者确认并批准 TRD，同步已提供域名环境时不重复提问的技术契约"
   - version: "0.1.0"
     date: "2026-08-05"
     changes: "定义 manual-gen skill 结构、doc_type manual 类型层扩展、截图资产复用路径与 eval 组织"
@@ -37,7 +40,7 @@ changelog:
 
 ## 1. 来源、范围与分级
 
-本 TRD 把 `docs/pm/agents/docs-agent/manual-gen/PRD.md`（v1.0.0，FR-M01~M16）转换为可实施设计。PRD 由 issue #226 及其维护者决策记录蒸馏而来。
+本 TRD 把 `docs/pm/agents/docs-agent/manual-gen/PRD.md`（v1.0.1，FR-M01~M16）转换为可实施设计。PRD 由 issue #226 及其维护者决策记录蒸馏而来。
 
 本 feature 新增一个 specialist、扩展 `docs-agent` 拥有的共享 frontmatter 契约、修改 `docs-site-bootstrap` 交付给宿主的脚本资产，并改动 marketplace 注册表，按仓库「变更分级契约」判定为 `change_tier: major`。
 
@@ -151,7 +154,7 @@ agents/docs/skills/manual-gen/
 
 **环境协商（FR-M02）。** 协商顺序写成带前置条件的分支，而非并列选项：
 
-- 第一问固定为域名环境，不得与本地启动合并成一个二选一问题；
+- 入口凭据或 handoff 已提供域名可访问环境时，直接使用已确认 URL 并记录来源，不再提问；仅当域名证据缺失时，第一问固定为域名环境，且不得与本地启动合并成一个二选一问题；
 - 本地启动分支的进入条件是「无可用域名环境」或「用户明确要求本地」二者之一成立，否则不得询问；
 - 启动命令的执行条件是用户对本地启动的明确同意，指令层写为「未获明确同意前不得执行任何启动命令」，并要求报告中回显同意来源。
 

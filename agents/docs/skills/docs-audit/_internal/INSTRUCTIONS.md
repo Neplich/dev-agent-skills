@@ -288,7 +288,9 @@ Use routes, handlers, schemas, tests, and other direct implementation evidence.
 
 For every affected manual page, verify at least:
 
-- every referenced screenshot exists and can be parsed as an image;
+- every numbered operation step references a corresponding screenshot that
+  exists and can be parsed as an image; a missing step screenshot blocks
+  stamping that manual page;
 - each screenshot caption corresponds to its numbered operation step;
 - the manual page is reachable through the host navigation; and
 - screenshots, captions, body text, frontmatter, and persistent metadata contain

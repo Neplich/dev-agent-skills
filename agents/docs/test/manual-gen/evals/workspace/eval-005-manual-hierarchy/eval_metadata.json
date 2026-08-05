@@ -8,7 +8,8 @@
     "kind": "maintainer_provided_domain",
     "url": "https://mermaid.live/",
     "authentication": "not_required",
-    "confirmed_scope": "one bounded anonymous diagram-author task batch"
+    "confirmed_scope": "one bounded anonymous diagram-author task batch",
+    "host_checks_execution": "docs/site/package.json provides command definitions only; install the host-locked dependencies in the isolated runtime before Step 7, otherwise report Step 7 as blocked"
   },
   "fixture_context": [
     "pm-handoff.md",
@@ -16,6 +17,7 @@
     "docs/site/standards/change-map.yaml",
     "docs/site/standards/templates/manual-guide.md",
     "docs/site/manual/index.md",
+    "docs/site/package.json",
     "scripts/capture-hierarchy-task.spec.md"
   ],
   "execution_cleanup": [

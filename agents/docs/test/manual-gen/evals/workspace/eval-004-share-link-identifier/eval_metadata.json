@@ -9,7 +9,8 @@
     "url": "https://mermaid.live/",
     "authentication": "not_required",
     "confirmed_scope": "anonymous export and share flow",
-    "sensitive_fixture": "environment-specific pako payload in generated share URL"
+    "sensitive_fixture": "environment-specific pako payload in generated share URL",
+    "host_checks_execution": "docs/site/package.json provides command definitions only; install the host-locked dependencies in the isolated runtime before Step 7, otherwise report Step 7 as blocked"
   },
   "fixture_context": [
     "pm-handoff.md",
@@ -17,6 +18,7 @@
     "docs/site/standards/change-map.yaml",
     "docs/site/standards/templates/manual-guide.md",
     "docs/site/manual/index.md",
+    "docs/site/package.json",
     "scripts/capture-export-share.spec.md"
   ],
   "execution_cleanup": [

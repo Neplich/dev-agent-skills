@@ -7,9 +7,17 @@
   "environment": {
     "kind": "no_domain_environment",
     "domain_available": false,
-    "local_start_consent": "not_yet_provided"
+    "local_start_consent": "not_yet_provided",
+    "host_checks_execution": "docs/site/package.json provides command definitions only; install the host-locked dependencies in the isolated runtime before Step 7, otherwise report Step 7 as blocked"
   },
-  "fixture_context": [],
+  "fixture_context": [
+    "pm-handoff.md",
+    "docs/site/standards/index.md",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/standards/templates/manual-guide.md",
+    "docs/site/manual/index.md",
+    "docs/site/package.json"
+  ],
   "execution_cleanup": [
     "with_skill",
     "without_skill",

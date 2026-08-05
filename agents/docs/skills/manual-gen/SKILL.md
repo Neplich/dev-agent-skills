@@ -25,8 +25,11 @@ initialize the site.
 
 Follow this conditional protocol before loading the execution instructions:
 
-1. The first question must be: 「是否有可通过域名访问的截图环境」. Do not
-   combine this question with local startup as a two-option prompt.
+1. If the entry credential or handoff already provides a domain-accessible
+   environment, use that confirmed URL directly and record its source without
+   asking again. Only when domain evidence is missing must the first question
+   be: 「是否有可通过域名访问的截图环境」. Do not combine this question
+   with local startup as a two-option prompt.
 2. If a domain-accessible environment is available, use that confirmed
    environment. Do not ask about local startup.
 3. Enter the local-startup branch only when either no domain-accessible

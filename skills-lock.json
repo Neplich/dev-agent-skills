@@ -189,12 +189,12 @@
     "manual-gen": {
       "source": "agents/docs/skills/manual-gen",
       "sourceType": "local",
-      "computedHash": "aa58873e40623e3a495ecd39a00c386662091c86c73b9d86dac38a7b7dc3e728"
+      "computedHash": "3911c34a5a665c831f5d15832a0bdf6142fdd9e42627e5a00e46d3a2eede7731"
     },
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",
       "sourceType": "local",
-      "computedHash": "39b5e9566d0c09b51d02c60136f6fa371991d2557493045ba5418958fa2ee7bf"
+      "computedHash": "6a5c7c6e19674e86048e86c527722dfb832b79356114ac5460750d9479ccb05c"
     }
   }
 }

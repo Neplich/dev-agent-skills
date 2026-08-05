@@ -119,8 +119,9 @@ path. This reuses the host `prepare-site.mjs` `referencedAssets()` mechanism;
 do not create a new `public` subdirectory convention.
 
 Every screenshot addition or replacement must also update its owning manual
-page or that page's change-map entry so the screenshot change enters the
-`docs-agent:docs-audit` affected evidence set.
+page so the screenshot change enters the `docs-agent:docs-audit` affected
+evidence set. Update the page's change-map entry when its mapping also needs to
+change, but a change-map edit cannot replace the required page update.
 
 For every created or updated manual page:
 

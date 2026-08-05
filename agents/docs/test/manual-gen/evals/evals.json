@@ -39,7 +39,7 @@
         {
           "id": "checks_render_and_handoffs_audit",
           "description": "宿主检查与渲染验收后正确交接",
-          "text": "记录宿主 docs 检查及渲染目视验收的命令、工作目录和退出状态，确认截图可见、图文对应、导航可达后 handoff docs-agent:docs-audit；不生成 Release Notes、不发版。"
+          "text": "记录宿主 docs 检查及渲染目视验收的权威命令、工作目录、执行状态与结果；依赖可用且检查通过时，确认截图可见、图文对应、导航可达后 handoff docs-agent:docs-audit；锁定依赖不可用时如实在第 7 步 blocked，不跳过检查、不编造结果、不把未执行的渲染验收或 handoff 标为完成；不生成 Release Notes、不发版。"
         }
       ]
     },
@@ -129,7 +129,7 @@
         {
           "id": "preserves_capture_and_audit_contract",
           "description": "视口、卫生、验收与交接契约不因分享场景弱化",
-          "text": "仍分别记录 1920×1080 设定和实际回读，清除浏览器外壳与临时营销浮层，完成宿主检查与渲染目视验收，页面保持 unverified 并 handoff docs-agent:docs-audit。"
+          "text": "仍分别记录 1920×1080 设定和实际回读，清除浏览器外壳与临时营销浮层，页面保持 unverified，并记录宿主检查与渲染验收的权威命令、工作目录、执行状态和结果；依赖可用且检查通过时 handoff docs-agent:docs-audit，锁定依赖不可用时如实在第 7 步 blocked，不跳过检查、不编造结果、不把未执行的渲染验收或 handoff 标为完成。"
         }
       ]
     },
@@ -159,7 +159,7 @@
         {
           "id": "keeps_hierarchy_navigable_and_evidence_backed",
           "description": "三层导航可达且由真实证据支持",
-          "text": "候选确认和渲染验收证明三个语义层次可逐级导航，操作页截图来自实际 1920×1080 回读通过的界面，related_code 可定位，且页面与资产只覆盖维护者确认的单批范围。"
+          "text": "候选确认体现三个语义层次可逐级导航，操作页截图来自实际 1920×1080 回读通过的界面，related_code 可定位，且页面与资产只覆盖维护者确认的单批范围；记录宿主渲染验收的权威命令、工作目录、执行状态和结果，依赖可用时以渲染证明导航可达，锁定依赖不可用时如实在第 7 步 blocked，不编造导航或渲染通过。"
         }
       ]
     }
