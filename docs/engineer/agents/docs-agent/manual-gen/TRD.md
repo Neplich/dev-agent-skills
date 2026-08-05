@@ -64,7 +64,7 @@ flowchart TB
     Env -->|域名| Exec["_internal/INSTRUCTIONS.md<br/>执行契约"]
     Env -->|本地已同意| Exec
     Env -->|无环境 / 未同意| Blocked["blocked"]
-    Exec --> Entry["三级执行入口<br/>AGENTS.md:169"]
+    Exec --> Entry["三级执行入口<br/>AGENTS.md 执行入口优先级"]
     Entry --> Shot["视口设定 → 回读校验 → 采集"]
     Shot --> Write["写入 docs/site/manual/**<br/>+ 同级截图资产"]
     Write --> Checks["宿主 docs checks<br/>+ 渲染目视验收"]
@@ -179,7 +179,7 @@ agents/docs/skills/manual-gen/
 
 指令层明确「回读结果必须来自运行环境的实际读数，不得由设定值推断」，并要求回读数值与 1920×1080 不符时停止采集。报告模板中这两项是分列字段，缺任一项即视为未完成该步骤。此约束的来源是实测：浏览器工具的 `desktop` 预设落到 691×837 视口并触发站点响应式移动布局。
 
-**执行入口（FR-M04）。** 直接引用 `AGENTS.md:169` 的三级优先级与 QA 三个 skill 中的权威副本，不复制判定细则，不新增第四种契约。指令层只要求说明所选入口为何覆盖当前采集需求。
+**执行入口（FR-M04）。** 直接引用 `AGENTS.md` 「QA E2E 测试用例持久化」节中的执行入口优先级条目与 QA 三个 skill 中的权威副本，不复制判定细则，不新增第四种契约。指令层只要求说明所选入口为何覆盖当前采集需求。
 
 ## 8. 注册与计数
 
