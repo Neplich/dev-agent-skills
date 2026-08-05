@@ -19,6 +19,7 @@ last_verified_version: unverified
 
 - [文档规范](/standards/)
 - [产品说明](/product/)
+- [操作手册](/manual/)
 - [系统设计](/design/)
 - [API 文档](/api/)
 - [数据库](/database/)

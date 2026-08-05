@@ -169,6 +169,20 @@
         {"id": "preserves_not_applicable_evidence", "description": "保留替代托管证据", "text": "确认宿主不采用文档镜像交付且维护者确认的替代托管仍有效，报告 not_applicable、证据路径、覆盖变体和下一 owner。"},
         {"id": "does_not_open_devops_handoff", "description": "不误路由 DevOps", "text": "有效 not_applicable 决策不生成 repo-wide deployment handoff；若决策失效才重新询问用户。"}
       ]
+    },
+    {
+      "id": "eval-007-route-manual-gen",
+      "name": "截图操作手册请求分流",
+      "description": "验证 router 接受有效入口凭据后，将真实运行界面截图驱动的操作手册请求分流到 manual-gen，并停在 specialist gate。",
+      "prompt": "请根据 `manual-handoff.md` 处理图文用户操作手册请求。只完成 Docs Agent 的入口检查和分流，不执行 specialist 工作。",
+      "expected_output": "接受完整入口凭据，选择 manual-gen，保留宿主、范围、运行界面证据与输出要求，并仅指向 specialist gate，不协商环境、不采集截图、不写手册。",
+      "workspace": "workspace/eval-007-route-manual-gen",
+      "assertions": [
+        {"id": "accepts_manual_entry_basis", "description": "接受完整手册入口凭据", "text": "识别 `manual-handoff.md` 已提供宿主仓库、有限手册范围、真实运行界面证据来源和所需输出，满足 manual-gen 的入口凭据。"},
+        {"id": "routes_manual_gen", "description": "正确分流到 manual-gen", "text": "选择 `manual-gen`，不改派 `formal-docs-sync`、`docs-site-bootstrap`、`release-notes-generator` 或 `docs-audit`。"},
+        {"id": "preserves_manual_handoff_context", "description": "保留手册入口上下文", "text": "保留 request_type、change_tier、feature_path、host_repository、manual_scope、evidence_sources、required_output 与 blockers_risks。"},
+        {"id": "references_manual_gate_only", "description": "仅指向 manual specialist gate", "text": "仅指向 `manual-gen/SKILL.md` 及其内部指令作为权威执行 gate；router 不代为协商运行环境、确认候选批次、设置视口、采集截图、写入站点或执行审计 handoff。"}
+      ]
     }
   ]
 }

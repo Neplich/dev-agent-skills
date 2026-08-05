@@ -18,6 +18,15 @@
 
 **PASS (3/3 assertions)** — fresh subagent revalidation across the cumulative API, Database, Product, Design, and Ops deployment layering refresh found all nine materialized targets byte-identical to the current packaged assets, preserved the existing manifest dispositions and original `createdAt`, and produced zero content changes.
 
+Overall result: BLOCKED
+
+## Current Asset-Set Drift
+
+- The retained PASS above is the historical result for the former 40-asset, five-template inventory.
+- The current packaged asset set contains 42 assets and six templates after
+  adding `standards/templates/manual-guide.md` and `manual/index.md`.
+- This changed inventory has not received fresh with-skill, same-run without-skill baseline, and independent judge validation, so the historical PASS does not establish the current result and the eval must be rerun.
+
 ## Assertions
 
 - `produces_zero_diff`: PASS. All nine materialized targets compared byte-identical to packaged assets; before/after SHA-256 sets and manifest hash `0bb02c44054da996a17a489f0453ced2c03cde6b9bf757d4a035ac5f3e90017b` matched, and `createdAt` remained `2026-07-16T08:00:00+08:00`.
@@ -47,7 +56,8 @@
 
 ## Next Steps
 
-- Retain this PASS. Re-run if the inventory, representative targets, omitted-target assumption, dependency declaration, or manifest disposition rules change.
+- Re-run against the current 42-asset, six-template inventory with a fresh
+  without-skill baseline and independent judge before restoring a PASS result.
 
 ## Runtime Artifact Policy
 

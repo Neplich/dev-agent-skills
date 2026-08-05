@@ -11,6 +11,11 @@
     "confirmed_scope": "anonymous basic editing and preview flow"
   },
   "fixture_context": [
+    "pm-handoff.md",
+    "docs/site/standards/index.md",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/standards/templates/manual-guide.md",
+    "docs/site/manual/index.md",
     "scripts/capture-basic-editing.spec.md"
   ],
   "execution_cleanup": [

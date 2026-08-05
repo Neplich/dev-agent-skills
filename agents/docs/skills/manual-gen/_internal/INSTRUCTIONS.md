@@ -118,6 +118,10 @@ Place each screenshot beside the page that references it. Name it
 path. This reuses the host `prepare-site.mjs` `referencedAssets()` mechanism;
 do not create a new `public` subdirectory convention.
 
+Every screenshot addition or replacement must also update its owning manual
+page or that page's change-map entry so the screenshot change enters the
+`docs-agent:docs-audit` affected evidence set.
+
 For every created or updated manual page:
 
 - set `doc_type: manual`;

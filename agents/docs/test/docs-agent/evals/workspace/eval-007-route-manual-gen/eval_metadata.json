@@ -1,0 +1,9 @@
+{
+  "eval_id": "eval-007-route-manual-gen",
+  "eval_name": "route-manual-gen",
+  "workspace_root": "agents/docs/test/docs-agent/evals/workspace/eval-007-route-manual-gen",
+  "skill_availability_goal": "Verify that docs-agent accepts a complete illustrated-manual entry basis and routes only to the manual-gen specialist gate.",
+  "prompt": "请根据 `manual-handoff.md` 处理图文用户操作手册请求。只完成 Docs Agent 的入口检查和分流，不执行 specialist 工作。",
+  "fixture_context": ["manual-handoff.md"],
+  "execution_cleanup": []
+}

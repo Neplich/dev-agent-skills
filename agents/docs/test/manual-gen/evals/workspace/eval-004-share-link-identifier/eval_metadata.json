@@ -12,6 +12,11 @@
     "sensitive_fixture": "environment-specific pako payload in generated share URL"
   },
   "fixture_context": [
+    "pm-handoff.md",
+    "docs/site/standards/index.md",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/standards/templates/manual-guide.md",
+    "docs/site/manual/index.md",
     "scripts/capture-export-share.spec.md"
   ],
   "execution_cleanup": [
