@@ -1,6 +1,6 @@
 title: Documentation change map
 visibility: internal
-doc_type: standard
+doc_type: design
 stage: dev
 owners: [docs]
 related_code: [src/notifications/retry.rules]
