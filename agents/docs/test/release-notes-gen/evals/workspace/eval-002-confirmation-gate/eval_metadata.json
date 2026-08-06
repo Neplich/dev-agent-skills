@@ -1,0 +1,8 @@
+{
+  "eval_id": "eval-002-confirmation-gate",
+  "eval_name": "confirmation-gate",
+  "workspace_root": "agents/docs/test/release-notes-gen/evals/workspace/eval-002-confirmation-gate",
+  "prompt": "请根据 `release-entry.md` 与 `evidence/` 准备 v1.0.0 的站内版本说明。目前正文尚未获得确认。",
+  "fixture_context": ["release-entry.md", "evidence/", "docs/site/package.json", "docs/site/scripts/", "docs/site/standards/", "docs/site/release-notes/README.md", "docs/site/release-notes/v0.9.0.md", "docs/site/.meta/releases.json"],
+  "execution_cleanup": ["docs/site/release-notes/v1.0.0.md", "docs/site/.generated", "handoff.yaml"]
+}

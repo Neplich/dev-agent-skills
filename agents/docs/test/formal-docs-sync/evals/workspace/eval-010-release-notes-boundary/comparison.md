@@ -42,7 +42,7 @@ Overall result: BLOCKED
 | Assertion | With skill | Without skill | Fresh judgment |
 | --- | --- | --- | --- |
 | `recognizes_release_communication_outcome` | PASS | FAIL | with-skill 识别独立 Release Notes workflow；baseline 直接生成页面。 |
-| `routes_complete_entry_to_site_owner` | PASS | FAIL | with-skill 将 confirmed host/version/scope/evidence/surfaces 交给 `docs-agent:release-notes-generator`；baseline 无 handoff。 |
+| `routes_complete_entry_to_site_owner` | PASS | FAIL | with-skill 将 confirmed host/version/scope/evidence/surfaces 交给 `docs-agent:release-notes-gen`；baseline 无 handoff。 |
 | `keeps_entire_site_zero_diff` | PASS | FAIL | with-skill 站点零写入；baseline 新增版本页并修改 index/metadata。 |
 | `preserves_external_release_boundary` | PASS | PASS | 两侧均未执行 tag 或 GitHub Release。 |
 

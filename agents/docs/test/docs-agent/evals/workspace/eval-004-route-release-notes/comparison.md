@@ -24,12 +24,12 @@ fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 
 
 ## Historical Results
 
-- 2026-07-19（fixture 下游指向修正前）：**PASS（4/4 assertions）** — with-skill 接受完整 Release Notes entry basis，保留全部 handoff 上下文，选择 `release-notes-generator`，且没有复制或执行 specialist 协议。
+- 2026-07-19（fixture 下游指向修正前）：**PASS（4/4 assertions）** — with-skill 接受完整 Release Notes entry basis，保留全部 handoff 上下文，选择 `release-notes-gen`，且没有复制或执行 specialist 协议。
 
 ## Assertions
 
 - `accepts_release_notes_entry_basis`：PASS。识别宿主、维护者确认版本、scope、证据与站内页面/下游 handoff 要求。
-- `routes_release_notes_generator`：PASS。明确选择 `release-notes-generator`，排除 sync、audit、bootstrap 与 GitHub Release 当前执行。
+- `routes_release_notes_generator`：PASS。明确选择 `release-notes-gen`，排除 sync、audit、bootstrap 与 GitHub Release 当前执行。
 - `preserves_handoff_context`：PASS。保留 request、tier、feature、version、scope、host、source、evidence、output 与 risk 字段。
 - `references_release_notes_gate_only`：PASS。仅指向 specialist SKILL 及内部指令，没有复制七步流程或执行正文、metadata、checks、#117/#120 handoff。
 
@@ -41,7 +41,7 @@ fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 
 ## Without-Skill Baseline
 
 - 来源：同一 prompt 与 pristine fixture 的本轮 fresh `without_skill`；不含目标 skill、Docs README、旧 comparison 或 with-skill 输出，未复用历史 baseline。
-- baseline 已命名并正确路由 `docs-agent:release-notes-generator`（accepts 与 routes 两条断言 PASS），但未完整保留 handoff context（缺 `host_repository`、原始 `release_scope`），且复制了 specialist 流程、未引用权威 gate——2/4 PASS。
+- baseline 已命名并正确路由 `docs-agent:release-notes-gen`（accepts 与 routes 两条断言 PASS），但未完整保留 handoff context（缺 `host_repository`、原始 `release_scope`），且复制了 specialist 流程、未引用权威 gate——2/4 PASS。
 
 ## Failures
 

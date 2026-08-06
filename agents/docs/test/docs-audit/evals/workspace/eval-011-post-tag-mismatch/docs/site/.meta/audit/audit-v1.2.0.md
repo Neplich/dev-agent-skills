@@ -20,7 +20,7 @@
 
 ## Release-version surfaces
 
-- `docs-agent:release-notes-generator` handoff: ready for `v1.2.0`
+- `docs-agent:release-notes-gen` handoff: ready for `v1.2.0`
 - `docs/site/release-notes/v1.2.0.md`: SHA-256 `f159690c0f8a816db8efbc2fdb2146ed73f2b04f43fdda4d79e2bd13bd746a77`
 - `docs/site/release-notes/index.md`: SHA-256 `88fc254cad95a0a023f125419e5fc3eed7649cda6c99be890019b55d6f1cb248`
 - `docs/site/.meta/releases.json`: SHA-256 `0a9cc1bda146381fd73264801d7510cedfbb9ff42f766e3b5b9cf9e0be7388ca`

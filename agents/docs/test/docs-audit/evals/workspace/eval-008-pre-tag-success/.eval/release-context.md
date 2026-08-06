@@ -65,4 +65,4 @@ this 100644 discovery blob; the external release package records that handoff
 commit/tree/path/blob. The host branch may accept the temporary branch only by
 normal fast-forward while its branch, worktree, and index fingerprints still
 match the captured state. Integration and readback are the final gate before
-the `pm-agent:github-release-generator` handoff.
+the `pm-agent:github-release-gen` handoff.

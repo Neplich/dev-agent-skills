@@ -81,9 +81,9 @@ changelog:
 |---|---|
 | `idea-to-spec` | 想法收敛、PRD/DECISIONS、existing-project feature/update、空仓库产品定义 |
 | `competitive-brief` | 竞品研究、定位比较、市场扫描、messaging gaps |
-| `changelog-generator` | 开发者视角 changelog、released/unreleased/full regeneration |
-| `github-release-generator` | 站内 Release Notes 与审计门禁完成后的 GitHub Release preview、draft、publish |
-| `roadmap-generator` | roadmap、milestone、version planning、后续优先级同步 |
+| `changelog-gen` | 开发者视角 changelog、released/unreleased/full regeneration |
+| `github-release-gen` | 站内 Release Notes 与审计门禁完成后的 GitHub Release preview、draft、publish |
+| `roadmap-gen` | roadmap、milestone、version planning、后续优先级同步 |
 | `github-reader` | GitHub repo health、issue/PR/milestone/backlog/release blockers |
 
 ## 验收标准
@@ -112,9 +112,9 @@ flowchart LR
     Context --> Decision{"选择一个最窄主 route"}
     Decision --> idea_to_spec["idea-to-spec"]
     Decision --> competitive_brief["competitive-brief"]
-    Decision --> changelog_generator["changelog-generator"]
-    Decision --> github_release_generator["github-release-generator"]
-    Decision --> roadmap_generator["roadmap-generator"]
+    Decision --> changelog_generator["changelog-gen"]
+    Decision --> github_release_generator["github-release-gen"]
+    Decision --> roadmap_generator["roadmap-gen"]
     Decision --> github_reader["github-reader"]
     Decision --> Output["选中最窄 PM specialist 后同轮进入该 skill workflow；仅路由目标真正不清时问一个路由级澄清问题。"]
     Output --> Handoff["UI/UX 到 designer-agent；稳定需求到 engineer-agent:trd-gen；release/changelog/roadmap/GitHub 状态交对应 PM skill。"]

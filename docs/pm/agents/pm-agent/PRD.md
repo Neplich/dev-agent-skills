@@ -62,7 +62,7 @@ changelog:
 | ID | User Story | Priority | Acceptance Criteria |
 |----|-----------|----------|---------------------|
 | US-A01 | 作为用户，我想通过 `pm-agent` 进入产品需求、范围收敛、项目状态、竞品、路线图和发布沟通流程，以便获得最小足够的 specialist 处理。 | P0 | 给定匹配请求，输出一个主 route、选择理由和下一步产物。 |
-| US-A02 | 作为维护者，我想确认 route matrix 不自路由、不全量执行，以便和 eval 保持一致。 | P0 | 流程图只从 dispatcher 指向 specialist：`idea-to-spec`, `competitive-brief`, `changelog-generator`, `github-release-generator`, `roadmap-generator`, `github-reader`。 |
+| US-A02 | 作为维护者，我想确认 route matrix 不自路由、不全量执行，以便和 eval 保持一致。 | P0 | 流程图只从 dispatcher 指向 specialist：`idea-to-spec`, `competitive-brief`, `changelog-gen`, `github-release-gen`, `roadmap-gen`, `github-reader`。 |
 | US-A03 | 作为下游 Agent，我想收到明确 handoff，以便继续工作时不重猜上下文。 | P1 | handoff 包含 target、source docs、blocked reason 或 expected output。 |
 
 ## 功能需求
@@ -70,9 +70,9 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-A00 | Entry Dispatcher | `pm-agent` 必须作为入口 dispatcher，负责激活角色级流程。 | P0 | README、marketplace 和 entry SKILL 都指向 `pm-agent`。 |
-| FR-A01 | Route Matrix | Dispatcher 默认选择一个最小主 route；只有用户明确要求或目标强烈暗示更广 PM 链路时，才定义后续 multi-skill chain。 | P0 | 主 route 属于 `idea-to-spec`, `competitive-brief`, `changelog-generator`, `github-release-generator`, `roadmap-generator`, `github-reader`，不包含 `pm-agent` 自身。 |
+| FR-A01 | Route Matrix | Dispatcher 默认选择一个最小主 route；只有用户明确要求或目标强烈暗示更广 PM 链路时，才定义后续 multi-skill chain。 | P0 | 主 route 属于 `idea-to-spec`, `competitive-brief`, `changelog-gen`, `github-release-gen`, `roadmap-gen`, `github-reader`，不包含 `pm-agent` 自身。 |
 | FR-A02 | Context Boundary | Dispatcher 只收集路由所需上下文；实现/审查/测试细节由被选 specialist 收集。 | P0 | 缺少内容级上下文不会让入口停在元路由。 |
-| FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任；PM 主输出路径必须覆盖 `docs/pm/{feature_path}/`、`docs/roadmap.md` 和 `docs/changelog/changelog-v{version}.md`。站内 Release Notes 归 `docs-agent:release-notes-generator`（`docs/site/release-notes/`），PM 侧 `github-release-generator` 只消费已确认的版本事实。 | P0 | Dispatcher 输出预期产物路径和类型，不伪装成 specialist report。 |
+| FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任；PM 主输出路径必须覆盖 `docs/pm/{feature_path}/`、`docs/roadmap.md` 和 `docs/changelog/changelog-v{version}.md`。站内 Release Notes 归 `docs-agent:release-notes-gen`（`docs/site/release-notes/`），PM 侧 `github-release-gen` 只消费已确认的版本事实。 | P0 | Dispatcher 输出预期产物路径和类型，不伪装成 specialist report。 |
 | FR-A04 | Handoff | UI/UX 产物交给 designer-agent；PM 范围稳定后通过 engineer-agent:trd-gen 进入工程；非 PM 范围按 owning agent 转交。 | P0 | Handoff 指向 owning skill/agent，并说明输入包、`feature_path` 证据和期望输出。 |
 | FR-A05 | Feature Path Routing | 当请求需要 PRD/DECISIONS/design.md 时，PM 入口必须把请求交给 `idea-to-spec` 解析合法多级 `feature_path`。 | P0 | 子功能不直接生成并列顶层 PM 目录；父功能不清楚时 blocked 或澄清。 |
 
@@ -84,9 +84,9 @@ changelog:
 |---|---|
 | `idea-to-spec` | 想法收敛、PRD/DECISIONS、existing-project feature/update、空仓库产品定义 |
 | `competitive-brief` | 竞品研究、定位比较、市场扫描、messaging gaps |
-| `changelog-generator` | 开发者视角 changelog、released/unreleased/full regeneration |
-| `github-release-generator` | 站内 Release Notes 与审计门禁完成后的 GitHub Release preview、draft、publish |
-| `roadmap-generator` | roadmap、milestone、version planning、后续优先级同步 |
+| `changelog-gen` | 开发者视角 changelog、released/unreleased/full regeneration |
+| `github-release-gen` | 站内 Release Notes 与审计门禁完成后的 GitHub Release preview、draft、publish |
+| `roadmap-gen` | roadmap、milestone、version planning、后续优先级同步 |
 | `github-reader` | GitHub repo health、issue/PR/milestone/backlog/release blockers |
 
 ## 验收标准
@@ -116,9 +116,9 @@ flowchart LR
     Context --> Decision{"选择最窄主 route 或 PM chain"}
     Decision --> idea_to_spec["idea-to-spec"]
     Decision --> competitive_brief["competitive-brief"]
-    Decision --> changelog_generator["changelog-generator"]
-    Decision --> github_release_generator["github-release-generator"]
-    Decision --> roadmap_generator["roadmap-generator"]
+    Decision --> changelog_generator["changelog-gen"]
+    Decision --> github_release_generator["github-release-gen"]
+    Decision --> roadmap_generator["roadmap-gen"]
     Decision --> github_reader["github-reader"]
     Decision --> Output["同轮进入下游 skill workflow；仅目标真正不清时输出 route decision"]
     Output --> Handoff["UI/UX 产物交给 designer-agent；PM 范围稳定后通过 engineer-agent:trd-gen 进入工程；非 PM 范围按 owning agent 转交。"]

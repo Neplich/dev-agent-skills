@@ -17,7 +17,7 @@
 
 - Schema: `evals.json` v1.0。
 - Fixture: 无静态 fixture；实时查询目标为 `anthropics/anthropic-sdk-python`。
-- Prompt: `我是 roadmap-generator，需要 anthropics/anthropic-sdk-python 的当前仓库状态作为结构化输入，请给我完整状态数据`
+- Prompt: `我是 roadmap-gen，需要 anthropics/anthropic-sdk-python 的当前仓库状态作为结构化输入，请给我完整状态数据`
 - Live dependency: GitHub API、网络、已认证 `gh` CLI。
 - Validation date: 2026-07-28（Asia/Shanghai）。
 - with-skill query: 2026-07-28 18:41:20–18:42:11 CST。

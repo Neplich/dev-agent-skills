@@ -36,8 +36,8 @@ execution.
 
 - running the full design or document-writing protocol itself
 - duplicating the domain logic of `idea-to-spec`, `feature-catalog`,
-  `competitive-brief`, `changelog-generator`, `github-release-generator`,
-  `roadmap-generator`, or `github-reader`
+  `competitive-brief`, `changelog-gen`, `github-release-gen`,
+  `roadmap-gen`, or `github-reader`
 - continuing into design implementation, engineering execution, QA, DevOps, or
   security work
 - letting empty-workspace product ideas skip PM discovery and go straight to
@@ -48,10 +48,10 @@ execution.
 - `pm-agent:idea-to-spec` - Product discovery, scope shaping, spec creation, spec updates
 - `pm-agent:feature-catalog` - Take-over feature catalog and project feature profile for existing codebases
 - `pm-agent:competitive-brief` - Competitive analysis, positioning, market comparison
-- `pm-agent:changelog-generator` - Developer-facing changelog generation from GitHub
-- `pm-agent:github-release-generator` - GitHub Release preview, draft, and
+- `pm-agent:changelog-gen` - Developer-facing changelog generation from GitHub
+- `pm-agent:github-release-gen` - GitHub Release preview, draft, and
   approved publication after the Docs release gates pass
-- `pm-agent:roadmap-generator` - Roadmap creation or sync from GitHub planning signals
+- `pm-agent:roadmap-gen` - Roadmap creation or sync from GitHub planning signals
 - `pm-agent:github-reader` - GitHub status, milestones, backlog, PR queue, blockers
 
 ## Downstream Role Handoff Targets
@@ -102,8 +102,8 @@ these stable `request_type` values in routing notes and handoff packets.
 | `delivery` / `status` | Confirm already-scoped change scope, verification state, CI/review status, and requested delivery action. | Engineer / delivery can use the fast lane only for known work whose scope is already confirmed. Repo health, backlog, PR queue, release-readiness planning, and blockers route to `repo_status` / `github-reader`. |
 | `feature_catalog` | Route inherited-project inventory and feature-profile work to `feature-catalog`. | Stay in PM until the catalog or feature profile is maintainer-confirmed. |
 | `competitive_research` / `battlecard` | Route market comparison and battlecards to `competitive-brief`. | Stay in PM unless follow-up roadmap, messaging, or implementation work needs a separate handoff. |
-| `changelog` / `release_notes` | Route developer-facing changelog work to `changelog-generator`; route site or user-facing version notes to `docs-agent:release-notes-generator`; route GitHub Release preview, draft, or publication to PM `github-release-generator`. | Site Release Notes require a Docs handoff and successful release gates before the PM GitHub Release specialist acts. |
-| `roadmap` / `repo_status` | Route planning, milestones, backlog, PR queue, blockers, and repository health to `roadmap-generator` or `github-reader`. | Stay in PM unless confirmed downstream execution is requested. |
+| `changelog` / `release_notes` | Route developer-facing changelog work to `changelog-gen`; route site or user-facing version notes to `docs-agent:release-notes-gen`; route GitHub Release preview, draft, or publication to PM `github-release-gen`. | Site Release Notes require a Docs handoff and successful release gates before the PM GitHub Release specialist acts. |
+| `roadmap` / `repo_status` | Route planning, milestones, backlog, PR queue, blockers, and repository health to `roadmap-gen` or `github-reader`. | Stay in PM unless confirmed downstream execution is requested. |
 
 New requirements, expectation changes, and unclear scope stay on the PM path.
 Do not route them to downstream execution as `hotfix`.
@@ -117,10 +117,10 @@ Route by the user's intended PM outcome, not by literal wording.
 | 新想法、新功能、空/新仓库里的产品想法、范围收敛、已有 spec 更新 | `idea-to-spec` | Product discovery, feature framing, scope convergence, requirement shaping, spec creation, spec updates, empty/new repo app ideas, "把想法变成文档", "收敛需求", "定义边界", "空目录里做个产品", "先别写代码先做 PRD" |
 | 接手已有项目、建立功能目录、功能画像、梳理现有功能 | `feature-catalog` | Taking over an existing project, mapping what features it has today, building a feature directory or feature inventory before new specs, "建立功能目录", "功能画像", "接手项目先梳理功能", "这个项目现在有哪些功能" |
 | 竞品分析、定位比较、市场情报 | `competitive-brief` | Competitor research, positioning comparison, market scan, messaging gaps, "竞品分析", "我们和 X 怎么比" |
-| changelog、版本差异、未发布改动 | `changelog-generator` | Changelog, what changed, unreleased changes, version history, "这个版本改了什么" |
-| GitHub Release 正文、预览、draft 或发布操作 | PM `github-release-generator` | GitHub Release bodies, previews, drafts, or publication operations, "GitHub Release", "GitHub 发版页" |
-| 面向用户的版本说明、发布公告、`docs/site/release-notes/` 版本页 | `docs-agent:release-notes-generator` | Customer-facing release announcements, "what's new", "发版公告", or versioned formal-site pages under `docs/site/release-notes/`, including their confirmation, metadata, index, and docs checks |
-| 路线图、里程碑规划、后续优先级 | `roadmap-generator` | Roadmap, future planning, upcoming work, milestone-driven planning, "路线图", "接下来做什么", "版本规划" |
+| changelog、版本差异、未发布改动 | `changelog-gen` | Changelog, what changed, unreleased changes, version history, "这个版本改了什么" |
+| GitHub Release 正文、预览、draft 或发布操作 | PM `github-release-gen` | GitHub Release bodies, previews, drafts, or publication operations, "GitHub Release", "GitHub 发版页" |
+| 面向用户的版本说明、发布公告、`docs/site/release-notes/` 版本页 | `docs-agent:release-notes-gen` | Customer-facing release announcements, "what's new", "发版公告", or versioned formal-site pages under `docs/site/release-notes/`, including their confirmation, metadata, index, and docs checks |
+| 路线图、里程碑规划、后续优先级 | `roadmap-gen` | Roadmap, future planning, upcoming work, milestone-driven planning, "路线图", "接下来做什么", "版本规划" |
 | 项目状态、milestone 进度、backlog、PR 队列、阻塞项 | `github-reader` | Repo health, milestone progress, issue backlog, review queue, release blockers, "项目状态", "有哪些 PR 卡住", "release ready 吗" |
 | 文档功能树梳理、结构治理、孤儿或跨角色镜像审计 | `idea-to-spec:structure-governance` | Feature-tree inventory, document structure audit, parallel-directory drift, orphan or mirror analysis, "文档结构治理", "功能树梳理", "目录结构检查"；具体拆分提案的评审或执行回到 `idea-to-spec` existing-project iteration |
 | 已确认产品范围的 UX 流程、UI 结构、视觉系统、页面或参考风格设计 | hand off to `designer-agent` | UX flow, UI structure, visual-system, page design, or reference-style requests with confirmed product scope |
@@ -136,9 +136,9 @@ If the request is PM-shaped but underspecified, use these defaults:
 - if it is about feature direction, scope, requirements, or docs -> `idea-to-spec`
 - if it is about current repo/project state -> `github-reader`
 - if it is about communicating shipped work -> choose
-  `changelog-generator` for developer-facing output and
-  `docs-agent:release-notes-generator` for site or user-facing version notes;
-  use PM `github-release-generator` only for the GitHub Release page workflow
+  `changelog-gen` for developer-facing output and
+  `docs-agent:release-notes-gen` for site or user-facing version notes;
+  use PM `github-release-gen` only for the GitHub Release page workflow
 
 ## PM-First Guardrail
 
@@ -210,10 +210,10 @@ blocking or inventing a `feature_path`.
 Use these only when the user clearly wants the broader PM workflow:
 
 - 接手项目先建功能目录再收敛需求 -> `feature-catalog` -> `idea-to-spec`
-- 完整产品规划 -> `idea-to-spec` -> `competitive-brief` -> `roadmap-generator`
-- 先看项目状态再做规划 -> `github-reader` -> `roadmap-generator`
-- 先整理变更再写 GitHub Release -> `changelog-generator` -> PM `github-release-generator`
-- 先做产品收敛再准备用户版本说明 -> `idea-to-spec` -> `docs-agent:release-notes-generator`
+- 完整产品规划 -> `idea-to-spec` -> `competitive-brief` -> `roadmap-gen`
+- 先看项目状态再做规划 -> `github-reader` -> `roadmap-gen`
+- 先整理变更再写 GitHub Release -> `changelog-gen` -> PM `github-release-gen`
+- 先做产品收敛再准备用户版本说明 -> `idea-to-spec` -> `docs-agent:release-notes-gen`
 
 Do not expand into a multi-skill PM chain unless the broader follow-up is
 explicitly requested or strongly implied by the user's end goal.

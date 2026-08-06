@@ -40,7 +40,7 @@ Overall result: BLOCKED
 - 删除预计算 digest、canonical 答案、invalid 原因标签和 producer/consumer 指令。
 - 增加 phase-boundary 变体：pre-tag declared source ids 缺少 future `tag`，post-tag observations 才出现该来源。
 - 保留多版本 index 的双匹配、absent JSON Pointer 与 unknown extractor 原始观测。
-- 将历史 issue locator 替换为 `docs-agent:release-notes-generator`。
+- 将历史 issue locator 替换为 `docs-agent:release-notes-gen`。
 
 ## Assertion Results
 

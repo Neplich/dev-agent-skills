@@ -38,7 +38,7 @@ changelog:
 
 ## 背景
 
-`docs-agent` 已有 4 个 specialist：`docs-site-bootstrap` 初始化站点骨架，`formal-docs-sync` 同步 API / 数据库 / 设计 / 运维 / 产品五类当前事实，`release-notes-generator` 产出站内版本说明，`docs-audit` 执行发版门禁。这四者共享同一条证据链——代码与已确认过程文档推导出纯文本当前事实。
+`docs-agent` 已有 4 个 specialist：`docs-site-bootstrap` 初始化站点骨架，`formal-docs-sync` 同步 API / 数据库 / 设计 / 运维 / 产品五类当前事实，`release-notes-gen` 产出站内版本说明，`docs-audit` 执行发版门禁。这四者共享同一条证据链——代码与已确认过程文档推导出纯文本当前事实。
 
 结果是文档站能说明平台"有什么"，却不能交付读者照着做完一件业务任务的图文手册。宿主项目的真实缺口是：新用户拿到平台后，没有一份以真实界面为证据、按业务任务组织、可被目标角色复现的操作说明。
 
@@ -60,7 +60,7 @@ changelog:
 - 不创建独立的 DOCX 手册生成 skill。
 - 不实现浏览器自动化框架、应用启动脚本或部署环境；只消费宿主已有的执行入口。
 - 不默认覆盖所有角色、所有管理后台模块或全站页面。
-- 不改动 `formal-docs-sync` 现有五类契约与八步流程，不改动 `release-notes-generator` 与 `docs-audit` 的既有职责边界。
+- 不改动 `formal-docs-sync` 现有五类契约与八步流程，不改动 `release-notes-gen` 与 `docs-audit` 的既有职责边界。
 - 不为截图过期新增告警机制或第二套变更检测协议。
 - 不发明新的宿主浏览器能力契约；执行入口复用仓库既有三级优先级。
 - 不在本功能内统一仓库 `-generator` 后缀的命名规范；该项作为独立治理变更另行推进。

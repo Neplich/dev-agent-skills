@@ -4,7 +4,7 @@
 - change_tier: `major`
 - feature_path: `ai-search`
 - host_repository: `JOTO-AI/aiportal`（AI Hub-shaped fixture）
-- requested_flow: `docs-audit pre-tag -> docs-audit post-tag -> github-release-generator handoff`
+- requested_flow: `docs-audit pre-tag -> docs-audit post-tag -> github-release-gen handoff`
 - target_release_version: `v1.4.0`
 - target_release_version_confirmation:
   - status: `maintainer_confirmed`

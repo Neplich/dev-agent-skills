@@ -139,22 +139,22 @@ def test_default_install_creates_hidden_mirror_and_relative_skill_symlinks(tmp_p
     assert marker["source"] == ROOT.resolve().as_posix()
     assert_relative_mirror_link(target, "pm-agent")
     assert_relative_mirror_link(target, "debugger")
-    assert_relative_mirror_link(target, "github-release-generator")
-    assert_relative_mirror_link(target, "release-notes-generator")
-    assert skill_source_rel("github-release-generator") == Path(
-        "agents/product_manager/skills/github-release-generator"
+    assert_relative_mirror_link(target, "github-release-gen")
+    assert_relative_mirror_link(target, "release-notes-gen")
+    assert skill_source_rel("github-release-gen") == Path(
+        "agents/product_manager/skills/github-release-gen"
     )
-    assert skill_source_rel("release-notes-generator") == Path(
-        "agents/docs/skills/release-notes-generator"
+    assert skill_source_rel("release-notes-gen") == Path(
+        "agents/docs/skills/release-notes-gen"
     )
     assert "Qualified aliases for colliding skill names:" not in result.stdout
     assert (
         target
         / MIRROR_DIR
-        / "agents/product_manager/skills/github-release-generator/SKILL.md"
+        / "agents/product_manager/skills/github-release-gen/SKILL.md"
     ).is_file()
     assert (
-        target / MIRROR_DIR / "agents/docs/skills/release-notes-generator/SKILL.md"
+        target / MIRROR_DIR / "agents/docs/skills/release-notes-gen/SKILL.md"
     ).is_file()
 
 
@@ -255,21 +255,21 @@ def test_upgrade_removes_obsolete_managed_qualified_aliases(tmp_path: Path) -> N
     checkout = tmp_path / "checkout"
     make_minimal_checkout(checkout)
     for role in ("product_manager", "docs"):
-        skill = checkout / f"agents/{role}/skills/release-notes-generator"
+        skill = checkout / f"agents/{role}/skills/release-notes-gen"
         skill.mkdir(parents=True)
         (skill / "SKILL.md").write_text(
-            "---\nname: release-notes-generator\n---\n",
+            "---\nname: release-notes-gen\n---\n",
             encoding="utf-8",
         )
 
     marketplace_path = checkout / ".claude-plugin/marketplace.json"
     marketplace = json.loads(marketplace_path.read_text(encoding="utf-8"))
-    marketplace["plugins"][0]["skills"].append("./skills/release-notes-generator")
+    marketplace["plugins"][0]["skills"].append("./skills/release-notes-gen")
     marketplace["plugins"].append(
         {
             "name": "docs-agent",
             "source": "./agents/docs",
-            "skills": ["./skills/release-notes-generator"],
+            "skills": ["./skills/release-notes-gen"],
         }
     )
     marketplace_path.write_text(json.dumps(marketplace), encoding="utf-8")
@@ -292,19 +292,19 @@ def test_upgrade_removes_obsolete_managed_qualified_aliases(tmp_path: Path) -> N
 
     old_install = run_checkout_installer()
     assert old_install.returncode == 0, old_install.stderr + old_install.stdout
-    assert (target / "pm-release-notes-generator").is_symlink()
-    assert (target / "docs-release-notes-generator").is_symlink()
+    assert (target / "pm-release-notes-gen").is_symlink()
+    assert (target / "docs-release-notes-gen").is_symlink()
 
-    new_skill = checkout / "agents/product_manager/skills/github-release-generator"
+    new_skill = checkout / "agents/product_manager/skills/github-release-gen"
     new_skill.mkdir()
     (new_skill / "SKILL.md").write_text(
-        "---\nname: github-release-generator\n---\n",
+        "---\nname: github-release-gen\n---\n",
         encoding="utf-8",
     )
-    shutil.rmtree(checkout / "agents/product_manager/skills/release-notes-generator")
+    shutil.rmtree(checkout / "agents/product_manager/skills/release-notes-gen")
     marketplace["plugins"][0]["skills"] = [
         "./skills/pm-agent",
-        "./skills/github-release-generator",
+        "./skills/github-release-gen",
     ]
     marketplace_path.write_text(json.dumps(marketplace), encoding="utf-8")
 
@@ -312,24 +312,24 @@ def test_upgrade_removes_obsolete_managed_qualified_aliases(tmp_path: Path) -> N
 
     assert upgraded.returncode == 0, upgraded.stderr + upgraded.stdout
     assert "Removed obsolete managed skill aliases:" in upgraded.stdout
-    assert not (target / "pm-release-notes-generator").exists()
-    assert not (target / "pm-release-notes-generator").is_symlink()
-    assert not (target / "docs-release-notes-generator").exists()
-    assert not (target / "docs-release-notes-generator").is_symlink()
+    assert not (target / "pm-release-notes-gen").exists()
+    assert not (target / "pm-release-notes-gen").is_symlink()
+    assert not (target / "docs-release-notes-gen").exists()
+    assert not (target / "docs-release-notes-gen").is_symlink()
     assert not (
-        target / MIRROR_DIR / "agents/product_manager/skills/release-notes-generator"
+        target / MIRROR_DIR / "agents/product_manager/skills/release-notes-gen"
     ).exists()
-    assert (target / "github-release-generator").resolve(strict=True) == (
-        target / MIRROR_DIR / "agents/product_manager/skills/github-release-generator"
+    assert (target / "github-release-gen").resolve(strict=True) == (
+        target / MIRROR_DIR / "agents/product_manager/skills/github-release-gen"
     )
-    assert (target / "release-notes-generator").resolve(strict=True) == (
-        target / MIRROR_DIR / "agents/docs/skills/release-notes-generator"
+    assert (target / "release-notes-gen").resolve(strict=True) == (
+        target / MIRROR_DIR / "agents/docs/skills/release-notes-gen"
     )
 
 
 def test_upgrade_preserves_unowned_obsolete_alias_name(tmp_path: Path) -> None:
     target = tmp_path / "skills"
-    unowned = target / "pm-release-notes-generator"
+    unowned = target / "pm-release-notes-gen"
     unowned.mkdir(parents=True)
     sentinel = unowned / "SKILL.md"
     sentinel.write_text("user-owned skill", encoding="utf-8")
@@ -351,13 +351,13 @@ def test_upgrade_preserves_unmanaged_checkout_symlink_for_obsolete_alias(
 
     custom_checkout = tmp_path / "custom-checkout"
     write_dev_agent_marketplace_marker(custom_checkout)
-    custom_skill = custom_checkout / "agents/custom/skills/release-notes-generator"
+    custom_skill = custom_checkout / "agents/custom/skills/release-notes-gen"
     custom_skill.mkdir(parents=True)
     (custom_skill / "SKILL.md").write_text(
-        "---\nname: release-notes-generator\n---\n",
+        "---\nname: release-notes-gen\n---\n",
         encoding="utf-8",
     )
-    custom_alias = target / "pm-release-notes-generator"
+    custom_alias = target / "pm-release-notes-gen"
     custom_alias.symlink_to(custom_skill, target_is_directory=True)
 
     upgraded = run_installer(target)

@@ -26,9 +26,9 @@
 | `idea-to-spec` | Product ideas, empty-repo app requests, feature changes, spec updates | `PRD.md`, `DECISIONS.md`, Engineer handoff |
 | `feature-catalog` | Project take-over, feature directory and feature profile for existing code | Feature catalog draft, `docs/pm/FEATURE_CATALOG.md`, `prd-gen`/`trd-gen` handoff |
 | `competitive-brief` | Competitor positioning, gap analysis, market scan | Competitive brief, positioning opportunities, risks |
-| `changelog-generator` | Developer-facing version change summaries | `docs/changelog/changelog-v{version}.md` |
-| `github-release-generator` | GitHub Release work after confirmed site Release Notes and release audits | Traceable preview or draft; approved publication after the tag and post-tag audit |
-| `roadmap-generator` | Milestones, issues, and version planning | `docs/roadmap.md` |
+| `changelog-gen` | Developer-facing version change summaries | `docs/changelog/changelog-v{version}.md` |
+| `github-release-gen` | GitHub Release work after confirmed site Release Notes and release audits | Traceable preview or draft; approved publication after the tag and post-tag audit |
+| `roadmap-gen` | Milestones, issues, and version planning | `docs/roadmap.md` |
 | `github-reader` | Project status, backlog, PR queue, release blockers | GitHub project health report |
 
 ## Routing Rules
@@ -36,12 +36,12 @@
 - Idea shaping, scope definition, PRD/DECISIONS: use `idea-to-spec`
 - Project take-over, feature catalog, feature profile for an existing repo: use `feature-catalog`
 - Competitor research, positioning gaps, market scans: use `competitive-brief`
-- Developer-facing version changes: use `changelog-generator`
+- Developer-facing version changes: use `changelog-gen`
 - GitHub Release preview, draft, or approved publication: use
-  `github-release-generator` after the Docs release gates pass.
+  `github-release-gen` after the Docs release gates pass.
 - User-facing version notes and versioned pages under `docs/site/release-notes/`: hand off to
-  `docs-agent:release-notes-generator`.
-- Roadmap and milestone planning: use `roadmap-generator`
+  `docs-agent:release-notes-gen`.
+- Roadmap and milestone planning: use `roadmap-gen`
 - GitHub project status, PR/Issue queues, release blockers: use `github-reader`
 
 Default rule: if the core task is still product direction, requirements, scope, planning, or communication, keep it in PM Agent. Hand off to Designer or Engineer only after the requirement is stable enough.
@@ -79,9 +79,9 @@ Repository-level PM artifacts can use:
 - `docs/roadmap.md`
 - `docs/changelog/changelog-v{version}.md`
 
-Site Release Notes are owned by `docs-agent:release-notes-generator` under the
+Site Release Notes are owned by `docs-agent:release-notes-gen` under the
 host site's `docs/site/release-notes/`; PM only produces GitHub Releases via
-`github-release-generator`.
+`github-release-gen`.
 
 ## Collaboration Boundary
 

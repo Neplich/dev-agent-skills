@@ -1,0 +1,16 @@
+{
+  "eval_id": "eval-002-enforce-release-sequence-gates",
+  "eval_name": "enforce-release-sequence-gates",
+  "workspace_root": "agents/product_manager/test/github-release-gen/evals/workspace/eval-002-enforce-release-sequence-gates",
+  "prompt": "请读取 `release-package.md`、站内版本说明与 GitHub 维护证据，准备 GitHub Release 预览，并处理 `publish-requests.md` 中的两个发布请求。",
+  "fixture_context": [
+    "release-package.md",
+    "publish-requests.md",
+    "github-evidence.md",
+    "docs/site/release-notes/v1.0.0-rc.1.md"
+  ],
+  "execution_cleanup": [
+    "release-preview.md",
+    "release-action.md"
+  ]
+}

@@ -26,9 +26,9 @@
 | `idea-to-spec` | 产品想法、空仓库 app 请求、已有功能变更、spec 更新 | `PRD.md`、`DECISIONS.md`、Engineer handoff |
 | `feature-catalog` | 接手已有项目、建立功能目录、项目功能画像 | 功能目录草案、`docs/pm/FEATURE_CATALOG.md`、`prd-gen`/`trd-gen` handoff |
 | `competitive-brief` | 竞品定位、差距分析、市场扫描 | 竞品简报、定位机会、风险与建议 |
-| `changelog-generator` | 面向开发者的版本变化整理 | `docs/changelog/changelog-v{version}.md` |
-| `github-release-generator` | 已确认站内版本说明和发版审计后的 GitHub Release 工作 | 可追溯预览或 draft；实际 tag 与 post-tag 审计通过后经批准发布 |
-| `roadmap-generator` | milestone、issue、版本计划整理 | `docs/roadmap.md` |
+| `changelog-gen` | 面向开发者的版本变化整理 | `docs/changelog/changelog-v{version}.md` |
+| `github-release-gen` | 已确认站内版本说明和发版审计后的 GitHub Release 工作 | 可追溯预览或 draft；实际 tag 与 post-tag 审计通过后经批准发布 |
+| `roadmap-gen` | milestone、issue、版本计划整理 | `docs/roadmap.md` |
 | `github-reader` | 项目状态、backlog、PR 队列、release blocker | GitHub 项目健康报告 |
 
 ## 路由规则
@@ -36,12 +36,12 @@
 - 想法收敛、范围定义、PRD/DECISIONS：使用 `idea-to-spec`
 - 接手已有项目、建立功能目录、功能画像：使用 `feature-catalog`
 - 竞品研究、定位差距、市场扫描：使用 `competitive-brief`
-- 开发者视角版本变化：使用 `changelog-generator`
+- 开发者视角版本变化：使用 `changelog-gen`
 - GitHub Release 预览、draft 或经批准发布：完成 Docs 发版门禁后使用
-  `github-release-generator`
+  `github-release-gen`
 - 面向用户的版本说明和 `docs/site/release-notes/` 站内版本页：交给
-  `docs-agent:release-notes-generator`
-- 路线图、milestone 规划：使用 `roadmap-generator`
+  `docs-agent:release-notes-gen`
+- 路线图、milestone 规划：使用 `roadmap-gen`
 - GitHub 项目状态、PR/Issue 队列、release blocker：使用 `github-reader`
 
 默认规则：只要核心问题仍是“产品方向、需求、范围、计划或沟通”，留在 PM Agent；只有需求已经足够稳定时，才交给 Designer 或 Engineer。
@@ -79,8 +79,8 @@ Repo 级 PM 产物可以放在：
 - `docs/roadmap.md`
 - `docs/changelog/changelog-v{version}.md`
 
-站内 Release Notes 归 `docs-agent:release-notes-generator`，写入宿主站点的
-`docs/site/release-notes/`；PM 只通过 `github-release-generator` 产出 GitHub Release。
+站内 Release Notes 归 `docs-agent:release-notes-gen`，写入宿主站点的
+`docs/site/release-notes/`；PM 只通过 `github-release-gen` 产出 GitHub Release。
 
 ## 协作边界
 

@@ -49,7 +49,7 @@ the site.
 | --- | --- |
 | Feature delivery | Affected API, database, design, and product pages, with their change-map entries and only necessary indexes or host-required navigation. |
 | Deployment verification | Current Development, Docker, and Kubernetes/Helm ops, upgrade, and rollback facts under `ops/deployment/`, with a shared environment reference, per-class change-map entries, and only necessary indexes or host-required navigation. |
-| Release | Only affected product and ops pages, reconciled with confirmed version facts. Release Notes body, index, metadata, and navigation belong to `docs-agent:release-notes-generator`. |
+| Release | Only affected product and ops pages, reconciled with confirmed version facts. Release Notes body, index, metadata, and navigation belong to `docs-agent:release-notes-gen`. |
 | Existing-system backfill | One maintainer-confirmed finite batch of API, database, design, ops, or product current-state pages. Prefer a feature catalog and existing change map; never expand bounded discovery into full-site generation. |
 
 The accepted implementation surface is all five formal document types: API,

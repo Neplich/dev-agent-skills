@@ -52,7 +52,7 @@ flowchart LR
     Ops --> Checks
     Product --> Checks
     Checks --> Audit["#117 docs-audit"]
-    Mode -. "Release Notes" .-> RN["#116 release-notes-generator"]
+    Mode -. "Release Notes" .-> RN["#116 release-notes-gen"]
 ```
 
 渐进加载结构固定为：

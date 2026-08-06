@@ -237,7 +237,7 @@ agents/docs/test/manual-gen/evals/
 ## 11. 实施约束与非目标
 
 - 只实现 PRD 逐条列出的改动；不新增抽象层或基类、重试与退避、缓存、降级开关、feature flag、新配置项、包装函数、事件钩子、监控埋点或额外日志层。
-- 不修改 `formal-docs-sync` 的五类契约与八步流程，不修改 `release-notes-generator` 与 `docs-audit` 的既有职责。
+- 不修改 `formal-docs-sync` 的五类契约与八步流程，不修改 `release-notes-gen` 与 `docs-audit` 的既有职责。
 - 不实现浏览器自动化框架、应用启动脚本或部署环境。
 - 不为截图过期新增告警机制或第二套变更检测协议。
 - 不在本 feature 内统一仓库 `-generator` 后缀命名（issue #230）。

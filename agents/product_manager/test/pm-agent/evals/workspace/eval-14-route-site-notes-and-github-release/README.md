@@ -10,4 +10,4 @@ AI Hub-shaped version:
    ready handoff and the required release-audit evidence.
 
 The router must preserve the order and must not collapse both outcomes into a
-single PM `release-notes-generator` route.
+single PM `release-notes-gen` route.

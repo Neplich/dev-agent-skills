@@ -39,7 +39,7 @@ Overall result: BLOCKED
 - assertions 收敛为 authority、release tree、version surfaces、durable result 和上游不可变性五个语义结果。
 - 删除 fixture 中的 locator 优先级、tree equality 结论、normalization 结论和 CAS 恢复答案。
 - 增加阻塞型凭据缺口：branch hint 存在，但 maintainer confirmation 与 expected head 均缺失。
-- 将历史 issue 身份引用替换为 `docs-agent:release-notes-generator`，并重算 inventory digest、candidate blob、discovery blob 与 lineage digest。
+- 将历史 issue 身份引用替换为 `docs-agent:release-notes-gen`，并重算 inventory digest、candidate blob、discovery blob 与 lineage digest。
 
 ## Assertion Results
 

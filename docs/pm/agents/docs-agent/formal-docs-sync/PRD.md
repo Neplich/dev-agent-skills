@@ -69,7 +69,7 @@ backfill 的 API 页面及 API `code_glob`。
 - 不执行 `last_verified_version` 版本盖章；新改页面保持 `unverified`，交给 issue #117
   的 `docs-audit` 审计。
 - 不生成、编辑 Release Notes 正文、版本索引或 release metadata；release 模式遇到该
-  范围必须 handoff issue #116 的站内 `release-notes-generator`。
+  范围必须 handoff issue #116 的站内 `release-notes-gen`。
 - 不创建或发布 GitHub Release，不创建或移动 tag，不发布镜像、不更新 Helm、不执行
   部署。
 - 不初始化文档站；缺少 `docs/site/` 或 standards 时 handoff `docs-site-bootstrap`。
@@ -112,7 +112,7 @@ flowchart LR
     D --> E["同步 API / database / design / ops / product"]
     E --> F["回读并运行宿主 docs checks"]
     F --> G["#117 docs-audit"]
-    B -. "Release Notes 范围" .-> H["#116 release-notes-generator"]
+    B -. "Release Notes 范围" .-> H["#116 release-notes-gen"]
 ```
 
 ## 验收面

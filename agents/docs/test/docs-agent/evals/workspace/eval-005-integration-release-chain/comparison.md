@@ -13,7 +13,7 @@
 - Actual validation date: `2026-07-28`
 - Fresh run: `tmp/eval-runs/issue-177/docs-agent-eval-005/round-2b-fixture-correction/`
 - with-skill 与 without-skill 使用同一 prompt 和独立 pristine fixture；两侧均只在各自隔离 workspace 执行 setup。
-- with-skill 读取 Docs router、`release-notes-generator`、`docs-audit` 与 PM `github-release-generator` 契约；without-skill 未读取或应用目标 skill、Agent README、assertions、旧 comparison、历史 baseline 或 with-skill 输出。
+- with-skill 读取 Docs router、`release-notes-gen`、`docs-audit` 与 PM `github-release-gen` 契约；without-skill 未读取或应用目标 skill、Agent README、assertions、旧 comparison、历史 baseline 或 with-skill 输出。
 
 ## Latest Result
 
@@ -45,12 +45,12 @@ Overall result: BLOCKED
 - setup 从 910 行缩减为 70 行，只构造 base/target、previous tag、进入检查时的 tag snapshot、漂移后的实际 tag、预期 evidence ref 和并发移动后的 evidence branch。
 - 删除 pre-tag candidate/discovery、post-tag success/blocked 模板及全部 setup 协议自检；setup 不生成任何 audit record、success handoff、`ready_for_tag` 或 `release_verified`。
 - fixture 增加一个自称 `ready` 但缺少正文确认凭据的站内 handoff，并保留 tag tuple 与 expected-head 漂移，使 skill 门禁而非 setup 成为判定来源。
-- 将 fixture 与脚手架中的历史 issue 身份引用替换为 `docs-agent:release-notes-generator`、`docs-agent:docs-audit`、`pm-agent:github-release-generator`。
+- 将 fixture 与脚手架中的历史 issue 身份引用替换为 `docs-agent:release-notes-gen`、`docs-agent:docs-audit`、`pm-agent:github-release-gen`。
 
 ## Assertions
 
 - `accepts_release_audit_entry`: with-skill PASS；baseline PASS。两侧均接受已确认版本、范围与只读边界。
-- `evaluates_site_release_notes_gate`: with-skill PASS；baseline **FAIL**。with-skill 拒绝缺少正文确认凭据的 ready handoff，并返回 `docs-agent:release-notes-generator`；baseline 将其视为可进入 docs-audit。
+- `evaluates_site_release_notes_gate`: with-skill PASS；baseline **FAIL**。with-skill 拒绝缺少正文确认凭据的 ready handoff，并返回 `docs-agent:release-notes-gen`；baseline 将其视为可进入 docs-audit。
 - `validates_release_window_basis`: with-skill PASS；baseline **FAIL**。with-skill 解析 base、target、previous tag 与版本 surfaces；baseline 未验证完整 compare window。
 - `rejects_missing_pre_tag_authority`: with-skill PASS；baseline PASS。两侧均未从原始目标树推断 `ready_for_tag`。
 - `detects_post_tag_evidence_drift`: with-skill PASS；baseline PASS。两侧均发现实际 tag/tree 与 snapshot 不同，且 evidence branch 不等于 expected ref。

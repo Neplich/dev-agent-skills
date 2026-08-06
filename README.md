@@ -132,7 +132,7 @@ Common chains:
 4. `engineer-agent -> devops-agent` for deployment, CI/CD, and runtime readiness
 5. `engineer-agent -> security-agent` for pre-release or focused security review
 6. `pm-agent -> docs-agent` for formal documentation bootstrap, synchronization, site Release Notes, or pre-release audit after scope is confirmed
-7. `docs-agent:release-notes-generator -> docs-agent:docs-audit -> pm-agent:github-release-generator` for confirmed site notes, two-phase release verification, and the GitHub Release
+7. `docs-agent:release-notes-gen -> docs-agent:docs-audit -> pm-agent:github-release-gen` for confirmed site notes, two-phase release verification, and the GitHub Release
 
 Not every project needs the full chain. Each agent can complete its own role-specific loop, and cross-agent handoff happens only when another role is needed.
 

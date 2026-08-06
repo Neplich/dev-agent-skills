@@ -349,7 +349,7 @@
         {
           "id": "preserves_release_notes_surfaces",
           "description": "Release Notes 相关面零变化",
-          "text": "不创建或编辑 Release Notes 正文、`release-notes/index.md`、`.meta/releases.json` 或 Release Notes navigation；如需该交付，指向 `docs-agent:release-notes-generator`。"
+          "text": "不创建或编辑 Release Notes 正文、`release-notes/index.md`、`.meta/releases.json` 或 Release Notes navigation；如需该交付，指向 `docs-agent:release-notes-gen`。"
         },
         {
           "id": "keeps_release_pages_unverified",
