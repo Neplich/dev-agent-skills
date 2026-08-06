@@ -44,7 +44,7 @@ export function validatePage(page) {
       || data.last_verified_version.trim() === '') {
     errors.push('last_verified_version must be a version anchor or unverified');
   }
-  if ('nav_order' in data && data.nav_order !== null && data.nav_order !== ''
+  if ('nav_order' in data
       && !(Number.isInteger(data.nav_order) && data.nav_order >= 0)) {
     errors.push('nav_order must be a non-negative integer when present');
   }

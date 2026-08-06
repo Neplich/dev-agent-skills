@@ -22,10 +22,29 @@ function compareText(left, right) {
 // Section 内排序：显式声明 `nav_order`（非负整数）的页面按值升序、
 // 始终排在无 `nav_order` 的页面之前；无序页面之间回退路径 slug 字典序。
 // 存在性优先，因此任意合法 `nav_order` 取值都不会与「无序」混淆。
-function navOrder(item) {
-  const page = item.page ?? item.child?.page;
+// 无可见 index 页的子树取子树内可见叶子的最小显式 `nav_order`，
+// 使被扁平化的子树保持其内部显式顺序，而不是整体被当作无序。
+function explicitOrder(page) {
   const value = page?.data?.nav_order;
   return Number.isInteger(value) && value >= 0 ? value : null;
+}
+
+function navOrder(item) {
+  const page = item.page ?? item.child?.page;
+  if (page) return explicitOrder(page);
+  const child = item.child;
+  if (child) {
+    let minimum = null;
+    for (const sub of [...child.children.values(), ...child.leaves.values()]) {
+      // sub 为 node（含 children）时递归子树，为 page 时取其显式顺序
+      const subOrder = sub.children ? navOrder({ child: sub }) : explicitOrder(sub);
+      if (subOrder !== null && (minimum === null || subOrder < minimum)) {
+        minimum = subOrder;
+      }
+    }
+    return minimum;
+  }
+  return null;
 }
 
 function sidebarItems(current) {
