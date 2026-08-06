@@ -30,7 +30,6 @@ RESERVED_CLEANUP_PATHS = (
 DEFAULT_TIMEOUT_SECONDS = 180
 DEFAULT_MODEL = "gpt-5.6-luna"
 DEFAULT_REASONING_EFFORT = "medium"
-DEFAULT_SKILL_DIR = "agents/product_manager/skills/idea-to-spec"
 
 
 class TranscriptRunError(RuntimeError):
@@ -136,12 +135,24 @@ def build_codex_command(
     ]
 
 
+def resolve_skill_dir(meta: dict) -> str:
+    entry = meta.get("entry_command", "/idea-to-spec").lstrip("/")
+    plugin = meta.get("plugin_dir", "agents/product_manager")
+    return f"{plugin}/skills/{entry}"
+
+
 def install_skill_documents(execution_root: Path, skill_dir: str) -> None:
     source = Path(skill_dir)
     if not source.is_absolute():
         source = repo_root() / source
     skill_name = source.name
+    # Codex discovery tree (mirrors install_codex_skills.py semantics).
     target = execution_root / ".agents" / "skills" / skill_name
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(source, target)
+    # Repository-relative copy so literal `agents/...` references inside the
+    # skill documents keep resolving (e.g. _internal/_shared includes).
+    target = execution_root / skill_dir
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(source, target)
 
@@ -242,7 +253,7 @@ def generate_eval_outputs(
     with tempfile.TemporaryDirectory(prefix="idea-to-spec-eval-") as temp_dir:
         temp_root = Path(temp_dir)
         lane_env, _ = build_isolated_env(temp_root)
-        skill_dir = meta.get("skill_dir", DEFAULT_SKILL_DIR)
+        skill_dir = meta.get("skill_dir") or resolve_skill_dir(meta)
 
         runs = [
             ("with_skill", meta.get("with_skill_outputs", []), True),
