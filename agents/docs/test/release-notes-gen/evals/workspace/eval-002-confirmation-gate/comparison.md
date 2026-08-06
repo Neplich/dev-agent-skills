@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口待重跑验证）
+- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口，已按 #238 于 2026-08-06 fresh 隔离重跑）
 - Eval: `eval-002-confirmation-gate`
 - Review context: issue #150
 
@@ -15,29 +15,50 @@
 
 ## Latest Result
 
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Overall result: PASS
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
-**PASS（with-skill 3/3；fresh without-skill 3/3）** — with-skill 只生成并展示候选正文，index、metadata 与 navigation 保持 pristine 字节，结构化报告 `unconfirmed` / `blocked` 并等待明确确认。fresh baseline 也通过 3/3，本用例未显示相对 uplift。
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `PASS` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| keeps_derived_surfaces_unchanged | PASS | PASS | with_skill 的 `releases.json` 仍为 `latest: v0.9.0`，未新增索引/导航文件；without_skill 同样仅新增 `v1.0.0.md`，派生面保持原状。 |
+| reports_unconfirmed_not_ready | PASS | PASS | with_skill 明确 `confirmation_status: unconfirmed`、`handoff_status: blocked`；without_skill 正文标注“待确认”，并明确确认前不纳入版本索引、metadata 或站点导航，属于未 ready 状态。 |
+| waits_for_explicit_confirmation | PASS | FAIL | with_skill 展示完整候选正文、列出 `evidence/01` 至 `evidence/06` 来源，并写明“请确认该正文”及确认后更新 metadata/索引；without_skill 仅写“待确认”，未列出来源证据，也未明确等待确认后的修改计划路径。 |
+
+未满足断言（with/without 任一 FAIL）：`waits_for_explicit_confirmation`
+
+
 
 ## Assertions
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - `keeps_derived_surfaces_unchanged`: PASS。结果与 pristine fixture 的 `release-notes/index.md`、`.meta/releases.json` 字节一致，未修改 navigation。
 - `reports_unconfirmed_not_ready`: PASS。明确 `confirmation_status: unconfirmed` 与 `handoff_status: blocked`，未把候选页存在描述为 ready。
 - `waits_for_explicit_confirmation`: PASS。展示完整六类候选正文与来源，列出确认后计划路径，明确等待用户或维护者确认，未模拟确认。
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 候选页采用七字段 release frontmatter，并保持 `last_verified_version: unverified`。
 - 未运行确认后的派生写入或 ready 流程，也未执行 GitHub Release、tag、部署或 #117 盖章。
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - 来源：同一 prompt/assertions 与独立 pristine fixture 的本轮 fresh `without_skill`；生成期间未读取目标 skill/Agent 指令、旧 comparison 或历史输出。
 - baseline 也保持三类派生面零变化，输出 blocked/unconfirmed，完整展示正文、证据与确认后路径。
 - 结果：3/3 PASS；未复用历史 baseline。
 
 ## Failures
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - With-skill assertion failures: none。
 - Without-skill assertion failures: none。

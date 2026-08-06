@@ -12,12 +12,30 @@
 
 ## Latest Result
 
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Overall result: PASS
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
-**PASS — 4 / 4 assertions passed.** Fresh with-skill 候选把映射命中的页面送入事实层，保留 `POST` 文档声明与 `GET` 代码事实并判为 `mismatch`，结果 `blocked`、零盖章。
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `PASS` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `includes_mapped_page` | PASS | PASS | 两条 lane 均确认 `src/catalog/routes.txt` 命中 `src/catalog/**`，并映射到 `docs/site/api/catalog.md`；with_skill 报告第 23–27 行，without_skill 报告第 48–50 行。 |
+| `classifies_direct_conflict_mismatch` | PASS | PASS | 两条 lane 均保留文档 `POST /catalog/items`、代码 `GET /catalog/items`、证据路径及调用方影响，并将页面判为冲突；with_skill 报告第 38–46 行，without_skill 报告第 31–38 行。 |
+| `blocks_with_conflict_evidence` | PASS | FAIL | with_skill 明确标记 `phase result: blocked`，列出冲突及修文档/核代码待办，且声明无 `ready_for_tag`；without_skill 仅给出 `FAIL`，未将阶段结果标记为 `blocked`，也未提出修文档或修代码的确认分支。 |
+| `does_not_stamp_blocked_set` | PASS | PASS | with_skill 明确声明未执行版本 stamping；受审页面仍为 `last_verified_version: v1.0.0`，且不存在 `.meta/releases.json`。without_skill 同样显示页面仍为 `v1.0.0`，未生成版本同步文件。 |
+
+未满足断言（with/without 任一 FAIL）：``blocks_with_conflict_evidence``
+
+
 
 ## Assertion Results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 | Assertion | Result | Evidence summary |
 | --- | --- | --- |
@@ -27,16 +45,19 @@
 | `does_not_stamp_blocked_set` | PASS | 页面仍为 `v1.0.0`，未修改或创建 `.meta/releases.json`，没有局部盖章。 |
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 来源：本轮 fresh session `019f7a73-2e16-7092-9d5d-a30bed3dd18c`，证据位于 `tmp/eval-runs/117/eval-001-audit-mismatch/with_skill/`。
 - 候选写入契约路径 `docs/site/.meta/audit/audit-v1.1.0.md`，报告包含三项独立输入、影响域、冲突证据、blocker 和复核命令。
 
 ## Without-Skill Baseline
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 来源：本轮独立 fresh session `019f7a77-66e9-7a00-a328-c2041378d9b0`，同一 prompt 与 pristine fixture，证据位于 `tmp/eval-runs/117/eval-001-audit-mismatch/without_skill/`；未复用历史 baseline。
 - baseline 也识别冲突并阻塞，但报告写入非契约路径 `.eval/docs-audit-report.md`，结构化 release-surface 与审计协议证据较弱。
 
 ## Failures
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 无 assertion failure。合成 refs 不在 Git object store 中，候选使用 fixture-authoritative `.eval/actual-diff.patch` 复现端点差异；这是已披露的 harness 限制，不是协议缺陷。
 

@@ -22,9 +22,38 @@ the assertions, and produced the verdict in `tmp/eval-runs/issue-188-docs/judge/
 
 ## Latest result
 
-Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Behavior result: `PASS`（with）/ `PASS`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— Git 缺失导致 pre-tag 成功路径未执行
+- Overall result: BLOCKED
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
+
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `PASS` / Coverage `PARTIAL`
+- without_skill：Behavior `PASS` / Coverage `PARTIAL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| accepts_confirmed_version_without_tag | PASS | PASS | 两边均记录 `target_release_version: v1.2.0`、`base_ref: v1.1.0`、`target_ref: release-head`，并明确同名 tag 不存在；阻塞原因均为缺少 Git 仓库，而非 tag 不存在（两边 `result.txt` 第 5–11 行）。 |
+| verifies_complete_set_and_surfaces | NOT_EXERCISED | NOT_EXERCISED | 未生成正式审计报告；两边均因无法解析 refs 而阻塞，未逐页产出 `verified` 结果。 |
+| normalizes_mixed_version_forms | NOT_EXERCISED | NOT_EXERCISED | 未生成包含完整版本来源 inventory 的审计记录；without_skill 仅声称静态版本一致，未核验 `.meta/releases.json`。 |
+| records_pre_stamp_values | NOT_EXERCISED | NOT_EXERCISED | with_skill 明确“未写入审计报告、版本戳”；两边均无审计报告文件。 |
+| stamps_complete_set_atomically | NOT_EXERCISED | NOT_EXERCISED | 两边均未执行版本戳写入；with_skill 明确未写入版本戳。 |
+| builds_isolated_candidate_transaction | NOT_EXERCISED | NOT_EXERCISED | 未产生隔离 worktree、临时分支或 candidate 产物；两边均报告当前工作区不是 Git 仓库。 |
+| candidate_record_has_no_ready_result | NOT_EXERCISED | NOT_EXERCISED | 未生成 candidate record；两边仅返回 `blocked`，无法验证 schema、digest、inventory 等完整字段。 |
+| validates_two_complete_staged_gates | NOT_EXERCISED | NOT_EXERCISED | 未执行或记录初稿/最终 raw metadata gate，也无 staged candidate 文件。 |
+| confirms_anchor_commit_before_discovery | NOT_EXERCISED | NOT_EXERCISED | 未创建 anchor commit；两边均无法验证提交树、diff、blob 类型和 refs。 |
+| persists_fixed_discovery_handoff | NOT_EXERCISED | NOT_EXERCISED | 未生成 `docs/site/.meta/audit/handoffs/pre-tag-v1.2.0.md` 或 handoff commit。 |
+| returns_ready_only_after_integration | NOT_EXERCISED | NOT_EXERCISED | 未进入临时分支集成、FF、回读或 CAS 恢复路径。 |
+| returns_ready_for_tag_not_published | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均因无 Git 无法进入 pre-tag 成功事务，正确停在 `blocked`；成功态 `ready_for_tag` 未执行。 |
+
+未触发断言：除 `accepts_confirmed_version_without_tag` 外的 11 条成功路径断言。
+
+基础设施阻塞说明：Git 仓库缺失；对应断言不构成 skill 行为回归。
+
 
 
 ## Fixture Drift Notice
@@ -32,10 +61,13 @@ Overall result: BLOCKED
 fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 PASS 反映变更前 run。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 独立判定，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；本节保留作为历史记录。
 
 ## Historical results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 2026-07-20（fixture 身份文本变更前）：旧 run 结果，按 Fixture Drift Notice 不再作为当前证据。
 
 ## Canonical digest verification
+
+> ⚠️ 本节为 2026-08-03 #188 历史轮执行证据；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
 
 The with-skill run reconstructed the exact six-field inventory rather than
 trusting the fixture literals. It sorted **6 entries** by `source_id`:
@@ -60,6 +92,7 @@ pre-tag value remains `pending_expected_absent`. Tag absence is expected and
 does not represent publication or a failed version comparison.
 
 ## Assertion results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 | Assertion | without_skill | with_skill | Evidence summary |
 | --- | --- | --- | --- |
@@ -77,6 +110,7 @@ does not represent publication or a failed version comparison.
 | `returns_ready_for_tag_not_published` | FAIL | PASS | with-skill 最终为 `ready_for_tag`，并明确仅允许创建 tag、不是 published 或 `release_verified`；without-skill 仅返回 `candidate_verified`，不满足成功场景的阶段结果。 |
 
 ## With-skill behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 The skill-guided run validates the full affected set and release surfaces from
 the exact target tree, applies the four-page stamp only after all evidence and
@@ -100,16 +134,21 @@ fingerprint. A concurrent move is never overwritten: the result remains
 and prohibits tag creation.
 
 ## Failures
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - `with_skill`: none。
 - `without_skill`: 4/12 PASS（accepts_confirmed_version_without_tag、verifies_complete_set_and_surfaces、normalizes_mixed_version_forms、stamps_complete_set_atomically）；其余 8 条 FAIL（records_pre_stamp_values、builds_isolated_candidate_transaction、candidate_record_has_no_ready_result、validates_two_complete_staged_gates、confirms_anchor_commit_before_discovery、persists_fixed_discovery_handoff、returns_ready_only_after_integration、returns_ready_for_tag_not_published）——隔离事务、双 staged gate、anchor/discovery、FF 集成与阶段结果语义保持 with-skill 专属增量。
 
 ## Next steps
 
+> ⚠️ 本节为 2026-08-03 #188 历史轮后续建议；当前 #238 重跑因 Git 仓库缺失保持 `BLOCKED`。
+
 No skill change is required. Preserve exact canonical inventory fields and
 ordering, actual-tag pending semantics, genesis bytes `[]`, and the guarded
 post-FF CAS rollback language in future protocol edits.
 
 ## Runtime artifact policy
+
+> ⚠️ 本节仅描述 2026-08-03 #188 历史轮运行产物；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
 
 - Runtime artifacts（双侧 candidate、judge verdict、隔离目录执行产物）在本次 fresh re-baseline 中真实生成，位于被 gitignore 覆盖的 `tmp/eval-runs/issue-188-docs/`；未提交到 git。长期 durable 产物仅为本 `comparison.md`。

@@ -4,11 +4,11 @@
 - change_tier: `standard`
 - feature_path: `docs/manual/eval-001-domain-provided`
 - host_repository: current fixture repository with an existing `docs/site/` foundation
-- source_documents: maintainer-confirmed test platform（平台名与平台在本地代码中的位置：执行前由维护者确认后注入）
-- scope_decision: anonymous basic editing and preview flow; all other roles and scenarios are excluded.
+- source_documents: maintainer-confirmed test platform（执行前物化为平台名、可访问 URL、本地代码位置与认证条件）
+- scope_decision: maintainer-selected bounded user flow（执行前物化为具体流程、适用角色、排除项与安全执行边界）
 - downstream_owner: `Docs`
 - required_output: one bounded illustrated manual batch under `docs/site/manual/`
-- blockers_risks: 手册面向匿名使用者；本批次未授权任何会改变服务端状态的操作。
-- scope_confirmation: 本批范围与增量内容已随本次请求一并确认，范围之外的内容不属本批。
+- blockers_risks: 所选流程的认证要求、服务端副作用、测试数据与重置权限在执行前物化；当前模板不包含运行实例值。
+- scope_confirmation: 维护者已批准本轮初始业务边界；候选页面树、逐页证据与截图计划尚未审阅。
 
-The maintainer confirms the host repository, bounded scope, live evidence source, and required output.
+The maintainer confirms the host repository, selected bounded flow, live evidence source, and required output before each run. Candidate pages and screenshots have not yet been reviewed.

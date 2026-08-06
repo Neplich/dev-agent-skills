@@ -29,17 +29,42 @@
 
 ## Latest Result
 
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Overall result: FAIL
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
-**PASS（with-skill 14/14；fresh without-skill 9/14）** — with-skill generated
-the complete two-level Product feature tree, kept every task reachable through
-five structurally nested sidebar levels, preserved the read-only Accounts and
-Billing surfaces, retained independently complete Product mapping closures,
-and blocked `docs-agent:docs-audit` pre-tag work until a maintainer confirms
-`target_release_version`.
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `FAIL` / Coverage `PARTIAL`
+- without_skill：Behavior `FAIL` / Coverage `PARTIAL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| loads_scoped_api_product_contracts | FAIL | FAIL | Product/API 回填场景已实际执行，但两条 lane 均无加载合同模块的执行证据；with_skill 仅有 `skill-map.md`，结果摘要也未展示 Product/API 模块加载过程。 |
+| prefers_catalog_scope | FAIL | FAIL | `result.txt` 只提出 Accounts 页面/代码建议，没有引用 catalog owner `identity-team`、验证路径存在或明确 Billing out-of-batch。 |
+| presents_batch_before_write | FAIL | FAIL | 两条 lane 都先完成 Product 写入，之后才在 `result.txt` 建议 Accounts；没有写入前展示三页完整树、逐节点边界并等待确认的证据。 |
+| keeps_unconfirmed_batch_read_only | PASS | PASS | 两条 lane 的 `docs/site/api/` 未新增 Accounts 页面；with_skill 的 `change-map.yaml` 保留既有 Billing 条目，Product 已确认批次正常更新。 |
+| aligns_seed_with_page | FAIL | FAIL | 没有 Accounts 的实际 change-map seed；with_skill 仅在摘要中口头列出 routes/schema/tests，未保留并展示 Billing 未知字段及完整原子候选范围。 |
+| handles_missing_catalog_semantically | NOT_EXERCISED | NOT_EXERCISED | fixture 明确存在 `docs/pm/feature-catalog.md`，无 catalog 分支未触发。 |
+| creates_complete_product_tree | PASS | PASS | 两条 lane 均实际生成完整 Product 树：根、两个域、`invitations`、两个二级子功能 index，以及四个任务页。 |
+| keeps_every_task_navigable | PASS | PASS | 两条 lane 的各级 index 均包含所需直接子链接，例如 `product/index.md` → 域 → `invitations` → 二级子功能 → 任务页。 |
+| records_confirmed_non_leaf_scope | FAIL | FAIL | with_skill 的 `member-invitations/index.md` 与 `invitation-acceptance/index.md` 有角色和子节点，但没有明确本批排除项；without_skill 的非叶页面同样缺少完整 scope/exclusion 语义。 |
+| writes_evidence_backed_task_behavior | PASS | PASS | 任务页均通过 `related_code` 和 acceptance test 引用证据；实现与测试覆盖 owner/admin、3 个上限、重复邀请、resend/revoke、恢复、过期/无效邀请及 dashboard empty/retry。 |
+| updates_product_map_atomically | PASS | FAIL | with_skill 的 `change-map.yaml` 包含 broad、invitation、两个精确 Product glob，并为各 glob列出祖先闭包，同时保留 Billing/support 条目及未知字段；without_skill 未新增任何 Product 映射。 |
+| links_authorities_without_copying_contracts | PASS | PASS | 两条 lane 的任务页均链接上级页面及 Design/API/Database/Ops 索引，未复制接口或数据库契约正文。 |
+| runs_product_host_checks | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 的 `npm run test:docs` 都因缺少 `fast-glob` 未启动完成，后续宿主检查与 docs-audit handoff 因而未执行；这是 runner 依赖阻塞，不是 skill 行为失败。 |
+| blocks_audit_without_confirmed_version | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均没有 `docs-agent:docs-audit` handoff、affected set 或因缺少 `target_release_version` 而 blocked 的审计记录。 |
+
+未满足断言（with/without 任一 FAIL）：`loads_scoped_api_product_contracts`、`prefers_catalog_scope`、`presents_batch_before_write`、`aligns_seed_with_page`、`records_confirmed_non_leaf_scope`、`updates_product_map_atomically`
+
+基础设施阻塞说明：依赖缺失（fast-glob 等）；`runs_product_host_checks` 不构成 skill 行为回归。
+
+
 
 ## Assertions
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - `loads_scoped_api_product_contracts`: with-skill PASS；without-skill FAIL。
   Only with-skill loaded and applied the common, API, and Product contracts.
@@ -79,6 +104,7 @@ and blocked `docs-agent:docs-audit` pre-tag work until a maintainer confirms
   maintainer-confirmed target version.
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - Applied the common eight-step contract and only the scoped API/Product
   modules.
@@ -92,6 +118,8 @@ and blocked `docs-agent:docs-audit` pre-tag work until a maintainer confirms
   on the missing `target_release_version`.
 
 ## Fresh Without-Skill Baseline
+
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
 
 - Source: a new pristine fixture copy with the same prompt. It did not read or
   apply the target skill, Agent README, assertions, this comparison, with-skill
@@ -114,6 +142,7 @@ and blocked `docs-agent:docs-audit` pre-tag work until a maintainer confirms
   recursive depths, and independent link parsing found zero broken links.
 
 ## Failures
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - With-skill assertion failures: none.
 - Without-skill assertion failures: `loads_scoped_api_product_contracts`,

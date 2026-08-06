@@ -1,7 +1,7 @@
 ---
 title: "Manual Gen TRD"
 type: TRD
-version: "0.1.4"
+version: "0.1.6"
 status: Approved
 author: "Neplich Claude Code"
 date: "2026-08-05"
@@ -28,6 +28,12 @@ related_code:
   - ".claude-plugin/marketplace.json"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.6"
+    date: "2026-08-06"
+    changes: "对齐 PRD v1.0.3：正向 eval 运行期注入具体流程、认证与安全事实，并将初始范围授权和候选页面/截图确认分离"
+  - version: "0.1.5"
+    date: "2026-08-06"
+    changes: "收敛 eval 执行契约：删除场景脚本残留，明确多轮确认、安全流程与三层语义的强制覆盖"
   - version: "0.1.4"
     date: "2026-08-05"
     changes: "自审收敛：同步当前 PRD 版本，补齐 per-agent manifest、依赖 eval 与 fixture 命令契约触点"
@@ -49,7 +55,7 @@ changelog:
 
 ## 1. 来源、范围与分级
 
-本 TRD 把 `docs/pm/agents/docs-agent/manual-gen/PRD.md`（v1.0.2，FR-M01~M16）转换为可实施设计。PRD 由 issue #226 及其维护者决策记录蒸馏而来。
+本 TRD 把 `docs/pm/agents/docs-agent/manual-gen/PRD.md`（v1.0.3，FR-M01~M16）转换为可实施设计。PRD 由 issue #226 及其维护者决策记录蒸馏而来。
 
 本 feature 新增一个 specialist、扩展 `docs-agent` 拥有的共享 frontmatter 契约、修改 `docs-site-bootstrap` 交付给宿主的脚本资产，并改动 marketplace 注册表，按仓库「变更分级契约」判定为 `change_tier: major`。
 
@@ -202,26 +208,26 @@ agents/docs/skills/manual-gen/
 agents/docs/test/manual-gen/evals/
 ├── evals.json
 └── workspace/
-    ├── eval-001-domain-provided/
+    ├── eval-001-domain-provided/（#245 单一通用正向测试，平台与场景不绑定）
     ├── eval-002-local-start-consent/
-    ├── eval-003-no-environment-blocked/
-    ├── eval-004-share-link-identifier/
-    └── eval-005-manual-hierarchy/
+    └── eval-003-no-environment-blocked/
 ```
 
-每个 workspace 含 `eval_metadata.json`、`comparison.md`、环境描述文件，以及需要 Playwright 采集的用例对应的 `scripts/*.spec.md`。
+每个 workspace 含 `eval_metadata.json`、`comparison.md` 与环境描述文件；平台相关采集脚本只在运行期按所选入口准备，不作为固定场景资产提交。
 
 共享契约变更的依赖 eval 同批同步：`docs-agent` router 增加 manual 路由用例；`docs-audit` 增加 manual 事实审计并更新 frontmatter 枚举用例；`docs-site-bootstrap` 更新资产计数、枚举断言及旧 comparison 的待重跑状态。manual-gen fixture 的 `docs/site/package.json` 只声明 fixture 内可直接运行的自包含 `test:docs`，不引用未物化的宿主 `scripts/` 树。
 
-**执行入口**：优先 Playwright，绕开 `codex exec` 与 Codex app Chrome 扩展的宿主差异，保证 with-skill 与新生成的 `without_skill` baseline 都能在同一入口下运行。
+**执行入口**：按采集入口优先级执行——repo harness > Chrome 插件 / browser connector > Playwright fallback（对齐 `manual-gen/_internal/INSTRUCTIONS.md` 采集入口契约），保证 with-skill 与新生成的 `without_skill` baseline 都能在同一入口下运行。
 
-**Playwright 脚本形态**：按 QA 既有约定使用 `*.spec.md`，保证重复执行一致，不含明文账号、密码、token、cookie、session 或 SSH 凭据。落点是本 eval workspace，不是宿主项目的 `docs/qa/e2e/`。
+**运行期采集脚本形态**：需要 Playwright fallback 时按 QA 既有约定在隔离 scratch workspace 准备 `*.spec.md`，保证重复执行一致且不含明文凭据；repo harness 或 Chrome 插件 / browser connector 可直接使用其入口。采集脚本不提交到 eval fixture。
 
-**产物边界**：截图与手册页产物是运行期产物，写隔离 scratch workspace，不入库。fixture 只保留环境描述、Playwright 脚本与期望的手册结构骨架。`evals.json` 不声明截图类 runner output。
+**产物边界**：截图、手册页与采集脚本都是运行期产物，写隔离 scratch workspace，不入库。fixture 只保留环境描述与期望的手册结构骨架。`evals.json` 不声明截图类 runner output。
 
-**断言取向**：一律语义判断。不比对具体目录结构，不断言手册划分出哪几个业务模块或模块叫什么名字。`eval-005` 判定的是「目录是否呈现平台定位、业务场景、可执行操作三个层次，且操作层步骤可被目标角色复现」。
+**断言取向**：一律语义判断，不比对具体目录名，也不规定业务模块的数量或命名；但平台层、业务层、操作层三类语义是强制契约。eval-001 必须分别核验平台定位/适用对象/角色边界、业务场景/能力目的/模块关系，以及操作步骤可复现性，目录落点随宿主既有信息架构自适应。
 
-**外部数据源**：eval 运行环境为 `https://mermaid.live/`。站点改版导致断言无触发条件时记 `NOT EXERCISED`，计入 Coverage result，不计入 Behavior result 的 `FAIL`。`eval-004` 依赖分享链接中的 pako 编码串，因此其覆盖范围必须包含导出与分享流程。
+**外部数据源**：按 #235 / #245 契约，eval 运行环境由维护者在每轮执行前确认注入：平台名、可访问 URL、本地代码路径，以及一条具体有限用户流程的适用角色、排除项、认证条件与安全执行依据。eval 定义不固定外部站点或业务场景，但 lane 不能在缺少本轮具体流程时自行选题。站点或平台改版导致断言无触发条件时记 `NOT EXERCISED`，计入 Coverage result，不计入 Behavior result 的 `FAIL`。环境相关标识脱敏由 eval-001 通用断言覆盖，不绑定分享场景。
+
+**正向执行前提**：eval-001 的 runner 必须支持候选范围提出后的多轮确认，并选择可证明非写入的核心流程，或使用具备测试账号、测试数据与重置权限的可丢弃环境。维护者对初始业务边界的授权不能替代候选页面树、逐页证据与截图计划的 follow-up 确认；缺少任一前提时整体记 `BLOCKED`，不得跳过核心步骤后继续判定正向路径。
 
 ## 10. 验证策略
 
@@ -230,7 +236,7 @@ agents/docs/test/manual-gen/evals/
 | 仓库契约 | 注册表、skill 结构、lock hash、eval 定义、文档 frontmatter | `uv run scripts/check_repository_contract.py` → `check_eval_contract.py` → `check_eval_artifacts.py` → `check_doc_contract.py` |
 | 确定性测试 | 现有 pytest 套件不回归 | 仓库既有 pytest 命令 |
 | 宿主脚本 | manual 类型在宿主校验链中可用 | 在临时 bootstrap 出的站点上创建手册页并运行宿主 docs 检查 |
-| skill 行为 | 五个 eval 场景 | fresh subagent validation + 本轮新生成的 `without_skill` baseline |
+| skill 行为 | 3 个 eval 场景（001 通用正向 / 002 / 003） | fresh subagent validation + 本轮新生成的 `without_skill` baseline |
 
 宿主脚本层改动（`pages.mjs`、`sidebar.mjs`、`scaffold-doc.mjs`）属于交付给宿主的资产，本仓库的 pytest 不直接覆盖其运行时行为，需在临时站点上实测一次并记录结果。
 
@@ -251,7 +257,7 @@ agents/docs/test/manual-gen/evals/
 | 存量宿主脚本升级 | 假设 | 已 bootstrap 宿主通过重跑 `docs-site-bootstrap` 获得 manual 支持，复用其幂等与 keep/overwrite 机制 | 宿主本地改过脚本时进入既有冲突决策流程，不新增机制 |
 | 截图引用被 `referencedAssets` 拒绝 | 风险 | 引用路径若指向站外或排除区，截图不会进入构建产物 | 落点定为页面同级，天然在 `docs/site` 内；`warnSkippedAsset` 输出纳入渲染验收检查项 |
 | 视口回读被推断 | 风险 | 模型以「已设定」代替实际读数 | 报告模板分列设定与回读两个字段，缺任一项视为未完成 |
-| eval 依赖外部站点 | 假设 | mermaid.live 在 eval 执行期可访问且界面稳定 | 不可访问时该轮记 blocked；界面改版导致断言无触发条件时记 `NOT EXERCISED` |
+| eval 依赖被测平台可访问 | 假设 | 维护者确认注入的平台在 eval 执行期可访问且界面稳定 | 不可访问时该轮记 blocked；平台改版导致断言无触发条件时记 `NOT EXERCISED` |
 
 ## 13. 开放技术问题
 

@@ -16,16 +16,30 @@
 
 ## Latest Result
 
-- Behavior result: **PASS**
-- Coverage result: **FULL**（5/5 assertions exercised）
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
+Overall result: FAIL
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
-- With-skill: **5/5 PASS**
-- Fresh without-skill: **3/5 PASS、2/5 FAIL**
-- Relative uplift: **+2 assertions**
+## #238 Fresh Rerun Result（2026-08-06）
 
-两臂都保留 prerelease/build/case identity，并逐来源识别 raw form、缺失、歧义 selector 和 unknown extractor。with-skill 额外要求 pre-tag inventory 预先包含 future actual-tag source 并记录 pending state，post-tag 只能消费同一 inventory；同时给出可独立重算的 canonical inventory digest。baseline 把 tag 当作 post-tag 新增来源，且没有提供稳定 serialization/digest 算法。
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `FAIL` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `preserves_complete_version_identity` | PASS | PASS | 两条产物均确认 `v1.2.0-rc.1+Build.7` 为完整 identity，并指出前缀、大小写、预发布标识和 build metadata 不能被丢失或视为等价（with_skill: `result.txt:5,7,17`；without_skill: `result.txt:6-8,23`）。 |
+| `enforces_each_source_contract` | PASS | PASS | 均按来源识别 raw form、selector/extractor 和缺失值问题；未用其他来源补值，也未静默修复非法值（with_skill: `result.txt:7,12-16`；without_skill: `result.txt:8,16-25`）。 |
+| `reports_all_version_blockers` | PASS | PASS | 两条产物均覆盖大小写/前缀非法、缺失、非 SemVer、selector 解析失败、重复匹配、extractor 不一致及 identity 差异，并分别给出发布前和发布后的失败结论（with_skill: `result.txt:8,12-18`；without_skill: `result.txt:10,14-27`）。 |
+| `binds_pre_and_post_tag_inventory` | FAIL | FAIL | 产物仅列出 pre-tag 的 6 个来源和 post-tag 的 7 个来源，没有说明 pre-tag 如何固化完整来源集合，也没有说明 post-tag 消费同一绑定；with_skill: `result.txt:6`，without_skill: `result.txt:5`。 |
+| `makes_inventory_integrity_reproducible` | FAIL | FAIL | 产物提到 selector 数量、匹配数量和 extractor identity，但没有给出可独立重算的 inventory integrity 证据，也没有说明来源集合、定位契约或顺序被篡改时如何阻止阶段成功（with_skill: `result.txt:13-14,18`；without_skill: `result.txt:19-25,27`）。 |
+
+未满足断言（with/without 任一 FAIL）：``binds_pre_and_post_tag_inventory``、``makes_inventory_integrity_reproducible``
+
+
 
 ## Leakage Surface Analysis
 
@@ -43,6 +57,7 @@ Overall result: BLOCKED
 - 将历史 issue locator 替换为 `docs-agent:release-notes-gen`。
 
 ## Assertion Results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 | Assertion | With skill | Without skill | Fresh judgment |
 | --- | --- | --- | --- |
@@ -54,12 +69,16 @@ Overall result: BLOCKED
 
 ## Fresh Validation Method
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - 两臂锁定前只读取同一 prompt 和 `version-cases.md`，未读取 assertions、expected output、旧 comparison 或对方输出。
 - with-skill arm读取完整 Docs/docs-audit 指令；without-skill arm隔离这些内容。
 - fresh judge 在 SHA-256 锁定后才读取 assertions。
 - with-skill SHA-256：`210a4836d46b095ef9ad18943784c5dcc55df4c9693a46a1351010c3bdab11b3`；without-skill：`e053ee70e2330b8c7b5138a57bdb1ce189170489dd169b5d182bf2fd8a068d9b`。
 
 ## Failures And Limitations
+
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
 
 - with-skill 无失败；Coverage FULL。
 - source table 仍暴露 raw forms、selector 和 extractor，所以 baseline 可恢复 3/5；区分度来自跨阶段 future-tag binding 与 canonical integrity。

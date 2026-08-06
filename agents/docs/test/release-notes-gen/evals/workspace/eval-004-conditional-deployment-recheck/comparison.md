@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口待重跑验证）
+- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口，已按 #238 于 2026-08-06 fresh 隔离重跑）
 - Eval: `eval-004-conditional-deployment-recheck`
 - Review context: issue #162 fresh paired validation
 
@@ -14,22 +14,41 @@
 
 ## Latest Result
 
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Overall result: FAIL
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
-**PASS (2/2 assertions)** — fresh Codex subagent semantic review.
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `FAIL` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `skips_content_only_recheck` | PASS | PASS | with_skill 明确写出“Content-only…不触发部署级复核”；without_skill 写出“纯文案/错字变更：不影响运行时，无需部署”。 |
+| `rechecks_material_release_surface` | FAIL | FAIL | 两条 lane 都识别出新增 Internal 导航会改变生成输出和启动路径；但 with_skill 仅说“需重新验证”，没有产出共享状态/检查复用证据；without_skill 仅分类为需要部署，也没有证明复用共享检查。两者均未复制新清单。 |
+
+未满足断言（with/without 任一 FAIL）：``rechecks_material_release_surface``
+
+
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - content-only 保留状态；runtime change 复用唯一共享协议且不复制 checklist。
 - Candidate source: fresh `tmp/eval-runs/issue-162/with_skill/eval-004-conditional-deployment-recheck/candidate-output.md`.
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - PARTIAL (1/2)；识别触发差异，但未声明共享状态/协议复用。
 - The same prompt and pristine fixture were used; no historical baseline, target skill, Agent README, shared skill-map, old comparison, or with-skill output was used to compose it.
 
 ## Failures
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - baseline 缺共享协议复用语义。
 - No with-skill assertion failure or runner/credential blocker.

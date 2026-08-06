@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口待重跑验证）
+- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口，已按 #238 于 2026-08-06 fresh 隔离重跑）
 - Eval: `eval-004-confirmed-release-delivery`
 - Scenario: 维护者已确认目标版本与完整正文后的站内 Release Notes 成功交付
 - Review context: PR #187 follow-up for issue #177
@@ -10,7 +10,7 @@
 ## Test Set / Fixture Version
 
 - Fixture version: `confirmed release delivery v1`
-- Validation time: `2026-07-29 01:33:08 CST`
+- Validation time: `2026-07-29`（历史轮；本轮 #238 重跑来源见 Latest Result 块）
 - Runtime: `tmp/eval-runs/issue-177/rng-eval-004/`
 - 两条 candidate 使用同一 prompt 与独立 pristine fixture；with-skill 只额外读取
   Docs Agent 与目标 skill 协议，without-skill 未读取或应用 skill、Agent README、
@@ -20,16 +20,37 @@
 
 ## Latest Result
 
-- Behavior result: **PASS**
-- Coverage result: **FULL**（5/5 assertions exercised）
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— 宿主检查因依赖缺失未执行
+- Overall result: FAIL
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
-- With-skill: **5/5 PASS**
-- Fresh without-skill: **2/5 PASS、3/5 FAIL**
-- Relative uplift: **+3 assertions / +60 percentage points**
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `FAIL` / Coverage `PARTIAL`
+- without_skill：Behavior `FAIL` / Coverage `PARTIAL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `delivers_confirmed_release_page` | PASS | PASS | 两条 lane 均生成 `docs/site/release-notes/v1.0.0.md`，包含六个证据章节；frontmatter 含 `doc_type: release` 且 `last_verified_version: unverified`。 |
+| `updates_derived_surfaces_after_confirmation` | PASS | FAIL | with_skill 的 `releases.json` 保留 `v0.9.0` 验证记录并保留 `manualNote`；without_skill 额外写入 `verifiedDocs["release-notes/v1.0.0.md"] = "v1.0.0"`，与页面仍为 `unverified` 矛盾。 |
+| `passes_host_docs_checks` | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 的 `npm run test:docs` 都因缺少 `fast-glob` 未启动完成；这是 runner 依赖阻塞，不是 skill 行为失败。 |
+| `returns_complete_ready_handoff` | FAIL | FAIL | 两条 lane 只有非结构化结果摘要，均未完整提供 `downstream_target`、`release_execution_authorized: false`、确认来源、实际更新面等完整 handoff 字段。 |
+| `preserves_external_release_boundary` | PASS | PASS | 两条 lane 均未创建或发布 GitHub Release、未创建 tag；页面和 index 保持 `last_verified_version: unverified`，并明确未授权外部发布或等待文档审计。 |
+
+未满足断言（with/without 任一 FAIL）：``updates_derived_surfaces_after_confirmation``、``returns_complete_ready_handoff``
+
+未触发断言：`passes_host_docs_checks`。
+
+基础设施阻塞说明：依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
+
+
 
 ## Assertion Results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 | Assertion | With skill | Without skill | Fresh judgment |
 | --- | --- | --- | --- |
@@ -40,6 +61,7 @@
 | `preserves_external_release_boundary` | PASS | FAIL | 两侧均未执行外部发布操作；baseline 仍越权完成页面、index 和 `verifiedDocs` 盖章。 |
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 生成 `docs/site/release-notes/v1.0.0.md`，完整保留用户功能、架构、数据库、
   部署配置、交付资产、升级兼容与风险六类证据。
@@ -57,6 +79,8 @@
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - baseline 能生成六类证据正文、更新 index/metadata，并真实通过宿主 docs checks。
 - baseline 把页面和 index 的 `last_verified_version` 提前写成 `v1.0.0`，同时把
   新页面加入 `verifiedDocs`，越过 docs-audit 盖章时序。
@@ -66,6 +90,8 @@
   `d049d1f7a8d878c4f26acb4044d621e34f369ad0ffe2c5acae8b0b249a0f38d7`。
 
 ## Failures And Limitations
+
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
 
 - With-skill assertion failures: none.
 - Infrastructure or credential blockers: none.

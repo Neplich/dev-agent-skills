@@ -15,12 +15,35 @@
 
 ## Latest Result
 
+- Behavior result: `PASS`（with）/ `PASS`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— 依赖缺失导致宿主检查与 handoff 未执行
 - Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
-**PASS（with-skill 5/5；fresh without-skill 5/5）** — with-skill 仅同步 v1.5.0 受影响的 product/ops 页面，既有两个 change-map entries 保持准确，Release Notes surfaces 零变化，两页保持 `unverified`，并在真实宿主检查通过后向 #117 输出维护者确认版本 handoff。fresh baseline 也满足全部 assertions，因此本用例证明协议可执行，但未显示相对 uplift。
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `PASS` / Coverage `PARTIAL`
+- without_skill：Behavior `PASS` / Coverage `PARTIAL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `limits_release_to_affected_product_ops` | PASS | PASS | 两条 lane 均仅更新 `docs/site/product/dashboard-limits.md` 与 `docs/site/ops/dashboard-runtime.md`；`change-map.yaml` 仅将对应代码映射到这两页，API/database/design 未改动。 |
+| `reconciles_confirmed_version_facts` | PASS | PASS | 两页分别写入上限 `25`、镜像 `registry.example/ai-hub:v1.5.0` 和 `DASHBOARD_LIMIT=25`；未写入 `v1.5.1` 计划，且与 `release-evidence.md`、代码、配置、测试记录一致。 |
+| `preserves_release_notes_surfaces` | PASS | PASS | `docs/site/release-notes/index.md`、`.meta/releases.json`、导航配置及现有 Release Notes 内容保持原状；两条 lane 均未创建 Release Notes 产物，并保留了应指向独立 Release Notes 流程的边界。 |
+| `keeps_release_pages_unverified` | PASS | PASS | 两页 frontmatter 均为 `last_verified_version: unverified`，没有写入 `v1.5.0` 审计盖章。 |
+| `runs_release_host_checks_and_handoffs` | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 的 `npm run test:docs` 都因依赖缺失未完成，后置 pre-tag handoff 因而未执行；这是 runner 依赖阻塞，不是 skill 行为失败。 |
+
+未触发断言：`runs_release_host_checks_and_handoffs`。
+
+基础设施阻塞说明：依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
+
+
 
 ## Assertions
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - `limits_release_to_affected_product_ops`: PASS。只修改 `product/dashboard-limits.md` 与 `ops/dashboard-runtime.md`；对应两个既有映射已准确，无 API、database、design 或无关页面扩张。
 - `reconciles_confirmed_version_facts`: PASS。代码、配置和 release tests 共同证明上限 25、镜像 `registry.example/ai-hub:v1.5.0`，并排除 10、v1.4.0 与未确认 v1.5.1。
@@ -29,6 +52,7 @@
 - `runs_release_host_checks_and_handoffs`: PASS。在 `docs/site` 执行 `RELEASE_VERSION=v1.4.0 npm run test:docs`，退出 0、74/74 tests；handoff 包含完整 affected set、`target_release_version: v1.5.0` 与 `release-handoff.md` 维护者确认来源。
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 读取公共八步 contract 及 product/ops 两个类型模块；未加载无关类型模块。
 - 先使用 lockfile 执行 `npm ci --ignore-scripts`，再运行宿主检查；版本参数只用于校验当前未改动 release metadata，不用 Git ref 推测目标版本。
@@ -36,11 +60,14 @@
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - 来源：同一 prompt/assertions 与独立 pristine fixture 的本轮 fresh `without_skill`；在生成期间未读取目标 SKILL、Docs README、internal/shared 指令、旧 comparison 或历史输出。
 - baseline 也只更新两页、保留准确映射和 Release Notes 零变化，页面保持 `unverified`，并真实通过相同 74 tests；其结构化响应包含 #117 affected set、维护者确认来源与 #116 边界。
 - 结果：5/5 PASS；未复用历史 baseline。
 
 ## Failures
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - With-skill assertion failures: none。
 - Without-skill assertion failures: none。

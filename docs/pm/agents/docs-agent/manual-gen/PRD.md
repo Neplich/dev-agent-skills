@@ -6,7 +6,7 @@ feature_path: "agents/docs-agent/manual-gen"
 parent_feature: "agents/docs-agent"
 feature_level: "3"
 child_features: "N/A"
-version: "1.0.2"
+version: "1.0.3"
 status: Approved
 author: "Neplich Claude Code"
 date: "2026-08-05"
@@ -23,6 +23,9 @@ related_docs:
   - "agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md"
   - "agents/docs/skills/formal-docs-sync/_internal/INSTRUCTIONS.md"
 changelog:
+  - version: "1.0.3"
+    date: "2026-08-06"
+    changes: "对齐 #245 通用正向 eval：执行时注入具体有限流程与认证/安全边界，采集脚本仅作运行期资产，并区分业务范围授权与候选批次确认"
   - version: "1.0.2"
     date: "2026-08-05"
     changes: "FR-M05 截图卫生收窄：排除范围限定为与任务无关的浮层，已确认操作步骤依赖的菜单或对话框作为产品证据保留"
@@ -216,7 +219,7 @@ flowchart TB
 | Phase 1 | 正式文档层扩展：`doc_type: manual` 枚举、manual 模板与根索引、脚手架类型映射与导航分区、`docs-audit` 枚举同步 | TBD | Maintainer |
 | Phase 2 | `manual-gen` skill 本体：入口门禁、环境协商、视口契约、采集与卫生、三层架构与七项字段、批次确认、渲染验收、阻塞语义 | TBD | Maintainer |
 | Phase 3 | 注册与文档：`docs-agent` 路由、marketplace 注册、`skills-lock.json`、README 与 `AGENTS.md` 计数 | TBD | Maintainer |
-| Phase 4 | eval：fixture、Playwright 脚本、`evals.json`、fresh subagent validation 与 `comparison.md` | TBD | Maintainer |
+| Phase 4 | eval：通用 fixture、按宿主入口准备的运行期采集脚本、`evals.json`、fresh subagent validation 与 `comparison.md` | TBD | Maintainer |
 
 推进顺序 1 → 2 → 3 → 4：文档类型是 skill 写入的前置条件，先扩展类型层再实现 skill 本体；注册在能力可用后进行；eval 最后收口。
 
@@ -227,7 +230,7 @@ flowchart TB
 | 浏览器工具的桌面预设落到远小于 1920 的视口，触发站点响应式移动布局 | High | 手册截图与桌面实际界面不符 | FR-M03 把回读校验定为独立且不可省略的一步，不由「已设定」推断 |
 | 模型为补齐手册而虚构界面或使用无关示例图 | Medium | 手册失去证据价值且难以察觉 | FR-M14 阻塞语义 + eval 反向场景断言；证据不足时明确 blocked |
 | 手册扩张为全站用户端与管理端盘点 | Medium | 批次失控，交付周期与成本不可预期 | FR-M09 批次确认纪律，沿用 `formal-docs-sync` 同级约束 |
-| 生成过程在真实业务数据上产生副作用 | Medium | 破坏宿主数据 | FR-M06 状态变更操作仅限已确认测试范围；eval 测试集选用无服务端副作用站点 |
+| 生成过程在真实业务数据上产生副作用 | Medium | 破坏宿主数据 | FR-M06 状态变更操作仅限已确认测试范围；eval 只选择可证明非写入的核心流程，或使用具备测试账号、测试数据与重置权限的可丢弃环境 |
 | `doc_type` 枚举两处不同步 | Medium | 手册页在宿主校验中失败，功能实际不可用 | 列为约束项，Phase 1 内两处同时变更并由契约检查覆盖 |
 | 存量宿主脚本本地改动导致重跑冲突 | Low | 升级路径受阻 | 复用 `docs-site-bootstrap` 既有逐文件 keep/overwrite 与 manifest 机制，不新增机制 |
 | eval 依赖外部实时站点，站点改版导致断言无触发条件 | Medium | 误判为 skill 回归 | 未触发断言记 `NOT EXERCISED`，计入 Coverage result 而非 Behavior result |
@@ -243,9 +246,9 @@ flowchart TB
 | 5 | 截图过期如何检测？ | Maintainer | 2026-08-05 | 不新增告警机制。截图随站点构建打包，读者访问的文档与截图属同一构建版本，无运行期漂移；复检形态是生成时在渲染出的页面上做目视验收。 |
 | 6 | 是否为截图能力定义新的宿主契约？ | Maintainer | 2026-08-05 | 不定义。复用仓库既有三级优先级 repo harness > Chrome plugin / browser connector > Playwright fallback，权威定义在 `AGENTS.md` 与 QA 三个 skill 中。 |
 | 7 | 1920×1080 如何保证？ | Maintainer | 2026-08-05 | 显式设定并在截图前回读校验；回读是独立于设定的一步，不可省略。实测浏览器工具的 desktop 预设会落到 691×837 并触发响应式移动布局。 |
-| 8 | eval 用哪个运行环境样本？ | Maintainer | 2026-08-05 | 选定 `https://mermaid.live/`：免登录、完全客户端渲染无服务端副作用、自带促销横幅与营销弹窗可作负向断言、无外部图片依赖渲染稳定、一份手册约 8–12 张截图。已淘汰 Grafana Play、Practice Software Testing Toolshop、Playwright TodoMVC。 |
-| 9 | eval 执行入口选哪个？ | Maintainer | 2026-08-05 | 优先 Playwright，绕开 `codex exec` 与 Codex app Chrome 扩展的宿主差异，保证两条 lane 都能生成本轮新的 `without_skill` baseline。 |
-| 10 | eval 的 Playwright 脚本是否入库？ | Maintainer | 2026-08-05 | 入库，按 QA 既有约定使用 `*.spec.md` 形态并遵守脱敏规则；落点是 `agents/docs/test/manual-gen/evals/workspace/`。截图仍是运行期产物写隔离 scratch workspace，不入库。 |
+| 8 | eval 用哪个运行环境样本？ | Maintainer | 2026-08-06 | 按 #235 契约不再固定样本：每轮执行前由维护者确认平台名、可访问 URL 与本地代码路径后注入。已淘汰 Grafana Play、Practice Software Testing Toolshop、Playwright TodoMVC 与早期 mermaid.live 固定选型。 |
+| 9 | eval 执行入口选哪个？ | Maintainer | 2026-08-06 | 按 skill 采集入口优先级执行：repo harness > Chrome 插件 / browser connector > Playwright fallback（对齐 `manual-gen/_internal/INSTRUCTIONS.md` 采集入口契约），保证两条 lane 都能生成本轮新的 `without_skill` baseline。 |
+| 10 | eval 的采集脚本是否入库？ | Maintainer | 2026-08-06 | 按 #245 收敛后仅 eval-001 保留通用采集执行说明（`evals/README.md`），不再提交 eval 专属 `scripts/*.spec.md`（随 eval-004/005 删除）；平台相关采集脚本按宿主与采集入口（repo harness > Chrome 插件 > Playwright）在运行期准备，截图仍写隔离 scratch workspace，不入库。 |
 | 11 | eval 断言如何避免脆弱？ | Maintainer | 2026-08-05 | 一律语义判断，不比对具体目录结构，不断言手册划分出哪几个业务模块或模块叫什么名字；目录组织是 skill 应随宿主平台自适应的能力。 |
-| 12 | eval 测试集是否覆盖付费功能与多角色？ | Maintainer | 2026-08-05 | 不覆盖。只测匿名用户可用能力；「适用角色」字段在 skill 能力中保留，但本测试集不作断言重点。「环境相关长串标识不入正文」用分享链接的 pako 编码串覆盖，因此 eval 范围必须包含导出与分享流程。 |
+| 12 | eval 测试集是否覆盖付费功能与多角色？ | Maintainer | 2026-08-06 | 不预设固定的付费功能或多角色矩阵，也不把认证方式写死为匿名。每轮按维护者选定的具体有限流程注入适用角色、认证条件与安全执行依据；平台层断言仍核验适用对象和角色边界。环境相关标识脱敏并入 eval-001 通用断言，不绑定分享场景或具体编码实现。 |
 | 13 | skill 命名？ | Maintainer | 2026-08-05 | `manual-gen`，与 `trd-gen`、`prd-gen` 的 `-gen` 后缀对齐。仓库现有四个 `-generator` 后缀 skill 的命名统一作为独立治理变更另行推进，不并入本功能。 |

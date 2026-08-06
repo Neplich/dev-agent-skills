@@ -22,9 +22,32 @@ the assertions, and produced the verdict in `tmp/eval-runs/issue-188-docs/judge/
 
 ## Latest result
 
-Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Behavior result: `PASS`（with）/ `PASS`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— Git 缺失导致成功事务未执行
+- Overall result: BLOCKED
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
+
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `PASS` / Coverage `PARTIAL`
+- without_skill：Behavior `PASS` / Coverage `PARTIAL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| verifies_complete_affected_set | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 的 change-map 均列出 required docs，但因无 Git 无法解析 immutable target tree，完整 affected-set 核验未执行。 |
+| stamps_all_pages_together | NOT_EXERCISED | NOT_EXERCISED | 统一盖章依赖前置 Git target-tree 核验；两条 lane 均在该基础设施门禁前停止并保持原版本。 |
+| verifies_release_metadata_read_only | PASS | PASS | `docs/site/.meta/releases.json` 的 `latest` 与两个 API 条目均为 `v1.1.0`；`.eval/actual-diff.patch` 未包含该文件修改。 |
+| normalizes_mixed_version_forms | PASS | PASS | Release Notes、索引和 `releases.json` 使用 `v1.1.0`，`package.json` 使用 `1.1.0`；两者可规范化为同一 SemVer。 |
+| persists_candidate_producer_schema | NOT_EXERCISED | NOT_EXERCISED | 审计报告只有 `blocked` 诊断报告，不是 candidate record；缺少可解析 Git refs，无法执行候选记录生成与 staged gate。 |
+| anchors_candidate_then_discovers_success | NOT_EXERCISED | NOT_EXERCISED | `docs/site/.meta/audit/handoffs/pre-tag-v1.1.0.md` 不存在，且两条 lane 均明确未创建 anchor、handoff 或返回 `ready_for_tag`。 |
+
+未触发断言：`verifies_complete_affected_set`、`stamps_all_pages_together`、`persists_candidate_producer_schema`、`anchors_candidate_then_discovers_success`
+
+基础设施阻塞说明：Git 仓库缺失；对应断言不构成 skill 行为回归。
+
 
 
 ## Fixture Drift Notice
@@ -32,10 +55,13 @@ Overall result: BLOCKED
 fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 PASS 反映变更前 run。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 独立判定，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；本节保留作为历史记录。
 
 ## Historical results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 2026-07-20（fixture 身份文本变更前）：旧 run 结果，按 Fixture Drift Notice 不再作为当前证据。
 
 ## Canonical digest verification
+
+> ⚠️ 本节为 2026-08-03 #188 历史轮执行证据；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
 
 The with-skill run reconstructed the exact six-field inventory rather than
 trusting the fixture literals. It sorted **6 entries** by `source_id`:
@@ -60,6 +86,7 @@ pre-tag value remains `pending_expected_absent`, so expected absence is not a
 version mismatch and does not represent publication.
 
 ## Assertion results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 | Assertion | without_skill | with_skill | Evidence summary |
 | --- | --- | --- | --- |
@@ -71,6 +98,7 @@ version mismatch and does not represent publication.
 | `anchors_candidate_then_discovers_success` | FAIL | PASS | The baseline does not make committed raw metadata/content/tree/blob confirmation, fixed discovery, handoff-only commit, external package, normal fast-forward integration, and integrated readback one indivisible success gate. The skill does. |
 
 ## With-skill behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 The skill keeps `base_ref`, `target_ref`, and the maintainer-confirmed target
 version independent, accepts the absent future tag for pre-tag, verifies all
@@ -90,6 +118,7 @@ fast-forward integration and integrated readback, and is explicitly not a
 publication result.
 
 ## Failures
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - `with_skill`: none.
 - `without_skill`: `persists_candidate_producer_schema` and
@@ -97,10 +126,14 @@ publication result.
 
 ## Next steps
 
+> ⚠️ 本节为 2026-08-03 #188 历史轮后续建议；当前 #238 重跑因 Git 仓库缺失保持 `BLOCKED`。
+
 No skill change is required. Preserve the exact canonical digest input schema,
 actual-tag pending entry, genesis bytes `[]`, and anchor/discovery/integration
 ordering in future edits.
 
 ## Runtime artifact policy
+
+> ⚠️ 本节仅描述 2026-08-03 #188 历史轮运行产物；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
 
 - Runtime artifacts（双侧 candidate、judge verdict、隔离目录执行产物）在本次 fresh re-baseline 中真实生成，位于被 gitignore 覆盖的 `tmp/eval-runs/issue-188-docs/`；未提交到 git。长期 durable 产物仅为本 `comparison.md`。

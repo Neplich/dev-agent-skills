@@ -6,17 +6,35 @@
 - Eval: `eval-009-pre-tag-blocked`
 - Validation time: `2026-08-03 22:40:00 +0800`（fresh re-baseline，issue #188）
 - Fixture: 本轮工作区中的 `evals.json` prompt/assertions、`eval_metadata.json` 及其列出的 pristine fixture 文件
-- Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
+- Latest result: 本轮 #238 fresh 隔离重跑结论（2026-08-06），见上方 Overall result 与下方证据表
 - Overall result: PASS
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
+
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `PASS` / Coverage `FULL`
+- without_skill：Behavior `PASS` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `requires_exact_target_tree_blobs` | PASS | PASS | 两条 lane 均指出 `release-head` 仍为 legacy dispatcher；`.eval/actual-diff.patch` 中的 table dispatcher 仅存在未提交差异，不能作为 target tree 证据。 |
+| `blocks_every_in_scope_worktree_delta` | PASS | PASS | 两条 lane 均逐项识别 staged `src/catalog/routes.txt`、unstaged `docs/site/api/catalog-items.md`、untracked 审计草稿和 modified `package.json`，并判定阻塞。 |
+| `performs_zero_audit_writes` | PASS | PASS | 两条 lane 均输出 `blocked`，明确不返回 `ready_for_tag`、不创建候选或修改主机文件；workspace 中也未发现候选/盖章产物。 |
+| `requires_clean_commit_update_ref_and_rerun` | PASS | PASS | 两条 lane 均要求先提交或移出全部差异、更新 `target_ref`、确认范围干净，再从 pre-tag 流程第一步完整重跑，拒绝局部续跑。 |
+
+本轮无 FAIL 断言。
+
+
 
 ## Fixture Drift Notice
 
 fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 PASS 反映变更前 run。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 独立判定，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；本节保留作为历史记录。
 
 ## Historical results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 2026-07-20（fixture 身份文本变更前）：**PASS（4/4 assertions）**
 
@@ -28,6 +46,7 @@ fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 
 - fresh judge 读取冻结的双侧 candidate 与 assertions 判定（`tmp/eval-runs/issue-188-docs/judge/verdict.md`）；本轮没有复用历史 baseline、旧 comparison 内容或历史运行产物。
 
 ## Assertion review
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 | Assertion | Without skill | With skill | Evidence and behavior |
 | --- | --- | --- | --- |
@@ -37,6 +56,7 @@ fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 
 | `requires_clean_commit_update_ref_and_rerun` | PASS | PASS | 两侧均要求维护者提交需保留的最终内容或移出全部 scope 内差异，再把 `target_ref` 更新到最终 commit、确认 scope/index 干净，并从输入解析开始完整重跑；Skill 明确不允许局部续跑或用补证修复本次尝试。 |
 
 ## Behavior summary
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 ### With skill
 
@@ -47,6 +67,7 @@ fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 
 本例 prompt、release context 与 porcelain inventory 已清楚给出未提交证据和四类 scope 交集，因此 baseline 也能正确阻塞、保持零写入并要求完整重跑。Skill 的增益主要是把“任何 scope/authorized path/required inventory 差异都独立阻塞”和“只接受 target-tree ordinary blob”固化为不可绕过的协议。
 
 ## Failures
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - With skill: 无 assertion failure。
 - Without skill: 无 assertion failure。

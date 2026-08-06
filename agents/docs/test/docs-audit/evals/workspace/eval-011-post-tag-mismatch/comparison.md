@@ -16,16 +16,30 @@
 
 ## Latest Result
 
-- Behavior result: **PASS**
-- Coverage result: **FULL**（5/5 assertions exercised）
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
+Overall result: FAIL
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
-- With-skill: **5/5 PASS**
-- Fresh without-skill: **4/5 PASS、1/5 FAIL**
-- Relative uplift: **+1 assertion**
+## #238 Fresh Rerun Result（2026-08-06）
 
-两臂都识别当前 checkout 副本不是可信 pre-tag authority、lineage tuple 冲突以及 tag tree 新增 `src/catalog/export-v2.py`。with-skill 额外给出协议允许的两类维护者选择：修正错误 tag 后按同一版本完整重跑，或放弃该版本并明确确认新版本后完整重跑；baseline 只围绕暂停、改写或保留 tag，未提供完整的版本选择与审计重入前置。
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `FAIL` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `uses_immutable_pre_tag_authority` | PASS | PASS | 两者均区分 `.eval/committed-audit-v1.2.0.md` 与被篡改的 `docs/site/.meta/audit/audit-v1.2.0.md`，并引用 `.eval/release-context.md` 的可信提交记录。 |
+| `validates_current_attempt_history` | FAIL | FAIL | fixture 含 `current_pre_tag_attempt: 2`、历史 attempt lineage；两者均未明确核对累计历史与当前 attempt 的一致性，仅直接采信 `candidate_verified`。 |
+| `rejects_complete_release_tree_drift` | PASS | PASS | 两者均引用 `.eval/tag-tree-diff.name-status` 的 `A src/catalog/export-v2.py`，指出 tag 含未审计增量并保持 `blocked`。 |
+| `offers_safe_maintainer_recovery` | PASS | FAIL | with_skill 明确针对同一 `v1.2.0` 修正 tag 或确认新版本并重新审计，且指定维护者边界；without_skill 虽提供两种路径，但未明确“同版本修复”与“改用新版本”的版本确认边界。 |
+| `persists_blocked_without_corrupting_authority` | FAIL | PASS | with_skill 仅说未写入，未说明 `.eval/release-context.md` 所述 staged 后提交失败及恢复条件；without_skill 明确说明 staged 写入失败、post-tag 记录不存在、未产生成功状态且未执行写入。 |
+
+未满足断言（with/without 任一 FAIL）：``validates_current_attempt_history``、``offers_safe_maintainer_recovery``、``persists_blocked_without_corrupting_authority``
+
+
 
 ## Leakage Surface Analysis
 
@@ -42,6 +56,7 @@ Overall result: BLOCKED
 - 清理历史 issue 身份引用，并重算 inventory/candidate/discovery object identities；只保留刻意的 lineage 冲突。
 
 ## Assertion Results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 | Assertion | With skill | Without skill | Fresh judgment |
 | --- | --- | --- | --- |
@@ -53,12 +68,16 @@ Overall result: BLOCKED
 
 ## Fresh Validation Method
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - 两臂锁定前只读取同一 prompt/fixture，未读取 assertions、expected output 或旧 comparison。
 - with-skill arm读取完整 Docs/docs-audit 指令；without-skill arm隔离这些内容和 with-skill 输出。
 - fresh judge 在 response SHA-256 锁定后才读取 assertions。
 - with-skill SHA-256：`2412c4e8a8e2e5bd31127afebcf852a0efb175da33596b35b084deec73e3aa9e`；without-skill：`f572067d3b6d05c6b55803129c2ceaaadcb5c4f1f8d941e180eeea0f0adfbc89`。
 
 ## Failures And Limitations
+
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
 
 - with-skill 无失败；Coverage FULL。
 - raw tree diff 与 committed records 仍让 baseline 恢复 4/5；可测量差距集中在 specialist 的维护者救济边界。

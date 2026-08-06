@@ -1,9 +1,0 @@
-{
-  "name": "formal-docs-site",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
-  "scripts": {
-    "test:docs": "node -e \"const fs=require('node:fs'); for (const path of ['manual/index.md','standards/change-map.yaml','standards/templates/manual-guide.md']) fs.accessSync(path)\""
-  }
-}

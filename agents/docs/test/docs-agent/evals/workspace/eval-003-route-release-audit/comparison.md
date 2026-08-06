@@ -14,29 +14,49 @@
 
 ## Latest Result
 
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Overall result: FAIL
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
-**PASS（3/3 assertions）** — with-skill 接受等效确认 release chain，正确路由 `docs-agent:docs-audit`，只引用 specialist 权威执行 gate。`docs-audit` description 扩展为双阶段表述后，router 分流语义无回归。
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `FAIL` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| accepts_equivalent_chain | PASS | PASS | 两条 `release-entry.md` 均明确包含 release scope（第 3 行）、版本 tag（第 4 行）、changelog（第 5 行）、release evidence（第 6 行）及审计请求（第 8–11 行）；两条 result 也均识别该入口链。 |
+| routes_docs_audit | PASS | FAIL | with_skill 明确写出“已正确路由至 `docs-audit`”，并保留版本、changelog、release evidence 后声明由专项能力执行；without_skill 未选择 `docs-audit`，而是自行给出审计结论和检查清单。 |
+| references_audit_gate_only | FAIL | FAIL | with_skill 仅提到“`docs-agent:docs-audit` 专项能力未提供”，没有指向 `docs-audit/SKILL.md` 或内部指令；without_skill 同样没有该 gate 引用，并自行展开审计检查与后续步骤。 |
+
+未满足断言（with/without 任一 FAIL）：`routes_docs_audit`、`references_audit_gate_only`
+
+
 
 ## Assertions
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - `accepts_equivalent_chain`：PASS。逐项识别已确认 scope、`verified_version_tag: v0.4.0`、已审阅 changelog、契约/CI 证据与既有 `docs/site/` 为等效确认入口。
 - `routes_docs_audit`：PASS。明确“选定 specialist：`docs-agent:docs-audit`”，保留版本与 release 证据，执行责任交给 specialist，router 停在 handoff。
 - `references_audit_gate_only`：PASS。以“由 `docs-audit` 按其权威执行门禁自行核验”指向 specialist gate，未复制 base/target、确定性层、事实层、三态或统一盖章协议。
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - fresh candidate 读取 main 上当前 `docs-agent` router SKILL.md、Docs README 与 `docs-audit` 新 frontmatter description，仅做入口检查、分流与上下文保留。
 - 边界说明：candidate 输出中出现的 pre-tag/post-tag phase 建议不作为本 comparison 的通过证据——phase 判定归 `docs-audit` specialist 权威 gate，且 fixture 只含 Markdown 字段、无可核验的实际 git tag；本 eval 只验证 router 分流行为。
 
 ## Without-Skill Baseline
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 来源：同一 prompt 与 pristine fixture 副本的本轮 fresh `without_skill`，在仓库外隔离 scratch Git 仓库运行，禁止读取宿主仓库、skill 文档与历史输出；未复用历史 baseline。
 - baseline 能泛化识别审计意图，但路由到自拟的 “Release Documentation Specialist” 而非 canonical `docs-agent:docs-audit`，缺少权威 gate 指针，且复制了五项审计检查与 `ready`/`blocked` 输出协议，违反 router 只引用 gate 的边界。
 - 独立 judge 确认 baseline 输出无 skill 文档污染迹象。
 
 ## Failures
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 无 with-skill assertion failure。
 - 上一轮记录的 harness limitation（baseline 可见父仓库 git 状态）本轮已通过仓库外隔离 scratch Git 仓库消除。
