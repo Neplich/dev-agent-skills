@@ -59,7 +59,7 @@
     "trd-gen": {
       "source": "agents/engineer/skills/trd-gen",
       "sourceType": "local",
-      "computedHash": "6fbf3d8d1ff88525a7228074c677c29c3bc26a3a09e85c7054e64425567a450a"
+      "computedHash": "90c8832c1a411dfa5eb1d87fa0d58904a263ad39146d0e7d5236b49ae9efce42"
     },
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",

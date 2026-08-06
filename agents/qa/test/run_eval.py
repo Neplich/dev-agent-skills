@@ -24,7 +24,8 @@ from scripts.eval_runtime import (
 
 
 DEFAULT_TIMEOUT_SECONDS = 180
-DEFAULT_MODEL = "gpt-5.4-mini"
+DEFAULT_MODEL = "gpt-5.6-luna"
+DEFAULT_REASONING_EFFORT = "medium"
 OUTPUT_FIELDS = (
     "with_skill_outputs",
     "without_skill_outputs",
@@ -213,7 +214,7 @@ def codex_command(output_path: Path) -> list[str]:
         "-m",
         DEFAULT_MODEL,
         "-c",
-        'model_reasoning_effort="low"',
+        f'model_reasoning_effort="{DEFAULT_REASONING_EFFORT}"',
         "-o",
         str(output_path),
         "-",
