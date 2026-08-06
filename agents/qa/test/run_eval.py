@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -221,6 +223,24 @@ def codex_command(output_path: Path) -> list[str]:
     ]
 
 
+def build_isolated_env(runtime_root: Path) -> dict:
+    """Isolate lanes from user-level Codex skills (~/.agents/skills).
+
+    Codex resolves user skills under $HOME/.agents/skills and the auth store
+    under $HOME/.codex; pointing HOME at a fresh directory (with a copied
+    auth.json) drops personal skills while keeping authentication. Built-in
+    Codex skills still load — they are unrelated to repo skills.
+    """
+    home = runtime_root / "codex-home"
+    (home / ".codex").mkdir(parents=True, exist_ok=True)
+    auth_src = Path.home() / ".codex" / "auth.json"
+    if auth_src.exists():
+        shutil.copy2(auth_src, home / ".codex" / "auth.json")
+    env = dict(os.environ)
+    env["HOME"] = str(home)
+    return env
+
+
 def run_codex(prompt: str, output_path: Path, timeout_seconds: int) -> dict:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     started = time.time()
@@ -231,6 +251,7 @@ def run_codex(prompt: str, output_path: Path, timeout_seconds: int) -> dict:
             text=True,
             capture_output=True,
             timeout=timeout_seconds,
+            env=build_isolated_env(output_path.parent.parent.parent),
         )
         returncode = completed.returncode
         stdout = completed.stdout
