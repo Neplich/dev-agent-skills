@@ -174,7 +174,7 @@
     "docs-agent": {
       "source": "agents/docs/skills/docs-agent",
       "sourceType": "local",
-      "computedHash": "97226c95b67ca9e20b7cfc80227a5125ca9d689427d75c38d2e66a8f91212df9"
+      "computedHash": "b5246af7772383ed241d169d3de3b03d230477e90b9aec81fbc4fc785a865290"
     },
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",

@@ -3,9 +3,10 @@
 > Single source of truth owned by `docs-agent` for the default frontmatter
 > contract of formal Markdown pages under `docs/site/`.
 > `docs-site-bootstrap` consumes it for built-in pages, templates, and the
-> validation script delivered to host repositories; `formal-docs-sync` and
-> `release-notes-gen` consume it for created or updated pages; and
-> `docs-audit` consumes it for frontmatter decisions. Producers and auditors
+> validation script delivered to host repositories; `formal-docs-sync`,
+> `release-notes-gen`, and `manual-gen` consume it for created or updated
+> pages; and `docs-audit` consumes it for frontmatter decisions. Producers and
+> auditors
 > must reach the same conclusion for the same page.
 
 The initial rules were migrated from the verified AI Hub implementation for
