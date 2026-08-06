@@ -33,6 +33,8 @@
 
 未满足断言（with/without 任一 FAIL）：``migrates_aggregate_path``、``repairs_inbound_and_internal_links``、``updates_change_map_without_data_loss``、``updates_navigation_atomically``
 
+基础设施阻塞说明：；依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
+
 
 
 ## With-Skill Behavior

@@ -36,7 +36,7 @@
 
 未满足断言（with/without 任一 FAIL）：``runs_release_host_checks_and_handoffs``
 
-基础设施阻塞说明：宿主检查依赖（如 fast-glob）在隔离 runner 中不可用，对应断言不构成 skill 行为回归；整体结果保持 BLOCKED，待依赖就绪后重跑。
+基础设施阻塞说明：；依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
 
 
 

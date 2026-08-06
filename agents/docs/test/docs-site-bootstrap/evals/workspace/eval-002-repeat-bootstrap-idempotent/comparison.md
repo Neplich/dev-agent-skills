@@ -18,7 +18,7 @@
 
 **PASS (3/3 assertions)** — fresh subagent revalidation across the cumulative API, Database, Product, Design, and Ops deployment layering refresh found all nine materialized targets byte-identical to the current packaged assets, preserved the existing manifest dispositions and original `createdAt`, and produced zero content changes.
 
-Overall result: FAIL
+Overall result: BLOCKED
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
@@ -35,6 +35,8 @@ Overall result: FAIL
 | `preserves_existing_state` | PASS | PASS | `standards/change-map.yaml` 与 `.meta/releases.json` 均存在，内容分别保持源资产哈希 `014f624…`、`c906ead…`；manifest 的既有 `createdAt` 也未被重置。阻塞时未写入宿主状态。 |
 
 未满足断言（with/without 任一 FAIL）：``reports_skipped_identical``
+
+Fixture 阻塞说明：已提交 fixture 的源资产（feature-design.md / product-handbook.md）与工作区哈希不一致，skill 如实报告冲突（未伪报 skipped-identical）属正确行为；需更新 fixture 后重跑。
 
 
 

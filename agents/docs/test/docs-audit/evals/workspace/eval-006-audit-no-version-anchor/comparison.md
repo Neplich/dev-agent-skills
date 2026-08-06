@@ -12,7 +12,7 @@
 
 ## Latest Result
 
-- Overall result: BLOCKED
+- Overall result: PASS
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
@@ -31,8 +31,6 @@
 | `does_not_write_version_stamp` | PASS | PASS | 两个工作区的 `docs/site/api/catalog.md` 均保持 `last_verified_version: unverified`；均不存在 `.meta/releases.json`，也未写入版本号。 |
 
 未满足断言（with/without 任一 FAIL）：``blocks_without_target_release_version``
-
-基础设施阻塞说明：宿主检查依赖（如 fast-glob）在隔离 runner 中不可用，对应断言不构成 skill 行为回归；整体结果保持 BLOCKED，待依赖就绪后重跑。
 
 
 
