@@ -204,6 +204,7 @@ Skill eval 是可用性测试：验证 skill 能被触发、协议可执行、�
 **Eval 执行契约**
 
 - 最终验证必须在与被测会话隔离的全新上下文中执行。全新 Codex subagent 与各自独立启动的 `codex exec` 会话都可接受，本质都是干净上下文。
+- 所有 eval lane（`with_skill` / `without_skill` / 独立 judge）统一使用 `gpt-5.6-luna` 模型并显式传 `model_reasoning_effort="medium"`（成本与速度考量；不用 `gpt-5.6-sol` 等更高成本模型跑 eval，除非维护者明确指定）。模型不可用时 blocked 并询问维护者，不得静默更换模型。
 - 每轮必须重新生成 `without_skill` baseline，**不得复用历史 baseline**，也不得为掩盖执行失败把 baseline 弱化成可选项。
 - 判定由独立评审方（fresh subagent 或独立 judge）对照 assertions 得出。**被测 lane 的自评不算判定**，评审方须独立核对零写入等关键事实。批量 transcript 生成脚本的输出只是诊断产物，不是 pass/fail 事实来源。
 - 运行期文件写隔离 scratch workspace（如 `tmp/eval-runs/...`），不得写入已提交 fixture——历史输出会污染 empty-workspace 这类上下文敏感用例。每轮运行前需清理的路径用 `eval_metadata.json` 的 `execution_cleanup` 声明。

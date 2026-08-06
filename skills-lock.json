@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "09cb3e508bcfca39ddbfaef9b8b508f820d68b8b5f7b30d09029c00bf1d286c9"
+      "computedHash": "847da3efbaf71bda2f5cc6416ac87446309f41c75a8b755f1eb196f0b1103e06"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
@@ -59,7 +59,7 @@
     "trd-gen": {
       "source": "agents/engineer/skills/trd-gen",
       "sourceType": "local",
-      "computedHash": "390e65d2cf67211a3c38d28811a72dc6a694fd6acbd43ae9f129bfd4a871a1ae"
+      "computedHash": "5b8735f2834ae5e4cca7d1a4d162723aba8cd4235f62d5d97d02e805d71d8244"
     },
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
@@ -139,12 +139,12 @@
     "ui-ux-design": {
       "source": "agents/designer/skills/ui-ux-design",
       "sourceType": "local",
-      "computedHash": "8d170b87f80a1fc0adaeea7b0436e212699d42c935e8db80f986bb64802dfa9f"
+      "computedHash": "3a93c5d953675980b2d7e5a29b66c1da80d3f10dc575c4ae063de0c59a16d67b"
     },
     "visual-design": {
       "source": "agents/designer/skills/visual-design",
       "sourceType": "local",
-      "computedHash": "99e8442136f2c5f75e7bb714726b2ab8c3dfe97d73b37e4b3ccebc950d68d114"
+      "computedHash": "79863911e1c0550dccca55be1f1afa57d2efd8aa04b76ed9dd017e3e906774e4"
     },
     "security-agent": {
       "source": "agents/security/skills/security-agent",

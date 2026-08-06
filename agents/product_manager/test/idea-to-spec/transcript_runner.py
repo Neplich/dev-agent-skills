@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -22,9 +23,13 @@ RESERVED_CLEANUP_PATHS = (
     "without_skill",
     "comparison.auto.md",
     "comparison.md",
+    "README.md",
+    "eval_metadata.json",
 )
 
 DEFAULT_TIMEOUT_SECONDS = 180
+DEFAULT_MODEL = "gpt-5.6-luna"
+DEFAULT_REASONING_EFFORT = "medium"
 
 
 class TranscriptRunError(RuntimeError):
@@ -61,19 +66,11 @@ def prepare_execution_workspace(
         remove_path(execution_root / rel)
 
 
-def extract_result_text(stdout: str) -> str:
-    if not stdout.strip():
-        raise ValueError("Claude returned empty stdout")
+def read_result_file(path: Path) -> str:
+    if not path.exists() or not path.read_text().strip():
+        raise ValueError(f"Codex result file is missing or empty: {path}")
 
-    payload = json.loads(stdout)
-    if payload.get("is_error"):
-        raise ValueError(payload.get("result") or "Claude returned an error payload")
-
-    result = payload.get("result")
-    if not isinstance(result, str) or not result.strip():
-        raise ValueError("Claude JSON payload does not contain a non-empty result")
-
-    return result
+    return path.read_text()
 
 
 def iter_output_paths(outputs: list) -> list[str]:
@@ -112,46 +109,112 @@ def repo_root() -> Path:
     return Path(__file__).resolve().parents[4]
 
 
-def build_claude_command(
+def build_codex_command(
     prompt: str,
     *,
-    with_skill: bool,
-    entry_command: str = "/idea-to-spec",
-    plugin_dir: str = "agents/product_manager",
+    cwd: Path,
+    output_path: Path,
 ) -> list[str]:
-    command = [
-        "claude",
-        "-p",
-        "--no-session-persistence",
-        "--permission-mode",
-        "bypassPermissions",
-        "--output-format",
-        "json",
+    return [
+        "codex",
+        "exec",
+        "-C",
+        str(cwd),
+        "-s",
+        "workspace-write",
+        "--ephemeral",
+        "--ignore-user-config",
+        "--ignore-rules",
+        "-m",
+        DEFAULT_MODEL,
+        "-c",
+        f'model_reasoning_effort="{DEFAULT_REASONING_EFFORT}"',
+        "-o",
+        str(output_path),
+        prompt,
     ]
 
-    if with_skill:
-        plugin_root = Path(plugin_dir)
-        if not plugin_root.is_absolute():
-            plugin_root = repo_root() / plugin_root
 
-        normalized_entry = entry_command.strip()
-        if not normalized_entry.startswith("/"):
-            normalized_entry = f"/{normalized_entry}"
-
-        command.extend(["--plugin-dir", str(plugin_root)])
-        command.append(f"{normalized_entry} {prompt}")
-        return command
-
-    command.append(prompt)
-    return command
+def resolve_skill_dir(meta: dict) -> str:
+    entry = meta.get("entry_command", "/idea-to-spec").lstrip("/")
+    plugin = meta.get("plugin_dir", "agents/product_manager")
+    return f"{plugin}/skills/{entry}"
 
 
-def run_claude(command: list[str], cwd: Path, timeout_seconds: int) -> tuple[str, dict]:
+# Routers whose entry skill delegates to a specialist that must also be
+# discoverable for the delegation chain to execute in the lane.
+ROUTER_SPECIALISTS = {
+    "agents/product_manager/skills/pm-agent": [
+        "agents/product_manager/skills/idea-to-spec",
+    ],
+}
+
+
+def mirror_dependency_documents(execution_root: Path) -> None:
+    """Stripped agents/ mirror shared by both lanes (identical visible context).
+
+    Literal `agents/...` references inside skill documents and router-to-
+    specialist delegation chains resolve from this tree; agent test
+    directories are stripped (matching docs/README.codex.md) so eval
+    assertions and prior comparison results never enter a lane. Both lanes
+    receive the same mirror — only the discovery/loading of the entry skill
+    differs, keeping the lane-isolation contract intact.
+    """
+    shutil.copytree(
+        repo_root() / "agents",
+        execution_root / "agents",
+        ignore=shutil.ignore_patterns("test"),
+    )
+
+
+def install_entry_skill(execution_root: Path, skill_dir: str) -> None:
+    """Expose the entry skill (and routed specialists) at Codex discovery."""
+    entry_source = Path(skill_dir)
+    if not entry_source.is_absolute():
+        entry_source = repo_root() / entry_source
+    for skill_path in [str(entry_source.relative_to(repo_root()))] + ROUTER_SPECIALISTS.get(
+        skill_dir, []
+    ):
+        source = repo_root() / skill_path
+        target = execution_root / ".agents" / "skills" / source.name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(source, target)
+
+
+def build_isolated_env(temp_root: Path) -> tuple[dict, Path]:
+    """Isolate the lane from user-level Codex skills (~/.agents/skills).
+
+    Codex resolves user skills under $HOME/.agents/skills and the auth store
+    under $CODEX_HOME (default $HOME/.codex); pointing HOME and CODEX_HOME at
+    fresh directories (with the auth.json copied from the active CODEX_HOME)
+    drops personal skills while keeping authentication. Built-in Codex skills
+    still load — they are unrelated to repo skills.
+    """
+    home = temp_root / "codex-home"
+    codex_home = home / ".codex"
+    codex_home.mkdir(parents=True, exist_ok=True)
+    active_codex_home = os.environ.get("CODEX_HOME") or str(Path.home() / ".codex")
+    auth_src = Path(active_codex_home) / "auth.json"
+    if auth_src.exists():
+        shutil.copy2(auth_src, codex_home / "auth.json")
+    env = dict(os.environ)
+    env["HOME"] = str(home)
+    env["CODEX_HOME"] = str(codex_home)
+    return env, home
+
+
+def run_codex(
+    command: list[str],
+    cwd: Path,
+    timeout_seconds: int,
+    env: dict | None = None,
+) -> tuple[str, dict]:
     started = time.time()
     try:
         completed = subprocess.run(
             command,
             cwd=cwd,
+            env=env,
             capture_output=True,
             text=True,
             timeout=timeout_seconds,
@@ -166,7 +229,7 @@ def run_claude(command: list[str], cwd: Path, timeout_seconds: int) -> tuple[str
             "stderr": exc.stderr or "",
             "duration_ms": int((time.time() - started) * 1000),
         }
-        raise TranscriptRunError("Claude command timed out", status) from exc
+        raise TranscriptRunError("Codex command timed out", status) from exc
 
     status = {
         "command": command,
@@ -179,10 +242,11 @@ def run_claude(command: list[str], cwd: Path, timeout_seconds: int) -> tuple[str
     }
 
     if completed.returncode != 0:
-        raise TranscriptRunError("Claude command failed", status)
+        raise TranscriptRunError("Codex command failed", status)
 
+    output_path = Path(command[command.index("-o") + 1])
     try:
-        result_text = extract_result_text(completed.stdout)
+        result_text = read_result_file(output_path)
     except Exception as exc:  # noqa: BLE001
         raise TranscriptRunError(str(exc), status) from exc
 
@@ -215,8 +279,9 @@ def generate_eval_outputs(
     reset_directory(runtime_root)
 
     with tempfile.TemporaryDirectory(prefix="idea-to-spec-eval-") as temp_dir:
-        execution_root = Path(temp_dir) / "workspace"
-        prepare_execution_workspace(eval_root, execution_root, cleanup_paths=cleanup_paths)
+        temp_root = Path(temp_dir)
+        lane_env, _ = build_isolated_env(temp_root)
+        skill_dir = meta.get("skill_dir") or resolve_skill_dir(meta)
 
         runs = [
             ("with_skill", meta.get("with_skill_outputs", []), True),
@@ -224,20 +289,27 @@ def generate_eval_outputs(
         ]
 
         for label, outputs, with_skill in runs:
-            command = build_claude_command(
+            execution_root = Path(temp_dir) / "workspace" / label
+            prepare_execution_workspace(eval_root, execution_root, cleanup_paths=cleanup_paths)
+            mirror_dependency_documents(execution_root)
+            if with_skill:
+                install_entry_skill(execution_root, skill_dir)
+            output_path = execution_root / label / "outputs/result.txt"
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            command = build_codex_command(
                 meta["prompt"],
-                with_skill=with_skill,
-                entry_command=meta.get("entry_command", "/idea-to-spec"),
-                plugin_dir=meta.get("plugin_dir", "agents/product_manager"),
+                cwd=execution_root,
+                output_path=output_path,
             )
             transcript_path = execution_root / label / "outputs/transcript.md"
             status_path = execution_root / label / "outputs/run_status.json"
 
             try:
-                transcript, status = run_claude(
+                transcript, status = run_codex(
                     command,
                     execution_root,
                     timeout_seconds,
+                    env=lane_env,
                 )
             except TranscriptRunError as exc:
                 status = exc.status

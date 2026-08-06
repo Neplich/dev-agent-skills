@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval-006-delivery-polling-to-events",
+  "eval_name": "delivery-polling-to-events",
+  "workspace_root": "agents/engineer/test/trd-gen/evals/workspace/eval-006-delivery-polling-to-events",
+  "prompt": "workspace 的 docs/engineer/delivery-pipeline/TRD.md 描述的投递方案是定时轮询，产品需求已经改为事件驱动。请把这份技术文档更新到与当前需求一致。",
+  "fixture_context": [
+    "docs/pm/delivery-pipeline/PRD.md",
+    "docs/engineer/delivery-pipeline/TRD.md"
+  ]
+}

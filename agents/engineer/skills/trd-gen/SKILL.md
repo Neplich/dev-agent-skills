@@ -219,6 +219,21 @@ The TRD must include:
 When updating a TRD from a gap packet, address each named gap directly or record
 it as an open technical question with the owner and unblock condition.
 
+When updating an existing Engineer-owned current-state document (TRD or API
+reference), follow the body-consolidation rule from
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md`:
+the updated body states only the current target state; superseded designs,
+endpoints, or parameters are deleted or rewritten instead of being kept with
+"deprecated" / "not part of the target architecture" annotations, and removals
+are recorded in the changelog and git history. If the target document has no
+changelog structure, add one to its frontmatter (mirroring the PRD changelog
+convention) so removals stay traceable. Exception for API references: endpoints
+that remain supported while deprecated keep their contract and deprecation
+notice — deprecation is part of the API contract lifecycle, and consolidation
+applies only to endpoints that are truly removed or superseded. Ledger-style
+docs (`DECISIONS.md`, ADRs) keep history — that is their design intent, and the
+same PM-side rule explicitly exempts them.
+
 ## Quality Checks
 
 Before handoff, verify:
@@ -237,8 +252,12 @@ Before handoff, verify:
    `docs/engineer/{feature_path}/` and do not use only the terminal feature
    name as a parallel top-level directory.
 8. Any inbound TRD gap packet has been resolved or explicitly tracked as open.
-9. The next step is `feature-implementor` only after the Engineer document set
-   is confirmed.
+9. When an Engineer-owned current-state document (TRD or API reference) was
+   updated, the body states only the current target state: no superseded
+   designs, endpoints, or parameters kept with status annotations, and every
+   removal is recorded in the changelog.
+10. The next step is `feature-implementor` only after the Engineer document set
+    is confirmed.
 
 ## Handoff
 

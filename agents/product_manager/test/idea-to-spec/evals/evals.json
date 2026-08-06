@@ -265,6 +265,11 @@
           "id": "rejection_keeps_current_flow",
           "description": "拒绝语义",
           "text": "说明或体现用户拒绝提案时保持当前 feature_path 并按现流程继续（版本 bump 与校验）"
+        },
+        {
+          "id": "body_consolidation",
+          "description": "更新后正文只描述当前目标状态",
+          "text": "更新后的 PRD 正文直接把轮询策略改写为事件驱动方案，不以「已废弃」「不属于目标架构」等状态标注保留轮询描述"
         }
       ]
     }

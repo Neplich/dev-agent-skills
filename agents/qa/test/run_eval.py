@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -24,7 +27,8 @@ from scripts.eval_runtime import (
 
 
 DEFAULT_TIMEOUT_SECONDS = 180
-DEFAULT_MODEL = "gpt-5.4-mini"
+DEFAULT_MODEL = "gpt-5.6-luna"
+DEFAULT_REASONING_EFFORT = "medium"
 OUTPUT_FIELDS = (
     "with_skill_outputs",
     "without_skill_outputs",
@@ -213,33 +217,60 @@ def codex_command(output_path: Path) -> list[str]:
         "-m",
         DEFAULT_MODEL,
         "-c",
-        'model_reasoning_effort="low"',
+        f'model_reasoning_effort="{DEFAULT_REASONING_EFFORT}"',
         "-o",
         str(output_path),
         "-",
     ]
 
 
+def build_isolated_env(temp_root: Path) -> dict:
+    """Isolate lanes from user-level Codex skills (~/.agents/skills).
+
+    Codex resolves user skills under $HOME/.agents/skills and the auth store
+    under $CODEX_HOME (default $HOME/.codex); pointing HOME and CODEX_HOME at
+    a fresh directory (with the auth.json copied from the active CODEX_HOME)
+    drops personal skills while keeping authentication. Built-in Codex skills
+    still load — they are unrelated to repo skills. The isolated home must
+    live outside the repository (caller passes a TemporaryDirectory) so lane
+    sessions can never read the copied credentials.
+    """
+    home = temp_root / "codex-home"
+    codex_home = home / ".codex"
+    codex_home.mkdir(parents=True, exist_ok=True)
+    active_codex_home = os.environ.get("CODEX_HOME") or str(Path.home() / ".codex")
+    auth_src = Path(active_codex_home) / "auth.json"
+    if auth_src.exists():
+        shutil.copy2(auth_src, codex_home / "auth.json")
+    env = dict(os.environ)
+    env["HOME"] = str(home)
+    env["CODEX_HOME"] = str(codex_home)
+    return env
+
+
 def run_codex(prompt: str, output_path: Path, timeout_seconds: int) -> dict:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     started = time.time()
-    try:
-        completed = subprocess.run(
-            codex_command(output_path),
-            input=prompt,
-            text=True,
-            capture_output=True,
-            timeout=timeout_seconds,
-        )
-        returncode = completed.returncode
-        stdout = completed.stdout
-        stderr = completed.stderr
-        timed_out = False
-    except subprocess.TimeoutExpired as exc:
-        returncode = 124
-        stdout = exc.stdout or ""
-        stderr = exc.stderr or ""
-        timed_out = True
+    with tempfile.TemporaryDirectory(prefix="qa-eval-codex-home-") as temp_dir:
+        env = build_isolated_env(Path(temp_dir))
+        try:
+            completed = subprocess.run(
+                codex_command(output_path),
+                input=prompt,
+                text=True,
+                capture_output=True,
+                timeout=timeout_seconds,
+                env=env,
+            )
+            returncode = completed.returncode
+            stdout = completed.stdout
+            stderr = completed.stderr
+            timed_out = False
+        except subprocess.TimeoutExpired as exc:
+            returncode = 124
+            stdout = exc.stdout or ""
+            stderr = exc.stderr or ""
+            timed_out = True
 
     return {
         "command": codex_command(output_path),

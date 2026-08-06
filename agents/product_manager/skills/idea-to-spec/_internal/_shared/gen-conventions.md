@@ -1,7 +1,8 @@
 # Gen Skill Conventions
 
 > Standard workflow, safety, and failure handling rules shared by all document
-> generation skills under `gen/`. Each gen skill MUST follow these conventions
+> generation skills under `gen/` and all iteration modules under
+> `iteration/`. Each gen and iteration skill MUST follow these conventions
 > unless explicitly overridden.
 
 ## Standard Workflow
@@ -32,7 +33,14 @@ Every gen skill follows this 6-step workflow:
 
 5. **Consolidate**: Rewrite any process notes, tentative correction phrasing, or
    chat-like fragments into stable document prose. The document body should
-   state the current design directly.
+   state the current design directly. This applies to generation and iteration
+   alike: when an iteration replaces or retires a design, delete or rewrite the
+   superseded content in the body instead of keeping it with annotations such as
+   "deprecated" or "not part of the target architecture". Removals are recorded
+   in the changelog and git history — "never silently remove" means "removals
+   must leave a trace", not "avoid removing". Ledger-style documents
+   (`DECISIONS.md`, ADRs, changelogs, QA `results/`) are exempt: preserving
+   history and rejected options is their design intent.
 
 6. **Self-check**: Validate the output against
    `_internal/_shared/quality-rules.md`

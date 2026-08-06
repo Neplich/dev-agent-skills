@@ -21,6 +21,13 @@ Forbidden actions:
 
 If the input includes a completed PM spec, treat it as design input only, not as permission to implement.
 
+When updating an existing design doc, the body states only the current design:
+superseded layouts, journeys, or patterns are rewritten, not kept with
+"deprecated" / "superseded" annotations. Removals are recorded in the doc
+changelog and git history: the doc carries a `## Changelog` section
+(initialized if absent) listing version, date, and change summary, and
+`last_updated` metadata is refreshed when present.
+
 ## PM Handoff Entry Gate
 
 Before creating design deliverables, require a PM/design handoff packet or
