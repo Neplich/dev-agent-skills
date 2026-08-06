@@ -5,7 +5,7 @@ version: "0.6.0"
 status: Draft
 author: "Neplich Claude"
 date: "2026-07-15"
-last_updated: "2026-08-03"
+last_updated: "2026-08-06"
 feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
 parent_feature: "agents"
@@ -84,7 +84,7 @@ TRD 第 13 节的两个 Open Question 在本计划中落定如下：
 - 不修改或复制参考实现，不把参考项目的专有路径、模块名或品牌内容写入 marketplace 模板。
 - 不在本 marketplace 仓库预置宿主项目 `docs/site/**`；该目录只由宿主显式执行 bootstrap 后生成。
 - 不把 database、design、ops、release-notes 或产品手册自动同步描述为 MVP 已完成能力；MVP 同步与回填验收仅覆盖 api 链路。
-- 不改变 `changelog-generator` 的输出路径；版本归档继续写入 `docs/changelog/changelog-v{version}.md`。
+- 不改变 `changelog-gen` 的输出路径；版本归档继续写入 `docs/changelog/changelog-v{version}.md`。
 - 不自动创建 tag、GitHub Release，不新增 Release CI，也不在任一 PR 通过前越过维护者确认执行下一 workstream。
 
 ## 5. 文件变更清单
@@ -101,8 +101,8 @@ TRD 第 13 节的两个 Open Question 在本计划中落定如下：
 | 修改 | `agents/designer/skills/ui-ux-design/SKILL.md` | 为需要读取现有产品与界面事实的 Designer specialist 增加一行消费契约指针。 |
 | 修改 | `agents/security/skills/{appsec-checklist,authz-reviewer,dependency-risk-auditor,privacy-surface-mapper}/SKILL.md` | 为 4 个 Security specialist 增加一行消费契约指针。 |
 | 修改 | `agents/engineer/skills/debugger/SKILL.md` | 在通用指针之外，把命中的 API contract 纳入 expected-behavior 依据来源之一，并保留与 Approved PRD/TRD、测试和代码证据的一致性门禁。 |
-| 修改 | `agents/docs/skills/release-notes-generator/SKILL.md`（已从 PM 迁入 docs-agent） | release-notes 输出目标固定为宿主站点 `docs/site/release-notes/`；站点基础缺失时不初始化该路径，无站点宿主由 PM `github-release-generator` 消费维护者确认的版本事实源。 |
-| 修改 | `agents/product_manager/test/{feature-catalog,github-reader,idea-to-spec,release-notes-generator}/evals/evals.json`、`agents/engineer/test/{codebase-analyzer,trd-gen,feature-implementor,debugger,test-writer}/evals/evals.json`、`agents/qa/test/{spec-based-tester,exploratory-tester,bug-analyzer,regression-suite}/evals/evals.json`、`agents/devops/test/{deployment-planner,env-config-auditor,incident-playbook-writer,cicd-bootstrap}/evals/evals.json`、`agents/designer/test/ui-ux-design/evals/evals.json`、`agents/security/test/{appsec-checklist,authz-reviewer,dependency-risk-auditor,privacy-surface-mapper}/evals/evals.json` | 为上述消费侧 skill 增补命中 change-map、无站点、旧版本三类语义 assertions；这些 eval 定义当前均存在。 |
+| 修改 | `agents/docs/skills/release-notes-gen/SKILL.md`（已从 PM 迁入 docs-agent） | release-notes 输出目标固定为宿主站点 `docs/site/release-notes/`；站点基础缺失时不初始化该路径，无站点宿主由 PM `github-release-gen` 消费维护者确认的版本事实源。 |
+| 修改 | `agents/product_manager/test/{feature-catalog,github-reader,idea-to-spec,release-notes-gen}/evals/evals.json`、`agents/engineer/test/{codebase-analyzer,trd-gen,feature-implementor,debugger,test-writer}/evals/evals.json`、`agents/qa/test/{spec-based-tester,exploratory-tester,bug-analyzer,regression-suite}/evals/evals.json`、`agents/devops/test/{deployment-planner,env-config-auditor,incident-playbook-writer,cicd-bootstrap}/evals/evals.json`、`agents/designer/test/ui-ux-design/evals/evals.json`、`agents/security/test/{appsec-checklist,authz-reviewer,dependency-risk-auditor,privacy-surface-mapper}/evals/evals.json` | 为上述消费侧 skill 增补命中 change-map、无站点、旧版本三类语义 assertions；这些 eval 定义当前均存在。 |
 | 新增 | 上述 eval 目录各自的 `workspace/<新增消费回归用例>/**`（含 durable `comparison.md`） | 为三类消费行为建立隔离 fixture；新用例编号在 PR 1 依据各 `evals.json` 的现有最大编号顺延，避免覆盖既有 workspace。 |
 | 修改 | `skills-lock.json` | 刷新 PR 1 中所有被修改 skill 的 `computedHash`。 |
 | 修改（按硬编码情况） | `scripts/check_repository_contract.py`、`scripts/check_eval_contract.py`、`agents/test_eval_contract.py` | 仅在现有校验硬编码 Agent、router、skill 数量或路径时扩展 contract 及其测试；动态兼容时不改。 |
@@ -116,7 +116,7 @@ WS1 适用 specialist 指针初步清单如下，已与 `agents/*/skills/` 实�
 - designer：`ui-ux-design`
 - security：`appsec-checklist`、`authz-reviewer`、`dependency-risk-auditor`、`privacy-surface-mapper`
 
-专属规则另有两处：`debugger` 增加 API contract expected-behavior 依据规则；`release-notes-generator` 增加站点存在性输出切换。`changelog-generator` 不增加消费指针，也不修改输出路径。
+专属规则另有两处：`debugger` 增加 API contract expected-behavior 依据规则；`release-notes-gen` 增加站点存在性输出切换。`changelog-gen` 不增加消费指针，也不修改输出路径。
 
 ### 5.2 PR 2 / WS2 Agent 骨架、bootstrap 与 sync
 
@@ -198,7 +198,7 @@ flowchart TB
    - 验证 → 用 `ls agents/*/skills/` 与 diff 核对没有修改 role router、无关 specialist 或不存在的 skill，且各处没有复制共享协议正文。
 
 3. **落实两处专属规则**
-   - 操作 → 在 `debugger` expected-behavior gate 增加 API contract 条件依据；在 `release-notes-generator` 增加站点存在性输出切换；不修改 `changelog-generator`。
+   - 操作 → 在 `debugger` expected-behavior gate 增加 API contract 条件依据；在 `release-notes-gen` 增加站点存在性输出切换；不修改 `changelog-gen`。
    - 验证 → 检查 debugger 不会以文档覆盖 Approved PRD/TRD、测试或代码证据；检查无站点时 release-notes 行为不变，changelog 路径保持原契约。
 
 4. **补消费回归 eval、lock hash 与必要 contract 适配**

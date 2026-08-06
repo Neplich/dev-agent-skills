@@ -26,7 +26,7 @@
 | `docs-site-bootstrap` | 维护者明确要求初始化正式文档站点 | 技术中立的 `docs/site/` 基础和标准 |
 | `formal-docs-sync` | 已确认的功能、部署、发布或现有系统需要同步或回填正式文档 | 当前状态的 API、数据库、设计、运维和产品文档及其 `change-map.yaml` 更新；v0.3.0 仅限 API 自动化 |
 | `manual-gen` | 已确认的有限范围需要基于真实运行界面生成图文用户操作手册 | 手册页面、同级截图资产和可交给文档审计的 change-map 更新 |
-| `release-notes-generator` | 已确认的发布需要在准备 GitHub Release 之前，在宿主文档站点中生成版本化页面 | 已确认的 `vX.Y.Z.md`、发布元数据/索引更新、成功的文档检查，以及面向 `docs-agent:docs-audit` pre-tag 审计的站点就绪证据 handoff；`pm-agent:github-release-generator` 仍是下游 GitHub Release 所有者 |
+| `release-notes-gen` | 已确认的发布需要在准备 GitHub Release 之前，在宿主文档站点中生成版本化页面 | 已确认的 `vX.Y.Z.md`、发布元数据/索引更新、成功的文档检查，以及面向 `docs-agent:docs-audit` pre-tag 审计的站点就绪证据 handoff；`pm-agent:github-release-gen` 仍是下游 GitHub Release 所有者 |
 | `docs-audit` | 发布就绪要求在创建 tag 前后进行正式文档覆盖度与事实核验 | 在维护者确认 `target_release_version` 后，pre-tag 在完成完整集合标记后返回 `ready_for_tag`；post-tag 在检查实际 tag 后返回 `release_verified` 或 `blocked` |
 
 ## 路由规则
@@ -34,7 +34,7 @@
 - 明确初始化正式文档站点：使用 `docs-site-bootstrap`。
 - 功能、部署或发布同步，或现有系统回填：使用 `formal-docs-sync`。
 - 基于真实运行界面截图生成图文用户操作手册：使用 `manual-gen`。
-- 生成、确认和索引版本化的站内 Release Notes，并进行文档验证：使用 `release-notes-generator`。
+- 生成、确认和索引版本化的站内 Release Notes，并进行文档验证：使用 `release-notes-gen`。
 - 发布文档审计：使用 `docs-audit`。
 
 ## `formal-docs-sync` 能力边界（v0.3.0）
@@ -45,7 +45,7 @@
 - 部署验证会同步有证据支持的当前运维、升级和回滚事实，不会把计划表述为当前状态。
 - Release 模式只同步受影响的产品和运维页面，并将其与已确认的版本事实对齐。
 - 现有系统回填支持一个由维护者确认的有限批次，范围可覆盖五种文档类型中的任意类型。
-- Release Notes 不属于 `formal-docs-sync`；专用的 `release-notes-generator` 负责站内生成、确认、发布元数据/索引更新、验证和 `docs-agent:docs-audit` pre-tag handoff；在 `ready_for_tag` 之后，`pm-agent:github-release-generator` 仍是下游 GitHub Release 所有者。
+- Release Notes 不属于 `formal-docs-sync`；专用的 `release-notes-gen` 负责站内生成、确认、发布元数据/索引更新、验证和 `docs-agent:docs-audit` pre-tag handoff；在 `ready_for_tag` 之后，`pm-agent:github-release-gen` 仍是下游 GitHub Release 所有者。
 
 ## 协作位置
 
@@ -81,7 +81,7 @@ Docs Agent 拥有宿主项目在 `docs/site/` 下的正式文档层。它消费�
 
 Docs Agent 依赖可能作为独立插件打包的同级能力：
 
-- `pm-agent` 用于请求分类、已批准的发布范围、功能目录和共享 handoff 契约；站内 Release Notes 由 Docs Agent 自身的 `release-notes-generator` 所有，而受 gate 约束的 GitHub Release 工作流由 PM `github-release-generator` 所有
+- `pm-agent` 用于请求分类、已批准的发布范围、功能目录和共享 handoff 契约；站内 Release Notes 由 Docs Agent 自身的 `release-notes-gen` 所有，而受 gate 约束的 GitHub Release 工作流由 PM `github-release-gen` 所有
 - `engineer-agent` 用于已确认的 TRD、实施计划、代码证据和未解决的技术影响范围
 - `qa-agent` 用于验证证据
 - `devops-agent` 用于部署和运维证据

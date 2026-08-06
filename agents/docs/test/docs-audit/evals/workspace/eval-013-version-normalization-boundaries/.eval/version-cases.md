@@ -8,7 +8,7 @@
 
 | source_id | locator_kind | immutable locator | exact selector | deterministic extractor | required raw form |
 | --- | --- | --- | --- | --- | --- |
-| target | handoff | docs-agent:release-notes-generator | `target_release_version` | `handoff-field-v1` | `vX.Y.Z` |
+| target | handoff | docs-agent:release-notes-gen | `target_release_version` | `handoff-field-v1` | `vX.Y.Z` |
 | tag | git-tag | `refs/tags/v1.2.0-rc.1+Build.7` | `tag-name` | `git-tag-name-v1` | `vX.Y.Z` |
 | notes | git-file | `docs/site/release-notes/v1.2.0-rc.1+Build.7.md` | `frontmatter.version` | `yaml-frontmatter-v1` | `vX.Y.Z` |
 | index | git-file | `docs/site/release-notes/index.md` | `entry[v1.2.0-rc.1+Build.7].version` | `markdown-release-index-v1` | `vX.Y.Z` |

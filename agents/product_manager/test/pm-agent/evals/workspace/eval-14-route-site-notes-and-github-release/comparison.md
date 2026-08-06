@@ -17,7 +17,7 @@ Overall result: BLOCKED
 
 ## With-skill behavior
 
-Routed site notes to `docs-agent:release-notes-generator`, GitHub Release preview to PM `github-release-generator`, preserved site-ready and audit gates, and did not revive the old PM skill name.
+Routed site notes to `docs-agent:release-notes-gen`, GitHub Release preview to PM `github-release-gen`, preserved site-ready and audit gates, and did not revive the old PM skill name.
 
 ## Without-skill baseline
 

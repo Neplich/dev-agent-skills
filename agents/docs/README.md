@@ -32,7 +32,7 @@ documentation audit requests to the matching documentation specialist.
 | `docs-site-bootstrap` | The maintainer explicitly asks to initialize a formal documentation site | A technology-neutral `docs/site/` foundation and standards |
 | `formal-docs-sync` | A confirmed feature, deployment, release, or existing system needs formal documentation synchronization or backfill | Current-state API, database, design, ops, and product docs with their `change-map.yaml` updates; v0.3.0 was limited to API automation |
 | `manual-gen` | A confirmed bounded scope needs an illustrated user operation manual based on the real running interface | Manual pages, colocated screenshots, and change-map updates ready for documentation audit |
-| `release-notes-generator` | A confirmed release needs a versioned page in the host documentation site before GitHub Release preparation | Confirmed `vX.Y.Z.md`, release metadata/index updates, successful docs checks, and a site-ready evidence handoff to `docs-agent:docs-audit` pre-tag audit; `pm-agent:github-release-generator` remains the downstream GitHub Release owner |
+| `release-notes-gen` | A confirmed release needs a versioned page in the host documentation site before GitHub Release preparation | Confirmed `vX.Y.Z.md`, release metadata/index updates, successful docs checks, and a site-ready evidence handoff to `docs-agent:docs-audit` pre-tag audit; `pm-agent:github-release-gen` remains the downstream GitHub Release owner |
 | `docs-audit` | Release readiness requires formal-document coverage and fact verification before and after tag creation | With a maintainer-confirmed `target_release_version`, pre-tag returns `ready_for_tag` after complete-set stamping; post-tag returns `release_verified` or `blocked` after checking the actual tag |
 
 ## Routing Rules
@@ -43,7 +43,7 @@ documentation audit requests to the matching documentation specialist.
 - Illustrated user operation manuals based on screenshots of the real running
   interface: use `manual-gen`.
 - Versioned site Release Notes generation, confirmation, indexing, and docs
-  validation: use `release-notes-generator`.
+  validation: use `release-notes-gen`.
 - Release documentation audit: use `docs-audit`.
 
 ## `formal-docs-sync` Capability Boundary (v0.3.0)
@@ -60,9 +60,9 @@ ops, and product current-state documentation.
 - Existing-system backfill supports one maintainer-confirmed finite batch
   across any of the five document types.
 - Release notes are not part of `formal-docs-sync`; the dedicated
-  `release-notes-generator` owns their site generation, confirmation, release
+  `release-notes-gen` owns their site generation, confirmation, release
   metadata/index updates, validation, and `docs-agent:docs-audit` pre-tag
-  handoff; `pm-agent:github-release-generator` remains the downstream GitHub
+  handoff; `pm-agent:github-release-gen` remains the downstream GitHub
   Release owner after `ready_for_tag`.
 
 ## Collaboration Position
@@ -115,8 +115,8 @@ plugins:
 
 - `pm-agent` for request classification, approved release scope, feature
   catalogs, and the shared handoff contract; site Release Notes are owned by
-  this Agent's `release-notes-generator`, while the gated GitHub Release
-  workflow is owned by PM `github-release-generator`
+  this Agent's `release-notes-gen`, while the gated GitHub Release
+  workflow is owned by PM `github-release-gen`
 - `engineer-agent` for confirmed TRDs, implementation plans, code evidence, and
   unresolved technical impact scope
 - `qa-agent` for validation evidence

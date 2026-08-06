@@ -19,7 +19,7 @@ preserves confirmed scope and evidence through the handoff.
 - routing explicit site initialization to `docs-site-bootstrap`, synchronization
   or backfill to `formal-docs-sync`, screenshot-evidenced illustrated user
   manuals to `manual-gen`, site Release Notes delivery to
-  `release-notes-generator`, and release audit to `docs-audit`
+  `release-notes-gen`, and release audit to `docs-audit`
 - owning the default formal-document frontmatter contract at
   `_internal/_shared/frontmatter-contract.md`, which specialist producers and
   auditors consume together
@@ -74,7 +74,7 @@ authoritative specialist contract.
   current-state documentation
 - `docs-agent:manual-gen` - Generate or update illustrated user operation
   manuals from screenshots of the real running interface
-- `docs-agent:release-notes-generator` - Generate, confirm, index, and validate
+- `docs-agent:release-notes-gen` - Generate, confirm, index, and validate
   a host site's versioned Release Notes before the GitHub Release handoff
 - `docs-agent:docs-audit` - Use a maintainer-confirmed
   `target_release_version` for pre-tag audit and unified stamping, returning
@@ -97,7 +97,7 @@ Route by the requested documentation outcome, not literal phrasing.
 - Generate or update a versioned page under the host site's Release Notes,
   confirm its body, update release metadata and indexes, and validate it before
   the GitHub Release handoff
-  -> `release-notes-generator`
+  -> `release-notes-gen`
 - Audit formal docs before tag creation or verify the same release facts after
   the actual tag exists
   -> `docs-audit`
@@ -111,7 +111,7 @@ Route by the requested documentation outcome, not literal phrasing.
 - Screenshot-evidenced illustrated manual behavior is authoritative in
   `manual-gen/SKILL.md` and its internal instructions.
 - Site Release Notes behavior is authoritative in
-  `release-notes-generator/SKILL.md` and its internal instructions.
+  `release-notes-gen/SKILL.md` and its internal instructions.
 - Release audit behavior is authoritative in
   `docs-audit/SKILL.md` and its internal instructions.
 

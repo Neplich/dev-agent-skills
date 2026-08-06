@@ -9,12 +9,12 @@ child_features:
   - "agents/docs-agent/docs-authoring-foundation"
   - "agents/docs-agent/formal-docs-sync"
   - "agents/docs-agent/manual-gen"
-  - "agents/docs-agent/release-notes-generator"
+  - "agents/docs-agent/release-notes-gen"
 version: "1.5.1"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
-last_updated: "2026-08-05"
+last_updated: "2026-08-06"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/105"
   - "https://github.com/Neplich/dev-agent-skills/issues/112"
@@ -23,8 +23,8 @@ related_issues:
 related_docs:
   - "AGENTS.md"
   - ".claude-plugin/marketplace.json"
-  - "agents/product_manager/skills/github-release-generator/SKILL.md"
-  - "agents/product_manager/skills/changelog-generator/SKILL.md"
+  - "agents/product_manager/skills/github-release-gen/SKILL.md"
+  - "agents/product_manager/skills/changelog-gen/SKILL.md"
   - "agents/engineer/skills/codebase-analyzer/SKILL.md"
   - "agents/engineer/skills/debugger/SKILL.md"
   - "agents/engineer/skills/feature-implementor/SKILL.md"
@@ -38,7 +38,7 @@ changelog:
     changes: "补齐 child_features 直接子功能索引，并纳入新增子功能 manual-gen（issue #226）"
   - version: "1.4.1"
     date: "2026-07-20"
-    changes: "对齐 #120：站内 Release Notes 归 Docs specialist，GitHub Release 归 PM github-release-generator"
+    changes: "对齐 #120：站内 Release Notes 归 Docs specialist，GitHub Release 归 PM github-release-gen"
   - version: "1.0.0"
     date: "2026-07-14"
     changes: "Initial draft"
@@ -56,7 +56,7 @@ changelog:
     changes: "决议 5 切换范围收窄为 release-notes 输出，changelog 归档路径不变"
   - version: "1.2.3"
     date: "2026-07-15"
-    changes: "发版节点收窄为产品手册同步与 release-notes 落位核对，release-notes 产出归 release-notes-generator"
+    changes: "发版节点收窄为产品手册同步与 release-notes 落位核对，release-notes 产出归 release-notes-gen"
   - version: "1.2.4"
     date: "2026-07-15"
     changes: "marketplace 注册面明确为 4 个 skill 路径（router + 3 specialist）"
@@ -109,7 +109,7 @@ changelog:
 ## 非目标
 
 - 不建立独立于 git tag / GitHub Release 的文档版本方案，不做多版本站点快照。
-- `docs-agent:release-notes-generator` 负责生成、确认和校验站内 Release Notes；PM `github-release-generator` 只在站内 ready handoff 与发版审计门禁通过后处理 GitHub Release，`changelog-generator` 的版本归档仍按既有契约留在 `docs/changelog/`。
+- `docs-agent:release-notes-gen` 负责生成、确认和校验站内 Release Notes；PM `github-release-gen` 只在站内 ready handoff 与发版审计门禁通过后处理 GitHub Release，`changelog-gen` 的版本归档仍按既有契约留在 `docs/changelog/`。
 - 不把 VitePress 或 npm 依赖强加给宿主项目；bootstrap 仅在用户显式请求时执行。
 - 不把站点渲染纳入本仓库 PR 必跑校验链；渲染是宿主项目的运行时关注点。
 - 不改变过程文档（`docs/pm/`、`docs/engineer/` 等）的既有契约与路径。
@@ -142,7 +142,7 @@ changelog:
 | ID | Feature | Description | Priority | Acceptance Criteria |
 |----|---------|-------------|----------|---------------------|
 | FR-A01 | docs-site-bootstrap | 初始化 VitePress 站点骨架：目录分类（api / database / design / product / ops / release-notes / standards）、frontmatter 内容模型、文档类型模板、prepare 与 check 脚本（含 visibility public / internal 双站点过滤生成）、空 `change-map.yaml`。模板以文本形式内置于 skill。骨架一次性完整生成（全部目录分类与双站点机器），文档内容随协作链节点与存量回填渐进填充。 | P0 | 空项目 bootstrap 后骨架完整可构建；重复执行幂等；未显式请求时不触发。 |
-| FR-A02 | formal-docs-sync | 三个同步节点：feature 落地同步 api / database / design 文档；部署验证同步 ops 文档；发版同步产品手册，并核对 release-notes 站点落位（release-notes 内容由 release-notes-generator 产出，sync 不重复生成）。数据来源为 TRD、过程文档与代码证据。第四模式见 FR-A09 存量回填。完整三节点覆盖为产品目标范围；MVP 按决议 6/8 收窄为 api 链路（feature 落地节点与存量回填），database / design / ops / release-notes / 产品手册的同步为后续迭代，不作为 MVP 验收面。 | P0 | 同步只更新受影响文档；每次同步追加或修正 change-map 条目；文档描述 latest state，不堆积变更历史。MVP 验收仅覆盖 api 链路。 |
+| FR-A02 | formal-docs-sync | 三个同步节点：feature 落地同步 api / database / design 文档；部署验证同步 ops 文档；发版同步产品手册，并核对 release-notes 站点落位（release-notes 内容由 release-notes-gen 产出，sync 不重复生成）。数据来源为 TRD、过程文档与代码证据。第四模式见 FR-A09 存量回填。完整三节点覆盖为产品目标范围；MVP 按决议 6/8 收窄为 api 链路（feature 落地节点与存量回填），database / design / ops / release-notes / 产品手册的同步为后续迭代，不作为 MVP 验收面。 | P0 | 同步只更新受影响文档；每次同步追加或修正 change-map 条目；文档描述 latest state，不堆积变更历史。MVP 验收仅覆盖 api 链路。 |
 | FR-A03 | docs-audit | 双阶段发版门禁。以独立的 `base_ref`、`target_ref` 和维护者确认的 `target_release_version` 为输入；确定性层计算完整影响域并检查 frontmatter，事实层逐页核对声明与代码；pre-tag 负责一致性核对和统一盖章，post-tag 只复核实际 tag 与既有发布事实。 | P0 | pre-tag 仅在完整影响域全部 verified 且版本事实一致时统一盖章并返回 `ready_for_tag`；post-tag 一致时返回 `release_verified`，否则 blocked；不允许局部盖章。 |
 | FR-A04 | 消费契约 | 6 个现有 Agent 增加读取协议：任务落点命中 change-map 时优先读映射文档；`debugger` 可把 API contract 文档作为 expected-behavior 依据来源之一。 | P0 | 协议以 `_shared` 共享约定为主、各 SKILL.md 指针为辅；无文档站时静默降级，不产生额外询问。 |
 | FR-A05 | 信任模型 | 文档是声明状态，代码是 ground truth。影响结论的关键判断必须回代码验证；`last_verified_version` 与当前版本差距决定信任度。 | P0 | 消费契约与 audit 协议均显式引用该模型；文档与代码不符时输出分歧证据而非采信文档。 |
@@ -279,7 +279,7 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 | 2 | audit 报告归档路径：沿用 QA `_reports/{platform-version}/` 先例，还是站点 `.meta/` 或 `docs/docs/`？ | Maintainer | 2026-07-14 | 归档到宿主站点 `docs/site/.meta/audit/audit-{version}.md`；`.meta/` 为机器消费区，不进导航、不受 frontmatter 校验约束 |
 | 3 | `visibility` 双站点是否进入 MVP，还是先单站点、双站点后置？ | Maintainer | 2026-07-14 | visibility 双站点全进 MVP：bootstrap 骨架内置 visibility 过滤生成脚本、public / internal 双首页与双站点配置 |
 | 4 | bootstrap 是否额外生成宿主项目本地维护 skill（仿 `hub-docs-maintainer`），还是逻辑全部留在 marketplace skill？ | Maintainer | 2026-07-14 | 不生成宿主本地维护 skill；逻辑全部留在 marketplace 的 `formal-docs-sync`，宿主差异落 `standards/` 与 change-map 数据层 |
-| 5 | `pm-agent` release 类 skill 输出目标切换到站点 `release-notes/` 的触发条件与向后兼容方式？ | Maintainer | 2026-07-14 | release 类产物按 owner 拆分：站内 Release Notes 固定由 `docs-agent:release-notes-generator` 写入 `docs/site/release-notes/`，站点基础缺失时不初始化该路径；GitHub Release 由 PM `github-release-generator` 生成；无文档站宿主时使用维护者确认的版本事实源，不再回退到旧 `docs/release-notes/` 路径；changelog 归档路径不变 |
+| 5 | `pm-agent` release 类 skill 输出目标切换到站点 `release-notes/` 的触发条件与向后兼容方式？ | Maintainer | 2026-07-14 | release 类产物按 owner 拆分：站内 Release Notes 固定由 `docs-agent:release-notes-gen` 写入 `docs/site/release-notes/`，站点基础缺失时不初始化该路径；GitHub Release 由 PM `github-release-gen` 生成；无文档站宿主时使用维护者确认的版本事实源，不再回退到旧 `docs/release-notes/` 路径；changelog 归档路径不变 |
 | 6 | MVP 的 sync 链路只覆盖 api 文档是否成立，database / ops 的迭代切分点？ | Maintainer | 2026-07-14 | MVP 仅覆盖 api 链路（feature 落地节点）；database、ops 作为后续两次迭代 |
 | 7 | 存量回填落在 bootstrap、独立 skill 还是 sync 模式？ | Maintainer | 2026-07-14 | 作为 formal-docs-sync 的第四模式；复用同一套模板映射、写作纪律与 change-map 生长逻辑 |
 | 8 | 存量回填是否进 MVP，覆盖范围如何切？ | Maintainer | 2026-07-14 | 进 MVP，api 链路先行；database、ops 回填随各自迭代补齐 |

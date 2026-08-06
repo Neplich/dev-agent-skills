@@ -2,7 +2,7 @@
 feature: repository-ci-governance
 version: 0.1.0-draft
 date: 2026-05-06
-last_updated: 2026-05-06
+last_updated: 2026-08-06
 ---
 
 # Repository CI Governance Plan
@@ -221,7 +221,7 @@ uv run agents/qa/test/run_all_evals.py
 - [ ] 确认 `docs/changelog/changelog-v{version}.md` 存在并记录对应版本变更。
 - [ ] 根目录 `CHANGELOG.md` 只作为版本索引。
 - [ ] 必要时手动触发 eval workflow 并记录结果。
-- [ ] 按 `pm-agent → github-release-generator` 流程创建 GitHub Release draft 并交维护者审批；本仓无文档站宿主，使用维护者确认的版本事实源，不生成 `docs/release-notes/`。
+- [ ] 按 `pm-agent → github-release-gen` 流程创建 GitHub Release draft 并交维护者审批；本仓无文档站宿主，使用维护者确认的版本事实源，不生成 `docs/release-notes/`。
 
 暂不实现：
 

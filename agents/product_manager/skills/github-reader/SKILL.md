@@ -10,7 +10,7 @@ Read a GitHub repository's current state and produce a structured Markdown summa
 
 This skill serves two purposes:
 1. **Direct answer**: respond to the user's question about the repo
-2. **Data feed**: provide structured input for downstream skills like `roadmap-generator` or `weekly-report`
+2. **Data feed**: provide structured input for downstream skills like `roadmap-gen` or `weekly-report`
 
 ## Step 1 — Establish repo context
 

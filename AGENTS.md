@@ -54,7 +54,7 @@ PM / Engineer / QA / DevOps（条件式）→ Docs Agent（正式文档生产 / 
 - 用户侧新需求、变更、bug、测试、部署、安全、交付或仓库状态诉求默认先进入 `pm-agent` 分类；用户未显式点名任何 skill 或 agent 时同样默认进入 `pm-agent`，显式点名是受支持的直达路径，但仍必须经过对应入口 gate 的安全网。下游 role router 和 specialist 只在 PM handoff packet 或等效已确认文档链存在时承接。
 - 下游安全网包含前置与收尾两面：缺少 PM handoff packet、等效已确认文档链或 specialist entry basis 时，不执行下游协议，温和引导用户经 `pm-agent` 补齐前置并完成入口分类（脚手架请求同样走正常 PM 分类）；完成当前事项后，主动建议协作链下一步并等待确认，用户已授权 `auto-continue` 时可连续推进直到链路结束或用户喊停。
 - SKILL.md frontmatter 的 `visibility: internal` 是声明层标记，Claude Code 与 Codex 都不消费该字段，不隐藏 slash 命令也不阻止显式直调；`pm-agent` 是默认入口，下游标记为 `internal` 仅表示非默认入口。
-- 6 个 role router 只保留入口凭据检查和分流指针，其中 `docs-agent` 分流正式文档站点 bootstrap、API/database/design/ops/product 当前事实 sync、基于运行界面截图的图文用户操作手册、站内 Release Notes 和 audit；PM `github-release-generator` 按 SKILL.md 的宿主文档站适用性判断生成 GitHub Release：有文档站宿主要求站内 Release Notes 已确认且 docs-audit 门禁通过；无文档站宿主降级为维护者确认的版本事实源与维护者显式批准；具体执行 gate 的权威副本留在对应 specialist `SKILL.md`，例如 `feature-implementor` 的 PRD/TRD/plan/archive gate、`debugger` 的 expected-behavior gate、QA specialist 的 E2E gate，以及 Designer/DevOps/Security/Docs specialist 的 feature-scope gate。
+- 6 个 role router 只保留入口凭据检查和分流指针，其中 `docs-agent` 分流正式文档站点 bootstrap、API/database/design/ops/product 当前事实 sync、基于运行界面截图的图文用户操作手册、站内 Release Notes 和 audit；PM `github-release-gen` 按 SKILL.md 的宿主文档站适用性判断生成 GitHub Release：有文档站宿主要求站内 Release Notes 已确认且 docs-audit 门禁通过；无文档站宿主降级为维护者确认的版本事实源与维护者显式批准；具体执行 gate 的权威副本留在对应 specialist `SKILL.md`，例如 `feature-implementor` 的 PRD/TRD/plan/archive gate、`debugger` 的 expected-behavior gate、QA specialist 的 E2E gate，以及 Designer/DevOps/Security/Docs specialist 的 feature-scope gate。
 
 **文档依赖**
 
@@ -88,7 +88,7 @@ PM / Engineer / QA / DevOps（条件式）→ Docs Agent（正式文档生产 / 
 - 维护变更不得直接在 `main` 上进行；开始修改前先创建工作分支，完成后通过 PR 合入。
 - PR 创建后的更新默认追加新 commit 并普通 push；除非用户明确要求整理提交历史，否则不要 amend、rebase 或 force push。
 - 创建 PR 后不要直接合并；必须等待维护者明确确认“可以合并”后再执行 merge / squash / rebase 合并操作。
-- 当前仓库仍处于早期维护阶段，暂不新增 Release CI；发布前使用手动 release checklist：按「市场注册」节的版本规则核对 `metadata.version` 与 `.kimi-plugin/plugin.json` 的 `version`，确认对应 `docs/changelog/changelog-v{version}.md` 存在并被根 `CHANGELOG.md` 索引，tag 使用 `v` 前缀 SemVer，PR 必跑 CI 全部通过，必要时手动触发 eval workflow 并记录结果；每次使用 tag 发版时，按 skill 维度汇总 skill eval 后的 `comparison.md` 最新结论。每次 tag 发版后，由 `pm-agent → github-release-generator` 使用 skill 流程自动创建 GitHub Release draft，并直接交维护者审批；draft 的发布（publish）仍必须等待维护者显式批准。不要自动上传 marketplace package，也不要配置 release bot bypass tag ruleset。
+- 当前仓库仍处于早期维护阶段，暂不新增 Release CI；发布前使用手动 release checklist：按「市场注册」节的版本规则核对 `metadata.version` 与 `.kimi-plugin/plugin.json` 的 `version`，确认对应 `docs/changelog/changelog-v{version}.md` 存在并被根 `CHANGELOG.md` 索引，tag 使用 `v` 前缀 SemVer，PR 必跑 CI 全部通过，必要时手动触发 eval workflow 并记录结果；每次使用 tag 发版时，按 skill 维度汇总 skill eval 后的 `comparison.md` 最新结论。每次 tag 发版后，由 `pm-agent → github-release-gen` 使用 skill 流程自动创建 GitHub Release draft，并直接交维护者审批；draft 的发布（publish）仍必须等待维护者显式批准。不要自动上传 marketplace package，也不要配置 release bot bypass tag ruleset。
 
 ### 变更分级契约
 

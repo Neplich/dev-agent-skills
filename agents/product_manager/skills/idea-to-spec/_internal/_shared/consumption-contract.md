@@ -8,9 +8,9 @@
 ## Release Notes 归属
 
 - `docs/site/release-notes/` 下的版本页、正文确认、metadata、索引和站点校验由
-  `docs-agent:release-notes-generator` 负责。
+  `docs-agent:release-notes-gen` 负责。
 - GitHub Release 正文、draft 与发布操作由
-  `pm-agent:github-release-generator` 负责；面向用户的版本说明仍由上述 Docs
+  `pm-agent:github-release-gen` 负责；面向用户的版本说明仍由上述 Docs
   specialist 交付。
 - 消费 change map 只用于缩小证据读取范围，不改变上述站内与 GitHub Release
   边界。

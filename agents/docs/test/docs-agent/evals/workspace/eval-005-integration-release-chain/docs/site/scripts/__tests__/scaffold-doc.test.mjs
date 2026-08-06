@@ -498,19 +498,19 @@ test('missingParentDirectories uses Windows path semantics for rollback boundari
   ]);
 });
 
-test('scaffoldDocument rejects release notes and hands off to docs-agent:release-notes-generator', async () => {
+test('scaffoldDocument rejects release notes and hands off to docs-agent:release-notes-gen', async () => {
   const fixture = await createFixture();
   const input = options('release-notes');
   input.path = 'docs/site/release-notes/v1.md';
   await assert.rejects(
     scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
-    /docs-agent:release-notes-generator/
+    /docs-agent:release-notes-gen/
   );
   const pathInput = options('api');
   pathInput.path = 'docs/site/release-notes/v1.md';
   await assert.rejects(
     scaffoldDocument(pathInput, { ...fixture, runDocsChecks: noChecks }),
-    /docs-agent:release-notes-generator/
+    /docs-agent:release-notes-gen/
   );
 });
 

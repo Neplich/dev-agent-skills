@@ -5,7 +5,7 @@ version: "0.1.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-19"
-last_updated: "2026-07-19"
+last_updated: "2026-08-06"
 generated_by: "trd-gen"
 feature: "formal-docs-sync"
 feature_path: "agents/docs-agent/formal-docs-sync"
@@ -52,7 +52,7 @@ flowchart LR
     Ops --> Checks
     Product --> Checks
     Checks --> Audit["#117 docs-audit"]
-    Mode -. "Release Notes" .-> RN["#116 release-notes-generator"]
+    Mode -. "Release Notes" .-> RN["#116 release-notes-gen"]
 ```
 
 渐进加载结构固定为：

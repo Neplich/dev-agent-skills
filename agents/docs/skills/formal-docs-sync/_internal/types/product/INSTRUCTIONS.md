@@ -64,7 +64,7 @@ Link Design, API, Database, and Ops authority pages instead of duplicating
 their contracts. Keep each page, all required ancestor indexes and links, and
 its change-map entries in the same confirmed write/read-back scope. Release
 Notes content, index, metadata, and navigation remain outside this module and
-must be handed to `docs-agent:release-notes-generator`.
+must be handed to `docs-agent:release-notes-gen`.
 
 Existing stable flat pages move only under a separately confirmed migration
 plan, and that constraint never justifies leaving drift unreported: run the

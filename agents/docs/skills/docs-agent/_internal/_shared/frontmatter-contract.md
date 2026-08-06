@@ -4,7 +4,7 @@
 > contract of formal Markdown pages under `docs/site/`.
 > `docs-site-bootstrap` consumes it for built-in pages, templates, and the
 > validation script delivered to host repositories; `formal-docs-sync` and
-> `release-notes-generator` consume it for created or updated pages; and
+> `release-notes-gen` consume it for created or updated pages; and
 > `docs-audit` consumes it for frontmatter decisions. Producers and auditors
 > must reach the same conclusion for the same page.
 
@@ -58,7 +58,7 @@ All seven fields are unconditionally required.
   and the host validation script it delivers.
 - `formal-docs-sync` must apply this contract whenever it creates or updates a
   formal documentation page.
-- `release-notes-generator` must apply this contract to versioned site Release
+- `release-notes-gen` must apply this contract to versioned site Release
   Notes and keep `last_verified_version: unverified` until `docs-audit` owns the
   version-stamping sequence.
 - `docs-audit` must use this contract for frontmatter decisions. A page with

@@ -9,7 +9,7 @@ version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-08-06"
 generated_by: "prd-gen"
 related_docs:
   - "agents/product_manager/README.md"
@@ -71,7 +71,7 @@ changelog:
 | FR-S03 | Workflow Execution | 必须按当前实现工作流执行，并保留已实现的 gate、phase 或 mode。 | P0 | Mermaid 流程和工作流条目覆盖关键阶段。 |
 | FR-S04 | Artifact Output | Direct answer 或 feed mode；feed mode 在 Markdown 后追加 github_reader_data YAML。 | P0 | 未阻塞时产出指定 artifact；blocked 时说明原因、缺口和 next owner。 |
 | FR-S05 | Boundary Guard | 不接管 `pm-agent` 之外角色的职责；不在上下文不足时伪造结论。 | P0 | 越界事项转交 owning skill/agent，不在本 skill 内扩大范围。 |
-| FR-S06 | Handoff | Direct answer 可直接结束；feed mode 面向 roadmap-generator 或 weekly-report；其他 release/changelog/design/engineering 目标回到 owning PM skill/agent，不把 Designer/Engineer 写成 github-reader 的直接消费者。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
+| FR-S06 | Handoff | Direct answer 可直接结束；feed mode 面向 roadmap-gen 或 weekly-report；其他 release/changelog/design/engineering 目标回到 owning PM skill/agent，不把 Designer/Engineer 写成 github-reader 的直接消费者。 | P0 | Handoff 目标具体到 skill/agent/owner，并携带输入包、证据和期望结果。 |
 | FR-S07 | Traceability | PRD 必须引用执行契约来源。 | P1 | related_docs、Dependencies、API Touchpoints 能覆盖关键实现来源。 |
 
 ## 当前实现对齐

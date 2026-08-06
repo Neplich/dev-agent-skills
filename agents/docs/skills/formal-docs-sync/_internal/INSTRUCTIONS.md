@@ -289,7 +289,7 @@ atomic scope.
 Synchronize only affected product and ops pages and reconcile their material
 claims with the confirmed release version evidence. Do not generate or edit a
 Release Notes body, its index, `.meta/releases.json`, or Release Notes
-navigation. Handoff all such work to `docs-agent:release-notes-generator`.
+navigation. Handoff all such work to `docs-agent:release-notes-gen`.
 For a direct Release Notes request, stop with zero site writes
 and pass the confirmed version, scope, evidence, and requested site surfaces to
 that specialist immediately; do not ask for separate permission to perform
@@ -385,6 +385,6 @@ output followed the relevant rules:
 - Handoff: <docs-audit ready, or blocked while waiting for confirmed
   target_release_version; include its maintainer confirmation source when
   available, or
-  release-notes-generator with the confirmed version, scope,
+  release-notes-gen with the confirmed version, scope,
   evidence, and requested site surfaces when applicable>
 ```

@@ -132,7 +132,7 @@ PRD/TRD 对齐、实现计划确认和 QA E2E handoff 等工程门禁见 [Engine
 4. `engineer-agent -> devops-agent`，用于部署、CI/CD 和运行准备
 5. `engineer-agent -> security-agent`，用于发布前或专项安全审查
 6. `pm-agent -> docs-agent`，用于范围确认后的正式文档站点初始化、同步、站内 Release Notes 或发版前审计
-7. `docs-agent:release-notes-generator -> docs-agent:docs-audit -> pm-agent:github-release-generator`，用于已确认站内版本说明、双阶段发版验证和 GitHub Release
+7. `docs-agent:release-notes-gen -> docs-agent:docs-audit -> pm-agent:github-release-gen`，用于已确认站内版本说明、双阶段发版验证和 GitHub Release
 
 不是所有项目都要走完整链路。每个 Agent 都能独立完成自己的角色闭环，只有在需要跨角色协作时才 handoff。
 
