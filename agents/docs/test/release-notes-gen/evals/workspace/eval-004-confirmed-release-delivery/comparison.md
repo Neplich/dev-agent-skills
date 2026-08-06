@@ -21,15 +21,15 @@
 ## Latest Result
 
 - Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
+- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— 宿主检查因依赖缺失未执行
 - Overall result: FAIL
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
+- with_skill：Behavior `FAIL` / Coverage `PARTIAL`
+- without_skill：Behavior `FAIL` / Coverage `PARTIAL`
 
 ### 逐断言判定
 
@@ -37,13 +37,15 @@
 | --- | --- | --- | --- |
 | `delivers_confirmed_release_page` | PASS | PASS | 两条 lane 均生成 `docs/site/release-notes/v1.0.0.md`，包含六个证据章节；frontmatter 含 `doc_type: release` 且 `last_verified_version: unverified`。 |
 | `updates_derived_surfaces_after_confirmation` | PASS | FAIL | with_skill 的 `releases.json` 保留 `v0.9.0` 验证记录并保留 `manualNote`；without_skill 额外写入 `verifiedDocs["release-notes/v1.0.0.md"] = "v1.0.0"`，与页面仍为 `unverified` 矛盾。 |
-| `passes_host_docs_checks` | FAIL | FAIL | with_skill 明确记录 `npm run test:docs` 因依赖安装失败而阻塞；without_skill 也明确记录该检查未完成、缺少 `fast-glob`。 |
+| `passes_host_docs_checks` | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 的 `npm run test:docs` 都因缺少 `fast-glob` 未启动完成；这是 runner 依赖阻塞，不是 skill 行为失败。 |
 | `returns_complete_ready_handoff` | FAIL | FAIL | 两条 lane 只有非结构化结果摘要，均未完整提供 `downstream_target`、`release_execution_authorized: false`、确认来源、实际更新面等完整 handoff 字段。 |
 | `preserves_external_release_boundary` | PASS | PASS | 两条 lane 均未创建或发布 GitHub Release、未创建 tag；页面和 index 保持 `last_verified_version: unverified`，并明确未授权外部发布或等待文档审计。 |
 
-未满足断言（with/without 任一 FAIL）：``updates_derived_surfaces_after_confirmation``、``passes_host_docs_checks``、``returns_complete_ready_handoff``
+未满足断言（with/without 任一 FAIL）：``updates_derived_surfaces_after_confirmation``、``returns_complete_ready_handoff``
 
-基础设施阻塞说明：；依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
+未触发断言：`passes_host_docs_checks`。
+
+基础设施阻塞说明：依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
 
 
 

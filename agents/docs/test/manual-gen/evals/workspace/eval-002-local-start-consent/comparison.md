@@ -14,7 +14,7 @@
   `manual-gen/SKILL.md` 与 `_internal/INSTRUCTIONS.md`。prompt 为自然用户目标，
   不含协议步骤、分层结构、字段清单或工具参数。`eval_metadata.json`、`pm-handoff.md`
   与采集脚本均已移出 lane 可见目录（见 `AGENTS.md` → Eval prompt 与 lane 隔离契约）。
-- Executed: `2026-08-05`，两条 lane 各自独立 `codex exec` 冷启动会话
+- Historical execution: `2026-08-05`；当前 #238 paired rerun 于 `2026-08-06` 使用两条独立 `codex exec` 冷启动会话完成
 
 ## Latest Result
 

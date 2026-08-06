@@ -42,7 +42,7 @@
 
 | 断言 | with_skill | without_skill | 判定依据 |
 | --- | --- | --- | --- |
-| loads_scoped_api_product_contracts | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均无加载合同模块的执行证据；with_skill 仅有 `skill-map.md`，结果摘要也未展示 Product/API 模块加载过程。 |
+| loads_scoped_api_product_contracts | FAIL | FAIL | Product/API 回填场景已实际执行，但两条 lane 均无加载合同模块的执行证据；with_skill 仅有 `skill-map.md`，结果摘要也未展示 Product/API 模块加载过程。 |
 | prefers_catalog_scope | FAIL | FAIL | `result.txt` 只提出 Accounts 页面/代码建议，没有引用 catalog owner `identity-team`、验证路径存在或明确 Billing out-of-batch。 |
 | presents_batch_before_write | FAIL | FAIL | 两条 lane 都先完成 Product 写入，之后才在 `result.txt` 建议 Accounts；没有写入前展示三页完整树、逐节点边界并等待确认的证据。 |
 | keeps_unconfirmed_batch_read_only | PASS | PASS | 两条 lane 的 `docs/site/api/` 未新增 Accounts 页面；with_skill 的 `change-map.yaml` 保留既有 Billing 条目，Product 已确认批次正常更新。 |
@@ -54,12 +54,12 @@
 | writes_evidence_backed_task_behavior | PASS | PASS | 任务页均通过 `related_code` 和 acceptance test 引用证据；实现与测试覆盖 owner/admin、3 个上限、重复邀请、resend/revoke、恢复、过期/无效邀请及 dashboard empty/retry。 |
 | updates_product_map_atomically | PASS | FAIL | with_skill 的 `change-map.yaml` 包含 broad、invitation、两个精确 Product glob，并为各 glob列出祖先闭包，同时保留 Billing/support 条目及未知字段；without_skill 未新增任何 Product 映射。 |
 | links_authorities_without_copying_contracts | PASS | PASS | 两条 lane 的任务页均链接上级页面及 Design/API/Database/Ops 索引，未复制接口或数据库契约正文。 |
-| runs_product_host_checks | FAIL | FAIL | with_skill 明确报告 `npm run test:docs` 因 `fast-glob` 无法启动，未证明三个宿主命令通过；without_skill 只报告相对链接校验，缺少三条命令及 docs-audit handoff 证据。 |
+| runs_product_host_checks | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 的 `npm run test:docs` 都因缺少 `fast-glob` 未启动完成，后续宿主检查与 docs-audit handoff 因而未执行；这是 runner 依赖阻塞，不是 skill 行为失败。 |
 | blocks_audit_without_confirmed_version | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均没有 `docs-agent:docs-audit` handoff、affected set 或因缺少 `target_release_version` 而 blocked 的审计记录。 |
 
-未满足断言（with/without 任一 FAIL）：`prefers_catalog_scope`、`presents_batch_before_write`、`aligns_seed_with_page`、`records_confirmed_non_leaf_scope`、`updates_product_map_atomically`、`runs_product_host_checks`
+未满足断言（with/without 任一 FAIL）：`loads_scoped_api_product_contracts`、`prefers_catalog_scope`、`presents_batch_before_write`、`aligns_seed_with_page`、`records_confirmed_non_leaf_scope`、`updates_product_map_atomically`
 
-基础设施阻塞说明：；依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
+基础设施阻塞说明：依赖缺失（fast-glob 等）；`runs_product_host_checks` 不构成 skill 行为回归。
 
 
 

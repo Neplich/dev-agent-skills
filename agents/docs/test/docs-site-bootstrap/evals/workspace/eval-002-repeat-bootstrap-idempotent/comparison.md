@@ -42,12 +42,12 @@ Fixture 阻塞说明：已提交 fixture 的源资产（feature-design.md / prod
 
 
 
-## Current Asset-Set Drift
+## Current Asset-Set Status
 
 - The retained PASS above is the historical result for the former 40-asset, five-template inventory.
 - The current packaged asset set contains 42 assets and six templates after
   adding `standards/templates/manual-guide.md` and `manual/index.md`.
-- This changed inventory has not received fresh with-skill, same-run without-skill baseline, and independent judge validation, so the historical PASS does not establish the current result and the eval must be rerun.
+- The #238 paired rerun and independent judge exercised the current contract, but detected that the committed fixture no longer matches the packaged source assets. The current result therefore remains `BLOCKED` until the fixture is refreshed and rerun.
 
 ## Assertions
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
@@ -83,8 +83,8 @@ Fixture 阻塞说明：已提交 fixture 的源资产（feature-design.md / prod
 
 ## Next Steps
 
-- Re-run against the current 42-asset, six-template inventory with a fresh
-  without-skill baseline and independent judge before restoring a PASS result.
+- Refresh the stale materialized fixture from the current 42-asset, six-template
+  inventory, then run a new paired validation and independent judge before restoring a PASS result.
 
 ## Runtime Artifact Policy
 

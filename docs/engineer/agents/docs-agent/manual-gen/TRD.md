@@ -1,7 +1,7 @@
 ---
 title: "Manual Gen TRD"
 type: TRD
-version: "0.1.5"
+version: "0.1.6"
 status: Approved
 author: "Neplich Claude Code"
 date: "2026-08-05"
@@ -28,6 +28,9 @@ related_code:
   - ".claude-plugin/marketplace.json"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.6"
+    date: "2026-08-06"
+    changes: "对齐 PRD v1.0.3：正向 eval 运行期注入具体流程、认证与安全事实，并将初始范围授权和候选页面/截图确认分离"
   - version: "0.1.5"
     date: "2026-08-06"
     changes: "收敛 eval 执行契约：删除场景脚本残留，明确多轮确认、安全流程与三层语义的强制覆盖"
@@ -52,7 +55,7 @@ changelog:
 
 ## 1. 来源、范围与分级
 
-本 TRD 把 `docs/pm/agents/docs-agent/manual-gen/PRD.md`（v1.0.2，FR-M01~M16）转换为可实施设计。PRD 由 issue #226 及其维护者决策记录蒸馏而来。
+本 TRD 把 `docs/pm/agents/docs-agent/manual-gen/PRD.md`（v1.0.3，FR-M01~M16）转换为可实施设计。PRD 由 issue #226 及其维护者决策记录蒸馏而来。
 
 本 feature 新增一个 specialist、扩展 `docs-agent` 拥有的共享 frontmatter 契约、修改 `docs-site-bootstrap` 交付给宿主的脚本资产，并改动 marketplace 注册表，按仓库「变更分级契约」判定为 `change_tier: major`。
 
@@ -222,9 +225,9 @@ agents/docs/test/manual-gen/evals/
 
 **断言取向**：一律语义判断，不比对具体目录名，也不规定业务模块的数量或命名；但平台层、业务层、操作层三类语义是强制契约。eval-001 必须分别核验平台定位/适用对象/角色边界、业务场景/能力目的/模块关系，以及操作步骤可复现性，目录落点随宿主既有信息架构自适应。
 
-**外部数据源**：按 #235 契约，eval 运行环境由维护者在每轮执行前确认注入（平台名、可访问 URL、本地代码路径），不固定外部站点。站点或平台改版导致断言无触发条件时记 `NOT EXERCISED`，计入 Coverage result，不计入 Behavior result 的 `FAIL`。环境相关标识脱敏由 eval-001 通用断言覆盖，不绑定分享场景。
+**外部数据源**：按 #235 / #245 契约，eval 运行环境由维护者在每轮执行前确认注入：平台名、可访问 URL、本地代码路径，以及一条具体有限用户流程的适用角色、排除项、认证条件与安全执行依据。eval 定义不固定外部站点或业务场景，但 lane 不能在缺少本轮具体流程时自行选题。站点或平台改版导致断言无触发条件时记 `NOT EXERCISED`，计入 Coverage result，不计入 Behavior result 的 `FAIL`。环境相关标识脱敏由 eval-001 通用断言覆盖，不绑定分享场景。
 
-**正向执行前提**：eval-001 的 runner 必须支持候选范围提出后的多轮确认，并选择可证明非写入的核心流程，或使用具备测试账号、测试数据与重置权限的可丢弃环境；缺少任一前提时整体记 `BLOCKED`，不得跳过核心步骤后继续判定正向路径。
+**正向执行前提**：eval-001 的 runner 必须支持候选范围提出后的多轮确认，并选择可证明非写入的核心流程，或使用具备测试账号、测试数据与重置权限的可丢弃环境。维护者对初始业务边界的授权不能替代候选页面树、逐页证据与截图计划的 follow-up 确认；缺少任一前提时整体记 `BLOCKED`，不得跳过核心步骤后继续判定正向路径。
 
 ## 10. 验证策略
 

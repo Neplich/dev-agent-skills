@@ -8,22 +8,24 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: `manual-gen-v0.1.3`（#235：被测平台改为执行前维护者确认注入）
-- Environment: 测试平台由执行前维护者确认注入（平台名 + 可访问 URL + 本地代码路径）；#245 通用契约（单一通用正向测试），本轮实测平台 llm-wiki（wiki.jototech.cn）
+- Current fixture contract: `manual-gen-v0.1.6`（平台、具体有限流程、认证与安全执行依据均在执行前注入；候选页面与截图计划需多轮确认）
+- Historical #238 fixture: `manual-gen-v0.1.3`（#235 平台注入契约；本轮实测平台 llm-wiki / wiki.jototech.cn）
 - Lane isolation: 两条 lane 的 prompt 逐字相同、可见 fixture 完全相同，唯一变量是是否加载
   `manual-gen/SKILL.md` 与 `_internal/INSTRUCTIONS.md`。prompt 为自然用户目标，
   不含协议步骤、分层结构、字段清单或工具参数。`eval_metadata.json`、`comparison.md`、`README.md` 与采集脚本均已移出 lane 可见目录；`pm-handoff.md` 为 lane 可见宿主事实（#235 契约）（见 `AGENTS.md` → Eval prompt 与 lane 隔离契约）。
-- Executed: `2026-08-05`，两条 lane 各自独立 `codex exec` 冷启动会话
+- Historical execution: `2026-08-06`，两条 lane 各自独立 `codex exec` 冷启动会话；当前 v0.1.6 fixture 尚未 paired 重跑
 
 ## Latest Result
 
-- Behavior result: `PASS`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— 本轮重跑实际触发的断言场景
+- Behavior result: `PASS`（with）/ `FAIL`（without）— 仅适用于 #238 的历史 v0.1.3 已触发路径
+- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— 当前 v0.1.6 prompt、handoff 与 runner 契约尚未 paired 重跑
 
 Overall result: BLOCKED
-- Blocking reason: 本轮因 DNS 解析失败且无浏览器/Playwright 采集入口而阻塞，正向路径无法执行，属基础设施缺失非 skill 行为；下轮还必须提供候选范围确认的多轮 runner，并选用可证明非写入的核心流程或具备重置权限的可丢弃环境。历史行为描述保留于下方段落（适用旧契约）。
+- Blocking reason: 当前 v0.1.6 已要求注入具体有限流程、认证与安全执行依据，并把初始业务边界授权与候选页面/截图计划确认分开；该契约尚未执行 fresh paired lane。重跑还必须具备可用采集入口、多轮 runner，以及可证明非写入的核心流程或具备测试数据与重置权限的可丢弃环境。
 
-## #238 Fresh Rerun Result（2026-08-06）
+## #238 Historical Fresh Rerun Result（2026-08-06，v0.1.3）
+
+> ⚠️ 本节是旧 fixture 的 fresh 执行证据；当前 v0.1.6 结论为上方 `BLOCKED`，不得将本节当作当前契约已验证。
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
 - with_skill：Behavior `PASS` / Coverage `PARTIAL`
@@ -49,7 +51,7 @@ Overall result: BLOCKED
 
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），#238 历史结论见上方「#238 Historical Fresh Rerun Result」。
 
 - 入口门禁通过，识别出请求已提供域名环境，**未进入本地启动分支、未重复询问域名**。
 - 完成 Step 1–4：读宿主 standards 与 change-map、读 manual 模板、在真实界面梳理角色与流程、
@@ -59,7 +61,7 @@ Overall result: BLOCKED
   `unverified`，handoff 为等待发版上下文的 blocked。
 
 ## Without-Skill Baseline
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），#238 历史结论见上方「#238 Historical Fresh Rerun Result」。
 
 - 来源：同一 prompt、同一 fixture 的独立冷启动会话，未加载 manual-gen 文档。
 - 直接完成采集与写入：4 张截图 + 4 个 Markdown 页面，未提出候选批次也未请求确认。
@@ -69,7 +71,7 @@ Overall result: BLOCKED
 - 自行读取了 `standards/index.md` 并采用三层组织——该规则来自宿主交付物而非 skill 协议。
 
 ## Failures / Gaps
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），#238 历史结论见上方「#238 Historical Fresh Rerun Result」。
 
 - 无 skill 行为回归。with_skill 在实际触发的 Step 1–4 路径上满足对应 assertions。
 - 未触发：`records_viewport_set_and_readback`、`captures_sanitized_product_evidence`、
@@ -77,8 +79,8 @@ Overall result: BLOCKED
 
 ## Next Steps
 
-- #238 的 `PLATFORM_INJECT` 已把 llm-wiki 的 `frontend/src/` 注入两条 lane，`related_code` 所需本地代码事实存在；本轮直接阻塞原因是 DNS 解析失败且无可用浏览器或 Playwright 执行入口。
-- 下一轮必须同时具备：可用采集入口、候选页面树与截图计划提出后的同文多轮确认、以及可证明非写入的核心流程或具备测试数据与重置权限的可丢弃环境；任一前提缺失都保持 `BLOCKED`。
+- 使用当前 v0.1.6 prompt、物化后的具体 `scope_decision`、认证/安全事实与同文 follow-up 确认重新执行 fresh paired lane；不得复用 #238 的 v0.1.3 结论。
+- 下一轮必须同时具备：平台名、URL、本地源码路径、维护者选定的具体有限流程、认证与安全执行依据、可用采集入口，以及候选页面树与截图计划提出后的同文多轮确认；任一前提缺失都保持 `BLOCKED`。
 
 ## Runtime Artifact Policy
 

@@ -1,7 +1,7 @@
 ---
 title: "Manual Gen 实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.6.1"
+version: "0.6.2"
 status: Implemented
 author: "Neplich Claude Code"
 date: "2026-08-05"
@@ -19,6 +19,9 @@ related_trd: "docs/engineer/agents/docs-agent/manual-gen/TRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/226"
 changelog:
+  - version: "0.6.2"
+    date: "2026-08-06"
+    changes: "对齐 PRD v1.0.3 / TRD v0.1.6，补齐通用正向 eval 的具体流程注入、认证安全事实与分阶段确认契约"
   - version: "0.6.1"
     date: "2026-08-06"
     changes: "PR #244 全量审查收敛：对齐 TRD v0.1.5，补记正向 eval、多轮 runner、router 与 manual 审计的真实残余项"
@@ -51,8 +54,8 @@ changelog:
 
 | 项 | 结果 |
 |---|---|
-| PRD 对齐 | `already_approved` — `docs/pm/agents/docs-agent/manual-gen/PRD.md` v1.0.2，FR-M01~M16 与 US-M01~M10 覆盖本次全部改动 |
-| TRD | `docs/engineer/agents/docs-agent/manual-gen/TRD.md` v0.1.5，`related_prd` 指向同 feature path 的 PRD |
+| PRD 对齐 | `already_approved` — `docs/pm/agents/docs-agent/manual-gen/PRD.md` v1.0.3，FR-M01~M16 与 US-M01~M10 覆盖本次全部改动 |
+| TRD | `docs/engineer/agents/docs-agent/manual-gen/TRD.md` v0.1.6，`related_prd` 指向同 feature path 的 PRD |
 | Feature path 门禁 | PRD / TRD / 本计划三者 `feature_path`、`parent_feature`、`feature_level` 一致 |
 | Archive 扫描 | 已将 settle 的 v0.5.0 计划归档；本活跃计划通过 `previous_plan_archive` 回链同 feature path 的历史计划 |
 | UI 设计门禁 | 不适用。本次产出是 skill 契约文档与宿主脚本资产，不改动任何前端页面结构、交互流程或视觉系统，无需 Designer 输入 |
@@ -128,7 +131,7 @@ C1、C3、C6、C7、C8 属发现层：客户端与 PM 入口在读正文前先�
 | # | 文件 | 动作 | 来源 |
 |---|---|---|---|
 | D1 | `agents/docs/test/manual-gen/evals/evals.json` | 新建 — schema v1.0，3 个 eval item（#245 收敛：001 通用正向 / 002 / 003） | TRD §9 |
-| D2 | `.../workspace/eval-001-domain-provided/` | 新建 — `eval_metadata.json`、`comparison.md`、环境描述（#245 收敛后不再提交 eval 专属采集脚本） | TRD §9 |
+| D2 | `.../workspace/eval-001-domain-provided/` | 新建 — `eval_metadata.json`、`comparison.md`、运行期具体流程/认证/安全事实注入模板与多轮确认说明（#245 收敛后不再提交 eval 专属采集脚本） | TRD §9 |
 | D3 | `.../workspace/eval-002-local-start-consent/` | 新建 — 同上，环境描述标明无域名环境 | TRD §9 |
 | D4 | `.../workspace/eval-003-no-environment-blocked/` | 新建 — 同上，环境描述标明环境不可用 | TRD §9 |
 | D5 | `agents/docs/test/docs-agent/evals/**` | 修改 — 增加 manual-gen 路由用例及 durable comparison | TRD §9 |
@@ -214,10 +217,10 @@ skill 行为验证（fresh subagent validation 与 `without_skill` baseline）�
 
 ### 7.3 Eval、残余风险与下一 owner
 
-- #238 已对 3 个 manual-gen eval 完成 fresh `with_skill` / `without_skill` 配对重跑与独立 judge；durable 结论以各 workspace 的 `comparison.md` 为准。
+- #238 已对当时的 3 个 manual-gen eval 完成 fresh `with_skill` / `without_skill` 配对重跑与独立 judge；eval-001 后续升级到 v0.1.6 的具体流程注入与多轮确认契约，旧 #238 结果只保留为历史证据，当前 durable 结论仍为 `BLOCKED`。
 - 未创建或跟踪截图、lane、transcript、verdict、timing、status、diagnostics 等运行期 eval 产物。
 - 独立核验发现并修复一处实现缺陷：`manual-guide.md` 的 `docs-scaffold` 块内原含完整 Markdown 图片语法 `![...](./step-1-example.png)`，指向不存在的文件。宿主 `prepare-site.mjs` 的 `referencedAssets()` 以纯文本正则提取引用，不区分 fence 内外，会在每次站点构建产生一条 `file does not exist` 警告。现有五类模板均无图片引用，属本次新引入。已改为不构成可解析图片语法的描述式说明，复测捕获引用数为 0，并同步刷新 `docs-site-bootstrap` 的 `computedHash`。
-- `manual-gen/eval-001` 当前为 `BLOCKED`：本轮 DNS / 浏览器采集入口不可用；再次执行还需提供候选范围确认的多轮 runner，并选择非写入核心流程或具备测试数据与重置权限的可丢弃环境。owner：eval harness 维护者。
+- `manual-gen/eval-001` 当前为 `BLOCKED`：v0.1.6 尚未 paired 重跑；再次执行需注入平台、具体有限流程、认证与安全执行依据，提供候选范围确认的多轮 runner，并具备可用采集入口。owner：eval harness 维护者。
 - `docs-agent/eval-007-route-manual-gen` 当前为 `FAIL`：with-skill 未完整保留 manual handoff 上下文。owner：Docs router；修复后使用同一 prompt/fixture 重新 paired 验证。
 - `docs-audit/eval-015-manual-page-evidence` 当前为 `FAIL`：with-skill 未完整核验截图文件、图注步骤对应、三处导航可达性与正文测试邮箱脱敏。owner：`docs-audit`；修复后重新 paired 验证。
 - CI 同款 pytest 本轮实测 213 项全部通过；确定性测试与四项仓库契约不能替代上述行为回归的后续 paired eval。

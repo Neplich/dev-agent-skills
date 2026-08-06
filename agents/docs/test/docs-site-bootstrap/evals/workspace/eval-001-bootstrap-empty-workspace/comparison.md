@@ -42,11 +42,11 @@ Overall result: FAIL
 
 
 
-## Current Asset-Set Drift
+## Current Asset-Set Status
 
 - The retained PASS above is the historical issue #155 result for the former 40-asset, five-template inventory.
 - The current packaged asset set contains 42 assets and six templates after adding `standards/templates/manual-guide.md` and `manual/index.md`.
-- This changed inventory has not received fresh with-skill, same-run without-skill baseline, and independent judge validation, so the historical PASS does not establish the current result and no current PASS conclusion is claimed.
+- The #238 paired rerun and independent judge validated the current inventory and scaffold surfaces. The current result remains `FAIL` only because `reports_manifest_readback` lacks an independently retained repeat-run snapshot or zero-diff evidence.
 
 ## Assertions
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
@@ -85,7 +85,7 @@ Overall result: FAIL
 ## Next Steps
 
 - Retain the PASS only as the historical issue #155 result for the 40-asset, five-template contract.
-- Run fresh paired validation for the current 42-asset, six-template contract, including a newly generated `without_skill` baseline, before replacing the BLOCKED result.
+- Re-run the current 42-asset, six-template contract with an independently retained repeat-run snapshot or zero-diff evidence before replacing the current `FAIL` result.
 
 ## Runtime Artifact Policy
 
