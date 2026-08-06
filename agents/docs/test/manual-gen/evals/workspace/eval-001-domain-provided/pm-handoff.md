@@ -8,7 +8,7 @@
 - scope_decision: one bounded illustrated manual batch on the real interface; all other roles and scenarios are excluded.
 - downstream_owner: `Docs`
 - required_output: one bounded illustrated manual batch under `docs/site/manual/`
-- blockers_risks: 本批次未授权任何会改变服务端状态的操作。
+- blockers_risks: 部分界面操作可能产生服务端状态变更，需在真实界面验证时确认。
 - scope_confirmation: 本批范围与增量内容已随本次请求一并确认，范围之外的内容不属本批。
 
 The maintainer confirms the host repository, bounded scope, live evidence source, and required output.

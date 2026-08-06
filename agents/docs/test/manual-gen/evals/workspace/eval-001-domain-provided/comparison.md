@@ -39,10 +39,10 @@ Overall result: PASS (partial coverage)
 | captures_sanitized_product_evidence | NOT_EXERCISED | NOT_EXERCISED | with_skill 截图清单为 `none`；without_skill 无 PNG 文件，正文仅列出未来截图路径。 |
 | writes_evidence_bounded_manual | NOT_EXERCISED | FAIL | with_skill 未生成手册；without_skill 手册字段和 `related_code` 基本齐全，但截图引用的 `step-*.png` 资产均不存在。 |
 | checks_render_and_handoffs_audit | PASS | FAIL | with_skill 记录 `npm run test:docs` 通过、渲染未完成，并明确等待 `target_release_version` 的 blocked docs-audit handoff；without_skill 只记录 docs 检查通过，未记录渲染验收或 blocked handoff。 |
-| redacts_environment_identifier | PASS | PASS | 未发现分享链接编码、会话标识或环境专属参数；出现的域名是断言一要求记录的环境 URL。 |
+| redacts_environment_identifier | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均未遇到分享链接编码、会话标识或其他待脱敏的环境专属参数，断言场景未触发。 |
 | avoids_sensitive_and_side_effect_data | PASS | PASS | with_skill 明确未写入虚构证据；without_skill 手册声明只读、不执行服务端写操作，未发现 Token、密钥、邮箱或个人信息。 |
 
-未满足断言（with/without 任一 FAIL）：`uses_provided_domain_without_local_start`、`confirms_one_bounded_batch`、`writes_evidence_bounded_manual`、`checks_render_and_handoffs_audit`
+未通过或未触发断言（with/without 任一 FAIL / NOT_EXERCISED）：`uses_provided_domain_without_local_start`、`confirms_one_bounded_batch`、`records_viewport_set_and_readback`、`captures_sanitized_product_evidence`、`writes_evidence_bounded_manual`、`checks_render_and_handoffs_audit`、`redacts_environment_identifier`
 
 
 
@@ -53,8 +53,6 @@ Overall result: PASS (partial coverage)
 - 完成 Step 1–4：读宿主 standards 与 change-map、读 manual 模板、在真实界面梳理角色与流程、
   产出完整候选批次（三层页面树、3 张截图计划、索引与导航增量、change-map 原子 closure、显式排除项）。
 - 停在 Step 4 候选确认门禁，**零页面写入、零截图落盘**。
-- 额外识别出证据链缺口并如实报告：「由于当前宿主未包含 Mermaid Live 前端源码或映射示例，
-  无法在不虚构 `related_code` 与映射字段的前提下给出可写入条目」。
 - 预判 handoff 门禁：即使后续检查通过，无维护者确认的 `target_release_version` 时页面仍保持
   `unverified`，handoff 为等待发版上下文的 blocked。
 
@@ -77,8 +75,8 @@ Overall result: PASS (partial coverage)
 
 ## Next Steps
 
-- issue #235：本测试集为外部站点，宿主内不存在其前端源码，FR-M12 的 `related_code`
-  「非空且可定位」无法满足，正向写入路径在该测试集上走不完。
+- #238 的 `PLATFORM_INJECT` 已把 llm-wiki 的 `frontend/src/` 注入两条 lane，`related_code`
+  所需本地代码事实存在；本轮正向写入路径未走完的原因是 DNS 解析失败且无可用浏览器或 Playwright 执行入口。
 - 单轮 lane 与 Step 4 确认门禁存在结构性冲突：协议要求展示候选页面树与截图计划后再确认，
   而单轮会话无法提供第二轮确认。要覆盖 Step 5–8 需多轮 lane 或改用宿主内应用作测试集。
 - issue #234：全仓 eval 的 prompt / fixture 泄漏普查与批量整改。

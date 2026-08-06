@@ -10,7 +10,7 @@
 
 - Fixture: one changed `doc_type: manual` page with deliberate screenshot, caption, navigation, and redaction defects
 - Assertions: 5
-- Validation date: not run
+- Validation date: `2026-08-06`（#238 fresh 重跑）
 
 ## Latest Result
 
@@ -43,20 +43,18 @@
 
 - Not executed. No behavior conclusion is recorded for the new manual fact-check branch.
 
-## Fresh Without-Skill Baseline
+## Fresh Without-Skill Baseline（#238）
 
-- Not generated. A fresh baseline must be created from the same prompt and pristine fixture when this eval is run.
+- 来源：2026-08-06 的 #238 fresh 隔离重跑；使用与 with-skill 逐字相同的 prompt 和 pristine fixture，未加载 `docs-audit` skill，由独立 judge 对照五条断言判定。
+- 行为摘要：Behavior `FAIL` / Coverage `FULL`；仅 `checks_caption_step_correspondence` 与 `blocks_manual_stamp` 通过，其余三条事实核验断言失败。
 
 ## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- Validation evidence is unavailable because fresh subagent validation is pending.
-- This blocked durable result must not be interpreted as an assertion failure or a PASS.
+- #238 fresh 重跑中，with-skill 未完整核验截图文件、图注与步骤对应、三处导航可达性及正文测试邮箱脱敏，Behavior 判定为 `FAIL`。
 
 ## Next Steps
 
-- Run a fresh with-skill lane and a newly generated without-skill baseline, then have an independent reviewer judge all five semantic assertions.
-- Replace this blocked result only with evidence from that paired run.
+- 修复 `docs-audit` 对 manual 页面证据的核验缺口后，使用相同 prompt 与 pristine fixture 重新执行 paired eval，并由独立 judge 复核五条断言。
 
 ## Runtime Artifact Policy
 

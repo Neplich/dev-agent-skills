@@ -228,7 +228,7 @@ agents/docs/test/manual-gen/evals/
 | 仓库契约 | 注册表、skill 结构、lock hash、eval 定义、文档 frontmatter | `uv run scripts/check_repository_contract.py` → `check_eval_contract.py` → `check_eval_artifacts.py` → `check_doc_contract.py` |
 | 确定性测试 | 现有 pytest 套件不回归 | 仓库既有 pytest 命令 |
 | 宿主脚本 | manual 类型在宿主校验链中可用 | 在临时 bootstrap 出的站点上创建手册页并运行宿主 docs 检查 |
-| skill 行为 | 五个 eval 场景 | fresh subagent validation + 本轮新生成的 `without_skill` baseline |
+| skill 行为 | 3 个 eval 场景（001 通用正向 / 002 / 003） | fresh subagent validation + 本轮新生成的 `without_skill` baseline |
 
 宿主脚本层改动（`pages.mjs`、`sidebar.mjs`、`scaffold-doc.mjs`）属于交付给宿主的资产，本仓库的 pytest 不直接覆盖其运行时行为，需在临时站点上实测一次并记录结果。
 

@@ -10,7 +10,7 @@
 
 - Fixture version: `manual-routing-v0.1.0`
 - Entry fixture: `manual-handoff.md`
-- Validation status: not executed as of `2026-08-05`
+- Validation status: #238 fresh 重跑已于 `2026-08-06` 完成
 
 ## Latest Result
 
@@ -44,20 +44,18 @@ Overall result: FAIL
 
 - Not observed. The future lane must stop after selecting and pointing to `manual-gen`.
 
-## Fresh Without-Skill Baseline
+## Fresh Without-Skill Baseline（#238）
 
-- Source: pending fresh baseline from the same prompt and pristine fixture without reading or applying docs-agent.
-- Behavior summary: unavailable; no historical baseline may substitute.
+- Source: 2026-08-06 #238 fresh isolated rerun using the same prompt and pristine fixture without loading `docs-agent`; an independent judge evaluated all four assertions.
+- Behavior summary: Behavior `FAIL` / Coverage `FULL`; `accepts_manual_entry_basis` passed, while routing, handoff preservation, and specialist-gate references were incomplete.
 
 ## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- No behavior failure is recorded because the eval has not run.
-- Infrastructure blocker: with-skill, without-skill, and independent review lanes are pending.
+- #238 fresh 重跑中，with-skill 未完整保留 `request_type`、`change_tier`、`feature_path`、`host_repository` 与 `blockers_risks`，`preserves_manual_handoff_context` 判定为 `FAIL`。
 
 ## Next Steps
 
-- Run both isolated lanes and have an independent fresh reviewer evaluate every assertion.
+- 修复 router 的 handoff context 保留缺口后，使用相同 prompt 与 pristine fixture 重新执行 paired eval，并由独立 judge 复核四条断言。
 
 ## Runtime Artifact Policy
 
