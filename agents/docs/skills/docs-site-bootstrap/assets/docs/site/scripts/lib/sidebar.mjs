@@ -19,12 +19,13 @@ function compareText(left, right) {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
-// Section 内排序：优先按 frontmatter `nav_order`（非负整数升序），
-// 缺省、非整数或负值一律回退路径 slug 字典序。
+// Section 内排序：显式声明 `nav_order`（非负整数）的页面按值升序、
+// 始终排在无 `nav_order` 的页面之前；无序页面之间回退路径 slug 字典序。
+// 存在性优先，因此任意合法 `nav_order` 取值都不会与「无序」混淆。
 function navOrder(item) {
   const page = item.page ?? item.child?.page;
   const value = page?.data?.nav_order;
-  return Number.isInteger(value) && value >= 0 ? value : Number.MAX_SAFE_INTEGER;
+  return Number.isInteger(value) && value >= 0 ? value : null;
 }
 
 function sidebarItems(current) {
@@ -33,8 +34,14 @@ function sidebarItems(current) {
     ...[...current.leaves.entries()].map(([key, page]) => ({ key, page }))
   ]
     .sort((a, b) => {
-      const order = navOrder(a) - navOrder(b);
-      return order !== 0 ? order : compareText(a.key, b.key);
+      const left = navOrder(a);
+      const right = navOrder(b);
+      if (left !== null && right !== null) {
+        return left !== right ? left - right : compareText(a.key, b.key);
+      }
+      if (left !== null) return -1;
+      if (right !== null) return 1;
+      return compareText(a.key, b.key);
     })
     .flatMap(({ key, child, page }) => {
       const items = page
