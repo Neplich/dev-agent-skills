@@ -3,9 +3,10 @@
 > Single source of truth owned by `docs-agent` for the default frontmatter
 > contract of formal Markdown pages under `docs/site/`.
 > `docs-site-bootstrap` consumes it for built-in pages, templates, and the
-> validation script delivered to host repositories; `formal-docs-sync` and
-> `release-notes-gen` consume it for created or updated pages; and
-> `docs-audit` consumes it for frontmatter decisions. Producers and auditors
+> validation script delivered to host repositories; `formal-docs-sync`,
+> `release-notes-gen`, and `manual-gen` consume it for created or updated
+> pages; and `docs-audit` consumes it for frontmatter decisions. Producers and
+> auditors
 > must reach the same conclusion for the same page.
 
 The initial rules were migrated from the verified AI Hub implementation for
@@ -25,6 +26,27 @@ All seven fields are unconditionally required.
 | `owners` | Non-empty array of strings | Identifies the roles or teams responsible for the page. |
 | `related_code` | Non-empty array of strings | Defines the code and test evidence scope for every page type. |
 | `last_verified_version` | Non-empty string | Stores a version anchor or the literal value `unverified`. |
+
+## Optional Fields
+
+| Field | Type / Allowed Values | Rule |
+| --- | --- | --- |
+| `nav_order` | Non-negative safe integer (`≤ 9007199254740991`) | Controls the display order of pages inside the same sidebar section. Lower values sort first; pages without `nav_order` fall back to path-slug lexicographic order and sort after any explicit order. Only the immediate section is affected — it never reorders sections, which follow the fixed `SECTION_ORDER`. The safe-integer bound matches the host validator (`Number.isSafeInteger`); larger integers cannot be represented exactly and are rejected. |
+
+Producers set `nav_order` when a section's pages need a business-logic order
+that path slugs cannot express (for example, keeping overview pages first or
+grouping related feature pages). When a section reads naturally in slug order,
+omit `nav_order` and keep the page set minimal.
+
+Before emitting `nav_order`, every producer (including `formal-docs-sync` and
+`release-notes-gen`) must confirm the host's delivered navigation generator
+supports it: the host `docs/site/scripts/lib/sidebar.mjs` must reference
+`nav_order` in its ordering logic. Delivered bootstrap assets are not upgraded
+automatically — a host bootstrapped before the `nav_order` capability shipped
+would ignore the field while the producer reports an intended sequence. If
+host support is missing, do not write `nav_order`; report in the batch summary
+that the host must rerun `docs-site-bootstrap` (or merge a confirmed bootstrap
+upgrade) before the field can take effect.
 
 ## Notes
 
@@ -61,6 +83,8 @@ All seven fields are unconditionally required.
 - `release-notes-gen` must apply this contract to versioned site Release
   Notes and keep `last_verified_version: unverified` until `docs-audit` owns the
   version-stamping sequence.
+- `manual-gen` must apply this contract to every illustrated manual page it
+  creates or updates, including the `nav_order` host-capability gate.
 - `docs-audit` must use this contract for frontmatter decisions. A page with
   invalid frontmatter is `stale`, and a release must not `proceed` while any
   such page remains in scope.

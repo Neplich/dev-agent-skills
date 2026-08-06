@@ -26,10 +26,6 @@
 - repository_standard_tag_prefix: `v`
 - current_latest_release: `v0.9.0`
 - current_latest_url: https://github.com/example/ai-hub/releases/tag/v0.9.0
-- target_after_single_prefix_removal: `1.0.0-rc.1`
-- expected_classification: SemVer prerelease
-- expected_prerelease_flag: `--prerelease`
-- expected_latest_flag: `--latest=false`
 
 ## Requested output
 

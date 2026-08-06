@@ -174,27 +174,27 @@
     "docs-agent": {
       "source": "agents/docs/skills/docs-agent",
       "sourceType": "local",
-      "computedHash": "0faa188f00fdbdc609c1bd5b7318626d41d9337cbe648fceaeee8dac39aada67"
+      "computedHash": "b5246af7772383ed241d169d3de3b03d230477e90b9aec81fbc4fc785a865290"
     },
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",
       "sourceType": "local",
-      "computedHash": "aff522dbdb2bc2a39f4a193371083548a691277dbaa3b07c56b9a275ee08ae6a"
+      "computedHash": "af6c8d45ab52a4b6ee4043f7fe9c23748ef6ead5db81fc972e138c1adb61c212"
     },
     "formal-docs-sync": {
       "source": "agents/docs/skills/formal-docs-sync",
       "sourceType": "local",
-      "computedHash": "b128bdc8ec318be15976fadc13ed84b684f2412e24c7ff3d4e5f71baf7f02574"
+      "computedHash": "909fab6d03124c89b35cf7ccea8e75c2ed4770fc4ebde32cdba42b7d2f407dd6"
     },
     "manual-gen": {
       "source": "agents/docs/skills/manual-gen",
       "sourceType": "local",
-      "computedHash": "80660b5716969d16709d1b0703ab72feba3f5bf20dafc6784e148df3f85d7bfc"
+      "computedHash": "de0e85c388e3f74db16defea12ef9a62cacb9b09fa4309e8533f41b2a5dffdd4"
     },
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",
       "sourceType": "local",
-      "computedHash": "caccc5c900a8b751bfffd3cb6de5b2b3498d03e274b9cd3ee4f357fefd4611ad"
+      "computedHash": "8651110cfa750340ebcac1965532fc26dbac3bbbcc3807157d99842dfb0fbb7e"
     }
   }
 }

@@ -223,6 +223,23 @@ Apply that contract to every created or updated formal page. Set
 must not stamp a release version, redefine frontmatter fields, or add a dynamic
 host schema.
 
+Write `nav_order` (a non-negative safe integer `≤ 9007199254740991`, per the contract's Optional Fields)
+only when a section's pages need a business-logic order that path slugs cannot
+express — for example, overview pages first or related feature pages grouped
+together. Number the pages within the section so the sidebar renders the
+intended sequence, and update existing `nav_order` values only when the page
+set or its intended order actually changes. When a section reads naturally in
+slug order, do not invent `nav_order`; keep the page set and metadata minimal.
+
+Before emitting `nav_order`, confirm the host's delivered navigation generator
+supports it: the host `docs/site/scripts/lib/sidebar.mjs` must reference
+`nav_order` in its ordering logic. Delivered bootstrap assets are not upgraded
+automatically — a host bootstrapped before the `nav_order` capability shipped
+would ignore the field while the sync reports an intended sequence. If host
+support is missing, do not write `nav_order`; report in the batch summary that
+the host must rerun `docs-site-bootstrap` (or merge a confirmed bootstrap
+upgrade) before the field can take effect.
+
 ### 7. Run host documentation checks
 
 Read required commands from the host `docs/site/package.json`, repository
