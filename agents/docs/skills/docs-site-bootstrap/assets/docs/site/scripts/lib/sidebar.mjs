@@ -22,39 +22,44 @@ function compareText(left, right) {
 // Section 内排序：显式声明 `nav_order`（非负整数）的页面按值升序、
 // 始终排在无 `nav_order` 的页面之前；无序页面之间回退路径 slug 字典序。
 // 存在性优先，因此任意合法 `nav_order` 取值都不会与「无序」混淆。
-// 无可见 index 页的子树取子树内可见叶子的最小显式 `nav_order`，
-// 使被扁平化的子树保持其内部显式顺序，而不是整体被当作无序。
 function explicitOrder(page) {
   const value = page?.data?.nav_order;
   return Number.isInteger(value) && value >= 0 ? value : null;
 }
 
-function navOrder(item) {
-  const page = item.page ?? item.child?.page;
-  if (page) return explicitOrder(page);
-  const child = item.child;
-  if (child) {
-    let minimum = null;
-    for (const sub of [...child.children.values(), ...child.leaves.values()]) {
-      // sub 为 node（含 children）时递归子树，为 page 时取其显式顺序
-      const subOrder = sub.children ? navOrder({ child: sub }) : explicitOrder(sub);
-      if (subOrder !== null && (minimum === null || subOrder < minimum)) {
-        minimum = subOrder;
-      }
+// 无可见 index 页的子树扁平化到当前层参与排序，使其叶子的显式顺序
+// 与同层条目按同一 comparator 混合，而不是整体作为不可分的块。
+function flattenIndexless(child) {
+  const items = [];
+  for (const [key, sub] of child.children.entries()) {
+    if (sub.page) {
+      items.push({ key, child: sub });
+    } else {
+      items.push(...flattenIndexless(sub));
     }
-    return minimum;
   }
-  return null;
+  for (const [key, page] of child.leaves.entries()) {
+    items.push({ key, page });
+  }
+  return items;
 }
 
 function sidebarItems(current) {
-  const childItems = [
-    ...[...current.children.entries()].map(([key, child]) => ({ key, child })),
-    ...[...current.leaves.entries()].map(([key, page]) => ({ key, page }))
-  ]
+  const childItems = [];
+  for (const [key, child] of current.children.entries()) {
+    if (child.page) {
+      childItems.push({ key, child });
+    } else {
+      childItems.push(...flattenIndexless(child));
+    }
+  }
+  for (const [key, page] of current.leaves.entries()) {
+    childItems.push({ key, page });
+  }
+  const items = childItems
     .sort((a, b) => {
-      const left = navOrder(a);
-      const right = navOrder(b);
+      const left = explicitOrder(a.page ?? a.child?.page);
+      const right = explicitOrder(b.page ?? b.child?.page);
       if (left !== null && right !== null) {
         return left !== right ? left - right : compareText(a.key, b.key);
       }
@@ -63,21 +68,21 @@ function sidebarItems(current) {
       return compareText(a.key, b.key);
     })
     .flatMap(({ key, child, page }) => {
-      const items = page
+      const childItems = page
         ? [{ text: page.data.title, link: page.route }]
         : sidebarItems(child);
-      return items.length ? items : [{ text: key, items: [] }];
+      return childItems.length ? childItems : [{ text: key, items: [] }];
     });
   const result = [];
   if (current.page) {
     result.push({
       text: current.page.data.title,
       link: current.page.route,
-      ...(childItems.length ? { items: childItems } : {})
+      ...(items.length ? { items } : {})
     });
     return result;
   }
-  return childItems;
+  return items;
 }
 
 function sectionTree(pages, section) {
