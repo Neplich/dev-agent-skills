@@ -68,12 +68,16 @@ Overall result: FAIL
 
 ## Fresh Validation Method
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - 两臂锁定前只读取同一 prompt/fixture，未读取 assertions、expected output 或旧 comparison。
 - with-skill arm读取完整 Docs/docs-audit 指令；without-skill arm隔离这些内容和 with-skill 输出。
 - fresh judge 在 response SHA-256 锁定后才读取 assertions。
 - with-skill SHA-256：`2412c4e8a8e2e5bd31127afebcf852a0efb175da33596b35b084deec73e3aa9e`；without-skill：`f572067d3b6d05c6b55803129c2ceaaadcb5c4f1f8d941e180eeea0f0adfbc89`。
 
 ## Failures And Limitations
+
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
 
 - with-skill 无失败；Coverage FULL。
 - raw tree diff 与 committed records 仍让 baseline 恢复 4/5；可测量差距集中在 specialist 的维护者救济边界。

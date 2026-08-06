@@ -1,7 +1,7 @@
 ---
 title: "Manual Gen TRD"
 type: TRD
-version: "0.1.4"
+version: "0.1.5"
 status: Approved
 author: "Neplich Claude Code"
 date: "2026-08-05"
@@ -28,6 +28,9 @@ related_code:
   - ".claude-plugin/marketplace.json"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.5"
+    date: "2026-08-06"
+    changes: "收敛 eval 执行契约：删除场景脚本残留，明确多轮确认、安全流程与三层语义的强制覆盖"
   - version: "0.1.4"
     date: "2026-08-05"
     changes: "自审收敛：同步当前 PRD 版本，补齐 per-agent manifest、依赖 eval 与 fixture 命令契约触点"
@@ -207,19 +210,21 @@ agents/docs/test/manual-gen/evals/
     └── eval-003-no-environment-blocked/
 ```
 
-每个 workspace 含 `eval_metadata.json`、`comparison.md`、环境描述文件，以及需要 Playwright 采集的用例对应的 `scripts/*.spec.md`。
+每个 workspace 含 `eval_metadata.json`、`comparison.md` 与环境描述文件；平台相关采集脚本只在运行期按所选入口准备，不作为固定场景资产提交。
 
 共享契约变更的依赖 eval 同批同步：`docs-agent` router 增加 manual 路由用例；`docs-audit` 增加 manual 事实审计并更新 frontmatter 枚举用例；`docs-site-bootstrap` 更新资产计数、枚举断言及旧 comparison 的待重跑状态。manual-gen fixture 的 `docs/site/package.json` 只声明 fixture 内可直接运行的自包含 `test:docs`，不引用未物化的宿主 `scripts/` 树。
 
 **执行入口**：按采集入口优先级执行——repo harness > Chrome 插件 / browser connector > Playwright fallback（对齐 `manual-gen/_internal/INSTRUCTIONS.md` 采集入口契约），保证 with-skill 与新生成的 `without_skill` baseline 都能在同一入口下运行。
 
-**Playwright 脚本形态**：按 QA 既有约定使用 `*.spec.md`，保证重复执行一致，不含明文账号、密码、token、cookie、session 或 SSH 凭据。落点是本 eval workspace，不是宿主项目的 `docs/qa/e2e/`。
+**运行期采集脚本形态**：需要 Playwright fallback 时按 QA 既有约定在隔离 scratch workspace 准备 `*.spec.md`，保证重复执行一致且不含明文凭据；repo harness 或 Chrome 插件 / browser connector 可直接使用其入口。采集脚本不提交到 eval fixture。
 
-**产物边界**：截图与手册页产物是运行期产物，写隔离 scratch workspace，不入库。fixture 只保留环境描述、Playwright 脚本与期望的手册结构骨架。`evals.json` 不声明截图类 runner output。
+**产物边界**：截图、手册页与采集脚本都是运行期产物，写隔离 scratch workspace，不入库。fixture 只保留环境描述与期望的手册结构骨架。`evals.json` 不声明截图类 runner output。
 
-**断言取向**：一律语义判断。不比对具体目录结构，不断言手册划分出哪几个业务模块或模块叫什么名字。#245 收敛后三层语义由通用质量断言覆盖（页面组织可导航、目标角色可复现），不再绑定平台/业务/操作三层固定结构。
+**断言取向**：一律语义判断，不比对具体目录名，也不规定业务模块的数量或命名；但平台层、业务层、操作层三类语义是强制契约。eval-001 必须分别核验平台定位/适用对象/角色边界、业务场景/能力目的/模块关系，以及操作步骤可复现性，目录落点随宿主既有信息架构自适应。
 
 **外部数据源**：按 #235 契约，eval 运行环境由维护者在每轮执行前确认注入（平台名、可访问 URL、本地代码路径），不固定外部站点。站点或平台改版导致断言无触发条件时记 `NOT EXERCISED`，计入 Coverage result，不计入 Behavior result 的 `FAIL`。环境相关标识脱敏由 eval-001 通用断言覆盖，不绑定分享场景。
+
+**正向执行前提**：eval-001 的 runner 必须支持候选范围提出后的多轮确认，并选择可证明非写入的核心流程，或使用具备测试账号、测试数据与重置权限的可丢弃环境；缺少任一前提时整体记 `BLOCKED`，不得跳过核心步骤后继续判定正向路径。
 
 ## 10. 验证策略
 

@@ -77,6 +77,8 @@
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - baseline 能生成六类证据正文、更新 index/metadata，并真实通过宿主 docs checks。
 - baseline 把页面和 index 的 `last_verified_version` 提前写成 `v1.0.0`，同时把
   新页面加入 `verifiedDocs`，越过 docs-audit 盖章时序。
@@ -86,6 +88,8 @@
   `d049d1f7a8d878c4f26acb4044d621e34f369ad0ffe2c5acae8b0b249a0f38d7`。
 
 ## Failures And Limitations
+
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
 
 - With-skill assertion failures: none.
 - Infrastructure or credential blockers: none.

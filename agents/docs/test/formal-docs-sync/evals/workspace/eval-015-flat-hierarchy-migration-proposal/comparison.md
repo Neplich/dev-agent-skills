@@ -64,6 +64,8 @@ Overall result: FAIL
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - Source: 本轮新生成的 `without_skill` lane，使用同一条 prompt 与同一份 pristine fixture；未读取目标 skill、Docs Agent README、`_internal/**`、仓库指导文件、历史 `comparison.md` 或 with-skill 输出。未复用任何历史 baseline。
 - baseline 核对了证据链、停在范围确认、保持零写入，这些一般性谨慎行为都做到了。
 - 但它主动选择把新页面追加为 `docs/site/api/conversation-messages.md`，理由是「沿用现有 API 宿主的稳定扁平路径」，并判定按 `feature_path` 建多级目录「超出 handoff 已确认边界」。既有扁平页面的 drift、迁移提案、批次外观察、已加载模块与 drift 报告字段全部缺失——issue #225 描述的沉默行为在无 skill 条件下被完整复现，且这一轮它还主动加深了扁平结构。

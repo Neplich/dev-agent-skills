@@ -13,10 +13,11 @@ eval-002（无域名时本地启动同意）与 eval-003（无环境时阻塞）
 ### 执行步骤
 
 1. 询问维护者被测平台的平台名、可访问 URL、本地代码 pwd，确认值作为本轮「已提供环境」的事实。
-2. **平台可访问性与副作用确认**：确认所选平台的界面可通过确认 URL 访问（登录墙等限制如实观察记录）；平台代码不在本地时本轮记 `BLOCKED`，待平台名、可访问 URL、本地代码路径三要素齐备后重跑。若平台界面流程含服务端写操作（原固定样本明确 client-only），如实记录副作用边界，批次范围不执行会改变服务端状态的步骤。
+2. **平台可访问性与安全流程确认**：确认所选平台的界面可通过确认 URL 访问（登录墙等限制如实观察记录）；平台代码不在本地时本轮记 `BLOCKED`。正向 eval 必须选择核心步骤本身可证明为非写入的流程，或使用具备测试账号、测试数据、重置权限的可丢弃环境；若两者都不满足，本轮记 `BLOCKED`，不得省略核心写入步骤后继续宣称完成了端到端正向流程。
 3. 在隔离 scratch workspace（`tmp/eval-runs/manual-gen/...`）物化本轮宿主仓库：复制平台本地代码仓库（含前端源码），把 eval workspace 的 `docs/site/` 文档站 fixture 与 `pm-handoff.md` 嵌入该副本，使副本成为 lane 的宿主仓库（`host_repository` 指向该副本）；将确认值写入副本 `pm-handoff.md` 的 `source_documents` 与 `eval_metadata.json` 的 `environment`。
-4. 从两条 lane 可见目录物理排除评测文件与评测素材：`eval_metadata.json`、`comparison.md`、`README.md`、`scripts/`（eval 编写的采集脚本）；已提交的 `pm-handoff.md` 只含宿主事实与自然范围授权，直接使用。prompt 中的平台声明与副本一致，两条 lane 逐字相同。
-5. 若维护者确认的平台仅有可访问界面、宿主仓库内无本地代码（如外部站点场景），写入路径（Step 5–8）无法走完：本轮记 `BLOCKED`（缺平台事实），待平台名、可访问 URL、本地代码路径三要素齐备后重跑，不虚构 `related_code`。
+4. 从两条 lane 可见目录物理排除评测文件与评测素材：`eval_metadata.json`、`comparison.md`、`README.md` 与运行期采集脚本；已提交的 `pm-handoff.md` 只含宿主事实与自然范围授权，直接使用。prompt 中的平台声明与副本一致，两条 lane 逐字相同。
+5. **多轮确认前提**：正向 eval 的 runner 必须支持候选页面树与截图计划提出后的维护者 follow-up，并向两条 lane 注入逐字相同的确认答复；若只有单轮 `codex exec`，本轮记 `BLOCKED`，不得绕过候选确认门禁进入视口、采集与写入。
+6. 若维护者确认的平台仅有可访问界面、宿主仓库内无本地代码（如外部站点场景），写入路径（Step 5–8）无法走完：本轮记 `BLOCKED`（缺平台事实），待平台名、可访问 URL、本地代码路径三要素齐备后重跑，不虚构 `related_code`。
 
 ### 各 eval 场景
 

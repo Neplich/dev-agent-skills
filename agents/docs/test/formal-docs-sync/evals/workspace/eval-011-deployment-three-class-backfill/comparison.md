@@ -45,6 +45,8 @@
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - Source: fresh lane from the same corrected pristine fixture and prompt; it did not read the target skill, Agent README, comparisons or with-skill output.
 - It passed 3/3 structural tests, but its environment table omitted required contract fields, treated Helm `service.port` as `APP_PORT`, treated an unconsumed value as effective, and omitted the formal `docs-agent:docs-audit` handoff.
 

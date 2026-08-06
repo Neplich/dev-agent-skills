@@ -1,7 +1,7 @@
 ---
 title: "Manual Gen 实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.6.0"
+version: "0.6.1"
 status: Implemented
 author: "Neplich Claude Code"
 date: "2026-08-05"
@@ -19,6 +19,9 @@ related_trd: "docs/engineer/agents/docs-agent/manual-gen/TRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/226"
 changelog:
+  - version: "0.6.1"
+    date: "2026-08-06"
+    changes: "PR #244 全量审查收敛：对齐 TRD v0.1.5，补记正向 eval、多轮 runner、router 与 manual 审计的真实残余项"
   - version: "0.6.0"
     date: "2026-08-06"
     changes: "归档已 settle 的历史计划，活跃计划对齐 #245 的 3-eval 现状与 #238 fresh 重跑证据"
@@ -49,7 +52,7 @@ changelog:
 | 项 | 结果 |
 |---|---|
 | PRD 对齐 | `already_approved` — `docs/pm/agents/docs-agent/manual-gen/PRD.md` v1.0.2，FR-M01~M16 与 US-M01~M10 覆盖本次全部改动 |
-| TRD | `docs/engineer/agents/docs-agent/manual-gen/TRD.md` v0.1.4，`related_prd` 指向同 feature path 的 PRD |
+| TRD | `docs/engineer/agents/docs-agent/manual-gen/TRD.md` v0.1.5，`related_prd` 指向同 feature path 的 PRD |
 | Feature path 门禁 | PRD / TRD / 本计划三者 `feature_path`、`parent_feature`、`feature_level` 一致 |
 | Archive 扫描 | 已将 settle 的 v0.5.0 计划归档；本活跃计划通过 `previous_plan_archive` 回链同 feature path 的历史计划 |
 | UI 设计门禁 | 不适用。本次产出是 skill 契约文档与宿主脚本资产，不改动任何前端页面结构、交互流程或视觉系统，无需 Designer 输入 |
@@ -136,7 +139,7 @@ C1、C3、C6、C7、C8 属发现层：客户端与 PM 入口在读正文前先�
 
 依赖：批次 B 完成。
 
-断言取向：一律语义判断，不比对具体目录结构，不断言划分出哪几个业务模块或模块叫什么名字。`evals.json` 不声明截图类 runner output。截图与手册页产物写隔离 scratch workspace，不入库。
+断言取向：一律语义判断，不比对具体目录名或模块命名，但必须分别覆盖平台层、业务层与操作层语义。`evals.json` 不声明截图类 runner output。截图、手册页与运行期采集脚本写隔离 scratch workspace，不入库。
 
 ## 3. 验证
 
@@ -176,7 +179,7 @@ skill 行为验证（fresh subagent validation 与 `without_skill` baseline）�
 | `SECTION_ORDER` 与 `SECTION_LABELS` 不同步会让 sidebar 取到 `undefined` | 两处在同一批次内改，验证时检查生成的 sidebar |
 | 宿主脚本改动无本仓库 pytest 覆盖 | 在临时站点上实测一次并记录结果 |
 | 临时宿主无法为 strict affected check 确定 Git 基线 | `check-affected.mjs` 的候选基线是 `origin/HEAD` 或 `HEAD^1`；只有单个 commit 的临时仓库两者都不存在，建立两个 commit 后即可通过 |
-| eval 依赖被测平台可访问（维护者确认注入） | 不可访问时该轮记 blocked；断言无触发条件时记 `NOT EXERCISED` |
+| eval-001 依赖可访问平台、安全可执行流程、多轮确认与采集入口 | 任一前提缺失时整体记 `BLOCKED`；断言无触发条件时记 `NOT EXERCISED` |
 
 ## 7. Closeout
 
@@ -197,7 +200,7 @@ skill 行为验证（fresh subagent validation 与 `without_skill` baseline）�
 | `UV_CACHE_DIR=/tmp/manual-gen-uv-cache uv run scripts/check_eval_contract.py` | PASS |
 | `UV_CACHE_DIR=/tmp/manual-gen-uv-cache uv run scripts/check_eval_artifacts.py` | PASS |
 | `UV_CACHE_DIR=/tmp/manual-gen-uv-cache uv run scripts/check_doc_contract.py` | PASS |
-| CI 同款 `uv run --with pytest pytest ...` | 历史 PASS：213 passed；本次自审重跑 BLOCKED：网络沙箱禁止访问 PyPI，当前环境无可复用 pytest，未产生测试失败 |
+| CI 同款 `uv run --with pytest pytest ...` | PASS：2026-08-06 本轮实测 `213 passed in 14.17s` |
 | 3 个 manual-gen fixture 的 `npm run test:docs` | PASS：每个命令均只检查本 fixture 已物化的 manual 根索引、change map 与 manual 模板，无 install 步骤或缺失脚本引用 |
 | 临时宿主初始化 | PASS：复制 `docs-site-bootstrap` 交付资产（42 个文件），`git init` 后建立两个 commit |
 | 临时宿主 `npm ci --offline --ignore-scripts` | PASS：从本地缓存安装锁定依赖 |
@@ -214,6 +217,8 @@ skill 行为验证（fresh subagent validation 与 `without_skill` baseline）�
 - #238 已对 3 个 manual-gen eval 完成 fresh `with_skill` / `without_skill` 配对重跑与独立 judge；durable 结论以各 workspace 的 `comparison.md` 为准。
 - 未创建或跟踪截图、lane、transcript、verdict、timing、status、diagnostics 等运行期 eval 产物。
 - 独立核验发现并修复一处实现缺陷：`manual-guide.md` 的 `docs-scaffold` 块内原含完整 Markdown 图片语法 `![...](./step-1-example.png)`，指向不存在的文件。宿主 `prepare-site.mjs` 的 `referencedAssets()` 以纯文本正则提取引用，不区分 fence 内外，会在每次站点构建产生一条 `file does not exist` 警告。现有五类模板均无图片引用，属本次新引入。已改为不构成可解析图片语法的描述式说明，复测捕获引用数为 0，并同步刷新 `docs-site-bootstrap` 的 `computedHash`。
-- 本次自审修复了 fixture 命令自相矛盾、版本引用、发现描述与计数、stale eval、截图卫生断言及过程文档触点等已核实问题；当前没有已知实现缺口。
-- 残余验证缺口是 eval-001 的 Playwright live selector 路径因 DNS 与浏览器执行入口不可用而未触发；CI 同款 pytest 本轮也因网络沙箱无法获取 pytest 而未重跑成功。
-- 下一 owner 为维护者：复核 #238 durable comparison 与本轮契约检查结果；本轮不 commit、不 push、不建 PR。
+- `manual-gen/eval-001` 当前为 `BLOCKED`：本轮 DNS / 浏览器采集入口不可用；再次执行还需提供候选范围确认的多轮 runner，并选择非写入核心流程或具备测试数据与重置权限的可丢弃环境。owner：eval harness 维护者。
+- `docs-agent/eval-007-route-manual-gen` 当前为 `FAIL`：with-skill 未完整保留 manual handoff 上下文。owner：Docs router；修复后使用同一 prompt/fixture 重新 paired 验证。
+- `docs-audit/eval-015-manual-page-evidence` 当前为 `FAIL`：with-skill 未完整核验截图文件、图注步骤对应、三处导航可达性与正文测试邮箱脱敏。owner：`docs-audit`；修复后重新 paired 验证。
+- CI 同款 pytest 本轮实测 213 项全部通过；确定性测试与四项仓库契约不能替代上述行为回归的后续 paired eval。
+- 下一 owner 为维护者与对应 specialist：先修复 router / audit 失败和 eval-001 runner 前提，再复核 #238 durable comparison；PR #244 不应把这些项表述为已关闭。

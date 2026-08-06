@@ -15,14 +15,16 @@
 
 ## Latest Result
 
+- Behavior result: `PASS`（with）/ `PASS`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— 依赖缺失导致宿主检查与 handoff 未执行
 - Overall result: BLOCKED
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
+- with_skill：Behavior `PASS` / Coverage `PARTIAL`
+- without_skill：Behavior `PASS` / Coverage `PARTIAL`
 
 ### 逐断言判定
 
@@ -32,11 +34,11 @@
 | `reconciles_confirmed_version_facts` | PASS | PASS | 两页分别写入上限 `25`、镜像 `registry.example/ai-hub:v1.5.0` 和 `DASHBOARD_LIMIT=25`；未写入 `v1.5.1` 计划，且与 `release-evidence.md`、代码、配置、测试记录一致。 |
 | `preserves_release_notes_surfaces` | PASS | PASS | `docs/site/release-notes/index.md`、`.meta/releases.json`、导航配置及现有 Release Notes 内容保持原状；两条 lane 均未创建 Release Notes 产物，并保留了应指向独立 Release Notes 流程的边界。 |
 | `keeps_release_pages_unverified` | PASS | PASS | 两页 frontmatter 均为 `last_verified_version: unverified`，没有写入 `v1.5.0` 审计盖章。 |
-| `runs_release_host_checks_and_handoffs` | FAIL | FAIL | 两条 lane 都报告 `npm run test:docs` 因依赖缺失未完成；没有真实成功的命令/cwd/退出状态记录，也没有包含两页 affected set、确认版本来源并交给 `docs-agent:docs-audit` 的 pre-tag handoff 产物。 |
+| `runs_release_host_checks_and_handoffs` | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 的 `npm run test:docs` 都因依赖缺失未完成，后置 pre-tag handoff 因而未执行；这是 runner 依赖阻塞，不是 skill 行为失败。 |
 
-未满足断言（with/without 任一 FAIL）：``runs_release_host_checks_and_handoffs``
+未触发断言：`runs_release_host_checks_and_handoffs`。
 
-基础设施阻塞说明：；依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
+基础设施阻塞说明：依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
 
 
 
@@ -57,6 +59,8 @@
 - 不操作 Release Notes、tag、GitHub Release 或部署。
 
 ## Fresh Without-Skill Baseline
+
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
 
 - 来源：同一 prompt/assertions 与独立 pristine fixture 的本轮 fresh `without_skill`；在生成期间未读取目标 SKILL、Docs README、internal/shared 指令、旧 comparison 或历史输出。
 - baseline 也只更新两页、保留准确映射和 Release Notes 零变化，页面保持 `unverified`，并真实通过相同 74 tests；其结构化响应包含 #117 affected set、维护者确认来源与 #116 边界。

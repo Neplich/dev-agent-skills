@@ -68,6 +68,8 @@
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - baseline 自行创建 `v1.0.0.md` 与 Release Notes index，运行 frontmatter 检查和 public/internal builds，并把站内 pre-tag handoff 描述为已完成；它没有修改 `.meta/releases.json`。
 - 它未识别 bootstrap gate，也未保留正文重新确认、站内检查与 pre-tag audit 的完整前置链。
 - Response SHA-256: `a9ed33574b0b964611a2bb8e88723c0ea1620f79261b4a2f05a80aa67850c0df`。

@@ -44,6 +44,8 @@
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - Source: fresh lane from the same pristine fixture and prompt without the target skill, Agent README, comparisons or with-skill output.
 - It also passed 2/2 structural migration tests, but used broader unsupported phrases such as a current Chart, approved workflow and previous Helm revision; with-skill maintained the stricter evidence boundary.
 
@@ -55,7 +57,7 @@
 
 ## Next Steps
 
-- Keep this PASS; require a new confirmed batch with source-level evidence before adding detailed image/Chart/values pages.
+- 修复四条 with-skill 失败（确认范围、迁移闭包、历史页面处理与写后证据）后，使用同一 prompt/fixture 重新执行 paired eval；重跑前保持 `FAIL`。
 
 ## Runtime Artifact Policy
 

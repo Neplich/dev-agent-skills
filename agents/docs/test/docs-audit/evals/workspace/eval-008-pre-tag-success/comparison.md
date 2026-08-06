@@ -22,15 +22,16 @@ the assertions, and produced the verdict in `tmp/eval-runs/issue-188-docs/judge/
 
 ## Latest result
 
-Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-Overall result: BLOCKED
+- Behavior result: `PASS`（with）/ `PASS`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— Git 缺失导致 pre-tag 成功路径未执行
+- Overall result: BLOCKED
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `PARTIAL`
-- without_skill：Behavior `FAIL` / Coverage `PARTIAL`
+- with_skill：Behavior `PASS` / Coverage `PARTIAL`
+- without_skill：Behavior `PASS` / Coverage `PARTIAL`
 
 ### 逐断言判定
 
@@ -47,9 +48,9 @@ Overall result: BLOCKED
 | confirms_anchor_commit_before_discovery | NOT_EXERCISED | NOT_EXERCISED | 未创建 anchor commit；两边均无法验证提交树、diff、blob 类型和 refs。 |
 | persists_fixed_discovery_handoff | NOT_EXERCISED | NOT_EXERCISED | 未生成 `docs/site/.meta/audit/handoffs/pre-tag-v1.2.0.md` 或 handoff commit。 |
 | returns_ready_only_after_integration | NOT_EXERCISED | NOT_EXERCISED | 未进入临时分支集成、FF、回读或 CAS 恢复路径。 |
-| returns_ready_for_tag_not_published | FAIL | FAIL | 断言要求 pre-tag 返回 `ready_for_tag`，但两边 `result.txt` 均明确返回 `blocked`，并写明“不能返回 `ready_for_tag`”。 |
+| returns_ready_for_tag_not_published | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均因无 Git 无法进入 pre-tag 成功事务，正确停在 `blocked`；成功态 `ready_for_tag` 未执行。 |
 
-未满足断言（with/without 任一 FAIL）：`returns_ready_for_tag_not_published`
+未触发断言：除 `accepts_confirmed_version_without_tag` 外的 11 条成功路径断言。
 
 基础设施阻塞说明：Git 仓库缺失；对应断言不构成 skill 行为回归。
 

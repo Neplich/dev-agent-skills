@@ -14,14 +14,16 @@
 
 ## Latest Result
 
+- Behavior result: `PASS`（with）/ `PASS`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— 依赖缺失导致宿主检查与 handoff 未执行
 - Overall result: BLOCKED
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
+- with_skill：Behavior `PASS` / Coverage `PARTIAL`
+- without_skill：Behavior `PASS` / Coverage `PARTIAL`
 
 ### 逐断言判定
 
@@ -31,11 +33,11 @@
 | writes_current_ops_upgrade_rollback | PASS | PASS | 两条 lane 均记录 Compose 启动/升级、`/healthz` 200、回滚到 `v1.4.1` 并复查健康状态；镜像页记录默认 `registry.example/ai-hub:v1.4.2`（with：`docker/image-sources.md:21-44`；without：`docker/image-sources.md:16-27`）。 |
 | does_not_promote_plan_to_current_state | PASS | PASS | 两条 lane 都明确 Kubernetes/Helm 只有未执行计划，不作为当前支持路径（with：`deployment/index.md:21-24`；without：`deployment/index.md:24-26`）。 |
 | writes_current_deployment_tree_atomically | PASS | PASS | 两条 lane 均生成四个要求页面，Ops、部署根页和 Docker 页有对应链接；`deploy/**` change-map 覆盖四页并保留 `deploy/examples/**` exclude；新页面均为 `last_verified_version: unverified`，未新增 product/design/database/release-notes 文件。 |
-| runs_ops_host_checks_and_handoffs | FAIL | FAIL | 两条 lane 的 `result.txt` 都明确记载完整 `npm run test:docs` 因 `fast-glob` 依赖不完整而阻塞；未发现成功测试结果或 `docs-agent:docs-audit` handoff 产物。该断言要求“真实通过”并完成 handoff，因此不是 NOT_EXERCISED。 |
+| runs_ops_host_checks_and_handoffs | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 的 `npm run test:docs` 都因缺少 `fast-glob` 未启动完成，后置 handoff 因而未执行；这是 runner 依赖阻塞，不是 skill 行为失败。 |
 
-未满足断言（with/without 任一 FAIL）：`runs_ops_host_checks_and_handoffs`
+未触发断言：`runs_ops_host_checks_and_handoffs`。
 
-基础设施阻塞说明：；依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
+基础设施阻塞说明：依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
 
 
 
@@ -58,6 +60,8 @@
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - Source: a fresh lane copied from the same pristine input and run with the same `eval_metadata.json` prompt; it was instructed not to read the target skill, Agent README, eval definitions, comparison, with-skill output, or historical runs.
 - The baseline also generated the four-page tree, recorded the executed Docker upgrade and rollback, excluded Kubernetes/Helm, and passed 76/76 tests.
 - It was weaker than the skill lane: the root used `doc_type: landing`, the environment table omitted the complete ops contract fields, deployment-class and missing-evidence reporting was unstructured, and the `docs-agent:docs-audit` handoff did not explicitly enforce the maintainer-confirmed-version blocked state.
@@ -76,7 +80,7 @@
 
 ## Next Steps
 
-- Keep this PASS and retain eval-008 as the focused executed-Docker-upgrade deployment-verification regression.
+- 安装锁定依赖后重新执行 paired eval 与独立 judge；宿主检查和 handoff 成功前保持 `BLOCKED`。
 - On a future rerun, use absolute `--output-last-message` paths per lane so both transcript summaries remain available to the judge.
 
 ## Runtime Artifact Policy

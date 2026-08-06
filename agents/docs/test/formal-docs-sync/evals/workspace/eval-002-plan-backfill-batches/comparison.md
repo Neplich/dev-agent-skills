@@ -119,6 +119,8 @@
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - Source: a new pristine fixture copy with the same prompt. It did not read or
   apply the target skill, Agent README, assertions, this comparison, with-skill
   output, or a historical baseline.

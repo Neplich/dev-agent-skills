@@ -21,7 +21,7 @@
 - Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— 本轮重跑实际触发的断言场景
 
 Overall result: BLOCKED
-- Blocking reason: 采集入口不可用（DNS 解析失败、无浏览器/Playwright 采集入口），正向路径（确认/视口/采集/写入/脱敏）无法执行，属基础设施缺失非 skill 行为；待采集入口可用后重跑。历史行为描述保留于下方段落（适用旧契约）。
+- Blocking reason: 本轮因 DNS 解析失败且无浏览器/Playwright 采集入口而阻塞，正向路径无法执行，属基础设施缺失非 skill 行为；下轮还必须提供候选范围确认的多轮 runner，并选用可证明非写入的核心流程或具备重置权限的可丢弃环境。历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
@@ -41,8 +41,10 @@ Overall result: BLOCKED
 | checks_render_and_handoffs_audit | PASS | FAIL | with_skill 记录 `npm run test:docs` 通过、渲染未完成，并明确等待 `target_release_version` 的 blocked docs-audit handoff；without_skill 只记录 docs 检查通过，未记录渲染验收或 blocked handoff。 |
 | redacts_environment_identifier | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均未遇到分享链接编码、会话标识或其他待脱敏的环境专属参数，断言场景未触发。 |
 | avoids_sensitive_and_side_effect_data | PASS | PASS | with_skill 明确未写入虚构证据；without_skill 手册声明只读、不执行服务端写操作，未发现 Token、密钥、邮箱或个人信息。 |
+| presents_platform_layer_semantics | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均未生成手册页面或导航，无法核验平台定位、适用对象与角色边界。 |
+| presents_business_layer_semantics | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均未生成手册页面或导航，无法核验业务场景、能力目的与模块关系。 |
 
-未通过或未触发断言（with/without 任一 FAIL / NOT_EXERCISED）：`uses_provided_domain_without_local_start`、`confirms_one_bounded_batch`、`records_viewport_set_and_readback`、`captures_sanitized_product_evidence`、`writes_evidence_bounded_manual`、`checks_render_and_handoffs_audit`、`redacts_environment_identifier`
+未通过或未触发断言（with/without 任一 FAIL / NOT_EXERCISED）：`uses_provided_domain_without_local_start`、`confirms_one_bounded_batch`、`records_viewport_set_and_readback`、`captures_sanitized_product_evidence`、`writes_evidence_bounded_manual`、`checks_render_and_handoffs_audit`、`redacts_environment_identifier`、`presents_platform_layer_semantics`、`presents_business_layer_semantics`
 
 
 
@@ -75,11 +77,8 @@ Overall result: BLOCKED
 
 ## Next Steps
 
-- #238 的 `PLATFORM_INJECT` 已把 llm-wiki 的 `frontend/src/` 注入两条 lane，`related_code`
-  所需本地代码事实存在；本轮正向写入路径未走完的原因是 DNS 解析失败且无可用浏览器或 Playwright 执行入口。
-- 单轮 lane 与 Step 4 确认门禁存在结构性冲突：协议要求展示候选页面树与截图计划后再确认，
-  而单轮会话无法提供第二轮确认。要覆盖 Step 5–8 需多轮 lane 或改用宿主内应用作测试集。
-- issue #234：全仓 eval 的 prompt / fixture 泄漏普查与批量整改。
+- #238 的 `PLATFORM_INJECT` 已把 llm-wiki 的 `frontend/src/` 注入两条 lane，`related_code` 所需本地代码事实存在；本轮直接阻塞原因是 DNS 解析失败且无可用浏览器或 Playwright 执行入口。
+- 下一轮必须同时具备：可用采集入口、候选页面树与截图计划提出后的同文多轮确认、以及可证明非写入的核心流程或具备测试数据与重置权限的可丢弃环境；任一前提缺失都保持 `BLOCKED`。
 
 ## Runtime Artifact Policy
 

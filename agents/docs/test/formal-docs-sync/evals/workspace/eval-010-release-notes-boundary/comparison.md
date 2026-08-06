@@ -71,6 +71,8 @@ Overall result: FAIL
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - baseline 自行新增 v1.5.0 页面、更新版本索引和 release metadata，并运行宿主检查。
 - 它保留外部 tag/GitHub Release 零写入，但没有识别当前 specialist 的站内职责边界。
 - Response SHA-256: `5b0e0bb59cf7311e9269f8ae69bbcaf1a3d22834a76d32000e0dbc6658ed8931`。

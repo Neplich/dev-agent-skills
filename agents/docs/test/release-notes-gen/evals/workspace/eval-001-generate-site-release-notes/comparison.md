@@ -79,6 +79,8 @@ Review 指出第二轮 `confirmation-record.md` 仍以“维护者确认 v1.0.0 
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - baseline 也识别版本未确认并保持站点零写入，且没有运行后置 checks。
 - baseline 越过入口 stop point，把 evidence 加工成完整的版本无关正文；后续只直接要求维护者确认，没有把入口歧义交回 PM owner。
 - Response SHA-256: `b77a596122f0992c1523fc631c981c4c0c9cc1dc9f7392251d8ad72cb5a84377`。

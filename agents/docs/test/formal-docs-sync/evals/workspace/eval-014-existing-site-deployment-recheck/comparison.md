@@ -43,6 +43,8 @@
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - PARTIAL (2/3)；识别完整/部分覆盖，但直接建议 DevOps，未形成 PM repo-wide 回流。
 - The same prompt and pristine fixture were used; no historical baseline, target skill, Agent README, shared skill-map, old comparison, or with-skill output was used to compose it.
 

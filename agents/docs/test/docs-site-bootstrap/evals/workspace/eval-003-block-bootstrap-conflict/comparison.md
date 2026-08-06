@@ -54,6 +54,8 @@
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - Source: a newly spawned independent issue #155 baseline worker using the same prompt and copied fixture, with the target skill, Docs README, internal instructions, old comparisons, and with-skill output prohibited.
 - Result: `BLOCKED`. It preserved the customized conflict and partial manifest, but lacked the full inventory source and could not complete omitted-target classification or bootstrap.
 - The baseline identified keep and overwrite as decisions but omitted the required explicit-merge option, so its behavior satisfies conflict preservation but not the full three-choice assertion. No historical baseline was reused.

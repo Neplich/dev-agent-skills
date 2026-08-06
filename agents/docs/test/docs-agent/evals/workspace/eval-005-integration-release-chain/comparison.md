@@ -88,6 +88,8 @@ Overall result: BLOCKED
 
 ## Fresh Without-Skill Baseline
 
+> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 - 来源：同一新 prompt 与独立 pristine fixture 的 fresh baseline；未复用历史 baseline。
 - 正确识别 tag/tree 漂移、evidence branch 漂移、缺少 pre/post-tag 成功证据和零写入边界。
 - 未识别站内 ready handoff 缺少权威正文确认凭据，未证明完整 release window，并把首要补救直接交给 docs-audit。

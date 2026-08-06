@@ -22,28 +22,29 @@ the assertions, and produced the verdict in `tmp/eval-runs/issue-188-docs/judge/
 
 ## Latest result
 
-Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-Overall result: BLOCKED
+- Behavior result: `PASS`（with）/ `PASS`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— Git 缺失导致成功事务未执行
+- Overall result: BLOCKED
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `PARTIAL`
-- without_skill：Behavior `FAIL` / Coverage `PARTIAL`
+- with_skill：Behavior `PASS` / Coverage `PARTIAL`
+- without_skill：Behavior `PASS` / Coverage `PARTIAL`
 
 ### 逐断言判定
 
 | 断言 | with_skill | without_skill | 判定依据 |
 | --- | --- | --- | --- |
-| verifies_complete_affected_set | FAIL | FAIL | 两条 lane 的 change-map 均列出两个 required docs，页面内容与 `src/catalog/routes.txt` 一致；但 API 页仍为 `last_verified_version: v1.0.0`，且审计报告明确因无 Git 无法完成 immutable target-tree 核验。 |
-| stamps_all_pages_together | FAIL | FAIL | 两张 API 页面仍是 `v1.0.0`，未统一更新为 `v1.1.0`；`audit-v1.1.0.md` 也明确写明未盖章。 |
+| verifies_complete_affected_set | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 的 change-map 均列出 required docs，但因无 Git 无法解析 immutable target tree，完整 affected-set 核验未执行。 |
+| stamps_all_pages_together | NOT_EXERCISED | NOT_EXERCISED | 统一盖章依赖前置 Git target-tree 核验；两条 lane 均在该基础设施门禁前停止并保持原版本。 |
 | verifies_release_metadata_read_only | PASS | PASS | `docs/site/.meta/releases.json` 的 `latest` 与两个 API 条目均为 `v1.1.0`；`.eval/actual-diff.patch` 未包含该文件修改。 |
 | normalizes_mixed_version_forms | PASS | PASS | Release Notes、索引和 `releases.json` 使用 `v1.1.0`，`package.json` 使用 `1.1.0`；两者可规范化为同一 SemVer。 |
 | persists_candidate_producer_schema | NOT_EXERCISED | NOT_EXERCISED | 审计报告只有 `blocked` 诊断报告，不是 candidate record；缺少可解析 Git refs，无法执行候选记录生成与 staged gate。 |
 | anchors_candidate_then_discovers_success | NOT_EXERCISED | NOT_EXERCISED | `docs/site/.meta/audit/handoffs/pre-tag-v1.1.0.md` 不存在，且两条 lane 均明确未创建 anchor、handoff 或返回 `ready_for_tag`。 |
 
-未满足断言（with/without 任一 FAIL）：`verifies_complete_affected_set`、`stamps_all_pages_together`
+未触发断言：`verifies_complete_affected_set`、`stamps_all_pages_together`、`persists_candidate_producer_schema`、`anchors_candidate_then_discovers_success`
 
 基础设施阻塞说明：Git 仓库缺失；对应断言不构成 skill 行为回归。
 
