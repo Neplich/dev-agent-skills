@@ -19,7 +19,7 @@
 ## Latest Result
 
 - Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
+- Coverage result: `PARTIAL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
 
 Overall result: FAIL
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
@@ -27,23 +27,21 @@ Overall result: FAIL
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
+- with_skill：Behavior `FAIL` / Coverage `PARTIAL`
 - without_skill：Behavior `FAIL` / Coverage `FULL`
 
 ### 逐断言判定
 
 | 断言 | with_skill | without_skill | 判定依据 |
 | --- | --- | --- | --- |
-| `uses_provided_domain_without_local_start` | PASS | FAIL | with_skill 的 `result.txt` 记录 `https://wiki.jototech.cn/` 及“维护者交接包已确认”，且未执行本地启动；without_skill 手册虽引用域名，但结果未记录环境 URL/维护者来源，截图为本地生成 SVG。 |
-| `confirms_one_bounded_batch` | FAIL | FAIL | 两条 lane 均未展示候选页面父子树、逐页证据与截图计划、change-map 和导航增量；with_skill 仅记录“无 change-map 增量”，without_skill 的 `change-map.yaml` 为 `{}`。 |
-| `records_viewport_set_and_readback` | FAIL | FAIL | with_skill 明确“视口设定 / 回读：未执行”；without_skill 已生成截图但所有产物均无 1920×1080 设定、实际回读或不符停止证据。 |
-| `captures_sanitized_product_evidence` | FAIL | FAIL | with_skill “采集截图清单：无”；without_skill 的 `step-1-editor.svg`、`step-4-rendered-page.svg` 是带“示意”标题的人工 SVG，不是真实运行界面截图，也无统一视口/主题/导航状态证据。 |
-| `writes_evidence_bounded_manual` | FAIL | PASS | with_skill 保持零写入且未生成操作条目；without_skill 的 `anonymous-edit-preview.md` 含角色、前置条件、编号步骤、界面说明、截图及图注、预期结果、注意事项/异常处理，`related_code` 指向 `PageEditor.tsx`/`PageDetail.tsx`，图片为同级相对路径，`last_verified_version: unverified`。 |
-| `checks_render_and_handoffs_audit` | FAIL | FAIL | with_skill 记录了 `npm run test:docs`、工作目录和退出状态，但渲染验收未执行，且 handoff 仅写 `docs-audit`，未形成明确的 `docs-agent:docs-audit` blocked handoff；without_skill 只在结果中笼统声称检查通过，没有权威命令、工作目录、状态与结果，也未记录版本交接 blocked 门禁。 |
+| `uses_provided_domain_without_local_start` | PASS | FAIL | with_skill 的 `result.txt` 明确记录 `https://wiki.jototech.cn/` 及“来源为维护者交接包”，且未执行本地启动；without_skill 的结果未记录环境 URL 或维护者来源。 |
+| `confirms_one_bounded_batch` | FAIL | FAIL | with_skill 仅记录角色、场景和排除项，未展示候选父子树、逐页证据、截图计划、change-map 与导航增量；without_skill 直接写入手册，也没有写入前确认记录。 |
+| `records_viewport_set_and_readback` | NOT_EXERCISED | FAIL | with_skill 明确记录“视口设定 / 回读：未执行”；without_skill 的 SVG 实际尺寸为 `1200×760`，手册与报告均无 `1920×1080` 设定及运行时回读。 |
+| `captures_sanitized_product_evidence` | NOT_EXERCISED | FAIL | with_skill 明确记录“采集截图清单：无”；without_skill 的 3 个截图是静态 SVG（`width="1200" height="760"`），无真实运行界面证据。 |
+| `writes_evidence_bounded_manual` | FAIL | FAIL | with_skill 记录“未写入站点文件”，没有手册条目或资产；without_skill 的 `anonymous-edit-preview.md:13` 将 `last_verified_version` 写成 `live-interface-2026-08-06`，违反应保持 `unverified`。 |
+| `checks_render_and_handoffs_audit` | FAIL | FAIL | with_skill 记录 `npm run test:docs` 在 `docs/site` 通过，但渲染验收未执行，且 handoff 仅写 `blocked`，未明确给出渲染命令及 `blocked docs-agent:docs-audit`；without_skill 只在结果中声称检查通过，未记录渲染验收、版本门禁或 blocked handoff，并生成了 Release Notes 之外的实际手册产物但未满足版本交接条件。 |
 
 未满足断言（with/without 任一 FAIL）：``uses_provided_domain_without_local_start``、``confirms_one_bounded_batch``、``records_viewport_set_and_readback``、``captures_sanitized_product_evidence``、``writes_evidence_bounded_manual``、``checks_render_and_handoffs_audit``
-
-基础设施阻塞说明：；依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
 
 
 

@@ -23,7 +23,7 @@ the assertions, and produced the verdict in `tmp/eval-runs/issue-188-docs/judge/
 ## Latest result
 
 Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-Overall result: FAIL
+Overall result: BLOCKED
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）

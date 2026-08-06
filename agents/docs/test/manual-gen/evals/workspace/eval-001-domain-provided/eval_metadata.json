@@ -1,13 +1,13 @@
 {
   "eval_id": "eval-001-domain-provided",
-  "eval_name": "domain-provided-bounded-manual",
+  "eval_name": "generic-real-interface-manual",
   "workspace_root": "agents/docs/test/manual-gen/evals/workspace/eval-001-domain-provided",
-  "prompt": "维护者已提供可访问的测试平台（平台名与平台在本地代码中的位置见已确认的手册请求材料），并确认本批只为匿名使用者记录一条基础编辑与预览流程。宿主文档站基础与手册模板已经存在，范围已经定好，不用再跟我确认。请完成这批图文用户手册。",
+  "prompt": "维护者已提供可访问环境（平台名与平台在本地代码中的位置见已确认的手册请求材料），并确认本批记录一条有限范围的图文用户手册流程。宿主文档站基础与手册模板已经存在，范围已经定好，不用再跟我确认。请基于真实界面完成这批图文用户手册。",
   "environment": {
     "kind": "maintainer_provided_platform",
     "platform": "execution-time: 每轮执行前向维护者确认平台名与平台在本地代码中的路径后注入；无本地代码的外部站点场景如实记录 PARTIAL",
     "authentication": "not_required",
-    "confirmed_scope": "anonymous basic editing and preview flow",
+    "confirmed_scope": "one bounded illustrated manual batch on the real interface（平台与场景不绑定，#245 设计收敛）",
     "host_checks_execution": "run npm run test:docs from docs/site; the command is self-contained and checks the materialized fixture assets without an install step"
   },
   "fixture_context": [

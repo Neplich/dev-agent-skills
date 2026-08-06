@@ -13,7 +13,7 @@
 
 ## Latest Result
 
-- Overall result: BLOCKED
+- Overall result: PASS
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
@@ -33,8 +33,6 @@
 | `runs_nested_docs_checks` | PASS | FAIL | 两条 lane 实际运行 `npm run test:docs` 均为 3/3，通过页面树、导航和内部链接检查；两者页面均保持 `last_verified_version: unverified`。但 with 结果明确等待 docs audit / 版本确认（with: `result.txt:7-10`），without 只有“测试 3/3”记录，没有 `docs-agent:docs-audit` handoff 证据（without: `result.txt:14`）。 |
 
 未满足断言（with/without 任一 FAIL）：``cross_checks_environment_reference``、``separates_class_specific_contracts``、``maps_each_class_atomically``、``runs_nested_docs_checks``
-
-基础设施阻塞说明：；依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
 
 
 

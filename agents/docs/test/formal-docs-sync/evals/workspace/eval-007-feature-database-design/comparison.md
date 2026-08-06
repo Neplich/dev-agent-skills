@@ -60,8 +60,6 @@
 
 未满足断言（with/without 任一 FAIL）：``loads_only_database_design_contracts``、``passes_design_closeout_gate``、``refreshes_confirmed_stable_path``、``updates_atomic_map_and_unverified_pages``、``runs_host_checks_and_handoffs_audit``
 
-基础设施阻塞说明：；依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
-
 
 
 ## Assertions

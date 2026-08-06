@@ -16,7 +16,7 @@
 
 ## Latest Result
 
-**PASS (3/3 assertions)** — fresh subagent revalidation across the cumulative API, Database, Product, Design, and Ops deployment layering refresh found all nine materialized targets byte-identical to the current packaged assets, preserved the existing manifest dispositions and original `createdAt`, and produced zero content changes.
+**PASS（3/3 assertions）— 历史结论（适用旧 fixture），已被上方 fixture-stale BLOCKED 取代**
 
 Overall result: BLOCKED
 
