@@ -142,19 +142,17 @@ def resolve_skill_dir(meta: dict) -> str:
 
 
 def install_skill_documents(execution_root: Path, skill_dir: str) -> None:
-    source = Path(skill_dir)
-    if not source.is_absolute():
-        source = repo_root() / source
-    skill_name = source.name
-    # Codex discovery tree (mirrors install_codex_skills.py semantics).
-    target = execution_root / ".agents" / "skills" / skill_name
+    # Full agents/ mirror so literal `agents/...` references inside skill
+    # documents resolve and router-to-specialist delegation chains (e.g.
+    # pm-agent -> idea-to-spec) keep working in the lane workspace.
+    shutil.copytree(repo_root() / "agents", execution_root / "agents")
+    # Entry skill exposed at the Codex discovery path.
+    entry_source = Path(skill_dir)
+    if not entry_source.is_absolute():
+        entry_source = repo_root() / entry_source
+    target = execution_root / ".agents" / "skills" / entry_source.name
     target.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(source, target)
-    # Repository-relative copy so literal `agents/...` references inside the
-    # skill documents keep resolving (e.g. _internal/_shared includes).
-    target = execution_root / skill_dir
-    target.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(source, target)
+    shutil.copytree(entry_source, target)
 
 
 def build_isolated_env(temp_root: Path) -> tuple[dict, Path]:
