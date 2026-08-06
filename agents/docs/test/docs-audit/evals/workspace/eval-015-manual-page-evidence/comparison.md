@@ -14,9 +14,9 @@
 
 ## Latest Result
 
-- Behavior result: `BLOCKED` — fresh subagent validation has not been executed.
-- Coverage result: `PARTIAL` — all five assertions are `NOT EXERCISED`; no current with-skill lane or newly generated without-skill baseline exists.
-- Overall result: BLOCKED
+- Behavior result: `PASS` — 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `FULL` — 本轮重跑实际触发的断言场景
+- Overall result: PASS
 
 ## With-Skill Behavior
 

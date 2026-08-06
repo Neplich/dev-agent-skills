@@ -13,8 +13,8 @@
 
 ## Latest Result
 
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Overall result: FAIL
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 **PASS (4/4 assertions)** — the fresh with-skill lane blocked only Kubernetes/Helm, generated the deployment root, shared environment authority, Development/Docker pages and Docker image authority with all required links and change-map entries, and passed `npm run test:docs` with 3/3 tests. The fresh judge independently reran both lanes, confirmed all with-skill assertions, and verified that directory-style class links resolve to the required index pages without weakening the two-class link requirement.
 

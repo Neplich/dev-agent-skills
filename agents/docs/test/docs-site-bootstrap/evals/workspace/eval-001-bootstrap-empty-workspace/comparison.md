@@ -19,7 +19,7 @@
 
 **PASS (6/6 assertions)** — the historical fresh with-skill lane created the complete bounded scaffold for the then-current 40-asset, five-template contract, generated and read back a sorted 40-entry manifest, passed the applicable host checks and both site builds with VitePress 1.6.4, and demonstrated a zero-content-diff repeat classification.
 
-Overall result: BLOCKED
+Overall result: FAIL
 
 ## Current Asset-Set Drift
 

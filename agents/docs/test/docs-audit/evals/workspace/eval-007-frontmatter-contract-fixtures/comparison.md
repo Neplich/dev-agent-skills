@@ -12,11 +12,11 @@
 
 ## Latest Result
 
-- Behavior result: `BLOCKED` — 本轮把共享 `doc_type` 合法集合从七项扩展为包含 `manual` 的八项后，尚未执行 fresh with-skill、同轮 fresh without-skill baseline 与独立 judge。
-- Coverage result: `PARTIAL` — 下述 8 / 8 PASS 是 2026-07-19 七项枚举契约的历史结果；当前八项枚举契约均未重跑。
-- Blocking reason: 旧 PASS 不能证明当前 `manual` 枚举已被 docs-audit 与 bootstrap validator 一致消费。
+- Behavior result: `FAIL` — 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `FULL` — 本轮重跑实际触发的断言场景
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
-Overall result: BLOCKED
+Overall result: FAIL
 
 ### Historical result for the former contract
 

@@ -16,10 +16,10 @@
 
 ## Latest Result
 
-- Behavior result: **PASS**
-- Coverage result: **FULL**（5/5 assertions exercised）
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Behavior result: `FAIL` — 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `FULL` — 本轮重跑实际触发的断言场景
+Overall result: FAIL
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 - With-skill: **5/5 PASS**
 - Fresh without-skill: **3/5 PASS、2/5 FAIL**

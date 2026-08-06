@@ -14,11 +14,11 @@
 
 ## Latest Result
 
-- Behavior result: `BLOCKED` — no with-skill lane, fresh without-skill baseline, or independent judge has run.
-- Coverage result: `PARTIAL` — all four routing assertions are `NOT EXERCISED`.
-- Blocking reason: fresh subagent validation and the same-run fresh without-skill baseline are pending.
+- Behavior result: `PASS` — 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `FULL` — 本轮重跑实际触发的断言场景
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
-Overall result: BLOCKED
+Overall result: PASS
 
 ## With-Skill Behavior
 

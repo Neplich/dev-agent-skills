@@ -15,8 +15,8 @@
 
 ## Latest Result
 
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Overall result: PASS
+- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 **PASS（with-skill 3/3；fresh without-skill 3/3）** — with-skill 只生成并展示候选正文，index、metadata 与 navigation 保持 pristine 字节，结构化报告 `unconfirmed` / `blocked` 并等待明确确认。fresh baseline 也通过 3/3，本用例未显示相对 uplift。
 
