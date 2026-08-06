@@ -29,7 +29,7 @@
 
 ## Latest Result
 
-- Overall result: FAIL
+- Overall result: BLOCKED
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
@@ -54,12 +54,12 @@
 | writes_evidence_backed_task_behavior | PASS | PASS | 任务页均通过 `related_code` 和 acceptance test 引用证据；实现与测试覆盖 owner/admin、3 个上限、重复邀请、resend/revoke、恢复、过期/无效邀请及 dashboard empty/retry。 |
 | updates_product_map_atomically | PASS | FAIL | with_skill 的 `change-map.yaml` 包含 broad、invitation、两个精确 Product glob，并为各 glob列出祖先闭包，同时保留 Billing/support 条目及未知字段；without_skill 未新增任何 Product 映射。 |
 | links_authorities_without_copying_contracts | PASS | PASS | 两条 lane 的任务页均链接上级页面及 Design/API/Database/Ops 索引，未复制接口或数据库契约正文。 |
-| runs_product_host_checks | NOT_EXERCISED | NOT_EXERCISED | with_skill 明确报告 `npm run test:docs` 因 `fast-glob` 无法启动，未证明三个宿主命令通过；without_skill 只报告相对链接校验，缺少三条命令及 docs-audit handoff 证据。 |
+| runs_product_host_checks | FAIL | FAIL | with_skill 明确报告 `npm run test:docs` 因 `fast-glob` 无法启动，未证明三个宿主命令通过；without_skill 只报告相对链接校验，缺少三条命令及 docs-audit handoff 证据。 |
 | blocks_audit_without_confirmed_version | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均没有 `docs-agent:docs-audit` handoff、affected set 或因缺少 `target_release_version` 而 blocked 的审计记录。 |
 
-未满足断言（with/without 任一 FAIL）：`prefers_catalog_scope`、`presents_batch_before_write`、`aligns_seed_with_page`、`records_confirmed_non_leaf_scope`、`updates_product_map_atomically`
+未满足断言（with/without 任一 FAIL）：`prefers_catalog_scope`、`presents_batch_before_write`、`aligns_seed_with_page`、`records_confirmed_non_leaf_scope`、`updates_product_map_atomically`、`runs_product_host_checks`
 
-基础设施说明：基础设施依赖缺失（runs_product_host_checks）→ 已转 NOT_EXERCISED；对应断言不构成 skill 行为回归。
+基础设施阻塞说明：宿主检查依赖（如 fast-glob）在隔离 runner 中不可用，对应断言不构成 skill 行为回归；整体结果保持 BLOCKED，待依赖就绪后重跑。
 
 
 

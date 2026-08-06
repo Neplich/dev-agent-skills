@@ -19,12 +19,12 @@
 
 **PASS (6/6 assertions)** — the historical fresh with-skill lane created the complete bounded scaffold for the then-current 40-asset, five-template contract, generated and read back a sorted 40-entry manifest, passed the applicable host checks and both site builds with VitePress 1.6.4, and demonstrated a zero-content-diff repeat classification.
 
-Overall result: PASS (partial coverage)
+Overall result: FAIL
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `PARTIAL`
+- with_skill：Behavior `FAIL` / Coverage `FULL`
 - without_skill：Behavior `FAIL` / Coverage `FULL`
 
 ### 逐断言判定
@@ -36,7 +36,7 @@ Overall result: PASS (partial coverage)
 | `validates_seven_frontmatter_fields` | PASS | FAIL | with_skill 的 19 个正式 Markdown 页面均有七字段，`doc_type` 均在允许集合内，数组非空且版本为 `unverified`；without_skill 页面无 frontmatter。 |
 | `writes_only_docs_site` | PASS | PASS | 两条 lane 的实际生成文件均位于各自 workspace 的 `docs/site/` 下，未发现目标根外文件。 |
 | `requires_explicit_opt_in` | PASS | PASS | 两条 lane 使用的 prompt 均明确确认当前仓库、固定 `docs/site/` 根及正式文档站初始化。 |
-| `reports_manifest_readback` | NOT_EXERCISED | FAIL | with_skill manifest 可独立解析且路径/状态正确，但没有独立保留的重复运行快照或 diff 证据；without_skill 没有 manifest。 |
+| `reports_manifest_readback` | FAIL | FAIL | with_skill manifest 可独立解析且路径/状态正确，但没有独立保留的重复运行快照或 diff 证据；without_skill 没有 manifest。 |
 
 未满足断言（with/without 任一 FAIL）：``creates_complete_inventory``、``delivers_deterministic_scaffold_assets``、``validates_seven_frontmatter_fields``、``reports_manifest_readback``
 

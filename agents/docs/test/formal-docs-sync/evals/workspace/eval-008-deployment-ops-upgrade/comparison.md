@@ -14,14 +14,14 @@
 
 ## Latest Result
 
-- Overall result: PASS (partial coverage)
+- Overall result: BLOCKED
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `PARTIAL`
-- without_skill：Behavior `PASS` / Coverage `PARTIAL`
+- with_skill：Behavior `FAIL` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
 
 ### 逐断言判定
 
@@ -31,11 +31,11 @@
 | writes_current_ops_upgrade_rollback | PASS | PASS | 两条 lane 均记录 Compose 启动/升级、`/healthz` 200、回滚到 `v1.4.1` 并复查健康状态；镜像页记录默认 `registry.example/ai-hub:v1.4.2`（with：`docker/image-sources.md:21-44`；without：`docker/image-sources.md:16-27`）。 |
 | does_not_promote_plan_to_current_state | PASS | PASS | 两条 lane 都明确 Kubernetes/Helm 只有未执行计划，不作为当前支持路径（with：`deployment/index.md:21-24`；without：`deployment/index.md:24-26`）。 |
 | writes_current_deployment_tree_atomically | PASS | PASS | 两条 lane 均生成四个要求页面，Ops、部署根页和 Docker 页有对应链接；`deploy/**` change-map 覆盖四页并保留 `deploy/examples/**` exclude；新页面均为 `last_verified_version: unverified`，未新增 product/design/database/release-notes 文件。 |
-| runs_ops_host_checks_and_handoffs | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 的 `result.txt` 都明确记载完整 `npm run test:docs` 因 `fast-glob` 依赖不完整而阻塞；未发现成功测试结果或 `docs-agent:docs-audit` handoff 产物。该断言要求“真实通过”并完成 handoff，因此不是 NOT_EXERCISED。 |
+| runs_ops_host_checks_and_handoffs | FAIL | FAIL | 两条 lane 的 `result.txt` 都明确记载完整 `npm run test:docs` 因 `fast-glob` 依赖不完整而阻塞；未发现成功测试结果或 `docs-agent:docs-audit` handoff 产物。该断言要求“真实通过”并完成 handoff，因此不是 NOT_EXERCISED。 |
 
-本轮无 FAIL 断言。
+未满足断言（with/without 任一 FAIL）：`runs_ops_host_checks_and_handoffs`
 
-基础设施说明：基础设施依赖缺失（runs_ops_host_checks_and_handoffs）→ 已转 NOT_EXERCISED；对应断言不构成 skill 行为回归。
+基础设施阻塞说明：宿主检查依赖（如 fast-glob）在隔离 runner 中不可用，对应断言不构成 skill 行为回归；整体结果保持 BLOCKED，待依赖就绪后重跑。
 
 
 
