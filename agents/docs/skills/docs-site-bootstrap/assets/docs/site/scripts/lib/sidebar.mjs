@@ -20,11 +20,11 @@ function compareText(left, right) {
 }
 
 // Section 内排序：优先按 frontmatter `nav_order`（非负整数升序），
-// 缺省或相等时回退路径 slug 字典序。
+// 缺省、非整数或负值一律回退路径 slug 字典序。
 function navOrder(item) {
   const page = item.page ?? item.child?.page;
-  const value = Number(page?.data?.nav_order);
-  return Number.isFinite(value) ? value : Number.MAX_SAFE_INTEGER;
+  const value = page?.data?.nav_order;
+  return Number.isInteger(value) && value >= 0 ? value : Number.MAX_SAFE_INTEGER;
 }
 
 function sidebarItems(current) {

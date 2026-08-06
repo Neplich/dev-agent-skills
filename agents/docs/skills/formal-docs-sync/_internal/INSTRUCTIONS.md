@@ -231,6 +231,15 @@ intended sequence, and update existing `nav_order` values only when the page
 set or its intended order actually changes. When a section reads naturally in
 slug order, do not invent `nav_order`; keep the page set and metadata minimal.
 
+Before emitting `nav_order`, confirm the host's delivered navigation generator
+supports it: the host `docs/site/scripts/lib/sidebar.mjs` must reference
+`nav_order` in its ordering logic. Delivered bootstrap assets are not upgraded
+automatically — a host bootstrapped before the `nav_order` capability shipped
+would ignore the field while the sync reports an intended sequence. If host
+support is missing, do not write `nav_order`; report in the batch summary that
+the host must rerun `docs-site-bootstrap` (or merge a confirmed bootstrap
+upgrade) before the field can take effect.
+
 ### 7. Run host documentation checks
 
 Read required commands from the host `docs/site/package.json`, repository
