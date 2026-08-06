@@ -7,7 +7,7 @@
 - Eval: `eval-006-delivery-polling-to-events`
 - Test case: delivery-polling-to-events
 - Workspace: `workspace/eval-006-delivery-polling-to-events`
-- Latest result: PASS - 2026-08-06 third fresh paired validation completed（frontmatter changelog 口径）；with_skill 4/4 assertions passed，without_skill 3/4。
+- Latest result: PASS - 2026-08-06 final-harness fresh paired validation completed（frontmatter changelog 口径）；with_skill 4/4 assertions passed，without_skill 3/4。
 - Behavior result: PASS — with_skill 实际触达路径满足全部 4 条断言（正文、版本与 changelog 事实一致）。
 - Coverage result: FULL — 4/4 assertion scenarios were exercised; no `NOT EXERCISED` items.
 Overall result: PASS
@@ -17,7 +17,7 @@ Overall result: PASS
 - Schema: `evals.json` v1.0
 - Fixture: delivery-pipeline PRD v1.2.0（事件驱动已确认）与 TRD v1.1.0（定时轮询旧方案：60 秒扫描、`poller.ts` / `batch.ts`）
 - Expected output: 更新 docs/engineer/delivery-pipeline/TRD.md：正文直接描述事件驱动方案，轮询旧方案从正文移除并留痕，不进入实现计划或代码。
-- Fresh run: `2026-08-06`（issue #233 新增 eval，三轮重跑，codex exec `gpt-5.6-luna` + `model_reasoning_effort=medium`，仓库外 workspace 拷贝隔离，两 lane 独立拷贝互不可见；independent judge 对照 4 条断言判定；lane 可见素材仅 fixture，README / eval_metadata.json / comparison.md 已物理排除）
+- Fresh run: `2026-08-06`（issue #233 新增 eval，最终 harness 重跑，codex exec `gpt-5.6-luna` + `model_reasoning_effort=medium`；两 lane 独立 workspace，均含剥离 test 的 agents/ 依赖镜像（可见上下文一致），with lane 额外在 `.agents/skills` 暴露入口 skill；HOME + CODEX_HOME 隔离（auth 从活跃 CODEX_HOME 复制）；README / eval_metadata.json / comparison.md 已物理排除；independent judge 对照 4 条断言判定）
 - Runtime directory: `tmp/eval-runs/fix-233/trd-gen-eval-006-delivery-polling-to-events/`（不入 git）
 
 ## Assertions
