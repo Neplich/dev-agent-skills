@@ -7,5 +7,16 @@
     "PM_HANDOFF.md",
     "docs/pm/user-search/PRD.md",
     "src/api/user-search.js"
+  ],
+  "execution_cleanup": [
+    "docs/security/user-search/appsec-checklist.md",
+    "with_skill",
+    "without_skill",
+    "outputs",
+    "diagnostics",
+    "transcript.md",
+    "subagent-verdict.md",
+    "run_status.json",
+    "timing.json"
   ]
 }

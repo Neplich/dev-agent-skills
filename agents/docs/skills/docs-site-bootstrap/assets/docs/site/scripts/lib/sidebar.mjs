@@ -24,22 +24,24 @@ function compareText(left, right) {
 // 存在性优先，因此任意合法 `nav_order` 取值都不会与「无序」混淆。
 function explicitOrder(page) {
   const value = page?.data?.nav_order;
-  return Number.isInteger(value) && value >= 0 ? value : null;
+  return Number.isSafeInteger(value) && value >= 0 ? value : null;
 }
 
 // 无可见 index 页的子树扁平化到当前层参与排序，使其叶子的显式顺序
 // 与同层条目按同一 comparator 混合，而不是整体作为不可分的块。
-function flattenIndexless(child) {
+// 展开时携带累计路径段作为排序 key，保证字典序回退仍按完整路径 slug 比较。
+function flattenIndexless(child, prefix) {
   const items = [];
   for (const [key, sub] of child.children.entries()) {
+    const path = prefix ? `${prefix}/${key}` : key;
     if (sub.page) {
-      items.push({ key, child: sub });
+      items.push({ key: path, child: sub });
     } else {
-      items.push(...flattenIndexless(sub));
+      items.push(...flattenIndexless(sub, path));
     }
   }
   for (const [key, page] of child.leaves.entries()) {
-    items.push({ key, page });
+    items.push({ key: prefix ? `${prefix}/${key}` : key, page });
   }
   return items;
 }
@@ -50,7 +52,7 @@ function sidebarItems(current) {
     if (child.page) {
       childItems.push({ key, child });
     } else {
-      childItems.push(...flattenIndexless(child));
+      childItems.push(...flattenIndexless(child, key));
     }
   }
   for (const [key, page] of current.leaves.entries()) {
