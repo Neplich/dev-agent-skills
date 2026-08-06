@@ -223,6 +223,14 @@ Apply that contract to every created or updated formal page. Set
 must not stamp a release version, redefine frontmatter fields, or add a dynamic
 host schema.
 
+Write `nav_order` (a non-negative integer, per the contract's Optional Fields)
+only when a section's pages need a business-logic order that path slugs cannot
+express — for example, overview pages first or related feature pages grouped
+together. Number the pages within the section so the sidebar renders the
+intended sequence, and update existing `nav_order` values only when the page
+set or its intended order actually changes. When a section reads naturally in
+slug order, do not invent `nav_order`; keep the page set and metadata minimal.
+
 ### 7. Run host documentation checks
 
 Read required commands from the host `docs/site/package.json`, repository

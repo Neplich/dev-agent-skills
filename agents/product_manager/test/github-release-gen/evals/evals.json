@@ -70,6 +70,11 @@
           "id": "keeps_preview_or_draft",
           "description": "阻塞时只保留非发布态",
           "text": "任一发布门禁缺失时只展示预览或保持既有 draft，不调用发布操作。"
+        },
+        {
+          "id": "inline_preview_body_and_version_normalization",
+          "description": "preview 含内联完整正文且版本标准化",
+          "text": "preview 或 draft 展示内联完整 Release 正文（标题、升级说明、变更明细），版本号按仓库约定标准化（识别 SemVer prerelease、按规则剥离或保留前缀），PRERELEASE_FLAG 由版本推导并在 draft create/update 命令中显式声明。"
         }
       ]
     },

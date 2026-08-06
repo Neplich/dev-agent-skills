@@ -26,6 +26,17 @@ All seven fields are unconditionally required.
 | `related_code` | Non-empty array of strings | Defines the code and test evidence scope for every page type. |
 | `last_verified_version` | Non-empty string | Stores a version anchor or the literal value `unverified`. |
 
+## Optional Fields
+
+| Field | Type / Allowed Values | Rule |
+| --- | --- | --- |
+| `nav_order` | Non-negative integer | Controls the display order of pages inside the same sidebar section. Lower values sort first; pages without `nav_order` fall back to path-slug lexicographic order and sort after any explicit order. Only the immediate section is affected — it never reorders sections, which follow the fixed `SECTION_ORDER`. |
+
+Producers set `nav_order` when a section's pages need a business-logic order
+that path slugs cannot express (for example, keeping overview pages first or
+grouping related feature pages). When a section reads naturally in slug order,
+omit `nav_order` and keep the page set minimal.
+
 ## Notes
 
 - `standard` is not a valid `doc_type` value. Standards explanation pages

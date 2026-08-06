@@ -174,17 +174,17 @@
     "docs-agent": {
       "source": "agents/docs/skills/docs-agent",
       "sourceType": "local",
-      "computedHash": "0faa188f00fdbdc609c1bd5b7318626d41d9337cbe648fceaeee8dac39aada67"
+      "computedHash": "0d90abf938de8992105ad991a4520023c1f826a6c8c00acf816b8b9396e248cb"
     },
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",
       "sourceType": "local",
-      "computedHash": "aff522dbdb2bc2a39f4a193371083548a691277dbaa3b07c56b9a275ee08ae6a"
+      "computedHash": "5102d5e4cda4267e9c3703ba1f44aa3091448f5ed5ce1091dbebb65f51fb449a"
     },
     "formal-docs-sync": {
       "source": "agents/docs/skills/formal-docs-sync",
       "sourceType": "local",
-      "computedHash": "b128bdc8ec318be15976fadc13ed84b684f2412e24c7ff3d4e5f71baf7f02574"
+      "computedHash": "8f743026d0a88f5f652e3cce2fa3e645298171f0526b3b178ca2adc2643814b4"
     },
     "manual-gen": {
       "source": "agents/docs/skills/manual-gen",

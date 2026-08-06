@@ -40,6 +40,11 @@
           "id": "keeps_unconfirmed_batch_read_only",
           "description": "候选批次未确认时零写入且不提前 handoff",
           "text": "明确指出 `backfill-request.md` 和本轮请求都不是 candidate-scope confirmation；不创建或修改页面、change-map、index 或导航，不开始下一批，不运行写后 host checks，也不输出 `docs-agent:docs-audit` handoff；停在维护者对完整候选树与映射的一次明确确认。"
+        },
+        {
+          "id": "defaults_new_pages_to_internal_visibility",
+          "description": "新页面 visibility 默认收紧为 internal",
+          "text": "候选与映射中的新增页面 visibility 收紧为 `internal`（宿主未明确要求 `both` 或 `public` 时），不为满足导航或链接检查而放宽为 `both`；解释收紧依据与例外。"
         }
       ]
     },
@@ -496,9 +501,21 @@
       "expected_output": "完整场景保持 integrated 且不重放 DevOps；部分场景因仅 Public 被覆盖而为 partial，并返回 PM 确认。",
       "workspace": "workspace/eval-014-existing-site-deployment-recheck",
       "assertions": [
-        {"id": "reports_existing_site_integrated", "description": "老站仍完整", "text": "内容更新后重新核对 Public/Internal 构建和启动链路，证据未漂移时报告 integrated、列出证据并不重复执行 DevOps。"},
-        {"id": "detects_partial_variant_coverage", "description": "识别仅 Public 覆盖", "text": "Public 有镜像/CI/编排而 Internal 缺少 CI 与启动入口时必须枚举两者并判为 partial，不能宣称完整。"},
-        {"id": "returns_gap_to_pm_read_only", "description": "只读返回 PM", "text": "询问是否由 pm-agent 生成 repo-wide deployment handoff；formal-docs-sync 不修改 Dockerfile、workflow、Compose、Helm 或执行部署。"}
+        {
+          "id": "reports_existing_site_integrated",
+          "description": "老站仍完整",
+          "text": "内容更新后重新核对 Public/Internal 构建和启动链路，证据未漂移时报告 integrated、列出证据并不重复执行 DevOps。"
+        },
+        {
+          "id": "detects_partial_variant_coverage",
+          "description": "识别仅 Public 覆盖",
+          "text": "Public 有镜像/CI/编排而 Internal 缺少 CI 与启动入口时必须枚举两者并判为 partial，不能宣称完整。"
+        },
+        {
+          "id": "returns_gap_to_pm_read_only",
+          "description": "只读返回 PM",
+          "text": "询问是否由 pm-agent 生成 repo-wide deployment handoff；formal-docs-sync 不修改 Dockerfile、workflow、Compose、Helm 或执行部署。"
+        }
       ]
     },
     {

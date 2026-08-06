@@ -19,12 +19,23 @@ function compareText(left, right) {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
+// Section 内排序：优先按 frontmatter `nav_order`（非负整数升序），
+// 缺省或相等时回退路径 slug 字典序。
+function navOrder(item) {
+  const page = item.page ?? item.child?.page;
+  const value = Number(page?.data?.nav_order);
+  return Number.isFinite(value) ? value : Number.MAX_SAFE_INTEGER;
+}
+
 function sidebarItems(current) {
   const childItems = [
     ...[...current.children.entries()].map(([key, child]) => ({ key, child })),
     ...[...current.leaves.entries()].map(([key, page]) => ({ key, page }))
   ]
-    .sort(({ key: left }, { key: right }) => compareText(left, right))
+    .sort((a, b) => {
+      const order = navOrder(a) - navOrder(b);
+      return order !== 0 ? order : compareText(a.key, b.key);
+    })
     .flatMap(({ key, child, page }) => {
       const items = page
         ? [{ text: page.data.title, link: page.route }]
