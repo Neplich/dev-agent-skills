@@ -8,8 +8,8 @@
 
 ## Test Set / Fixture Version
 
-- Fixture version: `manual-gen-v0.1.2`
-- Environment: `https://mermaid.live/`，匿名访问，域名由请求直接提供
+- Fixture version: `manual-gen-v0.1.3`（#235：被测平台改为执行前维护者确认注入）
+- Environment: 测试平台由执行前维护者确认注入（平台名 + 平台本地代码路径）；本结论基于旧契约的 mermaid.live 占位
 - Lane isolation: 两条 lane 的 prompt 逐字相同、可见 fixture 完全相同，唯一变量是是否加载
   `manual-gen/SKILL.md` 与 `_internal/INSTRUCTIONS.md`。prompt 为自然用户目标，
   不含协议步骤、分层结构、字段清单或工具参数。`eval_metadata.json`、`pm-handoff.md`
@@ -22,7 +22,7 @@
 - Coverage result: `PARTIAL` — 见下方未触发断言
 
 Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），且被测平台已改为执行前维护者确认注入（#235），本结论基于旧契约，待重跑验证。
 
 
 ## With-Skill Behavior
