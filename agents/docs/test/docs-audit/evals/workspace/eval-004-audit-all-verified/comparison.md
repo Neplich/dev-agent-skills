@@ -23,7 +23,7 @@ the assertions, and produced the verdict in `tmp/eval-runs/issue-188-docs/judge/
 ## Latest result
 
 Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-Overall result: FAIL
+Overall result: BLOCKED
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
@@ -44,6 +44,8 @@ Overall result: FAIL
 | anchors_candidate_then_discovers_success | NOT_EXERCISED | NOT_EXERCISED | `docs/site/.meta/audit/handoffs/pre-tag-v1.1.0.md` 不存在，且两条 lane 均明确未创建 anchor、handoff 或返回 `ready_for_tag`。 |
 
 未满足断言（with/without 任一 FAIL）：`verifies_complete_affected_set`、`stamps_all_pages_together`
+
+基础设施阻塞说明：宿主检查依赖（如 fast-glob）在隔离 runner 中不可用，对应断言不构成 skill 行为回归；整体结果保持 BLOCKED，待依赖就绪后重跑。
 
 
 

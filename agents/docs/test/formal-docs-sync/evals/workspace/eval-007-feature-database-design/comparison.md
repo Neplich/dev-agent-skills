@@ -38,14 +38,14 @@
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `PARTIAL`
-- without_skill：Behavior `FAIL` / Coverage `PARTIAL`
+- with_skill：Behavior `FAIL` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
 
 ### 逐断言判定
 
 | 断言 | with_skill | without_skill | 判定依据 |
 | --- | --- | --- | --- |
-| `loads_only_database_design_contracts` | NOT_EXERCISED | NOT_EXERCISED | 产物没有记录 standards/template/module 的实际读取轨迹；仅凭最终文档无法证明未加载 API、ops、product 规则。 |
+| `loads_only_database_design_contracts` | FAIL | FAIL | 产物没有记录 standards/template/module 的实际读取轨迹；仅凭最终文档无法证明未加载 API、ops、product 规则。 |
 | `passes_design_closeout_gate` | FAIL | FAIL | 两条 lane 均不存在 runtime-only `sync-report.md`，没有逐页 closeout matrix、生成时间或写前 changed-path 证据。 |
 | `creates_database_schema_domain_tree` | PASS | PASS | 两条 lane 均存在并链接 `database/index.md`、Primary、Workspace Access 数据域、relationships 和三个实体页。 |
 | `refreshes_confirmed_stable_path` | FAIL | FAIL | 两条 lane 均保留稳定路径并刷新正文，但 with_skill 页面仍为 `last_verified_version: v0.9.0`，without_skill 为 `v1.0.1`，均未标记 `unverified`。 |
@@ -58,7 +58,7 @@
 | `updates_atomic_map_and_unverified_pages` | FAIL | FAIL | with_skill 的稳定数据库页仍是 `v0.9.0`；without_skill 多个 Design/Database 页仍是 `v1.0.1`，且其 `src/audit/**` 映射未包含完整 Database 子树和互链闭包。 |
 | `runs_host_checks_and_handoffs_audit` | FAIL | FAIL | with_skill 明确记录 `npm run test:docs` 被环境阻断且尚未 handoff；without_skill 记录自动化测试未成功，且没有三项宿主检查通过证据或 `docs-agent:docs-audit` handoff。 |
 
-未满足断言（with/without 任一 FAIL）：``passes_design_closeout_gate``、``refreshes_confirmed_stable_path``、``updates_atomic_map_and_unverified_pages``、``runs_host_checks_and_handoffs_audit``
+未满足断言（with/without 任一 FAIL）：``loads_only_database_design_contracts``、``passes_design_closeout_gate``、``refreshes_confirmed_stable_path``、``updates_atomic_map_and_unverified_pages``、``runs_host_checks_and_handoffs_audit``
 
 
 

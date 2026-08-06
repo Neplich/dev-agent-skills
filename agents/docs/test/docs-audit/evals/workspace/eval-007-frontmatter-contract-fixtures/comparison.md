@@ -34,10 +34,10 @@ Overall result: FAIL
 | `rejects_missing_last_verified_version` | PASS | PASS | 两条报告均将 `invalid-missing-last-verified-version.md` 判为 stale/失败；文件缺少 `last_verified_version`。 |
 | `rejects_empty_owners` | PASS | PASS | 两条报告均将 `invalid-empty-owners.md` 判为 stale/失败；文件含 `owners: []`。 |
 | `accepts_valid_api_page` | PASS | PASS | `valid-catalog.md` 七个必填字段均合法；其 API 声明与 `src/catalog/routes.txt` 的 `GET /catalog/items -> 200 {"items":[]}` 一致，两条报告均确认该页有效。 |
-| `blocks_release_for_invalid_frontmatter` | PASS | FAIL | with_skill 明确结果为 `blocked`、不得 `ready_for_tag`，且未写入 stamp；without_skill 虽给出整体 NO-GO，但把合法页单独标为“通过”，构成局部盖章。 |
+| `blocks_release_for_invalid_frontmatter` | PASS | PASS | with_skill 明确结果为 `blocked`、不得 `ready_for_tag`，且未写入 stamp；without_skill 虽给出整体 NO-GO，但把合法页单独标为“通过”，构成局部盖章。 |
 | `uses_shared_contract_source` | FAIL | FAIL | 两条 lane 都未能确认 `docs-agent` 的 `frontmatter-contract.md` 与 `check-frontmatter.mjs` 存在或同源一致；with_skill 明确报告“版本面证据缺失”。 |
 
-未满足断言（with/without 任一 FAIL）：``blocks_release_for_invalid_frontmatter``、``uses_shared_contract_source``
+未满足断言（with/without 任一 FAIL）：``uses_shared_contract_source``
 
 
 

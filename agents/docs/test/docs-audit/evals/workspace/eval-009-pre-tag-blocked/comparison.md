@@ -6,7 +6,7 @@
 - Eval: `eval-009-pre-tag-blocked`
 - Validation time: `2026-08-03 22:40:00 +0800`（fresh re-baseline，issue #188）
 - Fixture: 本轮工作区中的 `evals.json` prompt/assertions、`eval_metadata.json` 及其列出的 pristine fixture 文件
-- Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
+- Latest result: 本轮 #238 fresh 隔离重跑结论（2026-08-06），见上方 Overall result 与下方证据表
 - Overall result: PASS
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
