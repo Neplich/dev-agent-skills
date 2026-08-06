@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `github-release-gen`
+- Skill: `github-release-generator` → `github-release-gen`（改名后新入口待重跑验证）
 - Test case: fact preservation and curated GitHub traceability
 - Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
 - Overall result: BLOCKED

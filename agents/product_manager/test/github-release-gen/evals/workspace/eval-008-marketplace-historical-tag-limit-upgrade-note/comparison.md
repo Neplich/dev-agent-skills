@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `github-release-gen`
+- Skill: `github-release-generator` → `github-release-gen`（改名后新入口待重跑验证）
 - Test case: marketplace 历史 tag 能力不完整时的条件省略
 - Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
 - Overall result: BLOCKED

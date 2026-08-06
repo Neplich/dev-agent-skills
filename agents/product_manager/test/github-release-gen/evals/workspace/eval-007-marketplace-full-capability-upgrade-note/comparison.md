@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `github-release-gen`
+- Skill: `github-release-generator` → `github-release-gen`（改名后新入口待重跑验证）
 - Test case: marketplace 当前 tag 能力齐全的标题强格式与升级说明正向分支
 - Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
 - Overall result: BLOCKED

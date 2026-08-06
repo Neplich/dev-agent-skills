@@ -3,7 +3,7 @@
 ## Evaluation Target
 
 - Agent: `product_manager`
-- Skill: `changelog-gen`
+- Skill: `changelog-generator` → `changelog-gen`（改名后新入口待重跑验证）
 - Eval: `eval-001-unreleased-mode`
 - Test case: `unreleased-mode`
 - Workspace: `workspace/eval-001-unreleased-mode`

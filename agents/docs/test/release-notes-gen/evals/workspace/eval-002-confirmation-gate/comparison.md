@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `release-notes-gen`
+- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口待重跑验证）
 - Eval: `eval-002-confirmation-gate`
 - Review context: issue #150
 

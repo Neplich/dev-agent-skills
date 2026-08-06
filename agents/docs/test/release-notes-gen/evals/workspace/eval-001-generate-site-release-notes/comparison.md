@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `release-notes-gen`
+- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口待重跑验证）
 - Eval: `eval-001-generate-site-release-notes`
 - Scenario: target release version 只有协调者候选值、缺少维护者确认
 - Review context: issue #177 sub-batch 4c

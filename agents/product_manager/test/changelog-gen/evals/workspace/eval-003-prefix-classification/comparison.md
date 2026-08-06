@@ -3,7 +3,7 @@
 ## Evaluation Target
 
 - Agent: `product_manager`
-- Skill: `changelog-gen`
+- Skill: `changelog-generator` → `changelog-gen`（改名后新入口待重跑验证）
 - Eval: `eval-003-prefix-classification`
 - Test case: prefix-classification
 - Workspace: `workspace/eval-003-prefix-classification`

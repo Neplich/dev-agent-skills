@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `release-notes-gen`
+- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口待重跑验证）
 - Eval: `eval-003-github-release-boundary`
 - Scenario: 缺少 Release Notes writing foundation 的混合站内/外部发布请求
 - Review context: self-review convergence

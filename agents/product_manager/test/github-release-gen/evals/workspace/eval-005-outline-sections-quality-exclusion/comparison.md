@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `github-release-gen`
+- Skill: `github-release-generator` → `github-release-gen`（改名后新入口待重跑验证）
 - Test case: outline 四节结构、内部质量证据排除与风险事实保持
 - Latest result: **PASS**（Behavior: PASS / Coverage: PARTIAL）
 - Overall result: BLOCKED

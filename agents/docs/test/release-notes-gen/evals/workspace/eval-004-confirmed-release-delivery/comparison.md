@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `release-notes-gen`
+- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口待重跑验证）
 - Eval: `eval-004-confirmed-release-delivery`
 - Scenario: 维护者已确认目标版本与完整正文后的站内 Release Notes 成功交付
 - Review context: PR #187 follow-up for issue #177

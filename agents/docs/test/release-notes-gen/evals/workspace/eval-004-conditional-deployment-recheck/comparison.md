@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `release-notes-gen`
+- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口待重跑验证）
 - Eval: `eval-004-conditional-deployment-recheck`
 - Review context: issue #162 fresh paired validation
 
