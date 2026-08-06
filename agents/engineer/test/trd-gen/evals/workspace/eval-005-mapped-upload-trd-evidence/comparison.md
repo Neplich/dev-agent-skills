@@ -1,3 +1,55 @@
+# Eval Result: eval-005-mapped-upload-trd-evidence
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-005-mapped-upload-trd-evidence`
+- Test case: mapped-upload-trd-evidence
+- Workspace: `workspace/eval-005-mapped-upload-trd-evidence`
+- Evaluation date: 2026-08-07
+- Overall result: FAIL
+- Behavior result: FAIL
+- Coverage result: FULL
+
+## Test Set / Fixture Version
+
+- Schema: `evals.json` v1.0
+- Prompt: 请为 `src/upload/` 增加分片上传能力准备技术方案，并先确认当前接口行为与技术差距。
+- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
+- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
+- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+
+## Assertions
+
+- FAIL `reads_mapped_docs_first`: transcript 中先读取 src/upload/limits.txt（item_3），之后才读取 change-map.yaml（item_4）及其命中文档 upload.md（item_7），不满足映射文档优先。
+- PASS `verifies_against_code`: final 明确核对 limits.txt 的 10 MB 与 upload.md 的 20 MB，并保留该分歧及其技术影响；workspace 哈希与记录一致。
+- PASS `treats_unverified_as_low_trust`: final 明确指出文档版本为 unverified、与代码配置冲突，并称无法据此确认真实运行时接口行为。
+
+## With Skill Behavior
+
+正确发现并记录 10 MB/20 MB 分歧及 unverified 低信任状态，但实际读序未先读取映射文档。
+
+## Without Skill Baseline
+
+作为对照，读取了上传配置、映射文档和 API 页面，并输出了分歧与技术差距；不影响 with_skill 判定。
+
+## Failures / Findings
+
+- reads_mapped_docs_first 未通过：代码证据读取发生在 change-map 和命中文档之前。
+- Root cause: with_skill transcript 明确显示先读取 src/upload/limits.txt，后读取 change-map.yaml 与 docs/site/api/upload.md，违反“映射文档优先”的断言。
+
+## Next Steps
+
+- 修复上述 assertion 对应的 skill 行为或 eval 输入问题后，使用同样的 paired fresh 流程重跑。
+
+## Runtime Artifacts Policy
+
+- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
+- 长期只保留本 `comparison.md`。
+
+## Historical Results
+
 # Consumption Regression Comparison
 
 ## Evaluation Target
@@ -12,7 +64,7 @@
 
 ## Latest Result
 
-- Overall result: BLOCKED
+- Historical result: BLOCKED
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
 **PASS** — with-skill 以接口证据核查发现代码 10 MB 与文档 20 MB 的上限冲突，按 gate 停在 PM 决策点补齐产品基线，未带着未验证预期起草 TRD。

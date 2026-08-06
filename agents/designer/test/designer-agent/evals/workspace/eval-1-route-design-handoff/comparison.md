@@ -7,7 +7,7 @@
 - Eval: `eval-001-route-design-handoff`
 - Workspace: `workspace/eval-1-route-design-handoff`
 - Review context: issue #196 L2-4 router single-table convergence
-- Latest run: fresh paired Codex validation on 2026-07-31
+- Latest run: fresh isolated paired Codex validation and independent judge on 2026-08-07
 
 ## Test Set / Fixture Version
 
@@ -18,6 +18,48 @@
 - Without-skill source: the same prompt and fixture in an isolated directory, without reading or applying Designer README, `designer-agent/SKILL.md`, with-skill output, assertions, historical comparison, or an old baseline.
 
 ## Latest Result
+
+- Behavior result: **FAIL**
+- Coverage result: **FULL** (5/5 declared assertions exercised)
+Overall result: FAIL
+
+## Assertion Results (Current)
+
+- routes_ux_first: **PASS** — the current final response routes first to ui-ux-design for flow and interaction work.
+- routes_visual_followup: **FAIL** — visual-design is second, but the response omits the required color, typography, and copy-tone scope.
+- uses_real_output_filenames: **FAIL** — neither canonical design filename is named.
+- stops_before_code: **FAIL** — no code was written, but the response does not explicitly refuse React, tests, scripts, and deployment work.
+- hands_off_to_engineer: **PASS** — React implementation is assigned to engineer-agent after design.
+
+## With-Skill Behavior (Current)
+
+The candidate honors the PM gate and selects the two design specialists, but it
+does not emit the full router contract: canonical filenames and an explicit
+multi-surface engineering refusal are missing.
+
+## Fresh Without-Skill Baseline (Current)
+
+The baseline was regenerated before the with-skill root existed, using the
+same prompt and clean fixture in an independent top-level workspace with an
+isolated HOME/CODEX_HOME. It implemented a React/Vite page, clearly
+differentiating the router boundary, but its behavior does not affect the
+with-skill verdict.
+
+## Failures (Current)
+
+- Missing canonical ui-ux-spec.md and visual-system.md filenames.
+- Incomplete visual-design scope and no explicit refusal covering all forbidden engineering surfaces.
+
+## Next Steps (Current)
+
+- Fix the router response discipline, then rerun this eval with the same isolation protocol.
+
+## Runtime Artifact Policy (Current)
+
+- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
+- Only this durable comparison is updated.
+
+## Historical Result (Superseded: pre-#234 contract)
 
 - Behavior result: PASS
 - Coverage result: FULL (5/5 declared assertions exercised)

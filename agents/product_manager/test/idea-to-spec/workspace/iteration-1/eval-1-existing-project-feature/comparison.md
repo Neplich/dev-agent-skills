@@ -1,5 +1,42 @@
 # Eval Result: eval-001-existing-project-feature-design
 
+## Latest Fresh Evaluation — 2026-08-07
+
+- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
+- Fixture: HEAD `47adbbc9`; baseline and with-skill input manifests matched exactly.
+- Isolation: all 17 baselines finished before any with-skill root existed; this case then ran in an independent with-skill root and an independent judge root.
+- Behavior result: FAIL — 4/5 assertions passed.
+- Coverage result: FULL — all 5 assertion scenarios were exercised.
+Overall result: FAIL
+
+### Assertion Results
+
+- `assertion_1`: PASS — the response opened with a project-context summary after reading the package and existing TRD.
+- `assertion_2`: PASS — it advanced only the first product-value decision.
+- `assertion_3`: PASS — it compared three options and their scope trade-offs.
+- `section`: FAIL — it asked a decision question but did not identify and confirm a current design section.
+- `assertion_5`: PASS — it named the feature PM document location as the later durable output.
+
+### With-Skill Behavior
+
+The candidate stayed read-only, selected `existing-project-feature`, and kept the first turn focused. It did not yet create PM documents because no decision had been confirmed.
+
+### Fresh Without-Skill Baseline
+
+The fresh baseline inspected the same package and TRD but asked five questions at once. It is comparison evidence only and did not affect the with-skill verdict.
+
+### Failures / Next Steps
+
+- Make the first decision point an explicit current section and request confirmation of that section.
+
+### Runtime Artifact Policy
+
+- Candidate transcripts, manifests, tool traces, and the independent verdict remain under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-001-existing-project-feature-design/` and are not committed.
+
+---
+
+The sections below are historical records from earlier runs.
+
 ## Evaluation Target
 
 - Agent: `product_manager`
@@ -18,7 +55,7 @@
 
 - Behavior result: PASS — all 5 assertions passed.
 - Coverage result: FULL — 5/5 assertion scenarios were exercised; no `NOT EXERCISED` items.
-Overall result: BLOCKED
+Historical result: BLOCKED
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
 

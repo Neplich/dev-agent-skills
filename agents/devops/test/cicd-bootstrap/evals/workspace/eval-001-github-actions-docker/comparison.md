@@ -5,47 +5,66 @@
 - Agent: `devops`
 - Skill: `cicd-bootstrap`
 - Eval: `eval-001-github-actions-docker`
-- Test case: github-actions-docker
-- Workspace: `workspace/eval-001-github-actions-docker`
-- Latest result: PASS - 2026-07-26 fresh paired validation completed; with_skill and fresh without_skill both satisfied 5/5 assertions.
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Test case: `github-actions-docker`
+- Workspace: `agents/devops/test/cicd-bootstrap/evals/workspace/eval-001-github-actions-docker`
 
+## Latest Result
+
+- Fresh run: `2026-08-07`（issue #238 严格隔离重跑）
+- Model: `gpt-5.6-luna`，`model_reasoning_effort=medium`
+- Isolation: baseline 使用随机顶层 root；完成后仅保存在内存快照并删除 root，随后才创建 with_skill root；with_skill root 删除后才创建独立 judge root。两条 lane 的原始 prompt、fixture snapshot、`HOME` 与 `CODEX_HOME` 值相同。
+- Judge: 独立 fresh `codex exec`，读取实际产物、final、status 与工具轨迹，对照当前 assertions 判定；不采信 lane 自评。
+- Behavior result: PASS
+- Coverage result: FULL
+- Without-skill comparison: PASS（仅作对照，不参与 durable Overall 组合）
+
+Overall result: PASS
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: confirmed repo-wide handoff, lockfile, lintable source/test, flat ESLint config, real package commands, Dockerfile, and staging Compose target
+- Eval definition: `agents/devops/test/cicd-bootstrap/evals/evals.json`
+- Metadata: `agents/devops/test/cicd-bootstrap/evals/workspace/eval-001-github-actions-docker/eval_metadata.json`
 - Expected output: 生成 GitHub Actions workflows，包含 CI 和 staging 部署
+- Fixture: `PM_HANDOFF.md`, `package.json`, `package-lock.json`, `eslint.config.js`, `src/server.js`, `test/server.test.js`, `deploy/docker/Dockerfile`, `deploy/docker/docker-compose.staging.yml`
 
-## Assertions
+## Assertion Results
 
-- PASS `github_workflows_ci_yml`: with_skill 生成 `.github/workflows/ci.yml`。
-- PASS `ci_yml_lint_test_build`: CI 包含 lint、test、build。
-- PASS `github_workflows_deploy_staging_yml`: 生成 `.github/workflows/deploy-staging.yml`。
-- PASS `deploy_staging_yml_push_to_main`: staging workflow 由 push 到 main 触发。
-- PASS `deploy_secrets_md_secrets`: 生成 `deploy/SECRETS.md` 并列出 secret 名称。
+| Assertion | with_skill | without_skill | Evidence |
+| --- | --- | --- | --- |
+| `github_workflows_ci_yml` | PASS | PASS | 两条 lane 均实际生成 .github/workflows/ci.yml。 |
+| `ci_yml_lint_test_build` | PASS | PASS | 两条 lane 的 ci.yml 均包含 npm run lint、npm test 和 npm run build 步骤。 |
+| `github_workflows_deploy_staging_yml` | PASS | PASS | 两条 lane 均实际生成 .github/workflows/deploy-staging.yml。 |
+| `deploy_staging_yml_push_to_main` | PASS | PASS | 两条 lane 的 deploy-staging.yml 均配置 on.push.branches.main。 |
+| `deploy_secrets_md_secrets` | PASS | PASS | 两条 lane 均生成 deploy/SECRETS.md，并列出 REGISTRY_USERNAME、REGISTRY_TOKEN、STAGING_HOST、STAGING_USER、STAGING_SSH_KEY。 |
 
-## With Skill
+## With-Skill Behavior
 
-- 除满足 5 项断言外，还加入最小权限、并发控制、部署前 lint/test/build、显式 registry 登录、远端 pull/up 与失败即停。
-- 2026-07-26 将 ESLint 精确更新到 10.8.0 并重建 lockfile 后，重新执行最终 fresh paired validation；`npm ci`、lint、1/1 test、build、high-severity audit、Docker build 与两份 workflow YAML 解析均通过。
+- 独立核对 evaluation.json、fixture、两条 lane 的实际文件、final、status 与 tool-trace；with_skill 的全部断言均可评估且满足，因此 Coverage 为 FULL、durable Overall 为 PASS。without_skill 也满足全部断言。
+- Workspace changes: added: `.github/workflows/ci.yml`, `.github/workflows/deploy-staging.yml`, `deploy/SECRETS.md`。
 
-## Without Skill / Baseline
+## Fresh Without-Skill Baseline
 
-- 2026-07-26 使用更新后的同一 prompt 和 fixture 重新生成 fresh baseline，未读取或应用 cicd-bootstrap skill、Agent README、历史 comparison 或旧 baseline。
-- baseline 同样满足 5/5 assertions，且相同 npm、0-vulnerability audit、Docker 与 YAML 验证均通过；但缺少 staging 前置 lint/test、远端 registry 登录、显式 pull、最小权限、并发保护与失败即停。
+- baseline 在本轮重新生成，没有复用历史 baseline，也没有读取 target skill、with_skill 产物或旧 comparison。
+- Workspace changes: added: `.github/workflows/ci.yml`, `.github/workflows/deploy-staging.yml`, `deploy/SECRETS.md`。
+- assertion 结果见上表；baseline 只用于比较 skill 增益，不作为 durable Overall 的独立机器门禁。
 
-## Failures
+## Failures and Coverage Gaps
 
-- 无 assertion failure。
-- 未真实触发 GitHub Actions、GHCR 或 staging 部署；第三方 Actions 使用版本 tag 而非 commit SHA。
-- 本机 Node 24 与 fixture 的 Node 22 engine 产生非失败 warning，Docker build 已使用 Node 22 验证通过。
+- with_skill 无 assertion failure。
+- 所有当前 assertions 均已实际覆盖。
+- 无模型、认证、runner 或外部服务 blocker。
+
+## Historical Result (Old Contract)
+
+- 旧结论为 PASS（5/5）；issue #234 修复 eval 泄漏后，该结论被标为 BLOCKED 等待重跑。
+- 该历史结论适用旧 eval 契约；本文件顶部的 2026-08-07 fresh 结果已取代它作为 latest durable 结论。
 
 ## Next Steps
 
-- 保留当前 CI/CD 产物断言，并在后续单独评估是否需要增强安全门禁断言。
+- 保留当前回归用例；后续 skill、fixture 或断言变化时继续执行同等严格的 fresh paired run。
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- Runtime transcripts, verdicts, timing, outputs, and diagnostics were generated only in an ignored scratch workspace and are not committed.
+- 两条 lane、工具轨迹、状态、文件快照、judge verdict 与隔离事件只保存在 `tmp/eval-runs/issue-238-devops-strict-20260806/`，不提交 git。
+- durable 结果只保留本 `comparison.md`。

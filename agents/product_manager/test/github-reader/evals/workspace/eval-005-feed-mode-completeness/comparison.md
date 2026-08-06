@@ -5,82 +5,78 @@
 - Agent: `product_manager`
 - Skill: `github-reader`
 - Eval: `eval-005-feed-mode-completeness`
-- Test case: Feed mode completeness
-- Workspace: `workspace/eval-005-feed-mode-completeness`
-- Classification: `(c)` 依赖实时外部数据；验证下游 skill 调用时是否产出机器可读 Feed YAML，并使完整性信号与 Markdown 声明一致。
-- Latest result: **PASS** — 当前会话中的 fresh validator 按 no-leak 顺序独立执行两个 live arm。with-skill 满足 3/3 assertions，without-skill 满足 0/3。
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Test case: `feed-mode-completeness`
+- Prompt:
 
+> 我是 roadmap-gen，需要 anthropics/anthropic-sdk-python 的当前仓库状态作为结构化输入，请给我完整状态数据
 
-## Test Set / Fixture Version
+- Expected output:
 
-- Schema: `evals.json` v1.0。
-- Fixture: 无静态 fixture；实时查询目标为 `anthropics/anthropic-sdk-python`。
-- Prompt: `我是 roadmap-gen，需要 anthropics/anthropic-sdk-python 的当前仓库状态作为结构化输入，请给我完整状态数据`
-- Live dependency: GitHub API、网络、已认证 `gh` CLI。
-- Validation date: 2026-07-28（Asia/Shanghai）。
-- with-skill query: 2026-07-28 18:41:20–18:42:11 CST。
-- without-skill query: 2026-07-28 18:44:56–18:45:30 CST。
-- 两个 arm 的近 14 天窗口均为 `>2026-07-14`。
+> Markdown 报告后附 `---` 分隔的 `github_reader_data` YAML 块，包含总数类字段；若报告声明了截断或总数不完整，YAML 必须有对应 `truncated_collections` / `incomplete_totals` 字段
 
-## Fresh Validation Method
+## Test Set / Fresh Run
 
-1. validator 开始时只获得原始 prompt，未读取 `evals.json`、旧 comparison 或 assertions。
-2. with-skill arm 完整读取当前 `github-reader/SKILL.md` 与 Product Manager Agent README，使用已认证 `gh` 独立查询，把命令、时间、原始 JSON 和最终报告保存到隔离 runtime 目录并以 SHA-256 锁定。
-3. 锁定 with-skill 后，without-skill arm 不读取或应用 skill 与 Agent README，仅凭原始 prompt 重新执行独立 GitHub 查询，没有复用 with-skill 查询结果。
-4. 两个 arm 均锁定并复核 checksum 后，validator 才读取 eval-005 的 3 条 assertions 并逐条裁决。
-5. canonical workspace 仅保存本 `comparison.md`；transcript、原始查询、checksum 和 verdict 不纳入 git。
+- Eval schema: `evals.json` v1.0。
+- Fixture manifest: `4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`（0 个可见文件；两侧逐字节一致）。
+- Repository HEAD: `47adbbc9`。
+- Fresh run window: 2026-08-07 00:58–01:14（Asia/Shanghai）。
+- Runtime: 3 个独立会话，均为 `gpt-5.6-luna`、`model_reasoning_effort=medium`：fresh without-skill、fresh with-skill、fresh judge。
+- Controlled variable: 两个 candidate 使用完全相同的 prompt、fixture manifest、HOME/CODEX_HOME 目录形态与同一份 `auth.json`；唯一变量是 with-skill lane 安装并加载目标 specialist skill。
+- Physical isolation: 按 skill 先完成并销毁全部 baseline 随机顶层根，再创建 with-skill 根；32 个 candidate 全部完成并销毁后才创建第三套 judge 根。
+- Candidate visibility: lane 中未放入 `eval_metadata.json`、`evals.json`、`expected_output`、assertions、历史 `comparison.md`、README 脚手架或 judge 材料；泄漏扫描为 0 命中。
+- External data rule: 实时实体因 GitHub 认证、网络或当时集合缺失而不可得时，相关 assertion 记为 `NOT EXERCISED`，只影响 Coverage，不伪造成 Behavior 的 PASS/FAIL。
 
-## Independent Live Snapshots
+## Latest Result
 
-| 集合 | With skill total / fetched | Without skill total / fetched | With skill 完整性 |
-| --- | ---: | ---: | --- |
-| Open issues | 143 / 143 | 143 / 143 | Search `incomplete_results=false`，未截断 |
-| Open PRs | 213 / 213 | 213 / 213 | Search `incomplete_results=false`，未截断 |
-| 近 14 天 merged PRs | 6 / 6 | 未查 total / 6 | Search `incomplete_results=false`，未截断 |
-| 近 14 天 closed issues | 1 / 1 | 未查 total / 1 | Search `incomplete_results=false`，未截断 |
-| Open milestones | 0（分页完成） | 0（分页完成） | 完整 |
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+- Overall result: PASS (partial coverage)
+- With-skill summary: with_skill 实际加载了 github-reader（status.json 的 skill_load_hits=2，transcript 中读取 SKILL.md），随后按技能先尝试仓库查询并检查认证；gh 未认证，未获得实时 GitHub 数据，因此诚实报告阻塞且未伪造 Feed YAML。
 
-with-skill Feed 数据中的 `truncated_collections` 与 `incomplete_totals` 均为空数组。
+## Historical Contract Note
+
+- 旧 durable 结果因 issue #234 的 prompt/fixture 泄漏修复或后续 assertion 增强而标记为 `BLOCKED`。本文件已由当前契约下的 fresh paired run 与独立 judge 结论覆盖。
+- 本轮没有复用历史 baseline、candidate、verdict 或旧结论；without-skill baseline 仅作行为对照，不参与 with-skill 的 Behavior/Coverage 判定。
 
 ## With-Skill Behavior
 
-- 正确识别下游 skill 调用并进入 Feed mode。
-- 在 Markdown 报告后使用 `---` 分隔，输出可解析的 `github_reader_data` YAML。
-- Feed 包含 open issues、open PRs、近 14 天 merged PRs 与 closed issues 的 total 和 fetched 字段，以及健康信号。
-- 四个总数均来自独立执行的 Search API `total_count`，没有用获取集合长度冒充总数。
-- Markdown 完整性表与 YAML 一致：143/143、213/213、6/6、1/1；所有 Search 查询均为 `incomplete_results=false`，milestones 分页完成，因此两个完整性信号数组均为空。
+with_skill 实际加载了 github-reader（status.json 的 skill_load_hits=2，transcript 中读取 SKILL.md），随后按技能先尝试仓库查询并检查认证；gh 未认证，未获得实时 GitHub 数据，因此诚实报告阻塞且未伪造 Feed YAML。
 
 ## Without-Skill Baseline
 
-- baseline 仅依据原始 prompt 独立查询，并输出 Markdown 报告和 fenced JSON 结构化块。
-- Open issue 与 open PR 总数来自 GraphQL `totalCount`；近 14 天 merged PR 与 closed issue 只报告获取集合长度，没有查询 Search API `total_count`。
-- 报告声明 release 明细截断为 20/213，但结构化 JSON 只有局部 `releases.truncated: true`，没有 Feed 契约要求的 `truncated_collections` / `incomplete_totals`。
-- baseline 首次因 `gh release list` 使用不支持的 `url` 字段失败；validator 保留错误证据，修正字段后重新独立执行整套 baseline 查询并成功锁定，未复用 with-skill 数据。
+without_skill 未加载技能（skill_load_hits=0），输出了另一套 GitHub connector JSON；仅作 baseline 对照，不影响 with_skill 判定。
 
-## Assertion Results
+## Assertion Review
 
-| Assertion | With skill | Without skill | Fresh judge 结论 |
+| Assertion | With skill | Evidence / reason | Without-skill comparison |
 | --- | --- | --- | --- |
-| `feed_yaml_present`：Markdown 后包含关键总数字段的 `github_reader_data` YAML | **PASS** | **FAIL** | with-skill 提供并成功解析 YAML；baseline 只有 fenced JSON，没有 Feed YAML。 |
-| `completeness_signals_consistent`：结构化完整性信号与报告声明一致 | **PASS** | **FAIL** | with-skill 的 totals、fetched 和两个完整性数组与 Markdown 完全一致；baseline 没有规定的 Feed 完整性字段。 |
-| `totals_not_fabricated`：YAML 总数来自 Search API `total_count` | **PASS** | **FAIL** | with-skill 保存了四个 Search API 原始响应；baseline 未使用 Search API totals，近期活动仅使用集合长度。 |
+| `feed_yaml_present` | **NOT EXERCISED** | with_skill 的 transcript 显示 gh repo view 因未认证失败，gh auth status 也失败；candidate.md 明确报告无法获取当前状态，因此没有可供判断的实时 Feed 数据或 YAML。 | without_skill 输出了 JSON 快照，没有 Markdown 报告后的 github_reader_data YAML 块。 |
+| `completeness_signals_consistent` | **NOT EXERCISED** | 实时仓库集合不可用，且 transcript 没有成功返回查询集合或总数；无法判断 YAML 总数与截断/不完整声明的一致性。 | without_skill 输出 retrieved=100 等集合长度，但未提供 Feed 完整性字段，不能作为 with_skill 结论依据。 |
+| `totals_not_fabricated` | **NOT EXERCISED** | 因 GitHub CLI 未认证，with_skill 未获得可用于核验的 search total_count；candidate.md 也未伪造任何总数。 | without_skill 的 JSON 使用 retrieved=100 等字段，未展示 search total_count；仅作对照。 |
 
 ## Failures
 
-- with-skill 无 assertion failure，也没有 GitHub、网络或认证失败。
-- without-skill 失败 3 条 assertions，说明原始 prompt 本身不足以稳定触发 Feed YAML、统一完整性字段和 Search API count-first 契约。
-- baseline 的首次命令兼容错误已显式记录；完整重跑成功，因此不构成本轮 infrastructure blocker。
+- 无 with-skill assertion failure。
+
+## Not Exercised
+
+- feed_yaml_present：GitHub 认证不可用，实时 Feed 数据未获取。
+- completeness_signals_consistent：没有成功的实时集合/总数可核对。
+- totals_not_fabricated：没有成功的 search total_count 可核对。
 
 ## Next Steps
 
-- 保持 **PASS**；eval-005 已覆盖本次新增的 Feed mode `truncated_collections` / `incomplete_totals` 契约。
-- 后续 fresh run 必须重新查询 live GitHub，并重新生成 without-skill baseline，不复用本轮快照。
-- 若目标仓库未来超过计算集合上限或 GitHub 返回 `incomplete_results=true`，应继续验证非空完整性数组与 Markdown 声明一致。
+- 认证 GitHub CLI 后重跑，以覆盖 Feed YAML、完整性信号和 total_count 三条 assertion。
+
+## Runtime Evidence
+
+- With-skill candidate: return code `0`，duration `35.141s`，`skill_load_hits=2`。
+- Without-skill candidate: return code `0`，duration `150.115s`，`skill_load_hits=0`。
+- Independent judge: return code `0`，duration `51.306s`。
+- Judge 已读取两侧最终输出、完整 JSONL 工具 trace、before/after workspace snapshot、fixture manifest 与 session status，并核验读取顺序和零写入边界。
+- 所有临时 HOME/CODEX_HOME 与 candidate/judge 随机顶层根均已销毁；持久化证据目录中不存在 `auth.json`。
 
 ## Runtime Artifact Policy
 
-- runtime 命令、时间、原始 JSON、两个报告、checksums、查询事件与 verdict 保存在 `tmp/eval-runs/github-reader-eval-005-2026-07-28/`，不纳入 git。
-- canonical workspace 不保存 transcripts、raw outputs、timing、diagnostics 或 verdict；durable 结果仅为本 `comparison.md`。
-- 本轮 fresh validation 未修改 canonical fixture、specialist `SKILL.md` 或 Agent README。
+- 仓库只持久化本 canonical `comparison.md`。
+- Candidate、transcript、judge verdict、timing、status、snapshot 与 diagnostics 仅作为 `/tmp` 运行期证据，不提交到 git。

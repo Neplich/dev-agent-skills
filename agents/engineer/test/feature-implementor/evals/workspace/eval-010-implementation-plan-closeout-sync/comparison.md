@@ -7,8 +7,66 @@
 - Eval: `eval-010-implementation-plan-closeout-sync`
 - Test case: implementation-plan-closeout-sync
 - Workspace: `workspace/eval-010-implementation-plan-closeout-sync`
+- Evaluation date: 2026-08-07
+- Overall result: FAIL
+- Behavior result: FAIL
+- Coverage result: FULL
+
+## Test Set / Fixture Version
+
+- Schema: `evals.json` v1.0
+- Prompt: docs/pm/sample-feature/PRD.md、docs/engineer/sample-feature/TRD.md 和 docs/engineer/sample-feature/IMPLEMENTATION_PLAN.md 都存在。实现和检查已完成，计划 frontmatter 已是 status: Implemented，但正文仍写计划待确认、代码和 skill 修改未开始、eval 执行待确认，并写模型 eval 尚未执行。请检查并完成实施收尾。
+- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
+- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
+- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+
+## Assertions
+
+- FAIL `detects_closeout_state_conflict`: final 未明确指出 `IMPLEMENTATION_PLAN.md` 的 `status: Implemented` 与正文待确认/未开始/未执行状态冲突；仅概括为正文未同步。
+- FAIL `blocks_handoff_until_plan_updated`: final 未明确阻止 QA handoff、delivery、PR 或 issue close 直到计划同步；反而直接写明下一责任人为 QA/delivery。
+- PASS `requires_implementation_result_update`: workspace 计划已包含 `Implementation Result`、完成文件、scope、skill changes、残余风险，以及 Handoff/下一责任人；final 也说明已补充这些内容。
+- FAIL `records_deterministic_checks`: 计划记录了 metadata、文件存在和 stale scan 命令，但“Implementation and focused checks”仅声称此前完成且命令输出不在快照中；未记录实际运行的确定性命令及结果，也未将缺失命令标为 skipped/blocked。transcript 还显示仓库没有 `src/settings.ts`，因此不能据此推断实现检查已运行。
+- PASS `records_eval_evidence`: 计划和 final 均明确 model/skill eval 未执行并给出跳过原因，未声称通过；未执行时不要求 comparison.md。
+- FAIL `keeps_runtime_artifacts_out_of_git`: workspace 确实未包含 transcript、diagnostics、outputs、timing、run status 或 comparison.auto.md，且 output hash 与实际 workspace 文件一致；但 final/计划未明确说明这些运行期 eval 产物不得提交到 git。
+
+## With Skill Behavior
+
+with_skill 更新了 IMPLEMENTATION_PLAN.md（实际 SHA256 与 output.sha256 一致，workspace 未出现运行期产物），但未满足冲突识别、handoff 阻断、确定性检查证据和运行期产物禁入 git 的明确输出要求。exit_code 为 0。
+
+## Without Skill Baseline
+
+without_skill 也更新了计划并清除旧状态词，workspace/output hash 一致且无运行期产物；但仅作对照，未改变 with_skill 的逐条判定。其计划同样缺少实际 deterministic check 命令/结果及 runtime artifact 禁提交说明。
+
+## Failures / Findings
+
+- 未明确输出 status: Implemented 与正文旧计划状态的冲突。
+- 未明确在计划同步前阻止 QA handoff/delivery/PR/issue close。
+- 未提供实现/聚焦 deterministic checks 的实际命令和结果，且未运行项未标记 skipped/blocked。
+- 未明确说明 runtime eval artifacts 不得提交到 git。
+- Root cause: closeout 文档虽被更新且哈希、工作区产物状态一致，但最终输出和计划未完整落实 expected_output 要求的阻断语义、可复现检查证据及运行期产物 git 边界。
+
+## Next Steps
+
+- 修复上述 assertion 对应的 skill 行为或 eval 输入问题后，使用同样的 paired fresh 流程重跑。
+
+## Runtime Artifacts Policy
+
+- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
+- 长期只保留本 `comparison.md`。
+
+## Historical Results
+
+### Previous comparison record: eval-010-implementation-plan-closeout-sync
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-010-implementation-plan-closeout-sync`
+- Test case: implementation-plan-closeout-sync
+- Workspace: `workspace/eval-010-implementation-plan-closeout-sync`
 - Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Overall result: BLOCKED
+- Historical result: BLOCKED
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
 

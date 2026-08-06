@@ -5,60 +5,64 @@
 - Agent: `devops`
 - Skill: `incident-playbook-writer`
 - Eval: `eval-002-mapped-doc-incident-playbook`
-- Test case: mapped-doc-incident-playbook
-- Workspace: `workspace/eval-002-mapped-doc-incident-playbook`
+- Test case: `mapped-doc-incident-playbook`
+- Workspace: `agents/devops/test/incident-playbook-writer/evals/workspace/eval-002-mapped-doc-incident-playbook`
+
+## Latest Result
+
+- Fresh run: `2026-08-07`（issue #238 严格隔离重跑）
+- Model: `gpt-5.6-luna`，`model_reasoning_effort=medium`
+- Isolation: baseline 使用随机顶层 root；完成后仅保存在内存快照并删除 root，随后才创建 with_skill root；with_skill root 删除后才创建独立 judge root。两条 lane 的原始 prompt、fixture snapshot、`HOME` 与 `CODEX_HOME` 值相同。
+- Judge: 独立 fresh `codex exec`，读取实际产物、final、status 与工具轨迹，对照当前 assertions 判定；不采信 lane 自评。
+- Behavior result: FAIL
+- Coverage result: PARTIAL
+- Without-skill comparison: FAIL（仅作对照，不参与 durable Overall 组合）
+
+Overall result: FAIL
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: issue #196 L2-3；`src/runtime/health.rules`、change-map 与 unverified 健康检查文档
-- Expected output: 以代码事实确定告警阈值的最小故障处置步骤，并记录映射文档差异
+- Eval definition: `agents/devops/test/incident-playbook-writer/evals/evals.json`
+- Metadata: `agents/devops/test/incident-playbook-writer/evals/workspace/eval-002-mapped-doc-incident-playbook/eval_metadata.json`
+- Expected output: 以代码事实确定告警阈值的故障处置步骤，并记录映射文档差异。
+- Fixture: `src/runtime/health.rules`, `docs/site/standards/change-map.yaml`, `docs/site/api/runtime-health.md`
 
-## Latest Result
+## Assertion Results
 
-- Behavior result: **PASS**
-- Coverage result: **FULL**（3/3 assertions exercised）
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-- 运行日期：2026-07-31
-
-## Assertions
-
-- PASS `reads_mapped_docs_first`: 任务落点命中 change-map 后先读取唯一 required doc，未遍历
-  其他站点文档。
-- PASS `verifies_against_code`: 识别文档阈值 3 与代码阈值 5 的差异，以代码值为准并说明处置
-  时机影响。
-- PASS `treats_unverified_as_low_trust`: 将 `last_verified_version: unverified` 按最低信任
-  处理，关键阈值回到代码核证。
+| Assertion | with_skill | without_skill | Evidence |
+| --- | --- | --- | --- |
+| `reads_mapped_docs_first` | FAIL | FAIL | with_skill 先读取 change-map、代码，再读取 runtime-health.md；without_skill 先读取 health.rules，再读取文档，均未优先读取 required doc。 |
+| `verifies_against_code` | FAIL | FAIL | 两条 lane 都确认代码阈值为 5、文档值为 3；但 with_skill 未说明阈值差异对处置时机的影响，也未产出处置手册。without_skill 同样未明确说明 5 相对 3 会使告警晚两个连续失败触发。 |
+| `treats_unverified_as_low_trust` | NOT_EXERCISED | FAIL | with_skill 因缺少 PM/DevOps 交接上下文和 playbook 选择而未进入写入关键告警/回滚步骤的分支，fixture 前提不足，故不判定该断言。without_skill 虽核对了代码，但生成的回滚步骤没有代码或测试证据支撑，也未明确按 unverified 最低信任处理。 |
 
 ## With-Skill Behavior
 
-- 来源：当前会话 fresh Codex validator；先读取 DevOps Agent README、skill、消费契约、
-  同一原始 prompt 与 fixture，在 baseline 生成前写入并以 SHA-256 锁定。
-- 从 `src/runtime/health.rules` 任务落点反查 change-map，先读唯一映射文档，再回到代码核证。
-- 以代码阈值 5 为准，明确指出文档值 3 会让处置提前两个检查周期；无部署证据时不臆造命令。
+- with_skill 正确识别了代码阈值 5 与文档阈值 3 的冲突，并因缺少必要上下文而阻止写入；但读取顺序不符合断言，且未说明阈值差异对处置时机的影响。覆盖度因关键步骤分支未触发而为 PARTIAL。without_skill 作为对照也未满足读取顺序和最低信任要求。
+- Workspace changes: 无文件变更。
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：with-skill 候选锁定后，使用同一原始 prompt 与 fixture fresh 生成；生成时不读取或
-  应用 skill、Agent README、with-skill 输出、历史 comparison 或旧 baseline。
-- baseline 同样识别文档值 3、代码值 5 与 `unverified` 信任问题，但其读取顺序是先检查
-  任务直接指向的代码，再对照 change-map 与映射文档。
-- baseline 满足 2/3 assertions；差异集中在 mapped-doc-first 消费顺序。
+- baseline 在本轮重新生成，没有复用历史 baseline，也没有读取 target skill、with_skill 产物或旧 comparison。
+- Workspace changes: modified: `docs/site/api/runtime-health.md`。
+- assertion 结果见上表；baseline 只用于比较 skill 增益，不作为 durable Overall 的独立机器门禁。
 
-## Failures
+## Failures and Coverage Gaps
 
-- with-skill 无 assertion failure。
-- baseline 失败：`reads_mapped_docs_first`，未先以 change-map 定位并读取 required doc。
+- with_skill failures: `reads_mapped_docs_first`, `verifies_against_code`。
+- NOT EXERCISED: `treats_unverified_as_low_trust`；fixture 未触发对应条件分支。
+- 无模型、认证、runner 或外部服务 blocker。
+
+## Historical Result (Old Contract)
+
+- 旧结论为 PASS（3/3）；issue #234 修复 eval 泄漏后，该结论被标为 BLOCKED 等待重跑。
+- 该历史结论适用旧 eval 契约；本文件顶部的 2026-08-07 fresh 结果已取代它作为 latest durable 结论。
 
 ## Next Steps
 
-- 保留 mapped-doc-first 与代码核证断言；本轮不新增干扰 fixture。
+- 按上表 with_skill failure 的共同根因建立后续修复项；本轮只记录结果，不修改 skill、eval 定义或 fixture。
 
 ## Runtime Artifact Policy
 
-- with-skill、fresh without-skill、锁定清单与 judge 只写入
-  `tmp/eval-runs/issue-196-l2-3-4/incident-playbook-writer/eval-002-mapped-doc-incident-playbook/`。
-- 运行期 candidates、verdicts、timing、outputs 与 diagnostics 不提交；只提交本
-  `comparison.md`。
+- 两条 lane、工具轨迹、状态、文件快照、judge verdict 与隔离事件只保存在 `tmp/eval-runs/issue-238-devops-strict-20260806/`，不提交 git。
+- durable 结果只保留本 `comparison.md`。

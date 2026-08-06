@@ -1,61 +1,82 @@
-# Eval Result: github-release-gen-outline-sections-quality-exclusion
+# Eval Result: eval-005-outline-sections-quality-exclusion
 
 ## Evaluation Target
 
-- Skill: `github-release-generator` → `github-release-gen`（改名后新入口待重跑验证）
-- Test case: outline 四节结构、内部质量证据排除与风险事实保持
-- Latest result: **PASS**（Behavior: PASS / Coverage: PARTIAL）
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-005-outline-sections-quality-exclusion`
+- Test case: `outline 四节结构与内部质量证据排除`
+- Prompt:
 
+> 请根据 `release-package.md`、`docs/site/release-notes/v1.0.0.md` 和 `github-evidence.md` 准备 GitHub Release 预览。
 
-## Review Context
+- Expected output:
 
-- Issue: #190（Release 标题与升级说明质量门禁修复）
-- Date: 2026-08-03
-- Final judge: 当前会话中的 fresh Codex validation agent
-- Judge 独立读取当前 skill、两份 reference、eval 定义/metadata/fixture 与 issue-190 fresh 双侧 candidate；verdict 完成前未读取 durable `comparison.md` 或旧 run tmp。
-- Coverage override（judge 后人工复核）：终版 judge 判定 Coverage FULL（5 条断言均有判定）；按仓库 Coverage 定义（「本轮实际覆盖了多少 assertion 场景」），`title_matches_gate` 与 `upgrade_note_fixed_structure` 的 marketplace 正向分支在本非 marketplace fixture 下未执行，属场景缺口，Coverage 为 PARTIAL。**2026-08-03（#220）marketplace 正向分支已由新增 eval-007 / eval-008 独立承接执行**（标题强格式、三小节指令模板、plugin 列表推导、TARGET_TAG/Kimi 能力条件、固定收尾句，双侧 fresh 验证 Behavior PASS / Coverage FULL，见对应 workspace comparison.md）；本 eval 自身 fixture 未执行 marketplace 分支的场景缺口仍按仓库 Coverage 定义记录为 PARTIAL，套件级覆盖由 eval-007/008 补足。Behavior PASS 与判定依据不受影响。
+> 预览逐项保持已确认的功能、架构、数据库、部署、资产、升级与风险事实；标题不是仅版本号的无语义裸标题（本 fixture 为非 marketplace 宿主且未定义明确标题惯例，含事实主题概述或遵循宿主惯例均为合格）；正文只包含重点更新、其他改进、升级说明、变更明细四节，不采用相邻风格小节，也不包含 skill eval、assertion 计数、review 轮次或 QA 证据汇总；升级说明按固定结构完整呈现（简述与适用时的指令小节/收尾句），本 fixture 事实源未确认 coding-agent 客户端升级入口时不得生成空壳小节或臆造安装命令，plugin 更新类声明只在已确认事实源支持时使用（本 fixture 事实源不含 plugin 更新事实，不得臆造），不只写占位句。
 
-## Test Set / Fixture Version
+## Test Set / Fresh Run
 
-- Schema: `evals.json` v1.0
-- Fixture: confirmed site Release Notes、curated GitHub evidence、adjacent presentation suggestions 与 internal quality evidence
-- With-skill evidence: `tmp/eval-runs/issue-190/with_skill/eval-005-outline-sections-quality-exclusion/candidate-output.md`
-- Without-skill evidence: `tmp/eval-runs/issue-190/without_skill/eval-005-outline-sections-quality-exclusion/candidate-output.md`
-- Judge verdict: `tmp/eval-runs/issue-190/judge/verdict.md`
+- Eval schema: `evals.json` v1.0。
+- Fixture manifest: `7c69c14e8240bc01c846c12bf7983be7360a5e3ed10a353f621b22dddf4d8177`（3 个可见文件；两侧逐字节一致）。
+- Repository HEAD: `47adbbc9`。
+- Fresh run window: 2026-08-07 00:58–01:14（Asia/Shanghai）。
+- Runtime: 3 个独立会话，均为 `gpt-5.6-luna`、`model_reasoning_effort=medium`：fresh without-skill、fresh with-skill、fresh judge。
+- Controlled variable: 两个 candidate 使用完全相同的 prompt、fixture manifest、HOME/CODEX_HOME 目录形态与同一份 `auth.json`；唯一变量是 with-skill lane 安装并加载目标 specialist skill。
+- Physical isolation: 按 skill 先完成并销毁全部 baseline 随机顶层根，再创建 with-skill 根；32 个 candidate 全部完成并销毁后才创建第三套 judge 根。
+- Candidate visibility: lane 中未放入 `eval_metadata.json`、`evals.json`、`expected_output`、assertions、历史 `comparison.md`、README 脚手架或 judge 材料；泄漏扫描为 0 命中。
+- External data rule: 实时实体因 GitHub 认证、网络或当时集合缺失而不可得时，相关 assertion 记为 `NOT EXERCISED`，只影响 Coverage，不伪造成 Behavior 的 PASS/FAIL。
 
-## Assertions
+## Latest Result
 
-- PASS `follows_outline_sections`：正文只有重点更新、其他改进、升级说明、变更明细四个 H2；without-skill FAIL（使用用户功能/架构与兼容/数据库/部署与资产等约定外结构）
-- PASS `excludes_internal_quality_evidence`：双侧都排除 skill eval、assertion 数、review 轮次与 QA 汇总
-- PASS `preserves_confirmed_facts`：双侧都保留两项独立功能、统一附件兼容链路、nullable JSONB 迁移与删列风险、部署顺序和开关、双架构资产、升级步骤及旧浏览器限制
-- PASS `title_matches_gate`（issue-190 新增）：标题为 `v1.0.0 - 文件卡片、原位重试与统一附件交付`，非裸版本号且含事实主题概述（本 fixture 未定义宿主标题惯例，含主题概述为合格输出）；without-skill 同 PASS（`AI Hub v1.0.0` 非裸版本号，非 marketplace 宿主不强制概述——本断言在非 marketplace fixture 下无法测 marketplace 强格式分支）
-- PASS `upgrade_note_fixed_structure`（issue-190 新增）：升级说明按事实源完整呈现实质简述与收尾动作，fixture 未确认 coding-agent 客户端升级入口时未生成 `Claude Code`/`Codex`/`Kimi Code` 空壳小节或安装命令，未臆造 plugin 更新声明；without-skill FAIL（只有「升级与风险」混合小节，未落实固定「升级说明」结构与收尾形态）
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+- Overall result: PASS
+- With-skill summary: with_skill 实际加载 github-release-gen（status skill_load_hits=2；transcript 先读取 SKILL.md、参考规范，再读取三份事实材料），按四节生成预览，排除了内部质量证据，未执行写操作；快照前后一致。
 
-## With Skill Behavior
+## Historical Contract Note
 
-- 生成四节正文，排除全部内部质量材料与相邻版式建议。
-- 标题含事实相关主题概述（非 marketplace 宿主不强格式）；升级说明按事实源完整呈现实质内容，fixture 未确认客户端升级入口时未生成空壳指令小节，plugin 声明句严格受事实源约束（fixture 无 plugin 事实时不写入）。
-- current latest 缺失时保守 `--latest=false`，只预览不写入。
+- 旧 durable 结果因 issue #234 的 prompt/fixture 泄漏修复或后续 assertion 增强而标记为 `BLOCKED`。本文件已由当前契约下的 fresh paired run 与独立 judge 结论覆盖。
+- 本轮没有复用历史 baseline、candidate、verdict 或旧结论；without-skill baseline 仅作行为对照，不参与 with-skill 的 Behavior/Coverage 判定。
 
-## Without Skill Baseline
+## With-Skill Behavior
 
-- 来源：issue-190 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
-- 行为：3/5 assertions PASS；能保留事实、排除内部质量证据并产出非裸版本号标题，但不遵守四节 outline、未形成升级说明固定结构——`follows_outline_sections` 与 `upgrade_note_fixed_structure` 在 without-skill 侧保持区分度。
+with_skill 实际加载 github-release-gen（status skill_load_hits=2；transcript 先读取 SKILL.md、参考规范，再读取三份事实材料），按四节生成预览，排除了内部质量证据，未执行写操作；快照前后一致。
 
-## Failures / Findings
+## Without-Skill Baseline
+
+without_skill 仅作对照：生成了包含约定外小节和质量验证的预览，并写入了新文件。
+
+## Assertion Review
+
+| Assertion | With skill | Evidence / reason | Without-skill comparison |
+| --- | --- | --- | --- |
+| `follows_outline_sections` | **PASS** | with_skill 正文仅含“重点更新”“其他改进”“升级说明”“变更明细”四个二级节；transcript 明确称相邻风格小节未纳入正文。 | FAIL：without_skill 预览包含“发布亮点”“架构与部署”“升级与风险”“质量验证”“维护者说明”等约定外小节。 |
+| `excludes_internal_quality_evidence` | **PASS** | with_skill candidate 明确写出“内部评估、QA 和相邻风格小节未纳入用户正文”，正文未出现 skill eval、assertion 计数、review 轮次或 QA 汇总；transcript 也记录了排除行为。 | FAIL：without_skill 预览实际包含“质量验证”节，且其 agent_message 明确说明正文包含质量验证。 |
+| `preserves_confirmed_facts` | **PASS** | with_skill 正文逐项保留文件卡片、失败消息原位重试、统一附件模型兼容链路、nullable JSONB message_files 迁移与删列风险、部署顺序与开关、amd64/arm64 资产、升级步骤及旧浏览器限制；内容与 release notes 及 release-package.md 一致。 | FAIL：without_skill 对 workflow_finished/统一附件模型作了泛化改写，并将多项事实重组为非目标结构；未完整按确认事实呈现。 |
+| `title_matches_gate` | **PASS** | with_skill 标题为“v1.0.0 - 文件卡片、失败消息重试与统一附件模型”，不是裸版本号；fixture 为非 marketplace 且未定义明确命名惯例，符合门禁。 | PASS：without_skill 标题“AI Hub v1.0.0”也不是裸版本号。 |
+| `upgrade_note_fixed_structure` | **PASS** | with_skill 的“升级说明”包含备份简述、数据库迁移/部署/验证/开关顺序及回滚风险收尾；未生成 Claude Code、Codex、Kimi Code 空壳小节或安装命令，也未臆造 plugin 更新。fixture 事实源不含 plugin 更新事实，candidate 与之相符。 | FAIL：without_skill 使用“升级与风险”而非固定“升级说明”节，且未按固定升级说明结构完整呈现。 |
+
+## Failures
 
 - 无 with-skill assertion failure。
-- issue-190 首轮 judge finding（已解决）：升级说明固定结构曾被无条件套入不含 plugin 事实的宿主场景；模板条件化后 with-skill 不再臆造 plugin 声明。
-- **Coverage PARTIAL（#220 承接记录）**：`title_matches_gate` 与 `upgrade_note_fixed_structure` 的 marketplace 正向分支（`vX.Y.Z - 概述` 强格式、三小节指令模板、按 marketplace.json 推导的 plugin 列表、TARGET_TAG/Kimi 能力条件）在本非 marketplace fixture 下未执行，Coverage 保持 PARTIAL；正向分支已由 eval-007（能力齐全）与 eval-008（历史 tag 能力不完整）独立承接执行，双侧 fresh 验证 Behavior PASS / Coverage FULL，本 eval 的 PARTIAL 是自身场景缺口记录，不表示套件级缺口。
+
+## Not Exercised
+
+- 无；本轮覆盖全部 assertions。
 
 ## Next Steps
 
-- 保留当前 outline、标题门禁与升级说明固定结构；后续修改这些规则时重新运行。
-- marketplace 场景 eval 已完成（#220）：eval-007（当前 tag：7 个 role plugin、三小节能力齐全）与 eval-008（历史 tag：能力不完整时的条件省略），覆盖正向分支场景。
+- 保留当前回归覆盖；目标 skill、fixture 或 assertion 契约变化时重新执行 fresh paired validation。
 
-## Runtime Artifacts Policy
+## Runtime Evidence
 
-- 双侧 candidates 与 judge verdict 位于 `tmp/eval-runs/issue-190/`，属于未提交运行期诊断产物。
-- 长期只保留本 `comparison.md`；不提交 transcript、candidate、verdict、timing、run status 或 diagnostics。
+- With-skill candidate: return code `0`，duration `116.363s`，`skill_load_hits=2`。
+- Without-skill candidate: return code `0`，duration `69.8s`，`skill_load_hits=0`。
+- Independent judge: return code `0`，duration `73.025s`。
+- Judge 已读取两侧最终输出、完整 JSONL 工具 trace、before/after workspace snapshot、fixture manifest 与 session status，并核验读取顺序和零写入边界。
+- 所有临时 HOME/CODEX_HOME 与 candidate/judge 随机顶层根均已销毁；持久化证据目录中不存在 `auth.json`。
+
+## Runtime Artifact Policy
+
+- 仓库只持久化本 canonical `comparison.md`。
+- Candidate、transcript、judge verdict、timing、status、snapshot 与 diagnostics 仅作为 `/tmp` 运行期证据，不提交到 git。

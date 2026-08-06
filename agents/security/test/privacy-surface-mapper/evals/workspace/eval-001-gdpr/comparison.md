@@ -7,45 +7,64 @@
 - Eval: `eval-001-gdpr`
 - Test case: GDPR Compliance Check
 - Workspace: `workspace/eval-001-gdpr`
-- Review context: issue #143
-- Latest result: PASS（4/4 assertions）- fresh Codex paired validation completed on 2026-07-21
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Natural user prompt:
 
+> pm-agent has completed entry classification and routed this confirmed `data-collection` security scope to privacy-surface-mapper. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/data-collection/PRD.md`. Map the personal data collection and check GDPR compliance.
+
+- Expected artifact: Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Prompt/fixture: issue #143 当前 fixture；包含 `PM_HANDOFF.md`、`docs/pm/data-collection/PRD.md`、`src/registration.js` 与 `config/analytics.json`
-- Fresh run: 当前会话中新启动的 fresh Codex validator 在 `tmp/eval-runs/issue-143/batch-c/eval-001-gdpr/` 的隔离副本中成对运行；with-skill 读取当前 specialist SKILL.md、Security README 与共享 closeout 契约，without-skill 仅以同一 prompt/fixture 重新生成 baseline，未读取历史 comparison，未复用历史 baseline
-- Source head: `test/issue-143-security-thin-fixtures`
-- Validation date: 2026-07-21
+- Schema: `evals.json` v1.0，使用 source HEAD `47adbbc9` 的当前 prompt、assertions 与 fixture。
+- Fresh run window: 2026-08-06 23:45:35 至 2026-08-07 00:13:31（Asia/Shanghai）。
+- Runtime root: `/tmp/security-fresh-evals-20260806-n3l1anp1/privacy-surface-mapper--eval-001-gdpr/`。
+- Fixture identity: 两条 lane 的初始 fixture manifest 完全相同，SHA-256 为 `364f34fef102662b30171eb4eaf54d781e387c635f07b6d450fd6bf48dadfdb6`。
+- Lane isolation: 先完成并销毁全部 `without_skill` 独立顶层临时目录，再创建任何 `with_skill` 目录；每条 lane 使用独立的顶层临时 workspace、`HOME` 与 `CODEX_HOME`，不存在可供另一条 candidate 读取的 sibling lane。
+- Controlled variable: 两条 lane 使用逐字相同 prompt 与相同初始 fixture；仅 `with_skill` 的隔离 `CODEX_HOME` 安装并加载目标 skill，`without_skill` 未安装任何目标 skill。
+- Evidence isolation: 所有 candidate 会话结束并删除各自临时根后，才将内存中的最终 workspace 快照与 transcript 持久化到 runtime root；candidate transcript 泄漏扫描未命中 `eval_metadata.json`、`evals/evals.json`、`comparison.md`、judge/verdict 或 expected output/assertion 脚手架。
+- Judge: candidate 全部结束后，由第三个独立、只读的 fresh Codex 会话依据当前 assertions、两条 candidate 输出、transcript 与最终 workspace 快照判定。
+
+## Latest Result
+
+- Behavior result: **PASS**（PASS 4 / FAIL 0 / NOT EXERCISED 0）
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Historical Contract Note
+
+上一份 durable comparison 基于 issue #234 修复前会向 baseline 泄漏规则的旧契约，因此标记为 `BLOCKED`。本轮使用当前无泄漏 prompt/fixture 重新生成两条 lane，未复用旧 baseline 或旧结论。
 
 ## Assertions
 
-- PASS `data_inventory`：逐字段识别注册库存储的姓名、邮箱、注册 IP、User-Agent，以及发送给 ExampleAnalytics 的 userId、邮箱、IP 和 `account_created` 事件，并关联账号创建和产品分析目的
-- PASS `sharing_and_retention`：识别 ExampleAnalytics 第三方共享、默认启用、无需同意、保留期限为空，以及数据库/供应商地域、传输、删除传播和保留未证实等风险
-- PASS `user_rights`：检查访问、导出/可携带、删除、更正、撤回同意及第三方传播，明确 fixture 中均无实现证据
-- PASS `compliance_gaps`：给出同意或合法基础、数据最小化/假名化、保留删除、处理者与跨境信息、全链路用户权利等分级整改建议
+| Assertion | With skill | With-skill evidence | Without skill | Baseline evidence |
+| --- | --- | --- | --- | --- |
+| `data_inventory`<br>识别个人数据类型、收集入口和处理目的 | PASS | 最终 privacy-map.md 明确列出姓名、邮箱、IP、User-Agent/设备信息、用户 ID 和行为事件，并以 registration.js、PRD 和 analytics.json 为证据，说明收集入口及账号创建、运营安全和产品分析目的。 | PASS | 最终 PRIVACY_SURFACE_REPORT.md 明确列出个人数据、入口、证据和处理目的。 |
+| `sharing_and_retention`<br>识别第三方共享、存储或保留相关风险 | PASS | 报告明确识别 ExampleAnalytics 第三方共享、共享字段和未记录的 DPA/子处理者/地区/跨境传输信息，并指出 retentionDays=null 及数据库、日志保留期限未定义。 | PASS | 报告明确识别 ExampleAnalytics 共享、提供方治理/传输缺口及无界分析保留和其他保留期限缺失。 |
+| `user_rights`<br>检查访问、删除、导出或同意等用户权利支持情况 | PASS | 报告逐项检查访问、删除、纠正、可携带/导出，并补充限制、反对和撤回同意；明确说明未发现对应 endpoint、workflow 或分析侧传播机制。 | PASS | 报告逐项评估访问、纠正、删除、限制、反对、可携带和同意撤回支持，并给出未实现/未证明结论。 |
+| `compliance_gaps`<br>给出隐私合规缺口和改进建议 | PASS | 报告明确指出默认启用分析且无需同意、目的/法律依据缺失、数据最小化不足、保留未定义、第三方治理与跨境证据缺失、权利流程缺失，并给出按 Engineer、DevOps、Security/Privacy 分工的整改建议。 | PASS | 报告系统列出 GDPR 控制缺口并提供分角色、分优先级的整改建议。 |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-with-skill 输出验证了 PM handoff 和 `feature_path=data-collection`，将代码中的收集/存储入口与配置中的第三方共享逐字段串联，并显式区分已确认事实与地域、合同、传输和删除支持等未知项。报告同时覆盖处理目的、合法基础缺口、保留、用户权利、优先级建议、`docs/security/data-collection/privacy-map.md` 落点及 Engineer/DevOps/PM 协作边界。
+with-skill 正确读取 handoff、PRD、源码和分析配置，创建了要求路径下的 privacy-map.md，并完整覆盖数据清单、共享/保留、用户权利及合规缺口与建议。
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-本轮 baseline 在独立 `without_skill` 副本中，仅依据同一 prompt 与 fixture 新生成。它同样识别数据字段、ExampleAnalytics 共享、默认无同意、无保留期、用户权利缺失及主要整改项，4/4 assertions 均满足；但结构更简略，未说明 Security 报告落点、证据置信边界和跨角色 closeout。
+without-skill 也创建了内容充分的隐私报告，四项 assertion 均有明确证据通过；其报告文件名不同于 skill 契约要求，但不影响本轮 assertion 内容核验。
 
 ## Failures
 
-- with-skill 与 without-skill 均无 assertion failure。
-- 对照显示该 fixture 本身信号较强；skill 的增益主要体现在证据结构、未知项标注、职责边界和可持久化报告形态。
+- 无。
+
+## Not Exercised
+
+- 无。
 
 ## Next Steps
 
-- 本 eval 无需修改 assertions 或 expected_output；后续 fixture 或 skill 行为变化时继续执行新的 fresh Codex paired run，并重新生成 baseline。
+- 无。
 
 ## Runtime Artifacts Policy
 
-- 本轮 paired 输出与临时隔离副本仅用于判定，完成后删除 `tmp/eval-runs/issue-143/batch-c`。
-- 不提交 with_skill、without_skill、transcript、verdict、timing、output、diagnostics 或其他运行期产物；durable result 仅为本 `comparison.md`。
+- Candidate command: `codex exec --skip-git-repo-check -C <isolated-workspace> -s workspace-write --ephemeral --ignore-user-config --ignore-rules -m gpt-5.6-luna -c 'model_reasoning_effort="medium"' --json -o <runtime-output> -`。
+- Judge 使用同一模型与 reasoning effort，在独立 `read-only` workspace 中按结构化 output schema 判定。
+- candidate、baseline、transcript、verdict、fixture snapshots、status、timing 与 diagnostics 仅保留于上述 `/tmp` runtime root，不提交到 git；仓库只更新 canonical `comparison.md`。

@@ -122,7 +122,7 @@ skill eval 的 Fresh Sub-Agent 门禁作用于 skill 自身的测试流程，不
 
 2. 按现有 Agent 模式创建 `agents/{agent-name}/README.md`
 
-3. 为每个 skill 创建 `skills/{skill-name}/SKILL.md` 与 `test/{skill-name}/evals/evals.json`，仅在需要渐进加载时创建 `skills/{skill-name}/_internal/`
+3. 为每个 skill 创建 `skills/{skill-name}/SKILL.md`；除下文登记的 manual-only 例外外，同时创建 `test/{skill-name}/evals/evals.json`，仅在需要渐进加载时创建 `skills/{skill-name}/_internal/`
 
 4. 在 `.claude-plugin/marketplace.json` 注册 Agent：
    ```json
@@ -134,7 +134,7 @@ skill eval 的 Fresh Sub-Agent 门禁作用于 skill 自身的测试流程，不
    ```
    随后用新 skill 元数据更新 `skills-lock.json`
 
-5. 添加 eval 测试并对比使用 skill 与不使用 skill 的结果，再按下节「新增或重命名 Skill 的同步面」逐面核对遗漏项
+5. 为可常规评测的 skill 添加 eval 并对比使用与不使用 skill 的结果；manual-only skill 记录真实使用反馈与当前结论，再按下节「新增或重命名 Skill 的同步面」逐面核对遗漏项
 
 ### 新增或重命名 Skill 的同步面
 
@@ -188,23 +188,25 @@ skill eval 的 Fresh Sub-Agent 门禁作用于 skill 自身的测试流程，不
 
 ### Skill 测试
 
-每个 skill 包含 `test/{skill-name}/evals/evals.json`、eval workspace，以及每个 eval 的 `comparison.md`（使用与不使用 skill 的最新持久化对比结果）。
+除明确登记的 manual-only 例外外，每个 skill 包含 `test/{skill-name}/evals/evals.json`、eval workspace，以及每个 eval 的 `comparison.md`（使用与不使用 skill 的最新持久化对比结果）。
 
 Skill eval 是可用性测试：验证 skill 能被触发、协议可执行、能产出该角色预期的结构化产物。断言检查 skill 特有行为——上下文读取、执行路径选择、证据处理、阻塞假设、handoff 边界，而不是泛化回答质量。
+
+`manual-gen` 是当前唯一 manual-only 例外：它依赖用户真实的已登录运行环境、对应源码仓库、实际界面状态、截图结果与用户对手册可用性的判断，常规合成 fixture 和 with/without lane 无法提供可信结论。该 skill 不保留 `evals.json` 或 eval workspace，只在 `agents/docs/test/manual-gen/comparison.md` 维护真实使用结论，并根据用户实际使用反馈迭代。其他 skill 不得类推此例外；新增 manual-only skill 必须先获得维护者确认并同步契约检查器。
 
 更新 skill 文档、内部指令或影响 skill 行为的 fixture 后，主动询问是否运行对应 eval。实际执行过 eval 就必须在同一轮变更中更新 durable `comparison.md`；无法生成 baseline、没有可更新文件或不适用时，写明 blocked 或不适用原因。缺少 runner、凭据或外部服务导致无法执行时明确记 blocked，不得静默降级成只读静态验证。
 
 **Eval 定义契约**
 
-- 使用共享 `evals.json` schema version `1.0`，不允许 Agent 专属例外；文件位于 `agents/{agent}/test/{skill-name}/evals/evals.json`，顶层含 `schema_version`、`agent`、`skill_name`、非空 `evals`，`skill_name` 与对应 `SKILL.md` 对齐
+- 所有常规 eval 使用共享 `evals.json` schema version `1.0`，不允许 Agent 专属 schema 例外；文件位于 `agents/{agent}/test/{skill-name}/evals/evals.json`，顶层含 `schema_version`、`agent`、`skill_name`、非空 `evals`，`skill_name` 与对应 `SKILL.md` 对齐
 - 每个 eval item 含 `id`（格式 `eval-NNN-short-slug`）、非空 `name`/`description`/`prompt`/`expected_output`、显式 `workspace`（值为 `workspace/...`）、非空对象形式 assertions；每个 assertion 含 lower snake_case `id`、非空 `description` 和非空语义化 `text`，不允许纯字符串 assertion
 - 优先语义断言，避免脆弱的精确字符串检查。语言或格式可合理变化时（如本地化、等价的 lane label），保持预期语义即可
 - 提交前运行 `uv run scripts/check_eval_contract.py`
 
 **Eval 执行契约**
 
-- 最终验证必须在与被测会话隔离的全新上下文中执行。全新 Codex subagent 与各自独立启动的 `codex exec` 会话都可接受，本质都是干净上下文。
-- 所有 eval lane（`with_skill` / `without_skill` / 独立 judge）统一使用 `gpt-5.6-luna` 模型并显式传 `model_reasoning_effort="medium"`（成本与速度考量；不用 `gpt-5.6-sol` 等更高成本模型跑 eval，除非维护者明确指定）。模型不可用时 blocked 并询问维护者，不得静默更换模型。
+- 最终验证必须在与被测会话隔离的全新上下文中执行。各 eval 独立启动 `codex exec` 会话提供干净上下文。
+- 所有 eval 执行中的 lane（`with_skill` / `without_skill` / 独立 judge）必须在实际执行命令或会话中显式使用 `gpt-5.6-luna` 模型并传入 `model_reasoning_effort="medium"`；不以编排 subagent 或当前会话自身的模型代替。模型不可用时 blocked 并询问维护者，不得静默更换模型。
 - 每轮必须重新生成 `without_skill` baseline，**不得复用历史 baseline**，也不得为掩盖执行失败把 baseline 弱化成可选项。
 - 判定由独立评审方（fresh subagent 或独立 judge）对照 assertions 得出。**被测 lane 的自评不算判定**，评审方须独立核对零写入等关键事实。批量 transcript 生成脚本的输出只是诊断产物，不是 pass/fail 事实来源。
 - 运行期文件写隔离 scratch workspace（如 `tmp/eval-runs/...`），不得写入已提交 fixture——历史输出会污染 empty-workspace 这类上下文敏感用例。每轮运行前需清理的路径用 `eval_metadata.json` 的 `execution_cleanup` 声明。
@@ -214,18 +216,28 @@ Skill eval 是可用性测试：验证 skill 能被触发、协议可执行、�
 
 `with_skill` 与 `without_skill` 的**唯一变量是「是否加载被测 skill 文档」**：prompt 逐字相同，可见 fixture 完全相同。任何把 skill 规则提前透给 baseline 的做法都会让两条 lane 拉不开差距，eval 失去判别力。
 
-prompt 写成自然用户目标。判据：*删掉这句话，一个不懂 skill 协议的 agent 就不知道该怎么做了——那它就是泄漏。*
+每条 eval 先设计真实用户场景，再写 prompt 和 assertions。场景至少说明一个可信的用户角色、触发原因、要完成的结果、用户当时确实掌握的材料与约束，以及用户如何判断事情办成；优先来自真实项目、历史请求或可验证工作流，不从某条 skill 规则反向拼装一个只为触发断言的场景。assertions 从 skill 契约与用户结果中提取，但不得回填到 prompt 或 lane fixture。
+
+prompt 必须有“活人感”：直接写成用户会在真实工作中发出的自然请求，以要解决的问题和结果为中心。不要加「用户说：」外壳，不要由测试编排者替用户讲解 PM 路由、skill 名、gate、`feature_path`、`change_tier`、assertion、runner 或判分方式，也不要要求 agent「判断应该怎么分类/交给谁」来命中内部路由断言；确有交接前提时，把它作为宿主原生 handoff 文档放进 fixture，prompt 只引用用户自然会看到的业务材料。
+
+prompt 泄漏判据：*删掉某句话后，一个不知道被测 skill 协议的 agent 就无法猜到评判项，但真实用户目标仍完整——这句话就是测试提示，应删除。* 每条新建或重设计的 eval 在评审时必须能肯定回答：这句话会由真实用户说出吗；离开测试仓库仍能独立成立吗；baseline 是否无法从措辞反推出评分清单。
 
 | 不得写进 prompt | 应当写进 prompt |
 | --- | --- |
 | 协议名与步骤名：「按八步契约执行」 | 自然目标：「写一份用户操作手册，要有操作步骤和对应截图」 |
 | 行为规则与禁令：「不要替维护者确认」「保持零启动命令」 | 环境客观事实：「当前没有可通过域名访问的部署环境」 |
-| skill 专有分类术语：「这是 feature-update 场景」 | 入口凭据：「pm-agent 已分类并路由至此，packet 见 `PM_HANDOFF.md`」 |
+| 测试编排与分类术语：「pm-agent 已路由」「这是 feature-update 场景」 | 用户事实：「这次登录页只改了错误提示，我想确认上线前没有影响原来的登录流程」 |
 | 产物字段清单、目录分层、命名规范、工具与参数 | 自然授权：「范围我已经定好了，不用再跟我确认」 |
 
 最后一行是测试**需要用户确认的门禁**的正确方式：用真实用户会说的话表达授权，而不是「Step N 门禁视为已通过」这类协议术语——后者直接把门禁的存在告诉了 baseline。
 
-lane 可见素材只给宿主环境事实，评测脚手架一律不给：`eval_metadata.json` 含评判意图，运行目录中应物理移除；`pm-handoff.md` 的 `required_output` 写产出形态而非期望行为，`blockers_risks` 写客观风险而非禁令；专为 eval 造的、写着答案的示例脚本不进 lane 目录。宿主本来就该有的资产（文档站模板、standards、已有配置）**不算泄漏**——baseline 会不会主动去翻、翻到了会不会照做，本身就是要观测的行为差异。
+lane 可见素材只给宿主环境事实，评测脚手架一律不给：`eval_metadata.json`、`evals.json`、assertions、`expected_output`、旧 `comparison.md`、judge prompt/verdict、transcript、diagnostics 与专为 eval 造的答案脚本必须从 lane 目录中物理移除。`pm-handoff.md` 的 `required_output` 只写用户所需产出形态，`blockers_risks` 只写客观风险，不复制 skill 禁令。宿主本来就该有的模板、standards、已有配置不算泄漏；专为命中断言而伪造的 `.rules`、`evidence.md` 或同义答案文件不算宿主事实。
+
+每轮在 scratch 下分别物化 `with_skill` 与 `without_skill` 两个独立工作目录并创建各自的 Git 根，禁止共享可写 cwd、复用 Codex 会话或让 agent 向上读取测试仓库的 `AGENTS.md`、skill、comparison 和历史运行目录。两份可见 fixture 在加载 skill 前做内容一致性检查；with lane 只在自然用户 prompt 之外加载被测 skill 及其明确引用，without lane 必须确认无法访问该 skill 的安装副本、仓库副本或被宿主文档转述的规则。runner 发给 candidate 的用户消息不得包含 mode/label、skill 路径、expected output、assertions 或评测说明。
+
+进程、端口、数据库、浏览器标签页、登录态、下载目录等运行时状态也属于 lane 隔离面。优先为两条 lane 创建独立且可重置的运行时；只能共用外部环境时，必须串行执行、保证核心流程只读或在每条 lane 后恢复同一初始状态，否则该轮记 `BLOCKED`。后一条 lane 不得读取前一条 lane 的文件、页面改动、截图、终端输出或浏览器状态。
+
+独立 judge 使用第三个全新、只读上下文；只在两条 lane 输出锁定后向 judge 提供 assertions、最终输出和必要的原始证据，不提供 lane 自评或预设结论。执行前记录隔离 preflight：两个工作目录、fixture 一致性、被排除的脚手架、skill 可见性、运行时重置状态和 judge 上下文，任一项无法证明就不得把结果写成 PASS。
 
 零区分度先判成因，不得为制造区分度而伪造结果或弱化断言：
 

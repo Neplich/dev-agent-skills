@@ -5,63 +5,66 @@
 - Agent: `devops`
 - Skill: `incident-playbook-writer`
 - Eval: `eval-001-docker-rollback`
-- Test case: docker-rollback
-- Workspace: `workspace/eval-001-docker-rollback`
+- Test case: `docker-rollback`
+- Workspace: `agents/devops/test/incident-playbook-writer/evals/workspace/eval-001-docker-rollback`
+
+## Latest Result
+
+- Fresh run: `2026-08-07`（issue #238 严格隔离重跑）
+- Model: `gpt-5.6-luna`，`model_reasoning_effort=medium`
+- Isolation: baseline 使用随机顶层 root；完成后仅保存在内存快照并删除 root，随后才创建 with_skill root；with_skill root 删除后才创建独立 judge root。两条 lane 的原始 prompt、fixture snapshot、`HOME` 与 `CODEX_HOME` 值相同。
+- Judge: 独立 fresh `codex exec`，读取实际产物、final、status 与工具轨迹，对照当前 assertions 判定；不采信 lane 自评。
+- Behavior result: FAIL
+- Coverage result: FULL
+- Without-skill comparison: FAIL（仅作对照，不参与 durable Overall 组合）
+
+Overall result: FAIL
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: issue #196 L2-3；确认过的 repo-wide PM handoff、Docker Compose、环境变量样例与部署 README
-- Expected output: 仅生成用户明确请求且有仓库证据支撑的回滚与故障响应手册
+- Eval definition: `agents/devops/test/incident-playbook-writer/evals/evals.json`
+- Metadata: `agents/devops/test/incident-playbook-writer/evals/workspace/eval-001-docker-rollback/eval_metadata.json`
+- Expected output: 仅生成用户明确请求且有仓库证据支撑的回滚与故障响应手册，不默认生成排查和值班文档
+- Fixture: `PM_HANDOFF.md`, `deploy/docker/docker-compose.yml`, `deploy/docker/.env.example`, `deploy/docker/README.md`
 
-## Latest Result
+## Assertion Results
 
-- Behavior result: **PASS**
-- Coverage result: **FULL**（5/5 assertions exercised）
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+| Assertion | with_skill | without_skill | Evidence |
+| --- | --- | --- | --- |
+| `deploy_rollback_md` | PASS | PASS | 两条 lane 均实际生成 deploy/ROLLBACK.md。 |
+| `rollback_md_docker` | PASS | PASS | 两条 lane 的 ROLLBACK.md 均包含 Docker Compose 拉取镜像、重建 app、状态/日志/health 验证等命令。 |
+| `deploy_incident_response_md` | PASS | PASS | 两条 lane 均实际生成 deploy/INCIDENT_RESPONSE.md。 |
+| `incident_response_md` | PASS | PASS | 两条 lane 的 INCIDENT_RESPONSE.md 均覆盖应用不可用、healthcheck 失败、容器重启/启动失败、发布后降级等常见故障场景。 |
+| `does_not_generate_unrequested_playbooks` | FAIL | FAIL | 两条 lane 均额外生成 deploy/TROUBLESHOOTING.md 和 deploy/ON_CALL.md；实际输出明确称生成四份手册，违反仅生成回滚与故障响应手册的断言。 |
 
-- 运行日期：2026-07-31
+## With-Skill Behavior
 
-## Assertions
+- with_skill 的五条断言均可核对，Coverage 为 FULL；但额外生成未请求的 TROUBLESHOOTING.md 与 ON_CALL.md，因此 durable Overall 按 binding_result_model 判定为 FAIL。without_skill 同样失败，仅作为对照。
+- Workspace changes: added: `deploy/INCIDENT_RESPONSE.md`, `deploy/ON_CALL.md`, `deploy/ROLLBACK.md`, `deploy/TROUBLESHOOTING.md`。
 
-- PASS `deploy_rollback_md`: 生成 `deploy/ROLLBACK.md`。
-- PASS `rollback_md_docker`: 回滚文档包含绑定 fixture 的 Docker Compose 拉取、重建与验证命令。
-- PASS `deploy_incident_response_md`: 生成 `deploy/INCIDENT_RESPONSE.md`。
-- PASS `incident_response_md`: 覆盖应用不可用、容器异常、健康检查失败、调查、恢复与恢复验证。
-- PASS `does_not_generate_unrequested_playbooks`: 只生成明确请求且有证据的 ROLLBACK 与
-  INCIDENT_RESPONSE，未生成 TROUBLESHOOTING 或 ON_CALL。
+## Fresh Without-Skill Baseline
 
-## With Skill
+- baseline 在本轮重新生成，没有复用历史 baseline，也没有读取 target skill、with_skill 产物或旧 comparison。
+- Workspace changes: added: `deploy/INCIDENT_RESPONSE.md`, `deploy/ON_CALL.md`, `deploy/ROLLBACK.md`, `deploy/TROUBLESHOOTING.md`。
+- assertion 结果见上表；baseline 只用于比较 skill 增益，不作为 durable Overall 的独立机器门禁。
 
-- 来源：当前会话 fresh Codex validator；先读取 DevOps Agent README、skill、同一原始 prompt
-  与 fixture，在 baseline 生成前写入并以 SHA-256 锁定。
-- 将用户的“故障处理和回滚手册”收敛为 `INCIDENT_RESPONSE.md` 与 `ROLLBACK.md`。
-- 两份文档均绑定实际 Compose 配置、不可变 SemVer tag、日志与 `/health` 验证；未把 PM
-  handoff 中较宽的四项候选机械展开为四份文件。
+## Failures and Coverage Gaps
 
-## Without Skill / Baseline
+- with_skill failures: `does_not_generate_unrequested_playbooks`。
+- 所有当前 assertions 均已实际覆盖。
+- 无模型、认证、runner 或外部服务 blocker。
 
-- 来源：with-skill 候选锁定后，使用同一原始 prompt 与 fixture fresh 生成；生成时不读取或
-  应用 skill、Agent README、with-skill 输出、历史 comparison 或旧 baseline。
-- baseline 读取 PM handoff 的四项 `required_output` 后生成了 ROLLBACK、INCIDENT_RESPONSE、
-  TROUBLESHOOTING 与 ON_CALL。
-- baseline 满足前四项断言，但未满足“不得默认生成未请求 playbook”的新契约断言。
+## Historical Result (Old Contract)
 
-## Failures
-
-- with-skill 无 assertion failure。
-- baseline 失败：`does_not_generate_unrequested_playbooks`，额外生成 TROUBLESHOOTING 与
-  ON_CALL。
+- 旧结论为 PASS（5/5）；issue #234 修复 eval 泄漏后，该结论被标为 BLOCKED 等待重跑。
+- 该历史结论适用旧 eval 契约；本文件顶部的 2026-08-07 fresh 结果已取代它作为 latest durable 结论。
 
 ## Next Steps
 
-- 保留当前按请求选择 playbook 的断言；后续如新增用例，可覆盖“用户未选择文件时只确认不生成”
-  和“选中文件但证据不足时阻塞该文件”，本轮不扩大范围。
+- 按上表 with_skill failure 的共同根因建立后续修复项；本轮只记录结果，不修改 skill、eval 定义或 fixture。
 
-## Runtime Artifacts Policy
+## Runtime Artifact Policy
 
-- with-skill、fresh without-skill、锁定清单与 judge 只写入
-  `tmp/eval-runs/issue-196-l2-3-4/incident-playbook-writer/eval-001-docker-rollback/`。
-- 运行期 candidates、verdicts、timing、outputs 与 diagnostics 不提交；只提交本
-  `comparison.md`。
+- 两条 lane、工具轨迹、状态、文件快照、judge verdict 与隔离事件只保存在 `tmp/eval-runs/issue-238-devops-strict-20260806/`，不提交 git。
+- durable 结果只保留本 `comparison.md`。

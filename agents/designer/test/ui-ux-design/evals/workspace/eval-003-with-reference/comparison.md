@@ -12,11 +12,48 @@
 
 - Schema: `evals.json` v1.0
 - Fixture version: HEAD `a452319`
-- Fresh run time: `2026-08-03 11:58:33 +0800`
+- Fresh run time: `2026-08-07 00:04:31 +0800`
 - Runtime directory: `tmp/eval-runs/issue-198-brd/designer/ui-ux-design/eval-003-with-reference/`
 - Fixture: confirmed PM handoff, PRD, and stable Linear reference-pattern record
 
 ## Latest Result
+
+- Behavior result: **PASS**
+- Coverage result: **FULL** (2/2 assertions exercised)
+Overall result: PASS
+
+## Assertion Results (Current)
+
+- assertion_1: **PASS** — the fresh ui-ux-spec.md extracts Linear navigation, hero, workflow, CTA, and motion patterns with an explicit adaptation boundary.
+- assertion_2: **PASS** — the output stops at UI/UX specification and creates no frontend implementation artifacts.
+
+## With-Skill Behavior (Current)
+
+The candidate uses the confirmed PM scope and stable reference record, verifies
+the live reference, produces the canonical artifact, and remains in design-only
+scope.
+
+## Fresh Without-Skill Baseline (Current)
+
+The baseline was generated before the with-skill root existed, using the same
+prompt and fixture in an independent top-level workspace under isolated
+HOME/CODEX_HOME. It also meets the broad assertions but is less disciplined
+about canonical structure and confirmed-source use.
+
+## Failures (Current)
+
+- None.
+
+## Next Steps (Current)
+
+- No corrective change is indicated by the current assertions.
+
+## Runtime Artifact Policy (Current)
+
+- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
+- Only this durable comparison is updated.
+
+## Historical Result (Superseded: pre-#234 contract)
 
 - Behavior result: **PASS**
 - Coverage result: **FULL**

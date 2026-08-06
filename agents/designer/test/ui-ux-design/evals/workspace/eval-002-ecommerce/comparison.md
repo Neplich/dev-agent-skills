@@ -12,11 +12,48 @@
 
 - Schema: `evals.json` v1.0
 - Fixture version: HEAD `a452319`
-- Fresh run time: `2026-08-03 11:58:33 +0800`
+- Fresh run time: `2026-08-07 00:04:31 +0800`
 - Runtime directory: `tmp/eval-runs/issue-198-brd/designer/ui-ux-design/eval-002-ecommerce/`
 - Fixture: confirmed PM handoff and PRD for `handmade-crafts-store`
 
 ## Latest Result
+
+- Behavior result: **PASS**
+- Coverage result: **FULL** (2/2 assertions exercised)
+Overall result: PASS
+
+## Assertion Results (Current)
+
+- assertion_1: **PASS** — the new ui-ux-spec.md is mobile-first and covers listing, filters, product detail, cart, and required states.
+- assertion_2: **PASS** — the output contains design specifications only, with no code, patch, command, or engineering task decomposition.
+
+## With-Skill Behavior (Current)
+
+The candidate generates the canonical feature-path artifact with mobile-first
+journey, ASCII layouts, components, state behavior, responsive rules, and
+accessibility constraints while staying within Designer scope.
+
+## Fresh Without-Skill Baseline (Current)
+
+The baseline was generated before the with-skill root existed, using the same
+prompt and clean fixture in an independent top-level workspace with isolated
+HOME/CODEX_HOME. It also satisfies the two broad assertions, so this eval has
+low differentiation but no with-skill regression.
+
+## Failures (Current)
+
+- None.
+
+## Next Steps (Current)
+
+- Keep this case; consider future assertion review if maintainers want stronger skill-specific differentiation.
+
+## Runtime Artifact Policy (Current)
+
+- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
+- Only this durable comparison is updated.
+
+## Historical Result (Superseded: pre-#234 contract)
 
 - Behavior result: **PASS**
 - Coverage result: **FULL**

@@ -7,46 +7,65 @@
 - Eval: `eval-002-abandoned`
 - Test case: Abandoned Packages
 - Workspace: `workspace/eval-002-abandoned`
-- Review context: issue #143 thin fixture 补全后的复验
-- Latest result: PASS（4/4 assertions）- fresh Codex subagent validation completed on 2026-07-21
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Natural user prompt:
 
+> pm-agent has completed entry classification and routed this confirmed `dependency-inventory` security scope to dependency-risk-auditor. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/dependency-inventory/PRD.md`. Check for abandoned or outdated dependencies.
+
+- Expected artifact: Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Prompt/fixture: issue #143 当前提交；包含 `PM_HANDOFF.md`、已确认的 `docs/pm/dependency-inventory/PRD.md` 与 `package.json`
-- Fresh run: 当前会话中的 fresh Codex validator 在 `tmp/eval-runs/issue-143/batch-b/eval-002-abandoned/` 建立隔离副本，先运行 with_skill，再基于同一 prompt/fixture 全新生成 without_skill baseline；baseline 未读取或应用 skill 文档、Agent README、历史 comparison，也未复用历史结果
-- Registry/audit evidence: 本轮分别在隔离副本查询 npm deprecation metadata；with_skill 另在 scratch 中生成临时 lockfile 并执行 `npm audit --json`
-- Source head: `test/issue-143-security-thin-fixtures`
-- Validation date: 2026-07-21
+- Schema: `evals.json` v1.0，使用 source HEAD `47adbbc9` 的当前 prompt、assertions 与 fixture。
+- Fresh run window: 2026-08-06 23:45:35 至 2026-08-07 00:13:31（Asia/Shanghai）。
+- Runtime root: `/tmp/security-fresh-evals-20260806-n3l1anp1/dependency-risk-auditor--eval-002-abandoned/`。
+- Fixture identity: 两条 lane 的初始 fixture manifest 完全相同，SHA-256 为 `78690f73cc6febd2097ea7892857fa979d64f69bbf14c879133bbbd07d659103`。
+- Lane isolation: 先完成并销毁全部 `without_skill` 独立顶层临时目录，再创建任何 `with_skill` 目录；每条 lane 使用独立的顶层临时 workspace、`HOME` 与 `CODEX_HOME`，不存在可供另一条 candidate 读取的 sibling lane。
+- Controlled variable: 两条 lane 使用逐字相同 prompt 与相同初始 fixture；仅 `with_skill` 的隔离 `CODEX_HOME` 安装并加载目标 skill，`without_skill` 未安装任何目标 skill。
+- Evidence isolation: 所有 candidate 会话结束并删除各自临时根后，才将内存中的最终 workspace 快照与 transcript 持久化到 runtime root；candidate transcript 泄漏扫描未命中 `eval_metadata.json`、`evals/evals.json`、`comparison.md`、judge/verdict 或 expected output/assertion 脚手架。
+- Judge: candidate 全部结束后，由第三个独立、只读的 fresh Codex 会话依据当前 assertions、两条 candidate 输出、transcript 与最终 workspace 快照判定。
+
+## Latest Result
+
+- Behavior result: **PASS**（PASS 4 / FAIL 0 / NOT EXERCISED 0）
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Historical Contract Note
+
+上一份 durable comparison 基于 issue #234 修复前会向 baseline 泄漏规则的旧契约，因此标记为 `BLOCKED`。本轮使用当前无泄漏 prompt/fixture 重新生成两条 lane，未复用旧 baseline 或旧结论。
 
 ## Assertions
 
-- PASS `dependency_inventory`：识别 Node.js 生态及两个直接生产依赖 `request@2.88.2`、`node-uuid@1.4.8`，并区分网络请求与 UUID 暴露面
-- PASS `risk_classification`：依据 npm deprecation metadata 将两者判为废弃依赖；将 request 的维护缺失及 audit 风险与 node-uuid 的迁移风险分级，未把普通过期等同已知漏洞
-- PASS `evidence`：引用 `package.json` 精确版本、两条 registry 弃用声明；with_skill 还记录临时 lockfile 的 audit 结果及无自动修复结论
-- PASS `upgrade_plan`：给出 request 向 fetch/Undici 等维护中客户端迁移、node-uuid 向 `uuid` 或 `crypto.randomUUID()` 迁移的优先级、兼容检查和回归验证
+| Assertion | With skill | With-skill evidence | Without skill | Baseline evidence |
+| --- | --- | --- | --- | --- |
+| `dependency_inventory`<br>识别依赖生态、关键包和风险来源 | PASS | 最终快照中的 docs/security/dependency-inventory/dependency-audit.md 明确识别 package.json 中的 2 个生产依赖：request@2.88.2 与 node-uuid@1.4.8，并说明无 lockfile。 | PASS | AUDIT.md 明确盘点同样的两个直接生产依赖及缺失 lockfile。 |
+| `risk_classification`<br>区分漏洞、废弃、过期或供应链风险并说明严重度 | PASS | 报告区分并分级了废弃/维护风险、供应链与传递依赖限制，并明确“Confirmed vulnerabilities: 0”及无法确认 exploitability；request 为 High，node-uuid 为 Medium。 | PASS | AUDIT.md 区分 abandoned/deprecated、public security report、direct vulnerability 未确立及 transitive 风险未评估，并给出 P0/P1 优先级。 |
+| `evidence`<br>引用依赖文件、版本或已知风险作为证据 | PASS | 报告引用 package.json 中的具体包名和版本，并提供 npm/GitHub 维护状态证据；transitive 结论有 ENOLOCK 和无 runtime/tree 的明确依据。 | PASS | AUDIT.md 引用 package.json:6/7、具体版本、npm 页面及上游 SSRF 报告。 |
+| `upgrade_plan`<br>给出升级、替换或缓解建议 | PASS | 报告给出按 P0/P1/P2 排序的替换计划：request 迁移至 fetch/undici，node-uuid 迁移至 crypto.randomUUID()/uuid，并包含测试、SSRF 控制、lockfile 和发布门禁建议。 | PASS | AUDIT.md 给出 request 和 node-uuid 的替换、隔离、测试及 lockfile/audit 后续计划。 |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-with_skill 通过 PM handoff gate 后，先完成依赖清单，再查询维护状态并按 specialist 协议运行可用的 npm audit。输出区分了“弃用”“已知漏洞”“普通版本落后”，将 `request` 定为优先替换并说明其 vulnerable transitives 与使用方式相关的可利用性边界；同时没有把 `node-uuid` 在未见调用代码时夸大为确定的 critical 漏洞。迁移步骤、兼容项和验证命令完整，4 条 assertion 全部满足。
+with-skill 正确读取 handoff/PRD，盘点 2 个直接依赖，创建了符合要求的 dependency-audit.md；明确记录 npm audit 的 ENOLOCK 限制，并分类废弃、供应链/传递依赖风险及严重度。
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-without_skill baseline 由本轮 fresh Codex validator 在独立副本中重新生成，仅使用同一 prompt、fixture 与独立 npm deprecation 查询。baseline 识别两个弃用包、说明 request 的外部网络风险与 node-uuid 的维护风险，并给出替换方向和测试要点，4 条 assertion 全部满足；baseline 未运行 audit，因此没有 with_skill 的 transitive vulnerability 数量与无自动修复证据。
+without-skill 也创建了 AUDIT.md，覆盖同一依赖盘点、风险证据与替换建议；作为 baseline，各 assertion 均满足。
 
 ## Failures
 
-- 无 assertion failure。
-- fixture 未提供依赖调用点，具体可利用性和迁移 API 差异仍需 Engineer 在实现阶段核实；该证据边界不影响废弃/过期审计 assertion。
+- 无。
+
+## Not Exercised
+
+- 没有 lockfile 或 node_modules，因此具体传递依赖、树深度和可验证 CVE 修复版本路径未被客观触发；报告已诚实标注 ENOLOCK 限制。
+- 未触发需要实际确认具体漏洞的分支；当前 fixture 的主要触发条件是废弃/过时依赖。
 
 ## Next Steps
 
-- 保持当前 registry 查询和 scratch audit 仅作为运行期证据；若未来 assertion 要求可利用性结论，应补最小调用代码 fixture 后再重跑。
+- 无。
 
 ## Runtime Artifacts Policy
 
-- 临时 lockfile、candidate、baseline、registry/audit 输出仅位于 `tmp/eval-runs/issue-143/batch-b/`，验证后删除，不提交到 git。
-- Runtime transcripts、verdicts、timing、diagnostics、with_skill / without_skill 输出及其他 scratch 产物均不得提交；长期结果仅保留本 `comparison.md`。
+- Candidate command: `codex exec --skip-git-repo-check -C <isolated-workspace> -s workspace-write --ephemeral --ignore-user-config --ignore-rules -m gpt-5.6-luna -c 'model_reasoning_effort="medium"' --json -o <runtime-output> -`。
+- Judge 使用同一模型与 reasoning effort，在独立 `read-only` workspace 中按结构化 output schema 判定。
+- candidate、baseline、transcript、verdict、fixture snapshots、status、timing 与 diagnostics 仅保留于上述 `/tmp` runtime root，不提交到 git；仓库只更新 canonical `comparison.md`。

@@ -7,11 +7,64 @@
 - Eval: `eval-001-analyze-nodejs-project`
 - Test case: analyze-nodejs-project
 - Workspace: `workspace/eval-001-analyze-nodejs-project`
+- Evaluation date: 2026-08-07
+- Overall result: PASS
+- Behavior result: PASS
+- Coverage result: FULL
+
+## Test Set / Fixture Version
+
+- Schema: `evals.json` v1.0
+- Prompt: engineer-agent 已确认需要 repo-level Project Profile，入口依据见 workspace `ENGINEERING_CONTEXT.md`。分析这个 Node.js 项目的代码库结构、技术栈和编码规范
+- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
+- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
+- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+
+## Assertions
+
+- PASS `assertion_1`: with_skill final.md 的 YAML 明确包含 language: JavaScript、framework: Express 5.1.0、package_manager: npm 11.4.2；transcript 显示实际读取 package.json、源码和配置。
+- PASS `assertion_2`: with_skill final.md 的 architecture 明确包含 source_dirs: [src] 和 test_dirs: [test]；transcript 的目录扫描及实际 workspace 文件确认存在 src/ 与 test/。
+- PASS `assertion_3`: with_skill final.md 的 conventions 明确包含 ESLint 规则及 Prettier 配置；transcript 实际读取 eslint.config.js、.prettierrc.json，并尝试执行 lint/format。
+- PASS `yaml`: with_skill final.md 使用 YAML 代码块并以 project_profile 为根结构，符合 expected_output 的 YAML Project Profile 要求。
+
+## With Skill Behavior
+
+with_skill 成功完成 repo-level 分析，exit_code 为 0；读取了工程上下文、项目清单、源码、测试、配置及额外 skill 文件，未修改 workspace。输出覆盖技术栈、目录、规范、依赖和架构。
+
+## Without Skill Baseline
+
+without_skill 使用同一基础 fixture，读取了工程上下文、项目清单、源码、测试和配置，exit_code 为 0，输出同样为 YAML Project Profile；其 input/output hashes 一致。
+
+## Failures / Findings
+
+- None.
+- Root cause: with_skill 相比 baseline 读取并利用了额外的 codebase-analyzer 规则文件，生成了更丰富的角色化 Project Profile，但两者均满足全部 assertions。
+
+## Next Steps
+
+- 后续修改该 skill、fixture 或 assertions 时，使用同样的 paired fresh 流程重跑。
+
+## Runtime Artifacts Policy
+
+- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
+- 长期只保留本 `comparison.md`。
+
+## Historical Results
+
+### Previous comparison record: eval-001-analyze-nodejs-project
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `codebase-analyzer`
+- Eval: `eval-001-analyze-nodejs-project`
+- Test case: analyze-nodejs-project
+- Workspace: `workspace/eval-001-analyze-nodejs-project`
 - Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-- Overall result: BLOCKED
+- Historical result: BLOCKED
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
-- Overall result: PASS
+- Historical result: PASS
 
 ## Review Context
 

@@ -7,7 +7,7 @@
 - Eval: `eval-002-feature-path-design-handoff`
 - Workspace: `workspace/eval-2-feature-path-design-handoff`
 - Review context: issue #196 L2-4 router single-table convergence
-- Latest run: fresh paired Codex validation on 2026-07-31
+- Latest run: fresh isolated paired Codex validation and independent judge on 2026-08-07
 
 ## Test Set / Fixture Version
 
@@ -18,6 +18,44 @@
 - Without-skill source: the same prompt and fixture in an isolated directory, without reading or applying Designer README, `designer-agent/SKILL.md`, with-skill output, assertions, historical comparison, or an old baseline.
 
 ## Latest Result
+
+- Behavior result: **FAIL**
+- Coverage result: **FULL** (4/4 declared assertions exercised)
+Overall result: FAIL
+
+## Assertion Results (Current)
+
+- uses_confirmed_feature_path: **PASS** — the full four-level path and same-path PRD/TRD are preserved.
+- mirrors_design_outputs: **FAIL** — ui-ux-spec.md is generated, but visual-system.md is absent.
+- no_synonym_top_level: **PASS** — no synonym or truncated design directory is created.
+- stops_before_code: **PASS** — the candidate stops at design handoff and routes implementation to engineer-agent.
+
+## With-Skill Behavior (Current)
+
+The candidate correctly preserves the canonical feature path and design-only
+boundary, but narrows the request to UI/UX and omits the required visual-system
+artifact.
+
+## Fresh Without-Skill Baseline (Current)
+
+The baseline was regenerated before the with-skill root existed, from the same
+prompt and clean fixture under an isolated HOME/CODEX_HOME. It produced a
+non-canonical design/code-style deliverable; this is comparison evidence only.
+
+## Failures (Current)
+
+- Missing docs/design/chat-interface/messages/history/search/visual-system.md.
+
+## Next Steps (Current)
+
+- Align router behavior with the two-artifact assertion, then rerun.
+
+## Runtime Artifact Policy (Current)
+
+- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
+- Only this durable comparison is updated.
+
+## Historical Result (Superseded: pre-#234 contract)
 
 - Behavior result: PASS
 - Coverage result: FULL (4/4 declared assertions exercised)

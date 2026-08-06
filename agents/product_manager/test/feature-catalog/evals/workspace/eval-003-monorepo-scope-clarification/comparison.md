@@ -1,5 +1,36 @@
 # Eval Result: eval-003-monorepo-scope-clarification
 
+## Latest Fresh Evaluation — 2026-08-07
+
+- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
+- Fixture: HEAD `47adbbc9`; fresh paired manifests matched exactly.
+- Behavior result: PASS — 4/4 assertions passed.
+- Coverage result: FULL — all 4 assertion scenarios were exercised.
+Overall result: PASS
+
+### Assertion Results
+
+- `blocked_on_scope`: PASS — detected independent web, admin, and API workspaces and stopped for scope clarification.
+- `minimal_clarification`: PASS — asked one scope question only.
+- `no_fabricated_catalog`: PASS — wrote no formal catalog or PRD.
+- `no_parallel_top_level`: PASS — did not guess workspace names as confirmed feature paths.
+
+### With-Skill / Baseline Comparison
+
+The with-skill response stopped at the smallest scope gate. The baseline wrote a root `FEATURES.md` despite the unresolved scope.
+
+### Failures / Next Steps
+
+- No with-skill assertion failures and no coverage gaps.
+
+### Runtime Artifact Policy
+
+- Fresh evidence remains under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-003-monorepo-scope-clarification/` and is not committed.
+
+---
+
+The sections below are historical records from earlier runs.
+
 ## Evaluation Target
 
 - Agent: `product_manager`
@@ -8,7 +39,7 @@
 - Test case: monorepo-scope-clarification
 - Workspace: `workspace/eval-003-monorepo-scope-clarification`
 - Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Overall result: BLOCKED
+- Historical result: BLOCKED
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
 

@@ -1,5 +1,38 @@
 # Eval Result: eval-001-legacy-project-catalog
 
+## Latest Fresh Evaluation — 2026-08-07
+
+- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
+- Fixture: HEAD `47adbbc9`; baseline and with-skill input manifests matched exactly.
+- Isolation: baseline completed and its root was deleted before any with-skill root was created; the judge used a third independent root.
+- Behavior result: PASS — 5/5 assertions passed.
+- Coverage result: FULL — all 5 assertion scenarios were exercised.
+Overall result: PASS
+
+### Assertion Results
+
+- `draft_before_formal_docs`: PASS — produced a visibly pending draft and wrote no formal catalog or PRD.
+- `evidence_and_confidence`: PASS — used the actual route/API/service/model/job/test evidence and conservative confidence.
+- `business_capability_naming`: PASS — grouped findings into user-facing authentication, order management, and status notification capabilities.
+- `open_questions_present`: PASS — recorded unresolved ownership and boundary questions.
+- `confirmation_gate`: PASS — stopped at maintainer confirmation before formal docs or handoff.
+
+### With-Skill / Baseline Comparison
+
+The with-skill lane produced an evidence-first, low-confidence draft without durable writes. The baseline wrote `docs/功能目录.md` before confirmation and lacked the same gate discipline.
+
+### Failures / Next Steps
+
+- No with-skill assertion failures and no coverage gaps.
+
+### Runtime Artifact Policy
+
+- Fresh evidence remains under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-001-legacy-project-catalog/` and is not committed.
+
+---
+
+The sections below are historical records from earlier runs.
+
 ## Evaluation Target
 
 - Agent: `product_manager`
@@ -18,7 +51,7 @@
 
 - Behavior result: PASS — all 5 assertions passed.
 - Coverage result: FULL — 5/5 assertion scenarios were exercised; no `NOT EXERCISED` items.
-Overall result: BLOCKED
+Historical result: BLOCKED
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
 

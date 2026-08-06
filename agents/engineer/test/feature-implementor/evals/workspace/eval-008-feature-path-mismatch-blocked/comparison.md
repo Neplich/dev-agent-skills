@@ -7,8 +7,61 @@
 - Eval: `eval-008-feature-path-mismatch-blocked`
 - Test case: feature-path-mismatch-blocked
 - Workspace: `workspace/eval-008-feature-path-mismatch-blocked`
+- Evaluation date: 2026-08-07
+- Overall result: PASS
+- Behavior result: PASS
+- Coverage result: FULL
+
+## Test Set / Fixture Version
+
+- Schema: `evals.json` v1.0
+- Prompt: 请根据 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/TRD.md 实现 Chat History Search。两份文档记录的功能路径不一致：PRD 是 chat-interface/history-search，TRD 是 chat-interface。
+- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
+- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
+- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+
+## Assertions
+
+- PASS `detects_prd_trd_path_mismatch`: 明确指出 PRD feature_path 为 `chat-interface/history-search`、TRD feature_path 为 `chat-interface`，且 transcript 实际读取并确认了两者。
+- PASS `checks_related_prd`: 明确指出 TRD related_prd 指向 `docs/pm/chat-interface/PRD.md`，而非目标 PRD 路径。
+- PASS `blocks_implementation_plan`: 明确表示未创建计划、未修改代码；transcript 无写入命令，目标 IMPLEMENTATION_PLAN.md 不存在，workspace 文档哈希与 fixture 一致。
+- PASS `hands_off_to_trd_gen`: 明确要求交回 `engineer-agent:trd-gen`，生成与目标 PRD 对齐的 TRD。
+
+## With Skill Behavior
+
+with_skill 四项断言均满足，且 exit_code 为 0、JSONL transcript 有效、workspace 未发生实现性变更。
+
+## Without Skill Baseline
+
+without_skill 仅作对照：识别了路径冲突，但未明确检查 related_prd，也未交回 engineer-agent:trd-gen。
+
+## Failures / Findings
+
+- None.
+- Root cause: None.
+
+## Next Steps
+
+- 后续修改该 skill、fixture 或 assertions 时，使用同样的 paired fresh 流程重跑。
+
+## Runtime Artifacts Policy
+
+- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
+- 长期只保留本 `comparison.md`。
+
+## Historical Results
+
+### Previous comparison record: eval-008-feature-path-mismatch-blocked
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-008-feature-path-mismatch-blocked`
+- Test case: feature-path-mismatch-blocked
+- Workspace: `workspace/eval-008-feature-path-mismatch-blocked`
 - Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Overall result: BLOCKED
+- Historical result: BLOCKED
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
 

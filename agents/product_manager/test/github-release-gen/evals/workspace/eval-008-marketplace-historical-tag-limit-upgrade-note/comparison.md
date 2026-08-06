@@ -1,62 +1,85 @@
-# Eval Result: github-release-gen-marketplace-historical-tag-limit-upgrade-note
+# Eval Result: eval-008-marketplace-historical-tag-limit-upgrade-note
 
 ## Evaluation Target
 
-- Skill: `github-release-generator` → `github-release-gen`（改名后新入口待重跑验证）
-- Test case: marketplace 历史 tag 能力不完整时的条件省略
-- Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-008-marketplace-historical-tag-limit-upgrade-note`
+- Test case: `marketplace 历史 tag 能力不完整时的条件省略`
+- Prompt:
 
+> 请根据 `release-package.md`、`docs/site/release-notes/v0.9.0.md` 和 `github-evidence.md` 准备 GitHub Release 预览。本仓库是 dev-agent-skills marketplace 宿主，历史 tag v0.9.0 的插件内容见 `.claude-plugin/marketplace.json` 与 `.codex/INSTALL.md`，该版本没有 `.kimi-plugin/plugin.json`。
 
-## Review Context
+- Expected output:
 
-- Issue: #220（marketplace 正向分支 eval 覆盖）；第 3 轮为 outline 收尾句规则与断言最终修订后验证（无固定版本路径不承诺同步该 tag 能力、mock 证据声明、完整 pre-tag handoff）
-- Date: 2026-08-03
-- Final judge: 当前会话中的 fresh Codex validation agent
-- Judge 独立读取当前 skill、reference、eval 定义/metadata/fixture 与 fresh 双侧 candidate；verdict 完成前未读取 durable `comparison.md` 或旧 run tmp。
-- 断言判据只以 fixture workspace 文件为准（伪造历史 tag 宿主文件：`.claude-plugin/marketplace.json` 6 plugins、`.codex/INSTALL.md` 无 TARGET_TAG、无 `.kimi-plugin/plugin.json`），不以仓库根目录同名文件为准。
-- 第 2 轮修订（review 意见）：release-package 补充同版本 pre-tag ready_for_tag 历史记录；github-evidence 补充证据确认声明；`claude_section_omitted_with_platform_limit` 断言修正为「固定版本替代路径只在目标 tag 实际存在已验证能力时点名，无则明确声明该 tag 无固定版本安装路径」。
+> 标题为 `v0.9.0 - {主题概述}` 强格式；升级说明按固定结构呈现：简述句按 v0.9.0 manifest 推导（6 个 role plugin 均更新到 `v0.9.0`）；`### Claude Code` 小节省略并在正文说明平台限制（/plugin update 无版本 pin，durable 正文无法承诺 v0.9.0 固定安装）；`### Codex` 小节省略（该版本 .codex/INSTALL.md 不含 TARGET_TAG 安装支持）；`### Kimi Code` 小节省略（该版本无 .kimi-plugin/plugin.json）；该 tag 无已验证固定版本安装路径，不得推荐不可用替代路径，收尾句包含由历史 manifest 推导的 6 个 plugin 并明确按默认分支（main）更新、不得承诺同步该 tag 能力；不生成空壳小节或臆造安装命令。
 
-## Test Set / Fixture Version
+## Test Set / Fresh Run
 
-- Schema: `evals.json` v1.0
-- Fixture: 伪造 dev-agent-skills marketplace 历史 tag（v0.9.0，6 role plugins、无 TARGET_TAG 支持、无 Kimi manifest；含同版本 pre-tag ready_for_tag 历史与 post-tag release_verified）、confirmed site Release Notes、curated GitHub evidence（维护者已确认）
-- With-skill evidence: `tmp/eval-runs/issue-220-r3/with_skill/eval-008-marketplace-historical-tag-limit-upgrade-note/candidate-output.md`
-- Without-skill evidence: `tmp/eval-runs/issue-220-r3/without_skill/eval-008-marketplace-historical-tag-limit-upgrade-note/candidate-output.md`
-- Judge verdict: `tmp/eval-runs/issue-220-r3/judge/verdict.md`
+- Eval schema: `evals.json` v1.0。
+- Fixture manifest: `6e0fc2447801f563813c5383f41902c94ab8b2ed2718e0b1475207eeab32d777`（5 个可见文件；两侧逐字节一致）。
+- Repository HEAD: `47adbbc9`。
+- Fresh run window: 2026-08-07 00:58–01:14（Asia/Shanghai）。
+- Runtime: 3 个独立会话，均为 `gpt-5.6-luna`、`model_reasoning_effort=medium`：fresh without-skill、fresh with-skill、fresh judge。
+- Controlled variable: 两个 candidate 使用完全相同的 prompt、fixture manifest、HOME/CODEX_HOME 目录形态与同一份 `auth.json`；唯一变量是 with-skill lane 安装并加载目标 specialist skill。
+- Physical isolation: 按 skill 先完成并销毁全部 baseline 随机顶层根，再创建 with-skill 根；32 个 candidate 全部完成并销毁后才创建第三套 judge 根。
+- Candidate visibility: lane 中未放入 `eval_metadata.json`、`evals.json`、`expected_output`、assertions、历史 `comparison.md`、README 脚手架或 judge 材料；泄漏扫描为 0 命中。
+- External data rule: 实时实体因 GitHub 认证、网络或当时集合缺失而不可得时，相关 assertion 记为 `NOT EXERCISED`，只影响 Coverage，不伪造成 Behavior 的 PASS/FAIL。
 
-## Assertions
+## Latest Result
 
-- PASS `title_matches_marketplace_format`：历史 tag 标题为 `v0.9.0 - 原位重试、附件链路兼容与双架构交付`，仍为强格式且概述与事实相关；without-skill FAIL（`Dev Agent Skills v0.9.0`）
-- PASS `upgrade_note_first_sentence_derived`：简述句 N=6 由 v0.9.0 manifest 推导（而非当前 7 个）；without-skill FAIL（使用「升级与风险」混合小节，首段非要求首句）
-- PASS `claude_section_omitted_with_platform_limit`：历史 tag 重跑省略 `### Claude Code` 并说明 durable 正文无法承诺固定 `v0.9.0`；固定版本替代路径只在目标 tag 实际存在已验证能力时点名，本 fixture 中 Codex/Kimi 均无固定版本能力，正文明确声明「该 tag 无已验证的固定版本安装路径」；without-skill FAIL（保留 `### Claude Code` 小节并作一般性说明，未形成「无已验证固定版本安装路径」统一声明）
-- PASS `codex_section_omitted_without_target_tag_support`：目标 tag 无 TARGET_TAG 支持时省略 `### Codex` 小节，不臆造安装指令；without-skill FAIL（生成了 `### Codex` 小节并推荐普通安装，未按断言省略）
-- PASS `kimi_section_omitted_without_plugin_json`：无 `.kimi-plugin/plugin.json` 时省略 `### Kimi Code` 小节，不生成空壳或 `/plugins install` 命令；without-skill FAIL（仍生成 `### Kimi Code` 小节，构成断言禁止的空壳能力说明）
-- PASS `closing_sentence_derived`：收尾明确声明该 tag 无已验证固定版本安装路径、6 个 plugin 按默认分支（main）更新且无法固定到 `v0.9.0`，不承诺同步该 tag 能力；without-skill FAIL（无固定收尾句）
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+- Overall result: FAIL
+- With-skill summary: github-release-gen 已实际加载（status skill_load_hits=2；transcript 首先读取 SKILL.md 及其 references）。with_skill 仅生成预览，快照无写入，但升级说明未按历史 tag 能力条件省略相关小节。未发现读取评测脚手架泄漏。
 
-## With Skill Behavior
+## Historical Contract Note
 
-- 完整应用 skill 与 reference：标题强格式、简述句 N=6 按历史 manifest 推导、三小节按目标 tag 实际能力条件省略（Claude 省略 + durable 平台限制说明、Codex 无 TARGET_TAG 省略、Kimi 无 manifest 省略）、无固定版本安装路径时明确声明、收尾句 N=6。
-- 保持站内事实与排除内部质量证据；preview only，无任何写操作；fixture 无 `release-preview.md`/`release-action.md` 残留。
+- 旧 durable 结果因 issue #234 的 prompt/fixture 泄漏修复或后续 assertion 增强而标记为 `BLOCKED`。本文件已由当前契约下的 fresh paired run 与独立 judge 结论覆盖。
+- 本轮没有复用历史 baseline、candidate、verdict 或旧结论；without-skill baseline 仅作行为对照，不参与 with-skill 的 Behavior/Coverage 判定。
 
-## Without Skill Baseline
+## With-Skill Behavior
 
-- 来源：issue-220-r3 fresh baseline（2026-08-03），基于同一 eval prompt 与 fixture；未读取或应用 skill、reference、Agent README、with-skill 输出或历史 comparison。
-- 行为：0/6 assertions PASS（第 3 轮，修正后断言与最终 fixture）。未省略 `### Claude Code`/`### Codex`/`### Kimi Code` 小节（保留为一般性说明），也未呈现标题强格式、固定首句与「无固定版本路径」条件化收尾——6 条断言全部保持 skill 增量区分度。
+github-release-gen 已实际加载（status skill_load_hits=2；transcript 首先读取 SKILL.md 及其 references）。with_skill 仅生成预览，快照无写入，但升级说明未按历史 tag 能力条件省略相关小节。未发现读取评测脚手架泄漏。
 
-## Failures / Findings
+## Without-Skill Baseline
 
-- 无 with-skill assertion failure。
-- 无 NOT EXERCISED；全部 6 条断言由本地 fixture 完整触发，Coverage FULL。
-- 区分度观察：第 3 轮修正断言后，条件省略断言（Claude/Codex/Kimi 小节省略与「无固定版本路径」声明）在 without-skill 侧也 FAIL（baseline 保留小节或未形成统一声明），skill 增量覆盖全部 6 条断言；此前第 2 轮观察到 Codex/Kimi 省略被 baseline 白捡的现象随断言收紧而消失。
+without_skill 未加载 skill（skill_load_hits=0），仅作为对照；其 candidate.md 只报告已生成预览及包含三宿主限制，未改变 with_skill 判定。
+
+## Assertion Review
+
+| Assertion | With skill | Evidence / reason | Without-skill comparison |
+| --- | --- | --- | --- |
+| `title_matches_marketplace_format` | **PASS** | with_skill candidate 的预览标题为 `v0.9.0 - 失败消息重试与统一附件模型兼容`，符合非空主题概述格式。 | without_skill candidate.md 仅报告生成预览，未提供可核验的标题正文。 |
+| `upgrade_note_first_sentence_derived` | **PASS** | with_skill 正文 `## 升级说明` 后首段为“无破坏性变更，也没有新增 plugin。6 个 role plugin 均更新到 `v0.9.0`。”；fixture 的 marketplace.json 注册了 6 个 plugin，且 release note 明确为 6 个 role plugin。 | without_skill candidate.md 仅声称包含六个 plugin 清单，未提供首句以供核验。 |
+| `claude_section_omitted_with_platform_limit` | **FAIL** | with_skill 正文实际包含 `### Claude Code` 小节；该 assertion 要求历史 tag 重跑时省略该小节，并在正文说明限制。虽然正文提到 `/plugin update` 无版本 pin，也声明无已验证固定版本路径，但小节未省略。 | without_skill candidate.md 报告包含 Claude 历史版本升级限制，但未提供正文结构细节。 |
+| `codex_section_omitted_without_target_tag_support` | **FAIL** | with_skill 正文实际包含 `### Codex` 小节，且加入了 `Fetch and follow instructions from https://raw.githubusercontent.com/.../refs/tags/v0.9.0/.codex/INSTALL.md` 指令；fixture 与 trace 已确认目标 `.codex/INSTALL.md` 不含 TARGET_TAG 支持，断言要求省略小节且不得臆造该安装指令。 | without_skill candidate.md 报告包含 Codex 历史版本限制，但未提供正文结构细节。 |
+| `kimi_section_omitted_without_plugin_json` | **FAIL** | with_skill 正文实际包含 `### Kimi Code` 小节。虽然其中如实说明无 `.kimi-plugin/plugin.json`、无 Kimi plugin 入口，但断言要求目标 tag 缺少 manifest 时省略该小节，不生成空壳小节。trace 第 15 行也显示 Kimi 文件 absent。 | without_skill candidate.md 报告包含 Kimi 历史版本限制，但未提供正文结构细节。 |
+| `closing_sentence_derived` | **FAIL** | with_skill 正文虽写有“该 tag 无已验证的固定版本安装路径”，但收尾句未包含由 manifest 推导的 6 个 role plugin 数量，也未明确按默认分支 `main` 更新；因此没有满足要求的 closing sentence。 | without_skill candidate.md 仅报告包含六个 plugin 清单，未提供收尾句正文。 |
+
+## Failures
+
+- with_skill 实际加载了目标 skill，但违反了历史 marketplace 能力不完整时的条件省略要求：Claude、Codex、Kimi 三个小节均被保留。
+- with_skill 臆造了目标 tag 的 Codex fetch 安装指令，尽管 trace 与 fixture 已确认该版本仅有不支持 TARGET_TAG 的普通安装文件。
+- with_skill 缺少要求的、包含 6 个 plugin 且明确按默认分支 main 更新的收尾句。
+
+## Not Exercised
+
+- 无；本轮覆盖全部 assertions。
 
 ## Next Steps
 
-- 保留当前 outline、标题门禁与升级说明固定结构；后续修改这些规则时重新运行。
-- 本 eval 与 eval-007 共同承接 eval-005 记录的 marketplace 正向分支 Coverage 缺口（见 eval-005 comparison 的 Coverage 记录更新）。
+- 重生成升级说明：省略 Claude Code、Codex、Kimi 三个小节；正文集中说明无已验证固定版本安装路径，并以 6 个 role plugin 和默认分支 main 完成收尾。
 
-## Runtime Artifacts Policy
+## Runtime Evidence
 
-- 双侧 candidates 与 judge verdict 位于 `tmp/eval-runs/issue-220-r3/`（r2 为第 2 轮历史轮次，仅作历史参考），属于未提交运行期诊断产物。
-- 长期只保留本 `comparison.md`；不提交 transcript、candidate、verdict、timing、run status 或 diagnostics。
+- With-skill candidate: return code `0`，duration `141.175s`，`skill_load_hits=2`。
+- Without-skill candidate: return code `0`，duration `112.661s`，`skill_load_hits=0`。
+- Independent judge: return code `0`，duration `78.547s`。
+- Judge 已读取两侧最终输出、完整 JSONL 工具 trace、before/after workspace snapshot、fixture manifest 与 session status，并核验读取顺序和零写入边界。
+- 所有临时 HOME/CODEX_HOME 与 candidate/judge 随机顶层根均已销毁；持久化证据目录中不存在 `auth.json`。
+
+## Runtime Artifact Policy
+
+- 仓库只持久化本 canonical `comparison.md`。
+- Candidate、transcript、judge verdict、timing、status、snapshot 与 diagnostics 仅作为 `/tmp` 运行期证据，不提交到 git。

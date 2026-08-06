@@ -5,63 +5,64 @@
 - Agent: `devops`
 - Skill: `devops-agent`
 - Eval: `eval-002-route-docs-site-completeness-chain`
-- Test case: route-docs-site-completeness-chain
-- Workspace: `workspace/eval-002-route-docs-site-completeness-chain`
-- Review context: issue #196 L2-4 router single-source convergence
+- Test case: `route-docs-site-completeness-chain`
+- Workspace: `agents/devops/test/devops-agent/evals/workspace/eval-002-route-docs-site-completeness-chain`
+
+## Latest Result
+
+- Fresh run: `2026-08-07`（issue #238 严格隔离重跑）
+- Model: `gpt-5.6-luna`，`model_reasoning_effort=medium`
+- Isolation: baseline 使用随机顶层 root；完成后仅保存在内存快照并删除 root，随后才创建 with_skill root；with_skill root 删除后才创建独立 judge root。两条 lane 的原始 prompt、fixture snapshot、`HOME` 与 `CODEX_HOME` 值相同。
+- Judge: 独立 fresh `codex exec`，读取实际产物、final、status 与工具轨迹，对照当前 assertions 判定；不采信 lane 自评。
+- Behavior result: PASS
+- Coverage result: FULL
+- Without-skill comparison: FAIL（仅作对照，不参与 durable Overall 组合）
+
+Overall result: PASS
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture: `pm-handoff.md` with a confirmed repo-wide documentation deployment packet, `N/A` feature scope, completeness evidence, and explicit delivery authorization boundary.
-- Validation date: 2026-07-31.
-- With-skill source: fresh candidate generated after reading `agents/devops/README.md`, `agents/devops/skills/devops-agent/SKILL.md`, `evals.json`, `eval_metadata.json`, and `pm-handoff.md`.
-- Without-skill source: fresh candidate regenerated from the same prompt and fixture only, without reading or applying the DevOps Agent README, target skill, with-skill candidate, historical comparison, or prior baseline.
+- Eval definition: `agents/devops/test/devops-agent/evals/evals.json`
+- Metadata: `agents/devops/test/devops-agent/evals/workspace/eval-002-route-docs-site-completeness-chain/eval_metadata.json`
+- Expected output: 按 deployment-planner 到 cicd-bootstrap 到 env-config-auditor 再回 formal-docs-sync 的顺序路由。
+- Fixture: `pm-handoff.md`
 
-## Latest Result
+## Assertion Results
 
-- Behavior result: **PASS**
-- Coverage result: **FULL** (3/3 assertions exercised)
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-## Assertions
-
-| Assertion | Result | Evidence |
-| --- | --- | --- |
-| `accepts_repo_wide_docs_handoff` | PASS | The with-skill result accepts deployment request type, `N/A` feature scope, and completeness evidence without returning for feature-path clarification. |
-| `routes_dependency_order` | PASS | It states `deployment-planner -> cicd-bootstrap -> env-config-auditor -> docs-agent:formal-docs-sync` in dependency order. |
-| `preserves_role_and_authority_boundaries` | PASS | It states that DevOps does not edit formal docs, only verified landed facts go to Docs, and the handoff does not authorize commit, push, image publication, or deployment. |
+| Assertion | with_skill | without_skill | Evidence |
+| --- | --- | --- | --- |
+| `accepts_repo_wide_docs_handoff` | PASS | PASS | with_skill 接受 deployment、feature_path=N/A 的 repo-wide handoff，未退回 feature_path 澄清；without_skill 也未退回澄清。 |
+| `routes_dependency_order` | PASS | FAIL | with_skill-final 明确给出 deployment-planner → cicd-bootstrap → env-config-auditor → docs-agent:formal-docs-sync；without_skill-final 未给出该依赖顺序。 |
+| `preserves_role_and_authority_boundaries` | PASS | PASS | with_skill-final 明确未修改文件并停止于不可验证资产，未执行部署或文档修改；符合 fixture 中未预授权交付的边界。 |
 
 ## With-Skill Behavior
 
-The router recognizes the complete repo-wide documentation-site packet as the explicit exception allowed by its PM handoff gate. It preserves the `N/A` feature scope, routes the four-stage chain in dependency order, and keeps both the DevOps/Docs role boundary and delivery authority boundary explicit.
-
-The L2-4 route table provides the deployment, CI/CD, and configuration-audit mappings without relying on a duplicated Routing Signals section. This explicit confirmed chain is not expanded from an underspecified request.
+- with_skill 三项断言均满足，Coverage 为 FULL，因此 durable Overall 为 PASS。without_skill 缺少所要求的依赖顺序，判为 baseline FAIL；不影响 durable Overall。
+- Workspace changes: 无文件变更。
 
 ## Fresh Without-Skill Baseline
 
-The fresh baseline accepts the repo-wide `N/A` scope, infers deployment followed by CI/CD and configuration review, and recognizes that routing does not authorize commit, push, image publication, or deployment.
+- baseline 在本轮重新生成，没有复用历史 baseline，也没有读取 target skill、with_skill 产物或旧 comparison。
+- Workspace changes: 无文件变更。
+- assertion 结果见上表；baseline 只用于比较 skill 增益，不作为 durable Overall 的独立机器门禁。
 
-It is less precise than the with-skill result: it does not name the exact four-stage specialist chain and does not explicitly state that DevOps must not edit formal documentation and may return only landed, verified operational facts to `docs-agent:formal-docs-sync`. It therefore provides useful general routing but does not meet two assertions in full.
+## Failures and Coverage Gaps
 
-## Failures
+- with_skill 无 assertion failure。
+- 所有当前 assertions 均已实际覆盖。
+- 无模型、认证、runner 或外部服务 blocker。
 
-- No with-skill assertion failures.
-- Baseline gap: exact dependency-chain identifiers and the verified-only DevOps-to-Docs role boundary.
-- No assertion was marked `NOT EXERCISED`; all three behaviors were observable.
-- No runtime, credential, or external-service blocker occurred.
+## Historical Result (Old Contract)
+
+- 旧结论为 PASS（3/3）；issue #234 修复 eval 泄漏后，该结论被标为 BLOCKED 等待重跑。
+- 该历史结论适用旧 eval 契约；本文件顶部的 2026-08-07 fresh 结果已取代它作为 latest durable 结论。
 
 ## Next Steps
 
-- Keep this eval as regression coverage for the confirmed repo-wide documentation-site handoff exception and exact dependency order.
-- Continue checking that future router edits preserve the verified-only Docs handoff and do not imply delivery authorization.
+- 保留当前回归用例；后续 skill、fixture 或断言变化时继续执行同等严格的 fresh paired run。
 
 ## Runtime Artifact Policy
 
-- Fresh paired evidence is stored only under `tmp/eval-runs/issue-196-l2-3-4/devops-agent/eval-002-route-docs-site-completeness-chain/`:
-  - `with_skill.md`
-  - `without_skill.md`
-  - `judge.md`
-- These scratch files are not committed.
-- Runtime transcripts, candidates, verdicts, timing, status, diagnostics, and generated output directories must not be copied into the fixture workspace.
+- 两条 lane、工具轨迹、状态、文件快照、judge verdict 与隔离事件只保存在 `tmp/eval-runs/issue-238-devops-strict-20260806/`，不提交 git。
+- durable 结果只保留本 `comparison.md`。

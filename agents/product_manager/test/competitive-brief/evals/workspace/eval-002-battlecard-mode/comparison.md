@@ -1,5 +1,36 @@
 # Eval Result: eval-002-battlecard-mode
 
+## Latest Fresh Evaluation — 2026-08-07
+
+- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
+- Fixture: HEAD `47adbbc9`; both lanes used the same empty fixture manifest.
+- Behavior result: PASS — 4/4 assertions passed.
+- Coverage result: FULL — all 4 assertion scenarios were exercised.
+Overall result: PASS
+
+### Assertion Results
+
+- `battlecard_fields`: PASS — each competitor received all required one-page battlecard fields.
+- `no_full_brief`: PASS — the result stayed in battlecard mode and omitted the full-brief section chain.
+- `evidence_boundary`: PASS — recorded the research date, linked source categories, and marked inference/validation boundaries.
+- `no_battlecard_offer`: PASS — did not offer battlecard creation as a later step.
+
+### With-Skill / Baseline Comparison
+
+The with-skill lane directly returned the two requested battlecards. The baseline also produced battlecards but additionally wrote three workspace files, including its own README; the input manifest contained no README, so this was an output write rather than fixture leakage.
+
+### Failures / Next Steps
+
+- No with-skill assertion failures and no coverage gaps.
+
+### Runtime Artifact Policy
+
+- Fresh evidence remains under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-002-battlecard-mode/` and is not committed.
+
+---
+
+The sections below are historical records from earlier runs.
+
 ## Evaluation Target
 
 - Agent: `product_manager`
@@ -8,10 +39,10 @@
 - Test case: battlecard-mode
 - Workspace: `workspace/eval-002-battlecard-mode`
 - Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-- Overall result: BLOCKED
+- Historical result: BLOCKED
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
-- Overall result: PASS
+- Historical result: PASS
 
 ## Review Context
 

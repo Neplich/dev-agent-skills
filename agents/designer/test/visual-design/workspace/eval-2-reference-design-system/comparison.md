@@ -12,11 +12,48 @@
 
 - Schema: `evals.json` v1.0
 - Fixture version: HEAD `a452319`
-- Fresh run time: `2026-08-03 11:58:33 +0800`
+- Fresh run time: `2026-08-07 00:04:31 +0800`
 - Runtime directory: `tmp/eval-runs/issue-198-brd/designer/visual-design/eval-002-playful/`
 - Fixture: confirmed PM handoff with `feature_path: enterprise-analytics-platform`
 
 ## Latest Result
+
+- Behavior result: **PASS**
+- Coverage result: **FULL** (2/2 assertions exercised)
+Overall result: PASS
+
+## Assertion Results (Current)
+
+- design_system_data: **PASS** — the new visual-system.md contains the reference-driven system, enterprise analytics category, Data-Dense Dashboard pattern, Data-Dense + Minimal Trust direction, colors, typography, UX rules, and anti-patterns derived from the local data helper.
+- assertion_2: **PASS** — the document contains no implementation code, install command, or engineering task decomposition and ends at engineer-agent handoff.
+
+## With-Skill Behavior (Current)
+
+The candidate consumes the confirmed handoff, runs the local reference lookup,
+reconciles it to the in-product analytics scope, and creates the canonical
+visual-system artifact without leaking implementation snippets.
+
+## Fresh Without-Skill Baseline (Current)
+
+The baseline was completed before the with-skill root and its local reference
+tree existed. It used the same prompt and clean handoff fixture in an independent
+top-level workspace under isolated HOME/CODEX_HOME, and produced a generic
+visual system without a real Design System Data lookup.
+
+## Failures (Current)
+
+- None.
+
+## Next Steps (Current)
+
+- No corrective change is indicated by the current assertions.
+
+## Runtime Artifact Policy (Current)
+
+- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
+- Only this durable comparison is updated.
+
+## Historical Result (Superseded: pre-#234 contract)
 
 - Behavior result: **PASS**
 - Coverage result: **FULL**

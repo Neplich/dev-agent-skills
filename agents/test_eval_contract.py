@@ -123,6 +123,41 @@ class EvalContractTests(unittest.TestCase):
             [],
         )
 
+    def test_eval_contract_allows_registered_manual_only_skill(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.write_eval_fixture(root, "# Comparison\n")
+            skill_doc = root / "agents/docs/skills/manual-gen/SKILL.md"
+            result_doc = root / "agents/docs/test/manual-gen/comparison.md"
+            skill_doc.parent.mkdir(parents=True)
+            result_doc.parent.mkdir(parents=True)
+            skill_doc.write_text("# Manual Gen\n")
+            result_doc.write_text("# Manual evaluation result\n")
+
+            errors = checker.validate_all(root)
+
+        self.assertEqual("\n".join(error.render(root) for error in errors), "")
+
+    def test_eval_contract_requires_manual_only_result(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.write_eval_fixture(root, "# Comparison\n")
+            skill_doc = root / "agents/docs/skills/manual-gen/SKILL.md"
+            skill_doc.parent.mkdir(parents=True)
+            skill_doc.write_text("# Manual Gen\n")
+
+            errors = checker.validate_all(root)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn(
+            "manual-only skill is missing evaluation result agents/docs/test/manual-gen/comparison.md",
+            rendered,
+        )
+
     def test_eval_contract_rejects_null_workspace(self):
         checker = load_checker_module()
 

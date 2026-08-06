@@ -1,59 +1,68 @@
-# pm-agent Eval Comparison: eval-016
+# Eval Result: eval-016-route-document-structure-governance
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `pm-agent`
 - Eval: `eval-016-route-document-structure-governance`
-- Workspace: `workspace/eval-016-route-document-structure-governance`
+- Workspace: `eval-016-route-document-structure-governance`
 
 ## Test Set / Fixture Version
 
 - Schema: `evals.json` v1.0
-- Fixture version: current uncommitted workspace atop HEAD `5af2134`. The workspace includes the latest review fixes: reserved namespace parents (`repository-governance` / `agent-collaboration`) need no physical root PRD or parent-index update; approved moves have per-role owners and each owner uses `git mv` only for its own directory; child-PRD creation refreshes the complete parent index and also bumps the parent version, refreshes `last_updated`, and adds changelog; contract PRD/TRD use `related_issues` and include issue #197. The fixture itself remains one aligned level-1 `notification-center` PM PRD and Engineer TRD; Design, QA, DevOps, and Security roots are absent. The HTML includes the reserved-namespace and per-role-owner constraints, but the fixture contains no reserved namespace or actual move, so those are not separate positive assertion scenarios in this case.
-- Fresh run: `2026-08-03 18:05:27 +0800`
-- Runtime directory: `tmp/eval-runs/issue-197-evals-r8/eval-016/`
-- Runtime HTML: `/private/var/folders/4g/9m0612cn1811btk7081t7ych0000gn/T/issue-197-eval016-r8.TCC3Ls/structure-governance-report.html`
+- Fixture version: current tracked fixture at the start of the 2026-08-07 run.
+- Fresh run: 2026-08-07 (Asia/Shanghai).
+- Candidate and independent judge: `gpt-5.6-luna`, `model_reasoning_effort="medium"`.
+- Isolation: identical raw prompt and fixture snapshot; all baseline roots were snapshotted in memory and destroyed before any with-skill root; all with-skill roots were destroyed before judging; HOME/CODEX_HOME values matched per eval and were reset for every lane; only `auth.json` was copied into CODEX_HOME.
+- Runtime evidence: `tmp/eval-runs/issue-238-pm/fresh-20260807/pm-agent/eval-016-route-document-structure-governance/`.
 
 ## Latest result:
 
-- Behavior result: PASS — all 5 assertions passed.
-- Coverage result: FULL — 5/5 assertion scenarios were exercised; no `NOT EXERCISED` items.
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
+- Behavior result: FAIL — determined only from the with-skill lane by an independent judge.
+- Coverage result: PARTIAL — 4/5 with-skill assertion scenarios were exercised.
+Overall result: FAIL
 
 ## Assertion Results
 
-- `routes_to_structure_governance`: PASS — the primary route is explicitly `pm-agent -> idea-to-spec:structure-governance` with `request_type: document_structure_governance`, not `prd-iteration`, `feature-catalog`, or a downstream role agent.
-- `read_only_audit`: PASS — the fixture scan did not modify, move, create, or delete repository documents. Only ignored runtime evidence and the repository-external HTML report were generated.
-- `report_form`: PASS — the self-contained HTML was actually written to `/private/var/folders/4g/9m0612cn1811btk7081t7ych0000gn/T/issue-197-eval016-r8.TCC3Ls/structure-governance-report.html`, an actual `mktemp -d` path outside the repository. Its existence, external placement, required sections, and absence from the repository runtime directory were verified; the with-skill response supplies the conclusion summary and absolute path.
-- `scope_six_role_dirs`: PASS — both the scan and HTML cover `docs/pm`, `docs/engineer`, `docs/design`, `docs/qa`, `docs/devops`, and `docs/security`; missing roots are limitations, not automatic defects.
-- `structural_change_requires_confirmation`: PASS — later merge, split, or move work requires explicit confirmation and a separate `change_tier: major` flow; the audit executes none. The report assigns PM, Engineer, Design, QA, DevOps, and Security work to the required role owners and preserves the reserved-parent namespace exemption.
+- `routes_to_structure_governance`: with-skill **PASS**; without-skill **NOT_EXERCISED** — with_skill trace 明确分类为 document_structure_governance，且读取的 pm-agent 路由表指定 idea-to-spec:structure-governance。
+- `read_only_audit`: with-skill **PASS**; without-skill **PASS** — 两份最终回复及 trace 均声明只读检查；两份 status 的 added/removed/modified 均为空，且 result_manifest 与 fixture_manifest 一致。
+- `report_form`: with-skill **FAIL**; without-skill **FAIL** — 两份最终回复都只提供 Markdown 对话内容；trace 中没有生成或写入 HTML 运行期 tmp 报告的工具调用。
+- `scope_six_role_dirs`: with-skill **NOT_EXERCISED**; without-skill **NOT_EXERCISED** — fixture 实际仅包含 docs/pm 与 docs/engineer，缺少 design、qa、devops、security 实体，因此按规则标记为 NOT_EXERCISED。
+- `structural_change_requires_confirmation`: with-skill **FAIL**; without-skill **FAIL** — with_skill trace/最终回复未说明合并、拆分、移动建议需用户确认、change_tier=major，或明确不在本次梳理中执行；without_skill 同样未覆盖该治理约束。
 
 ## With-Skill Behavior
 
-The dispatcher classified the request as `document_structure_governance` and continued directly into the read-only structure-governance lane. The scan found one aligned feature node and two Markdown artifacts, treated four missing role roots as limitations, and reported zero confirmed overlong, orphan, sibling, duplicate, or cross-role drift findings. The report retains a missing explicit `related_prd` as an informational metadata observation rather than misclassifying it as an orphan. The external HTML contains scope, feature coverage, summary counts, evidence, no-change recommendation, approval checklist, reserved-parent exemption, per-role move ownership, parent PRD refresh rules, and archive/QA-history constraints.
+正确识别并路由为 document_structure_governance，执行了只读扫描且没有文件变更；但未生成 HTML 运行期报告，也未在结论中落实 major/用户确认约束。六角色覆盖因 fixture 缺少实体而无法评估。
 
 ## Fresh Without-Skill Baseline
 
-The baseline was newly generated in this run from the same prompt and fixture without reading or applying `pm-agent`, `idea-to-spec`, Product Manager README, internal instructions, historical comparison, or prior runtime output. It preserved read-only semantics, addressed all six role roots, and required approval plus major handling for later structural changes. It failed `routes_to_structure_governance` because it named no repository-specific route and failed `report_form` because it returned only a Markdown summary without writing external HTML. Baseline result: 3/5 assertions passed.
+完成了基础只读目录检查且无文件变更，但没有可验证的结构治理路由、HTML 运行期报告或结构变更确认约束；六角色覆盖因 fixture 缺少实体而无法评估。
 
-## Judge Conclusion
-
-The judge compared the current fixture, with-skill response, newly generated baseline, scan evidence, actual external HTML, and all five assertions. The specialized route, read-only boundary, six-root scope, and separate major confirmation gate are explicit. The HTML exists at the reported external path, contains every required report section, and is paired with a conversation conclusion summary. Behavior is PASS and Coverage is FULL. The baseline contrast isolates the skill's repository-specific route and actually written external report.
+The baseline is comparison evidence only; its outcome does not affect `Overall result`.
 
 ## Failures
 
-- No with-skill assertion failures, unexercised assertions, or baseline-generation blockers.
-- Baseline gaps: `routes_to_structure_governance` and `report_form` failed.
+- with_skill 未生成 HTML 写入运行期 tmp 的报告。
+- with_skill 未明确结构变更建议须用户确认并按 change_tier=major 另行执行。
+- without_skill 同样未满足 HTML 报告形态和结构变更确认约束。
+
+## Coverage Gaps
+
+- fixture 仅有 pm、engineer 两个角色目录，design、qa、devops、security 缺失，六角色覆盖断言无法实际评估。
+
+## Blockers
+
+- None.
+
+## Historical Result (Pre-#234)
+
+- The previous durable result recorded Behavior **PASS**, Coverage **FULL**, and Overall **BLOCKED** after issue #234 identified prompt/fixture leakage.
+- That pre-remediation result is retained only as history and is superseded by this strict fresh run.
 
 ## Next Steps
 
-- Keep this eval as regression coverage for routing, repository-external report placement, read-only/major separation, and six-role scope.
-- Use separate fixture assertions if direct positive coverage is needed for a reserved namespace parent, an approved per-role `git mv`, parent PRD version/date/changelog refresh, or contract `related_issues` metadata.
+- Fix the with-skill failures listed above, then rerun this eval with the same strict isolation and independent-judge protocol.
 
 ## Runtime Artifacts Policy
 
-- The with-skill response, scan evidence, newly generated baseline, and explicit judge record remain under `tmp/eval-runs/issue-197-evals-r8/eval-016/` and are not committed.
-- The HTML report remains outside the repository at `/private/var/folders/4g/9m0612cn1811btk7081t7ych0000gn/T/issue-197-eval016-r8.TCC3Ls/structure-governance-report.html` and is not committed.
+- Candidate responses, traces, status manifests, isolation records, and judge evidence remain under the gitignored runtime path above and are not committed.

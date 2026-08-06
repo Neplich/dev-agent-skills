@@ -12,11 +12,50 @@
 
 - Schema: `evals.json` v1.0
 - Fixture version: HEAD `a452319`
-- Fresh run time: `2026-08-03 11:58:33 +0800`
+- Fresh run time: `2026-08-07 00:04:31 +0800`
 - Runtime directory: `tmp/eval-runs/issue-198-brd/designer/visual-design/eval-001-minimalist/`
 - Fixture: confirmed PM handoff with `feature_path: minimalist-productivity-app`
 
 ## Latest Result
+
+- Behavior result: **FAIL**
+- Coverage result: **FULL** (3/3 assertions exercised)
+Overall result: FAIL
+
+## Assertion Results (Current)
+
+- assertion_1: **FAIL** — no docs/design/minimalist-productivity-app/visual-system.md is generated despite the confirmed PM_HANDOFF fixture.
+- assertion_2: **PASS** — no token code, CSS/component implementation, engineering task decomposition, or test command is emitted.
+- assertion_3: **FAIL** — the candidate redirects to PM instead of naming engineer-agent as the implementation owner after design.
+
+## With-Skill Behavior (Current)
+
+The candidate applies the PM gate without inspecting the fixture's existing
+confirmed handoff, so it incorrectly blocks before producing the required
+visual system or Engineer handoff.
+
+## Fresh Without-Skill Baseline (Current)
+
+The baseline ran before the with-skill root existed, from the identical prompt
+and clean PM_HANDOFF fixture in an independent top-level workspace under
+isolated HOME/CODEX_HOME. It generated a detailed visual-system.md, but its
+behavior remains comparison input only.
+
+## Failures (Current)
+
+- Confirmed fixture handoff was not consumed.
+- Required visual-system artifact and engineer-agent handoff are absent.
+
+## Next Steps (Current)
+
+- Fix handoff discovery before applying the PM gate, then rerun.
+
+## Runtime Artifact Policy (Current)
+
+- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
+- Only this durable comparison is updated.
+
+## Historical Result (Superseded: pre-#234 contract)
 
 - Behavior result: **PASS**
 - Coverage result: **FULL**
