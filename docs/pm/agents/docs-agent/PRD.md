@@ -14,7 +14,7 @@ version: "1.5.1"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
-last_updated: "2026-08-05"
+last_updated: "2026-08-06"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/105"
   - "https://github.com/Neplich/dev-agent-skills/issues/112"

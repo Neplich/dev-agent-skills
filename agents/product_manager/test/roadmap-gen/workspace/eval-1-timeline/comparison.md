@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `roadmap-gen`
+- Skill: `roadmap-generator` → `roadmap-gen`（PASS 结论基于旧名，待重跑验证）
 - Eval: `eval-001-timeline`
 - Prompt: 为 `flutter/flutter` 生成完整项目路线图
 - Test set / fixture version: `evals.json` schema `1.0`; empty fixture context; live GitHub data queried on 2026-07-31
@@ -13,7 +13,8 @@
 
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
-- Overall result: PASS (partial coverage)
+- Overall result: BLOCKED
+- 注：以下 PASS 结论基于改名前的  评测记录保留；改名后待 fresh eval 重跑验证新入口。
 
 未覆盖场景：
 

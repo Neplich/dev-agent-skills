@@ -5,7 +5,7 @@ version: "0.1.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-19"
-last_updated: "2026-07-19"
+last_updated: "2026-08-06"
 generated_by: "trd-gen"
 feature: "formal-docs-sync"
 feature_path: "agents/docs-agent/formal-docs-sync"

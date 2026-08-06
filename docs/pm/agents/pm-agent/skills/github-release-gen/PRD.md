@@ -9,7 +9,7 @@ version: "1.1.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-20"
-last_updated: "2026-07-22"
+last_updated: "2026-08-06"
 generated_by: "idea-to-spec"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/120"

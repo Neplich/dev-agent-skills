@@ -9,7 +9,7 @@ parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
 author: "Neplich Codex"
 date: "2026-06-15"
-last_updated: "2026-06-15"
+last_updated: "2026-08-06"
 generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/changelog-gen/PRD.md"
 related_docs:

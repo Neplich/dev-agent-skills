@@ -5,7 +5,7 @@ version: "0.6.2"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
-last_updated: "2026-08-05"
+last_updated: "2026-08-06"
 generated_by: "trd-gen"
 feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"

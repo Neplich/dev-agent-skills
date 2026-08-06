@@ -2,10 +2,11 @@
 
 ## Evaluation Target
 
-- Skill: `github-release-gen`
+- Skill: `github-release-generator` → `github-release-gen`（PASS 结论基于旧名，待重跑验证）
 - Test case: site-first、draft latest 隔离、publish 漂移复查与 publication triple gate
 - Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-- Overall result: PASS
+- Overall result: BLOCKED
+- 注：以下 PASS 结论基于改名前的  评测记录保留；改名后待 fresh eval 重跑验证新入口。
 - Discrimination note: 修复后隔离重跑（2026-08-05）with/without 均满足全部断言。成因：宿主 release-package.md 天然承载门禁字段（ready_for_tag/release_verified/预览语义），baseline 可从中推断；skill 特有差异（内联完整预览正文、版本标准化、PRERELEASE_FLAG 推导）未落入断言粒度，建议后续增强断言。按 AGENTS.md 泄漏判定表属「规则天然存在于 skill 交付物」。
 
 - Overall result: PASS

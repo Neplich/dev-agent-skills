@@ -5,7 +5,7 @@ version: "0.1.4"
 status: Approved
 author: "Neplich Claude Code"
 date: "2026-08-05"
-last_updated: "2026-08-05"
+last_updated: "2026-08-06"
 generated_by: "trd-gen"
 feature: "manual-gen"
 feature_path: "agents/docs-agent/manual-gen"

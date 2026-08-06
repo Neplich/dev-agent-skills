@@ -5,7 +5,7 @@ version: "0.4.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-19"
-last_updated: "2026-07-19"
+last_updated: "2026-08-06"
 generated_by: "trd-gen"
 feature: "release-notes-gen"
 feature_path: "agents/docs-agent/release-notes-gen"
