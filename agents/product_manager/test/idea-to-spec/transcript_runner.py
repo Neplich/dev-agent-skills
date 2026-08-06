@@ -144,8 +144,14 @@ def resolve_skill_dir(meta: dict) -> str:
 def install_skill_documents(execution_root: Path, skill_dir: str) -> None:
     # Full agents/ mirror so literal `agents/...` references inside skill
     # documents resolve and router-to-specialist delegation chains (e.g.
-    # pm-agent -> idea-to-spec) keep working in the lane workspace.
-    shutil.copytree(repo_root() / "agents", execution_root / "agents")
+    # pm-agent -> idea-to-spec) keep working in the lane workspace. Agent
+    # test directories are stripped, matching docs/README.codex.md, so eval
+    # assertions and prior comparison results never enter a lane.
+    shutil.copytree(
+        repo_root() / "agents",
+        execution_root / "agents",
+        ignore=shutil.ignore_patterns("test"),
+    )
     # Entry skill exposed at the Codex discovery path.
     entry_source = Path(skill_dir)
     if not entry_source.is_absolute():
@@ -164,12 +170,14 @@ def build_isolated_env(temp_root: Path) -> tuple[dict, Path]:
     Codex skills still load — they are unrelated to repo skills.
     """
     home = temp_root / "codex-home"
-    (home / ".codex").mkdir(parents=True, exist_ok=True)
+    codex_home = home / ".codex"
+    codex_home.mkdir(parents=True, exist_ok=True)
     auth_src = Path.home() / ".codex" / "auth.json"
     if auth_src.exists():
-        shutil.copy2(auth_src, home / ".codex" / "auth.json")
+        shutil.copy2(auth_src, codex_home / "auth.json")
     env = dict(os.environ)
     env["HOME"] = str(home)
+    env["CODEX_HOME"] = str(codex_home)
     return env, home
 
 

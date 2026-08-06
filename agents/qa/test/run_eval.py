@@ -232,12 +232,14 @@ def build_isolated_env(runtime_root: Path) -> dict:
     Codex skills still load — they are unrelated to repo skills.
     """
     home = runtime_root / "codex-home"
-    (home / ".codex").mkdir(parents=True, exist_ok=True)
+    codex_home = home / ".codex"
+    codex_home.mkdir(parents=True, exist_ok=True)
     auth_src = Path.home() / ".codex" / "auth.json"
     if auth_src.exists():
-        shutil.copy2(auth_src, home / ".codex" / "auth.json")
+        shutil.copy2(auth_src, codex_home / "auth.json")
     env = dict(os.environ)
     env["HOME"] = str(home)
+    env["CODEX_HOME"] = str(codex_home)
     return env
 
 
