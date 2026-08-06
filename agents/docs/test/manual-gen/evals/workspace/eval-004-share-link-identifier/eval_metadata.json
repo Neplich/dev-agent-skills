@@ -17,8 +17,7 @@
     "docs/site/standards/change-map.yaml",
     "docs/site/standards/templates/manual-guide.md",
     "docs/site/manual/index.md",
-    "docs/site/package.json",
-    "scripts/capture-export-share.spec.md"
+    "docs/site/package.json"
   ],
   "execution_cleanup": [
     "with_skill",

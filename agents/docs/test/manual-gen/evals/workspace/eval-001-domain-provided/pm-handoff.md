@@ -9,6 +9,6 @@
 - downstream_owner: `Docs`
 - required_output: one bounded illustrated manual batch under `docs/site/manual/`
 - blockers_risks: 手册面向匿名使用者；本批次未授权任何会改变服务端状态的操作。
-- scope_confirmation: 候选页面树、截图计划与 change-map 增量已随本次请求一并确认。
+- scope_confirmation: 本批范围与增量内容已随本次请求一并确认，范围之外的内容不属本批。
 
 The maintainer confirms the host repository, bounded scope, live evidence source, and required output.
