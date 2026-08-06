@@ -33,7 +33,6 @@
 本轮无 FAIL 断言。
 
 
-**PASS (2/2 assertions)** — fresh Codex subagent semantic review.
 
 ## With-Skill Behavior
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

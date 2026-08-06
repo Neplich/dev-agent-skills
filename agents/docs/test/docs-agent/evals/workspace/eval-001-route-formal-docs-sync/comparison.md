@@ -31,10 +31,9 @@
 | `references_specialist_gate_only` | FAIL | FAIL | 两条产物均未指向 `formal-docs-sync/SKILL.md` 及其内部指令；仅称专家流程不可用。 |
 | `recognizes_shared_consumption_contract` | FAIL | FAIL | 两条产物均未提及 `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`，也未给出该权威指针。 |
 
-未满足断言：``accepts_complete_handoff``、``references_specialist_gate_only``、``recognizes_shared_consumption_contract``
+未满足断言（with/without 任一 FAIL）：``accepts_complete_handoff``、``references_specialist_gate_only``、``recognizes_shared_consumption_contract``
 
 
-**PASS（4/4 assertions）** — router 接受完整 PM handoff、保留全部 packet 字段、正确选择 `formal-docs-sync`，并只引用 specialist gate 与共享 consumption contract。
 
 ## With-Skill Behavior
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

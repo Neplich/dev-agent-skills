@@ -14,17 +14,17 @@
 
 ## Latest Result
 
-- Behavior result: `PASS`（with）/ `PASS`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
 - Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
-Overall result: PASS
+Overall result: FAIL
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `FULL`
-- without_skill：Behavior `PASS` / Coverage `FULL`
+- with_skill：Behavior `FAIL` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
 
 ### 逐断言判定
 
@@ -35,7 +35,8 @@ Overall result: PASS
 | preserves_manual_handoff_context | FAIL | FAIL | with_skill 仅保留范围、证据和输出，遗漏 `request_type`、`change_tier`、`feature_path`、`host_repository`、`blockers_risks`；without_skill 也遗漏 `feature_path`、`host_repository`，且未完整保留原始阻塞风险字段。 |
 | references_manual_gate_only | PASS | FAIL | with_skill 明确将截图、环境确认、候选步骤确认和写入交给“`manual-gen` 专项流程”，且声明当前未生成或修改文件；without_skill 未明确指向 `manual-gen` gate，仅泛称“manual specialist gate”，并额外自行判断 `docs/site/` 缺失为阻塞。 |
 
-未满足断言：`routes_manual_gen`、`preserves_manual_handoff_context`、`references_manual_gate_only`
+未满足断言（with/without 任一 FAIL）：`routes_manual_gen`、`preserves_manual_handoff_context`、`references_manual_gate_only`
+
 
 
 ## With-Skill Behavior

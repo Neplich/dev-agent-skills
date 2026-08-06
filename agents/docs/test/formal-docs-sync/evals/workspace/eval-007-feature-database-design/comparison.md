@@ -56,16 +56,13 @@
 | `keeps_reciprocal_and_authority_links` | PASS | PASS | 两条 lane 的三个组件页链接 invitation-acceptance，流程页反向链接三个组件；Design 页面链接 API 与数据库权威页，未复制完整 contract 表。 |
 | `keeps_cross_domain_authority_unique` | PASS | PASS | 两条 lane 均将 invitation-acceptance 保留在 Workspace Access 下；Audit Log 仅通过链接引用流程，没有复制流程正文。 |
 | `updates_atomic_map_and_unverified_pages` | FAIL | FAIL | with_skill 的稳定数据库页仍是 `v0.9.0`；without_skill 多个 Design/Database 页仍是 `v1.0.1`，且其 `src/audit/**` 映射未包含完整 Database 子树和互链闭包。 |
-| `runs_host_checks_and_handoffs_audit` | FAIL | FAIL | with_skill 明确记录 `npm run test:docs` 被环境阻断且尚未 handoff；without_skill 记录自动化测试未成功，且没有三项宿主检查通过证据或 `docs-agent:docs-audit` handoff。 |
+| `runs_host_checks_and_handoffs_audit` | NOT_EXERCISED | NOT_EXERCISED | with_skill 明确记录 `npm run test:docs` 被环境阻断且尚未 handoff；without_skill 记录自动化测试未成功，且没有三项宿主检查通过证据或 `docs-agent:docs-audit` handoff。 |
 
-未满足断言：``passes_design_closeout_gate``、``refreshes_confirmed_stable_path``、``updates_atomic_map_and_unverified_pages``、``runs_host_checks_and_handoffs_audit``
+未满足断言（with/without 任一 FAIL）：``passes_design_closeout_gate``、``refreshes_confirmed_stable_path``、``updates_atomic_map_and_unverified_pages``
+
+基础设施说明：基础设施依赖缺失（`runs_host_checks_and_handoffs_audit`）→ 已转 NOT_EXERCISED；对应断言不构成 skill 行为回归。
 
 
-**PASS（with-skill 12/12；fresh without-skill 6/12）** — with-skill satisfies
-all Database/Design hierarchy, current-fact, reciprocal-link, stable authority,
-closeout, atomic mapping, recursive navigation, host-check, and `docs-agent:docs-audit` handoff
-assertions. The arbitrary-depth Design wording and sidebar implementation did
-not weaken existing component/flow behavior.
 
 ## Assertions
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

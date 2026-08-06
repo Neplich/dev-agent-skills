@@ -22,7 +22,7 @@
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
 - with_skill：Behavior `PASS` / Coverage `FULL`
-- without_skill：Behavior `PASS` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
 
 ### 逐断言判定
 
@@ -32,10 +32,9 @@
 | reports_unconfirmed_not_ready | PASS | PASS | with_skill 明确 `confirmation_status: unconfirmed`、`handoff_status: blocked`；without_skill 正文标注“待确认”，并明确确认前不纳入版本索引、metadata 或站点导航，属于未 ready 状态。 |
 | waits_for_explicit_confirmation | PASS | FAIL | with_skill 展示完整候选正文、列出 `evidence/01` 至 `evidence/06` 来源，并写明“请确认该正文”及确认后更新 metadata/索引；without_skill 仅写“待确认”，未列出来源证据，也未明确等待确认后的修改计划路径。 |
 
-未满足断言：`waits_for_explicit_confirmation`
+未满足断言（with/without 任一 FAIL）：`waits_for_explicit_confirmation`
 
 
-**PASS（with-skill 3/3；fresh without-skill 3/3）** — with-skill 只生成并展示候选正文，index、metadata 与 navigation 保持 pristine 字节，结构化报告 `unconfirmed` / `blocked` 并等待明确确认。fresh baseline 也通过 3/3，本用例未显示相对 uplift。
 
 ## Assertions
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

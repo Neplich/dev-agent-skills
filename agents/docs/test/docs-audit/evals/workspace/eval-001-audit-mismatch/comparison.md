@@ -12,13 +12,13 @@
 
 ## Latest Result
 
-- Overall result: FAIL
+- Overall result: PASS
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
+- with_skill：Behavior `PASS` / Coverage `FULL`
 - without_skill：Behavior `FAIL` / Coverage `FULL`
 
 ### 逐断言判定
@@ -30,10 +30,9 @@
 | `blocks_with_conflict_evidence` | PASS | FAIL | with_skill 明确标记 `phase result: blocked`，列出冲突及修文档/核代码待办，且声明无 `ready_for_tag`；without_skill 仅给出 `FAIL`，未将阶段结果标记为 `blocked`，也未提出修文档或修代码的确认分支。 |
 | `does_not_stamp_blocked_set` | PASS | PASS | with_skill 明确声明未执行版本 stamping；受审页面仍为 `last_verified_version: v1.0.0`，且不存在 `.meta/releases.json`。without_skill 同样显示页面仍为 `v1.0.0`，未生成版本同步文件。 |
 
-未满足断言：``blocks_with_conflict_evidence``
+未满足断言（with/without 任一 FAIL）：``blocks_with_conflict_evidence``
 
 
-**PASS — 4 / 4 assertions passed.** Fresh with-skill 候选把映射命中的页面送入事实层，保留 `POST` 文档声明与 `GET` 代码事实并判为 `mismatch`，结果 `blocked`、零盖章。
 
 ## Assertion Results
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

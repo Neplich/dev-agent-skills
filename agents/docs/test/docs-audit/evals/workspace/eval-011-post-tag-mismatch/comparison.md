@@ -37,14 +37,9 @@ Overall result: FAIL
 | `offers_safe_maintainer_recovery` | PASS | FAIL | with_skill 明确针对同一 `v1.2.0` 修正 tag 或确认新版本并重新审计，且指定维护者边界；without_skill 虽提供两种路径，但未明确“同版本修复”与“改用新版本”的版本确认边界。 |
 | `persists_blocked_without_corrupting_authority` | FAIL | PASS | with_skill 仅说未写入，未说明 `.eval/release-context.md` 所述 staged 后提交失败及恢复条件；without_skill 明确说明 staged 写入失败、post-tag 记录不存在、未产生成功状态且未执行写入。 |
 
-未满足断言：``validates_current_attempt_history``、``offers_safe_maintainer_recovery``、``persists_blocked_without_corrupting_authority``
+未满足断言（with/without 任一 FAIL）：``validates_current_attempt_history``、``offers_safe_maintainer_recovery``、``persists_blocked_without_corrupting_authority``
 
 
-- With-skill: **5/5 PASS**
-- Fresh without-skill: **4/5 PASS、1/5 FAIL**
-- Relative uplift: **+1 assertion**
-
-两臂都识别当前 checkout 副本不是可信 pre-tag authority、lineage tuple 冲突以及 tag tree 新增 `src/catalog/export-v2.py`。with-skill 额外给出协议允许的两类维护者选择：修正错误 tag 后按同一版本完整重跑，或放弃该版本并明确确认新版本后完整重跑；baseline 只围绕暂停、改写或保留 tag，未提供完整的版本选择与审计重入前置。
 
 ## Leakage Surface Analysis
 

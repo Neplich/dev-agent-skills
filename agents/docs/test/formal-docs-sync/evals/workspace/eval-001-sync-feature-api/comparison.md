@@ -36,12 +36,9 @@
 | `keeps_unconfirmed_batch_read_only` | PASS | PASS | 两者均明确“不写入站点”、要求维护者确认后再写入（with `:1,58`；without `:1,51`）。实际目录仅有 `result.txt` 和 `run_status.json`，没有页面、change-map、index、导航或 handoff 产物。 |
 | `defaults_new_pages_to_internal_visibility` | FAIL | FAIL | 两者均未为候选页面或映射声明 `visibility: internal`，也未解释 `both/public` 例外。 |
 
-未满足断言：``selects_backfill_mode_and_api_contract``、``derives_complete_api_candidate_tree``、``presents_per_node_confirmation_matrix``、``proposes_exact_atomic_change_map``、``preserves_stable_paths_and_scope_boundaries``、``defaults_new_pages_to_internal_visibility``
+未满足断言（with/without 任一 FAIL）：``selects_backfill_mode_and_api_contract``、``derives_complete_api_candidate_tree``、``presents_per_node_confirmation_matrix``、``proposes_exact_atomic_change_map``、``preserves_stable_paths_and_scope_boundaries``、``defaults_new_pages_to_internal_visibility``
 
-- 注：PASS 结论基于旧断言（6 条）评测记录保留；断言已按 #239 增强（新增 internal 收紧断言，共 7 条），待 fresh eval 重跑验证新断言。
-- Discrimination note: 修复后隔离重跑（2026-08-05，fresh 会话、workspace 仓库外拷贝）with/without 均满足旧断言（6 条，增强前）。成因：宿主 handoff 材料（pm-handoff.md 的 required_output、change-map.yaml 模板、feature-catalog）天然承载候选树/change-map/零写入结构，按 AGENTS.md 泄漏判定表属「规则天然存在于 skill 交付物」，非泄漏缺陷，如实记录。skill 特有行为差异（新增页面 internal 收紧、change-map exclude 完整性）未落入断言粒度，建议后续增强断言。
 
-**PASS (with skill 6/6; without skill 3/6, 旧断言)** — the skill lane satisfied the full unconfirmed-batch protocol, while the fresh baseline retained only generic tree derivation, scope protection, and read-only behavior. Comparative discrimination is restored.
 
 ## Assertions
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

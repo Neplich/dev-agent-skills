@@ -28,7 +28,6 @@
 本轮无 FAIL 断言。
 
 
-- Overall result: PASS
 
 ## Fixture Drift Notice
 

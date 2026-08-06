@@ -37,14 +37,9 @@ Overall result: FAIL
 | `rolls_back_only_the_failed_attempt` | PASS | PASS | 两条 lane 都要求保留 `.eval/` 证据、恢复原始 staged snapshot，并明确保留 `notes/local.txt` 等无关用户变化。 |
 | `proves_host_state_restoration` | PASS | PASS | 两条 lane 都基于 `prewrite-fingerprint.md` 识别 branch、unstaged 区、授权页面和无关文件未变，但 staged hash 仍为 `9999…`，因此没有虚构成功，并要求恢复后重新核验。 |
 
-未满足断言：``detects_non_content_candidate_drift``、``rejects_every_unauthorized_transformation``、``rechecks_committed_candidate_boundaries``
+未满足断言（with/without 任一 FAIL）：``detects_non_content_candidate_drift``、``rejects_every_unauthorized_transformation``、``rechecks_committed_candidate_boundaries``
 
 
-- With-skill: **5/5 PASS**
-- Fresh without-skill: **4/5 PASS、1/5 FAIL**
-- Relative uplift: **+1 assertion**
-
-两臂都从 raw event log 识别 executable bit、symlink、rename、delete、额外 path、gitlink 和清理后的 staged fingerprint 漂移。with-skill 进一步把 anchor/handoff committed delta 作为 staged 之后的独立成功门禁；baseline 虽报告 hypothetical committed 异常，却没有建立“早期 staged 通过不能成为最终 authority”的二次验证要求。
 
 ## Leakage Surface Analysis
 

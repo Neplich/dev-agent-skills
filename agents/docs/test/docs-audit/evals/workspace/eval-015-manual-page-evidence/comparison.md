@@ -14,15 +14,15 @@
 
 ## Latest Result
 
-- Behavior result: `PASS`（with）/ `PASS`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
 - Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
-- Overall result: PASS
+- Overall result: FAIL
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `FULL`
-- without_skill：Behavior `PASS` / Coverage `FULL`
+- with_skill：Behavior `FAIL` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
 
 ### 逐断言判定
 
@@ -34,7 +34,8 @@
 | `checks_manual_redaction` | FAIL | FAIL | 两侧均识别截图中的 `token-demo-redact-me`（SVG 第 5 行），但均遗漏正文测试邮箱 `test.user@example.invalid`（`manage-access.md:18`）。 |
 | `blocks_manual_stamp` | PASS | PASS | with_skill 明确结论为 `blocked`、不能返回 `ready_for_tag`，并说明未修改 `last_verified_version`；without_skill 明确页面不可安全发布，且 `last_verified_version: unverified`（`manage-access.md:10`），未返回 `ready_for_tag`。 |
 
-未满足断言：``checks_step_screenshot_files``、``checks_caption_step_correspondence``、``checks_manual_navigation_reachability``、``checks_manual_redaction``
+未满足断言（with/without 任一 FAIL）：``checks_step_screenshot_files``、``checks_caption_step_correspondence``、``checks_manual_navigation_reachability``、``checks_manual_redaction``
+
 
 
 ## With-Skill Behavior

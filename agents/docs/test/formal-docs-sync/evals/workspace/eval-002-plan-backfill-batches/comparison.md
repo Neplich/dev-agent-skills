@@ -35,37 +35,33 @@
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
+- with_skill：Behavior `FAIL` / Coverage `PARTIAL`
+- without_skill：Behavior `FAIL` / Coverage `PARTIAL`
 
 ### 逐断言判定
 
 | 断言 | with_skill | without_skill | 判定依据 |
 | --- | --- | --- | --- |
-| loads_scoped_api_product_contracts | with_skill: NOT_EXERCISED | without_skill: NOT_EXERCISED | 两条 lane 均无加载合同模块的执行证据；with_skill 仅有 `skill-map.md`，结果摘要也未展示 Product/API 模块加载过程。 |
-| prefers_catalog_scope | with_skill: FAIL | without_skill: FAIL | `result.txt` 只提出 Accounts 页面/代码建议，没有引用 catalog owner `identity-team`、验证路径存在或明确 Billing out-of-batch。 |
-| presents_batch_before_write | with_skill: FAIL | without_skill: FAIL | 两条 lane 都先完成 Product 写入，之后才在 `result.txt` 建议 Accounts；没有写入前展示三页完整树、逐节点边界并等待确认的证据。 |
-| keeps_unconfirmed_batch_read_only | with_skill: PASS | without_skill: PASS | 两条 lane 的 `docs/site/api/` 未新增 Accounts 页面；with_skill 的 `change-map.yaml` 保留既有 Billing 条目，Product 已确认批次正常更新。 |
-| aligns_seed_with_page | with_skill: FAIL | without_skill: FAIL | 没有 Accounts 的实际 change-map seed；with_skill 仅在摘要中口头列出 routes/schema/tests，未保留并展示 Billing 未知字段及完整原子候选范围。 |
-| handles_missing_catalog_semantically | with_skill: NOT_EXERCISED | without_skill: NOT_EXERCISED | fixture 明确存在 `docs/pm/feature-catalog.md`，无 catalog 分支未触发。 |
-| creates_complete_product_tree | with_skill: PASS | without_skill: PASS | 两条 lane 均实际生成完整 Product 树：根、两个域、`invitations`、两个二级子功能 index，以及四个任务页。 |
-| keeps_every_task_navigable | with_skill: PASS | without_skill: PASS | 两条 lane 的各级 index 均包含所需直接子链接，例如 `product/index.md` → 域 → `invitations` → 二级子功能 → 任务页。 |
-| records_confirmed_non_leaf_scope | with_skill: FAIL | without_skill: FAIL | with_skill 的 `member-invitations/index.md` 与 `invitation-acceptance/index.md` 有角色和子节点，但没有明确本批排除项；without_skill 的非叶页面同样缺少完整 scope/exclusion 语义。 |
-| writes_evidence_backed_task_behavior | with_skill: PASS | without_skill: PASS | 任务页均通过 `related_code` 和 acceptance test 引用证据；实现与测试覆盖 owner/admin、3 个上限、重复邀请、resend/revoke、恢复、过期/无效邀请及 dashboard empty/retry。 |
-| updates_product_map_atomically | with_skill: PASS | without_skill: FAIL | with_skill 的 `change-map.yaml` 包含 broad、invitation、两个精确 Product glob，并为各 glob列出祖先闭包，同时保留 Billing/support 条目及未知字段；without_skill 未新增任何 Product 映射。 |
-| links_authorities_without_copying_contracts | with_skill: PASS | without_skill: PASS | 两条 lane 的任务页均链接上级页面及 Design/API/Database/Ops 索引，未复制接口或数据库契约正文。 |
-| runs_product_host_checks | with_skill: FAIL | without_skill: FAIL | with_skill 明确报告 `npm run test:docs` 因 `fast-glob` 无法启动，未证明三个宿主命令通过；without_skill 只报告相对链接校验，缺少三条命令及 docs-audit handoff 证据。 |
-| blocks_audit_without_confirmed_version | with_skill: NOT_EXERCISED | without_skill: NOT_EXERCISED | 两条 lane 均没有 `docs-agent:docs-audit` handoff、affected set 或因缺少 `target_release_version` 而 blocked 的审计记录。 |
+| loads_scoped_api_product_contracts | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均无加载合同模块的执行证据；with_skill 仅有 `skill-map.md`，结果摘要也未展示 Product/API 模块加载过程。 |
+| prefers_catalog_scope | FAIL | FAIL | `result.txt` 只提出 Accounts 页面/代码建议，没有引用 catalog owner `identity-team`、验证路径存在或明确 Billing out-of-batch。 |
+| presents_batch_before_write | FAIL | FAIL | 两条 lane 都先完成 Product 写入，之后才在 `result.txt` 建议 Accounts；没有写入前展示三页完整树、逐节点边界并等待确认的证据。 |
+| keeps_unconfirmed_batch_read_only | PASS | PASS | 两条 lane 的 `docs/site/api/` 未新增 Accounts 页面；with_skill 的 `change-map.yaml` 保留既有 Billing 条目，Product 已确认批次正常更新。 |
+| aligns_seed_with_page | FAIL | FAIL | 没有 Accounts 的实际 change-map seed；with_skill 仅在摘要中口头列出 routes/schema/tests，未保留并展示 Billing 未知字段及完整原子候选范围。 |
+| handles_missing_catalog_semantically | NOT_EXERCISED | NOT_EXERCISED | fixture 明确存在 `docs/pm/feature-catalog.md`，无 catalog 分支未触发。 |
+| creates_complete_product_tree | PASS | PASS | 两条 lane 均实际生成完整 Product 树：根、两个域、`invitations`、两个二级子功能 index，以及四个任务页。 |
+| keeps_every_task_navigable | PASS | PASS | 两条 lane 的各级 index 均包含所需直接子链接，例如 `product/index.md` → 域 → `invitations` → 二级子功能 → 任务页。 |
+| records_confirmed_non_leaf_scope | FAIL | FAIL | with_skill 的 `member-invitations/index.md` 与 `invitation-acceptance/index.md` 有角色和子节点，但没有明确本批排除项；without_skill 的非叶页面同样缺少完整 scope/exclusion 语义。 |
+| writes_evidence_backed_task_behavior | PASS | PASS | 任务页均通过 `related_code` 和 acceptance test 引用证据；实现与测试覆盖 owner/admin、3 个上限、重复邀请、resend/revoke、恢复、过期/无效邀请及 dashboard empty/retry。 |
+| updates_product_map_atomically | PASS | FAIL | with_skill 的 `change-map.yaml` 包含 broad、invitation、两个精确 Product glob，并为各 glob列出祖先闭包，同时保留 Billing/support 条目及未知字段；without_skill 未新增任何 Product 映射。 |
+| links_authorities_without_copying_contracts | PASS | PASS | 两条 lane 的任务页均链接上级页面及 Design/API/Database/Ops 索引，未复制接口或数据库契约正文。 |
+| runs_product_host_checks | NOT_EXERCISED | NOT_EXERCISED | with_skill 明确报告 `npm run test:docs` 因 `fast-glob` 无法启动，未证明三个宿主命令通过；without_skill 只报告相对链接校验，缺少三条命令及 docs-audit handoff 证据。 |
+| blocks_audit_without_confirmed_version | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均没有 `docs-agent:docs-audit` handoff、affected set 或因缺少 `target_release_version` 而 blocked 的审计记录。 |
 
-未满足断言：`prefers_catalog_scope`、`presents_batch_before_write`、`aligns_seed_with_page`、`records_confirmed_non_leaf_scope`、`updates_product_map_atomically`、`runs_product_host_checks`
+未满足断言（with/without 任一 FAIL）：`prefers_catalog_scope`、`presents_batch_before_write`、`aligns_seed_with_page`、`records_confirmed_non_leaf_scope`、`updates_product_map_atomically`
+
+基础设施说明：基础设施依赖缺失（runs_product_host_checks）→ 已转 NOT_EXERCISED；对应断言不构成 skill 行为回归。
 
 
-**PASS（with-skill 14/14；fresh without-skill 9/14）** — with-skill generated
-the complete two-level Product feature tree, kept every task reachable through
-five structurally nested sidebar levels, preserved the read-only Accounts and
-Billing surfaces, retained independently complete Product mapping closures,
-and blocked `docs-agent:docs-audit` pre-tag work until a maintainer confirms
-`target_release_version`.
 
 ## Assertions
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

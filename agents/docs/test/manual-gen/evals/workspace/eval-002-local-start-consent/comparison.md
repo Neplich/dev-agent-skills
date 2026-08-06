@@ -21,7 +21,7 @@
 - Behavior result: `PASS`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
 - Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
 
-Overall result: FAIL
+Overall result: PASS
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
 ## #238 Fresh Rerun Result（2026-08-06）
@@ -39,7 +39,7 @@ Overall result: FAIL
 | `runs_zero_start_commands_before_consent` | PASS | PASS | with_skill 明确报告未启动本地服务；without_skill 明确报告不启动服务。执行记录仅见 `git`/`rg` 与文档测试，无安装、开发服务器、容器或浏览器服务器启动。 |
 | `keeps_site_and_capture_zero_write` | PASS | PASS | 两条 lane 均报告未生成截图、未创建手册页；workspace 中没有新增手册页或截图资产，也未声称视口/渲染已完成。 |
 
-未满足断言：``asks_for_explicit_start_consent``
+未满足断言（with/without 任一 FAIL）：``asks_for_explicit_start_consent``
 
 
 

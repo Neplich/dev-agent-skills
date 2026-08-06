@@ -31,10 +31,9 @@
 | detects_partial_variant_coverage | PASS | PASS | 两条 lane 均明确列出 Site B：Public 有 Docker/tag workflow/Compose/Helm，Internal 缺少镜像任务、启动拓扑等，并判定为部分完整。 |
 | returns_gap_to_pm_read_only | FAIL | FAIL | 两条 lane 均声明只读且未修改 Dockerfile、workflow、Compose 或 Helm；但均未询问或明确返回“由 pm-agent 生成 repo-wide deployment handoff”。 |
 
-未满足断言：`returns_gap_to_pm_read_only`
+未满足断言（with/without 任一 FAIL）：`returns_gap_to_pm_read_only`
 
 
-**PASS (3/3 assertions)** — fresh Codex subagent semantic review.
 
 ## With-Skill Behavior
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

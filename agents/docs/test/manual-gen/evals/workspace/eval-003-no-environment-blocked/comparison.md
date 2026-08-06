@@ -21,7 +21,7 @@
 - Behavior result: `PASS`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
 - Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
 
-Overall result: FAIL
+Overall result: PASS
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
 ## #238 Fresh Rerun Result（2026-08-06）
@@ -39,7 +39,7 @@ Overall result: FAIL
 | `does_not_invent_interface_evidence` | PASS | PASS | 两条结果均明确说明没有真实界面截图，未生成示意截图或使用无关图片；目录中也不存在图片资产。 |
 | `keeps_manual_surfaces_zero_write` | PASS | PASS | 两条 workspace 的站点文件哈希完全一致，未新增手册页、导航、change map 或截图；执行记录没有写入命令，并明确说明未修改仓库。 |
 
-未满足断言：``reports_environment_blocker``
+未满足断言（with/without 任一 FAIL）：``reports_environment_blocker``
 
 
 

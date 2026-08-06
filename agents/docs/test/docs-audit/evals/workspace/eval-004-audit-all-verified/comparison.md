@@ -43,7 +43,7 @@ Overall result: FAIL
 | persists_candidate_producer_schema | NOT_EXERCISED | NOT_EXERCISED | 审计报告只有 `blocked` 诊断报告，不是 candidate record；缺少可解析 Git refs，无法执行候选记录生成与 staged gate。 |
 | anchors_candidate_then_discovers_success | NOT_EXERCISED | NOT_EXERCISED | `docs/site/.meta/audit/handoffs/pre-tag-v1.1.0.md` 不存在，且两条 lane 均明确未创建 anchor、handoff 或返回 `ready_for_tag`。 |
 
-未满足断言：`verifies_complete_affected_set`、`stamps_all_pages_together`
+未满足断言（with/without 任一 FAIL）：`verifies_complete_affected_set`、`stamps_all_pages_together`
 
 
 

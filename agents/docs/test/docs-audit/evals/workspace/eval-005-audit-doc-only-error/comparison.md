@@ -12,13 +12,13 @@
 
 ## Latest Result
 
-- Overall result: FAIL
+- Overall result: PASS
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
+- with_skill：Behavior `PASS` / Coverage `FULL`
 - without_skill：Behavior `FAIL` / Coverage `FULL`
 
 ### 逐断言判定
@@ -30,10 +30,9 @@
 | `classifies_doc_only_conflict_mismatch` | PASS | FAIL | with_skill 保留 DELETE 文档声明、代码事实、证据和影响，并明确判定为 `mismatch`；without_skill 描述了冲突，但未给出 `mismatch` 分类。 |
 | `blocks_despite_no_code_diff` | PASS | FAIL | with_skill 明确结论为 `blocked`、不能进入 `ready_for_tag`，且未盖章；without_skill 仅称“不通过（需修复）”，未明确阻塞或禁止 `ready_for_tag`。 |
 
-未满足断言：``includes_doc_only_change``、``classifies_doc_only_conflict_mismatch``、``blocks_despite_no_code_diff``
+未满足断言（with/without 任一 FAIL）：``includes_doc_only_change``、``classifies_doc_only_conflict_mismatch``、``blocks_despite_no_code_diff``
 
 
-**PASS — 4 / 4 assertions passed.** Fresh with-skill 候选把纯文档变更直接纳入影响域，按 `related_code` 发现无实现的 DELETE 声明，判 `mismatch`、pre-tag `blocked` 且零盖章。
 
 ## Assertion Results
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

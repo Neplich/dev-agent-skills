@@ -12,13 +12,13 @@
 
 ## Latest Result
 
-- Overall result: FAIL
+- Overall result: PASS
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
+- with_skill：Behavior `PASS` / Coverage `FULL`
 - without_skill：Behavior `FAIL` / Coverage `FULL`
 
 ### 逐断言判定
@@ -30,10 +30,9 @@
 | `does_not_persist_report_without_target` | PASS | PASS | 两个工作区均不存在 `docs/site/.meta` 目录，也不存在 `audit-7c9e2af.md` 或其他版本化审计报告。 |
 | `does_not_write_version_stamp` | PASS | PASS | 两个工作区的 `docs/site/api/catalog.md` 均保持 `last_verified_version: unverified`；均不存在 `.meta/releases.json`，也未写入版本号。 |
 
-未满足断言：``blocks_without_target_release_version``
+未满足断言（with/without 任一 FAIL）：``blocks_without_target_release_version``
 
 
-**PASS — 4 / 4 assertions passed.** Fresh with-skill 候选在缺少维护者确认的 `target_release_version` 时返回 `blocked`，仅做只读事实诊断，零报告、零盖章、零 metadata 写入。
 
 ## Assertion Results
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

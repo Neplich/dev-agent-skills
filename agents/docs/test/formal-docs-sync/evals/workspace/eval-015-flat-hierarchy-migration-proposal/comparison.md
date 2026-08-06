@@ -39,7 +39,7 @@ Overall result: FAIL
 | `reports_out_of_batch_drift_read_only` | FAIL | FAIL | with_skill 只提到 `graph-search.md`，没有分别报告“知识建设与维护”和“平台治理与运行”两组页面清单及目标节点；without_skill 未报告批次外 drift。 |
 | `loads_only_api_contract` | FAIL | FAIL | with_skill 声明不涉及其他类型，但未显式列出“已加载模块”、host API 模板及 `Hierarchy drift` 结论字段；without_skill 同样没有这些显式报告。 |
 
-未满足断言：``detects_flat_hierarchy_drift``、``proposes_migration_before_write``、``does_not_deepen_flat_layout``、``reports_out_of_batch_drift_read_only``、``loads_only_api_contract``
+未满足断言（with/without 任一 FAIL）：``detects_flat_hierarchy_drift``、``proposes_migration_before_write``、``does_not_deepen_flat_layout``、``reports_out_of_batch_drift_read_only``、``loads_only_api_contract``
 
 
 

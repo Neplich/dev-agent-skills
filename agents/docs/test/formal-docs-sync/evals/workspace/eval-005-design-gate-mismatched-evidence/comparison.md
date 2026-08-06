@@ -29,10 +29,9 @@
 | `design_zero_change` | PASS | PASS | 两个目标文件内容均保持原样；`.eval/actual-diff.patch` 仅包含 `src/preferences_summary.py` 新增，不包含 design 文档或 change-map 修改。 |
 | `routes_to_owner` | FAIL | FAIL | with_skill 仅路由给 `pm-agent`，未明确路由 Engineer / `trd-gen`；without_skill 仅要求统一 PRD/TRD，未指定 PM owner 与 Engineer / `trd-gen` 双 owner 路由。 |
 
-未满足断言：``routes_to_owner``
+未满足断言（with/without 任一 FAIL）：``routes_to_owner``
 
 
-**PASS** — with-skill 3/3 assertions 通过；without-skill baseline 3/3。
 
 ## With-Skill Behavior
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

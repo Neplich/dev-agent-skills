@@ -37,14 +37,9 @@ Overall result: FAIL
 | `binds_pre_and_post_tag_inventory` | FAIL | FAIL | 产物仅列出 pre-tag 的 6 个来源和 post-tag 的 7 个来源，没有说明 pre-tag 如何固化完整来源集合，也没有说明 post-tag 消费同一绑定；with_skill: `result.txt:6`，without_skill: `result.txt:5`。 |
 | `makes_inventory_integrity_reproducible` | FAIL | FAIL | 产物提到 selector 数量、匹配数量和 extractor identity，但没有给出可独立重算的 inventory integrity 证据，也没有说明来源集合、定位契约或顺序被篡改时如何阻止阶段成功（with_skill: `result.txt:13-14,18`；without_skill: `result.txt:19-25,27`）。 |
 
-未满足断言：``binds_pre_and_post_tag_inventory``、``makes_inventory_integrity_reproducible``
+未满足断言（with/without 任一 FAIL）：``binds_pre_and_post_tag_inventory``、``makes_inventory_integrity_reproducible``
 
 
-- With-skill: **5/5 PASS**
-- Fresh without-skill: **3/5 PASS、2/5 FAIL**
-- Relative uplift: **+2 assertions**
-
-两臂都保留 prerelease/build/case identity，并逐来源识别 raw form、缺失、歧义 selector 和 unknown extractor。with-skill 额外要求 pre-tag inventory 预先包含 future actual-tag source 并记录 pending state，post-tag 只能消费同一 inventory；同时给出可独立重算的 canonical inventory digest。baseline 把 tag 当作 post-tag 新增来源，且没有提供稳定 serialization/digest 算法。
 
 ## Leakage Surface Analysis
 

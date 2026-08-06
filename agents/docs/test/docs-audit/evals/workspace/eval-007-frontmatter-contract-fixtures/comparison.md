@@ -37,12 +37,9 @@ Overall result: FAIL
 | `blocks_release_for_invalid_frontmatter` | PASS | FAIL | with_skill 明确结果为 `blocked`、不得 `ready_for_tag`，且未写入 stamp；without_skill 虽给出整体 NO-GO，但把合法页单独标为“通过”，构成局部盖章。 |
 | `uses_shared_contract_source` | FAIL | FAIL | 两条 lane 都未能确认 `docs-agent` 的 `frontmatter-contract.md` 与 `check-frontmatter.mjs` 存在或同源一致；with_skill 明确报告“版本面证据缺失”。 |
 
-未满足断言：``blocks_release_for_invalid_frontmatter``、``uses_shared_contract_source``
+未满足断言（with/without 任一 FAIL）：``blocks_release_for_invalid_frontmatter``、``uses_shared_contract_source``
 
 
-### Historical result for the former contract
-
-**PASS — 8 / 8 assertions passed.** Fresh with-skill 候选接受维护者确认的等效入口，按当时共享 frontmatter 真源得到 1 个合法页面 `verified`、4 个非法页面 `stale`，pre-tag `blocked` 且不局部盖章。
 
 ## Assertion Results
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

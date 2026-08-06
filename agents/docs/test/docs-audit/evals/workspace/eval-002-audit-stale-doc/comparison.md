@@ -12,13 +12,13 @@
 
 ## Latest Result
 
-- Overall result: FAIL
+- Overall result: PASS
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
+- with_skill：Behavior `PASS` / Coverage `FULL`
 - without_skill：Behavior `FAIL` / Coverage `FULL`
 
 ### 逐断言判定
@@ -30,10 +30,9 @@
 | `blocks_stale_release` | PASS | FAIL | with_skill 报告 frontmatter 为 `phase_result: blocked`，并明确“不可 `ready_for_tag`”；without_skill 仅为 `status: fail`，未形成 pre-tag `blocked` 结果。 |
 | `does_not_stamp_stale_set` | PASS | PASS | 两条 lane 的 `catalog.md` 和 `change-map.yaml` 仍为 `last_verified_version: v1.0.0`，且均不存在或更新 `.meta/releases.json`；报告也明确未执行版本戳更新。 |
 
-未满足断言：``marks_missing_doc_update_suspect``、``blocks_stale_release``
+未满足断言（with/without 任一 FAIL）：``marks_missing_doc_update_suspect``、``blocks_stale_release``
 
 
-**PASS — 4 / 4 assertions passed.** Fresh with-skill 候选先标 `suspect`，再以新增必填 `locale` 和 `invalid_locale` 错误证据确认 `stale`，pre-tag `blocked` 且零盖章。
 
 ## Assertion Results
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

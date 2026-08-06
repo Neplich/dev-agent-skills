@@ -38,12 +38,9 @@
 | `does_not_run_post_entry_checks` | PASS | PASS | with_skill 将 `npm run test:docs` 放在版本确认之后；两条 lane 均未生成 site-ready/pre-tag handoff，且无依赖安装或 docs check 产物。 |
 | `returns_version_ambiguity_to_pm` | FAIL | FAIL | 两条 lane 都要求维护者确认版本，但未将阻塞明确交回 PM 入口分类；with_skill 反而指向 `release-engineering` / `docs-agent`，without_skill 仅列出后续确认步骤。 |
 
-未满足断言：``stops_before_loading_execution_workflow``、``keeps_all_site_surfaces_unchanged``、``returns_version_ambiguity_to_pm``
+未满足断言（with/without 任一 FAIL）：``stops_before_loading_execution_workflow``、``keeps_all_site_surfaces_unchanged``、``returns_version_ambiguity_to_pm``
 
 
-- With-skill: **5/5 PASS**
-- Fresh without-skill: **3/5 PASS、2/5 FAIL**
-- Relative uplift: **+2 assertions**，通过率从 60% 提升到 100%。
 
 ## Leakage Surface Analysis
 

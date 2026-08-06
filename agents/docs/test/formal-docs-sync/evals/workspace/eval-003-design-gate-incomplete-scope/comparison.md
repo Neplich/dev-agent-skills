@@ -12,13 +12,13 @@
 
 ## Latest Result
 
-- Overall result: FAIL
+- Overall result: PASS
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
+- with_skill：Behavior `PASS` / Coverage `FULL`
 - without_skill：Behavior `FAIL` / Coverage `FULL`
 
 ### 逐断言判定
@@ -29,10 +29,9 @@
 | `design_zero_change` | PASS | PASS | 两条 lane 的 `.eval/actual-diff.patch` 均仅包含 `src/preferences_summary.py`；设计页与 change-map 的 SHA-1 均分别为 `dfcee25...` 与 `bed32d5...`，保持一致。with_skill 报告也明确为“Changed docs: 无”。 |
 | `no_tentative_design` | PASS | PASS | 两条 lane 均未修改设计正文；实际 diff 没有 `docs/site/design/preferences-summary.md` 或设计性新增内容，也未将紧凑摘要描述为当前状态。 |
 
-未满足断言：``blocks_on_incomplete_scope``
+未满足断言（with/without 任一 FAIL）：``blocks_on_incomplete_scope``
 
 
-**PASS** — with-skill 3/3 assertions 通过；without-skill baseline 2/3。
 
 ## With-Skill Behavior
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

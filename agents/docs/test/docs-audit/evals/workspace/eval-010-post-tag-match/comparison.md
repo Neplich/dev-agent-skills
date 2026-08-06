@@ -18,7 +18,7 @@
 
 - Behavior result: `PASS`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
 - Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
-Overall result: FAIL
+Overall result: PASS
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
@@ -37,14 +37,9 @@ Overall result: FAIL
 | `requires_durable_post_tag_evidence` | PASS | FAIL | with_skill 明确识别 `release_evidence_branch_confirmation` 和 `release_evidence_expected_head` 缺失，并将两个场景均保持为 `blocked`；without_skill 将 direct-handoff 描述为“文档内容已验证、发布闭环待确认”，未按断言要求保持 blocked。 |
 | `preserves_upstream_release_artifacts` | PASS | PASS | 两条 lane 均明确“未执行任何 tag、branch 或 release 写入”，且未重新生成、盖章或改变 pre-tag handoff。 |
 
-未满足断言：``selects_pre_tag_authority_safely``、``proves_released_tree_binding``、``requires_durable_post_tag_evidence``
+未满足断言（with/without 任一 FAIL）：``selects_pre_tag_authority_safely``、``proves_released_tree_binding``、``requires_durable_post_tag_evidence``
 
 
-- With-skill: **5/5 PASS**
-- Fresh without-skill: **1/5 PASS、4/5 FAIL**
-- Relative uplift: **+4 assertions**
-
-两臂都看到一致的 tag/tree/version 原始证据。with-skill 在 direct handoff 可用时验证外部 authority，在 fresh clone 对象不可达时从 tag tree 固定 discovery path 重建 authority；同时因维护者未确认独立 post-tag evidence branch 与 expected head，让两个场景都保持 `blocked`。baseline 只完成 direct 场景，并把它表述为只读审计通过。
 
 ## Leakage Surface Analysis
 

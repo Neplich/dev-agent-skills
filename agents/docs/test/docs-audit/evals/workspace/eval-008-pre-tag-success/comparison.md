@@ -49,7 +49,7 @@ Overall result: FAIL
 | returns_ready_only_after_integration | NOT_EXERCISED | NOT_EXERCISED | 未进入临时分支集成、FF、回读或 CAS 恢复路径。 |
 | returns_ready_for_tag_not_published | FAIL | FAIL | 断言要求 pre-tag 返回 `ready_for_tag`，但两边 `result.txt` 均明确返回 `blocked`，并写明“不能返回 `ready_for_tag`”。 |
 
-未满足断言：`returns_ready_for_tag_not_published`
+未满足断言（with/without 任一 FAIL）：`returns_ready_for_tag_not_published`
 
 
 

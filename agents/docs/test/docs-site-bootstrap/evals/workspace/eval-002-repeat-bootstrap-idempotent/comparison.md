@@ -34,7 +34,8 @@ Overall result: FAIL
 | `reports_skipped_identical` | FAIL | FAIL | 两条 lane 的 manifest 都将 `feature-design.md` 和 `product-handbook.md` 标为 `skipped-identical`，但它们与源资产哈希不同：源资产分别为 `135360d…`、`2dbab2…`，工作区为 `5595820…`、`2c7b10…`。with_skill 报告了这两项冲突；without_skill 还错误报告 `standards/index.md` 冲突，而其哈希与源资产一致。 |
 | `preserves_existing_state` | PASS | PASS | `standards/change-map.yaml` 与 `.meta/releases.json` 均存在，内容分别保持源资产哈希 `014f624…`、`c906ead…`；manifest 的既有 `createdAt` 也未被重置。阻塞时未写入宿主状态。 |
 
-未满足断言：``reports_skipped_identical``
+未满足断言（with/without 任一 FAIL）：``reports_skipped_identical``
+
 
 
 ## Current Asset-Set Drift

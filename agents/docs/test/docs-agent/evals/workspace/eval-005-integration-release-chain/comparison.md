@@ -43,11 +43,6 @@ Overall result: PASS (partial coverage)
 本轮无 FAIL 断言。
 
 
-- With-skill: **7/7 PASS**
-- Fresh without-skill: **4/7 PASS、3/7 FAIL**
-- Relative uplift: **+3 assertions**，语义通过率从 57.1% 提升到 100%。
-
-两侧都正确返回 `blocked`，但不是等价表现。with-skill 识别站内 Release Notes 正文确认凭据缺口、缺失的 pre-tag 权威、tag/tree 漂移和 evidence branch 并发漂移，并把不同缺口交还正确 owner。baseline 只识别了对象漂移和 pre/post-tag 成功证据缺失。
 
 ## Leakage Surface Analysis
 

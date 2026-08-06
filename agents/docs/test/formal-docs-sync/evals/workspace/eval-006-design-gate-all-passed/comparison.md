@@ -32,7 +32,6 @@
 本轮无 FAIL 断言。
 
 
-**PASS** — with-skill 3/3 assertions 通过；without-skill baseline 3/3。
 
 ## With-Skill Behavior
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

@@ -30,10 +30,9 @@
 | `skips_content_only_recheck` | PASS | PASS | with_skill 明确写出“Content-only…不触发部署级复核”；without_skill 写出“纯文案/错字变更：不影响运行时，无需部署”。 |
 | `rechecks_material_release_surface` | FAIL | FAIL | 两条 lane 都识别出新增 Internal 导航会改变生成输出和启动路径；但 with_skill 仅说“需重新验证”，没有产出共享状态/检查复用证据；without_skill 仅分类为需要部署，也没有证明复用共享检查。两者均未复制新清单。 |
 
-未满足断言：``rechecks_material_release_surface``
+未满足断言（with/without 任一 FAIL）：``rechecks_material_release_surface``
 
 
-**PASS (2/2 assertions)** — fresh Codex subagent semantic review.
 
 ## With-Skill Behavior
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

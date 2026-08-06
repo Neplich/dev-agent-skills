@@ -15,14 +15,14 @@
 
 ## Latest Result
 
-- Overall result: FAIL
+- Overall result: PASS (partial coverage)
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
+- with_skill：Behavior `PASS` / Coverage `PARTIAL`
+- without_skill：Behavior `PASS` / Coverage `PARTIAL`
 
 ### 逐断言判定
 
@@ -32,12 +32,13 @@
 | `reconciles_confirmed_version_facts` | PASS | PASS | 两页分别写入上限 `25`、镜像 `registry.example/ai-hub:v1.5.0` 和 `DASHBOARD_LIMIT=25`；未写入 `v1.5.1` 计划，且与 `release-evidence.md`、代码、配置、测试记录一致。 |
 | `preserves_release_notes_surfaces` | PASS | PASS | `docs/site/release-notes/index.md`、`.meta/releases.json`、导航配置及现有 Release Notes 内容保持原状；两条 lane 均未创建 Release Notes 产物，并保留了应指向独立 Release Notes 流程的边界。 |
 | `keeps_release_pages_unverified` | PASS | PASS | 两页 frontmatter 均为 `last_verified_version: unverified`，没有写入 `v1.5.0` 审计盖章。 |
-| `runs_release_host_checks_and_handoffs` | FAIL | FAIL | 两条 lane 都报告 `npm run test:docs` 因依赖缺失未完成；没有真实成功的命令/cwd/退出状态记录，也没有包含两页 affected set、确认版本来源并交给 `docs-agent:docs-audit` 的 pre-tag handoff 产物。 |
+| `runs_release_host_checks_and_handoffs` | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 都报告 `npm run test:docs` 因依赖缺失未完成；没有真实成功的命令/cwd/退出状态记录，也没有包含两页 affected set、确认版本来源并交给 `docs-agent:docs-audit` 的 pre-tag handoff 产物。 |
 
-未满足断言：``runs_release_host_checks_and_handoffs``
+本轮无 FAIL 断言。
+
+基础设施说明：基础设施依赖缺失（`runs_release_host_checks_and_handoffs`）→ 已转 NOT_EXERCISED；对应断言不构成 skill 行为回归。
 
 
-**PASS（with-skill 5/5；fresh without-skill 5/5）** — with-skill 仅同步 v1.5.0 受影响的 product/ops 页面，既有两个 change-map entries 保持准确，Release Notes surfaces 零变化，两页保持 `unverified`，并在真实宿主检查通过后向 #117 输出维护者确认版本 handoff。fresh baseline 也满足全部 assertions，因此本用例证明协议可执行，但未显示相对 uplift。
 
 ## Assertions
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

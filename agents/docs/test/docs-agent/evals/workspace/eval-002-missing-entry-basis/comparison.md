@@ -30,10 +30,9 @@
 | does_not_execute_bootstrap | PASS | FAIL | with_skill 工作区没有创建 `docs/site/`、manifest 或建站文件；without_skill 实际创建了 `index.html`、`styles.css`、`script.js`，并声称已搭建首版。 |
 | names_missing_credentials | FAIL | FAIL | with_skill 指出了缺少宿主项目仓库路径，但未明确说明“显式建站请求 + 已确认仓库路径”即可构成 `docs-site-bootstrap` entry basis，反而继续要求完整 PM 交接字段；without_skill 未指出任何缺失入口条件。 |
 
-未满足断言：`guides_to_pm_agent`、`does_not_execute_bootstrap`、`names_missing_credentials`
+未满足断言（with/without 任一 FAIL）：`guides_to_pm_agent`、`does_not_execute_bootstrap`、`names_missing_credentials`
 
 
-**PASS（3/3 assertions）** — router 对模糊建站请求准确指出缺失的已确认宿主路径，不执行 bootstrap，并温和引导经 `pm-agent` 补齐入口。
 
 ## With-Skill Behavior
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

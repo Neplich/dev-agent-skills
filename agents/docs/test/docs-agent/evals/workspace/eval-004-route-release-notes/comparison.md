@@ -32,7 +32,7 @@ Overall result: FAIL
 | preserves_handoff_context | FAIL | FAIL | 两条 lane 均未在结果中保留完整的 `request_type`、`change_tier`、`feature_path`、`release_scope`、`host_repository`、`source_documents`、`evidence_sources`、`required_output` 和 `blockers_risks`。 |
 | references_release_notes_gate_only | FAIL | FAIL | 两条 lane 均未指向 `release-notes-gen/SKILL.md` 或其内部指令；未复制详细协议，但缺少必要的 specialist gate 指针。 |
 
-未满足断言：`accepts_release_notes_entry_basis`、`routes_release_notes_generator`、`preserves_handoff_context`、`references_release_notes_gate_only`
+未满足断言（with/without 任一 FAIL）：`accepts_release_notes_entry_basis`、`routes_release_notes_generator`、`preserves_handoff_context`、`references_release_notes_gate_only`
 
 
 

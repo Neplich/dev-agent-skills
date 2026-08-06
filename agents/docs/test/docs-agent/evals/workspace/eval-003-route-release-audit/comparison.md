@@ -31,10 +31,9 @@
 | routes_docs_audit | PASS | FAIL | with_skill 明确写出“已正确路由至 `docs-audit`”，并保留版本、changelog、release evidence 后声明由专项能力执行；without_skill 未选择 `docs-audit`，而是自行给出审计结论和检查清单。 |
 | references_audit_gate_only | FAIL | FAIL | with_skill 仅提到“`docs-agent:docs-audit` 专项能力未提供”，没有指向 `docs-audit/SKILL.md` 或内部指令；without_skill 同样没有该 gate 引用，并自行展开审计检查与后续步骤。 |
 
-未满足断言：`routes_docs_audit`、`references_audit_gate_only`
+未满足断言（with/without 任一 FAIL）：`routes_docs_audit`、`references_audit_gate_only`
 
 
-**PASS（3/3 assertions）** — with-skill 接受等效确认 release chain，正确路由 `docs-agent:docs-audit`，只引用 specialist 权威执行 gate。`docs-audit` description 扩展为双阶段表述后，router 分流语义无回归。
 
 ## Assertions
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

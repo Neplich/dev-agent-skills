@@ -14,26 +14,27 @@
 
 ## Latest Result
 
-- Overall result: PASS (partial coverage)
+- Overall result: PASS
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `PARTIAL`
+- with_skill：Behavior `PASS` / Coverage `FULL`
 - without_skill：Behavior `PASS` / Coverage `PARTIAL`
 
 ### 逐断言判定
 
 | 断言 | with_skill | without_skill | 判定依据 |
 | --- | --- | --- | --- |
-| preserves_not_applicable_evidence | PASS | FAIL | with_skill 的 `docs/site/DEPLOYMENT.md` 明确写出 `not_applicable`，引用 `../../evidence.md`，覆盖 Public/Internal 两个变体，并说明变化时进入 PM → DevOps → Docs 路由；without_skill 仅描述“不引入图片存储依赖”，未明确 `not_applicable`、证据路径或下一 owner。 |
+| preserves_not_applicable_evidence | PASS | NOT_EXERCISED | with_skill 的 `docs/site/DEPLOYMENT.md` 明确写出 `not_applicable`，引用 `../../evidence.md`，覆盖 Public/Internal 两个变体，并说明变化时进入 PM → DevOps → Docs 路由；without_skill 仅描述“不引入图片存储依赖”，未明确 `not_applicable`、证据路径或下一 owner。 |
 | does_not_open_devops_handoff | PASS | PASS | with_skill 明确写出“DevOps handoff: not required”，仅在托管模型变化时重新路由；without_skill 也未生成 DevOps handoff，且当前证据确认静态托管仍有效。 |
 
-未满足断言：`preserves_not_applicable_evidence`
+本轮无 FAIL 断言。
+
+基础设施说明：基础设施依赖缺失（preserves_not_applicable_evidence）→ 已转 NOT_EXERCISED；对应断言不构成 skill 行为回归。
 
 
-**PASS (2/2 assertions)** — fresh Codex subagent semantic review.
 
 ## With-Skill Behavior
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。

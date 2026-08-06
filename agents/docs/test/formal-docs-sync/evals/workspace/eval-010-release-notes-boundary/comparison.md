@@ -36,12 +36,9 @@ Overall result: FAIL
 | keeps_entire_site_zero_diff | FAIL | FAIL | 两条 lane 的实际 diff 都新增 `docs/site/release-notes/v1.5.0.md`，并修改 `index.md` 与 `.meta/releases.json`；不满足 `docs/site/` 零写入。 |
 | preserves_external_release_boundary | PASS | PASS | 产物和执行记录只显示 `docs/site/` 内三处文档变更；未发现创建/移动 tag、创建或发布 GitHub Release，或混入外部发布授权。 |
 
-未满足断言：`routes_complete_entry_to_site_owner`、`keeps_entire_site_zero_diff`
+未满足断言（with/without 任一 FAIL）：`routes_complete_entry_to_site_owner`、`keeps_entire_site_zero_diff`
 
 
-- With-skill: **4/4 PASS**
-- Fresh without-skill: **1/4 PASS、3/4 FAIL**
-- Relative uplift: **+3 assertions**，通过率从 25% 提升到 100%。
 
 ## Leakage Surface Analysis
 

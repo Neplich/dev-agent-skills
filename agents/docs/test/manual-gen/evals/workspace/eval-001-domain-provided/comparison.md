@@ -19,7 +19,7 @@
 ## Latest Result
 
 - Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `PARTIAL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
+- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— 本轮重跑实际触发的断言场景
 
 Overall result: FAIL
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），且被测平台已改为执行前维护者确认注入（#235），本结论基于旧契约，待重跑验证。
@@ -28,7 +28,7 @@ Overall result: FAIL
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
 - with_skill：Behavior `FAIL` / Coverage `PARTIAL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `PARTIAL`
 
 ### 逐断言判定
 
@@ -39,9 +39,11 @@ Overall result: FAIL
 | `records_viewport_set_and_readback` | NOT_EXERCISED | FAIL | with_skill 明确“视口设定 / 回读：未执行”；without_skill 已生成截图但所有产物均无 1920×1080 设定、实际回读或不符停止证据。 |
 | `captures_sanitized_product_evidence` | NOT_EXERCISED | FAIL | with_skill “采集截图清单：无”；without_skill 的 `step-1-editor.svg`、`step-4-rendered-page.svg` 是带“示意”标题的人工 SVG，不是真实运行界面截图，也无统一视口/主题/导航状态证据。 |
 | `writes_evidence_bounded_manual` | NOT_EXERCISED | PASS | with_skill 保持零写入且未生成操作条目；without_skill 的 `anonymous-edit-preview.md` 含角色、前置条件、编号步骤、界面说明、截图及图注、预期结果、注意事项/异常处理，`related_code` 指向 `PageEditor.tsx`/`PageDetail.tsx`，图片为同级相对路径，`last_verified_version: unverified`。 |
-| `checks_render_and_handoffs_audit` | FAIL | FAIL | with_skill 记录了 `npm run test:docs`、工作目录和退出状态，但渲染验收未执行，且 handoff 仅写 `docs-audit`，未形成明确的 `docs-agent:docs-audit` blocked handoff；without_skill 只在结果中笼统声称检查通过，没有权威命令、工作目录、状态与结果，也未记录版本交接 blocked 门禁。 |
+| `checks_render_and_handoffs_audit` | NOT_EXERCISED | NOT_EXERCISED | with_skill 记录了 `npm run test:docs`、工作目录和退出状态，但渲染验收未执行，且 handoff 仅写 `docs-audit`，未形成明确的 `docs-agent:docs-audit` blocked handoff；without_skill 只在结果中笼统声称检查通过，没有权威命令、工作目录、状态与结果，也未记录版本交接 blocked 门禁。 |
 
-未满足断言：``uses_provided_domain_without_local_start``、``confirms_one_bounded_batch``、``records_viewport_set_and_readback``、``captures_sanitized_product_evidence``、``checks_render_and_handoffs_audit``
+未满足断言（with/without 任一 FAIL）：``uses_provided_domain_without_local_start``、``confirms_one_bounded_batch``、``records_viewport_set_and_readback``、``captures_sanitized_product_evidence``
+
+基础设施说明：基础设施依赖缺失（`checks_render_and_handoffs_audit`）→ 已转 NOT_EXERCISED；对应断言不构成 skill 行为回归。
 
 
 

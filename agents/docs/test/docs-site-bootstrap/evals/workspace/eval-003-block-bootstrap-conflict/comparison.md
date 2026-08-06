@@ -35,7 +35,6 @@
 本轮无 FAIL 断言。
 
 
-**PASS (3/3 assertions)** — the fresh with-skill lane identified the complete materialized conflict, preserved the customized host file and partial manifest byte-for-byte, and blocked the overwrite stage pending one of three explicit decisions.
 
 ## Assertions
 > ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
