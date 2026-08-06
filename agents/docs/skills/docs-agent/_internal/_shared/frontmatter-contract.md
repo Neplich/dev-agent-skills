@@ -82,6 +82,8 @@ upgrade) before the field can take effect.
 - `release-notes-gen` must apply this contract to versioned site Release
   Notes and keep `last_verified_version: unverified` until `docs-audit` owns the
   version-stamping sequence.
+- `manual-gen` must apply this contract to every illustrated manual page it
+  creates or updates, including the `nav_order` host-capability gate.
 - `docs-audit` must use this contract for frontmatter decisions. A page with
   invalid frontmatter is `stale`, and a release must not `proceed` while any
   such page remains in scope.
