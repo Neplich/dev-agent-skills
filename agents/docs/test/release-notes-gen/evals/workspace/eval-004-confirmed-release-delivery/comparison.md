@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口待重跑验证）
+- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口，已按 #238 于 2026-08-06 fresh 隔离重跑）
 - Eval: `eval-004-confirmed-release-delivery`
 - Scenario: 维护者已确认目标版本与完整正文后的站内 Release Notes 成功交付
 - Review context: PR #187 follow-up for issue #177
@@ -10,7 +10,7 @@
 ## Test Set / Fixture Version
 
 - Fixture version: `confirmed release delivery v1`
-- Validation time: `2026-07-29 01:33:08 CST`
+- Validation time: `2026-07-29`（历史轮；本轮 #238 重跑来源见 Latest Result 块）
 - Runtime: `tmp/eval-runs/issue-177/rng-eval-004/`
 - 两条 candidate 使用同一 prompt 与独立 pristine fixture；with-skill 只额外读取
   Docs Agent 与目标 skill 协议，without-skill 未读取或应用 skill、Agent README、

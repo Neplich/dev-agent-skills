@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口待重跑验证）
+- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口，已按 #238 于 2026-08-06 fresh 隔离重跑）
 - Eval: `eval-003-github-release-boundary`
 - Scenario: 缺少 Release Notes writing foundation 的混合站内/外部发布请求
 - Review context: self-review convergence
@@ -10,7 +10,7 @@
 ## Test Set / Fixture Version
 
 - Fixture version: `foundation cleanup consistency round-4`
-- Validation time: `2026-07-29 01:07:33 CST`
+- Validation time: `2026-07-29`（历史轮；本轮 #238 重跑来源见 Latest Result 块）
 - Runtime: `tmp/eval-runs/issue-177/self-review/`
 - 修正原因：round-3 已移除等价 Release Notes 契约与 surfaces，但 `execution_cleanup` 没有覆盖被删除的 Release Notes 目录、release metadata 和可执行测试；复用 scratch 时可能被旧产物重新污染。
 - 本轮补齐 cleanup 后，两侧使用同一 prompt 与独立 pristine fixture；without-skill 未读取目标 skill、Docs Agent README、eval metadata、assertions、with-skill 输出、旧 comparison 或历史 round，独立 judge 也未读取旧 comparison。

@@ -9,39 +9,40 @@
 ## Test Set / Fixture Version
 
 - Fixture version: `manual-gen-v0.1.3`（#235：被测平台改为执行前维护者确认注入）
-- Environment: 测试平台由执行前维护者确认注入（平台名 + 平台本地代码路径）；本结论基于旧契约的 mermaid.live 占位
+- Environment: 测试平台由执行前维护者确认注入（平台名 + 可访问 URL + 本地代码路径）；#245 通用契约（单一通用正向测试），本轮实测平台 llm-wiki（wiki.jototech.cn）
 - Lane isolation: 两条 lane 的 prompt 逐字相同、可见 fixture 完全相同，唯一变量是是否加载
   `manual-gen/SKILL.md` 与 `_internal/INSTRUCTIONS.md`。prompt 为自然用户目标，
-  不含协议步骤、分层结构、字段清单或工具参数。`eval_metadata.json`、`pm-handoff.md`
-  与采集脚本均已移出 lane 可见目录（见 `AGENTS.md` → Eval prompt 与 lane 隔离契约）。
+  不含协议步骤、分层结构、字段清单或工具参数。`eval_metadata.json`、`comparison.md`、`README.md` 与采集脚本均已移出 lane 可见目录；`pm-handoff.md` 为 lane 可见宿主事实（#235 契约）（见 `AGENTS.md` → Eval prompt 与 lane 隔离契约）。
 - Executed: `2026-08-05`，两条 lane 各自独立 `codex exec` 冷启动会话
 
 ## Latest Result
 
-- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `PARTIAL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
+- Behavior result: `PASS`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— 本轮重跑实际触发的断言场景
 
-Overall result: FAIL
+Overall result: PASS (partial coverage)
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 
 - 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `PARTIAL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
+- with_skill：Behavior `PASS` / Coverage `PARTIAL`
+- without_skill：Behavior `FAIL` / Coverage `PARTIAL`
 
 ### 逐断言判定
 
 | 断言 | with_skill | without_skill | 判定依据 |
 | --- | --- | --- | --- |
-| `uses_provided_domain_without_local_start` | PASS | FAIL | with_skill 的 `result.txt` 明确记录 `https://wiki.jototech.cn/` 及“来源为维护者交接包”，且未执行本地启动；without_skill 的结果未记录环境 URL 或维护者来源。 |
-| `confirms_one_bounded_batch` | FAIL | FAIL | with_skill 仅记录角色、场景和排除项，未展示候选父子树、逐页证据、截图计划、change-map 与导航增量；without_skill 直接写入手册，也没有写入前确认记录。 |
-| `records_viewport_set_and_readback` | NOT_EXERCISED | FAIL | with_skill 明确记录“视口设定 / 回读：未执行”；without_skill 的 SVG 实际尺寸为 `1200×760`，手册与报告均无 `1920×1080` 设定及运行时回读。 |
-| `captures_sanitized_product_evidence` | NOT_EXERCISED | FAIL | with_skill 明确记录“采集截图清单：无”；without_skill 的 3 个截图是静态 SVG（`width="1200" height="760"`），无真实运行界面证据。 |
-| `writes_evidence_bounded_manual` | FAIL | FAIL | with_skill 记录“未写入站点文件”，没有手册条目或资产；without_skill 的 `anonymous-edit-preview.md:13` 将 `last_verified_version` 写成 `live-interface-2026-08-06`，违反应保持 `unverified`。 |
-| `checks_render_and_handoffs_audit` | FAIL | FAIL | with_skill 记录 `npm run test:docs` 在 `docs/site` 通过，但渲染验收未执行，且 handoff 仅写 `blocked`，未明确给出渲染命令及 `blocked docs-agent:docs-audit`；without_skill 只在结果中声称检查通过，未记录渲染验收、版本门禁或 blocked handoff，并生成了 Release Notes 之外的实际手册产物但未满足版本交接条件。 |
+| uses_provided_domain_without_local_start | PASS | FAIL | with_skill/result.txt 记录 `https://wiki.jototech.cn/` 且明确“维护者确认”，未启动本地服务；without_skill 仅记录 URL，未记录维护者提供来源。 |
+| confirms_one_bounded_batch | NOT_EXERCISED | FAIL | with_skill 未写入批次，仅有范围概述；without_skill 已写入手册，但未展示候选页面父子树及逐页确认证据。 |
+| records_viewport_set_and_readback | NOT_EXERCISED | NOT_EXERCISED | with_skill 明确“未执行”；without_skill 产物无 1920×1080 设定或实际回读。 |
+| captures_sanitized_product_evidence | NOT_EXERCISED | NOT_EXERCISED | with_skill 截图清单为 `none`；without_skill 无 PNG 文件，正文仅列出未来截图路径。 |
+| writes_evidence_bounded_manual | NOT_EXERCISED | FAIL | with_skill 未生成手册；without_skill 手册字段和 `related_code` 基本齐全，但截图引用的 `step-*.png` 资产均不存在。 |
+| checks_render_and_handoffs_audit | PASS | FAIL | with_skill 记录 `npm run test:docs` 通过、渲染未完成，并明确等待 `target_release_version` 的 blocked docs-audit handoff；without_skill 只记录 docs 检查通过，未记录渲染验收或 blocked handoff。 |
+| redacts_environment_identifier | PASS | PASS | 未发现分享链接编码、会话标识或环境专属参数；出现的域名是断言一要求记录的环境 URL。 |
+| avoids_sensitive_and_side_effect_data | PASS | PASS | with_skill 明确未写入虚构证据；without_skill 手册声明只读、不执行服务端写操作，未发现 Token、密钥、邮箱或个人信息。 |
 
-未满足断言（with/without 任一 FAIL）：``uses_provided_domain_without_local_start``、``confirms_one_bounded_batch``、``records_viewport_set_and_readback``、``captures_sanitized_product_evidence``、``writes_evidence_bounded_manual``、``checks_render_and_handoffs_audit``
+未满足断言（with/without 任一 FAIL）：`uses_provided_domain_without_local_start`、`confirms_one_bounded_batch`、`writes_evidence_bounded_manual`、`checks_render_and_handoffs_audit`
 
 
 

@@ -2,7 +2,7 @@
 
 ## Evaluation Target
 
-- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口待重跑验证）
+- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口，已按 #238 于 2026-08-06 fresh 隔离重跑）
 - Eval: `eval-001-generate-site-release-notes`
 - Scenario: target release version 只有协调者候选值、缺少维护者确认
 - Review context: issue #177 sub-batch 4c
@@ -10,7 +10,7 @@
 ## Test Set / Fixture Version
 
 - Fixture version: `issue-177 target-version confirmation clarification round-3`
-- Validation time: `2026-07-29 00:17:54 CST`
+- Validation time: `2026-07-29`（历史轮；本轮 #238 重跑来源见 Latest Result 块）
 - Runtime: `tmp/eval-runs/issue-177/docs-release-evals/round-3-eval-001/`
 - with-skill 读取公开 SKILL 和 Docs Agent README；入口未通过，因此未加载内部执行流程。
 - without-skill 由全新 `fork_turns=none` 子 Agent 从同一最新 fixture 和 prompt 独立生成，不读取目标 skill、Agent README、assertions、旧 comparison、历史 round 或 with-skill 输出。

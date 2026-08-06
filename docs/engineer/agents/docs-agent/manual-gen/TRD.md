@@ -202,11 +202,9 @@ agents/docs/skills/manual-gen/
 agents/docs/test/manual-gen/evals/
 ├── evals.json
 └── workspace/
-    ├── eval-001-domain-provided/
+    ├── eval-001-domain-provided/（#245 单一通用正向测试，平台与场景不绑定）
     ├── eval-002-local-start-consent/
-    ├── eval-003-no-environment-blocked/
-    ├── eval-004-share-link-identifier/
-    └── eval-005-manual-hierarchy/
+    └── eval-003-no-environment-blocked/
 ```
 
 每个 workspace 含 `eval_metadata.json`、`comparison.md`、环境描述文件，以及需要 Playwright 采集的用例对应的 `scripts/*.spec.md`。
@@ -219,9 +217,9 @@ agents/docs/test/manual-gen/evals/
 
 **产物边界**：截图与手册页产物是运行期产物，写隔离 scratch workspace，不入库。fixture 只保留环境描述、Playwright 脚本与期望的手册结构骨架。`evals.json` 不声明截图类 runner output。
 
-**断言取向**：一律语义判断。不比对具体目录结构，不断言手册划分出哪几个业务模块或模块叫什么名字。`eval-005` 判定的是「目录是否呈现平台定位、业务场景、可执行操作三个层次，且操作层步骤可被目标角色复现」。
+**断言取向**：一律语义判断。不比对具体目录结构，不断言手册划分出哪几个业务模块或模块叫什么名字。#245 收敛后三层语义由通用质量断言覆盖（页面组织可导航、目标角色可复现），不再绑定平台/业务/操作三层固定结构。
 
-**外部数据源**：eval 运行环境为 `https://mermaid.live/`。站点改版导致断言无触发条件时记 `NOT EXERCISED`，计入 Coverage result，不计入 Behavior result 的 `FAIL`。`eval-004` 依赖分享链接中的 pako 编码串，因此其覆盖范围必须包含导出与分享流程。
+**外部数据源**：按 #235 契约，eval 运行环境由维护者在每轮执行前确认注入（平台名、可访问 URL、本地代码路径），不固定外部站点。站点或平台改版导致断言无触发条件时记 `NOT EXERCISED`，计入 Coverage result，不计入 Behavior result 的 `FAIL`。环境相关标识脱敏由 eval-001 通用断言覆盖，不绑定分享场景。
 
 ## 10. 验证策略
 
@@ -251,7 +249,7 @@ agents/docs/test/manual-gen/evals/
 | 存量宿主脚本升级 | 假设 | 已 bootstrap 宿主通过重跑 `docs-site-bootstrap` 获得 manual 支持，复用其幂等与 keep/overwrite 机制 | 宿主本地改过脚本时进入既有冲突决策流程，不新增机制 |
 | 截图引用被 `referencedAssets` 拒绝 | 风险 | 引用路径若指向站外或排除区，截图不会进入构建产物 | 落点定为页面同级，天然在 `docs/site` 内；`warnSkippedAsset` 输出纳入渲染验收检查项 |
 | 视口回读被推断 | 风险 | 模型以「已设定」代替实际读数 | 报告模板分列设定与回读两个字段，缺任一项视为未完成 |
-| eval 依赖外部站点 | 假设 | mermaid.live 在 eval 执行期可访问且界面稳定 | 不可访问时该轮记 blocked；界面改版导致断言无触发条件时记 `NOT EXERCISED` |
+| eval 依赖被测平台可访问 | 假设 | 维护者确认注入的平台在 eval 执行期可访问且界面稳定 | 不可访问时该轮记 blocked；平台改版导致断言无触发条件时记 `NOT EXERCISED` |
 
 ## 13. 开放技术问题
 

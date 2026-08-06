@@ -120,12 +120,12 @@ C1、C3、C6、C7、C8 属发现层：客户端与 PM 入口在读正文前先�
 
 | # | 文件 | 动作 | 来源 |
 |---|---|---|---|
-| D1 | `agents/docs/test/manual-gen/evals/evals.json` | 新建 — schema v1.0，5 个 eval item | TRD §9 |
+| D1 | `agents/docs/test/manual-gen/evals/evals.json` | 新建 — schema v1.0，3 个 eval item（#245 收敛：001 通用正向 / 002 / 003） | TRD §9 |
 | D2 | `.../workspace/eval-001-domain-provided/` | 新建 — `eval_metadata.json`、`comparison.md`、环境描述、`scripts/*.spec.md` | TRD §9 |
 | D3 | `.../workspace/eval-002-local-start-consent/` | 新建 — 同上，环境描述标明无域名环境 | TRD §9 |
 | D4 | `.../workspace/eval-003-no-environment-blocked/` | 新建 — 同上，环境描述标明环境不可用 | TRD §9 |
-| D5 | `.../workspace/eval-004-share-link-identifier/` | 新建 — 同上，覆盖导出与分享流程 | TRD §9 |
-| D6 | `.../workspace/eval-005-manual-hierarchy/` | 新建 — 同上，判定三层次语义 | TRD §9 |
+| D5 | `.../workspace/eval-004-share-link-identifier/` | #245 收敛后删除（场景耦合，被 eval-001 取代） | TRD §9 |
+| D6 | `.../workspace/eval-005-manual-hierarchy/` | #245 收敛后删除（场景耦合，被 eval-001 取代） | TRD §9 |
 | D7 | `agents/docs/test/docs-agent/evals/**` | 修改 — 增加 manual-gen 路由用例及 durable comparison | TRD §9 |
 | D8 | `agents/docs/test/docs-audit/evals/**` | 修改 — 增加 manual 事实审计，更新 frontmatter 枚举断言与受影响 comparison | TRD §9 |
 | D9 | `agents/docs/test/docs-site-bootstrap/evals/**` | 修改 — 同步 42 项资产、六模板、manual 枚举与旧 comparison 待重跑状态 | TRD §9 |
@@ -172,7 +172,7 @@ skill 行为验证（fresh subagent validation 与 `without_skill` baseline）�
 | `SECTION_ORDER` 与 `SECTION_LABELS` 不同步会让 sidebar 取到 `undefined` | 两处在同一批次内改，验证时检查生成的 sidebar |
 | 宿主脚本改动无本仓库 pytest 覆盖 | 在临时站点上实测一次并记录结果 |
 | 临时宿主无法为 strict affected check 确定 Git 基线 | `check-affected.mjs` 的候选基线是 `origin/HEAD` 或 `HEAD^1`；只有单个 commit 的临时仓库两者都不存在，建立两个 commit 后即可通过 |
-| eval 依赖外部站点 mermaid.live | 不可访问时该轮记 blocked；断言无触发条件时记 `NOT EXERCISED` |
+| eval 依赖被测平台可访问（维护者确认注入） | 不可访问时该轮记 blocked；断言无触发条件时记 `NOT EXERCISED` |
 
 ## 7. Closeout
 
@@ -212,4 +212,4 @@ skill 行为验证（fresh subagent validation 与 `without_skill` baseline）�
 - 独立核验发现并修复一处实现缺陷：`manual-guide.md` 的 `docs-scaffold` 块内原含完整 Markdown 图片语法 `![...](./step-1-example.png)`，指向不存在的文件。宿主 `prepare-site.mjs` 的 `referencedAssets()` 以纯文本正则提取引用，不区分 fence 内外，会在每次站点构建产生一条 `file does not exist` 警告。现有五类模板均无图片引用，属本次新引入。已改为不构成可解析图片语法的描述式说明，复测捕获引用数为 0，并同步刷新 `docs-site-bootstrap` 的 `computedHash`。
 - 本次自审修复了 fixture 命令自相矛盾、版本引用、发现描述与计数、stale eval、截图卫生断言及过程文档触点等已核实问题；当前没有已知实现缺口。
 - 残余验证缺口是 Playwright live selector 与本轮更新后的 eval assertions 尚待 fresh paired eval 实际验证；CI 同款 pytest 本轮也因网络沙箱无法获取 pytest 而未重跑成功。
-- 下一 owner 为维护者：按仓库 Fresh Sub-Agent 门禁决定何时执行 5 个 eval；本轮不 commit、不 push、不建 PR。
+- 下一 owner 为维护者：按仓库 Fresh Sub-Agent 门禁决定何时执行 3 个 eval；本轮不 commit、不 push、不建 PR。
