@@ -232,6 +232,15 @@ or invalid version field makes the page `stale` immediately. The literal `unveri
 an older release anchor are valid version values, not `stale` conclusions. They
 lower trust and require broader code and test verification; after the complete
 affected set is `verified`, the unified stamp step advances them to the current
+
+When any affected page declares `nav_order`, also verify the host generator
+supports it: the host `docs/site/scripts/lib/sidebar.mjs` must reference
+`nav_order` in its ordering logic. Delivered bootstrap assets are not upgraded
+automatically, so a host bootstrapped before the capability shipped would
+ignore the field while the audit stamps the page and returns release readiness
+for a navigation order that is not applied. On an unsupported host, stay
+`blocked` and require a `docs-site-bootstrap` rerun (or a confirmed bootstrap
+upgrade merge) before completing the audit.
 version anchor.
 
 ### Step 6: Classify deterministic findings
