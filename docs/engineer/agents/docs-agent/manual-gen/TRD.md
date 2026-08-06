@@ -211,7 +211,7 @@ agents/docs/test/manual-gen/evals/
 
 共享契约变更的依赖 eval 同批同步：`docs-agent` router 增加 manual 路由用例；`docs-audit` 增加 manual 事实审计并更新 frontmatter 枚举用例；`docs-site-bootstrap` 更新资产计数、枚举断言及旧 comparison 的待重跑状态。manual-gen fixture 的 `docs/site/package.json` 只声明 fixture 内可直接运行的自包含 `test:docs`，不引用未物化的宿主 `scripts/` 树。
 
-**执行入口**：优先 Playwright，绕开 `codex exec` 与 Codex app Chrome 扩展的宿主差异，保证 with-skill 与新生成的 `without_skill` baseline 都能在同一入口下运行。
+**执行入口**：按采集入口优先级执行——repo harness > Chrome 插件 / browser connector > Playwright fallback（对齐 `manual-gen/_internal/INSTRUCTIONS.md` 采集入口契约），保证 with-skill 与新生成的 `without_skill` baseline 都能在同一入口下运行。
 
 **Playwright 脚本形态**：按 QA 既有约定使用 `*.spec.md`，保证重复执行一致，不含明文账号、密码、token、cookie、session 或 SSH 凭据。落点是本 eval workspace，不是宿主项目的 `docs/qa/e2e/`。
 

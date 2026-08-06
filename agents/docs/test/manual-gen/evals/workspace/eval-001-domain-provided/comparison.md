@@ -20,8 +20,8 @@
 - Behavior result: `PASS`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
 - Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— 本轮重跑实际触发的断言场景
 
-Overall result: PASS (partial coverage)
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
+Overall result: BLOCKED
+- Blocking reason: 采集入口不可用（DNS 解析失败、无浏览器/Playwright 采集入口），正向路径（确认/视口/采集/写入/脱敏）无法执行，属基础设施缺失非 skill 行为；待采集入口可用后重跑。历史行为描述保留于下方段落（适用旧契约）。
 
 ## #238 Fresh Rerun Result（2026-08-06）
 

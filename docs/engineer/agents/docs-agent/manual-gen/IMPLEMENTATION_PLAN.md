@@ -125,7 +125,7 @@ C1、C3、C6、C7、C8 属发现层：客户端与 PM 入口在读正文前先�
 | # | 文件 | 动作 | 来源 |
 |---|---|---|---|
 | D1 | `agents/docs/test/manual-gen/evals/evals.json` | 新建 — schema v1.0，3 个 eval item（#245 收敛：001 通用正向 / 002 / 003） | TRD §9 |
-| D2 | `.../workspace/eval-001-domain-provided/` | 新建 — `eval_metadata.json`、`comparison.md`、环境描述、`scripts/*.spec.md` | TRD §9 |
+| D2 | `.../workspace/eval-001-domain-provided/` | 新建 — `eval_metadata.json`、`comparison.md`、环境描述（#245 收敛后不再提交 eval 专属采集脚本） | TRD §9 |
 | D3 | `.../workspace/eval-002-local-start-consent/` | 新建 — 同上，环境描述标明无域名环境 | TRD §9 |
 | D4 | `.../workspace/eval-003-no-environment-blocked/` | 新建 — 同上，环境描述标明环境不可用 | TRD §9 |
 | D5 | `agents/docs/test/docs-agent/evals/**` | 修改 — 增加 manual-gen 路由用例及 durable comparison | TRD §9 |

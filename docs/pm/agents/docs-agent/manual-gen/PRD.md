@@ -245,7 +245,7 @@ flowchart TB
 | 7 | 1920×1080 如何保证？ | Maintainer | 2026-08-05 | 显式设定并在截图前回读校验；回读是独立于设定的一步，不可省略。实测浏览器工具的 desktop 预设会落到 691×837 并触发响应式移动布局。 |
 | 8 | eval 用哪个运行环境样本？ | Maintainer | 2026-08-06 | 按 #235 契约不再固定样本：每轮执行前由维护者确认平台名、可访问 URL 与本地代码路径后注入。已淘汰 Grafana Play、Practice Software Testing Toolshop、Playwright TodoMVC 与早期 mermaid.live 固定选型。 |
 | 9 | eval 执行入口选哪个？ | Maintainer | 2026-08-06 | 按 skill 采集入口优先级执行：repo harness > Chrome 插件 / browser connector > Playwright fallback（对齐 `manual-gen/_internal/INSTRUCTIONS.md` 采集入口契约），保证两条 lane 都能生成本轮新的 `without_skill` baseline。 |
-| 10 | eval 的 Playwright 脚本是否入库？ | Maintainer | 2026-08-05 | 入库，按 QA 既有约定使用 `*.spec.md` 形态并遵守脱敏规则；落点是 `agents/docs/test/manual-gen/evals/workspace/`。截图仍是运行期产物写隔离 scratch workspace，不入库。 |
+| 10 | eval 的采集脚本是否入库？ | Maintainer | 2026-08-06 | 按 #245 收敛后仅 eval-001 保留通用采集执行说明（`evals/README.md`），不再提交 eval 专属 `scripts/*.spec.md`（随 eval-004/005 删除）；平台相关采集脚本按宿主与采集入口（repo harness > Chrome 插件 > Playwright）在运行期准备，截图仍写隔离 scratch workspace，不入库。 |
 | 11 | eval 断言如何避免脆弱？ | Maintainer | 2026-08-05 | 一律语义判断，不比对具体目录结构，不断言手册划分出哪几个业务模块或模块叫什么名字；目录组织是 skill 应随宿主平台自适应的能力。 |
 | 12 | eval 测试集是否覆盖付费功能与多角色？ | Maintainer | 2026-08-06 | 不覆盖。只测匿名用户可用能力；「适用角色」字段在 skill 能力中保留，但本测试集不作断言重点。按 #245 设计收敛为单一通用正向测试，环境相关标识脱敏并入 eval-001 通用断言（`redacts_environment_identifier` / `avoids_sensitive_and_side_effect_data`），不绑定分享场景或具体编码实现。 |
 | 13 | skill 命名？ | Maintainer | 2026-08-05 | `manual-gen`，与 `trd-gen`、`prd-gen` 的 `-gen` 后缀对齐。仓库现有四个 `-generator` 后缀 skill 的命名统一作为独立治理变更另行推进，不并入本功能。 |

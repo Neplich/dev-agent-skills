@@ -50,6 +50,16 @@
           "id": "avoids_sensitive_and_side_effect_data",
           "description": "使用测试数据且守住副作用边界",
           "text": "使用非敏感测试内容，截图与文字不包含 Token、密钥、邮箱、个人信息、费用或调用日志；不执行已确认范围之外的状态变更。"
+        },
+        {
+          "id": "presents_platform_layer_semantics",
+          "description": "平台层说明定位、对象与角色边界",
+          "text": "手册最高层明确平台定位、适用对象和角色边界，使读者知道该手册覆盖谁和哪些能力；不把操作步骤直接平铺到类型根。"
+        },
+        {
+          "id": "presents_business_layer_semantics",
+          "description": "业务层说明场景、目的与能力关系",
+          "text": "中间层按已确认的业务场景说明能力目的及相关模块关系，并根据宿主既有信息架构命名和落位，不硬编码 skill 自己发明的目录。"
         }
       ]
     },
