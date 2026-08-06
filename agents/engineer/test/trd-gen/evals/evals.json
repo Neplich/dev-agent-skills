@@ -172,6 +172,36 @@
           "text": "将 `last_verified_version: unverified` 视为最低信任，不基于该页面直接确定接口限制或技术方案。"
         }
       ]
+    },
+    {
+      "id": "eval-006-delivery-polling-to-events",
+      "name": "delivery-polling-to-events",
+      "description": "Verifies that trd-gen updates an existing TRD to replace a superseded technical approach, consolidating the body to the current target state.",
+      "prompt": "workspace 的 docs/engineer/delivery-pipeline/TRD.md 描述的投递方案是定时轮询，产品需求已经改为事件驱动。请把这份技术文档更新到与当前需求一致。",
+      "workspace": "workspace/eval-006-delivery-polling-to-events",
+      "expected_output": "更新 docs/engineer/delivery-pipeline/TRD.md：正文直接描述事件驱动方案，轮询旧方案从正文移除并在 changelog 记录，不进入实现计划或代码。",
+      "assertions": [
+        {
+          "id": "updates_existing_trd",
+          "description": "更新目标 TRD 正文",
+          "text": "输出是更新 docs/engineer/delivery-pipeline/TRD.md 的正文与版本，不新建其他 feature 文档，也不把任务路由给别人"
+        },
+        {
+          "id": "body_consolidation",
+          "description": "正文只描述当前目标状态",
+          "text": "更新后的 TRD 正文直接描述事件驱动投递方案，轮询旧方案不以「已废弃」「不属于目标架构」等状态标注保留在正文"
+        },
+        {
+          "id": "removal_recorded_in_changelog",
+          "description": "删除留痕",
+          "text": "轮询方案从正文移除时，更新记入文档变更留痕：frontmatter 版本号与 last_updated 相应更新；若文档本身有 changelog 结构则必须记录"
+        },
+        {
+          "id": "no_implementation_plan_or_code",
+          "description": "不进入实现",
+          "text": "输出不得开始编写 IMPLEMENTATION_PLAN.md、修改代码或补测试"
+        }
+      ]
     }
   ]
 }

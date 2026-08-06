@@ -52,6 +52,11 @@ revision is needed and hands the work to `engineer-agent:trd-gen`.
    - source evidence
    - related PRD / DECISIONS impact
    - validator findings or review comments
+   - an explicit requirement that the updated TRD body states only the current
+     target state: superseded designs are deleted or rewritten, removals are
+     recorded in the changelog and git history, and ledger-style docs
+     (`DECISIONS.md`, ADRs) keep history per the body-consolidation rule in
+     `_internal/_shared/gen-conventions.md`
 5. **Check cross-document impact**:
    - If the change alters a technical decision materially, route ADR creation
      or revision to `engineer-agent:trd-gen`
@@ -79,7 +84,9 @@ revision is needed and hands the work to `engineer-agent:trd-gen`.
 
 ## Safety Boundaries
 
-- Never silently remove endpoints, NFR targets, or security controls
+- Never silently remove endpoints, NFR targets, or security controls — "never
+  silently" means removals must be recorded in the changelog and git history,
+  not that superseded content stays in the body with status annotations
 - Do not modify TRD files on disk from PM instructions
 - Do not authorize a PM directory move until the downstream mirror impact list
   and mirror handling decision are confirmed

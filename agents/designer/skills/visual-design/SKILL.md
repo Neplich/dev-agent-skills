@@ -24,6 +24,11 @@ Forbidden actions:
 
 If the input includes a completed PM or UX spec, use it to shape the visual system and stop at design handoff.
 
+When updating an existing visual system, the body states only the current
+design: superseded tokens, colors, or rules are rewritten, not kept with
+"deprecated" annotations. Removals are recorded in the doc changelog and git
+history.
+
 ## PM Handoff Entry Gate
 
 Before creating visual-system deliverables, require a PM/design handoff packet

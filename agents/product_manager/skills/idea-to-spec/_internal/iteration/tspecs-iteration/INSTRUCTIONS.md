@@ -51,7 +51,10 @@ history, traceability, and versioning.
    - Maintain positive, negative, and boundary coverage for P0 items
    - Update NFR, regression, and smoke-pack sections when release criteria
      change
-   - Preserve unchanged cases exactly
+   - Preserve unchanged cases exactly; rewrite replaced cases to state the
+     current expected behavior instead of keeping the superseded steps with
+     annotations (body-consolidation rule in
+     `_internal/_shared/gen-conventions.md`)
 4. **Repair traceability**:
    - Keep Coverage Summary and Traceability Matrix synchronized
    - Mark retired tests explicitly and note replacement coverage if any
@@ -87,7 +90,12 @@ history, traceability, and versioning.
 
 - Preserve unchanged test cases exactly
 - Preserve unchanged E2E case files exactly
-- Never silently drop coverage for a requirement, endpoint, or NFR
+- Body consolidation: replaced cases are rewritten to the current expected
+  behavior, not kept with status annotations; retirement is recorded in the
+  coverage summary / traceability layer, not by preserving the old case body
+- "Never silently drop coverage" means removals must be recorded in the
+  changelog and coverage summary — not that superseded case bodies stay in
+  the document
 - Confirm with the user before MAJOR version bumps or broad test-case
   retirements
 - Do not modify files on disk unless explicitly instructed

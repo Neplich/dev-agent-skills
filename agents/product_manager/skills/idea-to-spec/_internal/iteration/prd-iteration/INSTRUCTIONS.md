@@ -41,6 +41,10 @@ Apply changes to an existing PRD while maintaining version history and quality s
    - Scope changes (may require MAJOR version bump)
 
 3. **Apply changes**: Modify affected sections while preserving unchanged content.
+   The body must state only the current target state: delete or rewrite
+   superseded designs instead of keeping them with "deprecated" / "not part of
+   the target architecture" annotations. Record removals in the changelog (see
+   the body-consolidation rule in `_internal/_shared/gen-conventions.md`).
    If the change would move the PRD to a child feature path or reveals an
    existing parallel directory is misplaced, stop and present a path conflict
    summary instead of silently editing the wrong PRD.
@@ -89,7 +93,12 @@ Apply changes to an existing PRD while maintaining version history and quality s
 ## Safety Boundaries
 
 - Always preserve unchanged sections exactly as-is
-- Never silently remove content — track all deletions in changelog
+- Body consolidation: the body states only the current target state; superseded
+  designs are deleted or rewritten, not annotated as deprecated in the body
+- "Never silently remove content" means removals must be recorded in the
+  changelog and git history — not that content should be kept with status
+  annotations; exceptions are ledger-style docs (`DECISIONS.md`, ADRs,
+  changelogs, QA `results/`) where history is the design intent
 - Confirm with user before MAJOR version bumps
 - Do not modify files on disk unless explicitly instructed
 
