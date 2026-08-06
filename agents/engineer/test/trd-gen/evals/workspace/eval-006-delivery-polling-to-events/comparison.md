@@ -7,8 +7,8 @@
 - Eval: `eval-006-delivery-polling-to-events`
 - Test case: delivery-polling-to-events
 - Workspace: `workspace/eval-006-delivery-polling-to-events`
-- Latest result: PASS - 2026-08-06 fresh paired validation completed（重跑轮，按 codex review 收紧后的断言）；with_skill 4/4 assertions passed，without_skill 3/4。
-- Behavior result: PASS — with_skill 实际触达路径满足全部 4 条断言。
+- Latest result: PASS - 2026-08-06 third fresh paired validation completed（frontmatter changelog 口径）；with_skill 4/4 assertions passed，without_skill 3/4。
+- Behavior result: PASS — with_skill 实际触达路径满足全部 4 条断言（正文、版本与 changelog 事实一致）。
 - Coverage result: FULL — 4/4 assertion scenarios were exercised; no `NOT EXERCISED` items.
 Overall result: PASS
 
@@ -24,12 +24,12 @@ Overall result: PASS
 
 - PASS `updates_existing_trd`: 两条 lane 均更新目标 `docs/engineer/delivery-pipeline/TRD.md`，未新建 feature 文档或转交任务。
 - PASS `body_consolidation`: 两份正文均改写为事件驱动方案；60 秒扫描、`poller.ts`、`batch.ts` 旧方案细节已移除，仅保留「不再使用轮询」的当前约束，无「已废弃」等状态标注。
-- PASS `removal_recorded_in_changelog`（with）/ FAIL（without）: with_skill 在无 changelog 结构的 TRD 上新增 inline「变更记录」表并同步版本 `1.1.0 -> 1.2.0`（对应 trd-gen SKILL.md「无 changelog 结构则新增」指令）；without_skill 仅更新版本号，无 changelog 留痕。该断言在收紧口径下具备判别力。
+- PASS `removal_recorded_in_changelog`（with）/ FAIL（without）: with_skill 在 frontmatter 新增 `changelog` 结构（version/date/summary）记录删除并同步版本 `1.1.0 -> 1.2.0`（对应 trd-gen SKILL.md「无 changelog 结构则新增到 frontmatter」指令）；without_skill 仅更新版本号，无 changelog 留痕。该断言在 frontmatter 口径下具备判别力。
 - PASS `no_implementation_plan_or_code`: 两条 lane 均未生成 `IMPLEMENTATION_PLAN.md`、修改代码或补测试。
 
 ## With Skill
 
-重跑（收紧断言 + SKILL.md 补「无 changelog 结构则新增」指令）：更新后的 TRD 与已确认 PRD 对齐，`delivery.created` 事件驱动方案、状态机、重试队列与 dead-letter；正文直接改写；**新增 inline「变更记录」表**记录删除内容并同步版本 `1.1.0 -> 1.2.0`；未进入实现。
+第三轮重跑（frontmatter 口径 + SKILL.md「无 changelog 结构则新增到 frontmatter」指令）：更新后的 TRD 与已确认 PRD 对齐，`delivery.created` 事件驱动方案、状态机、重试队列与 dead-letter；正文直接改写；**frontmatter 新增 `changelog` 结构**（version/date/summary）记录删除并同步版本 `1.1.0 -> 1.2.0`；未进入实现。
 
 ## Without Skill
 
@@ -39,7 +39,7 @@ Overall result: PASS
 
 **Skill impact:** MEDIUM
 
-收紧后的 `removal_recorded_in_changelog` 断言具备判别力（with PASS / without FAIL）：skill 加载后按「无 changelog 结构则新增」指令补留痕，baseline 遗漏。事件驱动改写与正文收束仍属模型基线能力（两条 lane 均满足），但删除留痕纪律是 skill 带来的可观测差异。该 eval 保留为正文收束与删除留痕的回归覆盖。
+frontmatter 口径下 `removal_recorded_in_changelog` 断言具备判别力（with PASS / without FAIL）：skill 加载后按「无 changelog 结构则新增到 frontmatter」指令补留痕，baseline 遗漏。事件驱动改写与正文收束仍属模型基线能力（两条 lane 均满足），但删除留痕纪律是 skill 带来的可观测差异。该 eval 保留为正文收束与删除留痕的回归覆盖。
 
 ## Runtime Artifact(s) Policy
 

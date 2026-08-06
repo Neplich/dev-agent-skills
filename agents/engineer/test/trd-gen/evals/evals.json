@@ -194,7 +194,7 @@
         {
           "id": "removal_recorded_in_changelog",
           "description": "删除留痕",
-          "text": "轮询方案从正文移除时，删除必须记入文档 changelog（frontmatter 或 inline；原文档无 changelog 结构时新增一个），frontmatter 版本号相应更新"
+          "text": "轮询方案从正文移除时，删除必须记入 frontmatter changelog（原文档无 changelog 结构时在 frontmatter 新增），frontmatter 版本号相应更新"
         },
         {
           "id": "no_implementation_plan_or_code",

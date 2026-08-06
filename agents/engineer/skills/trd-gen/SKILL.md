@@ -227,9 +227,12 @@ endpoints, or parameters are deleted or rewritten instead of being kept with
 "deprecated" / "not part of the target architecture" annotations, and removals
 are recorded in the changelog and git history. If the target document has no
 changelog structure, add one to its frontmatter (mirroring the PRD changelog
-convention) so removals stay traceable. Ledger-style docs (`DECISIONS.md`,
-ADRs) keep history — that is their design intent, and the same PM-side rule
-explicitly exempts them.
+convention) so removals stay traceable. Exception for API references: endpoints
+that remain supported while deprecated keep their contract and deprecation
+notice — deprecation is part of the API contract lifecycle, and consolidation
+applies only to endpoints that are truly removed or superseded. Ledger-style
+docs (`DECISIONS.md`, ADRs) keep history — that is their design intent, and the
+same PM-side rule explicitly exempts them.
 
 ## Quality Checks
 

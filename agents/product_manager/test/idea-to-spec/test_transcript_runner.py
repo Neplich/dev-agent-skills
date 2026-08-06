@@ -23,18 +23,21 @@ def load_runner_module():
 
 
 class TranscriptRunnerTests(unittest.TestCase):
-    def test_build_claude_command_supports_custom_entry_command(self):
+    def test_build_codex_command_uses_mandated_model_and_effort(self):
         runner = load_runner_module()
 
-        command = runner.build_claude_command(
+        command = runner.build_codex_command(
             "我想做一个 AI 对话助手",
-            with_skill=True,
-            entry_command="/pm-agent",
-            plugin_dir="agents/product_manager",
+            cwd=Path("/tmp/ws"),
+            output_path=Path("/tmp/ws/result.txt"),
         )
 
-        self.assertIn("--plugin-dir", command)
-        self.assertEqual(command[-1], "/pm-agent 我想做一个 AI 对话助手")
+        self.assertIn("-m", command)
+        self.assertEqual(command[command.index("-m") + 1], "gpt-5.6-luna")
+        self.assertIn('model_reasoning_effort="medium"', command)
+        self.assertIn("-o", command)
+        self.assertEqual(command[command.index("-o") + 1], "/tmp/ws/result.txt")
+        self.assertEqual(command[-1], "我想做一个 AI 对话助手")
 
     def test_prepare_execution_workspace_removes_reserved_and_custom_outputs(self):
         runner = load_runner_module()
@@ -66,22 +69,21 @@ class TranscriptRunnerTests(unittest.TestCase):
             self.assertFalse((exec_root / "comparison.auto.md").exists())
             self.assertFalse((exec_root / "PRD.md").exists())
 
-    def test_extract_result_text_reads_json_payload(self):
+    def test_read_result_file_reads_codex_output(self):
         runner = load_runner_module()
 
-        payload = json.dumps(
-            {
-                "type": "result",
-                "subtype": "success",
-                "result": "structured transcript",
-            },
-            ensure_ascii=False,
-        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            result_path = Path(temp_dir) / "result.txt"
+            result_path.write_text("structured transcript")
 
-        self.assertEqual(
-            runner.extract_result_text(payload),
-            "structured transcript",
-        )
+            self.assertEqual(
+                runner.read_result_file(result_path),
+                "structured transcript",
+            )
+
+            missing_path = Path(temp_dir) / "missing.txt"
+            with self.assertRaises(ValueError):
+                runner.read_result_file(missing_path)
 
     def test_sync_declared_outputs_copies_existing_candidates(self):
         runner = load_runner_module()
@@ -135,9 +137,12 @@ class TranscriptRunnerTests(unittest.TestCase):
                 )
             )
 
-            def fake_run_claude(command, cwd, timeout_seconds):
-                label = "with_skill" if "--plugin-dir" in command else "without_skill"
+            def fake_run_codex(command, cwd, timeout_seconds):
+                output_path = Path(command[command.index("-o") + 1])
+                label = "with_skill" if "with_skill" in str(output_path) else "without_skill"
+                output_path.parent.mkdir(parents=True, exist_ok=True)
                 transcript = f"{label} transcript"
+                output_path.write_text(transcript)
                 return transcript, {
                     "command": command,
                     "cwd": str(cwd),
@@ -149,14 +154,14 @@ class TranscriptRunnerTests(unittest.TestCase):
                     "result_length": len(transcript),
                 }
 
-            old_run_claude = runner.run_claude
+            old_run_codex = runner.run_codex
             old_output_dir = os.environ.get("EVAL_RUN_OUTPUT_DIR")
-            runner.run_claude = fake_run_claude
+            runner.run_codex = fake_run_codex
             os.environ["EVAL_RUN_OUTPUT_DIR"] = str(temp_root / "runs")
             try:
                 runner.generate_eval_outputs(metadata)
             finally:
-                runner.run_claude = old_run_claude
+                runner.run_codex = old_run_codex
                 if old_output_dir is None:
                     os.environ.pop("EVAL_RUN_OUTPUT_DIR", None)
                 else:
