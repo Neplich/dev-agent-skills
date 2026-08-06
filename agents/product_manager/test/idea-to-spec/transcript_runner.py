@@ -141,38 +141,60 @@ def resolve_skill_dir(meta: dict) -> str:
     return f"{plugin}/skills/{entry}"
 
 
-def install_skill_documents(execution_root: Path, skill_dir: str) -> None:
-    # Full agents/ mirror so literal `agents/...` references inside skill
-    # documents resolve and router-to-specialist delegation chains (e.g.
-    # pm-agent -> idea-to-spec) keep working in the lane workspace. Agent
-    # test directories are stripped, matching docs/README.codex.md, so eval
-    # assertions and prior comparison results never enter a lane.
+# Routers whose entry skill delegates to a specialist that must also be
+# discoverable for the delegation chain to execute in the lane.
+ROUTER_SPECIALISTS = {
+    "agents/product_manager/skills/pm-agent": [
+        "agents/product_manager/skills/idea-to-spec",
+    ],
+}
+
+
+def mirror_dependency_documents(execution_root: Path) -> None:
+    """Stripped agents/ mirror shared by both lanes (identical visible context).
+
+    Literal `agents/...` references inside skill documents and router-to-
+    specialist delegation chains resolve from this tree; agent test
+    directories are stripped (matching docs/README.codex.md) so eval
+    assertions and prior comparison results never enter a lane. Both lanes
+    receive the same mirror — only the discovery/loading of the entry skill
+    differs, keeping the lane-isolation contract intact.
+    """
     shutil.copytree(
         repo_root() / "agents",
         execution_root / "agents",
         ignore=shutil.ignore_patterns("test"),
     )
-    # Entry skill exposed at the Codex discovery path.
+
+
+def install_entry_skill(execution_root: Path, skill_dir: str) -> None:
+    """Expose the entry skill (and routed specialists) at Codex discovery."""
     entry_source = Path(skill_dir)
     if not entry_source.is_absolute():
         entry_source = repo_root() / entry_source
-    target = execution_root / ".agents" / "skills" / entry_source.name
-    target.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(entry_source, target)
+    for skill_path in [str(entry_source.relative_to(repo_root()))] + ROUTER_SPECIALISTS.get(
+        skill_dir, []
+    ):
+        source = repo_root() / skill_path
+        target = execution_root / ".agents" / "skills" / source.name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(source, target)
 
 
 def build_isolated_env(temp_root: Path) -> tuple[dict, Path]:
     """Isolate the lane from user-level Codex skills (~/.agents/skills).
 
     Codex resolves user skills under $HOME/.agents/skills and the auth store
-    under $HOME/.codex; pointing HOME at a fresh directory (with a copied
-    auth.json) drops personal skills while keeping authentication. Built-in
-    Codex skills still load — they are unrelated to repo skills.
+    under $CODEX_HOME (default $HOME/.codex); pointing HOME and CODEX_HOME at
+    fresh directories (with the auth.json copied from the active CODEX_HOME)
+    drops personal skills while keeping authentication. Built-in Codex skills
+    still load — they are unrelated to repo skills.
     """
     home = temp_root / "codex-home"
     codex_home = home / ".codex"
     codex_home.mkdir(parents=True, exist_ok=True)
-    auth_src = Path.home() / ".codex" / "auth.json"
+    active_codex_home = os.environ.get("CODEX_HOME") or str(Path.home() / ".codex")
+    auth_src = Path(active_codex_home) / "auth.json"
     if auth_src.exists():
         shutil.copy2(auth_src, codex_home / "auth.json")
     env = dict(os.environ)
@@ -269,8 +291,9 @@ def generate_eval_outputs(
         for label, outputs, with_skill in runs:
             execution_root = Path(temp_dir) / "workspace" / label
             prepare_execution_workspace(eval_root, execution_root, cleanup_paths=cleanup_paths)
+            mirror_dependency_documents(execution_root)
             if with_skill:
-                install_skill_documents(execution_root, skill_dir)
+                install_entry_skill(execution_root, skill_dir)
             output_path = execution_root / label / "outputs/result.txt"
             output_path.parent.mkdir(parents=True, exist_ok=True)
             command = build_codex_command(

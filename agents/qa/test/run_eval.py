@@ -234,7 +234,8 @@ def build_isolated_env(runtime_root: Path) -> dict:
     home = runtime_root / "codex-home"
     codex_home = home / ".codex"
     codex_home.mkdir(parents=True, exist_ok=True)
-    auth_src = Path.home() / ".codex" / "auth.json"
+    active_codex_home = os.environ.get("CODEX_HOME") or str(Path.home() / ".codex")
+    auth_src = Path(active_codex_home) / "auth.json"
     if auth_src.exists():
         shutil.copy2(auth_src, codex_home / "auth.json")
     env = dict(os.environ)
