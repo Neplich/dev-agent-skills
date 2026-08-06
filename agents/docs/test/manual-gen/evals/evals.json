@@ -7,7 +7,7 @@
       "id": "eval-001-domain-provided",
       "name": "域名环境下生成有限范围图文手册",
       "description": "验证维护者已提供可访问域名时，skill 使用真实运行界面证据完成范围确认、视口校验、有限采集与正式文档 handoff。",
-      "prompt": "维护者已提供可访问环境 https://mermaid.live/，并确认本批只为匿名使用者记录一条基础编辑与预览流程。宿主文档站基础与手册模板已经存在，范围已经定好，不用再跟我确认。请完成这批图文用户手册。",
+      "prompt": "维护者已提供可访问的测试平台（平台名与平台在本地代码中的位置见已确认的手册请求材料），并确认本批只为匿名使用者记录一条基础编辑与预览流程。宿主文档站基础与手册模板已经存在，范围已经定好，不用再跟我确认。请完成这批图文用户手册。",
       "expected_output": "在已提供的域名环境中先展示并确认有限页面树，选择符合三级优先级的执行入口，分别记录 1920×1080 视口设定与实际回读，基于真实界面生成图文操作手册并运行宿主检查和渲染验收；由于没有维护者确认的 target_release_version，页面保持 unverified，返回等待发版上下文的 blocked docs-audit handoff；报告剩余候选且不扩大范围。",
       "workspace": "workspace/eval-001-domain-provided",
       "assertions": [
@@ -106,20 +106,20 @@
     {
       "id": "eval-004-share-link-identifier",
       "name": "导出分享手册隐藏环境长串标识",
-      "description": "验证导出与分享流程以真实界面为证据，同时不把分享链接中的 pako 编码串原样写入正文、图注或报告。",
-      "prompt": "维护者提供了 https://mermaid.live/，并确认本批覆盖匿名用户的导出与分享流程。分享动作会产生包含 pako 编码串的长链接，范围已经定好，不用再跟我确认。请基于真实界面完成这批图文用户手册。",
+      "description": "验证导出与分享流程以真实界面为证据，同时不把分享链接中的环境编码标识原样写入正文、图注或报告。",
+      "prompt": "维护者已提供可访问的测试平台（平台名与平台在本地代码中的位置见已确认的手册请求材料），并确认本批覆盖匿名用户的导出与分享流程。分享动作会产生带长串编码标识的链接，范围已经定好，不用再跟我确认。请基于真实界面完成这批图文用户手册。",
       "expected_output": "采集真实的导出与分享界面，保留可复现的控件与结果说明；分享链接只描述用途或使用脱敏占位，不在正文、图注、报告或持久化元数据中复制 pako 编码串，并完成视口、截图卫生与宿主检查；由于没有维护者确认的 target_release_version，页面保持 unverified，返回等待发版上下文的 blocked docs-audit handoff。",
       "workspace": "workspace/eval-004-share-link-identifier",
       "assertions": [
         {
           "id": "covers_export_and_share_from_real_ui",
           "description": "真实覆盖导出与分享流程",
-          "text": "从已提供域名的实际界面定位并记录导出与分享相关操作、可见控件、编号步骤和预期结果，不根据通用 Mermaid 知识虚构界面。"
+          "text": "从已提供测试平台的实际界面定位并记录导出与分享相关操作、可见控件、编号步骤和预期结果，不根据通用平台知识虚构界面。"
         },
         {
           "id": "redacts_share_link_identifier",
-          "description": "pako 编码串不进入手册正文",
-          "text": "分享链接中的环境相关 pako 编码串不原样出现在正文、图注、frontmatter、报告或 change-map；仅保留完成任务所需的语义说明或明确脱敏占位。"
+          "description": "分享链接的编码标识不进入手册正文",
+          "text": "分享链接中的环境相关编码标识不原样出现在正文、图注、frontmatter、报告或 change-map；仅保留完成任务所需的语义说明或明确脱敏占位。"
         },
         {
           "id": "avoids_sensitive_and_side_effect_data",
@@ -137,7 +137,7 @@
       "id": "eval-005-manual-hierarchy",
       "name": "手册呈现平台业务操作三层语义",
       "description": "验证手册按平台定位、业务场景和可执行操作三个层次组织，并让目标角色可以依据可见界面和预期结果复现任务。",
-      "prompt": "维护者提供了 https://mermaid.live/，并确认本批覆盖匿名图表作者的基础任务，范围已经定好，不用再跟我确认。请基于真实界面完成这批图文用户手册。",
+      "prompt": "维护者已提供可访问的测试平台（平台名与平台在本地代码中的位置见已确认的手册请求材料），并确认本批覆盖匿名图表作者的基础任务，范围已经定好，不用再跟我确认。请基于真实界面完成这批图文用户手册。",
       "expected_output": "候选树与成品在语义上体现平台层、业务层、操作层：平台层解释定位、对象和角色边界，业务层解释场景、目的和能力关系，操作层提供真实界面支持的可复现步骤与结果；层级适配宿主现状并通过导航和渲染验收。由于没有维护者确认的 target_release_version，页面保持 unverified，返回等待发版上下文的 blocked docs-audit handoff。",
       "workspace": "workspace/eval-005-manual-hierarchy",
       "assertions": [
