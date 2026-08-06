@@ -131,6 +131,8 @@ C1、C3、C6、C7、C8 属发现层：客户端与 PM 入口在读正文前先�
 | D5 | `agents/docs/test/docs-agent/evals/**` | 修改 — 增加 manual-gen 路由用例及 durable comparison | TRD §9 |
 | D6 | `agents/docs/test/docs-audit/evals/**` | 修改 — 增加 manual 事实审计，更新 frontmatter 枚举断言与受影响 comparison | TRD §9 |
 | D7 | `agents/docs/test/docs-site-bootstrap/evals/**` | 修改 — 同步 42 项资产、六模板、manual 枚举与旧 comparison 重跑状态 | TRD §9 |
+| D8 | `agents/docs/test/formal-docs-sync/evals/**` | 修改 — 15 个 durable comparison 随 #238 重跑更新 | TRD §9 |
+| D9 | `agents/docs/test/release-notes-gen/evals/**` | 修改 — 5 个 durable comparison 随 #238 重跑更新与改名标注清理 | TRD §9 |
 
 依赖：批次 B 完成。
 
