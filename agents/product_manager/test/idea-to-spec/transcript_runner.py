@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -122,6 +123,9 @@ def build_codex_command(
         str(cwd),
         "-s",
         "workspace-write",
+        "--ephemeral",
+        "--ignore-user-config",
+        "--ignore-rules",
         "-m",
         DEFAULT_MODEL,
         "-c",
@@ -142,12 +146,36 @@ def install_skill_documents(execution_root: Path, skill_dir: str) -> None:
     shutil.copytree(source, target)
 
 
-def run_codex(command: list[str], cwd: Path, timeout_seconds: int) -> tuple[str, dict]:
+def build_isolated_env(temp_root: Path) -> tuple[dict, Path]:
+    """Isolate the lane from user-level Codex skills (~/.agents/skills).
+
+    Codex resolves user skills under $HOME/.agents/skills and the auth store
+    under $HOME/.codex; pointing HOME at a fresh directory (with a copied
+    auth.json) drops personal skills while keeping authentication. Built-in
+    Codex skills still load — they are unrelated to repo skills.
+    """
+    home = temp_root / "codex-home"
+    (home / ".codex").mkdir(parents=True, exist_ok=True)
+    auth_src = Path.home() / ".codex" / "auth.json"
+    if auth_src.exists():
+        shutil.copy2(auth_src, home / ".codex" / "auth.json")
+    env = dict(os.environ)
+    env["HOME"] = str(home)
+    return env, home
+
+
+def run_codex(
+    command: list[str],
+    cwd: Path,
+    timeout_seconds: int,
+    env: dict | None = None,
+) -> tuple[str, dict]:
     started = time.time()
     try:
         completed = subprocess.run(
             command,
             cwd=cwd,
+            env=env,
             capture_output=True,
             text=True,
             timeout=timeout_seconds,
@@ -212,6 +240,8 @@ def generate_eval_outputs(
     reset_directory(runtime_root)
 
     with tempfile.TemporaryDirectory(prefix="idea-to-spec-eval-") as temp_dir:
+        temp_root = Path(temp_dir)
+        lane_env, _ = build_isolated_env(temp_root)
         skill_dir = meta.get("skill_dir", DEFAULT_SKILL_DIR)
 
         runs = [
@@ -239,6 +269,7 @@ def generate_eval_outputs(
                     command,
                     execution_root,
                     timeout_seconds,
+                    env=lane_env,
                 )
             except TranscriptRunError as exc:
                 status = exc.status

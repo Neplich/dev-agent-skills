@@ -139,7 +139,7 @@ class TranscriptRunnerTests(unittest.TestCase):
                 )
             )
 
-            def fake_run_codex(command, cwd, timeout_seconds):
+            def fake_run_codex(command, cwd, timeout_seconds, env=None):
                 output_path = Path(command[command.index("-o") + 1])
                 label = "with_skill" if "with_skill" in str(output_path) else "without_skill"
                 output_path.parent.mkdir(parents=True, exist_ok=True)
