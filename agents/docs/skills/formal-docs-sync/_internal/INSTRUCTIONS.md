@@ -223,7 +223,7 @@ Apply that contract to every created or updated formal page. Set
 must not stamp a release version, redefine frontmatter fields, or add a dynamic
 host schema.
 
-Write `nav_order` (a non-negative integer, per the contract's Optional Fields)
+Write `nav_order` (a non-negative safe integer `≤ 9007199254740991`, per the contract's Optional Fields)
 only when a section's pages need a business-logic order that path slugs cannot
 express — for example, overview pages first or related feature pages grouped
 together. Number the pages within the section so the sidebar renders the

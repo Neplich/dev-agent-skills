@@ -30,12 +30,22 @@ All seven fields are unconditionally required.
 
 | Field | Type / Allowed Values | Rule |
 | --- | --- | --- |
-| `nav_order` | Non-negative integer | Controls the display order of pages inside the same sidebar section. Lower values sort first; pages without `nav_order` fall back to path-slug lexicographic order and sort after any explicit order. Only the immediate section is affected — it never reorders sections, which follow the fixed `SECTION_ORDER`. |
+| `nav_order` | Non-negative safe integer (`≤ 9007199254740991`) | Controls the display order of pages inside the same sidebar section. Lower values sort first; pages without `nav_order` fall back to path-slug lexicographic order and sort after any explicit order. Only the immediate section is affected — it never reorders sections, which follow the fixed `SECTION_ORDER`. The safe-integer bound matches the host validator (`Number.isSafeInteger`); larger integers cannot be represented exactly and are rejected. |
 
 Producers set `nav_order` when a section's pages need a business-logic order
 that path slugs cannot express (for example, keeping overview pages first or
 grouping related feature pages). When a section reads naturally in slug order,
 omit `nav_order` and keep the page set minimal.
+
+Before emitting `nav_order`, every producer (including `formal-docs-sync` and
+`release-notes-gen`) must confirm the host's delivered navigation generator
+supports it: the host `docs/site/scripts/lib/sidebar.mjs` must reference
+`nav_order` in its ordering logic. Delivered bootstrap assets are not upgraded
+automatically — a host bootstrapped before the `nav_order` capability shipped
+would ignore the field while the producer reports an intended sequence. If
+host support is missing, do not write `nav_order`; report in the batch summary
+that the host must rerun `docs-site-bootstrap` (or merge a confirmed bootstrap
+upgrade) before the field can take effect.
 
 ## Notes
 

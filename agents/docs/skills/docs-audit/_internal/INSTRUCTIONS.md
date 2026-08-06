@@ -225,7 +225,7 @@ Check the seven required fields and their constraints:
 | `owners` | non-empty string array |
 | `related_code` | non-empty string array of repository-relative paths or globs for every `doc_type` |
 | `last_verified_version` | non-empty version anchor string or `unverified`; always required, including when the host has no version anchor |
-| `nav_order` | optional; when present must be a non-negative integer |
+| `nav_order` | optional; when present must be a non-negative safe integer (`≤ 9007199254740991`) |
 
 An invalid field, invalid enum, invalid `related_code`, invalid `nav_order`,
 or invalid version field makes the page `stale` immediately. The literal `unverified` and
