@@ -32,9 +32,9 @@
           "text": "提供具体、可执行的修复建议或验证步骤"
         },
         {
-          "id": "writes_security_report",
-          "description": "产出 docs/security 下的落盘报告",
-          "text": "创建 `docs/security/{feature_path}/appsec-checklist.md` 报告，包含发现、严重度与修复建议，作为 Security-owned 过程证据；不修改 PM/设计/实现等其他角色拥有的文档。"
+          "id": "writes_protocol_shaped_security_report",
+          "description": "报告按 SKILL.md 协议结构落盘（frontmatter + Executive Summary 分区）",
+          "text": "创建 `docs/security/user-search/appsec-checklist.md` 并按协议结构组织：frontmatter 含 feature/feature_path/version/date 等字段，报告含 Executive Summary 分区（问题总数、风险等级分布、总体态势）与逐问题说明（位置 file:line、风险解释、修复建议）；不修改 PM/设计/实现等其他角色拥有的文档。"
         }
       ]
     },

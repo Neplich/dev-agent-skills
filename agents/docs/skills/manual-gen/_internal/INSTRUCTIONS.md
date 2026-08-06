@@ -15,6 +15,17 @@ If the foundation, standards entry, or change map is absent, stop with zero
 site writes and return a bounded `docs-site-bootstrap` handoff. Do not create a
 partial site or initialize missing foundations.
 
+Consume the shared frontmatter contract
+(`agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md`)
+for every created or updated manual page. When a section's pages need a
+business-logic order that path slugs cannot express, `nav_order` may be written
+per the contract's Optional Fields — but only after confirming the host's
+delivered `docs/site/scripts/lib/sidebar.mjs` references `nav_order` in its
+ordering logic. Delivered bootstrap assets are not upgraded automatically; on a
+pre-upgrade host that ignores the field, do not write `nav_order` and report
+in the batch summary that the host must rerun `docs-site-bootstrap` (or merge a
+confirmed bootstrap upgrade) before the field can take effect.
+
 ## 2. Read the unique manual template and existing structure
 
 Follow the host standards entry to the manual template under
