@@ -67,6 +67,8 @@ fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 
 
 ## Canonical digest verification
 
+> ⚠️ 本节为 2026-08-03 #188 历史轮执行证据；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+
 The with-skill run reconstructed the exact six-field inventory rather than
 trusting the fixture literals. It sorted **6 entries** by `source_id`:
 `actual_tag`, `host_package`, `release_index`, `release_metadata`,
@@ -139,10 +141,14 @@ and prohibits tag creation.
 
 ## Next steps
 
+> ⚠️ 本节为 2026-08-03 #188 历史轮后续建议；当前 #238 重跑因 Git 仓库缺失保持 `BLOCKED`。
+
 No skill change is required. Preserve exact canonical inventory fields and
 ordering, actual-tag pending semantics, genesis bytes `[]`, and the guarded
 post-FF CAS rollback language in future protocol edits.
 
 ## Runtime artifact policy
+
+> ⚠️ 本节仅描述 2026-08-03 #188 历史轮运行产物；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
 
 - Runtime artifacts（双侧 candidate、judge verdict、隔离目录执行产物）在本次 fresh re-baseline 中真实生成，位于被 gitignore 覆盖的 `tmp/eval-runs/issue-188-docs/`；未提交到 git。长期 durable 产物仅为本 `comparison.md`。

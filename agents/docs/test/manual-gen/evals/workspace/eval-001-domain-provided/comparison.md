@@ -43,8 +43,8 @@ Overall result: BLOCKED
 | checks_render_and_handoffs_audit | PASS | FAIL | with_skill 记录 `npm run test:docs` 通过、渲染未完成，并明确等待 `target_release_version` 的 blocked docs-audit handoff；without_skill 只记录 docs 检查通过，未记录渲染验收或 blocked handoff。 |
 | redacts_environment_identifier | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均未遇到分享链接编码、会话标识或其他待脱敏的环境专属参数，断言场景未触发。 |
 | avoids_sensitive_and_side_effect_data | PASS | PASS | with_skill 明确未写入虚构证据；without_skill 手册声明只读、不执行服务端写操作，未发现 Token、密钥、邮箱或个人信息。 |
-| presents_platform_layer_semantics | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均未生成手册页面或导航，无法核验平台定位、适用对象与角色边界。 |
-| presents_business_layer_semantics | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 均未生成手册页面或导航，无法核验业务场景、能力目的与模块关系。 |
+| presents_platform_layer_semantics | NOT_EXERCISED | FAIL | with_skill 未生成手册页面或导航；without_skill 已生成扁平手册，但缺少说明平台定位、适用对象与角色边界的最高层。 |
+| presents_business_layer_semantics | NOT_EXERCISED | FAIL | with_skill 未生成手册页面或导航；without_skill 已生成扁平手册，但缺少说明业务场景、能力目的与模块关系的中间层。 |
 
 未通过或未触发断言（with/without 任一 FAIL / NOT_EXERCISED）：`uses_provided_domain_without_local_start`、`confirms_one_bounded_batch`、`records_viewport_set_and_readback`、`captures_sanitized_product_evidence`、`writes_evidence_bounded_manual`、`checks_render_and_handoffs_audit`、`redacts_environment_identifier`、`presents_platform_layer_semantics`、`presents_business_layer_semantics`
 

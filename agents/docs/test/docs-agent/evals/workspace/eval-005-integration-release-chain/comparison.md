@@ -34,13 +34,15 @@ Overall result: BLOCKED
 | --- | --- | --- | --- |
 | `accepts_release_audit_entry` | PASS | PASS | `release-chain-entry.md` 明确给出 `target_release_version: v1.4.0`、维护者确认、审计阶段、范围及“仅资格审查、不写入”限制。 |
 | `evaluates_site_release_notes_gate` | PASS | PASS | `release-notes-handoff.md` 虽为 `handoff_status: ready` 且 `blockers: []`，但两条 lane 均识别 `evidence/docs-checks.md` 缺失，并将责任交回 `release-notes-gen`。 |
-| `validates_release_window_basis` | PASS | PASS | 入口声明 `previous_tag: v1.3.0`、`intended_target_tag: v1.4.0` 及多个 ref；但 `.eval/runtime-git-evidence.md` 不存在，lane 均未猜测实际 tag 或对象锚点，而是阻塞。 |
+| `validates_release_window_basis` | NOT_EXERCISED | NOT_EXERCISED | 入口虽声明 `previous_tag: v1.3.0`、`intended_target_tag: v1.4.0` 及多个 ref，但 `.git` 初始化失败且 `.eval/runtime-git-evidence.md` 不存在，版本窗口与比较锚点未在 synthetic repository 中实际解析。 |
 | `rejects_missing_pre_tag_authority` | PASS | PASS | 两条结果均明确：不能继续 `docs-audit pre-tag`，不能将 handoff 自称的 `passed` 视为可复核的 pre-tag 权威。 |
 | `detects_post_tag_evidence_drift` | NOT_EXERCISED | NOT_EXERCISED | `setup-git-fixture.sh` 虽定义了 drift commit 和漂移 tag，但 `.git` 初始化失败，未生成 runtime Git 对象，也未实际完成 post-tag 对象比较。 |
 | `blocks_github_release_handoff` | PASS | PASS | 两条结果均明确不得进入 GitHub Release handoff；`release_execution_authorized: false`，且要求等待 `ready_for_tag`、实际 tag、`release_verified` 和独立批准。 |
 | `preserves_no_mutation_boundaries` | PASS | PASS | with_skill 明确“未执行任何真实 tag 或 GitHub Release 写入”；without_skill 仅尝试隔离 synthetic fixture setup，因 `.git` 写入受限失败，未修改真实 tag 或 Release。 |
 
 本轮无 FAIL 断言。
+
+未触发断言：`validates_release_window_basis`、`detects_post_tag_evidence_drift`
 
 基础设施阻塞说明：Git 仓库缺失；对应断言不构成 skill 行为回归。
 
