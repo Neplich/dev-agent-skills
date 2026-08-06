@@ -18,14 +18,35 @@
 
 ## Latest Result
 
-- Behavior result: `PASS` — with_skill 在本轮实际触发的路径上满足对应 assertions，无回归。
-- Coverage result: `PARTIAL` — 见下方未触发断言
+- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `PARTIAL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
 
-Overall result: BLOCKED
+Overall result: FAIL
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），且被测平台已改为执行前维护者确认注入（#235），本结论基于旧契约，待重跑验证。
+
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `FAIL` / Coverage `PARTIAL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `uses_provided_domain_without_local_start` | PASS | FAIL | with_skill 的 `result.txt` 记录 `https://wiki.jototech.cn/` 及“维护者交接包已确认”，且未执行本地启动；without_skill 手册虽引用域名，但结果未记录环境 URL/维护者来源，截图为本地生成 SVG。 |
+| `confirms_one_bounded_batch` | FAIL | FAIL | 两条 lane 均未展示候选页面父子树、逐页证据与截图计划、change-map 和导航增量；with_skill 仅记录“无 change-map 增量”，without_skill 的 `change-map.yaml` 为 `{}`。 |
+| `records_viewport_set_and_readback` | NOT_EXERCISED | FAIL | with_skill 明确“视口设定 / 回读：未执行”；without_skill 已生成截图但所有产物均无 1920×1080 设定、实际回读或不符停止证据。 |
+| `captures_sanitized_product_evidence` | NOT_EXERCISED | FAIL | with_skill “采集截图清单：无”；without_skill 的 `step-1-editor.svg`、`step-4-rendered-page.svg` 是带“示意”标题的人工 SVG，不是真实运行界面截图，也无统一视口/主题/导航状态证据。 |
+| `writes_evidence_bounded_manual` | NOT_EXERCISED | PASS | with_skill 保持零写入且未生成操作条目；without_skill 的 `anonymous-edit-preview.md` 含角色、前置条件、编号步骤、界面说明、截图及图注、预期结果、注意事项/异常处理，`related_code` 指向 `PageEditor.tsx`/`PageDetail.tsx`，图片为同级相对路径，`last_verified_version: unverified`。 |
+| `checks_render_and_handoffs_audit` | FAIL | FAIL | with_skill 记录了 `npm run test:docs`、工作目录和退出状态，但渲染验收未执行，且 handoff 仅写 `docs-audit`，未形成明确的 `docs-agent:docs-audit` blocked handoff；without_skill 只在结果中笼统声称检查通过，没有权威命令、工作目录、状态与结果，也未记录版本交接 blocked 门禁。 |
+
+未满足断言：``uses_provided_domain_without_local_start``、``confirms_one_bounded_batch``、``records_viewport_set_and_readback``、``captures_sanitized_product_evidence``、``checks_render_and_handoffs_audit``
+
 
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 入口门禁通过，识别出请求已提供域名环境，**未进入本地启动分支、未重复询问域名**。
 - 完成 Step 1–4：读宿主 standards 与 change-map、读 manual 模板、在真实界面梳理角色与流程、
@@ -37,6 +58,7 @@ Overall result: BLOCKED
   `unverified`，handoff 为等待发版上下文的 blocked。
 
 ## Without-Skill Baseline
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 来源：同一 prompt、同一 fixture 的独立冷启动会话，未加载 manual-gen 文档。
 - 直接完成采集与写入：4 张截图 + 4 个 Markdown 页面，未提出候选批次也未请求确认。
@@ -46,6 +68,7 @@ Overall result: BLOCKED
 - 自行读取了 `standards/index.md` 并采用三层组织——该规则来自宿主交付物而非 skill 协议。
 
 ## Failures / Gaps
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 无 skill 行为回归。with_skill 在实际触发的 Step 1–4 路径上满足对应 assertions。
 - 未触发：`records_viewport_set_and_readback`、`captures_sanitized_product_evidence`、

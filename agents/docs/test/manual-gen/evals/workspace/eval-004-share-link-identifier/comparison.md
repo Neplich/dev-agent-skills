@@ -22,6 +22,7 @@
 - Coverage result: `PARTIAL` — 见下方未触发断言
 
 Overall result: BLOCKED
+- Blocking reason: 平台缺场景（明确处置，非 skill 行为原因）。按 #235 契约被测平台由执行前维护者确认注入；本轮维护者确认平台为 llm-wiki（wiki.jototech.cn），实测该平台缺少本 eval 场景（无导出分享功能 / 无图表创作功能），正向写入路径不可执行。按 #245（eval 测试设计收敛：单一通用测试替代按场景拆分）实施后重跑。
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），且被测平台已改为执行前维护者确认注入（#235），本结论基于旧契约，待重跑验证。
 
 

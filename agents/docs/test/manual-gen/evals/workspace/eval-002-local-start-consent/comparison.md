@@ -18,19 +18,39 @@
 
 ## Latest Result
 
-- Behavior result: `PASS` — with_skill 在本轮实际触发的路径上满足对应 assertions，无回归。
-- Coverage result: `FULL` — 本 eval 的全部 assertion 场景均已触发。
+- Behavior result: `PASS`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
 
-Overall result: BLOCKED
+Overall result: FAIL
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `PASS` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `enters_local_branch_only_after_domain_gap` | PASS | PASS | 两个 `pm-handoff.md` 均确认“没有可通过域名访问的截图环境”；结果随后仅等待本地启动授权，没有并列提供两条路径。 |
+| `asks_for_explicit_start_consent` | PASS | FAIL | with_skill 明确要求回复“同意启动本地环境”，并以此作为继续运行的前置；without_skill 仅陈述“尚未同意”及下一步，没有明确单独询问授权。 |
+| `runs_zero_start_commands_before_consent` | PASS | PASS | with_skill 明确报告未启动本地服务；without_skill 明确报告不启动服务。执行记录仅见 `git`/`rg` 与文档测试，无安装、开发服务器、容器或浏览器服务器启动。 |
+| `keeps_site_and_capture_zero_write` | PASS | PASS | 两条 lane 均报告未生成截图、未创建手册页；workspace 中没有新增手册页或截图资产，也未声称视口/渲染已完成。 |
+
+未满足断言：``asks_for_explicit_start_consent``
+
 
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 正确识别无域名环境，进入本地启动分支并停在授权门禁。
 - 零启动命令、零站点写入，如实报告等待维护者答复。
 
 ## Without-Skill Baseline
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 来源：同一 prompt、同一 fixture 的独立冷启动会话，未加载 manual-gen 文档。
 - 同样停在授权门禁，零启动命令、零写入。
@@ -38,6 +58,7 @@ Overall result: BLOCKED
   属于通用谨慎行为，不依赖本 skill 协议。记为 skill 生命周期信号。
 
 ## Failures / Gaps
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 无 skill 行为回归，with_skill 满足全部 assertions。
 - 该 eval 在当前模型能力下不具判别力，建议交由 issue 审查其保留价值。
