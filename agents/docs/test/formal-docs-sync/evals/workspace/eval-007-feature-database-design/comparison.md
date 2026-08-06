@@ -35,6 +35,32 @@
 - Overall result: FAIL
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `FAIL` / Coverage `PARTIAL`
+- without_skill：Behavior `FAIL` / Coverage `PARTIAL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `loads_only_database_design_contracts` | NOT_EXERCISED | NOT_EXERCISED | 产物没有记录 standards/template/module 的实际读取轨迹；仅凭最终文档无法证明未加载 API、ops、product 规则。 |
+| `passes_design_closeout_gate` | FAIL | FAIL | 两条 lane 均不存在 runtime-only `sync-report.md`，没有逐页 closeout matrix、生成时间或写前 changed-path 证据。 |
+| `creates_database_schema_domain_tree` | PASS | PASS | 两条 lane 均存在并链接 `database/index.md`、Primary、Workspace Access 数据域、relationships 和三个实体页。 |
+| `refreshes_confirmed_stable_path` | FAIL | FAIL | 两条 lane 均保留稳定路径并刷新正文，但 with_skill 页面仍为 `last_verified_version: v0.9.0`，without_skill 为 `v1.0.1`，均未标记 `unverified`。 |
+| `documents_current_entity_facts` | PASS | PASS | 两条 lane 的实体页记录了 `(workspace_id, user_id)` 唯一约束、owner/editor/viewer、invitation token 唯一约束和 `expires_at`；对应 `schema.sql` 与测试一致。 |
+| `links_relationships_bidirectionally` | PASS | PASS | 两条 lane 的 `relationships.md` Mermaid 指向三个实体页；实体页均反向链接数据域、关系页、相关表和 `api/workspace-access.md`。 |
+| `distinguishes_physical_and_logical_relations` | PASS | PASS | 两条 lane 均明确 workspace 外键为 `ON DELETE CASCADE`，`workspace_memberships.user_id` 为 service 校验的逻辑引用且无物理 FK。 |
+| `creates_domain_component_flow_tree` | PASS | PASS | 两条 lane 均生成 Design 根、Workspace Access、Audit Log、Invitation Service、Membership Repository、AuditWriter、invitation-acceptance 和 authorization-boundary 页面，并保留旧 flat 兼容入口。 |
+| `keeps_reciprocal_and_authority_links` | PASS | PASS | 两条 lane 的三个组件页链接 invitation-acceptance，流程页反向链接三个组件；Design 页面链接 API 与数据库权威页，未复制完整 contract 表。 |
+| `keeps_cross_domain_authority_unique` | PASS | PASS | 两条 lane 均将 invitation-acceptance 保留在 Workspace Access 下；Audit Log 仅通过链接引用流程，没有复制流程正文。 |
+| `updates_atomic_map_and_unverified_pages` | FAIL | FAIL | with_skill 的稳定数据库页仍是 `v0.9.0`；without_skill 多个 Design/Database 页仍是 `v1.0.1`，且其 `src/audit/**` 映射未包含完整 Database 子树和互链闭包。 |
+| `runs_host_checks_and_handoffs_audit` | FAIL | FAIL | with_skill 明确记录 `npm run test:docs` 被环境阻断且尚未 handoff；without_skill 记录自动化测试未成功，且没有三项宿主检查通过证据或 `docs-agent:docs-audit` handoff。 |
+
+未满足断言：``passes_design_closeout_gate``、``refreshes_confirmed_stable_path``、``updates_atomic_map_and_unverified_pages``、``runs_host_checks_and_handoffs_audit``
+
+
 **PASS（with-skill 12/12；fresh without-skill 6/12）** — with-skill satisfies
 all Database/Design hierarchy, current-fact, reciprocal-link, stable authority,
 closeout, atomic mapping, recursive navigation, host-check, and `docs-agent:docs-audit` handoff
@@ -42,6 +68,7 @@ assertions. The arbitrary-depth Design wording and sidebar implementation did
 not weaken existing component/flow behavior.
 
 ## Assertions
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - `loads_only_database_design_contracts`: with-skill PASS；without-skill FAIL。
   Only with-skill loaded the standards entry, granularity, change map, and
@@ -77,6 +104,7 @@ not weaken existing component/flow behavior.
   version.
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - Loaded the exact common/Database/Design contracts and no unrelated type
   module.
@@ -111,6 +139,7 @@ not weaken existing component/flow behavior.
   broken links.
 
 ## Failures
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - With-skill assertion failures: none.
 - Without-skill assertion failures: `loads_only_database_design_contracts`,

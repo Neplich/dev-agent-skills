@@ -16,15 +16,35 @@
 
 ## Latest Result
 
-- Behavior result: `FAIL` — 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL` — 本轮重跑实际触发的断言场景
+- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
 - With skill 5/5；fresh without_skill baseline 0/5
 
 Overall result: FAIL
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
 
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `FAIL` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `detects_flat_hierarchy_drift` | FAIL | FAIL | with_skill 仅指出 `research-conversations.md`，称 `graph-search.md` 为“同类观察”，未明确二者同属缺失的“知识发现与应用”节点；without_skill 未识别 drift。feature catalog 确实将二者分别列为 `knowledge-discovery/conversations` 与 `knowledge-discovery/graph-search`。 |
+| `proposes_migration_before_write` | FAIL | FAIL | with_skill 给出 `research-conversations.md` 的迁移路径和三个选项，但未给出 `graph-search.md` 映射、完整入链/递归导航 delta、排除理由；without_skill 只提议新增一级页面 `docs/site/api/conversation-messages.md`，无迁移提案。 |
+| `does_not_deepen_flat_layout` | PASS | FAIL | with_skill 明确“尚未写入任何文件”，且工作区没有新增文档；without_skill 明确提出在 `docs/site/api/` 一级新增 `conversation-messages.md`（`result.txt:5`）。 |
+| `reports_out_of_batch_drift_read_only` | FAIL | FAIL | with_skill 只提到 `graph-search.md`，没有分别报告“知识建设与维护”和“平台治理与运行”两组页面清单及目标节点；without_skill 未报告批次外 drift。 |
+| `loads_only_api_contract` | FAIL | FAIL | with_skill 声明不涉及其他类型，但未显式列出“已加载模块”、host API 模板及 `Hierarchy drift` 结论字段；without_skill 同样没有这些显式报告。 |
+
+未满足断言：``detects_flat_hierarchy_drift``、``proposes_migration_before_write``、``does_not_deepen_flat_layout``、``reports_out_of_batch_drift_read_only``、``loads_only_api_contract``
+
+
 
 ## Assertions
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - `detects_flat_hierarchy_drift`: with skill PASS；without skill FAIL。skill lane 报告 `Hierarchy drift: positive` 并点名 `research-conversations.md` 与 `graph-search.md`，归类证据用 feature catalog、owner、`feature_path` 与 route prefix；baseline 把新页面放进 API 根并称之为「稳定扁平路径」，没有识别两页共同缺失的域节点。
 - `proposes_migration_before_write`: with skill PASS；without skill FAIL。skill lane 给出逐级 `index.md` 目标树、两个旧路径到新路径的映射、入链与递归导航 delta、两条 change-map `required_docs` delta、排除项与三个决策选项；baseline 只有「根目录新页 + API 索引 + change map」的扁平候选，没有目标子树、路径映射或迁移决策面。
@@ -33,6 +53,7 @@ Overall result: FAIL
 - `loads_only_api_contract`: with skill PASS；without skill FAIL。skill lane 报告 `Loaded type modules: api` 与 `Hierarchy drift` 结论并点名 host API template；baseline 两个字段都不存在。
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 选择 feature delivery 模式，消费 `.eval/actual-diff.patch` 作为入口证据，只加载 API 类型模块与 host API 模板。
 - 在 Step 4 候选范围之前执行扁平层级 drift 检查，只读页面路径与 frontmatter，输出本批次 positive drift 与两组批次外 drift。
@@ -49,6 +70,7 @@ Overall result: FAIL
 - Baseline result: **0/5**。
 
 ## Failures
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - With-skill assertion failures: 无。
 - Baseline failures: 全部 5 条。

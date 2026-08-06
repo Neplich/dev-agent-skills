@@ -16,10 +16,29 @@
 
 ## Latest Result
 
-- Behavior result: `FAIL` — 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL` — 本轮重跑实际触发的断言场景
+- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
 Overall result: FAIL
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
+
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `FAIL` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `detects_non_content_candidate_drift` | FAIL | FAIL | 两条 lane 都识别了 staged hash 漂移、symlink 与 `160000` Gitlink，但未在最终输出中逐类覆盖 fixture 的 `100644→100755`、普通文件到 symlink、rename 和 delete 变更。 |
+| `rejects_every_unauthorized_transformation` | FAIL | FAIL | 两条 lane 都阻止了 symlink 与 Gitlink，但没有明确把 snapshot A 中的模式变化、rename、delete 逐项纳入越界结论。 |
+| `rechecks_committed_candidate_boundaries` | PASS | FAIL | with_skill 明确检查 hypothetical committed snapshot，并指出 `anchor_commit..handoff_commit` 的 `160000` Gitlink 不得提交；without_skill 仅说明当前没有 candidate/handoff，未明确要求后续 candidate 与 handoff 重新验证同一边界。 |
+| `rolls_back_only_the_failed_attempt` | PASS | PASS | 两条 lane 都要求保留 `.eval/` 证据、恢复原始 staged snapshot，并明确保留 `notes/local.txt` 等无关用户变化。 |
+| `proves_host_state_restoration` | PASS | PASS | 两条 lane 都基于 `prewrite-fingerprint.md` 识别 branch、unstaged 区、授权页面和无关文件未变，但 staged hash 仍为 `9999…`，因此没有虚构成功，并要求恢复后重新核验。 |
+
+未满足断言：``detects_non_content_candidate_drift``、``rejects_every_unauthorized_transformation``、``rechecks_committed_candidate_boundaries``
+
 
 - With-skill: **5/5 PASS**
 - Fresh without-skill: **4/5 PASS、1/5 FAIL**
@@ -42,6 +61,7 @@ Overall result: FAIL
 - 保留 `notes/local.txt` 的一致 identity，用于验证不覆盖无关用户状态。
 
 ## Assertion Results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 | Assertion | With skill | Without skill | Fresh judgment |
 | --- | --- | --- | --- |

@@ -16,10 +16,29 @@
 
 ## Latest Result
 
-- Behavior result: `FAIL` — 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL` — 本轮重跑实际触发的断言场景
+- Behavior result: `PASS`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
 Overall result: FAIL
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
+
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `PASS` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `selects_pre_tag_authority_safely` | PASS | FAIL | with_skill 明确区分 direct-handoff 与 fresh-clone，并在 fresh-clone 使用 tag tree 固定路径回退校验；without_skill 明确称 fresh-clone 无法重建完整审计链。 |
+| `proves_released_tree_binding` | PASS | FAIL | with_skill 给出 `entry_tag_tuple` 与 `pre_result_tag_tuple` 一致、实际 tree 为 `666…666`，并解释 commit identity 不同但 tree 一致；without_skill 的 fresh-clone 仅能看到 tag tree，无法完成完整绑定复核。 |
+| `verifies_version_surfaces_from_release` | PASS | PASS | 两条 lane 均核验 tag、Release Notes、索引、`releases.json` 与 `package.json`，并处理 `v1.2.0` / `1.2.0` 表示差异；证据指向 tag tree 与已提交路径。 |
+| `requires_durable_post_tag_evidence` | PASS | FAIL | with_skill 明确识别 `release_evidence_branch_confirmation` 和 `release_evidence_expected_head` 缺失，并将两个场景均保持为 `blocked`；without_skill 将 direct-handoff 描述为“文档内容已验证、发布闭环待确认”，未按断言要求保持 blocked。 |
+| `preserves_upstream_release_artifacts` | PASS | PASS | 两条 lane 均明确“未执行任何 tag、branch 或 release 写入”，且未重新生成、盖章或改变 pre-tag handoff。 |
+
+未满足断言：``selects_pre_tag_authority_safely``、``proves_released_tree_binding``、``requires_durable_post_tag_evidence``
+
 
 - With-skill: **5/5 PASS**
 - Fresh without-skill: **1/5 PASS、4/5 FAIL**
@@ -42,6 +61,7 @@ Overall result: FAIL
 - 将历史 issue 身份引用替换为 `docs-agent:release-notes-gen`，并重算 inventory digest、candidate blob、discovery blob 与 lineage digest。
 
 ## Assertion Results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 | Assertion | With skill | Without skill | Fresh judgment |
 | --- | --- | --- | --- |

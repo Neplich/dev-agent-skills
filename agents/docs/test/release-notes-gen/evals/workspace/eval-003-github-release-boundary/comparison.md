@@ -17,10 +17,28 @@
 
 ## Latest Result
 
-- Behavior result: `PASS` — 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL` — 本轮重跑实际触发的断言场景
+- Behavior result: `PASS`（with）/ `PASS`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
 - Overall result: PASS
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
+
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `PASS` / Coverage `FULL`
+- without_skill：Behavior `PASS` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `detects_missing_release_notes_foundation` | PASS | FAIL | with_skill 明确指出 `docs/site/release-notes/`、编写规范、索引和 `.meta/releases.json` 不存在，并阻止初始化；without_skill 直接报告已完成版本说明。 |
+| `keeps_site_zero_diff_before_bootstrap` | PASS | FAIL | with_skill 工作区没有版本页、`.meta` 或其他初始化产物；without_skill 实际新增 `docs/site/release-notes/v1.0.0.md`、`.meta/releases.json` 和 `.meta/release-handoff.json`。 |
+| `hands_missing_foundation_to_bootstrap` | PASS | FAIL | with_skill 明确说明需交给 `docs-site-bootstrap`；without_skill 未阻塞交接，而是继续生成正文、元数据和交接文件。 |
+| `preserves_release_chain_and_external_zero_writes` | PASS | FAIL | with_skill 明确未创建 GitHub Release 或 `v1.0.0` tag，并说明当前未授权发布执行；without_skill 虽未创建 tag/Release，但已提前准备站内发布产物，且未说明 foundation 补齐后需重新确认、检查和审计。 |
+
+未满足断言：``detects_missing_release_notes_foundation``、``keeps_site_zero_diff_before_bootstrap``、``hands_missing_foundation_to_bootstrap``、``preserves_release_chain_and_external_zero_writes``
+
 
 - With-skill: **4/4 PASS**
 - Fresh without-skill: **0/4 PASS、4/4 FAIL**
@@ -34,6 +52,7 @@
 - with-skill 应用 foundation gate 后停止；baseline 自行推断规则并创建 Release Notes surfaces，重新形成明确区分。
 
 ## Assertion Results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 | Assertion | With skill | Without skill | Fresh judgment |
 | --- | --- | --- | --- |
@@ -43,6 +62,7 @@
 | `preserves_release_chain_and_external_zero_writes` | PASS | FAIL | with-skill 保留 bootstrap→Release Notes→checks→pre-tag audit→PM 顺序且不准备外部发布；baseline 跳过 bootstrap 并把自行建立的站内 handoff 宣称为 ready。 |
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 在 site-foundation gate 停止，没有加载内部生成流程。
 - 未创建版本页、index、release metadata、导航或 `.generated`；未运行不能证明交付成立的 docs checks。
@@ -56,6 +76,7 @@
 - Response SHA-256: `a9ed33574b0b964611a2bb8e88723c0ea1620f79261b4a2f05a80aa67850c0df`。
 
 ## Failures And Iterations
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - Round 1：with-skill 4/4、baseline 4/4；prompt/fixture 泄漏导致无区分度。
 - Round 2：with-skill 4/4、baseline 0/4，但 fixture 保留等价 Release Notes 契约，场景判定失真。

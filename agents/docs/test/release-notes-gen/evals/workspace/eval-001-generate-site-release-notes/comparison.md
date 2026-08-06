@@ -17,10 +17,29 @@
 
 ## Latest Result
 
-- Behavior result: `FAIL` — 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL` — 本轮重跑实际触发的断言场景
+- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
 - Overall result: FAIL
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
+
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `FAIL` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `detects_missing_version_confirmation` | PASS | PASS | 两条 lane 的 `release-entry.md` 均写明仅为 planning note、无维护者确认；`confirmation-record.md` 明确 `target_release_version_confirmation: not_confirmed`。 |
+| `stops_before_loading_execution_workflow` | PASS | FAIL | with_skill 明确“不能生成或提交站内 Release Notes”；without_skill 实际生成了 `site-release-notes.md` 草稿。 |
+| `keeps_all_site_surfaces_unchanged` | PASS | FAIL | with_skill 明确未修改版本页、metadata、索引或导航；without_skill 新增了 `site-release-notes.md`。 |
+| `does_not_run_post_entry_checks` | PASS | PASS | with_skill 将 `npm run test:docs` 放在版本确认之后；两条 lane 均未生成 site-ready/pre-tag handoff，且无依赖安装或 docs check 产物。 |
+| `returns_version_ambiguity_to_pm` | FAIL | FAIL | 两条 lane 都要求维护者确认版本，但未将阻塞明确交回 PM 入口分类；with_skill 反而指向 `release-engineering` / `docs-agent`，without_skill 仅列出后续确认步骤。 |
+
+未满足断言：``stops_before_loading_execution_workflow``、``keeps_all_site_surfaces_unchanged``、``returns_version_ambiguity_to_pm``
+
 
 - With-skill: **5/5 PASS**
 - Fresh without-skill: **3/5 PASS、2/5 FAIL**
@@ -43,6 +62,7 @@ Review 指出第二轮 `confirmation-record.md` 仍以“维护者确认 v1.0.0 
 - release entry 只把版本标为协调者候选值；confirmation record 只确认正文事实，并显式不确认目标版本。
 
 ## Assertion Results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 | Assertion | With skill | Without skill | Fresh judgment |
 | --- | --- | --- | --- |
@@ -53,6 +73,7 @@ Review 指出第二轮 `confirmation-record.md` 仍以“维护者确认 v1.0.0 
 | `returns_version_ambiguity_to_pm` | PASS | FAIL | with-skill blocked 并返回 `pm-agent` 补齐可追溯版本确认；baseline 只直接要求维护者确认，未回 PM，且已生成正文。 |
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 识别 body confirmation 与 target version confirmation 是两个独立凭据。
 - 未加载内部七步流程，未生成候选或页面、未应用 body confirmation、未安装依赖或运行 docs checks。
@@ -66,6 +87,7 @@ Review 指出第二轮 `confirmation-record.md` 仍以“维护者确认 v1.0.0 
 - Response SHA-256: `b77a596122f0992c1523fc631c981c4c0c9cc1dc9f7392251d8ad72cb5a84377`。
 
 ## Failures And Iterations
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - Round 1：with-skill 3/5、baseline 3/5；with-skill 自身两条 FAIL，Behavior FAIL。
 - Round 2：with-skill 5/5、baseline 3/5；Behavior PASS、Coverage FULL。

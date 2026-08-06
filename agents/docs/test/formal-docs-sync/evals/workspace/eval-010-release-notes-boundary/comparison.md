@@ -16,10 +16,28 @@
 
 ## Latest Result
 
-- Behavior result: `FAIL` — 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL` — 本轮重跑实际触发的断言场景
+- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
 Overall result: FAIL
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
+
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `FAIL` / Coverage `FULL`
+- without_skill：Behavior `FAIL` / Coverage `FULL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| recognizes_release_communication_outcome | PASS | PASS | 两条 lane 都产出用户版本页、发布列表和 `releases.json`；with_skill 的 `result.txt` 明确列出三类站点发布材料，without_skill 也列出相同目标。 |
+| routes_complete_entry_to_site_owner | FAIL | FAIL | 两条 lane 都直接执行同步并报告“已完成”，没有将 host、版本、范围、证据边界和站点面交给 Docs owner，也没有交接记录。 |
+| keeps_entire_site_zero_diff | FAIL | FAIL | 两条 lane 的实际 diff 都新增 `docs/site/release-notes/v1.5.0.md`，并修改 `index.md` 与 `.meta/releases.json`；不满足 `docs/site/` 零写入。 |
+| preserves_external_release_boundary | PASS | PASS | 产物和执行记录只显示 `docs/site/` 内三处文档变更；未发现创建/移动 tag、创建或发布 GitHub Release，或混入外部发布授权。 |
+
+未满足断言：`routes_complete_entry_to_site_owner`、`keeps_entire_site_zero_diff`
+
 
 - With-skill: **4/4 PASS**
 - Fresh without-skill: **1/4 PASS、3/4 FAIL**
@@ -38,6 +56,7 @@ Overall result: FAIL
 - 不在 prompt/assertions 中给出 specialist 名称或精确禁止路径清单。
 
 ## Assertion Results
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 | Assertion | With skill | Without skill | Fresh judgment |
 | --- | --- | --- | --- |
@@ -47,6 +66,7 @@ Overall result: FAIL
 | `preserves_external_release_boundary` | PASS | PASS | 两侧均未执行 tag 或 GitHub Release。 |
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 未加载 Product/Ops 类型模块，也未进入 current-state 页面同步。
 - 直接生成站内版本说明 specialist handoff，整个 `docs/site/` 保持 pristine。
@@ -59,6 +79,7 @@ Overall result: FAIL
 - Response SHA-256: `5b0e0bb59cf7311e9269f8ae69bbcaf1a3d22834a76d32000e0dbc6658ed8931`。
 
 ## Failures And Iterations
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - Round 1 即达到区分度，无需第二轮。
 - with-skill 无 assertion failure；基础设施失败 none。

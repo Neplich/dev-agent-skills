@@ -17,10 +17,31 @@
 
 ## Latest Result
 
-- Behavior result: `PASS` — 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `PARTIAL` — 本轮重跑实际触发的断言场景
+- Behavior result: `PASS`（with）/ `PASS`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
+- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— 本轮重跑实际触发的断言场景
 Overall result: PASS (partial coverage)
 - Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
+
+## #238 Fresh Rerun Result（2026-08-06）
+
+- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
+- with_skill：Behavior `PASS` / Coverage `PARTIAL`
+- without_skill：Behavior `PASS` / Coverage `PARTIAL`
+
+### 逐断言判定
+
+| 断言 | with_skill | without_skill | 判定依据 |
+| --- | --- | --- | --- |
+| `accepts_release_audit_entry` | PASS | PASS | `release-chain-entry.md` 明确给出 `target_release_version: v1.4.0`、维护者确认、审计阶段、范围及“仅资格审查、不写入”限制。 |
+| `evaluates_site_release_notes_gate` | PASS | PASS | `release-notes-handoff.md` 虽为 `handoff_status: ready` 且 `blockers: []`，但两条 lane 均识别 `evidence/docs-checks.md` 缺失，并将责任交回 `release-notes-gen`。 |
+| `validates_release_window_basis` | PASS | PASS | 入口声明 `previous_tag: v1.3.0`、`intended_target_tag: v1.4.0` 及多个 ref；但 `.eval/runtime-git-evidence.md` 不存在，lane 均未猜测实际 tag 或对象锚点，而是阻塞。 |
+| `rejects_missing_pre_tag_authority` | PASS | PASS | 两条结果均明确：不能继续 `docs-audit pre-tag`，不能将 handoff 自称的 `passed` 视为可复核的 pre-tag 权威。 |
+| `detects_post_tag_evidence_drift` | NOT_EXERCISED | NOT_EXERCISED | `setup-git-fixture.sh` 虽定义了 drift commit 和漂移 tag，但 `.git` 初始化失败，未生成 runtime Git 对象，也未实际完成 post-tag 对象比较。 |
+| `blocks_github_release_handoff` | PASS | PASS | 两条结果均明确不得进入 GitHub Release handoff；`release_execution_authorized: false`，且要求等待 `ready_for_tag`、实际 tag、`release_verified` 和独立批准。 |
+| `preserves_no_mutation_boundaries` | PASS | PASS | with_skill 明确“未执行任何真实 tag 或 GitHub Release 写入”；without_skill 仅尝试隔离 synthetic fixture setup，因 `.git` 写入受限失败，未修改真实 tag 或 Release。 |
+
+本轮无 FAIL 断言。
+
 
 - With-skill: **7/7 PASS**
 - Fresh without-skill: **4/7 PASS、3/7 FAIL**
@@ -48,6 +69,7 @@ Overall result: PASS (partial coverage)
 - 将 fixture 与脚手架中的历史 issue 身份引用替换为 `docs-agent:release-notes-gen`、`docs-agent:docs-audit`、`pm-agent:github-release-gen`。
 
 ## Assertions
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - `accepts_release_audit_entry`: with-skill PASS；baseline PASS。两侧均接受已确认版本、范围与只读边界。
 - `evaluates_site_release_notes_gate`: with-skill PASS；baseline **FAIL**。with-skill 拒绝缺少正文确认凭据的 ready handoff，并返回 `docs-agent:release-notes-gen`；baseline 将其视为可进入 docs-audit。
@@ -58,6 +80,7 @@ Overall result: PASS (partial coverage)
 - `preserves_no_mutation_boundaries`: with-skill PASS；baseline PASS。两侧均未执行真实 tag、远端或 GitHub Release 写入。
 
 ## With-Skill Behavior
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - 将现有 `docs/site/` 识别为 site-enabled host，不允许以无文档站路径降级。
 - 发现 `release-notes-handoff.md` 自称 ready，但缺少正文确认凭据，因此不能作为 docs-audit 的有效上游 handoff。
@@ -74,6 +97,7 @@ Overall result: PASS (partial coverage)
 - 结果：4/7 PASS、3/7 FAIL；相对 with-skill 存在 3 条可测量差距。
 
 ## Failures And Iterations
+> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
 - Round 1：with-skill 与 baseline 均识别对象漂移并阻止 GitHub Release，仍无区分度。
 - Round 2：加入站内 handoff 语义门禁后产生 +2 uplift，但简化 setup 时遗漏入口声明的 synthetic `v1.3.0`，导致双方漏过 release-window assertion；judge 判 with-skill 6/7、Behavior FAIL。
