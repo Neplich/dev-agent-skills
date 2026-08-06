@@ -7,45 +7,64 @@
 - Eval: `eval-002-user-rights`
 - Test case: User Rights Implementation
 - Workspace: `workspace/eval-002-user-rights`
-- Review context: issue #143
-- Latest result: PASS（4/4 assertions）- fresh Codex paired validation completed on 2026-07-21
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Natural user prompt:
 
+> pm-agent has completed entry classification and routed this confirmed `user-rights` security scope to privacy-surface-mapper. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/user-rights/PRD.md`. Check if user rights (access, deletion, export) are implemented.
+
+- Expected artifact: Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Prompt/fixture: issue #143 当前 fixture；包含 `PM_HANDOFF.md`、`docs/pm/user-rights/PRD.md` 与 `src/api/user-rights.js`
-- Fresh run: 当前会话中新启动的 fresh Codex validator 在 `tmp/eval-runs/issue-143/batch-c/eval-002-user-rights/` 的隔离副本中成对运行；with-skill 读取当前 specialist SKILL.md、Security README 与共享 closeout 契约，without-skill 仅以同一 prompt/fixture 重新生成 baseline，未读取历史 comparison，未复用历史 baseline
-- Source head: `test/issue-143-security-thin-fixtures`
-- Validation date: 2026-07-21
+- Schema: `evals.json` v1.0，使用 source HEAD `47adbbc9` 的当前 prompt、assertions 与 fixture。
+- Fresh run window: 2026-08-06 23:45:35 至 2026-08-07 00:13:31（Asia/Shanghai）。
+- Runtime root: `/tmp/security-fresh-evals-20260806-n3l1anp1/privacy-surface-mapper--eval-002-user-rights/`。
+- Fixture identity: 两条 lane 的初始 fixture manifest 完全相同，SHA-256 为 `51099ecfc1cc6407a2a8395e70e437687a8d984b7702e62660481c6549a657be`。
+- Lane isolation: 先完成并销毁全部 `without_skill` 独立顶层临时目录，再创建任何 `with_skill` 目录；每条 lane 使用独立的顶层临时 workspace、`HOME` 与 `CODEX_HOME`，不存在可供另一条 candidate 读取的 sibling lane。
+- Controlled variable: 两条 lane 使用逐字相同 prompt 与相同初始 fixture；仅 `with_skill` 的隔离 `CODEX_HOME` 安装并加载目标 skill，`without_skill` 未安装任何目标 skill。
+- Evidence isolation: 所有 candidate 会话结束并删除各自临时根后，才将内存中的最终 workspace 快照与 transcript 持久化到 runtime root；candidate transcript 泄漏扫描未命中 `eval_metadata.json`、`evals/evals.json`、`comparison.md`、judge/verdict 或 expected output/assertion 脚手架。
+- Judge: candidate 全部结束后，由第三个独立、只读的 fresh Codex 会话依据当前 assertions、两条 candidate 输出、transcript 与最终 workspace 快照判定。
+
+## Latest Result
+
+- Behavior result: **PASS**（PASS 4 / FAIL 0 / NOT EXERCISED 0）
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Historical Contract Note
+
+上一份 durable comparison 基于 issue #234 修复前会向 baseline 泄漏规则的旧契约，因此标记为 `BLOCKED`。本轮使用当前无泄漏 prompt/fixture 重新生成两条 lane，未复用旧 baseline 或旧结论。
 
 ## Assertions
 
-- PASS `data_inventory`：识别资料、订单、分析事件和备份，追踪 `/me`、`/data-export` 与删除端点的处理范围和用途
-- PASS `sharing_and_retention`：识别分析系统和备份中的副本，并将供应商属性、保留期限、法定保留例外、删除期限未定义列为风险，而未臆造额外第三方
-- PASS `user_rights`：确认资料访问仅部分实现；导出信任 `req.query.userId` 可越权且遗漏行为数据；删除仅软删除主库且不传播到分析/备份；更正、状态和同意控制缺失
-- PASS `compliance_gaps`：给出会话身份绑定、授权测试、完整安全导出、跨主库/分析/任务/备份删除编排、法定保留与审计状态等可执行整改
+| Assertion | With skill | With-skill evidence | Without skill | Baseline evidence |
+| --- | --- | --- | --- | --- |
+| `data_inventory`<br>识别个人数据类型、收集入口和处理目的 | PASS | 报告明确识别用户资料、订单/交易元数据、分析行为事件及备份副本，并列出收集/处理入口和目的；最终快照存在 privacy-map.md。 | PASS | PRIVACY_SURFACE_REPORT.md 明确列出用户资料、订单、行为事件及相关数据范围，并说明处理上下文。 |
+| `sharing_and_retention`<br>识别第三方共享、存储或保留相关风险 | PASS | 报告识别 analytics 为下游接收方、备份为内部副本，并明确缺少传输/供应商信息、保留期限、删除传播和法定保留策略。 | PASS | 报告识别 analytics、后台任务和备份中的数据副本，并明确删除传播、保留期限和法定保留处理缺口。 |
+| `user_rights`<br>检查访问、删除、导出或同意等用户权利支持情况 | PASS | 报告逐项核验 access、export、deletion，并以 src/api/user-rights.js 行号说明 session 身份、userId 越权、数据不完整、软删除及无传播/追踪。 | PASS | 报告逐项评估 /me、/data-export 和 DELETE /me，准确指出访问部分实现、导出越权且不完整、删除仅软删除。 |
+| `compliance_gaps`<br>给出隐私合规缺口和改进建议 | PASS | 报告包含 CRITICAL/HIGH/MEDIUM 风险、GDPR/CCPA 影响及 Engineer/DevOps/Product Legal 分工的具体整改建议。 | PASS | 报告包含风险评级、PRD 验收缺口及工程、DevOps 的具体修复建议。 |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-with-skill 输出以 PM handoff 与 `feature_path=user-rights` 为范围，按数据清单、存储/共享、权利实现和整改结构核对端点。它准确指出 `/data-export` 的对象级越权风险、分析数据遗漏和删除传播缺口，同时把未见证据的保留/供应商信息标为未知，不把推测当事实。输出还给出 `docs/security/user-rights/privacy-map.md` 落点以及 Engineer、DevOps 和 PM 的职责边界。
+已按 PM handoff 和 PRD 核验代码，并在最终快照创建了符合契约的 docs/security/user-rights/privacy-map.md。报告覆盖数据范围、入口、目的、共享/保留风险、用户权利状态及整改建议。
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-本轮 baseline 在独立 `without_skill` 副本中，仅依据同一 prompt 与 fixture 新生成。它也识别资料/订单/分析/备份、导出越权、删除不完整、保留未知和整改方案，4/4 assertions 均满足；但没有完整的隐私地图结构、严重性表达、报告归档和 Security→PM closeout。
+Baseline 也创建了结构化隐私报告并覆盖四项断言，作为对照不影响 with-skill 判定。
 
 ## Failures
 
-- with-skill 与 without-skill 均无 assertion failure。
-- baseline 已能利用高度显性的代码注释和 PM 风险提示；skill 的增益主要体现在完整权利矩阵、事实/未知边界和跨角色闭环。
+- 无。
+
+## Not Exercised
+
+- 无。
 
 ## Next Steps
 
-- 本 eval 无需修改 assertions 或 expected_output；后续 fixture 或 skill 行为变化时继续执行新的 fresh Codex paired run，并重新生成 baseline。
+- 无。
 
 ## Runtime Artifacts Policy
 
-- 本轮 paired 输出与临时隔离副本仅用于判定，完成后删除 `tmp/eval-runs/issue-143/batch-c`。
-- 不提交 with_skill、without_skill、transcript、verdict、timing、output、diagnostics 或其他运行期产物；durable result 仅为本 `comparison.md`。
+- Candidate command: `codex exec --skip-git-repo-check -C <isolated-workspace> -s workspace-write --ephemeral --ignore-user-config --ignore-rules -m gpt-5.6-luna -c 'model_reasoning_effort="medium"' --json -o <runtime-output> -`。
+- Judge 使用同一模型与 reasoning effort，在独立 `read-only` workspace 中按结构化 output schema 判定。
+- candidate、baseline、transcript、verdict、fixture snapshots、status、timing 与 diagnostics 仅保留于上述 `/tmp` runtime root，不提交到 git；仓库只更新 canonical `comparison.md`。

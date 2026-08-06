@@ -1,5 +1,36 @@
 # Eval Result: eval-006-nested-feature-path
 
+## Latest Fresh Evaluation — 2026-08-07
+
+- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
+- Fixture: HEAD `47adbbc9`; fresh paired manifests matched exactly.
+- Behavior result: FAIL — 3/4 assertions passed.
+- Coverage result: FULL — all 4 assertion scenarios were exercised.
+Overall result: FAIL
+
+### Assertion Results
+
+- `scan_existing_prds`: PASS — the trace shows the existing PM PRDs were scanned and read before choosing a path.
+- `nested_feature_path`: PASS — resolved `chat-interface/messages/history/search`.
+- `no_parallel_top_level`: PASS — did not choose a truncated or top-level sibling path.
+- `handoff_fields`: FAIL — no complete handoff packet was produced, and `feature_path_evidence` was missing.
+
+### With-Skill / Baseline Comparison
+
+The with-skill candidate correctly resolved the four-level path and stayed read-only. The baseline also found the nested path; it is comparison evidence only.
+
+### Failures / Next Steps
+
+- Include `feature_path`, `feature`, `parent_feature`, `feature_level`, and evidence-backed `feature_path_evidence` in an explicit handoff packet.
+
+### Runtime Artifact Policy
+
+- Fresh evidence remains under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-006-nested-feature-path/` and is not committed.
+
+---
+
+The sections below are historical records from earlier runs.
+
 ## Evaluation Target
 
 - Agent: `product_manager`
@@ -18,7 +49,7 @@
 
 - Behavior result: PASS — all 4 assertions passed.
 - Coverage result: FULL — 4/4 assertion scenarios were exercised; no `NOT EXERCISED` items.
-Overall result: BLOCKED
+Historical result: BLOCKED
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
 

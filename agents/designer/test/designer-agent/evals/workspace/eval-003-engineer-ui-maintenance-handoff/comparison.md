@@ -7,7 +7,7 @@
 - Eval: `eval-003-engineer-ui-maintenance-handoff`
 - Workspace: `workspace/eval-003-engineer-ui-maintenance-handoff`
 - Review context: issue #196 L2-4 router single-table convergence
-- Latest run: fresh paired Codex validation on 2026-07-31
+- Latest run: fresh isolated paired Codex validation and independent judge on 2026-08-07
 
 ## Test Set / Fixture Version
 
@@ -18,6 +18,45 @@
 - Without-skill source: the same prompt and fixture in an isolated directory, without reading or applying Designer README, `designer-agent/SKILL.md`, with-skill output, assertions, historical comparison, or an old baseline.
 
 ## Latest Result
+
+- Behavior result: **FAIL**
+- Coverage result: **FULL** (5/5 declared assertions exercised)
+Overall result: FAIL
+
+## Assertion Results (Current)
+
+- accepts_engineer_design_handoff: **FAIL** — the final response does not identify the request as an Engineer-sourced UI maintenance handoff.
+- uses_confirmed_feature_path: **FAIL** — the final response does not cite customer-portal/profile-settings or its aligned PRD/TRD.
+- routes_design_skills: **PASS** — information hierarchy routes to ui-ux-design and the primary button rule to visual-design.
+- writes_design_outputs_only: **FAIL** — no design deliverable is generated; the response blocks on allegedly unavailable specialists.
+- hands_back_to_engineer: **FAIL** — no explicit return to engineer-agent for TRD, plan, code, and tests.
+
+## With-Skill Behavior (Current)
+
+The candidate selects the correct specialists but falsely treats them as
+unavailable, then omits the confirmed path, deliverables, Engineer-handoff
+classification, and required return path.
+
+## Fresh Without-Skill Baseline (Current)
+
+The baseline was regenerated before the with-skill root existed, using the same
+prompt and fixture under an isolated HOME/CODEX_HOME. It produced a generic
+UI-SPEC.md and did not satisfy the router contract; it remains comparison input only.
+
+## Failures (Current)
+
+- Four of five router assertions fail; only specialist selection passes.
+
+## Next Steps (Current)
+
+- Correct installed-specialist availability handling and preserve the Engineer handoff packet in the response, then rerun.
+
+## Runtime Artifact Policy (Current)
+
+- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
+- Only this durable comparison is updated.
+
+## Historical Result (Superseded: pre-#234 contract)
 
 - Behavior result: PASS
 - Coverage result: FULL (5/5 declared assertions exercised)

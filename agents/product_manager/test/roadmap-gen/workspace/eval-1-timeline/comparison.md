@@ -1,5 +1,38 @@
 # Eval Result: roadmap-timeline
 
+## Latest Fresh Evaluation — 2026-08-07
+
+- Agent: `product_manager`
+- Skill: `roadmap-gen`
+- Eval: `eval-001-timeline`
+- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
+- Fixture: HEAD `47adbbc9`; both lanes used the same empty fixture manifest.
+- Behavior result: PASS — the exercised path correctly stopped on unavailable GitHub authentication.
+- Coverage result: PARTIAL — 0/3 assertion scenarios could be exercised because no milestone/issue data was available.
+Overall result: PASS (partial coverage)
+
+### Assertion Results
+
+- `phase_classification`: NOT EXERCISED — no milestone data was available.
+- `undated_semantic_inference`: NOT EXERCISED — no undated milestones were available.
+- `roadmap_artifacts`: NOT EXERCISED — no live-data roadmap could be generated.
+
+### With-Skill / Baseline Comparison
+
+The trace first checked for an existing roadmap, then `gh auth status` and `gh repo view` failed in the intentionally isolated HOME. The with-skill lane surfaced the authentication blocker and wrote no synthetic roadmap. The baseline wrote a roadmap, but it is comparison evidence only.
+
+### Failures / Next Steps
+
+- Re-run with a separately authorized GitHub fixture or authenticated isolated `gh` context; do not reuse historical live data.
+
+### Runtime Artifact Policy
+
+- Fresh evidence remains under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-001-timeline/` and is not committed.
+
+---
+
+The sections below are historical records from earlier runs.
+
 ## Evaluation Target
 
 - Skill: `roadmap-generator` → `roadmap-gen`（PASS 结论基于旧名，待重跑验证）
@@ -13,7 +46,7 @@
 
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
-- Overall result: BLOCKED
+- Historical result: BLOCKED
 - 注：以下 PASS 结论基于改名前的  评测记录保留；改名后待 fresh eval 重跑验证新入口。
 
 未覆盖场景：

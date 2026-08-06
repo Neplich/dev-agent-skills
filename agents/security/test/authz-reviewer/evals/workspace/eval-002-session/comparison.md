@@ -7,45 +7,64 @@
 - Eval: `eval-002-session`
 - Test case: Session Management
 - Workspace: `workspace/eval-002-session`
-- Review context: issue #143 thin fixture 补全后的复验
-- Latest result: PASS（4/4 assertions）- fresh Codex subagent validation completed on 2026-07-21
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Natural user prompt:
 
+> Check the session management security, using the confirmed PRD and code as evidence.
+
+- Expected artifact: Structured authorization review that identifies access-control risks, affected roles or resources, evidence, severity, and remediation guidance.
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Prompt/fixture: issue #143 当前提交；包含 `PM_HANDOFF.md`、已确认的 `docs/pm/session-management/PRD.md` 与 `src/auth/session-store.js`
-- Fresh run: 当前会话中的 fresh Codex validator 在 `tmp/eval-runs/issue-143/batch-b/eval-002-session/` 建立隔离副本，先运行 with_skill，再基于同一 prompt/fixture 全新生成 without_skill baseline；baseline 未读取或应用 skill 文档、Agent README、历史 comparison，也未复用历史结果
-- Source head: `test/issue-143-security-thin-fixtures`
-- Validation date: 2026-07-21
+- Schema: `evals.json` v1.0，使用 source HEAD `47adbbc9` 的当前 prompt、assertions 与 fixture。
+- Fresh run window: 2026-08-06 23:45:35 至 2026-08-07 00:13:31（Asia/Shanghai）。
+- Runtime root: `/tmp/security-fresh-evals-20260806-n3l1anp1/authz-reviewer--eval-002-session/`。
+- Fixture identity: 两条 lane 的初始 fixture manifest 完全相同，SHA-256 为 `63b039d9c786dd32ac2a298722e0ce7cb53b7adcb57752d6375b08aac458cf6b`。
+- Lane isolation: 先完成并销毁全部 `without_skill` 独立顶层临时目录，再创建任何 `with_skill` 目录；每条 lane 使用独立的顶层临时 workspace、`HOME` 与 `CODEX_HOME`，不存在可供另一条 candidate 读取的 sibling lane。
+- Controlled variable: 两条 lane 使用逐字相同 prompt 与相同初始 fixture；仅 `with_skill` 的隔离 `CODEX_HOME` 安装并加载目标 skill，`without_skill` 未安装任何目标 skill。
+- Evidence isolation: 所有 candidate 会话结束并删除各自临时根后，才将内存中的最终 workspace 快照与 transcript 持久化到 runtime root；candidate transcript 泄漏扫描未命中 `eval_metadata.json`、`evals/evals.json`、`comparison.md`、judge/verdict 或 expected output/assertion 脚手架。
+- Judge: candidate 全部结束后，由第三个独立、只读的 fresh Codex 会话依据当前 assertions、两条 candidate 输出、transcript 与最终 workspace 快照判定。
+
+## Latest Result
+
+- Behavior result: **PASS**（PASS 4 / FAIL 0 / NOT EXERCISED 0）
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Historical Contract Note
+
+上一份 durable comparison 基于 issue #234 修复前会向 baseline 泄漏规则的旧契约，因此标记为 `BLOCKED`。本轮使用当前无泄漏 prompt/fixture 重新生成两条 lane，未复用旧 baseline 或旧结论。
 
 ## Assertions
 
-- PASS `authorization_model`：识别 anonymous 与 authenticated-user 对资料/账户设置的边界，并梳理创建、解析、过期、退出的关键会话路径
-- PASS `access_control_findings`：指出递增会话 ID 可预测、无 30 分钟闲置过期、logout 未删除服务端会话三项缺陷
-- PASS `evidence_and_impact`：引用 `src/auth/session-store.js` 的计数器、Map 记录、读取和退出逻辑，说明会话枚举、账户冒用与退出后重放风险
-- PASS `remediation`：给出 CSPRNG 会话 ID、登录轮换、服务端过期、logout 删除记录和 Cookie 标志建议，并覆盖猜测、超时、退出重放回归测试
+| Assertion | With skill | With-skill evidence | Without skill | Baseline evidence |
+| --- | --- | --- | --- | --- |
+| `authorization_model`<br>识别角色、资源、权限边界和关键授权路径 | PASS | 最终快照中的 authz-review.md 含角色/权限矩阵、资源边界及 login→createSession→getSession→logout 授权路径。 | PASS | baseline 报告同样包含角色矩阵、资源边界和会话授权流程图。 |
+| `access_control_findings`<br>指出越权、会话、JWT 或权限检查缺陷 | PASS | 报告明确指出可预测会话 ID、无 30 分钟空闲过期、退出不撤销服务端会话，并说明无法验证的 Cookie/轮换/受保护路由控制。 | PASS | baseline 报告明确指出相同的会话、过期和退出失效缺陷，并标注集成控制的证据缺口。 |
+| `evidence_and_impact`<br>说明证据、影响范围和风险后果 | PASS | 每项主要发现均给出 session-store.js 定位证据、违反 PRD 的对应关系、会话劫持/账户接管或持续访问影响。 | PASS | baseline 报告提供了代码位置、PRD 对照及影响范围和风险后果。 |
+| `remediation`<br>提供可执行的授权修复和回归验证建议 | PASS | 最终报告给出 CSPRNG token、服务端空闲过期、撤销/删除、Cookie 与集成补证建议，并列出具体回归验证场景。 | PASS | baseline 报告同样提供了可执行修复和回归测试建议。 |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-with_skill 通过 PM handoff gate 后，按 authz-reviewer 的会话生命周期检查拆分审查证据。输出分别对可预测 ID、无过期、无服务端注销定为 HIGH，区分了 fixture 可确认事实与 Cookie 标志、登录调用方等未提供证据，并给出直接对应 PRD 验收边界的修复和回归方案，4 条 assertion 全部满足。
+With-skill 明确识别角色、资源、会话信任边界和授权路径；报告包含可定位证据、影响、严重度、修复及回归建议。
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-without_skill baseline 由本轮 fresh Codex validator 在独立副本中重新生成，仅使用同一 prompt 与 fixture。baseline 也识别匿名/已认证边界及三项会话缺陷，说明账户冒用后果并提出随机 ID、过期和服务端注销测试，4 条 assertion 全部满足；相比 with_skill，对生命周期阶段和证据缺口的结构化说明较少。
+Without-skill 也完成了合格的会话审查报告，作为 baseline 各项 assertions 均满足。
 
 ## Failures
 
-- 无 assertion failure。
-- Cookie 响应层和登录调用方不在 fixture 中，因此只能提出验证项，不能断言其当前实现状态。
+- 无。
+
+## Not Exercised
+
+- fixture 未提供登录处理器、Cookie 设置/解析、受保护端点或会话中间件，因此登录轮换、安全 Cookie 属性、匿名拒绝和端点级授权覆盖只能标记为不可验证，未形成可直接核验的实现分支。
 
 ## Next Steps
 
-- 保持当前最小 fixture；后续若把 Cookie 标志或登录轮换纳入 assertion，应先补相应响应层或调用方证据再复验。
+- 如需 FULL coverage，应补充登录、Cookie、会话解析和受保护端点实现后复审。
 
 ## Runtime Artifacts Policy
 
-- 本轮 candidate、baseline 与命令输出仅位于 `tmp/eval-runs/issue-143/batch-b/`，验证后删除，不提交到 git。
-- Runtime transcripts、verdicts、timing、diagnostics、with_skill / without_skill 输出及其他 scratch 产物均不得提交；长期结果仅保留本 `comparison.md`。
+- Candidate command: `codex exec --skip-git-repo-check -C <isolated-workspace> -s workspace-write --ephemeral --ignore-user-config --ignore-rules -m gpt-5.6-luna -c 'model_reasoning_effort="medium"' --json -o <runtime-output> -`。
+- Judge 使用同一模型与 reasoning effort，在独立 `read-only` workspace 中按结构化 output schema 判定。
+- candidate、baseline、transcript、verdict、fixture snapshots、status、timing 与 diagnostics 仅保留于上述 `/tmp` runtime root，不提交到 git；仓库只更新 canonical `comparison.md`。

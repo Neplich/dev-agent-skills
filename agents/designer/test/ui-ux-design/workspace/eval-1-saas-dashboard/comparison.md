@@ -12,11 +12,48 @@
 
 - Schema: `evals.json` v1.0
 - Fixture version: `chore/198-remove-brd-chain working tree, eval-001 fixture repaired with formal frontmatter`
-- Fresh run time: `2026-08-03 12:35:48 +0800`
+- Fresh run time: `2026-08-07 00:04:31 +0800`
 - Runtime directory: `tmp/eval-runs/issue-215-saas-dashboard-r2/`
 - Fixture: prompt, workspace README, and confirmed PM spec at `docs/pm/saas-dashboard/PRD.md`
 
 ## Latest Result
+
+- Behavior result: **FAIL**
+- Coverage result: **FULL** (3/3 assertions exercised)
+Overall result: FAIL
+
+## Assertion Results (Current)
+
+- assertion_1: **PASS** — the canonical ui-ux-spec.md is generated from the confirmed saas-dashboard path with a Mermaid journey, ASCII layouts, and interaction behavior.
+- assertion_2: **PASS** — the candidate remains design-only and writes no implementation or test work.
+- assertion_3: **FAIL** — neither the design document nor final response explicitly names engineer-agent as the next owner.
+
+## With-Skill Behavior (Current)
+
+The current run produces the expected structured design artifact and respects
+the Designer boundary, but fails the explicit next-role handoff requirement.
+
+## Fresh Without-Skill Baseline (Current)
+
+The baseline was regenerated first in an independent top-level workspace from
+the identical prompt and fixture under isolated HOME/CODEX_HOME. It creates a
+non-canonical DESIGN.md and likewise lacks the named Engineer handoff; it is
+comparison input only.
+
+## Failures (Current)
+
+- Missing explicit engineer-agent handoff.
+
+## Next Steps (Current)
+
+- Make the completion response satisfy the skill's existing Engineer handoff rule, then rerun.
+
+## Runtime Artifact Policy (Current)
+
+- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
+- Only this durable comparison is updated.
+
+## Historical Result (Superseded: earlier fixture/contract)
 
 - Behavior result: **PASS**
 - Coverage result: **FULL**

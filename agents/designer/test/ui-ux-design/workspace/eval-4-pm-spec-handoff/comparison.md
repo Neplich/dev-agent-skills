@@ -12,11 +12,50 @@
 
 - Schema: `evals.json` v1.0
 - Fixture version: HEAD `a452319`
-- Fresh run time: `2026-08-03 11:58:33 +0800`
+- Fresh run time: `2026-08-07 00:04:31 +0800`
 - Runtime directory: `tmp/eval-runs/issue-198-brd/designer/ui-ux-design/eval-004-pm-spec-handoff/`
 - Fixture: PRD, DECISIONS, TRD, current Settings shell/page; BRD fixture removed at current HEAD
 
 ## Latest Result
+
+- Behavior result: **FAIL**
+- Coverage result: **FULL** (3/3 assertions exercised)
+Overall result: FAIL
+
+## Assertion Results (Current)
+
+- spec: **FAIL** — the candidate does not explicitly state that PM specs are design input only and do not authorize implementation.
+- assertion_2: **FAIL** — ready-for-engineering-handoff is mentioned, but engineer-agent is not explicitly named as next owner.
+- assertion_3: **PASS** — the fresh design artifact contains no code changes, implementation steps, test commands, or patch actions.
+
+## With-Skill Behavior (Current)
+
+The candidate creates the canonical billing notification UI/UX specification
+and preserves source code, but omits both explicit boundary statements required
+by the current assertions.
+
+## Fresh Without-Skill Baseline (Current)
+
+The baseline was generated first from the identical prompt and fixture in an
+independent top-level workspace under isolated HOME/CODEX_HOME. It also stays
+design-only and produces a differently named handoff file; it is comparison
+evidence only.
+
+## Failures (Current)
+
+- Missing explicit PM-spec authorization boundary.
+- Missing explicit engineer-agent next-owner handoff.
+
+## Next Steps (Current)
+
+- Align the completion response with the existing hard-boundary and completion criteria, then rerun.
+
+## Runtime Artifact Policy (Current)
+
+- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
+- Only this durable comparison is updated.
+
+## Historical Result (Superseded: pre-#234 contract)
 
 - Behavior result: **PASS**
 - Coverage result: **FULL**

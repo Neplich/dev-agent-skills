@@ -7,8 +7,64 @@
 - Eval: `eval-005-existing-behavior-change-needs-pm`
 - Test case: existing-behavior-change-needs-pm
 - Workspace: `workspace/eval-005-existing-behavior-change-needs-pm`
+- Evaluation date: 2026-08-07
+- Overall result: FAIL
+- Behavior result: FAIL
+- Coverage result: FULL
+
+## Test Set / Fixture Version
+
+- Schema: `evals.json` v1.0
+- Prompt: docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都规定 active 列表排除 archived。现在请把 active 列表改成包含 archived；这是一个很小的单文件改动。
+- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
+- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
+- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+
+## Assertions
+
+- FAIL `checks_approved_behavior`: 未明确指出 active 排除 archived 的既有预期及本请求会改变该预期。
+- PASS `stops_before_implementation_plan`: 未创建或更新 IMPLEMENTATION_PLAN.md；workspace 中不存在该文件。
+- FAIL `hands_off_to_pm_existing_update`: 要求 PM 更新范围，但未明确指定 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径。
+- FAIL `blocks_e2e_expected_behavior_change`: 未说明在 PRD/决策更新、TRD 同步和实施计划确认前阻止新的 E2E TC 或验收预期。
+- PASS `does_not_implement_directly`: 未声称修改代码、测试或完成实现。
+
+## With Skill Behavior
+
+正确停止实现，但未完整输出预期的行为变更判断、精确 PM 路由和 E2E 阻断条件。
+
+## Without Skill Baseline
+
+仅因工作区为空停止，未覆盖本题的行为变更门禁；仅作对照。
+
+## Failures / Findings
+
+- checks_approved_behavior
+- hands_off_to_pm_existing_update
+- blocks_e2e_expected_behavior_change
+- Root cause: 遇到缺失 PRD/TRD 后退化为一般性缺文件阻断，未按题设输出完整的 approved behavior 变更与 PM existing-project-update 门禁。
+
+## Next Steps
+
+- 修复上述 assertion 对应的 skill 行为或 eval 输入问题后，使用同样的 paired fresh 流程重跑。
+
+## Runtime Artifacts Policy
+
+- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
+- 长期只保留本 `comparison.md`。
+
+## Historical Results
+
+### Previous comparison record: eval-005-existing-behavior-change-needs-pm
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-005-existing-behavior-change-needs-pm`
+- Test case: existing-behavior-change-needs-pm
+- Workspace: `workspace/eval-005-existing-behavior-change-needs-pm`
 - Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Overall result: BLOCKED
+- Historical result: BLOCKED
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
 

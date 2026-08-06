@@ -54,6 +54,9 @@ RUNTIME_DIAGNOSTIC_FILES = (
     "timing.json",
     "run_status.json",
 )
+MANUAL_ONLY_SKILLS = {
+    ("docs", "manual-gen"): "agents/docs/test/manual-gen/comparison.md",
+}
 
 
 @dataclass
@@ -395,6 +398,23 @@ def validate_all(root: Path | None = None) -> list[ContractError]:
         agent = rel_parts[1]
         skill_name = rel_parts[3]
         expected = f"agents/{agent}/test/{skill_name}/evals/evals.json"
+        manual_result = MANUAL_ONLY_SKILLS.get((agent, skill_name))
+        if manual_result is not None:
+            if expected in eval_path_set:
+                errors.append(
+                    ContractError(
+                        root / expected,
+                        f"manual-only skill must not define a conventional eval suite; use {manual_result}",
+                    )
+                )
+            if not (root / manual_result).is_file():
+                errors.append(
+                    ContractError(
+                        skill_doc,
+                        f"manual-only skill is missing evaluation result {manual_result}",
+                    )
+                )
+            continue
         if expected not in eval_path_set:
             errors.append(
                 ContractError(

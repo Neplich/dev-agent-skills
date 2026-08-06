@@ -1,5 +1,36 @@
 # Eval Result: eval-002-existing-project-update
 
+## Latest Fresh Evaluation — 2026-08-07
+
+- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
+- Fixture: HEAD `47adbbc9`; fresh paired manifests matched exactly.
+- Behavior result: PASS — 4/4 assertions passed.
+- Coverage result: FULL — all 4 assertion scenarios were exercised.
+Overall result: PASS
+
+### Assertion Results
+
+- `update`: PASS — identified the request as `existing-project-update` against approved PRD/TRD/DECISIONS.
+- `delta_blast_radius`: PASS — described the delivery delta and affected behavior/documents first.
+- `assertion_3`: PASS — recommended `change-impactor` plus targeted iteration, not regeneration.
+- `assertion_4`: PASS — named the notification-center PRD, DECISIONS, and Engineer TRD paths.
+
+### With-Skill / Baseline Comparison
+
+The with-skill response stayed read-only and produced a delta-oriented update sequence. The baseline also produced a useful impact analysis but directly rewrote the three documents; it remained comparison evidence only.
+
+### Failures / Next Steps
+
+- No with-skill assertion failures and no coverage gaps.
+
+### Runtime Artifact Policy
+
+- Fresh evidence remains under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-002-existing-project-update/` and is not committed.
+
+---
+
+The sections below are historical records from earlier runs.
+
 ## Evaluation Target
 
 - Agent: `product_manager`
@@ -18,7 +49,7 @@
 
 - Behavior result: PASS — all 4 assertions passed.
 - Coverage result: FULL — 4/4 assertion scenarios were exercised; no `NOT EXERCISED` items.
-Overall result: BLOCKED
+Historical result: BLOCKED
 - Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
 

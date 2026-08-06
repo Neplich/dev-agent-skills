@@ -7,45 +7,67 @@
 - Eval: `eval-003-third-party`
 - Test case: Third-Party Data Sharing
 - Workspace: `workspace/eval-003-third-party`
-- Review context: issue #143
-- Latest result: PASS（4/4 assertions）- fresh Codex paired validation completed on 2026-07-21
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Natural user prompt:
 
+> pm-agent has completed entry classification and routed this confirmed `third-party-sharing` security scope to privacy-surface-mapper. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/third-party-sharing/PRD.md`. Identify all third-party services receiving user data.
+
+- Expected artifact: Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Prompt/fixture: issue #143 当前 fixture；包含 `PM_HANDOFF.md`、`docs/pm/third-party-sharing/PRD.md`、`src/integrations/user-events.js` 与 `config/vendors.json`
-- Fresh run: 当前会话中新启动的 fresh Codex validator 在 `tmp/eval-runs/issue-143/batch-c/eval-003-third-party/` 的隔离副本中成对运行；with-skill 读取当前 specialist SKILL.md、Security README 与共享 closeout 契约，without-skill 仅以同一 prompt/fixture 重新生成 baseline，未读取历史 comparison，未复用历史 baseline
-- Source head: `test/issue-143-security-thin-fixtures`
-- Validation date: 2026-07-21
+- Schema: `evals.json` v1.0，使用 source HEAD `47adbbc9` 的当前 prompt、assertions 与 fixture。
+- Fresh run window: 2026-08-06 23:45:35 至 2026-08-07 00:13:31（Asia/Shanghai）。
+- Runtime root: `/tmp/security-fresh-evals-20260806-n3l1anp1/privacy-surface-mapper--eval-003-third-party/`。
+- Fixture identity: 两条 lane 的初始 fixture manifest 完全相同，SHA-256 为 `ca8fffebb733ec434021e77c2c210929e461bda51c1e7d4a57f5a1893e191202`。
+- Lane isolation: 先完成并销毁全部 `without_skill` 独立顶层临时目录，再创建任何 `with_skill` 目录；每条 lane 使用独立的顶层临时 workspace、`HOME` 与 `CODEX_HOME`，不存在可供另一条 candidate 读取的 sibling lane。
+- Controlled variable: 两条 lane 使用逐字相同 prompt 与相同初始 fixture；仅 `with_skill` 的隔离 `CODEX_HOME` 安装并加载目标 skill，`without_skill` 未安装任何目标 skill。
+- Evidence isolation: 所有 candidate 会话结束并删除各自临时根后，才将内存中的最终 workspace 快照与 transcript 持久化到 runtime root；candidate transcript 泄漏扫描未命中 `eval_metadata.json`、`evals/evals.json`、`comparison.md`、judge/verdict 或 expected output/assertion 脚手架。
+- Judge: candidate 全部结束后，由第三个独立、只读的 fresh Codex 会话依据当前 assertions、两条 candidate 输出、transcript 与最终 workspace 快照判定。
+
+## Latest Result
+
+- Behavior result: **PASS**（PASS 4 / FAIL 0 / NOT EXERCISED 0）
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Historical Contract Note
+
+上一份 durable comparison 基于 issue #234 修复前会向 baseline 泄漏规则的旧契约，因此标记为 `BLOCKED`。本轮使用当前无泄漏 prompt/fixture 重新生成两条 lane，未复用旧 baseline 或旧结论。
 
 ## Assertions
 
-- PASS `data_inventory`：逐供应商识别 ExampleAnalytics 的 userId/邮箱/IP/pageUrl、ExampleAds 的邮箱/最近购买金额、ExamplePay 的支付客户 ID/邮箱/内部用户 ID，并关联分析、广告受众和支付客户同步目的
-- PASS `sharing_and_retention`：核对美国地域、730/2555 天保留、广告保留为空、分析删除 API 缺失、广告删除支持未知和支付删除 API 可用但未编排等第三方风险
-- PASS `user_rights`：检查访问、导出、更正、删除和同意传播；明确分析无法通过 API 删除、广告未知、支付仅有能力但未接入工作流，且所有供应商均无完整权利传播证据
-- PASS `compliance_gaps`：给出广告默认无同意、合法基础/跨境保障、字段最小化、长或未定义保留、供应商清单和可测试权利传播等分级整改建议
+| Assertion | With skill | With-skill evidence | Without skill | Baseline evidence |
+| --- | --- | --- | --- | --- |
+| `data_inventory`<br>识别个人数据类型、收集入口和处理目的 | PASS | 最终快照中的 docs/security/third-party-sharing/privacy-map.md 明确列出内部用户 ID、邮箱、IP、页面 URL、订单金额和支付客户 ID，并说明各自用途、触发流程和保留信息；transcript 也显示其追溯了 PRD、user-events.js 与 vendors.json。 | PASS | 最终快照中的 privacy-surface-report.md 按服务列出发送字段、用途和 sendUserEvent 触发入口，足以支持数据类型、入口和目的识别。 |
+| `sharing_and_retention`<br>识别第三方共享、存储或保留相关风险 | PASS | privacy-map.md 明确列出三家第三方、接收字段、区域、同意、保留和删除支持；同时指出 ExampleAds 默认开启且无需同意、ExampleAnalytics 无删除 API、ExampleAds 保留期限未记录等风险。 | PASS | baseline 报告列出三家服务及字段、区域、保留和删除状态，并指出广告同意、保留及权利请求传播缺口。 |
+| `user_rights`<br>检查访问、删除、导出或同意等用户权利支持情况 | PASS | privacy-map.md 明确检查 Access、Deletion、Export/portability、Correction 四项状态，并说明 ExamplePay 有删除 API、ExampleAnalytics 无删除 API、ExampleAds 支持未记录，以及缺少传播工作流。 | PASS | baseline 报告明确记录删除支持和用户权利请求传播未文档化，并提出跨供应商 access、deletion、opt-out 等请求流程建议。 |
+| `compliance_gaps`<br>给出隐私合规缺口和改进建议 | PASS | privacy-map.md 包含 HIGH/MEDIUM 隐私风险及具体整改建议，覆盖广告默认共享、同意、保留删除、数据最小化、传输地域和权利请求传播。 | PASS | baseline 报告包含合规风险和整改建议，覆盖广告同意、数据最小化、保留删除、传输地域和权利请求传播。 |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-with-skill 输出将代码发送字段与供应商配置逐一交叉核对，形成供应商、字段、目的、地域、保留、删除能力和用户权利的完整映射。它识别了无条件调用与广告默认启用/无需同意，区分 `deletionApi=true` 和“删除流程已实现”，并对未知地域、保留和删除支持保持证据边界。输出也遵守 `docs/security/third-party-sharing/privacy-map.md` 报告落点与 Engineer/DevOps/PM handoff。
+with-skill 正确读取契约、PM handoff、PRD、代码和供应商配置，识别出 ExampleAnalytics、ExampleAds、ExamplePay，并在最终快照创建了完整 privacy-map.md。
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-本轮 baseline 在独立 `without_skill` 副本中，仅依据同一 prompt 与 fixture 新生成。它同样枚举三个供应商及精确字段，覆盖目的、地域、保留、同意、删除/用户权利和整改建议，4/4 assertions 均满足；但未形成正式的数据流/权利矩阵，也缺少报告归档和跨角色 closeout。
+without-skill 也识别出三家服务并创建报告，但报告结构和用户权利覆盖较不完整，作为 baseline 评估不影响 with-skill 行为结论。
 
 ## Failures
 
-- with-skill 与 without-skill 均无 assertion failure。
-- 对照 fixture 信息明确，baseline 已能覆盖核心风险；skill 的增益主要体现在交叉核证、未知项边界、结构化报告和职责闭环。
+- 无。
+
+## Not Exercised
+
+- 未触发无 PM handoff 的入口拒绝分支；本 fixture 已提供有效 handoff。
+- 未触发 docs/site/standards/change-map.yaml 存在时的 consumption-contract/change-map 探索分支；fixture 中不存在该文件。
+- 未提供 docs/engineer 下的 TRD 或 IMPLEMENTATION_PLAN，因此相关架构文档读取分支未被实际执行。
+- 未触发需要将结论升级回 PM 的额外 closeout 条件；transcript 仅显示完成报告并交付结论。
 
 ## Next Steps
 
-- 本 eval 无需修改 assertions 或 expected_output；后续 fixture 或 skill 行为变化时继续执行新的 fresh Codex paired run，并重新生成 baseline。
+- 如需 FULL coverage，增加直接调用、change-map 存在、工程文档存在及触发 PM escalation 的独立 fixture。
 
 ## Runtime Artifacts Policy
 
-- 本轮 paired 输出与临时隔离副本仅用于判定，完成后删除 `tmp/eval-runs/issue-143/batch-c`。
-- 不提交 with_skill、without_skill、transcript、verdict、timing、output、diagnostics 或其他运行期产物；durable result 仅为本 `comparison.md`。
+- Candidate command: `codex exec --skip-git-repo-check -C <isolated-workspace> -s workspace-write --ephemeral --ignore-user-config --ignore-rules -m gpt-5.6-luna -c 'model_reasoning_effort="medium"' --json -o <runtime-output> -`。
+- Judge 使用同一模型与 reasoning effort，在独立 `read-only` workspace 中按结构化 output schema 判定。
+- candidate、baseline、transcript、verdict、fixture snapshots、status、timing 与 diagnostics 仅保留于上述 `/tmp` runtime root，不提交到 git；仓库只更新 canonical `comparison.md`。

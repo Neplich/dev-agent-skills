@@ -2,66 +2,76 @@
 
 ## Evaluation Target
 
+- Agent: `qa`
 - Skill: `bug-analyzer`
 - Eval: `eval-001-analyze-test-failure`
-- Prompt target: 从登录 500 测试失败形成证据化 Bug 报告。
+- Test case: analyze-test-failure
+- Workspace: `workspace/eval-1-analyze-test-failure`
+- Natural user prompt:
+
+> 分析测试失败：登录表单提交后返回 500 错误，生成 Bug 报告
+
+- Expected artifact: 详细 Bug 报告，明确 evidence status、confidence statement 和 severity rationale，并包含 impact framing、复现步骤、环境信息和 evidence references
 
 ## Test Set / Fixture Version
 
-- Eval schema: `evals.json` v1.0
-- Fixture version: repository commit `cdfc879` + current PR-B `evals.json` assertion update
-- Fresh run: `2026-07-30 19:56:59 +0800`
-- Runtime directory: `tmp/eval-runs/issue-196-pr-b-bug-explore-20260730-195659/bug-analyzer/eval-001/`
-- `eval_metadata.json` 未声明 `execution_cleanup`。
+- Schema: `evals.json` v1.0，使用 source HEAD `47adbbc9` 的当前 prompt、assertions 与 fixture。
+- Fresh run window: 2026-08-07 00:26:03 至 00:42:04（Asia/Shanghai）。
+- Runtime root: `/tmp/qa-fresh-evals-20260807-002603-9bd07750/bug-analyzer--eval-001-analyze-test-failure/`。
+- Fixture identity: 两条 lane 的初始可见 fixture manifest 完全相同，SHA-256 为 `33e2cd10d9a244693e762c92b4220b0af0e494fc45e57646a727891c662e3a32`。
+- Lane isolation: 先完成并销毁全部 15 个 `without_skill` 独立随机顶层临时 root，再创建任何 `with_skill` root；`with_skill` 按 target skill 分组执行，每条 lane 都使用独立顶层 workspace、`HOME`、`CODEX_HOME` 和 temp 目录，不存在 candidate 可读取的 sibling lane。
+- Controlled variable: 两条 lane 使用逐字相同 prompt、相同 fixture manifest、相同隔离配置和同一份认证材料；唯一显式变量是 `with_skill` 的隔离 `CODEX_HOME` 安装并加载目标 QA skill，`without_skill` 的目标 skill 加载次数为 0。
+- Evidence isolation: 30 个 candidate 全部结束且临时 root 全部销毁后，才将内存中的 candidate、tool trace 和最终 workspace 快照持久化到 runtime root。
+- Candidate leakage audit: 两条 lane 均未命中 `eval_metadata.json`、`evals/evals.json`、`comparison.md`、expected output、assertions 或 judge schema。
+- Judge: candidate 全部结束后，第三个独立随机顶层、只读 fresh Codex 会话实际检查两条 candidate 输出、JSONL tool trace、status 和最终 workspace 快照，再按当前 assertions 判定。
+- Runtime health: candidate 与 judge 均 `rc=0`、无 timeout；judge root 已销毁。
 
 ## Latest Result
 
-- Behavior result: **PASS**
-- Coverage result: **FULL**
-- 当前 7 条 assertion 全部被新 with-skill 候选直接覆盖，无 `NOT EXERCISED`。
-- 本轮按新增 `non_e2e_report_path` 判定非 E2E fallback：候选明确使用
-  `docs/qa/authentication/login/bug-login-form-500.md`，文件名无日期且不使用
-  `docs/qa-reports/`。
+- Behavior result: **PASS**（PASS 6 / FAIL 0 / NOT EXERCISED 1）
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+## Invalidated Prior Run
 
+上一轮 QA paired run 将 `with_skill` 与 `without_skill` 放在可交叉读取的 sibling 路径，物理隔离不合格；该轮 candidate、baseline、judge 与结论全部作废，未作为本轮输入，也不保留为当前结果。本文件的当前结论仅来自 `qa-fresh-evals-20260807-002603-9bd07750`。
 
-## Assertion Results
+## Assertions
 
-- PASS `assertion_1`: 摄取 failing scenario、500、console、branch/commit/environment，并逐项标明 server stack、response body、截图、trace、runtime、flags 等证据缺口。
-- PASS `assertion_2`: 使用 `confirmed but environment-sensitive`，并将 evidence status 与 confidence 分开。
-- PASS `assertion_3`: severity 有影响理由，confidence 独立陈述。
-- PASS `assertion_4`: 选择 repo 内本地 Markdown artifact，明确不做 GitHub-first。
-- PASS `assertion_5`: 当前不满足 reusable E2E 沉淀条件；候选明确将 TC/script 创建标为 blocked，并列出缺失的 feature path、PRD/TRD/plan、platform 与用例树。
-- PASS `assertion_6`: 包含 release impact 与 evidence references。
-- PASS `non_e2e_report_path`: 使用 `docs/qa/{feature_path}/bug-<short-slug>.md`
-  形态，文件名无日期且未使用旧 `docs/qa-reports/`。
+| Assertion | With skill | With-skill evidence | Without skill | Baseline evidence |
+| --- | --- | --- | --- | --- |
+| `assertion_1`<br>证据摄取 | PASS | transcript item_4 读取了失败场景、500 错误、console、trace 状态和构建上下文；item_5 及报告明确记录服务端堆栈、响应体、重复复现等证据缺口，未凭空补全不存在的证据。fixture 中没有截图、独立 trace 或 network 文件。 | PASS | transcript item_2 读取失败日志和环境上下文，记录了 console 与 trace unavailable；报告明确列出缺失的服务端堆栈、响应体和 HAR/trace。 |
+| `assertion_2`<br>分类分离 | PASS | 快照报告 Classification 明确写出 Evidence status: suspected / needs more evidence，并单独写出 Confidence: Medium；transcript item_5 也采用该分类。 | FAIL | 报告仅写“状态：待调查”和“当前证据不足”，没有使用 confirmed and reproducible、confirmed but environment-sensitive、suspected / needs more evidence 分类，也没有独立的 evidence status 与 confidence 字段。 |
+| `assertion_3`<br>严重度与置信度 | PASS | 快照报告给出 Severity: High，并解释登录可能被整体阻断；同时给出独立的 Confidence: Medium 及其证据依据。 | FAIL | 报告给出高严重程度及影响理由，但没有明确 confidence statement，也未将证据强度作为独立置信度记录。 |
+| `assertion_4`<br>持久输出路径 | PASS | transcript item_6 执行 mkdir -p docs/qa/auth，item_7 增加报告；最终快照实际存在 docs/qa/auth/bug-login-submit-500.md，且 status 显示正常完成。 | PASS | transcript item_5 增加本地 Markdown 报告，最终快照确认 bug-report-login-500.md 存在；满足本地 durable artifact 要求。 |
+| `assertion_5`<br>可复用回归用例 | NOT EXERCISED | 该断言仅在确认的 E2E 复现场景需要沉淀回归覆盖时触发；报告分类为 suspected / needs more evidence，fixture 只有一次失败日志，没有 E2E 用例树或版本化执行要求。 | NOT EXERCISED | 同样没有确认的 E2E 复现场景或 E2E 用例树；报告中的验收标准建议不足以触发该条件。 |
+| `assertion_6`<br>影响说明 | PASS | 快照报告包含明确的 Impact 段落，并引用 logs/test-failure.log 与 environment/build.md；transcript item_9 核验报告内容成功。 | FAIL | 报告有“影响范围”和 evidence 来源，但没有明确的 implementation impact 或 release impact 段落/表述，未完全满足断言。 |
+| `non_e2e_report_path`<br>非 E2E 报告路径 | PASS | fixture 未提供 E2E 用例树或版本化 E2E 执行要求；最终快照路径为 docs/qa/auth/bug-login-submit-500.md，位于 docs/qa/{feature_path}/ 下，文件名无日期，也未使用 docs/qa-reports/。 | FAIL | 最终快照中的报告位于工作区根目录 bug-report-login-500.md，不在 docs/qa/{feature_path}/ 下。 |
 
 ## With-Skill Behavior
 
-候选完整分离 evidence status、confidence 与 severity，保留可追踪 fixture 引用，
-对证据缺口、release impact、reusable E2E blocker 和 PR-B 新非 E2E 路径均给出
-直接证据，Behavior PASS。
+with_skill 生成了 durable Markdown 报告，包含分类、置信度、严重度理由、影响说明、复现步骤、环境信息和证据引用；最终快照确认文件确实存在。
 
 ## Fresh Without-Skill Baseline
 
-同一 prompt/fixture 在本轮隔离目录重新生成 baseline，未读取或应用
-`bug-analyzer`、QA README 或历史 baseline。它把一次 fixture 直接写成已确认缺陷，
-GitHub-first，未分离 evidence status / confidence，未声明 repo durable path，也未处理
-reusable E2E gate；baseline 仅作为 comparison 输入，不决定 with-skill Behavior。
+without_skill 也生成了报告并收集了基础日志，但缺少独立的 evidence status/confidence，且输出路径不符合非 E2E fallback 约定。
 
 ## Failures
 
-- 无 with-skill assertion failure。
+- 无。
+
+## Not Exercised
+
+- with_skill assertion_5：未确认 E2E 复现场景，且 fixture 不含 E2E 用例树或版本化执行要求。
+- without_skill assertion_5：未确认 E2E 复现场景，且 fixture 不含 E2E 用例树或版本化执行要求。
 
 ## Next Steps
 
-- 可在后续 fixture 中提供正式 handoff `feature_path`，使报告路径无需从登录场景收敛为
-  `authentication/login`；这不影响本轮路径契约判定。
+- 如需 FULL coverage，补充可确认/可重复的 E2E 复现场景或明确的 E2E 执行要求，再核验 cases/TC-NNN-*.md 与 scripts/TC-NNN-*.spec.md。
+- 如修正 baseline，应补充独立 evidence status/confidence，并将报告移至 docs/qa/auth/ 下。
 
-## Runtime Artifact Policy
+## Runtime Artifacts Policy
 
-- 新 `with_skill.md`、`without_skill.md` 与 `verdict.md` 仅保存在上述
-  `tmp/eval-runs/`；未复用历史 candidate 或 baseline。
-- Runtime 不提交；durable 结果仅为本文件。
+- Candidate command: `codex exec --skip-git-repo-check -C <isolated-workspace> -s workspace-write --ephemeral --ignore-user-config --ignore-rules -m gpt-5.6-luna -c 'model_reasoning_effort="medium"' --json -o <runtime-output> -`。
+- Judge 使用同一模型与 reasoning effort，在独立 `read-only` root 中按结构化 output schema 判定。
+- candidate、baseline、transcript、verdict、fixture snapshots、status、timing 与 diagnostics 仅保留于上述 `/tmp` runtime root，不提交到 git；仓库只更新 canonical `comparison.md`。

@@ -7,44 +7,66 @@
 - Eval: `eval-004-mapped-report-export-authz`
 - Test case: Mapped Report Export Authorization
 - Workspace: `workspace/eval-004-mapped-report-export-authz`
-- Review context: issue #141 Security→PM 结论升级契约修订后的全量复验
-- Latest result: PASS（4/4 assertions PASS）- fresh subagent validation completed on 2026-07-21
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Natural user prompt:
 
+> 请审查 src/access/report-export-policy.js 的报表导出授权逻辑，说明哪些角色可以导出以及是否存在越权风险。
+
+- Expected artifact: 优先读取 change-map 命中的报表导出文档，再以代码核对角色权限；将 unverified 文档按最低信任处理并报告管理员专属声明与 analyst 可导出事实的不一致。
 
 ## Test Set / Fixture Version
 
-- Schema: `evals.json` v1.0
-- Prompt/fixture: 与 `evals.json` 当前提交一致（#141 未改动本 eval 定义）
-- Fresh run: fresh general-purpose subagent 成对运行（with_skill 读取更新后 skill 文档；without_skill 不读任何 skill 文档/共享指令/历史 comparison，baseline 本轮重新生成，未复用历史）。本轮经维护者批准以 Claude fresh subagent 执行；后续轮次按更新后的委派规则由 codex 执行。
-- Source head: `docs/issue-141-security-pm-escalation` 分支（#141 Security→PM 结论升级契约修订）
-- Validation date: 2026-07-21
+- Schema: `evals.json` v1.0，使用 source HEAD `47adbbc9` 的当前 prompt、assertions 与 fixture。
+- Fresh run window: 2026-08-06 23:45:35 至 2026-08-07 00:13:31（Asia/Shanghai）。
+- Runtime root: `/tmp/security-fresh-evals-20260806-n3l1anp1/authz-reviewer--eval-004-mapped-report-export-authz/`。
+- Fixture identity: 两条 lane 的初始 fixture manifest 完全相同，SHA-256 为 `9639cce1288a627343633a3f6f1cd38e62beaa58df89ae4e8eb5100e906b8a7f`。
+- Lane isolation: 先完成并销毁全部 `without_skill` 独立顶层临时目录，再创建任何 `with_skill` 目录；每条 lane 使用独立的顶层临时 workspace、`HOME` 与 `CODEX_HOME`，不存在可供另一条 candidate 读取的 sibling lane。
+- Controlled variable: 两条 lane 使用逐字相同 prompt 与相同初始 fixture；仅 `with_skill` 的隔离 `CODEX_HOME` 安装并加载目标 skill，`without_skill` 未安装任何目标 skill。
+- Evidence isolation: 所有 candidate 会话结束并删除各自临时根后，才将内存中的最终 workspace 快照与 transcript 持久化到 runtime root；candidate transcript 泄漏扫描未命中 `eval_metadata.json`、`evals/evals.json`、`comparison.md`、judge/verdict 或 expected output/assertion 脚手架。
+- Judge: candidate 全部结束后，由第三个独立、只读的 fresh Codex 会话依据当前 assertions、两条 candidate 输出、transcript 与最终 workspace 快照判定。
+
+## Latest Result
+
+- Behavior result: **FAIL**（PASS 2 / FAIL 2 / NOT EXERCISED 0）
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Historical Contract Note
+
+上一份 durable comparison 基于 issue #234 修复前会向 baseline 泄漏规则的旧契约，因此标记为 `BLOCKED`。本轮使用当前无泄漏 prompt/fixture 重新生成两条 lane，未复用旧 baseline 或旧结论。
 
 ## Assertions
 
-- PASS：change-map 反查只读 `docs/site/api/report-export.md`。
-- PASS：识别文档声称仅 admin 可导出、代码实际放行 analyst 的矛盾，以代码事实评估越权。
-- PASS：识别 unverified，扩大代码核证而非采信文档。
-- PASS：断言于第二轮 review 后补充；行为证据来自 2026-07-21 同一轮 fresh subagent validation——with_skill candidate 在该轮已展示此行为（mapped 场景正确升级回 pm-agent）。
+| Assertion | With skill | With-skill evidence | Without skill | Baseline evidence |
+| --- | --- | --- | --- | --- |
+| `reads_mapped_docs_first`<br>命中 change-map 后优先读取报表导出 required_docs | FAIL | transcript 先读取目标代码并进行广泛搜索，之后才读取 change-map 和命中文档，未按 change-map 反查后优先读取 required_docs。 | FAIL | transcript 先读取代码并进行全局搜索，之后才读取 change-map 和 required_docs。 |
+| `verifies_against_code`<br>以授权策略代码核对可导出角色 | PASS | transcript 和 candidate 明确引用 report-export-policy.js:2，确认 admin 与 analyst 均可导出，并指出与文档仅允许 admin 的冲突。 | PASS | candidate 和 transcript 均明确核对代码，正确识别 admin、analyst 均被放行及其与文档的不一致。 |
+| `treats_unverified_as_low_trust`<br>将 unverified 授权文档按最低信任处理 | PASS | transcript 读取到 change-map 与 required_docs 的 last_verified_version 为 unverified，且授权结论回到代码事实核验，没有拒绝读取或直接采信文档。 | PASS | transcript 读取并显示 unverified 元数据，同时以代码结论为主进行判断；虽未明确阐述信任等级，但未直接依赖文档替代代码核验。 |
+| `escalates_fact_changing_conclusion_to_pm`<br>改变正式文档事实的结论升级 | FAIL | 已确认代码改变正式文档事实，但 candidate 未回交 pm-agent、未创建 issue 分类交接，最终工作区也没有 docs/security 过程报告或其他升级产物。 | FAIL | 同样识别了代码与正式文档冲突，但没有 PM 交接、issue 或 Security 过程报告产物。 |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-结论克制：不单方面裁定 admin-only 是否为预期，交 owner 确认意图；feature_path 未确认故不落档、不自建顶层目录。closeout 验证（#141 核心）：确认结论改变 `docs/site/` 正式文档事实，candidate 按 `Security Conclusion Escalation to PM` 把结论与证据**回交 pm-agent 分类并提 issue**；未直交 docs-agent、未自建 issue、未修改文档；随后 Safety-Net Closeout 等待用户确认。
+代码核验和文档不一致识别正确，但未遵守 change-map 优先读取顺序，也未完成 PM 升级、创建 Security 过程报告及 issue 分类交接。
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-fresh baseline 同样发现 analyst 越权矛盾（fixture 驱动），但无 change-map 纪律、无 unverified 信任模型、无升级/closeout 语义。
+独立 baseline 正确识别 admin/analyst 均可导出及文档冲突，但同样未完成映射优先顺序和升级产物。
 
 ## Failures
 
-无。
+- with-skill 未按 change-map 优先读取命中文档。
+- with-skill 未按契约将改变正式文档事实的结论升级至 pm-agent，也未创建要求的报告/issue 交接产物。
+
+## Not Exercised
+
+- 无。
 
 ## Next Steps
 
-- 无阻塞项。
+- 补充按 change-map 顺序执行的审查证据。
+- 在最终工作区创建 Security 自有过程报告，并将文档事实冲突回交 pm-agent 分类及创建 issue。
 
 ## Runtime Artifacts Policy
 
-- 运行期证据（candidate、baseline、transcript）仅保留在 session scratchpad，不提交到 git。
-- Runtime transcripts、verdicts、timing、output 目录、diagnostics 与生成的 with_skill / without_skill 文件均不得提交。
+- Candidate command: `codex exec --skip-git-repo-check -C <isolated-workspace> -s workspace-write --ephemeral --ignore-user-config --ignore-rules -m gpt-5.6-luna -c 'model_reasoning_effort="medium"' --json -o <runtime-output> -`。
+- Judge 使用同一模型与 reasoning effort，在独立 `read-only` workspace 中按结构化 output schema 判定。
+- candidate、baseline、transcript、verdict、fixture snapshots、status、timing 与 diagnostics 仅保留于上述 `/tmp` runtime root，不提交到 git；仓库只更新 canonical `comparison.md`。

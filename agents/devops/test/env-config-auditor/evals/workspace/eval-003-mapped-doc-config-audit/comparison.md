@@ -1,40 +1,68 @@
-# Consumption Regression Comparison
+# Eval Result: eval-003-mapped-doc-config-audit
 
 ## Evaluation Target
 
+- Agent: `devops`
 - Skill: `env-config-auditor`
 - Eval: `eval-003-mapped-doc-config-audit`
-
-## Test Set / Fixture Version
-
-- Fixture: `ws1-consumption-v1`
-- Commit: `0b000b9`
+- Test case: `mapped-doc-config-audit`
+- Workspace: `agents/devops/test/env-config-auditor/evals/workspace/eval-003-mapped-doc-config-audit`
 
 ## Latest Result
 
-- Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
+- Fresh run: `2026-08-07`（issue #238 严格隔离重跑）
+- Model: `gpt-5.6-luna`，`model_reasoning_effort=medium`
+- Isolation: baseline 使用随机顶层 root；完成后仅保存在内存快照并删除 root，随后才创建 with_skill root；with_skill root 删除后才创建独立 judge root。两条 lane 的原始 prompt、fixture snapshot、`HOME` 与 `CODEX_HOME` 值相同。
+- Judge: 独立 fresh `codex exec`，读取实际产物、final、status 与工具轨迹，对照当前 assertions 判定；不采信 lane 自评。
+- Behavior result: FAIL
+- Coverage result: FULL
+- Without-skill comparison: FAIL（仅作对照，不参与 durable Overall 组合）
 
-**PASS** — with-skill 按 change-map 定位文档、以 required.env 核证出文档 optional 声明与代码 required 的分歧，审计结论以代码为准并落档 ENV_AUDIT 报告。
+Overall result: FAIL
+
+## Test Set / Fixture Version
+
+- Schema: `evals.json` v1.0
+- Eval definition: `agents/devops/test/env-config-auditor/evals/evals.json`
+- Metadata: `agents/devops/test/env-config-auditor/evals/workspace/eval-003-mapped-doc-config-audit/eval_metadata.json`
+- Expected output: 区分映射文档声明和代码配置事实的环境审计结论。
+- Fixture: `src/config/required.env`, `docs/site/standards/change-map.yaml`, `docs/site/api/runtime-config.md`
+
+## Assertion Results
+
+| Assertion | with_skill | without_skill | Evidence |
+| --- | --- | --- | --- |
+| `reads_mapped_docs_first` | FAIL | FAIL | with_skill 的读取命令顺序为 change-map、契约/skill-map、src/config/required.env、runtime-config.md；映射文档并未先于代码读取。without_skill 先读取 required.env，随后才读取文档。 |
+| `verifies_against_code` | PASS | PASS | 两条 lane 均读取 required.env，确认 API_TOKEN = required，并识别文档中的 optional 冲突；with_skill 还明确记录了配置缺失风险。 |
+| `treats_unverified_as_low_trust` | PASS | FAIL | with_skill 明确识别 last_verified_version: unverified，并以代码事实作为关键结论依据。without_skill 虽读取了该字段，但最终结论未识别或说明其最低信任影响。 |
 
 ## With-Skill Behavior
 
-- 消费路径完全按契约：change-map 定位 → 文档声明 → 回代码验证 → 以代码为准判定 API_TOKEN 必填。
-- 产出结构化审计报告，未覆盖的环境（Docker/Helm/CI）诚实标记无法确认。
+- with_skill 已核对文档与代码并正确判定 API_TOKEN 为必填，也正确处理 unverified；但未满足“先读取映射文档再回读代码”的严格读取顺序，因此 durable Overall 为 FAIL。Coverage 为 FULL。without_skill 作为对照同样未满足首读文档顺序，且未在结论中处理 unverified。
+- Workspace changes: 无文件变更。
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
-- baseline 也得出 required 为准的结论并建议修正文档，但读取路径未经 change-map 组织，审计证据的结构化程度较低。
+- baseline 在本轮重新生成，没有复用历史 baseline，也没有读取 target skill、with_skill 产物或旧 comparison。
+- Workspace changes: 无文件变更。
+- assertion 结果见上表；baseline 只用于比较 skill 增益，不作为 durable Overall 的独立机器门禁。
 
-## Failures
+## Failures and Coverage Gaps
 
-- 无。
+- with_skill failures: `reads_mapped_docs_first`。
+- 所有当前 assertions 均已实际覆盖。
+- 无模型、认证、runner 或外部服务 blocker。
+
+## Historical Result (Old Contract)
+
+- 旧结论为 PASS；issue #234 修复 eval 泄漏后，该结论被标为 BLOCKED 等待重跑。
+- 该历史结论适用旧 eval 契约；本文件顶部的 2026-08-07 fresh 结果已取代它作为 latest durable 结论。
 
 ## Next Steps
 
-- 保留本结果；后续 fixture 可增加干扰文档以放大行为差距。
+- 按上表 with_skill failure 的共同根因建立后续修复项；本轮只记录结果，不修改 skill、eval 定义或 fixture。
 
 ## Runtime Artifact Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- 两条 lane、工具轨迹、状态、文件快照、judge verdict 与隔离事件只保存在 `tmp/eval-runs/issue-238-devops-strict-20260806/`，不提交 git。
+- durable 结果只保留本 `comparison.md`。
