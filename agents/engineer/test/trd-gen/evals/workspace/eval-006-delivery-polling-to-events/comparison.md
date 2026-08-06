@@ -17,7 +17,7 @@ Overall result: PASS
 - Schema: `evals.json` v1.0
 - Fixture: delivery-pipeline PRD v1.2.0（事件驱动已确认）与 TRD v1.1.0（定时轮询旧方案：60 秒扫描、`poller.ts` / `batch.ts`）
 - Expected output: 更新 docs/engineer/delivery-pipeline/TRD.md：正文直接描述事件驱动方案，轮询旧方案从正文移除并留痕，不进入实现计划或代码。
-- Fresh run: `2026-08-06`（issue #233 新增 eval 首跑，codex exec `gpt-5.6-luna` + `model_reasoning_effort=medium`，仓库外 workspace 拷贝隔离，两 lane 独立拷贝互不可见；independent judge 对照 4 条断言判定）
+- Fresh run: `2026-08-06`（issue #233 新增 eval，三轮重跑，codex exec `gpt-5.6-luna` + `model_reasoning_effort=medium`，仓库外 workspace 拷贝隔离，两 lane 独立拷贝互不可见；independent judge 对照 4 条断言判定；lane 可见素材仅 fixture，README / eval_metadata.json / comparison.md 已物理排除）
 - Runtime directory: `tmp/eval-runs/fix-233/trd-gen-eval-006-delivery-polling-to-events/`（不入 git）
 
 ## Assertions

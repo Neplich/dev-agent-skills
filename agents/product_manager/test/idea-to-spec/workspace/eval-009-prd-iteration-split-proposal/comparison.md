@@ -11,7 +11,7 @@
 
 - Schema: `evals.json` v1.0
 - Fixture version: current workspace atop HEAD `68c86669`（#234 泄漏修复后）。The fixture remains the confirmed level-1 `notification-center` PRD with no child directory, 3 domains, 10 user stories, 8 functional requirements, and a polling-based Engineer TRD. The case exercises the L2b gate and the body-consolidation rule added by issue #233.
-- Fresh run: `2026-08-06`（issue #233 重跑，codex exec `gpt-5.6-luna` + `model_reasoning_effort=medium`，仓库外 workspace 拷贝隔离，两 lane 独立拷贝互不可见；independent judge 对照 6 条断言判定）
+- Fresh run: `2026-08-06`（issue #233 重跑，codex exec `gpt-5.6-luna` + `model_reasoning_effort=medium`，仓库外 workspace 拷贝隔离，两 lane 独立拷贝互不可见；independent judge 对照 6 条断言判定；lane 可见素材仅 fixture，README / eval_metadata.json / comparison.md 已物理排除）
 - Runtime directory: `tmp/eval-runs/fix-233/idea-to-spec-eval-009-prd-iteration-split-proposal/`（含 with/without lane 产物与 judge verdict，不入 git）
 
 ## Latest Result

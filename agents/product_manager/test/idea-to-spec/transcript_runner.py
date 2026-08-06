@@ -22,6 +22,8 @@ RESERVED_CLEANUP_PATHS = (
     "without_skill",
     "comparison.auto.md",
     "comparison.md",
+    "README.md",
+    "eval_metadata.json",
 )
 
 DEFAULT_TIMEOUT_SECONDS = 180
@@ -134,7 +136,8 @@ def install_skill_documents(execution_root: Path, skill_dir: str) -> None:
     source = Path(skill_dir)
     if not source.is_absolute():
         source = repo_root() / source
-    target = execution_root / skill_dir
+    skill_name = source.name
+    target = execution_root / ".agents" / "skills" / skill_name
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(source, target)
 
@@ -209,9 +212,6 @@ def generate_eval_outputs(
     reset_directory(runtime_root)
 
     with tempfile.TemporaryDirectory(prefix="idea-to-spec-eval-") as temp_dir:
-        execution_root = Path(temp_dir) / "workspace"
-        prepare_execution_workspace(eval_root, execution_root, cleanup_paths=cleanup_paths)
-
         skill_dir = meta.get("skill_dir", DEFAULT_SKILL_DIR)
 
         runs = [
@@ -220,10 +220,10 @@ def generate_eval_outputs(
         ]
 
         for label, outputs, with_skill in runs:
+            execution_root = Path(temp_dir) / "workspace" / label
+            prepare_execution_workspace(eval_root, execution_root, cleanup_paths=cleanup_paths)
             if with_skill:
                 install_skill_documents(execution_root, skill_dir)
-            else:
-                remove_path(execution_root / skill_dir)
             output_path = execution_root / label / "outputs/result.txt"
             output_path.parent.mkdir(parents=True, exist_ok=True)
             command = build_codex_command(

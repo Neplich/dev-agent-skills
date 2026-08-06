@@ -139,12 +139,12 @@
     "ui-ux-design": {
       "source": "agents/designer/skills/ui-ux-design",
       "sourceType": "local",
-      "computedHash": "85862e718289f9d2a02b43d3dd7812dcdeb58f3c11ab0fad88a54c109f391bdb"
+      "computedHash": "3a93c5d953675980b2d7e5a29b66c1da80d3f10dc575c4ae063de0c59a16d67b"
     },
     "visual-design": {
       "source": "agents/designer/skills/visual-design",
       "sourceType": "local",
-      "computedHash": "96b51eccdc9860125f67c8712508ab49a05fbcc65279c1dbec0591652a26c112"
+      "computedHash": "79863911e1c0550dccca55be1f1afa57d2efd8aa04b76ed9dd017e3e906774e4"
     },
     "security-agent": {
       "source": "agents/security/skills/security-agent",

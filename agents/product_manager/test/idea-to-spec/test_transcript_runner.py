@@ -55,6 +55,7 @@ class TranscriptRunnerTests(unittest.TestCase):
             (eval_root / "PRD.md").write_text("stale-prd")
             (eval_root / "docs/input/fixture.md").write_text("fixture")
             (eval_root / "README.md").write_text("readme")
+            (eval_root / "eval_metadata.json").write_text("{}")
 
             runner.prepare_execution_workspace(
                 eval_root,
@@ -62,7 +63,8 @@ class TranscriptRunnerTests(unittest.TestCase):
                 cleanup_paths=["PRD.md"],
             )
 
-            self.assertTrue((exec_root / "README.md").exists())
+            self.assertFalse((exec_root / "README.md").exists())
+            self.assertFalse((exec_root / "eval_metadata.json").exists())
             self.assertTrue((exec_root / "docs/input/fixture.md").exists())
             self.assertFalse((exec_root / "with_skill").exists())
             self.assertFalse((exec_root / "without_skill").exists())
