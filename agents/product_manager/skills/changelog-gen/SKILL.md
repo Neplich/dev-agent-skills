@@ -12,6 +12,9 @@ Before writing an entry, strip the full Conventional Commit prefix—including
 optional scope and breaking marker—from PR and commit titles (`type:`,
 `type(scope):`, `type!:` or `type(scope)!:`). The changelog bullet contains the
 human change description, not a bolded or literal commit prefix.
+Classify by semantic impact after stripping the prefix: a breaking redesign of
+existing behavior belongs under `Changed` even when its source title uses
+`feat` or another additive prefix.
 
 ## Modes
 

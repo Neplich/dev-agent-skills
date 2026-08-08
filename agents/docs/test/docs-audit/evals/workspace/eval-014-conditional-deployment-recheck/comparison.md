@@ -14,6 +14,246 @@
 - Fixture version/source: canonical manifest `02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52` from `agents/docs/test/docs-audit/evals/workspace/eval-014-conditional-deployment-recheck`.
 - Fixture SHA-256: `02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52`
 - Prompt SHA-256: `cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `b484eac80dd3c83d19d6e2564672bb72616ee37e54370c5c00059bfaaa781dcf`
+- Eval definition SHA-256: `3b49ebce5564e2973a0e2404ae2204baef9f3926736e7959e09be720ea423b90`
+- Metadata SHA-256: `2b29c083a590a4eda139a3861e29b83daf406cc100d9a6f0e884225e104c8734`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_state_for_no_surface_change` | PASS | with_skill 正确识别 version-stamp.patch 仅更新 last_verified_version，未改变构建目标、导航、资源或运行入口，并判断无需重新核对。 |
+| `refreshes_shared_state_for_material_change` | NOT_EXERCISED | with_skill 正确识别 internal-build-target.patch 改变构建脚本和 VitePress outDir，并判断需要重新核对；但正式 docs-audit 因缺少 target_release_version、refs、change-map 和交接证据而 blocked，无法证明共享检查已执行并刷新状态。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba; fixture_sha256=02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52; output_sha256=f6fa79d7154676118555981faf13035b29da1b8001bc5f28a63c241fcbdf1bc6; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 区分了仅版本盖章与构建/发布面变化，正确指出后者需重新核对，并保持部署配置未修改；正式审计因证据不足而阻塞。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba; fixture_sha256=02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52; output_sha256=12db1172cc822e455c60d01fdd153005819a071318a8077f0f4c497a0d13632d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 同样正确区分两类 patch，并指出缺少部署配置导致无法进一步验证。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 补充维护者确认的 target_release_version、base_ref、target_ref、change-map 和审计交接证据后执行共享 docs-audit 并刷新状态。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-014-conditional-deployment-recheck`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52` from `agents/docs/test/docs-audit/evals/workspace/eval-014-conditional-deployment-recheck`.
+- Fixture SHA-256: `02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52`
+- Prompt SHA-256: `cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a40b9426c3ece6f787614183ce8478f0aacaf94802441ebb84796853c2c8848e`
+- Skill overlay SHA-256: `6cbf5a99cea4bf2bfd3e91f9b1e261a828b8b62ab73699f7ed3de43f33d01739`
+- Judge schema SHA-256: `b484eac80dd3c83d19d6e2564672bb72616ee37e54370c5c00059bfaaa781dcf`
+- Eval definition SHA-256: `3b49ebce5564e2973a0e2404ae2204baef9f3926736e7959e09be720ea423b90`
+- Metadata SHA-256: `2b29c083a590a4eda139a3861e29b83daf406cc100d9a6f0e884225e104c8734`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_state_for_no_surface_change` | PASS | with_skill correctly identifies version-stamp.patch as metadata-only and states that deployment-integrity state need not be rechecked. |
+| `refreshes_shared_state_for_material_change` | NOT_EXERCISED | with_skill correctly identifies internal-build-target.patch as requiring recheck and reports no deployment mutation, but the shared audit/refresh could not proceed because required confirmation and site evidence were missing. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba; fixture_sha256=02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52; output_sha256=8a5e954f26b545165fe7438b762ca280fc7afe649310e3a002d6d50c683a0cb2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly distinguishes the metadata-only patch from the build-output-target patch, preserves the no-change case, and leaves the material-change audit blocked without modifying deployment configuration.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba; fixture_sha256=02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52; output_sha256=c4737ed7acd9935220d894bc4a989e59a69ffb9b92e68d17e9adc8cab00c6b3b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline reaches the same patch classifications but only notes that deployment-chain verification cannot be confirmed from the available workspace.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Obtain maintainer confirmation of target_release_version and the documentation-site/audit handoff evidence, then run the shared audit and refresh the material-change state.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-014-conditional-deployment-recheck`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52` from `agents/docs/test/docs-audit/evals/workspace/eval-014-conditional-deployment-recheck`.
+- Fixture SHA-256: `02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52`
+- Prompt SHA-256: `cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a40b9426c3ece6f787614183ce8478f0aacaf94802441ebb84796853c2c8848e`
+- Skill overlay SHA-256: `6cbf5a99cea4bf2bfd3e91f9b1e261a828b8b62ab73699f7ed3de43f33d01739`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `3b49ebce5564e2973a0e2404ae2204baef9f3926736e7959e09be720ea423b90`
+- Metadata SHA-256: `2b29c083a590a4eda139a3861e29b83daf406cc100d9a6f0e884225e104c8734`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_state_for_no_surface_change` | FAIL | with_skill 未判断 version-stamp.patch 是否仅为版本事实盖章，也未说明保留既有完整性状态；其以未提供 target_release_version/PM handoff 为由拒绝审计。锁定补丁内容显示该补丁仅将 last_verified_version 从 unverified 改为 v1.8.0。 |
+| `refreshes_shared_state_for_material_change` | FAIL | with_skill 未判断 internal-build-target.patch 的构建/发布面变化，也未说明复用共享检查、刷新状态或不修改部署资产；其以缺少额外确认材料为由拒绝审计。锁定补丁内容显示 internal 构建输出由 .generated/internal 改为 .generated/private，并同步修改构建脚本和 Vite 配置。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba; fixture_sha256=02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52; output_sha256=ef165a61737b5f1ee8a46bb73cd6f9a886e16c53a4efda6442c6af261f8964f8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 以缺少 target_release_version 和 PM handoff 为由未执行用户要求的补丁比较，未给出任一判断。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba; fixture_sha256=02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52; output_sha256=d193af24e87e885124d2176c35b804f2874a4cf87b954dc321277b1b4fbb66e2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确区分两个补丁：版本盖章无需重检；构建输出目录变化需要核对部署链路，并声明未修改部署配置。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 对两个可直接由锁定补丁证据判断的用户可见要求均未作答，并提出提示中未要求的前置条件。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-014-conditional-deployment-recheck`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52` from `agents/docs/test/docs-audit/evals/workspace/eval-014-conditional-deployment-recheck`.
+- Fixture SHA-256: `02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52`
+- Prompt SHA-256: `cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d339a8370a29b3fb2a69aa1879b1226165ec088d306a4e2e7a01258df2326973`
+- Skill overlay SHA-256: `0bc7243cbb5cff3e77d9ba448e020a1a1f279639f8db6a365faac208b8e1dcc7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `3b49ebce5564e2973a0e2404ae2204baef9f3926736e7959e09be720ea423b90`
+- Metadata SHA-256: `2b29c083a590a4eda139a3861e29b83daf406cc100d9a6f0e884225e104c8734`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_state_for_no_surface_change` | PASS | with_skill 正确识别 version-stamp.patch 仅修改版本元数据，未改变构建目标或发布面，因此判断无需重新核对。 |
+| `refreshes_shared_state_for_material_change` | NOT_EXERCISED | with_skill 正确识别 internal-build-target.patch 改变构建输出目标并判断需要核对；但 fixture 仅含 patch，缺少实际站点、共享检查状态及部署运行时证据，无法验证后续复用检查和刷新状态。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba; fixture_sha256=02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52; output_sha256=dde8c90765d620913c6bb29343aba11cdcf6820b3f198b49be88bea72c07bf9f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确完成两类 patch 的影响判断，并明确正式部署审计因缺少实际目录和映射证据而无法完成；无部署配置变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba; fixture_sha256=02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52; output_sha256=5b27abf0c5b4b1917d36835b6d8721001e91f42ff8007438d03a3cf165920c2d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确区分版本元数据变更与构建输出目标变更，并报告未修改部署配置。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 提供实际站点与部署链路证据后完成正式完整性审计。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-014-conditional-deployment-recheck`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52` from `agents/docs/test/docs-audit/evals/workspace/eval-014-conditional-deployment-recheck`.
+- Fixture SHA-256: `02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52`
+- Prompt SHA-256: `cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `9e9abf391c9ccd9564d35b5def50bc0374b1db0886710676c4d48422839746ae`

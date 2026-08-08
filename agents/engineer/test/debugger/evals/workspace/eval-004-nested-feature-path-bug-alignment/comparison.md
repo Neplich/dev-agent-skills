@@ -14,6 +14,258 @@
 - Fixture version/source: canonical manifest `1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0` from `agents/engineer/test/debugger/evals/workspace/eval-004-nested-feature-path-bug-alignment`.
 - Fixture SHA-256: `1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0`
 - Prompt SHA-256: `c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2c7be3366028d6afd52b5eb4079e33c2b766f47c01e7c7ee8c4cd7cee5ef4d64`
+- Skill overlay SHA-256: `d9980d41bb48adbaa0ffa94159cff2b9b190fc5504bbdbee7f3503d87a42c7b9`
+- Judge schema SHA-256: `8752855324ba03bc8e8e5d406c04e9f47ee4871f83be7779dbe93e460aa8eb03`
+- Eval definition SHA-256: `4ed41777f0081de6b22c8d5c1da9d06cff7a26fda1bb09b0b22361f263f5eaee`
+- Metadata SHA-256: `92b34bddeb11ae5b3c6841a7115ad004679cbe8ce0c62b863a34d672cce43c83`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_nested_expected_behavior_docs` | FAIL | The output gives the feature_path and names PRD/TRD, but does not cite the required full document paths. |
+| `validates_trd_related_prd` | PASS | It states that TRD related_prd is correct and classifies the technical documentation gap as trd_gap. |
+| `classifies_before_repair_plan` | PASS | The output classifies the issue before proposing any repair or handoff plan. |
+| `blocks_wrong_path_or_requirement_change` | NOT_EXERCISED | The fixture has a clear feature_path, present PRD, unchanged requirements, and matching TRD path, so this conditional blocking behavior is not exercised. |
+| `does_not_fix_directly` | PASS | The output explicitly says no code or tests were modified, and git evidence confirms no changes. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94; fixture_sha256=1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0; output_sha256=9166e65ec461e6d05bbd766c8f50b257fcca90b6172ef0a47fd689f2f3161e92; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly classifies a trd_gap, validates related_prd, routes to trd-gen, and makes no changes, but omits the exact document paths.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94; fixture_sha256=1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0; output_sha256=81fa81faafaa2480219ededa097862ce9823a42ba64c7462bb2a319a2a615fe4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Describes expected sorting and cites document paths, but does not classify the issue or route it through the required handoff.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output omits the exact required PRD.md and TRD.md paths.
+- Next: Include both exact document paths in the investigation output.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-004-nested-feature-path-bug-alignment`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0` from `agents/engineer/test/debugger/evals/workspace/eval-004-nested-feature-path-bug-alignment`.
+- Fixture SHA-256: `1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0`
+- Prompt SHA-256: `c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2c7be3366028d6afd52b5eb4079e33c2b766f47c01e7c7ee8c4cd7cee5ef4d64`
+- Skill overlay SHA-256: `d9980d41bb48adbaa0ffa94159cff2b9b190fc5504bbdbee7f3503d87a42c7b9`
+- Judge schema SHA-256: `8752855324ba03bc8e8e5d406c04e9f47ee4871f83be7779dbe93e460aa8eb03`
+- Eval definition SHA-256: `4ed41777f0081de6b22c8d5c1da9d06cff7a26fda1bb09b0b22361f263f5eaee`
+- Metadata SHA-256: `92b34bddeb11ae5b3c6841a7115ad004679cbe8ce0c62b863a34d672cce43c83`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_nested_expected_behavior_docs` | PASS | With-skill output cites both required document paths and explicitly states feature_path is chat-interface/messages/history/search. |
+| `validates_trd_related_prd` | PASS | It states PRD/TRD are aligned; the fixture confirms TRD related_prd points to the matching PRD. No mismatch branch is present. |
+| `classifies_before_repair_plan` | PASS | The output gives the missing_docs classification before stating it cannot enter a repair plan or modify code. |
+| `blocks_wrong_path_or_requirement_change` | NOT_EXERCISED | The fixture has a clear feature_path, both documents exist, and related_prd matches; the conditional blocking case is not exercised. The candidate does not enter repair, code modification, or E2E updates. |
+| `does_not_fix_directly` | PASS | The output does not claim code, test, repair, or validation changes; locked git evidence shows no changes. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94; fixture_sha256=1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0; output_sha256=d25924dd4d906a9b1b2deddd6c89940e4fb7ba02156dedc46329dcbacb77b688; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly identifies the aligned PRD/TRD paths and feature path, classifies the missing implementation evidence before declining repair, and performs no mutation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94; fixture_sha256=1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0; output_sha256=3cc1b347337f06d5bd2bcb7141d760e2e5a19a355d4cc1f1ee48d4d94dc84e72; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides useful document paths and expected ordering, but does not explicitly state feature_path, validate related_prd, or provide the same pre-repair classification and routing behavior.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Provide the implementation repository or failure evidence to exercise root-cause diagnosis and repair gating.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-004-nested-feature-path-bug-alignment`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0` from `agents/engineer/test/debugger/evals/workspace/eval-004-nested-feature-path-bug-alignment`.
+- Fixture SHA-256: `1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0`
+- Prompt SHA-256: `c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2c7be3366028d6afd52b5eb4079e33c2b766f47c01e7c7ee8c4cd7cee5ef4d64`
+- Skill overlay SHA-256: `d9980d41bb48adbaa0ffa94159cff2b9b190fc5504bbdbee7f3503d87a42c7b9`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `4ed41777f0081de6b22c8d5c1da9d06cff7a26fda1bb09b0b22361f263f5eaee`
+- Metadata SHA-256: `92b34bddeb11ae5b3c6841a7115ad004679cbe8ce0c62b863a34d672cce43c83`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_nested_expected_behavior_docs` | FAIL | With_skill 输出给出 feature_path，但未引用两个完整文档路径 `docs/pm/chat-interface/messages/history/search/PRD.md` 和 `docs/engineer/chat-interface/messages/history/search/TRD.md`。 |
+| `validates_trd_related_prd` | PASS | 输出明确说明 PRD/TRD 均存在且 `related_prd` 正确；当前 fixture 中 TRD 的 `related_prd` 确实指向同路径 PRD。 |
+| `classifies_before_repair_plan` | PASS | 输出先说明已完成预检查，随后给出 `trd_gap` 分类，并未进入修复计划。 |
+| `blocks_wrong_path_or_requirement_change` | NOT_EXERCISED | fixture 中 feature_path 清晰、PRD 存在、需求未变化且 TRD 路径匹配，因此未触发阻断条件。 |
+| `does_not_fix_directly` | PASS | 输出没有声称修改代码、更新测试、应用修复或验证修复通过；明确表示当前无法复现并请求补充实现上下文。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94; fixture_sha256=1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0; output_sha256=f8f93cc7c26d5a4af7ca81301c8045b4a16ef950248d66504bdf31cbda532457; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 给出 feature_path、预检查分类和 related_prd 正确性，并阻止直接修复；但遗漏两个完整预期文档路径。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94; fixture_sha256=1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0; output_sha256=b471e51121abb232fd1c4c5817f9b12fdbcacc4acc1da97827155d52c0b6269e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 读取并概述了 PRD/TRD 预期，但未给出 feature_path、related_prd 校验或前置分类/阻断结论。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 输出未引用 PRD.md 和 TRD.md 的完整要求路径。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-004-nested-feature-path-bug-alignment`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0` from `agents/engineer/test/debugger/evals/workspace/eval-004-nested-feature-path-bug-alignment`.
+- Fixture SHA-256: `1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0`
+- Prompt SHA-256: `c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `c794a9f4d25d61e50b6bf610eddf7b88ff4be58b7215ed85d280d6be8cae915f`
+- Skill overlay SHA-256: `ee5b521f7d9c6fe11867036a027efeb03a84b77600d52fa7396a529de342ee2e`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `4ed41777f0081de6b22c8d5c1da9d06cff7a26fda1bb09b0b22361f263f5eaee`
+- Metadata SHA-256: `92b34bddeb11ae5b3c6841a7115ad004679cbe8ce0c62b863a34d672cce43c83`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_nested_expected_behavior_docs` | FAIL | 候选输出引用了两份 PRD/TRD 路径，但没有说明它们对应的 feature_path 为 chat-interface/messages/history/search。 |
+| `validates_trd_related_prd` | NOT_EXERCISED | 输出未声称执行 related_prd 校验；原始证据只能证明 TRD 的 related_prd 实际匹配，不能证明候选执行了该检查。 |
+| `classifies_before_repair_plan` | NOT_EXERCISED | 候选没有提出 repair plan 或执行修复，因此该前置分类要求未被触发。 |
+| `blocks_wrong_path_or_requirement_change` | NOT_EXERCISED | 原始文档显示 feature_path 清晰、PRD 存在且 TRD related_prd 匹配，未出现该条件断言所覆盖的阻断情形。 |
+| `does_not_fix_directly` | PASS | 候选明确表示无法复现或定位根因，并请求补充代码仓库或失败测试信息；没有声称修改代码、更新测试、应用修复或验证修复通过。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94; fixture_sha256=1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0; output_sha256=212996dec698eb10eba3d052b5da7cbb801641cdb03de7ccb95e78fc508631e2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 引用了 PRD/TRD 并正确概述排序预期，且没有进行直接修复；但遗漏了 feature_path 说明，未展示相关校验或分类。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94; fixture_sha256=1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0; output_sha256=58b749601876de06ee13355c709eb0480a67d895c520e205f6a116c2a4e30b1a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了排序预期和文档缺少实现代码的限制，但未说明 feature_path，也未展示 related_prd 校验或分类流程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 输出未说明两份嵌套文档对应的 feature_path: chat-interface/messages/history/search。
+- Next: 补充明确的 feature_path 说明，并在适用时展示 related_prd 校验结果与分类。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-004-nested-feature-path-bug-alignment`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0` from `agents/engineer/test/debugger/evals/workspace/eval-004-nested-feature-path-bug-alignment`.
+- Fixture SHA-256: `1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0`
+- Prompt SHA-256: `c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `c794a9f4d25d61e50b6bf610eddf7b88ff4be58b7215ed85d280d6be8cae915f`

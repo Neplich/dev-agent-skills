@@ -23,23 +23,55 @@ Before code or test changes, produce one observable checkpoint that:
 
 1. resolves the canonical nested `feature_path` and records PRD, decisions,
    TRD, `related_prd`, design, and code-evidence alignment
-2. returns expectation changes to `pm-agent:idea-to-spec`, technical gaps to
-   `engineer-agent:trd-gen`, and UI design gaps to `designer-agent`; the finder
+2. returns a missing or changed PRD to `pm-agent:idea-to-spec`, a missing or
+   incomplete TRD to `engineer-agent:trd-gen`, and UI design gaps to
+   `designer-agent`; the finder
    names the gap but never performs the receiving role's work
-3. scans the fixed active-plan path and archive directory before writing;
+3. scans the fixed active-plan path and archive directory before writing and
+   records the original active-plan status verbatim;
    handles `Implemented`, draft/non-implemented, faithful archive, abandoned,
    and no-active-plan states exactly as the archive gate specifies
 4. writes or updates `IMPLEMENTATION_PLAN.md` with current frontmatter version,
    status, alignment, file scope, order, verification, forbidden areas, and an
-   explicit implementation/independent-validation split decision
+   explicit implementation/independent-validation split decision; the main
+   process retains repository rules, source context, integration, and final
+   delivery judgment, while each delegated scope forbids unrelated changes
 5. presents the exact plan and waits for user confirmation before coding,
    including for hotfixes and small bug fixes
+
+Render that checkpoint with explicit fields: `feature_path`, `parent_feature`,
+`feature_level`, `prd_alignment`, `prd_path`, `trd_alignment`, `trd_path`,
+`active_plan_path`, `active_plan_status`, `implementation_scope`,
+`archive_state`, `decision`, `receiving_owner`, `gap_packet`, `planned_files`,
+`verification_commands`, `subagent_split`, `blocked_downstream_actions`, and
+`confirmation_required`. Use `N/A` only when the field is genuinely
+inapplicable. A gap packet always preserves the feature metadata and expected
+document paths. A blocked checkpoint names every prohibited next action that
+matters, including implementation, new E2E expectations, QA handoff, delivery,
+PR creation, and issue closeout. A planning checkpoint never substitutes a
+generic request for more context when the confirmed documents already provide
+the field.
+
+For a planning-only request, missing implementation source does not prohibit
+creating the plan when confirmed PRD/TRD inputs identify the target file,
+behavior, and executable verification command. Record source availability as a
+risk, still produce the scoped plan and sub-agent split, and wait for plan
+confirmation before implementation.
+When the request itself says product and technical owners confirmed the PRD/TRD,
+record that exact user-supplied confirmation as the `prd_alignment` and
+`trd_alignment` evidence; do not reduce it to a generic aligned label or imply
+that an unavailable source tree supplied the confirmation.
 
 After implementation, reconcile the active plan body and frontmatter with the
 actual result before any handoff. The final summary must list changed files,
 verification, residual risks, runtime-artifact deletion, and—when user-facing
 paths may change—the complete QA E2E handoff package based on the confirmed
 plan. Runtime outputs never enter Git.
+
+The closeout summary explicitly records `changed_files`, `commands_and_results`,
+`residual_risks`, and `runtime_artifacts_removed`. The last field confirms that
+transcripts, diagnostics, outputs, timing, run status, and
+`comparison.auto.md` remain outside Git.
 
 ## PM Handoff Entry Gate
 
@@ -184,6 +216,13 @@ Runtime eval artifacts must not be committed.
 When user-facing flows, acceptance paths, permissions, login, data setup, or
 regression coverage may be affected, produce a QA E2E handoff package. Do not
 create QA E2E cases unless explicitly routed to QA work.
+While `IMPLEMENTATION_PLAN.md` is missing or unconfirmed, creation or update of
+QA E2E TCs is explicitly blocked. After confirmation, every QA E2E handoff must
+cite that confirmed plan path; source availability does not waive this gate.
+Render both facts in the planning checkpoint itself as
+`qa_e2e_tc_create_or_update: blocked_until_plan_confirmed` and
+`qa_e2e_source_after_confirmation: docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`;
+do not defer them to a later QA step.
 
 ## Key Principles
 

@@ -8,6 +8,11 @@ visibility: internal
 
 Turn a failing scenario into a defect artifact only when the evidence crosses a useful threshold. This skill is about judging defect quality, not filling a template.
 
+The durable evidence inventory explicitly records presence or absence for the
+observed error message, stack trace, screenshot, console output, network
+evidence, trace, environment, and reproduction result. Missing evidence stays
+`missing` or `unavailable`; never omit the field or infer it existed.
+
 ## Shared QA Directory Contract
 
 For feature-scoped E2E or reusable regression artifacts, prefer the function

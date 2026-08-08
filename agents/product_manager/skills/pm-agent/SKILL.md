@@ -5,6 +5,15 @@ description: "Default entry point for any new user request. Use this when the us
 
 # PM Agent Dispatcher
 
+Every response starts with the complete `Routing decision` block before any
+repository inspection or clarification question. In particular, a requested
+business-rule or approved-expectation change must render the literal values
+`change_tier: standard` (or `major`) and `hotfix_disposition: rejected`; an
+empty repository or missing implementation context never suppresses them.
+For example, a request to change a membership trial duration and merge quickly
+starts with `change_tier: standard` and `hotfix_disposition: rejected` before
+asking which users are affected or reporting that source is unavailable.
+
 `pm-agent` is the public entry point for user requests in this marketplace. It
 classifies the user's goal first, routes to the narrowest downstream PM skill
 when the work is PM-owned, and hands off to downstream role agents when the
@@ -29,22 +38,46 @@ file is missing. The first response must make these decisions observable:
 - if a direct role or specialist request lacks its entry basis, stop execution,
   return it to `pm-agent`, and name the missing handoff fields or documents
 
-Start with a compact `Routing decision` block that records the request type and
-tier, selected owner and reason, entry-basis status, expected current output or
-next action, preserved scope/blockers, and execution boundary. For a PM-owned
-route, name the owner exactly as listed under Available PM Skills before any
-internal lane, then emit this block before continuing into the specialist's
-first step. Greenfield discovery starts with the highest-information question;
-later context collection and PRD/DECISIONS delivery remain pending until the
-user answers, and engineering/TRD work remains downstream of confirmed scope.
+Start with a compact `Routing decision` block with these explicit fields:
+`request_type`, `change_tier`, `hotfix_disposition`, `selected_owner`, `selection_reason`,
+`entry_basis`, `feature_path`, `source_documents`, `confirmed_scope`,
+`required_output`, `blockers_risks`, `next_action`, and `execution_boundary`.
+For a hotfix decision also render `fast_lane`; for a security route also render
+`risk_surface`, `assets`, `permissions`, `data_flow`, and
+`remediation_expectations` before the handoff.
+Use `N/A` or `missing` rather than silently omitting a field. For direct role or
+specialist requests, the block must also say whether its own entry gate passed;
+if not, explicitly reject downstream execution, planning, implementation, and
+testing and return the request to `pm-agent`. For a PM-owned route, name the
+owner exactly as listed under Available PM Skills before any internal lane,
+then emit this block before continuing into the specialist's first step.
+Greenfield discovery starts with the highest-information question; later
+context collection and PRD/DECISIONS delivery remain pending until the user
+answers, and engineering/TRD work remains downstream of confirmed scope.
 
 Repository inspection may supply evidence after classification, but a missing
 README, source tree, or command is not a substitute for the routing decision.
 For `hotfix`, record why approved expectations are unchanged, the direct
-verification path, and retained scope/source/verification evidence. For release
+verification path, and retained scope/source/verification evidence. Set
+`fast_lane: allowed_after_classification` only for a qualifying delivery or
+status request; otherwise set it to `not_allowed`. For release
 communication, preserve the order site Release Notes -> Docs audit -> GitHub
 Release. For document-structure governance, scope the read-only inventory to
 all six role document trees before proposing any change.
+
+Always state the classification value itself, not only a synonym or rationale:
+bugs use `request_type: bug_report`; behavior or expectation changes use
+`change_tier: standard` or `major`; a valid delivery/status hotfix explicitly
+records that the post-classification fast lane is allowed; attempted hotfix
+abuse explicitly records that hotfix is rejected. Security routing records the
+literal `risk_surface`, `assets`, `permissions`, `data_flow`, and
+`remediation_expectations` fields before naming the Security handoff.
+Add `hotfix_disposition: allowed | rejected | not_applicable` to the routing
+decision. Any approved-expectation or business-rule change must say
+`hotfix_disposition: rejected` and `change_tier: standard` or `major` even when
+the user did not use the word hotfix. Emit those explicit values before asking
+any scope question; the question may refine the PM scope but must not replace
+the classification.
 
 ## Role Boundary
 

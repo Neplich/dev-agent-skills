@@ -11,6 +11,189 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `970626314f80eb97fc008436179e977f3b31875ef015d6a3dcce0205080e223e` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-002-repeat-bootstrap-idempotent`.
+- Fixture SHA-256: `970626314f80eb97fc008436179e977f3b31875ef015d6a3dcce0205080e223e`
+- Prompt SHA-256: `1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f74a445a21eabfad3f25cc38a5190833cf5fc52294bb0054a41378fe894ddd82`
+- Skill overlay SHA-256: `749412be4f8f7fe24db333e412ff5013877a6c57121d621b10bbe79fa7b60b02`
+- Judge schema SHA-256: `08c04fe57b81475dd890de6778e0567d043b2de7ae5ceb0392b2f8c748e60f69`
+- Eval definition SHA-256: `67789de316a1ba3d112d33eabc20baa992cdfc352bddac2855c6bcc9a3f93650`
+- Metadata SHA-256: `421f80bf3da30d58b5b544d4c2e96b4cfdc1446ea641a3ffc3d654e2472f3421`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_zero_diff` | PASS | With-skill output reports zero new files, an empty git status, an empty git diff, and a clean work tree. |
+| `reports_skipped_identical` | PASS | With-skill output reports all 42 assets as byte-identical and skipped, with 42 manifest records. |
+| `preserves_existing_state` | PASS | With-skill output reports no created files or conflicts, clean Git state, and unchanged existing change-map/site assets. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158; fixture_sha256=970626314f80eb97fc008436179e977f3b31875ef015d6a3dcce0205080e223e; output_sha256=ccb22a1e11bfb4c2392115bea571adbf7bb00572b2ab69f33e1be4d061f31576; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Re-initialization is reported as idempotent: all 42 assets were skipped as identical, the manifest remained valid, and Git is clean.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158; fixture_sha256=970626314f80eb97fc008436179e977f3b31875ef015d6a3dcce0205080e223e; output_sha256=a65f10cb06c0f7a8c9639b6e892ab9344f3a1b62f6e7f2875c31885add21a672; snapshot_sha256=060c9f1e9bca54e39b34c9d582c0f4bb286da0cadf85ff1b87aaced36e86fce0
+- Behavior: Baseline reports successful generation but leaves 38 untracked generated files, so its workspace is not zero-diff.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-site-bootstrap`
+- Eval: `eval-002-repeat-bootstrap-idempotent`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `970626314f80eb97fc008436179e977f3b31875ef015d6a3dcce0205080e223e` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-002-repeat-bootstrap-idempotent`.
+- Fixture SHA-256: `970626314f80eb97fc008436179e977f3b31875ef015d6a3dcce0205080e223e`
+- Prompt SHA-256: `1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f74a445a21eabfad3f25cc38a5190833cf5fc52294bb0054a41378fe894ddd82`
+- Skill overlay SHA-256: `749412be4f8f7fe24db333e412ff5013877a6c57121d621b10bbe79fa7b60b02`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `67789de316a1ba3d112d33eabc20baa992cdfc352bddac2855c6bcc9a3f93650`
+- Metadata SHA-256: `421f80bf3da30d58b5b544d4c2e96b4cfdc1446ea641a3ffc3d654e2472f3421`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_zero_diff` | PASS | With-skill git evidence reports empty status, index diff, worktree diff, and unchanged HEAD; all 43 recorded hashes match the fixture, including the manifest. |
+| `reports_skipped_identical` | PASS | The fixture manifest contains exactly 42 asset paths, all classified as skipped-identical; the with-skill output reports 42 byte-identical skipped assets and its recorded asset hashes match. |
+| `preserves_existing_state` | PASS | With-skill evidence reports no Git or reference changes, and all recorded existing asset hashes match the read-only fixture. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158; fixture_sha256=970626314f80eb97fc008436179e977f3b31875ef015d6a3dcce0205080e223e; output_sha256=1b566b6ac69b6a7646a16b94e7ad752cc1cdd794b4eba2f856403d43bf7f2e61; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Reported and evidenced an idempotent rerun with 42 skipped-identical assets and a clean Git workspace.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158; fixture_sha256=970626314f80eb97fc008436179e977f3b31875ef015d6a3dcce0205080e223e; output_sha256=219004642334d3fd86d41d8b32fb56972f3d9199dafb7ce6c4e3f55baad9d7d1; snapshot_sha256=060c9f1e9bca54e39b34c9d582c0f4bb286da0cadf85ff1b87aaced36e86fce0
+- Behavior: Reported no tracked-file diff but left 38 untracked generated files.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-site-bootstrap`
+- Eval: `eval-002-repeat-bootstrap-idempotent`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `970626314f80eb97fc008436179e977f3b31875ef015d6a3dcce0205080e223e` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-002-repeat-bootstrap-idempotent`.
+- Fixture SHA-256: `970626314f80eb97fc008436179e977f3b31875ef015d6a3dcce0205080e223e`
+- Prompt SHA-256: `1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `94e37af2ad7f4b39032db420d30845826ffa4c408edb8ffe671f400ff7e83f83`
+- Skill overlay SHA-256: `09f32081fb5da19c616e5c124981201ff10d8f1031a9890f0577b1364fa9c83c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `67789de316a1ba3d112d33eabc20baa992cdfc352bddac2855c6bcc9a3f93650`
+- Metadata SHA-256: `b55dbc29e6b1365719d0847e8b8ceb11bcbcaa0b15d77aac44cd57ea26527a2b`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_zero_diff` | PASS | with_skill reports zero-diff; locked git_status and git_diff are empty, and the manifest evidence matches the fixture's existing asset hashes. |
+| `reports_skipped_identical` | PASS | with_skill reports all 42 static assets as skipped-identical and a 42-record manifest; fixture manifest independently contains 42 asset paths with that status. |
+| `preserves_existing_state` | PASS | with_skill reports no conflicts or kept-as-is changes, clean Git state, and matching manifest/asset hashes; fixture includes the unchanged change-map, release metadata, pages, templates, configuration, and scripts. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158; fixture_sha256=970626314f80eb97fc008436179e977f3b31875ef015d6a3dcce0205080e223e; output_sha256=3e1d7a4331ee80a633b25aa0821e819cb1df009e77c095f05cc392c0bf2580b3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Reported and evidenced an idempotent rerun: all 42 assets skipped-identical, manifest preserved, and Git remained clean.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158; fixture_sha256=970626314f80eb97fc008436179e977f3b31875ef015d6a3dcce0205080e223e; output_sha256=1059b83f64eba41a5604b8b41ab5b47b4299535dee94c5fb26dc36c7d7e5ad7f; snapshot_sha256=060c9f1e9bca54e39b34c9d582c0f4bb286da0cadf85ff1b87aaced36e86fce0
+- Behavior: Reported no tracked-file changes but created an untracked generated directory and did not establish the required 42-asset skipped-identical result.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-site-bootstrap`
+- Eval: `eval-002-repeat-bootstrap-idempotent`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-002-repeat-bootstrap-idempotent`.
 - Fixture SHA-256: `81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba`
 - Prompt SHA-256: `1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158`

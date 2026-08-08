@@ -14,6 +14,192 @@
 - Fixture version/source: canonical manifest `a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677` from `agents/docs/test/docs-audit/evals/workspace/eval-003-audit-pure-refactor`.
 - Fixture SHA-256: `a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677`
 - Prompt SHA-256: `20617e4b8714b5129b537177e8c463822eec4083d7fdd0d6520c27013f94489f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `3e58dae2a34edb25f9589f7bddb4e3282cd1f66e3b0c3f35187db4ed16fd5f23`
+- Eval definition SHA-256: `a7212e3282f2eaaa660e0675fb965d5050f366a07c153f3821d78fdab8976de5`
+- Metadata SHA-256: `1e20c97bb5ffc477023f6bbbd217e71d747297cb0b8f52652660b6b2d10adc7a`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `sends_refactor_suspect_to_fact_layer` | NOT_EXERCISED | with_skill reports the page as affected and gives a fact-layer conclusion of `verified`, but does not explicitly establish the hidden `suspect` handoff. |
+| `classifies_accurate_refactor_verified` | PASS | with_skill states the refactor did not change the API contract and that the method, path, auth, parameters, success/error responses, streaming, and file behavior match the target code; it concludes `verified`. |
+| `does_not_force_noop_doc_edit` | FAIL | with_skill identifies the page as unchanged and accurate, but does not explicitly state that a no-op documentation edit is unnecessary. |
+| `does_not_block_for_unchanged_accurate_doc` | PASS | with_skill does not classify the unchanged page as `stale`; it attributes `blocked` to missing release-version/site/audit evidence and explicitly says it cannot return `ready_for_tag` or stamp. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=20617e4b8714b5129b537177e8c463822eec4083d7fdd0d6520c27013f94489f; fixture_sha256=a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677; output_sha256=da7f3430643defd272527694b49e7c7fc32849938870b1d5aebdef7927f455e5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly verifies the unchanged API contract and blocks only on missing release-surface evidence, but omits the explicit no-op-edit conclusion and does not prove the hidden suspect handoff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=20617e4b8714b5129b537177e8c463822eec4083d7fdd0d6520c27013f94489f; fixture_sha256=a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677; output_sha256=388c17f98d62af4dcc770ccf834b8e7063870244a0d97ea9014a22b41bfe71f3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline incorrectly reports the audit as passed and treats the accurate unchanged page as requiring no API update without the required fact-layer verification/blocking analysis.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill report omits the required explicit conclusion that an accurate pure refactor does not require editing the documentation merely to match the diff.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-003-audit-pure-refactor`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677` from `agents/docs/test/docs-audit/evals/workspace/eval-003-audit-pure-refactor`.
+- Fixture SHA-256: `a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677`
+- Prompt SHA-256: `20617e4b8714b5129b537177e8c463822eec4083d7fdd0d6520c27013f94489f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a40b9426c3ece6f787614183ce8478f0aacaf94802441ebb84796853c2c8848e`
+- Skill overlay SHA-256: `6cbf5a99cea4bf2bfd3e91f9b1e261a828b8b62ab73699f7ed3de43f33d01739`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `a7212e3282f2eaaa660e0675fb965d5050f366a07c153f3821d78fdab8976de5`
+- Metadata SHA-256: `1e20c97bb5ffc477023f6bbbd217e71d747297cb0b8f52652660b6b2d10adc7a`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `sends_refactor_suspect_to_fact_layer` | NOT_EXERCISED | with_skill 输出给出最终 verified，但锁定输出与原始证据均无法证明确定性层曾将页面标为 suspect 并交给事实层；按规则不据此推断失败。 |
+| `classifies_accurate_refactor_verified` | PASS | with_skill 输出明确页面状态为 verified；锁定 routes.txt 与 actual-diff.patch 显示仅实现重构，GET 路径、可选 limit、200 响应和 400 invalid_limit 均未变化。 |
+| `does_not_force_noop_doc_edit` | PASS | with_skill 输出明确“无需修改该 API 页面正文”，且锁定 git evidence 显示没有文件或工作区变更。 |
+| `does_not_block_for_unchanged_accurate_doc` | PASS | with_skill 将页面判为 verified 而非 stale；blocked 原因明确是缺少完整 v1.1.0 release-version surface 证据，并未返回 ready_for_tag 或盖章。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=20617e4b8714b5129b537177e8c463822eec4083d7fdd0d6520c27013f94489f; fixture_sha256=a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677; output_sha256=c5805153ab3ee84c7261d07208aea3fdf02b10f2c482ad28a9fa28deb7376d16; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别未更新映射页面，确认实现重构不影响 API 内容并判 verified；因缺少完整版本面证据而保持 blocked。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=20617e4b8714b5129b537177e8c463822eec4083d7fdd0d6520c27013f94489f; fixture_sha256=a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677; output_sha256=9fa23f7f38d691c927fdf2aaa6c4304794763ac524a5e7d33ffb11a5c61e4fa8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 错误地直接放行，声称未发现受影响但未更新页面，并将文档检查判为通过。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-003-audit-pure-refactor`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677` from `agents/docs/test/docs-audit/evals/workspace/eval-003-audit-pure-refactor`.
+- Fixture SHA-256: `a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677`
+- Prompt SHA-256: `20617e4b8714b5129b537177e8c463822eec4083d7fdd0d6520c27013f94489f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d339a8370a29b3fb2a69aa1879b1226165ec088d306a4e2e7a01258df2326973`
+- Skill overlay SHA-256: `0bc7243cbb5cff3e77d9ba448e020a1a1f279639f8db6a365faac208b8e1dcc7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `a7212e3282f2eaaa660e0675fb965d5050f366a07c153f3821d78fdab8976de5`
+- Metadata SHA-256: `1e20c97bb5ffc477023f6bbbd217e71d747297cb0b8f52652660b6b2d10adc7a`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `sends_refactor_suspect_to_fact_layer` | NOT_EXERCISED | The with_skill output identifies the page as suspect and verified, but locked evidence cannot prove the hidden handoff/read-order into the fact layer. |
+| `classifies_accurate_refactor_verified` | PASS | It confirms the GET path, optional limit with default 20 and maximum 100, 200/items response, 400 invalid_limit error, and final status verified. |
+| `does_not_force_noop_doc_edit` | PASS | It explicitly states the API page need not be modified for this implementation refactor. |
+| `does_not_block_for_unchanged_accurate_doc` | PASS | It does not mark the page stale; its blocked pre-tag conclusion is attributed to missing complete release-version surface evidence, and it does not return ready_for_tag. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=20617e4b8714b5129b537177e8c463822eec4083d7fdd0d6520c27013f94489f; fixture_sha256=a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677; output_sha256=6045baeb1d45693695edcdc3f037d64d56560f820b86ebf1d8cb42f7e184c326; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly verifies the unchanged API semantics, avoids a no-op doc edit, and blocks pre-tag only because complete release-version evidence is missing.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=20617e4b8714b5129b537177e8c463822eec4083d7fdd0d6520c27013f94489f; fixture_sha256=a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677; output_sha256=b9c8fc1cecad9faa3d18671f94059bee9a6652ea26bc4d6e8a084c99566a0ce0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Passes the page as accurate but omits the suspect/fact-layer workflow and does not block on missing release-surface evidence.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-003-audit-pure-refactor`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677` from `agents/docs/test/docs-audit/evals/workspace/eval-003-audit-pure-refactor`.
+- Fixture SHA-256: `a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677`
+- Prompt SHA-256: `20617e4b8714b5129b537177e8c463822eec4083d7fdd0d6520c27013f94489f`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `9e9abf391c9ccd9564d35b5def50bc0374b1db0886710676c4d48422839746ae`

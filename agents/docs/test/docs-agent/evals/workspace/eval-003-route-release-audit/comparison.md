@@ -14,6 +14,373 @@
 - Fixture version/source: canonical manifest `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6` from `agents/docs/test/docs-agent/evals/workspace/eval-003-route-release-audit`.
 - Fixture SHA-256: `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6`
 - Prompt SHA-256: `099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `f4f786bd56d6a5cbcee24193816a462566a8caafb4c223ef38759bdf64ee0486`
+- Eval definition SHA-256: `76669427412e6a3d2662bf813faa0ce4c31fa19c75739559cabe530efd5682a6`
+- Metadata SHA-256: `d582bafa2b7d4e637ef2b4b71f14f435256d70c30e92f7097a43cd40dc9da750`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_equivalent_chain` | PASS | with_skill 明确将 `release-entry.md` 作为“等价确认链”，并识别了正式文档审计范围、版本标签及现有证据。 |
+| `routes_docs_audit` | PASS | with_skill 选择 `docs-audit`，保留审计范围、`v0.4.0`、changelog、站点及检查证据的相关信息，并明确停止在路由边界。 |
+| `references_audit_gate_only` | FAIL | 虽然 with_skill 明确指定 `docs-audit` 并声明停止于路由边界，但输出进一步展开了 `base_ref`/`target_ref`、发布窗口、审计输入和证据要求，超出了只引用审计 specialist gate 的要求。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=4d9b0cfe747083ae8bcbc1494dc31d7ba9b4463ccadc8729af38ccdb7d7c970f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别等效确认链并路由至 `docs-audit`，但输出了超出 router 边界的审计内部要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=e2f3c04021fbaf20e0ad31322aebdaf710a1ebf8ce0f4648e4ed1f46cc818775; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 未执行路由，直接进行了发版文档审计并给出阻塞结论和整改建议。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 路由正确，但暴露并展开了 specialist 内部审计所需的 base/target、发布窗口及证据要求，违反只引用审计 gate 并停在 router 边界的要求。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-003-route-release-audit`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6` from `agents/docs/test/docs-agent/evals/workspace/eval-003-route-release-audit`.
+- Fixture SHA-256: `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6`
+- Prompt SHA-256: `099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `f4f786bd56d6a5cbcee24193816a462566a8caafb4c223ef38759bdf64ee0486`
+- Eval definition SHA-256: `76669427412e6a3d2662bf813faa0ce4c31fa19c75739559cabe530efd5682a6`
+- Metadata SHA-256: `d582bafa2b7d4e637ef2b4b71f14f435256d70c30e92f7097a43cd40dc9da750`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_equivalent_chain` | PASS | with_skill 将 `release-entry.md` 明确识别为等价的 confirmed release entry chain，并记录了正式文档 scope、`v0.4.0`、changelog、证据来源与审计意图。 |
+| `routes_docs_audit` | PASS | with_skill 明确选择 `docs-audit`，保留 `v0.4.0`、正式文档审计 scope、changelog 和证据信息，并将后续权威审计交给该 specialist。 |
+| `references_audit_gate_only` | PASS | with_skill 明确声明由 `docs-audit` 执行审计门禁，路由停在执行边界，并未暴露本地 SKILL.md 路径或复制内部审计协议。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=9346eff77b064c1d6a85cd9946849ebd4a22643a0e78dc6d39f5bdc70be3d754; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别等效 release entry chain，正确路由至 docs-audit，并停在 specialist 审计边界。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=89834af494550284066cdbb9c18d4c54fb95b7224c9f6edf59bd3a7d712738e2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 将请求当作直接正式文档审计，执行了材料缺失检查并给出阻塞结论，未进行 docs-audit 路由。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-003-route-release-audit`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6` from `agents/docs/test/docs-agent/evals/workspace/eval-003-route-release-audit`.
+- Fixture SHA-256: `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6`
+- Prompt SHA-256: `099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
+- Skill overlay SHA-256: `6cbf5a99cea4bf2bfd3e91f9b1e261a828b8b62ab73699f7ed3de43f33d01739`
+- Judge schema SHA-256: `f4f786bd56d6a5cbcee24193816a462566a8caafb4c223ef38759bdf64ee0486`
+- Eval definition SHA-256: `76669427412e6a3d2662bf813faa0ce4c31fa19c75739559cabe530efd5682a6`
+- Metadata SHA-256: `d582bafa2b7d4e637ef2b4b71f14f435256d70c30e92f7097a43cd40dc9da750`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_equivalent_chain` | PASS | with_skill explicitly identifies an equivalent confirmed release-entry chain and recognizes the v0.4.0 version, audit node, release checks, and changelog source. |
+| `routes_docs_audit` | PASS | with_skill selects docs-audit, preserves the formal documentation scope, v0.4.0, changelog, and release-check evidence, and assigns execution to the specialist. |
+| `references_audit_gate_only` | PASS | with_skill states the docs-audit routing boundary and specialist gates without exposing a local SKILL.md path or reproducing the audit protocol. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=d44616b73ac638e621699631cc91b509ea2a5efe63112573730e4535712ee4d7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly recognizes the equivalent release chain, routes to docs-audit, and stops at the router boundary.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=cad513f4b11f245caddd246a1729c5cba857469314b1553278b7355e0655e511; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Performs an unsupported repository audit instead of routing the request to docs-audit.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-003-route-release-audit`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6` from `agents/docs/test/docs-agent/evals/workspace/eval-003-route-release-audit`.
+- Fixture SHA-256: `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6`
+- Prompt SHA-256: `099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
+- Skill overlay SHA-256: `6cbf5a99cea4bf2bfd3e91f9b1e261a828b8b62ab73699f7ed3de43f33d01739`
+- Judge schema SHA-256: `f4f786bd56d6a5cbcee24193816a462566a8caafb4c223ef38759bdf64ee0486`
+- Eval definition SHA-256: `76669427412e6a3d2662bf813faa0ce4c31fa19c75739559cabe530efd5682a6`
+- Metadata SHA-256: `d582bafa2b7d4e637ef2b4b71f14f435256d70c30e92f7097a43cd40dc9da750`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_equivalent_chain` | FAIL | with_skill executes a substantive release audit and reports missing tags, base refs, inventory, and evidence instead of recognizing the confirmed entry chain. |
+| `routes_docs_audit` | FAIL | with_skill does not route the request directly to `docs-audit`; it performs the audit itself and only proposes re-routing after bootstrap work. |
+| `references_audit_gate_only` | FAIL | with_skill crosses the router boundary, exposing audit-gate details such as pre-tag/post-tag, previous-tag/base-ref, and inventory requirements. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=68aa2b7cb44f959a9743c1db17d08cff03a93db53eebdd4bfff029b01a10c1d5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Performs a detailed audit and proposes prerequisite remediation instead of routing at the router boundary.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=8ff794be9bbd38733e87f84ec55b84dc302baf54f9b52e9e4fed4096cd70e30f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Performs a detailed audit and defers release pending missing artifacts and evidence; comparison context only.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- All three with_skill routing assertions are contradicted by the locked output.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-003-route-release-audit`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6` from `agents/docs/test/docs-agent/evals/workspace/eval-003-route-release-audit`.
+- Fixture SHA-256: `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6`
+- Prompt SHA-256: `099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
+- Skill overlay SHA-256: `6cbf5a99cea4bf2bfd3e91f9b1e261a828b8b62ab73699f7ed3de43f33d01739`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `76669427412e6a3d2662bf813faa0ce4c31fa19c75739559cabe530efd5682a6`
+- Metadata SHA-256: `d582bafa2b7d4e637ef2b4b71f14f435256d70c30e92f7097a43cd40dc9da750`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_equivalent_chain` | FAIL | with_skill explicitly rejects the fixture's confirmed release-entry chain and claims PM confirmation plus additional credentials are required. |
+| `routes_docs_audit` | FAIL | Although it selects docs-audit, it does not retain the confirmed changelog and release evidence; it marks evidence as N/A and refuses routing based on unsupported missing prerequisites. |
+| `references_audit_gate_only` | FAIL | It identifies docs-audit and a routing boundary, but adds an unsupported pm-agent prerequisite and explicitly requests previous-tag/base-ref details, contrary to the assertion's gate-only boundary. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=b8e1aa1948a86a4d7f38b743316bf3f7d4b8d67df22fa3893e651b96f10bb8e0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Selects docs-audit but rejects the confirmed equivalent entry chain and adds unsupported prerequisite and protocol requirements.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=d342b06e80e4fd2f081b95e6b611db3987039d4528843ee6d7c42dcf51cff5e0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Incorrectly treats the repository's missing audit result as missing release prerequisites and does not route to docs-audit.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- All three with_skill assertions fail: the confirmed release-entry chain is rejected, required release evidence is not preserved, and extra routing prerequisites/protocol details are introduced.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-003-route-release-audit`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6` from `agents/docs/test/docs-agent/evals/workspace/eval-003-route-release-audit`.
+- Fixture SHA-256: `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6`
+- Prompt SHA-256: `099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e64e4dc492a2ff92be09822529f9abb1fbd17f4d0148b3045e0162382c5d46d3`
+- Skill overlay SHA-256: `0bc7243cbb5cff3e77d9ba448e020a1a1f279639f8db6a365faac208b8e1dcc7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `76669427412e6a3d2662bf813faa0ce4c31fa19c75739559cabe530efd5682a6`
+- Metadata SHA-256: `d582bafa2b7d4e637ef2b4b71f14f435256d70c30e92f7097a43cd40dc9da750`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_equivalent_chain` | FAIL | with_skill acknowledges release-entry.md as an entry but incorrectly treats confirmed changelog, site, tag, and handoff evidence as missing, so it does not accept the documented confirmation chain as sufficient. |
+| `routes_docs_audit` | FAIL | It names docs-audit but routes the work back to pm-agent instead of handing audit execution to docs-audit while retaining the confirmed release information. |
+| `references_audit_gate_only` | FAIL | It does not stop at the docs-audit router boundary; it prescribes returning to pm-agent and exposes additional handoff/process requirements. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=896427ddf3ed465ca161cc43731494f1e1249ec5d845bdf4696899108fa73c43; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Identifies docs-audit as the nominal specialist but incorrectly rejects confirmed fixture evidence, routes back to pm-agent, and does not stop at the required router boundary.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=498de8c8cec5b570da122fbdf60de1210a9534216403003a68b9e9c2c10f7436; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Performs an independent evidence-gap release audit and lists remediation steps, but does not recognize or route the equivalent confirmation chain to docs-audit.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output contradicts the fixture by treating confirmed release evidence as absent.
+- The required docs-audit routing and router-boundary behavior are not satisfied.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-003-route-release-audit`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6` from `agents/docs/test/docs-agent/evals/workspace/eval-003-route-release-audit`.
+- Fixture SHA-256: `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6`
+- Prompt SHA-256: `099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `e64e4dc492a2ff92be09822529f9abb1fbd17f4d0148b3045e0162382c5d46d3`

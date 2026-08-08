@@ -14,6 +14,329 @@
 - Fixture version/source: canonical manifest `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55` from `agents/engineer/test/trd-gen/evals/workspace/eval-001-prd-to-engineer-trd`.
 - Fixture SHA-256: `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55`
 - Prompt SHA-256: `59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `73cec46ef0287c25bd7a41d37b6bcee4e1ea25b1101672fb45bd299ecec77b0d`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `4d4b8ebdf0eaf847b9097b848450fa85763a3e1f30bf1bb128228339ff87a28d`
+- Eval definition SHA-256: `763059af120165947ccbb1397278bf0acb3f4c96fd42875970c4e31154f717da`
+- Metadata SHA-256: `b33234ce56a0b715b632f392ff44ba7c27cad834dbc654110228254e610f01ec`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `engineer_owns_trd` | PASS | 交付的 docs/engineer/capture-loop/TRD.md 明确写明由 Engineer 拥有，并使用 Engineer 路径。 |
+| `prd_confirmed_handoff` | PASS | TRD 将其描述为基于 confirmed PM scope，并引用已确认的 PRD 与 DECISIONS。 |
+| `document_subagent` | FAIL | 候选输出明确说“文档由主流程编写，当前没有可用的文档子代理”，与要求委派文档编写 sub-agent 相矛盾。 |
+| `implementation_plan_handoff` | PASS | TRD 明确规定确认后由 feature-implementor 产出 docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md，再进入实现。 |
+| `qa_e2e_after_confirmed_plan` | NOT_EXERCISED | 当前阶段没有实现计划、代码完成或交接包；交付内容仅说明 QA E2E 被阻塞，并规定 E2E 命令需在实现计划和 TRD 确认后执行。因此后续 QA 断言尚未 exercised。 |
+| `no_code_implementation` | PASS | 交付快照仅包含 TRD、API 和 ADR 文档；TRD 明确写明当前阶段不授权代码实现，git evidence 也显示无代码变更。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=7ce1593e9044eecc78ddd8a1f374a0a085dca4c7f434e8bb740a1881814ed3cf; snapshot_sha256=6fac6e578d5ee4de60d4dea4df41b57fc7df15a3aba045812b41a6c214ba3241
+- Behavior: 产出了 Engineer 路径下的 TRD、API 和 ADR，并正确描述了后续实现计划交接及当前下游阻塞；但文档由主流程编写，未按要求委派 sub-agent。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=d61b331cf89f719400a1f598f409aa31d61d54cfbf29855517d7d2fdf909eb00; snapshot_sha256=d4e01a51039a02696533656ddc47a894d8088477ce6a5a92b9a41d420f8143ea
+- Behavior: 直接在 docs/pm/capture-loop/TRD.md 交付技术方案，未体现 Engineer 归属及规定的阶段性交接。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 明确未使用文档编写 sub-agent，违反 document_subagent。
+- Next: 改为委派文档编写 sub-agent 执行 TRD 编写或更新，并由主进程保留上下文和最终审查。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-001-prd-to-engineer-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55` from `agents/engineer/test/trd-gen/evals/workspace/eval-001-prd-to-engineer-trd`.
+- Fixture SHA-256: `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55`
+- Prompt SHA-256: `59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `73cec46ef0287c25bd7a41d37b6bcee4e1ea25b1101672fb45bd299ecec77b0d`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `4d4b8ebdf0eaf847b9097b848450fa85763a3e1f30bf1bb128228339ff87a28d`
+- Eval definition SHA-256: `763059af120165947ccbb1397278bf0acb3f4c96fd42875970c4e31154f717da`
+- Metadata SHA-256: `b33234ce56a0b715b632f392ff44ba7c27cad834dbc654110228254e610f01ec`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `engineer_owns_trd` | PASS | 交付快照明确 `Engineer owns this TRD/API/ADR set`，并位于 `docs/engineer/capture-loop/TRD.md`。 |
+| `prd_confirmed_handoff` | PASS | TRD 以已确认的 PRD/DECISIONS 为来源，并要求确认 TRD 后才移交后续阶段，支持产品范围确认先于工程推进。 |
+| `document_subagent` | NOT_EXERCISED | 输出明确由 `engineer-agent:trd-gen` 负责文档；但主进程保留上下文和最终审查属于锁定证据无法证明的隐藏过程。 |
+| `implementation_plan_handoff` | PASS | 交付快照明确：确认 TRD 后移交 `feature-implementor` 编写 `docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md`，再进入实现。 |
+| `qa_e2e_after_confirmed_plan` | NOT_EXERCISED | 当前流程在 TRD 确认前停止，`feature-implementor` 和 QA E2E 均被标记为 blocked；实现完成后的完整 QA 交接尚未发生，无法 exercise。 |
+| `no_code_implementation` | PASS | 交付快照仅包含 TRD、API 和 ADR 文档；git evidence 显示仅新增文档文件，没有代码、测试修改或交付操作。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=6d659c782394baaeed5e3c898cc8f10acd2c6691f9e0f5a371a9d2ab663f2cd5; snapshot_sha256=bd782e844da282ce7e6264f42c4703293a6e509793e2e6dc69e65b713af54223
+- Behavior: 按 Engineer 文档流程产出 `docs/engineer/capture-loop/` 下的 TRD/API/ADR，明确确认门槛和后续 feature-implementor 阻塞状态，未实施代码。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=45e931a5796066898bbe85b1b41907d5a7c2ea5502ea8d8337e6bba8ccb33ca2; snapshot_sha256=8351b5546861eb228ec437970a454ce087ea886df0a3ff3216f4031737dd0795
+- Behavior: 直接在 `docs/pm/capture-loop/TRD.md` 产出技术方案，未体现 Engineer 归属、确认后交接或文档 sub-agent 流程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 确认 TRD 后再移交 feature-implementor；实现完成并提供交接包后再进行 QA E2E 文档补充。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-001-prd-to-engineer-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55` from `agents/engineer/test/trd-gen/evals/workspace/eval-001-prd-to-engineer-trd`.
+- Fixture SHA-256: `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55`
+- Prompt SHA-256: `59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `73cec46ef0287c25bd7a41d37b6bcee4e1ea25b1101672fb45bd299ecec77b0d`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `4d4b8ebdf0eaf847b9097b848450fa85763a3e1f30bf1bb128228339ff87a28d`
+- Eval definition SHA-256: `763059af120165947ccbb1397278bf0acb3f4c96fd42875970c4e31154f717da`
+- Metadata SHA-256: `b33234ce56a0b715b632f392ff44ba7c27cad834dbc654110228254e610f01ec`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `engineer_owns_trd` | PASS | 锁定的 TRD 位于 docs/engineer/capture-loop/TRD.md，内容明确“Engineer owns this document set”。 |
+| `prd_confirmed_handoff` | FAIL | 文档引用了 confirmed PRD/DECISIONS scope，但没有明确说明产品范围确认是进入 TRD 编写阶段的前置条件。 |
+| `document_subagent` | FAIL | 候选输出明确称“文档子代理不可用，由主流程完成并自审”，与要求的文档编写 sub-agent 委派相矛盾。 |
+| `implementation_plan_handoff` | PASS | 锁定 TRD 的 Handoff conditions 明确：确认 TRD 后由 feature-implementor 编写 docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md，再实现。 |
+| `qa_e2e_after_confirmed_plan` | NOT_EXERCISED | 候选尚未创建 IMPLEMENTATION_PLAN 或 QA E2E 文档，且 TRD 仍为 In Review、等待确认；后续实现交接证据尚不存在。 |
+| `no_code_implementation` | PASS | 锁定交付仅包含 Engineer 文档；候选明确说明无代码、测试或 change-map，git 状态也只有文档未跟踪文件。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=087b12c26da80e065e88b98c3985bcd90264628a55c05a0046dac03fb6a4c7bd; snapshot_sha256=4a349249dcbf346627a8015b66d78651a533c04a8cf8869f825a1b66299a2b70
+- Behavior: 生成了位于 docs/engineer/capture-loop/ 的 TRD/API/ADR 文档，保留在 In Review，并正确描述了 TRD 确认后的实现计划交接；但缺少明确的 PRD 确认前置表述，并违反了文档 sub-agent 委派要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=97eb5c779e527b1a9db21a90c6e359f0bca2217e7ec7a71b9208301c59738ca8; snapshot_sha256=eadb7ee3eedfdef94ffadcb30fada4a5c44f6aa9c41cd1ac3813b6e0ea783daf
+- Behavior: 生成了错误位置 docs/pm/capture-loop/TRD.md 的技术文档，未体现 Engineer 归属、阶段门禁或后续交接流程；仅作 fresh baseline 对比。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- 未明确表达 PRD/DECISIONS 确认是 TRD 编写的前置门槛。
+- 未委派文档编写 sub-agent，反而声明由主流程完成。
+- Next: 补充 PRD/DECISIONS 确认后方可开始 TRD 编写的阶段门禁说明。
+- Next: 按要求将 TRD 编写或更新委派给文档编写 sub-agent，并由主进程保留上下文和最终审查。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-001-prd-to-engineer-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55` from `agents/engineer/test/trd-gen/evals/workspace/eval-001-prd-to-engineer-trd`.
+- Fixture SHA-256: `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55`
+- Prompt SHA-256: `59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `73cec46ef0287c25bd7a41d37b6bcee4e1ea25b1101672fb45bd299ecec77b0d`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `763059af120165947ccbb1397278bf0acb3f4c96fd42875970c4e31154f717da`
+- Metadata SHA-256: `b33234ce56a0b715b632f392ff44ba7c27cad834dbc654110228254e610f01ec`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `engineer_owns_trd` | PASS | 锁定的 TRD 位于 docs/engineer/capture-loop/TRD.md，内容明确由 Engineer / engineer-agent:trd-gen 负责。 |
+| `prd_confirmed_handoff` | PASS | TRD 明确基于已确认的 PRD 和产品决策，且输出说明 PM 决策无未决项。 |
+| `document_subagent` | FAIL | TRD 明确写出“文档子代理不可用，未发生委派；主流程已完成文档起草”，与要求由文档编写 sub-agent 执行相矛盾。 |
+| `implementation_plan_handoff` | PASS | TRD 明确要求在确认后移交 feature-implementor 编写 docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md，并将其作为进入实现阶段的前置步骤。 |
+| `qa_e2e_after_confirmed_plan` | FAIL | 虽然将 qa-e2e 列为下游阻塞项，但没有说明 QA E2E 文档不能由 TRD 请求直接触发，也未明确其依赖已确认 TRD、已确认 IMPLEMENTATION_PLAN 和实现完成后的交接包。 |
+| `no_code_implementation` | PASS | 锁定交付物仅为技术文档；git 证据显示没有代码、测试修改、提交或其他实现交付操作。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=ee16829ab9cfc901ac4091d535a5000c6cfc6fd2f3c7185abf19451103e3931d; snapshot_sha256=6355b677c14c4cb87600b40b0e64705fc248bfd1c2816dab1c2b274d917f37f4
+- Behavior: 生成了 Engineer 路径下的 TRD 及相关文档，正确表达确认前置、实现计划交接和未直接实现代码，但明确未委派文档 sub-agent，且缺少 QA E2E 的完整依赖链说明。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=d3c70443ee1d5ff875349e2d9a2736a58454af33a0ba4e195ca38058acc7c809; snapshot_sha256=9ab9ef30430053bee24a62cecb21138656f47543055a8551ece39ae8d7e30d58
+- Behavior: 生成了错误路径 docs/pm/capture-loop/TRD.md，未体现 Engineer 归属或下游交接流程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- document_subagent
+- qa_e2e_after_confirmed_plan
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-001-prd-to-engineer-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55` from `agents/engineer/test/trd-gen/evals/workspace/eval-001-prd-to-engineer-trd`.
+- Fixture SHA-256: `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55`
+- Prompt SHA-256: `59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `bb3f875298d7fef0fcd2297b4e59b33b5c034efad4a2286dcaede91ec0863c72`
+- Skill overlay SHA-256: `12aaaef0d075d133bbbdc681f598fd09807b211a4377dcfbc6cbbfcaa30909e0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `763059af120165947ccbb1397278bf0acb3f4c96fd42875970c4e31154f717da`
+- Metadata SHA-256: `b33234ce56a0b715b632f392ff44ba7c27cad834dbc654110228254e610f01ec`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `engineer_owns_trd` | PASS | With-skill output identifies the work as an Engineer technical design and delivers it under docs/engineer/capture-loop/TRD.md. |
+| `prd_confirmed_handoff` | PASS | The TRD artifact states it was derived from the confirmed PRD and product decisions; the fixture marks DECISIONS as Confirmed. |
+| `document_subagent` | FAIL | The with-skill output does not require TRD writing or updating to be performed by a documentation sub-agent while retaining context and final review. |
+| `implementation_plan_handoff` | PASS | The output explicitly states that after Engineer document confirmation, feature-implementor writes IMPLEMENTATION_PLAN.md before implementation. |
+| `qa_e2e_after_confirmed_plan` | NOT_EXERCISED | The workflow stops at document confirmation and no implementation or QA handoff occurs; the later QA step requires confirmed planning and implementation evidence. |
+| `no_code_implementation` | PASS | The output explicitly says implementation has not started, no implementation plan was created, and the locked git evidence shows only documentation files added. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=6d9886ed64c02e666800bdd3a9bb390ab00f6530d6308fb015da9c2ae475b450; snapshot_sha256=7b0f94b20ac9317e3466da232d541f6fb442eb20b04c7e2198583f0d6e83acd1
+- Behavior: Produced the Engineer document set under docs/engineer, paused for confirmation, and preserved the no-code boundary, but omitted the documentation sub-agent requirement.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=5930b26194027ebd74bb0b0ae5f71e7d102eb040ec05cc0a57adcff07ddc4b1c; snapshot_sha256=5829f656efa0247978864da9824525acee6770e7fb206650c64c6241605ae06d
+- Behavior: Produced a TRD under docs/engineering and did not address the required Engineer workflow handoffs.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with-skill lane omits the required delegation of TRD writing or updating to a documentation sub-agent with main-process context retention and final review.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-001-prd-to-engineer-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55` from `agents/engineer/test/trd-gen/evals/workspace/eval-001-prd-to-engineer-trd`.
+- Fixture SHA-256: `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55`
+- Prompt SHA-256: `59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `bb3f875298d7fef0fcd2297b4e59b33b5c034efad4a2286dcaede91ec0863c72`

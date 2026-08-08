@@ -20,6 +20,11 @@ completeness and ask the integrated/independent/deferred decision. After every
 re-bootstrap, rerun the same evidence check and report drift even when the
 asset copy itself is zero-diff.
 
+The decision explicitly records the confirmed host repository, fixed
+`docs/site/` root, and user opt-in for the complete scaffold and manifest. A
+conflict remains `blocked` until the user chooses one of the three actions for
+every listed path; never record `kept-as-is` before that choice.
+
 ## Entry Credentials
 
 Require both of these credentials before inspecting or writing bootstrap

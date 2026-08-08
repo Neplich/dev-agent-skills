@@ -14,6 +14,194 @@
 - Fixture version/source: canonical manifest `7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8` from `agents/docs/test/docs-agent/evals/workspace/eval-007-route-manual-gen`.
 - Fixture SHA-256: `7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8`
 - Prompt SHA-256: `a3cc737cbb46c53cc07ec65089d26bb1859146138c26d847279db190c633dcfa`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
+- Skill overlay SHA-256: `91cbb2dfbc7f79ee3f298d858c1e3b0b986717f5b79fc8d2fb2d8be9f6762763`
+- Judge schema SHA-256: `dfbcad96e39d7a0ba2503c7d345d86b54a6c9e1188ff1c09f99476b24380e820`
+- Eval definition SHA-256: `11398fbb2de74bd454f6e9c88338b5fcf6dffb0fd21436f1f6c99eaff5b1117d`
+- Metadata SHA-256: `31c2720a1114e612336c51527d7aae20dddb1f4e46b566ffffe4788d27952b8e`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_manual_entry_basis` | PASS | with_skill 明确接受 manual-handoff.md 中的显式 Manual Generation Handoff，并保留入口字段。 |
+| `routes_manual_gen` | PASS | with_skill 明确选择 selected_specialist: manual-gen，未改派其他 specialist。 |
+| `preserves_manual_handoff_context` | PASS | with_skill 保留 request_type、change_tier、feature_path、host_repository、manual_scope（以 confirmed_scope 表达）、evidence_sources、required_output 与 blockers_risks。 |
+| `references_manual_gate_only` | PASS | with_skill 指向 manual-gen authoritative Entry Gate，并明确路由边界：不采集截图、不生成正文、不写入站点文件。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a3cc737cbb46c53cc07ec65089d26bb1859146138c26d847279db190c633dcfa; fixture_sha256=7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8; output_sha256=939dd18b83baa441759def73fa3c7dd6f61a8a6f186f5a8cfdb1e1e078d30ee8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别入口凭据，路由至 manual-gen，保留上下文并停在 specialist gate 边界。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a3cc737cbb46c53cc07ec65089d26bb1859146138c26d847279db190c633dcfa; fixture_sha256=7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8; output_sha256=7a4c0fe3c14ba2bee699b05fc90b52bc83fcba24072d04c4bc519c0d5cc615ea; snapshot_sha256=10e8c8a895c274312d91e87ca89f644f3c6f2e3099f8f6385e33d5417421d464
+- Behavior: 直接生成并声明完成手册，产生 docs/site/manual/ 下的文件，未执行所需的 manual-gen 路由边界。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-007-route-manual-gen`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8` from `agents/docs/test/docs-agent/evals/workspace/eval-007-route-manual-gen`.
+- Fixture SHA-256: `7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8`
+- Prompt SHA-256: `a3cc737cbb46c53cc07ec65089d26bb1859146138c26d847279db190c633dcfa`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
+- Skill overlay SHA-256: `91cbb2dfbc7f79ee3f298d858c1e3b0b986717f5b79fc8d2fb2d8be9f6762763`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `11398fbb2de74bd454f6e9c88338b5fcf6dffb0fd21436f1f6c99eaff5b1117d`
+- Metadata SHA-256: `31c2720a1114e612336c51527d7aae20dddb1f4e46b566ffffe4788d27952b8e`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_manual_entry_basis` | PASS | with_skill 明确接受 manual-handoff.md 交接包，并识别其手册范围、宿主仓库、运行界面证据和所需输出。 |
+| `routes_manual_gen` | PASS | with_skill 明确选择 manual-gen，未改派其他 specialist。 |
+| `preserves_manual_handoff_context` | PASS | with_skill 保留了 request_type、change_tier、feature_path、host_repository、manual_scope（以 confirmed_scope 表述）、evidence_sources、required_output 和 blockers_risks。 |
+| `references_manual_gate_only` | PASS | with_skill 明确停在 manual-gen specialist 接管的路由边界，不生成或修改手册，也未要求暴露本地 SKILL.md 路径。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a3cc737cbb46c53cc07ec65089d26bb1859146138c26d847279db190c633dcfa; fixture_sha256=7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8; output_sha256=5f50e73ab617a481e002b0a53708c5b98004e996ce1e3e63035fef9191a114f9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确接受交接包，路由至 manual-gen，并停在 specialist 接管边界，未进行手册生成或工作区修改。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a3cc737cbb46c53cc07ec65089d26bb1859146138c26d847279db190c633dcfa; fixture_sha256=7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8; output_sha256=1886695e4f67a4c725a3f91b2c3ca56a7633ef208f7a457f3441009607de914c; snapshot_sha256=c8614e382a658eccbfcd08c298394ee6e41d3c983c39951f3de422aacfbba91d
+- Behavior: 直接生成并交付手册及 SVG 示意图，未执行入口路由。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-007-route-manual-gen`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8` from `agents/docs/test/docs-agent/evals/workspace/eval-007-route-manual-gen`.
+- Fixture SHA-256: `7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8`
+- Prompt SHA-256: `a3cc737cbb46c53cc07ec65089d26bb1859146138c26d847279db190c633dcfa`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e64e4dc492a2ff92be09822529f9abb1fbd17f4d0148b3045e0162382c5d46d3`
+- Skill overlay SHA-256: `6214a7a342b55bde83bd1137337eab9c9044050e4bd53613b5541dbb41ce704b`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `11398fbb2de74bd454f6e9c88338b5fcf6dffb0fd21436f1f6c99eaff5b1117d`
+- Metadata SHA-256: `31c2720a1114e612336c51527d7aae20dddb1f4e46b566ffffe4788d27952b8e`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_manual_entry_basis` | FAIL | 虽称接受 formal Docs 交接包并选择 manual-gen，但错误声称缺少 docs/site 基础设施及多项入口字段，未认可 fixture 已提供的完整入口凭据。 |
+| `routes_manual_gen` | FAIL | 先选定 manual-gen，随后明确要求改派 docs-site-bootstrap，违反不得改派的要求。 |
+| `preserves_manual_handoff_context` | FAIL | 未保留并呈现 request_type、change_tier、feature_path、host_repository、manual_scope、evidence_sources、required_output 与 blockers_risks，反而声称存在 fixture 未要求的缺失字段。 |
+| `references_manual_gate_only` | FAIL | 虽提及 manual-gen specialist，但实际要求确认交由 docs-site-bootstrap 处理，未停在 manual-gen router 边界。未发生站点写入、截图采集或审计 handoff。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a3cc737cbb46c53cc07ec65089d26bb1859146138c26d847279db190c633dcfa; fixture_sha256=7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8; output_sha256=018422ab5983124489b1533020c0377ec5806e6aa5e0e9925cef6603ce8b73ac; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别并选定 manual-gen，但错误判定入口不完整并将后续处理改派 docs-site-bootstrap；未写入文件。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a3cc737cbb46c53cc07ec65089d26bb1859146138c26d847279db190c633dcfa; fixture_sha256=7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8; output_sha256=d213a48d330e764d41e2c6368759a29d622f225c9a04e48c2d6956cf0b496568; snapshot_sha256=7b8956230334591da027c8e1f52e9944108886cec393da749f71b2184d52e68c
+- Behavior: 直接生成并声明已完成手册及 SVG，产生 docs/site/manual/ 下未跟踪文件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 错误否定 fixture 已提供的 manual-gen 入口凭据。
+- with_skill 将请求改派至 docs-site-bootstrap，违反路由和 router 边界要求。
+- with_skill 未保留所需的手册交接上下文字段。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-007-route-manual-gen`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8` from `agents/docs/test/docs-agent/evals/workspace/eval-007-route-manual-gen`.
+- Fixture SHA-256: `7e690828debd990987ec359671232498f20061c2fa6e2bbd324f99b92a7c2fc8`
+- Prompt SHA-256: `a3cc737cbb46c53cc07ec65089d26bb1859146138c26d847279db190c633dcfa`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `e64e4dc492a2ff92be09822529f9abb1fbd17f4d0148b3045e0162382c5d46d3`

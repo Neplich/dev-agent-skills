@@ -23,9 +23,13 @@ If the input includes a completed PM spec, treat it as design input only, not as
 
 Make that boundary explicit in the delivered design document and final
 handoff: the PM spec authorizes design input only, no code or implementation.
-After writing `docs/design/{feature_path}/ui-ux-spec.md`, direct the next step
-to `engineer-agent` with the design path and remaining implementation scope;
-do not merely say that the document is “engineering ready.”
+After writing `docs/design/{feature_path}/ui-ux-spec.md`, record the design path
+and remaining implementation scope. Direct the next step to `engineer-agent`
+only when implementation continuation was requested or already authorized;
+otherwise stop at the completed design result without activating engineering.
+When change-map discovery finds a required formal page marked
+`last_verified_version: unverified`, state that it is low-trust and verify its
+claims against code before using it as design input.
 
 When updating an existing design doc, the body states only the current design:
 superseded layouts, journeys, or patterns are rewritten, not kept with

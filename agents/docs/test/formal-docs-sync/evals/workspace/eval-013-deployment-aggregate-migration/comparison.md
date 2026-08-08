@@ -14,6 +14,254 @@
 - Fixture version/source: canonical manifest `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-013-deployment-aggregate-migration`.
 - Fixture SHA-256: `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4`
 - Prompt SHA-256: `ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `cb68cc7396b4ed1007a2bd5b5970baa015053110168fade98a969dbebc84c1b1`
+- Eval definition SHA-256: `2adf472912fe37066628cc2da23affed241d146a6c7c80728c7df93b4f2fccc7`
+- Metadata SHA-256: `24118b2c28e807c2d8787e545057d4e67c26fd6313bf8abe3b22a58982fbfa17`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `migrates_aggregate_path` | PASS | Locked delivery snapshot deletes docs/site/ops/deployment.md and adds deployment/index.md, environment-reference.md, and development, docker, and kubernetes-helm page trees. |
+| `repairs_inbound_and_internal_links` | PASS | Locked files update both inbound links to deployment/index.md; the new root links resolve to all class pages and environment-reference.md, and no residual old aggregate links remain in the checked files. |
+| `updates_change_map_without_data_loss` | PASS | Locked change-map content maps each deployment glob to root, shared environment, and class pages while preserving custom_owner_field, exclude, and the unrelated src/product mapping. |
+| `updates_navigation_atomically` | PASS | With-skill evidence records npm run test:docs exit 0, git diff --check exit 0, no formal old-path remnants, and a coordinated snapshot containing navigation, moved pages, links, change-map updates, and consolidated facts. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4; output_sha256=5077aba73143ee46ad58b2537d4287c8cc783ec52d5e442329da8c295c7d1e47; snapshot_sha256=b8fb2a9995e508f6e4d33f6242c40730a14a000f80bbbce82f83a0c1d13afc87
+- Behavior: Completed the migration with the full page tree, repaired links, expanded change-map entries, preserved fields, and passing documentation tests.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4; output_sha256=d89c40f4b13f317991a77ee7fe6cfb2a0eaf54eb5e2c4b159b4a5bba10b340dc; snapshot_sha256=f671f7d7dc033436c1d9f37a04972c40a4df0ccef01fe720f7f0b0d0399a9dee
+- Behavior: Deleted and split the aggregate page and repaired basic links, but mapped each category only to its class page and omitted root/shared pages from required_docs.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-013-deployment-aggregate-migration`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-013-deployment-aggregate-migration`.
+- Fixture SHA-256: `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4`
+- Prompt SHA-256: `ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e1b96c87b6eb051a20a849fc51ca738b49866387566d5f61a7cdde4f1fc422cd`
+- Skill overlay SHA-256: `44e860f93f5d468075d88a048afe986ad68fcbae84270ffdc4d5a090573d59b8`
+- Judge schema SHA-256: `cb68cc7396b4ed1007a2bd5b5970baa015053110168fade98a969dbebc84c1b1`
+- Eval definition SHA-256: `2adf472912fe37066628cc2da23affed241d146a6c7c80728c7df93b4f2fccc7`
+- Metadata SHA-256: `24118b2c28e807c2d8787e545057d4e67c26fd6313bf8abe3b22a58982fbfa17`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `migrates_aggregate_path` | PASS | delivery_snapshot 删除旧聚合页并创建根索引、共享环境参考页及 Development、Docker、Kubernetes/Helm 三类子页；根索引和子页未复制旧聚合正文。 |
+| `repairs_inbound_and_internal_links` | PASS | ops/index.md 和 product/runtime.md 均改为指向 deployment/index.md；根索引及三个子页中的相对链接均可解析。 |
+| `updates_change_map_without_data_loss` | PASS | 三个部署 glob 的 required_docs 均稳定包含新根索引、environment-reference.md 和对应类别页，同时保留 exclude、custom_owner_field、trigger 及 src/product 无关映射。 |
+| `updates_navigation_atomically` | NOT_EXERCISED | 页面移动、链接修复、change-map 更新和重复内容归并均有交付证据，且候选报告 npm run test:docs 退出码为 0、无旧聚合链接；但 Public/Internal 递归导航配置在 fixture 中不存在，完整导航更新无法独立验证。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4; output_sha256=6b7fce31b656709a5a9d8b72b1036b03b71d85daf10d0b886d6658aca9c33f6f; snapshot_sha256=015a26a30affc04044dbe339ae43729f518b837a57b1a887b0aa8c18cdc5bb08
+- Behavior: 完成聚合页迁移、三类页面拆分、链接修复及 change-map 更新；测试报告通过。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4; output_sha256=623880000472d1854502a87297f69df5c5b855e81b36f77d4978fea89e7187bf; snapshot_sha256=3db5bbe88d5c98715d4e86ceec1fc42f672f7925e8691f605c0a79b16fac5dc8
+- Behavior: 完成基础迁移、入链修复和类别映射，但未将 required_docs 扩展为根索引、共享环境页及类别页的闭包。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 补充或提供 Public/Internal 递归导航配置及其验证结果。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-013-deployment-aggregate-migration`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-013-deployment-aggregate-migration`.
+- Fixture SHA-256: `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4`
+- Prompt SHA-256: `ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e1b96c87b6eb051a20a849fc51ca738b49866387566d5f61a7cdde4f1fc422cd`
+- Skill overlay SHA-256: `44e860f93f5d468075d88a048afe986ad68fcbae84270ffdc4d5a090573d59b8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `2adf472912fe37066628cc2da23affed241d146a6c7c80728c7df93b4f2fccc7`
+- Metadata SHA-256: `24118b2c28e807c2d8787e545057d4e67c26fd6313bf8abe3b22a58982fbfa17`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `migrates_aggregate_path` | FAIL | with_skill reports a blocked gate and explicitly states that no batch was completed and no files were written; its delivery_snapshot is empty. |
+| `repairs_inbound_and_internal_links` | FAIL | with_skill made no workspace changes, so the required inbound-link repairs and resolvable nested links were not delivered. |
+| `updates_change_map_without_data_loss` | FAIL | with_skill only proposes a change-map delta and states that nothing was written; the required updated mapping is absent from its delivery evidence. |
+| `updates_navigation_atomically` | FAIL | with_skill did not perform the confirmed atomic migration and did not run the documentation test; it explicitly reports no completed batch and no written changes. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4; output_sha256=d8168b4c8f998e7bead5ce909b532a28009ecf50d3157e523ac123c3213a9925; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Identified the confirmed batch but incorrectly stopped at a claimed missing prerequisite and made no changes.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4; output_sha256=18750111e3b15d81e9663dc7eb62f0e256958cda3a4d7a8717d9475afccc2c45; snapshot_sha256=8d44595a8215d44ee3cfd795c94f9e49ca71dd1510736f3611293e8632364a98
+- Behavior: Delivered the migration files, links, and change-map updates; claimed docs tests passed.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill lane did not execute the requested confirmed migration despite the fixture providing the handoff, deployment evidence, and test script.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-013-deployment-aggregate-migration`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-013-deployment-aggregate-migration`.
+- Fixture SHA-256: `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4`
+- Prompt SHA-256: `ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a612d50c32b84c65fad3cad08aad2d416a3a33647abfa1462784c1e58022424b`
+- Skill overlay SHA-256: `e55ecf59b3cd8d90a2ed4cf555bed2ad2fc2131494e0914246a868317b68f4e8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `2adf472912fe37066628cc2da23affed241d146a6c7c80728c7df93b4f2fccc7`
+- Metadata SHA-256: `2032fa363929f7a2591d02e3cb7c7d2c88a00667a0537649e0b9a34bb8bbffa9`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `migrates_aggregate_path` | PASS | with_skill 的交付快照删除旧聚合页，创建根索引、共享环境引用页及 Development、Docker、Kubernetes/Helm 页面；共享事实集中在 environment-reference.md，分类页未复制旧聚合正文。 |
+| `repairs_inbound_and_internal_links` | PASS | with_skill 快照确认 ops/index.md 和 product/runtime.md 已指向 deployment/index.md，且三个分类页与共享环境页的相对链接已更新并可由文档测试验证。 |
+| `updates_change_map_without_data_loss` | PASS | with_skill 将每个部署类别映射到根索引、共享环境页和对应分类页，并保留 custom_owner_field、exclude、trigger 及 src/product 无关映射。 |
+| `updates_navigation_atomically` | NOT_EXERCISED | 快照和测试证明了已交付的页面、链接及 change-map 结果，且 npm run test:docs 通过、无旧聚合链接；但锁定原始证据无法证明递归导航覆盖或这些变更是否作为同一原子操作完成。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4; output_sha256=1a47edb5ca542c49c863438bd77ed4ff37ec7aa0798587ffb3bccdc88ff5a567; snapshot_sha256=a9a2caf558de4a03ab67a61193432123e7f44eeb54d08cbdd1bd48fdf224d586
+- Behavior: 完成页面树迁移、入链修复、共享环境引用、分类 change-map 拆分与字段保留；文档测试和 diff 检查通过，后续审计因缺少目标发布版本而暂停。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4; output_sha256=c09aea29410bd7f808678dec00d3aeb7cfbbcfe254194377e66460faf127a8d5; snapshot_sha256=8f32f279cd699e6e1c1cb02f9557cde24963b40b01f4093ce2d1459797303fd8
+- Behavior: 完成了主要迁移、入链修复和分类 change-map 更新，但未把共享环境页加入各类别映射，且验证信息较少。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 如需完整覆盖 updates_navigation_atomically，应提供导航配置/递归链接检查结果及原子变更过程证据。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-013-deployment-aggregate-migration`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-013-deployment-aggregate-migration`.
+- Fixture SHA-256: `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4`
+- Prompt SHA-256: `ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `52db6badcefada59a1d42e81de2581f06256f43c060b7699c281ab21bfb40949`

@@ -14,6 +14,259 @@
 - Fixture version/source: canonical manifest `e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910` from `agents/product_manager/test/feature-catalog/evals/workspace/eval-002-child-feature-under-parent-prd`.
 - Fixture SHA-256: `e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910`
 - Prompt SHA-256: `d30a63f3453aaf3bd01618d870dc101f5d610329fec8c95cdf338a27c46a679e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `272c84e241c5d52534922fccf2bc6732492a0d70c9f6e2ab8dc1eff2533f7b0c`
+- Skill overlay SHA-256: `c7fd56e26e53c8ea32b598e8f4e06588e28aee376ed79eb9822ecf37e3099222`
+- Judge schema SHA-256: `c03c0410b926db4903e624e0fe3e993a88d8b355caa51278c9f027aa7078ef66`
+- Eval definition SHA-256: `381b074083537f3d71cb0a28bd3dbbcbf80ece8371ca5fba3a891d822f995603`
+- Metadata SHA-256: `9511751d671a5ae5883161ea664a79cdce7fc89cb2e17e607a976174a239c8f6`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `parent_prd_context_read` | NOT_EXERCISED | The output references the existing order-management PRD and reuses its feature_path, but the locked output cannot prove the required read order. |
+| `child_nested_under_parent` | PASS | It proposes order-management/refunds as a level-2 child of order-management, not a new top-level directory. |
+| `feature_level_metadata` | PASS | It specifies parent_feature as order-management and feature_level as 2, matching the two path segments. |
+| `handoff_packet_fields` | NOT_EXERCISED | The workflow pauses for user confirmation before generating the handoff packet, so the later packet-field requirement is not yet exercisable. |
+| `no_bulk_prd` | PASS | No PRD or TRD was generated; subsequent PRD/DECISIONS work is directed to idea-to-spec and TRD generation to engineer-agent:trd-gen. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d30a63f3453aaf3bd01618d870dc101f5d610329fec8c95cdf338a27c46a679e; fixture_sha256=e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910; output_sha256=4e9a6207537d263c4102d1fba62ddeabcbcc7740b4b6ab43c04944f9db438448; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly identifies the refund feature as a nested level-2 feature and pauses for confirmation before handoff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d30a63f3453aaf3bd01618d870dc101f5d610329fec8c95cdf338a27c46a679e; fixture_sha256=e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910; output_sha256=70ce617b495552b8939d808b6164a1334802f2caec4aa12033dce9ab24d7cfe0; snapshot_sha256=9457af2f83f3a465a71b79fd195f7ae23de910fb46d99f177ddade17b60e3ca8
+- Behavior: Generated catalog and PRD files directly, including a refund PRD, without the confirmation gate.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Obtain user confirmation, then evaluate the handoff packet fields from the subsequent output.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `feature-catalog`
+- Eval: `eval-002-child-feature-under-parent-prd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910` from `agents/product_manager/test/feature-catalog/evals/workspace/eval-002-child-feature-under-parent-prd`.
+- Fixture SHA-256: `e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910`
+- Prompt SHA-256: `d30a63f3453aaf3bd01618d870dc101f5d610329fec8c95cdf338a27c46a679e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `272c84e241c5d52534922fccf2bc6732492a0d70c9f6e2ab8dc1eff2533f7b0c`
+- Skill overlay SHA-256: `c7fd56e26e53c8ea32b598e8f4e06588e28aee376ed79eb9822ecf37e3099222`
+- Judge schema SHA-256: `c03c0410b926db4903e624e0fe3e993a88d8b355caa51278c9f027aa7078ef66`
+- Eval definition SHA-256: `381b074083537f3d71cb0a28bd3dbbcbf80ece8371ca5fba3a891d822f995603`
+- Metadata SHA-256: `9511751d671a5ae5883161ea664a79cdce7fc89cb2e17e607a976174a239c8f6`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `parent_prd_context_read` | NOT_EXERCISED | 输出提到既有 order-management 及其 feature_path，并列出 docs/pm/order-management/PRD.md；但锁定证据无法证明实际先读取该 PRD 的过程。 |
+| `child_nested_under_parent` | PASS | 明确建议 feature_path 为 order-management/refunds，并明确不新建并列一级目录。 |
+| `feature_level_metadata` | PASS | 建议数据包含 parent_feature: order-management、feature_level: 2，且 order-management/refunds 为两段路径。 |
+| `handoff_packet_fields` | NOT_EXERCISED | 候选输出正确请求确认，并说明确认后再更新目录和交接；但确认尚未发生，因此完整 handoff packet 字段及 catalog 证据归并尚未可执行。 |
+| `no_bulk_prd` | PASS | 未生成退款 PRD/TRD 正文；后续分别指向 idea-to-spec 和 engineer-agent:trd-gen。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d30a63f3453aaf3bd01618d870dc101f5d610329fec8c95cdf338a27c46a679e; fixture_sha256=e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910; output_sha256=094491e3add12a52317c6beaa42e70a9536d1fee0b8c3edd6483122b9f1ba658; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别退款为 order-management 下的二级子功能，提供父子元数据，并等待用户确认后继续交接。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d30a63f3453aaf3bd01618d870dc101f5d610329fec8c95cdf338a27c46a679e; fixture_sha256=e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910; output_sha256=46a5fdf7e6c478c57351df3e4d8b318fbafb591a0efdf36e02259004ea64bb1c; snapshot_sha256=e8ec361056b8fb72fcfb92958087186fa43b8bcd79045c26129a44f60e907f09
+- Behavior: 实际生成了功能目录和功能画像文件，结构上满足多数目录要求，但确认后流程未采用完整 handoff 契约。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 用户确认退款目录归属和业务规则后，再生成完整 handoff packet 并更新确认后的功能目录。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `feature-catalog`
+- Eval: `eval-002-child-feature-under-parent-prd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910` from `agents/product_manager/test/feature-catalog/evals/workspace/eval-002-child-feature-under-parent-prd`.
+- Fixture SHA-256: `e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910`
+- Prompt SHA-256: `d30a63f3453aaf3bd01618d870dc101f5d610329fec8c95cdf338a27c46a679e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `272c84e241c5d52534922fccf2bc6732492a0d70c9f6e2ab8dc1eff2533f7b0c`
+- Skill overlay SHA-256: `c7fd56e26e53c8ea32b598e8f4e06588e28aee376ed79eb9822ecf37e3099222`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `381b074083537f3d71cb0a28bd3dbbcbf80ece8371ca5fba3a891d822f995603`
+- Metadata SHA-256: `9511751d671a5ae5883161ea664a79cdce7fc89cb2e17e607a976174a239c8f6`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `parent_prd_context_read` | NOT_EXERCISED | 输出引用并复用了 docs/pm/order-management/PRD.md 与 order-management，但锁定证据无法证明先读父 PRD 的读取顺序。 |
+| `child_nested_under_parent` | PASS | 明确建议 order-management/refunds，并明确不建议新建顶层 refunds，符合父路径下的 lower kebab-case 子路径。 |
+| `feature_level_metadata` | PASS | 输出包含 parent_feature: order-management、feature_level: 2，且建议路径 order-management/refunds 为两段路径。 |
+| `handoff_packet_fields` | FAIL | 交接包列出了 feature、feature_path、parent_feature、feature_level，但遗漏了 feature_path_evidence，也未提供 {source, reason} 条目列表或确认后的 catalog 证据归并。 |
+| `no_bulk_prd` | FAIL | 未直接生成 PRD/TRD 正文，但把 PRD/DECISIONS 后续交给 idea-to-spec；断言要求指向 prd-gen，并要求 Engineer TRD 显式指向 engineer-agent:trd-gen。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d30a63f3453aaf3bd01618d870dc101f5d610329fec8c95cdf338a27c46a679e; fixture_sha256=e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910; output_sha256=b3a13362da3aebaffcbb92f3d302972e6e5ad26b20bd7797d522ab36615b6acf; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别父功能并提出嵌套二级路径及一致元数据，但交接包缺少 feature_path_evidence，且后续 PRD 路由使用了 idea-to-spec 而非要求的 prd-gen。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d30a63f3453aaf3bd01618d870dc101f5d610329fec8c95cdf338a27c46a679e; fixture_sha256=e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910; output_sha256=e9dae9da884b31cdb944e0174df01a3df315d792ab7b319e4f6a1948a37b2dd4; snapshot_sha256=be5370caed859c298cb27005f884a3bec2ba72d5e3c86b12db20aa0207f8f190
+- Behavior: 实际交付了功能目录和退款功能画像，路径与层级判断正确，但确认后流程未形成完整 handoff packet，且未体现要求的 PRD/TRD 路由。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill lane 的 handoff packet 缺少 feature_path_evidence 及其共享契约格式。
+- with_skill lane 未按要求将 PRD/DECISIONS 指向 prd-gen，并未显式给出 Engineer TRD 的 engineer-agent:trd-gen 路由。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `feature-catalog`
+- Eval: `eval-002-child-feature-under-parent-prd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910` from `agents/product_manager/test/feature-catalog/evals/workspace/eval-002-child-feature-under-parent-prd`.
+- Fixture SHA-256: `e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910`
+- Prompt SHA-256: `d30a63f3453aaf3bd01618d870dc101f5d610329fec8c95cdf338a27c46a679e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e4cd9b0e262233f5d6a944962f6bf7c4c1323776752d0c1e41ea8bac4c33f829`
+- Skill overlay SHA-256: `3f39f62240fb387c41fff7ebe0f42bb66e13cd2eda97d0b2c78636c06bb45d87`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `381b074083537f3d71cb0a28bd3dbbcbf80ece8371ca5fba3a891d822f995603`
+- Metadata SHA-256: `9511751d671a5ae5883161ea664a79cdce7fc89cb2e17e607a976174a239c8f6`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `parent_prd_context_read` | PASS | With-skill output cites docs/pm/order-management/PRD.md as the existing PRD and preserves order-management as the parent feature path. |
+| `child_nested_under_parent` | PASS | It proposes order-management/refunds as a level-2 child path, not a top-level directory. |
+| `feature_level_metadata` | PASS | The output specifies parent_feature: order-management and feature_level: 2, matching the two-segment suggested path. |
+| `handoff_packet_fields` | FAIL | It mentions generating a PM handoff but does not provide the required handoff packet fields or feature_path_evidence as a {source, reason} entry list derived from the confirmed catalog. |
+| `no_bulk_prd` | PASS | It does not generate PRD/TRD正文 and explicitly routes PM documents to prd-gen and the Engineer TRD to engineer-agent:trd-gen. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d30a63f3453aaf3bd01618d870dc101f5d610329fec8c95cdf338a27c46a679e; fixture_sha256=e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910; output_sha256=00df3baa8279ae385661b50c3da26db96f945a269192ceec688655ca2fb6c8fa; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly reads and preserves the parent PRD context, proposes a nested refund path with consistent metadata, requests confirmation, and routes subsequent PM/TRD generation to the designated agents; omits the required handoff packet details.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d30a63f3453aaf3bd01618d870dc101f5d610329fec8c95cdf338a27c46a679e; fixture_sha256=e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910; output_sha256=ec9216b35a511152f68712ef0a612a19cc898838cb0563edcbb3f8510f7c7d88; snapshot_sha256=ec716034335e51bdd6d6dcce5fee67ad4d91ee0234b19181c138dcc0a01eb25c
+- Behavior: Created a catalog file and correctly nested refund under order-management, but proposed directly creating a PRD without routing through prd-gen or engineer-agent:trd-gen.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- handoff_packet_fields: required handoff packet fields and shared-contract feature_path_evidence were omitted.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `feature-catalog`
+- Eval: `eval-002-child-feature-under-parent-prd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910` from `agents/product_manager/test/feature-catalog/evals/workspace/eval-002-child-feature-under-parent-prd`.
+- Fixture SHA-256: `e64d0dc500eb5720a57f43e64b9a52c75b87f674117c2e966a459db4cd412910`
+- Prompt SHA-256: `d30a63f3453aaf3bd01618d870dc101f5d610329fec8c95cdf338a27c46a679e`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `e4cd9b0e262233f5d6a944962f6bf7c4c1323776752d0c1e41ea8bac4c33f829`

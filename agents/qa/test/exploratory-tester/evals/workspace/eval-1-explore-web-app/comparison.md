@@ -14,6 +14,202 @@
 - Fixture version/source: canonical manifest `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7` from `agents/qa/test/exploratory-tester/evals/workspace/eval-1-explore-web-app`.
 - Fixture SHA-256: `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7`
 - Prompt SHA-256: `b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `4e2073febaef7202820d7977feb83c73b7673e1200e4724a3f37b54a20923059`
+- Skill overlay SHA-256: `bb6d955d3f1008412eca24a4e3e97d4883ccffc96444f5d6d3cd037fea0800ba`
+- Judge schema SHA-256: `3783048bfb479d6e8907a0e84c4199cb646178dd63c9a58d60ddd654db2122dc`
+- Eval definition SHA-256: `32b9d61e575fbee81406ffc68edbaec9418feec621754c8fca12fc2f2edd2c08`
+- Metadata SHA-256: `228751d86855b3dcdb583bdc4a44c4a493c28334ed74368c030ddad805b1f314`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | 交接报告直接包含 Surface、15 分钟 Timebox、Heuristics 和 Escalation signals。 |
+| `assertion_2` | NOT_EXERCISED | 报告声称已读取相关 QA 资料并说明未新增场景或脚本，但锁定证据无法独立证明实际读取顺序。 |
+| `assertion_3` | PASS | 15 分钟明确来自用户请求，并围绕 SearchPanel、FilterPills、ResultsList 及键盘焦点风险组织范围。 |
+| `assertion_4` | PASS | 报告区分已确认失败、环境阻塞、风险与未探索缺口，并明确未将阻塞或未确认信号写成产品缺陷。 |
+| `assertion_5` | NOT_EXERCISED | 报告采用 charter、优先路径和恢复后的探索清单；但因 QA_BASE_URL 缺失，实际页面路径与边界尚未执行。 |
+| `assertion_6` | PASS | 锁定报告包含 charter、timebox、covered/gaps、证据链和后续动作，具备交接结构。 |
+| `deduplicates_existing_flows` | PASS | 报告复用 TC-001，并明确未新增或修改 TC、script、FLOW_INDEX；未发现可沉淀的新流程。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=449dd945645863b11ef2b483a68e36f8e048438416df5e57fa82d4c21911f400; snapshot_sha256=d8573e39c0ebb16cbf0cfcff0ddec52f29c46fa068c608793a00691201f47188
+- Behavior: 完成预检并交付结构完整的探索测试报告，准确标记 blocked，未虚构运行时结果。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=007805819ddbba47c04eeb05979490572e7cfdba59e3e7ee1ca7c60413c41e76; snapshot_sha256=f30d5320795192b7b776ac66fcd576daffd6ac2d410500878da06179de8481d7
+- Behavior: 同样交付了 blocked 交接报告，但结构与证据链较简略。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 提供 QA_BASE_URL 及必要登录/种子数据。
+- Next: 从 TC-001 开始执行筛选、空状态和键盘焦点路径，并保存截图、console/network 证据。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `exploratory-tester`
+- Eval: `eval-001-explore-web-app`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7` from `agents/qa/test/exploratory-tester/evals/workspace/eval-1-explore-web-app`.
+- Fixture SHA-256: `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7`
+- Prompt SHA-256: `b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `4e2073febaef7202820d7977feb83c73b7673e1200e4724a3f37b54a20923059`
+- Skill overlay SHA-256: `309e638cb435584c0554aa29877ece640f9c06e93b9c36547885aff61a5b9761`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `32b9d61e575fbee81406ffc68edbaec9418feec621754c8fca12fc2f2edd2c08`
+- Metadata SHA-256: `228751d86855b3dcdb583bdc4a44c4a493c28334ed74368c030ddad805b1f314`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | 报告包含 Charter，明确列出 Surface、Heuristics 和 Escalation signals，并记录了探索目标与范围。 |
+| `assertion_2` | NOT_EXERCISED | 交付报告声明已读取 TEST_SUITE.md、FLOW_INDEX.md、cases 和 scripts；但锁定原始证据无法独立证明具体读取顺序。FLOW_INDEX.md 已更新，且报告说明未新增重复 TC 或脚本。 |
+| `assertion_3` | PASS | 报告将请求的 15 分钟作为 Requested timebox，并围绕 SearchPanel、FilterPills、ResultsList 及焦点移动风险组织覆盖。 |
+| `assertion_4` | PASS | 报告明确分开列出 Observed issues、Suspicious but unconfirmed signals 和 Gaps not explored，且未将未确认信号写成缺陷。 |
+| `assertion_5` | PASS | 报告以 chartered exploration 的既有过滤流程、空状态转换和键盘焦点路径为主，并明确记录实际仅完成 preflight、浏览器路径未执行及对应证据计划。 |
+| `assertion_6` | PASS | 交付报告包含 Charter、timebox、Exploration path covered、evidence/context used 和 Recommended next actions，具备交接用途。 |
+| `deduplicates_existing_flows` | PASS | 候选复用 TC-001，并更新 FLOW_INDEX.md；报告明确因未确认新的可复用场景而未新增 TC 或匹配脚本。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=43a4b3e2b87c24311938956750d0d6922aae942c313e2cae2533fccb1d88799e; snapshot_sha256=36cc574885e4e61c88df1a4919f344d1a5030202907eabfd640cfade3d3cb49a
+- Behavior: 完成结构化 preflight 和交接报告，更新 FLOW_INDEX.md，准确记录浏览器探索因 QA_BASE_URL 缺失而未启动。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=6a39556e0466013bc04fd4e7e4af17f70b83dac9372f8dbace70f6905dd18f21; snapshot_sha256=17c83543e0c6619bd21918f3f459c64ea2c13a5beaafce236604a4cf034ed61c
+- Behavior: 生成了探索交接报告并记录 QA_BASE_URL 阻塞，但未更新既有 FLOW_INDEX.md。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 提供 QA_BASE_URL 后执行报告中列出的 TC-001、空状态和键盘导航探索，并收集截图、DOM、焦点、控制台及网络证据。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `exploratory-tester`
+- Eval: `eval-001-explore-web-app`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7` from `agents/qa/test/exploratory-tester/evals/workspace/eval-1-explore-web-app`.
+- Fixture SHA-256: `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7`
+- Prompt SHA-256: `b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `4e2073febaef7202820d7977feb83c73b7673e1200e4724a3f37b54a20923059`
+- Skill overlay SHA-256: `23db194a7054f16c3f5fe20dc1cc233144d744a52637ad6168a69719aac6860b`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `32b9d61e575fbee81406ffc68edbaec9418feec621754c8fca12fc2f2edd2c08`
+- Metadata SHA-256: `228751d86855b3dcdb583bdc4a44c4a493c28334ed74368c030ddad805b1f314`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | Report includes charter scope, surfaces, heuristics, and escalation signals. |
+| `assertion_2` | NOT_EXERCISED | The report claims the relevant files were read and updates FLOW_INDEX without adding duplicate cases, but locked evidence cannot prove the required read order. |
+| `assertion_3` | PASS | The 15-minute timebox is sourced from the prompt, and exploration prioritizes the changed surfaces and nearby keyboard/focus risks. |
+| `assertion_4` | PASS | Report separately labels observed issues, suspicious but unconfirmed signals, and gaps not explored. |
+| `assertion_5` | PASS | The report uses a chartered path with explicit filter, empty-state, keyboard, recovery, and evidence plans, while accurately stating that runtime execution was blocked. |
+| `assertion_6` | PASS | Report contains charter, timebox, covered exploration path, evidence used, and recommended next actions. |
+| `deduplicates_existing_flows` | PASS | It reuses TC-001, updates FLOW_INDEX, and creates no duplicate TC or script. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=246af9a60423336bb2ac070c0bfbb14a5807660a544db29faa7a5cdd90df4120; snapshot_sha256=438edd0bd0a30b478c55f72a6259d12c7f28907615aed1d8d45875829afec7a8
+- Behavior: Produced a structured exploratory report, updated FLOW_INDEX, reused TC-001, separated evidence categories, and accurately reported the QA_BASE_URL execution block.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=8daf0f80fc65c85dd497ee3a4d246832e9b5f3be144558e7f701d60c01dbd5e7; snapshot_sha256=2bfdb6def22113b3d992266e26b01bd1369a12c5e3e2126788c5e708b1bd8b70
+- Behavior: Produced a handoff report with the blocker, reused TC-001, charter, and follow-up evidence requirements.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `exploratory-tester`
+- Eval: `eval-001-explore-web-app`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7` from `agents/qa/test/exploratory-tester/evals/workspace/eval-1-explore-web-app`.
+- Fixture SHA-256: `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7`
+- Prompt SHA-256: `b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `4e2073febaef7202820d7977feb83c73b7673e1200e4724a3f37b54a20923059`

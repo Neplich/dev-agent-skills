@@ -50,6 +50,15 @@ execution entry is missing, separately mark original-failure recheck, fixed
 behavior, adjacent checks, and release recommendation as `blocked` or
 `not executed`; use `needs more verification` or `blocked` as the release
 recommendation instead of a vague conclusion.
+Include the platform-version check itself in those explicit blocked/not-executed
+fields. For a feature-update run, append only the affected TC's `result.md` and
+`testcase.snapshot.md`; do not create a feature or release `_reports` summary
+unless the requested reporting scope requires one.
+Every regression conclusion includes `evidence_confidence` with a concrete
+level and rationale based on the available original failure, fix, environment,
+and execution evidence, including when the overall result is blocked.
+It also records `platform_version_status` and `release_recommendation`
+explicitly, including their blocked or not-executed rationale.
 
 For every executed E2E TC, append the run to
 `results/TC-NNN-<short-slug>/{platform-version}/result.md` and preserve

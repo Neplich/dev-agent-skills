@@ -31,6 +31,11 @@ checkpoint response:
 verification, rollout/rollback, observability, error-handling, and security
 decisions still needed. A request to skip alignment or confirmation remains
 blocked and never becomes permission to write a repair plan or code.
+The checkpoint prints the resolved `feature_path` value, not only PRD/TRD
+paths. For requirement changes, explicitly prohibit writing the new expectation
+into `docs/qa/e2e/` before PRD, TRD, and plan alignment, even when the user asks
+to skip alignment. Any future QA E2E handoff names the confirmed
+`IMPLEMENTATION_PLAN.md` it will consume.
 
 ## When to Use
 

@@ -940,7 +940,7 @@ class EvalContractTests(unittest.TestCase):
             schema = scripts / "eval_judge_result.schema.json"
             executor.write_text("executor v1\n", encoding="utf-8")
             runtime.write_text("runtime v1\n", encoding="utf-8")
-            schema.write_text('{"schema": 1}\n', encoding="utf-8")
+            schema.write_bytes(runner.JUDGE_SCHEMA.read_bytes())
             old_file, old_schema = runner.__file__, runner.JUDGE_SCHEMA
             runner.__file__, runner.JUDGE_SCHEMA = str(executor), schema
             try:
@@ -988,7 +988,9 @@ class EvalContractTests(unittest.TestCase):
                     "target skill": (skill, lambda data: data + b"dirty skill\n"),
                     "executor": (executor, lambda data: data + b"dirty executor\n"),
                     "runtime": (runtime, lambda data: data + b"dirty runtime\n"),
-                    "judge schema": (schema, lambda data: data + b"dirty schema\n"),
+                    "judge schema": (schema, lambda data: data.replace(
+                        b'"Skill eval judge result"', b'"Changed judge result"',
+                    )),
                     "fixture": (fixture, lambda data: data + b"dirty fixture\n"),
                 }
                 for label, (path, mutate) in mutations.items():

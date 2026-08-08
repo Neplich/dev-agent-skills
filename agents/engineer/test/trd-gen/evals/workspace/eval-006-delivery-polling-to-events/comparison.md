@@ -14,6 +14,317 @@
 - Fixture version/source: canonical manifest `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74` from `agents/engineer/test/trd-gen/evals/workspace/eval-006-delivery-polling-to-events`.
 - Fixture SHA-256: `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74`
 - Prompt SHA-256: `4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `73cec46ef0287c25bd7a41d37b6bcee4e1ea25b1101672fb45bd299ecec77b0d`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `58d5f8c73c18457a8d0864b8f5e21613dc914d57c8f96acc11ce98a78c601f05`
+- Eval definition SHA-256: `ec0b30178f28a00245f34e8794f34ea3d889794c5e097f45505840818ce3d657`
+- Metadata SHA-256: `c58e464b2f51cbecc05208e0f4320ff2bade980227072a25840336ba048c489e`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `updates_existing_trd` | PASS | with_skill delivery_snapshot contains only docs/engineer/delivery-pipeline/TRD.md, with the target TRD updated and status showing only that file modified. |
+| `body_consolidation` | PASS | The locked TRD content describes event-driven delivery and does not retain the old polling implementation as the target architecture. |
+| `removal_recorded_in_changelog` | PASS | Frontmatter adds changelog entries recording the event-driven update and prior polling version, and updates the version to 2.0.0. |
+| `no_implementation_plan_or_code` | PASS | The with_skill snapshot contains no IMPLEMENTATION_PLAN.md, code changes, or test additions; only the TRD is modified. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=1b74a5abc9aa4abe683a989ce6a73e650e2b96cf02dc9e02c68048e26dff0317; snapshot_sha256=fde2fb321f58477ce2e8fe5d2ee4b6dc0932bcad681df2c9eb9e069286a4cd2f
+- Behavior: Updated the existing TRD to an event-driven design, recorded the removal of polling in changelog, and made no implementation changes.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=5cc93f7c0769e6d6f924c0ee7eeac9d3369fc4d11ac0c5a9995124e4a66cd8df; snapshot_sha256=6b1e19af7358b75cc0922f968677cb3759c998f92702bce8ae0de1b8abd55e20
+- Behavior: Updated the existing TRD to an event-driven design and removed polling content, but provided no changelog structure.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-006-delivery-polling-to-events`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74` from `agents/engineer/test/trd-gen/evals/workspace/eval-006-delivery-polling-to-events`.
+- Fixture SHA-256: `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74`
+- Prompt SHA-256: `4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `73cec46ef0287c25bd7a41d37b6bcee4e1ea25b1101672fb45bd299ecec77b0d`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `58d5f8c73c18457a8d0864b8f5e21613dc914d57c8f96acc11ce98a78c601f05`
+- Eval definition SHA-256: `ec0b30178f28a00245f34e8794f34ea3d889794c5e097f45505840818ce3d657`
+- Metadata SHA-256: `c58e464b2f51cbecc05208e0f4320ff2bade980227072a25840336ba048c489e`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `updates_existing_trd` | PASS | with_skill 的 delivery_snapshot 仅更新 docs/engineer/delivery-pipeline/TRD.md，版本由 1.1.0 更新为 1.2.0；无其他交付文件或任务委派证据。 |
+| `body_consolidation` | PASS | TRD 正文以 delivery.created 事件驱动方案为当前架构，删除了轮询实现细节；正文仅说明事件消费替代定时扫描及不保留定时扫描路径，未保留旧方案内容。 |
+| `removal_recorded_in_changelog` | PASS | frontmatter 新增 changelog，记录 1.2.0 对轮询方案的移除与事件驱动替换，并保留 1.1.0 历史记录；版本已更新为 1.2.0。 |
+| `no_implementation_plan_or_code` | PASS | locked delivery_snapshot 仅包含 TRD；git_evidence 无代码、测试或 IMPLEMENTATION_PLAN.md 变更，正文明确说明本次不实现代码、不创建 QA E2E 期望。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=97f4fee37326598e708572612887bd2cf2204e04031b15b51aed0bf62cec4a53; snapshot_sha256=40fa29b8e8e41bcf205df70e9e01c043f4825a817f5f4bcd7537a6c2b3a2d0f5
+- Behavior: 完整更新现有 TRD，采用事件驱动正文并新增 changelog；未进入实现。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=a078e7153b18c61ec311ad7f35b3169a076e455fcb75c5e1c51007086c58add2; snapshot_sha256=ca63b46e320601ffa62892ede760eb82990e80a728fe797fcd26f88b1f5abbd1
+- Behavior: 更新现有 TRD 为事件驱动方案并更新版本，但未记录删除留痕 changelog。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-006-delivery-polling-to-events`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74` from `agents/engineer/test/trd-gen/evals/workspace/eval-006-delivery-polling-to-events`.
+- Fixture SHA-256: `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74`
+- Prompt SHA-256: `4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `73cec46ef0287c25bd7a41d37b6bcee4e1ea25b1101672fb45bd299ecec77b0d`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `58d5f8c73c18457a8d0864b8f5e21613dc914d57c8f96acc11ce98a78c601f05`
+- Eval definition SHA-256: `ec0b30178f28a00245f34e8794f34ea3d889794c5e097f45505840818ce3d657`
+- Metadata SHA-256: `c58e464b2f51cbecc05208e0f4320ff2bade980227072a25840336ba048c489e`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `updates_existing_trd` | FAIL | with_skill 的 delivery_snapshot 仅更新 docs/engineer/delivery-pipeline/TRD.md，但正文明确写入确认后移交 feature-implementor 编写 IMPLEMENTATION_PLAN.md，构成任务路由。 |
+| `body_consolidation` | PASS | 正文描述 delivery.created 事件驱动方案，未保留定时轮询的旧方案细节；轮询仅作为当前方案的禁止事项出现，旧方案留痕在 changelog。 |
+| `removal_recorded_in_changelog` | PASS | frontmatter 新增 changelog，记录 2.0.0 移除定时轮询，并将版本从 1.1.0 更新为 2.0.0。 |
+| `no_implementation_plan_or_code` | PASS | delivery_snapshot 仅包含 TRD.md；git_status 仅显示该文件修改，无 IMPLEMENTATION_PLAN.md、代码或测试文件变更。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=ae586150e4d9851d9e729c81c1d3a9bf0b7c4ec03a52ebcb13370b79a3edb9b5; snapshot_sha256=bf5db511b46bcc9eebe2ef1ee8f3d382f9c4378ae5210f63a2b38cbf03615b66
+- Behavior: 更新了目标 TRD，完成事件驱动方案收敛、版本更新和 frontmatter changelog；但加入了后续向 feature-implementor 移交任务的内容。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=db726dd5d02685a66405158b850358dfc1366438a93604724767117646756b46; snapshot_sha256=c2c0add2353965e2e703a186d92794f77b8bbf38552ff2ddec75ba78435005ac
+- Behavior: 更新了目标 TRD 并完成事件驱动改写，但未记录删除定时轮询方案的 changelog。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 交付的 TRD 正文和最终说明都将后续工作移交给 feature-implementor，违反不把任务路由给别人的要求。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-006-delivery-polling-to-events`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74` from `agents/engineer/test/trd-gen/evals/workspace/eval-006-delivery-polling-to-events`.
+- Fixture SHA-256: `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74`
+- Prompt SHA-256: `4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `73cec46ef0287c25bd7a41d37b6bcee4e1ea25b1101672fb45bd299ecec77b0d`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ec0b30178f28a00245f34e8794f34ea3d889794c5e097f45505840818ce3d657`
+- Metadata SHA-256: `c58e464b2f51cbecc05208e0f4320ff2bade980227072a25840336ba048c489e`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `updates_existing_trd` | FAIL | 仅交付了目标 TRD 文件，但其正文明确写入将 hand off 给 feature-implementor 创建 IMPLEMENTATION_PLAN.md，并声明下游任务路由。 |
+| `body_consolidation` | PASS | 交付快照正文以事件驱动异步投递为当前方案，未保留定时轮询的旧架构段落；历史说明仅出现在 changelog。 |
+| `removal_recorded_in_changelog` | PASS | frontmatter 新增 changelog，记录从轮询改为事件驱动，版本从 1.1.0 更新为 1.2.0。 |
+| `no_implementation_plan_or_code` | PASS | 锁定交付快照和 git 证据仅显示修改 docs/engineer/delivery-pipeline/TRD.md，未创建 IMPLEMENTATION_PLAN.md、修改代码或新增测试。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=2a9dadb02fc0533852bf6ebfeb6838eca0df750679f0920b65c8487a335bfa07; snapshot_sha256=f866bdc9264ef59f848753c278389bb49c4fa4b17bfb980b48c31872702e74e1
+- Behavior: 完整更新了目标 TRD、版本和 frontmatter changelog，未修改代码或创建测试，但在正文中加入了向 feature-implementor 的后续 handoff/路由说明。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=49b7cacebe7ab84c00c3a050004ae5fb86cbf4bf2f43dd43a3af40965cc634b1; snapshot_sha256=dbee4d6b5d2958311d82ab9a17a53ff26eeb01c959676e2c605cdfbcf4851f59
+- Behavior: 更新了目标 TRD 为事件驱动方案并更新版本，但未添加 changelog。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 交付内容包含将任务 hand off 给 feature-implementor 创建 IMPLEMENTATION_PLAN.md 的明确路由说明，违反 updates_existing_trd。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-006-delivery-polling-to-events`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74` from `agents/engineer/test/trd-gen/evals/workspace/eval-006-delivery-polling-to-events`.
+- Fixture SHA-256: `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74`
+- Prompt SHA-256: `4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `bb3f875298d7fef0fcd2297b4e59b33b5c034efad4a2286dcaede91ec0863c72`
+- Skill overlay SHA-256: `12aaaef0d075d133bbbdc681f598fd09807b211a4377dcfbc6cbbfcaa30909e0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ec0b30178f28a00245f34e8794f34ea3d889794c5e097f45505840818ce3d657`
+- Metadata SHA-256: `c58e464b2f51cbecc05208e0f4320ff2bade980227072a25840336ba048c489e`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `updates_existing_trd` | FAIL | 仅修改了目标 TRD 文件，但正文新增明确的 `feature-implementor` 移交及编写 IMPLEMENTATION_PLAN.md 的路由内容，违反了不得把任务路由给别人的要求。 |
+| `body_consolidation` | PASS | 正文的当前方案已直接改为事件驱动，轮询实现、轮询模块和旧验证项均已从架构正文移除；变更记录中的提及是删除历史而非保留旧方案。 |
+| `removal_recorded_in_changelog` | FAIL | 版本已从 1.1.0 更新为 1.2.0，但删除记录放在正文的“变更记录”章节，而不是要求的 frontmatter changelog；frontmatter 中没有新增 changelog 结构。 |
+| `no_implementation_plan_or_code` | PASS | git diff 仅修改 TRD.md，未创建 IMPLEMENTATION_PLAN.md，未修改代码，也未补充测试文件。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=bdd9d0b7264434727f1c1d2ca9595f1d9594f4486efc06464ea750850cdaf66d; snapshot_sha256=541604f06e15c8c94db85c204c8fe9e12b7ec8f0fcf61d4e166bab0f97f2b96d
+- Behavior: 完成了事件驱动 TRD 正文更新和版本升级，未修改代码或创建实现计划，但将变更记录放入正文并加入了后续 feature-implementor 移交路由。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=d13667719f3e9b2c5fe8201dfff4d5b70281ffbfc2495b614908b5f049cae1ed; snapshot_sha256=e916f98ed1041c33476f8780298444cc7a8f0317211a1e8edc38952bd5f2237d
+- Behavior: 更新了目标 TRD 的事件驱动正文和版本，但未记录 changelog，且未提供实际删除留痕。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未按要求将轮询删除记录写入 frontmatter changelog。
+- with_skill 正文包含将后续工作移交给 feature-implementor 的路由内容。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-006-delivery-polling-to-events`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74` from `agents/engineer/test/trd-gen/evals/workspace/eval-006-delivery-polling-to-events`.
+- Fixture SHA-256: `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74`
+- Prompt SHA-256: `4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `bb3f875298d7fef0fcd2297b4e59b33b5c034efad4a2286dcaede91ec0863c72`

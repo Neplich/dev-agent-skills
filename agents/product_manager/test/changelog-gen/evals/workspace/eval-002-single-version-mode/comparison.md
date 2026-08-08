@@ -14,6 +14,195 @@
 - Fixture version/source: canonical manifest `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-002-single-version-mode`.
 - Fixture SHA-256: `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88`
 - Prompt SHA-256: `d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `53f035563de038125d09b7a8997f87e900d099e00223f427a7c690e11ebbe449`
+- Skill overlay SHA-256: `9534a5bf71391ac48cfd6a48ca8f80e93da520d6ea9d2026741fd864da0cb720`
+- Judge schema SHA-256: `609660421781976ec561327c947a31da6f7d421bc63e99d2f3f00692dcdf763a`
+- Eval definition SHA-256: `e34f2dddfabba5be49382d984bac6785776f7fb5fa22e37126ed32d1f44a81df`
+- Metadata SHA-256: `814184c8bd7a959b3f0695c85bef4dd34c73bd316a08d00ccc354207f37fabc9`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `v_version_yyyy_mm_dd` | PASS | with_skill 文件包含 `## [v0.120.2] - 2026-08-05`。 |
+| `release_tag` | PASS | with_skill 文件版本号为 `v0.120.2`，与 fixture 的 target_release.tagName 一致。 |
+| `pr_conventional_commit` | PASS | PR #300、#301、#302 的标题均已去除 `fix(client):`、`docs:`、`feat!:` 前缀。 |
+| `breaking_change_breaking` | PASS | PR #302 条目带有 `⚠️ **BREAKING**` 标记。 |
+| `section` | PASS | 输出仅包含有内容的 `Changed` 和 `Fixed` sections。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031; fixture_sha256=835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88; output_sha256=fe04769f803c1ba7bfd404232032681cfca22f7ec0ad5f0c3af897bbc37afabc; snapshot_sha256=c165a4a9a2c9ccd41858db324fda5280162727a78e510a626368977497b6a8d3
+- Behavior: 成功写入包含正确版本、日期、全部 PR、清洗后标题和 breaking 标记的 changelog 文件。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031; fixture_sha256=835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88; output_sha256=88091684ce05bada07c92db609134c52fff730aff45a278b21afb8ac4c523a71; snapshot_sha256=e78bf12223329d28baed7861f0bd439c62c987071972ce91e1da976d23751b60
+- Behavior: 也写入了 changelog，但版本标题缺少 v 前缀，breaking change 未使用要求的 ⚠️ BREAKING 前缀。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-002-single-version-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-002-single-version-mode`.
+- Fixture SHA-256: `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88`
+- Prompt SHA-256: `d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `53f035563de038125d09b7a8997f87e900d099e00223f427a7c690e11ebbe449`
+- Skill overlay SHA-256: `9534a5bf71391ac48cfd6a48ca8f80e93da520d6ea9d2026741fd864da0cb720`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `e34f2dddfabba5be49382d984bac6785776f7fb5fa22e37126ed32d1f44a81df`
+- Metadata SHA-256: `814184c8bd7a959b3f0695c85bef4dd34c73bd316a08d00ccc354207f37fabc9`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `v_version_yyyy_mm_dd` | PASS | with_skill 文件包含 `## [v0.120.2] - 2026-08-05`。 |
+| `release_tag` | PASS | 文件版本 `v0.120.2` 与原始证据中的 target_release.tagName `v0.120.2` 匹配。 |
+| `pr_conventional_commit` | PASS | 3 个 PR 条目均已去除 conventional commit 前缀，保留了清洗后的可读标题。 |
+| `breaking_change_breaking` | PASS | #302 条目以 `⚠️ BREAKING` 标识，且原始证据确认其为 breaking change。 |
+| `section` | PASS | 输出仅包含有内容的 Changed 和 Fixed section，且两者均包含条目。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031; fixture_sha256=835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88; output_sha256=f0c21d961231647b838a20290b41f5fe8ccaab0b9e7852a065d0166d95cf00ef; snapshot_sha256=1352f6a5df9976e5b3d3fea7469342d8de4709c675e65dfc26744aeadfe012a6
+- Behavior: 生成了符合版本格式、release tag、PR 标题清洗、Breaking 标识和非空 section 要求的 changelog 文件。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031; fixture_sha256=835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88; output_sha256=d0d1234f432162fa4b95ca74b97baa24595bef4e0ba8efbe9d35683e770acef3; snapshot_sha256=4d3daf0515be15c244f52f69803b48d14458d5d77c26dfa9b0c5a0bba20550b4
+- Behavior: 生成了文件并包含 3 个 PR，但版本标题缺少 v 前缀，Breaking 标识也未使用要求的格式。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-002-single-version-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-002-single-version-mode`.
+- Fixture SHA-256: `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88`
+- Prompt SHA-256: `d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `fd6202eb001e4fcc8e818cb01c9c27ec290ab3c4edabd757735bf984bab469a4`
+- Skill overlay SHA-256: `b53e1261ebb5c959b0bf29a37559e89f454013b911c855fd491809032b43b267`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `e34f2dddfabba5be49382d984bac6785776f7fb5fa22e37126ed32d1f44a81df`
+- Metadata SHA-256: `814184c8bd7a959b3f0695c85bef4dd34c73bd316a08d00ccc354207f37fabc9`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `v_version_yyyy_mm_dd` | PASS | With-skill output contains `## [v0.120.2] - 2026-08-05`, matching the required format. |
+| `release_tag` | PASS | The output version `v0.120.2` matches the fixture's target release tag `v0.120.2`. |
+| `pr_conventional_commit` | PASS | With-skill entries remove conventional-commit prefixes while retaining the meaningful scope in `client:`, and include PR references #300–#302. |
+| `breaking_change_breaking` | PASS | PR #302 is rendered with the visible `⚠️ BREAKING` marker, matching the fixture's breaking-change evidence. |
+| `section` | PASS | Only populated sections—Added, Changed, and Fixed—are present in the with-skill output. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031; fixture_sha256=835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88; output_sha256=2aa25c2261ba46762630da4a5099430b8121b5a3dabd177bad5f4bebf8cd4daa; snapshot_sha256=e36ba5ceb504c99036333c486ed2f855257d6027ccabeab1fb72c8829738e9bb
+- Behavior: Generated the requested changelog with the matching version/date, cleaned PR titles, all three PR references, a breaking-change marker, and only populated sections.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031; fixture_sha256=835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88; output_sha256=c967f6bcaa3efe5c7f44cd9891459d5f66dba189f916feddfaeb473587ade7df; snapshot_sha256=7c0092eb15d8578f2063fe363e0c1232b4f474981c5ff58416f190fb31041657
+- Behavior: Generated the requested file and included all three PRs, but omitted the required v prefix, used a generic breaking-change label, and did not visibly apply the requested section format.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-002-single-version-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-002-single-version-mode`.
+- Fixture SHA-256: `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88`
+- Prompt SHA-256: `d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `fd6202eb001e4fcc8e818cb01c9c27ec290ab3c4edabd757735bf984bab469a4`

@@ -14,6 +14,254 @@
 - Fixture version/source: canonical manifest `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4` from `agents/security/test/authz-reviewer/evals/workspace/eval-003-jwt`.
 - Fixture SHA-256: `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4`
 - Prompt SHA-256: `da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5d96dce7dbfccf9a7b2e510ce571be9b1aa80472fabf9a5779117cb4e21d3b09`
+- Skill overlay SHA-256: `89401c75c36dd79dd8bf55d1b0c23cbd794402b7f29f62d05ae9f27f5e25c3f9`
+- Judge schema SHA-256: `a3c690bb602cdac9c05191ab0581fc35b8fd034dd27825093b3b51de5926404b`
+- Eval definition SHA-256: `8f6e801f8a45c6ec677bbcaa4a56de6b68c935402a27b9f24ca631ffe0af8504`
+- Metadata SHA-256: `2db8c4dc18a4712e7dcc4d2c4e3e9c1608e8526019fbff1c3fc3e6ded6f9d1c5`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `authorization_model` | PASS | The report identifies user/admin roles, ordinary protected APIs and /api/admin/* resources, the role-based boundary, and the Authorization-to-payload-to-role authorization path. |
+| `access_control_findings` | PASS | The report identifies missing signature and algorithm validation, alg:none acceptance, missing exp checks, direct trust of role, and lax Authorization/JWT parsing, with concrete code locations and impacts. |
+| `evidence_and_impact` | PASS | Each major finding includes source evidence, severity, affected assets or paths, and consequences such as identity forgery, admin privilege escalation, replay of expired tokens, and audit attribution risk. |
+| `remediation` | PASS | The delivered report provides actionable fixes for library-based verification, server-controlled algorithms and keys, exp validation, verified claims, strict parsing, and a detailed regression checklist including tampering, alg:none, expiry, roles, and malformed tokens. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=6bfc7f6651824903c5afdd37b8b037996d8e2932bf2dda02e0bc69b0adace610; snapshot_sha256=8e43df6d1ee06d67ba1789dbfc456b302ce00cdb10866cbd7e706cc4de5069ab
+- Behavior: Delivered the required structured JWT authorization review with role/resource boundaries, concrete findings, evidence and impact, remediation, and regression tests; implementation code was not modified.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=6a47c6d399a300372bef5e924e7a9e47ff6512317a61301b1b06fe74c9f3ec61; snapshot_sha256=62fc557641fa2acdf5d8fe8e0c36fde72a1d5ed794e06ba66d9bbe9b5cb1e056
+- Behavior: Fresh baseline also identified the core JWT and authorization flaws and delivered a substantive report, but with less explicit authorization modeling and repository-scope context than the with_skill lane.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `authz-reviewer`
+- Eval: `eval-003-jwt`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4` from `agents/security/test/authz-reviewer/evals/workspace/eval-003-jwt`.
+- Fixture SHA-256: `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4`
+- Prompt SHA-256: `da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5d96dce7dbfccf9a7b2e510ce571be9b1aa80472fabf9a5779117cb4e21d3b09`
+- Skill overlay SHA-256: `89401c75c36dd79dd8bf55d1b0c23cbd794402b7f29f62d05ae9f27f5e25c3f9`
+- Judge schema SHA-256: `a3c690bb602cdac9c05191ab0581fc35b8fd034dd27825093b3b51de5926404b`
+- Eval definition SHA-256: `8f6e801f8a45c6ec677bbcaa4a56de6b68c935402a27b9f24ca631ffe0af8504`
+- Metadata SHA-256: `2db8c4dc18a4712e7dcc4d2c4e3e9c1608e8526019fbff1c3fc3e6ded6f9d1c5`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `authorization_model` | PASS | The locked report identifies admin and non-admin roles, protected APIs, the /api/admin/* boundary, the role-check helper, and the authentication-to-authorization path, including the limitation that route coverage cannot be confirmed. |
+| `access_control_findings` | PASS | The locked report directly identifies missing signature verification, algorithm allow-listing, exp validation, forged role acceptance, and malformed-input failure handling, with locations in src/auth/jwt.js. |
+| `evidence_and_impact` | PASS | The locked report provides code locations, PRD requirements, severity ratings, and concrete impacts including authentication bypass and unauthorized access to admin endpoints. |
+| `remediation` | PASS | The locked report recommends verifier configuration, fail-closed parsing, claims handling, route integration checks, and unit/integration regression tests covering forged, unsigned, expired, malformed, and non-admin tokens. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=a983553af5eca1247c6c30d1451c487d048a7db38775cea0e25a531171ac9d72; snapshot_sha256=a9ef9c3bc1e887d400cbb815c6193697b227ee0389f6c839574316e130785858
+- Behavior: Delivered a structured JWT authorization review file with accurate findings, evidence, impact, remediation, and regression guidance.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=d8b8621cdb6bda4bf0d879b87d4d2d67c22f85d1a7f143990e3b4407fc8b12c6; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provided a strong inline review and remediation guidance but did not deliver the required structured review file.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `authz-reviewer`
+- Eval: `eval-003-jwt`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4` from `agents/security/test/authz-reviewer/evals/workspace/eval-003-jwt`.
+- Fixture SHA-256: `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4`
+- Prompt SHA-256: `da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5d96dce7dbfccf9a7b2e510ce571be9b1aa80472fabf9a5779117cb4e21d3b09`
+- Skill overlay SHA-256: `89401c75c36dd79dd8bf55d1b0c23cbd794402b7f29f62d05ae9f27f5e25c3f9`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `8f6e801f8a45c6ec677bbcaa4a56de6b68c935402a27b9f24ca631ffe0af8504`
+- Metadata SHA-256: `2db8c4dc18a4712e7dcc4d2c4e3e9c1608e8526019fbff1c3fc3e6ded6f9d1c5`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `authorization_model` | FAIL | with_skill incorrectly claims the PM/Security handoff is missing, despite fixture/PM_HANDOFF.md containing the confirmed scope, roles, assets, permissions, and trust boundary; it does not identify the authorization paths. |
+| `access_control_findings` | FAIL | with_skill provides no findings on the JWT implementation's signature, algorithm, expiry, or role validation and therefore omits the exercised security defects. |
+| `evidence_and_impact` | FAIL | with_skill provides no code evidence, severity, impact, or risk consequences; its claim that required handoff materials are absent is contradicted by the locked fixture. |
+| `remediation` | FAIL | with_skill provides no actionable remediation or regression-validation recommendations. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=460ed090acdc70c4be36c879032a77728d8d326e604bcc407e27356c2dd29d8d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Stopped before review, incorrectly reported the available PM/Security handoff as missing, and requested information already present in the fixture.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=b524264f2933e550622112c7f5cd8aa22963e9dd7211e217b85809398bbc2909; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Completed a detailed JWT security review covering authorization boundaries, concrete code evidence, impact, remediation, and regression tests.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill lane incorrectly blocked on a handoff that is present in the read-only fixture and omitted every requested review result.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `authz-reviewer`
+- Eval: `eval-003-jwt`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4` from `agents/security/test/authz-reviewer/evals/workspace/eval-003-jwt`.
+- Fixture SHA-256: `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4`
+- Prompt SHA-256: `da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `3e242b2dbb704cb1d29797b016c5227b3a75736fa3d4f0739192f0fdee71f01f`
+- Skill overlay SHA-256: `3de2c418f3c14f33d91cbef534093000d696ba99512436f5551d86e45d872cc9`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `8f6e801f8a45c6ec677bbcaa4a56de6b68c935402a27b9f24ca631ffe0af8504`
+- Metadata SHA-256: `2db8c4dc18a4712e7dcc4d2c4e3e9c1608e8526019fbff1c3fc3e6ded6f9d1c5`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `authorization_model` | PASS | with_skill identifies user/admin roles, protected APIs, /api/admin/*, the authenticateJwt -> claims -> canAccessAdminApi path, and the trust boundary requiring verified claims. |
+| `access_control_findings` | PASS | with_skill correctly identifies missing signature verification, missing algorithm allowlist, missing exp validation, untrusted role authorization, and malformed-header/error-handling weaknesses. |
+| `evidence_and_impact` | PASS | with_skill provides locatable src/auth/jwt.js evidence, severity levels, and concrete impacts including identity spoofing, admin privilege escalation, replay of expired tokens, and possible 500 responses. |
+| `remediation` | PASS | with_skill gives executable fixes and regression tests covering allowed algorithms, signature/payload tampering, alg:none, exp cases, role escalation, 401/403 behavior, malformed tokens, and route coverage. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=b16da2040992efd375fb1c585d369e6826ffa0fe36e8a6433277a6be59985e86; snapshot_sha256=14f84b830907055e420b8a7202659cb129d0958874f1a405ba71a3942e446139
+- Behavior: Provides a complete structured security review with authorization model, evidence-backed findings, impact, remediation, regression validation, and explicit uncertainty where route/runtime evidence is absent.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=aedc06238e4d32eb68138d9f942909da61dc4a98986dc40df6d5792e4787c29f; snapshot_sha256=57abedca57618861299921ae071ba8b356874d042b34bdd9ea78b407ccd4596a
+- Behavior: Provides a correct concise JWT security assessment with key findings and regression suggestions, but less comprehensive authorization/session coverage than with_skill.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `authz-reviewer`
+- Eval: `eval-003-jwt`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4` from `agents/security/test/authz-reviewer/evals/workspace/eval-003-jwt`.
+- Fixture SHA-256: `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4`
+- Prompt SHA-256: `da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `3e242b2dbb704cb1d29797b016c5227b3a75736fa3d4f0739192f0fdee71f01f`

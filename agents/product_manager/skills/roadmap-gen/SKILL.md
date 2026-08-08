@@ -22,6 +22,9 @@ from explicit labels or equivalent GitHub evidence. Every roadmap still
 includes its required status/progress artifacts and Mermaid timeline; unknown
 dates may use semantic phases or clearly marked placeholders without inventing
 calendar commitments.
+Preserve every included issue's number, title, state, milestone or backlog
+classification, labels, link, and assignee state; explicitly write
+`unassigned` when the source has no assignee rather than dropping the field.
 
 ## Step 1 — Establish repo context
 

@@ -14,6 +14,192 @@
 - Fixture version/source: canonical manifest `4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-002-abandoned`.
 - Fixture SHA-256: `4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f`
 - Prompt SHA-256: `89079b812ce4ce066ef86759ed6c1d41f09649e1cedce1ebb540e93d141b1137`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`
+- Skill overlay SHA-256: `0cc706a818794631f426534d787ec1444a803ce7555683ff49eb3015d8e3ce7c`
+- Judge schema SHA-256: `07345508cc5d326f024163cc8715111c4efeeb1bd80f16886d65b16eb2ef9292`
+- Eval definition SHA-256: `88dd9b929d53963534f872d5c6b43117be6b35cb41fa6b99bd7d05175018ade8`
+- Metadata SHA-256: `6e01d4daa6b468e7c7a0ddfd1d17ad1116a727bf8d6709ea8ad0e5baec7fce48`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `dependency_inventory` | PASS | 报告识别了 Node.js 依赖生态中的 `request@2.88.2` 与 `node-uuid@1.4.8`，并关联网络请求链路、UUID 生成逻辑及维护风险。 |
+| `risk_classification` | PASS | 报告区分了 deprecated/停止维护与未确认漏洞，分别给出 HIGH 风险及 P0/P1 优先级，并明确说明缺少 lockfile 导致无法确认 CVE。 |
+| `evidence` | PASS | 报告引用了 `package.json` 中的具体版本、npm/上游维护声明、Node.js 文档，并记录 `npm audit` 因缺少 lockfile 返回 `ENOLOCK`。 |
+| `upgrade_plan` | PASS | 报告建议迁移至内建 `fetch`、评估 `undici`、使用 `uuid` 或 `crypto.randomUUID()`，并包含 lockfile、兼容性测试、SSRF 防护和隔离措施。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=89079b812ce4ce066ef86759ed6c1d41f09649e1cedce1ebb540e93d141b1137; fixture_sha256=4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f; output_sha256=51c13ec0542575360ef2f2c3d5a82d1d4ee74d6d59f95d248e2d7257e1ec7461; snapshot_sha256=ae0e4bd273f272a48841a1522401e03db1281eb61cd5b786abc38a83a5935c7e
+- Behavior: 完成结构化依赖风险审计，覆盖两个直接生产依赖、风险分类、证据与替换计划，且未修改依赖文件。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=89079b812ce4ce066ef86759ed6c1d41f09649e1cedce1ebb540e93d141b1137; fixture_sha256=4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f; output_sha256=a2be26c21178bcdf0324aaaed280644f8c1c81688f2b37fd1930ac51ac14a229; snapshot_sha256=457308e8c050065affcbfbb1eccbc7b9aaed7659c39e5aaaeb7889d580a3e8f7
+- Behavior: 同样完成了依赖审计并提供替换建议；作为比较基线，其结论更直接提出具体 CVE，但未影响 with_skill 断言判定。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `dependency-risk-auditor`
+- Eval: `eval-002-abandoned`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-002-abandoned`.
+- Fixture SHA-256: `4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f`
+- Prompt SHA-256: `89079b812ce4ce066ef86759ed6c1d41f09649e1cedce1ebb540e93d141b1137`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`
+- Skill overlay SHA-256: `0cc706a818794631f426534d787ec1444a803ce7555683ff49eb3015d8e3ce7c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `88dd9b929d53963534f872d5c6b43117be6b35cb41fa6b99bd7d05175018ade8`
+- Metadata SHA-256: `6e01d4daa6b468e7c7a0ddfd1d17ad1116a727bf8d6709ea8ad0e5baec7fce48`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `dependency_inventory` | PASS | with_skill 交付文件识别了 package.json 中的 request@2.88.2 与 node-uuid@1.4.8，并说明外部网络请求、UUID 生成、运行时兼容性及供应链维护风险。 |
+| `risk_classification` | PASS | with_skill 文件区分了 request 的弃用/maintenance-only 风险、node-uuid 的归档/废弃风险，并将维护与供应链韧性评为高风险；同时明确没有 lockfile 时无法确认 CVE 或可利用性。 |
+| `evidence` | PASS | with_skill 文件直接引用 package.json、具体版本、上游 GitHub 维护状态、Node.js 文档及 npm audit 的 ENOLOCK 限制作为证据。 |
+| `upgrade_plan` | PASS | with_skill 文件提出使用内建 fetch、node:crypto.randomUUID() 或受支持的 uuid，并覆盖运行时确认、超时/重定向/状态码测试、lockfile、audit 和隔离措施。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=89079b812ce4ce066ef86759ed6c1d41f09649e1cedce1ebb540e93d141b1137; fixture_sha256=4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f; output_sha256=d77c06946f5e8bca51bd32618de11e440519417f0d34744955f94586c7a2327a; snapshot_sha256=a0be4febba2f579aa2d7509b6a523e08920ede064fcdec27f6082848e02e2f6f
+- Behavior: 交付了结构化依赖风险审计文件，覆盖依赖清单、风险分类、原始证据、限制条件和升级计划。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=89079b812ce4ce066ef86759ed6c1d41f09649e1cedce1ebb540e93d141b1137; fixture_sha256=4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f; output_sha256=53b445de09b73b83f3dde1dab6af06f80839b8f3279a32a0e42899a431b1e7c2; snapshot_sha256=a8df0ddcd2407de99cb8e82727ed8c08b41e97b7843286471bf5d1174811487f
+- Behavior: 完成了较详细的依赖审计与替换建议，涵盖废弃状态、SSRF、UUID 替换和迁移步骤。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `dependency-risk-auditor`
+- Eval: `eval-002-abandoned`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-002-abandoned`.
+- Fixture SHA-256: `4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f`
+- Prompt SHA-256: `89079b812ce4ce066ef86759ed6c1d41f09649e1cedce1ebb540e93d141b1137`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`
+- Skill overlay SHA-256: `b815bcadedc94647742113823ae910cacb0bd48d343e94eb3875bee2a6a39d68`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `88dd9b929d53963534f872d5c6b43117be6b35cb41fa6b99bd7d05175018ade8`
+- Metadata SHA-256: `6e01d4daa6b468e7c7a0ddfd1d17ad1116a727bf8d6709ea8ad0e5baec7fce48`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `dependency_inventory` | PASS | With_skill 识别了 Node.js 依赖生态及 package.json 中的 request@2.88.2、node-uuid@1.4.8，并说明其网络请求、UUID、传递依赖和维护风险。 |
+| `risk_classification` | PASS | 明确区分了官方废弃/停止维护、未验证的具体漏洞、传递依赖与供应链限制，并将风险评为高、替换优先级列为 P1。 |
+| `evidence` | PASS | 引用了 PM_HANDOFF.md、PRD、package.json 中的具体包和版本，以及 npm、上游仓库和 Node.js 文档证据；同时说明缺少 lockfile 导致 CVE 无法确认。 |
+| `upgrade_plan` | PASS | 给出了 request 迁移至内建 fetch 或评估 undici、node-uuid 迁移至 crypto.randomUUID 或受支持 uuid 的方案，并包含调用盘点、兼容性测试、lockfile、审计和发布隔离措施。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=89079b812ce4ce066ef86759ed6c1d41f09649e1cedce1ebb540e93d141b1137; fixture_sha256=4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f; output_sha256=fa98eddbd9b1a7a01d2f03ec50205bfe78e81f087fe40bd25586680e1cdad2a9; snapshot_sha256=3e01b43803da09fbf01f7f5a1893c970cb2ff5402bbdd5167e84e80530727363
+- Behavior: 完整覆盖四项用户可见要求，且未修改 package.json，符合只输出审计与替换计划的范围。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=89079b812ce4ce066ef86759ed6c1d41f09649e1cedce1ebb540e93d141b1137; fixture_sha256=4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f; output_sha256=28e7c5a9e5fa2c3f7555844b9f73aa77b5969002cb8f5df10dbaaf8760214fa2; snapshot_sha256=38f65348f44cdc8466a9d590730e87f96719865442573279bc8c70a4bc30d158
+- Behavior: 完成依赖识别、风险说明、证据引用和替换建议，作为基线表现。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `dependency-risk-auditor`
+- Eval: `eval-002-abandoned`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-002-abandoned`.
+- Fixture SHA-256: `4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f`
+- Prompt SHA-256: `89079b812ce4ce066ef86759ed6c1d41f09649e1cedce1ebb540e93d141b1137`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`

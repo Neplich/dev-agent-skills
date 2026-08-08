@@ -14,6 +14,192 @@
 - Fixture version/source: canonical manifest `5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-001-npm-audit`.
 - Fixture SHA-256: `5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa`
 - Prompt SHA-256: `77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`
+- Skill overlay SHA-256: `0cc706a818794631f426534d787ec1444a803ce7555683ff49eb3015d8e3ce7c`
+- Judge schema SHA-256: `07345508cc5d326f024163cc8715111c4efeeb1bd80f16886d65b16eb2ef9292`
+- Eval definition SHA-256: `971feaa0f85d14f75fe45df2640551915965f181de289e0a977efb57d2391e3e`
+- Metadata SHA-256: `aee94fbc4f1b4c53f14bd2d88b010307b382e89dd9cc2398f8a45f7d41146704`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `dependency_inventory` | PASS | 报告直接列出 Node.js 生产依赖 lodash@4.17.15 与 minimist@0.0.8，并说明对象路径、模板和命令行参数风险来源。 |
+| `risk_classification` | PASS | 报告区分了 Critical/High/Moderate 漏洞、维护活跃度观察项及无 lockfile 导致的供应链可复现性缺口，并为风险标注严重度和优先级。 |
+| `evidence` | PASS | 报告引用 PM_HANDOFF.md、PRD.md、package.json、具体版本、CVE/GHSA 编号、CVSS 分数及 NVD/GitHub/npm 链接作为证据。 |
+| `upgrade_plan` | PASS | 报告给出了 minimist 与 lodash 的明确升级目标、lockfile 与扫描计划、回归测试、CI 门禁及对象路径/模板/参数解析缓解措施。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e; fixture_sha256=5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa; output_sha256=b6992fa77a640dd9ca0b5ff58378c73f96aab32033a060f65566d75bd0ebcb43; snapshot_sha256=e9e565b952dc9fef8d97275e2acb8935f544e0af73efdef5b7dbfec3b5773e3e
+- Behavior: 完成并交付结构化依赖风险审计，覆盖清单、风险分类、证据和升级/缓解计划。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e; fixture_sha256=5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa; output_sha256=15a06609c852b4645c7e6f36cb9409cef3f5f1377eb715f1188b5878d9cdc87c; snapshot_sha256=d1bcc6a5bb5f50ca397b2eaa5242a0941ec9b54a944ecfac66d6d6ff5b58cd19
+- Behavior: 同样交付了依赖风险审计并识别主要包与漏洞；作为 fresh baseline，报告内容较简略且升级与风险覆盖不如 with_skill 完整。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `dependency-risk-auditor`
+- Eval: `eval-001-npm-audit`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-001-npm-audit`.
+- Fixture SHA-256: `5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa`
+- Prompt SHA-256: `77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`
+- Skill overlay SHA-256: `0cc706a818794631f426534d787ec1444a803ce7555683ff49eb3015d8e3ce7c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `971feaa0f85d14f75fe45df2640551915965f181de289e0a977efb57d2391e3e`
+- Metadata SHA-256: `aee94fbc4f1b4c53f14bd2d88b010307b382e89dd9cc2398f8a45f7d41146704`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `dependency_inventory` | PASS | With-skill report identifies the Node.js ecosystem, both direct production dependencies and their vulnerability, staleness, lockfile, and supply-chain risk sources. |
+| `risk_classification` | PASS | With-skill report distinguishes Critical/High/Moderate vulnerabilities, P0/P1 priorities, and stale-version risk, with impacts and conditional exploitability. |
+| `evidence` | PASS | With-skill delivery cites package.json versions, specific CVEs/GHSAs, severity scores, affected ranges, and repository audit limitations. |
+| `upgrade_plan` | PASS | With-skill delivery recommends removing or upgrading minimist to 1.2.8, upgrading lodash to 4.18.1, generating a lockfile, running npm ci/audit, regression testing, and applying interim mitigations. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e; fixture_sha256=5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa; output_sha256=5e132882698788d04c7b6f4999f118386829f283d8255598d65d1853eda41fef; snapshot_sha256=2e8d6faf02c24959b2d07a4539e6e0a901443809024dc73392ebd27e7aee5182
+- Behavior: Produced a more detailed structured audit with risk classification, evidence, upgrade sequencing, supply-chain limitations, and mitigations.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e; fixture_sha256=5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa; output_sha256=ab1dd81d91ee2510d5f82c5a79da79e223bc858d246994944fb4a90abe7d1153; snapshot_sha256=0451ef1b3a999403afd512a8f95473f55cc68c625c1edd50e1a30f13fa3edd52
+- Behavior: Produced a substantive audit covering dependencies, vulnerabilities, evidence, and remediation.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `dependency-risk-auditor`
+- Eval: `eval-001-npm-audit`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-001-npm-audit`.
+- Fixture SHA-256: `5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa`
+- Prompt SHA-256: `77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`
+- Skill overlay SHA-256: `b815bcadedc94647742113823ae910cacb0bd48d343e94eb3875bee2a6a39d68`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `971feaa0f85d14f75fe45df2640551915965f181de289e0a977efb57d2391e3e`
+- Metadata SHA-256: `aee94fbc4f1b4c53f14bd2d88b010307b382e89dd9cc2398f8a45f7d41146704`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `dependency_inventory` | PASS | 列出并核对了 package.json 中的 lodash@4.17.15 与 minimist@0.0.8，并识别了漏洞、锁文件缺失及维护风险。 |
+| `risk_classification` | PASS | 区分了 Critical/High/Moderate/Medium 漏洞、minimist 维护风险、过期版本及供应链/可复现性风险，并说明了影响与严重度。 |
+| `evidence` | PASS | 引用了具体包名、固定版本、CVE/GHSA、受影响范围、CVSS、修复版本及锁文件 ENOLOCK 证据。 |
+| `upgrade_plan` | PASS | 给出了升级至 minimist 1.2.8+、lodash 4.18.0+，生成锁文件、回归测试、调用点审查及短期缓解措施。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e; fixture_sha256=5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa; output_sha256=bbff30b1f87685c15cd3f6126ecbe88b4578c6cdd708eba0ff949f0b83aabcce; snapshot_sha256=b4c4704b703c0c7b1e789ee3848d9f3d87ed3d81f2c1118fec5145b8a3faf26e
+- Behavior: 完成了结构化依赖安全审计，覆盖清单、风险分类、证据、严重度、修复计划和发布门禁。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e; fixture_sha256=5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa; output_sha256=d3421fa56fe6f42e77dfdc485ee4cf7dde6403defa1a2f5843cd9baf8e496c12; snapshot_sha256=710f77183ed673291e1ea27ed935a9ea331482e011230940f6336ae941645e34
+- Behavior: 识别了主要依赖漏洞并提出升级建议，提供了较完整的审计报告。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `dependency-risk-auditor`
+- Eval: `eval-001-npm-audit`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-001-npm-audit`.
+- Fixture SHA-256: `5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa`
+- Prompt SHA-256: `77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`

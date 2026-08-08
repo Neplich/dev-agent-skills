@@ -14,6 +14,190 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-13-change-tier-hotfix-e2e-direct-path`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0b60a8fdef1023247fb430f4647e03f742c09fbfdb17e32a3a03dc6059ae9e02`
+- Skill overlay SHA-256: `7093347dda9d009dc74c5bd9b37b3d0d8b980466e82f7a4efbacd767a0e9fa19`
+- Judge schema SHA-256: `6a4c53f4d8ac913c9f4214c0dc35c3bf4c2a1bd9745f539a3879966e5d7f9011`
+- Eval definition SHA-256: `0e4e9687500855bbb8cac580183d47bafa14e53a69d5477185a5ceacddfe1857`
+- Metadata SHA-256: `385a2edb2c46d9f3ce571c34b812bf357f9247b71af061faebaf0764c87334a2`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `hotfix_direct_path_only` | NOT_EXERCISED | with_skill 将工作流暂停在源码和目标文案缺失的前置阻塞阶段，未执行 hotfix QA/E2E 覆盖范围决策。 |
+| `evidence_still_required` | NOT_EXERCISED | with_skill 明确无法完成验证并列出阻塞原因，但后续验证证据、结果和 blocked checks 记录尚未发生。 |
+| `no_full_suite_required` | NOT_EXERCISED | with_skill 未执行测试或套件选择；由于缺少源码和目标文案，无法判断 E2E suite 范围。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=6781f8af5b4ce580b372acee67f30f223f6811ce708f1a5a3d9ef5b502861b69; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别为现有项目更新，暂停实现、下游交接和测试，避免误改或伪造验证；但未产生文件改动或验证结果。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=7968e513fe113871f04fe97105091343017d389a8b0d8c59f1ac6e7d02cecfe2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 发现工作区为空并直接报告无法完成修改与验证；未产生文件改动或验证结果。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 提供正确项目源码/工作区及替换后的确切文案。
+- Next: 完成最小直接影响路径验证，并记录 verification evidence、结果及任何 blocked checks。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `pm-agent`
+- Eval: `eval-013-change-tier-hotfix-e2e-direct-path`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-13-change-tier-hotfix-e2e-direct-path`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `408fcd917b4eb851c354f2de7a398f53f4466aa8f161f9110ad055ed6bc0102c`
+- Skill overlay SHA-256: `e9a6397e166437c034ee8eec0fb781d11e200a5f78eb511626f627c9596e06b0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `0e4e9687500855bbb8cac580183d47bafa14e53a69d5477185a5ceacddfe1857`
+- Metadata SHA-256: `385a2edb2c46d9f3ce571c34b812bf357f9247b71af061faebaf0764c87334a2`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `hotfix_direct_path_only` | NOT_EXERCISED | with_skill 未能访问登录页源码或测试文件，也未进入 hotfix QA/E2E 验证步骤。 |
+| `evidence_still_required` | NOT_EXERCISED | with_skill 未执行验证；因缺少项目文件而暂停，未产生可记录的 verification evidence、结果或 blocked checks。 |
+| `no_full_suite_required` | NOT_EXERCISED | with_skill 未进入测试执行或套件选择步骤，因此无法判断其是否要求完整 E2E suite。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=c512671ba3f670ea68581915721cb8b199e147627a2fd24f1d5fe95a5857dbc2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别到工作区缺少源码、测试和批准文案，要求补充上下文后再修改和运行最小验证；未发生变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=c26d50addc163b8f9527d6c913602c256d84a22eb09f9f20fa44a98f819aaf67; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别到工作区缺少源码并停止，未修改或验证。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 提供项目代码、登录页文件路径和新的空状态文案后，再执行修改与最小验证并评估这些断言。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `pm-agent`
+- Eval: `eval-013-change-tier-hotfix-e2e-direct-path`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-13-change-tier-hotfix-e2e-direct-path`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `da17d4a3cc21b7b3406a5e9563eb0de52953132aff13ecd162bc201b422b9c60`
+- Skill overlay SHA-256: `e406d715ee602cbed706c0ad23e94d5aceb1a2d88e22b51dc7fec5b6b0ff84ae`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `0e4e9687500855bbb8cac580183d47bafa14e53a69d5477185a5ceacddfe1857`
+- Metadata SHA-256: `385a2edb2c46d9f3ce571c34b812bf357f9247b71af061faebaf0764c87334a2`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `hotfix_direct_path_only` | NOT_EXERCISED | with_skill 正确识别工作区为空，未进入 hotfix QA/E2E 规划阶段。 |
+| `evidence_still_required` | NOT_EXERCISED | 由于没有可修改源码或验证入口，未执行验证，也未进入记录 verification evidence 的阶段。 |
+| `no_full_suite_required` | NOT_EXERCISED | 未进入测试范围决策阶段；候选仅请求提供正确项目文件。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=954efaef6d02a91a1f390224b9f080593d86094a1333b7c170eb9391d4ffadf1; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 诚实报告工作区缺少登录页代码、目标文案和测试入口，请求补充文件；无仓库变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=fb693413e273c9bd99e3157d61c7bd8f73f5309382b4db5ac11fdfaec3d3581d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 诚实报告无法修改或验证，但未覆盖断言要求。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 提供包含登录页的项目文件或切换到正确工作区后再执行修改与验证。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `pm-agent`
+- Eval: `eval-013-change-tier-hotfix-e2e-direct-path`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-13-change-tier-hotfix-e2e-direct-path`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `847ec25f3bf19681577a3386dfc21c378712f63dee7629dde5750b16901ab4e4`

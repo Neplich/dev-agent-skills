@@ -14,6 +14,254 @@
 - Fixture version/source: canonical manifest `9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-004-mapped-client-dependency`.
 - Fixture SHA-256: `9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5`
 - Prompt SHA-256: `7a3821e75530d0b15af01947cb71f52d6f838c90667f22241c35f06721254994`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`
+- Skill overlay SHA-256: `0cc706a818794631f426534d787ec1444a803ce7555683ff49eb3015d8e3ce7c`
+- Judge schema SHA-256: `fe1f59786edfa4e3b7ee12601522d693ef12a42cdfce9b4a390ad6d7b95d03d2`
+- Eval definition SHA-256: `8b3afd523591d93b0ae2bfbea1c5709666ee81c09a14160679da5b53064efb14`
+- Metadata SHA-256: `72846a754080f41b7de9981348b71040115d4704d0a16f2aad7aa4b526a44443`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 候选输出明确列出命中 change-map、required_docs 和相关文档；但锁定证据无法证明实际读取顺序。 |
+| `verifies_against_code` | PASS | 明确核对清单实际为 network-client@1.4.0、文档声称为 2.1.0，并以清单事实为依据。 |
+| `treats_unverified_as_low_trust` | PASS | 明确识别两份文档的 last_verified_version 为 unverified，并将其作为低信任导航而非直接采信。 |
+| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | 候选输出将请求退回 pm-agent 分类并补齐交接；由于缺少 PM/Security handoff packet，后续创建 issue 和产出升级证据尚不能执行。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7a3821e75530d0b15af01947cb71f52d6f838c90667f22241c35f06721254994; fixture_sha256=9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5; output_sha256=ba14685392e63edc4da87fd7132e0029dd0b7daceed6b2f674d7f82e74c39d62; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别映射文档、实际依赖版本及 unverified 状态，并在缺少交接上下文时暂停审计、回交 pm-agent。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7a3821e75530d0b15af01947cb71f52d6f838c90667f22241c35f06721254994; fixture_sha256=9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5; output_sha256=ff3c9ef3ca9f21f3365267821b5fd18c13dd1ed8c4f9ee4c79b2c0b481617df6; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完成了版本漂移分析并给出风险及缓解建议，作为 fresh baseline 对照。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 由 pm-agent 提供确认的安全审计 handoff packet 后，再执行后续风险结论升级及 issue 创建。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `dependency-risk-auditor`
+- Eval: `eval-004-mapped-client-dependency`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-004-mapped-client-dependency`.
+- Fixture SHA-256: `9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5`
+- Prompt SHA-256: `7a3821e75530d0b15af01947cb71f52d6f838c90667f22241c35f06721254994`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`
+- Skill overlay SHA-256: `0cc706a818794631f426534d787ec1444a803ce7555683ff49eb3015d8e3ce7c`
+- Judge schema SHA-256: `fe1f59786edfa4e3b7ee12601522d693ef12a42cdfce9b4a390ad6d7b95d03d2`
+- Eval definition SHA-256: `8b3afd523591d93b0ae2bfbea1c5709666ee81c09a14160679da5b53064efb14`
+- Metadata SHA-256: `72846a754080f41b7de9981348b71040115d4704d0a16f2aad7aa4b526a44443`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 候选输出提到 change-map 命中及 required_docs，但锁定证据无法证明实际读取顺序。 |
+| `verifies_against_code` | NOT_EXERCISED | 候选输出未完成 PM handoff 前的清单核验，因此未形成 manifest 实际 1.4.0 与文档 2.1.0 的完整审计结论。 |
+| `treats_unverified_as_low_trust` | PASS | 明确识别文档和 change-map 均为 unverified，并将其限定为低信任导航，而非直接采信。 |
+| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | 候选输出正确要求先回交 pm-agent 分类；但创建 issue 还依赖 PM/Security handoff 确认，未到可执行阶段。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7a3821e75530d0b15af01947cb71f52d6f838c90667f22241c35f06721254994; fixture_sha256=9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5; output_sha256=3b89c85002621e78296a9c107ff08a6e0728de002832410c457318f799c1b16c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 在审计入口处正确暂停，识别 change-map、required_docs 和 unverified 状态，并请求 PM handoff。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7a3821e75530d0b15af01947cb71f52d6f838c90667f22241c35f06721254994; fixture_sha256=9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5; output_sha256=be784d23028140cc4c95e2545cbd7ea777bc64d5c3a75717930ca8e8a6a5505f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 直接完成依赖版本差异、风险和升级/缓解建议，但未执行 PM handoff 升级流程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 获得 PM/Security handoff 确认后，核对 manifest.json 的实际固定版本并完成 PM 分类及 issue 创建。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `dependency-risk-auditor`
+- Eval: `eval-004-mapped-client-dependency`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-004-mapped-client-dependency`.
+- Fixture SHA-256: `9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5`
+- Prompt SHA-256: `7a3821e75530d0b15af01947cb71f52d6f838c90667f22241c35f06721254994`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`
+- Skill overlay SHA-256: `0cc706a818794631f426534d787ec1444a803ce7555683ff49eb3015d8e3ce7c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `8b3afd523591d93b0ae2bfbea1c5709666ee81c09a14160679da5b53064efb14`
+- Metadata SHA-256: `72846a754080f41b7de9981348b71040115d4704d0a16f2aad7aa4b526a44443`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | FAIL | with_skill 输出拒绝开始审计或读取仓库文件，未反查 change-map 或读取 required_docs。 |
+| `verifies_against_code` | FAIL | with_skill 输出未核对 manifest.json，也未识别清单 1.4.0 与文档 2.1.0 的不一致。 |
+| `treats_unverified_as_low_trust` | FAIL | with_skill 仅提及映射文档为 unverified，未读取或核证 required_docs，也未据此扩大清单核证。 |
+| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | 候选未形成改变正式文档事实的审计结论；其在缺少 handoff packet 时停止，未进入升级步骤。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7a3821e75530d0b15af01947cb71f52d6f838c90667f22241c35f06721254994; fixture_sha256=9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5; output_sha256=9bc51edf54bc831333ac206abd95e3f5493406b48ccfeaeb752a636a3444a243; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 因缺少 handoff packet 而拒绝开始审计或读取仓库文件。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7a3821e75530d0b15af01947cb71f52d6f838c90667f22241c35f06721254994; fixture_sha256=9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5; output_sha256=b3074f3c708682a01221732257cdd69e64edef3bfad3d970923c5fda64647958; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完成了依赖审计，读取并对比了文档与 manifest，给出升级及缓解建议。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未执行用户要求的仓库依赖审计，导致前三项已执行要求均未满足。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `dependency-risk-auditor`
+- Eval: `eval-004-mapped-client-dependency`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-004-mapped-client-dependency`.
+- Fixture SHA-256: `9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5`
+- Prompt SHA-256: `7a3821e75530d0b15af01947cb71f52d6f838c90667f22241c35f06721254994`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`
+- Skill overlay SHA-256: `b815bcadedc94647742113823ae910cacb0bd48d343e94eb3875bee2a6a39d68`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `8b3afd523591d93b0ae2bfbea1c5709666ee81c09a14160679da5b53064efb14`
+- Metadata SHA-256: `72846a754080f41b7de9981348b71040115d4704d0a16f2aad7aa4b526a44443`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 候选输出表明命中 change-map 并引用 required_docs，但锁定原始证据无法证明实际读取顺序或未遍历无关文档。 |
+| `verifies_against_code` | PASS | 明确核对 src/dependencies/manifest.json，指出文档声称 2.1.0 而清单固定 1.4.0，并以清单版本为实际仓库事实。 |
+| `treats_unverified_as_low_trust` | PASS | 明确识别 last_verified_version: unverified，并说明缺少锁文件、无法确认安装解析版本；未直接采信文档事实。 |
+| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | 候选输出因缺少 PM/Security handoff packet 先返回 PM 分类；锁定输出未证明后续 issue 创建或完整升级流程，且该步骤依赖后续确认/运行时证据。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7a3821e75530d0b15af01947cb71f52d6f838c90667f22241c35f06721254994; fixture_sha256=9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5; output_sha256=f73ae114620d7665e72cd2fbdfc90e1b6a6cc356893b058cb80ecb8367f9108a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确核对变更映射、指定文档、实际依赖版本及 unverified 状态；在缺少 handoff packet 时停在 PM 分类前置步骤。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7a3821e75530d0b15af01947cb71f52d6f838c90667f22241c35f06721254994; fixture_sha256=9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5; output_sha256=ece73ccb3e53080ff4cc71b79d6737f122cbe12e6ae694d8e24ccc6f9f8112a6; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完成了版本不一致和依赖风险的实质审计，并提出缓解建议，但未体现 PM 分类升级流程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 提供 PM/Security handoff packet 或后续运行时证据，以评估完整 PM 分类、issue 创建及升级路由。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `dependency-risk-auditor`
+- Eval: `eval-004-mapped-client-dependency`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-004-mapped-client-dependency`.
+- Fixture SHA-256: `9287a8fa578b5447f010eec525225500d555d9e2f5c2758277bcae9488425fa5`
+- Prompt SHA-256: `7a3821e75530d0b15af01947cb71f52d6f838c90667f22241c35f06721254994`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`

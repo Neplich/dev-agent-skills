@@ -14,6 +14,246 @@
 - Fixture version/source: canonical manifest `816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00` from `agents/designer/test/ui-ux-design/evals/workspace/eval-003-with-reference`.
 - Fixture SHA-256: `816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00`
 - Prompt SHA-256: `1d07d7029ac6afd6bdd8b3a0c089a71197a6e0caee2ba8f44e93457b9bde08dd`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a26ada6a2ba843cfb4e657c89ce7c3b76b2095d2b006f263e49042916f04185f`
+- Skill overlay SHA-256: `1e46d8592a997f6f8a826742994d2b0945378f4e3503165a8d7fa4365064000f`
+- Judge schema SHA-256: `5ac69cf52c4833a0e74ebe39318957376e1be2b4d8142bcff9072bdd02569746`
+- Eval definition SHA-256: `36f115852952f11f54a62c4ef547a3782cf81881da967b1b9e5b272fbfbef0f5`
+- Metadata SHA-256: `1297d3b18067ef541e85c715177821c621d61aa5e828ddc8a5fd239236e4a6ab`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | 锁定的 with_skill 交付文档直接包含“参考分析”章节，提炼了顶部导航、首屏价值主张、产品界面先行、连续工作流章节、编号与预览、移动端折叠导航等信息架构、布局和交互模式。 |
+| `assertion_2` | PASS | 锁定文档声明交付严格停留在 UI/UX 设计范围；with_skill 输出说明仅修改设计文档、未修改代码或测试，并明确设计阶段结束。git_evidence 显示无提交、无代码变更，只有设计文档未跟踪文件。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1d07d7029ac6afd6bdd8b3a0c089a71197a6e0caee2ba8f44e93457b9bde08dd; fixture_sha256=816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00; output_sha256=381410451cdea3d8edcb24b348ee056c932de7fb217ffe82dff5b78ff00cd5b7; snapshot_sha256=31b7cba1c24cea316d0a895f0372cad2fedb8084d05c6d70b1235e22304d0b9d
+- Behavior: 完成包含参考模式提炼的原创 UI/UX 设计文档，并停止在设计交付阶段。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1d07d7029ac6afd6bdd8b3a0c089a71197a6e0caee2ba8f44e93457b9bde08dd; fixture_sha256=816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00; output_sha256=23a34c5c13373819cc696989467abf76158ceb6624144cefedd627737b09bf8d; snapshot_sha256=bfca40e9c7dae575af6921868356819dc63f1020c8d0066fe84a7c8745696bc3
+- Behavior: 同样完成原创 UI/UX 设计文档并停止实现；作为对比基线，其最终交付也覆盖了参考模式与设计范围。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-003-with-reference`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00` from `agents/designer/test/ui-ux-design/evals/workspace/eval-003-with-reference`.
+- Fixture SHA-256: `816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00`
+- Prompt SHA-256: `1d07d7029ac6afd6bdd8b3a0c089a71197a6e0caee2ba8f44e93457b9bde08dd`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a26ada6a2ba843cfb4e657c89ce7c3b76b2095d2b006f263e49042916f04185f`
+- Skill overlay SHA-256: `1e46d8592a997f6f8a826742994d2b0945378f4e3503165a8d7fa4365064000f`
+- Judge schema SHA-256: `5ac69cf52c4833a0e74ebe39318957376e1be2b4d8142bcff9072bdd02569746`
+- Eval definition SHA-256: `36f115852952f11f54a62c4ef547a3782cf81881da967b1b9e5b272fbfbef0f5`
+- Metadata SHA-256: `1297d3b18067ef541e85c715177821c621d61aa5e828ddc8a5fd239236e4a6ab`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 交付文档明确包含“设计方向与参考分析”，提炼了参考站的导航、单一 CTA、产品证据、编号章节、深层入口和移动端纵向布局，并说明了原创化处理。 |
+| `assertion_2` | PASS | with_skill 仅交付 UI/UX 设计规格；文档明确不包含代码、测试、构建或实现步骤，且 git evidence 显示无提交或实现变更。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1d07d7029ac6afd6bdd8b3a0c089a71197a6e0caee2ba8f44e93457b9bde08dd; fixture_sha256=816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00; output_sha256=b9656b378c7accdee0da99d5f202429136bc874061123cc88926df9076fc5d12; snapshot_sha256=02ac81dd67ccd1410ead9a3041560afb26a8df2cf707fdf3304ad0a8380d530e
+- Behavior: 完成原创落地页设计文档，包含参考分析，并在设计交接边界停止。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1d07d7029ac6afd6bdd8b3a0c089a71197a6e0caee2ba8f44e93457b9bde08dd; fixture_sha256=816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00; output_sha256=7f29a3a68c6f7ac979614057dc21fb53f731dfef09a44fb6f54026d6652d621b; snapshot_sha256=8c7ef78e2c8dab46a97d652bf1be1abd026514ddb8d183ec1c057b5d8587ca59
+- Behavior: 同样完成设计文档并停止实现，内容覆盖信息架构、视觉和交互规格；作为比较基线未影响 with_skill 判定。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-003-with-reference`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00` from `agents/designer/test/ui-ux-design/evals/workspace/eval-003-with-reference`.
+- Fixture SHA-256: `816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00`
+- Prompt SHA-256: `1d07d7029ac6afd6bdd8b3a0c089a71197a6e0caee2ba8f44e93457b9bde08dd`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a26ada6a2ba843cfb4e657c89ce7c3b76b2095d2b006f263e49042916f04185f`
+- Skill overlay SHA-256: `1e46d8592a997f6f8a826742994d2b0945378f4e3503165a8d7fa4365064000f`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `36f115852952f11f54a62c4ef547a3782cf81881da967b1b9e5b272fbfbef0f5`
+- Metadata SHA-256: `1297d3b18067ef541e85c715177821c621d61aa5e828ddc8a5fd239236e4a6ab`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 的交付文档直接包含“参考模式分析”，提炼了克制导航、单一主标题/CTA、先展示产品界面、编号章节、产品证明/深层链接及移动端纵向叙事，并明确原创边界；这些内容与 fixture 中的 Linear 参考模式一致。 |
+| `assertion_2` | PASS | with_skill 的 delivery_snapshot 仅包含设计规格 Markdown；文档明确 PM scope 不授权代码实现，候选输出说明“未修改代码”，git evidence 仅显示新增 ui-ux-spec.md，没有前端工程文件或实现变更。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1d07d7029ac6afd6bdd8b3a0c089a71197a6e0caee2ba8f44e93457b9bde08dd; fixture_sha256=816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00; output_sha256=10bdbd7edd6a5726268abc0848bc7bf83551c8f9964f072ad1a5a996668975e6; snapshot_sha256=94a726b0cfc8561647771dd617877351cd6a1987a6e27ccb1559070ec5bb2ac8
+- Behavior: 交付了原创生产力应用落地页 UX/UI 设计规格，包含参考模式分析，并在设计阶段停止；没有进入前端实现。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1d07d7029ac6afd6bdd8b3a0c089a71197a6e0caee2ba8f44e93457b9bde08dd; fixture_sha256=816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00; output_sha256=7609d2a43cf45a6a994c176326f5793fb419826f1fdf3b439fed7f55f9766012; snapshot_sha256=f23a29c4032f196d205a33ce1e9218db9aa02dfcd02cb8d4813ead2ea7f67f98
+- Behavior: 交付了 index.html、styles.css、script.js 的前端实现，声明包含交互和响应式功能；未交付设计文档，也未体现参考网站分析。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-003-with-reference`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00` from `agents/designer/test/ui-ux-design/evals/workspace/eval-003-with-reference`.
+- Fixture SHA-256: `816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00`
+- Prompt SHA-256: `1d07d7029ac6afd6bdd8b3a0c089a71197a6e0caee2ba8f44e93457b9bde08dd`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **CLEAN**
+- Target skill tree SHA-256: `5df1c01e08aa97e9873a8076a8bc80b312ca23697bf7b8274e324d7feecebbd3`
+- Skill overlay SHA-256: `91cbd0b25abda706f069ede3ae1d7e4f14e2da2a5a0702fbf7cbcb22b29ac6e2`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `36f115852952f11f54a62c4ef547a3782cf81881da967b1b9e5b272fbfbef0f5`
+- Metadata SHA-256: `1297d3b18067ef541e85c715177821c621d61aa5e828ddc8a5fd239236e4a6ab`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 交付物包含独立的“参考分析”部分，明确提炼了克制导航、单一价值主张、先产品预览后按工作流分章节、编号章节、留白优先及移动端纵向阅读等参考模式，并说明了原创转译与排除项。 |
+| `assertion_2` | PASS | with_skill 输出明确交付设计规格并说明“未修改代码”；原始证据显示仅新增 docs/design/productivity-app-landing/ui-ux-spec.md，git diff、提交及分支均无工程变更，并将下一步交给 engineer-agent。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1d07d7029ac6afd6bdd8b3a0c089a71197a6e0caee2ba8f44e93457b9bde08dd; fixture_sha256=816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00; output_sha256=b6b2c339b49cae287660ca48d06a9b31b373e42cd1480f6d25bb756ca899cb4f; snapshot_sha256=7f24ef2b0a56e6403b73c7371e2847ddb01bf62995808c678ed47f811252460a
+- Behavior: 完成原创设计规格，明确提炼并转译参考模式，定义设计边界和后续 engineer-agent 交接；证据显示未进行代码实现或提交。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1d07d7029ac6afd6bdd8b3a0c089a71197a6e0caee2ba8f44e93457b9bde08dd; fixture_sha256=816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00; output_sha256=601e57933ffbc18797e04e1395ee265f59d1ca10e7f0c07c6aa58aa8ca6c5a0d; snapshot_sha256=38d1530c6fc6152da91b8523d2bcd7f81d2dea51fb2a9302d62c65baf6a1f405
+- Behavior: 完成设计文档交付，内容覆盖信息架构、视觉、响应式、交互和验收；未继续实现工程代码，但未明确引用参考模式分析或工程交接边界。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-003-with-reference`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00` from `agents/designer/test/ui-ux-design/evals/workspace/eval-003-with-reference`.
+- Fixture SHA-256: `816b980f73797aa0bb179996356d70da27810eb91a7ac7c665a793e71da22e00`
+- Prompt SHA-256: `1d07d7029ac6afd6bdd8b3a0c089a71197a6e0caee2ba8f44e93457b9bde08dd`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `78da31c45df217a9e90f29e80573d99066d6964c62a108fc4cb609c96341db51`

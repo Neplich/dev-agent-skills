@@ -21,8 +21,9 @@ Detailed execution guidance lives in `_internal/INSTRUCTIONS.md`.
 ## Mandatory Catalog Checkpoint
 
 Confirm repository/workspace scope before scanning a monorepo. If the requested
-workspaces are not explicit, stop and ask one minimal scope question; do not
-catalog the whole monorepo first. For every confirmed feature, emit the full
+workspaces are not explicit, enumerate the independently detectable workspace
+candidates and stop with one minimal scope question; do not catalog the whole
+monorepo first. For every confirmed feature, emit the full
 handoff identity: `feature`, `feature_path`, `parent_feature`, `feature_level`,
 and `feature_path_evidence` as `{source, reason}` entries. The catalog does not
 bulk-generate PRDs or TRDs: confirmed features go to `idea-to-spec` for PM

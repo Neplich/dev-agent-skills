@@ -14,6 +14,189 @@
 - Fixture version/source: canonical manifest `7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf` from `agents/qa/test/bug-analyzer/evals/workspace/eval-3-mapped-doc-bug-analysis`.
 - Fixture SHA-256: `7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf`
 - Prompt SHA-256: `42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0d6c4b717279e8edddeea8100d93e004d25b98b502e0ca114092a3f0c007a52f`
+- Skill overlay SHA-256: `4d1289a2f580cb07efcd85d24fb079acfc635807339f9469fa7653101393ff87`
+- Judge schema SHA-256: `6eadf49a93ad15b65779f0737c549d6122220ac6abe8a01622417bb0da199cda`
+- Eval definition SHA-256: `5055f21aa292e91a955bc3aa635c808239336415cf083aba532e9d19a7985220`
+- Metadata SHA-256: `6e065f47b93dd01060b700c2c7836503fb5797f7c0c1bb375677811fe6fa6d5f`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | The locked report records the matched change-map entry and required document, but the locked evidence cannot prove the actual read order or absence of an unrelated full-site traversal. |
+| `verifies_against_code` | PASS | The delivered report records code value 2, documentation value 3, their separate evidence roles, and the impact on defect classification; the fixture confirms max_retry_attempts = 2. |
+| `treats_unverified_as_low_trust` | PASS | The delivered report identifies last_verified_version: unverified as low-trust and keeps runtime defect confidence low pending code, test, and execution evidence. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d; fixture_sha256=7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf; output_sha256=8b5e84a2f379b9d9cc1f1e5e73c05e09d78cc6cfd0f7eadc0e2484e1b0e69ff3; snapshot_sha256=c73eff7510c1ef2210bd4a1e6f062ba5b2b87af96eb15aee849b6dcc96954f18
+- Behavior: Produced a structured evidence report with correct code/document discrepancy analysis, low-trust handling, uncertainty boundaries, and requested follow-up evidence.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d; fixture_sha256=7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf; output_sha256=256b0e2e3603ec817b5b5916e3d5f8d0583794410ee41f57aca20425536ce2ce; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provided accurate comparison analysis in prose but no delivered report file; it also treated the discrepancy as unconfirmed runtime behavior.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Use an observable read trace or equivalent raw process evidence to evaluate the mapped-document read-order assertion.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `bug-analyzer`
+- Eval: `eval-003-mapped-doc-bug-analysis`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf` from `agents/qa/test/bug-analyzer/evals/workspace/eval-3-mapped-doc-bug-analysis`.
+- Fixture SHA-256: `7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf`
+- Prompt SHA-256: `42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0d6c4b717279e8edddeea8100d93e004d25b98b502e0ca114092a3f0c007a52f`
+- Skill overlay SHA-256: `4d1289a2f580cb07efcd85d24fb079acfc635807339f9469fa7653101393ff87`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `5055f21aa292e91a955bc3aa635c808239336415cf083aba532e9d19a7985220`
+- Metadata SHA-256: `6e065f47b93dd01060b700c2c7836503fb5797f7c0c1bb375677811fe6fa6d5f`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 交付报告引用了 change-map 和正式说明，但锁定原始证据无法证明读取顺序或是否遍历了无关站点文档。 |
+| `verifies_against_code` | PASS | 交付文件明确记录代码为 max_retry_attempts = 2、正式说明为最多重试 3 次，并将其分类为 suspected / needs more evidence，说明未仅凭文档确认缺陷。 |
+| `treats_unverified_as_low_trust` | PASS | 交付文件明确识别 last_verified_version: unverified，并说明文档不足以单独建立产品契约；结论和置信度依据代码与缺失的运行时、测试证据。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d; fixture_sha256=7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf; output_sha256=23781830324bc9e569fbc90257a8440ab5ed4033dd7c76f1f4cdd1d8a45eb782; snapshot_sha256=b2241fc8ae8cb5acc93d1a094c9ded77752737a2766b1a9020567a3f7440a1f0
+- Behavior: 交付了证据化分析文件，准确记录代码/文档差异、未核证状态、当前分类、置信度及待补证据；读取顺序无法由锁定证据证明。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d; fixture_sha256=7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf; output_sha256=a41a1a634bdb502bdced4e771ffbeef3f16fd1ee326e32c1f589f6b25e4fb16d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 基线输出识别了代码与文档的 2/3 差异，并谨慎指出语义和运行时证据不足；未交付文件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 如需完整覆盖，提供带读取事件或工具调用顺序的原始证据。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `bug-analyzer`
+- Eval: `eval-003-mapped-doc-bug-analysis`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf` from `agents/qa/test/bug-analyzer/evals/workspace/eval-3-mapped-doc-bug-analysis`.
+- Fixture SHA-256: `7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf`
+- Prompt SHA-256: `42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `41901c7a6c233e96234e49bc5924edbee83abf2f5546698275afb442ff6f1d8f`
+- Skill overlay SHA-256: `57b0a87d033b766894f476e95aca86f50c66550e77c4d8ba3a998651bf9efccb`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `5055f21aa292e91a955bc3aa635c808239336415cf083aba532e9d19a7985220`
+- Metadata SHA-256: `6e065f47b93dd01060b700c2c7836503fb5797f7c0c1bb375677811fe6fa6d5f`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | The with_skill report identifies the mapped document and records a change-map trace, but the locked evidence cannot prove the required read order or absence of an unrelated full-site traversal. |
+| `verifies_against_code` | PASS | The report explicitly contrasts `max_retry_attempts = 2` in code with the documented 3 retries, distinguishes confirmed facts from inference, and explains that runtime semantics and the actual defect remain unconfirmed. |
+| `treats_unverified_as_low_trust` | PASS | The report identifies `last_verified_version: unverified`, states the document cannot independently establish current behavior, and bases its medium-confidence conclusion on the deterministic code/document mismatch while requesting runtime or test evidence. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d; fixture_sha256=7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf; output_sha256=be2953ab121dcbfc756cded64f87da61fe882e22089db1e06136fd60aab42224; snapshot_sha256=e63cd0b602b517b75e5a3368edc480683544d7cb579eab58fb1cc367326eb321
+- Behavior: Delivered a structured QA analysis artifact with mapped-document context, explicit code-versus-document comparison, unverified-document qualification, and missing-evidence guidance.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d; fixture_sha256=7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf; output_sha256=c98c446e77acb337fda6370b22685c6efdd7a19bae7a8fddf6232b4e1b10a4da; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced a useful evidence summary and identified the code/document mismatch, but did not provide a delivered QA analysis artifact.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `bug-analyzer`
+- Eval: `eval-003-mapped-doc-bug-analysis`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf` from `agents/qa/test/bug-analyzer/evals/workspace/eval-3-mapped-doc-bug-analysis`.
+- Fixture SHA-256: `7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf`
+- Prompt SHA-256: `42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `41901c7a6c233e96234e49bc5924edbee83abf2f5546698275afb442ff6f1d8f`

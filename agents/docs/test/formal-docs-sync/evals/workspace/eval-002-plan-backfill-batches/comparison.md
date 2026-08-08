@@ -14,6 +14,203 @@
 - Fixture version/source: canonical manifest `d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-002-plan-backfill-batches`.
 - Fixture SHA-256: `d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45`
 - Prompt SHA-256: `8abbeebf58a017f34c7b7989f0280e2daf82af8f4daf404a0ba21c98f5540049`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `9176713527a4959d0641a1feea488e487885b76c3aa23f11bb3b81f29825c3ae`
+- Eval definition SHA-256: `be4dca3fd3a1f9f483cdce9c1cd23eedce67742046720ec2fe530fb1b240c258`
+- Metadata SHA-256: `5fd28d9378e7eecda587e4671ac17460a0dd3663cff48d75fd068b1dc2cb5f0c`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `keeps_unconfirmed_batch_read_only` | PASS | With-skill Git evidence changes only Analytics Product pages and change-map; Accounts, Billing, and unrelated paths are untouched. |
+| `creates_complete_product_tree` | PASS | Locked delivery snapshot contains product/index.md, product/analytics/index.md, and product/analytics/view-dashboard.md. |
+| `keeps_every_task_navigable` | FAIL | Analytics index links the task and the task links its parent, but product/index.md contains plain text stating Analytics is reached through internal navigation without an actual link. |
+| `writes_evidence_backed_task_behavior` | PASS | The task page records allowed roles, empty state, load failure retry, unauthorized recovery, and binds them to dashboard.py::view_dashboard and the named acceptance test. |
+| `updates_product_map_atomically` | PASS | Final Git evidence includes all three Analytics required_docs and preserves existing Billing and support entries, including triggers, excludes, and review_policy fields. |
+| `runs_product_host_checks` | FAIL | The output records all three docs-site host checks with cwd docs/site and exit 0, and all three pages retain last_verified_version: unverified; however the root-to-Analytics navigation link is absent, so navigation resolution is incomplete. |
+| `blocks_audit_without_confirmed_version` | PASS | The audit handoff is explicitly blocked, lists the batch, affected docs, evidence, exclusions, and target_release_version: missing; it does not claim audit readiness or infer a version. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8abbeebf58a017f34c7b7989f0280e2daf82af8f4daf404a0ba21c98f5540049; fixture_sha256=d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45; output_sha256=ac30ae9227f11b82d06a35d296220343d8767b459e7e4fe642e9b22da0e48f52; snapshot_sha256=2f59080876003ee128f9f3b6253d2c8e5eaa8dfa88fcb04ffb0f80680d32179d
+- Behavior: Delivered the confirmed Analytics three-page tree and mapping, with evidence-backed task behavior and a correctly blocked audit handoff, but omitted the required root navigation link.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8abbeebf58a017f34c7b7989f0280e2daf82af8f4daf404a0ba21c98f5540049; fixture_sha256=d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45; output_sha256=12599600c13bc6c93ce714f315811aae6e9ab968cb4053c9c67e3aaf3982b8ee; snapshot_sha256=796267faee13160336978a3a5f383e7a3bcb2e638962746cd04c65072088267b
+- Behavior: Fresh baseline also delivered Analytics pages and mapping, but provided less explicit evidence-backed behavior and audit gating.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- product/index.md does not contain an actual navigable link to the Analytics domain.
+- The host-check requirement is not fully satisfied because the root navigation link is missing.
+- Next: Add a Markdown link from docs/site/product/index.md to docs/site/product/analytics/index.md or its directory.
+- Next: Re-run the docs host checks after repairing root navigation.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-002-plan-backfill-batches`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-002-plan-backfill-batches`.
+- Fixture SHA-256: `d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45`
+- Prompt SHA-256: `8abbeebf58a017f34c7b7989f0280e2daf82af8f4daf404a0ba21c98f5540049`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e1b96c87b6eb051a20a849fc51ca738b49866387566d5f61a7cdde4f1fc422cd`
+- Skill overlay SHA-256: `44e860f93f5d468075d88a048afe986ad68fcbae84270ffdc4d5a090573d59b8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `be4dca3fd3a1f9f483cdce9c1cd23eedce67742046720ec2fe530fb1b240c258`
+- Metadata SHA-256: `5fd28d9378e7eecda587e4671ac17460a0dd3663cff48d75fd068b1dc2cb5f0c`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `keeps_unconfirmed_batch_read_only` | PASS | With-skill git evidence changes only Product Analytics pages and the change map; Accounts, API root, Billing, and unrelated files remain unchanged. |
+| `creates_complete_product_tree` | PASS | Delivery snapshot contains product/index.md, product/analytics/index.md, and product/analytics/view-dashboard.md. |
+| `keeps_every_task_navigable` | PASS | Snapshots show root→Analytics→dashboard links and the task page links back to Analytics, with node-scoped content. |
+| `writes_evidence_backed_task_behavior` | PASS | Dashboard page records owner/admin/analyst visibility, empty state, load failure, retry, and unauthorized recovery, citing the implementation and acceptance test. |
+| `updates_product_map_atomically` | PASS | Git evidence includes the three-page Analytics required_docs mapping while preserving existing Billing and support mapping fields, triggers, and exclusions. |
+| `runs_product_host_checks` | PASS | With-skill output records all three docs-site commands with cwd docs/site/ and exit 0; all three pages retain last_verified_version: unverified and links are resolvable. |
+| `blocks_audit_without_confirmed_version` | PASS | Audit handoff lists the completed Analytics batch, affected pages/map, evidence, exclusions, and target_release_version missing with status blocked. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8abbeebf58a017f34c7b7989f0280e2daf82af8f4daf404a0ba21c98f5540049; fixture_sha256=d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45; output_sha256=bf606403d2518738249a63d1ff571a48c627e84feaea1fa2b784203e8fed5c64; snapshot_sha256=42eff437d1114d91563061ff830f77db697fd38e13e493d5c1e9ca4b7f6ab430
+- Behavior: Completed the confirmed Analytics documentation tree and mapping, preserved excluded areas, recorded host checks, and blocked audit pending release-version confirmation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8abbeebf58a017f34c7b7989f0280e2daf82af8f4daf404a0ba21c98f5540049; fixture_sha256=d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45; output_sha256=07f0f3e6852dee0a9f2dbd9691e482c60008df9492dfd7893f9ece403898a543; snapshot_sha256=1825da37a88ca28edbdd93e1d6ca1ae8d15fc4e5835616d803da3583580a232e
+- Behavior: Produced the three Analytics pages and claimed checks, but omitted the required change-map update and audit handoff details.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-002-plan-backfill-batches`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-002-plan-backfill-batches`.
+- Fixture SHA-256: `d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45`
+- Prompt SHA-256: `8abbeebf58a017f34c7b7989f0280e2daf82af8f4daf404a0ba21c98f5540049`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a612d50c32b84c65fad3cad08aad2d416a3a33647abfa1462784c1e58022424b`
+- Skill overlay SHA-256: `e55ecf59b3cd8d90a2ed4cf555bed2ad2fc2131494e0914246a868317b68f4e8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `be4dca3fd3a1f9f483cdce9c1cd23eedce67742046720ec2fe530fb1b240c258`
+- Metadata SHA-256: `5fd28d9378e7eecda587e4671ac17460a0dd3663cff48d75fd068b1dc2cb5f0c`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `keeps_unconfirmed_batch_read_only` | PASS | With-skill diff adds only Analytics Product documentation and mapping; no Accounts, Billing, or unrelated fixture files are changed, and existing mapping entries remain unchanged. |
+| `creates_complete_product_tree` | PASS | With-skill status and manifest show product/index.md plus analytics/index.md and view-dashboard.md. |
+| `keeps_every_task_navigable` | PASS | Locked delivery evidence for the created pages shows root-to-domain, domain-to-task, and task-to-parent links with node-scoped descriptions. |
+| `writes_evidence_backed_task_behavior` | FAIL | With-skill output lists supporting evidence files but does not provide locked evidence that the task page records all required visibility, empty-state, retry, and unauthorized-recovery claims with implementation and acceptance-test locations. |
+| `updates_product_map_atomically` | PASS | With-skill diff adds the Analytics glob with all three required Product pages; existing Billing and support mappings are unchanged, including their triggers, excludes, and other fields. |
+| `runs_product_host_checks` | PASS | With-skill output records all three commands run from docs/site with exit status 0, states all three pages retain last_verified_version: unverified, and successful builds provide host/navigation validation. |
+| `blocks_audit_without_confirmed_version` | PASS | With-skill handoff explicitly marks status blocked, lists the affected pages and map, supporting evidence, exclusions, completed batch, missing target_release_version, and maintainer confirmation dependency. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8abbeebf58a017f34c7b7989f0280e2daf82af8f4daf404a0ba21c98f5540049; fixture_sha256=d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45; output_sha256=8a2fb4cfce32432ad2f6aaf68ffc595ddea9d23c67543c0546f3382761acf3f3; snapshot_sha256=6062077a354905babcd177a5bd3d833d1c0e155e78489e5fe27a048f0df2ce60
+- Behavior: Implemented the confirmed Analytics Product batch, preserved excluded areas, recorded host checks, and correctly blocked release audit pending a maintainer-confirmed version; task-page behavior evidence is not established by the locked record.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8abbeebf58a017f34c7b7989f0280e2daf82af8f4daf404a0ba21c98f5540049; fixture_sha256=d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45; output_sha256=9105462cd71586b660233f47fd5beee63e025bb2082b6ebb614ea8d234e4bfab; snapshot_sha256=fe509db0656624a3ef67722d26d47fa7a2ea5efdf2da8cdbdab230d05c6f0b9a
+- Behavior: Created the Analytics tree and mapping, but claimed broad verification without an audit handoff or confirmed-version block; generated navigation artifacts remained.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- writes_evidence_backed_task_behavior is not substantiated by the locked with-skill evidence.
+- Next: Provide the created dashboard task page content or equivalent locked evidence showing each required claim mapped to dashboard.py and the named acceptance test.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-002-plan-backfill-batches`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-002-plan-backfill-batches`.
+- Fixture SHA-256: `d39e08e3921dea4ed3620111c7989cda61f1e85ab306939032821affe0218f45`
+- Prompt SHA-256: `8abbeebf58a017f34c7b7989f0280e2daf82af8f4daf404a0ba21c98f5540049`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `a612d50c32b84c65fad3cad08aad2d416a3a33647abfa1462784c1e58022424b`

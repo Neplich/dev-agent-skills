@@ -14,6 +14,385 @@
 - Fixture version/source: canonical manifest `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5` from `agents/qa/test/regression-suite/evals/workspace/eval-2-blocked-without-original-bug-context`.
 - Fixture SHA-256: `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5`
 - Prompt SHA-256: `261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8289acf8e27bfd57efcbcc6d726b9bfaa4df0b2cb5c60400d61eca4c6f8c65d4`
+- Skill overlay SHA-256: `a284e7eb3465da68b2d3792a2435d75549c3a3732ed503ef22754fbfde0a19d1`
+- Judge schema SHA-256: `2f3ed1bac6bd41e43ecbd585f5beb95db8464a7cf767e9c9a3ef20fae4f56429`
+- Eval definition SHA-256: `bde407cd9167fc95a8a68436fa7745a88790341ccffae265b6e1321da5b3938f`
+- Metadata SHA-256: `e69dc8ec803ebfc43eb2e4147f1b861f4b02e94afa256d86c039101ea44fff1b`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 明确指出缺少缺陷记录、失败证据、修复上下文和测试环境，未执行泛化回归。 |
+| `blocked` | PASS | with_skill 将原失败复核、修复行为、相邻风险、平台版本及 PRD/TRD 对齐标为 blocked/not executed 或明确说明因材料缺失无法完成。 |
+| `assertion_3` | PASS | 输出包含所有要求的结构化字段。 |
+| `assertion_4` | PASS | release_recommendation 为 needs more verification。 |
+| `no_unknown_or_unscoped_release` | PASS | 未使用 unknown 目录或误作全量 E2E 结论，并列出了恢复验证所需证据。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d; fixture_sha256=811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5; output_sha256=b5280e093b9c3cddccdfca013e94ebd51d08d2ba4014a39d6b96bff014d2ebe2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别材料不足并阻止回归结论，提供结构化阻塞状态和补证清单。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d; fixture_sha256=811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5; output_sha256=238c801175574f239fa123629263641549d1d67f24a70bfd9196ac175f349597; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别材料不足并给出补充证据清单，但未提供要求的结构化回归字段。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 补充原始缺陷、失败证据、修复 PR/commit、构建版本、QA 环境和平台版本后再执行回归。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `regression-suite`
+- Eval: `eval-002-blocked-without-original-bug-context`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5` from `agents/qa/test/regression-suite/evals/workspace/eval-2-blocked-without-original-bug-context`.
+- Fixture SHA-256: `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5`
+- Prompt SHA-256: `261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8289acf8e27bfd57efcbcc6d726b9bfaa4df0b2cb5c60400d61eca4c6f8c65d4`
+- Skill overlay SHA-256: `5963f60ead81ffc5fd7b8778d6215ec69825a76246473fc9777aee19c6576e9c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bde407cd9167fc95a8a68436fa7745a88790341ccffae265b6e1321da5b3938f`
+- Metadata SHA-256: `e69dc8ec803ebfc43eb2e4147f1b861f4b02e94afa256d86c039101ea44fff1b`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | With_skill 明确指出缺少缺陷记录、失败证据、变更记录、测试命令、构建标识和 QA 环境，并声明未执行测试。 |
+| `blocked` | PASS | With_skill 将原始失败复核、修复行为验证、邻近回归检查标记为 blocked，将平台版本标记为缺失/未执行，并将 PRD、TRD 对齐标记为阻塞。 |
+| `assertion_3` | PASS | With_skill 输出包含 original failure recheck、fixed behavior、adjacent regression checks、发布建议和 evidence_confidence。 |
+| `assertion_4` | PASS | 发布建议为 blocked / needs more verification，未建议 release ready。 |
+| `no_unknown_or_unscoped_release` | PASS | With_skill 未使用 unknown 目录或给出全量 E2E 结论，并列出了所需的平台版本、QA 环境、原始缺陷和修复证据。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d; fixture_sha256=811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5; output_sha256=4c9af0f81706fe6b37916866ad1a20bc4a792e99b2ced0dfc7e3a93583bac69c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 明确阻塞回归，结构化列出各验证门禁状态、证据置信度、发布边界及补充材料要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d; fixture_sha256=811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5; output_sha256=f79923114a3875da63b778d864af36ba207fa7e6e267f26281117113df5132d3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别材料不足并列出缺失的缺陷、复现、修复、环境和验证证据，但未提供结构化门禁状态。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `regression-suite`
+- Eval: `eval-002-blocked-without-original-bug-context`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5` from `agents/qa/test/regression-suite/evals/workspace/eval-2-blocked-without-original-bug-context`.
+- Fixture SHA-256: `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5`
+- Prompt SHA-256: `261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8289acf8e27bfd57efcbcc6d726b9bfaa4df0b2cb5c60400d61eca4c6f8c65d4`
+- Skill overlay SHA-256: `5963f60ead81ffc5fd7b8778d6215ec69825a76246473fc9777aee19c6576e9c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bde407cd9167fc95a8a68436fa7745a88790341ccffae265b6e1321da5b3938f`
+- Metadata SHA-256: `e69dc8ec803ebfc43eb2e4147f1b861f4b02e94afa256d86c039101ea44fff1b`
+- Executor SHA-256: `6c1c50885619c5add1ae9c7d9faf1fa39e905346d86059a01403ae742d286478`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | With-skill output explicitly states the handoff lacks the original defect record, reproduction steps, failure evidence, and repair/test context, so regression cannot be performed. |
+| `blocked` | PASS | With-skill output marks original failure recheck, fixed behavior verification, adjacent regression checks, and platform-version checking as blocked or not executed; PRD/TRD alignment is also marked blocked. |
+| `assertion_3` | PASS | With-skill output includes original failure recheck, fixed behavior, adjacent regression checks, release recommendation, and evidence confidence. |
+| `assertion_4` | PASS | Release recommendation is explicitly `needs more verification`, and the output says release cannot be recommended. |
+| `no_unknown_or_unscoped_release` | PASS | With-skill output does not use an unknown directory or claim release-wide E2E coverage; it lists the required platform/version, environment, original defect, repair evidence, build, and validation materials. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d; fixture_sha256=811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5; output_sha256=cec6baffc6790bc362ae808205ad122e109a115a40d46d5799f6cab396f1d1ba; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly blocks unsupported regression conclusions, provides the required structured statuses and confidence, and recommends further verification.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d; fixture_sha256=811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5; output_sha256=a73386f9a6adcaa2c153b818e2a40b628073e0686947516e24dc5ef9792698d2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly identifies insufficient evidence and lists missing materials, but does not provide the required structured regression-status fields.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `regression-suite`
+- Eval: `eval-002-blocked-without-original-bug-context`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5` from `agents/qa/test/regression-suite/evals/workspace/eval-2-blocked-without-original-bug-context`.
+- Fixture SHA-256: `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5`
+- Prompt SHA-256: `261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f0c319a012387c7575d20d8895608b789ad01d7d5779f862d77b1253767b14fb`
+- Skill overlay SHA-256: `b96ed92ce0423bb8527c13b8849f250fdaaadae3fbca0ab6a14820e55a642b24`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bde407cd9167fc95a8a68436fa7745a88790341ccffae265b6e1321da5b3938f`
+- Metadata SHA-256: `e69dc8ec803ebfc43eb2e4147f1b861f4b02e94afa256d86c039101ea44fff1b`
+- Executor SHA-256: `6c1c50885619c5add1ae9c7d9faf1fa39e905346d86059a01403ae742d286478`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 明确指出缺少原始缺陷记录、失败截图/日志、修复内容或提交、测试环境及平台版本等证据，并未直接执行泛化回归。 |
+| `blocked` | FAIL | with_skill 将原始失败复测、修复行为验证和相邻回归检查标为 blocked/not executed，但未明确将平台版本确认标为 blocked 或 not executed；PRD/TRD 仅表述为无法确认。 |
+| `assertion_3` | FAIL | with_skill 包含三项回归状态和 evidence_confidence，但没有明确的 release recommendation 项或等价的结构化发布建议字段。 |
+| `assertion_4` | PASS | with_skill 的结论明确为 BLOCKED，并说明不能判定 PASS 或 FAIL，未建议 release ready。 |
+| `no_unknown_or_unscoped_release` | PASS | with_skill 未使用 unknown 目录，也未将局部回归当作 release 全量 E2E 结论，并列出了所需的版本、环境、原始缺陷和修复证据。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d; fixture_sha256=811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5; output_sha256=7c02aeaa4993fd94b401d6cfcf46033c350d9e7306ac7f016403722f73b665a3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别证据缺口，阻断回归并列出所需补充材料；但遗漏明确的平台版本状态和 release recommendation 字段。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d; fixture_sha256=811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5; output_sha256=ec1defc7a5c0522625b422dc5f98ae6cbbffd004c446597a2b23394f45e05adf; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别材料不足并列出补充项，但未提供结构化 blocked/not executed 状态。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未将平台版本确认明确标记为 blocked 或 not executed。
+- with_skill 未包含明确的 release recommendation 结构化项。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `regression-suite`
+- Eval: `eval-002-blocked-without-original-bug-context`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5` from `agents/qa/test/regression-suite/evals/workspace/eval-2-blocked-without-original-bug-context`.
+- Fixture SHA-256: `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5`
+- Prompt SHA-256: `261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5b6d7cb9ff5171a983a8d8515599a4773ee6ffaa61ca2bb620f01078152d2f6a`
+- Skill overlay SHA-256: `896f0e17d232feae7886d36d9b4a521d02c2ea0c4d33bfdb8e88073f3448a22f`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bde407cd9167fc95a8a68436fa7745a88790341ccffae265b6e1321da5b3938f`
+- Metadata SHA-256: `e69dc8ec803ebfc43eb2e4147f1b861f4b02e94afa256d86c039101ea44fff1b`
+- Executor SHA-256: `6c1c50885619c5add1ae9c7d9faf1fa39e905346d86059a01403ae742d286478`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 明确指出原始缺陷、失败复现证据、修复提交/构建信息、测试命令和 QA 环境均缺失，并判定材料不足以执行回归。 |
+| `blocked` | PASS | with_skill 将整体状态标为 BLOCKED，并明确原始失败复测、固定行为验证、相邻回归和发布建议为 blocked/not executed；同时指出平台版本及 PRD/TRD 均缺失，未将其判为通过。 |
+| `assertion_3` | FAIL | with_skill 涵盖了原始失败复测、固定行为、相邻回归和发布建议，但未提供明确的 evidence confidence/证据置信度输出项或等价结论。 |
+| `assertion_4` | PASS | with_skill 明确表示不能推荐发布，整体结论为 BLOCKED，符合 blocked 或 needs more verification 边界。 |
+| `no_unknown_or_unscoped_release` | PASS | with_skill 未使用 unknown 目录或作全量 E2E 结论，并列出了恢复验证所需的平台/版本、环境、原始 bug、修复及构建证据。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d; fixture_sha256=811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5; output_sha256=4fb8ba347db282e866a9ffae6650426f6dccb915ff0d8a7ad92812615932ef11; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别证据缺失，阻断回归和发布建议，列出补齐材料及 PRD/TRD 对齐要求；缺少明确 evidence confidence 输出。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d; fixture_sha256=811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5; output_sha256=e7618c051f6a054c721753e2f9b683d72478c171934bce556340ae1d6b8b911c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别材料不足并列出缺失的缺陷、复现、修复、环境和测试证据，但未给出结构化的 blocked 门禁状态。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未包含明确的 evidence confidence/证据置信度结果，未满足 assertion_3。
+- Next: 补充 evidence confidence 字段或明确的证据置信度结论。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `regression-suite`
+- Eval: `eval-002-blocked-without-original-bug-context`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5` from `agents/qa/test/regression-suite/evals/workspace/eval-2-blocked-without-original-bug-context`.
+- Fixture SHA-256: `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5`
+- Prompt SHA-256: `261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `93e5fd0d6baa599b41823d84d9e76df4ae1d287d1ee0dc585a0fbe0d3c54e8d5`
+- Skill overlay SHA-256: `9883d5bccab96c99ea3ecc04b59f35a7f6a047a4260200cdf425c896a87f0f3e`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bde407cd9167fc95a8a68436fa7745a88790341ccffae265b6e1321da5b3938f`
+- Metadata SHA-256: `e69dc8ec803ebfc43eb2e4147f1b861f4b02e94afa256d86c039101ea44fff1b`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | 明确指出缺少原始缺陷、复现/失败证据、修复上下文、测试环境等，并说明未执行复测。 |
+| `blocked` | FAIL | 明确将原始失败复查、修复行为验证和相邻回归检查标为 blocked/not executed，但未明确将平台版本确认标为 blocked 或 not executed；PRD/TRD 仅称缺失。 |
+| `assertion_3` | PASS | 语义上包含原始失败复查、修复行为验证、相邻回归检查、发布建议和低证据置信度。 |
+| `assertion_4` | PASS | 发布建议明确为 blocked，未建议 release ready。 |
+| `no_unknown_or_unscoped_release` | PASS | 未使用 unknown 目录或宣称全量 E2E；列出了缺陷、修复版本/提交、预期行为、环境和执行入口等补充材料。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d; fixture_sha256=811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5; output_sha256=dd44279ecc427987b1b3621312c679d5378dbd76e878bf90df9a1aafa4b05c73; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确阻断回归结论并列出主要缺失证据，结构化覆盖大多数要求，但未明确标记平台版本确认状态。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d; fixture_sha256=811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5; output_sha256=05968272771db0cb8dc360a4bedb54d9ad4b7c7cf2217f1b0cdc350415c57ba7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 能识别材料不足并列出补充信息，但未提供结构化 blocked 状态、证据置信度或 PRD/TRD 对齐信息。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 输出遗漏了平台版本确认必须为 blocked 或 not executed 的明确状态。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `regression-suite`
+- Eval: `eval-002-blocked-without-original-bug-context`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5` from `agents/qa/test/regression-suite/evals/workspace/eval-2-blocked-without-original-bug-context`.
+- Fixture SHA-256: `811b93327e61a4a1610d2801bebd47a27e231fa7f4e1ec17fdfda144fdd986f5`
+- Prompt SHA-256: `261f550b35c9a4d84c8303c0abe4a7adbe04fbf62131aadd694155952d4db10d`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `93e5fd0d6baa599b41823d84d9e76df4ae1d287d1ee0dc585a0fbe0d3c54e8d5`

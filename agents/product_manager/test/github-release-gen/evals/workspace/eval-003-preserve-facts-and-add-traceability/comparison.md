@@ -14,6 +14,194 @@
 - Fixture version/source: canonical manifest `da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-003-preserve-facts-and-add-traceability`.
 - Fixture SHA-256: `da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17`
 - Prompt SHA-256: `1f72f4ad91d022aceb74cd22a41be167aaa46a8a39f2494e69954624a58e1ac6`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f95690411417d5e9cf66495e67ce2d96d0a51fc4ca1821536421129a950bb8f3`
+- Skill overlay SHA-256: `ee4b811662f5234e9cbcc50a85629526ebcf704244484e48f81d5ce85841d93c`
+- Judge schema SHA-256: `13218ab4a7abff52fb220f782ffa27173bde4d7c9a5b1ae26ef3115112e26b3d`
+- Eval definition SHA-256: `95f3370a6690706f871a83ed16fd2ea4af289f136e5af47351107d1ec6c06fc2`
+- Metadata SHA-256: `9e52b1a05d9dc7bd3856fe83df9035077725f4a4387447107b2ae09c5bfbb539`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_confirmed_release_facts` | FAIL | with_skill 保留了文件卡片、失败消息重试、统一附件模型、nullable JSONB 迁移风险、部署顺序与开关、双架构资产、升级说明和旧浏览器限制，但正文新增了证据未确认的发布日期“2026-08-09”。 |
+| `adds_verified_traceability_links` | FAIL | with_skill 使用了代表性 PR、commit 和最终 compare 链接，但未提供 github-evidence.md 中的贡献者链接。 |
+| `curates_instead_of_dumping` | PASS | with_skill 围绕版本事实组织说明，仅列出代表性 PR/commit，并明确未粘贴 18 个维护 commit feed。 |
+| `blocks_on_fact_conflict` | NOT_EXERCISED | 锁定证据未包含 GitHub 与站内事实的冲突，因此该阻塞分支未被实际触发，无法证明其是否会返回 docs-agent:release-notes-gen。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1f72f4ad91d022aceb74cd22a41be167aaa46a8a39f2494e69954624a58e1ac6; fixture_sha256=da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17; output_sha256=4b2899973f574f8ae6d359a2ee4b152511a14d01a917a147aa63b4901f9c5659; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 生成了不执行 GitHub 写入的 Release 预览，并正确等待 tag 与发布确认；但预览含未经证实的日期且缺少贡献者链接。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1f72f4ad91d022aceb74cd22a41be167aaa46a8a39f2494e69954624a58e1ac6; fixture_sha256=da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17; output_sha256=29d0179f8a9c62a86efe8306a371440a38587056aa581a19151ed62c7117eac8; snapshot_sha256=1ea865ec9c72220b04727c251c9040170fb92274b4f400bf8fef43b4ef335f15
+- Behavior: 生成了文件型 Release 预览，覆盖主要事实并包含贡献者链接，但 compare 链接出现旧目标提交与最终 tag 的不一致。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 新增了未由锁定证据确认的发布日期。
+- with_skill 缺少贡献者链接。
+- Next: 移除未经证据确认的发布日期。
+- Next: 为代表性 PR/commit 补充对应贡献者链接。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-003-preserve-facts-and-add-traceability`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-003-preserve-facts-and-add-traceability`.
+- Fixture SHA-256: `da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17`
+- Prompt SHA-256: `1f72f4ad91d022aceb74cd22a41be167aaa46a8a39f2494e69954624a58e1ac6`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `380b2fcfd0ff29b900d02472045d511ad62a16c847b128cbfdce8af3c7a60338`
+- Skill overlay SHA-256: `c666691beb368144f31c0354fd118ef20d664151476cfb1c8695e6ee7c490aa7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `95f3370a6690706f871a83ed16fd2ea4af289f136e5af47351107d1ec6c06fc2`
+- Metadata SHA-256: `9e52b1a05d9dc7bd3856fe83df9035077725f4a4387447107b2ae09c5bfbb539`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_confirmed_release_facts` | PASS | with_skill 的预览正文保留了文件卡片、失败消息原位重试、统一附件模型与旧文本兼容、nullable JSONB 迁移及删列风险、部署顺序与开关、amd64/arm64 资产、升级步骤和旧浏览器限制；未发现与 fixture 事实冲突的改写。 |
+| `adds_verified_traceability_links` | PASS | 正文包含 PR #116、PR #117、commit 8b6a1f2 及 @alice/@bob/@carol 链接，并包含 github-evidence.md 中的完整 compare 链接 v0.9.0...v1.0.0；目标 tag 与 compare endpoint 一致。 |
+| `curates_instead_of_dumping` | PASS | 正文围绕已确认的用户功能、架构、数据库、部署和升级事实组织，仅选择代表性 PR/commit 链接，明确未展开完整维护 feed。 |
+| `blocks_on_fact_conflict` | NOT_EXERCISED | 原始 GitHub 证据未显示与站内事实冲突或新的用户版本事实，因此条件性冲突阻塞分支未被锁定证据实际触发。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1f72f4ad91d022aceb74cd22a41be167aaa46a8a39f2494e69954624a58e1ac6; fixture_sha256=da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17; output_sha256=f3bb32c8a2ae1fe950fe753e7358215f7782e6dd39382b57e42fa3f4df8b41fd; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了仅预览的 Release 内容、版本与 compare 证据、精选维护链接及明确的 tag 缺失阻塞；未创建或修改工作区文件。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1f72f4ad91d022aceb74cd22a41be167aaa46a8a39f2494e69954624a58e1ac6; fixture_sha256=da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17; output_sha256=2249419138996917cf0986b8dfefe755683d0f161d17ebea48f183f22919cc96; snapshot_sha256=178b92b4e10a673f0ef5ad62acfd85f49945a20d9708e793291f77a993a22142
+- Behavior: 生成了可交付的 GitHub Release 预览文件，包含主要事实和精选链接，但使用 pre-tag target ref 作为 compare endpoint，且未呈现门禁与后续 tag 阻塞状态。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 创建 v1.0.0 tag 后重新读取 tag、release_verified 和 latest Release 证据，再进行 draft/publish 前复核。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-003-preserve-facts-and-add-traceability`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-003-preserve-facts-and-add-traceability`.
+- Fixture SHA-256: `da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17`
+- Prompt SHA-256: `1f72f4ad91d022aceb74cd22a41be167aaa46a8a39f2494e69954624a58e1ac6`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `bfa553ee1e9614c42bec50e00faa33ed1a614260acdb1011ab1116e8b73db2dd`
+- Skill overlay SHA-256: `0db0717c5ca83fddc3ecdfe8bf130c8885c13a22148bb9bf0d8e93c491b17294`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `95f3370a6690706f871a83ed16fd2ea4af289f136e5af47351107d1ec6c06fc2`
+- Metadata SHA-256: `9e52b1a05d9dc7bd3856fe83df9035077725f4a4387447107b2ae09c5bfbb539`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_confirmed_release_facts` | PASS | with_skill 保留了文件卡片、原位重试、统一附件模型、nullable JSONB 迁移及删列风险、部署顺序与开关、双架构资产、升级步骤和旧浏览器限制。 |
+| `adds_verified_traceability_links` | PASS | 使用了 PR #116、PR #117、commit 8b6a1f2 及对应贡献者链接，并提供了与 v1.0.0 标签一致的完整 compare 链接。 |
+| `curates_instead_of_dumping` | PASS | 正文围绕已确认版本事实组织，仅选取代表性 PR/commit，并明确未粘贴其余 18 个无关维护 commit。 |
+| `blocks_on_fact_conflict` | NOT_EXERCISED | 原始证据未显示 GitHub 证据与站内事实冲突或暴露新事实，无法检验冲突阻塞行为。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1f72f4ad91d022aceb74cd22a41be167aaa46a8a39f2494e69954624a58e1ac6; fixture_sha256=da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17; output_sha256=f255de6073693548cf65f4e7ae3de8f1350a9dce198e0e6ba94d040b70bc5f29; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 生成仅预览、不发布的 Release 内容，完整保留站内事实，补充精选维护链接并明确过滤非支持性 feed。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1f72f4ad91d022aceb74cd22a41be167aaa46a8a39f2494e69954624a58e1ac6; fixture_sha256=da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17; output_sha256=bcb90c3e5d29c194ad8330b3c025b19ba3b351e321ee3704b912c5ace8918388; snapshot_sha256=2415e4dbfdba408672e14d4673714868c0eeadec47d194ea319fb747a5e7a94b
+- Behavior: 生成了包含主要事实和精选链接的预览，但未展示冲突阻塞决策。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-003-preserve-facts-and-add-traceability`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-003-preserve-facts-and-add-traceability`.
+- Fixture SHA-256: `da29a479071012ab3bfa3af5ab47af8541f3b6d49a5ec8e88304fa50a27aed17`
+- Prompt SHA-256: `1f72f4ad91d022aceb74cd22a41be167aaa46a8a39f2494e69954624a58e1ac6`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `bfa553ee1e9614c42bec50e00faa33ed1a614260acdb1011ab1116e8b73db2dd`

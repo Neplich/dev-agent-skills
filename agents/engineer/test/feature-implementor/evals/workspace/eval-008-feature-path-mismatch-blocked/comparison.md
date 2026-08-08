@@ -14,6 +14,192 @@
 - Fixture version/source: canonical manifest `fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d` from `agents/engineer/test/feature-implementor/evals/workspace/eval-008-feature-path-mismatch-blocked`.
 - Fixture SHA-256: `fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d`
 - Prompt SHA-256: `9ba9f5f01cabbae62ba3bf40c7c99d8dc7f337984c8ca4277c6f238b4df6793e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e820a1098a32d64fe76bdf4ec719cd859ebecfdb70fa28be1309b656ec71bd22`
+- Skill overlay SHA-256: `226a387f9ef93d9f4c106e1f240f22e5014d390eeb37da0fd61da0c129ca36ba`
+- Judge schema SHA-256: `33864756672d39ea5d3d054f279e52d6c05b6ece12eef5c3a61c53de61073a90`
+- Eval definition SHA-256: `66c4bea185008e1b43202328d058ecaa9e2ff572bdfe8be7d346a358d1c56597`
+- Metadata SHA-256: `3365bfe92db70d4ff5499652a29702f93ac57621aa93b249c4712559af86079a`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_prd_trd_path_mismatch` | PASS | With-skill output explicitly identifies PRD feature_path as chat-interface/history-search, TRD feature_path as chat-interface, and states they do not match. |
+| `checks_related_prd` | PASS | With-skill output checks the required related_prd target, identifies the TRD gap, and blocks planning until the TRD is corrected. |
+| `blocks_implementation_plan` | PASS | With-skill delivery_snapshot is empty and git evidence shows no status, index, worktree, or ref changes; output explicitly blocks implementation and IMPLEMENTATION_PLAN.md changes. |
+| `hands_off_to_trd_gen` | PASS | With-skill output explicitly hands off to engineer-agent:trd-gen to align or rewrite docs/engineer/chat-interface/history-search/TRD.md. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9ba9f5f01cabbae62ba3bf40c7c99d8dc7f337984c8ca4277c6f238b4df6793e; fixture_sha256=fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d; output_sha256=12c577562b2e86728f742c920ffdeec28492f035bb6a3eabbd2ea79aada312c0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Detected the PRD/TRD path and related_prd mismatch, blocked implementation planning and code/test work, and handed off to engineer-agent:trd-gen.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9ba9f5f01cabbae62ba3bf40c7c99d8dc7f337984c8ca4277c6f238b4df6793e; fixture_sha256=fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d; output_sha256=5f1adcec5367b0dce7db406689dcdcb2b691c278e0aa56d0fe589e7c2fb3aaba; snapshot_sha256=d0c55afbc10bd528e222c05a34394d3ec107ac1847c97108ff3dbb43525898db
+- Behavior: Implemented Chat History Search under the PRD path, including code, tests, and package changes, without detecting or blocking on the TRD mismatch.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-008-feature-path-mismatch-blocked`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d` from `agents/engineer/test/feature-implementor/evals/workspace/eval-008-feature-path-mismatch-blocked`.
+- Fixture SHA-256: `fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d`
+- Prompt SHA-256: `9ba9f5f01cabbae62ba3bf40c7c99d8dc7f337984c8ca4277c6f238b4df6793e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `664333a5486cf89713133cd2c13950492425453ded41d03d80fa464888580510`
+- Skill overlay SHA-256: `e3882775ef1e3496d2f149c4016d8d04e22a586399acb4fdc6095b11e8f7c7bf`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `66c4bea185008e1b43202328d058ecaa9e2ff572bdfe8be7d346a358d1c56597`
+- Metadata SHA-256: `3365bfe92db70d4ff5499652a29702f93ac57621aa93b249c4712559af86079a`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_prd_trd_path_mismatch` | PASS | with_skill 明确列出 PRD feature_path 为 chat-interface/history-search、TRD 路径为 chat-interface，并判定路径和层级不匹配。 |
+| `checks_related_prd` | PASS | with_skill 明确指出 TRD related_prd 当前错误指向 docs/pm/chat-interface/PRD.md，并阻塞后续规划。 |
+| `blocks_implementation_plan` | PASS | with_skill 输出决定阻塞；交付快照为空，git status/diff 均为空，且明确写明对齐前不创建实现计划并禁止代码、测试等下游修改。 |
+| `hands_off_to_trd_gen` | PASS | with_skill 指定 receiving_owner 为 engineer-agent:trd-gen，并要求其生成 chat-interface/history-search 对应的 TRD。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9ba9f5f01cabbae62ba3bf40c7c99d8dc7f337984c8ca4277c6f238b4df6793e; fixture_sha256=fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d; output_sha256=fd69e529bc4ff59c86f73736ecab676cf54563fa7bab4eda3edf1a16609a96cc; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别路径及 related_prd 不一致，阻断实施计划和下游修改，并将下一步交给 engineer-agent:trd-gen。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9ba9f5f01cabbae62ba3bf40c7c99d8dc7f337984c8ca4277c6f238b4df6793e; fixture_sha256=fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d; output_sha256=ca91d57deafbbbe20394f27ba78554b94f7c76371c3dacb67e2bc233ac3f5a9a; snapshot_sha256=63d5176f8c210a7682507c17347b29b2df2d0c567f7344500ec715fb1570c756
+- Behavior: 基线错误地继续实现并修改 TRD、代码和测试，未阻断实施。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-008-feature-path-mismatch-blocked`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d` from `agents/engineer/test/feature-implementor/evals/workspace/eval-008-feature-path-mismatch-blocked`.
+- Fixture SHA-256: `fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d`
+- Prompt SHA-256: `9ba9f5f01cabbae62ba3bf40c7c99d8dc7f337984c8ca4277c6f238b4df6793e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `34bb246c41505d261f20b6762e5f8c167260c9def318e938b2f40cd562a05376`
+- Skill overlay SHA-256: `b58ba61aee19f19d841deeba69a31e4991e1e48601dbae26ffb264815cffa67d`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `66c4bea185008e1b43202328d058ecaa9e2ff572bdfe8be7d346a358d1c56597`
+- Metadata SHA-256: `3365bfe92db70d4ff5499652a29702f93ac57621aa93b249c4712559af86079a`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_prd_trd_path_mismatch` | PASS | with_skill 明确列出 PRD feature_path 为 chat-interface/history-search、TRD feature_path 为 chat-interface，并说明存在不一致。 |
+| `checks_related_prd` | PASS | with_skill 明确指出 TRD related_prd 未指向目标 PRD，并停止继续规划。 |
+| `blocks_implementation_plan` | PASS | with_skill 输出未修改代码或创建计划；原始 git/status 证据显示工作区无变更。 |
+| `hands_off_to_trd_gen` | PASS | with_skill 明确将下一步交给 engineer-agent:trd-gen，并要求补充 docs/engineer/chat-interface/history-search/TRD.md。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9ba9f5f01cabbae62ba3bf40c7c99d8dc7f337984c8ca4277c6f238b4df6793e; fixture_sha256=fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d; output_sha256=b680a3a236b75f2f8cbf8b69214db7e78b58c6f8804e97064614afd06040f75e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别路径和 related_prd 对齐问题，阻断实现与计划创建，并交回 engineer-agent:trd-gen 修正嵌套 TRD。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9ba9f5f01cabbae62ba3bf40c7c99d8dc7f337984c8ca4277c6f238b4df6793e; fixture_sha256=fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d; output_sha256=a8001ee97a3b251c9b3a23305b94e6e3b490aa47ed6192c59f6b746a07e6a800; snapshot_sha256=1aeaab573c4cdbcd3574fb05c991f98144ec8775a84ac69298076bc64d4bc1d1
+- Behavior: 直接声称已完成实现并产生多个未跟踪代码文件，未识别 PRD/TRD 路径与 related_prd 不一致。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-008-feature-path-mismatch-blocked`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d` from `agents/engineer/test/feature-implementor/evals/workspace/eval-008-feature-path-mismatch-blocked`.
+- Fixture SHA-256: `fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d`
+- Prompt SHA-256: `9ba9f5f01cabbae62ba3bf40c7c99d8dc7f337984c8ca4277c6f238b4df6793e`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `31ea692709a0817bc32ab74f76490bf0edfdea6902d08e36d2b8cbddeb78aee4`

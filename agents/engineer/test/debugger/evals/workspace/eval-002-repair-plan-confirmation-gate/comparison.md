@@ -14,6 +14,195 @@
 - Fixture version/source: canonical manifest `cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e` from `agents/engineer/test/debugger/evals/workspace/eval-002-repair-plan-confirmation-gate`.
 - Fixture SHA-256: `cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e`
 - Prompt SHA-256: `665db040735beea5cd9a54d5fea883336b5acadf81472985dbcc094ec677dd55`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2c7be3366028d6afd52b5eb4079e33c2b766f47c01e7c7ee8c4cd7cee5ef4d64`
+- Skill overlay SHA-256: `d9980d41bb48adbaa0ffa94159cff2b9b190fc5504bbdbee7f3503d87a42c7b9`
+- Judge schema SHA-256: `02d5b7800830ae12f2a9e99e570ad3aff880c5fd3790b18a9b48bd3dab3b6e8d`
+- Eval definition SHA-256: `024f4702e0fa8869af3d3c3109a71208ab006a57b0857bf3decfc75788b86ec1`
+- Metadata SHA-256: `7d2fe0fce1e70425553acde36f203e00cc70ea5e32d8f50bf9a3232445ec4c62`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `writes_repair_plan` | PASS | 包含修改文件、最小修改思路及验证命令。 |
+| `records_fix_split_decision` | PASS | 明确判断无需 implementation/validation sub-agent split，并说明 QA E2E handoff 条件。 |
+| `waits_for_plan_confirmation` | PASS | 明确写明“确认后我再开始修改”。 |
+| `e2e_handoff_requires_confirmed_plan` | PASS | 包含 PRD/TRD 依据与对齐结论、目标修改文件、验证命令、建议 E2E 目录，并声明确认前不修改 E2E 文件。 |
+| `does_not_apply_fix` | PASS | 未声称已修改代码、更新测试或执行修复后的验证。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=665db040735beea5cd9a54d5fea883336b5acadf81472985dbcc094ec677dd55; fixture_sha256=cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e; output_sha256=553df3297f3154eef0c4526a99b800588c9a9589861d16db7b397ff46a8855e5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完整提供调查结论、修复计划、分工判断和确认门槛，未应用修复。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=665db040735beea5cd9a54d5fea883336b5acadf81472985dbcc094ec677dd55; fixture_sha256=cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e; output_sha256=6fb5630e55a06a8d40416f8045378cab1a8997e6e7c86c539ba725b633e90681; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了调查和修复建议，但缺少计划确认、分工判断及 E2E 交接约束。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-002-repair-plan-confirmation-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e` from `agents/engineer/test/debugger/evals/workspace/eval-002-repair-plan-confirmation-gate`.
+- Fixture SHA-256: `cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e`
+- Prompt SHA-256: `665db040735beea5cd9a54d5fea883336b5acadf81472985dbcc094ec677dd55`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2c7be3366028d6afd52b5eb4079e33c2b766f47c01e7c7ee8c4cd7cee5ef4d64`
+- Skill overlay SHA-256: `d9980d41bb48adbaa0ffa94159cff2b9b190fc5504bbdbee7f3503d87a42c7b9`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `024f4702e0fa8869af3d3c3109a71208ab006a57b0857bf3decfc75788b86ec1`
+- Metadata SHA-256: `7d2fe0fce1e70425553acde36f203e00cc70ea5e32d8f50bf9a3232445ec4c62`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `writes_repair_plan` | PASS | With_skill 输出列出修改文件、最小修复思路及两条验证命令。 |
+| `records_fix_split_decision` | PASS | 明确说明不需要 implementation/validation sub-agent split。 |
+| `waits_for_plan_confirmation` | PASS | 明确要求确认修复计划后再开始修改文件。 |
+| `e2e_handoff_requires_confirmed_plan` | PASS | 计划包含 PRD/TRD 依据、目标文件、验证命令、feature_path notifications，并说明确认后再交由 QA 补充 E2E，确认前不修改 E2E 文件。 |
+| `does_not_apply_fix` | PASS | 交付快照和 git evidence 均显示无文件或 Git 变更；输出未声称已修改代码、更新测试或运行修复后的验证。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=665db040735beea5cd9a54d5fea883336b5acadf81472985dbcc094ec677dd55; fixture_sha256=cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e; output_sha256=8ce2ebc639f0a9d10023069f7afc5dd3c5f43c9fb710a67ce2c990a19dcda155; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了完整修复计划、分工判断、E2E 交接约束，并等待用户确认；未产生文件变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=665db040735beea5cd9a54d5fea883336b5acadf81472985dbcc094ec677dd55; fixture_sha256=cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e; output_sha256=bf7666d4575323de516d2173dcffd0a097ec838a305e3fdad7363c241cd31ad1; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了调查结论和修复建议，但未记录 sub-agent 分工或要求计划确认。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-002-repair-plan-confirmation-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e` from `agents/engineer/test/debugger/evals/workspace/eval-002-repair-plan-confirmation-gate`.
+- Fixture SHA-256: `cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e`
+- Prompt SHA-256: `665db040735beea5cd9a54d5fea883336b5acadf81472985dbcc094ec677dd55`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `c794a9f4d25d61e50b6bf610eddf7b88ff4be58b7215ed85d280d6be8cae915f`
+- Skill overlay SHA-256: `ee5b521f7d9c6fe11867036a027efeb03a84b77600d52fa7396a529de342ee2e`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `024f4702e0fa8869af3d3c3109a71208ab006a57b0857bf3decfc75788b86ec1`
+- Metadata SHA-256: `7d2fe0fce1e70425553acde36f203e00cc70ea5e32d8f50bf9a3232445ec4c62`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `writes_repair_plan` | PASS | with_skill 输出了文件变更清单、最小修复思路和验证命令。 |
+| `records_fix_split_decision` | PASS | 明确说明“Sub-agent split：不需要”。 |
+| `waits_for_plan_confirmation` | PASS | 明确要求确认后再应用修复并运行验证。 |
+| `e2e_handoff_requires_confirmed_plan` | PASS | 计划包含 PRD/TRD 对齐结论、目标文件、验证命令和 docs/qa/e2e/notifications/ 建议目录，并说明当前未更新 E2E 资产。 |
+| `does_not_apply_fix` | PASS | 输出仅提出计划，明确确认后才应用修复；原始 git evidence 显示无修改、无提交、无验证结果变更。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=665db040735beea5cd9a54d5fea883336b5acadf81472985dbcc094ec677dd55; fixture_sha256=cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e; output_sha256=72d0b6fc74f9334d4303f6caafcf2ca42abe8f9f3af9df105ad57e4a4e23ec23; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 产出完整的审查式修复计划，记录分工判断，包含 E2E 交接信息，并等待用户确认；未执行修改。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=665db040735beea5cd9a54d5fea883336b5acadf81472985dbcc094ec677dd55; fixture_sha256=cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e; output_sha256=5012a8b8d190dac53f1f571de199594e1db8897a80eec23688adc3e2ba367dbb; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了根因并提出最小修复，但未说明 sub-agent split、E2E handoff 约束或等待确认。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-002-repair-plan-confirmation-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e` from `agents/engineer/test/debugger/evals/workspace/eval-002-repair-plan-confirmation-gate`.
+- Fixture SHA-256: `cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e`
+- Prompt SHA-256: `665db040735beea5cd9a54d5fea883336b5acadf81472985dbcc094ec677dd55`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `c794a9f4d25d61e50b6bf610eddf7b88ff4be58b7215ed85d280d6be8cae915f`

@@ -14,6 +14,206 @@
 - Fixture version/source: canonical manifest `a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838` from `agents/qa/test/spec-based-tester/evals/workspace/eval-1-test-from-spec`.
 - Fixture SHA-256: `a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838`
 - Prompt SHA-256: `9354357763da0add30a1325fbbb8939ec16a97d466c020a03be8548593c2f944`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8ceb46669357c2ad2e3984067ae0ce5c97b019da23d3a0f850d2bedd7e38ab17`
+- Skill overlay SHA-256: `fda3e87e887ba889a897540771dbb1fdc6d424a530b084850bba0cba716a1567`
+- Judge schema SHA-256: `af6defb3674eb2b870c7db7cceb8e07b1bc81b7056b91617749018c2cf4bddc5`
+- Eval definition SHA-256: `1c095f56ebf8188b170d450f4a4c64b7797467faefd997d04a5961dc178ee24e`
+- Metadata SHA-256: `beabc33b6b3cb3b4fcbdd2cd76be881ee37dbed2c10afbbb6515f52def856618`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | NOT_EXERCISED | The report records scope, environment, unknowns, and blockers, but locked evidence cannot prove the required read-before-execution order. |
+| `assertion_2` | NOT_EXERCISED | The report claims same-path QA materials were read and TC-001 reused, but locked evidence cannot prove the required read order. |
+| `assertion_3` | PASS | The candidate selected the documented repository harness and recorded why browser fallback was unavailable. |
+| `assertion_4` | PASS | The report requirement matrix explicitly marks each acceptance item blocked and does not classify the environment blocker as a product failure. |
+| `assertion_5` | PASS | The archived report contains a requirement matrix with statuses and notes, execution path, evidence references, and risk notes. |
+| `e2e` | NOT_EXERCISED | No new or supplemented E2E test case was delivered; the existing TC-001 was reused, so the file-creation constraint was not exercised. |
+| `versioned_report_archive` | PASS | The report confirms the feature-update scenario and v0.3.0-dev, and locked snapshots show the required versioned result and testcase files plus the _reports summary path. |
+| `assertion_7` | PASS | The report records no confirmed product failure and explicitly declines bug-analyzer handoff. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9354357763da0add30a1325fbbb8939ec16a97d466c020a03be8548593c2f944; fixture_sha256=a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838; output_sha256=b5066f25455614047b4e8f36ad083b6ca992ddbb00f55b44c61bacf27c2be409; snapshot_sha256=1493d479f410aef828214d9a15891197f51347aedcab554054c6a45957cc5771
+- Behavior: Produced a structured, versioned blocked QA report with requirement statuses, evidence, risks, and no unsupported product failure.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9354357763da0add30a1325fbbb8939ec16a97d466c020a03be8548593c2f944; fixture_sha256=a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838; output_sha256=1341d0d7465a7ad41927a16a03045fdc10842f587d5b3d8eb461ca69fbaba77b; snapshot_sha256=e698292ff0fb8d5a2bb455d5b3edeb0b35517edd258b98eb17e0c0fc5bece32b
+- Behavior: Produced a blocked report with a missing-Vitest diagnosis, but without the required same-path versioned result artifacts and comparable structured QA detail.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Restore dependencies and implementation/test sources, then rerun TC-001 on v0.3.0-dev.
+- Next: If the repository harness remains unavailable, provide a QA application URL and execute the documented browser fallback.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `spec-based-tester`
+- Eval: `eval-001-test-from-spec`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838` from `agents/qa/test/spec-based-tester/evals/workspace/eval-1-test-from-spec`.
+- Fixture SHA-256: `a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838`
+- Prompt SHA-256: `9354357763da0add30a1325fbbb8939ec16a97d466c020a03be8548593c2f944`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8ceb46669357c2ad2e3984067ae0ce5c97b019da23d3a0f850d2bedd7e38ab17`
+- Skill overlay SHA-256: `0dc6062e83cf445a1577948355ffb768c08c70474d373f09d93a3ded935ca1bb`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `1c095f56ebf8188b170d450f4a4c64b7797467faefd997d04a5961dc178ee24e`
+- Metadata SHA-256: `beabc33b6b3cb3b4fcbdd2cd76be881ee37dbed2c10afbbb6515f52def856618`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | NOT_EXERCISED | 交付报告记录了范围、feature-update、平台版本、测试命令、未知项和阻塞项，但锁定证据无法证明这些文档是在执行前读取的。 |
+| `assertion_2` | NOT_EXERCISED | 报告声称读取并复用 TEST_SUITE、FLOW_INDEX 和 TC-001，并检查了 scripts/results；但锁定证据无法证明要求的读取顺序。 |
+| `assertion_3` | PASS | 报告依据套件和 TRD 选择并执行了最窄的 repo harness：npm test -- checkout-discount；Vitest 不可用且无 QA URL/实现时未进行无依据的浏览器 fallback。 |
+| `assertion_4` | PASS | 汇总报告和 TC 结果均包含 requirement matrix，并将三项检查标为 blocked，明确区分了环境阻塞与产品失败。 |
+| `assertion_5` | PASS | 汇总报告包含 execution path、requirement matrix、逐项 status/evidence、风险与阻塞恢复顺序；result.md 还包含逐项 notes。 |
+| `e2e` | NOT_EXERCISED | 锁定交付物未新增或补充 E2E TC；现有 TC-001 文件保持不变，因此该条件性新增/补充约束未被触发。 |
+| `versioned_report_archive` | PASS | 锁定文件直接显示已确认 feature-update 与 v0.3.0-dev，并写入 results/TC-001-discount-code/v0.3.0-dev/result.md、testcase.snapshot.md 及对应 _reports/v0.3.0-dev 汇总报告。 |
+| `assertion_7` | PASS | 报告明确无可复现产品失败，不 hand off 给 bug-analyzer；将后续动作保留给仓库/工程恢复和 QA 重跑。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9354357763da0add30a1325fbbb8939ec16a97d466c020a03be8548593c2f944; fixture_sha256=a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838; output_sha256=7a234abb9ffa6f84c8838b9ee2672bf23f24a70fd194049b557fb458cb1afde0; snapshot_sha256=63461967f3e8e2c8940b1325fdc50b40d078364df8ccdd439c03d0ac39752a5d
+- Behavior: 读取并引用同路径规格、产品、工程和 QA 文档，复用 TC-001，选择 repo harness；运行被 Vitest 缺失阻塞，并生成结构化、版本化的 TC 结果、快照和汇总报告。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9354357763da0add30a1325fbbb8939ec16a97d466c020a03be8548593c2f944; fixture_sha256=a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838; output_sha256=d8b1a07198d20fa597d47eaab98a08fa1195a4d5cfb82a53e89a024569a2e5f5; snapshot_sha256=be1f5ee95b193961ccd8c65967d91dc5d2b6908a54112f421c803f0b53cc8692
+- Behavior: 执行 npm test 后因 Vitest 缺失阻塞；生成仓库外层 _reports 下的单一阻塞报告，未形成按 TC、平台版本归档的 QA 结果结构。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 恢复实现和测试运行时依赖后，在 v0.3.0-dev 下重跑 TC-001 并追加结果。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `spec-based-tester`
+- Eval: `eval-001-test-from-spec`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838` from `agents/qa/test/spec-based-tester/evals/workspace/eval-1-test-from-spec`.
+- Fixture SHA-256: `a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838`
+- Prompt SHA-256: `9354357763da0add30a1325fbbb8939ec16a97d466c020a03be8548593c2f944`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8ceb46669357c2ad2e3984067ae0ce5c97b019da23d3a0f850d2bedd7e38ab17`
+- Skill overlay SHA-256: `55ae613f45225c4fd27fe7b7bb1eff99de0a24107c076461ac6a7464ef4fa3ae`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `1c095f56ebf8188b170d450f4a4c64b7797467faefd997d04a5961dc178ee24e`
+- Metadata SHA-256: `beabc33b6b3cb3b4fcbdd2cd76be881ee37dbed2c10afbbb6515f52def856618`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | NOT_EXERCISED | The report contains a preflight baseline with scope, assumptions, unknowns, and blockers, but locked evidence cannot prove the required read order. |
+| `assertion_2` | NOT_EXERCISED | The report states that the same-path QA files, absent scripts, and absent historical results were checked, but locked evidence cannot prove the required read order. |
+| `assertion_3` | PASS | The with_skill lane selected the documented repo harness `npm test -- checkout-discount`; it did not fall back to browser tooling because the required harness and QA URL were unavailable. |
+| `assertion_4` | PASS | The requirement matrices explicitly mark all three behavioral checks as `blocked`, distinguish them from confirmed failures, and record the environment blocker. |
+| `assertion_5` | PASS | The with_skill lane produced structured per-TC and summary reports containing execution path, requirement matrix with status/evidence/notes, evidence references, and risk notes. |
+| `e2e` | NOT_EXERCISED | No new or supplemented E2E case or script was created; the existing TC-001 was reused. |
+| `versioned_report_archive` | PASS | The lane confirmed `feature-update` and platform `v0.3.0-dev`, and wrote versioned `result.md`, `testcase.snapshot.md`, and a summary report under the feature `_reports` path. |
+| `assertion_7` | PASS | The lane explicitly made no bug-analyzer handoff because no reproducible product failure was observed; the missing runner remained blocked. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9354357763da0add30a1325fbbb8939ec16a97d466c020a03be8548593c2f944; fixture_sha256=a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838; output_sha256=308f963004ccb11c28c8e2d4492330672caf91057f54c37acfaef1bd1c89317d; snapshot_sha256=d2b1b60099581d5176de3bbbc1795a633f850a9a1c5053feb3016214f417f8f2
+- Behavior: Correctly reused the existing TC, selected the repository harness, recorded the missing Vitest dependency as blocked, produced versioned per-TC and summary artifacts, and avoided unsupported failure claims or handoff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9354357763da0add30a1325fbbb8939ec16a97d466c020a03be8548593c2f944; fixture_sha256=a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838; output_sha256=8a3c61c2b5635c51fe78266c8ab0e1d88884292e8ad6b58fb69d91723b8ea6bc; snapshot_sha256=30448614c41ce794bccd861debc9079b2c76d3201f7fff10888fd3fb00363859
+- Behavior: Detected the missing Vitest runner and reported all behavioral checks as unexecuted/blocked, but produced only a top-level report outside the feature-scoped archive structure.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Restore the repository test dependencies and rerun TC-001 using `npm test -- checkout-discount`.
+- Next: Provide the configured QA URL if browser acceptance remains necessary.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `spec-based-tester`
+- Eval: `eval-001-test-from-spec`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838` from `agents/qa/test/spec-based-tester/evals/workspace/eval-1-test-from-spec`.
+- Fixture SHA-256: `a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838`
+- Prompt SHA-256: `9354357763da0add30a1325fbbb8939ec16a97d466c020a03be8548593c2f944`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `8ceb46669357c2ad2e3984067ae0ce5c97b019da23d3a0f850d2bedd7e38ab17`

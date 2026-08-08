@@ -18,6 +18,12 @@ and Helm/runtime contexts. Mark unavailable runtime or permission evidence as
 documentation follow-up, hand only verified landed facts and unresolved owners
 to `formal-docs-sync`; never write the formal pages here.
 
+Persist the audit at `deploy/ENV_AUDIT.md` unless the confirmed handoff names a
+different durable path. For every variable, compare code reads, local/example
+configuration, Docker/runtime configuration, and CI/CD injection; record each
+missing coverage location, the resulting configuration or security risk,
+recommended owner/action, and exact evidence source.
+
 ## When to Use
 
 - Before first deployment

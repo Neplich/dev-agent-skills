@@ -14,6 +14,264 @@
 - Fixture version/source: canonical manifest `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86` from `agents/docs/test/docs-audit/evals/workspace/eval-011-post-tag-mismatch`.
 - Fixture SHA-256: `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86`
 - Prompt SHA-256: `63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `87ef764041bed9ee9555b42ac224112964f5f9e1229cf61ab18c2da424e966e8`
+- Eval definition SHA-256: `dd2f814bca5d9dce6fed31e09545467860903a50efd0252401f17372eb85d63c`
+- Metadata SHA-256: `44f3e50cd86c78b14f58e8584dc26444f39390cb3ef1d6e88051fdaf94a2e89e`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_immutable_pre_tag_authority` | PASS | 明确以 refs/heads/pre-tag-handoff 作为 authority，并将 release-evidence 分支与未提交工作区副本隔离。 |
+| `validates_current_attempt_history` | FAIL | 虽然保持 blocked 并识别了未提交副本，但没有明确核对同版本 attempt 2 直接 superseded attempt 1 的历史关系。 |
+| `rejects_complete_release_tree_drift` | PASS | 明确比较 704d8f7..26cf729，识别新增 src/catalog/export-v2.py，并保持 blocked。 |
+| `offers_safe_maintainer_recovery` | PASS | 提供了同版本修复和改用新版本两种选择，并说明维护者、docs-site-bootstrap、Docs/工程负责人的边界及重新审计前提。 |
+| `persists_blocked_without_corrupting_authority` | FAIL | 说明保持 blocked、未执行写入且不产生成功状态，但未说明持久化失败后的具体恢复条件。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=dc8f260ba1d782fa4cdd851e0fd56103c46ff81ba38b230bee497bc0b909f1c9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别 pre-tag authority、完整发布树漂移并保持 blocked，且提供安全补救选择；但遗漏当前 attempt 历史核对和持久化故障恢复条件。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=26dd5c84e60c0c90b1d72b0b47c41ad312d5a01d99d70bbdf4138623ea14cd61; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了 export-v2.py 漂移并拒绝 release_verified，但使用较弱的 needs_follow_up 结论，未充分隔离 immutable authority，也未覆盖完整恢复边界。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- current_attempt_history 未完整呈现。
+- persistence failure recovery 未覆盖。
+- Next: 补充 attempt 2、直接 superseded attempt 1 及同版本关系的核对结果。
+- Next: 说明持久化失败时的恢复条件，并确认既有 authority 不被改写。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-011-post-tag-mismatch`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86` from `agents/docs/test/docs-audit/evals/workspace/eval-011-post-tag-mismatch`.
+- Fixture SHA-256: `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86`
+- Prompt SHA-256: `63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a40b9426c3ece6f787614183ce8478f0aacaf94802441ebb84796853c2c8848e`
+- Skill overlay SHA-256: `6cbf5a99cea4bf2bfd3e91f9b1e261a828b8b62ab73699f7ed3de43f33d01739`
+- Judge schema SHA-256: `87ef764041bed9ee9555b42ac224112964f5f9e1229cf61ab18c2da424e966e8`
+- Eval definition SHA-256: `dd2f814bca5d9dce6fed31e09545467860903a50efd0252401f17372eb85d63c`
+- Metadata SHA-256: `44f3e50cd86c78b14f58e8584dc26444f39390cb3ef1d6e88051fdaf94a2e89e`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_immutable_pre_tag_authority` | NOT_EXERCISED | The output preserves the pre-tag authority and rejects the modified worktree copy, but the locked evidence does not prove the required actual ref resolution and git-show read order. |
+| `validates_current_attempt_history` | NOT_EXERCISED | The output remains blocked and rejects the rewritten worktree audit, but it does not explicitly establish attempt 2, its superseded attempt 1, and the same-version current-attempt relationship. |
+| `rejects_complete_release_tree_drift` | PASS | It identifies the complete base-to-tag drift as the added src/catalog/export-v2.py, notes the raw patch mismatch, and keeps the result blocked instead of relying on matching version surfaces. |
+| `offers_safe_maintainer_recovery` | PASS | It gives two actionable maintainer paths: repair/remove the incorrect v1.2.0 tag and rerun audits, or abandon it and confirm a new release version before auditing that target; it keeps authority changes within maintainer control. |
+| `persists_blocked_without_corrupting_authority` | PASS | It reports blocked, performs no writes, preserves the existing pre-tag authority, rejects worktree backfilling of historical evidence, and requires evidence completion and renewed auditing before verification. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=ee65ebdb919b9dfe5fbd865c8cb94fb377ded1024b388523a4b3981a4e69ab46; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly keeps the release blocked, identifies the decisive complete-tree drift, separates the dirty worktree copy from authority, and provides safe recovery choices.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=95687e9f2ee88caefdde4e2de4a7d7e0c9348ee6f480b55883b1939589ad24f0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Recognizes the added source file and blocked release, but provides a less complete authority-preservation and recovery treatment for the current attempt and failed persistence context.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Require explicit evidence of resolving pre-tag commit/tree refs and reading committed audit and handoff records.
+- Next: Require explicit validation of attempt 2 and its direct superseded attempt 1 before claiming full coverage.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-011-post-tag-mismatch`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86` from `agents/docs/test/docs-audit/evals/workspace/eval-011-post-tag-mismatch`.
+- Fixture SHA-256: `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86`
+- Prompt SHA-256: `63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a40b9426c3ece6f787614183ce8478f0aacaf94802441ebb84796853c2c8848e`
+- Skill overlay SHA-256: `6cbf5a99cea4bf2bfd3e91f9b1e261a828b8b62ab73699f7ed3de43f33d01739`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `dd2f814bca5d9dce6fed31e09545467860903a50efd0252401f17372eb85d63c`
+- Metadata SHA-256: `44f3e50cd86c78b14f58e8584dc26444f39390cb3ef1d6e88051fdaf94a2e89e`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_immutable_pre_tag_authority` | PASS | With-skill output identifies the pre-tag authority and explicitly isolates the uncommitted worktree release_verified copy as non-authoritative. |
+| `validates_current_attempt_history` | FAIL | It does not state or reconcile attempt 2 with its directly superseded same-version attempt 1. |
+| `rejects_complete_release_tree_drift` | PASS | It reports the blocked result and identifies the actual tag delta as the added src/catalog/export-v2.py, inconsistent with the audit’s claimed change scope. |
+| `offers_safe_maintainer_recovery` | PASS | It offers same-version remediation and a new-valid-authority path, with complete pre-tag/post-tag verification prerequisites and an explicit prohibition on modifying the old authority. |
+| `persists_blocked_without_corrupting_authority` | FAIL | It states that no post-tag result was written and existing worktree changes remain, but does not explain the recovery conditions for the failed persistence attempt. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=cb962a5d39085c27b0eec200367f64490ff98bf66bf4b282b96509518970f1b8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly concluded blocked, isolated the uncommitted drifted audit, detected the complete-tree mismatch, and proposed bounded recovery; omitted explicit attempt-history reconciliation and persistence-failure recovery conditions.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=cbdda5bcae1757453949253b1c7dedebd3107df5155c37d25b3b8777cd3c2cf8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Recognized version-surface consistency and the export-v2.py delta, but did not clearly preserve the immutable pre-tag authority or provide sufficiently bounded recovery guidance.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- validates_current_attempt_history
+- persists_blocked_without_corrupting_authority
+- Next: Explicitly reconcile attempt 2 and its directly superseded attempt 1 for v1.2.0.
+- Next: State the persistence-failure recovery conditions, including restoring writable result persistence and rerunning post-tag verification without altering existing authority.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-011-post-tag-mismatch`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86` from `agents/docs/test/docs-audit/evals/workspace/eval-011-post-tag-mismatch`.
+- Fixture SHA-256: `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86`
+- Prompt SHA-256: `63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d339a8370a29b3fb2a69aa1879b1226165ec088d306a4e2e7a01258df2326973`
+- Skill overlay SHA-256: `0bc7243cbb5cff3e77d9ba448e020a1a1f279639f8db6a365faac208b8e1dcc7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `dd2f814bca5d9dce6fed31e09545467860903a50efd0252401f17372eb85d63c`
+- Metadata SHA-256: `44f3e50cd86c78b14f58e8584dc26444f39390cb3ef1d6e88051fdaf94a2e89e`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_immutable_pre_tag_authority` | NOT_EXERCISED | 输出正确区分了 pre-tag authority 与未提交工作区副本，但锁定证据无法证明实际执行了指定 ref 解析和 git show 读取。 |
+| `validates_current_attempt_history` | FAIL | 输出确认 attempt 2、工作区副本未被采用并保持 blocked，但未核对或说明同版本且已直接 superseded 的 attempt 1。 |
+| `rejects_complete_release_tree_drift` | NOT_EXERCISED | 输出指出 export-v2.py 是决定性新增差异并保持 blocked，但锁定证据无法证明实际执行了完整 commit tree 解析与差异核对。 |
+| `offers_safe_maintainer_recovery` | PASS | 提供了保留/修正现有 tag 与确认新版本两类选择，要求补齐证据、change-map 和审计链路，并将决定交给维护者。 |
+| `persists_blocked_without_corrupting_authority` | FAIL | 输出分离了 blocked 结果与既有 authority，且说明未执行写入；但未明确给出持久化故障恢复条件（恢复写入能力、写入并 readback 验证）。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=c89415f7171d59147f2b9e5c3c0181544834aae28f3005d147211075d8d6959e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确得出 blocked，识别 authority 漂移、完整 tree 增量和持久化限制，并给出维护者后续选择；但遗漏 attempt 1 历史核对及持久化恢复条件。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=0f7aada55b49bddfce0db09b4a9609365c3fccfcdf32e6702bb758eac5046d08; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了未审计的 export-v2.py 差异并拒绝确认 release_verified，但恢复选择和 authority 保护表述较弱。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- validates_current_attempt_history: 未说明 attempt 1 已被 attempt 2 直接 supersede。
+- persists_blocked_without_corrupting_authority: 未明确持久化失败后的恢复条件。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-011-post-tag-mismatch`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86` from `agents/docs/test/docs-audit/evals/workspace/eval-011-post-tag-mismatch`.
+- Fixture SHA-256: `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86`
+- Prompt SHA-256: `63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `9e9abf391c9ccd9564d35b5def50bc0374b1db0886710676c4d48422839746ae`

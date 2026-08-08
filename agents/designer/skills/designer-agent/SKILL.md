@@ -20,6 +20,11 @@ implementation authority. After the selected design deliverables are complete,
 stop and hand the confirmed paths and remaining implementation scope back to
 `engineer-agent`. Never continue into code, tests, commands, or implementation
 planning.
+For an Engineer-originated UI maintenance request, the return packet explicitly
+names `engineer-agent` and the remaining TRD, `IMPLEMENTATION_PLAN.md`,
+implementation, and test responsibilities. For a PM-originated design-only
+request, offer that handoff only when implementation continuation was requested
+or already authorized.
 
 ## Hard Boundaries
 

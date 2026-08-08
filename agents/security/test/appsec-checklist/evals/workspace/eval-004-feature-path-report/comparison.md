@@ -14,6 +14,195 @@
 - Fixture version/source: canonical manifest `258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c` from `agents/security/test/appsec-checklist/evals/workspace/eval-004-feature-path-report`.
 - Fixture SHA-256: `258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c`
 - Prompt SHA-256: `05538871e356a1820db883bcff8e90f4208bc94ba8410156f5ef306f19d4ce21`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `812b371fc30792cb2b0cf8d96079b3244c95b93efab7638e085d4e955d6ea42c`
+- Skill overlay SHA-256: `33e7e73c99fb4e7a6f2d6ab5104b8298fc067235a29614a6e32ee61035051666`
+- Judge schema SHA-256: `a8797f637904fc863710b298fe2fad8220a05aa0d79e70ed8997096bddf38e6c`
+- Eval definition SHA-256: `cea867306caa7c154c38a57a7085c1f3dc292e28eb28f571e99034334c62710c`
+- Metadata SHA-256: `8529cb6cbe6ab9523b4f7cf3b65440375e54cbaab5ce6a8376eb7a3bc4427f65`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_same_path_pm_engineer_docs` | PASS | Locked report lists the PRD, TRD, and IMPLEMENTATION_PLAN under the required feature path. |
+| `writes_nested_security_report` | PASS | Delivery snapshot contains docs/security/chat-interface/messages/history/search/appsec-checklist.md. |
+| `includes_feature_path_frontmatter` | PASS | Report frontmatter contains the required feature_path, parent_feature, and feature_level values. |
+| `does_not_invent_feature_directory` | PASS | The report uses the existing nested feature directory and does not invent a top-level synonym. |
+| `escalates_fact_changing_conclusion_to_pm` | PASS | Report includes a PM escalation payload, assigns classification and issue filing to pm-agent, and excludes direct Security issue filing. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=05538871e356a1820db883bcff8e90f4208bc94ba8410156f5ef306f19d4ce21; fixture_sha256=258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c; output_sha256=6b7262db05e1cca1463380d76b3675fa6a2d9fcfca23607a98b5f346fe1c6ae1; snapshot_sha256=89badf4bee0864d9005220165ddc48bbdbb8f3aa39ed1e4b484e9bd2be1df3dc
+- Behavior: Created the correctly nested Security report with required frontmatter, documented the security findings, and included PM escalation evidence.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=05538871e356a1820db883bcff8e90f4208bc94ba8410156f5ef306f19d4ce21; fixture_sha256=258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c; output_sha256=d3ccb6fc325c212284af035ff05da713930c3aecc54fb8cf6bce0a1f695706ad; snapshot_sha256=7078a4a1bc6e57b28363079a63cc42fc5f9b39910d51e8c20da66bf8f9f161d8
+- Behavior: Created an engineer-path SECURITY_REVIEW.md instead of the required nested Security report and did not provide the required PM escalation handoff.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `appsec-checklist`
+- Eval: `eval-004-feature-path-report`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c` from `agents/security/test/appsec-checklist/evals/workspace/eval-004-feature-path-report`.
+- Fixture SHA-256: `258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c`
+- Prompt SHA-256: `05538871e356a1820db883bcff8e90f4208bc94ba8410156f5ef306f19d4ce21`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `812b371fc30792cb2b0cf8d96079b3244c95b93efab7638e085d4e955d6ea42c`
+- Skill overlay SHA-256: `33e7e73c99fb4e7a6f2d6ab5104b8298fc067235a29614a6e32ee61035051666`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `cea867306caa7c154c38a57a7085c1f3dc292e28eb28f571e99034334c62710c`
+- Metadata SHA-256: `8529cb6cbe6ab9523b4f7cf3b65440375e54cbaab5ce6a8376eb7a3bc4427f65`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_same_path_pm_engineer_docs` | NOT_EXERCISED | The delivered report references the required PRD, TRD, and implementation plan and states they were in scope, but the locked evidence cannot prove the hidden act of reading them. |
+| `writes_nested_security_report` | PASS | The with_skill delivery snapshot contains docs/security/chat-interface/messages/history/search/appsec-checklist.md, matching the required nested path. |
+| `includes_feature_path_frontmatter` | PASS | The delivered file frontmatter contains feature_path: chat-interface/messages/history/search, parent_feature: chat-interface/messages/history, and feature_level: 4. |
+| `does_not_invent_feature_directory` | PASS | The feature path is aligned with the PM/Engineer documentation paths, and the report was written under the corresponding nested Security path rather than an invented top-level synonym. |
+| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | The report recommends PM-agent classification and PM-owned issue filing, but the locked evidence does not prove that the handoff and issue creation occurred. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=05538871e356a1820db883bcff8e90f4208bc94ba8410156f5ef306f19d4ce21; fixture_sha256=258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c; output_sha256=7eb57478fb318098a63d74bbec4dde1dc962eed8f09ec22048aceb9e8afa25ce; snapshot_sha256=363f23bb57ef91f850ec502ed1dceb366cef23150c4cabf3db48d709436e42a0
+- Behavior: Produced the required nested Security report with matching feature frontmatter, documented the SQL injection and authorization concerns, and recommended PM-agent escalation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=05538871e356a1820db883bcff8e90f4208bc94ba8410156f5ef306f19d4ce21; fixture_sha256=258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c; output_sha256=62854786896fcf45b450aab15796621fe9359db87efc6b4baf2784e06b44e8eb; snapshot_sha256=86e37802041d7561a463eba960b54edb81e1e2fc103d175914d13b6e725356ef
+- Behavior: Produced a security report under the incorrect engineer documentation path and did not use the required nested Security report path.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `appsec-checklist`
+- Eval: `eval-004-feature-path-report`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c` from `agents/security/test/appsec-checklist/evals/workspace/eval-004-feature-path-report`.
+- Fixture SHA-256: `258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c`
+- Prompt SHA-256: `05538871e356a1820db883bcff8e90f4208bc94ba8410156f5ef306f19d4ce21`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `812b371fc30792cb2b0cf8d96079b3244c95b93efab7638e085d4e955d6ea42c`
+- Skill overlay SHA-256: `5b2b2b7a3b96eded32c11959c382e7fa8aafb204f59c1c353154bae2cdaf9c71`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `cea867306caa7c154c38a57a7085c1f3dc292e28eb28f571e99034334c62710c`
+- Metadata SHA-256: `8529cb6cbe6ab9523b4f7cf3b65440375e54cbaab5ce6a8376eb7a3bc4427f65`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_same_path_pm_engineer_docs` | PASS | The with_skill report explicitly lists and cites the PRD, TRD, and IMPLEMENTATION_PLAN at the required paths. |
+| `writes_nested_security_report` | PASS | Raw delivery evidence shows the report at docs/security/chat-interface/messages/history/search/appsec-checklist.md; no forbidden alternative path was used. |
+| `includes_feature_path_frontmatter` | PASS | The report frontmatter contains feature_path: chat-interface/messages/history/search, parent_feature: chat-interface/messages/history, and feature_level: 4. |
+| `does_not_invent_feature_directory` | PASS | The required same-path fixture documents exist, and the with_skill output used the established nested feature path. |
+| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | The locked evidence shows a recommendation to return the conclusion to pm-agent and create a fix item, but does not prove an actual fact-changing conclusion requiring issue creation or the subsequent issue action. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=05538871e356a1820db883bcff8e90f4208bc94ba8410156f5ef306f19d4ce21; fixture_sha256=258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c; output_sha256=c7f34abb4e1ae2f4f346b5185589e1efd898ddbf54fe5783fed4e77440a03d39; snapshot_sha256=7cdc1ec3f7edb7ab7c56b2662cffd9198b0b5684d31a3af8f3e6fdf4f6e6edd4
+- Behavior: Produced the correctly nested appsec checklist with required frontmatter, cited all three feature documents, documented the SQL injection and authorization risks, and recommended PM escalation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=05538871e356a1820db883bcff8e90f4208bc94ba8410156f5ef306f19d4ce21; fixture_sha256=258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c; output_sha256=960272fbd912ff7c97332395ec46ab565df732132213d2591bacf8eac33601b7; snapshot_sha256=ab7b695d301555302a6a7a62fbdba504257b3f96fca756baa0056aeef1f4a486
+- Behavior: Produced an engineer-directory SECURITY_REVIEW.md, omitted the required security report location and required escalation wording, while identifying key security risks.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `appsec-checklist`
+- Eval: `eval-004-feature-path-report`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c` from `agents/security/test/appsec-checklist/evals/workspace/eval-004-feature-path-report`.
+- Fixture SHA-256: `258d12e924889cdd6b9d64d5ae077ef75e65139845669b9a81854ba9fc13621c`
+- Prompt SHA-256: `05538871e356a1820db883bcff8e90f4208bc94ba8410156f5ef306f19d4ce21`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `812b371fc30792cb2b0cf8d96079b3244c95b93efab7638e085d4e955d6ea42c`

@@ -19,6 +19,9 @@ decide explicitly whether the verified conclusion changes product behavior,
 formal documentation facts, operational facts, or release readiness; if so,
 return the evidence to `pm-agent` for issue classification before any follow-up
 Docs, Engineer, DevOps, or release work.
+If routing has not yet produced a verified Security-owned conclusion, record
+`pm_escalation: not_applicable_yet`. Security never sends a conclusion directly
+to `docs-agent` and never creates the PM tracking issue itself.
 
 ## Role Boundary
 

@@ -17,6 +17,10 @@ those files, create a meaningful commit, and then attempt push, PR creation,
 and CI readback in order. If the remote, authentication, `gh`, PR, or CI is
 unavailable, preserve the completed local evidence, name the exact blocker, and
 do not claim a remote PR or CI result that was not observed.
+When PR creation is blocked, still present an equivalent PR preview containing
+title, summary, PM/PRD reference, changed scope, and test status. When CI cannot
+be read, explicitly record `CI: not run` or `CI: unavailable` and provide the
+exact recovery/readback command rather than omitting CI state.
 
 ## When to Use
 

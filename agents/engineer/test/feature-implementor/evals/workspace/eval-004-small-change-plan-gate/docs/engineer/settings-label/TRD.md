@@ -16,5 +16,5 @@ state-management, or navigation behavior changes.
 
 ## Verification
 
-Run the settings form component test that checks the submit label and existing
-save behavior.
+Run `npm test -- tests/components/settings-form.test.tsx` to check the submit
+label and existing save behavior.

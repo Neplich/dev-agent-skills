@@ -14,6 +14,192 @@
 - Fixture version/source: canonical manifest `c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3` from `agents/product_manager/test/feature-catalog/evals/workspace/eval-003-monorepo-scope-clarification`.
 - Fixture SHA-256: `c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3`
 - Prompt SHA-256: `592a8806afad3bd6928b7ec27d5b10ebdae9bb0b86dd82cabdc2f71dc5d37c25`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `272c84e241c5d52534922fccf2bc6732492a0d70c9f6e2ab8dc1eff2533f7b0c`
+- Skill overlay SHA-256: `c7fd56e26e53c8ea32b598e8f4e06588e28aee376ed79eb9822ecf37e3099222`
+- Judge schema SHA-256: `fe7ee6212a0514e053db6b490f2fd78c74a3e6115f5b789e3e3734a9d7b1be8b`
+- Eval definition SHA-256: `221668759d9b3f1847f350986e591b6defbd71cd5f83a296b96e5736de8e7ceb`
+- Metadata SHA-256: `8aa1f1f970ba708ba203aa964e23b048bfd278c5cd0d04094602a65c55ad9476`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `blocked_on_scope` | PASS | With-skill output states `blocked` and identifies `apps/web`, `apps/admin`, and `services/api` as independent workspaces, then requests scope confirmation. |
+| `minimal_clarification` | PASS | With-skill output asks one scope question and offers concise scope choices; it does not present a multi-question questionnaire. |
+| `no_fabricated_catalog` | PASS | With-skill delivery_snapshot is empty and git status/diff are empty; no catalog or PRD was delivered. |
+| `no_parallel_top_level` | PASS | The listed workspace paths are presented as detected workspaces, not asserted as parallel top-level feature paths or confirmed catalog conclusions. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=592a8806afad3bd6928b7ec27d5b10ebdae9bb0b86dd82cabdc2f71dc5d37c25; fixture_sha256=c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3; output_sha256=95c785b44a8d9f090243f9c5520885aa2bcda4613df83e6d4b9dfd37ebd344b2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly blocks on the unspecified scope and asks for minimal scope clarification without making changes.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=592a8806afad3bd6928b7ec27d5b10ebdae9bb0b86dd82cabdc2f71dc5d37c25; fixture_sha256=c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3; output_sha256=2707fac4213b408799906d504f5d786d00f7ec472dc8526d306ed755c801ee5b; snapshot_sha256=4adcf266b69668cac98260b41a6b1b2219094d298ef229d8d2c518153fb41bb4
+- Behavior: Created and documented a functional catalog despite the unspecified scope, providing baseline contrast.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `feature-catalog`
+- Eval: `eval-003-monorepo-scope-clarification`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3` from `agents/product_manager/test/feature-catalog/evals/workspace/eval-003-monorepo-scope-clarification`.
+- Fixture SHA-256: `c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3`
+- Prompt SHA-256: `592a8806afad3bd6928b7ec27d5b10ebdae9bb0b86dd82cabdc2f71dc5d37c25`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `272c84e241c5d52534922fccf2bc6732492a0d70c9f6e2ab8dc1eff2533f7b0c`
+- Skill overlay SHA-256: `c7fd56e26e53c8ea32b598e8f4e06588e28aee376ed79eb9822ecf37e3099222`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `221668759d9b3f1847f350986e591b6defbd71cd5f83a296b96e5736de8e7ceb`
+- Metadata SHA-256: `8aa1f1f970ba708ba203aa964e23b048bfd278c5cd0d04094602a65c55ad9476`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `blocked_on_scope` | PASS | with_skill identifies apps/admin, apps/web, and services/api, then pauses for scope confirmation before continuing; this is an equivalent blocked/pending-clarification state. |
+| `minimal_clarification` | PASS | with_skill asks one scope-confirmation question with workspace/all options and does not present a multi-question questionnaire. |
+| `no_fabricated_catalog` | PASS | with_skill has empty delivery_snapshot and empty git status/diff, and produces no catalog or PRD before confirmation. |
+| `no_parallel_top_level` | PASS | with_skill lists the workspaces only as scope options; it does not assert parallel top-level feature paths, and the scope remains unresolved. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=592a8806afad3bd6928b7ec27d5b10ebdae9bb0b86dd82cabdc2f71dc5d37c25; fixture_sha256=c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3; output_sha256=2206f231ed1ab2912e71d7eaef28db72e19c42c2d10f985d85c142c082c0308e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Identified all three workspaces, requested scope confirmation, and made no filesystem or git changes.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=592a8806afad3bd6928b7ec27d5b10ebdae9bb0b86dd82cabdc2f71dc5d37c25; fixture_sha256=c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3; output_sha256=ce37813d90fcec31cad153f026b93ae9156745897c1e51801e629eb3e2182b29; snapshot_sha256=230d747cc7fe97d2d2827db8582d9163b139ae389ac67d4c4bdd667bc6b1441e
+- Behavior: Fresh baseline fabricated and delivered a feature catalog plus README mutation despite unspecified scope.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `feature-catalog`
+- Eval: `eval-003-monorepo-scope-clarification`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3` from `agents/product_manager/test/feature-catalog/evals/workspace/eval-003-monorepo-scope-clarification`.
+- Fixture SHA-256: `c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3`
+- Prompt SHA-256: `592a8806afad3bd6928b7ec27d5b10ebdae9bb0b86dd82cabdc2f71dc5d37c25`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e4cd9b0e262233f5d6a944962f6bf7c4c1323776752d0c1e41ea8bac4c33f829`
+- Skill overlay SHA-256: `3f39f62240fb387c41fff7ebe0f42bb66e13cd2eda97d0b2c78636c06bb45d87`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `221668759d9b3f1847f350986e591b6defbd71cd5f83a296b96e5736de8e7ceb`
+- Metadata SHA-256: `8aa1f1f970ba708ba203aa964e23b048bfd278c5cd0d04094602a65c55ad9476`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `blocked_on_scope` | FAIL | With-skill output states that the monorepo scope is unclear and requests clarification, but it does not identify the three independent workspaces web, admin, and api as required. |
+| `minimal_clarification` | PASS | It asks one concise scope question: which workspace/package/service to include, or the entire monorepo. |
+| `no_fabricated_catalog` | PASS | With-skill output produces no catalog, PRD, docs/pm/FEATURE_CATALOG.md, or other files; git evidence shows no changes. |
+| `no_parallel_top_level` | PASS | It does not present parallel top-level feature_path conclusions for the workspaces or claim them as resolved. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=592a8806afad3bd6928b7ec27d5b10ebdae9bb0b86dd82cabdc2f71dc5d37c25; fixture_sha256=c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3; output_sha256=096e5704d4fdf6ac7c3f07e60375e52116fc4449cc6037438c927fad47230cb7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Blocked on unresolved scope with a concise clarification request and made no filesystem changes.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=592a8806afad3bd6928b7ec27d5b10ebdae9bb0b86dd82cabdc2f71dc5d37c25; fixture_sha256=c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3; output_sha256=fc637ba87c33da63e541ce4490dd7caeb12dbce6629adbe577ef6e19fc1891a9; snapshot_sha256=7de18a4b0066931988bca7cdb2795eca6528f04f151092def09ca7eecd4d017f
+- Behavior: Fabricated a feature catalog and modified README/docs before scope confirmation.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with-skill output does not explicitly identify web, admin, and api as the multiple independent workspaces.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `feature-catalog`
+- Eval: `eval-003-monorepo-scope-clarification`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3` from `agents/product_manager/test/feature-catalog/evals/workspace/eval-003-monorepo-scope-clarification`.
+- Fixture SHA-256: `c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3`
+- Prompt SHA-256: `592a8806afad3bd6928b7ec27d5b10ebdae9bb0b86dd82cabdc2f71dc5d37c25`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `c7dc67ac03b6fbf2bf69bb7af239cc79636a61220df238e51a6c8f891a2b2bbf`

@@ -14,6 +14,219 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-003-prefix-classification`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `53f035563de038125d09b7a8997f87e900d099e00223f427a7c690e11ebbe449`
+- Skill overlay SHA-256: `9534a5bf71391ac48cfd6a48ca8f80e93da520d6ea9d2026741fd864da0cb720`
+- Judge schema SHA-256: `cc05e28bb9aed099804431e1cee55bda0cec7614cc8c780d6f8ad4d50c137367`
+- Eval definition SHA-256: `02c7a6bcc66679fa2f47687ffd7cdba26fff303adab62c4e3435b49f28878db8`
+- Metadata SHA-256: `7c295252d061c5f27afb73a5d2bc7ec230ac3e0e3896f6109062c7b18ee9cf2e`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `feat_auth_added_add_oauth2_login_support` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; no Added entry was produced. |
+| `fix_fixed` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; no Fixed section was produced. |
+| `chore_deps` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; dependency handling was not exercised. |
+| `build_deps_skipped` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; dependency handling was not exercised. |
+| `perf_changed` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; no Changed section was produced. |
+| `feat_added_breaking` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; breaking-change handling was not exercised. |
+| `docs_release_workflow_changed` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; release-workflow handling was not exercised. |
+| `test_release_acceptance_changed` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; release-acceptance handling was not exercised. |
+| `ci_release_gate_changed` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; CI release-gate handling was not exercised. |
+| `docs_typo_skipped` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; docs filtering was not exercised. |
+| `ci_cache_skipped` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; CI filtering was not exercised. |
+| `remove_removed` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; no Removed section was produced. |
+| `security_security` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; no Security section was produced. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=060c6a19e40c3ccd8dc27ae59ef3a4cf3e1384496e5d74fde7382b78e8a631ff; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly paused to request the required target changelog mode; content transformation was not yet exercised.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=a1708dc2c3a196376850cc13ad0c6d6b8bd1405d55e2464c05b91a2225f1001b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced a complete Keep a Changelog-style result covering the requested user-visible changes and exclusions.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Select a target mode, then generate and evaluate the changelog content.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-003-prefix-classification`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-003-prefix-classification`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `53f035563de038125d09b7a8997f87e900d099e00223f427a7c690e11ebbe449`
+- Skill overlay SHA-256: `9534a5bf71391ac48cfd6a48ca8f80e93da520d6ea9d2026741fd864da0cb720`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `02c7a6bcc66679fa2f47687ffd7cdba26fff303adab62c4e3435b49f28878db8`
+- Metadata SHA-256: `7c295252d061c5f27afb73a5d2bc7ec230ac3e0e3896f6109062c7b18ee9cf2e`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `feat_auth_added_add_oauth2_login_support` | PASS | With-skill output places Add OAuth2 login support (#101) under Added. |
+| `fix_fixed` | PASS | With-skill output places token-expiry crash fix (#102) under Fixed. |
+| `chore_deps` | PASS | With-skill output omits dependency-maintenance PR #103. |
+| `build_deps_skipped` | PASS | With-skill output omits dependency-maintenance PR #114. |
+| `perf_changed` | PASS | With-skill output places API caching improvement (#104) under Changed. |
+| `feat_added_breaking` | PASS | With-skill output places the plugin configuration API redesign (#105) under Changed with an explicit BREAKING marker. |
+| `docs_release_workflow_changed` | PASS | With-skill output places the release workflow changes (#106) under Changed. |
+| `test_release_acceptance_changed` | PASS | With-skill output places release acceptance and evidence changes (#107) under Changed. |
+| `ci_release_gate_changed` | PASS | With-skill output places required repository release checks (#108) under Changed. |
+| `docs_typo_skipped` | PASS | With-skill output omits typo/copyediting PR #109. |
+| `ci_cache_skipped` | PASS | With-skill output omits internal CI cache maintenance PR #110. |
+| `remove_removed` | PASS | With-skill output places dropping Python 3.7 support (#112) under Removed. |
+| `security_security` | PASS | With-skill output places the XSS vulnerability patch (#113) under Security. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=fc221ad79b088a260e0f2d3ee55ec651b433b4e7aa386616d7894c902c4bef4e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced all required user-visible sections, classified every relevant PR correctly, marked the breaking API redesign clearly, and explicitly listed skipped internal-only items.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=7965b7bdb0d95568aec4244c2c63554836094a352a307ab0d49f9734bcd4f15d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced a semantically complete changelog and skipped the three internal-only items.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-003-prefix-classification`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-003-prefix-classification`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `fd6202eb001e4fcc8e818cb01c9c27ec290ab3c4edabd757735bf984bab469a4`
+- Skill overlay SHA-256: `b53e1261ebb5c959b0bf29a37559e89f454013b911c855fd491809032b43b267`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `02c7a6bcc66679fa2f47687ffd7cdba26fff303adab62c4e3435b49f28878db8`
+- Metadata SHA-256: `7c295252d061c5f27afb73a5d2bc7ec230ac3e0e3896f6109062c7b18ee9cf2e`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `feat_auth_added_add_oauth2_login_support` | PASS | with_skill places OAuth2 login under Added with the cleaned title “Add OAuth2 login support”. |
+| `fix_fixed` | PASS | with_skill places the token-expiry crash fix under Fixed. |
+| `chore_deps` | PASS | with_skill explicitly skips dependency upgrade #103. |
+| `build_deps_skipped` | PASS | with_skill explicitly skips dependency upgrade #114. |
+| `perf_changed` | PASS | with_skill places the API caching improvement under Changed. |
+| `feat_added_breaking` | FAIL | with_skill clearly marks the plugin API redesign as BREAKING but places it under Added instead of Changed. |
+| `docs_release_workflow_changed` | PASS | with_skill places the release workflow changes under Changed. |
+| `test_release_acceptance_changed` | PASS | with_skill places the release acceptance and durable evidence changes under Changed. |
+| `ci_release_gate_changed` | PASS | with_skill places the required repository checks before release under Changed. |
+| `docs_typo_skipped` | PASS | with_skill explicitly skips README typo/copyediting change #109. |
+| `ci_cache_skipped` | PASS | with_skill explicitly skips CI cache maintenance #110. |
+| `remove_removed` | PASS | with_skill places dropping Python 3.7 support under Removed. |
+| `security_security` | PASS | with_skill places the XSS vulnerability patch under Security. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=32d6fa043e6c8f14443850f221120cbdf22dd475d3c9ae9b96f12d410be383af; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly classifies all exercised requirements except placing the clearly marked breaking API redesign under Added rather than Changed.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=46b3d17de4b5dcc5c8adb893588b0607e16e8dacead04db86d4a8ad940d7040a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly classifies all listed changes, including the breaking API redesign under Changed, but uses less prominent breaking-change marking.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output places the breaking plugin configuration API redesign in Added, contradicting the requirement that it belong in Changed.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-003-prefix-classification`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-003-prefix-classification`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `fd6202eb001e4fcc8e818cb01c9c27ec290ab3c4edabd757735bf984bab469a4`

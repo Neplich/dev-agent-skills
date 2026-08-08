@@ -14,6 +14,192 @@
 - Fixture version/source: canonical manifest `2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-002-user-rights`.
 - Fixture SHA-256: `2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8`
 - Prompt SHA-256: `f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`
+- Skill overlay SHA-256: `840e4d3e20057f4834a3b010b4142d0e7be2f66540c525231dc34075db0dbbee`
+- Judge schema SHA-256: `46c6f10cb2ee094e0f2d9b8cf0d9d794ebc801a301eb97187a76e961b4e37fd0`
+- Eval definition SHA-256: `ba5034d1b895bcb95cc9d848045b869189eec2c98d23c0a5d5ce381059a73047`
+- Metadata SHA-256: `b655e3698222cf189fb740616c1df41fb5ccc3d4bf71526ca29a7ecf05ef368a`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `data_inventory` | PASS | 交付的 privacy-map.md 列出账号资料、订单/交易元数据、产品行为事件及账号生命周期数据，并说明 /me、/data-export、DELETE /me 的入口、处理目的和当前处理情况。 |
+| `sharing_and_retention` | PASS | 报告识别了分析副本、备份、缓存、日志及第三方处理者/跨境传输的不确定性，并指出缺少保留期限、法律依据、加密和删除传播证据。 |
+| `user_rights` | PASS | 报告分别评估了访问、导出、删除和更正权；准确指出导出越权且不完整、删除仅软删除且不可追踪，并提出身份绑定、异步交付、删除编排和状态查询等整改建议。 |
+| `compliance_gaps` | PASS | 报告给出明确的隐私与安全合规缺口、影响、上线阻断项及分工明确的整改建议，覆盖授权、完整性、删除传播、保留例外、安全交付、审计和限流。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0; fixture_sha256=2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8; output_sha256=cedd912f4b2e22b67f408be14767275c658a7257752f5f67d67c38961428f209; snapshot_sha256=5d014ee8694828c0ceef86ee40d2a17442cf3da876485a7437866e60ef574d8c
+- Behavior: 交付了符合要求的 Security-owned 隐私处理面报告，覆盖数据范围、访问、删除、导出、共享/保留风险、影响和整改建议；未修改业务实现。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0; fixture_sha256=2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8; output_sha256=ff512bbd9085747910ebee2c646efaa94cb0a47f4c5fc4826d9ec850b0592085; snapshot_sha256=6dbbbbf946997fcd245284a53a849200f069de9409c98d6b5c499adab2a05eb9
+- Behavior: 同样交付了结构化安全审查报告，覆盖主要越权、删除、导出和响应安全缺口；作为对比基线，其报告较少展开数据清单和用户权利映射。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `privacy-surface-mapper`
+- Eval: `eval-002-user-rights`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-002-user-rights`.
+- Fixture SHA-256: `2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8`
+- Prompt SHA-256: `f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`
+- Skill overlay SHA-256: `840e4d3e20057f4834a3b010b4142d0e7be2f66540c525231dc34075db0dbbee`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ba5034d1b895bcb95cc9d848045b869189eec2c98d23c0a5d5ce381059a73047`
+- Metadata SHA-256: `b655e3698222cf189fb740616c1df41fb5ccc3d4bf71526ca29a7ecf05ef368a`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `data_inventory` | PASS | with_skill 的 privacy-map.md 明确列出用户记录、订单、产品行为事件及软删除记录，并说明各自的收集/使用入口与目的。 |
+| `sharing_and_retention` | PASS | with_skill 的报告专门分析了保留期限、法律留置、备份、缓存、分析供应商、处理商和第三方传播，并将缺少证据的内容标为 unverified，提出核实与删除传播建议。 |
+| `user_rights` | PASS | with_skill 检查了 /me 访问、/data-export 导出、/me 删除及更正权利，指出越权导出、导出缺少行为事件、删除仅软删除等问题。 |
+| `compliance_gaps` | PASS | with_skill 给出了阻断上线的隐私与安全缺口、影响、整改建议、验收要求及后续责任分派。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0; fixture_sha256=2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8; output_sha256=0c542250540c603dd538c2edc9dad16a012cb456ca013d01b2b2a5b868c9a201; snapshot_sha256=9f595722679104ad7e31e4481ef63a5e4558dbaa136574210e3fed57dea34814
+- Behavior: 交付了结构化隐私处理面报告，系统覆盖数据清单、数据流、用户权利、第三方共享、保留风险、合规缺口及整改建议。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0; fixture_sha256=2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8; output_sha256=d66ac5b886a72eb3acc3f7ba2662c8ed86f40ddd2a6f77b86d0a77265cdd2508; snapshot_sha256=252ae250bb4f50555b7e5b981742e6c284c29e4e15ab9c9e5b7062132a4f5923
+- Behavior: 提供了较完整的安全审查，识别 IDOR、软删除不完整、认证和导出安全控制缺口，并交付结构化报告。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `privacy-surface-mapper`
+- Eval: `eval-002-user-rights`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-002-user-rights`.
+- Fixture SHA-256: `2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8`
+- Prompt SHA-256: `f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`
+- Skill overlay SHA-256: `4e2d7a3ffa0fc7b4cc84f02f24df4e35de821cbc6e0c580a1427e37709efb43b`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ba5034d1b895bcb95cc9d848045b869189eec2c98d23c0a5d5ce381059a73047`
+- Metadata SHA-256: `b655e3698222cf189fb740616c1df41fb5ccc3d4bf71526ca29a7ecf05ef368a`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `data_inventory` | PASS | with_skill 报告识别了用户资料、订单/交易元数据、行为事件和会话身份，列出了 /me、/data-export、/me 删除入口及其用途，并指出字段范围未验证、原始用户记录可能过度暴露。 |
+| `sharing_and_retention` | PASS | with_skill 报告覆盖分析副本、第三方处理方/子处理方、跨境传输、备份、保留期限及法定保留例外，并明确这些控制在现有材料中无法验证及其风险。 |
+| `user_rights` | PASS | with_skill 报告逐项评估访问、导出、删除和更正能力，准确指出导出 IDOR、行为数据缺失、删除仅更新主库且无状态追踪，并提出认证、完整导出和端到端删除建议。 |
+| `compliance_gaps` | PASS | with_skill 报告给出了发布阻断结论、风险影响和分优先级整改建议，包括身份绑定、完整数据目录、异步安全导出、可重试删除工作流、保留策略、审计和权利测试。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0; fixture_sha256=2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8; output_sha256=9a6355c2997d344b67552f8007b3f21454c09d2bc8e3f3fb64f9c6abd3e4ce70; snapshot_sha256=328b4a83186a6241b3c0a21159a20250de3438bf381f862b69c870121e0afc05
+- Behavior: 生成了结构化隐私处理面报告，系统覆盖数据清单、数据流、第三方共享、保留、用户权利、风险影响和发布门槛；未修改实现代码。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0; fixture_sha256=2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8; output_sha256=4dd41f9b4184840dbecd2a6c30bebbf79054da15c1022aafbc5884017b380b99; snapshot_sha256=f1c544f85bb654fb3fab4765891603d1c66b63e40dcc99882bdf7db17be93c6e
+- Behavior: 识别了主要越权导出、删除传播、导出完整性、安全交付、认证和保留期限问题，并提供整改建议。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `privacy-surface-mapper`
+- Eval: `eval-002-user-rights`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-002-user-rights`.
+- Fixture SHA-256: `2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8`
+- Prompt SHA-256: `f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`

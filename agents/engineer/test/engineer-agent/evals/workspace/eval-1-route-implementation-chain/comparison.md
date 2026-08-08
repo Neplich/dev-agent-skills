@@ -14,6 +14,399 @@
 - Fixture version/source: canonical manifest `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62` from `agents/engineer/test/engineer-agent/evals/workspace/eval-1-route-implementation-chain`.
 - Fixture SHA-256: `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62`
 - Prompt SHA-256: `9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `cfa5a88208f1b1c899ab19782fdf4b1c4f59251e80b5c7edaead85a7f37b2ebd`
+- Skill overlay SHA-256: `077bb84411e61374de4fd93945f7e775b9133b3517221140cf4b19937f8b8f70`
+- Judge schema SHA-256: `a1e6bf4e08477989b26fffa805de56b77288d345cfdf1b16c76dd2c7ddf824f4`
+- Eval definition SHA-256: `c64c3e656d8dd56f539b8d46bbf02d2891b999db368472657d75c526ab878d79`
+- Metadata SHA-256: `8b67b33f30d9db399127d2f1e52b999931f8055d9c101157fccc82071f88b519`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `starts_with_codebase_context` | PASS | With-skill output explicitly makes codebase-analyzer the first route. |
+| `routes_implementation_to_feature_implementor` | FAIL | It routes to feature-implementor, but does not explicitly state execution is based on the confirmed TRD, IMPLEMENTATION_PLAN, and existing code together. |
+| `routes_tests_to_test_writer` | PASS | It explicitly routes testing to test-writer before QA and delivery. |
+| `routes_qa_e2e_handoff` | FAIL | It names a QA E2E handoff directory, but omits the required handoff contents and references to PRD, TRD, confirmed plan, changed files, validation commands, risks, and recommendations. |
+| `routes_delivery_last` | PASS | The stated sequence places delivery after implementation, testing, and QA handoff. |
+| `does_not_execute_directly` | NOT_EXERCISED | Git evidence proves no workspace or repository mutation, but locked evidence cannot prove that no tests were run; this hidden process requirement is therefore not exercised. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=29e0def146f8ed8cb659cd16e40f9990c782b087a0e9f414ffeb5215e42f2ab3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a mostly correct staged route with explicit analyzer, test-writer, QA directory, and delivery ordering, but misses required implementation-basis and QA-handoff details.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=beda76480b11694c95077f157ffc8e1f5c9834dbf92f11ec2e0b966799768b55; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline gives generic implementation, testing, and delivery phases without the required specialist routing or explicit QA E2E handoff.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The implementation handoff lacks the required explicit basis in confirmed TRD, implementation plan, and existing code.
+- The QA E2E handoff omits its required package contents and references.
+- Next: Require the feature-implementor handoff to cite the confirmed TRD, confirmed IMPLEMENTATION_PLAN, and existing-code findings.
+- Next: Specify the QA E2E handoff package contents and target docs/qa/e2e/billing-webhook/ directory.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-001-route-implementation-chain`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62` from `agents/engineer/test/engineer-agent/evals/workspace/eval-1-route-implementation-chain`.
+- Fixture SHA-256: `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62`
+- Prompt SHA-256: `9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `cfa5a88208f1b1c899ab19782fdf4b1c4f59251e80b5c7edaead85a7f37b2ebd`
+- Skill overlay SHA-256: `077bb84411e61374de4fd93945f7e775b9133b3517221140cf4b19937f8b8f70`
+- Judge schema SHA-256: `a1e6bf4e08477989b26fffa805de56b77288d345cfdf1b16c76dd2c7ddf824f4`
+- Eval definition SHA-256: `c64c3e656d8dd56f539b8d46bbf02d2891b999db368472657d75c526ab878d79`
+- Metadata SHA-256: `8b67b33f30d9db399127d2f1e52b999931f8055d9c101157fccc82071f88b519`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `starts_with_codebase_context` | PASS | With-skill output explicitly places codebase-analyzer as the first stage. |
+| `routes_implementation_to_feature_implementor` | FAIL | It routes implementation to feature-implementor, but does not state execution is based on a confirmed implementation plan and existing code; it says those artifacts are missing. |
+| `routes_tests_to_test_writer` | PASS | With-skill output explicitly routes testing and verification to test-writer after implementation. |
+| `routes_qa_e2e_handoff` | FAIL | It names the QA E2E handoff and target directory, but omits the required handoff-package references and contents. |
+| `routes_delivery_last` | PASS | The stated order places delivery after feature-implementor, test-writer, and QA E2E handoff. |
+| `does_not_execute_directly` | NOT_EXERCISED | Git evidence proves no file, index, branch, ref, or commit mutation, but cannot prove that no tests or other direct execution occurred. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=17fd08c66479a900d3501eaf59b7dc8cfcb5ce9387b7fd06c0ef844186a46b22; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides named staged routing with a codebase-analysis start, implementation, testing, QA E2E, and delivery sequence, while identifying missing prerequisites.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=1feb8a7ad60799685df76236f18f253297f55bcd1295efa61d08e24a0c005a93; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a generic implementation/testing/delivery plan and reports a clean empty repository, but does not route work to the required specialized agents.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The implementation route does not satisfy the required basis of confirmed TRD, implementation plan, and existing code.
+- The QA E2E route omits the required handoff-package references and verification/risk details.
+- Next: Confirm or provide the missing PM handoff, implementation plan, and repository code before implementation.
+- Next: Expand the QA E2E handoff definition with the required references, changed files, verification commands, risks, and recommendations.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-001-route-implementation-chain`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62` from `agents/engineer/test/engineer-agent/evals/workspace/eval-1-route-implementation-chain`.
+- Fixture SHA-256: `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62`
+- Prompt SHA-256: `9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `cf5998cdd0e57fc7e288a79411dd445b8e07aa2acaa4991819873a45b9dfb293`
+- Skill overlay SHA-256: `fbd54811cad37baf48c96e02cd6eda99bc6d8b886b0ce2dc848aa202c091fedd`
+- Judge schema SHA-256: `a1e6bf4e08477989b26fffa805de56b77288d345cfdf1b16c76dd2c7ddf824f4`
+- Eval definition SHA-256: `c64c3e656d8dd56f539b8d46bbf02d2891b999db368472657d75c526ab878d79`
+- Metadata SHA-256: `8b67b33f30d9db399127d2f1e52b999931f8055d9c101157fccc82071f88b519`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `starts_with_codebase_context` | FAIL | with_skill 将 pm-agent:idea-to-spec 排在 codebase-analyzer 之前，因此未先安排 codebase-analyzer。 |
+| `routes_implementation_to_feature_implementor` | PASS | 明确安排 codebase-analyzer、TRD/PRD 对齐和 IMPLEMENTATION_PLAN 确认后交给 feature-implementor 实现。 |
+| `routes_tests_to_test_writer` | PASS | 明确在实现后、交付前由 test-writer 补充重试与幂等覆盖。 |
+| `routes_qa_e2e_handoff` | PASS | 明确安排测试后进行 QA E2E handoff，并列出 PRD、TRD、实现计划、变更文件、验证命令和风险等交接内容及目录。 |
+| `routes_delivery_last` | PASS | 明确将 delivery 排在实现、测试和 QA E2E handoff 之后。 |
+| `does_not_execute_directly` | NOT_EXERCISED | 锁定证据证明没有工作区、索引或提交变更，但无法证明候选未运行测试。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=574873709ac21f278d4b3b1c235b7766891d384fedf498b56a6202a6581287b9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 遵循工程交接门禁，先要求补齐 PM 交接，再安排分析、实现、测试、QA 和交付；但首个路由不是 codebase-analyzer。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=80a46ab619dcc5ed77b17513e342900cd7bf90d4d87480c025a13943539c2d9d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 给出从需求澄清到实现、测试、验证和 PR 的通用顺序，未使用专职 agent 路由或 QA E2E 交接门禁。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- codebase-analyzer 未被安排为首个工程路由。
+- Next: 将 codebase-analyzer 安排为首个工程路由，或明确说明 PM 门禁不会取代首轮代码库上下文分析。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-001-route-implementation-chain`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62` from `agents/engineer/test/engineer-agent/evals/workspace/eval-1-route-implementation-chain`.
+- Fixture SHA-256: `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62`
+- Prompt SHA-256: `9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `cf5998cdd0e57fc7e288a79411dd445b8e07aa2acaa4991819873a45b9dfb293`
+- Skill overlay SHA-256: `fbd54811cad37baf48c96e02cd6eda99bc6d8b886b0ce2dc848aa202c091fedd`
+- Judge schema SHA-256: `a1e6bf4e08477989b26fffa805de56b77288d345cfdf1b16c76dd2c7ddf824f4`
+- Eval definition SHA-256: `c64c3e656d8dd56f539b8d46bbf02d2891b999db368472657d75c526ab878d79`
+- Metadata SHA-256: `8b67b33f30d9db399127d2f1e52b999931f8055d9c101157fccc82071f88b519`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `starts_with_codebase_context` | FAIL | with_skill 先安排 engineer-agent，随后才安排 codebase-analyzer；未以 codebase-analyzer 作为首个上下文步骤。 |
+| `routes_implementation_to_feature_implementor` | FAIL | 未安排 feature-implementor；仅泛化描述“设计并实现”，且未说明基于已确认 TRD、IMPLEMENTATION_PLAN 和现有代码执行。 |
+| `routes_tests_to_test_writer` | PASS | 明确安排 test-writer 补齐成功、失败重试、超限、重复事件和幂等回归测试，并置于 delivery 之前。 |
+| `routes_qa_e2e_handoff` | NOT_EXERCISED | 候选计划包含 QA handoff package，但由于缺少 PRD、实现计划、代码和后续 specialist，尚未能执行或提供交接包内容，故无法验证其引用项。 |
+| `routes_delivery_last` | PASS | 明确将 delivery 放在实现、测试和 QA handoff 之后。 |
+| `does_not_execute_directly` | PASS | 明确说明本轮未修改代码；锁定 git evidence 显示无提交、无分支变化、无工作区或索引变更。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=9f11c65c6a023c60e8acd746a817033049d16854f0de4719fe6a5bacf2ebb4f2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 能规划 test-writer、QA handoff 和最后 delivery，并保持只读；但首步上下文路由和实现 specialist 路由不符合要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=025de19e52afc2d8712fbc2baec75eb8e33468571b233f1fb61afc2530356b44; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅给出泛化的实现、测试、验证和 PR 计划，未展示 specialist 路由；作为 fresh baseline 对比，不影响 with_skill 判定。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未首先安排 codebase-analyzer 建立工程上下文。
+- with_skill 未将实现交给 feature-implementor，也未满足其依据说明要求。
+- Next: 修正首步路由，先安排 codebase-analyzer 获取仓库结构、技术栈、约束和现有模式。
+- Next: 将 webhook 重试实现明确交给 feature-implementor，并绑定已确认 TRD、IMPLEMENTATION_PLAN 和现有代码。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-001-route-implementation-chain`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62` from `agents/engineer/test/engineer-agent/evals/workspace/eval-1-route-implementation-chain`.
+- Fixture SHA-256: `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62`
+- Prompt SHA-256: `9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `cf5998cdd0e57fc7e288a79411dd445b8e07aa2acaa4991819873a45b9dfb293`
+- Skill overlay SHA-256: `fbd54811cad37baf48c96e02cd6eda99bc6d8b886b0ce2dc848aa202c091fedd`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `c64c3e656d8dd56f539b8d46bbf02d2891b999db368472657d75c526ab878d79`
+- Metadata SHA-256: `8b67b33f30d9db399127d2f1e52b999931f8055d9c101157fccc82071f88b519`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `starts_with_codebase_context` | FAIL | with_skill 首先安排 PM 确认需求，随后才安排 codebase-analyzer；未满足必须先建立工程上下文的顺序要求。 |
+| `routes_implementation_to_feature_implementor` | FAIL | 虽安排了 feature-implementor，但未明确说明其基于已确认 TRD、IMPLEMENTATION_PLAN 文档和现有代码执行；且候选明确称仓库没有可接手的实现基础。 |
+| `routes_tests_to_test_writer` | PASS | 明确安排 test-writer 补充单元/集成测试，并列出成功、重试、上限、重复事件和并发场景。 |
+| `routes_qa_e2e_handoff` | FAIL | 仅安排整理 docs/qa/e2e/billing-webhook/ 交接包，未包含要求的 PRD、TRD、已确认 IMPLEMENTATION_PLAN、变更文件、验证命令、风险和建议等引用内容。 |
+| `routes_delivery_last` | PASS | delivery 被安排在实现、测试和 QA 交接之后，用于创建分支、提交、推送和创建 PR。 |
+| `does_not_execute_directly` | PASS | with_skill 明确表示未修改代码或文档；锁定 git 证据显示 HEAD、分支、工作区和提交均未变化。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=aa005d085d1f827ef4f9d57608e6b037600b041ebd58a4cbce5df7df460f9079; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 先因缺少 PM handoff packet/PRD 而暂停，并规划了 codebase-analyzer、feature-implementor、test-writer、QA 和 delivery 路由；未执行修改或提交。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=efed31a7e796dc5eded36bd5f990b416f67461c145158795625e106b5058c8b6; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 给出一般性的实现、测试和交付阶段，但未使用专门角色路由；未执行修改或提交。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未先安排 codebase-analyzer。
+- feature-implementor 路由未明确基于已确认 TRD、IMPLEMENTATION_PLAN 和现有代码。
+- QA E2E 交接路线未列出要求的交接包引用内容。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-001-route-implementation-chain`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62` from `agents/engineer/test/engineer-agent/evals/workspace/eval-1-route-implementation-chain`.
+- Fixture SHA-256: `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62`
+- Prompt SHA-256: `9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `757a4f95af830e3468b6c44e54e5901a0cc27f0a6d0aa7ecc8b703b612007d3a`
+- Skill overlay SHA-256: `ed4d8f534d0e5c1c334b4a13d67b6d20c37dceb98e00e4e2ea3b6a2c0112faad`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `c64c3e656d8dd56f539b8d46bbf02d2891b999db368472657d75c526ab878d79`
+- Metadata SHA-256: `8b67b33f30d9db399127d2f1e52b999931f8055d9c101157fccc82071f88b519`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `starts_with_codebase_context` | PASS | with_skill 明确将 codebase-analyzer 作为首选专责，并将仓库分析安排在后续实现前。 |
+| `routes_implementation_to_feature_implementor` | PASS | with_skill 的后续链路包含 feature-implementor，且实现安排在仓库分析、TRD 对齐和实现计划确认之后。 |
+| `routes_tests_to_test_writer` | FAIL | with_skill 只安排补齐测试，但未将测试工作交给 test-writer。 |
+| `routes_qa_e2e_handoff` | FAIL | with_skill 安排了 QA E2E handoff 并列出大部分交接内容，但未明确建议 docs/qa/e2e/{feature_path} 功能目录。 |
+| `routes_delivery_last` | PASS | with_skill 将 delivery 明确置于实现、测试和 QA E2E handoff 之后，并安排最后创建分支、提交、推送和 PR。 |
+| `does_not_execute_directly` | PASS | 候选明确说明本轮不改代码，且原始 Git 证据显示无提交、分支或工作区变更。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=6f6ac49524c3e4b70f622dde4b11dc5881ef2fd2f778ecfcc895d78e74ed599f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确保持只做路由、不执行变更，并安排了代码分析、实现、测试、QA 交接和交付链路；但遗漏 test-writer 角色及明确的 QA E2E 目录。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=161bf81bbf07462d88becef36137dda954ea89a7b9864f3c9102403ab1fb95cc; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了顺序性工作计划，但未使用所要求的专责路由角色，也未规划明确的 QA E2E handoff 目录。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未将测试补齐和验证交给 test-writer。
+- with_skill 未明确包含 docs/qa/e2e/{feature_path} 功能目录的 QA E2E handoff 要求。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-001-route-implementation-chain`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62` from `agents/engineer/test/engineer-agent/evals/workspace/eval-1-route-implementation-chain`.
+- Fixture SHA-256: `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62`
+- Prompt SHA-256: `9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `757a4f95af830e3468b6c44e54e5901a0cc27f0a6d0aa7ecc8b703b612007d3a`

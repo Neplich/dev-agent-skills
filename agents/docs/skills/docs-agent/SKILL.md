@@ -22,8 +22,18 @@ write, it must:
   `manual-gen`, `release-notes-gen`, or `docs-audit`
 - carry the original handoff fields, source evidence, scope, required output,
   blockers, and authorization state forward unchanged
-- point to the selected specialist's `SKILL.md` and internal instructions as
-  the authoritative gate without copying or executing that gate
+- name the selected specialist's authoritative gate without exposing a local
+  filesystem path, copying its protocol, or executing that gate
+
+Emit one compact `Routing decision` block with explicit fields:
+`selected_specialist`, `accepted_entry_basis`, `request_type`, `change_tier`,
+`feature_path`, `host_repository`, `source_documents`, `confirmed_scope`,
+`evidence_sources`, `required_output`, `blockers_risks`, and
+`execution_boundary`. Preserve every field supplied by the accepted handoff;
+use `N/A` only for a field the handoff truly does not contain. Select exactly
+one specialist and stop at its router boundary. Do not add an unrelated site
+bootstrap prerequisite, second specialist, or PM round-trip after the selected
+specialist's documented entry basis is already complete.
 
 For a release chain, separately verify the site Release Notes entry basis and
 the previous-tag/base-ref release window before declaring the next Docs owner

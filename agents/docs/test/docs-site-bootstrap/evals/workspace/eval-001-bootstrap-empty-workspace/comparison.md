@@ -14,6 +14,198 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-001-bootstrap-empty-workspace`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `8294223a6cc9320411b7f3ca9761133eeb49b555e990170abcfa40eeb8076bd8`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f74a445a21eabfad3f25cc38a5190833cf5fc52294bb0054a41378fe894ddd82`
+- Skill overlay SHA-256: `749412be4f8f7fe24db333e412ff5013877a6c57121d621b10bbe79fa7b60b02`
+- Judge schema SHA-256: `373ba2965836f0cc6198ffb0151c12c61c34831fe45aaa5ef665fae7d893acbc`
+- Eval definition SHA-256: `0028d93b645e269e09fc6f6345ad073b0c2386395ad858bbd7693d057a9eca5f`
+- Metadata SHA-256: `72695cba8eaf9810a85aa17ba3cc9622de1dd39f4d06db93fe0728a19509d73b`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_complete_inventory` | PASS | Manifest lists 42 assets; the snapshot contains those exact 42 files, with matching SHA-256 content and created statuses. |
+| `delivers_deterministic_scaffold_assets` | PASS | package.json has one new:doc script; scaffold-doc.mjs and its test exist; six templates each contain exactly one docs-scaffold block and all are indexed. |
+| `validates_seven_frontmatter_fields` | PASS | All 19 Markdown pages visibly contain the seven required frontmatter fields, valid doc_type values, non-empty owners/related_code arrays, and last_verified_version: unverified. |
+| `writes_only_docs_site` | PASS | Every delivered snapshot path is under docs/site/, with no outside paths or repository configuration changes shown. |
+| `requires_explicit_opt_in` | PASS | The prompt explicitly confirms the current repository, fixed docs/site root, and complete scaffold; the candidate reports that same host and root scope before reporting the write. |
+| `reports_manifest_readback` | PASS | The candidate reports 42/42 manifest readback equality and 42 skipped-identical files on repeat; the manifest directly contains all paths and created statuses. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8294223a6cc9320411b7f3ca9761133eeb49b555e990170abcfa40eeb8076bd8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=3fefd961b1b4acdc2e53b0fb4306d5f7803908f2422ebc51d3b2e9d5ff11a38a; snapshot_sha256=f50521887e92aa39c647e777bfeb66700911acfcfa7a230b19b389f788f822f0
+- Behavior: Delivered the requested 42-asset formal documentation scaffold under docs/site, including manifest, templates, scripts, frontmatter pages, and repeat-run results.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8294223a6cc9320411b7f3ca9761133eeb49b555e990170abcfa40eeb8076bd8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=efb64f1206c3ac840f993effd66fbd457720bae8d556839db269510314256669; snapshot_sha256=2dd6f2f5375c211bea5c93c42c10e98c2b5b4c4798e437105790c9c3386a0494
+- Behavior: Created a small Docusaurus starter site with 11 files, without the requested inventory, manifest, formal templates, or validation scaffold.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Install the missing fast-glob dependency and rerun npm run test:docs.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-site-bootstrap`
+- Eval: `eval-001-bootstrap-empty-workspace`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-001-bootstrap-empty-workspace`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `8294223a6cc9320411b7f3ca9761133eeb49b555e990170abcfa40eeb8076bd8`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f74a445a21eabfad3f25cc38a5190833cf5fc52294bb0054a41378fe894ddd82`
+- Skill overlay SHA-256: `749412be4f8f7fe24db333e412ff5013877a6c57121d621b10bbe79fa7b60b02`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `0028d93b645e269e09fc6f6345ad073b0c2386395ad858bbd7693d057a9eca5f`
+- Metadata SHA-256: `72695cba8eaf9810a85aa17ba3cc9622de1dd39f4d06db93fe0728a19509d73b`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_complete_inventory` | PASS | with_skill 的 manifest.files 含 42 个 docs/site 路径，全部对应 workspace_manifest；交付快照和输出均记录 42/42 逐字节校验。 |
+| `delivers_deterministic_scaffold_assets` | PASS | package.json 含唯一 new:doc 命令；scaffold 脚本、测试文件、六个模板均存在。六个模板各有一个 docs-scaffold 区块，standards/index.md 索引了六者。 |
+| `validates_seven_frontmatter_fields` | PASS | 所有交付 Markdown 页面均含七个 frontmatter 字段；页面 doc_type 使用允许值，owners 与 related_code 为非空数组，last_verified_version 均存在且可为 unverified。 |
+| `writes_only_docs_site` | PASS | with_skill 的 git status 仅显示 docs/site/ 下新增文件；HEAD、分支、索引和工作树既有内容均未改变。 |
+| `requires_explicit_opt_in` | NOT_EXERCISED | prompt 确实明确确认了当前仓库、docs/site/ 根和完整 scaffold，但锁定证据无法证明具体的 opt-in 读写门禁过程或无 opt-in 分支。 |
+| `reports_manifest_readback` | PASS | 输出明确报告 manifest 已成功读回、42/42 校验通过，并说明模板与决策不变时重复执行为 zero-diff。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8294223a6cc9320411b7f3ca9761133eeb49b555e990170abcfa40eeb8076bd8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=5dbfcb97df214fd4b59d46f448cbdda47bc618be8df2ac46efbb06c26e3cc8cd; snapshot_sha256=762bd10c68863806694869bddc788c8599b52706912e253777086076352a5e77
+- Behavior: 交付完整 42 项清单及 manifest、确定性脚手架、规范模板、页面 frontmatter 和 zero-diff 报告；依赖测试因 fast-glob 未安装未完成。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8294223a6cc9320411b7f3ca9761133eeb49b555e990170abcfa40eeb8076bd8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=e4742da7d2efdb31b8fc6f4477edd17e06a229b0855d5b2a8f182ff60090d3b4; snapshot_sha256=2478dfc8f6cb1b0cade64eee058971a995de92ec33a88c2a6ebba889ca29778d
+- Behavior: 仅交付基础 VitePress 文件，缺少 manifest、完整脚手架、规范模板和 frontmatter 体系；其重复执行描述不能替代目标要求。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-site-bootstrap`
+- Eval: `eval-001-bootstrap-empty-workspace`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-001-bootstrap-empty-workspace`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `8294223a6cc9320411b7f3ca9761133eeb49b555e990170abcfa40eeb8076bd8`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `94e37af2ad7f4b39032db420d30845826ffa4c408edb8ffe671f400ff7e83f83`
+- Skill overlay SHA-256: `09f32081fb5da19c616e5c124981201ff10d8f1031a9890f0577b1364fa9c83c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `0028d93b645e269e09fc6f6345ad073b0c2386395ad858bbd7693d057a9eca5f`
+- Metadata SHA-256: `72695cba8eaf9810a85aa17ba3cc9622de1dd39f4d06db93fe0728a19509d73b`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_complete_inventory` | PASS | with_skill 清单列出 42 个 docs/site 文件，包含 bootstrap-manifest.json；manifest files 覆盖这些文件，且回读报告为 42/42 字节一致。 |
+| `delivers_deterministic_scaffold_assets` | PASS | package.json 含唯一 new:doc 命令；scaffold-doc.mjs、测试文件及六个模板均存在。六个模板各含一个 docs-scaffold 区块，并由 standards/index.md 全部索引。 |
+| `validates_seven_frontmatter_fields` | PASS | 快照中的正式 Markdown 页面均包含七个字段；doc_type 均为允许值，owners 与 related_code 为非空数组，last_verified_version 为 unverified。 |
+| `writes_only_docs_site` | PASS | with_skill 的 git_status 仅显示 ?? docs/，清单中的生成路径全部位于 docs/site/，未显示根配置或其他路径变更。 |
+| `requires_explicit_opt_in` | FAIL | 候选输出未说明写入获准是因为 prompt 明确确认了目标仓库、docs/site 根目录和完整 scaffold；仅报告了宿主仓库与生成根目录。 |
+| `reports_manifest_readback` | NOT_EXERCISED | 候选报告了 manifest 回读和 42/42 一致，但重复执行仅表述为“预计 zero-diff”，没有实际重复运行的运行时证据。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8294223a6cc9320411b7f3ca9761133eeb49b555e990170abcfa40eeb8076bd8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=96e9991c55d6cf4a1988ed4ae76a710a48c7de81fa887da27d7b30f8c5a9dc4c; snapshot_sha256=be53d9b525308af5cde2254386cda00f462e44cf2b2a140dfbb8d2dbbf7d6fd1
+- Behavior: 在 docs/site 下生成了完整 42 项 scaffold、manifest、模板、脚本和正式页面，并报告了字节一致性；未明确说明显式 opt-in 原因，幂等重复运行尚未实际验证。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8294223a6cc9320411b7f3ca9761133eeb49b555e990170abcfa40eeb8076bd8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=de7d3fb9a2202ba0783515d844996569bb257784b1985a6c712264744ac7ba49; snapshot_sha256=6a7d10cfd686d82ebc240f84f330aa675ebf545a13fdcccd4a88a049b7405ef3
+- Behavior: 创建了基础 VitePress 站点，但写入了仓库根 package.json 和 scripts，未生成目标所需的 42 项清单、manifest、规范模板或校验体系。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- 未满足 requires_explicit_opt_in 的用户可见说明要求。
+- Next: 补充明确的 opt-in 依据说明，并实际执行第二次初始化后回读 manifest，记录 42 个 skipped-identical 与 zero-diff 结果。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-site-bootstrap`
+- Eval: `eval-001-bootstrap-empty-workspace`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-001-bootstrap-empty-workspace`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `8294223a6cc9320411b7f3ca9761133eeb49b555e990170abcfa40eeb8076bd8`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `b2f0004a415a9413ec4f04c88be670a46f49aae91bdfea7a5f5a1bd3994bc3a2`

@@ -14,6 +14,264 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/engineer-agent/evals/workspace/eval-002-existing-feature-alignment-gate`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `cfa5a88208f1b1c899ab19782fdf4b1c4f59251e80b5c7edaead85a7f37b2ebd`
+- Skill overlay SHA-256: `077bb84411e61374de4fd93945f7e775b9133b3517221140cf4b19937f8b8f70`
+- Judge schema SHA-256: `fd74eb5f01d1266986de0e63d98b09a328266b3f4b3b37579328c75fc417b428`
+- Eval definition SHA-256: `35bf0057341046be2b5db3cd90c99d825b61efaf315ed25428b5eda571894209`
+- Metadata SHA-256: `43542dab517c382c8ae0bc3c7332df9e98a97a6229686bf334f88c000c1ef95a`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_user_provided_behavior_baseline` | PASS | 明确以“active 列表从‘排除 archived’改为‘包含 archived’”为 delta，并说明工作区没有 PRD、DECISIONS 或其他路径证据，未声称读取不存在文件。 |
+| `classifies_expectation_change` | PASS | 明确建议按“产品预期变更”推进，而不是直接改过滤条件。 |
+| `routes_to_existing_project_update` | PASS | 明确指定 existing-project-update lane，并路由至 pm-agent:idea-to-spec；同时说明后续需进行 TRD 对齐。 |
+| `routes_trd_gap_to_trd_gen` | NOT_EXERCISED | 当前仍处于 PM 范围确认阶段，PRD/产品决策尚未明确，因此该条件尚未满足。 |
+| `requires_plan_after_alignment` | NOT_EXERCISED | 工程实现尚未开始，且仍需 PM handoff、稳定范围及技术/TRD 对齐；后续 IMPLEMENTATION_PLAN.md 尚未到可执行阶段。 |
+| `does_not_route_directly_to_implementation` | PASS | 明确当前不修改代码，并将 feature-implementor 放在 PM、分析和 TRD 对齐之后，未直接路由实现。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=13332e43cb97ac05cfb2a502a91923d2f5250ff91264583a6cff7a9d135dbc77; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为已批准行为的产品预期变更，路由至 PM existing-project-update，并暂停于范围确认阶段。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=952b943981ca907d819392ddf3efe6cdbb5da270b6cbc27730a5bfe8b324bbc5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提出一般性的需求澄清、链路分析和测试步骤，但未明确使用现行批准基线或 PM/TRD 路由。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 确认 PM handoff、PRD/DECISIONS 及 active/archived 的边界定义。
+- Next: 对齐 TRD；若存在 TRD gap，再交回 engineer-agent:trd-gen。
+- Next: 完成对齐后再进入 feature-implementor，并先产出或引用已确认的 IMPLEMENTATION_PLAN.md。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-002-existing-feature-alignment-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/engineer-agent/evals/workspace/eval-002-existing-feature-alignment-gate`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `cf5998cdd0e57fc7e288a79411dd445b8e07aa2acaa4991819873a45b9dfb293`
+- Skill overlay SHA-256: `fbd54811cad37baf48c96e02cd6eda99bc6d8b886b0ce2dc848aa202c091fedd`
+- Judge schema SHA-256: `fd74eb5f01d1266986de0e63d98b09a328266b3f4b3b37579328c75fc417b428`
+- Eval definition SHA-256: `35bf0057341046be2b5db3cd90c99d825b61efaf315ed25428b5eda571894209`
+- Metadata SHA-256: `43542dab517c382c8ae0bc3c7332df9e98a97a6229686bf334f88c000c1ef95a`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_user_provided_behavior_baseline` | PASS | 明确将“active 列表由排除 archived 改为包含 archived”作为现行行为约定与本次变更对照，且说明仓库未发现 PRD、DECISIONS、TRD 或代码交接包。 |
+| `classifies_expectation_change` | PASS | 明确称其为“已存在行为约定的产品预期变更”，并说明不应直接当作 bug 修复。 |
+| `routes_to_existing_project_update` | PASS | 明确指定 `existing-project-update` 路径及 `pm-agent:idea-to-spec` 作为下一责任方，并要求先记录产品决定。 |
+| `routes_trd_gap_to_trd_gen` | NOT_EXERCISED | 候选输出明确指出 PRD、产品决策和 TRD 均未在当前仓库发现，因此触发该条件所需的 PRD/决策已明确前提尚未成立。 |
+| `requires_plan_after_alignment` | NOT_EXERCISED | 候选输出停留在 PM 变更确认阶段；后续 TRD 对齐和实现计划步骤尚不能在缺少用户确认时发生。 |
+| `does_not_route_directly_to_implementation` | PASS | 明确本轮不改代码、不写文档，并将后续工程步骤置于 PM 确认和 TRD 更新之后，没有直接交给 `feature-implementor`。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=e6da02108c9436a1622c8e08e34f2a191cd0609ebbb6d08189d7d9e6962e35f8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为已批准行为上的产品预期变更，路由至 existing-project-update，并停留在 PM 变更确认阶段。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=abb0eefcdf08877610e2b7ed210bc7ebd63292ef1470b0d2370ee11a4ed141a7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了较完整的产品语义和影响分析，但未按项目更新路径明确路由责任方。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 完成 PM/产品决策确认后，再同步并核对 TRD；若 TRD 存在缺口，再交回 TRD 生成流程。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-002-existing-feature-alignment-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/engineer-agent/evals/workspace/eval-002-existing-feature-alignment-gate`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `cf5998cdd0e57fc7e288a79411dd445b8e07aa2acaa4991819873a45b9dfb293`
+- Skill overlay SHA-256: `fbd54811cad37baf48c96e02cd6eda99bc6d8b886b0ce2dc848aa202c091fedd`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `35bf0057341046be2b5db3cd90c99d825b61efaf315ed25428b5eda571894209`
+- Metadata SHA-256: `43542dab517c382c8ae0bc3c7332df9e98a97a6229686bf334f88c000c1ef95a`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_user_provided_behavior_baseline` | PASS | With-skill output treats the current behavior as an approved baseline and does not claim to have read nonexistent PRD, TRD, or decision files. |
+| `classifies_expectation_change` | PASS | With-skill output explicitly classifies the request as an “approved-expectation change” and says it cannot be treated as a small coding change. |
+| `routes_to_existing_project_update` | FAIL | The output recommends updating PRD/decision records and a PM handoff, but does not route through the required existing-project-update path or explicitly synchronize the TRD. |
+| `routes_trd_gap_to_trd_gen` | NOT_EXERCISED | The locked evidence does not establish whether PRD/product decisions are clear while the TRD is missing, stale, or incomplete, so this conditional assertion cannot be exercised. |
+| `requires_plan_after_alignment` | NOT_EXERCISED | The candidate correctly stops at PM expectation alignment; the later post-alignment implementation step is not reached. |
+| `does_not_route_directly_to_implementation` | PASS | The output explicitly says to stop at PM expectation alignment and says the request must not directly enter coding. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=728e6d59514a9aa9812f055cc5a07a46d21fb284c54a96f72c15d7e440384bd7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly identifies the expectation change, pauses before coding, and proposes PM/TRD alignment, but omits the required explicit existing-project-update routing and TRD synchronization.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=7b2891be9241c6f8e3ef4643f8d9e2aac7553cbc3f0d56a5e52ef2daf26b89a4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline avoids mutation and gives a generic implementation-oriented checklist, but does not recognize the approved-expectation change or required governance routing.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output does not satisfy the required existing-project-update routing and explicit TRD synchronization.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-002-existing-feature-alignment-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/engineer-agent/evals/workspace/eval-002-existing-feature-alignment-gate`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `757a4f95af830e3468b6c44e54e5901a0cc27f0a6d0aa7ecc8b703b612007d3a`
+- Skill overlay SHA-256: `ed4d8f534d0e5c1c334b4a13d67b6d20c37dceb98e00e4e2ea3b6a2c0112faad`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `35bf0057341046be2b5db3cd90c99d825b61efaf315ed25428b5eda571894209`
+- Metadata SHA-256: `43542dab517c382c8ae0bc3c7332df9e98a97a6229686bf334f88c000c1ef95a`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_user_provided_behavior_baseline` | PASS | 明确以用户提供的 active 排除 archived 作为现行约定，并说明工作区未发现相关 PM 文档；未声称读取不存在的 PRD/TRD/决策文件。 |
+| `classifies_expectation_change` | PASS | 明确将请求定性为“产品约定变更”，要求先确认产品语义，而非直接修改筛选条件。 |
+| `routes_to_existing_project_update` | PASS | 明确路由到 pm-agent:idea-to-spec 的 existing-project-update 路径。 |
+| `routes_trd_gap_to_trd_gen` | NOT_EXERCISED | 当前证据显示 PRD/产品决策尚未明确，因此“已明确但 TRD 缺失或过期”的条件未被触发。 |
+| `requires_plan_after_alignment` | NOT_EXERCISED | 候选输出将实现计划列为 Engineer 入口门槛，但尚未完成 PRD/TRD 对齐，后续进入实现的步骤未发生。 |
+| `does_not_route_directly_to_implementation` | PASS | 未直接交给 feature-implementor；明确要求先完成 PM 确认、PRD/TRD 对齐及实现计划门槛。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=09b4a3b3966ff021bd9ed4cb95433f7303c1bfab3929abafebffe68ae3f121d7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为产品约定变更，路由至现有项目更新流程，并阻止在 PM/PRD/TRD 对齐前进入实现；原始 Git 证据显示未发生文件或分支变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=8552eca83adceadbf250a10b0d4fd5890e64603505c384215baaefac1f799b6b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 给出常规代码分析和实现推进建议，未识别现行批准行为与请求之间的产品预期冲突，也未路由 PM 对齐流程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-002-existing-feature-alignment-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/engineer-agent/evals/workspace/eval-002-existing-feature-alignment-gate`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `757a4f95af830e3468b6c44e54e5901a0cc27f0a6d0aa7ecc8b703b612007d3a`

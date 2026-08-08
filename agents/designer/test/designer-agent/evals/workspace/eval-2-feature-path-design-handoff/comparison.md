@@ -14,6 +14,254 @@
 - Fixture version/source: canonical manifest `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6` from `agents/designer/test/designer-agent/evals/workspace/eval-2-feature-path-design-handoff`.
 - Fixture SHA-256: `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6`
 - Prompt SHA-256: `e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e8c75de1d6f9996313bad1fce4ede6ed7cde9c08fd07355edd02169db57e8e68`
+- Skill overlay SHA-256: `bb133a8c85c48881a2031584ba17c553a39faea708969d0cf9c8fc7668592bf7`
+- Judge schema SHA-256: `173af1b9ec0e079651ca3a9820c63dda3723644385c5a202331578e8f1a93950`
+- Eval definition SHA-256: `53f91ea5792318b5883984b62004cc098b15b6389da8f0c2233bdab77fbf2aa6`
+- Metadata SHA-256: `e6f9e581a9240bd876422c7ab0f1f1ca860fda8f563a8f02f87555323c8c7b30`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_confirmed_feature_path` | PASS | The UI/UX snapshot declares `chat-interface/messages/history/search` and cites the matching PRD and TRD paths. |
+| `mirrors_design_outputs` | PASS | Locked delivery snapshots contain both required files at the exact `docs/design/chat-interface/messages/history/search/` paths. |
+| `no_synonym_top_level` | PASS | Locked git status and delivery snapshots show only the required nested design files; no synonym or truncated design directory is present or proposed. |
+| `stops_before_code` | PASS | Both locked design files explicitly state that the handoff stops before code, implementation, and tests; no code, commands, or patches are delivered. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=02f6ced0d0f9a08fa7f3f464a7d5afb454d4f8e870b7c0beb8b7327e6e488fd3; snapshot_sha256=5b9f8941d802be4ba5120a2606b8392cab37303ff776b332a190d1ce03609a1d
+- Behavior: Delivered the required nested UI/UX and visual-system design artifacts, aligned to the confirmed feature path and stopped at design handoff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=d4dedc2cd6b725e824876e0c9cb47ef90ed718e76fe2dc2fb905b048ac79f7b7; snapshot_sha256=e7ed3217952cfde6b9e60004cb4d243e1ffc2f60345bebb1ead06dd8432ebed3
+- Behavior: Delivered a single PM-scoped DESIGN.md under the wrong output location, so it did not satisfy the required design artifact paths.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `designer-agent`
+- Eval: `eval-002-feature-path-design-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6` from `agents/designer/test/designer-agent/evals/workspace/eval-2-feature-path-design-handoff`.
+- Fixture SHA-256: `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6`
+- Prompt SHA-256: `e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e8c75de1d6f9996313bad1fce4ede6ed7cde9c08fd07355edd02169db57e8e68`
+- Skill overlay SHA-256: `bb133a8c85c48881a2031584ba17c553a39faea708969d0cf9c8fc7668592bf7`
+- Judge schema SHA-256: `173af1b9ec0e079651ca3a9820c63dda3723644385c5a202331578e8f1a93950`
+- Eval definition SHA-256: `53f91ea5792318b5883984b62004cc098b15b6389da8f0c2233bdab77fbf2aa6`
+- Metadata SHA-256: `e6f9e581a9240bd876422c7ab0f1f1ca860fda8f563a8f02f87555323c8c7b30`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_confirmed_feature_path` | PASS | 两份交付文件的 front matter 均将唯一 feature_path 设为 chat-interface/messages/history/search，并直接列出同路径 PRD 与 TRD。 |
+| `mirrors_design_outputs` | PASS | 锁定 delivery_snapshot 直接显示 UI/UX 与 visual-system 文件均位于 docs/design/chat-interface/messages/history/search/ 下的指定路径。 |
+| `no_synonym_top_level` | PASS | git_status 仅显示 docs/design/，锁定快照中仅有指定 feature_path 下的两个设计文件；内容明确不新增顶层或同义功能。 |
+| `stops_before_code` | PASS | 锁定交付物是设计规范文件，包含明确的 Design Handoff/设计交付边界；未包含代码、测试命令、补丁或工程实现步骤。候选说明仅指出后续责任角色。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=7c506ebe25301548c7df6303cdd8a51968374fad5923c67afd879bbcefc43ac3; snapshot_sha256=48d53d9aa955958e9dd1fce4945ed6b79e238fe9f4b6fea14439b669cb1b15bb
+- Behavior: 完成了指定路径下的 UI/UX 规范和视觉系统设计，并停在 design handoff。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=e52a2a0b50e5152cd07f1b71c2a011ab926a72d122523ac19e56737bb8d695f3; snapshot_sha256=0eed801aa551e413d16d8111e6140b5d7e0dd2d3f8dc5adbce3dad820f7b2489
+- Behavior: 生成了可运行的 HTML/CSS/JS 实现，未交付指定设计文档路径，也执行了语法检查。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `designer-agent`
+- Eval: `eval-002-feature-path-design-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6` from `agents/designer/test/designer-agent/evals/workspace/eval-2-feature-path-design-handoff`.
+- Fixture SHA-256: `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6`
+- Prompt SHA-256: `e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e8c75de1d6f9996313bad1fce4ede6ed7cde9c08fd07355edd02169db57e8e68`
+- Skill overlay SHA-256: `bb133a8c85c48881a2031584ba17c553a39faea708969d0cf9c8fc7668592bf7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `53f91ea5792318b5883984b62004cc098b15b6389da8f0c2233bdab77fbf2aa6`
+- Metadata SHA-256: `e6f9e581a9240bd876422c7ab0f1f1ca860fda8f563a8f02f87555323c8c7b30`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_confirmed_feature_path` | PASS | 两份锁定设计交付文件均将 `chat-interface/messages/history/search` 作为 feature_path，并分别引用同路径的 PRD 与 TRD。 |
+| `mirrors_design_outputs` | PASS | delivery_snapshot 直接包含要求的 `docs/design/chat-interface/messages/history/search/ui-ux-spec.md` 与 `docs/design/chat-interface/messages/history/search/visual-system.md`。 |
+| `no_synonym_top_level` | PASS | 锁定交付仅位于确认的完整设计路径，没有建议或创建同义、截断目录。 |
+| `stops_before_code` | PASS | 锁定内容是 UI/UX 与视觉设计规范，并明确 Design Handoff；未交付代码、测试命令、补丁或工程实现步骤。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=c7b0419a457d59e9711039bd6171699847258fc40d7ff3119eca75f9fec10768; snapshot_sha256=ec516dcc4b3bc29113f774256a1f3dbc848624833ef4c55aaa4eacd0e1bf6b40
+- Behavior: 交付确认 feature_path 下的 UI/UX 与 visual-system 设计文档，引用 PRD/TRD，沿用现有功能树并停在设计交接。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=da18fd4e5ceba6c71913002471cb73802b61ea323dadb191d6276135c552789e; snapshot_sha256=baa76e3057a9fd997a9a4fd8259667048db273677c6067aee8dea51463c93b46
+- Behavior: 新建并交付 app.js、index.html、styles.css，且声称完成 JavaScript 语法校验；未交付要求的设计文档路径。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `designer-agent`
+- Eval: `eval-002-feature-path-design-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6` from `agents/designer/test/designer-agent/evals/workspace/eval-2-feature-path-design-handoff`.
+- Fixture SHA-256: `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6`
+- Prompt SHA-256: `e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **CLEAN**
+- Target skill tree SHA-256: `a2af40534bea6300e7542181039cc4ea7fb5bf91ca59c58d810e2ecc81053275`
+- Skill overlay SHA-256: `3e0603def6ab2fd4b5f3adf5c8eae0d13b31a6e105737c16ebc52acd20d08553`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `53f91ea5792318b5883984b62004cc098b15b6389da8f0c2233bdab77fbf2aa6`
+- Metadata SHA-256: `e6f9e581a9240bd876422c7ab0f1f1ca860fda8f563a8f02f87555323c8c7b30`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_confirmed_feature_path` | PASS | Both design documents use the sole feature_path chat-interface/messages/history/search and cite the matching PRD and TRD. |
+| `mirrors_design_outputs` | PASS | Raw delivery evidence shows exactly the required ui-ux-spec.md and visual-system.md paths under docs/design/chat-interface/messages/history/search/. |
+| `no_synonym_top_level` | PASS | The with_skill manifest contains only the canonical design directory; the documents explicitly prohibit new top-level navigation or feature-tree nodes. |
+| `stops_before_code` | PASS | With_skill delivery contains only design documents, explicitly states design handoff only and no code or implementation, and provides no test commands or patches. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=d2140d108186c55ef2483f5850f939ed61b4aebd24e340e61b8f5129e52d3b7b; snapshot_sha256=8192de40e8f867cd329b14028be9050ca0ec5eab4249f7f7fe3cd44e7dfe9b36
+- Behavior: Produced the canonical UX and visual-system design handoff documents, preserving the confirmed feature path and stopping before implementation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=c764176352e78ff8d020c88fd99af2c86f01ce20a8536a13e4aee60f723afc05; snapshot_sha256=dc489e0f55df7bf1f32e19511161e59f43c20dcbbf5b45ea72eb13f1a37993f1
+- Behavior: Produced HTML/CSS/JavaScript implementation files at workspace root and reported test commands, without the required design handoff paths.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `designer-agent`
+- Eval: `eval-002-feature-path-design-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6` from `agents/designer/test/designer-agent/evals/workspace/eval-2-feature-path-design-handoff`.
+- Fixture SHA-256: `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6`
+- Prompt SHA-256: `e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `a2af40534bea6300e7542181039cc4ea7fb5bf91ca59c58d810e2ecc81053275`

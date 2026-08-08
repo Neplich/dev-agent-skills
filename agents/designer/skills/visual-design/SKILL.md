@@ -24,6 +24,15 @@ Forbidden actions:
 
 If the input includes a completed PM or UX spec, use it to shape the visual system and stop at design handoff.
 
+When the supplied PM/design handoff already contains a confirmed feature path,
+product type, audience, brand direction, and requested visual-system output,
+accept it as the entry basis and produce the document; do not invent another
+handoff requirement. A repository-root `PM_HANDOFF.md` carrying those fields is
+an equivalent confirmed entry basis; a second design packet is not required.
+The result visibly includes the Design System Data query
+and findings, aesthetic direction, layout, palette, typography, UX rules, and
+anti-patterns while remaining code-free.
+
 Every reference-backed visual system must record the Design System Data query,
 the active installed `visual-design` skill reference source used, the relevant
 lookup findings, and how those findings support layout, style, color,

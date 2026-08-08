@@ -33,18 +33,58 @@ whether they normalize to one complete identity while preserving prerelease,
 build metadata, and case-sensitive components.
 
 In pre-tag, verify the complete affected set against code/tests, classify
-outdated claims as `stale`, validate the shared frontmatter source, and stamp
+confirmed outdated claims with the literal final verdict `stale` rather than
+the intermediate label `mismatch`, validate the shared frontmatter source, and stamp
 all verified pages in one transaction. Persist the complete candidate producer
 record, anchor it in a commit, discover it through the versioned path, integrate
 by fast-forward, and read it back before returning `ready_for_tag`; never call
 that published. On any failure, roll back only the current attempt and prove
 HEAD, refs, index, worktree, and authoritative prior records were restored.
+The producer record includes complete per-source locators, pre-candidate and
+post-candidate staged inventories, and readback identity. Keep the candidate,
+anchor, and handoff steps distinguishable in Git evidence; a single commit that
+mixes candidate content, anchor, handoff, and unrelated page changes does not
+prove the transaction.
+The pre-tag transaction evidence explicitly records `source_locators`
+(path/mode/type/blob/hash), `pre_candidate_inventory`,
+`post_candidate_inventory`, `candidate_commit`, `anchor_commit`,
+`handoff_commit`, `fast_forward_result`, and `readback_identity`. Stamp every
+verified inventory member—including Release Notes page/index surfaces—in the
+same transaction even when its body content did not otherwise change.
+Derive locator fields, staged inventories, object identities, and digests from
+the locked Git/source evidence. The inbound handoff does not need to prepopulate
+this audit-protocol schema; block only when the underlying raw evidence is
+absent or contradictory.
+Before committing, validate the candidate against every Section 5 field group,
+including the exact `canonical-json-rfc8259-sorted-v1` algorithm name, complete
+locator contracts, both pre-candidate and post-candidate staged inventories,
+and every post-stamp SHA-256. After the final atomic record write, recompute its
+actual Git blob and copy that exact identity into the anchor, discovery handoff,
+and external package; never reuse a draft-record digest. Record the distinct
+candidate, anchor, and handoff commits plus post-fast-forward readback before
+returning `ready_for_tag`.
+The candidate record must not contain the literal token `ready_for_tag`
+anywhere, including explanatory prohibitions. Every version-source entry must
+render all six locator-contract keys (`source_id`, `locator_kind`, `locator`,
+`selector`, `extractor`, `required_raw_form`), and every file-backed source also
+renders its path/mode/type/blob/hash evidence. Render two separately named,
+complete staged inventories—pre-candidate and post-candidate—before creating
+the anchor. The handoff commit stages only the discovery handoff path, and the
+external package reports that commit's tree/path/blob plus fast-forward and
+integrated readback evidence.
 
 In post-tag, select the trusted pre-tag authority before deterministic fallback,
 bind the actual tag object/tree and every surface to the same inventory, and
 persist `blocked` on mismatch without rewriting the authority. Manual-page
 audits additionally verify every step screenshot file, navigation reachability,
 and redaction-sensitive content from raw files.
+Review the complete same-version attempt history, including directly
+superseded attempts, before selecting authority. If persisting the current
+result fails, state the recovery condition: restore write capability, persist
+the blocked record, and verify it by readback without changing prior authority.
+For manuals, treat referenced raster and vector image files as images, and
+report redaction findings at an exact file plus line, element, or object
+location.
 
 ## Entry Credentials
 

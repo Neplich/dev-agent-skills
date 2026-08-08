@@ -11,6 +11,405 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-015-flat-hierarchy-migration-proposal`.
+- Fixture SHA-256: `687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac`
+- Prompt SHA-256: `02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `162b3544cbde876f526df1805303ea3ab78e34b2ebde819bbdbfe83bc8251b8c`
+- Eval definition SHA-256: `de76a086939d1591df845f72fbdb70d76c350be98629e84e5fc28aead6c5474b`
+- Metadata SHA-256: `1745a4b411c4974d9b158bc811fac50658345383bc93cab2e1df286dcb1629d0`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_flat_hierarchy_drift` | FAIL | with_skill 仅指出 research-conversations.md 的漂移，未点名 graph-search.md 与其同属缺失的“知识发现与应用”域节点。 |
+| `proposes_migration_before_write` | FAIL | with_skill 提供了会话消息目标子树和部分 change-map/导航说明，但未完整给出所有旧路径映射、三项决策选项及明确等待确认的同批迁移提案。 |
+| `does_not_deepen_flat_layout` | PASS | git_evidence 显示无变更；候选输出明确写明未修改 site files，且未宣称执行写入后检查。 |
+| `reports_out_of_batch_drift_read_only` | FAIL | with_skill 未列出知识建设与维护、平台治理与运行两组批次外 drift 的具体页面清单及建议目标节点，仅笼统排除其他 API。 |
+| `loads_only_api_contract` | FAIL | 候选输出未显式列出已加载的 API 类型模块与 host API 模板；虽然给出层级漂移说明并排除其他文档类型，但不足以满足显式加载模块报告。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac; output_sha256=462e3cb55aa4551c3ed966e949b49ad3ff131ec31ac481e65e551562d7b2f835; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了部分层级漂移并保持工作区零写入，但迁移提案、批次外 drift 报告和加载模块报告不完整。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac; output_sha256=d8afa4c355ad38fafb7c51f0469c3dd8d3d1fc7ffba8e7cf0ddba727104b9564; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提出扁平路径下新增叶子页和根导航链接，未识别层级漂移，也未提出迁移或批次外只读报告。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- detects_flat_hierarchy_drift
+- proposes_migration_before_write
+- reports_out_of_batch_drift_read_only
+- loads_only_api_contract
+- Next: 补齐 research-conversations.md 与 graph-search.md 到同一缺失域节点的 drift 证据和结论。
+- Next: 在写入前提供完整迁移树、旧新路径映射、入链/递归导航与 change-map delta，并给出三项决策选项后等待确认。
+- Next: 列出两组批次外 drift 的具体页面、目标节点及明确的范围外声明。
+- Next: 显式报告仅加载的 API 类型模块、host API 模板和 Hierarchy drift 结论。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-015-flat-hierarchy-migration-proposal`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-015-flat-hierarchy-migration-proposal`.
+- Fixture SHA-256: `687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac`
+- Prompt SHA-256: `02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `162b3544cbde876f526df1805303ea3ab78e34b2ebde819bbdbfe83bc8251b8c`
+- Eval definition SHA-256: `de76a086939d1591df845f72fbdb70d76c350be98629e84e5fc28aead6c5474b`
+- Metadata SHA-256: `1745a4b411c4974d9b158bc811fac50658345383bc93cab2e1df286dcb1629d0`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_flat_hierarchy_drift` | PASS | PASS：明确指出 `research-conversations.md` 与 `graph-search.md` 位于 API 根目录，并以 feature catalog 的嵌套层级作为 drift 依据。 |
+| `proposes_migration_before_write` | FAIL | FAIL：虽提出新页面目标子树，但未提供既有页面的迁移子树、旧新路径映射、入链/递归导航 delta、`required_docs` delta，也未给出三个决策选项。 |
+| `does_not_deepen_flat_layout` | PASS | PASS：候选范围明确不迁移既有 flat 页面，提出新增嵌套子树；锁定 git evidence 显示零写入，且输出说明 host checks 尚未运行。 |
+| `reports_out_of_batch_drift_read_only` | FAIL | FAIL：只报告了 `research-conversations.md` 和 `graph-search.md`，未列出知识建设与维护、平台治理与运行两组批次外 drift 的页面清单及建议目标节点。 |
+| `loads_only_api_contract` | FAIL | FAIL：输出未显式列出仅加载的 API 类型模块与 host API 模板，也未提供名为或等价于 Hierarchy drift 结论的显式字段；仅列出若干证据绑定。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac; output_sha256=3b867ba212e072cf8e8ddfeac59c2c7182d7eafd414f2cec44031c4ede6ef8cf; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了知识发现域的 flat hierarchy drift，提出嵌套 API 子树并保持零写入、等待确认；但迁移提案、批次外 drift 报告和模块加载报告不完整。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac; output_sha256=ac7f65a106db1b28efa0213f5f80ca114d219c4681e21c569f69236db3d1ff6e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提出 flat API 下新增页面并更新根索引和 change-map，未识别层级 drift，且未提供迁移或完整范围治理。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未在一次写入前确认中完整提出迁移映射、导航与 change-map delta 及三个决策选项。
+- with_skill 未完整报告两组批次外 drift。
+- with_skill 未显式报告限定加载模块和 Hierarchy drift 结论字段。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-015-flat-hierarchy-migration-proposal`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-015-flat-hierarchy-migration-proposal`.
+- Fixture SHA-256: `687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac`
+- Prompt SHA-256: `02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e1b96c87b6eb051a20a849fc51ca738b49866387566d5f61a7cdde4f1fc422cd`
+- Skill overlay SHA-256: `44e860f93f5d468075d88a048afe986ad68fcbae84270ffdc4d5a090573d59b8`
+- Judge schema SHA-256: `162b3544cbde876f526df1805303ea3ab78e34b2ebde819bbdbfe83bc8251b8c`
+- Eval definition SHA-256: `de76a086939d1591df845f72fbdb70d76c350be98629e84e5fc28aead6c5474b`
+- Metadata SHA-256: `1745a4b411c4974d9b158bc811fac50658345383bc93cab2e1df286dcb1629d0`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_flat_hierarchy_drift` | FAIL | FAIL：虽声明 flat 页面与 feature catalog 层级不一致，但未点名 research-conversations.md 与 graph-search.md，也未说明二者同属缺失的知识发现与应用域节点。 |
+| `proposes_migration_before_write` | FAIL | FAIL：给出了新页面嵌套树和 change-map 建议，但没有旧路径到新路径映射、递归导航与 required_docs delta，也没有同时提供迁移、仅本批次、全部推迟三个选项。 |
+| `does_not_deepen_flat_layout` | PASS | PASS：明确本轮不写入、不迁移既有 flat 页面，新页面位于嵌套目标树；git evidence 显示工作树、索引和提交均未变化，并声明 host checks 尚未运行。 |
+| `reports_out_of_batch_drift_read_only` | FAIL | FAIL：仅笼统称既有 flat 页面为 out-of-batch drift，未按知识建设与维护、平台治理与运行两组列出页面清单及建议目标节点。 |
+| `loads_only_api_contract` | NOT_EXERCISED | 无法由锁定证据证明实际模块加载/读取顺序；该隐藏过程断言未充分可观测。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac; output_sha256=23388a5acba0f1a43f989d3f02cfc4189f8220634d23ccab6d4ad903ea055c46; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别到知识发现层级与现有 flat API 页面不一致，提出嵌套会话消息页面树并等待维护者确认，且未产生文件或 git 变更；但遗漏了具体 drift 页面、完整迁移方案和批次外 drift 清单。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac; output_sha256=05d2d3559c79a9df6116afeb5ecb28b1f5a321619639ab4603d354eec8f1c5f0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提出直接在 docs/site/api/ 下新增一级叶子页并更新 API 索引及 change-map，未识别 flat hierarchy drift，也未进行写入。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未点名并完整解释 research-conversations.md 与 graph-search.md 的共同层级 drift。
+- with_skill 未提供完整的一次性迁移提案及三个确认选项。
+- with_skill 未按要求报告两组批次外 drift 的页面清单和目标节点。
+- Next: 点名 research-conversations.md 和 graph-search.md，说明其基于 feature catalog、feature_path、route prefix/tag、related_code 或 owner 的共同节点判定。
+- Next: 在确认前补充迁移目标树、旧新路径映射、导航和 required_docs delta，并提供三个确认选项。
+- Next: 列出知识建设与维护、平台治理与运行两组批次外页面及建议目标节点。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-015-flat-hierarchy-migration-proposal`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-015-flat-hierarchy-migration-proposal`.
+- Fixture SHA-256: `687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac`
+- Prompt SHA-256: `02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e1b96c87b6eb051a20a849fc51ca738b49866387566d5f61a7cdde4f1fc422cd`
+- Skill overlay SHA-256: `44e860f93f5d468075d88a048afe986ad68fcbae84270ffdc4d5a090573d59b8`
+- Judge schema SHA-256: `162b3544cbde876f526df1805303ea3ab78e34b2ebde819bbdbfe83bc8251b8c`
+- Eval definition SHA-256: `de76a086939d1591df845f72fbdb70d76c350be98629e84e5fc28aead6c5474b`
+- Metadata SHA-256: `1745a4b411c4974d9b158bc811fac50658345383bc93cab2e1df286dcb1629d0`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_flat_hierarchy_drift` | FAIL | with_skill identifies a positive flat drift generally, but does not name research-conversations.md and graph-search.md or establish that both belong to the same missing node before proposing scope. |
+| `proposes_migration_before_write` | FAIL | The output gives a target subtree and three semantically equivalent decision choices, but omits old-to-new path mappings, inbound/recursive navigation deltas, and an explicit change-map required_docs delta. |
+| `does_not_deepen_flat_layout` | PASS | It proposes the new page under the knowledge-discovery/conversations subtree, explicitly retains existing flat pages without moving them, and states the proposal is zero-write with checks and handoff blocked pending confirmation. |
+| `reports_out_of_batch_drift_read_only` | FAIL | The output does not provide read-only observation reports for the knowledge-building/maintenance and platform-governance/operations drift groups, their page lists, or target nodes. |
+| `loads_only_api_contract` | FAIL | The output lists API-related evidence and a drift conclusion, but does not explicitly report the loaded API modules and host template or prove that database, design, ops, and product modules were not read/applied. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac; output_sha256=578253835d2f85cc5d60075260f0c61343de6422c9cfd96e736cfe94c4673de5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly preserves zero-write behavior and proposes the new page in a hierarchical subtree, but misses several required migration, drift-reporting, and module-reporting details.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac; output_sha256=8e75f4fa61d83e6224655536b1250af2a99d7bd0276037693a362352be025775; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline proposes a flat API page and top-level navigation only, without hierarchy drift analysis or migration planning.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill proposal omits required named drift evidence and the two out-of-batch drift reports.
+- The migration proposal lacks required path mappings, navigation deltas, and change-map required_docs deltas.
+- The loaded-module/host-template report is incomplete.
+- Next: Add named drift evidence for research-conversations.md and graph-search.md, including their shared target node and catalog/route/tag/owner basis.
+- Next: Provide the complete migration mapping, navigation and recursive-link deltas, change-map required_docs delta, exclusions with reasons, and all three confirmation options.
+- Next: Add the two out-of-batch read-only drift reports and an explicit loaded-module/Hierarchy drift report.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-015-flat-hierarchy-migration-proposal`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-015-flat-hierarchy-migration-proposal`.
+- Fixture SHA-256: `687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac`
+- Prompt SHA-256: `02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e1b96c87b6eb051a20a849fc51ca738b49866387566d5f61a7cdde4f1fc422cd`
+- Skill overlay SHA-256: `44e860f93f5d468075d88a048afe986ad68fcbae84270ffdc4d5a090573d59b8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `de76a086939d1591df845f72fbdb70d76c350be98629e84e5fc28aead6c5474b`
+- Metadata SHA-256: `1745a4b411c4974d9b158bc811fac50658345383bc93cab2e1df286dcb1629d0`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_flat_hierarchy_drift` | FAIL | With_skill identifies a flat layout and names research-conversations.md, but does not name graph-search.md as part of the same missing knowledge-discovery/application node. |
+| `proposes_migration_before_write` | FAIL | With_skill provides a target tree, change-map delta, exclusions, and confirmation options, but omits the required complete old-to-new path mappings, inbound/recursive navigation deltas, and exclusion reasons. |
+| `does_not_deepen_flat_layout` | PASS | The with_skill delivery snapshot is empty and git evidence shows no changes. The output states zero writes, keeps existing pages unmoved before confirmation, places the proposed new page below nested indexes, and does not run site checks. |
+| `reports_out_of_batch_drift_read_only` | FAIL | With_skill excludes broad categories but does not report the two specified out-of-batch drift groups with page lists and suggested target nodes. |
+| `loads_only_api_contract` | FAIL | The output does not explicitly report the loaded API modules and host API template or provide an explicit Hierarchy drift conclusion field; the locked evidence cannot establish the hidden read order. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac; output_sha256=54be7a101eb70904d82a224d0b3d9287300b8ffbad259c799333254537064bdd; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: With_skill correctly gates on maintainer confirmation and preserves a zero-write state, but its proposal is incomplete on flat-drift coverage, migration deltas, out-of-batch drift reporting, and explicit API-only loading/report fields.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac; output_sha256=8686a936d83c624bd5f93ef22fe83f6c04240f75b5f54fc9c466d2179c68db9d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline proposes a flat conversation-messages page and index link, notices only a possible change-map issue, and omits the required hierarchy-drift and migration analysis.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- detects_flat_hierarchy_drift: graph-search.md is not identified alongside research-conversations.md.
+- proposes_migration_before_write: required complete mappings, navigation deltas, and exclusion reasons are missing.
+- reports_out_of_batch_drift_read_only: required page lists and target nodes for both out-of-batch drift groups are missing.
+- loads_only_api_contract: required explicit loaded-module/template and Hierarchy drift fields are missing.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-015-flat-hierarchy-migration-proposal`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-015-flat-hierarchy-migration-proposal`.
+- Fixture SHA-256: `687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac`
+- Prompt SHA-256: `02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a612d50c32b84c65fad3cad08aad2d416a3a33647abfa1462784c1e58022424b`
+- Skill overlay SHA-256: `e55ecf59b3cd8d90a2ed4cf555bed2ad2fc2131494e0914246a868317b68f4e8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `de76a086939d1591df845f72fbdb70d76c350be98629e84e5fc28aead6c5474b`
+- Metadata SHA-256: `f008330cf4c09bf2d8f5e755019b196220dae437f59e25ab5a6b76314ba70a05`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_flat_hierarchy_drift` | FAIL | With_skill 仅指出 research-conversations.md 的扁平漂移，未点名 graph-search.md，也未说明两者同属同一缺失的知识发现与应用域节点。 |
+| `proposes_migration_before_write` | FAIL | With_skill 提供了目标页面树和部分映射，但未给出旧路径到新路径映射、入链与递归导航 delta、明确的 required_docs delta，也未提供三个决策选项。 |
+| `does_not_deepen_flat_layout` | PASS | 候选输出明确声明待确认、当前零写入；新页面位于目标层级而非 docs/site/api/ 一级；git evidence 显示无变更。 |
+| `reports_out_of_batch_drift_read_only` | FAIL | With_skill 仅将 Database、Design、Ops、Product 等作为排除项，未分别列出知识建设与维护、平台治理与运行两组批次外 drift 的页面清单及建议目标节点。 |
+| `loads_only_api_contract` | NOT_EXERCISED | 输出报告了已加载模块 api 和层级漂移结论，但锁定 raw evidence 无法证明 API 模板的实际加载、未加载其他类型模块或具体读取顺序。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac; output_sha256=1a353faaa989e85d1e9ac3b31b4c16907c55aeafbf5b492e5b9da1c682430f92; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提出嵌套 API 子树和零写入候选范围，识别部分扁平漂移并等待维护者确认，但缺少完整迁移 delta、三选项确认和批次外 drift 清单。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=687c8c162f66866c443380eff16dcacb1132beefea8bacd8446882557f88aaac; output_sha256=0f9380883902e818858d65fbad47cf88b853cc89fcf125dda76779b3b5134572; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提出扁平路径新增页面并更新 API 索引，未识别层级漂移，也未提供迁移提案或批次外 drift 报告。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未识别 research-conversations.md 与 graph-search.md 共同缺失的知识域节点。
+- with_skill 未提供完整迁移提案及三个决策选项。
+- with_skill 未报告两组批次外 drift 的页面清单和建议目标节点。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-015-flat-hierarchy-migration-proposal`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `e820b6c4381f2b584f4fb75e118822cab822720708679f6856aff845dce75a20` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-015-flat-hierarchy-migration-proposal`.
 - Fixture SHA-256: `e820b6c4381f2b584f4fb75e118822cab822720708679f6856aff845dce75a20`
 - Prompt SHA-256: `02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3`

@@ -14,6 +14,195 @@
 - Fixture version/source: canonical manifest `6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-001-unreleased-mode`.
 - Fixture SHA-256: `6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17`
 - Prompt SHA-256: `43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `53f035563de038125d09b7a8997f87e900d099e00223f427a7c690e11ebbe449`
+- Skill overlay SHA-256: `9534a5bf71391ac48cfd6a48ca8f80e93da520d6ea9d2026741fd864da0cb720`
+- Judge schema SHA-256: `e87b7560e9b11fe6dfc954d0faa2696f04b98bb48f59af2eb521a8e8cfed4660`
+- Eval definition SHA-256: `f643e5a44adc95dee4686543e115df7acb899ebc5dec146519d9991e82db553d`
+- Metadata SHA-256: `95c0dae43621d97267d71f9000473df424f0f20875022c90f8a0826f1615ee52`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `unreleased` | PASS | with_skill delivery_snapshot contains `## [Unreleased]`. |
+| `pr` | PASS | Entries for PRs #310 and #311 include GitHub PR links with `(#number)` format. |
+| `bot_pr_dependabot` | PASS | Raw evidence identifies #312 as authored by dependabot[bot]; it is absent from the with_skill file. |
+| `chore_ci_test` | PASS | Raw evidence identifies #313 as CI-only internal maintenance; it is absent from the with_skill file. |
+| `versioned_changelog_file` | PASS | with_skill delivery_snapshot directly contains `docs/changelog/changelog-unreleased.md`. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811; fixture_sha256=6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17; output_sha256=6a7129e162585b080cf049f1ecf331bdf61c3b14ef1684054c2485602de1b092; snapshot_sha256=68018826ff931ee3733f3af5ff445d5478f936b6e83cf72e81efe455cf6c1700
+- Behavior: Generated the requested Unreleased changelog with user-facing PRs #310 and #311 while excluding dependency-bot and CI-only changes.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811; fixture_sha256=6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17; output_sha256=a16c0fd13876947021e5df412cd6e7f6b04625cb1958edaec2967750b5ace9e7; snapshot_sha256=43d5eb13a1d02f71f5ceadd9de7e6a39d79931dac65f722043367da3b3476e2a
+- Behavior: Generated a changelog containing user-facing PRs plus the dependency update #312; it excluded the CI-only change.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-001-unreleased-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-001-unreleased-mode`.
+- Fixture SHA-256: `6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17`
+- Prompt SHA-256: `43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `53f035563de038125d09b7a8997f87e900d099e00223f427a7c690e11ebbe449`
+- Skill overlay SHA-256: `9534a5bf71391ac48cfd6a48ca8f80e93da520d6ea9d2026741fd864da0cb720`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `f643e5a44adc95dee4686543e115df7acb899ebc5dec146519d9991e82db553d`
+- Metadata SHA-256: `95c0dae43621d97267d71f9000473df424f0f20875022c90f8a0826f1615ee52`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `unreleased` | PASS | with_skill delivery_snapshot contains the exact heading ## [Unreleased]. |
+| `pr` | PASS | Both with_skill changelog entries include GitHub PR links in (#310) and (#311) format. |
+| `bot_pr_dependabot` | PASS | The with_skill file excludes dependabot PR #312. |
+| `chore_ci_test` | PASS | The with_skill file excludes the chore dependency update #312 and internal CI change #313. |
+| `versioned_changelog_file` | PASS | with_skill delivery_snapshot directly contains docs/changelog/changelog-unreleased.md. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811; fixture_sha256=6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17; output_sha256=b971b98f2d402f6728bae6bd3474a17163d9856c335c2119b18a51d1e3d5e579; snapshot_sha256=3eae32ed3f79e89f67bb9fb6e522919bcd154e7d8ea3a668ecfd086048b90d86
+- Behavior: Created the required Unreleased file with PR-linked user-visible Added and Fixed entries, excluding dependency and CI-only changes.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811; fixture_sha256=6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17; output_sha256=826189cb7166b545a6864e5535b200df43a4a17108d33043fddb69a15111775b; snapshot_sha256=18ccafc549a4ee51ab52d8284baef521565b7e9e9c72988f33b7d440edf77fd7
+- Behavior: Created the required file and headings, but included the dependency-maintenance PR #312.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-001-unreleased-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-001-unreleased-mode`.
+- Fixture SHA-256: `6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17`
+- Prompt SHA-256: `43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `fd6202eb001e4fcc8e818cb01c9c27ec290ab3c4edabd757735bf984bab469a4`
+- Skill overlay SHA-256: `b53e1261ebb5c959b0bf29a37559e89f454013b911c855fd491809032b43b267`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `f643e5a44adc95dee4686543e115df7acb899ebc5dec146519d9991e82db553d`
+- Metadata SHA-256: `95c0dae43621d97267d71f9000473df424f0f20875022c90f8a0826f1615ee52`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `unreleased` | PASS | with_skill delivery snapshot contains exactly the required `## [Unreleased]` heading. |
+| `pr` | PASS | Both included entries contain GitHub PR links in `([#310](...))` and `([#311](...))` format. |
+| `bot_pr_dependabot` | PASS | with_skill omits PR #312, whose author is `dependabot[bot]`. |
+| `chore_ci_test` | PASS | with_skill output contains only feature and bug entries; no chore, ci, or test internal changes are present. |
+| `versioned_changelog_file` | PASS | Delivery snapshot and workspace status show `docs/changelog/changelog-unreleased.md` was created. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811; fixture_sha256=6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17; output_sha256=ea8f493dacef921361fcd88a6f8d5971807cc340ffb4b994200c079a4d268e03; snapshot_sha256=196211aa52607bd7dc1cff17131223c9175d02b40f18e555c1ed5cfa8df9b155
+- Behavior: Created the requested Unreleased changelog, included user-facing PRs #310 and #311 with links, and excluded bot/dependency and CI maintenance PRs.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811; fixture_sha256=6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17; output_sha256=9e6759259ea41689e30ca16fa3764ad280a3a222e72f0cb556526c81cb3703f9; snapshot_sha256=dd7a11ab64bcc29cd6c7fb978219ac562313cc0082b4826c7a13fa12f54492eb
+- Behavior: Created the requested file and heading with PR links, but included the dependency-maintenance bot PR #312.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-001-unreleased-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-001-unreleased-mode`.
+- Fixture SHA-256: `6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17`
+- Prompt SHA-256: `43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `fd6202eb001e4fcc8e818cb01c9c27ec290ab3c4edabd757735bf984bab469a4`

@@ -964,3 +964,21 @@ def test_preflight_blocks_workspace_nested_under_source_root(tmp_path: Path) -> 
         assert preflight.checks["source_isolation"] is False
     finally:
         materialized.cleanup()
+
+
+def test_target_instructions_require_material_review_and_consumption_contract(
+    tmp_path: Path,
+) -> None:
+    skill = tmp_path / "example-skill"
+    skill.mkdir()
+    (skill / "SKILL.md").write_text("# Example\n", encoding="utf-8")
+
+    instructions = eval_runtime._target_skill_instructions(skill)
+
+    assert "Inspect every host-native handoff and evidence file" in instructions
+    assert "accept equivalent confirmed document chains" in instructions
+    assert "emit the complete handoff and stop at that boundary" in instructions
+    assert "do not omit the handoff merely because that specialist is not installed" in instructions
+    assert "verify that every required explicit field" in instructions
+    assert "record the task landing, matched mapping, required docs read" in instructions
+    assert "treat unverified docs as low-trust navigation" in instructions

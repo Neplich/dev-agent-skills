@@ -14,6 +14,316 @@
 - Fixture version/source: canonical manifest `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264` from `agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd`.
 - Fixture SHA-256: `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264`
 - Prompt SHA-256: `9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e820a1098a32d64fe76bdf4ec719cd859ebecfdb70fa28be1309b656ec71bd22`
+- Skill overlay SHA-256: `226a387f9ef93d9f4c106e1f240f22e5014d390eeb37da0fd61da0c129ca36ba`
+- Judge schema SHA-256: `beede515c8e2f36efe8ae181f94762d96db69fb2e24a26068fcdd2ef262c1f48`
+- Eval definition SHA-256: `bd840cbb6d300dba8607f0e2ffca8d1cce35f8afa38a03d78fa95279dfa455c6`
+- Metadata SHA-256: `3f1598f1147e9d9fe4d3d8e602cb67a07409635701fd037d50b6d22e59d01fd0`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `writes_implementation_plan` | FAIL | with_skill 输出明确表示“不能进入编码，也不能创建实施计划”，且未交付 IMPLEMENTATION_PLAN.md；仅列出 planned_files，未提供实现顺序。 |
+| `requires_user_confirmation` | PASS | 输出明确写明“confirmation_required: 是”，并要求设计文档补齐后生成计划、等待用户确认后再继续。 |
+| `does_not_implement_directly` | PASS | 锁定的 delivery_snapshot 为空，git head、分支、工作区和未跟踪文件均未变化；输出也未声称已创建或修改代码、运行实现或完成自检。 |
+| `maintains_plan_metadata` | NOT_EXERCISED | 实际未创建 IMPLEMENTATION_PLAN.md；由于设计文档缺失导致流程停在计划生成之前，无法检验该文件的 frontmatter 元数据。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=e4e84268a2ea032e5f12bcc0a98b854dabbae4b271f20812409b3e3d1f2c15e9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别出设计输入缺口并阻止编码，但未完成用户要求的实施计划交付。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=006e983b8eea4bf1b7a04fd70c7f75104cef8c336bd8da4d260f20a2225603d9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 输出了包含文件清单和实现顺序的实施安排，并等待用户确认技术选型；未发生仓库变更。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未生成可审查的实施计划文件，也未完整输出文件变更清单和实现顺序。
+- Next: 补齐或确认设计文档缺口后，生成 docs/engineer/notification-center/IMPLEMENTATION_PLAN.md，并包含文件变更清单、实现顺序及有效初始 frontmatter。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-001-implement-from-prd-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264` from `agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd`.
+- Fixture SHA-256: `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264`
+- Prompt SHA-256: `9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `664333a5486cf89713133cd2c13950492425453ded41d03d80fa464888580510`
+- Skill overlay SHA-256: `e3882775ef1e3496d2f149c4016d8d04e22a586399acb4fdc6095b11e8f7c7bf`
+- Judge schema SHA-256: `beede515c8e2f36efe8ae181f94762d96db69fb2e24a26068fcdd2ef262c1f48`
+- Eval definition SHA-256: `bd840cbb6d300dba8607f0e2ffca8d1cce35f8afa38a03d78fa95279dfa455c6`
+- Metadata SHA-256: `3f1598f1147e9d9fe4d3d8e602cb67a07409635701fd037d50b6d22e59d01fd0`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `writes_implementation_plan` | PASS | 包含 active_plan_path、planned_files，并按 API、组件、测试的顺序列出计划文件。 |
+| `requires_user_confirmation` | PASS | 明确写明需先审查并由用户确认实施计划，之后才能编码。 |
+| `does_not_implement_directly` | PASS | 未声称创建或修改代码、运行实现步骤或完成自检。 |
+| `maintains_plan_metadata` | NOT_EXERCISED | delivery_snapshot 为空且 git 无变更；候选输出称正式计划需待设计输入补齐后创建，因此该后续文件元数据步骤未执行。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=e9ef393d4e5b35e5c91e41642d9eb30729e59f766200c342b32f1649d1ddd335; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 输出了结构化实施规划，列出目标文件和确认门槛，并因缺少设计输入暂停编码。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=476889edf590943f29f223793afa927f31266d7c02747b0639744be8f56c0119; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 输出了实施安排并请求澄清空仓库前置问题，未进行代码变更。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 补齐设计交接文件后创建带有效初始 version 和当前 last_updated 的 IMPLEMENTATION_PLAN.md。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-001-implement-from-prd-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264` from `agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd`.
+- Fixture SHA-256: `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264`
+- Prompt SHA-256: `9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `664333a5486cf89713133cd2c13950492425453ded41d03d80fa464888580510`
+- Skill overlay SHA-256: `e3882775ef1e3496d2f149c4016d8d04e22a586399acb4fdc6095b11e8f7c7bf`
+- Judge schema SHA-256: `beede515c8e2f36efe8ae181f94762d96db69fb2e24a26068fcdd2ef262c1f48`
+- Eval definition SHA-256: `bd840cbb6d300dba8607f0e2ffca8d1cce35f8afa38a03d78fa95279dfa455c6`
+- Metadata SHA-256: `3f1598f1147e9d9fe4d3d8e602cb67a07409635701fd037d50b6d22e59d01fd0`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `writes_implementation_plan` | FAIL | with_skill 输出包含 active_plan_path 和 planned_files，但未给出实现顺序。 |
+| `requires_user_confirmation` | PASS | 明确写出 confirmation_required，并说明计划确认前不会开始编码。 |
+| `does_not_implement_directly` | PASS | 输出仅描述暂停创建计划及禁止编码，未声称创建或修改代码、运行实现步骤或完成自检。 |
+| `maintains_plan_metadata` | NOT_EXERCISED | 候选输出声明暂停创建计划，且 locked git evidence 与 delivery_snapshot 均显示没有创建该文件；后续创建步骤尚未因确认/前置依据完成而执行。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=34e785b1013370ea3d45572c4336fd5609b30195cd90781c042230507ec09fd5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别到代码、测试和设计依据缺口，暂停创建实施计划并要求前置依据补齐后确认。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=6db7b00dbdc00c2e8dbef382fa9a8117aa3eb7339582822328e265725d860f67; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 直接给出包含文件变更和实施顺序的计划，并要求确认后编码。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未提供明确的实施顺序，未满足实现计划输出要求。
+- Next: 补充按阶段排列的实施顺序，并在确认后创建带有效 version 和 last_updated 的 IMPLEMENTATION_PLAN.md。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-001-implement-from-prd-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264` from `agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd`.
+- Fixture SHA-256: `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264`
+- Prompt SHA-256: `9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `664333a5486cf89713133cd2c13950492425453ded41d03d80fa464888580510`
+- Skill overlay SHA-256: `e3882775ef1e3496d2f149c4016d8d04e22a586399acb4fdc6095b11e8f7c7bf`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bd840cbb6d300dba8607f0e2ffca8d1cce35f8afa38a03d78fa95279dfa455c6`
+- Metadata SHA-256: `3f1598f1147e9d9fe4d3d8e602cb67a07409635701fd037d50b6d22e59d01fd0`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `writes_implementation_plan` | FAIL | with_skill 明确写明“暂不创建实施计划”，且未提供实现顺序；虽列出目标文件，但未生成要求的实施计划内容。 |
+| `requires_user_confirmation` | PASS | with_skill 输出明确要求设计输入补齐并生成实施计划后，仍需用户确认计划才能开始编码。 |
+| `does_not_implement_directly` | PASS | with_skill 明确处于阻断状态，列出“禁止编码”和“禁止交付”，原始 git evidence 也显示无变更。 |
+| `maintains_plan_metadata` | NOT_EXERCISED | delivery_snapshot 为空，未实际创建 IMPLEMENTATION_PLAN.md，因此无法检验其 frontmatter 元数据。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=cdaab366cbeb2d569845bdc8eca82405ecc76be25d81a7b3d9604cb6812ad5fa; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别到设计输入缺口并阻止创建实施计划与后续编码，同时要求后续确认。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=9cc7bd4d9f4a64bbc7c3f34709762eba477f531ab48966c4f4a74587540998a0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了拟实施安排并等待确认，未产生仓库变更。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未生成包含要求的 IMPLEMENTATION_PLAN.md、文件变更清单和实现顺序的实施计划。
+- Next: 补齐或转交设计输入后生成实施计划，再请求用户确认。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-001-implement-from-prd-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264` from `agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd`.
+- Fixture SHA-256: `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264`
+- Prompt SHA-256: `9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `34bb246c41505d261f20b6762e5f8c167260c9def318e938b2f40cd562a05376`
+- Skill overlay SHA-256: `b58ba61aee19f19d841deeba69a31e4991e1e48601dbae26ffb264815cffa67d`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bd840cbb6d300dba8607f0e2ffca8d1cce35f8afa38a03d78fa95279dfa455c6`
+- Metadata SHA-256: `3f1598f1147e9d9fe4d3d8e602cb67a07409635701fd037d50b6d22e59d01fd0`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `writes_implementation_plan` | FAIL | with_skill 明确表示无法生成实施计划，也未提供 IMPLEMENTATION_PLAN.md 路径、文件变更清单和实现顺序。 |
+| `requires_user_confirmation` | PASS | with_skill 表示补齐输入后生成计划，并在用户确认后开始编码，满足编码前需用户确认的要求。 |
+| `does_not_implement_directly` | PASS | with_skill 明确说明没有创建 IMPLEMENTATION_PLAN.md，也没有修改代码。原始 git evidence 也显示无变更。 |
+| `maintains_plan_metadata` | NOT_EXERCISED | 未创建 IMPLEMENTATION_PLAN.md；该后续文件元数据要求因前置计划未生成而未被执行。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=16649735e7576a15c3ee27b05304acc627b387b031ce6feae899865bdc3b94a5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 因声称缺少代码骨架及设计输入而阻止生成实施计划；未修改仓库，并表示后续需补齐输入后继续。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=e3d78655862cdc1ea2eccd5a5b5192faf06fc583b30541dcdcb227d7c48b91f3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 输出了较完整的实施安排并要求确认，未修改仓库；但未实际创建实施计划文件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未输出用户要求的可审查实施计划、文件变更清单和实现顺序。
+- Next: 补充实施计划内容，并在创建文件时验证初始 version 与当前 last_updated。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-001-implement-from-prd-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264` from `agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd`.
+- Fixture SHA-256: `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264`
+- Prompt SHA-256: `9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `31ea692709a0817bc32ab74f76490bf0edfdea6902d08e36d2b8cbddeb78aee4`

@@ -9,6 +9,10 @@
     "agents/product_manager/skills/idea-to-spec",
     "agents/docs/skills/docs-agent"
   ],
+  "git_topology": {
+    "base_ref": "docs-fixture-base",
+    "target_ref": "docs-fixture-target"
+  },
   "runtime_isolation": {
     "processes": "not_used",
     "ports": "not_used",

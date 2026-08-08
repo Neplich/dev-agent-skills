@@ -14,6 +14,254 @@
 - Fixture version/source: canonical manifest `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532` from `agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard`.
 - Fixture SHA-256: `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532`
 - Prompt SHA-256: `f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a26ada6a2ba843cfb4e657c89ce7c3b76b2095d2b006f263e49042916f04185f`
+- Skill overlay SHA-256: `1e46d8592a997f6f8a826742994d2b0945378f4e3503165a8d7fa4365064000f`
+- Judge schema SHA-256: `8d2763ec3401350181ee644de1028a6695d69fa18b5430a0edd7593fdf2e890a`
+- Eval definition SHA-256: `9dfc3c0232e65b50d6964b6b208307eca95842562a8965fcb0999b7dc0293b57`
+- Metadata SHA-256: `4806c6c3fd6574e59fbeca624e1db80b0abef304792432263a972f95ebcfa4e8`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_design_spec` | PASS | with_skill delivery_snapshot contains docs/design/saas-dashboard/ui-ux-spec.md. |
+| `covers_user_flows_and_states` | PASS | The locked specification covers user journeys, desktop/tablet layouts, components, filtering, drawers, feedback/error/empty/loading states, and responsive behavior. |
+| `preserves_design_boundary` | PASS | Git evidence shows only docs/design/saas-dashboard/ui-ux-spec.md as untracked; no source, test, build, deployment, or implementation changes are present. |
+| `hands_off_to_engineering` | PASS | The specification explicitly defines the remaining engineering scope and states that engineer-agent proceeds only after implementation authorization. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=b4aedb306390c677c4daebb74d8bbcc38bdcf005acc1e1bde53c13d8fca6d1d7; snapshot_sha256=fac92ddd4387c177d105d92bd3f240a475c65d284ec206490e4dba7e49a1defd
+- Behavior: Produced the requested design specification at the confirmed path, with complete design coverage and a clear engineering handoff boundary.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=bc16a28ba56d9786bf24a417fd13c1c423423b7cfb7b98194d50aff01e2782b3; snapshot_sha256=502a83122ef9b250e4fb9d8fdda5e92a51648f5daefd732a8a4909b098516670
+- Behavior: Produced an interactive prototype in source files instead of the requested design specification, providing comparison baseline only.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-001-saas-dashboard`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532` from `agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard`.
+- Fixture SHA-256: `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532`
+- Prompt SHA-256: `f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a26ada6a2ba843cfb4e657c89ce7c3b76b2095d2b006f263e49042916f04185f`
+- Skill overlay SHA-256: `1e46d8592a997f6f8a826742994d2b0945378f4e3503165a8d7fa4365064000f`
+- Judge schema SHA-256: `8d2763ec3401350181ee644de1028a6695d69fa18b5430a0edd7593fdf2e890a`
+- Eval definition SHA-256: `9dfc3c0232e65b50d6964b6b208307eca95842562a8965fcb0999b7dc0293b57`
+- Metadata SHA-256: `4806c6c3fd6574e59fbeca624e1db80b0abef304792432263a972f95ebcfa4e8`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_design_spec` | PASS | Locked delivery snapshot contains docs/design/saas-dashboard/ui-ux-spec.md under the confirmed PRD path. |
+| `covers_user_flows_and_states` | PASS | The locked specification covers user journeys, page layouts, components, interaction and feedback states, and desktop/tablet responsive behavior. |
+| `preserves_design_boundary` | PASS | Git evidence shows no commits or diffs; only the design specification is untracked, with no source, test, build, or deployment changes. |
+| `hands_off_to_engineering` | PASS | The specification explicitly defines the design deliverable, remaining implementation scope, and engineering handoff boundary. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=92e86ca3cd39ff842aaa2afe8825e57738fcf428e813a28e21c6882ebb15d2ea; snapshot_sha256=dc270031db9bfdd5b421bbbf49d539a0d7ab7ab4bee478fca2d925e362a08820
+- Behavior: Produced the required design specification with comprehensive flows, states, responsive guidance, and an explicit engineering handoff while preserving the implementation boundary.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=9bc629f4d0f7f2e6db6bf10326b791083ac407a71e0dbaf293b9a98ed0441d69; snapshot_sha256=d5fdbc2f1494c7374aec2ff00a2b783787f7da2fc71a360567b3a4934cd613ce
+- Behavior: Produced an interactive prototype and an off-path DESIGN.md, covering some dashboard concepts but not the required design-spec delivery path.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-001-saas-dashboard`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532` from `agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard`.
+- Fixture SHA-256: `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532`
+- Prompt SHA-256: `f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a26ada6a2ba843cfb4e657c89ce7c3b76b2095d2b006f263e49042916f04185f`
+- Skill overlay SHA-256: `1e46d8592a997f6f8a826742994d2b0945378f4e3503165a8d7fa4365064000f`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `9dfc3c0232e65b50d6964b6b208307eca95842562a8965fcb0999b7dc0293b57`
+- Metadata SHA-256: `4806c6c3fd6574e59fbeca624e1db80b0abef304792432263a972f95ebcfa4e8`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_design_spec` | PASS | with_skill delivery_snapshot directly contains docs/design/saas-dashboard/ui-ux-spec.md. |
+| `covers_user_flows_and_states` | PASS | The locked spec covers user journeys, page layouts, components, interaction/loading/error/empty/accessibility states, and desktop/tablet responsive behavior. |
+| `preserves_design_boundary` | PASS | with_skill git evidence shows only the new design document under docs/design, with no source, test, build, deployment, commit, or implementation changes. |
+| `hands_off_to_engineering` | PASS | The delivery output and locked spec explicitly define the engineering handoff boundary and state that implementation is the remaining engineering scope. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=09c3204a093f2bf7187f4f80bba9eacc1cc4b5693c6c1f50aac40e607a68268a; snapshot_sha256=8d4b1bb737e9a902fef6e43afe477b4747306f44305968cb7f1b39a0dcf7bc40
+- Behavior: Produced the requested design specification at the exact PRD-confirmed path, covering the required design content and preserving the design-only boundary.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=0bb1c1cba239ca640efa4ffbe4c40b903057541e165ac1c582c38fe728a26078; snapshot_sha256=9ba4967428598af814512b5cb6f49c9b03853d9223180322526040c170e0e3b0
+- Behavior: Produced an interactive prototype and DESIGN.md under docs/pm/saas-dashboard, but not the requested docs/design/saas-dashboard/ui-ux-spec.md path.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-001-saas-dashboard`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532` from `agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard`.
+- Fixture SHA-256: `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532`
+- Prompt SHA-256: `f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **CLEAN**
+- Target skill tree SHA-256: `5df1c01e08aa97e9873a8076a8bc80b312ca23697bf7b8274e324d7feecebbd3`
+- Skill overlay SHA-256: `91cbd0b25abda706f069ede3ae1d7e4f14e2da2a5a0702fbf7cbcb22b29ac6e2`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `9dfc3c0232e65b50d6964b6b208307eca95842562a8965fcb0999b7dc0293b57`
+- Metadata SHA-256: `4806c6c3fd6574e59fbeca624e1db80b0abef304792432263a972f95ebcfa4e8`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_design_spec` | PASS | Raw evidence shows the generated file at docs/design/saas-dashboard/ui-ux-spec.md. |
+| `covers_user_flows_and_states` | PASS | The locked specification contains User Journey, Page Layouts, Component List, Interaction Behaviors, Desktop/Tablet responsive sections, and loading/empty/error states. |
+| `preserves_design_boundary` | PASS | Git evidence shows no commits or tracked diffs; the only with_skill change is the design-spec document, and the candidate states that no code was modified. |
+| `hands_off_to_engineering` | FAIL | The candidate names engineer-agent and says the next step should be engineering despite the user not requesting implementation; the assertion limits naming that agent to a requested continuation. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=74dcc03edce7f4e9d13ddcb713a99b71ee6ca587022ae4d4420a6ee795cdf31f; snapshot_sha256=2e845f6d89a9cd7c92713b73097f8335676ef061dd8603defbd50e5ebe249112
+- Behavior: Created the required design specification with broad UX coverage and preserved the design-only boundary, but unnecessarily named engineer-agent before implementation was requested.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=6720c6ab9875ce7c5d6f665614ffda715c11481f724169c918f1f9e3767f3a07; snapshot_sha256=3381930a543e66cb6ad0562cbc0230ec91c2375af48ae09b4e2fc479bbb93005
+- Behavior: Created a design document and static prototype under the PRD directory, but not the required design-spec path.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- hands_off_to_engineering fails because engineer-agent was named without a user request to continue implementation.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-001-saas-dashboard`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532` from `agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard`.
+- Fixture SHA-256: `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532`
+- Prompt SHA-256: `f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `5df1c01e08aa97e9873a8076a8bc80b312ca23697bf7b8274e324d7feecebbd3`

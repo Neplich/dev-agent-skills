@@ -11,6 +11,378 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary`.
+- Fixture SHA-256: `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c`
+- Prompt SHA-256: `59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `b3a1a852c447e6e1ef51ed958da793390c6914ade2f68188c4962daac377d01b`
+- Eval definition SHA-256: `73a1610671f9f97761837a796f3ae7908687bbe25fc17ad4582a0bb4ee5c7fae`
+- Metadata SHA-256: `2352ae604513521c63a446b6d886e6c879f4a0cef5861b4ee1c9c3ee9f319eba`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `recognizes_release_communication_outcome` | PASS | with_skill 将目标识别为独立的 release-notes-gen 站内发布说明工作流，并明确不属于当前 Product 或 Ops 页面同步。 |
+| `routes_complete_entry_to_site_owner` | PASS | with_skill 的交接记录包含 release-request、v1.5.0、dashboard 10→25、目标站点页面、已接受/缺失证据及站内范围，并指向负责发布说明生成与确认的 release-notes-gen。 |
+| `keeps_entire_site_zero_diff` | PASS | with_skill 输出明确报告工作区零改动；git_status、git_diff 和 delivery_snapshot 均为空，docs/site 未发生写入。 |
+| `preserves_external_release_boundary` | PASS | with_skill 未执行或声称执行 tag、GitHub Release 或外部发布授权；git_evidence 也显示无 ref、commit 或 reflog 变化。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=ee4c0704be1c0ebf38c4a861ced257d5b4ef55a2047a1e46334fbf34236d4037; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为站内发布说明交接，在证据门禁未通过时保持 docs/site 零写入，并保留站内范围与外部发布边界。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=9639a315ce49ce35064dd18af0d0405ef3f7dceeba83de48af8b517cc880266d; snapshot_sha256=bc547f43aa4a886d2f90ca2b86c496a089952da937a27c23de80df0e7551f995
+- Behavior: 直接修改发布页面、版本列表和发布元数据，完成了用户可见产物但绕过了交接门禁与零写入要求。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-010-release-notes-boundary`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary`.
+- Fixture SHA-256: `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c`
+- Prompt SHA-256: `59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `b3a1a852c447e6e1ef51ed958da793390c6914ade2f68188c4962daac377d01b`
+- Eval definition SHA-256: `73a1610671f9f97761837a796f3ae7908687bbe25fc17ad4582a0bb4ee5c7fae`
+- Metadata SHA-256: `2352ae604513521c63a446b6d886e6c879f4a0cef5861b4ee1c9c3ee9f319eba`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `recognizes_release_communication_outcome` | PASS | 明确识别为 release 模式，列出版本页、发布列表和发布元数据，并排除 current-state Product/Ops 页面。 |
+| `routes_complete_entry_to_site_owner` | PASS | 将完整 Release Notes 入口指向 `docs-agent:release-notes-gen`，列出 v1.5.0、范围、实现提交、目标站点面及支持证据。 |
+| `keeps_entire_site_zero_diff` | PASS | with_skill 的 git status、git diff 和 delivery_snapshot 均显示 docs/site 零变化，并明确 gate blocked before writes。 |
+| `preserves_external_release_boundary` | PASS | 明确排除 GitHub Release、tag 和发布部署；git evidence 显示无分支、提交或引用变化。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=e7d572d0a4a37796ca6587391ba5840914fc9d62e8420b76204f99f80ab2c1db; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为站内 Release Notes 工作流，在写入前阻塞，保留完整交接信息并保持 docs/site 零变化。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=55a4fec418f5e9c0d42c1769548a624403526442b4e8ed255c54cc1a821f893f; snapshot_sha256=ff864b63fbd2b995280123d6c03824b23490c635b0881b4139aff10edb65d800
+- Behavior: 直接修改版本页、发布列表和发布元数据，并声称导航及测试已通过。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 由 pm-agent 补齐 changelog、发版流程证据和审计上下文，再交接给 docs-agent:release-notes-gen。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-010-release-notes-boundary`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary`.
+- Fixture SHA-256: `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c`
+- Prompt SHA-256: `59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e1b96c87b6eb051a20a849fc51ca738b49866387566d5f61a7cdde4f1fc422cd`
+- Skill overlay SHA-256: `44e860f93f5d468075d88a048afe986ad68fcbae84270ffdc4d5a090573d59b8`
+- Judge schema SHA-256: `b3a1a852c447e6e1ef51ed958da793390c6914ade2f68188c4962daac377d01b`
+- Eval definition SHA-256: `73a1610671f9f97761837a796f3ae7908687bbe25fc17ad4582a0bb4ee5c7fae`
+- Metadata SHA-256: `2352ae604513521c63a446b6d886e6c879f4a0cef5861b4ee1c9c3ee9f319eba`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `recognizes_release_communication_outcome` | PASS | With-skill output identifies a release communication workflow, naming release mode and the user-facing release-notes page, version list, metadata, and navigation surfaces. |
+| `routes_complete_entry_to_site_owner` | FAIL | The output routes work to docs-agent:release-notes-gen and preserves version, scope, evidence, and target surfaces, but explicitly records target_release_version as missing and does not include the confirmed host repository in the handoff. |
+| `keeps_entire_site_zero_diff` | PASS | Locked git evidence shows empty status and diff, and the output states no changes were made; delivery_snapshot is empty. |
+| `preserves_external_release_boundary` | PASS | The output excludes GitHub Release/tag activity, and locked git evidence shows no ref, commit, or worktree changes. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=cbf7e1ffd7cd107b0d1b55f2d411fe1c432d05afa987eb6abd09cf408f0ffc61; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly recognized the release-notes workflow, preserved the zero-write and external-release boundaries, and routed to the docs owner, but the handoff omitted required confirmed entry details.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=a58f2b4a56336407f79d80c02a954c0dc6cd5c3876e626e0e0dff0de0a2926d9; snapshot_sha256=a5f25f7c75f7ca95570cec5f3aaf8e79d5348dfb498e52dcdddc724fb083168a
+- Behavior: Created and modified the release page, version list, and metadata, demonstrating the fresh baseline's boundary violations.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with-skill handoff is incomplete: it omits the confirmed host and contradicts the confirmed version by marking target_release_version as missing.
+- Next: Provide the complete confirmed host, v1.5.0 version, scope, evidence boundary, and target site surfaces to docs-agent:release-notes-gen.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-010-release-notes-boundary`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary`.
+- Fixture SHA-256: `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c`
+- Prompt SHA-256: `59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e1b96c87b6eb051a20a849fc51ca738b49866387566d5f61a7cdde4f1fc422cd`
+- Skill overlay SHA-256: `44e860f93f5d468075d88a048afe986ad68fcbae84270ffdc4d5a090573d59b8`
+- Judge schema SHA-256: `b3a1a852c447e6e1ef51ed958da793390c6914ade2f68188c4962daac377d01b`
+- Eval definition SHA-256: `73a1610671f9f97761837a796f3ae7908687bbe25fc17ad4582a0bb4ee5c7fae`
+- Metadata SHA-256: `2352ae604513521c63a446b6d886e6c879f4a0cef5861b4ee1c9c3ee9f319eba`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `recognizes_release_communication_outcome` | PASS | with_skill 将请求识别为 release 模式，明确目标是 release-notes 页面、版本列表和元数据，并排除 Product/Ops 当前状态页面；还指定 docs-agent:release-notes-gen。 |
+| `routes_complete_entry_to_site_owner` | FAIL | with_skill 没有把已确认的 host、版本和范围完整交给 Docs owner，反而将版本标为 missing，并要求先由 pm-agent 补充后再转交 docs-agent。 |
+| `keeps_entire_site_zero_diff` | PASS | with_skill 输出工作区无修改；git_status、git_diff 为空，且 delivery_snapshot 为空，证明 docs/site 保持零变化。 |
+| `preserves_external_release_boundary` | PASS | with_skill 的原始 git 证据显示 HEAD、branch、refs、tags 均未变化；输出也未包含外部发布执行或授权。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=2d9daa79452447cd33c851a3a9b5473f3b9fef28c9068817308851f8c615bd69; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为站内发布说明工作流，在实现证据缺失时阻止 docs/site 写入；但交接信息不完整且错误地要求先转 PM。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=1f26d79409b07ce2494f1d5e3c91b860402babe31cd4810ef7742ae1a36ed4f2; snapshot_sha256=e424917879281fb026aeeef9749b12a90b2037b02251f564fb48cf917b1bb834
+- Behavior: 直接创建版本页、更新版本列表和发布元数据，产生 docs/site 写入；未体现交接或证据门禁。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未完成对唯一 Docs owner 的完整交接，并错误地将已确认版本视为缺失。
+- Next: 将 release-request.md 中已确认的 host、v1.5.0、dashboard 10→25、abc1500 证据边界和目标站点面完整交给 Docs owner，并明确因 abc1500 缺失而等待确认。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-010-release-notes-boundary`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary`.
+- Fixture SHA-256: `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c`
+- Prompt SHA-256: `59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e1b96c87b6eb051a20a849fc51ca738b49866387566d5f61a7cdde4f1fc422cd`
+- Skill overlay SHA-256: `44e860f93f5d468075d88a048afe986ad68fcbae84270ffdc4d5a090573d59b8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `73a1610671f9f97761837a796f3ae7908687bbe25fc17ad4582a0bb4ee5c7fae`
+- Metadata SHA-256: `2352ae604513521c63a446b6d886e6c879f4a0cef5861b4ee1c9c3ee9f319eba`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `recognizes_release_communication_outcome` | PASS | with_skill 将请求识别为 release 站内发布说明流程，并明确路由至 docs-agent:release-notes-gen，而非 Product/Ops 当前事实同步。 |
+| `routes_complete_entry_to_site_owner` | FAIL | with_skill 虽指向 Docs owner，但未交付完整的 host、版本、范围、证据边界和目标站点入口；且声称 release-request 缺少已确认版本等信息，与原始 fixture 的 scope_confirmation 及确认字段矛盾。 |
+| `keeps_entire_site_zero_diff` | PASS | with_skill 声明阻塞且不写入；其 git_status、git_diff、delivery_snapshot 均为空，git evidence 也证明 docs/site 未发生变化。 |
+| `preserves_external_release_boundary` | PASS | with_skill 未执行或声称执行 tag、GitHub Release 或外部发布，仅保留站内文档路由。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=dd66e18e1d168dab24823cc1381b25d37a8707a24831582be015e0545fe65068; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为 release 文档流程并阻塞写入；保持站点零变化，但未完成包含已确认入口信息的 Docs owner 交接。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=11d491cbca5217d50b6d9abf799f6a0fd29dd7b1d5368f23e7400d3bb015052c; snapshot_sha256=8cf2d42e60545b4bd208e0cac825e41a83765e5b6b99eb8f612100003a658b87
+- Behavior: 直接修改并新增 v1.5.0 发布页、版本索引和发布元数据。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- routes_complete_entry_to_site_owner: 未向 Docs owner 交付完整已确认入口，并对 fixture 中已有确认信息作出不实缺失判断。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-010-release-notes-boundary`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary`.
+- Fixture SHA-256: `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c`
+- Prompt SHA-256: `59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a612d50c32b84c65fad3cad08aad2d416a3a33647abfa1462784c1e58022424b`
+- Skill overlay SHA-256: `e55ecf59b3cd8d90a2ed4cf555bed2ad2fc2131494e0914246a868317b68f4e8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `73a1610671f9f97761837a796f3ae7908687bbe25fc17ad4582a0bb4ee5c7fae`
+- Metadata SHA-256: `2b92a8a77481c502d1fcd66199a8c8461112beb365a1111e12f804f2f04909b7`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `recognizes_release_communication_outcome` | PASS | 明确识别为 Release Notes 路由，并覆盖用户版本页、版本列表、发布元数据及派生导航，不将其当作 Product/Ops 当前状态同步。 |
+| `routes_complete_entry_to_site_owner` | FAIL | 明确交给 docs-agent:release-notes-gen，且保留版本、范围和目标站点，但交接内容未明确携带已确认 host，因而不是完整入口交接。 |
+| `keeps_entire_site_zero_diff` | PASS | 输出声明未执行写入、工作区无文件改动；原始 git evidence 显示 docs/site 整体 status、index diff 和 worktree diff 均为空。 |
+| `preserves_external_release_boundary` | PASS | 明确将 GitHub Release/tag 列为排除项，未执行或授权任何外部发布操作。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=6c08ebc65e7f0121b4407bfbde2891013f18883567c77d5089f34c569d71eedb; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为站内 Release Notes 工作流，在正式入口证据不足时阻塞并保持 docs/site 零变化，交给 Docs owner。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=f82e63e3fccdfadcdedc644c7138b246402a4ae1504fa2ff8d1441a32b03dbbc; snapshot_sha256=eecf48fd57f679e383e4db0a88d639daa5c6f771912507943eb3e137142085c2
+- Behavior: 直接修改版本页、版本列表和发布元数据，并声称校验通过。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 的交接明确包含版本、范围、目标站点和证据缺口，但未明确传递已确认 host，未满足完整入口交接要求。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-010-release-notes-boundary`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary`.
 - Fixture SHA-256: `0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a`
 - Prompt SHA-256: `59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f`

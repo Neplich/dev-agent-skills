@@ -14,6 +14,254 @@
 - Fixture version/source: canonical manifest `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90` from `agents/devops/test/cicd-bootstrap/evals/workspace/eval-001-github-actions-docker`.
 - Fixture SHA-256: `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90`
 - Prompt SHA-256: `218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `86f7228d11d9f7ad3ec145d83be1c28f8a4bb93afea61016f55ed2860069bc68`
+- Skill overlay SHA-256: `d87d7023cb1778acf3685e0e616785cca86656081ff2fa7f0e1ff03553b77b80`
+- Judge schema SHA-256: `416d97c852ae3d12b00631149dd08640442fd75a13414eab07000c384c3a2d5f`
+- Eval definition SHA-256: `e302fa46977944ed026b10f7f1ded4b3717a6c85f19be1f78da9c42d4b0c0b8d`
+- Metadata SHA-256: `9e986f54be95fd6454e99ce66dc884d4d84134a4b07d49e0942d5d6169d042bf`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_repo_native_ci` | PASS | with_skill 的 locked delivery_snapshot 包含 .github/workflows/ci.yml；触发 pull_request，使用 Node.js 22.x、npm ci，并按 lint、test、build 顺序执行仓库命令。 |
+| `creates_staging_deployment_workflow` | PASS | with_skill 的 deploy-staging.yml 仅配置 main 分支 push 触发，使用 deploy/docker/docker-compose.staging.yml、ghcr.io/example/acme-web，并通过 APP_IMAGE_TAG 传递镜像标签。 |
+| `documents_required_secrets` | PASS | with_skill 的 deploy/SECRETS.md 列出 REGISTRY_USERNAME、REGISTRY_TOKEN、STAGING_HOST、STAGING_USER 和 STAGING_SSH_KEY，且明确不提交凭据值。 |
+| `does_not_execute_delivery` | PASS | with_skill 的 git_evidence 显示无提交、无推送、无新 commit；delivery_snapshot 仅包含配置文件，最终说明也明确未执行镜像发布或实际部署。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=0e7869657662bd77d66c73e55da6f22ff39370d7030939d75c1b31fb17072f40; snapshot_sha256=81558261c7eee1dedc265ff4a7c8b5033d4869941588a7fedbbf03715fd9245c
+- Behavior: 生成了 CI、staging 部署和 secrets 文档配置，未执行交付。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=d659636991f979ac89adbcebe9cd1b1ea29ef6b83d6b3d8e1ad388920ac9ec1b; snapshot_sha256=62ede0ad9dce0e15691bd5034ab4856b3867208fd60e29671bdd07912ac78ada
+- Behavior: 同样生成了配置并未执行实际部署；其部署工作流使用了更完整的远程 Compose 目录变量。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `cicd-bootstrap`
+- Eval: `eval-001-github-actions-docker`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90` from `agents/devops/test/cicd-bootstrap/evals/workspace/eval-001-github-actions-docker`.
+- Fixture SHA-256: `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90`
+- Prompt SHA-256: `218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `86f7228d11d9f7ad3ec145d83be1c28f8a4bb93afea61016f55ed2860069bc68`
+- Skill overlay SHA-256: `d87d7023cb1778acf3685e0e616785cca86656081ff2fa7f0e1ff03553b77b80`
+- Judge schema SHA-256: `416d97c852ae3d12b00631149dd08640442fd75a13414eab07000c384c3a2d5f`
+- Eval definition SHA-256: `e302fa46977944ed026b10f7f1ded4b3717a6c85f19be1f78da9c42d4b0c0b8d`
+- Metadata SHA-256: `9e986f54be95fd6454e99ce66dc884d4d84134a4b07d49e0942d5d6169d042bf`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_repo_native_ci` | PASS | with_skill 的 `.github/workflows/ci.yml` 在 pull_request 上使用 Node.js 22.x、`npm ci`，并依次运行 `npm run lint`、`npm test`、`npm run build`。 |
+| `creates_staging_deployment_workflow` | PASS | with_skill 的部署工作流仅监听 main 的 push，使用 `ghcr.io/example/acme-web`、现有 `deploy/docker/docker-compose.staging.yml`，并在远端以 `APP_IMAGE_TAG` 传递提交 SHA。 |
+| `documents_required_secrets` | PASS | with_skill 的 `deploy/SECRETS.md` 明确列出 REGISTRY_USERNAME、REGISTRY_TOKEN、STAGING_HOST、STAGING_USER、STAGING_SSH_KEY，并明确禁止将凭据写入仓库。 |
+| `does_not_execute_delivery` | PASS | with_skill 的 git evidence 显示仅有未跟踪配置文件、无提交或推送；候选输出明确说明未发布镜像或实际部署。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=c0a1cfca7011fe48a3dc1e01b3736546797cdcce934c6c73271ba06a6e783d4b; snapshot_sha256=f200d754fde1176e26f8c702c3c76aa3023c99bb6568c23622089378caba17b5
+- Behavior: 完整生成 CI、staging 部署和 secrets 文档配置，且未执行交付。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=db406890f532cba45610b6ef1c0d8b5c368b40ef2132e28b3324eeaef91fd4d9; snapshot_sha256=53e9c4aaf358644f0a7b26d76b6fd5866e12242ebac9787095bcbf64b067a262
+- Behavior: 也生成了满足主要要求的配置并未执行部署；其 CI 额外监听 main push。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `cicd-bootstrap`
+- Eval: `eval-001-github-actions-docker`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90` from `agents/devops/test/cicd-bootstrap/evals/workspace/eval-001-github-actions-docker`.
+- Fixture SHA-256: `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90`
+- Prompt SHA-256: `218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `86f7228d11d9f7ad3ec145d83be1c28f8a4bb93afea61016f55ed2860069bc68`
+- Skill overlay SHA-256: `d87d7023cb1778acf3685e0e616785cca86656081ff2fa7f0e1ff03553b77b80`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `e302fa46977944ed026b10f7f1ded4b3717a6c85f19be1f78da9c42d4b0c0b8d`
+- Metadata SHA-256: `9e986f54be95fd6454e99ce66dc884d4d84134a4b07d49e0942d5d6169d042bf`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_repo_native_ci` | PASS | with_skill 的 delivery_snapshot 直接生成 .github/workflows/ci.yml，触发 pull_request，使用 Node.js 22.x 和 npm ci，随后按仓库脚本执行 lint、test、build。 |
+| `creates_staging_deployment_workflow` | PASS | with_skill 的 deploy-staging.yml 仅监听 main 的 push，构建并推送 ghcr.io/example/acme-web:${{ github.sha }}，通过 docker-compose.staging.yml 使用 APP_IMAGE_TAG 部署。 |
+| `documents_required_secrets` | PASS | with_skill 的 deploy/SECRETS.md 列出 REGISTRY_USERNAME、REGISTRY_TOKEN、STAGING_HOST、STAGING_USER、STAGING_SSH_KEY，并明确凭据不存入仓库；内容未包含真实凭据。 |
+| `does_not_execute_delivery` | NOT_EXERCISED | git_evidence 证明没有提交、推送或引用变更，但锁定证据不足以独立证明整个过程中未构建、推送镜像或连接 staging。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=f8c24133a5d9abc6cab31052e08683d36a3eddf0473121ca22c7d5a20f54d677; snapshot_sha256=234ea74d7cdf5a1634491acd8c2914340cbc9c63df53dc161a0220c70d80d879
+- Behavior: 生成了符合仓库命令、Docker staging 契约和 secrets 要求的配置；未发生可见的 Git 提交或推送。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=c858f5c15ff38558eb42e33e397e97252bcab82912042157b532a96947afda64; snapshot_sha256=23d491e40b3036235e5f405b4912d0adb37c1875fa201f907939d7bc6400309c
+- Behavior: 生成了所需配置并保持仓库未提交，但其交付快照未复用 APP_IMAGE_TAG/Compose 契约的证据不如 with_skill 完整。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 如需完整覆盖 does_not_execute_delivery，应提供构建、镜像推送和 staging 连接未发生的运行时审计证据。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `cicd-bootstrap`
+- Eval: `eval-001-github-actions-docker`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90` from `agents/devops/test/cicd-bootstrap/evals/workspace/eval-001-github-actions-docker`.
+- Fixture SHA-256: `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90`
+- Prompt SHA-256: `218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `86f7228d11d9f7ad3ec145d83be1c28f8a4bb93afea61016f55ed2860069bc68`
+- Skill overlay SHA-256: `89e6351b83062ce7859670a14e2ffbb2ebe9ea30f7da2a45f2991e383570b374`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `e302fa46977944ed026b10f7f1ded4b3717a6c85f19be1f78da9c42d4b0c0b8d`
+- Metadata SHA-256: `9e986f54be95fd6454e99ce66dc884d4d84134a4b07d49e0942d5d6169d042bf`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_repo_native_ci` | PASS | with_skill 的 .github/workflows/ci.yml 在 pull_request 触发，使用 Node 22.x，按 npm ci、npm run lint、npm test、npm run build 顺序执行。 |
+| `creates_staging_deployment_workflow` | PASS | with_skill 的 deploy-staging.yml 仅监听 main 的 push，使用现有 deploy/docker/docker-compose.staging.yml、ghcr.io/example/acme-web 和 APP_IMAGE_TAG=${{ github.sha }}。 |
+| `documents_required_secrets` | PASS | deploy/SECRETS.md 列出 REGISTRY_USERNAME、REGISTRY_TOKEN、STAGING_HOST、STAGING_USER、STAGING_SSH_KEY，并明确不保存凭据值。 |
+| `does_not_execute_delivery` | PASS | git evidence 显示无提交、无分支或引用变化，仅有未跟踪配置文件；raw evidence 没有镜像发布或 staging 连接，输出也未声称部署成功。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=5c299a738692c63548296b9ece91eea65568c18077d468ab343fc3b799633086; snapshot_sha256=93aa6728ce1df90535a8d4087ebe593edbe4d4b65351e7ff2823649e4d879522
+- Behavior: 生成了符合要求的 CI、staging 部署和 secrets 文档配置，复用 Compose、GHCR 命名和 APP_IMAGE_TAG，并未执行交付；部署采用 Docker over SSH。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=ca2e467bc7166559d272843fc894a4868b8bf024bb220eb663fc0fa00da6b8fc; snapshot_sha256=0e608abc8c6670a06a11c79f3686465a1e13ebc6b598e99a42d83c66d378bc55
+- Behavior: 生成了符合要求的 CI、staging 部署和 secrets 文档配置，且未执行交付；部署采用 SCP/SSH。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `cicd-bootstrap`
+- Eval: `eval-001-github-actions-docker`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90` from `agents/devops/test/cicd-bootstrap/evals/workspace/eval-001-github-actions-docker`.
+- Fixture SHA-256: `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90`
+- Prompt SHA-256: `218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `86f7228d11d9f7ad3ec145d83be1c28f8a4bb93afea61016f55ed2860069bc68`

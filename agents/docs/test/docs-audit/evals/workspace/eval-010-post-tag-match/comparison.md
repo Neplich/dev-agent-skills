@@ -14,6 +14,196 @@
 - Fixture version/source: canonical manifest `43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518` from `agents/docs/test/docs-audit/evals/workspace/eval-010-post-tag-match`.
 - Fixture SHA-256: `43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518`
 - Prompt SHA-256: `47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `f64d4542aa97d4b9bcd4bc655a5e70fec7d827a5ea9e9f63067fde8d7b819748`
+- Eval definition SHA-256: `f4b575228474dd8bb2a93bb17a067f25252f9c293e1f78393d445c449385e8d2`
+- Metadata SHA-256: `12f75879efa3cacf943ae19595239a747563947015e4033eed4ea7f4a51a5b47`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `selects_pre_tag_authority_safely` | NOT_EXERCISED | 锁定 git topology 证明当前仓库有该 custom ref、tag，且 fresh clone 未取得 custom ref；但没有 delivery_snapshot/git_blob 证据证明两边实际读取了 handoff/audit 并独立重建 authority。 |
+| `proves_released_tree_binding` | NOT_EXERCISED | 锁定 topology 证明 tag 的 commit/tree 及 clone 的 tag tree，但没有证明当前仓库执行了 direct package-tree 比较，或 clone 从 tag tree 核验完整发布路径。 |
+| `verifies_version_surfaces_from_release` | NOT_EXERCISED | 候选输出列出四个版本面并正确区分 v1.2.0 与 package.json 的 1.2.0；但锁定证据没有 git blob 或 delivery snapshot 将这些读取绑定到实际 tag tree。 |
+| `requires_durable_post_tag_evidence` | PASS | 候选输出明确指出 proposed post-release ref 没有维护者决定、目标 ref 不存在，并让当前工作区和普通新克隆均保持 blocked；fixture context 与锁定 topology 支持该结论。 |
+| `preserves_upstream_release_artifacts` | PASS | 候选输出未声称重新生成、重新盖章或移动 tag；锁定 git evidence 显示 head、branch、refs、diff 与 reflog 均未变化。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143; fixture_sha256=43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518; output_sha256=7c1a8a3d832e53935df5ce5bc6feca448187edb7639f34a08fc9414d1992473b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别 tag 与 custom ref 的拓扑、普通 clone 未携带 custom ref，并将两个场景保持为 blocked；但锁定原始证据不足以证明 authority 读取、tree binding 和从 tag blob 核验版本面。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143; fixture_sha256=43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518; output_sha256=2a7663d28fe5769cbf8883e6ea6fe63775acdf384ad4fe2df99fd95852e81644; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 新克隆和 tag 身份描述基本正确，但把内容一致直接升级为可独立核对成功，遗漏了缺少 durable post-tag 结果凭据这一阻塞条件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 补充当前 custom ref 下 handoff/audit 的锁定 blob 证据。
+- Next: 补充 tag tree 与 direct package tree、完整发布路径及四个版本面的锁定读取证据。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-010-post-tag-match`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518` from `agents/docs/test/docs-audit/evals/workspace/eval-010-post-tag-match`.
+- Fixture SHA-256: `43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518`
+- Prompt SHA-256: `47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a40b9426c3ece6f787614183ce8478f0aacaf94802441ebb84796853c2c8848e`
+- Skill overlay SHA-256: `6cbf5a99cea4bf2bfd3e91f9b1e261a828b8b62ab73699f7ed3de43f33d01739`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `f4b575228474dd8bb2a93bb17a067f25252f9c293e1f78393d445c449385e8d2`
+- Metadata SHA-256: `12f75879efa3cacf943ae19595239a747563947015e4033eed4ea7f4a51a5b47`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `selects_pre_tag_authority_safely` | PASS | with_skill 说明当前仓库解析 refs/release-evidence/v1.2.0 并检查 handoff/audit；新克隆使用默认 refspec，确认未取得 custom ref，并从自身 tag 中的已提交路径回退核验。 |
+| `proves_released_tree_binding` | PASS | with_skill 实际给出 v1.2.0 的 commit/tree 解析、pre-tag ref 与 tag tree 一致，以及新克隆从自身 tag tree 核验版本面和相关 blob；未依赖 commit identity 相同作为唯一依据。 |
+| `verifies_version_surfaces_from_release` | PASS | with_skill 从发布对象核验 Release Notes、index、.meta/releases.json 与 package.json，正确区分 v1.2.0 和 1.2.0，并明确未以当前工作区作为成功证据。 |
+| `requires_durable_post_tag_evidence` | PASS | with_skill 识别缺少 refs/heads/release-evidence/v1.2.0 及维护者决定，明确两个场景只能核对内容、不能完成 release_verified，最终为 blocked。 |
+| `preserves_upstream_release_artifacts` | PASS | with_skill 明确未修改现有 ref、tag 或发布记录；锁定 git_evidence 显示 HEAD、分支、ref_delta、提交、结果差异和 reflog 均未变化。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143; fixture_sha256=43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518; output_sha256=814cbba43605675dde0a70affad2b97c7a5e30b6fdecc221273bd1dbb8bde97e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 分别核验当前仓库和默认 refspec 新克隆，确认版本面绑定，同时识别缺失持久化凭据并将两边结论保持为 blocked，且无变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143; fixture_sha256=43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518; output_sha256=19c9e8060ea734a51e89cd9bdcb176fc25dbdceab10b0c2dfa19ed43e7b03a4b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确描述 tag/tree 和新克隆的部分核验，但错误地将内容核验直接判为通过，遗漏 durable post-tag 凭据阻断。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-010-post-tag-match`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518` from `agents/docs/test/docs-audit/evals/workspace/eval-010-post-tag-match`.
+- Fixture SHA-256: `43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518`
+- Prompt SHA-256: `47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d339a8370a29b3fb2a69aa1879b1226165ec088d306a4e2e7a01258df2326973`
+- Skill overlay SHA-256: `0bc7243cbb5cff3e77d9ba448e020a1a1f279639f8db6a365faac208b8e1dcc7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `f4b575228474dd8bb2a93bb17a067f25252f9c293e1f78393d445c449385e8d2`
+- Metadata SHA-256: `12f75879efa3cacf943ae19595239a747563947015e4033eed4ea7f4a51a5b47`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `selects_pre_tag_authority_safely` | NOT_EXERCISED | 候选输出描述了当前仓库和新克隆的 ref 可见性，但锁定证据没有证明实际的解析/读取顺序或克隆确实仅使用自身 Git 对象。 |
+| `proves_released_tree_binding` | NOT_EXERCISED | 输出给出了 tag commit/tree 和 blob 一致性结论，但锁定证据无法证明实际完成了要求的 tree 比较与独立内容绑定核验。 |
+| `verifies_version_surfaces_from_release` | PASS | 明确从 tag 树核验四个版本面，说明 release-note 使用 v1.2.0、package.json 使用 1.2.0，并进行规范化处理；未将工作区作为成功证据。 |
+| `requires_durable_post_tag_evidence` | PASS | 明确指出缺少已确认的 post-tag 记录 ref/独立持久化凭据，并将两种场景的最终状态保持为 blocked，而非 release_verified。 |
+| `preserves_upstream_release_artifacts` | PASS | 明确声明未修改现有 ref、tag、发布记录，也未创建 post-tag 审计记录；锁定 git evidence 显示无 ref、提交或工作区变化。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143; fixture_sha256=43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518; output_sha256=8d74b8beab8c4dd50ac418750c97cce6f6f7487887cc536a4ed69d70ffd6c513; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别版本内容可核验但 post-tag 审计凭据缺失，保持 blocked，并报告未发生发布产物或 ref/tag 变更；关键隐藏解析过程无法由锁定证据验证。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143; fixture_sha256=43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518; output_sha256=fe8a5a78d94b6659ac7b161d0571cf1b285f760da6cb4f664fc2c697ef1c072d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 能描述 tag、tree、版本路径和默认克隆，但未识别缺少独立 post-tag 持久化凭据，错误地得出两边均可完成核对的结论。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 如需完整覆盖，请提供两种 lane 的 Git 解析、默认克隆隔离及 tree/blob 比较原始记录。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-010-post-tag-match`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518` from `agents/docs/test/docs-audit/evals/workspace/eval-010-post-tag-match`.
+- Fixture SHA-256: `43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518`
+- Prompt SHA-256: `47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `9e9abf391c9ccd9564d35b5def50bc0374b1db0886710676c4d48422839746ae`

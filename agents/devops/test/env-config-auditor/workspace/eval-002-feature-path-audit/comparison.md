@@ -14,6 +14,250 @@
 - Fixture version/source: canonical manifest `a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9` from `agents/devops/test/env-config-auditor/workspace/eval-002-feature-path-audit`.
 - Fixture SHA-256: `a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9`
 - Prompt SHA-256: `45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `11f5a69db2a4c2ab81d782a866d9a88090a8560b5e61462d8af4e66c4376601f`
+- Skill overlay SHA-256: `ce7aff0f7795c878221dac5c9435b88a48e75e2799c5f15832edbd27f5f6796f`
+- Judge schema SHA-256: `542a3960b92dfab31d619dba36f1b4cd7435eaeb67ca74c65c1e8dc7cd584d0a`
+- Eval definition SHA-256: `6efcde24d7900ac81923c70a8eb454a7b5687569fc19e166e7a2702223bf20b8`
+- Metadata SHA-256: `ed9d0f761d7a235166a80b0e2724cd90628f15321561b77d0b2d2233a2c87014`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_confirmed_feature_path` | PASS | The delivered report uses feature_path `chat-interface/messages/history/search` and names both required Engineer documents: `TRD.md` and `IMPLEMENTATION_PLAN.md`. |
+| `writes_nested_devops_report` | PASS | The delivery snapshot contains `docs/devops/chat-interface/messages/history/search/ENV_AUDIT.md`, exactly matching the required nested path. |
+| `does_not_invent_feature_directory` | PASS | The confirmed feature directory exists in the fixture, both required Engineer documents are present, and the report preserves that path without inventing a top-level synonym. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b; fixture_sha256=a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9; output_sha256=0df65549c69908b3b63a65769da643ef51ac42fec492c8cb12dd9ccfb911c040; snapshot_sha256=4fdfd60988b4ef873ac96086ee94a4fa07ca0f736689c7cd305bd2188ef5320f
+- Behavior: Produced the required DevOps audit at the confirmed nested feature path and grounded it in the matching PM/Engineer documents.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b; fixture_sha256=a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9; output_sha256=9b19907b36ec30705ad8e44597c8b2bd45855686e4435a4c81dbebfa19d70a64; snapshot_sha256=08dbd1d1b993094bc004deeacf6043649abfdeb9b0900cfb723f01a919745827
+- Behavior: Produced an audit under the Engineer directory instead of the required nested DevOps report path.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `env-config-auditor`
+- Eval: `eval-002-feature-path-audit`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9` from `agents/devops/test/env-config-auditor/workspace/eval-002-feature-path-audit`.
+- Fixture SHA-256: `a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9`
+- Prompt SHA-256: `45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `11f5a69db2a4c2ab81d782a866d9a88090a8560b5e61462d8af4e66c4376601f`
+- Skill overlay SHA-256: `ce7aff0f7795c878221dac5c9435b88a48e75e2799c5f15832edbd27f5f6796f`
+- Judge schema SHA-256: `542a3960b92dfab31d619dba36f1b4cd7435eaeb67ca74c65c1e8dc7cd584d0a`
+- Eval definition SHA-256: `6efcde24d7900ac81923c70a8eb454a7b5687569fc19e166e7a2702223bf20b8`
+- Metadata SHA-256: `ed9d0f761d7a235166a80b0e2724cd90628f15321561b77d0b2d2233a2c87014`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_confirmed_feature_path` | PASS | 交付快照明确记录 feature_path 为 `chat-interface/messages/history/search`，并列出已读取同路径的 TRD 与 IMPLEMENTATION_PLAN。 |
+| `writes_nested_devops_report` | PASS | 锁定交付文件位于 `docs/devops/chat-interface/messages/history/search/ENV_AUDIT.md`，符合要求的嵌套 DevOps 路径。 |
+| `does_not_invent_feature_directory` | PASS | feature_path 清晰且同路径 TRD/IMPLEMENTATION_PLAN 存在；交付报告沿用该路径，未创建同义顶层目录。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b; fixture_sha256=a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9; output_sha256=16dba73be64226d0313afcfb36671e9c8f848fc61148369e2a33fe00a547ff6f; snapshot_sha256=dabfc5ce6bfb86dd3e24cc3be438b035c7d47751b706956c459d208797475b33
+- Behavior: 读取并记录了确认的 feature_path 及同路径工程文档，并将审计报告写入正确的嵌套 DevOps 路径。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b; fixture_sha256=a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9; output_sha256=b999c6290ef128a4d0aeae97a0923345c69098d5c2d87d3e5f8cedb1610b48f2; snapshot_sha256=2dd8282fed303dba0ed4e32d50258d59e2e24815ba8c1079163dd611780ba366
+- Behavior: 完成了相关环境审计，但将报告错误写入 Engineer 目录，未满足 DevOps 输出路径要求。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `env-config-auditor`
+- Eval: `eval-002-feature-path-audit`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9` from `agents/devops/test/env-config-auditor/workspace/eval-002-feature-path-audit`.
+- Fixture SHA-256: `a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9`
+- Prompt SHA-256: `45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `11f5a69db2a4c2ab81d782a866d9a88090a8560b5e61462d8af4e66c4376601f`
+- Skill overlay SHA-256: `ce7aff0f7795c878221dac5c9435b88a48e75e2799c5f15832edbd27f5f6796f`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6efcde24d7900ac81923c70a8eb454a7b5687569fc19e166e7a2702223bf20b8`
+- Metadata SHA-256: `ed9d0f761d7a235166a80b0e2724cd90628f15321561b77d0b2d2233a2c87014`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_confirmed_feature_path` | PASS | 锁定的 with_skill 交付文件明确记录 feature_path 为 `chat-interface/messages/history/search`，并列出并引用同路径的 TRD.md 与 IMPLEMENTATION_PLAN.md。 |
+| `writes_nested_devops_report` | PASS | 锁定快照显示文件已写入 `docs/devops/chat-interface/messages/history/search/ENV_AUDIT.md`，符合要求的嵌套路径。 |
+| `does_not_invent_feature_directory` | PASS | fixture 与 with_skill 交付内容均显示 feature_path 清晰且同路径 TRD/IMPLEMENTATION_PLAN 存在；候选未创建同义顶层目录，使用了确认的功能目录。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b; fixture_sha256=a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9; output_sha256=fca98e3a051a0a26d144850b7ccef66aa48abc64ad4446f048ca744e104fd6c1; snapshot_sha256=68e51d66d7c3d366ad96e78422868bed68a13ad851294762c706a7038deedafb
+- Behavior: 按确认的 feature_path 查阅同路径工程文档，并将审计报告写入正确的嵌套 DevOps 路径。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b; fixture_sha256=a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9; output_sha256=7fa1efa6b1a623b7b88d3b4cc7ba5293e04843a4145c711703c8d4f36f450bed; snapshot_sha256=0cbec2f6c8e7bf9fc501691996d03fedc6ce73197063a6accbeec9afbb874078
+- Behavior: 完成审计但将报告错误写入 Engineer 路径，未满足 DevOps 输出路径要求。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `env-config-auditor`
+- Eval: `eval-002-feature-path-audit`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9` from `agents/devops/test/env-config-auditor/workspace/eval-002-feature-path-audit`.
+- Fixture SHA-256: `a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9`
+- Prompt SHA-256: `45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a23a5206e5734d346e9cc05988abcd19e92dc09bd52f243173dd300d409a14ca`
+- Skill overlay SHA-256: `cf962faf729c051cb7dfd2e1a6a7c8c9a1b7f9b67501cbf18f492cb32a84adc7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6efcde24d7900ac81923c70a8eb454a7b5687569fc19e166e7a2702223bf20b8`
+- Metadata SHA-256: `ed9d0f761d7a235166a80b0e2724cd90628f15321561b77d0b2d2233a2c87014`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_confirmed_feature_path` | PASS | With-skill delivery snapshot records feature_path as chat-interface/messages/history/search and references the required Engineer TRD and IMPLEMENTATION_PLAN paths. |
+| `writes_nested_devops_report` | PASS | With-skill output and delivery snapshot identify docs/devops/chat-interface/messages/history/search/ENV_AUDIT.md exactly. |
+| `does_not_invent_feature_directory` | NOT_EXERCISED | The fixture contains a clear feature_path and both same-path Engineer documents, so the conditional escalation behavior was not exercised. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b; fixture_sha256=a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9; output_sha256=3c05651f2da42b8a72bd1b59969833ce711b22b5dff25f0ec30f451ba6c9733f; snapshot_sha256=f89d81044dc2a65732bd3780c8430ae52565ff650a30ea0fe9679d6a4552e604
+- Behavior: Produced the audit under the required nested DevOps path and documented the confirmed feature path and source documents.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b; fixture_sha256=a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9; output_sha256=7a122b7667b87cfe0540a5fbe384d9956f488c00dae83e6058ea704b8198e743; snapshot_sha256=c4a53f16cc50cc56f312d9172f1a907ab1a3f250b11c35672f54eac3f55db174
+- Behavior: Produced an audit under the incorrect Engineer path and did not satisfy the required nested DevOps output path.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `env-config-auditor`
+- Eval: `eval-002-feature-path-audit`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9` from `agents/devops/test/env-config-auditor/workspace/eval-002-feature-path-audit`.
+- Fixture SHA-256: `a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9`
+- Prompt SHA-256: `45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `a23a5206e5734d346e9cc05988abcd19e92dc09bd52f243173dd300d409a14ca`

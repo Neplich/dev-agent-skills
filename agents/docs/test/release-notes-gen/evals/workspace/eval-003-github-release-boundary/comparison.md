@@ -11,6 +11,192 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720` from `agents/docs/test/release-notes-gen/evals/workspace/eval-003-github-release-boundary`.
+- Fixture SHA-256: `b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720`
+- Prompt SHA-256: `761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b7f7292c266a0e83e45fc11a264c0b52188a05a92b94c912c4a7b6c5c35058d2`
+- Skill overlay SHA-256: `fcc8b19cc83a08b5f5e64f8b15695aa80b045962a63cbf1717889ea116dc31cc`
+- Judge schema SHA-256: `b3d43ca97793c6a0f8faf70ea92518e7709890635e7a921da0c1ddde071762ab`
+- Eval definition SHA-256: `05f16fbca1905a6bf2d3e5279f6310a7d3001480023c03eb422e696627b86d5d`
+- Metadata SHA-256: `79c5171e280a55a386cc65ee64ce2254d37bdb1b11edec578be748642efe98aa`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_missing_release_notes_foundation` | PASS | with_skill 明确识别缺少 docs/site/release-notes/ Release Notes 基础，并将页面状态置为 blocked，未进入页面生成流程。 |
+| `keeps_site_zero_diff_before_bootstrap` | PASS | with_skill 的 git_evidence 显示 HEAD、分支、refs、工作树和索引均无变化；git_status 与 git_diff 均为空。 |
+| `hands_missing_foundation_to_bootstrap` | PASS | 输出将缺失基础交给 docs-site-bootstrap 初始化，未交给 docs audit、GitHub Release owner，也未自行继续。 |
+| `preserves_release_chain_and_external_zero_writes` | PASS | 输出明确 tag 与 GitHub Release 均未创建，并等待 docs-audit 返回 ready_for_tag；git_evidence 的 ref_delta、result_diffs 和状态均为空。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e; fixture_sha256=b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720; output_sha256=c795bdddf39289886240bbe1cce87106225985318f6d9fbe574aae93d646e2a4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别 Release Notes 基础缺失，阻塞生成并完成正确的 bootstrap handoff；保持站内、Git 和外部发布链零写入。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e; fixture_sha256=b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720; output_sha256=bbf8e599adb4e0da8586193d4ccc1f44d8a0693ccc569f6962ee0981f1b09ec1; snapshot_sha256=39b391f82c97b7045b03f4e7cd72f06c05a987b788fdb40e776adb0c7dcbb3a5
+- Behavior: 错误地创建站内 Release Notes、元数据和提交，并创建 v1.0.0 tag；仅未创建 GitHub Release。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-003-github-release-boundary`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720` from `agents/docs/test/release-notes-gen/evals/workspace/eval-003-github-release-boundary`.
+- Fixture SHA-256: `b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720`
+- Prompt SHA-256: `761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b7f7292c266a0e83e45fc11a264c0b52188a05a92b94c912c4a7b6c5c35058d2`
+- Skill overlay SHA-256: `fcc8b19cc83a08b5f5e64f8b15695aa80b045962a63cbf1717889ea116dc31cc`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `05f16fbca1905a6bf2d3e5279f6310a7d3001480023c03eb422e696627b86d5d`
+- Metadata SHA-256: `79c5171e280a55a386cc65ee64ce2254d37bdb1b11edec578be748642efe98aa`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_missing_release_notes_foundation` | PASS | with_skill 明确识别宿主缺少 docs/site/release-notes/ 及其规范，并将其作为进入生成流程前的阻塞；fixture 中确无该目录。 |
+| `keeps_site_zero_diff_before_bootstrap` | PASS | with_skill 输出未生成 Release Notes、未修改 metadata/index/navigation；其 workspace_manifest 与 fixture 基线一致，git_status 和 git_diff 均为空。 |
+| `hands_missing_foundation_to_bootstrap` | PASS | with_skill 明确给出 blocked → docs-site-bootstrap，说明缺失 foundation，未转交给 audit、GitHub Release owner 或自行继续。 |
+| `preserves_release_chain_and_external_zero_writes` | PASS | with_skill 明确未准备或创建 GitHub Release/tag，并要求等待站点基础与 docs-audit 的 ready_for_tag；锁定证据显示无写入或引用变更。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e; fixture_sha256=b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720; output_sha256=4a61c0616b8369f30db3a4264ec4b7194f79a2995a6be643754c6ba79f107e43; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别缺失的 Release Notes foundation，阻塞并交接给 docs-site-bootstrap；保持工作区与站点文件零写入，未推进 tag 或 GitHub Release。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e; fixture_sha256=b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720; output_sha256=0803aa2c4c5165442e053c8910702ccb50264a5b3eb37837df2cf81e33356af5; snapshot_sha256=660fbabe1b5df61401a73ac4accc7aafe09546ccd0212326c51c9eb281a5d33d
+- Behavior: 创建了站内 Release Notes、metadata、提交和 v1.0.0 tag；GitHub Release 因环境限制未创建，违反 bootstrap 前零差异与外部发布链约束。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-003-github-release-boundary`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720` from `agents/docs/test/release-notes-gen/evals/workspace/eval-003-github-release-boundary`.
+- Fixture SHA-256: `b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720`
+- Prompt SHA-256: `761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2432b0a8b94e9e5b987302b22f20b3a68797aef99cb1f7535f80c5f6d550ca58`
+- Skill overlay SHA-256: `b8a032f2e0b3c1612e4ecd4d8c0404ffabac105e349deced7271302364bee3fd`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `05f16fbca1905a6bf2d3e5279f6310a7d3001480023c03eb422e696627b86d5d`
+- Metadata SHA-256: `cc603314c84acffcc044d1983ddad5ccbf550b74f01ff0d4a84abd79a152693b`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_missing_release_notes_foundation` | PASS | With_skill identifies the missing release-notes foundation, including the directory and index/metadata basis, and blocks page generation. |
+| `keeps_site_zero_diff_before_bootstrap` | PASS | With_skill reports no site writes, no metadata/index/navigation changes, and empty git status/diff; fixture confirms no Release Notes foundation exists. |
+| `hands_missing_foundation_to_bootstrap` | PASS | With_skill gives a blocked handoff to the Docs-site bootstrap owner, identifies the host/current repository and missing foundation, and defers further page work. |
+| `preserves_release_chain_and_external_zero_writes` | PASS | With_skill explicitly reports no GitHub Release or v1.0.0 tag creation and requires bootstrap followed by documentation audit before downstream release handling. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e; fixture_sha256=b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720; output_sha256=d84349e760e0589ddeb917485404ffc764088f04a170d09ef8fae2c435f192a2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly stopped at the missing Release Notes foundation, preserved zero diff and external zero writes, and handed off bootstrap.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e; fixture_sha256=b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720; output_sha256=b2475ea882b9429f8a361f15c7bd3aa5089184a4fb4d040b80e3528c6c002280; snapshot_sha256=4d75af9f03af697381f55ec36d0099bcd1c7f8024623201b89758dde8d0bc9bb
+- Behavior: Incorrectly generated release material, committed changes, and created a local tag despite the missing site foundation.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-003-github-release-boundary`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `57ad6ab7a7bd756cc1be44042bd4e749157f6514a8971f70e9cca76044d85d23` from `agents/docs/test/release-notes-gen/evals/workspace/eval-003-github-release-boundary`.
 - Fixture SHA-256: `57ad6ab7a7bd756cc1be44042bd4e749157f6514a8971f70e9cca76044d85d23`
 - Prompt SHA-256: `761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e`

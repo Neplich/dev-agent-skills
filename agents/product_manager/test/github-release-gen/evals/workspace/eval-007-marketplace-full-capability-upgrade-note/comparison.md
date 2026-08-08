@@ -14,6 +14,201 @@
 - Fixture version/source: canonical manifest `dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-007-marketplace-full-capability-upgrade-note`.
 - Fixture SHA-256: `dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b`
 - Prompt SHA-256: `a62a94b930216669961977d81dd33c33ea8ab99e80d1ccbdd52769d4a9afaf75`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f95690411417d5e9cf66495e67ce2d96d0a51fc4ca1821536421129a950bb8f3`
+- Skill overlay SHA-256: `ee4b811662f5234e9cbcc50a85629526ebcf704244484e48f81d5ce85841d93c`
+- Judge schema SHA-256: `03a8fb59a79fd1eace9e70a8f76361828e062efb8e2ad27720ecf0844391b693`
+- Eval definition SHA-256: `39c658cc52679808b5a56ed0ccb078241d74aac73ea7ef1462e40e6679aac516`
+- Metadata SHA-256: `b64763ea1d58b4c3c1d7a3e95d4a1d7bd5f4195151868d0276dd82eda387eb3e`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `title_matches_marketplace_format` | PASS | With-skill preview title is `v1.0.0 - 文件卡片、统一附件模型与失败消息重试`, a nonempty fact-based topic overview. |
+| `upgrade_note_first_sentence` | PASS | The first sentence of `## 升级说明` is exactly `无破坏性变更，也没有新增 plugin。7 个 role plugin 均更新到 \`v1.0.0\`。` |
+| `claude_section_verbatim` | PASS | The with-skill body contains the required Claude Code marketplace update, all seven manifest role-plugin update commands in the specified membership, `/reload-plugins`, and the no-version-pin explanation directing fixed installs to Codex or Kimi. |
+| `codex_section_pinned_install` | PASS | The Codex section uses the required raw tag URL ending in `refs/tags/v1.0.0/.codex/INSTALL.md` and sets `TARGET_TAG=v1.0.0`. |
+| `kimi_section_plugin_install` | PASS | The Kimi Code section uses `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/v1.0.0`. |
+| `plugin_list_derived_from_manifest` | PASS | The seven listed role plugins match the seven entries in the target `.claude-plugin/marketplace.json`: pm-agent, designer-agent, engineer-agent, qa-agent, devops-agent, security-agent, and docs-agent. |
+| `closing_sentence_present` | PASS | The upgrade section closes with `更新仓库后重新运行安装器，即可同步全部 7 个 role plugin 的 \`v1.0.0\` 能力。` |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a62a94b930216669961977d81dd33c33ea8ab99e80d1ccbdd52769d4a9afaf75; fixture_sha256=dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b; output_sha256=d57534b029426881790b05a8495a81c96f23aa5c29f44e3147360604a1ef1119; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced a complete inline GitHub Release preview with a compliant title, fact-grounded release body, manifest-derived seven-plugin upgrade instructions, pinned Codex and release-URL Kimi installation paths, and no GitHub write.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a62a94b930216669961977d81dd33c33ea8ab99e80d1ccbdd52769d4a9afaf75; fixture_sha256=dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b; output_sha256=815268503d58c22248c3909e862ea5dd7edf238c8facffd47ffc48ab5fcd3568; snapshot_sha256=6d3c920c8be0a0d0a9486717864f3d0642e193456e4b9a4abd2456853e8bd3af
+- Behavior: Produced a file-backed preview, but used a noncompliant bare-style title and omitted the required detailed Claude, Codex, Kimi, manifest-derived plugin list, and exact upgrade-section requirements; it also asserted documentation checks passed despite the candidate prose reporting the package was missing.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-007-marketplace-full-capability-upgrade-note`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-007-marketplace-full-capability-upgrade-note`.
+- Fixture SHA-256: `dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b`
+- Prompt SHA-256: `a62a94b930216669961977d81dd33c33ea8ab99e80d1ccbdd52769d4a9afaf75`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `380b2fcfd0ff29b900d02472045d511ad62a16c847b128cbfdce8af3c7a60338`
+- Skill overlay SHA-256: `c666691beb368144f31c0354fd118ef20d664151476cfb1c8695e6ee7c490aa7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `39c658cc52679808b5a56ed0ccb078241d74aac73ea7ef1462e40e6679aac516`
+- Metadata SHA-256: `b64763ea1d58b4c3c1d7a3e95d4a1d7bd5f4195151868d0276dd82eda387eb3e`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `title_matches_marketplace_format` | PASS | With-skill inline preview title is `v1.0.0 - 文件附件与可靠升级`, with a non-empty fact-based overview. |
+| `upgrade_note_first_sentence` | PASS | The 升级说明 section begins with the required sentence, using 7 role plugins derived from marketplace.json. |
+| `claude_section_verbatim` | PASS | Claude Code section contains marketplace update, all 7 manifest role-plugin update commands, reload command, and explains that `/plugin update` has no version pin and fixed versions require Codex or Kimi. |
+| `codex_section_pinned_install` | PASS | Codex section references the v1.0.0 raw-tag INSTALL.md URL and sets `TARGET_TAG=v1.0.0`. |
+| `kimi_section_plugin_install` | PASS | Kimi Code section contains `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/v1.0.0`. |
+| `plugin_list_derived_from_manifest` | PASS | The preview lists exactly the 7 role plugins registered in the target marketplace manifest. |
+| `closing_sentence_present` | PASS | Upgrade instructions end with the required sentence stating that all 7 role plugins synchronize to v1.0.0. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a62a94b930216669961977d81dd33c33ea8ab99e80d1ccbdd52769d4a9afaf75; fixture_sha256=dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b; output_sha256=0cd423c923b70a8968f1536938b4de9631041915190f72263d10f29c9e4eb570; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced an inline-only, non-mutating GitHub Release preview with the required marketplace-derived title, upgrade wording, seven-plugin list, and Claude Code, Codex, and Kimi Code instructions.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a62a94b930216669961977d81dd33c33ea8ab99e80d1ccbdd52769d4a9afaf75; fixture_sha256=dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b; output_sha256=4ca1b1d0db86f191ef187289a45f38d1c10d536f832b5d2fe73529fcae364989; snapshot_sha256=84c7accab71a828a3fde1f2a2d132de22d39b86200948b1d21f6bd1e6b4297a7
+- Behavior: Created an unrelated release preview focused on file-card application changes and omitted the required marketplace upgrade sections and exact installation guidance.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-007-marketplace-full-capability-upgrade-note`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-007-marketplace-full-capability-upgrade-note`.
+- Fixture SHA-256: `dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b`
+- Prompt SHA-256: `a62a94b930216669961977d81dd33c33ea8ab99e80d1ccbdd52769d4a9afaf75`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `bfa553ee1e9614c42bec50e00faa33ed1a614260acdb1011ab1116e8b73db2dd`
+- Skill overlay SHA-256: `0db0717c5ca83fddc3ecdfe8bf130c8885c13a22148bb9bf0d8e93c491b17294`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `39c658cc52679808b5a56ed0ccb078241d74aac73ea7ef1462e40e6679aac516`
+- Metadata SHA-256: `b64763ea1d58b4c3c1d7a3e95d4a1d7bd5f4195151868d0276dd82eda387eb3e`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `title_matches_marketplace_format` | PASS | With_skill output provides the non-empty, fact-related title `v1.0.0 - 文件附件、失败重试与双架构交付` and treats it as preview-only. |
+| `upgrade_note_first_sentence` | PASS | The `升级说明` section begins exactly with `无破坏性变更，也没有新增 plugin。7 个 role plugin 均更新到 v1.0.0。`. |
+| `claude_section_verbatim` | PASS | The output includes the required marketplace update, all seven specified `/plugin update` commands, `/reload-plugins`, and the no-version-pin/durable-install limitation with Codex/Kimi alternatives. |
+| `codex_section_pinned_install` | PASS | The Codex section references the v1.0.0 raw `.codex/INSTALL.md` URL and sets `TARGET_TAG=v1.0.0`. |
+| `kimi_section_plugin_install` | PASS | The Kimi Code section includes `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/v1.0.0`. |
+| `plugin_list_derived_from_manifest` | PASS | The output states there are 7 role plugins and lists the same seven manifest members used in the Claude commands: pm, designer, engineer, qa, devops, security, and docs. |
+| `closing_sentence_present` | PASS | The upgrade section ends with `更新仓库后重新运行安装器，即可同步全部 7 个 role plugin 的 v1.0.0 能力。`. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a62a94b930216669961977d81dd33c33ea8ab99e80d1ccbdd52769d4a9afaf75; fixture_sha256=dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b; output_sha256=6511ebff6fbc30c678015a4b804c61f52272442d67d920fd8a0186de81a6399f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced a complete semantically compliant preview in the candidate output, including manifest-derived plugin instructions and pinned Codex/Kimi paths, without mutating the workspace or creating a draft.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a62a94b930216669961977d81dd33c33ea8ab99e80d1ccbdd52769d4a9afaf75; fixture_sha256=dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b; output_sha256=7d664e3fceb20c73b8f4fa74612538876fea91317866ce5068f1ade4f5b37741; snapshot_sha256=05dde696fadba4fc8bc59278108947759d0cc2378490025bb3cb5ab9ac09a05d
+- Behavior: Created an untracked preview file, but its content was a generic English release draft and did not provide the required structured upgrade instructions.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-007-marketplace-full-capability-upgrade-note`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-007-marketplace-full-capability-upgrade-note`.
+- Fixture SHA-256: `dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b`
+- Prompt SHA-256: `a62a94b930216669961977d81dd33c33ea8ab99e80d1ccbdd52769d4a9afaf75`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `bfa553ee1e9614c42bec50e00faa33ed1a614260acdb1011ab1116e8b73db2dd`

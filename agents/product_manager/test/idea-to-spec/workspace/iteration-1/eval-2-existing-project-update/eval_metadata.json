@@ -2,11 +2,6 @@
   "eval_id": "eval-002-existing-project-update",
   "eval_name": "existing-project-update",
   "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update",
-  "with_skill_outputs": [
-    "docs/pm/notification-center/DECISIONS.md",
-    "docs/pm/notification-center/PRD.md",
-    "docs/engineer/notification-center/TRD.md"
-  ],
   "assertions": [
     {
       "id": "decision_history_handled",

@@ -14,6 +14,198 @@
 - Fixture version/source: canonical manifest `6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0` from `agents/security/test/security-agent/evals/workspace/eval-1-route-auth-release-risk`.
 - Fixture SHA-256: `6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0`
 - Prompt SHA-256: `5a4bc456b36f0fe19e8d15843877f0c9ef8daed9d99b67bdcc85d65720c79c5b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d757bbaf4b55662bd396a15ca7c9b69a10dbe649b2aac6ce29c97794cc4f00b0`
+- Skill overlay SHA-256: `c15cc4705f2e5ab1d2498bb87a228d8af5b54c5d7ed76fb2d1049031187c7404`
+- Judge schema SHA-256: `d09f4cbeb933e811c934cf8e665fe7675560abe0fc34d7865e0c67a56b1f4b12`
+- Eval definition SHA-256: `86d9cf5b5d192be02693890eee51825a1b00e0750fd5f2d88fdcc91b3fe08ad7`
+- Metadata SHA-256: `10861a3430f4e9df517502c7dede98b52c06228662db21b0d8914dd6b558a77c`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_primary_to_authz` | PASS | The with_skill output explicitly selects `authz-reviewer` first for login sessions, role matrix, tenant isolation, sensitive routes, and admin privilege escalation. |
+| `names_dependency_followup` | PASS | It explicitly places `dependency-risk-auditor` second for Express and the full dependency tree’s CVE, supply-chain, and maintenance risks. |
+| `collects_security_context` | PASS | It identifies login sessions, role matrix, tenant isolation, sensitive routes, dependency manifests, and later code/test/audit outputs as the evidence context. |
+| `structured_risk_output` | FAIL | It names report deliverables, but does not state that they are structured reviews containing a risk matrix, evidence, and remediation recommendations, nor explicitly distinguish them from direct patches. |
+| `hands_off_remediation` | PASS | It assigns authentication fixes to the application engineering team and dependency/build/deployment fixes to the platform engineering team, which is a semantic remediation handoff. |
+| `evaluates_escalation_to_pm_at_closeout` | NOT_EXERCISED | The workflow remains before confirmation and before either review produces a Security-owned conclusion; closeout escalation therefore cannot yet be exercised. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5a4bc456b36f0fe19e8d15843877f0c9ef8daed9d99b67bdcc85d65720c79c5b; fixture_sha256=6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0; output_sha256=cf9c6f67b0b236a4339aa08cf59186ceebeefd1f5fdf285c9c1ea4dc313a8eb3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly routes the security review and dependency follow-up, captures the main security context, and assigns remediation ownership, but omits required structured risk-output details.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5a4bc456b36f0fe19e8d15843877f0c9ef8daed9d99b67bdcc85d65720c79c5b; fixture_sha256=6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0; output_sha256=3613d0081baa558d331deaa73efeba6cf801847ee9b8f2af4259aaa97ae88da2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a broad security review plan and dependency concerns, but does not establish the required named primary and follow-up routes or the closeout handoff policy.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill lane omits the required explicit structured-review output contents and direct-patch distinction.
+- Next: After confirmation, run `authz-reviewer`, then `dependency-risk-auditor`; assess PM escalation at closeout once a Security-owned conclusion exists.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `security-agent`
+- Eval: `eval-001-route-auth-release-risk`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0` from `agents/security/test/security-agent/evals/workspace/eval-1-route-auth-release-risk`.
+- Fixture SHA-256: `6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0`
+- Prompt SHA-256: `5a4bc456b36f0fe19e8d15843877f0c9ef8daed9d99b67bdcc85d65720c79c5b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d757bbaf4b55662bd396a15ca7c9b69a10dbe649b2aac6ce29c97794cc4f00b0`
+- Skill overlay SHA-256: `c15cc4705f2e5ab1d2498bb87a228d8af5b54c5d7ed76fb2d1049031187c7404`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `86d9cf5b5d192be02693890eee51825a1b00e0750fd5f2d88fdcc91b3fe08ad7`
+- Metadata SHA-256: `10861a3430f4e9df517502c7dede98b52c06228662db21b0d8914dd6b558a77c`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_primary_to_authz` | PASS | with_skill 明确将 authz-reviewer 列为第一步主 route，并围绕 admin 越权、platform-ops 边界和敏感路由开展审查。 |
+| `names_dependency_followup` | PASS | with_skill 明确将 dependency-risk-auditor 列为第二步后续 route，专门检查 express 及依赖漏洞。 |
+| `collects_security_context` | PASS | with_skill 覆盖角色权限矩阵、敏感路由、session/认证生命周期、越权测试证据，以及 manifest/lockfile 和实际依赖版本证据。 |
+| `structured_risk_output` | PASS | with_skill 声明交付 review 文档、权限矩阵、扫描结果、风险严重性判断、证据和升级兼容性建议，未直接输出代码补丁。 |
+| `hands_off_remediation` | PASS | with_skill 将鉴权修复交给应用工程团队、依赖和平台配置修复交给平台工程团队，语义上对应 engineer-agent/devops-agent remediation handoff。 |
+| `evaluates_escalation_to_pm_at_closeout` | NOT_EXERCISED | 当前仍处于 route 安排阶段，候选明确标记尚不适用并等待确认后执行 authz-reviewer；尚未形成可供 closeout 评估的 Security 确认结论。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5a4bc456b36f0fe19e8d15843877f0c9ef8daed9d99b67bdcc85d65720c79c5b; fixture_sha256=6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0; output_sha256=69bc4c223d157e6b151ec29517c9fefe8ff78523f267042ee92e3bc72002d7ba; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确安排 authz-reviewer 为主 route、dependency-risk-auditor 为后续 route，覆盖安全上下文、结构化证据交付和 remediation handoff；closeout 尚未执行。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5a4bc456b36f0fe19e8d15843877f0c9ef8daed9d99b67bdcc85d65720c79c5b; fixture_sha256=6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0; output_sha256=e9dec38937f71b661867257ef506cea072ed3c3d1c2bb213542bf6985265d251; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了较完整的安全审查顺序和证据计划，但未使用要求的显式主 route/后续 route，也未说明 PM closeout escalation handoff。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 确认后执行 authz-reviewer，完成安全证据收集并在 closeout 评估 Security Conclusion Escalation to PM。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `security-agent`
+- Eval: `eval-001-route-auth-release-risk`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0` from `agents/security/test/security-agent/evals/workspace/eval-1-route-auth-release-risk`.
+- Fixture SHA-256: `6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0`
+- Prompt SHA-256: `5a4bc456b36f0fe19e8d15843877f0c9ef8daed9d99b67bdcc85d65720c79c5b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `c5520407483ac9a121a37797b7b98dc4da081bdab5743828b51d6d29547897a3`
+- Skill overlay SHA-256: `3bdcce8a6d41df932eba7c722b5148085394824bfb52aea5d19f35c076525924`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `86d9cf5b5d192be02693890eee51825a1b00e0750fd5f2d88fdcc91b3fe08ad7`
+- Metadata SHA-256: `10861a3430f4e9df517502c7dede98b52c06228662db21b0d8914dd6b558a77c`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_primary_to_authz` | PASS | With_skill 明确将 authz-reviewer 作为首要审查，覆盖登录、session、角色矩阵、租户隔离、敏感路由及 admin 越权。 |
+| `names_dependency_followup` | PASS | 明确将 dependency-risk-auditor 作为权限审查后的后续步骤，并检查 express 及传递依赖风险。 |
+| `collects_security_context` | PASS | 列明需审查 session、角色权限矩阵、敏感路由、过期 session/admin 越权/跨租户测试证据、依赖版本与 lockfile/依赖树信息。 |
+| `structured_risk_output` | PASS | 声明交付权限矩阵、鉴权覆盖表、审计报告、测试与扫描证据、严重性/影响/代码位置和修复建议，并以报告归档而非代码补丁为产物。 |
+| `hands_off_remediation` | PASS | 将修复归属交给应用工程团队，并指出依赖、构建或部署修复需由工程下游处理，语义上符合移交 remediation。 |
+| `evaluates_escalation_to_pm_at_closeout` | FAIL | 虽提到最终安全结论可返回 pm-agent 分类并建项，但未说明 closeout 时评估 Security 自有确认结论、路由阶段无确认结论时不升级，也未明确禁止直接交给 docs-agent或由 Security 自行创建 issue。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5a4bc456b36f0fe19e8d15843877f0c9ef8daed9d99b67bdcc85d65720c79c5b; fixture_sha256=6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0; output_sha256=de2d8bcf2217e1404aa39b6eeda2659b79342b6d13b01e9dd61d497cf29bbadd; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确安排权限主审查和依赖后续审查，给出安全上下文、证据交付和 remediation 归属，并保持工作区无变更；closeout 升级规则说明不完整。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5a4bc456b36f0fe19e8d15843877f0c9ef8daed9d99b67bdcc85d65720c79c5b; fixture_sha256=6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0; output_sha256=e5721233aade8830482662cb16342353687954f44717fc8d8f9dbe1f698bd2a5; snapshot_sha256=6c1139656f549598d86a7b7f2834c50c14fe899794d42decd07b45b0416fb4fb
+- Behavior: 生成了较详细的安全审查计划和依赖风险分析，但未执行要求的 authz-reviewer/dependency-risk-auditor 路由，且留下了 review-plan.md 未跟踪文件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- evaluates_escalation_to_pm_at_closeout 未满足完整的 closeout 评估、未升级条件及禁止错误交付/建 issue 要求。
+- Next: 补充明确的 Security Conclusion Escalation to PM closeout 规则及路由阶段不触发条件。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `security-agent`
+- Eval: `eval-001-route-auth-release-risk`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0` from `agents/security/test/security-agent/evals/workspace/eval-1-route-auth-release-risk`.
+- Fixture SHA-256: `6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0`
+- Prompt SHA-256: `5a4bc456b36f0fe19e8d15843877f0c9ef8daed9d99b67bdcc85d65720c79c5b`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `c5520407483ac9a121a37797b7b98dc4da081bdab5743828b51d6d29547897a3`

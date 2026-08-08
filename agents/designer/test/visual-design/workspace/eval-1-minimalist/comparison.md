@@ -14,6 +14,250 @@
 - Fixture version/source: canonical manifest `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a` from `agents/designer/test/visual-design/workspace/eval-1-minimalist`.
 - Fixture SHA-256: `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a`
 - Prompt SHA-256: `c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `9be23963f6e0e12e12a074b019666fb8a1f995677fec5a734a1b0b6be400f7fc`
+- Skill overlay SHA-256: `b87e6c9b4a37c78d9c7cc608aee6187878beb1abc19fff1a5afb3d9645233d49`
+- Judge schema SHA-256: `e8bf769ac89a10c9a014e6b2e125d2d95f024ce8d37a4e4481c16c75936c71a8`
+- Eval definition SHA-256: `2ec4f897729f0820b0a7830a10f3f0348db98fac1c3a94d29404427ccb404465`
+- Metadata SHA-256: `a8c3886c0203449f24edc77c5c3e77a82c91f7ce462169d6c62325194a234222`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill delivery_snapshot contains docs/design/minimalist-productivity-app/visual-system.md with colors, typography, spacing, and component rules; feature_path matches PM_HANDOFF.md. |
+| `assertion_2` | PASS | The delivered file is a visual specification containing rules and examples, with no CSS/design-token code, component implementation, engineering task breakdown, or test commands. |
+| `assertion_3` | PASS | The delivered file explicitly states: “Next role: `engineer-agent`.” |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=f9791922af9e247a59d0c5b2602313f8610b55a416c2bd096832a68edd351b2f; snapshot_sha256=f6cf9604e7412ef209caf3c04a3445f755c36fd49bedd472bbe6b9ad6b1f753c
+- Behavior: Delivered the required visual system file at the confirmed path, covering the requested design-system areas and handing implementation to engineer-agent.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=2cbd3cf03f390398c43a72fd4bf0cd725921d9e1a67b770e56375e7eeb52bb05; snapshot_sha256=15c0402bdf73b5d7e28635b2e07f2f89a430cd2523bc1903127275516f0479ce
+- Behavior: Also delivered a complete visual system at the confirmed path, with comparable coverage and no implementation code.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `visual-design`
+- Eval: `eval-001-minimalist`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a` from `agents/designer/test/visual-design/workspace/eval-1-minimalist`.
+- Fixture SHA-256: `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a`
+- Prompt SHA-256: `c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `9be23963f6e0e12e12a074b019666fb8a1f995677fec5a734a1b0b6be400f7fc`
+- Skill overlay SHA-256: `b87e6c9b4a37c78d9c7cc608aee6187878beb1abc19fff1a5afb3d9645233d49`
+- Judge schema SHA-256: `e8bf769ac89a10c9a014e6b2e125d2d95f024ce8d37a4e4481c16c75936c71a8`
+- Eval definition SHA-256: `2ec4f897729f0820b0a7830a10f3f0348db98fac1c3a94d29404427ccb404465`
+- Metadata SHA-256: `a8c3886c0203449f24edc77c5c3e77a82c91f7ce462169d6c62325194a234222`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | Locked with_skill delivery_snapshot contains docs/design/minimalist-productivity-app/visual-system.md; feature_path is minimalist-productivity-app, and the file directly includes Color System, Typography, Spacing, and Component Styles sections. |
+| `assertion_2` | PASS | The locked with_skill file is a visual specification: it contains no CSS, component implementation, design-token implementation code, engineering task breakdown, or test commands. |
+| `assertion_3` | PASS | The locked with_skill file explicitly states: “Next role: `engineer-agent`.” |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=78fa35c4ffc8008145ffa80f601ce235251957aca41c580b34f3447e0a4765eb; snapshot_sha256=0b08920e2960eab4e3f555645827aaf68b4140dc65c83afba3518ebcad134445
+- Behavior: Delivered the required visual-system document at the confirmed feature path, with complete visual rules and an explicit engineer-agent handoff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=d6a21e53e90dd0313d69a013bc851989beef4423b2253c308c0d48842b92379a; snapshot_sha256=e82e884424d5cd478c43d21bd8a514933537d09a67ecd4c8d0bfc2fdcf61572f
+- Behavior: Also delivered a visual-system file with the requested visual sections, but its locked output does not explicitly hand off implementation to engineer-agent.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `visual-design`
+- Eval: `eval-001-minimalist`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a` from `agents/designer/test/visual-design/workspace/eval-1-minimalist`.
+- Fixture SHA-256: `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a`
+- Prompt SHA-256: `c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `9be23963f6e0e12e12a074b019666fb8a1f995677fec5a734a1b0b6be400f7fc`
+- Skill overlay SHA-256: `b87e6c9b4a37c78d9c7cc608aee6187878beb1abc19fff1a5afb3d9645233d49`
+- Judge schema SHA-256: `e8bf769ac89a10c9a014e6b2e125d2d95f024ce8d37a4e4481c16c75936c71a8`
+- Eval definition SHA-256: `2ec4f897729f0820b0a7830a10f3f0348db98fac1c3a94d29404427ccb404465`
+- Metadata SHA-256: `a8c3886c0203449f24edc77c5c3e77a82c91f7ce462169d6c62325194a234222`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | 交付快照直接证明文件写入 docs/design/minimalist-productivity-app/visual-system.md；内容包含颜色、字体、间距和组件规范。 |
+| `assertion_2` | PASS | 交付文件是视觉系统规范，未包含 token 落地代码、CSS/组件实现、工程任务拆解或测试命令。 |
+| `assertion_3` | PASS | 文件明确写有“Next role: engineer-agent”，最终交付说明也提示由 engineer-agent 承接实现。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=d15e70b29321fa4893f6376225d99a0a106708ebfbc32373171cf5795b88e87e; snapshot_sha256=a3b780822814734b859b31be0a4e70b172da7242a06d730a8c1004650a5ed076
+- Behavior: 完成视觉系统文档交付，并明确工程交接角色。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=38e1fdeb9c62c9e889aecac9af2b9a4f32475a736ddf38c35571226aec65c1b1; snapshot_sha256=03f8e2314f4273380a4f34bdcb285ed7d55a2c8127bf3e266ece5a745b9c5530
+- Behavior: 同样完成了视觉系统文档，但未明确提示由 engineer-agent 接手。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `visual-design`
+- Eval: `eval-001-minimalist`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a` from `agents/designer/test/visual-design/workspace/eval-1-minimalist`.
+- Fixture SHA-256: `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a`
+- Prompt SHA-256: `c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **CLEAN**
+- Target skill tree SHA-256: `674ecf5fd4c78221e93a055ab56547f676aa916bf7d4681c324f65dbb7bc95bb`
+- Skill overlay SHA-256: `c6d17c572cc3c8fd0cf2c01e196e56f62bf538e4e13d12bb18f8fa31c5130da6`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `2ec4f897729f0820b0a7830a10f3f0348db98fac1c3a94d29404427ccb404465`
+- Metadata SHA-256: `a8c3886c0203449f24edc77c5c3e77a82c91f7ce462169d6c62325194a234222`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 的 raw evidence 显示已写入 docs/design/minimalist-productivity-app/visual-system.md，文档包含颜色、字体、间距和组件规范。 |
+| `assertion_2` | PASS | with_skill 的交付文档仅包含视觉规范、交互/无障碍规则和交接说明；未包含 token 落地代码、CSS/组件实现、工程任务拆解或测试命令。 |
+| `assertion_3` | PASS | 文档明确写有“Designer stops here. Next role: engineer-agent.”，提示后续由 engineer-agent 接手。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=670cf72e68a42a267ff900aa902ef5dba0eac1db0bc2cafa20e5d637aa20b1af; snapshot_sha256=752756a63235f53573b0811eaf1454de9f87a417ec375ad4904a102e88532162
+- Behavior: 生成确认路径下的完整视觉系统文档，覆盖颜色、字体、间距、组件及相关质量规则，保持设计范围，并明确交接给 engineer-agent。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=d90e4dc54f88ae6f8e710dc849692d826b6f9e26e5d5833385df81f25385c468; snapshot_sha256=23656716c4c9e448399b3023aa4df1eb1ac84131679b3c12dfead4f6db618838
+- Behavior: 同样生成了确认路径下的视觉系统文档，覆盖视觉规范，并声明未生成组件代码或 token 配置；未明确提示 engineer-agent 接手。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `visual-design`
+- Eval: `eval-001-minimalist`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a` from `agents/designer/test/visual-design/workspace/eval-1-minimalist`.
+- Fixture SHA-256: `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a`
+- Prompt SHA-256: `c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `674ecf5fd4c78221e93a055ab56547f676aa916bf7d4681c324f65dbb7bc95bb`

@@ -11,6 +11,198 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5` from `agents/docs/test/release-notes-gen/evals/workspace/eval-001-generate-site-release-notes`.
+- Fixture SHA-256: `5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5`
+- Prompt SHA-256: `abdc82e3242ddb2aafb79bd48f7c9ee0c804dc864021f0a687923bb4dc7de750`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b7f7292c266a0e83e45fc11a264c0b52188a05a92b94c912c4a7b6c5c35058d2`
+- Skill overlay SHA-256: `fcc8b19cc83a08b5f5e64f8b15695aa80b045962a63cbf1717889ea116dc31cc`
+- Judge schema SHA-256: `37b31d01c6d97d7403db04c5a14501c9f7c823331bdaca410487353335744541`
+- Eval definition SHA-256: `65fbac4fd20096e04fd9044ef9811d00f14a304548ada95a65b3bc87c1320345`
+- Metadata SHA-256: `f1489da43deb17946a7db1865ce4492ffcbc2d33d7073fbbdc572711b748a76c`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_missing_version_confirmation` | PASS | with_skill 明确指出 v1.0.0 仅为 proposed，且确认记录不确认目标版本。 |
+| `stops_before_loading_execution_workflow` | FAIL | with_skill 声称 blocked 且未写入站点，但仍输出了完整“候选正文”，与不得生成候选正文的要求冲突。 |
+| `keeps_all_site_surfaces_unchanged` | PASS | delivery_snapshot 为空，git head/branch 未变化，git diff 与 status 均无候选变更。 |
+| `does_not_run_post_entry_checks` | NOT_EXERCISED | 输出说明未运行最终站点检查且未生成 handoff；但锁定证据不能证明是否安装过依赖，故无法完整判定该隐藏过程要求。 |
+| `returns_version_ambiguity_to_pm` | FAIL | with_skill 返回 blocked 并要求维护者确认，但未将版本歧义明确交回 PM 入口分类；仅说明确认后重新进入 specialist，并禁止 tag/GitHub Release。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=abdc82e3242ddb2aafb79bd48f7c9ee0c804dc864021f0a687923bb4dc7de750; fixture_sha256=5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5; output_sha256=636d4074587bdf02440cb0b215e63043dedee5cd3943347592a78b9731c4e682; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别版本确认缺失并保持站点文件不变，但越过入口 gate 输出候选正文，且未明确回交 PM。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=abdc82e3242ddb2aafb79bd48f7c9ee0c804dc864021f0a687923bb4dc7de750; fixture_sha256=5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5; output_sha256=e18272dd81cba66d0a638b70dfa29e434cfb8dffbd94cf222dc442d9f459e8f4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别版本确认缺失并保持无写入，但提出可生成待确认 Release Notes 草稿，作为 fresh baseline。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- stops_before_loading_execution_workflow
+- returns_version_ambiguity_to_pm
+- Next: 入口 gate 通过前不要输出或生成候选正文。
+- Next: 明确将缺少 target release version 维护者确认的问题回交 PM 入口分类。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-001-generate-site-release-notes`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5` from `agents/docs/test/release-notes-gen/evals/workspace/eval-001-generate-site-release-notes`.
+- Fixture SHA-256: `5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5`
+- Prompt SHA-256: `abdc82e3242ddb2aafb79bd48f7c9ee0c804dc864021f0a687923bb4dc7de750`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b7f7292c266a0e83e45fc11a264c0b52188a05a92b94c912c4a7b6c5c35058d2`
+- Skill overlay SHA-256: `fcc8b19cc83a08b5f5e64f8b15695aa80b045962a63cbf1717889ea116dc31cc`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `65fbac4fd20096e04fd9044ef9811d00f14a304548ada95a65b3bc87c1320345`
+- Metadata SHA-256: `f1489da43deb17946a7db1865ce4492ffcbc2d33d7073fbbdc572711b748a76c`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_missing_version_confirmation` | PASS | with_skill 明确将 v1.0.0 标为 proposed，指出未获维护者确认，并说明正文确认不构成版本确认。 |
+| `stops_before_loading_execution_workflow` | PASS | with_skill 返回 blocked，明确尚未生成候选正文、修改站点或运行后续流程；仅说明满足入口条件后的下一步。 |
+| `keeps_all_site_surfaces_unchanged` | PASS | with_skill 明确尚未检查或修改 Release Notes、元数据、索引和导航；锁定 git evidence 显示 HEAD、分支、工作树和索引均未变化。 |
+| `does_not_run_post_entry_checks` | PASS | with_skill 明确因版本未确认尚未运行文档检查，也未生成 site-ready handoff；输出未声称安装依赖。 |
+| `returns_version_ambiguity_to_pm` | PASS | with_skill 将缺少 target_release_version 确认交回 pm-agent/发布负责人，要求补充确认后再继续，并保持 blocked、未执行发布交付。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=abdc82e3242ddb2aafb79bd48f7c9ee0c804dc864021f0a687923bb4dc7de750; fixture_sha256=5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5; output_sha256=e2eed4d63328d89c5841292dab3c50cc0717e1e75284bf033025c6b39847ab73; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 在入口 gate 阻断，未生成正文或修改站点，明确要求 PM/发布负责人补充可追溯版本确认。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=abdc82e3242ddb2aafb79bd48f7c9ee0c804dc864021f0a687923bb4dc7de750; fixture_sha256=5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5; output_sha256=4d4b24d6306bad539a40f70a736fa9486c7dd03c0275900a7bbe9fcb078512cc; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别版本未确认，但仍生成并保存待确认 Release Notes 草案，未发生文件或 git 写入。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-001-generate-site-release-notes`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5` from `agents/docs/test/release-notes-gen/evals/workspace/eval-001-generate-site-release-notes`.
+- Fixture SHA-256: `5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5`
+- Prompt SHA-256: `abdc82e3242ddb2aafb79bd48f7c9ee0c804dc864021f0a687923bb4dc7de750`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2432b0a8b94e9e5b987302b22f20b3a68797aef99cb1f7535f80c5f6d550ca58`
+- Skill overlay SHA-256: `b8a032f2e0b3c1612e4ecd4d8c0404ffabac105e349deced7271302364bee3fd`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `65fbac4fd20096e04fd9044ef9811d00f14a304548ada95a65b3bc87c1320345`
+- Metadata SHA-256: `55135ec97c57b29ad7355e4cdb438d1c465b4a85609ef95b3885b41077f62b9a`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_missing_version_confirmation` | FAIL | 输出将 v1.0.0 列在“已确认”项下，随后又承认其仅为 proposed 且未获维护者确认，形成对版本确认状态的用户可见矛盾。 |
+| `stops_before_loading_execution_workflow` | PASS | 输出明确 blocked，未生成版本页、正文候选或站点派生内容；原始 git 与工作区证据也显示无变更。 |
+| `keeps_all_site_surfaces_unchanged` | PASS | 输出明确未写入版本页、索引、metadata、导航及其他发布面；git status、diff、交付快照均为空。 |
+| `does_not_run_post_entry_checks` | NOT_EXERCISED | 输出仅说明满足条件后才运行 docs checks，且未生成 ready handoff；但锁定原始证据无法证明本次确实未安装依赖或未运行检查。 |
+| `returns_version_ambiguity_to_pm` | PASS | 输出将问题交回维护者/PM 入口，要求记录可追溯的 target_release_version 确认，并明确不进入 ready handoff、GitHub Release 或打标签流程。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=abdc82e3242ddb2aafb79bd48f7c9ee0c804dc864021f0a687923bb4dc7de750; fixture_sha256=5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5; output_sha256=cd6d3fce84e6f468edc3751b8a11f0168a82e60e78c5cf124d3ddd3d2c8b82bd; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly blocked site delivery and preserved all site surfaces, but mislabeled the unconfirmed target version under an “已确认” heading.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=abdc82e3242ddb2aafb79bd48f7c9ee0c804dc864021f0a687923bb4dc7de750; fixture_sha256=5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5; output_sha256=abea35e16a1764a6d8c8ed2ac1379b7566d32501f96dc15a241e6a5e21f96dc4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline drafted Release Notes content despite missing target-version confirmation, while making no workspace changes.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output visibly presents v1.0.0 as confirmed before acknowledging that maintainer confirmation is absent.],
+- next_steps.py
+- Next: Correctly label v1.0.0 as a proposed/candidate version throughout the blocked response.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-001-generate-site-release-notes`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `3cadad51264d0da80a117449256dc2596f7fe5dd819aeceb014ff669b9568697` from `agents/docs/test/release-notes-gen/evals/workspace/eval-001-generate-site-release-notes`.
 - Fixture SHA-256: `3cadad51264d0da80a117449256dc2596f7fe5dd819aeceb014ff669b9568697`
 - Prompt SHA-256: `abdc82e3242ddb2aafb79bd48f7c9ee0c804dc864021f0a687923bb4dc7de750`

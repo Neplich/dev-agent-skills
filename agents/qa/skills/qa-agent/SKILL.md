@@ -30,6 +30,12 @@ evidence artifact, and the boundary that the specialist—not this router—owns
 execution. Preserve secondary symptoms as risks or follow-up evidence needs.
 Read the accepted materials before claiming an input is unavailable, and carry
 any explicit repository test command or execution entry into the routing block.
+If an existing QA feature directory is present but contains no executable cases
+or scripts, state that exact empty/non-executable condition. When the user has
+already authorized bounded exploration and supplied a usable environment and
+test basis, read and pass every available environment instruction file together
+with the target source and QA memory to `spec-based-tester`; do not invent a
+second PM/Engineer handoff or credential gate.
 
 ## Role Boundary
 

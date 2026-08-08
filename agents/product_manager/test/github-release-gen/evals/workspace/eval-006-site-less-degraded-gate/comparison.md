@@ -14,6 +14,192 @@
 - Fixture version/source: canonical manifest `411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-006-site-less-degraded-gate`.
 - Fixture SHA-256: `411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20`
 - Prompt SHA-256: `3543da7f86f46fe1ddba91b579642c6082b99cf4ee707ac9b96a7d9fcb3ea3e7`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f95690411417d5e9cf66495e67ce2d96d0a51fc4ca1821536421129a950bb8f3`
+- Skill overlay SHA-256: `ee4b811662f5234e9cbcc50a85629526ebcf704244484e48f81d5ce85841d93c`
+- Judge schema SHA-256: `b8169d6d4489fefe59aefe4458af6c4e8108513691e18f7c250f5d7f5c9b7ba5`
+- Eval definition SHA-256: `ee0644452d121d4667c014aaf941ed770c3978ba415b0f3ee7cfc601dc801335`
+- Metadata SHA-256: `d64e10da3608725d47dc87efed91ed453ddbf43cfa5350e92eb1e539cf16b5a4`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `proceeds_without_handoff_when_site_absent` | PASS | With_skill confirms no docs/site or site Release Notes capability chain and produces a complete inline GitHub Release preview. |
+| `records_downgrade_basis` | PASS | With_skill explicitly records the formal site and both handoff chains as absent/not applicable, and cites the confirmed changelog plus version-bump evidence. |
+| `still_requires_maintainer_approval` | PASS | With_skill limits action to preview, reports no GitHub writes, forbids draft creation, and requires explicit current maintainer approval before writes. |
+| `blocks_without_confirmed_fact_source` | PASS | With_skill marks the second scenario blocked because the bump is proposed and no maintainer-confirmed fact source exists; it rejects commit subjects and the unconfirmed summary as facts. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3543da7f86f46fe1ddba91b579642c6082b99cf4ee707ac9b96a7d9fcb3ea3e7; fixture_sha256=411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20; output_sha256=b9b2d97df1cb4fcd13923455b7c1bcc57db8bec85916df34d347575626460c3b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly handles both site-less scenarios: downgrades the missing handoffs, previews only from confirmed evidence, preserves maintainer approval gates, and blocks the unconfirmed scenario.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3543da7f86f46fe1ddba91b579642c6082b99cf4ee707ac9b96a7d9fcb3ea3e7; fixture_sha256=411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20; output_sha256=7f60394eac76765a39f9aaf153242e91f81d747f6dce2b964cec08340df3eeae; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Also reaches the key outcomes, but gives a less complete preview and does not explicitly document the full site-less downgrade basis or detailed approval-gate state.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-006-site-less-degraded-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-006-site-less-degraded-gate`.
+- Fixture SHA-256: `411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20`
+- Prompt SHA-256: `3543da7f86f46fe1ddba91b579642c6082b99cf4ee707ac9b96a7d9fcb3ea3e7`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `380b2fcfd0ff29b900d02472045d511ad62a16c847b128cbfdce8af3c7a60338`
+- Skill overlay SHA-256: `c666691beb368144f31c0354fd118ef20d664151476cfb1c8695e6ee7c490aa7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ee0644452d121d4667c014aaf941ed770c3978ba415b0f3ee7cfc601dc801335`
+- Metadata SHA-256: `d64e10da3608725d47dc87efed91ed453ddbf43cfa5350e92eb1e539cf16b5a4`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `proceeds_without_handoff_when_site_absent` | PASS | with_skill 明确记录 docs/site 与 release-notes-gen 能力链不存在，缺少 handoff 不构成阻塞，并提供了 v1.4.0 的完整 inline Release 预览。 |
+| `records_downgrade_basis` | PASS | with_skill 记录无正式文档站、docs/site 不存在、release-notes-gen 能力链不存在，说明相关门禁不适用，并列出已确认的 changelog 与 version-bump 证据。 |
+| `still_requires_maintainer_approval` | PASS | with_skill 仅生成预览且声明未执行 GitHub 写入；禁止 draft，并明确 draft/publish 及 tag 操作仍需维护者新的、当前批准。锁定 git evidence 显示无状态、diff、引用或新提交变化。 |
+| `blocks_without_confirmed_fact_source` | PASS | with_skill 对第二场景明确结论为 blocked，指出无版本化 changelog、无维护者确认事实源，并明确不得将 commit subjects、proposed bump 或未确认摘要作为事实源。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3543da7f86f46fe1ddba91b579642c6082b99cf4ee707ac9b96a7d9fcb3ea3e7; fixture_sha256=411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20; output_sha256=7a04d7feb50ef4bcec600d95900451103930cefbd767ed6512dce2010071a733; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完整处理两种场景：无站点时基于确认事实源生成预览并保留批准/写入门禁；无确认事实源时阻塞。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3543da7f86f46fe1ddba91b579642c6082b99cf4ee707ac9b96a7d9fcb3ea3e7; fixture_sha256=411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20; output_sha256=4e397c46c012b5fabe79c23a0ffa071378088063345a724e2bae09e26c98c891; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 基线也正确处理两种场景，但场景 A 未明确展开宿主适用性与降级门禁依据，预览较简略。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-006-site-less-degraded-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-006-site-less-degraded-gate`.
+- Fixture SHA-256: `411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20`
+- Prompt SHA-256: `3543da7f86f46fe1ddba91b579642c6082b99cf4ee707ac9b96a7d9fcb3ea3e7`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `bfa553ee1e9614c42bec50e00faa33ed1a614260acdb1011ab1116e8b73db2dd`
+- Skill overlay SHA-256: `0db0717c5ca83fddc3ecdfe8bf130c8885c13a22148bb9bf0d8e93c491b17294`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ee0644452d121d4667c014aaf941ed770c3978ba415b0f3ee7cfc601dc801335`
+- Metadata SHA-256: `d64e10da3608725d47dc87efed91ed453ddbf43cfa5350e92eb1e539cf16b5a4`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `proceeds_without_handoff_when_site_absent` | PASS | with_skill 明确记录正式文档站未初始化、docs/site 与站内 Release Notes 能力链缺失，且缺少 handoff 不构成阻塞；同时生成了包含标题、正文、升级说明、变更明细与风险的完整预览。 |
+| `records_downgrade_basis` | PASS | with_skill 明确记录 site-less 降级依据，并列出确认的 changelog 与 version-bump 证据。 |
+| `still_requires_maintainer_approval` | PASS | with_skill 仅生成预览，明确未修改文件、标签或 GitHub Release，并说明 draft/publish 写入前需要维护者显式、当前批准。 |
+| `blocks_without_confirmed_fact_source` | PASS | with_skill 将第二场景明确标为阻塞，指出无版本化 changelog、无维护者确认事实源，且不把 commit subjects、proposed bump 或未确认摘要当作发布事实。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3543da7f86f46fe1ddba91b579642c6082b99cf4ee707ac9b96a7d9fcb3ea3e7; fixture_sha256=411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20; output_sha256=b954b2446b182bf42e577300d5a9abf96d573555f46437e1acac4898baaec64f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完整记录 site-less 降级依据，生成可信事实源场景的完整预览，并对无确认事实源场景阻塞；未执行任何写入。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3543da7f86f46fe1ddba91b579642c6082b99cf4ee707ac9b96a7d9fcb3ea3e7; fixture_sha256=411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20; output_sha256=4929e1f1c3a3b81f3acd3a5abb955d61071f6016b4b50c116744a08b2b65cc18; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确处理两种场景并避免写入，但对降级门禁依据和完整预览的记录较简略。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-006-site-less-degraded-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-006-site-less-degraded-gate`.
+- Fixture SHA-256: `411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20`
+- Prompt SHA-256: `3543da7f86f46fe1ddba91b579642c6082b99cf4ee707ac9b96a7d9fcb3ea3e7`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `bfa553ee1e9614c42bec50e00faa33ed1a614260acdb1011ab1116e8b73db2dd`

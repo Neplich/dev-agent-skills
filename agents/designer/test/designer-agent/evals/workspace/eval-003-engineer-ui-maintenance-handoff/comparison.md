@@ -14,6 +14,258 @@
 - Fixture version/source: canonical manifest `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a` from `agents/designer/test/designer-agent/evals/workspace/eval-003-engineer-ui-maintenance-handoff`.
 - Fixture SHA-256: `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a`
 - Prompt SHA-256: `92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e8c75de1d6f9996313bad1fce4ede6ed7cde9c08fd07355edd02169db57e8e68`
+- Skill overlay SHA-256: `bb133a8c85c48881a2031584ba17c553a39faea708969d0cf9c8fc7668592bf7`
+- Judge schema SHA-256: `642d6c7ee5330dc1af39bc9648e9c1bffdb74e1229fc98a9c317e40e13baaebf`
+- Eval definition SHA-256: `138aebdae4a1049db8b791a6754cc321fff06d447fcae99b0206d1d5aa26e929`
+- Metadata SHA-256: `f547a888a015d9e9862374a63fae63a3c03679e1e0f3c3c280b9cf0370c3b020`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_engineer_design_handoff` | PASS | With-skill output identifies an Engineer UI maintenance handoff. |
+| `uses_confirmed_feature_path` | PASS | Both delivered design files use feature_path customer-portal/profile-settings and cite the PM PRD and Engineer TRD as sources. |
+| `routes_design_skills` | PASS | The with-skill lane delivers distinct UI/UX and visual-design artifacts covering the requested hierarchy and primary-button emphasis. |
+| `writes_design_outputs_only` | PASS | Raw git evidence shows only the two requested files under docs/design/customer-portal/profile-settings were added; no code or engineering files were changed. |
+| `hands_back_to_engineer` | PASS | Output explicitly hands the work back to engineer-agent for TRD, implementation planning, frontend implementation, and tests. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=a320980f13500bbc1eeb5e2867d0d2d979b967c9f74e657017adb016ee760306; snapshot_sha256=75e2180aa54c1df9a058ffb61f16a678ecef5521ab237d8b7979bb459fa6f408
+- Behavior: Completed the design handoff with UI/UX and visual-system deliverables, preserving the engineering boundary.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=9b00abe61d6c455b8fbadd1d6e357ec079ed526894695147d44920530ded79d2; snapshot_sha256=af97cfa4a69361bf73f3c35d7f82ada31d4483f28692bbcf528d03300a0063d7
+- Behavior: Produced a generic DESIGN.md but modified the Engineer TRD and did not demonstrate the required design-skill routing or explicit handoff boundary.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `designer-agent`
+- Eval: `eval-003-engineer-ui-maintenance-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a` from `agents/designer/test/designer-agent/evals/workspace/eval-003-engineer-ui-maintenance-handoff`.
+- Fixture SHA-256: `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a`
+- Prompt SHA-256: `92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e8c75de1d6f9996313bad1fce4ede6ed7cde9c08fd07355edd02169db57e8e68`
+- Skill overlay SHA-256: `bb133a8c85c48881a2031584ba17c553a39faea708969d0cf9c8fc7668592bf7`
+- Judge schema SHA-256: `642d6c7ee5330dc1af39bc9648e9c1bffdb74e1229fc98a9c317e40e13baaebf`
+- Eval definition SHA-256: `138aebdae4a1049db8b791a6754cc321fff06d447fcae99b0206d1d5aa26e929`
+- Metadata SHA-256: `f547a888a015d9e9862374a63fae63a3c03679e1e0f3c3c280b9cf0370c3b020`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_engineer_design_handoff` | PASS | The design artifacts treat the work as design input and explicitly assign TRD, implementation, and testing to engineer-agent. |
+| `uses_confirmed_feature_path` | PASS | Both delivered files use feature_path customer-portal/profile-settings and reference the matching PRD and TRD paths. |
+| `routes_design_skills` | NOT_EXERCISED | The artifacts demonstrate separate UI/UX and visual-design deliverables, but locked evidence does not prove the hidden skill-routing decision itself. |
+| `writes_design_outputs_only` | PASS | Only the permitted ui-ux-spec.md and visual-system.md design files are delivered; no code, shell commands, deployment configuration, or implementation checklist is output. |
+| `hands_back_to_engineer` | PASS | The output explicitly hands responsibility to engineer-agent for TRD, IMPLEMENTATION_PLAN.md, frontend implementation, and tests. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=d2ffffe6e34a41db0b7c5557e9bff45d6222ec30c79be7290908e7f80fae0e84; snapshot_sha256=d61b6ae5095d0d371b0679de4849260fa2ef55880b977bfbdd2a6b34bcc5174c
+- Behavior: Delivered the two requested design artifacts, covering information hierarchy, responsive behavior, and primary-button visual states, then handed implementation ownership back to engineer-agent.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=2f986555fa7c8cdcfdb01043d597f84785cff5995204d9484576655614fa3549; snapshot_sha256=174cd4a14c8707b97642816f26c659606958f7e20f427913cd5e81ff3cfa9c91
+- Behavior: Delivered a noncanonical DESIGN.md, modified the TRD, and included an implementation checklist, providing a weaker baseline against the requested design-only handoff.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `designer-agent`
+- Eval: `eval-003-engineer-ui-maintenance-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a` from `agents/designer/test/designer-agent/evals/workspace/eval-003-engineer-ui-maintenance-handoff`.
+- Fixture SHA-256: `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a`
+- Prompt SHA-256: `92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e8c75de1d6f9996313bad1fce4ede6ed7cde9c08fd07355edd02169db57e8e68`
+- Skill overlay SHA-256: `bb133a8c85c48881a2031584ba17c553a39faea708969d0cf9c8fc7668592bf7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `138aebdae4a1049db8b791a6754cc321fff06d447fcae99b0206d1d5aa26e929`
+- Metadata SHA-256: `f547a888a015d9e9862374a63fae63a3c03679e1e0f3c3c280b9cf0370c3b020`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_engineer_design_handoff` | PASS | With-skill artifacts identify the TRD as the design input, scope the work to UI/UX and visual design, and explicitly state that engineer-agent continues implementation. |
+| `uses_confirmed_feature_path` | PASS | Both delivered files use feature_path customer-portal/profile-settings and reference the matching PM PRD and Engineer TRD. |
+| `routes_design_skills` | PASS | Raw evidence records ui-ux-design and visual-design in the with_skill lane; delivered artifacts cover hierarchy/structure and primary-button visual rules. |
+| `writes_design_outputs_only` | PASS | With-skill delivery contains only docs/design/customer-portal/profile-settings/ui-ux-spec.md and visual-system.md; git evidence shows no code or engineering-file changes. |
+| `hands_back_to_engineer` | PASS | Final output and both delivered files explicitly hand off to engineer-agent for TRD, IMPLEMENTATION_PLAN.md, frontend implementation, and testing. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=4da1bfaf62fafa54413c69b5933c7fca4109797ba56765996dff6040cd3e72d6; snapshot_sha256=22925148f6ce2275e6e16196fd92574d1227a12c5ef66437f96b114c9199b9ed
+- Behavior: Produced the two required design artifacts, preserved the fixture, routed both UI/UX and visual design work, and handed implementation back to engineer-agent.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=0b607cc03d95faa8ff6a122839384109aced7227aa3e5428261f61064cf3c710; snapshot_sha256=7f0373746238a9088d59c8ebc8b63711869497b15eb90248a11b765920240211
+- Behavior: Produced a design document at an unapproved DESIGN.md path and modified the Engineer TRD, without identifying the required handoff routing or skills.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `designer-agent`
+- Eval: `eval-003-engineer-ui-maintenance-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a` from `agents/designer/test/designer-agent/evals/workspace/eval-003-engineer-ui-maintenance-handoff`.
+- Fixture SHA-256: `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a`
+- Prompt SHA-256: `92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **CLEAN**
+- Target skill tree SHA-256: `a2af40534bea6300e7542181039cc4ea7fb5bf91ca59c58d810e2ecc81053275`
+- Skill overlay SHA-256: `3e0603def6ab2fd4b5f3adf5c8eae0d13b31a6e105737c16ebc52acd20d08553`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `138aebdae4a1049db8b791a6754cc321fff06d447fcae99b0206d1d5aa26e929`
+- Metadata SHA-256: `f547a888a015d9e9862374a63fae63a3c03679e1e0f3c3c280b9cf0370c3b020`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_engineer_design_handoff` | PASS | with_skill 交付为 UI/UX 与视觉设计规范，并明确设计阶段停止、下一步由 engineer-agent 实施前端更新；产物来源关联 PRD/TRD。 |
+| `uses_confirmed_feature_path` | PASS | 两份设计产物均使用 customer-portal/profile-settings，并分别引用同路径 PRD 与 TRD。 |
+| `routes_design_skills` | NOT_EXERCISED | 最终输出和锁定原始证据证明了 UI/UX 与视觉产物，但无法证明实际选择或调用了 ui-ux-design、visual-design skill。 |
+| `writes_design_outputs_only` | PASS | with_skill 仅新增 ui-ux-spec.md 与 visual-system.md；无代码、测试、命令、部署配置或工程实现清单。 |
+| `hands_back_to_engineer` | FAIL | 输出说明由 engineer-agent 继续前端实现，但未说明 Engineer 继续 TRD、IMPLEMENTATION_PLAN 和 test，未完整满足要求。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=8f5783b747c66e83625b2bdef564535ff1b61d1bf4a5f33ad58a9479614d68e3; snapshot_sha256=bba91002becb5ec0b6cd1e6a35005f0a5317e928de950392807165ba91f67866
+- Behavior: 正确产出指定路径的 UI/UX 与视觉规范，使用确认的 feature_path 和 PRD/TRD 来源，并回交 engineer-agent；但未完整说明后续 TRD、IMPLEMENTATION_PLAN、code、test 责任。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=441ca6e3f5650374a36b4a6742c17d3001fd835936d4575f4cdac996f819d786; snapshot_sha256=eddf0b8b2ac50a2f41e5439d57df53ab9c3a82988eeb01eb734d9193a6d9f4d3
+- Behavior: 产出了错误路径和合并式 DESIGN.md，并修改 TRD，未满足规定的设计产物边界。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- hands_back_to_engineer 未完整说明 Engineer 继续 TRD、IMPLEMENTATION_PLAN 和 test。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `designer-agent`
+- Eval: `eval-003-engineer-ui-maintenance-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a` from `agents/designer/test/designer-agent/evals/workspace/eval-003-engineer-ui-maintenance-handoff`.
+- Fixture SHA-256: `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a`
+- Prompt SHA-256: `92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `a2af40534bea6300e7542181039cc4ea7fb5bf91ca59c58d810e2ecc81053275`

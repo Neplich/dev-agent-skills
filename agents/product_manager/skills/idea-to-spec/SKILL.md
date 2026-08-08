@@ -37,6 +37,15 @@ Resolve `_internal/_shared/skill-map.md` from the active installed
   DevOps/Security mirror impacts; wait before moves or new child docs. Rejection
   keeps the current path and normal version-bump flow.
 
+Make the lane checkpoint explicit with `lane`, `current_feature_identity`,
+`delta`, `blast_radius`, `recommended_iteration`, `candidate_child_paths`,
+`section_migration_map`, `downstream_mirror_impacts`, `durable_docs_pending`,
+and `confirmation_required`. Existing updates name the applicable
+change-impact/iteration path rather than silently regenerating documents.
+Nested-feature handoffs always render the complete five-field identity and path
+evidence. Do not write or move durable PM documents until the required user
+confirmation is recorded.
+
 When entered through `pm-agent`, continue the discovery/iteration step itself;
 do not stop at a dispatcher summary or jump to implementation artifacts.
 

@@ -14,6 +14,258 @@
 - Fixture version/source: canonical manifest `01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756` from `agents/devops/test/devops-agent/evals/workspace/eval-1-route-ci-readiness`.
 - Fixture SHA-256: `01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756`
 - Prompt SHA-256: `0724714db74641157eee897f7a5f22bd3898815bc5861281390b10275748d63d`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d688e19912770823b0aab741fb33c331e4eee7536315cf3080fbad81ca1e904f`
+- Skill overlay SHA-256: `70f1770669d41ad65d9ae01cc50a5867620d9ff0a681a78c32019078d728ba00`
+- Judge schema SHA-256: `c7039dc2c9d829f51219a90df8027752cbbdaa32f7d8b6eb4b07c94a61b14320`
+- Eval definition SHA-256: `bf26d801d111c094ffb06e4f6cd89e1f8a4b7c9a1e7fc76f302a33c493a411f4`
+- Metadata SHA-256: `7dd2e52b200852fa05d4eb58b51c5b9cc7af5f7c62ced61947f3e3d4b9b7a2c0`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_primary_to_cicd` | PASS | with_skill 明确选择 `cicd-bootstrap` 为第一阶段当前主 route。 |
+| `keeps_deployment_context` | PASS | with_skill 明确基于现有 `deploy/docker` 镜像契约，并引用 `deploy/docker/README.md`。 |
+| `names_followups` | PASS | with_skill 明确将环境变量审计交给 `env-config-auditor`，回滚与故障文档交给 `incident-playbook-writer`。 |
+| `does_not_run_all_skills` | PASS | with_skill 区分当前 `cicd-bootstrap` 与两个后续 specialist，未同时执行所有 DevOps skill。 |
+| `does_not_write_workflow` | PASS | delivery_snapshot 为空，且 git evidence 显示 HEAD、分支、工作区和未跟踪文件均未变化；输出也明确“不修改配置”。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0724714db74641157eee897f7a5f22bd3898815bc5861281390b10275748d63d; fixture_sha256=01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756; output_sha256=dd69a19513e4341a139702188809099d1967413588e179c53a3e0d21de955ca5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确完成 DevOps 路由决策：选择 CI/CD 主 route，保留部署上下文，安排后续审计，并保持只读。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0724714db74641157eee897f7a5f22bd3898815bc5861281390b10275748d63d; fixture_sha256=01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756; output_sha256=147fb0d1f7006c6bf0d94947517fd349bda1e0dae3d4acd4eb3e5484fd630c31; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 未能明确选择 `cicd-bootstrap` 主 route，给出较泛化的全链路顺序，但同样未修改文件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `devops-agent`
+- Eval: `eval-001-route-ci-readiness`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756` from `agents/devops/test/devops-agent/evals/workspace/eval-1-route-ci-readiness`.
+- Fixture SHA-256: `01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756`
+- Prompt SHA-256: `0724714db74641157eee897f7a5f22bd3898815bc5861281390b10275748d63d`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d688e19912770823b0aab741fb33c331e4eee7536315cf3080fbad81ca1e904f`
+- Skill overlay SHA-256: `70f1770669d41ad65d9ae01cc50a5867620d9ff0a681a78c32019078d728ba00`
+- Judge schema SHA-256: `c7039dc2c9d829f51219a90df8027752cbbdaa32f7d8b6eb4b07c94a61b14320`
+- Eval definition SHA-256: `bf26d801d111c094ffb06e4f6cd89e1f8a4b7c9a1e7fc76f302a33c493a411f4`
+- Metadata SHA-256: `7dd2e52b200852fa05d4eb58b51c5b9cc7af5f7c62ced61947f3e3d4b9b7a2c0`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_primary_to_cicd` | PASS | with_skill 明确将 `cicd-bootstrap` 列为第一阶段和下一步主 route，理由是设计 GitHub Actions PR 检查。 |
+| `keeps_deployment_context` | PASS | with_skill 引用了 `PM_HANDOFF.md` 与 `deploy/docker/README.md`，并说明基于现有 Docker 入口和仓库命令设计。 |
+| `names_followups` | PASS | with_skill 明确将 `env-config-auditor` 和 `incident-playbook-writer` 分别作为环境变量审计与回滚手册后续 route。 |
+| `does_not_run_all_skills` | PASS | with_skill 区分了第一阶段主 route 与两个后续 route，并未同时执行所有 DevOps skill。 |
+| `does_not_write_workflow` | PASS | with_skill 明确表示本轮尚未修改配置；锁定 git 证据显示 head、分支和工作区均未变化。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0724714db74641157eee897f7a5f22bd3898815bc5861281390b10275748d63d; fixture_sha256=01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756; output_sha256=5e59bb42f7e364eccb8e228dff9995f05e3bf02a205d4bae31997809fa8c7434; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确确定 CI/CD 主 route，保留 Docker 部署上下文，列出后续审计 route，并遵守先路由、不写 workflow 的要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0724714db74641157eee897f7a5f22bd3898815bc5861281390b10275748d63d; fixture_sha256=01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756; output_sha256=6d001740e069fb45988ba7599474da307c10c2a370fd231c9e2b3ae799c784cd; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了合理的处理顺序和后续交付，但未使用用户要求的具体 route 名称。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `devops-agent`
+- Eval: `eval-001-route-ci-readiness`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756` from `agents/devops/test/devops-agent/evals/workspace/eval-1-route-ci-readiness`.
+- Fixture SHA-256: `01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756`
+- Prompt SHA-256: `0724714db74641157eee897f7a5f22bd3898815bc5861281390b10275748d63d`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d688e19912770823b0aab741fb33c331e4eee7536315cf3080fbad81ca1e904f`
+- Skill overlay SHA-256: `70f1770669d41ad65d9ae01cc50a5867620d9ff0a681a78c32019078d728ba00`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bf26d801d111c094ffb06e4f6cd89e1f8a4b7c9a1e7fc76f302a33c493a411f4`
+- Metadata SHA-256: `7dd2e52b200852fa05d4eb58b51c5b9cc7af5f7c62ced61947f3e3d4b9b7a2c0`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_primary_to_cicd` | PASS | with_skill 明确将 `cicd-bootstrap` 作为第一步和当前主交付，理由是 GitHub Actions PR 检查缺口。 |
+| `keeps_deployment_context` | PASS | with_skill 明确引用 `PM_HANDOFF.md` 和 `deploy/docker/README.md`，并基于现有 Docker 部署资产规划。 |
+| `names_followups` | PASS | with_skill 明确将 `env-config-auditor` 作为环境变量后续，将 `incident-playbook-writer` 作为回滚文档后续。 |
+| `does_not_run_all_skills` | PASS | with_skill 明确声明不同时执行所有 specialist，并将当前范围限定为路由决策，等待确认后再进入主 route。 |
+| `does_not_write_workflow` | PASS | with_skill 明确声明本阶段不编写 workflow；原始 git evidence 显示 HEAD、分支和工作区均未变化。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0724714db74641157eee897f7a5f22bd3898815bc5861281390b10275748d63d; fixture_sha256=01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756; output_sha256=bdce494256c0f06f00a7e41db44b99b48054298b46046baee763e6a13445333c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 准确完成 CI/CD 主 route、部署上下文保留、两个后续 route 的路由决策，并保持未修改配置。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0724714db74641157eee897f7a5f22bd3898815bc5861281390b10275748d63d; fixture_sha256=01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756; output_sha256=80bd0d20eb8e7ae6a7a58f1162a40c33b2e0a6fb79bcafc323ded74b4245baab; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了较宽泛的 DevOps 顺序建议，未使用要求中的 route 名称，但保持只读且未修改文件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `devops-agent`
+- Eval: `eval-001-route-ci-readiness`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756` from `agents/devops/test/devops-agent/evals/workspace/eval-1-route-ci-readiness`.
+- Fixture SHA-256: `01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756`
+- Prompt SHA-256: `0724714db74641157eee897f7a5f22bd3898815bc5861281390b10275748d63d`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d688e19912770823b0aab741fb33c331e4eee7536315cf3080fbad81ca1e904f`
+- Skill overlay SHA-256: `6358c6bd5e1060e5b25b54eb5840f7abb8142f35db1325c949d7f95d2230c5ff`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bf26d801d111c094ffb06e4f6cd89e1f8a4b7c9a1e7fc76f302a33c493a411f4`
+- Metadata SHA-256: `7dd2e52b200852fa05d4eb58b51c5b9cc7af5f7c62ced61947f3e3d4b9b7a2c0`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_primary_to_cicd` | PASS | with_skill explicitly selects `cicd-bootstrap` first and ties it to the GitHub Actions PR check gap. |
+| `keeps_deployment_context` | PASS | with_skill cites the existing `deploy/docker/` assets and README, and the locked manifest confirms that context was present. |
+| `names_followups` | PASS | with_skill explicitly assigns environment-variable auditing to `env-config-auditor` and rollback documentation to `incident-playbook-writer`. |
+| `does_not_run_all_skills` | PASS | with_skill distinguishes the current `cicd-bootstrap` route from the two later checks and excludes unrelated expansion such as `deployment-planner`. |
+| `does_not_write_workflow` | PASS | with_skill states the scope is planning only and that configuration is not modified; raw git evidence shows unchanged HEAD, empty diff, and no untracked files. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0724714db74641157eee897f7a5f22bd3898815bc5861281390b10275748d63d; fixture_sha256=01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756; output_sha256=2bcff0f3405cf0957c203fc656affc25a2c7c0d91d2baa77c73015b2ecbec1d9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly routes the work to `cicd-bootstrap` first, preserves existing Docker deployment context, names both follow-up routes, limits scope to planning, and leaves the repository unchanged.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0724714db74641157eee897f7a5f22bd3898815bc5861281390b10275748d63d; fixture_sha256=01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756; output_sha256=eceee4654ab4e6c23e46c3e905d521736eb516bc8cbd220755595bd337b64837; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a generic DevOps sequence and recognizes the deployment README, environment audit, and rollback documentation, but does not name the required specialist routes precisely.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `devops-agent`
+- Eval: `eval-001-route-ci-readiness`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756` from `agents/devops/test/devops-agent/evals/workspace/eval-1-route-ci-readiness`.
+- Fixture SHA-256: `01efe0f9d93680399a4e60a121c590987f01c7feeb295910c354e36c32f0a756`
+- Prompt SHA-256: `0724714db74641157eee897f7a5f22bd3898815bc5861281390b10275748d63d`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `d688e19912770823b0aab741fb33c331e4eee7536315cf3080fbad81ca1e904f`

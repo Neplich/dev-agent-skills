@@ -14,6 +14,189 @@
 - Fixture version/source: canonical manifest `a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192` from `agents/product_manager/test/roadmap-gen/workspace/eval-2-phase-classification`.
 - Fixture SHA-256: `a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192`
 - Prompt SHA-256: `129b1e07f1b508c4a87a365c1e9c5e8cf169856473baee027f1d68878bcd93f2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `74b972ac8dbd7706448e20025f6995b87c544e99309b65961f70d0e86a7bd191`
+- Skill overlay SHA-256: `bddee41393bca0a60880eaa8d81044ec84f2c1d751e6af66c6178450b19850d3`
+- Judge schema SHA-256: `828832f79453e0784207e366cba87f24e08c6f3017321b257129f96f3076509d`
+- Eval definition SHA-256: `9bebcff97f69229af9d2fc6b841c4826a4650eeb5ee2c6254e8400fa19d31afa`
+- Metadata SHA-256: `ae0af75c7768cc5a422a172a7778c85838314f028847e67a9b64a099fa24dc99`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `open_closed` | PASS | with_skill 文档将 August/September 标为当前冲刺与近期计划，并将 closed 的 July milestone 放入“已完成”区域。 |
+| `large_backlog` | PASS | with_skill 文档明确 backlog 总数 128、实际获取 6 条，仅列出 3 条，其余 122 条未列出，保持摘要可读。 |
+| `issue_details` | PASS | with_skill 文档按标签/类型分组展示 issue，并为各 issue 保留 GitHub 链接、标签和 assignee/unassigned 状态。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=129b1e07f1b508c4a87a365c1e9c5e8cf169856473baee027f1d68878bcd93f2; fixture_sha256=a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192; output_sha256=aafa4138e6d96f306c9e5ea32c5eb643eb7b6dd32647a7d5b37333e03db79c8c; snapshot_sha256=8d42f15c91d81bbee8814012ce6e14b59931f65e54e82ad2b4b8cc18a2bf1503
+- Behavior: 完整生成并交付路线图，满足全部三项断言。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=129b1e07f1b508c4a87a365c1e9c5e8cf169856473baee027f1d68878bcd93f2; fixture_sha256=a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192; output_sha256=6dcc72ef9a96a0def639ce1d93d84adfacac5b8afd783476d9e4996657ecce60; snapshot_sha256=bf58ec5257f4abb6d6f56c4a92df7274d0ca5715c712aa7adc4da2bd6356ef42
+- Behavior: 也生成了可用路线图并满足全部三项断言；作为比较基线记录。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `roadmap-gen`
+- Eval: `eval-002-phase-classification`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192` from `agents/product_manager/test/roadmap-gen/workspace/eval-2-phase-classification`.
+- Fixture SHA-256: `a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192`
+- Prompt SHA-256: `129b1e07f1b508c4a87a365c1e9c5e8cf169856473baee027f1d68878bcd93f2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `74b972ac8dbd7706448e20025f6995b87c544e99309b65961f70d0e86a7bd191`
+- Skill overlay SHA-256: `bddee41393bca0a60880eaa8d81044ec84f2c1d751e6af66c6178450b19850d3`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `9bebcff97f69229af9d2fc6b841c4826a4650eeb5ee2c6254e8400fa19d31afa`
+- Metadata SHA-256: `ae0af75c7768cc5a422a172a7778c85838314f028847e67a9b64a099fa24dc99`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `open_closed` | PASS | with_skill 的 docs/roadmap.md 将 August/September 2026 标为开放中的当前/近期计划，并将 July 2026 单列为已完成且注明 closed 状态。 |
+| `large_backlog` | PASS | 文档明确记录 backlog 总数 128、已获取 6 条，并仅展示有限明细，同时说明其余条目未展开，满足摘要/截断可读性要求。 |
+| `issue_details` | PASS | 文档按冲刺及 issue 类型分组，并为列出的 issue 保留编号、标题、标签、assignee 状态和 GitHub 链接。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=129b1e07f1b508c4a87a365c1e9c5e8cf169856473baee027f1d68878bcd93f2; fixture_sha256=a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192; output_sha256=26fe839abeda750078b0db64b64d2eab83823b589de53ed5c185a552ca86e6ba; snapshot_sha256=672f4b3db1c3f44e2599b2afad0f9bd9acc254a403540873c4da838c937d861c
+- Behavior: 已生成 docs/roadmap.md，注明数据时点，区分开放/关闭里程碑，压缩 128 项 backlog，并保留 issue 分类、assignee 与链接。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=129b1e07f1b508c4a87a365c1e9c5e8cf169856473baee027f1d68878bcd93f2; fixture_sha256=a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192; output_sha256=eadf9794215ff3c9410bcb9b4c1069ef592f9960aac3effac08f7bb0d449a7c8; snapshot_sha256=0ced39dd5f353b595e41925dabedbed7e94bed3577c062881f39424d6c47f06d
+- Behavior: 已生成路线图文件并注明数据时点；内容覆盖里程碑、backlog 摘要及 issue 标签、负责人和链接。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `roadmap-gen`
+- Eval: `eval-002-phase-classification`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192` from `agents/product_manager/test/roadmap-gen/workspace/eval-2-phase-classification`.
+- Fixture SHA-256: `a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192`
+- Prompt SHA-256: `129b1e07f1b508c4a87a365c1e9c5e8cf169856473baee027f1d68878bcd93f2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a12253d9a3d1d231837468fc266a18cbef8c731ab282a55d4d464a493ca02f11`
+- Skill overlay SHA-256: `c50d53c79d2138148c86c2ddaa4ea3403b46c5d6a9d3d67baf48a5203cd6d0b8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `9bebcff97f69229af9d2fc6b841c4826a4650eeb5ee2c6254e8400fa19d31afa`
+- Metadata SHA-256: `ae0af75c7768cc5a422a172a7778c85838314f028847e67a9b64a099fa24dc99`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `open_closed` | PASS | 路线图将 August/September 2026 的 open milestone 放入当前/近期计划，并将 July 2026 的 closed milestone 放入“已完成”区域。 |
+| `large_backlog` | PASS | 明确说明 backlog 总数为 128，仅列出 3 条未关联 milestone 的 issue，并注明另有 125 条未列出，避免逐条展开。 |
+| `issue_details` | FAIL | 路线图按标签/类型分组，并为列出的 milestone issue 保留 assignee 和链接；但 backlog 中 #3301 和 #3303 的 assignee 未保留，#3302 也未明确标示未分配，未完整满足该断言。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=129b1e07f1b508c4a87a365c1e9c5e8cf169856473baee027f1d68878bcd93f2; fixture_sha256=a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192; output_sha256=7691f12e9ef826b1766feea0d5b386c98471f31e916cf4d93f7a7484071cb9c5; snapshot_sha256=0bfec11802aae896cebe9decfabf91a08a0712377d8dbb83dae4ab5c58f3685c
+- Behavior: 生成了结构化路线图，清楚区分 open/closed milestone，压缩 backlog，并按类别呈现 issue；但 backlog 表格遗漏部分 assignee 信息。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=129b1e07f1b508c4a87a365c1e9c5e8cf169856473baee027f1d68878bcd93f2; fixture_sha256=a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192; output_sha256=8560ed7227277402ff8474fc9d3abd9703d1c08071fe455963da548eabaf3f69; snapshot_sha256=89761b7d281c685b29023bc1639a9697118d124d47d6c7bb9e91fb92e1cabe73
+- Behavior: 生成了路线图并声明压缩 backlog；区分了 milestone 状态并保留了大部分 issue 的标签、负责人和链接。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 路线图未为所有列出的 backlog issue 保留 assignee 信息。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `roadmap-gen`
+- Eval: `eval-002-phase-classification`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192` from `agents/product_manager/test/roadmap-gen/workspace/eval-2-phase-classification`.
+- Fixture SHA-256: `a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192`
+- Prompt SHA-256: `129b1e07f1b508c4a87a365c1e9c5e8cf169856473baee027f1d68878bcd93f2`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `a12253d9a3d1d231837468fc266a18cbef8c731ab282a55d4d464a493ca02f11`

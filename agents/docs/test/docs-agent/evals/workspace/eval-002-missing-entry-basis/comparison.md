@@ -14,6 +14,250 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/docs/test/docs-agent/evals/workspace/eval-002-missing-entry-basis`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
+- Skill overlay SHA-256: `56a47f4293d7435d43e789574be1e08a3a03c3c8021043b25cccb472ae22b6c6`
+- Judge schema SHA-256: `da898e3ecfd0169570b22be7c73cd730ef2fd22e3bf1c5b559383dc76454ff0d`
+- Eval definition SHA-256: `bf1b5d8af479146ff04e48ba6dcc39176cc5d38f4f20e513ea504da5a2a472c2`
+- Metadata SHA-256: `9e2c43ddcdebfd4398d2a8f32a222c29dd71f706e06b85ffb24ea4623239c500`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `guides_to_pm_agent` | PASS | with_skill 明确说明无 PM handoff、等价确认文档链，并要求先由 pm-agent 补齐和确认 handoff。 |
+| `does_not_execute_bootstrap` | PASS | with_skill 声明停留在路由边界、不创建或修改文档站；git_status、workspace_manifest、delivery_snapshot 均为空，且无变更证据。 |
+| `names_missing_credentials` | FAIL | with_skill 指出宿主仓库路径缺失，但未说明“显式建站请求加确认仓库路径”可构成 docs-site-bootstrap specialist entry basis。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=56c80ca31c94e3485904e29fa5cb186a358b2c204e72e7c23f3f4e313133540c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确执行 PM 路由并保持下游建站边界，但未完整说明可解锁的 specialist entry basis。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=a2280a0950e4b111161e1a023cdeb5012e0a17d22c681968022175369704a9e3; snapshot_sha256=6330393a243b8b937565be05cdd389635373021b9861f37889a2a2a81f72da12
+- Behavior: 直接声称已搭建正式文档站，并交付 index.html、styles.css、script.js；git_status 显示未跟踪文件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未完整说明可由显式建站请求与确认仓库路径解锁 docs-site-bootstrap specialist entry basis。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-002-missing-entry-basis`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/docs/test/docs-agent/evals/workspace/eval-002-missing-entry-basis`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
+- Skill overlay SHA-256: `56a47f4293d7435d43e789574be1e08a3a03c3c8021043b25cccb472ae22b6c6`
+- Judge schema SHA-256: `da898e3ecfd0169570b22be7c73cd730ef2fd22e3bf1c5b559383dc76454ff0d`
+- Eval definition SHA-256: `bf1b5d8af479146ff04e48ba6dcc39176cc5d38f4f20e513ea504da5a2a472c2`
+- Metadata SHA-256: `9e2c43ddcdebfd4398d2a8f32a222c29dd71f706e06b85ffb24ea4623239c500`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `guides_to_pm_agent` | PASS | With-skill output explicitly states that no PM handoff, confirmation chain, or specialist entry basis exists and asks the user to have pm-agent complete and confirm the Docs handoff. |
+| `does_not_execute_bootstrap` | PASS | With-skill output sets the execution boundary at routing, reports no delivered files or manifest, and raw git evidence shows no changes. |
+| `names_missing_credentials` | PASS | With-skill output identifies the unconfirmed host repository path as missing, while routing the explicit formal-docs request toward docs-site-bootstrap after the required repository and handoff information is confirmed. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=5c9e6eb9c0422444143e9c40b1844afa1139bf48a8e0f046c8ee177492cdc60d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly stopped at the routing boundary, identified missing PM and repository context, and directed the user to pm-agent.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=191d6951ebd31de5bce5b6425efac1f9ab9e14324b4ab6a26d1bebf61002f06e; snapshot_sha256=a984dd1aface0c913380e76321d0282752d94eece43ffd356fe9d4cc8137d8e2
+- Behavior: Fresh baseline executed the ambiguous request, created a static documentation site with README, HTML, CSS, and JavaScript, and provided local preview instructions.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-002-missing-entry-basis`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/docs/test/docs-agent/evals/workspace/eval-002-missing-entry-basis`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
+- Skill overlay SHA-256: `56a47f4293d7435d43e789574be1e08a3a03c3c8021043b25cccb472ae22b6c6`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bf1b5d8af479146ff04e48ba6dcc39176cc5d38f4f20e513ea504da5a2a472c2`
+- Metadata SHA-256: `9e2c43ddcdebfd4398d2a8f32a222c29dd71f706e06b85ffb24ea4623239c500`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `guides_to_pm_agent` | PASS | with_skill 明确指出缺少 PM handoff，并要求通过 pm-agent 补充范围、来源文档和授权状态。 |
+| `does_not_execute_bootstrap` | PASS | with_skill 仅完成路由，明确在信息齐备前不会创建或修改文档站文件；git_status、manifest 和 delivery_snapshot 均为空。 |
+| `names_missing_credentials` | FAIL | with_skill 指出宿主仓库路径未确认，但未说明“显式建站请求 + 已确认仓库路径”可构成 docs-site-bootstrap 的 specialist entry basis。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=885034b2590436683cd9bd15fa39db274ff875ad40f752362bf922dc55fe4c83; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确停留在路由阶段，指出 PM handoff、宿主仓库路径和范围缺失，并引导通过 pm-agent 补充信息。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=52fb6e934d7460fe6f3d440ce9b589a69c466159776d09367b0ae50680fdc8c2; snapshot_sha256=3622d10bb8fc645d499df13e60bdf6df0863e2e65fdcebdc352bb7e21c4773ed
+- Behavior: 将模糊请求直接执行为文档站建设，并交付 index.html、script.js 和 styles.css。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未明确说明显式建站请求与确认仓库路径可构成 specialist entry basis。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-002-missing-entry-basis`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/docs/test/docs-agent/evals/workspace/eval-002-missing-entry-basis`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e64e4dc492a2ff92be09822529f9abb1fbd17f4d0148b3045e0162382c5d46d3`
+- Skill overlay SHA-256: `749fef364aaabb23f2e52b059edb29be9012a21c64c9a31f0ad0b387e6a4d9e4`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bf1b5d8af479146ff04e48ba6dcc39176cc5d38f4f20e513ea504da5a2a472c2`
+- Metadata SHA-256: `9e2c43ddcdebfd4398d2a8f32a222c29dd71f706e06b85ffb24ea4623239c500`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `guides_to_pm_agent` | FAIL | with_skill 明确指出缺少有效的 PM Docs 交接包及相关前置上下文，但未引导用户经 `pm-agent` 完成分类和上下文准备。 |
+| `does_not_execute_bootstrap` | PASS | with_skill 明确表示暂不能执行；git_status、git_diff、workspace_manifest 和 delivery_snapshot 均为空，未见建站产物或 bootstrap 执行证据。 |
+| `names_missing_credentials` | PASS | with_skill 指出缺少主机项目/仓库绝对路径，并说明补齐后将路由至 `docs-site-bootstrap`，语义上对应确认仓库路径后具备 specialist entry basis。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=764b449f318a6e9a058620118d6e13984965cb4270634831d4736187bdef701e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为 docs-site-bootstrap 请求，但因缺少 PM 交接包、仓库路径及上下文而暂停执行并请求补充信息。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=dd9c7c68f963c1d62b89f672d65d45530f0057787e971c37934d1da770bd95de; snapshot_sha256=4c5d649d4eb887f526ef236f97459fa0b897c0f8a5e9a0a40d4f3d0a4074265b
+- Behavior: 直接创建并交付静态文档站文件，未进行 PM handoff 或入口条件检查。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未提及或引导用户通过 `pm-agent` 完成分类和前置上下文。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-002-missing-entry-basis`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/docs/test/docs-agent/evals/workspace/eval-002-missing-entry-basis`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `e64e4dc492a2ff92be09822529f9abb1fbd17f4d0148b3045e0162382c5d46d3`

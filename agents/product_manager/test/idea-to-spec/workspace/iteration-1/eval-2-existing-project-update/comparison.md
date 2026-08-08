@@ -14,6 +14,192 @@
 - Fixture version/source: canonical manifest `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update`.
 - Fixture SHA-256: `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a`
 - Prompt SHA-256: `6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `c0da2e0366232678672d0c64ce9fa764d3b78f3caaaa8493348af1a7e1cd00fe`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `34ccc67474b5d5409e42b47f3e143e51f307a39f3959fa17d3be62715a379bc6`
+- Eval definition SHA-256: `2eb26345c0320238f13795dd231ba4c205d452d230de64d35bcf4cc4acb002f8`
+- Metadata SHA-256: `d7142d966569c4d32f40a170b0f92f6780789b8a982e6faeead586a238a9f649`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `update` | PASS | With_skill explicitly classifies the request as an existing-project update. |
+| `delta_blast_radius` | PASS | It presents the impact scope and affected documents before the detailed design recommendations. |
+| `assertion_3` | PASS | It recommends incremental iteration and explicitly names change-impactor, rather than defaulting to a full rewrite. |
+| `assertion_4` | PASS | It clearly identifies PRD.md, DECISIONS.md, and TRD.md with their paths and document roles, plus proposed new document types. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441; fixture_sha256=4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a; output_sha256=f8330f3ad6499174bf7c2e89beff588cd5da018be8f56cd57ca9b94191cc0648; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly recognized an existing-project update, analyzed delta and blast radius, recommended incremental iteration, and identified affected document paths.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441; fixture_sha256=4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a; output_sha256=16c0baa4fb7cec97a665160511b3111d95c21e42ed3419224325abd5d0f9e027; snapshot_sha256=b3f6b96d58e3217a804ace2cc451de987edbea4af41c35df276d5eb0d9992da5
+- Behavior: Fresh baseline produced a substantial implementation-oriented update and modified the three existing documents, but is comparison context only.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `idea-to-spec`
+- Eval: `eval-002-existing-project-update`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update`.
+- Fixture SHA-256: `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a`
+- Prompt SHA-256: `6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `c0da2e0366232678672d0c64ce9fa764d3b78f3caaaa8493348af1a7e1cd00fe`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `2eb26345c0320238f13795dd231ba4c205d452d230de64d35bcf4cc4acb002f8`
+- Metadata SHA-256: `d7142d966569c4d32f40a170b0f92f6780789b8a982e6faeead586a238a9f649`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `update` | PASS | With_skill explicitly identifies notification-center as an existing capability update. |
+| `delta_blast_radius` | PASS | It begins with an impact-scope table covering affected documents and areas before presenting design recommendations. |
+| `assertion_3` | PASS | It recommends the corresponding iteration approach, explicitly naming change-impactor and describing incremental multi-document updates. |
+| `assertion_4` | PASS | It explicitly identifies PRD.md, DECISIONS.md, and TRD.md with paths under docs/pm/notification-center and docs/engineer/notification-center, plus document types for additional artifacts. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441; fixture_sha256=4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a; output_sha256=77ef87341417b0bbf512236134cce431252f001dfb7af8c56e03a3cd9445d243; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Analyzed the existing notification-center design delta and blast radius, recommended incremental iteration, identified document paths, and paused for confirmation before modifying files.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441; fixture_sha256=4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a; output_sha256=b1e98bcfacd6158120a2f34c11b8a46553dac71daeac2c3ea53592f954988208; snapshot_sha256=7fc1194f68223e0c013ae04160ebbb17d4b84073625af8db8b7b4d1e683f4bff
+- Behavior: Produced document changes and named affected paths, but did not explicitly frame the task as an update workflow or recommend an iteration skill.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `idea-to-spec`
+- Eval: `eval-002-existing-project-update`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update`.
+- Fixture SHA-256: `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a`
+- Prompt SHA-256: `6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `c0da2e0366232678672d0c64ce9fa764d3b78f3caaaa8493348af1a7e1cd00fe`
+- Skill overlay SHA-256: `3ae514c20cfc266208917e49ea4a0991dd7848a32c1d2c092df2e7fdf880746e`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `2eb26345c0320238f13795dd231ba4c205d452d230de64d35bcf4cc4acb002f8`
+- Metadata SHA-256: `d7142d966569c4d32f40a170b0f92f6780789b8a982e6faeead586a238a9f649`
+- Executor SHA-256: `6c1c50885619c5add1ae9c7d9faf1fa39e905346d86059a01403ae742d286478`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `update` | PASS | The with_skill output explicitly identifies the request as an existing-project-update involving the existing notification-center PRD, DECISIONS, and TRD. |
+| `delta_blast_radius` | PASS | It summarizes the polling-to-event-driven delta, blast radius, affected documents, behaviors, and downstream impacts before presenting the detailed design recommendations. |
+| `assertion_3` | PASS | It recommends incremental iteration via change-impactor and explicitly states that no parallel feature or full rewrite is needed. |
+| `assertion_4` | PASS | It clearly identifies existing feature-document paths and types, including the PM PRD and DECISIONS files and the Engineer TRD, plus proposed API, QA, ADR, and DevOps documents. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441; fixture_sha256=4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a; output_sha256=18c0a090df8498d5b14c384fb49f8261b9b71174670e2a4c57fc839b544d4632; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly framed the task as an existing-project update, analyzed delta and blast radius first, recommended incremental iteration, and mapped affected documents and paths.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441; fixture_sha256=4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a; output_sha256=a78ffd627fcc016b6b110ed306846679d939d6a977e4375e557d91fec91a241a; snapshot_sha256=062f184f97588469391f73ff8767b11e70de3a863a942b9596efa23ac9e2dbc9
+- Behavior: Produced a substantial event-driven design and named three updated document paths, but did not explicitly frame the work as an existing-project update or recommend the iteration skill.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `idea-to-spec`
+- Eval: `eval-002-existing-project-update`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update`.
+- Fixture SHA-256: `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a`
+- Prompt SHA-256: `6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `7638558b96730ed626879bcffd4a606d3ed390013a41acf29ade725d210e3f4e`

@@ -11,6 +11,250 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc` from `agents/docs/test/release-notes-gen/evals/workspace/eval-002-confirmation-gate`.
+- Fixture SHA-256: `d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc`
+- Prompt SHA-256: `7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b7f7292c266a0e83e45fc11a264c0b52188a05a92b94c912c4a7b6c5c35058d2`
+- Skill overlay SHA-256: `fcc8b19cc83a08b5f5e64f8b15695aa80b045962a63cbf1717889ea116dc31cc`
+- Judge schema SHA-256: `f52a12716f836504537cf75e93c1e10d802a32eb7ad0a9945e2057c1a94c3f7c`
+- Eval definition SHA-256: `734d8912f6102b866e236fb845ac847f11fde3651b05c29ee143e730ba9a8ce3`
+- Metadata SHA-256: `244623c4cb29666e66fbef86938647497dad20990909aac70827020a236484a7`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `keeps_derived_surfaces_unchanged` | PASS | with_skill 的 locked delivery_snapshot 提供了候选文件；git_evidence 显示仅有该文件未跟踪，index、metadata、导航及其他派生面均无 diff，且正文写明确认后才更新这些路径。 |
+| `reports_unconfirmed_not_ready` | PASS | with_skill 输出明确给出 confirmation_status: unconfirmed 和 handoff: blocked，并说明等待明确确认，没有宣称 ready。 |
+| `waits_for_explicit_confirmation` | PASS | with_skill 输出展示完整候选正文、逐项列出六份来源证据，正文记录确认后的 index/.meta/导航更新计划，并明确等待确认。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=45e65ce62e5c80eb37cbf36abbf67997863713765d4f44a020d5cce4568791f2; snapshot_sha256=ef77127d93e0346defb14e3dae1b65c9afe7c850f9db7f499d088135f5d0e1b3
+- Behavior: 生成完整候选 Release Notes，保留派生面不变，并以 blocked/unconfirmed 状态等待确认。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=d7d7faef8e512034f2d15a43d4feecdef0bf7895e8f11f994285124f5007e2b3; snapshot_sha256=a20eec8402970f255dfb0587611575794d9c7126c21b6c04f112cec646f7b269
+- Behavior: 生成候选页面并保持派生面不变，但交接状态和等待确认信息不完整。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 等待用户或维护者确认正文后，再更新 Release Notes 索引、metadata 和导航。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-002-confirmation-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc` from `agents/docs/test/release-notes-gen/evals/workspace/eval-002-confirmation-gate`.
+- Fixture SHA-256: `d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc`
+- Prompt SHA-256: `7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b7f7292c266a0e83e45fc11a264c0b52188a05a92b94c912c4a7b6c5c35058d2`
+- Skill overlay SHA-256: `fcc8b19cc83a08b5f5e64f8b15695aa80b045962a63cbf1717889ea116dc31cc`
+- Judge schema SHA-256: `f52a12716f836504537cf75e93c1e10d802a32eb7ad0a9945e2057c1a94c3f7c`
+- Eval definition SHA-256: `734d8912f6102b866e236fb845ac847f11fde3651b05c29ee143e730ba9a8ce3`
+- Metadata SHA-256: `244623c4cb29666e66fbef86938647497dad20990909aac70827020a236484a7`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `keeps_derived_surfaces_unchanged` | PASS | with_skill 的 git_evidence 显示派生路径未改动；输出明确未修改 releases.json、版本索引或导航，并以正文未确认作为阻塞原因。 |
+| `reports_unconfirmed_not_ready` | PASS | with_skill 明确报告 confirmation_status: unconfirmed，且 site-ready handoff 为 blocked，未宣称候选页面已 ready。 |
+| `waits_for_explicit_confirmation` | PASS | delivery_snapshot 包含完整候选正文；输出指明 release-entry.md 与 evidence/ 为来源，列出未修改的索引、元数据和导航路径，并明确要求回复“确认正文”。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=7a76ffbe791120bf84ca15ba1faa7328031805b3175e650286e527e493115665; snapshot_sha256=f63f1ee8a3b004cf50b62a9848de762f75f901b86b0ec081e4a7428d2e3434aa
+- Behavior: 生成完整候选页面，保持派生面不变，报告未确认且 blocked，并等待明确确认。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=2b45649a79bc8355a3f098d3f971dddaf4a100e9b56ee09c3c2a773fb97c4ac6; snapshot_sha256=ee9b71a171634947cbc3b5b7389624482b7d863bd8071dc925cccf909463eaf4
+- Behavior: 生成候选草稿并保持索引、元数据和导航未修改，但未提供结构化 confirmation_status/handoff_status 或完整确认交接。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-002-confirmation-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc` from `agents/docs/test/release-notes-gen/evals/workspace/eval-002-confirmation-gate`.
+- Fixture SHA-256: `d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc`
+- Prompt SHA-256: `7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b7f7292c266a0e83e45fc11a264c0b52188a05a92b94c912c4a7b6c5c35058d2`
+- Skill overlay SHA-256: `fcc8b19cc83a08b5f5e64f8b15695aa80b045962a63cbf1717889ea116dc31cc`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `734d8912f6102b866e236fb845ac847f11fde3651b05c29ee143e730ba9a8ce3`
+- Metadata SHA-256: `244623c4cb29666e66fbef86938647497dad20990909aac70827020a236484a7`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `keeps_derived_surfaces_unchanged` | PASS | With-skill git evidence shows unchanged HEAD, empty diffs, and only the candidate page untracked; the manifest hashes for metadata, index, and navigation files remain unchanged. Output explicitly says those surfaces were not modified. |
+| `reports_unconfirmed_not_ready` | PASS | With-skill output reports confirmation_status: unconfirmed and says no ready handoff was produced. It does not describe the candidate page as ready. |
+| `waits_for_explicit_confirmation` | FAIL | The locked candidate file contains the complete release-note body, and output maps all six evidence files and asks for “确认正文”. However, it does not present an explicit post-confirmation modification plan with the required paths; it only states that metadata, index, and navigation were not modified. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=2b53dd3afa34cda1010f4b17fc466f474b2a3fcad41f9a4ff73c143b76490bef; snapshot_sha256=12c8b1d1deec6e9041db909cd752a438947e82f39015c91ed8359f813a6dff73
+- Behavior: Created a complete evidence-backed candidate page without modifying derived surfaces, reported the body as unconfirmed and not ready, and requested confirmation, but omitted an explicit post-confirmation path plan.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=9a51ba39d67e66da446a9e9ae2df90bae4e91b04df63d36b88c8ed5b9952594d; snapshot_sha256=5b3f61c42aa66b8af195af9374729c572a5321ced479a5aa9c5a341b390bb7c5
+- Behavior: Created an untracked draft and stated that index, metadata, and navigation were unchanged, but did not provide structured unconfirmed/not-ready status or an explicit confirmation handoff.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill lane omits the explicit confirmation-after plan for the paths to be modified.
+- Next: State that after explicit正文 confirmation, docs/site/release-notes/index.md, docs/site/.meta/releases.json, relevant navigation files, and the issue #117 structured handoff will be updated.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-002-confirmation-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc` from `agents/docs/test/release-notes-gen/evals/workspace/eval-002-confirmation-gate`.
+- Fixture SHA-256: `d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc`
+- Prompt SHA-256: `7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2432b0a8b94e9e5b987302b22f20b3a68797aef99cb1f7535f80c5f6d550ca58`
+- Skill overlay SHA-256: `b8a032f2e0b3c1612e4ecd4d8c0404ffabac105e349deced7271302364bee3fd`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `734d8912f6102b866e236fb845ac847f11fde3651b05c29ee143e730ba9a8ce3`
+- Metadata SHA-256: `913e8a90d405fa7666ae23e665c2d55b7740272554f1234087ce53fcb62d5aad`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `keeps_derived_surfaces_unchanged` | PASS | with_skill 明确报告未修改 metadata、Release Notes 索引或导航，并说明确认后才更新元数据和索引；git evidence 也显示仅有候选页面未跟踪。 |
+| `reports_unconfirmed_not_ready` | PASS | with_skill 明确给出 confirmation_status: unconfirmed 和 handoff: blocked，且未声称 pm-agent ready。 |
+| `waits_for_explicit_confirmation` | FAIL | with_skill 要求确认并说明确认后的更新计划，但用户可见输出仅提供候选页面链接、覆盖范围和证据缺口，没有展示完整候选正文或来源证据。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=dd34990d3889ce6225a575421005407b5f259d719e9b3f29f48fb8c14cd42231; snapshot_sha256=515f1f87764db13284f4b65cae51d3713ebfa0966a6588c0325439c4f28c9c04
+- Behavior: 生成完整候选页面，保持派生面未修改，明确 unconfirmed/blocked 并等待确认；但输出未展示完整正文和来源证据。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=1c285a39f2c7011fb2e4b9534b0a37f591cc21cfaa679dc237db7c165815bbd2; snapshot_sha256=1aaf6c9cf66f1a100426bbcad49ad27c3347874aad7d6be4c51474105f22e724
+- Behavior: 生成候选页面并保持派生面未修改，但未报告明确的 unconfirmed/blocked 状态，也未明确等待确认。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未在用户可见输出中展示完整候选正文和来源证据。
+- Next: 在等待确认的交接中直接展示完整候选正文，并列出来源证据文档及确认后将修改的具体路径。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-002-confirmation-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee` from `agents/docs/test/release-notes-gen/evals/workspace/eval-002-confirmation-gate`.
 - Fixture SHA-256: `96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee`
 - Prompt SHA-256: `7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692`

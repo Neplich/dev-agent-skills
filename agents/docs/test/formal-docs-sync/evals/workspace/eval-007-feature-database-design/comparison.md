@@ -11,6 +11,147 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `de57a3e2c20f574e81d3d9803c1ae3a7c2c6c83bbead7114e75685122bb01a81` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-007-feature-database-design`.
+- Fixture SHA-256: `de57a3e2c20f574e81d3d9803c1ae3a7c2c6c83bbead7114e75685122bb01a81`
+- Prompt SHA-256: `97f82a75c78275f5f504c11fb93e67755d5b6d9f65a9ef9273ee264808b8d9c8`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `289a3b63a3dcdcdc4cc6c4b994a40567f085f301732b94d5ab13b0e67247a316`
+- Eval definition SHA-256: `dd84eeaf9ea9452e584f740ec00a1edde6c8e5bfae2ef83da4e9e416f2e769fe`
+- Metadata SHA-256: `23140221449282820c7da53fcdbe46ce5ee1169aff6e90986ef0dbd09c5f9120`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `loads_only_database_design_contracts` | NOT_EXERCISED | The locked evidence cannot prove the required read order or module-loading restriction. |
+| `passes_design_closeout_gate` | NOT_EXERCISED | The required runtime-only per-page closeout matrix is not present in the locked evidence; the claimed gate pass cannot independently prove this hidden process requirement. |
+| `creates_database_schema_domain_tree` | PASS | The delivered snapshot contains the database root, primary schema, workspace-access domain, relationship page, and three entity pages with hierarchical links. |
+| `refreshes_confirmed_stable_path` | PASS | The stable database path is preserved, marked unverified, and refreshed with current uniqueness, roles, physical FK, and logical-reference facts. |
+| `documents_current_entity_facts` | PASS | Entity snapshots accurately reflect schema, repository/service behavior, indexes, constraints, ownership, and lifecycle evidence. |
+| `links_relationships_bidirectionally` | PASS | The relationship page links all three entity pages; each entity page links its domain, relationship overview, related entities, API authority, and database authority. |
+| `distinguishes_physical_and_logical_relations` | PASS | The relationship Mermaid and prose distinguish cascading physical workspace FKs from the service-validated logical user reference. |
+| `creates_domain_component_flow_tree` | PASS | The Design snapshot contains root and domain indexes, InvitationService, MembershipRepository, AuditWriter, invitation-acceptance, and authorization-boundary pages. |
+| `keeps_reciprocal_and_authority_links` | PASS | Components link the acceptance flow, the flow links all three components, and Design pages link API/database authority pages without duplicating complete contracts. |
+| `keeps_cross_domain_authority_unique` | PASS | The acceptance flow is explicitly authoritative under workspace-access; audit-log pages link to it without duplicating its正文. |
+| `updates_atomic_map_and_unverified_pages` | PASS | The locked change-map preserves existing entries and stable paths, adds the database/design closure for each relevant code glob, and marks delivered pages unverified; candidate evidence reports a zero-missing-doc readback. |
+| `runs_host_checks_and_handoffs_audit` | NOT_EXERCISED | The candidate reports all three npm checks passed, but the required docs-audit handoff is explicitly blocked by missing target release-version confirmation, so the later handoff step is not exercised. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=97f82a75c78275f5f504c11fb93e67755d5b6d9f65a9ef9273ee264808b8d9c8; fixture_sha256=de57a3e2c20f574e81d3d9803c1ae3a7c2c6c83bbead7114e75685122bb01a81; output_sha256=1a1411f380f4acb5acced4dbe035c4ad46b56de30424fe5f47a3e9db761c7d7e; snapshot_sha256=812dc34cf26e3eb716477d270282b502d87d8fdf64d73a5a830e6d4486334606
+- Behavior: Delivered the requested database and design documentation trees with accurate current facts, reciprocal links, authority boundaries, and change-map updates; host checks were reported passed, while the final audit handoff remains blocked.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=97f82a75c78275f5f504c11fb93e67755d5b6d9f65a9ef9273ee264808b8d9c8; fixture_sha256=de57a3e2c20f574e81d3d9803c1ae3a7c2c6c83bbead7114e75685122bb01a81; output_sha256=9cb4f30def70e50fe7c1153eeeb55923522afd95565fde2fc5439072960d21a5; snapshot_sha256=d6445ec3bad367ceb6f27f94dfce6232d444a6541b8d5fdddc3a1184f448511f
+- Behavior: Delivered a similar but less complete documentation tree, omitted the public build report, and reported pytest unavailable.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Provide the target release version and complete the docs-audit handoff.
+- Next: Capture runtime closeout-matrix and read-order evidence if those process assertions must be evaluated.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-007-feature-database-design`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `de57a3e2c20f574e81d3d9803c1ae3a7c2c6c83bbead7114e75685122bb01a81` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-007-feature-database-design`.
+- Fixture SHA-256: `de57a3e2c20f574e81d3d9803c1ae3a7c2c6c83bbead7114e75685122bb01a81`
+- Prompt SHA-256: `97f82a75c78275f5f504c11fb93e67755d5b6d9f65a9ef9273ee264808b8d9c8`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e1b96c87b6eb051a20a849fc51ca738b49866387566d5f61a7cdde4f1fc422cd`
+- Skill overlay SHA-256: `44e860f93f5d468075d88a048afe986ad68fcbae84270ffdc4d5a090573d59b8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `dd84eeaf9ea9452e584f740ec00a1edde6c8e5bfae2ef83da4e9e416f2e769fe`
+- Metadata SHA-256: `23140221449282820c7da53fcdbe46ce5ee1169aff6e90986ef0dbd09c5f9120`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `loads_only_database_design_contracts` | NOT_EXERCISED | 该断言要求隐藏的读取顺序与加载范围；with_skill 锁定输出仅列出证据来源，无法证明实际读取顺序。 |
+| `passes_design_closeout_gate` | NOT_EXERCISED | with_skill 在写入前识别范围冲突并暂停、请求确认；尚未进入可验证的 closeout 固化或写入阶段。 |
+| `creates_database_schema_domain_tree` | NOT_EXERCISED | 候选尚未获得确认并执行写入，因此数据库子树未在 with_skill 交付中产生。 |
+| `refreshes_confirmed_stable_path` | NOT_EXERCISED | with_skill 的 proposed batch 明确保留稳定路径，但尚未实际刷新或重定向文件。 |
+| `documents_current_entity_facts` | NOT_EXERCISED | 实体页面尚未在 with_skill 交付中生成。 |
+| `links_relationships_bidirectionally` | NOT_EXERCISED | 关系页与实体页尚未在 with_skill 交付中生成，链接无法验证。 |
+| `distinguishes_physical_and_logical_relations` | NOT_EXERCISED | with_skill 提议数据库闭包，但尚未写入包含物理外键与逻辑引用区分的页面。 |
+| `creates_domain_component_flow_tree` | NOT_EXERCISED | 设计范围已识别并列入 proposed batch，但尚未因待确认冲突而执行写入。 |
+| `keeps_reciprocal_and_authority_links` | NOT_EXERCISED | 组件、流程与权威链接尚未在 with_skill 交付中产生。 |
+| `keeps_cross_domain_authority_unique` | NOT_EXERCISED | with_skill 提议了跨域流程权威页与 audit-log 引用关系，但尚未写入或验证。 |
+| `updates_atomic_map_and_unverified_pages` | NOT_EXERCISED | with_skill 明确提出完整 change-map 闭包与稳定路径保留，但尚未执行原子更新。 |
+| `runs_host_checks_and_handoffs_audit` | NOT_EXERCISED | with_skill 明确记录 host checks 和 audit handoff 尚未执行；这些步骤依赖用户确认后的继续执行。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=97f82a75c78275f5f504c11fb93e67755d5b6d9f65a9ef9273ee264808b8d9c8; fixture_sha256=de57a3e2c20f574e81d3d9803c1ae3a7c2c6c83bbead7114e75685122bb01a81; output_sha256=e3fe7ce9f5cf0d08667ffa474c3fa99af6ebb8a1906cd1c23e8760427b074a4d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别 candidate-scope-confirmation.md 与 design-scope-confirmation.md 的范围冲突，在写入前暂停并请求用户确认；未进行未经确认的文件变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=97f82a75c78275f5f504c11fb93e67755d5b6d9f65a9ef9273ee264808b8d9c8; fixture_sha256=de57a3e2c20f574e81d3d9803c1ae3a7c2c6c83bbead7114e75685122bb01a81; output_sha256=b545f1d786c0845b83668beb5c670fd2e1bdb779bb334504bbea49c4bbd7894f; snapshot_sha256=ffc113d7625d6c7b8dca0b03dc7e0bd500f2bab2f6b9c6d935b25daff79e1868
+- Behavior: 直接声称已完成文档同步并报告部分检查通过；对所需范围、原子更新和运行期门禁的完整证据不足。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 获得确认后继续执行文档同步、宿主检查与 docs-agent:docs-audit handoff。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-007-feature-database-design`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `069691c0cf641c0197bfdbacac2d64c88a425f981a4a1790a532e131615e041e` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-007-feature-database-design`.
 - Fixture SHA-256: `069691c0cf641c0197bfdbacac2d64c88a425f981a4a1790a532e131615e041e`
 - Prompt SHA-256: `97f82a75c78275f5f504c11fb93e67755d5b6d9f65a9ef9273ee264808b8d9c8`

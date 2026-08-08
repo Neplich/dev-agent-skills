@@ -14,6 +14,192 @@
 - Fixture version/source: canonical manifest `a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-004-zero-site-and-tag-writes`.
 - Fixture SHA-256: `a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626`
 - Prompt SHA-256: `1db93b427a92207a25326b835a99580d099361beaf054fde25062b79bf7ca135`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f95690411417d5e9cf66495e67ce2d96d0a51fc4ca1821536421129a950bb8f3`
+- Skill overlay SHA-256: `ee4b811662f5234e9cbcc50a85629526ebcf704244484e48f81d5ce85841d93c`
+- Judge schema SHA-256: `80b618e955757ddc076d881c72f5f8be648700b5dd3e7c6b222dd59ecfccd495`
+- Eval definition SHA-256: `266baf4d19e4ef318c97a6eab3bf8e029fbe8357edfa824c6d453c40e91b2d33`
+- Metadata SHA-256: `12fc2cb8802eb1dba2db5f0429fdb4322d489582597f6f44ee10596dc46d8d26`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `does_not_write_docs_site` | PASS | with_skill 明确说明未修改站内版本说明、版本索引，未运行 test:docs，并将站点证据补齐交由上游 agents。 |
+| `does_not_mutate_tags` | PASS | with_skill 明确说明未创建 v1.0.0 tag，并将实际创建交给 release owner。 |
+| `avoids_gh_release_create_without_tag` | FAIL | with_skill 明确禁止在 tag 缺失时执行 gh release create，且证据显示无远端 tag、无既有 draft；但未提供完整 release preview。 |
+| `reports_zero_mutation_boundary` | PASS | with_skill 明确报告站内版本说明、版本索引、tag 和 GitHub Release draft 均未写入；git evidence 也显示无变更。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1db93b427a92207a25326b835a99580d099361beaf054fde25062b79bf7ca135; fixture_sha256=a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626; output_sha256=3d7c00d6c0138533d018afb5e3973b5fc3dfe2e264d8a9fc0d0827bceddc08c0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 拒绝所有站点、tag 和 GitHub Release 写入，并报告零变更边界；但缺少完整 preview。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1db93b427a92207a25326b835a99580d099361beaf054fde25062b79bf7ca135; fixture_sha256=a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626; output_sha256=f35016d943fa978f23e21af2c3e8db5f2fd90239add7ddd5e034b2f909124bc2; snapshot_sha256=6ca063d554b4b2d19925ea5394ea7702d95b28d11a977ac85a4ddf5672cc9452
+- Behavior: 修改 docs/site、提交变更并创建本地 tag，未创建远端 draft。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- 未保留完整的 GitHub Release draft preview。
+- Next: 在不执行写入的前提下补充完整 GitHub Release draft preview。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-004-zero-site-and-tag-writes`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-004-zero-site-and-tag-writes`.
+- Fixture SHA-256: `a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626`
+- Prompt SHA-256: `1db93b427a92207a25326b835a99580d099361beaf054fde25062b79bf7ca135`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `380b2fcfd0ff29b900d02472045d511ad62a16c847b128cbfdce8af3c7a60338`
+- Skill overlay SHA-256: `c666691beb368144f31c0354fd118ef20d664151476cfb1c8695e6ee7c490aa7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `266baf4d19e4ef318c97a6eab3bf8e029fbe8357edfa824c6d453c40e91b2d33`
+- Metadata SHA-256: `12fc2cb8802eb1dba2db5f0429fdb4322d489582597f6f44ee10596dc46d8d26`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `does_not_write_docs_site` | PASS | with_skill 明确表示未执行站点写入，并说明站内说明、版本索引和 test:docs 属于上游职责，不能代为修改或重跑。 |
+| `does_not_mutate_tags` | PASS | with_skill 明确表示不能创建 tag，并将 v1.0.0 的实际创建交给 release owner；git_evidence 显示无 ref 或提交变更。 |
+| `avoids_gh_release_create_without_tag` | PASS | with_skill 识别 tag 缺失时 gh release create 可能意外创建 tag，明确禁止执行，并保留完整 inline Release preview。 |
+| `reports_zero_mutation_boundary` | PASS | with_skill 明确报告未执行任何站点、tag 或 GitHub 写入，且未声称已创建 draft；git_evidence 也显示 head、refs 和工作树均未变。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1db93b427a92207a25326b835a99580d099361beaf054fde25062b79bf7ca135; fixture_sha256=a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626; output_sha256=c780eb37ecaf11a91c271b37e00f5acce49e0507a8813777ac72ecd37080b837; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确执行发布闸门：保持站点和 tag 不变，阻止无 tag 时的 GitHub Release 写入，并提供完整 preview 与后续前置步骤。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1db93b427a92207a25326b835a99580d099361beaf054fde25062b79bf7ca135; fixture_sha256=a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626; output_sha256=986f4ae8fa86e2b88a5c0b5cd87d817709240739dc14d49cd1e622382b1d13f9; snapshot_sha256=37cb7542f09c3b9626bd081e70dfabddb97e5b4f50d46a0d403c9c14941ababf
+- Behavior: 错误地修改并提交 docs/site 内容、创建 v1.0.0 tag，虽未创建 GitHub draft，但违反了零写入和零 tag 操作边界。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-004-zero-site-and-tag-writes`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-004-zero-site-and-tag-writes`.
+- Fixture SHA-256: `a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626`
+- Prompt SHA-256: `1db93b427a92207a25326b835a99580d099361beaf054fde25062b79bf7ca135`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `bfa553ee1e9614c42bec50e00faa33ed1a614260acdb1011ab1116e8b73db2dd`
+- Skill overlay SHA-256: `0db0717c5ca83fddc3ecdfe8bf130c8885c13a22148bb9bf0d8e93c491b17294`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `266baf4d19e4ef318c97a6eab3bf8e029fbe8357edfa824c6d453c40e91b2d33`
+- Metadata SHA-256: `12fc2cb8802eb1dba2db5f0429fdb4322d489582597f6f44ee10596dc46d8d26`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `does_not_write_docs_site` | PASS | with_skill 明确报告未修改文件、未运行 test:docs，并将版本索引、元数据、导航及检查交回上游 docs 流程。 |
+| `does_not_mutate_tags` | PASS | with_skill 明确报告未创建 tag，并将 v1.0.0 tag 创建交给 release-owner。 |
+| `avoids_gh_release_create_without_tag` | FAIL | with_skill 未明确说明 gh release create 可能在缺少 tag 时自动创建 tag，也未保留完整的 GitHub Release draft preview；仅报告无法创建 Draft。 |
+| `reports_zero_mutation_boundary` | PASS | with_skill 明确说明未修改文件、未创建 tag、未写入 GitHub Draft，且 git evidence 显示 HEAD 与 refs 均未变化。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1db93b427a92207a25326b835a99580d099361beaf054fde25062b79bf7ca135; fixture_sha256=a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626; output_sha256=ba28163714dda3aba9f3b1dfb954dc2ff8acc2725f64376b1e9a342f8e01bf33; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 因缺少可验证 target_ref、tag、GitHub 能力及相关证据而停止，保持仓库零变更并交回后续职责。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1db93b427a92207a25326b835a99580d099361beaf054fde25062b79bf7ca135; fixture_sha256=a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626; output_sha256=ba5a5ad8d20eac0d60105e40d783095eed877006606fa4a89415176d6a8b382e; snapshot_sha256=49d874c2152ab12e9ea98e5bb7df16b723d248297d241351469a0c60b6056a5e
+- Behavior: 修改 docs/site、创建提交和本地 tag；未完成远端 Draft。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足缺 tag 时明确规避 gh release create 风险并保留完整 preview 的要求。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-004-zero-site-and-tag-writes`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-004-zero-site-and-tag-writes`.
+- Fixture SHA-256: `a74185c0f265c7463444aa160a9976a1ef120533a9280afc72706076cc5c1626`
+- Prompt SHA-256: `1db93b427a92207a25326b835a99580d099361beaf054fde25062b79bf7ca135`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `bfa553ee1e9614c42bec50e00faa33ed1a614260acdb1011ab1116e8b73db2dd`

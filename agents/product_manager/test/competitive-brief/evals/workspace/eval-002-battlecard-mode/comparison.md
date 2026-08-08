@@ -14,6 +14,192 @@
 - Fixture version/source: canonical manifest `580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0` from `agents/product_manager/test/competitive-brief/evals/workspace/eval-002-battlecard-mode`.
 - Fixture SHA-256: `580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0`
 - Prompt SHA-256: `e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `64a375a1a490fa251e9b252ef3a7787f55ca6a4fd08e5d401228a899b274ed39`
+- Skill overlay SHA-256: `c1341cebf983202b3c2101489252c70818305b548c111af4817c833b2dd4164f`
+- Judge schema SHA-256: `e42897afb6931d7065c6aa9ac71e607d574f057396cd3a30a0419c210f3be3cb`
+- Eval definition SHA-256: `a7454ae2eccc665064a08c31fc99de3b8f0a596f72811f2e5035b12f267e9fe8`
+- Metadata SHA-256: `be38b1b419460352b11de0cc1468d57c031f7575d697be3bf617760a456d47f3`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `battlecard_fields` | PASS | with_skill 输出分别为 Linear 和 Jira 两页结构化资料，均包含 Quick Overview、Their Pitch、Strengths、Weaknesses、Objection Handling、Landmines to Set、Landmines to Defuse、Win/Loss Themes。 |
+| `no_full_brief` | PASS | 输出采用 battlecard 结构；虽含 Discovery Questions、Talk Track、POC Guidance 等销售使用内容，但没有完整竞品 brief 的执行摘要、messaging gap、机会/威胁等章节。 |
+| `evidence_boundary` | PASS | 两家资料均标注 2026-08-06 研究日期和来源，并对定价、我方能力、企业控制、生态等未被材料确认的内容标注“待验证”或要求 POC 验证。 |
+| `no_battlecard_offer` | PASS | 输出直接提供两家 battlecard，没有询问是否需要创建 battlecard，也未将其作为后续追加项。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2; fixture_sha256=580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0; output_sha256=91cc3517c984d097ca8c48a9df8d46e0fa3f3a70d5ed4d88266f8327ffd18f50; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完成 Linear 与 Jira 的结构化销售 battlecard，并明确区分已知信息与待验证内容。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2; fixture_sha256=580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0; output_sha256=bafc548537f6e3314bc47a453c9f1d07ee8e528c660a024c18fa423911321659; snapshot_sha256=20d63c8919a61acd0e8c49734612182d7c73e90bfd5486ec4276eb62b7a23631
+- Behavior: 提供了两份文件型竞争资料，覆盖部分销售话题并标注待验证，但未展示要求的完整 battlecard 字段结构。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `competitive-brief`
+- Eval: `eval-002-battlecard-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0` from `agents/product_manager/test/competitive-brief/evals/workspace/eval-002-battlecard-mode`.
+- Fixture SHA-256: `580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0`
+- Prompt SHA-256: `e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `64a375a1a490fa251e9b252ef3a7787f55ca6a4fd08e5d401228a899b274ed39`
+- Skill overlay SHA-256: `c1341cebf983202b3c2101489252c70818305b548c111af4817c833b2dd4164f`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `a7454ae2eccc665064a08c31fc99de3b8f0a596f72811f2e5035b12f267e9fe8`
+- Metadata SHA-256: `be38b1b419460352b11de0cc1468d57c031f7575d697be3bf617760a456d47f3`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `battlecard_fields` | PASS | with_skill 输出分别覆盖 Linear 与 Jira 的 Quick Overview、Their Pitch、Strengths、Weaknesses、Objection Handling、Landmines to Set、Landmines to Defuse、Win/Loss Themes。 |
+| `no_full_brief` | PASS | with_skill 产物以两家竞品 battlecard 结构呈现，未输出完整竞品 brief 的执行摘要、完整画像、messaging gap 或机会/威胁/行动项章节。 |
+| `evidence_boundary` | PASS | 两份资料均标注研究日期和来源，并将价格细节、企业控制、迁移可行性、性能等未获来源支持的内容标为待验证或要求 POC 验证。 |
+| `no_battlecard_offer` | PASS | with_skill 已直接交付两家竞品 battlecard，未询问是否需要创建或将其作为后续追加项。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2; fixture_sha256=580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0; output_sha256=1798d30fbfc872f2312a5e0523201e48f280089ede6a9e6ab494f123cf4d74ab; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 直接交付了包含规定字段、证据边界和验证标记的 Linear 与 Jira battlecard。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2; fixture_sha256=580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0; output_sha256=bde9cd5049515204fa6f295a3d23eddb9539801f253e62379d6a25da221f6c74; snapshot_sha256=0a6b6194024ab474b45529667fa8c87c9218c745b8bb6ea8b325167407a30dc3
+- Behavior: 交付了两个竞争资料文件，但结构更像简要销售 brief，未明确覆盖全部 battlecard 字段。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `competitive-brief`
+- Eval: `eval-002-battlecard-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0` from `agents/product_manager/test/competitive-brief/evals/workspace/eval-002-battlecard-mode`.
+- Fixture SHA-256: `580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0`
+- Prompt SHA-256: `e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `64a375a1a490fa251e9b252ef3a7787f55ca6a4fd08e5d401228a899b274ed39`
+- Skill overlay SHA-256: `c1341cebf983202b3c2101489252c70818305b548c111af4817c833b2dd4164f`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `a7454ae2eccc665064a08c31fc99de3b8f0a596f72811f2e5035b12f267e9fe8`
+- Metadata SHA-256: `be38b1b419460352b11de0cc1468d57c031f7575d697be3bf617760a456d47f3`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `battlecard_fields` | PASS | with_skill 输出分别为 Linear 与 Jira 的 battlecard，均包含 Quick Overview、Their Pitch、Strengths、Weaknesses、Objection Handling、Landmines to Set、Landmines to Defuse、Win/Loss Themes；定价、目标客户、近期动态及三项差异点均有覆盖。官方 tagline 未被材料记录时明确标为需验证。 |
+| `no_full_brief` | PASS | with_skill 输出以两份销售竞争 battlecard 为核心，未采用执行摘要、完整竞品画像、messaging gap、机会/威胁/行动项等完整 brief 章节结构。 |
+| `evidence_boundary` | PASS | with_skill 明确标注研究日期 2026-08-06 与来源类别；对官方 tagline、安全/企业控制、我方优势、赢单丢单统计及具体比较结果等材料未确认内容标为需验证、待验证或建议性假设，未作确定性编造。 |
+| `no_battlecard_offer` | PASS | with_skill 直接交付两家 battlecard，未询问是否需要创建 battlecard，也未将其作为后续追加项。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2; fixture_sha256=580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0; output_sha256=8152c1846ceee1ccf5da46a72d95b9166ae81dd90e6109411317a88a455005be; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 直接为 Linear 和 Jira 各输出结构完整的 battlecard，覆盖所需销售字段，并对材料边界、研究日期和待验证事项作了明确标注。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2; fixture_sha256=580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0; output_sha256=407f91749e011c28e4801ee6355216263b7cbe05f9bb7a0a5066a89c4856edf0; snapshot_sha256=336535c59b1b2563e48596fc43bde58f58154d6d64143aff7af949e6cbb72ea1
+- Behavior: 交付了两份一页销售竞争资料并标注部分待验证内容，但主要是定位、购买动因、切入点、发现问题和 POC 建议，未呈现要求的完整 battlecard 字段结构。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `competitive-brief`
+- Eval: `eval-002-battlecard-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0` from `agents/product_manager/test/competitive-brief/evals/workspace/eval-002-battlecard-mode`.
+- Fixture SHA-256: `580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0`
+- Prompt SHA-256: `e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `64a375a1a490fa251e9b252ef3a7787f55ca6a4fd08e5d401228a899b274ed39`

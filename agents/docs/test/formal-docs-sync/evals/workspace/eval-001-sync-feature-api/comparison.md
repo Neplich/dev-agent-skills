@@ -11,6 +11,406 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api`.
+- Fixture SHA-256: `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa`
+- Prompt SHA-256: `cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `b75531387a8a9fcbe3680466e0062ed9ca0b3db6341639dbf81c051b7647e990`
+- Eval definition SHA-256: `ce743547e06014367140716bb2c97c1db58eb733e797662e8b4bd6eca00be3ee`
+- Metadata SHA-256: `f8156f035dafc132a200ab0fabf455e3a12e92c380c1e7265ae20e3e3df0c170`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `selects_backfill_mode_and_api_contract` | NOT_EXERCISED | with_skill selects `existing-system backfill`, cites the maintainer request/catalog/host evidence, and excludes non-API module categories; raw evidence does not prove that the specific template/type modules were read. |
+| `derives_complete_api_candidate_tree` | PASS | The with_skill tree contains the API, Identity, Sessions, create-session, and revoke-session paths, ties them to catalog hierarchy and route/schema/contract evidence, and leaves Billing for later due to owner/lifecycle boundaries. |
+| `presents_per_node_confirmation_matrix` | FAIL | A tree, per-page evidence table, code-glob table, and change-map section are provided, but the per-node mapping does not explicitly pair every node with complete path, parent, exact code boundary, and owner; route leaves in particular lack explicit owner/code-boundary pairings. |
+| `proposes_exact_atomic_change_map` | FAIL | The proposed route/schema/contract mappings cover all five candidate pages and preserve the Search mapping's unknown `review_hint`, but the output does not specify stable deduplicated ordering or explicitly preserve all unrelated/manual-plugin fields and entries. |
+| `preserves_stable_paths_and_scope_boundaries` | PASS | The with_skill output keeps Billing, Search, and `docs/site/api/search.md` out of batch, excludes database/design/ops/product/release and `src/api/internal/**`, and states that no migration is needed. |
+| `keeps_unconfirmed_batch_read_only` | PASS | It explicitly states zero writes, no host checks, no handoff, no next batch, and requests maintainer confirmation before proceeding. |
+| `defaults_new_pages_to_internal_visibility` | PASS | It proposes `internal` visibility for all new pages, retains the existing root's `both` visibility for the established public Search page, and explains the exception. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=4e8c0828baec7086066d2199930e33dabcd36df699bc487b5726bf8730df42da; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly bounded the unconfirmed Identity/Sessions backfill and preserved read-only scope, but the per-node confirmation mapping and exact change-map preservation details are incomplete.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=7e14aec867bbf484535877566f4e7fd4f9681d8eed5b89b6e8ef619f65ed0bb2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provided a plausible five-page Sessions tree and left the workspace unchanged, but lacked the required complete ancestor mappings, scope/visibility detail, and explicit confirmation gate structure.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The confirmation matrix does not fully provide the required per-node parent/path/code-boundary/owner pairings.
+- The atomic change-map proposal omits stable deduplicated ordering and explicit preservation of all unrelated/manual-plugin entries and fields.
+- Next: Complete a per-node matrix/mapping that explicitly pairs every page with parent, full path, exact code boundary, owner, evidence, delta, and exclusions.
+- Next: Add the stable deduplicated ordering rule and explicitly preserve all unrelated/manual-plugin change-map entries and unknown fields.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-001-sync-feature-api`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api`.
+- Fixture SHA-256: `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa`
+- Prompt SHA-256: `cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `b75531387a8a9fcbe3680466e0062ed9ca0b3db6341639dbf81c051b7647e990`
+- Eval definition SHA-256: `ce743547e06014367140716bb2c97c1db58eb733e797662e8b4bd6eca00be3ee`
+- Metadata SHA-256: `f8156f035dafc132a200ab0fabf455e3a12e92c380c1e7265ae20e3e3df0c170`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `selects_backfill_mode_and_api_contract` | PASS | 明确判定为 existing-system backfill，声明仅加载 api，并列出 host standards、change map、API template 与 API 证据；未应用其他类型模块。 |
+| `derives_complete_api_candidate_tree` | PASS | 包含 API、Identity、Sessions 两级索引及两个 route leaf，并以 catalog、路由、schema、owner 和 contract tests 支撑层级；Billing 明确留后续批次。 |
+| `presents_per_node_confirmation_matrix` | FAIL | 有 evidence bindings 和 mapping section，但没有为 docs/site/api/index.md 提供对应的逐节点 evidence binding，且部分节点的代码边界不够精确。 |
+| `proposes_exact_atomic_change_map` | FAIL | 提出覆盖完整祖先索引和两个叶页的 required_docs，并保留 manual-plugin 未知字段；但未说明列表稳定去重排序。 |
+| `preserves_stable_paths_and_scope_boundaries` | PASS | 明确排除 Billing、Search、database、design、ops、product、release 与 src/api/internal/**，并声明不迁移 Search；没有隐式扩大稳定路径范围。 |
+| `keeps_unconfirmed_batch_read_only` | PASS | 明确 pending_scope_confirmation、confirmed_batch:none、Changed docs:none，声明零写入、不运行 host checks，并等待维护者确认后再写入。 |
+| `defaults_new_pages_to_internal_visibility` | FAIL | 明确所有新增页面 visibility 为 internal；但没有解释该收紧依据及例外条件。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=b79c717205a5ed39810aaef97e9bb02f4362073601e276ecfa0ca267ba40e8dd; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 选择了受确认门控的 API backfill，提出完整 Identity/Sessions 候选树并保持零写入，但逐节点矩阵、change-map 细节和 visibility rationale 不完整。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=a614b05f6bbdc9563c015700a99577fd495543e4c63ba09e23a48ef4bb1db88e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提出相同的 Sessions 页面树和基本接口证据，但 visibility 建议沿用 both，change-map 与范围门控细节较弱。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- presents_per_node_confirmation_matrix: API 根索引缺少逐节点绑定，部分代码边界不够精确。
+- proposes_exact_atomic_change_map: 未提出稳定去重排序约束。
+- defaults_new_pages_to_internal_visibility: 未解释 internal 默认值的依据与例外。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-001-sync-feature-api`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api`.
+- Fixture SHA-256: `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa`
+- Prompt SHA-256: `cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e1b96c87b6eb051a20a849fc51ca738b49866387566d5f61a7cdde4f1fc422cd`
+- Skill overlay SHA-256: `44e860f93f5d468075d88a048afe986ad68fcbae84270ffdc4d5a090573d59b8`
+- Judge schema SHA-256: `b75531387a8a9fcbe3680466e0062ed9ca0b3db6341639dbf81c051b7647e990`
+- Eval definition SHA-256: `ce743547e06014367140716bb2c97c1db58eb733e797662e8b4bd6eca00be3ee`
+- Metadata SHA-256: `f8156f035dafc132a200ab0fabf455e3a12e92c380c1e7265ae20e3e3df0c170`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `selects_backfill_mode_and_api_contract` | NOT_EXERCISED | The with_skill output visibly selects existing-system backfill and an API-only Sessions proposal, but locked evidence cannot prove the required read order or exact source-loading process. |
+| `derives_complete_api_candidate_tree` | PASS | It presents the complete API tree through API, Identity, Sessions, and both route leaves, ties levels to catalog/code/route/contract evidence, and defers Billing. |
+| `presents_per_node_confirmation_matrix` | PASS | It provides a tree, per-page table, mapping section, exclusions, unresolved authentication/version details, and waits for confirmation; parent and per-node delta pairing is partly implicit rather than fully explicit. |
+| `proposes_exact_atomic_change_map` | PASS | The proposed sessions glob and contract-test mapping each require all five pages, describe atomic confirmation/write behavior, and preserve manual-plugin unknown fields and unrelated mappings. |
+| `preserves_stable_paths_and_scope_boundaries` | PASS | Billing, Search, internal APIs, and non-API sections are explicitly excluded; it states no migration is needed and requests confirmation before any path movement. |
+| `keeps_unconfirmed_batch_read_only` | PASS | It states no batch is confirmed, no files or mappings were written, no next batch or host checks were run, and the audit handoff is blocked pending confirmation. |
+| `defaults_new_pages_to_internal_visibility` | FAIL | The candidate does not specify internal visibility for any proposed new page or explain a visibility-default rule. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=edb056300ac2ea5fb896f44a2e850dd099e5dc2d4ab340e1bfec87f9014c6c16; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Strong bounded API backfill proposal with complete candidate tree, atomic mapping, exclusions, and confirmation gate, but no internal visibility defaults.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=f8ae6df66406037b1c8146fa92890dcb0e3c1b00dc0c0b4436da918925ef28ea; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline identifies the Sessions subtree and zero-write confirmation gate, but omits ancestor mappings, detailed atomic closure, and visibility handling.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- defaults_new_pages_to_internal_visibility
+- Next: Add internal visibility to every proposed new page and mapping, with the host-default rationale and any explicit exception.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-001-sync-feature-api`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api`.
+- Fixture SHA-256: `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa`
+- Prompt SHA-256: `cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e1b96c87b6eb051a20a849fc51ca738b49866387566d5f61a7cdde4f1fc422cd`
+- Skill overlay SHA-256: `44e860f93f5d468075d88a048afe986ad68fcbae84270ffdc4d5a090573d59b8`
+- Judge schema SHA-256: `b75531387a8a9fcbe3680466e0062ed9ca0b3db6341639dbf81c051b7647e990`
+- Eval definition SHA-256: `ce743547e06014367140716bb2c97c1db58eb733e797662e8b4bd6eca00be3ee`
+- Metadata SHA-256: `f8156f035dafc132a200ab0fabf455e3a12e92c380c1e7265ae20e3e3df0c170`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `selects_backfill_mode_and_api_contract` | NOT_EXERCISED | With-skill output explicitly selects `existing-system backfill` and proposes only the API subtree, but locked evidence cannot prove the required read/non-read process. |
+| `derives_complete_api_candidate_tree` | PASS | The complete five-node Sessions tree is present, supported by catalog, route, owner, schema, and contract-test evidence; Billing is excluded as a separate batch. |
+| `presents_per_node_confirmation_matrix` | FAIL | The output has a tree and partial page/evidence table, but does not provide per-node parent, complete path, exact code boundary, proposed delta, and exclusions in a cross-mappable confirmation structure. |
+| `proposes_exact_atomic_change_map` | FAIL | The proposed mappings cover the five pages and preserve manual/Search entries, but omit the required explicit stable dedupe/sort behavior and do not fully present the required atomic route-mapping details. |
+| `preserves_stable_paths_and_scope_boundaries` | PASS | Billing, Search, internal API, database, design, ops, product, and release documentation are explicitly excluded; Search is described as stable and not migrated or changed. |
+| `keeps_unconfirmed_batch_read_only` | PASS | The output states no files or change map were modified, confirmation is pending, no build or handoff occurred, and only read-only checks were run. |
+| `defaults_new_pages_to_internal_visibility` | FAIL | The candidate output never specifies `internal` visibility for proposed new pages or mappings. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=8f6f2c57996ff6ae6d9a000bc5d53ed2b41a9dcfa6e6f62960c9e5c9bb6068c0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly limits the proposed batch and preserves read-only scope, but omits required confirmation-matrix detail, exact atomic-map guarantees, and internal visibility defaults.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=d33eed82fc54347a0725dfafa3cd8574f92c56773617e07c800a732698457f55; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a fresh baseline with a plausible Sessions proposal, but is less complete and less explicit about scope and confirmation gating.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- presents_per_node_confirmation_matrix
+- proposes_exact_atomic_change_map
+- defaults_new_pages_to_internal_visibility
+- Next: Add a fully cross-mappable per-node confirmation matrix and mapping section.
+- Next: Specify internal visibility for every proposed new page.
+- Next: Document atomic page/map update semantics, stable deduplicated ordering, and complete route/navigation mapping.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-001-sync-feature-api`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api`.
+- Fixture SHA-256: `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa`
+- Prompt SHA-256: `cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e1b96c87b6eb051a20a849fc51ca738b49866387566d5f61a7cdde4f1fc422cd`
+- Skill overlay SHA-256: `44e860f93f5d468075d88a048afe986ad68fcbae84270ffdc4d5a090573d59b8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ce743547e06014367140716bb2c97c1db58eb733e797662e8b4bd6eca00be3ee`
+- Metadata SHA-256: `f8156f035dafc132a200ab0fabf455e3a12e92c380c1e7265ae20e3e3df0c170`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `selects_backfill_mode_and_api_contract` | NOT_EXERCISED | The with_skill output states existing-system backfill, accepted entry basis, and api as the loaded type module, but locked evidence cannot prove the required read order or that database/design/ops/product modules were not read or applied. |
+| `derives_complete_api_candidate_tree` | PASS | The with_skill output presents the complete five-node API tree, ties nodes to catalog hierarchy, owner, routes, schemas, handlers, and contract tests, and excludes Billing for later review. |
+| `presents_per_node_confirmation_matrix` | FAIL | The table covers all five pages but does not provide the required per-node parent pairing, complete exact code boundary for every node, proposed change-map delta, and exclusions in a cross-correspondable matrix/mapping structure. |
+| `proposes_exact_atomic_change_map` | FAIL | The proposed mappings cover the five-page closure and preserve the manual-plugin review_hint, but the output omits the required stable deduplicated ordering behavior and does not explicitly preserve all unrelated change-map entries. |
+| `preserves_stable_paths_and_scope_boundaries` | PASS | The with_skill output explicitly excludes Billing, existing docs/site/api/search.md, database, design, ops, product, release-notes, and src/api/internal/**; it states Search remains unchanged and proposes no migration. |
+| `keeps_unconfirmed_batch_read_only` | PASS | It marks the gate blocked pending maintainer confirmation, reports no changed docs, says host checks were not run, emits no docs-audit handoff, and requests confirmation before atomic writes. |
+| `defaults_new_pages_to_internal_visibility` | FAIL | The with_skill output does not assign internal visibility to proposed new pages or explain the default/exception policy. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=6f517ac1b32b2e3c34ea089bc7f24fa7ca4fa10c002409e76908fe2cd96d6c17; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produces a read-only, confirmation-gated five-page Identity/Sessions proposal with strong API evidence, exclusions, and full proposed mapping closure, but misses required matrix detail and internal visibility policy.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=29f249e3f0b48418fab86fb1e7f43c26e7e4adbe80bf78eeef4e622913e9255e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline identifies the five-page Identity/Sessions batch and some API evidence, but lacks explicit backfill gating, complete ancestor change-map closure, detailed confirmation matrix, exclusions, and visibility policy.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- presents_per_node_confirmation_matrix: required per-node mapping fields and cross-correspondable matrix coverage are incomplete.
+- proposes_exact_atomic_change_map: stable deduplicated ordering and preservation of all unrelated entries are not fully stated.
+- defaults_new_pages_to_internal_visibility: no internal visibility default is proposed or justified.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-001-sync-feature-api`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api`.
+- Fixture SHA-256: `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa`
+- Prompt SHA-256: `cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a612d50c32b84c65fad3cad08aad2d416a3a33647abfa1462784c1e58022424b`
+- Skill overlay SHA-256: `e55ecf59b3cd8d90a2ed4cf555bed2ad2fc2131494e0914246a868317b68f4e8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ce743547e06014367140716bb2c97c1db58eb733e797662e8b4bd6eca00be3ee`
+- Metadata SHA-256: `e71fe1ba5d6339777690bef42456f363050aa1a29a7cf722a403bab61da88105`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `selects_backfill_mode_and_api_contract` | NOT_EXERCISED | With-skill output visibly selects existing-system backfill and API-only loading, but locked evidence cannot prove the complete read-order/exclusion requirement. |
+| `derives_complete_api_candidate_tree` | PASS | Provides the complete API, Identity, Sessions, create-session, and revoke-session tree, with catalog hierarchy, routes, owners, schemas/tests, and Billing deferred. |
+| `presents_per_node_confirmation_matrix` | PASS | Provides a per-page table, full tree, code boundaries, owners, route/catalog evidence, mapping section, discrepancies, exclusions, and requests maintainer confirmation before writing. |
+| `proposes_exact_atomic_change_map` | PASS | Maps routes, schemas, and contract tests to all five ancestor/leaf pages, including recursive navigation impact, while preserving plugins/manual/** unknown fields and unrelated entries. |
+| `preserves_stable_paths_and_scope_boundaries` | PASS | Explicitly excludes Billing, Search, internal API, database, design, ops, product, and release scope; states the existing Search page and mapping remain unchanged. |
+| `keeps_unconfirmed_batch_read_only` | PASS | States zero writes, no host checks, and no handoff, and stops pending one explicit confirmation of the complete Sessions subtree and mappings. |
+| `defaults_new_pages_to_internal_visibility` | FAIL | The with-skill proposal does not specify visibility for candidate or mapped new pages, so it does not establish the required internal default or exceptions. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=d6c58b790f443880676c7d88916fcea44920d4eac5e12875998fe4ae906cadc5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produces a detailed zero-write Sessions subtree proposal with evidence, exclusions, atomic mappings, and confirmation gating, but omits new-page visibility defaults; read-order claims are not independently provable.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=25fcdaf0d11f553eafb081af332c6de7f873e2eff6119cc674188a17dffefc88; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Identifies a limited Identity/Sessions batch and waits for confirmation, but omits the API root ancestor, per-node confirmation matrix, full atomic ancestor mappings, explicit discrepancies, and visibility policy.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- New candidate-page visibility is not specified as internal by default.
+- Next: Add internal visibility to each proposed new page and explain that no public/both visibility is warranted absent explicit host requirements.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-001-sync-feature-api`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api`.
 - Fixture SHA-256: `a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032`
 - Prompt SHA-256: `cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a`

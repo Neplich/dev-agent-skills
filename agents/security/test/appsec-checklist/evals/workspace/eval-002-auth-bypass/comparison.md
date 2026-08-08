@@ -14,6 +14,192 @@
 - Fixture version/source: canonical manifest `cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c` from `agents/security/test/appsec-checklist/evals/workspace/eval-002-auth-bypass`.
 - Fixture SHA-256: `cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c`
 - Prompt SHA-256: `f088fb8b19565a837c87f47deb48148bf8a1f74fd9bf243974d4975068d68895`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `812b371fc30792cb2b0cf8d96079b3244c95b93efab7638e085d4e955d6ea42c`
+- Skill overlay SHA-256: `33e7e73c99fb4e7a6f2d6ab5104b8298fc067235a29614a6e32ee61035051666`
+- Judge schema SHA-256: `dd30fe689fbcc65952d80f9f7fb0f55e7cc2d55b9002a172d25f15b8b97c4288`
+- Eval definition SHA-256: `6a82fe3c3414aca61cd232161a32adb38bf8c698919832011992c1d84f8965f5`
+- Metadata SHA-256: `3fcfb91e83a24f1f8a67c2d9edff9012dc72e220f47b3bfd6102b0d7601836a9`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `security_findings` | PASS | The locked with_skill report identifies missing authentication and admin-role authorization on /admin/users, with anonymous and member access to user data. |
+| `evidence_and_impact` | PASS | The report cites src/app.js:18, src/api/admin-routes.js:4-6, and src/api/admin-users.js:6-8, and explains exposure of account data and release impact. |
+| `severity_rationale` | PASS | The report assigns Critical severity and provides rationale based on direct authentication/authorization bypass affecting an administrative endpoint. |
+| `remediation` | PASS | The report gives executable middleware changes, route-prefix guidance, 401/403 behavior, handler non-execution checks, and regression tests. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f088fb8b19565a837c87f47deb48148bf8a1f74fd9bf243974d4975068d68895; fixture_sha256=cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c; output_sha256=9aa4c1058b16ce7d8e587f4beb1f70e9b8c7660d2429808662a74f4c3bb651f9; snapshot_sha256=c79db78bd22ddb4cb8a68fa848da125510fdf54ed5053d95507119991fbcd875
+- Behavior: Produced a complete security checklist with findings, evidence, impact, severity rationale, and actionable remediation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f088fb8b19565a837c87f47deb48148bf8a1f74fd9bf243974d4975068d68895; fixture_sha256=cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c; output_sha256=9f3fe493ec5f77f305d95492326a8b170e88603f93e2ec5330183dd0af339770; snapshot_sha256=a7ad8f51c8f7fd2f9ca63cfd3da8bc82e4be89556eeb65d430a594b5e4058a38
+- Behavior: Also produced a complete checklist; serves only as comparison context and does not affect with_skill assertion verdicts.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `appsec-checklist`
+- Eval: `eval-002-auth-bypass`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c` from `agents/security/test/appsec-checklist/evals/workspace/eval-002-auth-bypass`.
+- Fixture SHA-256: `cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c`
+- Prompt SHA-256: `f088fb8b19565a837c87f47deb48148bf8a1f74fd9bf243974d4975068d68895`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `812b371fc30792cb2b0cf8d96079b3244c95b93efab7638e085d4e955d6ea42c`
+- Skill overlay SHA-256: `33e7e73c99fb4e7a6f2d6ab5104b8298fc067235a29614a6e32ee61035051666`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6a82fe3c3414aca61cd232161a32adb38bf8c698919832011992c1d84f8965f5`
+- Metadata SHA-256: `3fcfb91e83a24f1f8a67c2d9edff9012dc72e220f47b3bfd6102b0d7601836a9`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `security_findings` | PASS | with_skill 交付报告准确识别了 /admin/users 缺少认证与 admin 角色授权，导致匿名和普通用户越权访问。 |
+| `evidence_and_impact` | PASS | 报告引用了 src/app.js:18、src/api/admin-routes.js:6、src/api/admin-users.js:6-7，并说明了管理用户数据暴露及后续写操作扩展风险。 |
+| `severity_rationale` | PASS | 报告将问题定为 HIGH，并依据无需身份即可访问管理员 API、违反 PRD 两道访问控制且暴露账号资料进行了定级说明。 |
+| `remediation` | PASS | 报告提供了路由边界认证与管理员授权、中间件顺序、401/403 行为以及匿名、普通用户、管理员集成测试等可执行修复和验证步骤。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f088fb8b19565a837c87f47deb48148bf8a1f74fd9bf243974d4975068d68895; fixture_sha256=cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c; output_sha256=c3f8079b363c69694105f8e91bf118bf96b82558f960cf2ed871681f2e01f318; snapshot_sha256=9a11330f28373b177a6287ecda063916608cdb8fe8e591f48a1355841b1422a6
+- Behavior: 完整交付了基于实际挂载方式的安全报告，包含发现、证据、影响、严重度依据、修复方案和验证清单。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f088fb8b19565a837c87f47deb48148bf8a1f74fd9bf243974d4975068d68895; fixture_sha256=cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c; output_sha256=75b041a11cb2e79797a654564fadd2b49b8cfa665ee2c010187e8cce6991d663; snapshot_sha256=04ee323712bdaac14f0a39c1d5fb9f1cf1e5f6f2a78789a0ceee8d0aad86ae3e
+- Behavior: 识别了核心访问控制问题并提供了修复建议，交付了安全清单。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `appsec-checklist`
+- Eval: `eval-002-auth-bypass`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c` from `agents/security/test/appsec-checklist/evals/workspace/eval-002-auth-bypass`.
+- Fixture SHA-256: `cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c`
+- Prompt SHA-256: `f088fb8b19565a837c87f47deb48148bf8a1f74fd9bf243974d4975068d68895`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `812b371fc30792cb2b0cf8d96079b3244c95b93efab7638e085d4e955d6ea42c`
+- Skill overlay SHA-256: `5b2b2b7a3b96eded32c11959c382e7fa8aafb204f59c1c353154bae2cdaf9c71`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6a82fe3c3414aca61cd232161a32adb38bf8c698919832011992c1d84f8965f5`
+- Metadata SHA-256: `3fcfb91e83a24f1f8a67c2d9edff9012dc72e220f47b3bfd6102b0d7601836a9`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `security_findings` | PASS | with_skill identifies missing authentication and admin-role authorization on GET /admin/users, allowing anonymous and ordinary users into listUsers. |
+| `evidence_and_impact` | PASS | It cites app.js, admin-routes.js, and admin-users.js, describes the route chain, and explains exposure of user IDs, display names, roles, and broader management-data impact. |
+| `severity_rationale` | PASS | It assigns Critical severity and supports it with the authentication bypass, missing authorization boundary, sensitive administrative data, and direct PRD violation. |
+| `remediation` | PASS | It provides executable middleware examples, 401/403 behavior, route-prefix guidance, and anonymous/ordinary/admin regression tests. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f088fb8b19565a837c87f47deb48148bf8a1f74fd9bf243974d4975068d68895; fixture_sha256=cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c; output_sha256=8d72279cbc871509aba7e24fd130b9fdb0405b18180dafdecb84e6fc0103505c; snapshot_sha256=9a352bffaf29a4a0c7c6e5688b7e3ddec1a917d2893f0222845d6c09e73d8d3c
+- Behavior: Produces a detailed AppSec report identifying the missing authentication and authorization boundary, with evidence, impact, severity rationale, fixes, and regression checks.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f088fb8b19565a837c87f47deb48148bf8a1f74fd9bf243974d4975068d68895; fixture_sha256=cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c; output_sha256=c3cf77a0a4e0b831bd8fc36440d4ed7de19ed27c2ea80885e855d6b8ecabdf86; snapshot_sha256=8116ca13045a1123cc1e12348f448e8d153ede291f8754f9b9e133a478eead66
+- Behavior: Correctly identifies the access-control flaw and supplies evidence, High severity rationale, remediation, and validation guidance.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `appsec-checklist`
+- Eval: `eval-002-auth-bypass`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c` from `agents/security/test/appsec-checklist/evals/workspace/eval-002-auth-bypass`.
+- Fixture SHA-256: `cc5543f86ff4c8f3552e0e869f4690b7cabc4d7aa6f846231a547e3a3fb6e25c`
+- Prompt SHA-256: `f088fb8b19565a837c87f47deb48148bf8a1f74fd9bf243974d4975068d68895`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `812b371fc30792cb2b0cf8d96079b3244c95b93efab7638e085d4e955d6ea42c`

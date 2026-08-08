@@ -18,6 +18,14 @@ specialist, required output, and the authoritative specialist gate. For a full
 implementation request, keep this order observable:
 `codebase-analyzer` -> alignment/TRD gap resolution ->
 `feature-implementor` -> `test-writer` -> QA E2E handoff -> `delivery`.
+When the PM entry basis is already confirmed, `codebase-analyzer` remains the
+first engineering step; do not prepend a new PM discovery route.
+Name `engineer-agent` as the owner before the selected specialist. When the
+chain includes tests, explicitly route them to `test-writer`; when it includes
+QA E2E, preserve the suggested `docs/qa/e2e/{feature_path}/` directory. A UI
+design gap is handed to `designer-agent` with the exact design scope even when
+that downstream capability is unavailable; mark availability separately rather
+than replacing the required handoff.
 
 An approved-expectation change returns to `pm-agent:idea-to-spec` existing
 project update; a technical gap returns to `trd-gen`; implementation begins

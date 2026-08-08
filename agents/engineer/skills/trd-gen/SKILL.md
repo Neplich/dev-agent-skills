@@ -22,12 +22,20 @@ basis and resolved `feature_path`, and stop if product decisions remain open.
 Accept gap packets from routing, debugging, implementation, or QA as TRD work:
 the finder supplies evidence and missing decisions; `trd-gen` resolves them in
 the existing same-path Engineer document or records an owned blocker.
+For every gap-packet result, state this boundary explicitly and list unresolved
+questions with owners and unblock conditions. Any unresolved gap keeps
+`feature-implementor`, `debugger`, and QA E2E document creation blocked; do not
+write new `docs/qa/e2e/` expectations until the TRD is complete.
 
 When document sub-agents are available, delegate the document write while the
 main process retains source context and reviews the result. Never implement
 code or create an implementation plan here. After the Engineer documents are
-confirmed, hand them to `feature-implementor`; QA E2E work may begin only after
-that specialist has produced and confirmed the implementation plan.
+confirmed, offer the `feature-implementor` handoff only when continuation is
+requested or authorized; do not write routing instructions into the TRD itself.
+QA E2E work remains blocked until that specialist has produced and confirmed
+the implementation plan. The checkpoint explicitly states Engineer/
+`engineer-agent:trd-gen` ownership, whether document-subagent delegation was
+required and used, and the finder-versus-TRD-owner boundary for gap packets.
 
 ## Role Boundary
 
@@ -121,11 +129,18 @@ The incoming packet should identify:
 - the discoverer's boundary statement: the finder names the gaps; `trd-gen`
   completes or updates the TRD
 
+For every gap-packet task, restate this boundary in the generated TRD or
+delivery summary: the finder reports the gaps and evidence; `trd-gen` owns
+resolving them in Engineer documents. Do not leave the boundary implicit in the
+incoming packet.
+
 `trd-gen` must either update `docs/engineer/{feature_path}/TRD.md` to resolve
 each named gap or record an open technical question with owner, blocker, and
 unblock condition. Do not route to `feature-implementor`, `debugger`, or QA E2E
 documentation updates until the TRD is confirmed, mirrors the PRD feature path,
 and any open questions are explicitly accepted as non-blocking.
+Whenever an open technical question remains, report
+`blocked_downstream: [feature-implementor, debugger, qa-e2e]` explicitly.
 
 ## L2b Split Assessment
 
@@ -215,6 +230,8 @@ The TRD must include:
 
 - metadata with `type: TRD`, `feature`, `feature_path`, `parent_feature`,
   `feature_level`, `version`, `date`, `last_updated`, and `related_prd`
+- API and ADR frontmatter also carries `related_prd` when those documents are
+  produced from the same confirmed PM scope
 - optional frontmatter `related_code` as a machine-readable array of affected
   repository paths or globs, so `formal-docs-sync` and `docs-audit` can scope
   the impact precisely; this is an enhancement, not a handoff gate, and when

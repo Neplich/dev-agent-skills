@@ -14,6 +14,415 @@
 - Fixture version/source: canonical manifest `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974` from `agents/engineer/test/feature-implementor/evals/workspace/eval-002-subagent-division-from-docs`.
 - Fixture SHA-256: `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974`
 - Prompt SHA-256: `6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e820a1098a32d64fe76bdf4ec719cd859ebecfdb70fa28be1309b656ec71bd22`
+- Skill overlay SHA-256: `226a387f9ef93d9f4c106e1f240f22e5014d390eeb37da0fd61da0c129ca36ba`
+- Judge schema SHA-256: `1e433f2d38239fdd1f4633433c706d2dafc7492741c63113035a8d0975b21d23`
+- Eval definition SHA-256: `f4a3318c26964c6e50e73da4a0083b2eedeed8886d0685576f77ee1323f675a5`
+- Metadata SHA-256: `0a81d92a9af555dbb300e83a7ff4d8024a21161273fe243a2bbb1dbd8da3747a`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_main_context` | FAIL | with_skill 输出保留了 PRD/TRD/设计文档路径、实现范围和交付阻塞信息，但未说明主进程负责保留仓库规则及最终交付判断。 |
+| `writes_implementation_plan_doc` | NOT_EXERCISED | 候选输出确认 IMPLEMENTATION_PLAN.md 尚不存在，并将其推迟到 TRD 补齐及用户确认之后；后续文档编写步骤尚未发生。 |
+| `delegates_implementation_scope` | PASS | 明确列出 queue-service、event-handler 和测试文件，并禁止修改 PRD、TRD、无关模块及新增 E2E 需求。 |
+| `delegates_independent_validation` | FAIL | 安排了独立验收，但仅说明复核确认后的计划、文档、代码、测试和风险，未明确要求基于 PRD、TRD、设计文档、仓库规则及变更范围进行完整验收。 |
+| `keeps_simple_path_exception` | PASS | 输出未声称所有工程任务都必须拆分 sub-agent；其拆分要求限定在当前 TRD 对齐后的任务流程。 |
+| `final_summary_contract` | NOT_EXERCISED | 实现、测试、验收和交付均因 TRD 缺口及确认要求被阻塞，最终交付摘要尚未发生。 |
+| `qa_e2e_handoff_contract` | NOT_EXERCISED | QA handoff 明确标记为 blocked_until_plan_confirmed，尚未形成 QA E2E 交接包。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=529f6f00c965ac9a780ddb517d1841eec52acf285c475ed00a1949e3a5f41261; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别 TRD 缺口并暂停编码，列出实现范围、分工和后续确认条件；但主进程职责与完整独立验收依据表达不完整。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=6a0590e4200131cf3f6d91ba483a5891ef2929df72e049d9933841763f48f115; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 直接给出实现方案、默认重试约定和实现/验收分工，但未体现计划文档、sub-agent 约束、独立验收交接或阻塞控制。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- preserves_main_context
+- delegates_independent_validation
+- Next: 补齐并确认 TRD。
+- Next: 由文档编写 sub-agent 创建 IMPLEMENTATION_PLAN.md 后再开始实现与独立验收。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-002-subagent-division-from-docs`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974` from `agents/engineer/test/feature-implementor/evals/workspace/eval-002-subagent-division-from-docs`.
+- Fixture SHA-256: `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974`
+- Prompt SHA-256: `6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e820a1098a32d64fe76bdf4ec719cd859ebecfdb70fa28be1309b656ec71bd22`
+- Skill overlay SHA-256: `226a387f9ef93d9f4c106e1f240f22e5014d390eeb37da0fd61da0c129ca36ba`
+- Judge schema SHA-256: `1e433f2d38239fdd1f4633433c706d2dafc7492741c63113035a8d0975b21d23`
+- Eval definition SHA-256: `f4a3318c26964c6e50e73da4a0083b2eedeed8886d0685576f77ee1323f675a5`
+- Metadata SHA-256: `0a81d92a9af555dbb300e83a7ff4d8024a21161273fe243a2bbb1dbd8da3747a`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_main_context` | FAIL | 仅说明主流程保留仓库规则、源代码上下文、集成判断和最终交付判断，未明确说明其保留 PRD、TRD、设计文档及实现边界。 |
+| `writes_implementation_plan_doc` | FAIL | 提到计划文件路径及将在 TRD 补齐后创建，但未说明由文档编写 sub-agent 编写，也未说明 TRD 不由 feature-implementor 改写。 |
+| `delegates_implementation_scope` | FAIL | 明确列出三个实现文件及禁止修改外部 API、引入依赖和无关模块的约束，但未明确指定实现 sub-agent。 |
+| `delegates_independent_validation` | FAIL | 安排了独立验收方并要求依据 PRD、TRD、UI 规范和实施计划检查，但未完整要求基于测试结果、仓库规则和变更范围验收。 |
+| `keeps_simple_path_exception` | FAIL | 未保留简单单文件修改、纯解释或用户明确不拆分时的轻量路径例外。 |
+| `final_summary_contract` | FAIL | 未说明最终交付说明必须包含实现结果、测试情况、验收结论和遗留风险。 |
+| `qa_e2e_handoff_contract` | NOT_EXERCISED | 候选输出正确将 QA handoff 阻塞到 TRD 补齐及实施计划确认之后；代码尚未实现，因此该后续交接包要求尚未到可执行阶段。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=d2707d0abaf1fe15636b22b8e50c623b473e519159d8598829463d421ce4de51; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了 TRD 缺口、暂停编码并给出受限实现范围和独立验收方，但遗漏多项主流程、计划编写、轻量例外、最终交付和 QA 交接合同要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=ffcd774c59f622214a24ab0e02fc6081e05dc7bca2bafcbaef7346217e9e5508; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了较完整的实现方案、测试场景和实现/验收分工，但未体现所要求的 sub-agent 编排、实施计划文档、轻量例外或 QA E2E 交接合同。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- preserves_main_context
+- writes_implementation_plan_doc
+- delegates_implementation_scope
+- delegates_independent_validation
+- keeps_simple_path_exception
+- final_summary_contract
+- Next: 补充主流程保留 PRD、TRD、设计文档、仓库规则、实现边界和最终交付判断的说明。
+- Next: 明确由文档编写 sub-agent 创建 IMPLEMENTATION_PLAN.md，并禁止 feature-implementor 改写 TRD。
+- Next: 明确实现 sub-agent、独立验收 sub-agent、简单任务例外、最终交付摘要和 QA E2E 交接包内容及目录。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-002-subagent-division-from-docs`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974` from `agents/engineer/test/feature-implementor/evals/workspace/eval-002-subagent-division-from-docs`.
+- Fixture SHA-256: `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974`
+- Prompt SHA-256: `6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `664333a5486cf89713133cd2c13950492425453ded41d03d80fa464888580510`
+- Skill overlay SHA-256: `e3882775ef1e3496d2f149c4016d8d04e22a586399acb4fdc6095b11e8f7c7bf`
+- Judge schema SHA-256: `1e433f2d38239fdd1f4633433c706d2dafc7492741c63113035a8d0975b21d23`
+- Eval definition SHA-256: `f4a3318c26964c6e50e73da4a0083b2eedeed8886d0685576f77ee1323f675a5`
+- Metadata SHA-256: `0a81d92a9af555dbb300e83a7ff4d8024a21161273fe243a2bbb1dbd8da3747a`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_main_context` | FAIL | 输出保留了 PRD、TRD、设计说明、实现边界和当前阻塞决策，但未说明仓库规则及主进程职责。 |
+| `writes_implementation_plan_doc` | NOT_EXERCISED | TRD 缺口导致正式计划和后续分工尚未生成，无法判定该步骤。 |
+| `delegates_implementation_scope` | NOT_EXERCISED | 输出明确说明实现分工待 TRD 完整后评估，尚未进入该步骤。 |
+| `delegates_independent_validation` | NOT_EXERCISED | 输出明确说明当前不启动实现/验收分工，独立验收尚未发生。 |
+| `keeps_simple_path_exception` | NOT_EXERCISED | 输出未表达所有任务都必须拆分 sub-agent，但也未呈现简单路径例外。 |
+| `final_summary_contract` | NOT_EXERCISED | 由于 TRD 缺口，尚未形成最终交付，因此最终总结契约未被执行。 |
+| `qa_e2e_handoff_contract` | NOT_EXERCISED | 输出明确将 QA handoff 标记为 blocked_until_plan_confirmed，尚未执行。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=56cc636fdb5ac2b08247f4cf8ae8b94677e01119d7eb999b9dfb8b1f91c868b3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别 TRD 技术缺口并暂停实现、验收、QA handoff 和交付，未发生工作区变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=45dc8a17e8c738d35c251d7b415fe6a18b1d6be171ea1711110abc6a202bb44c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了实现和验收方案及参数假设，但未执行所需的主进程上下文保留、计划文档和明确 sub-agent 分工契约。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- preserves_main_context
+- Next: 补齐 TRD 缺口并确认完整 IMPLEMENTATION_PLAN.md。
+- Next: 确认后再明确实现 sub-agent、独立验收 sub-agent 及 QA E2E handoff。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-002-subagent-division-from-docs`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974` from `agents/engineer/test/feature-implementor/evals/workspace/eval-002-subagent-division-from-docs`.
+- Fixture SHA-256: `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974`
+- Prompt SHA-256: `6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `664333a5486cf89713133cd2c13950492425453ded41d03d80fa464888580510`
+- Skill overlay SHA-256: `e3882775ef1e3496d2f149c4016d8d04e22a586399acb4fdc6095b11e8f7c7bf`
+- Judge schema SHA-256: `1e433f2d38239fdd1f4633433c706d2dafc7492741c63113035a8d0975b21d23`
+- Eval definition SHA-256: `f4a3318c26964c6e50e73da4a0083b2eedeed8886d0685576f77ee1323f675a5`
+- Metadata SHA-256: `0a81d92a9af555dbb300e83a7ff4d8024a21161273fe243a2bbb1dbd8da3747a`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_main_context` | FAIL | 输出列出 PRD/TRD/设计文档和实现边界，但未说明主进程保留仓库规则、最终交付判断等高层上下文。 |
+| `writes_implementation_plan_doc` | NOT_EXERCISED | 输出明确说明 IMPLEMENTATION_PLAN.md 尚不存在，需 TRD 补齐并重新确认后才写入；后续用户确认尚未发生。 |
+| `delegates_implementation_scope` | FAIL | 输出列出三个实现文件和实现职责，但未包含禁止无关改动或不得触碰无关区域的约束。 |
+| `delegates_independent_validation` | FAIL | 输出提出实现与独立验收分工，并列出验收依据，但未明确验收 sub-agent 与实现 sub-agent 为不同代理，且未完整明确仓库规则、变更范围和测试结果作为依据。 |
+| `keeps_simple_path_exception` | FAIL | 输出未保留简单单文件修改、纯解释或用户明确不拆分时的轻量路径例外。 |
+| `final_summary_contract` | NOT_EXERCISED | 当前流程因 TRD 缺口和等待确认而暂停，尚未进入最终交付阶段。 |
+| `qa_e2e_handoff_contract` | NOT_EXERCISED | 输出明确禁止 QA handoff，且 QA 交接包依赖计划确认和后续编码；这些前置步骤尚未完成。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=fbffd5317e7f446f8e61c5f7ef435e961425feccffd33064dc082fab0509dbd5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别出 TRD 缺口并暂停编码，列出实现文件及实现/验收分工，但未完成计划文档、实现约束或后续交付。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=d83de1f36d9b83ee9be4a6f00a97bf373200656f292e1aa9ebfb674c22095aaf; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 直接给出较完整的编码方案、实现文件范围、验收矩阵及实现/验收分工，但未体现计划文档和 QA 交接约束。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未完整保留主进程高层上下文职责。
+- 实现代理范围缺少无关改动约束。
+- 独立验收代理的不同代理身份及完整验收依据未明确。
+- 未保留简单任务例外。
+- Next: 补齐 TRD 并获得计划确认后，由文档代理写入 IMPLEMENTATION_PLAN.md。
+- Next: 明确实现代理的禁止无关改动约束及不同代理负责的独立验收范围。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-002-subagent-division-from-docs`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974` from `agents/engineer/test/feature-implementor/evals/workspace/eval-002-subagent-division-from-docs`.
+- Fixture SHA-256: `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974`
+- Prompt SHA-256: `6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `664333a5486cf89713133cd2c13950492425453ded41d03d80fa464888580510`
+- Skill overlay SHA-256: `e3882775ef1e3496d2f149c4016d8d04e22a586399acb4fdc6095b11e8f7c7bf`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `f4a3318c26964c6e50e73da4a0083b2eedeed8886d0685576f77ee1323f675a5`
+- Metadata SHA-256: `0a81d92a9af555dbb300e83a7ff4d8024a21161273fe243a2bbb1dbd8da3747a`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_main_context` | FAIL | with_skill 未说明主进程负责保留 PRD、TRD、设计文档、仓库规则、实现边界及最终交付判断。 |
+| `writes_implementation_plan_doc` | FAIL | with_skill 提到 IMPLEMENTATION_PLAN.md 将在 TRD 补齐后生成，但未说明由文档编写 sub-agent 编写，也未说明 TRD 不由 feature-implementor 改写。 |
+| `delegates_implementation_scope` | FAIL | with_skill 仅列出暂定的三个文件和适合拆分，未为实现 sub-agent 明确分配写入范围，也未包含禁止无关改动或触碰无关区域的约束。 |
+| `delegates_independent_validation` | FAIL | with_skill 未安排不同于实现 sub-agent 的独立验收 sub-agent，也未要求其基于指定文档、测试结果、仓库规则和变更范围验收。 |
+| `keeps_simple_path_exception` | FAIL | with_skill 未保留简单单文件修改、纯解释或用户明确不拆分时的轻量路径说明。 |
+| `final_summary_contract` | FAIL | with_skill 未说明最终交付需包含实现结果、测试情况、验收结论和遗留风险。 |
+| `qa_e2e_handoff_contract` | NOT_EXERCISED | 候选正确识别 TRD 缺口并将 QA handoff 阻塞到计划确认之后；代码尚未完成，因此后续 QA E2E 交接包尚不能执行。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=0b4b68dfdd9439126ba1d4c4569379e7225aee22703794d93eb4fcfffc4e1f14; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别 TRD 技术缺口并在实现、QA handoff 和交付前暂停，等待 TRD 补齐及计划确认；但未满足多数要求的分工与交付说明。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=55a1806b3546e37cf391e82fc1325d51bf41808fc48ac2fdc4c2c85f3f8cd512; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 直接给出编码方案和验收分工，但未体现规定的文档计划、sub-agent 分工及 QA E2E 交接契约。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 缺少主进程高层上下文保留职责说明。
+- with_skill 缺少文档编写 sub-agent、IMPLEMENTATION_PLAN.md 写入职责及 TRD 修改边界说明。
+- with_skill 未明确实现 sub-agent 的写入范围和无关改动约束。
+- with_skill 未安排独立验收 sub-agent 及规定的验收依据。
+- with_skill 未保留简单任务的轻量路径例外。
+- with_skill 未完整说明最终交付摘要契约。
+- Next: TRD 补齐并确认后，生成并确认 IMPLEMENTATION_PLAN.md，再执行实现、独立验收及 QA E2E 交接。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-002-subagent-division-from-docs`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974` from `agents/engineer/test/feature-implementor/evals/workspace/eval-002-subagent-division-from-docs`.
+- Fixture SHA-256: `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974`
+- Prompt SHA-256: `6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `34bb246c41505d261f20b6762e5f8c167260c9def318e938b2f40cd562a05376`
+- Skill overlay SHA-256: `b58ba61aee19f19d841deeba69a31e4991e1e48601dbae26ffb264815cffa67d`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `f4a3318c26964c6e50e73da4a0083b2eedeed8886d0685576f77ee1323f675a5`
+- Metadata SHA-256: `0a81d92a9af555dbb300e83a7ff4d8024a21161273fe243a2bbb1dbd8da3747a`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_main_context` | NOT_EXERCISED | with_skill 先指出 TRD 关键决策缺失并暂停进入编码；主进程上下文保留与最终交付判断属于后续执行方案，当前未到该步骤。 |
+| `writes_implementation_plan_doc` | NOT_EXERCISED | 输出明确表示 TRD 补齐后才会编写 IMPLEMENTATION_PLAN.md，因此该后续交接约束尚未执行。 |
+| `delegates_implementation_scope` | NOT_EXERCISED | 输出仅表示后续会明确实现 sub-agent 边界；由于 TRD 尚未补齐，具体实现范围尚未形成。 |
+| `delegates_independent_validation` | NOT_EXERCISED | 输出仅表示后续会明确独立验收 sub-agent 边界；当前交互停留在补齐 TRD 的前置步骤。 |
+| `keeps_simple_path_exception` | NOT_EXERCISED | 轻量路径约束属于后续执行方案内容，当前未进入方案编写步骤。 |
+| `final_summary_contract` | NOT_EXERCISED | 最终交付说明尚未产生；当前输出只说明暂停原因、影响范围和验收应覆盖的测试场景。 |
+| `qa_e2e_handoff_contract` | NOT_EXERCISED | QA E2E 交接包属于代码完成后的后续步骤，当前尚未进入编码或交付阶段。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=672e34a05234057b973c4396829b38f2613aa32039e52ff727c041ca832f3ad1; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别出 TRD 的重试上限、调度入口等关键缺口，暂停编码并请求先由 trd-gen 补齐 TRD；承诺之后再编写实施计划并等待确认。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=19c84465c71c1e802ca9ecb962770c85991674f408be55d2d7f70d0dc93cb204; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 直接给出编码方案、验证方式和用户分工，但未形成 sub-agent 实施/独立验收及 QA E2E 交接合同。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 补齐并确认 TRD 决策后，再评估后续执行方案相关断言。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-002-subagent-division-from-docs`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974` from `agents/engineer/test/feature-implementor/evals/workspace/eval-002-subagent-division-from-docs`.
+- Fixture SHA-256: `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974`
+- Prompt SHA-256: `6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `31ea692709a0817bc32ab74f76490bf0edfdea6902d08e36d2b8cbddeb78aee4`

@@ -14,6 +14,192 @@
 - Fixture version/source: canonical manifest `a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-003-third-party`.
 - Fixture SHA-256: `a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73`
 - Prompt SHA-256: `f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`
+- Skill overlay SHA-256: `840e4d3e20057f4834a3b010b4142d0e7be2f66540c525231dc34075db0dbbee`
+- Judge schema SHA-256: `46c6f10cb2ee094e0f2d9b8cf0d9d794ebc801a301eb97187a76e961b4e37fd0`
+- Eval definition SHA-256: `fde37322a972618cf8b85d5463c8e7a856c7547f8c15123669fd15297f556852`
+- Metadata SHA-256: `1b358949b025cd13ff498cda0a21978c243d4781824a1ceab1947fe97db21069`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `data_inventory` | PASS | Locked privacy-map.md directly inventories all three recipients, their fields and data types, collection entry via sendUserEvent, and inferred processing purposes. |
+| `sharing_and_retention` | PASS | Locked privacy-map.md identifies sharing to ExampleAnalytics, ExampleAds, and ExamplePay, including configured regions, retention values, undefined advertising retention/region, and deletion-support gaps. |
+| `user_rights` | PASS | Locked privacy-map.md explicitly assesses access, deletion, export, rectification, consent, and opt-out propagation, finding no implemented end-to-end support and distinguishing configured payment deletion from verified execution. |
+| `compliance_gaps` | PASS | Locked privacy-map.md provides prioritized compliance gaps and actionable recommendations covering consent, rights-request orchestration, regional/DPA evidence, retention, minimization, testing, and privacy-policy updates. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935; fixture_sha256=a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73; output_sha256=15551c9adf33298c43b6ce34951715d84a9a50195243f86a0884116558ae9a2e; snapshot_sha256=6153b53f70d0ea8710d500a0085482e9eee5fe50c27a01654fe725ab7c1ed4d4
+- Behavior: Delivered a complete, evidence-traceable privacy processing report with inventory, sharing and retention assessment, user-rights status, compliance gaps, and remediation recommendations.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935; fixture_sha256=a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73; output_sha256=131f694810b7dd7c05f036181c1f3bda54c695635cb16521f94c734badf118fe; snapshot_sha256=4d5cd238240e752560e785caf9de9adf40a576dab3ce06b1000efe42e319cb76
+- Behavior: Fresh baseline also delivered a substantially complete report, but with less explicit evidence-freshness qualification and less structured user-rights and compliance analysis.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `privacy-surface-mapper`
+- Eval: `eval-003-third-party`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-003-third-party`.
+- Fixture SHA-256: `a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73`
+- Prompt SHA-256: `f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`
+- Skill overlay SHA-256: `840e4d3e20057f4834a3b010b4142d0e7be2f66540c525231dc34075db0dbbee`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `fde37322a972618cf8b85d5463c8e7a856c7547f8c15123669fd15297f556852`
+- Metadata SHA-256: `1b358949b025cd13ff498cda0a21978c243d4781824a1ceab1947fe97db21069`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `data_inventory` | PASS | with_skill 的 privacy-map.md 逐项列出三家供应商接收的字段、数据类型、sendUserEvent 触发入口及处理目的。 |
+| `sharing_and_retention` | PASS | 报告识别了分析、广告和支付共享，记录了地域、配置保留期、删除支持及广告方未记录字段，并明确相关风险。 |
+| `user_rights` | PASS | 报告检查了访问、删除、导出、可携带、更正和同意/选择支持，指出未发现权利请求传播机制，并区分支付供应商 API 与应用未实现传播。 |
+| `compliance_gaps` | PASS | 报告给出按优先级和责任团队划分的整改建议，覆盖同意、最小化、地域、保留、删除、权利编排和证据验证。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935; fixture_sha256=a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73; output_sha256=1147fde792b9a115502883c78d6f86d38c99a3d1be33eab99fb0ff0aa0622305; snapshot_sha256=c1dfa6f20475701f346650b85b50c51521c8e2d792c86636a3f0e24052f70df4
+- Behavior: 交付了结构化 privacy-map.md，系统覆盖数据清单、实际数据流、第三方共享、用户权利、风险、证据新鲜度和整改建议。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935; fixture_sha256=a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73; output_sha256=0a93e74aa73ec37f7623e76b784ff3fd0bc610734cbed29f05bb31b58cb374d6; snapshot_sha256=a03a67aac9bfcdb33aa176efda09e971741cbd9d9919c88caefbcc3e1867d132
+- Behavior: 完成了较简要的第三方数据共享报告，覆盖主要供应商、字段、地域、保留、删除和同意缺口。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `privacy-surface-mapper`
+- Eval: `eval-003-third-party`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-003-third-party`.
+- Fixture SHA-256: `a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73`
+- Prompt SHA-256: `f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`
+- Skill overlay SHA-256: `4e2d7a3ffa0fc7b4cc84f02f24df4e35de821cbc6e0c580a1427e37709efb43b`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `fde37322a972618cf8b85d5463c8e7a856c7547f8c15123669fd15297f556852`
+- Metadata SHA-256: `1b358949b025cd13ff498cda0a21978c243d4781824a1ceab1947fe97db21069`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `data_inventory` | PASS | with_skill 报告逐项识别分析、广告和支付接收的数据字段、数据类型、代码触发/调用入口及处理目的，并与原始代码和配置对应。 |
+| `sharing_and_retention` | PASS | 报告明确列出三类第三方共享，指出分析和支付为美国配置地域、广告地域未配置；记录 730/2555 天保留、广告保留未配置，以及各方删除支持和运行证据缺口。 |
+| `user_rights` | PASS | 报告明确检查访问、删除、导出/可携带和更正，指出未发现端到端权利请求传播；区分支付仅有删除能力配置而无应用侧传播证据，并提出实现建议。 |
+| `compliance_gaps` | PASS | 报告给出同意门控、字段最小化、IP/URL 清洗、地域与跨境核验、保留期限、删除作业、权利请求传播和责任分工等具体隐私合规缺口与改进建议。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935; fixture_sha256=a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73; output_sha256=f86fa5ecfea036e4b2039b2c2c8d5555b4d91fe4dd109bc5ae6f4b2000bfb676; snapshot_sha256=84a5d94b2837b0b4c239b499db46bc233685ee84c4e2f26b7678c5ad5865ec75
+- Behavior: 生成结构化隐私处理面报告，逐项追溯代码与配置，完整覆盖数据清单、共享与保留风险、用户权利状态及合规整改建议，并明确未证实的运行时结论。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935; fixture_sha256=a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73; output_sha256=6ab08b7c55754da42ab706de98a55b7ce318fbc6979b1383fb98bac1ef806e44; snapshot_sha256=34750cd75e2497a999c9110f9e5cff79027ad9747f758f1e9c3eabacdacc8953
+- Behavior: 生成了覆盖三类供应商的简要隐私报告和整改建议，识别了主要字段、地域、保留、删除及同意问题，但用户权利和证据边界说明较简略。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `privacy-surface-mapper`
+- Eval: `eval-003-third-party`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-003-third-party`.
+- Fixture SHA-256: `a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73`
+- Prompt SHA-256: `f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`

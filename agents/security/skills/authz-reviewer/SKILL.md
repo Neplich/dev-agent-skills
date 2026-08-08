@@ -6,6 +6,10 @@ visibility: internal
 
 ## Mandatory Evidence Escalation
 
+When change-map discovery points to a formal page whose
+`last_verified_version` is `unverified`, label that page low-trust and expand
+verification against code/tests before relying on its auth/authz claims.
+
 When the review proves that a formal documentation, behavior, operational, or
 release fact changed, write the Security-owned report under
 `docs/security/{feature_path}/`, preserve the mapped document/code evidence and

@@ -14,6 +14,195 @@
 - Fixture version/source: canonical manifest `fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b` from `agents/engineer/test/engineer-agent/evals/workspace/eval-003-nested-feature-alignment-routing`.
 - Fixture SHA-256: `fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b`
 - Prompt SHA-256: `8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `cfa5a88208f1b1c899ab19782fdf4b1c4f59251e80b5c7edaead85a7f37b2ebd`
+- Skill overlay SHA-256: `077bb84411e61374de4fd93945f7e775b9133b3517221140cf4b19937f8b8f70`
+- Judge schema SHA-256: `2c28cd5019db4aa28a9d236d016e67174df115cef2180ca189d432ec28ba579c`
+- Eval definition SHA-256: `6c7cc377f055d604b202feb40d5d2142b855d0368cb0621fa60f17937cec9872`
+- Metadata SHA-256: `cc9d0ea1f23672ef6b7d553053f01b0836b8fd341a707c6f88e853c6256fb3fb`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `resolves_nested_feature_path` | PASS | With-skill output explicitly identifies feature_path as `chat-interface/history-search` and references the matching PRD/TRD paths; fixture frontmatter confirms both paths. |
+| `does_not_use_sibling_or_parent_only_path` | PASS | With-skill output uses the nested feature path and does not substitute sibling or parent-only paths. |
+| `routes_requirement_change_to_pm` | PASS | Because the requested ranking change affects approved expectations, with-skill output routes to `pm-agent:idea-to-spec` with `existing-project-update`, then describes subsequent TRD alignment. |
+| `routes_trd_mismatch_to_trd_gen` | NOT_EXERCISED | The fixture TRD exists, is Approved, and its `feature_path` and `related_prd` match; the stale/missing/mismatch condition is not exercised. |
+| `does_not_execute_directly` | PASS | With-skill output states no code changes, and locked git evidence shows no changes, commits, plans, or test execution. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9; fixture_sha256=fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b; output_sha256=f65da846927597339f4f7dea24dccec7727684e87c4eef58b7e497a0cb2ba672; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly resolves the nested feature, routes an approved-expectation change to PM before TRD alignment, and stops without implementation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9; fixture_sha256=fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b; output_sha256=3408558463293160b5a06abf943f70b0e947913241253e7c350b236041f94f46; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides reasonable generic planning and avoids changes, but does not resolve the nested feature path or perform the required PM routing.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: If a missing, stale, or mismatched TRD case is exercised, verify routing to `engineer-agent:trd-gen`.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-003-nested-feature-alignment-routing`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b` from `agents/engineer/test/engineer-agent/evals/workspace/eval-003-nested-feature-alignment-routing`.
+- Fixture SHA-256: `fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b`
+- Prompt SHA-256: `8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `cf5998cdd0e57fc7e288a79411dd445b8e07aa2acaa4991819873a45b9dfb293`
+- Skill overlay SHA-256: `fbd54811cad37baf48c96e02cd6eda99bc6d8b886b0ce2dc848aa202c091fedd`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6c7cc377f055d604b202feb40d5d2142b855d0368cb0621fa60f17937cec9872`
+- Metadata SHA-256: `cc9d0ea1f23672ef6b7d553053f01b0836b8fd341a707c6f88e853c6256fb3fb`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `resolves_nested_feature_path` | PASS | with_skill 明确识别 feature_path 为 `chat-interface/history-search`，并基于锁定 manifest 中的嵌套 PRD/TRD 及输出中的两份文档内容进行推进判断。 |
+| `does_not_use_sibling_or_parent_only_path` | PASS | with_skill 未使用并列路径或仅父级路径替代嵌套功能路径。 |
+| `routes_requirement_change_to_pm` | PASS | 明确路由至 `pm-agent:idea-to-spec` 的 `existing-project-update`，并要求之后同步更新 TRD。 |
+| `routes_trd_mismatch_to_trd_gen` | NOT_EXERCISED | 锁定 raw evidence 证明存在 TRD，但无法证明其缺失、stale 或 frontmatter/`related_prd` 不匹配。 |
+| `does_not_execute_directly` | PASS | 输出明确本轮不改代码；git evidence 显示 HEAD、分支、索引和工作区均未变化，且无 delivery snapshot、实施计划或测试结果。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9; fixture_sha256=fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b; output_sha256=6af2ae331044f2b72e1c1a7cffb82d40e9f09128c4fbfaf398e164e937946508; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别嵌套功能路径，先将排序需求变更路由回 PM，再同步 TRD，并保持只做路由、不执行实现。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9; fixture_sha256=fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b; output_sha256=4bddd95fcb0da20911569bbdb1453fd27f8ed03fada7286fd0d5da761cc6d52f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 给出一般性的产品与技术推进建议，但未明确嵌套 feature_path 或规定的 PM 路由。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-003-nested-feature-alignment-routing`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b` from `agents/engineer/test/engineer-agent/evals/workspace/eval-003-nested-feature-alignment-routing`.
+- Fixture SHA-256: `fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b`
+- Prompt SHA-256: `8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `757a4f95af830e3468b6c44e54e5901a0cc27f0a6d0aa7ecc8b703b612007d3a`
+- Skill overlay SHA-256: `ed4d8f534d0e5c1c334b4a13d67b6d20c37dceb98e00e4e2ea3b6a2c0112faad`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6c7cc377f055d604b202feb40d5d2142b855d0368cb0621fa60f17937cec9872`
+- Metadata SHA-256: `cc9d0ea1f23672ef6b7d553053f01b0836b8fd341a707c6f88e853c6256fb3fb`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `resolves_nested_feature_path` | PASS | with_skill 明确识别 `chat-interface/history-search`，并引用了嵌套路径下的 PRD 与 TRD。 |
+| `does_not_use_sibling_or_parent_only_path` | PASS | with_skill 使用的两个文档均为 `chat-interface/history-search` 下的正确路径，未使用并列或父级替代路径。 |
+| `routes_requirement_change_to_pm` | PASS | with_skill 明确将行为变更路由至 PM `existing-project-update`，先确认产品规则并增量更新 PRD，再同步 TRD。 |
+| `routes_trd_mismatch_to_trd_gen` | NOT_EXERCISED | 原始 fixture 中 TRD 存在，且 frontmatter 的 `feature_path` 与 `related_prd` 均匹配；未出现缺失、过时或不匹配条件。 |
+| `does_not_execute_directly` | PASS | with_skill 明确说明本轮未修改代码或文档；原始 git evidence 显示 HEAD、分支和工作区均未变化。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9; fixture_sha256=fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b; output_sha256=322a3042ca956ee8791dd104bd768c199d3fc346aa8715ce8dcc98f60d1b689c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确解析功能路径，明确 PM 变更路由、文档同步和暂不实现的门禁；确认未发生代码或文档修改。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9; fixture_sha256=fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b; output_sha256=20d7239cee10c6f33dffcecb0321795f2b02c255b83a761808d4d561fdf88bbd; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确读取并概括嵌套 PRD/TRD，提出先确认排序规则再更新文档，但未明确 PM 工程路由。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-003-nested-feature-alignment-routing`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b` from `agents/engineer/test/engineer-agent/evals/workspace/eval-003-nested-feature-alignment-routing`.
+- Fixture SHA-256: `fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b`
+- Prompt SHA-256: `8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `757a4f95af830e3468b6c44e54e5901a0cc27f0a6d0aa7ecc8b703b612007d3a`

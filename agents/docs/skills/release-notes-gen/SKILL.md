@@ -24,6 +24,11 @@ evidence, page path, confirmation source, changed derived surfaces, and check
 results. Tag creation, GitHub Release creation/publication, image publication,
 and deployment remain zero-write external boundaries.
 
+The checkpoint explicitly separates `version_confirmation` from
+`proposed_version`; never list a proposed value as confirmed. Before asking for
+body confirmation, show the complete candidate body and its source-evidence
+mapping, not only a page path or summary.
+
 ## PM Handoff And Feature-Scope Gate
 
 Require a PM handoff packet or an equivalent confirmed release entry basis

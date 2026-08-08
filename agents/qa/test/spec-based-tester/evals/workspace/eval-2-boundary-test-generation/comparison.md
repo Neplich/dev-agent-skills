@@ -14,6 +14,270 @@
 - Fixture version/source: canonical manifest `b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1` from `agents/qa/test/spec-based-tester/evals/workspace/eval-2-boundary-test-generation`.
 - Fixture SHA-256: `b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1`
 - Prompt SHA-256: `fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8ceb46669357c2ad2e3984067ae0ce5c97b019da23d3a0f850d2bedd7e38ab17`
+- Skill overlay SHA-256: `fda3e87e887ba889a897540771dbb1fdc6d424a530b084850bba0cba716a1567`
+- Judge schema SHA-256: `6d4a307e5ec256ec68d2524f856808da877ec9503f513dcb2032388906c98b67`
+- Eval definition SHA-256: `7be9a5847eaa9053c9f4277b2d57d5f5622208652decda6e30f3718fbfec04c5`
+- Metadata SHA-256: `9bd3793631be46705766421244d6899c275c646d5598b1a7e8c43c8bec82ad4f`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | The report records scope, environment/platform, confirmed assumptions, unknowns, dependency blockers, and browser-URL blockers before execution. |
+| `assertion_2` | NOT_EXERCISED | The snapshot records the required QA documents and absent historical results/reports, but locked evidence cannot prove the required read order or user-confirmation gate. |
+| `assertion_3` | NOT_EXERCISED | The documented harness was invoked, but missing Vitest prevented boundary execution; the later validation step requires runtime recovery. |
+| `assertion_4` | PASS | The delivered report contains a requirement matrix with blocked status and per-check evidence references. |
+| `assertion_5` | PASS | The delivered report includes requirement matrix, execution path, evidence references, risk notes, and handoff decision sections. |
+| `assertion_6` | PASS | The report records risks and uncovered checks, identifies no confirmed failures, and explicitly says not to hand off to bug-analyzer. |
+| `alignment_plan_gate` | PASS | The report confirms PRD, TRD, and IMPLEMENTATION_PLAN.md exist under the same feature path and are Confirmed. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51; fixture_sha256=b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1; output_sha256=296393a812bd6a8a4b6f24afc40559ac5f74dc1d06a2853b96880304617346a4; snapshot_sha256=7c1edf993d1f193542a2c9ff219cb33639155d7bd9168c730f716899c0027de3
+- Behavior: Performed preflight alignment and QA-memory checks, invoked the preferred harness, recorded the environment block, structured evidence, and avoided unsupported defect escalation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51; fixture_sha256=b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1; output_sha256=2477ad8109d65899ee90721e789c64f621c1e3b0660a029e281587546b5c5c79; snapshot_sha256=896514c0958a563e9b177ced6237f86a9b11aff53053ff6eaf5c9fe8bda99b60
+- Behavior: Recorded the harness blocker and unexecuted checks, but lacked the with_skill lane’s documented preflight alignment, structured report, risk notes, and handoff decision.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Restore test dependencies and rerun TC-001-login-boundaries.
+- Next: Provide the configured QA URL and browser access if harness recovery is insufficient.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `spec-based-tester`
+- Eval: `eval-002-boundary-test-generation`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1` from `agents/qa/test/spec-based-tester/evals/workspace/eval-2-boundary-test-generation`.
+- Fixture SHA-256: `b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1`
+- Prompt SHA-256: `fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8ceb46669357c2ad2e3984067ae0ce5c97b019da23d3a0f850d2bedd7e38ab17`
+- Skill overlay SHA-256: `0dc6062e83cf445a1577948355ffb768c08c70474d373f09d93a3ded935ca1bb`
+- Judge schema SHA-256: `6d4a307e5ec256ec68d2524f856808da877ec9503f513dcb2032388906c98b67`
+- Eval definition SHA-256: `7be9a5847eaa9053c9f4277b2d57d5f5622208652decda6e30f3718fbfec04c5`
+- Metadata SHA-256: `9bd3793631be46705766421244d6899c275c646d5598b1a7e8c43c8bec82ad4f`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | The locked result records scope, platform, implementation context, unknowns/blockers, and the five boundary expectations before execution. |
+| `assertion_2` | PASS | The locked report states that TEST_SUITE.md, FLOW_INDEX.md, the case, script, prior results, and prior reports were checked before the run. |
+| `assertion_3` | NOT_EXERCISED | The targeted command was attempted, but Vitest was unavailable and no boundary case reached execution. |
+| `assertion_4` | PASS | Each boundary row is marked blocked and includes evidence references in the locked result and report. |
+| `assertion_5` | PASS | The locked report contains requirement matrix, execution path, evidence entries, risk notes, and handoff decision sections. |
+| `assertion_6` | PASS | Risk and blocked-item notes are recorded, and bug-analyzer handoff is explicitly withheld absent a reproducible failure. |
+| `alignment_plan_gate` | PASS | The locked report confirms same-path PRD, TRD, and IMPLEMENTATION_PLAN alignment and records the implementation plan as confirmed. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51; fixture_sha256=b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1; output_sha256=e594b19dd42171c607cf3e76dfd59e5dbc3da15f7be52dfba17250bb44b85f2c; snapshot_sha256=2e6d5aa2a8a85e5185ce1eeafc2f1a8d4078c8b9a9b78fdf77935bca60a09c07
+- Behavior: Produced structured, evidence-backed blocked results with preflight alignment checks, per-boundary statuses, risks, and controlled handoff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51; fixture_sha256=b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1; output_sha256=30ff46e4bf8a7f35f6d99e599272f783baf3304d57362b35ea5b6c3638736405; snapshot_sha256=7c27134e2878963cccbf73e141c0ce54fb7bf844d629fbd9fa0dc910d7d052d9
+- Behavior: Produced a minimal blocked result citing the failed test command and archived result files, without the structured preflight, matrix, risk, and handoff detail present in the with_skill lane.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Restore or install Vitest dependencies and rerun TC-001.
+- Next: Provide the configured QA URL and approved credential resolution if browser verification is needed.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `spec-based-tester`
+- Eval: `eval-002-boundary-test-generation`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1` from `agents/qa/test/spec-based-tester/evals/workspace/eval-2-boundary-test-generation`.
+- Fixture SHA-256: `b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1`
+- Prompt SHA-256: `fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8ceb46669357c2ad2e3984067ae0ce5c97b019da23d3a0f850d2bedd7e38ab17`
+- Skill overlay SHA-256: `0dc6062e83cf445a1577948355ffb768c08c70474d373f09d93a3ded935ca1bb`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `7be9a5847eaa9053c9f4277b2d57d5f5622208652decda6e30f3718fbfec04c5`
+- Metadata SHA-256: `9bd3793631be46705766421244d6899c275c646d5598b1a7e8c43c8bec82ad4f`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | FAIL | with_skill incorrectly claims a PM/QA handoff and platform version are missing, although the fixture contains confirmed PRD/TRD/IMPLEMENTATION_PLAN and QA documents specifying platform version v1.2.0-rc.1. It does not record the required constraints, assumptions, dependencies, and blocked conditions. |
+| `assertion_2` | NOT_EXERCISED | No raw evidence proves the read order, and no boundary validation occurred. |
+| `assertion_3` | NOT_EXERCISED | No targeted boundary checks were executed; the candidate deferred execution pending user-supplied information. |
+| `assertion_4` | NOT_EXERCISED | No boundary report or per-check evidence was produced because execution was deferred. |
+| `assertion_5` | FAIL | The with_skill output contains none of the required structured sections: requirement matrix, execution path, evidence references, risk notes, or handoff decision. |
+| `assertion_6` | NOT_EXERCISED | No execution report was produced from which risk notes, uncovered items, or handoff decisions could be assessed. |
+| `alignment_plan_gate` | FAIL | The same-feature PRD, TRD, and confirmed IMPLEMENTATION_PLAN.md are present, and the QA documents provide the platform version. The candidate nevertheless blocks on supposedly missing handoff and platform information. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51; fixture_sha256=b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1; output_sha256=a3b86e4b4c6013a917714130fa8401b2865101273ae0069cc3a9632023e50bc4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Stopped before reading or executing the available confirmed feature and QA materials, incorrectly requested missing handoff/platform inputs, and produced no report artifacts.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51; fixture_sha256=b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1; output_sha256=76742d4f3280b184a0c4bdb549e216a9b6660064dc7582a0fb43418ae462cabb; snapshot_sha256=7121939b959ef21772abeeb617072099fc6b965e6a91b643d7c2ec2e8a478baa
+- Behavior: Attempted the prescribed harness, recorded a vitest command-not-found blocker, and produced blocked per-check evidence plus result artifacts.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill lane incorrectly treated existing confirmed scope, implementation plan, QA case, and platform version as missing.
+- The required structured acceptance report was not produced.
+- Next: Read the confirmed PRD, TRD, implementation plan, and QA materials, then run the prescribed harness or record a justified runtime blocker with per-boundary evidence.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `spec-based-tester`
+- Eval: `eval-002-boundary-test-generation`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1` from `agents/qa/test/spec-based-tester/evals/workspace/eval-2-boundary-test-generation`.
+- Fixture SHA-256: `b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1`
+- Prompt SHA-256: `fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8ceb46669357c2ad2e3984067ae0ce5c97b019da23d3a0f850d2bedd7e38ab17`
+- Skill overlay SHA-256: `55ae613f45225c4fd27fe7b7bb1eff99de0a24107c076461ac6a7464ef4fa3ae`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `7be9a5847eaa9053c9f4277b2d57d5f5622208652decda6e30f3718fbfec04c5`
+- Metadata SHA-256: `9bd3793631be46705766421244d6899c275c646d5598b1a7e8c43c8bec82ad4f`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | With-skill report records scope, feature path, platform version, PRD/TRD/implementation-plan gate, unknowns, dependencies, QA URL, and runtime blockers before execution. |
+| `assertion_2` | NOT_EXERCISED | The report states the QA documents and prior results/reports were checked, but locked evidence cannot prove the required read order. |
+| `assertion_3` | NOT_EXERCISED | The targeted harness command was selected, but vitest was unavailable and no boundary behavior actually executed; the later validation step is therefore unexercised. |
+| `assertion_4` | PASS | The with-skill result contains a requirement matrix marking all five checks blocked, with command and result-record evidence references. |
+| `assertion_5` | PASS | The report includes Requirement Matrix, Execution Path, evidence references in the matrix and execution records, Risk Notes, and Handoff Decision sections. |
+| `assertion_6` | PASS | Risk notes and uncovered runtime items are recorded; the report explicitly states no bug-analyzer handoff is appropriate without a reproduced product failure. |
+| `alignment_plan_gate` | PASS | The with-skill report confirms same-feature-path PRD, TRD, and IMPLEMENTATION_PLAN documents with Confirmed status and records the platform version. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51; fixture_sha256=b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1; output_sha256=903c740d2cc3b7fec8b6bd5dd3a0eb47dd4de75d85e4cd57ca0b62bd8924e2dc; snapshot_sha256=a6144d465bca3989b40846ef180c35214c6a4f78f57bbf5cd77c167364000332
+- Behavior: Performed documented preflight and alignment checks, reused TC-001, recorded structured evidence and risks, and correctly kept all runtime checks blocked because vitest and browser runtime evidence were unavailable.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51; fixture_sha256=b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1; output_sha256=b9f7fb7a3bf646c985bfba1b4c993b88a684889ce3047200fc745d5816c56020; snapshot_sha256=69d2e380fa1953c6a860b4a63ad751e74d7c3fb8a7582e64e44b4acd98451347
+- Behavior: Ran the harness without the documented preflight structure; vitest was unavailable, all five checks were blocked, and only result artifacts were recorded.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Restore dependencies and rerun npm test -- login-boundaries.
+- Next: Provide the configured QA URL and test account reference if browser fallback remains necessary.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `spec-based-tester`
+- Eval: `eval-002-boundary-test-generation`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1` from `agents/qa/test/spec-based-tester/evals/workspace/eval-2-boundary-test-generation`.
+- Fixture SHA-256: `b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1`
+- Prompt SHA-256: `fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `8ceb46669357c2ad2e3984067ae0ce5c97b019da23d3a0f850d2bedd7e38ab17`

@@ -14,6 +14,192 @@
 - Fixture version/source: canonical manifest `06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d` from `agents/devops/test/deployment-planner/evals/workspace/eval-001-nextjs-web-app`.
 - Fixture SHA-256: `06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d`
 - Prompt SHA-256: `cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `762ea3248d76c5c9e715368b11ab616562bb9bdb0e2bd6a6aad38d47cc80b3af`
+- Skill overlay SHA-256: `52ed13d453014671ce8cc7f7f7ce4b4108c3a5cc943fcf3bece1ac66b08625d5`
+- Judge schema SHA-256: `8fdd554bf7008e1addc7b92301444335139887034f2813ab539445a1df4b82d6`
+- Eval definition SHA-256: `4ab6f3577023497f11197efb5117e95119ab70a437c95770925330f5be6aa5f2`
+- Metadata SHA-256: `be29fd9ddbc554b7d8ca7f9912c9d54f61470e99abd7c2e138b60022c4086794`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_local_runtime_assets` | PASS | With-skill snapshot includes deploy/local/.env.example and executable deploy/local/start.sh plus README documenting npm run start, port 3000, DATABASE_URL, and REDIS_URL. |
+| `creates_complete_compose_topology` | PASS | With-skill snapshot includes Dockerfile and docker-compose.yml defining app, postgres, and redis services; app healthcheck calls /api/health and dependencies have healthchecks. |
+| `creates_application_helm_chart` | PASS | With-skill snapshot includes Chart.yaml, values.yaml, and Deployment template with replicaCount and PostgreSQL/Redis values injected through the Secret. |
+| `documents_each_target_without_delivery` | PASS | Local, Docker, Helm, and deploy/README.md document usage and health checks; evidence explicitly states no deployment and no CI/CD rules, with placeholder credentials only. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8; fixture_sha256=06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d; output_sha256=cdb26857568fc97cd812f806d4331ad234b98ba44a8612161ad5938152041370; snapshot_sha256=893888204298be503f0a41a545efdd35638d4069c1b49cf441d6fce4cf1b8bad
+- Behavior: Delivered all three deployment targets with executable local startup, complete Compose topology, application-only Helm chart, cross-target documentation, and explicit non-deployment status.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8; fixture_sha256=06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d; output_sha256=34a08a9de7c2660c327965458e3411f495f0710a53b4e5ac8b3fb9cdb1423065; snapshot_sha256=3813549542ec815eecb28561137e3da9f7264ee4e33113b6577940d44ab237b6
+- Behavior: Delivered local, Docker, and Helm assets with required topology and documentation, but without the additional executable local startup script and deployment matrix present in the with_skill lane.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `deployment-planner`
+- Eval: `eval-001-nextjs-web-app`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d` from `agents/devops/test/deployment-planner/evals/workspace/eval-001-nextjs-web-app`.
+- Fixture SHA-256: `06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d`
+- Prompt SHA-256: `cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `762ea3248d76c5c9e715368b11ab616562bb9bdb0e2bd6a6aad38d47cc80b3af`
+- Skill overlay SHA-256: `52ed13d453014671ce8cc7f7f7ce4b4108c3a5cc943fcf3bece1ac66b08625d5`
+- Judge schema SHA-256: `8fdd554bf7008e1addc7b92301444335139887034f2813ab539445a1df4b82d6`
+- Eval definition SHA-256: `4ab6f3577023497f11197efb5117e95119ab70a437c95770925330f5be6aa5f2`
+- Metadata SHA-256: `be29fd9ddbc554b7d8ca7f9912c9d54f61470e99abd7c2e138b60022c4086794`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_local_runtime_assets` | PASS | with_skill 快照包含 deploy/local/.env.example、README.md 和可执行 start.sh；配置包含 npm run start、端口 3000、DATABASE_URL 与 REDIS_URL。 |
+| `creates_complete_compose_topology` | PASS | with_skill 快照包含 Dockerfile 和 Compose，编排 app、postgres、redis；app healthcheck 请求 /api/health。 |
+| `creates_application_helm_chart` | PASS | with_skill 快照包含 Chart.yaml、values.yaml 与 Deployment 模板；Deployment 使用 replicaCount，values 提供外部 databaseUrl 和 redisUrl，并且未创建 PostgreSQL/Redis 工作负载。 |
+| `documents_each_target_without_delivery` | PASS | local、Docker、Helm 均有 README；PM_HANDOFF 约束均被覆盖。快照显示未新增 CI/CD、凭据均为占位值，最终输出明确说明未执行实际部署。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8; fixture_sha256=06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d; output_sha256=602f31f669b24c8151bce4956f9df102a6951db222e6ba5d1db5808ad709bc1b; snapshot_sha256=164aec1d41af811f735830b335e6f91a50e2b0837354757597d122379e5748db
+- Behavior: 交付了符合仓库约束的 local、Docker Compose 和仅应用 Helm 配置，并明确未部署。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8; fixture_sha256=06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d; output_sha256=c1e99a0543531b9e858f515b8660d1329bf91d6de62448ddc86037c878617a55; snapshot_sha256=20396f089a0e38128bf90426aad6aec7ea2f3ad8115fd476a2d81d608f1bb34b
+- Behavior: 提供了三类部署资产，但 local 使用 npm run dev 且缺少应用 Compose 健康检查，作为 fresh baseline 对比不满足全部断言。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `deployment-planner`
+- Eval: `eval-001-nextjs-web-app`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d` from `agents/devops/test/deployment-planner/evals/workspace/eval-001-nextjs-web-app`.
+- Fixture SHA-256: `06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d`
+- Prompt SHA-256: `cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `762ea3248d76c5c9e715368b11ab616562bb9bdb0e2bd6a6aad38d47cc80b3af`
+- Skill overlay SHA-256: `52ed13d453014671ce8cc7f7f7ce4b4108c3a5cc943fcf3bece1ac66b08625d5`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `4ab6f3577023497f11197efb5117e95119ab70a437c95770925330f5be6aa5f2`
+- Metadata SHA-256: `be29fd9ddbc554b7d8ca7f9912c9d54f61470e99abd7c2e138b60022c4086794`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_local_runtime_assets` | PASS | with_skill 的 deploy/local/README.md 与 start.sh 使用 npm run start、3000、DATABASE_URL 和 REDIS_URL；deploy/local/.env.example 也包含两项依赖地址。 |
+| `creates_complete_compose_topology` | PASS | with_skill 的 deploy/docker/ 包含 Dockerfile、README.md 和 Compose；Compose 定义 app、postgres、redis，并通过 /api/health 检查 app。 |
+| `creates_application_helm_chart` | PASS | with_skill 的 deploy/helm/ 包含 Chart.yaml、values.yaml 和 Deployment 模板；Deployment 使用 replicaCount，并从 values 的 secrets.databaseUrl/secrets.redisUrl 注入外部依赖地址，未部署 PostgreSQL 或 Redis。 |
+| `documents_each_target_without_delivery` | PASS | with_skill 为 local、Docker、Helm 提供说明，声明无 CI/CD 配置、使用占位凭据且未执行实际部署；交付快照未显示生产凭据或部署动作。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8; fixture_sha256=06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d; output_sha256=f905734282eb12aca4e6a221a4fa47b751d48a9b21d5e03b69302d736ff7880c; snapshot_sha256=b89d6c129881d79f7962c83d5faf6d7fbdf84c721b93391679f9280b154fe8f2
+- Behavior: Delivered complete local, Docker, and Helm configuration assets and explicitly reported that deployment was not performed.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8; fixture_sha256=06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d; output_sha256=768f6e68115e39cbc6f6752e3e15ebdb0bc7909d2b071d28d3cbba0b08124155; snapshot_sha256=3446a997d1d5eff7fde2a11842c05406a70b42b9300c0bc288788005de591d8e
+- Behavior: Docker and Helm assets were documented, but the local README used npm run dev and no local startup script was present.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `deployment-planner`
+- Eval: `eval-001-nextjs-web-app`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d` from `agents/devops/test/deployment-planner/evals/workspace/eval-001-nextjs-web-app`.
+- Fixture SHA-256: `06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d`
+- Prompt SHA-256: `cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `6b7ee50b1667fd76ae49358cc3af5366a7e75afc33e7c444bb73e4e03310853a`

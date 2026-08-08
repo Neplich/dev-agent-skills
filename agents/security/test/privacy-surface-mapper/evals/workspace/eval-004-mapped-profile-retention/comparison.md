@@ -14,6 +14,254 @@
 - Fixture version/source: canonical manifest `ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-004-mapped-profile-retention`.
 - Fixture SHA-256: `ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb`
 - Prompt SHA-256: `15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`
+- Skill overlay SHA-256: `840e4d3e20057f4834a3b010b4142d0e7be2f66540c525231dc34075db0dbbee`
+- Judge schema SHA-256: `fe1f59786edfa4e3b7ee12601522d693ef12a42cdfce9b4a390ad6d7b95d03d2`
+- Eval definition SHA-256: `8768d40f89a0835f8bc18dc793ab9c71861c190253ab19b6d21f19d51aa1ed50`
+- Metadata SHA-256: `7059498df03f32583db887e25af006a8504ba7d72f9cb363375b4bcdb24efad6`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 候选输出列出了 change-map、required_docs 和目标文档，但锁定证据无法证明实际读取顺序或未遍历无关文档。 |
+| `verifies_against_code` | FAIL | with_skill 明确未回到 profile-processing.yaml 核对 90 天配置，也未识别 30 天与 90 天冲突或评估影响。 |
+| `treats_unverified_as_low_trust` | PASS | with_skill 明确将 unverified 文档视为低信任，未直接采信 30 天结论；但未完成后续配置核证。 |
+| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | 候选输出因缺少 PM/Security handoff packet 而暂停；尚未确认改变正式文档事实，因此后续 pm-agent 分类和 issue 创建未被 exercised。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f; fixture_sha256=ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb; output_sha256=07c8903598a8a460de0b0c61b1d871c10c354492383b03cb7050085505139ee7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别映射、required_docs 和 unverified 状态，但在读取配置并核对实际保留期限前暂停。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f; fixture_sha256=ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb; output_sha256=903b476811e8537486e45292f2cc9f667c4b91318c7d5704b9f2fff4b3bc4b65; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完成了配置与文档的字段、目的和保留期限对比，但未体现低信任处理或 PM 升级。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未完成配置核对，遗漏了 90 天实际保留期限与文档 30 天声明的关键冲突及合规影响。
+- Next: 补充 PM 分类/交接后，回到 profile-processing.yaml 核实 90 天配置并评估与文档 30 天声明的冲突。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `privacy-surface-mapper`
+- Eval: `eval-004-mapped-profile-retention`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-004-mapped-profile-retention`.
+- Fixture SHA-256: `ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb`
+- Prompt SHA-256: `15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`
+- Skill overlay SHA-256: `840e4d3e20057f4834a3b010b4142d0e7be2f66540c525231dc34075db0dbbee`
+- Judge schema SHA-256: `fe1f59786edfa4e3b7ee12601522d693ef12a42cdfce9b4a390ad6d7b95d03d2`
+- Eval definition SHA-256: `8768d40f89a0835f8bc18dc793ab9c71861c190253ab19b6d21f19d51aa1ed50`
+- Metadata SHA-256: `7059498df03f32583db887e25af006a8504ba7d72f9cb363375b4bcdb24efad6`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | The locked report names the matched change-map entry and required document, but the locked evidence cannot prove read order or that unrelated documents were not read. |
+| `verifies_against_code` | PASS | The delivered report directly identifies 90 days in src/privacy/profile-processing.yaml versus 30 days in profile-data.md, notes runtime behavior is unestablished, and assesses the resulting retention/compliance risk. |
+| `treats_unverified_as_low_trust` | PASS | The delivered report identifies both artifacts as unverified and explicitly treats them as low-trust navigation, while expanding verification to configuration and repository evidence. |
+| `escalates_fact_changing_conclusion_to_pm` | PASS | The delivered security report escalates the conclusion and evidence to pm-agent for classification and a PM-owned issue, while assigning the formal-document audit to Docs and not modifying docs/site/. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f; fixture_sha256=ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb; output_sha256=f33a8ea782bc30a56c56cdbb41f09abc846bbcef3f41379034e2a329204011c7; snapshot_sha256=73a7d8800ff73e7cf89b5ef2662942afcddf249a9e77ebd202969d4f39654fa0
+- Behavior: Produced the required privacy report, verified the 30/90-day discrepancy against the configuration, treated unverified documents as low trust, and escalated to pm-agent.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f; fixture_sha256=ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb; output_sha256=4e75d5592205c6a1e0758e19c8a6758289a38aa430e471ca42d8cce2234583f4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provided an accurate prose comparison of fields, purpose, and the 30/90-day discrepancy, but did not produce the required security report or explicit PM escalation.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `privacy-surface-mapper`
+- Eval: `eval-004-mapped-profile-retention`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-004-mapped-profile-retention`.
+- Fixture SHA-256: `ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb`
+- Prompt SHA-256: `15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`
+- Skill overlay SHA-256: `840e4d3e20057f4834a3b010b4142d0e7be2f66540c525231dc34075db0dbbee`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `8768d40f89a0835f8bc18dc793ab9c71861c190253ab19b6d21f19d51aa1ed50`
+- Metadata SHA-256: `7059498df03f32583db887e25af006a8504ba7d72f9cb363375b4bcdb24efad6`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | FAIL | With-skill output refuses to inspect the repository and provides no result based on the mapped required document. The fixture maps src/privacy/profile-processing.yaml to docs/site/api/profile-data.md. |
+| `verifies_against_code` | FAIL | With-skill output does not inspect or report the fixture's actual 90-day retention, the document's 30-day claim, or the resulting inconsistency. |
+| `treats_unverified_as_low_trust` | FAIL | Although the output asks for prerequisites, it does not identify either required document's last_verified_version as unverified or perform expanded configuration verification. |
+| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | The with-skill lane never reaches or confirms a conclusion changing the formal document's facts, so the required PM classification and issue-creation step cannot be evaluated from the locked evidence. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f; fixture_sha256=ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb; output_sha256=57edc1035f340e6a20222c9f4e0d1c16d208953a5e7981d248b1324999fe0b90; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Blocks on an unsupported prerequisite and provides no privacy-processing analysis or escalation deliverable.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f; fixture_sha256=ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb; output_sha256=b22b01403a25dfcb5995fbb56b395a6966c9743363f8e23b4ca3ed7844e02f3d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Reads and compares the mapped documentation and configuration, identifies the 30-day versus 90-day conflict, but does not perform the required PM escalation.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with-skill output omits the requested mapped-document review, configuration verification, retention conflict, and unverified-document treatment.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `privacy-surface-mapper`
+- Eval: `eval-004-mapped-profile-retention`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-004-mapped-profile-retention`.
+- Fixture SHA-256: `ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb`
+- Prompt SHA-256: `15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`
+- Skill overlay SHA-256: `4e2d7a3ffa0fc7b4cc84f02f24df4e35de821cbc6e0c580a1427e37709efb43b`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `8768d40f89a0835f8bc18dc793ab9c71861c190253ab19b6d21f19d51aa1ed50`
+- Metadata SHA-256: `7059498df03f32583db887e25af006a8504ba7d72f9cb363375b4bcdb24efad6`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 锁定原始证据无法证明读取顺序或是否遍历了无关文档；候选输出仅呈现结果。 |
+| `verifies_against_code` | PASS | with_skill 明确回到配置核对：文档为 30 天、配置为 90 天，并指出无法从仓库验证实际运行时行为及其隐私合规风险。 |
+| `treats_unverified_as_low_trust` | PASS | with_skill 识别 change-map 和正式说明为 unverified，并结合配置及缺少可验证删除实现，未直接采信文档或拒绝读取。 |
+| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | 候选输出表示需先补充 PM/Security 交接包及 feature_path、返回 PM 分类；后续创建 issue 和产出 Security 过程报告尚无法在缺少这些输入时完成。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f; fixture_sha256=ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb; output_sha256=c5f21c92a23ba6ab8b1244c5ed6c8665a8185bd0aa77f7c07a508e434c0cb259; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确核对配置与正式说明，谨慎处理 unverified 和无法验证的运行时行为，并停在等待 PM/Security 交接信息的下一步。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f; fixture_sha256=ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb; output_sha256=3befd516d6065a8a02a11b420c0323d758cd300267648ff6a676da5daf8fbd22; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别字段、目的及 30/90 天保留期限冲突，但未体现 PM 分类升级或交接流程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 补充 PM/Security 交接包和已确认的 feature_path，以完成 PM 分类、issue 创建及 Security 过程报告。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `privacy-surface-mapper`
+- Eval: `eval-004-mapped-profile-retention`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-004-mapped-profile-retention`.
+- Fixture SHA-256: `ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb`
+- Prompt SHA-256: `15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`

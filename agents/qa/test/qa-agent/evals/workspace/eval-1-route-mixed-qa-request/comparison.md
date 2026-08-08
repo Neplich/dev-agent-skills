@@ -14,6 +14,195 @@
 - Fixture version/source: canonical manifest `c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5` from `agents/qa/test/qa-agent/evals/workspace/eval-1-route-mixed-qa-request`.
 - Fixture SHA-256: `c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5`
 - Prompt SHA-256: `d32b34f557a9af42827fae115c24f25ec47fe1e0fcda62e092dc3afa3789c767`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d70112827b0542d867a7689306d190b9c9a901f0d16faf502ff69330466e810c`
+- Skill overlay SHA-256: `738b2bf1d3ac1adbd5e2b7ad94592b274ea7b5d29a4ca3f3a5fc51fa86b342bc`
+- Judge schema SHA-256: `f4aaec46995456a39da2b489696e387a78408415038edddd6412ca13bedbc20a`
+- Eval definition SHA-256: `2ad0a90eac7fca1f06d238ff5d3d06535381ddd810d8a9e8e9e423ce29483f2c`
+- Metadata SHA-256: `718fcc57ee1abd91d0d7551c46ebe8546481fa4f027452b86db232f30d15ab47`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 选择 regression-suite，并以已实现登录刷新变更、现有 QA 资料及 WebKit 间歇性失败说明当前应走回归验证路径。 |
+| `assertion_2` | PASS | with_skill 明确列出 PRD/TRD/实施计划、implementation changes、QA 测试资料、CI 日志、环境说明缺失项及 npm test -- login 执行入口。 |
+| `specialist_gate_pointer` | PASS | with_skill 声明 regression-suite 为 execution_owner，并保留其 E2E memory、平台版本、凭据和 execution-entry gates 及结果产出责任。 |
+| `assertion_4` | PASS | with_skill 使用结构化 YAML 字段声明 accepted_test_basis、required_evidence、执行路径、风险/阻塞状态、evidence_confidence 和 release_recommendation，并要求逐 TC 结果及回归汇总报告。 |
+| `assertion_5` | PASS | with_skill 只选择 regression-suite；将 WebKit 超时保留为主要风险和原始失败复核项，没有将其确认成产品 bug。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d32b34f557a9af42827fae115c24f25ec47fe1e0fcda62e092dc3afa3789c767; fixture_sha256=c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5; output_sha256=d629b9bd7586bdf25f4e9a1362275b55520565bfdee5f4d0064f652875487810; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 选择 regression-suite，明确下游门禁、输入资料、阻塞条件和预期证据，未执行多个下游 skill，也未确认间歇性失败为 bug。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d32b34f557a9af42827fae115c24f25ec47fe1e0fcda62e092dc3afa3789c767; fixture_sha256=c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5; output_sha256=11d0226cd7f91ca679c66dae460065a8d4ab16e66468716c9ef2fc6d2c997bf9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 给出较完整的验收阻断和重跑建议，但未形成明确的 specialist 路由、下游上下文清单或 specialist 执行责任指针。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `qa-agent`
+- Eval: `eval-001-route-mixed-qa-request`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5` from `agents/qa/test/qa-agent/evals/workspace/eval-1-route-mixed-qa-request`.
+- Fixture SHA-256: `c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5`
+- Prompt SHA-256: `d32b34f557a9af42827fae115c24f25ec47fe1e0fcda62e092dc3afa3789c767`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `ac14179f2aca4133a304fb2ec1e6f0613baa189aa0feceb7d5432c5a227afc79`
+- Skill overlay SHA-256: `df110a1f49970acbf7b4b0dbed9decebe95c46ae011086d02ffc3c74f98fc631`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `2ad0a90eac7fca1f06d238ff5d3d06535381ddd810d8a9e8e9e423ce29483f2c`
+- Metadata SHA-256: `718fcc57ee1abd91d0d7551c46ebe8546481fa4f027452b86db232f30d15ab47`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | 选择了 spec-based-tester 作为主 QA 承接路径，并以已确认文档、现有 QA 测试资料及 WebKit 间歇性超时风险说明其适用性。 |
+| `assertion_2` | PASS | 列出了 PM/Engineer 文档、QA memory、CI 日志、环境与应用 URL、测试账号及 npm 测试命令等下游读取上下文，并指出 URL、package.json 和入口缺失。 |
+| `specialist_gate_pointer` | PASS | 明确 selected specialist 为 spec-based-tester，并保留其检查 E2E memory、平台版本、凭据、执行入口和确认文档的责任；输出未自行执行完整 specialist 协议。 |
+| `assertion_4` | PASS | 声明了逐 TC 的 result.md 与 testcase.snapshot.md，以及包含需求矩阵、阻塞项、风险和验收结论的汇总报告结构。 |
+| `assertion_5` | PASS | 仅选择一个 specialist；将 WebKit 间歇性超时作为风险，明确只有稳定复现后才升级为缺陷分析。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d32b34f557a9af42827fae115c24f25ec47fe1e0fcda62e092dc3afa3789c767; fixture_sha256=c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5; output_sha256=f5ad8fbefafd712aab00c781d1ec59be00325a61705289949581c40d7df9a94b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 选择 spec-based-tester，传递必要上下文，定义结构化 QA 产物，并正确将间歇性 CI 超时保留为风险。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d32b34f557a9af42827fae115c24f25ec47fe1e0fcda62e092dc3afa3789c767; fixture_sha256=c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5; output_sha256=829d4159685b95dc13775375a7cf9feeae78d62a3cfb1dc06c423195d13be1fc; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 给出条件验收建议和证据清单，但未建立明确的 specialist 路由及下游责任边界。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `qa-agent`
+- Eval: `eval-001-route-mixed-qa-request`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5` from `agents/qa/test/qa-agent/evals/workspace/eval-1-route-mixed-qa-request`.
+- Fixture SHA-256: `c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5`
+- Prompt SHA-256: `d32b34f557a9af42827fae115c24f25ec47fe1e0fcda62e092dc3afa3789c767`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `afcc089a4522fb7587710a20e21adb99a4567c8fc61ab08b5aa456f6ceac23cb`
+- Skill overlay SHA-256: `4456feb4afcd3f05c1b5a634bd2e2f7f6addcac1102c5156f9d5ee00a8bd9c3a`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `2ad0a90eac7fca1f06d238ff5d3d06535381ddd810d8a9e8e9e423ce29483f2c`
+- Metadata SHA-256: `718fcc57ee1abd91d0d7551c46ebe8546481fa4f027452b86db232f30d15ab47`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | 选择 regression-suite 作为唯一主路径，并结合 feature-update、既有 TC、已实现变更及 WebKit 间歇性超时说明采用回归预检。 |
+| `assertion_2` | PASS | 列出了 PRD/TRD/实现计划、变更说明、QA 测试记忆、CI 日志、平台版本、凭据、QA URL 和 npm test -- login；未假设现成浏览器或端口。 |
+| `specialist_gate_pointer` | PASS | 明确由 regression-suite 负责后续回归预检和证据产出，列出其所需文档、测试记忆、平台版本、凭据及执行入口，并声明当前路由阶段不自行执行专项协议。 |
+| `assertion_4` | PASS | 声明输出 result.md、testcase.snapshot.md、平台版本目录下的回归汇总报告，并包含失败复核、修复行为、风险、新问题及验收建议。 |
+| `assertion_5` | PASS | 只选择一个下游 specialist；将 WebKit 间歇性超时作为待复核风险，要求复现后记录 FAIL/BLOCKED，未将其直接认定为 confirmed bug。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d32b34f557a9af42827fae115c24f25ec47fe1e0fcda62e092dc3afa3789c767; fixture_sha256=c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5; output_sha256=39c513e6b2a18313852e33276937534fd86276f265d005456635358536d709e2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 选择 regression-suite，传递完整上下文，定义结构化回归产物，并将间歇性 CI 现象保留为待复核风险；等待 specialist 执行所需环境与确认。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d32b34f557a9af42827fae115c24f25ec47fe1e0fcda62e092dc3afa3789c767; fixture_sha256=c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5; output_sha256=fdd830bc1670fb408c03d133a1c89e0f228130a708c5e2b79714593e9fa58c62; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 给出了有条件验收建议、风险处理和证据清单，但未明确选择并移交一个 specialist QA 承接路径。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `qa-agent`
+- Eval: `eval-001-route-mixed-qa-request`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5` from `agents/qa/test/qa-agent/evals/workspace/eval-1-route-mixed-qa-request`.
+- Fixture SHA-256: `c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5`
+- Prompt SHA-256: `d32b34f557a9af42827fae115c24f25ec47fe1e0fcda62e092dc3afa3789c767`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `afcc089a4522fb7587710a20e21adb99a4567c8fc61ab08b5aa456f6ceac23cb`

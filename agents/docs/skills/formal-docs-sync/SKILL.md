@@ -28,19 +28,37 @@ the batch or migration scope is not already confirmed.
   separate. Continue confirmed classes, block only the missing class, and never
   invent placeholder commands. Migrate confirmed aggregate paths atomically.
 - Release: touch only affected product/ops facts. A Release Notes outcome goes
-  to `release-notes-gen`; keep the entire site zero-diff in that routing step.
+  to `release-notes-gen`; carry the confirmed host repository, version, scope,
+  evidence, and target site surfaces unchanged, and keep the entire site
+  zero-diff in that routing step.
 - Existing-system backfill: prefer catalog/change-map scope, propose one finite
-  API/database/design/ops/product batch, and remain read-only until confirmed.
+  API/database/design/ops/product batch, mark every proposed new page
+  `visibility: internal`, and remain read-only until confirmed.
 
 Every completed write batch must run the host's real checks, report their raw
 result, hand the affected set to audit, and perform the read-only deployment
 completeness recheck. A discovered deployment gap returns to `pm-agent` without
 being repaired here.
 
+Make the result auditable with an explicit `Sync decision` block containing:
+`mode`, `gate_status`, `confirmed_batch`, `proposed_batch`, `affected_docs`,
+`evidence_bindings`, `excluded_paths`, `change_map_delta`, `host_checks`, and
+`audit_handoff`. Each factual page claim names its implementation, test,
+deployment, or maintainer-confirmed evidence. Do not add an ancestor/index,
+page, map entry, future version fact, or owner merely because it would make the
+site more complete; it must be required by the confirmed batch or existing host
+navigation. When a prerequisite fails, set `gate_status: blocked` before scope
+confirmation or writes. Route product/metadata conflicts to `pm-agent` and TRD
+path/impact conflicts to `engineer-agent:trd-gen` separately.
+
 When one batch is confirmed and another is still proposed, report them
 separately. The unconfirmed candidate must include its complete ancestor/leaf
 tree, code and evidence boundaries, owner, exact change-map delta, exclusions,
-and confirmation status even though it remains zero-write. In the final result,
+and confirmation status even though it remains zero-write. A hierarchy
+migration proposal additionally names every drifted path and target node,
+old-to-new path mapping, recursive navigation delta, `required_docs` delta, and
+out-of-batch drift group, then offers migrate, keep only the confirmed batch,
+or defer all changes before any write. In the final result,
 name every host command actually run with its cwd and exit status; a generic
 test-count or “checks passed” summary is not equivalent evidence.
 Use catalog ownership and evidence paths exactly; do not substitute a guessed

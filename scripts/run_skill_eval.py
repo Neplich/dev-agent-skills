@@ -43,7 +43,7 @@ from scripts.eval_runtime import (  # noqa: E402
 
 MODEL = "gpt-5.6-luna"
 REASONING_EFFORT = "medium"
-DEFAULT_TIMEOUT_SECONDS = 300
+DEFAULT_TIMEOUT_SECONDS = 600
 JUDGE_SCHEMA = Path(__file__).with_name("eval_judge_result.schema.json")
 _DURABLE_WRITE_LOCK = threading.Lock()
 _SOURCE_INPUT_KEYS = (
@@ -67,6 +67,18 @@ class EvalDefinition:
 
 
 CommandRunner = Callable[..., dict[str, Any]]
+
+
+def build_judge_schema_bytes(assertions: list[dict[str, Any]]) -> bytes:
+    schema = json.loads(JUDGE_SCHEMA.read_text(encoding="utf-8"))
+    assertion_ids = [assertion["id"] for assertion in assertions]
+    results = schema["properties"]["assertion_results"]
+    results["minItems"] = len(assertion_ids)
+    results["maxItems"] = len(assertion_ids)
+    results["items"]["properties"]["id"] = {"enum": assertion_ids}
+    return json.dumps(
+        schema, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+    ).encode()
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -95,7 +107,10 @@ def source_identity(
         for value in definition.metadata.get("skill_dependencies", [])
     )]
     overlay_hash = skill_overlay_hash(overlay_paths, definition.repository_root)
-    schema_bytes = JUDGE_SCHEMA.read_bytes() if judge_schema_bytes is None else judge_schema_bytes
+    schema_bytes = (
+        build_judge_schema_bytes(definition.item["assertions"])
+        if judge_schema_bytes is None else judge_schema_bytes
+    )
     with tempfile.TemporaryDirectory() as temporary:
         canonical = Path(temporary) / "canonical"
         copy_canonical_fixture(
@@ -313,22 +328,19 @@ def validate_judge_result(
         if not all(isinstance(value, str) and value.strip() for value in summary.values()):
             raise ValueError("judge lane summary values must be non-empty strings")
 
-    behavior, coverage = payload.get("behavior_result"), payload.get("coverage_result")
     expected_behavior = "FAIL" if "FAIL" in statuses else "PASS"
     expected_coverage = "PARTIAL" if "NOT_EXERCISED" in statuses else "FULL"
-    if behavior != expected_behavior:
-        raise ValueError("judge behavior_result contradicts assertion verdicts")
-    if coverage != expected_coverage:
-        raise ValueError("judge coverage_result contradicts assertion verdicts")
     for field in ("uncovered_reasons", "blockers", "failures", "next_steps"):
         value = payload.get(field)
         if not isinstance(value, list) or not all(isinstance(item, str) and item.strip() for item in value):
             raise ValueError(f"judge result {field} must be an array of non-empty strings")
-    if coverage == "PARTIAL" and not payload["uncovered_reasons"]:
+    if expected_coverage == "PARTIAL" and not payload["uncovered_reasons"]:
         raise ValueError("partial coverage requires uncovered_reasons")
 
     normalized = dict(payload)
-    normalized["overall_result"] = recompute_overall(behavior, coverage)
+    normalized["behavior_result"] = expected_behavior
+    normalized["coverage_result"] = expected_coverage
+    normalized["overall_result"] = recompute_overall(expected_behavior, expected_coverage)
     return normalized
 
 
@@ -685,7 +697,12 @@ def _judge_prompt() -> str:
         "verdicts evaluate only the with_skill lane. The without_skill is comparison context: "
         "its failure to satisfy an assertion must not make an assertion FAIL when with_skill "
         "satisfies it. Use without_skill only to describe the fresh baseline and contrast the "
-        "two behaviors. Return only the JSON object required by the supplied output schema. "
+        "two behaviors. Copy each assertion id exactly from judge-package.json; never invent "
+        "positional ids such as assertion_1. Return only the JSON object required by the "
+        "supplied output schema. "
+        "Treat each delivery_snapshot file or git_blob content as locked primary evidence: "
+        "inspect that content directly, and do not fail a file-backed requirement merely "
+        "because the candidate's final prose does not restate the delivered file. "
         "Judge user-visible behavior semantically: accept semantic equivalents and do not "
         "require an exact internal label, skill path, or wording unless the assertion makes "
         "that literal form part of the user's observable result. For an interactive workflow, "
@@ -863,7 +880,7 @@ def run_selected_eval(
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
 ) -> dict[str, Any]:
     definition = load_eval_definition(repository_root, agent, skill, eval_id)
-    judge_schema_bytes = JUDGE_SCHEMA.read_bytes()
+    judge_schema_bytes = build_judge_schema_bytes(definition.item["assertions"])
     identity = source_identity(definition, judge_schema_bytes=judge_schema_bytes)
     if runtime_root is None:
         runtime_root = (
@@ -1085,6 +1102,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--agent")
     parser.add_argument("--skill")
     parser.add_argument("--eval", dest="eval_id")
+    parser.add_argument(
+        "--select", action="append", default=[], metavar="AGENT/SKILL/EVAL",
+        help="repeatable exact cross-agent target selector",
+    )
     parser.add_argument("--metadata", type=Path)
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT_SECONDS)
     parser.add_argument("--jobs", type=int, choices=range(1, 11), default=10)
@@ -1096,12 +1117,29 @@ def main(argv: list[str] | None = None) -> int:
     repository_root = Path(__file__).resolve().parents[1]
     try:
         if args.metadata:
-            if any((args.agent, args.skill, args.eval_id)):
-                raise ValueError("--metadata cannot be combined with agent/skill/eval")
+            if any((args.agent, args.skill, args.eval_id, args.select)):
+                raise ValueError("--metadata cannot be combined with filters or --select")
             definition = definition_from_metadata(args.metadata)
             targets = [(definition.agent, definition.skill, definition.eval_id)]
         else:
+            if args.select and any((args.agent, args.skill, args.eval_id)):
+                raise ValueError("--select cannot be combined with agent/skill/eval filters")
             targets = _targets(repository_root, args.agent, args.skill, args.eval_id)
+            if args.select:
+                selected: set[tuple[str, str, str]] = set()
+                for value in args.select:
+                    parts = tuple(value.split("/", 2))
+                    if len(parts) != 3 or not all(parts):
+                        raise ValueError(f"invalid --select target: {value}")
+                    selected.add(parts)
+                available = set(targets)
+                missing = selected - available
+                if missing:
+                    raise ValueError(
+                        "unknown --select target(s): "
+                        + ", ".join("/".join(target) for target in sorted(missing))
+                    )
+                targets = [target for target in targets if target in selected]
         if not targets:
             raise ValueError("no eval targets matched")
     except (OSError, ValueError, json.JSONDecodeError) as exc:

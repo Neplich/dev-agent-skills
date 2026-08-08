@@ -14,6 +14,259 @@
 - Fixture version/source: canonical manifest `ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f` from `agents/engineer/test/feature-implementor/evals/workspace/eval-003-missing-trd-handoff`.
 - Fixture SHA-256: `ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f`
 - Prompt SHA-256: `b3686b3e49b5b805ba890514f93468b848aeefc3a94d03ef515571046a19d7e0`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e820a1098a32d64fe76bdf4ec719cd859ebecfdb70fa28be1309b656ec71bd22`
+- Skill overlay SHA-256: `226a387f9ef93d9f4c106e1f240f22e5014d390eeb37da0fd61da0c129ca36ba`
+- Judge schema SHA-256: `e6ae86389c4cff0bdb9cc29f2e8bb068759de0c10b4021f42a0673c6cbfc39d1`
+- Eval definition SHA-256: `beeebfd4f2a4eb407e840ff01043296b9db4c0e70af2a9d7de790cf54280c082`
+- Metadata SHA-256: `b646b97a67422c086871d592a86b4ef2968c69945b431fbbc93a36b8db79d701`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_missing_engineer_trd` | PASS | 明确指出 `docs/engineer/capture-loop/TRD.md` 缺失。 |
+| `hands_off_to_trd_gen` | PASS | 明确指定 `engineer-agent:trd-gen` 生成并确认 TRD。 |
+| `does_not_write_plan_or_code` | PASS | 明确阻止实现、代码、测试和 implementation plan；交付快照为空且 git 状态无变更。 |
+| `names_required_trd_decisions` | PASS | 覆盖组件、数据/API/集成、验证命令、发布回滚风险，以及错误处理、可观测性和安全策略。 |
+| `keeps_finder_trd_gen_boundary` | PASS | 明确说明 Finder 仅澄清缺口，`engineer-agent:trd-gen` 负责补完整 TRD。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b3686b3e49b5b805ba890514f93468b848aeefc3a94d03ef515571046a19d7e0; fixture_sha256=ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f; output_sha256=b3615bfc64b625530694f7cf2c2b04e3bc16513800e084f3a405c86c1acd5793; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别缺失 Engineer TRD，完整列出技术决策缺口并交回 trd-gen，未产生文件变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b3686b3e49b5b805ba890514f93468b848aeefc3a94d03ef515571046a19d7e0; fixture_sha256=ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f; output_sha256=72b51833ceb2601de4c5bfbcfb685892e9c56c12352b5e62ff271ddf7119b173; snapshot_sha256=c804adbd923c07bfb2fcb7f77c8c492fcd01a07e235a57925e3b7fdbce1c7afd
+- Behavior: 直接实现并交付队列重试代码和测试，未识别 TRD 门禁。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 由 `engineer-agent:trd-gen` 生成并确认 `docs/engineer/capture-loop/TRD.md`。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-003-missing-trd-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f` from `agents/engineer/test/feature-implementor/evals/workspace/eval-003-missing-trd-handoff`.
+- Fixture SHA-256: `ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f`
+- Prompt SHA-256: `b3686b3e49b5b805ba890514f93468b848aeefc3a94d03ef515571046a19d7e0`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `664333a5486cf89713133cd2c13950492425453ded41d03d80fa464888580510`
+- Skill overlay SHA-256: `e3882775ef1e3496d2f149c4016d8d04e22a586399acb4fdc6095b11e8f7c7bf`
+- Judge schema SHA-256: `e6ae86389c4cff0bdb9cc29f2e8bb068759de0c10b4021f42a0673c6cbfc39d1`
+- Eval definition SHA-256: `beeebfd4f2a4eb407e840ff01043296b9db4c0e70af2a9d7de790cf54280c082`
+- Metadata SHA-256: `b646b97a67422c086871d592a86b4ef2968c69945b431fbbc93a36b8db79d701`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `5a4d229da9707c7ce22c80b66e92baafd2ef50f8fc9733b6b61f658aabf3dd17`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_missing_engineer_trd` | PASS | With-skill output explicitly states `docs/engineer/capture-loop/TRD.md` is missing. |
+| `hands_off_to_trd_gen` | PASS | With-skill output returns the next step to `engineer-agent:trd-gen`. |
+| `does_not_write_plan_or_code` | PASS | With-skill output explicitly blocks implementation code and implementation-plan creation; delivery snapshot is empty and git evidence shows no changes. |
+| `names_required_trd_decisions` | PASS | With-skill output lists affected components, data and integration impacts, verification commands, release/rollback risks, error classification, observability, concurrency, and idempotency decisions for the TRD. |
+| `keeps_finder_trd_gen_boundary` | PASS | With-skill output explicitly says Finder clarifies TRD gaps and `engineer-agent:trd-gen` completes the TRD. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b3686b3e49b5b805ba890514f93468b848aeefc3a94d03ef515571046a19d7e0; fixture_sha256=ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f; output_sha256=434dddc1b831d9ff56c5b89fa2414bf88dd463da60430b42b6d784685072ccbe; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Recognizes the missing TRD, hands off to trd-gen, records the required decision gaps, and performs no implementation or planning mutation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b3686b3e49b5b805ba890514f93468b848aeefc3a94d03ef515571046a19d7e0; fixture_sha256=ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f; output_sha256=23ffec1fbd5a9460e8df802f655d79d278f8639c02d5d29398fc743369f5cc99; snapshot_sha256=2d5cf55a09adb8f106426ef2078ce96907dbb108481756d34bfd653b8150b90d
+- Behavior: Fresh baseline incorrectly claims implementation and delivers code, tests, and project files despite the missing TRD.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-003-missing-trd-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f` from `agents/engineer/test/feature-implementor/evals/workspace/eval-003-missing-trd-handoff`.
+- Fixture SHA-256: `ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f`
+- Prompt SHA-256: `b3686b3e49b5b805ba890514f93468b848aeefc3a94d03ef515571046a19d7e0`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `664333a5486cf89713133cd2c13950492425453ded41d03d80fa464888580510`
+- Skill overlay SHA-256: `e3882775ef1e3496d2f149c4016d8d04e22a586399acb4fdc6095b11e8f7c7bf`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `beeebfd4f2a4eb407e840ff01043296b9db4c0e70af2a9d7de790cf54280c082`
+- Metadata SHA-256: `b646b97a67422c086871d592a86b4ef2968c69945b431fbbc93a36b8db79d701`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_missing_engineer_trd` | PASS | With-skill output explicitly states that docs/engineer/capture-loop/TRD.md is missing. |
+| `hands_off_to_trd_gen` | PASS | With-skill output explicitly requests handoff to engineer-agent:trd-gen to supplement and confirm the TRD. |
+| `does_not_write_plan_or_code` | PASS | With-skill output says no implementation plan exists and states it will not modify code or create plans; locked git evidence shows no changes. |
+| `names_required_trd_decisions` | FAIL | The output covers retry storage, failure handling, queue consumption/idempotency, observability, validation, and release/rollback risk, but does not clearly cover security strategy and does not explicitly identify affected components/modules or API/integration impact. |
+| `keeps_finder_trd_gen_boundary` | FAIL | The output delegates TRD completion to engineer-agent:trd-gen but does not explicitly state that the finder only explains the gap and that trd-gen owns completing docs/engineer/capture-loop/TRD.md. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b3686b3e49b5b805ba890514f93468b848aeefc3a94d03ef515571046a19d7e0; fixture_sha256=ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f; output_sha256=889a1d4ecac8d1a4417db15b41a3da7516f8f2ecad0834ad0ecd2395c3da8d61; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Stopped before implementation, identified the missing Engineer TRD, and handed off to trd-gen.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b3686b3e49b5b805ba890514f93468b848aeefc3a94d03ef515571046a19d7e0; fixture_sha256=ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f; output_sha256=88e0dec11e3bff9fcdcec02f0def0375ba08f3966cd69ff488d2d052d2171ea3; snapshot_sha256=fb437f72b2a28462eb9271a9ddb53ced9a5073ea9abf0e6b31e2de166554745d
+- Behavior: Implemented code and tests despite the missing Engineer TRD.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with-skill output omits required security strategy and lacks explicit affected-component/API-integration decision coverage.
+- The with-skill output does not explicitly articulate the finder-versus-trd-gen responsibility boundary.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-003-missing-trd-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f` from `agents/engineer/test/feature-implementor/evals/workspace/eval-003-missing-trd-handoff`.
+- Fixture SHA-256: `ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f`
+- Prompt SHA-256: `b3686b3e49b5b805ba890514f93468b848aeefc3a94d03ef515571046a19d7e0`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `34bb246c41505d261f20b6762e5f8c167260c9def318e938b2f40cd562a05376`
+- Skill overlay SHA-256: `b58ba61aee19f19d841deeba69a31e4991e1e48601dbae26ffb264815cffa67d`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `beeebfd4f2a4eb407e840ff01043296b9db4c0e70af2a9d7de790cf54280c082`
+- Metadata SHA-256: `b646b97a67422c086871d592a86b4ef2968c69945b431fbbc93a36b8db79d701`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_missing_engineer_trd` | PASS | With-skill output explicitly states that docs/engineer/capture-loop/TRD.md is missing. |
+| `hands_off_to_trd_gen` | PASS | It explicitly hands the next step to engineer-agent:trd-gen to complete the TRD. |
+| `does_not_write_plan_or_code` | PASS | The output defers IMPLEMENTATION_PLAN.md and coding until TRD completion; raw git evidence and the empty delivery snapshot show no mutation. |
+| `names_required_trd_decisions` | PASS | It lists decisions covering state/retry semantics, queue persistence and next_retry_at, backoff/concurrency/idempotency, processing and API integration, observability/security, validation/testing, and release/rollback risk. |
+| `keeps_finder_trd_gen_boundary` | PASS | It explicitly states that Finder clarifies TRD gaps while engineer-agent:trd-gen completes the TRD. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b3686b3e49b5b805ba890514f93468b848aeefc3a94d03ef515571046a19d7e0; fixture_sha256=ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f; output_sha256=eb68e5d82238755d1fc1914514a8856b1ad9234e821c52091b18ecb42f7bcf88; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly stopped at the missing-TRD gate, delegated TRD generation, identified required decisions, and made no workspace changes.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b3686b3e49b5b805ba890514f93468b848aeefc3a94d03ef515571046a19d7e0; fixture_sha256=ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f; output_sha256=b088a6ae0d198a68c2900626f8209cd59025a435f901a2601b90bc61ec75c029; snapshot_sha256=61ddae38875bdd61d95155fe64e9e7bff44058bbbf835f435d04472f45967157
+- Behavior: Incorrectly implemented code and tests despite the missing TRD, with untracked workspace changes.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-003-missing-trd-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f` from `agents/engineer/test/feature-implementor/evals/workspace/eval-003-missing-trd-handoff`.
+- Fixture SHA-256: `ab5acf9561757cd60998119f1643fd8622ced39a8046dbb107e9cf8100e1110f`
+- Prompt SHA-256: `b3686b3e49b5b805ba890514f93468b848aeefc3a94d03ef515571046a19d7e0`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `34bb246c41505d261f20b6762e5f8c167260c9def318e938b2f40cd562a05376`

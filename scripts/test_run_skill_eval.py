@@ -14,6 +14,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts import run_skill_eval
 
 
+def judge_schema_variant(marker: str) -> bytes:
+    path = Path(run_skill_eval.__file__).with_name("eval_judge_result.schema.json")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["title"] = f"{payload['title']} {marker}"
+    return json.dumps(payload, ensure_ascii=False).encode()
+
+
 def permission_probe(*args, writable: bool, **_kwargs) -> dict:
     dependency_run = None
     if writable and args:
@@ -283,6 +290,18 @@ def test_judge_command_uses_profile_and_schema_constraint(tmp_path: Path) -> Non
     )
 
 
+def test_judge_schema_constrains_exact_assertion_ids() -> None:
+    payload = json.loads(run_skill_eval.build_judge_schema_bytes([
+        {"id": "first_check"}, {"id": "second_check"},
+    ]))
+    results = payload["properties"]["assertion_results"]
+    assert results["minItems"] == 2
+    assert results["maxItems"] == 2
+    assert results["items"]["properties"]["id"] == {
+        "enum": ["first_check", "second_check"],
+    }
+
+
 def test_overall_is_recomputed_from_behavior_and_coverage() -> None:
     assert run_skill_eval.recompute_overall("FAIL", "FULL") == "FAIL"
     assert run_skill_eval.recompute_overall("PASS", "FULL") == "PASS"
@@ -301,12 +320,29 @@ def test_validate_judge_result_rejects_model_supplied_wrong_overall() -> None:
     assert normalized["overall_result"] == "PASS"
 
 
+def test_validate_judge_result_recomputes_behavior_and_coverage() -> None:
+    payload = judge_payload()
+    payload["assertion_results"][0]["status"] = "FAIL"
+    payload["behavior_result"] = "PASS"
+    payload["coverage_result"] = "PARTIAL"
+    payload["overall_result"] = "PASS (partial coverage)"
+
+    normalized = run_skill_eval.validate_judge_result(payload, {"uses_evidence"})
+
+    assert normalized["behavior_result"] == "FAIL"
+    assert normalized["coverage_result"] == "FULL"
+    assert normalized["overall_result"] == "FAIL"
+
+
 def test_judge_prompt_applies_assertion_verdicts_only_to_with_skill_lane() -> None:
     prompt = run_skill_eval._judge_prompt().lower()
 
     assert "assertion verdicts evaluate only the with_skill lane" in prompt
     assert "without_skill is comparison context" in prompt
     assert "must not make an assertion fail" in prompt
+    assert "delivery_snapshot" in prompt
+    assert "final prose does not restate" in prompt
+    assert "copy each assertion id exactly" in prompt
 
 
 def test_blocked_preflight_never_calls_candidate_or_judge(tmp_path: Path) -> None:
@@ -561,7 +597,7 @@ def test_unrelated_worktree_dirty_transition_does_not_invalidate_locked_inputs(
         "commit", "-q", "-m", "base",
     ], cwd=repository, check=True)
     schema = tmp_path / "judge-schema.json"
-    schema.write_text('{}\n', encoding="utf-8")
+    schema.write_bytes(judge_schema_variant("concurrent"))
     monkeypatch.setattr(run_skill_eval, "JUDGE_SCHEMA", schema)
     candidate_count = 0
 
@@ -673,6 +709,34 @@ def test_batch_main_prints_blocker_reasons_after_runtime_cleanup(
     assert "blockers: candidate dependency preflight failed; source input drift" in output
 
 
+def test_batch_main_selects_cross_agent_targets_in_one_scheduler(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    targets = [
+        ("docs", "docs-agent", "eval-001-route"),
+        ("engineer", "debugger", "eval-002-failure"),
+        ("qa", "qa-agent", "eval-003-validation"),
+    ]
+    executed: list[tuple[str, str, str]] = []
+
+    monkeypatch.setattr(run_skill_eval, "_targets", lambda *_args: targets)
+    monkeypatch.setattr(
+        run_skill_eval,
+        "run_selected_eval",
+        lambda **kwargs: executed.append(
+            (kwargs["agent"], kwargs["skill"], kwargs["eval_id"])
+        ) or {"overall_result": "PASS"},
+    )
+    monkeypatch.setattr(run_skill_eval, "check_model_available", lambda _root: True)
+
+    assert run_skill_eval.main([
+        "--select", "docs/docs-agent/eval-001-route",
+        "--select", "qa/qa-agent/eval-003-validation",
+        "--jobs", "10",
+    ]) == 0
+    assert sorted(executed) == [targets[0], targets[2]]
+
+
 def test_batch_jobs_rejects_values_above_ten() -> None:
     with pytest.raises(SystemExit):
         run_skill_eval.parse_args(["--jobs", "11"])
@@ -692,7 +756,7 @@ def test_source_identity_records_dirty_current_skill_dependency_and_schema_conte
     metadata["skill_dependencies"] = ["agents/product_manager/skills/idea-to-spec"]
     metadata_path.write_text(json.dumps(metadata), encoding="utf-8")
     schema = tmp_path / "judge-schema.json"
-    schema.write_text('{"version": 1}\n', encoding="utf-8")
+    schema.write_bytes(judge_schema_variant("version-1"))
     monkeypatch.setattr(run_skill_eval, "JUDGE_SCHEMA", schema)
     subprocess.run(["git", "init", "-q", "-b", "main"], cwd=repository, check=True)
     subprocess.run(["git", "add", "."], cwd=repository, check=True)
@@ -715,7 +779,7 @@ def test_source_identity_records_dirty_current_skill_dependency_and_schema_conte
     dirty = run_skill_eval.source_identity(definition)
     (dependency / "SKILL.md").write_text("dependency v2\n", encoding="utf-8")
     dependency_dirty = run_skill_eval.source_identity(definition)
-    schema.write_text('{"version": 2}\n', encoding="utf-8")
+    schema.write_bytes(judge_schema_variant("version-2"))
     schema_dirty = run_skill_eval.source_identity(definition)
     metadata["runtime_isolation"]["browser"] = {
         "state": "isolated", "evidence": "fresh browser profile",
@@ -766,9 +830,12 @@ def test_transient_skill_and_schema_changes_use_locked_inputs(
     metadata["skill_dependencies"] = ["agents/product_manager/skills/idea-to-spec"]
     metadata_path.write_text(json.dumps(metadata), encoding="utf-8")
     schema = tmp_path / "judge-schema.json"
-    original_schema = b'{"version":1}\n'
+    original_schema = judge_schema_variant("version-1")
     schema.write_bytes(original_schema)
     monkeypatch.setattr(run_skill_eval, "JUDGE_SCHEMA", schema)
+    expected_locked_schema = run_skill_eval.build_judge_schema_bytes([
+        {"id": "uses_evidence"},
+    ])
     candidate_count = 0
 
     def transient_runner(command, *, prompt, env, timeout_seconds):
@@ -778,7 +845,7 @@ def test_transient_skill_and_schema_changes_use_locked_inputs(
         if "--output-schema" in command:
             locked_schema = Path(command[command.index("--output-schema") + 1])
             assert locked_schema != schema
-            assert locked_schema.read_bytes() == original_schema
+            assert locked_schema.read_bytes() == expected_locked_schema
             schema.write_bytes(original_schema)
             output.write_text(json.dumps(judge_payload()), encoding="utf-8")
         else:
@@ -788,7 +855,7 @@ def test_transient_skill_and_schema_changes_use_locked_inputs(
                 (dependency / "SKILL.md").write_text(
                     "transient dependency instructions\n", encoding="utf-8",
                 )
-                schema.write_text('{"version":2}\n', encoding="utf-8")
+                schema.write_bytes(judge_schema_variant("version-2"))
             else:
                 workspace = Path(command[command.index("-C") + 1])
                 assert (workspace / ".agents/skills/bug-analyzer/SKILL.md").read_bytes() \
@@ -827,7 +894,7 @@ def test_source_drift_blocks_durable_persist(
     original_comparison = comparison.read_bytes()
     original_inventory = inventory.read_bytes()
     schema = tmp_path / "judge-schema.json"
-    schema.write_text('{"version":1}\n', encoding="utf-8")
+    schema.write_bytes(judge_schema_variant("version-1"))
     monkeypatch.setattr(run_skill_eval, "JUDGE_SCHEMA", schema)
     candidate_count = 0
 
@@ -842,7 +909,7 @@ def test_source_drift_blocks_durable_persist(
             candidate_count += 1
             if candidate_count == 1:
                 if drift == "judge_schema":
-                    schema.write_text('{"version":2}\n', encoding="utf-8")
+                    schema.write_bytes(judge_schema_variant("version-2"))
                 else:
                     (comparison.parent / "incident.md").write_text(
                         "checkout now returns 503", encoding="utf-8",

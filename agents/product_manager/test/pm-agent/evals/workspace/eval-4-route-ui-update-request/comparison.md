@@ -14,6 +14,189 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-4-route-ui-update-request`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `cc5c00e0814501d7ed50a7f0170322a995f768ddcee0b14ac461aa95868c10b8`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0b60a8fdef1023247fb430f4647e03f742c09fbfdb17e32a3a03dc6059ae9e02`
+- Skill overlay SHA-256: `7093347dda9d009dc74c5bd9b37b3d0d8b980466e82f7a4efbacd767a0e9fa19`
+- Judge schema SHA-256: `afcbd1cd02daddf2a5de8000a17edb44c8f3338aa4214be0e836d3a78f54f541`
+- Eval definition SHA-256: `601243bb221e4073b25a6eba61d2cbbc1d243cb0d11ebc88b60ef8187a2e86e1`
+- Metadata SHA-256: `aa0eca0938ef56711257694af52b821c5be5dbedc9b5982d77710814288d3115`
+- Executor SHA-256: `69cd64edf8c82e7d3acfb3b8a11159a212cfe9a5b78fc994d0038dd18345990f`
+- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `request_type_design_or_update` | PASS | with_skill 将请求置于 `greenfield-discovery`，明确目标是新版设置页方案，并声明暂不写代码，语义上完成了设计型请求分类。 |
+| `pm_designer_engineer_decision` | NOT_EXERCISED | with_skill 列出了待产出的 PRD、DECISIONS 和界面方案草案，并将 Designer/Engineer 影响标记为待方案确认后评估；完整的 PM/Designer/Engineer 路径决策尚未发生，需用户确认产品场景。 |
+| `implementation_waits_for_alignment` | PASS | with_skill 明确声明“暂不写代码”，要求先确认产品场景和设置项范围，并表示方案确认后才评估 Designer/Engineer 影响，未提前 handoff Engineer。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cc5c00e0814501d7ed50a7f0170322a995f768ddcee0b14ac461aa95868c10b8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=8b4d073a04288c3762b0bba89c75b0dd521be5977efc3733b8a44d88b2dcd881; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为 greenfield discovery，暂停实现并请求高信息量澄清，以便后续收敛 PM、Designer、Engineer 路径。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cc5c00e0814501d7ed50a7f0170322a995f768ddcee0b14ac461aa95868c10b8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=13fd4759ba46ff686c21b12f4df246bed4b022c1cbc6a97b3bd12e1b9d919fc7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 直接提出左右分栏设置页方案和交互细节，但未进行 PM、Designer、Engineer 路径判断或对齐门禁。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 获得用户确认后，继续确定 PRD/DECISIONS、设计方案与 Engineer handoff 路径。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `pm-agent`
+- Eval: `eval-004-route-ui-update-request`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-4-route-ui-update-request`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `cc5c00e0814501d7ed50a7f0170322a995f768ddcee0b14ac461aa95868c10b8`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `408fcd917b4eb851c354f2de7a398f53f4466aa8f161f9110ad055ed6bc0102c`
+- Skill overlay SHA-256: `e9a6397e166437c034ee8eec0fb781d11e200a5f78eb511626f627c9596e06b0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `601243bb221e4073b25a6eba61d2cbbc1d243cb0d11ebc88b60ef8187a2e86e1`
+- Metadata SHA-256: `aa0eca0938ef56711257694af52b821c5be5dbedc9b5982d77710814288d3115`
+- Executor SHA-256: `4759e3eb0124e65ac5500eacae6e1b3cbebfb40e2c8ffb34b2510845238a8a1e`
+- Runtime SHA-256: `d518ba38e51999e7aa2b48e05b30b862bf7571b45a739209f707cd796de14a15`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `request_type_design_or_update` | PASS | with_skill 将请求分类为 existing-project-update，并识别为已有设置页的预期变更。 |
+| `pm_designer_engineer_decision` | PASS | with_skill 将后续工作拆分为 PM 文档、Designer/Engineer 影响评估，并先要求确认信息架构后形成界面方案，未直接进入实现。 |
+| `implementation_waits_for_alignment` | NOT_EXERCISED | 候选正确停留在需要用户确认核心分栏模型的阶段，尚未进入 PM/TRD/design 对齐或 Engineer handoff，因此该后续断言无法在当前交互轮次验证。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cc5c00e0814501d7ed50a7f0170322a995f768ddcee0b14ac461aa95868c10b8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=dd8162967ee4169daaff617f4a4d5008f0cdaf6eafc0b2a75b9dc1932d5b607e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为已有项目更新，先收敛信息架构并请求用户确认，未修改工作区或进入前端实现。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cc5c00e0814501d7ed50a7f0170322a995f768ddcee0b14ac461aa95868c10b8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=b0b56edd530a0f5bea12160fe079b659dd07e97a0f9b6c6e9b471cb77e42bc1d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 直接给出完整设置页方案和交互建议，未进行请求类型或 PM/Designer/Engineer 路径分流。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 等待用户确认左侧分栏角色，再验证 PM/Designer/Engineer 对齐与 Engineer handoff。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `pm-agent`
+- Eval: `eval-004-route-ui-update-request`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-4-route-ui-update-request`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `cc5c00e0814501d7ed50a7f0170322a995f768ddcee0b14ac461aa95868c10b8`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `da17d4a3cc21b7b3406a5e9563eb0de52953132aff13ecd162bc201b422b9c60`
+- Skill overlay SHA-256: `e406d715ee602cbed706c0ad23e94d5aceb1a2d88e22b51dc7fec5b6b0ff84ae`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `601243bb221e4073b25a6eba61d2cbbc1d243cb0d11ebc88b60ef8187a2e86e1`
+- Metadata SHA-256: `aa0eca0938ef56711257694af52b821c5be5dbedc9b5982d77710814288d3115`
+- Executor SHA-256: `e75b266b25353129e41b9505482b256c4f1f809f4eb6ccc1cbecefe663a14631`
+- Runtime SHA-256: `8c4a4ba5484af132c8cebb4bf5a10ccf8221fca2f7886b1fa40452042c1e572a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `request_type_design_or_update` | PASS | With_skill explicitly selects the `existing-project-update` lane, semantically classifying the request as an existing UI update rather than immediately implementing it. |
+| `pm_designer_engineer_decision` | NOT_EXERCISED | The candidate correctly pauses for clarification before determining the downstream PM/Designer/Engineer path; the user has not yet provided the requested context or confirmation. |
+| `implementation_waits_for_alignment` | PASS | With_skill states that it will not generate a formal proposal or hand off to Designer yet, and it performs no frontend implementation before alignment. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cc5c00e0814501d7ed50a7f0170322a995f768ddcee0b14ac461aa95868c10b8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=6eb9d885002e9d095b4a7962826f6544070568bfdd95296c9d8b1b379ef9b4c0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Classifies the request as an existing-project update, identifies missing context, pauses for a user decision, and does not begin design handoff or implementation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cc5c00e0814501d7ed50a7f0170322a995f768ddcee0b14ac461aa95868c10b8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=978cbb6de6d088ade91321201ad8da65a3b5e3344593e38371c7a164caf5d4f7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Immediately proposes a detailed settings-page design and interaction plan without classifying the workflow or waiting for PM/Designer alignment.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Obtain the user's clarification, then determine the appropriate PM, Designer, and Engineer handoff path.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `pm-agent`
+- Eval: `eval-004-route-ui-update-request`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-4-route-ui-update-request`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `cc5c00e0814501d7ed50a7f0170322a995f768ddcee0b14ac461aa95868c10b8`
 - Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `847ec25f3bf19681577a3386dfc21c378712f63dee7629dde5750b16901ab4e4`
