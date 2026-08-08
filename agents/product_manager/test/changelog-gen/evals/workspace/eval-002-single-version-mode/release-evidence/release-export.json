@@ -1,0 +1,23 @@
+{
+  "repository": {
+    "nameWithOwner": "anthropics/anthropic-sdk-python",
+    "url": "https://github.com/anthropics/anthropic-sdk-python"
+  },
+  "captured_at": "2026-08-08T09:20:00Z",
+  "target_release": {
+    "tagName": "v0.120.2",
+    "publishedAt": "2026-08-05T14:00:00Z",
+    "previousTag": "v0.120.1"
+  },
+  "reachable_commits_complete": true,
+  "commits": [
+    {"oid": "a7ee9402bb6b2e8f6f482323eeab1aad4549cf71", "subject": "fix(client): handle streaming reconnect (#300)", "pullRequest": 300},
+    {"oid": "a09371491b3a57c8e32b55a3e79e7c51065316f5", "subject": "docs: clarify retry configuration (#301)", "pullRequest": 301},
+    {"oid": "9155ff113fa6beffb83de42adf2776af5271dd22", "subject": "feat!: require explicit timeout units (#302)", "pullRequest": 302}
+  ],
+  "pull_requests": [
+    {"number": 300, "title": "fix(client): handle streaming reconnect", "body": "Fixes a user-visible reconnect failure.", "author": "contributor-a", "labels": ["bug"], "state": "MERGED"},
+    {"number": 301, "title": "docs: clarify retry configuration", "body": "Updates the public retry configuration guide.", "author": "maintainer-a", "labels": ["documentation"], "state": "MERGED"},
+    {"number": 302, "title": "feat!: require explicit timeout units", "body": "BREAKING CHANGE: timeout values must include a unit.", "author": "maintainer-b", "labels": ["breaking-change"], "state": "MERGED"}
+  ]
+}

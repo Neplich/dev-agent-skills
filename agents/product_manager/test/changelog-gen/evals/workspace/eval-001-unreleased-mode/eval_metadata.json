@@ -2,6 +2,9 @@
   "eval_id": "eval-001-unreleased-mode",
   "eval_name": "unreleased-mode",
   "workspace_root": "agents/product_manager/test/changelog-gen/evals/workspace/eval-001-unreleased-mode",
+  "fixture_context": [
+    "release-evidence/unreleased-export.json"
+  ],
   "skill_dependencies": [],
   "runtime_isolation": {
     "processes": "not_used",

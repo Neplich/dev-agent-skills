@@ -57,7 +57,8 @@
         "trigger": "销售即将进入竞争性客户沟通，需要现场可用的 Linear 与 Jira 单页材料。",
         "goal": "为销售分别提供一页式 Linear 和 Jira 竞争应对材料。",
         "materials": [
-          "Linear 与 Jira 当前公开产品与销售可核验资料"
+          "competitive-research/linear.md",
+          "competitive-research/jira.md"
         ],
         "constraints": [
           "每个竞品各一页",
@@ -71,7 +72,7 @@
           "不再询问是否创建 battlecard"
         ]
       },
-      "prompt": "请为 Linear 和 Jira 各准备一页便于销售对比使用的竞争资料。可用网络检索获取事实，无法确认的信息标记为假设。",
+      "prompt": "销售研究团队已经把 Linear 和 Jira 的来源记录放在 `competitive-research/`。请基于这些材料为两家各准备一页便于销售使用的竞争资料；材料没有支持的内容请标记为假设或待验证。",
       "expected_output": "为 Linear 和 Jira 各产出一页式 battlecard，单页字段覆盖 Quick Overview / Their Pitch / Strengths / Weaknesses / Objection Handling / Landmines / Win-Loss Themes；不输出完整竞品 brief 的结构章节；标注研究日期并区分事实与推断；不询问是否创建 battlecard。",
       "workspace": "workspace/eval-002-battlecard-mode",
       "assertions": [

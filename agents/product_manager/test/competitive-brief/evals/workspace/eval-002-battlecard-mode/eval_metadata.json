@@ -2,6 +2,10 @@
   "eval_id": "eval-002-battlecard-mode",
   "eval_name": "battlecard-mode",
   "workspace_root": "agents/product_manager/test/competitive-brief/evals/workspace/eval-002-battlecard-mode",
+  "fixture_context": [
+    "competitive-research/linear.md",
+    "competitive-research/jira.md"
+  ],
   "fixture_context": [],
   "execution_cleanup": [],
   "skill_dependencies": [],

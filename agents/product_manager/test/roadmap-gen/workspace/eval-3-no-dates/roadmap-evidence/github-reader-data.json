@@ -1,0 +1,20 @@
+{
+  "repository": "golang/go",
+  "repository_url": "https://github.com/golang/go",
+  "captured_at": "2026-08-08T10:20:00Z",
+  "current_release": "go1.26.0",
+  "milestones_complete": true,
+  "backlog_total": 1,
+  "milestones": [
+    {"title": "Go1.26.1", "state": "open", "open": 2, "closed": 6, "due_on": null, "url": "https://github.com/golang/go/milestone/400"},
+    {"title": "Go1.27", "state": "open", "open": 8, "closed": 2, "due_on": null, "url": "https://github.com/golang/go/milestone/401"},
+    {"title": "Go2.0", "state": "open", "open": 12, "closed": 1, "due_on": null, "url": "https://github.com/golang/go/milestone/402"},
+    {"title": "Runtime experiments", "state": "open", "open": 3, "closed": 0, "due_on": null, "url": "https://github.com/golang/go/milestone/403"},
+    {"title": "Backlog", "state": "open", "open": 1, "closed": 0, "due_on": null, "url": "https://github.com/golang/go/milestone/404"}
+  ],
+  "issues": [
+    {"number": 4101, "title": "Fix linker regression", "state": "open", "milestone": "Go1.26.1", "labels": ["release-blocker", "compiler"], "assignees": ["gopher-a"], "updatedAt": "2026-08-07", "url": "https://github.com/golang/go/issues/4101"},
+    {"number": 4201, "title": "Add structured logging package", "state": "open", "milestone": "Go1.27", "labels": ["proposal"], "assignees": ["gopher-b"], "updatedAt": "2026-08-06", "url": "https://github.com/golang/go/issues/4201"},
+    {"number": 4301, "title": "Explore generational collector", "state": "open", "milestone": "Runtime experiments", "labels": ["runtime", "experiment"], "assignees": [], "updatedAt": "2026-08-05", "url": "https://github.com/golang/go/issues/4301"}
+  ]
+}

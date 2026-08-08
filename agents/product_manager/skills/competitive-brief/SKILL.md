@@ -42,6 +42,12 @@ Gather the following from the user:
 
 ## Research Process
 
+When the user supplies dated research notes or an exported source packet, read
+those materials first and preserve their source/capture boundaries. Use web
+search only to fill an explicitly requested gap. If live search is unavailable,
+complete the artifact from the supplied packet and mark unsupported claims as
+assumptions or follow-up research instead of inventing current facts.
+
 For each competitor, research using web search:
 
 1. **Company website** — homepage messaging, product pages, about page, pricing page

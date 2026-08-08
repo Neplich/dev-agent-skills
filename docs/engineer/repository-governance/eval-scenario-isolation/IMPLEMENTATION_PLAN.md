@@ -1,8 +1,8 @@
 ---
 title: "Eval 真实场景与 Lane 隔离重构实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.4.0"
-status: "Implemented"
+version: "0.5.0"
+status: "Draft"
 author: "Neplich Codex"
 date: "2026-08-07"
 last_updated: "2026-08-08"
@@ -17,6 +17,9 @@ related_issue: "#246"
 related_prd: "docs/pm/repository-governance/eval-scenario-isolation/PRD.md"
 related_trd: "docs/engineer/repository-governance/eval-scenario-isolation/TRD.md"
 changelog:
+  - version: "0.5.0"
+    date: "2026-08-08"
+    changes: "按维护者追加范围重开 closeout：删除全部测试过程产物、加入 10 worker 跨角色并发、聚类修复首轮 FAIL 后再全量重跑"
   - version: "0.4.0"
     date: "2026-08-08"
     changes: "完成 193 条 eval 迁移、fresh paired 执行、独立 judge、durable comparison 与最终门禁，记录实际量级和剩余行为风险"
@@ -41,8 +44,8 @@ changelog:
 
 | 门禁 | 结论 | 证据 |
 | --- | --- | --- |
-| PRD 对齐 | `already_approved` | PRD `1.0.0` 为 Approved；DECISIONS `1.0.0` 无冲突 |
-| TRD 对齐 | 已通过 | TRD `1.1.0` 为 Approved，permission profile 与实测量级已对齐 |
+| PRD 对齐 | `already_approved` | PRD `1.1.0` 为 Approved；DECISIONS `1.0.0` 无冲突 |
+| TRD 对齐 | 已通过 | TRD `1.2.0` 为 Approved，清理、并发与 FAIL 聚类范围已对齐 |
 | Feature path | 已通过 | PRD、TRD 与本计划的 `feature_path`、`parent_feature`、`feature_level` 一致，TRD `related_prd` 正确 |
 | 变更等级 | `major` | 覆盖七角色、38 个 skill、runner/checker 契约和 193 条 eval |
 | 实施确认 | 已通过 | 维护者于 2026-08-07 回复“确认按计划实施” |
@@ -74,6 +77,10 @@ changelog:
    evidence，不伪造 paired run。
 7. 193/193 有去向，全部 retained 为 complete，所有契约、确定性测试和 artifact 检查
    通过，Git 跟踪的 runtime artifact 为 0。
+8. 每个 worker 无论 PASS、FAIL、BLOCKED 或异常都删除完整 runtime root；CI 不上传运行期
+   树，仓库和 `tmp/eval-runs/` 最终只保留 durable `comparison.md` 所表达的结论。
+9. 全部已确认 FAIL 根因先完成修改，随后以最多 10 个跨角色 worker 重跑；单条 eval 内的
+   fresh without、fresh with、fresh judge 顺序不变，最终无未解释 FAIL/BLOCKED。
 
 ### 2.2 改动量级
 
@@ -92,14 +99,15 @@ changelog:
 
 ### 2.3 禁止区
 
-- 不修改 38 个目标 skill 的 `SKILL.md`、`_internal/` 或其业务协议、路由边界和用户承诺。
+- 不修改与 fresh FAIL 无关的 skill 行为；允许按 durable assertion evidence 最小补齐已有
+  仓库契约、路由、门禁、证据或产物要求，并逐项记录对应失败。
 - 不修改或迁移 `agents/docs/test/manual-gen/`；`manual-gen` 保持唯一 manual-only 例外。
 - 不提交 `with_skill/`、`without_skill/`、`baseline/`、`outputs/`、`diagnostics/`、
   `snapshots/`、`preflight/`、transcript、candidate output、judge verdict、timing、run status
   或 `comparison.auto.md`。
 - 不新增重试、缓存、降级、feature flag、通用 hook、额外配置层、监控或日志层。
-- 不修改 PM/DECISIONS；TRD 与本计划只允许同步已批准范围内的实现事实和 closeout，不顺手
-  修复业务 skill 缺陷或重构无关代码。
+- DECISIONS 保持不变；PRD、TRD 与本计划只同步维护者明确追加的清理、并发和 FAIL 整改
+  范围，不顺手重构无关代码。
 - 不把模型 eval 设为 required status check，不新增 Release CI 或发布能力。
 
 ## 3. 依赖顺序
@@ -116,7 +124,9 @@ flowchart TD
     H -->|否| I["只修 scenario、fixture、runtime 或 assertions 后重跑"]
     I --> G
     H -->|是| J["阶段 6：按角色迁移剩余 186 条"]
-    J --> K["阶段 7：全量契约、测试、diff 与 closeout"]
+    J --> K["阶段 7：首轮全量契约、测试与 fresh 诊断"]
+    K --> L["阶段 8：清理过程产物、10 worker、FAIL 聚类整改"]
+    L --> M["阶段 9：全量重跑、二次聚类与最终 closeout"]
 ```
 
 后续阶段不得绕过前置门禁；pilot 失败或模型不可用时保留 stale / `BLOCKED`，不得复用历史
@@ -128,13 +138,13 @@ baseline、降低 assertions 或静默更换模型。
 | --- | --- | --- |
 | `docs/engineer/repository-governance/eval-scenario-isolation/migration-inventory.json` | 新增 | 冻结 193 条旧记录、七角色/38 skill 计数、disposition、替代覆盖、runner 审计和迁移状态 |
 | `scripts/test_eval_runtime.py` | 新增 | materializer、manifest/hash、目录/Git/HOME 隔离、skill overlay、preflight、cleanup 测试 |
-| `scripts/test_run_skill_eval.py` | 新增 | 同 prompt、candidate 顺序、BLOCKED、judge freshness/schema、Overall 重算与认证边界测试 |
+| `scripts/test_run_skill_eval.py` | 新增 | 同 prompt、candidate 顺序、BLOCKED、judge freshness/schema、Overall 重算、认证边界、10 worker 上限和全异常路径 cleanup 测试 |
 | `agents/test_eval_contract.py` | 修改 | scenario、自然 prompt、fixture 泄漏、metadata、inventory 193/193 与 fresh comparison 正反测试 |
 | `scripts/test_check_eval_artifacts.py` | 新增 | snapshot/preflight/judge 等新增 runtime 名称的 tracked-file 正反测试 |
 | `scripts/test_summarize_eval_results.py` | 修改 | stale/BLOCKED 不计 PASS、合法两维结果和旧格式兼容测试 |
 | 六个现有 runner 测试 | 修改 | 更新 designer、devops、docs、PM `run_eval` / `transcript_runner`、QA 的薄入口与泄漏回归断言 |
 | `scripts/eval_runtime.py` | 修改 | canonical fixture、排除、hash、独立临时根/Git/HOME/CODEX_HOME、skill overlay、preflight 和 cleanup 的唯一实现 |
-| `scripts/run_skill_eval.py` | 新增 | 读取自然 prompt，串行执行 paired candidate，锁定证据后调用独立 judge，写 ignored runtime 报告 |
+| `scripts/run_skill_eval.py` | 新增 | 读取自然 prompt；单 eval 串行 paired，批量最多 10 worker；durable 写锁后在 `finally` 删除完整 runtime root |
 | `scripts/eval_judge_result.schema.json` | 新增 | assertion verdict、Behavior、Coverage、Overall、blocker/failure/next step 的严格 schema |
 | `scripts/check_eval_contract.py` | 修改 | scenario、prompt/fixture 泄漏、metadata、inventory 和 fresh comparison 契约 |
 | `scripts/check_eval_artifacts.py` | 修改 | 覆盖统一 runtime 新产物、目录和文件名 |
@@ -142,7 +152,7 @@ baseline、降低 assertions 或静默更换模型。
 | 五个角色 `run_eval.py` | 修改 | designer、devops、docs、product_manager、qa 仅保留兼容 CLI 或确定性 post-run 检查，转发统一 executor |
 | `agents/product_manager/test/idea-to-spec/transcript_runner.py` | 修改 | 删除全 `agents/` mirror、共享 HOME 和自有 paired 物化，改由 PM 兼容入口调用共享实现 |
 | 三个 `run_all_evals.py` | 修改 | designer、docs、qa 只枚举目标并逐条调用统一入口，不持有隔离规则 |
-| `.github/workflows/evals.yml` | 修改 | 目标扩展至七角色，支持 agent/skill/eval 精确选择，只上传 `tmp/eval-runs/**` 短期 artifact |
+| `.github/workflows/evals.yml` | 修改 | 目标扩展至七角色，支持 agent/skill/eval 精确选择，调用 `--jobs 10` 且不上传 runtime tree |
 | `agents/{role}/test/{skill}/evals/evals.json`（38 份） | 修改 | 增加 scenario，重写自然 prompt 与语义 assertions，保留旧 ID 到新 ID 映射 |
 | `agents/{role}/test/{skill}/**/eval_metadata.json`（193 份） | 修改 | 增加显式 skill dependencies、六类 runtime isolation；移除 prompt 和脚手架重复信息 |
 | 对应 `comparison.md`（193 份） | 修改 | 先冻结为 stale/BLOCKED；retained 完成 fresh run 后写 preflight、paired、judge 与两维结果 |
@@ -249,8 +259,8 @@ uv run scripts/summarize_eval_results.py
    PM `run_eval.py` 统一转发 `scripts/run_skill_eval.py`。
 3. 三个 `run_all_evals.py` 只负责稳定枚举与传播退出码；Engineer/Security 直接使用统一入口，
    不新增角色 runner。
-4. workflow 支持七角色及 agent/skill/eval 精确选择，安装并认证 Codex CLI 后调用统一入口，
-   runtime artifact 保留七天且不回写仓库。
+4. workflow 支持七角色及 agent/skill/eval 精确选择，安装并认证 Codex CLI 后调用统一入口
+   `--jobs 10`；不上传 runtime tree，每条结束即删除过程产物。
 5. 完成 runner 审计：消息来源、cwd、HOME/CODEX_HOME、skill overlay、fixture、assertion/expected
    output 可见性、runtime reset、judge freshness、artifact 落点全部有结论。
 
@@ -325,7 +335,7 @@ git status --short
 `Implemented`，记录实际文件、逐条命令结果、模型 eval comparison、剩余风险和 QA/下一责任人；
 归档仍需维护者另行批准。
 
-### 阶段 7 实施结果
+### 阶段 7 首轮诊断结果
 
 - Inventory 为 193 retained / 193 complete / 0 pending；38 个 skill 分组的 durable
   comparison 均为本轮 fresh 证据，汇总为 59 PASS、9 PASS (partial coverage)、125 FAIL、
@@ -334,12 +344,34 @@ git status --short
   `without_skill`、fresh `with_skill` 与第三个独立 judge；同一 eval 内严格按顺序执行。
 - `check_repository_contract.py`、`check_eval_contract.py`、`check_eval_artifacts.py` 与
   `check_doc_contract.py` 全部通过；精确 CI 清单为 273 passed、10 subtests passed。
-- Workflow YAML、Python compile、tracked/untracked whitespace、禁止区和 runtime artifact
-  检查通过；目标 `SKILL.md`、`_internal/` 与 `agents/docs/test/manual-gen/` 零 diff。
-- 125 个 FAIL 与 9 个 partial coverage 是 fresh judge 记录的当前业务行为差距，不属于迁移或
-  隔离基础设施失败。下一责任人为 PM 与对应 skill owner，按 skill 分组决定修复、调整契约或
-  生命周期处置；Issue #246 不修改业务 skill 来掩盖这些结果。
-- 本计划保持当前路径的 `Implemented` 入口，不执行归档；归档等待维护者另行批准。
+- Workflow YAML、Python compile、tracked/untracked whitespace、禁止区和当时的 tracked
+  runtime artifact 检查通过；首轮结果随后作为 FAIL 聚类输入，不再代表最终 closeout。
+- 125 个 FAIL 重叠聚类为路由/handoff 43、gate/authority 56、证据核验 42、产物完整性 43，
+  另有少量网络不可用、空材料和 Git 初始状态不成立的 fixture 设计错误。
+- 维护者于 2026-08-08 明确要求继续处理全部 FAIL，并把过程产物清理与 10 并发加入同一
+  closeout；因此本计划由 `Implemented` 重开为 `Draft` 活动计划，不归档。
+
+### 阶段 8：过程产物、并发与 FAIL 整改
+
+1. 已删除 ignored 的 `tmp/eval-runs/` 历史运行树约 7.5 GB；`AGENTS.md`、runner 和 workflow
+   已统一为每条结束删除完整 runtime root，CI 不再上传过程树。
+2. `run_skill_eval.py` 已增加 1 至 10 worker 批量调度和 durable 写锁；20 个假目标验证峰值
+   为 10，单目标 paired 顺序保持不变。Runtime/runner/artifact 定向测试为 73 passed。
+3. 已按首轮 evidence 补齐七角色 router、门禁、mapped-doc evidence、durable artifact 和
+   closeout 要求；跨 skill 共享契约路径改为安装态依赖路径，避免 source repository OS deny。
+4. 已修正不可能 fixture：delivery 使用真实未提交 patch topology；计划生成用例获得真实
+   PRD/TRD；GitHub/changelog/roadmap/battlecard 使用用户提供的原始离线导出；成功的
+   docs-audit pre-tag 场景补齐 Release Notes owner handoff。
+5. 正在完成 skills-lock、全静态契约与确定性测试；此阶段不得启动模型 eval。
+
+### 阶段 9：10 worker 全量重跑与最终 closeout
+
+1. 静态门禁全部通过后执行 `uv run scripts/run_skill_eval.py --jobs 10`，跨七角色调度全部
+   193 条 eval；每条内部仍严格执行 fresh without、fresh with、fresh read-only judge。
+2. 汇总新 FAIL/BLOCKED 后再次按共因整改并只重跑受影响集合；修改共享 skill dependency、
+   runtime、schema 或 executor 时，按 source identity 重新运行全部受影响 comparison。
+3. 最终要求 193/193 comparison FRESH、无未解释 FAIL/BLOCKED、runtime tree 为 0、四类
+   contract 与精确 CI 清单全绿，再把计划改回 `Implemented` 并记录最终量级和下一责任人。
 
 ## 6. Sub-Agent 分工
 

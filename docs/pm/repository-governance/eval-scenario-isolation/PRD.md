@@ -1,11 +1,11 @@
 ---
 title: "Eval 真实场景与 Lane 隔离重构 PRD"
 type: PRD
-version: "1.0.0"
+version: "1.1.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-07"
-last_updated: "2026-08-07"
+last_updated: "2026-08-08"
 generated_by: "prd-gen"
 feature: "eval-scenario-isolation"
 feature_path: "repository-governance/eval-scenario-isolation"
@@ -18,6 +18,9 @@ related_docs:
   - "docs/pm/repository-governance/eval-baseline-evidence-contract/PRD.md"
   - "docs/pm/repository-governance/eval-comparison-coverage/PRD.md"
 changelog:
+  - version: "1.1.0"
+    date: "2026-08-08"
+    changes: "增加测试过程产物强制清理、最多 10 个跨角色并发 worker，以及 fresh FAIL 聚类整改后再重跑的完成门槛"
   - version: "1.0.0"
     date: "2026-08-07"
     changes: "初始版本，定义 38 个常规 skill、193 条 eval 的真实场景重设计与统一隔离要求"
@@ -33,6 +36,11 @@ changelog:
 当前 paired eval 的隔离方式也未形成统一闭环。Prompt、workspace README、metadata、历史 comparison、父会话上下文或专用 runner 都可能向 candidate 暴露评测意图；不同角色对 scratch workspace、Git 根、目标 skill 可见性和运行时状态采用不同处理方式。即使重新执行旧 eval，也可能得到形式完整但缺少用户代表性或因 lane 泄漏而失真的结论。
 
 本功能把常规 eval 的可信目标改为：以真实用户场景定义任务，以目标 skill 是否加载作为 `with_skill` 与 `without_skill` 的唯一变量，并以隔离 preflight、fresh baseline、独立 judge 和 durable comparison 形成可复核证据链。
+
+首轮 193 条 fresh paired 执行得到 59 PASS、9 PASS (partial coverage) 和
+125 FAIL。该结果证明迁移与隔离链路可运行，但同时暴露共享契约路径不可读、路由/门禁
+不完整、证据与产物缺失，以及少量 fixture 与断言不可能同时成立等共因。维护者要求先按
+共因完成整改，再统一重跑；旧 FAIL 在重跑前只是诊断输入，不是最终 closeout 结论。
 
 ### 1.1 当前状态与目标状态
 
@@ -52,12 +60,14 @@ changelog:
 3. 使每个保留 eval 的 prompt、fixture 和 assertions 都以真实用户结果为中心，不向 candidate 泄露评测脚手架或答案。
 4. 用统一 scratch materializer 和隔离 preflight 证明两条 lane 的 fixture 一致、运行目录独立、目标 skill 可见性符合约束且运行时已隔离或重置。
 5. 为每个保留 eval 重新生成 `without_skill` baseline、`with_skill` 输出和独立 judge 结论，并更新 durable `comparison.md`。
-6. 用静态检查和确定性隔离测试阻止已知泄漏重新进入 candidate lane，同时保持 runtime artifact 不入库。
+6. 用静态检查和确定性隔离测试阻止已知泄漏重新进入 candidate lane；每条 eval 结束（含 FAIL、BLOCKED 和异常）必须删除全部过程产物，只保留 durable `comparison.md`。
+7. 批量入口最多使用 10 个跨角色 worker 并行处理不同 eval；每条 eval 内仍严格按 `without_skill → with_skill → judge` 顺序执行。
+8. 对 fresh FAIL 先聚类定位共享根因，修复 skill、fixture 或 assertions 的真实缺陷后再运行正式 eval；不得用弱化断言或伪造 fixture 制造 PASS。
 
 ### 2.2 非目标
 
 - 不把 `manual-gen` 纳入常规 paired eval；它继续遵循 manual-only 契约。
-- 不修改 38 个目标 skill 的业务协议、角色边界或用户承诺。
+- 不修改与 fresh FAIL 无关的 skill 行为；只有 durable evidence 证明目标 skill 缺少既有仓库契约时，才做可追溯的最小协议修正。
 - 不引入与 Issue #246 无关的抽象、功能、发布能力或仓库治理规则。
 - 不提交 transcript、candidate output、baseline output、judge verdict、timing、diagnostics、运行期 workspace 或其他 runtime artifact。
 - 不要求迁移后的 eval 数量必须仍为 193；合并或删除必须有逐条理由和可追溯映射。
@@ -93,7 +103,8 @@ changelog:
 | FR-006 | 隔离 Preflight | 在 candidate 启动前验证 fixture 一致性、禁止文件排除、skill 可见性、工作目录、运行时隔离或重置状态以及 judge 上下文。 | P0 | 每次 paired run 都产生完整 preflight 结果；任一项无法证明时本轮为 `BLOCKED`，不得写成 PASS；进程、端口、数据库、浏览器、登录态和下载目录均有隔离、重置或阻塞结论。 |
 | FR-007 | Candidate 与 Judge 边界 | 两条 lane 接收逐字相同的自然消息；candidate 不接触 assertions、expected output、历史 comparison 或 judge 材料；judge 使用第三个全新只读 `gpt-5.6-luna` medium 上下文。 | P0 | Candidate 泄漏扫描为 0 命中；两条消息 hash 一致；judge 仅在两条输出锁定后读取 assertions 和必要原始证据，且不读取 lane 自评。 |
 | FR-008 | Runner 泄漏修复 | 修复 QA runner 已知的 lane、metadata、expected output 和源仓库根泄漏，并审计其余专用 runner 的同类风险。 | P0 | QA runner 不再向 candidate 发送评测编排信息，也不从源仓库根启动 baseline；所有专用 runner 都有审计结论，发现的问题在迁移完成前修复并有回归测试。 |
-| FR-009 | Fresh 结果与治理检查 | 每轮重新生成 baseline，锁定两条输出后由独立 judge 判定，并更新 durable comparison；旧结论保持 stale，直至新证据完成；新增静态检查和隔离测试并保持 runtime artifact 零提交。 | P0 | 每个保留 eval 的 comparison 记录本轮来源、preflight、两条 lane、judge、Behavior/Coverage 与 Overall result；所有旧 eval 已更新或有 stale 去向；仓库、eval、artifact、doc contract 及相关确定性测试通过，git 跟踪的 runtime artifact 为 0。 |
+| FR-009 | Fresh 结果与治理检查 | 每轮重新生成 baseline，锁定两条输出后由独立 judge 判定，并更新 durable comparison；所有 runtime root、candidate 输出、snapshot、judge package/verdict、transcript、timing 和 diagnostics 在 runner 退出前删除。 | P0 | 每个保留 eval 的 comparison 记录本轮来源、preflight、两条 lane、judge、Behavior/Coverage 与 Overall result；成功、FAIL、BLOCKED 和异常路径均只留下 durable comparison；仓库、eval、artifact、doc contract 及相关确定性测试通过。 |
+| FR-010 | FAIL 聚类与并发重跑 | 首轮 fresh FAIL 按共享路径、路由/门禁、证据核验、产物完整性和 fixture 可执行性聚类；全部已确认根因整改完成后，统一入口以最多 10 个 worker 跨角色运行。 | P0 | 每个整改可追溯到 fresh assertion evidence；批量测试证明并发上限为 10、共享 inventory 写入安全、单 eval paired 顺序不变；最终不存在未解释的 FAIL/BLOCKED。 |
 
 ## 6. 非功能需求
 
@@ -103,7 +114,7 @@ changelog:
 | 隔离性 | Candidate 不可读取评测脚手架、目标外 skill 或另一条 lane。 | 禁止项扫描与跨 lane 可见性 | 0 命中、0 可见 |
 | 可重复性 | 同一 canonical fixture 物化出的两条 lane 内容一致。 | 文件清单与内容 hash | 100% 一致 |
 | 可判定性 | 无法证明隔离时不得产出通过结论。 | Preflight 不完整时的结果 | 100% `BLOCKED` |
-| 产物卫生 | 运行期证据只保存在 scratch 或 CI artifact。 | Git 跟踪的 runtime artifact | 0 个 |
+| 产物卫生 | 运行期证据仅在单条执行期间存在，退出前无条件删除；CI 不上传 runtime tree。 | Runner 退出后的 runtime artifact | 0 个 |
 | 一致性 | 同一源码树上的确定性检查结果稳定。 | 重复执行静态检查 | 违规列表一致 |
 
 ## 7. 用户流程
@@ -172,7 +183,7 @@ flowchart TD
 | 约束 | `manual-gen` 是唯一 manual-only 例外，不进入本次 paired eval。 | 不得用本次机制伪造其真实环境证据。 |
 | 约束 | Candidate 与 judge 使用的模型和 reasoning effort 遵循现行 eval 执行契约。 | 指定模型不可用时本轮 `BLOCKED`，不得静默替换。 |
 | 约束 | 两条 lane 的唯一变量是目标 skill 是否加载。 | 存在其他差异时，本轮输出不得作为比较证据。 |
-| 约束 | Runtime artifact 不入 git，历史结果只通过 durable comparison 表达。 | Artifact 检查失败时不得完成迁移。 |
+| 约束 | Runtime artifact 在每条测试结束时删除，历史结果只通过 durable comparison 表达。 | Cleanup、artifact 或 CI 上传检查失败时不得完成迁移。 |
 | 约束 | 本次只重构 eval 定义、fixture、runner、隔离基础设施、检查和 durable comparison。 | 发现 skill 业务协议缺陷时另行建项，不在本 issue 顺手修改。 |
 
 ## 12. 依赖
@@ -192,6 +203,7 @@ flowchart TD
 | 阶段 3 | 七角色端到端 pilot。 | 7/7 pilot 满足全部 P0，且 comparison 使用 fresh 证据。 | 各角色维护者 / Engineer |
 | 阶段 4 | 按角色批量迁移与 fresh paired eval。 | 193/193 有去向；所有保留 eval 完成新 comparison。 | 各角色维护者 / Engineer |
 | 阶段 5 | 仓库级收尾验证。 | Repository、eval、artifact、doc contract 与相关确定性测试通过。 | Engineer / Reviewer |
+| 阶段 6 | Fresh FAIL 聚类整改与并发重跑。 | 已确认根因全部修复；10 worker 重跑后不存在未解释的 FAIL/BLOCKED，过程产物为 0。 | Skill owner / Engineer |
 
 本功能不以日期驱动放行。任一阶段未达到完成门槛时，后续 comparison 不作为 release 依据。
 
@@ -205,6 +217,8 @@ flowchart TD
 | 外部运行时无法完全隔离。 | 中 | Lane 结果受前序状态污染。 | 优先独立运行时；只能共享时串行并恢复同一初始状态，否则 `BLOCKED`。 |
 | 旧 comparison 在迁移中继续被引用。 | 高 | Release 依据与当前契约不一致。 | 先统一标记 stale，并以迁移清单和静态检查阻止误用。 |
 | 批量执行成本促使复用历史 baseline。 | 中 | Comparison 不再是同轮对照。 | 每轮强制 fresh baseline；无法完成时记录阻塞，不降级。 |
+| 并发 worker 竞争写 inventory 或残留大体积 scratch。 | 中 | Durable 状态损坏或磁盘膨胀。 | Durable transaction 使用进程内写锁；每个 worker 在 `finally` 删除完整 runtime root，并用并发与异常回归测试证明。 |
+| 把 skill 缺陷误判成 eval 缺陷。 | 高 | 通过弱化断言掩盖真实行为差距。 | 先核对 skill 契约、用户目标和 candidate 原始证据；只有不可能执行或材料事实不成立时才改 fixture/assertion。 |
 
 ## 15. 待确认问题
 

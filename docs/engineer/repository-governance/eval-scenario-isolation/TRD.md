@@ -1,11 +1,11 @@
 ---
 title: "Eval 真实场景与 Lane 隔离重构技术需求文档"
 type: TRD
-version: "1.1.0"
+version: "1.2.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-07"
-last_updated: "2026-08-07"
+last_updated: "2026-08-08"
 generated_by: "trd-gen"
 feature: "eval-scenario-isolation"
 feature_path: "repository-governance/eval-scenario-isolation"
@@ -31,6 +31,9 @@ related_code:
   - "agents/*/test/*/workspace/**"
   - ".github/workflows/evals.yml"
 changelog:
+  - version: "1.2.0"
+    date: "2026-08-08"
+    changes: "增加无条件 runtime root 清理、10 worker 跨角色并发、durable 写锁与 fresh FAIL 聚类整改设计"
   - version: "1.1.0"
     date: "2026-08-07"
     changes: "以 Codex permission profile 落实源码读隔离，并按阶段 1 至 4 实测修正代码与测试量级"
@@ -56,9 +59,10 @@ changelog:
 约束的结论；candidate 不接触 schema、assertions、expected output、历史 comparison
 或 judge 材料。
 
-方案不修改 38 个目标 skill 的业务协议，不引入缓存、重试、feature flag、额外配置
-层、监控系统或通用插件框架。运行状态只保存在 `tmp/eval-runs/` 或短期 CI artifact，
-仓库长期保留 scenario、fixture、迁移清单和 durable `comparison.md`。
+方案只允许依据 fresh assertion evidence 对目标 skill 做最小契约修正，不引入缓存、重试、
+feature flag、额外配置层、监控系统或通用插件框架。运行状态只在单条 eval 执行期间存在；
+runner 退出前删除完整 runtime root，仓库长期只保留 scenario、fixture、迁移清单和 durable
+`comparison.md`。
 
 ### 1.1 来源与追踪
 
@@ -73,7 +77,7 @@ changelog:
 | Issue #246 | 修复 QA 确定性泄漏，审计其余 runner，并重建全部常规 eval 证据。 |
 | AGENTS.md eval 契约 | 固定 fresh paired lane、Luna medium、独立 judge、Behavior/Coverage/Overall 结果。 |
 
-## 2. 当前实现证据
+## 2. 冻结实现基线
 
 | 组件 | 当前事实 | 目标差距 |
 | --- | --- | --- |
@@ -85,6 +89,10 @@ changelog:
 | `check_eval_contract.py` | 校验 schema v1.0、workspace、metadata path 和 comparison 存在。 | 不校验 scenario、自然 prompt、fixture 泄漏、skill 依赖或 193 条迁移清单。 |
 | `check_eval_artifacts.py` | 已阻止常见 runtime 输出进入 Git。 | 需覆盖统一 executor 新增的 snapshot/preflight/judge runtime 文件名。 |
 | `.github/workflows/evals.yml` | 手动 workflow 只暴露 designer、docs、qa。 | 七角色和单 eval/skill 选择必须进入统一入口。 |
+
+该表记录重构开始时的冻结基线。当前实现已由共享 runtime/executor、permission profile、
+Git topology、offline dependency staging、source identity 和 durable transaction 替代；本轮
+新增范围是清除所有过程产物、限制 10 worker 并发，以及处理首轮 fresh FAIL。
 
 仓库当前冻结基线为 38 个常规 skill、193 条 eval：designer 11、devops 15、
 docs 46、engineer 38、product_manager 50、qa 15、security 18。
@@ -106,7 +114,7 @@ flowchart TD
     O1 --> J
     J --> S["output-schema 约束的 judge JSON"]
     S --> C["更新 durable comparison"]
-    C --> A["清除 runtime artifact，保留长期结论"]
+    C --> A["finally 删除完整 runtime root，只保留长期结论"]
 ```
 
 ### 3.1 共享运行时边界
@@ -121,8 +129,9 @@ flowchart TD
    discovery 路径；依赖路径必须是仓库内显式相对路径。
 5. 生成并判定 preflight；不完整、失败、模型不可用或 runtime 状态未知时返回
    `BLOCKED`，不启动 candidate 或不写 PASS。
-6. Candidate 完成后只把最终消息、文件 manifest、Git diff 和运行状态复制到 ignored
-   runtime root，再销毁包含认证材料的 lane 根。
+6. Candidate 完成后只在当前进程中锁定最终消息、文件 manifest、Git/ref 证据和运行状态；
+   comparison 与 inventory 成功事务完成后，或任何 FAIL/BLOCKED/异常发生时，都在 `finally`
+   销毁 lane、依赖 staging、judge package、diagnostics 和完整 runtime root。
 
 `scripts/run_skill_eval.py` 是唯一 paired 执行入口。它读取 `evals.json` 的 prompt，
 不接受 runner 重写的 lane-specific prompt；两次 candidate 调用使用相同 prompt bytes
@@ -238,11 +247,20 @@ PASS + FULL 为 PASS；Behavior PASS + PARTIAL 为 PASS (partial coverage)。Pre
 | Designer/DevOps/Docs `run_eval.py` | 共用一个确定性 post-run 检查函数；角色文件只保留兼容入口，禁止再次复制 fixture。 |
 | Engineer/Security | 直接使用统一 executor，不新增角色专属 paired runner。 |
 | `run_all_evals.py` | 只枚举 suite 并逐条调用统一入口，不持有隔离规则。 |
-| `.github/workflows/evals.yml` | target 扩展到七角色；统一调用入口并只上传 `tmp/eval-runs/**` 短期 artifact。 |
+| `.github/workflows/evals.yml` | target 扩展到七角色；统一调用 `--jobs 10`，不上传 `tmp/eval-runs/**`。 |
 
 Runner 审计清单必须覆盖：candidate 消息来源、启动 cwd、HOME/CODEX_HOME、skill 安装、
 fixture 复制、assertion/expected output 可见性、runtime reset、judge freshness 和 artifact
 落点。审计结论写入迁移清单，不另建日志或监控层。
+
+### 4.1 批量并发与清理
+
+`scripts/run_skill_eval.py` 的批量入口默认 `--jobs 10`，并将合法范围限制为 1 至 10。
+线程池可以跨 agent/skill 调度不同 eval，但单个 worker 内仍严格串行执行
+`without_skill → with_skill → judge`。共享 migration inventory 的 comparison + inventory
+事务由单一进程内写锁保护，避免多个完成项丢失更新；每个 worker 在独立 runtime root 上
+工作，并在自己的 `finally` 中递归删除该 root。批量调度器也捕获单 worker 异常并继续回收
+其他 future，不允许异常绕过清理。
 
 ## 5. 迁移数据与执行门禁
 
@@ -271,6 +289,7 @@ Issue #246 新契约尚未重跑；保留历史正文。之后严格按以下阶
 | 2 | 七角色 pilot。 | 7/7 完成 scenario、paired run、fresh judge 和 comparison。 |
 | 3 | 按角色迁移剩余 eval。 | 193/193 有 disposition；每个 retained 完成 fresh 证据。 |
 | 4 | 仓库收尾。 | 全部 contract/test 通过，Git 跟踪 runtime artifact 为 0。 |
+| 5 | Fresh FAIL 聚类整改与并发重跑。 | 共享根因、skill 契约缺口和不可能 fixture 全部修复；10 worker 重跑后无未解释 FAIL/BLOCKED，runtime root 为 0。 |
 
 Pilot 使用以下冻结旧标识作为迁移种子；pilot 允许在 review 后改名，但必须保持迁移映射：
 
@@ -285,8 +304,9 @@ Pilot 使用以下冻结旧标识作为迁移种子；pilot 允许在 review 后
 | security | `authz-reviewer/eval-001-rbac` |
 
 剩余批次按 designer、devops、qa、security、engineer、docs、product_manager 执行，先用
-较小角色验证批处理纪律。任一 pilot 失败只修正 scenario、fixture、runtime 或 eval
-断言；发现 skill 业务协议缺陷时另行建项，本 Issue 不顺手修改 skill。
+较小角色验证批处理纪律。首轮 fresh 结果按共享路径、路由/门禁、证据核验、产物完整性和
+fixture 可执行性聚类：skill 未落实既有仓库契约时最小修正 skill；材料不真实或断言互相
+矛盾时修正 eval；不得把真实行为失败改写为更弱的通过条件。
 
 ## 6. 文件级影响与改动量级
 
@@ -303,18 +323,18 @@ Pilot 使用以下冻结旧标识作为迁移种子；pilot 允许在 review 后
 | 38 个 `evals.json` | 增加 scenario，重写自然 prompt 和语义 assertions，记录新 ID。 |
 | 193 个 eval workspace | 更新 metadata、清理/重写 README 与 fixture、保留 durable comparison。 |
 | `migration-inventory.json` | 新增 193 条冻结映射与阶段状态。 |
-| `.github/workflows/evals.yml` | 七角色统一入口与短期 artifact 上传。 |
+| `.github/workflows/evals.yml` | 七角色统一入口、固定 `--jobs 10`，移除 runtime artifact 上传。 |
 
-阶段 1 至 4 的实测口径为：计划列出的生产文件由 2,949 行增至 3,164 行，净增加 215 行；
-确定性测试由 4,300 行降至 3,914 行，净删除 386 行。生产增量用于 OS 级读隔离、顺序上下文、
-原始交付物快照、双文件回滚、完整 source identity、冻结哈希/audit 校验和兼容输出门禁；
-测试净删除来自六套旧角色 runner 重复测试由共享回归替代。该口径不允许引入业务抽象、重试、
-缓存、降级、feature flag、通用 hook、监控或额外日志层。
+阶段 1 至 4 的早期实测为生产净增加 215 行、确定性测试净删除 386 行；完整隔离终审加入
+Git topology、离线依赖、source lock 与原始 Git evidence 后，以实施计划记录的首轮 closeout
+实测为准。本轮追加预计主要落在 runner 并发/清理回归、目标 skill 的既有契约补齐和少量
+原始 fixture，不新增重试、缓存、降级、feature flag、通用 hook、监控或额外日志层；最终
+closeout 必须重新按冻结 commit 统计生产、测试、skill 和 fixture 四类净行数。
 
 资产触达规模为：38 个 eval 定义文件、193 份 metadata、193 份 comparison、1 份迁移
 清单，以及按审计结果最多 193 个 README/fixture 集合；最少触达 425 个资产文件，最多
 约 618 个。每个 retained eval 产生三次 fresh 模型运行，但 transcript、输出、judge
-verdict、timing、diagnostics 和 workspace snapshot 均不入 Git。
+verdict、timing、diagnostics 和 workspace snapshot 只在执行期间存在，runner 退出前删除。
 
 ## 7. 测试与验证
 
@@ -329,6 +349,9 @@ verdict、timing、diagnostics 和 workspace snapshot 均不入 Git。
 - 任一 preflight 项失败或 unknown 均返回 BLOCKED 且不产生 PASS；
 - judge 在 candidate 输出锁定后才创建，read-only，且 output schema/组合规则有效；
 - runtime artifact 检查覆盖全部新名称；
+- 成功、FAIL、BLOCKED、materialize 异常和 worker 异常都删除完整 runtime root；
+- 20 个跨角色假目标证明并发峰值恰为 10，且每个目标内部 paired 顺序不变；
+- 并发 durable transaction 不丢 comparison/inventory 更新；
 - migration inventory 精确覆盖 193/193，并拒绝缺失、重复和虚假 complete；
 - 合法宿主 README 与业务词不被 prompt/fixture 检查误报。
 
@@ -359,7 +382,7 @@ git ls-files agents tmp/eval-runs | \
 
 - Candidate 与 judge 默认无 model-generated network access；需要真实外部环境的 eval 必须
   在 runtime_isolation 中声明并证明独立或重置，否则 BLOCKED。
-- 认证文件不进入 candidate workspace、judge package、diagnostics、CI artifact 或 Git。
+- 认证文件不进入 candidate workspace、judge package、diagnostics 或 Git；CI 不上传 runtime tree。
 - Candidate 与 judge 不加载用户全局配置；各自只加载隔离 `CODEX_HOME/config.toml` 的
   permission profile 与认证。Preflight 必须实测该边界，不能只依赖目录结构或配置文本。
 - Workflow 是手动 eval 证据生成，不新增 Release CI 或 required status check。
@@ -378,6 +401,8 @@ git ls-files agents tmp/eval-runs | \
 | 193 条迁移产生遗漏或 ID 漂移 | 旧 eval 无去向。 | 冻结 machine-readable inventory，并由 contract 精确校验 193/193。 |
 | Judge 自由文本解析漂移 | 错误汇总 Behavior/Coverage。 | 使用 `--output-schema` 固定 JSON，并由 executor 重算 Overall。 |
 | 批量运行成本诱发历史 baseline 复用 | Comparison 不再是同轮证据。 | Executor 不提供复用入口；失败保留 stale/BLOCKED。 |
+| 并发写 durable inventory 丢更新 | Comparison 与 migration 状态不一致。 | Comparison + inventory 事务在进程内写锁中读取、重算和替换，并做并发回归。 |
+| 异常路径残留大体积 runtime tree | 工作区或 CI 磁盘持续膨胀。 | Materialization 也放入受保护的 try/finally；worker 和 `MaterializedEvalRun.cleanup()` 都删除完整 root。 |
 
 ## 10. 回滚方案
 
@@ -406,7 +431,7 @@ comparison 和迁移记录通过 Git 恢复，不从 runtime artifact 回填。
 
 ### 11.3 L2b 拆分评估
 
-本 TRD 少于 500 行；PRD 共 5 条 US 与 9 条 FR，未达到 15 条门槛；方案虽覆盖七角色，
+本 TRD 少于 500 行；PRD 共 5 条 US 与 10 条 FR，未达到 15 条门槛；方案虽覆盖七角色，
 但只包含“统一运行时/检查器”和“eval 资产迁移”两个相互依赖的技术域，没有独立子功能
 所有权。当前 `feature_path` 不拆分，所有产物继续镜像已确认的 PM L2 路径。
 
@@ -415,16 +440,17 @@ comparison 和迁移记录通过 Git 恢复，不从 runtime artifact 回填。
 `feature-implementor` 仅在以下条件同时满足后编写
 `docs/engineer/repository-governance/eval-scenario-isolation/IMPLEMENTATION_PLAN.md`：
 
-1. 同路径 PRD、DECISIONS 与本 TRD 均为 Approved，`change_tier` 保持 major。
-2. 实施计划按“stale 冻结 → runtime/checker → 七 pilot → 角色批次 → 全量收尾”列出
-   文件级步骤、验证命令和阶段回滚点。
-3. 实施计划采用本 TRD 第 6 节的实测量级：生产文件净增加 215 行、测试净删除 386 行；
-   后续若继续修改共享执行面并明显偏离该值，须再次回到 TRD 核对范围。
-4. 实施计划明确不修改 38 个 skill 的业务协议，不新增重试、缓存、feature flag、通用
-   hook、监控或日志层。
-5. 七角色 pilot 未达到 7/7 前，不开始剩余 186 条旧 eval 的批量迁移。
-6. 每个 retained eval 的完成定义包含 fresh without、fresh with、独立 judge、更新后的
-   comparison 和 runtime artifact 零提交；193/193 机械校验是最终 closeout 门禁。
+1. 同路径 PRD `1.1.0`、DECISIONS 与本 TRD `1.2.0` 均为 Approved，`change_tier` 保持 major。
+2. 实施计划在原“stale 冻结 → runtime/checker → 七 pilot → 角色批次 → 全量收尾”后追加
+   “过程产物清理 → 10 worker 并发 → fresh FAIL 聚类整改 → 全量重跑”。
+3. 实施计划保留首轮实测量级，并在最终 closeout 按冻结 commit 重算生产、测试、skill 和
+   fixture 四类净行数；不得为满足旧估算删除隔离或证据逻辑。
+4. 只允许 durable FAIL evidence 支持的最小 skill 契约修正，不新增重试、缓存、feature
+   flag、通用 hook、监控或日志层，也不修改无关 skill 行为。
+5. 七角色 pilot 与 193 条首轮 fresh 证据继续作为诊断基线；全部已确认根因修复前不启动
+   正式重跑。
+6. 最终完成定义包含每条 eval 的 fresh without、fresh with、独立 judge、更新后的
+   comparison、退出后 runtime artifact 为 0，以及不存在未解释的 FAIL/BLOCKED。
 
-Engineer 文档已批准后，下一步由 `feature-implementor` 生成并确认实施计划，再开始代码、
-测试、pilot 和批量迁移；不得从本 TRD 直接跳到实现。
+维护者已明确授权按该追加范围继续实施；`feature-implementor` 使用同一路径活动计划记录
+执行、验证和 closeout，不另建第二份计划或从旧 Implemented 状态跳过新门禁。

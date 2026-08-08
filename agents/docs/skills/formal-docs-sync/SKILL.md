@@ -37,6 +37,12 @@ result, hand the affected set to audit, and perform the read-only deployment
 completeness recheck. A discovered deployment gap returns to `pm-agent` without
 being repaired here.
 
+After each check, remove its transient work directories, generated previews,
+logs, caches, and diagnostics before taking the final workspace snapshot. Keep
+only the requested formal documents, change-map updates, and the durable
+conclusion/handoff; a passing command does not authorize test process artifacts
+to remain in the host tree.
+
 ## Entry Gate
 
 Require a PM handoff packet or an equivalent confirmed entry basis for exactly

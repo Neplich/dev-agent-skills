@@ -2,6 +2,9 @@
   "eval_id": "eval-002-single-version-mode",
   "eval_name": "single-version-mode",
   "workspace_root": "agents/product_manager/test/changelog-gen/evals/workspace/eval-002-single-version-mode",
+  "fixture_context": [
+    "release-evidence/release-export.json"
+  ],
   "skill_dependencies": [],
   "runtime_isolation": {
     "processes": "not_used",

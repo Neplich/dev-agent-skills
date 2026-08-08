@@ -6,7 +6,7 @@ visibility: internal
 
 # GitHub Reader
 
-Read a GitHub repository's current state and produce a structured Markdown summary. All data comes from `gh` CLI — no MCP needed.
+Read a GitHub repository's current state and produce a structured Markdown summary. Live data comes from `gh` CLI — no MCP needed. A user-supplied `gh` JSON export is also valid when the environment cannot reach GitHub: verify its repository and capture time, use its raw `total_count` and collection payloads, and label the report “as of” that capture instead of presenting it as a live query.
 
 This skill serves two purposes:
 1. **Direct answer**: respond to the user's question about the repo
@@ -23,6 +23,12 @@ raw GitHub search `total_count` query evidence; if unavailable, label the total
 unavailable rather than deriving or fabricating it.
 
 ## Step 1 — Establish repo context
+
+If the request names a repository and supplies a local GitHub evidence export,
+read that export first. It must identify the repository, `captured_at`, raw search
+query results, and any fetched milestone/issue/PR collections used by the
+report. Do not call GitHub or invent missing collections; surface absent or
+incomplete fields with the same completeness rules as a live query.
 
 宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 

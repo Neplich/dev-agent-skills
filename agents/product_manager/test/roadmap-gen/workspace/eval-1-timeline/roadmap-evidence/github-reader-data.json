@@ -1,0 +1,24 @@
+{
+  "repository": "flutter/flutter",
+  "repository_url": "https://github.com/flutter/flutter",
+  "captured_at": "2026-08-08T10:00:00Z",
+  "current_release": "3.35.0",
+  "milestones_complete": true,
+  "backlog_total": 2,
+  "milestones": [
+    {"title": "3.36.0", "state": "open", "open": 2, "closed": 8, "due_on": "2026-08-20", "created_at": "2026-06-01", "url": "https://github.com/flutter/flutter/milestone/200"},
+    {"title": "3.37.0", "state": "open", "open": 3, "closed": 3, "due_on": "2026-10-15", "created_at": "2026-07-01", "url": "https://github.com/flutter/flutter/milestone/201"},
+    {"title": "4.0.0", "state": "open", "open": 4, "closed": 1, "due_on": "2026-12-20", "created_at": "2026-07-15", "url": "https://github.com/flutter/flutter/milestone/202"},
+    {"title": "3.38.0", "state": "open", "open": 2, "closed": 0, "due_on": null, "created_at": "2026-08-01", "url": "https://github.com/flutter/flutter/milestone/203"},
+    {"title": "Rendering research", "state": "open", "open": 1, "closed": 0, "due_on": null, "created_at": "2026-08-02", "url": "https://github.com/flutter/flutter/milestone/204"},
+    {"title": "3.35.0", "state": "closed", "open": 0, "closed": 12, "due_on": "2026-07-30", "closed_at": "2026-07-29", "created_at": "2026-04-01", "url": "https://github.com/flutter/flutter/milestone/199"}
+  ],
+  "issues": [
+    {"number": 2101, "title": "Stabilize iOS reconnect", "state": "open", "milestone": "3.36.0", "labels": ["bug"], "assignees": ["alex"], "updatedAt": "2026-08-07", "url": "https://github.com/flutter/flutter/issues/2101"},
+    {"number": 2102, "title": "Expose rendering diagnostics", "state": "closed", "milestone": "3.36.0", "labels": ["enhancement"], "assignees": ["sam"], "updatedAt": "2026-08-06", "url": "https://github.com/flutter/flutter/issues/2102"},
+    {"number": 2201, "title": "Improve desktop semantics", "state": "open", "milestone": "3.37.0", "labels": ["enhancement"], "assignees": [], "updatedAt": "2026-08-05", "url": "https://github.com/flutter/flutter/issues/2201"},
+    {"number": 2301, "title": "Finalize new renderer migration", "state": "open", "milestone": "4.0.0", "labels": ["feature"], "assignees": ["lee"], "updatedAt": "2026-08-04", "url": "https://github.com/flutter/flutter/issues/2301"},
+    {"number": 2401, "title": "Review shader experiment", "state": "open", "milestone": "Rendering research", "labels": ["research"], "assignees": [], "updatedAt": "2026-08-03", "url": "https://github.com/flutter/flutter/issues/2401"},
+    {"number": 2501, "title": "Document embedding edge cases", "state": "open", "milestone": null, "labels": ["documentation"], "assignees": [], "updatedAt": "2026-08-02", "url": "https://github.com/flutter/flutter/issues/2501"}
+  ]
+}

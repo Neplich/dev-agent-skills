@@ -203,6 +203,7 @@
         "materials": [
           "release-evidence/actual-diff.patch",
           "release-evidence/release-context.md",
+          "release-evidence/release-notes-handoff.md",
           "docs/site/standards/change-map.yaml",
           "docs/site/api/catalog-items.md",
           "docs/site/api/catalog-status.md",
@@ -477,6 +478,7 @@
         "materials": [
           "release-evidence/actual-diff.patch",
           "release-evidence/release-context.md",
+          "release-evidence/release-notes-handoff.md",
           "docs/site/standards/change-map.yaml",
           "docs/site/api/catalog-items.md",
           "docs/site/api/catalog-status.md",
