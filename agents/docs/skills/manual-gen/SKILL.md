@@ -1,6 +1,6 @@
 ---
 name: manual-gen
-description: "Internal documentation specialist—not a direct entry point. Invoked by docs-agent after the documentation-site gate passes to generate or update illustrated user operation manuals from screenshots of a real running interface."
+description: "Generate or update illustrated user operation manuals from screenshots and verified navigation in a real running interface. Use after docs-agent confirms the documentation-site and runtime-access gates."
 visibility: internal
 ---
 

@@ -39,7 +39,7 @@
         {
           "id": "blocks_e2e_before_repair_plan",
           "description": "修复计划前阻断 E2E 更新",
-          "text": "输出必须说明在修复实施计划产出并经用户确认前，不得新增或更新 E2E TC；修复完成后的 E2E 文档补充还需要引用已确认的 IMPLEMENTATION_PLAN.md。"
+          "text": "在修复计划确认前不得新增或更新 E2E TC，Git 证据必须保持 QA E2E 资产零写入；若输出讨论修复后的 E2E 交接，应引用届时已确认的 IMPLEMENTATION_PLAN.md。"
         },
         {
           "id": "does_not_fix_directly",

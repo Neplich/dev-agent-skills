@@ -14,6 +14,136 @@
 - Fixture version/source: canonical manifest `b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6` from `agents/engineer/test/debugger/evals/workspace/eval-003-bug-report-conflicts-with-prd`.
 - Fixture SHA-256: `b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6`
 - Prompt SHA-256: `86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `c794a9f4d25d61e50b6bf610eddf7b88ff4be58b7215ed85d280d6be8cae915f`
+- Skill overlay SHA-256: `ee5b521f7d9c6fe11867036a027efeb03a84b77600d52fa7396a529de342ee2e`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `1b0128e389f23ce11fa7b4c38a0b662507e4f8c62e4b45bb6324446e6c6f6b76`
+- Metadata SHA-256: `83547cd6afd667b78b8f3a62b333fd240958e2bcd69f2565824d154532321924`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_prd_conflict` | PASS | 明确说明用户期望与 PRD/TRD 中 active 排除 archived 的规则冲突。 |
+| `hands_off_to_pm_update` | FAIL | 提到 existing-project-update 并建议更新 PRD、随后同步 TRD，但未交给 pm-agent:idea-to-spec。 |
+| `blocks_e2e_when_expectation_changes` | FAIL | 未说明在 PRD/产品决策更新、TRD 同步及 IMPLEMENTATION_PLAN 确认前，不能把新预期写入 docs/qa/e2e 功能树。 |
+| `does_not_produce_repair_plan` | PASS | 没有修改代码、测试或声称已修复；后续实现和 QA 仅作为流程建议，未形成具体修复实施计划。 |
+| `blocks_explicit_skip_override` | FAIL | 虽阻止当前直接改代码，但未明确说明即使跳过 PRD 对齐也不能按 bug 修复路径执行，亦未要求记录 blocker 或风险。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3; fixture_sha256=b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6; output_sha256=4d47709f408d56feef284f3f345151bda0bf6d2400caef40f77429eaf729c664; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别规范冲突并建议 existing-project-update，但遗漏指定代理、IMPLEMENTATION_PLAN/E2E 阻断条件及显式跳过对齐的阻断说明。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3; fixture_sha256=b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6; output_sha256=db82b807cd162657a2893d8f2f08c9e9059069b03c982857cc3f51ef32096736; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了 PRD/TRD 冲突并建议先做产品规则变更，但未明确指定 pm-agent:idea-to-spec 或完整阻断 E2E 的前置条件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未指定 pm-agent:idea-to-spec。
+- with_skill 未完整说明需求变更时不得更新 docs/qa/e2e 功能树的前置条件。
+- with_skill 未明确阻断显式跳过 PRD 对齐的修复请求。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-003-bug-report-conflicts-with-prd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6` from `agents/engineer/test/debugger/evals/workspace/eval-003-bug-report-conflicts-with-prd`.
+- Fixture SHA-256: `b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6`
+- Prompt SHA-256: `86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `4d48049390ab002df61765af74d4475aee31c5bcd9182a3c09d089676dc5c67c`
+- Skill overlay SHA-256: `900f3a9f7889564aa652e55c72206132dc4b2c69166314535fb3c79893f86eba`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `1b0128e389f23ce11fa7b4c38a0b662507e4f8c62e4b45bb6324446e6c6f6b76`
+- Metadata SHA-256: `83547cd6afd667b78b8f3a62b333fd240958e2bcd69f2565824d154532321924`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_prd_conflict` | PASS | With-skill output states the PRD excludes archived and asks whether the product rule should change to include it in active. |
+| `hands_off_to_pm_update` | FAIL | It names existing-project-update but does not identify pm-agent:idea-to-spec or explicitly hand off to that path. |
+| `blocks_e2e_when_expectation_changes` | FAIL | It does not mention blocking docs/qa/e2e updates pending PRD/product-decision update, TRD synchronization, and IMPLEMENTATION_PLAN confirmation. |
+| `does_not_produce_repair_plan` | PASS | It proposes no repair implementation, code changes, test updates, or claim of completion. |
+| `blocks_explicit_skip_override` | FAIL | It does not state that skipping PRD alignment cannot authorize the bug-fix path or record this as a blocker/risk. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3; fixture_sha256=b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6; output_sha256=c55ba9b4613d6b1f70ee0c13effe5cd41b8ef61f867b9ef1dd1f0fe273fe374f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly avoids treating the behavior as an implementation bug and recommends updating PRD and TRD before implementation, but omits the required named PM handoff, E2E gate, IMPLEMENTATION_PLAN gate, and explicit-skip blocker.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3; fixture_sha256=b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6; output_sha256=10a10e0765dee7d9b7178aa27f937879e196650c6c0e75041f95419932aab223; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Recognizes the behavior as matching the existing PRD/TRD and recommends documentation alignment before implementation, but lacks the required named workflow details.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output omits the required pm-agent:idea-to-spec existing-project-update handoff.
+- It omits the explicit E2E feature-tree and IMPLEMENTATION_PLAN blocking condition.
+- It omits the explicit rule that skipping PRD alignment remains a blocker or risk.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-003-bug-report-conflicts-with-prd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6` from `agents/engineer/test/debugger/evals/workspace/eval-003-bug-report-conflicts-with-prd`.
+- Fixture SHA-256: `b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6`
+- Prompt SHA-256: `86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `dcc41028443385df7286f016738f0aaf1f647d06f9da1ee3865bedd33c344afe`

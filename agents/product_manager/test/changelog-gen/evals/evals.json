@@ -179,8 +179,8 @@
         },
         {
           "id": "feat_added_breaking",
-          "description": "feat! → Added 章节，带 ⚠️ BREAKING 前缀",
-          "text": "feat! → Added 章节，带 ⚠️ BREAKING 前缀"
+          "description": "breaking API redesign → Changed 章节并显著标记",
+          "text": "对既有 plugin configuration API 的 breaking redesign 按实际用户影响进入 Changed 章节，并使用清晰的 BREAKING 标记；不只按 feat! 前缀机械归入 Added。"
         },
         {
           "id": "docs_release_workflow_changed",

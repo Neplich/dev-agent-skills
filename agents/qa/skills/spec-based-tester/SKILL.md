@@ -1,6 +1,6 @@
 ---
 name: spec-based-tester
-description: "Internal QA specialist—not a direct entry point. Invoked by qa-agent after pm-agent handoff to validate spec-backed requirements using PM docs, implementation context, repo instructions, and the safest executable test path."
+description: "Validate spec-backed requirements from confirmed PM/TRD/plan evidence using the safest executable repository test path and durable acceptance records. Use after qa-agent routes spec-based testing."
 visibility: internal
 ---
 

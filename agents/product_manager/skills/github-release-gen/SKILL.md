@@ -1,6 +1,6 @@
 ---
 name: github-release-gen
-description: "Internal PM specialist—not a direct entry point. Invoked by pm-agent after the applicable version fact source and release-gate evidence are ready to preview, draft, or publish a traceable GitHub Release."
+description: "Preview, draft, or publish a traceable GitHub Release only after version facts and applicable site Release Notes/audit gates are ready. Use after pm-agent routes GitHub Release work."
 visibility: internal
 ---
 

@@ -14,6 +14,128 @@
 - Fixture version/source: canonical manifest `866e2c4f7a812e0445a49d5de640bceae9b9dcd49ee9a3bd9c91db26e366238d` from `agents/engineer/test/test-writer/evals/workspace/eval-002-mapped-pagination-tests`.
 - Fixture SHA-256: `866e2c4f7a812e0445a49d5de640bceae9b9dcd49ee9a3bd9c91db26e366238d`
 - Prompt SHA-256: `868c36ff31e91e90391d3fe2090275a44a955f72894e47ed070c10d12b284428`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8676e9bdfb5dcb168ade64b20ca31fd5f471aaa2778319375ec606582ddd34da`
+- Skill overlay SHA-256: `951d3480264b2e92c6fe060b9ff2dd8bbbbc16570bec34932e5d89da435a6181`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `dffdc1de9650924aeba7f48471eac1b4c1592e52cef441419d14a463af648ff5`
+- Metadata SHA-256: `6a60b69beab2bdd4c854670cd54e7749219cde65551c8e29d984d322f4c34c88`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 锁定的原始证据未能证明读取顺序或是否扫描了无关文档。 |
+| `verifies_against_code` | PASS | with_skill 输出明确核对代码默认页大小为 25，识别文档中的 50 不一致，并新增测试断言默认值为 25。 |
+| `treats_unverified_as_low_trust` | PASS | with_skill 输出明确指出文档为 unverified、数值与代码不一致，并未将文档的 50 写入测试预期。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=868c36ff31e91e90391d3fe2090275a44a955f72894e47ed070c10d12b284428; fixture_sha256=866e2c4f7a812e0445a49d5de640bceae9b9dcd49ee9a3bd9c91db26e366238d; output_sha256=a1ff6961c917aec3cf24658bbb8f40a4932ce963f8ab07795727d1e11e2bea91; snapshot_sha256=494c427ce799f247f47b67bc6d36f299fdfe6a29a323941ae71b464d386efae7
+- Behavior: 以代码事实 25 为测试预期，识别并保留文档 50 的不一致，标注文档 unverified，并完成测试。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=868c36ff31e91e90391d3fe2090275a44a955f72894e47ed070c10d12b284428; fixture_sha256=866e2c4f7a812e0445a49d5de640bceae9b9dcd49ee9a3bd9c91db26e366238d; output_sha256=711af9cc093e8bad8ac12fcfb6daab57c36ccb16edb98a22125572990c131f81; snapshot_sha256=d34bc41c520476773fad9fb9174e1e4f3511fe4db8e3c27875620b56cdb4e88e
+- Behavior: 报告默认值为 25，并修改文档将 50 改为 25；作为比较基线，未体现对 unverified 文档低信任的处理。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `test-writer`
+- Eval: `eval-002-mapped-pagination-tests`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `866e2c4f7a812e0445a49d5de640bceae9b9dcd49ee9a3bd9c91db26e366238d` from `agents/engineer/test/test-writer/evals/workspace/eval-002-mapped-pagination-tests`.
+- Fixture SHA-256: `866e2c4f7a812e0445a49d5de640bceae9b9dcd49ee9a3bd9c91db26e366238d`
+- Prompt SHA-256: `868c36ff31e91e90391d3fe2090275a44a955f72894e47ed070c10d12b284428`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `aa1be9b48d34fae0ff9f72011ff46a9443fe17dcc0c3310cdf8f09cc429c5ad5`
+- Skill overlay SHA-256: `ace601443802587183e16fb4f65142cf4208a38f026e9e5a4042033023fff242`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `dffdc1de9650924aeba7f48471eac1b4c1592e52cef441419d14a463af648ff5`
+- Metadata SHA-256: `6a60b69beab2bdd4c854670cd54e7749219cde65551c8e29d984d322f4c34c88`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | The locked evidence shows the mapped API document and source fixture were in scope, with no unrelated document changes, but it does not establish read order or prove that the change-map was consulted first. |
+| `verifies_against_code` | PASS | The with_skill test reads src/pagination/defaults.txt and asserts default_page_size is 25; its output explicitly identifies the document's 50 as inconsistent. |
+| `treats_unverified_as_low_trust` | PASS | The with_skill lane leaves the unverified document unchanged and bases tests on the source configuration value 25 rather than asserting the documented 50. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=868c36ff31e91e90391d3fe2090275a44a955f72894e47ed070c10d12b284428; fixture_sha256=866e2c4f7a812e0445a49d5de640bceae9b9dcd49ee9a3bd9c91db26e366238d; output_sha256=d8da2ccf4649a8206995a0d60cd84d5a635342bf96b7d322001b7d58c7ef965f; snapshot_sha256=92d04fd89489ae00cca0cc9f97689431c00ff9940e904b18b088e75082804ada
+- Behavior: Added passing tests based on source values, identified the document mismatch, and left the unverified document unchanged.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=868c36ff31e91e90391d3fe2090275a44a955f72894e47ed070c10d12b284428; fixture_sha256=866e2c4f7a812e0445a49d5de640bceae9b9dcd49ee9a3bd9c91db26e366238d; output_sha256=ba556ce1c6cdcc80b760734c2ffb497d0acf2f91abd65597462626fcc47750c5; snapshot_sha256=017de3c4009299906bf06b7c073e7a9eff9a311d81cff36e36e02ce7f28998c2
+- Behavior: Read the source value correctly but modified the unverified document to replace 50 with 25 and added tests.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Capture file-read/tool trace if ordering of mapped-document discovery must be judged.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `test-writer`
+- Eval: `eval-002-mapped-pagination-tests`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `866e2c4f7a812e0445a49d5de640bceae9b9dcd49ee9a3bd9c91db26e366238d` from `agents/engineer/test/test-writer/evals/workspace/eval-002-mapped-pagination-tests`.
+- Fixture SHA-256: `866e2c4f7a812e0445a49d5de640bceae9b9dcd49ee9a3bd9c91db26e366238d`
+- Prompt SHA-256: `868c36ff31e91e90391d3fe2090275a44a955f72894e47ed070c10d12b284428`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `044621ea5e06de080877cb29e7795dc6b010bafa03f5ae20c49efdc9791d4cb1`

@@ -14,6 +14,130 @@
 - Fixture version/source: canonical manifest `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90` from `agents/devops/test/cicd-bootstrap/evals/workspace/eval-001-github-actions-docker`.
 - Fixture SHA-256: `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90`
 - Prompt SHA-256: `218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `86f7228d11d9f7ad3ec145d83be1c28f8a4bb93afea61016f55ed2860069bc68`
+- Skill overlay SHA-256: `89e6351b83062ce7859670a14e2ffbb2ebe9ea30f7da2a45f2991e383570b374`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `e302fa46977944ed026b10f7f1ded4b3717a6c85f19be1f78da9c42d4b0c0b8d`
+- Metadata SHA-256: `9e986f54be95fd6454e99ce66dc884d4d84134a4b07d49e0942d5d6169d042bf`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_repo_native_ci` | PASS | with_skill snapshot shows .github/workflows/ci.yml triggered by pull_request, setup-node 22.x, then npm ci, npm run lint, npm test, and npm run build in order. |
+| `creates_staging_deployment_workflow` | PASS | with_skill snapshot shows deploy-staging.yml triggered only by push to main, uses the existing deploy/docker/docker-compose.staging.yml, image ghcr.io/example/acme-web, and APP_IMAGE_TAG from the commit SHA. |
+| `documents_required_secrets` | PASS | with_skill deploy/SECRETS.md lists REGISTRY_USERNAME, REGISTRY_TOKEN, STAGING_HOST, STAGING_USER, and STAGING_SSH_KEY, and explicitly says not to commit secret values. |
+| `does_not_execute_delivery` | PASS | with_skill git evidence shows no commit, ref, branch, or remote changes; only untracked configuration files exist. The output states deployment was not executed, and raw evidence shows no delivery result. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=2359678a1b8bf962e25f9f2e0af44fe2487e7fcf177658c25e5186fe3af6a3f0; snapshot_sha256=d2d611e880ffdc838568b753e9a8804293f1a379fa7d59de9b8a32b2158c65b3
+- Behavior: Generated CI, staging deployment, and secrets documentation consistent with the fixture contract; no deployment or repository delivery mutations were evidenced.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=9e189720ad3b880a207e0d151728642e7ec7bf01671628dd334bd4e8f96c00f6; snapshot_sha256=865491358070ae6f7379177f608059e353e0794f9d152ddbdc9c72e195433577
+- Behavior: Generated the requested files and reported validation, with a different staging path/Compose handling; no repository delivery mutations were evidenced.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `cicd-bootstrap`
+- Eval: `eval-001-github-actions-docker`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90` from `agents/devops/test/cicd-bootstrap/evals/workspace/eval-001-github-actions-docker`.
+- Fixture SHA-256: `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90`
+- Prompt SHA-256: `218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `93da25401932361eaed1febe9295456c36da28e8f63a6322a9b6632f928594dc`
+- Skill overlay SHA-256: `83d8cb31e47efb4e01e1dd4e2d110f22b10e73a5e448fa73ece38b9d7a75b775`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `e302fa46977944ed026b10f7f1ded4b3717a6c85f19be1f78da9c42d4b0c0b8d`
+- Metadata SHA-256: `9e986f54be95fd6454e99ce66dc884d4d84134a4b07d49e0942d5d6169d042bf`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_repo_native_ci` | PASS | with_skill delivery snapshot shows .github/workflows/ci.yml triggered by pull_request, setup-node Node 22, npm ci, then npm run lint, npm test, and npm run build; these match fixture/package.json and PM_HANDOFF.md. |
+| `creates_staging_deployment_workflow` | PASS | with_skill snapshot shows deploy-staging.yml triggered only by push to main, builds/pushes ghcr.io/example/acme-web:${{ github.sha }}, and deploys the existing staging Compose configuration with APP_IMAGE_TAG set to the commit SHA. |
+| `documents_required_secrets` | PASS | with_skill deploy/SECRETS.md lists REGISTRY_USERNAME, REGISTRY_TOKEN, STAGING_HOST, STAGING_USER, and STAGING_SSH_KEY, and explicitly states that secret values do not belong in the repository. |
+| `does_not_execute_delivery` | PASS | with_skill git evidence shows unchanged HEAD/branch, no commits or ref changes, and only untracked configuration files; output states no actual deployment or image publication was performed. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=babafd243d6f46d45c851f662d3ec29d5b24c37517df45b7c8de7544f2fe4b68; snapshot_sha256=a2d1ef2ecb628d5bb2f520bc1aca6567442f269f0911afc96cf18528ffc5659c
+- Behavior: Generated all requested configuration files with repository-aligned commands, main-only staging deployment, GHCR/Compose integration, named secrets, and no repository or deployment side effects.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=6b9c21bb613a28df1d8b06108b6267f9bc5d38d3ef89466b2f13bdc050ab01ee; snapshot_sha256=8a9926151d5515151733473973ae3f8c94886923c87b3eec9fc92656298284bf
+- Behavior: Generated the requested CI, deployment, and secrets files and reported no deployment, but did not provide the same level of deployment verification detail.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `cicd-bootstrap`
+- Eval: `eval-001-github-actions-docker`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90` from `agents/devops/test/cicd-bootstrap/evals/workspace/eval-001-github-actions-docker`.
+- Fixture SHA-256: `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90`
+- Prompt SHA-256: `218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `e575c1d3a1c91f460942675e7572f24424d7186546327f9d3fb6028046c4eca9`

@@ -549,6 +549,56 @@ def test_paired_run_uses_identical_prompt_in_without_then_with_order_and_fresh_j
     assert not (tmp_path / "runs").exists()
 
 
+def test_unrelated_worktree_dirty_transition_does_not_invalidate_locked_inputs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repository = write_eval(tmp_path)
+    write_inventory(repository)
+    subprocess.run(["git", "init", "-q", "-b", "main"], cwd=repository, check=True)
+    subprocess.run(["git", "add", "."], cwd=repository, check=True)
+    subprocess.run([
+        "git", "-c", "user.name=Test", "-c", "user.email=test@example.com",
+        "commit", "-q", "-m", "base",
+    ], cwd=repository, check=True)
+    schema = tmp_path / "judge-schema.json"
+    schema.write_text('{}\n', encoding="utf-8")
+    monkeypatch.setattr(run_skill_eval, "JUDGE_SCHEMA", schema)
+    candidate_count = 0
+
+    def concurrent_result_writer(command, *, prompt, env, timeout_seconds):
+        nonlocal candidate_count
+        output = Path(command[command.index("--output-last-message") + 1])
+        output.parent.mkdir(parents=True, exist_ok=True)
+        if "--output-schema" in command:
+            output.write_text(json.dumps(judge_payload()), encoding="utf-8")
+        else:
+            candidate_count += 1
+            if candidate_count == 1:
+                (repository / "concurrent-durable-result.md").write_text(
+                    "another eval completed\n", encoding="utf-8",
+                )
+            output.write_text("candidate response", encoding="utf-8")
+        return {"returncode": 0, "timed_out": False}
+
+    result = run_skill_eval.run_selected_eval(
+        repository_root=repository, agent="qa", skill="bug-analyzer",
+        eval_id="eval-001-real-user", model_available=True,
+        command_runner=concurrent_result_writer, permission_probe=permission_probe,
+    )
+
+    assert result["overall_result"] == "PASS"
+    assert not (repository / "tmp/eval-runs").exists()
+
+
+def test_judge_prompt_treats_unreached_future_steps_as_coverage_not_failure() -> None:
+    prompt = run_skill_eval._judge_prompt()
+
+    assert "semantic equivalents" in prompt
+    assert "NOT_EXERCISED" in prompt
+    assert "interactive" in prompt
+    assert "internal label" in prompt
+
+
 def test_runtime_root_is_removed_when_materialization_raises(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -573,7 +623,7 @@ def test_runtime_root_is_removed_when_materialization_raises(
 
 
 def test_batch_main_runs_at_most_ten_cross_agent_evals_concurrently(
-    monkeypatch: pytest.MonkeyPatch,
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str],
 ) -> None:
     targets = [
         (f"agent-{index % 7}", f"skill-{index}", f"eval-{index:03}")
@@ -599,6 +649,28 @@ def test_batch_main_runs_at_most_ten_cross_agent_evals_concurrently(
 
     assert run_skill_eval.main(["--jobs", "10"]) == 0
     assert maximum == 10
+    assert "blockers:" not in capsys.readouterr().out
+
+
+def test_batch_main_prints_blocker_reasons_after_runtime_cleanup(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str],
+) -> None:
+    target = ("docs", "formal-docs-sync", "eval-001-sync-feature-api")
+    monkeypatch.setattr(run_skill_eval, "_targets", lambda *_args: [target])
+    monkeypatch.setattr(
+        run_skill_eval,
+        "run_selected_eval",
+        lambda **_kwargs: {
+            "overall_result": "BLOCKED",
+            "blockers": ["candidate dependency preflight failed", "source input drift"],
+        },
+    )
+    monkeypatch.setattr(run_skill_eval, "check_model_available", lambda _root: True)
+
+    assert run_skill_eval.main(["--jobs", "10"]) == 1
+    output = capsys.readouterr().out
+    assert "Overall result: BLOCKED" in output
+    assert "blockers: candidate dependency preflight failed; source input drift" in output
 
 
 def test_batch_jobs_rejects_values_above_ten() -> None:

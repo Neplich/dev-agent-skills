@@ -11,6 +11,146 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f` from `agents/docs/test/docs-audit/evals/workspace/eval-008-pre-tag-success`.
+- Fixture SHA-256: `188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f`
+- Prompt SHA-256: `c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `9e9abf391c9ccd9564d35b5def50bc0374b1db0886710676c4d48422839746ae`
+- Skill overlay SHA-256: `c66ac938bf9158faa694d7c3e311e913ddc4a06da11de703a881234f257c470c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `4d1aa7f3a07c406f7e925f931c91ea28170bd7650629aa75bcd06b4f58bba0c7`
+- Metadata SHA-256: `6adbc51a2dc07674edf9fca71addc72bccaccf75ae663c41fbf3725d8c48b107`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_confirmed_version_without_tag` | PASS | 明确记录了 base_ref、target_ref、维护者确认的 v1.2.0，并确认同名 tag 不存在且未因此阻塞。 |
+| `verifies_complete_set_and_surfaces` | NOT_EXERCISED | 确认列出四个文档页面并判为 verified，但因 handoff 版本源清单不完整，完整版本表面核验流程未完成。 |
+| `normalizes_mixed_version_forms` | NOT_EXERCISED | 未完成所需版本源 inventory 校验；输出未证明各来源 raw form 的规范化与等价比较。 |
+| `records_pre_stamp_values` | NOT_EXERCISED | 未进入盖章事务，未报告四页统一盖章集的盖章前值。 |
+| `stamps_complete_set_atomically` | NOT_EXERCISED | 由于 handoff 清单缺失，候选事务未启动；没有可评估的原子盖章操作。 |
+| `builds_isolated_candidate_transaction` | NOT_EXERCISED | 未创建候选记录或隔离事务，无法评估隔离构建流程。 |
+| `candidate_record_has_no_ready_result` | NOT_EXERCISED | 未创建 candidate record。 |
+| `validates_two_complete_staged_gates` | NOT_EXERCISED | 未进入 staged gate 流程。 |
+| `confirms_anchor_commit_before_discovery` | NOT_EXERCISED | 未创建 anchor commit 或 discovery handoff。 |
+| `persists_fixed_discovery_handoff` | NOT_EXERCISED | 输出明确未创建 handoff；该后续阶段未执行。 |
+| `returns_ready_only_after_integration` | NOT_EXERCISED | 由于前置版本源 inventory 缺失，未进行集成及集成后回读。 |
+| `returns_ready_for_tag_not_published` | NOT_EXERCISED | 输出正确地报告 blocked；因前置条件未满足，ready_for_tag 阶段未到达。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=762eaddd967f0354736ab05a5d9b230122c77d28ee8837a2460ca555bb4473cc; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确接受已确认版本和缺失 tag，核验四个文档页面，并在发现 handoff 缺少完整版本源 selector/extractor/required_raw_form 后安全阻塞，未进行写入或候选构建。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=c3abb8efb34fecf5e780eafb6348467b331a04f7cdc75f12b25e955c14ea88a0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 发现 releases.json 将 v1.2.0 标为已发布并阻塞，但未执行结构化 pre-tag 审计流程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 补充完整版本源 inventory 后重新运行 pre-tag 审计。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-008-pre-tag-success`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f` from `agents/docs/test/docs-audit/evals/workspace/eval-008-pre-tag-success`.
+- Fixture SHA-256: `188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f`
+- Prompt SHA-256: `c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2d24da5f976a5ab2710c2c072a19015e074d314e0ebdb88f1c28831425f1b98c`
+- Skill overlay SHA-256: `40330c17a3b77f25a1b1a716fa5e9355e0011db79d19014344ed516affba11c8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `4d1aa7f3a07c406f7e925f931c91ea28170bd7650629aa75bcd06b4f58bba0c7`
+- Metadata SHA-256: `6adbc51a2dc07674edf9fca71addc72bccaccf75ae663c41fbf3725d8c48b107`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_confirmed_version_without_tag` | PASS | with_skill 明确记录 base_ref=v1.1.0、target_ref=release-head、确认版本=v1.2.0，并说明同名 tag 不存在但未因此阻塞。 |
+| `verifies_complete_set_and_surfaces` | FAIL | 虽列出两张 API 页面为 verified，但未证明已核对 handoff、Release Notes、索引、releases.json 与宿主版本事实，也未证明 Release Notes 和索引已完成事实核验。 |
+| `normalizes_mixed_version_forms` | FAIL | 未记录各版本来源的 required raw form、selector/extractor、规范化比较或 SemVer 等价校验。 |
+| `records_pre_stamp_values` | FAIL | 仅概括列出 v1.1.0 和 unverified，未逐页明确四个页面的盖章前值，也未说明未新增 baseline_verified_version frontmatter。 |
+| `stamps_complete_set_atomically` | FAIL | with_skill 明确因阻塞项未创建记录、未统一更新 last_verified_version；因此未完成原子盖章和回读，也无法证明 releases.json 未修改。 |
+| `builds_isolated_candidate_transaction` | FAIL | 没有隔离 worktree/branch/index、target commit 初始化或宿主状态保持捕获的证据；git_evidence 中 temporary_worktree 使用状态为 unknown。 |
+| `candidate_record_has_no_ready_result` | FAIL | 未创建 candidate record，因而没有完整 producer schema、四页章前后值、SHA-256、inventory/digest、差异 inventory、回读命令等要求字段。 |
+| `validates_two_complete_staged_gates` | FAIL | 未执行或报告两次完整 raw metadata gate、name-status、summary、full binary patch、类型/mode/路径和单行变更约束。 |
+| `confirms_anchor_commit_before_discovery` | FAIL | 未创建 post-stamp anchor commit，也未对 target_ref..anchor_commit 执行确认检查。 |
+| `persists_fixed_discovery_handoff` | FAIL | 未写入或提交固定 discovery handoff，未提供 anchor、candidate、digest、preimage 或 post-commit confirmation。 |
+| `returns_ready_only_after_integration` | FAIL | 未执行临时分支 fast-forward 集成、集成后 handoff 回读、CAS 回退或并发移动处理。 |
+| `returns_ready_for_tag_not_published` | FAIL | 结果明确为 blocked，不能返回 ready_for_tag；未满足“可创建 tag 但尚未发布”的最终状态输出。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=7ae632405d8c50457fed1453f10cac71805031ee6834242c7959c261ae9beb2e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别出两张 API 页面并记录部分上下文，但因 handoff 缺少完整版本源清单而提前 blocked，未执行候选构建、盖章、anchor、handoff、集成或 ready 输出。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=d4e6cb4630716c64e1e69034dcfd75b95c51e718930abc9943417d08584f7d68; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: fresh baseline 未执行发布前审计变更，因 releases.json 状态冲突和范围疑点阻塞。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 只完成部分发现与页面核对，未完成版本规范化、完整事实核验、候选事务、双阶段 gate、anchor、handoff、集成及最终 ready_for_tag。
+- Next: 补齐 handoff 的完整版本源 inventory（source_id、locator_kind、selector、extractor、required_raw_form），然后重新执行完整 pre-tag 流程。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-008-pre-tag-success`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `b1af296f57c9472641aa2fbf552cc05b76e8658e900bc4d5f0a34e60133977ab` from `agents/docs/test/docs-audit/evals/workspace/eval-008-pre-tag-success`.
 - Fixture SHA-256: `b1af296f57c9472641aa2fbf552cc05b76e8658e900bc4d5f0a34e60133977ab`
 - Prompt SHA-256: `c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3`

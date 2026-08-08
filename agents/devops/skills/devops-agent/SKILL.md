@@ -1,6 +1,6 @@
 ---
 name: devops-agent
-description: "Downstream DevOps router invoked after pm-agent handoff. Classifies confirmed operational scope across deployment planning, runtime packaging, CI/CD, environment audits, release readiness, rollback, and runbook work, then delegates to DevOps specialists."
+description: "Classify and route confirmed deployment, runtime packaging, CI/CD, environment-audit, release-readiness, rollback, and runbook requests. Use immediately after a PM operational handoff and before any DevOps specialist executes."
 visibility: internal
 ---
 

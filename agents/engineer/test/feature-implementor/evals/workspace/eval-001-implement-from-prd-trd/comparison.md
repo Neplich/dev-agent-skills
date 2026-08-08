@@ -11,6 +11,130 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264` from `agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd`.
+- Fixture SHA-256: `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264`
+- Prompt SHA-256: `9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `31ea692709a0817bc32ab74f76490bf0edfdea6902d08e36d2b8cbddeb78aee4`
+- Skill overlay SHA-256: `32c9b06579315c3f3af57ed46ca530329febcbd28b2adfca751e5c7d8b333736`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bd840cbb6d300dba8607f0e2ffca8d1cce35f8afa38a03d78fa95279dfa455c6`
+- Metadata SHA-256: `3f1598f1147e9d9fe4d3d8e602cb67a07409635701fd037d50b6d22e59d01fd0`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `writes_implementation_plan` | FAIL | with_skill 未输出或创建 IMPLEMENTATION_PLAN.md，也未提供文件变更清单；仅给出后续实施顺序。 |
+| `requires_user_confirmation` | PASS | 明确表示正式实施安排提交后需等待用户明确批准，再开始编码。 |
+| `does_not_implement_directly` | PASS | 未声称创建或修改代码、运行实现步骤或完成自检；明确表示当前不能进入编码。 |
+| `maintains_plan_metadata` | NOT_EXERCISED | git_evidence 显示工作区无变更，实际未创建 IMPLEMENTATION_PLAN.md，因此无法检验其 frontmatter 元数据。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=6e078ce16d8e71715bbc2308c8edde34ca1da2608e7ab3b2bcc6757cbdadd720; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别并强调了 UI 设计和 TRD 细节缺口，未创建计划文件，给出后续实施顺序并要求文档补齐及批准。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=846830c4c8e38b28a2e3e4de333539308dc92d69ab908d8aaa40e7d2bafab93c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 以只读梳理形式提供了实施安排、文件清单和确认问题，但未创建正式计划文件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足本轮要求输出/创建可审查的 IMPLEMENTATION_PLAN.md 及文件变更清单。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-001-implement-from-prd-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264` from `agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd`.
+- Fixture SHA-256: `65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264`
+- Prompt SHA-256: `9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b2870e3d0eb112e2c40f35446120217b8d8a18d55835b9d634a5a2c9c71dcb55`
+- Skill overlay SHA-256: `eb10f50f1bee1354d4cdc15dfff5d3853f5131c3abdfbb65a03b041f90906b17`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `49964bfa40c4eb79d538198181fe371ea6dcc248c5f39dacb89d13915c52387e`
+- Metadata SHA-256: `3f1598f1147e9d9fe4d3d8e602cb67a07409635701fd037d50b6d22e59d01fd0`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `writes_implementation_plan` | PASS | With-skill output identifies IMPLEMENTATION_PLAN.md, lists the three planned file changes, and states the implementation order. |
+| `requires_user_confirmation` | PASS | With-skill output explicitly asks the user to confirm the plan before coding. |
+| `does_not_implement_directly` | PASS | With-skill raw evidence shows only the implementation plan was added; no code files, implementation steps, or self-checks are claimed as completed. |
+| `maintains_plan_metadata` | FAIL | The plan frontmatter contains version and last_updated, but the output does not explain the required initial-version rule or when substantive versus formatting updates change version metadata. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=9e3aaf7b88d3bdc1f194641913a6d17474563937e92bcd78011932c794901664; snapshot_sha256=8c85e1d0aae5cbb3742b9a293d863c9ebd313a997638a42ff14739451834eac7
+- Behavior: Created the implementation-plan document, listed scoped file changes and ordered steps, and gated coding on confirmation; metadata update-policy requirements were incomplete.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9724c537ded4c14b592d897088f388268956cff28e97f04ba4a128111c8f5636; fixture_sha256=65e03f7a1f44ddf6741e1196f7a8aa0bb58bff8733bbd1a64bd05da5fdd0d264; output_sha256=5322b8149ad2dae7ed88008e25ccf75857dc3de3dcf830618bc338a54f14cbd1; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced a detailed proposed implementation sequence and requested confirmation, but did not create the required implementation-plan document or provide its metadata policy.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with-skill output does not state the required version and last_updated maintenance rules for initial plans, substantive updates, and formatting or typo-only fixes.
+- Next: Add the complete frontmatter maintenance policy to the implementation-plan output.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-001-implement-from-prd-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `f28befa0f58d85ac2ecb3e6c24e0090a145d4ddb6231b7848d726f4aa1c607e7`

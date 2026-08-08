@@ -1,6 +1,6 @@
 ---
 name: qa-agent
-description: "Downstream QA router invoked after pm-agent handoff. Classifies confirmed validation scope across acceptance, exploratory testing, bug analysis, and regression verification, then delegates to QA specialists."
+description: "Classify and route confirmed validation requests across spec-based acceptance, exploratory testing, bug analysis, and regression verification. Use immediately after a PM QA handoff and before specialist execution."
 visibility: internal
 ---
 
@@ -22,6 +22,14 @@ the repository execution entry or command. Point to the selected specialist's
 authoritative E2E memory/platform/credential/execution gate. If any required
 basis is absent, stop at that gate and name the missing material; do not create
 cases, reports, or parallel QA routes.
+
+Make the decision observable in one compact routing block: accepted basis,
+resolved scope and platform status, one selected specialist with the evidence
+outcome that makes it the narrowest owner, required source materials, expected
+evidence artifact, and the boundary that the specialist—not this router—owns
+execution. Preserve secondary symptoms as risks or follow-up evidence needs.
+Read the accepted materials before claiming an input is unavailable, and carry
+any explicit repository test command or execution entry into the routing block.
 
 ## Role Boundary
 

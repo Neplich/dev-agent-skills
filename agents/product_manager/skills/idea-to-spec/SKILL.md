@@ -1,6 +1,6 @@
 ---
 name: idea-to-spec
-description: "Internal PM specialist—not a direct entry point. Invoked by pm-agent after entry classification to turn confirmed product discovery, empty-workspace app, existing-feature update, or spec-update scope into structured PM/design outputs."
+description: "Run product discovery and turn a new idea, empty-workspace app, existing-feature update, or spec iteration into confirmed PRD/DECISIONS and downstream handoff scope. Use after pm-agent classifies the request."
 visibility: internal
 ---
 

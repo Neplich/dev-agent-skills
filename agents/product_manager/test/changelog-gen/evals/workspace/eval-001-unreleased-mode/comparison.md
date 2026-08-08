@@ -11,6 +11,132 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-001-unreleased-mode`.
+- Fixture SHA-256: `6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17`
+- Prompt SHA-256: `43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `fd6202eb001e4fcc8e818cb01c9c27ec290ab3c4edabd757735bf984bab469a4`
+- Skill overlay SHA-256: `b53e1261ebb5c959b0bf29a37559e89f454013b911c855fd491809032b43b267`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `f643e5a44adc95dee4686543e115df7acb899ebc5dec146519d9991e82db553d`
+- Metadata SHA-256: `95c0dae43621d97267d71f9000473df424f0f20875022c90f8a0826f1615ee52`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `unreleased` | PASS | with_skill 快照包含 `## [Unreleased]` 标题。 |
+| `pr` | PASS | with_skill 输出中的每个条目均包含 `([#310](...))` 或 `([#311](...))` 格式的 PR 链接。 |
+| `bot_pr_dependabot` | PASS | 原始证据显示 #312 为 dependabot[bot]；with_skill 输出仅纳入 #310、#311，且明确跳过依赖更新。 |
+| `chore_ci_test` | PASS | 原始证据中的 chore 依赖更新 #312 和 ci 内部维护 #313 均未出现在 with_skill 文件中。 |
+| `versioned_changelog_file` | PASS | with_skill delivery_snapshot 和 git 状态均证明文件写入 `docs/changelog/changelog-unreleased.md`。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811; fixture_sha256=6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17; output_sha256=20759ed9c22335cd8f8d414e81638ff56a67e015e242e66c28b0f65a50d0aedf; snapshot_sha256=2bcdbbd67fe06761f679209a8dd382cbd7bdb3dc46d201e5c3eae57e18f520c8
+- Behavior: 生成了符合要求的 Unreleased 章节，纳入 #310、#311，跳过 bot 依赖更新及内部 CI 维护，并写入目标路径。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811; fixture_sha256=6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17; output_sha256=b17c2b0e90335767e5835672d0cabb4fd3f3d8dddbe6a889f46d86b8b06dc986; snapshot_sha256=e861df5541114641845569263f2f2cc50dd818dc9586eb15e4816c4bfe90c696
+- Behavior: 生成了目标文件并纳入 #310、#311、#312；跳过了 #313，但错误纳入了 dependabot 依赖维护 PR #312。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-001-unreleased-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-001-unreleased-mode`.
+- Fixture SHA-256: `6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17`
+- Prompt SHA-256: `43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `281e1b5c19a67eed1e87d8548e15e7ab23a90d7de9e0bd112a29df45200426a3`
+- Skill overlay SHA-256: `f4e3f318f95aeaf018d947cb5144bbc03198d0d62d802018a4946522adbf8065`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `f643e5a44adc95dee4686543e115df7acb899ebc5dec146519d9991e82db553d`
+- Metadata SHA-256: `95c0dae43621d97267d71f9000473df424f0f20875022c90f8a0826f1615ee52`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `unreleased` | PASS | with_skill 文件内容包含 ## [Unreleased] 标题。 |
+| `pr` | PASS | 两个条目均包含指向 GitHub PR 的链接，分别为 (#310) 和 (#311)。 |
+| `bot_pr_dependabot` | PASS | with_skill 输出未包含 dependabot PR #312。 |
+| `chore_ci_test` | PASS | with_skill 输出未包含 chore/deps PR #312 或 ci PR #313。 |
+| `versioned_changelog_file` | PASS | delivery_snapshot 和 workspace_manifest 均确认文件写入 docs/changelog/changelog-unreleased.md。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811; fixture_sha256=6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17; output_sha256=f7546a978b8198f2ee16d9c102d2900d6baae2ecc2fda242b29d3a344786b5f4; snapshot_sha256=c1fc320d6778cf589ab9f552b24d01060cabb739a13d50c89b3e1a8a6a59ac53
+- Behavior: 生成了目标文件，包含 Unreleased 标题和有效 PR 链接，并跳过 dependabot、依赖维护及 CI 内部变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=43cfb6c692393c921f5bd34fe732149f7950dd5ff91e898df22a516e60d25811; fixture_sha256=6c891edd0d2edaa974f9696bff7fd8bce1989edc225daec7356e08843c3ccf17; output_sha256=32746af8ed86fb0bcbf9928cdc2f64b33cb888f9f19de62d6e4f5896d36f2213; snapshot_sha256=eec3f1507d7ce333a9a3514bca1d26dcf9b9cc904da2e3158ae3d4f76ef7ab3f
+- Behavior: 生成了目标文件、标题和 PR 链接，但纳入了应跳过的 dependabot 依赖更新 #312。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-001-unreleased-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-001-unreleased-mode`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `816b4de603f11081701f38913293ff8bf45f51d9500e3f42bbaccf19e6d1cd7c`

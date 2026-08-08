@@ -28,33 +28,33 @@
         ]
       },
       "prompt": "这是一个空目录，我想做一个 AI 对话助手，左侧是会话历史，右侧是聊天区。先不要写代码，帮我把这件事推进起来。",
-      "expected_output": "PM 路由决策，明确选择 idea-to-spec，说明空目录产品想法必须先收敛需求，并给出后续 handoff 边界。",
+      "expected_output": "PM 路由与首轮产品发现，保持工程边界，并说明需求收敛后的文档与 handoff 方向。",
       "workspace": "workspace/eval-1-route-greenfield-product-request",
       "assertions": [
         {
           "id": "route_to_idea_to_spec",
           "description": "选择最窄 PM route",
-          "text": "必须选择 `idea-to-spec` 作为主 route，并说明它负责产品发现、范围收敛和 spec 创建。"
+          "text": "必须把请求留在 PM 的 greenfield 产品发现与需求收敛路径，并以 `idea-to-spec` 或语义等价的产品定义 route 作为当前责任方，不得跳到工程实现。"
         },
         {
           "id": "pm_first_guardrail",
           "description": "空目录 PM-first 边界",
-          "text": "必须识别空目录里的产品想法没有 skip-PM override，任何直跳工程执行的请求都必须返回 `pm-agent` 正常分类。"
+          "text": "必须识别这是空目录中的新产品想法，在产品范围和验收预期确认前保持 PM-first，不写代码也不转入工程执行。"
         },
         {
           "id": "context_to_collect",
           "description": "下游上下文",
-          "text": "必须说明下游需要收集用户目标、核心流程、范围边界、验收标准和关键未决问题。"
+          "text": "首轮至少提出一个最高信息量的产品发现问题，围绕目标用户或核心问题开始收敛；依赖用户回答的核心流程、范围边界、验收标准和未决问题属于后续交互覆盖，不要求在同一轮穷举。"
         },
         {
           "id": "expected_pm_artifacts",
           "description": "预期 PM 产物",
-          "text": "必须声明预期 PM 输出为 PRD、DECISIONS 等文档，并说明 TRD 由需求确认后的 `engineer-agent:trd-gen` 负责，而不是代码、测试或部署配置。"
+          "text": "若本轮仍在等待用户回答首个产品发现问题，PM 文档尚不可产出，此项记为 NOT_EXERCISED；一旦输出宣称发现完成或进入交接，就必须把 PRD/决策记录作为 PM 产物，并把 TRD 或实现留给后续工程阶段。"
         },
         {
           "id": "handoff_boundary",
           "description": "后续交接边界",
-          "text": "必须说明只有需求稳定后才 handoff 给 `designer-agent` 或 `engineer-agent`。"
+          "text": "若本轮只提出首个产品发现问题且尚未发生 handoff，此项记为 NOT_EXERCISED；实际发生交接时，必须在需求稳定后才交给设计或工程责任方。"
         }
       ]
     },

@@ -1,6 +1,6 @@
 ---
 name: feature-implementor
-description: "Internal engineering specialist—not a direct entry point. Invoked by engineer-agent after pm-agent handoff to implement confirmed TRDs and PM/design inputs through a verified implementation plan."
+description: "Create or continue the implementation plan for confirmed PRD/TRD/design inputs, wait for approval, then implement and verify the scoped change. Use after engineer-agent routes implementation work."
 visibility: internal
 ---
 
@@ -95,8 +95,9 @@ return to `engineer-agent:trd-gen`; requests to skip alignment are blockers or
 risks, not implementation permission.
 
 The TRD gap packet must name the missing technical decisions, affected
-components, data/API/integration impacts, validation commands, rollout risks,
-and the boundary: the finder only clarifies gaps; `trd-gen` completes the TRD.
+components, data/API/integration impacts, error handling, observability and
+security strategy, validation commands, rollout risks, and the boundary: the
+finder only clarifies gaps; `trd-gen` completes the TRD.
 
 ## UI Design Handoff Gate
 

@@ -1,6 +1,6 @@
 ---
 name: dependency-risk-auditor
-description: "Internal security specialist—not a direct entry point. Invoked by security-agent after pm-agent handoff to audit dependencies for vulnerabilities, abandonment, licensing, and supply-chain risk."
+description: "Audit npm, Python, or other dependencies for vulnerabilities, abandonment, licensing, provenance, and supply-chain risk with evidence-backed remediation. Use after security-agent routes dependency review."
 visibility: internal
 ---
 

@@ -29,6 +29,15 @@ file is missing. The first response must make these decisions observable:
 - if a direct role or specialist request lacks its entry basis, stop execution,
   return it to `pm-agent`, and name the missing handoff fields or documents
 
+Start with a compact `Routing decision` block that records the request type and
+tier, selected owner and reason, entry-basis status, expected current output or
+next action, preserved scope/blockers, and execution boundary. For a PM-owned
+route, name the owner exactly as listed under Available PM Skills before any
+internal lane, then emit this block before continuing into the specialist's
+first step. Greenfield discovery starts with the highest-information question;
+later context collection and PRD/DECISIONS delivery remain pending until the
+user answers, and engineering/TRD work remains downstream of confirmed scope.
+
 Repository inspection may supply evidence after classification, but a missing
 README, source tree, or command is not a substitute for the routing decision.
 For `hotfix`, record why approved expectations are unchanged, the direct

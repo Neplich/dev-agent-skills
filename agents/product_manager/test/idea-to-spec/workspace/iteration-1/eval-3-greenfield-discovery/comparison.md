@@ -14,6 +14,128 @@
 - Fixture version/source: canonical manifest `a4faa6eb1bc545a0fcd2b0f3491c8b376050fe70e6b532b62cd5d45f16655b85` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-3-greenfield-discovery`.
 - Fixture SHA-256: `a4faa6eb1bc545a0fcd2b0f3491c8b376050fe70e6b532b62cd5d45f16655b85`
 - Prompt SHA-256: `0af25e0d51f2fb040654e6f1d54a6ad79ea082de53fb485f0d81b3fe8a3d6ee6`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `7638558b96730ed626879bcffd4a606d3ed390013a41acf29ade725d210e3f4e`
+- Skill overlay SHA-256: `12aaaef0d075d133bbbdc681f598fd09807b211a4377dcfbc6cbbfcaa30909e0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `c665f0cae1373d04b176b75bc723732674aeb9f3630f01eadac8f7310d65bdb7`
+- Metadata SHA-256: `aa700f49d0f32cf47f3b535bd526e4ad2ade501da428e296936ddccef0bcdcbd`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 明确说明当前先收敛产品切入点，且“不写完整 PRD”。 |
+| `assertion_2` | PASS | with_skill 只提出一个当前决策点：从三个具体场景中选择切入方向，并允许用户补充团队类型和最难回答的问题，符合探索式单点提问。 |
+| `assertion_3` | NOT_EXERCISED | 当前仍处于首次探索、方向尚未稳定；输出没有进入推荐 PRD 或其他下游文档动作的阶段。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0af25e0d51f2fb040654e6f1d54a6ad79ea082de53fb485f0d81b3fe8a3d6ee6; fixture_sha256=a4faa6eb1bc545a0fcd2b0f3491c8b376050fe70e6b532b62cd5d45f16655b85; output_sha256=9f56fbe44dead0bcbd0f34b7a91f19d957f399dc2c0eaa4c08b0bfd6e9ed053b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 未直接生成完整 PRD，采用单一场景决策点推进探索；尚未到文档化阶段。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0af25e0d51f2fb040654e6f1d54a6ad79ea082de53fb485f0d81b3fe8a3d6ee6; fixture_sha256=a4faa6eb1bc545a0fcd2b0f3491c8b376050fe70e6b532b62cd5d45f16655b85; output_sha256=884062d3db9ee86f2b1890b6a15f9971f32af9498e9e7d0b3e25215ef2fa9c13; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 未直接生成完整 PRD，使用多问题清单收集方向信息。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 在用户选择或补充切入场景后继续验证方向稳定后是否推荐 PRD 或其他下游文档动作。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `idea-to-spec`
+- Eval: `eval-003-greenfield-discovery`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a4faa6eb1bc545a0fcd2b0f3491c8b376050fe70e6b532b62cd5d45f16655b85` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-3-greenfield-discovery`.
+- Fixture SHA-256: `a4faa6eb1bc545a0fcd2b0f3491c8b376050fe70e6b532b62cd5d45f16655b85`
+- Prompt SHA-256: `0af25e0d51f2fb040654e6f1d54a6ad79ea082de53fb485f0d81b3fe8a3d6ee6`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a2e446c3d8d5f02d34cd5e3954e55500a6eaf296bcb868f9d3dbe27d39c64b91`
+- Skill overlay SHA-256: `14328c4af5595e19e21331fb22dcc6dda56844ee6c4f2ee6382997e7ffe0af37`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `c665f0cae1373d04b176b75bc723732674aeb9f3630f01eadac8f7310d65bdb7`
+- Metadata SHA-256: `aa700f49d0f32cf47f3b535bd526e4ad2ade501da428e296936ddccef0bcdcbd`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 未输出完整 PRD 或 TRD，仅进行了探索阶段的方向收敛。 |
+| `assertion_2` | PASS | with_skill 明确只推进一个决策点（目标用户），并提供三个方向选项供用户选择，符合单决策点探索式提问。 |
+| `assertion_3` | NOT_EXERCISED | 当前输出尚未达到设计稳定阶段，也未发生后续文档化建议，因此无法判断该时序行为。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0af25e0d51f2fb040654e6f1d54a6ad79ea082de53fb485f0d81b3fe8a3d6ee6; fixture_sha256=a4faa6eb1bc545a0fcd2b0f3491c8b376050fe70e6b532b62cd5d45f16655b85; output_sha256=088f56705680ca1e76964f45c343bfa7b580c3d60eb78514d7bd6ab40bde4446; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 进入探索阶段，仅围绕目标用户提出一个决策点，并给出三个方向选项；未输出完整文档。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0af25e0d51f2fb040654e6f1d54a6ad79ea082de53fb485f0d81b3fe8a3d6ee6; fixture_sha256=a4faa6eb1bc545a0fcd2b0f3491c8b376050fe70e6b532b62cd5d45f16655b85; output_sha256=797a00f7f91ff3259a0215b47b0d10a78328e5e234514fe628748f4b9de10d2e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 一次提出五个问题，覆盖用户、痛点、问题示例、知识来源和产品形态；未输出完整文档。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `idea-to-spec`
+- Eval: `eval-003-greenfield-discovery`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a4faa6eb1bc545a0fcd2b0f3491c8b376050fe70e6b532b62cd5d45f16655b85` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-3-greenfield-discovery`.
+- Fixture SHA-256: `a4faa6eb1bc545a0fcd2b0f3491c8b376050fe70e6b532b62cd5d45f16655b85`
+- Prompt SHA-256: `0af25e0d51f2fb040654e6f1d54a6ad79ea082de53fb485f0d81b3fe8a3d6ee6`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `9c3b136c6958582b2c5c3d552759bbe4fd3ef24876075804e91c5b21980a34af`

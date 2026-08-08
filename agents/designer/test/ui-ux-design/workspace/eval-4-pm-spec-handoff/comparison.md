@@ -14,6 +14,67 @@
 - Fixture version/source: canonical manifest `0791241d90c35458117ad7afc41087d198e776e1bb0d176e05c3732f6be148a6` from `agents/designer/test/ui-ux-design/workspace/eval-4-pm-spec-handoff`.
 - Fixture SHA-256: `0791241d90c35458117ad7afc41087d198e776e1bb0d176e05c3732f6be148a6`
 - Prompt SHA-256: `34a9d38fc5d93e5c1a925aa7889e94a7727bc719382f01830a2c7b69cc7a8020`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5df1c01e08aa97e9873a8076a8bc80b312ca23697bf7b8274e324d7feecebbd3`
+- Skill overlay SHA-256: `91cbd0b25abda706f069ede3ae1d7e4f14e2da2a5a0702fbf7cbcb22b29ac6e2`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `f5e031cd559d08b9cd37fee2f571fc541cf110879ad665b05952cb915a09fe63`
+- Metadata SHA-256: `a2b7d997dbacd7584fcef225254185f8826f79c87e7c30c69a40f24691946c86`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `spec` | PASS | with_skill 输出明确写明 PM specification 仅授权设计输入，不授权源代码、API、测试或部署变更。 |
+| `assertion_2` | PASS | with_skill 输出明确写明下一步交由 engineer-agent 实现页面。 |
+| `assertion_3` | PASS | with_skill 仅新增 UI/UX 设计文档；原始证据显示无源代码修改、测试命令或补丁动作。文档中的用户流程和交互定义属于设计内容，不是实现步骤拆解。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=34a9d38fc5d93e5c1a925aa7889e94a7727bc719382f01830a2c7b69cc7a8020; fixture_sha256=0791241d90c35458117ad7afc41087d198e776e1bb0d176e05c3732f6be148a6; output_sha256=1cad2030f60830ac03642a7ea4c53a223295cec717675f0572a14f18aa127076; snapshot_sha256=904d16b9e251187e4e5286d77d698af7e5debe713f6c83549ebda8c22ef6d215
+- Behavior: 完成 UI/UX 设计文档，明确设计边界与 engineer-agent handoff，并声明未修改源代码。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=34a9d38fc5d93e5c1a925aa7889e94a7727bc719382f01830a2c7b69cc7a8020; fixture_sha256=0791241d90c35458117ad7afc41087d198e776e1bb0d176e05c3732f6be148a6; output_sha256=e1659f244015d9a64934c34cef13c1eba9fe58e2a50014b9e71803c5a74075ff; snapshot_sha256=efd9dbe683b6187ebc0fc6cc2fee502ba04876e0be717c7de1a4db2f849b0c7a
+- Behavior: 完成 UI/UX handoff 文档并声明未修改页面代码，但未明确 PM spec 的设计授权边界或交给 engineer-agent 的下一步。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-004-pm-spec-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0791241d90c35458117ad7afc41087d198e776e1bb0d176e05c3732f6be148a6` from `agents/designer/test/ui-ux-design/workspace/eval-4-pm-spec-handoff`.
+- Fixture SHA-256: `0791241d90c35458117ad7afc41087d198e776e1bb0d176e05c3732f6be148a6`
+- Prompt SHA-256: `34a9d38fc5d93e5c1a925aa7889e94a7727bc719382f01830a2c7b69cc7a8020`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `78da31c45df217a9e90f29e80573d99066d6964c62a108fc4cb609c96341db51`

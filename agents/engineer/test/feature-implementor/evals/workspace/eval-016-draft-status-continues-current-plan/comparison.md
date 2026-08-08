@@ -14,6 +14,134 @@
 - Fixture version/source: canonical manifest `e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d` from `agents/engineer/test/feature-implementor/evals/workspace/eval-016-draft-status-continues-current-plan`.
 - Fixture SHA-256: `e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d`
 - Prompt SHA-256: `94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `31ea692709a0817bc32ab74f76490bf0edfdea6902d08e36d2b8cbddeb78aee4`
+- Skill overlay SHA-256: `32c9b06579315c3f3af57ed46ca530329febcbd28b2adfca751e5c7d8b333736`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bb7bf0f3a482a77a018b0515b1c16fcfc9e7cd11c5d0dea890b0578898ccf6a8`
+- Metadata SHA-256: `566e39d7363acab918c0b8b38f7cebac43ee4f4a9069dd6e8b635d61f1c29eb0`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_active_plan_frontmatter` | NOT_EXERCISED | The locked evidence shows the plan was updated, but cannot prove the hidden read order or that the frontmatter, rather than the prompt, was the basis. |
+| `detects_non_implemented_status` | PASS | The with_skill diff retains status: "Draft" and the output states implementation cannot proceed yet and requires confirmation. |
+| `continues_current_plan` | PASS | Only docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md was modified; no second active plan was created. |
+| `bumps_plan_version` | PASS | The diff updates version from 0.1.0 to 0.2.0 and last_updated from 2026-07-27 to 2026-08-08. |
+| `does_not_force_archive_link` | PASS | The plan and output impose no archive or previous_plan_archive prerequisite. |
+| `waits_before_coding` | PASS | The output requests confirmation and a code baseline before implementation; raw git evidence shows only the plan file changed. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b; fixture_sha256=e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d; output_sha256=f2589d675f71cb009b5d12a58ab79671a3924b64680907a2a98f24a6eeecadcc; snapshot_sha256=4f1e75707f395bc6b3304be1822824e4e3773e9d63750e467b94d8a97817da1f
+- Behavior: Updated the existing Draft implementation plan, bumped its version and date, and paused for confirmation and code baseline before coding.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b; fixture_sha256=e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d; output_sha256=6ab2fade8acd6b2c107fcd5f58b9fb2abdd20cc51901285f828599aa35fcd022; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Asked for additional requirements and made no changes.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-016-draft-status-continues-current-plan`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d` from `agents/engineer/test/feature-implementor/evals/workspace/eval-016-draft-status-continues-current-plan`.
+- Fixture SHA-256: `e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d`
+- Prompt SHA-256: `94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b2870e3d0eb112e2c40f35446120217b8d8a18d55835b9d634a5a2c9c71dcb55`
+- Skill overlay SHA-256: `eb10f50f1bee1354d4cdc15dfff5d3853f5131c3abdfbb65a03b041f90906b17`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bb7bf0f3a482a77a018b0515b1c16fcfc9e7cd11c5d0dea890b0578898ccf6a8`
+- Metadata SHA-256: `566e39d7363acab918c0b8b38f7cebac43ee4f4a9069dd6e8b635d61f1c29eb0`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_active_plan_frontmatter` | FAIL | with_skill 输出未提及读取 IMPLEMENTATION_PLAN.md 的 frontmatter，也未基于其状态作判断。 |
+| `detects_non_implemented_status` | FAIL | with_skill 输出未识别 status: Draft，也未判断当前轮次尚未完成。 |
+| `continues_current_plan` | FAIL | 仅承诺按 payment-refund 路径更新对应文档，未明确继续更新固定入口 IMPLEMENTATION_PLAN.md。 |
+| `bumps_plan_version` | FAIL | 未要求同步 bump version 或更新 last_updated。 |
+| `does_not_force_archive_link` | PASS | 输出未要求归档或 previous_plan_archive 作为继续计划的前置条件。 |
+| `waits_before_coding` | FAIL | 未明确在更新实施计划后等待用户确认；仅表示收到变更描述后会做影响分析并更新文档。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b; fixture_sha256=e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d; output_sha256=beb79ccabe1198dd7ae2dabce13d1e34d8b2d313464c052cd1074151090bff01; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 索要具体变更，并泛泛承诺后续影响分析及按 payment-refund 路径更新文档，但未处理 active plan 状态、版本或确认门槛。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b; fixture_sha256=e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d; output_sha256=8365f41f84f7891d4f1c88bb55347cb4689ccd9a5dc260a3522cce05f8a2f67c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 确认 PRD/TRD 后索要具体变更，未读取或处理 active implementation plan。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill candidate output 未满足 5 项断言，只有不强制归档回链满足。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-016-draft-status-continues-current-plan`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d` from `agents/engineer/test/feature-implementor/evals/workspace/eval-016-draft-status-continues-current-plan`.
+- Fixture SHA-256: `e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d`
+- Prompt SHA-256: `94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`

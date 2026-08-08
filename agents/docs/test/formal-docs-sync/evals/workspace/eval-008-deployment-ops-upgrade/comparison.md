@@ -14,6 +14,132 @@
 - Fixture version/source: canonical manifest `79929cac2d8a0cd7566617f637009899090f1d90d4639070d26aca346f9cfe79` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-008-deployment-ops-upgrade`.
 - Fixture SHA-256: `79929cac2d8a0cd7566617f637009899090f1d90d4639070d26aca346f9cfe79`
 - Prompt SHA-256: `47aecb4a312eb41566bd1acc858dd108cbb65075c955dc6992e37865198bfec5`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `52db6badcefada59a1d42e81de2581f06256f43c060b7699c281ab21bfb40949`
+- Skill overlay SHA-256: `f896903fa1a8ae6886eb0b6365065625a2e60f6809acd0af6c7c8dc8f8f2bd40`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `7fe3c7ecf4038349101f98fb6f2ef19330f01c150bee2276a165994129650157`
+- Metadata SHA-256: `77c250a8dd394ec8e7b47c067343be0f3108a736b624b4ce31343031983a7685`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_executed_deployment_evidence` | PASS | With-skill documents use Compose, .env, execution results, health checks, and environment differences; they explicitly limit claims to verified evidence. |
+| `writes_current_ops_upgrade_rollback` | PASS | Docker pages record Compose startup and upgrade, v1.4.2, /healthz HTTP 200 with body ok, and v1.4.1 rollback with a repeated health check. |
+| `does_not_promote_plan_to_current_state` | PASS | The deployment overview explicitly labels Kubernetes/Helm as an unexecuted plan and unsupported current path. |
+| `writes_current_deployment_tree_atomically` | PASS | All four required deployment pages are present with unverified frontmatter, links map the Ops/deployment/Docker hierarchy, the deploy/** map covers all four pages, and existing exclude is preserved; unrelated pages are unchanged. |
+| `runs_ops_host_checks_and_handoffs` | FAIL | The with-skill output reports strict affected checking blocked by sandbox Git restrictions rather than npm run test:docs passing, and provides no evidence of the required docs-agent:docs-audit handoff. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47aecb4a312eb41566bd1acc858dd108cbb65075c955dc6992e37865198bfec5; fixture_sha256=79929cac2d8a0cd7566617f637009899090f1d90d4639070d26aca346f9cfe79; output_sha256=0649d26ced24098eef83a331d812d400e11974d3bddc8fbf493f76781f10cf7b; snapshot_sha256=35693bc63c30270df312298e3f27e4a646e9da104eb169c8a4498d4e72938628
+- Behavior: Produced the required deployment documentation and evidence-bound content, while reporting strict affected checking as blocked and omitting the required handoff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47aecb4a312eb41566bd1acc858dd108cbb65075c955dc6992e37865198bfec5; fixture_sha256=79929cac2d8a0cd7566617f637009899090f1d90d4639070d26aca346f9cfe79; output_sha256=7fcc044d00bf5c55aae0b06cb45aaf7854c833a6231ccf29ac800a5d235f2866; snapshot_sha256=91159ea255f1d5449d676e0a3e87b486ff6c9c85d2e0d7dfdfea6596ff6392aa
+- Behavior: Produced the deployment pages and reported equivalent checks, but modified the Ops index and reported a sandbox workaround for affected checking.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill lane did not demonstrate a passing npm run test:docs and did not demonstrate the required docs-agent:docs-audit handoff.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-008-deployment-ops-upgrade`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `79929cac2d8a0cd7566617f637009899090f1d90d4639070d26aca346f9cfe79` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-008-deployment-ops-upgrade`.
+- Fixture SHA-256: `79929cac2d8a0cd7566617f637009899090f1d90d4639070d26aca346f9cfe79`
+- Prompt SHA-256: `47aecb4a312eb41566bd1acc858dd108cbb65075c955dc6992e37865198bfec5`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `1e290565a84b926a128928ccdd91365a2235adff18f999307c0a3553f0b41f34`
+- Skill overlay SHA-256: `0c6a49eed1db242a95632eb0d142c1760f60ffc995c96026908ec8c0e6bd8d63`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `7fe3c7ecf4038349101f98fb6f2ef19330f01c150bee2276a165994129650157`
+- Metadata SHA-256: `77c250a8dd394ec8e7b47c067343be0f3108a736b624b4ce31343031983a7685`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_executed_deployment_evidence` | PASS | with_skill 文档内容与交接输出引用 Compose 配置、执行结果、健康检查及环境差异，并明确未验证的镜像元数据缺口。 |
+| `writes_current_ops_upgrade_rollback` | PASS | 记录了 Compose 启动、升级、HTTP 200/healthy 成功标准、回滚至 v1.4.1 后的 /healthz 检查，并记录 AI_HUB_IMAGE 默认值及 Compose 证据。 |
+| `does_not_promote_plan_to_current_state` | PASS | 明确 Kubernetes/Helm 仅为未执行计划，不属于当前支持路径，未写成已部署或可执行现状。 |
+| `writes_current_deployment_tree_atomically` | PASS | with_skill 交付快照包含四个要求页面，均为 last_verified_version: unverified；现有 Ops、部署及 Docker 链接和 deploy/** change-map 覆盖符合要求，未修改无关页面。 |
+| `runs_ops_host_checks_and_handoffs` | FAIL | 虽声称文档测试 76/76 通过，但同时说明严格 affected 检查未完成；且输出没有证据表明已 handoff 给 docs-agent:docs-audit。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47aecb4a312eb41566bd1acc858dd108cbb65075c955dc6992e37865198bfec5; fixture_sha256=79929cac2d8a0cd7566617f637009899090f1d90d4639070d26aca346f9cfe79; output_sha256=83ed3756b7d1f10163934afb772c652a7cc36265a14eafef8d7c36389c38abe4; snapshot_sha256=596d8b5b2de4150a75f00858c5fd6b53ba2f6378f6a916bd0bf05c562fa34528
+- Behavior: 基于执行证据生成了边界清晰、链接和元数据完整的四页部署文档；测试记录与要求的完整 test:docs 及 handoff 不足。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47aecb4a312eb41566bd1acc858dd108cbb65075c955dc6992e37865198bfec5; fixture_sha256=79929cac2d8a0cd7566617f637009899090f1d90d4639070d26aca346f9cfe79; output_sha256=01a4576efc04c612fb33b58d97da486bff21c72052f19816cee1afdba1242330; snapshot_sha256=48d6f5e62a22386a8d4a28f723a4da5001ab65e5e9172177eb000654b762eff1
+- Behavior: 生成了四个部署页面并记录了核心部署事实，但完整 npm run test:docs 未通过/未完成，未证明 handoff。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足真实通过完整 npm run test:docs 并 handoff docs-agent:docs-audit 的要求。
+- Next: 补充并记录完整 npm run test:docs 成功结果，完成 docs-agent:docs-audit handoff。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-008-deployment-ops-upgrade`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `79929cac2d8a0cd7566617f637009899090f1d90d4639070d26aca346f9cfe79` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-008-deployment-ops-upgrade`.
+- Fixture SHA-256: `79929cac2d8a0cd7566617f637009899090f1d90d4639070d26aca346f9cfe79`
+- Prompt SHA-256: `47aecb4a312eb41566bd1acc858dd108cbb65075c955dc6992e37865198bfec5`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `79b2ff102fa24fa224c9f24f44f3e648a1ae7eb9a7a10e639d8675db4454120a`

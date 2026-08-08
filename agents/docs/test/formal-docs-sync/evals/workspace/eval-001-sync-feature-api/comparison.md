@@ -14,6 +14,142 @@
 - Fixture version/source: canonical manifest `a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api`.
 - Fixture SHA-256: `a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032`
 - Prompt SHA-256: `cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `52db6badcefada59a1d42e81de2581f06256f43c060b7699c281ab21bfb40949`
+- Skill overlay SHA-256: `f896903fa1a8ae6886eb0b6365065625a2e60f6809acd0af6c7c8dc8f8f2bd40`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ce743547e06014367140716bb2c97c1db58eb733e797662e8b4bd6eca00be3ee`
+- Metadata SHA-256: `e71fe1ba5d6339777690bef42456f363050aa1a29a7cf722a403bab61da88105`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `selects_backfill_mode_and_api_contract` | NOT_EXERCISED | 输出明确提出 API backfill 并限制为 API 范围，但锁定 raw evidence 无法证明实际读取顺序或未读取其他类型模板。 |
+| `derives_complete_api_candidate_tree` | FAIL | 完整树和 Billing 排除均出现，但未充分以 feature catalog 父子关系、owner、route prefix/tag、schema 与 contract tests 解释层级。 |
+| `presents_per_node_confirmation_matrix` | FAIL | 有完整树和页面/代码范围表，但缺少逐节点 parent、owner、分类或 route 证据、change-map delta 与逐节点 exclusions 的可交叉映射。 |
+| `proposes_exact_atomic_change_map` | FAIL | 三类 Sessions 来源均映射到五个页面，且保留 manual review_hint；但未明确稳定去重排序、页面与 map 原子更新，也未明确保留所有既有 trigger、exclude 和无关条目。 |
+| `preserves_stable_paths_and_scope_boundaries` | PASS | 明确排除 Billing、Search 页面及路径迁移、internal、database、design、ops、product、release，并说明不移动既有 Search 页面。 |
+| `keeps_unconfirmed_batch_read_only` | PASS | 明确候选范围尚未确认、本轮不改文件，并停在维护者确认五页子树及映射之后。锁定 git evidence 也显示无写入或提交。 |
+| `defaults_new_pages_to_internal_visibility` | FAIL | 输出未为新增候选页面或映射声明 internal visibility，也未说明默认收紧依据或例外。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032; output_sha256=4b762c2e180b0c0bb72f401e06d4eec6296778461f8bfae96fe23bbcac9db3a2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确停留在未确认批次的只读提案阶段，给出完整 Sessions 页面树、接口事实和较完整的 change-map 草案，但遗漏逐节点映射字段、稳定更新约束和 visibility 默认值。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032; output_sha256=b2a16f3ad64798ab4ead37cf76238ca3be37691384713211bfd1506469a92cb1; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提出 API/Sessions 批次并保持不写入，但粒度、映射和证据结构较简略，未提供完整逐节点确认矩阵。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- 未充分说明候选层级所依据的 catalog、owner、route、schema 和 contract-test 证据。
+- 未提供满足要求的逐节点 confirmation matrix/mapping section。
+- change-map 草案遗漏稳定去重排序、页面/map 原子更新及既有 trigger/exclude 全量保留的明确承诺。
+- 未声明新增页面默认 visibility 为 internal。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-001-sync-feature-api`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api`.
+- Fixture SHA-256: `a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032`
+- Prompt SHA-256: `cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `1e290565a84b926a128928ccdd91365a2235adff18f999307c0a3553f0b41f34`
+- Skill overlay SHA-256: `0c6a49eed1db242a95632eb0d142c1760f60ffc995c96026908ec8c0e6bd8d63`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ce743547e06014367140716bb2c97c1db58eb733e797662e8b4bd6eca00be3ee`
+- Metadata SHA-256: `e71fe1ba5d6339777690bef42456f363050aa1a29a7cf722a403bab61da88105`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `selects_backfill_mode_and_api_contract` | FAIL | with_skill 选择了 existing-system backfill 并识别维护者请求与 feature catalog，但未明确说明以 host standards entry、change map、API template 和 API type module 作为读取依据，也未明确排除其他类型模板。 |
+| `derives_complete_api_candidate_tree` | PASS | with_skill 给出了 api/index.md、identity/index.md、identity/sessions/index.md 及 create-session.md、revoke-session.md 的完整树，并以 catalog、route、owner、schema、handler 和 contract tests 解释拆分；Billing 被排除在本批之外。 |
+| `presents_per_node_confirmation_matrix` | FAIL | with_skill 提供了页面表和 mapping section，但未逐节点配对 parent、完整代码边界、owner、proposed delta 等全部字段，未展示 api/index.md 的逐节点确认项，也未明确列出 unresolved discrepancies。 |
+| `proposes_exact_atomic_change_map` | FAIL | with_skill 的 required_docs 覆盖两个叶子及祖先索引，并保留 manual-plugin/Search 条目不变；但未明确稳定去重排序规则，也未显式复述并保留 manual-plugin 的 review_hint、trigger、exclude 字段。 |
+| `preserves_stable_paths_and_scope_boundaries` | PASS | with_skill 明确将 Billing、既有 docs/site/api/search.md、src/api/internal/** 及 database、design、ops、product、release 排除，并声明不迁移或重命名现有页面。 |
+| `keeps_unconfirmed_batch_read_only` | PASS | with_skill 明确候选页面树和 change-map 尚待维护者确认，未修改站点文件；确认后才进入写入和测试阶段，未提前 handoff。 |
+| `defaults_new_pages_to_internal_visibility` | FAIL | with_skill 未说明候选新增页面的 visibility 为 internal，也未给出默认收紧依据或例外规则。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032; output_sha256=55a186eac564eb3ad70d20b71ef5dc3b0b2630398bf753e3f68a49351447f1c5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确停留在未确认的 existing-system backfill 前期梳理阶段，给出完整 Sessions 候选树和较完整 change-map，但遗漏 host/API 模板读取声明、逐节点矩阵细节、稳定映射规则和 internal visibility。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032; output_sha256=e1234ed2a8b0030eda2434250fda930085c27adc397472e1eb2484de158fee67; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提出了有限 Sessions 范围并保持零写入，但页面路径错误为 create.md/revoke.md，缺少完整树、逐节点确认矩阵、visibility 和充分的边界说明。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足 selects_backfill_mode_and_api_contract。
+- with_skill 未满足 presents_per_node_confirmation_matrix。
+- with_skill 未满足 proposes_exact_atomic_change_map。
+- with_skill 未满足 defaults_new_pages_to_internal_visibility。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-001-sync-feature-api`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api`.
+- Fixture SHA-256: `a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032`
+- Prompt SHA-256: `cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `79b2ff102fa24fa224c9f24f44f3e648a1ae7eb9a7a10e639d8675db4454120a`

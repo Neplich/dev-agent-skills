@@ -14,6 +14,66 @@
 - Fixture version/source: canonical manifest `42400da86be636a5c48d6ced7acfe1114f7f3fc84e29109517e26b5a0856067c` from `agents/designer/test/visual-design/workspace/eval-2-reference-design-system`.
 - Fixture SHA-256: `42400da86be636a5c48d6ced7acfe1114f7f3fc84e29109517e26b5a0856067c`
 - Prompt SHA-256: `092b10f39d07502fd69cfd2b4992b956cec050d77722de8312a6a9dc94160cd6`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `674ecf5fd4c78221e93a055ab56547f676aa916bf7d4681c324f65dbb7bc95bb`
+- Skill overlay SHA-256: `c6d17c572cc3c8fd0cf2c01e196e56f62bf538e4e13d12bb18f8fa31c5130da6`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `1e9739265f0721cb69546820ef87da3e0b8045e92accd200c449d4a7c5bab7c5`
+- Metadata SHA-256: `dea024aad09482b4b51327a960ae6e8c89fbc9764107a299297b588df52b9aa7`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `design_system_data` | PASS | with_skill 文档包含 Reference-Driven Design System、Design System Data 查询与本地参考源说明，并明确产品类型、推荐模式、风格方向、配色、字体、UX 质量规则和反模式。 |
+| `assertion_2` | PASS | with_skill 输出为视觉系统文档交付；内容未包含 CSS/Tailwind/React/shadcn 实现代码、安装命令或工程任务拆解。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=092b10f39d07502fd69cfd2b4992b956cec050d77722de8312a6a9dc94160cd6; fixture_sha256=42400da86be636a5c48d6ced7acfe1114f7f3fc84e29109517e26b5a0856067c; output_sha256=23b91d8df6f9c7065b0bf992d2821035cb27f9bb3ce412aaa0e3dcbfa4e65cb1; snapshot_sha256=0a637fef873356cdabaacd3d1489dc70955ecd899075987d514020b6f2dbcab2
+- Behavior: 交付了完整的、引用 Design System Data 依据的视觉系统文档，并停止在设计交付层面。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=092b10f39d07502fd69cfd2b4992b956cec050d77722de8312a6a9dc94160cd6; fixture_sha256=42400da86be636a5c48d6ced7acfe1114f7f3fc84e29109517e26b5a0856067c; output_sha256=e3ba20fe2826cdb369f9c56f7ffdc39b965a3141d045d89abf05c49ac598d338; snapshot_sha256=1107caf240100853cae95fbecc5dd81959383a866235fee4b5f2033e5b175570
+- Behavior: 交付了视觉系统文档，但未体现 Design System Data 查询依据，且包含 CSS 示例。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `visual-design`
+- Eval: `eval-002-playful`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `42400da86be636a5c48d6ced7acfe1114f7f3fc84e29109517e26b5a0856067c` from `agents/designer/test/visual-design/workspace/eval-2-reference-design-system`.
+- Fixture SHA-256: `42400da86be636a5c48d6ced7acfe1114f7f3fc84e29109517e26b5a0856067c`
+- Prompt SHA-256: `092b10f39d07502fd69cfd2b4992b956cec050d77722de8312a6a9dc94160cd6`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `da7e677bc92a70c0b2d244a02d70cdeaf6c4dea3529e1c7fd6f633e617949291`

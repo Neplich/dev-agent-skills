@@ -11,6 +11,128 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `8ed1c517c0f0999b8177c14728f4f1837cf8c41c83a93a8766a4e6fd07e1d14f` from `agents/product_manager/test/roadmap-gen/workspace/eval-3-no-dates`.
+- Fixture SHA-256: `8ed1c517c0f0999b8177c14728f4f1837cf8c41c83a93a8766a4e6fd07e1d14f`
+- Prompt SHA-256: `4165caadd548c6b8d1d9df4c0aa9c054ed9c0f0a71e88ab4aefd0c18bb92400a`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a12253d9a3d1d231837468fc266a18cbef8c731ab282a55d4d464a493ca02f11`
+- Skill overlay SHA-256: `c50d53c79d2138148c86c2ddaa4ea3403b46c5d6a9d3d67baf48a5203cd6d0b8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `fbd695e0a879758e25936e89babfefc9a6cba4a52e1572a61e1da7fea0b1364b`
+- Metadata SHA-256: `1dfb7bfbfed7613af8764f4385cade9d5822d1652d85a0cbb75853e0bcae7474`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `semantic_classification` | FAIL | The with_skill output correctly classifies Go1.26.1 as the patch/current sprint, Go1.27 as the next minor, and Go2.0 as a distant major. However, unmatched milestones are only labeled “待维护者分类” or “未排期”; they are not explicitly handed to the user for confirmation as required. |
+| `no_fake_dates` | PASS | The with_skill roadmap states that no dates were invented and contains no Mermaid Gantt or calendar-based schedule. Its flowchart explicitly says it represents semantic relationships, not dates. |
+| `release_blockers` | PASS | The with_skill roadmap prominently displays a “发布阻塞项” section and includes issue #4101 with the release-blocker label. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4165caadd548c6b8d1d9df4c0aa9c054ed9c0f0a71e88ab4aefd0c18bb92400a; fixture_sha256=8ed1c517c0f0999b8177c14728f4f1837cf8c41c83a93a8766a4e6fd07e1d14f; output_sha256=9e1738093ba27047bcaca61af9ac6d7c6c6eef1c4925ee093b10d8172c6a43c7; snapshot_sha256=01ba33fec59e510671aeacd96c32e479cc8472e8233b79b1ce6b835cd27403f9
+- Behavior: Created the roadmap with semantic version grouping, explicit no-date handling, incomplete-export caveats, and a prominently displayed release blocker; it did not explicitly request user confirmation for unmatched milestones.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4165caadd548c6b8d1d9df4c0aa9c054ed9c0f0a71e88ab4aefd0c18bb92400a; fixture_sha256=8ed1c517c0f0999b8177c14728f4f1837cf8c41c83a93a8766a4e6fd07e1d14f; output_sha256=abec560e30a0294eef9de078a9a480e4950de84ae16d1801afc64b82839e6928; snapshot_sha256=f8324a1af0a7d20c98446b09bb562a437e516f173be1a388c3ecddeb87d2c4d7
+- Behavior: Created the requested roadmap, avoided fabricated dates, and presented the release-blocker issue, but used less explicit semantic classification and confirmation handling.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- semantic_classification is not fully satisfied because unmatched milestones are not explicitly handed to the user for confirmation.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `roadmap-gen`
+- Eval: `eval-003-no-dates`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `8ed1c517c0f0999b8177c14728f4f1837cf8c41c83a93a8766a4e6fd07e1d14f` from `agents/product_manager/test/roadmap-gen/workspace/eval-3-no-dates`.
+- Fixture SHA-256: `8ed1c517c0f0999b8177c14728f4f1837cf8c41c83a93a8766a4e6fd07e1d14f`
+- Prompt SHA-256: `4165caadd548c6b8d1d9df4c0aa9c054ed9c0f0a71e88ab4aefd0c18bb92400a`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2b8eaa887e0089b78c69e8bf72f0824676518d33b5c372709e901a79190cd61b`
+- Skill overlay SHA-256: `61c47c3293a0a8c5746d4b748abf3c5e11689bfbf0a0493a9b3beca73cbb7663`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `fbd695e0a879758e25936e89babfefc9a6cba4a52e1572a61e1da7fea0b1364b`
+- Metadata SHA-256: `1dfb7bfbfed7613af8764f4385cade9d5822d1652d85a0cbb75853e0bcae7474`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `semantic_classification` | PASS | with_skill 输出按当前 go1.26.0 将 Go1.26.1 归为补丁、Go1.27 归为次版本、Go2.0 归为主要版本；对无版本号的 Runtime experiments 明确标为待维护者确认。 |
+| `no_fake_dates` | PASS | with_skill 输出明确所有 milestone 的 due_on 缺失，未生成 Mermaid Gantt，也未虚构日期或日历排期；使用的更新时间与导出时间有原始证据支持。 |
+| `release_blockers` | PASS | with_skill 输出以“发布阻塞项”醒目标注 Go1.26.1 中带有 release-blocker 标签的 issue #4101。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4165caadd548c6b8d1d9df4c0aa9c054ed9c0f0a71e88ab4aefd0c18bb92400a; fixture_sha256=8ed1c517c0f0999b8177c14728f4f1837cf8c41c83a93a8766a4e6fd07e1d14f; output_sha256=59c6d5bcd80d5b6f20d6ee6ddee8a875e2a4c2529430113a5525fcf96403db1e; snapshot_sha256=349e02c7d6fb72f6d90ecb281231df2a8f644605027c05155a95812b143ca5c1
+- Behavior: 完成路线图，正确进行版本语义分类，明确处理无法归类的 Runtime experiments，避免虚构日期，并突出显示 release-blocker issue。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4165caadd548c6b8d1d9df4c0aa9c054ed9c0f0a71e88ab4aefd0c18bb92400a; fixture_sha256=8ed1c517c0f0999b8177c14728f4f1837cf8c41c83a93a8766a4e6fd07e1d14f; output_sha256=212ddced1d944228e1e8fec07598df589f00d5170063f9f304e2081a9298b2ef; snapshot_sha256=81e95c5d64a91494453d14d815622606f58fa16259fbab1de30bcdae9e851418
+- Behavior: 生成了按版本语义区分的路线图并避免虚构日期，但未将 release-blocker issue 以明确的发布阻塞项突出显示，也未明确要求对无法匹配的 milestone 进行用户确认。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `roadmap-gen`
+- Eval: `eval-003-no-dates`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/roadmap-gen/workspace/eval-3-no-dates`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `bab782f32910e02f1c388e6bfdd66ca200e156024c36b424426822229da5a9ff`

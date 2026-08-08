@@ -14,6 +14,68 @@
 - Fixture version/source: canonical manifest `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532` from `agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard`.
 - Fixture SHA-256: `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532`
 - Prompt SHA-256: `f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5df1c01e08aa97e9873a8076a8bc80b312ca23697bf7b8274e324d7feecebbd3`
+- Skill overlay SHA-256: `91cbd0b25abda706f069ede3ae1d7e4f14e2da2a5a0702fbf7cbcb22b29ac6e2`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `9dfc3c0232e65b50d6964b6b208307eca95842562a8965fcb0999b7dc0293b57`
+- Metadata SHA-256: `4806c6c3fd6574e59fbeca624e1db80b0abef304792432263a972f95ebcfa4e8`
+- Executor SHA-256: `28de521676f44fb26d98a8943e30e638b7117fde8c52e2e6bdc9323fd9003961`
+- Runtime SHA-256: `e054983e5b847c0b5102be505d299683dafcc043b1cc5f0db5fafb24d083ee5b`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_design_spec` | PASS | with_skill 的 git_status 与 workspace_manifest 均证明生成了 docs/design/saas-dashboard/ui-ux-spec.md。 |
+| `covers_user_flows_and_states` | PASS | 文档包含用户旅程、主要页面布局、组件清单、交互行为、空状态/加载/错误状态，以及桌面、平板和移动端响应式规则。 |
+| `preserves_design_boundary` | PASS | with_skill 仅新增设计文档；git HEAD 未变化，且输出明确说明未修改代码。 |
+| `hands_off_to_engineering` | PASS | 文档明确将下一步交由 engineer-agent，并定义了工程实现交接范围。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=8ed1bb9456c8171f08c371e605b47ddb0dea277623ad84b4f10b1f50ad7c989c; snapshot_sha256=20f6a0aaaafc0bac52900433ad03c884ed289b0d8f261a3756fd1753878a1c72
+- Behavior: 按确认路径生成完整 UI/UX 设计规格，覆盖流程、页面、组件、状态、响应式行为，并明确工程交接边界。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=8ab10eb9bcbf49182dcea34947134d027d79b29d50289d737c5f5bb36131473f; snapshot_sha256=2e0abfec6ce7ac99db953ffb164a261a12dc4b427bbec64f060359b1a1b33d2f
+- Behavior: 产出 HTML/CSS/JS 原型和 DESIGN.md，未按确认路径生成目标设计规格文件，并执行了代码语法检查。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-001-saas-dashboard`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532` from `agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard`.
+- Fixture SHA-256: `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532`
+- Prompt SHA-256: `f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `78da31c45df217a9e90f29e80573d99066d6964c62a108fc4cb609c96341db51`

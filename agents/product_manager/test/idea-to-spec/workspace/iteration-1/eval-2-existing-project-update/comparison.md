@@ -14,6 +14,68 @@
 - Fixture version/source: canonical manifest `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update`.
 - Fixture SHA-256: `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a`
 - Prompt SHA-256: `6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `7638558b96730ed626879bcffd4a606d3ed390013a41acf29ade725d210e3f4e`
+- Skill overlay SHA-256: `12aaaef0d075d133bbbdc681f598fd09807b211a4377dcfbc6cbbfcaa30909e0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `2eb26345c0320238f13795dd231ba4c205d452d230de64d35bcf4cc4acb002f8`
+- Metadata SHA-256: `705e055f0c1e2ecaf46061084a80e87ae854a0054e6c7225c7ef5f20736382be`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `update` | PASS | 输出明确称“已完成设计更新”，并围绕现有通知记录、现有 API 和迁移路径说明变更。 |
+| `delta_blast_radius` | PASS | 输出先列出产品行为、数据写入、消息链路、前端、API、运维、测试和发布影响，再列出更新文档。 |
+| `assertion_3` | FAIL | 输出描述了渐进迁移和增量更新，但没有推荐 change-impactor 或对应 iteration 技能。 |
+| `assertion_4` | PASS | 明确列出 PRD、DECISIONS.md、TRD.md、API.md 和 ADR-001 的具体路径及更新内容。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441; fixture_sha256=4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a; output_sha256=7b871773bfbba575f129f991861777100b9a011ed8bdabd1319145872e0ce77c; snapshot_sha256=76d73672d83a85ce75edd41a6a3549b2c19de7d853c8662e299e0fd32fc42bbb
+- Behavior: 识别为设计更新，先分析影响范围，再明确列出需要更新或新增的文档；未推荐 change-impactor 或对应 iteration 技能。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441; fixture_sha256=4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a; output_sha256=90782c1a1507297cccbe9833a06a9095a422b44b418a8aad8e986ed56b6c8419; snapshot_sha256=ab0e800eb41afb67fd4d274081779ed4278066b4d42cc21669fd3b89b78996ae
+- Behavior: 完成了文档修改并提供了影响范围和设计建议，但未明确识别为设计更新或推荐迭代技能。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 输出遗漏了 assertion_3 要求的 change-impactor 或对应 iteration 技能推荐。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `idea-to-spec`
+- Eval: `eval-002-existing-project-update`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update`.
+- Fixture SHA-256: `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a`
+- Prompt SHA-256: `6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `9c3b136c6958582b2c5c3d552759bbe4fd3ef24876075804e91c5b21980a34af`

@@ -14,6 +14,128 @@
 - Fixture version/source: canonical manifest `96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee` from `agents/docs/test/release-notes-gen/evals/workspace/eval-002-confirmation-gate`.
 - Fixture SHA-256: `96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee`
 - Prompt SHA-256: `7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2432b0a8b94e9e5b987302b22f20b3a68797aef99cb1f7535f80c5f6d550ca58`
+- Skill overlay SHA-256: `b8a032f2e0b3c1612e4ecd4d8c0404ffabac105e349deced7271302364bee3fd`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `734d8912f6102b866e236fb845ac847f11fde3651b05c29ee143e730ba9a8ce3`
+- Metadata SHA-256: `913e8a90d405fa7666ae23e665c2d55b7740272554f1234087ce53fcb62d5aad`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `keeps_derived_surfaces_unchanged` | PASS | with_skill reports .meta/releases.json, the Release Notes index, and navigation were not modified; git evidence shows only the new draft is untracked, and it says updates wait for正文确认. |
+| `reports_unconfirmed_not_ready` | PASS | with_skill explicitly reports confirmation_status: unconfirmed and handoff: blocked, with no ready claim. |
+| `waits_for_explicit_confirmation` | FAIL | It links to the generated draft and summarizes its coverage, but does not present the complete candidate正文 or identify the source evidence documents in the user-visible output. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee; output_sha256=ee91b82500f8ecb5f4690e75cdbfca1fe5f2e7d32f6d9ce410ce7d7ef6511f4b; snapshot_sha256=b5ce73f11fa77f4a33947f96b4507c809cb1468f000ee15c71a4197b29c0238b
+- Behavior: Created a comprehensive untracked draft, preserved derived surfaces, explicitly marked the handoff blocked and confirmation unconfirmed, and requested正文 confirmation before updates; presentation omitted full正文 and source-evidence details.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee; output_sha256=4cfbb5d2caf02bad54e8af71947be85bd87c15f0c5255b255a0424c2bf494669; snapshot_sha256=664affe84aa80cd9852dffec8a5123143385951a7d18561c48f76a93f5d45849
+- Behavior: Created an untracked draft and preserved derived surfaces, but did not report explicit confirmation_status/handoff_status or clearly request confirmation.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output does not user-visibly present the complete candidate正文 and source evidence required before requesting confirmation.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-002-confirmation-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee` from `agents/docs/test/release-notes-gen/evals/workspace/eval-002-confirmation-gate`.
+- Fixture SHA-256: `96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee`
+- Prompt SHA-256: `7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `299c765e24bed3d47cd5f1165cb4e7dae973e90fb9c91e1e5e35950ac2fddd9f`
+- Skill overlay SHA-256: `62aaaf9c8c05eac4d9d569c35ab001e055f2ecdc527f1e0c77f6bdc4eedf1246`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `734d8912f6102b866e236fb845ac847f11fde3651b05c29ee143e730ba9a8ce3`
+- Metadata SHA-256: `913e8a90d405fa7666ae23e665c2d55b7740272554f1234087ce53fcb62d5aad`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `keeps_derived_surfaces_unchanged` | PASS | With-skill git evidence shows only the candidate page as untracked; index.md, .meta/releases.json, and navigation files are unchanged. Output states they have not been modified, and the candidate says confirmation precedes indexing/metadata updates. |
+| `reports_unconfirmed_not_ready` | PASS | With-skill output says the page is awaiting maintainer confirmation, explicitly says no ready handoff was produced, and identifies missing confirmation and release evidence. |
+| `waits_for_explicit_confirmation` | FAIL | The with-skill output provides only a link and category summary, not the complete candidate body, source evidence, or a concrete post-confirmation path plan. It does state that maintainer confirmation is pending. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee; output_sha256=ef752beaf512fc58a74bf5a6ddf0cc47935b187032760c642613652a791b0b2e; snapshot_sha256=5ff31aff49ca8270e0bf7c41fed5ae89df15a50e43545ed891c9f65493cb2550
+- Behavior: Preserved derived surfaces and clearly kept the work awaiting confirmation, but the handoff output omitted the complete candidate body, source evidence, and concrete confirmation-follow-up paths.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee; output_sha256=9088f9989a61ff21496c29ba3271c8c0956950dce3ef8c500b258c9ddba93568; snapshot_sha256=744d0c4251763965f6d20203b46e5fff0e1363b3356ea60ea8b594ade2b0c7d5
+- Behavior: Created an untracked candidate and preserved derived surfaces, but did not provide explicit structured not-ready handoff or the requested complete body, evidence, and confirmation plan.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill lane fails the explicit confirmation handoff requirement by not displaying the complete candidate body, source evidence, and planned post-confirmation paths.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-002-confirmation-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee` from `agents/docs/test/release-notes-gen/evals/workspace/eval-002-confirmation-gate`.
+- Fixture SHA-256: `96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee`
+- Prompt SHA-256: `7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `2da7831c1e3b626979a3601984870e16015610b54d1ff8f08ff8c14d15f812ca`

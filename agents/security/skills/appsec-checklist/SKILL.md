@@ -1,6 +1,6 @@
 ---
 name: appsec-checklist
-description: "Internal security specialist—not a direct entry point. Invoked by security-agent after pm-agent handoff to scan application code for common vulnerabilities and produce a release-oriented security checklist."
+description: "Review application code for injection, XSS, auth bypass, secret, upload, and related AppSec risks and produce the protocol-shaped security report. Use after security-agent routes an AppSec scope."
 visibility: internal
 ---
 

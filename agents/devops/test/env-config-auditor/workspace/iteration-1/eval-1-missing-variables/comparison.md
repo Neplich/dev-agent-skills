@@ -14,6 +14,128 @@
 - Fixture version/source: canonical manifest `4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57` from `agents/devops/test/env-config-auditor/workspace/iteration-1/eval-1-missing-variables`.
 - Fixture SHA-256: `4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57`
 - Prompt SHA-256: `75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a23a5206e5734d346e9cc05988abcd19e92dc09bd52f243173dd300d409a14ca`
+- Skill overlay SHA-256: `cf962faf729c051cb7dfd2e1a6a7c8c9a1b7f9b67501cbf18f492cb32a84adc7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `5217a2bb49f0b8e0ba081e4029f81b07efd6b07af9fb34ce9773ecbde5d00a5b`
+- Metadata SHA-256: `f2d1d6d11daf93046843d6cf276fdc2c30cd77fd3602aa38ebdb9fcc3d6c1a85`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_durable_config_audit` | PASS | with_skill created deploy/ENV_AUDIT.md containing missing variables, a coverage matrix, security issues, recommendations, and source-line evidence. |
+| `compares_code_deploy_and_cicd` | PASS | The report compares src/server.ts, local, Docker, CI/CD, and explicitly records Helm/Kubernetes as absent/unknown; it correctly identifies Docker/CI gaps for API_KEY and REDIS_URL and CI-only STRIPE_SECRET_KEY. |
+| `keeps_secrets_and_unknowns_honest` | PASS | No real secret values are disclosed; the report identifies the local example key as non-production, marks Helm and runtime/deployment evidence unknown, and does not claim production readiness. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf; fixture_sha256=4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57; output_sha256=f16b96ba913745c2fe9b62ea3df63ea114179de9e7b1f0cf82d02f406c5c3485; snapshot_sha256=7ef41d8245979e43994d26682e7e60f69ccf4104b97efa1f08c0dc87ccecf104
+- Behavior: Created the required repository audit with accurate coverage, security cautions, source evidence, and explicit unknowns for absent Helm/runtime configuration.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf; fixture_sha256=4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57; output_sha256=4ac2fadbce35e4922af8a1dada4e3a601c3ffceabf0df655fbe79878c66eb897; snapshot_sha256=040488ccdf25cfb0b300f47329efc230608d03e041e7e58fc11deb9a678418a8
+- Behavior: Created a report at the wrong path and omitted the required Helm comparison, though its variable-gap findings were largely correct.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `env-config-auditor`
+- Eval: `eval-001-missing-variables`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57` from `agents/devops/test/env-config-auditor/workspace/iteration-1/eval-1-missing-variables`.
+- Fixture SHA-256: `4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57`
+- Prompt SHA-256: `75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `672542b4c547ee15b5007c81b95d14b5fa65c727675122bbb5a233f553fe8ae7`
+- Skill overlay SHA-256: `de10ec2dd3547ee5b7a57196d7f9e6584e3ffbd9e717a8e1c8e3b5506cd96520`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `5217a2bb49f0b8e0ba081e4029f81b07efd6b07af9fb34ce9773ecbde5d00a5b`
+- Metadata SHA-256: `f2d1d6d11daf93046843d6cf276fdc2c30cd77fd3602aa38ebdb9fcc3d6c1a85`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_durable_config_audit` | PASS | with_skill creates deploy/ENV_AUDIT.md containing missing variables, coverage matrices, security risks, recommendations, and cited repository evidence. |
+| `compares_code_deploy_and_cicd` | PASS | The report compares source, local, Docker, CI/CD, and Helm/Kubernetes; correctly identifies REDIS_URL and API_KEY missing from Docker/CI/CD and STRIPE_SECRET_KEY present only in CI/CD. |
+| `keeps_secrets_and_unknowns_honest` | PASS | No real secret values are disclosed. Helm/Kubernetes is explicitly marked unknown/not represented, and incomplete coverage is not described as production-ready. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf; fixture_sha256=4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57; output_sha256=fe4637a83c155d562c9258f667add04d84205eb354f8b6df2c7dd38b6bb4db5c; snapshot_sha256=e85727ee596608314ad5028693965f0fbed0e26e62d494c6dd2e7261752afd00
+- Behavior: Produced the required deploy/ENV_AUDIT.md with complete coverage findings, explicit unknowns, security considerations, evidence sources, and recommendations.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf; fixture_sha256=4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57; output_sha256=97354526ff81751f405d5fcfe92cb746f7f9a5d088082da982f6078aee13408f; snapshot_sha256=c4cf0d2d83b4056733b6dce7a5da19f2f9e1f248209e69e0e715a0cf21b55c3a
+- Behavior: Produced a report under docs/ with mostly accurate variable findings, but not at the required deploy/ENV_AUDIT.md path and without explicit Helm/unknown-runtime treatment.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `env-config-auditor`
+- Eval: `eval-001-missing-variables`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57` from `agents/devops/test/env-config-auditor/workspace/iteration-1/eval-1-missing-variables`.
+- Fixture SHA-256: `4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57`
+- Prompt SHA-256: `75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `30d88474014fd1654b2afdad809dd429177b5ede44673678193420a680992fce`

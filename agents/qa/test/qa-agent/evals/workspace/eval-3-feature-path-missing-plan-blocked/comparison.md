@@ -14,6 +14,128 @@
 - Fixture version/source: canonical manifest `39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc` from `agents/qa/test/qa-agent/evals/workspace/eval-3-feature-path-missing-plan-blocked`.
 - Fixture SHA-256: `39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc`
 - Prompt SHA-256: `094ec5b09f42125c7ea3b42f7f8365ddf4bd40bef6652060cfeb7ff368908608`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `bf605f953dcf46f19d2e331c4596d99cf4c0c84b7fc1582467970e0cc18f8ccd`
+- Skill overlay SHA-256: `61d94a4bf111e70ade2232cb9d882f35a6012c6ae7909aa0b8f48602aadf3860`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ffa490cd1f58367914b109adc50e94706c92cbf66e7c95942ae329d3f9a191c7`
+- Metadata SHA-256: `aa798ca118679678c2fef882d4726badd357a387202dcb387aceaa4b86696bd0`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_same_feature_path` | PASS | with_skill 明确识别 `account/profile/preferences`，指出同路径 PRD/TRD 均为 Confirmed，并保留现有 QA E2E 目录；workspace_manifest 也确认四个同路径材料未被修改。 |
+| `specialist_gate_pointer` | PASS | with_skill 选择 `spec-based-tester` 作为后续 E2E 验证责任方，明确缺少 `IMPLEMENTATION_PLAN.md`、测试平台和运行环境，因此当前不能执行；git_status 和 git_diff 均为空，未创建、更新或运行 E2E 资产。 |
+| `keeps_single_route` | PASS | with_skill 选择单一的 `spec-based-tester` QA 路由，并将实施计划补齐描述为前置阻塞条件；没有并行调用多个 QA skill，也没有执行实现修复或 specialist 协议。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=094ec5b09f42125c7ea3b42f7f8365ddf4bd40bef6652060cfeb7ff368908608; fixture_sha256=39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc; output_sha256=29631206d05f125703591d3a877ffa27deb83f8776294e7762198ec65e651d8b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别 feature path，选择 spec-based-tester，指出实施计划及运行条件缺失并在门禁处停止，未产生工作区变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=094ec5b09f42125c7ea3b42f7f8365ddf4bd40bef6652060cfeb7ff368908608; fixture_sha256=39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc; output_sha256=61ddf52d3adb7bb2748b5e27c806091ff323264a404b2f071cbfa83218af8605; snapshot_sha256=03a49eca18df71c5a3109d7b519c3a457f88e2b8f30796f92d4914206ce774ab
+- Behavior: 识别材料不足和 E2E 无法执行，但修改了 QA 测试套件与流程索引，未体现 specialist 门禁和单一路由。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `qa-agent`
+- Eval: `eval-003-feature-path-missing-plan-blocked`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc` from `agents/qa/test/qa-agent/evals/workspace/eval-3-feature-path-missing-plan-blocked`.
+- Fixture SHA-256: `39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc`
+- Prompt SHA-256: `094ec5b09f42125c7ea3b42f7f8365ddf4bd40bef6652060cfeb7ff368908608`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a20bd075e7e1649c2f9f1462392950229b31be9ed570a4e240d839bf872da003`
+- Skill overlay SHA-256: `46ffa1a74f0eaa93e8e4995713b7c67a998b633e4325098596292dae49b6afe3`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `850613bb7e4be55053e2a4ef8d2c3adf6cfe9e1ff2df8dc4182acbf3737eb282`
+- Metadata SHA-256: `aa798ca118679678c2fef882d4726badd357a387202dcb387aceaa4b86696bd0`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_same_feature_path` | PASS | with_skill 明确使用 feature_path `account/profile/preferences`，指出同路径 PRD/TRD，并引用同路径 QA E2E 目录中的 TEST_SUITE.md 与 FLOW_INDEX.md。 |
+| `specialist_gate_pointer` | FAIL | 虽声明选择 `spec-based-tester` 并提及 QA memory、平台版本、执行入口、PRD/TRD、IMPLEMENTATION_PLAN 和账号信息，但明确展开了 IMPLEMENTATION_PLAN 缺失导致硬门禁阻塞及后续补充协议，违反不得复述缺计划阻塞/交接/执行协议的要求。 |
+| `keeps_single_route` | PASS | with_skill 选择单一且最窄的 `spec-based-tester` 路由，未并行调用多个 QA skill，也未进入实现修复。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=094ec5b09f42125c7ea3b42f7f8365ddf4bd40bef6652060cfeb7ff368908608; fixture_sha256=39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc; output_sha256=d29c948d3648a8f9c1dcb9fbd09000e118005522297851da03e9113d397b8eb2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 选择了单一 spec-based-tester 路由并正确识别同路径材料，但展开复述了缺少 implementation plan 的阻塞及后续执行前置条件。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=094ec5b09f42125c7ea3b42f7f8365ddf4bd40bef6652060cfeb7ff368908608; fixture_sha256=39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc; output_sha256=2c0dc6f9f83e4e7c449ebed981b22d6263ba62abc340eb70cf39e57284443ea0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了正确的功能承接范围和材料不足，但未声明 specialist 或其权威门禁指针。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- specialist_gate_pointer：with_skill 输出展开了缺计划后的硬门禁阻塞和后续补充/执行协议。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `qa-agent`
+- Eval: `eval-003-feature-path-missing-plan-blocked`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc` from `agents/qa/test/qa-agent/evals/workspace/eval-3-feature-path-missing-plan-blocked`.
+- Fixture SHA-256: `39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc`
+- Prompt SHA-256: `094ec5b09f42125c7ea3b42f7f8365ddf4bd40bef6652060cfeb7ff368908608`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `fce4a3d76c9b69c96fdd86c3a44479dd8a12dd392536b124aa25210a7efca146`

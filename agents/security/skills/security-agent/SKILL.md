@@ -1,6 +1,6 @@
 ---
 name: security-agent
-description: "Downstream security router invoked after pm-agent handoff. Classifies confirmed security scope across AppSec, auth/authz, dependency risk, privacy, and data-flow review, then delegates to security specialists."
+description: "Classify and route confirmed security requests across AppSec, auth/authz, dependency risk, privacy, and data-flow review, preserving remediation and PM-escalation context. Use immediately after a PM security handoff."
 visibility: internal
 ---
 

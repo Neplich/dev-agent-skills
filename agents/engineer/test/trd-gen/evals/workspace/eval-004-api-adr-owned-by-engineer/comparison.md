@@ -14,6 +14,69 @@
 - Fixture version/source: canonical manifest `7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116` from `agents/engineer/test/trd-gen/evals/workspace/eval-004-api-adr-owned-by-engineer`.
 - Fixture SHA-256: `7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116`
 - Prompt SHA-256: `825205d6124cce58172b3b6756f4b557e630d638b9032e293e0df1661f6c8e2b`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `bb3f875298d7fef0fcd2297b4e59b33b5c034efad4a2286dcaede91ec0863c72`
+- Skill overlay SHA-256: `12aaaef0d075d133bbbdc681f598fd09807b211a4377dcfbc6cbbfcaa30909e0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `c2e125b845f0cfd23a8b77d0953e79c0dfdb8a47bc09cbe45bf84d70fdf9a2db`
+- Metadata SHA-256: `d32be481f3b029c028aa82a9a8adf92bda8ff5084062b1a65511dd3d764980a1`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `engineer_owns_api_and_adr` | FAIL | with_skill 输出说明已补齐 Engineer 文档，但未说明 API 和 ADR 由 `engineer-agent:trd-gen` 负责，也未明确排除 PM 内部生成器。 |
+| `writes_all_engineer_docs_under_feature_path` | PASS | 输出及 delivery_snapshot 均显示目标路径为 docs/engineer/chat-interface/history-search/TRD.md、API.md 和 ADR-001-search-index.md。 |
+| `preserves_related_prd_and_metadata` | PASS | 三份 Engineer 文档 frontmatter 均包含 feature_path: chat-interface/history-search、parent_feature: chat-interface、feature_level: 2，并将 related_prd 指向 docs/pm/chat-interface/history-search/PRD.md。 |
+| `does_not_use_pm_generators` | PASS | with_skill 输出和文档未将 API 或 ADR 路由到 PM 内部 api-gen 或 adr-gen。 |
+| `no_plan_or_code` | PASS | git evidence 仅显示三份 Engineer 文档新增；输出明确说明未修改业务代码，未创建 IMPLEMENTATION_PLAN.md 或测试交付物。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=825205d6124cce58172b3b6756f4b557e630d638b9032e293e0df1661f6c8e2b; fixture_sha256=7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116; output_sha256=6533489d95d8ce6aa07b6808c619bc62a2d7be23833e67eda9f656b7af640bd1; snapshot_sha256=b30ac27fe53bccde12fa3c5d14ee26802988ddfbe31a154fc598c6769416982b
+- Behavior: 正确生成 Engineer 路径下的 TRD、API 和 ADR，保留路径元数据及 PRD 关联，并未修改代码；但未明确说明 engineer-agent:trd-gen 负责 API/ADR。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=825205d6124cce58172b3b6756f4b557e630d638b9032e293e0df1661f6c8e2b; fixture_sha256=7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116; output_sha256=5e7f0873ce51fa99c9dc29a803e9281d1cd364f4de4185439943d2045c487ba1; snapshot_sha256=7c64add107c578ad5842a7a71f5fc73e8fe26ae3eb144020e12e85f7bd2a2b49
+- Behavior: 生成了错误位于 PM 路径下的技术方案、API 和 ADR，未体现 Engineer 产物归属。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- engineer_owns_api_and_adr 未满足：缺少 API/ADR 由 `engineer-agent:trd-gen` 负责的用户可见说明。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-004-api-adr-owned-by-engineer`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116` from `agents/engineer/test/trd-gen/evals/workspace/eval-004-api-adr-owned-by-engineer`.
+- Fixture SHA-256: `7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116`
+- Prompt SHA-256: `825205d6124cce58172b3b6756f4b557e630d638b9032e293e0df1661f6c8e2b`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `b66f9acea93e151819a21f82909f9a6b7d44c68fa52d2116667525e2fe8e9bd7`

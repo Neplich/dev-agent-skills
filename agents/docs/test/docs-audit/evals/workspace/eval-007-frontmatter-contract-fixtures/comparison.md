@@ -14,6 +14,141 @@
 - Fixture version/source: canonical manifest `1219a80a8f97201ae3cdd929f2d631a2ba100cf6ab153bec6afe2b6d163ff59f` from `agents/docs/test/docs-audit/evals/workspace/eval-007-frontmatter-contract-fixtures`.
 - Fixture SHA-256: `1219a80a8f97201ae3cdd929f2d631a2ba100cf6ab153bec6afe2b6d163ff59f`
 - Prompt SHA-256: `49a9f020c04120ad8bdb6f9b036cf5ce5bd9266f99e431e7e0059400223b90de`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `9e9abf391c9ccd9564d35b5def50bc0374b1db0886710676c4d48422839746ae`
+- Skill overlay SHA-256: `c66ac938bf9158faa694d7c3e311e913ddc4a06da11de703a881234f257c470c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6bde344495a08502946e81bb93f2ae1c40e1aff64c95e853b673dd5a307e9ade`
+- Metadata SHA-256: `ac5c625c3b447eed92814a4915de66331bf3c2449cbef00676c3c687ad5d80de`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_confirmed_audit_entry` | PASS | With-skill output accepts v0.4.0, the confirmed base/target refs, pre-tag phase, and audit scope. |
+| `rejects_standard_doc_type` | PASS | Classifies catalog-search.md as stale because doc_type: standard is invalid. |
+| `rejects_empty_related_code` | PASS | Classifies catalog-export.md as stale because related_code: [] is invalid. |
+| `rejects_missing_last_verified_version` | PASS | Classifies catalog-status.md as stale because last_verified_version is missing. |
+| `rejects_empty_owners` | PASS | Classifies catalog-bulk-update.md as stale because owners: [] is invalid. |
+| `accepts_valid_api_page` | PASS | Marks catalog-items.md verified, states its frontmatter is valid, and matches it to GET /catalog/items. |
+| `blocks_release_for_invalid_frontmatter` | FAIL | Although the output blocks release and identifies four stale pages, it marks catalog-items.md verified, contradicting the requirement not to locally seal a valid page while invalid pages remain in scope. |
+| `uses_shared_contract_source` | FAIL | The output says the shared contract and generator files are missing, but does not identify docs-agent/frontmatter-contract.md as the source of truth or confirm consistency with docs-site-bootstrap/check-frontmatter.mjs. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=49a9f020c04120ad8bdb6f9b036cf5ce5bd9266f99e431e7e0059400223b90de; fixture_sha256=1219a80a8f97201ae3cdd929f2d631a2ba100cf6ab153bec6afe2b6d163ff59f; output_sha256=69253a43f76b6bade86fc55fec1ef871ea874fd1d8c2c19e6c172581bcaa9154; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly accepts the audit entry, classifies the four invalid pages, and blocks release, but incorrectly locally verifies catalog-items.md and does not establish the shared contract source/logic consistency.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=49a9f020c04120ad8bdb6f9b036cf5ce5bd9266f99e431e7e0059400223b90de; fixture_sha256=1219a80a8f97201ae3cdd929f2d631a2ba100cf6ab153bec6afe2b6d163ff59f; output_sha256=bc8c0069f558bc43e7bebdaa9594495d3a12cfe7fec64d91d27097453f53296c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly blocks the release and identifies several issues, but incorrectly treats catalog-items.md as having an invalid last_verified_version and misses the required per-field classifications.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with-skill output locally verifies catalog-items.md despite invalid pages remaining in the affected set.
+- The with-skill output omits the required shared-contract source and validation-logic consistency conclusion.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-007-frontmatter-contract-fixtures`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1219a80a8f97201ae3cdd929f2d631a2ba100cf6ab153bec6afe2b6d163ff59f` from `agents/docs/test/docs-audit/evals/workspace/eval-007-frontmatter-contract-fixtures`.
+- Fixture SHA-256: `1219a80a8f97201ae3cdd929f2d631a2ba100cf6ab153bec6afe2b6d163ff59f`
+- Prompt SHA-256: `49a9f020c04120ad8bdb6f9b036cf5ce5bd9266f99e431e7e0059400223b90de`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2d24da5f976a5ab2710c2c072a19015e074d314e0ebdb88f1c28831425f1b98c`
+- Skill overlay SHA-256: `40330c17a3b77f25a1b1a716fa5e9355e0011db79d19014344ed516affba11c8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6bde344495a08502946e81bb93f2ae1c40e1aff64c95e853b673dd5a307e9ade`
+- Metadata SHA-256: `ac5c625c3b447eed92814a4915de66331bf3c2449cbef00676c3c687ad5d80de`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_confirmed_audit_entry` | PASS | 明确接受 v0.4.0、4a1b2c3..7c9e2af、pre-tag 阶段及维护者确认的入口。 |
+| `rejects_standard_doc_type` | PASS | 将 catalog-search.md 的 doc_type: standard 判为 stale。 |
+| `rejects_empty_related_code` | PASS | 将 catalog-export.md 的 related_code: [] 判为 stale。 |
+| `rejects_missing_last_verified_version` | PASS | 将缺少 last_verified_version 的 catalog-status.md 判为 stale。 |
+| `rejects_empty_owners` | PASS | 将 owners: [] 的 catalog-bulk-update.md 判为 stale。 |
+| `accepts_valid_api_page` | FAIL | catalog-items.md 的七个 frontmatter 字段在原始 fixture 中合法，且 routes.txt 提供对应 endpoint；with_skill 却将其判为 unverified，未确认其通过 frontmatter 校验并进入事实层。 |
+| `blocks_release_for_invalid_frontmatter` | PASS | 识别四个非法页面为 stale，阶段结果为 blocked，未返回 ready_for_tag，也未局部盖章。 |
+| `uses_shared_contract_source` | FAIL | 未明确以 docs-agent 的 frontmatter-contract.md 为判定真源，也未确认与 docs-site-bootstrap 的 check-frontmatter.mjs 逻辑一致。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=49a9f020c04120ad8bdb6f9b036cf5ce5bd9266f99e431e7e0059400223b90de; fixture_sha256=1219a80a8f97201ae3cdd929f2d631a2ba100cf6ab153bec6afe2b6d163ff59f; output_sha256=03eba3f3f0336391562ba56963eb0119a91d5fdce2aded556326ba990e39db42; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确接受审计入口、识别四个非法页面并阻塞发布；但误判合法 API 页面，且未提供共享 contract source 一致性确认。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=49a9f020c04120ad8bdb6f9b036cf5ce5bd9266f99e431e7e0059400223b90de; fixture_sha256=1219a80a8f97201ae3cdd929f2d631a2ba100cf6ab153bec6afe2b6d163ff59f; output_sha256=7d72dcc2c223230bcf75a2932f5e74aa9b05857eec51a7e244d233916fb40003; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确给出 No-Go，但错误地将合法的 catalog-items.md 判为不通过，并以未验证版本等额外理由泛化页面失败。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未接受 fixture 中 frontmatter 合法且有 routes 证据的 catalog-items.md。
+- with_skill 未明确验证 docs-agent contract 与 check-frontmatter.mjs 同源一致。
+- Next: 修正 catalog-items.md 的 frontmatter 判定并将其纳入事实层核对。
+- Next: 明确引用 frontmatter-contract.md，并确认其与 check-frontmatter.mjs 的校验逻辑一致。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-007-frontmatter-contract-fixtures`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1219a80a8f97201ae3cdd929f2d631a2ba100cf6ab153bec6afe2b6d163ff59f` from `agents/docs/test/docs-audit/evals/workspace/eval-007-frontmatter-contract-fixtures`.
+- Fixture SHA-256: `1219a80a8f97201ae3cdd929f2d631a2ba100cf6ab153bec6afe2b6d163ff59f`
+- Prompt SHA-256: `49a9f020c04120ad8bdb6f9b036cf5ce5bd9266f99e431e7e0059400223b90de`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `2baee6e542351d5b0c46e79c685dd29ff93f0fee4a45cf4485afee7656248cf7`

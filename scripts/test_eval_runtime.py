@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -359,8 +360,8 @@ def test_materializer_creates_independent_git_home_and_exact_skill_overlay(
     fixture = tmp_path / "fixture"
     fixture.mkdir()
     (fixture / "input.md").write_text("host input", encoding="utf-8")
-    target = make_skill(repository, "qa", "bug-analyzer")
-    dependency = make_skill(repository, "qa", "qa-agent")
+    target = make_skill(repository, "qa", "bug-analyzer", "# Target protocol\n")
+    dependency = make_skill(repository, "qa", "qa-agent", "# Dependency protocol\n")
 
     materialized = eval_runtime.materialize_eval_run(
         fixture_root=fixture,
@@ -375,9 +376,24 @@ def test_materializer_creates_independent_git_home_and_exact_skill_overlay(
     try:
         without = eval_runtime.open_context(materialized, "without_skill")
         without_outer = without.outer_root
+        expected_git_bin = eval_runtime._bundled_git_bin()
+        expected_prefix = [str(expected_git_bin)] if expected_git_bin else []
+        assert without.env["PATH"].split(os.pathsep)[:len(expected_prefix) + 2] == [
+            *expected_prefix, "/usr/bin", "/bin",
+        ]
+        assert without.env["TMPDIR"] == str(without.home / "tmp")
+        assert without.env["GIT_BINARY"] == str(
+            (expected_git_bin / "git") if expected_git_bin else Path("/usr/bin/git")
+        )
+        assert Path(without.env["TMPDIR"]).is_dir()
+        assert "GITHUB_BASE_SHA" not in without.env
         assert (without.git_root / ".git").is_dir()
         assert without.skill_sources == ()
         assert not (without.workspace_root / ".agents/skills").exists()
+        without_config = (without.codex_home / "config.toml").read_text(encoding="utf-8")
+        assert "developer_instructions" not in without_config
+        assert "[shell_environment_policy.set]" in without_config
+        assert "TMPDIR" in without_config
         preflight = eval_runtime.evaluate_context_preflight(
             materialized, without, "without_skill", passing_probe,
         )
@@ -393,6 +409,11 @@ def test_materializer_creates_independent_git_home_and_exact_skill_overlay(
         )
         assert (with_skill.workspace_root / ".agents/skills/bug-analyzer/SKILL.md").is_file()
         assert (with_skill.workspace_root / ".agents/skills/qa-agent/SKILL.md").is_file()
+        with_config = (with_skill.codex_home / "config.toml").read_text(encoding="utf-8")
+        assert "developer_instructions" in with_config
+        assert "`.agents/skills/bug-analyzer`" in with_config
+        assert "# Target protocol" in with_config
+        assert "# Dependency protocol" not in with_config
         assert eval_runtime.evaluate_context_preflight(
             materialized, with_skill, "with_skill", passing_probe,
         ).status == "PASS"
@@ -448,6 +469,12 @@ def test_materializer_builds_identical_declared_git_topology_in_both_lanes(
         assert git(without, "rev-parse", "HEAD") == git(
             without, "rev-parse", "release-head^{commit}",
         )
+        assert without.env["GITHUB_BASE_SHA"] == git(
+            without, "rev-parse", "old-base^{commit}",
+        )
+        assert "GITHUB_BASE_SHA" in (
+            without.codex_home / "config.toml"
+        ).read_text(encoding="utf-8")
         assert git(without, "cat-file", "-t", "v1.0.0") == "commit"
         assert git(without, "cat-file", "-t", "v1.1.0") == "tag"
         assert git(without, "rev-parse", "refs/release-evidence/v1.1.0^{commit}") \

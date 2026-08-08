@@ -1,6 +1,6 @@
 ---
 name: docs-audit
-description: "Internal documentation specialist—not a direct entry point. Invoked by docs-agent to audit formal documentation against current code and test evidence, covering pre-tag release audit and post-tag release verification."
+description: "Audit formal documentation against code, tests, Git objects, version surfaces, and raw manual-page evidence for bounded, pre-tag, or post-tag verification. Use after docs-agent supplies a confirmed audit basis and target version."
 visibility: internal
 ---
 
@@ -18,6 +18,19 @@ Resolve the active installed `docs-audit` skill and load
 reproducible inventory binding immutable base/target objects, changed files,
 change-map matches, affected pages, all release surfaces, normalized versions,
 and each page's pre-stamp state.
+
+Persist that inventory as canonical sorted data with a reproducible identity
+or digest during pre-tag, and make post-tag consume exactly the same bound
+inventory. Any membership, locator, order, or identity drift—or an attempt to
+replace it with a broad multi-version scan—blocks both publication readiness
+and post-tag verification.
+
+Report the inventory binding and integrity status in every audit conclusion,
+including blocked reviews: state what pre-tag would bind, whether post-tag can
+consume that exact identity, and which missing or changed element blocks it.
+When sources use both prefixed and unprefixed version forms, explicitly state
+whether they normalize to one complete identity while preserving prerelease,
+build metadata, and case-sensitive components.
 
 In pre-tag, verify the complete affected set against code/tests, classify
 outdated claims as `stale`, validate the shared frontmatter source, and stamp

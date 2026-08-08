@@ -14,6 +14,68 @@
 - Fixture version/source: canonical manifest `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6` from `agents/designer/test/designer-agent/evals/workspace/eval-2-feature-path-design-handoff`.
 - Fixture SHA-256: `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6`
 - Prompt SHA-256: `e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a2af40534bea6300e7542181039cc4ea7fb5bf91ca59c58d810e2ecc81053275`
+- Skill overlay SHA-256: `3e0603def6ab2fd4b5f3adf5c8eae0d13b31a6e105737c16ebc52acd20d08553`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `53f91ea5792318b5883984b62004cc098b15b6389da8f0c2233bdab77fbf2aa6`
+- Metadata SHA-256: `e6f9e581a9240bd876422c7ab0f1f1ca860fda8f563a8f02f87555323c8c7b30`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_confirmed_feature_path` | PASS | 两份设计文档均将 chat-interface/messages/history/search 作为 feature_path，并引用同路径 PRD/TRD。 |
+| `mirrors_design_outputs` | PASS | 原始交付证据显示产物位于 docs/design/chat-interface/messages/history/search/ui-ux-spec.md 和 visual-system.md。 |
+| `no_synonym_top_level` | PASS | 设计文档明确声明沿用现有功能树、不创建新的顶层导航或同名功能；原始 git 证据仅显示目标路径下两份文档。 |
+| `stops_before_code` | PASS | with_skill 输出仅交付 UI/UX 与视觉设计文档，并将工程实现列为后续交接；无代码、实现步骤、测试命令或补丁。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=88dfd0ae1d9b28a88fccbcb282adb4a38b978bad534ce4989ef89767b92c6e59; snapshot_sha256=daa85968d6947d204c3e6abe6e2cff2b7b97c1f7607c02b49df94d10381bf63d
+- Behavior: 交付了目标 feature_path 下的 UI/UX 规格与视觉系统文档，引用 PRD/TRD，保持设计交接边界。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=d4a86846e7268a59e7aa5d647ff50445535de276980c81571f9808d5dee391d3; snapshot_sha256=238aa1c9492e1702ac1d8300541808c515c2888d80b5c097f775639ee00c456a
+- Behavior: 创建了根目录 HTML/CSS/JS 原型并报告了代码语法检查，未交付要求的设计文档路径。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `designer-agent`
+- Eval: `eval-002-feature-path-design-handoff`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6` from `agents/designer/test/designer-agent/evals/workspace/eval-2-feature-path-design-handoff`.
+- Fixture SHA-256: `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6`
+- Prompt SHA-256: `e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `516410461bd0c09f36f48a72fcff5f04e02a1fd7c3d7bf7c66ee6407ed3b789c`

@@ -1,6 +1,6 @@
 ---
 name: deployment-planner
-description: "Internal DevOps specialist—not a direct entry point. Invoked by devops-agent after pm-agent handoff to plan deployment configuration, service targets, local runtime, Docker, Kubernetes, and deploy assets."
+description: "Plan deployable service units, runtime entry points, local startup, Docker, Kubernetes/Helm, and required deployment assets from confirmed scope. Use after devops-agent routes deployment planning."
 visibility: internal
 ---
 

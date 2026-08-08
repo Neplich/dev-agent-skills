@@ -14,6 +14,72 @@
 - Fixture version/source: canonical manifest `e52dc183368f81bf8278941735b98c8f9da85437b60c6dd9736b019d7bf6c9ca` from `agents/qa/test/bug-analyzer/evals/workspace/eval-1-analyze-test-failure`.
 - Fixture SHA-256: `e52dc183368f81bf8278941735b98c8f9da85437b60c6dd9736b019d7bf6c9ca`
 - Prompt SHA-256: `382c8cd397f8f6526e011c90c1ba36354751b701fabc41ae3a4966bbcf764eb3`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `41901c7a6c233e96234e49bc5924edbee83abf2f5546698275afb442ff6f1d8f`
+- Skill overlay SHA-256: `57b0a87d033b766894f476e95aca86f50c66550e77c4d8ba3a998651bf9efccb`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `35f2f99594df8382cdc242359c30a451a1bdaa89727c7071b5ec00d92699fbf8`
+- Metadata SHA-256: `e96ab79b6862e4b82cb2cc5b58266d1ce1ed35caa4271d16c371f2d1b6443e6f`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | NOT_EXERCISED | 报告记录了场景、500 错误、console、network、trace unavailable、环境上下文及缺失的服务端堆栈等信息；但锁定证据无法证明先收集再分类的过程顺序。 |
+| `assertion_2` | PASS | 报告分别记录了证据状态“疑似/需要补充证据”和独立的中等置信度，并给出“已确认且可复现”及“已确认但环境相关”的后续分类。 |
+| `assertion_3` | PASS | 报告给出高（S2）严重度及其登录阻断理由，并单独给出中等置信度及证据不足的理由。 |
+| `assertion_4` | PASS | 报告持久化为本地 Markdown artifact：docs/qa/login-refresh/bug-valid-login-returns-500.md；未创建 GitHub issue。 |
+| `assertion_5` | NOT_EXERCISED | 报告明确只有一次失败记录，重复复现尚未确认，因此创建 E2E 用例树和脚本的条件尚未满足。 |
+| `assertion_6` | PASS | 报告包含“实现与发布影响”，并保留失败日志和构建环境的 evidence references。 |
+| `non_e2e_report_path` | PASS | 在没有 E2E 用例树或版本化 E2E 执行要求的 fixture 中，报告落在 docs/qa/login-refresh/ 下，文件名无日期，且未使用 docs/qa-reports/。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=382c8cd397f8f6526e011c90c1ba36354751b701fabc41ae3a4966bbcf764eb3; fixture_sha256=e52dc183368f81bf8278941735b98c8f9da85437b60c6dd9736b019d7bf6c9ca; output_sha256=80e0613082b8dd3837017e6a2b7a837447972bbc457d58f5dd21d1e3343c3f1d; snapshot_sha256=ab370a009543815e9e9b731033b797ee691c0ee0f3500cd8931d66544b716a29
+- Behavior: 生成了结构化本地缺陷报告，正确区分证据状态、严重度和置信度，记录证据缺口、影响和追踪引用，并使用正确的 docs/qa 路径。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=382c8cd397f8f6526e011c90c1ba36354751b701fabc41ae3a4966bbcf764eb3; fixture_sha256=e52dc183368f81bf8278941735b98c8f9da85437b60c6dd9736b019d7bf6c9ca; output_sha256=cf44c56b52deafb64b4276bca9d9c75c58f5ad4c35eb81f4d621daa12aabb7d7; snapshot_sha256=cb08e7bf5b04ea3382ea350adec6110c29166bd25e6109cf8e29043730c7aaff
+- Behavior: 生成了根目录 Markdown 报告，包含基本复现、影响和证据，但未遵循 docs/qa fallback 路径，也未明确结构化分类和独立置信度。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: 补采集服务端堆栈、请求关联信息、响应体及截图等缺失证据，并重复执行场景。
+- Next: 若确认可复现，再创建对应的 E2E case 和 spec 脚本。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `bug-analyzer`
+- Eval: `eval-001-analyze-test-failure`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `e52dc183368f81bf8278941735b98c8f9da85437b60c6dd9736b019d7bf6c9ca` from `agents/qa/test/bug-analyzer/evals/workspace/eval-1-analyze-test-failure`.
+- Fixture SHA-256: `e52dc183368f81bf8278941735b98c8f9da85437b60c6dd9736b019d7bf6c9ca`
+- Prompt SHA-256: `382c8cd397f8f6526e011c90c1ba36354751b701fabc41ae3a4966bbcf764eb3`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `b27d2fe5d8edb9052289c39964020afb301396abbc970275eb70967d32504d68`

@@ -11,6 +11,71 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `189adddf12b53efb048e7c5d0b3605c9ce9d7f6b01023de7e418b715817c16f4` from `agents/engineer/test/feature-implementor/evals/workspace/eval-006-small-bug-fix-plan-gate`.
+- Fixture SHA-256: `189adddf12b53efb048e7c5d0b3605c9ce9d7f6b01023de7e418b715817c16f4`
+- Prompt SHA-256: `3ca6a3518bdc8bcc3b18e69a3a095ab08898901d1b98a9feaebe381c01e9564a`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `31ea692709a0817bc32ab74f76490bf0edfdea6902d08e36d2b8cbddeb78aee4`
+- Skill overlay SHA-256: `32c9b06579315c3f3af57ed46ca530329febcbd28b2adfca751e5c7d8b333736`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `eedd6f2658d30fa0d35d3b4c542f62bf462bc6c1940c310dab2dd6d4429a52b7`
+- Metadata SHA-256: `e36d75fac31fda1c2cb2830fe86474e7378a0134e27ed358915e6d77bdb6c000`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `treats_bug_fix_as_spec_backed` | FAIL | with_skill 提到 PRD/TRD，但未说明用户已确认预期和根因可支持安排实现；反而错误地将缺少源码视为无法制定计划的阻塞。 |
+| `writes_bug_fix_implementation_plan` | FAIL | 未要求产出或更新 docs/engineer/notifications/IMPLEMENTATION_PLAN.md，也未明确列出验证命令。 |
+| `records_no_complex_split` | FAIL | 未说明这是可不触发复杂 implementation/validation sub-agent split 的单文件小修复，也未提及仍需实施计划。 |
+| `waits_before_fixing` | PASS | 未声称已修改或验证，并明确表示会在修改前等待用户确认。 |
+| `prepares_e2e_handoff_after_fix` | NOT_EXERCISED | 当前仍处于修改前、等待确认阶段，修复后的 E2E 交接尚不能发生；锁定证据不足以判定该后续步骤。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3ca6a3518bdc8bcc3b18e69a3a095ab08898901d1b98a9feaebe381c01e9564a; fixture_sha256=189adddf12b53efb048e7c5d0b3605c9ce9d7f6b01023de7e418b715817c16f4; output_sha256=c10069ebb5b4f7ae4e926fa96be78ba7e09ba33d25354b865d9240e05823a941; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 保持未修改仓库并等待确认，但错误地以缺少源码阻塞计划，且遗漏实施计划要求和轻量分工说明。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3ca6a3518bdc8bcc3b18e69a3a095ab08898901d1b98a9feaebe381c01e9564a; fixture_sha256=189adddf12b53efb048e7c5d0b3605c9ce9d7f6b01023de7e418b715817c16f4; output_sha256=2c36ac81df56a738b9cf7e6b54b9d13d1a1754351277ecb5a0916ac8899bac3c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 只确认修改范围并等待确认，未提供实施计划、轻量分工判断或后续 E2E 交接。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未按 PRD/TRD 已确认的 spec-backed bug fix 处理。
+- with_skill 未要求 IMPLEMENTATION_PLAN.md 或明确完整验证命令。
+- with_skill 未记录单文件小修复无需复杂 sub-agent split 的判断。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-006-small-bug-fix-plan-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/feature-implementor/evals/workspace/eval-006-small-bug-fix-plan-gate`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `f1664e91f85e64c4e9fe007c1e9e2a615f6259259dc6ff27919727268dd7653c`

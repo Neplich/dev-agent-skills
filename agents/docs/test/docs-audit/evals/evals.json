@@ -761,12 +761,12 @@
         {
           "id": "binds_pre_and_post_tag_inventory",
           "description": "post-tag 复核同一来源集合而非重新猜测",
-          "text": "输出说明 pre-tag 如何固定完整来源集合，以及 post-tag 如何从实际发布对象消费同一绑定；多版本来源不能靠扫描挑选。"
+          "text": "若输入在生成 pre-tag inventory 之前已 blocked，输出须说明当前没有可供 post-tag 消费的绑定，此项记为 NOT_EXERCISED；若已生成 inventory，则须说明 post-tag 消费同一绑定且不得扫描多版本来源重新选择。"
         },
         {
           "id": "makes_inventory_integrity_reproducible",
           "description": "来源集合身份可被独立重算和发现篡改",
-          "text": "输出给出确定性的 inventory integrity 证据，并说明来源集合、定位契约或顺序被改变时如何阻止阶段成功。"
+          "text": "若输入在生成 pre-tag inventory 之前已 blocked，确定性 integrity 证据尚不可产生，此项记为 NOT_EXERCISED；若 inventory 已生成，则须给出可独立重算的完整性证据并阻断来源集合、定位契约或顺序漂移。"
         }
       ],
       "scenario": {

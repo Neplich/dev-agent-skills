@@ -14,6 +14,134 @@
 - Fixture version/source: canonical manifest `6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68` from `agents/engineer/test/feature-implementor/evals/workspace/eval-011-four-level-feature-path-plan-gate`.
 - Fixture SHA-256: `6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68`
 - Prompt SHA-256: `e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `31ea692709a0817bc32ab74f76490bf0edfdea6902d08e36d2b8cbddeb78aee4`
+- Skill overlay SHA-256: `32c9b06579315c3f3af57ed46ca530329febcbd28b2adfca751e5c7d8b333736`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `7d6cafded24992611b95dfc908abe3d7611f7857dadb745152c30089566b43d2`
+- Metadata SHA-256: `3668a072214fe6498899f002deadbb563dcff96e3a3df4bc0dd68e0b0df02057`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_matching_four_level_docs` | PASS | With-skill output and plan reference both required PRD/TRD paths and confirm feature_path chat-interface/messages/history/search. |
+| `writes_four_level_plan_path` | PASS | Raw git status and delivery snapshot show IMPLEMENTATION_PLAN.md at the exact four-level path. |
+| `preserves_feature_metadata` | PASS | Plan frontmatter contains feature_path, parent_feature, feature_level 4, related_prd, and related_trd. |
+| `includes_scope_and_checks` | PASS | Output and plan list relevant source/test files and the deterministic npm test command. |
+| `waits_for_user_confirmation` | PASS | Output explicitly asks the user to confirm the plan before coding. |
+| `does_not_implement_directly` | PASS | With-skill git evidence shows only the untracked plan; source and test files are unchanged, and output says coding will begin after confirmation. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=186df42bf84ac369de84d683f4d68e21164ea6076821b98d98640a493d818bc3; snapshot_sha256=e8b075f3b1bdc587b82fe10dd1e44f86f141d8431f43629416483223393fad77
+- Behavior: Created the correctly located metadata-rich implementation plan, described scope and validation, and waited for confirmation before implementation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=ab129214c67de75f45492108427dabe80d61376277eb1f511d598d64bb87504c; snapshot_sha256=54f407d382be897b4f2cf36420afb6868b4f02b8d9df4224a978b42a0bd3769f
+- Behavior: Implemented source and tests directly, without the required plan or confirmation step.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-011-four-level-feature-path-plan-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68` from `agents/engineer/test/feature-implementor/evals/workspace/eval-011-four-level-feature-path-plan-gate`.
+- Fixture SHA-256: `6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68`
+- Prompt SHA-256: `e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b2870e3d0eb112e2c40f35446120217b8d8a18d55835b9d634a5a2c9c71dcb55`
+- Skill overlay SHA-256: `eb10f50f1bee1354d4cdc15dfff5d3853f5131c3abdfbb65a03b041f90906b17`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `7d6cafded24992611b95dfc908abe3d7611f7857dadb745152c30089566b43d2`
+- Metadata SHA-256: `3668a072214fe6498899f002deadbb563dcff96e3a3df4bc0dd68e0b0df02057`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_matching_four_level_docs` | FAIL | with_skill 输出未引用 PRD/TRD 路径，也未确认二者的 feature_path；仅原始交付快照中的计划 frontmatter 间接包含 related_prd/related_trd。 |
+| `writes_four_level_plan_path` | PASS | 原始 git 状态显示新增 docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md，路径正确。 |
+| `preserves_feature_metadata` | PASS | 交付快照中的 frontmatter 包含 feature_path、parent_feature、feature_level、related_prd 和 related_trd，值均正确。 |
+| `includes_scope_and_checks` | PASS | 计划列出两个消息历史搜索相关的修改文件，并包含 npm 测试命令及独立验证要求。 |
+| `waits_for_user_confirmation` | PASS | 输出明确表示请确认计划后再开始编码；计划确认部分也说明实现被阻塞至用户确认。 |
+| `does_not_implement_directly` | PASS | git 状态仅有 IMPLEMENTATION_PLAN.md 未跟踪文件，输出未声称修改代码、更新测试、运行实现或完成验证。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=e3f64e91e6479199298ee732942ed35373f2074f71f89e66d3d7aa723d015f19; snapshot_sha256=ec183cc685b6ca8bf2f8ed479effe8b0ec44f9795417e842eeba050cb97cb6ba
+- Behavior: 创建了正确路径的实施计划，保留完整元数据，列出范围和验证，并等待用户确认后编码；但输出未明确引用并确认 PRD/TRD 的四级 feature_path。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=8a084ffb9d01b54ba8e2e7ed8cfbb1dc6c2c3549082bb8cad62049abf1e3da22; snapshot_sha256=3dc42f34ffc55e12707611d0bc848532888a74097efb806fa10cadd104d651da
+- Behavior: 直接实现代码并新增测试，未创建实施计划；测试因缺少 package.json 无法执行。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- reads_matching_four_level_docs 未满足：with_skill 输出缺少 PRD/TRD 路径及二者 feature_path 确认。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-011-four-level-feature-path-plan-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68` from `agents/engineer/test/feature-implementor/evals/workspace/eval-011-four-level-feature-path-plan-gate`.
+- Fixture SHA-256: `6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68`
+- Prompt SHA-256: `e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`

@@ -14,6 +14,134 @@
 - Fixture version/source: canonical manifest `681e197eb0a978ca201707a3d3b58dd8ed78255de8e5033ca94ef611ea90807e` from `agents/engineer/test/feature-implementor/evals/workspace/eval-012-implementation-plan-archive-preflight`.
 - Fixture SHA-256: `681e197eb0a978ca201707a3d3b58dd8ed78255de8e5033ca94ef611ea90807e`
 - Prompt SHA-256: `9c7650cd9313e12223d2a68ebc3c37905ca839128cbb6b36d20fc7541af57b74`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `31ea692709a0817bc32ab74f76490bf0edfdea6902d08e36d2b8cbddeb78aee4`
+- Skill overlay SHA-256: `32c9b06579315c3f3af57ed46ca530329febcbd28b2adfca751e5c7d8b333736`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `3628876acf1d52ad92b5faf79f556bf7cb6aca5a88b0bd15975a544759685f18`
+- Metadata SHA-256: `158f5bafaa3ad4ac6ba561642292db5794c29432044a423049518391aa4f0dbd`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `runs_pre_plan_archive_scan` | NOT_EXERCISED | With-skill output does not state that either the existing plan or archive directory was scanned; locked raw evidence cannot prove this hidden process. |
+| `blocks_direct_overwrite` | PASS | Output explicitly says the existing Implemented plan cannot be directly overwritten; git evidence shows no mutation. |
+| `offers_implemented_handling_options` | PASS | Output offers archiving then creating a new plan, or archiving as Superseded with a reason then creating a new plan, without offering status-only updating. |
+| `keeps_active_entry_fixed` | FAIL | Output does not state that the active entry remains docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md or that archives belong under implementation-plans/archive/. |
+| `does_not_implement_directly` | PASS | Output makes no claim of code changes, implementation, or verification; git evidence is clean. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9c7650cd9313e12223d2a68ebc3c37905ca839128cbb6b36d20fc7541af57b74; fixture_sha256=681e197eb0a978ca201707a3d3b58dd8ed78255de8e5033ca94ef611ea90807e; output_sha256=b54c6bd1198f197e25f581b32a4af4a8852ddfd54de2f0cc36d2e3bed35c8db7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly paused before mutation and requested a handling choice, but omitted the required scan and active-entry/archive-location explanation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9c7650cd9313e12223d2a68ebc3c37905ca839128cbb6b36d20fc7541af57b74; fixture_sha256=681e197eb0a978ca201707a3d3b58dd8ed78255de8e5033ca94ef611ea90807e; output_sha256=690c1228ccc66f76fc7607438e7aeb50fcbdc1f5879156dd9823d2cf0139007d; snapshot_sha256=8dd447564d88629d75c77eefbfedbfed8cd3dc7a253a527577ba2fc887e58c63
+- Behavior: Claimed completion, used the wrong archive path, and directly modified the active plan.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with-skill output omits the required fixed active-entry path and archive directory location.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-012-implementation-plan-archive-preflight`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `681e197eb0a978ca201707a3d3b58dd8ed78255de8e5033ca94ef611ea90807e` from `agents/engineer/test/feature-implementor/evals/workspace/eval-012-implementation-plan-archive-preflight`.
+- Fixture SHA-256: `681e197eb0a978ca201707a3d3b58dd8ed78255de8e5033ca94ef611ea90807e`
+- Prompt SHA-256: `9c7650cd9313e12223d2a68ebc3c37905ca839128cbb6b36d20fc7541af57b74`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b2870e3d0eb112e2c40f35446120217b8d8a18d55835b9d634a5a2c9c71dcb55`
+- Skill overlay SHA-256: `eb10f50f1bee1354d4cdc15dfff5d3853f5131c3abdfbb65a03b041f90906b17`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `3628876acf1d52ad92b5faf79f556bf7cb6aca5a88b0bd15975a544759685f18`
+- Metadata SHA-256: `158f5bafaa3ad4ac6ba561642292db5794c29432044a423049518391aa4f0dbd`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `runs_pre_plan_archive_scan` | FAIL | with_skill 输出说明做了实施前检查，并提到当前计划及“归档目录目前为空”，但未明确说明扫描了精确路径 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md` 和 `docs/engineer/payment-refund/implementation-plans/archive/`。 |
+| `blocks_direct_overwrite` | PASS | with_skill 输出在用户选择处理方式前明确表示不会写出新计划，并且 raw git evidence 显示工作区无修改。 |
+| `offers_implemented_handling_options` | PASS | with_skill 提供了归档已完成计划后新建，以及以 `Superseded` 并记录原因后归档再新建两种选项，未提供继续更新当前计划为 Implemented 的选项。 |
+| `keeps_active_entry_fixed` | FAIL | with_skill 未说明活跃入口固定为 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`，也未明确说明归档只能放入 `implementation-plans/archive/`。 |
+| `does_not_implement_directly` | PASS | with_skill 表示确认后才会写计划，并等待计划确认后再编码；raw git evidence 显示未发生文件、索引或提交变更。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9c7650cd9313e12223d2a68ebc3c37905ca839128cbb6b36d20fc7541af57b74; fixture_sha256=681e197eb0a978ca201707a3d3b58dd8ed78255de8e5033ca94ef611ea90807e; output_sha256=d581aaea937a0cc4f7e0154053a7f57c0f30af9e22d39a63f2eddbaf0b7e5aba; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别出当前计划已完成且归档目录为空，暂停写入并请求两种归档处理方式确认；未产生任何工作区变更，但未明确满足精确扫描路径和固定入口要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9c7650cd9313e12223d2a68ebc3c37905ca839128cbb6b36d20fc7541af57b74; fixture_sha256=681e197eb0a978ca201707a3d3b58dd8ed78255de8e5033ca94ef611ea90807e; output_sha256=1004379e66eb6778451a0cb9558a70a90d9e23d1d657040ba5b54ada5ea1dfce; snapshot_sha256=a51f9b89d969685ebec5c32e47d10b1e84e5a328d96a96a2ed815d70c0b0c7a2
+- Behavior: 直接修改并覆盖活跃实施计划，归档到错误的 `payment-refund/archive/` 路径；未请求处理方式确认。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未明确说明扫描两个精确归档前置路径。
+- with_skill 未明确说明活跃入口固定且归档仅限 `implementation-plans/archive/`。
+- Next: 明确列出并说明已扫描 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md` 与 `docs/engineer/payment-refund/implementation-plans/archive/`。
+- Next: 明确声明活跃入口保持不变，归档文件仅放入 `docs/engineer/payment-refund/implementation-plans/archive/`。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-012-implementation-plan-archive-preflight`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `681e197eb0a978ca201707a3d3b58dd8ed78255de8e5033ca94ef611ea90807e` from `agents/engineer/test/feature-implementor/evals/workspace/eval-012-implementation-plan-archive-preflight`.
+- Fixture SHA-256: `681e197eb0a978ca201707a3d3b58dd8ed78255de8e5033ca94ef611ea90807e`
+- Prompt SHA-256: `9c7650cd9313e12223d2a68ebc3c37905ca839128cbb6b36d20fc7541af57b74`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`

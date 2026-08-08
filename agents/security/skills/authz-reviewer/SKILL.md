@@ -1,6 +1,6 @@
 ---
 name: authz-reviewer
-description: "Internal security specialist—not a direct entry point. Invoked by security-agent after pm-agent handoff to review authentication, authorization, permission models, and access-control implementation."
+description: "Review authentication, authorization, RBAC, sessions, JWTs, permission models, and access-control implementation against confirmed security scope. Use after security-agent routes auth/authz review."
 visibility: internal
 ---
 

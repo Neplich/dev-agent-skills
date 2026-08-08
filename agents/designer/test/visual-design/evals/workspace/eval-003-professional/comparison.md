@@ -14,6 +14,66 @@
 - Fixture version/source: canonical manifest `567d74ee90d360991ab613f98d8049d53202d95a2bc7caeb2b7d46b23846a5f0` from `agents/designer/test/visual-design/evals/workspace/eval-003-professional`.
 - Fixture SHA-256: `567d74ee90d360991ab613f98d8049d53202d95a2bc7caeb2b7d46b23846a5f0`
 - Prompt SHA-256: `fe1184ee76579ac0041ea69b2abac6b0897add864da628d5ff0192673c2c0220`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `dbc89b16b7a1017124c8d8209732a5f2e8e6bc7ea670cc1a4805b47499b0f833`
+- Skill overlay SHA-256: `4bf64f10a062be91ed0a9f3820720d94fb7479e7a10dd1f8fa4cdcff426a30db`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `730e4eb8de3e03b346a013a3d5577a175072336c34214d71e41ce4685c2c2ee1`
+- Metadata SHA-256: `0f7ee2304f9494f523bf0e9ffeed979b5af06eb7930b9cda8b5ec89883762703`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 文档明确规定普通文本至少 4.5:1、大文本与关键 UI 边界至少 3:1，并通过数据层级、扫描顺序、密度、表格和图表规则满足企业场景的清晰层级要求。 |
+| `assertion_2` | PASS | with_skill 仅产生 docs/design/enterprise-analytics/visual-system.md；git 状态显示仅有该文档未跟踪，git_diff 为空，未见组件代码、样式文件改动或工程命令。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fe1184ee76579ac0041ea69b2abac6b0897add864da628d5ff0192673c2c0220; fixture_sha256=567d74ee90d360991ab613f98d8049d53202d95a2bc7caeb2b7d46b23846a5f0; output_sha256=e249c20f085ee5a10a3fdb359033d327e09d2fc4e0abaa2b116c3cec8aacbc1d; snapshot_sha256=3e644c83a117ff9f302e5b32a5a2a071b1e0a710fe2fde7df3e584519c09b355
+- Behavior: 生成更完整的视觉系统规范文档，明确 WCAG 对比度、层级和非颜色表达要求；仅新增设计文档。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fe1184ee76579ac0041ea69b2abac6b0897add864da628d5ff0192673c2c0220; fixture_sha256=567d74ee90d360991ab613f98d8049d53202d95a2bc7caeb2b7d46b23846a5f0; output_sha256=907d084a4ea8460290eafe3f35c61e2d6265bcdbb0c5d2915ef65e2226657df8; snapshot_sha256=46e2456e961599593df22eaddfa1798d9d3e42c019ac761bbdf2be2c4242fea1
+- Behavior: 生成视觉系统规范文档，覆盖可访问性与企业分析场景，并仅新增设计文档。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `visual-design`
+- Eval: `eval-003-professional`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `567d74ee90d360991ab613f98d8049d53202d95a2bc7caeb2b7d46b23846a5f0` from `agents/designer/test/visual-design/evals/workspace/eval-003-professional`.
+- Fixture SHA-256: `567d74ee90d360991ab613f98d8049d53202d95a2bc7caeb2b7d46b23846a5f0`
+- Prompt SHA-256: `fe1184ee76579ac0041ea69b2abac6b0897add864da628d5ff0192673c2c0220`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `da7e677bc92a70c0b2d244a02d70cdeaf6c4dea3529e1c7fd6f633e617949291`

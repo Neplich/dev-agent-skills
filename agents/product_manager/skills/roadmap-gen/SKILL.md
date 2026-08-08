@@ -1,6 +1,6 @@
 ---
 name: roadmap-gen
-description: "Internal PM specialist—not a direct entry point. Invoked by pm-agent after entry classification to create or update roadmap docs from GitHub milestones, issues, PRs, and release context."
+description: "Create or update a roadmap from dated GitHub milestone, issue, PR, and release evidence, using real dates when available and semantic phases otherwise. Use after pm-agent routes roadmap work."
 visibility: internal
 ---
 

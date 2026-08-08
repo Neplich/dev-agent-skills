@@ -72,7 +72,7 @@
         {
           "id": "produces_zero_diff",
           "description": "重复执行零差异",
-          "text": "逐项比较全部 42 项站点资产后，不重写任何目标文件或 manifest；报告工作区内容 zero-diff，并保留既有 createdAt。"
+          "text": "逐项比较全部 42 项站点资产后，不重写任何目标文件或 manifest；工作区 zero-diff 和原 manifest 字节未变即可证明既有 createdAt 被保留，不要求最终文字再次抄录时间戳。"
         },
         {
           "id": "reports_skipped_identical",

@@ -14,6 +14,134 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/feature-implementor/evals/workspace/eval-005-existing-behavior-change-needs-pm`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `31ea692709a0817bc32ab74f76490bf0edfdea6902d08e36d2b8cbddeb78aee4`
+- Skill overlay SHA-256: `32c9b06579315c3f3af57ed46ca530329febcbd28b2adfca751e5c7d8b333736`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `a4e07ef6b983fa7473b530066460795acade377b6663bfa81c7266e9bd35ec21`
+- Metadata SHA-256: `4d7d33b92b764b2a122613cfa3d9e97d80ead9fb721df6a2df123d3fcb35534c`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `checks_approved_behavior` | PASS | With_skill 输出明确指出该变更会改变 active 的产品语义，并非仅按小代码改动处理。 |
+| `stops_before_implementation_plan` | PASS | With_skill 未编写或更新实施计划，并明确表示当前不应进入实现阶段。 |
+| `hands_off_to_pm_existing_update` | FAIL | 输出未要求先走 pm-agent:idea-to-spec 的 existing-project-update 路径，也未要求更新 PRD/产品决策记录后同步 TRD。 |
+| `blocks_e2e_expected_behavior_change` | FAIL | 输出仅笼统表示不应进入实现阶段，未明确说明在 PRD/产品决策更新、TRD 同步和实施计划确认前不得将该行为写入新的 E2E TC 或验收预期。 |
+| `does_not_implement_directly` | PASS | With_skill 明确声明本轮未修改任何文件，未声称已修改代码、测试或完成实现。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=b3920b0c9323078a33d1f9ddffa23990b39082d82ddd5040785f55f86ae78b89; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别为现有项目行为更新并停止实施，但遗漏了 PM existing-project-update、PRD/TRD 同步及 E2E 预期阻断要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=f4c9d0b63c21ed8119c78a96ff6b079501ccd116c1007cce86ad6fe907e40c60; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别到工作区为空并拒绝直接修改，但未完成针对产品语义变更的规范流程判断。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- 未要求走 pm-agent:idea-to-spec 的 existing-project-update 路径并更新 PRD/产品决策记录后同步 TRD。
+- 未明确阻断在流程确认前新增 E2E TC 或验收预期。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-005-existing-behavior-change-needs-pm`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/feature-implementor/evals/workspace/eval-005-existing-behavior-change-needs-pm`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b2870e3d0eb112e2c40f35446120217b8d8a18d55835b9d634a5a2c9c71dcb55`
+- Skill overlay SHA-256: `eb10f50f1bee1354d4cdc15dfff5d3853f5131c3abdfbb65a03b041f90906b17`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `a4e07ef6b983fa7473b530066460795acade377b6663bfa81c7266e9bd35ec21`
+- Metadata SHA-256: `4d7d33b92b764b2a122613cfa3d9e97d80ead9fb721df6a2df123d3fcb35534c`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `checks_approved_behavior` | PASS | with_skill 明确将需求判断为“既有功能行为变更”，并要求核查 active、archived 及相关契约影响，而非仅按过滤条件小改动处理。 |
+| `stops_before_implementation_plan` | PASS | with_skill 未编写或更新 IMPLEMENTATION_PLAN.md，并明确表示在此之前不会修改文件。 |
+| `hands_off_to_pm_existing_update` | FAIL | with_skill 未要求走 pm-agent:idea-to-spec 的 existing-project-update 路径；仅笼统建议更新 PRD/TRD 或记录行为决策。 |
+| `blocks_e2e_expected_behavior_change` | FAIL | with_skill 未明确说明在 PRD/产品决策更新、TRD 同步和实施计划确认前，不能将 archived 进入 active 写入新的 E2E TC 或验收预期。 |
+| `does_not_implement_directly` | PASS | with_skill 明确表示当前只读影响分析，并称“在此之前不会修改文件”。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=2c8391a839b6fc7b110d0e89c8d08eefb904318a6ddfc9b7df9c43c95578eedd; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为既有行为变更并停止直接修改，但未完成指定的 PM existing-project-update 交接及 E2E 预期阻断要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=3017fbfaae25e0511d10a8e29c18dcd95b235267949ca9271abed55fe7f79feb; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 将问题主要视为缺少源码后的技术定位/实现准备，未识别并明确阻断既有批准行为变更。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未要求 pm-agent:idea-to-spec 的 existing-project-update 路径。
+- with_skill 未明确阻断在 PRD/TRD/实施计划确认前新增 archived 进入 active 的 E2E TC 或验收预期。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-005-existing-behavior-change-needs-pm`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/feature-implementor/evals/workspace/eval-005-existing-behavior-change-needs-pm`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`

@@ -14,6 +14,130 @@
 - Fixture version/source: canonical manifest `ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a` from `agents/security/test/authz-reviewer/evals/workspace/eval-002-session`.
 - Fixture SHA-256: `ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a`
 - Prompt SHA-256: `2d47191ee1ff1f15f350d3cf5e7d5d57f991913e4e2049f23f29264b335bfc56`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `3e242b2dbb704cb1d29797b016c5227b3a75736fa3d4f0739192f0fdee71f01f`
+- Skill overlay SHA-256: `3de2c418f3c14f33d91cbef534093000d696ba99512436f5551d86e45d872cc9`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `86d9727a0807549b3bf3936da079aa7238a2b14b16eed4306c9bda4eb6d7be43`
+- Metadata SHA-256: `f26166d912f73c7f118a1561bee3e62973123b274975fb4a17a869fba31f82a0`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `authorization_model` | PASS | With-skill report identifies anonymous and authenticated-user roles, protected resources, session validity boundaries, and login, parsing, expiration, logout, and Cookie paths. |
+| `access_control_findings` | PASS | With-skill report correctly identifies predictable/enumerable session IDs, missing 30-minute inactivity expiration, ineffective server-side logout revocation, and unverified secure-Cookie transport. |
+| `evidence_and_impact` | PASS | Each finding includes file/line evidence, severity, and concrete impacts including session impersonation, prolonged unauthorized access, and credential leakage risk. |
+| `remediation` | PASS | With-skill report provides actionable fixes and regression tests covering randomness, expiry boundaries, logout rejection, concurrency/idempotence, rotation, Cookie attributes, and endpoint integration. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2d47191ee1ff1f15f350d3cf5e7d5d57f991913e4e2049f23f29264b335bfc56; fixture_sha256=ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a; output_sha256=01c084989547b80982f0ce54a4b91ab6d850f9982d53a7eec0fd3813deda7b1f; snapshot_sha256=40d067eb7e4c23b263dce9d4780c9c971d127b739d7ce2296d4d8e21346bfc25
+- Behavior: Produced a complete structured authorization review covering roles, resources, boundaries, lifecycle paths, findings, evidence, impacts, remediation, and regression validation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2d47191ee1ff1f15f350d3cf5e7d5d57f991913e4e2049f23f29264b335bfc56; fixture_sha256=ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a; output_sha256=7688f4f420598f77227b0f9d19059e22d74e70d614ad5accc2d2c7522b0d080b; snapshot_sha256=4785a5385c2ed8f39ec1db80a4ede322f10d674a9640156fabcfe8f714893638
+- Behavior: Produced a substantively correct review with findings, evidence, impacts, remediation, and validation, but omitted an explicit role/resource/permission-boundary model in the shown output.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `authz-reviewer`
+- Eval: `eval-002-session`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a` from `agents/security/test/authz-reviewer/evals/workspace/eval-002-session`.
+- Fixture SHA-256: `ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a`
+- Prompt SHA-256: `2d47191ee1ff1f15f350d3cf5e7d5d57f991913e4e2049f23f29264b335bfc56`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0fb3bcf4b507247f482a2a4dba9d951bb407cd66a7a7b7801270374734e4b29d`
+- Skill overlay SHA-256: `a5058c0e55b69c8360ce0ae93f04438f76cd73a75566cfde030e7cc6ed7b7266`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `86d9727a0807549b3bf3936da079aa7238a2b14b16eed4306c9bda4eb6d7be43`
+- Metadata SHA-256: `f26166d912f73c7f118a1561bee3e62973123b274975fb4a17a869fba31f82a0`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `authorization_model` | PASS | The with_skill report identifies anonymous and authenticated-user roles, protected resources (user profiles/account settings), session creation/parsing/logout boundaries, and the login-to-session-to-protected-resource authorization path. |
+| `access_control_findings` | PASS | It identifies predictable/enumerable session IDs, missing 30-minute inactivity expiry, and logout failing to revoke the server-side session, with precise source locations. |
+| `evidence_and_impact` | PASS | Each finding includes code evidence, severity, affected resources, and concrete consequences including session impersonation, prolonged stolen-session use, and post-logout access. |
+| `remediation` | PASS | The report provides executable fixes and regression checks for random IDs, expiry boundaries/activity refresh, server-side logout revocation, secure cookies, endpoint authorization, idempotency, and concurrency. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2d47191ee1ff1f15f350d3cf5e7d5d57f991913e4e2049f23f29264b335bfc56; fixture_sha256=ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a; output_sha256=4d984509a1b172e768c244acfe399a28596e7479214ae36004abb02bf2ff3ddb; snapshot_sha256=ec7b1c8b0dcf453fd2040ee02fe4da81cd42e7931ea7159148f89093635cc38d
+- Behavior: Delivered a structured session security review with role/permission modeling, authorization flow, localized findings, impacts, remediation, regression tests, and explicit evidence gaps.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2d47191ee1ff1f15f350d3cf5e7d5d57f991913e4e2049f23f29264b335bfc56; fixture_sha256=ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a; output_sha256=01f77a4a16c04540f32cd9235099d14039cb15bac73fc5112177369dc8342386; snapshot_sha256=5c2389a77e2ba1ffe617b722c7cd49edda9d00bfc1486b13600b4de73df6dbe9
+- Behavior: Correctly found the three core session defects and gave evidence and basic remediation, but provided less structured authorization-path analysis and fewer detailed verification requirements.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `authz-reviewer`
+- Eval: `eval-002-session`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a` from `agents/security/test/authz-reviewer/evals/workspace/eval-002-session`.
+- Fixture SHA-256: `ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a`
+- Prompt SHA-256: `2d47191ee1ff1f15f350d3cf5e7d5d57f991913e4e2049f23f29264b335bfc56`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `d2e4aec7daf8a1a3d4dd9129eb3c1a3dff6fda1cedda3583e17db51f3c77b01c`

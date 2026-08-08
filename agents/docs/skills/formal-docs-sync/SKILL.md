@@ -1,6 +1,6 @@
 ---
 name: formal-docs-sync
-description: "Internal documentation specialist—not a direct entry point. Invoked by docs-agent to synchronize current-state API, database, design, ops, and product docs from confirmed feature, deployment, release, or bounded backfill evidence."
+description: "Synchronize or plan bounded backfill of current-state API, database, design, ops, and product docs from confirmed feature, deployment, or release evidence. Use after docs-agent routes a complete sync basis."
 visibility: internal
 ---
 
@@ -36,6 +36,26 @@ Every completed write batch must run the host's real checks, report their raw
 result, hand the affected set to audit, and perform the read-only deployment
 completeness recheck. A discovered deployment gap returns to `pm-agent` without
 being repaired here.
+
+When one batch is confirmed and another is still proposed, report them
+separately. The unconfirmed candidate must include its complete ancestor/leaf
+tree, code and evidence boundaries, owner, exact change-map delta, exclusions,
+and confirmation status even though it remains zero-write. In the final result,
+name every host command actually run with its cwd and exit status; a generic
+test-count or “checks passed” summary is not equivalent evidence.
+Use catalog ownership and evidence paths exactly; do not substitute a guessed
+team. End every completed write batch with an explicit audit handoff containing
+all six fields: `status`, `completed_batch`, `affected_docs_and_map`,
+`supporting_evidence`, `exclusions`, and `target_release_version`. When the
+release version is not maintainer-confirmed, set `status: blocked` and
+`target_release_version: missing`; do not replace either field with prose about
+the next owner.
+When the host defines `test:docs`, `build:public`, and `build:internal`, a
+completed write batch must run and report all three commands with cwd and exit
+status. Unit tests, navigation preparation, or a subset of those scripts cannot
+substitute for the two visibility builds. Before returning, verify that all six
+audit-handoff fields are present and complete rather than only naming
+`docs-audit` as the next owner.
 
 After each check, remove its transient work directories, generated previews,
 logs, caches, and diagnostics before taking the final workspace snapshot. Keep

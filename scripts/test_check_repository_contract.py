@@ -218,6 +218,28 @@ def validate_changed_plan(
     return errors
 
 
+def test_skill_description_must_front_load_user_trigger(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    skill_dir = root / "agents" / "engineer" / "skills" / "debugger"
+    skill_dir.mkdir(parents=True)
+    (skill_dir / "SKILL.md").write_text(
+        "---\n"
+        "name: debugger\n"
+        'description: "Internal specialist invoked after routing to diagnose failures."\n'
+        "visibility: internal\n"
+        "---\n",
+        encoding="utf-8",
+    )
+
+    errors: list[contract.ContractError] = []
+    contract.validate_skill(root, skill_dir, errors)
+
+    assert any(
+        "front-load the user goal and trigger" in error.message
+        for error in errors
+    )
+
+
 def test_active_plan_status_is_unconditionally_required(tmp_path: Path) -> None:
     root = initialize_repo(tmp_path, base_status=None)
 

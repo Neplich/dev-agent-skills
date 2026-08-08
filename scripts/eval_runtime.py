@@ -746,12 +746,14 @@ class IsolatedContext:
 
     @property
     def env(self) -> dict[str, str]:
-        return {
+        environment = {
             **os.environ, "HOME": str(self.home), "CODEX_HOME": str(self.codex_home),
+            **_shell_environment(self.home, self.git_topology),
             "NPM_CONFIG_UPDATE_NOTIFIER": "false", "NPM_CONFIG_OFFLINE": "true",
             "NPM_CONFIG_AUDIT": "false", "NPM_CONFIG_FUND": "false",
             "NPM_CONFIG_SCRIPT_SHELL": "/bin/sh",
         }
+        return environment
 
     def cleanup(self) -> None:
         remove_path(self.outer_root)
@@ -914,6 +916,32 @@ def _install_runtime_dependencies(
             "sites": sites}
 
 
+def _bundled_git_bin() -> Path | None:
+    for entry in os.environ.get("PATH", "").split(os.pathsep):
+        candidate = Path(entry) / "git"
+        if candidate.is_file() and candidate.parent.name == "fallback" \
+                and candidate.parent.parent.name == "bin" \
+                and candidate.parent.parent.parent.name == "dependencies":
+            return candidate.parent
+    return None
+
+
+def _shell_environment(home: Path, git_topology: dict[str, Any]) -> dict[str, str]:
+    bundled_git = _bundled_git_bin()
+    preferred = [
+        str(path) for path in (bundled_git, Path("/usr/bin"), Path("/bin"))
+        if path is not None
+    ]
+    environment = {
+        "PATH": os.pathsep.join((*preferred, os.environ.get("PATH", ""))),
+        "TMPDIR": str(home / "tmp"),
+        "GIT_BINARY": str((bundled_git / "git") if bundled_git else Path("/usr/bin/git")),
+    }
+    if git_topology:
+        environment["GITHUB_BASE_SHA"] = git_topology["base_ref"]["commit"]
+    return environment
+
+
 def _runtime_read_roots() -> tuple[Path, ...]:
     roots: set[Path] = set()
     xcode_select = shutil.which("xcode-select")
@@ -933,6 +961,9 @@ def _runtime_read_roots() -> tuple[Path, ...]:
             ):
                 roots.add(parent)
                 break
+    bundled_git = _bundled_git_bin()
+    if bundled_git is not None:
+        roots.add(bundled_git.parents[1])
     broad = {Path("/"), Path("/usr"), Path("/opt"), Path("/System"), Path("/Library"), Path.home()}
     return tuple(sorted(path for path in roots if path.is_dir() and path not in broad))
 
@@ -940,6 +971,8 @@ def _runtime_read_roots() -> tuple[Path, ...]:
 def _profile_text(
     profile: str, writable: bool, home: Path, codex_home: Path,
     dependency_sites: tuple[str, ...] = (),
+    developer_instructions: str | None = None,
+    shell_environment: dict[str, str] | None = None,
 ) -> str:
     access = "write" if writable else "read"
     protected = f'\n".git" = "{access}"\n".agents" = "read"'
@@ -951,7 +984,19 @@ def _profile_text(
         f'\n{json.dumps("node_modules" if site == "." else f"{site}/node_modules")} = "read"'
         for site in dependency_sites
     )
-    return f'''default_permissions = "{profile}"
+    selected_skill = (
+        "\ndeveloper_instructions = " + json.dumps(
+            developer_instructions, ensure_ascii=False,
+        )
+        if developer_instructions is not None else ""
+    )
+    environment_policy = ""
+    if shell_environment:
+        assignments = "\n".join(
+            f"{key} = {json.dumps(value)}" for key, value in shell_environment.items()
+        )
+        environment_policy = f"\n\n[shell_environment_policy.set]\n{assignments}"
+    return f'''default_permissions = "{profile}"{selected_skill}{environment_policy}
 
 [permissions.{profile}.filesystem]
 ":root" = "deny"
@@ -965,6 +1010,17 @@ def _profile_text(
 [permissions.{profile}.network]
 enabled = false
 '''
+
+
+def _target_skill_instructions(target_skill_root: Path) -> str:
+    return (
+        "The following target skill is selected for this task. Follow its instructions "
+        "as the authoritative workflow; installed dependency skills are supporting "
+        "references and must not replace this target. Its installed root is "
+        f"`.agents/skills/{target_skill_root.name}`; resolve target-relative references "
+        "there and read target-owned internal files when instructed.\n\n"
+        + (target_skill_root / "SKILL.md").read_text(encoding="utf-8")
+    )
 
 
 def _new_context(
@@ -983,6 +1039,7 @@ def _new_context(
     home = outer_root / "home"
     codex_home = outer_root / "codex-home"
     home.mkdir(mode=0o700)
+    (home / "tmp").mkdir()
     _copy_auth(codex_home, auth_source)
     if canonical_root is None:
         workspace.mkdir()
@@ -995,8 +1052,13 @@ def _new_context(
     dependency_evidence = _install_runtime_dependencies(workspace, dependency_staging)
     profile = "eval-judge" if mode == "judge" else "eval-candidate"
     dependency_sites = tuple(relative for relative, _source, _hash in dependency_staging)
+    developer_instructions = None
+    if skill_sources:
+        developer_instructions = _target_skill_instructions(skill_sources[0][0])
     profile_text = _profile_text(
         profile, mode != "judge", home, codex_home, dependency_sites,
+        developer_instructions,
+        _shell_environment(home, topology_evidence),
     )
     (codex_home / "config.toml").write_text(profile_text, encoding="utf-8")
     manifest = fixture_manifest(workspace) if canonical_root else {}
@@ -1216,6 +1278,9 @@ def evaluate_context_preflight(
     ) if candidate else ()
     expected_profile = _profile_text(
         profile, candidate, context.home, context.codex_home, dependency_sites,
+        _target_skill_instructions(materialized.skill_source_paths[0])
+        if mode == "with_skill" else None,
+        _shell_environment(context.home, context.git_topology),
     )
     git_ref = (
         materialized.git_topology["target_ref"]

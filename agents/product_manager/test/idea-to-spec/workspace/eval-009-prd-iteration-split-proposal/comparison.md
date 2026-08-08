@@ -14,6 +14,138 @@
 - Fixture version/source: canonical manifest `cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997` from `agents/product_manager/test/idea-to-spec/workspace/eval-009-prd-iteration-split-proposal`.
 - Fixture SHA-256: `cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997`
 - Prompt SHA-256: `ae03344941a8a5473fce84f07af68d8bb42c4c4dd8dbaf557b909886adf20c98`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `7638558b96730ed626879bcffd4a606d3ed390013a41acf29ade725d210e3f4e`
+- Skill overlay SHA-256: `12aaaef0d075d133bbbdc681f598fd09807b211a4377dcfbc6cbbfcaa30909e0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `8ef466ccd13d937453c02f105817ced47839fb573011ea1ee300be62facb6b71`
+- Metadata SHA-256: `ae189abbce9ec160b22d49ab4f79a0a7a8f521d1a6e2046930669caf75d7dab0`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `applies_requested_change` | PASS | With-skill evidence shows PRD.md modified from polling to event-driven delivery, with updated requirements, flow, reliability details, and acceptance criteria. |
+| `detects_l2b_signals` | FAIL | The output only says the PRD triggered split evaluation; it does not explicitly identify any qualifying L2b signal or its threshold, such as three independent domains, at least 15 US/FR rows, or over 500 lines. |
+| `presents_split_proposal` | FAIL | It suggests the tree notification-center/{delivery,subscriptions,channels}, but omits the required chapter migration mapping and downstream mirror impact checklist for docs/engineer, docs/design, docs/qa/e2e, docs/devops, and docs/security. |
+| `waits_for_confirmation` | FAIL | The output says no split or document move occurred, but does not clearly state that execution is waiting for user confirmation before proceeding. |
+| `rejection_keeps_current_flow` | NOT_EXERCISED | No user rejection occurred, and the locked evidence does not exercise the rejection branch. |
+| `body_consolidation` | PASS | The updated PRD describes event-driven delivery as the current strategy; references to polling are only negative constraints or latency wording, not retained polling behavior marked as deprecated. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ae03344941a8a5473fce84f07af68d8bb42c4c4dd8dbaf557b909886adf20c98; fixture_sha256=cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997; output_sha256=1072fc64491251675fa2b878514bb45044ad25f9a8fb007b8f5d09e045f039fd; snapshot_sha256=259637ce34c166fa40f7b97561d85d1ddde7b55b8bb34e2dd2711b0f7dd08467
+- Behavior: Updated the PRD comprehensively for event-driven delivery and mentioned a future split evaluation, but omitted the complete split proposal and explicit confirmation gate.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ae03344941a8a5473fce84f07af68d8bb42c4c4dd8dbaf557b909886adf20c98; fixture_sha256=cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997; output_sha256=3bd969f49b80a3fce06e426716526c2d7bad9f5a359479d75d6535cddb8303db; snapshot_sha256=aaf27abad5423bbff5f8d7ac55614456fb08772648ce3250722ea7695adfe512
+- Behavior: Updated the PRD to event-driven delivery but did not provide split evaluation or confirmation workflow details.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with-skill output did not explicitly identify the qualifying L2b signal.
+- The split proposal lacked chapter migration mapping and downstream mirror impact coverage.
+- The confirmation gate was not explicitly stated.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `idea-to-spec`
+- Eval: `eval-009-prd-iteration-split-proposal`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997` from `agents/product_manager/test/idea-to-spec/workspace/eval-009-prd-iteration-split-proposal`.
+- Fixture SHA-256: `cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997`
+- Prompt SHA-256: `ae03344941a8a5473fce84f07af68d8bb42c4c4dd8dbaf557b909886adf20c98`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a2e446c3d8d5f02d34cd5e3954e55500a6eaf296bcb868f9d3dbe27d39c64b91`
+- Skill overlay SHA-256: `14328c4af5595e19e21331fb22dcc6dda56844ee6c4f2ee6382997e7ffe0af37`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `8ef466ccd13d937453c02f105817ced47839fb573011ea1ee300be62facb6b71`
+- Metadata SHA-256: `ae189abbce9ec160b22d49ab4f79a0a7a8f521d1a6e2046930669caf75d7dab0`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `applies_requested_change` | PASS | with_skill 的 PRD diff 将 FR-02、Delivery Strategy 和验收标准从轮询改为事件驱动，并实际修改了 PRD 文件。 |
+| `detects_l2b_signals` | FAIL | fixture 中有 3 个独立领域且 US/FR 表格共 18 行，但 with_skill 输出未明确识别任何 L2b 拆分信号。 |
+| `presents_split_proposal` | FAIL | with_skill 未提供子 feature_path 树、章节迁移映射或 docs/engineer、docs/design、docs/qa/e2e、docs/devops、docs/security 的下游镜像影响清单。 |
+| `waits_for_confirmation` | FAIL | with_skill 未提出等待用户确认的拆分提案，也未说明确认前不拆分、不 git mv、不新建子 feature_path 文档。 |
+| `rejection_keeps_current_flow` | FAIL | with_skill 未说明用户拒绝拆分提案时保持当前 feature_path 并按现流程继续版本 bump 与校验。 |
+| `body_consolidation` | PASS | 更新后的 PRD 正文将轮询策略直接改写为事件驱动方案；未以已废弃或不属于目标架构等状态保留轮询描述。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ae03344941a8a5473fce84f07af68d8bb42c4c4dd8dbaf557b909886adf20c98; fixture_sha256=cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997; output_sha256=15baccf8fe5c13eb2ed77134bffebc92d9990d6a7e3bd86ce9a1c593b663b35e; snapshot_sha256=1d7363af26095a4a9bd1bbbf709971ce7dc16152299a0fa1b70b3938292ccc41
+- Behavior: 实际更新了 PRD 的事件驱动策略并补充迁移、幂等、重试和恢复要求，但未识别或执行要求中的 L2b 提案-确认流程。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ae03344941a8a5473fce84f07af68d8bb42c4c4dd8dbaf557b909886adf20c98; fixture_sha256=cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997; output_sha256=cbb67730bdc504c7787ce6a9e4096d10a9a45eca2f180293d69733d14ce3ca98; snapshot_sha256=d89af7af7cf1f77a29cf7384902c43dfdde5a2c623595e966cd28d963669a209
+- Behavior: 实际更新了 PRD 的事件驱动策略，但未处理 L2b 拆分流程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未识别 L2b 信号。
+- with_skill 未输出拆分提案及下游镜像影响清单。
+- with_skill 未说明确认前不执行拆分及拒绝后的继续流程。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `idea-to-spec`
+- Eval: `eval-009-prd-iteration-split-proposal`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997` from `agents/product_manager/test/idea-to-spec/workspace/eval-009-prd-iteration-split-proposal`.
+- Fixture SHA-256: `cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997`
+- Prompt SHA-256: `ae03344941a8a5473fce84f07af68d8bb42c4c4dd8dbaf557b909886adf20c98`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `9c3b136c6958582b2c5c3d552759bbe4fd3ef24876075804e91c5b21980a34af`

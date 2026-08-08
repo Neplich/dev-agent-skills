@@ -1,6 +1,6 @@
 ---
 name: competitive-brief
-description: "Internal PM specialist—not a direct entry point. Invoked by pm-agent after entry classification to produce competitor positioning, messaging comparisons, content gaps, opportunities, and threat summaries."
+description: "Produce competitor positioning briefs or sales battlecards from current sourced research, including messaging, gaps, opportunities, threats, and recent developments. Use after pm-agent routes competitive research."
 visibility: internal
 argument-hint: "<competitor or market segment>"
 ---

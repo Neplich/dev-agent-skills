@@ -11,6 +11,133 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `415df27ebd271a5c6f0949b6abe147a826b07a65acc211cf3185fa0d7f9c490e` from `agents/engineer/test/delivery/evals/workspace/eval-001-create-pr-with-commits`.
+- Fixture SHA-256: `415df27ebd271a5c6f0949b6abe147a826b07a65acc211cf3185fa0d7f9c490e`
+- Prompt SHA-256: `0b44a24f8cc1cd09df29f861e75c80120390e6bd31b5f661fccd1e0a1e7be7a5`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2f50028ba86c6f445df96f26b38139e690cf6231ad89fac0774b234a0c5dc4e1`
+- Skill overlay SHA-256: `127b8414687cc98a6277b223b3da3a183d31df3a096ba31b6f0085951eea2cb0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `7e02d3842aadb84c2bf63d29c927cc522ebed52b96eed1878122982c38563924`
+- Metadata SHA-256: `ddad21037c097d13ee42c91b495c2c2326e53dc9044ae9a3b160a51decc6ffbb`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `feature_branch_created` | PASS | With-skill git evidence shows branch changed from main to fix/notification-status and the new ref was created. |
+| `meaningful_commit_created` | FAIL | The commit message is 'Fix notification status labels', which is meaningful but does not follow Conventional Commits, and no project-specific convention evidence is provided. |
+| `pr` | FAIL | The candidate correctly reports that no remote and no gh command prevent PR creation, but it does not provide the required equivalent PR preview containing summary, PM document reference, and test status. |
+| `ci` | FAIL | Because no PR exists, CI should be reported as not run with the blocking reason and a recovery check command; the candidate omits this CI status and command. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0b44a24f8cc1cd09df29f861e75c80120390e6bd31b5f661fccd1e0a1e7be7a5; fixture_sha256=415df27ebd271a5c6f0949b6abe147a826b07a65acc211cf3185fa0d7f9c490e; output_sha256=83bafe40d6d3dc1eb7f9ad9fe77d7860d9937564f6796893a597c1e6232fcae6; snapshot_sha256=1c3e1f9d7e663f41231d261de35de1a7ee99b4f2f8cce451085f9b5052abe2d7
+- Behavior: Created a feature branch, committed the change, ran tests, and reported a clean worktree and PR blocking, but used a non-Conventional commit message and omitted the required PR preview and CI-not-run details.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0b44a24f8cc1cd09df29f861e75c80120390e6bd31b5f661fccd1e0a1e7be7a5; fixture_sha256=415df27ebd271a5c6f0949b6abe147a826b07a65acc211cf3185fa0d7f9c490e; output_sha256=308028c695aa88aa0e0310701a038df0251e185ccd13a2861cab3f84ea5f62ff; snapshot_sha256=d4f21218fa65fdb625ce789d421e60b468e50554e83edcf96eb8f5140d6a3e88
+- Behavior: Created a feature branch and Conventional Commit, ran tests, and truthfully reported PR blocking due to no configured remote, but did not provide the required PR preview or CI status.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill commit message does not satisfy the stated commit convention.
+- The with_skill output omits the required fallback PR preview.
+- The with_skill output omits explicit CI-not-run status, blocking reason, and recovery command.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `delivery`
+- Eval: `eval-001-create-pr-with-commits`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `415df27ebd271a5c6f0949b6abe147a826b07a65acc211cf3185fa0d7f9c490e` from `agents/engineer/test/delivery/evals/workspace/eval-001-create-pr-with-commits`.
+- Fixture SHA-256: `415df27ebd271a5c6f0949b6abe147a826b07a65acc211cf3185fa0d7f9c490e`
+- Prompt SHA-256: `0b44a24f8cc1cd09df29f861e75c80120390e6bd31b5f661fccd1e0a1e7be7a5`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `29c61c58a2652bd07f18ba26bb25b18563fce087002096b0bb5e8a06424417c0`
+- Skill overlay SHA-256: `32d24578ed344a6ae666c9852e0b693b2f910e584a7849849063e01d95ab66e2`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `7e02d3842aadb84c2bf63d29c927cc522ebed52b96eed1878122982c38563924`
+- Metadata SHA-256: `ddad21037c097d13ee42c91b495c2c2326e53dc9044ae9a3b160a51decc6ffbb`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `feature_branch_created` | PASS | With-skill git evidence shows branch changed from main to fix/notification-status-archived, matching the project naming convention. |
+| `meaningful_commit_created` | PASS | With-skill git evidence shows commit subject "fix: support archived notification status", following Conventional Commits. |
+| `pr` | FAIL | The with-skill lane correctly says no PR was created because origin and gh were unavailable, but it does not provide the required equivalent PR preview containing a summary and PM document reference. |
+| `ci` | FAIL | No PR exists, but the with-skill output does not explicitly state that CI did not run or provide the required recovery check command. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0b44a24f8cc1cd09df29f861e75c80120390e6bd31b5f661fccd1e0a1e7be7a5; fixture_sha256=415df27ebd271a5c6f0949b6abe147a826b07a65acc211cf3185fa0d7f9c490e; output_sha256=1d359072460cdae68a5885ef00b47037bbad3380ffbb6c17592277a5ec320759; snapshot_sha256=c269de167a1757b1af1a25742753ad3f86b03d7ce9a6a881ef3c91aa16ee840f
+- Behavior: Created the correctly named branch and a Conventional Commit; accurately avoided claiming a PR, but omitted required PR preview fields and explicit CI-not-run recovery guidance.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0b44a24f8cc1cd09df29f861e75c80120390e6bd31b5f661fccd1e0a1e7be7a5; fixture_sha256=415df27ebd271a5c6f0949b6abe147a826b07a65acc211cf3185fa0d7f9c490e; output_sha256=f7d3fd4032a759cd17b085bbfcfb62d2c84b7564d484796ff7cdfaecd79823b8; snapshot_sha256=2b3d763c9cb60b526e29c4d4eff2b193f6a83c16a0ef04fa67dbd12b12b9beae
+- Behavior: Created the correctly named branch and a Conventional Commit; reported PR blockage but did not provide the required PR preview or CI blockage details.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with-skill output lacks a complete PR preview with summary and PM document reference.
+- The with-skill output does not explicitly state CI was not run and omit a recovery check command.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `delivery`
+- Eval: `eval-001-create-pr-with-commits`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `a095496c94e4d4b145d5e90f01a6091f49d20133f7d6a46767163e94951ca30c` from `agents/engineer/test/delivery/evals/workspace/eval-001-create-pr-with-commits`.
 - Fixture SHA-256: `a095496c94e4d4b145d5e90f01a6091f49d20133f7d6a46767163e94951ca30c`
 - Prompt SHA-256: `0b44a24f8cc1cd09df29f861e75c80120390e6bd31b5f661fccd1e0a1e7be7a5`

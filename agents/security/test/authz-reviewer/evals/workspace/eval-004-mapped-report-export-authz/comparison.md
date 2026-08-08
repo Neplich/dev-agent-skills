@@ -14,6 +14,131 @@
 - Fixture version/source: canonical manifest `1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f` from `agents/security/test/authz-reviewer/evals/workspace/eval-004-mapped-report-export-authz`.
 - Fixture SHA-256: `1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f`
 - Prompt SHA-256: `37500482cb4ba2d8e25d4d03e2971e18b8768e627b3eb196fe101c177681427a`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `3e242b2dbb704cb1d29797b016c5227b3a75736fa3d4f0739192f0fdee71f01f`
+- Skill overlay SHA-256: `3de2c418f3c14f33d91cbef534093000d696ba99512436f5551d86e45d872cc9`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `5b176c277f514c5c57cbc50df739c8bd53714adf02a29d091d0507fdcbd6bda5`
+- Metadata SHA-256: `e90a93e1c6fa00dac24590e3594c181ac3d2710839dea31ce1c1f4375ebfd014`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 输出提到变更映射和命中文档，但锁定原始证据无法证明读取顺序或未遍历无关文档。 |
+| `verifies_against_code` | PASS | 明确核对了 report-export-policy.js，识别 admin 与 analyst 均可导出，并据此判断与文档不一致及越权风险。 |
+| `treats_unverified_as_low_trust` | FAIL | 未识别 required_docs 的 last_verified_version 为 unverified，也未明确说明因此扩大代码核证；虽引用了代码事实，但遗漏了该要求。 |
+| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | 输出未呈现 pm-agent 分类、issue 创建或 Security 过程报告；锁定证据也没有交付或运行时证据可据此判定。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=37500482cb4ba2d8e25d4d03e2971e18b8768e627b3eb196fe101c177681427a; fixture_sha256=1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f; output_sha256=d452dcc296a20e6a5527a5b1ef3c2194c657545da5bde44293e17308a5db9b43; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确核对文档与代码并识别 analyst 越权风险；遗漏 unverified 元数据处理，升级流程未被证据练习。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=37500482cb4ba2d8e25d4d03e2971e18b8768e627b3eb196fe101c177681427a; fixture_sha256=1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f; output_sha256=53478c0be57a908a725e67b59655e5cd9f9e9008d00d1343acbbb89d93a80b47; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别代码允许 analyst 导出并判断存在越权风险，但同样未呈现 unverified 信任处理或升级动作。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未识别 required_docs 的 last_verified_version 为 unverified，也未说明按最低信任处理并扩大代码核证。
+- Next: 补充明确说明 required_docs 为 unverified，并说明授权结论以代码核证为准。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `authz-reviewer`
+- Eval: `eval-004-mapped-report-export-authz`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f` from `agents/security/test/authz-reviewer/evals/workspace/eval-004-mapped-report-export-authz`.
+- Fixture SHA-256: `1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f`
+- Prompt SHA-256: `37500482cb4ba2d8e25d4d03e2971e18b8768e627b3eb196fe101c177681427a`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0fb3bcf4b507247f482a2a4dba9d951bb407cd66a7a7b7801270374734e4b29d`
+- Skill overlay SHA-256: `a5058c0e55b69c8360ce0ae93f04438f76cd73a75566cfde030e7cc6ed7b7266`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `5b176c277f514c5c57cbc50df739c8bd53714adf02a29d091d0507fdcbd6bda5`
+- Metadata SHA-256: `e90a93e1c6fa00dac24590e3594c181ac3d2710839dea31ce1c1f4375ebfd014`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | PASS | With-skill output cites the change map and the mapped report-export document, with no unrelated formal documents used. |
+| `verifies_against_code` | PASS | It cites report-export-policy.js, identifies that both admin and analyst satisfy the code condition, contrasts this with the admin-only document, and assesses analyst access as an authorization bypass. |
+| `treats_unverified_as_low_trust` | FAIL | The output does not identify last_verified_version: unverified or explicitly apply a lowest-trust treatment to the document; the code check is present but the required unverified-status reasoning is absent. |
+| `escalates_fact_changing_conclusion_to_pm` | FAIL | The output recommends changing the implementation but does not return the fact-changing conclusion and evidence to pm-agent, create an issue through pm-agent, or produce a Security process report. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=37500482cb4ba2d8e25d4d03e2971e18b8768e627b3eb196fe101c177681427a; fixture_sha256=1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f; output_sha256=b9eb1bf57bed709de4a17f94985398e7dfd1c9b88f30332aa98a1e820e0d7d68; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly used the mapped documentation and code to identify analyst over-permission and qualification around the missing download call site, but omitted explicit unverified-trust handling and pm-agent escalation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=37500482cb4ba2d8e25d4d03e2971e18b8768e627b3eb196fe101c177681427a; fixture_sha256=1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f; output_sha256=49eba0241db7a012b4a0bbffa5b94546dd3a64696b653b1de3cb6ee99d2e9c22; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly identified the code/document authorization mismatch and risk, but did not demonstrate mapped-document-first review, unverified-document handling, or required pm-agent escalation.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output omits explicit handling of the mapped documents' unverified verification status.
+- The with_skill output omits the mandatory pm-agent classification and issue-creation escalation for a conclusion that changes formal documentation facts.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `authz-reviewer`
+- Eval: `eval-004-mapped-report-export-authz`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f` from `agents/security/test/authz-reviewer/evals/workspace/eval-004-mapped-report-export-authz`.
+- Fixture SHA-256: `1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f`
+- Prompt SHA-256: `37500482cb4ba2d8e25d4d03e2971e18b8768e627b3eb196fe101c177681427a`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `d2e4aec7daf8a1a3d4dd9129eb3c1a3dff6fda1cedda3583e17db51f3c77b01c`

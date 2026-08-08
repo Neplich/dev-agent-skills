@@ -14,6 +14,130 @@
 - Fixture version/source: canonical manifest `2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-1-existing-project-feature`.
 - Fixture SHA-256: `2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc`
 - Prompt SHA-256: `989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `7638558b96730ed626879bcffd4a606d3ed390013a41acf29ade725d210e3f4e`
+- Skill overlay SHA-256: `12aaaef0d075d133bbbdc681f598fd09807b211a4377dcfbc6cbbfcaa30909e0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `fbb5377843587b9c6261e61b2a81e3a48d39c5e7814d8290865e02fe8eb5ec41`
+- Metadata SHA-256: `ff56c9c4026c02d3f3b5f70e58cc2a2e628e1817de3ecbec4d01c2d2b3fe50bc`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `summarizes_current_context` | PASS | 基于 package.json、Docs Index 和 Engineer TRD，准确概括了项目为内部应用目录、当前仅有文档与 manifest、已有应用摄取/管理员编辑/前台列表能力，以及无标签模型、仅按名称搜索、单一 modal 编辑等缺口。 |
+| `keeps_first_turn_to_one_decision` | PASS | 第一轮聚焦于一个关键决策：标签治理方式，并只要求用户在三个方向中选择其一。 |
+| `offers_real_options_with_tradeoffs` | PASS | 提供了受控标签、自由输入标签、混合模式三个可执行选项，分别说明了治理、灵活性和复杂度取舍，并推荐受控标签。 |
+| `waits_before_durable_docs` | FAIL | 未创建正式 PM 文档，且将 apps-catalog/tags 表述为暂定路径；但没有说明待决策确认后再把稳定结论沉淀为正式产品文档，遗漏了该用户可见要求。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b; fixture_sha256=2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc; output_sha256=324d7221e56061171f37247ab0841527666dee1368a4b01f6961e927532c7717; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 准确总结项目现状，围绕单一标签治理决策提供三种方案、取舍和推荐；未提前创建文档，但遗漏确认后沉淀正式产品文档的明确说明。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b; fixture_sha256=2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc; output_sha256=40bcbfdd04a43974a6a12b4e55db68f335c96f92b55bbdc2dd14acb31d1924bb; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 能概括主要现状并推进一个方向，但未基于文档索引和 Engineer TRD 明确展开证据，也未提供多个真实选项及取舍。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- waits_before_durable_docs：未明确说明确认后再将稳定结论沉淀为正式产品文档。
+- Next: 补充说明：待功能归属和当前决策确认后，再将稳定结论写入正式产品文档。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `idea-to-spec`
+- Eval: `eval-001-existing-project-feature-design`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-1-existing-project-feature`.
+- Fixture SHA-256: `2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc`
+- Prompt SHA-256: `989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a2e446c3d8d5f02d34cd5e3954e55500a6eaf296bcb868f9d3dbe27d39c64b91`
+- Skill overlay SHA-256: `14328c4af5595e19e21331fb22dcc6dda56844ee6c4f2ee6382997e7ffe0af37`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `fbb5377843587b9c6261e61b2a81e3a48d39c5e7814d8290865e02fe8eb5ec41`
+- Metadata SHA-256: `ff56c9c4026c02d3f3b5f70e58cc2a2e628e1817de3ecbec4d01c2d2b3fe50bc`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `summarizes_current_context` | PASS | With_skill summarizes package version, catalog capabilities, name-only search, absent tag model, modal editing constraint, documentation state, and lack of source implementation. |
+| `keeps_first_turn_to_one_decision` | PASS | With_skill asks the product owner to confirm one decision: the core positioning of tags; the numbered choices are alternatives for that single decision. |
+| `offers_real_options_with_tradeoffs` | PASS | With_skill provides three actionable directions, identifies scope, discovery UX, extensibility, and cost tradeoffs, and marks option 1 as recommended with a clear rationale. |
+| `waits_before_durable_docs` | FAIL | No durable PM document was created, as shown by empty delivery_snapshot and unchanged git state, but the output does not explicitly state that formal product documentation will be created only after confirmation. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b; fixture_sha256=2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc; output_sha256=d7f34a815cf335a7b65edf9a862a6829021b46ab0ddb7832c72047468c01aec4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Accurately grounds the discussion in the fixture, advances one decision with three differentiated options and a recommendation, and makes no workspace changes.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b; fixture_sha256=2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc; output_sha256=6b39f0f62909f214cffbc3e7661f8749ce527fb91e2d03ad64566122867bf452; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a concise baseline summary and asks one decision, but presents a largely preselected first-version scope rather than 2–3 options with tradeoffs.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output does not explicitly commit to documenting stable conclusions in a formal PM document only after the current decision and feature ownership are confirmed.
+- Next: Add an explicit statement that, once the scope/ownership decision is confirmed, the stable conclusions will be captured in a formal PM document.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `idea-to-spec`
+- Eval: `eval-001-existing-project-feature-design`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-1-existing-project-feature`.
+- Fixture SHA-256: `2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc`
+- Prompt SHA-256: `989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `9c3b136c6958582b2c5c3d552759bbe4fd3ef24876075804e91c5b21980a34af`

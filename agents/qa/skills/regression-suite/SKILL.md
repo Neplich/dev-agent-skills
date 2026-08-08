@@ -1,6 +1,6 @@
 ---
 name: regression-suite
-description: "Internal QA specialist—not a direct entry point. Invoked by qa-agent after pm-agent handoff to verify fixes with reused evidence, adjacent-risk review, and clear pass/fail or blocked reporting."
+description: "Verify a confirmed fix by reusing the original bug evidence, running direct and adjacent-risk checks, and reporting PASS, FAIL, or BLOCKED with confidence. Use after qa-agent routes regression work."
 visibility: internal
 ---
 

@@ -14,6 +14,132 @@
 - Fixture version/source: canonical manifest `969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-009-release-product-ops`.
 - Fixture SHA-256: `969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3`
 - Prompt SHA-256: `8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `52db6badcefada59a1d42e81de2581f06256f43c060b7699c281ab21bfb40949`
+- Skill overlay SHA-256: `f896903fa1a8ae6886eb0b6365065625a2e60f6809acd0af6c7c8dc8f8f2bd40`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `c9bcafbf3ecc8c0e0ac28908b463b075e9d1371a95444953a8afc3d41757e192`
+- Metadata SHA-256: `8deaf3ef06984a55739a36e203fd82989e4163ee4a9c31b6706c821440154ae8`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `limits_release_to_affected_product_ops` | PASS | With_skill diff changes only the product and ops dashboard pages; output states API, database, design, Release Notes, and deployment were untouched. |
+| `reconciles_confirmed_version_facts` | PASS | With_skill records the implementation limit as 25, runtime image as v1.5.0, DASHBOARD_LIMIT=25, and three release checks passed; it does not introduce v1.5.1 behavior. |
+| `preserves_release_notes_surfaces` | PASS | Raw git status/diff show no Release Notes files changed, and with_skill explicitly says Release Notes were not touched. |
+| `keeps_release_pages_unverified` | PASS | Both with_skill delivery snapshots retain last_verified_version: unverified and the output defers audit stamping to docs-audit. |
+| `runs_release_host_checks_and_handoffs` | FAIL | With_skill explicitly reports strict affected check failed and does not provide a successful real npm run test:docs command/cwd/exit-status record or a complete pre-tag handoff containing the affected set, confirmed target version, and confirmation source. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3; output_sha256=481b9ae307804467b1eb743e312a865e990d0bdc9591bb1a8c9da1ff08df16be; snapshot_sha256=0d7185784ed9ca4ca20e5499f74c298f69f3cc52ef3450a708bd49d8fd146d03
+- Behavior: Correctly limited edits, reconciled v1.5.0 facts, preserved unverified status, and reported evidence honestly, but did not complete the required passing host check and pre-tag handoff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3; output_sha256=4d4527713e323a8688bbe599bb71b341ed7b79a0a00c794e55f689093b019651; snapshot_sha256=89b7007b9af7802698151ff6b44b443628c0e72c52bc9922d4962543458c76ce
+- Behavior: Updated the two affected pages and facts, but incorrectly stamped both pages v1.5.0 and reported host checks as blocked.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The required real npm run test:docs pass and complete docs-audit pre-tag handoff were not achieved or evidenced.
+- Next: Run npm run test:docs in docs/site with a valid Git baseline, record cwd and exit status, then hand off the complete affected set to docs-agent:docs-audit.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-009-release-product-ops`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-009-release-product-ops`.
+- Fixture SHA-256: `969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3`
+- Prompt SHA-256: `8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `1e290565a84b926a128928ccdd91365a2235adff18f999307c0a3553f0b41f34`
+- Skill overlay SHA-256: `0c6a49eed1db242a95632eb0d142c1760f60ffc995c96026908ec8c0e6bd8d63`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `c9bcafbf3ecc8c0e0ac28908b463b075e9d1371a95444953a8afc3d41757e192`
+- Metadata SHA-256: `8deaf3ef06984a55739a36e203fd82989e4163ee4a9c31b6706c821440154ae8`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `limits_release_to_affected_product_ops` | PASS | With-skill diff changes only the product and ops pages; change-map entries were left unchanged and API/database/design/unrelated pages were not modified. |
+| `reconciles_confirmed_version_facts` | PASS | With-skill output and delivery snapshot state limit 25, image registry.example/ai-hub:v1.5.0, and explicitly exclude unconfirmed v1.5.1 behavior; these match raw evidence, code, config, and tests. |
+| `preserves_release_notes_surfaces` | PASS | With-skill git status/diff show no Release Notes body, index, metadata, or navigation changes, and the output explicitly says Release Notes were not modified. |
+| `keeps_release_pages_unverified` | PASS | Both with-skill delivery snapshots retain last_verified_version: unverified and explicitly defer stamping to docs-audit. |
+| `runs_release_host_checks_and_handoffs` | FAIL | With-skill reports check:affected --strict was blocked by spawn EPERM, so the required npm run test:docs did not genuinely pass; it also reports no available docs-audit specialist and provides no completed pre-tag handoff record. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3; output_sha256=99d4398e30a6588b4b642c6869cdcff8a6c7d4d1f32d4c4b1b7f84d4cb4dfee5; snapshot_sha256=c6b2c8415f5fefb308a95f3e89949672d9a2402a34a944bb6e08814ff2319b1c
+- Behavior: Correctly limited edits, reconciled confirmed facts, preserved Release Notes surfaces, kept pages unverified, and transparently reported blocked strict checks and missing handoff specialist.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3; output_sha256=b909c3f2c23d9977b1f8db40745ea9e39f8449894732528ed0ab4d394f1e3f27; snapshot_sha256=b3b6ed0dcfec4c5c646bd2c54bdfe95ce99f09bf986cb460f80308003415dc7d
+- Behavior: Updated the two target pages and change-map, but incorrectly stamped pages/map v1.5.0 and reported strict checks blocked.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- runs_release_host_checks_and_handoffs failed because the required test/handoff completion was not demonstrated.
+- Next: Run npm run test:docs successfully in docs/site and complete the documented docs-agent:docs-audit pre-tag handoff.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-009-release-product-ops`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-009-release-product-ops`.
+- Fixture SHA-256: `969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3`
+- Prompt SHA-256: `8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `79b2ff102fa24fa224c9f24f44f3e648a1ae7eb9a7a10e639d8675db4454120a`

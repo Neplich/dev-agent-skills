@@ -29,7 +29,7 @@
         {
           "id": "maintains_plan_metadata",
           "description": "维护实施计划元数据",
-          "text": "输出必须说明 `docs/engineer/notification-center/IMPLEMENTATION_PLAN.md` 的 frontmatter 需要包含 `version` 和 `last_updated`；新建计划使用初始版本，实质性更新计划正文时同步更新 `version` 和 `last_updated`，纯格式或错别字修正可不提升版本。"
+          "text": "实际创建的 `docs/engineer/notification-center/IMPLEMENTATION_PLAN.md` frontmatter 必须包含有效的初始 `version` 和当前 `last_updated`；本轮不要求向用户复述未来版本维护规则。"
         }
       ],
       "scenario": {

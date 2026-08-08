@@ -14,6 +14,130 @@
 - Fixture version/source: canonical manifest `8307ea1325de4c132e54824c9dd507ed174ce29fe901e9f04e5a56bc654490e3` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-003-python`.
 - Fixture SHA-256: `8307ea1325de4c132e54824c9dd507ed174ce29fe901e9f04e5a56bc654490e3`
 - Prompt SHA-256: `109b986b4018ed5121d20e83d0f03f39a0aaef687eb5dd7c1936ee4b3a089210`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`
+- Skill overlay SHA-256: `b815bcadedc94647742113823ae910cacb0bd48d343e94eb3875bee2a6a39d68`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `b851960b1dd4c6ab11f9c42f685034d6bd0e27ae3c26e4256af19942329ed614`
+- Metadata SHA-256: `86d72efa91ee3890167dbac2135eac8aaff379e02491ea01e89a3595936d759c`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `dependency_inventory` | PASS | With_skill identifies the Python ecosystem and all three key packages—requests, urllib3, and Jinja2—along with HTTP/TLS, redirect, template, and supply-chain risk sources. |
+| `risk_classification` | PASS | With_skill distinguishes multiple CVE vulnerabilities, outdated/unsupported versions, and reproducibility/supply-chain risks, with HIGH/MEDIUM severity and contextual impact. |
+| `evidence` | PASS | With_skill cites exact dependency versions from requirements.txt and provides specific CVE identifiers, affected ranges, remediation versions, and authoritative advisory links. |
+| `upgrade_plan` | PASS | With_skill recommends coordinated upgrades to requests 2.34.2, urllib3 2.7.0, and Jinja2 3.1.6, plus compatibility testing and concrete interim mitigations. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=109b986b4018ed5121d20e83d0f03f39a0aaef687eb5dd7c1936ee4b3a089210; fixture_sha256=8307ea1325de4c132e54824c9dd507ed174ce29fe901e9f04e5a56bc654490e3; output_sha256=ccbbcfa7055360757cdf9a0553aac618d8b737e7feb25060b816d5e3ea6092b9; snapshot_sha256=85cd1d5c79b592f4ef54abd8815780fa8eb88ba7ab6e496f8b3a10ebe087627d
+- Behavior: Produced a structured, detailed dependency security audit covering all requested packages, risks, evidence, upgrade targets, and interim mitigations without modifying requirements.txt.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=109b986b4018ed5121d20e83d0f03f39a0aaef687eb5dd7c1936ee4b3a089210; fixture_sha256=8307ea1325de4c132e54824c9dd507ed174ce29fe901e9f04e5a56bc654490e3; output_sha256=01204e2d5aa8231769836de2239575ad42e591d97c44c3821b294a6b65421575; snapshot_sha256=dcca324c423623654b5916fe961cd21a90f1aa6c1aaa979f70ec264bdd5ffd47
+- Behavior: Produced a detailed security audit with version evidence, vulnerability classification, upgrade targets, and mitigations.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `dependency-risk-auditor`
+- Eval: `eval-003-python`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `8307ea1325de4c132e54824c9dd507ed174ce29fe901e9f04e5a56bc654490e3` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-003-python`.
+- Fixture SHA-256: `8307ea1325de4c132e54824c9dd507ed174ce29fe901e9f04e5a56bc654490e3`
+- Prompt SHA-256: `109b986b4018ed5121d20e83d0f03f39a0aaef687eb5dd7c1936ee4b3a089210`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b2573dd217cef308cd88d80bd4db555dc7ac29ee2b87cd67e3ed8f4807140636`
+- Skill overlay SHA-256: `ae39de43f00ac22182f0336b47936a0651b8b7cb847715311e719e485ae6d9ed`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `b851960b1dd4c6ab11f9c42f685034d6bd0e27ae3c26e4256af19942329ed614`
+- Metadata SHA-256: `86d72efa91ee3890167dbac2135eac8aaff379e02491ea01e89a3595936d759c`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `dependency_inventory` | PASS | With-skill output identifies the three direct dependencies—Requests, urllib3, and Jinja2—and relates them to HTTP, TLS, redirect, proxy, compression, and template-rendering risk surfaces. |
+| `risk_classification` | PASS | It distinguishes confirmed CVEs, outdated dependency lines, conditional usage risks such as SSTI, and assigns High/Medium severity with triggering conditions and impact. |
+| `evidence` | PASS | It cites requirements.txt with exact versions (requests 2.19.1, urllib3 1.23, Jinja2 2.10.1), references the PRD and handoff, and provides CVE/advisory identifiers and links. |
+| `upgrade_plan` | PASS | It provides concrete upgrade targets for all three packages, compatibility/testing guidance, and temporary mitigations for redirects, TLS verification, proxy credentials, templates, resource limits, and scanning. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=109b986b4018ed5121d20e83d0f03f39a0aaef687eb5dd7c1936ee4b3a089210; fixture_sha256=8307ea1325de4c132e54824c9dd507ed174ce29fe901e9f04e5a56bc654490e3; output_sha256=b9671876a506561b05bff453ad694ce52559afe698b79d6f5ae38417a019a1e8; snapshot_sha256=2f062bfbf6a5d160810dd5a68fdf3a8b8aafa20cc447cdaf3c97c7d81d3ff84b
+- Behavior: Produced a structured, evidence-based audit covering all three dependencies, severity and conditionality, precise CVEs, upgrade targets, temporary controls, validation gates, and audit limitations.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=109b986b4018ed5121d20e83d0f03f39a0aaef687eb5dd7c1936ee4b3a089210; fixture_sha256=8307ea1325de4c132e54824c9dd507ed174ce29fe901e9f04e5a56bc654490e3; output_sha256=281da6d055e7ae51f44caff9717fe527d9b7002cf05448fef4025841b0fea55a; snapshot_sha256=dc6eb2d381a7eb4bfb0c871ecc53a127414a2422411ca33db546b0d2bbfa7295
+- Behavior: Produced a concise audit summary with exact dependency versions, several known risks, upgrade recommendations, citations, and a generated report path.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `dependency-risk-auditor`
+- Eval: `eval-003-python`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `8307ea1325de4c132e54824c9dd507ed174ce29fe901e9f04e5a56bc654490e3` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-003-python`.
+- Fixture SHA-256: `8307ea1325de4c132e54824c9dd507ed174ce29fe901e9f04e5a56bc654490e3`
+- Prompt SHA-256: `109b986b4018ed5121d20e83d0f03f39a0aaef687eb5dd7c1936ee4b3a089210`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `9847519784146234ee8e6186ebd4f58b4e08cc25986e95e53a8cdbe8be3e0635`

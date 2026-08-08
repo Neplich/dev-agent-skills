@@ -14,6 +14,74 @@
 - Fixture version/source: canonical manifest `d16b0aba9c42c15bb50cb2e6533059095747e0b241aeb84f42387b57f3c93839` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-002-enforce-release-sequence-gates`.
 - Fixture SHA-256: `d16b0aba9c42c15bb50cb2e6533059095747e0b241aeb84f42387b57f3c93839`
 - Prompt SHA-256: `2a564a9812a9893c6d440f3a82f58d1b6e03bc64e97e5dd9f393ca99e3af9583`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `793cabc84dc1947c3d6386a1d060276eea2eb8b4e9de25fdd6c7b7a60fb82cb0`
+- Skill overlay SHA-256: `ecc021af86f838c5c915ade1c1e1095fa203f789350af9aa701ad32bae876bb2`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `4ae771ce624f2d4218d5a0892756a08ab5deb5771e2156fa84d9cebf89f45e20`
+- Metadata SHA-256: `6e1c66d9908de26eec5a81a59cb64d6d09ad4a2d9291406739a3d318995009f5`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `site_notes_before_github_release` | FAIL | with_skill 未明确说明 docs-agent:release-notes-gen 确认站内 Release Notes → docs-audit 返回 ready_for_tag → PM github-release-gen 生成 submit-ready preview 的完整顺序。 |
+| `ready_for_tag_allows_preview_only` | FAIL | with_skill 说明 pre-tag 审计和 post-tag/release_verified 的缺失会阻止发布，但未明确将 ready_for_tag 定义为仅 preview/受限 draft 状态，或明确其不能代替实际 tag。 |
+| `draft_omits_latest_and_publish_rechecks` | FAIL | with_skill 正确识别 prerelease 并给出 --prerelease --latest=false，但未说明 draft 命令省略 latest 参数，也未覆盖 publish 前后 fresh read、latest/tag 漂移复查及原子最终写入流程。 |
+| `blocks_missing_tag_and_post_tag_audit` | PASS | with_skill 对场景 A 因目标 tag absent、post-tag/release_verified 缺失而拒绝发布，并将 tag 交给 release owner、审计交给 docs-agent:docs-audit。 |
+| `blocks_missing_independent_approval` | PASS | with_skill 明确即使接受实际 tag 与 release_verified，仍因缺少独立、当前的 maintainer publish approval 而暂停，并指出站点确认和预览请求不可复用。 |
+| `keeps_preview_or_draft` | PASS | with_skill 明确 blocked，未执行 GitHub 写入、发布或 tag 操作，并保留 Release preview；同时说明不能创建 draft。 |
+| `inline_preview_body_and_version_normalization` | FAIL | with_skill 提供了内联完整正文、标题、升级说明、变更明细，并识别 prerelease、给出发布参数；但未明确 PRERELEASE_FLAG，亦未说明 draft create/update 命令中的显式声明。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2a564a9812a9893c6d440f3a82f58d1b6e03bc64e97e5dd9f393ca99e3af9583; fixture_sha256=d16b0aba9c42c15bb50cb2e6533059095747e0b241aeb84f42387b57f3c93839; output_sha256=c482a827208f1d4ba7cba282ccf3a66e146d6099737e684d231c319824c66f3d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 生成了完整内联预览，正确阻止缺 tag/审计或独立批准的发布请求，并保持无写入状态；但遗漏多个细粒度流程和参数要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2a564a9812a9893c6d440f3a82f58d1b6e03bc64e97e5dd9f393ca99e3af9583; fixture_sha256=d16b0aba9c42c15bb50cb2e6533059095747e0b241aeb84f42387b57f3c93839; output_sha256=2ab4f17c068f1448efe6212677148d4ff2d708b9ee68b89f64bd758cbbc4ac61; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 生成了预览并阻止两个发布请求，但未明确完整的顺序门禁、ready_for_tag 限制、发布写入复查或 draft 参数保护。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足顺序门禁的明确表述。
+- with_skill 未完整说明 ready_for_tag 的仅预览语义。
+- with_skill 未覆盖 draft 参数省略及 publish 前后漂移复查。
+- with_skill 未声明 PRERELEASE_FLAG 及其在 draft 命令中的显式使用。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-002-enforce-release-sequence-gates`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `d16b0aba9c42c15bb50cb2e6533059095747e0b241aeb84f42387b57f3c93839` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-002-enforce-release-sequence-gates`.
+- Fixture SHA-256: `d16b0aba9c42c15bb50cb2e6533059095747e0b241aeb84f42387b57f3c93839`
+- Prompt SHA-256: `2a564a9812a9893c6d440f3a82f58d1b6e03bc64e97e5dd9f393ca99e3af9583`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `ebd2c00966a7932d251daeeef05573b0145183fe908cf102225636115f85820c`

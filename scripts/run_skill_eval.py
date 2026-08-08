@@ -46,6 +46,11 @@ REASONING_EFFORT = "medium"
 DEFAULT_TIMEOUT_SECONDS = 300
 JUDGE_SCHEMA = Path(__file__).with_name("eval_judge_result.schema.json")
 _DURABLE_WRITE_LOCK = threading.Lock()
+_SOURCE_INPUT_KEYS = (
+    "target_skill_sha256", "skill_overlay_sha256", "judge_schema_sha256",
+    "eval_definition_sha256", "metadata_sha256", "executor_sha256",
+    "runtime_sha256", "fixture_sha256",
+)
 
 
 @dataclass(frozen=True)
@@ -112,6 +117,25 @@ def source_identity(
         "runtime_sha256": hashlib.sha256(runtime.read_bytes()).hexdigest(),
         "fixture_sha256": fixture_hash,
     }
+
+
+def _same_source_inputs(left: dict[str, Any], right: dict[str, Any]) -> bool:
+    return all(left.get(key) == right.get(key) for key in _SOURCE_INPUT_KEYS)
+
+
+def _prune_runtime_parents(runtime_root: Path, repository_root: Path) -> None:
+    stop = (repository_root.resolve() / "tmp/eval-runs").resolve()
+    current = runtime_root.resolve().parent
+    if current != stop and stop not in current.parents:
+        return
+    while current == stop or stop in current.parents:
+        try:
+            current.rmdir()
+        except OSError:
+            return
+        if current == stop:
+            return
+        current = current.parent
 
 
 def _resolve_workspace(evals_path: Path, workspace: str) -> Path:
@@ -662,7 +686,18 @@ def _judge_prompt() -> str:
         "its failure to satisfy an assertion must not make an assertion FAIL when with_skill "
         "satisfies it. Use without_skill only to describe the fresh baseline and contrast the "
         "two behaviors. Return only the JSON object required by the supplied output schema. "
-        "Do not use lane self-ratings or any historical comparison."
+        "Judge user-visible behavior semantically: accept semantic equivalents and do not "
+        "require an exact internal label, skill path, or wording unless the assertion makes "
+        "that literal form part of the user's observable result. For an interactive workflow, "
+        "when the candidate correctly performs the next required step but a later step cannot "
+        "yet occur without user confirmation or missing runtime evidence, mark that later "
+        "assertion NOT_EXERCISED and coverage PARTIAL rather than FAIL. Likewise, a hidden "
+        "process or read-order assertion is NOT_EXERCISED when the locked raw evidence cannot "
+        "prove it; do not infer failure merely because the final prose omits process narration. "
+        "Use FAIL only when the with_skill lane contradicts an exercised requirement, omits an "
+        "exercised user-visible result, makes an unsupported claim, or performs a forbidden "
+        "mutation. Return only the JSON object required by the supplied output schema. Do not "
+        "use lane self-ratings or any historical comparison."
     )
 
 
@@ -903,9 +938,14 @@ def run_selected_eval(
                     candidate_runs,
                 )
             if run["status"].get("returncode") != 0 or not run["output_exists"]:
+                status = run["status"]
                 return _blocked_result(
                     definition, materialized,
-                    [f"{run['mode']} candidate did not complete with a final output"],
+                    [
+                        f"{run['mode']} candidate did not complete with a final output "
+                        f"(returncode={status.get('returncode')}, "
+                        f"timed_out={bool(status.get('timed_out'))})"
+                    ],
                     candidate_runs,
                 )
             if mode == "with_skill" and any(not check["ok"] for check in run["declared_outputs"]):
@@ -956,7 +996,7 @@ def run_selected_eval(
             )
 
         final_definition = load_eval_definition(repository_root, agent, skill, eval_id)
-        if source_identity(final_definition) != identity:
+        if not _same_source_inputs(source_identity(final_definition), identity):
             return _blocked_result(
                 definition, materialized,
                 ["eval source inputs changed during the isolated run"], candidate_runs,
@@ -979,6 +1019,7 @@ def run_selected_eval(
             materialized.cleanup()
         if runtime_root.exists():
             shutil.rmtree(runtime_root)
+        _prune_runtime_parents(runtime_root, repository_root)
 
 
 def _targets(
@@ -1095,6 +1136,8 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{label}: ERROR: {outcome}", file=sys.stderr)
             continue
         print(f"{label}: Overall result: {outcome['overall_result']}")
+        if outcome["overall_result"] == "BLOCKED" and outcome.get("blockers"):
+            print(f"{label}: blockers: {'; '.join(outcome['blockers'])}")
         if not outcome["overall_result"].startswith("PASS"):
             failures += 1
     print(f"Ran {len(targets)} eval(s); {failures} non-passing")

@@ -1,6 +1,6 @@
 ---
 name: exploratory-tester
-description: "Internal QA specialist—not a direct entry point. Invoked by qa-agent after pm-agent handoff to explore changed product surfaces, environmental risks, and nearby failure modes with evidence-backed charters."
+description: "Explore a confirmed product surface with an evidence-backed charter, explicit environment and timebox, adjacent risks, findings, and follow-up coverage. Use after qa-agent routes exploratory validation."
 visibility: internal
 ---
 

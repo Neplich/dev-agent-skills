@@ -14,6 +14,130 @@
 - Fixture version/source: canonical manifest `a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859` from `agents/engineer/test/codebase-analyzer/evals/workspace/eval-003-mapped-search-architecture`.
 - Fixture SHA-256: `a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859`
 - Prompt SHA-256: `0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `de6d27a82a6affa1d54b83f57c4eb1889c4977944cd8849112c1a97798fbfd77`
+- Skill overlay SHA-256: `0fb9a99c8b6a885ab74bb6a43bc122826a529476b9651a4d99df59ab056dab90`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `df0ea3b9e16f84cfa3123784feaff62e9978d327069fdb7ff40819c75c9ebde1`
+- Metadata SHA-256: `c79f8b60b8eda49d60383374b0b105b8c506dcb4b757a67593ed9721a0d169df`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_change_map_to_bound_context` | PASS | With-skill output cites change-map.yaml, identifies docs/site/api/search.md as the related document for src/search/**, and confines analysis to the listed search sources/documents. |
+| `verifies_claims_against_code` | PASS | With-skill output directly cites src/search/query.txt for entrypoint: search and match_mode: exact, and explicitly treats the entrypoint as only a declaration rather than substituting documentation for code facts. |
+| `reports_document_code_conflict` | PASS | With-skill output clearly contrasts the API document's default fuzzy matching claim with match_mode: exact, concludes exact is the only confirmed current semantic, and explains the conflict's relevance to future assessment. |
+| `does_not_overclaim_unverified_docs` | PASS | With-skill output identifies last_verified_version: unverified, treats the document claim as unverified and conflicting, and does not present fuzzy matching as implemented. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c; fixture_sha256=a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859; output_sha256=96276bbd7563ce7da8b140eae2ab6955f8ae69d9d07480e708c8d9a4df608c4f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Satisfies all four assertions with scoped context, direct code verification, explicit documentation conflict handling, and appropriate uncertainty.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c; fixture_sha256=a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859; output_sha256=beee295d502b5137887fef64e7cc0de294825188deebad6e475262eb907f33e2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline already satisfies all four assertions, with a more detailed but semantically equivalent evidence-based analysis.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `codebase-analyzer`
+- Eval: `eval-003-mapped-search-architecture`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859` from `agents/engineer/test/codebase-analyzer/evals/workspace/eval-003-mapped-search-architecture`.
+- Fixture SHA-256: `a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859`
+- Prompt SHA-256: `0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `4ef5dda23bd378b639722b86e7dbea1f7e09912544ca0c5fef4a87033ad825db`
+- Skill overlay SHA-256: `d7b973d9b32cc5f2454374d2a337486c02a7f09a3b2d983c8c66b6ce00c56177`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `df0ea3b9e16f84cfa3123784feaff62e9978d327069fdb7ff40819c75c9ebde1`
+- Metadata SHA-256: `c79f8b60b8eda49d60383374b0b105b8c506dcb4b757a67593ed9721a0d169df`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_change_map_to_bound_context` | PASS | 明确引用 change-map.yaml，说明 src/search/** 关联 docs/site/api/search.md，并将分析限定在搜索模块及其正式文档范围内。 |
+| `verifies_claims_against_code` | PASS | 明确引用 src/search/query.txt，并据此核验 entrypoint: search 与 match_mode: exact；未以文档替代代码证据。 |
+| `reports_document_code_conflict` | PASS | 清楚指出文档默认 fuzzy matching 与代码 exact 配置冲突，并说明当前能力不能按模糊匹配认定、后续需确认产品意图。 |
+| `does_not_overclaim_unverified_docs` | PASS | 识别文档 last_verified_version: unverified，明确降低其可信度，未将未由代码证明的模糊匹配写成当前事实。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c; fixture_sha256=a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859; output_sha256=41733841a639eb7b7efcd04a889dd83998223d686a983cb66e2b7256dcb10513; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 使用 change map 限定范围，以 query.txt 核验能力，报告文档冲突并避免采信未验证文档结论。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c; fixture_sha256=a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859; output_sha256=16322e465ca4df0c6253bc8b5ad74c35c7f3aa8e4643bc2a33ce839bc262831b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 基于代码配置、文档和 change map 做了较谨慎的搜索模块分析，并识别 exact/fuzzy 冲突。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `codebase-analyzer`
+- Eval: `eval-003-mapped-search-architecture`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859` from `agents/engineer/test/codebase-analyzer/evals/workspace/eval-003-mapped-search-architecture`.
+- Fixture SHA-256: `a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859`
+- Prompt SHA-256: `0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `4f1332611648af165a59b99f871678f4c900534d4d5d1fcedda6f815a3b3d5ed`

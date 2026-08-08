@@ -302,6 +302,18 @@ def validate_skill(root: Path, skill_dir: Path, errors: list[ContractError]) -> 
         if not isinstance(value, str) or not value.strip():
             add_error(errors, skill_doc, f"frontmatter {field!r} must be non-empty")
 
+    description = metadata.get("description", "")
+    if isinstance(description, str) and re.match(
+        r"^(?:internal\b|downstream\b)",
+        description.strip(),
+        flags=re.IGNORECASE,
+    ):
+        add_error(
+            errors,
+            skill_doc,
+            "frontmatter description must front-load the user goal and trigger, not the skill's internal routing status",
+        )
+
     name = metadata.get("name", "")
     if name != skill_dir.name:
         add_error(errors, skill_doc, "frontmatter name must match the skill directory")

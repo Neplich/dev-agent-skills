@@ -14,6 +14,130 @@
 - Fixture version/source: canonical manifest `746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e` from `agents/security/test/appsec-checklist/evals/workspace/eval-003-xss`.
 - Fixture SHA-256: `746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e`
 - Prompt SHA-256: `4fbcbae96df725d2ae68317bce92f64188686abcfd62940b28a42e14a09de97f`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `812b371fc30792cb2b0cf8d96079b3244c95b93efab7638e085d4e955d6ea42c`
+- Skill overlay SHA-256: `5b2b2b7a3b96eded32c11959c382e7fa8aafb204f59c1c353154bae2cdaf9c71`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6b75287b771a74771292ff6a9a4b1d4288f8c6b58ea121782df92af92abb087a`
+- Metadata SHA-256: `8b9d5478f14d810cc31c023b6e6a4956d8afc5605aa60470f7733640de6334fb`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `security_findings` | PASS | With-skill identifies a stored XSS path: user-controlled author/body values are interpolated into HTML and assigned to innerHTML, matching the fixture code and plain-text PRD boundary. |
+| `evidence_and_impact` | PASS | It cites src/ui/comment-display.js:2-4, traces API comments through the template and innerHTML sink, and explains impact on other viewers, page integrity, accessible data, and same-origin actions. |
+| `severity_rationale` | PASS | It rates the issue High and justifies this as cross-user stored XSS requiring only attacker comment submission, with execution when victims load the comment list. |
+| `remediation` | PASS | It recommends DOM APIs with textContent for both fields, avoiding user HTML interpolation, and specifies browser/automated payload, DOM-structure, text-rendering, and execution-probe regression checks. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4fbcbae96df725d2ae68317bce92f64188686abcfd62940b28a42e14a09de97f; fixture_sha256=746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e; output_sha256=991550cfee5818f7429e10c641ba55fec1f90c06b03d826c4babd03c999edc3b; snapshot_sha256=988f2035a0a1fdd66bd966afab642adfeaa169dea353ebd23a6682816df8b527
+- Behavior: Produced a detailed AppSec report covering the XSS finding, data flow, impact, severity rationale, concrete fix, and verification criteria.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4fbcbae96df725d2ae68317bce92f64188686abcfd62940b28a42e14a09de97f; fixture_sha256=746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e; output_sha256=184163dbe2982642f86c2883dcb47d9233af84a4c5cc01e02d916bb2b9975845; snapshot_sha256=3a962d83e57b253bb3dbcf6b1fef069332016f9f6411dbb3ac27d41f43f5313c
+- Behavior: Correctly identified high-severity stored XSS and provided evidence, impact, remediation, and validation guidance.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `appsec-checklist`
+- Eval: `eval-003-xss`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e` from `agents/security/test/appsec-checklist/evals/workspace/eval-003-xss`.
+- Fixture SHA-256: `746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e`
+- Prompt SHA-256: `4fbcbae96df725d2ae68317bce92f64188686abcfd62940b28a42e14a09de97f`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8638f695ab2249699760b63a17b3618bf2d964d5ae466881f575505e2674bdaf`
+- Skill overlay SHA-256: `7a46c5f912eabaa23dbb3c81db666071019107df43f45f25b7e8f552cbe709f8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6b75287b771a74771292ff6a9a4b1d4288f8c6b58ea121782df92af92abb087a`
+- Metadata SHA-256: `8b9d5478f14d810cc31c023b6e6a4956d8afc5605aa60470f7733640de6334fb`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `security_findings` | PASS | With-skill output identifies stored XSS caused by unencoded author/body values entering innerHTML, including event-handler and SVG payloads. |
+| `evidence_and_impact` | PASS | It cites src/ui/comment-display.js:2-4, traces both fields into innerHTML, and explains cross-user session, page-integrity, and data/action impacts. |
+| `severity_rationale` | PASS | It rates the issue High and justifies this using low-privilege input, cross-user execution, script capability, and session/page impact; it appropriately conditions Critical on privileged access or sensitive data. |
+| `remediation` | PASS | It provides executable createElement/textContent remediation covering both fields and detailed browser/DOM regression checks with HTML, event, SVG, multi-user, and structure assertions. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4fbcbae96df725d2ae68317bce92f64188686abcfd62940b28a42e14a09de97f; fixture_sha256=746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e; output_sha256=f80dccf65a27bc45b7d54be0bf1db6da2169c9020b9cf5bbb3894b4b395695f4; snapshot_sha256=1a59bad236bff679ff4494a0704aeeec6ec3f5bf34ea7c1b4514ff62422d47b4
+- Behavior: Produced a complete security report with precise DOM-path evidence, stored-XSS analysis, severity rationale, concrete text-node remediation, and comprehensive cross-user regression validation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4fbcbae96df725d2ae68317bce92f64188686abcfd62940b28a42e14a09de97f; fixture_sha256=746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e; output_sha256=77337d05bd6e4f09e4bd9b5061629fdac42a1bebbbf5f9f3b43c4540714285d7; snapshot_sha256=935073052997cf6972fb3b343f43f1d46a00ba8f81590e3ad7f44999a480f1af
+- Behavior: Produced a complete, detailed security assessment covering XSS, evidence, impact, severity, remediation, and validation.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `appsec-checklist`
+- Eval: `eval-003-xss`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e` from `agents/security/test/appsec-checklist/evals/workspace/eval-003-xss`.
+- Fixture SHA-256: `746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e`
+- Prompt SHA-256: `4fbcbae96df725d2ae68317bce92f64188686abcfd62940b28a42e14a09de97f`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `095129ad5c17fd8974fdea44f1054ac02e7fa8f954b0e4a1a1d1a0ef185f9ce5`

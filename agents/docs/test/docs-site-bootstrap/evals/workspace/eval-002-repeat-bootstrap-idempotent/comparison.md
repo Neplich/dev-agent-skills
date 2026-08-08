@@ -14,6 +14,128 @@
 - Fixture version/source: canonical manifest `81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-002-repeat-bootstrap-idempotent`.
 - Fixture SHA-256: `81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba`
 - Prompt SHA-256: `1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b2f0004a415a9413ec4f04c88be670a46f49aae91bdfea7a5f5a1bd3994bc3a2`
+- Skill overlay SHA-256: `e3264805b55d520c4492930be28050bfd749cd67b6530c8ad7ae5532a81dc597`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `67789de316a1ba3d112d33eabc20baa992cdfc352bddac2855c6bcc9a3f93650`
+- Metadata SHA-256: `b55dbc29e6b1365719d0847e8b8ceb11bcbcaa0b15d77aac44cd57ea26527a2b`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_zero_diff` | PASS | with_skill raw Git evidence shows unchanged HEAD/branch and empty status, index, worktree, and result diffs; all 43 recorded hashes match the fixture, including the unchanged manifest hash. |
+| `reports_skipped_identical` | PASS | The with_skill output reports all 42 assets as skipped-identical with 0 missing, conflicts, or modifications; fixture manifest evidence contains exactly 42 records, all skipped-identical, and the candidate manifest hash matches. |
+| `preserves_existing_state` | PASS | Raw evidence shows no Git or worktree changes, and every existing fixture asset hash—including metadata, pages, templates, configuration, scripts, and manifest—matches the candidate workspace. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158; fixture_sha256=81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba; output_sha256=de845291fe31b3c3f68a99941044ca85a3df9455ff996ae9528cfa0e30a04911; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Reported and evidenced a 42-asset skipped-identical rerun with zero attributable Git/worktree changes and preserved manifest state.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158; fixture_sha256=81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba; output_sha256=fcc19b16459c870ae88c109bb8b9342f99c5350916adc812250211d5ce6962e1; snapshot_sha256=1b323124e15340b551297f9dfa3a6372444f9d351e16047fe0f9bd65a9495fdc
+- Behavior: Reported generated untracked output and did not establish the required 42-asset idempotent classification.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-site-bootstrap`
+- Eval: `eval-002-repeat-bootstrap-idempotent`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-002-repeat-bootstrap-idempotent`.
+- Fixture SHA-256: `81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba`
+- Prompt SHA-256: `1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `152b64c666428933a1e4cc6555b5ae40ea5c3e08c7fc1320bdd861942ed3733a`
+- Skill overlay SHA-256: `256eb0ac5a55ca6fadf72afd9abf599973b2fa270458596afcc043a11cc688b6`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `d69da1ea23c3e19a3bb0fc90f80dd5c408b949a85124191f1000ce2477a1817f`
+- Metadata SHA-256: `b55dbc29e6b1365719d0847e8b8ceb11bcbcaa0b15d77aac44cd57ea26527a2b`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_zero_diff` | FAIL | with_skill reports zero-diff and raw Git evidence confirms unchanged HEAD, index, worktree, and no untracked files. However, neither the output nor raw evidence independently verifies that the pre-existing createdAt was preserved. |
+| `reports_skipped_identical` | PASS | with_skill reports all 42 assets as skipped-identical; its workspace manifest contains 43 entries, consistent with 42 assets plus the manifest, and Git evidence shows no changes. |
+| `preserves_existing_state` | PASS | Raw with_skill Git evidence shows unchanged commit, branch, index, worktree, and no untracked files. The manifest covers existing pages, templates, configuration, scripts, change-map, and release metadata. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158; fixture_sha256=81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba; output_sha256=0b11a1f4731e7cab36b4c80f1187a6f0afd0aa04af18cfd6cce7975da0b725fa; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Reported 42 skipped-identical assets, zero-diff, and clean Git state; createdAt preservation was not independently evidenced.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158; fixture_sha256=81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba; output_sha256=264983134102ced305ff27d9a60ebf7a513bc64a8cc828e207e1541a5df9a7c4; snapshot_sha256=060c9f1e9bca54e39b34c9d582c0f4bb286da0cadf85ff1b87aaced36e86fce0
+- Behavior: Generated 38 untracked .generated files and did not provide zero-diff or skipped-identical classification.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- createdAt preservation is asserted but not independently supported by the with_skill output or raw evidence.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-site-bootstrap`
+- Eval: `eval-002-repeat-bootstrap-idempotent`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-002-repeat-bootstrap-idempotent`.
+- Fixture SHA-256: `81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba`
+- Prompt SHA-256: `1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `4a398cfa9db1074844549bc002d7714ae1641dceb87757d5c772d45182765b8a`

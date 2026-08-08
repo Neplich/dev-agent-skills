@@ -14,6 +14,130 @@
 - Fixture version/source: canonical manifest `259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888` from `agents/devops/test/deployment-planner/evals/workspace/eval-002-python-api-only`.
 - Fixture SHA-256: `259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888`
 - Prompt SHA-256: `000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `762ea3248d76c5c9e715368b11ab616562bb9bdb0e2bd6a6aad38d47cc80b3af`
+- Skill overlay SHA-256: `e369287042e128c8646e3e76c58b4eed6d4fabe0c3d6bf6826d377c5e25e82c9`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `f6bee599168504aabc5841db04bc20810e822fd2af8545bc98e19f6298c38285`
+- Metadata SHA-256: `cd34fc596ce17b79112511df2244a7b68d45546111925715157c8598360bb097`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_confirmed_target_matrix` | PASS | with_skill 提供 local、Docker 和 Helm 三类部署资产，未见其他部署目标。 |
+| `keeps_api_only_topology` | PASS | Compose 仅包含 api 服务；证据中未引入数据库、Redis、migration、DATABASE_URL 或额外运行时服务。 |
+| `uses_confirmed_runtime_contract` | PASS | local 使用 python -m uvicorn app.main:app，Docker 使用同一入口并暴露 8000，Compose 健康检查和 Helm readiness/liveness 均检查 /health；python -m uvicorn 是等价入口形式。 |
+| `stays_within_deployment_scope` | PASS | 仅新增 deploy/ 下部署资产；git 证据无提交或发布，内容明确未创建 CI/CD，也未执行实际部署或镜像发布。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b; fixture_sha256=259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888; output_sha256=736cbb0d5f733ce6fb334ccc1feb76a5aee66217cb4b7f1308ca6dd3f950f6ff; snapshot_sha256=714f989262277f1ff7e557b5b397753e4adef96770f3999a172d8aa214abb01a
+- Behavior: 完整提供 local、Docker、Helm 三类部署资产，并保持 API-only 拓扑、运行时契约及部署范围。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b; fixture_sha256=259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888; output_sha256=59cb8a2d404413d686550dc88012751fe91c374227c77aa98e5c282fe10c7541; snapshot_sha256=08447277ae4dabdf5bed22da381685fb826480832466e7e434caeb44d0791c3f
+- Behavior: 生成了 Docker 和 Helm 资产，但未提供独立 local handoff；其余范围声明与 API-only 方向基本一致。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `deployment-planner`
+- Eval: `eval-002-python-api-only`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888` from `agents/devops/test/deployment-planner/evals/workspace/eval-002-python-api-only`.
+- Fixture SHA-256: `259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888`
+- Prompt SHA-256: `000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `62de154d5d3bc35771dec755a7ec8baad854cbf6ae4dee4b16b30feea6be70e9`
+- Skill overlay SHA-256: `630d9fd3b5fba61321b2f5f330c0da776d5a0a643b7a33930fe98ad6dda9f302`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `f6bee599168504aabc5841db04bc20810e822fd2af8545bc98e19f6298c38285`
+- Metadata SHA-256: `cd34fc596ce17b79112511df2244a7b68d45546111925715157c8598360bb097`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_confirmed_target_matrix` | PASS | With_skill delivery snapshot contains exactly three target areas: deploy/local, deploy/docker, and deploy/helm; no fourth deployment target is present. |
+| `keeps_api_only_topology` | PASS | The Docker Compose snapshot defines one service, api, with no depends_on or additional services. Snapshots and documentation contain no database, Redis, migration, DATABASE_URL, or persistence configuration. |
+| `uses_confirmed_runtime_contract` | PASS | Local start.sh invokes uvicorn app.main:app with default port 8000. The Dockerfile uses the same entrypoint and port, while Compose maps to 8000 and uses /health; Helm exposes port 8000 and configures readiness/liveness probes for /health. |
+| `stays_within_deployment_scope` | PASS | The with_skill git evidence shows only untracked deploy assets, with no CI/CD files or commit/ref changes. The snapshots contain documentation and configuration only, with no publishing or deployment execution evidence. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b; fixture_sha256=259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888; output_sha256=0e48209f763aadb340f271def83250ea9cefc9b6140bdacb677f06226d8eb828; snapshot_sha256=f8f0f64bd43c83842964d8aefae74c4dc5c70a4e4c34798cd6ff37e323d02443
+- Behavior: Produced local, Docker, and Helm assets, preserved the API-only topology and runtime contract, and stayed within deployment-only scope.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b; fixture_sha256=259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888; output_sha256=9d676c74fdbef0be7b6fef508e0c682150c4644188c9c98992f51dba6e9dd0a6; snapshot_sha256=e0f646de97036ffb08a2440b151bbc7e2b25e6a853d2491104e6ef5af2e896b7
+- Behavior: Produced local, Docker, and Helm assets with an API-only topology and matching runtime contract; baseline used only for comparison.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `deployment-planner`
+- Eval: `eval-002-python-api-only`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888` from `agents/devops/test/deployment-planner/evals/workspace/eval-002-python-api-only`.
+- Fixture SHA-256: `259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888`
+- Prompt SHA-256: `000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `6b7ee50b1667fd76ae49358cc3af5366a7e75afc33e7c444bb73e4e03310853a`

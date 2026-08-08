@@ -14,6 +14,133 @@
 - Fixture version/source: canonical manifest `870f233236f82c3cf594816a5771878c8e388e11eeb3846cf269bf436f0fb100` from `agents/qa/test/qa-agent/evals/workspace/eval-2-empty-qa-directory-expands-cases`.
 - Fixture SHA-256: `870f233236f82c3cf594816a5771878c8e388e11eeb3846cf269bf436f0fb100`
 - Prompt SHA-256: `068467ca9228748a58aa1065f9a150e3f5b012d5ddc3cefa3e5b130984c9cc4a`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `bf605f953dcf46f19d2e331c4596d99cf4c0c84b7fc1582467970e0cc18f8ccd`
+- Skill overlay SHA-256: `56ef2d43180dea784b914fa8976f7eea9cd5a503412b7838586b3195fe555016`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `1252f49c3e393535dba5cc481c5c3100fe9a709aa3de1773196b4edb5900ada3`
+- Metadata SHA-256: `bf12045623474ece32b13073fc8cb963c9b4f673ab0fe9f0cf0dc0ad649d4ef6`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | With_skill identifies the existing profile-form QA directory, checks TEST_SUITE.md and FLOW_INDEX.md, and states that no active executable TC exists. This matches the fixture's empty-suite state. |
+| `assertion_2` | FAIL | With_skill only reports blockers and lists files checked; it does not route the target files and environment as downstream context or declare an applicable specialist execution gate. The user had already authorized exploration. |
+| `specialist_gate_pointer` | FAIL | With_skill does not identify a selected specialist as the verification owner or hand off the project files, environment notes, and existing E2E memory. |
+| `assertion_6` | FAIL | With_skill selects no narrow primary route and returns blocked instead of assigning a single QA specialist route. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=068467ca9228748a58aa1065f9a150e3f5b012d5ddc3cefa3e5b130984c9cc4a; fixture_sha256=870f233236f82c3cf594816a5771878c8e388e11eeb3846cf269bf436f0fb100; output_sha256=659e4f1944d3502a0afee97313d8079ae939032b32dd566e4777ccb11528d5c8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly recognized that the fixture has no active executable cases, but incorrectly stopped at unrelated blockers and omitted the required specialist routing and handoff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=068467ca9228748a58aa1065f9a150e3f5b012d5ddc3cefa3e5b130984c9cc4a; fixture_sha256=870f233236f82c3cf594816a5771878c8e388e11eeb3846cf269bf436f0fb100; output_sha256=287994d270fbbc57889e58189016f6572e2eb924ad43e4b00bfb0a894378daea; snapshot_sha256=ad825740c159e3b02daf0ac49800b1b40aba00e0aa869b47c6b5d7463f2407bd
+- Behavior: Created E2E documentation and correctly noted runtime blockage, but did not provide routing behavior.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- assertion_2
+- specialist_gate_pointer
+- assertion_6
+- Next: Select one narrow QA specialist route and explicitly hand off the target files, environment notes, and existing E2E memory.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `qa-agent`
+- Eval: `eval-002-empty-qa-directory-expands-cases`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `870f233236f82c3cf594816a5771878c8e388e11eeb3846cf269bf436f0fb100` from `agents/qa/test/qa-agent/evals/workspace/eval-2-empty-qa-directory-expands-cases`.
+- Fixture SHA-256: `870f233236f82c3cf594816a5771878c8e388e11eeb3846cf269bf436f0fb100`
+- Prompt SHA-256: `068467ca9228748a58aa1065f9a150e3f5b012d5ddc3cefa3e5b130984c9cc4a`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a20bd075e7e1649c2f9f1462392950229b31be9ed570a4e240d839bf872da003`
+- Skill overlay SHA-256: `badb7717b586c61e5dc54d1f19f46df7c0dd13d0c9640c7f20d0dcbfe6068ee7`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `4e55e5728edf1af511c4153d6f4ebee13eca98f8056d3af30cfe3314c96bd08e`
+- Metadata SHA-256: `bf12045623474ece32b13073fc8cb963c9b4f673ab0fe9f0cf0dc0ad649d4ef6`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | With-skill evidence states the existing suite/flow index had no reusable cases, scripts, prior results, or reports, and it worked within the requested profile-form path without reverting to the legacy single-layer directory. |
+| `assertion_2` | FAIL | The with-skill output documents QA artifacts and blockers but does not route downstream context containing the target files and environment instructions, nor declare an applicable selected specialist gate. |
+| `specialist_gate_pointer` | FAIL | The with-skill route/output does not name a selected specialist or point to the required authoritative E2E memory, platform, credential, execution, PRD/TRD/implementation-plan, and blocked-condition gates. |
+| `assertion_6` | PASS | The with-skill changes remain narrowly scoped to profile-settings E2E coverage and blocked execution; they do not execute multiple QA skills or expand into implementation fixes. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=068467ca9228748a58aa1065f9a150e3f5b012d5ddc3cefa3e5b130984c9cc4a; fixture_sha256=870f233236f82c3cf594816a5771878c8e388e11eeb3846cf269bf436f0fb100; output_sha256=6f81073d3df397d35dd7a3c7b66cb385bbd271e35c8cbb6ec7cd05da8ff1b87a; snapshot_sha256=7e1452b47de005ee3f89f57efc7896d27a6ce9b1727e35cae5e26f05fd9939be
+- Behavior: Identified the empty QA area, added three focused cases and blocked results, but omitted the required specialist route and authoritative gate pointer.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=068467ca9228748a58aa1065f9a150e3f5b012d5ddc3cefa3e5b130984c9cc4a; fixture_sha256=870f233236f82c3cf594816a5771878c8e388e11eeb3846cf269bf436f0fb100; output_sha256=f0e5bc48f7b1b5ec5d1e0f9d3ae4450f6329948cc0dc62af3bcfe5876af2d897; snapshot_sha256=a569d2b18865b4b0c1730860ce85092646185c4b07a4b097f217844881c7e836
+- Behavior: Created six profile-form cases and reports, correctly marked execution blocked, but provided no specialist-routing or gate-pointer behavior.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill lane omits the required downstream context transfer and specialist authority declaration.
+- The with_skill lane omits the required specialist gate pointer.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `qa-agent`
+- Eval: `eval-002-empty-qa-directory-expands-cases`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `870f233236f82c3cf594816a5771878c8e388e11eeb3846cf269bf436f0fb100` from `agents/qa/test/qa-agent/evals/workspace/eval-2-empty-qa-directory-expands-cases`.
+- Fixture SHA-256: `870f233236f82c3cf594816a5771878c8e388e11eeb3846cf269bf436f0fb100`
+- Prompt SHA-256: `068467ca9228748a58aa1065f9a150e3f5b012d5ddc3cefa3e5b130984c9cc4a`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `fce4a3d76c9b69c96fdd86c3a44479dd8a12dd392536b124aa25210a7efca146`

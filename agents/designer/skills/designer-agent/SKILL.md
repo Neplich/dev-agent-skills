@@ -1,6 +1,6 @@
 ---
 name: designer-agent
-description: "Downstream design router invoked after pm-agent handoff. Classifies confirmed design scope across UX flows, information architecture, screen definitions, wireframes, reference-pattern analysis, and visual-system work, then delegates to design specialists."
+description: "Classify and route confirmed UX, information-architecture, wireframe, reference-pattern, and visual-system requests before design work begins. Use immediately after a PM handoff; preserve the handoff and delegate to the matching design specialist."
 visibility: internal
 ---
 

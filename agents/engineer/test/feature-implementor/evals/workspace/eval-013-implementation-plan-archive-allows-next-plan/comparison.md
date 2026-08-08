@@ -14,6 +14,69 @@
 - Fixture version/source: canonical manifest `b1196f3cc740d50faa388fb3640408e1ae15382be34fb5cbb8ccf574f355b7b3` from `agents/engineer/test/feature-implementor/evals/workspace/eval-013-implementation-plan-archive-allows-next-plan`.
 - Fixture SHA-256: `b1196f3cc740d50faa388fb3640408e1ae15382be34fb5cbb8ccf574f355b7b3`
 - Prompt SHA-256: `3f34e8964229e17bf678fdb0295a0b4214512a8063221444dbb90bb2e6e03fb8`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b2870e3d0eb112e2c40f35446120217b8d8a18d55835b9d634a5a2c9c71dcb55`
+- Skill overlay SHA-256: `eb10f50f1bee1354d4cdc15dfff5d3853f5131c3abdfbb65a03b041f90906b17`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `63eea1bc6726716aeec9d0c5f47bf4224063a1ac86fd4d675f7615f584d2a70d`
+- Metadata SHA-256: `20785706c746be6895ed31fc2345f379cd37d1db1f0bd95d72fc9387f408aa95`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_prior_plan_archived` | PASS | With-skill plan frontmatter references the exact archived plan path; fixture confirms that plan has status Archived, and the new Draft plan establishes no active-plan blocker. |
+| `allows_new_active_plan` | PASS | With-skill output links to docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md, the canonical new plan path. |
+| `records_previous_plan_archive` | PASS | With-skill delivery snapshot frontmatter contains previous_plan_archive set to the exact archived plan path. |
+| `keeps_active_entry_fixed` | PASS | With-skill output and git status show the active plan at docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md, not under the archive directory. |
+| `waits_for_user_confirmation` | PASS | Output explicitly requests confirmation before coding; git evidence shows no code changes, only the untracked plan file. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3f34e8964229e17bf678fdb0295a0b4214512a8063221444dbb90bb2e6e03fb8; fixture_sha256=b1196f3cc740d50faa388fb3640408e1ae15382be34fb5cbb8ccf574f355b7b3; output_sha256=8a353f109b95cfc3c8701244ebebdb11552f40a2e707af3ba8e02d33330acb6b; snapshot_sha256=5b19f63b6176965c982f644561b21d47ea29aa9bd70916b046525cb6bb70ece4
+- Behavior: Created the canonical Draft plan, linked the archived prior plan in frontmatter, preserved the active entry path, and awaited confirmation before coding.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3f34e8964229e17bf678fdb0295a0b4214512a8063221444dbb90bb2e6e03fb8; fixture_sha256=b1196f3cc740d50faa388fb3640408e1ae15382be34fb5cbb8ccf574f355b7b3; output_sha256=633dae115788bc8e4f7f0bb4367132e548bb618432e26e853254d4879dc5896d; snapshot_sha256=336725626cc7170a8e5d92ed4c22e385d15c5c26dea7e69796744d1266b60b05
+- Behavior: Created a non-canonical plan under implementation-plans/, without identifying the archived plan, recording previous_plan_archive, or requesting confirmation.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-013-implementation-plan-archive-allows-next-plan`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b1196f3cc740d50faa388fb3640408e1ae15382be34fb5cbb8ccf574f355b7b3` from `agents/engineer/test/feature-implementor/evals/workspace/eval-013-implementation-plan-archive-allows-next-plan`.
+- Fixture SHA-256: `b1196f3cc740d50faa388fb3640408e1ae15382be34fb5cbb8ccf574f355b7b3`
+- Prompt SHA-256: `3f34e8964229e17bf678fdb0295a0b4214512a8063221444dbb90bb2e6e03fb8`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`

@@ -14,6 +14,130 @@
 - Fixture version/source: canonical manifest `f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a` from `agents/devops/test/incident-playbook-writer/evals/workspace/eval-001-docker-rollback`.
 - Fixture SHA-256: `f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a`
 - Prompt SHA-256: `f9cbfa543cb8f8fa6c3d3f1e68b0eaa1e627427917cfa9b9970e909922356673`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `500941dffb48347901d3283054321002e2a4be37cb509882170d999b6f27485f`
+- Skill overlay SHA-256: `322b6fc4de918cf45a54ef853b436aea4069d29a5654d65d9e002fe4543294d8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ef78ea6924e16ad4c29c668948468977eb007b3ff9fb4e26733caf7d332c338d`
+- Metadata SHA-256: `aaf6d95692337cdac99edc2200f96e32a7dbdc444f3865d1a29464638703fbd4`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_evidence_based_rollback` | PASS | with_skill 的 deploy/ROLLBACK.md 使用 release record 中已知健康、不可变 SemVer tag，设置 APP_IMAGE_TAG，执行 pull 与 up -d app，并核对 ps、日志和 /health。 |
+| `creates_scoped_incident_response` | PASS | with_skill 的 deploy/INCIDENT_RESPONSE.md 明确 P1 15 分钟、P2 30 分钟响应时限，使用 #ops-incidents，指定 incident commander 和 service owner，并覆盖调查、恢复验证及恢复后关闭/记录。 |
+| `avoids_unsupported_procedures` | PASS | 文档明确排除数据库 migration 回滚、缓存清理和无证据操作；with_skill 的 git evidence 显示未执行回滚或产生提交，候选输出也明确未执行实际回滚。 |
+| `omits_unrequested_playbooks` | PASS | with_skill 的 git 状态和 workspace manifest 仅显示新增 deploy/ROLLBACK.md 与 deploy/INCIDENT_RESPONSE.md，没有 TROUBLESHOOTING.md 或 ON_CALL.md。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9cbfa543cb8f8fa6c3d3f1e68b0eaa1e627427917cfa9b9970e909922356673; fixture_sha256=f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a; output_sha256=15d6992485ca55334c51febc927c4b7bc210f805060cfb3f82f95fdc5de06e0a; snapshot_sha256=24af926265b96cf81abc73d3bde6228bffb79f2f2e3cac778db01a227983b28e
+- Behavior: 新增两份目标手册，基于 fixture 契约覆盖回滚、事故响应和限制，未执行实际回滚或额外文档生成。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9cbfa543cb8f8fa6c3d3f1e68b0eaa1e627427917cfa9b9970e909922356673; fixture_sha256=f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a; output_sha256=c4c9c80f6a000743bb76c388bb71f6e0ebbcf6f2f818b9e4cdce3e2b380e54b0; snapshot_sha256=5d8cb7ca4a84e78e36a7674c705111e01c76b8ccac65ac17f6d3db005929bf54
+- Behavior: 新增两份目标手册，未执行回滚；内容满足请求，但仅作比较基线。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `incident-playbook-writer`
+- Eval: `eval-001-docker-rollback`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a` from `agents/devops/test/incident-playbook-writer/evals/workspace/eval-001-docker-rollback`.
+- Fixture SHA-256: `f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a`
+- Prompt SHA-256: `f9cbfa543cb8f8fa6c3d3f1e68b0eaa1e627427917cfa9b9970e909922356673`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a3dcab32ca6f16ce18a6d001bf4e11cedd9e9fc11b26bd45c079c620b67ec959`
+- Skill overlay SHA-256: `f49bc0517e51e913154134ad0435ffac724d99a1f33e11d0280d2294a9d5c8bd`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ef78ea6924e16ad4c29c668948468977eb007b3ff9fb4e26733caf7d332c338d`
+- Metadata SHA-256: `aaf6d95692337cdac99edc2200f96e32a7dbdc444f3865d1a29464638703fbd4`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_evidence_based_rollback` | PASS | with_skill 输出明确要求使用 release record 中的 last known healthy、不可变 SemVer tag，设置 APP_IMAGE_TAG，执行 pull app 与重建 app，并验证容器状态、health、日志和 /health。 |
+| `creates_scoped_incident_response` | PASS | with_skill 的 INCIDENT_RESPONSE.md 覆盖 P1 15 分钟、P2 30 分钟、#ops-incidents、incident commander、service owner，以及调查、恢复和恢复后检查。 |
+| `avoids_unsupported_procedures` | PASS | with_skill 文档明确排除数据库 migration 回滚、数据恢复及仓库未提供的凭据修复或镜像重建流程；git_evidence 显示未执行实际回滚或提交变更。 |
+| `omits_unrequested_playbooks` | PASS | with_skill 的 git_status、workspace_manifest 和 delivery_snapshot 均显示仅新增 deploy/ROLLBACK.md 与 deploy/INCIDENT_RESPONSE.md，没有 TROUBLESHOOTING.md 或 ON_CALL.md。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9cbfa543cb8f8fa6c3d3f1e68b0eaa1e627427917cfa9b9970e909922356673; fixture_sha256=f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a; output_sha256=8ecbd508d560dfb4379221465f14992207485e3618bc30de5c5d371043b0fe61; snapshot_sha256=dc70bea08b7633fd5a3620fb1faf1a973b54fe1e2bb2d2b79e4aae34feea02c0
+- Behavior: 新增两份目标手册，基于 fixture 证据细化 Docker Compose healthcheck、P1/P2 故障场景、回滚流程和恢复确认，未执行实际操作。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9cbfa543cb8f8fa6c3d3f1e68b0eaa1e627427917cfa9b9970e909922356673; fixture_sha256=f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a; output_sha256=a7cff7a64c2085f6b60a7a4068392dee24b425830d51d88d6973f95323a861ea; snapshot_sha256=fa204c6baf7b98bbe9d831de4eea8a122f5c5ef3693d50847379323eaa3f8fef
+- Behavior: 新增两份目标手册，内容满足主要范围与回滚契约，并未执行实际操作。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `incident-playbook-writer`
+- Eval: `eval-001-docker-rollback`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a` from `agents/devops/test/incident-playbook-writer/evals/workspace/eval-001-docker-rollback`.
+- Fixture SHA-256: `f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a`
+- Prompt SHA-256: `f9cbfa543cb8f8fa6c3d3f1e68b0eaa1e627427917cfa9b9970e909922356673`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `2ee427f056a8ac15cf9d4885d215c9ee8db1e2692beb4901545cf09914ace629`

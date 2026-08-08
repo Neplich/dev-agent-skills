@@ -1,6 +1,6 @@
 ---
 name: changelog-gen
-description: "Internal PM specialist—not a direct entry point. Invoked by pm-agent after entry classification to generate or update versioned changelogs from merged PRs, tags, and repository release history."
+description: "Generate or update developer-facing changelogs from merged PRs, tags, or a dated repository release-history export, classifying user-impacting changes semantically. Use after pm-agent routes changelog work."
 visibility: internal
 ---
 

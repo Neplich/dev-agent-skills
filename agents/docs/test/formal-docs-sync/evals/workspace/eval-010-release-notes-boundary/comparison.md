@@ -14,6 +14,132 @@
 - Fixture version/source: canonical manifest `0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary`.
 - Fixture SHA-256: `0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a`
 - Prompt SHA-256: `59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `52db6badcefada59a1d42e81de2581f06256f43c060b7699c281ab21bfb40949`
+- Skill overlay SHA-256: `f896903fa1a8ae6886eb0b6365065625a2e60f6809acd0af6c7c8dc8f8f2bd40`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `73a1610671f9f97761837a796f3ae7908687bbe25fc17ad4582a0bb4ee5c7fae`
+- Metadata SHA-256: `2b92a8a77481c502d1fcd66199a8c8461112beb365a1111e12f804f2f04909b7`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `recognizes_release_communication_outcome` | PASS | With-skill output identifies a release-document workflow and names the user update page, release list, and release metadata as the produced surfaces. |
+| `routes_complete_entry_to_site_owner` | FAIL | It does not hand off the confirmed host, version, scope, evidence boundary, and site surfaces to the Docs owner; instead it claims to have completed the synchronization. |
+| `keeps_entire_site_zero_diff` | FAIL | Raw evidence shows docs/site mutations: metadata and index modified, and v1.5.0.md added. |
+| `preserves_external_release_boundary` | PASS | The with-skill output and raw diff show no tag or GitHub Release creation or movement, and no external-release authorization is included. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a; output_sha256=a451b7a34dc32b8c977a55ae595bfd7d1c53ab7cdbe8f11010d942154788d93f; snapshot_sha256=4a38053a27af16600259bab9cb51a2a92d1975bb542eaeae93d81f26657ee129
+- Behavior: Correctly identified the release-document surfaces and stayed within site files, but performed the forbidden site mutations and omitted the required Docs-owner handoff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a; output_sha256=fd0995f86aea25d4415a144070f93036fd4755d0fdd62fb7e64e64ad0da24fe4; snapshot_sha256=25a7959e075071547a8b4e47fdf545c6869362e948f91f0aaad6c5a2b62e92cb
+- Behavior: Directly created the release page, index, metadata, and generated navigation; no handoff or zero-diff boundary.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- Missing complete handoff to the Docs owner.
+- docs/site was modified despite the required zero-diff boundary.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-010-release-notes-boundary`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary`.
+- Fixture SHA-256: `0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a`
+- Prompt SHA-256: `59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `1e290565a84b926a128928ccdd91365a2235adff18f999307c0a3553f0b41f34`
+- Skill overlay SHA-256: `0c6a49eed1db242a95632eb0d142c1760f60ffc995c96026908ec8c0e6bd8d63`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `73a1610671f9f97761837a796f3ae7908687bbe25fc17ad4582a0bb4ee5c7fae`
+- Metadata SHA-256: `2b92a8a77481c502d1fcd66199a8c8461112beb365a1111e12f804f2f04909b7`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `recognizes_release_communication_outcome` | PASS | With-skill output targets the version page, release list, release metadata, and generated navigation, identifying the site release-notes workflow rather than Product/Ops current-state pages. |
+| `routes_complete_entry_to_site_owner` | FAIL | The output claims direct completion and does not hand off the confirmed host, version, scope, evidence boundary, and target surfaces to the Docs owner. |
+| `keeps_entire_site_zero_diff` | FAIL | Raw git evidence shows modifications to docs/site/.meta/releases.json and docs/site/release-notes/index.md plus a new docs/site/release-notes/v1.5.0.md. |
+| `preserves_external_release_boundary` | PASS | Raw git evidence shows no ref delta, new commits, or reflog changes, and the output mentions no tag or GitHub Release creation or publication. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a; output_sha256=cc23cc006ad6103e2cb48b97f3b7344a55129f0e3cc3f1bfa8614e05f933b731; snapshot_sha256=e91a1a593606b4117d2fa47fbfa162a89c28a5748b346497a13ca4dbe895072f
+- Behavior: Directly modified the release metadata and index and created the version page; it avoided generated artifacts and external Git changes, but did not preserve the required handoff/zero-write boundary.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a; output_sha256=deeeec46c1755c5adc5f965ac991e5c90103f5f520941f0793d5d045d292e940; snapshot_sha256=dcdf895e16f982800e80432e522f7718fff595dfc89409e375653f629162cd9b
+- Behavior: Directly modified release metadata and index, created the version page and generated site artifacts, and reported completion.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill lane failed to route the complete confirmed entry to the Docs owner.
+- The with_skill lane wrote three files under docs/site despite the required zero-diff handoff boundary.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-010-release-notes-boundary`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary`.
+- Fixture SHA-256: `0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a`
+- Prompt SHA-256: `59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `79b2ff102fa24fa224c9f24f44f3e648a1ae7eb9a7a10e639d8675db4454120a`

@@ -1,6 +1,6 @@
 ---
 name: github-reader
-description: "Internal PM specialist—not a direct entry point. Invoked by pm-agent after entry classification to summarize GitHub issues, PRs, milestones, backlog health, release readiness, and recent repository activity."
+description: "Summarize GitHub issues, PRs, milestones, backlog health, review queues, release readiness, and recent activity from live data or a dated complete export. Use after pm-agent routes repository-status work."
 visibility: internal
 ---
 

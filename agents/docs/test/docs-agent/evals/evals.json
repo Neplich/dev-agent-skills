@@ -43,7 +43,7 @@
         {
           "id": "points_to_authoritative_gate",
           "description": "只指向 specialist 权威合同",
-          "text": "将 `formal-docs-sync/SKILL.md` 及其内部指令作为权威执行合同，不在 router 输出中复制八步同步协议或 change-map 写入细节。"
+          "text": "明确由 `formal-docs-sync` specialist 接管后续执行并停在 router 边界；不要求向用户暴露本地 SKILL.md 路径，也不复制八步同步协议或 change-map 写入细节。"
         },
         {
           "id": "stops_at_router_boundary",
@@ -116,7 +116,7 @@
         {
           "id": "references_audit_gate_only",
           "description": "只引用审计 specialist gate",
-          "text": "仅指向 `docs-audit/SKILL.md` 及其内部指令作为权威执行 gate，不在 router 输出中复制 base/target、确定性层、事实层、三态或统一盖章协议。"
+          "text": "明确由 `docs-audit` specialist 接管审计并停在 router 边界；不要求向用户暴露本地 SKILL.md 路径，也不复制 base/target、确定性层、事实层或统一盖章协议。"
         }
       ],
       "scenario": {
@@ -164,7 +164,7 @@
         {
           "id": "references_release_notes_gate_only",
           "description": "仅指向 specialist gate",
-          "text": "仅指向 `release-notes-gen/SKILL.md` 及其内部指令作为权威执行 gate，不在 router 输出中复制七步流程、正文确认、metadata/index、docs checks 或 `pm-agent:github-release-gen` handoff 的详细协议。"
+          "text": "明确由 `release-notes-gen` specialist 接管站内版本说明并停在 router 边界；不要求向用户暴露本地 SKILL.md 路径，也不复制正文确认、metadata/index、docs checks 或 GitHub Release handoff 的详细协议。"
         }
       ],
       "scenario": {
@@ -323,7 +323,7 @@
         {
           "id": "references_manual_gate_only",
           "description": "仅指向 manual specialist gate",
-          "text": "仅指向 `manual-gen/SKILL.md` 及其内部指令作为权威执行 gate；router 不代为协商运行环境、确认候选批次、设置视口、采集截图、写入站点或执行审计 handoff。"
+          "text": "明确由 `manual-gen` specialist 接管图文手册并停在 router 边界；不要求向用户暴露本地 SKILL.md 路径，router 不代为协商环境、采集截图、写入站点或执行审计 handoff。"
         }
       ],
       "scenario": {

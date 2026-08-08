@@ -11,6 +11,141 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `9101f664c7914afb9d6f3edb2707872f2f3d501fb3302e3056bb7ba01643e88f` from `agents/engineer/test/feature-implementor/evals/workspace/eval-004-small-change-plan-gate`.
+- Fixture SHA-256: `9101f664c7914afb9d6f3edb2707872f2f3d501fb3302e3056bb7ba01643e88f`
+- Prompt SHA-256: `334abb7e4defb6a609eb3e27f2a8ee311f59dfd40169a8f184ac8785cb43611a`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `31ea692709a0817bc32ab74f76490bf0edfdea6902d08e36d2b8cbddeb78aee4`
+- Skill overlay SHA-256: `32c9b06579315c3f3af57ed46ca530329febcbd28b2adfca751e5c7d8b333736`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `7ad36e3dae8256ee32b41e326daa72d3992661ae3195905ab94c0de9d5bb4663`
+- Metadata SHA-256: `62fa61590c7d39e5404273472c64cb54c1f2eedc4a5d8859470cb476742b524a`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `records_prd_alignment` | FAIL | 未说明用户已提供产品与技术负责人确认，也未在安排中记录该对齐依据。 |
+| `writes_plan_for_small_change` | FAIL | 明确表示未创建实施计划文件，未要求产出或更新 docs/engineer/settings-label/IMPLEMENTATION_PLAN.md。 |
+| `records_split_decision` | FAIL | 未说明是否进行 implementation/validation sub-agent split，也未说明不拆分仍需实施计划。 |
+| `waits_for_user_confirmation` | FAIL | 未要求用户确认实施计划后再开始实施。 |
+| `blocks_e2e_without_confirmed_plan` | NOT_EXERCISED | 未进入后续 QA E2E 文档补充步骤；该步骤依赖计划确认或运行时证据。 |
+| `does_not_modify_code` | PASS | 输出明确表示未修改代码、按钮文案或完成实现；git evidence 也显示无变更。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=334abb7e4defb6a609eb3e27f2a8ee311f59dfd40169a8f184ac8785cb43611a; fixture_sha256=9101f664c7914afb9d6f3edb2707872f2f3d501fb3302e3056bb7ba01643e88f; output_sha256=780e628ac588eab4379fbce8b8f0008530b864ae11b10eeb6a946c0e56efdcfb; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 未修改代码，但因缺少源码而停止；同样遗漏多项当前应输出的计划与确认要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=334abb7e4defb6a609eb3e27f2a8ee311f59dfd40169a8f184ac8785cb43611a; fixture_sha256=9101f664c7914afb9d6f3edb2707872f2f3d501fb3302e3056bb7ba01643e88f; output_sha256=f6059bcd2aa43276d65d5be81b026058a1cf226d1fbf2f75b323b97586bd1336; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了实施安排，但遗漏确认依据、实施计划文件、拆分决策、用户确认和 E2E 依赖约束。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- 未记录 PRD 对齐依据。
+- 未要求创建或更新实施计划文件。
+- 未记录拆分判断。
+- 未要求用户确认计划。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-004-small-change-plan-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `9101f664c7914afb9d6f3edb2707872f2f3d501fb3302e3056bb7ba01643e88f` from `agents/engineer/test/feature-implementor/evals/workspace/eval-004-small-change-plan-gate`.
+- Fixture SHA-256: `9101f664c7914afb9d6f3edb2707872f2f3d501fb3302e3056bb7ba01643e88f`
+- Prompt SHA-256: `334abb7e4defb6a609eb3e27f2a8ee311f59dfd40169a8f184ac8785cb43611a`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b2870e3d0eb112e2c40f35446120217b8d8a18d55835b9d634a5a2c9c71dcb55`
+- Skill overlay SHA-256: `eb10f50f1bee1354d4cdc15dfff5d3853f5131c3abdfbb65a03b041f90906b17`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `7ad36e3dae8256ee32b41e326daa72d3992661ae3195905ab94c0de9d5bb4663`
+- Metadata SHA-256: `62fa61590c7d39e5404273472c64cb54c1f2eedc4a5d8859470cb476742b524a`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `records_prd_alignment` | FAIL | 未说明产品和技术负责人已确认，也未将该确认作为实施安排依据记录。 |
+| `writes_plan_for_small_change` | FAIL | 未要求产出或更新 docs/engineer/settings-label/IMPLEMENTATION_PLAN.md。 |
+| `records_split_decision` | FAIL | 未说明是否触发 implementation/validation sub-agent split，也未说明不拆分仍需实施计划。 |
+| `waits_for_user_confirmation` | FAIL | 未要求用户确认实施计划后再开始实施。 |
+| `blocks_e2e_without_confirmed_plan` | FAIL | 未提及 E2E 文档补充依赖已确认的实施计划，或计划缺失/未确认时必须 blocked。 |
+| `does_not_modify_code` | PASS | 输出明确表示目标源码尚未出现，未声称已修改代码或完成实现。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=334abb7e4defb6a609eb3e27f2a8ee311f59dfd40169a8f184ac8785cb43611a; fixture_sha256=9101f664c7914afb9d6f3edb2707872f2f3d501fb3302e3056bb7ba01643e88f; output_sha256=5e0eece338ead4e998b6d32d9835b99b534dcb659d3129b444615abc9c8f1548; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提出直接修改组件文案的步骤，确认源码尚未出现且未修改代码，但遗漏全部流程性要求，仅满足不直接修改代码。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=334abb7e4defb6a609eb3e27f2a8ee311f59dfd40169a8f184ac8785cb43611a; fixture_sha256=9101f664c7914afb9d6f3edb2707872f2f3d501fb3302e3056bb7ba01643e88f; output_sha256=d1004824ac3ac8bd55ec2fc83f8b8c2f81183a39cb301c9b0ecbdc8e5426539d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提出直接修改和测试安排，未修改代码；同样遗漏确认依据、实施计划文件、拆分判断、用户确认及 E2E blocked 依赖。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- records_prd_alignment
+- writes_plan_for_small_change
+- records_split_decision
+- waits_for_user_confirmation
+- blocks_e2e_without_confirmed_plan
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-004-small-change-plan-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/feature-implementor/evals/workspace/eval-004-small-change-plan-gate`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `78a38f2825c3f49238f0218d2c37fda54f328e48d02e714402d6027e16d2911e`

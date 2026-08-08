@@ -11,6 +11,132 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-002-single-version-mode`.
+- Fixture SHA-256: `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88`
+- Prompt SHA-256: `d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `fd6202eb001e4fcc8e818cb01c9c27ec290ab3c4edabd757735bf984bab469a4`
+- Skill overlay SHA-256: `b53e1261ebb5c959b0bf29a37559e89f454013b911c855fd491809032b43b267`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `e34f2dddfabba5be49382d984bac6785776f7fb5fa22e37126ed32d1f44a81df`
+- Metadata SHA-256: `814184c8bd7a959b3f0695c85bef4dd34c73bd316a08d00ccc354207f37fabc9`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `v_version_yyyy_mm_dd` | PASS | with_skill 文件包含 `## [v0.120.2] - 2026-08-05`。 |
+| `release_tag` | PASS | 版本号 `v0.120.2` 与 fixture 的实际 release tag `v0.120.2` 匹配。 |
+| `pr_conventional_commit` | FAIL | PR #300 条目仍显示 `**client:** Handle streaming reconnect`，未完全去掉 conventional commit 的 scope 前缀；#301 和 #302 已清洗。 |
+| `breaking_change_breaking` | PASS | PR #302 条目带有 `⚠️ BREAKING` 前缀。 |
+| `section` | PASS | 输出中的 Added、Changed、Fixed 均有内容，未输出空 section。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031; fixture_sha256=835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88; output_sha256=8918eeff11ee9c1e12a66f46bb469afd99896b60e169e8e0a219f3dab631d0e0; snapshot_sha256=c7abcd23ff8ada6652e7b20cece2dfc9c938e9defe5147bfb24d64f9213468c6
+- Behavior: 生成并写入目标文件，版本和日期正确，包含全部 3 个 PR，标注 breaking change；PR #300 保留了 client scope 前缀。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031; fixture_sha256=835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88; output_sha256=1db3d79a3d52672068755102b15cd5ddeb0c6c88eacb73334f9d57147188e7f6; snapshot_sha256=5aad754f2b0e07bff4f3362e14b4ea0a51e4eea82384254f3c4261a670c71b6a
+- Behavior: 生成了目标文件并包含全部 PR 引用，但版本标题缺少 v 前缀，breaking 标记未使用要求的格式。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 的 PR #300 标题未完全去掉 conventional commit 前缀中的 scope。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-002-single-version-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-002-single-version-mode`.
+- Fixture SHA-256: `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88`
+- Prompt SHA-256: `d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `281e1b5c19a67eed1e87d8548e15e7ab23a90d7de9e0bd112a29df45200426a3`
+- Skill overlay SHA-256: `f4e3f318f95aeaf018d947cb5144bbc03198d0d62d802018a4946522adbf8065`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `e34f2dddfabba5be49382d984bac6785776f7fb5fa22e37126ed32d1f44a81df`
+- Metadata SHA-256: `814184c8bd7a959b3f0695c85bef4dd34c73bd316a08d00ccc354207f37fabc9`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `v_version_yyyy_mm_dd` | PASS | With-skill output contains `## [v0.120.2] - 2026-08-05`, matching the required format. |
+| `release_tag` | PASS | With-skill version `v0.120.2` matches the fixture's target release tag. |
+| `pr_conventional_commit` | PASS | All three PR titles are cleaned of conventional-commit prefixes while retaining their meaningful titles/scopes. |
+| `breaking_change_breaking` | PASS | PR #302 is marked with the required `⚠️ BREAKING:` prefix. |
+| `section` | PASS | The output includes only populated sections: Added, Changed, and Fixed; all correspond to fixture PRs. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031; fixture_sha256=835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88; output_sha256=6c6a610ca1200baaea43ac11b6db2ddf55550067022e8acc26154bb6a37f56a8; snapshot_sha256=6356441170f8c5b437fe910294dbd7cc97c9ab08ed63a4901eae87bc15670346
+- Behavior: Generated the expected changelog file with the correct version/date, cleaned PR titles, breaking-change marker, and populated sections.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031; fixture_sha256=835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88; output_sha256=e05bab249e4233429a0ca970266f94a7d6cce466f0873385f33e306290fa5b16; snapshot_sha256=e1d9814563db2bea61ac4bc462a9e971934011ff8b0aea714184dc1b0122b905
+- Behavior: Generated the changelog file and included PRs #300–#302, but omitted the required v-prefixed header and breaking-change marker.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-002-single-version-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-002-single-version-mode`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `bd018ad305c5f305a6daed7fd9f17ae486593c50dc80e5c2aa3a74b95671bf30`

@@ -14,6 +14,129 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/idea-to-spec/workspace/iteration-2/eval-5-pm-agent-direct-delegation`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `acbae9b70ef204aa5ea01807d9cde8c1bfaf036424605400b24871c7a447ebef`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `7638558b96730ed626879bcffd4a606d3ed390013a41acf29ade725d210e3f4e`
+- Skill overlay SHA-256: `12aaaef0d075d133bbbdc681f598fd09807b211a4377dcfbc6cbbfcaa30909e0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `073eeac01923328bf5fb812c3ab5852d6edb01936d4f17fc20c69c0d80324b2c`
+- Metadata SHA-256: `2ddab779806f9b6e5f9359612bd5cef16f9b4ffd4913ec9f35576d1c0f06be89`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `dispatcher` | PASS | with_skill 直接将需求归类为全新产品探索，并进入上下文摘要与需求梳理，未停留在路由说明。 |
+| `skill` | PASS | with_skill 未询问是否调用子 skill，也未要求手动执行相关命令。 |
+| `pm` | PASS | with_skill 在同一轮明确收敛 MVP、功能边界、初版实现方案与非目标，并提出确认下一步。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acbae9b70ef204aa5ea01807d9cde8c1bfaf036424605400b24871c7a447ebef; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=f9f9e6839217acec8a252afa0d6744ade32dc00ad060c47100fdcf47f1ef025e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 进入 greenfield-discovery，完成 MVP、功能边界和非目标的需求收敛，并等待用户确认后继续。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acbae9b70ef204aa5ea01807d9cde8c1bfaf036424605400b24871c7a447ebef; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=99e5f4783b5438e393f2396389b63be21ff15f154bcdc10751e285b7936571bc; snapshot_sha256=4264f422a63ce392c2ef772a235dec3ac73935bed3f1bdc69049ee90421a2270
+- Behavior: 直接交付了可运行前端原型，未展示需求发现或 PM 收敛过程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `idea-to-spec`
+- Eval: `eval-005-pm-agent-direct-delegation`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/idea-to-spec/workspace/iteration-2/eval-5-pm-agent-direct-delegation`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `acbae9b70ef204aa5ea01807d9cde8c1bfaf036424605400b24871c7a447ebef`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a2e446c3d8d5f02d34cd5e3954e55500a6eaf296bcb868f9d3dbe27d39c64b91`
+- Skill overlay SHA-256: `14328c4af5595e19e21331fb22dcc6dda56844ee6c4f2ee6382997e7ffe0af37`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `073eeac01923328bf5fb812c3ab5852d6edb01936d4f17fc20c69c0d80324b2c`
+- Metadata SHA-256: `2ddab779806f9b6e5f9359612bd5cef16f9b4ffd4913ec9f35576d1c0f06be89`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `dispatcher` | FAIL | with_skill 输出仅说明已完成静态 AI 对话助手原型及其功能，没有进入 idea-to-spec 风格的上下文摘要或需求梳理。 |
+| `skill` | PASS | with_skill 输出未询问是否调用 idea-to-spec，也未要求手动执行 /pm-agent:idea-to-spec。 |
+| `pm` | FAIL | with_skill 输出没有继续提炼产品定位、功能边界、MVP 或其他需求收敛问题。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acbae9b70ef204aa5ea01807d9cde8c1bfaf036424605400b24871c7a447ebef; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=a50ac16395bcf29b1b4a30c8ebd0620c645d1707459bb925be8adbf283511a8e; snapshot_sha256=f17c8657a0582a273772804911d90deb93d0bd507c2ac2b40aefe5fc202eb417
+- Behavior: 直接交付左右结构的静态 AI 对话助手原型；避免反问调用 skill，但未进入上下文摘要或 PM 需求收敛流程。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acbae9b70ef204aa5ea01807d9cde8c1bfaf036424605400b24871c7a447ebef; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=fd871aeb22b33923dd986723770e2a92f166d0504a75baffefaa6e263b632af0; snapshot_sha256=ffd0c9ed2f39d5f257ad39d77808f08657c5d20d1f5273f3f6a6784a3fbfb7ae
+- Behavior: 直接交付左右结构的 AI 对话助手原型，未进行需求梳理或 PM 收敛。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- dispatcher 未满足：未直接下钻到 idea-to-spec 风格的上下文摘要或需求梳理。
+- pm 未满足：未在同一轮继续进行产品定位、功能边界、MVP 或其他需求收敛。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `idea-to-spec`
+- Eval: `eval-005-pm-agent-direct-delegation`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/idea-to-spec/workspace/iteration-2/eval-5-pm-agent-direct-delegation`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `acbae9b70ef204aa5ea01807d9cde8c1bfaf036424605400b24871c7a447ebef`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `9c3b136c6958582b2c5c3d552759bbe4fd3ef24876075804e91c5b21980a34af`

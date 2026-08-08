@@ -14,6 +14,137 @@
 - Fixture version/source: canonical manifest `b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071` from `agents/engineer/test/feature-implementor/evals/workspace/eval-010-implementation-plan-closeout-sync`.
 - Fixture SHA-256: `b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071`
 - Prompt SHA-256: `c3ffcc020a63823b1bc5160a6102e792071ef85d1d8fe0aee0513d9e308a0fbf`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `31ea692709a0817bc32ab74f76490bf0edfdea6902d08e36d2b8cbddeb78aee4`
+- Skill overlay SHA-256: `32c9b06579315c3f3af57ed46ca530329febcbd28b2adfca751e5c7d8b333736`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `20499e40a806229e21ef95ff8d5fbc24188637283192bc707a4d5fd2332a9e7d`
+- Metadata SHA-256: `8cc2bbac5be951408272dda8df48e23d4c89655790723f30b56076864a8cfafc`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_closeout_state_conflict` | FAIL | The with_skill output says the plan cannot be marked Implemented, but does not explicitly identify the conflict between `status: Implemented` and the body states 待用户确认/未开始/待确认. |
+| `blocks_handoff_until_plan_updated` | FAIL | It blocks completion until implementation is restored, but does not explicitly block QA handoff, delivery, PR creation, or issue closure until the plan is synchronized. |
+| `requires_implementation_result_update` | PASS | It states that IMPLEMENTATION_PLAN.md was updated and records missing implementation files, validation evidence, residual risk, and the next owner. |
+| `records_deterministic_checks` | PASS | It records `test -f src/settings.ts`, `rg --files src test tests`, and `git diff --check` with results, and explains why no further deterministic command could run. |
+| `records_eval_evidence` | PASS | It explicitly states model evaluation and fresh independent validation were not run because implementation and test targets are absent, without claiming they passed. |
+| `keeps_runtime_artifacts_out_of_git` | FAIL | It says no runtime artifacts were created, but does not state that transcript, diagnostics, outputs, timing, run status, or `comparison.auto.md` must not be committed to git. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3ffcc020a63823b1bc5160a6102e792071ef85d1d8fe0aee0513d9e308a0fbf; fixture_sha256=b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071; output_sha256=720488a26589737bccf23c7b8fae219e813450442cb9b3c8e081e354ab84f224; snapshot_sha256=9be38f35dc3cd42e5235c968a0b0da402b5d9949192801320c44768f04db39c6
+- Behavior: Correctly reconciles the repository snapshot, blocks Implemented closeout, updates the plan to Blocked, and records validation gaps, but omits several required explicit handoff and artifact-policy statements.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3ffcc020a63823b1bc5160a6102e792071ef85d1d8fe0aee0513d9e308a0fbf; fixture_sha256=b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071; output_sha256=d953fa039e5a93f425d0d4212076adbe668efa86d78367f110f9509cf551692d; snapshot_sha256=d68ea9b2966db5cc08f4cc497271025b789fe799962bfa8453a7a7ace25746ea
+- Behavior: Incorrectly claims implementation completed, adds src/settings.ts, and marks the plan complete despite the fixture's contradictory closeout state.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- detects_closeout_state_conflict
+- blocks_handoff_until_plan_updated
+- keeps_runtime_artifacts_out_of_git
+- Next: Explicitly describe the status/body conflict and block QA handoff, delivery, PR creation, and issue closure until synchronization.
+- Next: Explicitly state that runtime eval artifacts must remain uncommitted.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-010-implementation-plan-closeout-sync`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071` from `agents/engineer/test/feature-implementor/evals/workspace/eval-010-implementation-plan-closeout-sync`.
+- Fixture SHA-256: `b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071`
+- Prompt SHA-256: `c3ffcc020a63823b1bc5160a6102e792071ef85d1d8fe0aee0513d9e308a0fbf`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b2870e3d0eb112e2c40f35446120217b8d8a18d55835b9d634a5a2c9c71dcb55`
+- Skill overlay SHA-256: `eb10f50f1bee1354d4cdc15dfff5d3853f5131c3abdfbb65a03b041f90906b17`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `20499e40a806229e21ef95ff8d5fbc24188637283192bc707a4d5fd2332a9e7d`
+- Metadata SHA-256: `8cc2bbac5be951408272dda8df48e23d4c89655790723f30b56076864a8cfafc`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_closeout_state_conflict` | PASS | 明确将状态由 `Implemented` 修正为 `Blocked`，并清除正文中的过时“待确认/未开始”收尾信息。 |
+| `blocks_handoff_until_plan_updated` | PASS | 明确 QA E2E handoff 在用户-facing setting 存在前不可进行，当前实施收尾处于阻塞状态。 |
+| `requires_implementation_result_update` | PASS | 更新了实施计划状态表、Closeout Result、Verification Evidence 和 Next Owner，记录文件状态、验证结果、阻塞风险及下一步。 |
+| `records_deterministic_checks` | PASS | 记录了 `find`、`git ls-tree` 和 `git status --short` 命令及结果，并说明因缺少项目配置、源码和验证命令而无法运行确定性检查。 |
+| `records_eval_evidence` | PASS | 将 eval 标为 `Skipped`，并说明因没有可评估的实现而未执行；未声称 eval 通过。 |
+| `keeps_runtime_artifacts_out_of_git` | FAIL | 仅说明未创建运行期产物，没有明确说明 transcript、diagnostics、outputs、timing、run status 或 `comparison.auto.md` 不得提交到 git。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3ffcc020a63823b1bc5160a6102e792071ef85d1d8fe0aee0513d9e308a0fbf; fixture_sha256=b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071; output_sha256=3ec0c1cf501ba92cdced67c98d322cc742a7d84c624a6ef378171a336e420840; snapshot_sha256=3c9c37656cc576ba28b5482f8fe263f7e56fe31aa2799c56f6bc7e3ae3ce0df5
+- Behavior: 修正实施计划状态，记录仓库检查命令、阻塞原因、验证证据、eval 跳过原因和 QA handoff 阻断；未明确禁止运行期 eval 产物入 git。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3ffcc020a63823b1bc5160a6102e792071ef85d1d8fe0aee0513d9e308a0fbf; fixture_sha256=b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071; output_sha256=6ee8f28c4be6deeb0ae843909864d43566bc6748ea1470479ecc61072c56e0af; snapshot_sha256=f6cb458a9b73ecf6aa2cf5e4f6b42c4a442228edd859686c283c953720d93498
+- Behavior: 识别仓库缺少实现和验证产物，并将计划改为 Blocked；未充分记录交付阻断、eval 跳过原因及运行期产物规则。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 输出未明确说明运行期 eval 产物不得提交到 git。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-010-implementation-plan-closeout-sync`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071` from `agents/engineer/test/feature-implementor/evals/workspace/eval-010-implementation-plan-closeout-sync`.
+- Fixture SHA-256: `b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071`
+- Prompt SHA-256: `c3ffcc020a63823b1bc5160a6102e792071ef85d1d8fe0aee0513d9e308a0fbf`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`

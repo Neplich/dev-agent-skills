@@ -1,6 +1,6 @@
 ---
 name: bug-analyzer
-description: "Internal QA specialist—not a direct entry point. Invoked by qa-agent after pm-agent handoff to analyze confirmed failing scenarios, classify defect confidence, and produce durable bug evidence for QA or engineering handoff."
+description: "Analyze a confirmed failing scenario, classify defect confidence, separate observation from inference, and produce durable bug evidence for QA or engineering. Use after qa-agent routes bug analysis."
 visibility: internal
 ---
 

@@ -14,6 +14,66 @@
 - Fixture version/source: canonical manifest `066b89d2cc1dd835345cd6d39e99316bc4d1c11f89b8739eb2d1941c8791d32f` from `agents/designer/test/ui-ux-design/evals/workspace/eval-002-ecommerce`.
 - Fixture SHA-256: `066b89d2cc1dd835345cd6d39e99316bc4d1c11f89b8739eb2d1941c8791d32f`
 - Prompt SHA-256: `eb90dbc90941b21fe1cf928c689f4703e38f536b24e4a881de504f524de89ea3`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5df1c01e08aa97e9873a8076a8bc80b312ca23697bf7b8274e324d7feecebbd3`
+- Skill overlay SHA-256: `91cbd0b25abda706f069ede3ae1d7e4f14e2da2a5a0702fbf7cbcb22b29ac6e2`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `931b5a68d664b4bafde7712fdb59980628e60528384f0dba2478ad10661f14cd`
+- Metadata SHA-256: `40409fe16f5c840772ed9dc96d9a9bf18f86662171fdae939c0a1ec6acbc3c28`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 交付物明确覆盖 mobile-first 布局、商品列表、筛选抽屉、商品详情、购物车，以及筛选、加入购物车、数量调整、移除和错误反馈等交互。 |
+| `assertion_2` | PASS | with_skill 交付物是设计规范，包含流程图、页面原型、组件清单、交互说明和响应式断点；未包含代码、文件补丁或命令行步骤。工程交接范围仍属于设计交付边界说明，不构成实现任务拆解。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=eb90dbc90941b21fe1cf928c689f4703e38f536b24e4a881de504f524de89ea3; fixture_sha256=066b89d2cc1dd835345cd6d39e99316bc4d1c11f89b8739eb2d1941c8791d32f; output_sha256=26fd09aba0c23a1f4cd13160aff3c3ca8d225167da9914d977d13290194e0add; snapshot_sha256=a97a1075c5822a49444436618082caf16055c646fb3969ecb64645bd5d94e36d
+- Behavior: 交付了更完整的 mobile-first UI/UX 设计规范，包含用户旅程、页面原型、边界状态、交互行为、响应式断点和设计验收要点。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=eb90dbc90941b21fe1cf928c689f4703e38f536b24e4a881de504f524de89ea3; fixture_sha256=066b89d2cc1dd835345cd6d39e99316bc4d1c11f89b8739eb2d1941c8791d32f; output_sha256=e512f9cfb00c5c0097a8f8d58572721b313145064d43ea7819a6ac95fd523097; snapshot_sha256=0362ce3d6433729264461f5ac0805cc06e1996974a29de4af490fdd943f45d73
+- Behavior: 交付了覆盖列表、筛选、详情和购物车的设计文档，未扩展到结账等非目标范围。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-002-ecommerce`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `066b89d2cc1dd835345cd6d39e99316bc4d1c11f89b8739eb2d1941c8791d32f` from `agents/designer/test/ui-ux-design/evals/workspace/eval-002-ecommerce`.
+- Fixture SHA-256: `066b89d2cc1dd835345cd6d39e99316bc4d1c11f89b8739eb2d1941c8791d32f`
+- Prompt SHA-256: `eb90dbc90941b21fe1cf928c689f4703e38f536b24e4a881de504f524de89ea3`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `78da31c45df217a9e90f29e80573d99066d6964c62a108fc4cb609c96341db51`

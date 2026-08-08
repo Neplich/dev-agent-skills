@@ -1,6 +1,6 @@
 ---
 name: visual-design
-description: "Internal design specialist—not a direct entry point. Invoked by designer-agent after pm-agent handoff to define visual systems, aesthetic direction, color, typography, components, copy tone, and reference-backed UI quality rules."
+description: "Define a reference-backed visual system: aesthetic direction, color, typography, components, copy tone, and UI quality rules. Use after designer-agent confirms the visual-design scope; an unconfirmed direct request returns to the design entry gate."
 visibility: internal
 ---
 

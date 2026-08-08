@@ -1,6 +1,6 @@
 ---
 name: test-writer
-description: "Internal engineering specialist—not a direct entry point. Invoked by engineer-agent after pm-agent handoff to add or update tests from confirmed PM test expectations, implementation context, and repository conventions."
+description: "Add or update deterministic tests from confirmed PM expectations, implementation context, and repository conventions, including mapped-doc evidence when present. Use after engineer-agent routes test-writing work."
 visibility: internal
 ---
 

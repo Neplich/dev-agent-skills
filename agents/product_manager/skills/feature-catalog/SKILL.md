@@ -1,6 +1,6 @@
 ---
 name: feature-catalog
-description: "Internal PM specialist—not a direct entry point. Invoked by pm-agent after entry classification to map inherited-project routes, pages, APIs, services, data models, tests, and docs into a maintainer-confirmable feature catalog."
+description: "Map an inherited project's routes, pages, APIs, services, data models, tests, and docs into a maintainer-confirmable feature catalog and bounded child-feature proposal. Use after pm-agent routes catalog work."
 visibility: internal
 ---
 

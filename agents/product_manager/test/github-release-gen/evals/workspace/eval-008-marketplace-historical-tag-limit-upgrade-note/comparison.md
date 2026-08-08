@@ -14,6 +14,136 @@
 - Fixture version/source: canonical manifest `17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-008-marketplace-historical-tag-limit-upgrade-note`.
 - Fixture SHA-256: `17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933`
 - Prompt SHA-256: `734c4a4cb7e543db5091d9f1c4a08014e2d017a93f5c1b82e54e15f916eb8fba`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `bfa553ee1e9614c42bec50e00faa33ed1a614260acdb1011ab1116e8b73db2dd`
+- Skill overlay SHA-256: `0db0717c5ca83fddc3ecdfe8bf130c8885c13a22148bb9bf0d8e93c491b17294`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ca7c0b18d751c17e3675256471abe2e22f05a84c6ec6d780c8a51c53156008f9`
+- Metadata SHA-256: `a37c69100d8b09e8a32fd7ae07c266ac1aa0ef65dd08a89916726ecd29694ad7`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `title_matches_marketplace_format` | PASS | With-skill title is `v0.9.0 - 失败消息重试与附件链路兼容`, matching the required format with a non-empty, fact-based overview. |
+| `upgrade_note_first_sentence_derived` | PASS | The upgrade section begins with the required no-breaking-change/no-new-plugin statement and correctly states 6 role plugins updated to `v0.9.0`. |
+| `claude_section_omitted_with_platform_limit` | FAIL | The with-skill output includes a `### Claude Code` section, although the historical-tag rerun requirement says to omit it; it also presents Codex instructions despite the fixture confirming no fixed-version path. |
+| `codex_section_omitted_without_target_tag_support` | FAIL | The with-skill output includes a `### Codex` section even though `.codex/INSTALL.md` lacks `TARGET_TAG` support; the assertion requires omitting that section. |
+| `kimi_section_omitted_without_plugin_json` | PASS | No `### Kimi Code` section or `/plugins install` command is generated; Kimi is mentioned only in surrounding prose. |
+| `closing_sentence_derived` | PASS | The upgrade explanation has a closing statement identifying 6 role plugins and explicitly says there is no verified fixed-version installation path, with updates performed from `main`. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=734c4a4cb7e543db5091d9f1c4a08014e2d017a93f5c1b82e54e15f916eb8fba; fixture_sha256=17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933; output_sha256=e9b6143d46864eac613d1b5a4eec912843a995135629b1de2b7d20fa3cbebe6a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced a semantically detailed preview with correct version/plugin-count derivation and safe no-mutation handling, but included Claude and Codex sections that the fixture-specific historical-tag constraints require omitting.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=734c4a4cb7e543db5091d9f1c4a08014e2d017a93f5c1b82e54e15f916eb8fba; fixture_sha256=17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933; output_sha256=29f78eb81c5970c6c2cfa7e57c6be4637a42ce0927d3444d89ef568389d85755; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced a release preview but used an incorrect title format and included unsupported/inapplicable platform guidance.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output violates the required omission of the Claude Code section.
+- The with_skill output violates the required omission of the Codex section when TARGET_TAG support is absent.
+- Next: Remove the `### Claude Code` and `### Codex` sections and retain an explicit statement that the historical tag has no verified fixed-version installation path.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-008-marketplace-historical-tag-limit-upgrade-note`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-008-marketplace-historical-tag-limit-upgrade-note`.
+- Fixture SHA-256: `17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933`
+- Prompt SHA-256: `734c4a4cb7e543db5091d9f1c4a08014e2d017a93f5c1b82e54e15f916eb8fba`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `793cabc84dc1947c3d6386a1d060276eea2eb8b4e9de25fdd6c7b7a60fb82cb0`
+- Skill overlay SHA-256: `ecc021af86f838c5c915ade1c1e1095fa203f789350af9aa701ad32bae876bb2`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ca7c0b18d751c17e3675256471abe2e22f05a84c6ec6d780c8a51c53156008f9`
+- Metadata SHA-256: `a37c69100d8b09e8a32fd7ae07c266ac1aa0ef65dd08a89916726ecd29694ad7`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `title_matches_marketplace_format` | PASS | With-skill 标题为 `v0.9.0 - 失败消息重试与附件模型兼容`，符合格式且概述非空、与事实相关。 |
+| `upgrade_note_first_sentence_derived` | PASS | 升级说明首段以「无破坏性变更，也没有新增 plugin。6 个 role plugin 均更新到 `v0.9.0`。」开头。 |
+| `claude_section_omitted_with_platform_limit` | FAIL | 正文包含 `Claude Code` 小节；该断言要求历史 tag 重跑时省略该小节。 |
+| `codex_section_omitted_without_target_tag_support` | FAIL | 正文包含 `Codex` 小节；fixture 明确目标 tag 不支持 TARGET_TAG，断言要求省略该小节。 |
+| `kimi_section_omitted_without_plugin_json` | FAIL | 正文包含 `Kimi Code` 小节；fixture 明确无 `.kimi-plugin/plugin.json`，断言要求省略该小节。 |
+| `closing_sentence_derived` | FAIL | 正文有无固定版本安装路径的声明，但收尾句「该 tag 无已验证的固定版本安装路径，按默认分支（main）更新」未包含由 manifest 推导的 6 个 role plugin 数量。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=734c4a4cb7e543db5091d9f1c4a08014e2d017a93f5c1b82e54e15f916eb8fba; fixture_sha256=17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933; output_sha256=0a8fcc47f241ba629bd94e85926726560174b5cc00d29215a21cb39dbf783f08; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 标题和升级说明首段符合要求，也声明了平台限制，但未按能力缺失要求省略 Codex、Claude Code、Kimi Code 小节，且收尾句缺少 6 个 role plugin 数量。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=734c4a4cb7e543db5091d9f1c4a08014e2d017a93f5c1b82e54e15f916eb8fba; fixture_sha256=17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933; output_sha256=d28b33c02a64ba8fe257c3af8811a44ae2804e6b14fa818e67bd65c5af80a9aa; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 生成了包含大量未由 fixture 确认事实的 Release 内容，并保留了不应生成的客户端小节。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未省略不适用的 Claude Code、Codex、Kimi Code 小节。
+- with_skill 的升级说明收尾句未包含 6 个 role plugin 数量。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-008-marketplace-historical-tag-limit-upgrade-note`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-008-marketplace-historical-tag-limit-upgrade-note`.
+- Fixture SHA-256: `17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933`
+- Prompt SHA-256: `734c4a4cb7e543db5091d9f1c4a08014e2d017a93f5c1b82e54e15f916eb8fba`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `ebd2c00966a7932d251daeeef05573b0145183fe908cf102225636115f85820c`

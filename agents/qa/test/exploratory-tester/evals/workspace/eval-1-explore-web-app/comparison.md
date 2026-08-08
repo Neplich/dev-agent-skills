@@ -13,6 +13,136 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7` from `agents/qa/test/exploratory-tester/evals/workspace/eval-1-explore-web-app`.
 - Fixture SHA-256: `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7`
+- Prompt SHA-256: `b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `4e2073febaef7202820d7977feb83c73b7673e1200e4724a3f37b54a20923059`
+- Skill overlay SHA-256: `f90efe8186969e2f5d6c26cc6d2a76589cb8efe0e7f9452cedf25227be4cf8e9`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `32b9d61e575fbee81406ffc68edbaec9418feec621754c8fca12fc2f2edd2c08`
+- Metadata SHA-256: `228751d86855b3dcdb583bdc4a44c4a493c28334ed74368c030ddad805b1f314`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | The with_skill report contains a charter specifying surface, timebox, heuristics, and escalation signals. |
+| `assertion_2` | NOT_EXERCISED | The report claims the required QA files were read and no new cases/scripts were created, but locked evidence cannot independently prove the required read order. |
+| `assertion_3` | PASS | The 15-minute timebox comes from the user prompt, and exploration is scoped to the changed surfaces and adjacent keyboard/empty-state risks. |
+| `assertion_4` | PASS | The report separately lists observed issues, suspicious but unconfirmed signals, and gaps not explored, with no unconfirmed product defect asserted. |
+| `assertion_5` | PASS | The report uses a chartered path, documents preflight coverage and evidence, and does not present random-click activity as exploration. |
+| `assertion_6` | PASS | The handoff report includes charter, timebox, covered path, evidence basis, blocker details, and recommended next actions. |
+| `deduplicates_existing_flows` | PASS | The existing TC-001 is explicitly reused; FLOW_INDEX is incrementally updated, and no duplicate TC or script is created. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=defdc159a4acd6fc5bb54af12196f595070e72d90b4a9d96aea9f6b430a166e4; snapshot_sha256=5c303f089844fbd53fdce1936a9173a76c2e190e985a3fe1964b59c291ead068
+- Behavior: Produced a structured exploratory handoff, updated FLOW_INDEX, reused TC-001, and correctly reported that browser execution was blocked before interaction.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=7b779f8798c81248c6d9716bc1afdf92580a43bacd0cc41713855fba1668aa75; snapshot_sha256=c50958ec45a9616b0d76349357521666d81c27061f1b07ac4517bf97ab249e7f
+- Behavior: Produced a handoff report reusing TC-001 and documented the QA_BASE_URL blocker, but did not update FLOW_INDEX.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Provide QA_BASE_URL or a runnable target and execute the chartered filtering, empty-state, and keyboard-navigation paths.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `exploratory-tester`
+- Eval: `eval-001-explore-web-app`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7` from `agents/qa/test/exploratory-tester/evals/workspace/eval-1-explore-web-app`.
+- Fixture SHA-256: `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7`
+- Prompt SHA-256: `adb51c9508613745e4594166968ba5eae31bfca02ef3c43a040df0498e1923c7`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `afbb19ee49749967688f949ed21bb2386ea86b8301685fafced66b23325118ab`
+- Skill overlay SHA-256: `253325aa58a969826ea6853544729e44f6b321de1621777385ced958992f1626`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `b189077590accc8a288dd5027f94ec220abaf589b0e6787e235e77f305935bbd`
+- Metadata SHA-256: `228751d86855b3dcdb583bdc4a44c4a493c28334ed74368c030ddad805b1f314`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | With-skill report includes a charter specifying surface, timebox, heuristics, and escalation signals. |
+| `assertion_2` | PASS | Report states TEST_SUITE.md, FLOW_INDEX.md, and TC-001 were read; no new E2E scenario was added, and FLOW_INDEX.md was updated. |
+| `assertion_3` | FAIL | The report states a 15-minute timebox, but the fixture context provides no timebox; the value is unsupported by the supplied context. |
+| `assertion_4` | PASS | Report separates observed issues, suspicious but unconfirmed signals, and gaps not explored; blockers are explicitly not called product defects. |
+| `assertion_5` | PASS | Report uses a chartered path covering filters, zero results, recovery, and keyboard traversal, with evidence requirements; no random-click log is presented. |
+| `assertion_6` | PASS | Report contains charter, timebox, exploration path, evidence used, and recommended next actions for handoff and escalation. |
+| `deduplicates_existing_flows` | PASS | The existing TC-001 flow is reused and FLOW_INDEX.md is updated; no synonymous TC or script is created. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=adb51c9508613745e4594166968ba5eae31bfca02ef3c43a040df0498e1923c7; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=ad399c329981be9ed249e22cacd1d28fce22bd29a6f73a4efdf60edb6add92a1; snapshot_sha256=b5aca84b351075945ea166737d83fa5dea465f68ff4ebfcfcfb421b4b997d507
+- Behavior: Produced a structured blocked exploration report, reused TC-001, and updated FLOW_INDEX.md; it incorrectly introduced an unsupported 15-minute timebox.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=adb51c9508613745e4594166968ba5eae31bfca02ef3c43a040df0498e1923c7; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=129c8a0c232a8704c0747fb9829589e4ce3b82ebe63303170d3462b7d4613b41; snapshot_sha256=92cd9832e53320fd850d28f628be19b23e48e110f361840877700257563ed6ce
+- Behavior: Produced a blocked handoff report with a useful exploration matrix and execution recipe, but did not update QA memory and did not separate all required evidence categories.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- assertion_3 fails because the stated 15-minute timebox is not grounded in fixture context.
+- Next: Derive the timebox from explicit project context, or mark it as unspecified rather than assigning a default.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `exploratory-tester`
+- Eval: `eval-001-explore-web-app`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7` from `agents/qa/test/exploratory-tester/evals/workspace/eval-1-explore-web-app`.
+- Fixture SHA-256: `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7`
 - Prompt SHA-256: `adb51c9508613745e4594166968ba5eae31bfca02ef3c43a040df0498e1923c7`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**

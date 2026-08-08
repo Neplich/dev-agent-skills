@@ -14,6 +14,134 @@
 - Fixture version/source: canonical manifest `e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984` from `agents/engineer/test/feature-implementor/evals/workspace/eval-009-ui-design-handoff-gate`.
 - Fixture SHA-256: `e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984`
 - Prompt SHA-256: `ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `31ea692709a0817bc32ab74f76490bf0edfdea6902d08e36d2b8cbddeb78aee4`
+- Skill overlay SHA-256: `32c9b06579315c3f3af57ed46ca530329febcbd28b2adfca751e5c7d8b333736`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `a313159478f71f3c53034d04181e6cf7f6ee092241472cdee4c99fbe2b9042fc`
+- Metadata SHA-256: `5e7a0cec3496b476d745c2e2e1792aa7fe5d0f1912d30b7047f5ac770f4cdb1c`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_ui_design_change` | PASS | with_skill 明确识别了信息层级与主按钮视觉样式属于设置页的视觉/UI变化，并因缺少设计交接文档阻止进入实现阶段。 |
+| `checks_design_docs` | PASS | with_skill 明确列出了并指出缺少 docs/design/customer-portal/profile-settings/ui-ux-spec.md 与 visual-system.md，同时要求覆盖层级、按钮视觉、响应式、无障碍及组件/token。 |
+| `blocks_plan_when_design_missing` | PASS | with_skill 明确表示未创建实现计划，且 raw git evidence 显示无文件变化。 |
+| `hands_off_to_designer` | FAIL | 输出要求 designer-agent 补充文档，但未明确执行或说明 engineer-agent -> designer-agent 的 handoff 路由。 |
+| `preserves_plan_gate_after_design` | NOT_EXERCISED | 设计文档尚未补齐，后续由 feature-implementor 创建计划并等待用户确认的交互步骤尚未发生；不能仅凭当前输出推断该步骤失败。 |
+| `does_not_implement_directly` | PASS | with_skill 明确表示未修改代码；raw git evidence 也显示无代码或其他工作区变化，且没有声称运行测试或完成实现。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6; fixture_sha256=e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984; output_sha256=656e81046f0fb815fe4a5d9a38ddf81096509787a15680099c2e71cae9a6a504; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly recognized the UI/design dependency, checked the required design-document paths, blocked implementation-plan creation, and avoided mutations; it omitted the explicit engineer-agent -> designer-agent handoff route.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6; fixture_sha256=e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984; output_sha256=56a46bb3348e53de1fc760d919473204ea4668fccbafaded92423cb8fd3fc9a3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline identified missing implementation files and made no changes, but did not identify the UI design gate, check the required design documents, or hand off to a designer.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output did not explicitly hand off via engineer-agent -> designer-agent as required.
+- Next: Require an explicit engineer-agent -> designer-agent handoff requesting the missing UI/UX or visual-system deliverables.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-009-ui-design-handoff-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984` from `agents/engineer/test/feature-implementor/evals/workspace/eval-009-ui-design-handoff-gate`.
+- Fixture SHA-256: `e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984`
+- Prompt SHA-256: `ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b2870e3d0eb112e2c40f35446120217b8d8a18d55835b9d634a5a2c9c71dcb55`
+- Skill overlay SHA-256: `eb10f50f1bee1354d4cdc15dfff5d3853f5131c3abdfbb65a03b041f90906b17`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `a313159478f71f3c53034d04181e6cf7f6ee092241472cdee4c99fbe2b9042fc`
+- Metadata SHA-256: `5e7a0cec3496b476d745c2e2e1792aa7fe5d0f1912d30b7047f5ac770f4cdb1c`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_ui_design_change` | FAIL | 说明了前端 UI、信息层级和主按钮样式变更，但未明确写出“visual change”及进入“UI Design Handoff Gate”。 |
+| `checks_design_docs` | FAIL | 列出了两个设计文档缺失，但未明确检查它们是否覆盖当前变化。 |
+| `blocks_plan_when_design_missing` | PASS | 明确说明尚未创建实现计划；git_evidence 和 declared_outputs 也显示没有文件变更。 |
+| `hands_off_to_designer` | FAIL | 要求 Designer 确认设计内容，但未明确执行 engineer-agent -> designer-agent 的 handoff。 |
+| `preserves_plan_gate_after_design` | FAIL | 说明设计补齐后创建实现计划并等待确认后修改代码，但未明确由 feature-implementor 编写 IMPLEMENTATION_PLAN。 |
+| `does_not_implement_directly` | PASS | 输出明确表示当前无法开始实现，未声称修改代码、运行测试或完成实现。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6; fixture_sha256=e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984; output_sha256=691e5a5eb02c40dce25438e7e8063a09adb25e4808966c904a2277bc2178b8a5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 阻止了设计输入缺失时的实现并保持计划未创建，但未完整表达 UI Design Handoff Gate、文档覆盖检查、精确 handoff 路由及 feature-implementor 责任。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6; fixture_sha256=e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984; output_sha256=11e67e8fb0ad34b59f24ad5b2cccecf063bc1bf0d041683e5d5e408b8e369228; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别到缺少前端源码，但未识别设计门禁、检查设计文档或执行设计 handoff。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足 detects_ui_design_change、checks_design_docs、hands_off_to_designer、preserves_plan_gate_after_design。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-009-ui-design-handoff-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984` from `agents/engineer/test/feature-implementor/evals/workspace/eval-009-ui-design-handoff-gate`.
+- Fixture SHA-256: `e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984`
+- Prompt SHA-256: `ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`

@@ -14,6 +14,141 @@
 - Fixture version/source: canonical manifest `ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df` from `agents/engineer/test/engineer-agent/evals/workspace/eval-004-frontend-ui-routing-contract`.
 - Fixture SHA-256: `ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df`
 - Prompt SHA-256: `c7cb9273b0ca01f312d499d16a87d54a68980710efc17abee5e6a4600012b8c0`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `757a4f95af830e3468b6c44e54e5901a0cc27f0a6d0aa7ecc8b703b612007d3a`
+- Skill overlay SHA-256: `ed4d8f534d0e5c1c334b4a13d67b6d20c37dceb98e00e4e2ea3b6a2c0112faad`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bfc10d83b8c5a5962987ac2605d966a1788bde7de31566b4d329601b6b214354`
+- Metadata SHA-256: `4906971d417635b5c425ac490e57080c03cc4473b36cee23eaff89fa06fe26b0`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_frontend_update_to_engineer` | FAIL | The with_skill output discusses engineering implementation generically but does not identify the request as an Engineering request or route it to `engineer-agent`. |
+| `does_not_route_to_external_ui_skill` | PASS | The output does not recommend modifying, calling, or relying on `ui-ux-pro-max`. |
+| `runs_feature_alignment` | NOT_EXERCISED | The locked output discusses PRD/TRD contents, but raw evidence cannot prove the required feature_path parsing or read order. |
+| `checks_design_deliverables` | PASS | The output identifies that only the PRD and TRD are present and that the required layout and button visual specifications are missing. |
+| `hands_design_gap_to_designer` | FAIL | Although it identifies a design gap, the output does not hand off to `designer-agent` or specify that the missing information hierarchy and button visual design must be completed. |
+| `routes_implementation_after_design` | FAIL | The output proposes later engineering implementation but does not state that Designer completion precedes the return to `engineer-agent`/`feature-implementor`, nor mention the IMPLEMENTATION_PLAN confirmation gate. |
+| `does_not_execute_directly` | PASS | The output explicitly says this round will not modify code or documentation, and provides no evidence of writing an IMPLEMENTATION_PLAN or running tests. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c7cb9273b0ca01f312d499d16a87d54a68980710efc17abee5e6a4600012b8c0; fixture_sha256=ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df; output_sha256=6591b74b6f300fcfe1be53300477a220b416701743fcd37627aa2d374e705410; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a generic staged plan and identifies missing design detail, but omits the required explicit engineer-agent routing, designer-agent handoff, and IMPLEMENTATION_PLAN gate.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c7cb9273b0ca01f312d499d16a87d54a68980710efc17abee5e6a4600012b8c0; fixture_sha256=ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df; output_sha256=78f6d8d229e35bca99faf1ad37a5b7365b0951201ca2c16efd33a04039c75b70; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a generic product/documentation and implementation plan, with no agent routing or design handoff.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output fails to explicitly route the frontend implementation request to engineer-agent.
+- It identifies a design gap without handing it to designer-agent.
+- It does not specify the post-design return route or IMPLEMENTATION_PLAN confirmation gate.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-004-frontend-ui-routing-contract`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df` from `agents/engineer/test/engineer-agent/evals/workspace/eval-004-frontend-ui-routing-contract`.
+- Fixture SHA-256: `ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df`
+- Prompt SHA-256: `c7cb9273b0ca01f312d499d16a87d54a68980710efc17abee5e6a4600012b8c0`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8d8fb0fa400e90f6295a8210be17110ea5dbf40c02704b7c3c2d90e5fd3722a5`
+- Skill overlay SHA-256: `5d21e5d4fde13b79efe9b8a3a45224c9f9295ffd2ea23291a6557ce52b7a55ce`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `bfc10d83b8c5a5962987ac2605d966a1788bde7de31566b4d329601b6b214354`
+- Metadata SHA-256: `4906971d417635b5c425ac490e57080c03cc4473b36cee23eaff89fa06fe26b0`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_frontend_update_to_engineer` | FAIL | with_skill 输出未将请求识别为 Engineering request，也未由 engineer-agent 承接。 |
+| `does_not_route_to_external_ui_skill` | PASS | with_skill 输出未建议修改、调用或依赖 ui-ux-pro-max。 |
+| `runs_feature_alignment` | FAIL | 虽提到先做 PRD/TRD 对齐，但未解析 customer-portal/profile-settings，也未明确读取两份指定文档后再路由。 |
+| `checks_design_deliverables` | PASS | with_skill 输出检查了对应 UI/UX spec 或 visual-system 文档，并判断仓库中未发现。原始 fixture 也仅包含 PRD.md 与 TRD.md。 |
+| `hands_design_gap_to_designer` | FAIL | 输出指出设计依据缺失，但未 handoff 到 designer-agent，也未明确需要补齐信息层级和按钮样式的设计范围。 |
+| `routes_implementation_after_design` | FAIL | 未说明设计完成后回到 engineer-agent/feature-implementor，也未提及 IMPLEMENTATION_PLAN 确认门禁。 |
+| `does_not_execute_directly` | PASS | 输出明确本轮未修改代码；未声称写入 IMPLEMENTATION_PLAN 或运行测试。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c7cb9273b0ca01f312d499d16a87d54a68980710efc17abee5e6a4600012b8c0; fixture_sha256=ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df; output_sha256=0e9ceedea1940a70b266b3336a7ef7b66cc7f6fc0d37b740de14276eef4ea388; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: With-skill output correctly avoided external UI-skill routing, checked for missing design deliverables, and deferred code changes, but omitted explicit engineer routing, feature-path/document-read evidence, designer-agent handoff, and the post-design implementation gate.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c7cb9273b0ca01f312d499d16a87d54a68980710efc17abee5e6a4600012b8c0; fixture_sha256=ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df; output_sha256=410df328e0271ed3d2a0562d726dc221c150145e2634cf337e3f325c9f1f90e7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline discussed PRD/TRD and implementation considerations but did not perform the required agent routing or design-gap handoff; it also did not modify files or run tests.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- routes_frontend_update_to_engineer
+- runs_feature_alignment
+- hands_design_gap_to_designer
+- routes_implementation_after_design
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-004-frontend-ui-routing-contract`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df` from `agents/engineer/test/engineer-agent/evals/workspace/eval-004-frontend-ui-routing-contract`.
+- Fixture SHA-256: `ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df`
+- Prompt SHA-256: `c7cb9273b0ca01f312d499d16a87d54a68980710efc17abee5e6a4600012b8c0`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `83f220b482f661eab0884cc4770c84fbb545af7bd74199e0b9f4ba499020031a`

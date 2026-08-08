@@ -1,6 +1,6 @@
 ---
 name: engineer-agent
-description: "Downstream engineering router invoked after pm-agent handoff. Classifies confirmed engineering scope across codebase analysis, TRD generation, implementation, tests, debugging, delivery, and UI implementation, then delegates to engineering specialists."
+description: "Classify and route confirmed engineering requests across codebase analysis, TRD generation, implementation, tests, debugging, UI work, and delivery. Use immediately after a PM engineering handoff and before specialist execution."
 visibility: internal
 ---
 

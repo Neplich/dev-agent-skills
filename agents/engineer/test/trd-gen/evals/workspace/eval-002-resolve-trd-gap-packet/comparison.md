@@ -14,6 +14,136 @@
 - Fixture version/source: canonical manifest `d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a` from `agents/engineer/test/trd-gen/evals/workspace/eval-002-resolve-trd-gap-packet`.
 - Fixture SHA-256: `d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a`
 - Prompt SHA-256: `bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `bb3f875298d7fef0fcd2297b4e59b33b5c034efad4a2286dcaede91ec0863c72`
+- Skill overlay SHA-256: `12aaaef0d075d133bbbdc681f598fd09807b211a4377dcfbc6cbbfcaa30909e0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `96fd70658261e3a17be616b06efc13bb061ebd641ee5ed5f4b30d21e34984bf7`
+- Metadata SHA-256: `4025e3b1dd282f00d05c7506655215876b7bcc3af8d7657c77ae8574687fce25`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_gap_packet_as_trd_work` | FAIL | With-skill output creates TRD/ADR artifacts and marks the TRD In Review, but does not explicitly state the request is trd-gen TRD work rather than a feature-implementor implementation/code task. |
+| `resolves_named_gap_categories` | PASS | TRD evidence covers component ownership, event/data flow and API boundaries, validation commands and test cases, rollout/rollback risks, error classification and retries, observability, and organization/security boundaries. |
+| `keeps_finder_trd_gen_boundary` | FAIL | Evidence identifies the gap packet and metadata says generated_by: trd-gen, but does not explicitly define the discoverer’s reporting role or state that trd-gen completes TRD.md or records unresolved items as open questions. |
+| `unresolved_gap_blocks_e2e` | FAIL | TRD remains In Review and lists unresolved implementation prerequisites, but does not state that feature-implementor, debugger, or QA E2E additions are blocked or prohibit writing IMPLEMENTATION_PLAN.md or QA E2E cases. |
+| `no_implementation_plan_or_code` | PASS | With-skill evidence shows only TRD and ADR documentation additions; no code, implementation plan, or tests were added or executed. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482; fixture_sha256=d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a; output_sha256=f8f343ac672e9090497f87ab802f6a886cd54a473dce029fd96fc911d8fa04a9; snapshot_sha256=46656f282d3519b77585572605f434021b7062628143d4871149338d7fb8d4c4
+- Behavior: Produced docs/engineer/capture-loop/TRD.md and an ADR with comprehensive technical coverage, preserved an In Review state, and deferred implementation prerequisites, but omitted explicit workflow-boundary and blocked-downstream guidance.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482; fixture_sha256=d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a; output_sha256=8d3b33a6301f5954128a2ec3f81920213835dce10f5fccc54b54368309b71fc4; snapshot_sha256=7cbf8f1513069e938ee4097923feb8b78c28204f2aca7ce92e091454dd6b0bd7
+- Behavior: Modified TRD_GAP_PACKET.md directly and summarized technical decisions, but did not establish the required trd-gen workflow boundary.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output omits the explicit trd-gen versus feature-implementor boundary.
+- The with_skill output omits the discoverer/trd-gen responsibility split.
+- The with_skill output omits explicit blocking of implementation, debugger, and QA E2E follow-on work while gaps remain.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-002-resolve-trd-gap-packet`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a` from `agents/engineer/test/trd-gen/evals/workspace/eval-002-resolve-trd-gap-packet`.
+- Fixture SHA-256: `d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a`
+- Prompt SHA-256: `bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a696884cd8ec31e2137cab6da5326eb0f6fb0d49089fe5e32218dce4da5cdfee`
+- Skill overlay SHA-256: `14328c4af5595e19e21331fb22dcc6dda56844ee6c4f2ee6382997e7ffe0af37`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `96fd70658261e3a17be616b06efc13bb061ebd641ee5ed5f4b30d21e34984bf7`
+- Metadata SHA-256: `4025e3b1dd282f00d05c7506655215876b7bcc3af8d7657c77ae8574687fce25`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_gap_packet_as_trd_work` | FAIL | with_skill 输出未明确说明这是 trd-gen 的 TRD 编写/更新工作，也未明确排除 feature-implementor 的实现计划或代码任务。 |
+| `resolves_named_gap_categories` | PASS | TRD 逐项覆盖组件职责、事件/API 与幂等数据流、测试和验证命令、发布兼容与回滚风险、错误分类/副作用防重、观测告警与组织边界安全策略。 |
+| `keeps_finder_trd_gen_boundary` | FAIL | TRD 未明确说明发现者仅报告缺口、trd-gen 负责补全 TRD 或记录 open questions；仅提到后续移交 feature-implementor。 |
+| `unresolved_gap_blocks_e2e` | FAIL | 文档仍列出部署 SLA、payload 上限、状态查询 SLA 和外部副作用幂等等前置决策，但未明确阻断 feature-implementor、debugger 或 QA E2E 文档，也写明后续可编写 IMPLEMENTATION_PLAN.md。 |
+| `no_implementation_plan_or_code` | PASS | 交付快照仅新增 docs/engineer/capture-loop/TRD.md；git 证据显示未修改业务代码、测试或 IMPLEMENTATION_PLAN.md。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482; fixture_sha256=d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a; output_sha256=802ff1ccb1efaebaa8a79d22d8e7e6c5330097c9bb2dfa2c13f9062ebd479be7; snapshot_sha256=640a6eb1fc358049006da67a0c4cf071505cebab3cc78e0bf02917b160e93d1d
+- Behavior: 新增了较完整的 capture-loop TRD，未修改代码，但遗漏 trd-gen/发现者边界，并未对未决前置项明确阻断下游文档工作。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482; fixture_sha256=d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a; output_sha256=1aeb2333faa5ffbf552c2c287d3030882c5e011cd923df6cede2a01bcc0d4c84; snapshot_sha256=95330670eba4feb0884ea0ee2463bb1f3ab450a6d207ff956bdf72629ce17949
+- Behavior: 修改了 TRD_GAP_PACKET.md，覆盖技术细节，但未体现规范的 trd-gen 边界。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未明确声明 trd-gen 工作边界。
+- with_skill 未落实发现者与 trd-gen 的职责边界。
+- 未决前置项未明确阻断实现、调试或 QA E2E 文档工作。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-002-resolve-trd-gap-packet`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a` from `agents/engineer/test/trd-gen/evals/workspace/eval-002-resolve-trd-gap-packet`.
+- Fixture SHA-256: `d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a`
+- Prompt SHA-256: `bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `b66f9acea93e151819a21f82909f9a6b7d44c68fa52d2116667525e2fe8e9bd7`

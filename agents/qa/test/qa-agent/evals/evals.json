@@ -39,7 +39,7 @@
         {
           "id": "assertion_1",
           "description": "路由选择",
-          "text": "必须在 spec-based-tester、exploratory-tester、bug-analyzer、regression-suite 中选择一个主 route，并说明为什么它比其他 QA skill 更窄、更适合当前 evidence outcome"
+          "text": "必须选择一个主 QA 承接路径，并用当前已实现变更、既有测试记忆和间歇性 CI 证据说明它为何是当前最窄的责任方。"
         },
         {
           "id": "assertion_2",
@@ -49,7 +49,7 @@
         {
           "id": "specialist_gate_pointer",
           "description": "Specialist 权威门禁指针",
-          "text": "路由输出必须声明选中的 specialist，并指出该 specialist 的权威 E2E memory、platform version、credential、execution entry、PRD/TRD/implementation plan 与 blocked-condition 门禁适用；不得在 qa-agent 路由输出中展开或复述这些门禁的具体协议，展开复述应判 FAIL。"
+          "text": "路由输出必须声明选中的 specialist 是后续验证的执行责任方，并保留其检查现有 E2E 记忆、平台版本、凭据、执行入口和确认文档的责任；router 不自行执行或复制完整 specialist 协议。"
         },
         {
           "id": "assertion_4",
@@ -108,7 +108,7 @@
         {
           "id": "specialist_gate_pointer",
           "description": "Specialist 权威门禁指针",
-          "text": "路由输出必须声明选中的 specialist，并指出该 specialist 的权威 E2E memory、platform version、credential、execution entry、PRD/TRD/implementation plan 与 blocked-condition 门禁适用；不得在 qa-agent 路由输出中展开或复述这些门禁的具体协议，展开复述应判 FAIL。"
+          "text": "路由输出必须声明选中的 specialist 是后续验证的执行责任方，并把目标项目文件、环境说明和现有 E2E 记忆交给它；router 不自行探索或复制完整 specialist 协议。"
         },
         {
           "id": "assertion_6",
@@ -155,7 +155,7 @@
         {
           "id": "specialist_gate_pointer",
           "description": "Specialist 权威门禁指针",
-          "text": "路由输出必须声明选中的 specialist，并指出该 specialist 的权威 E2E memory、platform version、credential、execution entry、PRD/TRD/implementation plan 与 blocked-condition 门禁适用；不得在 qa-agent 路由输出中展开或复述缺计划后的阻塞、交接或执行协议，展开复述应判 FAIL。"
+          "text": "路由输出必须声明选中的 specialist 是后续验证的执行责任方，并客观指出当前缺少已确认实施计划而不能执行；router 不自行创建、更新或运行 E2E 资产。"
         },
         {
           "id": "keeps_single_route",

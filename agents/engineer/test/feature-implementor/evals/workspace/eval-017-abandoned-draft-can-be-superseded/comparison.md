@@ -14,6 +14,134 @@
 - Fixture version/source: canonical manifest `1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b` from `agents/engineer/test/feature-implementor/evals/workspace/eval-017-abandoned-draft-can-be-superseded`.
 - Fixture SHA-256: `1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b`
 - Prompt SHA-256: `3023c99f87e425cf1e709e4a173f62dfa04ac1cedece451c8d3671923093f7ca`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `31ea692709a0817bc32ab74f76490bf0edfdea6902d08e36d2b8cbddeb78aee4`
+- Skill overlay SHA-256: `32c9b06579315c3f3af57ed46ca530329febcbd28b2adfca751e5c7d8b333736`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `d59f332d9689221834dd583c1a569fa62e1de4ce2c4c1d7f5aa087aed088bd53`
+- Metadata SHA-256: `21a9c9ae11f8c9b8058a429c319a4f2a640a6b07fdf2d71e259bbc158caa4e24`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_unfinished_active_plan` | PASS | Raw evidence shows the original plan at the required path was deleted and its Draft status, feature path, and implementation_scope are preserved in the diff/archive metadata. |
+| `detects_explicit_abandonment` | PASS | The output identifies the maintainer's abandonment through the recorded superseded reason. |
+| `archives_as_superseded` | PASS | The archive snapshot has status Superseded, a non-empty superseded_reason, archived_at, archive_approved_by, source_plan, implementation_scope, and preserved original metadata. |
+| `links_replacement_plan` | NOT_EXERCISED | The candidate correctly completed archival but reported that no new active plan was created because required TRD details were missing. |
+| `waits_before_coding` | NOT_EXERCISED | No code was modified, but the replacement plan was not yet written, so the later confirmation-before-coding step was not reached. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3023c99f87e425cf1e709e4a173f62dfa04ac1cedece451c8d3671923093f7ca; fixture_sha256=1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b; output_sha256=d2cc1bdc9f0715a27c0d9f5d7db556edaa88b2d6b4c53470ef92e4f93a2c92a3; snapshot_sha256=7294352b52d88cff4789d32dae8ebd74ca21a50792b64a470f297182baba50a2
+- Behavior: Archived the unfinished plan as Superseded with required metadata, made no code changes, and paused before creating the replacement plan due to missing TRD details.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3023c99f87e425cf1e709e4a173f62dfa04ac1cedece451c8d3671923093f7ca; fixture_sha256=1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b; output_sha256=76d493db17979402db1b65663dbf56d08f758635d44357e8d85a822fa4868261; snapshot_sha256=549bc8acb06f68ccd075fcd229a6860a90684a39f6df0bd0ac865ad2213934b7
+- Behavior: Marked the old plan Deprecated and created an In Progress replacement, but did not use the required Superseded archive workflow.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Complete the TRD details, create the replacement implementation plan with a previous_plan_archive link, then obtain user confirmation before coding.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-017-abandoned-draft-can-be-superseded`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b` from `agents/engineer/test/feature-implementor/evals/workspace/eval-017-abandoned-draft-can-be-superseded`.
+- Fixture SHA-256: `1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b`
+- Prompt SHA-256: `3023c99f87e425cf1e709e4a173f62dfa04ac1cedece451c8d3671923093f7ca`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b2870e3d0eb112e2c40f35446120217b8d8a18d55835b9d634a5a2c9c71dcb55`
+- Skill overlay SHA-256: `eb10f50f1bee1354d4cdc15dfff5d3853f5131c3abdfbb65a03b041f90906b17`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `d59f332d9689221834dd583c1a569fa62e1de4ce2c4c1d7f5aa087aed088bd53`
+- Metadata SHA-256: `21a9c9ae11f8c9b8058a429c319a4f2a640a6b07fdf2d71e259bbc158caa4e24`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_unfinished_active_plan` | FAIL | with_skill 输出未明确识别 Draft 状态、当前路径 docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md 和精确 implementation_scope: refund-reason-codes。 |
+| `detects_explicit_abandonment` | PASS | with_skill 输出明确表示已废弃旧退款原因码实施计划，并说明维护者明确放弃该轮。 |
+| `archives_as_superseded` | FAIL | 虽归档为 Superseded 且有非空 superseded_reason，但归档原始证据缺少 archived_at、archive_approved_by、source_plan，且未完整保留要求的元数据。 |
+| `links_replacement_plan` | FAIL | with_skill 删除了活动 IMPLEMENTATION_PLAN.md，且明确表示暂不能生成新实施计划；没有通过 previous_plan_archive 回链同 feature_path 的 Superseded 归档。 |
+| `waits_before_coding` | PASS | git_diff 仅涉及计划文件归档/删除，未修改业务代码；输出明确表示暂不能开始编码。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3023c99f87e425cf1e709e4a173f62dfa04ac1cedece451c8d3671923093f7ca; fixture_sha256=1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b; output_sha256=29e0d1e1eb8ee217da8ec0a1dcd0eeb8ffd81d7929d5209a32b38a085a74584f; snapshot_sha256=18bff28ccab4596c44ebca0f5829e83fd0ddbfbc64d79f6191fec5e3fcbaaaa7
+- Behavior: 识别并归档了废弃计划为 Superseded，未修改业务代码，但遗漏必需归档字段和替代计划回链。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3023c99f87e425cf1e709e4a173f62dfa04ac1cedece451c8d3671923093f7ca; fixture_sha256=1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b; output_sha256=32b6a4b4d786236f5e3756471f07fff5cea648747c40be94122a677eab3be70b; snapshot_sha256=6995bf9c25a12866dbab1af2906dacd7066fe6950387f174e7942935038d3a94
+- Behavior: 将原计划直接改为 Abandoned，未创建符合要求的归档或替代计划。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足读取并明确识别原 Draft 计划字段的断言。
+- 归档缺少 archived_at、archive_approved_by、source_plan。
+- 未创建带 previous_plan_archive 的新活动实施计划。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-017-abandoned-draft-can-be-superseded`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b` from `agents/engineer/test/feature-implementor/evals/workspace/eval-017-abandoned-draft-can-be-superseded`.
+- Fixture SHA-256: `1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b`
+- Prompt SHA-256: `3023c99f87e425cf1e709e4a173f62dfa04ac1cedece451c8d3671923093f7ca`
 - Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`

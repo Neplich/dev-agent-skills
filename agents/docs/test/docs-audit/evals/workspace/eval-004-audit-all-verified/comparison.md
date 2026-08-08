@@ -11,6 +11,140 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897` from `agents/docs/test/docs-audit/evals/workspace/eval-004-audit-all-verified`.
+- Fixture SHA-256: `085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897`
+- Prompt SHA-256: `f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `9e9abf391c9ccd9564d35b5def50bc0374b1db0886710676c4d48422839746ae`
+- Skill overlay SHA-256: `c66ac938bf9158faa694d7c3e311e913ddc4a06da11de703a881234f257c470c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `9d29cd503dc3f38e1235bc8d674c667f9fc3bef38d94569b7888bb0dfed80506`
+- Metadata SHA-256: `4c1ab6c77122f43adf1cbc9d6f05aea7b2b047fe1e69ba225e32d03f006dc954`
+- Executor SHA-256: `df470e672d809d58d28b784ae0b206dc66689c1eb5e12ed84f518fc870309d93`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `verifies_complete_affected_set` | PASS | with_skill 的 candidate record 列出 change-map 命中的两个 API 页面及 Release Notes 页和索引，逐页标记 verified，并明确无 blockers/unresolved gap。 |
+| `stamps_all_pages_together` | PASS | candidate record 记录两张 API 页统一从 v1.0.0 更新为 v1.1.0；Release Notes 页和索引本已为 v1.1.0，最终四个受审页面一致。 |
+| `verifies_release_metadata_read_only` | PASS | 记录核对了 docs/site/.meta/releases.json，声明其只读且未修改；manifest 中其 SHA-256 与初始值一致。 |
+| `normalizes_mixed_version_forms` | PASS | version-source inventory 同时列出带 v 的来源、package.json 的无 v 版本，并统一规范化为 1.1.0；actual tag 明确为 pre-tag pending_expected_absent。 |
+| `persists_candidate_producer_schema` | FAIL | 虽生成固定路径 candidate record 并结论为 candidate_verified，但缺少断言要求的完整 schema：逐页 mode/type/blob 与章后哈希、六字段 locator contract、canonical-json-rfc8259-sorted-v1 实算 digest、两次 staged gate inventory 等。 |
+| `anchors_candidate_then_discovers_success` | FAIL | 虽有 anchor/handoff 文件和 ready_for_tag 结果，但 raw evidence 未提供要求的完整 post-stamp anchor 确认字段及外部包补充的 handoff commit/tree/path/blob、fast-forward 集成与回读证据，因此 ready_for_tag 是不受完整证据支持的声明。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=8ee828113b0c8d62f5967c7a59c22860b163529faf11fc6b84132db2aabb0367; snapshot_sha256=1b554ebf60d81a2dece8c1a50ad3541bc9e7d5639d4fb2fc1b7d9dff82545ad5
+- Behavior: 核对并生成了 candidate record，更新两张 API 页面，保留 release metadata 只读，并提交了 anchor/handoff；但 candidate schema 和最终 handoff 证据不完整。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=a4ca00cf963e0c48264cf559e1129aa6110251e86d46994b939de6a5c1b6db2b; snapshot_sha256=d574c6ce38ef03b6b77cf01d014af6ad4043bd719d50527805a56429979fb387
+- Behavior: 仅创建了 workspace 外的普通 release-evidence 报告；未修改正式文档、未生成固定 audit/handoff 记录，也未执行统一盖章。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- candidate producer record 未满足完整 schema 与 digest/gate inventory 要求。
+- ready_for_tag 缺少完整 anchor 确认及外部 handoff 集成证据。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-004-audit-all-verified`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897` from `agents/docs/test/docs-audit/evals/workspace/eval-004-audit-all-verified`.
+- Fixture SHA-256: `085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897`
+- Prompt SHA-256: `f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c`
+- Repository HEAD: `f33a08c427728fb9aa22fc5d146b1d725dcad4f5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2d24da5f976a5ab2710c2c072a19015e074d314e0ebdb88f1c28831425f1b98c`
+- Skill overlay SHA-256: `40330c17a3b77f25a1b1a716fa5e9355e0011db79d19014344ed516affba11c8`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `9d29cd503dc3f38e1235bc8d674c667f9fc3bef38d94569b7888bb0dfed80506`
+- Metadata SHA-256: `4c1ab6c77122f43adf1cbc9d6f05aea7b2b047fe1e69ba225e32d03f006dc954`
+- Executor SHA-256: `bae0dfdc880ac55872337bb8b1e3be6fa01333a78ce2ecdda8aac9cb64c0ac57`
+- Runtime SHA-256: `ab4b75f8a9f4eb280f5713c7e6797fcff90753ebaf0ddd07e2e0e28edcc6a9fd`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `verifies_complete_affected_set` | PASS | The with_skill candidate identifies both change-map-required API pages plus the release page and index, reports page-by-page fact verification, and marks all affected pages verified with no unresolved gap. |
+| `stamps_all_pages_together` | PASS | The candidate records the four-page unified stamp set; both API markers changed to v1.1.0 and the release page and index already carried v1.1.0. |
+| `verifies_release_metadata_read_only` | PASS | The candidate reports releases.json values as matching v1.1.0 and git evidence shows no metadata modification. |
+| `normalizes_mixed_version_forms` | PASS | The candidate includes the required version-source inventory, distinguishes v-prefixed sources from package.json's unprefixed version, normalizes all to 1.1.0, and marks comparisons verified. |
+| `persists_candidate_producer_schema` | FAIL | The candidate record is candidate_verified, but lacks the required complete target-tree mode/type/blob evidence, chapter before/after values, precise claim code/test blob evidence, post-stamp SHA-256, six-field locator contract, canonical inventory algorithm/digest details, staged gate inventories, and complete readback evidence. |
+| `anchors_candidate_then_discovers_success` | FAIL | The handoff is included in the final fast-forward commit, but raw git evidence does not establish the required complete target_ref..anchor confirmation, separate handoff-only commit, external package integration, or consistent candidate blob/anchor lineage; the handoff references an unreachable anchor commit and a different candidate blob. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=08d3e56c9cf159338038c82a5dc0023b6c4663d8c10724629d0f12eb85c00b23; snapshot_sha256=12a26856d17504e9c7d6f49295c216f00854818dd5eb22193c4fcd380e1e7dfb
+- Behavior: Updated the two API markers and created audit/handoff records, but claimed ready_for_tag without satisfying the required candidate schema and anchor/discovery transaction evidence.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=8c4c48f79a7ff9faa348ebffe5689decef4169dbb514e98fbae307cf20fc9cbe; snapshot_sha256=dafd65aa9e444d2525abefec0be6ada9333414efbb0d52b10fa2707950ee8345
+- Behavior: Produced an untracked conditional-pass report, left all documentation markers unchanged, and did not create commits or handoff records.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- verifies_complete_affected_set
+- stamps_all_pages_together
+- verifies_release_metadata_read_only
+- normalizes_mixed_version_forms
+- persists_candidate_producer_schema
+- anchors_candidate_then_discovers_success
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-004-audit-all-verified`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `877afc6a20a0a47433c20416263d7ec34d2ee62071ad1b0dbc64b35451cfe7b5` from `agents/docs/test/docs-audit/evals/workspace/eval-004-audit-all-verified`.
 - Fixture SHA-256: `877afc6a20a0a47433c20416263d7ec34d2ee62071ad1b0dbc64b35451cfe7b5`
 - Prompt SHA-256: `f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c`
