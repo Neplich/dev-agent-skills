@@ -1,3 +1,83 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-reader`
+- Eval: `eval-001-full-status`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/github-reader/evals/workspace/eval-001-full-status`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `1493e8ad45559bbc5b4bea241fbc6897a1fd400094ebebd9e530360f72c03906`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `254cc92cf58649aa2c5bb2447fe35aa135bdc944368afe7a7cc119c6e2735ba1`
+- Skill overlay SHA-256: `86a7dea13dce1a60e9d0c4442e983c46d3a33318b7a112994f13359d56bd6e12`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `5118c2b783b26288410de500b4b1953d713b7a3bd8b126ea94bcd4d729f93e60`
+- Metadata SHA-256: `c0371765feed3291a029ddfa0b1a8e14c63074210c329b26ba8af6b5faba5b6c`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `milestone` | FAIL | With-skill output has Milestone headings and counts, but no progress table or percentage. |
+| `pr` | FAIL | It has a PR queue section and open/closed totals, but does not distinguish pending review from merged PRs. |
+| `assertion_3` | PASS | The ending summary includes numeric figures: 143 open PRs and 53 open issues. |
+| `pr_2` | FAIL | No individual PR entries use the required [#NUMBER](URL) format; only a general Pull requests link is provided. |
+| `data_completeness` | PASS | The output attributes counts to the current pages and explicitly states that review-status categories cannot be reliably split, avoiding unsupported complete category counts. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1493e8ad45559bbc5b4bea241fbc6897a1fd400094ebebd9e530360f72c03906; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=05717a1ed7d5718e98f6313149e1ae8a32bce73fbbbb98d82875ffc4a961dffd; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Adds structured headings, source links, numeric summary, and a caveat about unavailable PR review decisions, but still lacks the required milestone table, review/merged distinction, and individual PR links.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1493e8ad45559bbc5b4bea241fbc6897a1fd400094ebebd9e530360f72c03906; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=bb150efc4f1378ae0520682529202f7feee1aa37d28fc6293fd79d8cde7a27b9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Reports milestone, issue, and PR counts, but lacks the required milestone table, review/merged PR distinction, individual PR links, numeric ending summary, and explicit completeness caveat.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- milestone
+- pr
+- pr_2
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-full-status
 
 ## Evaluation Target

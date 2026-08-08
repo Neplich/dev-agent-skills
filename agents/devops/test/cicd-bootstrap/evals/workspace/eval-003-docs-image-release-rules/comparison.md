@@ -1,3 +1,79 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `cicd-bootstrap`
+- Eval: `eval-003-docs-image-release-rules`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `3676f277a876b41e1703c92d57107677efc45689334ecbdddc74bf8f7e7cb8bf` from `agents/devops/test/cicd-bootstrap/evals/workspace/eval-003-docs-image-release-rules`.
+- Fixture SHA-256: `3676f277a876b41e1703c92d57107677efc45689334ecbdddc74bf8f7e7cb8bf`
+- Prompt SHA-256: `d3c1631bc39b4cdb5a62c7ac02b9b6359957e5c2debaf73a2659a08294722209`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e575c1d3a1c91f460942675e7572f24424d7186546327f9d3fb6028046c4eca9`
+- Skill overlay SHA-256: `35e1addc81106457a31cc80acfe03c60ba6a9d5ae75c3411408e4bb92991c900`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `90a9cf04ee14bffff8a2eaca0298de327ed551cee77903fd69a219a57495281e`
+- Metadata SHA-256: `3fa9951d25624dea3daa1a46647a39c6e45e551d897c4684f13850f3c7afbfd4`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_host_image_policy` | PASS | with_skill 明确为 Public 与 Internal 指定 linux/amd64、linux/arm64、registry.example/project/service、不可变 vX.Y.Z 与 git-<shortsha> 标签，以及仅由版本 tag 触发生产发布。 |
+| `verifies_each_published_variant` | PASS | with_skill 分别列出两个镜像单元的发布后 digest inspection，并要求确认结果对应预期构建；同时指出当前没有 workflow/脚本/patch，不能将其存在视为已发布。 |
+| `keeps_delivery_authority_separate` | FAIL | with_skill 说明未获 release manager 批准不得 push 或 publication，但未明确覆盖 commit 与 deployment 的授权边界。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d3c1631bc39b4cdb5a62c7ac02b9b6359957e5c2debaf73a2659a08294722209; fixture_sha256=3676f277a876b41e1703c92d57107677efc45689334ecbdddc74bf8f7e7cb8bf; output_sha256=ea7234ee7a2637c75c684723458652045ba43488c7d17658f5264e133e2d3856; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 准确复述 Public/Internal 的镜像策略与发布后 digest 验证，并明确缺少 workflow/脚本/patch；对交付授权边界的覆盖不完整。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d3c1631bc39b4cdb5a62c7ac02b9b6359957e5c2debaf73a2659a08294722209; fixture_sha256=3676f277a876b41e1703c92d57107677efc45689334ecbdddc74bf8f7e7cb8bf; output_sha256=2e7680478a1b09a128f6089fcf2f0b0c9ad490c567b1455063cfe0466f9928ea; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 准确读取现有约定并覆盖三项核心规则，但同样未提供拟议 CI/CD 变更，且未明确说明 commit/deployment 授权边界。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未明确说明写 workflow 不自动授权 commit 或 deployment，因此未完整满足 keeps_delivery_authority_separate。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-003-docs-image-release-rules
 
 ## Evaluation Target

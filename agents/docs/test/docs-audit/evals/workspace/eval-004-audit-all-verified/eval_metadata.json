@@ -2,10 +2,9 @@
   "eval_id": "eval-004-audit-all-verified",
   "eval_name": "audit-all-verified",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-004-audit-all-verified",
-  "prompt": "维护者确认本次检查的目标版本为 `v1.1.0`，`base_ref` 为 `a1b2c3d`、`target_ref` 为 `b2c3d4e`，且匹配 tag 尚不存在。请审计正式文档并保存报告。",
   "fixture_context": [
-    ".eval/actual-diff.patch",
-    ".eval/release-context.md",
+    "release-evidence/actual-diff.patch",
+    "release-evidence/release-context.md",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/catalog-items.md",
     "docs/site/api/catalog-status.md",
@@ -14,5 +13,23 @@
     "docs/site/release-notes/index.md",
     "package.json",
     "src/catalog/routes.txt"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "git_topology": {
+    "base_ref": "a1b2c3d",
+    "target_ref": "b2c3d4e",
+    "target_patch": "release-evidence/actual-diff.patch",
+    "absent_refs": ["refs/tags/v1.1.0"]
+  },
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

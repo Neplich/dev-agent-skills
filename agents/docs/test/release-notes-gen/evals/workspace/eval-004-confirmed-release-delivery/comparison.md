@@ -1,3 +1,85 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-004-confirmed-release-delivery`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `66f607dd2167ff47674a24a52b3b537cbd227a6a1b4a574ecfef674b38f3633c` from `agents/docs/test/release-notes-gen/evals/workspace/eval-004-confirmed-release-delivery`.
+- Fixture SHA-256: `66f607dd2167ff47674a24a52b3b537cbd227a6a1b4a574ecfef674b38f3633c`
+- Prompt SHA-256: `5d2eb8fee66e709ed28ba5aa53ac1e57295ed25d74500a43d924b8fbc434431e`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2da7831c1e3b626979a3601984870e16015610b54d1ff8f08ff8c14d15f812ca`
+- Skill overlay SHA-256: `d552bdbf1aa95d384d7132b02e78e69678457f53a15c3f49ddfae00094ce8ee0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6ba71c78dee7f69b879178b4307965fc8b664b773fca948482dc1711c289b5ad`
+- Metadata SHA-256: `281089e0eacfd344cee9623295c4741f90652b2ae8ae709447ae5189db5a2ee5`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `delivers_confirmed_release_page` | PASS | with_skill 的 v1.0.0 页面包含六个证据类别章节、六个证据链接；frontmatter 合法，且 last_verified_version 保持 unverified。 |
+| `updates_derived_surfaces_after_confirmation` | FAIL | 确认后正确更新了 index、latest 和 released，并保留 manualNote；但额外将 v1.0.0 写入 verifiedDocs。按规范该页面尚未完成 formal documentation audit，不能被标记为已验证。 |
+| `passes_host_docs_checks` | FAIL | 宿主规范要求在 docs/site 执行 npm run test:docs 且全部成功；with_skill 明确报告该命令因无 committed base 被阻塞，未通过完整检查。 |
+| `returns_complete_ready_handoff` | FAIL | 输出明确为 blocked，未提供字段完整的 ready handoff，且缺少明确的 downstream_target 与 release_execution_authorized: false。 |
+| `preserves_external_release_boundary` | FAIL | 虽未报告 GitHub Release、tag、部署或修改 last_verified_version，但 diff 将 v1.0.0 加入 verifiedDocs，越过了 docs-audit 的验证边界。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5d2eb8fee66e709ed28ba5aa53ac1e57295ed25d74500a43d924b8fbc434431e; fixture_sha256=66f607dd2167ff47674a24a52b3b537cbd227a6a1b4a574ecfef674b38f3633c; output_sha256=e36571bfcf20f4c1cb1607d5fd4d9449112d524b13da2016d144ff3599cab3ef; snapshot_sha256=35b8c825f382c905c7c87758e540fd4f6121656d4e0468cec10ca949f0acd3d2
+- Behavior: 生成并确认了完整页面，正确保持页面 unverified、未修改导航；但将页面写入 verifiedDocs，完整 npm run test:docs 被阻塞，输出为 blocked 而非字段完整的 ready handoff。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5d2eb8fee66e709ed28ba5aa53ac1e57295ed25d74500a43d924b8fbc434431e; fixture_sha256=66f607dd2167ff47674a24a52b3b537cbd227a6a1b4a574ecfef674b38f3633c; output_sha256=60c563b29460a25b688210f17ec391eb84be5106dc708514fb1e61016150ad27; snapshot_sha256=6a8eded80556869b68c537202ab5db3f7ca76b971c1a9fa918318bd81e022175
+- Behavior: 生成了完整页面并更新 index/latest/released，保留 unverified 和宿主字段；声称使用显式 HEAD 通过检查，但未形成完整 handoff，且未更新 verifiedDocs。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 将尚未完成 docs-audit 的 v1.0.0 写入 verifiedDocs。
+- with_skill 未通过完整宿主文档检查。
+- with_skill 未返回完整的 pre-tag ready handoff。
+- Next: 在具备有效 Git 基线的 docs/site 工作目录重新执行 npm run test:docs。
+- Next: 移除 verifiedDocs 中对 v1.0.0 的条目，待 docs-audit 完成后再登记。
+- Next: 补充 downstream_target 与 release_execution_authorized: false 的完整 handoff。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Skill Eval Comparison
 
 ## Evaluation Target

@@ -1,3 +1,148 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-004-audit-all-verified`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `877afc6a20a0a47433c20416263d7ec34d2ee62071ad1b0dbc64b35451cfe7b5` from `agents/docs/test/docs-audit/evals/workspace/eval-004-audit-all-verified`.
+- Fixture SHA-256: `877afc6a20a0a47433c20416263d7ec34d2ee62071ad1b0dbc64b35451cfe7b5`
+- Prompt SHA-256: `f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2baee6e542351d5b0c46e79c685dd29ff93f0fee4a45cf4485afee7656248cf7`
+- Skill overlay SHA-256: `a2871f547194089c5425585467f9bee6e3c85ea103d77933d85a4c4cf246fa7c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `e14946c0514a89c80fbae0a1c2296f0621f94cff9935a850c07c617de54712b9`
+- Metadata SHA-256: `4ac2733faccb7d81e868901a87caed3b09e67f0f580dbd1a3f001b98108909da`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `verifies_complete_affected_set` | FAIL | With-skill report verifies only the two required API pages and explicitly records a missing release-notes handoff as an unresolved evidence gap; it does not establish the complete affected set as verified. |
+| `stamps_all_pages_together` | FAIL | With-skill output states that no unified version stamp was executed; all four affected pages remain unchanged in the manifest. |
+| `verifies_release_metadata_read_only` | PASS | The report checks docs/site/.meta/releases.json as v1.1.0-consistent and states it was a read-only audit surface; the manifest hash is unchanged. |
+| `normalizes_mixed_version_forms` | PASS | The report inventories v1.1.0 and 1.1.0 sources, records normalized result 1.1.0 for each, and treats the absent actual tag as pending_expected_absent. |
+| `persists_candidate_producer_schema` | FAIL | The saved record is diagnostic and blocked, not candidate_verified, and lacks required candidate schema details including complete locator/inventory contract, digests, staged gates, post-stamp evidence, and exact claim/test evidence. |
+| `anchors_candidate_then_discovers_success` | FAIL | With-skill output explicitly says no candidate commit, handoff, or tag was created, so the required anchor, discovery, integration, and ready_for_tag sequence did not occur. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=877afc6a20a0a47433c20416263d7ec34d2ee62071ad1b0dbc64b35451cfe7b5; output_sha256=30fac7d5952c877acc41f3077460bbfa6b54f3d33cea55d25ab7c2689855fa40; snapshot_sha256=a7feb85c67e0e2892ec5638b972d12c291ddf12630c5c7a2c68551049c83aa87
+- Behavior: Saved a structured diagnostic audit, verified the two required API pages and version sources, then blocked on the missing release-notes handoff without stamping or creating commits.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=877afc6a20a0a47433c20416263d7ec34d2ee62071ad1b0dbc64b35451cfe7b5; output_sha256=9c817b5ffa956083119f324ef31a87fbebc0728f22bd6d3fec74cf8960830b25; snapshot_sha256=a4b5846f4088bf4ff7617a4326b78fb9b1bb8444c52977770f879bd2430bb96d
+- Behavior: Saved an external audit report, found stale API-page metadata, and made no repository changes.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with-skill lane failed assertions requiring complete affected-set verification, unified stamping, complete candidate schema, and anchor/discovery handoff sequencing.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-004-audit-all-verified`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `15ffe8d37dff57cc024ef91d1367c2695ae30d7652ffe146d828a4b684aa43ed` from `agents/docs/test/docs-audit/evals/workspace/eval-004-audit-all-verified`.
+- Fixture SHA-256: `15ffe8d37dff57cc024ef91d1367c2695ae30d7652ffe146d828a4b684aa43ed`
+- Prompt SHA-256: `f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2baee6e542351d5b0c46e79c685dd29ff93f0fee4a45cf4485afee7656248cf7`
+- Skill overlay SHA-256: `a2871f547194089c5425585467f9bee6e3c85ea103d77933d85a4c4cf246fa7c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `e14946c0514a89c80fbae0a1c2296f0621f94cff9935a850c07c617de54712b9`
+- Metadata SHA-256: `4ac2733faccb7d81e868901a87caed3b09e67f0f580dbd1a3f001b98108909da`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `verifies_complete_affected_set` | PASS | with_skill explicitly marks all four affected pages verified and documents page-level factual evidence. |
+| `stamps_all_pages_together` | FAIL | with_skill explicitly states no version stamp was performed. |
+| `verifies_release_metadata_read_only` | PASS | with_skill reports release metadata matches v1.1.0 and says it was not modified. |
+| `normalizes_mixed_version_forms` | PASS | with_skill explicitly distinguishes raw v1.1.0 sources from package.json 1.1.0 and says they agree after normalization. |
+| `persists_candidate_producer_schema` | FAIL | with_skill explicitly states no candidate record was created. |
+| `anchors_candidate_then_discovers_success` | FAIL | with_skill explicitly states no anchor commit or discoverable pre-tag handoff was created and the result was not ready_for_tag. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=15ffe8d37dff57cc024ef91d1367c2695ae30d7652ffe146d828a4b684aa43ed; output_sha256=b63d27e32d005c1da70fec4ecb128ac8080402568bf138f87e87af98eabbe922; snapshot_sha256=5b90d452c4f9150b80d8a21c8792a0b2d572bf89ae328a3f8e0a13c9e0665b21
+- Behavior: Verified the affected-page facts and version sources, then correctly blocked on missing formal audit foundation and release-notes handoff; it performed no stamp or downstream publication workflow.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=15ffe8d37dff57cc024ef91d1367c2695ae30d7652ffe146d828a4b684aa43ed; output_sha256=d9eff37efbe459e40603851cc4e6b4605e8982d47636dea5b4f1b2607dbc2023; snapshot_sha256=0ab72c88c3894e94c625d3aa0eb6968168763b9e5b290d81e9ddf0f155502d7f
+- Behavior: Produced an uncommitted audit report, identified stale API verification markers, and did not perform the required unified stamp, candidate record, anchor, or handoff workflow.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- stamps_all_pages_together
+- persists_candidate_producer_schema
+- anchors_candidate_then_discovers_success
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # eval-004-audit-all-verified Comparison
 
 ## Evaluation target

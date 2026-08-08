@@ -1,3 +1,78 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `visual-design`
+- Eval: `eval-003-professional`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `567d74ee90d360991ab613f98d8049d53202d95a2bc7caeb2b7d46b23846a5f0` from `agents/designer/test/visual-design/evals/workspace/eval-003-professional`.
+- Fixture SHA-256: `567d74ee90d360991ab613f98d8049d53202d95a2bc7caeb2b7d46b23846a5f0`
+- Prompt SHA-256: `fe1184ee76579ac0041ea69b2abac6b0897add864da628d5ff0192673c2c0220`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `da7e677bc92a70c0b2d244a02d70cdeaf6c4dea3529e1c7fd6f633e617949291`
+- Skill overlay SHA-256: `f98263488d224b1b4c95d5f549311089ee5bc3eefe030032e40a15cde7e65f9d`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `730e4eb8de3e03b346a013a3d5577a175072336c34214d71e41ce4685c2c2ee1`
+- Metadata SHA-256: `0f7ee2304f9494f523bf0e9ffeed979b5af06eb7930b9cda8b5ec89883762703`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | With-skill delivery specifies WCAG AA thresholds: normal text 4.5:1 and large text/key UI boundaries 3:1. It also defines stable information hierarchy and scanning priorities for enterprise analytics users. |
+| `assertion_2` | PASS | With-skill delivery explicitly states it excludes component implementation, style files, and design-token configuration. Git evidence shows only an untracked visual-system.md document and no engineering changes. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fe1184ee76579ac0041ea69b2abac6b0897add864da628d5ff0192673c2c0220; fixture_sha256=567d74ee90d360991ab613f98d8049d53202d95a2bc7caeb2b7d46b23846a5f0; output_sha256=2688c0d95e01fcdaf3f9b5b970dd908bc93e92d662a394cea4a413c707a3194d; snapshot_sha256=160013af585378a41e799710440199b39c9b9e50e461b0f21e433417ec26d245
+- Behavior: Produced a detailed enterprise visual-system specification with explicit WCAG thresholds and no implementation artifacts.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fe1184ee76579ac0041ea69b2abac6b0897add864da628d5ff0192673c2c0220; fixture_sha256=567d74ee90d360991ab613f98d8049d53202d95a2bc7caeb2b7d46b23846a5f0; output_sha256=9e18b7c2e67212e96565e18d99e5a6935f06e83978f1ba1d7a3a095a43a5888f; snapshot_sha256=815c1ff2508e509ec140fd49715e04325bea7abbf43c3608b7514fb194ab9336
+- Behavior: Produced a visual-system document covering accessibility, hierarchy, and scope boundaries.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-003-professional
 
 ## Evaluation Target

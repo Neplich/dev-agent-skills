@@ -1,3 +1,83 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `security-agent`
+- Eval: `eval-001-route-auth-release-risk`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0` from `agents/security/test/security-agent/evals/workspace/eval-1-route-auth-release-risk`.
+- Fixture SHA-256: `6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0`
+- Prompt SHA-256: `5a4bc456b36f0fe19e8d15843877f0c9ef8daed9d99b67bdcc85d65720c79c5b`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `c7bb70655078216ed1473a2f43ea75bd2a651e603db60ff1bdae499fb8fcad0d`
+- Skill overlay SHA-256: `3d7c6fcf40c8244a30d0a19185ac32957c7700ee79807e5938bbaf835def210a`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `86d9cf5b5d192be02693890eee51825a1b00e0750fd5f2d88fdcc91b3fe08ad7`
+- Metadata SHA-256: `10861a3430f4e9df517502c7dede98b52c06228662db21b0d8914dd6b558a77c`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_primary_to_authz` | PASS | with_skill 明确将权限与认证审查列为最高优先级，并指定负责人 authz-reviewer。 |
+| `names_dependency_followup` | PASS | with_skill 明确将依赖与供应链审查列为第二步，并指定 dependency-risk-auditor。 |
+| `collects_security_context` | PASS | with_skill 要求读取角色—权限矩阵、登录与 session 流程、敏感 endpoint 鉴权覆盖、越权与 session 测试、package.json 和 lockfile 等依赖材料。 |
+| `structured_risk_output` | PASS | with_skill 声明交付审查报告、最终风险矩阵、测试/扫描证据和修复建议，并明确不直接修改实现。 |
+| `hands_off_remediation` | FAIL | with_skill 仅提到应用工程团队和平台工程团队，没有明确交给 engineer-agent 或 devops-agent。 |
+| `evaluates_escalation_to_pm_at_closeout` | FAIL | with_skill 未说明 closeout 时按 Security Conclusion Escalation to PM 评估 Security 自有确认结论，也未说明路由阶段不触发升级、不得直接交给 docs-agent 或由 Security 自行创建 issue。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5a4bc456b36f0fe19e8d15843877f0c9ef8daed9d99b67bdcc85d65720c79c5b; fixture_sha256=6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0; output_sha256=c1672a787ba23c95820b857bcb7f087c2b15c1c75b2f80c25c4995562636220c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 按权限/认证审查、依赖审查、上线门禁复核顺序组织工作，并明确指定 authz-reviewer 与 dependency-risk-auditor；但缺少指定 remediation agent 和 closeout PM escalation 规则。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5a4bc456b36f0fe19e8d15843877f0c9ef8daed9d99b67bdcc85d65720c79c5b; fixture_sha256=6becbc324dd17ee4f5ba7cdf2d867ad58ae183800d34e6d3eb510323380d49a0; output_sha256=a0232eb6da04df54a906cba6e1d427324d857bdd489a0a3fe02c47bbd3eefe83; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了详细的安全审查清单和证据要求，但将依赖扫描并行推进，未按要求明确 authz-reviewer 主 route 或 dependency-risk-auditor 后续 route。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- hands_off_remediation 未满足指定 agent 名称要求。
+- evaluates_escalation_to_pm_at_closeout 未覆盖 closeout 升级及相关禁止事项。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-route-auth-release-risk
 
 ## Evaluation Target

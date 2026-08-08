@@ -2,9 +2,21 @@
   "eval_id": "eval-003-engineer-ui-maintenance-handoff",
   "eval_name": "engineer-ui-maintenance-handoff",
   "workspace_root": "agents/designer/test/designer-agent/evals/workspace/eval-003-engineer-ui-maintenance-handoff",
-  "prompt": "Engineer 已完成 PRD/TRD 对齐，相关功能在 customer-portal/profile-settings。前端 UI 更新还缺设置页信息层级和主按钮视觉规范，请补齐设计。",
   "fixture_context": [
     "docs/pm/customer-portal/profile-settings/PRD.md",
     "docs/engineer/customer-portal/profile-settings/TRD.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/designer/skills/ui-ux-design",
+    "agents/designer/skills/visual-design"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

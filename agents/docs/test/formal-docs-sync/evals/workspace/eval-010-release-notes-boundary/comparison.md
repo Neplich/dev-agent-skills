@@ -1,3 +1,82 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-010-release-notes-boundary`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary`.
+- Fixture SHA-256: `0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a`
+- Prompt SHA-256: `59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `79b2ff102fa24fa224c9f24f44f3e648a1ae7eb9a7a10e639d8675db4454120a`
+- Skill overlay SHA-256: `52a3ba7ee2d9485acf003417b40e0d0ca2ab263cbadde98fac58250b6c2a9778`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `73a1610671f9f97761837a796f3ae7908687bbe25fc17ad4582a0bb4ee5c7fae`
+- Metadata SHA-256: `2b92a8a77481c502d1fcd66199a8c8461112beb365a1111e12f804f2f04909b7`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `recognizes_release_communication_outcome` | FAIL | with_skill 输出宣称直接完成页面、版本列表和元数据写入，没有识别为独立的站内 Release Notes 交接工作流，也没有区分其与 Product/Ops 当前事实同步。fixture/docs/site/release-notes/README.md 明确规定这是独立的站内 Release Notes 流程。 |
+| `routes_complete_entry_to_site_owner` | FAIL | with_skill 输出未交接 host_repository、confirmed_version、confirmed_scope、source_evidence、desired_site_surfaces 或 maintainer-confirmed 边界，也未路由给唯一 Docs owner；反而宣称已完成同步。 |
+| `keeps_entire_site_zero_diff` | FAIL | with_skill 的 git_status 显示修改 docs/site/.meta/releases.json、docs/site/release-notes/index.md，并新增 docs/site/release-notes/v1.5.0.md 和 docs/site/.generated/；因此 docs/site 并非零变化。 |
+| `preserves_external_release_boundary` | PASS | with_skill 输出和 git_evidence 未显示创建/移动 tag、创建或发布 GitHub Release，亦未混入外部发布授权；证据中的 ref_delta、new_commits 和 reflog_delta 均为空。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a; output_sha256=b8429c7da861f18b9b87d7ba79679c0a49ab2d3a06cef9a4eab103cb607c3eda; snapshot_sha256=bfd9a22fb265954f1f8c6e19140a164292e0cc635efee8fb31ad4f31c6250240
+- Behavior: 同样直接完成站内发布材料写入，并额外生成 docs/site/.generated/；未进行交接，docs/site 非零变化，未涉及外部发布执行。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=0daa7cdcb772a6f6919dacea1ac9411135275f8c86a790e62556fe0d85f5534a; output_sha256=a346aec47dc64956c00a16528c6c18e7e2711b543e4a0a30e504716e9289e8b3; snapshot_sha256=e1ca05e5a63676d2ec8f224b2b3745a65f6b3ec81f4666fb68e73c8f63039404
+- Behavior: 直接创建 v1.5.0 页面、版本列表和元数据；docs/site 发生三项变更，未完成严格影响范围检查。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未识别并执行独立 Release Notes 交接工作流。
+- with_skill 未将完整已确认入口交给 Docs owner。
+- with_skill 越界修改并生成了 docs/site 内容，违反零写入要求。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Skill Eval Comparison
 
 ## Evaluation Target

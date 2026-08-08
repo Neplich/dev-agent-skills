@@ -2,7 +2,6 @@
   "eval_id": "eval-001-analyze-nodejs-project",
   "eval_name": "analyze-nodejs-project",
   "workspace_root": "agents/engineer/test/codebase-analyzer/evals/workspace/eval-001-analyze-nodejs-project",
-  "prompt": "engineer-agent 已确认需要 repo-level Project Profile，入口依据见 workspace `ENGINEERING_CONTEXT.md`。分析这个 Node.js 项目的代码库结构、技术栈和编码规范",
   "feature_path": "N/A",
   "fixture_context": [
     "ENGINEERING_CONTEXT.md",
@@ -11,5 +10,16 @@
     "test/server.test.js",
     "eslint.config.js",
     ".prettierrc.json"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

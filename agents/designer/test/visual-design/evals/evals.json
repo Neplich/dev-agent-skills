@@ -7,7 +7,25 @@
       "id": "eval-001-minimalist",
       "name": "Minimalist Design System",
       "description": "Create a minimalist design system for a productivity app",
-      "prompt": "Create a visual design system for a minimalist productivity app. Target: professionals who value simplicity and focus.",
+      "scenario": {
+        "persona": "负责极简生产力应用的产品设计师",
+        "situation": "产品定位和受众已经确认，工程团队等待统一视觉规则",
+        "trigger": "首批核心界面实施前需要确定色彩、字体、间距和组件视觉",
+        "goal": "形成克制、可访问且适合高频工作的视觉系统文档",
+        "materials": [
+          "PM_HANDOFF.md"
+        ],
+        "constraints": [
+          "面向重视简洁与专注的专业用户",
+          "不生成 CSS、组件代码或设计 token 配置"
+        ],
+        "success_criteria": [
+          "视觉规则覆盖颜色、字体、间距、组件和文案",
+          "规则体现产品信息密度与可访问性",
+          "文档完成后交给工程团队"
+        ]
+      },
+      "prompt": "极简生产力应用的产品范围已经整理在 `PM_HANDOFF.md`。目标用户是重视简洁和专注的专业人士，请为核心界面建立一套可供工程团队采用的视觉系统。",
       "workspace": "workspace/eval-1-minimalist",
       "expected_output": "完整的视觉系统文档，包含色彩、字体、间距、组件样式和文案规范，并在设计交接处停止",
       "assertions": [
@@ -32,7 +50,25 @@
       "id": "eval-002-playful",
       "name": "Reference-Driven Design System",
       "description": "Create a design system using local Design System Data plus local design-only boundary references",
-      "prompt": "Create a visual design system for an enterprise analytics platform. Target users are operations leaders and analysts. Use the local Design System Data as supporting context.",
+      "scenario": {
+        "persona": "负责企业分析平台的产品设计负责人",
+      "situation": "平台面向运营负责人和分析师，需要为高密度数据界面建立统一视觉方向",
+        "trigger": "仪表盘实施前需要统一高密度数据界面的视觉方向和质量规则",
+      "goal": "形成可信、易扫描且适合企业分析场景的视觉系统",
+        "materials": [
+        "PM_HANDOFF.md"
+        ],
+        "constraints": [
+          "需要说明参考依据和产品类型判断",
+          "不输出 CSS、组件代码、安装命令或工程任务"
+        ],
+        "success_criteria": [
+        "布局、风格、配色与字体适合高密度企业分析场景",
+          "覆盖可访问性、数据可读性和反模式",
+          "视觉文档完成后交给工程团队"
+        ]
+      },
+      "prompt": "企业分析平台面向运营负责人和分析师。请为数据密集的仪表盘建立一套可信、易扫描的视觉系统，结合产品定位说明布局、风格、配色和字体选择，供工程团队后续采用。",
       "workspace": "workspace/eval-2-reference-design-system",
       "expected_output": "基于本地 Design System Data 的视觉系统文档，包含产品类型推理、风格/配色/字体推荐、UX 质量规则和反模式，并在设计交接处停止",
       "assertions": [
@@ -52,7 +88,26 @@
       "id": "eval-003-professional",
       "name": "Professional Design System",
       "description": "Create a professional design system for enterprise software",
-      "prompt": "pm-agent 已完成入口分类并路由至 visual-design；确认 handoff 见 workspace `PM_HANDOFF.md`，已确认 `feature_path: enterprise-analytics`。Create a visual design system for an enterprise analytics platform. Target: corporate users, trustworthy and authoritative.",
+      "scenario": {
+        "persona": "负责企业分析平台体验一致性的设计负责人",
+        "situation": "产品受众、数据密度与品牌方向已经确认，团队准备统一关键界面视觉",
+        "trigger": "分析师和管理层需要在高密度表格、图表和告警中快速辨别信息",
+        "goal": "形成专业、可信并满足可访问性要求的企业视觉系统",
+        "materials": [
+          "PM_HANDOFF.md",
+          "docs/pm/enterprise-analytics/PRD.md"
+        ],
+        "constraints": [
+          "优先保证层级清晰和数据可读性",
+          "不生成组件代码、样式文件或工程命令"
+        ],
+        "success_criteria": [
+          "视觉规则适配表格、图表、筛选、状态和告警",
+          "明确 WCAG 对比度和交互状态",
+          "文档写入确认范围并完成设计交接"
+        ]
+      },
+      "prompt": "企业分析平台的产品范围和受众要求在 `PM_HANDOFF.md` 与 `docs/pm/enterprise-analytics/PRD.md`。请为分析师、运营负责人和管理层建立一套可信、权威且易于扫描的视觉系统，重点保证高密度数据界面的清晰度与可访问性。",
       "workspace": "workspace/eval-003-professional",
       "expected_output": "面向企业软件的专业视觉系统文档，强调可信和可访问性，并在设计交接处停止",
       "assertions": [

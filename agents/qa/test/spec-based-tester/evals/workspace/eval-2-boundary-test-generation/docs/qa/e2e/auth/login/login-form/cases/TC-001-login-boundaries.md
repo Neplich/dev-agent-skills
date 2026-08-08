@@ -8,7 +8,7 @@
 - Credential ref: `platform.login.qa_user`
 - Script: `scripts/TC-001-login-boundaries.spec.md`
 
-## Assertions
+## Acceptance Checks
 
 - Empty email and password are rejected with validation errors.
 - Overlong input does not crash validation.

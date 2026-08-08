@@ -1,3 +1,80 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `release-notes-gen`
+- Eval: `eval-002-confirmation-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee` from `agents/docs/test/release-notes-gen/evals/workspace/eval-002-confirmation-gate`.
+- Fixture SHA-256: `96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee`
+- Prompt SHA-256: `7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2da7831c1e3b626979a3601984870e16015610b54d1ff8f08ff8c14d15f812ca`
+- Skill overlay SHA-256: `d552bdbf1aa95d384d7132b02e78e69678457f53a15c3f49ddfae00094ce8ee0`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `734d8912f6102b866e236fb845ac847f11fde3651b05c29ee143e730ba9a8ce3`
+- Metadata SHA-256: `913e8a90d405fa7666ae23e665c2d55b7740272554f1234087ce53fcb62d5aad`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `keeps_derived_surfaces_unchanged` | FAIL | with_skill 明确称未修改 releases.json、Release Notes 索引或导航，但没有明确说明这些路径必须等正文确认后才能修改。 |
+| `reports_unconfirmed_not_ready` | PASS | with_skill 报告 confirmation_status: unconfirmed，并说明未输出 ready handoff；git evidence 也显示仅新增候选页面，派生面未变更。 |
+| `waits_for_explicit_confirmation` | FAIL | with_skill 请求确认，但只提供候选正文的文件链接和主题摘要，没有在输出中展示完整候选正文、来源证据及确认后计划修改的具体路径。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee; output_sha256=edec040ee1755b905f3e1ae60227bdfc0df8a830b0fffe9298fdac3694bf08a4; snapshot_sha256=ef22ae718596494c8b6003a3f737cff4c451344c040a6c83773041e6b97f4b05
+- Behavior: 保持派生面未修改，明确 unconfirmed、未输出 ready handoff，并请求确认；但未明确派生路径须等待确认，也未展示完整正文、来源证据和确认后路径。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=96f3ebd893045bcb6258f448d567899e41ff3b23e37c5a73f9e213fdf3f448ee; output_sha256=8433041d558c25db941bf0ddd02fca77db9efdb41570a011935331e97f488c74; snapshot_sha256=0696ddb122d0f40321ca0c23d1d3bfa0932e22ce0dcf955cb0f14d6071b58817
+- Behavior: 创建候选版本页并标注待确认，称未修改索引、metadata 或导航；未报告结构化 unconfirmed/blocked 状态，也未展示完整正文或确认后路径。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足 keeps_derived_surfaces_unchanged 的显式等待条件。
+- with_skill 未满足 waits_for_explicit_confirmation 对完整正文、来源证据和确认后路径的展示要求。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Skill Eval Comparison
 
 ## Evaluation Target

@@ -1,3 +1,79 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-site-bootstrap`
+- Eval: `eval-002-repeat-bootstrap-idempotent`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-002-repeat-bootstrap-idempotent`.
+- Fixture SHA-256: `81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba`
+- Prompt SHA-256: `1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `4a398cfa9db1074844549bc002d7714ae1641dceb87757d5c772d45182765b8a`
+- Skill overlay SHA-256: `4e5a2571a4a7180fe735bec31f7744892dd9b213e7966b85237f9d1c2b22d88a`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `d69da1ea23c3e19a3bb0fc90f80dd5c408b949a85124191f1000ce2477a1817f`
+- Metadata SHA-256: `b55dbc29e6b1365719d0847e8b8ceb11bcbcaa0b15d77aac44cd57ea26527a2b`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_zero_diff` | PASS | with_skill reports zero new files, zero unresolved conflicts, empty git status and git diff; the fixture manifest retains createdAt 2026-07-16T08:00:00+08:00. |
+| `reports_skipped_identical` | PASS | with_skill reports 42 skipped-identical assets and a 42-record manifest. Raw fixture evidence contains 42 manifest file entries, all marked skipped-identical. |
+| `preserves_existing_state` | PASS | with_skill reports no Git changes and zero kept-as-is conflicts; raw fixture evidence shows existing pages, templates, configuration, scripts, change-map, releases, and manifest assets. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158; fixture_sha256=81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba; output_sha256=a70eafd0e42d11d5efd802490261615c2c4cc1ea8198fb8c723922d7b4c332fc; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Reported an idempotent rerun: 42 skipped-identical assets, a 42-record manifest, zero Git changes, and zero-diff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1e8516931ef9c5300021c46d1671fb3fb195b5fe4d687cb8133fc778b15a0158; fixture_sha256=81fc070f4ad34328237a018c7882b4df392c1f8371f853eea4af158725fb66ba; output_sha256=4d4d958acde9d761caf2044d32ac40f7f6fc6b975a691d0de10e1264781cb425; snapshot_sha256=060c9f1e9bca54e39b34c9d582c0f4bb286da0cadf85ff1b87aaced36e86fce0
+- Behavior: Reported no tracked modifications but introduced 38 untracked generated files under docs/site/.generated/ and did not establish the required 42-asset skipped-identical result.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Skill Eval Comparison
 
 ## Evaluation Target

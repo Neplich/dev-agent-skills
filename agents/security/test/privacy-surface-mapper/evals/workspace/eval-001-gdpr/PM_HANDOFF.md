@@ -1,6 +1,6 @@
 # PM Handoff Packet
 
-pm-agent 已完成入口分类，并将个人数据收集与 GDPR 审查路由至 privacy-surface-mapper。
+产品与安全负责人已确认本次审查范围和可用材料。
 
 ```yaml
 request_type: security
@@ -41,8 +41,8 @@ data_categories:
   - 设备标识
   - 产品行为事件
 remediation_expectations:
-  - 同意与数据最小化实现交回 engineer-agent
-  - 保留与删除运维项交回 devops-agent
+  - 同意与数据最小化实现交回 应用工程团队
+  - 保留与删除运维项交回 平台工程团队
 blockers_risks:
   - 当前样本未记录分析同意或保留期限
 ```

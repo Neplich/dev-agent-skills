@@ -7,7 +7,28 @@
       "id": "eval-001-npm-audit",
       "name": "NPM Dependency Audit",
       "description": "Test audit of Node.js project with vulnerable dependencies",
-      "prompt": "pm-agent has completed entry classification and routed this confirmed `dependency-inventory` security scope to dependency-risk-auditor. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/dependency-inventory/PRD.md`. Audit the dependencies for security vulnerabilities.",
+      "scenario": {
+        "persona": "Node.js 发布安全工程师",
+        "situation": "服务固定了生产依赖，尚未完成发布审计",
+        "trigger": "团队需知道公开漏洞及升级路径",
+        "goal": "形成版本证据和缓解建议审计",
+        "materials": [
+          "PM_HANDOFF.md",
+          "docs/pm/dependency-inventory/PRD.md",
+          "package.json"
+        ],
+        "constraints": [
+          "不改 package.json",
+          "缺 lockfile 或实时输出时说明限制",
+          "只评估生产依赖"
+        ],
+        "success_criteria": [
+          "盘点精确版本",
+          "区分漏洞过期供应链",
+          "给出升级或缓解"
+        ]
+      },
+      "prompt": "Node.js 服务准备发布，依赖范围在 `PM_HANDOFF.md` 和对应 PRD，当前生产依赖在 `package.json`。请审计这些固定版本的安全风险，说明证据、影响、优先级和升级或缓解建议。",
       "workspace": "workspace/eval-001-npm-audit",
       "expected_output": "Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.",
       "assertions": [
@@ -37,7 +58,27 @@
       "id": "eval-002-abandoned",
       "name": "Abandoned Packages",
       "description": "Test detection of abandoned/outdated packages",
-      "prompt": "pm-agent has completed entry classification and routed this confirmed `dependency-inventory` security scope to dependency-risk-auditor. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/dependency-inventory/PRD.md`. Check for abandoned or outdated dependencies.",
+      "scenario": {
+        "persona": "遗留服务安全工程师",
+        "situation": "服务仍使用早期网络请求和 UUID 包",
+        "trigger": "升级前需区分停止维护、漏洞和版本落后",
+        "goal": "形成维护状态和替换优先级审计",
+        "materials": [
+          "PM_HANDOFF.md",
+          "docs/pm/dependency-inventory/PRD.md",
+          "package.json"
+        ],
+        "constraints": [
+          "不自动替换",
+          "维护结论注明来源或待核验"
+        ],
+        "success_criteria": [
+          "识别版本和维护风险",
+          "说明暴露面",
+          "给出替代方向与顺序"
+        ]
+      },
+      "prompt": "遗留集成服务仍在使用 `package.json` 中的网络请求和 UUID 依赖。请根据 `PM_HANDOFF.md` 与产品范围检查这些包是否已废弃、停止维护或明显过时，并给出有依据的替换建议。",
       "workspace": "workspace/eval-002-abandoned",
       "expected_output": "Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.",
       "assertions": [
@@ -67,7 +108,28 @@
       "id": "eval-003-python",
       "name": "Python Dependency Audit",
       "description": "Test audit of Python project dependencies",
-      "prompt": "pm-agent has completed entry classification and routed this confirmed `dependency-inventory` security scope to dependency-risk-auditor. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/dependency-inventory/PRD.md`. Review Python dependencies for security issues.",
+      "scenario": {
+        "persona": "Python 发布安全工程师",
+        "situation": "HTTP、TLS 和模板依赖固定在较老版本",
+        "trigger": "团队需决定阻断发布或升级",
+        "goal": "形成包版本、暴露面和缓解审计",
+        "materials": [
+          "PM_HANDOFF.md",
+          "docs/pm/dependency-inventory/PRD.md",
+          "requirements.txt"
+        ],
+        "constraints": [
+          "不改 requirements.txt",
+          "不编造 CVE",
+          "区分确认与待核验"
+        ],
+        "success_criteria": [
+          "盘点三个依赖",
+          "说明入口和优先级",
+          "给出升级或短期缓解"
+        ]
+      },
+      "prompt": "Python 服务准备发布，依赖范围在 `PM_HANDOFF.md` 和对应 PRD，固定版本在 `requirements.txt`。请审计 HTTP、TLS 和模板相关依赖的安全风险，给出升级或临时缓解建议。",
       "workspace": "workspace/eval-003-python",
       "expected_output": "Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.",
       "assertions": [
@@ -97,7 +159,27 @@
       "id": "eval-004-mapped-client-dependency",
       "name": "Mapped Client Dependency Documentation",
       "description": "Verify that a dependency audit reads mapped formal documentation and validates an unverified client version claim against the dependency manifest",
-      "prompt": "请审计 src/dependencies/manifest.json 中网络客户端依赖的风险，核对当前版本并给出升级或缓解建议。",
+      "scenario": {
+        "persona": "客户端依赖安全工程师",
+        "situation": "正式说明记录 2.1.0，清单可能仍是旧版",
+        "trigger": "发布前需确认实际版本及风险",
+        "goal": "以清单形成审计并记录差异",
+        "materials": [
+          "src/dependencies/manifest.json",
+          "docs/site/standards/change-map.yaml",
+          "docs/site/api/network-client.md"
+        ],
+        "constraints": [
+          "文档未核验",
+          "不直接升级"
+        ],
+        "success_criteria": [
+          "通过映射定位说明",
+          "确认清单版本",
+          "说明差异和缓解"
+        ]
+      },
+      "prompt": "请审计 `src/dependencies/manifest.json` 中网络客户端依赖的风险。仓库有变更映射和正式说明，请核对当前实际版本，并给出升级或缓解建议。",
       "workspace": "workspace/eval-004-mapped-client-dependency",
       "expected_output": "优先读取 change-map 命中的依赖文档，再以清单核对实际版本；将 unverified 文档按最低信任处理并报告文档版本与依赖清单不一致。",
       "assertions": [
@@ -111,16 +193,16 @@
           "description": "以依赖清单核对网络客户端版本",
           "text": "关键依赖结论回到 src/dependencies/manifest.json；识别文档声称使用 2.1.0、清单实际固定 1.4.0 的不一致，并以清单事实评估风险。"
         },
-    {
-      "id": "treats_unverified_as_low_trust",
-      "description": "将 unverified 依赖文档按最低信任处理",
-      "text": "识别 required_docs 的 last_verified_version 为 unverified，对所有关键依赖判断扩大代码或清单核证，而不是直接采信文档或拒绝读取。"
-    },
-    {
-      "id": "escalates_fact_changing_conclusion_to_pm",
-      "description": "改变正式文档事实的结论升级",
-      "text": "确认结论改变正式文档事实时，必须把结论与证据回交 `pm-agent` 分类并创建 issue，不直接交给 `docs-agent`、不由 Security 自行创建 issue；Security 自有的 `docs/security/` 过程报告除外，仍必须作为升级证据产出。"
-    }
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "将 unverified 依赖文档按最低信任处理",
+          "text": "识别 required_docs 的 last_verified_version 为 unverified，对所有关键依赖判断扩大代码或清单核证，而不是直接采信文档或拒绝读取。"
+        },
+        {
+          "id": "escalates_fact_changing_conclusion_to_pm",
+          "description": "改变正式文档事实的结论升级",
+          "text": "确认结论改变正式文档事实时，必须把结论与证据回交 `pm-agent` 分类并创建 issue，不直接交给 `docs-agent`、不由 Security 自行创建 issue；Security 自有的 `docs/security/` 过程报告除外，仍必须作为升级证据产出。"
+        }
       ]
     }
   ]

@@ -1,3 +1,142 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-009-pre-tag-blocked`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0c59dd74f98f557b12899cbca54adf5aa4fe8aa94d37037f8495e06f83e726c0` from `agents/docs/test/docs-audit/evals/workspace/eval-009-pre-tag-blocked`.
+- Fixture SHA-256: `0c59dd74f98f557b12899cbca54adf5aa4fe8aa94d37037f8495e06f83e726c0`
+- Prompt SHA-256: `542a6dbc4e91378f219fb9c7b639cb7670be62733499a20407d8c4586f25b852`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2baee6e542351d5b0c46e79c685dd29ff93f0fee4a45cf4485afee7656248cf7`
+- Skill overlay SHA-256: `a2871f547194089c5425585467f9bee6e3c85ea103d77933d85a4c4cf246fa7c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `15afea3ad3f743cdcf46b8c92f93ce64a903895054dc1b1a156e01c34538eba5`
+- Metadata SHA-256: `2fa243367a1e388253aea518818683b603664720294e82f2ffeeeebe3d5f82e8`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `requires_exact_target_tree_blobs` | PASS | with_skill requires facts from the immutable target_ref tree and treats all worktree/index evidence as diagnostic only. |
+| `blocks_every_in_scope_worktree_delta` | PASS | with_skill identifies the staged implementation change, unstaged affected documentation and package version, and untracked audit draft, and concludes blocked. |
+| `performs_zero_audit_writes` | PASS | with_skill returns blocked, forbids ready_for_tag and tag creation, and locked git evidence shows no branch, ref, commit, or worktree changes. |
+| `requires_clean_commit_update_ref_and_rerun` | PASS | with_skill requires committing the changes, updating release-head, confirming clean worktree/index, and rerunning the complete pre-tag audit. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=542a6dbc4e91378f219fb9c7b639cb7670be62733499a20407d8c4586f25b852; fixture_sha256=0c59dd74f98f557b12899cbca54adf5aa4fe8aa94d37037f8495e06f83e726c0; output_sha256=34ada93f7c5d348ea2b09389a88a04f105d01bd083d97f059b9351aad97c4153; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly blocks the audit, enforces immutable target-tree evidence, identifies all in-scope deltas, preserves state, and specifies a complete rerun.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=542a6dbc4e91378f219fb9c7b639cb7670be62733499a20407d8c4586f25b852; fixture_sha256=0c59dd74f98f557b12899cbca54adf5aa4fe8aa94d37037f8495e06f83e726c0; output_sha256=f50bd9550671b260f7b9584015661f051e1dcf720853336234bf6901a2652dca; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly rejects approval and preserves repository state, but gives less complete scope classification and rerun requirements.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-009-pre-tag-blocked`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `e7c07749e1ccddc060263b8f3a4f43a48fd955320cdd49d95c38c2e2312093a6` from `agents/docs/test/docs-audit/evals/workspace/eval-009-pre-tag-blocked`.
+- Fixture SHA-256: `e7c07749e1ccddc060263b8f3a4f43a48fd955320cdd49d95c38c2e2312093a6`
+- Prompt SHA-256: `542a6dbc4e91378f219fb9c7b639cb7670be62733499a20407d8c4586f25b852`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2baee6e542351d5b0c46e79c685dd29ff93f0fee4a45cf4485afee7656248cf7`
+- Skill overlay SHA-256: `a2871f547194089c5425585467f9bee6e3c85ea103d77933d85a4c4cf246fa7c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `15afea3ad3f743cdcf46b8c92f93ce64a903895054dc1b1a156e01c34538eba5`
+- Metadata SHA-256: `2fa243367a1e388253aea518818683b603664720294e82f2ffeeeebe3d5f82e8`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `requires_exact_target_tree_blobs` | PASS | with_skill explicitly requires passing evidence to come from the resolved target_ref tree and excludes workspace, index, and untracked files. |
+| `blocks_every_in_scope_worktree_delta` | PASS | with_skill identifies all four porcelain states and treats the implementation, affected page, package version, and audit record as blocking scope differences. |
+| `performs_zero_audit_writes` | PASS | with_skill concludes blocked, rejects ready_for_tag, and reports no audit writes or repository changes. |
+| `requires_clean_commit_update_ref_and_rerun` | FAIL | with_skill requires committing the changes, updating release-head, and rerunning the full audit, but does not explicitly require confirming the scope worktree and index are clean before rerunning. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=542a6dbc4e91378f219fb9c7b639cb7670be62733499a20407d8c4586f25b852; fixture_sha256=e7c07749e1ccddc060263b8f3a4f43a48fd955320cdd49d95c38c2e2312093a6; output_sha256=0fa27ffb767bda3d1ffd71b3c541d2496b7bcf451aca70a11703ca66615d7674; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly blocks the audit, identifies the relevant differences, preserves the no-write outcome, and gives a full rerun direction except for the explicit clean worktree/index confirmation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=542a6dbc4e91378f219fb9c7b639cb7670be62733499a20407d8c4586f25b852; fixture_sha256=e7c07749e1ccddc060263b8f3a4f43a48fd955320cdd49d95c38c2e2312093a6; output_sha256=65f0a9a62cc382549d73dee2dbb1981a0d711cac3ee237b3b335e855b5084989; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly blocks the audit and distinguishes target-tree evidence from uncommitted workspace evidence; gives a rerun procedure but does not fully classify all scope requirements.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- requires_clean_commit_update_ref_and_rerun: the with_skill output omits an explicit instruction to confirm the scope worktree and index are clean before rerunning.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Fresh Paired Validation: eval-009-pre-tag-blocked
 
 ## Evaluation target

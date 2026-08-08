@@ -2,10 +2,20 @@
   "eval_id": "eval-017-abandoned-draft-can-be-superseded",
   "eval_name": "abandoned-draft-can-be-superseded",
   "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-017-abandoned-draft-can-be-superseded",
-  "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现有退款原因码实施计划不再继续，维护者明确要求废弃这一轮并为新的退款审核流程继续工作。",
   "fixture_context": [
     "docs/pm/payment-refund/PRD.md",
     "docs/engineer/payment-refund/TRD.md",
     "docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

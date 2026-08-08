@@ -2,7 +2,6 @@
   "eval_id": "eval-006-nested-feature-path",
   "eval_name": "nested-feature-path",
   "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-3/eval-6-nested-feature-path",
-  "prompt": "已有 Web 应用已经有 Chat Interface 和 Message History 的 PRD。现在要新增消息历史搜索。请先看项目文档，判断应该更新或生成哪些 PM 文档。",
   "fixture_context": [
     "docs/pm/chat-interface/PRD.md",
     "docs/pm/chat-interface/messages/PRD.md",
@@ -65,5 +64,16 @@
         "feature_path_evidence"
       ]
     }
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/engineer/skills/trd-gen"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

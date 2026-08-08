@@ -1,3 +1,82 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `qa-agent`
+- Eval: `eval-001-route-mixed-qa-request`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5` from `agents/qa/test/qa-agent/evals/workspace/eval-1-route-mixed-qa-request`.
+- Fixture SHA-256: `c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5`
+- Prompt SHA-256: `d32b34f557a9af42827fae115c24f25ec47fe1e0fcda62e092dc3afa3789c767`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `fce4a3d76c9b69c96fdd86c3a44479dd8a12dd392536b124aa25210a7efca146`
+- Skill overlay SHA-256: `02078f32eed1000178bae7f378d81856a077951dbb061b6ea461010744428cde`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `df4278b098e7470d5c41718341478d7c82c0968178c0b46c4b2f1526aa5b9366`
+- Metadata SHA-256: `4be0f47d4261e8c4b656f6ffc80cff8a92794168034f2231da1ec209e3d5f4fd`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | With_skill selects spec-based-tester as the main route, frames the work as feature-update scope acceptance, and contrasts it with full regression and immediate bug analysis. |
+| `assertion_2` | FAIL | It names PRD/TRD/implementation plan and QA materials, plus platform/browser version, but does not explicitly require downstream reading of environment instructions and a concrete test command; the CI failure input is discussed rather than listed as required context to read. |
+| `specialist_gate_pointer` | FAIL | It selects spec-based-tester and mentions platform version plus PRD/TRD/implementation plan, but does not point to authoritative E2E memory, credentials, execution entry, or blocked-condition gate applicability. |
+| `assertion_4` | PASS | It specifies requirement matrices, feature paths, evidence references, per-TC result directories, a feature-update report, and risk/blocked-item treatment. |
+| `assertion_5` | PASS | It uses spec-based-tester as the single main route, defers bug-analyzer to a stable reproduction, and explicitly says the intermittent symptom must not be marked a confirmed bug. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d32b34f557a9af42827fae115c24f25ec47fe1e0fcda62e092dc3afa3789c767; fixture_sha256=c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5; output_sha256=46abced89ee013ee28226b77ce8e2935c16ca291baf14edc8ee16e1e9d70e04d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Selects spec-based-tester, preserves the intermittent-failure risk distinction, and defines structured artifacts, but omits required downstream context details and the specialist authority gate pointer.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d32b34f557a9af42827fae115c24f25ec47fe1e0fcda62e092dc3afa3789c767; fixture_sha256=c9268123afd7a11d5bd4ac6d14865261ea2db8883ff6a745cea96f843ec5dbd5; output_sha256=6b7986914c4a65bdcb3f55a996fa36de4a267edc12cee141a31d96962479994c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a reasonable conditional-acceptance recommendation and evidence suggestions, but does not select a QA specialist route or satisfy the required routing and handoff structure.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- assertion_2: missing explicit environment-instructions and concrete test-command context requirements.
+- specialist_gate_pointer: missing authoritative E2E memory, credential, execution-entry, and blocked-condition gate pointers.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-route-mixed-qa-request
 
 ## Evaluation Target

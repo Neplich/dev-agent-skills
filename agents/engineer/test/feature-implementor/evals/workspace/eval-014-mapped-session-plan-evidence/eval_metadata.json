@@ -2,10 +2,20 @@
   "eval_id": "eval-014-mapped-session-plan-evidence",
   "eval_name": "mapped-session-plan-evidence",
   "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-014-mapped-session-plan-evidence",
-  "prompt": "请为 `src/session/` 增加会话续期，并先核对当前超时行为。",
   "fixture_context": [
     "src/session/config.txt",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/session.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

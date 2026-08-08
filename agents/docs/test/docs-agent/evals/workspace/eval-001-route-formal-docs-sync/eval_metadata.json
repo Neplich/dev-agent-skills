@@ -2,6 +2,19 @@
   "eval_id": "eval-001-route-formal-docs-sync",
   "eval_name": "route-formal-docs-sync",
   "workspace_root": "agents/docs/test/docs-agent/evals/workspace/eval-001-route-formal-docs-sync",
-  "prompt": "请根据 `pm-handoff.md` 处理已完成搜索 API 实现后的正式文档同步请求。",
-  "fixture_context": ["pm-handoff.md"]
+  "fixture_context": [
+    "pm-handoff.md"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/formal-docs-sync"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

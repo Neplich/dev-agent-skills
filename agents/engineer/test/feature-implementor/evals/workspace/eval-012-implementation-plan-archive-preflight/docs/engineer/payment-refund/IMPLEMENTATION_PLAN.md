@@ -20,8 +20,7 @@ related_trd: "docs/engineer/payment-refund/TRD.md"
 
 ## Implementation Result
 
-The full refund flow was implemented and verified. This plan has not been
-archived yet.
+The full refund flow was implemented and verified.
 
 | Item | Status |
 | --- | --- |

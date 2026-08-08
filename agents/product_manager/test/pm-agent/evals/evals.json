@@ -7,9 +7,29 @@
       "id": "eval-001-route-greenfield-product-request",
       "name": "route-greenfield-product-request",
       "description": "Verifies that pm-agent routes a greenfield product request to the narrowest PM specialist before engineering starts.",
-      "prompt": "用户说：这是一个空目录，我想做一个 AI 对话助手，左侧是会话历史，右侧是聊天区。先不要写代码。",
-      "workspace": "workspace/eval-1-route-greenfield-product-request",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "用户在空目录提出 AI 对话助手想法并明确暂不写代码，需要先找到能收敛产品范围的入口。",
+        "trigger": "产品想法刚提出且代码阶段被明确延后，需要先确定正确的下一步。",
+        "goal": "先进入产品需求收敛而不是写代码，并说明近期应得到的产品文档或决定",
+        "materials": [
+          "空工作目录",
+          "用户给出的 AI 对话助手界面构想"
+        ],
+        "constraints": [
+          "空目录且用户明确暂不写代码",
+          "先收敛产品需求",
+          "不提前进入设计或工程实现"
+        ],
+        "success_criteria": [
+          "先进入产品需求收敛而不是写代码",
+          "说明近期应得到的产品文档或决定",
+          "明确何时才适合交给设计和工程"
+        ]
+      },
+      "prompt": "这是一个空目录，我想做一个 AI 对话助手，左侧是会话历史，右侧是聊天区。先不要写代码，帮我把这件事推进起来。",
       "expected_output": "PM 路由决策，明确选择 idea-to-spec，说明空目录产品想法必须先收敛需求，并给出后续 handoff 边界。",
+      "workspace": "workspace/eval-1-route-greenfield-product-request",
       "assertions": [
         {
           "id": "route_to_idea_to_spec",
@@ -42,9 +62,28 @@
       "id": "eval-002-route-bugfix-request",
       "name": "route-bugfix-request",
       "description": "Verifies that pm-agent classifies a user bug-fix request before debugger or engineering execution.",
-      "prompt": "用户说：帮我修这个登录 bug，错误日志显示 token 过期后页面一直转圈。请判断应该怎么分类、先确认什么，再交给谁处理。",
-      "workspace": "workspace/eval-2-route-bugfix-request",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "登录页在 token 过期后持续转圈，用户希望修复，但当前只有错误现象与日志摘要。",
+        "trigger": "登录异常已经影响用户，但修复前仍需确认预期和可复现证据。",
+        "goal": "先确认 token 过期时的预期行为和复现证据，并实现偏差成立后再安排工程修复",
+        "materials": [
+          "用户提供的 token 过期错误现象与日志摘要"
+        ],
+        "constraints": [
+          "先核对确认预期与复现证据",
+          "只有实现偏差成立后才进入修复",
+          "当前不直接改代码"
+        ],
+        "success_criteria": [
+          "先确认 token 过期时的预期行为和复现证据",
+          "实现偏差成立后再安排工程修复",
+          "当前不凭一条现象直接改代码"
+        ]
+      },
+      "prompt": "登录页在 token 过期后会一直转圈，错误日志也显示请求在过期后没有结束。帮我修好这个问题。",
       "expected_output": "PM 路由决策，识别为 bug_report；先确认 approved PRD/TRD 预期行为和复现证据，再在确认实现偏差后 handoff Engineer/debugger。",
+      "workspace": "workspace/eval-2-route-bugfix-request",
       "assertions": [
         {
           "id": "request_type_bug_report",
@@ -67,9 +106,28 @@
       "id": "eval-003-route-test-writing-request",
       "name": "route-test-writing-request",
       "description": "Verifies that pm-agent classifies a test-writing request and asks for a stable test basis before QA or test-writer handoff.",
-      "prompt": "用户说：帮我补测试，覆盖订单退款流程的异常分支。请判断应该怎么分类、需要什么测试依据，以及后续交给谁。",
-      "workspace": "workspace/eval-3-route-test-writing-request",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "订单退款异常分支缺少测试覆盖，请求方尚未提供确认的验收依据。",
+        "trigger": "团队准备补齐退款异常测试，但尚未确认这些分支应满足什么行为。",
+        "goal": "指出补测试前缺少的验收或技术依据，并明确产品验收与工程测试各自责任",
+        "materials": [
+          "用户指出的订单退款异常分支范围"
+        ],
+        "constraints": [
+          "测试必须有已确认行为依据",
+          "区分产品验收与工程单元测试责任",
+          "不在入口阶段编写测试"
+        ],
+        "success_criteria": [
+          "指出补测试前缺少的验收或技术依据",
+          "明确产品验收与工程测试各自责任",
+          "依据稳定后再安排具体测试编写"
+        ]
+      },
+      "prompt": "订单退款流程的异常分支还没有测试覆盖，帮我把测试补齐。",
       "expected_output": "PM 路由决策，识别为 validation；先确认 PRD/TRD/IMPLEMENTATION_PLAN 或既有验收记录作为测试依据，再 handoff QA 或 Engineer/test-writer。",
+      "workspace": "workspace/eval-3-route-test-writing-request",
       "assertions": [
         {
           "id": "request_type_validation",
@@ -92,9 +150,28 @@
       "id": "eval-004-route-ui-update-request",
       "name": "route-ui-update-request",
       "description": "Verifies that pm-agent classifies a frontend UI update request and chooses between PM, Designer, and Engineer paths.",
-      "prompt": "用户说：更新一下前端 UI，把设置页改成左右分栏并调整交互。请判断这是 PM、Designer 还是 Engineer 路径。",
-      "workspace": "workspace/eval-4-route-ui-update-request",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "设置页要改为左右分栏并调整交互，用户当前目标是先确定新版界面方案。",
+        "trigger": "界面改版即将开始，用户希望先定方案再安排实现。",
+        "goal": "先确定左右分栏是否改变产品预期，并需要时先形成可执行的界面设计",
+        "materials": [
+          "用户给出的设置页左右分栏与交互调整目标"
+        ],
+        "constraints": [
+          "先判断产品预期是否变化",
+          "界面方案先于前端实现",
+          "不把设计与工程责任混在一起"
+        ],
+        "success_criteria": [
+          "先确定左右分栏是否改变产品预期",
+          "需要时先形成可执行的界面设计",
+          "设计和技术依据齐备后再安排前端实现"
+        ]
+      },
+      "prompt": "设置页需要改成左右分栏并调整交互，我想先把新版界面方案定下来。",
       "expected_output": "PM 路由决策，识别为 design 或 existing_update；先判断是否改变产品预期和是否需要设计产物，设计产物 handoff Designer，前端实现等待 PM/TRD/design 对齐后再 handoff Engineer。",
+      "workspace": "workspace/eval-4-route-ui-update-request",
       "assertions": [
         {
           "id": "request_type_design_or_update",
@@ -117,9 +194,29 @@
       "id": "eval-005-route-deployment-request",
       "name": "route-deployment-request",
       "description": "Verifies that pm-agent classifies deployment, CI, and release-readiness requests before DevOps handoff.",
-      "prompt": "用户说：帮我配 CI，并做上线前检查。这个是仓库级配置，不属于某个功能。请判断分类、scope 和后续交接。",
-      "workspace": "workspace/eval-5-route-deployment-request",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "仓库尚无持续集成，维护者希望补齐 CI 并完成上线前检查，且任务不隶属单一产品功能。",
+        "trigger": "上线准备暴露出 CI 缺口，需要把仓库级运维工作交给合适负责人。",
+        "goal": "把 CI 与上线检查作为仓库级运维范围处理，并交接前明确环境、发布范围、回滚与风险",
+        "materials": [
+          "当前仓库缺少 CI 的事实",
+          "上线前检查目标"
+        ],
+        "constraints": [
+          "任务是仓库级而非单一功能",
+          "交接前明确环境、发布范围、回滚和风险",
+          "入口不直接修改 CI"
+        ],
+        "success_criteria": [
+          "把 CI 与上线检查作为仓库级运维范围处理",
+          "交接前明确环境、发布范围、回滚与风险",
+          "把执行工作交给 DevOps 而不是入口直接修改配置"
+        ]
+      },
+      "prompt": "这个仓库还没有 CI，我需要把持续集成配好并完成上线前检查。",
       "expected_output": "PM 路由决策，识别为 deployment；记录仓库级非 feature scope 可使用 N/A feature fields，明确运维目标、环境、发布范围、回滚需求和风险，再 handoff DevOps。",
+      "workspace": "workspace/eval-5-route-deployment-request",
       "assertions": [
         {
           "id": "request_type_deployment",
@@ -142,9 +239,28 @@
       "id": "eval-006-route-security-request",
       "name": "route-security-request",
       "description": "Verifies that pm-agent classifies security, authz, dependency, and secret-risk requests before Security handoff.",
-      "prompt": "用户说：看下权限控制、依赖漏洞和 secrets 风险，帮我判断该怎么处理。请给出分类和交接要求。",
-      "workspace": "workspace/eval-6-route-security-request",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "项目上线前需要同时审查权限、依赖漏洞与 secrets 暴露面。",
+        "trigger": "上线检查进入安全阶段，需要把三类风险组织成可执行审查范围。",
+        "goal": "审查范围同时覆盖授权、依赖和 secrets，并交接时保留资产、权限、数据流与整改期望",
+        "materials": [
+          "用户指定的权限、依赖与 secrets 审查范围"
+        ],
+        "constraints": [
+          "同时覆盖授权、依赖和 secrets",
+          "先记录资产、权限与数据流范围",
+          "入口不代替安全审查"
+        ],
+        "success_criteria": [
+          "审查范围同时覆盖授权、依赖和 secrets",
+          "交接时保留资产、权限、数据流与整改期望",
+          "把实际安全审查交给安全团队"
+        ]
+      },
+      "prompt": "请检查当前项目的权限控制、依赖漏洞和 secrets 风险，并告诉我上线前需要先处理什么。",
       "expected_output": "PM 路由决策，识别为 security；先记录 risk surface、assets、permissions、data flow 和 remediation expectations，再 handoff Security。",
+      "workspace": "workspace/eval-6-route-security-request",
       "assertions": [
         {
           "id": "request_type_security",
@@ -167,9 +283,29 @@
       "id": "eval-007-direct-downstream-without-handoff",
       "name": "direct-downstream-without-handoff",
       "description": "Verifies that direct user requests to downstream role routers are returned to pm-agent when no PM handoff or equivalent source documents are present.",
-      "prompt": "用户说：直接帮我实现一个设置页布局调整，不需要 PM 文档，先开始改代码。",
-      "workspace": "workspace/eval-7-direct-downstream-without-handoff",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "用户要求立即实现设置页改动，但承认尚无产品或设计材料。",
+        "trigger": "用户催促立即实现，但关键产品和设计前提仍然缺失。",
+        "goal": "说明当前缺少哪些产品或设计前提，并引导先确认范围并形成可消费的交接材料",
+        "materials": [
+          "用户提出的设置页实现请求",
+          "当前没有产品或设计材料的事实"
+        ],
+        "constraints": [
+          "缺少已确认范围与交接材料",
+          "不能因用户要求立即开始而绕过入口",
+          "不执行工程修改"
+        ],
+        "success_criteria": [
+          "说明当前缺少哪些产品或设计前提",
+          "引导先确认范围并形成可消费的交接材料",
+          "不立即修改设置页代码"
+        ]
+      },
+      "prompt": "直接帮我实现设置页布局调整；目前没有准备产品或设计材料，希望先开始改代码。",
       "expected_output": "PM 路由或下游入口门禁决策，拒绝直接进入 downstream execution；说明没有 PM handoff packet 或等价已确认文档时必须回到 pm-agent 分类和范围确认，不开始工程实现。",
+      "workspace": "workspace/eval-7-direct-downstream-without-handoff",
       "assertions": [
         {
           "id": "reject_direct_downstream",
@@ -192,9 +328,29 @@
       "id": "eval-008-direct-specialist-bypass-gate",
       "name": "direct-specialist-bypass-gate",
       "description": "Verifies that direct invocation of an internal specialist cannot bypass the PM handoff entry gate.",
-      "prompt": "用户说：帮我实现这个新功能，当前没有 PRD、TRD、实施计划或交接材料。",
-      "workspace": "workspace/eval-8-direct-specialist-bypass-gate",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "账号中心新功能只有一句需求，没有确认范围、技术设计或实施依据，却被要求直接实现。",
+        "trigger": "实现请求已经到达执行入口，但没有任何可供实施的确认材料。",
+        "goal": "说明一句需求不足以制定实施计划，并列出继续前最小的需求和技术依据",
+        "materials": [
+          "用户提出的一句账号中心需求",
+          "产品与技术材料均缺失的事实"
+        ],
+        "constraints": [
+          "需求和技术依据均缺失",
+          "直接点名实现不能替代前置确认",
+          "不创建计划或代码"
+        ],
+        "success_criteria": [
+          "说明一句需求不足以制定实施计划",
+          "列出继续前最小的需求和技术依据",
+          "不创建计划或开始实现"
+        ]
+      },
+      "prompt": "帮我实现账号中心的新功能；目前只有这句话，还没有需求文档或技术设计。",
       "expected_output": "Specialist entry gate 决策，拒绝创建实施计划或写代码；说明 direct invocation 不会绕过 PM handoff entry gate，并返回 pm-agent 做分类、范围和源文档确认。",
+      "workspace": "workspace/eval-8-direct-specialist-bypass-gate",
       "assertions": [
         {
           "id": "specialist_gate_runs",
@@ -217,9 +373,29 @@
       "id": "eval-009-missing-handoff-target-unavailable",
       "name": "missing-handoff-target-unavailable",
       "description": "Verifies that pm-agent marks a cross-agent handoff as blocked when the target role agent is not installed or unavailable.",
-      "prompt": "用户说：这个需求已经确认要交给设计，但当前环境没有安装设计相关能力。",
-      "workspace": "workspace/eval-9-missing-handoff-target-unavailable",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "设置页范围已经确认并准备进入设计，但当前环境缺少对应设计能力。",
+        "trigger": "需求已准备进入设计阶段，却因当前环境缺少目标能力无法继续。",
+        "goal": "明确设计阶段因能力不可用而阻塞，并指出需要补齐的设计能力或交付目标",
+        "materials": [
+          "已确认的设置页需求",
+          "当前环境缺少设计能力的事实"
+        ],
+        "constraints": [
+          "目标设计能力当前不可用",
+          "明确指出缺失能力与阻塞阶段",
+          "不得由其他角色冒充设计交付"
+        ],
+        "success_criteria": [
+          "明确设计阶段因能力不可用而阻塞",
+          "指出需要补齐的设计能力或交付目标",
+          "不由其他角色代写设计产物"
+        ]
+      },
+      "prompt": "设置页需求已经确认，需要交给设计，但当前环境似乎没有设计相关能力可用。请帮我继续推进。",
       "expected_output": "PM handoff readiness decision，说明目标 agent 未安装或不可用时必须标记 blocked，指出缺失的 plugin/capability，不代行 Designer 职责。",
+      "workspace": "workspace/eval-9-missing-handoff-target-unavailable",
       "assertions": [
         {
           "id": "detect_missing_target",
@@ -242,9 +418,29 @@
       "id": "eval-010-change-tier-hotfix-fast-lane",
       "name": "change-tier-hotfix-fast-lane",
       "description": "Verifies that pm-agent classifies an unchanged-expectation single-file fix as hotfix and preserves evidence requirements while using the fast lane.",
-      "prompt": "用户说：这个 PR 只修 README 里一个错误链接，不改变任何功能预期；我已经本地验证链接可打开。",
-      "workspace": "workspace/eval-10-change-tier-hotfix-fast-lane",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "一个 PR 只修 README 错误链接，功能预期不变且已有直接验证证据。",
+        "trigger": "链接修复已完成本地验证，需要判断能否用最短交付路径收尾。",
+        "goal": "确认该改动只影响一个 README 链接，并允许凭现有验证快速交付",
+        "materials": [
+          "README 错误链接改动",
+          "本地链接可打开的验证结果"
+        ],
+        "constraints": [
+          "只改一个文档链接",
+          "不改变已批准预期",
+          "保留范围与验证证据"
+        ],
+        "success_criteria": [
+          "确认该改动只影响一个 README 链接",
+          "允许凭现有验证快速交付",
+          "仍保留改动范围、来源和验证记录"
+        ]
+      },
+      "prompt": "这个 PR 只修 README 里的一个错误链接，不改变任何功能预期；我已经在本地确认新链接可以打开。请帮我完成交付。",
       "expected_output": "PM 分类为 delivery/status 或等价轻量交付请求，change_tier 为 hotfix；说明可走 fast lane，但仍需记录 scope、source evidence 和 verification evidence。",
+      "workspace": "workspace/eval-10-change-tier-hotfix-fast-lane",
       "assertions": [
         {
           "id": "classify_hotfix",
@@ -267,9 +463,29 @@
       "id": "eval-011-change-tier-standard-full-gate",
       "name": "change-tier-standard-full-gate",
       "description": "Verifies that pm-agent classifies an existing behavior change as standard and keeps the full PRD/TRD alignment gate.",
-      "prompt": "用户说：把退款审批从自动通过改成需要管理员二次确认，这应该很小，想尽快处理。",
-      "workspace": "workspace/eval-11-change-tier-standard-full-gate",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "退款审批要从自动通过改为管理员二次确认，请求方认为改动很小并希望快速处理。",
+        "trigger": "业务方提出审批规则变化，需要在快速处理诉求与预期对齐之间作出正确判断。",
+        "goal": "识别审批规则是用户可见行为变化，并在实现前完成产品与技术预期对齐",
+        "materials": [
+          "退款审批当前自动通过的规则",
+          "改为管理员二次确认的新目标"
+        ],
+        "constraints": [
+          "审批规则属于用户可见行为变化",
+          "请求方的“小改动”描述不能降低门禁",
+          "先对齐产品和技术预期"
+        ],
+        "success_criteria": [
+          "识别审批规则是用户可见行为变化",
+          "在实现前完成产品与技术预期对齐",
+          "不因改动代码量小而走快速修复通道"
+        ]
+      },
+      "prompt": "把退款审批从自动通过改成需要管理员二次确认。我希望尽快推进这个调整。",
       "expected_output": "PM 分类为 existing_update；拒绝按 hotfix 处理，change_tier 至少为 standard，并要求先完成 PRD/TRD 预期对齐。",
+      "workspace": "workspace/eval-11-change-tier-standard-full-gate",
       "assertions": [
         {
           "id": "classify_standard",
@@ -292,9 +508,28 @@
       "id": "eval-012-change-tier-hotfix-abuse-blocked",
       "name": "change-tier-hotfix-abuse-blocked",
       "description": "Verifies that pm-agent blocks attempts to use the hotfix label to skip expectation alignment.",
-      "prompt": "用户说：直接把会员试用期从 7 天改成 30 天，快速合并。",
-      "workspace": "workspace/eval-12-change-tier-hotfix-abuse-blocked",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "会员试用期要从 7 天改为 30 天，请求方希望按快速修复直接合并。",
+        "trigger": "试用期规则被要求立即修改，入口必须先识别其产品影响。",
+        "goal": "识别试用期变化属于业务规则调整，并要求先确认范围和影响再实施",
+        "materials": [
+          "会员试用期当前 7 天与目标 30 天的规则变化"
+        ],
+        "constraints": [
+          "试用期是业务规则",
+          "不能借快速合并跳过预期确认",
+          "未对齐前保持阻塞"
+        ],
+        "success_criteria": [
+          "识别试用期变化属于业务规则调整",
+          "要求先确认范围和影响再实施",
+          "阻止未经对齐的快速合并"
+        ]
+      },
+      "prompt": "直接把会员试用期从 7 天改成 30 天，帮我尽快合并。",
       "expected_output": "PM 拒绝以 hotfix 名义跳过预期变更对齐；说明这是预期/业务规则变化，必须按 standard 或 blocked 回 PM 完成范围确认。",
+      "workspace": "workspace/eval-12-change-tier-hotfix-abuse-blocked",
       "assertions": [
         {
           "id": "reject_hotfix_abuse",
@@ -317,9 +552,28 @@
       "id": "eval-013-change-tier-hotfix-e2e-direct-path",
       "name": "change-tier-hotfix-e2e-direct-path",
       "description": "Verifies that pm-agent preserves the QA evidence requirement for hotfix work while limiting E2E validation to directly affected paths.",
-      "prompt": "用户说：只修登录页空状态文案，请尽快完成并验证。",
-      "workspace": "workspace/eval-13-change-tier-hotfix-e2e-direct-path",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "登录页只调整空状态文案，需要快速交付并验证直接影响路径。",
+        "trigger": "窄文案修复准备交付，需要确定与影响范围匹配的验证强度。",
+        "goal": "只验证空状态文案及其直接影响路径，并追加实际执行结果和阻塞项",
+        "materials": [
+          "登录页空状态文案改动范围"
+        ],
+        "constraints": [
+          "只验证文案改动及直接影响路径",
+          "不要求无关的全量套件",
+          "仍需追加真实结果和阻塞项"
+        ],
+        "success_criteria": [
+          "只验证空状态文案及其直接影响路径",
+          "追加实际执行结果和阻塞项",
+          "不要求与改动无关的全量回归"
+        ]
+      },
+      "prompt": "只修登录页空状态文案，请尽快完成并验证这处改动。",
       "expected_output": "PM 判定 hotfix QA 只需验证直接影响路径并追加结果；不要求完整 E2E 套件，但仍要记录验证证据和 blocked 项。",
+      "workspace": "workspace/eval-13-change-tier-hotfix-e2e-direct-path",
       "assertions": [
         {
           "id": "hotfix_direct_path_only",
@@ -342,9 +596,29 @@
       "id": "eval-014-route-site-notes-and-github-release",
       "name": "route-site-notes-and-github-release",
       "description": "Verifies that pm-agent splits site/user-facing Release Notes from GitHub Release page work after the Release Notes / GitHub Release ownership split.",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "v1.0.0 同时需要站内用户版本说明和后续 GitHub Release 预览，两项工作有明确先后依赖。",
+        "trigger": "版本发布沟通进入准备期，需要安排有依赖关系的站内说明和 GitHub 预览。",
+        "goal": "先完成并确认站内 v1.0.0 用户说明，并确认后再准备 GitHub Release 预览",
+        "materials": [
+          "v1.0.0 站内版本说明目标",
+          "GitHub Release 仅预览授权"
+        ],
+        "constraints": [
+          "先完成并确认站内版本说明",
+          "GitHub Release 只做预览",
+          "不得实际发布"
+        ],
+        "success_criteria": [
+          "先完成并确认站内 v1.0.0 用户说明",
+          "确认后再准备 GitHub Release 预览",
+          "整个过程不实际发布"
+        ]
+      },
       "prompt": "请为 v1.0.0 编写站内用户版本说明，并基于确认后的版本说明准备 GitHub Release 预览。不要实际发布。",
-      "workspace": "workspace/eval-14-route-site-notes-and-github-release",
       "expected_output": "A handoff docs-agent:release-notes-gen；B route PM github-release-gen，且 B 必须等待 A 的 confirmed ready handoff 与 release audit gates。",
+      "workspace": "workspace/eval-14-route-site-notes-and-github-release",
       "assertions": [
         {
           "id": "routes_site_notes_to_docs_specialist",
@@ -372,7 +646,29 @@
       "id": "eval-015-route-docs-site-deployment-gap",
       "name": "文档站证据不足与确认纳入路由",
       "description": "验证 unknown 阻塞和用户确认后的 repo-wide deployment handoff。",
-      "prompt": "处理 evidence.md 中先 unknown、后补齐证据并确认纳入的文档站完整性报告。",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "文档站首次审查因权限不足无法判断部署完整性，随后补齐了 CI、Helm 与维护者范围决定。",
+        "trigger": "首次 unknown 报告已获得原始补证和维护者决定，需要重新判断当前责任链。",
+        "goal": "首次缺少 CI 与 Helm 证据时不猜测部署状态，并补证后准确识别 Public 与 Internal 的覆盖差异",
+        "materials": [
+          "access-note.md",
+          ".github/workflows/docs.yml",
+          "deploy/helm/docs-values.yaml",
+          "maintainer-decision.md"
+        ],
+        "constraints": [
+          "首次报告因不可访问关键文件只能为 unknown",
+          "后续判断必须来自实际 CI 与 Helm 配置",
+          "用户已确认要覆盖全部构建变体但未授权部署"
+        ],
+        "success_criteria": [
+          "首次缺少 CI 与 Helm 证据时不猜测部署状态",
+          "补证后准确识别 Public 与 Internal 的覆盖差异",
+          "根据维护者决定安排部署整改及后续文档复核"
+        ]
+      },
+      "prompt": "Docs 团队第一次检查受限的情况在 `access-note.md`，后来补齐了当前 CI、Helm 配置和 `maintainer-decision.md`。请根据这些材料告诉我现在下一步怎么处理。",
       "expected_output": "unknown 不推断集成；证据补齐且用户确认后生成 N/A feature scope 的 deployment packet 并交 DevOps。",
       "workspace": "workspace/eval-015-route-docs-site-deployment-gap",
       "assertions": [
@@ -397,9 +693,29 @@
       "id": "eval-016-route-document-structure-governance",
       "name": "route-document-structure-governance",
       "description": "Verifies pm-agent routes whole-tree structure audit requests to idea-to-spec:structure-governance with read-only semantics.",
+      "scenario": {
+        "persona": "希望把工作请求交给正确团队推进的需求负责人",
+        "situation": "维护者发现 docs 下可能有过长文档、孤立目录和跨角色路径漂移，希望先只读盘点。",
+        "trigger": "文档树维护问题开始影响查找与协作，需要在任何结构改动前先做只读盘点。",
+        "goal": "生成覆盖各角色文档树的只读问题报告，并报告能定位过长文档、孤立目录和路径漂移",
+        "materials": [
+          "docs/engineer/notification-center/TRD.md",
+          "docs/pm/notification-center/PRD.md"
+        ],
+        "constraints": [
+          "扫描保持只读",
+          "覆盖各角色过程文档",
+          "合并、拆分或移动需另行确认"
+        ],
+        "success_criteria": [
+          "生成覆盖各角色文档树的只读问题报告",
+          "报告能定位过长文档、孤立目录和路径漂移",
+          "任何合并、拆分或移动都留待维护者另行确认"
+        ]
+      },
       "prompt": "请只读检查 docs 下各角色的文档组织，找出过长文档、孤立目录和不同角色间路径不一致的问题，并给我一份报告。",
-      "workspace": "workspace/eval-016-route-document-structure-governance",
       "expected_output": "主 route 指向 idea-to-spec:structure-governance 的只读结构梳理；报告以 HTML 落运行期 tmp 并在对话中给结论摘要；任何合并/拆分/移动建议需用户确认并按 major 处理，不在梳理中执行。",
+      "workspace": "workspace/eval-016-route-document-structure-governance",
       "assertions": [
         {
           "id": "routes_to_structure_governance",

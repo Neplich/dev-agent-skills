@@ -1,3 +1,84 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-002-resolve-trd-gap-packet`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a` from `agents/engineer/test/trd-gen/evals/workspace/eval-002-resolve-trd-gap-packet`.
+- Fixture SHA-256: `d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a`
+- Prompt SHA-256: `bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b66f9acea93e151819a21f82909f9a6b7d44c68fa52d2116667525e2fe8e9bd7`
+- Skill overlay SHA-256: `e4cc003a0e06320ef354c6c9cdbebb2b75980ec8b23ae530ac78b0667fab31da`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `96fd70658261e3a17be616b06efc13bb061ebd641ee5ed5f4b30d21e34984bf7`
+- Metadata SHA-256: `4025e3b1dd282f00d05c7506655215876b7bcc3af8d7657c77ae8574687fce25`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_gap_packet_as_trd_work` | FAIL | with_skill 输出未明确说明这是 trd-gen 的 TRD 编写/更新工作；仅称已补齐技术方案并提到下一步交给 feature-implementor。 |
+| `resolves_named_gap_categories` | PASS | with_skill 交付的 TRD/API/ADR 覆盖组件职责、事件与幂等、API/集成影响、验证命令、发布回滚、错误处理、死信、可观测性和组织隔离。 |
+| `keeps_finder_trd_gen_boundary` | FAIL | with_skill 输出及交付文档未明确说明发现者负责报告缺口、trd-gen 负责补全 docs/engineer/capture-loop/TRD.md 或记录 open questions。 |
+| `unresolved_gap_blocks_e2e` | FAIL | 文档仍包含 open technical questions，并明确建议交给 feature-implementor 编写 IMPLEMENTATION_PLAN.md；未声明 feature-implementor、debugger 或 QA E2E 文档补充应 blocked。 |
+| `no_implementation_plan_or_code` | PASS | with_skill 未新增 IMPLEMENTATION_PLAN.md、未修改业务代码、未补测试；新增的是 TRD、API 和 ADR 文档。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482; fixture_sha256=d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a; output_sha256=5a19a05ad509b60f957a23a98bbe1961a5641a2fe419a0a0983f3ac5c0b7338d; snapshot_sha256=d2b263b3b7750f2fe8af47869b59cf43caea9a38250ecc75fc89d87713fd0b80
+- Behavior: 新增 TRD/API/ADR 并覆盖主要技术缺口，保持未改代码，但遗漏 trd-gen 边界和未决缺口阻断要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482; fixture_sha256=d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a; output_sha256=a657de9c9b37fddffe15783d40c8d329d4b9985d5b398d182c3dce5beb7e68f1; snapshot_sha256=fe5a14f0830a2a61c30cebf9aeb9308560bf12295a7e074fbda4f8d4a517b2ad
+- Behavior: 直接改写 TRD_GAP_PACKET.md，覆盖技术缺口，但未提供 trd-gen 边界或下游阻断说明。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- 未明确声明 trd-gen 的 TRD 工作边界。
+- 未明确区分发现者与 trd-gen 的职责。
+- 未对仍存在的 open questions 设置 feature-implementor/debugger/QA E2E 阻断。
+- Next: 明确写出 trd-gen 工作性质及发现者/trd-gen 边界。
+- Next: 将未决技术问题标为 open questions，并阻断 IMPLEMENTATION_PLAN.md、debugger 和 QA E2E 文档补充，直至决策完成。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-002-resolve-trd-gap-packet
 
 ## Evaluation Target

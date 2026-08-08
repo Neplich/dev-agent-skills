@@ -1,6 +1,6 @@
 # PM Handoff Packet
 
-pm-agent 已完成入口分类，并将废弃依赖审计路由至 dependency-risk-auditor。
+产品与安全负责人已确认本次审查范围和可用材料。
 
 ```yaml
 request_type: security
@@ -35,8 +35,8 @@ permissions:
 data_categories:
   - 应用依赖元数据
 remediation_expectations:
-  - 依赖替换实现交回 engineer-agent
-  - 发布期隔离措施交回 devops-agent
+  - 依赖替换实现交回 应用工程团队
+  - 发布期隔离措施交回 平台工程团队
 blockers_risks:
   - 废弃依赖不会继续获得安全修复
 ```

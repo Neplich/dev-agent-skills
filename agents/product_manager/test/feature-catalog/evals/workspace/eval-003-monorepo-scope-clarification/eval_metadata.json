@@ -2,7 +2,6 @@
   "eval_id": "eval-003-monorepo-scope-clarification",
   "eval_name": "monorepo-scope-clarification",
   "workspace_root": "agents/product_manager/test/feature-catalog/evals/workspace/eval-003-monorepo-scope-clarification",
-  "prompt": "接手了这个 monorepo，帮我建立功能目录。",
   "fixture_context": [
     "README.md",
     "pnpm-workspace.yaml",
@@ -10,5 +9,16 @@
     "apps/web/src/pages/dashboard.tsx",
     "apps/admin/package.json",
     "services/api/package.json"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

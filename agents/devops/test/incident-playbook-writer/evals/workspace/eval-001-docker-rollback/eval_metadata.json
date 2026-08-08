@@ -2,12 +2,22 @@
   "eval_id": "eval-001-docker-rollback",
   "eval_name": "docker-rollback",
   "workspace_root": "agents/devops/test/incident-playbook-writer/evals/workspace/eval-001-docker-rollback",
-  "prompt": "pm-agent 已完成项目级运维入口分类并路由至 incident-playbook-writer；确认 handoff 见 workspace `PM_HANDOFF.md`，本任务为 `feature_path: N/A` 的 repo-wide rollback/runbook work。我的项目使用 Docker 部署，请基于 workspace 中现有 Docker 配置生成故障处理和回滚手册。",
-  "feature_path": "N/A",
   "fixture_context": [
     "PM_HANDOFF.md",
     "deploy/docker/docker-compose.yml",
     "deploy/docker/.env.example",
     "deploy/docker/README.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  },
+  "feature_path": "N/A"
 }

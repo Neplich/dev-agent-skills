@@ -2,7 +2,33 @@
   "eval_id": "eval-011-deployment-three-class-backfill",
   "eval_name": "deployment-three-class-backfill",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-011-deployment-three-class-backfill",
-  "prompt": "请根据 `backfill-handoff.md` 中已确认的范围同步现有系统的部署文档。工作区提供源码开发、Compose、镜像、Helm Chart、values、配置读取和执行结果证据。",
-  "fixture_context": ["backfill-handoff.md", ".env.example", "src/settings.py", "tests/test_settings.py", "scripts/dev/start.sh", "Dockerfile", "deploy/docker/compose.yaml", "deploy/helm/app/", ".eval/", "docs/site/"],
-  "execution_cleanup": ["docs/site/ops/deployment", "docs/site/.generated", "sync-report.md"]
+  "fixture_context": [
+    "backfill-handoff.md",
+    ".env.example",
+    "src/settings.py",
+    "tests/test_settings.py",
+    "scripts/dev/start.sh",
+    "Dockerfile",
+    "deploy/docker/compose.yaml",
+    "deploy/helm/app/",
+    "deployment-evidence/",
+    "docs/site/"
+  ],
+  "execution_cleanup": [
+    "docs/site/ops/deployment",
+    "docs/site/.generated",
+    "sync-report.md"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

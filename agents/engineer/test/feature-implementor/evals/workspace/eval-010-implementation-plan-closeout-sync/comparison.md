@@ -1,3 +1,83 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-010-implementation-plan-closeout-sync`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071` from `agents/engineer/test/feature-implementor/evals/workspace/eval-010-implementation-plan-closeout-sync`.
+- Fixture SHA-256: `b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071`
+- Prompt SHA-256: `c3ffcc020a63823b1bc5160a6102e792071ef85d1d8fe0aee0513d9e308a0fbf`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`
+- Skill overlay SHA-256: `5c74cbf7ab5eef845bc8c3f0d81a775b1feca5810a9a615f9b35865026f3e841`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `20499e40a806229e21ef95ff8d5fbc24188637283192bc707a4d5fd2332a9e7d`
+- Metadata SHA-256: `8cc2bbac5be951408272dda8df48e23d4c89655790723f30b56076864a8cfafc`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_closeout_state_conflict` | PASS | With-skill output states Implemented was corrected to Blocked and identifies the removed 未开始/待确认 states as contradictory. |
+| `blocks_handoff_until_plan_updated` | FAIL | It says the feature is not deliverable, but does not explicitly prohibit QA handoff, delivery, PR creation, or issue closure until the closeout status is synchronized. |
+| `requires_implementation_result_update` | PASS | The diff updates the closeout status table with implementation/validation evidence and provides next-owner follow-up; absent implementation files are recorded as blocked. |
+| `records_deterministic_checks` | PASS | It records exact inventory and git commands with results and marks deterministic checks blocked because no executable project surface or commands exist. |
+| `records_eval_evidence` | PASS | It explicitly marks model/skill eval skipped as not applicable while implementation and validation are absent, with no eval artifact created. |
+| `keeps_runtime_artifacts_out_of_git` | FAIL | The output does not state that transcript, diagnostics, outputs, timing, run-status, or comparison.auto.md artifacts must remain out of git. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3ffcc020a63823b1bc5160a6102e792071ef85d1d8fe0aee0513d9e308a0fbf; fixture_sha256=b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071; output_sha256=b83f9d7dd579f6f5811f8dd45cc1c67a27310f64f3a29b79854c35a0bb93d65f; snapshot_sha256=72491430c5cda38962bef9445963c265083ba15ecd00b59b134b552b6c5b0d9c
+- Behavior: Correctly reconciled the Implemented status, documented repository checks and blocked validation, and recorded skipped eval, but omitted an explicit handoff gate and runtime-artifact git exclusion.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3ffcc020a63823b1bc5160a6102e792071ef85d1d8fe0aee0513d9e308a0fbf; fixture_sha256=b472a02faf2f5e271bff5cfda7f77a99314d4a0e9e7388442ee7140ff824b071; output_sha256=76a5bbb4ef1d0dbaa554df121a970df0606aaa33970946dbf90e667eb42c25d4; snapshot_sha256=579cfb3d891696d203d932a8ea22150c52b3bbb12a65fa4b73ce88b8bf8938fa
+- Behavior: Detected missing implementation evidence and changed the plan to Blocked, but did not fully satisfy the required closeout controls.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output does not explicitly block QA handoff, delivery, PR creation, or issue closure until closeout synchronization.
+- The with_skill output does not require runtime eval artifacts to remain out of git.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-010-implementation-plan-closeout-sync
 
 ## Evaluation Target

@@ -46,13 +46,34 @@
           "description": "不得直接修复",
           "text": "输出不得声称已经修改代码、更新测试、应用修复或验证修复通过。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "负责调查回归问题的工程师",
+        "situation": "通知接口测试在本地失败，失败行为可能违背已有产品约定。",
+        "trigger": "回归阻塞了后续合并，但尚未确认是实现缺陷还是测试预期错误。",
+        "goal": "查清失败原因，并给负责人一条有证据支持的处置路径。",
+        "materials": [
+          "package.json",
+          "docs/pm/notifications/PRD.md",
+          "docs/engineer/notifications/TRD.md",
+          "src/api/notifications.ts",
+          "test/api/notifications.test.ts"
+        ],
+        "constraints": [
+          "先复现失败并核对产品与技术文档",
+          "在负责人同意处置方式前保持源码和测试不变"
+        ],
+        "success_criteria": [
+          "报告能说明 archived 状态为何造成测试失败",
+          "负责人可据复现证据、影响范围和验证方式决定是否修复"
+        ]
+      }
     },
     {
       "id": "eval-002-repair-plan-confirmation-gate",
       "name": "repair-plan-confirmation-gate",
       "description": "Verifies that debugger writes a repair implementation plan only after the user asks for it, then waits for plan confirmation before fixing.",
-      "prompt": "已确认的预期文档和复现根因见 workspace `BUG_ANALYSIS.md`、`docs/pm/notifications/PRD.md` 与 `docs/engineer/notifications/TRD.md`。test/api/notifications.test.ts 的失败已经复现，根因确认是 notification status 没有处理 archived。请准备修复方案。",
+      "prompt": "`test/api/notifications.test.ts` 的 archived 状态用例失败了。产品和技术文档、实现与测试都在仓库里；请先调查并给我一份可审查的修复建议，暂时不要改文件。",
       "workspace": "workspace/eval-002-repair-plan-confirmation-gate",
       "expected_output": "修复实施计划 + 文件范围 + 验证命令 + sub-agent 拆分判断 + 等待用户确认，不直接修复",
       "assertions": [
@@ -81,13 +102,34 @@
           "description": "不得应用修复",
           "text": "输出不得声称已经修改代码、更新测试或运行修复验证。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "负责调查回归问题的工程师",
+        "situation": "一个 archived 通知用例稳定失败，仓库同时保留了行为约定和当前实现。",
+        "trigger": "维护者希望在动手前审查根因、改动范围和验证办法。",
+        "goal": "形成足够让维护者批准或驳回的修复建议。",
+        "materials": [
+          "docs/pm/notifications/PRD.md",
+          "docs/engineer/notifications/TRD.md",
+          "package.json",
+          "src/api/notifications.ts",
+          "test/api/notifications.test.ts"
+        ],
+        "constraints": [
+          "根因必须由失败测试、源码和已批准行为共同证明",
+          "本轮只提交分析与建议，不编辑实现"
+        ],
+        "success_criteria": [
+          "建议指出最小改动位置、预期影响与可重复的验证命令",
+          "没有把尚未获批的修改描述成已经完成"
+        ]
+      }
     },
     {
       "id": "eval-003-bug-report-conflicts-with-prd",
       "name": "bug-report-conflicts-with-prd",
       "description": "Verifies that debugger hands off to PM when a reported bug is actually a request to change approved PRD/TRD behavior.",
-      "prompt": "用户说：通知中心 active 列表没有显示 archived 通知，这是个 bug，请直接修一下。现有 docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都写着 active 列表排除 archived。",
+      "prompt": "通知中心 active 列表没有显示 archived 通知，我认为这是个 bug，想直接修复。但现有 `docs/pm/notifications/PRD.md` 和 `docs/engineer/notifications/TRD.md` 都写着 active 列表排除 archived。请根据仓库材料判断下一步。",
       "workspace": "workspace/eval-003-bug-report-conflicts-with-prd",
       "expected_output": "识别用户期望与 PRD/TRD 冲突，停止修复路径，交回 pm-agent:idea-to-spec existing-project-update 更新 PRD 或产品决策记录并同步 TRD，不产出修复计划或代码改动。",
       "assertions": [
@@ -116,13 +158,31 @@
           "description": "显式跳过也不能继续",
           "text": "输出必须说明用户要求跳过 PRD 对齐也不能直接按 bug 修复路径执行；只能记录为 blocker 或风险，等待 PRD/TRD 对齐完成。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "负责调查回归问题的工程师",
+        "situation": "用户把 active 列表不显示 archived 当成缺陷，但正式文档明确要求排除 archived。",
+        "trigger": "有人要求立即修改代码，而请求本身正在改变既有产品行为。",
+        "goal": "先澄清预期冲突，避免把需求变更误当成缺陷修补。",
+        "materials": [
+          "docs/pm/notifications/PRD.md",
+          "docs/engineer/notifications/TRD.md"
+        ],
+        "constraints": [
+          "以两份正式文档中的 active 列表定义为当前基线",
+          "产品决策更新前不得提出代码级修复"
+        ],
+        "success_criteria": [
+          "结论明确说明这是待确认的行为变更而非已证实缺陷",
+          "下一步回到产品预期确认，并保持仓库内容不变"
+        ]
+      }
     },
     {
       "id": "eval-004-nested-feature-path-bug-alignment",
       "name": "nested-feature-path-bug-alignment",
       "description": "Verifies that debugger aligns expected behavior against 4-level PRD/TRD feature_path documents before repair planning.",
-      "prompt": "用户说：Message History Search 的搜索结果排序不对，这是 bug，请修一下。相关预期文档在 docs/pm/chat-interface/messages/history/search/PRD.md 和 docs/engineer/chat-interface/messages/history/search/TRD.md。",
+      "prompt": "Message History Search 的搜索结果排序不对，请帮我调查。相关预期文档在 `docs/pm/chat-interface/messages/history/search/PRD.md` 和 `docs/engineer/chat-interface/messages/history/search/TRD.md`。",
       "workspace": "workspace/eval-004-nested-feature-path-bug-alignment",
       "expected_output": "先读取 docs/pm/chat-interface/messages/history/search/PRD.md 和 docs/engineer/chat-interface/messages/history/search/TRD.md，对齐 feature_path、parent_feature、feature_level 和 related_prd，再分类为 implementation_deviation / requirement_change / missing_docs / trd_gap；不直接修复。",
       "assertions": [
@@ -151,7 +211,25 @@
           "description": "不得直接修复",
           "text": "输出不得声称已经修改代码、更新测试、应用修复或验证修复通过。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "负责调查回归问题的工程师",
+        "situation": "消息历史搜索的排序结果被报告异常，相关产品与技术文档位于四级目录。",
+        "trigger": "团队需要知道问题来自实现、预期变化还是文档不一致。",
+        "goal": "沿正确的文档层级核对排序预期并给出问题分类。",
+        "materials": [
+          "docs/pm/chat-interface/messages/history/search/PRD.md",
+          "docs/engineer/chat-interface/messages/history/search/TRD.md"
+        ],
+        "constraints": [
+          "不得用父目录文档替代消息历史搜索自己的文档",
+          "调查阶段只报告证据和分类，不直接改动"
+        ],
+        "success_criteria": [
+          "报告引用了同一层级的产品与技术材料并指出是否一致",
+          "结论能把后续工作导向实现修正、产品确认或技术文档补齐之一"
+        ]
+      }
     },
     {
       "id": "eval-005-mapped-cache-debug-evidence",
@@ -176,7 +254,26 @@
           "description": "未验证文档按最低信任处理",
           "text": "明确把 `last_verified_version: unverified` 当作最低信任，复现与根因判断不依赖未经代码验证的文档声明。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "负责调查回归问题的工程师",
+        "situation": "缓存条目实际过期时间早于接口文档中的说明。",
+        "trigger": "线上症状指向 TTL 配置，但团队尚未确认文档还是实现有误。",
+        "goal": "定位过早失效的证据链，并说明当前实现与文档的差距。",
+        "materials": [
+          "src/cache/ttl.txt",
+          "docs/site/standards/change-map.yaml",
+          "docs/site/api/cache.md"
+        ],
+        "constraints": [
+          "先通过映射定位缓存文档，再用源码事实核验",
+          "不把文档声明直接当作运行行为"
+        ],
+        "success_criteria": [
+          "报告给出当前 TTL 值、文档值及各自来源",
+          "根因与分歧足以支持后续选择修代码或修文档"
+        ]
+      }
     }
   ]
 }

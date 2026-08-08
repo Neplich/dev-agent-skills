@@ -1,0 +1,8 @@
+{
+  "name": "support-portal-docs",
+  "private": true,
+  "scripts": {
+    "build:public": "node scripts/build.mjs public .generated/public",
+    "build:internal": "node scripts/build.mjs internal .generated/private"
+  }
+}

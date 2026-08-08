@@ -1,3 +1,82 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `exploratory-tester`
+- Eval: `eval-002-explore-with-custom-duration`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3` from `agents/qa/test/exploratory-tester/evals/workspace/eval-2-explore-with-custom-duration`.
+- Fixture SHA-256: `58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3`
+- Prompt SHA-256: `95b19585ae663cfe50fef5d8a922d75ec357803535a13bbb323cdf9b1845fa29`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2bfbb6ecc0134ec5f9998274cdf0307f307da434e743767837778ac154a53a86`
+- Skill overlay SHA-256: `d11214369d847e3bf37c4f57b3d2f711860c3796c879f82ec5e4e0b0da64ec70`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `234873760fb9d0649d16f54118fbf0383fa2955b9451730f9429892d78a6d7e0`
+- Metadata SHA-256: `4befffc2e8037477b9995f3ded3869d8476cd9a66637621d7f8e8d3fc8c6fed3`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 记录了目标 URL、5 分钟时限、feature-update 场景、改动面、覆盖章程、环境缺失项和未验证范围。 |
+| `assertion_2` | PASS | with_skill 报告确认读取 TEST_SUITE、FLOW_INDEX 及历史 QA 状态，确认 feature-update；在无可复用 case/flow、未能启动 UI 的前提下，仅更新 FLOW_INDEX，并明确 live flow 确认后再新增 case/script。 |
+| `version_entry_and_subagent` | PASS | with_skill 明确记录平台版本和执行入口缺失，因此在执行前 blocked；同时记录无 repo harness、浏览器 connector，未声称执行任何 TC。 |
+| `assertion_3` | PASS | with_skill 将无确认缺陷、可疑但未确认信号和未覆盖区域分开记录，并明确 console/network 证据尚未探索。 |
+| `assertion_4` | PASS | with_skill 提供了探索报告和 FLOW_INDEX evidence references，记录了 preflight、URL 尝试及阻塞原因，而非随机操作清单。 |
+| `assertion_5` | PASS | with_skill 提供了阻塞风险、认证/版本/执行入口缺失等 notes，并给出恢复环境、提供账号和入口、补充证据及新增 case/script 的后续步骤。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=95b19585ae663cfe50fef5d8a922d75ec357803535a13bbb323cdf9b1845fa29; fixture_sha256=58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3; output_sha256=d9042be89f0e4d8646ce7491fdf15101d98b5222a0ebbace948361658ecf7b94; snapshot_sha256=008d00c463d002f948eba5f58fe667e523eb9cb85e3887583e111ed7bbc2803e
+- Behavior: Performed documented preflight, identified the execution blocker, separated confirmed/unconfirmed/uncovered areas, created report evidence, and updated FLOW_INDEX without fabricating UI results.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=95b19585ae663cfe50fef5d8a922d75ec357803535a13bbb323cdf9b1845fa29; fixture_sha256=58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3; output_sha256=f097aef54cfa54b916f522b3e77eb54d06ec80b545a12650fbb4645b82e3bd9f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline reported DNS blocking and did not produce structured preflight, report references, or QA artifact updates.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-002-explore-with-custom-duration
 
 ## Evaluation Target

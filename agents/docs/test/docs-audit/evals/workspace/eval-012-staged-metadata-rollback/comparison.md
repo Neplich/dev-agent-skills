@@ -1,3 +1,213 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-012-staged-metadata-rollback`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1013313f9177f2e4b64118a15325ba0a4da0ec26b6c32604368f1f754b57e620` from `agents/docs/test/docs-audit/evals/workspace/eval-012-staged-metadata-rollback`.
+- Fixture SHA-256: `1013313f9177f2e4b64118a15325ba0a4da0ec26b6c32604368f1f754b57e620`
+- Prompt SHA-256: `4c059264a7527dcf6082f43bc5cacdf327f947505e6d5f9721fd10e71b64fdcb`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2baee6e542351d5b0c46e79c685dd29ff93f0fee4a45cf4485afee7656248cf7`
+- Skill overlay SHA-256: `a2871f547194089c5425585467f9bee6e3c85ea103d77933d85a4c4cf246fa7c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `885108a0e0e9ce48751816455b91da0ec400a08bb7d3a722984a36e4221d1938`
+- Metadata SHA-256: `86b2ab0ad4bcb3fb98728ca8ff1375ff58d1094876353cbeafc325bf7593eb63`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_non_content_candidate_drift` | PASS | with_skill cites staged.name-status, staged.summary, and staged.patch, identifying mode, symlink/type, rename, deletion, and path-target changes. |
+| `rejects_every_unauthorized_transformation` | PASS | with_skill blocks publication and explicitly covers the executable-mode change, catalog-status symlink, release-note rename/deletion, and escaping unexpected symlink. |
+| `rechecks_committed_candidate_boundaries` | FAIL | It says the unchanged host state does not prove candidate validity, but does not explicitly require rechecking the same authorization boundaries after candidate and handoff formation. |
+| `rolls_back_only_the_failed_attempt` | FAIL | It recommends abandoning and regenerating the candidate, but does not explain isolating the failed attempt/draft, restoring the touched authorized host state, and preserving unrelated user changes. |
+| `proves_host_state_restoration` | FAIL | It proves unchanged ref, index, and worktree hashes, but does not cover relevant path identities or provide residual/half-stamp cleanup handling. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4c059264a7527dcf6082f43bc5cacdf327f947505e6d5f9721fd10e71b64fdcb; fixture_sha256=1013313f9177f2e4b64118a15325ba0a4da0ec26b6c32604368f1f754b57e620; output_sha256=f0063cabfb56fb43da621776b987500ce7bd27db7d4a1c5f1bf0975cd5d4c5ab; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly blocks publication with stronger structural and evidence-integrity findings, but omits explicit final-boundary recheck and precise rollback/restoration requirements.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4c059264a7527dcf6082f43bc5cacdf327f947505e6d5f9721fd10e71b64fdcb; fixture_sha256=1013313f9177f2e4b64118a15325ba0a4da0ec26b6c32604368f1f754b57e620; output_sha256=5651bcf79a98bf0e301f44059ac7604e077b1fe7339f927ee6d2ec3a2ba3b6af; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly blocks publication and notes several structural issues, but misses mode drift and gives weaker boundary and cleanup reasoning.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill does not explicitly require rechecking committed candidate and handoff boundaries.
+- with_skill does not precisely scope rollback to the failed attempt while preserving unrelated user changes.
+- with_skill does not fully prove relevant path identity restoration or residual cleanup.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-012-staged-metadata-rollback`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4d1932ef946b48a83d2fe93fa9ff8ea85df4b26c8944c206493268c53de7692b` from `agents/docs/test/docs-audit/evals/workspace/eval-012-staged-metadata-rollback`.
+- Fixture SHA-256: `4d1932ef946b48a83d2fe93fa9ff8ea85df4b26c8944c206493268c53de7692b`
+- Prompt SHA-256: `4c059264a7527dcf6082f43bc5cacdf327f947505e6d5f9721fd10e71b64fdcb`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2baee6e542351d5b0c46e79c685dd29ff93f0fee4a45cf4485afee7656248cf7`
+- Skill overlay SHA-256: `a2871f547194089c5425585467f9bee6e3c85ea103d77933d85a4c4cf246fa7c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `885108a0e0e9ce48751816455b91da0ec400a08bb7d3a722984a36e4221d1938`
+- Metadata SHA-256: `86b2ab0ad4bcb3fb98728ca8ff1375ff58d1094876353cbeafc325bf7593eb63`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_non_content_candidate_drift` | FAIL | with_skill 识别了 catalog-status 符号链接和越界链接，但未覆盖 catalog-items 的 100644→100755 模式变化，也未识别 audit-v1.2.0.md 的符号链接语义。 |
+| `rejects_every_unauthorized_transformation` | FAIL | with_skill 覆盖了删除、重命名、类型替换和越界链接，但遗漏了可执行模式变更等授权边界违反项，不能证明逐类拒绝全部越界转换。 |
+| `rechecks_committed_candidate_boundaries` | FAIL | with_skill 阻止创建 tag/继续发布，但未说明后续 committed candidate 与 handoff 形成后必须重新验证同一授权边界。 |
+| `rolls_back_only_the_failed_attempt` | PASS | with_skill 要求丢弃/重建候选暂存快照，并依据清理前后 host、index、worktree 哈希一致的证据说明清理未改变宿主；同时明确 notes/release-checklist.md 和 notes/local.txt 等无关用户修改仍保留。 |
+| `proves_host_state_restoration` | PASS | with_skill 以清理前后 status、index diff、worktree diff 哈希一致以及相关路径记录证明没有宿主残留，并在缺少完整 authority 证明时继续 blocked，要求丢弃/重建候选并重新审计，而非宣称成功。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4c059264a7527dcf6082f43bc5cacdf327f947505e6d5f9721fd10e71b64fdcb; fixture_sha256=4d1932ef946b48a83d2fe93fa9ff8ea85df4b26c8944c206493268c53de7692b; output_sha256=724c5a5235d476abdc0867f8231f31cdac8a892ab5b2b0f2f312a5490d3fe64d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确阻止发布并识别证据校验、删除、重命名、符号链接和宿主清理状态，但遗漏若干非文本语义变化，且未明确后续 candidate/handoff 复核要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4c059264a7527dcf6082f43bc5cacdf327f947505e6d5f9721fd10e71b64fdcb; fixture_sha256=4d1932ef946b48a83d2fe93fa9ff8ea85df4b26c8944c206493268c53de7692b; output_sha256=86cb4f715e698d68d6fded51dbba1481d5cc42c0d4f41fbb2615c96ce24f04e3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 阻止发布并识别了大部分内容、模式、符号链接、断链和证据完整性问题，但未明确 committed candidate/handoff 的后续边界复核。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- detects_non_content_candidate_drift
+- rejects_every_unauthorized_transformation
+- rechecks_committed_candidate_boundaries
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-012-staged-metadata-rollback`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `56ccb183ce0a970ed157c6f0efa2f2e8e25742264f17604510b8d6ab06a81520` from `agents/docs/test/docs-audit/evals/workspace/eval-012-staged-metadata-rollback`.
+- Fixture SHA-256: `56ccb183ce0a970ed157c6f0efa2f2e8e25742264f17604510b8d6ab06a81520`
+- Prompt SHA-256: `4c059264a7527dcf6082f43bc5cacdf327f947505e6d5f9721fd10e71b64fdcb`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2baee6e542351d5b0c46e79c685dd29ff93f0fee4a45cf4485afee7656248cf7`
+- Skill overlay SHA-256: `a2871f547194089c5425585467f9bee6e3c85ea103d77933d85a4c4cf246fa7c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `885108a0e0e9ce48751816455b91da0ec400a08bb7d3a722984a36e4221d1938`
+- Metadata SHA-256: `86b2ab0ad4bcb3fb98728ca8ff1375ff58d1094876353cbeafc325bf7593eb63`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_non_content_candidate_drift` | PASS | with_skill 明确覆盖删除、重命名、普通文件到符号链接、仓库外符号链接和 100755 权限变化，并引用 staged.name-status、staged.raw、staged.patch、staged.summary。 |
+| `rejects_every_unauthorized_transformation` | PASS | with_skill 逐类列出候选中的删除、重命名、链接转换、外部链接和可执行权限变化，并以不能继续发布、废弃候选为结论。 |
+| `rechecks_committed_candidate_boundaries` | FAIL | with_skill 仅要求重新生成并复核发布快照，没有明确说明 candidate 与 handoff 形成后必须重新验证同一授权边界，也未明确否定早期 staged 结果作为最终 authority。 |
+| `rolls_back_only_the_failed_attempt` | FAIL | with_skill 证明了清理前后状态哈希一致，但没有说明隔离 attempt、本次草稿、误触的授权宿主状态及无关用户变化之间的精确回滚边界。 |
+| `proves_host_state_restoration` | FAIL | with_skill 提供 status、cached diff 和 worktree diff 的前后哈希，但未给出覆盖 ref、路径身份和残留状态的完整恢复证明；仅笼统声称未修改 ref。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4c059264a7527dcf6082f43bc5cacdf327f947505e6d5f9721fd10e71b64fdcb; fixture_sha256=56ccb183ce0a970ed157c6f0efa2f2e8e25742264f17604510b8d6ab06a81520; output_sha256=4b800b98f76d5a2943e0e03197a263988a4c5c7e351852a86620ff68fdc5d3fd; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了全部主要候选漂移并正确阻塞发布，但未完整说明最终 candidate/handoff 复核要求及精确、全面的恢复证明。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4c059264a7527dcf6082f43bc5cacdf327f947505e6d5f9721fd10e71b64fdcb; fixture_sha256=56ccb183ce0a970ed157c6f0efa2f2e8e25742264f17604510b8d6ab06a81520; output_sha256=6b2ac2644dbab41f9922fba734d5819d035ca1ed3799201335481c3c17571995; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了部分结构、链接和权限变化，并指出发布索引断链，但覆盖和边界证明较不完整。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未明确要求 committed candidate 与 handoff 形成后重新验证授权边界。
+- with_skill 未精确界定仅回滚失败 attempt，同时保留无关用户变化。
+- with_skill 未提供覆盖 ref、路径身份和残留状态的完整宿主恢复证明。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Skill Eval Comparison
 
 ## Evaluation Target

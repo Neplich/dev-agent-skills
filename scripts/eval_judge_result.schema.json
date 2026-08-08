@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Skill eval judge result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["assertion_results", "lane_summaries", "behavior_result", "coverage_result", "overall_result", "uncovered_reasons", "blockers", "failures", "next_steps"],
+  "properties": {
+    "assertion_results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status", "evidence"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["PASS", "FAIL", "NOT_EXERCISED"]},
+          "evidence": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "lane_summaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["without_skill", "with_skill"],
+      "properties": {
+        "without_skill": {"$ref": "#/$defs/lane_summary"},
+        "with_skill": {"$ref": "#/$defs/lane_summary"}
+      }
+    },
+    "behavior_result": {"enum": ["PASS", "FAIL"]},
+    "coverage_result": {"enum": ["FULL", "PARTIAL"]},
+    "overall_result": {"enum": ["PASS", "PASS (partial coverage)", "FAIL", "BLOCKED"]},
+    "uncovered_reasons": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "blockers": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "failures": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "next_steps": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  },
+  "$defs": {
+    "lane_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run_source", "behavior_summary"],
+      "properties": {
+        "run_source": {"type": "string", "minLength": 1},
+        "behavior_summary": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

@@ -1,3 +1,83 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `regression-suite`
+- Eval: `eval-001-verify-bug-fix`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `de9aee791f056463d193f05e53c9f483fe312d6ee3aeb7bb4d1f7b0eb008f308` from `agents/qa/test/regression-suite/evals/workspace/eval-1-verify-bug-fix`.
+- Fixture SHA-256: `de9aee791f056463d193f05e53c9f483fe312d6ee3aeb7bb4d1f7b0eb008f308`
+- Prompt SHA-256: `c6a22bd6a4c946877c350cf1e3485fb0daa745bafdccb74f798f1fdae43d71c0`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `850108c3e4722feb1b9e0417b1554f0fb5b41d47001505d7da16c6bcd9946093`
+- Skill overlay SHA-256: `3af177f0dcd9723964fdbcbf144832d8c6b68b267a850af3da918d86fe27d617`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `8ca6ea4c46c7a5a2c854d9ff5def7ea0ec612ddbf9888a829e50de270f1b84c4`
+- Metadata SHA-256: `732278c998a10f6e6333dc13e2fc4edfbaed96da1abb806d2dc29682a3a79f75`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 报告明确引用 BUG-001 与 PR-001，并以有效登录 500、会话创建和 dashboard 跳转界定原始与修复范围。 |
+| `qa` | FAIL | 报告引用了 TEST_SUITE 相关范围和 TC-001，但未提供读取 FLOW_INDEX、case、script 以及历史 results/ 和 _reports/ 的证据。 |
+| `assertion_3` | PASS | 报告分别标明 Status: blocked、Original failure recheck: not executed、Expected fixed behavior: not executed，并说明运行验证结果被环境阻塞。 |
+| `assertion_4` | PASS | 报告按 feature-update 限定原始成功登录、无效凭据和锁定账户等直接相邻路径，未扩展到 release 全量 E2E。 |
+| `alignment_version_archive` | FAIL | 报告确认 PRD、TRD、IMPLEMENTATION_PLAN 均为 Confirmed 且平台版本为 v1.2.0-fix.1，但结果写入 _reports/test-reports-2026-08-08.md，未按要求追加 results/TC-001-login-session/{platform-version}/result.md 和 testcase.snapshot.md。 |
+| `assertion_5` | PASS | 报告包含 Release Recommendation，并明确区分 Fix Verification 的 blocked run status 与 low evidence confidence。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a22bd6a4c946877c350cf1e3485fb0daa745bafdccb74f798f1fdae43d71c0; fixture_sha256=de9aee791f056463d193f05e53c9f483fe312d6ee3aeb7bb4d1f7b0eb008f308; output_sha256=b5c90a74fb86fc96d16b185e8c617b295010d8781f358c81bdf9b7591af7e070; snapshot_sha256=36ea3a4d753d486f29f2cd7fef5bcdf5b064cf55ea5cea92948c12e5025c7063
+- Behavior: 完成对齐门禁、定向范围和相邻路径规划，明确 blocked 状态及低证据置信度，但结果归档路径不合规且未证明完整复用 QA 资料。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a22bd6a4c946877c350cf1e3485fb0daa745bafdccb74f798f1fdae43d71c0; fixture_sha256=de9aee791f056463d193f05e53c9f483fe312d6ee3aeb7bb4d1f7b0eb008f308; output_sha256=b9559ec782e260e1f16c2533e144c630eacf84069027ae94bc31a13da8378071; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别到缺少 package.json 和运行环境，结论为 blocked；范围和发布建议较简略。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足完整 QA 用例资料读取证据。
+- with_skill 未按规定的 results/{TC}/{platform-version}/result.md 与 testcase.snapshot.md 归档结果。
+- Next: 补充完整 QA 资料读取记录，并按规定路径追加 result.md 和 testcase.snapshot.md。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-verify-bug-fix
 
 ## Evaluation Target

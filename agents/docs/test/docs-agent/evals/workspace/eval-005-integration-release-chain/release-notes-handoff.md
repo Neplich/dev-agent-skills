@@ -1,10 +1,10 @@
-# docs-agent:release-notes-gen site Release Notes handoff
+# site Release Notes owner site Release Notes handoff
 
 ```yaml
-handoff_target: "docs-agent:docs-audit / pre-tag"
-downstream_target: "pm-agent:github-release-gen"
+handoff_target: "formal documentation audit owner / pre-tag"
+downstream_target: "GitHub release preparation owner"
 handoff_status: ready
-next_gate: "docs-agent:docs-audit pre-tag"
+next_gate: "formal documentation audit owner pre-tag"
 release_execution_authorized: false
 target_release_version: "v1.4.0"
 target_release_version_confirmation:
@@ -74,4 +74,4 @@ required_version_sources:
 blockers: []
 ```
 
-站内页面、metadata、index、正文确认和 docs checks 由 `docs-agent:release-notes-gen` 所有。该 handoff 不是 GitHub Release 执行授权；`pm-agent:github-release-gen` 只能在同版本 `ready_for_tag` 后准备预览，并在实际 tag、`release_verified` 和维护者独立发布批准全部存在后发布。
+站内页面、metadata、index、正文确认和 docs checks 由 `site Release Notes owner` 所有。该 handoff 不是 GitHub Release 执行授权；`GitHub release preparation owner` 只能在同版本 `ready_for_tag` 后准备预览，并在实际 tag、`release_verified` 和维护者独立发布批准全部存在后发布。

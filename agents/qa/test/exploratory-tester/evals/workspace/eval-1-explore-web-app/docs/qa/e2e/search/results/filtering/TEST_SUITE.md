@@ -10,7 +10,5 @@ Platform version: `v0.9.0-dev`
 | --- | --- | --- |
 | `TC-001-filter-results` | active | Filter pills update results without losing keyboard focus. |
 
-## Exploration Rule
-
-If exploration finds the same filter-results flow, update the existing TC or
-script instead of creating a duplicate case.
+The current feature-update scope is the filter-results flow and its directly
+affected keyboard-navigation behavior.

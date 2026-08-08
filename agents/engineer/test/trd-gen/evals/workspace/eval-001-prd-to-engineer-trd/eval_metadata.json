@@ -2,10 +2,19 @@
   "eval_id": "eval-001-prd-to-engineer-trd",
   "eval_name": "prd-to-engineer-trd",
   "workspace_root": "agents/engineer/test/trd-gen/evals/workspace/eval-001-prd-to-engineer-trd",
-  "prompt": "PM 已经确认 docs/pm/capture-loop/PRD.md 和 docs/pm/capture-loop/DECISIONS.md。请准备这个功能的技术方案。",
   "fixture_context": [
     "docs/pm/capture-loop/PRD.md",
-    "docs/pm/capture-loop/DECISIONS.md",
-    "README.md"
-  ]
+    "docs/pm/capture-loop/DECISIONS.md"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -1,3 +1,82 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-004-small-change-plan-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/feature-implementor/evals/workspace/eval-004-small-change-plan-gate`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `78a38f2825c3f49238f0218d2c37fda54f328e48d02e714402d6027e16d2911e`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`
+- Skill overlay SHA-256: `5c74cbf7ab5eef845bc8c3f0d81a775b1feca5810a9a615f9b35865026f3e841`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `e8113c8f9ac27e12faac063db222c170fc22f3e44873b19aceac594a7e81169a`
+- Metadata SHA-256: `74367c62f9d5c4aae964f8fe1660f63ee4472124c71cb1b116797d64179c211b`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `records_prd_alignment` | FAIL | with_skill 输出未说明产品与技术负责人已确认，也未在实施安排中记录该对齐依据。 |
+| `writes_plan_for_small_change` | FAIL | with_skill 输出未要求产出或更新 docs/engineer/settings-label/IMPLEMENTATION_PLAN.md。 |
+| `records_split_decision` | FAIL | with_skill 输出未说明是否触发 implementation/validation sub-agent split，也未说明不拆分不等于跳过实施计划。 |
+| `waits_for_user_confirmation` | FAIL | with_skill 输出未要求用户确认实施计划后再开始实施。 |
+| `blocks_e2e_without_confirmed_plan` | FAIL | with_skill 输出未说明 E2E 文档补充需引用已确认计划，或计划缺失/未确认时必须 blocked。 |
+| `does_not_modify_code` | PASS | with_skill 输出仅描述拟议步骤，并明确当前无法开始修改；原始 git evidence 也显示无代码变更。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a38f2825c3f49238f0218d2c37fda54f328e48d02e714402d6027e16d2911e; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=aca63787cb104759a6c9ee8656a681be026dd5b602053d24c4b2985173c201d8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了简单的修改安排并说明当前无法修改，但未满足五项流程与依赖记录要求；未发生代码变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a38f2825c3f49238f0218d2c37fda54f328e48d02e714402d6027e16d2911e; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=fda6c0091c7bbf5530192060b43f456a3ea81117a6fa9125cf39b11276bc6585; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了简单的按钮文案修改安排，但未涵盖所要求的确认、计划文件、拆分判断或 E2E 依赖。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 输出未满足 records_prd_alignment、writes_plan_for_small_change、records_split_decision、waits_for_user_confirmation、blocks_e2e_without_confirmed_plan。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-004-small-change-plan-gate
 
 ## Evaluation Target

@@ -1,3 +1,82 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-site-bootstrap`
+- Eval: `eval-001-bootstrap-empty-workspace`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-001-bootstrap-empty-workspace`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `8294223a6cc9320411b7f3ca9761133eeb49b555e990170abcfa40eeb8076bd8`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `4a398cfa9db1074844549bc002d7714ae1641dceb87757d5c772d45182765b8a`
+- Skill overlay SHA-256: `4e5a2571a4a7180fe735bec31f7744892dd9b213e7966b85237f9d1c2b22d88a`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `0028d93b645e269e09fc6f6345ad073b0c2386395ad858bbd7693d057a9eca5f`
+- Metadata SHA-256: `72695cba8eaf9810a85aa17ba3cc9622de1dd39f4d06db93fe0728a19509d73b`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_complete_inventory` | PASS | with_skill evidence reports 42/42 byte verification; manifest contains 42 created entries, all under docs/site/. |
+| `delivers_deterministic_scaffold_assets` | PASS | Snapshot contains package.json with one new:doc script, both required scripts, six templates with exactly one docs-scaffold block each, and standards/index.md links all six. |
+| `validates_seven_frontmatter_fields` | PASS | All 19 Markdown pages in the snapshot contain the seven required fields; owners and related_code are non-empty arrays, doc_type values are allowed, and last_verified_version is present. |
+| `writes_only_docs_site` | PASS | All 42 manifest paths are within docs/site/; git evidence shows no tracked-file changes and only the docs directory untracked. |
+| `requires_explicit_opt_in` | PASS | The prompt explicitly confirms the target repository, fixed docs/site root, and complete scaffold before the with_skill lane writes. |
+| `reports_manifest_readback` | PASS | with_skill reports manifest parsing and path/status validation, plus repeat execution producing 42 skipped-identical files, zero conflicts, and zero content changes. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8294223a6cc9320411b7f3ca9761133eeb49b555e990170abcfa40eeb8076bd8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=b94d3bc71ead18138be683dfdfb4ce717a4bb8b84236dc302dfe28186a27a095; snapshot_sha256=13b06c79556a034e84ca74d53414eac66892c7fad48ef238489f2cbc7275d24b
+- Behavior: Created the complete 42-asset formal documentation scaffold under docs/site, validated manifest coverage and frontmatter, and reported deterministic zero-diff rerun behavior.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8294223a6cc9320411b7f3ca9761133eeb49b555e990170abcfa40eeb8076bd8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=5face9b89423d7ac698448df35db8f8e53255cde6c5524d24fe775c1b9c7042a; snapshot_sha256=603023b347ba6e56192ea24250868340485c05ea2c579e7bf8b9a7903c705fb3
+- Behavior: Created a small Docusaurus scaffold with 9 files, omitted the required 42-asset inventory and formal documentation scaffold, and reported repeat execution as unchanged.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Skill Eval Comparison
 
 ## Evaluation Target

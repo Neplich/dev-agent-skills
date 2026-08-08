@@ -1,3 +1,83 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `github-release-gen`
+- Eval: `eval-008-marketplace-historical-tag-limit-upgrade-note`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-008-marketplace-historical-tag-limit-upgrade-note`.
+- Fixture SHA-256: `17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933`
+- Prompt SHA-256: `734c4a4cb7e543db5091d9f1c4a08014e2d017a93f5c1b82e54e15f916eb8fba`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `ebd2c00966a7932d251daeeef05573b0145183fe908cf102225636115f85820c`
+- Skill overlay SHA-256: `2398a04c1c550bc8e45aa1564f5f42f6e629a29d1c1ed530494ae269f918d169`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ca7c0b18d751c17e3675256471abe2e22f05a84c6ec6d780c8a51c53156008f9`
+- Metadata SHA-256: `a37c69100d8b09e8a32fd7ae07c266ac1aa0ef65dd08a89916726ecd29694ad7`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `title_matches_marketplace_format` | PASS | with_skill 标题为 `v0.9.0 - 失败消息重试与统一附件兼容`，概述非空且对应已确认发布事实。 |
+| `upgrade_note_first_sentence_derived` | PASS | 「升级说明」首段以要求的“无破坏性变更，也没有新增 plugin。6 个 role plugin 均更新到 `v0.9.0`。”开头。 |
+| `claude_section_omitted_with_platform_limit` | FAIL | 虽未生成 `### Claude Code`，但写有“需要固定版本时使用具备相应能力的安装路径”，而 fixture 明确无已验证固定版本路径；未按要求直接明确该 tag 无固定版本安装路径。 |
+| `codex_section_omitted_without_target_tag_support` | FAIL | with_skill 生成了 `### Codex` 小节，尽管 `.codex/INSTALL.md` 不含 TARGET_TAG 支持。 |
+| `kimi_section_omitted_without_plugin_json` | PASS | 未生成 `### Kimi Code` 小节，也未臆造 `/plugins install` 命令。 |
+| `closing_sentence_derived` | FAIL | 升级说明收尾句“该 tag 无已验证的固定版本安装路径，按默认分支（main）更新。”未包含由 manifest 推导的 6 个 role plugin 数量。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=734c4a4cb7e543db5091d9f1c4a08014e2d017a93f5c1b82e54e15f916eb8fba; fixture_sha256=17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933; output_sha256=d402cefd8db978c0d6fa0c8a95730b6808ddd136a3f09e75cc22b394c59471a4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 标题和升级首句、Kimi 省略符合要求，但错误保留 Codex 小节，且对无固定版本路径的表述及收尾句不完全符合断言。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=734c4a4cb7e543db5091d9f1c4a08014e2d017a93f5c1b82e54e15f916eb8fba; fixture_sha256=17e20791a9c9288907fb214989bbc6378e7d64a98732f68a5c493285ff25f933; output_sha256=aefa6f2f023ca25cc46ec71b3f946c1494121684b0123a87eac2ba013186a8ab; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 生成了裸版本式标题，并保留 Claude、Codex、Kimi 三个平台说明；未按历史 tag 平台限制省略相关小节。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未省略不支持 TARGET_TAG 的 Codex 小节。
+- with_skill 对无已验证固定版本路径的说明不符合要求，且升级说明收尾句未包含 6 个 role plugin 数量。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-008-marketplace-historical-tag-limit-upgrade-note
 
 ## Evaluation Target

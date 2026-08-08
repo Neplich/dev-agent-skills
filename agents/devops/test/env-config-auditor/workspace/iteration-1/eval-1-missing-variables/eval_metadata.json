@@ -1,30 +1,22 @@
 {
   "eval_id": "eval-001-missing-variables",
   "eval_name": "missing-variables",
-  "prompt": "检查我的项目环境配置是否完整。代码里使用了 DATABASE_URL、API_KEY、REDIS_URL、STRIPE_SECRET_KEY，但当前只有 local 和部分 docker 配置定义了它们。",
-  "with_skill_outputs": [
-    "deploy/ENV_AUDIT.md"
+  "workspace_root": "agents/devops/test/env-config-auditor/workspace/iteration-1/eval-1-missing-variables",
+  "fixture_context": [
+    "src/server.ts",
+    "deploy/local/.env.example",
+    "deploy/docker/.env.example",
+    ".github/workflows/deploy.yml"
   ],
-  "assertions": [
-    {
-      "id": "report-has-sections",
-      "description": "audit report should include missing variables and recommendations sections",
-      "target": "deploy/ENV_AUDIT.md",
-      "all_of": [
-        "# Environment Configuration Audit Report",
-        "## Missing Variables",
-        "## Recommendations"
-      ]
-    },
-    {
-      "id": "checks-cicd-and-deploy",
-      "description": "audit should capture missing values across deploy and CI/CD contexts",
-      "target": "deploy/ENV_AUDIT.md",
-      "all_of": [
-        "API_KEY",
-        "STRIPE_SECRET_KEY",
-        "CI/CD"
-      ]
-    }
-  ]
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

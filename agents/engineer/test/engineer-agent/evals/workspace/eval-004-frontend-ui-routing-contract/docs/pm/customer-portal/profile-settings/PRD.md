@@ -7,7 +7,7 @@ parent_feature: "customer-portal"
 feature_level: "2"
 version: "1.0.0"
 status: Approved
-author: "Fixture"
+author: "Customer Portal Product"
 date: "2026-06-24"
 last_updated: "2026-06-24"
 ---

@@ -1,6 +1,6 @@
 # v1.5.0 release communication inputs
 
-- host_repository: current fixture repository
+- host_repository: current product repository
 - confirmed_version: `v1.5.0`
 - confirmed_scope: dashboard limit increased from 10 to 25
 - source_evidence: implementation commit `abc1500`

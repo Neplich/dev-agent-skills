@@ -2,11 +2,21 @@
   "eval_id": "eval-001-nextjs-web-app",
   "eval_name": "nextjs-web-app",
   "workspace_root": "agents/devops/test/deployment-planner/evals/workspace/eval-001-nextjs-web-app",
-  "prompt": "pm-agent 已完成项目级部署入口分类并路由至 deployment-planner；确认 handoff 见 workspace `PM_HANDOFF.md`，本任务为 `feature_path: N/A` 的 repo-wide deployment。我的 Next.js 项目使用 PostgreSQL 数据库和 Redis 缓存。帮我生成 local、docker、helm 三种部署配置。",
-  "feature_path": "N/A",
   "fixture_context": [
     "PM_HANDOFF.md",
     "package.json",
     "app/api/health/route.ts"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  },
+  "feature_path": "N/A"
 }

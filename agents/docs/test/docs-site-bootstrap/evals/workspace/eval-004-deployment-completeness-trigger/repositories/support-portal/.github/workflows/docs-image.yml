@@ -1,0 +1,15 @@
+name: docs-image
+on:
+  push:
+    tags: ['v*']
+jobs:
+  image:
+    strategy:
+      matrix:
+        variant: [public, internal]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci && npm run build:${{ matrix.variant }}
+        working-directory: docs/site
+      - run: docker build --target "${{ matrix.variant }}" docs/site

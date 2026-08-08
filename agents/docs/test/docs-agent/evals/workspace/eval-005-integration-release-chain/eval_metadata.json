@@ -2,12 +2,10 @@
   "eval_id": "eval-005-integration-release-chain",
   "eval_name": "integration-release-chain",
   "workspace_root": "agents/docs/test/docs-agent/evals/workspace/eval-005-integration-release-chain",
-  "prompt": "请依据 `release-chain-entry.md` 及其指向的证据，评估 v1.4.0 文档发布链当前能否继续，并给出结论、阻塞项和下一责任人。不要执行任何真实 tag 或 GitHub Release 写入。",
   "fixture_context": [
     "release-chain-entry.md",
     "release-notes-handoff.md",
-    ".eval/raw-git-evidence.md",
-    ".eval/setup-git-fixture.sh",
+    "release-evidence/git-reference-snapshot.md",
     "docs/pm/ai-search/PRD.md",
     "docs/engineer/ai-search/TRD.md",
     "docs/engineer/ai-search/IMPLEMENTATION_PLAN.md",
@@ -17,10 +15,22 @@
     "package.json"
   ],
   "execution_cleanup": [
-    ".git",
-    ".eval/runtime-git-evidence.md",
     "outputs",
     "docs/site/.generated",
     "docs/site/.meta/audit"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/formal-docs-sync",
+    "agents/docs/skills/docs-audit",
+    "agents/docs/skills/release-notes-gen"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

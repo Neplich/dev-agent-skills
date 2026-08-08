@@ -1,3 +1,81 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-001-implement-from-prd-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `f28befa0f58d85ac2ecb3e6c24e0090a145d4ddb6231b7848d726f4aa1c607e7`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`
+- Skill overlay SHA-256: `5c74cbf7ab5eef845bc8c3f0d81a775b1feca5810a9a615f9b35865026f3e841`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `e8316f0aa4590c63e65f70612d76f8fbcd38a328f8061718a97190f173e80bf3`
+- Metadata SHA-256: `a03f40843844b3baa3ce9f2eed494948253034bd0a93be1411356fd09a957890`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `writes_implementation_plan` | FAIL | with_skill 仅承诺收到文档后生成计划，并未实际生成实施计划、文件变更清单或实现顺序。 |
+| `requires_user_confirmation` | PASS | 明确表示“你确认计划后再开始编码”。 |
+| `does_not_implement_directly` | PASS | 未声称已创建或修改代码文件、运行实现步骤或完成自检。 |
+| `maintains_plan_metadata` | FAIL | 未提及 IMPLEMENTATION_PLAN.md 的 frontmatter、version、last_updated 或版本更新规则。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f28befa0f58d85ac2ecb3e6c24e0090a145d4ddb6231b7848d726f4aa1c607e7; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=b00f9dbe1c5e995b84407e547532d5e4a58c8205cfa9cebbaaa954c8ce3377ee; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 因工作区缺少文档而暂停，承诺后续生成计划并等待确认，但未实际提供计划内容或元数据要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f28befa0f58d85ac2ecb3e6c24e0090a145d4ddb6231b7848d726f4aa1c607e7; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=3cf826448d5b2b8a2a875e40f2eec4bb72d174e0f9610004ddc9f7f648d933cb; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 生成了较完整的实施安排并要求负责人确认后编码，但未说明计划元数据规则。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足生成实施计划及文件变更清单、实现顺序的要求。
+- with_skill 未满足实施计划元数据维护要求。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-implement-from-prd-trd
 
 ## Evaluation Target

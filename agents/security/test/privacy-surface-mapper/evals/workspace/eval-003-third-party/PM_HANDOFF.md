@@ -1,6 +1,6 @@
 # PM Handoff Packet
 
-pm-agent 已完成入口分类，并将第三方数据共享识别路由至 privacy-surface-mapper。
+产品与安全负责人已确认本次审查范围和可用材料。
 
 ```yaml
 request_type: security
@@ -41,9 +41,9 @@ data_categories:
   - 在线标识与行为数据
   - 交易元数据
 remediation_expectations:
-  - 同意、字段最小化与用户选择实现交回 engineer-agent
-  - 供应商配置与数据删除作业交回 devops-agent
+  - 同意、字段最小化与用户选择实现交回 应用工程团队
+  - 供应商配置与数据删除作业交回 平台工程团队
 blockers_risks:
-  - 广告共享默认开启且包含电子邮箱
+  - 需要核对广告共享的默认设置、字段范围和同意依据
   - 供应商保留期限与删除支持未完整记录
 ```

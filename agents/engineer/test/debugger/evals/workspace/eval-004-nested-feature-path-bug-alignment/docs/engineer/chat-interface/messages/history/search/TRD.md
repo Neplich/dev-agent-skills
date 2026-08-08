@@ -17,6 +17,6 @@ related_prd: "docs/pm/chat-interface/messages/history/search/PRD.md"
 
 ## Technical Overview
 
-The search service sorts by relevance score and message timestamp. A mismatch
-between the PRD ordering and implementation result is classified only after
-`related_prd` and `feature_path` are confirmed.
+The search service receives workspace-scoped candidates, orders higher
+relevance scores first, and uses the newest message timestamp to break equal
+scores.

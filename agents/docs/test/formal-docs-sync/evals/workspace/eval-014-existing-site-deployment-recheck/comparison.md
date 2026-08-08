@@ -1,3 +1,80 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-014-existing-site-deployment-recheck`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `c3d3b07fc792c4084ace3c9b32ba907e4fcd07d875befcf6af84add997421b79` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-014-existing-site-deployment-recheck`.
+- Fixture SHA-256: `c3d3b07fc792c4084ace3c9b32ba907e4fcd07d875befcf6af84add997421b79`
+- Prompt SHA-256: `1fa72144e806cf52f8fd8fbc5b8cac36763c1b6d96e197c5c1ebe4dd6e004c69`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `79b2ff102fa24fa224c9f24f44f3e648a1ae7eb9a7a10e639d8675db4454120a`
+- Skill overlay SHA-256: `52a3ba7ee2d9485acf003417b40e0d0ca2ab263cbadde98fac58250b6c2a9778`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `db9d705a02de2df76d9e1b62334995eac21d110dc172ed350d92306793043708`
+- Metadata SHA-256: `57de9e366e385164240069213a2870da7cd8d43f7b6ee6621d6856f237ac7e4c`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reports_existing_site_integrated` | FAIL | with_skill lists Atlas Public/Internal configurations and evidence, but does not report the existing site as integrated; it instead emphasizes unresolved workflow and external-platform gaps. |
+| `detects_partial_variant_coverage` | PASS | with_skill enumerates Orbit's Public and Internal variants, states only Public is configured for CI/image/Compose/Helm, and says Internal cannot form a publishable access entry without claiming completeness. |
+| `returns_gap_to_pm_read_only` | FAIL | with_skill states that deployment assets were not modified, but does not ask whether pm-agent should generate a repo-wide deployment handoff. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1fa72144e806cf52f8fd8fbc5b8cac36763c1b6d96e197c5c1ebe4dd6e004c69; fixture_sha256=c3d3b07fc792c4084ace3c9b32ba907e4fcd07d875befcf6af84add997421b79; output_sha256=c0baa34eeabf6662a2be605f0b4fa4a8c05d129a15ae1ec170860165d745e37c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a read-only configuration review with evidence, distinguishes Atlas's two configured variants from Orbit's Public-only state, and notes deployment gaps.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1fa72144e806cf52f8fd8fbc5b8cac36763c1b6d96e197c5c1ebe4dd6e004c69; fixture_sha256=c3d3b07fc792c4084ace3c9b32ba907e4fcd07d875befcf6af84add997421b79; output_sha256=5649c8c3e7c5a45f4fb738148943b2fc4678ca2f209d384555c60fb35be571a4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Identifies Atlas Public/Internal and Orbit's Public-only coverage, with evidence and gaps, but does not provide the required integrated/PM handoff behavior.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output omits an explicit integrated conclusion for the existing Atlas site.
+- The with_skill output does not ask whether pm-agent should generate a repo-wide deployment handoff.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Skill Eval Comparison
 
 ## Evaluation Target

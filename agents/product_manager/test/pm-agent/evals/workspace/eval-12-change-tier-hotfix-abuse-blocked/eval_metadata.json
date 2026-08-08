@@ -2,8 +2,18 @@
   "eval_id": "eval-012-change-tier-hotfix-abuse-blocked",
   "eval_name": "change-tier-hotfix-abuse-blocked",
   "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-12-change-tier-hotfix-abuse-blocked",
-  "prompt": "用户说：直接把会员试用期从 7 天改成 30 天，快速合并。",
   "fixture_context": [
     "README.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -1,3 +1,80 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `appsec-checklist`
+- Eval: `eval-003-xss`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e` from `agents/security/test/appsec-checklist/evals/workspace/eval-003-xss`.
+- Fixture SHA-256: `746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e`
+- Prompt SHA-256: `4fbcbae96df725d2ae68317bce92f64188686abcfd62940b28a42e14a09de97f`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `095129ad5c17fd8974fdea44f1054ac02e7fa8f954b0e4a1a1d1a0ef185f9ce5`
+- Skill overlay SHA-256: `5839d5cfe31d4e5dc5e9520f24a99b1147c97570ef1cc156eb90972408a49170`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6b75287b771a74771292ff6a9a4b1d4288f8c6b58ea121782df92af92abb087a`
+- Metadata SHA-256: `8b9d5478f14d810cc31c023b6e6a4956d8afc5605aa60470f7733640de6334fb`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `security_findings` | PASS | with_skill 识别出 author/body 通过模板字符串进入 innerHTML，导致用户控制的 HTML 注入/XSS，并结合纯文本需求说明事件处理器、SVG 等风险。 |
+| `evidence_and_impact` | PASS | with_skill 给出 src/ui/comment-display.js:2-4、API response 到 innerHTML 的完整数据流，指出 author 和 body 为受影响入口，并说明同源脚本、页面篡改及影响其他查看用户的后果。 |
+| `severity_rationale` | PASS | with_skill 将风险评为 High，并以持久化用户输入、HTML 解析、查看者触发及源站脚本权限为依据，同时说明 CSP 等控制不能替代正确渲染。 |
+| `remediation` | PASS | with_skill 提供了使用 DOM API、textContent 和 replaceChildren 的具体修复方案，以及覆盖恶意载荷、DOM 结构、事件执行、文本一致性和真实浏览器回归的验证步骤。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4fbcbae96df725d2ae68317bce92f64188686abcfd62940b28a42e14a09de97f; fixture_sha256=746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e; output_sha256=bc205487e11ce6d2de961b40fc39b7a5b8ab70646dade66e609f8ca4e5492754; snapshot_sha256=40d65b5cbd9d3e88464292742a014d62a7977901f2568466e8fabbaef2057ca2
+- Behavior: 完整覆盖用户输入到 innerHTML 的路径、XSS 风险、影响入口、严重度依据、DOM API/textContent 修复和详细浏览器验证，符合纯文本产品边界。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4fbcbae96df725d2ae68317bce92f64188686abcfd62940b28a42e14a09de97f; fixture_sha256=746acb9424bcff0e7d1cdbd84db8418dc8fed63831bb1cdba56197295fa9433e; output_sha256=5141a24c70c8e1ab5cc56c2cb23f25fbda9a270e4f689fc8809ecd8cac9c7dee; snapshot_sha256=fd0e748877a0f2717af5b727a7b7d0bb65c9c884ed2fa2007089034427439af6
+- Behavior: 识别存储型 XSS，提供代码与数据流证据、影响和高危依据，并给出 textContent 修复及浏览器回归验证；内容较为完整。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-003-xss
 
 ## Evaluation Target

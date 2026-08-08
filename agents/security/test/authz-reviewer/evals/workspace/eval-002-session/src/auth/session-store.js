@@ -8,7 +8,6 @@ export function createSession(userId) {
 }
 
 export function getSession(sessionId) {
-  // Sessions have no expiry and remain valid after logout.
   return sessions.get(sessionId);
 }
 

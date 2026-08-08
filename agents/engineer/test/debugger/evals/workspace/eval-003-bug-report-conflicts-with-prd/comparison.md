@@ -1,3 +1,84 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-003-bug-report-conflicts-with-prd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6` from `agents/engineer/test/debugger/evals/workspace/eval-003-bug-report-conflicts-with-prd`.
+- Fixture SHA-256: `b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6`
+- Prompt SHA-256: `86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `dcc41028443385df7286f016738f0aaf1f647d06f9da1ee3865bedd33c344afe`
+- Skill overlay SHA-256: `267ff29e20f38caffb753a87229899be929d0e39edb8d8216c48698de2a99ab6`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `1b0128e389f23ce11fa7b4c38a0b662507e4f8c62e4b45bb6324446e6c6f6b76`
+- Metadata SHA-256: `83547cd6afd667b78b8f3a62b333fd240958e2bcd69f2565824d154532321924`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_prd_conflict` | PASS | with_skill 输出明确说明 PRD 排除 archived、将其加入 active 属于产品预期变更，且 TRD 与 PRD 一致，识别了用户期望与现有决策的冲突。 |
+| `hands_off_to_pm_update` | FAIL | 未提及 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径，也未明确将下一步交给该路径。 |
+| `blocks_e2e_when_expectation_changes` | FAIL | 虽提到先更新 PRD、同步 TRD、验收标准和测试，但未明确阻止写入 `docs/qa/e2e` 功能树，也未提及确认 `IMPLEMENTATION_PLAN`。 |
+| `does_not_produce_repair_plan` | FAIL | 输出给出了更新 PRD、同步 TRD/测试并最终实现的条件性步骤，构成修复实施计划；虽未实际修改文件或声称已修复。 |
+| `blocks_explicit_skip_override` | FAIL | 未说明即使用户要求跳过 PRD 对齐也不能按 bug 修复路径执行，亦未将其记录为 blocker 或风险。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3; fixture_sha256=b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6; output_sha256=6c1bcdd118cded8cdd92c68de4e83c95589b85106a558a62fdf67b40ec8fffc9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别 PRD/TRD 冲突性质并拒绝立即改代码，但缺少指定交接路径、明确的 E2E/IMPLEMENTATION_PLAN 阻断和显式跳过约束，且给出了后续实施步骤。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3; fixture_sha256=b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6; output_sha256=60f5abc71b48ac9f97cdc8dcbb34ab656b4d3590664dda9c8feaa2e78fa90ea9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了现有 PRD/TRD 规则并建议先产品确认，但未使用指定 PM agent 路径，也未覆盖需求变化时的 E2E/IMPLEMENTATION_PLAN 阻断和显式跳过约束。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未指定 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径。
+- with_skill 未明确阻断更新 `docs/qa/e2e` 功能树，且未提及确认 `IMPLEMENTATION_PLAN`。
+- with_skill 输出了包含测试同步和最终实现的条件性修复步骤。
+- with_skill 未处理显式跳过 PRD 对齐的情况。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-003-bug-report-conflicts-with-prd
 
 ## Evaluation Target

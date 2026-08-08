@@ -1,0 +1,6 @@
+diff --git a/docs/site/release-notes/v1.8.0.md b/docs/site/release-notes/v1.8.0.md
+--- a/docs/site/release-notes/v1.8.0.md
++++ b/docs/site/release-notes/v1.8.0.md
+@@ -18,4 +18,4 @@ last_verified_version: unverified
+-The export page now shows progress while the archive is prepared.
++The export page now shows progress while the downloadable archive is prepared.

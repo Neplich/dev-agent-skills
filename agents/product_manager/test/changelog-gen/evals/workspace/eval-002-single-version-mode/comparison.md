@@ -1,3 +1,81 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-002-single-version-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-002-single-version-mode`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `bd018ad305c5f305a6daed7fd9f17ae486593c50dc80e5c2aa3a74b95671bf30`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `3dfcf246dc4057e8231ee4e2380b4525eeecf840a484daf60bd4e990283d5e5e`
+- Skill overlay SHA-256: `5c214a0a2c2365016d6b3bafaa3e6cd9bb33067b007f4407a0b78fe50c4ba935`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `4fbc72fdf98154f7c2dd882f093beffcc404677e79487aa94518bc287dcc4e70`
+- Metadata SHA-256: `0261b537a122aab27112048b46542c55dcea0510f7dd974807fe61e039d9308d`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `v_version_yyyy_mm_dd` | PASS | with_skill 文件包含 `## [v0.120.2] - 2026-07-28`。 |
+| `release_tag` | PASS | 版本 `v0.120.2` 与输出引用的 release tag `v0.120.2` 一致。 |
+| `pr_conventional_commit` | FAIL | PR 条目仍包含 `**mcp:**` 前缀，未完全清洗 conventional commit 前缀。 |
+| `breaking_change_breaking` | PASS | with_skill 输出无 breaking change 条目，因此不存在未添加 `⚠️ BREAKING` 前缀的 breaking change。 |
+| `section` | PASS | 输出仅包含有内容的 `Fixed` section。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bd018ad305c5f305a6daed7fd9f17ae486593c50dc80e5c2aa3a74b95671bf30; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=365a478a03d030917ae289e7ab726f76beff21cae225eb3fcf216c9607a272c1; snapshot_sha256=a86142e53d5eff63397b9cb820f5913caeda80df11fe6805954bc08638d2b3db
+- Behavior: 生成了 v0.120.2 changelog，包含日期、release 引用、Fixed section 和 PR #300。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bd018ad305c5f305a6daed7fd9f17ae486593c50dc80e5c2aa3a74b95671bf30; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=6d51e35c792280ae79e5f62b8004db6c1d8e045584eb547358ec51ca0b85155b; snapshot_sha256=0992d862f20d10fec88966111d8644e16cf1e120c774033712380dba84fe08e8
+- Behavior: 生成了 changelog 文件并包含 Fixed 条目和 PR #300，但版本标题缺少 v 前缀。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- pr_conventional_commit：PR 条目保留了 `**mcp:**` 前缀。
+- Next: 移除 PR 条目中的 `**mcp:**` conventional commit 前缀。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-002-single-version-mode
 
 ## Evaluation Target

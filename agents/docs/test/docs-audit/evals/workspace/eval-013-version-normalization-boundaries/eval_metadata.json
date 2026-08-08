@@ -2,8 +2,30 @@
   "eval_id": "eval-013-version-normalization-boundaries",
   "eval_name": "version-normalization-boundaries",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-013-version-normalization-boundaries",
-  "prompt": "请审查 `.eval/version-cases.md` 中的版本来源与观测值，分别给出发布前和发布后的检查结论。不要修改工作区内容。",
   "fixture_context": [
-    ".eval/version-cases.md"
-  ]
+    "release-evidence/version-cases.md"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "git_topology": {
+    "base_ref": "version-base",
+    "target_ref": "version-target",
+    "tags": [
+      {
+        "name": "v1.2.0-rc.1+Build.7",
+        "target": "target",
+        "kind": "lightweight"
+      }
+    ]
+  },
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

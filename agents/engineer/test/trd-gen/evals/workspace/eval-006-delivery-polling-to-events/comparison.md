@@ -1,3 +1,80 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-006-delivery-polling-to-events`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74` from `agents/engineer/test/trd-gen/evals/workspace/eval-006-delivery-polling-to-events`.
+- Fixture SHA-256: `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74`
+- Prompt SHA-256: `4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b66f9acea93e151819a21f82909f9a6b7d44c68fa52d2116667525e2fe8e9bd7`
+- Skill overlay SHA-256: `e4cc003a0e06320ef354c6c9cdbebb2b75980ec8b23ae530ac78b0667fab31da`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ec0b30178f28a00245f34e8794f34ea3d889794c5e097f45505840818ce3d657`
+- Metadata SHA-256: `c58e464b2f51cbecc05208e0f4320ff2bade980227072a25840336ba048c489e`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `updates_existing_trd` | FAIL | 仅修改了目标 TRD，但正文第 8 节写明将移交给 feature-implementor 编写实现计划，违反不得把任务路由给别人的要求。 |
+| `body_consolidation` | PASS | 正文已改为事件驱动方案，旧轮询描述已从正文移除；旧方案仅在 frontmatter changelog 中留痕。 |
+| `removal_recorded_in_changelog` | PASS | frontmatter 新增 changelog，记录轮询方案删除及 1.2.0 版本更新。 |
+| `no_implementation_plan_or_code` | PASS | 证据显示仅修改 TRD.md，未创建 IMPLEMENTATION_PLAN.md、修改代码或补测试。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=d1c810ac9a1fb6b3e3bbad543fcdac39b80b369d0433392ce1fa75599cd40f65; snapshot_sha256=b6a37f324805f128a73bfd997abf1e48f23e6a5df0d607e1c185ef319c757a8b
+- Behavior: 更新了 TRD，补充事件驱动设计与 changelog，但正文包含移交给 feature-implementor 编写实现计划的路由。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=55885933de5348311609eee5afe6b4bcc0203c52f3c6d5af2bf3ad576448b741; snapshot_sha256=0b16383286786094bb5deedfa3fa9c0ba95e0e9ef07f01ac89077cf678e4bc51
+- Behavior: 更新了 TRD 为事件驱动方案，但未增加 changelog。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 输出在 TRD 正文中将后续工作移交给 feature-implementor，违反 updates_existing_trd 的不得路由要求。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-006-delivery-polling-to-events
 
 ## Evaluation Target

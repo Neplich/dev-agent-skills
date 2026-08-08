@@ -7,7 +7,36 @@
       "id": "eval-001-verify-bug-fix",
       "name": "verify-bug-fix",
       "description": "Verifies that regression-suite handles verify-bug-fix and produces the expected role-specific artifact.",
-      "prompt": "验证 Bug #001 的修复，执行回归测试",
+      "scenario": {
+        "persona": "负责登录缺陷关闭的 QA 工程师",
+        "situation": "BUG-001 的修复已完成，同路径产品、技术、计划和可复用登录用例齐备",
+        "trigger": "发布前需要确认原始 500 消失且共享序列化路径没有回归",
+        "goal": "完成登录修复的定向回归并给出范围级发布建议",
+        "materials": [
+          "bugs/BUG-001.md",
+          "fixes/PR-001.md",
+          "docs/pm/auth/login/session-start/PRD.md",
+          "docs/engineer/auth/login/session-start/TRD.md",
+          "docs/engineer/auth/login/session-start/IMPLEMENTATION_PLAN.md",
+          "docs/qa/e2e/auth/login/session-start/TEST_SUITE.md",
+          "docs/qa/e2e/auth/login/session-start/FLOW_INDEX.md",
+          "docs/qa/e2e/auth/login/session-start/cases/TC-001-login-session.md",
+          "docs/qa/e2e/auth/login/session-start/scripts/TC-001-login-session.spec.md",
+          "environment/qa-env.md"
+        ],
+        "constraints": [
+          "场景是 feature-update",
+          "平台版本为 v1.2.0-fix.1",
+          "浏览器确认依赖 QA_BASE_URL",
+          "只覆盖原始失败和直接邻近风险"
+        ],
+        "success_criteria": [
+          "复用原始失败与既有 TC",
+          "分别记录修复行为和邻近路径结果",
+          "区分运行状态、证据置信度和发布建议"
+        ]
+      },
+      "prompt": "BUG-001 的修复已完成，请根据 `bugs/BUG-001.md`、`fixes/PR-001.md` 和同路径产品、工程及 QA 资料做一次定向回归，确认登录 500 是否解决，并检查共享响应逻辑影响的相邻路径。",
       "workspace": "workspace/eval-1-verify-bug-fix",
       "expected_output": "回归验证报告，明确 original failure recheck、fixed behavior、adjacent regression checks 和 release recommendation",
       "assertions": [
@@ -47,7 +76,25 @@
       "id": "eval-002-blocked-without-original-bug-context",
       "name": "blocked-without-original-bug-context",
       "description": "Verifies that regression-suite handles blocked-without-original-bug-context and produces the expected role-specific artifact.",
-      "prompt": "复测上周修过的支付按钮问题，但仓库里找不到原始 bug 报告、失败证据、修复 PR 或可用测试环境。请给出回归验证结论。",
+      "scenario": {
+        "persona": "负责支付发布复核的 QA 工程师",
+        "situation": "发布群只留下一句支付按钮问题已修复，没有链接原始缺陷或构建",
+        "trigger": "发布负责人要求复测，但无法知道原始失败和修复范围",
+        "goal": "判断当前能否给出可靠回归结论并列出恢复验证所需材料",
+        "materials": [
+          "notes/release-handoff.md"
+        ],
+        "constraints": [
+          "没有原始 bug、失败证据、修复记录、测试命令、构建标识或 QA 环境",
+          "不得把没有复现到问题误作通过"
+        ],
+        "success_criteria": [
+          "明确各检查是否执行",
+          "不建议 release ready",
+          "列出最小原始证据、修复和环境补充清单"
+        ]
+      },
+      "prompt": "请复测上周修过的支付按钮问题。仓库里目前只有 `notes/release-handoff.md` 这条交接记录，请先判断现有材料能否支持回归结论，并告诉我还需要补什么。",
       "workspace": "workspace/eval-2-blocked-without-original-bug-context",
       "expected_output": "blocked 回归验证报告，说明缺失上下文、无法复核 original failure、不能给 release ready 结论，并列出恢复验证所需证据",
       "assertions": [
@@ -82,7 +129,27 @@
       "id": "eval-003-mapped-doc-regression",
       "name": "mapped-doc-regression",
       "description": "验证回归范围通过 change-map 定位，同时对未核证且过时的文档声明执行代码核证。",
-      "prompt": "为 src/search/query.rules 的最短查询长度修复制定定向回归范围，并判断当前实际阈值。",
+      "scenario": {
+        "persona": "负责搜索修复复测的 QA 工程师",
+        "situation": "最短查询长度的正式说明与代码规则记录不一致",
+        "trigger": "修复进入回归设计，需要确定当前实际阈值和直接影响范围",
+        "goal": "形成由代码事实支撑的定向回归范围",
+        "materials": [
+          "src/search/query.rules",
+          "docs/site/standards/change-map.yaml",
+          "docs/site/api/search-query.md"
+        ],
+        "constraints": [
+          "正式文档尚未完成版本核验",
+          "本轮设计回归范围，不声称实际通过"
+        ],
+        "success_criteria": [
+          "通过变更映射定位相关说明",
+          "以代码确认最短长度",
+          "记录差异及直接影响路径"
+        ]
+      },
+      "prompt": "请为 `src/search/query.rules` 的最短查询长度修复制定定向回归范围。仓库有变更映射和正式说明，请核对当前实际阈值并说明需要覆盖的直接影响路径。",
       "workspace": "workspace/eval-3-mapped-doc-regression",
       "expected_output": "以映射文档缩小范围、以代码事实确定阈值的回归计划和差异说明。",
       "assertions": [

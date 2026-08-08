@@ -2,15 +2,18 @@
   "eval_id": "eval-001-minimalist",
   "eval_name": "minimalist-design-system",
   "workspace_root": "agents/designer/test/visual-design/workspace/eval-1-minimalist",
-  "prompt": "Create a visual design system for a minimalist productivity app. Target: professionals who value simplicity and focus.",
-  "with_skill_outputs": [
-    "with_skill/docs/design/minimalist-productivity-app/visual-system.md"
+  "fixture_context": [
+    "PM_HANDOFF.md"
   ],
-  "without_skill_outputs": [
-    "without_skill/outputs/design-notes.md"
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
   ],
-  "execution_cleanup": [
-    "with_skill",
-    "without_skill"
-  ]
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -2,13 +2,22 @@
   "eval_id": "eval-001-fix-failing-test",
   "eval_name": "fix-failing-test",
   "workspace_root": "agents/engineer/test/debugger/evals/workspace/eval-001-fix-failing-test",
-  "prompt": "测试 test/api/notifications.test.ts 失败了，帮我修复",
   "fixture_context": [
-    "README.md",
     "package.json",
     "docs/pm/notifications/PRD.md",
     "docs/engineer/notifications/TRD.md",
     "src/api/notifications.ts",
     "test/api/notifications.test.ts"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

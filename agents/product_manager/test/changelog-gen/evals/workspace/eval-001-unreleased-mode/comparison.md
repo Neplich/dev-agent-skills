@@ -1,3 +1,81 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `changelog-gen`
+- Eval: `eval-001-unreleased-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-001-unreleased-mode`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `816b4de603f11081701f38913293ff8bf45f51d9500e3f42bbaccf19e6d1cd7c`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `3dfcf246dc4057e8231ee4e2380b4525eeecf840a484daf60bd4e990283d5e5e`
+- Skill overlay SHA-256: `5c214a0a2c2365016d6b3bafaa3e6cd9bb33067b007f4407a0b78fe50c4ba935`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `d79133c1bbb156df00e2bf94905fa052c00f56ec190d786d942617fe98a1c3a2`
+- Metadata SHA-256: `2e8886660979e8d508feb617ffafcb0337fa9f27576f749f4ff86dbac479ac74`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `unreleased` | PASS | with_skill delivery snapshot contains the exact heading ## [Unreleased]. |
+| `pr` | NOT_EXERCISED | The with_skill output contains no entries, and the fixture directory provides no raw PR evidence to evaluate this criterion. |
+| `bot_pr_dependabot` | NOT_EXERCISED | No raw PR list is present in the fixture, so skipping bot PRs cannot be independently verified. |
+| `chore_ci_test` | NOT_EXERCISED | No raw PR list is present in the fixture, so exclusion of internal chore/ci/test changes cannot be independently verified. |
+| `versioned_changelog_file` | PASS | with_skill workspace_manifest and delivery_snapshot both identify docs/changelog/changelog-unreleased.md. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=816b4de603f11081701f38913293ff8bf45f51d9500e3f42bbaccf19e6d1cd7c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=90ecdbd4c1816b3377901ec9dc4c9d7a0253020fb3552f238e6d96491d81abdf; snapshot_sha256=72c252991da4d355b40317539f88c89a1dd688b867b6bf0c3d380a79fae226ff
+- Behavior: Created the requested file with an Unreleased heading and claimed no user-facing changes after v0.120.2; no PR-level content was provided.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=816b4de603f11081701f38913293ff8bf45f51d9500e3f42bbaccf19e6d1cd7c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=f776d312c769cd3872fdba8394161ace8c6d8d9acb29b5fac9bb2510d590a6a5; snapshot_sha256=cabb63678d1342a76b66cc21488c626cbd56aefa8ed4e9080c9770e4ea43a080
+- Behavior: Created the requested file with an Unreleased heading and claimed no changes after v0.121.0.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: Provide the raw release and merged-PR fixture to evaluate the PR-content assertions.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-unreleased-mode
 
 ## Evaluation Target

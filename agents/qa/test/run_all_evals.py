@@ -18,12 +18,14 @@ def main() -> int:
         print("No eval_metadata.json files found under agents/qa/test")
         return 2
 
-    runner = test_root / "run_eval.py"
+    runner = repo_root / "scripts/run_skill_eval.py"
     failures = []
 
     for metadata_path in targets:
         print(f"==> Running {metadata_path.relative_to(repo_root)}", flush=True)
-        result = subprocess.run([sys.executable, str(runner), str(metadata_path)])
+        result = subprocess.run(
+            [sys.executable, str(runner), "--metadata", str(metadata_path)]
+        )
         if result.returncode != 0:
             failures.append(metadata_path)
 

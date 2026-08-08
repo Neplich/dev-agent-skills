@@ -1,0 +1,63 @@
+diff --git a/docs/site/api/catalog-items.md b/docs/site/api/catalog-items.md
+old mode 100644
+new mode 100755
+index 458186210e2c42eb0b009ac4f102f981db824d8b..f21b76ed54949887c64784de2964533288e5d746
+--- a/docs/site/api/catalog-items.md
++++ b/docs/site/api/catalog-items.md
+@@ -1,7 +1,7 @@
+ ---
+ title: Catalog items
+-last_verified_version: unverified
++last_verified_version: v1.2.0
+ ---
+ # Catalog items
+-
++
+ `GET /catalog/items` returns the current catalog page.
+diff --git a/docs/site/api/catalog-status.md b/docs/site/api/catalog-status.md
+deleted file mode 100644
+index 8b58a29adf4c6f7217f228d53d9553ff7e300572..0000000000000000000000000000000000000000
+--- a/docs/site/api/catalog-status.md
++++ /dev/null
+@@ -1,7 +0,0 @@
+----
+-title: Catalog status
+-last_verified_version: unverified
+----
+-# Catalog status
+-
+-`GET /catalog/status` reports catalog availability.
+diff --git a/docs/site/api/catalog-status.md b/docs/site/api/catalog-status.md
+new file mode 120000
+index 0000000000000000000000000000000000000000..f8b885a19ad096da18f84b2df51bb39f90e4f823
+--- /dev/null
++++ b/docs/site/api/catalog-status.md
+@@ -0,0 +1 @@
++catalog-items.md
+diff --git a/docs/site/release-notes/index.md b/docs/site/release-notes/archive.md
+similarity index 100%
+rename from docs/site/release-notes/index.md
+rename to docs/site/release-notes/archive.md
+diff --git a/docs/site/release-notes/v1.2.0.md b/docs/site/release-notes/v1.2.0.md
+deleted file mode 100644
+index 88b6d2d7564702854660ac182304ecf81922340e..0000000000000000000000000000000000000000
+--- a/docs/site/release-notes/v1.2.0.md
++++ /dev/null
+@@ -1,3 +0,0 @@
+-# v1.2.0
+-
+-Catalog item and status endpoints are available.
+diff --git a/docs/site/.meta/audit/audit-v1.2.0.md b/docs/site/.meta/audit/audit-v1.2.0.md
+new file mode 120000
+index 0000000000000000000000000000000000000000..93e86510c67cd99f093b7fa6a66c3172d2476f7e
+--- /dev/null
++++ b/docs/site/.meta/audit/audit-v1.2.0.md
+@@ -0,0 +1 @@
++../../api/catalog-items.md
+diff --git a/docs/site/.meta/audit/unexpected-link.md b/docs/site/.meta/audit/unexpected-link.md
+new file mode 120000
+index 0000000000000000000000000000000000000000..98b952184b787d40a7da9ae677244c3f9dd88979
+--- /dev/null
++++ b/docs/site/.meta/audit/unexpected-link.md
+@@ -0,0 +1 @@
++../../../../tmp/audit.md

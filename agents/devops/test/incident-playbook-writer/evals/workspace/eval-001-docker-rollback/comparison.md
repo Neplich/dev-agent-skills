@@ -1,3 +1,80 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `devops`
+- Skill: `incident-playbook-writer`
+- Eval: `eval-001-docker-rollback`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a` from `agents/devops/test/incident-playbook-writer/evals/workspace/eval-001-docker-rollback`.
+- Fixture SHA-256: `f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a`
+- Prompt SHA-256: `f9cbfa543cb8f8fa6c3d3f1e68b0eaa1e627427917cfa9b9970e909922356673`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2ee427f056a8ac15cf9d4885d215c9ee8db1e2692beb4901545cf09914ace629`
+- Skill overlay SHA-256: `c4126e3ccb08175ab528f594300ee6ab6305ac16fe0fbdfca38a793465cbc175`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ef78ea6924e16ad4c29c668948468977eb007b3ff9fb4e26733caf7d332c338d`
+- Metadata SHA-256: `aaf6d95692337cdac99edc2200f96e32a7dbdc444f3865d1a29464638703fbd4`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_evidence_based_rollback` | PASS | with_skill delivery_snapshot contains deploy/ROLLBACK.md using the release record's last-known-healthy immutable SemVer tag, changing APP_IMAGE_TAG, pulling and recreating app, then checking status, logs, and /health. |
+| `creates_scoped_incident_response` | PASS | with_skill delivery_snapshot contains deploy/INCIDENT_RESPONSE.md covering P1/P2 15/30-minute response targets, #ops-incidents, incident commander, service owner, investigation, recovery, and closure checks. |
+| `avoids_unsupported_procedures` | PASS | The with_skill manuals explicitly prohibit database migration rollback, floating tags, deleting volumes, and unsupported actions; git_evidence shows no commits or executed rollback changes. |
+| `omits_unrequested_playbooks` | PASS | with_skill git_status and workspace_manifest show only deploy/ROLLBACK.md and deploy/INCIDENT_RESPONSE.md added; no TROUBLESHOOTING.md or ON_CALL.md. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9cbfa543cb8f8fa6c3d3f1e68b0eaa1e627427917cfa9b9970e909922356673; fixture_sha256=f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a; output_sha256=9acefd8d1a1d0bfa933a88b832be3cf59717daae27c65907b7a42f91c4645ad4; snapshot_sha256=24492482dc875c27bd418a63ca8c729443cd38cdbf5284811e1e390dfeda98eb
+- Behavior: Produced both requested manuals with Docker-contract-specific rollback, incident roles/timelines, recovery validation, and explicit exclusions.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9cbfa543cb8f8fa6c3d3f1e68b0eaa1e627427917cfa9b9970e909922356673; fixture_sha256=f3b605dee7b400a16cee380181367beb6aef0898c3081a8e6f89abd9e2c19e1a; output_sha256=fab50f34ef61556ab978e1cc2f8926cff055b5b16f930b3e02894953a3b509d4; snapshot_sha256=6a99c5a48df49e3de613c365a0af9a6983799ef025c386e954315b52c6a6aebb
+- Behavior: Fresh baseline also produced the two requested manuals and avoided execution; with_skill provided more detailed evidence-based procedures and scoped recovery guidance.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-docker-rollback
 
 ## Evaluation Target

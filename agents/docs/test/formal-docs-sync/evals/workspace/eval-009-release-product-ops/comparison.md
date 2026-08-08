@@ -1,3 +1,83 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-009-release-product-ops`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-009-release-product-ops`.
+- Fixture SHA-256: `969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3`
+- Prompt SHA-256: `8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `79b2ff102fa24fa224c9f24f44f3e648a1ae7eb9a7a10e639d8675db4454120a`
+- Skill overlay SHA-256: `52a3ba7ee2d9485acf003417b40e0d0ca2ab263cbadde98fac58250b6c2a9778`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `c9bcafbf3ecc8c0e0ac28908b463b075e9d1371a95444953a8afc3d41757e192`
+- Metadata SHA-256: `8deaf3ef06984a55739a36e203fd82989e4163ee4a9c31b6706c821440154ae8`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `limits_release_to_affected_product_ops` | FAIL | with_skill 的 git_status 含未跟踪的 docs/site/docs-test-gEpwSf/，超出两页及其映射的受影响集合。 |
+| `reconciles_confirmed_version_facts` | PASS | with_skill 两页均记录 25 和 v1.5.0；内容未延续 10/v1.4.0，也未写入 v1.5.1。fixture/release-evidence.md 与 release-test-results.md 支持这些事实。 |
+| `preserves_release_notes_surfaces` | PASS | with_skill 的 git_diff 仅涉及 product/dashboard-limits.md 和 ops/dashboard-runtime.md；未修改 Release Notes 正文、索引、元数据或导航。 |
+| `keeps_release_pages_unverified` | PASS | with_skill 两页均设置 last_verified_version: unverified，并明确等待 docs audit。 |
+| `runs_release_host_checks_and_handoffs` | FAIL | with_skill 仅报告 check:frontmatter、check:version 和单元测试；明确未能执行严格 affected 检查，未报告 docs/site/ 下 npm run test:docs 的通过、cwd/退出状态，也未提供 docs-agent:docs-audit 的 pre-tag handoff。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3; output_sha256=69385d6e5ec0bb569b27efb748c4079662759edfd53a332d9d3c159983b58ebb; snapshot_sha256=8b94b52ca575ee064ec84e3a75e32ebcd24001fa1e21befa2cc5d30875b3b67e
+- Behavior: 正确保留 unverified 状态并同步确认的版本事实，但产生额外未跟踪目录，且未完成 npm run test:docs 和 docs-audit pre-tag handoff。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=969fba1034afbbb0a1b1ea8386f5681318bff1a8e08153fcbc8b9cc14cb9dbd3; output_sha256=baddc0cdcc6aff45f2377160968be857c8a6d30b71e197696b82a156d1ae4fe2; snapshot_sha256=b5b9730e6e8ec886ecd894c48754cfd3e90d2cd8a7ed17f6f6d2773ce04a72d0
+- Behavior: 更新了两页并核对版本事实，但错误将两页盖章为 v1.5.0，且未完成所需宿主检查与 handoff。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 超出受影响文件集合。
+- with_skill 未执行并记录 npm run test:docs，也未完成 docs-agent:docs-audit handoff。
+- Next: 移除 docs/site/docs-test-gEpwSf/ 等额外产物。
+- Next: 在 docs/site/ 执行并记录 npm run test:docs 的命令、cwd 和退出状态，然后将完整 affected set 与 v1.5.0 确认来源 handoff 给 docs-agent:docs-audit。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Skill Eval Comparison
 
 ## Evaluation Target

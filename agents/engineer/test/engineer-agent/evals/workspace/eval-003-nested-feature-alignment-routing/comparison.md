@@ -1,3 +1,83 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-003-nested-feature-alignment-routing`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b` from `agents/engineer/test/engineer-agent/evals/workspace/eval-003-nested-feature-alignment-routing`.
+- Fixture SHA-256: `fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b`
+- Prompt SHA-256: `8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `83f220b482f661eab0884cc4770c84fbb545af7bd74199e0b9f4ba499020031a`
+- Skill overlay SHA-256: `94585e968fb2a0b5b29dd98429a0ee0f98e86ec73794257bcf099dd92d775e4c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6c7cc377f055d604b202feb40d5d2142b855d0368cb0621fa60f17937cec9872`
+- Metadata SHA-256: `cc9d0ea1f23672ef6b7d553053f01b0836b8fd341a707c6f88e853c6256fb3fb`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `resolves_nested_feature_path` | FAIL | with_skill 输出未明确识别 `chat-interface/history-search`，也未输出两份文档的完整路径；仅泛称 PRD/TRD。 |
+| `does_not_use_sibling_or_parent_only_path` | PASS | with_skill 输出未使用错误的并列路径或父级路径替代子功能文档。 |
+| `routes_requirement_change_to_pm` | FAIL | with_skill 建议更新 PRD 并同步 TRD，但未路由至 `pm-agent:idea-to-spec` 的 `existing-project-update`。 |
+| `routes_trd_mismatch_to_trd_gen` | NOT_EXERCISED | fixture 中 TRD 存在且为 Approved，`feature_path` 与 `related_prd` 均匹配，因此该条件未触发。 |
+| `does_not_execute_directly` | PASS | with_skill 明确表示本轮不会改代码或文档，且 raw git evidence 显示无变更、无计划文件、无测试执行结果。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9; fixture_sha256=fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b; output_sha256=22e38dcca5fa0129f746ceede862bcc6506ca22610be436ec60498142b0a6bb0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确保持只规划不执行并避免错误路径，但未在输出中给出嵌套路径，也未明确执行要求的 PM 路由。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9; fixture_sha256=fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b; output_sha256=a213964aff09cf4bf823bc98364680a73508a96a34958d7079219c4dd28763e6; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别并列出了正确的嵌套 PRD/TRD 路径，也保持只规划不执行，但未明确要求 PM 路由。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- resolves_nested_feature_path
+- routes_requirement_change_to_pm
+- Next: 输出中明确 `chat-interface/history-search` 以及 PRD/TRD 的完整路径。
+- Next: 在已批准排序预期发生变化时，明确路由至 `pm-agent:idea-to-spec` 的 `existing-project-update`，再同步 TRD。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-003-nested-feature-alignment-routing
 
 ## Evaluation Target

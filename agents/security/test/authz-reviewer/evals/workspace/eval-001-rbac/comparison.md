@@ -1,3 +1,142 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `authz-reviewer`
+- Eval: `eval-001-rbac`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a079595e48d457c66e6bfba203a327a4dd2cee76937828205dc7d5ae1bf6d9ea` from `agents/security/test/authz-reviewer/evals/workspace/eval-001-rbac`.
+- Fixture SHA-256: `a079595e48d457c66e6bfba203a327a4dd2cee76937828205dc7d5ae1bf6d9ea`
+- Prompt SHA-256: `1a600a6512e0923d93e2001890b6b0e358c2e4b71aa4c63f0e217fc733bd66d6`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d2e4aec7daf8a1a3d4dd9129eb3c1a3dff6fda1cedda3583e17db51f3c77b01c`
+- Skill overlay SHA-256: `93997287763bb5908bc9735f09115a4d8477c3badf934fbe6f43970bb3ecd156`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `235137f94204f51e6c45d33016dc89d9789a6db39caeb6f905a7bece723a5a15`
+- Metadata SHA-256: `df9bade135aeb250331ea2ef878f13f4c9a4066b16cd28748dca8a45cce63fa2`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `maps_expected_and_actual_access` | PASS | with_skill 对照 PRD 权限矩阵与代码，明确 guest/user 禁止、admin 允许读取审计日志，并分别描述预期认证链路和实际 x-user-role -> 授权 -> 日志路径。 |
+| `finds_client_controlled_role_bypass` | PASS | with_skill 引用 src/access/admin-policy.js:1-3 和 5-10，说明客户端可控的 x-user-role: admin 可使任意请求获得 200 并读取完整审计日志。 |
+| `states_evidence_impact_and_limits` | PASS | with_skill 明确影响管理操作审计数据，后果包括敏感信息泄露、管理员身份伪造和审计失真，严重度为 High；同时将 session/token/JWT、用户角色管理及其他 /admin/* 路由列为未发现或未验证。 |
+| `proposes_trusted_identity_fix_and_tests` | PASS | with_skill 建议使用服务端验证的 session 或签名 token 解析 request.auth，并提出覆盖未认证、guest、user、admin、伪造或冲突 header、query/body 角色值及所有管理路由的回归测试。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1a600a6512e0923d93e2001890b6b0e358c2e4b71aa4c63f0e217fc733bd66d6; fixture_sha256=a079595e48d457c66e6bfba203a327a4dd2cee76937828205dc7d5ae1bf6d9ea; output_sha256=0b5d493739d25fb1db69096dba9679e3b05831f0ec9b2aac9eb9f2aa08a07d29; snapshot_sha256=f096b955fc64c57f28ada02d80211e298fc86ded13d21815268cbce05faaa233
+- Behavior: 完整覆盖四项要求，提供了可定位证据、预期与实际边界、风险限制、可信身份修复及系统化回归验证方案。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1a600a6512e0923d93e2001890b6b0e358c2e4b71aa4c63f0e217fc733bd66d6; fixture_sha256=a079595e48d457c66e6bfba203a327a4dd2cee76937828205dc7d5ae1bf6d9ea; output_sha256=4327f46bbfa478ba665cfdc4b7dcd9eb4c9bf41b5a70427f0ab5ff4436d1fde8; snapshot_sha256=786ea928c95229fd32c7b993d12b104b1560a1b38a38c766e65a5a603a0834bc
+- Behavior: 识别了客户端角色头越权、影响范围限制、可信身份修复和基本回归建议，但交付报告内容更详尽，主要作为基线对照。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `authz-reviewer`
+- Eval: `eval-001-rbac`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a079595e48d457c66e6bfba203a327a4dd2cee76937828205dc7d5ae1bf6d9ea` from `agents/security/test/authz-reviewer/evals/workspace/eval-001-rbac`.
+- Fixture SHA-256: `a079595e48d457c66e6bfba203a327a4dd2cee76937828205dc7d5ae1bf6d9ea`
+- Prompt SHA-256: `1a600a6512e0923d93e2001890b6b0e358c2e4b71aa4c63f0e217fc733bd66d6`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d2e4aec7daf8a1a3d4dd9129eb3c1a3dff6fda1cedda3583e17db51f3c77b01c`
+- Skill overlay SHA-256: `93997287763bb5908bc9735f09115a4d8477c3badf934fbe6f43970bb3ecd156`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `235137f94204f51e6c45d33016dc89d9789a6db39caeb6f905a7bece723a5a15`
+- Metadata SHA-256: `df9bade135aeb250331ea2ef878f13f4c9a4066b16cd28748dca8a45cce63fa2`
+- Executor SHA-256: `c5ece8c6632badb84ff79ee67e4bea96a1d1db7e8afd66de87486af43e8fdd16`
+- Runtime SHA-256: `5c4532cfa9ada91c16b3ae2d69922296ddc7c2c1c61841e01bc9c804be1b85fe`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `maps_expected_and_actual_access` | PASS | with_skill 报告以权限矩阵对照 PRD 预期与当前代码行为，明确 guest/user 禁止、admin 允许，并指出实际仅依赖请求头。 |
+| `finds_client_controlled_role_bypass` | PASS | 报告引用 src/access/admin-policy.js:1-3 的 x-user-role 比较及 :5-11 的 200/完整 auditLog 返回，说明任意 guest/user 可伪造 admin。 |
+| `states_evidence_impact_and_limits` | PASS | 报告说明管理端审计数据泄露及潜在高权限操作影响，评级 High，并明确 session/token、认证链路、用户角色管理接口和其他 /admin/* 路由无法验证。 |
+| `proposes_trusted_identity_fix_and_tests` | PASS | 报告建议使用服务端验证的 session/token 和 authenticated principal，并覆盖未认证、guest、user、admin 及伪造 x-user-role header 的回归测试。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1a600a6512e0923d93e2001890b6b0e358c2e4b71aa4c63f0e217fc733bd66d6; fixture_sha256=a079595e48d457c66e6bfba203a327a4dd2cee76937828205dc7d5ae1bf6d9ea; snapshot_sha256=ff5ae76fa0424ffa94b4e5d9d2a850a2ce01568b4ba001533b205c3a0e9c194d
+- Behavior: 形成结构化授权审查，完整对照权限边界，定位具体代码风险，说明影响与审查限制，并提出可信身份修复和全面回归验证。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1a600a6512e0923d93e2001890b6b0e358c2e4b71aa4c63f0e217fc733bd66d6; fixture_sha256=a079595e48d457c66e6bfba203a327a4dd2cee76937828205dc7d5ae1bf6d9ea; snapshot_sha256=263fb8ff3e1923c05a78abc9686f46ec8198d925bc0b6fb173289a16f1504e26
+- Behavior: 已识别客户端角色头越权、影响与基本修复建议；覆盖度略低于 with_skill 报告。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-rbac
 
 ## Evaluation Target

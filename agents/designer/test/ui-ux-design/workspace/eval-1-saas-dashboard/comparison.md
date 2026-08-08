@@ -1,3 +1,204 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-001-saas-dashboard`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532` from `agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard`.
+- Fixture SHA-256: `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532`
+- Prompt SHA-256: `f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `78da31c45df217a9e90f29e80573d99066d6964c62a108fc4cb609c96341db51`
+- Skill overlay SHA-256: `b9db71f44c6cca6e399d27edcc8fe58463a8d7a3c9a80f1728f1e7571f16e7df`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `9dfc3c0232e65b50d6964b6b208307eca95842562a8965fcb0999b7dc0293b57`
+- Metadata SHA-256: `4806c6c3fd6574e59fbeca624e1db80b0abef304792432263a972f95ebcfa4e8`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_design_spec` | PASS | with_skill 交付快照确认生成 docs/design/saas-dashboard/ui-ux-spec.md，路径与 PRD 的 saas-dashboard 一致。 |
+| `covers_user_flows_and_states` | PASS | 规格包含用户旅程、页面布局、组件清单、交互行为、空/加载/错误状态，以及桌面和平板响应式规则。 |
+| `preserves_design_boundary` | PASS | with_skill Git 证据仅显示新增 docs/design/saas-dashboard/ui-ux-spec.md，未修改源码、测试、构建或部署文件，且无新提交。 |
+| `hands_off_to_engineering` | PASS | 文档状态标为 Draft for Engineering，并说明设计建议可由工程映射到设计系统；输出未在未被要求时点名 engineer-agent。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=3f52de88e51f6ce9c36716efd71c1624e3b5b2ad0b03dfbacd0c9d3a85203864; snapshot_sha256=47d07187cabaaa7b462f5a8fc5c960da5e0ad0bedabbdbf1f7687fc6dc887ddd
+- Behavior: 在正确路径生成了 UI/UX 设计规格，覆盖需求转化、交互状态、响应式行为和工程交接；Git 证据显示仅新增设计文档。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=e273d70b6f6b5086d517d5b95d76562d4bedf836e828d5d4a1ac426409127574; snapshot_sha256=6df6bfdd08cae0d28fd0d890d7ff7cf04bfcc67e0a84c9926fb823186b6e0df0
+- Behavior: 产出了 docs/pm/saas-dashboard 下的 HTML/CSS/JS 原型及 DESIGN.md，未生成要求的设计规格文件，并新增源码类文件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-001-saas-dashboard`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532` from `agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard`.
+- Fixture SHA-256: `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532`
+- Prompt SHA-256: `f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `78da31c45df217a9e90f29e80573d99066d6964c62a108fc4cb609c96341db51`
+- Skill overlay SHA-256: `b9db71f44c6cca6e399d27edcc8fe58463a8d7a3c9a80f1728f1e7571f16e7df`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `9dfc3c0232e65b50d6964b6b208307eca95842562a8965fcb0999b7dc0293b57`
+- Metadata SHA-256: `4806c6c3fd6574e59fbeca624e1db80b0abef304792432263a972f95ebcfa4e8`
+- Executor SHA-256: `c5ece8c6632badb84ff79ee67e4bea96a1d1db7e8afd66de87486af43e8fdd16`
+- Runtime SHA-256: `5c4532cfa9ada91c16b3ae2d69922296ddc7c2c1c61841e01bc9c804be1b85fe`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_design_spec` | PASS | with_skill delivery_snapshot contains docs/design/saas-dashboard/ui-ux-spec.md, matching the required path. |
+| `covers_user_flows_and_states` | PASS | The specification includes user journeys, page layouts and ASCII prototypes, component lists, interaction behaviors, loading/empty/error/no-results states, and desktop/tablet responsive behavior. |
+| `preserves_design_boundary` | PASS | with_skill git_status shows only ?? docs/design/ and git_diff is empty; no source, test, build, or deployment files are reported as modified. |
+| `hands_off_to_engineering` | PASS | The specification frontmatter declares status "Ready for engineering handoff"; the output states the design document was delivered and engineering code was not modified. No engineer-agent mention was required. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; snapshot_sha256=f0c9e51436a4c6e8fe740f474aaa49d8f278cc0d0319f1ecaa63ed1f3ef96b07
+- Behavior: Produced the required UI/UX specification at docs/design/saas-dashboard/ui-ux-spec.md with broad flows, layouts, components, states, responsive behavior, and an explicit engineering-handoff status without modifying engineering code.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; snapshot_sha256=e1e853615802e1a149cb227b8446cc035c975278feb78122b461e8b8d4740ba9
+- Behavior: Produced a design document at docs/pm/saas-dashboard/DESIGN.md, outside the required docs/design/saas-dashboard/ui-ux-spec.md path, while otherwise describing broad design coverage and no engineering-code changes.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-001-saas-dashboard`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532` from `agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard`.
+- Fixture SHA-256: `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532`
+- Prompt SHA-256: `f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `78da31c45df217a9e90f29e80573d99066d6964c62a108fc4cb609c96341db51`
+- Skill overlay SHA-256: `b9db71f44c6cca6e399d27edcc8fe58463a8d7a3c9a80f1728f1e7571f16e7df`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `2dcf9762dcc78b60534bd1c72c61d212f33e43fca9187592aa721cb5da8f7b79`
+- Metadata SHA-256: `4806c6c3fd6574e59fbeca624e1db80b0abef304792432263a972f95ebcfa4e8`
+- Executor SHA-256: `09b0b5b509e8182c242c6f9481313487eabf12333793e0753966622eef8f6baa`
+- Runtime SHA-256: `5c4532cfa9ada91c16b3ae2d69922296ddc7c2c1c61841e01bc9c804be1b85fe`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_design_spec` | PASS | with_skill 的 raw evidence 显示已生成 docs/design/saas-dashboard/ui-ux-spec.md；without_skill 仅生成 docs/pm/saas-dashboard/DESIGN.md，路径不符合要求。 |
+| `covers_user_flows_and_states` | PASS | with_skill 规格包含用户旅程、页面布局、组件清单、交互状态、错误/空态/加载态及 Desktop、Tablet 响应式规范；without_skill 覆盖部分布局和交互，但缺少完整用户旅程与状态规范。 |
+| `preserves_design_boundary` | PASS | with_skill 的 git_status 仅为 ?? docs/design/，raw evidence 未显示源码、测试、构建或部署文件修改；without_skill 修改并实现了 app.js、index.html、styles.css，违反设计边界。 |
+| `hands_off_to_engineering` | FAIL | 两份 candidate output 均未明确说明由 engineer-agent 承接实现；with_skill 仅标注“Draft for engineering handoff”。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; snapshot_sha256=b80ebaae5d25589f618a3431ffb6d73ab2f970437612e1877a7b599e3c392ea9
+- Behavior: 按要求生成了完整 UI/UX 设计规格并保持设计边界，但未明确指定 engineer-agent 承接。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; snapshot_sha256=c8c3e2e88a0e4479c5f8016a61fc9cafce0f8134253257c4c7061f3a4725908a
+- Behavior: 未按要求路径生成设计规格；实现了原型源码并修改源码文件；未明确 engineer-agent 交接。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- 两份候选输出都没有明确由 engineer-agent 承接实现，导致 hands_off_to_engineering 失败。
+- Next: 在设计交付中明确写出由 engineer-agent 承接实现。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-saas-dashboard
 
 ## Evaluation Target

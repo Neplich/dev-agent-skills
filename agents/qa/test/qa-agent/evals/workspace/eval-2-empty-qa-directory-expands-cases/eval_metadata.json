@@ -2,7 +2,6 @@
   "eval_id": "eval-002-empty-qa-directory-expands-cases",
   "eval_name": "empty-qa-directory-expands-cases",
   "workspace_root": "agents/qa/test/qa-agent/evals/workspace/eval-2-empty-qa-directory-expands-cases",
-  "prompt": "用户说：请对 profile-settings 做一次 E2E QA。docs/qa/e2e/account/profile-settings/profile-form/ 已存在，但 TEST_SUITE.md、FLOW_INDEX.md 和 cases/ 里没有测试用例。我确认这个功能有新更新，请主动查看项目文件并完成验证。",
   "fixture_context": [
     "docs/qa/e2e/account/profile-settings/profile-form/TEST_SUITE.md",
     "docs/qa/e2e/account/profile-settings/profile-form/FLOW_INDEX.md",
@@ -10,5 +9,18 @@
     "src/pages/ProfileSettingsPage.tsx",
     "src/components/ProfileSettingsForm.tsx",
     "environment/qa-env.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/qa/skills/spec-based-tester",
+    "agents/qa/skills/exploratory-tester"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

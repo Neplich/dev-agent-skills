@@ -46,7 +46,33 @@
           "description": "新页面 visibility 默认收紧为 internal",
           "text": "候选与映射中的新增页面 visibility 收紧为 `internal`（宿主未明确要求 `both` 或 `public` 时），不为满足导航或链接检查而放宽为 `both`；解释收紧依据与例外。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "负责梳理遗留 API 文档的技术负责人",
+        "situation": "现有系统有 Identity、Billing 等多块 API，文档站只覆盖少量旧页面；本轮只获准先盘点并提出一个小批次。",
+        "trigger": "维护者希望从高使用量的会话接口开始回填，但还没确认具体页面树。",
+        "goal": "给出证据充分、规模有限的首批 API 文档范围，让维护者能做明确取舍。",
+        "materials": [
+          "pm-handoff.md",
+          "backfill-request.md",
+          "docs/pm/feature-catalog.md",
+          "src/api/identity/sessions/",
+          "src/api/billing/",
+          "tests/contract/",
+          "docs/site/standards/",
+          "docs/site/api/index.md",
+          "docs/site/api/search.md"
+        ],
+        "constraints": [
+          "盘点阶段不得改动站点文件",
+          "首批只覆盖一个可独立验收的功能域并说明排除项"
+        ],
+        "success_criteria": [
+          "候选树能从功能目录追溯到路由和契约测试",
+          "Billing 与已有稳定页面明确留在批次外",
+          "维护者可以按节点确认或调整范围"
+        ]
+      }
     },
     {
       "id": "eval-002-plan-backfill-batches",
@@ -126,13 +152,44 @@
           "description": "缺少确认版本时阻塞 pre-tag 审计",
           "text": "`docs-agent:docs-audit` handoff 列出完整 affected set、证据、排除项和已覆盖批次；因 fixture 没有维护者确认的 `target_release_version`，必须明确标为 blocked 并等待该确认，不得声称 pre-tag audit ready、可直接盖章或从分支/ref 推断版本。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "协调产品与 API 文档回填的内容负责人",
+        "situation": "workspace-management 与 analytics 的产品范围已确认，Accounts API 仍只有建议；现有 Billing 文档必须保留。",
+        "trigger": "团队准备并行推进已确认产品页面和下一批 API 规划。",
+        "goal": "完成两块产品功能的分层文档，同时为 Accounts 提供不落盘的候选范围。",
+        "materials": [
+          "docs/pm/feature-catalog.md",
+          "backfill-confirmation.md",
+          "src/api/accounts/routes.py",
+          "src/api/accounts/schemas.py",
+          "tests/contract/test_accounts_api.py",
+          "src/api/billing/routes.py",
+          "src/product/workspace_management/invitations/member_invitations.py",
+          "src/product/workspace_management/invitations/invitation_acceptance.py",
+          "src/product/analytics/dashboard.py",
+          "tests/acceptance/test_product_tasks.py",
+          "docs/site/api/index.md",
+          "docs/site/api/billing/index.md",
+          "docs/site/api/billing/list-invoices.md",
+          "docs/site/"
+        ],
+        "constraints": [
+          "不得把未确认的 Accounts 候选写入站点",
+          "既有 Billing 子树、链接和映射必须保持有效"
+        ],
+        "success_criteria": [
+          "产品任务能从根索引逐层找到",
+          "每个行为页都有实现与验收证据",
+          "Accounts 候选与已落地内容在结果中清楚区分"
+        ]
+      }
     },
     {
       "id": "eval-003-design-gate-incomplete-scope",
       "name": "Design 收口门禁阻断未完成范围",
       "description": "验证实施计划仍有本次范围内未完成条目时，design 正文与映射保持原子性零变化。",
-      "prompt": "按 `pm-handoff.md` 请求同步 `preferences-summary` feature 的 `docs/site/design/**`。请先核验同一 feature_path 的完成态证据；本轮没有额外范围确认。",
+      "prompt": "按 `pm-handoff.md` 请求同步 `preferences-summary` 功能的 `docs/site/design/**`。请先核验这项功能的完成态材料；本轮没有额外范围确认。",
       "expected_output": "识别实施计划中仍属本次范围的 TODO 条目并 blocked，指名 owner 与下一步；不修改 design 页面或对应 change-map 条目，也不写暂定或未来态设计。",
       "workspace": "workspace/eval-003-design-gate-incomplete-scope",
       "assertions": [
@@ -151,13 +208,39 @@
           "description": "不生成暂定或未来态设计正文",
           "text": "blocked 状态下不写 provisional、tentative、planned、future-state 或部分 design 正文，不把尚未实现的紧凑摘要描述成 current state。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "维护 preferences-summary 设计文档的工程负责人",
+        "situation": "实现计划仍有属于本功能的 TODO 条目，但有人请求把设计页更新成完成后的当前状态。",
+        "trigger": "版本收口前需要避免正式站点提前宣称未交付能力。",
+        "goal": "确认当前是否具备同步设计页的条件，并指出未完成工作由谁补齐。",
+        "materials": [
+          "pm-handoff.md",
+          "docs/pm/preferences-summary/PRD.md",
+          "docs/engineer/preferences-summary/TRD.md",
+          "docs/engineer/preferences-summary/IMPLEMENTATION_PLAN.md",
+          "delivery-evidence/actual-diff.patch",
+          "delivery-evidence/test-results.md",
+          "src/preferences_summary.py",
+          "docs/site/design/preferences-summary.md",
+          "docs/site/standards/change-map.yaml"
+        ],
+        "constraints": [
+          "只以同一功能路径下的已完成事实为准",
+          "仍有范围内 TODO 时不得改设计页或映射"
+        ],
+        "success_criteria": [
+          "未完成计划项被具体指出",
+          "下一责任人和解锁条件明确",
+          "正式设计页保持现有内容"
+        ]
+      }
     },
     {
       "id": "eval-004-design-gate-failing-tests",
       "name": "Design 收口门禁阻断失败测试",
       "description": "验证计划范围与代码 diff 完整但要求测试失败时，design 正文与映射保持原子性零变化。",
-      "prompt": "请根据 `pm-handoff.md` 为 `preferences-summary` 同步设计文档，并结合计划、代码、diff 与 `.eval/test-results.md` 核对完成情况。本轮没有额外范围确认。",
+      "prompt": "请根据 `pm-handoff.md` 为 `preferences-summary` 同步设计文档，并结合计划、代码、diff 与 `delivery-evidence/test-results.md` 核对完成情况。本轮没有额外范围确认。",
       "expected_output": "识别具名失败测试并 blocked，说明补测解锁路径；不修改 design 页面或对应 change-map 条目。",
       "workspace": "workspace/eval-004-design-gate-failing-tests",
       "assertions": [
@@ -176,13 +259,39 @@
           "description": "指名失败证据与解锁路径",
           "text": "指名失败测试、当前 owner 为 Engineer / test owner，并说明修复实现或测试后重新执行该计划要求测试、取得全通过记录，再重新进入 design 收口门禁。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "负责 preferences-summary 收口的技术写作者",
+        "situation": "计划条目看似完成，但回归结果中仍有一个具名失败测试。",
+        "trigger": "团队想在修复测试前先更新设计文档以赶发布节奏。",
+        "goal": "判断失败是否阻止设计当前事实同步，并给出最短的解锁路径。",
+        "materials": [
+          "pm-handoff.md",
+          "docs/pm/preferences-summary/PRD.md",
+          "docs/engineer/preferences-summary/TRD.md",
+          "docs/engineer/preferences-summary/IMPLEMENTATION_PLAN.md",
+          "delivery-evidence/actual-diff.patch",
+          "delivery-evidence/test-results.md",
+          "src/preferences_summary.py",
+          "docs/site/design/preferences-summary.md",
+          "docs/site/standards/change-map.yaml"
+        ],
+        "constraints": [
+          "不能用计划完成标记覆盖真实失败结果",
+          "测试未通过时不写设计页面和 change-map"
+        ],
+        "success_criteria": [
+          "报告点名失败用例及影响",
+          "修复和重跑要求可执行",
+          "站点不会呈现未证实的完成状态"
+        ]
+      }
     },
     {
       "id": "eval-005-design-gate-mismatched-evidence",
       "name": "Design 收口门禁阻断路径证据不一致",
       "description": "验证 PRD/TRD metadata 与请求 feature_path 不一致时，在 design 写入前路由回对应 owner。",
-      "prompt": "按 `pm-handoff.md` 请求同步 `preferences-summary` feature 的 `docs/site/design/**`。请先核验 PRD、TRD、计划、代码、diff 与测试是否都属于同一 feature_path；本轮没有额外范围确认。",
+      "prompt": "按 `pm-handoff.md` 请求同步 `preferences-summary` 功能的 `docs/site/design/**`。请先核验 PRD、TRD、计划、代码、diff 与测试是否都属于这项功能；本轮没有额外范围确认。",
       "expected_output": "识别请求路径与 PRD/TRD metadata 的 feature_path 冲突并 blocked，路由 PM 与 Engineer owner 补齐证据；design 页面与映射零变化。",
       "workspace": "workspace/eval-005-design-gate-mismatched-evidence",
       "assertions": [
@@ -201,13 +310,39 @@
           "description": "回对应 owner 修正证据链",
           "text": "将 PRD feature_path 归属冲突路由给 PM owner，将 TRD 同路径与影响域对齐路由给 Engineer / trd-gen；要求二者与请求和计划统一后再重试，不自行猜测正确路径。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "审查 preferences-summary 文档证据链的维护者",
+        "situation": "请求路径指向 preferences-summary，但 PRD/TRD 元数据属于另一个功能路径，代码与测试无法形成单一事实链。",
+        "trigger": "内容同步即将开始，负责人需要先排除拿错材料的风险。",
+        "goal": "确认材料是否属于同一功能，并把文档或工程缺口交回正确负责人。",
+        "materials": [
+          "pm-handoff.md",
+          "docs/pm/preferences-summary/PRD.md",
+          "docs/engineer/preferences-summary/TRD.md",
+          "docs/engineer/preferences-summary/IMPLEMENTATION_PLAN.md",
+          "delivery-evidence/actual-diff.patch",
+          "delivery-evidence/test-results.md",
+          "src/preferences_summary.py",
+          "docs/site/design/preferences-summary.md",
+          "docs/site/standards/change-map.yaml"
+        ],
+        "constraints": [
+          "不得拼接不同 feature_path 的证据",
+          "路径冲突消除前站点和映射保持零变化"
+        ],
+        "success_criteria": [
+          "冲突的路径和文档元数据被点明",
+          "产品与工程负责人分别知道需补什么",
+          "错误材料不会进入正式设计页"
+        ]
+      }
     },
     {
       "id": "eval-006-design-gate-all-passed",
       "name": "Design 收口门禁通过后停在范围确认",
       "description": "验证前六项完成态证据齐备后，仍只展示候选 design 范围并等待维护者确认。",
-      "prompt": "按 `pm-handoff.md` 请求同步 `preferences-summary` feature 的 `docs/site/design/**`。请核验前六项完成态证据并提出候选范围；本轮没有授权写入，也没有替维护者确认该候选范围。",
+      "prompt": "`preferences-summary` 的 PRD、TRD、实施计划、代码变更和测试材料都在工作区。请先列出准备同步的设计页面及其依据，等我确认后再修改站点。",
       "expected_output": "确认前六项证据均通过，展示候选页面、代码范围、证据、排除项与未决项，停在维护者确认；候选正文只描述代码和通过测试证明的 current state。",
       "workspace": "workspace/eval-006-design-gate-all-passed",
       "assertions": [
@@ -226,7 +361,33 @@
           "description": "候选内容仅陈述 current state",
           "text": "候选设计内容只陈述代码与通过测试共同证明的当前行为：按固定字段顺序返回非空偏好摘要并省略空值；不加入未来态、实施过程或无证据声明。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "准备确认设计文档范围的维护者",
+        "situation": "PRD、TRD、实施计划、代码、diff 和测试都指向同一已完成功能，但候选页面范围尚未由维护者确认。",
+        "trigger": "实现收口完成后，需要先看清站点将改哪些页面再授权写入。",
+        "goal": "获得一份只描述已交付事实的候选范围，以便确认下一步文档修改。",
+        "materials": [
+          "pm-handoff.md",
+          "docs/pm/preferences-summary/PRD.md",
+          "docs/engineer/preferences-summary/TRD.md",
+          "docs/engineer/preferences-summary/IMPLEMENTATION_PLAN.md",
+          "delivery-evidence/actual-diff.patch",
+          "delivery-evidence/test-results.md",
+          "src/preferences_summary.py",
+          "docs/site/design/preferences-summary.md",
+          "docs/site/standards/change-map.yaml"
+        ],
+        "constraints": [
+          "本轮没有写入授权",
+          "候选内容不得包含计划态或未来态设计"
+        ],
+        "success_criteria": [
+          "六类完成证据都有明确结论",
+          "候选页面、代码范围和排除项清楚",
+          "站点与映射在确认前保持不变"
+        ]
+      }
     },
     {
       "id": "eval-007-feature-database-design",
@@ -296,7 +457,37 @@
           "description": "真实执行宿主检查并 handoff `docs-agent:docs-audit`",
           "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`、`npm run build:public` 和 `npm run build:internal`；按 visibility 核对 internal 递归导航包含全部嵌套 Database/Design 页、public 导航正确排除 internal Database/Design 页，并验证全部父子、关系、组件、流程和权威链接均可解析；随后把完整 affected set handoff 给 `docs-agent:docs-audit`。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "交付 workspace-access 正式文档的技术写作者",
+        "situation": "workspace-access 的数据模型、邀请流程和审计边界已经实现并通过测试；数据库与设计页面范围也已确认。",
+        "trigger": "功能准备交付给集成团队，需要站点提供可导航的当前架构说明。",
+        "goal": "让读者能从数据库结构和设计领域两条路径理解 workspace-access 的已实现关系与边界。",
+        "materials": [
+          "pm-handoff.md",
+          "candidate-scope-confirmation.md",
+          "design-scope-confirmation.md",
+          "docs/pm/workspace-access/PRD.md",
+          "docs/engineer/workspace-access/",
+          "delivery-evidence/test-results.md",
+          "src/workspace_access/",
+          "src/audit/",
+          "tests/test_workspace_access.py",
+          "docs/site/api/workspace-access.md",
+          "docs/site/api/workspace-invitations.md",
+          "docs/site/database/workspace-access.md",
+          "docs/site/"
+        ],
+        "constraints": [
+          "数据库事实以 schema 和数据实现为权威",
+          "设计页不得取代 API 或数据库页面的事实归属"
+        ],
+        "success_criteria": [
+          "实体、关系、组件和流程可双向导航",
+          "现有稳定页面与新增层级保持一致",
+          "站点检查通过并可交给审计人员"
+        ]
+      }
     },
     {
       "id": "eval-008-deployment-ops-upgrade",
@@ -309,7 +500,7 @@
         {
           "id": "uses_executed_deployment_evidence",
           "description": "只消费已确认且执行过的部署证据",
-          "text": "以 `deploy/compose.yaml`、`.eval/deployment-results.md` 中的命令/退出状态/健康结果和环境差异为事实源，不能仅凭 TRD 或 deployment plan 宣称可运行。"
+          "text": "以 `deploy/compose.yaml`、`deployment-evidence/deployment-results.md` 中的命令/退出状态/健康结果和环境差异为事实源，不能仅凭 TRD 或 deployment plan 宣称可运行。"
         },
         {
           "id": "writes_current_ops_upgrade_rollback",
@@ -331,7 +522,31 @@
           "description": "真实通过宿主检查并 handoff",
           "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，准确记录结果，然后 handoff `docs-agent:docs-audit`，不执行部署。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "负责 AI Hub 运行手册的运维文档工程师",
+        "situation": "Compose 启动、升级、健康检查和回滚已经实际执行；Kubernetes 仍只存在计划，没有落地结果。",
+        "trigger": "Docker 交付路径已稳定，值班团队需要可依赖的当前操作手册。",
+        "goal": "把已验证的 Docker 运行事实同步到运维页面，同时清楚隔离尚未实现的 Kubernetes 计划。",
+        "materials": [
+          "deployment-handoff.md",
+          "docs/engineer/ai-hub-runtime/TRD.md",
+          ".env.example",
+          "deploy/compose.yaml",
+          "deployment-plan.md",
+          "deployment-evidence/deployment-results.md",
+          "docs/site/"
+        ],
+        "constraints": [
+          "只有执行过的命令和结果可以写成当前事实",
+          "不得为未执行的 Kubernetes 或 Helm 创建可操作指引"
+        ],
+        "success_criteria": [
+          "值班人员能找到环境参数、镜像来源和升级回滚步骤",
+          "计划态内容被明确排除",
+          "页面保持待审计并通过站点检查"
+        ]
+      }
     },
     {
       "id": "eval-009-release-product-ops",
@@ -366,7 +581,30 @@
           "description": "真实通过宿主检查并 handoff",
           "text": "在 `docs/site/` 真实执行并通过 `npm run test:docs`，记录命令/cwd/退出状态，随后将两页完整 affected set、维护者确认的 `target_release_version: v1.5.0` 及确认来源 handoff `docs-agent:docs-audit` 进入 pre-tag；不得从分支名或 Git ref 推测版本。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "负责 v1.5.0 当前事实同步的发布写作者",
+        "situation": "该版本只改变 dashboard 限额和 runtime 配置，站内版本说明由另一条发布流程负责。",
+        "trigger": "发版审计前需要让产品与运维页面反映真实上线行为。",
+        "goal": "更新受影响的产品和运行页面，同时避免碰触版本说明及其登记面。",
+        "materials": [
+          "release-handoff.md",
+          "release-evidence.md",
+          "src/product/dashboard_limits.ts",
+          "deploy/dashboard.env",
+          "release-evidence/release-test-results.md",
+          "docs/site/"
+        ],
+        "constraints": [
+          "只写 v1.5.0 已确认实现、配置和测试证明的事实",
+          "Release Notes 页面、索引、元数据和导航均不在本轮范围"
+        ],
+        "success_criteria": [
+          "dashboard 与 runtime 页面准确描述新行为",
+          "映射只覆盖本次受影响代码",
+          "版本说明相关文件保持不变"
+        ]
+      }
     },
     {
       "id": "eval-010-release-notes-boundary",
@@ -396,7 +634,26 @@
           "description": "站内交接不包含外部发布执行",
           "text": "输出不创建或移动 tag，不生成、创建或发布 GitHub Release，也不把外部发布授权混入站内文档交接。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "收到混合文档请求的内容维护者",
+        "situation": "请求要求生成面向用户的版本更新页并登记版本，这属于一次发布说明交付，而不是常规当前事实同步。",
+        "trigger": "发布负责人要求现在直接完成，但当前执行者只负责常规正式文档同步。",
+        "goal": "把完整版本材料交给正确的站内发布说明负责人，避免越权或丢失上下文。",
+        "materials": [
+          "release-request.md",
+          "docs/site/"
+        ],
+        "constraints": [
+          "不得因用户催促而修改发布说明页面或版本元数据",
+          "交接必须保留版本、范围、证据和目标站点"
+        ],
+        "success_criteria": [
+          "站点在交接前没有变化",
+          "接收方能直接理解所需版本说明结果",
+          "外部 tag 与 GitHub Release 不被执行"
+        ]
+      }
     },
     {
       "id": "eval-011-deployment-three-class-backfill",
@@ -431,7 +688,34 @@
           "description": "嵌套导航与链接通过宿主检查",
           "text": "在 `docs/site/` 运行并通过 `npm run test:docs`，确认 public/internal 递归导航与内部链接覆盖所有嵌套页面，保持页面 `last_verified_version: unverified` 后 handoff `docs-agent:docs-audit`。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "为遗留服务补齐部署文档的运维写作者",
+        "situation": "服务同时支持源码开发、Docker Compose 和 Kubernetes/Helm，三条路径都有配置与执行记录，但旧站点没有结构化运行手册。",
+        "trigger": "新值班轮次开始前，需要把三类部署方式拆成互不混用的权威页面。",
+        "goal": "建立共享参数参考和三套独立部署入口，让使用者能按环境选择正确步骤。",
+        "materials": [
+          "backfill-handoff.md",
+          ".env.example",
+          "src/settings.py",
+          "tests/test_settings.py",
+          "scripts/dev/start.sh",
+          "Dockerfile",
+          "deploy/docker/compose.yaml",
+          "deploy/helm/app/",
+          "deployment-evidence/",
+          "docs/site/"
+        ],
+        "constraints": [
+          "每条命令必须来自对应类别的真实配置和结果",
+          "共享参数只写跨事实源核对一致的值"
+        ],
+        "success_criteria": [
+          "三类部署均有独立导航和权威子页",
+          "环境参数、镜像与 Chart 信息可追溯",
+          "页面之间不复制或混用类别命令"
+        ]
+      }
     },
     {
       "id": "eval-012-deployment-class-evidence-gap",
@@ -461,7 +745,33 @@
           "description": "Docker 与 Development 不吸收 Helm 内容",
           "text": "Development 与 Docker 页面分别维护自己的前置、命令、成功标准、回滚和故障处理，不把 Kubernetes 计划塞入 Docker 页面，也不从同名镜像 tag 推断集群来源。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "补齐遗留部署文档的运维负责人",
+        "situation": "Development 与 Docker 有完整配置和执行结果，Kubernetes 只有未执行计划，缺少 Chart、values、权限和验证记录。",
+        "trigger": "团队希望先交付可用的本地和容器文档，同时记录集群路径缺口。",
+        "goal": "完成证据充分的两类文档，并明确 Kubernetes 需要哪些材料后才能继续。",
+        "materials": [
+          "backfill-handoff.md",
+          ".env.example",
+          "src/settings.py",
+          "tests/test_settings.py",
+          "scripts/dev/start.sh",
+          "deploy/docker/compose.yaml",
+          "kubernetes-plan.md",
+          "deployment-evidence/",
+          "docs/site/"
+        ],
+        "constraints": [
+          "缺证据的类别不得生成占位页面或猜测命令",
+          "一个类别阻塞不能抹掉另外两类已确认范围"
+        ],
+        "success_criteria": [
+          "Development 与 Docker 文档可以独立交付",
+          "Kubernetes 缺口和责任人清楚",
+          "站点不包含看似可执行的未验证集群步骤"
+        ]
+      }
     },
     {
       "id": "eval-013-deployment-aggregate-migration",
@@ -491,13 +801,37 @@
           "description": "导航与迁移原子更新",
           "text": "递归 public/internal 导航、页面移动、链接修复、change-map delta 和重复内容归并作为同一已确认范围更新；`npm run test:docs` 通过且没有指向旧聚合页的残留链接。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "整理遗留运维信息架构的文档维护者",
+        "situation": "旧站把开发、Docker 和 Kubernetes 命令都堆在一个 deployment.md 中，多个页面和映射仍指向它。",
+        "trigger": "三类部署证据已经齐备，团队决定消除命令混用和重复维护。",
+        "goal": "把聚合页迁移成清晰的分类结构，并保持所有既有入口可达。",
+        "materials": [
+          "migration-handoff.md",
+          "deployment-evidence.md",
+          "docs/site/ops/deployment.md",
+          "docs/site/ops/index.md",
+          "docs/site/product/runtime.md",
+          "docs/site/standards/change-map.yaml",
+          "docs/site/package.json"
+        ],
+        "constraints": [
+          "旧页面、入链、导航和 change-map 必须作为一个原子范围处理",
+          "未知映射字段必须保留，不得顺手格式化无关配置"
+        ],
+        "success_criteria": [
+          "旧正文被归并且不留重复副本",
+          "所有站内链接和嵌套链接指向新位置",
+          "站点检查通过且三类边界清楚"
+        ]
+      }
     },
     {
       "id": "eval-014-existing-site-deployment-recheck",
       "name": "老站内容更新后复核完整与部分覆盖",
       "description": "验证老站更新后的 integrated 与 Public/Internal partial 场景。",
-      "prompt": "根据 evidence.md 完成本次内容同步收尾，只读复核两套现有站点配置并说明部署完整性。不要修改部署资产。",
+      "prompt": "内容同步已经完成。请只读复核 `sites/atlas-portal/` 和 `sites/orbit-console/` 的现有构建与发布配置，说明每套站点当前能覆盖哪些访问变体以及还缺什么。不要修改部署资产。",
       "expected_output": "完整场景保持 integrated 且不重放 DevOps；部分场景因仅 Public 被覆盖而为 partial，并返回 PM 确认。",
       "workspace": "workspace/eval-014-existing-site-deployment-recheck",
       "assertions": [
@@ -516,7 +850,26 @@
           "description": "只读返回 PM",
           "text": "询问是否由 pm-agent 生成 repo-wide deployment handoff；formal-docs-sync 不修改 Dockerfile、workflow、Compose、Helm 或执行部署。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "为老文档站做内容同步收尾的交付负责人",
+        "situation": "两套既有站点配置中，一套仍覆盖 Public 与 Internal，另一套只覆盖 Public；本次没有修改部署资产的授权。",
+        "trigger": "内容更新结束后，需要判断既有交付完整性结论是否仍成立。",
+        "goal": "只读确认两套站点当前能覆盖哪些发布变体，并指出部分覆盖的后续处理人。",
+        "materials": [
+          "sites/atlas-portal/",
+          "sites/orbit-console/"
+        ],
+        "constraints": [
+          "不得重放部署流程或修改配置",
+          "Public 与 Internal 覆盖必须分别核对"
+        ],
+        "success_criteria": [
+          "完整配置继续沿用原结论",
+          "仅覆盖 Public 的配置被识别为部分完整",
+          "需要确认的缺口回到产品负责人"
+        ]
+      }
     },
     {
       "id": "eval-015-flat-hierarchy-migration-proposal",
@@ -551,7 +904,36 @@
           "description": "仅加载 API 类型契约并显式报告 drift 结论",
           "text": "只加载 API 类型模块与 host API 模板，不读取或应用 database、design、ops、product 类型模块；报告中显式给出已加载模块与 Hierarchy drift 结论字段。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "维护知识发现 API 文档结构的技术写作者",
+        "situation": "新会话消息 API 已交付，但同功能域旧页面平铺在 api 根目录，没有反映功能树层级。",
+        "trigger": "维护者要求先确认本次范围，避免新页面继续加深历史结构问题。",
+        "goal": "提交一次可评审的层级迁移方案，并在获批前保持现有站点不变。",
+        "materials": [
+          "pm-handoff.md",
+          "docs/pm/feature-catalog.md",
+          "docs/pm/knowledge-discovery/conversations/messages/PRD.md",
+          "docs/engineer/knowledge-discovery/conversations/messages/TRD.md",
+          "docs/engineer/knowledge-discovery/conversations/messages/IMPLEMENTATION_PLAN.md",
+          "src/api/knowledge_discovery/conversations/",
+          "src/api/knowledge_building/",
+          "src/api/knowledge_discovery/",
+          "src/api/platform_governance/",
+          "tests/contract/test_conversation_messages_api.py",
+          "docs/site/standards/",
+          "docs/site/api/"
+        ],
+        "constraints": [
+          "不得静默沿用扁平结构或擅自搬迁旧页面",
+          "批次外结构漂移只报告，不纳入本次写入"
+        ],
+        "success_criteria": [
+          "方案包含目标树、路径映射和入链导航变化",
+          "change-map 变化与排除项可复核",
+          "维护者确认前站点保持零改动"
+        ]
+      }
     }
   ]
 }

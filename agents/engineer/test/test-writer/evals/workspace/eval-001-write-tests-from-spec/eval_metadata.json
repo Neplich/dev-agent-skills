@@ -2,11 +2,21 @@
   "eval_id": "eval-001-write-tests-from-spec",
   "eval_name": "write-tests-from-spec",
   "workspace_root": "agents/engineer/test/test-writer/evals/workspace/eval-001-write-tests-from-spec",
-  "prompt": "根据 docs/test-spec.md 为 NotificationService 编写测试",
   "fixture_context": [
     "docs/test-spec.md",
     "package.json",
     "src/services/notification-service.js",
     "test/services/health-service.test.js"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

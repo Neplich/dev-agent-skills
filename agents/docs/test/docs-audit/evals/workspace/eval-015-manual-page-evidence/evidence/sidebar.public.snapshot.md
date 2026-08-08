@@ -1,6 +1,6 @@
 # Generated public sidebar snapshot
 
-Source: host `npm run prepare:nav` output captured for the fixture target tree.
+Source: host `npm run prepare:nav` output captured for the release candidate tree.
 
 ```text
 操作手册

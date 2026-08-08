@@ -2,11 +2,22 @@
   "eval_id": "eval-003-feature-path-missing-plan-blocked",
   "eval_name": "feature-path-missing-plan-blocked",
   "workspace_root": "agents/qa/test/qa-agent/evals/workspace/eval-3-feature-path-missing-plan-blocked",
-  "prompt": "用户说：account/profile/preferences 已经开发完成，请基于 docs/pm/account/profile/preferences/PRD.md 和 docs/engineer/account/profile/preferences/TRD.md 更新并执行 E2E 验收。docs/qa/e2e/account/profile/preferences/ 目录也存在。",
   "fixture_context": [
     "docs/pm/account/profile/preferences/PRD.md",
     "docs/engineer/account/profile/preferences/TRD.md",
     "docs/qa/e2e/account/profile/preferences/TEST_SUITE.md",
     "docs/qa/e2e/account/profile/preferences/FLOW_INDEX.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/qa/skills/spec-based-tester"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

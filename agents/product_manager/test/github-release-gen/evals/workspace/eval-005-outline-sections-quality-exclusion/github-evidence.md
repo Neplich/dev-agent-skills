@@ -19,7 +19,7 @@
 
 ## Internal quality evidence
 
-- github-release-gen skill eval：PASS
+- release tooling acceptance suite：PASS
 - assertions：17/17 通过
 - PR review：已完成第三轮
 - QA 证据汇总：12 条 E2E 用例全部通过，覆盖附件兼容、迁移、回滚和双架构资产

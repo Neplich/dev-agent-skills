@@ -1,3 +1,84 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-002-repair-plan-confirmation-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e` from `agents/engineer/test/debugger/evals/workspace/eval-002-repair-plan-confirmation-gate`.
+- Fixture SHA-256: `cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e`
+- Prompt SHA-256: `665db040735beea5cd9a54d5fea883336b5acadf81472985dbcc094ec677dd55`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `dcc41028443385df7286f016738f0aaf1f647d06f9da1ee3865bedd33c344afe`
+- Skill overlay SHA-256: `267ff29e20f38caffb753a87229899be929d0e39edb8d8216c48698de2a99ab6`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `024f4702e0fa8869af3d3c3109a71208ab006a57b0857bf3decfc75788b86ec1`
+- Metadata SHA-256: `7d2fe0fce1e70425553acde36f203e00cc70ea5e32d8f50bf9a3232445ec4c62`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `writes_repair_plan` | FAIL | with_skill 输出仅给出修复建议和 diff，没有列出预期修改文件、最小修复思路及验证命令组成的实施计划。 |
+| `records_fix_split_decision` | FAIL | with_skill 输出未说明是否需要 implementation/validation sub-agent split。 |
+| `waits_for_plan_confirmation` | FAIL | with_skill 输出未要求用户确认修复实施计划后再开始修复。 |
+| `e2e_handoff_requires_confirmed_plan` | FAIL | with_skill 未提供修复实施计划，因此没有包含 PRD/TRD 对齐结论、目标文件、验证命令和建议功能目录，也未明确计划确认前不得更新 docs/qa/e2e 下内容。 |
+| `does_not_apply_fix` | PASS | with_skill 明确写明“本轮未修改任何文件”，且 git_evidence 显示无变更。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=665db040735beea5cd9a54d5fea883336b5acadf81472985dbcc094ec677dd55; fixture_sha256=cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e; output_sha256=a5745e2b3ed6c5cae11751d723dbb77a2c553b96b78bd7713f047f5c99d97ba7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确诊断并给出最小代码修复建议，明确未修改文件；但缺少实施计划、sub-agent split 判断、计划确认请求及 E2E 交接约束。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=665db040735beea5cd9a54d5fea883336b5acadf81472985dbcc094ec677dd55; fixture_sha256=cb0f3c3b3299f6d7c5c59f8e23f6486f0ceb71f6128a3055fbac267527c0d07e; output_sha256=e88937cc6568a8dccb67cc7b22a90bb937cc18d17e92b97c6acd6e8ed7460a44; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确调查出 archived 状态校验遗漏，提供了修复建议和验证命令，并明确未修改文件；但未覆盖计划确认、分工判断或 E2E 交接要求。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足 writes_repair_plan。
+- with_skill 未满足 records_fix_split_decision。
+- with_skill 未满足 waits_for_plan_confirmation。
+- with_skill 未满足 e2e_handoff_requires_confirmed_plan。
+- Next: 补充完整修复实施计划、分工判断、确认请求及 E2E 交接约束。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-002-repair-plan-confirmation-gate
 
 ## Evaluation Target

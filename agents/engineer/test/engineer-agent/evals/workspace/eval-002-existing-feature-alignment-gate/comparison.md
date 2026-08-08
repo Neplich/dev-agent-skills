@@ -1,3 +1,84 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `engineer-agent`
+- Eval: `eval-002-existing-feature-alignment-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/engineer-agent/evals/workspace/eval-002-existing-feature-alignment-gate`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `83f220b482f661eab0884cc4770c84fbb545af7bd74199e0b9f4ba499020031a`
+- Skill overlay SHA-256: `94585e968fb2a0b5b29dd98429a0ee0f98e86ec73794257bcf099dd92d775e4c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `35bf0057341046be2b5db3cd90c99d825b61efaf315ed25428b5eda571894209`
+- Metadata SHA-256: `43542dab517c382c8ae0bc3c7332df9e98a97a6229686bf334f88c000c1ef95a`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_user_provided_behavior_baseline` | PASS | with_skill 保留 active 的原定义，并未声称读取不存在的 PRD、TRD 或决策文件。 |
+| `classifies_expectation_change` | PASS | with_skill 明确将其归为“现有功能行为变更”，而非直接按小改动处理。 |
+| `routes_to_existing_project_update` | FAIL | 未路由到 pm-agent:idea-to-spec 的 existing-project-update 路径，也未要求记录产品决定后同步 TRD。 |
+| `routes_trd_gap_to_trd_gen` | FAIL | 工作区 fixture 为空且输出确认缺少业务文档，但未构造 TRD gap packet 或交回 engineer-agent:trd-gen。 |
+| `requires_plan_after_alignment` | FAIL | 仅泛称形成变更说明/技术方案，未要求 PRD/TRD 对齐后进入 feature-implementor，并先产出或引用已确认的 IMPLEMENTATION_PLAN.md。 |
+| `does_not_route_directly_to_implementation` | PASS | with_skill 未将请求直接交给 feature-implementor 开始编码，且要求先确认需求。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=eee995dd908fa613f2d9a3554011a27ff187fd4e7fdf6c5a050388f855f9ab9e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为现有功能行为变更并暂停代码修改，但缺少指定的 PM existing-project-update、TRD gap 及实施计划路径。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d08d04c31266e7709df236e5a84b0516db051d4099fdd86927601fc672aa3954; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=36d558d7b95851c2f74ccc1bbc85efe10859a63aa4404d0c25ac1b1ca131955f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了需要产品语义确认和影响分析，但未体现受批准基线冲突后的产品/TRD 路由。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足 existing-project-update 路由要求。
+- with_skill 未满足 TRD gap packet 回交 trd-gen 要求。
+- with_skill 未满足对齐后 IMPLEMENTATION_PLAN.md 要求。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-002-existing-feature-alignment-gate
 
 ## Evaluation Target

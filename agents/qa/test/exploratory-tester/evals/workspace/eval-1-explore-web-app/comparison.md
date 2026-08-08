@@ -1,3 +1,83 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `exploratory-tester`
+- Eval: `eval-001-explore-web-app`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7` from `agents/qa/test/exploratory-tester/evals/workspace/eval-1-explore-web-app`.
+- Fixture SHA-256: `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7`
+- Prompt SHA-256: `adb51c9508613745e4594166968ba5eae31bfca02ef3c43a040df0498e1923c7`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2bfbb6ecc0134ec5f9998274cdf0307f307da434e743767837778ac154a53a86`
+- Skill overlay SHA-256: `d11214369d847e3bf37c4f57b3d2f711860c3796c879f82ec5e4e0b0da64ec70`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `b189077590accc8a288dd5027f94ec220abaf589b0e6787e235e77f305935bbd`
+- Metadata SHA-256: `228751d86855b3dcdb583bdc4a44c4a493c28334ed74368c030ddad805b1f314`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | With-skill report includes an exploration charter covering changed surfaces, heuristics, escalation signals, and the blocked-state evidence plan. |
+| `assertion_2` | PASS | Report records reading TEST_SUITE.md, FLOW_INDEX.md, and the existing case; notes scripts/*.spec.md is absent, reuses TC-001, and directs future reusable additions to existing TC/FLOW_INDEX/scripts without inventing a duplicate. |
+| `assertion_3` | PASS | Timebox is explicitly marked unavailable because blocking occurred before execution, with retry duration deferred to the QA execution window/user context; scope prioritizes SearchPanel, FilterPills, ResultsList, and keyboard-navigation risks. |
+| `assertion_4` | PASS | Report separately identifies confirmed issues, suspicious-but-unconfirmed signals, and unexplored gaps, and does not convert documented focus risk into a defect. |
+| `assertion_5` | PASS | The report uses a chartered path covering filtering, empty states, transitions, keyboard boundaries, and refresh/rapid switching, while clearly stating that execution was blocked and providing evidence requirements. |
+| `assertion_6` | PASS | With-skill deliverables contain charter, timebox, covered/planned exploration paths, evidence references, blocked rationale, and recommended next actions suitable for handoff. |
+| `deduplicates_existing_flows` | PASS | The existing TC-001 flow is reused; the report explicitly says to update existing TC, scripts, or FLOW_INDEX for reusable paths and not create duplicate TCs. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=adb51c9508613745e4594166968ba5eae31bfca02ef3c43a040df0498e1923c7; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=93b0e45a45070797a5dbaf128677148403c70ce7d2ed96cd53e3034c17b07b1b; snapshot_sha256=824435ea452d1e9a4b25547bb99d5bcaa42aef2d48a762ba8319a26debf844db
+- Behavior: Produced a blocked summary report plus TC-001 execution evidence with explicit charter, context-derived timebox handling, evidence layers, coverage gaps, and deduplication guidance.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=adb51c9508613745e4594166968ba5eae31bfca02ef3c43a040df0498e1923c7; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=00fe6ddd3350430b76d2acce2c50af985d96635e4faba32a8767d48d50db1ffa; snapshot_sha256=631ebcbf902b053e5ecbb20e3fb9ec3d38e176f1489fe68f8694380b56987c81
+- Behavior: Produced a blocked exploratory handoff reusing TC-001 and listing planned risks, but with less explicit QA-memory/read-order and evidence classification detail.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-explore-web-app
 
 ## Evaluation Target

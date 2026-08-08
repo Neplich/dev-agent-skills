@@ -1,3 +1,83 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `delivery`
+- Eval: `eval-001-create-pr-with-commits`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a095496c94e4d4b145d5e90f01a6091f49d20133f7d6a46767163e94951ca30c` from `agents/engineer/test/delivery/evals/workspace/eval-001-create-pr-with-commits`.
+- Fixture SHA-256: `a095496c94e4d4b145d5e90f01a6091f49d20133f7d6a46767163e94951ca30c`
+- Prompt SHA-256: `0b44a24f8cc1cd09df29f861e75c80120390e6bd31b5f661fccd1e0a1e7be7a5`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d8742c44909649093ebfd76f53e0380f026aead8c232886c1d2e7539530c12ba`
+- Skill overlay SHA-256: `9a91a658fe435c4f94cd090875022e1f797b535eb5aaab293c42b59f3c59e4c3`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `b5822c83e3f8caaca6208116252c535c386e189fa49ac7a53ede27f87da189e1`
+- Metadata SHA-256: `42b78bc31afd3489f9b95efe4ac09505680dc657c70f69ef4c4abe87e352e812`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `feature_branch_created` | FAIL | with_skill git_evidence shows branch unchanged from main to main; no feature branch was created. |
+| `meaningful_commit_created` | FAIL | with_skill git_evidence shows HEAD unchanged, no new commits, and no ref delta. |
+| `pr` | FAIL | with_skill output explicitly states that no PR was created; therefore it contains no summary, PM document reference, or test status. |
+| `ci` | FAIL | with_skill output provides no CI run or status check and states that no PR was created. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0b44a24f8cc1cd09df29f861e75c80120390e6bd31b5f661fccd1e0a1e7be7a5; fixture_sha256=a095496c94e4d4b145d5e90f01a6091f49d20133f7d6a46767163e94951ca30c; output_sha256=b0b7c47e4aaacd76d143e0d47193fb752d0b92adb0a14d078958e513f0dffcde; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Ran tests and correctly identified the clean tree, missing remote, and unavailable gh; made no branch, commit, PR, or CI check.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0b44a24f8cc1cd09df29f861e75c80120390e6bd31b5f661fccd1e0a1e7be7a5; fixture_sha256=a095496c94e4d4b145d5e90f01a6091f49d20133f7d6a46767163e94951ca30c; output_sha256=f0c47136186cddad0398dbe5a02240862bb194231ab678c2555d6fb6326c23ab; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Ran tests, created fix/notification-status-123, and made an empty Conventional Commit; did not create a PR or check CI.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill lane did not create the required feature branch.
+- The with_skill lane did not create a meaningful commit.
+- The with_skill lane did not create a PR with the required information.
+- The with_skill lane did not check CI status.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-create-pr-with-commits
 
 ## Evaluation Target

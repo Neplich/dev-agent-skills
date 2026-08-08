@@ -3,7 +3,7 @@
 - request_type: existing_update
 - change_tier: major
 - feature_path: products/ai-hub/v1-file-delivery
-- host_repository: current fixture repository
+- host_repository: current product repository
 - target_release_version: v1.0.0
 - target_release_version_confirmation: 本 entry basis 由维护者明确确认，来源为本文件
 - release_scope: 文件卡片、消息重试及其后端附件模型、迁移和交付资产

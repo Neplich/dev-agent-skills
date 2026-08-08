@@ -7,17 +7,17 @@
       "id": "eval-001-create-pr-with-commits",
       "name": "create-pr-with-commits",
       "description": "Verifies that delivery handles create-pr-with-commits and produces the expected role-specific artifact.",
-      "prompt": "已完成工作的 scope、changed files 与验证状态见 workspace `DELIVERY_HANDOFF.md`。代码已完成，创建 PR 并关联 Issue #123",
+      "prompt": "通知状态修复已经完成，改动在当前工作树的 `src/notification-status.js` 和 `test/notification-status.test.js`。请核对本地测试后提交，并创建关联 Issue #123 的 PR。",
       "workspace": "workspace/eval-001-create-pr-with-commits",
       "expected_output": "分支创建 + 提交 + PR 创建 + CI 检查",
       "assertions": [
         {
-          "id": "assertion_1",
+          "id": "feature_branch_created",
           "description": "创建功能分支",
           "text": "创建符合项目命名规范的功能分支"
         },
         {
-          "id": "assertion_2",
+          "id": "meaningful_commit_created",
           "description": "有意义的提交",
           "text": "commit message 遵循 Conventional Commits 或项目规范"
         },
@@ -31,7 +31,28 @@
           "description": "检查 CI 状态",
           "text": "创建 PR 后检查 CI 运行状态"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "准备交付已完成变更的工程负责人",
+        "situation": "通知状态修复与对应测试已经留在工作树中，等待团队审查。",
+        "trigger": "负责人要求把当前改动关联到已有 Issue 并送入远端评审。",
+        "goal": "把已验证的修改整理成来源清楚、范围准确的可审查变更。",
+        "materials": [
+          "docs/pm/notifications/PRD.md",
+          "package.json",
+          "src/notification-status.js",
+          "test/notification-status.test.js",
+          ".github/workflows/ci.yml"
+        ],
+        "constraints": [
+          "只纳入通知状态实现、测试和必要配置",
+          "本地结果与远端检查状态必须分别如实表述"
+        ],
+        "success_criteria": [
+          "提交信息与 PR 能追溯到 Issue #123 和实际变更文件",
+          "审查者能看见已运行验证及尚未完成的远端检查"
+        ]
+      }
     }
   ]
 }

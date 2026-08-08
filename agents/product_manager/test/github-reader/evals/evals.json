@@ -7,9 +7,30 @@
       "id": "eval-001-full-status",
       "name": "full-status",
       "description": "Verifies that github-reader handles full-status and produces the expected role-specific artifact.",
+      "scenario": {
+        "persona": "需要掌握仓库进度与风险的项目负责人",
+        "situation": "项目负责人要为 anthropic-sdk-python 做周度状态同步，需要同时掌握 milestone、issue 与 PR 队列。",
+        "trigger": "周度项目同步即将开始，负责人需要同一时点的完整仓库健康数据。",
+        "goal": "提供可用于周度同步的 milestone、issue、PR 与健康状态全景。",
+        "materials": [
+          "anthropics/anthropic-sdk-python 当前的 milestones、issues 与 pull requests"
+        ],
+        "constraints": [
+          "数据以查询时点为准",
+          "同时覆盖 milestone、issue 与 PR",
+          "缺失或截断必须声明"
+        ],
+        "success_criteria": [
+          "包含 Milestone 表格",
+          "包含 PR 队列",
+          "包含健康摘要",
+          "PR 链接格式正确",
+          "声明数据完整性"
+        ]
+      },
       "prompt": "帮我看一下 anthropics/anthropic-sdk-python 现在的项目状态，包括 milestone 进度、open issue 数量和 PR 队列情况",
-      "workspace": "workspace/eval-001-full-status",
       "expected_output": "结构化的项目状态报告，包含 Milestone 进度表、Open Issues 分组、PR 队列（待 review / 草稿 / 近期合并），以及健康摘要",
+      "workspace": "workspace/eval-001-full-status",
       "assertions": [
         {
           "id": "milestone",
@@ -42,9 +63,28 @@
       "id": "eval-002-focused-pr-query",
       "name": "focused-pr-query",
       "description": "Verifies that github-reader handles focused-pr-query and produces the expected role-specific artifact.",
+      "scenario": {
+        "persona": "需要掌握仓库进度与风险的项目负责人",
+        "situation": "cli/cli 维护者准备安排评审资源，只想找出等待 review 最久的开放 PR。",
+        "trigger": "评审排期正在制定，需要先处理等待时间最长的开放 PR。",
+        "goal": "列出 cli/cli 等待 review 的开放 PR，并按实际等待时间排序。",
+        "materials": [
+          "cli/cli 当前开放 pull requests 的 review 与更新时间数据"
+        ],
+        "constraints": [
+          "只回答等待 review 的 PR",
+          "按实际等待时长排序",
+          "不混入 issue 或 milestone 数据"
+        ],
+        "success_criteria": [
+          "聚焦 PR 不冗余",
+          "包含等待时间",
+          "有排序"
+        ]
+      },
       "prompt": "我在 cli/cli 这个仓库里工作，现在有哪些 PR 还在等待 review？按等待时间排序",
-      "workspace": "workspace/eval-002-focused-pr-query",
       "expected_output": "聚焦 PR 的输出，列出 awaiting review 的 PR 并按等待时间排序，不需要输出 issue 和 milestone 数据",
+      "workspace": "workspace/eval-002-focused-pr-query",
       "assertions": [
         {
           "id": "pr",
@@ -67,9 +107,28 @@
       "id": "eval-003-milestone-focused",
       "name": "milestone-focused",
       "description": "Verifies that github-reader handles milestone-focused and produces the expected role-specific artifact.",
+      "scenario": {
+        "persona": "需要掌握仓库进度与风险的项目负责人",
+        "situation": "React 项目负责人要识别近期 milestone 中进展最慢或已经逾期的计划。",
+        "trigger": "近期计划复盘前，需要找出进度落后或已经越过截止日的 milestone。",
+        "goal": "用完成率和截止日期找出 React 近期最慢或逾期的 milestone。",
+        "materials": [
+          "facebook/react 当前可见的近期 milestone、截止日期与完成数据"
+        ],
+        "constraints": [
+          "用截止日期和完成率支撑判断",
+          "没有逾期样本时如实说明",
+          "状态口径保持一致"
+        ],
+        "success_criteria": [
+          "有逾期或慢速判断",
+          "有完成率数据",
+          "状态图例一致"
+        ]
+      },
       "prompt": "看一下 facebook/react 最近的 milestone，哪个进度最慢或者已经逾期了？",
-      "workspace": "workspace/eval-003-milestone-focused",
       "expected_output": "Milestone 状态报告，识别出进度最慢或逾期的 milestone，给出具体数据支撑",
+      "workspace": "workspace/eval-003-milestone-focused",
       "assertions": [
         {
           "id": "assertion_1",
@@ -92,6 +151,27 @@
       "id": "eval-004-mapped-export-status-context",
       "name": "结合映射文档汇总导出模块状态",
       "description": "验证仓库状态读取命中 change-map 后使用低信任文档导航并以代码证据校验",
+      "scenario": {
+        "persona": "需要掌握仓库进度与风险的项目负责人",
+        "situation": "导出模块的文档与代码可能不同步，交付负责人需要据当前仓库证据判断真实状态和风险。",
+        "trigger": "导出模块准备交付复核，文档与实现可能漂移的风险必须先确认。",
+        "goal": "以代码为准说明 export 模块的当前交付状态、文档差异与风险。",
+        "materials": [
+          "docs/site/api/export.md",
+          "docs/site/standards/change-map.yaml",
+          "src/export/handler.txt"
+        ],
+        "constraints": [
+          "先用映射定位受影响文档",
+          "实现状态回到 src/export 核证",
+          "文档冲突作为风险而非事实覆盖"
+        ],
+        "success_criteria": [
+          "优先读取映射文档",
+          "状态结论回代码核证",
+          "未验证文档按最低信任处理"
+        ]
+      },
       "prompt": "请根据仓库内的现有证据，汇总 `src/export/` 模块当前的交付状态与风险。",
       "expected_output": "精准读取导出 API 文档，以代码核证实现状态并指出文档与实现不一致。",
       "workspace": "workspace/eval-004-mapped-export-status-context",
@@ -117,9 +197,28 @@
       "id": "eval-005-feed-mode-completeness",
       "name": "feed-mode-completeness",
       "description": "验证 Feed mode 输出机器可读 YAML 块且完整性信号与报告声明一致",
-      "prompt": "我是 roadmap-gen，需要 anthropics/anthropic-sdk-python 的当前仓库状态作为结构化输入，请给我完整状态数据",
-      "workspace": "workspace/eval-005-feed-mode-completeness",
+      "scenario": {
+        "persona": "需要掌握仓库进度与风险的项目负责人",
+        "situation": "路线图生成流程需要 anthropic-sdk-python 的机器可读状态输入，并且必须知道查询是否完整。",
+        "trigger": "路线图编制即将读取仓库状态，输入的完整性和总数必须可机器判断。",
+        "goal": "生成总数与完整性信号一致、可供路线图流程读取的结构化仓库状态。",
+        "materials": [
+          "anthropics/anthropic-sdk-python 当前仓库状态查询结果"
+        ],
+        "constraints": [
+          "输出供下游机器读取",
+          "报告与结构化总数必须一致",
+          "截断与不完整总数显式标记"
+        ],
+        "success_criteria": [
+          "包含 Feed mode YAML 数据块",
+          "完整性信号与报告声明一致",
+          "总数来自实际查询"
+        ]
+      },
+      "prompt": "我正在编制项目路线图，需要 anthropics/anthropic-sdk-python 的当前仓库状态作为结构化输入，请给我完整状态数据。",
       "expected_output": "Markdown 报告后附 `---` 分隔的 `github_reader_data` YAML 块，包含总数类字段；若报告声明了截断或总数不完整，YAML 必须有对应 `truncated_collections` / `incomplete_totals` 字段",
+      "workspace": "workspace/eval-005-feed-mode-completeness",
       "assertions": [
         {
           "id": "feed_yaml_present",

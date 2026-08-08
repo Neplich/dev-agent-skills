@@ -1,0 +1,13 @@
+diff --git a/src/catalog/routes.txt b/src/catalog/routes.txt
+--- a/src/catalog/routes.txt
++++ b/src/catalog/routes.txt
+@@ -5,7 +5,7 @@
+ ERROR none
+ STREAMING no
+ FILES none
+-IMPLEMENTATION legacy dispatcher
++IMPLEMENTATION table dispatcher
+-
++
+ ROUTE GET /catalog/status
+ AUTH service-token required

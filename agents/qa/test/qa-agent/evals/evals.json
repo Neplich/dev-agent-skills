@@ -7,7 +7,32 @@
       "id": "eval-001-route-mixed-qa-request",
       "name": "route-mixed-qa-request",
       "description": "Verifies that qa-agent handles route-mixed-qa-request and produces the expected role-specific artifact.",
-      "prompt": "用户说：这个登录重构已经按 docs/pm/login-refresh/PRD.md 实现了，但 CI 里有一个 intermittent 失败，同时 PM 想知道是否可以进入验收。请处理这个 QA 请求。",
+      "scenario": {
+        "persona": "负责登录刷新交付的 QA 负责人",
+        "situation": "功能已实现并有产品、技术、计划和既有 E2E 资料，但 CI 出现一次间歇性失败",
+        "trigger": "产品负责人要决定是否进入验收，需要先确定主验证路径",
+        "goal": "选择最窄的 QA 工作并保留间歇性失败作为后续风险",
+        "materials": [
+          "docs/pm/auth/login/login-refresh/PRD.md",
+          "docs/engineer/auth/login/login-refresh/TRD.md",
+          "docs/engineer/auth/login/login-refresh/IMPLEMENTATION_PLAN.md",
+          "docs/qa/e2e/auth/login/login-refresh/TEST_SUITE.md",
+          "docs/qa/e2e/auth/login/login-refresh/FLOW_INDEX.md",
+          "implementation/changes.md",
+          "ci/login-intermittent-failure.log"
+        ],
+        "constraints": [
+          "当前只确定 QA 处理方式，不同时执行多类测试",
+          "间歇性日志不足以确认缺陷",
+          "不得假定固定浏览器或端口"
+        ],
+        "success_criteria": [
+          "明确一个主 QA 路径及其证据产物",
+          "把完整上下文传给承接方",
+          "将间歇性失败保留为风险或补证后续"
+        ]
+      },
+      "prompt": "登录刷新已经按确认文档实现，现有 QA 资料和变更说明也在仓库里；CI 的 WebKit 分片偶尔等不到锁定账号提示。产品现在想知道是否可以进入验收，请先确定最合适的 QA 处理方式和需要产出的证据。",
       "workspace": "workspace/eval-1-route-mixed-qa-request",
       "expected_output": "QA 路由决策，明确选择最窄的下游 QA skill、选择理由、需要读取的上下文和预期 evidence artifact",
       "assertions": [
@@ -42,7 +67,31 @@
       "id": "eval-002-empty-qa-directory-expands-cases",
       "name": "empty-qa-directory-expands-cases",
       "description": "Verifies that qa-agent handles empty-qa-directory-expands-cases and produces the expected role-specific artifact.",
-      "prompt": "用户说：请对 profile-settings 做一次 E2E QA。docs/qa/e2e/account/profile-settings/profile-form/ 已存在，但 TEST_SUITE.md、FLOW_INDEX.md 和 cases/ 里没有测试用例。我确认这个功能有新更新，请主动查看项目文件并完成验证。",
+      "scenario": {
+        "persona": "负责账户资料设置交付的 QA 负责人",
+        "situation": "资料表单刚有更新，QA 功能目录存在但没有覆盖此次改动的活动用例",
+        "trigger": "团队授权查看目标代码补足覆盖并完成 E2E 验证",
+        "goal": "选择单一 QA 承接路径并传递现有 QA memory、代码和环境事实",
+        "materials": [
+          "docs/qa/e2e/account/profile-settings/profile-form/TEST_SUITE.md",
+          "docs/qa/e2e/account/profile-settings/profile-form/FLOW_INDEX.md",
+          "src/routes/profile-settings.md",
+          "src/pages/ProfileSettingsPage.tsx",
+          "src/components/ProfileSettingsForm.tsx",
+          "environment/qa-env.md"
+        ],
+        "constraints": [
+          "用户已授权查看项目文件补充用例",
+          "平台版本尚未记录",
+          "当前只做路由，不直接实施或修复"
+        ],
+        "success_criteria": [
+          "识别现有目录没有活动覆盖",
+          "选择一个最窄 QA 承接方",
+          "保留 specialist 的文档、版本、环境和执行入口门禁"
+        ]
+      },
+      "prompt": "账户资料设置表单刚有更新，请完成这部分 E2E 验证。现有 QA 资料在 `docs/qa/e2e/account/profile-settings/profile-form/`，但还没有覆盖这次改动；你可以查看已提供的页面、表单和环境资料来补充所需用例。",
       "workspace": "workspace/eval-2-empty-qa-directory-expands-cases",
       "expected_output": "QA 路由决策与执行协议，明确空 E2E 功能树目录需要触发目标文件探索、更新 TEST_SUITE.md 和 FLOW_INDEX.md、创建独立 TC 与 script 文件，并要求后续验证基于这些用例执行",
       "assertions": [
@@ -72,7 +121,29 @@
       "id": "eval-003-feature-path-missing-plan-blocked",
       "name": "feature-path-missing-plan-blocked",
       "description": "Verifies that qa-agent blocks code-complete E2E acceptance work when same-path PRD/TRD exist but the confirmed implementation plan is missing.",
-      "prompt": "用户说：account/profile/preferences 已经开发完成，请基于 docs/pm/account/profile/preferences/PRD.md 和 docs/engineer/account/profile/preferences/TRD.md 更新并执行 E2E 验收。docs/qa/e2e/account/profile/preferences/ 目录也存在。",
+      "scenario": {
+        "persona": "负责资料偏好功能验收的 QA 负责人",
+        "situation": "产品和技术文档已确认，QA 目录存在，但工程交付材料不完整",
+        "trigger": "团队请求立即更新并执行偏好设置 E2E 验收",
+        "goal": "选择 QA 承接路径并识别当前材料缺口对后续执行的影响",
+        "materials": [
+          "docs/pm/account/profile/preferences/PRD.md",
+          "docs/engineer/account/profile/preferences/TRD.md",
+          "docs/qa/e2e/account/profile/preferences/TEST_SUITE.md",
+          "docs/qa/e2e/account/profile/preferences/FLOW_INDEX.md"
+        ],
+        "constraints": [
+          "沿用 account/profile/preferences 功能树",
+          "当前只做路由，不执行 specialist 协议",
+          "不得创建同义 QA 目录"
+        ],
+        "success_criteria": [
+          "读取同路径产品、技术和 QA 资料",
+          "选择一个最窄 QA 路径",
+          "让承接方的计划与执行门禁决定是否可以继续"
+        ]
+      },
+      "prompt": "账户资料偏好已经开发完成，请根据 `docs/pm/account/profile/preferences/PRD.md`、对应 TRD 和现有 QA 目录更新并执行 E2E 验收。请先确定由哪类 QA 工作承接，并说明当前材料是否足够。",
       "workspace": "workspace/eval-3-feature-path-missing-plan-blocked",
       "expected_output": "QA 路由决策必须识别 feature_path account/profile/preferences，读取同路径 PRD/TRD 和 QA 功能树，但因为缺少 docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md 而 blocked，不创建、更新或执行 E2E acceptance TC",
       "assertions": [

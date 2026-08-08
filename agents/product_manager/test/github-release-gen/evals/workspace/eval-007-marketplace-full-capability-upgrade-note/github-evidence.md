@@ -1,6 +1,8 @@
 # GitHub 维护证据
 
-> **证据确认声明（mock 输入）**：本证据包是测试用 mock 数据，模拟「维护者已完成的 GitHub 验证」结果——下列 PR 与 commit 链接视为已属于声明的 compare 范围、且支持站内已确认事实源中的事实。执行者直接作为已审计输入使用，不得也不需要对它们做实时远端验证（这些链接是虚构对象）。
+> **离线证据快照**：发布负责人已在导出时核对下列 compare、PR 与 commit，
+> 并确认它们属于本次 Release 范围。当前评审环境没有远端访问权限，预览以这份
+> 已签认快照为维护证据；真正发布仍需完成发布门禁与维护者批准。
 
 ## Release window
 
@@ -21,7 +23,7 @@
 
 ## Internal quality evidence
 
-- github-release-gen skill eval：PASS
+- release tooling acceptance suite：PASS
 - assertions：17/17 通过
 - PR review：已完成第三轮
 - QA 证据汇总：12 条 E2E 用例全部通过，覆盖附件兼容、迁移、回滚和双架构资产

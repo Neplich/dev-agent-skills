@@ -1,3 +1,85 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-009-ui-design-handoff-gate`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984` from `agents/engineer/test/feature-implementor/evals/workspace/eval-009-ui-design-handoff-gate`.
+- Fixture SHA-256: `e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984`
+- Prompt SHA-256: `ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`
+- Skill overlay SHA-256: `5c74cbf7ab5eef845bc8c3f0d81a775b1feca5810a9a615f9b35865026f3e841`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `a313159478f71f3c53034d04181e6cf7f6ee092241472cdee4c99fbe2b9042fc`
+- Metadata SHA-256: `5e7a0cec3496b476d745c2e2e1792aa7fe5d0f1912d30b7047f5ac770f4cdb1c`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_ui_design_change` | FAIL | The output mentions a UI design gate but does not explicitly identify the hierarchy and primary-button changes as frontend UI/visual changes requiring the UI Design Handoff Gate. |
+| `checks_design_docs` | FAIL | It names the ui-ux spec path and refers generally to visual规范, but does not explicitly check the exact visual-system.md path or state whether both documents cover the requested changes. |
+| `blocks_plan_when_design_missing` | PASS | Git evidence shows no changes, no declared outputs, and no IMPLEMENTATION_PLAN was created or updated. |
+| `hands_off_to_designer` | FAIL | The output requests design deliverables but does not handoff to the exact `engineer-agent -> designer-agent` route. |
+| `preserves_plan_gate_after_design` | FAIL | It does not state that feature-implementor must write IMPLEMENTATION_PLAN and await user confirmation after design completion. |
+| `does_not_implement_directly` | PASS | The output says implementation is currently impossible and that no files were modified; git evidence confirms no code, test, or implementation changes. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6; fixture_sha256=e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984; output_sha256=39ea93b4c60ec48bc6451d379e26d34822f77df0d647638ec55b6ae8fff23e4b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly recognizes missing design deliverables and blocks changes, but omits several required gate, handoff, and post-design planning details.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6; fixture_sha256=e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984; output_sha256=1fe5dbf45d6d8c1e5c15d14d81833d1c6790224d37979eaa56b9298c77787a08; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline only reports missing source/design documents and does not identify the UI design gate or required handoff.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with_skill output fails to explicitly classify the requested changes as frontend UI/visual changes requiring the UI Design Handoff Gate.
+- It does not explicitly verify both required design-document paths and their coverage.
+- It omits the required engineer-agent -> designer-agent handoff.
+- It omits the required post-design IMPLEMENTATION_PLAN and user-confirmation gate.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-009-ui-design-handoff-gate
 
 ## Evaluation Target

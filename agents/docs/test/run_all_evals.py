@@ -17,7 +17,7 @@ def main() -> int:
         print("No docs eval metadata found under agents/docs/test")
         return 0
 
-    run_eval = test_root / "run_eval.py"
+    run_eval = test_root.parents[2] / "scripts/run_skill_eval.py"
     failures = []
 
     for metadata_path in targets:
@@ -25,7 +25,9 @@ def main() -> int:
             f"==> Running {metadata_path.relative_to(test_root.parent.parent.parent)}",
             flush=True,
         )
-        result = subprocess.run([sys.executable, str(run_eval), str(metadata_path)])
+        result = subprocess.run(
+            [sys.executable, str(run_eval), "--metadata", str(metadata_path)]
+        )
         if result.returncode != 0:
             failures.append(metadata_path)
 

@@ -1,3 +1,82 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-013-version-normalization-boundaries`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970` from `agents/docs/test/docs-audit/evals/workspace/eval-013-version-normalization-boundaries`.
+- Fixture SHA-256: `1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970`
+- Prompt SHA-256: `e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2baee6e542351d5b0c46e79c685dd29ff93f0fee4a45cf4485afee7656248cf7`
+- Skill overlay SHA-256: `a2871f547194089c5425585467f9bee6e3c85ea103d77933d85a4c4cf246fa7c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6f3c010dbdde60de256381f298da12ba27ac671f9dba533a58464c18d69bbe20`
+- Metadata SHA-256: `de723686d571b59f10dc657eaf98d1d9ad27c06a9381fcb0dfee19364fb401ec`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_complete_version_identity` | PASS | with_skill 将带 v 与不带 v 的版本归一化为同一完整 identity，并保留 rc.1 与 +Build.7；同时拒绝大小写、构建元数据和预发布部分不同的候选。 |
+| `enforces_each_source_contract` | PASS | with_skill 逐项列出 target、tag、notes、index、releases、marketplace、package 的观测问题，指出缺失、非法 raw form、selector 解析为 0、非唯一匹配及 extractor identity 不一致，未将其他来源值作为补值。 |
+| `reports_all_version_blockers` | PASS | with_skill 覆盖了 fixture 中的缺失、非法格式、大小写/前缀错误、identity 差异、selector 非唯一或无解析结果、extractor 不一致及 pre-tag 来源集合问题，并分别判定 pre-tag 与 post-tag blocked。 |
+| `binds_pre_and_post_tag_inventory` | FAIL | with_skill 指出 pre-tag 缺少可验证 handoff，但没有说明应如何固定完整来源集合、如何让 post-tag 消费同一绑定，或为何多版本来源不能通过扫描挑选。 |
+| `makes_inventory_integrity_reproducible` | FAIL | with_skill 仅指出 extractor identity 不一致会破坏可复现性；没有给出确定性的 inventory integrity 证据，也没有说明来源集合、定位契约或顺序变更时的阻断规则。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e; fixture_sha256=1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970; output_sha256=582eefc3872decc8188039db14b9d6123afc0c1fe9fc12d6f50f3e36095ee39c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 更完整地识别并阻断 pre-tag/post-tag 证据问题，但未满足来源绑定和 inventory integrity 可复现性要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e; fixture_sha256=1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970; output_sha256=268fab184efced03c3c678997644aa1ae17fed5fdc378736e78ee2c55baa0bea; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了主要 post-tag 版本问题，但将 pre-tag 判为通过且未充分逐源审查。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未说明 pre-tag 固定来源集合与 post-tag 同绑定复核机制。
+- with_skill 未提供确定性的 inventory integrity 证据及其篡改阻断规则。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Skill Eval Comparison
 
 ## Evaluation Target

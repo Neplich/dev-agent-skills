@@ -13,20 +13,20 @@ source_documents:
   - deploy/docker/.env.example
   - deploy/docker/README.md
 scope_decision:
-  summary: 为现有 production Docker Compose 服务编写回滚、故障响应、排查和值班手册。
+  summary: 为现有 production Docker Compose 服务编写回滚与故障响应手册。
   expectation_changed: false
   non_goals:
     - 实际执行回滚
     - 修改应用
     - 数据库 migration 回滚
+    - 通用排查手册
+    - 值班手册
 downstream_owner: DevOps
 required_output:
   - deploy/ROLLBACK.md
   - deploy/INCIDENT_RESPONSE.md
-  - deploy/TROUBLESHOOTING.md
-  - deploy/ON_CALL.md
 blockers_risks:
   - 回滚必须使用已知健康的不可变 SemVer tag
 ```
 
-P1 应用不可用要求 15 分钟内响应并升级至 on-call lead；P2 部分降级要求 30 分钟内响应。升级渠道使用 `#ops-incidents`，角色为 on-call engineer、incident commander 和 service owner。
+P1 应用不可用要求 15 分钟内响应并升级至 incident commander；P2 部分降级要求 30 分钟内响应。升级渠道使用 `#ops-incidents`，参与角色为 incident commander 和 service owner。

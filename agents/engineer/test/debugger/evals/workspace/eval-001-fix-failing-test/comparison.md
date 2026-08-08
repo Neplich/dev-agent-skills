@@ -1,3 +1,83 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-001-fix-failing-test`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `5c2aa809e84372707ac261c141dd4e1423c9e30cd9e6ea24a75c119a154d7dff` from `agents/engineer/test/debugger/evals/workspace/eval-001-fix-failing-test`.
+- Fixture SHA-256: `5c2aa809e84372707ac261c141dd4e1423c9e30cd9e6ea24a75c119a154d7dff`
+- Prompt SHA-256: `466181e7694b25aaf0cac9d93d523254287de12a8ec17c132e46918754d64666`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `dcc41028443385df7286f016738f0aaf1f647d06f9da1ee3865bedd33c344afe`
+- Skill overlay SHA-256: `267ff29e20f38caffb753a87229899be929d0e39edb8d8216c48698de2a99ab6`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `6b7f6f3c728ce188aed0a47e4a45eb3f4fe94997d76729d3cd71d8126d7fbe1a`
+- Metadata SHA-256: `b2ee79c4493432ae5076e82b907d6b1be7ab09583eef30c12a61c6ba0cd38123`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `aligns_expected_behavior` | FAIL | with_skill 输出未引用 PRD.md 或 TRD.md，也未按要求对齐并说明预期行为。 |
+| `classifies_requirement_alignment` | FAIL | 未在根因分析前区分 implementation_deviation、requirement_change、trd_gap 或 missing_docs。 |
+| `reproduces_failure` | FAIL | 仅报告测试通过，未提供失败复现步骤或错误信息。 |
+| `reports_root_cause` | FAIL | 只说明筛选条件已修改，未明确分析原实现为何导致失败。 |
+| `presents_combined_analysis_and_plan` | FAIL | 未呈现根因分析与修复计划，也未等待用户确认。 |
+| `blocks_e2e_before_repair_plan` | FAIL | 未说明修复计划确认前禁止新增或更新 E2E TC，也未要求引用已确认的 IMPLEMENTATION_PLAN.md。 |
+| `does_not_fix_directly` | FAIL | 输出明确声称已修复、测试通过并修改了 src/api/notifications.ts。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=466181e7694b25aaf0cac9d93d523254287de12a8ec17c132e46918754d64666; fixture_sha256=5c2aa809e84372707ac261c141dd4e1423c9e30cd9e6ea24a75c119a154d7dff; output_sha256=2c64db3849c80f924eea593a380d8fc942706c07d243b94f850cfd60a215c33f; snapshot_sha256=979419988003dce818013a156de00587aa1bee4357920919a8ba007a4a60eab8
+- Behavior: 同样直接修改代码并报告测试通过；未满足要求的分析、计划、E2E 阻断和确认流程。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=466181e7694b25aaf0cac9d93d523254287de12a8ec17c132e46918754d64666; fixture_sha256=5c2aa809e84372707ac261c141dd4e1423c9e30cd9e6ea24a75c119a154d7dff; output_sha256=8a1f3a058823a42976a455ee43631449f715a01af690abd48042635c23b0d060; snapshot_sha256=213ecfc0f050d1ec64b2660f2b8c7a5677052b704d3959c03673e292fe4c78ca
+- Behavior: 直接修改代码并报告测试通过，未进行需求对齐、分类、复现或计划确认。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 输出未满足任何一项断言要求。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-fix-failing-test
 
 ## Evaluation Target

@@ -1,3 +1,80 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `competitive-brief`
+- Eval: `eval-002-battlecard-mode`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/competitive-brief/evals/workspace/eval-002-battlecard-mode`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `70b4fbc3e06dc263b49c3b8be67b315a355580959b808022e5988e647e7d834c`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `9bcbaea9ed44a65b8b7c8fe2503291ec2b4f93690b7975aa2c81cb08e3724567`
+- Skill overlay SHA-256: `e16b71c2700d685342e052804fd5eb5278935b75eddc6e749594182c8bc24969`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `e8a999a639bd228ca705a12ae8869ebeef2f7342c542af9c88de16ec2f2c6c41`
+- Metadata SHA-256: `afa74db5ddc57d2d44d180de2fcf13cf3e54e4afa39e70bed4f98d234bbdaa99`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `battlecard_fields` | FAIL | with_skill 输出虽分为 Linear/Jira 两页并覆盖定位、强项、短板、发现问题、话术和 POC，但未明确提供 Quick Overview、Their Pitch、Objection Handling、Landmines to Set、Landmines to Defuse、Win/Loss Themes 等要求字段，且未形成每家完整单页字段结构。 |
+| `no_full_brief` | PASS | with_skill 输出以两页 battlecard 形式组织，没有执行摘要、完整竞品画像、messaging gap 分析或机会/威胁/行动项等完整 brief 章节。 |
+| `evidence_boundary` | PASS | with_skill 标注研究日期，区分“事实”与“假设/需验证”，并提供官方及第三方来源链接；对迁移、体验、合规、成本等不确定结论明确要求验证。 |
+| `no_battlecard_offer` | PASS | with_skill 直接交付 Linear/Jira 资料，没有询问是否需要创建 battlecard，也未将其作为后续追加项。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=70b4fbc3e06dc263b49c3b8be67b315a355580959b808022e5988e647e7d834c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=d525782eb9a219d5e3e2603e0d027bf02448a2d100fc15bb3a59df307450a18c; snapshot_sha256=018a4d6d824aaea8de3928890bb086060be80aab2b9c1df2f0aed0a56795a307
+- Behavior: 交付了两页 Linear/Jira 单页版竞争资料，证据边界和研究日期处理良好，但未按要求显式覆盖全部 battlecard 字段。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=70b4fbc3e06dc263b49c3b8be67b315a355580959b808022e5988e647e7d834c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=289309de145b545cf9f9cc4ca1f22bedd2b8cce814868bd3ba3373312f50f1c4; snapshot_sha256=67417e63bde5a4033ce4764817ca7ecac0ba0837e208fc8ee27fdbb9aa876bf1
+- Behavior: 交付了两页 battlecard，字段覆盖较多并标注事实/假设，但包含 Discovery 问题且未完整满足指定 battlecard 字段清单。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未显式覆盖要求的完整 battlecard 字段集合。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-002-battlecard-mode
 
 ## Latest Fresh Evaluation — 2026-08-07

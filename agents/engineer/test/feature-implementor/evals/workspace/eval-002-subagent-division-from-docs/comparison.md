@@ -1,3 +1,83 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-002-subagent-division-from-docs`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974` from `agents/engineer/test/feature-implementor/evals/workspace/eval-002-subagent-division-from-docs`.
+- Fixture SHA-256: `8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974`
+- Prompt SHA-256: `6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`
+- Skill overlay SHA-256: `5c74cbf7ab5eef845bc8c3f0d81a775b1feca5810a9a615f9b35865026f3e841`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `f4a3318c26964c6e50e73da4a0083b2eedeed8886d0685576f77ee1323f675a5`
+- Metadata SHA-256: `0a81d92a9af555dbb300e83a7ff4d8024a21161273fe243a2bbb1dbd8da3747a`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_main_context` | FAIL | 未说明主进程保留仓库规则、实现边界及最终交付判断，也未明确主进程不吞并编码和验收细节。 |
+| `writes_implementation_plan_doc` | FAIL | 虽提到稍后固化 IMPLEMENTATION_PLAN.md，但未安排文档编写 sub-agent，也未说明 TRD 不由 feature-implementor 改写。 |
+| `delegates_implementation_scope` | FAIL | 列出了三个文件和范围约束，但未明确委派给实现 sub-agent。 |
+| `delegates_independent_validation` | FAIL | 描述了验收侧检查，但未安排不同于实现 sub-agent 的独立验收 sub-agent。 |
+| `keeps_simple_path_exception` | FAIL | 未保留简单单文件修改、纯解释或用户明确不拆分时的轻量路径例外。 |
+| `final_summary_contract` | FAIL | 提到汇总测试结果和遗留风险，但未完整说明最终交付需包含实现结果、测试情况、验收结论和遗留风险。 |
+| `qa_e2e_handoff_contract` | FAIL | 未说明形成 QA E2E 文档补充交接包，也未给出 docs/qa/e2e/{feature_path} 功能目录或所需内容。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=194feb4ac09939ba258ef272b8fd6b1ac50f288ecda3e61fb0c82bb19f97c005; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提出了较清晰的三文件实现与验收范围，并要求先确认技术参数，但未满足所需的主进程、sub-agent、简单任务例外及 QA E2E 交接契约。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6d68306ed0e21eb7949f908f4dc831f18272177bd88aed14ab9420f34207f51f; fixture_sha256=8481ed80b8f086d56a7d099cb26476a4c1557eb2e668f63f4464955938246974; output_sha256=ccd0c58cc8e6cb205302737649a9b2b5bc16d5be42104b06c37c8bea611cb853; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了直接实现方案并将验收留给用户或评审人，未采用 sub-agent 分工和 QA E2E 交接约定。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足全部七项断言。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-002-subagent-division-from-docs
 
 ## Evaluation Target

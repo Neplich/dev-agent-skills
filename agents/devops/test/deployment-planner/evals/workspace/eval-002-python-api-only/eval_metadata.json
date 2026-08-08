@@ -2,11 +2,21 @@
   "eval_id": "eval-002-python-api-only",
   "eval_name": "python-api-only",
   "workspace_root": "agents/devops/test/deployment-planner/evals/workspace/eval-002-python-api-only",
-  "prompt": "我的 FastAPI 项目只需要 API 服务，没有数据库或其他持久化依赖。请生成部署配置。",
   "feature_path": "N/A",
   "fixture_context": [
     "PM_HANDOFF.md",
     "pyproject.toml",
     "app/main.py"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

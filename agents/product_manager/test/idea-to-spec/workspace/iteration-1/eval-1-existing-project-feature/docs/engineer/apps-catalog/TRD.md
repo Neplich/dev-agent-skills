@@ -3,14 +3,14 @@ title: "Apps Catalog Technical Requirements"
 type: TRD
 version: "1.0.0"
 status: Draft
-author: "Eval Fixture"
+author: "Applications Platform Team"
 date: "2026-04-06"
-generated_by: "fixture"
+generated_by: "engineering"
 related_docs: []
 changelog:
   - version: "1.0.0"
     date: "2026-04-06"
-    changes: "Initial fixture"
+    changes: "Documented the current app catalog architecture and constraints"
 ---
 
 # Overview

@@ -1,3 +1,83 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-001-sync-feature-api`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api`.
+- Fixture SHA-256: `a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032`
+- Prompt SHA-256: `cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `79b2ff102fa24fa224c9f24f44f3e648a1ae7eb9a7a10e639d8675db4454120a`
+- Skill overlay SHA-256: `52a3ba7ee2d9485acf003417b40e0d0ca2ab263cbadde98fac58250b6c2a9778`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `ce743547e06014367140716bb2c97c1db58eb733e797662e8b4bd6eca00be3ee`
+- Metadata SHA-256: `e71fe1ba5d6339777690bef42456f363050aa1a29a7cf722a403bab61da88105`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `selects_backfill_mode_and_api_contract` | FAIL | With-skill output selects existing-system backfill and cites the request, handoff, catalog, and site, but does not state loading the host standards entry, change map, or API template, nor explicitly confirm those non-API templates were not read or applied. |
+| `derives_complete_api_candidate_tree` | FAIL | It lists the required five pages and supports them with catalog paths, routes, owner, schema, and contract-test evidence, while deferring Billing; however, route tag evidence is not stated. |
+| `presents_per_node_confirmation_matrix` | FAIL | The page table has only page, role, and evidence, and the mapping section has change-map entries. It does not provide per-node parent, exact code boundary, owner, classification/route evidence, delta, and exclusions for every domain, subfeature, index, and leaf. |
+| `proposes_exact_atomic_change_map` | FAIL | The route, schema, and contract-test mappings cover the five-page tree and preserve the manual-plugin fields, but the output does not state stable deduplicated sorting of mappings/navigation or explicitly preserve all unrelated entries. |
+| `preserves_stable_paths_and_scope_boundaries` | FAIL | It keeps Billing and Search out of batch and explicitly excludes database, design, ops, product, and release documentation, but does not explicitly exclude src/api/internal/** or state the required migration-plan-and-confirmation rule for any stable-path move. |
+| `keeps_unconfirmed_batch_read_only` | FAIL | It clearly says no documents or change map are written and waits for confirmation before creation, but does not explicitly state that no next batch, post-write host checks, or docs-agent:docs-audit handoff will occur. |
+| `defaults_new_pages_to_internal_visibility` | PASS | It assigns visibility: internal to new pages and keeps the existing API root both-visible because the existing external Search page remains in scope for that root. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032; output_sha256=11161bded73630a85cd31368c0e218e82be9fad772da28eb2071f2a299fc0a09; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: The candidate selects the correct Identity/Sessions backfill and page paths, adds richer evidence and mappings, preserves existing Search/manual-plugin context, and pauses before writes, but omits several required per-node, exclusion, and confirmation-boundary details.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=a02cecead0666327de493458ce5b7665c4330c17675060cfa33039c7bc6f5032; output_sha256=4ca78b03d9e770f30a2c191b37277e80501b4d504ccfee8590cc220140b63de0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline proposes a narrower four-page subtree with create.md/revoke.md names, incomplete ancestor/change-map coverage, and no visibility or explicit read-only handoff safeguards.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- With-skill output fails six assertions due to omitted required evidence or safeguards; the without-skill lane was used only as comparison context.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Skill Eval Comparison
 
 ## Evaluation Target

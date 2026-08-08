@@ -1,3 +1,80 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `product_manager`
+- Skill: `roadmap-gen`
+- Eval: `eval-001-timeline`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/roadmap-gen/workspace/eval-1-timeline`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `468200f0078590343722139d5397a5381e11a254b11fd8f1f5d7276eda7575c7`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f225bc0cb8da89135ab8fda6545fb6caaf81067f282662f8137864aa5ba934b5`
+- Skill overlay SHA-256: `6a4646ad3a1fa7bd703a7dd65466915e8af51609ca905370cd74275729cdaa61`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `cbeae06859c5325069790802206e50a82b5b23d446c019f5364c7f597eb8f474`
+- Metadata SHA-256: `2881f972587a02ea67b4b7ffba2b31eb69fa71b4cf60d23781d8d9d383996c5a`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `phase_classification` | PASS | 证据显示所有开放 milestone 均无 due_on，未发现有截止日期的 milestone；输出未捏造日期。 |
+| `undated_semantic_inference` | FAIL | 输出正确指出无法按 semver 推断阶段并请求维护者确认，但仍将这些 milestone 放入“未排期”区段，违反了不得自动归入未排期的要求。 |
+| `roadmap_artifacts` | FAIL | 输出包含进度条、issue 状态和 GitHub 链接，但明确因无截止日期而不生成 Mermaid Gantt，缺少必需工件。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=468200f0078590343722139d5397a5381e11a254b11fd8f1f5d7276eda7575c7; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=e6b544f8737d602714eb2f4ec5429155072f5e0ce8d0584779b0b21381596132; snapshot_sha256=f673eff5f537456013e5fafd947b7fef82b7d917b7e1b6bffa99729ad004a4d8
+- Behavior: 基于 milestone、issue 和版本上下文整理了进度条、issue 状态及链接；识别无日期且非 semver 的 milestone 并请求确认，但将其置于未排期区段且省略 Mermaid Gantt。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=468200f0078590343722139d5397a5381e11a254b11fd8f1f5d7276eda7575c7; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=38031397ba38c47e007a6c2fe3ce04050d5b819938d3d82ff9576de10d0d651f; snapshot_sha256=3045c5dae12c123c781c79ea48b3d52accb7d146ee8b95db48385d98bdb093dc
+- Behavior: 生成了主题化的规划路线图和官方链接，但未展示基于 milestone 的日期/语义分类证据，也未提供要求的结构化进度与 Gantt 工件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足无日期 milestone 不得自动归入未排期的约束。
+- with_skill 缺少 Mermaid Gantt。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: roadmap-timeline
 
 ## Latest Fresh Evaluation — 2026-08-07

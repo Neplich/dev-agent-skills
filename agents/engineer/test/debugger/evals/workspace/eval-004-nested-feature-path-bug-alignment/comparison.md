@@ -1,3 +1,81 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `debugger`
+- Eval: `eval-004-nested-feature-path-bug-alignment`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0` from `agents/engineer/test/debugger/evals/workspace/eval-004-nested-feature-path-bug-alignment`.
+- Fixture SHA-256: `1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0`
+- Prompt SHA-256: `c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `dcc41028443385df7286f016738f0aaf1f647d06f9da1ee3865bedd33c344afe`
+- Skill overlay SHA-256: `267ff29e20f38caffb753a87229899be929d0e39edb8d8216c48698de2a99ab6`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `4ed41777f0081de6b22c8d5c1da9d06cff7a26fda1bb09b0b22361f263f5eaee`
+- Metadata SHA-256: `92b34bddeb11ae5b3c6841a7115ad004679cbe8ce0c62b863a34d672cce43c83`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_nested_expected_behavior_docs` | FAIL | 列出了两份文档路径，但未说明它们对应 feature_path: chat-interface/messages/history/search。 |
+| `validates_trd_related_prd` | FAIL | 未检查或提及 TRD 的 related_prd 指向同一路径 PRD，也未定义不匹配时的 trd_gap 分类。 |
+| `classifies_before_repair_plan` | FAIL | 输出未在调查结论中使用 implementation_deviation、requirement_change、missing_docs 或 trd_gap 分类。 |
+| `blocks_wrong_path_or_requirement_change` | PASS | 原始文档显示 feature_path 清晰、PRD 存在、需求未显示变化且 TRD related_prd 路径匹配；输出未进入修复计划、代码修改或 E2E 更新。 |
+| `does_not_fix_directly` | PASS | 输出仅说明无法定位并请求补充代码或数据，未声称修改代码、更新测试、应用修复或验证通过。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94; fixture_sha256=1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0; output_sha256=800e503039edd5ba8b660cb75cade4d3a37d7e03e3da4407ff0a5b3472dae2e3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别到仅有文档、缺少实现与测试，并保持未修改状态；同样未明确说明 feature_path、校验 related_prd 或进行规定分类。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a119a607cc22724566b0886d0898a2191f1291f5ef19216b2d283dcf9bdf94; fixture_sha256=1e51e9c8d509d705021a998a8e3fa6c6c2d1f11f8d331f94d613c603fe3acfe0; output_sha256=e9ee936e5c57ed26e88a4fe0611a387dc3a8fbd21606e7aacb82e699aefaa4d2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别到仅有文档、缺少实现与测试，并保持未修改状态；未完成路径元数据校验或分类。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足 nested 文档行为说明、TRD related_prd 校验和修复前分类要求。
+- Next: 在输出中明确引用两份文档及 feature_path，校验 related_prd，并在任何修复建议前给出规定分类。
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-004-nested-feature-path-bug-alignment
 
 ## Evaluation Target

@@ -1,0 +1,6 @@
+ mode change 100644 => 100755 docs/site/api/catalog-items.md
+ mode change 100644 => 120000 docs/site/api/catalog-status.md
+ rename docs/site/release-notes/{index.md => archive.md} (100%)
+ delete mode 100644 docs/site/release-notes/v1.2.0.md
+ create mode 120000 docs/site/.meta/audit/audit-v1.2.0.md
+ create mode 120000 docs/site/.meta/audit/unexpected-link.md

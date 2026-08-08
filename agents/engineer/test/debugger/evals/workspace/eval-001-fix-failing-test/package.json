@@ -1,5 +1,5 @@
 {
-  "name": "debugger-failing-test-fixture",
+  "name": "notifications-api",
   "private": true,
   "type": "module",
   "scripts": {

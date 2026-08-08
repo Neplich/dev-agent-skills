@@ -1,23 +1,12 @@
-# TRD Gap Packet
+# Capture Loop Technical Open Questions
 
-```yaml
-finder: feature-implementor
-classification: trd_gap
-feature_path: capture-loop
-source_documents:
-  - docs/pm/capture-loop/PRD.md
-target_document: docs/engineer/capture-loop/TRD.md
-target_state: missing
-boundary: finder reports gaps; trd-gen owns the Engineer document
-```
+The product requirements define asynchronous processing, idempotency, bounded
+retry, dead-letter handling, and observable processing states. The following
+engineering details are not yet decided:
 
-## Named Gaps
-
-1. Affected components: HTTP capture entry, `src/capture/processor.ts`, queue retry policy and dead-letter path.
-2. Data flow and integration: define `capture.created` fields, idempotency key propagation, enqueue/consume boundaries and status persistence.
-3. Validation: define unit and integration coverage plus the concrete command `npm test -- capture-loop`.
-4. Release and rollback: define compatibility during rolling deployment, safe disablement of consumers and treatment of in-flight events.
-5. Error handling: distinguish retryable from permanent errors and prevent duplicate side effects.
-6. Observability and security: define correlation ID, retry/dead-letter metrics, alerting and organization boundary validation.
-
-Any unresolved technical decision must be recorded as an open question with owner and unblock condition. Until the TRD is complete and confirmed, `feature-implementor`, `debugger`, `IMPLEMENTATION_PLAN.md` and QA E2E updates remain blocked.
+1. Which component owns the HTTP capture entry, event publication, queue consumption, status persistence, and dead-letter handling?
+2. Which fields belong in `capture.created`, and where is the client event ID converted into an organization-scoped idempotency key?
+3. Which unit and integration cases cover duplicate delivery, transient failure, exhausted retries, and permanent errors, and which repository commands run those cases?
+4. How do producers and consumers remain compatible during rolling deployment, and how are in-flight events handled during rollback?
+5. Which errors are retryable, which are permanent, and where are duplicate side effects prevented?
+6. Which correlation IDs, retry and dead-letter metrics, alerts, and organization-boundary checks are required?

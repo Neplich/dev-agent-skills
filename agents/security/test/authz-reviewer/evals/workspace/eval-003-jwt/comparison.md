@@ -1,3 +1,80 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `security`
+- Skill: `authz-reviewer`
+- Eval: `eval-003-jwt`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4` from `agents/security/test/authz-reviewer/evals/workspace/eval-003-jwt`.
+- Fixture SHA-256: `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4`
+- Prompt SHA-256: `da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d2e4aec7daf8a1a3d4dd9129eb3c1a3dff6fda1cedda3583e17db51f3c77b01c`
+- Skill overlay SHA-256: `93997287763bb5908bc9735f09115a4d8477c3badf934fbe6f43970bb3ecd156`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `8f6e801f8a45c6ec677bbcaa4a56de6b68c935402a27b9f24ca631ffe0af8504`
+- Metadata SHA-256: `2db8c4dc18a4712e7dcc4d2c4e3e9c1608e8526019fbff1c3fc3e6ded6f9d1c5`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `authorization_model` | PASS | with_skill 报告明确识别 user/admin 角色、普通受保护 API 与 /api/admin/* 资源边界，并追踪 Authorization header → authenticateJwt → payload 解码 → canAccessAdminApi 的实际路径。 |
+| `access_control_findings` | PASS | with_skill 报告指出未验证签名、未限制 alg、未校验 exp、直接信任 role、sub 可伪造，以及 Bearer/token 结构解析不严格等缺陷，并说明认证绕过和 admin 越权后果。 |
+| `evidence_and_impact` | PASS | 报告提供了 src/auth/jwt.js 的定位证据、具体代码行为、Critical/High/Medium 严重度，以及对身份冒充、管理端越权、过期令牌访问和异常处理的影响分析。 |
+| `remediation` | PASS | 报告给出使用完整 JWT verify、固定算法 allowlist、校验 exp/iss/aud、仅向授权层传递已验证 claims、严格解析 Bearer token、统一 401/403，以及覆盖篡改签名、alg:none、过期、角色篡改和路由集成的回归测试建议。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=6b0d05e6a11e782bb7ddc71462ae0683c605fe509541104ffdfe578a92a60999; snapshot_sha256=a411349506b79f831724a18ec9b978540e9dd7fbe7e96a42f1b156ed3293d711
+- Behavior: 生成结构化 JWT 安全审查，完整覆盖授权路径、信任边界、代码证据、风险影响、修复方案和回归验证。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=ece48833759fd1574db66dbdb326a8d693564bc8664ee0fbe7fe4f0238f7a371; snapshot_sha256=4a69169a2f90749096183202f030734abb94958777a995da75a7f6726379637d
+- Behavior: 识别了主要 JWT 与角色授权缺陷，并提供了较完整的审查报告、影响、修复和回归建议。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-003-jwt
 
 ## Evaluation Target

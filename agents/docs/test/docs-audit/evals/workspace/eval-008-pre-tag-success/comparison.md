@@ -1,3 +1,169 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-008-pre-tag-success`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b1af296f57c9472641aa2fbf552cc05b76e8658e900bc4d5f0a34e60133977ab` from `agents/docs/test/docs-audit/evals/workspace/eval-008-pre-tag-success`.
+- Fixture SHA-256: `b1af296f57c9472641aa2fbf552cc05b76e8658e900bc4d5f0a34e60133977ab`
+- Prompt SHA-256: `c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2baee6e542351d5b0c46e79c685dd29ff93f0fee4a45cf4485afee7656248cf7`
+- Skill overlay SHA-256: `a2871f547194089c5425585467f9bee6e3c85ea103d77933d85a4c4cf246fa7c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `9e8cd9d72ce0e98552272f26978823af26e642ab29487b2f1519c46898c21493`
+- Metadata SHA-256: `8bf9eed51fb7f0c370d32001c1771329090952db5672ea9c398b67465aa72d50`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_confirmed_version_without_tag` | PASS | with_skill records base_ref, target_ref, confirmed v1.2.0, and absent tag; it blocks for missing handoff/inventory rather than tag absence. |
+| `verifies_complete_set_and_surfaces` | FAIL | It verifies the four listed pages, but does not establish the complete required surface set or successful handoff, metadata, and host-version verification. |
+| `normalizes_mixed_version_forms` | FAIL | It notes an incomplete version-source inventory and does not demonstrate required raw-form validation, normalization, or SemVer equality. |
+| `records_pre_stamp_values` | PASS | It records the exact required pre-stamp values for all four pages. |
+| `stamps_complete_set_atomically` | NOT_EXERCISED | The output explicitly says no document fields were modified because the audit was blocked. |
+| `builds_isolated_candidate_transaction` | NOT_EXERCISED | No isolated candidate transaction or temporary build is reported; the audit stopped before construction. |
+| `candidate_record_has_no_ready_result` | NOT_EXERCISED | No candidate record was created or reported. |
+| `validates_two_complete_staged_gates` | NOT_EXERCISED | No staging, raw metadata gate, or candidate replacement gate was performed. |
+| `confirms_anchor_commit_before_discovery` | NOT_EXERCISED | No anchor commit or post-stamp confirmation was created. |
+| `persists_fixed_discovery_handoff` | NOT_EXERCISED | The output explicitly says no audit record or handoff was created. |
+| `returns_ready_only_after_integration` | NOT_EXERCISED | Integration and downstream ready handoff were not reached because the audit was blocked. |
+| `returns_ready_for_tag_not_published` | FAIL | The output returns blocked rather than the required pre-tag ready_for_tag result. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=b1af296f57c9472641aa2fbf552cc05b76e8658e900bc4d5f0a34e60133977ab; output_sha256=398e5f83753be86170ff333d79b71d66251164b780867e05af976ee7880965be; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly accepted the confirmed pre-tag version and absent tag, verified the four listed pages and pre-stamp values, then blocked on missing release-notes handoff and incomplete version-source inventory.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=b1af296f57c9472641aa2fbf552cc05b76e8658e900bc4d5f0a34e60133977ab; output_sha256=2b16be09888ad63a1d710e91fccfe240755b1009b7b08ef88744e422973f9abb; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline misclassified the release metadata as a blocking publication conflict and did not perform the required audit workflow.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The complete required surface and source-normalization verification were not demonstrated.
+- The required ready_for_tag result was not returned.
+- Next: Provide the required Release Notes handoff and complete version-source inventory, then rerun the full pre-tag workflow.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-audit`
+- Eval: `eval-008-pre-tag-success`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `588924b9e745bd0282560429ce305f14ce4c254eb94edfc5269a128aff4ece1b` from `agents/docs/test/docs-audit/evals/workspace/eval-008-pre-tag-success`.
+- Fixture SHA-256: `588924b9e745bd0282560429ce305f14ce4c254eb94edfc5269a128aff4ece1b`
+- Prompt SHA-256: `c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2baee6e542351d5b0c46e79c685dd29ff93f0fee4a45cf4485afee7656248cf7`
+- Skill overlay SHA-256: `a2871f547194089c5425585467f9bee6e3c85ea103d77933d85a4c4cf246fa7c`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `9e8cd9d72ce0e98552272f26978823af26e642ab29487b2f1519c46898c21493`
+- Metadata SHA-256: `8bf9eed51fb7f0c370d32001c1771329090952db5672ea9c398b67465aa72d50`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_confirmed_version_without_tag` | PASS | with_skill 明确记录 base_ref、target_ref、维护者确认的 v1.2.0，并确认同名 tag 不存在且未因此阻塞。 |
+| `verifies_complete_set_and_surfaces` | FAIL | 虽列出两张 API 页面及两份 Release Notes 为 verified，但未验证 release-notes-gen handoff，且将 .meta/releases.json 的状态矛盾作为阻塞。 |
+| `normalizes_mixed_version_forms` | FAIL | 仅记录 v1.2.0，未分别核对带 v、无 v 的来源形态并规范化比较。 |
+| `records_pre_stamp_values` | FAIL | 未在审计结果中逐页记录四页的盖章前值。 |
+| `stamps_complete_set_atomically` | FAIL | 明确表示未执行统一 stamp。 |
+| `builds_isolated_candidate_transaction` | FAIL | 未构建隔离 candidate 事务，也未提供相关工作树、分支或 index 证据。 |
+| `candidate_record_has_no_ready_result` | FAIL | 未生成 candidate record。 |
+| `validates_two_complete_staged_gates` | FAIL | 未执行初稿和最终 candidate 的完整 raw metadata gate。 |
+| `confirms_anchor_commit_before_discovery` | FAIL | 未创建或确认 post-stamp anchor commit。 |
+| `persists_fixed_discovery_handoff` | FAIL | 未写入固定 discovery handoff。 |
+| `returns_ready_only_after_integration` | FAIL | 未进行临时分支集成、handoff 回读或 CAS 条件验证。 |
+| `returns_ready_for_tag_not_published` | FAIL | 结果为 blocked，未返回 ready_for_tag。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=588924b9e745bd0282560429ce305f14ce4c254eb94edfc5269a128aff4ece1b; output_sha256=a45a3c4acd5b72016a062f78253ede63f0a4de14dc1e8fe824dd0ba8cb82ed48; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确接受已确认版本和不存在的 tag，并识别影响页面；但因 handoff、版本源清单和发布元数据问题错误阻塞，未完成 pre-tag 事务或返回 ready_for_tag。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=588924b9e745bd0282560429ce305f14ce4c254eb94edfc5269a128aff4ece1b; output_sha256=e235a73d9646053f8c746bfa2b819574c83f013b509a71e85d091be8fba89804; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别 refs、版本和缺失 tag，但错误地将 .meta/releases.json 的预发布状态作为阻塞。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- verifies_complete_set_and_surfaces
+- normalizes_mixed_version_forms
+- records_pre_stamp_values
+- stamps_complete_set_atomically
+- builds_isolated_candidate_transaction
+- candidate_record_has_no_ready_result
+- validates_two_complete_staged_gates
+- confirms_anchor_commit_before_discovery
+- persists_fixed_discovery_handoff
+- returns_ready_only_after_integration
+- returns_ready_for_tag_not_published
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # eval-008-pre-tag-success Comparison
 
 ## Evaluation target

@@ -2,7 +2,35 @@
   "eval_id": "eval-004-confirmed-release-delivery",
   "eval_name": "confirmed-release-delivery",
   "workspace_root": "agents/docs/test/release-notes-gen/evals/workspace/eval-004-confirmed-release-delivery",
-  "prompt": "请依据 `release-entry.md`、`confirmation-record.md`、`evidence/` 与现有文档站完成本次站内 Release Notes 交付，并报告实际完成结果。",
-  "fixture_context": ["release-entry.md", "confirmation-record.md", "evidence/", "docs/site/package.json", "docs/site/package-lock.json", "docs/site/scripts/", "docs/site/standards/", "docs/site/release-notes/README.md", "docs/site/release-notes/index.md", "docs/site/release-notes/v0.9.0.md", "docs/site/.meta/releases.json"],
-  "execution_cleanup": ["docs/site/node_modules", "docs/site/.generated", "docs/site/release-notes/v1.0.0.md", "handoff.yaml"]
+  "fixture_context": [
+    "release-entry.md",
+    "confirmation-record.md",
+    "evidence/",
+    "docs/site/package.json",
+    "docs/site/package-lock.json",
+    "docs/site/scripts/",
+    "docs/site/standards/",
+    "docs/site/release-notes/README.md",
+    "docs/site/release-notes/index.md",
+    "docs/site/release-notes/v0.9.0.md",
+    "docs/site/.meta/releases.json"
+  ],
+  "execution_cleanup": [
+    "docs/site/node_modules",
+    "docs/site/.generated",
+    "docs/site/release-notes/v1.0.0.md",
+    "handoff.yaml"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

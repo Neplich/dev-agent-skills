@@ -2,10 +2,20 @@
   "eval_id": "eval-002-mapped-pagination-tests",
   "eval_name": "mapped-pagination-tests",
   "workspace_root": "agents/engineer/test/test-writer/evals/workspace/eval-002-mapped-pagination-tests",
-  "prompt": "请为 `src/pagination/` 的边界行为设计并编写测试，先核对当前默认页大小。",
   "fixture_context": [
     "src/pagination/defaults.txt",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/pagination.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

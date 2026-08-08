@@ -1,6 +1,6 @@
 # PM Handoff Packet
 
-pm-agent 已完成入口分类，并将本次 JWT 认证安全审查路由至 authz-reviewer。
+产品与安全负责人已确认本次审查范围和可用材料。
 
 ```yaml
 request_type: security
@@ -38,8 +38,8 @@ data_categories:
   - 身份认证数据
   - 角色声明
 remediation_expectations:
-  - JWT 实现修复项交回 engineer-agent
-  - 正式产品预期变化回交 pm-agent 分类
+  - JWT 实现修复项交回 应用工程团队
+  - 正式产品预期变化回交 产品负责人 分类
 blockers_risks:
   - 未验证的令牌声明可能导致身份伪造和 admin 越权
 ```

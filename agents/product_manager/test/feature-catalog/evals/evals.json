@@ -7,9 +7,35 @@
       "id": "eval-001-legacy-project-catalog",
       "name": "legacy-project-catalog",
       "description": "Verifies that feature-catalog builds an evidence-backed feature catalog draft for a legacy project with no PM docs, and stops at the maintainer confirmation gate instead of generating formal documents.",
+      "scenario": {
+        "persona": "刚接手存量产品的产品负责人",
+        "situation": "产品负责人刚接手一个只有代码、没有 PM 文档的电商后端，无法确认当前能力边界。",
+        "trigger": "新维护团队要安排后续产品工作，但当前没有任何可信功能清单。",
+        "goal": "从代码整理一份可由维护者确认的功能目录草案和不确定项。",
+        "materials": [
+          "README.md",
+          "package.json",
+          "src/models/order.js",
+          "src/routes/auth.js",
+          "src/routes/orders.js",
+          "src/services/notification-job.js"
+        ],
+        "constraints": [
+          "没有既有 PM 文档可作为确认事实",
+          "先给待确认草案，不写正式目录",
+          "功能名按业务能力而非代码文件命名"
+        ],
+        "success_criteria": [
+          "草案先行，不落正式文档",
+          "条目带分类证据和置信度",
+          "按业务能力命名",
+          "不确定项记录待确认问题",
+          "以确认门禁收尾"
+        ]
+      },
       "prompt": "我刚接手这个项目，之前团队没有留下任何 PM 文档。帮我建立功能目录，先梳理一下这个项目现在有哪些功能。",
-      "workspace": "workspace/eval-001-legacy-project-catalog",
       "expected_output": "一份显式标记待确认的功能目录草案：按业务能力归并出候选功能（如登录认证、订单管理、订单状态通知），每个条目带 suggested_feature_path、分类证据（routes/api_endpoints/services/data_models/background_jobs/tests）、high/medium/low 置信度、open questions 和关联代码路径；输出以维护者确认 feature_path 的请求收尾，不写 docs/pm/FEATURE_CATALOG.md，也不生成任何 PRD。",
+      "workspace": "workspace/eval-001-legacy-project-catalog",
       "assertions": [
         {
           "id": "draft_before_formal_docs",
@@ -42,9 +68,34 @@
       "id": "eval-002-child-feature-under-parent-prd",
       "name": "child-feature-under-parent-prd",
       "description": "Verifies that feature-catalog reuses the existing parent PRD feature_path and nests the new refund capability as a child feature with a complete handoff packet, instead of creating a parallel top-level directory.",
-      "prompt": "我们接手维护这个项目，docs/pm 里已经有 order-management 的 PRD。代码里最近多了退款模块，帮我做功能画像并更新功能目录，确定退款功能的 feature_path，说明确认后下一步怎么走。",
-      "workspace": "workspace/eval-002-child-feature-under-parent-prd",
+      "scenario": {
+        "persona": "刚接手存量产品的产品负责人",
+        "situation": "订单管理已有正式 PRD，但新出现的退款代码尚未归入功能树，维护者需要确认它与父功能的关系。",
+        "trigger": "退款模块刚进入代码库，产品目录需要在下一轮规划前确认其父子归属。",
+        "goal": "以现有订单管理为父功能，给退款模块确定有证据的目录归属和后续动作。",
+        "materials": [
+          "README.md",
+          "docs/pm/order-management/PRD.md",
+          "src/orders/refund/refund-api.js",
+          "src/orders/refund/refund-service.js",
+          "test/refund.test.js"
+        ],
+        "constraints": [
+          "复用已确认父功能路径",
+          "退款证据限于现有 API、服务和测试",
+          "维护者确认前不生成新 PRD 或技术文档"
+        ],
+        "success_criteria": [
+          "先读父 PRD 并复用其 feature_path",
+          "子功能嵌套在父路径下",
+          "父子元数据一致",
+          "handoff packet 字段完整",
+          "不越界生成 PRD/TRD"
+        ]
+      },
+      "prompt": "我们接手维护这个项目，docs/pm 里已经有 order-management 的 PRD。代码里最近多了退款模块，帮我做功能画像并更新功能目录，确定退款功能应该归到哪一层目录，说明确认后下一步怎么走。",
       "expected_output": "先读取 docs/pm/order-management/PRD.md 并复用既有 feature_path；退款作为 order-management 下的子功能提案（如 order-management/refund），parent_feature 和 feature_level 与嵌套路径一致，带 refund-api/refund-service/test 证据；说明维护者确认后由 prd-gen 创建或更新 PRD/DECISIONS，PM 文档确认后显式 handoff engineer-agent:trd-gen，handoff packet 包含 feature_path、feature、parent_feature、feature_level 和 feature_path_evidence。",
+      "workspace": "workspace/eval-002-child-feature-under-parent-prd",
       "assertions": [
         {
           "id": "parent_prd_context_read",
@@ -77,9 +128,34 @@
       "id": "eval-003-monorepo-scope-clarification",
       "name": "monorepo-scope-clarification",
       "description": "Verifies that feature-catalog blocks with one minimal scope clarification question when a monorepo take-over request does not say which workspace to catalog, instead of fabricating a confirmed catalog.",
+      "scenario": {
+        "persona": "刚接手存量产品的产品负责人",
+        "situation": "一个 monorepo 内有三个独立部署且分别维护的产品面，请求方尚未说明本次目录要覆盖哪一部分。",
+        "trigger": "维护交接刚开始，而不同 workspace 的产品边界使目录范围无法直接确定。",
+        "goal": "在范围不清时先得到最小澄清，而不是生成臆测的 monorepo 功能目录。",
+        "materials": [
+          "README.md",
+          "apps/admin/package.json",
+          "apps/web/package.json",
+          "apps/web/src/pages/dashboard.tsx",
+          "pnpm-workspace.yaml",
+          "services/api/package.json"
+        ],
+        "constraints": [
+          "三个 workspace 独立部署并有不同 owner",
+          "覆盖范围尚未确认",
+          "不得猜测三个并列产品功能结论"
+        ],
+        "success_criteria": [
+          "识别范围不清并 blocked",
+          "只问最小澄清问题",
+          "不伪造确认版目录",
+          "不猜测并列顶层路径"
+        ]
+      },
       "prompt": "接手了这个 monorepo，帮我建立功能目录。",
-      "workspace": "workspace/eval-003-monorepo-scope-clarification",
       "expected_output": "识别出 apps/web、apps/admin、services/api 三个独立 workspace 且请求未指定范围，输出 blocked 状态和一个最小范围澄清问题（先梳理哪个 workspace 或是否全部纳入）；不为未确认范围产出确认版功能目录，不写正式文档，也不为每个 workspace 猜测并列顶层 feature_path 作为结论。",
+      "workspace": "workspace/eval-003-monorepo-scope-clarification",
       "assertions": [
         {
           "id": "blocked_on_scope",
@@ -107,6 +183,27 @@
       "id": "eval-004-catalog-mapped-billing-feature",
       "name": "使用映射文档盘点计费功能",
       "description": "验证功能目录盘点命中 change-map 后精准读取低信任文档并回代码核证",
+      "scenario": {
+        "persona": "刚接手存量产品的产品负责人",
+        "situation": "计费模块已有映射文档和 API 页面，但其验证状态不明，产品负责人需要以实现为准盘点现状。",
+        "trigger": "计费功能将进入维护评审，现有文档的未验证状态要求先回代码核实。",
+        "goal": "以代码核验计费模块真实能力，并标明映射文档的可信度和冲突。",
+        "materials": [
+          "docs/site/api/billing.md",
+          "docs/site/standards/change-map.yaml",
+          "src/billing/service.txt"
+        ],
+        "constraints": [
+          "映射文档只用于定位",
+          "当前功能必须回到代码核证",
+          "未验证文档不能提升置信度"
+        ],
+        "success_criteria": [
+          "优先读取映射文档",
+          "回到代码核证目录事实",
+          "未验证文档按最低信任处理"
+        ]
+      },
       "prompt": "请盘点 `src/billing/` 当前已经实现的计费功能，给出带证据与置信度的功能目录草案。",
       "expected_output": "先读取 change-map 命中的计费 API 文档，再以代码事实核证功能边界并报告文档分歧。",
       "workspace": "workspace/eval-004-catalog-mapped-billing-feature",

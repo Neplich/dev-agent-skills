@@ -2,8 +2,18 @@
   "eval_id": "eval-005-route-deployment-request",
   "eval_name": "route-deployment-request",
   "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-5-route-deployment-request",
-  "prompt": "用户说：帮我配 CI，并做上线前检查。这个是仓库级配置，不属于某个功能。请判断分类、scope 和后续交接。",
   "fixture_context": [
     "README.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

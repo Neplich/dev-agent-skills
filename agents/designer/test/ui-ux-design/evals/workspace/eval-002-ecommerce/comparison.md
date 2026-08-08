@@ -1,3 +1,78 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `designer`
+- Skill: `ui-ux-design`
+- Eval: `eval-002-ecommerce`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `066b89d2cc1dd835345cd6d39e99316bc4d1c11f89b8739eb2d1941c8791d32f` from `agents/designer/test/ui-ux-design/evals/workspace/eval-002-ecommerce`.
+- Fixture SHA-256: `066b89d2cc1dd835345cd6d39e99316bc4d1c11f89b8739eb2d1941c8791d32f`
+- Prompt SHA-256: `eb90dbc90941b21fe1cf928c689f4703e38f536b24e4a881de504f524de89ea3`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `78da31c45df217a9e90f29e80573d99066d6964c62a108fc4cb609c96341db51`
+- Skill overlay SHA-256: `b9db71f44c6cca6e399d27edcc8fe58463a8d7a3c9a80f1728f1e7571f16e7df`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `931b5a68d664b4bafde7712fdb59980628e60528384f0dba2478ad10661f14cd`
+- Metadata SHA-256: `40409fe16f5c840772ed9dc96d9a9bf18f86662171fdae939c0a1ec6acbc3c28`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill 的交付文档明确采用 mobile-first，并覆盖商品列表、移动端筛选抽屉、商品详情、购物车及其数量调整、移除、撤销、价格汇总和状态反馈。 |
+| `assertion_2` | PASS | with_skill 输出是设计规格文档，包含布局原型、页面清单、交互行为、状态和响应式规则；未包含代码、文件补丁、命令行步骤或实现任务拆解。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=eb90dbc90941b21fe1cf928c689f4703e38f536b24e4a881de504f524de89ea3; fixture_sha256=066b89d2cc1dd835345cd6d39e99316bc4d1c11f89b8739eb2d1941c8791d32f; output_sha256=53f10ebe9e50260f11033bab36ce4d7db3d9c5c8747b1e8966c1fd961a578c0a; snapshot_sha256=6ec1e29b37ee8a9ed00f46997797e27de6acaaec02a8b721a207427b8b13ea39
+- Behavior: 满足两项断言，设计规格对 mobile-first 布局、筛选和购物车交互覆盖更明确，并保持在设计范围内。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=eb90dbc90941b21fe1cf928c689f4703e38f536b24e4a881de504f524de89ea3; fixture_sha256=066b89d2cc1dd835345cd6d39e99316bc4d1c11f89b8739eb2d1941c8791d32f; output_sha256=fa314cde7c2130dde3e9525de7487a08bed7a6336e5ad9f31cf65932ec5a0189; snapshot_sha256=b7e8e87ff87323e5e31f4436b9ffedb579f3e587e309b3cefa28c4b403b9b644
+- Behavior: 满足两项断言，已交付覆盖列表、筛选、详情、购物车的 mobile-first 设计文档。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- None.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-002-ecommerce
 
 ## Evaluation Target

@@ -1,3 +1,81 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-004-api-adr-owned-by-engineer`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116` from `agents/engineer/test/trd-gen/evals/workspace/eval-004-api-adr-owned-by-engineer`.
+- Fixture SHA-256: `7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116`
+- Prompt SHA-256: `825205d6124cce58172b3b6756f4b557e630d638b9032e293e0df1661f6c8e2b`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b66f9acea93e151819a21f82909f9a6b7d44c68fa52d2116667525e2fe8e9bd7`
+- Skill overlay SHA-256: `e4cc003a0e06320ef354c6c9cdbebb2b75980ec8b23ae530ac78b0667fab31da`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `c2e125b845f0cfd23a8b77d0953e79c0dfdb8a47bc09cbe45bf84d70fdf9a2db`
+- Metadata SHA-256: `d32be481f3b029c028aa82a9a8adf92bda8ff5084062b1a65511dd3d764980a1`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `engineer_owns_api_and_adr` | FAIL | With-skill output creates Engineer documents and marks `generated_by: "trd-gen"`, but neither the output nor document metadata identifies `engineer-agent:trd-gen` as the responsible owner. |
+| `writes_all_engineer_docs_under_feature_path` | PASS | Locked with-skill status and delivery paths show TRD.md, API.md, and ADR-001-search-index-strategy.md under `docs/engineer/chat-interface/history-search/`. |
+| `preserves_related_prd_and_metadata` | PASS | All three with-skill documents contain `feature_path: "chat-interface/history-search"`, `parent_feature: "chat-interface"`, `feature_level: "2"`, and `related_prd: "docs/pm/chat-interface/history-search/PRD.md"`. |
+| `does_not_use_pm_generators` | PASS | With-skill output and document contents contain no routing to `api-gen` or `adr-gen`; all documents identify `trd-gen`. |
+| `no_plan_or_code` | PASS | With-skill git status contains only the three Engineer documentation files; no implementation plan, source-code changes, or test files were created. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=825205d6124cce58172b3b6756f4b557e630d638b9032e293e0df1661f6c8e2b; fixture_sha256=7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116; output_sha256=04dedc5fe1ea6b8327dd76d02fa0d05ac5f448b7ca8cc218a0e1c48b61a15570; snapshot_sha256=55555b0e679ee3e7559451f4dde9c39ee05f63209d46735f33c6315f0fd829c3
+- Behavior: Created three Engineer documents under the mirrored feature path with required metadata and no code changes.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=825205d6124cce58172b3b6756f4b557e630d638b9032e293e0df1661f6c8e2b; fixture_sha256=7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116; output_sha256=d81b752e256f2dd0e16e51897fdbf7548bfca49bfea3ee9bf086461bf5501a1d; snapshot_sha256=1ea94e8bcce7c201417d67538f131ee6163fefaa3a1896c3b5e8cd6d79ae38aa
+- Behavior: Created PM-path technical design, API, and ADR documents.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- engineer_owns_api_and_adr failed because the required explicit owner string `engineer-agent:trd-gen` is absent.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-004-api-adr-owned-by-engineer
 
 ## Evaluation Target

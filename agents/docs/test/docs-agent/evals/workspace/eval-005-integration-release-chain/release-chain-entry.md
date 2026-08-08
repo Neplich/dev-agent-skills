@@ -3,32 +3,31 @@
 - request_type: `validation`
 - change_tier: `major`
 - feature_path: `ai-search`
-- host_repository: `JOTO-AI/aiportal`（AI Hub-shaped fixture）
-- requested_flow: `docs-audit pre-tag -> docs-audit post-tag -> github-release-gen handoff`
+- host_repository: `JOTO-AI/aiportal`（AI Hub product repository）
+- requested_flow: `formal documentation pre-tag audit -> post-tag audit -> GitHub release preparation handoff`
 - target_release_version: `v1.4.0`
 - target_release_version_confirmation:
   - status: `maintainer_confirmed`
   - source: `maintainer-approval/release-v1.4.0@2026-07-20T09:00:00+08:00`
 - requested_audit_phases: `pre-tag` and `post-tag` eligibility
-- git_fixture_setup: `sh .eval/setup-git-fixture.sh`
-- git_fixture_evidence_contract: `.eval/raw-git-evidence.md`
-- git_fixture_runtime_index: `.eval/runtime-git-evidence.md`
-- base_ref: `refs/heads/fixture-base`
-- target_ref: `refs/heads/fixture-target`
-- caller_ref: `refs/heads/fixture-caller`
-- release_branch_ref: `refs/heads/fixture-build`
+- git_evidence_snapshot: `release-evidence/git-reference-snapshot.md`
+- git_evidence_source: release manager signed offline capture from `JOTO-AI/aiportal`
+- base_ref: `refs/heads/release-base`
+- target_ref: `refs/heads/release-candidate`
+- caller_ref: `refs/heads/release-review`
+- release_branch_ref: `refs/heads/release-v1.4`
 - release_evidence_branch_ref: `refs/heads/release-evidence/v1.4.0`
-- tag_entry_snapshot_ref: `refs/eval/tag-entry/v1.4.0`
-- release_evidence_expected_ref: `refs/eval/release-evidence-expected/v1.4.0`
+- tag_entry_snapshot_ref: `refs/release-review/tag-entry/v1.4.0`
+- release_evidence_expected_ref: `refs/release-review/evidence-expected/v1.4.0`
 - diff_semantics: `two-dot endpoint diff`
 - previous_tag: `v1.3.0`
 - intended_target_tag: `v1.4.0`
 - release_scope: completed AI search API delivery and its formal documentation/release surfaces
 - site_release_notes_handoff: `release-notes-handoff.md`
 - requested_output: current eligibility decision and next-owner handoff
-- github_release_action: eligibility review only; no preview, draft, publish, or remote mutation in this eval
+- github_release_action: eligibility review only; no preview, draft, publish, or remote mutation in this review
 
-`git_fixture_setup` 只能在 runner 复制出的隔离 workspace 执行。它创建的 tag 和 refs 均为本地 synthetic Git 对象，用于审计 object/tree/CAS 语义；不得在本仓库工作树或任何远端执行。
+当前环境没有远端仓库写权限。Git ref 证据由版本负责人在进入发布窗口时只读采集并签认，本次只核对快照与正式文档之间的一致性。
 
 ## Confirmed source documents
 

@@ -7,34 +7,55 @@
       "id": "eval-001-github-actions-docker",
       "name": "github-actions-docker",
       "description": "Verifies that cicd-bootstrap handles github-actions-docker and produces the expected role-specific artifact.",
-      "prompt": "pm-agent 已完成项目级 CI/CD 入口分类并路由至 cicd-bootstrap；确认 handoff 见 workspace `PM_HANDOFF.md`，本任务为 `feature_path: N/A` 的 repo-wide automation。我的项目在 GitHub，使用 Docker 部署。帮我搭建 CI/CD 流程：PR 时运行测试，main 分支合并后自动部署到 staging。",
+      "scenario": {
+        "persona": "维护 GitHub 项目的平台工程师",
+        "situation": "Node.js 服务已有 Docker staging 部署方式，但仓库没有持续集成与自动部署工作流",
+        "trigger": "团队希望在每个 PR 上验证质量，并在 main 更新后发布到 staging",
+        "goal": "建立与仓库现有命令和 Docker 运行方式一致的 CI/CD 配置",
+        "materials": [
+          "PM_HANDOFF.md",
+          "package.json",
+          "package-lock.json",
+          "eslint.config.js",
+          "src/server.js",
+          "test/server.test.js",
+          "deploy/docker/Dockerfile",
+          "deploy/docker/docker-compose.staging.yml"
+        ],
+        "constraints": [
+          "只覆盖 PR CI 与 main 分支 staging",
+          "工作流只能引用 secret 名称",
+          "不实际发布镜像或部署"
+        ],
+        "success_criteria": [
+          "PR 流程按仓库命令执行 lint、test、build",
+          "staging 流程复用现有 Compose 与镜像约定",
+          "所需 secrets 有持久说明"
+        ]
+      },
+      "prompt": "我们用 GitHub 托管这个 Node.js 服务，Docker staging 的现有约定和仓库命令已经整理在 `PM_HANDOFF.md`。请补上 PR 的质量检查，并让 main 分支更新后按现有方式自动部署到 staging；这次只生成配置，不实际部署。",
       "workspace": "workspace/eval-001-github-actions-docker",
       "expected_output": "生成 GitHub Actions workflows，包含 CI 和 staging 部署",
       "assertions": [
         {
-          "id": "github_workflows_ci_yml",
-          "description": ".github/workflows/ci.yml 存在",
-          "text": ".github/workflows/ci.yml 存在"
+          "id": "creates_repo_native_ci",
+          "description": "按仓库真实命令建立 PR 质量门禁",
+          "text": "生成 `.github/workflows/ci.yml`，在 pull request 上使用 Node.js 22 和 `npm ci`，依次执行仓库已有的 lint、test、build 命令。"
         },
         {
-          "id": "ci_yml_lint_test_build",
-          "description": "ci.yml 包含 lint、test、build 步骤",
-          "text": "ci.yml 包含 lint、test、build 步骤"
+          "id": "creates_staging_deployment_workflow",
+          "description": "复用现有 Docker staging 契约",
+          "text": "生成 `.github/workflows/deploy-staging.yml`，仅在 main 更新时触发，并复用现有 Compose 文件、GHCR 镜像命名与 `APP_IMAGE_TAG`。"
         },
         {
-          "id": "github_workflows_deploy_staging_yml",
-          "description": ".github/workflows/deploy-staging.yml 存在",
-          "text": ".github/workflows/deploy-staging.yml 存在"
+          "id": "documents_required_secrets",
+          "description": "只记录秘密名称而不泄漏值",
+          "text": "在 `deploy/SECRETS.md` 中列出 REGISTRY_USERNAME、REGISTRY_TOKEN、STAGING_HOST、STAGING_USER 和 STAGING_SSH_KEY，不写入真实凭据。"
         },
         {
-          "id": "deploy_staging_yml_push_to_main",
-          "description": "deploy-staging.yml 触发条件是 push to main",
-          "text": "deploy-staging.yml 触发条件是 push to main"
-        },
-        {
-          "id": "deploy_secrets_md_secrets",
-          "description": "deploy/SECRETS.md 文档存在，列出需要的 secrets",
-          "text": "deploy/SECRETS.md 文档存在，列出需要的 secrets"
+          "id": "does_not_execute_delivery",
+          "description": "生成配置不等于执行交付",
+          "text": "不构建或推送镜像、不连接 staging、不提交或推送仓库，也不声称部署已经成功。"
         }
       ]
     },
@@ -42,7 +63,27 @@
       "id": "eval-002-mapped-doc-cicd",
       "name": "mapped-doc-cicd",
       "description": "验证 CI/CD 设计通过 change-map 定位构建文档，并用代码配置核证未验证的校验命令。",
-      "prompt": "为 src/build/pipeline.rules 中定义的校验流程设计最小 CI job，确认应执行的命令。",
+      "scenario": {
+        "persona": "维护构建流水线的平台工程师",
+        "situation": "仓库的正式构建说明和实际校验规则可能不同",
+        "trigger": "新增最小 CI job 前需要确认真实的校验命令",
+        "goal": "用代码配置确定可靠的 CI 校验步骤并记录文档差异",
+        "materials": [
+          "src/build/pipeline.rules",
+          "docs/site/standards/change-map.yaml",
+          "docs/site/api/build-pipeline.md"
+        ],
+        "constraints": [
+          "正式文档尚未完成版本核验",
+          "只设计最小校验 job"
+        ],
+        "success_criteria": [
+          "通过变更映射定位构建说明",
+          "以 pipeline.rules 确认命令",
+          "指出错误命令对流水线的影响"
+        ]
+      },
+      "prompt": "请为 `src/build/pipeline.rules` 定义的校验流程设计一个最小 CI job。仓库有变更映射和正式构建说明，请核对后告诉我实际应该执行什么命令。",
       "workspace": "workspace/eval-002-mapped-doc-cicd",
       "expected_output": "以代码配置确认校验命令的 CI 建议，并报告映射文档与代码差异。",
       "assertions": [
@@ -67,13 +108,43 @@
       "id": "eval-003-docs-image-release-rules",
       "name": "docs-image-release-rules",
       "description": "补齐确认纳入的文档镜像构建与发布验证规则。",
-      "prompt": "根据 deployment-handoff.md 审查拟议 CI/CD 变更并报告每个文档镜像单元的规则。",
-      "expected_output": "Public/Internal 镜像使用宿主不可变版本、架构、registry、触发器和 manifest/digest 验证。",
+      "scenario": {
+        "persona": "负责文档站发布流水线的平台工程师",
+        "situation": "Public 与 Internal 文档镜像已纳入发布范围，宿主已有镜像版本和架构约定",
+        "trigger": "CI/CD 变更进入评审，需要逐个确认构建、发布与发布后核验规则",
+        "goal": "形成两个文档镜像单元的可审查发布规则",
+        "materials": [
+          "deployment-handoff.md"
+        ],
+        "constraints": [
+          "沿用宿主不可变版本、registry、双架构和 tag 触发策略",
+          "当前未授权 push、发布或部署"
+        ],
+        "success_criteria": [
+          "每个镜像单元有构建和发布校验",
+          "发布后核对 manifest 或 digest",
+          "不把工作流存在误作发布成功"
+        ]
+      },
+      "prompt": "Public 和 Internal 文档镜像的现有发布约定写在 `deployment-handoff.md`。请审查拟议的 CI/CD 变更，分别说明两个镜像单元应遵循的构建、发布和发布后验证规则。",
       "workspace": "workspace/eval-003-docs-image-release-rules",
+      "expected_output": "Public/Internal 镜像使用宿主不可变版本、架构、registry、触发器和 manifest/digest 验证。",
       "assertions": [
-        {"id": "preserves_host_image_policy", "description": "沿用宿主镜像策略", "text": "Public 与 Internal 均沿用不可变版本、registry 约定、release trigger 和仓库声明的 amd64/arm64 架构。"},
-        {"id": "verifies_each_published_variant", "description": "逐变体验证发布结果", "text": "每个镜像单元都有 build/publish validation，并用宿主既有机制核对已发布 manifest 或 digest；workflow 存在不等于已发布。"},
-        {"id": "keeps_delivery_authority_separate", "description": "交付授权独立", "text": "写 workflow 不自动授权 commit、push、镜像发布或部署。"}
+        {
+          "id": "preserves_host_image_policy",
+          "description": "沿用宿主镜像策略",
+          "text": "Public 与 Internal 均沿用不可变版本、registry 约定、release trigger 和仓库声明的 amd64/arm64 架构。"
+        },
+        {
+          "id": "verifies_each_published_variant",
+          "description": "逐变体验证发布结果",
+          "text": "每个镜像单元都有 build/publish validation，并用宿主既有机制核对已发布 manifest 或 digest；workflow 存在不等于已发布。"
+        },
+        {
+          "id": "keeps_delivery_authority_separate",
+          "description": "交付授权独立",
+          "text": "写 workflow 不自动授权 commit、push、镜像发布或部署。"
+        }
       ]
     }
   ]

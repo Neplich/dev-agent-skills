@@ -6,7 +6,7 @@
 - Scenario: `feature-update`
 - Platform version: `v0.3.0-dev`
 
-## Assertions
+## Acceptance Checks
 
 - One eligible discount code applies during checkout.
 - Expired codes are rejected before payment submission.

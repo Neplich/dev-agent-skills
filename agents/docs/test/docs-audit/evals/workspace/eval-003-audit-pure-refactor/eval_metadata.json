@@ -2,11 +2,27 @@
   "eval_id": "eval-003-audit-pure-refactor",
   "eval_name": "audit-pure-refactor",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-003-audit-pure-refactor",
-  "prompt": "维护者确认本次检查的目标版本为 `v1.1.0`，范围是已确认的 `base_ref` `81a2b3c` 到 `target_ref` `92d3e4f`。请核对受影响但未更新的 API 页面并给出审计结论。",
   "fixture_context": [
-    ".eval/actual-diff.patch",
+    "release-evidence/actual-diff.patch",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/catalog.md",
     "src/catalog/routes.txt"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "git_topology": {
+    "base_ref": "81a2b3c",
+    "target_ref": "92d3e4f",
+    "target_patch": "release-evidence/actual-diff.patch"
+  },
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

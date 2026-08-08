@@ -3,6 +3,7 @@ AUTH public
 QUERY locale required nonblank
 QUERY limit optional default=20 max=100
 SUCCESS 200 {"items": []}
+IMPLEMENTATION table dispatcher
 
 ROUTE GET /catalog/status
 AUTH service-token required

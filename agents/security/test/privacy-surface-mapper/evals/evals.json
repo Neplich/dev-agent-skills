@@ -7,7 +7,29 @@
       "id": "eval-001-gdpr",
       "name": "GDPR Compliance Check",
       "description": "Test privacy mapping for user data collection",
-      "prompt": "pm-agent has completed entry classification and routed this confirmed `data-collection` security scope to privacy-surface-mapper. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/data-collection/PRD.md`. Map the personal data collection and check GDPR compliance.",
+      "scenario": {
+        "persona": "注册分析隐私工程师",
+        "situation": "产品收集注册信息、IP、设备和行为事件但无统一清单",
+        "trigger": "上线前需明确目的、同意、共享、保留和权利",
+        "goal": "形成可追溯的数据处理面",
+        "materials": [
+          "PM_HANDOFF.md",
+          "docs/pm/data-collection/PRD.md",
+          "src/registration.js",
+          "config/analytics.json"
+        ],
+        "constraints": [
+          "不提供法律意见",
+          "不直接修改实现",
+          "未知依据和期限明确标注"
+        ],
+        "success_criteria": [
+          "盘点字段目的",
+          "识别同意保留风险",
+          "检查权利并建议"
+        ]
+      },
+      "prompt": "注册和分析功能准备上线，个人数据范围在 `PM_HANDOFF.md` 和产品需求中，实际收集代码与分析配置也已提供。请梳理数据收集、用途、共享、保留和用户权利缺口，形成可追溯的隐私处理面。",
       "workspace": "workspace/eval-001-gdpr",
       "expected_output": "Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.",
       "assertions": [
@@ -37,7 +59,28 @@
       "id": "eval-002-user-rights",
       "name": "User Rights Implementation",
       "description": "Test checking of user data rights implementation",
-      "prompt": "pm-agent has completed entry classification and routed this confirmed `user-rights` security scope to privacy-surface-mapper. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/user-rights/PRD.md`. Check if user rights (access, deletion, export) are implemented.",
+      "scenario": {
+        "persona": "用户权利隐私工程师",
+        "situation": "产品提供读取、导出和删除入口，身份边界和副本覆盖未确认",
+        "trigger": "发布前需判断实现完整且不泄露他人数据",
+        "goal": "形成权利状态与隐私风险报告",
+        "materials": [
+          "PM_HANDOFF.md",
+          "docs/pm/user-rights/PRD.md",
+          "src/api/user-rights.js"
+        ],
+        "constraints": [
+          "不改认证模型",
+          "不实现端点",
+          "区分主库分析备份"
+        ],
+        "success_criteria": [
+          "检查可信身份",
+          "核对导出与越权",
+          "核对删除传播保留"
+        ]
+      },
+      "prompt": "用户数据访问、导出和删除功能准备上线，产品目标在 `PM_HANDOFF.md` 与对应 PRD，实现位于 `src/api/user-rights.js`。请检查这些权利是否完整、安全，并说明缺口、影响和整改建议。",
       "workspace": "workspace/eval-002-user-rights",
       "expected_output": "Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.",
       "assertions": [
@@ -67,7 +110,29 @@
       "id": "eval-003-third-party",
       "name": "Third-Party Data Sharing",
       "description": "Test mapping of third-party data sharing",
-      "prompt": "pm-agent has completed entry classification and routed this confirmed `third-party-sharing` security scope to privacy-surface-mapper. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/third-party-sharing/PRD.md`. Identify all third-party services receiving user data.",
+      "scenario": {
+        "persona": "第三方共享隐私工程师",
+        "situation": "产品接入分析、广告和支付但无统一共享清单",
+        "trigger": "评审需确认字段、同意、地域、保留和删除支持",
+        "goal": "形成可追溯的第三方数据流",
+        "materials": [
+          "PM_HANDOFF.md",
+          "docs/pm/third-party-sharing/PRD.md",
+          "src/integrations/user-events.js",
+          "config/vendors.json"
+        ],
+        "constraints": [
+          "不评价商业条款",
+          "不移除集成",
+          "未知能力明确标注"
+        ],
+        "success_criteria": [
+          "逐供应商列字段目的",
+          "核对地域同意保留",
+          "检查权利传播和最小化"
+        ]
+      },
+      "prompt": "我们准备整理第三方数据共享清单。产品范围在 `PM_HANDOFF.md` 与对应 PRD，实际发送代码和供应商配置已提供；请识别分析、广告和支付服务接收的数据，并评估同意、地域、保留和删除支持。",
       "workspace": "workspace/eval-003-third-party",
       "expected_output": "Structured privacy surface map that identifies personal data, processing purpose, third-party sharing, user-rights gaps, and compliance risks.",
       "assertions": [
@@ -97,7 +162,27 @@
       "id": "eval-004-mapped-profile-retention",
       "name": "Mapped Profile Data Retention",
       "description": "Verify that a privacy mapping reads mapped formal documentation and validates an unverified retention claim against the processing configuration",
-      "prompt": "请梳理 src/privacy/profile-processing.yaml 的个人资料处理面，重点核对收集字段、处理目的和删除后的保留期限。",
+      "scenario": {
+        "persona": "资料保留隐私工程师",
+        "situation": "正式说明写删除后 30 天，配置可能不同",
+        "trigger": "评审前需确认实际字段、目的和期限",
+        "goal": "以配置形成结论并记录差异",
+        "materials": [
+          "src/privacy/profile-processing.yaml",
+          "docs/site/standards/change-map.yaml",
+          "docs/site/api/profile-data.md"
+        ],
+        "constraints": [
+          "文档未核验",
+          "只审查提供处理面"
+        ],
+        "success_criteria": [
+          "通过映射读说明",
+          "以配置确认期限",
+          "说明差异影响和整改"
+        ]
+      },
+      "prompt": "请梳理 `src/privacy/profile-processing.yaml` 的个人资料处理面。仓库有变更映射和正式说明，请重点核对收集字段、处理目的和删除后的实际保留期限。",
       "workspace": "workspace/eval-004-mapped-profile-retention",
       "expected_output": "优先读取 change-map 命中的个人资料处理文档，再以配置核对保留期限；将 unverified 文档按最低信任处理并报告 30 天声明与 90 天配置事实的不一致。",
       "assertions": [
@@ -111,16 +196,16 @@
           "description": "以处理配置核对删除后的保留期限",
           "text": "关键隐私结论回到 src/privacy/profile-processing.yaml；识别文档声称删除后保留 30 天、配置实际为 90 天的不一致，并以配置事实评估合规影响。"
         },
-    {
-      "id": "treats_unverified_as_low_trust",
-      "description": "将 unverified 隐私文档按最低信任处理",
-      "text": "识别 required_docs 的 last_verified_version 为 unverified，对所有关键隐私判断扩大代码或配置核证，而不是直接采信文档或拒绝读取。"
-    },
-    {
-      "id": "escalates_fact_changing_conclusion_to_pm",
-      "description": "改变正式文档事实的结论升级",
-      "text": "确认结论改变正式文档事实时，必须把结论与证据回交 `pm-agent` 分类并创建 issue，不直接交给 `docs-agent`、不由 Security 自行创建 issue；Security 自有的 `docs/security/` 过程报告除外，仍必须作为升级证据产出。"
-    }
+        {
+          "id": "treats_unverified_as_low_trust",
+          "description": "将 unverified 隐私文档按最低信任处理",
+          "text": "识别 required_docs 的 last_verified_version 为 unverified，对所有关键隐私判断扩大代码或配置核证，而不是直接采信文档或拒绝读取。"
+        },
+        {
+          "id": "escalates_fact_changing_conclusion_to_pm",
+          "description": "改变正式文档事实的结论升级",
+          "text": "确认结论改变正式文档事实时，必须把结论与证据回交 `pm-agent` 分类并创建 issue，不直接交给 `docs-agent`、不由 Security 自行创建 issue；Security 自有的 `docs/security/` 过程报告除外，仍必须作为升级证据产出。"
+        }
       ]
     }
   ]

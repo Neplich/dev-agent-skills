@@ -1,3 +1,82 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `feature-implementor`
+- Eval: `eval-017-abandoned-draft-can-be-superseded`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b` from `agents/engineer/test/feature-implementor/evals/workspace/eval-017-abandoned-draft-can-be-superseded`.
+- Fixture SHA-256: `1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b`
+- Prompt SHA-256: `3023c99f87e425cf1e709e4a173f62dfa04ac1cedece451c8d3671923093f7ca`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5a3403ec360f8aca06dd1301fa3bfe0f2bd967f54afc7bad9b5691a78697b0ca`
+- Skill overlay SHA-256: `5c74cbf7ab5eef845bc8c3f0d81a775b1feca5810a9a615f9b35865026f3e841`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `d59f332d9689221834dd583c1a569fa62e1de4ce2c4c1d7f5aa087aed088bd53`
+- Metadata SHA-256: `21a9c9ae11f8c9b8058a429c319a4f2a640a6b07fdf2d71e259bbc158caa4e24`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_unfinished_active_plan` | PASS | With-skill raw diff shows the original plan was Draft with implementation_scope `refund-reason-codes`, and the output identifies the current and archived plan paths. |
+| `detects_explicit_abandonment` | PASS | The output and archived plan identify explicit maintainer abandonment/supersession of the unfinished refund reason-code round. |
+| `archives_as_superseded` | FAIL | The archive has status `Superseded`, a non-empty `superseded_reason`, `implementation_scope`, and original metadata, but lacks required `archived_at`, `archive_approved_by`, and `source_plan` fields. |
+| `links_replacement_plan` | PASS | The replacement plan contains `previous_plan_archive` pointing to the archive, and both plans use feature_path `payment-refund`; the archive is Superseded. |
+| `waits_before_coding` | FAIL | No code was modified and implementation is blocked pending TRD completion, but the output does not state that user confirmation is still required before coding. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3023c99f87e425cf1e709e4a173f62dfa04ac1cedece451c8d3671923093f7ca; fixture_sha256=1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b; output_sha256=731014c63ba572543fe9cc77e423296677c5b171bc58c71be5c2486d7c421b1d; snapshot_sha256=04af1cb114eeb6b1d70ff70399d7bd15510a5c366ab97b81c93e8754d8b2cb44
+- Behavior: Created a Superseded archive and linked replacement Draft plan, but omitted required archive metadata and did not explicitly wait for user confirmation before coding.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3023c99f87e425cf1e709e4a173f62dfa04ac1cedece451c8d3671923093f7ca; fixture_sha256=1f669b72548a150607fd615bf909a1c365d5c49a031676d6fa71132017e8642b; output_sha256=30677428babdc786852d112acf37bb5500311d1bfa25c6769f020aec31a01927; snapshot_sha256=25d73571d5f509474c20bb300783df84a2868dab0fcde25480a77493dd0f2b89
+- Behavior: Updated the existing plan in place, marked it Superseded, changed scope, and claimed continuation, without creating a compliant archive or replacement-plan link.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The archive omits `archived_at`, `archive_approved_by`, and `source_plan`.
+- The output does not explicitly require user confirmation before coding.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-017-abandoned-draft-can-be-superseded
 
 ## Evaluation Target

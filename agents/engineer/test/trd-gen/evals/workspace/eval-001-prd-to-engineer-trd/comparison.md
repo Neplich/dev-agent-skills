@@ -1,3 +1,82 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `engineer`
+- Skill: `trd-gen`
+- Eval: `eval-001-prd-to-engineer-trd`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55` from `agents/engineer/test/trd-gen/evals/workspace/eval-001-prd-to-engineer-trd`.
+- Fixture SHA-256: `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55`
+- Prompt SHA-256: `59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b66f9acea93e151819a21f82909f9a6b7d44c68fa52d2116667525e2fe8e9bd7`
+- Skill overlay SHA-256: `e4cc003a0e06320ef354c6c9cdbebb2b75980ec8b23ae530ac78b0667fab31da`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `763059af120165947ccbb1397278bf0acb3f4c96fd42875970c4e31154f717da`
+- Metadata SHA-256: `b33234ce56a0b715b632f392ff44ba7c27cad834dbc654110228254e610f01ec`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `engineer_owns_trd` | FAIL | with_skill 输出给出 docs/engineer/capture-loop/TRD.md 并提及 Engineer 文档，但未明确说明 TRD 由 Engineer Agent 负责。 |
+| `prd_confirmed_handoff` | FAIL | with_skill 文档引用 PRD/DECISIONS 并要求维护者确认一致，但未明确说明仅在产品范围确认后才开始编写 TRD。 |
+| `document_subagent` | FAIL | with_skill 输出和 TRD 未要求文档编写 sub-agent 执行 TRD 编写/更新，也未说明主进程保留上下文并进行最终审查。 |
+| `implementation_plan_handoff` | PASS | 输出明确说明 TRD 确认后移交 feature-implementor，并指定 docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md。 |
+| `qa_e2e_after_confirmed_plan` | FAIL | with_skill 输出未说明 QA E2E 文档补充依赖已确认 TRD、已确认 IMPLEMENTATION_PLAN、实现完成及交接包，也未说明不能由 TRD 请求直接触发。 |
+| `no_code_implementation` | PASS | TRD 明确列出不在本任务实现代码、API 客户端、数据库迁移或部署资源，输出也说明仅产出文档。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=3d4b7fd9bc9d3269acf08adb160079a27ad4c9990a2aa733ce91f645d23c0cdb; snapshot_sha256=b2a48f563e73d4103a4924c576c3b18f460e9e088e7936310e46d8a61e077ba3
+- Behavior: 生成了 docs/engineer/capture-loop/TRD.md，包含 feature-implementor 交接和不实施代码约束，但缺少 Engineer Agent 归属、文档 sub-agent、确认前置条件及 QA E2E 交接链路。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=857dff0d4fa77bf39d3ab4efca108fd50f41748f91f3dfd58350492a16a74606; snapshot_sha256=d5ce8fcb55114f5af046e8eb3fd7544669c77af5ebb14784966197837626b9d8
+- Behavior: 生成了 docs/pm/capture-loop/TRD.md，未采用 Engineer 文档路径或规定的交接流程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill lane 未满足 4 项流程断言：Engineer Agent 归属、PRD/DECISIONS 确认前置、文档编写 sub-agent 委派、确认计划后的 QA E2E 交接。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-prd-to-engineer-trd
 
 ## Evaluation Target

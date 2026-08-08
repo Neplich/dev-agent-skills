@@ -2,10 +2,20 @@
   "eval_id": "eval-004-mapped-client-dependency",
   "eval_name": "Mapped Client Dependency Documentation",
   "workspace_root": "agents/security/test/dependency-risk-auditor/evals/workspace/eval-004-mapped-client-dependency",
-  "prompt": "请审计 src/dependencies/manifest.json 中网络客户端依赖的风险，核对当前版本并给出升级或缓解建议。",
   "fixture_context": [
     "src/dependencies/manifest.json",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/network-client.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

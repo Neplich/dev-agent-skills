@@ -1,3 +1,84 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `spec-based-tester`
+- Eval: `eval-001-test-from-spec`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838` from `agents/qa/test/spec-based-tester/evals/workspace/eval-1-test-from-spec`.
+- Fixture SHA-256: `a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838`
+- Prompt SHA-256: `9354357763da0add30a1325fbbb8939ec16a97d466c020a03be8548593c2f944`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `9bc7bc56a69ed03539b92f8b1b5ab784d65f1b99345268b0e2860387a93c400f`
+- Skill overlay SHA-256: `5682fc1ffcb4eb879c1789588b290db4ff6dc8f83dc85473fb6c12c8ad0ebd72`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `1c095f56ebf8188b170d450f4a4c64b7797467faefd997d04a5961dc178ee24e`
+- Metadata SHA-256: `beabc33b6b3cb3b4fcbdd2cd76be881ee37dbed2c10afbbb6515f52def856618`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | With-skill report records scope, feature-update scenario, platform version, source documents, repository command, environment assumptions, and blocked checks. |
+| `assertion_2` | PASS | It reads and reuses TEST_SUITE.md, FLOW_INDEX.md, and TC-001; it records scripts and prior results as absent. |
+| `assertion_3` | PASS | It selected and attempted the documented repo harness before any browser fallback. |
+| `assertion_4` | PASS | The requirement matrix marks each acceptance item blocked and distinguishes the runner prerequisite issue from product failure. |
+| `assertion_5` | PASS | The report contains a requirement matrix, execution details, evidence references, blocked-item/risk notes, and per-requirement status. |
+| `e2e` | PASS | No new or supplemented E2E case was created; the existing TC-001 file was reused and referenced in the report. |
+| `versioned_report_archive` | FAIL | Scenario and platform version are recorded, and a snapshot plus versioned result are present, but the result is timestamp-named rather than the required result.md path. |
+| `assertion_7` | PASS | No bug handoff was made because the only observed issue was an unreproducible test-runner blockage, not a confirmed product failure. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9354357763da0add30a1325fbbb8939ec16a97d466c020a03be8548593c2f944; fixture_sha256=a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838; output_sha256=15a18d6e003f33a8427044dbc74af4954476d47047f3dcc71ee1379f30c7d811; snapshot_sha256=38d0210e0bda18a3b9baf04cac88ea234cbc2859d5e0330aa204376a7dc042cd
+- Behavior: Read the prescribed documentation and reused TC-001, selected the repo harness, recorded blocked statuses with traceable versioned artifacts, and avoided filing a product defect.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9354357763da0add30a1325fbbb8939ec16a97d466c020a03be8548593c2f944; fixture_sha256=a434f6abe187edb75db35d4f3fb8bb622d73bfabcbaa68935c4416b36759d838; output_sha256=e90b4d646d2f1531f9e297e96161cc8c5134c758463d7d9e8bd260459b8906ed; snapshot_sha256=12c805b0b490f62c9b99eb67de74621f4d407032b050cacffcee155b8ec47eda
+- Behavior: Ran the same test command and reported blocked execution, but produced a less complete report outside the feature QA archive path.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- versioned_report_archive is not fully satisfied because the archived execution result is timestamp-named instead of result.md.
+- Next: Append or rename the per-TC execution artifact to results/TC-001-discount-code/v0.3.0-dev/result.md while retaining testcase.snapshot.md and the feature-update summary report.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-001-test-from-spec
 
 ## Evaluation Target

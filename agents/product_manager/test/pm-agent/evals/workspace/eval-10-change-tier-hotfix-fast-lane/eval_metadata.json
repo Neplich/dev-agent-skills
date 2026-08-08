@@ -2,8 +2,18 @@
   "eval_id": "eval-010-change-tier-hotfix-fast-lane",
   "eval_name": "change-tier-hotfix-fast-lane",
   "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-10-change-tier-hotfix-fast-lane",
-  "prompt": "用户说：这个 PR 只修 README 里一个错误链接，不改变任何功能预期；我已经本地验证链接可打开。",
   "fixture_context": [
     "README.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -1,3 +1,84 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `qa`
+- Skill: `spec-based-tester`
+- Eval: `eval-002-boundary-test-generation`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1` from `agents/qa/test/spec-based-tester/evals/workspace/eval-2-boundary-test-generation`.
+- Fixture SHA-256: `b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1`
+- Prompt SHA-256: `fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `9bc7bc56a69ed03539b92f8b1b5ab784d65f1b99345268b0e2860387a93c400f`
+- Skill overlay SHA-256: `5682fc1ffcb4eb879c1789588b290db4ff6dc8f83dc85473fb6c12c8ad0ebd72`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `7be9a5847eaa9053c9f4277b2d57d5f5622208652decda6e30f3718fbfec04c5`
+- Metadata SHA-256: `9bd3793631be46705766421244d6899c275c646d5598b1a7e8c43c8bec82ad4f`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | The with_skill report records scope, feature path, scenario, platform, same-path PRD/TRD/IMPLEMENTATION_PLAN gate, unavailable vitest, absent QA URL, and recovery blockers before validation. |
+| `assertion_2` | PASS | The preflight baseline explicitly records reading TEST_SUITE.md, FLOW_INDEX.md, the case, and script, and checking that prior results/_reports were absent before the run. |
+| `assertion_3` | NOT_EXERCISED | The prescribed targeted command was attempted, but vitest was unavailable and none of the five boundary checks executed. |
+| `assertion_4` | PASS | The report and result artifact mark every boundary as blocked and provide per-check evidence plus a detailed result.md reference. |
+| `assertion_5` | FAIL | A requirement matrix and evidence references are present, but the output does not provide explicit structured execution path, risk notes, and handoff decision sections as required. |
+| `assertion_6` | PASS | The report includes per-item risks, records 0/5 coverage and recovery items, identifies no confirmed failures, and does not escalate blocked checks to bug-analyzer. |
+| `alignment_plan_gate` | PASS | The with_skill preflight explicitly confirms same-feature-path PRD/TRD alignment and a confirmed IMPLEMENTATION_PLAN.md, with no documented alignment blocker. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51; fixture_sha256=b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1; output_sha256=e337ac76fbf44ce98250246a80425be1a4b47a3f59295384dc2bf0f69ec7e50b; snapshot_sha256=0879a770956627ba1d304e5306257d209fb24734f1911d50da170c49da7373e2
+- Behavior: Read the scoped QA and feature documents, recorded preflight and alignment-gate context, attempted the prescribed command, documented all five checks as blocked, and added a structured summary report.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fca68fb7467bf000e3c38b2b867a8aeab7cf98cabe927e8e96f334144b3ecb51; fixture_sha256=b4127bff8b3b1c32e35f1a58623703ca5f4eb13030dd5763812f9d858500fda1; output_sha256=63faf7dd8326d38a01325c8757caa891f206d4502c2391698a82e5a329648527; snapshot_sha256=131571f4ad118ad23e6dade2fd56b63914f93d76d4fabbff1f7f1db68f7c1e14
+- Behavior: Fresh baseline attempted npm test -- login-boundaries, hit vitest: command not found, marked all five checks blocked, and produced only result artifacts.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The required structured output sections were incomplete: explicit execution path, risk notes, and handoff decision sections were not all provided.
+- Next: Restore/install vitest and rerun npm test -- login-boundaries.
+- Next: Add the missing structured sections, including execution path, risk notes, and handoff decision.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Result: eval-002-boundary-test-generation
 
 ## Evaluation Target

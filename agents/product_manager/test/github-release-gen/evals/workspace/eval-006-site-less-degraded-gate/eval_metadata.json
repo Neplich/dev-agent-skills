@@ -2,7 +2,6 @@
   "eval_id": "eval-006-site-less-degraded-gate",
   "eval_name": "site-less-degraded-gate",
   "workspace_root": "agents/product_manager/test/github-release-gen/evals/workspace/eval-006-site-less-degraded-gate",
-  "prompt": "请读取 `release-package.md`、`docs/changelog/changelog-v1.4.0.md`、`evidence/version-bump.md` 与 `scenarios/no-confirmed-fact-source.md`，处理其中两种 GitHub Release 场景。",
   "fixture_context": [
     "release-package.md",
     "docs/changelog/changelog-v1.4.0.md",
@@ -12,5 +11,14 @@
   "execution_cleanup": [
     "release-preview.md",
     "release-action.md"
-  ]
+  ],
+  "skill_dependencies": [],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -1,3 +1,84 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-015-flat-hierarchy-migration-proposal`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `e820b6c4381f2b584f4fb75e118822cab822720708679f6856aff845dce75a20` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-015-flat-hierarchy-migration-proposal`.
+- Fixture SHA-256: `e820b6c4381f2b584f4fb75e118822cab822720708679f6856aff845dce75a20`
+- Prompt SHA-256: `02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `79b2ff102fa24fa224c9f24f44f3e648a1ae7eb9a7a10e639d8675db4454120a`
+- Skill overlay SHA-256: `52a3ba7ee2d9485acf003417b40e0d0ca2ab263cbadde98fac58250b6c2a9778`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `de76a086939d1591df845f72fbdb70d76c350be98629e84e5fc28aead6c5474b`
+- Metadata SHA-256: `f008330cf4c09bf2d8f5e755019b196220dae437f59e25ab5a6b76314ba70a05`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_flat_hierarchy_drift` | FAIL | with_skill 点名了 research-conversations.md 和 graph-search.md，并提到 feature catalog/feature_path，但未明确说明二者属于同一个缺失的知识发现与应用域节点，也未给出足够的 route prefix/tag、related_code 或 owner 证据。 |
+| `proposes_migration_before_write` | FAIL | with_skill 给出了目标树和三种处理方向，但缺少每个旧路径到新路径的映射、入链与递归导航 delta、change-map required_docs delta、排除项理由，且决策选项不是要求的三个精确选项。 |
+| `does_not_deepen_flat_layout` | PASS | with_skill 明确表示暂未修改文件；新消息页面拟放在 knowledge-discovery/conversations 子树，而非 docs/site/api/ 一级；git_evidence 显示无提交、无工作区改动或交付输出。 |
+| `reports_out_of_batch_drift_read_only` | FAIL | with_skill 只列出数据库、设计、运维、产品、Release Notes 等排除项，未将知识建设与维护、平台治理与运行两组批次外 drift 按页面清单、建议目标节点和范围外说明进行只读报告。 |
+| `loads_only_api_contract` | FAIL | with_skill 未显式列出仅加载的 API 类型模块与 host API 模板，也未提供名为 Hierarchy drift 的显式结论字段；仅以范围排除项间接提及其他文档类型。 |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=e820b6c4381f2b584f4fb75e118822cab822720708679f6856aff845dce75a20; output_sha256=614be8d77bd77f79f3d351515ced76b92e25c6b5c30ffd8e6230f3f9d42625a8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别部分扁平路径问题并提出嵌套目标树，声明零写入，但迁移提案、批次外 drift 报告和加载/Hierarchy drift 记录不完整。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=02d5619a5b35a2cb54dbb7f3f19b3f4325fef0a1206d2f3f66f83a6cc1613ad3; fixture_sha256=e820b6c4381f2b584f4fb75e118822cab822720708679f6856aff845dce75a20; output_sha256=6152a8637dbb4b1853bd83861a6ff8450ff901acc03f9569bd30c7b7dd8a30a4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提出扁平 API 一级新增页面方案，未识别层级 drift，保留现有路径并只增加首页链接。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- with_skill 未满足扁平 drift 证据完整性要求。
+- with_skill 未提供完整的一次性迁移提案及规定的决策选项。
+- with_skill 未报告两组批次外 drift 的页面清单和建议节点。
+- with_skill 未显式报告 API-only 加载范围与 Hierarchy drift 结论。
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Skill Eval Comparison
 
 ## Evaluation Target

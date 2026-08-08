@@ -1,3 +1,5 @@
 # Billing Webhook TRD
 
-The service needs retry behavior for failed billing webhooks. Engineering should inspect the existing service structure before changing code.
+Failed billing webhook deliveries require bounded retries. Each attempt keeps
+the original event ID, and repeated delivery must not apply the same billing
+change twice.

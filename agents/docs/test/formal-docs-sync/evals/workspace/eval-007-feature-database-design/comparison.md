@@ -1,3 +1,91 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `formal-docs-sync`
+- Eval: `eval-007-feature-database-design`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `069691c0cf641c0197bfdbacac2d64c88a425f981a4a1790a532e131615e041e` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-007-feature-database-design`.
+- Fixture SHA-256: `069691c0cf641c0197bfdbacac2d64c88a425f981a4a1790a532e131615e041e`
+- Prompt SHA-256: `97f82a75c78275f5f504c11fb93e67755d5b6d9f65a9ef9273ee264808b8d9c8`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `79b2ff102fa24fa224c9f24f44f3e648a1ae7eb9a7a10e639d8675db4454120a`
+- Skill overlay SHA-256: `52a3ba7ee2d9485acf003417b40e0d0ca2ab263cbadde98fac58250b6c2a9778`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `dd84eeaf9ea9452e584f740ec00a1edde6c8e5bfae2ef83da4e9e416f2e769fe`
+- Metadata SHA-256: `a0174e62fc5ee1741a54f96a3dfafd22a8b0c46a51aa767a1e30458f73276359`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `loads_only_database_design_contracts` | PASS | With-skill outputs modify only database/design documentation and mappings; API is referenced as an authority link and no API, ops, or product pages are changed. |
+| `passes_design_closeout_gate` | FAIL | No runtime-only sync-report.md, per-page closeout matrix, generation time, or pre-write changed-path state is present. |
+| `creates_database_schema_domain_tree` | PASS | Snapshot contains database/index.md, primary/index.md, the workspace-access domain index, relationships.md, and all three entity pages. |
+| `refreshes_confirmed_stable_path` | PASS | database/workspace-access.md is retained, stale facts are replaced with current facts, last_verified_version is unverified, and the stable mapping is preserved. |
+| `documents_current_entity_facts` | PASS | Entity pages record current fields, constraints, indexes, ownership/lifecycle behavior, membership uniqueness and roles, invitation token uniqueness, and expires_at. |
+| `links_relationships_bidirectionally` | PASS | relationships.md links all three entity pages; each entity page links the domain index, relationships, related tables, and the workspace-access API authority. |
+| `distinguishes_physical_and_logical_relations` | PASS | Relationship Mermaid and prose identify both workspace_id references as CASCADE physical FKs and user_id as a service-validated logical reference without a physical FK. |
+| `creates_domain_component_flow_tree` | PASS | Snapshot contains the Design root, Workspace Access and Audit Log indexes, three component pages, invitation-acceptance flow, authorization-boundary page, and the legacy compatibility page. |
+| `keeps_reciprocal_and_authority_links` | PASS | All three components link the acceptance flow, the flow links all three components, and Design pages link API/database authority pages without duplicating their contracts. |
+| `keeps_cross_domain_authority_unique` | PASS | The acceptance flow is under Workspace Access; Audit Log pages link to it and explicitly state they do not duplicate the flow. |
+| `updates_atomic_map_and_unverified_pages` | FAIL | The final snapshot has the required pages and unverified metadata, but there is no evidence of atomic write sequencing or read-back/stable-sort verification; the page-specific mappings are also broad full-closure mappings rather than demonstrated per-glob affected sets. |
+| `runs_host_checks_and_handoffs_audit` | FAIL | Evidence reports frontmatter/version checks and unit tests, but full test:docs affected checking was blocked; no successful npm run test:docs, public/internal builds, complete visibility/link verification, or docs-agent:docs-audit handoff is shown. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=97f82a75c78275f5f504c11fb93e67755d5b6d9f65a9ef9273ee264808b8d9c8; fixture_sha256=069691c0cf641c0197bfdbacac2d64c88a425f981a4a1790a532e131615e041e; output_sha256=34fb8daf0b89c7003de3a8cd801dd2048f7ba5d10313d5b2c032818cefe5519c; snapshot_sha256=03ea858b341e667a9fe0426d6493eeef572209e066b4e042ac7095182b8b0b7b
+- Behavior: With-skill produced the requested database/design hierarchy and current facts with reciprocal authority links, but lacked required closeout timing evidence and complete host-check/handoff evidence.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=97f82a75c78275f5f504c11fb93e67755d5b6d9f65a9ef9273ee264808b8d9c8; fixture_sha256=069691c0cf641c0197bfdbacac2d64c88a425f981a4a1790a532e131615e041e; output_sha256=84908942a683edfdc2461787838844e9ba315694087582159cdc9bab86619fac; snapshot_sha256=b2a213d1bcc8b3fb980d22dedddbeafbff5142d06a0618543b061686801eac64
+- Behavior: Fresh baseline created much of the database/design tree and refreshed facts, but lacked the complete mapping closure and reported incomplete checks.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- passes_design_closeout_gate failed because sync-report.md and per-page pre-write closeout evidence are absent.
+- updates_atomic_map_and_unverified_pages failed because atomic sequencing/read-back evidence is absent and mapping precision is not demonstrated.
+- runs_host_checks_and_handoffs_audit failed because required npm checks/builds, visibility/link verification, and handoff are not evidenced.
+- Next: Create and preserve the required runtime-only sync-report.md before writes.
+- Next: Run all required docs checks/builds and complete the docs-audit handoff with the full affected set.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Eval Comparison: Feature Database + Design Sync
 
 ## Evaluation Target

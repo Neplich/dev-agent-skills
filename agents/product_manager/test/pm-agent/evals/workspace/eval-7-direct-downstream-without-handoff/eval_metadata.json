@@ -2,8 +2,18 @@
   "eval_id": "eval-007-direct-downstream-without-handoff",
   "eval_name": "direct-downstream-without-handoff",
   "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-7-direct-downstream-without-handoff",
-  "prompt": "用户说：直接帮我实现一个设置页布局调整，不需要 PM 文档，先开始改代码。",
   "fixture_context": [
     "README.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -7,29 +7,46 @@
       "id": "eval-001-missing-variables",
       "name": "missing-variables",
       "description": "Verifies that env-config-auditor handles missing-variables and produces the expected role-specific artifact.",
-      "prompt": "检查我的项目环境配置是否完整，代码中使用了 DATABASE_URL、API_KEY、REDIS_URL，但只有 local 配置文件定义了它们。",
+      "scenario": {
+        "persona": "负责上线前配置检查的平台工程师",
+        "situation": "应用代码使用四个环境变量，但 local、Docker 和 CI/CD 的覆盖不一致",
+        "trigger": "部署准备评审需要确认缺失变量与敏感配置风险",
+        "goal": "形成跨代码、部署和流水线的持久环境配置审计报告",
+        "materials": [
+          "src/server.ts",
+          "deploy/local/.env.example",
+          "deploy/docker/.env.example",
+          ".github/workflows/deploy.yml"
+        ],
+        "constraints": [
+          "这是仓库级审计",
+          "示例配置不得包含真实秘密",
+          "不凭空假设 Helm 已配置"
+        ],
+        "success_criteria": [
+          "逐变量比较代码、local、Docker、Helm 和 CI/CD 覆盖",
+          "指出 API_KEY、REDIS_URL 与 STRIPE_SECRET_KEY 的覆盖缺口",
+          "给出按风险排序的补齐建议"
+        ]
+      },
+      "prompt": "请检查这个服务的环境配置是否完整。代码在 `src/server.ts`，local、Docker 示例和部署工作流也都在仓库里；请找出各运行环境缺失或不一致的变量，并把审计结论留成一份可复查的报告。",
       "workspace": "workspace/iteration-1/eval-1-missing-variables",
       "expected_output": "生成 durable 审计报告，指出 deploy 和 CI/CD 配置中缺失的变量",
       "assertions": [
         {
-          "id": "deploy_env_audit_md_docs_devops_feature_path_env_audit_md",
-          "description": "deploy/ENV_AUDIT.md 或 docs/devops/{feature_path}/ENV_AUDIT.md 存在",
-          "text": "deploy/ENV_AUDIT.md 或 docs/devops/{feature_path}/ENV_AUDIT.md 存在"
+          "id": "creates_durable_config_audit",
+          "description": "形成可复查的仓库级配置报告",
+          "text": "生成 `deploy/ENV_AUDIT.md`，包含缺失变量、覆盖矩阵、安全问题和建议，并注明证据来源。"
         },
         {
-          "id": "missing_variables",
-          "description": "报告包含 Missing Variables 章节",
-          "text": "报告包含 Missing Variables 章节"
+          "id": "compares_code_deploy_and_cicd",
+          "description": "逐环境核对变量覆盖",
+          "text": "比较 src/server.ts、local、Docker、Helm 与 CI/CD，准确指出 API_KEY 和 REDIS_URL 缺少 Docker/CI 覆盖、STRIPE_SECRET_KEY 只出现在 CI/CD。"
         },
         {
-          "id": "api_key_stripe_secret_key_deploy_ci_cd",
-          "description": "列出 API_KEY 或 STRIPE_SECRET_KEY 在 deploy/CI-CD 中缺失",
-          "text": "列出 API_KEY 或 STRIPE_SECRET_KEY 在 deploy/CI-CD 中缺失"
-        },
-        {
-          "id": "recommendations",
-          "description": "报告包含 Recommendations 章节",
-          "text": "报告包含 Recommendations 章节"
+          "id": "keeps_secrets_and_unknowns_honest",
+          "description": "不泄漏秘密且不虚构环境",
+          "text": "不写入真实 secret 值；没有 Helm 配置时记录缺失或未知，不把部分覆盖误报为生产就绪。"
         }
       ]
     },
@@ -37,7 +54,29 @@
       "id": "eval-002-feature-path-audit",
       "name": "feature-path-audit",
       "description": "Verifies that env-config-auditor uses a confirmed 4-level feature_path and does not create a synonymous or truncated DevOps report directory.",
-      "prompt": "对 chat-interface/messages/history/search 这个功能做环境配置审计。仓库里已有 docs/pm/chat-interface/messages/history/search/PRD.md、docs/engineer/chat-interface/messages/history/search/TRD.md 和 docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md。",
+      "scenario": {
+        "persona": "负责聊天搜索功能上线准备的平台工程师",
+        "situation": "四级功能目录已有产品、技术和实施计划，代码新增搜索服务地址",
+        "trigger": "上线前需要确认该功能的环境变量在部署配置中的覆盖情况",
+        "goal": "在相同功能树下形成环境配置审计报告",
+        "materials": [
+          "docs/pm/chat-interface/messages/history/search/PRD.md",
+          "docs/engineer/chat-interface/messages/history/search/TRD.md",
+          "docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md",
+          "src/server.ts",
+          "deploy/local/.env.example"
+        ],
+        "constraints": [
+          "沿用现有四级目录，不创建同义或截断目录",
+          "只审计配置，不修改产品或工程文档"
+        ],
+        "success_criteria": [
+          "读取同路径的技术与实施依据",
+          "核对代码与 local 配置",
+          "报告写入镜像的 DevOps 目录"
+        ]
+      },
+      "prompt": "请对聊天界面里的消息历史搜索做环境配置审计。产品、技术和实施计划都在 `docs/pm/chat-interface/messages/history/search/` 与对应工程目录，代码和 local 配置也已提供；请沿用这棵功能目录记录审计结论。",
       "workspace": "workspace/eval-002-feature-path-audit",
       "expected_output": "读取同一 feature_path 下的 PM/Engineer 文档，输出 docs/devops/chat-interface/messages/history/search/ENV_AUDIT.md，不生成 docs/devops/history-search/ENV_AUDIT.md 或 docs/devops/chat-interface/history-search/ENV_AUDIT.md。",
       "assertions": [
@@ -62,7 +101,27 @@
       "id": "eval-003-mapped-doc-config-audit",
       "name": "mapped-doc-config-audit",
       "description": "验证配置审计读取 change-map 指向的配置文档，并用代码事实核证未验证的必需变量声明。",
-      "prompt": "审计 src/config/required.env 定义的运行时变量要求，判断 API_TOKEN 是否为必填配置。",
+      "scenario": {
+        "persona": "维护运行时配置的平台工程师",
+        "situation": "正式配置说明把 API_TOKEN 标为可选，但实际规则可能已变化",
+        "trigger": "上线检查前需要确认 API_TOKEN 是否必须提供",
+        "goal": "以当前代码规则形成可信配置审计结论并记录文档差异",
+        "materials": [
+          "src/config/required.env",
+          "docs/site/standards/change-map.yaml",
+          "docs/site/api/runtime-config.md"
+        ],
+        "constraints": [
+          "正式文档尚未完成版本核验",
+          "不得仅凭文档声称配置完整"
+        ],
+        "success_criteria": [
+          "通过变更映射定位配置说明",
+          "以 required.env 确认必填性",
+          "说明缺失变量的运行风险"
+        ]
+      },
+      "prompt": "请审计 `src/config/required.env` 定义的运行时配置，重点确认 API_TOKEN 是否必填。仓库有变更映射和正式配置说明，请把文档声明与当前代码规则一起核对。",
       "workspace": "workspace/eval-003-mapped-doc-config-audit",
       "expected_output": "区分映射文档声明和代码配置事实的环境审计结论。",
       "assertions": [
@@ -87,9 +146,28 @@
       "id": "eval-004-docs-entry-access-audit",
       "name": "docs-entry-access-audit",
       "description": "核对文档站域名、TLS、Internal 访问控制和环境差异。",
-      "prompt": "读取 evidence.md，对 Public/Internal 在 staging/production 的入口配置进行只读审计。",
-      "expected_output": "逐环境报告 DNS/TLS、认证或网络限制、端口、探针、Ingress/Gateway、配置引用与未知项。",
+      "scenario": {
+        "persona": "负责文档站上线检查的平台工程师",
+        "situation": "Public 和 Internal 在 staging 与 production 的入口证据完整度不同",
+        "trigger": "正式文档更新前需要确认各环境的访问控制和运行配置事实",
+        "goal": "形成逐环境的只读入口与配置审计结论",
+        "materials": [
+          "runtime-entry-status.md"
+        ],
+        "constraints": [
+          "没有权限或运行证据时必须标为 unknown",
+          "可达域名不能单独证明集成",
+          "只返回已验证事实"
+        ],
+        "success_criteria": [
+          "覆盖 Public 的 DNS/TLS",
+          "覆盖 Internal 的认证或网络限制",
+          "核对端口、探针、Service/Ingress/Gateway、配置引用与环境差异"
+        ]
+      },
+      "prompt": "Public 和 Internal 文档站在 staging、production 的当前入口状态整理在 `runtime-entry-status.md`。请做一次只读审计，明确哪些配置已经有证据、哪些仍然未知。",
       "workspace": "workspace/eval-004-docs-entry-access-audit",
+      "expected_output": "逐环境报告 DNS/TLS、认证或网络限制、端口、探针、Ingress/Gateway、配置引用与未知项。",
       "assertions": [
         {
           "id": "audits_public_and_internal_access",

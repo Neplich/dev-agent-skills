@@ -1,3 +1,84 @@
+# Issue #246 Evaluation Result
+
+## Evaluation Target
+
+- Agent: `docs`
+- Skill: `docs-agent`
+- Eval: `eval-005-integration-release-chain`
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1632db2ef57cd08fd5111dc591159b38c9384e4241c7c2810f25eebdc67d578a` from `agents/docs/test/docs-agent/evals/workspace/eval-005-integration-release-chain`.
+- Fixture SHA-256: `1632db2ef57cd08fd5111dc591159b38c9384e4241c7c2810f25eebdc67d578a`
+- Prompt SHA-256: `62a386a246bcb0c7c5b2df7096cfd60c5023a6b28473d50af8f99649d1d3480e`
+- Repository HEAD: `4400ae28f989d139c65fdc4d3f711f6d7fbc2ee5`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `9fbb92b16f91777ce613be24ad3cd630730cfccd4cce1cf1d33c3b6c917671d6`
+- Skill overlay SHA-256: `5c882a57295d157e3993960abec476d2e269c34163ca7490bf29b90ab3d78823`
+- Judge schema SHA-256: `21d43403f9a89e052dc7c8f27bb7f6b25e3aac68a0c2bb24cb181a89e617d64a`
+- Eval definition SHA-256: `05d8b9eb5ccf6bbc077dad850c79899562c5b4ed9bbb4187abffd82f21410ea3`
+- Metadata SHA-256: `c1ee9aeb87a312a5a12a5c6bde57cbe238245b2c2b0147ad5f64c990238e5981`
+- Executor SHA-256: `7b65d7d7a30937e6b3b48ed51b563d70cd10d801a8c222649956a85efbe3ac48`
+- Runtime SHA-256: `92bdfb539ae5a9bdf642c9b3eb735e3ccaf253ed3a4c99f8e136ca1d192d295a`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
+
+## Assertion Results
+
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_release_audit_entry` | PASS | With-skill output recognizes v1.4.0 maintainer confirmation, the documented release scope, and the read-only/no-write boundary. |
+| `evaluates_site_release_notes_gate` | FAIL | It calls the Release Notes handoff ready and does not return the site Release Notes owner as responsible for the incomplete handoff credentials, despite the missing pre-tag authority and release verification. |
+| `validates_release_window_basis` | FAIL | It identifies the candidate/tag tree mismatch but does not verify the configured previous-tag and base-ref comparison window from the signed snapshot. |
+| `rejects_missing_pre_tag_authority` | PASS | It explicitly states that formal pre-tag audit authority is missing and refuses to infer that the tag is bound to an audited document tree. |
+| `detects_post_tag_evidence_drift` | PASS | It correctly identifies that the v1.4.0 tag tree differs from the release-candidate/tag-entry tree and concludes the chain is blocked. |
+| `blocks_github_release_handoff` | PASS | It concludes GitHub Release preparation or publication cannot continue and does not generate a preview, draft, or publish handoff. |
+| `preserves_no_mutation_boundaries` | PASS | It explicitly states that no tag or GitHub Release writes were performed. |
+
+## With-Skill Behavior
+
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=62a386a246bcb0c7c5b2df7096cfd60c5023a6b28473d50af8f99649d1d3480e; fixture_sha256=1632db2ef57cd08fd5111dc591159b38c9384e4241c7c2810f25eebdc67d578a; output_sha256=15a71edc0f173c63796641377b57dcd988a934565232df33e561a67a3335ea76; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly blocks GitHub Release progression, detects tag/tree drift, rejects missing pre-tag authority, and preserves read-only boundaries, but misses the required release-window validation and assigns incomplete handoff remediation to the wrong owner.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
+
+## Fresh Without-Skill Baseline
+
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=62a386a246bcb0c7c5b2df7096cfd60c5023a6b28473d50af8f99649d1d3480e; fixture_sha256=1632db2ef57cd08fd5111dc591159b38c9384e4241c7c2810f25eebdc67d578a; output_sha256=f4d26bf940bfd37291e2232f0112fd75227e9663d79f489f37d17f7faa0d5810; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly blocks release progression and identifies tree drift, missing post-tag evidence, and inconsistent documentation verification, but provides less explicit pre-tag authority analysis.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
+
+## Failures and Next Steps
+
+- The with-skill output does not validate the previous-tag/base-ref release window and comparison anchor.
+- It treats the site Release Notes handoff as ready and does not return the site Release Notes owner for incomplete gate credentials.
+- Next: None.
+
+## Runtime Artifact Policy
+
+- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
+- This durable comparison retains only the reviewable summary and superseded history.
+
+## Historical Context (Superseded)
+
+# Issue #246 Migration Status
+
+## Current Result
+
+- Evidence status: **STALE**
+- Migration status: **PENDING**
+- Blocking reason: this eval has not yet been rerun under the Issue #246 scenario, lane-isolation, and fresh-judge contract.
+Overall result: BLOCKED
+
+## Historical Context (Superseded)
+
+The complete pre-migration comparison follows unchanged. It is retained only as historical context and is not current release evidence.
+
+---
+
 # Skill Eval Comparison
 
 ## Evaluation Target
