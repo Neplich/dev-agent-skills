@@ -11,11 +11,37 @@ formal documentation site. This file owns only the entry gate and mode
 selection. After they pass, load `_internal/INSTRUCTIONS.md`; that entry tells
 you which single type module to load for each target page.
 
+## Mandatory Mode Checkpoint
+
+Resolve the active installed `formal-docs-sync` skill directory and load its
+`_internal/INSTRUCTIONS.md` after the entry gate; load only the type modules in
+scope. Before any write, report the selected mode, accepted evidence, complete
+candidate page tree, per-node confirmation state, exact atomic change-map
+delta, stable paths and out-of-batch drift, then wait for confirmation whenever
+the batch or migration scope is not already confirmed.
+
+- Feature delivery: enforce PRD/TRD/plan/diff/test and design-closeout evidence;
+  update the affected pages and change map together, leave new or unstamped
+  pages `unverified`, run host checks, then hand off to `docs-audit`.
+- Deployment verification: cross-check the shared environment reference and
+  keep Development, Docker, and Kubernetes/Helm evidence and blockers
+  separate. Continue confirmed classes, block only the missing class, and never
+  invent placeholder commands. Migrate confirmed aggregate paths atomically.
+- Release: touch only affected product/ops facts. A Release Notes outcome goes
+  to `release-notes-gen`; keep the entire site zero-diff in that routing step.
+- Existing-system backfill: prefer catalog/change-map scope, propose one finite
+  API/database/design/ops/product batch, and remain read-only until confirmed.
+
+Every completed write batch must run the host's real checks, report their raw
+result, hand the affected set to audit, and perform the read-only deployment
+completeness recheck. A discovered deployment gap returns to `pm-agent` without
+being repaired here.
+
 ## Entry Gate
 
 Require a PM handoff packet or an equivalent confirmed entry basis for exactly
 one mode. The PM packet definition lives in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 Direct invocation does not waive this gate.
 Security-originated evidence is not an equivalent entry basis for any mode. If
 there is no PM handoff packet, stop and guide the request back to `pm-agent` for

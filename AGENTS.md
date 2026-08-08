@@ -210,6 +210,7 @@ Skill eval 是可用性测试：验证 skill 能被触发、协议可执行、�
 - 每轮必须重新生成 `without_skill` baseline，**不得复用历史 baseline**，也不得为掩盖执行失败把 baseline 弱化成可选项。
 - 判定由独立评审方（fresh subagent 或独立 judge）对照 assertions 得出。**被测 lane 的自评不算判定**，评审方须独立核对零写入等关键事实。批量 transcript 生成脚本的输出只是诊断产物，不是 pass/fail 事实来源。
 - 运行期文件写隔离 scratch workspace（如 `tmp/eval-runs/...`），不得写入已提交 fixture——历史输出会污染 empty-workspace 这类上下文敏感用例。每轮运行前需清理的路径用 `eval_metadata.json` 的 `execution_cleanup` 声明。
+- 每条 eval 在成功、FAIL、BLOCKED 或异常退出后，都必须在 runner 结束前删除该轮全部过程产物，包括 lane workspace、依赖副本、candidate 输出、snapshot、judge package/verdict、transcript、timing、diagnostics 与 `run_status.json`；批量执行也必须逐条执行同一 `finally` 清理。仓库和 CI 只保留 durable `comparison.md` 结论，不保留或上传 `tmp/eval-runs/`。
 - 只在实际存在 deterministic runner 时声明 run diagnostics（command、cwd、timeout、return code 等），便于区分基础设施失败与 assertion 失败。
 
 **Eval prompt 与 lane 隔离契约**
@@ -252,7 +253,7 @@ lane 可见素材只给宿主环境事实，评测脚手架一律不给：`eval_
 - 提交 eval 定义、metadata、fixtures、README 与最新 `comparison.md`。不提交运行期产物：`with_skill/`、`without_skill/`、`baseline/`、`outputs/`、`comparison.auto.md`、`transcript.md`、`candidate-output.md`、`subagent-verdict.md`、`timing.json`、`run_status.json`、diagnostics 目录
 - metadata 中的 `with_skill_outputs` / `without_skill_outputs` 只是 deterministic runner 的运行期产物预期，不要求存在于已提交 workspace。`with_skill_outputs` 可作 runner 门禁；baseline 类输出只报告，不作失败条件。无 deterministic 产物的 eval 不声明 runner output
 - `eval_metadata.json` 不声明 `validation_method`；skill eval 默认执行 fresh subagent validation
-- 模型 transcript、verdict、timing、diagnostics 可作短期 CI artifact 上传排查，但不入 git
+- 模型 transcript、verdict、timing、diagnostics 只允许在单条 eval 运行期间供 judge 使用，结论写入 `comparison.md` 后立即删除，不入 git、不上传 CI artifact
 - PR 评论或对话中的 eval 结论必须与已提交或拟提交的 `comparison.md` 一致
 - Python eval 测试不得依赖上次运行的输出；用临时目录或最小 fixture，避免跨测试根目录重名模块。提交前运行 `uv run scripts/check_eval_artifacts.py`
 

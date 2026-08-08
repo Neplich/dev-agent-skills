@@ -18,6 +18,16 @@ get one confirmed feature map instead of ad-hoc names invented per request.
 
 Detailed execution guidance lives in `_internal/INSTRUCTIONS.md`.
 
+## Mandatory Catalog Checkpoint
+
+Confirm repository/workspace scope before scanning a monorepo. If the requested
+workspaces are not explicit, stop and ask one minimal scope question; do not
+catalog the whole monorepo first. For every confirmed feature, emit the full
+handoff identity: `feature`, `feature_path`, `parent_feature`, `feature_level`,
+and `feature_path_evidence` as `{source, reason}` entries. The catalog does not
+bulk-generate PRDs or TRDs: confirmed features go to `idea-to-spec` for PM
+documents and then `engineer-agent:trd-gen` for Engineer documents.
+
 ## When to Use
 
 - The user takes over an existing project and asks what features it has today
@@ -58,7 +68,7 @@ evidence conflicts the scan cannot resolve.
 
 ### Step 1 — Read existing feature context
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 Before proposing any name, read what already exists:
 

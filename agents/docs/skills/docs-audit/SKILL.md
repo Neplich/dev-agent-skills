@@ -11,6 +11,28 @@ pass followed by fact verification. This file owns the entry and release gates;
 load `_internal/INSTRUCTIONS.md` only after the entry basis and version baseline
 are resolved.
 
+## Mandatory Audit Transaction
+
+Resolve the active installed `docs-audit` skill and load
+`_internal/INSTRUCTIONS.md` after credentials are complete. Keep one
+reproducible inventory binding immutable base/target objects, changed files,
+change-map matches, affected pages, all release surfaces, normalized versions,
+and each page's pre-stamp state.
+
+In pre-tag, verify the complete affected set against code/tests, classify
+outdated claims as `stale`, validate the shared frontmatter source, and stamp
+all verified pages in one transaction. Persist the complete candidate producer
+record, anchor it in a commit, discover it through the versioned path, integrate
+by fast-forward, and read it back before returning `ready_for_tag`; never call
+that published. On any failure, roll back only the current attempt and prove
+HEAD, refs, index, worktree, and authoritative prior records were restored.
+
+In post-tag, select the trusted pre-tag authority before deterministic fallback,
+bind the actual tag object/tree and every surface to the same inventory, and
+persist `blocked` on mismatch without rewriting the authority. Manual-page
+audits additionally verify every step screenshot file, navigation reachability,
+and redaction-sensitive content from raw files.
+
 ## Entry Credentials
 
 Require one confirmed audit entry basis:
@@ -27,7 +49,7 @@ or not maintainer-confirmed, return `blocked` before writing a report, stamping
 pages, or changing version metadata.
 
 The PM packet definition lives in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 Direct invocation does not waive this gate. If the audit scope is ambiguous,
 stop before writing a report or version metadata and return the missing scope
 to `docs-agent` or `pm-agent`.
@@ -69,7 +91,7 @@ Before auditing or writing:
    update directly into `stale`.
 3. Verify every affected page against current code or test evidence under the
    trust model in
-   `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`.
+   the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`.
    Code and tests are ground truth; preserve each conflicting document claim,
    code fact, and impact.
 4. Treat `stale`, `mismatch`, a page that remains unverified after fact review,
@@ -111,7 +133,7 @@ Report:
 
 At closeout, return the audit conclusion to the release handoff and follow the
 safety-net behavior in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 Wait for confirmation before another role acts unless the user has enabled the
 applicable continuation.
 

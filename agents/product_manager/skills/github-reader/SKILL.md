@@ -12,9 +12,19 @@ This skill serves two purposes:
 1. **Direct answer**: respond to the user's question about the repo
 2. **Data feed**: provide structured input for downstream skills like `roadmap-gen` or `weekly-report`
 
+## Mandatory Status Shape
+
+Full status includes a milestone progress table with percentages, separate PR
+queues for pending review and merged work, and each PR number linked to its
+absolute GitHub URL. Use the repository status emoji vocabulary (`✅`, `🟢`, `🟡`,
+`🔴`, `⚪`) consistently. Feed mode must also emit a
+`github_reader_data` YAML block. Every aggregate issue/PR total must carry the
+raw GitHub search `total_count` query evidence; if unavailable, label the total
+unavailable rather than deriving or fabricating it.
+
 ## Step 1 — Establish repo context
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 ```bash
 gh repo view --json nameWithOwner,url,defaultBranchRef,description

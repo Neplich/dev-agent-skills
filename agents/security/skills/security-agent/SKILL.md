@@ -10,6 +10,16 @@ visibility: internal
 based on whether the user needs broad application review, focused auth review,
 dependency risk analysis, or privacy/data-handling mapping.
 
+## Mandatory Routing Decision
+
+Before any review, state the accepted security entry basis, selected specialist
+or ordered chain, preserved risk surface and evidence, required report, and
+remediation owner. The router never implements remediation itself. At closeout,
+decide explicitly whether the verified conclusion changes product behavior,
+formal documentation facts, operational facts, or release readiness; if so,
+return the evidence to `pm-agent` for issue classification before any follow-up
+Docs, Engineer, DevOps, or release work.
+
 ## Role Boundary
 
 `security-agent` is responsible for:
@@ -35,7 +45,7 @@ dependency risk analysis, or privacy/data-handling mapping.
 Security is a downstream router. Before routing, require an explicit PM handoff
 packet or equivalent confirmed security context. The PM-side packet fields are
 defined in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 - If the user directly asks `security-agent` or a security specialist for a
   review without PM handoff context, return the request to `pm-agent` for
@@ -92,7 +102,7 @@ security outcome.
   remediation directly to `engineer-agent` or `devops-agent` as appropriate.
   Conclusions that trigger the escalation always return to `pm-agent`, which
   dispatches remediation through the issue lifecycle.
-- At Security closeout, evaluate Security's own confirmed conclusion — a review finding, or a Security re-review confirming that a remediation has landed — against the `Security Conclusion Escalation to PM` rule in `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`. If that conclusion establishes that formal documentation facts, externally visible behavior, operational facts, or release readiness have changed, return the conclusion and evidence to `pm-agent` for entry classification and issue filing. The trigger is Security's own conclusion; Security does not wait on a separate Engineer or DevOps return handoff and does not hand evidence directly to `docs-agent`.
+- At Security closeout, evaluate Security's own confirmed conclusion — a review finding, or a Security re-review confirming that a remediation has landed — against the `Security Conclusion Escalation to PM` rule in the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`. If that conclusion establishes that formal documentation facts, externally visible behavior, operational facts, or release readiness have changed, return the conclusion and evidence to `pm-agent` for entry classification and issue filing. The trigger is Security's own conclusion; Security does not wait on a separate Engineer or DevOps return handoff and does not hand evidence directly to `docs-agent`.
 
 ## Missing Handoff Target
 
@@ -113,7 +123,7 @@ When routing is complete:
   `docs/security/{feature_path}/...`
 - after the routed skill or role stage completes, apply the cross-role
   safety-net closeout defined in
-  `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+  the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
   (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
   next step, request confirmation before continuing, and honor user-enabled
   `auto-continue`

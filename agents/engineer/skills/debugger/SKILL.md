@@ -10,6 +10,28 @@ Systematically reproduce, diagnose, and fix bugs: align expected behavior,
 reproduce the failure, analyze the root cause, present the analysis and repair
 plan together, get user confirmation, then fix minimally and verify.
 
+## Mandatory Debugging Checkpoint
+
+Before any repair or E2E edit, make the following sequence observable in one
+checkpoint response:
+
+1. resolve the nested `feature_path`; read same-path PRD, decisions, TRD, and
+   validate `related_prd`
+2. classify the report as `implementation_deviation`, `requirement_change`,
+   `missing_docs`, or `trd_gap`
+3. only for `implementation_deviation`, reproduce the exact failure and report
+   the evidence-backed root cause
+4. present the analysis and tier-appropriate repair plan together, including
+   changed scope, verification, split decision, risks, and QA handoff condition
+5. wait for explicit plan confirmation before changing code, tests, or E2E
+   assets
+
+`requirement_change` returns to `pm-agent:idea-to-spec`; a TRD gap returns to
+`engineer-agent:trd-gen` with the affected components, data/API/integration,
+verification, rollout/rollback, observability, error-handling, and security
+decisions still needed. A request to skip alignment or confirmation remains
+blocked and never becomes permission to write a repair plan or code.
+
 ## When to Use
 
 - Tests are failing
@@ -40,7 +62,7 @@ expectation source, do not reproduce or fix yet; return the request to
 `pm-agent` for classification. Direct invocation does not bypass this gate.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 When equivalent docs are present, Step 0 below remains the authoritative
 expected-behavior gate.
 
@@ -89,7 +111,7 @@ or delegate implementation.
 
 ## Step 0 — Align expected behavior with PRD / TRD
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 For user-reported bugs in an existing feature, identify the likely
 `feature_path` and read the durable expected-behavior documents before deciding

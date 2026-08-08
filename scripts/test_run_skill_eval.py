@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import threading
+import time
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -333,6 +335,7 @@ def test_blocked_preflight_never_calls_candidate_or_judge(tmp_path: Path) -> Non
     assert (repository / (
         "agents/qa/test/bug-analyzer/evals/workspace/eval-001-real-user/comparison.md"
     )).read_text(encoding="utf-8") == "Overall result: BLOCKED"
+    assert not (tmp_path / "runs").exists()
 
 
 def test_failed_candidate_keeps_comparison_stale_and_inventory_pending(tmp_path: Path) -> None:
@@ -414,26 +417,15 @@ def test_declared_output_normalizes_matching_lane_prefix_and_rejects_wrong_lane(
     }], ["committed.md"], "with_skill")[0]["ok"] is True
 
 
-def test_compatibility_skip_generate_reports_existing_isolated_status(
+def test_compatibility_skip_generate_reports_durable_comparison(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repository = write_eval(tmp_path)
     definition = run_skill_eval.load_eval_definition(
         repository, "qa", "bug-analyzer", "eval-001-real-user",
     )
-    runtime = repository / "tmp/eval-runs/qa/bug-analyzer/eval-001-real-user"
-    runtime.mkdir(parents=True)
-    (runtime / "run_status.json").write_text(
-        json.dumps({
-            "agent": "qa", "skill": "bug-analyzer", "eval_id": "eval-001-real-user",
-            "overall_result": "PASS", "runtime_evidence": "isolated",
-            "candidate_runs": [
-                {"mode": "without_skill", "declared_outputs": [{"ok": False}]},
-                {"mode": "with_skill", "declared_outputs": [], "delivery_snapshot": []},
-            ],
-        }),
-        encoding="utf-8",
-    )
+    comparison = definition.workspace_root / "comparison.md"
+    comparison.write_text("# Durable conclusion\n\nOverall result: PASS\n", encoding="utf-8")
     monkeypatch.setattr(run_skill_eval, "definition_from_metadata", lambda _path: definition)
 
     exit_code = run_skill_eval.compatibility_main(
@@ -441,23 +433,19 @@ def test_compatibility_skip_generate_reports_existing_isolated_status(
     )
 
     assert exit_code == 0
-    assert '"runtime_evidence": "isolated"' in capsys.readouterr().out
+    assert "# Durable conclusion" in capsys.readouterr().out
+    assert not (repository / "tmp/eval-runs").exists()
 
 
-def test_compatibility_skip_generate_rejects_forged_pass_status(
+def test_compatibility_skip_generate_returns_nonzero_for_nonpassing_conclusion(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repository = write_eval(tmp_path)
     definition = run_skill_eval.load_eval_definition(
         repository, "qa", "bug-analyzer", "eval-001-real-user",
     )
-    runtime = repository / "tmp/eval-runs/qa/bug-analyzer/eval-001-real-user"
-    runtime.mkdir(parents=True)
-    (runtime / "run_status.json").write_text(json.dumps({
-        "agent": "qa", "skill": "other", "eval_id": "eval-001-real-user",
-        "overall_result": "PASS",
-        "candidate_runs": [{"mode": "with_skill", "declared_outputs": [{"ok": True}]}],
-    }))
+    comparison = definition.workspace_root / "comparison.md"
+    comparison.write_text("# Durable conclusion\n\nOverall result: FAIL\n", encoding="utf-8")
     monkeypatch.setattr(run_skill_eval, "definition_from_metadata", lambda _path: definition)
 
     exit_code = run_skill_eval.compatibility_main(
@@ -465,7 +453,8 @@ def test_compatibility_skip_generate_rejects_forged_pass_status(
     )
 
     assert exit_code == 1
-    assert "does not match metadata identity" in capsys.readouterr().err
+    assert "Overall result: FAIL" in capsys.readouterr().out
+    assert not (repository / "tmp/eval-runs").exists()
 
 
 def test_paired_run_uses_identical_prompt_in_without_then_with_order_and_fresh_judge(
@@ -549,12 +538,72 @@ def test_paired_run_uses_identical_prompt_in_without_then_with_order_and_fresh_j
     assert "## With-Skill Behavior" in comparison
     assert "## Fresh Without-Skill Baseline" in comparison
     assert "## Runtime Artifact Policy" in comparison
+    assert "deleted before the runner exits" in comparison
+    assert "remain under ignored `tmp/eval-runs/`" not in comparison
     updated_inventory = json.loads(inventory.read_text(encoding="utf-8"))
     assert updated_inventory["old_evals"][0]["migration_status"] == "complete"
     assert updated_inventory["counts"]["migration_status"] == {
         "pending": 0,
         "complete": 1,
     }
+    assert not (tmp_path / "runs").exists()
+
+
+def test_runtime_root_is_removed_when_materialization_raises(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repository = write_eval(tmp_path)
+    runtime = tmp_path / "runs"
+
+    def broken_materializer(**kwargs):
+        kwargs["runtime_root"].mkdir(parents=True)
+        (kwargs["runtime_root"] / "partial-artifact.bin").write_bytes(b"partial")
+        raise ValueError("materialization failed")
+
+    monkeypatch.setattr(run_skill_eval, "materialize_eval_run", broken_materializer)
+
+    with pytest.raises(ValueError, match="materialization failed"):
+        run_skill_eval.run_selected_eval(
+            repository_root=repository, agent="qa", skill="bug-analyzer",
+            eval_id="eval-001-real-user", runtime_root=runtime,
+            model_available=True,
+        )
+
+    assert not runtime.exists()
+
+
+def test_batch_main_runs_at_most_ten_cross_agent_evals_concurrently(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    targets = [
+        (f"agent-{index % 7}", f"skill-{index}", f"eval-{index:03}")
+        for index in range(20)
+    ]
+    active = 0
+    maximum = 0
+    lock = threading.Lock()
+
+    def fake_run_selected_eval(**_kwargs):
+        nonlocal active, maximum
+        with lock:
+            active += 1
+            maximum = max(maximum, active)
+        time.sleep(0.03)
+        with lock:
+            active -= 1
+        return {"overall_result": "PASS"}
+
+    monkeypatch.setattr(run_skill_eval, "_targets", lambda *_args: targets)
+    monkeypatch.setattr(run_skill_eval, "run_selected_eval", fake_run_selected_eval)
+    monkeypatch.setattr(run_skill_eval, "check_model_available", lambda _root: True)
+
+    assert run_skill_eval.main(["--jobs", "10"]) == 0
+    assert maximum == 10
+
+
+def test_batch_jobs_rejects_values_above_ten() -> None:
+    with pytest.raises(SystemExit):
+        run_skill_eval.parse_args(["--jobs", "11"])
 
 
 def test_source_identity_records_dirty_current_skill_dependency_and_schema_content(

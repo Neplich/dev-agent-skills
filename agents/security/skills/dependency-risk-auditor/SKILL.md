@@ -4,6 +4,15 @@ description: "Internal security specialist—not a direct entry point. Invoked b
 visibility: internal
 ---
 
+## Mandatory Evidence Escalation
+
+Explicitly record mapped-document freshness; `unverified` is low-trust
+navigation and dependency manifests/lockfiles plus repository evidence are the
+fact source. If the verified dependency fact changes formal documentation,
+behavior, operations, or release readiness, write the Security-owned report and
+return its evidence to `pm-agent` for classification and PM-owned issue filing,
+not directly to Docs.
+
 ## PM Handoff Entry Gate
 
 Before dependency review, require a PM/Security handoff packet or equivalent
@@ -13,13 +22,13 @@ use `N/A` feature scope; feature-scoped audits need the confirmed
 context, return the request to `pm-agent` for classification.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Execution Steps
 
 ### Step 0: Resolve Review Scope
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 For feature-scoped dependency review, use the confirmed `feature_path` and read
 `docs/pm/{feature_path}/PRD.md`, `docs/engineer/{feature_path}/TRD.md`, and

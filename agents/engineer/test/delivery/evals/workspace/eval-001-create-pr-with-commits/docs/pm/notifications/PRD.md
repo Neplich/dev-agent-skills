@@ -1,13 +1,14 @@
 ---
-feature: notifications
+type: PRD
+feature: Notifications
 feature_path: notifications
-parent_feature: N/A
-feature_level: 1
-version: 1.0.0
-date: 2026-07-26
-last_updated: 2026-07-26
+status: Approved
+version: 1.0
+date: 2026-08-08
+last_updated: 2026-08-08
 ---
 
-# 通知状态标签
+# Notifications
 
-active、read 和 archived 状态必须显示为稳定的人类可读标签。未知状态保留原值，避免隐藏后端新增状态。
+Notification status labels must cover active, read, and archived records. The
+current delivery is limited to the formatter and its direct test coverage.

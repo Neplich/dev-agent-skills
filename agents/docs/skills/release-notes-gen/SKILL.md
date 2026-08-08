@@ -12,6 +12,18 @@ the host release metadata and indexes and runs the host documentation checks.
 This file owns the entry, feature-scope, confirmation, and role-boundary gates.
 Load `_internal/INSTRUCTIONS.md` only after the entry basis is complete.
 
+## Mandatory Release-Notes Checkpoint
+
+An ambiguous or unconfirmed version returns to `pm-agent`; a missing site or
+Release Notes foundation returns to `docs-site-bootstrap`. Before explicit body
+confirmation, keep release metadata, indexes, navigation, tags, GitHub Release,
+and deployment surfaces unchanged. After confirmation, update only the
+host-required derived surfaces, run the real host documentation checks, and
+return a complete handoff to `docs-audit` containing confirmed version, scope,
+evidence, page path, confirmation source, changed derived surfaces, and check
+results. Tag creation, GitHub Release creation/publication, image publication,
+and deployment remain zero-write external boundaries.
+
 ## PM Handoff And Feature-Scope Gate
 
 Require a PM handoff packet or an equivalent confirmed release entry basis
@@ -24,7 +36,7 @@ that identifies all of the following:
   handoff.
 
 The PM packet definition lives in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 Direct invocation does not waive this gate. If the version, scope, host, or
 evidence boundary is unresolved, stop before writing, name the missing entry
 credential, and return product ambiguity to `pm-agent` or technical-impact gaps
@@ -104,7 +116,7 @@ Report:
 Only an explicitly maintainer-confirmed `target_release_version`,
 `confirmation_status: confirmed`, and successful host docs checks together can
 produce a ready handoff. At closeout, follow the safety-net behavior
-in `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+in the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
 and wait for confirmation before another role acts unless the applicable
 `auto-continue` authorization already exists.
 

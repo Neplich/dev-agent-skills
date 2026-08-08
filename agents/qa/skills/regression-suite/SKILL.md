@@ -41,6 +41,21 @@ overwrite historical result directories.
 
 Reuse the original evidence instead of re-deriving the scope from scratch. The regression run should confirm the fix, test the nearby surfaces that could break, and report whether the scope is ready to release.
 
+## Mandatory Regression Record
+
+Before execution, record that `TEST_SUITE.md`, `FLOW_INDEX.md`, the relevant
+case and script, prior `results/`, and prior `_reports/` were read or absent.
+If original defect/fix evidence, same-path alignment, platform version, or the
+execution entry is missing, separately mark original-failure recheck, fixed
+behavior, adjacent checks, and release recommendation as `blocked` or
+`not executed`; use `needs more verification` or `blocked` as the release
+recommendation instead of a vague conclusion.
+
+For every executed E2E TC, append the run to
+`results/TC-NNN-<short-slug>/{platform-version}/result.md` and preserve
+`testcase.snapshot.md`; the timestamped `_reports` file is an additional
+summary, not a replacement for the per-TC result.
+
 ## PM Handoff Entry Gate
 
 Before verifying a fix, require a PM/QA handoff packet or equivalent completed
@@ -50,11 +65,11 @@ handoff context or fix evidence, return the request to `pm-agent` for
 classification instead of inventing the regression scope.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Step 1 — Regression preflight
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 Read the evidence before executing anything:
 

@@ -8,6 +8,11 @@ visibility: internal
 
 Generate and maintain per-version changelog files under `docs/changelog/`, such as `docs/changelog/changelog-v1.2.0.md`, following [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format. Source of truth: merged GitHub PRs and release tags, fetched via `gh` CLI — no external MCP required.
 
+Before writing an entry, strip the full Conventional Commit prefix—including
+optional scope and breaking marker—from PR and commit titles (`type:`,
+`type(scope):`, `type!:` or `type(scope)!:`). The changelog bullet contains the
+human change description, not a bolded or literal commit prefix.
+
 ## Modes
 
 Choose the mode based on what the user asks for:

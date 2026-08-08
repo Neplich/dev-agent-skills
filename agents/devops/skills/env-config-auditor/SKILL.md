@@ -8,6 +8,16 @@ visibility: internal
 
 Validate environment configuration completeness and security across all deployment environments.
 
+## Mandatory Environment Evidence
+
+Build a per-environment and per-runtime-variant matrix covering DNS/TLS,
+authentication or network restriction, ports, probes, service/Ingress/Gateway
+values, secret/config references, and differences between local, CI, Docker,
+and Helm/runtime contexts. Mark unavailable runtime or permission evidence as
+`unknown` and do not infer readiness from configuration text alone. For formal
+documentation follow-up, hand only verified landed facts and unresolved owners
+to `formal-docs-sync`; never write the formal pages here.
+
 ## When to Use
 
 - Before first deployment
@@ -24,11 +34,11 @@ user directly invokes this specialist without that context, return the request
 to `pm-agent` for classification.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Context Preflight
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 Before auditing, inspect the narrowest relevant context:
 

@@ -24,6 +24,13 @@ Forbidden actions:
 
 If the input includes a completed PM or UX spec, use it to shape the visual system and stop at design handoff.
 
+Every reference-backed visual system must record the Design System Data query,
+the active installed `visual-design` skill reference source used, the relevant
+lookup findings, and how those findings support layout, style, color,
+typography, and UX decisions. A polished recommendation without this source
+evidence is incomplete. Resolve helper paths from the active installed skill
+directory rather than from the host workspace.
+
 When updating an existing visual system, the body states only the current
 design: superseded tokens, colors, or rules are rewritten, not kept with
 "deprecated" annotations. Removals are recorded in the doc changelog and git
@@ -39,7 +46,7 @@ specialist without PM handoff context or a confirmed `feature_path`, return the
 request to `pm-agent` for classification.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Feature Path Gate
 

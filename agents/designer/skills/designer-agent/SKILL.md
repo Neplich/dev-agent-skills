@@ -10,6 +10,17 @@ visibility: internal
 the narrowest design skill while preserving the strict boundary that design
 stops at design handoff and does not continue into code.
 
+## Mandatory Routing Decision
+
+Before producing design work, state the accepted entry basis, resolved
+`feature_path`, selected design specialist, preserved source documents, and
+required design output. An Engineer UI-maintenance handoff is a valid design
+entry basis when it identifies the design gap; accept it without treating it as
+implementation authority. After the selected design deliverables are complete,
+stop and hand the confirmed paths and remaining implementation scope back to
+`engineer-agent`. Never continue into code, tests, commands, or implementation
+planning.
+
 ## Hard Boundaries
 
 Designer Agent is design-only.
@@ -57,7 +68,7 @@ commands, code patches, tests, or deployment instructions.
 Designer is a downstream router. Before routing, require an explicit PM handoff
 packet or equivalent confirmed PM/design documents with a stable
 `feature_path`. The PM-side packet fields are defined in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 - If the user directly asks `designer-agent` or a design specialist for new
   design work without PM handoff context, return the request to `pm-agent` for
@@ -125,7 +136,7 @@ When routing is complete:
   next step for implementation
 - after the routed skill or role stage completes, apply the cross-role
   safety-net closeout defined in
-  `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+  the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
   (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
   next step, request confirmation before continuing, and honor user-enabled
   `auto-continue`

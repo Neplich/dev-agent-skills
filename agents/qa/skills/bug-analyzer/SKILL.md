@@ -55,6 +55,21 @@ approved PRD/TRD expectations is never `hotfix` — route it back to PM.
 
 Do not treat every failure as a confirmed bug. First collect evidence, then classify the report, then choose the output path that fits the repo context.
 
+## Mandatory Defect Record
+
+Every completed analysis must create a durable Markdown artifact unless the
+user explicitly requested a different repository-native tracker. Record these
+as separate fields: evidence status, confidence, severity with rationale,
+potential user/system impact, implementation or release impact, and evidence
+references. Thin evidence remains `suspected / needs more evidence`; request
+the decisive product/app version, environment, reproduction, expected/actual,
+logs/network/trace, and screenshots needed to change that status.
+
+When no E2E function tree applies, write the dated-free report under
+`docs/qa/{feature_path}/bug-<short-slug>.md`, never `docs/qa-reports/`. A
+confirmed reusable E2E reproduction instead uses the function-tree case,
+script, versioned result, and report paths from the shared QA contract.
+
 ## PM Handoff Entry Gate
 
 Before analyzing a failure, require a PM/QA handoff packet, existing QA evidence,
@@ -64,11 +79,11 @@ return the request to `pm-agent` for classification unless the prompt supplies
 enough evidence to remain a QA-only defect intake.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Step 1 — Intake evidence
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 Collect the minimum evidence needed to judge the report:
 

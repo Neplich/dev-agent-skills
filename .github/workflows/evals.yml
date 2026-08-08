@@ -84,11 +84,4 @@ jobs:
           if [ "${TARGET}" != "all" ]; then args+=(--agent "${TARGET}"); fi
           if [ -n "${SKILL}" ]; then args+=(--skill "${SKILL}"); fi
           if [ -n "${EVAL_ID}" ]; then args+=(--eval "${EVAL_ID}"); fi
-          uv run scripts/run_skill_eval.py "${args[@]}"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: eval-runtime-artifacts
-          if-no-files-found: ignore
-          retention-days: 7
-          path: tmp/eval-runs/**
+          uv run scripts/run_skill_eval.py --jobs 10 "${args[@]}"

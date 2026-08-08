@@ -4,6 +4,15 @@ description: "Internal security specialist—not a direct entry point. Invoked b
 visibility: internal
 ---
 
+## Mandatory Evidence Escalation
+
+When the review proves that a formal documentation, behavior, operational, or
+release fact changed, write the Security-owned report under
+`docs/security/{feature_path}/`, preserve the mapped document/code evidence and
+impact, and return the conclusion to `pm-agent` for classification and
+PM-owned issue filing. Do not hand the conclusion directly to `docs-agent` or
+edit another role's document.
+
 ## PM Handoff Entry Gate
 
 Before auth/authz review, require a PM/Security handoff packet or equivalent
@@ -13,13 +22,13 @@ without PM handoff context, confirmed roles/permissions scope, or a confirmed
 classification.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Execution Steps
 
 ### Step 1: Understand User Roles and Permissions
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 1. **Resolve feature scope**:
    - For feature-scoped review, use the confirmed `feature_path`.

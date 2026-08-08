@@ -8,6 +8,15 @@ visibility: internal
 
 Create operational runbooks for common incidents and failure scenarios.
 
+## Mandatory Runbook Evidence
+
+Read any mapped operational document first, record its freshness, then verify
+alerts, thresholds, rollback actions, and recovery checks against code,
+configuration, or executable tests. An `unverified` document is low-trust. If
+documented and implemented thresholds differ, state both values and explain
+how the difference changes detection, escalation, rollback timing, and release
+risk instead of choosing one silently.
+
 ## When to Use
 
 - Before first production deployment
@@ -27,11 +36,11 @@ use `N/A` feature scope; feature-scoped runbooks need the confirmed
 context, return the request to `pm-agent` for classification.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Context Preflight
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 Before generating playbooks, inspect:
 

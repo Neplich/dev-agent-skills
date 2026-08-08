@@ -30,6 +30,27 @@ applicability and degraded-gate rules take precedence over site-only wording in
 the references. All reference mutation, tag-safety, latest, prerelease, and
 readback protections remain in force on both paths.
 
+## Mandatory Release Gate Summary
+
+Before any mutation, report the ordered authority chain and current state:
+site Release Notes confirmation -> Docs pre-tag `ready_for_tag` -> release-owner
+tag creation -> Docs post-tag `release_verified` -> GitHub Release draft or
+publication. `ready_for_tag` permits only an inline preview or restricted draft;
+it is not tag or publish authority. Missing tags return to the release owner;
+missing post-tag evidence returns to `docs-agent:docs-audit`.
+
+Every preview includes the complete body and normalized version/prerelease
+decision. Draft commands explicitly set draft/prerelease flags, never infer or
+move `latest`, and are followed by fresh readback, atomic final update, and
+drift verification before publication. Never use `gh release create` when the
+tag is absent because it can create the tag. Any conflict between GitHub facts
+and the confirmed site/fallback source blocks and returns to the source owner.
+
+Marketplace install sections are evidence-driven: omit a platform section when
+the target tag lacks a verified pinned-install path, state that limitation
+plainly, and derive the closing plugin count from the target-tag manifest
+instead of memory or current HEAD.
+
 ## Host Documentation-Site Applicability
 
 Determine and record whether the host has an initialized formal documentation

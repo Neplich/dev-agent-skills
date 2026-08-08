@@ -16,6 +16,30 @@ Always read `_internal/_shared/skill-map.md` before loading any other internal
 resource or assembling a handoff packet. Load only the narrowest internal
 `INSTRUCTIONS.md` needed for the current next step.
 
+## Mandatory Lane Checkpoint
+
+Resolve `_internal/_shared/skill-map.md` from the active installed
+`idea-to-spec` skill and state the selected lane before producing output.
+
+- Greenfield: summarize the empty/current workspace, stack and document state;
+  enter `greenfield-discovery`/`greenfield-bootstrap`, narrow one decision with
+  real options and trade-offs, then propose PRD/DECISIONS documentation only
+  after confirmation.
+- Existing update: read current PM documents, recommend the matching iteration
+  path, update them incrementally, and wait before durable scope changes.
+- API/ADR: keep API and ADR documents Engineer-owned; hand off the full feature
+  identity and decision-background evidence to `engineer-agent:trd-gen`, never
+  use PM API/ADR generators.
+- Nested features: every handoff includes `feature`, `feature_path`,
+  `parent_feature`, `feature_level`, and `{source, reason}` path evidence.
+- L2b signals: when domain/size/requirement thresholds are met, present the
+  child path tree, section migration map, and downstream Engineer/Design/QA/
+  DevOps/Security mirror impacts; wait before moves or new child docs. Rejection
+  keeps the current path and normal version-bump flow.
+
+When entered through `pm-agent`, continue the discovery/iteration step itself;
+do not stop at a dispatcher summary or jump to implementation artifacts.
+
 ## Non-Negotiable Protocol
 
 1. Read workspace and document context before proposing formal design.
@@ -85,7 +109,7 @@ New formal PM documents must include `feature_path`, `feature`,
 
 ## Phase 0: Context Detection
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 Inspect repo markers, stack markers, architecture directories, existing docs,
 and `docs/pm/**/PRD.md` metadata. Output a compact context summary covering

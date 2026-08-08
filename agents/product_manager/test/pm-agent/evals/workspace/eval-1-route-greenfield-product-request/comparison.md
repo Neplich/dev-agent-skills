@@ -56,8 +56,8 @@ Overall result: FAIL
 
 ## Runtime Artifact Policy
 
-- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
-- This durable comparison retains only the reviewable summary and superseded history.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
 
 ## Historical Context (Superseded)
 

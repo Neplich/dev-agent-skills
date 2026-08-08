@@ -11,6 +11,18 @@ evidence outcome the user wants, the repository context available, and whether
 the work is documented acceptance, exploratory discovery, failure reproduction,
 or fix verification.
 
+## Mandatory Routing Decision
+
+This router selects one primary QA specialist before any test artifact or
+execution is produced. State the accepted test basis, resolved `feature_path`,
+scenario and platform version, selected specialist, required evidence output,
+and the concrete materials that specialist must read: PM/Engineer documents,
+existing QA memory, environment instructions, credentials by account ID, and
+the repository execution entry or command. Point to the selected specialist's
+authoritative E2E memory/platform/credential/execution gate. If any required
+basis is absent, stop at that gate and name the missing material; do not create
+cases, reports, or parallel QA routes.
+
 ## Role Boundary
 
 `qa-agent` is responsible for:
@@ -36,7 +48,7 @@ or fix verification.
 QA is a downstream router. Before routing, require an explicit PM handoff
 packet or equivalent confirmed test basis. The PM-side packet fields are
 defined in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 - If the user directly asks `qa-agent` or a QA specialist for acceptance,
   exploratory, bug-analysis, retest, regression, or E2E work without PM
@@ -100,7 +112,7 @@ When routing is complete:
   PRD/TRD/implementation-plan, and blocked-condition gates apply
 - after the routed skill or role stage completes, apply the cross-role
   safety-net closeout defined in
-  `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+  the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
   (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
   next step, request confirmation before continuing, and honor user-enabled
   `auto-continue`

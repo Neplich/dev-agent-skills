@@ -12,6 +12,31 @@ request is ready for design, engineering, QA, DevOps, security, formal
 documentation, or delivery
 execution.
 
+## Mandatory Entry Decision
+
+Do not begin by inspecting or implementing the requested work. First apply the
+classification protocol below, even when the workspace is empty or a requested
+file is missing. The first response must make these decisions observable:
+
+- name the `request_type` and `change_tier`, with the evidence that supports
+  them
+- select the exact PM specialist or downstream role and state whether its entry
+  basis is ready, missing, or blocked
+- preserve the confirmed source documents, scope, required output, and
+  blockers; never invent a feature path merely because the repository is empty
+- for a PM-owned route, continue directly into that specialist's first step;
+  for a downstream route, emit the complete handoff packet before execution
+- if a direct role or specialist request lacks its entry basis, stop execution,
+  return it to `pm-agent`, and name the missing handoff fields or documents
+
+Repository inspection may supply evidence after classification, but a missing
+README, source tree, or command is not a substitute for the routing decision.
+For `hotfix`, record why approved expectations are unchanged, the direct
+verification path, and retained scope/source/verification evidence. For release
+communication, preserve the order site Release Notes -> Docs audit -> GitHub
+Release. For document-structure governance, scope the read-only inventory to
+all six role document trees before proposing any change.
+
 ## Role Boundary
 
 `pm-agent` is responsible for:
@@ -170,7 +195,7 @@ When classifying a request, assess `change_tier` (`hotfix` / `standard` /
 When routing to Designer, Engineer, QA, DevOps, Security, Docs, delivery, or any other
 non-PM owner, include a structured packet. YAML is preferred, but an equivalent
 explicit field list is acceptable. Field definitions are authoritative in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 Required fields:
 
@@ -267,7 +292,7 @@ When routing is complete:
   route decisions
 - after the routed skill or role stage completes, apply the cross-role
   safety-net closeout defined in
-  `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+  the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
   (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
   next step, request confirmation before continuing, and honor user-enabled
   `auto-continue`

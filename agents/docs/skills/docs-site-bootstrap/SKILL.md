@@ -10,6 +10,16 @@ Initializes a host repository's formal documentation foundation under the fixed
 root `docs/site/`. This file owns the entry, opt-in, idempotency, and conflict
 gates. Load `_internal/INSTRUCTIONS.md` only after every gate below passes.
 
+## Mandatory Bootstrap Decision
+
+Resolve the complete authoritative asset inventory before writing. If any
+target differs, report the full conflict list and offer exactly overwrite,
+explicit merge, or keep-existing for each conflict; do not partially apply the
+scaffold first. After a first committed bootstrap, classify deployment
+completeness and ask the integrated/independent/deferred decision. After every
+re-bootstrap, rerun the same evidence check and report drift even when the
+asset copy itself is zero-diff.
+
 ## Entry Credentials
 
 Require both of these credentials before inspecting or writing bootstrap
@@ -93,4 +103,4 @@ Report:
 - recommended handoff to `formal-docs-sync`, then wait for confirmation
 
 At closeout, follow the safety-net behavior in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.

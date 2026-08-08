@@ -4,6 +4,16 @@ description: "Internal security specialist—not a direct entry point. Invoked b
 visibility: internal
 ---
 
+## Mandatory Evidence Escalation
+
+Explicitly record mapped-document freshness; `unverified` is low-trust
+navigation. Verify retention and data-flow claims against code and
+configuration, distinguish configured policy from observed runtime behavior,
+and state the compliance impact of any difference. If the verified conclusion
+changes formal documentation, behavior, operations, or release readiness,
+write the Security-owned report and return the evidence to `pm-agent` for
+classification and PM-owned issue filing, not directly to Docs.
+
 ## PM Handoff Entry Gate
 
 Before privacy mapping, require a PM/Security handoff packet or equivalent
@@ -13,13 +23,13 @@ without PM handoff context, confirmed data categories, or a confirmed
 classification.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Execution Steps
 
 ### Step 1: Understand Data Requirements
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 1. **Resolve feature scope**:
    - For feature-scoped privacy mapping, use the confirmed `feature_path`.

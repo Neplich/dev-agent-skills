@@ -805,7 +805,7 @@ class MaterializedEvalRun:
         if self.active_context:
             self.active_context.cleanup()
             self.active_context = None
-        remove_path(self.runtime_root / "dependencies")
+        remove_path(self.runtime_root)
 
 
 def _run_locked_npm_ci(staging: Path) -> subprocess.CompletedProcess[str]:

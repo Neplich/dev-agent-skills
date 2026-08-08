@@ -17,6 +17,30 @@ load `_internal/implementor/INSTRUCTIONS.md`. For self-review and closeout,
 load `_internal/reviewer/INSTRUCTIONS.md` and
 `_internal/_shared/output-conventions.md`.
 
+## Mandatory Planning Checkpoint
+
+Before code or test changes, produce one observable checkpoint that:
+
+1. resolves the canonical nested `feature_path` and records PRD, decisions,
+   TRD, `related_prd`, design, and code-evidence alignment
+2. returns expectation changes to `pm-agent:idea-to-spec`, technical gaps to
+   `engineer-agent:trd-gen`, and UI design gaps to `designer-agent`; the finder
+   names the gap but never performs the receiving role's work
+3. scans the fixed active-plan path and archive directory before writing;
+   handles `Implemented`, draft/non-implemented, faithful archive, abandoned,
+   and no-active-plan states exactly as the archive gate specifies
+4. writes or updates `IMPLEMENTATION_PLAN.md` with current frontmatter version,
+   status, alignment, file scope, order, verification, forbidden areas, and an
+   explicit implementation/independent-validation split decision
+5. presents the exact plan and waits for user confirmation before coding,
+   including for hotfixes and small bug fixes
+
+After implementation, reconcile the active plan body and frontmatter with the
+actual result before any handoff. The final summary must list changed files,
+verification, residual risks, runtime-artifact deletion, and—when user-facing
+paths may change—the complete QA E2E handoff package based on the confirmed
+plan. Runtime outputs never enter Git.
+
 ## PM Handoff Entry Gate
 
 Do not execute implementation, write code, or create a plan unless the request
@@ -27,7 +51,7 @@ work, or an equivalent confirmed document chain:
 decision.
 
 The PM-side packet field definition lives in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 If the user directly asks this skill to "implement", "build", "change a
 feature", or "do the code" without PM handoff or equivalent confirmed docs,
 stop and return the request to `pm-agent` for classification. Direct invocation
@@ -128,7 +152,7 @@ The active plan path remains fixed at
 
 ## Implementation Flow
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 1. Gather PRD, DECISIONS, TRD, relevant design docs, repo structure, and active
    plan/archive state.

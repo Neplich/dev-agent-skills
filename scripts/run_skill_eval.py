@@ -8,10 +8,13 @@ import base64
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
@@ -42,6 +45,7 @@ MODEL = "gpt-5.6-luna"
 REASONING_EFFORT = "medium"
 DEFAULT_TIMEOUT_SECONDS = 300
 JUDGE_SCHEMA = Path(__file__).with_name("eval_judge_result.schema.json")
+_DURABLE_WRITE_LOCK = threading.Lock()
 
 
 @dataclass(frozen=True)
@@ -598,11 +602,6 @@ def _lane_run_source(run: dict[str, Any], materialized: MaterializedEvalRun) -> 
     )
 
 
-def _write_status(runtime_root: Path, payload: dict[str, Any]) -> None:
-    path = runtime_root / "run_status.json"
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-
 def _blocked_result(
     definition: EvalDefinition,
     materialized: MaterializedEvalRun,
@@ -621,7 +620,6 @@ def _blocked_result(
         "overall_result": "BLOCKED",
         "blockers": blockers,
     }
-    _write_status(materialized.runtime_root, result)
     return result
 
 
@@ -771,8 +769,8 @@ Overall result: {result['overall_result']}
 
 ## Runtime Artifact Policy
 
-- Candidate outputs, snapshots, judge package, verdict, timing, and diagnostics remain under ignored `tmp/eval-runs/` or short-lived CI artifacts and are not committed.
-- This durable comparison retains only the reviewable summary and superseded history.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- Only this durable comparison retains the reviewable conclusion and superseded history.
 
 ## Historical Context (Superseded)
 
@@ -802,16 +800,19 @@ def _updated_inventory(definition: EvalDefinition) -> tuple[Path, dict[str, Any]
 
 
 def persist_durable_result(definition: EvalDefinition, result: dict[str, Any]) -> None:
-    inventory = _updated_inventory(definition)
-    comparison = definition.workspace_root / "comparison.md"
-    historical = comparison.read_text(encoding="utf-8")
-    comparison_bytes = _durable_comparison(definition, result, historical).encode("utf-8")
-    updates: dict[Path, bytes] = {}
-    if inventory:
-        path, payload = inventory
-        updates[path] = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
-    updates[comparison] = comparison_bytes
-    _transactional_replace(updates)
+    with _DURABLE_WRITE_LOCK:
+        inventory = _updated_inventory(definition)
+        comparison = definition.workspace_root / "comparison.md"
+        historical = comparison.read_text(encoding="utf-8")
+        comparison_bytes = _durable_comparison(definition, result, historical).encode("utf-8")
+        updates: dict[Path, bytes] = {}
+        if inventory:
+            path, payload = inventory
+            updates[path] = (
+                json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+            ).encode("utf-8")
+        updates[comparison] = comparison_bytes
+        _transactional_replace(updates)
 
 
 def run_selected_eval(
@@ -840,20 +841,21 @@ def run_selected_eval(
         repository_root.resolve() / value
         for value in definition.metadata.get("skill_dependencies", [])
     ]
-    materialized = materialize_eval_run(
-        fixture_root=definition.workspace_root,
-        repository_root=repository_root,
-        target_skill=repository_root.resolve() / f"agents/{agent}/skills/{skill}",
-        skill_dependencies=dependencies,
-        prompt=definition.item["prompt"],
-        runtime_isolation=definition.metadata.get("runtime_isolation", {}),
-        runtime_root=runtime_root,
-        model_available=model_available,
-        cleanup_paths=definition.metadata.get("execution_cleanup", []),
-        git_topology=definition.metadata.get("git_topology"),
-        judge_schema_bytes=judge_schema_bytes,
-    )
+    materialized: MaterializedEvalRun | None = None
     try:
+        materialized = materialize_eval_run(
+            fixture_root=definition.workspace_root,
+            repository_root=repository_root,
+            target_skill=repository_root.resolve() / f"agents/{agent}/skills/{skill}",
+            skill_dependencies=dependencies,
+            prompt=definition.item["prompt"],
+            runtime_isolation=definition.metadata.get("runtime_isolation", {}),
+            runtime_root=runtime_root,
+            model_available=model_available,
+            cleanup_paths=definition.metadata.get("execution_cleanup", []),
+            git_topology=definition.metadata.get("git_topology"),
+            judge_schema_bytes=judge_schema_bytes,
+        )
         locked_inputs = {
             "fixture": materialized.canonical_hash,
             "skill overlay": materialized.locked_overlay_hash,
@@ -971,10 +973,12 @@ def run_selected_eval(
             **verdict,
         }
         persist_durable_result(definition, result)
-        _write_status(materialized.runtime_root, result)
         return result
     finally:
-        materialized.cleanup()
+        if materialized is not None:
+            materialized.cleanup()
+        if runtime_root.exists():
+            shutil.rmtree(runtime_root)
 
 
 def _targets(
@@ -1014,37 +1018,20 @@ def compatibility_main(agent: str, argv: list[str] | None = None) -> int:
         print(f"ERROR: metadata belongs to {definition.agent}, not {agent}", file=sys.stderr)
         return 2
     if skip_generate:
-        status_path = definition.repository_root / (
-            f"tmp/eval-runs/{definition.agent}/{definition.skill}/{definition.eval_id}/run_status.json"
-        )
-        if not status_path.is_file():
-            print(f"ERROR: isolated runtime status does not exist: {status_path}", file=sys.stderr)
+        comparison = definition.workspace_root / "comparison.md"
+        if not comparison.is_file():
+            print(f"ERROR: durable comparison does not exist: {comparison}", file=sys.stderr)
             return 2
-        result = _load_json(status_path)
-        identity = (result.get("agent"), result.get("skill"), result.get("eval_id"))
-        expected = (definition.agent, definition.skill, definition.eval_id)
-        if identity != expected:
-            print("ERROR: isolated runtime status does not match metadata identity", file=sys.stderr)
-            return 1
-        runs = result.get("candidate_runs")
-        by_mode = {
-            run.get("mode"): run for run in runs or [] if isinstance(run, dict)
-        }
-        with_run = by_mode.get("with_skill")
-        expected_checks = _output_checks(
-            with_run.get("delivery_snapshot", []) if isinstance(with_run, dict) else [],
-            definition.metadata.get("with_skill_outputs"), "with_skill",
+        conclusion = comparison.read_text(encoding="utf-8")
+        match = re.search(
+            r"^Overall result: (PASS \(partial coverage\)|PASS|FAIL|BLOCKED)$",
+            conclusion, re.MULTILINE,
         )
-        if (
-            not isinstance(with_run, dict)
-            or with_run.get("declared_outputs") != expected_checks
-            or any(not check["ok"] for check in expected_checks)
-            or "without_skill" not in by_mode
-        ):
-            print("ERROR: isolated runtime status lacks verified paired output evidence", file=sys.stderr)
-            return 1
-        print(json.dumps(result, ensure_ascii=False, indent=2))
-        return 0 if str(result.get("overall_result", "")).startswith("PASS") else 1
+        if not match:
+            print("ERROR: durable comparison lacks Overall result", file=sys.stderr)
+            return 2
+        print(conclusion, end="" if conclusion.endswith("\n") else "\n")
+        return 0 if match.group(1).startswith("PASS") else 1
     result = run_selected_eval(repository_root=definition.repository_root,
                                agent=definition.agent, skill=definition.skill,
                                eval_id=definition.eval_id)
@@ -1059,6 +1046,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--eval", dest="eval_id")
     parser.add_argument("--metadata", type=Path)
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT_SECONDS)
+    parser.add_argument("--jobs", type=int, choices=range(1, 11), default=10)
     return parser.parse_args(argv)
 
 
@@ -1079,13 +1067,35 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
 
+    model_available = check_model_available(repository_root)
+    outcomes: dict[tuple[str, str, str], dict[str, Any] | Exception] = {}
+    with ThreadPoolExecutor(max_workers=min(args.jobs, len(targets))) as executor:
+        futures = {}
+        for agent, skill, eval_id in targets:
+            print(f"==> {agent}/{skill}/{eval_id}", flush=True)
+            future = executor.submit(
+                run_selected_eval, repository_root=repository_root, agent=agent,
+                skill=skill, eval_id=eval_id, timeout_seconds=args.timeout,
+                model_available=model_available,
+            )
+            futures[future] = (agent, skill, eval_id)
+        for future in as_completed(futures):
+            target = futures[future]
+            try:
+                outcomes[target] = future.result()
+            except Exception as exc:  # noqa: BLE001 - report every batch target
+                outcomes[target] = exc
+
     failures = 0
-    for agent, skill, eval_id in targets:
-        print(f"==> {agent}/{skill}/{eval_id}", flush=True)
-        result = run_selected_eval(repository_root=repository_root, agent=agent, skill=skill,
-                                   eval_id=eval_id, timeout_seconds=args.timeout)
-        print(f"Overall result: {result['overall_result']}")
-        if not result["overall_result"].startswith("PASS"):
+    for target in targets:
+        outcome = outcomes[target]
+        label = "/".join(target)
+        if isinstance(outcome, Exception):
+            failures += 1
+            print(f"{label}: ERROR: {outcome}", file=sys.stderr)
+            continue
+        print(f"{label}: Overall result: {outcome['overall_result']}")
+        if not outcome["overall_result"].startswith("PASS"):
             failures += 1
     print(f"Ran {len(targets)} eval(s); {failures} non-passing")
     return 1 if failures else 0

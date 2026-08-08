@@ -9,7 +9,7 @@
       "description": "Verifies that delivery handles create-pr-with-commits and produces the expected role-specific artifact.",
       "prompt": "通知状态修复已经完成，改动在当前工作树的 `src/notification-status.js` 和 `test/notification-status.test.js`。请核对本地测试后提交，并创建关联 Issue #123 的 PR。",
       "workspace": "workspace/eval-001-create-pr-with-commits",
-      "expected_output": "分支创建 + 提交 + PR 创建 + CI 检查",
+      "expected_output": "本地分支与提交证据，以及远端不可用时准确的 PR/CI 阻塞交接",
       "assertions": [
         {
           "id": "feature_branch_created",
@@ -23,13 +23,13 @@
         },
         {
           "id": "pr",
-          "description": "PR 包含必要信息",
-          "text": "PR 包含摘要、PM 文档引用、测试状态"
+          "description": "PR 交付状态真实",
+          "text": "远端与 gh 可用时创建含摘要、PM 文档引用和测试状态的 PR；不可用时明确阻塞且提供同等字段的 PR 预览，不声称已创建"
         },
         {
           "id": "ci",
-          "description": "检查 CI 状态",
-          "text": "创建 PR 后检查 CI 运行状态"
+          "description": "CI 状态真实",
+          "text": "只在 PR 实际存在时读取 CI；否则明确 CI 未运行、说明阻塞原因和恢复后的检查命令，不伪造结果"
         }
       ],
       "scenario": {
@@ -48,10 +48,10 @@
           "只纳入通知状态实现、测试和必要配置",
           "本地结果与远端检查状态必须分别如实表述"
         ],
-        "success_criteria": [
-          "提交信息与 PR 能追溯到 Issue #123 和实际变更文件",
-          "审查者能看见已运行验证及尚未完成的远端检查"
-        ]
+      "success_criteria": [
+        "本地提交信息与 PR 预览能追溯到 Issue #123 和实际变更文件",
+        "审查者能区分已完成的本地验证与因远端不可用而未执行的 PR/CI"
+      ]
       }
     }
   ]

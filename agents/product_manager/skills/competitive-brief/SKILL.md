@@ -11,6 +11,12 @@ argument-hint: "<competitor or market segment>"
 
 Research competitors and generate a structured competitive analysis comparing positioning, messaging, content strategy, and market presence.
 
+For battlecard mode, produce one complete page per competitor with these
+explicit sections: Quick Overview, Their Pitch, Our Position, Strengths,
+Weaknesses, Objection Handling, Landmines to Set, Landmines to Defuse, Win/Loss
+Themes, Discovery Questions, Talk Track, and POC Guidance. Do not replace this
+page contract with a generic comparison narrative.
+
 ## Trigger
 
 User runs `/competitive-brief` or asks for a competitive analysis, competitor research, or market comparison.

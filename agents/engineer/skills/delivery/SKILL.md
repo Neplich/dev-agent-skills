@@ -8,6 +8,16 @@ visibility: internal
 
 Manage the Git workflow for delivering completed code: branch creation, meaningful commits, PR creation with proper references, and CI status verification.
 
+## Mandatory Delivery Checkpoint
+
+Before mutating Git, verify that the working tree contains the claimed scoped
+changes and that their tests pass. Never create an empty commit to imitate a
+delivery. When changes exist, create the project-conformant branch, stage only
+those files, create a meaningful commit, and then attempt push, PR creation,
+and CI readback in order. If the remote, authentication, `gh`, PR, or CI is
+unavailable, preserve the completed local evidence, name the exact blocker, and
+do not claim a remote PR or CI result that was not observed.
+
 ## When to Use
 
 - Code and tests are complete, ready to commit
@@ -25,7 +35,7 @@ delivery while scope or verification status is unclear, return to `pm-agent`
 for classification or status confirmation.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Step 1 — Assess current Git state
 

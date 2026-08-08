@@ -15,6 +15,20 @@ interface contracts or architecture decisions, it also owns
 confirmed Engineer document set to `feature-implementor` for an implementation
 plan and code execution.
 
+## Mandatory Engineer-Document Checkpoint
+
+State that Engineer owns the TRD/API/ADR work, identify the confirmed PM entry
+basis and resolved `feature_path`, and stop if product decisions remain open.
+Accept gap packets from routing, debugging, implementation, or QA as TRD work:
+the finder supplies evidence and missing decisions; `trd-gen` resolves them in
+the existing same-path Engineer document or records an owned blocker.
+
+When document sub-agents are available, delegate the document write while the
+main process retains source context and reviews the result. Never implement
+code or create an implementation plan here. After the Engineer documents are
+confirmed, hand them to `feature-implementor`; QA E2E work may begin only after
+that specialist has produced and confirmed the implementation plan.
+
 ## Role Boundary
 
 `trd-gen` owns:
@@ -62,11 +76,11 @@ expectation change, or ambiguous feature path, stop and return the request to
 stable PM scope.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Required Flow
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 ```mermaid
 flowchart LR
@@ -117,7 +131,7 @@ and any open questions are explicitly accepted as non-blocking.
 
 After drafting or applying TRD changes and before finalizing its version, assess
 the four L2b signals defined in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md`: more than 500 total lines, at least 3
+the active installed `idea-to-spec` skill's `_internal/_shared/gen-conventions.md`: more than 500 total lines, at least 3
 independent domains, at least 15 related PRD `US-*` / `FR-*` rows, or sections
 with clear child-feature ownership. A signal requires an assessment, not an
 automatic split.
@@ -221,7 +235,7 @@ it as an open technical question with the owner and unblock condition.
 
 When updating an existing Engineer-owned current-state document (TRD or API
 reference), follow the body-consolidation rule from
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md`:
+the active installed `idea-to-spec` skill's `_internal/_shared/gen-conventions.md`:
 the updated body states only the current target state; superseded designs,
 endpoints, or parameters are deleted or rewritten instead of being kept with
 "deprecated" / "not part of the target architecture" annotations, and removals

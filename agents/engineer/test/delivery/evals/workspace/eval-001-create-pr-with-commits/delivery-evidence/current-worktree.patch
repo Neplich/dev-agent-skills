@@ -1,0 +1,19 @@
+diff --git a/src/notification-status.js b/src/notification-status.js
+--- a/src/notification-status.js
++++ b/src/notification-status.js
+@@ -1,4 +1,5 @@
+ const labels = {
+   active: "Active",
+-  read: "Read"
++  read: "Read",
++  archived: "Archived"
+ };
+diff --git a/test/notification-status.test.js b/test/notification-status.test.js
+--- a/test/notification-status.test.js
++++ b/test/notification-status.test.js
+@@ -6,4 +6,5 @@
+ test("formats supported notification statuses", () => {
+   assert.equal(formatNotificationStatus("active"), "Active");
+   assert.equal(formatNotificationStatus("read"), "Read");
++  assert.equal(formatNotificationStatus("archived"), "Archived");
+ });

@@ -10,6 +10,17 @@ Validate documented requirements against the implementation using the best avail
 
 This is a QA validation protocol, not a router and not a generic execution script. It stays within QA boundaries: read the spec and implementation context, choose an execution path, collect evidence, and report confirmed results, blocked items, and handoff risks.
 
+## Mandatory Validation Record
+
+For each E2E TC, append the run to
+`docs/qa/e2e/{feature_path}/results/TC-NNN-<short-slug>/{platform-version}/result.md`
+and preserve `testcase.snapshot.md`; the timestamped summary report does not
+replace that file. The validation report must have explicit preflight,
+execution path, requirement matrix, evidence references, blocked items, risk
+notes, and handoff-decision sections even when execution is blocked. When a
+mapped document is `unverified`, say so explicitly and ground every acceptance
+conclusion in code or executable test evidence.
+
 ## PM Handoff Entry Gate
 
 Before validating, require a PM/QA handoff packet or equivalent confirmed test
@@ -18,7 +29,7 @@ confirmed specs, or an existing QA memory scope, return the request to
 `pm-agent` for classification instead of inventing acceptance expectations.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Shared QA Directory Contract
 
@@ -70,7 +81,7 @@ yourself.
 
 ## Top-Level Contract
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 Before running anything, gather repository evidence and confirm what is in scope.
 

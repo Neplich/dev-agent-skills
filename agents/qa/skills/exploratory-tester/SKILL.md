@@ -8,6 +8,11 @@ visibility: internal
 
 Use this skill to discover defects through guided exploration, not to generate random UI actions. The exploration strategy is chosen only after reading the product context, implementation changes, and environment instructions. The output is an exploratory QA report plus, when warranted, a defect-ready escalation path.
 
+When change-map routing applies, record the mapped document and its freshness
+before code exploration. Treat `unverified` as low-trust navigation only,
+verify every behavior claim against code or executable evidence, and preserve
+the document/code difference in the exploratory report.
+
 ## Shared QA Directory Contract
 
 For E2E or feature-scoped QA, use the function-tree directory as durable QA
@@ -51,11 +56,11 @@ an existing QA memory scope, or a confirmed exploration target, return the
 request to `pm-agent` for classification instead of expanding broad discovery.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Exploration Preflight
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 Before any testing action, gather the context needed to choose an exploration charter:
 

@@ -12,6 +12,17 @@ This skill has two modes:
 1. **Generate**: create a fresh roadmap from current GitHub state
 2. **Update**: read existing `docs/roadmap.md`, sync with latest GitHub data, preserve manual annotations
 
+## Mandatory Roadmap Classification
+
+Classify roadmap position from milestone semantics, dependencies, release
+signals, and maintainer intent—not merely dates or version-like names. An
+undated or unmatched milestone remains pending maintainer classification and
+must not be silently placed in “unscheduled.” Identify release blockers only
+from explicit labels or equivalent GitHub evidence. Every roadmap still
+includes its required status/progress artifacts and Mermaid timeline; unknown
+dates may use semantic phases or clearly marked placeholders without inventing
+calendar commitments.
+
 ## Step 1 — Establish repo context
 
 ```bash
