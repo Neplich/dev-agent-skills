@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Eval Runner"
+  short_description: "编写、运行并诊断本仓库的隔离 paired skill eval"
+  default_prompt: "使用 $skill-eval-runner 编写、运行或诊断本仓库的 fresh paired skill eval。"
