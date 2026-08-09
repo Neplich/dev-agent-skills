@@ -1,11 +1,11 @@
 ---
 title: "Eval 真实场景与 Lane 隔离重构实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.5.0"
-status: "Draft"
+version: "0.6.0"
+status: "Implemented"
 author: "Neplich Codex"
 date: "2026-08-07"
-last_updated: "2026-08-08"
+last_updated: "2026-08-09"
 generated_by: "feature-implementor"
 feature: "eval-scenario-isolation"
 feature_path: "repository-governance/eval-scenario-isolation"
@@ -17,6 +17,9 @@ related_issue: "#246"
 related_prd: "docs/pm/repository-governance/eval-scenario-isolation/PRD.md"
 related_trd: "docs/engineer/repository-governance/eval-scenario-isolation/TRD.md"
 changelog:
+  - version: "0.6.0"
+    date: "2026-08-09"
+    changes: "完成 10 worker 全量重跑与 closeout；按维护者要求将 193 份 durable comparison 压缩为仅保留最新结果，不重新执行模型 eval"
   - version: "0.5.0"
     date: "2026-08-08"
     changes: "按维护者追加范围重开 closeout：删除全部测试过程产物、加入 10 worker 跨角色并发、聚类修复首轮 FAIL 后再全量重跑"
@@ -94,6 +97,8 @@ changelog:
 - 相对冻结 commit 的工作树涉及 885 个路径条目，其中 705 个 tracked 变更、180 个新文件；
   范围包含 38 份 `evals.json`、193 份 metadata、193 份 comparison、迁移 inventory、共享
   基础设施、测试和经逐条审查的宿主 fixture。
+- 193 份常规 durable comparison 最终只保留最新一轮可审查结论；旧轮次由 Git 历史追溯，
+  不再把 superseded comparison 递归嵌入当前文件。
 - 实际量级高于阶段 1 至 4 的早期估算；最终范围未加入重试、缓存、feature flag、hook 或
   与 Issue #246 无关的业务抽象，增量均由隔离与证据契约的验收缺口直接触发。
 
@@ -362,16 +367,28 @@ git status --short
 4. 已修正不可能 fixture：delivery 使用真实未提交 patch topology；计划生成用例获得真实
    PRD/TRD；GitHub/changelog/roadmap/battlecard 使用用户提供的原始离线导出；成功的
    docs-audit pre-tag 场景补齐 Release Notes owner handoff。
-5. 正在完成 skills-lock、全静态契约与确定性测试；此阶段不得启动模型 eval。
+5. skills-lock、全静态契约与确定性测试均已完成；此阶段完成后才启动模型 eval。
 
 ### 阶段 9：10 worker 全量重跑与最终 closeout
 
-1. 静态门禁全部通过后执行 `uv run scripts/run_skill_eval.py --jobs 10`，跨七角色调度全部
-   193 条 eval；每条内部仍严格执行 fresh without、fresh with、fresh read-only judge。
-2. 汇总新 FAIL/BLOCKED 后再次按共因整改并只重跑受影响集合；修改共享 skill dependency、
-   runtime、schema 或 executor 时，按 source identity 重新运行全部受影响 comparison。
-3. 最终要求 193/193 comparison FRESH、无未解释 FAIL/BLOCKED、runtime tree 为 0、四类
-   contract 与精确 CI 清单全绿，再把计划改回 `Implemented` 并记录最终量级和下一责任人。
+1. 静态门禁通过后以 10 worker 跨七角色完成 193 条 eval；每条内部严格执行 fresh without、
+   fresh with 与 fresh read-only judge，最终为 193/193 FRESH、0 BLOCKED。
+2. 最终分布为 91 PASS、55 PASS (partial coverage)、47 FAIL。47 个行为 FAIL 已按角色聚合为
+   GitHub Issue #249 至 #255，后续分别判断 eval 是否偏离 skill 设计、skill 是否存在执行缺陷，
+   或是否属于模型波动；它们不再作为 Issue #246 的基础设施或迁移阻塞。
+3. Inventory 为 193 retained / 193 complete / 0 pending；四类 contract、完整确定性测试、
+   whitespace、YAML、Python compile、禁止区和 runtime artifact 检查均通过。
+
+### 阶段 10：Durable comparison 最新结果归一化
+
+1. 先把共享 writer 回归改为要求每份 comparison 只有一个 `Overall result`，并确认旧实现因
+   递归保留 historical context 而失败；随后移除 writer 的历史正文拼接。
+2. 193 份常规 comparison 全部删除 `Historical Context (Superseded)`，只保留最新 FRESH
+   结论；结果分布保持 91 PASS、55 PASS (partial coverage)、47 FAIL，`manual-gen` 不变。
+3. 维护者明确要求本次不重新执行模型 eval。文件中的 normalization note 说明本次只做
+   durable 格式归一化；candidate、judge 与既有结果没有被伪装成新一轮运行。
+4. `scripts/test_run_skill_eval.py` 为 33 passed；完整确定性测试为 284 passed、10 subtests
+   passed；repository、eval、artifact、doc 四项 contract 与 summarizer 全部通过。
 
 ## 6. Sub-Agent 分工
 

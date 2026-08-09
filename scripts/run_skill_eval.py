@@ -756,7 +756,6 @@ def _transactional_replace(updates: dict[Path, bytes]) -> None:
 
 def _durable_comparison(
     definition: EvalDefinition, result: dict[str, Any],
-    historical: str,
 ) -> str:
     rows = "\n".join(
         f"| `{item['id']}` | {item['status']} | {item['evidence'].replace('|', chr(92) + '|')} |"
@@ -822,11 +821,7 @@ Overall result: {result['overall_result']}
 ## Runtime Artifact Policy
 
 - Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
-- Only this durable comparison retains the reviewable conclusion and superseded history.
-
-## Historical Context (Superseded)
-
-{historical.rstrip()}
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.
 """
 
 
@@ -855,8 +850,7 @@ def persist_durable_result(definition: EvalDefinition, result: dict[str, Any]) -
     with _DURABLE_WRITE_LOCK:
         inventory = _updated_inventory(definition)
         comparison = definition.workspace_root / "comparison.md"
-        historical = comparison.read_text(encoding="utf-8")
-        comparison_bytes = _durable_comparison(definition, result, historical).encode("utf-8")
+        comparison_bytes = _durable_comparison(definition, result).encode("utf-8")
         updates: dict[Path, bytes] = {}
         if inventory:
             path, payload = inventory

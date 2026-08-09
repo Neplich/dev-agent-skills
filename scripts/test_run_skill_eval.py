@@ -558,8 +558,9 @@ def test_paired_run_uses_identical_prompt_in_without_then_with_order_and_fresh_j
     assert "Preflight status: **PASS**" in comparison
     assert "fresh judge" in comparison
     assert "Overall result: PASS" in comparison
-    assert "## Historical Context (Superseded)" in comparison
-    assert "Overall result: BLOCKED" in comparison
+    assert comparison.count("Overall result:") == 1
+    assert "## Historical Context (Superseded)" not in comparison
+    assert "Overall result: BLOCKED" not in comparison
     assert "## Evaluation Target" in comparison
     assert "Fixture version/source:" in comparison
     assert "Repository HEAD:" in comparison
