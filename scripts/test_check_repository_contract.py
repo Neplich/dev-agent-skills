@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -17,6 +18,24 @@ assert CONTRACT_SPEC.loader is not None
 contract = importlib.util.module_from_spec(CONTRACT_SPEC)
 sys.modules[CONTRACT_SPEC.name] = contract
 CONTRACT_SPEC.loader.exec_module(contract)
+
+
+def test_history_dependent_ci_jobs_fetch_full_history() -> None:
+    workflow = (
+        Path(__file__).resolve().parents[1] / ".github/workflows/ci.yml"
+    ).read_text(encoding="utf-8")
+
+    for job_name in ("eval-contract", "python-tests"):
+        match = re.search(
+            rf"^  {re.escape(job_name)}:\n(?P<body>.*?)(?=^  [a-z][a-z-]+:\n|\Z)",
+            workflow,
+            re.M | re.S,
+        )
+        assert match is not None
+        assert re.search(
+            r"- uses: actions/checkout@v\d+\n\s+with:\n\s+fetch-depth: 0\b",
+            match.group("body"),
+        )
 
 
 FEATURE_PATH = "fixture-feature"

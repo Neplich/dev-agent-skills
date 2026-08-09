@@ -47,6 +47,25 @@ def make_skill(root: Path, agent: str, skill: str, text: str = "skill") -> Path:
     return skill_root
 
 
+def test_content_tree_hash_ignores_python_bytecode(tmp_path: Path) -> None:
+    skill_root = make_skill(tmp_path, "designer", "visual-design")
+    scripts = skill_root / "references/scripts"
+    scripts.mkdir(parents=True)
+    (scripts / "search.py").write_text("print('source')\n", encoding="utf-8")
+    source_hash = eval_runtime.content_tree_hash(skill_root)
+
+    cache = scripts / "__pycache__"
+    cache.mkdir()
+    (cache / "search.cpython-312.pyc").write_bytes(b"local bytecode")
+
+    assert eval_runtime.content_tree_hash(skill_root) == source_hash
+    locked, _ = eval_runtime._lock_skill_overlay(
+        tmp_path / "runtime", (skill_root,), tmp_path,
+    )
+    assert not list(locked[0].rglob("*.pyc"))
+    assert not list(locked[0].rglob("__pycache__"))
+
+
 def test_canonical_fixture_excludes_scaffolding_and_keeps_host_readme(
     tmp_path: Path,
 ) -> None:

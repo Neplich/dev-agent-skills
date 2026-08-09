@@ -16,14 +16,14 @@
 - Prompt SHA-256: `092b10f39d07502fd69cfd2b4992b956cec050d77722de8312a6a9dc94160cd6`
 - Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `9be23963f6e0e12e12a074b019666fb8a1f995677fec5a734a1b0b6be400f7fc`
-- Skill overlay SHA-256: `b87e6c9b4a37c78d9c7cc608aee6187878beb1abc19fff1a5afb3d9645233d49`
+- Target skill tree SHA-256: `7b149b6fe06b79fc3d427a1960513a2a422e6be13b6ef797018ec31a49be8d0b`
+- Skill overlay SHA-256: `a6cc4f87a79718857deec970b62a0d982843b0d6e87cd456e49e337ea084db0e`
 - Judge schema SHA-256: `b207ccfef6c29a46ee4c39ebd7d39f4af35c494d6c841b0789899fe237e9584b`
 - Eval definition SHA-256: `1e9739265f0721cb69546820ef87da3e0b8045e92accd200c449d4a7c5bab7c5`
 - Metadata SHA-256: `dea024aad09482b4b51327a960ae6e8c89fbc9764107a299297b588df52b9aa7`
 - Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections were removed without rerunning candidate or judge; the executor hash reflects the current durable-format-only implementation.
-- Runtime SHA-256: `dd143ad6f63df2577f2dff83225ec761f8a9cb05d96aab3f87ee37557e43c6e6`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS

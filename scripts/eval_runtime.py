@@ -666,7 +666,12 @@ def _safe_skill_source(path: Path, repository_root: Path) -> Path:
 
 def content_tree_hash(root: Path) -> str:
     digest = hashlib.sha256()
-    for path in sorted(value for value in root.rglob("*") if value.is_file()):
+    for path in sorted(
+        value for value in root.rglob("*")
+        if value.is_file()
+        and "__pycache__" not in value.relative_to(root).parts
+        and value.suffix != ".pyc"
+    ):
         digest.update(path.relative_to(root).as_posix().encode())
         digest.update(b"\0")
         digest.update(hashlib.sha256(path.read_bytes()).digest())
@@ -701,7 +706,10 @@ def _lock_skill_overlay(
     for index, source in enumerate(skill_sources):
         destination = locked_root / str(index) / source.name
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(source, destination)
+        shutil.copytree(
+            source, destination,
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+        )
         locked.append(destination)
         labels.append(source.relative_to(repository_root).as_posix())
         for path in destination.rglob("*"):
