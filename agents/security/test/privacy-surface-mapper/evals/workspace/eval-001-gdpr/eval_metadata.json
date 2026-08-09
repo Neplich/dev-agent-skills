@@ -2,11 +2,21 @@
   "eval_id": "eval-001-gdpr",
   "eval_name": "GDPR Compliance Check",
   "workspace_root": "agents/security/test/privacy-surface-mapper/evals/workspace/eval-001-gdpr",
-  "prompt": "pm-agent has completed entry classification and routed this confirmed `data-collection` security scope to privacy-surface-mapper. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/data-collection/PRD.md`. Map the personal data collection and check GDPR compliance.",
   "fixture_context": [
     "PM_HANDOFF.md",
     "docs/pm/data-collection/PRD.md",
     "src/registration.js",
     "config/analytics.json"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -1,0 +1,9 @@
+diff --git a/src/catalog/routes.txt b/src/catalog/routes.txt
+--- a/src/catalog/routes.txt
++++ b/src/catalog/routes.txt
+@@ -5,4 +5,4 @@
+ ERROR 400 {"code": "invalid_limit"}
+ STREAMING no
+ FILES none
+-IMPLEMENTATION inline limit normalization
++IMPLEMENTATION normalize_limit helper

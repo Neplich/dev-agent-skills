@@ -1,131 +1,62 @@
-# Eval Result: eval-016-draft-status-continues-current-plan
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `feature-implementor`
 - Eval: `eval-016-draft-status-continues-current-plan`
-- Test case: draft-status-continues-current-plan
-- Workspace: `workspace/eval-016-draft-status-continues-current-plan`
-- Evaluation date: 2026-08-07
-- Overall result: FAIL
-- Behavior result: FAIL
-- Coverage result: FULL
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt: docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现在要在这个功能上做下一轮更新。
-- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
-- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
-- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d` from `agents/engineer/test/feature-implementor/evals/workspace/eval-016-draft-status-continues-current-plan`.
+- Fixture SHA-256: `e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d`
+- Prompt SHA-256: `94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e820a1098a32d64fe76bdf4ec719cd859ebecfdb70fa28be1309b656ec71bd22`
+- Skill overlay SHA-256: `226a387f9ef93d9f4c106e1f240f22e5014d390eeb37da0fd61da0c129ca36ba`
+- Judge schema SHA-256: `b61097c2327e4512b0954be7440f9efb0288869d119e12aff21af89d2a1a48fa`
+- Eval definition SHA-256: `bb7bf0f3a482a77a018b0515b1c16fcfc9e7cd11c5d0dea890b0578898ccf6a8`
+- Metadata SHA-256: `566e39d7363acab918c0b8b38f7cebac43ee4f4a9069dd6e8b635d61f1c29eb0`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
 
-## Assertions
+## Assertion Results
 
-- PASS `reads_active_plan_frontmatter`: with_skill transcript item_4 explicitly reads IMPLEMENTATION_PLAN.md, including its frontmatter; the resulting final identifies status Draft.
-- PASS `detects_non_implemented_status`: Final explicitly states current plan is `Draft` and treats the round as unfinished.
-- FAIL `continues_current_plan`: Final explicitly says 暂不更新计划; workspace plan remains unchanged and no file_change item exists.
-- FAIL `bumps_plan_version`: Workspace and fixture hashes match; plan remains version 0.1.0 with last_updated 2026-07-27, not bumped.
-- PASS `does_not_force_archive_link`: Final says there is no archive history and no archive choice is needed; it does not require archival or previous_plan_archive before proceeding.
-- FAIL `waits_before_coding`: No plan update occurred and the final does not present an updated plan followed by a confirmation request; it only reports a TRD blocker.
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_active_plan_frontmatter` | NOT_EXERCISED | 输出包含 active_plan_path 和 active_plan_status，但锁定证据无法证明其读取了 frontmatter；该隐藏过程断言未被证实。 |
+| `detects_non_implemented_status` | PASS | 明确写出 active_plan_status: Draft，并说明当前无法进入实现阶段。 |
+| `continues_current_plan` | PASS | 明确指定固定入口 docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md，并表示之后更新实施计划。 |
+| `bumps_plan_version` | FAIL | 输出只要求更新实施计划，未明确要求同步 bump version 和更新 last_updated。 |
+| `does_not_force_archive_link` | PASS | 输出写明 archive_state: no archive history，且未将归档或 previous_plan_archive 作为继续 Draft 计划的前置条件。 |
+| `waits_before_coding` | PASS | 明确表示 TRD 补全后会更新实施计划并等待编码确认，且阻止 implementation。 |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-读取了 PRD、TRD、active plan 及归档状态并识别 Draft，但因自行判定 TRD gap 而不更新现有计划，导致未完成版本 bump、计划确认前置流程。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b; fixture_sha256=e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d; output_sha256=f48456a97772dbb167db1a01d9420cceb79a01c05a5c36ba5e86c7a58466ab14; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了当前计划为 Draft，继续使用固定实施计划入口，并在编码前等待确认；但遗漏了版本和更新时间更新要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-without_skill 更新了固定 IMPLEMENTATION_PLAN.md、将版本改为 0.2.0 并更新 last_updated，且未编写代码；仅作对照。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b; fixture_sha256=e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d; output_sha256=cabb766114b33a8b34bd40c8f27083b5085e4cbaac8fca52b9752648439b9493; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅确认 PRD/TRD，未读取或处理 active plan，也未进入计划更新与确认流程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures / Findings
+## Failures and Next Steps
 
-- 未继续更新固定 active IMPLEMENTATION_PLAN.md。
-- 未 bump version 和 last_updated。
-- 未在计划更新后等待用户确认。
-- Root cause: with_skill transcript 显示其将简短但已批准的 TRD 误判为必须先补充技术决策的 TRD gap，并因此提前阻断了 Draft active plan 的继续更新流程。
+- 未要求对实质性计划更新同步 bump version 并更新 last_updated。
+- Next: 补充明确要求同步 bump version 并更新 last_updated。
 
-## Next Steps
+## Runtime Artifact Policy
 
-- 修复上述 assertion 对应的 skill 行为或 eval 输入问题后，使用同样的 paired fresh 流程重跑。
-
-## Runtime Artifacts Policy
-
-- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
-- 长期只保留本 `comparison.md`。
-
-## Historical Results
-
-### Previous comparison record: eval-016-draft-status-continues-current-plan
-
-## Evaluation Target
-
-- Agent: `engineer`
-- Skill: `feature-implementor`
-- Eval: `eval-016-draft-status-continues-current-plan`
-- Test case: draft-status-continues-current-plan
-- Workspace: `workspace/eval-016-draft-status-continues-current-plan`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-27
-- Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Fixture files read before skill use: `README.md`, `eval_metadata.json`,
-  `docs/pm/payment-refund/PRD.md`, `docs/engineer/payment-refund/TRD.md`, and
-  `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`.
-- Fixture summary: the prompt omits plan status; the active plan frontmatter has
-  `status: Draft`, `version: 0.1.0`, and
-  `implementation_scope: refund-reason-codes`.
-
-## Assertions
-
-- PASS `reads_active_plan_frontmatter`: the response derives the current state
-  from the active plan frontmatter instead of the prompt.
-- PASS `detects_non_implemented_status`: it recognizes `status: Draft` as an
-  unfinished current round.
-- PASS `continues_current_plan`: it keeps the fixed active entry and does not
-  create a second plan.
-- PASS `bumps_plan_version`: it requires a substantive version bump and
-  `last_updated` refresh.
-- PASS `does_not_force_archive_link`: it does not require archive handling or
-  `previous_plan_archive`.
-- PASS `waits_before_coding`: it waits for confirmation after updating the plan.
-
-## With Skill Behavior
-
-The fresh with-skill validator read the Engineer entry and feature-implementor
-planner instructions, inspected the fixture active plan, and identified
-`status: Draft`, `version: 0.1.0`, and the current scope. It chose the continued
-update path, required a version and date update, omitted archive linkage, and
-stopped before code until user confirmation.
-
-## Without Skill Baseline
-
-A separate fresh zero-exposure subagent received only the eval prompt, fixture,
-and assertions. It did not read the feature-implementor skill, internal
-instructions, or Engineer README and did not reuse a historical baseline. It
-also passed all six assertions by deriving the Draft state from the fixture and
-continuing the fixed active plan.
-
-## Failures
-
-- None.
-- The paired run showed no assertion-level difference. The assertions expose
-  the full desired behavior, so this eval confirms correctness but has limited
-  with-skill differentiation.
-
-## Next Steps
-
-- Keep the case focused on discovering the non-`Implemented` state from
-  frontmatter and allowing a continued update.
-- If stronger differentiation is needed later, reduce rule-level hints without
-  weakening the real active-plan evidence.
-
-## Runtime Artifacts Policy
-
-- The paired validation returned results in the subagent response and did not
-  create repository runtime files.
-- Runtime transcripts, verdicts, timing files, outputs, diagnostics, run status
-  files, and `comparison.auto.md` must not be committed.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

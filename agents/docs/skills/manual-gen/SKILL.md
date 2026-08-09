@@ -1,6 +1,6 @@
 ---
 name: manual-gen
-description: "Internal documentation specialist—not a direct entry point. Invoked by docs-agent after the documentation-site gate passes to generate or update illustrated user operation manuals from screenshots of a real running interface."
+description: "Generate or update illustrated user operation manuals from screenshots and verified navigation in a real running interface. Use after docs-agent confirms the documentation-site and runtime-access gates."
 visibility: internal
 ---
 
@@ -11,7 +11,7 @@ visibility: internal
 Require a PM handoff packet or an equivalent confirmed document chain that
 defines the host repository, bounded manual scope, evidence sources, and
 required output. The PM packet definition lives in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 Direct invocation does not waive this gate.
 
 Verify that the host already contains the `docs/site/` foundation and its

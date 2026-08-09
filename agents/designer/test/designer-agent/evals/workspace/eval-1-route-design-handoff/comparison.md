@@ -1,113 +1,61 @@
-# Eval Result: eval-001-route-design-handoff
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `designer`
 - Skill: `designer-agent`
 - Eval: `eval-001-route-design-handoff`
-- Workspace: `workspace/eval-1-route-design-handoff`
-- Review context: issue #196 L2-4 router single-table convergence
-- Latest run: fresh isolated paired Codex validation and independent judge on 2026-08-07
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt and assertions: current `agents/designer/test/designer-agent/evals/evals.json`
-- Fixture: `docs/pm/billing-notifications/PRD.md`
-- With-skill source: current Designer README, `designer-agent/SKILL.md`, eval definition, fixture, and the referenced PM handoff/closeout contract; historical comparison was not read before candidate generation.
-- Without-skill source: the same prompt and fixture in an isolated directory, without reading or applying Designer README, `designer-agent/SKILL.md`, with-skill output, assertions, historical comparison, or an old baseline.
-
-## Latest Result
-
-- Behavior result: **FAIL**
-- Coverage result: **FULL** (5/5 declared assertions exercised)
-Overall result: FAIL
-
-## Assertion Results (Current)
-
-- routes_ux_first: **PASS** — the current final response routes first to ui-ux-design for flow and interaction work.
-- routes_visual_followup: **FAIL** — visual-design is second, but the response omits the required color, typography, and copy-tone scope.
-- uses_real_output_filenames: **FAIL** — neither canonical design filename is named.
-- stops_before_code: **FAIL** — no code was written, but the response does not explicitly refuse React, tests, scripts, and deployment work.
-- hands_off_to_engineer: **PASS** — React implementation is assigned to engineer-agent after design.
-
-## With-Skill Behavior (Current)
-
-The candidate honors the PM gate and selects the two design specialists, but it
-does not emit the full router contract: canonical filenames and an explicit
-multi-surface engineering refusal are missing.
-
-## Fresh Without-Skill Baseline (Current)
-
-The baseline was regenerated before the with-skill root existed, using the
-same prompt and clean fixture in an independent top-level workspace with an
-isolated HOME/CODEX_HOME. It implemented a React/Vite page, clearly
-differentiating the router boundary, but its behavior does not affect the
-with-skill verdict.
-
-## Failures (Current)
-
-- Missing canonical ui-ux-spec.md and visual-system.md filenames.
-- Incomplete visual-design scope and no explicit refusal covering all forbidden engineering surfaces.
-
-## Next Steps (Current)
-
-- Fix the router response discipline, then rerun this eval with the same isolation protocol.
-
-## Runtime Artifact Policy (Current)
-
-- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
-- Only this durable comparison is updated.
-
-## Historical Result (Superseded: pre-#234 contract)
-
-- Behavior result: PASS
-- Coverage result: FULL (5/5 declared assertions exercised)
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-The L2-4 fallback for “范围已确认但设计类型模糊” is present in the current single `Default Routes` table. This fixture asks explicitly for both flow and visual style, so it does not exercise that fallback; no fallback behavior was inferred or counted as dynamic evidence.
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `318a6ed6ff151cee086f75e2b1924aa867c873c059722194e1d201fc514c9d89` from `agents/designer/test/designer-agent/evals/workspace/eval-1-route-design-handoff`.
+- Fixture SHA-256: `318a6ed6ff151cee086f75e2b1924aa867c873c059722194e1d201fc514c9d89`
+- Prompt SHA-256: `6928263198e744f0628528a64ad381eb51b57dfc5347279a1b5dc49c697dfc6c`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e8c75de1d6f9996313bad1fce4ede6ed7cde9c08fd07355edd02169db57e8e68`
+- Skill overlay SHA-256: `d5cce8bb3a0ed13303ab87dcabfbfd03ba8265e34d21e6c15b242afc7dcb3316`
+- Judge schema SHA-256: `463caa76fbf321564869d8651cfcd73afe8721c939c5039c5cfd81c4ab25d935`
+- Eval definition SHA-256: `22532d649002dfa1851fec27c554d610e1ed3e70ab860965c5b4914f96d4ccce`
+- Metadata SHA-256: `b228adbda9579c0023d949fdd52d3bd090b6ff85b7c6c2610e5202c6900dbe10`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
-| Assertion | With skill | Without skill | Evidence |
-| --- | --- | --- | --- |
-| `routes_ux_first` | PASS | FAIL | With skill explicitly starts with `ui-ux-design`; baseline gives generic design steps without the repository specialist route. |
-| `routes_visual_followup` | PASS | FAIL | With skill explicitly follows with `visual-design`; baseline describes visual work but does not name the specialist. |
-| `uses_real_output_filenames` | PASS | FAIL | With skill names both canonical files; baseline names no durable design output file. |
-| `stops_before_code` | PASS | PASS | Both honor the prompt's explicit no-implementation boundary. |
-| `hands_off_to_engineer` | PASS | FAIL | With skill explicitly hands implementation to `engineer-agent`; baseline only stops before implementation. |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_ux_first` | NOT_EXERCISED | Locked evidence does not prove the required route selection or ordering. |
+| `routes_visual_followup` | NOT_EXERCISED | Locked evidence does not prove delegation to visual-design as a later or second route. |
+| `uses_real_output_filenames` | PASS | Delivered files are exactly docs/design/billing-notifications/ui-ux-spec.md and docs/design/billing-notifications/visual-system.md. |
+| `stops_before_code` | PASS | Both delivered files explicitly define the work as design-only and exclude React implementation and tests; the snapshot contains no code deliverables. |
+| `hands_off_to_engineer` | PASS | Both delivered files explicitly hand remaining implementation to engineer-agent. |
 
 ## With-Skill Behavior
 
-The candidate preserves `billing-notifications`, routes `ui-ux-design` before
-`visual-design`, names `docs/design/billing-notifications/ui-ux-spec.md` and
-`docs/design/billing-notifications/visual-system.md`, refuses React, tests,
-scripts, and deployment work, and hands implementation to `engineer-agent`.
-All 5 assertions pass.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6928263198e744f0628528a64ad381eb51b57dfc5347279a1b5dc49c697dfc6c; fixture_sha256=318a6ed6ff151cee086f75e2b1924aa867c873c059722194e1d201fc514c9d89; output_sha256=2868393852ea5a4f1f9911fb881fde3111022e9d38faff25a09ff16e45f90348; snapshot_sha256=58bdc5d739570e882eec31f89ee4fbc136ce3b395ebf602bd44f8c4fe95b7d13
+- Behavior: Produced the requested UX and visual design deliverables, stopped at design, and handed implementation to engineer-agent.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-The fresh baseline gives a reasonable generic design sequence and obeys the
-explicit request not to implement React. It does not express the repository's
-specialist names, canonical artifact filenames, or named Engineer handoff.
-This provides useful differentiation on router-specific behavior.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6928263198e744f0628528a64ad381eb51b57dfc5347279a1b5dc49c697dfc6c; fixture_sha256=318a6ed6ff151cee086f75e2b1924aa867c873c059722194e1d201fc514c9d89; output_sha256=982c1920fa1f7664c12c097b7c21d9323ff1b2e8ba4c46d5c48f200c187a2adb; snapshot_sha256=ab31f19621725ba90c2297b9a96398a29ab2b970ff8d37cdbe0c498a5dff6763
+- Behavior: Implemented React/Vite files directly, providing a fresh code-first baseline.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- None in the with-skill candidate.
+- None.
+- Next: Exercise or capture route-selection and route-order evidence for the two routing assertions.
 
-## Next Steps
+## Runtime Artifact Policy
 
-- Keep this eval as regression coverage for the two-specialist sequence, durable artifact names, design-only boundary, and Engineer handoff.
-- Add a separate fixture only if maintainers later choose to dynamically cover the confirmed-scope/ambiguous-design fallback; this run does not fabricate that scenario.
-
-## Runtime Artifacts Policy
-
-Paired runtime evidence is stored only under
-`tmp/eval-runs/issue-196-l2-3-4/designer-agent/eval-001-route-design-handoff/`
-as `with_skill/candidate-output.md` and
-`without_skill/baseline-output.md`. Runtime outputs, transcripts, verdicts,
-timing data, and diagnostics must not be committed. This `comparison.md` is the
-durable result.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

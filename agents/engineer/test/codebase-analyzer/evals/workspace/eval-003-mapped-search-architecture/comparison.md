@@ -1,93 +1,60 @@
-# Eval Result: eval-003-mapped-search-architecture
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `codebase-analyzer`
 - Eval: `eval-003-mapped-search-architecture`
-- Test case: mapped-search-architecture
-- Workspace: `workspace/eval-003-mapped-search-architecture`
-- Evaluation date: 2026-08-07
-- Overall result: FAIL
-- Behavior result: FAIL
-- Coverage result: FULL
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt: 请分析 `src/search/` 的模块职责、请求流程和当前接口能力。
-- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
-- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
-- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859` from `agents/engineer/test/codebase-analyzer/evals/workspace/eval-003-mapped-search-architecture`.
+- Fixture SHA-256: `a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859`
+- Prompt SHA-256: `0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `de6d27a82a6affa1d54b83f57c4eb1889c4977944cd8849112c1a97798fbfd77`
+- Skill overlay SHA-256: `be427177bb8618969a8c9c2b0aea6596dceb0dbc6a57e3c3bb5e1896d11ef1ed`
+- Judge schema SHA-256: `953cf0ea99b9840a17c7b6706052165ac0b5ad2da8cf5b30696958f911637de4`
+- Eval definition SHA-256: `df0ea3b9e16f84cfa3123784feaff62e9978d327069fdb7ff40819c75c9ebde1`
+- Metadata SHA-256: `c79f8b60b8eda49d60383374b0b105b8c506dcb4b757a67593ed9721a0d169df`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-## Assertions
+## Assertion Results
 
-- FAIL `reads_mapped_docs_first`: with_skill transcript 中 item_2 先读取 agents/.../consumption-contract.md，再读取 docs/site/api/search.md；未满足命中 change-map 后首先读取映射 API 文档。
-- PASS `verifies_against_code`: transcript item_2/item_4 实际读取并核查 src/search/query.txt；final.md 明确指出文档默认 fuzzy 与代码 match_mode: exact 的分歧及其影响（应以代码为准、文档需校准）。
-- PASS `treats_unverified_as_low_trust`: 实际 docs/site/api/search.md 与 change-map.yaml 均含 last_verified_version: unverified；final.md 按最低信任处理文档，并以 query.txt 的代码事实核证职责、流程和能力。
-
-## With Skill Behavior
-
-with_skill 实际读取了 change-map、映射 API 文档和代码，并正确报告 fuzzy/exact 冲突；但命中 change-map 后先读取了 shared consumption-contract，未满足映射文档优先顺序。workspace hashes 与 input/output hashes 一致，未发生文件写入。
-
-## Without Skill Baseline
-
-without_skill 在同一 fixture 上读取了代码、API 文档和 change-map，最终也识别出 unverified 文档与 exact 代码的冲突；仅作为 baseline 对照，不影响单独 assertion 判定。其 workspace input/output hashes 一致，未发生文件写入。
-
-## Failures / Findings
-
-- reads_mapped_docs_first
-- Root cause: with_skill 在确认 change-map 后先读取 shared consumption-contract 而非映射的 docs/site/api/search.md，导致文档优先读取断言失败。
-
-## Next Steps
-
-- 修复上述 assertion 对应的 skill 行为或 eval 输入问题后，使用同样的 paired fresh 流程重跑。
-
-## Runtime Artifacts Policy
-
-- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
-- 长期只保留本 `comparison.md`。
-
-## Historical Results
-
-# Consumption Regression Comparison
-
-## Evaluation Target
-
-- Skill: `codebase-analyzer`
-- Eval: `eval-003-mapped-search-architecture`
-
-## Test Set / Fixture Version
-
-- Fixture: `ws1-consumption-v1`
-- Commit: `0b000b9`
-
-## Latest Result
-
-- Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-**PASS** — with-skill 输出满足全部 3 条断言：命中 change-map 后以映射文档 `docs/site/api/search.md` 为地图、以 `src/search/query.txt` 为 ground truth 核证出"文档声称模糊匹配、代码只实现精确匹配"的分歧，并按 `unverified` 最低信任规则以代码为准。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_change_map_to_bound_context` | PASS | With-skill output explicitly scopes the task to `src/search/**`, identifies the change map, and names `docs/site/api/search.md` as required documentation. |
+| `verifies_claims_against_code` | PASS | With-skill output cites and quotes `src/search/query.txt`, using `entrypoint: search` and `match_mode: exact` to establish the code-backed behavior. |
+| `reports_document_code_conflict` | PASS | With-skill output clearly contrasts the documentation's fuzzy-matching claim with the code's exact mode and explains that the conflict affects the current baseline and follow-up evaluation. |
+| `does_not_overclaim_unverified_docs` | PASS | With-skill output identifies `last_verified_version` as `unverified`, lowers document confidence, and declines to treat fuzzy matching as implemented without code evidence. |
 
 ## With-Skill Behavior
 
-- 显式声明按 consumption contract 执行，只读取命中的映射文档，未做无关文档遍历。
-- 产出契约要求的结构化分歧表（文档路径 / 文档声明 / 代码事实 / 影响），可直接供 `docs-audit` 消费。
-- 对 `last_verified_version: unverified` 显式引用最低信任规则，全部关键能力结论以代码证据支撑，未证实项明确标注"无法确认"。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c; fixture_sha256=a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859; output_sha256=9e7e78d1a199fe2bed13261e157f3b88452f82f233a6376ca64e114dc3886c5d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Core search-module analysis is accurate and satisfies all four assertions, but the appended project profile includes a false PM-document inventory claim.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
-- baseline 也识别了模糊/精确匹配分歧并倾向以代码为准，但没有产出契约格式的结构化分歧证据，信任降级是临场推断而非协议行为。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c; fixture_sha256=a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859; output_sha256=360840071da88fe2b2fbe3ddb7695e6bf26eade8b824ac0af30b8dcc46e3c35a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline independently provides the core exact-mode analysis and document conflict, but lacks the structured change-map/evidence handoff detail of the with-skill output.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- 无。
-
-## Next Steps
-
-- 保留本结果；后续可在 fixture 中加入多个无关文档以放大"精准读取"与全库遍历的行为差距。
+- The with-skill output contains an unsupported and contradictory project-profile claim: `has_pm_docs: false`, despite the fixture containing `PM_HANDOFF.md` and the analysis relying on it.
+- Next: Remove or correct the contradictory `has_pm_docs` project-profile field before accepting the with-skill delivery.
 
 ## Runtime Artifact Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

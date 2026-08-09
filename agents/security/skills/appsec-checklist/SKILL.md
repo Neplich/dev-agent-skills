@@ -1,8 +1,20 @@
 ---
 name: appsec-checklist
-description: "Internal security specialist—not a direct entry point. Invoked by security-agent after pm-agent handoff to scan application code for common vulnerabilities and produce a release-oriented security checklist."
+description: "Review application code for injection, XSS, auth bypass, secret, upload, and related AppSec risks and produce the protocol-shaped security report. Use after security-agent routes an AppSec scope."
 visibility: internal
 ---
+
+## Mandatory Report And Escalation
+
+Write the Security-owned report under `docs/security/{feature_path}/` with
+frontmatter containing `feature`, `feature_path`, `version`, `date`, and
+`last_updated`. Include an Executive Summary with finding count, severity
+distribution, and overall posture before detailed evidence.
+
+When code/test verification changes a formal documentation fact, preserve the
+mapped document and its freshness, code fact, impact, and report path; return
+that conclusion to `pm-agent` for classification and PM-owned issue filing.
+Do not send it directly to Docs or edit another role's document.
 
 ## PM Handoff Entry Gate
 
@@ -13,13 +25,13 @@ without PM handoff context, a confirmed risk surface, or a confirmed
 classification.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Execution Steps
 
 ### Step 1: Understand the Feature Context
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 1. **Resolve feature scope**:
    - For feature-scoped review, use the confirmed `feature_path`.

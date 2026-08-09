@@ -2,13 +2,11 @@
   "eval_id": "eval-010-post-tag-match",
   "eval_name": "post-tag-match",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-010-post-tag-match",
-  "prompt": "请根据 `.eval/release-context.md` 中的 `v1.2.0` 发布证据完成文档审计，分别评估直接交接与全新克隆两种场景。工作区内容只读，不执行真实 tag、branch 或 release 写入。",
   "execution_cleanup": [
     "docs/site/.meta/audit/audit-v1.2.0-post-tag.md"
   ],
   "fixture_context": [
-    ".eval/release-context.md",
-    ".eval/tag-commit-tree.txt",
+    "release-evidence/release-context.md",
     "docs/site/.meta/audit/handoffs/pre-tag-v1.2.0.md",
     "docs/site/.meta/audit/audit-v1.2.0.md",
     "docs/site/api/catalog-items.md",
@@ -17,5 +15,28 @@
     "docs/site/release-notes/index.md",
     "docs/site/.meta/releases.json",
     "package.json"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "git_topology": {
+    "base_ref": "pre-tag-handoff",
+    "target_ref": "release-head",
+    "refs": [
+      {"name": "refs/release-evidence/v1.2.0", "target": "base"}
+    ],
+    "tags": [
+      {"name": "v1.2.0", "target": "target", "kind": "lightweight"}
+    ],
+    "absent_refs": ["refs/heads/release-evidence/v1.2.0"]
+  },
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

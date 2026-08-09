@@ -17,4 +17,4 @@ related_code:
 ## Impacted modules and interfaces
 
 - `src/preferences_summary.py` formats saved values in a fixed field order and owns compact rendering.
-- `.eval/test-results.md` records the plan-required behavior checks.
+- `delivery-evidence/test-results.md` records the plan-required behavior checks.

@@ -1,103 +1,59 @@
-# Eval Result: eval-005-mapped-cache-debug-evidence
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `debugger`
 - Eval: `eval-005-mapped-cache-debug-evidence`
-- Test case: mapped-cache-debug-evidence
-- Workspace: `workspace/eval-005-mapped-cache-debug-evidence`
-- Evaluation date: 2026-08-07
-- Overall result: PASS (partial coverage)
-- Behavior result: PASS
-- Coverage result: PARTIAL
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt: 请诊断 `src/cache/` 中缓存比预期更早过期的问题，并说明复现依据和根因。
-- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
-- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
-- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
-
-## Assertions
-
-- PASS `reads_mapped_docs_first`: transcript item_2 先读取 change-map.yaml，再读取命中的 docs/site/api/cache.md，并未遍历无关文档。
-- PASS `verifies_against_code`: final 明确记录 src/cache/ttl.txt 为 60 秒、API 文档声明 300 秒，并报告 240 秒分歧及静态复现限制。
-- NOT EXERCISED `treats_unverified_as_low_trust`: 虽读取到 last_verified_version: unverified，final 未明确将其作为最低信任处理。
-
-## With Skill Behavior
-
-按映射读取 API 文档并回到 ttl.txt 核证，正确报告 60 秒与 300 秒分歧；未明确报告 unverified 的最低信任级别。
-
-## Without Skill Baseline
-
-读取并报告了 ttl.txt 与 API 文档的静态分歧，但未按 change-map 流程提供同等的信任模型证据。
-
-## Failures / Findings
-
-- None.
-- Root cause: with_skill 输出遗漏了对 last_verified_version: unverified 应按最低信任处理的明确说明。
-
-## Next Steps
-
-- 增加可触发 NOT EXERCISED 分支的 fixture 后重跑；当前已触发路径没有行为失败。
-
-## Runtime Artifacts Policy
-
-- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
-- 长期只保留本 `comparison.md`。
-
-## Historical Results
-
-### Previous comparison record: eval-005-mapped-cache-debug-evidence
-
-## Evaluation Target
-
-- Agent: `engineer`
-- Skill: `debugger`
-- Eval: `eval-005-mapped-cache-debug-evidence`
-- Workspace: `workspace/eval-005-mapped-cache-debug-evidence`
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Fixture：`ws1-consumption-v1`
-- 日期：2026-07-30
-- Fresh run：`tmp/eval-runs/issue-196-l2-2-debugger-20260730-220643/`
-- paired candidates 均为本轮隔离新生成。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `5265284c4bc9506c9aff21630151842110054255967ea23b3c9669fa67c6063d` from `agents/engineer/test/debugger/evals/workspace/eval-005-mapped-cache-debug-evidence`.
+- Fixture SHA-256: `5265284c4bc9506c9aff21630151842110054255967ea23b3c9669fa67c6063d`
+- Prompt SHA-256: `f67ee52e742cb8b8fa4a2e4a8def50688400c24b6328050c434ae918f3f4101b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `2c7be3366028d6afd52b5eb4079e33c2b766f47c01e7c7ee8c4cd7cee5ef4d64`
+- Skill overlay SHA-256: `d9980d41bb48adbaa0ffa94159cff2b9b190fc5504bbdbee7f3503d87a42c7b9`
+- Judge schema SHA-256: `6eadf49a93ad15b65779f0737c549d6122220ac6abe8a01622417bb0da199cda`
+- Eval definition SHA-256: `793c3f5cce4575964aaa387ece63f94a0f71e528641010e1ee2d932bd04007a8`
+- Metadata SHA-256: `296cf62658138bf9e31e0fd2b92d8abed954cf84bd5c6bd08af68865f72fdfc1`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
-- PASS `reads_mapped_docs_first`：根据 `src/cache/**` 的 change-map 精准读取 `docs/site/api/cache.md`，未遍历无关文档。
-- PASS `verifies_against_code`：以 `src/cache/ttl.txt` 核证实现为 fixed 60 秒，并结构化对照文档 300 秒。
-- PASS `treats_unverified_as_low_trust`：明确 `last_verified_version: unverified` 为最低信任，不能单独建立批准预期。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 候选输出声称读取了 change-map 和命中文档，但锁定原始证据无法证明读取顺序。 |
+| `verifies_against_code` | PASS | 输出明确记录代码配置为 ttl_seconds: 60、文档声明为 300 秒，并据此结构化说明提前过期及两者分歧。 |
+| `treats_unverified_as_low_trust` | PASS | 输出明确将 last_verified_version: unverified 视为最低信任，并拒绝仅凭该文档正式确认根因。 |
 
 ## With-Skill Behavior
 
-候选使用映射文档定位、代码事实定性，确认 60/300 秒分歧，同时把“应修代码还是文档”停在 `missing_docs` 的预期对齐边界。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f67ee52e742cb8b8fa4a2e4a8def50688400c24b6328050c434ae918f3f4101b; fixture_sha256=5265284c4bc9506c9aff21630151842110054255967ea23b3c9669fa67c6063d; output_sha256=f07f10c8dfbb99f99ce44dbb89d8705379371f818670f70664b9b1be96d20f8f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别并报告了代码 TTL 与文档预期的差异，同时正确降低未验证文档的可信度；读取顺序无法由锁定证据核验。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-来源为本轮隔离子代理使用相同 prompt 与 fixture 生成，未接触 skill、Engineer README 或 with-skill。baseline 同样精准读取映射文档、以代码核证 TTL，并明确 unverified 最低信任，满足 3/3 assertions。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f67ee52e742cb8b8fa4a2e4a8def50688400c24b6328050c434ae918f3f4101b; fixture_sha256=5265284c4bc9506c9aff21630151842110054255967ea23b3c9669fa67c6063d; output_sha256=11a2e1263573bf270b4c5d8fb276a1ac8de8925f555f70a02eacc7a5ddec4063; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 直接依据配置与文档给出 60 秒对 300 秒的诊断和复现时间线，但未体现对未验证文档的低信任处理。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- With-skill：无。
-- Baseline：无；本轮没有 assertion 级行为差异。
-
-## Latest Result
-
-- Behavior result: PASS
-- Coverage result: FULL
-Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-## Next Steps
-
-保留映射消费与低信任文档覆盖；如需测量 skill 增益，可加入无关文档干扰或移除 prompt 中的明确诊断导向。
+- None.
+- Next: 如需覆盖读取顺序断言，应提供可证明实际读取顺序的锁定原始证据。
 
 ## Runtime Artifact Policy
 
-候选、verdict 和诊断只存放于 ignored runtime 目录，不提交；本文件是 durable 结果。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

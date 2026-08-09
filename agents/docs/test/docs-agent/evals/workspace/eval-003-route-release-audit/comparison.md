@@ -1,70 +1,59 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `docs-agent`
 - Eval: `eval-003-route-release-audit`
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture version: `cross-doc audit 2026-07-19`（fixture 未变化）
-- 本轮触发：issue #131 将 `docs-audit` frontmatter description 扩展为同时覆盖 pre-tag release audit 与 post-tag release verification 后的 routing 复验（2026-07-20）
-- Fresh run：仓库外隔离 scratch Git 仓库（session scratchpad `eval-131-e003/`）
-- Source head: `6040de9`，即 PR #137（关闭 issue #131，含本次复验针对的 `docs-audit` description 变更）的 squash 合并 commit；PR #136（关闭 issue #132）已在其之前合并
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6` from `agents/docs/test/docs-agent/evals/workspace/eval-003-route-release-audit`.
+- Fixture SHA-256: `aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6`
+- Prompt SHA-256: `099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `f4f786bd56d6a5cbcee24193816a462566a8caafb4c223ef38759bdf64ee0486`
+- Eval definition SHA-256: `76669427412e6a3d2662bf813faa0ce4c31fa19c75739559cabe530efd5682a6`
+- Metadata SHA-256: `d582bafa2b7d4e637ef2b4b71f14f435256d70c30e92f7097a43cd40dc9da750`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
 
-## Latest Result
+## Assertion Results
 
-- Overall result: FAIL
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| accepts_equivalent_chain | PASS | PASS | 两条 `release-entry.md` 均明确包含 release scope（第 3 行）、版本 tag（第 4 行）、changelog（第 5 行）、release evidence（第 6 行）及审计请求（第 8–11 行）；两条 result 也均识别该入口链。 |
-| routes_docs_audit | PASS | FAIL | with_skill 明确写出“已正确路由至 `docs-audit`”，并保留版本、changelog、release evidence 后声明由专项能力执行；without_skill 未选择 `docs-audit`，而是自行给出审计结论和检查清单。 |
-| references_audit_gate_only | FAIL | FAIL | with_skill 仅提到“`docs-agent:docs-audit` 专项能力未提供”，没有指向 `docs-audit/SKILL.md` 或内部指令；without_skill 同样没有该 gate 引用，并自行展开审计检查与后续步骤。 |
-
-未满足断言（with/without 任一 FAIL）：`routes_docs_audit`、`references_audit_gate_only`
-
-
-
-## Assertions
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- `accepts_equivalent_chain`：PASS。逐项识别已确认 scope、`verified_version_tag: v0.4.0`、已审阅 changelog、契约/CI 证据与既有 `docs/site/` 为等效确认入口。
-- `routes_docs_audit`：PASS。明确“选定 specialist：`docs-agent:docs-audit`”，保留版本与 release 证据，执行责任交给 specialist，router 停在 handoff。
-- `references_audit_gate_only`：PASS。以“由 `docs-audit` 按其权威执行门禁自行核验”指向 specialist gate，未复制 base/target、确定性层、事实层、三态或统一盖章协议。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_equivalent_chain` | PASS | with_skill 明确将 `release-entry.md` 作为“等价确认链”，并识别了正式文档审计范围、版本标签及现有证据。 |
+| `routes_docs_audit` | PASS | with_skill 选择 `docs-audit`，保留审计范围、`v0.4.0`、changelog、站点及检查证据的相关信息，并明确停止在路由边界。 |
+| `references_audit_gate_only` | FAIL | 虽然 with_skill 明确指定 `docs-audit` 并声明停止于路由边界，但输出进一步展开了 `base_ref`/`target_ref`、发布窗口、审计输入和证据要求，超出了只引用审计 specialist gate 的要求。 |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- fresh candidate 读取 main 上当前 `docs-agent` router SKILL.md、Docs README 与 `docs-audit` 新 frontmatter description，仅做入口检查、分流与上下文保留。
-- 边界说明：candidate 输出中出现的 pre-tag/post-tag phase 建议不作为本 comparison 的通过证据——phase 判定归 `docs-audit` specialist 权威 gate，且 fixture 只含 Markdown 字段、无可核验的实际 git tag；本 eval 只验证 router 分流行为。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=4d9b0cfe747083ae8bcbc1494dc31d7ba9b4463ccadc8729af38ccdb7d7c970f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别等效确认链并路由至 `docs-audit`，但输出了超出 router 边界的审计内部要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+## Fresh Without-Skill Baseline
 
-- 来源：同一 prompt 与 pristine fixture 副本的本轮 fresh `without_skill`，在仓库外隔离 scratch Git 仓库运行，禁止读取宿主仓库、skill 文档与历史输出；未复用历史 baseline。
-- baseline 能泛化识别审计意图，但路由到自拟的 “Release Documentation Specialist” 而非 canonical `docs-agent:docs-audit`，缺少权威 gate 指针，且复制了五项审计检查与 `ready`/`blocked` 输出协议，违反 router 只引用 gate 的边界。
-- 独立 judge 确认 baseline 输出无 skill 文档污染迹象。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=099569afeec045caa3e4e020611c72b9def7b5897f52222810916bd2477fd230; fixture_sha256=aea5c9e95cc3674c80708ee78ba0276fef121e6d5652789edf0421371d054bf6; output_sha256=e2f3c04021fbaf20e0ad31322aebdaf710a1ebf8ce0f4648e4ed1f46cc818775; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 未执行路由，直接进行了发版文档审计并给出阻塞结论和整改建议。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+## Failures and Next Steps
 
-- 无 with-skill assertion failure。
-- 上一轮记录的 harness limitation（baseline 可见父仓库 git 状态）本轮已通过仓库外隔离 scratch Git 仓库消除。
-
-## Next Steps
-
-- 保持 router 只引用 specialist gate；后续 router 或 `docs-audit` 入口语义再变化时重新 fresh 验证。
+- with_skill 路由正确，但暴露并展开了 specialist 内部审计所需的 base/target、发布窗口及证据要求，违反只引用审计 gate 并停在 router 边界的要求。
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- candidate、baseline、judge verdict 与 transcript 仅保留在会话 scratchpad 的隔离 scratch 仓库中，不提交到 git。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

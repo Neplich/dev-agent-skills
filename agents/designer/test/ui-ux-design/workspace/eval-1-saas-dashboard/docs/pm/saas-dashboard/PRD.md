@@ -7,7 +7,7 @@ parent_feature: ""
 feature_level: "1"
 version: "0.1.0"
 status: Confirmed
-author: "PM Fixture"
+author: "Dashboard Product Team"
 date: "2026-08-03"
 last_updated: "2026-08-03"
 ---

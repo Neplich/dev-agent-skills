@@ -1,117 +1,63 @@
-# Eval Result: eval-004-frontend-ui-routing-contract
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `engineer-agent`
 - Eval: `eval-004-frontend-ui-routing-contract`
-- Test case: frontend-ui-routing-contract
-- Workspace: `workspace/eval-004-frontend-ui-routing-contract`
-- Evaluation date: 2026-08-07
-- Overall result: FAIL
-- Behavior result: FAIL
-- Coverage result: FULL
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt: 用户说：Customer Portal 的 profile settings 已有 PRD/TRD，现在要更新前端代码，调整设置页的信息层级和主按钮样式。请先做工程路由，不要改代码。相关文档在 docs/pm/customer-portal/profile-settings/PRD.md 和 docs/engineer/customer-portal/profile-settings/TRD.md。
-- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
-- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
-- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df` from `agents/engineer/test/engineer-agent/evals/workspace/eval-004-frontend-ui-routing-contract`.
+- Fixture SHA-256: `ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df`
+- Prompt SHA-256: `c7cb9273b0ca01f312d499d16a87d54a68980710efc17abee5e6a4600012b8c0`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `cfa5a88208f1b1c899ab19782fdf4b1c4f59251e80b5c7edaead85a7f37b2ebd`
+- Skill overlay SHA-256: `077bb84411e61374de4fd93945f7e775b9133b3517221140cf4b19937f8b8f70`
+- Judge schema SHA-256: `e2168c580c03f1c43acee8d4077b4a9553410b224e0542721c19d2cc8e09e39c`
+- Eval definition SHA-256: `bfc10d83b8c5a5962987ac2605d966a1788bde7de31566b4d329601b6b214354`
+- Metadata SHA-256: `4906971d417635b5c425ac490e57080c03cc4473b36cee23eaff89fa06fe26b0`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
-## Assertions
+## Assertion Results
 
-- FAIL `routes_frontend_update_to_engineer`: with_skill final 仅写 `feature-implementor`，未明确由 `engineer-agent` 承接；不可据此推断满足要求。
-- PASS `does_not_route_to_external_ui_skill`: final/transcript 未建议调用或依赖 `ui-ux-pro-max`。
-- PASS `runs_feature_alignment`: transcript 实际读取 PRD/TRD，并确认 `feature_path` 为 `customer-portal/profile-settings`。
-- PASS `checks_design_deliverables`: transcript 检查了 docs/design 下目标路径，且 final 明确指出 ui-ux-spec.md 与 visual-system.md 均未发现。
-- FAIL `hands_design_gap_to_designer`: 虽 handoff 到 `designer-agent`，但未具体说明需补齐信息层级与主按钮样式的设计范围。
-- FAIL `routes_implementation_after_design`: final 仅说明回到 `feature-implementor`，未说明遵守 `IMPLEMENTATION_PLAN` 确认门禁。
-- PASS `does_not_execute_directly`: exit_code 为 0；workspace 实际文件哈希与输入哈希一致，未见代码、IMPLEMENTATION_PLAN 或测试执行证据。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_frontend_update_to_engineer` | PASS | with_skill 明确指定 Owner 为 `engineer-agent`，并将前端实现列入后续工程流程。 |
+| `does_not_route_to_external_ui_skill` | PASS | with_skill 输出未建议修改、调用或依赖 `ui-ux-pro-max`。 |
+| `runs_feature_alignment` | NOT_EXERCISED | 输出列出 `customer-portal/profile-settings` 及对应 PRD/TRD，但锁定证据无法证明实际读取顺序。 |
+| `checks_design_deliverables` | PASS | with_skill 明确说明未发现 `ui-ux-spec.md` 或 `visual-system.md`，且当前变化涉及信息层级和按钮样式。 |
+| `hands_design_gap_to_designer` | PASS | with_skill 要求将信息层级、主按钮样式规则、响应式与交互状态交给 `designer-agent`。 |
+| `routes_implementation_after_design` | PASS | with_skill 将设计对齐置于实现之前，并要求基于设计文档和确认后的 `IMPLEMENTATION_PLAN.md` 返回 `feature-implementor` 实现。 |
+| `does_not_execute_directly` | PASS | 输出明确声明本轮不改代码；锁定 git 证据显示无状态、索引、工作区或提交变化。 |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-完成了 PRD/TRD 读取、feature_path 对齐和设计交付物存在性检查，并进行了 Designer → feature-implementor 路由；但缺少明确的 engineer-agent 承接表述、具体设计缺口范围及 IMPLEMENTATION_PLAN 门禁。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c7cb9273b0ca01f312d499d16a87d54a68980710efc17abee5e6a4600012b8c0; fixture_sha256=ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df; output_sha256=3f1736eabda86e6631f6325cb3ccf8651fc65a22b709ea47f317d746c10fdd15; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确将前端变更路由至 engineer-agent，识别设计交付缺口并交给 designer-agent，设计完成且 IMPLEMENTATION_PLAN 确认后再实现；未执行代码变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-without_skill 仅作对照：读取 PRD/TRD 后错误地转向 URL/路由注册分析，未检查设计交付物，也未形成 Designer handoff。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c7cb9273b0ca01f312d499d16a87d54a68980710efc17abee5e6a4600012b8c0; fixture_sha256=ec60268c3cba621e7690e34a6ae14bc9ac52429e90275b6d4c2fdedef202a8df; output_sha256=705cb52e061923c8d10b83badcbc7ca5cc2104dda1c3382a660d92996ebf37d1; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了基于现状的通用推进建议，但未呈现明确的 engineer-agent 路由、feature_path 对齐或设计代理交接。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures / Findings
-
-- routes_frontend_update_to_engineer
-- hands_design_gap_to_designer
-- routes_implementation_after_design
-- Root cause: with_skill 的路由结论不完整，遗漏了 engineer-agent 明确承接、设计缺口具体范围和 IMPLEMENTATION_PLAN 确认门禁。
-
-## Next Steps
-
-- 修复上述 assertion 对应的 skill 行为或 eval 输入问题后，使用同样的 paired fresh 流程重跑。
-
-## Runtime Artifacts Policy
-
-- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
-- 长期只保留本 `comparison.md`。
-
-## Historical Results
-
-### Previous comparison record: eval-004-frontend-ui-routing-contract
-
-## Evaluation Target
-
-- Agent: `engineer`
-- Skill: `engineer-agent`
-- Eval: `eval-004-frontend-ui-routing-contract`
-- Test case: frontend-ui-routing-contract
-- Workspace: `workspace/eval-004-frontend-ui-routing-contract`
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Fixture: frontend UI request for `customer-portal/profile-settings` with same-path PRD/TRD and intentionally absent design deliverables.
-- Fresh validation date: 2026-08-01.
-- With-skill source: current Engineer README, current `engineer-agent` SKILL, eval definition, metadata, README, and same-path PRD/TRD.
-- Without-skill source: the same prompt and fixture, freshly regenerated without reading or applying the target README/SKILL, with-skill output, historical comparison, or prior baseline.
-
-## Latest Result
-
-- Behavior result: PASS
-- Coverage result: FULL
-Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-All 7 assertions were exercised and passed in the with-skill run.
-
-## Assertions
-
-- PASS `routes_frontend_update_to_engineer`: treats local frontend/UI implementation as Engineering work.
-- PASS `does_not_route_to_external_ui_skill`: does not use external `ui-ux-pro-max`.
-- PASS `runs_feature_alignment`: preserves `customer-portal/profile-settings` and reads its PRD/TRD.
-- PASS `checks_design_deliverables`: checks the same-path UI/UX and visual-system files.
-- PASS `hands_design_gap_to_designer`: hands the missing information hierarchy and button-style design scope to `designer-agent`.
-- PASS `routes_implementation_after_design`: returns to `feature-implementor` only after design completion and plan confirmation.
-- PASS `does_not_execute_directly`: remains route-only.
-
-## With Skill Behavior
-
-The fresh route keeps frontend implementation in Engineer, aligns the same feature path, checks both repository-native design deliverables, hands the fixture's design gap to `designer-agent`, and returns to `feature-implementor` behind the confirmed-plan gate.
-
-## Without Skill Baseline
-
-The fresh baseline identifies frontend engineering, avoids the external skill, generically recommends a designer for missing specifications, and remains route-only. It omits the exact same-path alignment, repository design-file checks, named agent handoff, and `feature-implementor` implementation-plan gate. Baseline assertion result: 4/7.
-
-## Failures
+## Failures and Next Steps
 
 - None.
+- Next: 补充可证明 PRD/TRD 实际读取顺序的运行证据。
 
-## Next Steps
+## Runtime Artifact Policy
 
-- Keep this eval as regression coverage for frontend/UI implementation routing and repository-native design handoff.
-
-## Runtime Artifacts Policy
-
-- Fresh runtime evidence is under `tmp/eval-runs/issue-196-project-bootstrap-removal-20260801-131022/engineer-agent/eval-004-frontend-ui-routing-contract/`.
-- `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence and must not be committed.
-- This `comparison.md` is the only durable result.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

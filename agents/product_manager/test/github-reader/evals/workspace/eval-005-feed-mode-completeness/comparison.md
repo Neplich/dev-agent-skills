@@ -1,82 +1,59 @@
-# Eval Result: eval-005-feed-mode-completeness
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `github-reader`
 - Eval: `eval-005-feed-mode-completeness`
-- Test case: `feed-mode-completeness`
-- Prompt:
 
-> 我是 roadmap-gen，需要 anthropics/anthropic-sdk-python 的当前仓库状态作为结构化输入，请给我完整状态数据
+## Current Result
 
-- Expected output:
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0519c739e4c8d28c0f994ae12773611385afed7d111bc3d263905cd5dd009c56` from `agents/product_manager/test/github-reader/evals/workspace/eval-005-feed-mode-completeness`.
+- Fixture SHA-256: `0519c739e4c8d28c0f994ae12773611385afed7d111bc3d263905cd5dd009c56`
+- Prompt SHA-256: `733e42077f632553b5cf8048118a1b14f8ea055ecbaf96d2e6e26af0ff51b1b5`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8b55857ad21cc937337dcf6bc1fa19fcc7f833c3e9c078d89a5db79725e98233`
+- Skill overlay SHA-256: `68da0ba1f028f581794447a220a41c2a7932596fc89598d52df4a3ae7cae05a7`
+- Judge schema SHA-256: `4f066e3762e89c228d67c784e34a35c0c16edf603d99427b4a0ebdaa56519646`
+- Eval definition SHA-256: `c049e8ab5f946f319bc21927957f6fda02a148471bd8950bd306a941a14167f6`
+- Metadata SHA-256: `07ab98c6d1c3adcc9277e1cfe784f8d017e9650890973540f2c3871622f64ed2`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
 
-> Markdown 报告后附 `---` 分隔的 `github_reader_data` YAML 块，包含总数类字段；若报告声明了截断或总数不完整，YAML 必须有对应 `truncated_collections` / `incomplete_totals` 字段
+## Assertion Results
 
-## Test Set / Fresh Run
-
-- Eval schema: `evals.json` v1.0。
-- Fixture manifest: `4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`（0 个可见文件；两侧逐字节一致）。
-- Repository HEAD: `47adbbc9`。
-- Fresh run window: 2026-08-07 00:58–01:14（Asia/Shanghai）。
-- Runtime: 3 个独立会话，均为 `gpt-5.6-luna`、`model_reasoning_effort=medium`：fresh without-skill、fresh with-skill、fresh judge。
-- Controlled variable: 两个 candidate 使用完全相同的 prompt、fixture manifest、HOME/CODEX_HOME 目录形态与同一份 `auth.json`；唯一变量是 with-skill lane 安装并加载目标 specialist skill。
-- Physical isolation: 按 skill 先完成并销毁全部 baseline 随机顶层根，再创建 with-skill 根；32 个 candidate 全部完成并销毁后才创建第三套 judge 根。
-- Candidate visibility: lane 中未放入 `eval_metadata.json`、`evals.json`、`expected_output`、assertions、历史 `comparison.md`、README 脚手架或 judge 材料；泄漏扫描为 0 命中。
-- External data rule: 实时实体因 GitHub 认证、网络或当时集合缺失而不可得时，相关 assertion 记为 `NOT EXERCISED`，只影响 Coverage，不伪造成 Behavior 的 PASS/FAIL。
-
-## Latest Result
-
-- Behavior result: **PASS**
-- Coverage result: **PARTIAL**
-- Overall result: PASS (partial coverage)
-- With-skill summary: with_skill 实际加载了 github-reader（status.json 的 skill_load_hits=2，transcript 中读取 SKILL.md），随后按技能先尝试仓库查询并检查认证；gh 未认证，未获得实时 GitHub 数据，因此诚实报告阻塞且未伪造 Feed YAML。
-
-## Historical Contract Note
-
-- 旧 durable 结果因 issue #234 的 prompt/fixture 泄漏修复或后续 assertion 增强而标记为 `BLOCKED`。本文件已由当前契约下的 fresh paired run 与独立 judge 结论覆盖。
-- 本轮没有复用历史 baseline、candidate、verdict 或旧结论；without-skill baseline 仅作行为对照，不参与 with-skill 的 Behavior/Coverage 判定。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `feed_yaml_present` | PASS | PASS: The with_skill output includes a `github_reader_data` YAML block with repository, timestamp, open issue/PR totals, and related fields. |
+| `completeness_signals_consistent` | FAIL | FAIL: The report states all collections are complete and omits the fixture’s milestone reconciliation warning, even though milestone counters total 5 open issues while the exported issue detail contains only 3 milestone-linked issues. No corresponding incompleteness signal is provided. |
+| `totals_not_fabricated` | PASS | PASS: YAML totals and `search_evidence.total_count` values match the fixture’s search totals: 4, 3, 2, and 5. They are not inferred solely from collection lengths. |
 
 ## With-Skill Behavior
 
-with_skill 实际加载了 github-reader（status.json 的 skill_load_hits=2，transcript 中读取 SKILL.md），随后按技能先尝试仓库查询并检查认证；gh 未认证，未获得实时 GitHub 数据，因此诚实报告阻塞且未伪造 Feed YAML。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=733e42077f632553b5cf8048118a1b14f8ea055ecbaf96d2e6e26af0ff51b1b5; fixture_sha256=0519c739e4c8d28c0f994ae12773611385afed7d111bc3d263905cd5dd009c56; output_sha256=dd1fa12a2aaf1bfac80256871cede7fead6abbe729fd75db685adad0b3f307ed; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produces the requested Markdown report and YAML feed with correct search totals, but gives an inconsistent completeness assessment by omitting the milestone reconciliation warning.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-without_skill 未加载技能（skill_load_hits=0），输出了另一套 GitHub connector JSON；仅作 baseline 对照，不影响 with_skill 判定。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=733e42077f632553b5cf8048118a1b14f8ea055ecbaf96d2e6e26af0ff51b1b5; fixture_sha256=0519c739e4c8d28c0f994ae12773611385afed7d111bc3d263905cd5dd009c56; output_sha256=6de76c792801edfb0e0823ff6ed928589099f93d50a89f008e3bf4fb57eb2f32; snapshot_sha256=2ab70d9152e88d6c1f99652b5aeee29a0ec70178784a76765df64d37890a62c7
+- Behavior: Creates a file-backed JSON status input and explicitly reports a warning about milestone totals versus issue detail, but does not provide the requested YAML feed block.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Assertion Review
+## Failures and Next Steps
 
-| Assertion | With skill | Evidence / reason | Without-skill comparison |
-| --- | --- | --- | --- |
-| `feed_yaml_present` | **NOT EXERCISED** | with_skill 的 transcript 显示 gh repo view 因未认证失败，gh auth status 也失败；candidate.md 明确报告无法获取当前状态，因此没有可供判断的实时 Feed 数据或 YAML。 | without_skill 输出了 JSON 快照，没有 Markdown 报告后的 github_reader_data YAML 块。 |
-| `completeness_signals_consistent` | **NOT EXERCISED** | 实时仓库集合不可用，且 transcript 没有成功返回查询集合或总数；无法判断 YAML 总数与截断/不完整声明的一致性。 | without_skill 输出 retrieved=100 等集合长度，但未提供 Feed 完整性字段，不能作为 with_skill 结论依据。 |
-| `totals_not_fabricated` | **NOT EXERCISED** | 因 GitHub CLI 未认证，with_skill 未获得可用于核验的 search total_count；candidate.md 也未伪造任何总数。 | without_skill 的 JSON 使用 retrieved=100 等字段，未展示 search total_count；仅作对照。 |
-
-## Failures
-
-- 无 with-skill assertion failure。
-
-## Not Exercised
-
-- feed_yaml_present：GitHub 认证不可用，实时 Feed 数据未获取。
-- completeness_signals_consistent：没有成功的实时集合/总数可核对。
-- totals_not_fabricated：没有成功的 search total_count 可核对。
-
-## Next Steps
-
-- 认证 GitHub CLI 后重跑，以覆盖 Feed YAML、完整性信号和 total_count 三条 assertion。
-
-## Runtime Evidence
-
-- With-skill candidate: return code `0`，duration `35.141s`，`skill_load_hits=2`。
-- Without-skill candidate: return code `0`，duration `150.115s`，`skill_load_hits=0`。
-- Independent judge: return code `0`，duration `51.306s`。
-- Judge 已读取两侧最终输出、完整 JSONL 工具 trace、before/after workspace snapshot、fixture manifest 与 session status，并核验读取顺序和零写入边界。
-- 所有临时 HOME/CODEX_HOME 与 candidate/judge 随机顶层根均已销毁；持久化证据目录中不存在 `auth.json`。
+- The with_skill report presents completeness as fully passing and fails to surface the milestone open-issue reconciliation inconsistency present in the raw evidence.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 仓库只持久化本 canonical `comparison.md`。
-- Candidate、transcript、judge verdict、timing、status、snapshot 与 diagnostics 仅作为 `/tmp` 运行期证据，不提交到 git。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

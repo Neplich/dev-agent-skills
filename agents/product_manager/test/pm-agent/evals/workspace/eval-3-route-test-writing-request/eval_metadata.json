@@ -2,8 +2,18 @@
   "eval_id": "eval-003-route-test-writing-request",
   "eval_name": "route-test-writing-request",
   "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-3-route-test-writing-request",
-  "prompt": "用户说：帮我补测试，覆盖订单退款流程的异常分支。请判断应该怎么分类、需要什么测试依据，以及后续交给谁。",
   "fixture_context": [
     "README.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

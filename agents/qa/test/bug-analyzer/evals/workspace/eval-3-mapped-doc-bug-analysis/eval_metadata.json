@@ -2,10 +2,20 @@
   "eval_id": "eval-003-mapped-doc-bug-analysis",
   "eval_name": "mapped-doc-bug-analysis",
   "workspace_root": "agents/qa/test/bug-analyzer/evals/workspace/eval-3-mapped-doc-bug-analysis",
-  "prompt": "分析 src/notifications/retry.rules 中通知重试次数可能与预期不一致的问题，形成证据化缺陷分析。",
   "fixture_context": [
     "src/notifications/retry.rules",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/notification-retry.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

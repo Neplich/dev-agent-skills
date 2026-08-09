@@ -2,15 +2,31 @@
   "eval_id": "eval-007-frontmatter-contract-fixtures",
   "eval_name": "frontmatter-contract-fixtures",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-007-frontmatter-contract-fixtures",
-  "prompt": "`release-entry.md` 提供了维护者确认的目标版本、明确的 `base_ref`、`target_ref`、审计请求与证据清单。请据此审计工作区中的文档站并给出结果。",
   "fixture_context": [
     "release-entry.md",
     "docs/site/standards/change-map.yaml",
-    "docs/site/api/valid-catalog.md",
-    "docs/site/api/invalid-standard-doc-type.md",
-    "docs/site/api/invalid-empty-related-code.md",
-    "docs/site/api/invalid-missing-last-verified-version.md",
-    "docs/site/api/invalid-empty-owners.md",
+    "docs/site/api/catalog-items.md",
+    "docs/site/api/catalog-search.md",
+    "docs/site/api/catalog-export.md",
+    "docs/site/api/catalog-status.md",
+    "docs/site/api/catalog-bulk-update.md",
     "src/catalog/routes.txt"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "git_topology": {
+    "base_ref": "4a1b2c3",
+    "target_ref": "7c9e2af",
+    "absent_refs": ["refs/tags/v0.4.0"]
+  },
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

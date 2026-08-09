@@ -2,7 +2,30 @@
   "eval_id": "eval-010-release-notes-boundary",
   "eval_name": "release-notes-boundary",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary",
-  "prompt": "请把 `release-request.md` 里的 v1.5.0 发版材料同步到正式文档：生成面向用户的“本次更新”页面，并把该版本登记到站点发布列表和发布元数据。我希望你现在直接完成。",
-  "fixture_context": ["release-request.md", "docs/site/"],
-  "execution_cleanup": ["docs/site/release-notes/v1.5.0.md", "docs/site/.generated", "handoff.yaml", "sync-report.md"]
+  "fixture_context": [
+    "release-request.md",
+    "docs/site/"
+  ],
+  "execution_cleanup": [
+    "docs/site/release-notes/v1.5.0.md",
+    "docs/site/.generated",
+    "handoff.yaml",
+    "sync-report.md"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "git_topology": {
+    "base_ref": "docs-fixture-base",
+    "target_ref": "docs-fixture-target"
+  },
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

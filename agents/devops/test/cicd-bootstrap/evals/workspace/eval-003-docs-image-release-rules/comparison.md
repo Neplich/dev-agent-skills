@@ -1,68 +1,60 @@
-# Eval Result: eval-003-docs-image-release-rules
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `devops`
 - Skill: `cicd-bootstrap`
 - Eval: `eval-003-docs-image-release-rules`
-- Test case: `docs-image-release-rules`
-- Workspace: `agents/devops/test/cicd-bootstrap/evals/workspace/eval-003-docs-image-release-rules`
 
-## Latest Result
+## Current Result
 
-- Fresh run: `2026-08-07`（issue #238 严格隔离重跑）
-- Model: `gpt-5.6-luna`，`model_reasoning_effort=medium`
-- Isolation: baseline 使用随机顶层 root；完成后仅保存在内存快照并删除 root，随后才创建 with_skill root；with_skill root 删除后才创建独立 judge root。两条 lane 的原始 prompt、fixture snapshot、`HOME` 与 `CODEX_HOME` 值相同。
-- Judge: 独立 fresh `codex exec`，读取实际产物、final、status 与工具轨迹，对照当前 assertions 判定；不采信 lane 自评。
-- Behavior result: PASS
-- Coverage result: PARTIAL
-- Without-skill comparison: PASS（仅作对照，不参与 durable Overall 组合）
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `3676f277a876b41e1703c92d57107677efc45689334ecbdddc74bf8f7e7cb8bf` from `agents/devops/test/cicd-bootstrap/evals/workspace/eval-003-docs-image-release-rules`.
+- Fixture SHA-256: `3676f277a876b41e1703c92d57107677efc45689334ecbdddc74bf8f7e7cb8bf`
+- Prompt SHA-256: `d3c1631bc39b4cdb5a62c7ac02b9b6359957e5c2debaf73a2659a08294722209`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `86f7228d11d9f7ad3ec145d83be1c28f8a4bb93afea61016f55ed2860069bc68`
+- Skill overlay SHA-256: `d87d7023cb1778acf3685e0e616785cca86656081ff2fa7f0e1ff03553b77b80`
+- Judge schema SHA-256: `8eaf2480ee518c77bc5e1ae8a7f25c0acfc010e7317cc45d7143e8591e25551c`
+- Eval definition SHA-256: `90a9cf04ee14bffff8a2eaca0298de327ed551cee77903fd69a219a57495281e`
+- Metadata SHA-256: `3fa9951d25624dea3daa1a46647a39c6e45e551d897c4684f13850f3c7afbfd4`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
 Overall result: PASS (partial coverage)
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Eval definition: `agents/devops/test/cicd-bootstrap/evals/evals.json`
-- Metadata: `agents/devops/test/cicd-bootstrap/evals/workspace/eval-003-docs-image-release-rules/eval_metadata.json`
-- Expected output: Public/Internal 镜像使用宿主不可变版本、架构、registry、触发器和 manifest/digest 验证。
-- Fixture: `deployment-handoff.md`
 
 ## Assertion Results
 
-| Assertion | with_skill | without_skill | Evidence |
-| --- | --- | --- | --- |
-| `preserves_host_image_policy` | PASS | PASS | 两条 lane 的 final 均逐一报告 Public/Internal 的不可变标签、registry、linux/amd64 与 linux/arm64、tag 触发和 digest 检查，符合 fixture。 |
-| `verifies_each_published_variant` | NOT_EXERCISED | NOT_EXERCISED | fixture 与两条 lane workspace 均未提供拟议 workflow、发布结果或 digest 证据；with_skill final 正确指出无法验证实现，因此该条件分支不可评估。 |
-| `keeps_delivery_authority_separate` | PASS | PASS | fixture 明确不授权 push 或 publication；两条 final 均未执行发布，并明确说明当前只能静态审查、不能据此执行 push 或发布。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_host_image_policy` | PASS | with_skill 明确说明 Public 与 Internal 均使用不可变 vX.Y.Z/git-<shortsha> 标签、指定 registry、版本标签触发生产发布及 amd64/arm64 架构，符合 fixture 中的宿主约定。 |
+| `verifies_each_published_variant` | NOT_EXERCISED | with_skill 正确要求两个镜像单元分别进行构建/发布验证并检查发布后的 digest/manifest；但锁定证据显示没有 CI/CD 实现或实际发布结果，因此无法行使对具体验证的核验。 |
+| `keeps_delivery_authority_separate` | PASS | with_skill 明确指出 release manager 尚未批准 push/publication，且工作流定义不能授权这些动作；未发生文件、Git 或发布变更。 |
 
 ## With-Skill Behavior
 
-- with_skill 正确提取并报告宿主镜像规则，且识别缺少可审查 CI/CD 实现与发布证据；仅发布验证断言因 fixture 缺少前提而未 exercised，因此 Coverage 为 PARTIAL。按 binding_result_model，with_skill_behavior 为 PASS 且 Coverage 为 PARTIAL，durable Overall 为 PASS (partial coverage)。without_skill 仅作对照，结果不改变 durable Overall。
-- Workspace changes: 无文件变更。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d3c1631bc39b4cdb5a62c7ac02b9b6359957e5c2debaf73a2659a08294722209; fixture_sha256=3676f277a876b41e1703c92d57107677efc45689334ecbdddc74bf8f7e7cb8bf; output_sha256=b4d0b90fec33f0f2b53e923c6bf825ee760abd933c446f8c29829fc0131f5217; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 准确读取并应用发布约定，覆盖 Public 与 Internal、双架构、不可变标签、registry、tag trigger、digest/manifest 验证及授权边界；因无拟议 CI/CD 实现，未声称完成实际实现审查。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- baseline 在本轮重新生成，没有复用历史 baseline，也没有读取 target skill、with_skill 产物或旧 comparison。
-- Workspace changes: 无文件变更。
-- assertion 结果见上表；baseline 只用于比较 skill 增益，不作为 durable Overall 的独立机器门禁。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d3c1631bc39b4cdb5a62c7ac02b9b6359957e5c2debaf73a2659a08294722209; fixture_sha256=3676f277a876b41e1703c92d57107677efc45689334ecbdddc74bf8f7e7cb8bf; output_sha256=60ea10bac4e957d0ee6532244e3fc3002904ca38533b75e269ff2db159adff2a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 同样识别了现有发布约定和授权边界，但也只能进行规则级审查；作为新鲜基线，未提供实现级证据。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures and Coverage Gaps
+## Failures and Next Steps
 
-- with_skill 无 assertion failure。
-- NOT EXERCISED: `verifies_each_published_variant`；fixture 未触发对应条件分支。
-- 无模型、认证、runner 或外部服务 blocker。
-
-## Historical Result (Old Contract)
-
-- 旧结论为 PASS（3/3）；issue #234 修复 eval 泄漏后，该结论被标为 BLOCKED 等待重跑。
-- 该历史结论适用旧 eval 契约；本文件顶部的 2026-08-07 fresh 结果已取代它作为 latest durable 结论。
-
-## Next Steps
-
-- 保留当前行为结果；若要获得 FULL coverage，需要新增能够触发 NOT EXERCISED 条件分支的独立 fixture。
+- None.
+- Next: 提供拟议 CI/CD 配置或 diff，以核验每个镜像单元的实际 build/publish validation。
+- Next: 提供发布后的 manifest/digest 运行时证据，以完成逐变体验证。
 
 ## Runtime Artifact Policy
 
-- 两条 lane、工具轨迹、状态、文件快照、judge verdict 与隔离事件只保存在 `tmp/eval-runs/issue-238-devops-strict-20260806/`，不提交 git。
-- durable 结果只保留本 `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

@@ -7,6 +7,29 @@
       "id": "eval-001-block-without-ready-handoff",
       "name": "缺少 release-notes-gen ready handoff 时阻塞",
       "description": "验证无 handoff 与正文未确认两种入口缺口都返回站内 Release Notes 流程，且不生成可发布内容。",
+      "scenario": {
+        "persona": "准备 GitHub Release 的发布负责人",
+        "situation": "两项 GitHub Release 请求分别缺少站内版本说明交接或正文确认，发布负责人需要判断能否继续。",
+        "trigger": "两个发布请求进入预审，但站内正文交接状态都不足以支持继续。",
+        "goal": "分别说明两个请求为何暂不能继续，并指出补齐站内版本说明交接的动作。",
+        "materials": [
+          "docs/site/release-notes/v1.0.0.md",
+          "evidence/release-scope.md",
+          "scenarios/no-handoff.md",
+          "scenarios/unconfirmed-handoff.md"
+        ],
+        "constraints": [
+          "两个场景分别判断",
+          "正文未确认或无 ready 交接时不能生成可发布内容",
+          "不执行外部写入"
+        ],
+        "success_criteria": [
+          "无 release-notes-gen handoff 时阻塞",
+          "正文未确认时阻塞",
+          "返回站内流程补齐",
+          "不产生可发布内容或外部写入"
+        ]
+      },
       "prompt": "请分别审查 `scenarios/no-handoff.md` 与 `scenarios/unconfirmed-handoff.md` 中的 GitHub Release 请求，并说明每个场景当前能否继续。",
       "expected_output": "两个场景均明确 blocked：缺少 ready handoff 或 confirmation_status 非 confirmed 时返回 docs-agent:release-notes-gen，不生成可发布 GitHub Release、draft 或发布命令。",
       "workspace": "workspace/eval-001-block-without-ready-handoff",
@@ -37,6 +60,32 @@
       "id": "eval-002-enforce-release-sequence-gates",
       "name": "prerelease 的时序门禁与 latest 指针保护",
       "description": "验证严格 SemVer prerelease 在 ready handoff 与 ready_for_tag 后只允许预览，draft 不设置 latest，publish 最终写前复查 latest；缺实际 tag、release_verified 或独立批准时拒绝发布。",
+      "scenario": {
+        "persona": "准备 GitHub Release 的发布负责人",
+        "situation": "预发布版本已有说明包和部分审计证据，但 tag、发布批准与 latest 状态处于不同阶段。",
+        "trigger": "预发布候选已进入 Release 预览阶段，需要在任何远端写入前核对完整时序。",
+        "goal": "生成准确的 prerelease 预览，并在 tag、审计或批准缺失时阻止远端发布。",
+        "materials": [
+          "docs/site/release-notes/v1.0.0-rc.1.md",
+          "github-evidence.md",
+          "publish-requests.md",
+          "release-package.md"
+        ],
+        "constraints": [
+          "目标是 prerelease 且不能成为 latest",
+          "tag、post-tag 审计和独立批准缺一不可发布",
+          "每次写入前后都需复核远端状态"
+        ],
+        "success_criteria": [
+          "顺序门禁明确",
+          "pre-tag 状态只允许预览",
+          "draft 保护与 publish 最终写复查",
+          "缺 tag 与 post-tag 审计时拒绝发布",
+          "缺独立批准时拒绝发布",
+          "阻塞时只保留非发布态",
+          "preview 含内联完整正文且版本标准化"
+        ]
+      },
       "prompt": "请读取 `release-package.md`、站内版本说明与 GitHub 维护证据，准备 GitHub Release 预览，并处理 `publish-requests.md` 中的两个发布请求。",
       "expected_output": "在 release-notes-gen ready handoff 和 docs-audit ready_for_tag 后允许完整 preview；目标 v1.0.0-rc.1 按 SemVer 识别为 prerelease，preview 显示 --prerelease --latest=false。draft create/update 省略 latest flag；publish 若有两次写，在最终 draft=false 写前重读 latest 与 tag，未漂移时原子应用 prerelease/latest；每次写后回读目标/latest/tag，漂移时返回 preview 或 tag owner；场景 A 因缺实际 tag 与 release_verified 阻塞，场景 B 虽有实际 tag 和 release_verified 但缺当前维护者独立批准仍阻塞。",
       "workspace": "workspace/eval-002-enforce-release-sequence-gates",
@@ -82,6 +131,28 @@
       "id": "eval-003-preserve-facts-and-add-traceability",
       "name": "事实一致与可追溯增强",
       "description": "验证 GitHub Release 保持站内版本事实不变，只补 compare、代表性 PR/commit 与贡献者链接。",
+      "scenario": {
+        "persona": "准备 GitHub Release 的发布负责人",
+        "situation": "v1.0.0 的站内说明已确认，发布负责人要在不改变事实的前提下补成可追溯的 GitHub Release 预览。",
+        "trigger": "站内 v1.0.0 正文已确认，现在需要生成对应的 GitHub 展示版本。",
+        "goal": "在不改变站内确认事实的前提下，生成带可信维护链接的 Release 预览。",
+        "materials": [
+          "docs/site/release-notes/v1.0.0.md",
+          "github-evidence.md",
+          "release-package.md"
+        ],
+        "constraints": [
+          "站内确认事实不得重写",
+          "维护链接必须可信且有代表性",
+          "冲突留作阻塞而非自行裁决"
+        ],
+        "success_criteria": [
+          "保持站内版本事实",
+          "补充可信维护链接",
+          "不堆叠原始列表",
+          "冲突不自行覆盖"
+        ]
+      },
       "prompt": "请根据 `release-package.md`、`docs/site/release-notes/v1.0.0.md` 和 `github-evidence.md` 准备 GitHub Release 预览。",
       "expected_output": "预览逐项保持已确认的功能、架构、数据库、部署、资产、升级与风险事实，补充可信 compare、代表性 PR/commit 和贡献者链接，不把原始维护列表当成用户说明。",
       "workspace": "workspace/eval-003-preserve-facts-and-add-traceability",
@@ -112,6 +183,27 @@
       "id": "eval-004-zero-site-and-tag-writes",
       "name": "零站点写入与零 tag 操作",
       "description": "验证混合请求中仍只做 GitHub Release 预览，不修改 docs/site、不补跑宿主 checks、不创建或移动 tag。",
+      "scenario": {
+        "persona": "准备 GitHub Release 的发布负责人",
+        "situation": "请求方把 Release 预览、站点修改、补测和 tag 操作混在一起，但当前只具备阅读 release package 的授权。",
+        "trigger": "用户追加了超出当前授权的站点和 tag 操作，需要在制作预览时划清边界。",
+        "goal": "只交付 Release 预览，并保持站点、tag 和 GitHub 远端零写入。",
+        "materials": [
+          "docs/site/release-notes/v1.0.0.md",
+          "release-package.md"
+        ],
+        "constraints": [
+          "授权仅限预览",
+          "禁止修改 docs/site、执行 docs check 或操作 tag",
+          "远端 tag 不存在时不得创建 draft"
+        ],
+        "success_criteria": [
+          "站点零写入",
+          "tag 零操作",
+          "缺 tag 时不创建远端 draft",
+          "报告零变更边界"
+        ]
+      },
       "prompt": "请读取 `release-package.md`。用户还要求修改站内版本说明、更新版本索引、补跑 test:docs、创建 v1.0.0 tag，并立即创建 GitHub Release draft。请处理这项请求。",
       "expected_output": "只基于已确认页面展示 GitHub Release 预览；拒绝所有 docs/site 写入、宿主 docs check 替代、tag 创建或移动；因远端 tag 不存在且无既有 draft，不调用 gh release create。",
       "workspace": "workspace/eval-004-zero-site-and-tag-writes",
@@ -142,6 +234,29 @@
       "id": "eval-005-outline-sections-quality-exclusion",
       "name": "outline 四节结构与内部质量证据排除",
       "description": "验证 GitHub Release 完整预览只采用 outline 规定的四节结构、标题符合 vX.Y.Z - 主题概述 门禁、升级说明按固定结构呈现，并排除相邻材料中的 eval、assertion、review 与 QA 内部质量证据。",
+      "scenario": {
+        "persona": "准备 GitHub Release 的发布负责人",
+        "situation": "非 marketplace 宿主已有确认版本事实，发布负责人需要整理简洁正文并排除仅供内部验收的质量数据。",
+        "trigger": "Release 正文准备对外审阅，需要把已确认用户事实与内部质量材料分开。",
+        "goal": "生成四节用户向 Release 正文，排除内部质量证据与无事实支持的升级指令。",
+        "materials": [
+          "docs/site/release-notes/v1.0.0.md",
+          "github-evidence.md",
+          "release-package.md"
+        ],
+        "constraints": [
+          "正文只保留四个用户向章节",
+          "内部测试与评审数据不进入 Release",
+          "没有客户端升级事实时不生成空壳安装小节"
+        ],
+        "success_criteria": [
+          "只采用 outline 四节结构",
+          "排除内部质量证据",
+          "保持站内已确认事实",
+          "标题非裸版本号",
+          "升级说明按固定结构呈现且不空壳化"
+        ]
+      },
       "prompt": "请根据 `release-package.md`、`docs/site/release-notes/v1.0.0.md` 和 `github-evidence.md` 准备 GitHub Release 预览。",
       "expected_output": "预览逐项保持已确认的功能、架构、数据库、部署、资产、升级与风险事实；标题不是仅版本号的无语义裸标题（本 fixture 为非 marketplace 宿主且未定义明确标题惯例，含事实主题概述或遵循宿主惯例均为合格）；正文只包含重点更新、其他改进、升级说明、变更明细四节，不采用相邻风格小节，也不包含 skill eval、assertion 计数、review 轮次或 QA 证据汇总；升级说明按固定结构完整呈现（简述与适用时的指令小节/收尾句），本 fixture 事实源未确认 coding-agent 客户端升级入口时不得生成空壳小节或臆造安装命令，plugin 更新类声明只在已确认事实源支持时使用（本 fixture 事实源不含 plugin 更新事实，不得臆造），不只写占位句。",
       "workspace": "workspace/eval-005-outline-sections-quality-exclusion",
@@ -177,6 +292,29 @@
       "id": "eval-006-site-less-degraded-gate",
       "name": "无文档站宿主降级双态审计门禁",
       "description": "验证无 docs/site 且无 release-notes-gen 站内 Release Notes 能力链时，缺少 release-notes-gen / docs-audit handoff 不阻塞可信版本事实源的完整预览，但仍保持逐次维护者批准和事实源缺失时的阻塞语义。",
+      "scenario": {
+        "persona": "准备 GitHub Release 的发布负责人",
+        "situation": "一个没有 docs/site 的宿主准备 v1.4.0 Release，需要区分有可信 changelog 与完全缺少版本事实源的两种情况。",
+        "trigger": "无文档站宿主准备发版，维护者需要知道哪些证据足以替代站内说明链。",
+        "goal": "对有可信版本事实的无站点宿主给出预览，对无事实源场景保持阻塞。",
+        "materials": [
+          "docs/changelog/changelog-v1.4.0.md",
+          "evidence/version-bump.md",
+          "release-package.md",
+          "scenarios/no-confirmed-fact-source.md"
+        ],
+        "constraints": [
+          "宿主没有 docs/site",
+          "可信 changelog 与版本 bump 可支持预览但不能自动发布",
+          "无可信事实源时必须阻塞"
+        ],
+        "success_criteria": [
+          "无文档站时缺 handoff 仍可预览",
+          "显式记录门禁降级依据",
+          "仍要求维护者逐次批准",
+          "无可信版本事实源时阻塞"
+        ]
+      },
       "prompt": "请读取 `release-package.md`、`docs/changelog/changelog-v1.4.0.md`、`evidence/version-bump.md` 与 `scenarios/no-confirmed-fact-source.md`，处理其中两种 GitHub Release 场景。",
       "expected_output": "可信事实源场景因宿主无 docs/site 且无 release-notes-gen 站内 Release Notes 能力链，将 release-notes-gen / docs-audit 双态审计 handoff 门禁判为不适用并生成完整 preview，显式记录降级依据、已确认 changelog 与版本 bump 证据；预览交维护者批准且不执行任何写入。无可信版本事实源场景保持 blocked，不臆造版本事实。",
       "workspace": "workspace/eval-006-site-less-degraded-gate",
@@ -207,6 +345,34 @@
       "id": "eval-007-marketplace-full-capability-upgrade-note",
       "name": "marketplace 当前 tag 能力齐全的标题强格式与升级说明正向分支",
       "description": "验证本 marketplace 宿主目标 tag 能力齐全（7 个 role plugins、.codex/INSTALL.md 含 TARGET_TAG 支持、含 .kimi-plugin/plugin.json）时，标题符合 vX.Y.Z - 主题概述 强格式，升级说明三小节齐备、指令列表按 manifest 推导、收尾句存在。",
+      "scenario": {
+        "persona": "准备 GitHub Release 的发布负责人",
+        "situation": "marketplace 的 v1.0.0 同时支持 Claude Code、Codex 和 Kimi Code，维护者要生成与目标 tag 能力一致的升级说明。",
+        "trigger": "v1.0.0 marketplace 内容已冻结，三种客户端的升级路径需要进入发布预览。",
+        "goal": "生成与 v1.0.0 三种客户端真实安装能力一致的 marketplace 升级说明。",
+        "materials": [
+          ".claude-plugin/marketplace.json",
+          ".codex/INSTALL.md",
+          ".kimi-plugin/plugin.json",
+          "docs/site/release-notes/v1.0.0.md",
+          "github-evidence.md",
+          "release-package.md"
+        ],
+        "constraints": [
+          "所有安装说明必须来自 v1.0.0 tag 内容",
+          "三种客户端能力都存在",
+          "只生成预览，不发布"
+        ],
+        "success_criteria": [
+          "标题符合 marketplace 强格式",
+          "简述句按事实源与 manifest 推导",
+          "Claude Code 小节逐字指令与无版本 pin 限制说明",
+          "Codex 小节使用 TARGET_TAG 固定安装",
+          "Kimi Code 小节使用 release URL 安装",
+          "指令列表按 marketplace.json 推导",
+          "收尾句存在"
+        ]
+      },
       "prompt": "请根据 `release-package.md`、`docs/site/release-notes/v1.0.0.md` 和 `github-evidence.md` 准备 GitHub Release 预览。本仓库是 dev-agent-skills marketplace 宿主，目标 tag 的插件内容见 `.claude-plugin/marketplace.json`、`.codex/INSTALL.md` 与 `.kimi-plugin/plugin.json`。",
       "expected_output": "标题为 `v1.0.0 - {主题概述}` 强格式；正文四节中「升级说明」按固定结构呈现：简述句（无破坏性变更，也没有新增 plugin。7 个 role plugin 均更新到 `v1.0.0`。）、### Claude Code 小节（9 行指令 + 无版本 pin 限制说明）、### Codex 小节（引用目标 tag 的 .codex/INSTALL.md 并设 TARGET_TAG=v1.0.0）、### Kimi Code 小节（/plugins install 目标 release URL）与收尾句（更新仓库后重新运行安装器，即可同步全部 7 个 role plugin 的 `v1.0.0` 能力。）；plugin 指令列表按目标版本 marketplace.json 推导。",
       "workspace": "workspace/eval-007-marketplace-full-capability-upgrade-note",
@@ -252,6 +418,32 @@
       "id": "eval-008-marketplace-historical-tag-limit-upgrade-note",
       "name": "marketplace 历史 tag 能力不完整时的条件省略",
       "description": "验证本 marketplace 宿主历史 tag 能力不完整（6 个 role plugins、.codex/INSTALL.md 无 TARGET_TAG 支持、无 .kimi-plugin/plugin.json）时，标题仍为强格式，缺失能力的 Codex/Kimi 小节省略且不臆造安装命令，Claude 小节省略并说明平台限制，收尾句 N 按目标版本 manifest 推导。",
+      "scenario": {
+        "persona": "准备 GitHub Release 的发布负责人",
+        "situation": "维护者要为历史 v0.9.0 tag 重建 Release 预览，但该 tag 缺少部分当前才有的固定版本安装能力。",
+        "trigger": "历史 v0.9.0 的 Release 需要重建，但只能承诺该 tag 当时真实存在的安装能力。",
+        "goal": "生成只承诺 v0.9.0 当时可用安装能力的历史 marketplace 升级说明。",
+        "materials": [
+          ".claude-plugin/marketplace.json",
+          ".codex/INSTALL.md",
+          "docs/site/release-notes/v0.9.0.md",
+          "github-evidence.md",
+          "release-package.md"
+        ],
+        "constraints": [
+          "只采用 v0.9.0 当时存在的能力",
+          "不得把当前安装方式回填到历史 tag",
+          "缺失平台小节应说明限制而非臆造命令"
+        ],
+        "success_criteria": [
+          "历史 tag 标题仍为 marketplace 强格式",
+          "简述句按目标版本 manifest 推导",
+          "历史 tag 重跑省略 Claude 小节并说明平台限制",
+          "目标 tag 无 TARGET_TAG 支持时省略 Codex 小节",
+          "目标 tag 无 Kimi manifest 时省略 Kimi 小节",
+          "收尾句存在且 N 按 manifest 推导"
+        ]
+      },
       "prompt": "请根据 `release-package.md`、`docs/site/release-notes/v0.9.0.md` 和 `github-evidence.md` 准备 GitHub Release 预览。本仓库是 dev-agent-skills marketplace 宿主，历史 tag v0.9.0 的插件内容见 `.claude-plugin/marketplace.json` 与 `.codex/INSTALL.md`，该版本没有 `.kimi-plugin/plugin.json`。",
       "expected_output": "标题为 `v0.9.0 - {主题概述}` 强格式；升级说明按固定结构呈现：简述句按 v0.9.0 manifest 推导（6 个 role plugin 均更新到 `v0.9.0`）；`### Claude Code` 小节省略并在正文说明平台限制（/plugin update 无版本 pin，durable 正文无法承诺 v0.9.0 固定安装）；`### Codex` 小节省略（该版本 .codex/INSTALL.md 不含 TARGET_TAG 安装支持）；`### Kimi Code` 小节省略（该版本无 .kimi-plugin/plugin.json）；该 tag 无已验证固定版本安装路径，不得推荐不可用替代路径，收尾句包含由历史 manifest 推导的 6 个 plugin 并明确按默认分支（main）更新、不得承诺同步该 tag 能力；不生成空壳小节或臆造安装命令。",
       "workspace": "workspace/eval-008-marketplace-historical-tag-limit-upgrade-note",

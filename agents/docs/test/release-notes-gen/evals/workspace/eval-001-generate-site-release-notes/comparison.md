@@ -1,105 +1,63 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
-- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口，已按 #238 于 2026-08-06 fresh 隔离重跑）
+- Agent: `docs`
+- Skill: `release-notes-gen`
 - Eval: `eval-001-generate-site-release-notes`
-- Scenario: target release version 只有协调者候选值、缺少维护者确认
-- Review context: issue #177 sub-batch 4c
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture version: `issue-177 target-version confirmation clarification round-3`
-- Validation time: `2026-07-29`（历史轮；本轮 #238 重跑来源见 Latest Result 块）
-- Runtime: `tmp/eval-runs/issue-177/docs-release-evals/round-3-eval-001/`
-- with-skill 读取公开 SKILL 和 Docs Agent README；入口未通过，因此未加载内部执行流程。
-- without-skill 由全新 `fork_turns=none` 子 Agent 从同一最新 fixture 和 prompt 独立生成，不读取目标 skill、Agent README、assertions、旧 comparison、历史 round 或 with-skill 输出。
-
-## Latest Result
-
-- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
-- Overall result: FAIL
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| `detects_missing_version_confirmation` | PASS | PASS | 两条 lane 的 `release-entry.md` 均写明仅为 planning note、无维护者确认；`confirmation-record.md` 明确 `target_release_version_confirmation: not_confirmed`。 |
-| `stops_before_loading_execution_workflow` | PASS | FAIL | with_skill 明确“不能生成或提交站内 Release Notes”；without_skill 实际生成了 `site-release-notes.md` 草稿。 |
-| `keeps_all_site_surfaces_unchanged` | PASS | FAIL | with_skill 明确未修改版本页、metadata、索引或导航；without_skill 新增了 `site-release-notes.md`。 |
-| `does_not_run_post_entry_checks` | PASS | PASS | with_skill 将 `npm run test:docs` 放在版本确认之后；两条 lane 均未生成 site-ready/pre-tag handoff，且无依赖安装或 docs check 产物。 |
-| `returns_version_ambiguity_to_pm` | FAIL | FAIL | 两条 lane 都要求维护者确认版本，但未将阻塞明确交回 PM 入口分类；with_skill 反而指向 `release-engineering` / `docs-agent`，without_skill 仅列出后续确认步骤。 |
-
-未满足断言（with/without 任一 FAIL）：``stops_before_loading_execution_workflow``、``keeps_all_site_surfaces_unchanged``、``returns_version_ambiguity_to_pm``
-
-
-
-## Leakage Surface Analysis
-
-重做前，prompt、assertions、Release Notes README、六份 evidence 和 confirmation record 共同给出六类正文、frontmatter、确认顺序、checks 与完整 ready handoff 字段，baseline 可完整恢复成功路径。
-
-第一轮加入缺失镜像 digest/inspect 证据，但双方都正确记录缺口、更新 confirmed body 的 index/metadata 并返回 blocked audit handoff；原 assertions 错误要求缺证据时派生面零写入，导致 with-skill 3/5，说明用例把证据 blocker 与正文确认门禁混为一谈。
-
-第二轮改测公开入口 gate：fixture 提供 `target_release_version: v1.0.0`，但来源只是 release coordinator planning note，没有维护者确认记录。正文确认与 evidence 仍存在，用于验证它们不能替代版本入口凭据。
-
-Review 指出第二轮 `confirmation-record.md` 仍以“维护者确认 v1.0.0 页面”描述正文事实，并使用 `confirmation_status: confirmed`，与 `release-entry.md` 的“没有维护者版本确认记录”冲突。第三轮把该记录改为版本无关的 Release Notes 正文事实确认，并显式声明 `target_release_version_confirmation: not_confirmed`，使正文确认和目标版本确认成为无歧义的两个凭据。
-
-## Redesign
-
-- prompt 不再写出版本值、执行步骤或 handoff 字段。
-- assertions 检查版本确认主体、入口 stop point、全站零写入、不运行后置流程和 PM return。
-- release entry 只把版本标为协调者候选值；confirmation record 只确认正文事实，并显式不确认目标版本。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5` from `agents/docs/test/release-notes-gen/evals/workspace/eval-001-generate-site-release-notes`.
+- Fixture SHA-256: `5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5`
+- Prompt SHA-256: `abdc82e3242ddb2aafb79bd48f7c9ee0c804dc864021f0a687923bb4dc7de750`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b7f7292c266a0e83e45fc11a264c0b52188a05a92b94c912c4a7b6c5c35058d2`
+- Skill overlay SHA-256: `fcc8b19cc83a08b5f5e64f8b15695aa80b045962a63cbf1717889ea116dc31cc`
+- Judge schema SHA-256: `37b31d01c6d97d7403db04c5a14501c9f7c823331bdaca410487353335744541`
+- Eval definition SHA-256: `65fbac4fd20096e04fd9044ef9811d00f14a304548ada95a65b3bc87c1320345`
+- Metadata SHA-256: `f1489da43deb17946a7db1865ce4492ffcbc2d33d7073fbbdc572711b748a76c`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
 
 ## Assertion Results
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-| Assertion | With skill | Without skill | Fresh judgment |
-| --- | --- | --- | --- |
-| `detects_missing_version_confirmation` | PASS | PASS | 两侧均识别协调者 planning note 只是候选来源，正文事实确认不构成目标版本确认。 |
-| `stops_before_loading_execution_workflow` | PASS | FAIL | with-skill 停在入口且未生成候选；baseline 加工六份 evidence 并输出完整“版本待确认”正文，越过入口 stop point。 |
-| `keeps_all_site_surfaces_unchanged` | PASS | PASS | 两侧 `docs/site/` 前后 SHA-256 manifest 一致，版本页、index、metadata 和导航均零差异。 |
-| `does_not_run_post_entry_checks` | PASS | PASS | 两侧均未安装依赖、运行 docs checks 或生成 site-ready / pre-tag handoff。 |
-| `returns_version_ambiguity_to_pm` | PASS | FAIL | with-skill blocked 并返回 `pm-agent` 补齐可追溯版本确认；baseline 只直接要求维护者确认，未回 PM，且已生成正文。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_missing_version_confirmation` | PASS | with_skill 明确指出 v1.0.0 仅为 proposed，且确认记录不确认目标版本。 |
+| `stops_before_loading_execution_workflow` | FAIL | with_skill 声称 blocked 且未写入站点，但仍输出了完整“候选正文”，与不得生成候选正文的要求冲突。 |
+| `keeps_all_site_surfaces_unchanged` | PASS | delivery_snapshot 为空，git head/branch 未变化，git diff 与 status 均无候选变更。 |
+| `does_not_run_post_entry_checks` | NOT_EXERCISED | 输出说明未运行最终站点检查且未生成 handoff；但锁定证据不能证明是否安装过依赖，故无法完整判定该隐藏过程要求。 |
+| `returns_version_ambiguity_to_pm` | FAIL | with_skill 返回 blocked 并要求维护者确认，但未将版本歧义明确交回 PM 入口分类；仅说明确认后重新进入 specialist，并禁止 tag/GitHub Release。 |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- 识别 body confirmation 与 target version confirmation 是两个独立凭据。
-- 未加载内部七步流程，未生成候选或页面、未应用 body confirmation、未安装依赖或运行 docs checks。
-- 返回 PM 补齐可追溯维护者版本确认，tag/GitHub Release 零写入。
-- Response SHA-256: `3fa99a9eaae344df5dedfc96344a99f0714e27f624051caec3b94803f803faf9`。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=abdc82e3242ddb2aafb79bd48f7c9ee0c804dc864021f0a687923bb4dc7de750; fixture_sha256=5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5; output_sha256=636d4074587bdf02440cb0b215e63043dedee5cd3943347592a78b9731c4e682; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别版本确认缺失并保持站点文件不变，但越过入口 gate 输出候选正文，且未明确回交 PM。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=abdc82e3242ddb2aafb79bd48f7c9ee0c804dc864021f0a687923bb4dc7de750; fixture_sha256=5f0f5b3062eae992b755cdc1ae78582ce41bb32058f8a49d6044db233c5966f5; output_sha256=e18272dd81cba66d0a638b70dfa29e434cfb8dffbd94cf222dc442d9f459e8f4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别版本确认缺失并保持无写入，但提出可生成待确认 Release Notes 草稿，作为 fresh baseline。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-- baseline 也识别版本未确认并保持站点零写入，且没有运行后置 checks。
-- baseline 越过入口 stop point，把 evidence 加工成完整的版本无关正文；后续只直接要求维护者确认，没有把入口歧义交回 PM owner。
-- Response SHA-256: `b77a596122f0992c1523fc631c981c4c0c9cc1dc9f7392251d8ad72cb5a84377`。
+## Failures and Next Steps
 
-## Failures And Iterations
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- Round 1：with-skill 3/5、baseline 3/5；with-skill 自身两条 FAIL，Behavior FAIL。
-- Round 2：with-skill 5/5、baseline 3/5；Behavior PASS、Coverage FULL。
-- Round 3：澄清正文确认记录不确认目标版本后，with-skill 5/5、fresh baseline 3/5；Behavior PASS、Coverage FULL。
-- Round-1 问题来自错误 assertion 语义，不把失败篡改为 PASS。
-- Round-2 fixture 的确认记录同时绑定 v1.0.0 和标记 confirmed，可能被合理解释为维护者版本确认来源；Round-3 已消除该证据矛盾。
-- 基础设施失败：none。
-
-## Next Steps
-
-- 保持正文确认与目标版本确认的显式分离，并继续以入口 stop point 和 PM return 作为核心回归。
+- stops_before_loading_execution_workflow
+- returns_version_ambiguity_to_pm
+- Next: 入口 gate 通过前不要输出或生成候选正文。
+- Next: 明确将缺少 target release version 维护者确认的问题回交 PM 入口分类。
 
 ## Runtime Artifact Policy
 
-- runtime 页面副本、日志、response 与 verdict 不提交。
-- 本 `comparison.md` 是唯一 durable eval 结果。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

@@ -2,5 +2,15 @@
   "eval_id": "eval-002-missing-entry-basis",
   "eval_name": "missing-entry-basis",
   "workspace_root": "agents/docs/test/docs-agent/evals/workspace/eval-002-missing-entry-basis",
-  "prompt": "帮我把正式文档站建起来。"
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

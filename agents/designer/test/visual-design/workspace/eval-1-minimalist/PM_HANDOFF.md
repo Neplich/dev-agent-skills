@@ -4,7 +4,7 @@ feature_path: minimalist-productivity-app
 feature: minimalist-productivity-app
 parent_feature: N/A
 feature_level: 1
-feature_path_evidence: [{source: PM_HANDOFF.md, reason: 已确认本 eval 的产品范围和 canonical 视觉系统路径。}]
+feature_path_evidence: [{source: PM_HANDOFF.md, reason: 产品负责人已确认产品范围和视觉系统归档路径。}]
 source_documents: [PM_HANDOFF.md]
 scope_decision:
   summary: 为重视简洁与专注的专业用户定义极简生产力应用视觉系统。

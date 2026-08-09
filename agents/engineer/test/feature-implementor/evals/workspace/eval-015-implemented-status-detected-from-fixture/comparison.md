@@ -1,125 +1,61 @@
-# Eval Result: eval-015-implemented-status-detected-from-fixture
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `feature-implementor`
 - Eval: `eval-015-implemented-status-detected-from-fixture`
-- Test case: implemented-status-detected-from-fixture
-- Workspace: `workspace/eval-015-implemented-status-detected-from-fixture`
-- Evaluation date: 2026-08-07
-- Overall result: PASS
-- Behavior result: PASS
-- Coverage result: FULL
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt: docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现在要在这个功能上做下一轮更新。
-- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
-- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
-- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `081f99f1748dae6b1e4b0b232ec7c1df3a484b0c63d868321dc8a1e16a817449` from `agents/engineer/test/feature-implementor/evals/workspace/eval-015-implemented-status-detected-from-fixture`.
+- Fixture SHA-256: `081f99f1748dae6b1e4b0b232ec7c1df3a484b0c63d868321dc8a1e16a817449`
+- Prompt SHA-256: `94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e820a1098a32d64fe76bdf4ec719cd859ebecfdb70fa28be1309b656ec71bd22`
+- Skill overlay SHA-256: `226a387f9ef93d9f4c106e1f240f22e5014d390eeb37da0fd61da0c129ca36ba`
+- Judge schema SHA-256: `923a1c7b31287566dcbc7acd5bf79481560908bbcc5207920a4090de9501eef3`
+- Eval definition SHA-256: `b2cb611a2eb526b32fe7d8233b7af41b5dc9690189d7d476ddf33384f3fb4855`
+- Metadata SHA-256: `b8899bf7ae5f8fcc629e9bed966ceb9612aaea2fc7055363d1e8ea6b2efd4e30`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
-## Assertions
+## Assertion Results
 
-- PASS `reads_active_plan_frontmatter`: transcript item_5 明确执行并输出 IMPLEMENTATION_PLAN.md 内容，包含 frontmatter。
-- PASS `detects_implemented_status`: final 明确指出活动计划路径、status `Implemented` 与 implementation scope `full-refund-flow`。
-- PASS `blocks_direct_overwrite`: final 在处理决定确认前停下并提供选择；with_skill 输入/输出 workspace hash 完全一致，未新增归档或计划文件。
-- PASS `offers_implemented_handling_options`: final 明确提供“归档后新建”和“归档为 Superseded 并填写原因后新建”两项，未提供继续更新当前计划选项。
-- PASS `does_not_implement_code`: final 未声称开始实现；workspace 仅保留原有文档，hash 与 fixture/input manifest 一致。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_active_plan_frontmatter` | NOT_EXERCISED | 输出包含 active_plan_path、active_plan_status 和 implementation_scope；但锁定证据无法证明主动读取 frontmatter 的过程。 |
+| `detects_implemented_status` | PASS | 明确识别 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`、`status: Implemented` 及 `implementation_scope`。 |
+| `blocks_direct_overwrite` | PASS | 明确将流程标记为 blocked，并说明确认前禁止创建新计划；git evidence 显示无变更。 |
+| `offers_implemented_handling_options` | PASS | 明确要求二选一：归档后新建，或归档为 `Superseded` 并说明原因后新建；未提供继续更新当前计划的选项。 |
+| `does_not_implement_code` | PASS | 明确禁止实现代码，且 git head、分支、diff 和 untracked 均无变化。 |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-with_skill transcript、final、JSONL、hash manifest 与 workspace 均核验通过；正确识别 Implemented 活动计划并触发归档门禁。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b; fixture_sha256=081f99f1748dae6b1e4b0b232ec7c1df3a484b0c63d868321dc8a1e16a817449; output_sha256=d5150bc18770616549a8d4ea7fc9a3a8be7347413bb1a56db41c6c75b03cd75d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别已实施的 active plan，阻止继续操作，并要求选择归档处理方式；未发生代码或计划文件变更。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-without_skill 仅作对照：识别了 Implemented，但未按要求停在两选项归档门禁，转而要求代码仓库或更新计划。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b; fixture_sha256=081f99f1748dae6b1e4b0b232ec7c1df3a484b0c63d868321dc8a1e16a817449; output_sha256=33ff5eea391962363c9eb66acc30d564b30539f5a25f9c97960f50cc78c17bff; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅讨论下一轮需求，没有识别或处理已实施的 active plan。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures / Findings
+## Failures and Next Steps
 
 - None.
-- Root cause: None.
+- Next: 用户选择一种归档处理方式后，再创建并确认新的 active plan。
 
-## Next Steps
+## Runtime Artifact Policy
 
-- 后续修改该 skill、fixture 或 assertions 时，使用同样的 paired fresh 流程重跑。
-
-## Runtime Artifacts Policy
-
-- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
-- 长期只保留本 `comparison.md`。
-
-## Historical Results
-
-### Previous comparison record: eval-015-implemented-status-detected-from-fixture
-
-## Evaluation Target
-
-- Agent: `engineer`
-- Skill: `feature-implementor`
-- Eval: `eval-015-implemented-status-detected-from-fixture`
-- Test case: implemented-status-detected-from-fixture
-- Workspace: `workspace/eval-015-implemented-status-detected-from-fixture`
-- Latest result: PARTIAL - the 2026-07-27 fresh validation still covers reading
-- Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-  frontmatter, detecting `Implemented`, and blocking overwrite, but the
-  handling-options assertion changed from three choices to two and has not been
-  rerun.
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Fixture files read before skill use: `README.md`, `eval_metadata.json`,
-  `docs/pm/payment-refund/PRD.md`, `docs/engineer/payment-refund/TRD.md`, and
-  `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`.
-- Fixture summary: the prompt omits plan status; the active plan frontmatter has
-  `status: Implemented` and `implementation_scope: full-refund-flow`.
-
-## Assertions
-
-- PASS `reads_active_plan_frontmatter`: the response derives the completed state
-  from the active plan frontmatter instead of the prompt.
-- PASS `detects_implemented_status`: it reports the active path,
-  `status: Implemented`, and `implementation_scope: full-refund-flow`.
-- PASS `blocks_direct_overwrite`: it stops before creating or overwriting an
-  active plan.
-- NOT RERUN `offers_implemented_handling_options`: the current assertion
-  requires archive-then-create or Superseded-then-create and forbids continuing
-  an `Implemented` plan.
-- PASS `does_not_implement_code`: it makes no code or implementation claim.
-
-## With Skill Behavior
-
-The prior fresh with-skill validator read the Engineer entry and
-feature-implementor planner instructions, inspected the fixture active plan,
-and stopped at the archive gate. Its three-choice result is historical and
-does not validate the current two-choice rule.
-
-## Without Skill Baseline
-
-The prior fresh zero-exposure baseline predates the current two-choice
-assertion and cannot serve as the required fresh baseline for a rerun.
-
-## Failures
-
-- The current two-choice handling assertion has not received fresh with-skill
-  and without-skill validation.
-
-## Next Steps
-
-- Keep the case focused on discovering `Implemented` from frontmatter rather
-  than from a prompt hint.
-- Rerun fresh with-skill and without-skill validation before treating the
-  updated handling assertion as PASS.
-- If stronger differentiation is needed later, reduce rule-level hints in the
-  fixture README and metadata without weakening the real active-plan evidence.
-
-## Runtime Artifacts Policy
-
-- The paired validation returned results in the subagent response and did not
-  create repository runtime files.
-- Runtime transcripts, verdicts, timing files, outputs, diagnostics, run status
-  files, and `comparison.auto.md` must not be committed.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

@@ -7,74 +7,102 @@
       "id": "eval-001-nextjs-web-app",
       "name": "nextjs-web-app",
       "description": "Verifies that deployment-planner handles nextjs-web-app and produces the expected role-specific artifact.",
-      "prompt": "pm-agent 已完成项目级部署入口分类并路由至 deployment-planner；确认 handoff 见 workspace `PM_HANDOFF.md`，本任务为 `feature_path: N/A` 的 repo-wide deployment。我的 Next.js 项目使用 PostgreSQL 数据库和 Redis 缓存。帮我生成 local、docker、helm 三种部署配置。",
+      "scenario": {
+        "persona": "负责 Next.js 服务上线准备的平台工程师",
+        "situation": "服务依赖 PostgreSQL 和 Redis，团队需要一致的本地、容器和 Kubernetes 运行方式",
+        "trigger": "首次部署前需要把现有运行契约转成三类可用部署资产",
+        "goal": "补齐 local、Docker 和 Helm 配置及使用说明",
+        "materials": [
+          "PM_HANDOFF.md",
+          "package.json",
+          "app/api/health/route.ts"
+        ],
+        "constraints": [
+          "沿用 Node.js 22、3000 端口和 npm run start",
+          "Compose 包含应用、PostgreSQL、Redis",
+          "Helm 只部署应用并引用外部依赖",
+          "不生成 CI/CD 或执行部署"
+        ],
+        "success_criteria": [
+          "三类资产均可追溯到现有启动与健康检查契约",
+          "环境变量使用占位值",
+          "交付物覆盖各目标的启动说明"
+        ]
+      },
+      "prompt": "这个 Next.js 服务依赖 PostgreSQL 和 Redis，现有运行约束在 `PM_HANDOFF.md`、`package.json` 和健康检查路由中。请补齐 local、Docker 和 Helm 三种部署配置，方便开发和运维团队直接采用；这次不做实际部署。",
       "workspace": "workspace/eval-001-nextjs-web-app",
       "expected_output": "在 deploy/ 目录下生成三个子目录，每个包含 README.md 和相应的配置文件",
       "assertions": [
         {
-          "id": "deploy_local_readme_md",
-          "description": "deploy/local/README.md 存在",
-          "text": "deploy/local/README.md 存在"
+          "id": "creates_local_runtime_assets",
+          "description": "本地配置反映服务依赖",
+          "text": "`deploy/local/` 包含可执行启动说明或脚本及 `.env.example`，使用 `npm run start`、3000 端口、DATABASE_URL 和 REDIS_URL。"
         },
         {
-          "id": "deploy_local_env_example_database_url_redis_url",
-          "description": "deploy/local/.env.example 包含 DATABASE_URL 和 REDIS_URL",
-          "text": "deploy/local/.env.example 包含 DATABASE_URL 和 REDIS_URL"
+          "id": "creates_complete_compose_topology",
+          "description": "Docker 资产覆盖应用及必需依赖",
+          "text": "`deploy/docker/` 包含 Dockerfile 和 Compose；Compose 编排 app、postgres、redis，并以现有健康路由检查应用。"
         },
         {
-          "id": "deploy_local_start_sh",
-          "description": "deploy/local/start.sh 可执行",
-          "text": "deploy/local/start.sh 可执行"
+          "id": "creates_application_helm_chart",
+          "description": "Helm 只部署应用并注入外部依赖",
+          "text": "`deploy/helm/` 包含 Chart、values 和 Deployment 模板，支持 replicaCount，并通过 values 引用外部 PostgreSQL 与 Redis 地址。"
         },
         {
-          "id": "deploy_docker_dockerfile",
-          "description": "deploy/docker/Dockerfile 存在",
-          "text": "deploy/docker/Dockerfile 存在"
-        },
-        {
-          "id": "deploy_docker_docker_compose_yml_app_postgres_redis",
-          "description": "deploy/docker/docker-compose.yml 包含 app、postgres、redis 三个服务",
-          "text": "deploy/docker/docker-compose.yml 包含 app、postgres、redis 三个服务"
-        },
-        {
-          "id": "deploy_helm_chart_yaml",
-          "description": "deploy/helm/Chart.yaml 存在",
-          "text": "deploy/helm/Chart.yaml 存在"
-        },
-        {
-          "id": "deploy_helm_values_yaml_replicacount",
-          "description": "deploy/helm/values.yaml 包含 replicaCount 配置",
-          "text": "deploy/helm/values.yaml 包含 replicaCount 配置"
-        },
-        {
-          "id": "deploy_helm_templates_deployment_yaml",
-          "description": "deploy/helm/templates/deployment.yaml 存在",
-          "text": "deploy/helm/templates/deployment.yaml 存在"
+          "id": "documents_each_target_without_delivery",
+          "description": "三类目标有使用说明且不执行部署",
+          "text": "local、Docker、Helm 均有与仓库契约一致的说明；不新增 CI/CD、不保存生产凭据、不声称已部署。"
         }
       ]
     },
     {
       "id": "eval-002-python-api-only",
       "name": "python-api-only",
-      "description": "Verifies that deployment-planner handles python-api-only and produces the expected role-specific artifact.",
-      "prompt": "我的 FastAPI 项目只需要 API 服务，没有数据库或其他持久化依赖。请生成部署配置。",
+      "description": "为已确认目标矩阵的 FastAPI API-only 服务生成可直接使用的部署资产。",
+      "scenario": {
+        "persona": "FastAPI 服务负责人",
+        "situation": "API-only 服务准备建立首次标准部署资产",
+        "trigger": "团队需要统一本地、Docker 与 Kubernetes/Helm 运行方式",
+        "goal": "生成确认目标矩阵对应的可用部署配置",
+        "materials": [
+          "PM_HANDOFF.md",
+          "pyproject.toml",
+          "app/main.py"
+        ],
+        "constraints": [
+          "服务没有数据库、Redis、migration 或其他持久化依赖",
+          "不创建 CI/CD",
+          "不执行实际发布"
+        ],
+        "success_criteria": [
+          "本地、Docker 和 Helm 三个目标均有可使用的资产",
+          "部署拓扑只包含 API 服务",
+          "入口、端口和健康检查与源码一致"
+        ]
+      },
+      "prompt": "这个 FastAPI API 服务准备建立标准部署配置，PM 已把范围写在 `PM_HANDOFF.md`，当前入口和依赖也在仓库里。请按已确认范围补齐部署资产，方便开发和运维团队直接使用。",
       "workspace": "workspace/eval-002-python-api-only",
-      "expected_output": "生成简化的部署配置，不包含数据库相关内容",
+      "expected_output": "为已确认的 local、Docker 和 Helm 目标生成 API-only 部署资产，保持运行契约与源码一致且不引入持久化依赖或 CI/CD。",
       "assertions": [
         {
-          "id": "deploy_local_env_example_database_url",
-          "description": "deploy/local/.env.example 不包含 DATABASE_URL",
-          "text": "deploy/local/.env.example 不包含 DATABASE_URL"
+          "id": "uses_confirmed_target_matrix",
+          "description": "只生成已确认的部署目标",
+          "text": "生成 local、Docker 和 Helm 三类 handoff 已确认的部署资产，不自行增加其他目标。"
         },
         {
-          "id": "deploy_docker_docker_compose_yml_app",
-          "description": "deploy/docker/docker-compose.yml 只有 app 服务",
-          "text": "deploy/docker/docker-compose.yml 只有 app 服务"
+          "id": "keeps_api_only_topology",
+          "description": "保持 API-only 服务拓扑",
+          "text": "部署配置不虚构数据库、Redis、migration、`DATABASE_URL` 或额外服务，Compose 只编排 API 服务。"
         },
         {
-          "id": "deploy_local_start_sh",
-          "description": "deploy/local/start.sh 不包含数据库初始化步骤",
-          "text": "deploy/local/start.sh 不包含数据库初始化步骤"
+          "id": "uses_confirmed_runtime_contract",
+          "description": "部署参数与服务实现一致",
+          "text": "本地启动、容器与 Helm 资产使用 `uvicorn app.main:app`、8000 端口，并以现有 `/health` 端点配置健康检查。"
+        },
+        {
+          "id": "stays_within_deployment_scope",
+          "description": "不越过部署规划范围",
+          "text": "不创建 CI/CD 配置，不执行实际镜像发布或环境部署。"
         }
       ]
     },
@@ -82,7 +110,27 @@
       "id": "eval-003-mapped-doc-deployment",
       "name": "mapped-doc-deployment",
       "description": "验证部署规划通过 change-map 定位运行时文档，并用代码配置核证未验证的端口声明。",
-      "prompt": "为 src/runtime/server.conf 中的服务生成最小容器部署建议，确认应暴露的服务端口。",
+      "scenario": {
+        "persona": "负责服务容器化的平台工程师",
+        "situation": "正式运行时文档记录的端口可能落后于实际配置",
+        "trigger": "编写最小容器部署建议前必须确认应暴露的端口",
+        "goal": "以当前代码配置形成准确的容器部署建议并记录文档差异",
+        "materials": [
+          "src/runtime/server.conf",
+          "docs/site/standards/change-map.yaml",
+          "docs/site/api/runtime-server.md"
+        ],
+        "constraints": [
+          "正式文档尚未完成版本核验",
+          "只考虑容器部署，不扩展本地或 Helm 目标"
+        ],
+        "success_criteria": [
+          "通过变更映射读取相关运行时说明",
+          "以 server.conf 确认端口",
+          "解释端口差异的部署影响"
+        ]
+      },
+      "prompt": "请为 `src/runtime/server.conf` 中的服务整理最小容器部署建议。仓库有变更映射和运行时说明，请核对后确认容器真正应该暴露的端口。",
       "workspace": "workspace/eval-003-mapped-doc-deployment",
       "expected_output": "基于映射文档定位、以代码配置确认端口的部署建议和文档差异记录。",
       "assertions": [
@@ -112,13 +160,43 @@
       "id": "eval-004-docs-build-variant-matrix",
       "name": "docs-build-variant-matrix",
       "description": "文档站部署单元完整性门禁枚举全部构建变体。",
-      "prompt": "根据 evidence.md 评估文档站各构建变体的部署安排。",
-      "expected_output": "逐一列出 Public、Internal 与 Preview 的 build/image/Compose/Helm/health/runtime 处置。",
+      "scenario": {
+        "persona": "负责文档站部署完整性的运维架构师",
+        "situation": "宿主同时提供 Public、Internal 和 Preview 三种构建变体，但各自部署覆盖度不同",
+        "trigger": "正式文档同步前需要知道每个变体是否有完整运行路径",
+        "goal": "形成逐变体的部署单元矩阵和缺口处置",
+        "materials": [
+          "docs-build-inventory.md"
+        ],
+        "constraints": [
+          "Preview 非生产但仍需明确替代托管或延期决定",
+          "本阶段不编写 CI 工作流"
+        ],
+        "success_criteria": [
+          "三个变体均被单独列出",
+          "逐项核对构建、镜像、Compose、Helm、健康检查和入口",
+          "为缺口标记明确处置并交给后续流水线工作"
+        ]
+      },
+      "prompt": "文档站当前有哪些构建变体以及部署覆盖情况，已经整理在 `docs-build-inventory.md`。请逐一评估它们的部署安排和缺口，给出完整的部署单元矩阵。",
       "workspace": "workspace/eval-004-docs-build-variant-matrix",
+      "expected_output": "逐一列出 Public、Internal 与 Preview 的 build/image/Compose/Helm/health/runtime 处置。",
       "assertions": [
-        {"id": "enumerates_all_docs_variants", "description": "枚举全部文档构建变体", "text": "矩阵必须包含 Public、Internal 和宿主 Preview，不能只覆盖 Public/Internal 后宣称完整。"},
-        {"id": "covers_deployment_unit_chain", "description": "覆盖部署单元链路", "text": "每个变体核对 build target/context/static entry、镜像单元、Compose、Deployment/Service/Ingress 或 Gateway、values、健康检查和运行入口。"},
-        {"id": "hands_units_to_cicd", "description": "将镜像单元交给 CI/CD", "text": "为每个变体记录 integrated/alternative/deferred/blocked 处置，并把确认镜像单元交给 cicd-bootstrap，不在本 skill 写 workflow。"}
+        {
+          "id": "enumerates_all_docs_variants",
+          "description": "枚举全部文档构建变体",
+          "text": "矩阵必须包含 Public、Internal 和宿主 Preview，不能只覆盖 Public/Internal 后宣称完整。"
+        },
+        {
+          "id": "covers_deployment_unit_chain",
+          "description": "覆盖部署单元链路",
+          "text": "每个变体核对 build target/context/static entry、镜像单元、Compose、Deployment/Service/Ingress 或 Gateway、values、健康检查和运行入口。"
+        },
+        {
+          "id": "hands_units_to_cicd",
+          "description": "将镜像单元交给 CI/CD",
+          "text": "为每个变体记录 integrated/alternative/deferred/blocked 处置，并把确认镜像单元交给 cicd-bootstrap，不在本 skill 写 workflow。"
+        }
       ]
     }
   ]

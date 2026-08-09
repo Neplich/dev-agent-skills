@@ -1,6 +1,6 @@
 ---
 name: ui-ux-design
-description: "Internal design specialist—not a direct entry point. Invoked by designer-agent after pm-agent handoff to produce UX flows, page structures, journey maps, and ASCII prototypes from confirmed PM/design scope."
+description: "Produce UX flows, page structures, journey maps, screen definitions, and ASCII prototypes from confirmed product scope. Use after designer-agent routes a UI/UX delivery; an unconfirmed direct request returns to the design entry gate."
 visibility: internal
 ---
 
@@ -21,6 +21,16 @@ Forbidden actions:
 
 If the input includes a completed PM spec, treat it as design input only, not as permission to implement.
 
+Make that boundary explicit in the delivered design document and final
+handoff: the PM spec authorizes design input only, no code or implementation.
+After writing `docs/design/{feature_path}/ui-ux-spec.md`, record the design path
+and remaining implementation scope. Direct the next step to `engineer-agent`
+only when implementation continuation was requested or already authorized;
+otherwise stop at the completed design result without activating engineering.
+When change-map discovery finds a required formal page marked
+`last_verified_version: unverified`, state that it is low-trust and verify its
+claims against code before using it as design input.
+
 When updating an existing design doc, the body states only the current design:
 superseded layouts, journeys, or patterns are rewritten, not kept with
 "deprecated" / "superseded" annotations. Removals are recorded in the doc
@@ -36,7 +46,7 @@ without PM handoff context or a confirmed `feature_path`, return the request to
 `pm-agent` for classification.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Feature Path Gate
 
@@ -58,7 +68,7 @@ yourself.
 
 ### Step 1: Gather Requirements
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 1. **Read PM documents** from `docs/pm/{feature_path}/`:
    - PRD: feature requirements, user stories, use cases, target users, business goals, brand tone

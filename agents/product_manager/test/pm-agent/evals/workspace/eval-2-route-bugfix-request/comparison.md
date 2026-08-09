@@ -1,64 +1,60 @@
-# Eval Result: eval-002-route-bugfix-request
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `pm-agent`
 - Eval: `eval-002-route-bugfix-request`
-- Workspace: `eval-2-route-bugfix-request`
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Fixture version: current tracked fixture at the start of the 2026-08-07 run.
-- Fresh run: 2026-08-07 (Asia/Shanghai).
-- Candidate and independent judge: `gpt-5.6-luna`, `model_reasoning_effort="medium"`.
-- Isolation: identical raw prompt and fixture snapshot; all baseline roots were snapshotted in memory and destroyed before any with-skill root; all with-skill roots were destroyed before judging; HOME/CODEX_HOME values matched per eval and were reset for every lane; only `auth.json` was copied into CODEX_HOME.
-- Runtime evidence: `tmp/eval-runs/issue-238-pm/fresh-20260807/pm-agent/eval-002-route-bugfix-request/`.
-
-## Latest result:
-
-- Behavior result: PASS — determined only from the with-skill lane by an independent judge.
-- Coverage result: FULL — 3/3 with-skill assertion scenarios were exercised.
-Overall result: PASS
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-2-route-bugfix-request`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `3622b3dfdb9bef50766ff22e70a5639483865b84fa39f8a64f027bc492debda1`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0b60a8fdef1023247fb430f4647e03f742c09fbfdb17e32a3a03dc6059ae9e02`
+- Skill overlay SHA-256: `7093347dda9d009dc74c5bd9b37b3d0d8b980466e82f7a4efbacd767a0e9fa19`
+- Judge schema SHA-256: `00a01c5f9432a18e723abe9a7b1a555e5a2a41dc2c36a101ed91497434d1c7f4`
+- Eval definition SHA-256: `fe6d213ce4edb254dae39c5fefca87002824c8356e6ca05dfa6b8b92c57d378d`
+- Metadata SHA-256: `163386e80d321ea48ddfd244853e278bc70ea13a08cdc68ac01f85bf3ba7240f`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
 
 ## Assertion Results
 
-- `request_type_bug_report`: with-skill **PASS**; without-skill **FAIL** — with_skill 明确分类为 `bug_report`；without_skill 仅称为登录/鉴权模块前端缺陷，未使用要求的 `bug_report` 分类。
-- `expectation_first`: with-skill **PASS**; without-skill **FAIL** — with_skill 明确要求先确认 token 过期后的正确预期，并核对 PRD/TRD 或登录流程文档；without_skill 未要求对照 approved PRD/TRD 或等价产品预期。
-- `debugger_handoff_after_confirmation`: with-skill **PASS**; without-skill **FAIL** — with_skill 明确表示只有确认是实现偏差后才交给 `engineer-agent` 调试；without_skill 直接建议交给前端登录/鉴权负责人，未设置“确认实现偏差后”门槛。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `request_type_bug_report` | PASS | with_skill 明确将 request_type 设为 bug_report。 |
+| `expectation_first` | FAIL | 候选输出明确表示工作区没有 PRD/TRD 或批准的产品预期，且未展示对等产品预期确认；仍以用户故障描述形成 confirmed_scope。 |
+| `debugger_handoff_after_confirmation` | FAIL | 候选输出明确声称已完成 Engineer handoff，但同时确认没有批准预期文档，因此没有证据表明 handoff 发生在预期确认之后。 |
 
 ## With-Skill Behavior
 
-最终回复完整满足三项 PM 路由断言：分类为 bug_report，先确认 approved PRD/TRD 预期及复现证据，确认实现偏差后再交给 Engineer/debugger。status 显示无 added/removed/modified，trace 仅读取技能与文件，没有外部 mutation。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3622b3dfdb9bef50766ff22e70a5639483865b84fa39f8a64f027bc492debda1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=191ea45ef7d08b149f50f8aa1f129d10d1edb8dfa2f6f24b24c2eab548fdaedf; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确完成 bug_report 分类，但在缺少产品预期文档时继续完成 Engineer handoff，未满足先确认预期再 handoff 的顺序要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-回复提供了部分排查信息，但未按要求进行稳定的 bug_report 分类，未先核对 approved PRD/TRD 预期，并在确认实现偏差前直接提出工程负责人路由。status 显示无文件变更；trace 仅执行读取命令。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3622b3dfdb9bef50766ff22e70a5639483865b84fa39f8a64f027bc492debda1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=3d808516c2caaebeba0cadc71f80b9cb317133034dd6d6485a37e5579685a1fa; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别到工作区缺少源码并停止，未进行 bug_report 分类或 Engineer handoff。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-The baseline is comparison evidence only; its outcome does not affect `Overall result`.
+## Failures and Next Steps
 
-## Failures
+- with_skill 在缺少 approved PRD/TRD 或等价产品预期时仍宣称完成 Engineer handoff。
+- with_skill 未先确认正确产品行为。
+- Next: None.
 
-- None.
+## Runtime Artifact Policy
 
-## Coverage Gaps
-
-- None.
-
-## Blockers
-
-- None.
-
-## Historical Result (Pre-#234)
-
-- The previous durable result recorded Behavior **PASS**, Coverage **FULL**, and Overall **BLOCKED** after issue #234 identified prompt/fixture leakage.
-- That pre-remediation result is retained only as history and is superseded by this strict fresh run.
-
-## Next Steps
-
-- Keep this case as a regression gate and rerun it after changes to `pm-agent`, its routing contract, or this fixture.
-
-## Runtime Artifacts Policy
-
-- Candidate responses, traces, status manifests, isolation records, and judge evidence remain under the gitignored runtime path above and are not committed.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

@@ -2,7 +2,6 @@
   "eval_id": "eval-001-sync-feature-api",
   "eval_name": "nested-api-backfill-scope-confirmation",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api",
-  "prompt": "维护者通过 `pm-handoff.md` 请求为现有文档站回填 API，`backfill-request.md` 目前只授权有限范围的前期梳理。请读取功能目录、现有站点记录、路由、schema、handler 与 contract tests，提出第一批有限范围供维护者确认。",
   "fixture_context": [
     "pm-handoff.md",
     "backfill-request.md",
@@ -20,5 +19,21 @@
     "docs/site/api/identity",
     "docs/site/api/billing",
     "sync-report.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "git_topology": {
+    "base_ref": "docs-fixture-base",
+    "target_ref": "docs-fixture-target"
+  },
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

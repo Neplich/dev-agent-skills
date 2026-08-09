@@ -1,7 +1,7 @@
 image:
   repository: registry.example/app
   tag: v2.0.0
-  digest: sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+  digest: sha256:d72b8095defb5aed9affa64bc68b747089d2eab27ddf36edb6ee70a3cdd167e4
   pullPolicy: IfNotPresent
 imagePullSecrets: []
 service:

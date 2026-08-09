@@ -1,105 +1,61 @@
-# Eval Result: eval-005-existing-behavior-change-needs-pm
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `feature-implementor`
 - Eval: `eval-005-existing-behavior-change-needs-pm`
-- Test case: existing-behavior-change-needs-pm
-- Workspace: `workspace/eval-005-existing-behavior-change-needs-pm`
-- Evaluation date: 2026-08-07
-- Overall result: FAIL
-- Behavior result: FAIL
-- Coverage result: FULL
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt: docs/pm/notifications/PRD.md 和 docs/engineer/notifications/TRD.md 都规定 active 列表排除 archived。现在请把 active 列表改成包含 archived；这是一个很小的单文件改动。
-- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
-- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
-- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/feature-implementor/evals/workspace/eval-005-existing-behavior-change-needs-pm`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e820a1098a32d64fe76bdf4ec719cd859ebecfdb70fa28be1309b656ec71bd22`
+- Skill overlay SHA-256: `226a387f9ef93d9f4c106e1f240f22e5014d390eeb37da0fd61da0c129ca36ba`
+- Judge schema SHA-256: `c708196a2509f10ac671d636aa20ae05a664bdf496710d323db28c9149713561`
+- Eval definition SHA-256: `a4e07ef6b983fa7473b530066460795acade377b6663bfa81c7266e9bd35ec21`
+- Metadata SHA-256: `4d7d33b92b764b2a122613cfa3d9e97d80ead9fb721df6a2df123d3fcb35534c`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-## Assertions
+## Assertion Results
 
-- FAIL `checks_approved_behavior`: 未明确指出 active 排除 archived 的既有预期及本请求会改变该预期。
-- PASS `stops_before_implementation_plan`: 未创建或更新 IMPLEMENTATION_PLAN.md；workspace 中不存在该文件。
-- FAIL `hands_off_to_pm_existing_update`: 要求 PM 更新范围，但未明确指定 `pm-agent:idea-to-spec` 的 `existing-project-update` 路径。
-- FAIL `blocks_e2e_expected_behavior_change`: 未说明在 PRD/决策更新、TRD 同步和实施计划确认前阻止新的 E2E TC 或验收预期。
-- PASS `does_not_implement_directly`: 未声称修改代码、测试或完成实现。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `checks_approved_behavior` | PASS | with_skill 明确判断这是对已批准行为的 expectation change，而非可直接处理的小改动。 |
+| `stops_before_implementation_plan` | PASS | with_skill 明确列出不得创建或更新 IMPLEMENTATION_PLAN.md。 |
+| `hands_off_to_pm_existing_update` | PASS | with_skill 要求返回 pm-agent:idea-to-spec，走 existing-project-update，并在确认后同步更新 TRD。 |
+| `blocks_e2e_expected_behavior_change` | PASS | with_skill 明确禁止新增 E2E 预期，并将 E2E TC 创建或更新阻断至计划确认后。 |
+| `does_not_implement_directly` | PASS | with_skill 未声称修改代码、更新测试或完成实现，且明确将代码和测试修改列为禁止动作。 |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-正确停止实现，但未完整输出预期的行为变更判断、精确 PM 路由和 E2E 阻断条件。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=08b3412d78bfd7f95baddb19e3e7c06d1772aa5b6546ec97909eda2d17bf3a42; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为已批准行为变更，交回 PM existing-project-update，并阻断实施、测试和 E2E 预期更新。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-仅因工作区为空停止，未覆盖本题的行为变更门禁；仅作对照。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=87f355d69d7b270c9fa670cad132bb3c17cc0914b927f203d41a964b60135654; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 停留在缺少项目文件的代码级分析，未识别并执行既定 PM 对齐流程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures / Findings
-
-- checks_approved_behavior
-- hands_off_to_pm_existing_update
-- blocks_e2e_expected_behavior_change
-- Root cause: 遇到缺失 PRD/TRD 后退化为一般性缺文件阻断，未按题设输出完整的 approved behavior 变更与 PM existing-project-update 门禁。
-
-## Next Steps
-
-- 修复上述 assertion 对应的 skill 行为或 eval 输入问题后，使用同样的 paired fresh 流程重跑。
-
-## Runtime Artifacts Policy
-
-- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
-- 长期只保留本 `comparison.md`。
-
-## Historical Results
-
-### Previous comparison record: eval-005-existing-behavior-change-needs-pm
-
-## Evaluation Target
-
-- Agent: `engineer`
-- Skill: `feature-implementor`
-- Eval: `eval-005-existing-behavior-change-needs-pm`
-- Test case: existing-behavior-change-needs-pm
-- Workspace: `workspace/eval-005-existing-behavior-change-needs-pm`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Fixture files read before skill use: `eval_metadata.json` and the `eval-005-existing-behavior-change-needs-pm` item in `evals.json`.
-- Fixture note: this workspace stores metadata only; the prompt declares PRD/TRD currently require active lists to exclude archived items.
-- Expected output: recognize the requested archived-in-active behavior changes approved expectations, stop before `IMPLEMENTATION_PLAN.md`, return to `pm-agent:idea-to-spec` using `existing-project-update`, then require TRD sync before implementation.
-
-## Assertions
-
-- PASS `checks_approved_behavior`: the alignment gate classifies expectation changes before planning.
-- PASS `stops_before_implementation_plan`: behavior changes that need PM updates do not create or update `docs/engineer/notifications/IMPLEMENTATION_PLAN.md`.
-- PASS `hands_off_to_pm_existing_update`: approved expectation changes return to `pm-agent:idea-to-spec` with `existing-project-update`.
-- PASS `blocks_e2e_expected_behavior_change`: QA E2E expectations cannot be updated until PRD/product decision update, TRD sync, and implementation plan confirmation.
-- PASS `does_not_implement_directly`: the skill does not code, test, or claim implementation when scope is unaligned.
-
-## With Skill Behavior
-
-Fresh with-skill validation confirmed the PM handoff gate is still meaningful after direct specialist updates: confirmed PRD/TRD inputs do not permit implementation when the requested behavior contradicts them. The current skill should classify archived items in the active list as an approved-expectation change, stop before planning, route the request to `pm-agent:idea-to-spec` through `existing-project-update`, and require synchronized TRD updates before any `feature-implementor` plan or QA E2E expected behavior update.
-
-## Without Skill Baseline
-
-The fresh without-skill baseline was summarized before reading skill docs. A generic worker may over-focus on the prompt's "small single-file change" framing and either propose the code/test edit or write a lightweight plan. It would not reliably treat the request as a product expectation change, block `IMPLEMENTATION_PLAN.md`, or require PM update plus later TRD sync before E2E changes.
-
-## Failures
+## Failures and Next Steps
 
 - None.
+- Next: None.
 
-## Next Steps
+## Runtime Artifact Policy
 
-- Keep this eval focused on stopping small existing-behavior changes that alter approved PM/TRD expectations.
-
-## Runtime Artifacts Policy
-
-- This validation did not create runtime artifacts.
-- Runtime transcripts, verdicts, timing files, outputs, diagnostics, run status files, and `comparison.auto.md` must not be committed.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

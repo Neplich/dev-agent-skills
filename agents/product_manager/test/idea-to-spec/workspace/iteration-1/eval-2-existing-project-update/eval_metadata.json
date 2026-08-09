@@ -2,12 +2,6 @@
   "eval_id": "eval-002-existing-project-update",
   "eval_name": "existing-project-update",
   "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update",
-  "prompt": "当前系统已经有一版通知中心的 PRD/TRD，现在要把提醒策略从轮询改成事件驱动。请分析影响范围，更新设计思路，并告诉我应该改哪些文档。",
-  "with_skill_outputs": [
-    "docs/pm/notification-center/DECISIONS.md",
-    "docs/pm/notification-center/PRD.md",
-    "docs/engineer/notification-center/TRD.md"
-  ],
   "assertions": [
     {
       "id": "decision_history_handled",
@@ -21,5 +15,16 @@
         "Start with polling instead of websocket delivery for v1"
       ]
     }
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/engineer/skills/trd-gen"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

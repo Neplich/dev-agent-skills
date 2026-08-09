@@ -2,5 +2,18 @@
   "eval_id": "eval-003-milestone-focused",
   "eval_name": "milestone-focused",
   "workspace_root": "agents/product_manager/test/github-reader/evals/workspace/eval-003-milestone-focused",
-  "prompt": "看一下 facebook/react 最近的 milestone，哪个进度最慢或者已经逾期了？"
+  "fixture_context": [
+    "github-evidence/milestones-export.json"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

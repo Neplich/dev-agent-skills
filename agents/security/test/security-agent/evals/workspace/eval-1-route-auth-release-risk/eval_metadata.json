@@ -2,11 +2,23 @@
   "eval_id": "eval-001-route-auth-release-risk",
   "eval_name": "route-auth-release-risk",
   "workspace_root": "agents/security/test/security-agent/evals/workspace/eval-1-route-auth-release-risk",
-  "prompt": "pm-agent 已完成入口分类，相关材料见 workspace `PM_HANDOFF.md` 与 docs/pm/auth-model/PRD.md。用户原始诉求：登录和权限模型重构准备上线，重点担心 admin 越权，同时也想知道依赖有没有漏洞。请处理这次安全审查请求。",
   "fixture_context": [
     "PM_HANDOFF.md",
     "docs/pm/auth-model/PRD.md",
     "docs/security/auth-model.md",
     "package.json"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/security/skills/authz-reviewer",
+    "agents/security/skills/dependency-risk-auditor"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

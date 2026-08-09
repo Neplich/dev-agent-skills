@@ -1,0 +1,8 @@
+public:
+  enabled: true
+  host: docs.atlas.example
+  tlsSecret: docs-atlas-tls
+internal:
+  enabled: true
+  networkPolicy: private-only
+  authentication: oidc

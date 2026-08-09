@@ -23,4 +23,4 @@ required_output: 简化的 local、Docker 和 Helm 配置
 blockers_risks: []
 ```
 
-服务入口为 `uvicorn app.main:app --host 0.0.0.0 --port 8000`。所有部署目标都不得增加数据库服务、`DATABASE_URL`、Redis 或初始化步骤。
+`app/main.py` 是唯一服务入口，`/health` 是现有健康检查端点。

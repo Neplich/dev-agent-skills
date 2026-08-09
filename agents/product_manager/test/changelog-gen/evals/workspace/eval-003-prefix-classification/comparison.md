@@ -1,119 +1,69 @@
-# Eval Result: eval-003-prefix-classification
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `changelog-gen`
 - Eval: `eval-003-prefix-classification`
-- Test case: `prefix-classification`
-- Prompt:
 
-> 以下是一批 PR 标题和正文，帮我把它们分类到 Keep a Changelog 的各个章节（Added/Changed/Fixed/Deprecated/Removed/Security），并按格式输出，跳过不需要出现在 changelog 的条目。注意：docs/test/ci 不能只按前缀跳过，需要根据正文判断是否影响用户可见能力、skill 行为、eval 契约、release workflow、installation 或协作边界。
->
-> - feat(auth): add OAuth2 login support (#101)
->   Body: Adds a new OAuth2 login flow for users.
-> - fix: resolve crash when token expires (#102)
->   Body: Fixes a user-visible crash.
-> - chore(deps): bump requests from 2.28 to 2.31 (#103)
->   Body: Dependency maintenance only.
-> - build(deps): bump vite from 5.0.0 to 5.0.1 (#114)
->   Body: Dependency maintenance only.
-> - perf: reduce API response time by caching (#104)
->   Body: Improves response time.
-> - feat!: redesign plugin configuration API (#105)
->   Body: BREAKING CHANGE: plugin configuration fields changed.
-> - docs: update release notes generator publishing workflow (#106)
->   Body: Adds GitHub draft release, changelog preflight, tag retargeting, and publishing review rules used by release owners.
-> - test: tighten changelog-gen eval contract (#107)
->   Body: Updates eval assertions and durable comparison requirements so docs/test/ci PRs are judged by semantic impact.
-> - ci: require repository and eval contract checks before release (#108)
->   Body: Changes required release gates for this skill marketplace.
-> - docs: fix typo in README heading (#109)
->   Body: Copyediting only; no behavior or workflow change.
-> - ci: tune cache restore key (#110)
->   Body: Internal cache maintenance only; no release gate change.
-> - fix(ui): correct button alignment on mobile (#111)
->   Body: Fixes visible UI layout.
-> - remove: drop Python 3.7 support (#112)
->   Body: Removes unsupported runtime.
-> - security: patch XSS vulnerability in template renderer (#113)
->   Body: Fixes a security vulnerability.
+## Current Result
 
-- Expected output:
-
-> Added: feat items. Changed: perf items plus docs/test/ci items with semantic impact. Fixed: fix items. Removed: remove items. Security: security items. 跳过 chore(deps)、build(deps)、formatting-only docs 和 cache-only ci。Breaking change (#105) 带 ⚠️ BREAKING 前缀。
-
-## Test Set / Fresh Run
-
-- Eval schema: `evals.json` v1.0。
-- Fixture manifest: `4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`（0 个可见文件；两侧逐字节一致）。
-- Repository HEAD: `47adbbc9`。
-- Fresh run window: 2026-08-07 00:58–01:14（Asia/Shanghai）。
-- Runtime: 3 个独立会话，均为 `gpt-5.6-luna`、`model_reasoning_effort=medium`：fresh without-skill、fresh with-skill、fresh judge。
-- Controlled variable: 两个 candidate 使用完全相同的 prompt、fixture manifest、HOME/CODEX_HOME 目录形态与同一份 `auth.json`；唯一变量是 with-skill lane 安装并加载目标 specialist skill。
-- Physical isolation: 按 skill 先完成并销毁全部 baseline 随机顶层根，再创建 with-skill 根；32 个 candidate 全部完成并销毁后才创建第三套 judge 根。
-- Candidate visibility: lane 中未放入 `eval_metadata.json`、`evals.json`、`expected_output`、assertions、历史 `comparison.md`、README 脚手架或 judge 材料；泄漏扫描为 0 命中。
-- External data rule: 实时实体因 GitHub 认证、网络或当时集合缺失而不可得时，相关 assertion 记为 `NOT EXERCISED`，只影响 Coverage，不伪造成 Behavior 的 PASS/FAIL。
-
-## Latest Result
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-003-prefix-classification`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `53f035563de038125d09b7a8997f87e900d099e00223f427a7c690e11ebbe449`
+- Skill overlay SHA-256: `9534a5bf71391ac48cfd6a48ca8f80e93da520d6ea9d2026741fd864da0cb720`
+- Judge schema SHA-256: `cc05e28bb9aed099804431e1cee55bda0cec7614cc8c780d6f8ad4d50c137367`
+- Eval definition SHA-256: `02c7a6bcc66679fa2f47687ffd7cdba26fff303adab62c4e3435b49f28878db8`
+- Metadata SHA-256: `7c295252d061c5f27afb73a5d2bc7ec230ac3e0e3896f6109062c7b18ee9cf2e`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
-- Coverage result: **FULL**
-- Overall result: PASS
-- With-skill summary: with_skill 加载了 changelog-gen（status.json skill_load_hits=2；transcript 先读取 SKILL.md），输出完整且正确分类所有条目，并准确跳过三类维护项；fixture-manifest 未被写入。
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
-## Historical Contract Note
+## Assertion Results
 
-- 旧 durable 结果因 issue #234 的 prompt/fixture 泄漏修复或后续 assertion 增强而标记为 `BLOCKED`。本文件已由当前契约下的 fresh paired run 与独立 judge 结论覆盖。
-- 本轮没有复用历史 baseline、candidate、verdict 或旧结论；without-skill baseline 仅作行为对照，不参与 with-skill 的 Behavior/Coverage 判定。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `feat_auth_added_add_oauth2_login_support` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; no Added entry was produced. |
+| `fix_fixed` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; no Fixed section was produced. |
+| `chore_deps` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; dependency handling was not exercised. |
+| `build_deps_skipped` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; dependency handling was not exercised. |
+| `perf_changed` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; no Changed section was produced. |
+| `feat_added_breaking` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; breaking-change handling was not exercised. |
+| `docs_release_workflow_changed` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; release-workflow handling was not exercised. |
+| `test_release_acceptance_changed` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; release-acceptance handling was not exercised. |
+| `ci_release_gate_changed` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; CI release-gate handling was not exercised. |
+| `docs_typo_skipped` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; docs filtering was not exercised. |
+| `ci_cache_skipped` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; CI filtering was not exercised. |
+| `remove_removed` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; no Removed section was produced. |
+| `security_security` | NOT_EXERCISED | With-skill output requests the target mode before generating the changelog; no Security section was produced. |
 
 ## With-Skill Behavior
 
-with_skill 加载了 changelog-gen（status.json skill_load_hits=2；transcript 先读取 SKILL.md），输出完整且正确分类所有条目，并准确跳过三类维护项；fixture-manifest 未被写入。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=060c6a19e40c3ccd8dc27ae59ef3a4cf3e1384496e5d74fde7382b78e8a631ff; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly paused to request the required target changelog mode; content transformation was not yet exercised.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-without_skill 未加载 skill（skill_load_hits=0），作为对照其输出遗漏了若干标题清洗/格式细节，但不影响 with_skill 判定。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=a1708dc2c3a196376850cc13ad0c6d6b8bd1405d55e2464c05b91a2225f1001b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced a complete Keep a Changelog-style result covering the requested user-visible changes and exclusions.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Assertion Review
+## Failures and Next Steps
 
-| Assertion | With skill | Evidence / reason | Without-skill comparison |
-| --- | --- | --- | --- |
-| `feat_auth_added_add_oauth2_login_support` | **PASS** | with_skill candidate.md 将 #101 放入 Added，并输出“**auth:** Add OAuth2 login support”。 | without_skill 也将 #101 放入 Added，但使用中文标题。 |
-| `fix_fixed` | **PASS** | with_skill candidate.md 将 #102 放入 Fixed，输出“Resolve crash when token expires”。 | without_skill 也将 #102 放入 Fixed。 |
-| `chore_deps` | **PASS** | with_skill 明确写入“已跳过：依赖维护（#103、#114）”，且正文无 #103 条目。 | without_skill 未输出 #103。 |
-| `build_deps_skipped` | **PASS** | with_skill 明确写入“已跳过：依赖维护（#103、#114）”，且正文无 #114 条目。 | without_skill 未输出 #114。 |
-| `perf_changed` | **PASS** | with_skill 将 #104 放入 Changed，输出“Reduce API response time by caching”。 | without_skill 也将 #104 放入 Changed。 |
-| `feat_added_breaking` | **PASS** | with_skill 将 #105 放入 Added，并以“⚠️ **BREAKING:**”前缀标记。 | without_skill 将 #105 错放入 Changed，且未使用要求的 BREAKING 前缀。 |
-| `docs_release_workflow_changed` | **PASS** | with_skill 将 #106 放入 Changed；其 SKILL.md 明确要求依据 release workflow、changelog preflight 等正文语义纳入。 | without_skill 也将 #106 放入 Changed。 |
-| `test_eval_contract_changed` | **PASS** | with_skill 将 #107 放入 Changed；transcript 中加载的 SKILL.md 明确覆盖 eval contract/durable comparison 语义。 | without_skill 也将 #107 放入 Changed。 |
-| `ci_release_gate_changed` | **PASS** | with_skill 将 #108 放入 Changed；其 SKILL.md 明确要求 release gates、required checks 等语义纳入。 | without_skill 也将 #108 放入 Changed。 |
-| `docs_typo_skipped` | **PASS** | with_skill 明确写入“README 拼写修正（#109）”已跳过，且无 #109 条目。 | without_skill 未输出 #109。 |
-| `ci_cache_skipped` | **PASS** | with_skill 明确写入“CI 缓存维护（#110）”已跳过，且无 #110 条目。 | without_skill 未输出 #110。 |
-| `remove_removed` | **PASS** | with_skill 将 #112 放入 Removed，输出“Drop Python 3.7 support”。 | without_skill 也将 #112 放入 Removed。 |
-| `security_security` | **PASS** | with_skill 将 #113 放入 Security，输出“Patch XSS vulnerability in template renderer”。 | without_skill 也将 #113 放入 Security。 |
-
-## Failures
-
-- 无 with-skill assertion failure。
-
-## Not Exercised
-
-- 无；本轮覆盖全部 assertions。
-
-## Next Steps
-
-- 保留当前回归覆盖；目标 skill、fixture 或 assertion 契约变化时重新执行 fresh paired validation。
-
-## Runtime Evidence
-
-- With-skill candidate: return code `0`，duration `30.96s`，`skill_load_hits=2`。
-- Without-skill candidate: return code `0`，duration `23.374s`，`skill_load_hits=0`。
-- Independent judge: return code `0`，duration `79.221s`。
-- Judge 已读取两侧最终输出、完整 JSONL 工具 trace、before/after workspace snapshot、fixture manifest 与 session status，并核验读取顺序和零写入边界。
-- 所有临时 HOME/CODEX_HOME 与 candidate/judge 随机顶层根均已销毁；持久化证据目录中不存在 `auth.json`。
+- None.
+- Next: Select a target mode, then generate and evaluate the changelog content.
 
 ## Runtime Artifact Policy
 
-- 仓库只持久化本 canonical `comparison.md`。
-- Candidate、transcript、judge verdict、timing、status、snapshot 与 diagnostics 仅作为 `/tmp` 运行期证据，不提交到 git。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

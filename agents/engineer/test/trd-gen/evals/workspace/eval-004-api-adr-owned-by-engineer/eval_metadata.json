@@ -2,9 +2,18 @@
   "eval_id": "eval-004-api-adr-owned-by-engineer",
   "eval_name": "api-adr-owned-by-engineer",
   "workspace_root": "agents/engineer/test/trd-gen/evals/workspace/eval-004-api-adr-owned-by-engineer",
-  "prompt": "PM 已确认 docs/pm/chat-interface/history-search/PRD.md。请为聊天历史搜索补技术方案、API 文档和一份搜索索引选型 ADR。",
   "fixture_context": [
-    "README.md",
     "docs/pm/chat-interface/history-search/PRD.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

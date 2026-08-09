@@ -1,5 +1,16 @@
 # Docs-Agent 消费契约
 
+## 强制执行顺序
+
+宿主存在 `docs/site/standards/change-map.yaml` 时，消费方必须在读取无关文档
+或下结论前完成并在结果中保留以下证据：任务落点、命中的 change-map 条目、
+实际读取的 `required_docs`、用于复核每个关键判断的代码或测试路径。不能仅说
+“已参考文档”或只复述文档结论。
+
+任何 `last_verified_version: unverified`、版本不可比或落后当前版本的文档都按
+低信任导航信息处理；它不能单独支持实现、测试、运维或安全结论。结果必须并列
+写出文档声明、代码/测试事实、差异影响和需要交给 `docs-audit` 的后续证据。
+
 ## 适用条件
 
 - 仅当宿主存在 `docs/site/standards/change-map.yaml` 时启用本契约。

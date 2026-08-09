@@ -48,6 +48,40 @@ def test_extract_result_prefers_overall_result(tmp_path: Path) -> None:
     assert summarizer.extract_result(comparison) == "FAIL"
 
 
+def test_extract_result_treats_stale_historical_pass_as_blocked(tmp_path: Path) -> None:
+    comparison = tmp_path / "comparison.md"
+    comparison.write_text(
+        """
+## Latest result
+
+- Overall result: BLOCKED
+- Evidence freshness: stale — Issue #246 has not been rerun.
+
+## Historical result
+
+- Overall result: PASS
+""".strip(),
+        encoding="utf-8",
+    )
+
+    assert summarizer.extract_result(comparison) == "BLOCKED"
+
+
+def test_extract_result_does_not_count_pass_without_fresh_evidence(tmp_path: Path) -> None:
+    comparison = tmp_path / "comparison.md"
+    comparison.write_text(
+        """
+## Latest result
+
+- Overall result: PASS
+- Evidence freshness: stale
+""".strip(),
+        encoding="utf-8",
+    )
+
+    assert summarizer.extract_result(comparison) == "BLOCKED"
+
+
 @pytest.mark.parametrize(
     ("content", "expected"),
     [

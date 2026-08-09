@@ -7,9 +7,28 @@
       "id": "eval-001-timeline",
       "name": "timeline",
       "description": "Verifies roadmap-gen timeline and Gantt classification for milestones with due dates.",
-      "prompt": "请为 flutter/flutter 生成一份完整的项目路线图，写入 docs/roadmap.md。",
-      "workspace": "workspace/eval-1-timeline",
+      "scenario": {
+        "persona": "需要对外同步项目方向的项目规划负责人",
+        "situation": "Flutter 项目需要一份同时覆盖有日期与无日期 milestone 的完整路线图。",
+        "trigger": "路线图更新窗口到来，需要把 Flutter 当前 milestone 转成可沟通时间线。",
+        "goal": "把 Flutter 有日期和无日期 milestone 整理成有证据的完整路线图。",
+        "materials": [
+          "roadmap-evidence/github-reader-data.json 中的 milestones、issues 与 release 状态"
+        ],
+        "constraints": [
+          "日期只来自 milestone 事实",
+          "无日期项只能按版本语义推断或待确认",
+          "保留 issue 与 milestone 证据链接"
+        ],
+        "success_criteria": [
+          "按日期阶段分类",
+          "无日期 milestone 使用语义推断",
+          "保留路线图证据"
+        ]
+      },
+      "prompt": "我把 flutter/flutter 的 GitHub 状态导出到了 `roadmap-evidence/github-reader-data.json`。请基于这份快照生成完整项目路线图，写入 `docs/roadmap.md`，并注明数据时点。",
       "expected_output": "路线图按 milestone 截止日期分类；无日期 milestone 使用版本语义推断，无法匹配的交用户确认；包含进度、issue 链接、已完成 milestone 和 Mermaid Gantt。",
+      "workspace": "workspace/eval-1-timeline",
       "assertions": [
         {
           "id": "phase_classification",
@@ -32,9 +51,28 @@
       "id": "eval-002-phase-classification",
       "name": "phase-classification",
       "description": "Verifies roadmap-gen phase classification and large backlog compression.",
-      "prompt": "请为 microsoft/vscode 生成项目路线图，写入 docs/roadmap.md。",
-      "workspace": "workspace/eval-2-phase-classification",
+      "scenario": {
+        "persona": "需要对外同步项目方向的项目规划负责人",
+        "situation": "VS Code 的 milestone 与 issue 数量较大，规划负责人需要把开放、已完成和大 backlog 压缩成可读阶段。",
+        "trigger": "规划评审即将开始，需要压缩 VS Code 大量计划项而不丢失状态证据。",
+        "goal": "把 VS Code 开放、完成和大 backlog 计划压缩成仍可追溯的路线图阶段。",
+        "materials": [
+          "roadmap-evidence/github-reader-data.json 中的 milestones、issues、labels 与 assignee 数据"
+        ],
+        "constraints": [
+          "区分 open 与 closed milestone",
+          "大 backlog 需要压缩但不能丢分类信息",
+          "保留负责人和更新时间"
+        ],
+        "success_criteria": [
+          "区分 open 和 closed milestone",
+          "压缩大 backlog",
+          "保留 issue 分类细节"
+        ]
+      },
+      "prompt": "我把 microsoft/vscode 的 GitHub 状态导出到了 `roadmap-evidence/github-reader-data.json`。请基于这份快照生成项目路线图，写入 `docs/roadmap.md`，并注明数据时点。",
       "expected_output": "路线图正确分类 open/closed milestone，压缩超大 backlog，按标签分组 issue，并保留 assignee 与更新时间。",
+      "workspace": "workspace/eval-2-phase-classification",
       "assertions": [
         {
           "id": "open_closed",
@@ -57,9 +95,28 @@
       "id": "eval-003-no-dates",
       "name": "no-dates",
       "description": "Verifies roadmap-gen semantic inference when milestones do not have due dates.",
-      "prompt": "请为 golang/go 生成项目路线图，写入 docs/roadmap.md。",
-      "workspace": "workspace/eval-3-no-dates",
+      "scenario": {
+        "persona": "需要对外同步项目方向的项目规划负责人",
+        "situation": "Go 项目的 milestone 没有截止日期，维护者仍需要依据版本语义了解规划方向。",
+        "trigger": "缺少截止日期的 Go milestones 仍需进入路线图，且不能伪造时间承诺。",
+        "goal": "在不编造日期的前提下，用版本语义整理 Go 项目的规划阶段。",
+        "materials": [
+          "roadmap-evidence/github-reader-data.json 中的无截止日期 milestones、当前版本与 issue 状态"
+        ],
+        "constraints": [
+          "没有可信截止日期",
+          "不得生成虚构日期型甘特图",
+          "无法从版本语义判断的计划交维护者确认"
+        ],
+        "success_criteria": [
+          "使用语义分类",
+          "不伪造日期",
+          "突出发布阻塞项"
+        ]
+      },
+      "prompt": "我把 golang/go 的 GitHub 状态导出到了 `roadmap-evidence/github-reader-data.json`。这些 milestone 没有截止日期；请基于版本语义整理路线图并写入 `docs/roadmap.md`，不要编造日期。",
       "expected_output": "当 milestone 没有截止日期时，不生成日期型 Gantt；基于 semver 与仓库当前版本范围推断规划阶段，无法匹配的 milestone 交用户确认。",
+      "workspace": "workspace/eval-3-no-dates",
       "assertions": [
         {
           "id": "semantic_classification",

@@ -1,96 +1,60 @@
-# Eval Result: eval-001-saas-dashboard
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `designer`
 - Skill: `ui-ux-design`
 - Eval: `eval-001-saas-dashboard`
-- Test case: SaaS Dashboard Design
-- Workspace: `workspace/eval-1-saas-dashboard`
 
-## Test Set or Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Fixture version: `chore/198-remove-brd-chain working tree, eval-001 fixture repaired with formal frontmatter`
-- Fresh run time: `2026-08-07 00:04:31 +0800`
-- Runtime directory: `tmp/eval-runs/issue-215-saas-dashboard-r2/`
-- Fixture: prompt, workspace README, and confirmed PM spec at `docs/pm/saas-dashboard/PRD.md`
-
-## Latest Result
-
-- Behavior result: **FAIL**
-- Coverage result: **FULL** (3/3 assertions exercised)
-Overall result: FAIL
-
-## Assertion Results (Current)
-
-- assertion_1: **PASS** — the canonical ui-ux-spec.md is generated from the confirmed saas-dashboard path with a Mermaid journey, ASCII layouts, and interaction behavior.
-- assertion_2: **PASS** — the candidate remains design-only and writes no implementation or test work.
-- assertion_3: **FAIL** — neither the design document nor final response explicitly names engineer-agent as the next owner.
-
-## With-Skill Behavior (Current)
-
-The current run produces the expected structured design artifact and respects
-the Designer boundary, but fails the explicit next-role handoff requirement.
-
-## Fresh Without-Skill Baseline (Current)
-
-The baseline was regenerated first in an independent top-level workspace from
-the identical prompt and fixture under isolated HOME/CODEX_HOME. It creates a
-non-canonical DESIGN.md and likewise lacks the named Engineer handoff; it is
-comparison input only.
-
-## Failures (Current)
-
-- Missing explicit engineer-agent handoff.
-
-## Next Steps (Current)
-
-- Make the completion response satisfy the skill's existing Engineer handoff rule, then rerun.
-
-## Runtime Artifact Policy (Current)
-
-- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
-- Only this durable comparison is updated.
-
-## Historical Result (Superseded: earlier fixture/contract)
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532` from `agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard`.
+- Fixture SHA-256: `0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532`
+- Prompt SHA-256: `f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a26ada6a2ba843cfb4e657c89ce7c3b76b2095d2b006f263e49042916f04185f`
+- Skill overlay SHA-256: `1e46d8592a997f6f8a826742994d2b0945378f4e3503165a8d7fa4365064000f`
+- Judge schema SHA-256: `8d2763ec3401350181ee644de1028a6695d69fa18b5430a0edd7593fdf2e890a`
+- Eval definition SHA-256: `9dfc3c0232e65b50d6964b6b208307eca95842562a8965fcb0999b7dc0293b57`
+- Metadata SHA-256: `4806c6c3fd6574e59fbeca624e1db80b0abef304792432263a972f95ebcfa4e8`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
-Overall result: BLOCKED
-- Blocking reason: test
-
-
-All three assertions were evaluated and passed in this fresh paired run. The repaired fixture's formal PRD frontmatter supplies the confirmed `saas-dashboard` feature path and PM scope needed for the skill to produce the canonical design artifact.
+Overall result: PASS
 
 ## Assertion Results
 
-- `assertion_1`: **PASS** — the PRD confirms `feature_path: saas-dashboard`; the with-skill run writes `docs/design/saas-dashboard/ui-ux-spec.md` and includes a Mermaid user journey, ASCII layouts, and interaction behaviors.
-- `assertion_2`: **PASS** — the artifact and response remain design-only and explicitly exclude code changes, engineering implementation steps, and test execution.
-- `assertion_3`: **PASS** — the design handoff and response explicitly identify `engineer-agent` as the next role if implementation continues.
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `produces_design_spec` | PASS | with_skill delivery_snapshot contains docs/design/saas-dashboard/ui-ux-spec.md. |
+| `covers_user_flows_and_states` | PASS | The locked specification covers user journeys, desktop/tablet layouts, components, filtering, drawers, feedback/error/empty/loading states, and responsive behavior. |
+| `preserves_design_boundary` | PASS | Git evidence shows only docs/design/saas-dashboard/ui-ux-spec.md as untracked; no source, test, build, deployment, or implementation changes are present. |
+| `hands_off_to_engineering` | PASS | The specification explicitly defines the remaining engineering scope and states that engineer-agent proceeds only after implementation authorization. |
 
 ## With-Skill Behavior
 
-- Reads the confirmed PM spec and resolves the canonical output path as `docs/design/saas-dashboard/ui-ux-spec.md`.
-- Produces the expected structured specification: user journey, page inventory, desktop/tablet ASCII layouts, component list, interaction and state behavior, responsive design, and design handoff.
-- Stops at the Designer boundary without code, implementation-task decomposition, or test execution, and routes any continuation to `engineer-agent`.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=b4aedb306390c677c4daebb74d8bbcc38bdcf005acc1e1bde53c13d8fca6d1d7; snapshot_sha256=fac92ddd4387c177d105d92bd3f240a475c65d284ec206490e4dba7e49a1defd
+- Behavior: Produced the requested design specification at the confirmed path, with complete design coverage and a clear engineering handoff boundary.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- This baseline was newly generated in this run from the same prompt and repaired fixture only; it did not read or apply the Designer README, `ui-ux-design` skill, with-skill output, historical baseline, or prior comparison. No historical baseline was reused.
-- It provides generic sidebar, project/task, member, activity, responsive, and state suggestions, but does not produce the canonical repository artifact or a Mermaid journey, ASCII layouts, or complete component inventory.
-- It stops loosely before development but does not name `engineer-agent` or state the skill's hard no-implementation boundary. The paired run therefore has clear behavioral differentiation.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f9bf4ccc3d0c86ca715af1c880c16aa04a3e494f2b6001d3d604b6428e7bc8b2; fixture_sha256=0c6e97834bbed6c2319a5e523ec66e524f7cbbe181557cf3e6af4ae38b100532; output_sha256=bc16a28ba56d9786bf24a417fd13c1c423423b7cfb7b98194d50aff01e2782b3; snapshot_sha256=502a83122ef9b250e4fb9d8fdda5e92a51648f5daefd732a8a4909b098516670
+- Behavior: Produced an interactive prototype in source files instead of the requested design specification, providing comparison baseline only.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- None. No assertion was unexercised, so coverage is full.
-
-## Next Steps
-
-- Keep the repaired fixture changes with the owning Issue #215 / PR #214 work.
-- No `ui-ux-design` skill change is indicated by this result.
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- Paired-run notes and judge evidence remain only under the ignored runtime directory and are not committed.
-- Only this durable `comparison.md` is updated.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

@@ -2,9 +2,8 @@
   "eval_id": "eval-015-manual-page-evidence",
   "eval_name": "manual-page-evidence",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-015-manual-page-evidence",
-  "prompt": "维护者确认本次检查的目标版本为 `v1.3.0`，范围是已确认的 `base_ref` `1a2b3c4` 到 `target_ref` `5d6e7f8`，只变更一张用户手册页面及其截图。请审计这次变更；工作区没有提供完整的版本发布材料。",
   "fixture_context": [
-    ".eval/actual-diff.patch",
+    "release-evidence/actual-diff.patch",
     "evidence/sidebar.public.snapshot.md",
     "docs/site/index.public.md",
     "docs/site/manual/index.md",
@@ -22,5 +21,22 @@
     "subagent-verdict.md",
     "run_status.json",
     "timing.json"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "git_topology": {
+    "base_ref": "1a2b3c4",
+    "target_ref": "5d6e7f8",
+    "target_patch": "release-evidence/actual-diff.patch"
+  },
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -1,12 +1,26 @@
 ---
 name: delivery
-description: "Internal engineering specialist—not a direct entry point. Invoked by engineer-agent after pm-agent handoff to manage branch delivery, commits, pushes, PR creation, and PR update evidence for completed work."
+description: "Deliver completed work through an intentional branch, commits, push, PR preview or creation, and CI/readback evidence. Use after engineer-agent confirms scope and verification are complete."
 visibility: internal
 ---
 
 # Delivery
 
 Manage the Git workflow for delivering completed code: branch creation, meaningful commits, PR creation with proper references, and CI status verification.
+
+## Mandatory Delivery Checkpoint
+
+Before mutating Git, verify that the working tree contains the claimed scoped
+changes and that their tests pass. Never create an empty commit to imitate a
+delivery. When changes exist, create the project-conformant branch, stage only
+those files, create a meaningful commit, and then attempt push, PR creation,
+and CI readback in order. If the remote, authentication, `gh`, PR, or CI is
+unavailable, preserve the completed local evidence, name the exact blocker, and
+do not claim a remote PR or CI result that was not observed.
+When PR creation is blocked, still present an equivalent PR preview containing
+title, summary, PM/PRD reference, changed scope, and test status. When CI cannot
+be read, explicitly record `CI: not run` or `CI: unavailable` and provide the
+exact recovery/readback command rather than omitting CI state.
 
 ## When to Use
 
@@ -25,7 +39,7 @@ delivery while scope or verification status is unclear, return to `pm-agent`
 for classification or status confirmation.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Step 1 — Assess current Git state
 

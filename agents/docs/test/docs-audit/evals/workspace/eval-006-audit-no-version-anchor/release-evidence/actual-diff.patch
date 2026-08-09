@@ -1,0 +1,10 @@
+diff --git a/src/catalog/routes.txt b/src/catalog/routes.txt
+index bbb93eebdac02752f25c22a6c0151c907c275250..d316ef9b9e9d3e6f503d652f9a32c54f85aad8d7 100644
+--- a/src/catalog/routes.txt
++++ b/src/catalog/routes.txt
+@@ -5,4 +5,4 @@
+ ERROR none
+ STREAMING no
+ FILES none
+-IMPLEMENTATION legacy dispatcher
++IMPLEMENTATION table dispatcher

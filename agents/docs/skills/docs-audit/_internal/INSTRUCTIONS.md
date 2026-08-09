@@ -91,9 +91,12 @@ case-sensitive, including pre-release and build identifiers; SemVer precedence
 that ignores build metadata is not sufficient. Sources requiring a prefix
 accept exactly one lowercase `v`; `V`, `vv`, or a missing prefix is invalid.
 Record both the raw source value and the normalized value in the audit
-evidence. The confirmed entry or `docs-agent:release-notes-gen` handoff must also declare the
-complete required version-source inventory as
+evidence. Derive the complete required version-source inventory from the locked
+Git tree and source files as
 `{source_id, locator_kind, locator, selector, extractor, required_raw_form}`.
+The confirmed entry or `docs-agent:release-notes-gen` handoff supplies the
+confirmed release scope, target version, refs, and any non-repository authority;
+it does not need to precompute this inventory or the producer-record schema.
 For a Git file, `locator` is its repository path and `selector` is an exact
 JSON Pointer, YAML/Markdown field identity, or unique index-entry key;
 `extractor` names the deterministic parser and version. Non-file facts use an

@@ -1,6 +1,6 @@
 # PM Handoff Packet
 
-pm-agent 已完成入口分类，并将用户搜索 API 的应用安全审查路由至 appsec-checklist。
+产品与安全负责人已确认本次审查范围和可用材料。
 
 ```yaml
 request_type: security
@@ -34,7 +34,7 @@ permissions:
 data_categories:
   - 用户账号资料
 remediation_expectations:
-  - 应用代码修复项交回 engineer-agent
+  - 应用代码修复项交回 应用工程团队
   - 修复后对恶意搜索输入执行回归验证
 blockers_risks:
   - 搜索参数直接进入原始 SQL 时可能造成数据泄露或破坏

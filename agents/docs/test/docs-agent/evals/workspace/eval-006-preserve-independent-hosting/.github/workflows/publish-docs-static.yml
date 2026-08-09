@@ -1,0 +1,23 @@
+name: publish-docs-static
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        variant: [public, internal]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+        working-directory: docs/site
+      - run: npm run build:${{ matrix.variant }}
+        working-directory: docs/site
+      - run: ./scripts/upload-docs.sh "${{ matrix.variant }}" "docs/site/.generated/${{ matrix.variant }}"

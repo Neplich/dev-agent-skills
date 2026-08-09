@@ -2,7 +2,19 @@
   "eval_id": "eval-002-battlecard-mode",
   "eval_name": "battlecard-mode",
   "workspace_root": "agents/product_manager/test/competitive-brief/evals/workspace/eval-002-battlecard-mode",
-  "prompt": "请为 Linear 和 Jira 各准备一页便于销售对比使用的竞争资料。可用网络检索获取事实，无法确认的信息标记为假设。",
+  "fixture_context": [
+    "competitive-research/linear.md",
+    "competitive-research/jira.md"
+  ],
   "fixture_context": [],
-  "execution_cleanup": []
+  "execution_cleanup": [],
+  "skill_dependencies": [],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -1,6 +1,6 @@
 # PM Handoff Packet
 
-pm-agent 已完成入口分类，并将个人数据访问、删除与导出实现审查路由至 privacy-surface-mapper。
+产品与安全负责人已确认本次审查范围和可用材料。
 
 ```yaml
 request_type: security
@@ -39,9 +39,9 @@ data_categories:
   - 订单与交易元数据
   - 产品行为事件
 remediation_expectations:
-  - 用户权利端点与身份校验修复交回 engineer-agent
-  - 删除任务与保留策略交回 devops-agent
+  - 用户权利端点与身份校验修复交回 应用工程团队
+  - 删除任务与保留策略交回 平台工程团队
 blockers_risks:
-  - 当前导出接口信任请求参数中的 userId
-  - 当前删除仅做账号软删除且未传播到分析系统
+  - 需要确认数据导出使用可信的已登录用户身份
+  - 需要确认删除请求能传播到适用的数据副本
 ```

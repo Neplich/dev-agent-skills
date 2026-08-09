@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -17,6 +18,24 @@ assert CONTRACT_SPEC.loader is not None
 contract = importlib.util.module_from_spec(CONTRACT_SPEC)
 sys.modules[CONTRACT_SPEC.name] = contract
 CONTRACT_SPEC.loader.exec_module(contract)
+
+
+def test_history_dependent_ci_jobs_fetch_full_history() -> None:
+    workflow = (
+        Path(__file__).resolve().parents[1] / ".github/workflows/ci.yml"
+    ).read_text(encoding="utf-8")
+
+    for job_name in ("eval-contract", "python-tests"):
+        match = re.search(
+            rf"^  {re.escape(job_name)}:\n(?P<body>.*?)(?=^  [a-z][a-z-]+:\n|\Z)",
+            workflow,
+            re.M | re.S,
+        )
+        assert match is not None
+        assert re.search(
+            r"- uses: actions/checkout@v\d+\n\s+with:\n\s+fetch-depth: 0\b",
+            match.group("body"),
+        )
 
 
 FEATURE_PATH = "fixture-feature"
@@ -216,6 +235,28 @@ def validate_changed_plan(
         errors,
     )
     return errors
+
+
+def test_skill_description_must_front_load_user_trigger(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    skill_dir = root / "agents" / "engineer" / "skills" / "debugger"
+    skill_dir.mkdir(parents=True)
+    (skill_dir / "SKILL.md").write_text(
+        "---\n"
+        "name: debugger\n"
+        'description: "Internal specialist invoked after routing to diagnose failures."\n'
+        "visibility: internal\n"
+        "---\n",
+        encoding="utf-8",
+    )
+
+    errors: list[contract.ContractError] = []
+    contract.validate_skill(root, skill_dir, errors)
+
+    assert any(
+        "front-load the user goal and trigger" in error.message
+        for error in errors
+    )
 
 
 def test_active_plan_status_is_unconditionally_required(tmp_path: Path) -> None:

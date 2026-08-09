@@ -3,9 +3,9 @@ title: "Notification Center PRD"
 type: PRD
 version: "1.2.0"
 status: Approved
-author: "Eval Fixture"
+author: "Notification Product Team"
 date: "2026-04-06"
-generated_by: "fixture"
+generated_by: "product"
 related_docs:
   - "docs/engineer/notification-center/TRD.md"
   - "docs/pm/notification-center/DECISIONS.md"

@@ -2,10 +2,20 @@
   "eval_id": "eval-005-mapped-cache-debug-evidence",
   "eval_name": "mapped-cache-debug-evidence",
   "workspace_root": "agents/engineer/test/debugger/evals/workspace/eval-005-mapped-cache-debug-evidence",
-  "prompt": "请诊断 `src/cache/` 中缓存比预期更早过期的问题，并说明复现依据和根因。",
   "fixture_context": [
     "src/cache/ttl.txt",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/cache.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -1,89 +1,60 @@
-# Eval Result: eval-001-existing-project-feature-design
-
-## Latest Fresh Evaluation — 2026-08-07
-
-- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
-- Fixture: HEAD `47adbbc9`; baseline and with-skill input manifests matched exactly.
-- Isolation: all 17 baselines finished before any with-skill root existed; this case then ran in an independent with-skill root and an independent judge root.
-- Behavior result: FAIL — 4/5 assertions passed.
-- Coverage result: FULL — all 5 assertion scenarios were exercised.
-Overall result: FAIL
-
-### Assertion Results
-
-- `assertion_1`: PASS — the response opened with a project-context summary after reading the package and existing TRD.
-- `assertion_2`: PASS — it advanced only the first product-value decision.
-- `assertion_3`: PASS — it compared three options and their scope trade-offs.
-- `section`: FAIL — it asked a decision question but did not identify and confirm a current design section.
-- `assertion_5`: PASS — it named the feature PM document location as the later durable output.
-
-### With-Skill Behavior
-
-The candidate stayed read-only, selected `existing-project-feature`, and kept the first turn focused. It did not yet create PM documents because no decision had been confirmed.
-
-### Fresh Without-Skill Baseline
-
-The fresh baseline inspected the same package and TRD but asked five questions at once. It is comparison evidence only and did not affect the with-skill verdict.
-
-### Failures / Next Steps
-
-- Make the first decision point an explicit current section and request confirmation of that section.
-
-### Runtime Artifact Policy
-
-- Candidate transcripts, manifests, tool traces, and the independent verdict remain under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-001-existing-project-feature-design/` and are not committed.
-
----
-
-The sections below are historical records from earlier runs.
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `idea-to-spec`
 - Eval: `eval-001-existing-project-feature-design`
-- Workspace: `workspace/iteration-1/eval-1-existing-project-feature`
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Fixture version: HEAD `a452319`; cleaned existing Web app workspace with Next.js markers and app-catalog TRD; stale `docs/pm/app-tags/` excluded by `execution_cleanup`.
-- Fresh run: `2026-08-03 11:58:20 +0800`
-- Runtime directory: `tmp/eval-runs/issue-198-brd/pm/eval-001-existing-project-feature-design/`
-
-## Latest Result
-
-- Behavior result: PASS — all 5 assertions passed.
-- Coverage result: FULL — 5/5 assertion scenarios were exercised; no `NOT EXERCISED` items.
-Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-1-existing-project-feature`.
+- Fixture SHA-256: `2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc`
+- Prompt SHA-256: `989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `c0da2e0366232678672d0c64ce9fa764d3b78f3caaaa8493348af1a7e1cd00fe`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `dbe3f262003438ea2a4caaa2b38e4ab353ee29def3530b27abe04d98b19dfd03`
+- Eval definition SHA-256: `fbb5377843587b9c6261e61b2a81e3a48d39c5e7814d8290865e02fe8eb5ec41`
+- Metadata SHA-256: `ff56c9c4026c02d3f3b5f70e58cc2a2e628e1817de3ecbec4d01c2d2b3fe50bc`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
 
-- `assertion_1`: PASS — starts with current project context and selects `existing-project-feature`.
-- `assertion_2`: PASS — advances only the v1 product-goal decision.
-- `assertion_3`: PASS — compares three scope options with trade-offs and a recommendation.
-- `section`: PASS — asks for confirmation of the current section before continuing.
-- `assertion_5`: PASS — names `DECISIONS.md` and the PM feature docs as durable memory.
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `summarizes_current_context` | PASS | with_skill 总结了 package manifest、Docs Index 与 Engineer TRD，准确指出应用导入/编辑/列表能力、仅按名称搜索以及缺少标签模型和标签筛选等缺口。 |
+| `keeps_first_turn_to_one_decision` | PASS | with_skill 只推进一个关键决策：第一版优先解决管理员整理、用户发现或双向均衡中的哪种价值。 |
+| `offers_real_options_with_tradeoffs` | PASS | with_skill 提供了三个可执行方向，说明了各自范围与取舍，并明确推荐“管理员整理优先”。 |
+| `waits_before_durable_docs` | PASS | delivery_snapshot 为空且 git_evidence 显示无变更；with_skill 明确暂不写正式 PM 文档，并将文档列为待确认事项。 |
 
 ## With-Skill Behavior
 
-The response inspected the cleaned fixture, summarized the current app-catalog constraints, and kept the first turn inside incremental product shaping. Confirmed outcomes would be stored in `docs/pm/app-tags/DECISIONS.md` and later formalized in `PRD.md`; it did not introduce any BRD generation, validation, or iteration stage.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b; fixture_sha256=2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc; output_sha256=f97531ca2c89c0b6ae2a223cb85e50fce0065a30f1c0b17d69ea148ee8a56fd9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 先基于现状和缺口建立 checkpoint，再只请求一个范围决策，提供三个方向及推荐，并保持文档待确认。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-The baseline was newly generated in this run from the same prompt and cleaned fixture, without reading or applying the target skill, Product Manager README, internal instructions, or historical comparison. It proposed sensible tag features but expanded several design topics at once and did not establish the section-confirmation or `DECISIONS.md` memory contract.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b; fixture_sha256=2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc; output_sha256=3ba5bac426c7c9bae55a98b51752b5e13766b58694d06af4261eab3763b2a4e9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 也总结了主要现状并提出三个方向，但未体现结构化 checkpoint；同样未产生文件变更。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- No assertion failures or baseline blockers.
-- BRD removal caused no behavioral regression; this case now uses only PRD and DECISIONS as PM artifacts.
-
-## Next Steps
-
-- Keep this eval as coverage for first-turn context detection, single-decision progression, and durable PM memory after BRD removal.
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- Fresh responses and judge notes remain under `tmp/eval-runs/issue-198-brd/pm/eval-001-existing-project-feature-design/` and are not committed.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

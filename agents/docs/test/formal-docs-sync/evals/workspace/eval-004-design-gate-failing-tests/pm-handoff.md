@@ -13,9 +13,9 @@
   - `docs/pm/preferences-summary/PRD.md` (Approved)
   - `docs/engineer/preferences-summary/TRD.md` (Confirmed)
   - `docs/engineer/preferences-summary/IMPLEMENTATION_PLAN.md` (Confirmed)
-- scope_decision: Synchronize the feature-level design page only after all plan-required tests pass.
+- scope_decision: Synchronize the current `preferences-summary` feature design page.
 - downstream_owner: `docs`
 - required_output: Synchronize `docs/site/design/preferences-summary.md` and its design change-map entry as one atomic scope.
-- evidence: `.eval/actual-diff.patch`, `src/preferences_summary.py`, and `.eval/test-results.md`.
+- evidence: `delivery-evidence/actual-diff.patch`, `src/preferences_summary.py`, and `delivery-evidence/test-results.md`.
 - exclusions: API, database, operations, product, and release documentation.
-- blockers_risks: Do not treat this handoff as candidate-scope confirmation.
+- blockers_risks: `test_compact_summary_handles_empty_values` is recorded as FAILED in `delivery-evidence/test-results.md`.

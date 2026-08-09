@@ -1,68 +1,59 @@
-# Eval Result: eval-002-mapped-doc-cicd
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `devops`
 - Skill: `cicd-bootstrap`
 - Eval: `eval-002-mapped-doc-cicd`
-- Test case: `mapped-doc-cicd`
-- Workspace: `agents/devops/test/cicd-bootstrap/evals/workspace/eval-002-mapped-doc-cicd`
 
-## Latest Result
+## Current Result
 
-- Fresh run: `2026-08-07`（issue #238 严格隔离重跑）
-- Model: `gpt-5.6-luna`，`model_reasoning_effort=medium`
-- Isolation: baseline 使用随机顶层 root；完成后仅保存在内存快照并删除 root，随后才创建 with_skill root；with_skill root 删除后才创建独立 judge root。两条 lane 的原始 prompt、fixture snapshot、`HOME` 与 `CODEX_HOME` 值相同。
-- Judge: 独立 fresh `codex exec`，读取实际产物、final、status 与工具轨迹，对照当前 assertions 判定；不采信 lane 自评。
-- Behavior result: FAIL
-- Coverage result: FULL
-- Without-skill comparison: FAIL（仅作对照，不参与 durable Overall 组合）
-
-Overall result: FAIL
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Eval definition: `agents/devops/test/cicd-bootstrap/evals/evals.json`
-- Metadata: `agents/devops/test/cicd-bootstrap/evals/workspace/eval-002-mapped-doc-cicd/eval_metadata.json`
-- Expected output: 以代码配置确认校验命令的 CI 建议，并报告映射文档与代码差异。
-- Fixture: `src/build/pipeline.rules`, `docs/site/standards/change-map.yaml`, `docs/site/api/build-pipeline.md`
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b0f5ab103062d754c225176fd1995f4f428e9f29340584ac86077ed978dc1482` from `agents/devops/test/cicd-bootstrap/evals/workspace/eval-002-mapped-doc-cicd`.
+- Fixture SHA-256: `b0f5ab103062d754c225176fd1995f4f428e9f29340584ac86077ed978dc1482`
+- Prompt SHA-256: `08a3ffdcb2251091cdf30040590082a976faabcf76e7e71f7124b4bb2d5a5ba4`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `86f7228d11d9f7ad3ec145d83be1c28f8a4bb93afea61016f55ed2860069bc68`
+- Skill overlay SHA-256: `d87d7023cb1778acf3685e0e616785cca86656081ff2fa7f0e1ff03553b77b80`
+- Judge schema SHA-256: `6eadf49a93ad15b65779f0737c549d6122220ac6abe8a01622417bb0da199cda`
+- Eval definition SHA-256: `68a87fb5d229c5c451c4b7081adb9e28c9c2e68f2832958c12f8d53464b0ae13`
+- Metadata SHA-256: `a6802835ad6096782cd89b2c4280b4422a56ff9be96ac885a939daae8583297c`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
-| Assertion | with_skill | without_skill | Evidence |
-| --- | --- | --- | --- |
-| `reads_mapped_docs_first` | FAIL | FAIL | 两条 lane 都先读取 src/build/pipeline.rules，之后才读取 change-map 和 required doc，未满足 change-map → required doc → 回代码核验的要求。 |
-| `verifies_against_code` | FAIL | FAIL | 两条 lane 最终均使用 verify 并识别文档中的 test 不一致；但未说明错误命令 test 对流水线的影响。with_skill 后续 rg 可视为再次核验代码，但合取要求仍因缺少影响说明而失败。 |
-| `treats_unverified_as_low_trust` | FAIL | FAIL | 两条 lane 都读取到 last_verified_version: unverified，但没有明确将文档视为低信任，也没有证明所有关键 CI 步骤均由代码或测试配置核证。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 锁定证据包含映射规则和目标文档，但无法证明候选实际读取顺序或未遍历无关文档。 |
+| `verifies_against_code` | PASS | 候选识别文档的 test 与代码的 validation_command = verify 冲突，采用 verify，并说明当前缺少入口时直接执行会失败。 |
+| `treats_unverified_as_low_trust` | PASS | 候选明确识别 last_verified_version: unverified，将文档作为低信任导航，并以代码中的 verify 定义为准。 |
 
 ## With-Skill Behavior
 
-- with_skill 的三个合取断言均未完整满足，因此 with_skill_behavior 为 FAIL；所有断言均可评估，Coverage 为 FULL。without_skill 仅作对照，其 FAIL 不改变 durable Overall。
-- Workspace changes: added: `.github/workflows/ci.yml`；modified: `docs/site/api/build-pipeline.md`。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=08a3ffdcb2251091cdf30040590082a976faabcf76e7e71f7124b4bb2d5a5ba4; fixture_sha256=b0f5ab103062d754c225176fd1995f4f428e9f29340584ac86077ed978dc1482; output_sha256=bf7e3026c34f03c7c43594fa6615b1cb83f1a62eb22b2ecbd09fa297fae46b0c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别映射目标、核对未核证文档与代码冲突，采用 verify；因入口交接和可执行入口缺失未创建 workflow。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- baseline 在本轮重新生成，没有复用历史 baseline，也没有读取 target skill、with_skill 产物或旧 comparison。
-- Workspace changes: added: `.github/workflows/validation.yml`；modified: `docs/site/api/build-pipeline.md`。
-- assertion 结果见上表；baseline 只用于比较 skill 增益，不作为 durable Overall 的独立机器门禁。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=08a3ffdcb2251091cdf30040590082a976faabcf76e7e71f7124b4bb2d5a5ba4; fixture_sha256=b0f5ab103062d754c225176fd1995f4f428e9f29340584ac86077ed978dc1482; output_sha256=fe991daadfbda06fc927501132ab47104eff048ffe6c1739890413c99c4d6f4c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确给出 verify 并识别文档冲突，但未识别文档为 unverified 低信任。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures and Coverage Gaps
+## Failures and Next Steps
 
-- with_skill failures: `reads_mapped_docs_first`, `verifies_against_code`, `treats_unverified_as_low_trust`。
-- 所有当前 assertions 均已实际覆盖。
-- 无模型、认证、runner 或外部服务 blocker。
-
-## Historical Result (Old Contract)
-
-- 旧结论为 PASS；issue #234 修复 eval 泄漏后，该结论被标为 BLOCKED 等待重跑。
-- 该历史结论适用旧 eval 契约；本文件顶部的 2026-08-07 fresh 结果已取代它作为 latest durable 结论。
-
-## Next Steps
-
-- 按上表 with_skill failure 的共同根因建立后续修复项；本轮只记录结果，不修改 skill、eval 定义或 fixture。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 两条 lane、工具轨迹、状态、文件快照、judge verdict 与隔离事件只保存在 `tmp/eval-runs/issue-238-devops-strict-20260806/`，不提交 git。
-- durable 结果只保留本 `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

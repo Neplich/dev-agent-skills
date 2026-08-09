@@ -1,46 +1,60 @@
-# Eval Result: eval-006-delivery-polling-to-events
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `trd-gen`
 - Eval: `eval-006-delivery-polling-to-events`
-- Test case: delivery-polling-to-events
-- Workspace: `workspace/eval-006-delivery-polling-to-events`
-- Latest result: PASS - 2026-08-06 final-harness fresh paired validation completed（frontmatter changelog 口径）；with_skill 4/4 assertions passed，without_skill 3/4。
-- Behavior result: PASS — with_skill 实际触达路径满足全部 4 条断言（正文、版本与 changelog 事实一致）。
-- Coverage result: FULL — 4/4 assertion scenarios were exercised; no `NOT EXERCISED` items.
+
+## Current Result
+
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74` from `agents/engineer/test/trd-gen/evals/workspace/eval-006-delivery-polling-to-events`.
+- Fixture SHA-256: `26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74`
+- Prompt SHA-256: `4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `73cec46ef0287c25bd7a41d37b6bcee4e1ea25b1101672fb45bd299ecec77b0d`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `58d5f8c73c18457a8d0864b8f5e21613dc914d57c8f96acc11ce98a78c601f05`
+- Eval definition SHA-256: `ec0b30178f28a00245f34e8794f34ea3d889794c5e097f45505840818ce3d657`
+- Metadata SHA-256: `c58e464b2f51cbecc05208e0f4320ff2bade980227072a25840336ba048c489e`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
 Overall result: PASS
 
-## Test Set / Fixture Version
+## Assertion Results
 
-- Schema: `evals.json` v1.0
-- Fixture: delivery-pipeline PRD v1.2.0（事件驱动已确认）与 TRD v1.1.0（定时轮询旧方案：60 秒扫描、`poller.ts` / `batch.ts`）
-- Expected output: 更新 docs/engineer/delivery-pipeline/TRD.md：正文直接描述事件驱动方案，轮询旧方案从正文移除并留痕，不进入实现计划或代码。
-- Fresh run: `2026-08-06`（issue #233 新增 eval，最终 harness 重跑，codex exec `gpt-5.6-luna` + `model_reasoning_effort=medium`；两 lane 独立 workspace，均含剥离 test 的 agents/ 依赖镜像（可见上下文一致），with lane 额外在 `.agents/skills` 暴露入口 skill；HOME + CODEX_HOME 隔离（auth 从活跃 CODEX_HOME 复制）；README / eval_metadata.json / comparison.md 已物理排除；independent judge 对照 4 条断言判定）
-- Runtime directory: `tmp/eval-runs/fix-233/trd-gen-eval-006-delivery-polling-to-events/`（不入 git）
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `updates_existing_trd` | PASS | with_skill delivery_snapshot contains only docs/engineer/delivery-pipeline/TRD.md, with the target TRD updated and status showing only that file modified. |
+| `body_consolidation` | PASS | The locked TRD content describes event-driven delivery and does not retain the old polling implementation as the target architecture. |
+| `removal_recorded_in_changelog` | PASS | Frontmatter adds changelog entries recording the event-driven update and prior polling version, and updates the version to 2.0.0. |
+| `no_implementation_plan_or_code` | PASS | The with_skill snapshot contains no IMPLEMENTATION_PLAN.md, code changes, or test additions; only the TRD is modified. |
 
-## Assertions
+## With-Skill Behavior
 
-- PASS `updates_existing_trd`: 两条 lane 均更新目标 `docs/engineer/delivery-pipeline/TRD.md`，未新建 feature 文档或转交任务。
-- PASS `body_consolidation`: 两份正文均改写为事件驱动方案；60 秒扫描、`poller.ts`、`batch.ts` 旧方案细节已移除，仅保留「不再使用轮询」的当前约束，无「已废弃」等状态标注。
-- PASS `removal_recorded_in_changelog`（with）/ FAIL（without）: with_skill 在 frontmatter 新增 `changelog` 结构（version/date/summary）记录删除并同步版本 `1.1.0 -> 1.2.0`（对应 trd-gen SKILL.md「无 changelog 结构则新增到 frontmatter」指令）；without_skill 仅更新版本号，无 changelog 留痕。该断言在 frontmatter 口径下具备判别力。
-- PASS `no_implementation_plan_or_code`: 两条 lane 均未生成 `IMPLEMENTATION_PLAN.md`、修改代码或补测试。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=1b74a5abc9aa4abe683a989ce6a73e650e2b96cf02dc9e02c68048e26dff0317; snapshot_sha256=fde2fb321f58477ce2e8fe5d2ee4b6dc0932bcad681df2c9eb9e069286a4cd2f
+- Behavior: Updated the existing TRD to an event-driven design, recorded the removal of polling in changelog, and made no implementation changes.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## With Skill
+## Fresh Without-Skill Baseline
 
-第三轮重跑（frontmatter 口径 + SKILL.md「无 changelog 结构则新增到 frontmatter」指令）：更新后的 TRD 与已确认 PRD 对齐，`delivery.created` 事件驱动方案、状态机、重试队列与 dead-letter；正文直接改写；**frontmatter 新增 `changelog` 结构**（version/date/summary）记录删除并同步版本 `1.1.0 -> 1.2.0`；未进入实现。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4d55ba6ecaf12e0a768970bba911c34982402774916977cdba5d537398d0d4ea; fixture_sha256=26621a90d557560b63afa9dd1b1ebe2dbb9f05568b574efca78ec5babe092c74; output_sha256=5cc93f7c0769e6d6f924c0ee7eeac9d3369fc4d11ac0c5a9995124e4a66cd8df; snapshot_sha256=6b1e19af7358b75cc0922f968677cb3759c998f92702bce8ae0de1b8abd55e20
+- Behavior: Updated the existing TRD to an event-driven design and removed polling content, but provided no changelog structure.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Without Skill
+## Failures and Next Steps
 
-同一 prompt 与 fixture 下新建 baseline（codex `gpt-5.6-luna`，workspace 无 skill 文档）。baseline 同样完成事件驱动改写与版本 bump，但**未新增 changelog 留痕**（仅版本号与 last_updated 更新）。baseline 回复提及 `pm-agent` / `trd-gen` 名称——该仓库为公开仓库，模型先验知识中存在 skill 体系名称，非 lane 泄漏。
+- None.
+- Next: None.
 
-## Conclusion
+## Runtime Artifact Policy
 
-**Skill impact:** MEDIUM
-
-frontmatter 口径下 `removal_recorded_in_changelog` 断言具备判别力（with PASS / without FAIL）：skill 加载后按「无 changelog 结构则新增到 frontmatter」指令补留痕，baseline 遗漏。事件驱动改写与正文收束仍属模型基线能力（两条 lane 均满足），但删除留痕纪律是 skill 带来的可观测差异。该 eval 保留为正文收束与删除留痕的回归覆盖。
-
-## Runtime Artifact(s) Policy
-
-- with/without lane 产物、workspace 更新后的 TRD、judge verdict 均在 `tmp/eval-runs/fix-233/` 下，不入 git。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

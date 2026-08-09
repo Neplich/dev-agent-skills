@@ -1,115 +1,62 @@
-# Eval Result: eval-001-prd-to-engineer-trd
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `trd-gen`
 - Eval: `eval-001-prd-to-engineer-trd`
-- Test case: prd-to-engineer-trd
-- Workspace: `workspace/eval-001-prd-to-engineer-trd`
-- Evaluation date: 2026-08-07
-- Overall result: FAIL
-- Behavior result: FAIL
-- Coverage result: FULL
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt: PM 已经确认 docs/pm/capture-loop/PRD.md 和 docs/pm/capture-loop/DECISIONS.md。请准备这个功能的技术方案。
-- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
-- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
-- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
-
-## Assertions
-
-- PASS `engineer_owns_trd`: transcript 明确进入 Engineer TRD 阶段并指定 docs/engineer/{feature_path}/TRD.md；实际生成 TRD.md。
-- PASS `prd_confirmed_handoff`: transcript 明确写出“PRD 已确认，当前进入 Engineer TRD 阶段”；实际读取并核对 PRD 与 DECISIONS。
-- FAIL `document_subagent`: final、transcript 和生成文档均未要求由文档编写 sub-agent 执行并由主进程保留上下文和最终审查；不能据 AGENTS 指令推断实际委派。
-- PASS `implementation_plan_handoff`: final 明确说明 TRD 确认后移交 feature-implementor 编写 IMPLEMENTATION_PLAN.md；TRD 第 11 节也明确该路径和前置确认条件。
-- FAIL `qa_e2e_after_confirmed_plan`: final 和 TRD 未说明 QA E2E 文档补充必须依赖已确认 TRD、已确认 IMPLEMENTATION_PLAN 及实现完成后的交接包，也未说明不能由 TRD 请求直接触发。
-- PASS `no_code_implementation`: final 明确“未进入代码实现”；workspace 实际仅新增 Engineer 文档，无 IMPLEMENTATION_PLAN 或代码文件。
-
-## With Skill Behavior
-
-with_skill exit_code 为 0；实际生成 TRD.md、API.md、ADR，且 PM 输入文件 hash 与记录一致，生成文件 hash 也与 output.sha256 一致。TRD 内容完整并停止在 Draft/实现计划移交前，但遗漏 sub-agent 委派要求和 QA E2E 交接边界。
-
-## Without Skill Baseline
-
-without_skill 仅作对照：生成 TRD.md，未生成 API/ADR；final 未体现 Engineer 归属、PRD 确认门槛、sub-agent 委派或实现计划/QA 交接约束。其结果不用于 with_skill 判定。
-
-## Failures / Findings
-
-- document_subagent：没有证据表明输出要求文档写作由 document-writing sub-agent 执行，并由主进程保留上下文和最终审查。
-- qa_e2e_after_confirmed_plan：没有说明 QA E2E 文档补充必须等待确认 TRD、确认 IMPLEMENTATION_PLAN、实现完成及交接包。
-- Root cause: with_skill 的实际 final 和产物覆盖了 TRD 归属、PRD 门禁、feature-implementor 移交和不进入实现，但没有把文档编写委派约束与 QA E2E 的严格下游触发条件写入输出；不能用技能说明中的要求替代实际输出证据。
-
-## Next Steps
-
-- 修复上述 assertion 对应的 skill 行为或 eval 输入问题后，使用同样的 paired fresh 流程重跑。
-
-## Runtime Artifacts Policy
-
-- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
-- 长期只保留本 `comparison.md`。
-
-## Historical Results
-
-### Previous comparison record: eval-001-prd-to-engineer-trd
-
-## Evaluation Target
-
-- Agent: `engineer`
-- Skill: `trd-gen`
-- Eval: `eval-001-prd-to-engineer-trd`
-- Test case: prd-to-engineer-trd
-- Workspace: `workspace/eval-001-prd-to-engineer-trd`
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Fixture: confirmed capture-loop PRD, resolved product decisions, and repository context.
-- Fixture version: current HEAD `a452319`.
-- Fresh run time: `2026-08-03 11:58:13 +0800`.
-- Runtime directory: `tmp/eval-runs/issue-198-brd/engineer/20260803-115813/trd-gen/eval-001-prd-to-engineer-trd/`.
-- Expected output: generate or update `docs/engineer/capture-loop/TRD.md`, hand off to `feature-implementor` only after TRD confirmation, and do not implement code.
-
-## Latest Result
-
-- Behavior result: PASS
-- Coverage result: FULL
-Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-All 6 assertions were exercised and passed. The confirmed PRD plus `DECISIONS.md` supplies the full product input after BRD removal; no TRD ownership, delegation, confirmation, or QA sequencing behavior regressed.
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55` from `agents/engineer/test/trd-gen/evals/workspace/eval-001-prd-to-engineer-trd`.
+- Fixture SHA-256: `874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55`
+- Prompt SHA-256: `59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `73cec46ef0287c25bd7a41d37b6bcee4e1ea25b1101672fb45bd299ecec77b0d`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `4d4b8ebdf0eaf847b9097b848450fa85763a3e1f30bf1bb128228339ff87a28d`
+- Eval definition SHA-256: `763059af120165947ccbb1397278bf0acb3f4c96fd42875970c4e31154f717da`
+- Metadata SHA-256: `b33234ce56a0b715b632f392ff44ba7c27cad834dbc654110228254e610f01ec`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
 
 ## Assertion Results
 
-- PASS `engineer_owns_trd`: identifies the TRD as an Engineer-owned artifact at `docs/engineer/capture-loop/TRD.md`.
-- PASS `prd_confirmed_handoff`: enters the TRD stage only after the PRD and product decisions are confirmed.
-- PASS `document_subagent`: delegates TRD drafting to a fresh document-writing sub-agent while the main process keeps source context and final review.
-- PASS `implementation_plan_handoff`: waits for TRD confirmation before handing off to `feature-implementor` for `docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md`.
-- PASS `qa_e2e_after_confirmed_plan`: states that QA E2E documentation waits for confirmed TRD, confirmed implementation plan, completed implementation/verification, and the handoff package.
-- PASS `no_code_implementation`: stops at Engineer documentation and does not modify code, tests, or delivery artifacts.
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `engineer_owns_trd` | PASS | 交付的 docs/engineer/capture-loop/TRD.md 明确写明由 Engineer 拥有，并使用 Engineer 路径。 |
+| `prd_confirmed_handoff` | PASS | TRD 将其描述为基于 confirmed PM scope，并引用已确认的 PRD 与 DECISIONS。 |
+| `document_subagent` | FAIL | 候选输出明确说“文档由主流程编写，当前没有可用的文档子代理”，与要求委派文档编写 sub-agent 相矛盾。 |
+| `implementation_plan_handoff` | PASS | TRD 明确规定确认后由 feature-implementor 产出 docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md，再进入实现。 |
+| `qa_e2e_after_confirmed_plan` | NOT_EXERCISED | 当前阶段没有实现计划、代码完成或交接包；交付内容仅说明 QA E2E 被阻塞，并规定 E2E 命令需在实现计划和 TRD 确认后执行。因此后续 QA 断言尚未 exercised。 |
+| `no_code_implementation` | PASS | 交付快照仅包含 TRD、API 和 ADR 文档；TRD 明确写明当前阶段不授权代码实现，git evidence 也显示无代码变更。 |
 
 ## With-Skill Behavior
 
-The fresh with-skill run resolves `feature_path: capture-loop` from the PRD, delegates a scoped TRD draft, and keeps unknown storage, queue, transaction, and verification details as owned open questions rather than invented facts. It maps the confirmed requirements to intake, idempotency, queue processing, controlled retry, dead-letter, status, validation, observability, and rollout concerns. The output stops before implementation and preserves the explicit TRD-confirmation and implementation-plan gates. BRD is not consulted or reported missing.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=7ce1593e9044eecc78ddd8a1f374a0a085dca4c7f434e8bb740a1881814ed3cf; snapshot_sha256=6fac6e578d5ee4de60d4dea4df41b57fc7df15a3aba045812b41a6c214ba3241
+- Behavior: 产出了 Engineer 路径下的 TRD、API 和 ADR，并正确描述了后续实现计划交接及当前下游阻塞；但文档由主流程编写，未按要求委派 sub-agent。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-The without-skill baseline was newly generated in this run from the same prompt and fixture without applying `trd-gen`, the Engineer README, with-skill output, historical comparison, or any prior baseline. It covers Engineer ownership, confirmed PRD/decisions, a later implementation-plan handoff, and no direct code work, but omits the required document-writing sub-agent and the complete QA E2E sequencing. Baseline assertion result: 4/6.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59315add19ee6ece2648d62000ea89257cb037f1973ece31adc62018b509f700; fixture_sha256=874c9a19c616d97ed625612e04c37ce561c010e8908c127503ea72d53817db55; output_sha256=d61b331cf89f719400a1f598f409aa31d61d54cfbf29855517d7d2fdf909eb00; snapshot_sha256=d4e01a51039a02696533656ddc47a894d8088477ce6a5a92b9a41d420f8143ea
+- Behavior: 直接在 docs/pm/capture-loop/TRD.md 交付技术方案，未体现 Engineer 归属及规定的阶段性交接。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- None.
-
-## Next Steps
-
-- Keep this eval focused on PRD plus product decisions as the TRD input contract, document delegation, plan handoff, and QA E2E sequencing.
+- with_skill 明确未使用文档编写 sub-agent，违反 document_subagent。
+- Next: 改为委派文档编写 sub-agent 执行 TRD 编写或更新，并由主进程保留上下文和最终审查。
 
 ## Runtime Artifact Policy
 
-- Fresh runtime evidence is under `tmp/eval-runs/issue-198-brd/engineer/20260803-115813/trd-gen/eval-001-prd-to-engineer-trd/`.
-- Generated TRD behavior, `with_skill.md`, `without_skill.md`, and `verdict.md` remain ignored scratch evidence and must not be committed.
-- This `comparison.md` is the only durable result for this case.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

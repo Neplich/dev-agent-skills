@@ -1,0 +1,7 @@
+---
+title: Catalog status
+last_verified_version: unverified
+---
+# Catalog status
+
+`GET /catalog/status` reports catalog availability.

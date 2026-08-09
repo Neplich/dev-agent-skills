@@ -1,6 +1,6 @@
 ---
 name: docs-agent
-description: "Downstream documentation router invoked after pm-agent handoff. Classifies confirmed formal documentation scope across site bootstrap, synchronization, backfill, illustrated user operation manuals from real running interfaces, site Release Notes, and release audit, then delegates to documentation specialists."
+description: "Classify and route confirmed formal-documentation requests for site bootstrap, current-state sync/backfill, screenshot-based manuals, site Release Notes, and release audit. Use immediately after a PM docs handoff and preserve its complete context before delegating."
 visibility: internal
 ---
 
@@ -9,6 +9,36 @@ visibility: internal
 `docs-agent` is the formal-documentation capability entry point. It checks the
 downstream entry basis, selects the narrowest documentation specialist, and
 preserves confirmed scope and evidence through the handoff.
+
+## Mandatory Routing Decision
+
+This router produces a routing decision, not specialist output. Before any
+write, it must:
+
+- identify which explicit packet, equivalent confirmed chain, or specialist
+  entry basis was accepted; if incomplete, return to `pm-agent` and name every
+  missing credential or source
+- select exactly one of `docs-site-bootstrap`, `formal-docs-sync`,
+  `manual-gen`, `release-notes-gen`, or `docs-audit`
+- carry the original handoff fields, source evidence, scope, required output,
+  blockers, and authorization state forward unchanged
+- name the selected specialist's authoritative gate without exposing a local
+  filesystem path, copying its protocol, or executing that gate
+
+Emit one compact `Routing decision` block with explicit fields:
+`selected_specialist`, `accepted_entry_basis`, `request_type`, `change_tier`,
+`feature_path`, `host_repository`, `source_documents`, `confirmed_scope`,
+`evidence_sources`, `required_output`, `blockers_risks`, and
+`execution_boundary`. Preserve every field supplied by the accepted handoff;
+use `N/A` only for a field the handoff truly does not contain. Select exactly
+one specialist and stop at its router boundary. Do not add an unrelated site
+bootstrap prerequisite, second specialist, or PM round-trip after the selected
+specialist's documented entry basis is already complete.
+
+For a release chain, separately verify the site Release Notes entry basis and
+the previous-tag/base-ref release window before declaring the next Docs owner
+ready. Missing release credentials return to their current owner; they do not
+authorize this router to write pages, publish, tag, deploy, or audit.
 
 ## Role Boundary
 
@@ -44,7 +74,7 @@ Before routing, require one of:
 - the documented entry basis accepted by the selected specialist
 
 The PM-side packet fields and cross-role behavior are defined in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 Security-originated evidence, including security reports and remediation
 evidence, is not an equivalent confirmed document chain. It may enter Docs only
 with a PM handoff packet after `Security Conclusion Escalation to PM`
@@ -139,7 +169,7 @@ When routing is complete:
   editing deployment assets or performing delivery
 - after the current role or specialist finishes, apply the cross-role
   safety-net closeout in
-  `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+  the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
   (`Safety-Net Closeout and Auto-Continue`): recommend the next owner, explain
   the expected artifact or action, and wait for user confirmation unless
   `auto-continue` is already enabled

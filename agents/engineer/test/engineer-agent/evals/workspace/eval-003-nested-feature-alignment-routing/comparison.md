@@ -1,111 +1,61 @@
-# Eval Result: eval-003-nested-feature-alignment-routing
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `engineer-agent`
 - Eval: `eval-003-nested-feature-alignment-routing`
-- Test case: nested-feature-alignment-routing
-- Workspace: `workspace/eval-003-nested-feature-alignment-routing`
-- Evaluation date: 2026-08-07
-- Overall result: FAIL
-- Behavior result: FAIL
-- Coverage result: PARTIAL
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt: 用户说：Chat Interface 已经有 History Search 子功能 PRD/TRD，现在想调整搜索结果排序，这是个很小的现有功能改动。请先做工程路由，不要改代码。相关文档在 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/history-search/TRD.md。
-- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
-- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
-- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b` from `agents/engineer/test/engineer-agent/evals/workspace/eval-003-nested-feature-alignment-routing`.
+- Fixture SHA-256: `fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b`
+- Prompt SHA-256: `8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `cfa5a88208f1b1c899ab19782fdf4b1c4f59251e80b5c7edaead85a7f37b2ebd`
+- Skill overlay SHA-256: `077bb84411e61374de4fd93945f7e775b9133b3517221140cf4b19937f8b8f70`
+- Judge schema SHA-256: `2c28cd5019db4aa28a9d236d016e67174df115cef2180ca189d432ec28ba579c`
+- Eval definition SHA-256: `6c7cc377f055d604b202feb40d5d2142b855d0368cb0621fa60f17937cec9872`
+- Metadata SHA-256: `cc9d0ea1f23672ef6b7d553053f01b0836b8fd341a707c6f88e853c6256fb3fb`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
-## Assertions
+## Assertion Results
 
-- PASS `resolves_nested_feature_path`: final 明确识别 `chat-interface/history-search`；with_skill transcript 实际读取了嵌套路径下的 PRD.md 与 TRD.md。
-- PASS `does_not_use_sibling_or_parent_only_path`: transcript 与 final 均使用完整嵌套路径，未读取错误的 sibling 或 parent-only 路径。
-- FAIL `routes_requirement_change_to_pm`: 排序调整属于已批准行为的变更，但 final 仍将目标技能写为 `engineer-agent:feature-implementor`，没有路由到 `pm-agent:idea-to-spec` 的 `existing-project-update`。
-- NOT EXERCISED `routes_trd_mismatch_to_trd_gen`: 当前 TRD 存在、状态为 Approved，feature_path 与 related_prd 均匹配，未触发该条件。
-- PASS `does_not_execute_directly`: workspace hash 与输入一致；无代码、IMPLEMENTATION_PLAN 或测试变更，transcript 也未显示执行测试。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `resolves_nested_feature_path` | PASS | With-skill output explicitly identifies feature_path as `chat-interface/history-search` and references the matching PRD/TRD paths; fixture frontmatter confirms both paths. |
+| `does_not_use_sibling_or_parent_only_path` | PASS | With-skill output uses the nested feature path and does not substitute sibling or parent-only paths. |
+| `routes_requirement_change_to_pm` | PASS | Because the requested ranking change affects approved expectations, with-skill output routes to `pm-agent:idea-to-spec` with `existing-project-update`, then describes subsequent TRD alignment. |
+| `routes_trd_mismatch_to_trd_gen` | NOT_EXERCISED | The fixture TRD exists, is Approved, and its `feature_path` and `related_prd` match; the stale/missing/mismatch condition is not exercised. |
+| `does_not_execute_directly` | PASS | With-skill output states no code changes, and locked git evidence shows no changes, commits, plans, or test execution. |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-解析并读取了正确的嵌套 PRD/TRD，且未修改 workspace；但在 alignment gate 未通过时仍指向 feature-implementor，缺少 PM existing-project-update 路由。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9; fixture_sha256=fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b; output_sha256=f65da846927597339f4f7dea24dccec7727684e87c4eef58b7e497a0cb2ba672; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly resolves the nested feature, routes an approved-expectation change to PM before TRD alignment, and stops without implementation.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-正确识别并引用嵌套 PRD/TRD，未修改 workspace；仅作对照，不影响 with_skill 判定。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8df8927fae8a7a05a0bc46dd68c9ebf5573f79304565b07745939c992b9c20d9; fixture_sha256=fce695dea6b3b91d6d3888c03505a121b7361b20c47f0ec1866020880becfe0b; output_sha256=3408558463293160b5a06abf943f70b0e947913241253e7c350b236041f94f46; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides reasonable generic planning and avoids changes, but does not resolve the nested feature path or perform the required PM routing.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures / Findings
-
-- routes_requirement_change_to_pm：未路由到 `pm-agent:idea-to-spec` 的 `existing-project-update`。
-- Root cause: with_skill 在已批准排序行为的变更尚未完成需求对齐时错误保留了 feature-implementor 路由。
-
-## Next Steps
-
-- 修复上述 assertion 对应的 skill 行为或 eval 输入问题后，使用同样的 paired fresh 流程重跑。
-
-## Runtime Artifacts Policy
-
-- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
-- 长期只保留本 `comparison.md`。
-
-## Historical Results
-
-### Previous comparison record: eval-003-nested-feature-alignment-routing
-
-## Evaluation Target
-
-- Agent: `engineer`
-- Skill: `engineer-agent`
-- Eval: `eval-003-nested-feature-alignment-routing`
-- Test case: nested-feature-alignment-routing
-- Workspace: `workspace/eval-003-nested-feature-alignment-routing`
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Fixture: approved `chat-interface/history-search` PRD/TRD with a small search-ordering change.
-- Fresh validation date: 2026-08-01.
-- With-skill source: current Engineer README, current `engineer-agent` SKILL, eval definition, metadata, README, and same-path PRD/TRD.
-- Without-skill source: the same prompt and fixture, freshly regenerated without reading or applying the target README/SKILL, with-skill output, historical comparison, or prior baseline.
-
-## Latest Result
-
-- Behavior result: PASS
-- Coverage result: FULL
-Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-All 5 assertions were exercised and passed in the with-skill run.
-
-## Assertions
-
-- PASS `resolves_nested_feature_path`: preserves `chat-interface/history-search` and reads its same-path PRD/TRD.
-- PASS `does_not_use_sibling_or_parent_only_path`: does not collapse evidence to a sibling or parent-only path.
-- PASS `routes_requirement_change_to_pm`: sends approved sorting changes to the PM `existing-project-update` lane.
-- PASS `routes_trd_mismatch_to_trd_gen`: sends missing, stale, or path-mismatched TRDs to `engineer-agent:trd-gen`.
-- PASS `does_not_execute_directly`: remains route-only.
-
-## With Skill Behavior
-
-The fresh route resolves the nested path, compares the explicit sorting contract, sends a changed expectation to PM, and sends technical freshness/path mismatches to `trd-gen`. It does not create a plan, edit code, or run tests.
-
-## Without Skill Baseline
-
-The fresh baseline preserves the exact nested paths, recognizes a possible product requirement change, and stays route-only. It does not name the required PM `existing-project-update` or `engineer-agent:trd-gen` routes. Baseline assertion result: 3/5.
-
-## Failures
+## Failures and Next Steps
 
 - None.
+- Next: If a missing, stale, or mismatched TRD case is exercised, verify routing to `engineer-agent:trd-gen`.
 
-## Next Steps
+## Runtime Artifact Policy
 
-- Keep this eval as regression coverage for nested feature-path resolution and same-path alignment.
-
-## Runtime Artifacts Policy
-
-- Fresh runtime evidence is under `tmp/eval-runs/issue-196-project-bootstrap-removal-20260801-131022/engineer-agent/eval-003-nested-feature-alignment-routing/`.
-- `with_skill.md`, `without_skill.md`, and `verdict.md` are scratch evidence and must not be committed.
-- This `comparison.md` is the only durable result.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

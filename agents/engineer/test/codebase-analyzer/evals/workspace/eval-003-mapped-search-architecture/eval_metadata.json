@@ -2,10 +2,21 @@
   "eval_id": "eval-003-mapped-search-architecture",
   "eval_name": "mapped-search-architecture",
   "workspace_root": "agents/engineer/test/codebase-analyzer/evals/workspace/eval-003-mapped-search-architecture",
-  "prompt": "请分析 `src/search/` 的模块职责、请求流程和当前接口能力。",
   "fixture_context": [
+    "PM_HANDOFF.md",
     "src/search/query.txt",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/search.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

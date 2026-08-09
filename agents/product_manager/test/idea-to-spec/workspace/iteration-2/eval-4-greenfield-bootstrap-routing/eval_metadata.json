@@ -5,5 +5,15 @@
   "execution_cleanup": [
     "PRD.md"
   ],
-  "prompt": "这是一个空目录。我想做一个 AI 对话助手，左侧是会话列表，右侧是聊天区。先不要直接初始化项目，先帮我梳理需求并落成 PRD 骨架。"
+  "skill_dependencies": [
+    "agents/engineer/skills/trd-gen"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

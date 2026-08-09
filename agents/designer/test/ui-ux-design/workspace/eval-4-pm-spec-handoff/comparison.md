@@ -1,97 +1,59 @@
-# Eval Result: eval-004-pm-spec-handoff
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `designer`
 - Skill: `ui-ux-design`
 - Eval: `eval-004-pm-spec-handoff`
-- Test case: PM Spec Handoff Stops Before Implementation
-- Workspace: `workspace/eval-4-pm-spec-handoff`
 
-## Test Set or Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Fixture version: HEAD `a452319`
-- Fresh run time: `2026-08-07 00:04:31 +0800`
-- Runtime directory: `tmp/eval-runs/issue-198-brd/designer/ui-ux-design/eval-004-pm-spec-handoff/`
-- Fixture: PRD, DECISIONS, TRD, current Settings shell/page; BRD fixture removed at current HEAD
-
-## Latest Result
-
-- Behavior result: **FAIL**
-- Coverage result: **FULL** (3/3 assertions exercised)
-Overall result: FAIL
-
-## Assertion Results (Current)
-
-- spec: **FAIL** — the candidate does not explicitly state that PM specs are design input only and do not authorize implementation.
-- assertion_2: **FAIL** — ready-for-engineering-handoff is mentioned, but engineer-agent is not explicitly named as next owner.
-- assertion_3: **PASS** — the fresh design artifact contains no code changes, implementation steps, test commands, or patch actions.
-
-## With-Skill Behavior (Current)
-
-The candidate creates the canonical billing notification UI/UX specification
-and preserves source code, but omits both explicit boundary statements required
-by the current assertions.
-
-## Fresh Without-Skill Baseline (Current)
-
-The baseline was generated first from the identical prompt and fixture in an
-independent top-level workspace under isolated HOME/CODEX_HOME. It also stays
-design-only and produces a differently named handoff file; it is comparison
-evidence only.
-
-## Failures (Current)
-
-- Missing explicit PM-spec authorization boundary.
-- Missing explicit engineer-agent next-owner handoff.
-
-## Next Steps (Current)
-
-- Align the completion response with the existing hard-boundary and completion criteria, then rerun.
-
-## Runtime Artifact Policy (Current)
-
-- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
-- Only this durable comparison is updated.
-
-## Historical Result (Superseded: pre-#234 contract)
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `0791241d90c35458117ad7afc41087d198e776e1bb0d176e05c3732f6be148a6` from `agents/designer/test/ui-ux-design/workspace/eval-4-pm-spec-handoff`.
+- Fixture SHA-256: `0791241d90c35458117ad7afc41087d198e776e1bb0d176e05c3732f6be148a6`
+- Prompt SHA-256: `34a9d38fc5d93e5c1a925aa7889e94a7727bc719382f01830a2c7b69cc7a8020`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a26ada6a2ba843cfb4e657c89ce7c3b76b2095d2b006f263e49042916f04185f`
+- Skill overlay SHA-256: `1e46d8592a997f6f8a826742994d2b0945378f4e3503165a8d7fa4365064000f`
+- Judge schema SHA-256: `2f242e255f292a4598cb48c2bfc21dd7b56a2d6cda47e6a68b75b5c3321a2e98`
+- Eval definition SHA-256: `f5e031cd559d08b9cd37fee2f571fc541cf110879ad665b05952cb915a09fe63`
+- Metadata SHA-256: `a2b7d997dbacd7584fcef225254185f8826f79c87e7c30c69a40f24691946c86`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-All three assertions were exercised on the reachable design-generation path.
+Overall result: PASS
 
 ## Assertion Results
 
-- `spec`: **PASS** — PRD, DECISIONS, TRD, and current UI context are explicitly treated as design input only, not implementation authorization.
-- `assertion_2`: **PASS** — the candidate completes the design handoff and names `engineer-agent` as the next implementation owner.
-- `assertion_3`: **PASS** — it contains no code edits, implementation steps, test commands, or patch actions.
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `spec` | PASS | 交付的设计文档明确写明 PM PRD 仅授权设计输入，不授权源码或实现工作。 |
+| `assertion_2` | PASS | 交付文档明确写明下一步是 engineer-agent。 |
+| `assertion_3` | PASS | with_skill 仅新增设计文档，git evidence 显示源码未修改；未包含测试命令或补丁操作。文档中的实现范围说明属于工程交接边界，并非实现步骤拆解。 |
 
 ## With-Skill Behavior
 
-- Produces the canonical `docs/design/billing-notification-settings/ui-ux-spec.md` behavior with workspace-admin journey, event toggles, recipient alias, non-color urgent cues, loading/empty/save states, and reuse of the existing Settings shell.
-- Respects the TRD warning not to hard-code unconfirmed API field assumptions.
-- Reads only PRD/DECISIONS/TRD for product and technical context and never looks for or cites BRD. Removing BRD causes no assertion-level behavior difference.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=34a9d38fc5d93e5c1a925aa7889e94a7727bc719382f01830a2c7b69cc7a8020; fixture_sha256=0791241d90c35458117ad7afc41087d198e776e1bb0d176e05c3732f6be148a6; output_sha256=d1ff30bdd46f6d2d159683a0764111c7740c8273b7eff4ab87e65f65d50645bc; snapshot_sha256=9216c99469813ecf0656a58788e1684f5cef33e6ed6d80e0a1ebd2e8f91decdb
+- Behavior: 完成 UI/UX 设计交付，明确设计与实现边界，并交接给 engineer-agent。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- This baseline was newly generated in this run from only the same prompt and fixture files; it did not apply the Designer README, skill, with-skill result, historical baseline, or prior comparison.
-- The explicit prompt keeps it code-free and it proposes similar settings controls, but it is less explicit about canonical artifact ownership and role boundaries.
-- It also uses no BRD.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=34a9d38fc5d93e5c1a925aa7889e94a7727bc719382f01830a2c7b69cc7a8020; fixture_sha256=0791241d90c35458117ad7afc41087d198e776e1bb0d176e05c3732f6be148a6; output_sha256=b7803a5329614d363c9102111e5e36f85a2e09a3bcd34e461d031599b1a23bb4; snapshot_sha256=8c7a7286683403e9d8d3c66522c238084e9018820132206b19e737e11e006455
+- Behavior: 同时修改了页面源码并新增设计文档，还声明未执行测试，未遵守仅交付设计的边界。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
 - None.
-
-## Next Steps
-
-- No skill or fixture correction is required for the current assertions.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- Runtime candidates, fresh baseline, and judge evidence remain under the ignored runtime directory and are not committed.
-- Only this durable `comparison.md` is updated.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

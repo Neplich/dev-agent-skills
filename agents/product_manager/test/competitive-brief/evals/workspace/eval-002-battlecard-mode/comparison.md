@@ -1,85 +1,60 @@
-# Eval Result: eval-002-battlecard-mode
-
-## Latest Fresh Evaluation — 2026-08-07
-
-- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
-- Fixture: HEAD `47adbbc9`; both lanes used the same empty fixture manifest.
-- Behavior result: PASS — 4/4 assertions passed.
-- Coverage result: FULL — all 4 assertion scenarios were exercised.
-Overall result: PASS
-
-### Assertion Results
-
-- `battlecard_fields`: PASS — each competitor received all required one-page battlecard fields.
-- `no_full_brief`: PASS — the result stayed in battlecard mode and omitted the full-brief section chain.
-- `evidence_boundary`: PASS — recorded the research date, linked source categories, and marked inference/validation boundaries.
-- `no_battlecard_offer`: PASS — did not offer battlecard creation as a later step.
-
-### With-Skill / Baseline Comparison
-
-The with-skill lane directly returned the two requested battlecards. The baseline also produced battlecards but additionally wrote three workspace files, including its own README; the input manifest contained no README, so this was an output write rather than fixture leakage.
-
-### Failures / Next Steps
-
-- No with-skill assertion failures and no coverage gaps.
-
-### Runtime Artifact Policy
-
-- Fresh evidence remains under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-002-battlecard-mode/` and is not committed.
-
----
-
-The sections below are historical records from earlier runs.
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `competitive-brief`
 - Eval: `eval-002-battlecard-mode`
-- Test case: battlecard-mode
-- Workspace: `workspace/eval-002-battlecard-mode`
-- Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-- Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
-- Historical result: PASS
+## Current Result
 
-## Review Context
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0` from `agents/product_manager/test/competitive-brief/evals/workspace/eval-002-battlecard-mode`.
+- Fixture SHA-256: `580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0`
+- Prompt SHA-256: `e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `64a375a1a490fa251e9b252ef3a7787f55ca6a4fd08e5d401228a899b274ed39`
+- Skill overlay SHA-256: `c1341cebf983202b3c2101489252c70818305b548c111af4817c833b2dd4164f`
+- Judge schema SHA-256: `e42897afb6931d7065c6aa9ac71e607d574f057396cd3a30a0419c210f3be3cb`
+- Eval definition SHA-256: `a7454ae2eccc665064a08c31fc99de3b8f0a596f72811f2e5035b12f267e9fe8`
+- Metadata SHA-256: `be38b1b419460352b11de0cc1468d57c031f7575d697be3bf617760a456d47f3`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-- Date: 2026-08-03（issue #188 Battlecard Mode 新增后 fresh 双侧验证）
-- Judge: fresh Codex validation agent，双侧 candidate 冻结后独立判定（`tmp/eval-runs/issue-188-battlecard/judge/verdict.md`）
+## Assertion Results
 
-## Test Set / Fixture Version
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `battlecard_fields` | PASS | with_skill 输出分别为 Linear 和 Jira 两页结构化资料，均包含 Quick Overview、Their Pitch、Strengths、Weaknesses、Objection Handling、Landmines to Set、Landmines to Defuse、Win/Loss Themes。 |
+| `no_full_brief` | PASS | 输出采用 battlecard 结构；虽含 Discovery Questions、Talk Track、POC Guidance 等销售使用内容，但没有完整竞品 brief 的执行摘要、messaging gap、机会/威胁等章节。 |
+| `evidence_boundary` | PASS | 两家资料均标注 2026-08-06 研究日期和来源，并对定价、我方能力、企业控制、生态等未被材料确认的内容标注“待验证”或要求 POC 验证。 |
+| `no_battlecard_offer` | PASS | 输出直接提供两家 battlecard，没有询问是否需要创建 battlecard，也未将其作为后续追加项。 |
 
-- Schema: `evals.json` v1.0
-- Fixture: live 联网研究（Linear 与 Jira 官方公开页面），无静态 fixture
+## With-Skill Behavior
 
-## Assertions
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2; fixture_sha256=580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0; output_sha256=91cc3517c984d097ca8c48a9df8d46e0fa3f3a70d5ed4d88266f8327ffd18f50; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完成 Linear 与 Jira 的结构化销售 battlecard，并明确区分已知信息与待验证内容。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-- PASS `battlecard_fields`：Linear/Jira 各产出单页 battlecard，Quick Overview / Their Pitch / Strengths / Weaknesses / Objection Handling / Landmines to Set / Landmines to Defuse / Win-Loss Themes 字段齐全；without-skill FAIL（未呈现 Their Pitch、双向 Landmines、Win/Loss Themes 等指定字段）
-- PASS `no_full_brief`：未展开完整 brief 章节，只输出单页 battlecard；without-skill 同 PASS
-- PASS `evidence_boundary`：标注研究日期、来源类别，逐项区分官方事实/第三方评价/推断/假设；without-skill 同 PASS
-- PASS `no_battlecard_offer`：直接交付 battlecard，未再询问是否创建 battlecard；without-skill 同 PASS
+## Fresh Without-Skill Baseline
 
-## With Skill Behavior
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2; fixture_sha256=580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0; output_sha256=bafc548537f6e3314bc47a453c9f1d07ee8e528c660a024c18fa423911321659; snapshot_sha256=20d63c8919a61acd0e8c49734612182d7c73e90bfd5486ec4276eb62b7a23631
+- Behavior: 提供了两份文件型竞争资料，覆盖部分销售话题并标注待验证，但未展示要求的完整 battlecard 字段结构。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-- Battlecard Mode 生效：pm-agent `battlecard` 信号路由时直接产出两页单页 battlecard（字段齐全），不输出完整 brief，不询问是否创建 battlecard；研究日期与证据标签完整。
+## Failures and Next Steps
 
-## Without Skill Baseline
+- None.
+- Next: None.
 
-- 来源：2026-08-03 fresh baseline（同 prompt，未读 skill）；3/4 assertions PASS（no_full_brief、evidence_boundary、no_battlecard_offer 被 baseline 内化，battlecard_fields 因缺指定字段 FAIL——唯一区分项）。
-- 区分度：结构契约（单页字段清单）保持 skill 增量；范围与证据边界已被 baseline 内化。
+## Runtime Artifact Policy
 
-## Failures / Findings
-
-- 无 with-skill assertion failure；无 NOT EXERCISED；Coverage FULL。
-- 零区分度观察（no_full_brief/evidence_boundary/no_battlecard_offer 被 baseline 白捡，3/4）：属模型通用审慎；Battlecard Mode 的增量在固定字段清单（battlecard_fields 保持区分度）。
-
-## Next Steps
-
-- 保留 Battlecard Mode 与 eval-002；后续修改这些规则时重新运行。
-
-## Runtime Artifacts Policy
-
-- 双侧 candidates 与 judge verdict 位于 `tmp/eval-runs/issue-188-battlecard/`（ignored 运行期目录，未提交）。
-- 长期只保留本 `comparison.md`；不提交 transcript、candidate、verdict、timing、run status 或 diagnostics。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

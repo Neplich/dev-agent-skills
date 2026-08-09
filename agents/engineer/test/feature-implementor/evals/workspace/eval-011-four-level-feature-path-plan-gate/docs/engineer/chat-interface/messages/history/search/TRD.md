@@ -24,6 +24,6 @@ related_prd: "docs/pm/chat-interface/messages/history/search/PRD.md"
 
 ## Validation
 
-- `uv run --with pytest pytest agents/test_eval_contract.py`
-- Repository-specific TypeScript or unit test command if present in the target
-  project fixture.
+- `npm test -- tests/chat-interface/messages/history/search-service.test.ts`
+- The TypeScript unit test verifies relevance ordering and the timestamp
+  tie-breaker against the message search service.

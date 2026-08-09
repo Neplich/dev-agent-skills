@@ -4,84 +4,35 @@ name: Manual Evals
   workflow_dispatch:
     inputs:
       target:
-        description: "Eval suite to run"
+        description: "Agent suite to run"
         required: true
         default: all
         type: choice
         options:
           - all
           - designer
+          - devops
           - docs
+          - engineer
+          - product_manager
           - qa
+          - security
+      skill:
+        description: "Optional exact skill name"
+        required: false
+        type: string
+      eval_id:
+        description: "Optional exact eval ID (requires skill)"
+        required: false
+        type: string
 
 permissions:
   contents: read
 
 jobs:
-  designer-evals:
-    if: ${{ github.event.inputs.target == 'all' || github.event.inputs.target == 'designer' }}
+  paired-evals:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-      - uses: astral-sh/setup-uv@v8.1.0
-        with:
-          enable-cache: true
-      - name: Run designer eval diagnostics
-        id: run-designer-evals
-        continue-on-error: true
-        run: uv run agents/designer/test/run_all_evals.py
-      - name: Explain designer eval diagnostics
-        if: ${{ steps.run-designer-evals.outcome == 'failure' }}
-        run: |
-          echo "::warning::Designer eval diagnostics found missing or failing runtime outputs."
-          echo "::warning::Review the uploaded comparison.auto.md artifacts before using this run as merge evidence."
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: designer-eval-runtime-artifacts
-          if-no-files-found: ignore
-          retention-days: 7
-          path: |
-            tmp/eval-runs/designer/**
-
-  docs-evals:
-    if: ${{ github.event.inputs.target == 'all' || github.event.inputs.target == 'docs' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-      - uses: astral-sh/setup-uv@v8.1.0
-        with:
-          enable-cache: true
-      - name: Run docs eval diagnostics
-        id: run-docs-evals
-        continue-on-error: true
-        run: uv run agents/docs/test/run_all_evals.py
-      - name: Explain docs eval diagnostics
-        if: ${{ steps.run-docs-evals.outcome == 'failure' }}
-        run: |
-          echo "::warning::Docs eval diagnostics found missing or failing runtime outputs."
-          echo "::warning::Review the uploaded comparison.auto.md artifacts before using this run as merge evidence."
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: docs-eval-runtime-artifacts
-          if-no-files-found: ignore
-          retention-days: 7
-          path: |
-            tmp/eval-runs/docs/**
-
-  qa-evals:
-    if: ${{ github.event.inputs.target == 'all' || github.event.inputs.target == 'qa' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 360
     env:
       CODEX_HOME: /tmp/codex-home
     steps:
@@ -100,21 +51,37 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           if [ -z "${OPENAI_API_KEY:-}" ]; then
-            echo "::error::Set the OPENAI_API_KEY repository secret before running QA evals."
+            echo "::error::Set the OPENAI_API_KEY repository secret before running evals."
             exit 1
           fi
-      - name: Install Codex CLI
-        run: npm install -g @openai/codex
-      - name: Authenticate Codex CLI
+      - name: Validate selection
+        env:
+          TARGET: ${{ inputs.target }}
+          SKILL: ${{ inputs.skill }}
+          EVAL_ID: ${{ inputs.eval_id }}
+        run: |
+          if [ -n "${SKILL}" ] && [ "${TARGET}" = "all" ]; then
+            echo "::error::Select an agent target when filtering by skill."
+            exit 1
+          fi
+          if [ -n "${EVAL_ID}" ] && [ -z "${SKILL}" ]; then
+            echo "::error::An exact eval ID requires an exact skill name."
+            exit 1
+          fi
+      - name: Install and authenticate Codex CLI
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: printenv OPENAI_API_KEY | codex login --with-api-key
-      - run: uv run agents/qa/test/run_all_evals.py
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: qa-eval-runtime-artifacts
-          if-no-files-found: ignore
-          retention-days: 7
-          path: |
-            tmp/eval-runs/qa/**
+        run: |
+          npm install -g @openai/codex
+          printenv OPENAI_API_KEY | codex login --with-api-key
+      - name: Run fresh paired evals
+        env:
+          TARGET: ${{ inputs.target }}
+          SKILL: ${{ inputs.skill }}
+          EVAL_ID: ${{ inputs.eval_id }}
+        run: |
+          args=()
+          if [ "${TARGET}" != "all" ]; then args+=(--agent "${TARGET}"); fi
+          if [ -n "${SKILL}" ]; then args+=(--skill "${SKILL}"); fi
+          if [ -n "${EVAL_ID}" ]; then args+=(--eval "${EVAL_ID}"); fi
+          uv run scripts/run_skill_eval.py --jobs 10 "${args[@]}"

@@ -1,65 +1,60 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `formal-docs-sync`
 - Eval: `eval-013-deployment-aggregate-migration`
-- Review context: issue #161 fresh paired rerun and fresh Codex judge
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture: legacy aggregate deployment page, inbound links, three-class evidence summary and old change map
-- Actual validation date: `2026-07-22`
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-013-deployment-aggregate-migration`.
+- Fixture SHA-256: `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4`
+- Prompt SHA-256: `ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `cb68cc7396b4ed1007a2bd5b5970baa015053110168fade98a969dbebc84c1b1`
+- Eval definition SHA-256: `2adf472912fe37066628cc2da23affed241d146a6c7c80728c7df93b4f2fccc7`
+- Metadata SHA-256: `24118b2c28e807c2d8787e545057d4e67c26fd6313bf8abe3b22a58982fbfa17`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-## Latest Result
+## Assertion Results
 
-- Overall result: FAIL
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| `migrates_aggregate_path` | FAIL | FAIL | with_skill 仍存在 `docs/site/ops/deployment.md`；without_skill 虽创建页面树，但根索引及分类页仍重复 `APP_PORT`、健康检查等旧聚合正文（如 `deployment/index.md:21-25`、`docker/index.md:12-17`）。 |
-| `repairs_inbound_and_internal_links` | FAIL | PASS | with_skill 的 `ops/index.md`、`product/runtime.md` 仍链接 `deployment.md`；without_skill 的站内链接均指向新页面且相对目标存在。 |
-| `updates_change_map_without_data_loss` | FAIL | FAIL | with_skill 的三个 `required_docs` 仍指向旧聚合页；without_skill 保留了未知字段和 exclude，但未将共享 `environment.md` 纳入各类别映射。 |
-| `updates_navigation_atomically` | FAIL | FAIL | with_skill 保留旧链接且 `npm run test:docs` 失败；without_skill 链接已更新，但同一测试命令仍因缺少 `scripts/deployment-migration.test.mjs` 失败。 |
-
-未满足断言（with/without 任一 FAIL）：``migrates_aggregate_path``、``repairs_inbound_and_internal_links``、``updates_change_map_without_data_loss``、``updates_navigation_atomically``
-
-
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `migrates_aggregate_path` | PASS | Locked delivery snapshot deletes docs/site/ops/deployment.md and adds deployment/index.md, environment-reference.md, and development, docker, and kubernetes-helm page trees. |
+| `repairs_inbound_and_internal_links` | PASS | Locked files update both inbound links to deployment/index.md; the new root links resolve to all class pages and environment-reference.md, and no residual old aggregate links remain in the checked files. |
+| `updates_change_map_without_data_loss` | PASS | Locked change-map content maps each deployment glob to root, shared environment, and class pages while preserving custom_owner_field, exclude, and the unrelated src/product mapping. |
+| `updates_navigation_atomically` | PASS | With-skill evidence records npm run test:docs exit 0, git diff --check exit 0, no formal old-path remnants, and a coordinated snapshot containing navigation, moved pages, links, change-map updates, and consolidated facts. |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- Moved shared `APP_PORT` facts to the environment authority, repaired Ops/Product inbound links, split maps by class and preserved `exclude`, unknown fields and unrelated entries.
-- Limited the migration to evidence retained by the fixture; it did not invent image, Chart, values or exact command child pages from a summary.
-- Kept changed pages `unverified` and returned the `docs-agent:docs-audit` handoff blocked on a confirmed target version.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4; output_sha256=5077aba73143ee46ad58b2537d4287c8cc783ec52d5e442329da8c295c7d1e47; snapshot_sha256=b8fb2a9995e508f6e4d33f6242c40730a14a000f80bbbce82f83a0c1d13afc87
+- Behavior: Completed the migration with the full page tree, repaired links, expanded change-map entries, preserved fields, and passing documentation tests.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4; output_sha256=d89c40f4b13f317991a77ee7fe6cfb2a0eaf54eb5e2c4b159b4a5bba10b340dc; snapshot_sha256=f671f7d7dc033436c1d9f37a04972c40a4df0ccef01fe720f7f0b0d0399a9dee
+- Behavior: Deleted and split the aggregate page and repaired basic links, but mapped each category only to its class page and omitted root/shared pages from required_docs.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-- Source: fresh lane from the same pristine fixture and prompt without the target skill, Agent README, comparisons or with-skill output.
-- It also passed 2/2 structural migration tests, but used broader unsupported phrases such as a current Chart, approved workflow and previous Helm revision; with-skill maintained the stricter evidence boundary.
+## Failures and Next Steps
 
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- No with-skill assertion failures.
-- Runtime provenance used lane transcripts and reports; a separate immutable input manifest was not retained.
-
-## Next Steps
-
-- 修复四条 with-skill 失败（确认范围、迁移闭包、历史页面处理与写后证据）后，使用同一 prompt/fixture 重新执行 paired eval；重跑前保持 `FAIL`。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- Paired lanes, transcripts, reports, generated pages and judge verdict remain under `tmp/eval-runs/issue-161-rerun/` and are not submitted.
-- Only this comparison is durable.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

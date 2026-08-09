@@ -1,65 +1,59 @@
-# Eval Result: eval-004-route-ui-update-request
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `pm-agent`
 - Eval: `eval-004-route-ui-update-request`
-- Workspace: `eval-4-route-ui-update-request`
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Fixture version: current tracked fixture at the start of the 2026-08-07 run.
-- Fresh run: 2026-08-07 (Asia/Shanghai).
-- Candidate and independent judge: `gpt-5.6-luna`, `model_reasoning_effort="medium"`.
-- Isolation: identical raw prompt and fixture snapshot; all baseline roots were snapshotted in memory and destroyed before any with-skill root; all with-skill roots were destroyed before judging; HOME/CODEX_HOME values matched per eval and were reset for every lane; only `auth.json` was copied into CODEX_HOME.
-- Runtime evidence: `tmp/eval-runs/issue-238-pm/fresh-20260807/pm-agent/eval-004-route-ui-update-request/`.
-
-## Latest result:
-
-- Behavior result: PASS — determined only from the with-skill lane by an independent judge.
-- Coverage result: FULL — 4/4 with-skill assertion scenarios were exercised.
-Overall result: PASS
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-4-route-ui-update-request`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `cc5c00e0814501d7ed50a7f0170322a995f768ddcee0b14ac461aa95868c10b8`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0b60a8fdef1023247fb430f4647e03f742c09fbfdb17e32a3a03dc6059ae9e02`
+- Skill overlay SHA-256: `7093347dda9d009dc74c5bd9b37b3d0d8b980466e82f7a4efbacd767a0e9fa19`
+- Judge schema SHA-256: `afcbd1cd02daddf2a5de8000a17edb44c8f3338aa4214be0e836d3a78f54f541`
+- Eval definition SHA-256: `601243bb221e4073b25a6eba61d2cbbc1d243cb0d11ebc88b60ef8187a2e86e1`
+- Metadata SHA-256: `aa0eca0938ef56711257694af52b821c5be5dbedc9b5982d77710814288d3115`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
-- `request_type_design_or_update`: with-skill **PASS**; without-skill **FAIL** — with_skill 最终回复明确分类为 existing_update；without_skill 直接判为 Engineer 路径，未作所需 PM 分类。
-- `pm_designer_engineer_decision`: with-skill **PASS**; without-skill **FAIL** — with_skill 指出先由 PM 收敛需求，并按是否需要设计产物转 Designer、范围确认后转 Engineer；without_skill 将 Engineer 作为主要执行者，未完成 PM 路由判断。
-- `implementation_waits_for_alignment`: with-skill **PASS**; without-skill **FAIL** — with_skill 明确要求先确认设计和技术范围，再修改前端；without_skill 直接建议 Engineer 执行。
-- `no_fresh_writes_or_external_mutation`: with-skill **PASS**; without-skill **PASS** — 两份 status 的 changes 均为空；trace 仅显示读取技能文件和输出回复，无写入或外部 mutation。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `request_type_design_or_update` | PASS | with_skill 将请求置于 `greenfield-discovery`，明确目标是新版设置页方案，并声明暂不写代码，语义上完成了设计型请求分类。 |
+| `pm_designer_engineer_decision` | NOT_EXERCISED | with_skill 列出了待产出的 PRD、DECISIONS 和界面方案草案，并将 Designer/Engineer 影响标记为待方案确认后评估；完整的 PM/Designer/Engineer 路径决策尚未发生，需用户确认产品场景。 |
+| `implementation_waits_for_alignment` | PASS | with_skill 明确声明“暂不写代码”，要求先确认产品场景和设置项范围，并表示方案确认后才评估 Designer/Engineer 影响，未提前 handoff Engineer。 |
 
 ## With-Skill Behavior
 
-正确走 PM 路径，分类为 existing_update；先收敛产品范围，再按需交接 Designer，设计和技术范围确认后交接 Engineer。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cc5c00e0814501d7ed50a7f0170322a995f768ddcee0b14ac461aa95868c10b8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=8b4d073a04288c3762b0bba89c75b0dd521be5977efc3733b8a44d88b2dcd881; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为 greenfield discovery，暂停实现并请求高信息量澄清，以便后续收敛 PM、Designer、Engineer 路径。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-错误地直接走 Engineer 路径，仅将 Designer 作为可选参与者。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cc5c00e0814501d7ed50a7f0170322a995f768ddcee0b14ac461aa95868c10b8; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=13fd4759ba46ff686c21b12f4df246bed4b022c1cbc6a97b3bd12e1b9d919fc7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 直接提出左右分栏设置页方案和交互细节，但未进行 PM、Designer、Engineer 路径判断或对齐门禁。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-The baseline is comparison evidence only; its outcome does not affect `Overall result`.
-
-## Failures
-
-- None.
-
-## Coverage Gaps
+## Failures and Next Steps
 
 - None.
+- Next: 获得用户确认后，继续确定 PRD/DECISIONS、设计方案与 Engineer handoff 路径。
 
-## Blockers
+## Runtime Artifact Policy
 
-- None.
-
-## Historical Result (Pre-#234)
-
-- The previous durable result recorded Behavior **PASS**, Coverage **FULL**, and Overall **BLOCKED** after issue #234 identified prompt/fixture leakage.
-- That pre-remediation result is retained only as history and is superseded by this strict fresh run.
-
-## Next Steps
-
-- Keep this case as a regression gate and rerun it after changes to `pm-agent`, its routing contract, or this fixture.
-
-## Runtime Artifacts Policy
-
-- Candidate responses, traces, status manifests, isolation records, and judge evidence remain under the gitignored runtime path above and are not committed.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

@@ -1,66 +1,62 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `formal-docs-sync`
 - Eval: `eval-011-deployment-three-class-backfill`
-- Review context: issue #161 fresh paired rerun and fresh Codex judge
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture: issue #161 three-class deployment evidence set after template-consumer and recursive-link corrections
-- Actual validation date: `2026-07-22`
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4d8408c1113f0b188f486ff52a1805928dda107a5b4bcef41d15ff086a7d524c` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-011-deployment-three-class-backfill`.
+- Fixture SHA-256: `4d8408c1113f0b188f486ff52a1805928dda107a5b4bcef41d15ff086a7d524c`
+- Prompt SHA-256: `bed66a02e7102d84cc8988d8318b854a858b57d12888f0168cc60650b6d45cd2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `2e68facf61317de81b206f59b17f3e724dc3951afae11b2a8c4aad6ddba91a26`
+- Eval definition SHA-256: `75d9816433885deaa537c3684a33cbf77a210bf3435c193880901b7467aafb6d`
+- Metadata SHA-256: `e1dbc6626788bdd9110a7a2968862f7b97506d86b4133c4cf183a556eecf36ce`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
 
-## Latest Result
+## Assertion Results
 
-- Overall result: PASS
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| `creates_three_class_page_tree` | PASS | PASS | 两条 lane 均生成完整 10 文件页面树；根索引分别提供三类部署导航（with: `docs/site/ops/deployment/index.md:12-21`；without: `.../index.md:12-19`）。 |
-| `cross_checks_environment_reference` | PASS | FAIL | with 的环境表包含用途、类型/约束、必填性、默认值、安全示例、适用方式、Secret 属性和证据，并明确 `LEGACY_TIMEOUT` 未消费且已废弃（with: `environment-reference.md:12-22`）；without 仅列变量、必填性、默认值和使用方，未交叉记录 `.env.example`、测试证据或 `LEGACY_TIMEOUT`（without: `environment-reference.md:12-20`）。 |
-| `separates_class_specific_contracts` | PASS | FAIL | with 为 Development、Docker、Kubernetes/Helm 分别提供前置、命令、成功标准、回滚和故障处理，并包含各自证据范围（with: 三类 `index.md` 及子页）；without 的 Development、Docker、Kubernetes 主页主要只有简短事实和导航，缺少完整类别合同（without: `development/index.md:10-12`、`docker/index.md:10-14`、`kubernetes-helm/index.md:10-14`）。 |
-| `maps_each_class_atomically` | PASS | FAIL | with 的 `change-map.yaml` 将 `scripts/dev/**`、`Dockerfile`、`deploy/docker/**`、`deploy/helm/**` 及共享配置映射到完整页面树，并保留 `custom_owner_field`（with: `change-map.yaml:6-32`）；without 的映射只覆盖各类部分页面，未将 Docker/Helm/共享配置原子映射到根索引、环境参考和导航（without: `change-map.yaml:6-36`）。 |
-| `runs_nested_docs_checks` | PASS | FAIL | 两条 lane 实际运行 `npm run test:docs` 均为 3/3，通过页面树、导航和内部链接检查；两者页面均保持 `last_verified_version: unverified`。但 with 结果明确等待 docs audit / 版本确认（with: `result.txt:7-10`），without 只有“测试 3/3”记录，没有 `docs-agent:docs-audit` handoff 证据（without: `result.txt:14`）。 |
-
-未满足断言（with/without 任一 FAIL）：``cross_checks_environment_reference``、``separates_class_specific_contracts``、``maps_each_class_atomically``、``runs_nested_docs_checks``
-
-
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_three_class_page_tree` | PASS | Locked delivery snapshots include the required deployment index, shared environment page, Development (2), Docker (2), and Kubernetes/Helm (4) pages, with navigation and selection guidance. |
+| `cross_checks_environment_reference` | FAIL | The environment table omits an explicit APP_PORT default, incorrectly marks APP_PORT as required for Development despite the source default, omits Kubernetes/Helm applicability for DATABASE_URL, and does not fully document effective mechanisms for each parameter. |
+| `separates_class_specific_contracts` | FAIL | The class pages separate prerequisites, commands, success criteria, rollback, and troubleshooting, but Docker lacks documented network and migration coverage, while Kubernetes/Helm lacks ConfigMap handling and a real chart package tree. |
+| `maps_each_class_atomically` | PASS | The locked change-map snapshot maps the real Development, Docker, Helm, and shared-configuration globs to the corresponding pages, preserves the unrelated existing custom_owner_field, and records the delivered navigation and mappings. |
+| `runs_nested_docs_checks` | NOT_EXERCISED | The candidate reports npm run test:docs passed, but the locked test only proves nested internal links and change-map coverage; it cannot prove public/internal recursive navigation, and the docs-agent:docs-audit handoff remains blocked by the missing target release version. |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- Cross-checked env examples, settings/tests, Compose, values and actual template consumers; treated `LEGACY_TIMEOUT` and unconsumed values explicitly instead of inventing runtime mappings.
-- Kept Development, Docker and Kubernetes/Helm commands, images, rollback and troubleshooting separate; all class indexes link their authoritative child pages.
-- Preserved unrelated/unknown map data, left pages `unverified`, and returned the `docs-agent:docs-audit` handoff blocked on a confirmed target version.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bed66a02e7102d84cc8988d8318b854a858b57d12888f0168cc60650b6d45cd2; fixture_sha256=4d8408c1113f0b188f486ff52a1805928dda107a5b4bcef41d15ff086a7d524c; output_sha256=d1b8bf77a362faea4960996013e0e0206e8aa4af4397dffd5a6368a9e0a0eef0; snapshot_sha256=a287d9732496cf0e1756fed9d0dc414dddb90ddba45ef57b2325d1ee0d70e0e0
+- Behavior: Delivered the requested page tree, evidence-linked mappings, and documented test execution, but with substantive contract omissions and inaccuracies.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bed66a02e7102d84cc8988d8318b854a858b57d12888f0168cc60650b6d45cd2; fixture_sha256=4d8408c1113f0b188f486ff52a1805928dda107a5b4bcef41d15ff086a7d524c; output_sha256=3f3fe6248ec2a39c1f2d8f6b211339c5339f3103ea32decaa962ba7a3e1d42e7; snapshot_sha256=387a2737eac2c4832db3caf15bc9b3f8953934d677e9824b30dd32a739d4e7c1
+- Behavior: Delivered a similar page tree and concise verification claim, used only as comparison context.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-- Source: fresh lane from the same corrected pristine fixture and prompt; it did not read the target skill, Agent README, comparisons or with-skill output.
-- It passed 3/3 structural tests, but its environment table omitted required contract fields, treated Helm `service.port` as `APP_PORT`, treated an unconsumed value as effective, and omitted the formal `docs-agent:docs-audit` handoff.
+## Failures and Next Steps
 
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- No with-skill assertion failures.
-- Runtime provenance used lane transcripts and reports; a separate immutable input manifest was not retained.
-
-## Next Steps
-
-- Keep this PASS and retain the stricter internal-link test and template-consumer evidence boundary.
+- The with_skill delivery has material environment-reference inaccuracies and omissions.
+- The with_skill class-specific contracts omit required Docker and Kubernetes/Helm details.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- Paired lanes, transcripts, reports, generated pages and judge verdict remain under `tmp/eval-runs/issue-161-rerun/` and are not submitted.
-- Only this comparison is durable.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

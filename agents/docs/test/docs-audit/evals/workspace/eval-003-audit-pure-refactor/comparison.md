@@ -1,70 +1,60 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `docs-audit`
 - Eval: `eval-003-audit-pure-refactor`
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture version: docs-audit A2 / 2026-07-19
-- Assertions: 4
-
-## Latest Result
-
-- Overall result: PASS
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| `sends_refactor_suspect_to_fact_layer` | PASS | FAIL | with_skill 明确写明页面“先列为 `suspect`；复核后确认”；without_skill 直接称“审计结论：通过”，未将未更新页面交给事实层。 |
-| `classifies_accurate_refactor_verified` | PASS | FAIL | with_skill 最终明确标为 `verified`，并核对了 GET、limit、200、400 等事实；without_skill 仅称页面“当前内容仍准确”，没有 `verified` 的事实层结论。 |
-| `does_not_force_noop_doc_edit` | PASS | PASS | 两条 lane 均明确说明纯实现重构无需更新 API 页面。 |
-| `does_not_block_for_unchanged_accurate_doc` | PASS | PASS | 两条 lane 均未将页面判为 `stale`；with_skill 仅因缺少 Git 元数据而不能签发 `ready_for_tag`，without_skill 也未返回 `ready_for_tag` 或盖章。 |
-
-未满足断言（with/without 任一 FAIL）：``sends_refactor_suspect_to_fact_layer``、``classifies_accurate_refactor_verified``
-
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677` from `agents/docs/test/docs-audit/evals/workspace/eval-003-audit-pure-refactor`.
+- Fixture SHA-256: `a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677`
+- Prompt SHA-256: `20617e4b8714b5129b537177e8c463822eec4083d7fdd0d6520c27013f94489f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `3e58dae2a34edb25f9589f7bddb4e3282cd1f66e3b0c3f35187db4ed16fd5f23`
+- Eval definition SHA-256: `a7212e3282f2eaaa660e0675fb965d5050f366a07c153f3821d78fdab8976de5`
+- Metadata SHA-256: `1e20c97bb5ffc477023f6bbbd217e71d747297cb0b8f52652660b6b2d10adc7a`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
 
 ## Assertion Results
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-| Assertion | Result | Evidence summary |
+| Assertion | Result | Evidence |
 | --- | --- | --- |
-| `sends_refactor_suspect_to_fact_layer` | PASS | change-map 命中且文档未同批更新时先标 `suspect`，继续事实核对。 |
-| `classifies_accurate_refactor_verified` | PASS | GET 路径、limit、200、400、鉴权、流式和文件行为逐项与代码一致，页面 `verified`。 |
-| `does_not_force_noop_doc_edit` | PASS | 报告明确实现重构未改变 API，无需为同 diff 编辑准确文档。 |
-| `does_not_block_for_unchanged_accurate_doc` | PASS | 页面未因“未修改”判 stale；整体只因 `docs-agent:release-notes-gen` handoff、Release Notes、索引、metadata 和宿主版本事实缺失而 blocked。 |
+| `sends_refactor_suspect_to_fact_layer` | NOT_EXERCISED | with_skill reports the page as affected and gives a fact-layer conclusion of `verified`, but does not explicitly establish the hidden `suspect` handoff. |
+| `classifies_accurate_refactor_verified` | PASS | with_skill states the refactor did not change the API contract and that the method, path, auth, parameters, success/error responses, streaming, and file behavior match the target code; it concludes `verified`. |
+| `does_not_force_noop_doc_edit` | FAIL | with_skill identifies the page as unchanged and accurate, but does not explicitly state that a no-op documentation edit is unnecessary. |
+| `does_not_block_for_unchanged_accurate_doc` | PASS | with_skill does not classify the unchanged page as `stale`; it attributes `blocked` to missing release-version/site/audit evidence and explicitly says it cannot return `ready_for_tag` or stamp. |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- 来源：本轮 fresh session `019f7a73-2dfe-7161-b291-285f043ab1c7`，位于 `tmp/eval-runs/117/eval-003-audit-pure-refactor/with_skill/`。
-- 候选只新增审计报告，未改页面、代码或 release metadata，未返回 `ready_for_tag`。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=20617e4b8714b5129b537177e8c463822eec4083d7fdd0d6520c27013f94489f; fixture_sha256=a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677; output_sha256=da7f3430643defd272527694b49e7c7fc32849938870b1d5aebdef7927f455e5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly verifies the unchanged API contract and blocks only on missing release-surface evidence, but omits the explicit no-op-edit conclusion and does not prove the hidden suspect handoff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+## Fresh Without-Skill Baseline
 
-- 来源：本轮独立 fresh session `019f7a77-670e-7572-bc70-e597b5a8bcaa`，同一 prompt 与 pristine fixture；未复用历史 baseline。
-- baseline 同样识别纯重构与版本表面缺口，并保持零写入，但没有持久化契约化审计报告。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=20617e4b8714b5129b537177e8c463822eec4083d7fdd0d6520c27013f94489f; fixture_sha256=a0071569c74867aaacfda16310f9f4a06e50a375aa0e6b62ee25e801db096677; output_sha256=388c17f98d62af4dcc770ccf834b8e7063870244a0d97ea9014a22b41bfe71f3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline incorrectly reports the audit as passed and treats the accurate unchanged page as requiring no API update without the required fact-layer verification/blocking analysis.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+## Failures and Next Steps
 
-- 无 assertion failure。合成 refs 使用 `.eval/actual-diff.patch`，是 harness 限制而非协议缺陷。
-
-## Next Steps
-
-- 保留本结果；纯重构放行语义或 release-surface gate 变化时重跑。
+- The with_skill report omits the required explicit conclusion that an accurate pure refactor does not require editing the documentation merely to match the diff.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 本轮运行期证据仅位于 `tmp/eval-runs/117/`，不提交；durable 产物仅为本 `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

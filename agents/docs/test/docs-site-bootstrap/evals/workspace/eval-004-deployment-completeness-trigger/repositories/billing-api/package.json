@@ -1,0 +1,8 @@
+{
+  "name": "billing-api",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js"
+  }
+}

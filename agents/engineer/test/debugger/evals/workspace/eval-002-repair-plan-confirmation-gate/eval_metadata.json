@@ -2,13 +2,22 @@
   "eval_id": "eval-002-repair-plan-confirmation-gate",
   "eval_name": "repair-plan-confirmation-gate",
   "workspace_root": "agents/engineer/test/debugger/evals/workspace/eval-002-repair-plan-confirmation-gate",
-  "prompt": "已确认的预期文档和复现根因见 workspace `BUG_ANALYSIS.md`、`docs/pm/notifications/PRD.md` 与 `docs/engineer/notifications/TRD.md`。test/api/notifications.test.ts 的失败已经复现，根因确认是 notification status 没有处理 archived。请准备修复方案。",
   "fixture_context": [
-    "BUG_ANALYSIS.md",
     "docs/pm/notifications/PRD.md",
     "docs/engineer/notifications/TRD.md",
     "package.json",
     "src/api/notifications.ts",
     "test/api/notifications.test.ts"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

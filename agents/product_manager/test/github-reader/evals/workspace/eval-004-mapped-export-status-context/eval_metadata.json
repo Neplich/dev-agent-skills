@@ -2,10 +2,20 @@
   "eval_id": "eval-004-mapped-export-status-context",
   "eval_name": "mapped-export-status-context",
   "workspace_root": "agents/product_manager/test/github-reader/evals/workspace/eval-004-mapped-export-status-context",
-  "prompt": "请根据仓库内的现有证据，汇总 `src/export/` 模块当前的交付状态与风险。",
   "fixture_context": [
     "src/export/handler.txt",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/export.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

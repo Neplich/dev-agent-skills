@@ -23,4 +23,5 @@ existing Chat Interface.
 
 - Search belongs to the existing `chat-interface/messages/history` parent
   feature.
-- Engineer TRD must mirror `chat-interface/messages/history/search`.
+- Results remain inside the message history view and preserve the surrounding
+  conversation context.

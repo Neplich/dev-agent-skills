@@ -1,68 +1,61 @@
-# Eval Result: eval-004-docs-build-variant-matrix
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `devops`
 - Skill: `deployment-planner`
 - Eval: `eval-004-docs-build-variant-matrix`
-- Test case: `docs-build-variant-matrix`
-- Workspace: `agents/devops/test/deployment-planner/evals/workspace/eval-004-docs-build-variant-matrix`
 
-## Latest Result
+## Current Result
 
-- Fresh run: `2026-08-07`（issue #238 严格隔离重跑）
-- Model: `gpt-5.6-luna`，`model_reasoning_effort=medium`
-- Isolation: baseline 使用随机顶层 root；完成后仅保存在内存快照并删除 root，随后才创建 with_skill root；with_skill root 删除后才创建独立 judge root。两条 lane 的原始 prompt、fixture snapshot、`HOME` 与 `CODEX_HOME` 值相同。
-- Judge: 独立 fresh `codex exec`，读取实际产物、final、status 与工具轨迹，对照当前 assertions 判定；不采信 lane 自评。
-- Behavior result: FAIL
-- Coverage result: FULL
-- Without-skill comparison: FAIL（仅作对照，不参与 durable Overall 组合）
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1133bdf01ec9b2682fe921196914971ab2c40caac0f63afd22f66198e7edede5` from `agents/devops/test/deployment-planner/evals/workspace/eval-004-docs-build-variant-matrix`.
+- Fixture SHA-256: `1133bdf01ec9b2682fe921196914971ab2c40caac0f63afd22f66198e7edede5`
+- Prompt SHA-256: `449e8afe22d56be4ea49871dccbdfe925565441c9990c7332f547cf304565087`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `762ea3248d76c5c9e715368b11ab616562bb9bdb0e2bd6a6aad38d47cc80b3af`
+- Skill overlay SHA-256: `52ed13d453014671ce8cc7f7f7ce4b4108c3a5cc943fcf3bece1ac66b08625d5`
+- Judge schema SHA-256: `cfb4e9daef57a9f8f8f71bd53e7b9c04b3f443f035ca06014209a131297ec22b`
+- Eval definition SHA-256: `4c14837e1c149db8fdda5fa172eb35b4e3c167d223226adbc87832c6a7126d6f`
+- Metadata SHA-256: `ae56541ba154741dfb7ef84587ce065786aeb8ae82c4a282fa656aa8884b399e`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
 Overall result: FAIL
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Eval definition: `agents/devops/test/deployment-planner/evals/evals.json`
-- Metadata: `agents/devops/test/deployment-planner/evals/workspace/eval-004-docs-build-variant-matrix/eval_metadata.json`
-- Expected output: 逐一列出 Public、Internal 与 Preview 的 build/image/Compose/Helm/health/runtime 处置。
-- Fixture: `evidence.md`
 
 ## Assertion Results
 
-| Assertion | with_skill | without_skill | Evidence |
-| --- | --- | --- | --- |
-| `enumerates_all_docs_variants` | PASS | PASS | with_skill 矩阵明确包含 public、internal、preview；without_skill 结论也逐一覆盖三者。 |
-| `covers_deployment_unit_chain` | PASS | FAIL | with_skill 为每个变体提供了 build target、context、static entry、image、Compose、Kubernetes/Helm、health check、runtime entry 列，并对缺失证据标注“未记录”；without_skill 仅列出 Docker/Compose/Helm 覆盖，没有逐变体核对完整链路。 |
-| `hands_units_to_cicd` | FAIL | FAIL | with_skill 给出 integrated/deferred/blocked 处置，但未明确将每个确认的镜像单元和变体矩阵交给 cicd-bootstrap；仅泛称后续交给 CI/CD 流程。without_skill 同样未进行该 handoff。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `enumerates_all_docs_variants` | FAIL | With_skill only returns RETURN_TO_PM and does not deliver a deployment-unit matrix containing the three variants, despite naming them in prose. |
+| `covers_deployment_unit_chain` | FAIL | With_skill provides only a brief coverage summary and omits the required per-variant chain checks for build context/static entry, image unit, Compose, Deployment/Service/Ingress or Gateway, values, health checks, and runtime entry. |
+| `hands_units_to_cicd` | FAIL | With_skill records no per-variant integrated/alternative/deferred/blocked disposition and does not hand confirmed image units to cicd-bootstrap. |
 
 ## With-Skill Behavior
 
-- with_skill 成功枚举全部变体并建立了逐变体链路矩阵，所有断言均可评估，Coverage 为 FULL；但遗漏了向 cicd-bootstrap 明确移交确认镜像单元和变体矩阵，因此 durable Overall 为 FAIL。without_skill 仅作对照，存在链路覆盖与 handoff 缺口。
-- Workspace changes: added: `docs/devops/documentation-site-deployment-variant-matrix.md`。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=449e8afe22d56be4ea49871dccbdfe925565441c9990c7332f547cf304565087; fixture_sha256=1133bdf01ec9b2682fe921196914971ab2c40caac0f63afd22f66198e7edede5; output_sha256=e28a6c27c7bbacf8d72d22fc8f3ad55ee43a2be9776bdd6bba0ce80ff36e3471; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Refused the requested assessment and returned the work to PM without a delivery.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- baseline 在本轮重新生成，没有复用历史 baseline，也没有读取 target skill、with_skill 产物或旧 comparison。
-- Workspace changes: 无文件变更。
-- assertion 结果见上表；baseline 只用于比较 skill 增益，不作为 durable Overall 的独立机器门禁。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=449e8afe22d56be4ea49871dccbdfe925565441c9990c7332f547cf304565087; fixture_sha256=1133bdf01ec9b2682fe921196914971ab2c40caac0f63afd22f66198e7edede5; output_sha256=59b5e5e9b894a0e0792730320dd14bffea5f7fa588dccb16b41d18db13e0e026; snapshot_sha256=bbf1a3007eccf8b1ef6f17b90e27b8b9c554bc17681ebe67bd1777119a484d5f
+- Behavior: Produced a file-backed three-variant matrix and documented major gaps, though its matrix remained less detailed than the full assertion chain and included no evidenced cicd-bootstrap handoff.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures and Coverage Gaps
+## Failures and Next Steps
 
-- with_skill failures: `hands_units_to_cicd`。
-- 所有当前 assertions 均已实际覆盖。
-- 无模型、认证、runner 或外部服务 blocker。
-
-## Historical Result (Old Contract)
-
-- 旧结论为 PASS（3/3）；issue #234 修复 eval 泄漏后，该结论被标为 BLOCKED 等待重跑。
-- 该历史结论适用旧 eval 契约；本文件顶部的 2026-08-07 fresh 结果已取代它作为 latest durable 结论。
-
-## Next Steps
-
-- 按上表 with_skill failure 的共同根因建立后续修复项；本轮只记录结果，不修改 skill、eval 定义或 fixture。
+- The with_skill lane incorrectly gates on a missing PM/DevOps handoff instead of evaluating the supplied fixture and producing the requested matrix.
+- No deployment-unit matrix or CI/CD handoff was delivered in the with_skill lane.
+- Next: Produce the complete three-variant deployment-unit matrix from the fixture.
+- Next: Record the required chain fields and per-variant disposition, then hand confirmed image units to cicd-bootstrap without writing workflow code.
 
 ## Runtime Artifact Policy
 
-- 两条 lane、工具轨迹、状态、文件快照、judge verdict 与隔离事件只保存在 `tmp/eval-runs/issue-238-devops-strict-20260806/`，不提交 git。
-- durable 结果只保留本 `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

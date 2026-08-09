@@ -5,7 +5,7 @@ feature: "preferences"
 feature_path: "account/profile/preferences"
 parent_feature: "account/profile"
 feature_level: "3"
-status: Draft
+status: Confirmed
 ---
 
 # Profile Preferences PRD

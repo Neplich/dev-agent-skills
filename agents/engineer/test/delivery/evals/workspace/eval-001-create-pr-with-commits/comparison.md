@@ -1,103 +1,60 @@
-# Eval Result: eval-001-create-pr-with-commits
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `delivery`
 - Eval: `eval-001-create-pr-with-commits`
-- Test case: create-pr-with-commits
-- Workspace: `workspace/eval-001-create-pr-with-commits`
-- Evaluation date: 2026-08-07
-- Overall result: FAIL
-- Behavior result: FAIL
-- Coverage result: PARTIAL
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt: 已完成工作的 scope、changed files 与验证状态见 workspace `DELIVERY_HANDOFF.md`。代码已完成，创建 PR 并关联 Issue #123
-- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
-- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
-- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `415df27ebd271a5c6f0949b6abe147a826b07a65acc211cf3185fa0d7f9c490e` from `agents/engineer/test/delivery/evals/workspace/eval-001-create-pr-with-commits`.
+- Fixture SHA-256: `415df27ebd271a5c6f0949b6abe147a826b07a65acc211cf3185fa0d7f9c490e`
+- Prompt SHA-256: `0b44a24f8cc1cd09df29f861e75c80120390e6bd31b5f661fccd1e0a1e7be7a5`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `3291b3bf29fbba656cfab581113b3724f453df2f593ee385dae5e746a6649c65`
+- Skill overlay SHA-256: `67f626d08e11b0e8b9b347a8746142889487e1229a1dc34e7b49ca498c9a191d`
+- Judge schema SHA-256: `eaac8d5ec4179daca7a6c1c98e4847ae0114d9d33168a84593f70ca6474abe10`
+- Eval definition SHA-256: `7e02d3842aadb84c2bf63d29c927cc522ebed52b96eed1878122982c38563924`
+- Metadata SHA-256: `ddad21037c097d13ee42c91b495c2c2326e53dc9044ae9a3b160a51decc6ffbb`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
 
-## Assertions
+## Assertion Results
 
-- FAIL `assertion_1`: with_skill transcript 仅记录 git 检查因 not a git repository 失败；workspace 无 .git、无分支产物。
-- FAIL `assertion_2`: 未观察到成功的 git add/commit；final 明确无法提交。
-- FAIL `pr`: 未观察到 PR 创建或 PR 正文；final 明确尚未创建 PR。
-- NOT EXERCISED `ci`: 未创建 PR，因此 transcript 中没有可验证的 PR CI 状态检查。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `feature_branch_created` | PASS | git_evidence shows branch changed from main to fix/notification-status, with a new reachable branch ref. |
+| `meaningful_commit_created` | PASS | The new commit subject is `fix: support archived notification status`, which follows Conventional Commits. |
+| `pr` | FAIL | PR creation was correctly blocked and a preview was provided, but it incorrectly states `PM/PRD: 未提供` even though docs/pm/notifications/PRD.md exists; the required PM document reference is missing. |
+| `ci` | PASS | No PR was created; the output reports CI unavailable, explains the remote/gh blockers, and provides a `gh pr checks <pr-number> --watch` recovery command without claiming CI results. |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-未完成分支、提交、PR；本地 npm test 有 transcript 证据通过。workspace 哈希与 output.sha256 一致，且无 .git。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0b44a24f8cc1cd09df29f861e75c80120390e6bd31b5f661fccd1e0a1e7be7a5; fixture_sha256=415df27ebd271a5c6f0949b6abe147a826b07a65acc211cf3185fa0d7f9c490e; output_sha256=281d70f06ea6b27502fbdd0f8641181b4b0e71dc1a0c07c2c640febb1063a040; snapshot_sha256=f0a9567b9f3ce3a4b5807827e70497510104912c63c94dd2369e71d511624ac8
+- Behavior: Created a compliant feature branch and meaningful commit, passed tests, and accurately blocked PR/CI operations, but produced an incomplete and inaccurate PR preview by omitting the existing PM/PRD.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-同样未完成交付；额外尝试 GitHub Issue 查询但未创建 PR。workspace 哈希与记录一致；仅作对照。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0b44a24f8cc1cd09df29f861e75c80120390e6bd31b5f661fccd1e0a1e7be7a5; fixture_sha256=415df27ebd271a5c6f0949b6abe147a826b07a65acc211cf3185fa0d7f9c490e; output_sha256=b113a55c2c44a825438bb7abddb0c60611107f54b987a22a2d9d612804b82634; snapshot_sha256=81d39d912af6a09f9968c5f2d1bbfffbee4780dc5e0180b61b4fc1364d31578e
+- Behavior: Created a compliant feature branch and meaningful commit and reported the remote/Issue blocker, but did not provide the required PR preview or explicit CI handling.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures / Findings
+## Failures and Next Steps
 
-- assertion_1: 未创建符合规范的功能分支
-- assertion_2: 未产生 Conventional Commit 或其他提交
-- pr: 未创建包含摘要、PM 文档引用和测试状态的 PR
-- Root cause: fixture workspace 没有 Git 仓库或远端，且 GitHub 未认证，导致分支、提交、PR 无法完成；因无 PR，CI 检查未执行。
+- The PR preview omits the existing PM/PRD reference and falsely says it was not provided.
+- Next: Update the PR preview to reference docs/pm/notifications/PRD.md, then create the PR once a remote and gh are available.
 
-## Next Steps
+## Runtime Artifact Policy
 
-- 修复上述 assertion 对应的 skill 行为或 eval 输入问题后，使用同样的 paired fresh 流程重跑。
-
-## Runtime Artifacts Policy
-
-- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
-- 长期只保留本 `comparison.md`。
-
-## Historical Results
-
-### Previous comparison record: eval-001-create-pr-with-commits
-
-## Evaluation Target
-
-- Agent: `engineer`
-- Skill: `delivery`
-- Eval: `eval-001-create-pr-with-commits`
-- Test case: create-pr-with-commits
-- Workspace: `workspace/eval-001-create-pr-with-commits`
-- Latest result: PASS (4/4 assertions) - fresh Codex paired validation completed on 2026-07-26
-- Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Fixture: completed-work handoff, PM reference, changed source/test, passing test command and CI workflow
-- Fresh run: both isolated copies created a feature branch and Conventional Commit, ran `npm test`, pushed a remote branch, opened a real temporary GitHub PR, and waited for hosted CI.
-- Hosted evidence: with_skill [PR #170](https://github.com/Neplich/dev-agent-skills/pull/170) at `129da903c5a2be7d25d53ed58ab28d7ab77459d5`; fresh without_skill [PR #169](https://github.com/Neplich/dev-agent-skills/pull/169) at `602726696738d32095ee63225837946e247b7152`.
-- Cleanup: both temporary PRs were closed without merge after validation and both remote branches were deleted.
-
-## Assertions
-
-- PASS `assertion_1`: creates a project-conformant feature branch.
-- PASS `assertion_2`: creates a Conventional Commit.
-- PASS `pr`: each side created a real GitHub PR whose body includes a summary, canonical PM document, Issue #123 and passing tests.
-- PASS `ci`: each side waited for hosted `repository-contract`, `eval-contract`, `doc-contract` and `python-tests`; all eight checks completed with `SUCCESS`.
-
-## With Skill Behavior
-
-The candidate verified scope and tests, staged only scoped files, completed branch/commit/push/PR delivery, and waited for all hosted CI checks before reporting success.
-
-## Without Skill Baseline
-
-The fresh baseline independently created PR #169 and waited for all four hosted CI checks, so it also satisfied 4/4 assertions. The skill adds a more explicit staged-scope review and CI evidence structure, but the assertions do not distinguish it.
-
-## Failures
-
-- With-skill and baseline: none.
-
-## Next Steps
-
-Keep the temporary-PR cleanup rule and hosted CI evidence requirement explicit in future paired runs.
-
-## Runtime Artifacts Policy
-
-Scratch `.git` directories, responses and diagnostics are ignored and not committed. Temporary PRs are retained only as closed GitHub evidence; their remote branches were deleted.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

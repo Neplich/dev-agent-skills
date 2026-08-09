@@ -1,69 +1,61 @@
-# Eval Result: eval-001-route-greenfield-product-request
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `pm-agent`
 - Eval: `eval-001-route-greenfield-product-request`
-- Workspace: `eval-1-route-greenfield-product-request`
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Fixture version: current tracked fixture at the start of the 2026-08-07 run.
-- Fresh run: 2026-08-07 (Asia/Shanghai).
-- Candidate and independent judge: `gpt-5.6-luna`, `model_reasoning_effort="medium"`.
-- Isolation: identical raw prompt and fixture snapshot; all baseline roots were snapshotted in memory and destroyed before any with-skill root; all with-skill roots were destroyed before judging; HOME/CODEX_HOME values matched per eval and were reset for every lane; only `auth.json` was copied into CODEX_HOME.
-- Runtime evidence: `tmp/eval-runs/issue-238-pm/fresh-20260807/pm-agent/eval-001-route-greenfield-product-request/`.
-
-## Latest result:
-
-- Behavior result: FAIL — determined only from the with-skill lane by an independent judge.
-- Coverage result: FULL — 5/5 with-skill assertion scenarios were exercised.
-Overall result: FAIL
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-1-route-greenfield-product-request`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `acfb6edf3aff0b94988c5e9a7ff435967801458a79c851afd902400163536b81`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0b60a8fdef1023247fb430f4647e03f742c09fbfdb17e32a3a03dc6059ae9e02`
+- Skill overlay SHA-256: `7093347dda9d009dc74c5bd9b37b3d0d8b980466e82f7a4efbacd767a0e9fa19`
+- Judge schema SHA-256: `8e99b873e976898a8a9714405f69dce2d81e6c553f7d4c2b0a99b8b832eee831`
+- Eval definition SHA-256: `4e776e14ac2c8d3f3aa33718b92238355ee2d15eab3267a50cdada6bb3d4a1de`
+- Metadata SHA-256: `98a5616a9f22e4ba7d6ed10c98a36b572ccd9f5c0bfcfaf868ea982ef672635f`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
-- `route_to_idea_to_spec`: with-skill **FAIL**; without-skill **FAIL** — with_skill 最终回复未明确选择 `idea-to-spec` 或说明其职责；without_skill 同样未路由。
-- `pm_first_guardrail`: with-skill **FAIL**; without-skill **FAIL** — with_skill 说明停留 PM 发现阶段但未明确无 skip-PM override 或返回 `pm-agent` 分类；without_skill 也未作该分类。
-- `context_to_collect`: with-skill **PASS**; without-skill **FAIL** — with_skill 覆盖产品概念/目标、核心流程、MVP 与非目标、验收标准及待确认问题；without_skill 有部分问题清单，但缺少明确验收标准和完整核心流程。
-- `expected_pm_artifacts`: with-skill **FAIL**; without-skill **FAIL** — with_skill 提到 PRD，但未声明 DECISIONS，也未说明 TRD 由 `engineer-agent:trd-gen` 负责；without_skill 未声明这些 PM 产物或 TRD 边界。
-- `handoff_boundary`: with-skill **PASS**; without-skill **FAIL** — with_skill 明确只有 PRD 稳定后才进入设计或工程阶段，满足稳定需求后的设计/工程交接边界；without_skill 未明确稳定需求后的 agent handoff。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `route_to_idea_to_spec` | PASS | With-skill output labels the lane `greenfield-discovery`, identifies the product as a new AI conversation assistant, and keeps the work in requirements exploration without entering design or engineering. This is semantically equivalent to an idea-to-spec/product-definition route. |
+| `pm_first_guardrail` | PASS | With-skill output explicitly states the workspace has no application code, project documentation, or existing PRD, and says it will not enter design or engineering directly. |
+| `context_to_collect` | PASS | With-skill output asks the highest-value first discovery question: who the assistant primarily serves, with concrete user/context options. |
+| `expected_pm_artifacts` | NOT_EXERCISED | The output is still waiting for the user's answer to the first discovery question and explicitly marks durable PM documents as pending, so this assertion is not yet exercised. |
+| `handoff_boundary` | NOT_EXERCISED | No handoff occurs; the output explicitly says it will not enter design or engineering and requests further product confirmation first. |
 
 ## With-Skill Behavior
 
-最终回复完成了 PM 需求发现、范围收敛、流程、验收和待决策整理，且未写代码；但缺少明确的 `idea-to-spec` 路由、pm-agent guardrail 分类，以及 DECISIONS/TRD 与 `engineer-agent:trd-gen` 的产物边界。status 显示无新增、删除或修改，trace 仅读取 pm-agent skill 和目录，没有外部 mutation。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acfb6edf3aff0b94988c5e9a7ff435967801458a79c851afd902400163536b81; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=7db6dab989c5091b61882d832b04bebde18e4e5343d941a3f7d4e958b5e17bb0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline remains in PM-first greenfield discovery, asks one focused user/context question, and defers formal artifacts and handoff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-回复停留在需求讨论且无文件写入，但未给出要求的 PM 路由、guardrail、PM 产物/TRD 边界，也未完整覆盖下游上下文与正式 handoff。status 显示无文件变化；trace 无工具调用。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acfb6edf3aff0b94988c5e9a7ff435967801458a79c851afd902400163536b81; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=b2ee7d93743ec5b3387bcb05b427e685a9b762ac84a14ec3986db6f02d001552; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline produces an expansive provisional MVP and several product questions, but does not explicitly establish the PM-first route or defer scope decisions as tightly.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-The baseline is comparison evidence only; its outcome does not affect `Overall result`.
-
-## Failures
-
-- with_skill 未明确选择 `idea-to-spec` 主 route。
-- with_skill 未明确说明空目录无 skip-PM override 并返回 `pm-agent` 正常分类。
-- with_skill 未声明 DECISIONS 及 `engineer-agent:trd-gen` 负责 TRD。
-- without_skill 未满足指定 PM 路由、guardrail、产物边界和完整下游上下文要求。
-
-## Coverage Gaps
+## Failures and Next Steps
 
 - None.
+- Next: Answer the core-user question to exercise PM artifact and eventual handoff assertions.
 
-## Blockers
+## Runtime Artifact Policy
 
-- None.
-
-## Historical Result (Pre-#234)
-
-- The previous durable result recorded Behavior **PASS**, Coverage **FULL**, and Overall **BLOCKED** after issue #234 identified prompt/fixture leakage.
-- That pre-remediation result is retained only as history and is superseded by this strict fresh run.
-
-## Next Steps
-
-- Fix the with-skill failures listed above, then rerun this eval with the same strict isolation and independent-judge protocol.
-
-## Runtime Artifacts Policy
-
-- Candidate responses, traces, status manifests, isolation records, and judge evidence remain under the gitignored runtime path above and are not committed.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

@@ -1,81 +1,60 @@
-# Eval Result: eval-006-site-less-degraded-gate
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `github-release-gen`
 - Eval: `eval-006-site-less-degraded-gate`
-- Test case: `无文档站宿主降级双态审计门禁`
-- Prompt:
 
-> 请读取 `release-package.md`、`docs/changelog/changelog-v1.4.0.md`、`evidence/version-bump.md` 与 `scenarios/no-confirmed-fact-source.md`，处理其中两种 GitHub Release 场景。
+## Current Result
 
-- Expected output:
-
-> 可信事实源场景因宿主无 docs/site 且无 release-notes-gen 站内 Release Notes 能力链，将 release-notes-gen / docs-audit 双态审计 handoff 门禁判为不适用并生成完整 preview，显式记录降级依据、已确认 changelog 与版本 bump 证据；预览交维护者批准且不执行任何写入。无可信版本事实源场景保持 blocked，不臆造版本事实。
-
-## Test Set / Fresh Run
-
-- Eval schema: `evals.json` v1.0。
-- Fixture manifest: `cf75cbbf67a65894298fe934a83d0c3f2f3701462abb01c13f26fe10b3f8ba45`（4 个可见文件；两侧逐字节一致）。
-- Repository HEAD: `47adbbc9`。
-- Fresh run window: 2026-08-07 00:58–01:14（Asia/Shanghai）。
-- Runtime: 3 个独立会话，均为 `gpt-5.6-luna`、`model_reasoning_effort=medium`：fresh without-skill、fresh with-skill、fresh judge。
-- Controlled variable: 两个 candidate 使用完全相同的 prompt、fixture manifest、HOME/CODEX_HOME 目录形态与同一份 `auth.json`；唯一变量是 with-skill lane 安装并加载目标 specialist skill。
-- Physical isolation: 按 skill 先完成并销毁全部 baseline 随机顶层根，再创建 with-skill 根；32 个 candidate 全部完成并销毁后才创建第三套 judge 根。
-- Candidate visibility: lane 中未放入 `eval_metadata.json`、`evals.json`、`expected_output`、assertions、历史 `comparison.md`、README 脚手架或 judge 材料；泄漏扫描为 0 命中。
-- External data rule: 实时实体因 GitHub 认证、网络或当时集合缺失而不可得时，相关 assertion 记为 `NOT EXERCISED`，只影响 Coverage，不伪造成 Behavior 的 PASS/FAIL。
-
-## Latest Result
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-006-site-less-degraded-gate`.
+- Fixture SHA-256: `411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20`
+- Prompt SHA-256: `3543da7f86f46fe1ddba91b579642c6082b99cf4ee707ac9b96a7d9fcb3ea3e7`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f95690411417d5e9cf66495e67ce2d96d0a51fc4ca1821536421129a950bb8f3`
+- Skill overlay SHA-256: `ee4b811662f5234e9cbcc50a85629526ebcf704244484e48f81d5ce85841d93c`
+- Judge schema SHA-256: `b8169d6d4489fefe59aefe4458af6c4e8108513691e18f7c250f5d7f5c9b7ba5`
+- Eval definition SHA-256: `ee0644452d121d4667c014aaf941ed770c3978ba415b0f3ee7cfc601dc801335`
+- Metadata SHA-256: `d64e10da3608725d47dc87efed91ed453ddbf43cfa5350e92eb1e539cf16b5a4`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
-- Overall result: PASS
-- With-skill summary: with_skill 实际加载 github-release-gen（status.json skill_load_hits=2；transcript item_1、item_3 读取技能及其 references），按场景生成预览或阻塞，且未产生写入。
+Overall result: PASS
 
-## Historical Contract Note
+## Assertion Results
 
-- 旧 durable 结果因 issue #234 的 prompt/fixture 泄漏修复或后续 assertion 增强而标记为 `BLOCKED`。本文件已由当前契约下的 fresh paired run 与独立 judge 结论覆盖。
-- 本轮没有复用历史 baseline、candidate、verdict 或旧结论；without-skill baseline 仅作行为对照，不参与 with-skill 的 Behavior/Coverage 判定。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `proceeds_without_handoff_when_site_absent` | PASS | With_skill confirms no docs/site or site Release Notes capability chain and produces a complete inline GitHub Release preview. |
+| `records_downgrade_basis` | PASS | With_skill explicitly records the formal site and both handoff chains as absent/not applicable, and cites the confirmed changelog plus version-bump evidence. |
+| `still_requires_maintainer_approval` | PASS | With_skill limits action to preview, reports no GitHub writes, forbids draft creation, and requires explicit current maintainer approval before writes. |
+| `blocks_without_confirmed_fact_source` | PASS | With_skill marks the second scenario blocked because the bump is proposed and no maintainer-confirmed fact source exists; it rejects commit subjects and the unconfirmed summary as facts. |
 
 ## With-Skill Behavior
 
-with_skill 实际加载 github-release-gen（status.json skill_load_hits=2；transcript item_1、item_3 读取技能及其 references），按场景生成预览或阻塞，且未产生写入。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3543da7f86f46fe1ddba91b579642c6082b99cf4ee707ac9b96a7d9fcb3ea3e7; fixture_sha256=411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20; output_sha256=b9b2d97df1cb4fcd13923455b7c1bcc57db8bec85916df34d347575626460c3b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly handles both site-less scenarios: downgrades the missing handoffs, previews only from confirmed evidence, preserves maintainer approval gates, and blocks the unconfirmed scenario.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-without_skill 未加载目标 skill（skill_load_hits=0），但作为对照同样处理了两个场景；其标题为裸 v1.4.0 且预览结构较不完整。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3543da7f86f46fe1ddba91b579642c6082b99cf4ee707ac9b96a7d9fcb3ea3e7; fixture_sha256=411862fab7a80dddacd42426a98282018153d50c9458b43edec6c0056c4dce20; output_sha256=7f60394eac76765a39f9aaf153242e91f81d747f6dce2b964cec08340df3eeae; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Also reaches the key outcomes, but gives a less complete preview and does not explicitly document the full site-less downgrade basis or detailed approval-gate state.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Assertion Review
+## Failures and Next Steps
 
-| Assertion | With skill | Evidence / reason | Without-skill comparison |
-| --- | --- | --- | --- |
-| `proceeds_without_handoff_when_site_absent` | **PASS** | with_skill/candidate.md 场景 A 明确说明 docs/site、站内 Release Notes 能力链及 handoff 缺失，但仍生成了 v1.4.0 的完整标题、正文、compare 链接和预览决策；transcript item_4 记录当前模式为仅 Preview。 | without_skill 也生成预览，但标题仅为 v1.4.0，且正文较简略。 |
-| `records_downgrade_basis` | **PASS** | candidate 明确记录文档站未初始化、docs/site/ 与站内 Release Notes 能力链缺失，并说明双态审计 handoff 的降级适用性；同时列出 docs/changelog/changelog-v1.4.0.md 和 evidence/version-bump.md。fixture-manifest.json 与快照确认这些证据文件存在且未被修改。 | without_skill 记录了无正式文档站及相关 handoff，并引用确认 changelog，但降级依据表述较简略。 |
-| `still_requires_maintainer_approval` | **PASS** | candidate 顶部明确未执行任何 GitHub 写入、创建或移动 tag；场景 A 标注仅 Preview、无维护者写入批准，并明确 Draft/Publish 前须分别取得当前、明确的维护者批准。before-snapshot.json 与 after-snapshot.json 完全一致，transcript 无写入命令。 | without_skill 也明确未执行 Tag、Draft 或 Publish 写入，但未达到 with_skill 的详细审批与后续复核表述。 |
-| `blocks_without_confirmed_fact_source` | **PASS** | candidate 场景 B 明确 blocked：版本化 changelog 不存在、version_bump_status 为 proposed、无维护者确认事实源，并声明 commit subjects 与未确认摘要不能作为 Release 事实；未生成可提交 Preview 或执行 Draft/Publish。 | without_skill 同样将场景 B 标记 blocked，并拒绝使用未确认材料。 |
-
-## Failures
-
-- 无 with-skill assertion failure。
-
-## Not Exercised
-
-- 无；本轮覆盖全部 assertions。
-
-## Next Steps
-
-- 保留当前回归覆盖；目标 skill、fixture 或 assertion 契约变化时重新执行 fresh paired validation。
-
-## Runtime Evidence
-
-- With-skill candidate: return code `0`，duration `98.93s`，`skill_load_hits=2`。
-- Without-skill candidate: return code `0`，duration `80.206s`，`skill_load_hits=0`。
-- Independent judge: return code `0`，duration `85.912s`。
-- Judge 已读取两侧最终输出、完整 JSONL 工具 trace、before/after workspace snapshot、fixture manifest 与 session status，并核验读取顺序和零写入边界。
-- 所有临时 HOME/CODEX_HOME 与 candidate/judge 随机顶层根均已销毁；持久化证据目录中不存在 `auth.json`。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 仓库只持久化本 canonical `comparison.md`。
-- Candidate、transcript、judge verdict、timing、status、snapshot 与 diagnostics 仅作为 `/tmp` 运行期证据，不提交到 git。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

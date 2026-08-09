@@ -1,88 +1,61 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `formal-docs-sync`
 - Eval: `eval-009-release-product-ops`
-- Review context: issue #150
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture version: `issue-150 fresh-paired group-b v1`
-- Actual validation date: `2026-07-21`
-- Fresh run: `tmp/eval-runs/issue-150/group-b/eval-009-release-product-ops/`
-- Both lanes started from independent copies of the same pristine fixture.
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-009-release-product-ops`.
+- Fixture SHA-256: `88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75`
+- Prompt SHA-256: `8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `56b98af2f6fc5a04535db999157836236eb69830528cbecc99ca00f23b4d8d9e`
+- Eval definition SHA-256: `c9bcafbf3ecc8c0e0ac28908b463b075e9d1371a95444953a8afc3d41757e192`
+- Metadata SHA-256: `d04b92e9a3754ad51ae5d707b3601a2084dc53a6e309122269ca881bc88a10ef`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
-## Latest Result
+## Assertion Results
 
-- Behavior result: `PASS`（with）/ `PASS`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— 依赖缺失导致宿主检查与 handoff 未执行
-- Overall result: BLOCKED
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `PARTIAL`
-- without_skill：Behavior `PASS` / Coverage `PARTIAL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| `limits_release_to_affected_product_ops` | PASS | PASS | 两条 lane 均仅更新 `docs/site/product/dashboard-limits.md` 与 `docs/site/ops/dashboard-runtime.md`；`change-map.yaml` 仅将对应代码映射到这两页，API/database/design 未改动。 |
-| `reconciles_confirmed_version_facts` | PASS | PASS | 两页分别写入上限 `25`、镜像 `registry.example/ai-hub:v1.5.0` 和 `DASHBOARD_LIMIT=25`；未写入 `v1.5.1` 计划，且与 `release-evidence.md`、代码、配置、测试记录一致。 |
-| `preserves_release_notes_surfaces` | PASS | PASS | `docs/site/release-notes/index.md`、`.meta/releases.json`、导航配置及现有 Release Notes 内容保持原状；两条 lane 均未创建 Release Notes 产物，并保留了应指向独立 Release Notes 流程的边界。 |
-| `keeps_release_pages_unverified` | PASS | PASS | 两页 frontmatter 均为 `last_verified_version: unverified`，没有写入 `v1.5.0` 审计盖章。 |
-| `runs_release_host_checks_and_handoffs` | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 的 `npm run test:docs` 都因依赖缺失未完成，后置 pre-tag handoff 因而未执行；这是 runner 依赖阻塞，不是 skill 行为失败。 |
-
-未触发断言：`runs_release_host_checks_and_handoffs`。
-
-基础设施阻塞说明：依赖缺失（fast-glob 等）；对应断言不构成 skill 行为回归。
-
-
-
-## Assertions
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- `limits_release_to_affected_product_ops`: PASS。只修改 `product/dashboard-limits.md` 与 `ops/dashboard-runtime.md`；对应两个既有映射已准确，无 API、database、design 或无关页面扩张。
-- `reconciles_confirmed_version_facts`: PASS。代码、配置和 release tests 共同证明上限 25、镜像 `registry.example/ai-hub:v1.5.0`，并排除 10、v1.4.0 与未确认 v1.5.1。
-- `preserves_release_notes_surfaces`: PASS。Release Notes 正文、index、metadata、navigation 与 pristine fixture 字节一致，并明确指向 `docs-agent:release-notes-gen` #116。
-- `keeps_release_pages_unverified`: PASS。两页均回读为 `last_verified_version: unverified`。
-- `runs_release_host_checks_and_handoffs`: PASS。在 `docs/site` 执行 `RELEASE_VERSION=v1.4.0 npm run test:docs`，退出 0、74/74 tests；handoff 包含完整 affected set、`target_release_version: v1.5.0` 与 `release-handoff.md` 维护者确认来源。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `limits_release_to_affected_product_ops` | PASS | Locked delivery and git diff contain only the product and ops pages; the existing two change-map entries are unchanged, with API/database/design and unrelated pages excluded. |
+| `reconciles_confirmed_version_facts` | PASS | Delivered pages contain limit 25 and image registry.example/ai-hub:v1.5.0, matching release evidence, code, configuration, and tests; no v1.5.1 facts are added. |
+| `preserves_release_notes_surfaces` | PASS | Release Notes files, metadata, and navigation are unchanged in the locked manifest/diff, and the output excludes those surfaces. |
+| `keeps_release_pages_unverified` | PASS | Both locked delivery_snapshot files explicitly retain last_verified_version: unverified and state that audit handoff remains required. |
+| `runs_release_host_checks_and_handoffs` | NOT_EXERCISED | The candidate output reports the required command, cwd, exit status, and audit handoff, but locked raw evidence does not independently prove that the host checks actually ran or that the handoff entered pre-tag. |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- 读取公共八步 contract 及 product/ops 两个类型模块；未加载无关类型模块。
-- 先使用 lockfile 执行 `npm ci --ignore-scripts`，再运行宿主检查；版本参数只用于校验当前未改动 release metadata，不用 Git ref 推测目标版本。
-- 不操作 Release Notes、tag、GitHub Release 或部署。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75; output_sha256=258f233ca5fea28f4143441b4fdd7f5b3674649810f1752d90618d8fa8fb9b34; snapshot_sha256=232b1471b892843d912fbf68c6e8ecb90673b6973a07a04af8d8e3221510b24a
+- Behavior: Correctly limits the delivery, reconciles confirmed v1.5.0 facts, preserves Release Notes surfaces, and keeps pages unverified; reported host checks and audit handoff cannot be independently verified from raw evidence.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75; output_sha256=9e0a178297f44568371063cfe7a340012dbc4586589535c7c5d024aed3d39860; snapshot_sha256=3abe89046ac74a47ae7626bbfb612a0d7d1d80febf3ec1e4dd8baaadb0176c3a
+- Behavior: Updated the two affected pages and confirmed v1.5.0 facts, but incorrectly stamped both pages v1.5.0 and did not provide the structured audit handoff.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-- 来源：同一 prompt/assertions 与独立 pristine fixture 的本轮 fresh `without_skill`；在生成期间未读取目标 SKILL、Docs README、internal/shared 指令、旧 comparison 或历史输出。
-- baseline 也只更新两页、保留准确映射和 Release Notes 零变化，页面保持 `unverified`，并真实通过相同 74 tests；其结构化响应包含 #117 affected set、维护者确认来源与 #116 边界。
-- 结果：5/5 PASS；未复用历史 baseline。
+## Failures and Next Steps
 
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- With-skill assertion failures: none。
-- Without-skill assertion failures: none。
-- Comparative limitation: prompt/assertions 与 fixture 已充分显式给出范围、版本事实和 handoff 字段，fresh baseline 也能完整执行。
-
-## Next Steps
-
-- 保持 release mode 的 product/ops 窄范围、Release Notes 零写入、`unverified` 和明确版本确认来源作为回归门禁。
-- 如需衡量 uplift，另增缺失或冲突 release evidence 的阻塞型 eval。
+- None.
+- Next: Independently capture or verify the docs/site host-check execution and pre-tag audit handoff.
 
 ## Runtime Artifact Policy
 
-- 两 lane workspace、依赖、页面副本、响应与测试日志仅位于 `tmp/eval-runs/issue-150/group-b/eval-009-release-product-ops/`，不提交。
-- 本 `comparison.md` 是唯一 durable eval 结果。
-
-## 磨平记录（2026-07-29）
-
-维护者裁定本 eval 的零区分度属于模型能力进步磨平（(b) 类），批次 4 的重写已回滚。该 eval 作为 [issue #188](https://github.com/neplich/dev-agent-skills/issues/188) 的 skill 能力审查标本保留原样；在 #188 得出审查结论前不重做本 eval。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

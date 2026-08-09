@@ -1,68 +1,59 @@
-# Eval Result: eval-002-feature-path-audit
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `devops`
 - Skill: `env-config-auditor`
 - Eval: `eval-002-feature-path-audit`
-- Test case: `feature-path-audit`
-- Workspace: `agents/devops/test/env-config-auditor/workspace/eval-002-feature-path-audit`
 
-## Latest Result
+## Current Result
 
-- Fresh run: `2026-08-07`（issue #238 严格隔离重跑）
-- Model: `gpt-5.6-luna`，`model_reasoning_effort=medium`
-- Isolation: baseline 使用随机顶层 root；完成后仅保存在内存快照并删除 root，随后才创建 with_skill root；with_skill root 删除后才创建独立 judge root。两条 lane 的原始 prompt、fixture snapshot、`HOME` 与 `CODEX_HOME` 值相同。
-- Judge: 独立 fresh `codex exec`，读取实际产物、final、status 与工具轨迹，对照当前 assertions 判定；不采信 lane 自评。
-- Behavior result: PASS
-- Coverage result: PARTIAL
-- Without-skill comparison: FAIL（仅作对照，不参与 durable Overall 组合）
-
-Overall result: PASS (partial coverage)
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Eval definition: `agents/devops/test/env-config-auditor/evals/evals.json`
-- Metadata: `agents/devops/test/env-config-auditor/workspace/eval-002-feature-path-audit/eval_metadata.json`
-- Expected output: 读取同一 feature_path 下的 PM/Engineer 文档，输出 docs/devops/chat-interface/messages/history/search/ENV_AUDIT.md，不生成 docs/devops/history-search/ENV_AUDIT.md 或 docs/devops/chat-interface/history-search/ENV_AUDIT.md。
-- Fixture: `docs/pm/chat-interface/messages/history/search/PRD.md`, `docs/engineer/chat-interface/messages/history/search/TRD.md`, `docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md`, `src/server.ts`, `deploy/local/.env.example`
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9` from `agents/devops/test/env-config-auditor/workspace/eval-002-feature-path-audit`.
+- Fixture SHA-256: `a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9`
+- Prompt SHA-256: `45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `11f5a69db2a4c2ab81d782a866d9a88090a8560b5e61462d8af4e66c4376601f`
+- Skill overlay SHA-256: `ce7aff0f7795c878221dac5c9435b88a48e75e2799c5f15832edbd27f5f6796f`
+- Judge schema SHA-256: `542a3960b92dfab31d619dba36f1b4cd7435eaeb67ca74c65c1e8dc7cd584d0a`
+- Eval definition SHA-256: `6efcde24d7900ac81923c70a8eb454a7b5687569fc19e166e7a2702223bf20b8`
+- Metadata SHA-256: `ed9d0f761d7a235166a80b0e2724cd90628f15321561b77d0b2d2233a2c87014`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
 
-| Assertion | with_skill | without_skill | Evidence |
-| --- | --- | --- | --- |
-| `uses_confirmed_feature_path` | PASS | PASS | 两条 lane 均读取了同路径的 docs/engineer/chat-interface/messages/history/search/TRD.md 与 IMPLEMENTATION_PLAN.md；with-skill trace 明确记录了这些读取。 |
-| `writes_nested_devops_report` | PASS | FAIL | with-skill status 显示新增 docs/devops/chat-interface/messages/history/search/ENV_AUDIT.md；without-skill status 显示新增错误路径 docs/engineer/chat-interface/messages/history/search/ENV_CONFIG_AUDIT.md。 |
-| `does_not_invent_feature_directory` | NOT_EXERCISED | NOT_EXERCISED | fixture 中 feature_path 明确，且同路径 TRD 与 IMPLEMENTATION_PLAN 均存在，因此该条件分支未触发。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_confirmed_feature_path` | PASS | The delivered report uses feature_path `chat-interface/messages/history/search` and names both required Engineer documents: `TRD.md` and `IMPLEMENTATION_PLAN.md`. |
+| `writes_nested_devops_report` | PASS | The delivery snapshot contains `docs/devops/chat-interface/messages/history/search/ENV_AUDIT.md`, exactly matching the required nested path. |
+| `does_not_invent_feature_directory` | PASS | The confirmed feature directory exists in the fixture, both required Engineer documents are present, and the report preserves that path without inventing a top-level synonym. |
 
 ## With-Skill Behavior
 
-- with-skill 正确使用确认的嵌套 feature_path，并输出要求的 DevOps 审计报告路径；条件分支断言因 fixture 不具备触发前提而未执行，因此 Coverage 为 PARTIAL。without-skill 输出路径错误，作为 baseline FAIL，不影响 durable Overall。
-- Workspace changes: added: `docs/devops/chat-interface/messages/history/search/ENV_AUDIT.md`。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b; fixture_sha256=a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9; output_sha256=0df65549c69908b3b63a65769da643ef51ac42fec492c8cb12dd9ccfb911c040; snapshot_sha256=4fdfd60988b4ef873ac96086ee94a4fa07ca0f736689c7cd305bd2188ef5320f
+- Behavior: Produced the required DevOps audit at the confirmed nested feature path and grounded it in the matching PM/Engineer documents.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- baseline 在本轮重新生成，没有复用历史 baseline，也没有读取 target skill、with_skill 产物或旧 comparison。
-- Workspace changes: added: `docs/engineer/chat-interface/messages/history/search/ENV_CONFIG_AUDIT.md`。
-- assertion 结果见上表；baseline 只用于比较 skill 增益，不作为 durable Overall 的独立机器门禁。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=45dd97708d4498ba2c5e31fb882b1692d7db80756c144b5c54d249bddbdf8a4b; fixture_sha256=a481b5374544e745048b6d91a89eb4240f2b8d26afa6409ed21d0c822a29f8c9; output_sha256=9b19907b36ec30705ad8e44597c8b2bd45855686e4435a4c81dbebfa19d70a64; snapshot_sha256=08dbd1d1b993094bc004deeacf6043649abfdeb9b0900cfb723f01a919745827
+- Behavior: Produced an audit under the Engineer directory instead of the required nested DevOps report path.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures and Coverage Gaps
+## Failures and Next Steps
 
-- with_skill 无 assertion failure。
-- NOT EXERCISED: `does_not_invent_feature_directory`；fixture 未触发对应条件分支。
-- 无模型、认证、runner 或外部服务 blocker。
-
-## Historical Result (Old Contract)
-
-- 旧结论为 PASS，但仅做静态审查且没有 fresh baseline；issue #234 后标为 BLOCKED 等待重跑。
-- 该历史结论适用旧 eval 契约；本文件顶部的 2026-08-07 fresh 结果已取代它作为 latest durable 结论。
-
-## Next Steps
-
-- 保留当前行为结果；若要获得 FULL coverage，需要新增能够触发 NOT EXERCISED 条件分支的独立 fixture。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 两条 lane、工具轨迹、状态、文件快照、judge verdict 与隔离事件只保存在 `tmp/eval-runs/issue-238-devops-strict-20260806/`，不提交 git。
-- durable 结果只保留本 `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

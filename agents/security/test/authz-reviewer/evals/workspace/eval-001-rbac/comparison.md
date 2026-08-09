@@ -1,72 +1,60 @@
-# Eval Result: eval-001-rbac
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `security`
 - Skill: `authz-reviewer`
 - Eval: `eval-001-rbac`
-- Test case: Role-Based Access Control
-- Workspace: `workspace/eval-001-rbac`
-- Natural user prompt:
 
-> Review the authorization logic for this admin/user/guest system, using the confirmed PRD and code as evidence.
+## Current Result
 
-- Expected artifact: Structured authorization review that identifies access-control risks, affected roles or resources, evidence, severity, and remediation guidance.
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a079595e48d457c66e6bfba203a327a4dd2cee76937828205dc7d5ae1bf6d9ea` from `agents/security/test/authz-reviewer/evals/workspace/eval-001-rbac`.
+- Fixture SHA-256: `a079595e48d457c66e6bfba203a327a4dd2cee76937828205dc7d5ae1bf6d9ea`
+- Prompt SHA-256: `1a600a6512e0923d93e2001890b6b0e358c2e4b71aa4c63f0e217fc733bd66d6`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `5d96dce7dbfccf9a7b2e510ce571be9b1aa80472fabf9a5779117cb4e21d3b09`
+- Skill overlay SHA-256: `89401c75c36dd79dd8bf55d1b0c23cbd794402b7f29f62d05ae9f27f5e25c3f9`
+- Judge schema SHA-256: `b9195372d92f3bbea03af4fc8ee3a7b882c68284b96da53cdd8cef5cf57e70e9`
+- Eval definition SHA-256: `235137f94204f51e6c45d33016dc89d9789a6db39caeb6f905a7bece723a5a15`
+- Metadata SHA-256: `df9bade135aeb250331ea2ef878f13f4c9a4066b16cd28748dca8a45cce63fa2`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-## Test Set / Fixture Version
+## Assertion Results
 
-- Schema: `evals.json` v1.0，使用 source HEAD `47adbbc9` 的当前 prompt、assertions 与 fixture。
-- Fresh run window: 2026-08-06 23:45:35 至 2026-08-07 00:13:31（Asia/Shanghai）。
-- Runtime root: `/tmp/security-fresh-evals-20260806-n3l1anp1/authz-reviewer--eval-001-rbac/`。
-- Fixture identity: 两条 lane 的初始 fixture manifest 完全相同，SHA-256 为 `d4151578bda027f95e9c5e5165623b77c04bc9bcd8bdac21daa3d786fc9d243a`。
-- Lane isolation: 先完成并销毁全部 `without_skill` 独立顶层临时目录，再创建任何 `with_skill` 目录；每条 lane 使用独立的顶层临时 workspace、`HOME` 与 `CODEX_HOME`，不存在可供另一条 candidate 读取的 sibling lane。
-- Controlled variable: 两条 lane 使用逐字相同 prompt 与相同初始 fixture；仅 `with_skill` 的隔离 `CODEX_HOME` 安装并加载目标 skill，`without_skill` 未安装任何目标 skill。
-- Evidence isolation: 所有 candidate 会话结束并删除各自临时根后，才将内存中的最终 workspace 快照与 transcript 持久化到 runtime root；candidate transcript 泄漏扫描未命中 `eval_metadata.json`、`evals/evals.json`、`comparison.md`、judge/verdict 或 expected output/assertion 脚手架。
-- Judge: candidate 全部结束后，由第三个独立、只读的 fresh Codex 会话依据当前 assertions、两条 candidate 输出、transcript 与最终 workspace 快照判定。
-
-## Latest Result
-
-- Behavior result: **PASS**（PASS 4 / FAIL 0 / NOT EXERCISED 0）
-- Coverage result: **PARTIAL**
-Overall result: PASS (partial coverage)
-
-## Historical Contract Note
-
-上一份 durable comparison 基于 issue #234 修复前会向 baseline 泄漏规则的旧契约，因此标记为 `BLOCKED`。本轮使用当前无泄漏 prompt/fixture 重新生成两条 lane，未复用旧 baseline 或旧结论。
-
-## Assertions
-
-| Assertion | With skill | With-skill evidence | Without skill | Baseline evidence |
-| --- | --- | --- | --- | --- |
-| `authorization_model`<br>识别角色、资源、权限边界和关键授权路径 | PASS | 最终产物 docs/security/auth-model/authz-review.md 包含 guest/user/admin 角色矩阵、资源边界及 getAdminAuditLog → canReadAdminAuditLog 授权路径，并对未发现的角色管理及其他 /admin/* 路径明确标为未验证。 | PASS | 最终产物包含 guest/user/admin 权限矩阵、审计日志资源边界及关键调用路径，并区分了未证实路径。 |
-| `access_control_findings`<br>指出越权、会话、JWT 或权限检查缺陷 | PASS | 最终报告明确指出 src/access/admin-policy.js:1-3 信任客户端可控的 x-user-role: admin，且 6-11 行在该条件下返回审计日志；同时指出缺少认证及可信角色校验。 | PASS | 最终报告同样以代码行号证据指出 x-user-role 可伪造 admin 并绕过审计日志授权。 |
-| `evidence_and_impact`<br>说明证据、影响范围和风险后果 | PASS | 报告将 PRD 15、19-26、30-31 与代码 1-11 对照，说明未认证调用方可读取管理审计数据，并评为高严重度、影响机密性及管理授权边界。 | PASS | 报告提供 PRD 与代码行号证据，说明 guest/user 可取得 200 和完整 auditLog，并描述审计数据泄露影响。 |
-| `remediation`<br>提供可执行的授权修复和回归验证建议 | PASS | 报告建议使用经服务端验证的 session/token 和可信账户角色，拒绝客户端角色字段，并给出覆盖 guest/user/admin、伪造 header/query/body、未认证/过期身份及所有 /admin/* 路由的回归验证。 | PASS | 报告给出可信身份解析、统一 admin middleware、禁止客户端角色来源及具体回归测试建议。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `maps_expected_and_actual_access` | PASS | 交付报告提供 guest/user/admin 权限矩阵，并逐项对照审计日志函数的实际边界及未发现的角色管理实现。 |
+| `finds_client_controlled_role_bypass` | PASS | 报告直接引用 `admin-policy.js` 中读取 `request.headers["x-user-role"]` 并比较 `admin`，说明伪造该请求头可获得 200 和审计日志。 |
+| `states_evidence_impact_and_limits` | PASS | 报告说明管理审计数据影响、High 严重度及越权后果，并明确 session、JWT、认证、角色管理接口和其他 `/admin/*` 路由仍未验证。 |
+| `proposes_trusted_identity_fix_and_tests` | PASS | 报告建议使用认证中间件生成的服务端 principal/role，剥离客户端身份头，并列出未认证、guest、user、admin、伪造 header、query/body role 及凭证异常的回归测试。 |
 
 ## With-Skill Behavior
 
-with-skill 在最终快照中生成了结构化报告，覆盖角色矩阵、授权缺陷、证据/影响、修复和回归验证；明确标注未实现的其他管理路径为未验证。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1a600a6512e0923d93e2001890b6b0e358c2e4b71aa4c63f0e217fc733bd66d6; fixture_sha256=a079595e48d457c66e6bfba203a327a4dd2cee76937828205dc7d5ae1bf6d9ea; output_sha256=6d1ebc338cf046c42d25c9fd56ed7f07955be067fd35506d537696aaf4b45f84; snapshot_sha256=4a1defb4eadce9d75be52b014992d7a7edd844236cf68f90cc02d861b56f965d
+- Behavior: 完整交付结构化授权审查，覆盖四项要求。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-without-skill 也生成了满足四项 assertion 的报告，且识别出同一 header 伪造问题；作为 baseline 不影响 Behavior 判定。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1a600a6512e0923d93e2001890b6b0e358c2e4b71aa4c63f0e217fc733bd66d6; fixture_sha256=a079595e48d457c66e6bfba203a327a4dd2cee76937828205dc7d5ae1bf6d9ea; output_sha256=de5d74cdd49ed2a6cbf51090f221634bee518ac5b0cf0f7476a5ca3a014f7443; snapshot_sha256=f04a48e13f359ef8b067a28ad588f052b61ccfb97df27b11344cb556fb6c89cf
+- Behavior: 同样识别越权并提供修复建议，作为对比基线，不影响 with_skill assertion verdicts。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- 无。
+- None.
+- Next: None.
 
-## Not Exercised
+## Runtime Artifact Policy
 
-- 最终 fixture 仅包含审计日志授权实现；用户角色管理和其他 /admin/* 路由未实现/未出现，因此其实际授权分支无法核验。
-- fixture 中没有 login、session、JWT、token、logout 或密码处理实现，相关安全分支仅能报告为未验证。
-
-## Next Steps
-
-- 补充并审查用户角色管理及所有 /admin/* 路由。
-- 实现可信身份来源后，运行 guest/user/admin 及伪造请求字段的集成回归测试。
-
-## Runtime Artifacts Policy
-
-- Candidate command: `codex exec --skip-git-repo-check -C <isolated-workspace> -s workspace-write --ephemeral --ignore-user-config --ignore-rules -m gpt-5.6-luna -c 'model_reasoning_effort="medium"' --json -o <runtime-output> -`。
-- Judge 使用同一模型与 reasoning effort，在独立 `read-only` workspace 中按结构化 output schema 判定。
-- candidate、baseline、transcript、verdict、fixture snapshots、status、timing 与 diagnostics 仅保留于上述 `/tmp` runtime root，不提交到 git；仓库只更新 canonical `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

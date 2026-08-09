@@ -133,13 +133,16 @@ def assert_eval_workspaces_exist(case_ids: set[str]) -> None:
     for eval_id in case_ids:
         item = evals[eval_id]
         workspace = EVALS_PATH.parent / item["workspace"]
-        assert (workspace / "README.md").exists()
+        assert workspace.is_dir()
         assert (workspace / "eval_metadata.json").exists()
         comparison = workspace / "comparison.md"
         assert comparison.exists()
         comparison_text = comparison.read_text()
-        assert "Latest result:" in comparison_text
-        assert "Runtime Artifacts Policy" in comparison_text
+        assert "Overall result:" in comparison_text
+        assert set(item["scenario"]) == {
+            "persona", "situation", "trigger", "goal", "materials",
+            "constraints", "success_criteria",
+        }
         assert item["assertions"]
 
 

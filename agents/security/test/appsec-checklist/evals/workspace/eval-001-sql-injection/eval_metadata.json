@@ -2,21 +2,20 @@
   "eval_id": "eval-001-sql-injection",
   "eval_name": "SQL Injection Vulnerability",
   "workspace_root": "agents/security/test/appsec-checklist/evals/workspace/eval-001-sql-injection",
-  "prompt": "pm-agent 已完成入口分类并路由至 appsec-checklist；PM handoff packet 见 workspace `PM_HANDOFF.md`，已确认 feature_path 为 `user-search`。Review the security of this user search API endpoint.",
   "fixture_context": [
     "PM_HANDOFF.md",
     "docs/pm/user-search/PRD.md",
     "src/api/user-search.js"
   ],
-  "execution_cleanup": [
-    "docs/security/user-search/appsec-checklist.md",
-    "with_skill",
-    "without_skill",
-    "outputs",
-    "diagnostics",
-    "transcript.md",
-    "subagent-verdict.md",
-    "run_status.json",
-    "timing.json"
-  ]
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

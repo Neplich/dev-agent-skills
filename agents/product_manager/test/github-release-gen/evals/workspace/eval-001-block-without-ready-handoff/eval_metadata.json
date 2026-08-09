@@ -2,7 +2,6 @@
   "eval_id": "eval-001-block-without-ready-handoff",
   "eval_name": "block-without-ready-handoff",
   "workspace_root": "agents/product_manager/test/github-release-gen/evals/workspace/eval-001-block-without-ready-handoff",
-  "prompt": "请分别审查 `scenarios/no-handoff.md` 与 `scenarios/unconfirmed-handoff.md` 中的 GitHub Release 请求，并说明每个场景当前能否继续。",
   "fixture_context": [
     "scenarios/no-handoff.md",
     "scenarios/unconfirmed-handoff.md",
@@ -12,5 +11,14 @@
   "execution_cleanup": [
     "release-preview.md",
     "release-action.md"
-  ]
+  ],
+  "skill_dependencies": [],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

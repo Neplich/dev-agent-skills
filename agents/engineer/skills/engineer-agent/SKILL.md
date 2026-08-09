@@ -1,6 +1,6 @@
 ---
 name: engineer-agent
-description: "Downstream engineering router invoked after pm-agent handoff. Classifies confirmed engineering scope across codebase analysis, TRD generation, implementation, tests, debugging, delivery, and UI implementation, then delegates to engineering specialists."
+description: "Classify and route confirmed engineering requests across codebase analysis, TRD generation, implementation, tests, debugging, UI work, and delivery. Use immediately after a PM engineering handoff and before specialist execution."
 visibility: internal
 ---
 
@@ -9,6 +9,30 @@ visibility: internal
 `engineer-agent` is the engineering capability entry point. It routes the
 request to the narrowest engineering skill based on the user's target outcome,
 repo context, and current delivery stage.
+
+## Mandatory Routing Decision
+
+Produce the routing decision before executing engineering work. State the
+accepted entry basis, resolved `feature_path`, current delivery stage, selected
+specialist, required output, and the authoritative specialist gate. For a full
+implementation request, keep this order observable:
+`codebase-analyzer` -> alignment/TRD gap resolution ->
+`feature-implementor` -> `test-writer` -> QA E2E handoff -> `delivery`.
+When the PM entry basis is already confirmed, `codebase-analyzer` remains the
+first engineering step; do not prepend a new PM discovery route.
+Name `engineer-agent` as the owner before the selected specialist. When the
+chain includes tests, explicitly route them to `test-writer`; when it includes
+QA E2E, preserve the suggested `docs/qa/e2e/{feature_path}/` directory. A UI
+design gap is handed to `designer-agent` with the exact design scope even when
+that downstream capability is unavailable; mark availability separately rather
+than replacing the required handoff.
+
+An approved-expectation change returns to `pm-agent:idea-to-spec` existing
+project update; a technical gap returns to `trd-gen`; implementation begins
+only after same-path PRD/TRD/design inputs and a confirmed plan are ready.
+Frontend changes remain Engineer-owned, but UI structure, interaction, or
+visual gaps first go to `designer-agent` and then return to Engineer. Do not
+collapse these boundaries into a generic request for more files.
 
 ## Role Boundary
 
@@ -75,7 +99,7 @@ route back to the implementor before handing the result to QA.
 Before routing, require either an explicit PM handoff packet or an equivalent
 confirmed entry basis for the selected engineering specialist. The PM-side
 packet fields are defined in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 - If the user directly invokes `engineer-agent`, `feature-implementor`,
   `debugger`, `test-writer`, or `delivery` without a packet or equivalent
@@ -210,7 +234,7 @@ When routing is complete:
   right implementation target
 - after the routed skill or role stage completes, apply the cross-role
   safety-net closeout defined in
-  `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+  the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
   (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
   next step, request confirmation before continuing, and honor user-enabled
   `auto-continue`

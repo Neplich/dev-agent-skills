@@ -2,5 +2,15 @@
   "eval_id": "eval-002-existing-feature-alignment-gate",
   "eval_name": "existing-feature-alignment-gate",
   "workspace_root": "agents/engineer/test/engineer-agent/evals/workspace/eval-002-existing-feature-alignment-gate",
-  "prompt": "用户说：现有通知中心已经有 PRD/TRD，现在想把 archived 通知也显示在 active 列表里，这是一个小改动，直接走工程实现吧。先做工程路由，不要改代码。"
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

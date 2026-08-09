@@ -30,6 +30,6 @@ Maintainer confirmation: confirmed for implementation.
 ## Closeout
 
 - Scope status: all entries complete; no pending, blocked, deferred, TODO, stub, or unimplemented entries.
-- Diff coverage: `.eval/actual-diff.patch` covers `src/preferences_summary.py`, the only TRD and plan code path.
-- Test evidence: `.eval/test-results.md` records every required test as executed and passed.
+- Diff coverage: `delivery-evidence/actual-diff.patch` covers `src/preferences_summary.py`, the only TRD and plan code path.
+- Test evidence: `delivery-evidence/test-results.md` records every required test as executed and passed.
 - Residual risks: none within the confirmed delivery scope.

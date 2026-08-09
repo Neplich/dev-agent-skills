@@ -1,68 +1,60 @@
-# Eval Result: eval-002-python-api-only
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `devops`
 - Skill: `deployment-planner`
 - Eval: `eval-002-python-api-only`
-- Test case: `python-api-only`
-- Workspace: `agents/devops/test/deployment-planner/evals/workspace/eval-002-python-api-only`
 
-## Latest Result
+## Current Result
 
-- Fresh run: `2026-08-07`（issue #238 严格隔离重跑）
-- Model: `gpt-5.6-luna`，`model_reasoning_effort=medium`
-- Isolation: baseline 使用随机顶层 root；完成后仅保存在内存快照并删除 root，随后才创建 with_skill root；with_skill root 删除后才创建独立 judge root。两条 lane 的原始 prompt、fixture snapshot、`HOME` 与 `CODEX_HOME` 值相同。
-- Judge: 独立 fresh `codex exec`，读取实际产物、final、status 与工具轨迹，对照当前 assertions 判定；不采信 lane 自评。
-- Behavior result: PASS
-- Coverage result: FULL
-- Without-skill comparison: FAIL（仅作对照，不参与 durable Overall 组合）
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888` from `agents/devops/test/deployment-planner/evals/workspace/eval-002-python-api-only`.
+- Fixture SHA-256: `259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888`
+- Prompt SHA-256: `000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `762ea3248d76c5c9e715368b11ab616562bb9bdb0e2bd6a6aad38d47cc80b3af`
+- Skill overlay SHA-256: `52ed13d453014671ce8cc7f7f7ce4b4108c3a5cc943fcf3bece1ac66b08625d5`
+- Judge schema SHA-256: `6d6cb805f86354c5ca7fe62a901b9a052b0e2f5bc53f163da17451ac99ca29a5`
+- Eval definition SHA-256: `f6bee599168504aabc5841db04bc20810e822fd2af8545bc98e19f6298c38285`
+- Metadata SHA-256: `cd34fc596ce17b79112511df2244a7b68d45546111925715157c8598360bb097`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
 Overall result: PASS
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Eval definition: `agents/devops/test/deployment-planner/evals/evals.json`
-- Metadata: `agents/devops/test/deployment-planner/evals/workspace/eval-002-python-api-only/eval_metadata.json`
-- Expected output: 生成简化的部署配置，不包含数据库相关内容
-- Fixture: `PM_HANDOFF.md`, `pyproject.toml`, `app/main.py`
 
 ## Assertion Results
 
-| Assertion | with_skill | without_skill | Evidence |
-| --- | --- | --- | --- |
-| `deploy_local_env_example_database_url` | PASS | FAIL | with_skill/deploy/local/.env.example exists and contains only APP_HOST and APP_PORT, with no DATABASE_URL. The without_skill lane lacks the expected deploy/local/.env.example artifact. |
-| `deploy_docker_docker_compose_yml_app` | PASS | FAIL | with_skill/deploy/docker/docker-compose.yml defines exactly one service, api. The without_skill lane lacks the expected deploy/docker/docker-compose.yml artifact. |
-| `deploy_local_start_sh` | PASS | FAIL | with_skill/deploy/local/start.sh only checks Python dependencies and starts uvicorn; it has no database initialization. The without_skill lane lacks the expected deploy/local/start.sh artifact. |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_confirmed_target_matrix` | PASS | Locked delivery snapshot contains deploy/local, deploy/docker, and deploy/helm assets only; no additional deployment target category is present. |
+| `keeps_api_only_topology` | PASS | Compose defines only the api service. Snapshots contain no database, Redis, migration, DATABASE_URL, or dependent service configuration. |
+| `uses_confirmed_runtime_contract` | PASS | Local start.sh, Dockerfile, and the image used by Helm specify uvicorn app.main:app and port 8000; Docker and Helm probes use /health, and local documentation verifies /health. |
+| `stays_within_deployment_scope` | PASS | Locked snapshot contains no CI/CD configuration and git evidence shows no commits or external deployment/publication actions; publication is explicitly deferred/documented as handoff only. |
 
 ## With-Skill Behavior
 
-- with_skill 三条断言均可核查且全部满足，因此 Coverage 为 FULL、durable Overall 为 PASS。without_skill 缺少断言所要求的文件，按 baseline_policy 判为 FAIL，但不影响 durable Overall。
-- Workspace changes: added: `deploy/docker/.env.example`, `deploy/docker/Dockerfile`, `deploy/docker/README.md`, `deploy/docker/docker-compose.yml`, `deploy/helm/Chart.yaml`, `deploy/helm/README.md`, `deploy/helm/templates/_helpers.tpl`, `deploy/helm/templates/deployment.yaml`, `deploy/helm/templates/hpa.yaml`, `deploy/helm/templates/ingress.yaml`, `deploy/helm/templates/service.yaml`, `deploy/helm/values.yaml`, `deploy/local/.env.example`, `deploy/local/README.md`, `deploy/local/start.sh`。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b; fixture_sha256=259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888; output_sha256=66117e8af42e170775bdc637cc090568e79efa1bd3a6b4cca8046db8ba26434a; snapshot_sha256=1b62515296e834bf18a03e7fba779dc8d39399e9d875e8149023800065fbc880
+- Behavior: Delivered local, Docker, and Helm deployment assets with API-only topology and matching runtime/health-check contract; no CI/CD or actual publication was performed.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- baseline 在本轮重新生成，没有复用历史 baseline，也没有读取 target skill、with_skill 产物或旧 comparison。
-- Workspace changes: added: `.dockerignore`, `DEPLOYMENT.md`, `Dockerfile`, `compose.yaml`, `helm/status-api/Chart.yaml`, `helm/status-api/templates/NOTES.txt`, `helm/status-api/templates/_helpers.tpl`, `helm/status-api/templates/deployment.yaml`, `helm/status-api/templates/service.yaml`, `helm/status-api/values.yaml`。
-- assertion 结果见上表；baseline 只用于比较 skill 增益，不作为 durable Overall 的独立机器门禁。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b; fixture_sha256=259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888; output_sha256=228ce914bd48a36eb390e5c84715acd4c0a64e6e716c8718513f840d4652cf7c; snapshot_sha256=6682a514cf779307fc10e5fa70a359d2895a7b08da00f02f1ea4a949da8f976c
+- Behavior: Delivered local, Docker, and Helm assets with matching runtime contract and API-only Compose topology; no CI/CD or actual publication was performed.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures and Coverage Gaps
+## Failures and Next Steps
 
-- with_skill 无 assertion failure。
-- 所有当前 assertions 均已实际覆盖。
-- 无模型、认证、runner 或外部服务 blocker。
-
-## Historical Result (Old Contract)
-
-- 旧结论为 PASS（3/3）；issue #234 修复 eval 泄漏后，该结论被标为 BLOCKED 等待重跑。
-- 该历史结论适用旧 eval 契约；本文件顶部的 2026-08-07 fresh 结果已取代它作为 latest durable 结论。
-
-## Next Steps
-
-- 保留当前回归用例；后续 skill、fixture 或断言变化时继续执行同等严格的 fresh paired run。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 两条 lane、工具轨迹、状态、文件快照、judge verdict 与隔离事件只保存在 `tmp/eval-runs/issue-238-devops-strict-20260806/`，不提交 git。
-- durable 结果只保留本 `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

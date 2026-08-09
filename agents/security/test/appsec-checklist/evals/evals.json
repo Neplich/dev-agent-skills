@@ -7,7 +7,28 @@
       "id": "eval-001-sql-injection",
       "name": "SQL Injection Vulnerability",
       "description": "Test detection of SQL injection vulnerability in user search",
-      "prompt": "pm-agent 已完成入口分类并路由至 appsec-checklist；PM handoff packet 见 workspace `PM_HANDOFF.md`，已确认 feature_path 为 `user-search`。Review the security of this user search API endpoint.",
+      "scenario": {
+        "persona": "用户目录安全工程师",
+        "situation": "用户搜索 API 即将发布，查询输入必须保持数据语义",
+        "trigger": "发布门禁要求检查参数到数据库的完整路径",
+        "goal": "形成有代码证据和修复建议的安全报告",
+        "materials": [
+          "PM_HANDOFF.md",
+          "docs/pm/user-search/PRD.md",
+          "src/api/user-search.js"
+        ],
+        "constraints": [
+          "只审查不改代码",
+          "无可运行数据库",
+          "结论限于搜索路径"
+        ],
+        "success_criteria": [
+          "识别真实查询风险",
+          "说明数据影响和严重度",
+          "写入确认目录并给出回归"
+        ]
+      },
+      "prompt": "用户目录搜索 API 准备发布，范围在 `PM_HANDOFF.md` 与对应 PRD。请审查 `src/api/user-search.js` 中查询参数进入数据库的路径，给出有代码证据的风险、影响、严重度和修复建议。",
       "workspace": "workspace/eval-001-sql-injection",
       "expected_output": "Structured application security checklist with prioritized findings, affected surfaces, evidence, impact, and remediation guidance.",
       "assertions": [
@@ -42,7 +63,30 @@
       "id": "eval-002-auth-bypass",
       "name": "Authentication Bypass",
       "description": "Test detection of missing authentication on admin endpoint",
-      "prompt": "pm-agent 已完成入口分类并路由至 appsec-checklist；PM handoff packet 见 workspace `PM_HANDOFF.md`，已确认 feature_path 为 `admin-panel`。Check the security of the admin panel endpoints.",
+      "scenario": {
+        "persona": "管理后台安全工程师",
+        "situation": "管理 API 仅允许管理员访问，路由和处理器已提供",
+        "trigger": "上线前需确认匿名和普通成员会被拒绝",
+        "goal": "形成管理端认证授权审查",
+        "materials": [
+          "PM_HANDOFF.md",
+          "docs/pm/admin-panel/PRD.md",
+          "src/app.js",
+          "src/api/admin-routes.js",
+          "src/api/admin-users.js"
+        ],
+        "constraints": [
+          "只审查现有端点",
+          "不修改认证实现",
+          "引用实际挂载路径"
+        ],
+        "success_criteria": [
+          "明确保护状态",
+          "说明资产与后果",
+          "给出中间件修复和角色回归"
+        ]
+      },
+      "prompt": "管理面板准备上线，只有管理员应该访问相关 API。请根据 `PM_HANDOFF.md`、产品需求和 `src/app.js`、`src/api/admin-routes.js` 的实际挂载方式审查访问边界，并给出分级和修复建议。",
       "workspace": "workspace/eval-002-auth-bypass",
       "expected_output": "Structured application security checklist with prioritized findings, affected surfaces, evidence, impact, and remediation guidance.",
       "assertions": [
@@ -72,7 +116,28 @@
       "id": "eval-003-xss",
       "name": "XSS Vulnerability",
       "description": "Test detection of XSS in comment rendering",
-      "prompt": "pm-agent 已完成入口分类并路由至 appsec-checklist；PM handoff packet 见 workspace `PM_HANDOFF.md`，已确认 feature_path 为 `comment-display`。Review the security of the comment display feature.",
+      "scenario": {
+        "persona": "评论功能安全工程师",
+        "situation": "评论正文按纯文本定义，浏览器端负责渲染用户内容",
+        "trigger": "发布前需确认评论不能改变 DOM 或执行脚本",
+        "goal": "形成评论渲染安全报告",
+        "materials": [
+          "PM_HANDOFF.md",
+          "docs/pm/comment-display/PRD.md",
+          "src/ui/comment-display.js"
+        ],
+        "constraints": [
+          "不引入富文本",
+          "不改排序审核",
+          "只审查不修复"
+        ],
+        "success_criteria": [
+          "定位内容进入 DOM 的方式",
+          "说明会话与页面影响",
+          "提出安全渲染和载荷回归"
+        ]
+      },
+      "prompt": "评论展示功能即将发布，评论正文按纯文本处理。请结合 `PM_HANDOFF.md`、产品需求和 `src/ui/comment-display.js` 审查用户内容进入 DOM 的路径，说明风险、影响、严重度和修复验证方式。",
       "workspace": "workspace/eval-003-xss",
       "expected_output": "Structured application security checklist with prioritized findings, affected surfaces, evidence, impact, and remediation guidance.",
       "assertions": [
@@ -102,7 +167,29 @@
       "id": "eval-004-feature-path-report",
       "name": "Feature Path Security Report",
       "description": "Verifies that appsec-checklist reads same-path PM/Engineer documents and writes a 4-level feature_path security report.",
-      "prompt": "对 chat-interface/messages/history/search 做发布前应用安全检查。仓库中已有 docs/pm/chat-interface/messages/history/search/PRD.md、docs/engineer/chat-interface/messages/history/search/TRD.md 和 docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md。",
+      "scenario": {
+        "persona": "聊天搜索安全工程师",
+        "situation": "四级目录的产品、技术和实施计划已确认",
+        "trigger": "搜索发布前需评估输入、授权和敏感数据",
+        "goal": "沿用原功能树形成安全报告",
+        "materials": [
+          "docs/pm/chat-interface/messages/history/search/PRD.md",
+          "docs/engineer/chat-interface/messages/history/search/TRD.md",
+          "docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md",
+          "src/search.ts"
+        ],
+        "constraints": [
+          "不建同义目录",
+          "不改其他角色文档",
+          "事实变化返回产品团队"
+        ],
+        "success_criteria": [
+          "读取同路径文档链",
+          "报告镜像四级目录",
+          "记录层级和升级证据"
+        ]
+      },
+      "prompt": "聊天历史搜索准备发布，产品、技术和实施计划都在 `docs/pm/chat-interface/messages/history/search/` 与对应工程目录。请审查 `src/search.ts` 的应用安全风险，并沿用这棵功能目录记录报告。",
       "workspace": "workspace/eval-004-feature-path-report",
       "expected_output": "读取同一 feature_path 下的 PM/Engineer 文档，输出 docs/security/chat-interface/messages/history/search/appsec-checklist.md，frontmatter 包含 feature_path，不生成 docs/security/history-search/appsec-checklist.md 或 docs/security/chat-interface/history-search/appsec-checklist.md。",
       "assertions": [
@@ -137,7 +224,27 @@
       "id": "eval-005-mapped-search-security",
       "name": "Mapped Search Security Documentation",
       "description": "Verify that an application security review uses mapped formal documentation as a low-trust exploration aid and checks the search query against code",
-      "prompt": "请审查 src/api/search-handler.js 的用户搜索安全性，重点检查查询参数如何进入数据查询，并给出证据、影响和修复建议。",
+      "scenario": {
+        "persona": "搜索 API 安全工程师",
+        "situation": "正式说明声称参数化查询，但尚未核验",
+        "trigger": "发布前需确认参数实际如何进入查询",
+        "goal": "以代码事实形成结论并记录差异",
+        "materials": [
+          "src/api/search-handler.js",
+          "docs/site/standards/change-map.yaml",
+          "docs/site/api/user-search.md"
+        ],
+        "constraints": [
+          "文档未核验",
+          "只读映射命中材料"
+        ],
+        "success_criteria": [
+          "通过映射定位说明",
+          "以代码核对查询",
+          "说明差异影响和修复"
+        ]
+      },
+      "prompt": "请审查 `src/api/search-handler.js` 的用户搜索安全性，重点核对查询参数如何进入数据查询。仓库有变更映射和正式 API 说明，请把文档声明与代码事实一起记录。",
       "workspace": "workspace/eval-005-mapped-search-security",
       "expected_output": "优先读取 change-map 命中的搜索 API 文档，再以代码核对查询构造；将 unverified 文档按最低信任处理并报告参数化声明与代码插值事实的不一致。",
       "assertions": [

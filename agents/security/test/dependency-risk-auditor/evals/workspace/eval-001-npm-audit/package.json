@@ -1,5 +1,5 @@
 {
-  "name": "dependency-audit-fixture",
+  "name": "account-directory-service",
   "private": true,
   "version": "1.0.0",
   "dependencies": {

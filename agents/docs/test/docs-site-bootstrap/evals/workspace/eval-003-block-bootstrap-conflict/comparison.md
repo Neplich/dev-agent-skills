@@ -1,78 +1,59 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `docs-site-bootstrap`
 - Eval: `eval-003-block-bootstrap-conflict`
-- Review context: issue #155 fresh paired eval
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture: `issue-122-assets-conflict-v1`
-- Scope: one known host conflict plus representative identical targets; omitted targets follow the fixture's missing-or-identical assumption
-- Dependency fact under review: the representative `package.json` VitePress declaration is pinned exactly to `1.6.4`
-- Actual validation date: `2026-07-22`
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `67d646aaa1407e943f08140487b646ac63c9406ed33f7972e7921d67116c9f4a` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-003-block-bootstrap-conflict`.
+- Fixture SHA-256: `67d646aaa1407e943f08140487b646ac63c9406ed33f7972e7921d67116c9f4a`
+- Prompt SHA-256: `7e27a0b4acbeb0bbab6d1ce4f4eaef1707f80d3f366d62ddd92d0e2d6f621f17`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f74a445a21eabfad3f25cc38a5190833cf5fc52294bb0054a41378fe894ddd82`
+- Skill overlay SHA-256: `749412be4f8f7fe24db333e412ff5013877a6c57121d621b10bbe79fa7b60b02`
+- Judge schema SHA-256: `8fb0a4310aa73072ce3915bd9569df86e49409cfb5df2e41bfa626f79fa1e1ef`
+- Eval definition SHA-256: `ef71b65d8d90e0a7a85b11140f77333b6bccfac4b39b25f67875d33153f0ebea`
+- Metadata SHA-256: `dd91ae0a6e0ac8c19ffeb9b16bf575dc1d6e559c0626e7027f9e04c671f270d0`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-## Latest Result
+## Assertion Results
 
-- Overall result: PASS
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `FULL`
-- without_skill：Behavior `PASS` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| `blocks_on_complete_conflict_list` | PASS | PASS | 两条 lane 均明确列出 `docs/site/standards/index.md` 为冲突文件，说明“安全阻塞”，并承诺未收到决定前不生成部分脚手架或 manifest；实际 manifest 未将该文件标记为成功状态。 |
-| `does_not_overwrite_conflict` | PASS | PASS | 两条 workspace 中 `docs/site/standards/index.md` 均保留 fixture 的宿主定制内容（“团队文档规范入口”、审批链接和 owner 约定），未被覆盖或部分规范化。 |
-| `offers_explicit_resolution_choices` | PASS | PASS | 两条 lane 均明确提供 `overwrite`、`merge`、`keep` 三种选项，并说明只有选择 `keep` 后才记录 `kept-as-is`；当前 manifest 中没有该状态。 |
-
-本轮无 FAIL 断言。
-
-
-
-## Assertions
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- `blocks_on_complete_conflict_list`: PASS. `docs/site/standards/index.md` is the complete conflict list under the fixture scope; the unresolved overwrite stage remains blocked and the manifest has no success state for that path.
-- `does_not_overwrite_conflict`: PASS. The target still matches the pristine host customization and differs from the packaged asset; before/after SHA-256 sets match, with no merge, formatting, normalization, or partial overwrite.
-- `offers_explicit_resolution_choices`: PASS. The with-skill result requires the user to choose overwrite, an explicitly reviewed merge, or keep; `kept-as-is` is recorded only after an explicit keep decision.
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `blocks_on_complete_conflict_list` | PASS | with_skill 列出唯一冲突路径，并明确在解决前不会继续创建脚手架；其空 git 状态和空 delivery_snapshot 证明未产生成功 manifest 状态。 |
+| `does_not_overwrite_conflict` | PASS | with_skill 的 git_status、git_diff 和 delivery_snapshot 均为空，fixture 中的宿主文件内容未被修改。 |
+| `offers_explicit_resolution_choices` | PASS | with_skill 明确提供 overwrite、explicit merge、keep-existing 三种选择，且尚未记录 kept-as-is；记录动作等待用户选择。 |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- Source: fresh issue #155 with-skill lane under `tmp/eval-runs/issue-155/with_skill/eval-003`, using the current target skill and conflict protocol with the same eval prompt and copied minimal fixture.
-- Classified `package.json` and `.meta/releases.json` as byte-identical and `standards/index.md` as the single known unresolved conflict; the representative package declares VitePress exactly as `1.6.4`.
-- Read-back confirmed the customized index and manifest stayed byte-identical to input; the manifest still contains only the two pre-existing `skipped-identical` entries and no state for the conflict.
-- The valid outcome is blocked pending overwrite, explicit merge, or keep. A future keep decision would add `kept-as-is`; no such decision was inferred in this run.
-- The fixture deliberately omits executable site scripts and most inventory files, so host tests and builds are not applicable. Conflict comparison, manifest parsing, and before/after hashes are the executable evidence; no complete-host checks are claimed.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7e27a0b4acbeb0bbab6d1ce4f4eaef1707f80d3f366d62ddd92d0e2d6f621f17; fixture_sha256=67d646aaa1407e943f08140487b646ac63c9406ed33f7972e7921d67116c9f4a; output_sha256=f751ecabb071b7961d32394826fd91cd60688637a926f6e9b61f34f517f5ea4a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完整识别冲突并暂停写入，保留现有文件，同时提供三种明确解决选项。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7e27a0b4acbeb0bbab6d1ce4f4eaef1707f80d3f366d62ddd92d0e2d6f621f17; fixture_sha256=67d646aaa1407e943f08140487b646ac63c9406ed33f7972e7921d67116c9f4a; output_sha256=fa3900497cf931304e394529287ada09ed359e914bc7588be680aee88b5ebf6d; snapshot_sha256=907e4b5801ab47acce07203b2eec7a8bdb180224fd94086826fdf70acb9ab057
+- Behavior: 直接生成站点并修改 manifest，未提供冲突阻塞或三种解决选项。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-- Source: a newly spawned independent issue #155 baseline worker using the same prompt and copied fixture, with the target skill, Docs README, internal instructions, old comparisons, and with-skill output prohibited.
-- Result: `BLOCKED`. It preserved the customized conflict and partial manifest, but lacked the full inventory source and could not complete omitted-target classification or bootstrap.
-- The baseline identified keep and overwrite as decisions but omitted the required explicit-merge option, so its behavior satisfies conflict preservation but not the full three-choice assertion. No historical baseline was reused.
+## Failures and Next Steps
 
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- No with-skill assertion failures.
-- The blocked overwrite stage is the expected successful behavior, not an eval failure.
-- Host docs tests and builds are not applicable to this deliberately partial conflict fixture.
-- The baseline did not provide the full three-option conflict protocol and remained blocked by missing inventory; this comparison does not promote it to PASS.
-
-## Next Steps
-
-- Retain this PASS. A real bootstrap remains paused until the maintainer selects overwrite, an approved explicit merge, or keep for every conflict.
+- None.
+- Next: 等待用户选择冲突解决方式。
 
 ## Runtime Artifact Policy
 
-- Runtime copies, hashes, conflict evidence, and baseline reports remain under `tmp/eval-runs/issue-155/` and are not submitted.
-- Only this durable comparison is retained; no runtime transcript, candidate, verdict, timing, diagnostics, dependencies, or generated site output is committed.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

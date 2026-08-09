@@ -2,7 +2,34 @@
   "eval_id": "eval-013-deployment-aggregate-migration",
   "eval_name": "deployment-aggregate-migration",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-013-deployment-aggregate-migration",
-  "prompt": "请根据 `migration-handoff.md` 中已确认的范围整理现有 `docs/site/ops/deployment.md`。工作区提供聚合页、引用它的站内链接、旧站点记录和三类部署证据。",
-  "fixture_context": ["migration-handoff.md", "deployment-evidence.md", "docs/site/ops/deployment.md", "docs/site/ops/index.md", "docs/site/product/runtime.md", "docs/site/standards/change-map.yaml", "docs/site/package.json"],
-  "execution_cleanup": ["docs/site/ops/deployment", "docs/site/.generated", "sync-report.md"]
+  "fixture_context": [
+    "migration-handoff.md",
+    "deployment-evidence.md",
+    "docs/site/ops/deployment.md",
+    "docs/site/ops/index.md",
+    "docs/site/product/runtime.md",
+    "docs/site/standards/change-map.yaml",
+    "docs/site/package.json"
+  ],
+  "execution_cleanup": [
+    "docs/site/ops/deployment",
+    "docs/site/.generated",
+    "sync-report.md"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "git_topology": {
+    "base_ref": "docs-fixture-base",
+    "target_ref": "docs-fixture-target"
+  },
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

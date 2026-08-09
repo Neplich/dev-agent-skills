@@ -1,6 +1,6 @@
 ---
 name: release-notes-gen
-description: "Internal documentation specialist—not the default entry point. Normally invoked by docs-agent to generate, confirm, index, and validate a host site's versioned Release Notes before the GitHub Release handoff."
+description: "Generate, preview, confirm, index, and validate a host documentation site's versioned Release Notes before GitHub Release work. Use after docs-agent routes confirmed version facts and release evidence."
 visibility: internal
 ---
 
@@ -11,6 +11,23 @@ documentation site, waits for user or maintainer confirmation, then updates
 the host release metadata and indexes and runs the host documentation checks.
 This file owns the entry, feature-scope, confirmation, and role-boundary gates.
 Load `_internal/INSTRUCTIONS.md` only after the entry basis is complete.
+
+## Mandatory Release-Notes Checkpoint
+
+An ambiguous or unconfirmed version returns to `pm-agent`; a missing site or
+Release Notes foundation returns to `docs-site-bootstrap`. Before explicit body
+confirmation, keep release metadata, indexes, navigation, tags, GitHub Release,
+and deployment surfaces unchanged. After confirmation, update only the
+host-required derived surfaces, run the real host documentation checks, and
+return a complete handoff to `docs-audit` containing confirmed version, scope,
+evidence, page path, confirmation source, changed derived surfaces, and check
+results. Tag creation, GitHub Release creation/publication, image publication,
+and deployment remain zero-write external boundaries.
+
+The checkpoint explicitly separates `version_confirmation` from
+`proposed_version`; never list a proposed value as confirmed. Before asking for
+body confirmation, show the complete candidate body and its source-evidence
+mapping, not only a page path or summary.
 
 ## PM Handoff And Feature-Scope Gate
 
@@ -24,7 +41,7 @@ that identifies all of the following:
   handoff.
 
 The PM packet definition lives in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 Direct invocation does not waive this gate. If the version, scope, host, or
 evidence boundary is unresolved, stop before writing, name the missing entry
 credential, and return product ambiguity to `pm-agent` or technical-impact gaps
@@ -104,7 +121,7 @@ Report:
 Only an explicitly maintainer-confirmed `target_release_version`,
 `confirmation_status: confirmed`, and successful host docs checks together can
 produce a ready handoff. At closeout, follow the safety-net behavior
-in `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+in the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
 and wait for confirmation before another role acts unless the applicable
 `auto-continue` authorization already exists.
 

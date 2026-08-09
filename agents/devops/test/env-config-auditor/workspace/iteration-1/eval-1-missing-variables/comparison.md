@@ -1,69 +1,59 @@
-# Eval Result: eval-001-missing-variables
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `devops`
 - Skill: `env-config-auditor`
 - Eval: `eval-001-missing-variables`
-- Test case: `missing-variables`
-- Workspace: `agents/devops/test/env-config-auditor/workspace/iteration-1/eval-1-missing-variables`
 
-## Latest Result
+## Current Result
 
-- Fresh run: `2026-08-07`（issue #238 严格隔离重跑）
-- Model: `gpt-5.6-luna`，`model_reasoning_effort=medium`
-- Isolation: baseline 使用随机顶层 root；完成后仅保存在内存快照并删除 root，随后才创建 with_skill root；with_skill root 删除后才创建独立 judge root。两条 lane 的原始 prompt、fixture snapshot、`HOME` 与 `CODEX_HOME` 值相同。
-- Judge: 独立 fresh `codex exec`，读取实际产物、final、status 与工具轨迹，对照当前 assertions 判定；不采信 lane 自评。
-- Behavior result: PASS
-- Coverage result: FULL
-- Without-skill comparison: FAIL（仅作对照，不参与 durable Overall 组合）
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57` from `agents/devops/test/env-config-auditor/workspace/iteration-1/eval-1-missing-variables`.
+- Fixture SHA-256: `4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57`
+- Prompt SHA-256: `75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `11f5a69db2a4c2ab81d782a866d9a88090a8560b5e61462d8af4e66c4376601f`
+- Skill overlay SHA-256: `ce7aff0f7795c878221dac5c9435b88a48e75e2799c5f15832edbd27f5f6796f`
+- Judge schema SHA-256: `7c0e897fa2e11e667f833a3bbf2e28e35b1c65790975d953ea93444f623ad66b`
+- Eval definition SHA-256: `5217a2bb49f0b8e0ba081e4029f81b07efd6b07af9fb34ce9773ecbde5d00a5b`
+- Metadata SHA-256: `f2d1d6d11daf93046843d6cf276fdc2c30cd77fd3602aa38ebdb9fcc3d6c1a85`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
 Overall result: PASS
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Eval definition: `agents/devops/test/env-config-auditor/evals/evals.json`
-- Metadata: `agents/devops/test/env-config-auditor/workspace/iteration-1/eval-1-missing-variables/eval_metadata.json`
-- Expected output: 生成 durable 审计报告，指出 deploy 和 CI/CD 配置中缺失的变量
-- Fixture: metadata 未声明 `fixture_context`；本轮复制 workspace 中除 comparison、metadata、README 和声明输出外的纯净 fixture 文件。
 
 ## Assertion Results
 
-| Assertion | with_skill | without_skill | Evidence |
-| --- | --- | --- | --- |
-| `deploy_env_audit_md_docs_devops_feature_path_env_audit_md` | PASS | FAIL | with_skill 创建了 deploy/ENV_AUDIT.md；without_skill 未创建耐久审计报告文件。 |
-| `missing_variables` | PASS | FAIL | with_skill 报告包含 ## Missing Variables 章节并列出 API_KEY、REDIS_URL 等缺失项；without_skill 仅输出摘要，没有该章节。 |
-| `api_key_stripe_secret_key_deploy_ci_cd` | PASS | PASS | with_skill 明确指出 API_KEY 在 CI/CD 缺失；without_skill 也明确指出 CI 缺少 API_KEY。 |
-| `recommendations` | PASS | FAIL | with_skill 报告包含 ## Recommendations 章节；without_skill 未生成报告或 Recommendations 章节。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `creates_durable_config_audit` | PASS | Locked delivery snapshot contains deploy/ENV_AUDIT.md with missing-variable findings, coverage matrices, security issues, recommendations, and explicit source references. |
+| `compares_code_deploy_and_cicd` | PASS | The report compares src/server.ts, local, Docker, CI/CD, and Helm/runtime status; it accurately identifies REDIS_URL and API_KEY as missing from Docker and CI/CD, and STRIPE_SECRET_KEY as present only in CI/CD among deployment configurations. |
+| `keeps_secrets_and_unknowns_honest` | PASS | The report contains no real secret values, records absent Helm/Kubernetes/runtime evidence as unknown, and explicitly states deployment readiness is not verifiable. |
 
 ## With-Skill Behavior
 
-- with_skill 的四项断言均满足且全部可评估，因此 durable Overall 按 binding_result_model 为 PASS；without_skill 仅作对照，基线缺少耐久报告并不改变 durable Overall。
-- Workspace changes: added: `deploy/ENV_AUDIT.md`。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf; fixture_sha256=4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57; output_sha256=6d5d612c4821fc98aeb2cc5bf2cab117d23839277f81527acdcd9aaa9604c170; snapshot_sha256=b2380611c5bdb80734738e53aa8b551f6d75390d33c1e1d7486ec1ceea4546cb
+- Behavior: Delivered the requested durable audit with comprehensive environment coverage, evidence references, honest unknowns, and security caveats.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- baseline 在本轮重新生成，没有复用历史 baseline，也没有读取 target skill、with_skill 产物或旧 comparison。
-- Workspace changes: 无文件变更。
-- assertion 结果见上表；baseline 只用于比较 skill 增益，不作为 durable Overall 的独立机器门禁。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf; fixture_sha256=4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57; output_sha256=efc76c12a923da79260234bb1f15ca9e141d2f73105813f01329aea24331587d; snapshot_sha256=97f12e1805a69ca9084211039bd97a106a3ecd5bd3a0331483db08f53371e481
+- Behavior: Delivered an audit outside the requested deploy/ENV_AUDIT.md path and omitted the required coverage/report details.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures and Coverage Gaps
+## Failures and Next Steps
 
-- with_skill 无 assertion failure。
-- 所有当前 assertions 均已实际覆盖。
-- 无模型、认证、runner 或外部服务 blocker。
-
-## Historical Result (Old Contract)
-
-- 旧结论为 PARTIAL，原因是没有 fresh without_skill baseline；issue #234 后进一步标为 BLOCKED 等待重跑。
-- 该历史结论适用旧 eval 契约；本文件顶部的 2026-08-07 fresh 结果已取代它作为 latest durable 结论。
-
-## Next Steps
-
-- 保留当前回归用例；后续 skill、fixture 或断言变化时继续执行同等严格的 fresh paired run。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 两条 lane、工具轨迹、状态、文件快照、judge verdict 与隔离事件只保存在 `tmp/eval-runs/issue-238-devops-strict-20260806/`，不提交 git。
-- durable 结果只保留本 `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

@@ -1,97 +1,59 @@
-# Eval Result: eval-001-minimalist
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `designer`
 - Skill: `visual-design`
 - Eval: `eval-001-minimalist`
-- Test case: Minimalist Design System
-- Workspace: `workspace/eval-1-minimalist`
 
-## Test Set or Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Fixture version: HEAD `a452319`
-- Fresh run time: `2026-08-07 00:04:31 +0800`
-- Runtime directory: `tmp/eval-runs/issue-198-brd/designer/visual-design/eval-001-minimalist/`
-- Fixture: confirmed PM handoff with `feature_path: minimalist-productivity-app`
-
-## Latest Result
-
-- Behavior result: **FAIL**
-- Coverage result: **FULL** (3/3 assertions exercised)
-Overall result: FAIL
-
-## Assertion Results (Current)
-
-- assertion_1: **FAIL** — no docs/design/minimalist-productivity-app/visual-system.md is generated despite the confirmed PM_HANDOFF fixture.
-- assertion_2: **PASS** — no token code, CSS/component implementation, engineering task decomposition, or test command is emitted.
-- assertion_3: **FAIL** — the candidate redirects to PM instead of naming engineer-agent as the implementation owner after design.
-
-## With-Skill Behavior (Current)
-
-The candidate applies the PM gate without inspecting the fixture's existing
-confirmed handoff, so it incorrectly blocks before producing the required
-visual system or Engineer handoff.
-
-## Fresh Without-Skill Baseline (Current)
-
-The baseline ran before the with-skill root existed, from the identical prompt
-and clean PM_HANDOFF fixture in an independent top-level workspace under
-isolated HOME/CODEX_HOME. It generated a detailed visual-system.md, but its
-behavior remains comparison input only.
-
-## Failures (Current)
-
-- Confirmed fixture handoff was not consumed.
-- Required visual-system artifact and engineer-agent handoff are absent.
-
-## Next Steps (Current)
-
-- Fix handoff discovery before applying the PM gate, then rerun.
-
-## Runtime Artifact Policy (Current)
-
-- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
-- Only this durable comparison is updated.
-
-## Historical Result (Superseded: pre-#234 contract)
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a` from `agents/designer/test/visual-design/workspace/eval-1-minimalist`.
+- Fixture SHA-256: `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a`
+- Prompt SHA-256: `c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `7b149b6fe06b79fc3d427a1960513a2a422e6be13b6ef797018ec31a49be8d0b`
+- Skill overlay SHA-256: `a6cc4f87a79718857deec970b62a0d982843b0d6e87cd456e49e337ea084db0e`
+- Judge schema SHA-256: `e8bf769ac89a10c9a014e6b2e125d2d95f024ce8d37a4e4481c16c75936c71a8`
+- Eval definition SHA-256: `2ec4f897729f0820b0a7830a10f3f0348db98fac1c3a94d29404427ccb404465`
+- Metadata SHA-256: `a8c3886c0203449f24edc77c5c3e77a82c91f7ce462169d6c62325194a234222`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-All three assertions were exercised on the reachable visual-system generation path.
+Overall result: PASS
 
 ## Assertion Results
 
-- `assertion_1`: **PASS** — the candidate targets `docs/design/minimalist-productivity-app/visual-system.md` and covers color, typography, spacing, and dimensioned components.
-- `assertion_2`: **PASS** — it includes no token code, CSS/component implementation, engineering task decomposition, or test command.
-- `assertion_3`: **PASS** — implementation is explicitly handed to `engineer-agent`.
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | with_skill delivery_snapshot contains docs/design/minimalist-productivity-app/visual-system.md with colors, typography, spacing, and component rules; feature_path matches PM_HANDOFF.md. |
+| `assertion_2` | PASS | The delivered file is a visual specification containing rules and examples, with no CSS/design-token code, component implementation, engineering task breakdown, or test commands. |
+| `assertion_3` | PASS | The delivered file explicitly states: “Next role: `engineer-agent`.” |
 
 ## With-Skill Behavior
 
-- Runs the local Design System Data helper, keeps useful flat/low-noise cues, and rejects its unconfirmed App Store landing framing for this productivity product.
-- Produces a restrained, accessible, density-derived visual system and strips raw helper CSS/imports from the design artifact.
-- Uses confirmed audience and goals from the PM handoff; it neither requires nor cites BRD, so removal causes no tested behavior difference.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=f9791922af9e247a59d0c5b2602313f8610b55a416c2bd096832a68edd351b2f; snapshot_sha256=f6cf9604e7412ef209caf3c04a3445f755c36fd49bedd472bbe6b9ad6b1f753c
+- Behavior: Delivered the required visual system file at the confirmed path, covering the requested design-system areas and handing implementation to engineer-agent.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- This baseline was newly generated in this run from only the same prompt and PM handoff; it did not apply the Designer README, skill, local references, with-skill output, or old comparison.
-- It gives plausible minimalist visual notes and remains code-free, but does not perform the local reference lookup or consistently produce the canonical artifact and role handoff.
-- It contains no BRD reference.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=2cbd3cf03f390398c43a72fd4bf0cd725921d9e1a67b770e56375e7eeb52bb05; snapshot_sha256=15c0402bdf73b5d7e28635b2e07f2f89a430cd2523bc1903127275516f0479ce
+- Behavior: Also delivered a complete visual system at the confirmed path, with comparable coverage and no implementation code.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- None. The first helper attempt was blocked by the default `uv` cache path; rerunning unchanged with `UV_CACHE_DIR=/tmp/issue-198-uv-cache` succeeded and produced fresh lookup evidence.
-
-## Next Steps
-
-- No skill or fixture correction is required for this case.
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- Runtime candidates, fresh baseline, helper diagnostics, and judge evidence remain under the ignored runtime directory and are not committed.
-- Only this durable `comparison.md` is updated.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

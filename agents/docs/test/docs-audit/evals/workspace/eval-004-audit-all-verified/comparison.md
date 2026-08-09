@@ -1,139 +1,62 @@
-# eval-004-audit-all-verified Comparison
+# Issue #246 Evaluation Result
 
-## Evaluation target
+## Evaluation Target
 
-- Agent: `docs-agent`
+- Agent: `docs`
 - Skill: `docs-audit`
 - Eval: `eval-004-audit-all-verified`
-- Validation time: `2026-08-03 22:40:00 +0800`（fresh re-baseline，issue #188）
-- Scope: complete affected-set verification, canonical version-source inventory and genesis digests, unified stamping, candidate/anchor/discovery transaction, and integration-gated `ready_for_tag`.
 
-## Test set and method
+## Current Result
 
-This is a fresh paired validation against the current 6 assertions. The
-`with_skill` and `without_skill` runs (2026-08-03, #188) each started from their own pristine fixture copy in
-isolated directories (`tmp/eval-runs/issue-188-docs/with_skill/` and `tmp/eval-runs/issue-188-docs/without_skill/`),
-executed independently without reading each other's outputs. The `without_skill` baseline read only
-the current eval definition, metadata, prompt, and fixture files, and did not read the Docs Agent README,
-`docs-audit` skill instructions, prior comparison, or historical output. The `with_skill` run read
-`agents/docs/skills/docs-audit/SKILL.md`, `agents/docs/skills/docs-audit/_internal/INSTRUCTIONS.md`, and
-`agents/docs/README.md` before executing. The fresh judge then read the frozen bilateral candidates and
-the assertions, and produced the verdict in `tmp/eval-runs/issue-188-docs/judge/verdict.md`.
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897` from `agents/docs/test/docs-audit/evals/workspace/eval-004-audit-all-verified`.
+- Fixture SHA-256: `085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897`
+- Prompt SHA-256: `f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `a043187f1d82deb6ceb1f6f2a8dbb12db6dd01c71ced16d224de3ae50ca31c3b`
+- Eval definition SHA-256: `9d29cd503dc3f38e1235bc8d674c667f9fc3bef38d94569b7888bb0dfed80506`
+- Metadata SHA-256: `4c1ab6c77122f43adf1cbc9d6f05aea7b2b047fe1e69ba225e32d03f006dc954`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-## Latest result
+## Assertion Results
 
-- Behavior result: `PASS`（with）/ `PASS`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `PARTIAL`（with）/ `PARTIAL`（without）— Git 缺失导致成功事务未执行
-- Overall result: BLOCKED
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `verifies_complete_affected_set` | PASS | With-skill candidate records all four affected pages as verified with no unresolved evidence gap; final stamped page snapshots are present. |
+| `stamps_all_pages_together` | PASS | Final snapshots show all four required surfaces at v1.1.0, and the candidate records a unified stamp set with successful read-back. |
+| `verifies_release_metadata_read_only` | PASS | Release metadata remains unchanged in the final manifest and is explicitly audited as read-only. |
+| `normalizes_mixed_version_forms` | PASS | The candidate inventory records prefixed and unprefixed sources, their raw forms, normalized SemVer values, and matching comparison results. |
+| `persists_candidate_producer_schema` | PASS | The reachable candidate record contains the required schema, evidence, inventories, digests, staged gates, read-back commands, and candidate_verified conclusion without ready_for_tag or post-commit fields. |
+| `anchors_candidate_then_discovers_success` | PASS | Locked git evidence shows candidate, anchor, handoff, and fast-forward commits; the final handoff snapshot contains ready_for_tag discovery metadata and final confirmation. |
 
-## #238 Fresh Rerun Result（2026-08-06）
+## With-Skill Behavior
 
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `PARTIAL`
-- without_skill：Behavior `PASS` / Coverage `PARTIAL`
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=9ea839124b6074d747cba3957e5de386641ed4bae73f3f6693c75d987cb7b704; snapshot_sha256=acf4e1a516b0333f8cd4cdae012b72808d7ac7311a7beef62c17d3621bcfd788
+- Behavior: Completed the documentation audit, persisted the candidate and handoff records, stamped the required pages, and returned ready_for_tag without creating a tag.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-### 逐断言判定
+## Fresh Without-Skill Baseline
 
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| verifies_complete_affected_set | NOT_EXERCISED | NOT_EXERCISED | 两条 lane 的 change-map 均列出 required docs，但因无 Git 无法解析 immutable target tree，完整 affected-set 核验未执行。 |
-| stamps_all_pages_together | NOT_EXERCISED | NOT_EXERCISED | 统一盖章依赖前置 Git target-tree 核验；两条 lane 均在该基础设施门禁前停止并保持原版本。 |
-| verifies_release_metadata_read_only | PASS | PASS | `docs/site/.meta/releases.json` 的 `latest` 与两个 API 条目均为 `v1.1.0`；`.eval/actual-diff.patch` 未包含该文件修改。 |
-| normalizes_mixed_version_forms | PASS | PASS | Release Notes、索引和 `releases.json` 使用 `v1.1.0`，`package.json` 使用 `1.1.0`；两者可规范化为同一 SemVer。 |
-| persists_candidate_producer_schema | NOT_EXERCISED | NOT_EXERCISED | 审计报告只有 `blocked` 诊断报告，不是 candidate record；缺少可解析 Git refs，无法执行候选记录生成与 staged gate。 |
-| anchors_candidate_then_discovers_success | NOT_EXERCISED | NOT_EXERCISED | `docs/site/.meta/audit/handoffs/pre-tag-v1.1.0.md` 不存在，且两条 lane 均明确未创建 anchor、handoff 或返回 `ready_for_tag`。 |
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=55b450d620370fbd825c4c3c1e56fecd8215255d744b6e756266089d6ecdbb5a; snapshot_sha256=9247dc286f355dc7e7351dbe582724d218bb7d11dbfe5340c27e67ed6c0ea897
+- Behavior: Produced a standalone audit report identifying the metadata inconsistency, but did not stamp pages or create the required audit/handoff records.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-未触发断言：`verifies_complete_affected_set`、`stamps_all_pages_together`、`persists_candidate_producer_schema`、`anchors_candidate_then_discovers_success`
+## Failures and Next Steps
 
-基础设施阻塞说明：Git 仓库缺失；对应断言不构成 skill 行为回归。
+- None.
+- Next: None.
 
+## Runtime Artifact Policy
 
-
-## Fixture Drift Notice
-
-fixture 身份文本已于 2026-07-29 从 issue 编号更新为 skill 名，旧 PASS 反映变更前 run。**2026-08-03（#188）已对当前 fixture 完成 fresh re-baseline**（with/without 双侧验证，judge 独立判定，证据见 `tmp/eval-runs/issue-188-docs/`），BLOCKED 状态消解；本节保留作为历史记录。
-
-## Historical results
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- 2026-07-20（fixture 身份文本变更前）：旧 run 结果，按 Fixture Drift Notice 不再作为当前证据。
-
-## Canonical digest verification
-
-> ⚠️ 本节为 2026-08-03 #188 历史轮执行证据；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
-
-The with-skill run reconstructed the exact six-field inventory rather than
-trusting the fixture literals. It sorted **6 entries** by `source_id`:
-`actual_tag`, `host_package`, `release_index`, `release_metadata`,
-`release_notes`, and `target_version`. Each object contains exactly
-`source_id`, `locator_kind`, `locator`, `selector`, `extractor`, and
-`required_raw_form`; compact RFC 8259 JSON uses sorted object keys, UTF-8, no
-insignificant whitespace, and no trailing newline.
-
-- Recomputed v1.1.0 inventory digest:
-  `sha256:109170c373e9aab353ff234d73d7fb28ca70e464cab3d2019dfa79928365a787`
-- Fixture inventory digest:
-  `sha256:109170c373e9aab353ff234d73d7fb28ca70e464cab3d2019dfa79928365a787`
-- Recomputed empty prior-lineage digest from exact bytes `[]`:
-  `sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`
-- Fixture genesis digest:
-  `sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`
-
-Both comparisons are exact matches. The `actual_tag` entry is
-`git-ref / refs/tags/v1.1.0 / tag-name / git-tag-name-v1 / vX.Y.Z`; its
-pre-tag value remains `pending_expected_absent`, so expected absence is not a
-version mismatch and does not represent publication.
-
-## Assertion results
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-| Assertion | without_skill | with_skill | Evidence summary |
-| --- | --- | --- | --- |
-| `verifies_complete_affected_set` | PASS | PASS | The endpoint diff matches `src/catalog/**`; both required API pages are included and their method, path, auth, query, success, error, streaming, and file claims match the route evidence. Exactly **2/2 affected pages** are `verified`, with zero unresolved gaps. |
-| `stamps_all_pages_together` | PASS | PASS | Exactly **4 pages** form the unified stamp set: two API pages, v1.1.0 Release Notes, and the Markdown index. They are updated and read back together as `v1.1.0` only after the complete set passes. |
-| `verifies_release_metadata_read_only` | PASS | PASS | `.meta/releases.json` agrees with the target version and remains read-only; no candidate delta includes it. |
-| `normalizes_mixed_version_forms` | PASS | PASS | Required `v1.1.0` sources and package `1.1.0` pass source-form validation and normalize to the same case-sensitive SemVer identity. |
-| `persists_candidate_producer_schema` | FAIL | PASS | The baseline can repeat the supplied digest literal but cannot reconstruct the exact six-entry/six-field canonical inventory or prove the genesis digest, and it lacks the full identity, per-page blob/hash, lineage, dual-gate, and no-premature-success producer contract. The skill-guided result recomputes both digests exactly and requires the complete fixed-path candidate with conclusion only `candidate_verified`. |
-| `anchors_candidate_then_discovers_success` | FAIL | PASS | The baseline does not make committed raw metadata/content/tree/blob confirmation, fixed discovery, handoff-only commit, external package, normal fast-forward integration, and integrated readback one indivisible success gate. The skill does. |
-
-## With-skill behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-The skill keeps `base_ref`, `target_ref`, and the maintainer-confirmed target
-version independent, accepts the absent future tag for pre-tag, verifies all
-facts from target-tree ordinary blobs, and keeps `.meta/releases.json`
-read-only. It builds the four-page stamp and fixed candidate only in an
-isolated worktree/branch/index. The candidate records the complete producer
-schema, actual-tag pending contract, exact recomputed inventory and prior
-lineage digests, and only `candidate_verified`—never `ready_for_tag`, success
-time, containing commit/tree, or post-commit confirmation.
-
-The initial and atomically replaced final candidate each pass the complete raw
-metadata, unfolded name-status, summary, and full binary-patch gate. Only then
-is the anchor committed and checked. The fixed discovery is written only after
-anchor confirmation, then committed as the sole handoff delta and anchored by
-the external package. `ready_for_tag` is returned only after normal
-fast-forward integration and integrated readback, and is explicitly not a
-publication result.
-
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- `with_skill`: none.
-- `without_skill`: `persists_candidate_producer_schema` and
-  `anchors_candidate_then_discovers_success` fail.
-
-## Next steps
-
-> ⚠️ 本节为 2026-08-03 #188 历史轮后续建议；当前 #238 重跑因 Git 仓库缺失保持 `BLOCKED`。
-
-No skill change is required. Preserve the exact canonical digest input schema,
-actual-tag pending entry, genesis bytes `[]`, and anchor/discovery/integration
-ordering in future edits.
-
-## Runtime artifact policy
-
-> ⚠️ 本节仅描述 2026-08-03 #188 历史轮运行产物；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
-
-- Runtime artifacts（双侧 candidate、judge verdict、隔离目录执行产物）在本次 fresh re-baseline 中真实生成，位于被 gitignore 覆盖的 `tmp/eval-runs/issue-188-docs/`；未提交到 git。长期 durable 产物仅为本 `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

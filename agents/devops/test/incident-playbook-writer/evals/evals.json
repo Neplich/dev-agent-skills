@@ -7,34 +7,52 @@
       "id": "eval-001-docker-rollback",
       "name": "docker-rollback",
       "description": "Verifies that incident-playbook-writer handles docker-rollback and produces the expected role-specific artifact.",
-      "prompt": "pm-agent 已完成项目级运维入口分类并路由至 incident-playbook-writer；确认 handoff 见 workspace `PM_HANDOFF.md`，本任务为 `feature_path: N/A` 的 repo-wide rollback/runbook work。我的项目使用 Docker 部署，请基于 workspace 中现有 Docker 配置生成故障处理和回滚手册。",
+      "scenario": {
+        "persona": "负责生产 Docker 服务的运维负责人",
+        "situation": "服务使用不可变 SemVer 镜像，已有 Compose、健康检查和升级渠道",
+        "trigger": "首次上线前需要准备应用不可用时的回滚和故障响应文档",
+        "goal": "形成与现有 Docker 运行方式一致的回滚与故障响应手册",
+        "materials": [
+          "PM_HANDOFF.md",
+          "deploy/docker/docker-compose.yml",
+          "deploy/docker/.env.example",
+          "deploy/docker/README.md"
+        ],
+        "constraints": [
+          "只生成回滚和故障响应两份手册",
+          "不实际执行回滚",
+          "不生成通用排查或值班手册",
+          "不编造数据库回滚步骤"
+        ],
+        "success_criteria": [
+          "回滚使用上一个已知健康镜像并验证恢复",
+          "故障响应覆盖 P1/P2 升级和恢复检查",
+          "未请求的手册不生成"
+        ]
+      },
+      "prompt": "生产服务使用 Docker Compose，现有运行、健康检查和升级约定都在 `PM_HANDOFF.md` 与 `deploy/docker/`。请只编写回滚手册和故障响应手册，暂时不需要通用排查或值班文档，也不要实际执行回滚。",
       "workspace": "workspace/eval-001-docker-rollback",
       "expected_output": "仅生成用户明确请求且有仓库证据支撑的回滚与故障响应手册，不默认生成排查和值班文档",
       "assertions": [
         {
-          "id": "deploy_rollback_md",
-          "description": "deploy/ROLLBACK.md 存在",
-          "text": "deploy/ROLLBACK.md 存在"
+          "id": "creates_evidence_based_rollback",
+          "description": "回滚手册复用现有 Docker 契约",
+          "text": "生成 `deploy/ROLLBACK.md`，使用 release record 中上一个已知健康 SemVer 镜像，更新 APP_IMAGE_TAG、拉取并重建 app，再核对状态、日志和 /health。"
         },
         {
-          "id": "rollback_md_docker",
-          "description": "ROLLBACK.md 包含 docker 回滚命令",
-          "text": "ROLLBACK.md 包含 docker 回滚命令"
+          "id": "creates_scoped_incident_response",
+          "description": "故障响应覆盖已确认级别与角色",
+          "text": "生成 `deploy/INCIDENT_RESPONSE.md`，覆盖 P1/P2 响应时限、#ops-incidents、incident commander/service owner、调查、恢复和恢复后检查。"
         },
         {
-          "id": "deploy_incident_response_md",
-          "description": "deploy/INCIDENT_RESPONSE.md 存在",
-          "text": "deploy/INCIDENT_RESPONSE.md 存在"
+          "id": "avoids_unsupported_procedures",
+          "description": "不编造缺少证据的处置",
+          "text": "不加入数据库 migration 回滚或仓库未支持的运行方式，也不实际执行任何回滚命令。"
         },
         {
-          "id": "incident_response_md",
-          "description": "INCIDENT_RESPONSE.md 包含常见故障场景",
-          "text": "INCIDENT_RESPONSE.md 包含常见故障场景"
-        },
-        {
-          "id": "does_not_generate_unrequested_playbooks",
-          "description": "不默认生成未请求的 playbook",
-          "text": "只生成用户明确请求且有证据支撑的 ROLLBACK.md 与 INCIDENT_RESPONSE.md；不得默认生成 TROUBLESHOOTING.md 或 ON_CALL.md"
+          "id": "omits_unrequested_playbooks",
+          "description": "只生成用户选择的两份手册",
+          "text": "不生成 `deploy/TROUBLESHOOTING.md` 或 `deploy/ON_CALL.md`。"
         }
       ]
     },
@@ -42,7 +60,27 @@
       "id": "eval-002-mapped-doc-incident-playbook",
       "name": "mapped-doc-incident-playbook",
       "description": "验证故障手册通过 change-map 读取健康检查文档，并依据代码核证未验证的失败阈值。",
-      "prompt": "为 src/runtime/health.rules 的连续健康检查失败场景编写最小处置与回滚步骤，确认告警阈值。",
+      "scenario": {
+        "persona": "维护服务故障手册的 SRE",
+        "situation": "正式健康说明和实际告警规则记录了不同的连续失败阈值",
+        "trigger": "更新最小处置步骤前需要确认真正的告警触发点",
+        "goal": "以当前运行规则编写健康检查失败的处置与回滚步骤",
+        "materials": [
+          "src/runtime/health.rules",
+          "docs/site/standards/change-map.yaml",
+          "docs/site/api/runtime-health.md"
+        ],
+        "constraints": [
+          "正式文档尚未完成版本核验",
+          "只覆盖连续健康检查失败场景"
+        ],
+        "success_criteria": [
+          "通过变更映射读取健康说明",
+          "以 health.rules 确认阈值",
+          "说明阈值差异对处置时机的影响"
+        ]
+      },
+      "prompt": "请为 `src/runtime/health.rules` 定义的连续健康检查失败场景编写最小处置和回滚步骤。仓库有变更映射和健康说明，请核对后确认实际告警阈值。",
       "workspace": "workspace/eval-002-mapped-doc-incident-playbook",
       "expected_output": "以代码事实确定告警阈值的故障处置步骤，并记录映射文档差异。",
       "assertions": [

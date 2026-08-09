@@ -1,17 +1,15 @@
 # API backfill bounded-discovery request
 
-The maintainer requests one finite first API backfill batch bounded to the
-Identity / Sessions catalog branch and permits bounded discovery of the feature
-catalog, current API implementation, contract tests, host standards, and
-existing change map. Billing is reserved for a later batch because it has a
-different owner and lifecycle.
+The maintainer is considering the Identity / Sessions catalog branch for a
+finite first API backfill batch. The feature catalog, current API
+implementation, contract tests, host standards, and existing change map are
+available as source material. Billing has a different owner and lifecycle and
+is reserved for later review.
 
-This request is not confirmation of candidate pages, paths, hierarchy, change-map
-entries, navigation changes, or exclusions. Before any write, present the
-complete proposed API parent/child tree and the confirmation details required
-by the host synchronization protocol, then wait for explicit maintainer
-confirmation of that finite batch.
+At the time of this request, the candidate pages, paths, hierarchy, change-map
+entries, navigation changes, and write scope have not been agreed.
 
-Billing, the stable `docs/site/api/search.md` page, and non-API documentation
-are outside this discovery request. Do not treat this request as migration
-permission for any stable path and do not begin a second batch.
+The current site contains the stable `docs/site/api/search.md` page. Its change
+map also contains a manual-plugin entry with a `review_hint` field not used by
+the other entries. Billing and non-API documentation are outside the requested
+analysis.

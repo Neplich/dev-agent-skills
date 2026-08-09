@@ -1,71 +1,60 @@
-# Eval Result: eval-005-mapped-search-security
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `security`
 - Skill: `appsec-checklist`
 - Eval: `eval-005-mapped-search-security`
-- Test case: Mapped Search Security Documentation
-- Workspace: `workspace/eval-005-mapped-search-security`
-- Natural user prompt:
 
-> 请审查 src/api/search-handler.js 的用户搜索安全性，重点检查查询参数如何进入数据查询，并给出证据、影响和修复建议。
+## Current Result
 
-- Expected artifact: 优先读取 change-map 命中的搜索 API 文档，再以代码核对查询构造；将 unverified 文档按最低信任处理并报告参数化声明与代码插值事实的不一致。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `fc2995d30d3ccba9dfaf0358946382fa2b5ecd4e3e1f4b423d1635f72c325d7d` from `agents/security/test/appsec-checklist/evals/workspace/eval-005-mapped-search-security`.
+- Fixture SHA-256: `fc2995d30d3ccba9dfaf0358946382fa2b5ecd4e3e1f4b423d1635f72c325d7d`
+- Prompt SHA-256: `e2ae5e4d2822699f2cb15956131366187d45773423915faa9c9726d6be1fc4de`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `812b371fc30792cb2b0cf8d96079b3244c95b93efab7638e085d4e955d6ea42c`
+- Skill overlay SHA-256: `33e7e73c99fb4e7a6f2d6ab5104b8298fc067235a29614a6e32ee61035051666`
+- Judge schema SHA-256: `fe1f59786edfa4e3b7ee12601522d693ef12a42cdfce9b4a390ad6d7b95d03d2`
+- Eval definition SHA-256: `d863b13d3e997477097b1a2de108729923e21619e10b2847114ea312db1c1bc8`
+- Metadata SHA-256: `44e3487a1b0a940b7bf23d73f980b7d71bd0be1a4d04a13c48606fd67383de8a`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
-## Test Set / Fixture Version
+## Assertion Results
 
-- Schema: `evals.json` v1.0，使用 source HEAD `47adbbc9` 的当前 prompt、assertions 与 fixture。
-- Fresh run window: 2026-08-06 23:45:35 至 2026-08-07 00:13:31（Asia/Shanghai）。
-- Runtime root: `/tmp/security-fresh-evals-20260806-n3l1anp1/appsec-checklist--eval-005-mapped-search-security/`。
-- Fixture identity: 两条 lane 的初始 fixture manifest 完全相同，SHA-256 为 `246474747e13b38824929dd18bb0b6743805302db0f636f44fbd4479602b83cc`。
-- Lane isolation: 先完成并销毁全部 `without_skill` 独立顶层临时目录，再创建任何 `with_skill` 目录；每条 lane 使用独立的顶层临时 workspace、`HOME` 与 `CODEX_HOME`，不存在可供另一条 candidate 读取的 sibling lane。
-- Controlled variable: 两条 lane 使用逐字相同 prompt 与相同初始 fixture；仅 `with_skill` 的隔离 `CODEX_HOME` 安装并加载目标 skill，`without_skill` 未安装任何目标 skill。
-- Evidence isolation: 所有 candidate 会话结束并删除各自临时根后，才将内存中的最终 workspace 快照与 transcript 持久化到 runtime root；candidate transcript 泄漏扫描未命中 `eval_metadata.json`、`evals/evals.json`、`comparison.md`、judge/verdict 或 expected output/assertion 脚手架。
-- Judge: candidate 全部结束后，由第三个独立、只读的 fresh Codex 会话依据当前 assertions、两条 candidate 输出、transcript 与最终 workspace 快照判定。
-
-## Latest Result
-
-- Behavior result: **FAIL**（PASS 2 / FAIL 2 / NOT EXERCISED 0）
-- Coverage result: **FULL**
-Overall result: FAIL
-
-## Historical Contract Note
-
-上一份 durable comparison 基于 issue #234 修复前会向 baseline 泄漏规则的旧契约，因此标记为 `BLOCKED`。本轮使用当前无泄漏 prompt/fixture 重新生成两条 lane，未复用旧 baseline 或旧结论。
-
-## Assertions
-
-| Assertion | With skill | With-skill evidence | Without skill | Baseline evidence |
-| --- | --- | --- | --- | --- |
-| `reads_mapped_docs_first`<br>命中 change-map 后优先读取搜索 API required_docs | FAIL | transcript 显示先读取目标代码（item_3），随后在同一命令中先读 user-search.md、再读 change-map.yaml（item_5）；未按 change-map 反查后优先读取 required_docs。 | FAIL | transcript 未读取 change-map 后按 required_docs 顺序探索；先读代码，之后同一命令先读 API 文档再读 change-map。 |
-| `verifies_against_code`<br>以处理器代码核对查询参数安全声明 | PASS | 候选结论明确引用 src/api/search-handler.js:1-2 的模板字符串直接插入 query，并指出其与文档所称参数化查询不一致。 | PASS | 候选结论明确核对 src/api/search-handler.js:2 的直接插值，并给出可形成恒真条件的输入示例。 |
-| `treats_unverified_as_low_trust`<br>将 unverified 搜索文档按最低信任处理 | PASS | transcript 读取了文档的 last_verified_version: unverified；最终结论以代码事实为依据，未采信参数化声明，并扩大说明调用方、数据库适配层等尚未确认的范围。 | PASS | transcript 读取了文档的 last_verified_version: unverified；结论仍以代码中的直接 SQL 插值为核心证据，并将文档声明列为不一致。 |
-| `escalates_fact_changing_conclusion_to_pm`<br>改变正式文档事实的结论升级 | FAIL | 结论明确改变了正式 API 文档关于参数化查询的事实，但最终工作区仅有源代码、change-map 和 API 文档，没有 docs/security/{feature_path}/appsec-checklist.md；transcript 也没有回交 pm-agent、分类或创建 issue 的证据。 | FAIL | 同样指出正式 API 文档与代码不一致，但最终工作区没有 Security-owned 报告，且无 PM 回交、分类或 issue 创建证据。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 输出识别了 change-map、required_docs 及目标文档，但锁定证据没有证明实际读取顺序或是否遍历了无关文档。 |
+| `verifies_against_code` | PASS | 明确指出代码将 query 直接插入 SQL，并识别其与文档所称 parameterized query 的不一致。 |
+| `treats_unverified_as_low_trust` | PASS | 明确识别 last_verified_version 为 unverified，并将文档作为低信任导航，转而依据代码事实。 |
+| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | 输出正确将下一步退回 pm-agent，但因缺少 handoff packet、feature_path 和 PM 分类，锁定证据不足以要求后续 issue 创建及 Security 过程报告。 |
 
 ## With-Skill Behavior
 
-发现代码与文档不一致及 SQL 注入风险，但未按契约完成 PM 升级、创建 issue 或产出 Security-owned 报告。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e2ae5e4d2822699f2cb15956131366187d45773423915faa9c9726d6be1fc4de; fixture_sha256=fc2995d30d3ccba9dfaf0358946382fa2b5ecd4e3e1f4b423d1635f72c325d7d; output_sha256=27fd85a20be77b40f332ff5dd8f6699fc858a0a84c6694a542f409bb7e8bf99b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了文档映射、unverified 状态及代码与文档的安全事实冲突，并在缺少合法交接信息时退回 pm-agent；未继续执行无法授权或定位的后续升级步骤。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-同样识别了代码中的直接 SQL 插值和文档不一致；未完成映射文档优先顺序及升级产物。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e2ae5e4d2822699f2cb15956131366187d45773423915faa9c9726d6be1fc4de; fixture_sha256=fc2995d30d3ccba9dfaf0358946382fa2b5ecd4e3e1f4b423d1635f72c325d7d; output_sha256=6c80f1ab9f16d3bf2c919839d4e75cd4b293f2f028ce382a64dd7be1d1edc3a9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 独立识别 SQL 注入风险及文档/代码不一致，并提出修复建议，但没有按 PM/Security 交接流程升级。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- with-skill 未满足 mapped-doc 优先读取顺序。
-- with-skill 在触发正式文档事实变更升级时未产出 Security 报告，也未回交 pm-agent 并创建 issue。
+- None.
+- Next: 由 pm-agent 补充合法 handoff packet、feature_path 和分类后，验证 issue 创建及 Security 过程报告。
 
-## Not Exercised
+## Runtime Artifact Policy
 
-- 无。
-
-## Next Steps
-
-- 补充 docs/security/{feature_path}/appsec-checklist.md，并将代码/文档不一致及证据回交 pm-agent 分类和创建 issue。
-
-## Runtime Artifacts Policy
-
-- Candidate command: `codex exec --skip-git-repo-check -C <isolated-workspace> -s workspace-write --ephemeral --ignore-user-config --ignore-rules -m gpt-5.6-luna -c 'model_reasoning_effort="medium"' --json -o <runtime-output> -`。
-- Judge 使用同一模型与 reasoning effort，在独立 `read-only` workspace 中按结构化 output schema 判定。
-- candidate、baseline、transcript、verdict、fixture snapshots、status、timing 与 diagnostics 仅保留于上述 `/tmp` runtime root，不提交到 git；仓库只更新 canonical `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

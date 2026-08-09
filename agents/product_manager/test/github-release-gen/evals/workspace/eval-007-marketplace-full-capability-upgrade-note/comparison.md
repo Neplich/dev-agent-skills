@@ -1,84 +1,63 @@
-# Eval Result: eval-007-marketplace-full-capability-upgrade-note
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `github-release-gen`
 - Eval: `eval-007-marketplace-full-capability-upgrade-note`
-- Test case: `marketplace 当前 tag 能力齐全的标题强格式与升级说明正向分支`
-- Prompt:
 
-> 请根据 `release-package.md`、`docs/site/release-notes/v1.0.0.md` 和 `github-evidence.md` 准备 GitHub Release 预览。本仓库是 dev-agent-skills marketplace 宿主，目标 tag 的插件内容见 `.claude-plugin/marketplace.json`、`.codex/INSTALL.md` 与 `.kimi-plugin/plugin.json`。
+## Current Result
 
-- Expected output:
-
-> 标题为 `v1.0.0 - {主题概述}` 强格式；正文四节中「升级说明」按固定结构呈现：简述句（无破坏性变更，也没有新增 plugin。7 个 role plugin 均更新到 `v1.0.0`。）、### Claude Code 小节（9 行指令 + 无版本 pin 限制说明）、### Codex 小节（引用目标 tag 的 .codex/INSTALL.md 并设 TARGET_TAG=v1.0.0）、### Kimi Code 小节（/plugins install 目标 release URL）与收尾句（更新仓库后重新运行安装器，即可同步全部 7 个 role plugin 的 `v1.0.0` 能力。）；plugin 指令列表按目标版本 marketplace.json 推导。
-
-## Test Set / Fresh Run
-
-- Eval schema: `evals.json` v1.0。
-- Fixture manifest: `edc8f94a65adc55e0678ac62eedc62d16f0ef2ba75af261ea8c90725c12656ab`（6 个可见文件；两侧逐字节一致）。
-- Repository HEAD: `47adbbc9`。
-- Fresh run window: 2026-08-07 00:58–01:14（Asia/Shanghai）。
-- Runtime: 3 个独立会话，均为 `gpt-5.6-luna`、`model_reasoning_effort=medium`：fresh without-skill、fresh with-skill、fresh judge。
-- Controlled variable: 两个 candidate 使用完全相同的 prompt、fixture manifest、HOME/CODEX_HOME 目录形态与同一份 `auth.json`；唯一变量是 with-skill lane 安装并加载目标 specialist skill。
-- Physical isolation: 按 skill 先完成并销毁全部 baseline 随机顶层根，再创建 with-skill 根；32 个 candidate 全部完成并销毁后才创建第三套 judge 根。
-- Candidate visibility: lane 中未放入 `eval_metadata.json`、`evals.json`、`expected_output`、assertions、历史 `comparison.md`、README 脚手架或 judge 材料；泄漏扫描为 0 命中。
-- External data rule: 实时实体因 GitHub 认证、网络或当时集合缺失而不可得时，相关 assertion 记为 `NOT EXERCISED`，只影响 Coverage，不伪造成 Behavior 的 PASS/FAIL。
-
-## Latest Result
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-007-marketplace-full-capability-upgrade-note`.
+- Fixture SHA-256: `dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b`
+- Prompt SHA-256: `a62a94b930216669961977d81dd33c33ea8ab99e80d1ccbdd52769d4a9afaf75`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f95690411417d5e9cf66495e67ce2d96d0a51fc4ca1821536421129a950bb8f3`
+- Skill overlay SHA-256: `ee4b811662f5234e9cbcc50a85629526ebcf704244484e48f81d5ce85841d93c`
+- Judge schema SHA-256: `03a8fb59a79fd1eace9e70a8f76361828e062efb8e2ad27720ecf0844391b693`
+- Eval definition SHA-256: `39c658cc52679808b5a56ed0ccb078241d74aac73ea7ef1462e40e6679aac516`
+- Metadata SHA-256: `b64763ea1d58b4c3c1d7a3e95d4a1d7bd5f4195151868d0276dd82eda387eb3e`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
-- Overall result: PASS
-- With-skill summary: with_skill 实际加载 github-release-gen（status.json skill_load_hits=2；transcript item_1/item_2 读取技能及其 references），按正确顺序读取发布证据和三个宿主元数据，未执行写入；candidate 输出满足全部 7 条断言。
+Overall result: PASS
 
-## Historical Contract Note
+## Assertion Results
 
-- 旧 durable 结果因 issue #234 的 prompt/fixture 泄漏修复或后续 assertion 增强而标记为 `BLOCKED`。本文件已由当前契约下的 fresh paired run 与独立 judge 结论覆盖。
-- 本轮没有复用历史 baseline、candidate、verdict 或旧结论；without-skill baseline 仅作行为对照，不参与 with-skill 的 Behavior/Coverage 判定。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `title_matches_marketplace_format` | PASS | With-skill preview title is `v1.0.0 - 文件卡片、统一附件模型与失败消息重试`, a nonempty fact-based topic overview. |
+| `upgrade_note_first_sentence` | PASS | The first sentence of `## 升级说明` is exactly `无破坏性变更，也没有新增 plugin。7 个 role plugin 均更新到 \`v1.0.0\`。` |
+| `claude_section_verbatim` | PASS | The with-skill body contains the required Claude Code marketplace update, all seven manifest role-plugin update commands in the specified membership, `/reload-plugins`, and the no-version-pin explanation directing fixed installs to Codex or Kimi. |
+| `codex_section_pinned_install` | PASS | The Codex section uses the required raw tag URL ending in `refs/tags/v1.0.0/.codex/INSTALL.md` and sets `TARGET_TAG=v1.0.0`. |
+| `kimi_section_plugin_install` | PASS | The Kimi Code section uses `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/v1.0.0`. |
+| `plugin_list_derived_from_manifest` | PASS | The seven listed role plugins match the seven entries in the target `.claude-plugin/marketplace.json`: pm-agent, designer-agent, engineer-agent, qa-agent, devops-agent, security-agent, and docs-agent. |
+| `closing_sentence_present` | PASS | The upgrade section closes with `更新仓库后重新运行安装器，即可同步全部 7 个 role plugin 的 \`v1.0.0\` 能力。` |
 
 ## With-Skill Behavior
 
-with_skill 实际加载 github-release-gen（status.json skill_load_hits=2；transcript item_1/item_2 读取技能及其 references），按正确顺序读取发布证据和三个宿主元数据，未执行写入；candidate 输出满足全部 7 条断言。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a62a94b930216669961977d81dd33c33ea8ab99e80d1ccbdd52769d4a9afaf75; fixture_sha256=dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b; output_sha256=d57534b029426881790b05a8495a81c96f23aa5c29f44e3147360604a1ef1119; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced a complete inline GitHub Release preview with a compliant title, fact-grounded release body, manifest-derived seven-plugin upgrade instructions, pinned Codex and release-URL Kimi installation paths, and no GitHub write.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-without_skill 未加载目标 skill（skill_load_hits=0），仅作对照：输出使用裸版本标题、非固定升级结构且未给出完整指令列表。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a62a94b930216669961977d81dd33c33ea8ab99e80d1ccbdd52769d4a9afaf75; fixture_sha256=dc5fdc0f377589e2a17429105072ec9f0f122806b4874d8f07072dd9a6c6c26b; output_sha256=815268503d58c22248c3909e862ea5dd7edf238c8facffd47ffc48ab5fcd3568; snapshot_sha256=6d3c920c8be0a0d0a9486717864f3d0642e193456e4b9a4abd2456853e8bd3af
+- Behavior: Produced a file-backed preview, but used a noncompliant bare-style title and omitted the required detailed Claude, Codex, Kimi, manifest-derived plugin list, and exact upgrade-section requirements; it also asserted documentation checks passed despite the candidate prose reporting the package was missing.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Assertion Review
+## Failures and Next Steps
 
-| Assertion | With skill | Evidence / reason | Without-skill comparison |
-| --- | --- | --- | --- |
-| `title_matches_marketplace_format` | **PASS** | with_skill candidate 的 Title 为 `v1.0.0 - 文件卡片、统一附件契约与失败消息重试`，符合 `v{VERSION} - {主题概述}`，且概述对应发布事实。trace item_1/item_2 显示先读取 github-release-gen 及 release-outline；未发现脚手架泄漏。 | without_skill candidate 仅输出 `# Dev Agent Skills v1.0.0`，不符合 marketplace 强格式。 |
-| `upgrade_note_first_sentence` | **PASS** | candidate 的「升级说明」首段精确为「无破坏性变更，也没有新增 plugin。7 个 role plugin 均更新到 `v1.0.0`。」；trace item_7 通过 marketplace 一致性检查确认 7 个 plugins。 | without_skill 只在后文笼统写“没有新增 plugin，marketplace 保持 7 个 role plugins”，未按要求首句固定呈现。 |
-| `claude_section_verbatim` | **PASS** | candidate 含 `### Claude Code`，先给出无版本 pin 限制及固定版本需用 Codex/Kimi 的说明，随后完整列出 marketplace update、7 个指定 role 的 update 和 reload-plugins，共 9 行指令，成员与顺序均匹配 marketplace.json。 | without_skill 仅用安装方式概述，没有完整的 9 行固定指令，也未给出所需的明确 durable 正文限制说明。 |
-| `codex_section_pinned_install` | **PASS** | candidate 含 `### Codex`，引用 `https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/tags/v1.0.0/.codex/INSTALL.md` 并明确 setting `TARGET_TAG=v1.0.0`；fixture-manifest 与 trace item_2 证明目标 `.codex/INSTALL.md` 已读取。 | without_skill 使用 GitHub blob URL 的泛化安装描述，不符合要求的 raw tag URL 结构。 |
-| `kimi_section_plugin_install` | **PASS** | candidate 含 `### Kimi Code`，指令精确为 `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/v1.0.0`；目标 `.kimi-plugin/plugin.json` 在 fixture-manifest 和 trace item_2 中有证据。 | without_skill 仅概述使用 `/plugins install`，未给出精确 release URL 指令。 |
-| `plugin_list_derived_from_manifest` | **PASS** | candidate 的 Claude Code 列表正好包含 pm-agent、designer-agent、engineer-agent、qa-agent、devops-agent、security-agent、docs-agent 7 个成员；trace item_7 输出 `marketplace ... 7 plugins`，与 `.claude-plugin/marketplace.json` 一致。 | without_skill 未列出 7 个 role plugin 的完整指令列表。 |
-| `closing_sentence_present` | **PASS** | candidate 的升级说明以「更新仓库后重新运行安装器，即可同步全部 7 个 role plugin 的 `v1.0.0` 能力。」收尾，文本精确匹配要求。 | without_skill 没有该固定收尾句。 |
-
-## Failures
-
-- 无 with-skill assertion failure。
-
-## Not Exercised
-
-- 无；本轮覆盖全部 assertions。
-
-## Next Steps
-
-- 保留当前回归覆盖；目标 skill、fixture 或 assertion 契约变化时重新执行 fresh paired validation。
-
-## Runtime Evidence
-
-- With-skill candidate: return code `0`，duration `120.418s`，`skill_load_hits=2`。
-- Without-skill candidate: return code `0`，duration `107.237s`，`skill_load_hits=0`。
-- Independent judge: return code `0`，duration `83.485s`。
-- Judge 已读取两侧最终输出、完整 JSONL 工具 trace、before/after workspace snapshot、fixture manifest 与 session status，并核验读取顺序和零写入边界。
-- 所有临时 HOME/CODEX_HOME 与 candidate/judge 随机顶层根均已销毁；持久化证据目录中不存在 `auth.json`。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 仓库只持久化本 canonical `comparison.md`。
-- Candidate、transcript、judge verdict、timing、status、snapshot 与 diagnostics 仅作为 `/tmp` 运行期证据，不提交到 git。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

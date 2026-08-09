@@ -1,84 +1,61 @@
-# Eval Result: eval-002-single-version-mode
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `changelog-gen`
 - Eval: `eval-002-single-version-mode`
-- Test case: `single-version-mode`
-- Prompt:
 
-> 在 https://github.com/anthropics/anthropic-sdk-python 仓库，帮我生成最新 release 版本的 changelog 条目，使用 Keep a Changelog 格式，包含该版本对应的所有 PR 引用，并写入 docs/changelog/changelog-v{version}.md。
+## Current Result
 
-- Expected output:
-
-> 生成最新 release tag 的版本块，格式为 ## [v{VERSION}] - YYYY-MM-DD，包含该版本窗口内的 PR，分组写入，每条带 PR 链接，并写入 docs/changelog/changelog-v{version}.md
-
-## Test Set / Fresh Run
-
-- Eval schema: `evals.json` v1.0。
-- Fixture manifest: `4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`（0 个可见文件；两侧逐字节一致）。
-- Repository HEAD: `47adbbc9`。
-- Fresh run window: 2026-08-07 00:58–01:14（Asia/Shanghai）。
-- Runtime: 3 个独立会话，均为 `gpt-5.6-luna`、`model_reasoning_effort=medium`：fresh without-skill、fresh with-skill、fresh judge。
-- Controlled variable: 两个 candidate 使用完全相同的 prompt、fixture manifest、HOME/CODEX_HOME 目录形态与同一份 `auth.json`；唯一变量是 with-skill lane 安装并加载目标 specialist skill。
-- Physical isolation: 按 skill 先完成并销毁全部 baseline 随机顶层根，再创建 with-skill 根；32 个 candidate 全部完成并销毁后才创建第三套 judge 根。
-- Candidate visibility: lane 中未放入 `eval_metadata.json`、`evals.json`、`expected_output`、assertions、历史 `comparison.md`、README 脚手架或 judge 材料；泄漏扫描为 0 命中。
-- External data rule: 实时实体因 GitHub 认证、网络或当时集合缺失而不可得时，相关 assertion 记为 `NOT EXERCISED`，只影响 Coverage，不伪造成 Behavior 的 PASS/FAIL。
-
-## Latest Result
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-002-single-version-mode`.
+- Fixture SHA-256: `835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88`
+- Prompt SHA-256: `d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `53f035563de038125d09b7a8997f87e900d099e00223f427a7c690e11ebbe449`
+- Skill overlay SHA-256: `9534a5bf71391ac48cfd6a48ca8f80e93da520d6ea9d2026741fd864da0cb720`
+- Judge schema SHA-256: `609660421781976ec561327c947a31da6f7d421bc63e99d2f3f00692dcdf763a`
+- Eval definition SHA-256: `e34f2dddfabba5be49382d984bac6785776f7fb5fa22e37126ed32d1f44a81df`
+- Metadata SHA-256: `814184c8bd7a959b3f0695c85bef4dd34c73bd316a08d00ccc354207f37fabc9`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
-- Coverage result: **PARTIAL**
-- Overall result: PASS (partial coverage)
-- With-skill summary: changelog-gen 实际加载（skill_load_hits=2，transcript item_1 读取 SKILL.md），成功写入目标版本文件；GitHub 实时数据查询受认证/网络失败影响。
+- Coverage result: **FULL**
+Overall result: PASS
 
-## Historical Contract Note
+## Assertion Results
 
-- 旧 durable 结果因 issue #234 的 prompt/fixture 泄漏修复或后续 assertion 增强而标记为 `BLOCKED`。本文件已由当前契约下的 fresh paired run 与独立 judge 结论覆盖。
-- 本轮没有复用历史 baseline、candidate、verdict 或旧结论；without-skill baseline 仅作行为对照，不参与 with-skill 的 Behavior/Coverage 判定。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `v_version_yyyy_mm_dd` | PASS | with_skill 文件包含 `## [v0.120.2] - 2026-08-05`。 |
+| `release_tag` | PASS | with_skill 文件版本号为 `v0.120.2`，与 fixture 的 target_release.tagName 一致。 |
+| `pr_conventional_commit` | PASS | PR #300、#301、#302 的标题均已去除 `fix(client):`、`docs:`、`feat!:` 前缀。 |
+| `breaking_change_breaking` | PASS | PR #302 条目带有 `⚠️ **BREAKING**` 标记。 |
+| `section` | PASS | 输出仅包含有内容的 `Changed` 和 `Fixed` sections。 |
 
 ## With-Skill Behavior
 
-changelog-gen 实际加载（skill_load_hits=2，transcript item_1 读取 SKILL.md），成功写入目标版本文件；GitHub 实时数据查询受认证/网络失败影响。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031; fixture_sha256=835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88; output_sha256=fe04769f803c1ba7bfd404232032681cfca22f7ec0ad5f0c3af897bbc37afabc; snapshot_sha256=c165a4a9a2c9ccd41858db324fda5280162727a78e510a626368977497b6a8d3
+- Behavior: 成功写入包含正确版本、日期、全部 PR、清洗后标题和 breaking 标记的 changelog 文件。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-对照侧未加载 skill（skill_load_hits=0），但也写入了目标文件；仅作基线，不影响 with_skill 判定。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d5b776b3a900ef058dd8e13d5ff0673d61e60850257603b59fa1902a93991031; fixture_sha256=835e6d91014bb254ac4027a75b2b94fcac8cc02efcf4ee8832fb73ee44824c88; output_sha256=88091684ce05bada07c92db609134c52fff730aff45a278b21afb8ac4c523a71; snapshot_sha256=e78bf12223329d28baed7861f0bd439c62c987071972ce91e1da976d23751b60
+- Behavior: 也写入了 changelog，但版本标题缺少 v 前缀，breaking change 未使用要求的 ⚠️ BREAKING 前缀。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Assertion Review
+## Failures and Next Steps
 
-| Assertion | With skill | Evidence / reason | Without-skill comparison |
-| --- | --- | --- | --- |
-| `v_version_yyyy_mm_dd` | **PASS** | trace item_16 显示文件内容含 `## [v0.120.2] - 2026-07-28`，candidate.md 也报告相同版本和日期。 | without_skill 文件为 `## [0.120.2] - 2026-07-28`，缺少 v 前缀。 |
-| `release_tag` | **NOT EXERCISED** | with_skill 尝试了 `gh release list`（trace item_4），但因未认证失败；随后 `git ls-remote` 因无法解析 github.com 失败（item_5）。candidate 的 release 声明没有可用实时证据或 fixture 支撑。 | without_skill 也报告 v0.120.2，但其外部 release 查询没有可用结果。 |
-| `pr_conventional_commit` | **NOT EXERCISED** | PR #300 的实时元数据/原始标题不可用：trace item_4 认证失败、item_5 网络失败，web_search 项无返回内容；因此无法验证是否确实清除了 conventional commit 前缀。 | without_skill 输出 `Support MCP SDK v2 alongside v1`，表面上已清洗前缀，但无可验证原始 PR 标题。 |
-| `breaking_change_breaking` | **NOT EXERCISED** | 无法取得 PR 标题和 body，不能判断该版本是否存在 breaking change；trace 中没有可用的 PR 元数据结果。 | without_skill 未添加 `⚠️ BREAKING`，但同样无法确认条件是否触发。 |
-| `section` | **PASS** | trace item_16 展示写入内容仅包含有条目的 `### Fixed` section，且该 section 下有 PR #300 条目，没有空 section；after-snapshot 证明目标文件已写入。 | without_skill 也只输出有内容的 `### Fixed` section。 |
-
-## Failures
-
-- 无 with-skill assertion failure。
-
-## Not Exercised
-
-- release_tag
-- pr_conventional_commit
-- breaking_change_breaking
-
-## Next Steps
-
-- 保留当前回归覆盖；目标 skill、fixture 或 assertion 契约变化时重新执行 fresh paired validation。
-
-## Runtime Evidence
-
-- With-skill candidate: return code `0`，duration `100.176s`，`skill_load_hits=2`。
-- Without-skill candidate: return code `0`，duration `62.473s`，`skill_load_hits=0`。
-- Independent judge: return code `0`，duration `62.677s`。
-- Judge 已读取两侧最终输出、完整 JSONL 工具 trace、before/after workspace snapshot、fixture manifest 与 session status，并核验读取顺序和零写入边界。
-- 所有临时 HOME/CODEX_HOME 与 candidate/judge 随机顶层根均已销毁；持久化证据目录中不存在 `auth.json`。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 仓库只持久化本 canonical `comparison.md`。
-- Candidate、transcript、judge verdict、timing、status、snapshot 与 diagnostics 仅作为 `/tmp` 运行期证据，不提交到 git。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

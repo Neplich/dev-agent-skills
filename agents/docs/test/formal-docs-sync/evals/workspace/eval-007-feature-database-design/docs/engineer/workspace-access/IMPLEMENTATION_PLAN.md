@@ -39,4 +39,4 @@ Maintainer confirmation: confirmed for implementation and closeout.
 
 ## Closeout
 
-All scope is complete. `.eval/actual-diff.patch` covers every related code path and `.eval/test-results.md` records all required tests as passed. No TODO, deferred item, stub, or residual in-scope work remains.
+All scope is complete. The listed source paths contain the delivered implementation, and `delivery-evidence/test-results.md` records all required tests as passed. No TODO, deferred item, stub, or residual in-scope work remains.

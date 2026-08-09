@@ -2,11 +2,21 @@
   "eval_id": "eval-014-route-site-notes-and-github-release",
   "eval_name": "route-site-notes-and-github-release",
   "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-14-route-site-notes-and-github-release",
-  "prompt": "请为 v1.0.0 编写站内用户版本说明，并基于确认后的版本说明准备 GitHub Release 预览。不要实际发布。",
   "fixture_context": [
     "README.md"
   ],
   "execution_cleanup": [
     "routing-output.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

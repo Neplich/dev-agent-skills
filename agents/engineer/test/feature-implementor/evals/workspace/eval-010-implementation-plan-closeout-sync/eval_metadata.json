@@ -2,10 +2,20 @@
   "eval_id": "eval-010-implementation-plan-closeout-sync",
   "eval_name": "implementation-plan-closeout-sync",
   "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-010-implementation-plan-closeout-sync",
-  "prompt": "docs/pm/sample-feature/PRD.md、docs/engineer/sample-feature/TRD.md 和 docs/engineer/sample-feature/IMPLEMENTATION_PLAN.md 都存在。实现和检查已完成，计划 frontmatter 已是 status: Implemented，但正文仍写计划待确认、代码和 skill 修改未开始、eval 执行待确认，并写模型 eval 尚未执行。请检查并完成实施收尾。",
   "fixture_context": [
     "docs/pm/sample-feature/PRD.md",
     "docs/engineer/sample-feature/TRD.md",
     "docs/engineer/sample-feature/IMPLEMENTATION_PLAN.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

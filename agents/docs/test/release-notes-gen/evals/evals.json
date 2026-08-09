@@ -36,7 +36,33 @@
           "description": "版本入口歧义回到产品入口 owner",
           "text": "输出 blocked 状态，把缺少 target release version 维护者确认的问题交回 PM 入口分类，说明获得可追溯确认后才可重新进入站内版本说明 specialist；不执行 tag 或 GitHub Release。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "准备下一版用户更新说明的发布负责人",
+        "situation": "变更事实已整理，但版本号仍只是团队讨论中的候选值，维护者没有做最终确认。",
+        "trigger": "内容团队希望提前开始，以免确认版本后赶不上发布窗口。",
+        "goal": "明确当前能准备到什么程度，以及获得哪项确认后才能写入站点。",
+        "materials": [
+          "release-entry.md",
+          "confirmation-record.md",
+          "evidence/",
+          "docs/site/package.json",
+          "docs/site/scripts/",
+          "docs/site/standards/",
+          "docs/site/release-notes/README.md",
+          "docs/site/release-notes/v0.9.0.md",
+          "docs/site/.meta/releases.json"
+        ],
+        "constraints": [
+          "不得从文件名、路径或候选文本推断正式版本",
+          "版本未确认前整个站点保持不变"
+        ],
+        "success_criteria": [
+          "候选版本与已确认版本被清楚区分",
+          "缺失确认及其责任人明确",
+          "没有生成页面或修改版本登记"
+        ]
+      }
     },
     {
       "id": "eval-002-confirmation-gate",
@@ -61,7 +87,32 @@
           "description": "明确等待确认",
           "text": "展示完整候选正文、来源证据和确认后计划修改的路径，并明确等待用户或维护者确认；不自行假设、模拟或代替确认。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "负责 v1.0.0 站内说明的发布编辑",
+        "situation": "目标版本已确认，证据足以起草正文，但维护者尚未批准最终措辞。",
+        "trigger": "支持团队想先预览候选内容，站点索引和导航必须等批准后再更新。",
+        "goal": "产出可供确认的候选正文，同时保证未批准内容不会进入正式发布入口。",
+        "materials": [
+          "release-entry.md",
+          "evidence/",
+          "docs/site/package.json",
+          "docs/site/scripts/",
+          "docs/site/standards/",
+          "docs/site/release-notes/README.md",
+          "docs/site/release-notes/v0.9.0.md",
+          "docs/site/.meta/releases.json"
+        ],
+        "constraints": [
+          "候选正文与正式派生面必须分开处理",
+          "确认前不得修改版本索引、元数据或导航"
+        ],
+        "success_criteria": [
+          "维护者能审阅完整候选说明",
+          "结果清楚标记仍在等待批准",
+          "正式站点入口和登记保持不变"
+        ]
+      }
     },
     {
       "id": "eval-003-github-release-boundary",
@@ -91,19 +142,69 @@
           "description": "bootstrap 前外部发布链不能提前",
           "text": "输出不创建或移动 tag，不准备、创建、编辑或发布 GitHub Release；说明 foundation 补齐后仍需重新进入正文确认、站内检查与 pre-tag 审计，当前 release execution 未授权。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "协调 v1.0.0 发布内容的版本经理",
+        "situation": "仓库有基础站点工具，但缺少 Release Notes 目录、写作规范和等价站点约定；请求还夹带创建 tag 与 GitHub Release。",
+        "trigger": "发布窗口临近，负责人希望一次完成所有对内对外动作。",
+        "goal": "先补齐可持续维护的站内版本说明基础，并保留后续审计和外部发布的正确顺序。",
+        "materials": [
+          "release-entry.md",
+          "confirmation-record.md",
+          "evidence/",
+          "docs/site/package.json",
+          "docs/site/scripts/",
+          "docs/site/standards/"
+        ],
+        "constraints": [
+          "缺少站内基础时不得做局部版本说明初始化",
+          "本轮不得创建 tag 或 GitHub Release"
+        ],
+        "success_criteria": [
+          "缺失的站点基础资产被具体列明",
+          "建站交接保留目标版本与证据",
+          "页面、版本登记和外部发布均保持不变"
+        ]
+      }
     },
     {
       "id": "eval-004-conditional-deployment-recheck",
       "name": "Release Notes 条件式复用部署完整性状态",
       "description": "仅在构建或发布面实质变化时触发共享检查。",
-      "prompt": "比较 evidence.md 中两种站内版本说明变更并完成本次工作收尾。",
+      "prompt": "请比较 `release-changes/editorial.patch` 与 `release-changes/internal-entry.patch`，判断各自是否会让现有文档部署结论失效，并完成版本说明收尾。不要修改部署配置。",
       "expected_output": "content-only 保留原状态；runtime entry 变化复用共享检查，不复制协议。",
       "workspace": "workspace/eval-004-conditional-deployment-recheck",
       "assertions": [
-        {"id": "skips_content_only_recheck", "description": "内容变更不重复检查", "text": "纯正文变化不触发第二套部署完整性检查，保留既有状态。"},
-        {"id": "rechecks_material_release_surface", "description": "发布面变化触发共享检查", "text": "运行入口或构建目标实质变化时复用 skill-map 的共享状态与检查，不复制新清单。"}
-      ]
+        {
+          "id": "skips_content_only_recheck",
+          "description": "内容变更不重复检查",
+          "text": "纯正文变化不触发第二套部署完整性检查，保留既有状态。"
+        },
+        {
+          "id": "rechecks_material_release_surface",
+          "description": "发布面变化触发共享检查",
+          "text": "运行入口或构建目标实质变化时复用 skill-map 的共享状态与检查，不复制新清单。"
+        }
+      ],
+      "scenario": {
+        "persona": "负责版本说明收尾的发布工程师",
+        "situation": "一项变更只调整版本说明内容，另一项同时修改文档站运行入口。",
+        "trigger": "交付前需要判断哪种变化会让既有部署完整性结论失效。",
+        "goal": "复用仍有效的部署结论，只对影响运行入口的情况发起重新核对。",
+        "materials": [
+          "release-changes/editorial.patch",
+          "release-changes/internal-entry.patch"
+        ],
+        "constraints": [
+          "本轮不修改部署配置",
+          "内容变化与运行入口变化必须分别判断"
+        ],
+        "success_criteria": [
+          "纯内容场景沿用原部署状态",
+          "运行入口变化场景指出需要重检的证据",
+          "结果没有复制或执行部署流程"
+        ]
+      }
     },
     {
       "id": "eval-004-confirmed-release-delivery",
@@ -138,7 +239,35 @@
           "description": "站内交付不越权进入外部发布或盖章",
           "text": "不创建、编辑或发布 GitHub Release，不创建或移动 tag，不部署任何内容，也不把目标版本写入 last_verified_version 或代替 docs-audit 盖章。"
         }
-      ]
+      ],
+      "scenario": {
+        "persona": "负责交付 v1.0.0 站内版本说明的发布编辑",
+        "situation": "目标版本和完整正文都已获维护者确认，现有站点具备版本说明规范、索引和版本登记。",
+        "trigger": "发布审计即将开始，需要先完成站内内容与派生入口的一致更新。",
+        "goal": "把已确认的用户更新说明完整交付到站点，并形成可供 tag 前审计使用的结果。",
+        "materials": [
+          "release-entry.md",
+          "confirmation-record.md",
+          "evidence/",
+          "docs/site/package.json",
+          "docs/site/package-lock.json",
+          "docs/site/scripts/",
+          "docs/site/standards/",
+          "docs/site/release-notes/README.md",
+          "docs/site/release-notes/index.md",
+          "docs/site/release-notes/v0.9.0.md",
+          "docs/site/.meta/releases.json"
+        ],
+        "constraints": [
+          "只能写已确认版本和正文所要求的站点面",
+          "站内交付完成也不授权外部发布操作"
+        ],
+        "success_criteria": [
+          "版本页、索引、元数据和导航相互一致",
+          "真实站点检查全部通过",
+          "交接说明已可进入 tag 前审计且尚未发布"
+        ]
+      }
     }
   ]
 }

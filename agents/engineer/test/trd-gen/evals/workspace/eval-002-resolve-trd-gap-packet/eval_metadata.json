@@ -2,11 +2,21 @@
   "eval_id": "eval-002-resolve-trd-gap-packet",
   "eval_name": "resolve-trd-gap-packet",
   "workspace_root": "agents/engineer/test/trd-gen/evals/workspace/eval-002-resolve-trd-gap-packet",
-  "prompt": "workspace `TRD_GAP_PACKET.md` 记录了当前缺少的技术决策，PM 的 docs/pm/capture-loop/PRD.md 已确认。请补齐技术方案。",
   "fixture_context": [
     "docs/pm/capture-loop/PRD.md",
     "TRD_GAP_PACKET.md",
     "src/capture/processor.ts",
     "src/queue/retry-policy.ts"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -1,6 +1,6 @@
 ---
 name: trd-gen
-description: "Internal engineering specialist—not a direct entry point. Invoked by engineer-agent after pm-agent handoff to create or update Engineer-owned TRDs, API docs, ADRs, and implementation blueprints from stable PM decisions."
+description: "Create or update Engineer-owned TRDs, API technical docs, ADRs, and implementation blueprints from confirmed PM decisions or a TRD gap packet. Use after engineer-agent routes technical-design work."
 visibility: internal
 ---
 
@@ -14,6 +14,28 @@ interface contracts or architecture decisions, it also owns
 `docs/engineer/{feature_path}/ADR-<NNN>-<decision-title>.md`, then hands the
 confirmed Engineer document set to `feature-implementor` for an implementation
 plan and code execution.
+
+## Mandatory Engineer-Document Checkpoint
+
+State that Engineer owns the TRD/API/ADR work, identify the confirmed PM entry
+basis and resolved `feature_path`, and stop if product decisions remain open.
+Accept gap packets from routing, debugging, implementation, or QA as TRD work:
+the finder supplies evidence and missing decisions; `trd-gen` resolves them in
+the existing same-path Engineer document or records an owned blocker.
+For every gap-packet result, state this boundary explicitly and list unresolved
+questions with owners and unblock conditions. Any unresolved gap keeps
+`feature-implementor`, `debugger`, and QA E2E document creation blocked; do not
+write new `docs/qa/e2e/` expectations until the TRD is complete.
+
+When document sub-agents are available, delegate the document write while the
+main process retains source context and reviews the result. Never implement
+code or create an implementation plan here. After the Engineer documents are
+confirmed, offer the `feature-implementor` handoff only when continuation is
+requested or authorized; do not write routing instructions into the TRD itself.
+QA E2E work remains blocked until that specialist has produced and confirmed
+the implementation plan. The checkpoint explicitly states Engineer/
+`engineer-agent:trd-gen` ownership, whether document-subagent delegation was
+required and used, and the finder-versus-TRD-owner boundary for gap packets.
 
 ## Role Boundary
 
@@ -62,11 +84,11 @@ expectation change, or ambiguous feature path, stop and return the request to
 stable PM scope.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Required Flow
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 ```mermaid
 flowchart LR
@@ -107,17 +129,24 @@ The incoming packet should identify:
 - the discoverer's boundary statement: the finder names the gaps; `trd-gen`
   completes or updates the TRD
 
+For every gap-packet task, restate this boundary in the generated TRD or
+delivery summary: the finder reports the gaps and evidence; `trd-gen` owns
+resolving them in Engineer documents. Do not leave the boundary implicit in the
+incoming packet.
+
 `trd-gen` must either update `docs/engineer/{feature_path}/TRD.md` to resolve
 each named gap or record an open technical question with owner, blocker, and
 unblock condition. Do not route to `feature-implementor`, `debugger`, or QA E2E
 documentation updates until the TRD is confirmed, mirrors the PRD feature path,
 and any open questions are explicitly accepted as non-blocking.
+Whenever an open technical question remains, report
+`blocked_downstream: [feature-implementor, debugger, qa-e2e]` explicitly.
 
 ## L2b Split Assessment
 
 After drafting or applying TRD changes and before finalizing its version, assess
 the four L2b signals defined in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md`: more than 500 total lines, at least 3
+the active installed `idea-to-spec` skill's `_internal/_shared/gen-conventions.md`: more than 500 total lines, at least 3
 independent domains, at least 15 related PRD `US-*` / `FR-*` rows, or sections
 with clear child-feature ownership. A signal requires an assessment, not an
 automatic split.
@@ -201,6 +230,8 @@ The TRD must include:
 
 - metadata with `type: TRD`, `feature`, `feature_path`, `parent_feature`,
   `feature_level`, `version`, `date`, `last_updated`, and `related_prd`
+- API and ADR frontmatter also carries `related_prd` when those documents are
+  produced from the same confirmed PM scope
 - optional frontmatter `related_code` as a machine-readable array of affected
   repository paths or globs, so `formal-docs-sync` and `docs-audit` can scope
   the impact precisely; this is an enhancement, not a handoff gate, and when
@@ -221,7 +252,7 @@ it as an open technical question with the owner and unblock condition.
 
 When updating an existing Engineer-owned current-state document (TRD or API
 reference), follow the body-consolidation rule from
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/gen-conventions.md`:
+the active installed `idea-to-spec` skill's `_internal/_shared/gen-conventions.md`:
 the updated body states only the current target state; superseded designs,
 endpoints, or parameters are deleted or rewritten instead of being kept with
 "deprecated" / "not part of the target architecture" annotations, and removals

@@ -1,6 +1,6 @@
 # PM Handoff Packet
 
-pm-agent 已完成入口分类，并将评论展示功能的应用安全审查路由至 appsec-checklist。
+产品与安全负责人已确认本次审查范围和可用材料。
 
 ```yaml
 request_type: security
@@ -35,7 +35,7 @@ permissions:
 data_categories:
   - 用户生成内容
 remediation_expectations:
-  - 输出编码与渲染修复项交回 engineer-agent
+  - 输出编码与渲染修复项交回 应用工程团队
   - 修复后使用脚本载荷执行浏览器回归验证
 blockers_risks:
   - 未转义评论内容可能在其他用户浏览器中执行攻击者脚本

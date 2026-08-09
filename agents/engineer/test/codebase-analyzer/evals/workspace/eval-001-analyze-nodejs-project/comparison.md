@@ -1,115 +1,60 @@
-# Eval Result: eval-001-analyze-nodejs-project
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `codebase-analyzer`
 - Eval: `eval-001-analyze-nodejs-project`
-- Test case: analyze-nodejs-project
-- Workspace: `workspace/eval-001-analyze-nodejs-project`
-- Evaluation date: 2026-08-07
-- Overall result: PASS
-- Behavior result: PASS
-- Coverage result: FULL
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt: engineer-agent 已确认需要 repo-level Project Profile，入口依据见 workspace `ENGINEERING_CONTEXT.md`。分析这个 Node.js 项目的代码库结构、技术栈和编码规范
-- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
-- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
-- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `70d2400afd3b1f84a7248de72cf04a9e4741bffe1ed6525d4f1cdd2942b2f522` from `agents/engineer/test/codebase-analyzer/evals/workspace/eval-001-analyze-nodejs-project`.
+- Fixture SHA-256: `70d2400afd3b1f84a7248de72cf04a9e4741bffe1ed6525d4f1cdd2942b2f522`
+- Prompt SHA-256: `cad1b3715da2e128465b3215c9e0ead310ad90fc998d9d73f08f99586980cace`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `de6d27a82a6affa1d54b83f57c4eb1889c4977944cd8849112c1a97798fbfd77`
+- Skill overlay SHA-256: `be427177bb8618969a8c9c2b0aea6596dceb0dbc6a57e3c3bb5e1896d11ef1ed`
+- Judge schema SHA-256: `4a44af8c4f43ac2a76bbdbb1c44519dabd549bb54a1dc48487259a1d80539946`
+- Eval definition SHA-256: `dad930e2f7ff239d93a7a9675b382ce2b702f6090d6d7cc66b26e7ea598351d6`
+- Metadata SHA-256: `5ca1d6325e7d73a97605eeb110ddc4062765b77075b5da8df9a904201e44cb60`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-## Assertions
+## Assertion Results
 
-- PASS `assertion_1`: with_skill final.md 的 YAML 明确包含 language: JavaScript、framework: Express 5.1.0、package_manager: npm 11.4.2；transcript 显示实际读取 package.json、源码和配置。
-- PASS `assertion_2`: with_skill final.md 的 architecture 明确包含 source_dirs: [src] 和 test_dirs: [test]；transcript 的目录扫描及实际 workspace 文件确认存在 src/ 与 test/。
-- PASS `assertion_3`: with_skill final.md 的 conventions 明确包含 ESLint 规则及 Prettier 配置；transcript 实际读取 eslint.config.js、.prettierrc.json，并尝试执行 lint/format。
-- PASS `yaml`: with_skill final.md 使用 YAML 代码块并以 project_profile 为根结构，符合 expected_output 的 YAML Project Profile 要求。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `technology_stack_identified` | PASS | with_skill 输出的 YAML Project Profile 包含 tech_stack.language、tech_stack.framework 和 tech_stack.package_manager。 |
+| `project_structure_mapped` | PASS | with_skill 输出包含 architecture.source_dirs 和 architecture.test_dirs，分别识别为 src 和 test。 |
+| `coding_conventions_identified` | PASS | with_skill 输出包含 conventions.linter 和 conventions.formatter，分别描述 ESLint 与 Prettier 配置。 |
+| `structured_profile_output` | PASS | with_skill 输出使用 yaml fenced block，并以结构化 YAML 形式提供 project_profile。 |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-with_skill 成功完成 repo-level 分析，exit_code 为 0；读取了工程上下文、项目清单、源码、测试、配置及额外 skill 文件，未修改 workspace。输出覆盖技术栈、目录、规范、依赖和架构。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cad1b3715da2e128465b3215c9e0ead310ad90fc998d9d73f08f99586980cace; fixture_sha256=70d2400afd3b1f84a7248de72cf04a9e4741bffe1ed6525d4f1cdd2942b2f522; output_sha256=837dc8de0f6ee0a5b00b096c299632b673b54e061c071a047bc9d3b72d9f9f12; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完整输出了包含技术栈、目录结构、编码规范的 YAML 项目概况。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-without_skill 使用同一基础 fixture，读取了工程上下文、项目清单、源码、测试和配置，exit_code 为 0，输出同样为 YAML Project Profile；其 input/output hashes 一致。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cad1b3715da2e128465b3215c9e0ead310ad90fc998d9d73f08f99586980cace; fixture_sha256=70d2400afd3b1f84a7248de72cf04a9e4741bffe1ed6525d4f1cdd2942b2f522; output_sha256=19186d8c41ffe991f155151b173b8554768479b82600997479c6917ca81f1ae3; snapshot_sha256=b80ea6b9d8a6d8b52a2cf088db8194c2d9c3f36a2840eca70cd503f4a4056e4a
+- Behavior: 通过 PROJECT_PROFILE.yaml 文件交付了更完整的项目概况；其文件内容满足相关结构化信息要求。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures / Findings
+## Failures and Next Steps
 
 - None.
-- Root cause: with_skill 相比 baseline 读取并利用了额外的 codebase-analyzer 规则文件，生成了更丰富的角色化 Project Profile，但两者均满足全部 assertions。
+- Next: None.
 
-## Next Steps
+## Runtime Artifact Policy
 
-- 后续修改该 skill、fixture 或 assertions 时，使用同样的 paired fresh 流程重跑。
-
-## Runtime Artifacts Policy
-
-- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
-- 长期只保留本 `comparison.md`。
-
-## Historical Results
-
-### Previous comparison record: eval-001-analyze-nodejs-project
-
-## Evaluation Target
-
-- Agent: `engineer`
-- Skill: `codebase-analyzer`
-- Eval: `eval-001-analyze-nodejs-project`
-- Test case: analyze-nodejs-project
-- Workspace: `workspace/eval-001-analyze-nodejs-project`
-- Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-- Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-- Historical result: PASS
-
-## Review Context
-
-- Date: 2026-08-03（issue #188 A 维删除后 paired 回归）
-- 变更：Step 3 技术栈 marker 表、Step 4 lint 工具表、Step 6 架构模式表已删除（L3 A 维实测确认磨平）
-- Judge: fresh Codex validation agent，双侧 candidate 冻结后独立判定（`tmp/eval-runs/issue-188-regress/judge/verdict-paired.md`）
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Fixture: ENGINEERING_CONTEXT.md、package.json、eslint.config.js、.prettierrc.json、src/、test/
-- With-skill evidence: `tmp/eval-runs/issue-188-regress/with_skill/codebase-analyzer-eval-001/candidate-output.md`
-- Without-skill evidence: `tmp/eval-runs/issue-188-regress/without_skill/codebase-analyzer-eval-001/candidate-output.md`
-
-## Assertions
-
-- PASS `assertion_1`：tech_stack 明确给出 JavaScript、Express 5.1.0、Node.js 22.x、npm 11.4.2；without-skill 同 PASS（runtime/stack 字段语义等价）
-- PASS `assertion_2`：识别 `src/` 为源码目录、`test/` 为测试目录；without-skill 同 PASS
-- PASS `assertion_3`：识别 ESLint 9.31.0 与规则、Prettier 3.6.2 与格式配置；without-skill 同 PASS
-- PASS `yaml`：Project Profile 主体置于有效 YAML fenced block；without-skill 同 PASS
-
-## With Skill Behavior
-
-- 删除三张速查表后仍产出完整 Project Profile：技术栈（package.json 核证）、规范（lint/formatter 配置文件）、结构（src/test）、架构分类（单模块 HTTP 服务）、feature_inventory 候选与 pm-agent:feature-catalog 确认边界。
-
-## Without Skill Baseline
-
-- 来源：2026-08-03 fresh baseline（同 prompt/fixture，未读 skill）；4/4 assertions PASS。
-- 原断言双侧零区分（baseline 已内化技术栈/lint/结构识别）；skill 增量在入口门禁、证据边界、feature inventory 等非断言内容，删除后无行为回归。
-
-## Failures / Findings
-
-- 无 with-skill assertion failure；无 NOT EXERCISED；Coverage FULL。
-- 零区分度观察：原 4 条断言被 baseline 全部白捡，与 #188 删除决策一致（已删内容正是 baseline 内化的部分）；剩余增量（门禁/证据边界/feature inventory）不在本 eval 断言范围。
-
-## Historical Results
-
-- 2026-07-26（删除前）：PASS（4/4 assertions，fresh Codex paired validation；without-skill 3/4，`yaml` 断言失分）。该轮基于删除前 skill 内容，仅作历史记录。
-
-## Next Steps
-
-- 删除后后续修改 codebase-analyzer 时重新运行本 eval 与其他 eval（eval-002 monorepo 场景、eval-003 mapped 场景）。
-- 原断言已无区分度；后续评估可考虑把断言钉在 skill 特有增量（feature_inventory 证据分组规则、suggested_feature_path 推导）上。
-
-## Runtime Artifacts Policy
-
-- 双侧 candidates 与 judge verdict 位于 `tmp/eval-runs/issue-188-regress/`（ignored 运行期目录，未提交）。
-- 长期只保留本 `comparison.md`；不提交 transcript、candidate、verdict、timing、run status 或 diagnostics。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

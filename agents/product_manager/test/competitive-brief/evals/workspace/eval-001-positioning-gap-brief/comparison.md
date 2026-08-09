@@ -1,93 +1,59 @@
-# Eval Result: eval-001-positioning-gap-brief
-
-## Latest Fresh Evaluation — 2026-08-07
-
-- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
-- Fixture: HEAD `47adbbc9`; both lanes used the same empty fixture manifest.
-- Isolation: the fresh baseline completed before any with-skill root was created; the judge ran in a third independent root.
-- Behavior result: PASS — 3/3 defined assertions passed.
-- Coverage result: FULL — all 3 assertion scenarios were exercised.
-Overall result: PASS
-
-### Assertion Results
-
-- `positioning`: PASS — covered Linear and Jira positioning, target users, and core selling points.
-- `messaging_gap`: PASS — identified concrete unclaimed messaging and content opportunities.
-- `evidence_boundary`: PASS — cited sources, qualified weak evidence, and marked product-context-dependent conclusions for validation.
-
-### With-Skill / Baseline Comparison
-
-The with-skill lane produced a complete positioning brief using fresh web research. The baseline also produced a useful brief and passed the broad assertions, so this eval continues to show low behavioral differentiation.
-
-### Failures / Next Steps
-
-- No with-skill assertion failures or coverage gaps.
-- The broad assertions remain a lifecycle signal: baseline already covers most of this behavior.
-
-### Runtime Artifact Policy
-
-- Fresh web traces, candidate output, manifests, and verdict remain under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-001-positioning-gap-brief/` and are not committed.
-
----
-
-The sections below are historical records from earlier runs.
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `competitive-brief`
 - Eval: `eval-001-positioning-gap-brief`
-- Test case: positioning-gap-brief
-- Workspace: `workspace/eval-001-positioning-gap-brief`
-- Latest result: **PASS**（Behavior: PASS / Coverage: FULL）
-- Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
-- Historical result: PASS
+## Current Result
 
-## Review Context
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/competitive-brief/evals/workspace/eval-001-positioning-gap-brief`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `adf7889b0d876e991ee47320ba8f46f60cd10315ed2d153b1c81fce9f52aed9b`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `64a375a1a490fa251e9b252ef3a7787f55ca6a4fd08e5d401228a899b274ed39`
+- Skill overlay SHA-256: `c1341cebf983202b3c2101489252c70818305b548c111af4817c833b2dd4164f`
+- Judge schema SHA-256: `9482baaf8c9e8ed2c6d5d65dd72ca668fb6cc639dacfe10c14d42e2f2d0f4c53`
+- Eval definition SHA-256: `97a23b71b146f4c0d34488da4fd45ddfa63b73d91d16deb5d2e03fbe4f5d01f6`
+- Metadata SHA-256: `253b7cd58ea1d83c5776d9de8bd0332f1de43ff8d162b4ae1c25de74c0394acf`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-- Date: 2026-08-03（issue #188 A 维删除后 paired 回归）
-- 变更：Analysis Frameworks 节已删除（L3 A 维实测确认磨平），新增 Battlecard Mode 条件模式
-- Judge: fresh Codex validation agent，双侧 candidate 冻结后独立判定（`tmp/eval-runs/issue-188-regress/judge/verdict-paired.md`）
+## Assertion Results
 
-## Test Set / Fixture Version
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `positioning` | PASS | With-skill output separately covers Linear and Jira positioning, target users, and core selling points in sections 2–4 and the comparison matrix. |
+| `messaging_gap` | PASS | With-skill output identifies five explicit messaging gaps plus concrete content opportunities in sections 6–7. |
+| `evidence_boundary` | PASS | With-skill output explicitly distinguishes category-level opportunity analysis, judgment-based weaknesses, public facts, and items requiring price verification. |
 
-- Schema: `evals.json` v1.0
-- Fixture: live 联网研究（Linear 与 Jira 官方公开页面），无静态 fixture
-- With-skill evidence: `tmp/eval-runs/issue-188-regress/with_skill/competitive-brief-eval-001/candidate-output.md`
-- Without-skill evidence: `tmp/eval-runs/issue-188-regress/without_skill/competitive-brief-eval-001/candidate-output.md`
+## With-Skill Behavior
 
-## Assertions
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=adf7889b0d876e991ee47320ba8f46f60cd10315ed2d153b1c81fce9f52aed9b; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=4a08efe07d313da50417d9ae8b7dc4b8c402ce46b94b60ff18392de7f6c67297; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Delivered a structured Linear-versus-Jira competitive brief covering positioning, users, selling points, messaging gaps, content opportunities, and evidence qualifications.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-- PASS `positioning`：分别说明 Linear 与 Jira 的定位、目标用户和核心卖点；without-skill 同 PASS
-- PASS `messaging_gap`：识别线性/强治理之间的 messaging gap 并提出可切入机会；without-skill 同 PASS
-- PASS `evidence_boundary`：区分官方事实与策略推断，无法确认信息标记为假设；without-skill 同 PASS
+## Fresh Without-Skill Baseline
 
-## With Skill Behavior
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=adf7889b0d876e991ee47320ba8f46f60cd10315ed2d153b1c81fce9f52aed9b; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=9e067866ab87b79bc38902e6c76e95cf800dcfd8ede63c7bb27b48f5dd946b47; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline also delivered a complete competitive brief with positioning, users, selling points, and messaging gaps, but used less explicit evidence-boundary qualification.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-- 删除 Analysis Frameworks 后仍产出完整 brief：定位、卖点、messaging gap、机会/威胁/行动项，并保留证据边界；Battlecard Mode 在 pm-agent `battlecard` 信号路由时直接产出单页 battlecard（不输出完整 brief）。
+## Failures and Next Steps
 
-## Without Skill Baseline
+- None.
+- Next: None.
 
-- 来源：2026-08-03 fresh baseline（同 prompt，未读 skill）；3/3 assertions PASS。
-- 原断言双侧零区分（baseline 已内化定位/gap/证据边界分析）；skill 增量在扩展内容（近期动态、机会、威胁、行动项）与 Battlecard Mode，删除后无行为回归。
+## Runtime Artifact Policy
 
-## Failures / Findings
-
-- 无 with-skill assertion failure；无 NOT EXERCISED；Coverage FULL。
-- 零区分度观察：原 3 条断言被 baseline 全部白捡，与 #188 删除决策一致（已删内容正是 baseline 内化的框架知识）；剩余增量不在本 eval 断言范围。
-
-## Historical Results
-
-- 2026-07-26（删除前）：PASS（3/3 assertions，fresh same-agent judge；双侧均满足，with-skill 对事实/推断边界更系统）。该轮基于删除前 skill 内容，仅作历史记录。
-
-## Next Steps
-
-- 删除后后续修改 competitive-brief 时重新运行本 eval。
-- 原断言已无区分度；后续评估可考虑把断言钉在 skill 特有增量（Battlecard Mode 产物、扩展结构）上。
-
-## Runtime Artifacts Policy
-
-- 双侧 candidates 与 judge verdict 位于 `tmp/eval-runs/issue-188-regress/`（ignored 运行期目录，未提交）。
-- 长期只保留本 `comparison.md`；不提交 transcript、candidate、verdict、timing、run status 或 diagnostics。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

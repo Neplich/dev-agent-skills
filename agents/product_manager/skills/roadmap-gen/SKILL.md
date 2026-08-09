@@ -1,18 +1,37 @@
 ---
 name: roadmap-gen
-description: "Internal PM specialist—not a direct entry point. Invoked by pm-agent after entry classification to create or update roadmap docs from GitHub milestones, issues, PRs, and release context."
+description: "Create or update a roadmap from dated GitHub milestone, issue, PR, and release evidence, using real dates when available and semantic phases otherwise. Use after pm-agent routes roadmap work."
 visibility: internal
 ---
 
 # Roadmap Generator
 
-Generate or update `docs/roadmap.md` from GitHub Milestones, Issues, and PRs. All data comes from `gh` CLI.
+Generate or update `docs/roadmap.md` from GitHub Milestones, Issues, and PRs. Use live `gh` queries or a user-supplied, dated `github_reader_data` export. For an export, preserve its repository, capture time, completeness signals, current release context, and raw milestone/issue fields; do not invent missing live state.
 
 This skill has two modes:
 1. **Generate**: create a fresh roadmap from current GitHub state
 2. **Update**: read existing `docs/roadmap.md`, sync with latest GitHub data, preserve manual annotations
 
+## Mandatory Roadmap Classification
+
+Classify roadmap position from milestone semantics, dependencies, release
+signals, and maintainer intent—not merely dates or version-like names. An
+undated or unmatched milestone remains pending maintainer classification and
+must not be silently placed in “unscheduled.” Identify release blockers only
+from explicit labels or equivalent GitHub evidence. Every roadmap still
+includes its required status/progress artifacts and Mermaid timeline; unknown
+dates may use semantic phases or clearly marked placeholders without inventing
+calendar commitments.
+Preserve every included issue's number, title, state, milestone or backlog
+classification, labels, link, and assignee state; explicitly write
+`unassigned` when the source has no assignee rather than dropping the field.
+
 ## Step 1 — Establish repo context
+
+If the request supplies a local GitHub status export, read it first and use the
+active installed `github-reader` skill's feed-mode contract as the evidence
+schema. Missing repository identity, capture time, milestone completeness, or
+issue state/label evidence must remain unknown in the roadmap.
 
 ```bash
 gh repo view --json nameWithOwner,url,description
@@ -234,7 +253,7 @@ When updating an existing roadmap:
    - Removed issues (closed + removed from milestone) → remove from list
 3. **Update header timestamp**: always refresh "最后更新" date
 
-## Step 7 — Generate Mermaid timeline (optional)
+## Step 7 — Generate Mermaid timeline
 
 If the repo has 2+ milestones with due dates, append a Mermaid gantt chart:
 
@@ -263,6 +282,11 @@ Gantt chart rules:
 - Milestones without `due_on` are excluded from the chart
 - Completed milestones use `:done` tag
 - Current sprint uses `:active` tag
+
+If no milestone has a reliable date, do not generate a Gantt chart. Append a
+Mermaid flowchart or timeline that shows only semantically supported phases and
+a separate “pending maintainer classification” branch; it must not contain
+fabricated calendar dates.
 
 ## Edge cases
 

@@ -1,63 +1,58 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `docs-agent`
 - Eval: `eval-006-preserve-independent-hosting`
-- Review context: issue #162 fresh paired validation
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture: issue #162 scenario evidence in this workspace
-- Validation date: 2026-07-22
-- Execution cleanup: all declared runtime paths were absent from pristine scratch fixtures
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f6c421284ed0143d28fff161f0f4c1cd48b067505beae1d38677d871a066543f` from `agents/docs/test/docs-agent/evals/workspace/eval-006-preserve-independent-hosting`.
+- Fixture SHA-256: `f6c421284ed0143d28fff161f0f4c1cd48b067505beae1d38677d871a066543f`
+- Prompt SHA-256: `75b11cec554fb9cabf92f38559abd7d5bd8c24a6e4b7927952fa49a44fb00e8c`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `787b3941ec90b819758a9894561fa37e2c0eff7eedddb4c4a4d863809f28587f`
+- Eval definition SHA-256: `8a4360282a35d2ba7a52bbb24d703648e9f263e7fbfc9516063ba62f62b92b92`
+- Metadata SHA-256: `62050136e2c1de0d65367ed4b1b1b706bb2211c3759fb54a832b8fd66233328b`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-## Latest Result
+## Assertion Results
 
-- Overall result: PASS
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| preserves_not_applicable_evidence | PASS | FAIL | with_skill 的 `docs/site/DEPLOYMENT.md` 明确写出 `not_applicable`，引用 `../../evidence.md`，覆盖 Public/Internal 两个变体，并说明变化时进入 PM → DevOps → Docs 路由；without_skill 仅描述“不引入图片存储依赖”，未明确 `not_applicable`、证据路径或下一 owner。 |
-| does_not_open_devops_handoff | PASS | PASS | with_skill 明确写出“DevOps handoff: not required”，仅在托管模型变化时重新路由；without_skill 也未生成 DevOps handoff，且当前证据确认静态托管仍有效。 |
-
-未满足断言（with/without 任一 FAIL）：`preserves_not_applicable_evidence`
-
-
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_not_applicable_evidence` | PASS | With-skill output records N/A applicability, cites both source paths, identifies public/internal variants, and assigns follow-up to the formal-docs-sync/repository-maintainer release path. |
+| `does_not_open_devops_handoff` | PASS | With-skill output explicitly says no application deployment-team intervention, no configuration change, deployment, or downstream flow; locked git evidence shows no mutations. |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- 保留 not_applicable、证据、Public/Internal、维护者决定和下一 owner，有效时不生成 DevOps handoff。
-- Candidate source: fresh `tmp/eval-runs/issue-162/with_skill/eval-006-preserve-independent-hosting/candidate-output.md`.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=75b11cec554fb9cabf92f38559abd7d5bd8c24a6e4b7927952fa49a44fb00e8c; fixture_sha256=f6c421284ed0143d28fff161f0f4c1cd48b067505beae1d38677d871a066543f; output_sha256=e0ecba9a1a6b22d8db117d0a7040394ffba463d4c87d7b292ee8ffac94df7f93; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly preserves the valid static-hosting decision and avoids an unnecessary deployment handoff.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=75b11cec554fb9cabf92f38559abd7d5bd8c24a6e4b7927952fa49a44fb00e8c; fixture_sha256=f6c421284ed0143d28fff161f0f4c1cd48b067505beae1d38677d871a066543f; output_sha256=f6c164e2a39af4bb01a919fa67cf654865e7e16f44c5dec2b8d65201bfc28a3e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Also reaches the correct no-intervention conclusion, but provides less structured applicability, evidence, and ownership detail.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-- PARTIAL (1/2)；保留独立托管决定但未使用稳定 not_applicable 状态。
-- The same prompt and pristine fixture were used; no historical baseline, target skill, Agent README, shared skill-map, old comparison, or with-skill output was used to compose it.
+## Failures and Next Steps
 
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- baseline 缺少稳定跨角色状态。
-- No with-skill assertion failure or runner/credential blocker.
-
-## Next Steps
-
-- Keep this regression case; strengthen fixture ambiguity later where the baseline already passes.
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- Runtime candidates, copied fixtures, verdict, status, and diagnostics remain under `tmp/eval-runs/issue-162/` and are not committed.
-- Only this durable comparison, eval definition, metadata, and fixture evidence are submitted.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

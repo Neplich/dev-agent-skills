@@ -2,11 +2,27 @@
   "eval_id": "eval-006-audit-no-version-anchor",
   "eval_name": "audit-no-target-release-version",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-006-audit-no-version-anchor",
-  "prompt": "请审计已确认的 `base_ref` `e1f2a3b` 到真实 `target_ref` commit `7c9e2af` 范围。宿主没有 tag、GitHub Release，也没有维护者确认的目标版本。",
   "fixture_context": [
-    ".eval/actual-diff.patch",
+    "release-evidence/actual-diff.patch",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/catalog.md",
     "src/catalog/routes.txt"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "git_topology": {
+    "base_ref": "e1f2a3b",
+    "target_ref": "7c9e2af",
+    "target_patch": "release-evidence/actual-diff.patch"
+  },
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

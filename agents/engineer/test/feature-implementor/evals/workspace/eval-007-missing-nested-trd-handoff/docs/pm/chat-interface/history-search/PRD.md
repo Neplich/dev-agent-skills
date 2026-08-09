@@ -21,4 +21,4 @@ Users can search previous messages inside the existing Chat Interface.
 ## Acceptance Criteria
 
 - The feature belongs under `chat-interface`.
-- Implementation planning requires a mirrored Engineer TRD.
+- Search returns matching previous messages without leaving the Chat Interface.

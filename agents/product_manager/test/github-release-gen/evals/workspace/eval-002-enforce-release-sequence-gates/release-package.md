@@ -30,4 +30,4 @@
 ## Requested output
 
 - First show a complete GitHub Release preview.
-- Do not mutate GitHub or tags in this fixture.
+- This package is approved for preview review only; no GitHub publish or tag operation has been authorized.

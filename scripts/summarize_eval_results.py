@@ -29,6 +29,17 @@ def find_comparison(test_dir, workspace):
 
 def extract_result(path):
     text = open(path, encoding="utf-8").read()
+    latest = re.search(
+        r"^##\s*Latest [Rr]esult\s*$([\s\S]*?)(?=^##\s|\Z)",
+        text,
+        re.M,
+    )
+    if latest and re.search(
+        r"Evidence freshness[：:]\s*\**stale\b",
+        latest.group(1),
+        re.I,
+    ):
+        return "BLOCKED"
     m = re.search(
         r"^[ \t]*(?:[-+*][ \t]+)?[ \t*]*Overall [Rr]esult[ \t*]*"
         r"[：:][ \t*]*"

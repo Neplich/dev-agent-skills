@@ -1,0 +1,5 @@
+.github/workflows/service-image.yml
+Dockerfile
+deploy/compose.yaml
+deploy/helm/values.yaml
+package.json

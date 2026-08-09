@@ -1,80 +1,59 @@
-# Eval Result: eval-004-mapped-export-status-context
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `github-reader`
 - Eval: `eval-004-mapped-export-status-context`
-- Test case: `结合映射文档汇总导出模块状态`
-- Prompt:
 
-> 请根据仓库内的现有证据，汇总 `src/export/` 模块当前的交付状态与风险。
+## Current Result
 
-- Expected output:
-
-> 精准读取导出 API 文档，以代码核证实现状态并指出文档与实现不一致。
-
-## Test Set / Fresh Run
-
-- Eval schema: `evals.json` v1.0。
-- Fixture manifest: `6bf5af1937dcff508b0a43fc05937595b1549a6cf153cd58ae1400d8d7c6f166`（3 个可见文件；两侧逐字节一致）。
-- Repository HEAD: `47adbbc9`。
-- Fresh run window: 2026-08-07 00:58–01:14（Asia/Shanghai）。
-- Runtime: 3 个独立会话，均为 `gpt-5.6-luna`、`model_reasoning_effort=medium`：fresh without-skill、fresh with-skill、fresh judge。
-- Controlled variable: 两个 candidate 使用完全相同的 prompt、fixture manifest、HOME/CODEX_HOME 目录形态与同一份 `auth.json`；唯一变量是 with-skill lane 安装并加载目标 specialist skill。
-- Physical isolation: 按 skill 先完成并销毁全部 baseline 随机顶层根，再创建 with-skill 根；32 个 candidate 全部完成并销毁后才创建第三套 judge 根。
-- Candidate visibility: lane 中未放入 `eval_metadata.json`、`evals.json`、`expected_output`、assertions、历史 `comparison.md`、README 脚手架或 judge 材料；泄漏扫描为 0 命中。
-- External data rule: 实时实体因 GitHub 认证、网络或当时集合缺失而不可得时，相关 assertion 记为 `NOT EXERCISED`，只影响 Coverage，不伪造成 Behavior 的 PASS/FAIL。
-
-## Latest Result
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b91f8ca3f3681cf4c1a336f7748050f27d679c67ce39092970202362aab7af63` from `agents/product_manager/test/github-reader/evals/workspace/eval-004-mapped-export-status-context`.
+- Fixture SHA-256: `b91f8ca3f3681cf4c1a336f7748050f27d679c67ce39092970202362aab7af63`
+- Prompt SHA-256: `c3d78f9b9bc67f2a85f690ebb4f7d73fa301b8da080d83b39bba1b815957de1c`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8b55857ad21cc937337dcf6bc1fa19fcc7f833c3e9c078d89a5db79725e98233`
+- Skill overlay SHA-256: `68da0ba1f028f581794447a220a41c2a7932596fc89598d52df4a3ae7cae05a7`
+- Judge schema SHA-256: `6eadf49a93ad15b65779f0737c549d6122220ac6abe8a01622417bb0da199cda`
+- Eval definition SHA-256: `c9320af546c098adb51ac45faa524e2216c221f13ecd2b33fb2f8f822f024522`
+- Metadata SHA-256: `d12a4df00a2f5f04d2bf0e553078ba3dc62e403dd0f77a037fb5796abdce7123`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
-- Coverage result: **FULL**
-- Overall result: PASS
-- With-skill summary: with_skill 实际加载 github-reader（status.json skill_load_hits=2；transcript item_1 读取 SKILL.md），按 change-map 定位并核验导出文档与代码，输出明确指出 CSV/JSON 分歧及 unverified 风险。未发现评测脚手架泄漏或写入行为。
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
-## Historical Contract Note
+## Assertion Results
 
-- 旧 durable 结果因 issue #234 的 prompt/fixture 泄漏修复或后续 assertion 增强而标记为 `BLOCKED`。本文件已由当前契约下的 fresh paired run 与独立 judge 结论覆盖。
-- 本轮没有复用历史 baseline、candidate、verdict 或旧结论；without-skill baseline 仅作行为对照，不参与 with-skill 的 Behavior/Coverage 判定。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 锁定原始证据中没有可证明读取顺序的过程记录；候选输出的自述不足以证明该隐藏过程。 |
+| `verifies_against_code` | PASS | 候选明确以 handler.txt 的 supported_format: csv 对照文档的 CSV 和 JSON 声明，结构化说明能力分歧及交付风险。 |
+| `treats_unverified_as_low_trust` | PASS | 候选将 last_verified_version: unverified 评为低信任，并明确不据此认定 JSON 已交付。 |
 
 ## With-Skill Behavior
 
-with_skill 实际加载 github-reader（status.json skill_load_hits=2；transcript item_1 读取 SKILL.md），按 change-map 定位并核验导出文档与代码，输出明确指出 CSV/JSON 分歧及 unverified 风险。未发现评测脚手架泄漏或写入行为。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3d78f9b9bc67f2a85f690ebb4f7d73fa301b8da080d83b39bba1b815957de1c; fixture_sha256=b91f8ca3f3681cf4c1a336f7748050f27d679c67ce39092970202362aab7af63; output_sha256=1929a1a442b18dad83decd91a0d4f946f2383c5fb9415ce90b3a41f80b68212d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确汇总代码与文档分歧、验证状态及交付风险；隐藏读取顺序无法由锁定证据证明。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-without_skill 未加载 skill（skill_load_hits=0），虽也识别出 CSV/JSON 不一致，但未遵循 with_skill 的映射优先读取证据链；仅作对照，不影响 with_skill 判定。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3d78f9b9bc67f2a85f690ebb4f7d73fa301b8da080d83b39bba1b815957de1c; fixture_sha256=b91f8ca3f3681cf4c1a336f7748050f27d679c67ce39092970202362aab7af63; output_sha256=41df3c44827858ffebef2dbcf97414b086a756af019343646f8b629bc1e2b288; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 同样识别 CSV/JSON 分歧和未验证状态，但包含超出当前只读 fixture 可核实范围的仓库断言。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Assertion Review
+## Failures and Next Steps
 
-| Assertion | With skill | Evidence / reason | Without-skill comparison |
-| --- | --- | --- | --- |
-| `reads_mapped_docs_first` | **PASS** | transcript 先在 item_3 读取 docs/site/standards/change-map.yaml，命中 src/export/** 后读取 docs/site/api/export.md（item_14、item_15）；未成功执行全库文档内容遍历，item_4 的 README* 命令因无匹配直接失败。 | without_skill 的 transcript item_1 先检查 src/export/.github，之后才在 item_4 读取文档，且 status.json 的 skill_load_hits 为 0。 |
-| `verifies_against_code` | **PASS** | transcript item_12 读取 src/export/handler.txt，输出 supported_format: csv；item_14 读取 export.md，输出 CSV and JSON。candidate.md 明确结构化说明“handler 仅支持 CSV”而文档声称 CSV 和 JSON，并指出交付风险。 | without_skill 也读取并描述了 handler.txt 与 export.md 的格式冲突，但未使用已加载 skill 的映射流程。 |
-| `treats_unverified_as_low_trust` | **PASS** | change-map 与 export.md 均显示 stage: dev、last_verified_version: unverified；candidate.md 明确写为“尚未完成正式验证/发布确认”，并将 JSON 声明视为不能直接当作已验收交付。 | without_skill 同样将 dev/unverified 视为未完成验证，但其 skill_load_hits=0。 |
-
-## Failures
-
-- 无 with-skill assertion failure。
-
-## Not Exercised
-
-- 无；本轮覆盖全部 assertions。
-
-## Next Steps
-
-- 保留当前回归覆盖；目标 skill、fixture 或 assertion 契约变化时重新执行 fresh paired validation。
-
-## Runtime Evidence
-
-- With-skill candidate: return code `0`，duration `63.643s`，`skill_load_hits=2`。
-- Without-skill candidate: return code `0`，duration `55.778s`，`skill_load_hits=0`。
-- Independent judge: return code `0`，duration `90.567s`。
-- Judge 已读取两侧最终输出、完整 JSONL 工具 trace、before/after workspace snapshot、fixture manifest 与 session status，并核验读取顺序和零写入边界。
-- 所有临时 HOME/CODEX_HOME 与 candidate/judge 随机顶层根均已销毁；持久化证据目录中不存在 `auth.json`。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 仓库只持久化本 canonical `comparison.md`。
-- Candidate、transcript、judge verdict、timing、status、snapshot 与 diagnostics 仅作为 `/tmp` 运行期证据，不提交到 git。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

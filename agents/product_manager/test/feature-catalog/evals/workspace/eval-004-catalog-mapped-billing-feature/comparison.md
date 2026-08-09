@@ -1,74 +1,59 @@
-# Consumption Regression Comparison
+# Issue #246 Evaluation Result
 
-## Latest Fresh Evaluation — 2026-08-07
+## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `feature-catalog`
 - Eval: `eval-004-catalog-mapped-billing-feature`
-- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
-- Fixture: HEAD `47adbbc9`; fresh paired manifests matched exactly.
-- Behavior result: FAIL — 2/3 assertions passed.
-- Coverage result: FULL — all 3 assertion scenarios were exercised.
-Overall result: FAIL
 
-### Assertion Results
+## Current Result
 
-- `reads_mapped_docs_first`: FAIL — the tool trace read `service.txt` and enumerated files before reading `change-map.yaml` and the mapped billing page.
-- `verifies_against_code`: PASS — code showed monthly only, and the response preserved the annual-plan documentation conflict with its impact.
-- `treats_unverified_as_low_trust`: PASS — the unverified page was treated as low trust and checked against code.
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `dbc5593a346cec17c758e623e41d968d8b062bb60f1c6687047b79f186d5a5fa` from `agents/product_manager/test/feature-catalog/evals/workspace/eval-004-catalog-mapped-billing-feature`.
+- Fixture SHA-256: `dbc5593a346cec17c758e623e41d968d8b062bb60f1c6687047b79f186d5a5fa`
+- Prompt SHA-256: `18727fc23cb0e6511e466aafaee8dc2b3d50aa38834ef79db9cd3a99a2690d99`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `272c84e241c5d52534922fccf2bc6732492a0d70c9f6e2ab8dc1eff2533f7b0c`
+- Skill overlay SHA-256: `c7fd56e26e53c8ea32b598e8f4e06588e28aee376ed79eb9822ecf37e3099222`
+- Judge schema SHA-256: `6eadf49a93ad15b65779f0737c549d6122220ac6abe8a01622417bb0da199cda`
+- Eval definition SHA-256: `8d7030970f6fab5f1056baaa7f97792f12e093b11e3211055d5ae790cf0d3bc2`
+- Metadata SHA-256: `b6e639db89ad7dc9c01b74ff5037844027a7f93b1a684864779b0328b14ee4bc`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
-### With-Skill / Baseline Comparison
+## Assertion Results
 
-The with-skill response produced a pending, evidence-backed billing draft and correctly handled the document/code conflict, but violated the prescribed mapped-doc-first read order. The baseline showed the same ordering weakness.
-
-### Failures / Next Steps
-
-- From the task path, read `change-map.yaml`, then the mapped billing page, and only then return to `src/billing/service.txt` for verification.
-
-### Runtime Artifact Policy
-
-- Fresh evidence remains under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-004-catalog-mapped-billing-feature/` and is not committed.
-
----
-
-The sections below are historical records from earlier runs.
-
-## Evaluation Target
-
-- Skill: `feature-catalog`
-- Eval: `eval-004-catalog-mapped-billing-feature`
-
-## Test Set / Fixture Version
-
-- Fixture: `ws1-consumption-v1`
-- Commit: `0b000b9`
-
-## Latest Result
-
-- Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-**PASS** — with-skill 输出满足全部 3 条断言：精准读取映射文档、回到代码核证年付差异，并将 `unverified` 文档按最低信任处理。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 候选输出声称已读取 required doc，但锁定证据没有记录实际读取顺序或遍历范围，无法证明该隐藏过程要求。 |
+| `verifies_against_code` | PASS | 明确引用 docs/site/api/billing.md，说明文档声称月付和年付；同时引用 src/billing/service.txt，指出代码仅声明支持 monthly，并将年度计划列为待核实项。 |
+| `treats_unverified_as_low_trust` | PASS | 明确指出 last_verified_version: unverified，并据此将年度计划视为待核实项，且将代码复核作为实现结论依据。 |
 
 ## With-Skill Behavior
 
-- 仅引用映射文档 `docs/site/api/billing.md` 与代码事实 `src/billing/service.txt`，未引入无关文档。
-- 明确保留文档声明、代码事实、版本新鲜度与影响，未把年付列为已实现能力。
-- 所有关键目录结论均由代码证据支撑，候选功能置信度保持为 `low`。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=18727fc23cb0e6511e466aafaee8dc2b3d50aa38834ef79db9cd3a99a2690d99; fixture_sha256=dbc5593a346cec17c758e623e41d968d8b062bb60f1c6687047b79f186d5a5fa; output_sha256=4194ff17fe73fb00e88225fd419432bb0f26a0c91b2c99d0c5288633bc0b5268; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 产出带证据、置信度和待确认事项的计费功能目录，正确区分代码事实与未验证文档声明。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，使用同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
-- baseline 也识别了月付/年付差异及 `unverified` 风险，并回到代码核证；本 fixture 下未形成明显行为差距，但不影响 with-skill 全断言通过。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=18727fc23cb0e6511e466aafaee8dc2b3d50aa38834ef79db9cd3a99a2690d99; fixture_sha256=dbc5593a346cec17c758e623e41d968d8b062bb60f1c6687047b79f186d5a5fa; output_sha256=54d0923311f5c574b8480cb47ae950dd7c630ce8f7dbfa9f009a52e2e41b42c4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 也识别了月付与创建订阅，并发现年付仅为未验证文档声明，但未形成同等结构化的功能目录和后续确认流程。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- 无。
-
-## Next Steps
-
-- 保留本结果；后续 fixture 扩展可增加无关文档干扰，以提高消费契约差异的辨识度。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

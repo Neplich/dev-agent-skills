@@ -2,7 +2,7 @@
 
 Feature path: `docs/qa/e2e/account/settings/email-preferences/`
 Scenario: `feature-update`
-Platform version: missing, so execution is blocked until provided.
+Platform version: not recorded
 
 ## Active Cases
 

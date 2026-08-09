@@ -2,7 +2,6 @@
   "eval_id": "eval-002-detect-monorepo",
   "eval_name": "detect-monorepo",
   "workspace_root": "agents/engineer/test/codebase-analyzer/evals/workspace/eval-002-detect-monorepo",
-  "prompt": "engineer-agent 已确认需要 repo-level Project Profile，入口依据见 workspace `ENGINEERING_CONTEXT.md`。这个项目是 monorepo 吗？如果是，列出所有子项目",
   "feature_path": "N/A",
   "fixture_context": [
     "ENGINEERING_CONTEXT.md",
@@ -11,5 +10,16 @@
     "apps/web/package.json",
     "apps/api/package.json",
     "packages/shared/package.json"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -6,35 +6,51 @@
     {
       "id": "eval-001-existing-project-feature-design",
       "name": "existing-project-feature-design",
-      "description": "Verifies that idea-to-spec handles existing-project-feature-design and produces the expected role-specific artifact.",
-      "prompt": "我们在一个已有的 Web 应用里，要新增应用标签系统。请先看项目上下文，再和我一起把方案收敛下来，最终沉淀成 PM 设计文档。",
+      "description": "帮助现有应用目录产品负责人逐步收敛第一版标签能力，而不提前锁定未确认方案。",
+      "scenario": {
+        "persona": "现有应用目录产品的产品负责人",
+        "situation": "应用目录已有录入和列表能力，但尚未形成标签产品范围",
+        "trigger": "团队想增加应用标签，需要先收敛第一版价值和边界",
+        "goal": "通过逐步讨论形成可落地的 PM 方案",
+        "materials": [
+          "package.json",
+          "docs/README.md",
+          "docs/engineer/apps-catalog/TRD.md"
+        ],
+        "constraints": [
+          "先理解现有项目状态",
+          "一次只确认一个关键决策",
+          "未确认功能归属前不创建正式文档"
+        ],
+        "success_criteria": [
+          "准确总结当前应用目录能力和标签缺口",
+          "提出一个带有真实取舍的关键决策并等待确认",
+          "不在用户确认前生成完整 PRD 或锁定功能路径"
+        ]
+      },
+      "prompt": "我们想在现有应用目录里增加标签能力，方便管理员整理应用，也方便用户发现应用。请先看一下项目现状，再和我逐步把第一版范围收敛下来；方案确认后我希望留下正式的产品文档。",
+      "expected_output": "先总结项目现状，再用一个有取舍的关键决策推进范围收敛，并在用户确认前保持只读、不锁定正式功能文档路径。",
       "workspace": "workspace/iteration-1/eval-1-existing-project-feature",
-      "expected_output": "先给出项目上下文摘要，然后按单决策点推进设计；在关键点提供 2-3 个方案和 trade-off；按 section 逐段确认；把已确认内容沉淀到 docs/pm/{feature_path}/DECISIONS.md 与相关 PM 文档。",
       "assertions": [
         {
-          "id": "assertion_1",
-          "description": "先做上下文检测",
-          "text": "输出开始于项目上下文或现状摘要，而不是直接给完整方案"
+          "id": "summarizes_current_context",
+          "description": "先说明项目现状和产品缺口",
+          "text": "先基于现有 manifest、文档索引和 Engineer TRD 总结应用目录已有能力与标签缺口，不直接给出完整方案。"
         },
         {
-          "id": "assertion_2",
-          "description": "单决策点推进",
-          "text": "每个回合只推进一个待确认问题，不并行展开多个未确认议题"
+          "id": "keeps_first_turn_to_one_decision",
+          "description": "第一轮只推进一个关键决策",
+          "text": "本轮只提出一个需要产品负责人确认的关键范围或归属决策，不并行抛出多组待确认问题。"
         },
         {
-          "id": "assertion_3",
-          "description": "关键点有选项比较",
-          "text": "在数据模型、查询语义或交互方案等关键设计点给出 2-3 个选项和 trade-off"
+          "id": "offers_real_options_with_tradeoffs",
+          "description": "为当前决策提供真实选项和取舍",
+          "text": "针对当前决策给出 2–3 个可执行方向、各自取舍和一个有理由的推荐。"
         },
         {
-          "id": "section",
-          "description": "按 section 推进",
-          "text": "设计内容按 section 展开，并要求用户确认当前 section"
-        },
-        {
-          "id": "assertion_5",
-          "description": "文档作为记忆源",
-          "text": "明确提到 DECISIONS.md 或 feature 文档作为持久记忆和沉淀位置"
+          "id": "waits_before_durable_docs",
+          "description": "确认前不提前写入正式产品文档",
+          "text": "在功能归属和当前决策确认前不创建 PM 文档或擅自锁定路径，并说明确认后再将稳定结论沉淀为正式产品文档。"
         }
       ]
     },
@@ -42,9 +58,31 @@
       "id": "eval-002-existing-project-update",
       "name": "existing-project-update",
       "description": "Verifies that idea-to-spec handles existing-project-update and produces the expected role-specific artifact.",
+      "scenario": {
+        "persona": "负责把产品想法收敛成确认范围的产品负责人",
+        "situation": "通知中心已有确认的 PRD、决策和 TRD，现在要把轮询提醒迁移为事件驱动，需要先界定受影响事实。",
+        "trigger": "提醒策略变更进入产品讨论，需要在改文档前先识别受影响范围。",
+        "goal": "清楚说明轮询改事件驱动的行为差异和影响面，并列出需要增量更新的现有产品与工程文档",
+        "materials": [
+          "docs/engineer/notification-center/TRD.md",
+          "docs/pm/notification-center/DECISIONS.md",
+          "docs/pm/notification-center/PRD.md",
+          "package.json"
+        ],
+        "constraints": [
+          "先分析 delta 与影响面",
+          "优先增量迭代现有文档",
+          "不把已确认文档整份重写"
+        ],
+        "success_criteria": [
+          "清楚说明轮询改事件驱动的行为差异和影响面",
+          "列出需要增量更新的现有产品与工程文档",
+          "不丢失已确认事实或整份重写现有文档"
+        ]
+      },
       "prompt": "当前系统已经有一版通知中心的 PRD/TRD，现在要把提醒策略从轮询改成事件驱动。请分析影响范围，更新设计思路，并告诉我应该改哪些文档。",
-      "workspace": "workspace/iteration-1/eval-2-existing-project-update",
       "expected_output": "识别为 existing-project-update；先总结 delta 和影响范围；优先走 change-impactor / iteration 思路而不是整份重写；明确受影响文档和后续迭代路径。",
+      "workspace": "workspace/iteration-1/eval-2-existing-project-update",
       "assertions": [
         {
           "id": "update",
@@ -72,9 +110,29 @@
       "id": "eval-003-greenfield-discovery",
       "name": "greenfield-discovery",
       "description": "Verifies that idea-to-spec handles greenfield-discovery and produces the expected role-specific artifact.",
+      "scenario": {
+        "persona": "负责把产品想法收敛成确认范围的产品负责人",
+        "situation": "团队只有“知识问答产品”这一模糊想法，用户和首要问题都还没有收敛。",
+        "trigger": "团队准备评估知识问答方向，但目前还没有足够信息决定第一版。",
+        "goal": "先帮助用户确认知识问答产品解决的首要问题，并每轮只推进一个有明确选项的产品决定",
+        "materials": [
+          "用户提出的团队知识问答产品初步想法",
+          "notes.md 中的零散背景"
+        ],
+        "constraints": [
+          "当前想法仍模糊",
+          "一次只收敛一个关键决定",
+          "方向稳定前不写完整 PRD"
+        ],
+        "success_criteria": [
+          "先帮助用户确认知识问答产品解决的首要问题",
+          "每轮只推进一个有明确选项的产品决定",
+          "方向稳定前不生成完整 PRD"
+        ]
+      },
       "prompt": "我想做一个团队知识问答产品，现在只有一个模糊想法。你先不要直接写完整 PRD，先帮我把方向收敛。",
-      "workspace": "workspace/iteration-1/eval-3-greenfield-discovery",
       "expected_output": "保持在 greenfield-discovery；不直接产出整份 PRD；通过单决策点问题和关键方案比较逐步收敛；在方向稳定后再建议下一步文档化。",
+      "workspace": "workspace/iteration-1/eval-3-greenfield-discovery",
       "assertions": [
         {
           "id": "assertion_1",
@@ -97,9 +155,29 @@
       "id": "eval-004-greenfield-bootstrap-routing",
       "name": "greenfield-bootstrap-routing",
       "description": "Verifies that idea-to-spec handles greenfield-bootstrap-routing and produces the expected role-specific artifact.",
+      "scenario": {
+        "persona": "负责把产品想法收敛成确认范围的产品负责人",
+        "situation": "空目录中的 AI 对话助手只有基本左右布局设想，请求方希望先形成需求骨架而不是工程脚手架。",
+        "trigger": "用户希望把界面想法转成需求骨架，同时明确暂不初始化工程。",
+        "goal": "说明空目录中目前只有产品构想，并形成可继续讨论的需求或 PRD 骨架",
+        "materials": [
+          "空工作目录",
+          "用户给出的会话列表与聊天区布局构想"
+        ],
+        "constraints": [
+          "目录为空且尚无工程上下文",
+          "先完成产品澄清与文档骨架",
+          "不初始化工程项目"
+        ],
+        "success_criteria": [
+          "说明空目录中目前只有产品构想",
+          "形成可继续讨论的需求或 PRD 骨架",
+          "不创建工程脚手架或实现代码"
+        ]
+      },
       "prompt": "这是一个空目录。我想做一个 AI 对话助手，左侧是会话列表，右侧是聊天区。先不要直接初始化项目，先帮我梳理需求并落成 PRD 骨架。",
-      "workspace": "workspace/iteration-2/eval-4-greenfield-bootstrap-routing",
       "expected_output": "先输出空工作区 context summary；识别为 PM-first 的 greenfield-discovery 或 greenfield-bootstrap 路径；保持在 PM/idea-to-spec 路径里，不直接运行脚手架；明确下一步是需求澄清、PRD/DECISIONS 文档化或等价的 PM 动作，而不是工程实现。",
+      "workspace": "workspace/iteration-2/eval-4-greenfield-bootstrap-routing",
       "assertions": [
         {
           "id": "assertion_1",
@@ -127,9 +205,28 @@
       "id": "eval-005-pm-agent-direct-delegation",
       "name": "pm-agent-direct-delegation",
       "description": "Verifies that idea-to-spec handles pm-agent-direct-delegation and produces the expected role-specific artifact.",
+      "scenario": {
+        "persona": "负责把产品想法收敛成确认范围的产品负责人",
+        "situation": "用户直接描述了 AI 对话助手的界面构想，希望系统继续推进产品定义而不是停在能力介绍。",
+        "trigger": "用户刚提出产品构想，期望对话立即进入需求收敛而非能力导航。",
+        "goal": "直接开始梳理目标用户、问题和第一版范围，并不把回复停在能力介绍或再次询问是否继续",
+        "materials": [
+          "用户给出的 AI 对话助手左右布局构想"
+        ],
+        "constraints": [
+          "从用户请求直接进入产品梳理",
+          "不把对话停在能力推荐或再次询问是否继续",
+          "暂不实现界面"
+        ],
+        "success_criteria": [
+          "直接开始梳理目标用户、问题和第一版范围",
+          "不把回复停在能力介绍或再次询问是否继续",
+          "在范围确认前不进入界面实现"
+        ]
+      },
       "prompt": "我现在想做一个 AI 对话助手，按左右结构进行创建，左侧是对话历史，右侧是对话页",
-      "workspace": "workspace/iteration-2/eval-5-pm-agent-direct-delegation",
       "expected_output": "通过 pm-agent 入口先识别为 PM-first 的新产品需求，再直接继续进入 idea-to-spec 的上下文摘要与需求收敛流程；不会停在'推荐技能'或'是否需要我帮你唤起'这类 dispatcher 元回答。",
+      "workspace": "workspace/iteration-2/eval-5-pm-agent-direct-delegation",
       "assertions": [
         {
           "id": "dispatcher",
@@ -152,9 +249,31 @@
       "id": "eval-006-nested-feature-path",
       "name": "nested-feature-path",
       "description": "Verifies that idea-to-spec scans existing PM PRDs and routes a child feature under a confirmed 4-level parent feature_path instead of creating a truncated or parallel top-level directory.",
+      "scenario": {
+        "persona": "负责把产品想法收敛成确认范围的产品负责人",
+        "situation": "现有聊天产品已分层记录界面、消息和历史功能，现在要新增历史搜索并确定正确的文档归属。",
+        "trigger": "消息历史搜索进入立项讨论，需要在写新文档前复用已有产品层级。",
+        "goal": "把历史搜索归入现有消息历史功能之下，并说明需要新增或更新的产品文档位置",
+        "materials": [
+          "docs/pm/chat-interface/PRD.md",
+          "docs/pm/chat-interface/messages/PRD.md",
+          "docs/pm/chat-interface/messages/history/PRD.md",
+          "package.json"
+        ],
+        "constraints": [
+          "复用现有三层父功能文档树",
+          "搜索属于消息历史的子功能",
+          "不创建并列或截断路径"
+        ],
+        "success_criteria": [
+          "把历史搜索归入现有消息历史功能之下",
+          "说明需要新增或更新的产品文档位置",
+          "避免创建与现有父功能并列的重复文档"
+        ]
+      },
       "prompt": "已有 Web 应用已经有 Chat Interface 和 Message History 的 PRD。现在要新增消息历史搜索。请先看项目文档，判断应该更新或生成哪些 PM 文档。",
-      "workspace": "workspace/iteration-3/eval-6-nested-feature-path",
       "expected_output": "扫描 docs/pm/**/PRD.md；识别已有父功能 chat-interface/messages/history；将消息历史搜索解析为 feature_path=chat-interface/messages/history/search；不创建 docs/pm/history-search/PRD.md 或 docs/pm/chat-interface/history-search/PRD.md；handoff packet 包含 feature_path、feature、parent_feature、feature_level 和 feature_path_evidence。",
+      "workspace": "workspace/iteration-3/eval-6-nested-feature-path",
       "assertions": [
         {
           "id": "scan_existing_prds",
@@ -182,9 +301,28 @@
       "id": "eval-007-api-adr-engineer-handoff",
       "name": "api-adr-engineer-handoff",
       "description": "Verifies that idea-to-spec does not generate Engineer API or ADR docs directly and instead hands stable scope to engineer-agent:trd-gen.",
+      "scenario": {
+        "persona": "负责把产品想法收敛成确认范围的产品负责人",
+        "situation": "历史搜索的产品范围已经确认，下一步需要工程侧 API 合同和索引选型决策记录。",
+        "trigger": "产品范围已稳定，工程设计阶段现在缺少 API 合同与选型记录。",
+        "goal": "明确 API 合同和索引选型记录由工程团队产出，并给出与已确认产品路径对应的工程文档位置",
+        "materials": [
+          "docs/pm/chat-interface/history-search/PRD.md"
+        ],
+        "constraints": [
+          "产品范围已经确认",
+          "API 与 ADR 由工程角色拥有",
+          "PM 不直接写入 docs/engineer"
+        ],
+        "success_criteria": [
+          "明确 API 合同和索引选型记录由工程团队产出",
+          "给出与已确认产品路径对应的工程文档位置",
+          "交接中保留 PRD、父功能和决策背景证据"
+        ]
+      },
       "prompt": "PM 范围已经稳定：docs/pm/chat-interface/history-search/PRD.md 已确认。现在需要为这个功能补 API 文档和一份搜索索引选型 ADR。请判断由谁生成、输出到哪里。",
-      "workspace": "workspace/iteration-3/eval-7-api-adr-engineer-handoff",
       "expected_output": "不直接调用 PM 内部 api-gen 或 adr-gen，不直接写 docs/engineer 文档；输出给 engineer-agent:trd-gen 的 handoff 包，要求 Engineer 在 docs/engineer/chat-interface/history-search/ 下生成 API.md 和 ADR-*.md，并携带 feature_path、parent_feature、feature_level、PRD 路径和决策背景。",
+      "workspace": "workspace/iteration-3/eval-7-api-adr-engineer-handoff",
       "assertions": [
         {
           "id": "does_not_use_pm_api_adr_generators",
@@ -212,6 +350,27 @@
       "id": "eval-008-mapped-notification-update",
       "name": "基于映射文档定义通知功能更新",
       "description": "验证现有功能更新在命中 change-map 时精准取文档且回代码确认现状",
+      "scenario": {
+        "persona": "负责把产品想法收敛成确认范围的产品负责人",
+        "situation": "通知模块准备新增短信渠道，但当前 API 页面与代码事实可能存在分歧。",
+        "trigger": "短信渠道即将纳入现有通知功能，需要先解决文档和代码的事实差异。",
+        "goal": "从代码确认当前通知渠道，并指出 API 页面与实现不一致之处",
+        "materials": [
+          "docs/site/api/notifications.md",
+          "docs/site/standards/change-map.yaml",
+          "src/notifications/channels.txt"
+        ],
+        "constraints": [
+          "映射只作为定位线索",
+          "当前渠道以代码为准",
+          "文档分歧要进入需求证据"
+        ],
+        "success_criteria": [
+          "从代码确认当前通知渠道",
+          "指出 API 页面与实现不一致之处",
+          "短信渠道需求范围以核验事实为起点"
+        ]
+      },
       "prompt": "现有 `src/notifications/` 需要新增短信渠道。请先梳理当前行为与差距，再形成现有项目功能更新的需求范围。",
       "expected_output": "读取命中的通知 API 页面，以代码核证当前渠道并把文档分歧纳入需求证据。",
       "workspace": "workspace/eval-008-mapped-notification-update",
@@ -237,9 +396,29 @@
       "id": "eval-009-prd-iteration-split-proposal",
       "name": "prd-iteration-split-proposal",
       "description": "Verifies prd-iteration evaluates L2b split signals after applying a change and presents a confirmation-gated split proposal instead of restructuring automatically.",
+      "scenario": {
+        "persona": "负责把产品想法收敛成确认范围的产品负责人",
+        "situation": "已确认的通知中心 PRD 同时覆盖多个独立领域，轮询改事件驱动会进一步扩大文档调整面。",
+        "trigger": "事件驱动变更即将进入已确认 PRD，文档体量要求同时评估是否拆分。",
+        "goal": "把事件驱动目标写成当前产品目标，并说明大 PRD 是否已达到拆分信号并给出完整迁移提案",
+        "materials": [
+          "docs/engineer/notification-center/TRD.md",
+          "docs/pm/notification-center/PRD.md"
+        ],
+        "constraints": [
+          "先应用事件驱动目标再评估文档结构",
+          "拆分属于需要确认的重大结构动作",
+          "确认前不得移动或新建子文档"
+        ],
+        "success_criteria": [
+          "把事件驱动目标写成当前产品目标",
+          "说明大 PRD 是否已达到拆分信号并给出完整迁移提案",
+          "在维护者确认前不移动或创建子文档"
+        ]
+      },
       "prompt": "当前 docs/pm/notification-center/PRD.md 已确认，现在要把提醒策略从轮询改成事件驱动。请更新这版 PRD。",
-      "workspace": "workspace/eval-009-prd-iteration-split-proposal",
       "expected_output": "应用轮询改事件驱动的变更后，识别 L2b 信号命中（≥3 独立领域、≥15 US/FR 行），输出拆分提案（子 feature_path 树 + 章节迁移映射 + 下游镜像影响清单）并等待用户确认；未确认前不拆分、不移动、不新建子文档。",
+      "workspace": "workspace/eval-009-prd-iteration-split-proposal",
       "assertions": [
         {
           "id": "applies_requested_change",

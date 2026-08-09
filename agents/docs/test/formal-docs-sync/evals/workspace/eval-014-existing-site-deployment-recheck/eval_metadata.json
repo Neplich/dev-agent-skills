@@ -2,7 +2,30 @@
   "eval_id": "eval-014-existing-site-deployment-recheck",
   "eval_name": "existing-site-deployment-recheck",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-014-existing-site-deployment-recheck",
-  "prompt": "根据 evidence.md 完成本次内容同步收尾，只读复核两套现有站点配置并说明部署完整性。不要修改部署资产。",
-  "fixture_context": ["evidence.md"],
-  "execution_cleanup": ["with_skill", "without_skill", "outputs", "diagnostics", "transcript.md", "subagent-verdict.md", "run_status.json", "timing.json"]
+  "fixture_context": [
+    "sites/atlas-portal/",
+    "sites/orbit-console/"
+  ],
+  "execution_cleanup": [
+    "with_skill",
+    "without_skill",
+    "outputs",
+    "diagnostics",
+    "transcript.md",
+    "subagent-verdict.md",
+    "run_status.json",
+    "timing.json"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

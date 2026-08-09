@@ -1,61 +1,59 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `docs-agent`
 - Eval: `eval-002-missing-entry-basis`
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture: `ws2-docs-v1`
-- 评估基线：`a273a00` 加本轮 cross-doc sync R2 working tree
-- Harness：完整 router harness、fresh zero-skill baseline 与独立 judge
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/docs/test/docs-agent/evals/workspace/eval-002-missing-entry-basis`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
+- Skill overlay SHA-256: `56a47f4293d7435d43e789574be1e08a3a03c3c8021043b25cccb472ae22b6c6`
+- Judge schema SHA-256: `da898e3ecfd0169570b22be7c73cd730ef2fd22e3bf1c5b559383dc76454ff0d`
+- Eval definition SHA-256: `bf1b5d8af479146ff04e48ba6dcc39176cc5d38f4f20e513ea504da5a2a472c2`
+- Metadata SHA-256: `9e2c43ddcdebfd4398d2a8f32a222c29dd71f706e06b85ffb24ea4623239c500`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
 
-## Latest Result
+## Assertion Results
 
-- Overall result: FAIL
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| guides_to_pm_agent | PASS | FAIL | with_skill 明确指出缺少 PM 交接包/等效确认链和宿主项目路径，并要求补齐后经 `pm-agent` 路由；without_skill 直接声称“已搭好正式文档站首版”。 |
-| does_not_execute_bootstrap | PASS | FAIL | with_skill 工作区没有创建 `docs/site/`、manifest 或建站文件；without_skill 实际创建了 `index.html`、`styles.css`、`script.js`，并声称已搭建首版。 |
-| names_missing_credentials | FAIL | FAIL | with_skill 指出了缺少宿主项目仓库路径，但未明确说明“显式建站请求 + 已确认仓库路径”即可构成 `docs-site-bootstrap` entry basis，反而继续要求完整 PM 交接字段；without_skill 未指出任何缺失入口条件。 |
-
-未满足断言（with/without 任一 FAIL）：`guides_to_pm_agent`、`does_not_execute_bootstrap`、`names_missing_credentials`
-
-
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `guides_to_pm_agent` | PASS | with_skill 明确说明无 PM handoff、等价确认文档链，并要求先由 pm-agent 补齐和确认 handoff。 |
+| `does_not_execute_bootstrap` | PASS | with_skill 声明停留在路由边界、不创建或修改文档站；git_status、workspace_manifest、delivery_snapshot 均为空，且无变更证据。 |
+| `names_missing_credentials` | FAIL | with_skill 指出宿主仓库路径缺失，但未说明“显式建站请求加确认仓库路径”可构成 docs-site-bootstrap specialist entry basis。 |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- `guides_to_pm_agent`：PASS。明确没有 PM packet、等效链或完整 specialist entry basis。
-- `does_not_execute_bootstrap`：PASS。未创建 `docs/site/`、模板或 manifest；fixture 仅新增 candidate output。
-- `names_missing_credentials`：PASS。指出“显式建站请求 + 已确认宿主仓库路径”可解锁 bootstrap entry basis。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=56c80ca31c94e3485904e29fa5cb186a358b2c204e72e7c23f3f4e313133540c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确执行 PM 路由并保持下游建站边界，但未完整说明可解锁的 specialist entry basis。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+## Fresh Without-Skill Baseline
 
-- 来源：同 prompt/fixture 的本轮全新 baseline，不含 skill/README。
-- baseline 只索要一般建站信息，未识别 PM gate 或最小 specialist entry basis。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6cf5103ac6662b081338cd0ba18b3696b5704a9a176ed2544db6f0ed4a2a1ee6; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=a2280a0950e4b111161e1a023cdeb5012e0a17d22c681968022175369704a9e3; snapshot_sha256=6330393a243b8b937565be05cdd389635373021b9861f37889a2a2a81f72da12
+- Behavior: 直接声称已搭建正式文档站，并交付 index.html、styles.css、script.js；git_status 显示未跟踪文件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+## Failures and Next Steps
 
-- 无 assertion failure；未发生任何下游写入。
-
-## Next Steps
-
-- 保留当前温和入口安全网。
+- with_skill 未完整说明可由显式建站请求与确认仓库路径解锁 docs-site-bootstrap specialist entry basis。
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 运行期产物仅保留在 `tmp/eval-runs/116/`，不提交到 git。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

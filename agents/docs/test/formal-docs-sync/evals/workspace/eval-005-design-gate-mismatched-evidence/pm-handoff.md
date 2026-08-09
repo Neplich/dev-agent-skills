@@ -13,9 +13,9 @@
   - `docs/pm/preferences-summary/PRD.md` (Approved status; metadata requires verification)
   - `docs/engineer/preferences-summary/TRD.md` (Confirmed status; metadata requires verification)
   - `docs/engineer/preferences-summary/IMPLEMENTATION_PLAN.md` (Confirmed)
-- scope_decision: Synchronize the requested feature-level design page only if every completion artifact resolves to the same feature path.
+- scope_decision: Synchronize the requested `preferences-summary` feature design page.
 - downstream_owner: `docs`
 - required_output: Synchronize `docs/site/design/preferences-summary.md` and its design change-map entry as one atomic scope.
-- evidence: `.eval/actual-diff.patch`, `src/preferences_summary.py`, and `.eval/test-results.md`.
+- evidence: `delivery-evidence/actual-diff.patch`, `src/preferences_summary.py`, and `delivery-evidence/test-results.md`.
 - exclusions: API, database, operations, product, and release documentation.
-- blockers_risks: Document metadata must be checked instead of trusting directory placement.
+- blockers_risks: The request and implementation plan use `preferences-summary`, while the PRD and TRD metadata use `account-preferences`.

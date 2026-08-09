@@ -9,7 +9,7 @@ last_updated: "2026-05-29"
 
 ## Component Boundary
 
-`src/api/notifications.ts` owns notification list filtering for this fixture.
+`src/api/notifications.ts` owns notification list filtering for the notification API.
 
 ## Expected Behavior
 

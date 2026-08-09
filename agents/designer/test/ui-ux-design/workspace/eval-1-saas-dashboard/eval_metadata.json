@@ -2,39 +2,18 @@
   "eval_id": "eval-001-saas-dashboard",
   "eval_name": "saas-dashboard-design-structure",
   "workspace_root": "agents/designer/test/ui-ux-design/workspace/eval-1-saas-dashboard",
-  "prompt": "PM 已经产出 saas-dashboard 的 PRD（docs/pm/saas-dashboard/PRD.md）：项目管理 dashboard，用户需要查看 projects、tasks、team members 和 activity timeline，目标用户为 5-20 人小团队。请阅读该文档并补充 UI/UX 设计。",
-  "with_skill_outputs": [
-    "with_skill/docs/design/saas-dashboard/ui-ux-spec.md"
+  "fixture_context": [
+    "docs/pm/saas-dashboard/PRD.md"
   ],
-  "without_skill_outputs": [
-    "without_skill/outputs/design-notes.md"
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
   ],
-  "assertions": [
-    {
-      "id": "with_skill_has_structured_spec",
-      "description": "With skill output contains the expected UI/UX spec structure",
-      "target": "with_skill/docs/design/saas-dashboard/ui-ux-spec.md",
-      "all_of": [
-        "# UI/UX Design Specification",
-        "## 2. User Journey",
-        "```mermaid",
-        "## 4. Page Layouts",
-        "## 5. Component List",
-        "## 7. Responsive Design"
-      ]
-    },
-    {
-      "id": "without_skill_is_unstructured",
-      "description": "Baseline output stays vague and misses structured design artifacts",
-      "target": "without_skill/outputs/design-notes.md",
-      "all_of": [
-        "Maybe a sidebar for filters."
-      ],
-      "none_of": [
-        "```mermaid",
-        "## 5. Component List",
-        "## 7. Responsive Design"
-      ]
-    }
-  ]
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -2,8 +2,18 @@
   "eval_id": "eval-004-route-ui-update-request",
   "eval_name": "route-ui-update-request",
   "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-4-route-ui-update-request",
-  "prompt": "用户说：更新一下前端 UI，把设置页改成左右分栏并调整交互。请判断这是 PM、Designer 还是 Engineer 路径。",
   "fixture_context": [
     "README.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

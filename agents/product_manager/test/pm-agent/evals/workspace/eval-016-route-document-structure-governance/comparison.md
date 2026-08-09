@@ -1,68 +1,61 @@
-# Eval Result: eval-016-route-document-structure-governance
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `pm-agent`
 - Eval: `eval-016-route-document-structure-governance`
-- Workspace: `eval-016-route-document-structure-governance`
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Fixture version: current tracked fixture at the start of the 2026-08-07 run.
-- Fresh run: 2026-08-07 (Asia/Shanghai).
-- Candidate and independent judge: `gpt-5.6-luna`, `model_reasoning_effort="medium"`.
-- Isolation: identical raw prompt and fixture snapshot; all baseline roots were snapshotted in memory and destroyed before any with-skill root; all with-skill roots were destroyed before judging; HOME/CODEX_HOME values matched per eval and were reset for every lane; only `auth.json` was copied into CODEX_HOME.
-- Runtime evidence: `tmp/eval-runs/issue-238-pm/fresh-20260807/pm-agent/eval-016-route-document-structure-governance/`.
-
-## Latest result:
-
-- Behavior result: FAIL — determined only from the with-skill lane by an independent judge.
-- Coverage result: PARTIAL — 4/5 with-skill assertion scenarios were exercised.
-Overall result: FAIL
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8` from `agents/product_manager/test/pm-agent/evals/workspace/eval-016-route-document-structure-governance`.
+- Fixture SHA-256: `1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8`
+- Prompt SHA-256: `78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0b60a8fdef1023247fb430f4647e03f742c09fbfdb17e32a3a03dc6059ae9e02`
+- Skill overlay SHA-256: `7093347dda9d009dc74c5bd9b37b3d0d8b980466e82f7a4efbacd767a0e9fa19`
+- Judge schema SHA-256: `c8400122a967de4e5b8b409bbe920fe16ec946724a3aa7d4b3077b3582a3f2f0`
+- Eval definition SHA-256: `ba37454a106688e9f5f2e2586231a60f2093e364612eb14bfa53540c9e2d1589`
+- Metadata SHA-256: `fe53b448dd4fd2693ceb179d875dd617b7b717601fc7d9d3214cab940b4cdef7`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
-- `routes_to_structure_governance`: with-skill **PASS**; without-skill **NOT_EXERCISED** — with_skill trace 明确分类为 document_structure_governance，且读取的 pm-agent 路由表指定 idea-to-spec:structure-governance。
-- `read_only_audit`: with-skill **PASS**; without-skill **PASS** — 两份最终回复及 trace 均声明只读检查；两份 status 的 added/removed/modified 均为空，且 result_manifest 与 fixture_manifest 一致。
-- `report_form`: with-skill **FAIL**; without-skill **FAIL** — 两份最终回复都只提供 Markdown 对话内容；trace 中没有生成或写入 HTML 运行期 tmp 报告的工具调用。
-- `scope_six_role_dirs`: with-skill **NOT_EXERCISED**; without-skill **NOT_EXERCISED** — fixture 实际仅包含 docs/pm 与 docs/engineer，缺少 design、qa、devops、security 实体，因此按规则标记为 NOT_EXERCISED。
-- `structural_change_requires_confirmation`: with-skill **FAIL**; without-skill **FAIL** — with_skill trace/最终回复未说明合并、拆分、移动建议需用户确认、change_tier=major，或明确不在本次梳理中执行；without_skill 同样未覆盖该治理约束。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `routes_to_structure_governance` | NOT_EXERCISED | with_skill 输出未说明主 route 指向何处；skill_visibility 只能证明技能可见，不能证明实际路由。 |
+| `read_only_audit` | PASS | 明确声明“只读检查，仓库未修改”，且 git_evidence 显示 head、branch、工作区和索引均未变化。 |
+| `report_form` | NOT_EXERCISED | 对话中给出了结论摘要，但明确报告文件未生成；缺少可验证的 HTML delivery_snapshot。 |
+| `scope_six_role_dirs` | PASS | 明确列出 docs/pm、docs/engineer 及缺失的 docs/design、docs/qa、docs/devops、docs/security，覆盖六个角色目录范围。 |
+| `structural_change_requires_confirmation` | NOT_EXERCISED | 未提出合并、拆分或移动建议，也未执行结构变更，因此未触发确认流程。 |
 
 ## With-Skill Behavior
 
-正确识别并路由为 document_structure_governance，执行了只读扫描且没有文件变更；但未生成 HTML 运行期报告，也未在结论中落实 major/用户确认约束。六角色覆盖因 fixture 缺少实体而无法评估。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=64616f06e1ae19d8bf6e39c025ea977ce04c5be9b6ecf413df9d1674c1762b9b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完成只读结构审计并识别缺失角色根目录；未生成 HTML 报告，路由和结构变更确认流程没有可验证证据。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-完成了基础只读目录检查且无文件变更，但没有可验证的结构治理路由、HTML 运行期报告或结构变更确认约束；六角色覆盖因 fixture 缺少实体而无法评估。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=cbe797e29e28557aea2d1ded41591d2e976d2fec6a3a93e5773db28c00f3d681; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅识别并报告了现有的 PM/Engineer 两个角色，错误地将不完整角色覆盖描述为全部 docs 结构。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-The baseline is comparison evidence only; its outcome does not affect `Overall result`.
-
-## Failures
-
-- with_skill 未生成 HTML 写入运行期 tmp 的报告。
-- with_skill 未明确结构变更建议须用户确认并按 change_tier=major 另行执行。
-- without_skill 同样未满足 HTML 报告形态和结构变更确认约束。
-
-## Coverage Gaps
-
-- fixture 仅有 pm、engineer 两个角色目录，design、qa、devops、security 缺失，六角色覆盖断言无法实际评估。
-
-## Blockers
+## Failures and Next Steps
 
 - None.
+- Next: 若运行环境允许写入 tmp 目录，生成并核验 HTML 报告。
 
-## Historical Result (Pre-#234)
+## Runtime Artifact Policy
 
-- The previous durable result recorded Behavior **PASS**, Coverage **FULL**, and Overall **BLOCKED** after issue #234 identified prompt/fixture leakage.
-- That pre-remediation result is retained only as history and is superseded by this strict fresh run.
-
-## Next Steps
-
-- Fix the with-skill failures listed above, then rerun this eval with the same strict isolation and independent-judge protocol.
-
-## Runtime Artifacts Policy
-
-- Candidate responses, traces, status manifests, isolation records, and judge evidence remain under the gitignored runtime path above and are not committed.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

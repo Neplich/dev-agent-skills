@@ -1,84 +1,59 @@
-# Eval Result: roadmap-phase-classification
+# Issue #246 Evaluation Result
 
-## Latest Fresh Evaluation — 2026-08-07
+## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `roadmap-gen`
 - Eval: `eval-002-phase-classification`
-- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
-- Fixture: HEAD `47adbbc9`; both lanes used the same empty fixture manifest.
-- Behavior result: PASS — the exercised path correctly stopped on unavailable GitHub authentication.
-- Coverage result: PARTIAL — 0/3 assertion scenarios could be exercised because no milestone, backlog, or issue data was available.
-Overall result: PASS (partial coverage)
 
-### Assertion Results
+## Current Result
 
-- `open_closed`: NOT EXERCISED — no milestone data was available.
-- `large_backlog`: NOT EXERCISED — no backlog sample was available.
-- `issue_details`: NOT EXERCISED — no issue, label, assignee, or URL data was available.
-
-### With-Skill / Baseline Comparison
-
-The with-skill lane checked the empty workspace, then stopped after `gh repo view` failed in the isolated HOME. It did not invent repository state. The baseline wrote a generic roadmap without actual milestone/issue evidence.
-
-### Failures / Next Steps
-
-- Re-run with an authorized GitHub data source to exercise the three live-data assertions.
-
-### Runtime Artifact Policy
-
-- Fresh evidence remains under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-002-phase-classification/` and is not committed.
-
----
-
-The sections below are historical records from earlier runs.
-
-## Evaluation Target
-
-- Skill: `roadmap-generator` → `roadmap-gen`（PASS 结论基于旧名，待重跑验证）
-- Eval: `eval-002-phase-classification`
-- Prompt: 为 `microsoft/vscode` 生成项目路线图
-- Test set / fixture version: `evals.json` schema `1.0`; empty fixture context; live GitHub data queried on 2026-07-31
-- Candidate source: `tmp/eval-runs/issue-196-l2-3-4/roadmap-gen/eval-002-phase-classification/with_skill/`
-- Fresh baseline source: `tmp/eval-runs/issue-196-l2-3-4/roadmap-gen/eval-002-phase-classification/without_skill/`
-
-## Latest Result
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192` from `agents/product_manager/test/roadmap-gen/workspace/eval-2-phase-classification`.
+- Fixture SHA-256: `a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192`
+- Prompt SHA-256: `129b1e07f1b508c4a87a365c1e9c5e8cf169856473baee027f1d68878bcd93f2`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `74b972ac8dbd7706448e20025f6995b87c544e99309b65961f70d0e86a7bd191`
+- Skill overlay SHA-256: `bddee41393bca0a60880eaa8d81044ec84f2c1d751e6af66c6178450b19850d3`
+- Judge schema SHA-256: `828832f79453e0784207e366cba87f24e08c6f3017321b257129f96f3076509d`
+- Eval definition SHA-256: `9bebcff97f69229af9d2fc6b841c4826a4650eeb5ee2c6254e8400fa19d31afa`
+- Metadata SHA-256: `ae0af75c7768cc5a422a172a7778c85838314f028847e67a9b64a099fa24dc99`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
-- Historical result: BLOCKED
-- 注：以下 PASS 结论基于改名前的  评测记录保留；改名后待 fresh eval 重跑验证新入口。
+Overall result: PASS
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `open_closed` | PASS | Open milestones 按截止日期进入当前冲刺/近期计划，最近 5 个 closed milestones 进入“已完成”。 |
-| `large_backlog` | PASS | Live 查询到 9,986 个未关联 milestone 的 open issue，仅列 20 条并汇总其余 9,966 条。 |
-| `issue_details` | PASS | 1.132.0 issue 按 Agent/Chat、修复、API/功能、工程/发布分组，保留 checkbox、assignee 与链接。 |
+| `open_closed` | PASS | with_skill 文档将 August/September 标为当前冲刺与近期计划，并将 closed 的 July milestone 放入“已完成”区域。 |
+| `large_backlog` | PASS | with_skill 文档明确 backlog 总数 128、实际获取 6 条，仅列出 3 条，其余 122 条未列出，保持摘要可读。 |
+| `issue_details` | PASS | with_skill 文档按标签/类型分组展示 issue，并为各 issue 保留 GitHub 链接、标签和 assignee/unassigned 状态。 |
 
-## With Skill
+## With-Skill Behavior
 
-- 完整区分 open/closed milestone，并在同一文档保留进度、日期阶段和已完成区域。
-- 对超大 backlog 执行明确的 20 条截断，保留总数而不展开 9,986 条。
-- Issue 分组使用仓库标签与主题语义，保留 assignee 和 GitHub 链接；空 milestone 仍显示并注明无 issue。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=129b1e07f1b508c4a87a365c1e9c5e8cf169856473baee027f1d68878bcd93f2; fixture_sha256=a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192; output_sha256=aafa4138e6d96f306c9e5ea32c5eb643eb7b6dd32647a7d5b37333e03db79c8c; snapshot_sha256=8d42f15c91d81bbee8814012ce6e14b59931f65e54e82ad2b4b8cc18a2bf1503
+- Behavior: 完整生成并交付路线图，满足全部三项断言。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- 生成了简洁的版本阶段路线图，能保留部分 issue 链接、assignee 和主题分组。
-- 没有呈现最近 closed milestone 的“已完成”区域，也没有查询并压缩 9,986 条未关联 milestone 的 backlog；因此在 `open_closed` 与 `large_backlog` 上弱于 with-skill。
-- Baseline 更接近优先级规划摘要，with-skill 更完整地执行了 eval 的 GitHub 同步契约。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=129b1e07f1b508c4a87a365c1e9c5e8cf169856473baee027f1d68878bcd93f2; fixture_sha256=a264a565b80cdab16388e48390a97336c870c675ea266e111b6f98276cf41192; output_sha256=6dcc72ef9a96a0def639ce1d93d84adfacac5b8afd783476d9e4996657ecce60; snapshot_sha256=bf58ec5257f4abb6d6f56c4a92df7274d0ca5715c712aa7adc4da2bd6356ef42
+- Behavior: 也生成了可用路线图并满足全部三项断言；作为比较基线记录。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
 - None.
-- `release-blocker` 场景未命中，但它不属于本 eval 的 assertions，不影响 Coverage result。
-
-## Next Steps
-
-- 保留此 eval，持续验证 open/closed 分类、超大 backlog 压缩和 issue 细节保留。
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 本轮 `with_skill`、fresh `without_skill`、transcript、final message 与生成的 roadmap 仅存于 `tmp/eval-runs/`。
-- Git 只提交本 `comparison.md`；运行期产物不提交。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

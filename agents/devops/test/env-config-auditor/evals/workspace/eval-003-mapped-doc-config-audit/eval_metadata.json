@@ -2,10 +2,20 @@
   "eval_id": "eval-003-mapped-doc-config-audit",
   "eval_name": "mapped-doc-config-audit",
   "workspace_root": "agents/devops/test/env-config-auditor/evals/workspace/eval-003-mapped-doc-config-audit",
-  "prompt": "审计 src/config/required.env 定义的运行时变量要求，判断 API_TOKEN 是否为必填配置。",
   "fixture_context": [
     "src/config/required.env",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/runtime-config.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

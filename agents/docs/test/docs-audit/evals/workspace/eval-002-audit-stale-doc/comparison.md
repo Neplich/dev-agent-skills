@@ -1,70 +1,60 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `docs-audit`
 - Eval: `eval-002-audit-stale-doc`
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture version: docs-audit A2 / 2026-07-19
-- Assertions: 4
-
-## Latest Result
-
-- Overall result: PASS
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| `marks_missing_doc_update_suspect` | PASS | FAIL | with_skill 报告明确写明 required page 的确定性状态为 `suspect`，随后事实层判为 `stale`；without_skill 直接判为 stale，未标记 `suspect`。 |
-| `confirms_outdated_claim_stale` | PASS | PASS | 两条 lane 均核对 `src/catalog/routes.txt`：新增必填非空 `locale` 与 `400 invalid_locale`，而 `catalog.md` 未声明，均确认文档为 stale。 |
-| `blocks_stale_release` | PASS | FAIL | with_skill 报告 frontmatter 为 `phase_result: blocked`，并明确“不可 `ready_for_tag`”；without_skill 仅为 `status: fail`，未形成 pre-tag `blocked` 结果。 |
-| `does_not_stamp_stale_set` | PASS | PASS | 两条 lane 的 `catalog.md` 和 `change-map.yaml` 仍为 `last_verified_version: v1.0.0`，且均不存在或更新 `.meta/releases.json`；报告也明确未执行版本戳更新。 |
-
-未满足断言（with/without 任一 FAIL）：``marks_missing_doc_update_suspect``、``blocks_stale_release``
-
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `7c0329b08b7d983c3fb25be26c421ff6963478e62486e2e0e75d22d246186583` from `agents/docs/test/docs-audit/evals/workspace/eval-002-audit-stale-doc`.
+- Fixture SHA-256: `7c0329b08b7d983c3fb25be26c421ff6963478e62486e2e0e75d22d246186583`
+- Prompt SHA-256: `a0986a693a041b20341e8fc74006f156b719dab648f0efc1ee18f7a27b8849f4`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `6c436d29e1c4d967534d387d71455397c2a958eb0e9fdd8f24d404e3a4bfc7c7`
+- Eval definition SHA-256: `65171d2c00ad7205a3b92eb523639da0ae1b9b851f9b225fb39f151ac8a09d1b`
+- Metadata SHA-256: `393d49433e1e9b818095a60378e27c82e27a5159f0878e57881a2872b5feee91`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-| Assertion | Result | Evidence summary |
+| Assertion | Result | Evidence |
 | --- | --- | --- |
-| `marks_missing_doc_update_suspect` | PASS | required doc 未同批更新时仅标 `suspect` 并送事实层，没有直接等同于 stale。 |
-| `confirms_outdated_claim_stale` | PASS | 当前代码要求非空 `locale` 并定义 400 `invalid_locale`，文档遗漏，事实层判 `stale`。 |
-| `blocks_stale_release` | PASS | 报告列出同步文档、补齐 release surfaces、重审的待办，结果 `blocked`。 |
-| `does_not_stamp_stale_set` | PASS | 页面版本保持 `v1.0.0`，未创建或修改 `.meta/releases.json`。 |
+| `marks_missing_doc_update_suspect` | PASS | 报告的“Deterministic impact”明确说明必需页面未在 base-to-target diff 中更新，因此进入事实审查时标记为 `suspect`。 |
+| `confirms_outdated_claim_stale` | PASS | 报告以目标代码 blob 为证据，确认 `locale` 必填非空并存在 `400 {"code": "invalid_locale"}`，随后将文档结论定为 `stale`。 |
+| `blocks_stale_release` | PASS | 报告结果为 `blocked`，列出 stale 页面证据及更新文档后重新审计等具体待办，并明确未执行 tag 操作且未返回 `ready_for_tag`。 |
+| `does_not_stamp_stale_set` | PASS | 报告明确写出“No page was stamped”，且目标树没有 `.meta/releases.json`；文档的 `last_verified_version` 保持为 `v1.0.0`。 |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- 来源：本轮 fresh session `019f7a73-2dfe-7763-a3a0-e6156e81de1b`，位于 `tmp/eval-runs/117/eval-002-audit-stale-doc/with_skill/`。
-- 候选持久化契约路径报告，清楚区分确定性 `suspect` 与事实层 `stale`。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a0986a693a041b20341e8fc74006f156b719dab648f0efc1ee18f7a27b8849f4; fixture_sha256=7c0329b08b7d983c3fb25be26c421ff6963478e62486e2e0e75d22d246186583; output_sha256=f548f1e435668a919e740752f08347fe8e91d96eae537e2284575c40aaa83861; snapshot_sha256=b510e4dcdd8ee892520bac506cf355a2ce699b54aa4bcbfddb54bea690de79df
+- Behavior: 完成正式文档审计，识别 suspect、经事实核验确认 stale，并以 blocked 结果阻止版本盖章和发布操作。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+## Fresh Without-Skill Baseline
 
-- 来源：本轮独立 fresh session `019f7a77-668b-7f93-b7db-5e4a32d4d4d0`，同一 prompt 与 pristine fixture；未复用历史 baseline。
-- baseline 同样识别 stale 和 blocked，但报告位于 `.eval/audit-report.md`，未完整体现版本表面与契约化报告路径。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a0986a693a041b20341e8fc74006f156b719dab648f0efc1ee18f7a27b8849f4; fixture_sha256=7c0329b08b7d983c3fb25be26c421ff6963478e62486e2e0e75d22d246186583; output_sha256=cd07cf3d7db5e15199afce0f99febb20947a1a5e6d3915894fb5c31ac15f5735; snapshot_sha256=c327e63cd185bf04976939bce8907b505f7cbd832509ebd95570461c80f3156e
+- Behavior: 生成了审计报告并指出文档遗漏 locale、invalid_locale 和旧验证版本，但未展示确定性 suspect 到事实层 stale 的审计链路，也未明确 blocked、未盖章和具体发布阻塞控制。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+## Failures and Next Steps
 
-- 无 assertion failure。合成 refs 通过 `.eval/actual-diff.patch` 复现，属于 harness 限制，不是协议缺陷。
-
-## Next Steps
-
-- 保留本结果；suspect/stale 判定规则变化时重跑。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 本轮运行期证据仅位于 `tmp/eval-runs/117/`，不提交；durable 产物仅为本 `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

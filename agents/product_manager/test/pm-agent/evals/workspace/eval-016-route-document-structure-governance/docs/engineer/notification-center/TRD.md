@@ -7,7 +7,7 @@ parent_feature: "N/A"
 feature_level: "1"
 version: "1.0.0"
 status: Confirmed
-author: "Engineer Fixture"
+author: "Notification Engineering Team"
 date: "2026-07-21"
 last_updated: "2026-07-21"
 ---

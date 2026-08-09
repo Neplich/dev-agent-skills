@@ -2,10 +2,19 @@
   "eval_id": "eval-008-feature-path-mismatch-blocked",
   "eval_name": "feature-path-mismatch-blocked",
   "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-008-feature-path-mismatch-blocked",
-  "prompt": "请根据 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/TRD.md 实现 Chat History Search。两份文档记录的功能路径不一致：PRD 是 chat-interface/history-search，TRD 是 chat-interface。",
   "fixture_context": [
-    "README.md",
     "docs/pm/chat-interface/history-search/PRD.md",
     "docs/engineer/chat-interface/TRD.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

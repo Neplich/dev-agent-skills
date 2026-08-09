@@ -3,16 +3,16 @@ title: "Notification Center Decisions"
 type: DECISIONS
 version: "1.0.0"
 status: Approved
-author: "Eval Fixture"
+author: "Notification Product Team"
 date: "2026-04-06"
-generated_by: "fixture"
+generated_by: "product"
 related_docs:
   - "docs/pm/notification-center/PRD.md"
   - "docs/engineer/notification-center/TRD.md"
 changelog:
   - version: "1.0.0"
     date: "2026-04-06"
-    changes: "Initial fixture"
+    changes: "Confirmed initial notification decisions"
 ---
 
 # Confirmed Decisions

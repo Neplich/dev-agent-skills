@@ -12,8 +12,3 @@
 2. Apply a filter pill.
 3. Confirm the results list updates.
 4. Confirm keyboard focus remains usable between filters and results.
-
-## Deduplication
-
-Exploratory findings for this same flow should update this TC or its script,
-not create a second synonymous TC.

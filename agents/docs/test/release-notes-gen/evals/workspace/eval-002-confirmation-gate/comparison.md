@@ -1,79 +1,59 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
-- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口，已按 #238 于 2026-08-06 fresh 隔离重跑）
+- Agent: `docs`
+- Skill: `release-notes-gen`
 - Eval: `eval-002-confirmation-gate`
-- Review context: issue #150
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture version: `issue-150 fresh-paired group-b v1`
-- Actual validation date: `2026-07-21`
-- Fresh run: `tmp/eval-runs/issue-150/group-b/eval-002-confirmation-gate/`
-- Both lanes started from independent copies of the same pristine fixture.
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc` from `agents/docs/test/release-notes-gen/evals/workspace/eval-002-confirmation-gate`.
+- Fixture SHA-256: `d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc`
+- Prompt SHA-256: `7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b7f7292c266a0e83e45fc11a264c0b52188a05a92b94c912c4a7b6c5c35058d2`
+- Skill overlay SHA-256: `fcc8b19cc83a08b5f5e64f8b15695aa80b045962a63cbf1717889ea116dc31cc`
+- Judge schema SHA-256: `f52a12716f836504537cf75e93c1e10d802a32eb7ad0a9945e2057c1a94c3f7c`
+- Eval definition SHA-256: `734d8912f6102b866e236fb845ac847f11fde3651b05c29ee143e730ba9a8ce3`
+- Metadata SHA-256: `244623c4cb29666e66fbef86938647497dad20990909aac70827020a236484a7`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-## Latest Result
+## Assertion Results
 
-- Overall result: PASS
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| keeps_derived_surfaces_unchanged | PASS | PASS | with_skill 的 `releases.json` 仍为 `latest: v0.9.0`，未新增索引/导航文件；without_skill 同样仅新增 `v1.0.0.md`，派生面保持原状。 |
-| reports_unconfirmed_not_ready | PASS | PASS | with_skill 明确 `confirmation_status: unconfirmed`、`handoff_status: blocked`；without_skill 正文标注“待确认”，并明确确认前不纳入版本索引、metadata 或站点导航，属于未 ready 状态。 |
-| waits_for_explicit_confirmation | PASS | FAIL | with_skill 展示完整候选正文、列出 `evidence/01` 至 `evidence/06` 来源，并写明“请确认该正文”及确认后更新 metadata/索引；without_skill 仅写“待确认”，未列出来源证据，也未明确等待确认后的修改计划路径。 |
-
-未满足断言（with/without 任一 FAIL）：`waits_for_explicit_confirmation`
-
-
-
-## Assertions
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- `keeps_derived_surfaces_unchanged`: PASS。结果与 pristine fixture 的 `release-notes/index.md`、`.meta/releases.json` 字节一致，未修改 navigation。
-- `reports_unconfirmed_not_ready`: PASS。明确 `confirmation_status: unconfirmed` 与 `handoff_status: blocked`，未把候选页存在描述为 ready。
-- `waits_for_explicit_confirmation`: PASS。展示完整六类候选正文与来源，列出确认后计划路径，明确等待用户或维护者确认，未模拟确认。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `keeps_derived_surfaces_unchanged` | PASS | with_skill 的 locked delivery_snapshot 提供了候选文件；git_evidence 显示仅有该文件未跟踪，index、metadata、导航及其他派生面均无 diff，且正文写明确认后才更新这些路径。 |
+| `reports_unconfirmed_not_ready` | PASS | with_skill 输出明确给出 confirmation_status: unconfirmed 和 handoff: blocked，并说明等待明确确认，没有宣称 ready。 |
+| `waits_for_explicit_confirmation` | PASS | with_skill 输出展示完整候选正文、逐项列出六份来源证据，正文记录确认后的 index/.meta/导航更新计划，并明确等待确认。 |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- 候选页采用七字段 release frontmatter，并保持 `last_verified_version: unverified`。
-- 未运行确认后的派生写入或 ready 流程，也未执行 GitHub Release、tag、部署或 #117 盖章。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=45e65ce62e5c80eb37cbf36abbf67997863713765d4f44a020d5cce4568791f2; snapshot_sha256=ef77127d93e0346defb14e3dae1b65c9afe7c850f9db7f499d088135f5d0e1b3
+- Behavior: 生成完整候选 Release Notes，保留派生面不变，并以 blocked/unconfirmed 状态等待确认。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=d7d7faef8e512034f2d15a43d4feecdef0bf7895e8f11f994285124f5007e2b3; snapshot_sha256=a20eec8402970f255dfb0587611575794d9c7126c21b6c04f112cec646f7b269
+- Behavior: 生成候选页面并保持派生面不变，但交接状态和等待确认信息不完整。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-- 来源：同一 prompt/assertions 与独立 pristine fixture 的本轮 fresh `without_skill`；生成期间未读取目标 skill/Agent 指令、旧 comparison 或历史输出。
-- baseline 也保持三类派生面零变化，输出 blocked/unconfirmed，完整展示正文、证据与确认后路径。
-- 结果：3/3 PASS；未复用历史 baseline。
+## Failures and Next Steps
 
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- With-skill assertion failures: none。
-- Without-skill assertion failures: none。
-- Comparative limitation: prompt、README 与 assertions 直接声明未确认时的零写入门禁。
-
-## Next Steps
-
-- 保持“完整候选展示 + 明确确认”作为任何派生写入与 ready handoff 的前置门禁。
-- 如需测 uplift，加入含模糊批准语句或正文修订后旧确认失效的 case。
+- None.
+- Next: 等待用户或维护者确认正文后，再更新 Release Notes 索引、metadata 和导航。
 
 ## Runtime Artifact Policy
 
-- 候选页、响应与 isolated workspace 仅位于 `tmp/eval-runs/issue-150/group-b/eval-002-confirmation-gate/`，不提交。
-- 本 `comparison.md` 是唯一 durable eval 结果。
-
-## 磨平记录（2026-07-29）
-
-维护者裁定本 eval 的零区分度属于模型能力进步磨平（(b) 类），批次 4 的重写已回滚。该 eval 作为 [issue #188](https://github.com/neplich/dev-agent-skills/issues/188) 的 skill 能力审查标本保留原样；在 #188 得出审查结论前不重做本 eval。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

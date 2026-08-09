@@ -1,3 +1,5 @@
-# Docker Deployment Fixture
+# Docker Deployment
 
-The service already has a Docker deployment path. CI/CD automation is the current missing piece.
+The service is packaged through the files in this directory. Production uses
+the same image contract as staging, with environment-specific values supplied
+outside the image.

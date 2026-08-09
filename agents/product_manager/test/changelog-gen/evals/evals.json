@@ -7,9 +7,30 @@
       "id": "eval-001-unreleased-mode",
       "name": "unreleased-mode",
       "description": "Verifies that changelog-gen handles unreleased-mode and produces the expected role-specific artifact.",
-      "prompt": "我在 https://github.com/anthropics/anthropic-sdk-python 这个仓库里工作。帮我生成 Unreleased 章节 —— 也就是最新 release tag 之后合并的所有 PR，写成 Keep a Changelog 格式，输出到 docs/changelog/changelog-unreleased.md。",
-      "workspace": "workspace/eval-001-unreleased-mode",
+      "scenario": {
+        "persona": "负责维护版本变更记录的发布负责人",
+        "situation": "该仓库在最近一个 release tag 之后又合并了一批用户可见变更，但尚未形成 Unreleased 记录。",
+        "trigger": "准备下一轮发布前，维护者需要汇总最新 tag 之后尚未记录的合并内容。",
+        "goal": "生成从最新 tag 起、带 PR 引用且只含真实外部影响的 Unreleased 章节。",
+        "materials": [
+          "release-evidence/unreleased-export.json 中的最新 tag 与其后合并 PR"
+        ],
+        "constraints": [
+          "范围从最新 release tag 之后开始",
+          "排除 bot 与纯内部维护变更",
+          "写入指定 Unreleased 文件"
+        ],
+        "success_criteria": [
+          "输出包含 ## [Unreleased] 标题",
+          "每个条目包含 PR 链接，格式为 (#数字)",
+          "跳过了 bot PR（dependabot 等）",
+          "不包含 chore/ci/test 等内部变更",
+          "输出写入了 docs/changelog/changelog-unreleased.md 文件"
+        ]
+      },
+      "prompt": "我把 anthropics/anthropic-sdk-python 最新 tag 之后的提交和 PR 记录导出到 `release-evidence/unreleased-export.json`。请基于这份证据生成 Keep a Changelog 的 Unreleased 章节，输出到 `docs/changelog/changelog-unreleased.md`。",
       "expected_output": "生成 ## [Unreleased] 章节，包含最新 release 之后的 PR 列表，按 Added/Changed/Fixed 分组，每条带 PR 链接，写入 docs/changelog/changelog-unreleased.md",
+      "workspace": "workspace/eval-001-unreleased-mode",
       "assertions": [
         {
           "id": "unreleased",
@@ -42,9 +63,30 @@
       "id": "eval-002-single-version-mode",
       "name": "single-version-mode",
       "description": "Verifies that changelog-gen handles single-version-mode and produces the expected role-specific artifact.",
-      "prompt": "在 https://github.com/anthropics/anthropic-sdk-python 仓库，帮我生成最新 release 版本的 changelog 条目，使用 Keep a Changelog 格式，包含该版本对应的所有 PR 引用，并写入 docs/changelog/changelog-v{version}.md。",
-      "workspace": "workspace/eval-002-single-version-mode",
+      "scenario": {
+        "persona": "负责维护版本变更记录的发布负责人",
+        "situation": "最新 release 已经发布，维护者需要补齐与该 tag 精确对应的单版本变更记录。",
+        "trigger": "最新 release 已落地，版本归档需要补上与 tag 一致的 changelog 文件。",
+        "goal": "生成与最新 release tag 和发布日期一致的单版本 changelog 文件。",
+        "materials": [
+          "release-evidence/release-export.json 中的 tag 窗口、合并 PR 与发布时间"
+        ],
+        "constraints": [
+          "版本号、日期和窗口必须来自导出的 release 证据",
+          "只输出有内容的分类",
+          "每条保留 PR 引用"
+        ],
+        "success_criteria": [
+          "输出包含带 v 前缀的版本号和日期，格式 ## [v{VERSION}] - YYYY-MM-DD",
+          "版本号与实际 release tag 匹配",
+          "PR 条目标题经过清洗（去掉 conventional commit 前缀）",
+          "Breaking change 如有则带 ⚠️ BREAKING 前缀",
+          "有内容的 section 才出现在输出中"
+        ]
+      },
+      "prompt": "我把 anthropics/anthropic-sdk-python 最新 release 的 tag 窗口和 PR 记录导出到 `release-evidence/release-export.json`。请基于这份证据生成该版本的 Keep a Changelog 条目，包含窗口内所有应收录的 PR 引用，并写入对应的 `docs/changelog/changelog-v{version}.md`。",
       "expected_output": "生成最新 release tag 的版本块，格式为 ## [v{VERSION}] - YYYY-MM-DD，包含该版本窗口内的 PR，分组写入，每条带 PR 链接，并写入 docs/changelog/changelog-v{version}.md",
+      "workspace": "workspace/eval-002-single-version-mode",
       "assertions": [
         {
           "id": "v_version_yyyy_mm_dd",
@@ -77,9 +119,38 @@
       "id": "eval-003-prefix-classification",
       "name": "prefix-classification",
       "description": "Verifies that changelog-gen handles conventional prefix classification plus semantic review for docs/test/ci PRs.",
-      "prompt": "以下是一批 PR 标题和正文，帮我把它们分类到 Keep a Changelog 的各个章节（Added/Changed/Fixed/Deprecated/Removed/Security），并按格式输出，跳过不需要出现在 changelog 的条目。注意：docs/test/ci 不能只按前缀跳过，需要根据正文判断是否影响用户可见能力、skill 行为、eval 契约、release workflow、installation 或协作边界。\n\n- feat(auth): add OAuth2 login support (#101)\n  Body: Adds a new OAuth2 login flow for users.\n- fix: resolve crash when token expires (#102)\n  Body: Fixes a user-visible crash.\n- chore(deps): bump requests from 2.28 to 2.31 (#103)\n  Body: Dependency maintenance only.\n- build(deps): bump vite from 5.0.0 to 5.0.1 (#114)\n  Body: Dependency maintenance only.\n- perf: reduce API response time by caching (#104)\n  Body: Improves response time.\n- feat!: redesign plugin configuration API (#105)\n  Body: BREAKING CHANGE: plugin configuration fields changed.\n- docs: update release notes generator publishing workflow (#106)\n  Body: Adds GitHub draft release, changelog preflight, tag retargeting, and publishing review rules used by release owners.\n- test: tighten changelog-gen eval contract (#107)\n  Body: Updates eval assertions and durable comparison requirements so docs/test/ci PRs are judged by semantic impact.\n- ci: require repository and eval contract checks before release (#108)\n  Body: Changes required release gates for this skill marketplace.\n- docs: fix typo in README heading (#109)\n  Body: Copyediting only; no behavior or workflow change.\n- ci: tune cache restore key (#110)\n  Body: Internal cache maintenance only; no release gate change.\n- fix(ui): correct button alignment on mobile (#111)\n  Body: Fixes visible UI layout.\n- remove: drop Python 3.7 support (#112)\n  Body: Removes unsupported runtime.\n- security: patch XSS vulnerability in template renderer (#113)\n  Body: Fixes a security vulnerability.",
-      "workspace": "workspace/eval-003-prefix-classification",
+      "scenario": {
+        "persona": "负责维护版本变更记录的发布负责人",
+        "situation": "待发布 PR 同时包含功能、修复、维护和流程变更，单看 conventional commit 前缀会漏掉用户与发布方可见影响。",
+        "trigger": "发布候选清单已形成，但混合前缀不足以判断哪些变化值得对外记录。",
+        "goal": "把混合 PR 按实际影响归入正确章节，并排除纯内部维护项。",
+        "materials": [
+          "用户在请求中逐条给出的 14 个 PR 标题与正文"
+        ],
+        "constraints": [
+          "按正文语义而非只看前缀分类",
+          "纯依赖、排版和缓存维护不进入记录",
+          "破坏性与安全变化需显式标注"
+        ],
+        "success_criteria": [
+          "feat(auth) → Added 章节，标题清洗为 Add OAuth2 login support",
+          "fix → Fixed 章节",
+          "chore(deps) → 跳过，不出现在输出",
+          "build(deps) → 跳过，不出现在输出",
+          "perf → Changed 章节",
+          "feat! → Added 章节，带 ⚠️ BREAKING 前缀",
+          "docs PR 正文描述 release workflow / changelog preflight 影响时进入 Changed 章节",
+          "test PR 正文改变发布验收结果或持久证据要求时进入 Changed 章节",
+          "ci PR 正文描述 release gate 或 required check 影响时进入 Changed 章节",
+          "formatting-only docs → 跳过",
+          "cache-only ci → 跳过",
+          "remove → Removed 章节",
+          "security → Security 章节"
+        ]
+      },
+      "prompt": "以下是一批待发布 PR 的标题和正文。请整理成 Keep a Changelog 的 Added、Changed、Fixed、Deprecated、Removed 和 Security 章节；根据实际影响保留对用户或发布维护者有意义的变化，纯内部维护项跳过。\n\n- feat(auth): add OAuth2 login support (#101)\n  Body: Adds a new OAuth2 login flow for users.\n- fix: resolve crash when token expires (#102)\n  Body: Fixes a user-visible crash.\n- chore(deps): bump requests from 2.28 to 2.31 (#103)\n  Body: Dependency maintenance only.\n- build(deps): bump vite from 5.0.0 to 5.0.1 (#114)\n  Body: Dependency maintenance only.\n- perf: reduce API response time by caching (#104)\n  Body: Improves response time.\n- feat!: redesign plugin configuration API (#105)\n  Body: BREAKING CHANGE: plugin configuration fields changed.\n- docs: update release publishing workflow (#106)\n  Body: Adds GitHub draft release, changelog preflight, tag retargeting, and publishing review rules used by release owners.\n- test: tighten release acceptance coverage (#107)\n  Body: Changes release-owner review results and durable evidence required before publishing.\n- ci: require repository checks before release (#108)\n  Body: Changes required release gates for this marketplace.\n- docs: fix typo in README heading (#109)\n  Body: Copyediting only; no behavior or workflow change.\n- ci: tune cache restore key (#110)\n  Body: Internal cache maintenance only; no release gate change.\n- fix(ui): correct button alignment on mobile (#111)\n  Body: Fixes visible UI layout.\n- remove: drop Python 3.7 support (#112)\n  Body: Removes unsupported runtime.\n- security: patch XSS vulnerability in template renderer (#113)\n  Body: Fixes a security vulnerability.",
       "expected_output": "Added: feat items. Changed: perf items plus docs/test/ci items with semantic impact. Fixed: fix items. Removed: remove items. Security: security items. 跳过 chore(deps)、build(deps)、formatting-only docs 和 cache-only ci。Breaking change (#105) 带 ⚠️ BREAKING 前缀。",
+      "workspace": "workspace/eval-003-prefix-classification",
       "assertions": [
         {
           "id": "feat_auth_added_add_oauth2_login_support",
@@ -108,8 +179,8 @@
         },
         {
           "id": "feat_added_breaking",
-          "description": "feat! → Added 章节，带 ⚠️ BREAKING 前缀",
-          "text": "feat! → Added 章节，带 ⚠️ BREAKING 前缀"
+          "description": "breaking API redesign → Changed 章节并显著标记",
+          "text": "对既有 plugin configuration API 的 breaking redesign 按实际用户影响进入 Changed 章节，并使用清晰的 BREAKING 标记；不只按 feat! 前缀机械归入 Added。"
         },
         {
           "id": "docs_release_workflow_changed",
@@ -117,14 +188,14 @@
           "text": "docs PR 正文描述 GitHub draft release、changelog preflight、tag retargeting 或 publishing review 影响时进入 Changed 章节，而不是仅凭 docs 前缀跳过"
         },
         {
-          "id": "test_eval_contract_changed",
-          "description": "test PR 正文描述 eval assertion 或 durable comparison 契约影响时进入 Changed 章节",
-          "text": "test PR 正文描述 eval assertions、durable comparison 或语义判断契约影响时进入 Changed 章节，而不是仅凭 test 前缀跳过"
+          "id": "test_release_acceptance_changed",
+          "description": "test PR 正文改变发布验收结果或持久证据要求时进入 Changed 章节",
+          "text": "test PR 正文改变 release-owner review 结果或发布前持久证据要求时进入 Changed 章节，而不是仅凭 test 前缀跳过"
         },
         {
           "id": "ci_release_gate_changed",
           "description": "ci PR 正文描述 release gate 或 required check 影响时进入 Changed 章节",
-          "text": "ci PR 正文描述 required release gates、repository contract 或 eval contract checks 影响时进入 Changed 章节，而不是仅凭 ci 前缀跳过"
+          "text": "ci PR 正文描述 required release gates 或 repository checks 影响时进入 Changed 章节，而不是仅凭 ci 前缀跳过"
         },
         {
           "id": "docs_typo_skipped",

@@ -2,5 +2,19 @@
   "eval_id": "eval-006-small-bug-fix-plan-gate",
   "eval_name": "small-bug-fix-plan-gate",
   "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-006-small-bug-fix-plan-gate",
-  "prompt": "通知中心 active 列表没有排除 archived，已经确认这是实现偏离 PRD/TRD，不是需求变更；根因是 src/api/notifications.ts 的过滤条件少了 archived。请修复这个单文件问题。"
+  "fixture_context": [
+    "docs/pm/notifications/PRD.md",
+    "docs/engineer/notifications/TRD.md"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

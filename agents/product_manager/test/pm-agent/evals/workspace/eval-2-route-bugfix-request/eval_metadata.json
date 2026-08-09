@@ -2,8 +2,18 @@
   "eval_id": "eval-002-route-bugfix-request",
   "eval_name": "route-bugfix-request",
   "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-2-route-bugfix-request",
-  "prompt": "用户说：帮我修这个登录 bug，错误日志显示 token 过期后页面一直转圈。请判断应该怎么分类、先确认什么，再交给谁处理。",
   "fixture_context": [
     "README.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -1,64 +1,59 @@
-# Eval Result: eval-010-change-tier-hotfix-fast-lane
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `pm-agent`
 - Eval: `eval-010-change-tier-hotfix-fast-lane`
-- Workspace: `eval-10-change-tier-hotfix-fast-lane`
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Fixture version: current tracked fixture at the start of the 2026-08-07 run.
-- Fresh run: 2026-08-07 (Asia/Shanghai).
-- Candidate and independent judge: `gpt-5.6-luna`, `model_reasoning_effort="medium"`.
-- Isolation: identical raw prompt and fixture snapshot; all baseline roots were snapshotted in memory and destroyed before any with-skill root; all with-skill roots were destroyed before judging; HOME/CODEX_HOME values matched per eval and were reset for every lane; only `auth.json` was copied into CODEX_HOME.
-- Runtime evidence: `tmp/eval-runs/issue-238-pm/fresh-20260807/pm-agent/eval-010-change-tier-hotfix-fast-lane/`.
-
-## Latest result:
-
-- Behavior result: FAIL — determined only from the with-skill lane by an independent judge.
-- Coverage result: FULL — 3/3 with-skill assertion scenarios were exercised.
-Overall result: FAIL
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-10-change-tier-hotfix-fast-lane`.
+- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Prompt SHA-256: `c8036aad85835ee733e12f58737233d7e9bc1a90da347bec50e7094cf58797ad`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0b60a8fdef1023247fb430f4647e03f742c09fbfdb17e32a3a03dc6059ae9e02`
+- Skill overlay SHA-256: `7093347dda9d009dc74c5bd9b37b3d0d8b980466e82f7a4efbacd767a0e9fa19`
+- Judge schema SHA-256: `bb0ee0282945f3d4f9dce339b9d8538e36a23ce40cb0cf92b33dc2be95234be0`
+- Eval definition SHA-256: `47a19a6c15b443fba6827b5bff8e5f73b3367c26176898038b1822e6a445e0c6`
+- Metadata SHA-256: `dd7edb355d66e4505d2039e9fe3eb4eb203c3d8b2cfcc299410f099efef7e166`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
 
-- `classify_hotfix`: with-skill **PASS**; without-skill **FAIL** — with_skill 明确给出 change_tier: hotfix，并说明范围仅为 README 链接、功能预期不变且已有本地验证；without_skill 未给出 hotfix 分类。
-- `allow_fast_lane`: with-skill **PASS**; without-skill **FAIL** — with_skill 明确写出可走 hotfix fast lane；without_skill 未提及 fast lane。
-- `preserve_evidence`: with-skill **FAIL**; without-skill **FAIL** — with_skill 提到了范围和验证，但未明确要求保留 source evidence；without_skill 也未要求保留 scope、source evidence、verification evidence。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `classify_hotfix` | PASS | The with_skill output explicitly sets `change_tier: hotfix` and explains that the README-only link correction changes no functionality or approved expectations. |
+| `allow_fast_lane` | PASS | The with_skill output sets `fast_lane: allowed_after_classification`, explicitly preserving the required ordering. |
+| `preserve_evidence` | PASS | The with_skill output records confirmed scope, non-goals, source documents, and the user’s local link-opening confirmation; it also requires verification in the delivery output. |
 
 ## With-Skill Behavior
 
-完成 hotfix 分类并允许 fast lane，但未完整落实三类证据的保留要求。状态正常返回且无文件变化；trace 未显示写入或外部 mutation。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c8036aad85835ee733e12f58737233d7e9bc1a90da347bec50e7094cf58797ad; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=22cb11d2dd713cb7adea5cef21be84be345bae255e90158f135c49a54593ac4d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly classifies the request as a hotfix, allows fast lane only after classification, preserves scope/source/verification evidence, and reports the delivery-agent blocker.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-未完成 PM 分类和 fast-lane 判断，仅检查工作区后报告无法修改。状态正常返回且无文件变化。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c8036aad85835ee733e12f58737233d7e9bc1a90da347bec50e7094cf58797ad; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=90dba0aa687a79b2b94044775dc49fba5bfba17f5507c643123b9fb989b8fe22; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline reports inability to proceed and does not provide the requested classification or routing guidance.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-The baseline is comparison evidence only; its outcome does not affect `Overall result`.
-
-## Failures
-
-- with_skill 未满足 preserve_evidence：缺少 source evidence 的明确保留要求。
-
-## Coverage Gaps
+## Failures and Next Steps
 
 - None.
+- Next: Install or enable engineer-agent, then execute the delivery handoff and verification.
 
-## Blockers
+## Runtime Artifact Policy
 
-- None.
-
-## Historical Result (Pre-#234)
-
-- The previous durable result recorded Behavior **PASS**, Coverage **FULL**, and Overall **BLOCKED** after issue #234 identified prompt/fixture leakage.
-- That pre-remediation result is retained only as history and is superseded by this strict fresh run.
-
-## Next Steps
-
-- Fix the with-skill failures listed above, then rerun this eval with the same strict isolation and independent-judge protocol.
-
-## Runtime Artifacts Policy
-
-- Candidate responses, traces, status manifests, isolation records, and judge evidence remain under the gitignored runtime path above and are not committed.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

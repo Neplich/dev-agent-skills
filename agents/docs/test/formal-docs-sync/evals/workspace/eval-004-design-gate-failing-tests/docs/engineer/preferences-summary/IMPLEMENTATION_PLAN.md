@@ -29,4 +29,4 @@ Maintainer confirmation: confirmed for implementation.
 
 ## Closeout
 
-All code scope entries are complete and covered by `.eval/actual-diff.patch`. Test completion remains subject to the execution record.
+All code scope entries are complete and covered by `delivery-evidence/actual-diff.patch`. Test completion remains subject to the execution record.

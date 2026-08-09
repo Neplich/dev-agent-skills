@@ -1,73 +1,59 @@
-# Eval Result: eval-003-feature-path-missing-plan-blocked
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `qa`
 - Skill: `qa-agent`
 - Eval: `eval-003-feature-path-missing-plan-blocked`
-- Test case: feature-path-missing-plan-blocked
-- Workspace: `workspace/eval-3-feature-path-missing-plan-blocked`
-- Natural user prompt:
 
-> 用户说：account/profile/preferences 已经开发完成，请基于 docs/pm/account/profile/preferences/PRD.md 和 docs/engineer/account/profile/preferences/TRD.md 更新并执行 E2E 验收。docs/qa/e2e/account/profile/preferences/ 目录也存在。
+## Current Result
 
-- Expected artifact: QA 路由决策必须识别 feature_path account/profile/preferences，读取同路径 PRD/TRD 和 QA 功能树，但因为缺少 docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md 而 blocked，不创建、更新或执行 E2E acceptance TC
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc` from `agents/qa/test/qa-agent/evals/workspace/eval-3-feature-path-missing-plan-blocked`.
+- Fixture SHA-256: `39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc`
+- Prompt SHA-256: `094ec5b09f42125c7ea3b42f7f8365ddf4bd40bef6652060cfeb7ff368908608`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `d70112827b0542d867a7689306d190b9c9a901f0d16faf502ff69330466e810c`
+- Skill overlay SHA-256: `fda3e87e887ba889a897540771dbb1fdc6d424a530b084850bba0cba716a1567`
+- Judge schema SHA-256: `7c827cee8609863280607c031efdc95a92d32b851664d68126eccd9d66c1f27a`
+- Eval definition SHA-256: `ffa490cd1f58367914b109adc50e94706c92cbf66e7c95942ae329d3f9a191c7`
+- Metadata SHA-256: `aa798ca118679678c2fef882d4726badd357a387202dcb387aceaa4b86696bd0`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
-## Test Set / Fixture Version
+## Assertion Results
 
-- Schema: `evals.json` v1.0，使用 source HEAD `47adbbc9` 的当前 prompt、assertions 与 fixture。
-- Fresh run window: 2026-08-07 00:26:03 至 00:42:04（Asia/Shanghai）。
-- Runtime root: `/tmp/qa-fresh-evals-20260807-002603-9bd07750/qa-agent--eval-003-feature-path-missing-plan-blocked/`。
-- Fixture identity: 两条 lane 的初始可见 fixture manifest 完全相同，SHA-256 为 `dc46f6e9c1ab17c986802148894541b71552a8bbd96ec33756b90f15b25e1a45`。
-- Lane isolation: 先完成并销毁全部 15 个 `without_skill` 独立随机顶层临时 root，再创建任何 `with_skill` root；`with_skill` 按 target skill 分组执行，每条 lane 都使用独立顶层 workspace、`HOME`、`CODEX_HOME` 和 temp 目录，不存在 candidate 可读取的 sibling lane。
-- Controlled variable: 两条 lane 使用逐字相同 prompt、相同 fixture manifest、相同隔离配置和同一份认证材料；唯一显式变量是 `with_skill` 的隔离 `CODEX_HOME` 安装并加载目标 QA skill，`without_skill` 的目标 skill 加载次数为 0。
-- Evidence isolation: 30 个 candidate 全部结束且临时 root 全部销毁后，才将内存中的 candidate、tool trace 和最终 workspace 快照持久化到 runtime root。
-- Candidate leakage audit: 两条 lane 均未命中 `eval_metadata.json`、`evals/evals.json`、`comparison.md`、expected output、assertions 或 judge schema。
-- Judge: candidate 全部结束后，第三个独立随机顶层、只读 fresh Codex 会话实际检查两条 candidate 输出、JSONL tool trace、status 和最终 workspace 快照，再按当前 assertions 判定。
-- Runtime health: candidate 与 judge 均 `rc=0`、无 timeout；judge root 已销毁。
-
-## Latest Result
-
-- Behavior result: **FAIL**（PASS 2 / FAIL 1 / NOT EXERCISED 0）
-- Coverage result: **FULL**
-Overall result: FAIL
-
-## Invalidated Prior Run
-
-上一轮 QA paired run 将 `with_skill` 与 `without_skill` 放在可交叉读取的 sibling 路径，物理隔离不合格；该轮 candidate、baseline、judge 与结论全部作废，未作为本轮输入，也不保留为当前结果。本文件的当前结论仅来自 `qa-fresh-evals-20260807-002603-9bd07750`。
-
-## Assertions
-
-| Assertion | With skill | With-skill evidence | Without skill | Baseline evidence |
-| --- | --- | --- | --- | --- |
-| `reads_same_feature_path`<br>同路径上下文 | PASS | transcript item_2 明确将请求归类为基于 PRD/TRD 的文档化 E2E 验收；item_1/3/5 读取同路径 PRD、TRD、FLOW_INDEX、TEST_SUITE，并确认 feature_path 为 account/profile/preferences。最终快照保留四个同路径文件。 | PASS | transcript item_1/2 读取同路径 PRD、TRD、FLOW_INDEX、TEST_SUITE；快照保留相同四个文件，PRD/TRD 中的 feature_path 与 QA 路径均一致。 |
-| `specialist_gate_pointer`<br>Specialist 权威门禁指针 | FAIL | 虽然 transcript item_2 和最终 candidate.md 选择了 spec-based-tester，但输出没有完整声明该 specialist 的权威 E2E memory、platform version、credential、execution entry、PRD/TRD/implementation plan 与 blocked-condition 门禁适用；并且 item_6/candidate.md 详细展开了缺少 IMPLEMENTATION_PLAN、禁止创建/更新/执行 TC、技能缺失等阻塞与交接协议。断言明确规定展开复述即 FAIL。 | FAIL | candidate.md 未声明选中的 specialist，也未提供 required gate pointer；仅说明缺少 IMPLEMENTATION_PLAN 并复述阻塞条件。该无条件路由输出要求缺失，判 FAIL。 |
-| `keeps_single_route`<br>单一路由 | PASS | transcript item_2 只选择一个最窄 route：spec-based-tester；没有并行调用多个 QA skill、执行 specialist 协议、修改实现或修复代码。item_1/3/5 仅为文档读取和缺失文件检查。 | FAIL | transcript 与 candidate.md 没有选择明确的 QA route/specialist；仅停止于前置文件检查。因此未满足必须选择一个最窄 QA route 的无条件要求。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_same_feature_path` | NOT_EXERCISED | The with_skill output names `account/profile/preferences` and lists the same-path PRD, TRD, and QA files, but the locked raw evidence cannot independently prove the read operation itself. |
+| `specialist_gate_pointer` | PASS | The output selects `spec-based-tester` as the continuing execution owner, identifies the missing implementation plan and other execution prerequisites, and states that no E2E assets were created or run; clean git evidence supports no mutation. |
+| `keeps_single_route` | PASS | The with_skill lane selects one narrow route, `spec-based-tester`, and explicitly does not create cases, reports, results, or execute E2E. |
 
 ## With-Skill Behavior
 
-with_skill 正确识别并读取同路径 PRD/TRD 与 QA 功能树，选择 spec-based-tester，且最终快照无写入、无执行产物；但路由输出复述了缺少 implementation plan、阻塞和交接协议，违反 specialist gate pointer。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=094ec5b09f42125c7ea3b42f7f8365ddf4bd40bef6652060cfeb7ff368908608; fixture_sha256=39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc; output_sha256=63e204e6cf2ec296783a1711537e0494b8ebc5540cde45787cac4a5b0b0a347b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly routes the work to one specialist and stops at the missing-material gate without mutating QA assets.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-without_skill 的 fixture 与最终快照和 with_skill 完全一致，也未写入或执行 E2E；但未完成 specialist 路由指针输出，且未明确选择唯一 QA route，仅作 baseline 对照。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=094ec5b09f42125c7ea3b42f7f8365ddf4bd40bef6652060cfeb7ff368908608; fixture_sha256=39ecc1af9722a7aadd83ae04a9403edca1017d45bde6a98a57d2d87ccb7702dc; output_sha256=504836b62d5129a2efc0e90cb341d07138e072e951ffc9d135dd6b7a8945a12d; snapshot_sha256=923d8947c5a061536adbc80a9ac422971e43d32e548fd9103f4dc882c279bb1a
+- Behavior: Provides a fresh baseline that attempts execution, mutates QA assets, and reports blocked cases without the specialist routing behavior.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- with_skill 的 specialist_gate_pointer 失败：路由输出缺失完整权威门禁指针，并展开复述了 blocked-condition、交接和执行阻塞协议。
-- without_skill 的 specialist_gate_pointer 与 keeps_single_route 均失败；这是 baseline 对照，不改变当前 with_skill 结果。
+- None.
+- Next: Provide the missing implementation plan and execution materials, then have the selected specialist perform the E2E acceptance.
 
-## Not Exercised
+## Runtime Artifact Policy
 
-- 无。
-
-## Next Steps
-
-- 补齐并确认 docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md 后，重新运行该 QA 路由评估。
-- 修正 qa-agent 输出：只声明 spec-based-tester 及其权威门禁适用，不在 router 层复述 specialist 的阻塞、交接或执行协议。
-
-## Runtime Artifacts Policy
-
-- Candidate command: `codex exec --skip-git-repo-check -C <isolated-workspace> -s workspace-write --ephemeral --ignore-user-config --ignore-rules -m gpt-5.6-luna -c 'model_reasoning_effort="medium"' --json -o <runtime-output> -`。
-- Judge 使用同一模型与 reasoning effort，在独立 `read-only` root 中按结构化 output schema 判定。
-- candidate、baseline、transcript、verdict、fixture snapshots、status、timing 与 diagnostics 仅保留于上述 `/tmp` runtime root，不提交到 git；仓库只更新 canonical `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

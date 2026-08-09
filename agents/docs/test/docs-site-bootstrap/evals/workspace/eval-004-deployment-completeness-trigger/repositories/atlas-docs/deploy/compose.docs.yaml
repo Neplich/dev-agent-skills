@@ -1,0 +1,13 @@
+services:
+  docs-public:
+    image: registry.example/atlas-docs:public-v1.4.0
+    healthcheck:
+      test: [CMD, wget, -qO-, http://127.0.0.1/]
+  docs-internal:
+    image: registry.example/atlas-docs:internal-v1.4.0
+    networks: [private]
+    healthcheck:
+      test: [CMD, wget, -qO-, http://127.0.0.1/]
+networks:
+  private:
+    internal: true

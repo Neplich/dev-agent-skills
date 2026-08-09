@@ -1,64 +1,59 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `formal-docs-sync`
 - Eval: `eval-014-existing-site-deployment-recheck`
-- Review context: issue #162 fresh paired validation
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture: issue #162 scenario evidence in this workspace
-- Validation date: 2026-07-22
-- Execution cleanup: all declared runtime paths were absent from pristine scratch fixtures
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `c3d3b07fc792c4084ace3c9b32ba907e4fcd07d875befcf6af84add997421b79` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-014-existing-site-deployment-recheck`.
+- Fixture SHA-256: `c3d3b07fc792c4084ace3c9b32ba907e4fcd07d875befcf6af84add997421b79`
+- Prompt SHA-256: `1fa72144e806cf52f8fd8fbc5b8cac36763c1b6d96e197c5c1ebe4dd6e004c69`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `4b8356273a26d14ecc55ebfe7a9a2e541bdc3539a06437a0f30fb3a0dc7cbd4b`
+- Eval definition SHA-256: `db9d705a02de2df76d9e1b62334995eac21d110dc172ed350d92306793043708`
+- Metadata SHA-256: `57de9e366e385164240069213a2870da7cd8d43f7b6ee6621d6856f237ac7e4c`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
-## Latest Result
+## Assertion Results
 
-- Overall result: FAIL
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| reports_existing_site_integrated | PASS | PASS | with_skill 的 `result.txt` 报告 Site A Public/Internal 构建、镜像、Compose/Helm、健康检查和访问控制“证据显示完整”；without_skill 报告 Site A“部署完整”，均列出证据且未重复执行 DevOps。 |
-| detects_partial_variant_coverage | PASS | PASS | 两条 lane 均明确列出 Site B：Public 有 Docker/tag workflow/Compose/Helm，Internal 缺少镜像任务、启动拓扑等，并判定为部分完整。 |
-| returns_gap_to_pm_read_only | FAIL | FAIL | 两条 lane 均声明只读且未修改 Dockerfile、workflow、Compose 或 Helm；但均未询问或明确返回“由 pm-agent 生成 repo-wide deployment handoff”。 |
-
-未满足断言（with/without 任一 FAIL）：`returns_gap_to_pm_read_only`
-
-
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reports_existing_site_integrated` | PASS | With_skill reports Atlas public/internal builds, Docker targets, Compose services, Helm values, CI matrix, and read-only evidence paths; it also states no deployment or build execution occurred. |
+| `detects_partial_variant_coverage` | PASS | With_skill enumerates Orbit public versus internal: internal has a build script but lacks internal Docker target, Compose service, Helm values, and CI matrix, so it cannot be published or deployed and is not complete. |
+| `returns_gap_to_pm_read_only` | NOT_EXERCISED | With_skill records that PM handoff evidence is missing and provides a blocked audit handoff while explicitly excluding deployment and documentation changes, but it does not ask the user to confirm PM-agent handoff generation; that later interactive step is not exercised. |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- 老站完整时保持 integrated 且不重放 DevOps；仅 Public 覆盖时判 partial 并只读返回 PM。
-- Candidate source: fresh `tmp/eval-runs/issue-162/with_skill/eval-014-existing-site-deployment-recheck/candidate-output.md`.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1fa72144e806cf52f8fd8fbc5b8cac36763c1b6d96e197c5c1ebe4dd6e004c69; fixture_sha256=c3d3b07fc792c4084ace3c9b32ba907e4fcd07d875befcf6af84add997421b79; output_sha256=097ec79cedfc4ce5299d6c8772dcee00315169159bc5114cda303a191d24d09f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Accurately performs a read-only configuration review, confirms Atlas coverage, detects Orbit's partial internal coverage, and records the PM handoff gap without mutations.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1fa72144e806cf52f8fd8fbc5b8cac36763c1b6d96e197c5c1ebe4dd6e004c69; fixture_sha256=c3d3b07fc792c4084ace3c9b32ba907e4fcd07d875befcf6af84add997421b79; output_sha256=54650a16846996a76a1780ba76b7afa96458131ad3c1e9b323d658e2b307964a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a fresh comparison baseline that identifies Orbit's missing internal release path but is less systematic about the full deployment-chain gaps.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-- PARTIAL (2/3)；识别完整/部分覆盖，但直接建议 DevOps，未形成 PM repo-wide 回流。
-- The same prompt and pristine fixture were used; no historical baseline, target skill, Agent README, shared skill-map, old comparison, or with-skill output was used to compose it.
+## Failures and Next Steps
 
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- baseline 未满足 PM 回流和完整角色边界。
-- No with-skill assertion failure or runner/credential blocker.
-
-## Next Steps
-
-- Keep this regression case; strengthen fixture ambiguity later where the baseline already passes.
+- None.
+- Next: Ask whether pm-agent should generate the repo-wide deployment handoff when confirmation is available.
 
 ## Runtime Artifact Policy
 
-- Runtime candidates, copied fixtures, verdict, status, and diagnostics remain under `tmp/eval-runs/issue-162/` and are not committed.
-- Only this durable comparison, eval definition, metadata, and fixture evidence are submitted.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

@@ -1,6 +1,6 @@
 # PM Handoff Packet
 
-pm-agent 已完成入口分类，并将本次角色授权安全审查路由至 authz-reviewer。
+产品管理入口已完成分类，并将本次角色授权安全审查交给安全团队。
 
 ```yaml
 request_type: security
@@ -38,8 +38,8 @@ data_categories:
   - 身份与角色数据
   - 管理操作审计数据
 remediation_expectations:
-  - 授权逻辑修复项交回 engineer-agent
-  - 正式产品预期变化回交 pm-agent 分类
+  - 授权逻辑修复项交回工程团队
+  - 正式产品预期变化回交产品管理分类
 blockers_risks:
-  - 非可信角色声明可能造成管理端越权
+  - 管理端审计数据属于高敏资源，当前角色来源及服务端授权覆盖尚待核验
 ```

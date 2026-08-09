@@ -2,10 +2,20 @@
   "eval_id": "eval-004-catalog-mapped-billing-feature",
   "eval_name": "catalog-mapped-billing-feature",
   "workspace_root": "agents/product_manager/test/feature-catalog/evals/workspace/eval-004-catalog-mapped-billing-feature",
-  "prompt": "请盘点 `src/billing/` 当前已经实现的计费功能，给出带证据与置信度的功能目录草案。",
   "fixture_context": [
     "src/billing/service.txt",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/billing.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

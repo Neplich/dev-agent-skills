@@ -1,112 +1,61 @@
-# Eval Result: eval-003-engineer-ui-maintenance-handoff
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `designer`
 - Skill: `designer-agent`
 - Eval: `eval-003-engineer-ui-maintenance-handoff`
-- Workspace: `workspace/eval-003-engineer-ui-maintenance-handoff`
-- Review context: issue #196 L2-4 router single-table convergence
-- Latest run: fresh isolated paired Codex validation and independent judge on 2026-08-07
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt and assertions: current `agents/designer/test/designer-agent/evals/evals.json`
-- Fixture documents: approved PRD and TRD for `customer-portal/profile-settings`
-- With-skill source: current Designer README, `designer-agent/SKILL.md`, eval definition, fixture, and the referenced PM handoff/closeout contract; historical comparison was not read before candidate generation.
-- Without-skill source: the same prompt and fixture in an isolated directory, without reading or applying Designer README, `designer-agent/SKILL.md`, with-skill output, assertions, historical comparison, or an old baseline.
-
-## Latest Result
-
-- Behavior result: **FAIL**
-- Coverage result: **FULL** (5/5 declared assertions exercised)
-Overall result: FAIL
-
-## Assertion Results (Current)
-
-- accepts_engineer_design_handoff: **FAIL** — the final response does not identify the request as an Engineer-sourced UI maintenance handoff.
-- uses_confirmed_feature_path: **FAIL** — the final response does not cite customer-portal/profile-settings or its aligned PRD/TRD.
-- routes_design_skills: **PASS** — information hierarchy routes to ui-ux-design and the primary button rule to visual-design.
-- writes_design_outputs_only: **FAIL** — no design deliverable is generated; the response blocks on allegedly unavailable specialists.
-- hands_back_to_engineer: **FAIL** — no explicit return to engineer-agent for TRD, plan, code, and tests.
-
-## With-Skill Behavior (Current)
-
-The candidate selects the correct specialists but falsely treats them as
-unavailable, then omits the confirmed path, deliverables, Engineer-handoff
-classification, and required return path.
-
-## Fresh Without-Skill Baseline (Current)
-
-The baseline was regenerated before the with-skill root existed, using the same
-prompt and fixture under an isolated HOME/CODEX_HOME. It produced a generic
-UI-SPEC.md and did not satisfy the router contract; it remains comparison input only.
-
-## Failures (Current)
-
-- Four of five router assertions fail; only specialist selection passes.
-
-## Next Steps (Current)
-
-- Correct installed-specialist availability handling and preserve the Engineer handoff packet in the response, then rerun.
-
-## Runtime Artifact Policy (Current)
-
-- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
-- Only this durable comparison is updated.
-
-## Historical Result (Superseded: pre-#234 contract)
-
-- Behavior result: PASS
-- Coverage result: FULL (5/5 declared assertions exercised)
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-This Engineer handoff has a confirmed path and explicitly names both information hierarchy and primary-button visual rules. It matches the dedicated Engineer UI maintenance route and does not exercise the separate “范围已确认但设计类型模糊” fallback.
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a` from `agents/designer/test/designer-agent/evals/workspace/eval-003-engineer-ui-maintenance-handoff`.
+- Fixture SHA-256: `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a`
+- Prompt SHA-256: `92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e8c75de1d6f9996313bad1fce4ede6ed7cde9c08fd07355edd02169db57e8e68`
+- Skill overlay SHA-256: `d5cce8bb3a0ed13303ab87dcabfbfd03ba8265e34d21e6c15b242afc7dcb3316`
+- Judge schema SHA-256: `642d6c7ee5330dc1af39bc9648e9c1bffdb74e1229fc98a9c317e40e13baaebf`
+- Eval definition SHA-256: `138aebdae4a1049db8b791a6754cc321fff06d447fcae99b0206d1d5aa26e929`
+- Metadata SHA-256: `f547a888a015d9e9862374a63fae63a3c03679e1e0f3c3c280b9cf0370c3b020`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
 
-| Assertion | With skill | Without skill | Evidence |
-| --- | --- | --- | --- |
-| `accepts_engineer_design_handoff` | PASS | FAIL | With skill explicitly classifies an `engineer-agent` UI maintenance design handoff; baseline directly writes generic design guidance. |
-| `uses_confirmed_feature_path` | PASS | PASS | Both retain `customer-portal/profile-settings`; with skill also states that it reads the aligned PRD/TRD. |
-| `routes_design_skills` | PASS | FAIL | With skill routes information hierarchy to `ui-ux-design` and button rules to `visual-design`; baseline names neither specialist. |
-| `writes_design_outputs_only` | PASS | FAIL | With skill names only the two canonical design files and excludes engineering work; baseline supplies design prose but no canonical artifact path. |
-| `hands_back_to_engineer` | PASS | PASS | Both return the design result to Engineer; with skill additionally names `engineer-agent` and its downstream ownership. |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `accepts_engineer_design_handoff` | PASS | With-skill output identifies an Engineer UI maintenance handoff. |
+| `uses_confirmed_feature_path` | PASS | Both delivered design files use feature_path customer-portal/profile-settings and cite the PM PRD and Engineer TRD as sources. |
+| `routes_design_skills` | PASS | The with-skill lane delivers distinct UI/UX and visual-design artifacts covering the requested hierarchy and primary-button emphasis. |
+| `writes_design_outputs_only` | PASS | Raw git evidence shows only the two requested files under docs/design/customer-portal/profile-settings were added; no code or engineering files were changed. |
+| `hands_back_to_engineer` | PASS | Output explicitly hands the work back to engineer-agent for TRD, implementation planning, frontend implementation, and tests. |
 
 ## With-Skill Behavior
 
-The candidate recognizes the request as an Engineer-sourced frontend UI design
-gap, preserves the confirmed path, selects both appropriate design specialists,
-names the two allowed design artifacts, excludes code/tests/commands/config and
-implementation lists, and returns implementation to `engineer-agent`. All 5
-assertions pass.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=a320980f13500bbc1eeb5e2867d0d2d979b967c9f74e657017adb016ee760306; snapshot_sha256=75e2180aa54c1df9a058ffb61f16a678ecef5521ab237d8b7979bb459fa6f408
+- Behavior: Completed the design handoff with UI/UX and visual-system deliverables, preserving the engineering boundary.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-The fresh baseline produces plausible design guidance and returns it to
-Engineer, but it bypasses the repository router contract: it does not classify
-the handoff, select the two specialist skills, or name the canonical durable
-files. It also introduces fixed layout and component values in prose, further
-showing that generic design guidance is not equivalent to the router's scoped
-design handoff.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=9b00abe61d6c455b8fbadd1d6e357ec079ed526894695147d44920530ded79d2; snapshot_sha256=af97cfa4a69361bf73f3c35d7f82ada31d4483f28692bbcf528d03300a0063d7
+- Behavior: Produced a generic DESIGN.md but modified the Engineer TRD and did not demonstrate the required design-skill routing or explicit handoff boundary.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- None in the with-skill candidate.
+- None.
+- Next: None.
 
-## Next Steps
+## Runtime Artifact Policy
 
-- Keep this eval as regression coverage for the dedicated Engineer UI maintenance handoff route and its design-only boundary.
-- A confirmed-scope but genuinely ambiguous design request would require a separate fixture; it was not fabricated in this run.
-
-## Runtime Artifacts Policy
-
-Paired runtime evidence is stored only under
-`tmp/eval-runs/issue-196-l2-3-4/designer-agent/eval-003-engineer-ui-maintenance-handoff/`
-as `with_skill/candidate-output.md` and
-`without_skill/baseline-output.md`. Runtime outputs, transcripts, verdicts,
-timing data, and diagnostics must not be committed. This `comparison.md` is the
-durable result.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

@@ -2,5 +2,15 @@
   "eval_id": "eval-016-route-document-structure-governance",
   "eval_name": "route-document-structure-governance",
   "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-016-route-document-structure-governance",
-  "prompt": "请只读检查 docs 下各角色的文档组织，找出过长文档、孤立目录和不同角色间路径不一致的问题，并给我一份报告。"
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

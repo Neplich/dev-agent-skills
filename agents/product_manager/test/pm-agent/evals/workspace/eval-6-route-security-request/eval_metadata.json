@@ -2,8 +2,18 @@
   "eval_id": "eval-006-route-security-request",
   "eval_name": "route-security-request",
   "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-6-route-security-request",
-  "prompt": "用户说：看下权限控制、依赖漏洞和 secrets 风险，帮我判断该怎么处理。请给出分类和交接要求。",
   "fixture_context": [
     "README.md"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

@@ -34,7 +34,7 @@ export function parseArgs(argv) {
 }
 
 async function git(args) {
-  const { stdout } = await exec('git', args, { cwd: REPO_ROOT });
+  const { stdout } = await exec(process.env.GIT_BINARY || 'git', args, { cwd: REPO_ROOT });
   return stdout;
 }
 

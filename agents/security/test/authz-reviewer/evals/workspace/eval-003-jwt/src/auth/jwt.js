@@ -6,7 +6,6 @@ export function authenticateJwt(authorizationHeader) {
   const token = authorizationHeader.replace("Bearer ", "");
   const [, payload] = token.split(".");
 
-  // The payload is trusted without verifying the signature, algorithm, or expiry.
   return decodeSegment(payload);
 }
 

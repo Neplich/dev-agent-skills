@@ -1,83 +1,60 @@
-# Eval Result: eval-007-api-adr-engineer-handoff
-
-## Latest Fresh Evaluation — 2026-08-07
-
-- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
-- Fixture: HEAD `47adbbc9`; fresh paired manifests matched exactly.
-- Behavior result: FAIL — 2/4 assertions passed.
-- Coverage result: FULL — all 4 assertion scenarios were exercised.
-Overall result: FAIL
-
-### Assertion Results
-
-- `does_not_use_pm_api_adr_generators`: FAIL — it said the artifacts are Engineer-owned but did not explicitly reject PM internal `api-gen` / `adr-gen`.
-- `routes_to_trd_gen`: PASS — routed both artifacts to `engineer-agent:trd-gen`.
-- `engineer_paths_mirror_feature_path`: PASS — used `docs/engineer/chat-interface/history-search/`.
-- `handoff_contains_feature_path_evidence`: FAIL — the handoff omitted explicit `parent_feature` and `feature_level` fields.
-
-### With-Skill / Baseline Comparison
-
-The with-skill response preserved Engineer ownership and correct paths without writing API/ADR files. The baseline proposed unrelated `docs/api/` and `docs/adr/` paths.
-
-### Failures / Next Steps
-
-- Explicitly state that PM internal API/ADR generators are not used.
-- Emit a complete handoff packet with the full feature-path metadata and decision background.
-
-### Runtime Artifact Policy
-
-- Fresh evidence remains under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-007-api-adr-engineer-handoff/` and is not committed.
-
----
-
-The sections below are historical records from earlier runs.
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `idea-to-spec`
 - Eval: `eval-007-api-adr-engineer-handoff`
-- Workspace: `workspace/iteration-3/eval-7-api-adr-engineer-handoff`
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Fixture version: HEAD `a452319`; confirmed PM PRD at `docs/pm/chat-interface/history-search/PRD.md`, with stale Engineer paths excluded by `execution_cleanup`.
-- Fresh run: `2026-08-03 11:58:20 +0800`
-- Runtime directory: `tmp/eval-runs/issue-198-brd/pm/eval-007-api-adr-engineer-handoff/`
-
-## Latest Result
-
-- Behavior result: PASS — all 4 assertions passed.
-- Coverage result: FULL — 4/4 assertion scenarios were exercised; no `NOT EXERCISED` items.
-Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116` from `agents/product_manager/test/idea-to-spec/workspace/iteration-3/eval-7-api-adr-engineer-handoff`.
+- Fixture SHA-256: `7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116`
+- Prompt SHA-256: `2ab3ca8b74dd55c90856f6dfac8c03932d3fb9eacb469271c944f9a989eec4b0`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `c0da2e0366232678672d0c64ce9fa764d3b78f3caaaa8493348af1a7e1cd00fe`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `7d015813fae4cd945c52acc28425338fd81878adf050d1ecc956ba13abe7bc00`
+- Eval definition SHA-256: `02e5d899a7687cd28d5b7fe3ed85f267cd9ce62f15d9844aa4281eff90859ac1`
+- Metadata SHA-256: `6b28964c95e54c379988fdfd7c54f486a5c872824039a926ede4358e3117f378`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
 
-- `does_not_use_pm_api_adr_generators`: PASS — states that API and ADR are Engineer-owned and PM must not generate them.
-- `routes_to_trd_gen`: PASS — explicitly hands off to `engineer-agent:trd-gen`.
-- `engineer_paths_mirror_feature_path`: PASS — requires `API.md` and `ADR-*.md` under the full Engineer feature path.
-- `handoff_contains_feature_path_evidence`: PASS — includes the feature metadata, approved PRD path, API needs, and ADR decision context.
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `does_not_use_pm_api_adr_generators` | PASS | With-skill output assigns API/ADR generation to engineer-agent:trd-gen and states PM/idea-to-spec does not generate them, satisfying the ownership boundary. |
+| `routes_to_trd_gen` | PASS | With-skill output explicitly routes the work to engineer-agent:trd-gen. |
+| `engineer_paths_mirror_feature_path` | PASS | With-skill output specifies docs/engineer/chat-interface/history-search/API.md and ADR-001-search-index-strategy.md. |
+| `handoff_contains_feature_path_evidence` | PASS | The handoff YAML includes feature_path, parent_feature, feature_level, the PRD path, and decision-background evidence for API/search-index work. |
 
 ## With-Skill Behavior
 
-The response preserves the PM/Engineer boundary, uses the confirmed PRD as the source of product truth, and leaves unknown technical constraints as blockers rather than fabricating them. It does not use BRD as a handoff source or lifecycle stage.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2ab3ca8b74dd55c90856f6dfac8c03932d3fb9eacb469271c944f9a989eec4b0; fixture_sha256=7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116; output_sha256=80fa67a50a5ece3a8947629915b40e3c096c71220aa06b547a0d15bb14afdecb; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly routes API and ADR generation to Engineer trd-gen, mirrors the feature path, and provides the required handoff evidence.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-The baseline was newly generated in this run from the same prompt and cleaned fixture, without reading or applying the target skill, Product Manager README, internal instructions, or historical comparison. It retained general Engineer ownership but omitted the precise `engineer-agent:trd-gen` route and preferred a non-canonical ADR subdirectory.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2ab3ca8b74dd55c90856f6dfac8c03932d3fb9eacb469271c944f9a989eec4b0; fixture_sha256=7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116; output_sha256=52a346aec878c3c3f192665c7b5684918358fbbcd40475334022ff19a389a59a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline suggests unrelated API/ADR owners and paths, with no Engineer trd-gen routing or feature-path handoff.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- No assertion failures or baseline blockers.
-- BRD removal caused no ownership, path, or handoff regression.
-
-## Next Steps
-
-- Keep this eval as coverage for Engineer-owned API/ADR handoff from a confirmed PRD.
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- Fresh responses and judge notes remain under `tmp/eval-runs/issue-198-brd/pm/eval-007-api-adr-engineer-handoff/` and are not committed.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

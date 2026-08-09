@@ -2,21 +2,61 @@
   "eval_id": "eval-011-post-tag-mismatch",
   "eval_name": "post-tag-mismatch",
   "workspace_root": "agents/docs/test/docs-audit/evals/workspace/eval-011-post-tag-mismatch",
-  "prompt": "请根据 `.eval/release-context.md` 中的 `v1.2.0` 发布证据完成文档审计，并说明决定性差异与后续选择。工作区内容只读，不执行真实 tag、branch 或 release 写入。",
   "execution_cleanup": [
     "docs/site/.meta/audit/audit-v1.2.0-post-tag.md"
   ],
   "fixture_context": [
-    ".eval/release-context.md",
-    ".eval/committed-audit-v1.2.0.md",
-    ".eval/committed-discovery-v1.2.0.md",
-    ".eval/tag-tree-diff.name-status",
+    "release-evidence/release-context.md",
+    "release-evidence/committed-audit-v1.2.0.md",
+    "release-evidence/committed-discovery-v1.2.0.md",
+    "release-evidence/tag-tree-diff.name-status",
+    "release-evidence/tag-tree-diff.patch",
     "docs/site/.meta/audit/audit-v1.2.0.md",
+    "docs/site/.meta/audit/handoffs/pre-tag-v1.2.0.md",
     "docs/site/api/catalog-items.md",
     "docs/site/api/catalog-status.md",
     "docs/site/release-notes/v1.2.0.md",
     "docs/site/release-notes/index.md",
     "docs/site/.meta/releases.json",
-    "package.json"
-  ]
+    "package.json",
+    "src/catalog/export-v2.py"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/docs/skills/docs-agent"
+  ],
+  "git_topology": {
+    "base_ref": "pre-tag-anchor",
+    "target_ref": "release-head",
+    "target_patch": "release-evidence/tag-tree-diff.patch",
+    "target_patch_states": {
+      "src/catalog/export-v2.py": "committed",
+      "docs/site/.meta/audit/audit-v1.2.0.md": "unstaged"
+    },
+    "base_files": [
+      {
+        "source": "release-evidence/committed-audit-v1.2.0.md",
+        "path": "docs/site/.meta/audit/audit-v1.2.0.md"
+      },
+      {
+        "source": "release-evidence/committed-discovery-v1.2.0.md",
+        "path": "docs/site/.meta/audit/handoffs/pre-tag-v1.2.0.md"
+      }
+    ],
+    "refs": [
+      {"name": "refs/heads/pre-tag-handoff", "target": "base"},
+      {"name": "refs/heads/release-evidence/v1.2.0", "target": "target"}
+    ],
+    "tags": [
+      {"name": "v1.2.0", "target": "target", "kind": "annotated"}
+    ]
+  },
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

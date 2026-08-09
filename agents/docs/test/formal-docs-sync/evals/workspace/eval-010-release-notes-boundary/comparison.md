@@ -1,93 +1,60 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `formal-docs-sync`
 - Eval: `eval-010-release-notes-boundary`
-- Scenario: 从非协议化结果语义识别独立站内版本说明工作流
-- Review context: issue #177 sub-batch 4c
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture version: `issue-177 discrimination restore round-1`
-- Validation time: `2026-07-28 23:36:25 CST`
-- Runtime: `tmp/eval-runs/issue-177/docs-release-evals/round-1/`
-- 两侧使用同一 prompt 与独立 pristine fixture；baseline 不读取目标 skill、assertions、旧 comparison 或 with-skill 输出。
-
-## Latest Result
-
-- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
-Overall result: FAIL
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| recognizes_release_communication_outcome | PASS | PASS | 两条 lane 都产出用户版本页、发布列表和 `releases.json`；with_skill 的 `result.txt` 明确列出三类站点发布材料，without_skill 也列出相同目标。 |
-| routes_complete_entry_to_site_owner | FAIL | FAIL | 两条 lane 都直接执行同步并报告“已完成”，没有将 host、版本、范围、证据边界和站点面交给 Docs owner，也没有交接记录。 |
-| keeps_entire_site_zero_diff | FAIL | FAIL | 两条 lane 的实际 diff 都新增 `docs/site/release-notes/v1.5.0.md`，并修改 `index.md` 与 `.meta/releases.json`；不满足 `docs/site/` 零写入。 |
-| preserves_external_release_boundary | PASS | PASS | 产物和执行记录只显示 `docs/site/` 内三处文档变更；未发现创建/移动 tag、创建或发布 GitHub Release，或混入外部发布授权。 |
-
-未满足断言（with/without 任一 FAIL）：`routes_complete_entry_to_site_owner`、`keeps_entire_site_zero_diff`
-
-
-
-## Leakage Surface Analysis
-
-重做前，prompt 与 assertions 直接写出 `formal-docs-sync` 必须拒绝、四类禁止 surface、准确 specialist 名和整个站点零 diff；fixture 还声明用户正在强迫错误 owner。baseline 因此可复述完整边界。
-
-重做后 prompt 只用“面向用户的本次更新页面、版本列表、发布元数据”描述目标结果；fixture 只保留 host、版本、范围、来源和目标站点面，不标注正确 owner 或越界结论。
-
-## Redesign
-
-- 按 requested outcome 而不是协议术语判断路由。
-- assertions 只检查 workflow 识别、完整入口交接、当前 specialist 零写入和外部发布边界。
-- 不在 prompt/assertions 中给出 specialist 名称或精确禁止路径清单。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-010-release-notes-boundary`.
+- Fixture SHA-256: `f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c`
+- Prompt SHA-256: `59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
+- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Judge schema SHA-256: `b3a1a852c447e6e1ef51ed958da793390c6914ade2f68188c4962daac377d01b`
+- Eval definition SHA-256: `73a1610671f9f97761837a796f3ae7908687bbe25fc17ad4582a0bb4ee5c7fae`
+- Metadata SHA-256: `2352ae604513521c63a446b6d886e6c879f4a0cef5861b4ee1c9c3ee9f319eba`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-| Assertion | With skill | Without skill | Fresh judgment |
-| --- | --- | --- | --- |
-| `recognizes_release_communication_outcome` | PASS | FAIL | with-skill 识别独立 Release Notes workflow；baseline 直接生成页面。 |
-| `routes_complete_entry_to_site_owner` | PASS | FAIL | with-skill 将 confirmed host/version/scope/evidence/surfaces 交给 `docs-agent:release-notes-gen`；baseline 无 handoff。 |
-| `keeps_entire_site_zero_diff` | PASS | FAIL | with-skill 站点零写入；baseline 新增版本页并修改 index/metadata。 |
-| `preserves_external_release_boundary` | PASS | PASS | 两侧均未执行 tag 或 GitHub Release。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `recognizes_release_communication_outcome` | PASS | with_skill 将目标识别为独立的 release-notes-gen 站内发布说明工作流，并明确不属于当前 Product 或 Ops 页面同步。 |
+| `routes_complete_entry_to_site_owner` | PASS | with_skill 的交接记录包含 release-request、v1.5.0、dashboard 10→25、目标站点页面、已接受/缺失证据及站内范围，并指向负责发布说明生成与确认的 release-notes-gen。 |
+| `keeps_entire_site_zero_diff` | PASS | with_skill 输出明确报告工作区零改动；git_status、git_diff 和 delivery_snapshot 均为空，docs/site 未发生写入。 |
+| `preserves_external_release_boundary` | PASS | with_skill 未执行或声称执行 tag、GitHub Release 或外部发布授权；git_evidence 也显示无 ref、commit 或 reflog 变化。 |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- 未加载 Product/Ops 类型模块，也未进入 current-state 页面同步。
-- 直接生成站内版本说明 specialist handoff，整个 `docs/site/` 保持 pristine。
-- Response SHA-256: `3941048d7ac38a20485a8f6a0101d59fa5be1b6566b64543584c531198ee9e69`。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=ee4c0704be1c0ebf38c4a861ced257d5b4ef55a2047a1e46334fbf34236d4037; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为站内发布说明交接，在证据门禁未通过时保持 docs/site 零写入，并保留站内范围与外部发布边界。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=59f3f4b07b3e4d027f3b554bec6c0d7c22a2923908783529642641c26634e91f; fixture_sha256=f62e3d002a3d849e5b28b313abce4433afd4885459572da3c6552b50d7fc432c; output_sha256=9639a315ce49ce35064dd18af0d0405ef3f7dceeba83de48af8b517cc880266d; snapshot_sha256=bc547f43aa4a886d2f90ca2b86c496a089952da937a27c23de80df0e7551f995
+- Behavior: 直接修改发布页面、版本列表和发布元数据，完成了用户可见产物但绕过了交接门禁与零写入要求。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-- baseline 自行新增 v1.5.0 页面、更新版本索引和 release metadata，并运行宿主检查。
-- 它保留外部 tag/GitHub Release 零写入，但没有识别当前 specialist 的站内职责边界。
-- Response SHA-256: `5b0e0bb59cf7311e9269f8ae69bbcaf1a3d22834a76d32000e0dbc6658ed8931`。
+## Failures and Next Steps
 
-## Failures And Iterations
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- Round 1 即达到区分度，无需第二轮。
-- with-skill 无 assertion failure；基础设施失败 none。
-
-## Next Steps
-
-- 保持本例为 outcome-based routing 回归，不把 specialist 名称重新泄漏到 prompt。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 两 lane workspace、responses、依赖、日志和 judge verdict 仅位于 gitignored runtime，不提交。
-- 本 `comparison.md` 是唯一 durable eval 结果。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

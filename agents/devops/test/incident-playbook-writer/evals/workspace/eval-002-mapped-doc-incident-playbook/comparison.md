@@ -1,68 +1,59 @@
-# Eval Result: eval-002-mapped-doc-incident-playbook
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `devops`
 - Skill: `incident-playbook-writer`
 - Eval: `eval-002-mapped-doc-incident-playbook`
-- Test case: `mapped-doc-incident-playbook`
-- Workspace: `agents/devops/test/incident-playbook-writer/evals/workspace/eval-002-mapped-doc-incident-playbook`
 
-## Latest Result
+## Current Result
 
-- Fresh run: `2026-08-07`（issue #238 严格隔离重跑）
-- Model: `gpt-5.6-luna`，`model_reasoning_effort=medium`
-- Isolation: baseline 使用随机顶层 root；完成后仅保存在内存快照并删除 root，随后才创建 with_skill root；with_skill root 删除后才创建独立 judge root。两条 lane 的原始 prompt、fixture snapshot、`HOME` 与 `CODEX_HOME` 值相同。
-- Judge: 独立 fresh `codex exec`，读取实际产物、final、status 与工具轨迹，对照当前 assertions 判定；不采信 lane 自评。
-- Behavior result: FAIL
-- Coverage result: PARTIAL
-- Without-skill comparison: FAIL（仅作对照，不参与 durable Overall 组合）
-
-Overall result: FAIL
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Eval definition: `agents/devops/test/incident-playbook-writer/evals/evals.json`
-- Metadata: `agents/devops/test/incident-playbook-writer/evals/workspace/eval-002-mapped-doc-incident-playbook/eval_metadata.json`
-- Expected output: 以代码事实确定告警阈值的故障处置步骤，并记录映射文档差异。
-- Fixture: `src/runtime/health.rules`, `docs/site/standards/change-map.yaml`, `docs/site/api/runtime-health.md`
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7` from `agents/devops/test/incident-playbook-writer/evals/workspace/eval-002-mapped-doc-incident-playbook`.
+- Fixture SHA-256: `cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7`
+- Prompt SHA-256: `27a471d4180c030327b87d22f79174352fdeffbbaace399da8cf913275d6b17e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `500941dffb48347901d3283054321002e2a4be37cb509882170d999b6f27485f`
+- Skill overlay SHA-256: `8bcf98d79219616ab4a2e4bf38f41850dabf91363c7e81c3766a5503c4452405`
+- Judge schema SHA-256: `6eadf49a93ad15b65779f0737c549d6122220ac6abe8a01622417bb0da199cda`
+- Eval definition SHA-256: `56f66c660609712980bbe29e190d00dff6d36c67cb844c6b5e1aa3d336dcd314`
+- Metadata SHA-256: `d30677e1d058f7ced7ac6b80a07136e834c175a519dc8964e75c167556348374`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
-| Assertion | with_skill | without_skill | Evidence |
-| --- | --- | --- | --- |
-| `reads_mapped_docs_first` | FAIL | FAIL | with_skill 先读取 change-map、代码，再读取 runtime-health.md；without_skill 先读取 health.rules，再读取文档，均未优先读取 required doc。 |
-| `verifies_against_code` | FAIL | FAIL | 两条 lane 都确认代码阈值为 5、文档值为 3；但 with_skill 未说明阈值差异对处置时机的影响，也未产出处置手册。without_skill 同样未明确说明 5 相对 3 会使告警晚两个连续失败触发。 |
-| `treats_unverified_as_low_trust` | NOT_EXERCISED | FAIL | with_skill 因缺少 PM/DevOps 交接上下文和 playbook 选择而未进入写入关键告警/回滚步骤的分支，fixture 前提不足，故不判定该断言。without_skill 虽核对了代码，但生成的回滚步骤没有代码或测试证据支撑，也未明确按 unverified 最低信任处理。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | with_skill 的锁定原始证据没有提供实际文档读取顺序或工具轨迹，无法证明优先读取该映射文档。 |
+| `verifies_against_code` | PASS | with_skill 明确核对了 src/runtime/health.rules 中的 5 次阈值，指出文档的 3 次说法，并说明按文档执行会提前两次触发处置。 |
+| `treats_unverified_as_low_trust` | PASS | with_skill 将 last_verified_version: unverified 视为低信任，使用规则文件确认告警阈值，并因缺乏部署、恢复和回滚证据而拒绝生成未经核证的可执行步骤。 |
 
 ## With-Skill Behavior
 
-- with_skill 正确识别了代码阈值 5 与文档阈值 3 的冲突，并因缺少必要上下文而阻止写入；但读取顺序不符合断言，且未说明阈值差异对处置时机的影响。覆盖度因关键步骤分支未触发而为 PARTIAL。without_skill 作为对照也未满足读取顺序和最低信任要求。
-- Workspace changes: 无文件变更。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=27a471d4180c030327b87d22f79174352fdeffbbaace399da8cf913275d6b17e; fixture_sha256=cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7; output_sha256=85f30731b1c2fb8dce2e02083a552cf53ddaf200969607e08ab6d4c9a2de01c6; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确核证了代码阈值、识别并降低未核证文档的信任度；在缺少回滚运行时证据时安全阻塞，未进行文件修改。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- baseline 在本轮重新生成，没有复用历史 baseline，也没有读取 target skill、with_skill 产物或旧 comparison。
-- Workspace changes: modified: `docs/site/api/runtime-health.md`。
-- assertion 结果见上表；baseline 只用于比较 skill 增益，不作为 durable Overall 的独立机器门禁。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=27a471d4180c030327b87d22f79174352fdeffbbaace399da8cf913275d6b17e; fixture_sha256=cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7; output_sha256=195274b079daa5a12d8ad174bd4e547b9eaac0d47ade974c363e26d936fc9511; snapshot_sha256=ffb9cffc4080bf17c22b61b00e1cf967ee3fd5b95bdded7ed63c983967953cdc
+- Behavior: 生成并修改了健康说明，修正阈值并加入处置/回滚步骤，但其锁定证据未证明读取顺序或对 unverified 文档采取最低信任。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures and Coverage Gaps
+## Failures and Next Steps
 
-- with_skill failures: `reads_mapped_docs_first`, `verifies_against_code`。
-- NOT EXERCISED: `treats_unverified_as_low_trust`；fixture 未触发对应条件分支。
-- 无模型、认证、runner 或外部服务 blocker。
-
-## Historical Result (Old Contract)
-
-- 旧结论为 PASS（3/3）；issue #234 修复 eval 泄漏后，该结论被标为 BLOCKED 等待重跑。
-- 该历史结论适用旧 eval 契约；本文件顶部的 2026-08-07 fresh 结果已取代它作为 latest durable 结论。
-
-## Next Steps
-
-- 按上表 with_skill failure 的共同根因建立后续修复项；本轮只记录结果，不修改 skill、eval 定义或 fixture。
+- None.
+- Next: 补充部署方式、上一版本恢复命令和健康恢复判据后，再生成并核验可执行的处置与回滚 runbook。
 
 ## Runtime Artifact Policy
 
-- 两条 lane、工具轨迹、状态、文件快照、judge verdict 与隔离事件只保存在 `tmp/eval-runs/issue-238-devops-strict-20260806/`，不提交 git。
-- durable 结果只保留本 `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

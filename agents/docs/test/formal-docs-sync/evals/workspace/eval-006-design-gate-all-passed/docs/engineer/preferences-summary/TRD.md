@@ -19,4 +19,4 @@ related_code:
 - `src/preferences_summary.py` formats saved values in the fixed order `language`, `timezone`, `theme`.
 - Standard output contains ordered field-value pairs; compact output joins the same pairs with separators.
 - Values that are empty are omitted before either output is created.
-- `.eval/test-results.md` records all plan-required behavior checks.
+- `delivery-evidence/test-results.md` records all plan-required behavior checks.

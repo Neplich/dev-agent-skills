@@ -7,7 +7,33 @@
       "id": "eval-001-explore-web-app",
       "name": "explore-web-app",
       "description": "Verifies that exploratory-tester handles explore-web-app and produces the expected role-specific artifact.",
-      "prompt": "对当前可访问的目标应用进行探索测试，基于产品上下文、变更范围和环境说明发现潜在问题。",
+      "scenario": {
+        "persona": "负责搜索改版质量的 QA 工程师",
+        "situation": "搜索过滤功能已实现，同路径产品、技术、计划和既有 QA 用例齐备",
+        "trigger": "发布候选进入 feature-update 探索，需要关注筛选和键盘导航的邻近风险",
+        "goal": "制定有时间边界和证据分层的搜索过滤探索方案并记录可执行结果",
+        "materials": [
+          "docs/pm/search/results/filtering/PRD.md",
+          "docs/engineer/search/results/filtering/TRD.md",
+          "docs/engineer/search/results/filtering/IMPLEMENTATION_PLAN.md",
+          "docs/qa/e2e/search/results/filtering/TEST_SUITE.md",
+          "docs/qa/e2e/search/results/filtering/FLOW_INDEX.md",
+          "docs/qa/e2e/search/results/filtering/cases/TC-001-filter-results.md",
+          "implementation/changed-surface.md",
+          "environment/qa-env.md"
+        ],
+        "constraints": [
+          "平台版本为 v0.9.0-dev",
+          "浏览器目标只有在 QA_BASE_URL 可用时才能执行",
+          "避免为已有过滤流程创建重复用例"
+        ],
+        "success_criteria": [
+          "探索章程聚焦改动面和邻近风险",
+          "确认或阻塞执行入口并保留证据",
+          "已确认问题、可疑信号和未覆盖项分开记录"
+        ]
+      },
+      "prompt": "搜索过滤刷新已经完成，相关产品、技术、实施和 QA 资料都在 `docs/` 下，改动面及环境说明也已提供。请在 15 分钟内围绕筛选、空状态和键盘导航做一次探索测试，复用现有过滤用例，并把发现与证据整理成可交接报告。",
       "workspace": "workspace/eval-1-explore-web-app",
       "expected_output": "探索测试报告，包含发现的问题列表和复现路径",
       "assertions": [
@@ -52,7 +78,32 @@
       "id": "eval-002-explore-with-custom-duration",
       "name": "explore-with-custom-duration",
       "description": "Verifies that exploratory-tester handles explore-with-custom-duration and produces the expected role-specific artifact.",
-      "prompt": "对用户指定的目标应用进行 5 分钟探索测试，按探索章程验证 changed surface、相邻风险和证据分层",
+      "scenario": {
+        "persona": "负责账户设置质量的 QA 工程师",
+        "situation": "邮件偏好内联编辑已实现，但尚未形成可复用 E2E 用例",
+        "trigger": "产品要求用五分钟快速探索 save、cancel、未保存状态和共享 toast 风险",
+        "goal": "形成五分钟探索章程，并诚实判断当前是否具备执行条件",
+        "materials": [
+          "docs/pm/account/settings/email-preferences/PRD.md",
+          "docs/engineer/account/settings/email-preferences/TRD.md",
+          "docs/engineer/account/settings/email-preferences/IMPLEMENTATION_PLAN.md",
+          "docs/qa/e2e/account/settings/email-preferences/TEST_SUITE.md",
+          "docs/qa/e2e/account/settings/email-preferences/FLOW_INDEX.md",
+          "implementation/changed-surface.md",
+          "environment/qa-env.md"
+        ],
+        "constraints": [
+          "用户指定 timebox 为 5 分钟",
+          "测试平台版本尚未记录",
+          "浏览器只在目标环境可达时使用"
+        ],
+        "success_criteria": [
+          "完整读取现有 QA memory",
+          "平台版本缺失时不开始计时或执行",
+          "报告区分确认问题、可疑信号和覆盖缺口"
+        ]
+      },
+      "prompt": "账户设置里的邮件偏好刚完成内联编辑，请按 `docs/pm/account/settings/email-preferences/PRD.md` 和现有 QA 资料做一次 5 分钟探索，重点看保存、取消、未保存状态和 toast 反馈。环境入口写在 `environment/qa-env.md`。",
       "workspace": "workspace/eval-2-explore-with-custom-duration",
       "expected_output": "5 分钟探索测试报告",
       "assertions": [
@@ -92,7 +143,27 @@
       "id": "eval-003-mapped-doc-exploration",
       "name": "mapped-doc-exploration",
       "description": "验证探索测试使用 change-map 缩小上下文，并对未核证文档与代码的冲突保留代码证据。",
-      "prompt": "围绕 src/checkout/session.rules 的结账会话超时行为制定最小探索章程，并指出应重点验证的边界。",
+      "scenario": {
+        "persona": "负责结账体验的 QA 工程师",
+        "situation": "正式说明与代码对结账会话超时时间的记录可能不同",
+        "trigger": "测试前需要决定超时边界应围绕哪个当前值展开",
+        "goal": "形成以代码核证为基础的最小探索章程",
+        "materials": [
+          "src/checkout/session.rules",
+          "docs/site/standards/change-map.yaml",
+          "docs/site/api/checkout-session.md"
+        ],
+        "constraints": [
+          "正式文档尚未完成版本核验",
+          "本轮制定章程，不启动真实计时会话"
+        ],
+        "success_criteria": [
+          "通过变更映射读取相关说明",
+          "确认代码中的实际超时值",
+          "把差异转化为边界和风险假设"
+        ]
+      },
+      "prompt": "请围绕 `src/checkout/session.rules` 的结账会话超时行为制定一个最小探索章程。仓库有变更映射和正式说明，请先核对当前真实阈值，再列出最值得验证的边界。",
       "workspace": "workspace/eval-3-mapped-doc-exploration",
       "expected_output": "以映射文档定位、代码事实核证的探索章程和风险记录。",
       "assertions": [

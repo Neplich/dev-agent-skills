@@ -1,6 +1,6 @@
 ---
 name: github-release-gen
-description: "Internal PM specialist—not a direct entry point. Invoked by pm-agent after the applicable version fact source and release-gate evidence are ready to preview, draft, or publish a traceable GitHub Release."
+description: "Preview, draft, or publish a traceable GitHub Release only after version facts and applicable site Release Notes/audit gates are ready. Use after pm-agent routes GitHub Release work."
 visibility: internal
 ---
 
@@ -29,6 +29,42 @@ and the alternate pre-tag/post-tag evidence defined here; this file's
 applicability and degraded-gate rules take precedence over site-only wording in
 the references. All reference mutation, tag-safety, latest, prerelease, and
 readback protections remain in force on both paths.
+
+## Mandatory Release Gate Summary
+
+Before any mutation, report the ordered authority chain and current state:
+`docs-agent:release-notes-gen` site Release Notes confirmation ->
+`docs-agent:docs-audit` pre-tag `ready_for_tag` -> release-owner tag creation ->
+`docs-agent:docs-audit` post-tag `release_verified` ->
+`pm-agent:github-release-gen` preview, draft, or publication. `ready_for_tag`
+permits only an inline preview or restricted draft;
+it is not tag or publish authority. Missing tags return to the release owner;
+missing post-tag evidence returns to `docs-agent:docs-audit`.
+Name the owner at the preview stage explicitly as
+`pm-agent:github-release-gen`: only after `docs-agent:release-notes-gen` confirms
+the site page and `docs-agent:docs-audit` returns `ready_for_tag` may it produce
+the submit-ready preview.
+
+Every preview includes the complete body and normalized version/prerelease
+decision. Draft commands explicitly set draft/prerelease flags, never infer or
+move `latest`, and are followed by fresh readback, atomic final update, and
+drift verification before publication. Never use `gh release create` when the
+tag is absent because it can create the tag. Any conflict between GitHub facts
+and the confirmed site/fallback source blocks and returns to the source owner.
+
+Marketplace install sections are evidence-driven: omit a platform section when
+the target tag lacks a verified pinned-install path, state that limitation
+plainly outside that platform section, and derive the closing plugin count from
+the target-tag manifest instead of memory or current HEAD. In particular, when
+the target tag lacks `TARGET_TAG` support, do not render a `### Codex` heading.
+
+Render the gate summary with explicit fields for `site_notes_handoff`,
+`ready_for_tag`, `actual_tag`, `release_verified`, `allowed_action`,
+`normalized_version`, `prerelease_flag`, `latest_policy`, `draft_command`,
+`fresh_readback`, and `publish_recheck`. If the site handoff is absent, return
+to `docs-agent:release-notes-gen`. If the tag is absent, preserve a complete
+inline preview and state that `gh release create` is forbidden because it may
+create the tag.
 
 ## Host Documentation-Site Applicability
 

@@ -1,6 +1,6 @@
 # PM Handoff Packet
 
-pm-agent 已完成入口分类，并将本次上线前安全审查路由至 security-agent。
+产品与安全负责人已确认本次审查范围和可用材料。
 
 ```yaml
 request_type: security
@@ -45,8 +45,8 @@ data_categories:
   - 审计日志
   - 平台配置数据
 remediation_expectations:
-  - 应用代码与鉴权逻辑修复项交回 engineer-agent
-  - 依赖、构建或部署配置修复项交回 devops-agent
+  - 应用代码与鉴权逻辑修复项交回 应用工程团队
+  - 依赖、构建或部署配置修复项交回 平台工程团队
 blockers_risks:
   - admin 越权是本次上线前审查的主要风险
   - 依赖 CVE 状态待扫描确认

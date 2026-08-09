@@ -1,6 +1,6 @@
 # PM Handoff Packet
 
-pm-agent 已完成入口分类，并将管理面板端点的应用安全审查路由至 appsec-checklist。
+产品与安全负责人已确认本次审查范围和可用材料。
 
 ```yaml
 request_type: security
@@ -36,7 +36,7 @@ data_categories:
   - 用户账号资料
   - 管理操作数据
 remediation_expectations:
-  - 认证与授权中间件修复项交回 engineer-agent
+  - 认证与授权中间件修复项交回 应用工程团队
   - 修复后验证匿名用户和普通用户均被拒绝
 blockers_risks:
   - 未受保护的管理端点可能允许匿名访问敏感管理能力

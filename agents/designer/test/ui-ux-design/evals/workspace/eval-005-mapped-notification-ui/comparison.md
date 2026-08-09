@@ -1,98 +1,60 @@
-# Eval Result: eval-005-mapped-notification-ui
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `designer`
 - Skill: `ui-ux-design`
 - Eval: `eval-005-mapped-notification-ui`
-- Test case: Mapped Notification UI Documentation
-- Workspace: `workspace/eval-005-mapped-notification-ui`
 
-## Test Set or Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Fixture version: HEAD `a452319`
-- Fresh run time: `2026-08-07 00:04:31 +0800`
-- Runtime directory: `tmp/eval-runs/issue-198-brd/designer/ui-ux-design/eval-005-mapped-notification-ui/`
-- Fixture: `change-map.yaml`, mapped notification document, and notification-preferences HTML
-
-## Latest Result
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `cc899f673f7067e0f23d4e43273fcee59ea0d49ecc2127d06d0f6831a3eb4d0a` from `agents/designer/test/ui-ux-design/evals/workspace/eval-005-mapped-notification-ui`.
+- Fixture SHA-256: `cc899f673f7067e0f23d4e43273fcee59ea0d49ecc2127d06d0f6831a3eb4d0a`
+- Prompt SHA-256: `2797a1f8eaaa6ec1663895e21733e03c38b2053355b7534ad87b60c49209372a`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `a26ada6a2ba843cfb4e657c89ce7c3b76b2095d2b006f263e49042916f04185f`
+- Skill overlay SHA-256: `1e46d8592a997f6f8a826742994d2b0945378f4e3503165a8d7fa4365064000f`
+- Judge schema SHA-256: `6eadf49a93ad15b65779f0737c549d6122220ac6abe8a01622417bb0da199cda`
+- Eval definition SHA-256: `25a9beaf5037d128f11073d7bdad29e775b60a170f80ba9b4b2cd556e1ef1469`
+- Metadata SHA-256: `10998afd499537d318b7152b7f04f522887c53c432e959ff9a023e23e13617cb`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
-- Coverage result: **PARTIAL** (2/3 assertions exercised; read-order evidence unavailable)
+- Coverage result: **PARTIAL**
 Overall result: PASS (partial coverage)
-
-## Assertion Results (Current)
-
-- reads_mapped_docs_first: **NOT EXERCISED** — current runtime evidence proves the mapped document was read and no unrelated formal document was used, but no persisted transcript proves read order.
-- verifies_against_code: **PASS** — the candidate identifies the unchecked HTML control and reports the conflict with the document's enabled-by-default claim.
-- treats_unverified_as_low_trust: **PASS** — last_verified_version: unverified triggers code verification and prevents blind trust in the formal document.
-
-## With-Skill Behavior (Current)
-
-The candidate correctly applies the low-trust and code-ground-truth rules,
-reports the discrepancy, and stops at the missing feature-path gate. The
-mapped-document-first ordering assertion could not be independently verified
-from the retained runtime evidence.
-
-## Fresh Without-Skill Baseline (Current)
-
-The baseline was generated before the with-skill root existed, with the same
-prompt and fixture in an independent top-level workspace under isolated
-HOME/CODEX_HOME. It edits the HTML to match the stale document, demonstrating
-the skill's code-ground-truth value; baseline behavior does not set Overall.
-
-## Failures (Current)
-
-- No behavior failure on exercised assertions.
-- Coverage gap: read order was not retained as judgeable transcript evidence.
-
-## Next Steps (Current)
-
-- Persist the fresh lane transcript on the next run to exercise reads_mapped_docs_first.
-
-## Runtime Artifact Policy (Current)
-
-- Runtime lanes and judge evidence remain in independent /tmp workspaces and are not committed.
-- Only this durable comparison is updated.
-
-## Historical Result (Superseded: pre-#234 contract)
-
-- Behavior result: **PASS**
-- Coverage result: **FULL**
-Overall result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-All three consumption-contract assertions were exercised.
 
 ## Assertion Results
 
-- `reads_mapped_docs_first`: **PASS** — the task path is reverse-mapped to the sole required document, with no unrelated formal-doc traversal.
-- `verifies_against_code`: **PASS** — the document says enabled by default while the checkbox lacks `checked`, so the current static markup is unchecked.
-- `treats_unverified_as_low_trust`: **PASS** — `last_verified_version: unverified` triggers code verification of every key claim rather than blind trust or refusal.
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 候选输出声称命中 change-map 并读取 required_docs，但锁定证据无法证明实际读取顺序。 |
+| `verifies_against_code` | PASS | 输出明确指出文档声称默认开启，而 HTML checkbox 没有 checked，实际默认关闭；与 fixture 代码一致。 |
+| `treats_unverified_as_low_trust` | PASS | 输出识别 last_verified_version 为 unverified，并据此以代码事实核对文档，而非直接采信文档。 |
 
 ## With-Skill Behavior
 
-- Preserves a structured discrepancy containing the documentation claim, HTML fact, and design impact.
-- Correctly stops at the PM handoff/feature-path gate instead of inventing a design artifact path.
-- The reached consumption and gate behavior does not use BRD; its removal causes no difference.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2797a1f8eaaa6ec1663895e21733e03c38b2053355b7534ad87b60c49209372a; fixture_sha256=cc899f673f7067e0f23d4e43273fcee59ea0d49ecc2127d06d0f6831a3eb4d0a; output_sha256=acd354ed15b7ca73f2afc582139605587a80b1f793c003b3f8718e0603585969; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别 change-map、unverified 状态及文档与代码的默认值冲突，但停止并未交付所需规格。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- This baseline was newly generated in this run from only the same prompt and fixture; it did not apply the Designer README, skill, consumption contract, with-skill output, or old comparison.
-- It notices the unchecked HTML control but does not systematically establish mapped-document-first ordering, lowest trust for `unverified`, or structured discrepancy evidence.
-- It contains no BRD reference.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2797a1f8eaaa6ec1663895e21733e03c38b2053355b7534ad87b60c49209372a; fixture_sha256=cc899f673f7067e0f23d4e43273fcee59ea0d49ecc2127d06d0f6831a3eb4d0a; output_sha256=b27de1dd06d01e9bfaf94150fb4803db81799361ceaee52301accca5f9371dba; snapshot_sha256=600cffa6deebcd12de1ee149eb83b10b8254a6ee57b7ea9eacf9082daa0290aa
+- Behavior: 交付了 UI/UX 规格文档，并正确记录 checkbox 默认关闭及文档冲突。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- None.
-
-## Next Steps
-
-- No skill or fixture correction is required for this case.
+- with_skill 未生成用户请求的 UI/UX 设计规格或交接文档。
+- 以缺少已确认 PM scope/feature_path 为由阻塞，但任务和代码落点已由提示明确给出。
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- Runtime candidates, fresh baseline, and judge evidence remain under the ignored runtime directory and are not committed.
-- Only this durable `comparison.md` is updated.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

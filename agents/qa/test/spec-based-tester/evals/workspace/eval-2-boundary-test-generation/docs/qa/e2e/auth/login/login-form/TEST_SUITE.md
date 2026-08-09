@@ -14,4 +14,4 @@ Platform version: `v1.2.0-rc.1`
 
 The repo package exposes `npm test -- login-boundaries`, so the repo harness is
 the preferred execution path for this TC. Browser checks use Chrome only when
-the harness cannot cover a user-visible assertion.
+the harness cannot cover a user-visible requirement.

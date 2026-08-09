@@ -1,12 +1,21 @@
 ---
 name: cicd-bootstrap
-description: "Internal DevOps specialist—not a direct entry point. Invoked by devops-agent after pm-agent handoff to add or update CI/CD automation, GitHub Actions, and release workflow configuration."
+description: "Add or update CI/CD automation, GitHub Actions, build checks, image workflows, and release workflow configuration from confirmed operational evidence. Use after devops-agent routes the CI/CD scope."
 visibility: internal
 ---
 
 # CI/CD Bootstrap
 
 Generate CI/CD pipeline configurations that automate testing, building, and deployment based on the deployment strategy (local/docker/helm).
+
+## Mandatory Automation Evidence
+
+When a change map exists, record the mapped documents read first, their
+freshness, and the code/workflow evidence used to verify every command, target,
+and release claim. `unverified` documents are low-trust navigation only.
+Creating a workflow never authorizes commit, deployment, publication, tagging,
+or release; report each unexecuted delivery action separately and preserve its
+owner and approval boundary.
 
 ## When to Use
 
@@ -26,11 +35,11 @@ confirmed release or automation context. Confirmed repo-wide CI/CD work may use
 context, return the request to `pm-agent` for classification.
 
 Use the PM-side packet definition in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 ## Context Preflight
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（`agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 Before writing CI/CD config, inspect:
 

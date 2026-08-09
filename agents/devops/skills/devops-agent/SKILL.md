@@ -1,6 +1,6 @@
 ---
 name: devops-agent
-description: "Downstream DevOps router invoked after pm-agent handoff. Classifies confirmed operational scope across deployment planning, runtime packaging, CI/CD, environment audits, release readiness, rollback, and runbook work, then delegates to DevOps specialists."
+description: "Classify and route confirmed deployment, runtime packaging, CI/CD, environment-audit, release-readiness, rollback, and runbook requests. Use immediately after a PM operational handoff and before any DevOps specialist executes."
 visibility: internal
 ---
 
@@ -10,6 +10,16 @@ visibility: internal
 request is about deployment setup, delivery automation, configuration
 governance, or operational readiness, then routes to the narrowest downstream
 DevOps skill.
+
+## Mandatory Routing Decision
+
+Before any specialist work, state the accepted entry basis, selected DevOps
+specialist or ordered chain, preserved source evidence, scope, and required
+output. A documentation-site completeness remediation keeps ownership
+separate: DevOps may plan deployment units, CI, configuration, and runtime
+verification, but it must not modify formal documentation or treat workflow
+creation as authorization to commit, deploy, publish, tag, or release. Preserve
+those authority boundaries explicitly in the handoff.
 
 ## Role Boundary
 
@@ -38,7 +48,7 @@ DevOps skill.
 DevOps is a downstream router. Before routing, require an explicit PM handoff
 packet or equivalent confirmed operational context. The PM-side packet fields
 are defined in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 
 - If the user directly asks `devops-agent` or a DevOps specialist for
   deployment, CI, config, release, rollback, or runbook work without PM handoff
@@ -119,7 +129,7 @@ When routing is complete:
   docs under `docs/devops/{feature_path}/` or `deploy/`
 - after the routed skill or role stage completes, apply the cross-role
   safety-net closeout defined in
-  `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`
+  the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
   (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
   next step, request confirmation before continuing, and honor user-enabled
   `auto-continue`

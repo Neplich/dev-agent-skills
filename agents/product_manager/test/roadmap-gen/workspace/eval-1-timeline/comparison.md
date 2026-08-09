@@ -1,90 +1,59 @@
-# Eval Result: roadmap-timeline
+# Issue #246 Evaluation Result
 
-## Latest Fresh Evaluation — 2026-08-07
+## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `roadmap-gen`
 - Eval: `eval-001-timeline`
-- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
-- Fixture: HEAD `47adbbc9`; both lanes used the same empty fixture manifest.
-- Behavior result: PASS — the exercised path correctly stopped on unavailable GitHub authentication.
-- Coverage result: PARTIAL — 0/3 assertion scenarios could be exercised because no milestone/issue data was available.
-Overall result: PASS (partial coverage)
 
-### Assertion Results
+## Current Result
 
-- `phase_classification`: NOT EXERCISED — no milestone data was available.
-- `undated_semantic_inference`: NOT EXERCISED — no undated milestones were available.
-- `roadmap_artifacts`: NOT EXERCISED — no live-data roadmap could be generated.
-
-### With-Skill / Baseline Comparison
-
-The trace first checked for an existing roadmap, then `gh auth status` and `gh repo view` failed in the intentionally isolated HOME. The with-skill lane surfaced the authentication blocker and wrote no synthetic roadmap. The baseline wrote a roadmap, but it is comparison evidence only.
-
-### Failures / Next Steps
-
-- Re-run with a separately authorized GitHub fixture or authenticated isolated `gh` context; do not reuse historical live data.
-
-### Runtime Artifact Policy
-
-- Fresh evidence remains under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-001-timeline/` and is not committed.
-
----
-
-The sections below are historical records from earlier runs.
-
-## Evaluation Target
-
-- Skill: `roadmap-generator` → `roadmap-gen`（PASS 结论基于旧名，待重跑验证）
-- Eval: `eval-001-timeline`
-- Prompt: 为 `flutter/flutter` 生成完整项目路线图
-- Test set / fixture version: `evals.json` schema `1.0`; empty fixture context; live GitHub data queried on 2026-07-31
-- Candidate source: `tmp/eval-runs/issue-196-l2-3-4/roadmap-gen/eval-001-timeline/with_skill/`
-- Fresh baseline source: `tmp/eval-runs/issue-196-l2-3-4/roadmap-gen/eval-001-timeline/without_skill/`
-
-## Latest Result
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1114e9e115cfb91a2f09d56b7563aa8c7433df316dc5fe8c86e2dd3614f9d165` from `agents/product_manager/test/roadmap-gen/workspace/eval-1-timeline`.
+- Fixture SHA-256: `1114e9e115cfb91a2f09d56b7563aa8c7433df316dc5fe8c86e2dd3614f9d165`
+- Prompt SHA-256: `ccc64c80301839b5d15a311cba6ab8a69fb955dea99cdfd947a735556c9d9e63`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `74b972ac8dbd7706448e20025f6995b87c544e99309b65961f70d0e86a7bd191`
+- Skill overlay SHA-256: `bddee41393bca0a60880eaa8d81044ec84f2c1d751e6af66c6178450b19850d3`
+- Judge schema SHA-256: `c9231138562bec2ed562cf0d8c1ec94b96debb390ee547b6815473c326c64b09`
+- Eval definition SHA-256: `d6df04c011109b2d27a14aaefa7802d9d9c0af801e4acce9ed37afdc4c26a731`
+- Metadata SHA-256: `c374d15583cb501346d3285d30669c9dbaf58b19f95661d07d8aeac8332d8ba1`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
-- Coverage result: **PARTIAL**
-- Historical result: BLOCKED
-- 注：以下 PASS 结论基于改名前的  评测记录保留；改名后待 fresh eval 重跑验证新入口。
-
-未覆盖场景：
-
-- `phase_classification` 的 90 天以上 open dated milestone 分支未触发；live 数据只有逾期/30 天内与 31–90 天 milestone。
-- `undated_semantic_inference` 的“无日期 milestone 可按 semver 匹配”分支未触发；6 个无日期 open milestone 都是非 semver 名称。无法匹配后列出并交用户确认的分支已触发。
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `phase_classification` | PASS | Q2/Q3 cutoff 按逾期或 30 天内归入当前冲刺，Q4 cutoff 按 31–90 天归入近期计划；没有捏造远期 milestone。 |
-| `undated_semantic_inference` | PASS | 6 个非 semver、无日期 milestone 单列为“需维护者确认阶段”，没有自动归入“未排期”或虚构日期。 |
-| `roadmap_artifacts` | PASS | 输出含 16 字符进度条、dated milestone Mermaid Gantt、issue checkbox 与 GitHub 链接。 |
+| `phase_classification` | PASS | with_skill 的 roadmap.md 将有截止日期的 3.36.0、3.37.0、4.0.0 分为当前冲刺、近期计划和远期规划，并单列已完成 3.35.0。 |
+| `undated_semantic_inference` | PASS | with_skill 对无日期的 3.38.0 基于当前版本 3.35.0 和后续 minor 版本语义暂列远期规划并要求确认；对无法匹配语义的 Rendering research 标记待维护者分类，未归入未排期且未捏造日期。 |
+| `roadmap_artifacts` | PASS | with_skill 的 roadmap.md 包含 Unicode 进度条、Mermaid gantt、issue 的开放/关闭状态，以及 milestone 和 issue 的 GitHub 链接。 |
 
-## With Skill
+## With-Skill Behavior
 
-- 严格用 `due_on` 分类有日期 milestone，并对无日期 milestone 进入语义推断路径。
-- 对无法可靠匹配 semver 的 6 个 milestone 保留证据、逐项提出确认问题，没有使用固定“未排期”兜底。
-- Backlog 截断为 20 条并保留总数；空 milestone、无 assignee、最近关闭 milestone 和未触发场景均显式说明。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ccc64c80301839b5d15a311cba6ab8a69fb955dea99cdfd947a735556c9d9e63; fixture_sha256=1114e9e115cfb91a2f09d56b7563aa8c7433df316dc5fe8c86e2dd3614f9d165; output_sha256=5c560594e26c4cfa05c89d1dd1a03fe814daaa4a847be8d35ae99c4dee6fecb5; snapshot_sha256=f357b31aa25ac18efa1a0872e49b7df378c42f2b4d4f12a7a5f0c43ef68912ca
+- Behavior: 生成了符合要求的 docs/roadmap.md，正确处理日期阶段、无日期 milestone 语义和路线图证据。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- 同样正确处理了 dated milestone、进度、issue 链接和 Mermaid Gantt，基础路线图质量与 with-skill 接近。
-- 但把 6 个无日期工程 milestone 直接归入“⚪ 未排期工程主题”，没有先按版本语义尝试匹配并把无法匹配项交用户确认，不满足新契约。
-- Milestone 语义推断的区分度在本样本上主要来自“未匹配处理”：with-skill 遵守确认边界，baseline 使用了固定未排期兜底。由于 live 数据没有可匹配的无日期 semver milestone，本轮不能证明两者在成功语义匹配分支上的差异。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ccc64c80301839b5d15a311cba6ab8a69fb955dea99cdfd947a735556c9d9e63; fixture_sha256=1114e9e115cfb91a2f09d56b7563aa8c7433df316dc5fe8c86e2dd3614f9d165; output_sha256=f04ab3dbbb0d7f991a69f21648697629dae6320d99df6faebb389c2dd0a4fdf8; snapshot_sha256=1a1a4dbeb71a699d27ff46ed6ccb182c04f7d80952b83691d17133022c9e057f
+- Behavior: 也生成了路线图，但将无日期 milestone 直接标为未排期，未提供 Mermaid Gantt，且进度汇总与原始快照计数不一致。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- Behavior failure: none.
-- Coverage gap: 90 天以上 dated milestone 与可匹配的无日期 semver milestone 均未出现。
-
-## Next Steps
-
-- 保留此 eval，后续 live 数据出现可匹配的无日期 semver milestone 时再观察成功推断分支。
-- 不为补齐 coverage 人工制造 GitHub milestone 或日期。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 本轮 `with_skill`、fresh `without_skill`、transcript、final message 与生成的 roadmap 仅存于 `tmp/eval-runs/`。
-- Git 只提交本 `comparison.md`；运行期产物不提交。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

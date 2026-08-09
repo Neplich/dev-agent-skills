@@ -1,0 +1,9 @@
+diff --git a/src/catalog/routes.txt b/src/catalog/routes.txt
+--- a/src/catalog/routes.txt
++++ b/src/catalog/routes.txt
+@@ -1,4 +1,4 @@
+-ROUTE POST /catalog/items
++ROUTE GET /catalog/items
+ AUTH public
+ QUERY none
+ SUCCESS 200 {"items": []}

@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import json
 import subprocess
 import sys
@@ -70,6 +71,29 @@ def init_git_main(root: Path) -> None:
 
 
 class EvalContractTests(unittest.TestCase):
+    @staticmethod
+    def valid_scenario() -> dict:
+        return {
+            "persona": "support engineer",
+            "situation": "a customer-reported failure is under investigation",
+            "trigger": "the failure started after a deploy",
+            "goal": "identify the evidence-backed cause",
+            "materials": ["application logs"],
+            "constraints": ["do not modify production"],
+            "success_criteria": ["a reviewer can trace the conclusion to evidence"],
+        }
+
+    @staticmethod
+    def valid_runtime_isolation() -> dict:
+        return {
+            "processes": "not_used",
+            "ports": "not_used",
+            "database": "not_used",
+            "browser": "not_used",
+            "login_state": "not_used",
+            "downloads": "not_used",
+        }
+
     def write_eval_fixture(self, root: Path, comparison_text: str) -> Path:
         evals_path = root / "agents/engineer/test/debugger/evals/evals.json"
         skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
@@ -83,6 +107,8 @@ class EvalContractTests(unittest.TestCase):
                 {
                     "eval_id": "eval-001-baseline-evidence",
                     "eval_name": "baseline-evidence",
+                    "skill_dependencies": [],
+                    "runtime_isolation": self.valid_runtime_isolation(),
                 }
             )
         )
@@ -97,6 +123,7 @@ class EvalContractTests(unittest.TestCase):
                             "id": "eval-001-baseline-evidence",
                             "name": "baseline-evidence",
                             "description": "Baseline evidence fixture",
+                            "scenario": self.valid_scenario(),
                             "prompt": "Run the eval",
                             "workspace": "workspace/eval-001-baseline-evidence",
                             "expected_output": "A result",
@@ -338,6 +365,8 @@ class EvalContractTests(unittest.TestCase):
                     {
                         "eval_id": "eval-001-fixture-transcript",
                         "eval_name": "fixture-transcript",
+                        "skill_dependencies": [],
+                        "runtime_isolation": self.valid_runtime_isolation(),
                         "fixture_context": [
                             "fixtures/customer-interview/transcript.md",
                             "fixtures/diagnostics/readme.md",
@@ -356,6 +385,7 @@ class EvalContractTests(unittest.TestCase):
                                 "id": "eval-001-fixture-transcript",
                                 "name": "fixture-transcript",
                                 "description": "Valid fixture transcript input",
+                                "scenario": self.valid_scenario(),
                                 "prompt": "Run the eval",
                                 "workspace": "workspace/eval-001-fixture-transcript",
                                 "expected_output": "A result",
@@ -515,6 +545,8 @@ class EvalContractTests(unittest.TestCase):
                     {
                         "eval_id": "eval-001-cleanup-only",
                         "eval_name": "cleanup-only",
+                        "skill_dependencies": [],
+                        "runtime_isolation": self.valid_runtime_isolation(),
                         "execution_cleanup": ["docs/pm/"],
                     }
                 )
@@ -530,6 +562,7 @@ class EvalContractTests(unittest.TestCase):
                                 "id": "eval-001-cleanup-only",
                                 "name": "cleanup-only",
                                 "description": "Valid cleanup-only metadata",
+                                "scenario": self.valid_scenario(),
                                 "prompt": "Run the eval",
                                 "workspace": "workspace/eval-001-cleanup-only",
                                 "expected_output": "A result",
@@ -552,6 +585,53 @@ class EvalContractTests(unittest.TestCase):
             "\n".join(error.render(root) for error in errors),
             "",
         )
+
+    def test_eval_contract_validates_bounded_git_topology(self):
+        checker = load_checker_module()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(root, "# Comparison\n")
+            workspace = evals_path.parent / "workspace/eval-001-baseline-evidence"
+            patch = workspace / "release-evidence/change.patch"
+            patch.parent.mkdir()
+            (workspace / "a").write_text("new\n", encoding="utf-8")
+            patch.write_text(
+                "diff --git a/a b/a\n--- a/a\n+++ b/a\n@@ -1 +1 @@\n-old\n+new\n",
+                encoding="utf-8",
+            )
+            metadata_path = workspace / "eval_metadata.json"
+            metadata = json.loads(metadata_path.read_text())
+            metadata["git_topology"] = {
+                "base_ref": "v1.0.0",
+                "target_ref": "release-head",
+                "target_patch": "release-evidence/change.patch",
+                "tags": [
+                    {"name": "v1.0.0", "target": "base", "kind": "lightweight"},
+                ],
+                "refs": [
+                    {"name": "refs/heads/release-evidence/v1.1.0", "target": "target"},
+                ],
+                "absent_refs": ["refs/tags/v1.1.0"],
+            }
+            metadata_path.write_text(json.dumps(metadata))
+            valid = checker.validate_file(root, evals_path)
+
+            metadata["git_topology"]["target_patch"] = "../setup.sh"
+            metadata["git_topology"]["refs"][0]["name"] = "refs/tags/../escape"
+            metadata["git_topology"]["absent_refs"] = ["refs/tags/v1.0.0"]
+            metadata["git_topology"]["base_files"] = [
+                {"source": "a", "path": "eval_metadata.json"},
+            ]
+            metadata_path.write_text(json.dumps(metadata))
+            invalid = checker.validate_file(root, evals_path)
+
+        self.assertEqual("\n".join(error.render(root) for error in valid), "")
+        rendered = "\n".join(error.render(root) for error in invalid)
+        self.assertIn("git_topology", rendered)
+        self.assertIn("target_patch", rendered)
+        self.assertIn("ref name", rendered)
+        self.assertIn("both present and absent", rendered)
+        self.assertIn("excluded from candidate fixtures", rendered)
 
     def test_eval_contract_does_not_validate_baseline_semantics(self):
         checker = load_checker_module()
@@ -590,6 +670,401 @@ class EvalContractTests(unittest.TestCase):
             errors = checker.validate_file(root, evals_path)
 
         self.assertEqual("\n".join(error.render(root) for error in errors), "")
+
+    def test_eval_contract_requires_complete_real_user_scenario(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(root, "# Comparison\n")
+            payload = json.loads(evals_path.read_text())
+            del payload["evals"][0]["scenario"]["trigger"]
+            evals_path.write_text(json.dumps(payload))
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("scenario.trigger must be a non-empty string", rendered)
+
+    def test_eval_contract_rejects_prompt_that_leaks_eval_scaffolding(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(root, "# Comparison\n")
+            payload = json.loads(evals_path.read_text())
+            payload["evals"][0]["prompt"] = (
+                "用户说：请按 assertions 对比 with_skill 和 without_skill。"
+            )
+            evals_path.write_text(json.dumps(payload, ensure_ascii=False))
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("prompt contains forbidden eval scaffolding", rendered)
+
+    def test_eval_contract_rejects_metadata_prompt_and_unknown_runtime(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(root, "# Comparison\n")
+            metadata = evals_path.parent / "workspace/eval-001-baseline-evidence/eval_metadata.json"
+            payload = json.loads(metadata.read_text())
+            payload["prompt"] = "duplicated prompt"
+            payload["skill_dependencies"] = ["../../outside"]
+            payload["runtime_isolation"]["browser"] = "unknown"
+            metadata.write_text(json.dumps(payload))
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("prompt must only be defined in evals.json", rendered)
+        self.assertIn("skill_dependencies contains unsafe path", rendered)
+        self.assertIn("runtime_isolation.browser", rendered)
+
+    def test_eval_contract_rejects_answer_bearing_nested_readme(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(root, "# Comparison\n")
+            workspace = evals_path.parent / "workspace/eval-001-baseline-evidence"
+            (workspace / "service").mkdir()
+            readme = workspace / "service/README.md"
+            readme.write_text("Expected behavior: dispatcher should return PASS.")
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("README contains high-confidence answer guidance", rendered)
+
+    def test_eval_contract_allows_host_facts_in_nested_readme(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(root, "# Comparison\n")
+            workspace = evals_path.parent / "workspace/eval-001-baseline-evidence"
+            (workspace / "service").mkdir()
+            (workspace / "service/README.md").write_text(
+                "The checkout service listens on port 8080 and owns payment requests."
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        self.assertEqual("\n".join(error.render(root) for error in errors), "")
+
+    def test_eval_contract_rejects_answer_guidance_in_root_readme(self):
+        checker = load_checker_module()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(root, "# Comparison\n")
+            workspace = evals_path.parent / "workspace/eval-001-baseline-evidence"
+            (workspace / "README.md").write_text(
+                "Expected behavior: return the scored answer.\n", encoding="utf-8",
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        self.assertIn(
+            "README contains high-confidence answer guidance",
+            "\n".join(error.render(root) for error in errors),
+        )
+
+    def test_eval_contract_rejects_high_confidence_fixture_markers(self):
+        checker = load_checker_module()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(root, "# Comparison\n")
+            workspace = evals_path.parent / "workspace/eval-001-baseline-evidence"
+            (workspace / "package.json").write_text(
+                json.dumps({"description": "Existing project update eval workspace"})
+            )
+            (workspace / "PRD.md").write_text(
+                '---\nauthor: "PM Fixture"\ngenerated_by: "fixture"\n---\n'
+                'changes: "Initial fixture"\n'
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("package.json contains high-confidence eval marker", rendered)
+        self.assertIn("document contains high-confidence fixture provenance", rendered)
+
+    def test_eval_contract_allows_ordinary_business_evaluation_and_fixture_words(self):
+        checker = load_checker_module()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(root, "# Comparison\n")
+            workspace = evals_path.parent / "workspace/eval-001-baseline-evidence"
+            (workspace / "package.json").write_text(
+                json.dumps({"description": "Evaluate fixture mounting hardware inventory"})
+            )
+            (workspace / "facts.md").write_text(
+                "The customer evaluation covers production lighting fixtures.\n"
+            )
+
+            errors = checker.validate_file(root, evals_path)
+
+        self.assertEqual("\n".join(error.render(root) for error in errors), "")
+
+    def test_eval_contract_requires_explicit_cross_skill_dependency(self):
+        checker = load_checker_module()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = root / "agents/qa/test/bug-analyzer/evals/evals.json"
+            workspace = evals_path.parent / "workspace/eval-001-baseline-evidence"
+            skill_doc = root / "agents/qa/skills/bug-analyzer/SKILL.md"
+            workspace.mkdir(parents=True)
+            skill_doc.parent.mkdir(parents=True)
+            (workspace / "comparison.md").write_text("# Comparison\n")
+            (workspace / "eval_metadata.json").write_text(json.dumps({
+                "eval_id": "eval-001-baseline-evidence",
+                "skill_dependencies": [],
+                "runtime_isolation": self.valid_runtime_isolation(),
+            }))
+            evals_path.write_text(json.dumps({
+                "schema_version": "1.0", "agent": "qa", "skill_name": "bug-analyzer",
+                "evals": [{
+                    "id": "eval-001-baseline-evidence", "name": "baseline-evidence",
+                    "description": "Baseline evidence fixture", "scenario": self.valid_scenario(),
+                    "prompt": "Run the eval", "workspace": "workspace/eval-001-baseline-evidence",
+                    "expected_output": "A result", "assertions": [{
+                        "id": "has_result", "description": "Has a result", "text": "Result is present",
+                    }],
+                }],
+            }))
+            skill_doc.write_text(
+                "Read agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md.\n"
+            )
+            dependency = root / "agents/product_manager/skills/idea-to-spec/SKILL.md"
+            dependency.parent.mkdir(parents=True)
+            dependency.write_text("---\nname: idea-to-spec\n---\n")
+            metadata = evals_path.parent / "workspace/eval-001-baseline-evidence/eval_metadata.json"
+
+            missing = checker.validate_file(root, evals_path)
+            payload = json.loads(metadata.read_text())
+            payload["skill_dependencies"] = ["agents/product_manager/skills/idea-to-spec"]
+            metadata.write_text(json.dumps(payload))
+            covered = checker.validate_file(root, evals_path)
+
+        self.assertIn(
+            "missing explicit cross-skill dependencies",
+            "\n".join(error.render(root) for error in missing),
+        )
+        self.assertEqual("\n".join(error.render(root) for error in covered), "")
+
+    def test_issue_246_inventory_matches_frozen_baseline(self):
+        checker = load_checker_module()
+        errors = checker.validate_migration_inventory(checker.repo_root())
+
+        self.assertEqual(
+            "\n".join(error.render(checker.repo_root()) for error in errors),
+            "",
+        )
+
+    def test_inventory_recomputes_frozen_pointer_and_hashes_from_commit(self):
+        checker = load_checker_module()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            subprocess.run(["git", "init", "-q", "-b", "main"], cwd=root, check=True)
+            evals = root / "agents/qa/test/example/evals/evals.json"
+            metadata = root / "agents/qa/test/example/evals/workspace/eval-001/eval_metadata.json"
+            comparison = metadata.parent / "comparison.md"
+            metadata.parent.mkdir(parents=True)
+            item = {"id": "eval-001-example", "prompt": "help"}
+            evals.write_text(json.dumps({"evals": [item]}), encoding="utf-8")
+            metadata.write_text('{"eval_id":"eval-001-example"}\n', encoding="utf-8")
+            comparison.write_text("Overall result: PASS\n", encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            subprocess.run(
+                ["git", "-c", "user.name=Test", "-c", "user.email=test@example.com",
+                 "commit", "-q", "-m", "freeze"], cwd=root, check=True,
+            )
+            commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+            sha = lambda data: hashlib.sha256(data).hexdigest()
+            record = {
+                "old_eval_id": "eval-001-example", "old_eval_index": 0,
+                "old_eval_path": "agents/qa/test/example/evals/evals.json#/evals/0",
+                "old_eval_sha256": sha(json.dumps(item, sort_keys=True, separators=(",", ":")).encode()),
+                "metadata_path": metadata.relative_to(root).as_posix(),
+                "metadata_sha256_at_freeze": sha(metadata.read_bytes()),
+                "comparison_path": comparison.relative_to(root).as_posix(),
+                "comparison_sha256_before_stale": sha(comparison.read_bytes()),
+            }
+
+            self.assertEqual([], checker.validate_frozen_record(root, commit, record))
+            record["old_eval_sha256"] = "0" * 64
+            errors = checker.validate_frozen_record(root, commit, record)
+
+        self.assertIn("old_eval_sha256 does not match frozen commit", errors[0].message)
+
+    def test_inventory_requires_real_frozen_commit_and_exact_source_contract(self):
+        checker = load_checker_module()
+        path = checker.repo_root() / checker.MIGRATION_INVENTORY
+        errors = []
+
+        checker.validate_inventory_freeze_contract(
+            checker.repo_root(), path,
+            {"frozen_from_git_commit": "", "source_contract": {}}, errors,
+        )
+        checker.validate_inventory_freeze_contract(
+            checker.repo_root(), path,
+            {"frozen_from_git_commit": "f" * 40,
+             "source_contract": checker.FROZEN_SOURCE_CONTRACT}, errors,
+        )
+
+        rendered = "\n".join(error.message for error in errors)
+        self.assertIn("frozen_from_git_commit must be a real 40-hex commit", rendered)
+        self.assertIn("source_contract must exactly match the frozen scan contract", rendered)
+
+    def test_complete_fresh_comparison_rejects_current_input_drift(self):
+        checker = load_checker_module()
+        sys.path.insert(0, str(CHECKER_PATH.parents[1]))
+        from scripts import run_skill_eval as runner
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(root, "placeholder")
+            workspace = evals_path.parent / "workspace/eval-001-baseline-evidence"
+            fixture = workspace / "host-input.txt"
+            fixture.write_text("host v1\n", encoding="utf-8")
+            dependency = root / "agents/product_manager/skills/idea-to-spec/SKILL.md"
+            dependency.parent.mkdir(parents=True)
+            dependency.write_text("dependency v1\n", encoding="utf-8")
+            scripts = root / "scripts"
+            scripts.mkdir()
+            executor = scripts / "run_skill_eval.py"
+            runtime = scripts / "eval_runtime.py"
+            schema = scripts / "eval_judge_result.schema.json"
+            executor.write_text("executor v1\n", encoding="utf-8")
+            runtime.write_text("runtime v1\n", encoding="utf-8")
+            schema.write_bytes(runner.JUDGE_SCHEMA.read_bytes())
+            old_file, old_schema = runner.__file__, runner.JUDGE_SCHEMA
+            runner.__file__, runner.JUDGE_SCHEMA = str(executor), schema
+            try:
+                definition = runner.load_eval_definition(
+                    root, "engineer", "debugger", "eval-001-baseline-evidence",
+                )
+                identity = runner.source_identity(definition)
+                labels = {
+                    "Fixture SHA-256": checker.current_fixture_hash(definition),
+                    "Prompt SHA-256": hashlib.sha256(definition.item["prompt"].encode()).hexdigest(),
+                    "Eval definition SHA-256": identity["eval_definition_sha256"],
+                    "Metadata SHA-256": identity["metadata_sha256"],
+                    "Target skill tree SHA-256": identity["target_skill_sha256"],
+                    "Skill overlay SHA-256": identity["skill_overlay_sha256"],
+                    "Judge schema SHA-256": identity["judge_schema_sha256"],
+                    "Executor SHA-256": identity["executor_sha256"],
+                    "Runtime SHA-256": identity["runtime_sha256"],
+                }
+                comparison = workspace / "comparison.md"
+                comparison.write_text(
+                    "## Current Result\n\n- Evidence status: **FRESH**\n"
+                    "- Preflight status: **PASS**\n- Judge: fresh judge completed.\n"
+                    + "".join(f"- {name}: `{value}`\n" for name, value in labels.items())
+                    + "- Behavior result: **PASS**\n- Coverage result: **FULL**\n"
+                    "Overall result: PASS\n",
+                    encoding="utf-8",
+                )
+                baseline_errors = []
+                checker.validate_fresh_comparison_identity(
+                    root, comparison, "engineer", "debugger",
+                    "eval-001-baseline-evidence", baseline_errors,
+                )
+                self.assertEqual(baseline_errors, [])
+
+                metadata = workspace / "eval_metadata.json"
+                skill = root / "agents/engineer/skills/debugger/SKILL.md"
+                mutations = {
+                    "eval assertion": (evals_path, lambda data: data.replace(
+                        b"Result is present", b"Changed assertion",
+                    )),
+                    "metadata dependency": (metadata, lambda data: data.replace(
+                        b'"skill_dependencies": []',
+                        b'"skill_dependencies": ["agents/product_manager/skills/idea-to-spec"]',
+                    )),
+                    "target skill": (skill, lambda data: data + b"dirty skill\n"),
+                    "executor": (executor, lambda data: data + b"dirty executor\n"),
+                    "runtime": (runtime, lambda data: data + b"dirty runtime\n"),
+                    "judge schema": (schema, lambda data: data.replace(
+                        b'"Skill eval judge result"', b'"Changed judge result"',
+                    )),
+                    "fixture": (fixture, lambda data: data + b"dirty fixture\n"),
+                }
+                for label, (path, mutate) in mutations.items():
+                    with self.subTest(label=label):
+                        original = path.read_bytes()
+                        path.write_bytes(mutate(original))
+                        errors = []
+                        checker.validate_fresh_comparison_identity(
+                            root, comparison, "engineer", "debugger",
+                            "eval-001-baseline-evidence", errors,
+                        )
+                        self.assertTrue(any(
+                            "fresh comparison input identity is stale" in error.message
+                            for error in errors
+                        ))
+                        path.write_bytes(original)
+            finally:
+                runner.__file__, runner.JUDGE_SCHEMA = old_file, old_schema
+
+    def test_fresh_comparison_allows_stale_word_in_eval_slug(self):
+        checker = load_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            comparison = Path(temp_dir) / "comparison.md"
+            comparison.write_text(
+                "## Current Result\n\n"
+                "- Evidence status: **FRESH**\n"
+                "- Preflight status: **PASS**\n"
+                "- Judge: fresh judge completed.\n"
+                "- Fixture version/source: workspace/eval-002-audit-stale-doc\n"
+                "- Behavior result: **PASS**\n"
+                "- Coverage result: **FULL**\n"
+                "Overall result: PASS\n",
+                encoding="utf-8",
+            )
+
+            self.assertTrue(checker._comparison_has_fresh_evidence(comparison))
+
+    def test_runner_audit_requires_all_nine_fields_per_surface(self):
+        checker = load_checker_module()
+        inventory = json.loads((checker.repo_root() / checker.MIGRATION_INVENTORY).read_text())
+        audit = inventory["runner_audit"]
+        del audit["surfaces"][0]["fields"]["judge_freshness"]
+        errors = []
+
+        checker.validate_runner_audit(
+            audit, checker.repo_root() / checker.MIGRATION_INVENTORY, errors,
+            all_evals_complete=False,
+        )
+
+        self.assertIn("must contain exactly the nine audit fields", errors[0].message)
+
+    def test_runner_audit_rejects_missing_surface_path_and_forged_complete_evidence(self):
+        checker = load_checker_module()
+        inventory = json.loads((checker.repo_root() / checker.MIGRATION_INVENTORY).read_text())
+        audit = inventory["runner_audit"]
+        audit["surfaces"][0]["path"] = "missing/runner.py"
+        forged = audit["surfaces"][1]
+        forged["migration_status"] = "complete"
+        forged["fields"] = {
+            name: {"status": "pass", "evidence": "looks good"}
+            for name in checker.RUNNER_AUDIT_FIELDS
+        }
+        errors = []
+
+        checker.validate_runner_audit(
+            audit, checker.repo_root() / checker.MIGRATION_INVENTORY, errors,
+            all_evals_complete=False,
+        )
+
+        rendered = "\n".join(error.message for error in errors)
+        self.assertIn("surfaces must match the exact runner inventory", rendered)
+        self.assertIn("surface path does not exist", rendered)
+        self.assertIn("complete evidence lacks executor anchor", rendered)
 
     def test_artifact_checker_blocks_tmp_eval_runs(self):
         checker = load_artifact_checker_module()

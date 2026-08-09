@@ -1,93 +1,60 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
-- Skill: `release-notes-generator` → `release-notes-gen`（改名后新入口，已按 #238 于 2026-08-06 fresh 隔离重跑）
+- Agent: `docs`
+- Skill: `release-notes-gen`
 - Eval: `eval-003-github-release-boundary`
-- Scenario: 缺少 Release Notes writing foundation 的混合站内/外部发布请求
-- Review context: self-review convergence
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture version: `foundation cleanup consistency round-4`
-- Validation time: `2026-07-29`（历史轮；本轮 #238 重跑来源见 Latest Result 块）
-- Runtime: `tmp/eval-runs/issue-177/self-review/`
-- 修正原因：round-3 已移除等价 Release Notes 契约与 surfaces，但 `execution_cleanup` 没有覆盖被删除的 Release Notes 目录、release metadata 和可执行测试；复用 scratch 时可能被旧产物重新污染。
-- 本轮补齐 cleanup 后，两侧使用同一 prompt 与独立 pristine fixture；without-skill 未读取目标 skill、Docs Agent README、eval metadata、assertions、with-skill 输出、旧 comparison 或历史 round，独立 judge 也未读取旧 comparison。
-
-## Latest Result
-
-- Behavior result: `PASS`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
-- Overall result: PASS
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| `detects_missing_release_notes_foundation` | PASS | FAIL | with_skill 明确指出 `docs/site/release-notes/`、编写规范、索引和 `.meta/releases.json` 不存在，并阻止初始化；without_skill 直接报告已完成版本说明。 |
-| `keeps_site_zero_diff_before_bootstrap` | PASS | FAIL | with_skill 工作区没有版本页、`.meta` 或其他初始化产物；without_skill 实际新增 `docs/site/release-notes/v1.0.0.md`、`.meta/releases.json` 和 `.meta/release-handoff.json`。 |
-| `hands_missing_foundation_to_bootstrap` | PASS | FAIL | with_skill 明确说明需交给 `docs-site-bootstrap`；without_skill 未阻塞交接，而是继续生成正文、元数据和交接文件。 |
-| `preserves_release_chain_and_external_zero_writes` | PASS | FAIL | with_skill 明确未创建 GitHub Release 或 `v1.0.0` tag，并说明当前未授权发布执行；without_skill 虽未创建 tag/Release，但已提前准备站内发布产物，且未说明 foundation 补齐后需重新确认、检查和审计。 |
-
-未满足断言（with/without 任一 FAIL）：``detects_missing_release_notes_foundation``、``keeps_site_zero_diff_before_bootstrap``、``hands_missing_foundation_to_bootstrap``、``preserves_release_chain_and_external_zero_writes``
-
-
-
-## Fixture Correction And Discrimination
-
-- 修正后宿主保留正式文档站的其他必要文件，但不存在 `docs/site/release-notes/`、编写规则、index、release metadata、相邻版本页或等价可执行契约。
-- 通用脚手架仅拒绝生成 Release Notes 并指向专用 skill，不提供正文、frontmatter、metadata 或 index 写作规则，因此不构成等价 foundation。
-- `execution_cleanup` 现在覆盖整个 `docs/site/release-notes`、`docs/site/.meta/releases.json` 与 `docs/site/scripts/__tests__/release-notes.test.mjs`，防止旧 runtime 产物伪造 foundation。
-- with-skill 应用 foundation gate 后停止；baseline 自行推断规则并创建 Release Notes surfaces，重新形成明确区分。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720` from `agents/docs/test/release-notes-gen/evals/workspace/eval-003-github-release-boundary`.
+- Fixture SHA-256: `b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720`
+- Prompt SHA-256: `761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `b7f7292c266a0e83e45fc11a264c0b52188a05a92b94c912c4a7b6c5c35058d2`
+- Skill overlay SHA-256: `fcc8b19cc83a08b5f5e64f8b15695aa80b045962a63cbf1717889ea116dc31cc`
+- Judge schema SHA-256: `b3d43ca97793c6a0f8faf70ea92518e7709890635e7a921da0c1ddde071762ab`
+- Eval definition SHA-256: `05f16fbca1905a6bf2d3e5279f6310a7d3001480023c03eb422e696627b86d5d`
+- Metadata SHA-256: `79c5171e280a55a386cc65ee64ce2254d37bdb1b11edec578be748642efe98aa`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-| Assertion | With skill | Without skill | Fresh judgment |
-| --- | --- | --- | --- |
-| `detects_missing_release_notes_foundation` | PASS | FAIL | with-skill 识别空目录及 writing rules/等价契约缺失；baseline 未识别阻塞并继续生成。 |
-| `keeps_site_zero_diff_before_bootstrap` | PASS | FAIL | with-skill 的 `docs/site/` 文件 manifest 与源 fixture 完全一致；baseline 新增版本页、index、metadata 与生成物。 |
-| `hands_missing_foundation_to_bootstrap` | PASS | FAIL | with-skill blocked 给 `docs-site-bootstrap` 并等待显式初始化授权；baseline 无 bootstrap handoff。 |
-| `preserves_release_chain_and_external_zero_writes` | PASS | FAIL | with-skill 保留 bootstrap→Release Notes→checks→pre-tag audit→PM 顺序且不准备外部发布；baseline 跳过 bootstrap 并把自行建立的站内 handoff 宣称为 ready。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_missing_release_notes_foundation` | PASS | with_skill 明确识别缺少 docs/site/release-notes/ Release Notes 基础，并将页面状态置为 blocked，未进入页面生成流程。 |
+| `keeps_site_zero_diff_before_bootstrap` | PASS | with_skill 的 git_evidence 显示 HEAD、分支、refs、工作树和索引均无变化；git_status 与 git_diff 均为空。 |
+| `hands_missing_foundation_to_bootstrap` | PASS | 输出将缺失基础交给 docs-site-bootstrap 初始化，未交给 docs audit、GitHub Release owner，也未自行继续。 |
+| `preserves_release_chain_and_external_zero_writes` | PASS | 输出明确 tag 与 GitHub Release 均未创建，并等待 docs-audit 返回 ready_for_tag；git_evidence 的 ref_delta、result_diffs 和状态均为空。 |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- 在 site-foundation gate 停止，没有加载内部生成流程。
-- 未创建版本页、index、release metadata、导航或 `.generated`；未运行不能证明交付成立的 docs checks。
-- 未准备或写入 GitHub Release，未创建或移动 tag；返回携带 host、目标版本、证据边界与缺失 foundation 的 blocked bootstrap handoff。
-- Response SHA-256: `2e12af318ce600cda34001d30ac9de7c8a91a65239bd2f693417eff1d8391eec`。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e; fixture_sha256=b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720; output_sha256=c795bdddf39289886240bbe1cce87106225985318f6d9fbe574aae93d646e2a4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别 Release Notes 基础缺失，阻塞生成并完成正确的 bootstrap handoff；保持站内、Git 和外部发布链零写入。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e; fixture_sha256=b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720; output_sha256=bbf8e599adb4e0da8586193d4ccc1f44d8a0693ccc569f6962ee0981f1b09ec1; snapshot_sha256=39b391f82c97b7045b03f4e7cd72f06c05a987b788fdb40e776adb0c7dcbb3a5
+- Behavior: 错误地创建站内 Release Notes、元数据和提交，并创建 v1.0.0 tag；仅未创建 GitHub Release。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-- baseline 自行创建 `v1.0.0.md` 与 Release Notes index，运行 frontmatter 检查和 public/internal builds，并把站内 pre-tag handoff 描述为已完成；它没有修改 `.meta/releases.json`。
-- 它未识别 bootstrap gate，也未保留正文重新确认、站内检查与 pre-tag audit 的完整前置链。
-- Response SHA-256: `a9ed33574b0b964611a2bb8e88723c0ea1620f79261b4a2f05a80aa67850c0df`。
+## Failures and Next Steps
 
-## Failures And Iterations
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
-
-- Round 1：with-skill 4/4、baseline 4/4；prompt/fixture 泄漏导致无区分度。
-- Round 2：with-skill 4/4、baseline 0/4，但 fixture 保留等价 Release Notes 契约，场景判定失真。
-- Round 3：修剪等价契约后 with-skill 4/4、baseline 0/4；Behavior PASS、Coverage FULL，场景与协议一致。
-- Round 4：补齐删除 surface 的 cleanup 后重新 fresh 成对验证；with-skill 4/4、baseline 0/4，Behavior PASS、Coverage FULL，独立 judge 确认区分度保持。
-- 基础设施失败：none。runtime 未保留 lane transcript、显式读取清单或结构化命令日志，降低读取边界的可审计性，但 workspace diff、响应和 baseline 构建产物足以覆盖本轮 4 条行为 assertion。
-
-## Next Steps
-
-- 保持缺少目录、写作规则和等价站点契约时的 bootstrap stop 为回归门禁。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- `tmp/eval-runs/issue-177/self-review/` 下的 workspace、依赖、页面副本、构建产物、response、handoff 和 judge verdict 不提交。
-- 本 `comparison.md` 是本轮唯一 durable eval 结果。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

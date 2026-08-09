@@ -1,89 +1,62 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `docs-audit`
 - Eval: `eval-010-post-tag-match`
-- Scenario: direct handoff 与 fresh clone 两种对象可达性下的 post-tag authority 与持久化门禁
-- Review context: issue #177 sub-batch 4b
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture version: `issue-177 discrimination restore round-1`
-- Validation time: `2026-07-28 22:48:16 CST`
-- Runtime: `tmp/eval-runs/issue-177/docs-audit/round-1/`
-- Assertions: 5，全部实际触发
-
-## Latest Result
-
-- Behavior result: `PASS`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
-Overall result: PASS
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| `selects_pre_tag_authority_safely` | PASS | FAIL | with_skill 明确区分 direct-handoff 与 fresh-clone，并在 fresh-clone 使用 tag tree 固定路径回退校验；without_skill 明确称 fresh-clone 无法重建完整审计链。 |
-| `proves_released_tree_binding` | PASS | FAIL | with_skill 给出 `entry_tag_tuple` 与 `pre_result_tag_tuple` 一致、实际 tree 为 `666…666`，并解释 commit identity 不同但 tree 一致；without_skill 的 fresh-clone 仅能看到 tag tree，无法完成完整绑定复核。 |
-| `verifies_version_surfaces_from_release` | PASS | PASS | 两条 lane 均核验 tag、Release Notes、索引、`releases.json` 与 `package.json`，并处理 `v1.2.0` / `1.2.0` 表示差异；证据指向 tag tree 与已提交路径。 |
-| `requires_durable_post_tag_evidence` | PASS | FAIL | with_skill 明确识别 `release_evidence_branch_confirmation` 和 `release_evidence_expected_head` 缺失，并将两个场景均保持为 `blocked`；without_skill 将 direct-handoff 描述为“文档内容已验证、发布闭环待确认”，未按断言要求保持 blocked。 |
-| `preserves_upstream_release_artifacts` | PASS | PASS | 两条 lane 均明确“未执行任何 tag、branch 或 release 写入”，且未重新生成、盖章或改变 pre-tag handoff。 |
-
-未满足断言（with/without 任一 FAIL）：``selects_pre_tag_authority_safely``、``proves_released_tree_binding``、``requires_durable_post_tag_evidence``
-
-
-
-## Leakage Surface Analysis
-
-重做前，baseline 可直接从 prompt、assertions 与 release context 取得 package 优先级、fixed-path fallback、anchor tree 重建、tag tuple 双读、object-read 范围、版本规范化、独立记录路径、FF/CAS 和成功状态。
-
-重做后仍可见的是原始 object identity、candidate/discovery 记录和版本表面；不再预告 locator 选择、fallback 算法或独立持久化 gate。release context 只声明 direct/fresh 对象可达性和一个未确认 branch hint。
-
-## Redesign
-
-- prompt 只保留 post-tag 任务、两个场景、输入指针与只读边界。
-- assertions 收敛为 authority、release tree、version surfaces、durable result 和上游不可变性五个语义结果。
-- 删除 fixture 中的 locator 优先级、tree equality 结论、normalization 结论和 CAS 恢复答案。
-- 增加阻塞型凭据缺口：branch hint 存在，但 maintainer confirmation 与 expected head 均缺失。
-- 将历史 issue 身份引用替换为 `docs-agent:release-notes-gen`，并重算 inventory digest、candidate blob、discovery blob 与 lineage digest。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518` from `agents/docs/test/docs-audit/evals/workspace/eval-010-post-tag-match`.
+- Fixture SHA-256: `43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518`
+- Prompt SHA-256: `47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `f64d4542aa97d4b9bcd4bc655a5e70fec7d827a5ea9e9f63067fde8d7b819748`
+- Eval definition SHA-256: `f4b575228474dd8bb2a93bb17a067f25252f9c293e1f78393d445c449385e8d2`
+- Metadata SHA-256: `12f75879efa3cacf943ae19595239a747563947015e4033eed4ea7f4a51a5b47`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-| Assertion | With skill | Without skill | Fresh judgment |
-| --- | --- | --- | --- |
-| `selects_pre_tag_authority_safely` | PASS | FAIL | skill arm 分别验证 direct handoff 与 tag-tree fixed-path fallback；baseline 将 fresh clone 判为无法建立 authority。 |
-| `proves_released_tree_binding` | PASS | FAIL | skill arm 在两种可达性下都证明完整 tag tree 绑定；baseline 只完成 direct 场景。 |
-| `verifies_version_surfaces_from_release` | PASS | FAIL | skill arm 从 peeled tag tree 复核完整来源；baseline 未完成 fresh 场景的发布对象复核。 |
-| `requires_durable_post_tag_evidence` | PASS | FAIL | skill arm 因 evidence branch/head 未确认让两场景都 blocked；baseline 错误放行 direct 场景。 |
-| `preserves_upstream_release_artifacts` | PASS | PASS | 两臂均未改 pre-tag authority、stamp、tag 或 Release。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `selects_pre_tag_authority_safely` | NOT_EXERCISED | 锁定 git topology 证明当前仓库有该 custom ref、tag，且 fresh clone 未取得 custom ref；但没有 delivery_snapshot/git_blob 证据证明两边实际读取了 handoff/audit 并独立重建 authority。 |
+| `proves_released_tree_binding` | NOT_EXERCISED | 锁定 topology 证明 tag 的 commit/tree 及 clone 的 tag tree，但没有证明当前仓库执行了 direct package-tree 比较，或 clone 从 tag tree 核验完整发布路径。 |
+| `verifies_version_surfaces_from_release` | NOT_EXERCISED | 候选输出列出四个版本面并正确区分 v1.2.0 与 package.json 的 1.2.0；但锁定证据没有 git blob 或 delivery snapshot 将这些读取绑定到实际 tag tree。 |
+| `requires_durable_post_tag_evidence` | PASS | 候选输出明确指出 proposed post-release ref 没有维护者决定、目标 ref 不存在，并让当前工作区和普通新克隆均保持 blocked；fixture context 与锁定 topology 支持该结论。 |
+| `preserves_upstream_release_artifacts` | PASS | 候选输出未声称重新生成、重新盖章或移动 tag；锁定 git evidence 显示 head、branch、refs、diff 与 reflog 均未变化。 |
 
-## Fresh Validation Method
+## With-Skill Behavior
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143; fixture_sha256=43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518; output_sha256=7c1a8a3d832e53935df5ce5bc6feca448187edb7639f34a08fc9414d1992473b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别 tag 与 custom ref 的拓扑、普通 clone 未携带 custom ref，并将两个场景保持为 blocked；但锁定原始证据不足以证明 authority 读取、tree binding 和从 tag blob 核验版本面。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-1. 两个生成 arm 只读取 `eval_metadata.json` 的 prompt 与 fixture_context；锁定前均未读取 `evals.json`、assertions、expected output 或旧 comparison。
-2. with-skill arm读取 Docs README、`docs-audit/SKILL.md` 和完整内部指令；without-skill arm 不读取或应用这些内容，也不读取 with-skill 输出。
-3. 两臂基于同一最终 fixture revision 生成 response 并锁定 SHA-256 后，fresh judge 才读取 assertions。
-4. with-skill response SHA-256：`0605883f82aff53f7bf03dbe5a90b6e950989032fc041a169af38aaaeb81b8e4`；without-skill：`475f755dcf05f9a146e36c5f3925600165794cc0db9122574bf90db09553dfa7`。
+## Fresh Without-Skill Baseline
 
-## Failures And Limitations
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143; fixture_sha256=43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518; output_sha256=2a7663d28fe5769cbf8883e6ea6fe63775acdf384ad4fe2df99fd95852e81644; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 新克隆和 tag 身份描述基本正确，但把内容一致直接升级为可独立核对成功，遗漏了缺少 durable post-tag 结果凭据这一阻塞条件。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+## Failures and Next Steps
 
-- with-skill 无失败；Coverage FULL。
-- baseline 仍能从 committed records 恢复部分 authority 与版本事实，但未恢复 fresh-clone fallback 和 durable-result credential gate。
-- 第一轮即达到区分度，无需第二轮。
+- None.
+- Next: 补充当前 custom ref 下 handoff/audit 的锁定 blob 证据。
+- Next: 补充 tag tree 与 direct package tree、完整发布路径及四个版本面的锁定读取证据。
 
 ## Runtime Artifact Policy
 
-- responses、judge verdict 与校验和仅位于 git 忽略的 `tmp/eval-runs/issue-177/docs-audit/round-1/`，不提交。
-- 本 `comparison.md` 是唯一 durable 结果。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

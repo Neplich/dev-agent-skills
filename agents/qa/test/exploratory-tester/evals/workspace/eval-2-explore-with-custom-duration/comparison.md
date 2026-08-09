@@ -1,76 +1,64 @@
-# Eval Result: eval-002-explore-with-custom-duration
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `qa`
 - Skill: `exploratory-tester`
 - Eval: `eval-002-explore-with-custom-duration`
-- Test case: explore-with-custom-duration
-- Workspace: `workspace/eval-2-explore-with-custom-duration`
-- Natural user prompt:
 
-> 对用户指定的目标应用进行 5 分钟探索测试，按探索章程验证 changed surface、相邻风险和证据分层
+## Current Result
 
-- Expected artifact: 5 分钟探索测试报告
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3` from `agents/qa/test/exploratory-tester/evals/workspace/eval-2-explore-with-custom-duration`.
+- Fixture SHA-256: `58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3`
+- Prompt SHA-256: `95b19585ae663cfe50fef5d8a922d75ec357803535a13bbb323cdf9b1845fa29`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `4e2073febaef7202820d7977feb83c73b7673e1200e4724a3f37b54a20923059`
+- Skill overlay SHA-256: `bb6d955d3f1008412eca24a4e3e97d4883ccffc96444f5d6d3cd037fea0800ba`
+- Judge schema SHA-256: `795b13efa8aba1d005ca8e2bf3be74790d6a011a9b79e7e9c3ef0bb4863b7e5d`
+- Eval definition SHA-256: `234873760fb9d0649d16f54118fbf0383fa2955b9451730f9429892d78a6d7e0`
+- Metadata SHA-256: `4befffc2e8037477b9995f3ded3869d8476cd9a66637621d7f8e8d3fc8c6fed3`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
-## Test Set / Fixture Version
+## Assertion Results
 
-- Schema: `evals.json` v1.0，使用 source HEAD `47adbbc9` 的当前 prompt、assertions 与 fixture。
-- Fresh run window: 2026-08-07 00:26:03 至 00:42:04（Asia/Shanghai）。
-- Runtime root: `/tmp/qa-fresh-evals-20260807-002603-9bd07750/exploratory-tester--eval-002-explore-with-custom-duration/`。
-- Fixture identity: 两条 lane 的初始可见 fixture manifest 完全相同，SHA-256 为 `309d7645fa902999f9cc011ad12d0dc566cf30afa564d27b0c546cf8e149fa0b`。
-- Lane isolation: 先完成并销毁全部 15 个 `without_skill` 独立随机顶层临时 root，再创建任何 `with_skill` root；`with_skill` 按 target skill 分组执行，每条 lane 都使用独立顶层 workspace、`HOME`、`CODEX_HOME` 和 temp 目录，不存在 candidate 可读取的 sibling lane。
-- Controlled variable: 两条 lane 使用逐字相同 prompt、相同 fixture manifest、相同隔离配置和同一份认证材料；唯一显式变量是 `with_skill` 的隔离 `CODEX_HOME` 安装并加载目标 QA skill，`without_skill` 的目标 skill 加载次数为 0。
-- Evidence isolation: 30 个 candidate 全部结束且临时 root 全部销毁后，才将内存中的 candidate、tool trace 和最终 workspace 快照持久化到 runtime root。
-- Candidate leakage audit: 两条 lane 均未命中 `eval_metadata.json`、`evals/evals.json`、`comparison.md`、expected output、assertions 或 judge schema。
-- Judge: candidate 全部结束后，第三个独立随机顶层、只读 fresh Codex 会话实际检查两条 candidate 输出、JSONL tool trace、status 和最终 workspace 快照，再按当前 assertions 判定。
-- Runtime health: candidate 与 judge 均 `rc=0`、无 timeout；judge root 已销毁。
-
-## Latest Result
-
-- Behavior result: **PASS**（PASS 6 / FAIL 0 / NOT EXERCISED 0）
-- Coverage result: **FULL**
-Overall result: PASS
-
-## Invalidated Prior Run
-
-上一轮 QA paired run 将 `with_skill` 与 `without_skill` 放在可交叉读取的 sibling 路径，物理隔离不合格；该轮 candidate、baseline、judge 与结论全部作废，未作为本轮输入，也不保留为当前结果。本文件的当前结论仅来自 `qa-fresh-evals-20260807-002603-9bd07750`。
-
-## Assertions
-
-| Assertion | With skill | With-skill evidence | Without skill | Baseline evidence |
-| --- | --- | --- | --- | --- |
-| `assertion_1`<br>上下文驱动范围 | PASS | 最终快照中的 FLOW_INDEX.md 和阻塞报告包含目标 URL、5 分钟时长、changed surface、具体启发式、阻塞原因及未验证范围；transcript 记录了读取环境和改动面。 | FAIL | transcript/candidate 仅记录目标、改动面和风险，未形成完整探索章程，缺少明确的升级信号和未验证前提记录。 |
-| `assertion_2`<br>独立探索确认 | PASS | transcript 在任何运行前读取 TEST_SUITE.md、FLOW_INDEX.md、PRD 和环境/改动信息；最终快照确认无 cases、scripts、results。阻塞后实际更新了 FLOW_INDEX.md，未创建 TC/script。 | PASS | transcript 读取了 TEST_SUITE.md、FLOW_INDEX.md、PRD、环境和改动面；最终快照确认没有可读的 cases/scripts/results，且未声称扩充用例。 |
-| `version_entry_and_subagent`<br>版本、执行入口与 subagent | PASS | TEST_SUITE.md 明确平台版本缺失；transcript 及最终阻塞报告明确因此 blocked、未启动计时，并记录 repo harness → Chrome/browser connector → Playwright fallback 顺序及 subagent 执行约定。 | FAIL | 虽读取到版本缺失并执行 curl 探测，但 transcript/candidate 未确认规定的执行入口顺序、选择理由或默认 subagent 执行约定。 |
-| `assertion_3`<br>异常分层 | PASS | 最终阻塞报告明确区分 Observed issues（None）、Suspicious but unconfirmed signals（toast 风险）和 Gaps not explored；transcript 证明未进行 UI/运行时操作。 | PASS | candidate 明确将 DNS/HTTP 000 作为 L0 环境证据，并区分文档证据与没有 UI/日志证据，未把未确认信号升级为缺陷。 |
-| `assertion_4`<br>证据输出 | PASS | 最终阻塞报告包含实际覆盖路径（preflight only）、读取的 QA/PM/环境文件、目标 URL 和阻塞原因；transcript 还提供了实际读取命令及文件变更 trace。 | PASS | transcript 提供实际 rg/sed/curl 命令，candidate 给出目标 URL、DNS/HTTP 000 结果及 implementation/changed-surface.md 证据引用，不是随机操作清单。 |
-| `assertion_5`<br>风险交接 | PASS | 最终阻塞报告包含具体风险 notes（toast 可能遮蔽校验错误）及三项重试/补齐版本、TRD、IMPLEMENTATION_PLAN 的下一步建议。 | PASS | candidate 记录保存/取消、未保存状态、账户联动和 toast 风险，并建议提供可解析地址或浏览器环境后重测。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `assertion_1` | PASS | 交付报告包含 5 分钟时长、目标功能范围、改动面、环境入口，以及保存/取消/未保存状态/toast 等未验证前提。 |
+| `assertion_2` | NOT_EXERCISED | 报告记录了 feature-update 场景及既有 QA 资料清单，但锁定证据无法证明这些资料是在独立探索前按要求读取的顺序。 |
+| `version_entry_and_subagent` | PASS | 报告明确因平台版本缺失而 blocked，并说明了 repo harness、浏览器连接器、Playwright 的入口顺序和原因，也记录了 subagent 默认执行规则。 |
+| `assertion_3` | PASS | 报告区分了无 confirmed issue、待确认的 suspicious signals，以及未覆盖的探索区域。 |
+| `assertion_4` | PASS | 报告包含实际覆盖路径、预检资料和环境等 evidence references，而非随机操作清单。 |
+| `assertion_5` | PASS | 报告列出了未验证风险、阻塞原因和可执行的后续 QA 建议。 |
 
 ## With-Skill Behavior
 
-with_skill 完成了阻塞前置检查、章程、证据分层和风险交接；未伪造运行结果。最终快照确认 FLOW_INDEX 与阻塞报告确实落盘。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=95b19585ae663cfe50fef5d8a922d75ec357803535a13bbb323cdf9b1845fa29; fixture_sha256=58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3; output_sha256=e08c791a501d2b08c9a2a66d9b5ff12f6852f645070d434d899c532298ac4840; snapshot_sha256=a8483f35b35ed86188b2aa93d01c35d4a9301073969b2ed215e9051b942f946a
+- Behavior: 正确识别 feature-update 范围和阻塞条件，交付了结构化探索报告，覆盖章程、预检、入口选择、异常分层、证据、风险与下一步。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-without_skill 未完成版本/执行入口/subagent 前置要求，但进行了可审计的环境探测；仅作为 baseline 对照。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=95b19585ae663cfe50fef5d8a922d75ec357803535a13bbb323cdf9b1845fa29; fixture_sha256=58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3; output_sha256=f016c940d2023a57be41a153fd89a31a4a6b41144914dea29fdd18fc58d0d056; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅报告入口不可达和无法验证功能，未交付探索报告或结构化证据。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- 无。
+- None.
+- Next: 提供可访问的 QA 入口并记录浏览器/平台版本。
+- Next: 重新执行 5 分钟探索，覆盖保存、取消、未保存状态、校验与 toast。
+- Next: 若发现可复现问题，补充 per-TC evidence 并移交 bug 分析。
 
-## Not Exercised
+## Runtime Artifact Policy
 
-- 无。
-
-## Next Steps
-
-- 补充确切平台/浏览器版本及可达 QA 地址后重跑 5 分钟探索。
-- 补齐或确认对应 TRD 与 IMPLEMENTATION_PLAN，并在发现可复用场景时生成匹配 TC/script。
-- fixture-manifest.json 的五个初始 fixture 在两条 lane 中一致；with_skill 的 FLOW_INDEX 差异是已验证的运行后更新，非初始 fixture 差异。
-
-## Runtime Artifacts Policy
-
-- Candidate command: `codex exec --skip-git-repo-check -C <isolated-workspace> -s workspace-write --ephemeral --ignore-user-config --ignore-rules -m gpt-5.6-luna -c 'model_reasoning_effort="medium"' --json -o <runtime-output> -`。
-- Judge 使用同一模型与 reasoning effort，在独立 `read-only` root 中按结构化 output schema 判定。
-- candidate、baseline、transcript、verdict、fixture snapshots、status、timing 与 diagnostics 仅保留于上述 `/tmp` runtime root，不提交到 git；仓库只更新 canonical `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

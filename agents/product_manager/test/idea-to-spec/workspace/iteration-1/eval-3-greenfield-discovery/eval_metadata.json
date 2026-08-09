@@ -2,5 +2,15 @@
   "eval_id": "eval-003-greenfield-discovery",
   "eval_name": "greenfield-discovery",
   "workspace_root": "agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-3-greenfield-discovery",
-  "prompt": "我想做一个团队知识问答产品，现在只有一个模糊想法。你先不要直接写完整 PRD，先帮我把方向收敛。"
+  "skill_dependencies": [
+    "agents/engineer/skills/trd-gen"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

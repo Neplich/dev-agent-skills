@@ -1,70 +1,60 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `docs-audit`
 - Eval: `eval-006-audit-no-version-anchor`
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture version: docs-audit A2 / 2026-07-19
-- Assertions: 4
-
-## Latest Result
-
-- Overall result: PASS
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `PASS` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| `blocks_without_target_release_version` | PASS | FAIL | with_skill 的 `result.txt` 明确为“审计结果：blocked”，并指出缺少维护者确认的 `target_release_version`；without_skill 返回“结论：未发现需要更新文档的变更”，未将阶段结果标记为 `blocked`。 |
-| `allows_read_only_diagnostic` | PASS | PASS | with_skill 未执行写入或成功审计，仅报告缺少 Git 元数据；without_skill 仅依据 `.eval/actual-diff.patch`、`change-map.yaml` 和代码文件做影响诊断，未声称 `ready_for_tag` 或 `release_verified`。 |
-| `does_not_persist_report_without_target` | PASS | PASS | 两个工作区均不存在 `docs/site/.meta` 目录，也不存在 `audit-7c9e2af.md` 或其他版本化审计报告。 |
-| `does_not_write_version_stamp` | PASS | PASS | 两个工作区的 `docs/site/api/catalog.md` 均保持 `last_verified_version: unverified`；均不存在 `.meta/releases.json`，也未写入版本号。 |
-
-未满足断言（with/without 任一 FAIL）：``blocks_without_target_release_version``
-
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `82b55bed70c9cef729375a3351448011b6841c9c9416854e0ef1fd304e6c48bb` from `agents/docs/test/docs-audit/evals/workspace/eval-006-audit-no-version-anchor`.
+- Fixture SHA-256: `82b55bed70c9cef729375a3351448011b6841c9c9416854e0ef1fd304e6c48bb`
+- Prompt SHA-256: `dfb1de5ef05668c278fa0bfcea0c360fed3169b7b4bae6483c3fb5fedeccf198`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `7c0884fab11b08d46eb01de89abfa2125334493a96c7805f68a7161e9d7bff70`
+- Eval definition SHA-256: `405d79374055fe033af3883c346829478f3f76cf09e82f4870928a5901ad3a47`
+- Metadata SHA-256: `953ef09fb5962b093fa646d68b6f137fe0b19f6ba0157a6c58aae94c9c50c930`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-| Assertion | Result | Evidence summary |
+| Assertion | Result | Evidence |
 | --- | --- | --- |
-| `blocks_without_target_release_version` | PASS | 明确因目标版本缺失且未确认而 `blocked`，未返回任一成功阶段状态。 |
-| `allows_read_only_diagnostic` | PASS | 仍用已确认 base/target 描述 affected page，并确认纯重构下页面事实 `verified`，但不包装为成功审计。 |
-| `does_not_persist_report_without_target` | PASS | workspace 零写入；不存在 `audit-7c9e2af.md` 或其他版本化报告，没有 SHA 回退命名。 |
-| `does_not_write_version_stamp` | PASS | 页面保持 `last_verified_version: unverified`，未创建或修改 `.meta/releases.json`，未推测版本。 |
+| `blocks_without_target_release_version` | PASS | with_skill 输出明确结果为 `blocked`，并指出缺少维护者确认的 `target_release_version`。 |
+| `allows_read_only_diagnostic` | PASS | with_skill 输出描述了变更文件、change-map 匹配、受影响页面及当前事实诊断，同时明确未进入正式事实审计。 |
+| `does_not_persist_report_without_target` | PASS | with_skill 输出明确说明未写入报告；锁定 git_evidence 显示无状态、索引、工作树或新提交变化。 |
+| `does_not_write_version_stamp` | PASS | with_skill 输出记录页面保持 `last_verified_version: unverified`，并明确未修改页面或版本元数据；锁定 git_evidence 显示无变更。 |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- 来源：本轮 fresh session `019f7a75-30f2-72d0-bea2-6fd9fe5ff45d`，位于 `tmp/eval-runs/117/eval-006-audit-no-version-anchor/with_skill/`。
-- 候选正确应用入口 gate 与只读诊断例外，完全修正旧模型的 SHA 报告回退语义。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=dfb1de5ef05668c278fa0bfcea0c360fed3169b7b4bae6483c3fb5fedeccf198; fixture_sha256=82b55bed70c9cef729375a3351448011b6841c9c9416854e0ef1fd304e6c48bb; output_sha256=5bdd6bf5482deeae1f59c245fdc4198bbd0631d6dd47e894696f2a1e5b54aa1f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确阻塞正式审计，保留只读诊断，并报告未发生任何持久化或版本盖章。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+## Fresh Without-Skill Baseline
 
-- 来源：本轮独立 fresh session `019f7a78-ed4d-77e1-a925-8cac1dcb9995`，同一 prompt 与 pristine fixture；未复用历史 baseline。
-- baseline 也保持零写入且拒绝推测版本，但没有 docs-audit 的入口、报告持久化禁止与阶段状态结构。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=dfb1de5ef05668c278fa0bfcea0c360fed3169b7b4bae6483c3fb5fedeccf198; fixture_sha256=82b55bed70c9cef729375a3351448011b6841c9c9416854e0ef1fd304e6c48bb; output_sha256=d873d2bb8c3797c53485377dc2dba326ca4deea7da74664526b9483231d73e89; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 同样未执行写入，但主要聚焦差异证据补丁无效；其对比结果不影响 with_skill 断言判定。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+## Failures and Next Steps
 
-- 无 assertion failure。合成 refs 使用 `.eval/actual-diff.patch` 仅作只读诊断，属于 harness 限制，不是协议缺陷。
-
-## Next Steps
-
-- 保留本结果；无目标版本 gate 或报告持久化规则变化时重跑。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 本轮运行期证据仅位于 `tmp/eval-runs/117/`，不提交；durable 产物仅为本 `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

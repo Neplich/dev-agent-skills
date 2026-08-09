@@ -1,93 +1,63 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `docs-audit`
 - Eval: `eval-011-post-tag-mismatch`
-- Scenario: same-version history、当前副本漂移与未审计 tag 增量
-- Review context: issue #177 sub-batch 4b
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture version: `issue-177 discrimination restore round-1`
-- Validation time: `2026-07-28 22:48:16 CST`
-- Runtime: `tmp/eval-runs/issue-177/docs-audit/round-1/`
-- Assertions: 5，全部实际触发
-
-## Latest Result
-
-- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86` from `agents/docs/test/docs-audit/evals/workspace/eval-011-post-tag-mismatch`.
+- Fixture SHA-256: `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86`
+- Prompt SHA-256: `63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `87ef764041bed9ee9555b42ac224112964f5f9e1229cf61ab18c2da424e966e8`
+- Eval definition SHA-256: `dd2f814bca5d9dce6fed31e09545467860903a50efd0252401f17372eb85d63c`
+- Metadata SHA-256: `44f3e50cd86c78b14f58e8584dc26444f39390cb3ef1d6e88051fdaf94a2e89e`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
 Overall result: FAIL
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| `uses_immutable_pre_tag_authority` | PASS | PASS | 两者均区分 `.eval/committed-audit-v1.2.0.md` 与被篡改的 `docs/site/.meta/audit/audit-v1.2.0.md`，并引用 `.eval/release-context.md` 的可信提交记录。 |
-| `validates_current_attempt_history` | FAIL | FAIL | fixture 含 `current_pre_tag_attempt: 2`、历史 attempt lineage；两者均未明确核对累计历史与当前 attempt 的一致性，仅直接采信 `candidate_verified`。 |
-| `rejects_complete_release_tree_drift` | PASS | PASS | 两者均引用 `.eval/tag-tree-diff.name-status` 的 `A src/catalog/export-v2.py`，指出 tag 含未审计增量并保持 `blocked`。 |
-| `offers_safe_maintainer_recovery` | PASS | FAIL | with_skill 明确针对同一 `v1.2.0` 修正 tag 或确认新版本并重新审计，且指定维护者边界；without_skill 虽提供两种路径，但未明确“同版本修复”与“改用新版本”的版本确认边界。 |
-| `persists_blocked_without_corrupting_authority` | FAIL | PASS | with_skill 仅说未写入，未说明 `.eval/release-context.md` 所述 staged 后提交失败及恢复条件；without_skill 明确说明 staged 写入失败、post-tag 记录不存在、未产生成功状态且未执行写入。 |
-
-未满足断言（with/without 任一 FAIL）：``validates_current_attempt_history``、``offers_safe_maintainer_recovery``、``persists_blocked_without_corrupting_authority``
-
-
-
-## Leakage Surface Analysis
-
-重做前，prompt、assertions 和 release context 直接提供 immutable record 选择、strict tree equality、lineage digest 算法、两条 remedy、re-entry 条件、blocked record 事务和 rollback 清单。
-
-重做后，fixture 只保留两份 repository-state bytes、raw tag tuple、raw tree diff、committed candidate/discovery 和一次 staged 写入失败事件。显眼 tree delta 仍对 baseline 可见，但维护者版本选择契约不再出现在生成输入中。
-
-## Redesign
-
-- prompt 只要求给出结论、决定性差异、可持久化结果和维护者后续选择。
-- assertions 改为 immutable authority、attempt history、complete tree、maintainer recovery 和 blocked persistence 五个语义结果。
-- 删除 equality、active attempt、lineage rule、CAS policy 与标准答案 prose。
-- 在 committed discovery 的 current tuple 中引入单字符 `previous_lineage_digest` 冲突，与 visible code-tree drift 形成两个独立 blocker。
-- 清理历史 issue 身份引用，并重算 inventory/candidate/discovery object identities；只保留刻意的 lineage 冲突。
 
 ## Assertion Results
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-| Assertion | With skill | Without skill | Fresh judgment |
-| --- | --- | --- | --- |
-| `uses_immutable_pre_tag_authority` | PASS | PASS | 两臂均使用 committed evidence 并隔离 checkout 副本。 |
-| `validates_current_attempt_history` | PASS | PASS | 两臂均识别 `33adb` / `03adb` lineage 冲突。 |
-| `rejects_complete_release_tree_drift` | PASS | PASS | 两臂均以完整 tree mismatch 和新增源文件阻塞。 |
-| `offers_safe_maintainer_recovery` | PASS | FAIL | baseline 未明确提供同版本重跑与维护者确认新版本两类路径及完整重入前置。 |
-| `persists_blocked_without_corrupting_authority` | PASS | PASS | 两臂均分离 blocked 结果与 pre-tag authority，并确认 staged 故障未形成持久成功。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `uses_immutable_pre_tag_authority` | PASS | 明确以 refs/heads/pre-tag-handoff 作为 authority，并将 release-evidence 分支与未提交工作区副本隔离。 |
+| `validates_current_attempt_history` | FAIL | 虽然保持 blocked 并识别了未提交副本，但没有明确核对同版本 attempt 2 直接 superseded attempt 1 的历史关系。 |
+| `rejects_complete_release_tree_drift` | PASS | 明确比较 704d8f7..26cf729，识别新增 src/catalog/export-v2.py，并保持 blocked。 |
+| `offers_safe_maintainer_recovery` | PASS | 提供了同版本修复和改用新版本两种选择，并说明维护者、docs-site-bootstrap、Docs/工程负责人的边界及重新审计前提。 |
+| `persists_blocked_without_corrupting_authority` | FAIL | 说明保持 blocked、未执行写入且不产生成功状态，但未说明持久化失败后的具体恢复条件。 |
 
-## Fresh Validation Method
+## With-Skill Behavior
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=dc8f260ba1d782fa4cdd851e0fd56103c46ff81ba38b230bee497bc0b909f1c9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别 pre-tag authority、完整发布树漂移并保持 blocked，且提供安全补救选择；但遗漏当前 attempt 历史核对和持久化故障恢复条件。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-- 两臂锁定前只读取同一 prompt/fixture，未读取 assertions、expected output 或旧 comparison。
-- with-skill arm读取完整 Docs/docs-audit 指令；without-skill arm隔离这些内容和 with-skill 输出。
-- fresh judge 在 response SHA-256 锁定后才读取 assertions。
-- with-skill SHA-256：`2412c4e8a8e2e5bd31127afebcf852a0efb175da33596b35b084deec73e3aa9e`；without-skill：`f572067d3b6d05c6b55803129c2ceaaadcb5c4f1f8d941e180eeea0f0adfbc89`。
+## Fresh Without-Skill Baseline
 
-## Failures And Limitations
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=26dd5c84e60c0c90b1d72b0b47c41ad312d5a01d99d70bbdf4138623ea14cd61; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了 export-v2.py 漂移并拒绝 release_verified，但使用较弱的 needs_follow_up 结论，未充分隔离 immutable authority，也未覆盖完整恢复边界。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+## Failures and Next Steps
 
-- with-skill 无失败；Coverage FULL。
-- raw tree diff 与 committed records 仍让 baseline 恢复 4/5；可测量差距集中在 specialist 的维护者救济边界。
-- 第一轮即达到区分度，无需第二轮。
+- current_attempt_history 未完整呈现。
+- persistence failure recovery 未覆盖。
+- Next: 补充 attempt 2、直接 superseded attempt 1 及同版本关系的核对结果。
+- Next: 说明持久化失败时的恢复条件，并确认既有 authority 不被改写。
 
 ## Runtime Artifact Policy
 
-- runtime responses 和 judge verdict 仅保存在 `tmp/eval-runs/issue-177/docs-audit/round-1/`，不提交。
-- 本 `comparison.md` 是唯一 durable 结果。
-
-## Next Steps
-
-- 本 assertion 措辞在本轮 review 后做了澄清性对齐，判定语义与已记录的 fresh run 一致，未重新执行 eval。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

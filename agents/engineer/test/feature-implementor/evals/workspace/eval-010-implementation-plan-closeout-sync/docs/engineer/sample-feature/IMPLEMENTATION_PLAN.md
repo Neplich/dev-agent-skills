@@ -23,9 +23,9 @@ related_trd: "docs/engineer/sample-feature/TRD.md"
 | --- | --- | --- |
 | PRD alignment | Complete | `docs/pm/sample-feature/PRD.md` |
 | TRD alignment | Complete | `docs/engineer/sample-feature/TRD.md` |
-| Implementation plan | 待用户确认 | This text is stale and should have been updated. |
-| Code / skill edits | 未开始 | This text is stale and should have been updated. |
-| Eval execution | 待确认 | This text is stale and should have been updated. |
+| Implementation plan | 待用户确认 | No maintainer confirmation recorded. |
+| Code changes | 未开始 | No changed files recorded. |
+| Eval execution | 待确认 | No durable evaluation result referenced. |
 
 ## Planned Steps
 

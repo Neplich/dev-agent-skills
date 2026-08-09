@@ -1,92 +1,59 @@
-# Eval Result: eval-005-mapped-upload-trd-evidence
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `trd-gen`
 - Eval: `eval-005-mapped-upload-trd-evidence`
-- Test case: mapped-upload-trd-evidence
-- Workspace: `workspace/eval-005-mapped-upload-trd-evidence`
-- Evaluation date: 2026-08-07
-- Overall result: FAIL
-- Behavior result: FAIL
-- Coverage result: FULL
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt: 请为 `src/upload/` 增加分片上传能力准备技术方案，并先确认当前接口行为与技术差距。
-- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
-- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
-- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `b9272be266caff6ac38d8060f5dbdbc6e981647729fe1530cfc53ca05b58b007` from `agents/engineer/test/trd-gen/evals/workspace/eval-005-mapped-upload-trd-evidence`.
+- Fixture SHA-256: `b9272be266caff6ac38d8060f5dbdbc6e981647729fe1530cfc53ca05b58b007`
+- Prompt SHA-256: `415550072b82b1b3b236c15b45beda7e56782899611899aec658b78876563888`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `73cec46ef0287c25bd7a41d37b6bcee4e1ea25b1101672fb45bd299ecec77b0d`
+- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Judge schema SHA-256: `6eadf49a93ad15b65779f0737c549d6122220ac6abe8a01622417bb0da199cda`
+- Eval definition SHA-256: `ed02404d14ffd40d542c29f44a74caf2fc5696740b01f75b11e50dfad6379f60`
+- Metadata SHA-256: `cfc84017a2f6130d5f5d58c0d09338a6a3beaaf2ead3e34eb6d3229566da0300`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
-## Assertions
+## Assertion Results
 
-- FAIL `reads_mapped_docs_first`: transcript 中先读取 src/upload/limits.txt（item_3），之后才读取 change-map.yaml（item_4）及其命中文档 upload.md（item_7），不满足映射文档优先。
-- PASS `verifies_against_code`: final 明确核对 limits.txt 的 10 MB 与 upload.md 的 20 MB，并保留该分歧及其技术影响；workspace 哈希与记录一致。
-- PASS `treats_unverified_as_low_trust`: final 明确指出文档版本为 unverified、与代码配置冲突，并称无法据此确认真实运行时接口行为。
-
-## With Skill Behavior
-
-正确发现并记录 10 MB/20 MB 分歧及 unverified 低信任状态，但实际读序未先读取映射文档。
-
-## Without Skill Baseline
-
-作为对照，读取了上传配置、映射文档和 API 页面，并输出了分歧与技术差距；不影响 with_skill 判定。
-
-## Failures / Findings
-
-- reads_mapped_docs_first 未通过：代码证据读取发生在 change-map 和命中文档之前。
-- Root cause: with_skill transcript 明确显示先读取 src/upload/limits.txt，后读取 change-map.yaml 与 docs/site/api/upload.md，违反“映射文档优先”的断言。
-
-## Next Steps
-
-- 修复上述 assertion 对应的 skill 行为或 eval 输入问题后，使用同样的 paired fresh 流程重跑。
-
-## Runtime Artifacts Policy
-
-- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
-- 长期只保留本 `comparison.md`。
-
-## Historical Results
-
-# Consumption Regression Comparison
-
-## Evaluation Target
-
-- Skill: `trd-gen`
-- Eval: `eval-005-mapped-upload-trd-evidence`
-
-## Test Set / Fixture Version
-
-- Fixture: `ws1-consumption-v1`
-- Commit: `0b000b9`
-
-## Latest Result
-
-- Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-**PASS** — with-skill 以接口证据核查发现代码 10 MB 与文档 20 MB 的上限冲突，按 gate 停在 PM 决策点补齐产品基线，未带着未验证预期起草 TRD。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `reads_mapped_docs_first` | NOT_EXERCISED | 锁定证据仅显示候选声称已读取 change-map 指向文档，无法证明实际读取顺序。 |
+| `verifies_against_code` | NOT_EXERCISED | 候选明确记录 10 MB 与 20 MB 的冲突及技术影响，但因缺少 PM 确认未进入 TRD 编写，因此 TRD 中保留分歧的后续步骤未执行。 |
+| `treats_unverified_as_low_trust` | PASS | 候选明确指出文档的 last_verified_version 为 unverified，不能据此确定最终实现依据，并以代码配置冲突作为待确认事项。 |
 
 ## With-Skill Behavior
 
-- 命中映射文档后回代码核证上传上限，识别并结构化列出 10 MB / 20 MB 冲突与待确认契约问题。
-- 严格遵守协作链：PM 确认 → TRD → 维护者确认 → 实施计划，未越权产出正式 TRD。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=415550072b82b1b3b236c15b45beda7e56782899611899aec658b78876563888; fixture_sha256=b9272be266caff6ac38d8060f5dbdbc6e981647729fe1530cfc53ca05b58b007; output_sha256=5fa6dbb4fdcd6823a1166659d965b25934f92c5838ace42a0e00a3c077f11634; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别并记录文档与代码的限制冲突，将未验证文档降为低信任，并在缺少产品确认时安全停止后续 TRD 工作。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without-Skill Baseline
+## Fresh Without-Skill Baseline
 
-- 来源：本次 fresh `codex exec` 独立子进程，同一原始 prompt 与 fixture，未接触 skill 或消费契约提示。
-- baseline 同样发现冲突并请求基线确认，但对文档采信边界与协作链停点的处理是临场组织，未引用契约协议。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=415550072b82b1b3b236c15b45beda7e56782899611899aec658b78876563888; fixture_sha256=b9272be266caff6ac38d8060f5dbdbc6e981647729fe1530cfc53ca05b58b007; output_sha256=0d0bcf151624717aeb989a9feb755a463cd74fc9019ce2dea6ed8ce9d2d9f714; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了较完整的技术方案，但错误地将配置上限直接建议为正式限制，且未将未验证文档明确作为低信任依据。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- 无。
-
-## Next Steps
-
-- 保留本结果；后续 fixture 可增加干扰文档以放大行为差距。
+- None.
+- Next: 确认 PM 入口与 feature_path 后生成 TRD，并在其中保留 10 MB/20 MB 分歧及其影响。
 
 ## Runtime Artifact Policy
 
-- 运行期产物只存放于 `tmp/eval-runs/`，不提交到 git。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

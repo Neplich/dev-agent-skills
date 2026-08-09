@@ -1,71 +1,60 @@
-# Eval Result: eval-002-abandoned
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `security`
 - Skill: `dependency-risk-auditor`
 - Eval: `eval-002-abandoned`
-- Test case: Abandoned Packages
-- Workspace: `workspace/eval-002-abandoned`
-- Natural user prompt:
 
-> pm-agent has completed entry classification and routed this confirmed `dependency-inventory` security scope to dependency-risk-auditor. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/dependency-inventory/PRD.md`. Check for abandoned or outdated dependencies.
+## Current Result
 
-- Expected artifact: Structured dependency risk audit that identifies vulnerable, outdated, or abandoned packages with severity, evidence, and upgrade or mitigation guidance.
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-002-abandoned`.
+- Fixture SHA-256: `4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f`
+- Prompt SHA-256: `89079b812ce4ce066ef86759ed6c1d41f09649e1cedce1ebb540e93d141b1137`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `0f253c18407bc188d3558e673dc587116dcb519a01d7ef15849f9e98e350e1c1`
+- Skill overlay SHA-256: `0cc706a818794631f426534d787ec1444a803ce7555683ff49eb3015d8e3ce7c`
+- Judge schema SHA-256: `07345508cc5d326f024163cc8715111c4efeeb1bd80f16886d65b16eb2ef9292`
+- Eval definition SHA-256: `88dd9b929d53963534f872d5c6b43117be6b35cb41fa6b99bd7d05175018ade8`
+- Metadata SHA-256: `6e01d4daa6b468e7c7a0ddfd1d17ad1116a727bf8d6709ea8ad0e5baec7fce48`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-## Test Set / Fixture Version
+## Assertion Results
 
-- Schema: `evals.json` v1.0，使用 source HEAD `47adbbc9` 的当前 prompt、assertions 与 fixture。
-- Fresh run window: 2026-08-06 23:45:35 至 2026-08-07 00:13:31（Asia/Shanghai）。
-- Runtime root: `/tmp/security-fresh-evals-20260806-n3l1anp1/dependency-risk-auditor--eval-002-abandoned/`。
-- Fixture identity: 两条 lane 的初始 fixture manifest 完全相同，SHA-256 为 `78690f73cc6febd2097ea7892857fa979d64f69bbf14c879133bbbd07d659103`。
-- Lane isolation: 先完成并销毁全部 `without_skill` 独立顶层临时目录，再创建任何 `with_skill` 目录；每条 lane 使用独立的顶层临时 workspace、`HOME` 与 `CODEX_HOME`，不存在可供另一条 candidate 读取的 sibling lane。
-- Controlled variable: 两条 lane 使用逐字相同 prompt 与相同初始 fixture；仅 `with_skill` 的隔离 `CODEX_HOME` 安装并加载目标 skill，`without_skill` 未安装任何目标 skill。
-- Evidence isolation: 所有 candidate 会话结束并删除各自临时根后，才将内存中的最终 workspace 快照与 transcript 持久化到 runtime root；candidate transcript 泄漏扫描未命中 `eval_metadata.json`、`evals/evals.json`、`comparison.md`、judge/verdict 或 expected output/assertion 脚手架。
-- Judge: candidate 全部结束后，由第三个独立、只读的 fresh Codex 会话依据当前 assertions、两条 candidate 输出、transcript 与最终 workspace 快照判定。
-
-## Latest Result
-
-- Behavior result: **PASS**（PASS 4 / FAIL 0 / NOT EXERCISED 0）
-- Coverage result: **PARTIAL**
-Overall result: PASS (partial coverage)
-
-## Historical Contract Note
-
-上一份 durable comparison 基于 issue #234 修复前会向 baseline 泄漏规则的旧契约，因此标记为 `BLOCKED`。本轮使用当前无泄漏 prompt/fixture 重新生成两条 lane，未复用旧 baseline 或旧结论。
-
-## Assertions
-
-| Assertion | With skill | With-skill evidence | Without skill | Baseline evidence |
-| --- | --- | --- | --- | --- |
-| `dependency_inventory`<br>识别依赖生态、关键包和风险来源 | PASS | 最终快照中的 docs/security/dependency-inventory/dependency-audit.md 明确识别 package.json 中的 2 个生产依赖：request@2.88.2 与 node-uuid@1.4.8，并说明无 lockfile。 | PASS | AUDIT.md 明确盘点同样的两个直接生产依赖及缺失 lockfile。 |
-| `risk_classification`<br>区分漏洞、废弃、过期或供应链风险并说明严重度 | PASS | 报告区分并分级了废弃/维护风险、供应链与传递依赖限制，并明确“Confirmed vulnerabilities: 0”及无法确认 exploitability；request 为 High，node-uuid 为 Medium。 | PASS | AUDIT.md 区分 abandoned/deprecated、public security report、direct vulnerability 未确立及 transitive 风险未评估，并给出 P0/P1 优先级。 |
-| `evidence`<br>引用依赖文件、版本或已知风险作为证据 | PASS | 报告引用 package.json 中的具体包名和版本，并提供 npm/GitHub 维护状态证据；transitive 结论有 ENOLOCK 和无 runtime/tree 的明确依据。 | PASS | AUDIT.md 引用 package.json:6/7、具体版本、npm 页面及上游 SSRF 报告。 |
-| `upgrade_plan`<br>给出升级、替换或缓解建议 | PASS | 报告给出按 P0/P1/P2 排序的替换计划：request 迁移至 fetch/undici，node-uuid 迁移至 crypto.randomUUID()/uuid，并包含测试、SSRF 控制、lockfile 和发布门禁建议。 | PASS | AUDIT.md 给出 request 和 node-uuid 的替换、隔离、测试及 lockfile/audit 后续计划。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `dependency_inventory` | PASS | 报告识别了 Node.js 依赖生态中的 `request@2.88.2` 与 `node-uuid@1.4.8`，并关联网络请求链路、UUID 生成逻辑及维护风险。 |
+| `risk_classification` | PASS | 报告区分了 deprecated/停止维护与未确认漏洞，分别给出 HIGH 风险及 P0/P1 优先级，并明确说明缺少 lockfile 导致无法确认 CVE。 |
+| `evidence` | PASS | 报告引用了 `package.json` 中的具体版本、npm/上游维护声明、Node.js 文档，并记录 `npm audit` 因缺少 lockfile 返回 `ENOLOCK`。 |
+| `upgrade_plan` | PASS | 报告建议迁移至内建 `fetch`、评估 `undici`、使用 `uuid` 或 `crypto.randomUUID()`，并包含 lockfile、兼容性测试、SSRF 防护和隔离措施。 |
 
 ## With-Skill Behavior
 
-with-skill 正确读取 handoff/PRD，盘点 2 个直接依赖，创建了符合要求的 dependency-audit.md；明确记录 npm audit 的 ENOLOCK 限制，并分类废弃、供应链/传递依赖风险及严重度。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=89079b812ce4ce066ef86759ed6c1d41f09649e1cedce1ebb540e93d141b1137; fixture_sha256=4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f; output_sha256=51c13ec0542575360ef2f2c3d5a82d1d4ee74d6d59f95d248e2d7257e1ec7461; snapshot_sha256=ae0e4bd273f272a48841a1522401e03db1281eb61cd5b786abc38a83a5935c7e
+- Behavior: 完成结构化依赖风险审计，覆盖两个直接生产依赖、风险分类、证据与替换计划，且未修改依赖文件。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-without-skill 也创建了 AUDIT.md，覆盖同一依赖盘点、风险证据与替换建议；作为 baseline，各 assertion 均满足。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=89079b812ce4ce066ef86759ed6c1d41f09649e1cedce1ebb540e93d141b1137; fixture_sha256=4ef6c6ec20f409ae50ba76d9496bdabb654cdb81289a7a2eacee1dc6b802832f; output_sha256=a2be26c21178bcdf0324aaaed280644f8c1c81688f2b37fd1930ac51ac14a229; snapshot_sha256=457308e8c050065affcbfbb1eccbc7b9aaed7659c39e5aaaeb7889d580a3e8f7
+- Behavior: 同样完成了依赖审计并提供替换建议；作为比较基线，其结论更直接提出具体 CVE，但未影响 with_skill 断言判定。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
-- 无。
+- None.
+- Next: None.
 
-## Not Exercised
+## Runtime Artifact Policy
 
-- 没有 lockfile 或 node_modules，因此具体传递依赖、树深度和可验证 CVE 修复版本路径未被客观触发；报告已诚实标注 ENOLOCK 限制。
-- 未触发需要实际确认具体漏洞的分支；当前 fixture 的主要触发条件是废弃/过时依赖。
-
-## Next Steps
-
-- 无。
-
-## Runtime Artifacts Policy
-
-- Candidate command: `codex exec --skip-git-repo-check -C <isolated-workspace> -s workspace-write --ephemeral --ignore-user-config --ignore-rules -m gpt-5.6-luna -c 'model_reasoning_effort="medium"' --json -o <runtime-output> -`。
-- Judge 使用同一模型与 reasoning effort，在独立 `read-only` workspace 中按结构化 output schema 判定。
-- candidate、baseline、transcript、verdict、fixture snapshots、status、timing 与 diagnostics 仅保留于上述 `/tmp` runtime root，不提交到 git；仓库只更新 canonical `comparison.md`。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

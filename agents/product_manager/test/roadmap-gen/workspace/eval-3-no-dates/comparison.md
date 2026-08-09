@@ -1,85 +1,59 @@
-# Eval Result: roadmap-no-dates
+# Issue #246 Evaluation Result
 
-## Latest Fresh Evaluation — 2026-08-07
+## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `roadmap-gen`
 - Eval: `eval-003-no-dates`
-- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
-- Fixture: HEAD `47adbbc9`; both lanes used the same empty fixture manifest.
-- Behavior result: PASS — the exercised path correctly stopped on unavailable GitHub authentication.
-- Coverage result: PARTIAL — 0/3 assertion scenarios could be exercised because no milestone or issue data was available.
-Overall result: PASS (partial coverage)
 
-### Assertion Results
+## Current Result
 
-- `semantic_classification`: NOT EXERCISED — no undated milestone sample was available.
-- `no_fake_dates`: NOT EXERCISED — no live-data roadmap was generated for format review.
-- `release_blockers`: NOT EXERCISED — no issue labels were available.
-
-### With-Skill / Baseline Comparison
-
-The with-skill lane checked the existing-roadmap path, then stopped after `gh auth status` and `gh repo view` failed in the isolated HOME. It generated no fake dates or roadmap. The baseline produced a directional roadmap without GitHub milestone data.
-
-### Failures / Next Steps
-
-- Re-run after providing authenticated GitHub data to cover semantic inference and release-blocker behavior.
-
-### Runtime Artifact Policy
-
-- Fresh evidence remains under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-003-no-dates/` and is not committed.
-
----
-
-The sections below are historical records from earlier runs.
-
-## Evaluation Target
-
-- Skill: `roadmap-generator` → `roadmap-gen`（PASS 结论基于旧名，待重跑验证）
-- Eval: `eval-003-no-dates`
-- Prompt: 为 `golang/go` 生成项目路线图
-- Test set / fixture version: `evals.json` schema `1.0`; empty fixture context; live GitHub data queried on 2026-07-31
-- Candidate source: `tmp/eval-runs/issue-196-l2-3-4/roadmap-gen/eval-003-no-dates/with_skill/`
-- Fresh baseline source: `tmp/eval-runs/issue-196-l2-3-4/roadmap-gen/eval-003-no-dates/without_skill/`
-
-## Latest Result
-
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `8ed1c517c0f0999b8177c14728f4f1837cf8c41c83a93a8766a4e6fd07e1d14f` from `agents/product_manager/test/roadmap-gen/workspace/eval-3-no-dates`.
+- Fixture SHA-256: `8ed1c517c0f0999b8177c14728f4f1837cf8c41c83a93a8766a4e6fd07e1d14f`
+- Prompt SHA-256: `4165caadd548c6b8d1d9df4c0aa9c054ed9c0f0a71e88ab4aefd0c18bb92400a`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `74b972ac8dbd7706448e20025f6995b87c544e99309b65961f70d0e86a7bd191`
+- Skill overlay SHA-256: `bddee41393bca0a60880eaa8d81044ec84f2c1d751e6af66c6178450b19850d3`
+- Judge schema SHA-256: `f6a7dabb82746a0dc0f0c5965d8e78c276cdccf3d2da25bfbb1a77e91ffeca3f`
+- Eval definition SHA-256: `fbd695e0a879758e25936e89babfefc9a6cba4a52e1572a61e1da7fea0b1364b`
+- Metadata SHA-256: `1dfb7bfbfed7613af8764f4385cade9d5822d1652d85a0cbb75853e0bcae7474`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
-- Historical result: BLOCKED
-- 注：以下 PASS 结论基于改名前的  评测记录保留；改名后待 fresh eval 重跑验证新入口。
+Overall result: PASS
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `semantic_classification` | PASS | Patch milestones `Go1.25.13`/`Go1.26.6` 归入近期交付，当前 minor `Go1.27`、下一 minor `Go1.28` 和明显超出当前范围的 `Go1.29` 分层；非 semver milestones 单列交维护者确认。 |
-| `no_fake_dates` | PASS | 文档明确不生成日期型 Mermaid Gantt，也没有为无日期版本 milestone 虚构截止日。 |
-| `release_blockers` | PASS | Live 命中的 `release-blocker` issues 在对应 milestone 顶部以“🚨 发布阻塞项”突出，并保留 issue 链接。 |
+| `semantic_classification` | PASS | 交付的 docs/roadmap.md 按当前版本后的补丁版 Go1.26.1、下一 minor Go1.27、远期 major Go2.0 分类，并将 Runtime experiments 标为无法仅凭名称确认阶段、待维护者确认。 |
+| `no_fake_dates` | PASS | 交付文件明确记录 due_on 均为 null，未生成 Mermaid Gantt；日期仅使用证据中的抓取/更新上下文。 |
+| `release_blockers` | PASS | 交付文件以“发布阻塞项”突出列出带 release-blocker 标签的 #4101。 |
 
-## With Skill
+## With-Skill Behavior
 
-- 用 semver 与当前开放版本关系推断 patch、当前/后续 minor 和远期版本，不依赖被移除的固定 Go 映射表。
-- 无法仅靠 semver 匹配的 milestone 进入维护者确认清单；两个 2099 哨兵日期 milestone 也明确标注其非真实发布时间语义。
-- 不生成无依据的 Gantt；release blockers、进度、assignee、closed milestones 和 backlog 均保留 live 证据。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4165caadd548c6b8d1d9df4c0aa9c054ed9c0f0a71e88ab4aefd0c18bb92400a; fixture_sha256=8ed1c517c0f0999b8177c14728f4f1837cf8c41c83a93a8766a4e6fd07e1d14f; output_sha256=f7b5cee9d5a79c3d436d7fcc96583c32f6014a84acf6cc89ccb158ac0bdced62; snapshot_sha256=e071008d39586820391975b638a350319b5cb46d902544287410dc3ba5f8f7bf
+- Behavior: 成功写入路线图，完成语义分类、日期约束和发布阻塞项突出显示。
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Baseline 也把维护版 `Go1.25.13`/`Go1.26.6`、当前 `Go1.27`、下一版本 `Go1.28`、远期 `Go1.29` 组织成 P0/P1/P2，并且没有虚构日期。
-- 因此在本轮核心“milestone 语义推断”上，baseline 与 with-skill 基本持平，区分度不足；不能把通用模型已经具备的版本规划能力粉饰为 skill 独有收益。
-- With-skill 的可见增益主要是更明确的 semver 推断理由、无法匹配项的用户确认边界，以及逐条突出 live `release-blocker`；baseline 对 blockers 多为目标性描述，没有同等完整地列出命中实体。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4165caadd548c6b8d1d9df4c0aa9c054ed9c0f0a71e88ab4aefd0c18bb92400a; fixture_sha256=8ed1c517c0f0999b8177c14728f4f1837cf8c41c83a93a8766a4e6fd07e1d14f; output_sha256=eb0b5db69da2c9220987703d084cd3d6df6b9f5abb267320e2841e67ddd92d21; snapshot_sha256=7dd086fbbd65d13eec0975ec73ed463e9ddcd05e9531f022cc3fe5b269f2f8e0
+- Behavior: 也写入了路线图并覆盖主要版本分类与日期约束，但未明确将无法匹配的 milestone 交用户确认。
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
+## Failures and Next Steps
 
 - None.
-- 内化度观察：语义推断本身没有形成强区分；本 eval 主要验证契约执行正确性，而不是证明 skill 相对 baseline 的显著优势。
-
-## Next Steps
-
-- 保留此 eval 作为无日期、语义推断和 release-blocker 的回归门禁。
-- 后续评审继续关注 baseline 是否持续与 with-skill 持平；若长期无区分，应把它作为 skill 精简或 assertion 重构的决策证据。
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- 本轮 `with_skill`、fresh `without_skill`、transcript、final message 与生成的 roadmap 仅存于 `tmp/eval-runs/`。
-- Git 只提交本 `comparison.md`；运行期产物不提交。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

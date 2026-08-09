@@ -2,8 +2,19 @@
   "eval_id": "eval-002-blocked-without-original-bug-context",
   "eval_name": "blocked-without-original-bug-context",
   "workspace_root": "agents/qa/test/regression-suite/evals/workspace/eval-2-blocked-without-original-bug-context",
-  "prompt": "复测上周修过的支付按钮问题，但仓库里找不到原始 bug 报告、失败证据、修复 PR 或可用测试环境。请给出回归验证结论。",
   "fixture_context": [
-    "notes/missing-context.md"
-  ]
+    "notes/release-handoff.md"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec",
+    "agents/qa/skills/qa-agent"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

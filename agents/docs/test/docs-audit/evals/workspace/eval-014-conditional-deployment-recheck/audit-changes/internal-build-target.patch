@@ -1,0 +1,25 @@
+diff --git a/docs/site/package.json b/docs/site/package.json
+--- a/docs/site/package.json
++++ b/docs/site/package.json
+@@ -4,6 +4,6 @@
+   "scripts": {
+     "build:public": "node scripts/build.mjs public .generated/public",
+-    "build:internal": "node scripts/build.mjs internal .generated/internal"
++    "build:internal": "node scripts/build.mjs internal .generated/private"
+   }
+ }
+diff --git a/docs/site/scripts/build.mjs b/docs/site/scripts/build.mjs
+--- a/docs/site/scripts/build.mjs
++++ b/docs/site/scripts/build.mjs
+@@ -3,5 +3,5 @@ const variant = process.argv[2]
+-const output = process.argv[3] ?? `.generated/${variant}`
++const output = process.argv[3] ?? (variant === 'internal' ? '.generated/private' : '.generated/public')
+ await build({ variant, output })
+diff --git a/docs/site/.vitepress/config.internal.mjs b/docs/site/.vitepress/config.internal.mjs
+--- a/docs/site/.vitepress/config.internal.mjs
++++ b/docs/site/.vitepress/config.internal.mjs
+@@ -2,5 +2,5 @@ export default defineConfig({
+-  outDir: '../.generated/internal',
++  outDir: '../.generated/private',
+   base: '/internal/',
+ })

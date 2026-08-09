@@ -1,64 +1,60 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `docs-site-bootstrap`
 - Eval: `eval-004-deployment-completeness-trigger`
-- Review context: issue #162 fresh paired validation
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture: issue #162 scenario evidence in this workspace
-- Validation date: 2026-07-22
-- Execution cleanup: all declared runtime paths were absent from pristine scratch fixtures
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `4e3ac8498634ec41445a5f746933f338a50d3c3d4cae8d2f058bd619e288d842` from `agents/docs/test/docs-site-bootstrap/evals/workspace/eval-004-deployment-completeness-trigger`.
+- Fixture SHA-256: `4e3ac8498634ec41445a5f746933f338a50d3c3d4cae8d2f058bd619e288d842`
+- Prompt SHA-256: `a857fcf2c722711dbe976f85685cf13e950a1e35983a7408a6a97bb35347ed24`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `f74a445a21eabfad3f25cc38a5190833cf5fc52294bb0054a41378fe894ddd82`
+- Skill overlay SHA-256: `749412be4f8f7fe24db333e412ff5013877a6c57121d621b10bbe79fa7b60b02`
+- Judge schema SHA-256: `84cb88cc9e25dde2fbf0d2a0fb5349bfe630e32b333634cfdb918d30e60002a8`
+- Eval definition SHA-256: `f0a0699462419947dfa64649c390cf74a3d370111b9c3ea826e84a8d4dc9f735`
+- Metadata SHA-256: `abed400d8529a0bd91cc069fda9057f38aa9e64b1a632698bb6d1e29c26ae6e8`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **FAIL**
+- Coverage result: **PARTIAL**
+Overall result: FAIL
 
-## Latest Result
+## Assertion Results
 
-- Overall result: FAIL
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| `classifies_first_bootstrap_integrated` | PASS | PASS | 两条 `result.txt` 均依据 `evidence.md`，列出 Public/Internal、Docker、Tag CI、Compose、Helm、健康检查、TLS 和网络认证，并说明仅做只读核验、未重复执行发布部署。 |
-| `asks_first_bootstrap_choice` | FAIL | FAIL | 两条产物均仅说“补齐”缺失的 Dockerfile、CI、Compose、Helm 配置，没有明确询问三选一：全部纳入、独立托管 `not_applicable`、暂缓并保留 blocker。 |
-| `rechecks_rebootstrap_drift` | FAIL | FAIL | 两条产物都识别了 `.generated/internal` → `.generated/private` 的路径漂移，但没有判为 `partial`，也没有重新询问是否进入 PM → DevOps 补齐链路。 |
-| `preserves_authorization_boundary` | PASS | PASS | 两条产物均明确“仅获准只读检查和文档修改”，且未执行或授权 push、镜像发布、部署；没有让 Docs 明确修改 Docker、CI/CD、Compose 或 Helm。 |
-
-未满足断言（with/without 任一 FAIL）：``asks_first_bootstrap_choice``、``rechecks_rebootstrap_drift``
-
-
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `classifies_first_bootstrap_integrated` | NOT_EXERCISED | The locked with_skill output reports the repository states but provides no durable-commit confirmation or completed first-bootstrap integrated classification. |
+| `asks_first_bootstrap_choice` | FAIL | It identifies billing-api as lacking a documentation site and suggests PM/Docs scope confirmation, but does not explicitly ask the three required choices: include all variants, independent hosting not_applicable, or defer with blocker. |
+| `rechecks_rebootstrap_drift` | NOT_EXERCISED | No locked evidence shows a repeated bootstrap, re-read configuration, or Internal startup-path drift recheck. |
+| `preserves_authorization_boundary` | PASS | The output explicitly states the check was read-only and no files were modified; git evidence also shows no changes, commits, pushes, releases, or deployments. |
 
 ## With-Skill Behavior
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- 正确区分首次 integrated、首次 not_integrated、re-bootstrap partial 漂移，给出三选一和授权边界。
-- Candidate source: fresh `tmp/eval-runs/issue-162/with_skill/eval-004-deployment-completeness-trigger/candidate-output.md`.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a857fcf2c722711dbe976f85685cf13e950a1e35983a7408a6a97bb35347ed24; fixture_sha256=4e3ac8498634ec41445a5f746933f338a50d3c3d4cae8d2f058bd619e288d842; output_sha256=fe4360fe69be6281e70aaea42c218c4feb3cedd3e55a9d03ba9a49c07efcb010; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Accurately performs the requested read-only repository connectivity review and preserves the authorization boundary, but omits the explicit three-way bootstrap choice.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-- BLOCKED (0/4)；识别事实但缺 durable commit trigger、稳定状态、完整三选一与 PM/DevOps 链路。
-- The same prompt and pristine fixture were used; no historical baseline, target skill, Agent README, shared skill-map, old comparison, or with-skill output was used to compose it.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=a857fcf2c722711dbe976f85685cf13e950a1e35983a7408a6a97bb35347ed24; fixture_sha256=4e3ac8498634ec41445a5f746933f338a50d3c3d4cae8d2f058bd619e288d842; output_sha256=ebf512367cce7627977b41c253d64e86d1f61149606d857b4b3c54da7d2e487c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a comparable read-only repository review, with similar connectivity findings, but is comparison context only.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
+## Failures and Next Steps
 
-- baseline 缺少共享 closeout 协议。
-- No with-skill assertion failure or runner/credential blocker.
-
-## Next Steps
-
-- Keep this regression case; strengthen fixture ambiguity later where the baseline already passes.
+- asks_first_bootstrap_choice was not satisfied: the required three-way user choice was omitted.
+- Next: If the bootstrap workflow is continued, explicitly ask the three required hosting/scope choices for the non-integrated documentation host.
 
 ## Runtime Artifact Policy
 
-- Runtime candidates, copied fixtures, verdict, status, and diagnostics remain under `tmp/eval-runs/issue-162/` and are not committed.
-- Only this durable comparison, eval definition, metadata, and fixture evidence are submitted.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

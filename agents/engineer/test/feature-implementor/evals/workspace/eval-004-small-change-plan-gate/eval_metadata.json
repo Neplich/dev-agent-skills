@@ -2,5 +2,19 @@
   "eval_id": "eval-004-small-change-plan-gate",
   "eval_name": "small-change-plan-gate",
   "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-004-small-change-plan-gate",
-  "prompt": "docs/pm/settings-label/PRD.md 和 docs/engineer/settings-label/TRD.md 已确认。请把设置页按钮文案从「保存」改成「保存设置」，这是一个单文件小改动。"
+  "fixture_context": [
+    "docs/pm/settings-label/PRD.md",
+    "docs/engineer/settings-label/TRD.md"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

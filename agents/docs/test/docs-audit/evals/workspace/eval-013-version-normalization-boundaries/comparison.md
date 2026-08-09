@@ -1,90 +1,61 @@
-# Skill Eval Comparison
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
+- Agent: `docs`
 - Skill: `docs-audit`
 - Eval: `eval-013-version-normalization-boundaries`
-- Scenario: 多来源版本 identity、selector 边界与跨阶段 inventory 完整性
-- Review context: issue #177 sub-batch 4b
 
-## Test Set / Fixture Version
+## Current Result
 
-- Fixture version: `issue-177 discrimination restore round-1`
-- Validation time: `2026-07-28 22:48:16 CST`
-- Runtime: `tmp/eval-runs/issue-177/docs-audit/round-1/`
-- Assertions: 5，全部实际触发
-
-## Latest Result
-
-- Behavior result: `FAIL`（with）/ `FAIL`（without）— 本轮 #238 fresh 隔离重跑（2026-08-06）
-- Coverage result: `FULL`（with）/ `FULL`（without）— 本轮重跑实际触发的断言场景
-Overall result: FAIL
-- Blocking reason: 已按 #238 完成 fresh 隔离重跑（2026-08-06，gpt-5.6-luna + effort medium，独立 judge 判定），结论基于新契约；历史行为描述保留于下方段落（适用旧契约）。
-
-## #238 Fresh Rerun Result（2026-08-06）
-
-- 执行：with/without 两条 lane（独立 codex exec，gpt-5.6-luna + effort medium，仓库外 workspace 物化，逐字同 prompt）；判定：独立 judge（fresh 会话，read-only，对照断言逐条核对产物事实，不采信 lane 自述）
-- with_skill：Behavior `FAIL` / Coverage `FULL`
-- without_skill：Behavior `FAIL` / Coverage `FULL`
-
-### 逐断言判定
-
-| 断言 | with_skill | without_skill | 判定依据 |
-| --- | --- | --- | --- |
-| `preserves_complete_version_identity` | PASS | PASS | 两条产物均确认 `v1.2.0-rc.1+Build.7` 为完整 identity，并指出前缀、大小写、预发布标识和 build metadata 不能被丢失或视为等价（with_skill: `result.txt:5,7,17`；without_skill: `result.txt:6-8,23`）。 |
-| `enforces_each_source_contract` | PASS | PASS | 均按来源识别 raw form、selector/extractor 和缺失值问题；未用其他来源补值，也未静默修复非法值（with_skill: `result.txt:7,12-16`；without_skill: `result.txt:8,16-25`）。 |
-| `reports_all_version_blockers` | PASS | PASS | 两条产物均覆盖大小写/前缀非法、缺失、非 SemVer、selector 解析失败、重复匹配、extractor 不一致及 identity 差异，并分别给出发布前和发布后的失败结论（with_skill: `result.txt:8,12-18`；without_skill: `result.txt:10,14-27`）。 |
-| `binds_pre_and_post_tag_inventory` | FAIL | FAIL | 产物仅列出 pre-tag 的 6 个来源和 post-tag 的 7 个来源，没有说明 pre-tag 如何固化完整来源集合，也没有说明 post-tag 消费同一绑定；with_skill: `result.txt:6`，without_skill: `result.txt:5`。 |
-| `makes_inventory_integrity_reproducible` | FAIL | FAIL | 产物提到 selector 数量、匹配数量和 extractor identity，但没有给出可独立重算的 inventory integrity 证据，也没有说明来源集合、定位契约或顺序被篡改时如何阻止阶段成功（with_skill: `result.txt:13-14,18`；without_skill: `result.txt:19-25,27`）。 |
-
-未满足断言（with/without 任一 FAIL）：``binds_pre_and_post_tag_inventory``、``makes_inventory_integrity_reproducible``
-
-
-
-## Leakage Surface Analysis
-
-重做前，prompt、assertions 和 `version-cases.md` 直接给出前缀算法、完整 expected identity、case/build 判定、全部 blocker、六字段 inventory、canonical serialization、预计算 digest 和 pre/post producer-consumer 答案。
-
-重做后，fixture 只保留 source locator table、pre/post observed source ids 和 observation sets，不给 expected identity、valid/invalid 标签、canonical rules、digest 或阶段裁定。
-
-## Redesign
-
-- prompt 只要求分别给出两阶段 identity、全部 blocker、持久化证据与结论。
-- assertions 改为完整 identity、source contract、全量 blocker、跨阶段 inventory binding 和 reproducible integrity 五个语义结果。
-- 删除预计算 digest、canonical 答案、invalid 原因标签和 producer/consumer 指令。
-- 增加 phase-boundary 变体：pre-tag declared source ids 缺少 future `tag`，post-tag observations 才出现该来源。
-- 保留多版本 index 的双匹配、absent JSON Pointer 与 unknown extractor 原始观测。
-- 将历史 issue locator 替换为 `docs-agent:release-notes-gen`。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970` from `agents/docs/test/docs-audit/evals/workspace/eval-013-version-normalization-boundaries`.
+- Fixture SHA-256: `1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970`
+- Prompt SHA-256: `e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
+- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Judge schema SHA-256: `3cb4db02fceb3a963ab35cfa46d9bd95146e58bed4f92e90064a4aa2fe2f0404`
+- Eval definition SHA-256: `5705e506f62200b76867ebca90e47274aa68bc0ca81a7790a3ab2ac8baafd194`
+- Metadata SHA-256: `de723686d571b59f10dc657eaf98d1d9ad27c06a9381fcb0dfee19364fb401ec`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
-> ⚠️ 本节为该文件历史轮结论（适用旧契约/旧 fixture），本轮 #238 结论见上方「#238 Fresh Rerun Result」。
 
-| Assertion | With skill | Without skill | Fresh judgment |
-| --- | --- | --- | --- |
-| `preserves_complete_version_identity` | PASS | PASS | 两臂均保留 prerelease、build metadata 与大小写。 |
-| `enforces_each_source_contract` | PASS | PASS | 两臂均逐来源拒绝 raw-form、selector 与 extractor 问题。 |
-| `reports_all_version_blockers` | PASS | PASS | 两臂均覆盖缺失、非法、歧义和 identity 不一致类别。 |
-| `binds_pre_and_post_tag_inventory` | PASS | FAIL | skill arm要求 pre-tag 固定 future tag pending source；baseline 将 tag 当作 post-tag 新增来源。 |
-| `makes_inventory_integrity_reproducible` | PASS | FAIL | skill arm给出 canonical JSON、稳定排序、digest 重算和篡改阻塞；baseline 只有字段列表。 |
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `preserves_complete_version_identity` | PASS | with_skill explicitly equates the prefixed and unprefixed Observation A values as the same complete SemVer identity, retaining prerelease and build metadata, and rejects case-changed or metadata-dropped candidates. |
+| `enforces_each_source_contract` | PASS | with_skill reports each observed source failure, including raw-prefix violations, missing values, invalid package SemVer, index multiplicity, zero selector resolution, and extractor mismatch, without silently repairing values. |
+| `reports_all_version_blockers` | PASS | with_skill covers the missing, malformed, ambiguous, extractor, and identity discrepancies and states that both pre-tag and post-tag checks are blocked. |
+| `binds_pre_and_post_tag_inventory` | NOT_EXERCISED | with_skill states pre-tag cannot form a consumable canonical inventory and post-tag therefore cannot consume the same immutable identity. Per the fixture rule, this later binding check is NOT_EXERCISED. |
+| `makes_inventory_integrity_reproducible` | NOT_EXERCISED | with_skill states no canonical pre-tag inventory was generated. Per the fixture rule, deterministic integrity evidence cannot yet be produced, so this is NOT_EXERCISED. |
 
-## Fresh Validation Method
+## With-Skill Behavior
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e; fixture_sha256=1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970; output_sha256=436fdcf02801a2fed6c1bb52e5909f3594ef9f52c90a7cc1ab9216f4cd1f15f4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly identifies complete version identity, enforces source-specific raw and extraction contracts, reports the blockers, and explains that no post-tag inventory binding is available because pre-tag is blocked.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-- 两臂锁定前只读取同一 prompt 和 `version-cases.md`，未读取 assertions、expected output、旧 comparison 或对方输出。
-- with-skill arm读取完整 Docs/docs-audit 指令；without-skill arm隔离这些内容。
-- fresh judge 在 SHA-256 锁定后才读取 assertions。
-- with-skill SHA-256：`210a4836d46b095ef9ad18943784c5dcc55df4c9693a46a1351010c3bdab11b3`；without-skill：`e053ee70e2330b8c7b5138a57bdb1ce189170489dd169b5d182bf2fd8a068d9b`。
+## Fresh Without-Skill Baseline
 
-## Failures And Limitations
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e; fixture_sha256=1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970; output_sha256=8ca2de0c5cb365248c64ac3123f3c7541a2bf3b13d6853460986a856ece722af; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a basic blocker list and post-tag failure conclusion, but gives less complete source-contract, identity, and inventory-binding analysis than with_skill.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-> ⚠️ 本节为历史轮执行证据（适用旧 run）；当前结论以本文件上方「#238 Fresh Rerun Result」为准。
+## Failures and Next Steps
 
-- with-skill 无失败；Coverage FULL。
-- source table 仍暴露 raw forms、selector 和 extractor，所以 baseline 可恢复 3/5；区分度来自跨阶段 future-tag binding 与 canonical integrity。
-- 第一轮即达到区分度，无需第二轮。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 
-- runtime responses 和 judge verdict 仅保存在 `tmp/eval-runs/issue-177/docs-audit/round-1/`，不提交。
-- 本 `comparison.md` 是唯一 durable 结果。
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

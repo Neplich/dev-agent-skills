@@ -2,21 +2,22 @@
   "eval_id": "eval-004-pm-spec-handoff",
   "eval_name": "pm-spec-handoff-stops-before-implementation",
   "workspace_root": "agents/designer/test/ui-ux-design/workspace/eval-4-pm-spec-handoff",
-  "prompt": "PM 已经产出 billing-notification-settings 的 PRD、DECISIONS 和 TRD。请阅读这些文档，并基于现有设置页补充 UI/UX 设计。",
-  "with_skill_outputs": [
-    "with_skill/docs/design/billing-notification-settings/ui-ux-spec.md"
+  "fixture_context": [
+    "docs/pm/billing-notification-settings/PRD.md",
+    "docs/pm/billing-notification-settings/DECISIONS.md",
+    "docs/pm/billing-notification-settings/TRD.md",
+    "src/components/settings/SettingsShell.tsx",
+    "src/pages/settings/BillingNotificationsPage.tsx"
   ],
-  "assertions": [
-    {
-      "id": "creates_design_handoff_doc",
-      "description": "Produces a UI/UX handoff doc for Engineer consumption",
-      "target": "with_skill/docs/design/billing-notification-settings/ui-ux-spec.md",
-      "all_of": [
-        "# UI/UX Design Specification",
-        "## 2. User Journey",
-        "## 4. Page Layouts",
-        "## 6. Interaction Behaviors"
-      ]
-    }
-  ]
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

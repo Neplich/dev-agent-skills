@@ -2,10 +2,20 @@
   "eval_id": "eval-003-python",
   "eval_name": "Python Dependency Audit",
   "workspace_root": "agents/security/test/dependency-risk-auditor/evals/workspace/eval-003-python",
-  "prompt": "pm-agent has completed entry classification and routed this confirmed `dependency-inventory` security scope to dependency-risk-auditor. Use the PM handoff packet in workspace `PM_HANDOFF.md` and the confirmed source document `docs/pm/dependency-inventory/PRD.md`. Review Python dependencies for security issues.",
   "fixture_context": [
     "PM_HANDOFF.md",
     "docs/pm/dependency-inventory/PRD.md",
     "requirements.txt"
-  ]
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }

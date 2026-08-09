@@ -13,9 +13,9 @@
   - `docs/pm/preferences-summary/PRD.md` (Approved)
   - `docs/engineer/preferences-summary/TRD.md` (Confirmed)
   - `docs/engineer/preferences-summary/IMPLEMENTATION_PLAN.md` (Confirmed and closed out)
-- scope_decision: Propose the bounded feature-level design synchronization scope after verifying completion evidence; maintainer scope confirmation is still required.
+- scope_decision: Prepare a bounded update for the current `preferences-summary` feature design page.
 - downstream_owner: `docs`
 - required_output: Candidate update for `docs/site/design/preferences-summary.md` and its design change-map entry as one atomic scope.
-- evidence: `.eval/actual-diff.patch`, `src/preferences_summary.py`, and `.eval/test-results.md`.
+- evidence: `delivery-evidence/actual-diff.patch`, `src/preferences_summary.py`, and `delivery-evidence/test-results.md`.
 - exclusions: API, database, operations, product, release documentation, and any code outside `src/preferences_summary.py`.
-- blockers_risks: This handoff is not candidate-scope confirmation and does not authorize writes.
+- blockers_risks: The implementation materials are complete; the candidate page scope has not yet been confirmed by the maintainer, and the existing site is unchanged.

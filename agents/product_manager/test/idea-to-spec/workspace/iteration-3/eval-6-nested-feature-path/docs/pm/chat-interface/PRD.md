@@ -15,7 +15,7 @@ related_docs: []
 changelog:
   - version: "1.0.0"
     date: "2026-06-23"
-    changes: "Initial fixture"
+    changes: "Confirmed initial chat interface scope"
 ---
 
 # Chat Interface PRD

@@ -1,82 +1,60 @@
-# Eval Result: eval-003-monorepo-scope-clarification
-
-## Latest Fresh Evaluation — 2026-08-07
-
-- Model: `gpt-5.6-luna`, `model_reasoning_effort="medium"`
-- Fixture: HEAD `47adbbc9`; fresh paired manifests matched exactly.
-- Behavior result: PASS — 4/4 assertions passed.
-- Coverage result: FULL — all 4 assertion scenarios were exercised.
-Overall result: PASS
-
-### Assertion Results
-
-- `blocked_on_scope`: PASS — detected independent web, admin, and API workspaces and stopped for scope clarification.
-- `minimal_clarification`: PASS — asked one scope question only.
-- `no_fabricated_catalog`: PASS — wrote no formal catalog or PRD.
-- `no_parallel_top_level`: PASS — did not guess workspace names as confirmed feature paths.
-
-### With-Skill / Baseline Comparison
-
-The with-skill response stopped at the smallest scope gate. The baseline wrote a root `FEATURES.md` despite the unresolved scope.
-
-### Failures / Next Steps
-
-- No with-skill assertion failures and no coverage gaps.
-
-### Runtime Artifact Policy
-
-- Fresh evidence remains under `/private/tmp/pm-spec-fresh-evidence.GpQ6yO/eval-003-monorepo-scope-clarification/` and is not committed.
-
----
-
-The sections below are historical records from earlier runs.
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `product_manager`
 - Skill: `feature-catalog`
 - Eval: `eval-003-monorepo-scope-clarification`
-- Test case: monorepo-scope-clarification
-- Workspace: `workspace/eval-003-monorepo-scope-clarification`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
 
+## Current Result
 
-## Test Set / Fixture Version
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3` from `agents/product_manager/test/feature-catalog/evals/workspace/eval-003-monorepo-scope-clarification`.
+- Fixture SHA-256: `c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3`
+- Prompt SHA-256: `592a8806afad3bd6928b7ec27d5b10ebdae9bb0b86dd82cabdc2f71dc5d37c25`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `272c84e241c5d52534922fccf2bc6732492a0d70c9f6e2ab8dc1eff2533f7b0c`
+- Skill overlay SHA-256: `c7fd56e26e53c8ea32b598e8f4e06588e28aee376ed79eb9822ecf37e3099222`
+- Judge schema SHA-256: `fe7ee6212a0514e053db6b490f2fd78c74a3e6115f5b789e3e3734a9d7b1be8b`
+- Eval definition SHA-256: `221668759d9b3f1847f350986e591b6defbd71cd5f83a296b96e5736de8e7ceb`
+- Metadata SHA-256: `8aa1f1f970ba708ba203aa964e23b048bfd278c5cd0d04094602a65c55ad9476`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-- Schema: `evals.json` v1.0
-- Fixture: pnpm monorepo with independently deployed `apps/web`, `apps/admin`, and `services/api`, with no PM docs
-- Expected output: blocked on scope, ask exactly one minimal scope clarification question, and avoid confirmed catalog or guessed parallel top-level feature paths.
+## Assertion Results
 
-## Assertions
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `blocked_on_scope` | PASS | With-skill output states `blocked` and identifies `apps/web`, `apps/admin`, and `services/api` as independent workspaces, then requests scope confirmation. |
+| `minimal_clarification` | PASS | With-skill output asks one scope question and offers concise scope choices; it does not present a multi-question questionnaire. |
+| `no_fabricated_catalog` | PASS | With-skill delivery_snapshot is empty and git status/diff are empty; no catalog or PRD was delivered. |
+| `no_parallel_top_level` | PASS | The listed workspace paths are presented as detected workspaces, not asserted as parallel top-level feature paths or confirmed catalog conclusions. |
 
-- `blocked_on_scope`: identify multiple workspaces and unresolved scope
-- `minimal_clarification`: ask one smallest clarification question
-- `no_fabricated_catalog`: do not fabricate a confirmed catalog or PRD
-- `no_parallel_top_level`: do not guess each workspace as a settled top-level feature path
+## With-Skill Behavior
 
-## With Skill
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=592a8806afad3bd6928b7ec27d5b10ebdae9bb0b86dd82cabdc2f71dc5d37c25; fixture_sha256=c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3; output_sha256=95c785b44a8d9f090243f9c5520885aa2bcda4613df83e6d4b9dfd37ebd344b2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly blocks on the unspecified scope and asks for minimal scope clarification without making changes.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-- The `feature-catalog` edge-case rule treats undetermined monorepo scope as `blocked`.
-- The fixture clearly exposes three independently deployed surfaces: `apps/web`, `apps/admin`, and `services/api`.
-- The correct with-skill behavior is to ask one minimal question, such as whether to catalog `apps/web`, `apps/admin`, `services/api`, or all of them, and stop.
-- It does not create `docs/pm/FEATURE_CATALOG.md`, generate PRDs, or present guessed top-level feature paths as confirmed conclusions.
+## Fresh Without-Skill Baseline
 
-## Without Skill / without_skill Baseline
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=592a8806afad3bd6928b7ec27d5b10ebdae9bb0b86dd82cabdc2f71dc5d37c25; fixture_sha256=c414562285f1c022777b6125d75fb56cbbd795475c5bf83bc97b862a14abc6d3; output_sha256=2707fac4213b408799906d504f5d786d00f7ec472dc8526d306ed755c801ee5b; snapshot_sha256=4adcf266b69668cac98260b41a6b1b2219094d298ef229d8d2c518153fb41bb4
+- Behavior: Created and documented a functional catalog despite the unspecified scope, providing baseline contrast.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-- The baseline read the eval item and fixture before target skill docs. A generic response could eagerly inventory all packages and produce a catalog despite unresolved scope.
-- It may ask several discovery questions or treat each workspace name as a confirmed top-level feature path.
+## Failures and Next Steps
 
-## Failures
+- None.
+- Next: None.
 
-- None. The current `feature-catalog` protocol satisfies the blocked, single-question, no-fabrication, and no-parallel-top-level assertions.
+## Runtime Artifact Policy
 
-## Next Steps
-
-- Keep this eval as coverage for monorepo scope clarification.
-- Re-run fresh validation if monorepo scope or blocked-state rules change.
-
-## Runtime Artifacts Policy
-
-- No runtime artifacts were created or committed. Transcripts, verdicts, outputs, timing, and diagnostics must remain outside git; the durable result is this `comparison.md`.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

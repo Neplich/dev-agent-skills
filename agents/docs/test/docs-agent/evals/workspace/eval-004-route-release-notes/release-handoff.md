@@ -5,7 +5,7 @@
 - feature_path: products/ai-hub/v1-file-delivery
 - release_version: v1.0.0
 - release_scope: 文件卡片、消息重试、附件模型、数据库迁移与交付资产
-- host_repository: current fixture repository
+- host_repository: current product repository
 - source_documents:
   - docs/pm/products/ai-hub/v1-file-delivery/PRD.md
   - docs/engineer/products/ai-hub/v1-file-delivery/TRD.md
@@ -17,8 +17,8 @@
   - deploy/helm/ai-hub/
   - dist/manifest.json
   - test-results/release-v1.0.0.md
-- required_output: 生成、确认、索引并校验 docs/site/release-notes/v1.0.0.md，随后提供 `docs-agent:docs-audit` pre-tag handoff；`pm-agent:github-release-gen` 在 `ready_for_tag` 后作为下游
-- blockers_risks: 无入口阻塞；正文确认与宿主 docs checks 仍由 specialist gate 执行
+- required_output: 面向站内读者的 `docs/site/release-notes/v1.0.0.md` 版本说明
+- blockers_risks: 版本说明正文尚未生成，宿主文档检查尚未执行
 
-只要求 Docs Agent 完成入口检查和 specialist 分流，不执行正文生成、GitHub Release、
-tag、部署或 `docs-agent:docs-audit` 盖章。
+目标版本、变更范围、宿主仓库和证据位置均已确认。当前工作区还没有
+`docs/site/release-notes/v1.0.0.md` 或该版本的文档审计结果。

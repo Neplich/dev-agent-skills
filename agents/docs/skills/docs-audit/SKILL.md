@@ -1,6 +1,6 @@
 ---
 name: docs-audit
-description: "Internal documentation specialist—not a direct entry point. Invoked by docs-agent to audit formal documentation against current code and test evidence, covering pre-tag release audit and post-tag release verification."
+description: "Audit formal documentation against code, tests, Git objects, version surfaces, and raw manual-page evidence for bounded, pre-tag, or post-tag verification. Use after docs-agent supplies a confirmed audit basis and target version."
 visibility: internal
 ---
 
@@ -10,6 +10,81 @@ Audits a host project's formal documentation through a deterministic impact
 pass followed by fact verification. This file owns the entry and release gates;
 load `_internal/INSTRUCTIONS.md` only after the entry basis and version baseline
 are resolved.
+
+## Mandatory Audit Transaction
+
+Resolve the active installed `docs-audit` skill and load
+`_internal/INSTRUCTIONS.md` after credentials are complete. Keep one
+reproducible inventory binding immutable base/target objects, changed files,
+change-map matches, affected pages, all release surfaces, normalized versions,
+and each page's pre-stamp state.
+
+Persist that inventory as canonical sorted data with a reproducible identity
+or digest during pre-tag, and make post-tag consume exactly the same bound
+inventory. Any membership, locator, order, or identity drift—or an attempt to
+replace it with a broad multi-version scan—blocks both publication readiness
+and post-tag verification.
+
+Report the inventory binding and integrity status in every audit conclusion,
+including blocked reviews: state what pre-tag would bind, whether post-tag can
+consume that exact identity, and which missing or changed element blocks it.
+When sources use both prefixed and unprefixed version forms, explicitly state
+whether they normalize to one complete identity while preserving prerelease,
+build metadata, and case-sensitive components.
+
+In pre-tag, verify the complete affected set against code/tests, classify
+confirmed outdated claims with the literal final verdict `stale` rather than
+the intermediate label `mismatch`, validate the shared frontmatter source, and stamp
+all verified pages in one transaction. Persist the complete candidate producer
+record, anchor it in a commit, discover it through the versioned path, integrate
+by fast-forward, and read it back before returning `ready_for_tag`; never call
+that published. On any failure, roll back only the current attempt and prove
+HEAD, refs, index, worktree, and authoritative prior records were restored.
+The producer record includes complete per-source locators, pre-candidate and
+post-candidate staged inventories, and readback identity. Keep the candidate,
+anchor, and handoff steps distinguishable in Git evidence; a single commit that
+mixes candidate content, anchor, handoff, and unrelated page changes does not
+prove the transaction.
+The pre-tag transaction evidence explicitly records `source_locators`
+(path/mode/type/blob/hash), `pre_candidate_inventory`,
+`post_candidate_inventory`, `candidate_commit`, `anchor_commit`,
+`handoff_commit`, `fast_forward_result`, and `readback_identity`. Stamp every
+verified inventory member—including Release Notes page/index surfaces—in the
+same transaction even when its body content did not otherwise change.
+Derive locator fields, staged inventories, object identities, and digests from
+the locked Git/source evidence. The inbound handoff does not need to prepopulate
+this audit-protocol schema; block only when the underlying raw evidence is
+absent or contradictory.
+Before committing, validate the candidate against every Section 5 field group,
+including the exact `canonical-json-rfc8259-sorted-v1` algorithm name, complete
+locator contracts, both pre-candidate and post-candidate staged inventories,
+and every post-stamp SHA-256. After the final atomic record write, recompute its
+actual Git blob and copy that exact identity into the anchor, discovery handoff,
+and external package; never reuse a draft-record digest. Record the distinct
+candidate, anchor, and handoff commits plus post-fast-forward readback before
+returning `ready_for_tag`.
+The candidate record must not contain the literal token `ready_for_tag`
+anywhere, including explanatory prohibitions. Every version-source entry must
+render all six locator-contract keys (`source_id`, `locator_kind`, `locator`,
+`selector`, `extractor`, `required_raw_form`), and every file-backed source also
+renders its path/mode/type/blob/hash evidence. Render two separately named,
+complete staged inventories—pre-candidate and post-candidate—before creating
+the anchor. The handoff commit stages only the discovery handoff path, and the
+external package reports that commit's tree/path/blob plus fast-forward and
+integrated readback evidence.
+
+In post-tag, select the trusted pre-tag authority before deterministic fallback,
+bind the actual tag object/tree and every surface to the same inventory, and
+persist `blocked` on mismatch without rewriting the authority. Manual-page
+audits additionally verify every step screenshot file, navigation reachability,
+and redaction-sensitive content from raw files.
+Review the complete same-version attempt history, including directly
+superseded attempts, before selecting authority. If persisting the current
+result fails, state the recovery condition: restore write capability, persist
+the blocked record, and verify it by readback without changing prior authority.
+For manuals, treat referenced raster and vector image files as images, and
+report redaction findings at an exact file plus line, element, or object
+location.
 
 ## Entry Credentials
 
@@ -27,7 +102,7 @@ or not maintainer-confirmed, return `blocked` before writing a report, stamping
 pages, or changing version metadata.
 
 The PM packet definition lives in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 Direct invocation does not waive this gate. If the audit scope is ambiguous,
 stop before writing a report or version metadata and return the missing scope
 to `docs-agent` or `pm-agent`.
@@ -69,7 +144,7 @@ Before auditing or writing:
    update directly into `stale`.
 3. Verify every affected page against current code or test evidence under the
    trust model in
-   `agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md`.
+   the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`.
    Code and tests are ground truth; preserve each conflicting document claim,
    code fact, and impact.
 4. Treat `stale`, `mismatch`, a page that remains unverified after fact review,
@@ -111,7 +186,7 @@ Report:
 
 At closeout, return the audit conclusion to the release handoff and follow the
 safety-net behavior in
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`.
+the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 Wait for confirmation before another role acts unless the user has enabled the
 applicable continuation.
 

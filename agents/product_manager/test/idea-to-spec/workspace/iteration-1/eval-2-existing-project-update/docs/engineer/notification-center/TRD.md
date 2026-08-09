@@ -3,9 +3,9 @@ title: "Notification Center TRD"
 type: TRD
 version: "1.1.0"
 status: Approved
-author: "Eval Fixture"
+author: "Notification Platform Team"
 date: "2026-04-06"
-generated_by: "fixture"
+generated_by: "engineering"
 related_docs:
   - "docs/pm/notification-center/PRD.md"
   - "docs/pm/notification-center/DECISIONS.md"

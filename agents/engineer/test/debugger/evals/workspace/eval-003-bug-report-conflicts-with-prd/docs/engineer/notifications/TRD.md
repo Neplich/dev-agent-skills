@@ -13,5 +13,4 @@ related_prd: docs/pm/notifications/PRD.md
 # 通知列表过滤
 
 active 查询条件为 `status IN ('active', 'read')`，archive 查询条件为 `status = 'archived'`。该技术行为与 PRD 一致。
-
-若产品希望 active 包含 archived，必须先由 `pm-agent:idea-to-spec` 的 existing-project-update 路径更新 PRD 或产品决策，再同步本 TRD，并由 `feature-implementor` 形成确认的 `IMPLEMENTATION_PLAN.md`。
+两个查询在仓储层独立构造，不会把 archive 结果合并进 active 响应。

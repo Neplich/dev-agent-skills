@@ -1,101 +1,60 @@
-# Eval Result: eval-008-feature-path-mismatch-blocked
+# Issue #246 Evaluation Result
 
 ## Evaluation Target
 
 - Agent: `engineer`
 - Skill: `feature-implementor`
 - Eval: `eval-008-feature-path-mismatch-blocked`
-- Test case: feature-path-mismatch-blocked
-- Workspace: `workspace/eval-008-feature-path-mismatch-blocked`
-- Evaluation date: 2026-08-07
-- Overall result: PASS
-- Behavior result: PASS
-- Coverage result: FULL
 
-## Test Set / Fixture Version
+## Current Result
 
-- Schema: `evals.json` v1.0
-- Prompt: 请根据 docs/pm/chat-interface/history-search/PRD.md 和 docs/engineer/chat-interface/TRD.md 实现 Chat History Search。两份文档记录的功能路径不一致：PRD 是 chat-interface/history-search，TRD 是 chat-interface。
-- Paired isolation: baseline 全部完成并销毁运行根后，才创建 with-skill roots；两条 lane 使用逐字相同 prompt 与同一 fixture。
-- Leak control: candidate 不可见 `evals.json`、`eval_metadata.json`、expected output、assertions、历史 comparison 或 judge；eval 脚手架 `README.md` 已从两条 lane 物理移除。
-- Execution: with-skill、without-skill 与独立 judge 均为 fresh `gpt-5.6-luna`，`model_reasoning_effort="medium"`；judge 读取实际 workspace、JSONL transcript 与文件 hashes。
+- Evidence status: **FRESH**
+- Preflight status: **PASS**
+- Judge: third independent fresh judge completed after both candidates were locked.
+- Fixture version/source: canonical manifest `fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d` from `agents/engineer/test/feature-implementor/evals/workspace/eval-008-feature-path-mismatch-blocked`.
+- Fixture SHA-256: `fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d`
+- Prompt SHA-256: `9ba9f5f01cabbae62ba3bf40c7c99d8dc7f337984c8ca4277c6f238b4df6793e`
+- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository worktree state: **DIRTY**
+- Target skill tree SHA-256: `e820a1098a32d64fe76bdf4ec719cd859ebecfdb70fa28be1309b656ec71bd22`
+- Skill overlay SHA-256: `226a387f9ef93d9f4c106e1f240f22e5014d390eeb37da0fd61da0c129ca36ba`
+- Judge schema SHA-256: `33864756672d39ea5d3d054f279e52d6c05b6ece12eef5c3a61c53de61073a90`
+- Eval definition SHA-256: `66c4bea185008e1b43202328d058ecaa9e2ff572bdfe8be7d346a358d1c56597`
+- Metadata SHA-256: `3365bfe92db70d4ff5499652a29702f93ac57621aa93b249c4712559af86079a`
+- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
+- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
-## Assertions
+## Assertion Results
 
-- PASS `detects_prd_trd_path_mismatch`: 明确指出 PRD feature_path 为 `chat-interface/history-search`、TRD feature_path 为 `chat-interface`，且 transcript 实际读取并确认了两者。
-- PASS `checks_related_prd`: 明确指出 TRD related_prd 指向 `docs/pm/chat-interface/PRD.md`，而非目标 PRD 路径。
-- PASS `blocks_implementation_plan`: 明确表示未创建计划、未修改代码；transcript 无写入命令，目标 IMPLEMENTATION_PLAN.md 不存在，workspace 文档哈希与 fixture 一致。
-- PASS `hands_off_to_trd_gen`: 明确要求交回 `engineer-agent:trd-gen`，生成与目标 PRD 对齐的 TRD。
+| Assertion | Result | Evidence |
+| --- | --- | --- |
+| `detects_prd_trd_path_mismatch` | PASS | With-skill output explicitly identifies PRD feature_path as chat-interface/history-search, TRD feature_path as chat-interface, and states they do not match. |
+| `checks_related_prd` | PASS | With-skill output checks the required related_prd target, identifies the TRD gap, and blocks planning until the TRD is corrected. |
+| `blocks_implementation_plan` | PASS | With-skill delivery_snapshot is empty and git evidence shows no status, index, worktree, or ref changes; output explicitly blocks implementation and IMPLEMENTATION_PLAN.md changes. |
+| `hands_off_to_trd_gen` | PASS | With-skill output explicitly hands off to engineer-agent:trd-gen to align or rewrite docs/engineer/chat-interface/history-search/TRD.md. |
 
-## With Skill Behavior
+## With-Skill Behavior
 
-with_skill 四项断言均满足，且 exit_code 为 0、JSONL transcript 有效、workspace 未发生实现性变更。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9ba9f5f01cabbae62ba3bf40c7c99d8dc7f337984c8ca4277c6f238b4df6793e; fixture_sha256=fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d; output_sha256=12c577562b2e86728f742c920ffdeec28492f035bb6a3eabbd2ea79aada312c0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Detected the PRD/TRD path and related_prd mismatch, blocked implementation planning and code/test work, and handed off to engineer-agent:trd-gen.
+- The with-skill context was created only after the baseline evidence was locked and destroyed.
 
-## Without Skill Baseline
+## Fresh Without-Skill Baseline
 
-without_skill 仅作对照：识别了路径冲突，但未明确检查 related_prd，也未交回 engineer-agent:trd-gen。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9ba9f5f01cabbae62ba3bf40c7c99d8dc7f337984c8ca4277c6f238b4df6793e; fixture_sha256=fa61fddb39b3b74bc77db4e82386f7b1f9cd3a070d4333160570607ea9172a8d; output_sha256=5f1adcec5367b0dce7db406689dcdcb2b691c278e0aa56d0fe589e7c2fb3aaba; snapshot_sha256=d0c55afbc10bd528e222c05a34394d3ec107ac1847c97108ff3dbb43525898db
+- Behavior: Implemented Chat History Search under the PRD path, including code, tests, and package changes, without detecting or blocking on the TRD mismatch.
+- The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
-## Failures / Findings
-
-- None.
-- Root cause: None.
-
-## Next Steps
-
-- 后续修改该 skill、fixture 或 assertions 时，使用同样的 paired fresh 流程重跑。
-
-## Runtime Artifacts Policy
-
-- 本轮 candidates、judge、transcripts、diagnostics、workspace snapshots、timing 与 run status 只作为 ignored 运行期证据，不提交。
-- 长期只保留本 `comparison.md`。
-
-## Historical Results
-
-### Previous comparison record: eval-008-feature-path-mismatch-blocked
-
-## Evaluation Target
-
-- Agent: `engineer`
-- Skill: `feature-implementor`
-- Eval: `eval-008-feature-path-mismatch-blocked`
-- Test case: feature-path-mismatch-blocked
-- Workspace: `workspace/eval-008-feature-path-mismatch-blocked`
-- Latest result: PASS - fresh Codex subagent validation completed on 2026-07-05
-- Historical result: BLOCKED
-- Blocking reason: eval 定义已按 issue #234 修复泄漏（prompt/fixture 不再向 baseline 泄漏 skill 规则），本结论基于旧契约（泄漏版 eval 定义），待重跑验证。
-
-
-## Test Set / Fixture Version
-
-- Schema: `evals.json` v1.0
-- Fixture files read before skill use: `README.md`, `eval_metadata.json`, `docs/pm/chat-interface/history-search/PRD.md`, and `docs/engineer/chat-interface/TRD.md`.
-- Fixture summary: the PRD declares `feature_path: chat-interface/history-search`; the TRD declares parent `feature_path: chat-interface` and `related_prd: docs/pm/chat-interface/PRD.md`.
-- Expected output: detect PRD/TRD metadata and related PRD mismatch, block implementation planning, and hand back to `engineer-agent:trd-gen`.
-
-## Assertions
-
-- PASS `detects_prd_trd_path_mismatch`: the skill requires matching PRD/TRD `feature_path`, `parent_feature`, and `feature_level`.
-- PASS `checks_related_prd`: output conventions and planner require TRD `related_prd` to point to `docs/pm/{feature_path}/PRD.md`.
-- PASS `blocks_implementation_plan`: mismatched TRD blocks `docs/engineer/chat-interface/history-search/IMPLEMENTATION_PLAN.md`, code, and tests.
-- PASS `hands_off_to_trd_gen`: stale, incomplete, path-mismatched, or conflicting TRDs return to `engineer-agent:trd-gen`.
-
-## With Skill Behavior
-
-Fresh with-skill validation confirmed that Batch 3's direct specialist gate is not diluted by a parent TRD. The current skill should compare the nested PRD with the supplied parent TRD, explicitly report `chat-interface/history-search` versus `chat-interface`, detect that `related_prd` points to `docs/pm/chat-interface/PRD.md` instead of the nested PRD, and stop before writing any plan. The correct handoff is to `engineer-agent:trd-gen` to create or correct the mirrored nested TRD.
-
-## Without Skill Baseline
-
-The fresh without-skill baseline was summarized before reading skill docs. A generic response could accept the parent Chat Interface TRD as close enough and proceed with a plan, or mention mismatch without validating `related_prd`. It would not reliably enforce the mirrored feature path and related-PRD gates before planning.
-
-## Failures
+## Failures and Next Steps
 
 - None.
+- Next: None.
 
-## Next Steps
+## Runtime Artifact Policy
 
-- Keep this eval focused on blocking parent/child feature path mismatches before implementation planning.
-
-## Runtime Artifacts Policy
-
-- This validation did not create runtime artifacts.
-- Runtime transcripts, verdicts, timing files, outputs, diagnostics, run status files, and `comparison.auto.md` must not be committed.
+- Candidate outputs, snapshots, judge packages, verdict payloads, timing, diagnostics, and other runtime files are deleted before the runner exits, including after FAIL, BLOCKED, or exceptions.
+- This durable comparison retains only the latest reviewable conclusion; Git history preserves earlier revisions.

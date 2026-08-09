@@ -13,7 +13,6 @@ export function registerUserRightsRoutes(app, db, analytics) {
 
   app.delete("/me", async (req, res) => {
     await db.users.update(req.session.userId, { deleted: true });
-    // Analytics events and backups are not deleted or queued for deletion.
     res.status(202).json({ status: "accepted" });
   });
 }

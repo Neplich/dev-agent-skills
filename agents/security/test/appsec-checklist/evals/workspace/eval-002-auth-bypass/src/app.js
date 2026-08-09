@@ -15,7 +15,6 @@ app.get("/account", requireAuthenticated, (req, res) => {
   res.json({ userId: req.user.id });
 });
 
-// Unlike the account route, the admin router is mounted without an auth guard.
 app.use(adminRouter);
 
 export default app;

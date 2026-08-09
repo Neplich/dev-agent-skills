@@ -1,12 +1,20 @@
 ---
 name: changelog-gen
-description: "Internal PM specialist—not a direct entry point. Invoked by pm-agent after entry classification to generate or update versioned changelogs from merged PRs, tags, and repository release history."
+description: "Generate or update developer-facing changelogs from merged PRs, tags, or a dated repository release-history export, classifying user-impacting changes semantically. Use after pm-agent routes changelog work."
 visibility: internal
 ---
 
 # Changelog Generator
 
-Generate and maintain per-version changelog files under `docs/changelog/`, such as `docs/changelog/changelog-v1.2.0.md`, following [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format. Source of truth: merged GitHub PRs and release tags, fetched via `gh` CLI — no external MCP required.
+Generate and maintain per-version changelog files under `docs/changelog/`, such as `docs/changelog/changelog-v1.2.0.md`, following [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format. The source of truth is merged GitHub PRs and release tags. Fetch live facts with `gh` CLI, or consume a user-supplied `gh`/release-history JSON export when GitHub access is unavailable. For an export, verify repository, capture time, tag window, reachable commits, and PR metadata; label the result with that evidence time and never fill missing records from memory.
+
+Before writing an entry, strip the full Conventional Commit prefix—including
+optional scope and breaking marker—from PR and commit titles (`type:`,
+`type(scope):`, `type!:` or `type(scope)!:`). The changelog bullet contains the
+human change description, not a bolded or literal commit prefix.
+Classify by semantic impact after stripping the prefix: a breaking redesign of
+existing behavior belongs under `Changed` even when its source title uses
+`feat` or another additive prefix.
 
 ## Modes
 
@@ -21,6 +29,12 @@ Choose the mode based on what the user asks for:
 If the user's intent is ambiguous, ask which mode they want before proceeding.
 
 ## Step 1 — Detect repo context
+
+When the request supplies a local release-history export, read it before live
+commands. The export must identify the repository, target and previous tags,
+release time, reachable commit subjects, and the PR records used for grouping.
+Missing tag-window or reachability evidence is a blocker, not permission to
+guess the latest version or its PR set.
 
 ```bash
 gh repo view --json nameWithOwner,url,defaultBranchRef

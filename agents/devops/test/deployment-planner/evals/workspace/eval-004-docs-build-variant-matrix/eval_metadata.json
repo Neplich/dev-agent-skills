@@ -2,7 +2,18 @@
   "eval_id": "eval-004-docs-build-variant-matrix",
   "eval_name": "docs-build-variant-matrix",
   "workspace_root": "agents/devops/test/deployment-planner/evals/workspace/eval-004-docs-build-variant-matrix",
-  "prompt": "根据 evidence.md 评估文档站各构建变体的部署安排。",
-  "fixture_context": ["evidence.md"],
-  "execution_cleanup": ["deploy", "with_skill", "without_skill", "outputs", "diagnostics", "transcript.md", "subagent-verdict.md", "run_status.json", "timing.json"]
+  "fixture_context": [
+    "docs-build-inventory.md"
+  ],
+  "skill_dependencies": [
+    "agents/product_manager/skills/idea-to-spec"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
 }
