@@ -1,4 +1,8 @@
-.agents/
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/skill-eval-runner/
+!.agents/skills/skill-eval-runner/**
 .claude/
 .kiro/
 .windsurf/
