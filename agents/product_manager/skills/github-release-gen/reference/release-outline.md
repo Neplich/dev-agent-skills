@@ -30,7 +30,7 @@ updated with it.
 ## Body
 
 ```markdown
-# Release Notes - {THIS_TAG} ({YYYY-MM-DD})
+# Release Notes - {THIS_TAG}
 
 {适用版本事实源已确认的版本主题。}
 
@@ -55,6 +55,10 @@ updated with it.
 完整变更： {REPO_URL}/compare/{PREV_TAG}...{THIS_TAG}
 ```
 
+Append ` ({YYYY-MM-DD})` to the heading only when that exact release date is
+present in the confirmed fact source or release evidence. If no date is
+confirmed, keep the date-free heading; never substitute the current date.
+
 ## Conversion Rules
 
 - Preserve the applicable confirmed version facts and their logical relationships; this outline determines the section order of the user-facing body.
@@ -63,7 +67,10 @@ updated with it.
   notes state that rollback deletes data or requires a backup.
 - Preserve conventional prefixes from PR titles or commit subjects.
 - Link major confirmed highlights to representative PRs or commits.
-- Mention contributors using the repository's existing style.
+- Mention contributors using the repository's existing style, and preserve the
+  verified contributor link whenever the selected PR or commit evidence
+  provides one. Keep the contributor name and its URL bound to the same evidence
+  record; never reuse another contributor's valid profile link.
 - Put the complete compare link after the curated detail section.
 - Do not paste the full PR or commit feed as the user-facing narrative.
 - Do not add a product claim that is absent from the applicable confirmed fact source.
@@ -111,6 +118,13 @@ client-installation subsections or shell commands.
    其他宿主不适用这些安装命令，按已确认事实源给出对应的升级动作，不生成
    空壳小节：
 
+   在渲染任何平台标题或命令前，先逐项作出 `render` / `omit` 决策：历史
+   tag 重建的 Claude Code 为 `omit`；目标版本不含 `TARGET_TAG` 支持的
+   Codex 为 `omit`；目标版本不含 `.kimi-plugin/plugin.json` 的 Kimi Code
+   为 `omit`。`omit` 表示标题和命令块都不得出现，限制说明写在平台小节
+   之外。历史 tag 的 Claude 限制说明必须明确写出 `/plugin update` 不支持
+   version pin，不能只泛称“没有固定版本路径”。
+
    ```text
    /plugin marketplace update dev-agent-skills
    /plugin update pm-agent@dev-agent-skills
@@ -137,9 +151,10 @@ client-installation subsections or shell commands.
    时，以「更新仓库后重新运行安装器，即可同步全部 N 个 role plugin 的
    `v{VERSION}` 能力。」结束（N 按 manifest 推导，当前为 7）；目标版本
    无已验证固定版本安装路径时，不得承诺同步该 tag 能力，收尾句改为如实
-   声明「该 tag 无已验证的固定版本安装路径，按默认分支（main）更新」或
-   按事实源给出对应的升级动作收尾；其他宿主按事实源给出对应的升级动作
-   收尾或省略，不得写事实源之外的安装器或 plugin 声明。
+   声明「该 tag 的 N 个 role plugin 无已验证的固定版本安装路径，按默认
+   分支（main）更新」或按事实源给出对应的升级动作收尾，其中 N 仍按目标
+   manifest 推导；其他宿主按事实源给出对应的升级动作收尾或省略，不得写
+   事实源之外的安装器或 plugin 声明。
 
 ## Traceability Checks
 

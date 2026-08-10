@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57` from `agents/devops/test/env-config-auditor/workspace/iteration-1/eval-1-missing-variables`.
 - Fixture SHA-256: `4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57`
 - Prompt SHA-256: `75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `11f5a69db2a4c2ab81d782a866d9a88090a8560b5e61462d8af4e66c4376601f`
-- Skill overlay SHA-256: `ce7aff0f7795c878221dac5c9435b88a48e75e2799c5f15832edbd27f5f6796f`
+- Skill overlay SHA-256: `5e8f780f2a23903ad4823430be6e0bdde57143815b657cdec9f983559a04ccae`
 - Judge schema SHA-256: `7c0e897fa2e11e667f833a3bbf2e28e35b1c65790975d953ea93444f623ad66b`
 - Eval definition SHA-256: `5217a2bb49f0b8e0ba081e4029f81b07efd6b07af9fb34ce9773ecbde5d00a5b`
 - Metadata SHA-256: `f2d1d6d11daf93046843d6cf276fdc2c30cd77fd3602aa38ebdb9fcc3d6c1a85`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
@@ -32,20 +31,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `creates_durable_config_audit` | PASS | Locked delivery snapshot contains deploy/ENV_AUDIT.md with missing-variable findings, coverage matrices, security issues, recommendations, and explicit source references. |
-| `compares_code_deploy_and_cicd` | PASS | The report compares src/server.ts, local, Docker, CI/CD, and Helm/runtime status; it accurately identifies REDIS_URL and API_KEY as missing from Docker and CI/CD, and STRIPE_SECRET_KEY as present only in CI/CD among deployment configurations. |
-| `keeps_secrets_and_unknowns_honest` | PASS | The report contains no real secret values, records absent Helm/Kubernetes/runtime evidence as unknown, and explicitly states deployment readiness is not verifiable. |
+| `creates_durable_config_audit` | PASS | 锁定的 delivery_snapshot 直接生成 deploy/ENV_AUDIT.md，包含缺失变量、逐环境覆盖矩阵、安全/一致性问题、修复建议及逐项文件行号证据。 |
+| `compares_code_deploy_and_cicd` | PASS | 报告逐项对照 src/server.ts、local、Docker、Helm/runtime 与 CI/CD，准确记录 Docker 和 CI/CD 缺少 REDIS_URL、API_KEY，并记录 STRIPE_SECRET_KEY 仅由 CI/CD 注入。 |
+| `keeps_secrets_and_unknowns_honest` | PASS | 报告未写入真实 secret 值；明确 Helm/runtime 配置不存在且为 unknown，并明确当前配置不可判定为部署就绪。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf; fixture_sha256=4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57; output_sha256=6d5d612c4821fc98aeb2cc5bf2cab117d23839277f81527acdcd9aaa9604c170; snapshot_sha256=b2380611c5bdb80734738e53aa8b551f6d75390d33c1e1d7486ec1ceea4546cb
-- Behavior: Delivered the requested durable audit with comprehensive environment coverage, evidence references, honest unknowns, and security caveats.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf; fixture_sha256=4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57; output_sha256=65f0a71a1f084e2d23ded29edff32e835075e54d937c76376a7d2ab97780798a; snapshot_sha256=2b1af9c2fece92b3079d3d0cc97d2d22f486d45cf0d35f4b62d0810063d50c6e
+- Behavior: 生成了要求路径 deploy/ENV_AUDIT.md 的完整、可复查配置审计报告。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf; fixture_sha256=4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57; output_sha256=efc76c12a923da79260234bb1f15ca9e141d2f73105813f01329aea24331587d; snapshot_sha256=97f12e1805a69ca9084211039bd97a106a3ecd5bd3a0331483db08f53371e481
-- Behavior: Delivered an audit outside the requested deploy/ENV_AUDIT.md path and omitted the required coverage/report details.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=75e60dc10eb3fef811146cbd4dcc0df487be3bd537e40cef0747bad2cca106cf; fixture_sha256=4e6c22cd2abded0cbcf31007050064d16e8cb14c8ccdda445c9587853833ba57; output_sha256=d147dbcc6c42b5823d3b6858bb8e998c423c1ef11f669de6fb5b8f7da6b2ebb7; snapshot_sha256=f6eca2708c8f6040792ea626648624a0c767751ffb525390d1d0df2c4ad6a423
+- Behavior: 生成了内容部分相关但路径不符合要求的 docs/environment-config-audit.md，作为基线对比。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

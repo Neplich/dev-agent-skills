@@ -4,7 +4,8 @@
   "workspace_root": "agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd",
   "fixture_context": [
     "docs/pm/notification-center/PRD.md",
-    "docs/engineer/notification-center/TRD.md"
+    "docs/engineer/notification-center/TRD.md",
+    "docs/design/notification-center/ui-ux-spec.md"
   ],
   "skill_dependencies": [
     "agents/product_manager/skills/idea-to-spec"

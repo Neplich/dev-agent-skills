@@ -38,10 +38,37 @@ file is missing. The first response must make these decisions observable:
 - if a direct role or specialist request lacks its entry basis, stop execution,
   return it to `pm-agent`, and name the missing handoff fields or documents
 
-Start with a compact `Routing decision` block with these explicit fields:
-`request_type`, `change_tier`, `hotfix_disposition`, `selected_owner`, `selection_reason`,
-`entry_basis`, `feature_path`, `source_documents`, `confirmed_scope`,
-`required_output`, `blockers_risks`, `next_action`, and `execution_boundary`.
+Start with this compact block and keep every field visible; use `N/A`, `[]`, or
+`missing` instead of dropping a key:
+
+```yaml
+Routing decision:
+  request_type: <stable value>
+  change_tier: <hotfix | standard | major>
+  hotfix_disposition: <allowed | rejected | not_applicable>
+  selected_owner: <PM specialist or downstream role>
+  selection_reason: <evidence-backed reason>
+  entry_basis: <ready | missing | blocked>
+  feature_path: <path | unresolved | N/A>
+  feature: <slug | unresolved | N/A>
+  parent_feature: <path | N/A>
+  feature_level: <integer | N/A>
+  feature_path_evidence: []
+  source_documents: []
+  confirmed_scope: <confirmed scope or observed symptom only>
+  required_output: <next deliverable>
+  blockers_risks: []
+  next_action: <current owner action>
+  execution_boundary: <allowed and prohibited actions>
+```
+
+When `entry_basis` is `missing` or `blocked`, `selected_owner` names only the
+future route. Keep `next_action` with PM alignment, mark downstream execution
+blocked, and never claim that a handoff completed. A `bug_report` without an
+approved PRD/TRD or equivalent expected-behavior source keeps
+`confirmed_scope` limited to the observed symptom and cannot complete the
+Engineer/debugger handoff.
+
 For a hotfix decision also render `fast_lane`; for a security route also render
 `risk_surface`, `assets`, `permissions`, `data_flow`, and
 `remediation_expectations` before the handoff.
@@ -54,6 +81,12 @@ then emit this block before continuing into the specialist's first step.
 Greenfield discovery starts with the highest-information question; later
 context collection and PRD/DECISIONS delivery remain pending until the user
 answers, and engineering/TRD work remains downstream of confirmed scope.
+
+Before returning any response, validate its first non-whitespace line and
+required keys. It must start with `Routing decision:` and contain every field
+in the schema above; a `greenfield-discovery`, checkpoint, or specialist block
+may follow it but never substitute for it. If this validation fails, prepend
+the complete routing block before returning.
 
 Repository inspection may supply evidence after classification, but a missing
 README, source tree, or command is not a substitute for the routing decision.

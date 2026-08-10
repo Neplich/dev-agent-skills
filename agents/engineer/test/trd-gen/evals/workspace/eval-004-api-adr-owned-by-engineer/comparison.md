@@ -14,46 +14,45 @@
 - Fixture version/source: canonical manifest `7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116` from `agents/engineer/test/trd-gen/evals/workspace/eval-004-api-adr-owned-by-engineer`.
 - Fixture SHA-256: `7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116`
 - Prompt SHA-256: `825205d6124cce58172b3b6756f4b557e630d638b9032e293e0df1661f6c8e2b`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `73cec46ef0287c25bd7a41d37b6bcee4e1ea25b1101672fb45bd299ecec77b0d`
-- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Target skill tree SHA-256: `6b892e000764d0f52ab1e2bbfd237e12483caafd3413b84144f2d3397ea92558`
+- Skill overlay SHA-256: `2811fdd3c57db7a2738883046d1d787b9d794bcfbf96919af99fd2eac7160676`
 - Judge schema SHA-256: `2fb0119eb77903cfe9db053e59a3c85f9fb841609febdeb77953e7bac06ea0fe`
 - Eval definition SHA-256: `c2e125b845f0cfd23a8b77d0953e79c0dfdb8a47bc09cbe45bf84d70fdf9a2db`
 - Metadata SHA-256: `d32be481f3b029c028aa82a9a8adf92bda8ff5084062b1a65511dd3d764980a1`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **FULL**
-Overall result: FAIL
+Overall result: PASS
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `engineer_owns_api_and_adr` | FAIL | The Engineer documents contain `generated_by: "trd-gen"`, but neither the locked output nor file content states that API and ADR are owned by `engineer-agent:trd-gen`; the output instead says the main flow completed them because the Engineer document subagent was unavailable. |
-| `writes_all_engineer_docs_under_feature_path` | PASS | The delivery snapshot contains TRD.md, API.md, and ADR-001-search-index.md under `docs/engineer/chat-interface/history-search/`. |
-| `preserves_related_prd_and_metadata` | PASS | All three Engineer documents contain the required feature_path, parent_feature, feature_level, and related_prd metadata pointing to the PM PRD. |
-| `does_not_use_pm_generators` | PASS | The with_skill output and snapshots contain no routing to `api-gen` or `adr-gen`; generation is identified as `trd-gen`. |
-| `no_plan_or_code` | PASS | Git evidence shows only untracked Engineer documentation files, with no implementation plan or code changes. The TRD explicitly states this stage does not implement code or create an implementation plan; its testing strategy is documentation, not added tests. |
+| `engineer_owns_api_and_adr` | PASS | With_skill output states all three documents belong to `engineer-agent:trd-gen`; each locked API and ADR snapshot also carries `engineer_document_owner: "engineer-agent:trd-gen"`. |
+| `writes_all_engineer_docs_under_feature_path` | PASS | Locked delivery snapshots contain `docs/engineer/chat-interface/history-search/TRD.md`, `API.md`, and `ADR-001-search-index.md`. |
+| `preserves_related_prd_and_metadata` | PASS | All three locked Engineer snapshots preserve `feature_path: chat-interface/history-search`, `parent_feature: chat-interface`, `feature_level: 2`, and `related_prd: docs/pm/chat-interface/history-search/PRD.md`. |
+| `does_not_use_pm_generators` | PASS | With_skill delivery routes ownership to `engineer-agent:trd-gen`; no locked with_skill output or delivered file routes API/ADR generation to PM `api-gen` or `adr-gen`. |
+| `no_plan_or_code` | PASS | Locked with_skill status and delivery manifest contain only TRD/API/ADR documents; no implementation plan, code, or test files are delivered, and the output explicitly says no code or implementation plan was created. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=825205d6124cce58172b3b6756f4b557e630d638b9032e293e0df1661f6c8e2b; fixture_sha256=7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116; output_sha256=3387cb020b5b9be1f2f66d7d9986ff3330b00b08e8f6e2fa8586afa284e35982; snapshot_sha256=059d708749478013d2ffddd270bf392ac6a626da8b42e1b596589a69a634be08
-- Behavior: Created the requested Engineer TRD, API, and ADR under the correct feature path, preserved metadata and PRD linkage, and avoided implementation changes; however, it did not satisfy the required explicit Engineer-agent ownership statement.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=825205d6124cce58172b3b6756f4b557e630d638b9032e293e0df1661f6c8e2b; fixture_sha256=7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116; output_sha256=d9231b718250eb80dd136277badeed9f6df17fbc7a16a1e7192cbd9d0ec8f1f5; snapshot_sha256=84cd230dffb9b72f98f8bd289d3167349e3ab9b00e4ed85e3fe70e669ab88df5
+- Behavior: Produced Engineer-owned TRD, API, and ADR artifacts under the mirrored feature path with preserved PRD metadata and no implementation work.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=825205d6124cce58172b3b6756f4b557e630d638b9032e293e0df1661f6c8e2b; fixture_sha256=7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116; output_sha256=0084f26d0297f8d5c6904ac679e7c5dba0fc665e3252806fdeeb1a10332b50de; snapshot_sha256=5888f3412bbabee943d80b4f3e8c0f9493df2b994bc343120ed0781e4bfa43c7
-- Behavior: Created technical, API, and ADR files under the PM path, providing a fresh baseline that misplaced Engineer artifacts and did not demonstrate the required Engineer ownership routing.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=825205d6124cce58172b3b6756f4b557e630d638b9032e293e0df1661f6c8e2b; fixture_sha256=7b6820d67dd73e9499a1ca84c463bfc82e890640eeaf8c3154b04834d8479116; output_sha256=40b7a93f21fb2acf6517bac85fe1fa31b02b2c885445747195bd68efbb7787a9; snapshot_sha256=4480a49f68d12ae1aa24dc6b6781fa545cb484141e678c64a0763eee311bd118
+- Behavior: Produced technical, API, and ADR documents under the PM path, providing a weaker baseline that did not mirror the Engineer-owned workflow.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- The with_skill lane does not establish the required `engineer-agent:trd-gen` ownership for the API and ADR, and explicitly says the main flow completed the work because the Engineer document subagent was unavailable.
-- Next: Route or explicitly identify API and ADR generation as owned by `engineer-agent:trd-gen`.
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 

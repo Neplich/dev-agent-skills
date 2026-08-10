@@ -25,6 +25,12 @@ without PM handoff context, confirmed roles/permissions scope, or a confirmed
 `feature_path` for feature-scoped work, return the request to `pm-agent` for
 classification.
 
+Resolve the entry basis from both the user context and repository materials
+before declaring it missing. If a repository-root `PM_HANDOFF.md` exists, read
+it and validate its confirmed scope, roles or permissions, source documents,
+and `feature_path`; do not block merely because the natural-language request
+does not repeat those packet fields.
+
 Use the PM-side packet definition in
 the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 

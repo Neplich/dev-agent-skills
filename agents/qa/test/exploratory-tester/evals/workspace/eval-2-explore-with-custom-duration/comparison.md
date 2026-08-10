@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3` from `agents/qa/test/exploratory-tester/evals/workspace/eval-2-explore-with-custom-duration`.
 - Fixture SHA-256: `58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3`
 - Prompt SHA-256: `95b19585ae663cfe50fef5d8a922d75ec357803535a13bbb323cdf9b1845fa29`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `4e2073febaef7202820d7977feb83c73b7673e1200e4724a3f37b54a20923059`
-- Skill overlay SHA-256: `bb6d955d3f1008412eca24a4e3e97d4883ccffc96444f5d6d3cd037fea0800ba`
+- Skill overlay SHA-256: `d5a8b4f617bd4daeb6e78fdb531d6c6e6ec5fb1b029628fdf35a46d483c79624`
 - Judge schema SHA-256: `795b13efa8aba1d005ca8e2bf3be74790d6a011a9b79e7e9c3ef0bb4863b7e5d`
 - Eval definition SHA-256: `234873760fb9d0649d16f54118fbf0383fa2955b9451730f9429892d78a6d7e0`
 - Metadata SHA-256: `4befffc2e8037477b9995f3ded3869d8476cd9a66637621d7f8e8d3fc8c6fed3`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
@@ -32,31 +31,29 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `assertion_1` | PASS | 交付报告包含 5 分钟时长、目标功能范围、改动面、环境入口，以及保存/取消/未保存状态/toast 等未验证前提。 |
-| `assertion_2` | NOT_EXERCISED | 报告记录了 feature-update 场景及既有 QA 资料清单，但锁定证据无法证明这些资料是在独立探索前按要求读取的顺序。 |
-| `version_entry_and_subagent` | PASS | 报告明确因平台版本缺失而 blocked，并说明了 repo harness、浏览器连接器、Playwright 的入口顺序和原因，也记录了 subagent 默认执行规则。 |
-| `assertion_3` | PASS | 报告区分了无 confirmed issue、待确认的 suspicious signals，以及未覆盖的探索区域。 |
-| `assertion_4` | PASS | 报告包含实际覆盖路径、预检资料和环境等 evidence references，而非随机操作清单。 |
-| `assertion_5` | PASS | 报告列出了未验证风险、阻塞原因和可执行的后续 QA 建议。 |
+| `assertion_1` | PASS | Blocked report records the target surface, 5-minute timebox, environment URL, heuristics, escalation signals, and runtime-unverified risks. |
+| `assertion_2` | PASS | Blocked report records the TEST_SUITE/FLOW_INDEX read set, absent cases/scripts/history, confirms feature-update, and states no expansion occurred, so no index/TC/script update was needed. |
+| `version_entry_and_subagent` | PASS | Report explicitly blocks on missing platform version, documents repo harness → Chrome/browser connector → Playwright fallback order, and states TC execution is delegated to a subagent when TC exists. |
+| `assertion_3` | NOT_EXERCISED | No runtime errors were exercised because execution was blocked; therefore console/network/crash classification was not exercised. |
+| `assertion_4` | PASS | The delivered report includes the planned execution-entry path, test scope, and references to the report, TEST_SUITE.md, and qa-env.md. |
+| `assertion_5` | PASS | The delivered report distinguishes the unconfirmed toast risk and gives concrete follow-up requirements for platform/browser version and executable environment entry. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=95b19585ae663cfe50fef5d8a922d75ec357803535a13bbb323cdf9b1845fa29; fixture_sha256=58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3; output_sha256=e08c791a501d2b08c9a2a66d9b5ff12f6852f645070d434d899c532298ac4840; snapshot_sha256=a8483f35b35ed86188b2aa93d01c35d4a9301073969b2ed215e9051b942f946a
-- Behavior: 正确识别 feature-update 范围和阻塞条件，交付了结构化探索报告，覆盖章程、预检、入口选择、异常分层、证据、风险与下一步。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=95b19585ae663cfe50fef5d8a922d75ec357803535a13bbb323cdf9b1845fa29; fixture_sha256=58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3; output_sha256=ca9abf4a1e7898299f7776b44d1e5624d8385a6a506bd03dd7fc62b3f58e2bec; snapshot_sha256=0f9713f0ac22a865c4d54e4fd2b24903656d4ede18453dc01bd7a3dcbbb9faa9
+- Behavior: Correctly gated the exploratory run as blocked, produced a structured evidence-backed report, and preserved the required QA routing and handoff information.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=95b19585ae663cfe50fef5d8a922d75ec357803535a13bbb323cdf9b1845fa29; fixture_sha256=58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3; output_sha256=f016c940d2023a57be41a153fd89a31a4a6b41144914dea29fdd18fc58d0d056; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 仅报告入口不可达和无法验证功能，未交付探索报告或结构化证据。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=95b19585ae663cfe50fef5d8a922d75ec357803535a13bbb323cdf9b1845fa29; fixture_sha256=58e996bab34649b23e7bf5cc00be4fa65ff65a8e7b288cba77fc10a44d715cf3; output_sha256=769d356712f491b5e177225e96791f9a7f938d74cf27de93788a745c479776b0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Attempted a network reachability check, reported DNS failure, and provided only a prose summary without the structured blocked report or process evidence.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: 提供可访问的 QA 入口并记录浏览器/平台版本。
-- Next: 重新执行 5 分钟探索，覆盖保存、取消、未保存状态、校验与 toast。
-- Next: 若发现可复现问题，补充 per-TC evidence 并移交 bug 分析。
+- Next: Provide the platform/browser version and an accessible executable QA entry point, then rerun the chartered exploration.
 
 ## Runtime Artifact Policy
 

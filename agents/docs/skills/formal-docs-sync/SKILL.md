@@ -19,6 +19,10 @@ scope. Before any write, report the selected mode, accepted evidence, complete
 candidate page tree, per-node confirmation state, exact atomic change-map
 delta, stable paths and out-of-batch drift, then wait for confirmation whenever
 the batch or migration scope is not already confirmed.
+For a confirmed multi-type scope, preserve every exact invitation,
+repository/schema, service, audit, or other source boundary as its own
+`code_glob` row with a complete cross-type `required_docs` closure; a broad
+feature glob never substitutes for a missing exact row.
 
 - Feature delivery: enforce PRD/TRD/plan/diff/test and design-closeout evidence;
   update the affected pages and change map together, leave new or unstamped
@@ -34,6 +38,10 @@ the batch or migration scope is not already confirmed.
 - Existing-system backfill: prefer catalog/change-map scope, propose one finite
   API/database/design/ops/product batch, mark every proposed new page
   `visibility: internal`, and remain read-only until confirmed.
+Before that confirmation, inspect only the host check definitions needed to
+plan verification; do not execute `test:docs`, builds, navigation preparation,
+or any other host check. Read-only candidate planning is not authorization to
+run the post-write verification phase.
 
 Every completed write batch must run the host's real checks, report their raw
 result, hand the affected set to audit, and perform the read-only deployment
@@ -42,14 +50,25 @@ being repaired here.
 
 Make the result auditable with an explicit `Sync decision` block containing:
 `mode`, `gate_status`, `confirmed_batch`, `proposed_batch`, `affected_docs`,
-`evidence_bindings`, `excluded_paths`, `change_map_delta`, `host_checks`, and
-`audit_handoff`. Each factual page claim names its implementation, test,
+`evidence_bindings`, `excluded_paths`, `change_map_delta`,
+`change_map_normalization`,
+`loaded_type_modules`, `loaded_host_templates`, `hierarchy_drift`,
+`host_checks`, and `audit_handoff`. Deployment mode additionally records one status for each of
+Development, Docker, and Kubernetes/Helm. The top-level `gate_status` describes
+the entry or whole-batch gate; a missing class-specific evidence set marks only
+that class `blocked` and must not turn the whole batch into `blocked` while an
+independently confirmed class can proceed. Each factual page claim names its implementation, test,
 deployment, or maintainer-confirmed evidence. Do not add an ancestor/index,
 page, map entry, future version fact, or owner merely because it would make the
 site more complete; it must be required by the confirmed batch or existing host
 navigation. When a prerequisite fails, set `gate_status: blocked` before scope
-confirmation or writes. Route product/metadata conflicts to `pm-agent` and TRD
+confirmation or writes. This applies to entry or whole-batch prerequisites; a
+deployment class evidence gap follows the per-class continuation rule above.
+Route product/metadata conflicts to `pm-agent` and TRD
 path/impact conflicts to `engineer-agent:trd-gen` separately.
+Set `change_map_normalization` to the observed result of a pre-return check that
+every changed mapping list is deduplicated and stably sorted; a proposed delta
+must state this normalization behavior as explicitly as an applied delta.
 
 When one batch is confirmed and another is still proposed, report them
 separately. The unconfirmed candidate must include its complete ancestor/leaf
@@ -73,7 +92,13 @@ completed write batch must run and report all three commands with cwd and exit
 status. Unit tests, navigation preparation, or a subset of those scripts cannot
 substitute for the two visibility builds. Before returning, verify that all six
 audit-handoff fields are present and complete rather than only naming
-`docs-audit` as the next owner.
+`docs-audit` as the next owner. For a hierarchy proposal, also verify that every
+root-level non-index page is classified exactly once, pages that confirmed
+catalog or `feature_path` evidence places under the same domain parent remain
+in one group, each old-to-new row includes its inbound-link,
+recursive-navigation, and `required_docs` deltas, and every out-of-batch group
+contains both its page list and proposed target node. Do not return a partial
+hierarchy inventory.
 
 After each check, remove its transient work directories, generated previews,
 logs, caches, and diagnostics before taking the final workspace snapshot. Keep
@@ -90,6 +115,12 @@ Direct invocation does not waive this gate.
 Security-originated evidence is not an equivalent entry basis for any mode. If
 there is no PM handoff packet, stop and guide the request back to `pm-agent` for
 classification under `Security Conclusion Escalation to PM` and issue filing.
+When a deployment recheck specifically exposes a missing repo-wide deployment
+handoff, a PM-authorized bounded read-only recheck remains valid entry basis:
+inspect the named site configuration, report the evidence-backed coverage and
+gaps, then ask the user whether `pm-agent` should generate that repo-wide
+handoff. The missing handoff blocks operational changes, not the scoped review;
+do not replace the user-visible question with only a next-owner label.
 
 - **Feature delivery:** require an Approved PRD, a Confirmed TRD with traceable
   impact scope, a confirmed `IMPLEMENTATION_PLAN.md`, the actual diff, and

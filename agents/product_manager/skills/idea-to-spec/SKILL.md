@@ -31,11 +31,22 @@ Resolve `_internal/_shared/skill-map.md` from the active installed
   identity and decision-background evidence to `engineer-agent:trd-gen`, never
   use PM API/ADR generators.
 - Nested features: every handoff includes `feature`, `feature_path`,
-  `parent_feature`, `feature_level`, and `{source, reason}` path evidence.
+  `parent_feature`, `feature_level`, and the literal
+  `feature_path_evidence` field containing `{source, reason}` entries. Do not
+  shorten or alias this field as `evidence`.
 - L2b signals: when domain/size/requirement thresholds are met, present the
   child path tree, section migration map, and downstream Engineer/Design/QA/
   DevOps/Security mirror impacts; wait before moves or new child docs. Rejection
   keeps the current path and normal version-bump flow.
+
+For every existing-PRD iteration, compute and render `l2b_measurements` from
+the staged body before any durable write: total line count, independent-domain
+count, combined `US-*`/`FR-*` table-row count, and sections with clear
+child-feature ownership. Three or more independent domains or 15 or more
+combined requirement rows mechanically trigger L2b even when the requested
+content change itself is narrow. A checkpoint that reports no trigger while a
+recorded measurement meets a threshold is invalid and must be corrected before
+version bump or write.
 
 Make the lane checkpoint explicit with `lane`, `current_feature_identity`,
 `delta`, `blast_radius`, `recommended_iteration`, `candidate_child_paths`,
@@ -45,6 +56,10 @@ change-impact/iteration path rather than silently regenerating documents.
 Nested-feature handoffs always render the complete five-field identity and path
 evidence. Do not write or move durable PM documents until the required user
 confirmation is recorded.
+Immediately before a PRD write, recheck the staged `l2b_measurements`; when any
+signal is triggered, verify the durable PRD hash is unchanged, present the
+complete split proposal, and wait. Do not convert the staged content update
+into a durable edit while the split decision is pending.
 
 When entered through `pm-agent`, continue the discovery/iteration step itself;
 do not stop at a dispatcher summary or jump to implementation artifacts.
@@ -124,6 +139,11 @@ Inspect repo markers, stack markers, architecture directories, existing docs,
 and `docs/pm/**/PRD.md` metadata. Output a compact context summary covering
 directory, project status, detected stack, existing docs, feature path, chosen
 lane, and likely next step.
+
+Render every context-summary field even when evidence is absent. For an empty
+workspace, state `project_status: empty`, `tech_stack: pending`, and
+`existing_docs: []` (or an unambiguous equivalent) instead of omitting the
+unknown stack or empty document inventory.
 
 Only perform local read-only inspection in Phase 0 unless the user asked for
 file output or document authoring is already underway.

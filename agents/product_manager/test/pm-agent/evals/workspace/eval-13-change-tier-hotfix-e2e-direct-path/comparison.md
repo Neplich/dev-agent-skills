@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-13-change-tier-hotfix-e2e-direct-path`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `0b60a8fdef1023247fb430f4647e03f742c09fbfdb17e32a3a03dc6059ae9e02`
-- Skill overlay SHA-256: `7093347dda9d009dc74c5bd9b37b3d0d8b980466e82f7a4efbacd767a0e9fa19`
+- Target skill tree SHA-256: `1cfd412fc44e8e1667cc3feab76a58474b6382f405680057b41b379032f76e0a`
+- Skill overlay SHA-256: `8ddfbafd6ae3cf064836ded5fbaa7bcc8a3ab817df212a0b6c4ff355a78b12af`
 - Judge schema SHA-256: `6a4c53f4d8ac913c9f4214c0dc35c3bf4c2a1bd9745f539a3879966e5d7f9011`
 - Eval definition SHA-256: `0e4e9687500855bbb8cac580183d47bafa14e53a69d5477185a5ceacddfe1857`
 - Metadata SHA-256: `385a2edb2c46d9f3ce571c34b812bf357f9247b71af061faebaf0764c87334a2`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
@@ -32,27 +31,26 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `hotfix_direct_path_only` | NOT_EXERCISED | with_skill 将工作流暂停在源码和目标文案缺失的前置阻塞阶段，未执行 hotfix QA/E2E 覆盖范围决策。 |
-| `evidence_still_required` | NOT_EXERCISED | with_skill 明确无法完成验证并列出阻塞原因，但后续验证证据、结果和 blocked checks 记录尚未发生。 |
-| `no_full_suite_required` | NOT_EXERCISED | with_skill 未执行测试或套件选择；由于缺少源码和目标文案，无法判断 E2E suite 范围。 |
+| `hotfix_direct_path_only` | NOT_EXERCISED | with_skill 将请求路由为 standard 并拒绝 hotfix，随后因缺少源码和目标文案停止；未进入 hotfix QA/E2E 规划，因此该断言未执行。 |
+| `evidence_still_required` | NOT_EXERCISED | with_skill 明确存在源码缺失、目标文案缺失等阻塞，并停止验证；由于缺少可运行项目，verification evidence、结果及 blocked checks 尚无法产生，因此该断言未执行。 |
+| `no_full_suite_required` | NOT_EXERCISED | with_skill 将范围判定为 standard 并在测试规划前停止；没有形成 E2E suite 范围决策，因此该断言未执行。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=6781f8af5b4ce580b372acee67f30f223f6811ce708f1a5a3d9ef5b502861b69; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 正确识别为现有项目更新，暂停实现、下游交接和测试，避免误改或伪造验证；但未产生文件改动或验证结果。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=8255e1da70eca9637bad603dfb195902e0fcca623a5706e597fde8f4ace825df; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别为 existing_update/standard，拒绝 hotfix，并在缺少项目证据时停止下游实现与测试。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=7968e513fe113871f04fe97105091343017d389a8b0d8c59f1ac6e7d02cecfe2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 发现工作区为空并直接报告无法完成修改与验证；未产生文件改动或验证结果。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=de22c7b571ed5335e842a9e999ab5bee4093f14615e17c350e4b58ca0a150599; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 发现工作区为空后直接报告无法修改和验证，未进行路由或 QA 规则处理。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: 提供正确项目源码/工作区及替换后的确切文案。
-- Next: 完成最小直接影响路径验证，并记录 verification evidence、结果及任何 blocked checks。
+- Next: 提供包含登录页源码、测试入口和确认目标文案的工作区后继续实现与针对性验证。
 
 ## Runtime Artifact Policy
 

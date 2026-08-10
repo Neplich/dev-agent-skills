@@ -1,3 +1,5 @@
 # Standards
 
-Read `templates/ops-runbook.md` and `change-map.yaml`.
+- [Document granularity](./doc-granularity.md)
+- [Ops runbook template](./templates/ops-runbook.md)
+- `change-map.yaml`

@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `ede96965e7d44efbe6d4a7e610af20046168e4331047764663820caf76860ea6` from `agents/security/test/appsec-checklist/evals/workspace/eval-001-sql-injection`.
 - Fixture SHA-256: `ede96965e7d44efbe6d4a7e610af20046168e4331047764663820caf76860ea6`
 - Prompt SHA-256: `bb6bd5dae7cb984c9a3912af15f420906d99ddbd232c9c6777c774fceb165a28`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `812b371fc30792cb2b0cf8d96079b3244c95b93efab7638e085d4e955d6ea42c`
-- Skill overlay SHA-256: `33e7e73c99fb4e7a6f2d6ab5104b8298fc067235a29614a6e32ee61035051666`
+- Skill overlay SHA-256: `11d9f677e9ab3fadaeeab596575848debc7e1fb3f4f8054e9e5572a63ccf426b`
 - Judge schema SHA-256: `01ca86a4951823e3b6c703072ce5be09764c747ae9938b66975b80e4d41e39dd`
 - Eval definition SHA-256: `8fc30622b3de679ebf38da0b0fc7b8032d774fb8a425496383ba9ed0da1fdbb0`
 - Metadata SHA-256: `c7304df99ba027e455b94ef86d8c2964c99813b4b7afb5bd532e0bf494b29d15`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
@@ -32,22 +31,22 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `security_findings` | PASS | The with_skill report identifies SQL injection via direct interpolation of req.query.name into SQL at src/api/user-search.js:2-4. |
-| `evidence_and_impact` | PASS | The report traces the HTTP parameter-to-database path and explains unauthorized directory reads plus conditional data modification, destruction, and availability impact. |
-| `severity_rationale` | PASS | It assigns Critical severity and supports it with authenticated reachability, predicate manipulation, PRD violations, affected assets, and conditional driver/database impacts. |
-| `remediation` | PASS | It recommends parameterized queries, validation, wildcard handling, least privilege, disabled multi-statements, and concrete regression tests. |
-| `writes_protocol_shaped_security_report` | PASS | The locked delivery_snapshot contains docs/security/user-search/appsec-checklist.md with frontmatter including feature, feature_path, version, and date; an Executive Summary with finding count, severity distribution, and posture; and location, risk, remediation, and verification sections. Git evidence shows no other files changed. |
+| `security_findings` | PASS | with_skill 报告识别了 SQL 注入，并以 req.query.name 直接进入 SQL 模板和 db.query 为证据。 |
+| `evidence_and_impact` | PASS | 报告给出 src/api/user-search.js:2-4、受影响的已认证入口，以及数据越权、暴露、篡改风险和可用性影响。 |
+| `severity_rationale` | PASS | 报告明确标为 Critical，并说明严重度依据及数据库驱动、权限等影响条件。 |
+| `remediation` | PASS | 报告提供参数化查询、输入约束、LIKE 转义、最小权限和恶意输入回归测试等可执行建议。 |
+| `writes_protocol_shaped_security_report` | PASS | 锁定 delivery_snapshot 中的文件包含完整 frontmatter（feature、feature_path、version、date 等）、Executive Summary、问题数量、风险分布、总体态势及逐问题位置、风险和修复建议；git 证据显示未修改其他文档。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bb6bd5dae7cb984c9a3912af15f420906d99ddbd232c9c6777c774fceb165a28; fixture_sha256=ede96965e7d44efbe6d4a7e610af20046168e4331047764663820caf76860ea6; output_sha256=40f3a74ff0a24f1c3a1d683915259cd59c8fd2c6ab11f0800fe90dbd13e93135; snapshot_sha256=ad8b8df94941228c8b06201eaff840e6999e9fc43b36e88e87e3af37b903911c
-- Behavior: Produced a protocol-shaped security report identifying the SQL injection with code evidence, impact, severity, remediation, and verification steps; no forbidden source or PM document mutations are evidenced.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bb6bd5dae7cb984c9a3912af15f420906d99ddbd232c9c6777c774fceb165a28; fixture_sha256=ede96965e7d44efbe6d4a7e610af20046168e4331047764663820caf76860ea6; output_sha256=3bb2ed6e2d200af56b04c6e4bb92d414ab143ce07ef5b6bdd1650860f08e72ea; snapshot_sha256=0fe28283de94c78c25c5530f04cd49363b137af36c390cea325e35f905a9a1b1
+- Behavior: 完成安全审查并落盘符合协议的 user-search 应用安全报告。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bb6bd5dae7cb984c9a3912af15f420906d99ddbd232c9c6777c774fceb165a28; fixture_sha256=ede96965e7d44efbe6d4a7e610af20046168e4331047764663820caf76860ea6; output_sha256=fb6e859f5c9c3ba44d8dfee7f7d50b9f54c22fab3d07409cfe428ce58154a15b; snapshot_sha256=0e6e4c5a3dbc08dcc9a5b956562aeec158e242d1efb7a297a8fc16c20d0659fa
-- Behavior: Identified the main SQL injection and additional wildcard/resource risks and delivered a report, but the locked report lacks the required frontmatter and Executive Summary protocol structure.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bb6bd5dae7cb984c9a3912af15f420906d99ddbd232c9c6777c774fceb165a28; fixture_sha256=ede96965e7d44efbe6d4a7e610af20046168e4331047764663820caf76860ea6; output_sha256=70ade284fce141dd113a49fa8b9e5621de0c8d6ba16dd0ae5c176b8a0bf9a02d; snapshot_sha256=1bb36b1679473a6b63751c556edc5db493cff2010a81a00aacef08df0be08db0
+- Behavior: 基线识别了 SQL 注入和宽泛查询/资源耗尽风险，并声称写入报告；仅作对比，不用于否定 with_skill 断言。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

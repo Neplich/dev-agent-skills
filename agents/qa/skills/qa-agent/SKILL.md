@@ -15,7 +15,7 @@ or fix verification.
 
 This router selects one primary QA specialist before any test artifact or
 execution is produced. State the accepted test basis, resolved `feature_path`,
-scenario and platform version, selected specialist, required evidence output,
+scenario and platform-version status, selected specialist, required evidence output,
 and the concrete materials that specialist must read: PM/Engineer documents,
 existing QA memory, environment instructions, credentials by account ID, and
 the repository execution entry or command. Point to the selected specialist's
@@ -36,6 +36,10 @@ already authorized bounded exploration and supplied a usable environment and
 test basis, read and pass every available environment instruction file together
 with the target source and QA memory to `spec-based-tester`; do not invent a
 second PM/Engineer handoff or credential gate.
+If the platform version is not yet recorded, preserve that status in the
+routing block and let the selected specialist enforce its version gate before
+execution or archival; that missing value alone does not block this router from
+handing off an otherwise confirmed, authorized test basis.
 
 ## Role Boundary
 
@@ -63,6 +67,13 @@ QA is a downstream router. Before routing, require an explicit PM handoff
 packet or equivalent confirmed test basis. The PM-side packet fields are
 defined in
 the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+
+A user-confirmed feature update plus explicit bounded-exploration authority,
+the target QA memory, target source files, and an environment instruction file
+is equivalent confirmed test basis for router handoff. Route it to the selected
+specialist even when the platform version or specialist-level PRD/TRD/plan gate
+is not yet resolved; preserve those gaps for the specialist instead of
+returning the router to PM.
 
 - If the user directly asks `qa-agent` or a QA specialist for acceptance,
   exploratory, bug-analysis, retest, regression, or E2E work without PM

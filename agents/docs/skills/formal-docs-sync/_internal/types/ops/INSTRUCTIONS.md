@@ -12,6 +12,13 @@ environment differences, exclusions, and change-map delta. Continue with other
 confirmed classes when one is blocked; do not create a page or command that
 pretends the blocked class is supported.
 
+Treat that continuation as an execution rule, not only a reporting rule. Once
+the bounded scope for the supported classes is confirmed, write and validate
+those classes atomically even when another class remains `blocked`. For a
+blocked Kubernetes/Helm class, enumerate each applicable missing evidence
+category separately, including Chart, values, template consumption points,
+cluster authority or permissions, and executed verification results.
+
 Use confirmed deployment and runtime evidence to verify, as applicable:
 
 - supported services, components, environments, versions, owners, and
@@ -38,6 +45,22 @@ deployment classes, safe example, secret classification and store reference,
 activation timing, and evidence paths. Report missing, deprecated, renamed, or
 conflicting definitions. Do not document variables absent from both examples
 and reads, or duplicate the full table in deployment-specific pages.
+
+Before calling the environment reference complete, validate a per-parameter,
+per-source matrix: preserve an evidence-backed default and requiredness exactly
+as implemented, enumerate every applicable deployment class, and name the
+effective injection or consumption mechanism for each class. A value present
+in source defaults must not be relabeled as required merely because one
+deployment file supplies it. Give every parameter row its evidence paths and
+one explicit lifecycle status: `active`, `deprecated`, `renamed`, `missing`, or
+`conflict`. Do not collapse a deprecated parameter into a generic drift label.
+Before returning, reconcile the table against every key in each supplied
+environment example and every actual configuration read. A key found in an
+example must remain in the matrix even when its lifecycle is `deprecated` or
+its current read is absent. Do not call an example or settings source missing
+until its supplied path has been checked, and do not silently omit a stale key.
+Read an explicitly named dotfile such as `.env.example` by its exact path; a
+discovery command that hides dotfiles is not evidence that the file is absent.
 
 Use the host granularity and ops template contracts for the authoritative page
 tree:
@@ -74,6 +97,23 @@ rollback, and troubleshooting. Root and class indexes provide scope and
 navigation without copying child-page bodies. If migrating an aggregate page,
 include path moves, link repairs, navigation, change-map updates, and duplicate
 fact consolidation in the same confirmed atomic scope.
+
+Do not mark a class page set complete while an evidence-backed applicable item
+from the class checklist is omitted. This includes Docker network and migration
+behavior, and Kubernetes/Helm ConfigMap handling and the real Chart package
+tree when those facts exist in the confirmed evidence.
+
+Before write/read-back, materialize a per-class applicability matrix covering
+every item in the Development, Docker, and Kubernetes/Helm checklists above.
+Each supported-class row points to the exact evidence and target page, or marks
+the item `N/A` with an evidence-backed reason. The matrix must name Docker
+networks and migrations and Kubernetes/Helm ConfigMap handling explicitly; a
+class cannot be called supported or complete while one of its applicable rows
+is absent.
+After writing, audit each class page for explicit prerequisites, commands,
+success criteria, rollback, and troubleshooting sections. Reconcile Docker
+network and migration rows explicitly as evidenced facts or evidence-backed
+`N/A`; an omitted row or heading fails the class completion check.
 
 ## Template and Output Rules
 

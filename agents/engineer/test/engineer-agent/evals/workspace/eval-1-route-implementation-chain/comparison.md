@@ -14,49 +14,46 @@
 - Fixture version/source: canonical manifest `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62` from `agents/engineer/test/engineer-agent/evals/workspace/eval-1-route-implementation-chain`.
 - Fixture SHA-256: `6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62`
 - Prompt SHA-256: `9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `cfa5a88208f1b1c899ab19782fdf4b1c4f59251e80b5c7edaead85a7f37b2ebd`
-- Skill overlay SHA-256: `077bb84411e61374de4fd93945f7e775b9133b3517221140cf4b19937f8b8f70`
+- Target skill tree SHA-256: `a0945f69a591a803cbdf998f521f63c8cd89a50d9611edf8290964f39919f246`
+- Skill overlay SHA-256: `9a7303ba5cad830c4f006356c75d5caf882ecf0cba962488589ee499a487871f`
 - Judge schema SHA-256: `a1e6bf4e08477989b26fffa805de56b77288d345cfdf1b16c76dd2c7ddf824f4`
 - Eval definition SHA-256: `c64c3e656d8dd56f539b8d46bbf02d2891b999db368472657d75c526ab878d79`
 - Metadata SHA-256: `8b67b33f30d9db399127d2f1e52b999931f8055d9c101157fccc82071f88b519`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
-- Behavior result: **FAIL**
-- Coverage result: **PARTIAL**
-Overall result: FAIL
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `starts_with_codebase_context` | PASS | With-skill output explicitly makes codebase-analyzer the first route. |
-| `routes_implementation_to_feature_implementor` | FAIL | It routes to feature-implementor, but does not explicitly state execution is based on the confirmed TRD, IMPLEMENTATION_PLAN, and existing code together. |
-| `routes_tests_to_test_writer` | PASS | It explicitly routes testing to test-writer before QA and delivery. |
-| `routes_qa_e2e_handoff` | FAIL | It names a QA E2E handoff directory, but omits the required handoff contents and references to PRD, TRD, confirmed plan, changed files, validation commands, risks, and recommendations. |
-| `routes_delivery_last` | PASS | The stated sequence places delivery after implementation, testing, and QA handoff. |
-| `does_not_execute_directly` | NOT_EXERCISED | Git evidence proves no workspace or repository mutation, but locked evidence cannot prove that no tests were run; this hidden process requirement is therefore not exercised. |
+| `starts_with_codebase_context` | PASS | with_skill 输出将 `codebase-analyzer` 列为首个专员，并安排其核验仓库结构、技术栈、Webhook 链路、持久化和测试框架。 |
+| `routes_implementation_to_feature_implementor` | PASS | 明确将重试与幂等逻辑交给 `feature-implementor`，前置条件包括确认 TRD、实现范围和 `IMPLEMENTATION_PLAN.md`，并结合代码库核验结果执行。 |
+| `routes_tests_to_test_writer` | PASS | 明确将测试补齐交给 `test-writer`，且列出成功、失败重试、上限、重复事件、并发和持久化失败等覆盖。 |
+| `routes_qa_e2e_handoff` | PASS | 实现和测试之后安排 QA E2E handoff，并提供包含 PRD、TRD、实现计划、变更文件、验证命令、风险、建议及 `docs/qa/e2e/billing-webhook/` 的交接包。 |
+| `routes_delivery_last` | PASS | 执行顺序明确为 `feature-implementor`、`test-writer`、QA E2E handoff，最后是 `delivery`，负责验证、commit、push 和 PR。 |
+| `does_not_execute_directly` | PASS | locked git evidence 显示 HEAD、分支和工作区均未变化；输出明确声明不改代码、不提交，且未运行测试。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=29e0def146f8ed8cb659cd16e40f9990c782b087a0e9f414ffeb5215e42f2ab3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Provides a mostly correct staged route with explicit analyzer, test-writer, QA directory, and delivery ordering, but misses required implementation-basis and QA-handoff details.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=f084353eb11143c5be8691156ab1fae6c2afba4df067f95ba1e47af1a69a9893; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完整建立上下文并按要求安排实现、测试、QA 和最后交付路由；保持只读。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=beda76480b11694c95077f157ffc8e1f5c9834dbf92f11ec2e0b966799768b55; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline gives generic implementation, testing, and delivery phases without the required specialist routing or explicit QA E2E handoff.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9fc8881f18737830e6fd3bd600a3e0c2e55655ace219e4ac6560b9a3b9b10408; fixture_sha256=6901f5611ca2fe3ad6e90465dd3d2fa7fe65487d3ee792571b1138447aa07b62; output_sha256=e5d0b0676db1fb2681f92589202d350a76ddc40c2a2a4a2bb8b816ba64caf6fb; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 给出一般性的实现、测试和交付顺序，但未路由到指定专员或提供结构化 QA 交接包。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- The implementation handoff lacks the required explicit basis in confirmed TRD, implementation plan, and existing code.
-- The QA E2E handoff omits its required package contents and references.
-- Next: Require the feature-implementor handoff to cite the confirmed TRD, confirmed IMPLEMENTATION_PLAN, and existing-code findings.
-- Next: Specify the QA E2E handoff package contents and target docs/qa/e2e/billing-webhook/ directory.
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 

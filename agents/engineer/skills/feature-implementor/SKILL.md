@@ -21,27 +21,51 @@ load `_internal/reviewer/INSTRUCTIONS.md` and
 
 Before code or test changes, produce one observable checkpoint that:
 
-1. resolves the canonical nested `feature_path` and records PRD, decisions,
+1. when `docs/site/standards/change-map.yaml` exists, resolves the task's code
+   path through that map before reading any mapped formal document or beginning
+   broader repository exploration; records the matched code glob and mapped
+   documents, then verifies every material planning claim against code or tests
+2. resolves the canonical nested `feature_path` and records PRD, decisions,
    TRD, `related_prd`, design, and code-evidence alignment
-2. returns a missing or changed PRD to `pm-agent:idea-to-spec`, a missing or
+3. returns a missing or changed PRD to `pm-agent:idea-to-spec`, a missing or
    incomplete TRD to `engineer-agent:trd-gen`, and UI design gaps to
    `designer-agent`; the finder
    names the gap but never performs the receiving role's work
-3. scans the fixed active-plan path and archive directory before writing and
-   records the original active-plan status verbatim;
+4. scans the fixed active-plan path and archive directory before writing,
+   explicitly names both paths, states that the active entry remains fixed and
+   archives belong only in that archive directory, and
+   records the original active-plan status and `implementation_scope` verbatim
+   before any archive or replacement write;
    handles `Implemented`, draft/non-implemented, faithful archive, abandoned,
    and no-active-plan states exactly as the archive gate specifies
-4. writes or updates `IMPLEMENTATION_PLAN.md` with current frontmatter version,
+5. writes or updates `IMPLEMENTATION_PLAN.md` with current frontmatter version,
    status, alignment, file scope, order, verification, forbidden areas, and an
    explicit implementation/independent-validation split decision; the main
    process retains repository rules, source context, integration, and final
    delivery judgment, while each delegated scope forbids unrelated changes
-5. presents the exact plan and waits for user confirmation before coding,
+6. presents the exact plan and waits for user confirmation before coding,
    including for hotfixes and small bug fixes
 
+For a substantive continuation of a draft or other non-`Implemented` active
+plan, the checkpoint states the new `version` and `last_updated` together; a
+generic statement that the plan will be updated is insufficient. For a
+`Superseded` or completed archive, the checkpoint names the exact required
+archive metadata: `implementation_scope`, `status`, `archived_at`,
+`archive_approved_by`, `source_plan`, the preserved original metadata, and
+`superseded_reason` when applicable. Do not substitute similarly named fields.
+
+When `subagent_split` is enabled, state that the main process retains the PRD,
+TRD, applicable design documents, repository rules, implementation boundary,
+integration, and final delivery judgment. Assign independent validation to a
+different sub-agent and require it to check those source documents, changed
+scope, deterministic test results, repository rules, unrelated-change safety,
+and residual risk.
+
 Render that checkpoint with explicit fields: `feature_path`, `parent_feature`,
-`feature_level`, `prd_alignment`, `prd_path`, `trd_alignment`, `trd_path`,
-`active_plan_path`, `active_plan_status`, `implementation_scope`,
+`feature_level`, `change_map_path`, `matched_code_glob`, `mapped_docs`,
+`prd_alignment`, `prd_path`, `trd_alignment`, `trd_path`,
+`active_plan_path`, `active_plan_status`, `active_plan_scope_before`,
+`replacement_plan_scope`, `archive_directory`, `active_entry_rule`,
 `archive_state`, `decision`, `receiving_owner`, `gap_packet`, `planned_files`,
 `verification_commands`, `subagent_split`, `blocked_downstream_actions`, and
 `confirmation_required`. Use `N/A` only when the field is genuinely
@@ -51,6 +75,10 @@ matters, including implementation, new E2E expectations, QA handoff, delivery,
 PR creation, and issue closeout. A planning checkpoint never substitutes a
 generic request for more context when the confirmed documents already provide
 the field.
+For replacement or abandonment, `active_plan_scope_before` must come from the
+locked pre-write active plan and remain unchanged in the checkpoint and archive;
+`replacement_plan_scope` names the new active plan. Never use the replacement
+scope as evidence of what the original plan contained.
 
 For a planning-only request, missing implementation source does not prohibit
 creating the plan when confirmed PRD/TRD inputs identify the target file,
@@ -211,6 +239,12 @@ fresh subagent eval status when applicable, residual risks, and next owner.
 If frontmatter says `status: "Implemented"`, the body must not keep unresolved
 planning wording such as "waiting for confirmation", "not started", or
 "pending execution" except as clearly historical context with a resolved result.
+Before correcting that closeout, explicitly identify the conflict between the
+`Implemented` frontmatter and each unresolved body state found. When an archive
+decision is in scope, the user-visible checkpoint also states that
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` remains the fixed active
+entry and archives go only under
+`docs/engineer/{feature_path}/implementation-plans/archive/`.
 Runtime eval artifacts must not be committed.
 
 When user-facing flows, acceptance paths, permissions, login, data setup, or
@@ -223,6 +257,12 @@ Render both facts in the planning checkpoint itself as
 `qa_e2e_tc_create_or_update: blocked_until_plan_confirmed` and
 `qa_e2e_source_after_confirmation: docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`;
 do not defer them to a later QA step.
+The same checkpoint renders `qa_e2e_handoff_package_after_implementation` with
+explicit fields for PRD path, TRD path, confirmed implementation-plan path,
+changed files, verification commands, test results, residual risks, and the
+suggested `docs/qa/e2e/{feature_path}/` directory. Values that cannot exist
+before implementation are marked pending, but no field or target directory may
+be omitted.
 
 ## Key Principles
 

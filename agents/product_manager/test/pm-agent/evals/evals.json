@@ -282,7 +282,7 @@
     {
       "id": "eval-007-direct-downstream-without-handoff",
       "name": "direct-downstream-without-handoff",
-      "description": "Verifies that direct user requests to downstream role routers are returned to pm-agent when no PM handoff or equivalent source documents are present.",
+      "description": "Verifies that pm-agent keeps an underspecified implementation request in PM scope alignment instead of treating it as a completed downstream handoff.",
       "scenario": {
         "persona": "希望把工作请求交给正确团队推进的需求负责人",
         "situation": "用户要求立即实现设置页改动，但承认尚无产品或设计材料。",
@@ -304,30 +304,30 @@
         ]
       },
       "prompt": "直接帮我实现设置页布局调整；目前没有准备产品或设计材料，希望先开始改代码。",
-      "expected_output": "PM 路由或下游入口门禁决策，拒绝直接进入 downstream execution；说明没有 PM handoff packet 或等价已确认文档时必须回到 pm-agent 分类和范围确认，不开始工程实现。",
+      "expected_output": "先给出 PM Routing decision；将范围和 feature_path 标为未确认，继续由 PM 完成需求与设计依据对齐，不把未来的 Engineer 路由表述成已完成 handoff，也不开始工程实现。",
       "workspace": "workspace/eval-7-direct-downstream-without-handoff",
       "assertions": [
         {
-          "id": "reject_direct_downstream",
-          "description": "拒绝直接进入下游执行",
-          "text": "必须明确说明不能直接进入 `engineer-agent`、代码修改或其他 downstream execution。"
+          "id": "routing_decision_present",
+          "description": "先给出 PM 路由决策",
+          "text": "输出先给出明确的 Routing decision，包含 request_type、selected owner、entry basis、feature_path 和 execution boundary；不得只进入需求讨论而省略入口分类。"
         },
         {
-          "id": "return_to_pm_agent",
-          "description": "返回 PM 入口分类",
-          "text": "必须把请求返回 `pm-agent` 进行 request_type、scope、feature_path 和 handoff readiness 分类。"
+          "id": "stay_in_pm_alignment",
+          "description": "保持在 PM 范围对齐",
+          "text": "由于产品范围、feature_path 和设计依据尚未确认，当前没有可供下游消费的 PM handoff packet，必须由 `pm-agent` 保持在 idea-to-spec 的范围对齐路径，不得声称 Engineer handoff 已完成或进入 downstream execution。"
         },
         {
-          "id": "require_handoff_or_docs",
-          "description": "要求 handoff 或等价文档",
-          "text": "必须要求 PM handoff packet 或等价已确认 PRD/TRD/design/test/deployment/security 文档后才能交给对应 role router。"
+          "id": "blocks_engineering_without_basis",
+          "description": "缺少依据时阻止工程执行",
+          "text": "必须说明进入工程实现前仍需确认产品范围，并按布局变化性质补齐适用的 PRD、设计依据和技术范围；当前不得修改代码。"
         }
       ]
     },
     {
       "id": "eval-008-direct-specialist-bypass-gate",
       "name": "direct-specialist-bypass-gate",
-      "description": "Verifies that direct invocation of an internal specialist cannot bypass the PM handoff entry gate.",
+      "description": "Verifies that a direct request for an implementation plan and code cannot bypass PM and engineering entry evidence when only a one-line feature idea exists.",
       "scenario": {
         "persona": "希望把工作请求交给正确团队推进的需求负责人",
         "situation": "账号中心新功能只有一句需求，没有确认范围、技术设计或实施依据，却被要求直接实现。",
@@ -348,24 +348,24 @@
           "不创建计划或开始实现"
         ]
       },
-      "prompt": "帮我实现账号中心的新功能；目前只有这句话，还没有需求文档或技术设计。",
-      "expected_output": "Specialist entry gate 决策，拒绝创建实施计划或写代码；说明 direct invocation 不会绕过 PM handoff entry gate，并返回 pm-agent 做分类、范围和源文档确认。",
+      "prompt": "账号中心要做一个新功能。目前只有这句话，还没有需求文档或技术设计；请先直接给我实施计划并开始写代码。",
+      "expected_output": "先给出 PM Routing decision，将该请求留在新功能范围确认；说明一句需求不足以形成实施依据，需求范围与 PRD 确认后还需技术设计和已确认实施范围，当前不创建实施计划、不写代码或测试。",
       "workspace": "workspace/eval-8-direct-specialist-bypass-gate",
       "assertions": [
         {
-          "id": "specialist_gate_runs",
-          "description": "specialist 入口 gate 生效",
-          "text": "必须说明内部 specialist 被直接调用时仍要执行 PM handoff entry gate。"
+          "id": "routing_decision_present",
+          "description": "先给出 PM 路由决策",
+          "text": "输出先给出明确的 Routing decision，识别这是范围未确认的新功能或等价 PM 请求，并标明 entry basis 和 execution boundary；Direct invocation 不得绕过 PM handoff entry gate，仍由 `pm-agent` 承接。"
         },
         {
-          "id": "requires_handoff_or_docs",
-          "description": "要求 handoff 或等价文档",
-          "text": "必须要求 PM handoff packet，或等价已确认 PRD/TRD 与当前 implementation scope；不能把已存在 IMPLEMENTATION_PLAN 当作进入 feature-implementor 的前置条件。"
+          "id": "requires_product_and_engineering_basis",
+          "description": "要求产品与工程实施依据",
+          "text": "必须先完成 PM 范围与 PRD 或等价预期确认；进入实施计划前还需要 TRD 或等价技术设计以及已确认的 implementation scope，不能从一句需求直接生成计划。"
         },
         {
           "id": "blocks_implementation",
           "description": "阻止实现动作",
-          "text": "必须阻止创建 plan、写代码或测试实现，并返回 `pm-agent` 分类。"
+          "text": "必须阻止创建实施 plan、写代码或测试实现，并保持在 pm-agent/idea-to-spec 的分类与范围确认阶段。"
         }
       ]
     },

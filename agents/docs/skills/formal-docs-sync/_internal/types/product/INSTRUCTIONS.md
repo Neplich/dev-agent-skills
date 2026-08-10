@@ -58,8 +58,14 @@ exclusions. For every leaf, enumerate the full ancestor chain from the Product
 root through every confirmed non-leaf feature, create or update each ancestor
 `index.md`, and verify every parent links its direct children. Every confirmed
 feature and task must therefore be reachable from the Product root one level at
-a time, regardless of nesting depth. Write for the confirmed audience and
-describe existing behavior, constraints, permissions, failures, and recovery.
+a time, regardless of nesting depth. Apply that parent-link rule within each
+visibility target. When an existing `public` or `both` ancestor gains an
+`internal` child, preserve the ancestor visibility and make the child reachable
+through the host's generated internal recursive navigation; do not add a shared
+Markdown link that becomes dead in the public build. Add a direct body link only
+when the child is included in every build target that includes the parent.
+Write for the confirmed audience and describe existing behavior, constraints,
+permissions, failures, and recovery.
 Link Design, API, Database, and Ops authority pages instead of duplicating
 their contracts. Keep each page, all required ancestor indexes and links, and
 its change-map entries in the same confirmed write/read-back scope. Release

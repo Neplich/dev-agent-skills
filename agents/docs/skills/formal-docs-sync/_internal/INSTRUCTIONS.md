@@ -111,6 +111,17 @@ delta, and exclusions. Paths must use lower kebab-case. If an existing stable
 host path would move, show a separate migration plan and wait for its explicit
 confirmation; the sync batch itself is not migration permission.
 
+Before presenting the confirmation request, validate the candidate matrix row
+by row. Every domain, intermediate index, and leaf row must directly contain or
+unambiguously cross-reference its parent, complete page path, exact code glob or
+code boundary, owner, classification evidence, change-map delta, and
+exclusions. Every new page row also states its own `visibility`; a section-level
+default does not substitute for a per-page value. A tree plus separate evidence
+or glob tables is incomplete when a reader cannot pair all of those fields back
+to each node. Validate the proposed map independently: lists are deduplicated
+and stably sorted, and every unknown field, unrelated entry, trigger, and
+exclusion is preserved.
+
 Wait for confirmation. For each matched `code_glob`, show one atomic mapping
 closure: every leaf or compatibility page that the glob can affect, every
 ancestor `index.md` changed to keep those pages reachable, and every required
@@ -175,6 +186,14 @@ flat pages as an unresolved discrepancy. Under the third decision write nothing.
 Neither decision moves an existing page, and neither ever appends a new page to
 the type root merely to match the existing flat layout.
 
+The migration proposal must enumerate each inbound link repair and the
+recursive-navigation delta at every affected parent-child level; a generic
+statement that links or navigation will be updated is not a complete delta.
+The hierarchy report classifies every non-`index.md` page directly under the
+loaded type root as in-batch drift, out-of-batch drift, resolved by one of the
+two exceptions above, or unsupported by classification evidence. Do not omit a
+root-level page merely because its drift group is outside the confirmed batch.
+
 Report every drifted parent outside this batch as a read-only observation with
 its page list and proposed target node. Do not expand the confirmed scope,
 propose a site-wide restructure, or move anything without confirmation. When the
@@ -211,6 +230,12 @@ Read every changed page and map entry back. Verify that page paths exist, map
 globs and exclusions have the intended reach, lists are stable, and every
 material statement is supported. Contradictory or missing evidence is a
 blocker, not permission to guess.
+
+Navigation claims must be backed by actual resolvable links in the changed
+pages or by read-back of the host's generated navigation for the relevant
+visibility target. Plain text saying that a child is reachable, a generated
+sidebar is expected to contain it, or another page links upward does not prove
+the path from the type root through each ancestor to the leaf.
 
 ### 6. Apply the shared contract and leave pages unverified
 
@@ -346,6 +371,13 @@ scope:
 6. every required test, including applicable QA/E2E evidence, ran and passed;
 7. the Step 4 candidate scope is confirmed.
 
+Evaluate items 1-6 before item 7. If any of items 1-6 fails, set the page row
+to `blocked`, report item 7 as not reached rather than `PASS`, and stop before
+Step 4 scope confirmation or writes for that atomic mapping closure. The failed
+row must name the responsible owner or test owner from the accepted handoff,
+plan, or test evidence; if ownership evidence is missing, report that gap rather
+than silently omitting or guessing the owner.
+
 Reuse `feature-implementor` closeout evidence; do not invent another evidence
 format. Before any write, render a page-level closeout matrix with one row for
 every proposed Design page and one explicit status/evidence reference for each
@@ -378,6 +410,29 @@ Hub paths or business facts, migrate AI Hub non-VitePress logic, or introduce
 dynamic schemas. It does not create duplicate type specialists.
 
 ## Report Shape
+
+For a hierarchy-drift proposal, the `Hierarchy drift` report is a structured
+inventory, not a prose summary. It must name the loaded type module and host
+template; list every in-batch drifted parent, all root-level pages assigned to
+it by confirmed classification evidence, the target subtree, every old-to-new
+mapping, navigation/link and `required_docs` deltas, exclusions, and all three
+maintainer choices; and list every out-of-batch drift group with its page list
+and proposed target node. Keep the out-of-batch groups explicitly read-only.
+Before returning that inventory, reconcile its rows against the complete list
+of non-`index.md` pages at the loaded type root. Every page appears exactly
+once; pages sharing the same confirmed catalog domain or first `feature_path`
+parent remain grouped even when only one child belongs to the current batch.
+Reject the report as incomplete if any migration row lacks its old path, target
+path, inbound-link delta, recursive-navigation delta, or change-map
+`required_docs` delta, or if an out-of-batch group lacks its page list or target
+node.
+Represent this check with explicit `root_page_inventory`, `in_batch_groups`,
+and `out_of_batch_groups` fields. Each in-batch group contains `pages`,
+`target_tree`, `old_to_new`, `inbound_link_delta`,
+`recursive_navigation_delta`, `required_docs_delta`, `exclusions`, and exactly
+the three maintainer choices: migrate with this batch, confirm only this batch,
+or defer all. Do not ask for confirmation until every applicable field is
+non-empty or carries an evidence-backed `N/A`.
 
 After each scope or backfill batch, report every field below explicitly. Do not
 omit the loaded-module line or replace it with an implicit claim that the

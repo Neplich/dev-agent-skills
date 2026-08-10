@@ -40,7 +40,8 @@ Apply changes to an existing PRD while maintaining version history and quality s
    - Apply content changes (additions, modifications, removals)
    - Scope changes (may require MAJOR version bump)
 
-3. **Apply changes**: Modify affected sections while preserving unchanged content.
+3. **Stage changes**: Prepare the affected-section changes in memory while
+   preserving unchanged content; do not write the PRD yet.
    The body must state only the current target state: delete or rewrite
    superseded designs instead of keeping them with "deprecated" / "not part of
    the target architecture" annotations. Record removals in the changelog (see
@@ -49,7 +50,7 @@ Apply changes to an existing PRD while maintaining version history and quality s
    existing parallel directory is misplaced, stop and present a path conflict
    summary instead of silently editing the wrong PRD.
 
-4. **Evaluate L2b split signals**: After applying the requested content change,
+4. **Evaluate L2b split signals**: After staging the requested content change,
    evaluate the four L2b signals in `_internal/_shared/gen-conventions.md`:
    total lines `> 500`, at least 3 independent domains, at least 15 combined
    `US-*` / `FR-*` table rows, or sections with clear child-feature ownership.
@@ -57,6 +58,18 @@ Apply changes to an existing PRD while maintaining version history and quality s
    section migration map, and downstream mirror impact list, then wait for
    explicit user confirmation. Do not move or split files while waiting. If the
    user rejects the proposal, keep the current path and continue this workflow.
+
+   Complete this assessment before version bump, validation, or presentation.
+   Render the result explicitly as `l2b_assessment`, including the triggered
+   signals. When triggered, the same response must contain the candidate child
+   `feature_path` tree, complete section migration map, downstream mirror
+   impacts for Engineer, Design, QA, DevOps, and Security, and the pending
+   confirmation boundary. Do not silently continue as though the assessment
+   were not triggered.
+
+   When triggered, the existing PRD remains byte-for-byte unchanged until the
+   split proposal is accepted or rejected. Only a non-triggered assessment or a
+   resolved proposal may continue to the version bump and durable PRD write.
 
 5. **Bump version**: Per `_internal/_shared/output-conventions.md`:
    - Typo/formatting → PATCH
@@ -75,6 +88,10 @@ Apply changes to an existing PRD while maintaining version history and quality s
 - **Diff summary**: Section-by-section list of changes
 - **Validation result**: Inline validation score of the updated document
 - **Changelog**: Updated with new entry
+- **L2b assessment**: Triggered signals and the complete confirmation-gated
+  split proposal when any signal is met
+- **Body consolidation check**: Confirm that superseded behavior appears only
+  in changelog or decision history, not in the current-state PRD body
 
 ## Failure Handling
 

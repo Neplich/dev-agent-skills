@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68` from `agents/engineer/test/feature-implementor/evals/workspace/eval-011-four-level-feature-path-plan-gate`.
 - Fixture SHA-256: `6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68`
 - Prompt SHA-256: `e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `e820a1098a32d64fe76bdf4ec719cd859ebecfdb70fa28be1309b656ec71bd22`
-- Skill overlay SHA-256: `226a387f9ef93d9f4c106e1f240f22e5014d390eeb37da0fd61da0c129ca36ba`
+- Target skill tree SHA-256: `1b3ba014c732559fe2d85e84b85c8db967bb14f4b1fc850a2267e7d4ee1cf03b`
+- Skill overlay SHA-256: `7f72b0d2378eefdc164735f00c26c14522753a42e538abe02ba7accda3b0a9f5`
 - Judge schema SHA-256: `daa05dfde11fd09221d4ad9b38d9b74b58a7b93050ec83c55293e7ca9eae6a7e`
 - Eval definition SHA-256: `7d6cafded24992611b95dfc908abe3d7611f7857dadb745152c30089566b43d2`
 - Metadata SHA-256: `3668a072214fe6498899f002deadbb563dcff96e3a3df4bc0dd68e0b0df02057`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
@@ -32,29 +31,29 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reads_matching_four_level_docs` | PASS | With-skill output cites both required document paths and states feature_path is chat-interface/messages/history/search for each. |
-| `writes_four_level_plan_path` | PASS | Delivery snapshot contains docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md. |
+| `reads_matching_four_level_docs` | PASS | With-skill output cites both required PRD/TRD paths and records their aligned four-level feature path; raw trace also captures both documents with matching feature_path metadata. |
+| `writes_four_level_plan_path` | PASS | Locked delivery_snapshot contains docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md and no forbidden alternative plan path. |
 | `preserves_feature_metadata` | PASS | Plan frontmatter contains feature_path, parent_feature, feature_level, related_prd, and related_trd with the required values. |
-| `includes_scope_and_checks` | PASS | Plan lists the two implementation/test files and the deterministic npm test command, with scope specific to message history search. |
-| `waits_for_user_confirmation` | PASS | Output explicitly requires user confirmation before loading implementation and modifying code or tests. |
-| `does_not_implement_directly` | PASS | Locked evidence shows only the implementation plan was added; no source/test changes or execution claims are present. |
+| `includes_scope_and_checks` | PASS | Plan lists implementation/test scope and the deterministic npm test command plus diff review check. |
+| `waits_for_user_confirmation` | PASS | Output explicitly says implementation starts only after explicit user confirmation and asks the user to confirm the plan. |
+| `does_not_implement_directly` | PASS | Delivery snapshot contains only the implementation plan; output states implementation is pending confirmation and does not claim code/test execution. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=252c6966d97472b3ee0551c176662c0238cc5e1de17059749407763a22df93b8; snapshot_sha256=75762173e008a538ddf2f21aea2db7d8c4d9ca745ab3fc708f3bff93dbf3985a
-- Behavior: Created the correctly located four-level implementation plan, preserved metadata, documented scope and deterministic verification, and stopped at the confirmation gate.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=5f7761127c699900d74013c0a62a7033163ea2739271aa845910bad93ca3cb8c; snapshot_sha256=ca7a81a25655255dcd772dacd03b75183caa9aed105a4c36be5666b359aad643
+- Behavior: Created the correctly mirrored implementation plan with required metadata, scope, verification, and an explicit confirmation checkpoint; did not implement code.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=7b97e38c5eae7f5c66a365358c21e0819395dd3512243cfa5f6059c0e41addc7; snapshot_sha256=3bacd223c19098fbd50554e3ef570b9ff4d76948111ea3a7f8d6e740b6af7de3
-- Behavior: Implemented source and test changes directly, reported diff-check success, and could not run tests because package.json was missing.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=976372baf29699adb60ebc0ea1403e43470604ce393b375c676e4a6cea96184c; snapshot_sha256=62cc2e539aa653d94380c21148e453a88c26cc038355679bca4b06b4207061f0
+- Behavior: Implemented source and tests directly, omitting the required planning checkpoint and plan artifact; reported runtime verification despite npm test being unavailable.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Await user confirmation before implementation.
+- Next: None.
 
 ## Runtime Artifact Policy
 

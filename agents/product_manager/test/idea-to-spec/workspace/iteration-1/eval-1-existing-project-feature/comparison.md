@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-1-existing-project-feature`.
 - Fixture SHA-256: `2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc`
 - Prompt SHA-256: `989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `c0da2e0366232678672d0c64ce9fa764d3b78f3caaaa8493348af1a7e1cd00fe`
-- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Target skill tree SHA-256: `3072109ec32b0fb477459bf87e4126d386584326abd0c8ada42f180e6d9cbf00`
+- Skill overlay SHA-256: `2811fdd3c57db7a2738883046d1d787b9d794bcfbf96919af99fd2eac7160676`
 - Judge schema SHA-256: `dbe3f262003438ea2a4caaa2b38e4ab353ee29def3530b27abe04d98b19dfd03`
 - Eval definition SHA-256: `fbb5377843587b9c6261e61b2a81e3a48d39c5e7814d8290865e02fe8eb5ec41`
 - Metadata SHA-256: `ff56c9c4026c02d3f3b5f70e58cc2a2e628e1817de3ecbec4d01c2d2b3fe50bc`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
@@ -32,21 +31,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `summarizes_current_context` | PASS | with_skill 总结了 package manifest、Docs Index 与 Engineer TRD，准确指出应用导入/编辑/列表能力、仅按名称搜索以及缺少标签模型和标签筛选等缺口。 |
-| `keeps_first_turn_to_one_decision` | PASS | with_skill 只推进一个关键决策：第一版优先解决管理员整理、用户发现或双向均衡中的哪种价值。 |
-| `offers_real_options_with_tradeoffs` | PASS | with_skill 提供了三个可执行方向，说明了各自范围与取舍，并明确推荐“管理员整理优先”。 |
-| `waits_before_durable_docs` | PASS | delivery_snapshot 为空且 git_evidence 显示无变更；with_skill 明确暂不写正式 PM 文档，并将文档列为待确认事项。 |
+| `summarizes_current_context` | PASS | With_skill summarizes the manifest, docs index, Engineer TRD, current catalog capabilities, and tag gap before proposing scope. |
+| `keeps_first_turn_to_one_decision` | PASS | With_skill advances one decision only: the first-version user-facing capability level, with one recommendation and no parallel confirmation questions. |
+| `offers_real_options_with_tradeoffs` | PASS | With_skill presents three executable directions—basic discovery, filterable directory, and complete tag system—with tradeoffs implied by scope and a reasoned recommendation for option 2. |
+| `waits_before_durable_docs` | PASS | With_skill states durable_docs_pending=true, confirmation_required, recommends exploration before formal PRD/DECISIONS, reports no PM docs, and delivery_snapshot/git evidence show no mutation. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b; fixture_sha256=2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc; output_sha256=f97531ca2c89c0b6ae2a223cb85e50fce0065a30f1c0b17d69ea148ee8a56fd9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 先基于现状和缺口建立 checkpoint，再只请求一个范围决策，提供三个方向及推荐，并保持文档待确认。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b; fixture_sha256=2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc; output_sha256=deec8a822eb946a7832b75f36843562075ab96bbfca70dcde0710af21104f429; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly performs the read-only project checkpoint, summarizes current state and gap, advances one product decision with three scoped options and a recommendation, and defers formal documentation pending confirmation.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b; fixture_sha256=2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc; output_sha256=3ba5bac426c7c9bae55a98b51752b5e13766b58694d06af4261eab3763b2a4e9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 也总结了主要现状并提出三个方向，但未体现结构化 checkpoint；同样未产生文件变更。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=989dc53f5a8c8fb9df9263c550c8d2965414d618ab35b7c932c180c33869ec1b; fixture_sha256=2a0d3945e9442edd7c1ef55752552e4a49ef23e35e942cd87d1e31a4fa5138fc; output_sha256=fdade409559bf8994aecd380f38e50dd277fd058b9d0b3dd7771dff0fafa5ce0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline also summarizes the project and gap, advances one decision with two options and a recommendation, and defers formal documentation; it is less structured and offers fewer options.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

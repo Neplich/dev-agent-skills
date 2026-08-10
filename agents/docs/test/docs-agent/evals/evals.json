@@ -56,7 +56,7 @@
       "id": "eval-002-missing-entry-basis",
       "name": "无凭据建站请求回到 PM 入口",
       "description": "验证未提供 PM handoff、等效文档链或完整 specialist entry basis 时，router 温和引导回 pm-agent。",
-      "prompt": "帮我把正式文档站建起来。",
+      "prompt": "我们要新建正式文档站，但我还没确定要落在哪个代码仓库。你先告诉我现在能做到哪一步、还缺什么。",
       "expected_output": "说明缺少目标仓库和有效入口凭据，温和引导经 pm-agent 分类或补齐 specialist entry basis，且不执行建站协议。",
       "workspace": "workspace/eval-002-missing-entry-basis",
       "assertions": [

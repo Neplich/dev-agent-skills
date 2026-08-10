@@ -11,48 +11,47 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
-- Fixture version/source: canonical manifest `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-013-deployment-aggregate-migration`.
-- Fixture SHA-256: `13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4`
+- Fixture version/source: canonical manifest `b9cf5f02e5624842eefaa770fff8e84ccfc602f0eed28accf48a25400705d39e` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-013-deployment-aggregate-migration`.
+- Fixture SHA-256: `b9cf5f02e5624842eefaa770fff8e84ccfc602f0eed28accf48a25400705d39e`
 - Prompt SHA-256: `ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
-- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Target skill tree SHA-256: `f24bfeb12dba77a74fcf3f0161749ae4671b83762eac08484e7ae08621d9bacb`
+- Skill overlay SHA-256: `5dbb8d8559bfab3926047aa028e19f362490751247c2142101cfd687fff5239e`
 - Judge schema SHA-256: `cb68cc7396b4ed1007a2bd5b5970baa015053110168fade98a969dbebc84c1b1`
 - Eval definition SHA-256: `2adf472912fe37066628cc2da23affed241d146a6c7c80728c7df93b4f2fccc7`
-- Metadata SHA-256: `24118b2c28e807c2d8787e545057d4e67c26fd6313bf8abe3b22a58982fbfa17`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Metadata SHA-256: `1730a36a001d532f328500208fe2ccb136183d8551b840ea714421749b8365ea`
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
-- Behavior result: **PASS**
+- Behavior result: **FAIL**
 - Coverage result: **FULL**
-Overall result: PASS
+Overall result: FAIL
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `migrates_aggregate_path` | PASS | Locked delivery snapshot deletes docs/site/ops/deployment.md and adds deployment/index.md, environment-reference.md, and development, docker, and kubernetes-helm page trees. |
-| `repairs_inbound_and_internal_links` | PASS | Locked files update both inbound links to deployment/index.md; the new root links resolve to all class pages and environment-reference.md, and no residual old aggregate links remain in the checked files. |
-| `updates_change_map_without_data_loss` | PASS | Locked change-map content maps each deployment glob to root, shared environment, and class pages while preserving custom_owner_field, exclude, and the unrelated src/product mapping. |
-| `updates_navigation_atomically` | PASS | With-skill evidence records npm run test:docs exit 0, git diff --check exit 0, no formal old-path remnants, and a coordinated snapshot containing navigation, moved pages, links, change-map updates, and consolidated facts. |
+| `migrates_aggregate_path` | FAIL | The old page is deleted and the page tree exists, but the root index and all three class pages repeat shared facts such as APP_PORT=8080; the snapshot therefore contradicts the requirement that shared facts remain only in environment-reference.md. |
+| `repairs_inbound_and_internal_links` | PASS | Snapshot links update ops/index.md and product/runtime.md to deployment/index.md; child pages contain parseable relative links to the root and environment-reference.md. |
+| `updates_change_map_without_data_loss` | PASS | The with_skill change map includes class-specific pages, environment-reference.md, and required ancestor/navigation pages; it preserves custom_owner_field, exclude, and the unrelated src/product mapping, with deduplicated stable ordering. |
+| `updates_navigation_atomically` | PASS | The locked snapshot contains the migrated tree, repaired navigation and mappings, and no old-path markdown links. Raw trace item_16 records npm run test:docs from docs/site passing 2/2 with exit code 0. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4; output_sha256=5077aba73143ee46ad58b2537d4287c8cc783ec52d5e442329da8c295c7d1e47; snapshot_sha256=b8fb2a9995e508f6e4d33f6242c40730a14a000f80bbbce82f83a0c1d13afc87
-- Behavior: Completed the migration with the full page tree, repaired links, expanded change-map entries, preserved fields, and passing documentation tests.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=b9cf5f02e5624842eefaa770fff8e84ccfc602f0eed28accf48a25400705d39e; output_sha256=fd9f28c28a8c2a428f6ac09f7d7463dcc84477b47dd369bf1ecdb4b27eeab8b9; snapshot_sha256=a7717931bca143b7d235ed0d055f365375d90d2adcef0f197b19ea79fe27ece5
+- Behavior: Completed the confirmed deployment-page migration with repaired links, expanded change-map closures, preserved fields, and passing documentation tests, but duplicated shared environment facts outside the dedicated reference page.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=13971a8a2ce22367dc9a9017e6a9d07e4a46c704998bfe1f7035f4fbe3557cf4; output_sha256=d89c40f4b13f317991a77ee7fe6cfb2a0eaf54eb5e2c4b159b4a5bba10b340dc; snapshot_sha256=f671f7d7dc033436c1d9f37a04972c40a4df0ccef01fe720f7f0b0d0399a9dee
-- Behavior: Deleted and split the aggregate page and repaired basic links, but mapped each category only to its class page and omitted root/shared pages from required_docs.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=b9cf5f02e5624842eefaa770fff8e84ccfc602f0eed28accf48a25400705d39e; output_sha256=64d318a5a7520a897de9a6a609f874757b94fd31a70c9ca2abdad04afc3cf0a7; snapshot_sha256=b1305fec62d686213f7ce3791e1088c12e6eab3530978293da547e8df437aabc
+- Behavior: Fresh baseline also produced a migration-shaped delivery and passing test claim; used only as comparison context and not to determine with_skill assertion verdicts.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- None.
-- Next: None.
+- The with_skill delivery duplicates shared environment facts outside environment-reference.md, including APP_PORT=8080 in the root and class pages.
+- Next: Move shared APP_PORT and health-check facts out of the root and class pages, leaving them only in environment-reference.md.
 
 ## Runtime Artifact Policy
 

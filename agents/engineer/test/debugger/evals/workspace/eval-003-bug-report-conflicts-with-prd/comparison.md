@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6` from `agents/engineer/test/debugger/evals/workspace/eval-003-bug-report-conflicts-with-prd`.
 - Fixture SHA-256: `b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6`
 - Prompt SHA-256: `86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `2c7be3366028d6afd52b5eb4079e33c2b766f47c01e7c7ee8c4cd7cee5ef4d64`
-- Skill overlay SHA-256: `d9980d41bb48adbaa0ffa94159cff2b9b190fc5504bbdbee7f3503d87a42c7b9`
+- Target skill tree SHA-256: `acf0c5d2caeeb9edf300e1f0c7701e33bb6c45afbe3042c358a9c6ee00d796a7`
+- Skill overlay SHA-256: `fe7a8ba393fe785cea7c7f8aebc226c5d2d3fa7e0ca885b983992d7f1c96a094`
 - Judge schema SHA-256: `a8bfc4df337c13eb13450fd2790a0adaaa6e985db2ba520873d18d41987ab63d`
 - Eval definition SHA-256: `1b0128e389f23ce11fa7b4c38a0b662507e4f8c62e4b45bb6324446e6c6f6b76`
 - Metadata SHA-256: `83547cd6afd667b78b8f3a62b333fd240958e2bcd69f2565824d154532321924`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
@@ -32,28 +31,28 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `detects_prd_conflict` | PASS | with_skill 明确指出 active 排除 archived，且将纳入 archived 定性为 requirement_change，语义上识别了用户期望与 PRD/TRD 的冲突。 |
-| `hands_off_to_pm_update` | PASS | with_skill 指定回到 pm-agent:idea-to-spec 的 existing-project-update 路径，并要求更新 PRD/决策记录后同步 TRD。 |
-| `blocks_e2e_when_expectation_changes` | PASS | with_skill 要求先完成 PRD/DECISIONS、TRD 和已确认的 IMPLEMENTATION_PLAN，随后才继续；同时明确当前不写入 docs/qa/e2e。 |
-| `does_not_produce_repair_plan` | PASS | with_skill 未提出修复实施计划，且 locked git evidence 显示无代码、测试或文档变更。 |
-| `blocks_explicit_skip_override` | NOT_EXERCISED | 输入表达了想直接修复，但未明确提出“跳过 PRD 对齐”的显式 override，因此该专门场景未被行使。 |
+| `detects_prd_conflict` | PASS | With-skill output identifies this as a requirement change and states that the request to include archived conflicts with the PRD/TRD rules. |
+| `hands_off_to_pm_update` | PASS | It explicitly hands off to pm-agent:idea-to-spec via existing-project-update, requiring PRD or product-decision-record update first and TRD synchronization afterward. |
+| `blocks_e2e_when_expectation_changes` | PASS | It states that E2E expectations must wait until PRD/product alignment, TRD synchronization, and a confirmed IMPLEMENTATION_PLAN are complete. |
+| `does_not_produce_repair_plan` | PASS | No repair steps, code changes, test updates, or repair-plan contents are produced; the output only names the required future confirmation artifact. |
+| `blocks_explicit_skip_override` | NOT_EXERCISED | The prompt asks to fix directly but does not explicitly request skipping PRD alignment, so the explicit skip-override behavior is not exercised. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3; fixture_sha256=b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6; output_sha256=423f10bb724a0d6bab262b40ee103e8edc1e0f3e06a0b0553f037c34c0ab0072; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 识别需求变更而非实现缺陷，交回 PM 更新路径，阻止当前修复和 E2E 预期写入；未执行修改。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3; fixture_sha256=b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6; output_sha256=ace20bdfd19ad44b690bcc2a1ed06cdc1d18dfc350a69df798eba06308d11f68; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly classifies the request as a requirement change, enforces PM/TRD/implementation-plan sequencing, and blocks implementation and E2E updates.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3; fixture_sha256=b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6; output_sha256=8b3e1ec6c639970b2a0fe57bebba0fde1f2a04b4bd3d6237b81a9ca22c205981; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 识别了 PRD/TRD 规则冲突并建议先更新文档，但未明确指定 pm-agent:idea-to-spec existing-project-update 路径及后续 IMPLEMENTATION_PLAN 门槛。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=86a3ada212136d13171426579f0eb442cf8d67a9050df5093eea8ab964daf7e3; fixture_sha256=b9cb551f52561a96ecca0df5c9b20f04fdacfc0ec8b6db0f67266ab529420ef6; output_sha256=87b4c7d2beda06c4b478e69ba71b3ec40fa40eb868e311145c0162a167c788f1; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Recognizes the PRD/TRD conflict and avoids direct changes, but does not provide the required named PM handoff or explicit sequencing details.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: None.
+- Next: Exercise the explicit request-to-skip-alignment scenario to evaluate blocks_explicit_skip_override.
 
 ## Runtime Artifact Policy
 

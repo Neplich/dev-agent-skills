@@ -36,6 +36,19 @@ QA E2E work remains blocked until that specialist has produced and confirmed
 the implementation plan. The checkpoint explicitly states Engineer/
 `engineer-agent:trd-gen` ownership, whether document-subagent delegation was
 required and used, and the finder-versus-TRD-owner boundary for gap packets.
+It also renders `document_subagent_availability`, `document_author`,
+`source_context_owner`, and `final_review_owner`. When document sub-agents are
+unavailable, all three owner fields identify the main process and the result
+states that it retained the PM/Engineer source context and completed the final
+traceability/repository-fit review; reporting only “unavailable” is incomplete.
+Always render `implementation_plan_handoff_owner: feature-implementor` and
+`implementation_plan_handoff_path:
+docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`. Open technical questions
+may keep that handoff blocked, but must not erase its owner or target path.
+Render the ownership as `engineer_document_owner: engineer-agent:trd-gen` and
+apply it to every requested Engineer document in the current scope, including
+TRD, API, and ADR artifacts; `generated_by: trd-gen` alone is not the ownership
+checkpoint.
 
 ## Role Boundary
 

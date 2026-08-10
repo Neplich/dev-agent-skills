@@ -1,9 +1,15 @@
 ---
+title: "Notification Center TRD"
+type: TRD
 feature: notification-center
 feature_path: notification-center
-parent_feature: null
+parent_feature: N/A
 feature_level: 1
-status: Confirmed
+version: "1.0.0"
+status: Approved
+author: "Neplich Codex"
+date: "2026-08-10"
+last_updated: "2026-08-10"
 related_prd: docs/pm/notification-center/PRD.md
 ---
 
@@ -23,4 +29,11 @@ related_prd: docs/pm/notification-center/PRD.md
 
 ## Verification
 
-Run the notification unit tests and the existing component test suite.
+Run `npm test -- notifications` for ordering and read-state coverage, then run
+`npm test -- notification-center` for list and empty-state component coverage.
+
+## Design Alignment
+
+The confirmed interaction states are defined in
+`docs/design/notification-center/ui-ux-spec.md`. No visual-system change is in
+scope.

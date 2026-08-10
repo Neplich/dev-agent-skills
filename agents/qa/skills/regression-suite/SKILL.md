@@ -45,6 +45,9 @@ Reuse the original evidence instead of re-deriving the scope from scratch. The r
 
 Before execution, record that `TEST_SUITE.md`, `FLOW_INDEX.md`, the relevant
 case and script, prior `results/`, and prior `_reports/` were read or absent.
+Resolve the scenario and platform version from those durable QA files before
+declaring either missing; a version explicitly recorded in `TEST_SUITE.md` or
+the affected TC is confirmed input, not an environment gap.
 If original defect/fix evidence, same-path alignment, platform version, or the
 execution entry is missing, separately mark original-failure recheck, fixed
 behavior, adjacent checks, and release recommendation as `blocked` or
@@ -248,13 +251,13 @@ Use a durable output path that matches repo context.
 - Use a local Markdown artifact when the repo tracks QA verification in files or when the user asked for a document
 - For E2E regression, append per-TC results under
   `docs/qa/e2e/{feature_path}/results/TC-NNN-<short-slug>/{platform-version}/`
-  and write the main-agent summary report with
-  `agents/qa/skills/qa-agent/references/e2e-test-report.md`
-- Use
-  `docs/qa/e2e/{feature_path}/_reports/{platform-version}/test-reports-{test-time}.md`
-  for `feature-update` and
-  `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md` for
-  `release`
+  as `result.md` plus `testcase.snapshot.md`; this remains the required durable
+  record even when execution is blocked after preflight
+- Create a timestamped summary with
+  `agents/qa/skills/qa-agent/references/e2e-test-report.md` only when the user
+  requested a summary or the confirmed reporting scope requires one: use the
+  feature directory's `_reports/` for `feature-update` and the root E2E
+  `_reports/` for `release`; never use a summary instead of per-TC records
 - For non-E2E regression where the repo has no stronger convention, use
   `docs/qa/{feature_path}/regression-verification.md`
 - Use a GitHub issue only when the repo workflow or user request explicitly wants issue tracking

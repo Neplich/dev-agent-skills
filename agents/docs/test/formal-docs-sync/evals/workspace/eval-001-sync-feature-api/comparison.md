@@ -14,50 +14,47 @@
 - Fixture version/source: canonical manifest `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-001-sync-feature-api`.
 - Fixture SHA-256: `19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa`
 - Prompt SHA-256: `cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `a0fd1ad6b8713d6036307d1b20788b4771cc4b6ba53645fe17625e0dd55bbb5b`
-- Skill overlay SHA-256: `73e88fe8c07f988c3353f81f9b058d4f8350c48ee381f924fe8c8201b9f92bb4`
+- Target skill tree SHA-256: `f24bfeb12dba77a74fcf3f0161749ae4671b83762eac08484e7ae08621d9bacb`
+- Skill overlay SHA-256: `5dbb8d8559bfab3926047aa028e19f362490751247c2142101cfd687fff5239e`
 - Judge schema SHA-256: `b75531387a8a9fcbe3680466e0062ed9ca0b3db6341639dbf81c051b7647e990`
 - Eval definition SHA-256: `ce743547e06014367140716bb2c97c1db58eb733e797662e8b4bd6eca00be3ee`
 - Metadata SHA-256: `f8156f035dafc132a200ab0fabf455e3a12e92c380c1e7265ae20e3e3df0c170`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
-- Behavior result: **FAIL**
-- Coverage result: **PARTIAL**
-Overall result: FAIL
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `selects_backfill_mode_and_api_contract` | NOT_EXERCISED | with_skill selects `existing-system backfill`, cites the maintainer request/catalog/host evidence, and excludes non-API module categories; raw evidence does not prove that the specific template/type modules were read. |
-| `derives_complete_api_candidate_tree` | PASS | The with_skill tree contains the API, Identity, Sessions, create-session, and revoke-session paths, ties them to catalog hierarchy and route/schema/contract evidence, and leaves Billing for later due to owner/lifecycle boundaries. |
-| `presents_per_node_confirmation_matrix` | FAIL | A tree, per-page evidence table, code-glob table, and change-map section are provided, but the per-node mapping does not explicitly pair every node with complete path, parent, exact code boundary, and owner; route leaves in particular lack explicit owner/code-boundary pairings. |
-| `proposes_exact_atomic_change_map` | FAIL | The proposed route/schema/contract mappings cover all five candidate pages and preserve the Search mapping's unknown `review_hint`, but the output does not specify stable deduplicated ordering or explicitly preserve all unrelated/manual-plugin fields and entries. |
-| `preserves_stable_paths_and_scope_boundaries` | PASS | The with_skill output keeps Billing, Search, and `docs/site/api/search.md` out of batch, excludes database/design/ops/product/release and `src/api/internal/**`, and states that no migration is needed. |
-| `keeps_unconfirmed_batch_read_only` | PASS | It explicitly states zero writes, no host checks, no handoff, no next batch, and requests maintainer confirmation before proceeding. |
-| `defaults_new_pages_to_internal_visibility` | PASS | It proposes `internal` visibility for all new pages, retains the existing root's `both` visibility for the established public Search page, and explains the exception. |
+| `selects_backfill_mode_and_api_contract` | PASS | With-skill trace reads the handoff, request, catalog, host standards, change map, API template, and API type instructions, and selects existing-system backfill with API scope. |
+| `derives_complete_api_candidate_tree` | PASS | The with-skill output presents the five required API paths, ties hierarchy to catalog, route, owner, schema, and contract-test evidence, and defers Billing. |
+| `presents_per_node_confirmation_matrix` | PASS | The with-skill output includes a complete tree, per-node matrix, mapping details, exclusions, drift, and confirmation request before writes. |
+| `proposes_exact_atomic_change_map` | PASS | The proposed route mapping covers both leaves and all ancestor indexes, while schema and contract-test mappings provide the remaining exact boundaries; stable sorting, deduplication, atomic update, and preservation of manual fields are stated. |
+| `preserves_stable_paths_and_scope_boundaries` | PASS | Billing, Search, non-API document types, release, and internal API paths are explicitly out of scope; Search remains unmoved and requires confirmation for future changes. |
+| `keeps_unconfirmed_batch_read_only` | PASS | The output states the batch is unconfirmed, remains zero-write, does not run host checks, and does not issue a docs-agent:docs-audit handoff; the trace shows clean git status. |
+| `defaults_new_pages_to_internal_visibility` | PASS | All proposed new pages are explicitly assigned visibility: internal, while the existing API root retains both visibility. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=4e8c0828baec7086066d2199930e33dabcd36df699bc487b5726bf8730df42da; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly bounded the unconfirmed Identity/Sessions backfill and preserved read-only scope, but the per-node confirmation mapping and exact change-map preservation details are incomplete.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=4634533c61aef2af635afa0b7d18f22f958f45a87def7b7503bfcfd86d18db93; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produces a gated, evidence-backed, zero-write API backfill proposal with complete hierarchy, mappings, exclusions, and internal visibility defaults.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=7e14aec867bbf484535877566f4e7fd4f9681d8eed5b89b6e8ef619f65ed0bb2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Provided a plausible five-page Sessions tree and left the workspace unchanged, but lacked the required complete ancestor mappings, scope/visibility detail, and explicit confirmation gate structure.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd2f08c41a6ec95815793c80de00d9c220026a6632090c7da71f54b61e0f767a; fixture_sha256=19be975a76919e1880464ff6b63104dc042d768be1d80c006b73e28d58ffabfa; output_sha256=7f15d429cdba8e1f21c7ce86c4843362c9596c6b5545b2ded5abda25178cf7c9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a useful read-only Sessions tree and basic API facts, but lacks the with-skill confirmation matrix, complete atomic ancestor mappings, explicit audit structure, and internal visibility default.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- The confirmation matrix does not fully provide the required per-node parent/path/code-boundary/owner pairings.
-- The atomic change-map proposal omits stable deduplicated ordering and explicit preservation of all unrelated/manual-plugin entries and fields.
-- Next: Complete a per-node matrix/mapping that explicitly pairs every page with parent, full path, exact code boundary, owner, evidence, delta, and exclusions.
-- Next: Add the stable deduplicated ordering rule and explicitly preserve all unrelated/manual-plugin change-map entries and unknown fields.
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 

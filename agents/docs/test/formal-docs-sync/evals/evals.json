@@ -95,7 +95,7 @@
         {
           "id": "keeps_every_task_navigable",
           "description": "每项功能和任务均可逐级定位",
-          "text": "Product 根链接 Analytics 域，Analytics index 链接 dashboard 任务，任务页反向链接父级；各级只描述本节点范围和直接子节点。"
+          "text": "Analytics 域与 dashboard 任务在包含 internal 页面的递归导航中可从 Product 根逐级定位，Analytics index 链接 dashboard 任务，任务页反向链接父级；既有 `visibility: both` 的 Product 根保持原可见性，不添加会在 public 构建中指向 internal 页面而失效的正文链接；各级只描述本节点范围和直接子节点。"
         },
         {
           "id": "writes_evidence_backed_task_behavior",
@@ -862,7 +862,7 @@
         {
           "id": "loads_only_api_contract",
           "description": "仅加载 API 类型契约并显式报告 drift 结论",
-          "text": "只加载 API 类型模块与 host API 模板，不读取或应用 database、design、ops、product 类型模块；报告中显式给出已加载模块与 Hierarchy drift 结论字段。"
+          "text": "只加载 formal-docs-sync 的 API 类型模块与 host API 模板，不读取或应用 formal-docs-sync 的 database、design、ops、product 内部类型模块或对应 host 类型模板；允许读取所有类型共用的宿主标准（即使该标准页自身的 frontmatter `doc_type` 不是 API）；报告中显式给出已加载模块与 Hierarchy drift 结论字段。"
         }
       ],
       "scenario": {

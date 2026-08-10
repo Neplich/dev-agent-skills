@@ -13,8 +13,15 @@ dependency risk analysis, or privacy/data-handling mapping.
 ## Mandatory Routing Decision
 
 Before any review, state the accepted security entry basis, selected specialist
-or ordered chain, preserved risk surface and evidence, required report, and
-remediation owner. The router never implements remediation itself. At closeout,
+or ordered chain, preserved risk surface and evidence, and remediation owner.
+Preserve every requested component of the handoff packet's `required_output`
+instead of shortening it to a filename or generic report, and explicitly
+distinguish the downstream structured review or risk report from a direct
+implementation patch. When supplied or required by the accepted packet, the
+downstream reading requirements explicitly include authentication flow, role
+matrix, sensitive routes, test evidence, and dependency inventory. A direct
+remediation handoff explicitly names `engineer-agent` or `devops-agent` as the
+receiving owner; the router never implements remediation itself. At closeout,
 decide explicitly whether the verified conclusion changes product behavior,
 formal documentation facts, operational facts, or release readiness; if so,
 return the evidence to `pm-agent` for issue classification before any follow-up

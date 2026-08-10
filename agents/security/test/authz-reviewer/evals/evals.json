@@ -166,6 +166,7 @@
         "trigger": "上线前需确认 analyst 实际权限",
         "goal": "以策略代码形成结论并记录差异",
         "materials": [
+          "PM_HANDOFF.md",
           "src/access/report-export-policy.js",
           "docs/site/standards/change-map.yaml",
           "docs/site/api/report-export.md"
@@ -180,7 +181,7 @@
           "说明差异和越权影响"
         ]
       },
-      "prompt": "请审查 `src/access/report-export-policy.js` 的报表导出授权逻辑。仓库有变更映射和正式说明，请核对哪些角色实际可以导出，并判断是否存在越权风险。",
+      "prompt": "本次报表导出审查范围已经确认，相关材料都在仓库里。请审查 `src/access/report-export-policy.js` 的授权逻辑，核对哪些角色实际可以导出，并判断是否存在越权风险。",
       "workspace": "workspace/eval-004-mapped-report-export-authz",
       "expected_output": "优先读取 change-map 命中的报表导出文档，再以代码核对角色权限；将 unverified 文档按最低信任处理并报告管理员专属声明与 analyst 可导出事实的不一致。",
       "assertions": [

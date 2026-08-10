@@ -35,9 +35,31 @@ one specialist and stop at its router boundary. Do not add an unrelated site
 bootstrap prerequisite, second specialist, or PM round-trip after the selected
 specialist's documented entry basis is already complete.
 
+When routing is blocked, make the missing-entry result equally explicit: name
+each missing credential and the exact credential combination that would make
+the selected specialist entry basis complete. For an explicit site-
+initialization request that lacks only the host path, state that the existing
+explicit request plus a confirmed host repository path completes the
+`docs-site-bootstrap` entry basis; do not merely repeat that the path is
+missing.
+Render blocked routing with `missing_credentials`, `unblock_credentials`,
+`entry_basis_after_unblock`, and `return_owner`. For site initialization,
+`entry_basis_after_unblock` must explicitly state whether the combination of an
+explicit site-initialization request and a confirmed host repository path is
+sufficient; `return_owner` remains `pm-agent` while that combination is
+incomplete. Do not replace these fields with a generic request for context.
+
 For a release chain, separately verify the site Release Notes entry basis and
 the previous-tag/base-ref release window before declaring the next Docs owner
-ready. Missing release credentials return to their current owner; they do not
+ready. Report both comparison anchors, the signed or immutable evidence used
+to resolve each one, and whether the pair is usable; naming a snapshot without
+checking its previous-tag/base-ref anchor is not validation. Do not accept a
+Release Notes handoff merely because it labels itself `ready`: verify that its
+body records an explicit confirmed status together with the maintainer-confirmed
+version, host checks, supporting evidence, updated surfaces, blockers, and
+external execution boundary. An absent or unconfirmed body status returns to
+the Release Notes owner. Missing release credentials return to their current
+owner; they do not
 authorize this router to write pages, publish, tag, deploy, or audit.
 
 ## Role Boundary
