@@ -11,49 +11,47 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
-- Fixture version/source: canonical manifest `1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f` from `agents/security/test/authz-reviewer/evals/workspace/eval-004-mapped-report-export-authz`.
-- Fixture SHA-256: `1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f`
-- Prompt SHA-256: `37500482cb4ba2d8e25d4d03e2971e18b8768e627b3eb196fe101c177681427a`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Fixture version/source: canonical manifest `6b2ecd7bb8b1ef79f098d4d11a3ca4f93d8ab0f7969ef301d999bac9f594dbd1` from `agents/security/test/authz-reviewer/evals/workspace/eval-004-mapped-report-export-authz`.
+- Fixture SHA-256: `6b2ecd7bb8b1ef79f098d4d11a3ca4f93d8ab0f7969ef301d999bac9f594dbd1`
+- Prompt SHA-256: `956153b2567d541c97d7a49956fee1365b2dd3779decf5baff92a40059a84ff2`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `5d96dce7dbfccf9a7b2e510ce571be9b1aa80472fabf9a5779117cb4e21d3b09`
-- Skill overlay SHA-256: `89401c75c36dd79dd8bf55d1b0c23cbd794402b7f29f62d05ae9f27f5e25c3f9`
+- Target skill tree SHA-256: `c5c4e1b3eeeb704a06966dee8397bc4f1df239be6ed5f5799f8d4bd382f23626`
+- Skill overlay SHA-256: `5d963f35c675c3748a7ab8200aa22a681cf01b4c9046afa796b21dbaa5d298b4`
 - Judge schema SHA-256: `fe1f59786edfa4e3b7ee12601522d693ef12a42cdfce9b4a390ad6d7b95d03d2`
-- Eval definition SHA-256: `5b176c277f514c5c57cbc50df739c8bd53714adf02a29d091d0507fdcbd6bda5`
-- Metadata SHA-256: `e90a93e1c6fa00dac24590e3594c181ac3d2710839dea31ce1c1f4375ebfd014`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Eval definition SHA-256: `8fb5f1e36d08ae5ad3c1dfb46758101e4ce1413f28a63b591aee885fb67bbefb`
+- Metadata SHA-256: `04460ae4a10b7b6f92dfdd6cb899ffd1f5dfbcb4fb34b6242a7bc18e450e6ddd`
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **PARTIAL**
-Overall result: FAIL
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reads_mapped_docs_first` | NOT_EXERCISED | 锁定原始证据只能确认 change-map 将该代码映射到 required_docs；无法证明候选实际遵循了“优先读取”的隐藏读取顺序。 |
-| `verifies_against_code` | FAIL | 候选没有回到代码给出 analyst 实际可导出及其越权风险的结论，而是停止在等待交接信息。代码原始证据明确显示 admin 和 analyst 均可导出。 |
-| `treats_unverified_as_low_trust` | PASS | 候选明确识别两份文档为 unverified、将其视为低信任且不单独据此下结论；但因交接信息缺失，后续代码核证尚未完成。 |
-| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | 候选未形成改变正式文档事实的最终结论，因此触发 PM 分类并创建 issue 的条件尚未发生。 |
+| `reads_mapped_docs_first` | PASS | Trace shows the candidate read PM_HANDOFF.md and change-map.yaml, then read the mapped report-export.md and target policy, with no traversal of unrelated formal documents. |
+| `verifies_against_code` | PASS | The report and final output identify that the policy allows exact roles admin and analyst, contrast this with the admin-only documentation, and assess the analyst permission as an authorization-boundary mismatch. |
+| `treats_unverified_as_low_trust` | PASS | The candidate explicitly labels report-export.md as last_verified_version: unverified and bases the conclusion on code plus runtime checks for admin, analyst, and unknown roles. |
+| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | The locked Security report records the conclusion, evidence, PM-agent routing, and PM-owned issue filing requirement. The trace shows no subsequent PM-agent confirmation, classification, or issue-creation runtime evidence, so the later interactive step was not exercised. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=37500482cb4ba2d8e25d4d03e2971e18b8768e627b3eb196fe101c177681427a; fixture_sha256=1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f; output_sha256=2fcbf7fd25ebc7bcd724d05ebd47d2aeaf9381d4a01ece66d37906e73b5010a1; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 正确定位 change-map、required_docs 并降低 unverified 文档信任，但在交接信息缺失时停止，未完成核心代码授权审查。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=956153b2567d541c97d7a49956fee1365b2dd3779decf5baff92a40059a84ff2; fixture_sha256=6b2ecd7bb8b1ef79f098d4d11a3ca4f93d8ab0f7969ef301d999bac9f594dbd1; output_sha256=94473d570079b5002c9672e04b382a1cbc25e8f47c5e0407782c1b88c4a125fb; snapshot_sha256=896269540b2c43241ef1893fa425e9253d79a26767cfb02ee0d824932461b176
+- Behavior: Correctly performed the authorization review, created the required Security-owned report, and documented PM escalation requirements.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=37500482cb4ba2d8e25d4d03e2971e18b8768e627b3eb196fe101c177681427a; fixture_sha256=1673a8537015ccb78dccaef03358a444dd29e08496bc7a169f640fd43e0d756f; output_sha256=cf1efe39d48e6fa8dc7ba5dc6ca082a7ca7192afc4df96095eb08cb80259923a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 完成了代码与文档对照，正确识别 admin/analyst 均可导出及文档不一致导致的越权风险，但未体现低信任文档处理和升级流程。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=956153b2567d541c97d7a49956fee1365b2dd3779decf5baff92a40059a84ff2; fixture_sha256=6b2ecd7bb8b1ef79f098d4d11a3ca4f93d8ab0f7969ef301d999bac9f594dbd1; output_sha256=180c17094a0c149f8121adb95748dda49f431faac72978d1beacccea80eeab9a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Reached the correct code-versus-document conclusion but did not create the required Security report or demonstrate the escalation workflow.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- with_skill 未提供代码核对后的实际可导出角色和越权风险结论。
-- Next: 补齐或确认 PM/Security handoff packet 与 feature_path。
-- Next: 回到 report-export-policy.js 核实授权结论，并在结论改变正式文档事实时交回 pm-agent 分类并创建 issue。
+- None.
+- Next: Obtain PM-agent confirmation and runtime evidence for classification and PM-owned issue creation.
 
 ## Runtime Artifact Policy
 

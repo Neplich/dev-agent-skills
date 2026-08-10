@@ -168,6 +168,7 @@
         "trigger": "评审前需确认实际字段、目的和期限",
         "goal": "以配置形成结论并记录差异",
         "materials": [
+          "PM_HANDOFF.md",
           "src/privacy/profile-processing.yaml",
           "docs/site/standards/change-map.yaml",
           "docs/site/api/profile-data.md"
@@ -182,7 +183,7 @@
           "说明差异影响和整改"
         ]
       },
-      "prompt": "请梳理 `src/privacy/profile-processing.yaml` 的个人资料处理面。仓库有变更映射和正式说明，请重点核对收集字段、处理目的和删除后的实际保留期限。",
+      "prompt": "本次个人资料处理面审查范围已经确认，相关材料都在仓库里。请梳理 `src/privacy/profile-processing.yaml`，重点核对收集字段、处理目的和删除后的实际保留期限。",
       "workspace": "workspace/eval-004-mapped-profile-retention",
       "expected_output": "优先读取 change-map 命中的个人资料处理文档，再以配置核对保留期限；将 unverified 文档按最低信任处理并报告 30 天声明与 90 天配置事实的不一致。",
       "assertions": [

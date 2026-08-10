@@ -15,22 +15,41 @@ plan together, get user confirmation, then fix minimally and verify.
 Before any repair or E2E edit, make the following sequence observable in one
 checkpoint response:
 
-1. resolve the nested `feature_path`; read same-path PRD, decisions, TRD, and
+1. when `docs/site/standards/change-map.yaml` exists, resolve the task's code
+   path through the change map before reading any mapped formal document; read
+   only the matched `required_docs`, then verify every material claim against
+   code or tests
+2. resolve the nested `feature_path`; read same-path PRD, decisions, TRD, and
    validate `related_prd`
-2. classify the report as `implementation_deviation`, `requirement_change`,
+3. classify the report as `implementation_deviation`, `requirement_change`,
    `missing_docs`, or `trd_gap`
-3. only for `implementation_deviation`, reproduce the exact failure and report
+4. only for `implementation_deviation`, reproduce the exact failure and report
    the evidence-backed root cause
-4. present the analysis and tier-appropriate repair plan together, including
+5. present the analysis and tier-appropriate repair plan together, including
    changed scope, verification, split decision, risks, and QA handoff condition
-5. wait for explicit plan confirmation before changing code, tests, or E2E
+6. wait for explicit plan confirmation before changing code, tests, or E2E
    assets
+
+The checkpoint must cite the exact resolved `prd_path` and `trd_path`, plus any
+decision-record paths that were checked; do not replace those paths with only
+document-type labels or the `feature_path`. Record the TRD's actual
+`related_prd` target beside the expected same-path PRD so the alignment evidence
+is reviewable from the response.
 
 `requirement_change` returns to `pm-agent:idea-to-spec`; a TRD gap returns to
 `engineer-agent:trd-gen` with the affected components, data/API/integration,
 verification, rollout/rollback, observability, error-handling, and security
 decisions still needed. A request to skip alignment or confirmation remains
 blocked and never becomes permission to write a repair plan or code.
+For a requirement change, state the order explicitly: PM updates the PRD or
+product decision record first, `engineer-agent:trd-gen` synchronizes the TRD
+second, a confirmed implementation plan follows, and only then may the new E2E
+expectation be written. A request to skip PRD alignment does not waive any step.
+When raw code evidence proves an observable value mismatch against an
+`unverified` document, report the code-grounded discrepancy and its runtime
+effect as a low-trust documentation conflict even while repair remains blocked
+on expected-behavior alignment; do not turn the document gap into a refusal to
+provide the requested evidence-based diagnosis.
 The checkpoint prints the resolved `feature_path` value, not only PRD/TRD
 paths. For requirement changes, explicitly prohibit writing the new expectation
 into `docs/qa/e2e/` before PRD, TRD, and plan alignment, even when the user asks

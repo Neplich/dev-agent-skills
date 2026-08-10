@@ -3,6 +3,7 @@
   "eval_name": "Mapped Profile Data Retention",
   "workspace_root": "agents/security/test/privacy-surface-mapper/evals/workspace/eval-004-mapped-profile-retention",
   "fixture_context": [
+    "PM_HANDOFF.md",
     "src/privacy/profile-processing.yaml",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/profile-data.md"

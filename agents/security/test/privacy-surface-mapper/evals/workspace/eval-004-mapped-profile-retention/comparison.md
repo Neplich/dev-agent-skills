@@ -11,48 +11,47 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
-- Fixture version/source: canonical manifest `ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-004-mapped-profile-retention`.
-- Fixture SHA-256: `ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb`
-- Prompt SHA-256: `15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Fixture version/source: canonical manifest `770d05d85a5304099a8f9433d2be942409c59c2f8ece13f985350673cd6e1b76` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-004-mapped-profile-retention`.
+- Fixture SHA-256: `770d05d85a5304099a8f9433d2be942409c59c2f8ece13f985350673cd6e1b76`
+- Prompt SHA-256: `90526a6f11b7d07cc96154485f1093a95a1e0a80c1ca3d9a35272a8e6b6e737f`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`
-- Skill overlay SHA-256: `840e4d3e20057f4834a3b010b4142d0e7be2f66540c525231dc34075db0dbbee`
+- Skill overlay SHA-256: `4894e45a78f6999eae63835919f4d9ac1eddcf0e15978742e5f90f2ebd544560`
 - Judge schema SHA-256: `fe1f59786edfa4e3b7ee12601522d693ef12a42cdfce9b4a390ad6d7b95d03d2`
-- Eval definition SHA-256: `8768d40f89a0835f8bc18dc793ab9c71861c190253ab19b6d21f19d51aa1ed50`
-- Metadata SHA-256: `7059498df03f32583db887e25af006a8504ba7d72f9cb363375b4bcdb24efad6`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Eval definition SHA-256: `4636a9753113bcd43710d7f9510814811413ce11cdc5e68daebdc570220f08a9`
+- Metadata SHA-256: `9a8afbbbec758d7a8301647fd089cbe8695096269334ba062d91dd1eead9320a`
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **PARTIAL**
-Overall result: FAIL
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reads_mapped_docs_first` | NOT_EXERCISED | 候选输出列出了 change-map、required_docs 和目标文档，但锁定证据无法证明实际读取顺序或未遍历无关文档。 |
-| `verifies_against_code` | FAIL | with_skill 明确未回到 profile-processing.yaml 核对 90 天配置，也未识别 30 天与 90 天冲突或评估影响。 |
-| `treats_unverified_as_low_trust` | PASS | with_skill 明确将 unverified 文档视为低信任，未直接采信 30 天结论；但未完成后续配置核证。 |
-| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | 候选输出因缺少 PM/Security handoff packet 而暂停；尚未确认改变正式文档事实，因此后续 pm-agent 分类和 issue 创建未被 exercised。 |
+| `reads_mapped_docs_first` | PASS | Raw trace shows change-map lookup followed by targeted reading of docs/site/api/profile-data.md and src/privacy/profile-processing.yaml; delivered report records the matched document and scoped evidence. |
+| `verifies_against_code` | PASS | Locked delivery snapshot identifies the configured 90-day value, documented 30-day value, 60-day discrepancy, and corresponding compliance risk; raw trace confirms configuration inspection and repository verification. |
+| `treats_unverified_as_low_trust` | PASS | Locked report explicitly marks the formal documentation as unverified/low-trust and distinguishes configured policy from unverified runtime behavior, with additional implementation/test verification. |
+| `escalates_fact_changing_conclusion_to_pm` | NOT_EXERCISED | The Security-owned report hands the conclusion and evidence back to pm-agent for classification and PM-owned issue filing. Actual issue creation is not exercised because no PM confirmation or issue-tracker runtime is present. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f; fixture_sha256=ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb; output_sha256=07c8903598a8a460de0b0c61b1d871c10c354492383b03cb7050085505139ee7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 正确识别映射、required_docs 和 unverified 状态，但在读取配置并核对实际保留期限前暂停。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=90526a6f11b7d07cc96154485f1093a95a1e0a80c1ca3d9a35272a8e6b6e737f; fixture_sha256=770d05d85a5304099a8f9433d2be942409c59c2f8ece13f985350673cd6e1b76; output_sha256=dc99e6f4321d30eeed68c7caaeec11e238495525b7b72a97f22412cb8323f822; snapshot_sha256=c9a488b41a845607230a026b269dcea716612f2501f40e31fcb317950460a4de
+- Behavior: Produced the required Security report, used mapped evidence, verified the 90-day configuration against the 30-day document claim, treated unverified material as low-trust, and prepared PM handoff.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=15781c686db28c8e23be7d15ddb44295e5640725a6c0d3e97e4814f9916ad62f; fixture_sha256=ae2f7b18628f3022eadc959d5f64f8f6cc91f393bb8423cb17fc823cb3e454bb; output_sha256=903b476811e8537486e45292f2cc9f667c4b91318c7d5704b9f2fff4b3bc4b65; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 完成了配置与文档的字段、目的和保留期限对比，但未体现低信任处理或 PM 升级。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=90526a6f11b7d07cc96154485f1093a95a1e0a80c1ca3d9a35272a8e6b6e737f; fixture_sha256=770d05d85a5304099a8f9433d2be942409c59c2f8ece13f985350673cd6e1b76; output_sha256=cd4552c270121fd0e943f2bd7fc7d0cb3fde94ba8937583b427442029c6dc18f; snapshot_sha256=b9d708ea0de380629e643256d2d97da9ad864ccf8d99e8173ae6c16ebbb9eb19
+- Behavior: Produced a similar report and correctly identified the 90-day versus 30-day discrepancy, but provided less evidence of mapped-document and low-trust verification workflow.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- with_skill 未完成配置核对，遗漏了 90 天实际保留期限与文档 30 天声明的关键冲突及合规影响。
-- Next: 补充 PM 分类/交接后，回到 profile-processing.yaml 核实 90 天配置并评估与文档 30 天声明的冲突。
+- None.
+- Next: pm-agent should classify the handed-off conclusion and create the remediation issue.
 
 ## Runtime Artifact Policy
 

@@ -38,6 +38,9 @@ existing ancestor index, this default applies only when the ancestor has no
 existing `public` or `both` descendant outside the current batch; otherwise
 keep the ancestor's existing visibility so out-of-batch public pages remain
 reachable from the API root through public navigation.
+This default prevents unconfirmed interface details from becoming externally
+visible; the two exceptions above are explicit host authorization and
+preserving an existing public navigation path.
 
 ## Information Architecture
 
@@ -79,3 +82,32 @@ trigger. For this type, the evidence that places a page directly under
 handler ownership, and catalog classification. Propose the resulting migration
 in the same confirmation instead of appending this batch's pages to the API
 root.
+
+### API flat-hierarchy checkpoint
+
+Before presenting that confirmation, inventory every non-`index.md` page
+directly under `docs/site/api/` and join each page's frontmatter to the feature
+catalog by `related_code`, owner, route prefix/tag, or `feature_path`. Group all
+pages that share the catalog's first feature-path/domain parent together even
+when only one page is in the current batch. Do not abbreviate or omit the other
+groups as “remaining API pages.”
+
+Render the resulting inventory through the common `Hierarchy drift` schema in
+`../../INSTRUCTIONS.md` before the candidate API tree. For every positive
+in-batch group, enumerate each old path and target path plus its inbound-link,
+recursive-navigation, and change-map `required_docs` deltas, and include all
+three maintainer choices. For every positive out-of-batch group, enumerate its
+page list and target node and keep it read-only. If any root page is unassigned
+or any required delta is incomplete, stop and finish the checkpoint instead of
+returning a shortened migration proposal.
+
+For each positive in-batch group, render a mandatory migration-delta table with
+one row per old path and these non-optional columns: `old_path`, `target_path`,
+`inbound_link_delta`, `recursive_navigation_delta`, and
+`required_docs_before_after`. Derive inbound links from the current root index,
+navigation configuration, and repository links; if none exist, write `none`
+with the checked evidence paths. The navigation cell names every affected
+parent-child level. The mapping cell names each affected `code_glob` and its
+exact `required_docs` list before and after migration. A group-level summary or
+one representative row does not complete this table. Present the table before
+the three maintainer choices.

@@ -1,3 +1,17 @@
+---
+title: "Capture Loop Queue Retry PRD"
+type: PRD
+feature: capture-loop
+feature_path: capture-loop
+parent_feature: N/A
+feature_level: 1
+version: "1.0.0"
+status: Approved
+author: "Neplich Codex"
+date: "2026-08-10"
+last_updated: "2026-08-10"
+---
+
 # Capture Loop 队列重试 PRD
 
 ## 背景

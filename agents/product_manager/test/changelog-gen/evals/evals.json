@@ -101,7 +101,7 @@
         {
           "id": "pr_conventional_commit",
           "description": "PR 条目标题经过清洗（去掉 conventional commit 前缀）",
-          "text": "PR 条目标题经过清洗（去掉 conventional commit 前缀）"
+          "text": "PR 条目标题去掉 conventional type 前缀；按 skill 设计可保留有意义的 scope 作为简短上下文，因此仅保留 `client`、`auth`、`api` 等 scope 不构成失败"
         },
         {
           "id": "breaking_change_breaking",

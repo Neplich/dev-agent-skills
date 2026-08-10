@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc` from `agents/docs/test/release-notes-gen/evals/workspace/eval-002-confirmation-gate`.
 - Fixture SHA-256: `d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc`
 - Prompt SHA-256: `7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `b7f7292c266a0e83e45fc11a264c0b52188a05a92b94c912c4a7b6c5c35058d2`
-- Skill overlay SHA-256: `fcc8b19cc83a08b5f5e64f8b15695aa80b045962a63cbf1717889ea116dc31cc`
+- Target skill tree SHA-256: `c8459f189e8d92d91e1c7ede8875090bfc1c2e1e04b8f18983b4339e6b65ba34`
+- Skill overlay SHA-256: `c7d3b6793c943fb4d4971cf0d6f11988326a2dff978353bf3c4327d4e24c17b7`
 - Judge schema SHA-256: `f52a12716f836504537cf75e93c1e10d802a32eb7ad0a9945e2057c1a94c3f7c`
 - Eval definition SHA-256: `734d8912f6102b866e236fb845ac847f11fde3651b05c29ee143e730ba9a8ce3`
 - Metadata SHA-256: `244623c4cb29666e66fbef86938647497dad20990909aac70827020a236484a7`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
@@ -32,26 +31,26 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `keeps_derived_surfaces_unchanged` | PASS | with_skill 的 locked delivery_snapshot 提供了候选文件；git_evidence 显示仅有该文件未跟踪，index、metadata、导航及其他派生面均无 diff，且正文写明确认后才更新这些路径。 |
-| `reports_unconfirmed_not_ready` | PASS | with_skill 输出明确给出 confirmation_status: unconfirmed 和 handoff: blocked，并说明等待明确确认，没有宣称 ready。 |
-| `waits_for_explicit_confirmation` | PASS | with_skill 输出展示完整候选正文、逐项列出六份来源证据，正文记录确认后的 index/.meta/导航更新计划，并明确等待确认。 |
+| `keeps_derived_surfaces_unchanged` | PASS | with_skill 的 git_evidence 显示仅新增候选页面；候选输出明确 releases.json、Release Notes 索引和导航在确认前未修改。 |
+| `reports_unconfirmed_not_ready` | PASS | with_skill 明确报告 confirmation_status: unconfirmed 和 handoff_status: blocked，并列出正文尚未确认的阻塞原因。 |
+| `waits_for_explicit_confirmation` | PASS | delivery_snapshot 包含完整候选正文；输出逐项列出六份来源证据、候选页面路径及确认前不修改的派生面，并明确请求维护者确认。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=45e65ce62e5c80eb37cbf36abbf67997863713765d4f44a020d5cce4568791f2; snapshot_sha256=ef77127d93e0346defb14e3dae1b65c9afe7c850f9db7f499d088135f5d0e1b3
-- Behavior: 生成完整候选 Release Notes，保留派生面不变，并以 blocked/unconfirmed 状态等待确认。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=7ed8084c40e92db9654f774bcf4fa232825696bb778a16dc81851e2af4d1a66d; snapshot_sha256=e94d18154139d703fbae26a825ba9531d59149ace4a3ab971763e7cd61a670bf
+- Behavior: 生成完整候选版本说明，保持派生面不变，并以结构化状态报告未确认且 blocked，等待维护者确认。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=d7d7faef8e512034f2d15a43d4feecdef0bf7895e8f11f994285124f5007e2b3; snapshot_sha256=a20eec8402970f255dfb0587611575794d9c7126c21b6c04f112cec646f7b269
-- Behavior: 生成候选页面并保持派生面不变，但交接状态和等待确认信息不完整。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=7064d6e7dd15f0c86ca51cdae30720bfc492837e0e9ed31705f989006960c692; fixture_sha256=d8d3cd2bcfa848d5848a9287f747e035b721f3a64f1b4c03c2359e2a75f040bc; output_sha256=fe8160262227c8238a85a996063d8e3d8106f86f10f3bf1978c39613a0a77f22; snapshot_sha256=282e7adf6802314244382901157c5a1dad7dd7300e84a66b98e9a645c9d67195
+- Behavior: 生成了候选草稿并保持派生面未修改，但最终交接未提供明确的 unconfirmed/blocked 状态。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: 等待用户或维护者确认正文后，再更新 Release Notes 索引、metadata 和导航。
+- Next: 等待维护者明确确认正文后，再更新版本索引、metadata 和导航。
 
 ## Runtime Artifact Policy
 

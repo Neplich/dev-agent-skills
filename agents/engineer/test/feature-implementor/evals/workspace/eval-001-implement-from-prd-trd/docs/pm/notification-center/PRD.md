@@ -1,9 +1,15 @@
 ---
+title: "Notification Center PRD"
+type: PRD
 feature: notification-center
 feature_path: notification-center
-parent_feature: null
+parent_feature: N/A
 feature_level: 1
-status: Confirmed
+version: "1.0.0"
+status: Approved
+author: "Neplich Codex"
+date: "2026-08-10"
+last_updated: "2026-08-10"
 ---
 
 # Notification Center PRD

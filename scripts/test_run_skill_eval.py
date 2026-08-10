@@ -274,6 +274,7 @@ def test_candidate_command_uses_permission_profile_config_and_fixed_model(
     assert command[command.index("--model") + 1] == "gpt-5.6-luna"
     assert 'model_reasoning_effort="medium"' in command
     assert "--output-schema" not in command
+    assert "--json" in command
 
 
 def test_judge_command_uses_profile_and_schema_constraint(tmp_path: Path) -> None:
@@ -285,6 +286,7 @@ def test_judge_command_uses_profile_and_schema_constraint(tmp_path: Path) -> Non
     assert command[:4] == ["codex", "--ask-for-approval", "never", "--strict-config"]
     assert "--sandbox" not in command
     assert "--ignore-user-config" not in command
+    assert "--json" not in command
     assert command[command.index("--output-schema") + 1].endswith(
         "scripts/eval_judge_result.schema.json"
     )
@@ -343,6 +345,8 @@ def test_judge_prompt_applies_assertion_verdicts_only_to_with_skill_lane() -> No
     assert "delivery_snapshot" in prompt
     assert "final prose does not restate" in prompt
     assert "copy each assertion id exactly" in prompt
+    assert "runner_captured_trace" in prompt
+    assert "agent-message claims" in prompt
 
 
 def test_blocked_preflight_never_calls_candidate_or_judge(tmp_path: Path) -> None:

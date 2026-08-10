@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6` from `agents/designer/test/designer-agent/evals/workspace/eval-2-feature-path-design-handoff`.
 - Fixture SHA-256: `f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6`
 - Prompt SHA-256: `e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `e8c75de1d6f9996313bad1fce4ede6ed7cde9c08fd07355edd02169db57e8e68`
-- Skill overlay SHA-256: `d5cce8bb3a0ed13303ab87dcabfbfd03ba8265e34d21e6c15b242afc7dcb3316`
+- Skill overlay SHA-256: `a999946ff7bd8c02d585ab2a5420fd1a5c4016373f3e682b7b9832c315b881b3`
 - Judge schema SHA-256: `173af1b9ec0e079651ca3a9820c63dda3723644385c5a202331578e8f1a93950`
 - Eval definition SHA-256: `53f91ea5792318b5883984b62004cc098b15b6389da8f0c2233bdab77fbf2aa6`
 - Metadata SHA-256: `e6f9e581a9240bd876422c7ab0f1f1ca860fda8f563a8f02f87555323c8c7b30`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
@@ -32,21 +31,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `uses_confirmed_feature_path` | PASS | The UI/UX snapshot declares `chat-interface/messages/history/search` and cites the matching PRD and TRD paths. |
-| `mirrors_design_outputs` | PASS | Locked delivery snapshots contain both required files at the exact `docs/design/chat-interface/messages/history/search/` paths. |
-| `no_synonym_top_level` | PASS | Locked git status and delivery snapshots show only the required nested design files; no synonym or truncated design directory is present or proposed. |
-| `stops_before_code` | PASS | Both locked design files explicitly state that the handoff stops before code, implementation, and tests; no code, commands, or patches are delivered. |
+| `uses_confirmed_feature_path` | PASS | With-skill delivery snapshots explicitly set `feature_path` to `chat-interface/messages/history/search` and cite the matching PRD and TRD paths. |
+| `mirrors_design_outputs` | PASS | The locked with-skill snapshots are exactly `docs/design/chat-interface/messages/history/search/ui-ux-spec.md` and `docs/design/chat-interface/messages/history/search/visual-system.md`. |
+| `no_synonym_top_level` | PASS | The with-skill manifest contains only the required full design path; no synonym or truncated design directory is delivered or proposed. |
+| `stops_before_code` | PASS | With-skill delivery contains design documents only and explicitly marks the work as stopping at design handoff; no code, patch, or test command is included. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=02f6ced0d0f9a08fa7f3f464a7d5afb454d4f8e870b7c0beb8b7327e6e488fd3; snapshot_sha256=5b9f8941d802be4ba5120a2606b8392cab37303ff776b332a190d1ce03609a1d
-- Behavior: Delivered the required nested UI/UX and visual-system design artifacts, aligned to the confirmed feature path and stopped at design handoff.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=df2d7773d9762c1c31cf3de86000df8bcef9517fa9911472036de308f62558e3; snapshot_sha256=0bcd4e9ff309457ece97296421bb8a0f504ffe13bebd36c30f9a3d40f61d7110
+- Behavior: Delivered the required UI/UX and visual-system design artifacts at the confirmed feature path and stopped at design handoff.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=d4dedc2cd6b725e824876e0c9cb47ef90ed718e76fe2dc2fb905b048ac79f7b7; snapshot_sha256=e7ed3217952cfde6b9e60004cb4d243e1ffc2f60345bebb1ead06dd8432ebed3
-- Behavior: Delivered a single PM-scoped DESIGN.md under the wrong output location, so it did not satisfy the required design artifact paths.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e85929c91fa7ac5d9cb93339a38a992d155e1c545a4c3e5f4af6c78a44404dd1; fixture_sha256=f51ab76601713bed8d87e8e33016aaf394374041676e06644b8b383a6a3f1ef6; output_sha256=727852146ff958574726e77dfced27fda6831f156a4c0b21512b1edf8f452482; snapshot_sha256=642b822c68ddfb757698624340ccabf36a88b736024c928af675080f55e5879d
+- Behavior: Delivered an implemented HTML/CSS/JS prototype at the workspace root, including a syntax-check command, rather than the required design handoff artifacts.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

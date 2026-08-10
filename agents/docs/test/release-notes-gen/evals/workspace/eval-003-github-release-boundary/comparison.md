@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720` from `agents/docs/test/release-notes-gen/evals/workspace/eval-003-github-release-boundary`.
 - Fixture SHA-256: `b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720`
 - Prompt SHA-256: `761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `b7f7292c266a0e83e45fc11a264c0b52188a05a92b94c912c4a7b6c5c35058d2`
-- Skill overlay SHA-256: `fcc8b19cc83a08b5f5e64f8b15695aa80b045962a63cbf1717889ea116dc31cc`
+- Target skill tree SHA-256: `c8459f189e8d92d91e1c7ede8875090bfc1c2e1e04b8f18983b4339e6b65ba34`
+- Skill overlay SHA-256: `c7d3b6793c943fb4d4971cf0d6f11988326a2dff978353bf3c4327d4e24c17b7`
 - Judge schema SHA-256: `b3d43ca97793c6a0f8faf70ea92518e7709890635e7a921da0c1ddde071762ab`
 - Eval definition SHA-256: `05f16fbca1905a6bf2d3e5279f6310a7d3001480023c03eb422e696627b86d5d`
 - Metadata SHA-256: `79c5171e280a55a386cc65ee64ce2254d37bdb1b11edec578be748642efe98aa`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
@@ -32,21 +31,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `detects_missing_release_notes_foundation` | PASS | with_skill 明确识别缺少 docs/site/release-notes/ Release Notes 基础，并将页面状态置为 blocked，未进入页面生成流程。 |
-| `keeps_site_zero_diff_before_bootstrap` | PASS | with_skill 的 git_evidence 显示 HEAD、分支、refs、工作树和索引均无变化；git_status 与 git_diff 均为空。 |
-| `hands_missing_foundation_to_bootstrap` | PASS | 输出将缺失基础交给 docs-site-bootstrap 初始化，未交给 docs audit、GitHub Release owner，也未自行继续。 |
-| `preserves_release_chain_and_external_zero_writes` | PASS | 输出明确 tag 与 GitHub Release 均未创建，并等待 docs-audit 返回 ready_for_tag；git_evidence 的 ref_delta、result_diffs 和状态均为空。 |
+| `detects_missing_release_notes_foundation` | PASS | with_skill 输出识别缺少 docs/site/release-notes 基础及 Release Notes 规则/索引，并说明不能自行初始化；trace 也确认目录与 .meta/releases.json 不存在。 |
+| `keeps_site_zero_diff_before_bootstrap` | PASS | with_skill 输出声明未创建页面、未修改 metadata/index/navigation；git_evidence 显示 HEAD、分支、索引、工作树及未跟踪文件均无变化。 |
+| `hands_missing_foundation_to_bootstrap` | PASS | with_skill 输出明确 blocked -> docs-site-bootstrap，携带当前仓库主机和缺失 foundation，并保留后续 docs-audit 与下游职责。 |
+| `preserves_release_chain_and_external_zero_writes` | PASS | with_skill 输出明确未创建 GitHub Release 或 v1.0.0 tag，trace 显示无 tag、无 remote 且 git 状态未变；同时要求 foundation 授权后重新进入 Release Notes 流程，并等待 docs-audit 的 ready_for_tag。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e; fixture_sha256=b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720; output_sha256=c795bdddf39289886240bbe1cce87106225985318f6d9fbe574aae93d646e2a4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 识别 Release Notes 基础缺失，阻塞生成并完成正确的 bootstrap handoff；保持站内、Git 和外部发布链零写入。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e; fixture_sha256=b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720; output_sha256=33b807b33c1715903514aa1b08ad1ae8d60441c8742c1a482b004406f8f50895; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别站点基础缺失，停止写入并将工作交接给 docs-site-bootstrap；保持 Git 与外部发布链零写入。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e; fixture_sha256=b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720; output_sha256=bbf8e599adb4e0da8586193d4ccc1f44d8a0693ccc569f6962ee0981f1b09ec1; snapshot_sha256=39b391f82c97b7045b03f4e7cd72f06c05a987b788fdb40e776adb0c7dcbb3a5
-- Behavior: 错误地创建站内 Release Notes、元数据和提交，并创建 v1.0.0 tag；仅未创建 GitHub Release。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=761d6ada5782aed911f08ad61db425bc070c8bdb36e85c9be9e952ce71ac3d5e; fixture_sha256=b6c1fa26768d6c9af6d59884eea70e6437cb9644150d6247f56b09929c6c2720; output_sha256=2c0b0cc7da37bb2825f403b1b1e0d454652b5611269b0fc1d0e410566ee9fc5f; snapshot_sha256=d474ff97e963863cf7bf17e2d72219d019f2f587d0bf49bcd09f273d7534f792
+- Behavior: 基线错误地生成站内页面和元数据、创建本地 tag，并准备 GitHub Release 草稿。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

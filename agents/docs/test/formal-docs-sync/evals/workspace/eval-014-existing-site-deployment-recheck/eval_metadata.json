@@ -3,6 +3,7 @@
   "eval_name": "existing-site-deployment-recheck",
   "workspace_root": "agents/docs/test/formal-docs-sync/evals/workspace/eval-014-existing-site-deployment-recheck",
   "fixture_context": [
+    "pm-handoff.md",
     "sites/atlas-portal/",
     "sites/orbit-console/"
   ],

@@ -19,6 +19,11 @@ reproducible inventory binding immutable base/target objects, changed files,
 change-map matches, affected pages, all release surfaces, normalized versions,
 and each page's pre-stamp state.
 
+Derive live index and worktree state only from current isolated Git/status
+evidence. A supplied patch, name-status listing, or other captured change
+artifact is content evidence, not proof that the current worktree is dirty.
+Never add a worktree blocker that contradicts the locked Git state.
+
 Persist that inventory as canonical sorted data with a reproducible identity
 or digest during pre-tag, and make post-tag consume exactly the same bound
 inventory. Any membership, locator, order, or identity drift—or an attempt to
@@ -180,6 +185,20 @@ Report:
 - each page's pre-stamp `last_verified_version`, document claims, and code or
   test evidence
 - `verified`, `stale`, or `mismatch` conclusions
+- for a `suspect` page whose accurate contract survived a pure implementation
+  refactor, `documentation_change_required: false` and the evidence-backed
+  reason that no no-op page edit is needed
+- in post-tag, the selected current attempt, its directly superseded attempt
+  when present, their same-version relationship, and the authority-selection
+  result
+- for any blocked post-tag result that cannot be persisted, the concrete
+  persistence recovery condition and readback required before any success
+  state can exist, while preserving the prior authority unchanged
+- for a blocker caused by staged, unstaged, or untracked paths, every affected
+  path and its required disposition, the updated reference to audit, proof that
+  both index and worktree are clean, and the full audit restart required after
+  cleanup; an untracked required artifact must be explicitly preserved and
+  committed or moved outside the audited worktree
 - blockers, review commands, and any unified stamp update
 - phase result: `ready_for_tag`, `release_verified`, or `blocked` with a
   concrete to-do list

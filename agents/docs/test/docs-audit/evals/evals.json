@@ -520,7 +520,7 @@
         {
           "id": "performs_zero_audit_writes",
           "description": "发现 scope 内差异后零审计写入",
-          "text": "blocked 分支不得把页面判为 verified、不得盖章、不得创建隔离 candidate/anchor/discovery/handoff commit，也不得返回 `ready_for_tag`；保持宿主分支、工作区和 index 原状。"
+          "text": "blocked 分支不得盖章、不得创建隔离 candidate/anchor/discovery/handoff commit，也不得返回 `ready_for_tag`；保持宿主分支、工作区和 index 原状。只读 fact-layer 诊断可以描述精确 target_ref tree 中页面的事实状态，但不得把该局部结论当作阶段通过或写入授权。"
         },
         {
           "id": "requires_clean_commit_update_ref_and_rerun",

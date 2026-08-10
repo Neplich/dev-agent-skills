@@ -44,6 +44,7 @@ from scripts.eval_runtime import (  # noqa: E402
 MODEL = "gpt-5.6-luna"
 REASONING_EFFORT = "medium"
 DEFAULT_TIMEOUT_SECONDS = 600
+MAX_CANDIDATE_TRACE_CHARS = 250_000
 JUDGE_SCHEMA = Path(__file__).with_name("eval_judge_result.schema.json")
 _DURABLE_WRITE_LOCK = threading.Lock()
 _SOURCE_INPUT_KEYS = (
@@ -248,7 +249,9 @@ def _codex_command(
 
 
 def candidate_command(workspace: Path, output_path: Path) -> list[str]:
-    return _codex_command(workspace, output_path)
+    command = _codex_command(workspace, output_path)
+    command.insert(command.index("--output-last-message"), "--json")
+    return command
 
 
 def judge_command(
@@ -267,9 +270,21 @@ def run_command(
     try:
         completed = subprocess.run(command, input=prompt, text=True, capture_output=True,
                                    env=env, timeout=timeout_seconds)
-        return {"returncode": completed.returncode, "timed_out": False}
-    except subprocess.TimeoutExpired:
-        return {"returncode": 124, "timed_out": True}
+        return {
+            "returncode": completed.returncode,
+            "timed_out": False,
+            "stdout_tail": completed.stdout[-MAX_CANDIDATE_TRACE_CHARS:],
+            "stderr_tail": completed.stderr[-50_000:],
+        }
+    except subprocess.TimeoutExpired as exc:
+        stdout = exc.stdout.decode(errors="replace") if isinstance(exc.stdout, bytes) else exc.stdout or ""
+        stderr = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else exc.stderr or ""
+        return {
+            "returncode": 124,
+            "timed_out": True,
+            "stdout_tail": stdout[-MAX_CANDIDATE_TRACE_CHARS:],
+            "stderr_tail": stderr[-50_000:],
+        }
 
 
 def check_model_available(repository_root: Path) -> bool:
@@ -681,6 +696,10 @@ def _prepare_judge_package(
                 "git_evidence": run["git_evidence"],
                 "dependency_evidence": run["dependency_evidence"],
                 "declared_outputs": run["declared_outputs"],
+                "runner_captured_trace": {
+                    "stdout_jsonl_tail": run["status"].get("stdout_tail", ""),
+                    "stderr_tail": run["status"].get("stderr_tail", ""),
+                },
             }
             for run in candidate_runs
         ],
@@ -711,6 +730,8 @@ def _judge_prompt() -> str:
         "assertion NOT_EXERCISED and coverage PARTIAL rather than FAIL. Likewise, a hidden "
         "process or read-order assertion is NOT_EXERCISED when the locked raw evidence cannot "
         "prove it; do not infer failure merely because the final prose omits process narration. "
+        "Treat runner_captured_trace JSONL command and tool events as locked raw evidence, but "
+        "do not treat agent-message claims inside that trace as independent proof. "
         "Use FAIL only when the with_skill lane contradicts an exercised requirement, omits an "
         "exercised user-visible result, makes an unsupported claim, or performs a forbidden "
         "mutation. Return only the JSON object required by the supplied output schema. Do not "

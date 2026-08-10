@@ -14,45 +14,44 @@
 - Fixture version/source: canonical manifest `82b55bed70c9cef729375a3351448011b6841c9c9416854e0ef1fd304e6c48bb` from `agents/docs/test/docs-audit/evals/workspace/eval-006-audit-no-version-anchor`.
 - Fixture SHA-256: `82b55bed70c9cef729375a3351448011b6841c9c9416854e0ef1fd304e6c48bb`
 - Prompt SHA-256: `dfb1de5ef05668c278fa0bfcea0c360fed3169b7b4bae6483c3fb5fedeccf198`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
-- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Target skill tree SHA-256: `5b5823d2c0804ce3dabb1d32490f71697f4ff111cd9371ebf92d1bb1b6ad2188`
+- Skill overlay SHA-256: `c7033e85898ff61111eb14edc47b25e717119ee79349d7af461390afc706db78`
 - Judge schema SHA-256: `7c0884fab11b08d46eb01de89abfa2125334493a96c7805f68a7161e9d7bff70`
 - Eval definition SHA-256: `405d79374055fe033af3883c346829478f3f76cf09e82f4870928a5901ad3a47`
 - Metadata SHA-256: `953ef09fb5962b093fa646d68b6f137fe0b19f6ba0157a6c58aae94c9c50c930`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
-- Coverage result: **FULL**
-Overall result: PASS
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `blocks_without_target_release_version` | PASS | with_skill 输出明确结果为 `blocked`，并指出缺少维护者确认的 `target_release_version`。 |
-| `allows_read_only_diagnostic` | PASS | with_skill 输出描述了变更文件、change-map 匹配、受影响页面及当前事实诊断，同时明确未进入正式事实审计。 |
-| `does_not_persist_report_without_target` | PASS | with_skill 输出明确说明未写入报告；锁定 git_evidence 显示无状态、索引、工作树或新提交变化。 |
-| `does_not_write_version_stamp` | PASS | with_skill 输出记录页面保持 `last_verified_version: unverified`，并明确未修改页面或版本元数据；锁定 git_evidence 显示无变更。 |
+| `blocks_without_target_release_version` | PASS | With-skill output explicitly returns `blocked` and states that the maintainer-confirmed target_release_version is missing; it does not return `ready_for_tag` or `release_verified`. |
+| `allows_read_only_diagnostic` | NOT_EXERCISED | The candidate correctly stops at the missing-version gate before performing the later diagnostic pass; affected-page/factual diagnostics are therefore not exercised. |
+| `does_not_persist_report_without_target` | PASS | The locked delivery snapshot is empty, declared outputs are empty, and raw Git evidence shows no commits, ref changes, index changes, worktree changes, or untracked report. |
+| `does_not_write_version_stamp` | PASS | The fixture page contains `last_verified_version: unverified`; the candidate states it will not stamp or modify version metadata, and raw Git evidence shows no mutation. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=dfb1de5ef05668c278fa0bfcea0c360fed3169b7b4bae6483c3fb5fedeccf198; fixture_sha256=82b55bed70c9cef729375a3351448011b6841c9c9416854e0ef1fd304e6c48bb; output_sha256=5bdd6bf5482deeae1f59c245fdc4198bbd0631d6dd47e894696f2a1e5b54aa1f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 正确阻塞正式审计，保留只读诊断，并报告未发生任何持久化或版本盖章。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=dfb1de5ef05668c278fa0bfcea0c360fed3169b7b4bae6483c3fb5fedeccf198; fixture_sha256=82b55bed70c9cef729375a3351448011b6841c9c9416854e0ef1fd304e6c48bb; output_sha256=03dea1168a27dd5638b4cf58d3886c3d4e56ea0f8003877a721adc62b505c377; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly blocks at the missing maintainer-confirmed target version gate and reports no persistence or stamping.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=dfb1de5ef05668c278fa0bfcea0c360fed3169b7b4bae6483c3fb5fedeccf198; fixture_sha256=82b55bed70c9cef729375a3351448011b6841c9c9416854e0ef1fd304e6c48bb; output_sha256=d873d2bb8c3797c53485377dc2dba326ca4deea7da74664526b9483231d73e89; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 同样未执行写入，但主要聚焦差异证据补丁无效；其对比结果不影响 with_skill 断言判定。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=dfb1de5ef05668c278fa0bfcea0c360fed3169b7b4bae6483c3fb5fedeccf198; fixture_sha256=82b55bed70c9cef729375a3351448011b6841c9c9416854e0ef1fd304e6c48bb; output_sha256=0468c4128f10dbc4afec27c4cee4d13ab80402734a4098c4c866991ab258665f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a read-only range diagnosis but does not enforce the required missing-version block.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: None.
+- Next: Obtain explicit maintainer confirmation of the exact target_release_version, then rerun the audit.
 
 ## Runtime Artifact Policy
 

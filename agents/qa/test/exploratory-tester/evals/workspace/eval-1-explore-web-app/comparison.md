@@ -14,49 +14,47 @@
 - Fixture version/source: canonical manifest `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7` from `agents/qa/test/exploratory-tester/evals/workspace/eval-1-explore-web-app`.
 - Fixture SHA-256: `ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7`
 - Prompt SHA-256: `b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `4e2073febaef7202820d7977feb83c73b7673e1200e4724a3f37b54a20923059`
-- Skill overlay SHA-256: `bb6d955d3f1008412eca24a4e3e97d4883ccffc96444f5d6d3cd037fea0800ba`
+- Skill overlay SHA-256: `d5a8b4f617bd4daeb6e78fdb531d6c6e6ec5fb1b029628fdf35a46d483c79624`
 - Judge schema SHA-256: `3783048bfb479d6e8907a0e84c4199cb646178dd63c9a58d60ddd654db2122dc`
 - Eval definition SHA-256: `32b9d61e575fbee81406ffc68edbaec9418feec621754c8fca12fc2f2edd2c08`
 - Metadata SHA-256: `228751d86855b3dcdb583bdc4a44c4a493c28334ed74368c030ddad805b1f314`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
-- Coverage result: **PARTIAL**
-Overall result: PASS (partial coverage)
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `assertion_1` | PASS | 交接报告直接包含 Surface、15 分钟 Timebox、Heuristics 和 Escalation signals。 |
-| `assertion_2` | NOT_EXERCISED | 报告声称已读取相关 QA 资料并说明未新增场景或脚本，但锁定证据无法独立证明实际读取顺序。 |
-| `assertion_3` | PASS | 15 分钟明确来自用户请求，并围绕 SearchPanel、FilterPills、ResultsList 及键盘焦点风险组织范围。 |
-| `assertion_4` | PASS | 报告区分已确认失败、环境阻塞、风险与未探索缺口，并明确未将阻塞或未确认信号写成产品缺陷。 |
-| `assertion_5` | NOT_EXERCISED | 报告采用 charter、优先路径和恢复后的探索清单；但因 QA_BASE_URL 缺失，实际页面路径与边界尚未执行。 |
-| `assertion_6` | PASS | 锁定报告包含 charter、timebox、covered/gaps、证据链和后续动作，具备交接结构。 |
-| `deduplicates_existing_flows` | PASS | 报告复用 TC-001，并明确未新增或修改 TC、script、FLOW_INDEX；未发现可沉淀的新流程。 |
+| `assertion_1` | PASS | The locked report contains Surface, user-specified 15-minute timebox, heuristics, and escalation signals. |
+| `assertion_2` | PASS | Trace shows QA memory files were read first; no new E2E scenarios were created, and FLOW_INDEX was updated incrementally. |
+| `assertion_3` | PASS | The report derives the 15-minute timebox from the prompt and prioritizes SearchPanel, FilterPills, ResultsList, focus, and empty-state risks. |
+| `assertion_4` | PASS | The report separately includes Observed issues, Suspicious but unconfirmed signals, and Gaps not explored, without labeling unconfirmed risks as defects. |
+| `assertion_5` | PASS | The report documents a chartered exploration path and preflight evidence, explicitly records browser execution as blocked, and provides planned boundaries rather than random-click logs. |
+| `assertion_6` | PASS | The delivered report contains charter, timebox, exploration path covered, evidence used, and recommended next actions for escalation handoff. |
+| `deduplicates_existing_flows` | PASS | The existing TC-001 flow was reused, FLOW_INDEX was updated, and no synonymous TC, case, or script was created. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=449dd945645863b11ef2b483a68e36f8e048438416df5e57fa82d4c21911f400; snapshot_sha256=d8573e39c0ebb16cbf0cfcff0ddec52f29c46fa068c608793a00691201f47188
-- Behavior: 完成预检并交付结构完整的探索测试报告，准确标记 blocked，未虚构运行时结果。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=f024748f651be20d49f75a22cc53521892b771dcc09e6b168ca89d7dfd62a9d8; snapshot_sha256=ff450fa4bc0b923accd2978b7f7f7aefb8bf0dc817de5a4977ef577851456d75
+- Behavior: Produced a structured blocked exploration handoff and incremental FLOW_INDEX update with required charter, evidence, risk separation, and follow-up details.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=007805819ddbba47c04eeb05979490572e7cfdba59e3e7ee1ca7c60413c41e76; snapshot_sha256=f30d5320795192b7b776ac66fcd576daffd6ac2d410500878da06179de8481d7
-- Behavior: 同样交付了 blocked 交接报告，但结构与证据链较简略。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b0dd5a79c80e2e161088bef46107d054902f47f9ef2205167f1eaadd760b99cd; fixture_sha256=ee088defa4a7bb2cbc3d091f8817eac9fb8cc7c128c92be34adf72ee4a79f3b7; output_sha256=dd2695cfbe61f9d1ebeff468bc10485bfd248e344d296abd8da000d5527276b9; snapshot_sha256=81a20894feedebb6a9c9e435a4e4ea517239fde8aa92219e7e5dcf2719da2c0c
+- Behavior: Produced a basic blocked handoff with planned coverage and reused TC-001, but without the fuller charter, evidence taxonomy, and FLOW_INDEX handoff detail.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: 提供 QA_BASE_URL 及必要登录/种子数据。
-- Next: 从 TC-001 开始执行筛选、空状态和键盘焦点路径，并保存截图、console/network 证据。
+- Next: None.
 
 ## Runtime Artifact Policy
 

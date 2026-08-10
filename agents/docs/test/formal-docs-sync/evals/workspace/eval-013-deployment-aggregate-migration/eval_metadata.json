@@ -9,6 +9,7 @@
     "docs/site/ops/index.md",
     "docs/site/product/runtime.md",
     "docs/site/standards/change-map.yaml",
+    "docs/site/standards/doc-granularity.md",
     "docs/site/package.json"
   ],
   "execution_cleanup": [

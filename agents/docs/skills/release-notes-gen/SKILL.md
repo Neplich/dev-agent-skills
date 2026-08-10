@@ -29,6 +29,13 @@ The checkpoint explicitly separates `version_confirmation` from
 body confirmation, show the complete candidate body and its source-evidence
 mapping, not only a page path or summary.
 
+If `version_confirmation` is missing or unconfirmed, stop at the entry gate
+before loading the generation workflow: do not turn the evidence directory or
+an existing body-confirmation record into a candidate body. Return a compact
+blocked result that names `pm-agent` as the owner of version-entry
+classification, the missing maintainer-confirmation source, and the condition
+for re-entering this specialist.
+
 ## PM Handoff And Feature-Scope Gate
 
 Require a PM handoff packet or an equivalent confirmed release entry basis

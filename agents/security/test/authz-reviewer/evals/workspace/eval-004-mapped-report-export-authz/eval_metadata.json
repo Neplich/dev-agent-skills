@@ -3,6 +3,7 @@
   "eval_name": "Mapped Report Export Authorization",
   "workspace_root": "agents/security/test/authz-reviewer/evals/workspace/eval-004-mapped-report-export-authz",
   "fixture_context": [
+    "PM_HANDOFF.md",
     "src/access/report-export-policy.js",
     "docs/site/standards/change-map.yaml",
     "docs/site/api/report-export.md"

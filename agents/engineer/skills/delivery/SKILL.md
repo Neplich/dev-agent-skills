@@ -21,6 +21,10 @@ When PR creation is blocked, still present an equivalent PR preview containing
 title, summary, PM/PRD reference, changed scope, and test status. When CI cannot
 be read, explicitly record `CI: not run` or `CI: unavailable` and provide the
 exact recovery/readback command rather than omitting CI state.
+Before writing that preview, resolve the applicable PM/PRD and Engineer document
+references from the completed-work evidence and repository. Cite every reference
+that exists by its exact path; do not report a PM/PRD as missing until the
+corresponding documentation paths have been checked.
 
 ## When to Use
 

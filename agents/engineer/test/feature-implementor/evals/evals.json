@@ -7,7 +7,7 @@
       "id": "eval-001-implement-from-prd-trd",
       "name": "implement-from-prd-trd",
       "description": "Verifies that feature-implementor turns user-confirmed product and technical scope into an implementation plan and waits for confirmation before coding.",
-      "prompt": "notification-center 的产品和技术文档已经确认。请按仓库里的 PRD 与 TRD 落实用户通知功能；开始编码前先给我一份可审查的实施安排。",
+      "prompt": "我是负责 notification-center 交付的 Neplich。产品、技术和界面方案已经确认，请按仓库里的材料落实用户通知功能；开始编码前先给我一份可审查的实施安排。",
       "workspace": "workspace/eval-001-implement-from-prd-trd",
       "expected_output": "IMPLEMENTATION_PLAN.md + 文件变更清单 + 实现顺序 + 用户确认门禁，不直接写代码",
       "assertions": [
@@ -33,13 +33,14 @@
         }
       ],
       "scenario": {
-        "persona": "负责落实已确认需求的实现工程师",
-        "situation": "notification-center 的产品范围和技术方案已经由负责人确认并保存在仓库文档中。",
+        "persona": "负责 notification-center 交付的维护者 Neplich",
+        "situation": "notification-center 的产品范围、技术方案和界面方案已经确认并保存在仓库文档中。",
         "trigger": "团队准备进入编码，但希望先审查改动边界和验证方式。",
         "goal": "让实现工作在范围、顺序和验收方式清楚后再启动。",
         "materials": [
           "docs/pm/notification-center/PRD.md",
-          "docs/engineer/notification-center/TRD.md"
+          "docs/engineer/notification-center/TRD.md",
+          "docs/design/notification-center/ui-ux-spec.md"
         ],
         "constraints": [
           "计划必须与现有 PRD 和 TRD 的范围保持一致",
@@ -54,10 +55,10 @@
     {
       "id": "eval-002-subagent-division-from-docs",
       "name": "subagent-division-from-docs",
-      "description": "Verifies that feature-implementor preserves main-process context and uses separate implementation and validation sub-agent responsibilities for a complex document-driven coding task.",
-      "prompt": "请根据 `docs/pm/capture-loop/PRD.md`、`docs/engineer/capture-loop/TRD.md` 和 `docs/design/capture-loop/ui-ux-spec.md` 落实 Capture Loop 队列重试能力。范围已经确定；开始编码前请给我一份可审查的执行方案，并说明实现与验收如何分工。",
+      "description": "Verifies that feature-implementor preserves main-process context and applies the complex-task implementation/validation split when the candidate environment provides sub-agent capability, without fabricating delegation when it does not.",
+      "prompt": "我是负责 Capture Loop 交付的 Neplich。请根据 `docs/pm/capture-loop/PRD.md`、`docs/engineer/capture-loop/TRD.md` 和 `docs/design/capture-loop/ui-ux-spec.md` 落实队列重试能力。范围已经确定；开始编码前请给我一份可审查的执行方案，并说明实现与验收如何分工。",
       "workspace": "workspace/eval-002-subagent-division-from-docs",
-      "expected_output": "读取源文档并保留主进程上下文，确认 TRD 已就绪，要求通过文档编写 sub-agent 产出 IMPLEMENTATION_PLAN.md，判断任务触发复杂编码分工，给出实现 sub-agent 的写入范围和禁止事项，给出验收 sub-agent 的验收依据和检查范围，并在最终交付契约中包含实现结果、测试情况、验收结论和遗留风险。",
+      "expected_output": "读取源文档并保留主进程上下文，确认 TRD 已就绪；文档编写 sub-agent 可用时由其产出 IMPLEMENTATION_PLAN.md，不可用时允许主进程编写并审查；候选环境提供 sub-agent 能力时，对当前复杂编码给出实现与独立验收 sub-agent 的范围；未提供时明确能力不可用并由主进程按同一源文档和范围完成实现、自检，不虚构委派；最终交付契约包含实现结果、测试情况、验收结论和遗留风险。",
       "assertions": [
         {
           "id": "preserves_main_context",
@@ -67,22 +68,22 @@
         {
           "id": "writes_implementation_plan_doc",
           "description": "实现计划文档",
-          "text": "输出必须说明先由文档编写 sub-agent 编写 `docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md`，TRD 不由 feature-implementor 改写。"
+          "text": "输出必须交付或安排 `docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md` 且不由 feature-implementor 改写 TRD；候选环境提供文档编写 sub-agent 时必须由其先行编写，未提供该能力时允许主进程编写并审查，且不得虚构已完成委派。"
         },
         {
           "id": "delegates_implementation_scope",
           "description": "实现 sub-agent 范围清晰",
-          "text": "输出必须为实现 sub-agent 指定清晰写入范围，至少包含服务逻辑、处理器或测试文件，并包含禁止回退无关改动或禁止触碰无关区域的约束。"
+          "text": "只有锁定的 runner preflight 或 tool trace 证明候选环境实际提供 sub-agent 执行能力时，才要求为实现 sub-agent 指定清晰写入范围、文件和无关改动保护；候选计划里的未来角色名称不是能力证据。没有这种锁定证据时，允许主进程承担同样清晰的写入范围与无关改动保护，不得虚构已完成委派；该 sub-agent 路径应判为未覆盖而不是失败。"
         },
         {
           "id": "delegates_independent_validation",
           "description": "验收 sub-agent 独立检查",
-          "text": "输出必须安排不同于实现 sub-agent 的验收 sub-agent，并要求它基于 PRD、TRD、设计文档、测试结果、仓库规则和变更范围进行验收。"
+          "text": "只有锁定的 runner preflight 或 tool trace 证明候选环境实际提供 sub-agent 执行能力时，才要求安排不同于实现 sub-agent 的验收 sub-agent，并基于 PRD、TRD、设计文档、测试结果、仓库规则和变更范围验收；候选计划里的未来角色名称不是能力证据。没有这种锁定证据时，允许主进程依据同一材料完成自检且不得声称已完成独立验收；该 sub-agent 路径应判为未覆盖而不是失败。"
         },
         {
           "id": "keeps_simple_path_exception",
           "description": "保留简单任务例外",
-          "text": "输出不得表达所有工程任务都必须拆分 sub-agent；应保留简单单文件修改、纯解释或用户明确不拆分时的轻量路径。"
+          "text": "输出不得把当前复杂编码拆分表达为所有工程任务都无条件必须拆分；只要拆分明确限定在当前跨服务、处理器和测试的复杂范围，且未宣称对简单任务普遍强制，即满足本断言。"
         },
         {
           "id": "final_summary_contract",
@@ -96,10 +97,10 @@
         }
       ],
       "scenario": {
-        "persona": "负责落实已确认需求的实现工程师",
+        "persona": "负责 Capture Loop 交付的维护者 Neplich",
         "situation": "Capture Loop 队列重试已有产品、技术和界面材料，改动横跨服务、处理器与测试。",
-        "trigger": "范围已确定，负责人要求在编码前说明多人协作和独立验收如何衔接。",
-        "goal": "把复杂改动拆成边界清楚的实现与验收工作，同时保留统一交付判断。",
+        "trigger": "范围已确定，负责人要求在编码前说明实现和验收如何衔接。",
+        "goal": "按候选环境实际具备的执行能力安排边界清楚的实现与验收工作，同时保留统一交付判断。",
         "materials": [
           "docs/pm/capture-loop/PRD.md",
           "docs/engineer/capture-loop/TRD.md",
@@ -109,12 +110,12 @@
           "tests/capture-loop/queue-service.test.ts"
         ],
         "constraints": [
-          "各参与者只能写入被明确分配的代码或测试范围",
-          "最终结论必须同时考虑源文档、实际变更和独立检查"
+          "使用多执行者时只能写入被明确分配的代码或测试范围",
+          "最终结论必须同时考虑源文档、实际变更和验收检查"
         ],
         "success_criteria": [
-          "实现和验收由不同执行者承担且各自范围可核对",
-          "最终交付能汇总实现结果、测试、独立结论与遗留风险"
+          "环境提供 sub-agent 时实现和验收由不同执行者承担；不提供时明确记录主进程回退且不虚构委派",
+          "最终交付能汇总实现结果、测试、验收结论与遗留风险"
         ]
       }
     },
@@ -360,7 +361,7 @@
         {
           "id": "keeps_pm_trd_boundary",
           "description": "保持 PM/TRD 边界",
-          "text": "输出必须说明缺 PRD 回 PM，当前是缺 TRD 因此回 `trd-gen`；feature-implementor 不自行补写 TRD 决策。"
+          "text": "输出必须说明当前缺失的是同路径 TRD，因此回 `trd-gen`；feature-implementor 只报告技术缺口，不自行补写 TRD 决策。"
         }
       ],
       "scenario": {
@@ -664,7 +665,7 @@
       "id": "eval-013-implementation-plan-archive-allows-next-plan",
       "name": "implementation-plan-archive-allows-next-plan",
       "description": "Verifies that feature-implementor allows creating a next active plan once the prior plan is archived, requires previous_plan_archive linkage, and keeps the active entry fixed.",
-      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要新增部分退款能力。上一轮全额退款计划已归档到 docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md，当前没有活跃计划。",
+      "prompt": "我是 payment-refund 的维护者 Neplich。docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要新增部分退款能力。上一轮全额退款计划已归档到 docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md，当前没有活跃计划。",
       "workspace": "workspace/eval-013-implementation-plan-archive-allows-next-plan",
       "expected_output": "识别上一份计划已归档、当前无活跃计划阻塞，允许创建新的 docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md，要求新计划 frontmatter 记录 previous_plan_archive 指向归档文件，活跃入口保持不变，等待用户确认后再编码。",
       "assertions": [
@@ -695,7 +696,7 @@
         }
       ],
       "scenario": {
-        "persona": "负责落实已确认需求的实现工程师",
+        "persona": "负责 payment-refund 的维护者 Neplich",
         "situation": "全额退款工作已经归档，部分退款有已确认输入且当前固定入口空闲。",
         "trigger": "团队要启动下一轮退款能力，同时保留与上一轮交付的连续性。",
         "goal": "建立一份能追溯上一轮归档的新工作安排。",
@@ -772,7 +773,7 @@
       "id": "eval-016-draft-status-continues-current-plan",
       "name": "draft-status-continues-current-plan",
       "description": "Verifies that feature-implementor reads an existing active plan frontmatter, recognizes a non-Implemented Draft status without the prompt revealing it, and continues the current plan with a version bump instead of forcing archival.",
-      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现在要在这个功能上做下一轮更新。",
+      "prompt": "我是 payment-refund 的维护者 Neplich。docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要在这个功能上做下一轮更新。",
       "expected_output": "主动读取现有 active IMPLEMENTATION_PLAN.md 的 frontmatter，识别 status 为 Draft，继续更新固定 active 入口并 bump version，不强制要求归档或 previous_plan_archive，更新计划后等待用户确认再编码。",
       "workspace": "workspace/eval-016-draft-status-continues-current-plan",
       "assertions": [
@@ -808,7 +809,7 @@
         }
       ],
       "scenario": {
-        "persona": "负责落实已确认需求的实现工程师",
+        "persona": "负责 payment-refund 的维护者 Neplich",
         "situation": "payment-refund 的现有工作记录仍是草稿，新需求属于同一轮未完成工作。",
         "trigger": "负责人要求继续推进，但需要判断是否真的要新建归档。",
         "goal": "延续当前未完成记录，避免制造不必要的历史分叉。",
@@ -831,7 +832,7 @@
       "id": "eval-017-abandoned-draft-can-be-superseded",
       "name": "abandoned-draft-can-be-superseded",
       "description": "Verifies that feature-implementor preserves the explicit abandonment path for a non-Implemented active plan by archiving it as Superseded before creating a linked replacement plan.",
-      "prompt": "docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认。现有退款原因码实施计划不再继续，维护者明确要求废弃这一轮并为新的退款审核流程继续工作。",
+      "prompt": "我是 payment-refund 的维护者 Neplich。docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认；现有退款原因码实施计划不再继续，我明确要求废弃这一轮并为新的退款审核流程继续工作。",
       "expected_output": "主动读取现有 status 为 Draft 的 active IMPLEMENTATION_PLAN.md；由于维护者已明确废弃，允许将该未完成计划以 Superseded 归档并记录 superseded_reason 和完整归档 metadata，再创建带 previous_plan_archive 的新 active plan；不得把默认继续更新当前 Draft 计划作为本次处理结果，编码前仍等待确认。",
       "workspace": "workspace/eval-017-abandoned-draft-can-be-superseded",
       "assertions": [
@@ -862,7 +863,7 @@
         }
       ],
       "scenario": {
-        "persona": "负责落实已确认需求的实现工程师",
+        "persona": "负责 payment-refund 的维护者 Neplich",
         "situation": "退款原因码草稿被维护者明确废弃，新的退款审核流程将取代它。",
         "trigger": "同一固定入口需要承载新方向，同时保留旧草稿为何终止的记录。",
         "goal": "保留废弃原因和历史关联后，为新审核流程建立干净起点。",

@@ -14,48 +14,46 @@
 - Fixture version/source: canonical manifest `cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997` from `agents/product_manager/test/idea-to-spec/workspace/eval-009-prd-iteration-split-proposal`.
 - Fixture SHA-256: `cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997`
 - Prompt SHA-256: `ae03344941a8a5473fce84f07af68d8bb42c4c4dd8dbaf557b909886adf20c98`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `c0da2e0366232678672d0c64ce9fa764d3b78f3caaaa8493348af1a7e1cd00fe`
-- Skill overlay SHA-256: `8f09b52303d9393824dd3e732e656dd74f7ac606a082939547181274986dfb2d`
+- Target skill tree SHA-256: `3072109ec32b0fb477459bf87e4126d386584326abd0c8ada42f180e6d9cbf00`
+- Skill overlay SHA-256: `2811fdd3c57db7a2738883046d1d787b9d794bcfbf96919af99fd2eac7160676`
 - Judge schema SHA-256: `9c9a733fc3c46fd3cb1cdea794218e66a7a987137063c1a3c970e8e9386d1a58`
 - Eval definition SHA-256: `8ef466ccd13d937453c02f105817ced47839fb573011ea1ee300be62facb6b71`
 - Metadata SHA-256: `ae189abbce9ec160b22d49ab4f79a0a7a8f521d1a6e2046930669caf75d7dab0`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **PARTIAL**
-Overall result: FAIL
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `applies_requested_change` | PASS | Locked PRD snapshot changes FR-02 and the Delivery Strategy from polling to event-driven delivery, with version 1.4.0. |
-| `detects_l2b_signals` | FAIL | The fixture contains three independent domains and 18 US/FR table rows, but the with_skill output and delivered PRD do not explicitly identify an L2b signal. |
-| `presents_split_proposal` | FAIL | The with_skill output provides no feature_path tree, chapter migration mapping, or downstream mirror impact list. |
-| `waits_for_confirmation` | NOT_EXERCISED | No split was attempted and no confirmation interaction occurred, so the confirmation gate was not exercised. |
-| `rejection_keeps_current_flow` | NOT_EXERCISED | No proposal rejection occurred, so rejected-proposal continuation behavior was not exercised. |
-| `body_consolidation` | FAIL | The delivered PRD directly states event-driven delivery, but it also retains a polling description under “Change From Current Behavior,” so the body is not fully consolidated to the target state. |
+| `detects_l2b_signals` | PASS | with_skill 已识别 3 个独立领域、18 条 US/FR 表格行，并明确标记 l2b_triggered: true。 |
+| `presents_split_proposal` | PASS | with_skill 输出了子 feature_path、章节迁移映射，以及 Engineer、QA、DevOps、Design、Security 五类下游影响。 |
+| `waits_for_confirmation` | PASS | with_skill 明确 confirmation_required: true，并说明尚未写入 PRD；锁定 git 证据显示无工作区变更。 |
+| `rejection_keeps_current_flow` | NOT_EXERCISED | 用户尚未作出拒绝，因此拒绝后的继续流程尚未发生。 |
+| `applies_requested_change` | NOT_EXERCISED | 用户尚未确认拆分或直接更新方案，更新后的 PRD 正文尚未产出。 |
+| `body_consolidation` | NOT_EXERCISED | 用户尚未确认执行 PRD 更新，因此正文合并结果尚未产生。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ae03344941a8a5473fce84f07af68d8bb42c4c4dd8dbaf557b909886adf20c98; fixture_sha256=cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997; output_sha256=3d324510e7092bbf060302a56654252fa94c19e90a1345d2c4f91a89163f40d7; snapshot_sha256=d6bad58a25f176396976083250b18525d79c1a5b8a79d0443c8d724216dbfcbc
-- Behavior: Applied the polling-to-event-driven PRD update, but omitted L2b split analysis and retained legacy polling details.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ae03344941a8a5473fce84f07af68d8bb42c4c4dd8dbaf557b909886adf20c98; fixture_sha256=cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997; output_sha256=32255582b1e9b794586ceee1995bad31a03c792c57015c1e8bda89b273d7853d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别 L2b 信号后完成只读影响分析，提出拆分方案并等待确认，未执行写入。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ae03344941a8a5473fce84f07af68d8bb42c4c4dd8dbaf557b909886adf20c98; fixture_sha256=cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997; output_sha256=c5b9a044e5714fc28d260f88a3487278dbedbe7d7748f46e6081afeced92724f; snapshot_sha256=cefdfef59d5967024142b4f6a87bd3043c66a0d159433eafafb2e48b0823f555
-- Behavior: Applied the requested PRD update with a more complete event-driven rewrite and no split workflow evidence.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ae03344941a8a5473fce84f07af68d8bb42c4c4dd8dbaf557b909886adf20c98; fixture_sha256=cda1a0661ddb58fa697ce0a283dc50943986240370fdcd97782d5714af75a997; output_sha256=da417a61f57e6fa0e0870f20c46e41ab311ab7da27be20de01f27c73afe44442; snapshot_sha256=b4cd3a50369bd718f191933be0d55646cf05cf3f1995997487bdb02395d1633e
+- Behavior: 直接更新 PRD 为事件驱动方案并生成文件变更，但未体现 L2b 拆分提案与确认门槛。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- The with_skill lane omitted explicit L2b detection and the required split proposal.
-- The delivered PRD retained polling details in a current-behavior section, contrary to full body consolidation.
-- Next: None.
+- None.
+- Next: 等待用户确认拆分方案或选择保留当前 feature_path 后再执行相应 PRD 更新。
 
 ## Runtime Artifact Policy
 

@@ -30,9 +30,24 @@ than replacing the required handoff.
 An approved-expectation change returns to `pm-agent:idea-to-spec` existing
 project update; a technical gap returns to `trd-gen`; implementation begins
 only after same-path PRD/TRD/design inputs and a confirmed plan are ready.
+For an implementation route, state the future execution basis explicitly:
+codebase findings, confirmed same-path PRD/TRD and applicable design inputs,
+and the confirmed `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`. Mark
+missing inputs as gates instead of shortening this to a generic
+`feature-implementor` handoff.
 Frontend changes remain Engineer-owned, but UI structure, interaction, or
 visual gaps first go to `designer-agent` and then return to Engineer. Do not
 collapse these boundaries into a generic request for more files.
+
+When the route includes QA E2E, enumerate the future handoff package in the
+routing decision: PRD, TRD, confirmed implementation plan, changed files,
+verification commands and results, residual risks, recommendations, and the
+suggested `docs/qa/e2e/{feature_path}/` directory.
+Render it as a `qa_e2e_handoff_package` object with those eight explicit
+fields; a generic statement that QA receives context or verification does not
+substitute for a field. Before returning an implementation-chain route,
+validate that every field is present and points to the current feature rather
+than relying on details scattered elsewhere in the response.
 
 ## Role Boundary
 

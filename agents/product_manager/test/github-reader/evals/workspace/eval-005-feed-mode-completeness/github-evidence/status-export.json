@@ -14,7 +14,7 @@
   "milestones_complete": true,
   "milestones": [
     {"title": "v0.80", "state": "open", "open_issues": 2, "closed_issues": 8, "due_on": "2026-08-20T00:00:00Z", "html_url": "https://github.com/anthropics/anthropic-sdk-python/milestone/12"},
-    {"title": "v0.81", "state": "open", "open_issues": 3, "closed_issues": 2, "due_on": null, "html_url": "https://github.com/anthropics/anthropic-sdk-python/milestone/13"}
+    {"title": "v0.81", "state": "open", "open_issues": 1, "closed_issues": 2, "due_on": null, "html_url": "https://github.com/anthropics/anthropic-sdk-python/milestone/13"}
   ],
   "open_issues": [
     {"number": 801, "title": "Document retry options", "milestone": "v0.80", "assignees": ["maintainer-a"], "updatedAt": "2026-08-07T10:00:00Z"},

@@ -14,7 +14,7 @@ available targets, not defaults.
 
 For each confirmed variant, record the complete unit chain: build target,
 context, static entry, image unit, Compose topology, Kubernetes/Helm resource,
-health check, runtime entry, and disposition. Missing evidence is `blocked` or
+values, health check, runtime entry, and disposition. Missing evidence is `blocked` or
 an explicitly approved alternative, never silently omitted. Hand every
 confirmed image/runtime unit and its immutable tag, architecture, registry,
 trigger, and verification requirement to `cicd-bootstrap`; do not claim CI/CD
@@ -36,6 +36,12 @@ equivalent confirmed operational context. Confirmed repo-wide deployment work
 may use `N/A` feature scope; feature-scoped work needs the confirmed
 `feature_path`. If the user directly invokes this specialist without that
 context, return the request to `pm-agent` for classification.
+
+A maintainer-supplied inventory that names the existing build variants and
+their deployment coverage is equivalent confirmed operational context for a
+read-only completeness assessment. Produce the requested per-variant matrix;
+treat facts absent from that inventory as field-level `blocked` gaps instead
+of returning the whole assessment to PM.
 
 Use the PM-side packet definition in
 the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
@@ -67,7 +73,7 @@ If `deploy/` already exists, prefer extension or targeted iteration over blind r
 For a documentation-site completeness handoff, enumerate Public, Internal, and
 every host-specific build variant before writing. Build a per-variant matrix of
 build target, context, static entry, image unit, Compose topology, Kubernetes /
-Helm resources, health checks, and runtime entry. Do not claim completeness
+Helm resources, values, health checks, and runtime entry. Do not claim completeness
 until every variant has an explicit integrated, alternative-hosted, deferred,
 or blocked disposition.
 

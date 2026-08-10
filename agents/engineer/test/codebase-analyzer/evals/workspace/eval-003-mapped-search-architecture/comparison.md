@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859` from `agents/engineer/test/codebase-analyzer/evals/workspace/eval-003-mapped-search-architecture`.
 - Fixture SHA-256: `a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859`
 - Prompt SHA-256: `0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `de6d27a82a6affa1d54b83f57c4eb1889c4977944cd8849112c1a97798fbfd77`
-- Skill overlay SHA-256: `be427177bb8618969a8c9c2b0aea6596dceb0dbc6a57e3c3bb5e1896d11ef1ed`
+- Skill overlay SHA-256: `2437579eab93080a360f91c28589c43439611fa078f69b97d2ce2bd37e59a941`
 - Judge schema SHA-256: `953cf0ea99b9840a17c7b6706052165ac0b5ad2da8cf5b30696958f911637de4`
 - Eval definition SHA-256: `df0ea3b9e16f84cfa3123784feaff62e9978d327069fdb7ff40819c75c9ebde1`
 - Metadata SHA-256: `c79f8b60b8eda49d60383374b0b105b8c506dcb4b757a67593ed9721a0d169df`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
@@ -32,27 +31,27 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `uses_change_map_to_bound_context` | PASS | With-skill output explicitly scopes the task to `src/search/**`, identifies the change map, and names `docs/site/api/search.md` as required documentation. |
-| `verifies_claims_against_code` | PASS | With-skill output cites and quotes `src/search/query.txt`, using `entrypoint: search` and `match_mode: exact` to establish the code-backed behavior. |
-| `reports_document_code_conflict` | PASS | With-skill output clearly contrasts the documentation's fuzzy-matching claim with the code's exact mode and explains that the conflict affects the current baseline and follow-up evaluation. |
-| `does_not_overclaim_unverified_docs` | PASS | With-skill output identifies `last_verified_version` as `unverified`, lowers document confidence, and declines to treat fuzzy matching as implemented without code evidence. |
+| `uses_change_map_to_bound_context` | PASS | with_skill 明确引用 change-map，将 src/search/** 映射到 docs/site/api/search.md，并将分析范围限定在搜索模块及其映射文档；原始 trace 也显示直接读取了 change map 和 required_docs，未扩展到无关正式文档。 |
+| `verifies_claims_against_code` | PASS | with_skill 直接以 src/search/query.txt 中的 match_mode: exact 和 entrypoint: search 核验入口及匹配模式，并明确没有可执行搜索实现。 |
+| `reports_document_code_conflict` | PASS | with_skill 清楚对比文档的 fuzzy matching 声明与代码的 match_mode: exact，说明该冲突影响当前能力判断，并指出后续需确认真实运行载体和 API 契约。 |
+| `does_not_overclaim_unverified_docs` | PASS | with_skill 识别文档和 change map 的 last_verified_version: unverified，明确将文档降为低信任导航信息，并未将未经代码证明的 fuzzy matching 写成当前事实。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c; fixture_sha256=a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859; output_sha256=9e7e78d1a199fe2bed13261e157f3b88452f82f233a6376ca64e114dc3886c5d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Core search-module analysis is accurate and satisfies all four assertions, but the appended project profile includes a false PM-document inventory claim.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c; fixture_sha256=a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859; output_sha256=bdc0077b4984b1a1e18ef6353f46a46054d11ad798860614d88ca2d67452d179; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 基于 change map 限定上下文，回到 query.txt 核验代码事实，并完整报告文档冲突与未验证状态。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c; fixture_sha256=a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859; output_sha256=360840071da88fe2b2fbe3ddb7695e6bf26eade8b824ac0af30b8dcc46e3c35a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline independently provides the core exact-mode analysis and document conflict, but lacks the structured change-map/evidence handoff detail of the with-skill output.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=0f34452462bbb10e7f7328b054a3e1b0e6f741b40ba12100a356dcedfa512f9c; fixture_sha256=a3ef5b9cc00c15c74b103c208a46d73ff5b53e17721ec0a79184a10c02b16859; output_sha256=fdb861c0021f8fd359a0d1a48966875882c34a944bb925251cb9066d95d492fa; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 也完成了代码核验和冲突识别，但作为比较基线，不影响 with_skill assertion verdicts。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- The with-skill output contains an unsupported and contradictory project-profile claim: `has_pm_docs: false`, despite the fixture containing `PM_HANDOFF.md` and the analysis relying on it.
-- Next: Remove or correct the contradictory `has_pm_docs` project-profile field before accepting the with-skill delivery.
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 

@@ -11,50 +11,49 @@
 - Evidence status: **FRESH**
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
-- Fixture version/source: canonical manifest `e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d` from `agents/engineer/test/feature-implementor/evals/workspace/eval-016-draft-status-continues-current-plan`.
-- Fixture SHA-256: `e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d`
-- Prompt SHA-256: `94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Fixture version/source: canonical manifest `20e27cdb155a076474a45e3e1e88d991a8bc4e1c3723a56f9fad5436bddd121e` from `agents/engineer/test/feature-implementor/evals/workspace/eval-016-draft-status-continues-current-plan`.
+- Fixture SHA-256: `20e27cdb155a076474a45e3e1e88d991a8bc4e1c3723a56f9fad5436bddd121e`
+- Prompt SHA-256: `b545dbdf7b14573cc5aa0b9db7a4defefe66a311f4d3b98d9f23cd367fdfa1aa`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `e820a1098a32d64fe76bdf4ec719cd859ebecfdb70fa28be1309b656ec71bd22`
-- Skill overlay SHA-256: `226a387f9ef93d9f4c106e1f240f22e5014d390eeb37da0fd61da0c129ca36ba`
+- Target skill tree SHA-256: `1b3ba014c732559fe2d85e84b85c8db967bb14f4b1fc850a2267e7d4ee1cf03b`
+- Skill overlay SHA-256: `7f72b0d2378eefdc164735f00c26c14522753a42e538abe02ba7accda3b0a9f5`
 - Judge schema SHA-256: `b61097c2327e4512b0954be7440f9efb0288869d119e12aff21af89d2a1a48fa`
-- Eval definition SHA-256: `bb7bf0f3a482a77a018b0515b1c16fcfc9e7cd11c5d0dea890b0578898ccf6a8`
+- Eval definition SHA-256: `86c8e37f3b454c4b68e8a8e0d79eed844e522098807d679c66512f9c18daf3b3`
 - Metadata SHA-256: `566e39d7363acab918c0b8b38f7cebac43ee4f4a9069dd6e8b635d61f1c29eb0`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
-- Behavior result: **FAIL**
-- Coverage result: **PARTIAL**
-Overall result: FAIL
+- Behavior result: **PASS**
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reads_active_plan_frontmatter` | NOT_EXERCISED | 输出包含 active_plan_path 和 active_plan_status，但锁定证据无法证明其读取了 frontmatter；该隐藏过程断言未被证实。 |
-| `detects_non_implemented_status` | PASS | 明确写出 active_plan_status: Draft，并说明当前无法进入实现阶段。 |
-| `continues_current_plan` | PASS | 明确指定固定入口 docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md，并表示之后更新实施计划。 |
-| `bumps_plan_version` | FAIL | 输出只要求更新实施计划，未明确要求同步 bump version 和更新 last_updated。 |
-| `does_not_force_archive_link` | PASS | 输出写明 archive_state: no archive history，且未将归档或 previous_plan_archive 作为继续 Draft 计划的前置条件。 |
-| `waits_before_coding` | PASS | 明确表示 TRD 补全后会更新实施计划并等待编码确认，且阻止 implementation。 |
+| `reads_active_plan_frontmatter` | PASS | runner trace item_7 directly reads IMPLEMENTATION_PLAN.md, and the delivered plan is based on it. |
+| `detects_non_implemented_status` | PASS | Delivered plan and final output explicitly retain and identify status: Draft. |
+| `continues_current_plan` | PASS | delivery_snapshot and git diff show the fixed IMPLEMENTATION_PLAN.md entry was updated; no second active plan was created. |
+| `bumps_plan_version` | PASS | Locked delivery content changes version 0.1.0 to 0.2.0 and last_updated to 2026-08-11. |
+| `does_not_force_archive_link` | PASS | The plan records previous_plan_archive as N/A and explicitly states the Draft plan continues without archive history; no archive prerequisite is imposed. |
+| `waits_before_coding` | PASS | Final output requests confirmation of the Draft plan and states coding will begin only after confirmation; no code files were modified. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b; fixture_sha256=e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d; output_sha256=f48456a97772dbb167db1a01d9420cceb79a01c05a5c36ba5e86c7a58466ab14; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 识别了当前计划为 Draft，继续使用固定实施计划入口，并在编码前等待确认；但遗漏了版本和更新时间更新要求。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b545dbdf7b14573cc5aa0b9db7a4defefe66a311f4d3b98d9f23cd367fdfa1aa; fixture_sha256=20e27cdb155a076474a45e3e1e88d991a8bc4e1c3723a56f9fad5436bddd121e; output_sha256=6b3c44e17a3fd782c2ffe54b790a982fe6dbf3cf256a29df6a4ef35b671687ea; snapshot_sha256=97915e1b263c93bc044c4691b03f96938418da765fd2b16ef9dbc485ffed91bb
+- Behavior: Read the active plan, detected Draft status, updated the existing plan with a version/date bump, avoided requiring an archive, and waited for confirmation before coding.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=94992d68c84f843faca4d58c6bb2c604bfcff22e23ecd95ba7c0c306fd36011b; fixture_sha256=e083cacd49102d9384a79c9ea941e92b48d18d81842c0cbf72510a9b890d7c7d; output_sha256=cabb766114b33a8b34bd40c8f27083b5085e4cbaac8fca52b9752648439b9493; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 仅确认 PRD/TRD，未读取或处理 active plan，也未进入计划更新与确认流程。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b545dbdf7b14573cc5aa0b9db7a4defefe66a311f4d3b98d9f23cd367fdfa1aa; fixture_sha256=20e27cdb155a076474a45e3e1e88d991a8bc4e1c3723a56f9fad5436bddd121e; output_sha256=d9ede043848b8e793240887bf6ebac6effe0608f157716eb0439dbb5384089f0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline inspected PRD/TRD and repository state but did not read or update the active implementation plan and did not proceed to the required planning checkpoint.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- 未要求对实质性计划更新同步 bump version 并更新 last_updated。
-- Next: 补充明确要求同步 bump version 并更新 last_updated。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 

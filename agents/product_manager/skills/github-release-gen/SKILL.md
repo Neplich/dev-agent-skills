@@ -182,6 +182,25 @@ invalid, version-mismatched, or blocked audit evidence returns to
    the confirmed latest flag is applied only by the final draft-to-published
    write, together with the final prerelease state.
 
+Before presenting the preview, run this completeness check. A failed item makes
+the preview not submit-ready:
+
+- every date in the title or body comes from the confirmed fact source or
+  release evidence; when no release date is confirmed, omit it instead of
+  inserting the current date;
+- every selected PR or direct commit includes its verified contributor link
+  when the GitHub evidence provides one; verify the displayed contributor
+  identity and profile URL as one evidence pair so a valid URL for a different
+  contributor still fails this check;
+- a request containing unauthorized site, check, tag, draft, or publish writes
+  still receives the complete inline title and body preview when the content
+  gates pass; the boundary report does not replace the preview; and
+- for this marketplace, decide `render` or `omit` for Claude Code, Codex, and
+  Kimi Code from the audited target ref before writing any platform heading or
+  command. Historical-tag reconstruction omits Claude Code; missing
+  `TARGET_TAG` support omits Codex; missing `.kimi-plugin/plugin.json` omits
+  Kimi Code.
+
 GitHub evidence may add traceability and formatting, not new or contradictory
 version facts. If it exposes an omission or conflict, block. For a site-enabled
 host, return the page to `docs-agent:release-notes-gen` for renewed

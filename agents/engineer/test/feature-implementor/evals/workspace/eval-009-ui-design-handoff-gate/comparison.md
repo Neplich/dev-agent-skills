@@ -14,47 +14,46 @@
 - Fixture version/source: canonical manifest `e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984` from `agents/engineer/test/feature-implementor/evals/workspace/eval-009-ui-design-handoff-gate`.
 - Fixture SHA-256: `e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984`
 - Prompt SHA-256: `ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `e820a1098a32d64fe76bdf4ec719cd859ebecfdb70fa28be1309b656ec71bd22`
-- Skill overlay SHA-256: `226a387f9ef93d9f4c106e1f240f22e5014d390eeb37da0fd61da0c129ca36ba`
+- Target skill tree SHA-256: `1b3ba014c732559fe2d85e84b85c8db967bb14f4b1fc850a2267e7d4ee1cf03b`
+- Skill overlay SHA-256: `7f72b0d2378eefdc164735f00c26c14522753a42e538abe02ba7accda3b0a9f5`
 - Judge schema SHA-256: `2ecaa597e1be5d2c7100696a1bf5cce49ac2b021a5cc8ab7c690c99ac2883c0d`
 - Eval definition SHA-256: `a313159478f71f3c53034d04181e6cf7f6ee092241472cdee4c99fbe2b9042fc`
 - Metadata SHA-256: `5e7a0cec3496b476d745c2e2e1792aa7fe5d0f1912d30b7047f5ac770f4cdb1c`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
-- Coverage result: **FULL**
-Overall result: PASS
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `detects_ui_design_change` | PASS | 明确说明信息层级与主按钮样式属于 UI/UX 与视觉设计输入，并进入设计交接流程。 |
-| `checks_design_docs` | PASS | 明确列出并指出两个设计文档均缺失，并要求覆盖信息层级、按钮样式、状态与响应式约束。 |
-| `blocks_plan_when_design_missing` | PASS | 明确说明暂不创建实施计划或修改代码；git evidence 也显示无文件变化。 |
-| `hands_off_to_designer` | PASS | 明确要求返回 designer-agent 补齐 UI/UX 与视觉设计交付物。 |
-| `preserves_plan_gate_after_design` | PASS | 明确说明设计补齐后由 feature-implementor 生成实施计划，并需等待用户确认后才能继续。 |
-| `does_not_implement_directly` | PASS | 明确声明本轮未修改文件，且 locked delivery_snapshot 为空、git 状态干净。 |
+| `detects_ui_design_change` | PASS | 说明这是前端信息层级与主按钮样式变更，并按设计门禁转交 Designer。 |
+| `checks_design_docs` | PASS | 明确列出两个设计文档路径，均标记为缺失，并说明其应覆盖信息层级、主按钮视觉层级及相关规范。 |
+| `blocks_plan_when_design_missing` | PASS | 输出明确说明未创建实现计划；git evidence 显示无文件、索引或提交变化。 |
+| `hands_off_to_designer` | PASS | 明确给出 `engineer-agent → designer-agent`，要求补齐两个 UI/UX 与 visual-system 文档。 |
+| `preserves_plan_gate_after_design` | NOT_EXERCISED | 设计文档尚未补齐，后续计划生成与用户确认步骤尚未可执行；输出仅记录了该门禁要求。 |
+| `does_not_implement_directly` | PASS | 输出明确说明未修改代码，且 git evidence 显示工作区、索引和提交均未变化。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6; fixture_sha256=e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984; output_sha256=4d48b0cae6fe2f91b69160fda0841c314e7f0f112e2323c87bfffb0cb35e334a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 识别 UI 设计变更，检查并确认设计文档缺失，阻断计划与实现，交回 designer-agent，并保留后续实施计划确认门禁。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6; fixture_sha256=e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984; output_sha256=d487fcfb834a25baad51823edcb97becddf9be21405c2e26eaaf031fcfdce3c0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别前端 UI/视觉设计变更，检查并确认设计文档缺失，转交 Designer，并在设计门禁处停止；未创建计划或修改代码。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6; fixture_sha256=e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984; output_sha256=d16c11061fd0743cae80763cf709b93252bbf9994059457485c24e2ab443d2d9; snapshot_sha256=f94fd59f46561cce7b17f3eb24c768abf13d1dd5c47038ac4b548dad2a1332c7
-- Behavior: 直接创建设置页前端文件并声称完成实现与校验，未执行设计缺失阻断流程。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ddb6591b250157e73a35cd94cd577e9355400395f2d96425bab34fbb48bb56d6; fixture_sha256=e933472ac04a2cc28b54c89f863b1b89688bd67af1793cbac5f728cf5ae72984; output_sha256=436aff3c440cbd8b52c76e24b7197023322a0a85c8f29af0aaabaa62ed98ade7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅因缺少前端源码而停止，未识别设计门禁、检查指定设计文档或执行 Designer handoff。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: None.
+- Next: 补齐两个设计文档后，再由 feature-implementor 生成 IMPLEMENTATION_PLAN.md 并等待用户确认。
 
 ## Runtime Artifact Policy
 

@@ -24,7 +24,7 @@
         {
           "id": "document_subagent",
           "description": "文档编写委派",
-          "text": "输出必须要求 TRD 编写或更新任务由文档编写 sub-agent 执行，主进程保留上下文和最终审查。"
+          "text": "文档编写 sub-agent 可用时，输出必须把 TRD 编写或更新委派给它并由主进程保留上下文和最终审查；不可用时必须如实说明能力限制，仍由主进程保留来源上下文和最终审查，且不得声称已经完成委派。"
         },
         {
           "id": "implementation_plan_handoff",

@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970` from `agents/docs/test/docs-audit/evals/workspace/eval-013-version-normalization-boundaries`.
 - Fixture SHA-256: `1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970`
 - Prompt SHA-256: `e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
-- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Target skill tree SHA-256: `5b5823d2c0804ce3dabb1d32490f71697f4ff111cd9371ebf92d1bb1b6ad2188`
+- Skill overlay SHA-256: `c7033e85898ff61111eb14edc47b25e717119ee79349d7af461390afc706db78`
 - Judge schema SHA-256: `3cb4db02fceb3a963ab35cfa46d9bd95146e58bed4f92e90064a4aa2fe2f0404`
 - Eval definition SHA-256: `5705e506f62200b76867ebca90e47274aa68bc0ca81a7790a3ab2ac8baafd194`
 - Metadata SHA-256: `de723686d571b59f10dc657eaf98d1d9ad27c06a9381fcb0dfee19364fb401ec`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
@@ -32,28 +31,29 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `preserves_complete_version_identity` | PASS | with_skill explicitly equates the prefixed and unprefixed Observation A values as the same complete SemVer identity, retaining prerelease and build metadata, and rejects case-changed or metadata-dropped candidates. |
-| `enforces_each_source_contract` | PASS | with_skill reports each observed source failure, including raw-prefix violations, missing values, invalid package SemVer, index multiplicity, zero selector resolution, and extractor mismatch, without silently repairing values. |
-| `reports_all_version_blockers` | PASS | with_skill covers the missing, malformed, ambiguous, extractor, and identity discrepancies and states that both pre-tag and post-tag checks are blocked. |
-| `binds_pre_and_post_tag_inventory` | NOT_EXERCISED | with_skill states pre-tag cannot form a consumable canonical inventory and post-tag therefore cannot consume the same immutable identity. Per the fixture rule, this later binding check is NOT_EXERCISED. |
-| `makes_inventory_integrity_reproducible` | NOT_EXERCISED | with_skill states no canonical pre-tag inventory was generated. Per the fixture rule, deterministic integrity evidence cannot yet be produced, so this is NOT_EXERCISED. |
+| `preserves_complete_version_identity` | PASS | With-skill output normalizes prefixed and unprefixed values while retaining prerelease, build metadata, and case-sensitive identity distinctions. |
+| `enforces_each_source_contract` | PASS | With-skill output evaluates the listed raw forms, missing values, selector counts, and extractor mismatch without repairing or cross-filling sources. |
+| `reports_all_version_blockers` | PASS | With-skill output reports all fixture blocker categories and concludes both pre-tag and post-tag are blocked. |
+| `binds_pre_and_post_tag_inventory` | NOT_EXERCISED | The pre-tag audit is blocked before an inventory is generated; the output explicitly states that no same-source binding is available for post-tag consumption. |
+| `makes_inventory_integrity_reproducible` | NOT_EXERCISED | Because no inventory was generated before blocking, deterministic inventory-integrity evidence cannot be produced. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e; fixture_sha256=1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970; output_sha256=436fdcf02801a2fed6c1bb52e5909f3594ef9f52c90a7cc1ab9216f4cd1f15f4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly identifies complete version identity, enforces source-specific raw and extraction contracts, reports the blockers, and explains that no post-tag inventory binding is available because pre-tag is blocked.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e; fixture_sha256=1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970; output_sha256=2e96cbeda8f43950ecdc700975f3d4dfc89d0ed3f4827505f5ef36361e55a24a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly preserves version identity, enforces source contracts, reports all blockers, and appropriately stops before inventory-dependent post-tag checks.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e; fixture_sha256=1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970; output_sha256=8ca2de0c5cb365248c64ac3123f3c7541a2bf3b13d6853460986a856ece722af; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Provides a basic blocker list and post-tag failure conclusion, but gives less complete source-contract, identity, and inventory-binding analysis than with_skill.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e; fixture_sha256=1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970; output_sha256=b8f10c5079b179daf1f01d43fa64b65cdabeaa4dd60446ab7cc2344dc5734134; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a plausible baseline audit and reports many post-tag discrepancies, but lacks the stronger inventory and gate handling shown by with_skill.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: None.
+- Next: Provide a valid pre-tag inventory and binding evidence to exercise post-tag inventory consumption.
+- Next: Provide reproducible integrity evidence for the bound inventory to exercise tamper detection.
 
 ## Runtime Artifact Policy
 

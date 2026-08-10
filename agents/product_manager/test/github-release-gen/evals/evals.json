@@ -385,7 +385,7 @@
         {
           "id": "upgrade_note_first_sentence",
           "description": "简述句按事实源与 manifest 推导",
-          "text": "「升级说明」首段以「无破坏性变更，也没有新增 plugin。7 个 role plugin 均更新到 `v1.0.0`。」开头（N=7 由目标版本 `.claude-plugin/marketplace.json` 推导），不得新增事实源之外的发布声明。"
+          "text": "「升级说明」首段的首个实质句为「无破坏性变更，也没有新增 plugin。7 个 role plugin 均更新到 `v1.0.0`。」（允许其前只有 `简述` 等 Markdown 结构标签；N=7 由目标版本 `.claude-plugin/marketplace.json` 推导），不得新增事实源之外的发布声明。"
         },
         {
           "id": "claude_section_verbatim",

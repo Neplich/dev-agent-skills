@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897` from `agents/docs/test/docs-audit/evals/workspace/eval-004-audit-all-verified`.
 - Fixture SHA-256: `085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897`
 - Prompt SHA-256: `f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
-- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Target skill tree SHA-256: `5b5823d2c0804ce3dabb1d32490f71697f4ff111cd9371ebf92d1bb1b6ad2188`
+- Skill overlay SHA-256: `c7033e85898ff61111eb14edc47b25e717119ee79349d7af461390afc706db78`
 - Judge schema SHA-256: `a043187f1d82deb6ceb1f6f2a8dbb12db6dd01c71ced16d224de3ae50ca31c3b`
 - Eval definition SHA-256: `9d29cd503dc3f38e1235bc8d674c667f9fc3bef38d94569b7888bb0dfed80506`
 - Metadata SHA-256: `4c1ab6c77122f43adf1cbc9d6f05aea7b2b047fe1e69ba225e32d03f006dc954`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
@@ -32,23 +31,23 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `verifies_complete_affected_set` | PASS | With-skill candidate records all four affected pages as verified with no unresolved evidence gap; final stamped page snapshots are present. |
-| `stamps_all_pages_together` | PASS | Final snapshots show all four required surfaces at v1.1.0, and the candidate records a unified stamp set with successful read-back. |
-| `verifies_release_metadata_read_only` | PASS | Release metadata remains unchanged in the final manifest and is explicitly audited as read-only. |
-| `normalizes_mixed_version_forms` | PASS | The candidate inventory records prefixed and unprefixed sources, their raw forms, normalized SemVer values, and matching comparison results. |
-| `persists_candidate_producer_schema` | PASS | The reachable candidate record contains the required schema, evidence, inventories, digests, staged gates, read-back commands, and candidate_verified conclusion without ready_for_tag or post-commit fields. |
-| `anchors_candidate_then_discovers_success` | PASS | Locked git evidence shows candidate, anchor, handoff, and fast-forward commits; the final handoff snapshot contains ready_for_tag discovery metadata and final confirmation. |
+| `verifies_complete_affected_set` | PASS | Candidate record lists all four affected pages, marks each final_status as verified, and reports blockers: []. |
+| `stamps_all_pages_together` | PASS | The locked candidate record defines the same four-page unified_stamp_set; final Git evidence shows the two stale API metadata lines updated in the integrated transaction while the release surfaces already held v1.1.0. |
+| `verifies_release_metadata_read_only` | PASS | The candidate inventory reads docs/site/.meta/releases.json as a file-backed source and the final diff contains no modification to it. |
+| `normalizes_mixed_version_forms` | PASS | The version inventory records prefixed and unprefixed raw forms, normalized identity 1.1.0, and equal comparison results, including package.json and release metadata. |
+| `persists_candidate_producer_schema` | PASS | The locked audit-v1.1.0.md snapshot contains the required candidate schema, immutable commits, affected/stamp sets, per-page evidence, hashes, locator inventory, canonical digest, staged inventories, readback, commands, and candidate_conclusion: candidate_verified without post-commit success fields. |
+| `anchors_candidate_then_discovers_success` | PASS | Git evidence and locked handoff content show distinct candidate/anchor and integrated handoff commits, anchor and candidate blob/tree identities, fast-forward integration, and final readback before phase_result: ready_for_tag. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=9ea839124b6074d747cba3957e5de386641ed4bae73f3f6693c75d987cb7b704; snapshot_sha256=acf4e1a516b0333f8cd4cdae012b72808d7ac7311a7beef62c17d3621bcfd788
-- Behavior: Completed the documentation audit, persisted the candidate and handoff records, stamped the required pages, and returned ready_for_tag without creating a tag.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=0cbc9cbd0d9ffd60773b817ea493c2cab702848b15d64a73c65c6de36ce114b6; snapshot_sha256=b1f660485e3b92d2f8cd4611515dc4e0442e7f698c29f67abc4eb4fe5b0aebd8
+- Behavior: Completed the pre-tag audit, stamped the required API metadata, persisted the candidate, anchored it, created the discovery handoff, fast-forward integrated it, and returned ready_for_tag.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=55b450d620370fbd825c4c3c1e56fecd8215255d744b6e756266089d6ecdbb5a; snapshot_sha256=9247dc286f355dc7e7351dbe582724d218bb7d11dbfe5340c27e67ed6c0ea897
-- Behavior: Produced a standalone audit report identifying the metadata inconsistency, but did not stamp pages or create the required audit/handoff records.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=ec76c4ad28b18ea9e6da3eb98f0f1580438ebe91a0220adefd79622edfeae3a0; snapshot_sha256=98a6ecfaf3cc547d75504aaabc0a073f4ed0020b37dce327b74cf0a7c8e8205d
+- Behavior: Produced a conditional audit report identifying stale API verification metadata and stopped before stamping or release handoff.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

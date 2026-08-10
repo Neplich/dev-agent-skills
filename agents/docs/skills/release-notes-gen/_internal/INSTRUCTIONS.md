@@ -148,6 +148,11 @@ blockers: []
 `handoff_status` 才能是 `ready`。其他情况一律为 `blocked`，并准确列出目标版本缺少
 维护者确认、未确认正文、失败/未执行检查、版本不一致或证据缺口。
 
+输出 handoff 前逐字段回读并校验上方结构；不得省略
+`handoff_target`、`downstream_target`、`source_evidence`、
+`release_execution_authorized` 或任何版本确认、页面、检查、更新面和 blocker
+字段。正文中的泛化证据摘要不能替代结构化 `source_evidence`。
+
 该 handoff 只证明站内 Release Notes 已确认且校验通过，应直接交给
 `docs-agent:docs-audit` 执行 pre-tag audit；它也是
 `pm-agent:github-release-gen` 的必要上游证据，但不是 GitHub Release 执行授权。只有

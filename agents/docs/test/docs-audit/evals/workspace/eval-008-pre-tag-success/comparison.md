@@ -14,15 +14,14 @@
 - Fixture version/source: canonical manifest `188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f` from `agents/docs/test/docs-audit/evals/workspace/eval-008-pre-tag-success`.
 - Fixture SHA-256: `188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f`
 - Prompt SHA-256: `c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `8588a4fc6bb55ff6a1ce485f659334cabf6f9624098f4db4f1066bdacc1fc3ec`
-- Skill overlay SHA-256: `09c184e9256c59e7718f2b61600ec30436b550d1692a7c65f8b8e6c64fc491f3`
+- Target skill tree SHA-256: `5b5823d2c0804ce3dabb1d32490f71697f4ff111cd9371ebf92d1bb1b6ad2188`
+- Skill overlay SHA-256: `c7033e85898ff61111eb14edc47b25e717119ee79349d7af461390afc706db78`
 - Judge schema SHA-256: `4cd14ef8cd033d31b5bb9ce50a786ad0b7d18c7ff4f682d88505eac53b634ecf`
 - Eval definition SHA-256: `4d1aa7f3a07c406f7e925f931c91ea28170bd7650629aa75bcd06b4f58bba0c7`
 - Metadata SHA-256: `6adbc51a2dc07674edf9fca71addc72bccaccf75ae663c41fbf3725d8c48b107`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
@@ -32,35 +31,35 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `accepts_confirmed_version_without_tag` | PASS | With-skill output records base_ref, target_ref, confirmed v1.2.0, and absent tag, while identifying a separate metadata contradiction as the blocker. |
-| `verifies_complete_set_and_surfaces` | PASS | With-skill output includes both change-map API pages, reports all four affected pages verified, and surfaces the conflicting .meta/releases.json state. |
-| `normalizes_mixed_version_forms` | NOT_EXERCISED | The output uses v1.2.0 for the confirmed target and page values but does not provide enough evidence of source-form normalization against package.json and metadata. |
-| `records_pre_stamp_values` | PASS | All four pre-stamp values are explicitly recorded: v1.1.0, unverified, unverified, and v1.1.0. |
-| `stamps_complete_set_atomically` | NOT_EXERCISED | The candidate correctly reports that unified stamping was not executed because the audit is blocked; later stamping cannot proceed without correcting the surfaced blocker. |
-| `builds_isolated_candidate_transaction` | NOT_EXERCISED | No candidate was built, and the locked evidence cannot prove the hidden isolation and captured-state process. |
-| `candidate_record_has_no_ready_result` | NOT_EXERCISED | No candidate record exists because the audit stopped before candidate construction. |
-| `validates_two_complete_staged_gates` | NOT_EXERCISED | No staged gates were executed because the audit stopped at the precondition blocker. |
-| `confirms_anchor_commit_before_discovery` | NOT_EXERCISED | No anchor commit or post-stamp validation was created because stamping did not occur. |
-| `persists_fixed_discovery_handoff` | NOT_EXERCISED | No discovery handoff was written because no anchor commit was created. |
-| `returns_ready_only_after_integration` | NOT_EXERCISED | Integration and downstream readiness were not reached after the metadata blocker was surfaced. |
-| `returns_ready_for_tag_not_published` | NOT_EXERCISED | The correct pre-tag outcome is blocked by the contradictory released/latest metadata, so ready_for_tag was not reachable in this run. |
+| `accepts_confirmed_version_without_tag` | PASS | 输出明确记录了 base_ref、target_ref、维护者确认的 v1.2.0，并说明同名 tag 不存在但符合 pre-tag；阻断原因是受影响路径的工作区漂移。 |
+| `verifies_complete_set_and_surfaces` | NOT_EXERCISED | 锁定 trace 显示其识别了 change-map 的两张 API 页面及两张 Release Notes 页面，并读取了 handoff、版本元数据和 package.json；但在完成逐页 verified 结论前因工作区污染阻断。 |
+| `normalizes_mixed_version_forms` | PASS | 输出明确说明 package.json 使用 1.2.0，Release Notes 和 releases.json 使用 v1.2.0，并归一化为同一 SemVer。 |
+| `records_pre_stamp_values` | NOT_EXERCISED | 读取了 fixture 中的盖章前值，但未生成审计报告或进入可写盖章阶段。 |
+| `stamps_complete_set_atomically` | NOT_EXERCISED | 候选输出明确表示未修改任何版本戳；统一盖章尚未执行。 |
+| `builds_isolated_candidate_transaction` | NOT_EXERCISED | 未创建隔离 candidate worktree/branch 或 candidate 事务；流程在受影响路径存在未提交修改时阻断。 |
+| `candidate_record_has_no_ready_result` | NOT_EXERCISED | 未产生 candidate record。 |
+| `validates_two_complete_staged_gates` | NOT_EXERCISED | 未执行 candidate staged gate 或最终 candidate staged gate。 |
+| `confirms_anchor_commit_before_discovery` | NOT_EXERCISED | 未创建或确认 post-stamp anchor commit。 |
+| `persists_fixed_discovery_handoff` | NOT_EXERCISED | 未写入固定 discovery handoff；输出明确说明未创建 handoff。 |
+| `returns_ready_only_after_integration` | NOT_EXERCISED | 未进行候选集成、handoff 回读或向下游返回 ready_for_tag。 |
+| `returns_ready_for_tag_not_published` | NOT_EXERCISED | 输出返回 blocked，而非 ready_for_tag；由于受影响工作区存在未提交修改，成功阶段尚未到达。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=8a96fe1aba2b23602273d1cd6e861d642e6dc6530d66d939af60720d41305bca; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly audited the confirmed refs/version, verified the affected documentation surfaces, surfaced the release metadata contradiction, and preserved the workspace without performing downstream mutations.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=63718550d362a3d29cceb892973dd72a2a5c4f5d427588da56975d2f4b0cd21a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确锁定 pre-tag 输入，识别缺失 tag 不应阻断，并在检测到受影响路径工作区漂移后安全阻断且不执行写入。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=ba68143435d49013938be6175eba28c5597c751d3f112746836ea5d5888dcc7a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline also blocked on release metadata, but reported stale verification markers and an alleged diff-evidence mismatch instead of the with-skill complete-surface verification and bound blocker handling.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=b3fc38eae644997440b021a5d3014bcb2e034cc0a59e5661e61de62a31afc80f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 新鲜基线仅进行浅层只读审计，错误地将 releases.json 发布状态视为主要问题，未执行完整 docs-audit 事务。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Correct the contradictory release metadata, then rerun the complete pre-tag workflow.
+- Next: 维护者处理 src/catalog/routes.txt 的未提交修改并更新 release-head，然后从头重跑完整 pre-tag 审计。
 
 ## Runtime Artifact Policy
 

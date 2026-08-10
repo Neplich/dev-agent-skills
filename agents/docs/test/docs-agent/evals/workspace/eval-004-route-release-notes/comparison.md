@@ -14,44 +14,43 @@
 - Fixture version/source: canonical manifest `23d5701fab562491dfec3455fd6eabce7f6a6cba18940861023208d40f53fc3e` from `agents/docs/test/docs-agent/evals/workspace/eval-004-route-release-notes`.
 - Fixture SHA-256: `23d5701fab562491dfec3455fd6eabce7f6a6cba18940861023208d40f53fc3e`
 - Prompt SHA-256: `ab720b723fbaf54cc8b204eab97c1f0a7167519c350afdf3b475cf0b324862c8`
-- Repository HEAD: `19966d8caa4dbd319c21d0a540286a0f274cf253`
+- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `b04f0f833fdfe60f19dba4258110d7f6b0a3d6a6f2afb7034b0d3d883c30f83b`
-- Skill overlay SHA-256: `fcc8b19cc83a08b5f5e64f8b15695aa80b045962a63cbf1717889ea116dc31cc`
+- Target skill tree SHA-256: `cf92649952a97be677cf5e900a4d9c793a6c0724813cf1fa3154f57e7d2c08f3`
+- Skill overlay SHA-256: `c7d3b6793c943fb4d4971cf0d6f11988326a2dff978353bf3c4327d4e24c17b7`
 - Judge schema SHA-256: `73f4addc59ec16b0f91c6a70a2a767ce7f6b4ad72612ca19a2131095a0722114`
 - Eval definition SHA-256: `6d935c2fabb41ac4d322f49d33294bd64934555c17ee2ff70a64426da58d1b41`
 - Metadata SHA-256: `5831b803b3b347d7fd4611f1c19958d707ffe3e9ced4a78ed755e71f76a2c9b8`
-- Executor SHA-256: `ed1e952e9fe823936a2bd3d21b88e0b0d6870350be1dd767dd6052065f14b0eb`
-- Evidence normalization: historical sections and transient Python bytecode exclusion were normalized without rerunning candidate or judge; recorded behavior and verdict are unchanged.
+- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
-- Behavior result: **PASS**
+- Behavior result: **FAIL**
 - Coverage result: **FULL**
-Overall result: PASS
+Overall result: FAIL
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `accepts_release_notes_entry_basis` | PASS | With-skill output identifies the handoff package and explicitly lists host repository, version, scope, evidence sources, and required output. |
-| `routes_release_notes_generator` | PASS | With-skill output selects `release-notes-gen` and keeps execution at the router boundary without routing to excluded specialists or GitHub Release delivery. |
-| `preserves_handoff_context` | PASS | With-skill output preserves every required handoff field, including request type, tier, feature path, version, scope, repository, sources, output, and blockers/risks. |
-| `references_release_notes_gate_only` | PASS | With-skill output states that `release-notes-gen` owns the next gate and that the router will not generate, publish, tag, deploy, or audit the release notes; it exposes no local skill path or detailed specialist protocol. |
+| `accepts_release_notes_entry_basis` | FAIL | With_skill calls the handoff only pending verification and says it has not formed an executable Release Notes entry, contradicting the fixture's explicit target host, confirmed version/scope, evidence sources, and required output. |
+| `routes_release_notes_generator` | PASS | The routing decision selects exactly release-notes-gen and sets the execution boundary to routing only, with no reassignment or GitHub Release execution. |
+| `preserves_handoff_context` | PASS | The output preserves all required handoff values semantically, including release version and scope within confirmed_scope, plus request_type, change_tier, feature_path, host_repository, source_documents, evidence_sources, required_output, and blockers_risks. |
+| `references_release_notes_gate_only` | PASS | It names the release-notes-gen authoritative gate, stops at the router boundary, avoids local skill paths, and does not reproduce detailed downstream protocols. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ab720b723fbaf54cc8b204eab97c1f0a7167519c350afdf3b475cf0b324862c8; fixture_sha256=23d5701fab562491dfec3455fd6eabce7f6a6cba18940861023208d40f53fc3e; output_sha256=fd6c4384ebbaa87f6318131d40bff3b43483205bdbdfdc90dceaea1777d2b75c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly accepts the handoff, routes to release-notes-gen, preserves context, and stops at the router boundary.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ab720b723fbaf54cc8b204eab97c1f0a7167519c350afdf3b475cf0b324862c8; fixture_sha256=23d5701fab562491dfec3455fd6eabce7f6a6cba18940861023208d40f53fc3e; output_sha256=8da24e3d37a046bb5c81cf9fb4ff14779d4575540c74ac587f285cdc7ca822ef; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly routes to release-notes-gen and preserves the handoff, but incorrectly treats the complete entry basis as incomplete.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ab720b723fbaf54cc8b204eab97c1f0a7167519c350afdf3b475cf0b324862c8; fixture_sha256=23d5701fab562491dfec3455fd6eabce7f6a6cba18940861023208d40f53fc3e; output_sha256=8c92bc70f8d88b8bf6a3f0f7125580a8d84ed1373a26720727cf8521ebbcdfb1; snapshot_sha256=0069660ea4f87efe0a48a0db30635a6d2c454621def02068deaafb7297a1dc4d
-- Behavior: Generated a release-notes file despite missing source evidence and did not demonstrate the required routing or handoff-context behavior.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ab720b723fbaf54cc8b204eab97c1f0a7167519c350afdf3b475cf0b324862c8; fixture_sha256=23d5701fab562491dfec3455fd6eabce7f6a6cba18940861023208d40f53fc3e; output_sha256=7291f352950f5026d6b26c9ef3b95c3e069fdf22af8cbca4878e05f1791b25c3; snapshot_sha256=2e8880fc34e1f0bafb4a381c6e6e72559e7bb33387615c3fe64c60bbd23403fa
+- Behavior: Generates a Release Notes file despite the router-scoped request and does not perform the required routing decision.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- None.
+- The with_skill lane incorrectly rejects the complete specialist entry basis documented in release-handoff.md.
 - Next: None.
 
 ## Runtime Artifact Policy
