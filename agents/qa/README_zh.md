@@ -103,5 +103,5 @@ flowchart LR
 npx skills add ./agents/qa/skills/spec-based-tester
 
 # 运行 QA eval
-uv run agents/qa/test/run_all_evals.py
+uv run scripts/run_skill_eval.py --agent qa --jobs 10
 ```

@@ -96,5 +96,5 @@ agents/designer/skills/visual-design/references/
 npx skills add ./agents/designer/skills/visual-design
 
 # 运行 Designer eval
-uv run agents/designer/test/run_all_evals.py
+uv run scripts/run_skill_eval.py --agent designer --jobs 10
 ```

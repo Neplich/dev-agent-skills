@@ -82,7 +82,6 @@ flowchart LR
 # 安装某个 DevOps skill 到当前项目运行时
 npx skills add ./agents/devops/skills/deployment-planner
 
-# 运行单个 DevOps eval
-uv run agents/devops/test/run_eval.py \
-  agents/devops/test/env-config-auditor/workspace/iteration-1/eval-1-missing-variables/eval_metadata.json
+# 运行 DevOps eval
+uv run scripts/run_skill_eval.py --agent devops --jobs 10
 ```

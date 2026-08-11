@@ -31,6 +31,9 @@ uv run --with pytest pytest \
   agents/docs/test/test_docs_run_eval.py \
   agents/test_doc_contract.py \
   agents/test_eval_contract.py \
+  scripts/test_eval_runtime.py \
+  scripts/test_run_skill_eval.py \
+  scripts/test_check_eval_artifacts.py \
   scripts/test_install_codex_skills.py \
   scripts/test_summarize_eval_results.py \
   scripts/test_check_repository_contract.py
@@ -45,20 +48,17 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 
 ## Manual Eval
 
-Local model evals are quality checks and are not part of the first-round required PR status checks:
+Local model evals are quality checks and are not part of the first-round required PR status checks. Designing, writing, running, rerunning, summarizing, or diagnosing evals must go through the project-level skill `.agents/skills/skill-eval-runner/SKILL.md`:
 
 ```bash
-# Designer eval diagnostics
-uv run agents/designer/test/run_all_evals.py
+# One role (e.g. designer)
+uv run scripts/run_skill_eval.py --agent designer --jobs 10
 
-# Docs eval diagnostics
-uv run agents/docs/test/run_all_evals.py
-
-# QA model eval
-uv run agents/qa/test/run_all_evals.py
+# All regular evals
+uv run scripts/run_skill_eval.py --jobs 10
 ```
 
-Changes involving skill behavior, routing, eval fixtures, or release readiness follow the eval strategy in [AGENTS.md](./AGENTS.md#skill-测试). The GitHub Actions `Manual Evals` workflow accepts `all`, `designer`, `docs`, or `qa`; the QA eval requires the repository `OPENAI_API_KEY` secret.
+Changes involving skill behavior, routing, eval fixtures, or release readiness follow the eval strategy in [AGENTS.md](./AGENTS.md#skill-测试). The GitHub Actions `Manual Evals` workflow accepts `all`, `designer`, `devops`, `docs`, `engineer`, `product_manager`, `qa`, or `security`; every target requires the repository `OPENAI_API_KEY` secret.
 
 ## Eval Maintenance Checklist
 
