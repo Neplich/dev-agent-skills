@@ -23,8 +23,12 @@ New agent:
 
 1. Create `agents/{agent-name}/{skills,test}`.
 2. Create `agents/{agent-name}/README.md` following an existing agent.
-3. Create each skill's SKILL.md and eval per the new-skill steps.
-4. Register the agent in `.claude-plugin/marketplace.json`, refresh
+3. Create each skill's SKILL.md and eval per the new-skill steps. The entry
+   router skill name must equal the marketplace plugin name:
+   `scripts/install_codex_skills.py` `--routers-only` recognizes routers by
+   that equality, and a mismatch silently excludes the new agent.
+4. Register the agent in `.claude-plugin/marketplace.json` with
+   `"strict": true` (every existing plugin uses it), refresh
    `skills-lock.json`, create `agents/{agent}/.claude-plugin/plugin.json`, and
    add the agent's skills directory to `.kimi-plugin/plugin.json`.
 5. Add the agent to `scripts/check_eval_contract.py` `VALID_AGENTS` and to
@@ -52,6 +56,8 @@ together.
 
 - marketplace path in `.claude-plugin/marketplace.json`
 - `skills-lock.json` entry path and hash
+- the skill's `SKILL.md` frontmatter `name` (the contract requires it to match
+  the skill directory)
 - router references in the owning router SKILL.md
 - README references in agent and root READMEs
 - eval fixture paths under `agents/{agent}/test/{skill-name}/`
