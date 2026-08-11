@@ -5,7 +5,7 @@ version: "0.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-25"
-last_updated: "2026-06-25"
+last_updated: "2026-08-11"
 generated_by: "idea-to-spec"
 feature: "review-fix"
 feature_path: "agent-collaboration/readme-collaboration-guardrails/review-fix"

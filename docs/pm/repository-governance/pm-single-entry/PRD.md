@@ -5,6 +5,7 @@ version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-05"
+last_updated: "2026-08-11"
 generated_by: "prd-gen"
 feature: "pm-single-entry"
 feature_path: "repository-governance/pm-single-entry"
@@ -48,7 +49,7 @@ changelog:
 部署诉求或安全诉求，都应先从 PM 侧进入，由 PM 判断它是新需求、现有功能变更、缺陷、
 验证、部署、安全审查，还是需要继续澄清，再编排到下游角色。
 
-issue #61 为「防绕过」需求提供了直接证据：34 个 skill 的 frontmatter description 全部常驻
+issue #61 为「防绕过」需求提供了直接证据：39 个 skill 的 frontmatter description 全部常驻
 harness 上下文（router 类普遍 500-670 字符，合计约 10KB），且 router 与 specialist 的触发
 短语大量重叠。例如「实现这个功能」同时出现在 `engineer-agent`（router）和
 `feature-implementor`（specialist）的 description 中。harness 层由模型基于 description 自主

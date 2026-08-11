@@ -99,7 +99,7 @@ PM Agent hands off to peer agents that are packaged and installed as separate pl
 - `qa-agent` for confirmed acceptance, exploratory, bug analysis, or regression validation work
 - `devops-agent` for confirmed deployment, CI/CD, environment, release readiness, rollback, or runbook work
 - `security-agent` for confirmed AppSec, auth/authz, dependency, privacy, or data-flow review work
-- `docs-agent` for confirmed formal documentation site bootstrap, synchronization, backfill, or release documentation audit work
+- `docs-agent` for confirmed formal documentation site bootstrap, synchronization, backfill, illustrated user operation manuals from real running interfaces, or release documentation audit work
 
 If a target agent is not installed, the corresponding handoff stage is unavailable; PM Agent reports the missing stage and the recommended plugin and marks that stage blocked instead of doing the work itself.
 

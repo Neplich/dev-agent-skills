@@ -98,7 +98,7 @@ PM Agent 依赖可能作为独立插件打包的同级能力：
 - `qa-agent` 用于已确认的验收、探索、缺陷分析或回归验证工作
 - `devops-agent` 用于已确认的部署、CI/CD、环境、发版就绪、回滚或 runbook 工作
 - `security-agent` 用于已确认的 AppSec、认证授权、依赖、隐私或数据流审查工作
-- `docs-agent` 用于已确认的正式文档站 bootstrap、同步、回填或发版文档审计工作
+- `docs-agent` 用于已确认的正式文档站 bootstrap、同步、回填、基于真实运行界面的图文用户操作手册或发版文档审计工作
 
 如果所需目标不可用，PM Agent 会识别缺失的阶段和插件，将该阶段标记为 blocked，并且不会执行缺失角色的工作。
 
