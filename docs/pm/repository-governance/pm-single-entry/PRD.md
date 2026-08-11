@@ -218,8 +218,7 @@ PM handoff 到下游角色时必须携带结构化输入：
 6. 用户说「看下权限 / 依赖漏洞 / secrets 风险」，命中 `pm-agent`，再 handoff Security。
 7. 用户直接调用下游 agent 或 specialist 时，如果没有 PM handoff packet，应被拉回 PM 分类。
 8. 绕过 router 直接触发 specialist 时（#61 场景），specialist 内 gate 仍然执行。
-9. 用户说「搭个文档站 / 同步正式文档 / 写用户手册」，命中 `pm-agent`，再 handoff Docs
-   （正式文档路由已由 eval-014 / eval-015 / eval-016 覆盖）。
+9. 用户说「搭个文档站 / 同步正式文档 / 写用户手册」，命中 `pm-agent`，再 handoff Docs。
 
 验收标准：eval 使用 schema `1.0` 与语义断言；实际执行后更新 durable `comparison.md`。
 
@@ -256,7 +255,7 @@ flowchart TD
 | ID | 验收标准 | 验证方式 |
 | --- | --- | --- |
 | AC-001 | 用户文档只把 `pm-agent` 描述为公开入口。 | 审查 README / README_zh / `.codex/INSTALL.md` / `docs/README.codex.md`。 |
-| AC-002 | 新需求、功能变更、bug、测试、部署、安全、交付、正式文档请求默认先进入 PM 分类和编排。 | PM 入口 eval（FR-006 场景 1-6、9；交付 fast lane 见 eval-010）。 |
+| AC-002 | 新需求、功能变更、bug、测试、部署、安全、交付、正式文档请求默认先进入 PM 分类和编排。 | PM 入口 eval（FR-006 场景 1-6；正式文档路由见 eval-014~016；交付 fast lane 见 eval-010）。 |
 | AC-003 | 无 PM handoff packet 时，下游 role agent / specialist 不直接承接用户原始请求。 | 防绕过 eval（FR-006 场景 7-8）。 |
 | AC-004 | `feature-implementor` 不直接响应用户新需求并进入实现。 | `feature-implementor` eval 与 gate 审查。 |
 | AC-005 | PM handoff packet 字段被文档化，并被下游 agent 作为入口校验依据。 | 审查 PM skill-map / handoff contract 与下游 SKILL.md。 |
