@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-2-route-bugfix-request`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `3622b3dfdb9bef50766ff22e70a5639483865b84fa39f8a64f027bc492debda1`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `e2d0e3e00078c297194828182b4d6445ecbb492d`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `1cfd412fc44e8e1667cc3feab76a58474b6382f405680057b41b379032f76e0a`
-- Skill overlay SHA-256: `8ddfbafd6ae3cf064836ded5fbaa7bcc8a3ab817df212a0b6c4ff355a78b12af`
+- Target skill tree SHA-256: `c658e8351498435bd5246b692fbf8a3a6d40caa45d6998b37785e6522243068b`
+- Skill overlay SHA-256: `6e906e23fd0805526cda111a5e2e74eb02ce2f72534b3e384e90b10a34160090`
 - Judge schema SHA-256: `00a01c5f9432a18e723abe9a7b1a555e5a2a41dc2c36a101ed91497434d1c7f4`
 - Eval definition SHA-256: `fe6d213ce4edb254dae39c5fefca87002824c8356e6ca05dfa6b8b92c57d378d`
 - Metadata SHA-256: `163386e80d321ea48ddfd244853e278bc70ea13a08cdc68ac01f85bf3ba7240f`
@@ -31,26 +31,27 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `request_type_bug_report` | PASS | With_skill output explicitly sets request_type: bug_report and blocks repair. |
-| `expectation_first` | NOT_EXERCISED | No approved PRD/TRD or equivalent expectation source exists in the locked fixture; the lane correctly records this blocker, so expectation confirmation was not exercisable. |
-| `debugger_handoff_after_confirmation` | NOT_EXERCISED | Because expectation confirmation was blocked, no Engineer/debugger handoff occurred; this later step was not exercisable. |
+| `request_type_bug_report` | PASS | with_skill 输出明确写明 `request_type: bug_report`。 |
+| `expectation_first` | NOT_EXERCISED | 候选执行了只读证据检查，并明确说明尚未核验 PRD/TRD 或等价预期；工作区缺少相关文档，因此预期确认未完成。 |
+| `debugger_handoff_after_confirmation` | NOT_EXERCISED | 由于预期行为尚未确认，候选明确禁止完成 Engineer handoff；因此确认实现偏差及后续 handoff 尚未发生。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3622b3dfdb9bef50766ff22e70a5639483865b84fa39f8a64f027bc492debda1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=a879b9c34597f930ceb335ee616ceb180770ed887d5f9a3cdd442b0bc6a2c545; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Classified the request as bug_report, identified missing evidence, and safely stopped without mutation or premature handoff.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3622b3dfdb9bef50766ff22e70a5639483865b84fa39f8a64f027bc492debda1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=39d1b06afed2182fa47ccc9985da5f7149b5c561bb8f6665a27da1c3e2f6a9f5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确将请求分类为 bug_report，先进行只读证据与预期文档核验；因缺少文档和工程能力而安全停止，未宣称修复或提前 handoff。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3622b3dfdb9bef50766ff22e70a5639483865b84fa39f8a64f027bc492debda1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=426844a3b9120a04f56adbd306fda2cb7057d12bdb9b1c4c5f9a03a1ce7ed5b9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Inspected the empty workspace and stopped without classification or expectation-first routing.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3622b3dfdb9bef50766ff22e70a5639483865b84fa39f8a64f027bc492debda1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=5668b9e694d076f704e08c42a0908e8de02a518cc3846b848c5a141ce6458ae4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 直接尝试检查并修复问题，未进行请求分类或预期确认；发现空仓库后停止。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Provide the application workspace and approved expectation documents, then confirm the expectation before handing off to Engineer/debugger.
+- Next: 提供项目源码及 approved PRD/TRD 或等价预期行为文档。
+- Next: 安装 engineer-agent 后，在确认实现偏差时再继续 Engineer/debugger handoff。
 
 ## Runtime Artifact Policy
 

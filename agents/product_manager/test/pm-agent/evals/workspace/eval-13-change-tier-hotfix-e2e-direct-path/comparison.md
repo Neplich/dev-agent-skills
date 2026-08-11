@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-13-change-tier-hotfix-e2e-direct-path`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `e2d0e3e00078c297194828182b4d6445ecbb492d`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `1cfd412fc44e8e1667cc3feab76a58474b6382f405680057b41b379032f76e0a`
-- Skill overlay SHA-256: `8ddfbafd6ae3cf064836ded5fbaa7bcc8a3ab817df212a0b6c4ff355a78b12af`
+- Target skill tree SHA-256: `c658e8351498435bd5246b692fbf8a3a6d40caa45d6998b37785e6522243068b`
+- Skill overlay SHA-256: `6e906e23fd0805526cda111a5e2e74eb02ce2f72534b3e384e90b10a34160090`
 - Judge schema SHA-256: `6a4c53f4d8ac913c9f4214c0dc35c3bf4c2a1bd9745f539a3879966e5d7f9011`
 - Eval definition SHA-256: `0e4e9687500855bbb8cac580183d47bafa14e53a69d5477185a5ceacddfe1857`
 - Metadata SHA-256: `385a2edb2c46d9f3ce571c34b812bf357f9247b71af061faebaf0764c87334a2`
@@ -31,26 +31,26 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `hotfix_direct_path_only` | NOT_EXERCISED | with_skill 将请求路由为 standard 并拒绝 hotfix，随后因缺少源码和目标文案停止；未进入 hotfix QA/E2E 规划，因此该断言未执行。 |
-| `evidence_still_required` | NOT_EXERCISED | with_skill 明确存在源码缺失、目标文案缺失等阻塞，并停止验证；由于缺少可运行项目，verification evidence、结果及 blocked checks 尚无法产生，因此该断言未执行。 |
-| `no_full_suite_required` | NOT_EXERCISED | with_skill 将范围判定为 standard 并在测试规划前停止；没有形成 E2E suite 范围决策，因此该断言未执行。 |
+| `hotfix_direct_path_only` | NOT_EXERCISED | With-skill output stopped at the missing-source/documentation blocker before any QA/E2E workflow or hotfix coverage decision could be exercised. |
+| `evidence_still_required` | NOT_EXERCISED | With-skill output stopped before implementation or verification; no verification stage was reached. |
+| `no_full_suite_required` | NOT_EXERCISED | With-skill output stopped before test execution; full-suite policy was not exercised. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=8255e1da70eca9637bad603dfb195902e0fcca623a5706e597fde8f4ace825df; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 正确识别为 existing_update/standard，拒绝 hotfix，并在缺少项目证据时停止下游实现与测试。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=87b2281ff713c9a657844c2f64342d1e34ad8c27b205bcd0f8a0d086a32acac6; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Safely inspected and reported the empty workspace, made no unsupported changes or verification claims, and requested the missing project inputs.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=de22c7b571ed5335e842a9e999ab5bee4093f14615e17c350e4b58ca0a150599; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 发现工作区为空后直接报告无法修改和验证，未进行路由或 QA 规则处理。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=6aa9338af255a235b2cdcbe931d17dd842234b9c1da5646854e83f9553a2c216; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Reported the empty repository and inability to modify or verify the requested login-page copy.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: 提供包含登录页源码、测试入口和确认目标文案的工作区后继续实现与针对性验证。
+- Next: Provide the actual project source and relevant expected-copy or acceptance documentation, then implement and run the focused verification workflow.
 
 ## Runtime Artifact Policy
 

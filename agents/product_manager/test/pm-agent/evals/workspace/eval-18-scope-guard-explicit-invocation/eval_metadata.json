@@ -1,0 +1,15 @@
+{
+  "eval_id": "eval-018-scope-guard-explicit-invocation",
+  "eval_name": "scope-guard-explicit-invocation",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-18-scope-guard-explicit-invocation",
+  "fixture_context": [],
+  "skill_dependencies": [],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
+}

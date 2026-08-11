@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `16e3b6cbbbae6769ac6b5ead7bae34214b3dd90e3e6c4d5fad97cfd7d3784013` from `agents/product_manager/test/pm-agent/evals/workspace/eval-015-route-docs-site-deployment-gap`.
 - Fixture SHA-256: `16e3b6cbbbae6769ac6b5ead7bae34214b3dd90e3e6c4d5fad97cfd7d3784013`
 - Prompt SHA-256: `f6c9996daf9a7bdf78228fb674eccb457f386d1e74abf9925ac4646e4da1c9d4`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `e2d0e3e00078c297194828182b4d6445ecbb492d`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `1cfd412fc44e8e1667cc3feab76a58474b6382f405680057b41b379032f76e0a`
-- Skill overlay SHA-256: `8ddfbafd6ae3cf064836ded5fbaa7bcc8a3ab817df212a0b6c4ff355a78b12af`
+- Target skill tree SHA-256: `c658e8351498435bd5246b692fbf8a3a6d40caa45d6998b37785e6522243068b`
+- Skill overlay SHA-256: `6e906e23fd0805526cda111a5e2e74eb02ce2f72534b3e384e90b10a34160090`
 - Judge schema SHA-256: `69f2798cad12b0dd0ca3c224e3cfd6cf611a315695684db1b07a23452b52a60e`
 - Eval definition SHA-256: `6e2d29edefa67ed434a00461a929405f7c4bccd693a99ad48559b546fe6fab29`
 - Metadata SHA-256: `e7a743e88e4c53094e4afe2903a87ebcc467ace2dc58c61ccb0a0dcf64ebf2fd`
@@ -31,26 +31,26 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `blocks_unknown_evidence` | PASS | With-skill output correctly reports partial deployment coverage, identifies missing image/deployment/verification evidence, and does not claim integrated or ready handoff. |
-| `builds_repo_wide_deployment_packet` | PASS | With-skill output provides request_type: deployment, N/A feature fields, feature_path_evidence: [], and preserves the four source documents plus concrete blockers/risks. |
-| `routes_devops_ordered_chain` | NOT_EXERCISED | With-skill output routes the next action to DevOps, but devops-agent is unavailable, so the downstream ordered specialist chain was not exercised. |
+| `blocks_unknown_evidence` | PASS | with_skill 明确保留静态证据边界，指出未执行 CI、镜像发布或部署验证，并将交接标为阻塞；没有宣称 integrated 或 ready handoff。 |
+| `builds_repo_wide_deployment_packet` | PASS | with_skill 输出 request_type: deployment，所有 feature fields 为 N/A，feature_path_evidence 为空，并列出真实 source_documents 与 blockers_risks。 |
+| `routes_devops_ordered_chain` | NOT_EXERCISED | with_skill 正确提出下一步交给 DevOps，随后由 Docs 同步；但 devops-agent 不可用，后续具体阶段的运行时证据不存在。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f6c9996daf9a7bdf78228fb674eccb457f386d1e74abf9925ac4646e4da1c9d4; fixture_sha256=16e3b6cbbbae6769ac6b5ead7bae34214b3dd90e3e6c4d5fad97cfd7d3784013; output_sha256=382180018be078b45dea4f66fef89af8050d32d3a3613a6b2f0834697818e2ff; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly classifies the deployment as partial, builds a repo-wide deployment packet, and routes the next action to DevOps without mutation.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f6c9996daf9a7bdf78228fb674eccb457f386d1e74abf9925ac4646e4da1c9d4; fixture_sha256=16e3b6cbbbae6769ac6b5ead7bae34214b3dd90e3e6c4d5fad97cfd7d3784013; output_sha256=d56efe9fe0297d78228f659df6ac25799c762f6e32563ce06d87010506eedcbb; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 准确核对 CI 仅构建 public、Helm 仅启用 public，并生成受边界约束的 deployment 交接建议。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f6c9996daf9a7bdf78228fb674eccb457f386d1e74abf9925ac4646e4da1c9d4; fixture_sha256=16e3b6cbbbae6769ac6b5ead7bae34214b3dd90e3e6c4d5fad97cfd7d3784013; output_sha256=61550374aa131f016a2de214d0d5bdae5abf7c780d8580481b4b4741fa226d67; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Provides a cautious planning response but does not build the required deployment packet or explicit ordered routing chain.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f6c9996daf9a7bdf78228fb674eccb457f386d1e74abf9925ac4646e4da1c9d4; fixture_sha256=16e3b6cbbbae6769ac6b5ead7bae34214b3dd90e3e6c4d5fad97cfd7d3784013; output_sha256=58e558e71c3ed255df1dbd041d69c8dd0c7047cc48ad366392e60d1faa00d2e1; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了 CI 证据缺口，但因未读取可用 fixture 中的 CI 配置而停留在 unknown。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Run the ordered DevOps specialist chain when devops-agent is available.
+- Next: 启用或安装 devops-agent 后，继续执行 DevOps 规划、CI/CD 引导和环境配置审计；取得验证证据后再进行 Docs 正式同步。
 
 ## Runtime Artifact Policy
 

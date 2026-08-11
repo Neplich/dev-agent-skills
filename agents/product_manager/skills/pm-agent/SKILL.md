@@ -21,6 +21,34 @@ request is ready for design, engineering, QA, DevOps, security, formal
 documentation, or delivery
 execution.
 
+## Scope Guard
+
+dev-agent-skills is an in-project R&D workflow. The scope guard runs **before**
+the Mandatory Entry Decision below; when the guard stops the request, do not
+emit the `Routing decision` block or any classification field. Decide whether
+the current request is in scope:
+
+- **Enabled project**: the current directory or an ancestor carries an enable
+  marker — the dev-agent-skills repository itself (`AGENTS.md` plus
+  `.claude-plugin/marketplace.json`), a Codex project install
+  (`.agents/skills/.dev-agent-skills-mirror.json` or a dev-agent-skills
+  skills tree under `.agents/skills/`), or a dev-agent-skills entry in
+  `.claude/settings.json` / `.claude/settings.local.json` `enabledPlugins`.
+  A personal install (`~/.agents/skills/`) alone is not a project marker.
+- **Out of scope**: no marker, and the request is general conversation,
+  local-machine operation, or generic file work. State in one line that
+  dev-agent-skills targets in-project R&D workflows and that the current
+  directory is not enabled, then stop. Do not emit the `Routing decision`
+  block, classification fields, a document chain, or any handoff; the guard
+  short-circuits the Mandatory Entry Decision.
+- **Explicit invocation**: when the user's message names `pm-agent`, a role
+  agent, or a skill from this marketplace, proceed normally from any
+  directory.
+
+Project-oriented requests (product, engineering, QA, deployment, security,
+formal documentation, delivery) proceed normally; the guard only stops
+general, non-project requests in unenabled directories.
+
 ## Mandatory Entry Decision
 
 Do not begin by inspecting or implementing the requested work. First apply the

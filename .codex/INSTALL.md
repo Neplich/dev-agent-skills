@@ -57,6 +57,14 @@ CLONE_ROOT="$HOME/.agents/dev-agent-skills"
 SKILL_ROOT="$HOME/.agents/skills"
 ```
 
+A personal install is discoverable in every project Codex opens. In projects
+without an enable marker, `pm-agent`'s scope guard stops general conversation,
+local-machine operations, and generic file work with a one-line notice;
+project-oriented requests and explicit invocation still proceed. Choose
+`personal` only when that global trigger surface is intended; a project
+install keeps the skills inside the project and gives it an explicit enable
+marker (`.agents/skills/.dev-agent-skills-mirror.json`).
+
 For a project install, run from the project root:
 
 ```bash

@@ -66,14 +66,29 @@ Implementation details and troubleshooting are in the [Codex Guide](./docs/READM
 ### Kimi Code
 
 ```text
-/plugins install https://github.com/Neplich/dev-agent-skills/tree/main
+/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/v0.4.1
 ```
 
-The repository ships a `.kimi-plugin/plugin.json` manifest: all seven role skill directories are registered as a single plugin, and `pm-agent` loads automatically at session start via `sessionStart.skill`. A bare repo URL installs the latest GitHub Release, so use the `tree/main` form above until a release includes the Kimi manifest; afterwards, pin an immutable version with `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/vX.Y.Z`.
+The repository ships a `.kimi-plugin/plugin.json` manifest: all seven role skill directories are registered as a single plugin, and `pm-agent` loads automatically at session start via `sessionStart.skill`. Pin an immutable version with the release-tag URL above; replace `v0.4.1` with the latest release tag.
 
 Skills previously installed Codex-style into `~/.agents/skills/` are also discovered by Kimi Code automatically; the native plugin above is the recommended path.
 
 **Using both Codex and Kimi Code?** Install only via the Codex path (`~/.agents/skills/`): Kimi Code discovers that directory automatically, so one copy serves both hosts as a single source of truth. Installing the Kimi plugin alongside it creates two same-named copies per skill — a live symlink tree versus an install-time snapshot under `~/.kimi-code/plugins/managed/` — whose versions can drift apart. One caveat: Kimi's generic skill directory group is mutually exclusive, so if `~/.config/agents/skills/` exists it shadows `~/.agents/skills/`; in that case add `~/.agents/skills/` to `extra_skill_dirs` in Kimi's `config.toml`. Trade-off: the Codex path gives Kimi plain skill discovery only — the plugin's `sessionStart.skill` auto-load of `pm-agent` does not apply. To keep the PM-first bootstrap in Kimi sessions, invoke `/skill:pm-agent` manually at session start, or choose the plugin and accept the two-copy caveat above.
+
+## Scope
+
+These agents target in-project R&D workflows. A personal install — the Codex
+path (`~/.agents/skills/`), a user-scope Claude plugin, or the Kimi plugin —
+makes the skills discoverable in every project the host sees. In a project
+that has not enabled dev-agent-skills, `pm-agent` applies a scope guard:
+general conversation, local-machine operations, and generic file work stop
+with a one-line notice instead of entering the heavy PM workflow. Project
+requests and explicit invocation of `pm-agent` or any skill still proceed
+normally.
+
+For the tightest isolation, prefer a Codex project install (see
+[`docs/README.codex.md`](./docs/README.codex.md)), which keeps the skills
+inside the project directory and gives the project an explicit enable marker.
 
 ## Usage Examples
 
