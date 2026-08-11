@@ -3,6 +3,8 @@
 .agents/skills/*
 !.agents/skills/skill-eval-runner/
 !.agents/skills/skill-eval-runner/**
+!.agents/skills/maintain-skills/
+!.agents/skills/maintain-skills/**
 .claude/
 .kiro/
 .windsurf/

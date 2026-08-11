@@ -1,0 +1,109 @@
+---
+name: maintain-skills
+description: Manage this repository's role-skill lifecycle (add, modify, rename). Use when adding or renaming a role agent or skill, changing an existing skill's SKILL.md, frontmatter, structure, description, or shared-contract copies, or when a change requires syncing marketplace.json, skills-lock.json, router routing, discovery descriptions, agent or root READMEs, or process docs. Do not use for authoring, running, or diagnosing evals — delegate those to skill-eval-runner.
+---
+
+# Maintain Skills
+
+Manage the repository's role-skill lifecycle without reimplementing its sync
+surfaces. Treat this skill as the operator workflow for skill structure and
+registration, `references/sync-surfaces.md` as the authoritative sync checklist,
+and `references/change-types.md` as the change classification. Eval impact
+analysis, writing, execution, and failure triage belong to the project-level
+`skill-eval-runner`; do not duplicate its workflow here.
+
+Read [references/change-types.md](references/change-types.md) before classifying a
+request. Read [references/sync-surfaces.md](references/sync-surfaces.md) before
+editing anything, and check every surface it lists against the final diff.
+
+## Classify the Change
+
+- Treat "新增 agent / skill" as **add**. A new skill lives inside an existing
+  agent; a new agent adds the full `agents/{agent-name}/` skeleton.
+- Treat "修改 skill 的 SKILL.md、frontmatter、结构、描述或共享契约副本" as **modify**.
+  Judge the change tier against the tier contract in `AGENTS.md`（hotfix /
+  standard / major）and record it before planning.
+- Treat "重命名 skill 目录" as **rename**. Renames are path-contract changes:
+  marketplace paths, router references, README references, lockfile entries,
+  and eval fixture paths all move together.
+- Classify first, then scan. Do not skip classification because the edit looks
+  small.
+
+## Scan the Impact
+
+- Read `references/sync-surfaces.md` and list every surface the change touches:
+  registration, routing, discovery, agent docs, top-level entry, evals, process
+  docs, and shared-contract copies.
+- Check the high-risk surfaces named in the reference: discovery metadata,
+  router routing evals, PM entry classification, affected existing evals and
+  durable `comparison.md`, and process-doc/diff consistency.
+- State the forbidden files or areas for this change explicitly; do not edit
+  anything outside the confirmed scope.
+
+## Plan the Minimal Change
+
+Before editing, output:
+
+1. Change type and `change_tier` with the evidence that supports them.
+2. The exact impact-surface list and forbidden areas.
+3. A line-count order-of-magnitude expectation (e.g. "净新增约 150 行，不新增
+   抽象").
+4. The verification commands that will prove the change.
+
+Only implement changes listed in the plan. If the plan grows beyond the expected
+scale, stop and re-scope.
+
+## Execute the Sync
+
+- Registration: add or update the skill in `.claude-plugin/marketplace.json` and
+  refresh its entry and `computedHash` in `skills-lock.json`. A SKILL.md change
+  refreshes that skill's hash; a rename updates path and hash together.
+- Routing: update the router SKILL.md sections that enumerate the specialist
+  (Available Skills, Routing Signals, Specialist Gate Pointers, Role Boundary).
+- Discovery: update the marketplace agent `description`, the router frontmatter
+  `description`, and the root-routing pointer sentence in `AGENTS.md`.
+- Agent docs: update `agents/{agent}/README.md` skills table, counts, and
+  Routing Rules; mirror to `README_zh.md`.
+- Top-level entry: update root `README.md` / `README_zh.md` agent-table counts
+  and capability descriptions, and `pm-agent/SKILL.md` handoff targets, request
+  classification lines, and Default Routes.
+- Shared contracts: when extending an enum such as `doc_type`, update every
+  copy: the authoritative definition, the consumer-skill copied tables, and the
+  script assets and templates shipped by `docs-site-bootstrap`. Note in the PR
+  that existing hosts must re-run bootstrap because shipped copies do not
+  auto-upgrade.
+- Process docs: keep PRD/TRD/implementation-plan touch tables and forbidden
+  areas consistent with the actual diff.
+
+## Delegate Eval Work
+
+- Send eval impact analysis, authoring, running, rerunning, and failure triage
+  to the project-level `skill-eval-runner`. Do not author or run evals here.
+- If the change affects existing eval assertions or durable `comparison.md`,
+  have `skill-eval-runner` identify the affected scope and produce fresh
+  evidence; never reuse or hand-craft old conclusions.
+
+## Verify the Final State
+
+After the edits, run:
+
+```bash
+uv run scripts/check_repository_contract.py
+uv run scripts/check_eval_contract.py
+uv run scripts/check_eval_artifacts.py
+uv run scripts/check_doc_contract.py
+uv run --with pytest pytest <affected deterministic tests>
+git diff --check
+```
+
+Stop and repair a static failure before considering the change done. Run the
+deterministic tests that cover the touched surfaces (e.g. router routing eval
+assertions, lockfile contract tests).
+
+## Report
+
+Summarize for handoff: the change type and tier, files changed with the
+sync-surface checklist result, verification results, and any leftover items
+(e.g. eval work delegated to `skill-eval-runner`, fresh-eval targets still
+pending). Do not claim CI ran model evals; model evals are manual through
+`.github/workflows/evals.yml`.
