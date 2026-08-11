@@ -7,7 +7,7 @@ untrustworthy in practice.
 
 | Surface | Required changes |
 | --- | --- |
-| Registration | `.claude-plugin/marketplace.json` `skills` array; `skills-lock.json` entry and `computedHash` |
+| Registration | `.claude-plugin/marketplace.json` `skills` array; `skills-lock.json` entry and `computedHash`; `.kimi-plugin/plugin.json` `skills` array (new agents only — the contract checks the version, not the skills array) |
 | Routing | Router SKILL.md sections that enumerate the specialist: Available Skills, Routing Signals, Specialist Gate Pointers, Role Boundary |
 | Discovery | `.claude-plugin/marketplace.json` agent `description`; router SKILL.md frontmatter `description`; the root-routing pointer sentence in `AGENTS.md` describing that router's routing scope |
 | Agent docs | `agents/{agent}/README.md` skills table, counts, and Routing Rules; `README_zh.md` mirrored |
@@ -43,8 +43,10 @@ hosts must re-run bootstrap, and the PR must state this.
 
 ## Lockfile Notes
 
-- `skills-lock.json` `computedHash` refreshes when the skill's SKILL.md changes.
+- `skills-lock.json` `computedHash` is a sha256 over every tracked file under
+  the skill directory (path and content), not just SKILL.md. Any tracked-file
+  change — SKILL.md, `references/`, `_internal/` — refreshes the hash.
 - A rename updates both the entry path and the hash in the same change.
-- The hash refresh is part of the same change as the SKILL.md edit; a contract
-  check failing on a stale hash is a signal that the refresh was missed, not a
-  request to stop and ask.
+- The hash refresh is part of the same change as the skill-directory edit; a
+  contract check failing on a stale hash is a signal that the refresh was
+  missed, not a request to stop and ask.

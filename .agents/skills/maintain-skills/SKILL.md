@@ -56,8 +56,11 @@ scale, stop and re-scope.
 ## Execute the Sync
 
 - Registration: add or update the skill in `.claude-plugin/marketplace.json` and
-  refresh its entry and `computedHash` in `skills-lock.json`. A SKILL.md change
-  refreshes that skill's hash; a rename updates path and hash together.
+  refresh its entry and `computedHash` in `skills-lock.json`. A new agent also
+  adds its skills directory to `.kimi-plugin/plugin.json` (the contract checks
+  the version only, not the skills array). Any tracked file change under a
+  skill directory refreshes that skill's hash; a rename updates path and hash
+  together.
 - Routing: update the router SKILL.md sections that enumerate the specialist
   (Available Skills, Routing Signals, Specialist Gate Pointers, Role Boundary).
 - Discovery: update the marketplace agent `description`, the router frontmatter

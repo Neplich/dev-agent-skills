@@ -24,8 +24,9 @@ New agent:
 1. Create `agents/{agent-name}/{skills,test}`.
 2. Create `agents/{agent-name}/README.md` following an existing agent.
 3. Create each skill's SKILL.md and eval per the new-skill steps.
-4. Register the agent in `.claude-plugin/marketplace.json` and refresh
-   `skills-lock.json`.
+4. Register the agent in `.claude-plugin/marketplace.json`, refresh
+   `skills-lock.json`, and add the agent's skills directory to
+   `.kimi-plugin/plugin.json`.
 5. Add evals for regularly evaluable skills and record real usage feedback for
    manual-only skills via `skill-eval-runner`, then check every sync surface.
 
@@ -38,7 +39,8 @@ or shared-contract copies.
 2. Scan the impact per `sync-surfaces.md`; the surface set depends on what the
    modification touches (description changes hit discovery, routing changes hit
    router evals, and so on).
-3. Refresh `skills-lock.json` `computedHash` for every SKILL.md touched.
+3. Refresh `skills-lock.json` `computedHash` for the skill when any tracked
+   file under its directory changes (SKILL.md, `references/`, `_internal/`).
 4. Route eval-impact analysis to `skill-eval-runner`.
 
 ## Rename
