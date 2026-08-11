@@ -38,7 +38,7 @@ changelog:
 
 ## 1. 背景与动机
 
-本仓库当前将 6 个入口 dispatcher skills 和 28 个 specialist skills 一起暴露在
+本仓库当前将 7 个入口 dispatcher skills 和 32 个 specialist skills 一起暴露在
 `.claude-plugin/marketplace.json` 和 Codex skill discovery 中。即使 README 建议优先调用
 入口 agent，用户的新需求、问题反馈、修复诉求或上线准备仍可能直接命中
 `engineer-agent`、`feature-implementor`、`debugger`、`qa-agent` 等下游能力，绕过 PM 侧的
@@ -68,9 +68,9 @@ harness 上下文（router 类普遍 500-670 字符，合计约 10KB），且 ro
 2. `pm-agent` 扩大触发范围，能捕获近似、模糊、不完整的需求和问题表达（高召回）。
 3. `pm-agent` 负责统一路由和编排：需求澄清、范围判断、feature_path 解析、PM 文档更新、
    下游角色 handoff、执行状态追踪。
-4. `engineer-agent`、`designer-agent`、`qa-agent`、`devops-agent`、`security-agent` 不再作为
-   用户公开入口，而是 PM handoff 后的下游 role capability。
-5. 28 个 specialist skills 保留目录和协议能力，但定位为 role agent 或 PM 编排下的内部
+4. `engineer-agent`、`designer-agent`、`qa-agent`、`devops-agent`、`security-agent`、
+   `docs-agent` 不再作为用户公开入口，而是 PM handoff 后的下游 role capability。
+5. 32 个 specialist skills 保留目录和协议能力，但定位为 role agent 或 PM 编排下的内部
    执行模块，不再面向用户直接触发。
 6. 防止「用户提了一个新需求，直接被 `engineer-agent` / `feature-implementor` 响应并进入
    实现」的路径；承认平台无法完全阻止直接触发时，提供明确的纵深防御与降级策略。

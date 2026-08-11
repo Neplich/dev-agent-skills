@@ -26,7 +26,7 @@ GitHub issue #28 要求 README 层面准确表达 Agent 协作门禁，避免用
 
 ## 范围
 
-- 主 README 保留 6 个 Agent 的协作关系，并补充现有功能变更、bug fix 和用户可见实现的关键门禁。
+- 主 README 保留 7 个 Agent 的协作关系，并补充现有功能变更、bug fix 和用户可见实现的关键门禁。
 - Engineer README 展示 TRD 确认、实施计划确认、实现或 debug、测试与 QA E2E handoff 的关系。
 - 中英文 README 保持语义一致。
 

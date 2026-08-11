@@ -27,7 +27,7 @@ PR #34 review 指出，README 协作门禁主链路需要调整展示层级，�
 
 ## 范围
 
-- 主 README / README_zh 保留 6 个 Agent 的主交互图。
+- 主 README / README_zh 保留 7 个 Agent 的主交互图。
 - 门禁关系作为主图后的补充信息呈现。
 - Engineer README / README_zh 中 debugger 分支连接到 QA E2E handoff。
 - 原主链路实施计划保持历史完成状态。
@@ -36,7 +36,7 @@ PR #34 review 指出，README 协作门禁主链路需要调整展示层级，�
 
 | ID | 标准 |
 | --- | --- |
-| AC-01 | 主 README 的主图仍表达 6 个 Agent 的交互关系。 |
+| AC-01 | 主 README 的主图仍表达 7 个 Agent 的交互关系。 |
 | AC-02 | 门禁关系不抢占主协作图语义。 |
 | AC-03 | Engineer README 的 implementation 和 debugger 路径都进入 QA E2E handoff。 |
 

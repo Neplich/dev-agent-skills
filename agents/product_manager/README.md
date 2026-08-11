@@ -16,7 +16,7 @@
 | Specialist skills | 7 |
 | Main inputs | User ideas, local `docs/`, repository state, GitHub Issues / PRs / Milestones / Releases |
 | Main outputs | `docs/pm/{feature_path}/`, `docs/roadmap.md`, `docs/changelog/changelog-v{version}.md` |
-| Downstream agents | `designer-agent`, `engineer-agent` |
+| Downstream agents | `designer-agent`, `engineer-agent`, `qa-agent`, `devops-agent`, `security-agent`, `docs-agent` |
 
 ## Skills
 
@@ -94,8 +94,12 @@ host site's `docs/site/release-notes/`; PM only produces GitHub Releases via
 
 PM Agent hands off to peer agents that are packaged and installed as separate plugins:
 
-- `engineer-agent` for TRD and technical planning after PM scope is stable
-- `designer-agent` for UI/UX deliverables
+- `designer-agent` for confirmed UX, UI structure, visual-system, or design handoff work
+- `engineer-agent` for confirmed TRD, implementation, tests, debugging, delivery, or codebase work
+- `qa-agent` for confirmed acceptance, exploratory, bug analysis, or regression validation work
+- `devops-agent` for confirmed deployment, CI/CD, environment, release readiness, rollback, or runbook work
+- `security-agent` for confirmed AppSec, auth/authz, dependency, privacy, or data-flow review work
+- `docs-agent` for confirmed formal documentation site bootstrap, synchronization, backfill, or release documentation audit work
 
 If a target agent is not installed, the corresponding handoff stage is unavailable; PM Agent reports the missing stage and the recommended plugin and marks that stage blocked instead of doing the work itself.
 

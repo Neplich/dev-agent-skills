@@ -76,6 +76,15 @@ flowchart LR
 - Security 不判断父功能归属；需要功能范围时读取
   `docs/pm/{feature_path}/PRD.md` 和匹配的 Engineer TRD/实施计划。
 
+## 协作依赖
+
+Security Agent 依赖可能作为独立插件打包的同级能力：
+
+- `engineer-agent` 和 `devops-agent` 用于已确认发现项的修复
+- `pm-agent` 用于需求驱动的风险与 feature-path 澄清
+
+如果所需目标不可用，Security Agent 会识别缺失的阶段和插件，将该阶段标记为 blocked，并且不会执行缺失角色的工作。
+
 ## 本地维护
 
 ```bash
