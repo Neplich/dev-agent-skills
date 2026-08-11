@@ -104,6 +104,16 @@ Engineer 的主产物包括技术计划、API / ADR 文档、实现计划、代�
 - QA 发现实现缺陷时回到 Engineer；发现需求缺口时回到 PM。
 - DevOps 和 Security 只在部署、运行、安全审查成为当前目标时介入。
 
+## 协作依赖
+
+Engineer Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
+
+- `pm-agent` 用于需求定义、范围对齐和 PRD 更新
+- `designer-agent` 用于缺失或过时的 UI/UX 与视觉设计交付物
+- `qa-agent` 用于验证，`devops-agent` 用于部署，`security-agent` 用于安全审查
+
+如果所需目标不可用，Engineer Agent 会识别缺失的阶段和插件，将该阶段标记为 blocked，并且不会执行缺失角色的工作。
+
 ## 本地维护
 
 ```bash

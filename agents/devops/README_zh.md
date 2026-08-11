@@ -76,6 +76,15 @@ flowchart LR
   `docs/engineer/{feature_path}/TRD.md` 和
   `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。
 
+## 协作依赖
+
+DevOps Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
+
+- `pm-agent` 用于 PRD 与 feature-path 澄清
+- `engineer-agent` 用于缺失或过时的 TRD / 实施计划
+
+如果所需目标不可用，DevOps Agent 会识别缺失的阶段和插件，将该阶段标记为 blocked，并且不会执行缺失角色的工作。
+
 ## 本地维护
 
 ```bash

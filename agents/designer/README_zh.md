@@ -89,6 +89,15 @@ agents/designer/skills/visual-design/references/
 - Engineer 是唯一负责把 PM/Designer 文档转化为代码、测试和交付产物的角色。
 - 来自 Engineer 的 UI 维护请求在 Designer 内仍然只做设计；设计 handoff 后由 Engineer 继续实现。
 
+## 协作依赖
+
+Designer Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
+
+- `pm-agent` 用于范围与 feature-path 澄清
+- `engineer-agent` 用于设计 handoff 后的实现
+
+如果所需目标不可用，Designer Agent 会识别缺失的阶段和插件，将该阶段标记为 blocked，并且不会执行缺失角色的工作。
+
 ## 本地维护
 
 ```bash

@@ -5,12 +5,12 @@ version: "1.0.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-05"
+last_updated: "2026-08-11"
 generated_by: "prd-gen"
 feature: "pm-single-entry"
 feature_path: "repository-governance/pm-single-entry"
 parent_feature: "repository-governance"
 feature_level: "2"
-last_updated: "2026-07-05"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/52"
 related_docs:
   - "AGENTS.md"
@@ -38,7 +38,7 @@ changelog:
 
 ## 1. 背景与动机
 
-本仓库当前将 6 个入口 dispatcher skills 和 28 个 specialist skills 一起暴露在
+本仓库当前将 7 个入口 dispatcher skills 和 32 个 specialist skills 一起暴露在
 `.claude-plugin/marketplace.json` 和 Codex skill discovery 中。即使 README 建议优先调用
 入口 agent，用户的新需求、问题反馈、修复诉求或上线准备仍可能直接命中
 `engineer-agent`、`feature-implementor`、`debugger`、`qa-agent` 等下游能力，绕过 PM 侧的
@@ -48,7 +48,7 @@ changelog:
 部署诉求或安全诉求，都应先从 PM 侧进入，由 PM 判断它是新需求、现有功能变更、缺陷、
 验证、部署、安全审查，还是需要继续澄清，再编排到下游角色。
 
-issue #61 为「防绕过」需求提供了直接证据：34 个 skill 的 frontmatter description 全部常驻
+issue #61 为「防绕过」需求提供了直接证据：39 个 skill 的 frontmatter description 全部常驻
 harness 上下文（router 类普遍 500-670 字符，合计约 10KB），且 router 与 specialist 的触发
 短语大量重叠。例如「实现这个功能」同时出现在 `engineer-agent`（router）和
 `feature-implementor`（specialist）的 description 中。harness 层由模型基于 description 自主
@@ -68,9 +68,9 @@ harness 上下文（router 类普遍 500-670 字符，合计约 10KB），且 ro
 2. `pm-agent` 扩大触发范围，能捕获近似、模糊、不完整的需求和问题表达（高召回）。
 3. `pm-agent` 负责统一路由和编排：需求澄清、范围判断、feature_path 解析、PM 文档更新、
    下游角色 handoff、执行状态追踪。
-4. `engineer-agent`、`designer-agent`、`qa-agent`、`devops-agent`、`security-agent` 不再作为
-   用户公开入口，而是 PM handoff 后的下游 role capability。
-5. 28 个 specialist skills 保留目录和协议能力，但定位为 role agent 或 PM 编排下的内部
+4. `engineer-agent`、`designer-agent`、`qa-agent`、`devops-agent`、`security-agent`、
+   `docs-agent` 不再作为用户公开入口，而是 PM handoff 后的下游 role capability。
+5. 32 个 specialist skills 保留目录和协议能力，但定位为 role agent 或 PM 编排下的内部
    执行模块，不再面向用户直接触发。
 6. 防止「用户提了一个新需求，直接被 `engineer-agent` / `feature-implementor` 响应并进入
    实现」的路径；承认平台无法完全阻止直接触发时，提供明确的纵深防御与降级策略。
@@ -91,7 +91,7 @@ harness 上下文（router 类普遍 500-670 字符，合计约 10KB），且 ro
 
 | 用户画像 | 描述 | 核心诉求 | 痛点 |
 | --- | --- | --- | --- |
-| 终端用户 | 在自己项目里安装本 marketplace 的开发者。 | 说一句需求就能被正确编排，不需要先学 34 个 skill 的分工。 | 直接命中下游 skill 后跳过范围确认，产出与预期不符。 |
+| 终端用户 | 在自己项目里安装本 marketplace 的开发者。 | 说一句需求就能被正确编排，不需要先学 39 个 skill 的分工。 | 直接命中下游 skill 后跳过范围确认，产出与预期不符。 |
 | 仓库维护者 | 维护 Agent skill 行为、文档契约和 eval 的人。 | 路由竞争行为可预期，治理规则不因入口不同而失效。 | router/specialist 描述重叠，gate 被绕过时只能靠三层复制兜底。 |
 | Skill 作者 | 维护单个 agent 或 specialist skill 的人。 | description 分工清晰，改一处不用同步多处。 | 触发短语互相抄写，改任意一条要检查多个文件。 |
 | 下游 Agent 使用者 | 已有明确 PM handoff、需要执行下游能力的用户。 | 携带 handoff packet 时下游直接承接，不被反复拉回 PM。 | 收口过严会让明确的执行请求也被强制绕路。 |
@@ -140,8 +140,10 @@ harness 上下文（router 类普遍 500-670 字符，合计约 10KB），且 ro
 - 部署、CI/CD、环境变量、Docker/Helm、发布、回滚、runbook 诉求。
 - 安全、权限、登录、依赖、secrets、隐私、数据流、webhook/upload 等风险诉求。
 - GitHub issue / PR / milestone / release / changelog / roadmap / repo status 诉求。
+- 正式文档站 bootstrap、功能/部署/发版后的同步、存量回填、图文用户操作手册、站内
+  Release Notes、发版审计诉求。
 
-验收标准：`pm-agent` description 覆盖上述九类起点的代表性短语；FR-006 的 eval 场景全部
+验收标准：`pm-agent` description 覆盖上述十类起点的代表性短语；FR-006 的 eval 场景全部
 命中 `pm-agent`。
 
 ### FR-003: PM 先分类，再 handoff（P0）
@@ -156,6 +158,7 @@ harness 上下文（router 类普遍 500-670 字符，合计约 10KB），且 ro
 | 设计诉求 | 先确认是设计产物需求还是前端实现需求。 | 设计产物 handoff Designer；前端实现需 PM/TRD/设计对齐后 handoff Engineer。 |
 | 测试诉求 | 先确认测试依据（PRD/TRD/已确认实施计划）。 | 预期未确认不得让 QA 或 test-writer 固化新预期。 |
 | 部署/运维/安全诉求 | PM 记录目标、范围和风险。 | 记录完成后 handoff DevOps/Security。 |
+| 正式文档诉求 | PM 确认范围（bootstrap / sync / 手册 / Release Notes / audit）。 | 确认后 handoff Docs（docs-agent）。 |
 | 已完成工作交付 | 确认变更范围和验证状态。 | 确认后 handoff Engineer/delivery，不得绕过状态确认。 |
 
 分类时同步判定变更等级（`change_tier`，衔接 issue #55 / PR #68 的变更分级契约）：
@@ -166,9 +169,9 @@ harness 上下文（router 类普遍 500-670 字符，合计约 10KB），且 ro
 
 ### FR-004: 下游 agent 不直接响应用户入口（P0）
 
-- 5 个下游 role agent（Engineer、Designer、QA、DevOps、Security）的公开触发描述调整为
-  「PM handoff 后使用」；specialist 的 description 移除与用户侧起点重叠的触发短语，改为
-  弱触发表述（#61 方案 B 语义应用于 specialist 层）。
+- 6 个下游 role agent（Engineer、Designer、QA、DevOps、Security、Docs）的公开触发描述
+  调整为「PM handoff 后使用」；specialist 的 description 移除与用户侧起点重叠的触发短语，
+  改为弱触发表述（#61 方案 B 语义应用于 specialist 层）。
 - 用户直接点名下游 agent 或 specialist 时，默认先回到 `pm-agent` 做入口分类，除非该请求
   已携带明确、已确认的 PM handoff packet（或等效的已确认 PRD/TRD/实施计划文档链）。
 - `feature-implementor` 不得直接响应「新需求 / 改功能 / 做个功能 / 帮我实现」等用户原始
@@ -190,12 +193,12 @@ PM handoff 到下游角色时必须携带结构化输入：
 
 | 字段 | 说明 |
 | --- | --- |
-| `request_type` | new_feature / existing_update / bug_report / validation / deployment / security / delivery / status 等。 |
+| `request_type` | new_feature / existing_update / bug_report / validation / deployment / security / delivery / status / formal_docs 等。 |
 | `change_tier` | hotfix / standard / major（衔接 issue #55 / PR #68 的变更分级契约；契约未合入前由 PM 按同一定义判级）。 |
 | `feature_path` / `feature` / `parent_feature` / `feature_level` / `feature_path_evidence` | 功能归属主键与证据，遵循 feature-path-contract。 |
 | `source_documents` | PRD / DECISIONS / TRD / design docs / issue / PR / release context。 |
 | `scope_decision` | 本次范围、非目标、是否改变已批准预期。 |
-| `downstream_owner` | Designer / Engineer / QA / DevOps / Security / delivery 等。 |
+| `downstream_owner` | Designer / Engineer / QA / DevOps / Security / Docs / delivery 等。 |
 | `required_output` | 下游需要产出的文档、计划、实现、报告或验证证据。 |
 | `blockers_risks` | 缺失文档、未确认决策、平台限制、验证风险。 |
 
@@ -215,6 +218,7 @@ PM handoff 到下游角色时必须携带结构化输入：
 6. 用户说「看下权限 / 依赖漏洞 / secrets 风险」，命中 `pm-agent`，再 handoff Security。
 7. 用户直接调用下游 agent 或 specialist 时，如果没有 PM handoff packet，应被拉回 PM 分类。
 8. 绕过 router 直接触发 specialist 时（#61 场景），specialist 内 gate 仍然执行。
+9. 用户说「搭个文档站 / 同步正式文档 / 写用户手册」，命中 `pm-agent`，再 handoff Docs。
 
 验收标准：eval 使用 schema `1.0` 与语义断言；实际执行后更新 durable `comparison.md`。
 
@@ -236,6 +240,7 @@ flowchart TD
     TQ -->|否| Spec
     TQ -->|是| HQ["handoff QA / test-writer"]
     C -->|部署 / 安全| HO["记录目标范围风险 -> handoff DevOps / Security"]
+    C -->|正式文档| HF["handoff Docs（bootstrap / sync / 手册 / release notes / audit）"]
     C -->|交付 / 状态 (fast lane)| HL["确认范围与验证状态 -> handoff delivery / github-reader"]
     Spec --> Packet["PM handoff packet"]
     Update --> Packet
@@ -250,7 +255,7 @@ flowchart TD
 | ID | 验收标准 | 验证方式 |
 | --- | --- | --- |
 | AC-001 | 用户文档只把 `pm-agent` 描述为公开入口。 | 审查 README / README_zh / `.codex/INSTALL.md` / `docs/README.codex.md`。 |
-| AC-002 | 新需求、功能变更、bug、测试、部署、安全、交付请求默认先进入 PM 分类和编排。 | PM 入口 eval（FR-006 场景 1-6）。 |
+| AC-002 | 新需求、功能变更、bug、测试、部署、安全、交付、正式文档请求默认先进入 PM 分类和编排。 | PM 入口 eval（FR-006 场景 1-6；交付 fast lane 见 eval-010；正式文档场景 9 对应 eval 待补充）。 |
 | AC-003 | 无 PM handoff packet 时，下游 role agent / specialist 不直接承接用户原始请求。 | 防绕过 eval（FR-006 场景 7-8）。 |
 | AC-004 | `feature-implementor` 不直接响应用户新需求并进入实现。 | `feature-implementor` eval 与 gate 审查。 |
 | AC-005 | PM handoff packet 字段被文档化，并被下游 agent 作为入口校验依据。 | 审查 PM skill-map / handoff contract 与下游 SKILL.md。 |
