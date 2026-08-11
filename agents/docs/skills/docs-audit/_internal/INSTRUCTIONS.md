@@ -631,6 +631,12 @@ Return the persisted audit report and exactly one phase result:
   independent post-tag result was committed and read back.
 - **Blocked:** list every `stale`, `mismatch`, and evidence-gap item with the
   document, fact, impact, required action, and responsible owner when known.
+  Every post-tag blocked report must include
+  `blocked_record_persistence: persisted|not_persisted`; any no-write or
+  no-record outcome is `not_persisted`. For `not_persisted`, include
+  `persistence_recovery` with this mandatory order: restore write capability,
+  persist the blocked record, verify it by readback, then rerun the audit.
+  Never report success before that readback passes.
 
 `docs-agent:release-notes-gen` owns Release Notes generation and confirmation, its index and
 required navigation, and release metadata content; consume its ready handoff

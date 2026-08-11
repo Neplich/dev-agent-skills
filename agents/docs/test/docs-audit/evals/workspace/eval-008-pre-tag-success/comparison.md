@@ -14,52 +14,52 @@
 - Fixture version/source: canonical manifest `188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f` from `agents/docs/test/docs-audit/evals/workspace/eval-008-pre-tag-success`.
 - Fixture SHA-256: `188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f`
 - Prompt SHA-256: `c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `fecf485e8e3dcaf191b2b221d9cccbddfdea0b72`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `5b5823d2c0804ce3dabb1d32490f71697f4ff111cd9371ebf92d1bb1b6ad2188`
-- Skill overlay SHA-256: `c7033e85898ff61111eb14edc47b25e717119ee79349d7af461390afc706db78`
+- Target skill tree SHA-256: `5b11b38c1c44c386fe19122dfb1ce5918b2bfbc4830ad32aa994d8a7e39f35e7`
+- Skill overlay SHA-256: `85c4ae0a1d58505c4a23c34e6f9116aed81a09b4b6270e3ce148424084f6c7e0`
 - Judge schema SHA-256: `4cd14ef8cd033d31b5bb9ce50a786ad0b7d18c7ff4f682d88505eac53b634ecf`
 - Eval definition SHA-256: `4d1aa7f3a07c406f7e925f931c91ea28170bd7650629aa75bcd06b4f58bba0c7`
 - Metadata SHA-256: `6adbc51a2dc07674edf9fca71addc72bccaccf75ae663c41fbf3725d8c48b107`
 - Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
-- Coverage result: **PARTIAL**
-Overall result: PASS (partial coverage)
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `accepts_confirmed_version_without_tag` | PASS | 输出明确记录了 base_ref、target_ref、维护者确认的 v1.2.0，并说明同名 tag 不存在但符合 pre-tag；阻断原因是受影响路径的工作区漂移。 |
-| `verifies_complete_set_and_surfaces` | NOT_EXERCISED | 锁定 trace 显示其识别了 change-map 的两张 API 页面及两张 Release Notes 页面，并读取了 handoff、版本元数据和 package.json；但在完成逐页 verified 结论前因工作区污染阻断。 |
-| `normalizes_mixed_version_forms` | PASS | 输出明确说明 package.json 使用 1.2.0，Release Notes 和 releases.json 使用 v1.2.0，并归一化为同一 SemVer。 |
-| `records_pre_stamp_values` | NOT_EXERCISED | 读取了 fixture 中的盖章前值，但未生成审计报告或进入可写盖章阶段。 |
-| `stamps_complete_set_atomically` | NOT_EXERCISED | 候选输出明确表示未修改任何版本戳；统一盖章尚未执行。 |
-| `builds_isolated_candidate_transaction` | NOT_EXERCISED | 未创建隔离 candidate worktree/branch 或 candidate 事务；流程在受影响路径存在未提交修改时阻断。 |
-| `candidate_record_has_no_ready_result` | NOT_EXERCISED | 未产生 candidate record。 |
-| `validates_two_complete_staged_gates` | NOT_EXERCISED | 未执行 candidate staged gate 或最终 candidate staged gate。 |
-| `confirms_anchor_commit_before_discovery` | NOT_EXERCISED | 未创建或确认 post-stamp anchor commit。 |
-| `persists_fixed_discovery_handoff` | NOT_EXERCISED | 未写入固定 discovery handoff；输出明确说明未创建 handoff。 |
-| `returns_ready_only_after_integration` | NOT_EXERCISED | 未进行候选集成、handoff 回读或向下游返回 ready_for_tag。 |
-| `returns_ready_for_tag_not_published` | NOT_EXERCISED | 输出返回 blocked，而非 ready_for_tag；由于受影响工作区存在未提交修改，成功阶段尚未到达。 |
+| `accepts_confirmed_version_without_tag` | PASS | With-skill output and candidate record identify base_ref v1.1.0, target_ref release-head, confirmed v1.2.0, and absent tag without blocking pre-tag. |
+| `verifies_complete_set_and_surfaces` | PASS | Candidate record lists both change-map API pages and all four formal surfaces as verified, with release handoff and host/version metadata checked. |
+| `normalizes_mixed_version_forms` | PASS | Version inventory records required v-prefixed forms, package.json's 1.2.0 form, selectors/extractors, normalized 1.2.0 equality, and absent tag. |
+| `records_pre_stamp_values` | PASS | Candidate record records pre-stamp values v1.1.0, unverified, v1.1.0, unverified and shows no baseline_verified_version field. |
+| `stamps_complete_set_atomically` | PASS | Locked blobs show all four pages stamped to v1.2.0, with matching hashes and no release-metadata modification. |
+| `builds_isolated_candidate_transaction` | PASS | Trace records creation of an isolated worktree/branch and candidate transaction; host state remained clean until integration. |
+| `candidate_record_has_no_ready_result` | PASS | Candidate record is candidate_verified and contains schema, inventories, digests, hashes, staged inventories, and readback commands without ready_for_tag or post-commit fields. |
+| `validates_two_complete_staged_gates` | PASS | Candidate record and trace document both staged gates, ordinary 100644 blobs, four one-line M changes, fixed candidate A path, and full patch/name-status checks. |
+| `confirms_anchor_commit_before_discovery` | PASS | Trace records the post-stamp anchor commit and subsequent handoff creation; integrated evidence confirms the anchor/tree and candidate readbacks. |
+| `persists_fixed_discovery_handoff` | PASS | Locked handoff blob contains the fixed path, ready_for_tag phase, refs, result time, inventory digest, anchor commit/tree, candidate path/blob, confirmation, preimage, lineage, and digest; integration readback supplies commit/tree/blob. |
+| `returns_ready_only_after_integration` | PASS | Trace and git evidence show release-head fast-forward integration, integrated handoff commit/tree/blob readback, and clean host state before the ready result. |
+| `returns_ready_for_tag_not_published` | PASS | Final output explicitly returns ready_for_tag and states it only means tag creation is allowed, not publication or release verification. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=63718550d362a3d29cceb892973dd72a2a5c4f5d427588da56975d2f4b0cd21a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 正确锁定 pre-tag 输入，识别缺失 tag 不应阻断，并在检测到受影响路径工作区漂移后安全阻断且不执行写入。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=88ecf7f28156a0b9d0695b287b362984a08dd54de09950f2c9811a74779c8e4a; snapshot_sha256=98ce9faac70fa34898e28537558402841fd5747d33e2f6c9ab26922e5654aec1
+- Behavior: Completed the pre-tag audit, isolated candidate transaction, anchor/handoff commits, fast-forward integration, and returned ready_for_tag without claiming publication.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=b3fc38eae644997440b021a5d3014bcb2e034cc0a59e5661e61de62a31afc80f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 新鲜基线仅进行浅层只读审计，错误地将 releases.json 发布状态视为主要问题，未执行完整 docs-audit 事务。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=07d0683bac034eaee16aa8ac6273ea11f3e5351f88991792135fc1a5e17a3330; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline performed a read-only audit but stopped blocked on metadata and evidence-patch discrepancies, producing no candidate or integration outputs.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: 维护者处理 src/catalog/routes.txt 的未提交修改并更新 release-head，然后从头重跑完整 pre-tag 审计。
+- Next: None.
 
 ## Runtime Artifact Policy
 
