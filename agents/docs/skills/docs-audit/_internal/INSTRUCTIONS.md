@@ -597,6 +597,15 @@ Run the post-tag protocol in this order:
 
 Blocked outcomes have these required next steps:
 
+For tag-tree, release-branch, or version-source drift, always present both
+maintainer choices as separate executable options: repair the same version and
+rerun its complete audit, or abandon it, confirm a new version, and run fresh
+pre-tag and post-tag audits. Never collapse these choices into one preferred path.
+Every post-tag blocked conclusion must also state whether its blocked record was
+persisted. If persistence failed, state that no success exists, preserve the
+prior authority unchanged, restore write capability, persist the blocked record,
+and verify it by readback before rerunning the audit.
+
 | Trigger | Record and next step |
 | --- | --- |
 | Tag missing | Keep the valid pre-tag authority unchanged; host creates the correct tag at the validated integrated handoff/release tree (anchor plus validated discovery delta), then rerun post-tag. |
