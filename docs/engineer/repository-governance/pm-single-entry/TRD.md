@@ -5,6 +5,7 @@ version: "1.0.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-05"
+last_updated: "2026-08-11"
 generated_by: "trd-gen"
 feature: "pm-single-entry"
 feature_path: "repository-governance/pm-single-entry"
@@ -43,8 +44,8 @@ changelog:
 ## 1. 来源上下文
 
 本 TRD 承接 `docs/pm/repository-governance/pm-single-entry/PRD.md`、GitHub issue #52 和
-issue #61。PM 范围已明确：`pm-agent` 收口为唯一对外公开入口，5 个下游 role agent 和
-28 个 specialist skills 内部化为 PM 编排下的下游能力，并对平台无法完全阻止的直接触发
+issue #61。PM 范围已明确：`pm-agent` 收口为唯一对外公开入口，6 个下游 role agent 和
+32 个 specialist skills 内部化为 PM 编排下的下游能力，并对平台无法完全阻止的直接触发
 路径建立防绕过机制。
 
 本 TRD 只定义技术契约、平台约束分析、架构决策、影响范围和验证策略，**不进入实现**。
@@ -62,8 +63,8 @@ flowchart TD
         PM["pm-agent（唯一推荐入口，高召回 description）"]
     end
     subgraph Internal["内部/下游能力（description 弱化）"]
-        R1["engineer-agent / designer-agent / qa-agent / devops-agent / security-agent（router）"]
-        S1["28 个 specialist skills"]
+        R1["engineer-agent / designer-agent / qa-agent / devops-agent / security-agent / docs-agent（router）"]
+        S1["32 个 specialist skills"]
     end
     U["用户请求"] --> PM
     PM -->|"分类 + change_tier + handoff packet"| R1
