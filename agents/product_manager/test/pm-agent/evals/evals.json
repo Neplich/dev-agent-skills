@@ -810,7 +810,7 @@
       "assertions": [
         {
           "id": "explicit_invocation_proceeds",
-          "description": "显式点名放行并输出 Routing decision",
+          "description": "显式点名放行并诚实分类（Routing decision 或不可分类说明）",
           "text": "用户消息显式点名 pm-agent，即使目录未启用且请求属于一般本机操作，也不得输出使用范围拦截提示（不得声明当前目录未启用并停止）；必须进入分类流程：输出 Routing decision 或语义等价的分类说明。若请求无法归入任何 PM 类别或下游角色，须诚实说明该请求不在 PM 工作流分类范围内并停在 PM，不得伪造与请求内容矛盾的 request_type 或 selected_owner（例如把文件整理谎报为 deployment）。"
         },
         {

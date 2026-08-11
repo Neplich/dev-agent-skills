@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `16e3b6cbbbae6769ac6b5ead7bae34214b3dd90e3e6c4d5fad97cfd7d3784013` from `agents/product_manager/test/pm-agent/evals/workspace/eval-015-route-docs-site-deployment-gap`.
 - Fixture SHA-256: `16e3b6cbbbae6769ac6b5ead7bae34214b3dd90e3e6c4d5fad97cfd7d3784013`
 - Prompt SHA-256: `f6c9996daf9a7bdf78228fb674eccb457f386d1e74abf9925ac4646e4da1c9d4`
-- Repository HEAD: `5eed6bd61702fe0e1aa38eba2649b61fbdbcd5a6`
+- Repository HEAD: `33a503192c752d6227de1bc0d8d8a2e78e31cdf5`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `4e76801189b426dd33ce29ced16e549279e16d547ce6762d36863400f4354122`
-- Skill overlay SHA-256: `77702f471e61dbfa60bd67a78323dc643acf1a23ee94c61de468a9d3da2ceccc`
+- Target skill tree SHA-256: `8b87fb93cdb85ecb0436a61b1aedfcf9c8b41c4cd8f9eff41c412a3196c1d245`
+- Skill overlay SHA-256: `56390e18f057b654978938889dac7daf0263eaaf39d741419b573d12bff2c198`
 - Judge schema SHA-256: `69f2798cad12b0dd0ca3c224e3cfd6cf611a315695684db1b07a23452b52a60e`
 - Eval definition SHA-256: `8bc69d85fc3ff063d885b8a2c4d7a9ea83b6dca3de23a034dba15fb34f1ba98e`
 - Metadata SHA-256: `e7a743e88e4c53094e4afe2903a87ebcc467ace2dc58c61ccb0a0dcf64ebf2fd`
@@ -31,26 +31,26 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `blocks_unknown_evidence` | PASS | with_skill 明确将当前状态标为 blocked，指出 CI 仅展示 public、Helm 的 internal 未启用、尚未证明所有变体覆盖，并保留未获准发布或部署的限制。 |
-| `builds_repo_wide_deployment_packet` | PASS | with_skill 输出了 request_type: deployment、所有 feature fields 为 N/A、feature_path_evidence 为空，并在 source_documents 与 blockers_risks 中保留了实际材料和检查缺口。 |
-| `routes_devops_ordered_chain` | NOT_EXERCISED | 当前锁定证据只证明已路由到 devops-agent 且该下游不可用，无法证明后续 specialist 链或最终 Docs 同步步骤。 |
+| `blocks_unknown_evidence` | PASS | with_skill 输出将状态标为 blocked，列出 CI、Helm、DevOps 能力和授权缺口，并明确不是可直接发布。 |
+| `builds_repo_wide_deployment_packet` | PASS | with_skill 输出包含 request_type: deployment、feature_path/feature/parent_feature/feature_level: N/A、feature_path_evidence: []，并在 source_documents 与 blockers_risks 中保留了 fixture 文件和真实检查证据。 |
+| `routes_devops_ordered_chain` | NOT_EXERCISED | with_skill 已将下一步交给 DevOps，但 devops-agent 不可用，未执行后续下游链路；因此完整的有序 DevOps→Docs 链未被行使。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f6c9996daf9a7bdf78228fb674eccb457f386d1e74abf9925ac4646e4da1c9d4; fixture_sha256=16e3b6cbbbae6769ac6b5ead7bae34214b3dd90e3e6c4d5fad97cfd7d3784013; output_sha256=e5c92749b28d11a11c2761827090eb6f6f6c51609b77f7fe7692fdc090b0922c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 正确保持证据不足状态，生成 repo-wide deployment handoff，并在执行边界内停止。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f6c9996daf9a7bdf78228fb674eccb457f386d1e74abf9925ac4646e4da1c9d4; fixture_sha256=16e3b6cbbbae6769ac6b5ead7bae34214b3dd90e3e6c4d5fad97cfd7d3784013; output_sha256=0c1d4b0d599a7d8be8bb28733f47072a1a597775a48e2ce1a72550d52cc1f488; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别部署状态为 blocked/partial，构建了部署交接包，并指出当前只允许只读判断和交接。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f6c9996daf9a7bdf78228fb674eccb457f386d1e74abf9925ac4646e4da1c9d4; fixture_sha256=16e3b6cbbbae6769ac6b5ead7bae34214b3dd90e3e6c4d5fad97cfd7d3784013; output_sha256=1cfe0d491e4f1583d9ceddac58eaa7bf17ddde56e63187b6b600183841ddbab0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 能识别 CI/Helm 覆盖缺口和授权限制，但未生成结构化路由 handoff。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f6c9996daf9a7bdf78228fb674eccb457f386d1e74abf9925ac4646e4da1c9d4; fixture_sha256=16e3b6cbbbae6769ac6b5ead7bae34214b3dd90e3e6c4d5fad97cfd7d3784013; output_sha256=12dfeac8dac594b67abb611243547e30772081fc9e676de9e949ff51713dfa79; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅基于初始可见材料指出 CI 证据缺失并建议先核验，未生成部署交接包。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: 提供 devops-agent 并取得实际变更和发布授权后，继续执行 DevOps ordered chain。
+- Next: 在 devops-agent 可用并获得继续执行确认后，行使 deployment-planner → cicd-bootstrap → env-config-auditor → formal-docs-sync 链路。
 
 ## Runtime Artifact Policy
 

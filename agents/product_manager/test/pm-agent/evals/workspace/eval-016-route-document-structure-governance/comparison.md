@@ -14,39 +14,39 @@
 - Fixture version/source: canonical manifest `1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8` from `agents/product_manager/test/pm-agent/evals/workspace/eval-016-route-document-structure-governance`.
 - Fixture SHA-256: `1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8`
 - Prompt SHA-256: `78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3`
-- Repository HEAD: `5eed6bd61702fe0e1aa38eba2649b61fbdbcd5a6`
+- Repository HEAD: `33a503192c752d6227de1bc0d8d8a2e78e31cdf5`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `4e76801189b426dd33ce29ced16e549279e16d547ce6762d36863400f4354122`
-- Skill overlay SHA-256: `77702f471e61dbfa60bd67a78323dc643acf1a23ee94c61de468a9d3da2ceccc`
+- Target skill tree SHA-256: `8b87fb93cdb85ecb0436a61b1aedfcf9c8b41c4cd8f9eff41c412a3196c1d245`
+- Skill overlay SHA-256: `56390e18f057b654978938889dac7daf0263eaaf39d741419b573d12bff2c198`
 - Judge schema SHA-256: `c8400122a967de4e5b8b409bbe920fe16ec946724a3aa7d4b3077b3582a3f2f0`
 - Eval definition SHA-256: `ba37454a106688e9f5f2e2586231a60f2093e364612eb14bfa53540c9e2d1589`
 - Metadata SHA-256: `fe53b448dd4fd2693ceb179d875dd617b7b717601fc7d9d3214cab940b4cdef7`
 - Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
-- Coverage result: **FULL**
-Overall result: PASS
+- Coverage result: **PARTIAL**
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `routes_to_structure_governance` | PASS | 锁定输出声明 request_type 为 document_structure_governance，selected_owner 为 pm-agent:idea-to-spec，并进入 structure-governance lane。 |
-| `read_only_audit` | PASS | 锁定输出明确 execution_boundary 为仅读、未修改仓库文件；锁定 git evidence 显示 HEAD、分支及工作区均未变化。 |
-| `report_form` | PASS | 锁定 runner 工具事件显示在 /tmp 临时目录创建并验证 HTML 报告，且 git evidence 显示未提交或修改 git。对话输出给出了审计摘要和报告路径。 |
-| `scope_six_role_dirs` | PASS | 锁定报告内容列出并扫描 docs/pm、docs/engineer、docs/design、docs/qa、docs/devops、docs/security 六个角色目录，并明确后四者缺失属于扫描限制。 |
-| `structural_change_requires_confirmation` | PASS | 锁定输出声明无结构变更，confirmation_required；报告内容要求新增镜像或结构调整先确认，再按 change_tier: major 流程执行，且未直接执行 move/split/merge。 |
+| `routes_to_structure_governance` | NOT_EXERCISED | With-skill raw evidence does not independently prove the selected route; the route statement appears only in an agent-message event. |
+| `read_only_audit` | PASS | The candidate explicitly states the repository was not modified; git evidence shows unchanged HEAD, branch, status, index, and worktree. |
+| `report_form` | PASS | Raw command evidence shows an HTML report created in a runtime temporary directory, moved out of the workspace, validated as non-empty, and accompanied by an in-conversation summary. |
+| `scope_six_role_dirs` | PASS | Raw command evidence explicitly checks docs/pm, docs/engineer, docs/design, docs/qa, docs/devops, and docs/security; the candidate records missing role roots as coverage gaps. |
+| `structural_change_requires_confirmation` | PASS | The candidate performed no structural document changes and explicitly states that structural adjustment requires confirmation before proceeding. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=ac98fcc1bdfe03088686ea137a9dc33ed783e38d0706e3248a71f7dd7ce0e862; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 完成结构治理路由、六角色目录范围审计、只读检查和临时 HTML 报告交付；未修改仓库。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=7c45d72ececd88b9973d29d5b2ee270667e0a5c9932ec279ce56790eff5dc77b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Completed a read-only six-role structure audit, produced a runtime HTML report and summary, preserved the workspace, and gated future structural changes on confirmation.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=6fd0b8f970edb6f5cc72b7a85f3eab4f56b3afde3d0f400d6ae4f93e61fe622d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 仅检查了实际存在的 PM 和 Engineer 两个角色，未覆盖六角色范围，也未交付 HTML 报告或结构变更确认流程。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=195fcc4031d5a392ef4a0303a1264d41166ac38e474653337016ed0bd69ba1ee; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced a useful read-only report covering only the PM and Engineer trees, without the required six-role coverage or runtime HTML delivery.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

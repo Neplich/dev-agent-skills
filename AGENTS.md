@@ -51,7 +51,7 @@ PM / Engineer / QA / DevOps（条件式）→ Docs Agent（正式文档生产 / 
 
 **PM 唯一入口与下游 gate 指针**
 
-- 用户侧新需求、变更、bug、测试、部署、安全、交付或仓库状态诉求默认先进入 `pm-agent` 分类；用户未显式点名任何 skill 或 agent 时同样默认进入 `pm-agent`，显式点名是受支持的直达路径，但仍必须经过对应入口 gate 的安全网。例外：`pm-agent` 的 Scope Guard 对未启用 dev-agent-skills 的目录中的一般对话、本机操作与通用文件处理直接给出提示并停止，不进入分类。下游 role router 和 specialist 只在 PM handoff packet 或等效已确认文档链存在时承接。
+- 用户侧新需求、变更、bug、测试、部署、安全、交付或仓库状态诉求默认先进入 `pm-agent` 分类；用户未显式点名任何 skill 或 agent 时同样默认进入 `pm-agent`，显式点名是受支持的直达路径，但仍必须经过对应入口 gate 的安全网。例外（`pm-agent` Scope Guard）：未启用 dev-agent-skills 的目录中的一般对话、本机操作与通用文件处理直接给出提示并停止，不进入分类；显式点名或已启用目录放行的一般请求若无法归入任何 PM 类别或下游角色，诚实说明并停在 PM，不输出 Routing decision、不伪造 request_type/owner。下游 role router 和 specialist 只在 PM handoff packet 或等效已确认文档链存在时承接。
 - 下游安全网包含前置与收尾两面：缺少 PM handoff packet、等效已确认文档链或 specialist entry basis 时，不执行下游协议，温和引导用户经 `pm-agent` 补齐前置并完成入口分类（脚手架请求同样走正常 PM 分类）；完成当前事项后，主动建议协作链下一步并等待确认，用户已授权 `auto-continue` 时可连续推进直到链路结束或用户喊停。
 - SKILL.md frontmatter 的 `visibility: internal` 是声明层标记，Claude Code 与 Codex 都不消费该字段，不隐藏 slash 命令也不阻止显式直调；`pm-agent` 是默认入口，下游标记为 `internal` 仅表示非默认入口。
 - 6 个 role router 只保留入口凭据检查和分流指针，其中 `docs-agent` 分流正式文档站点 bootstrap、API/database/design/ops/product 当前事实 sync、基于运行界面截图的图文用户操作手册、站内 Release Notes 和 audit；PM `github-release-gen` 按 SKILL.md 的宿主文档站适用性判断生成 GitHub Release：有文档站宿主要求站内 Release Notes 已确认且 docs-audit 门禁通过；无文档站宿主降级为维护者确认的版本事实源与维护者显式批准；具体执行 gate 的权威副本留在对应 specialist `SKILL.md`，例如 `feature-implementor` 的 PRD/TRD/plan/archive gate、`debugger` 的 expected-behavior gate、QA specialist 的 E2E gate，以及 Designer/DevOps/Security/Docs specialist 的 feature-scope gate。

@@ -33,9 +33,10 @@ the Mandatory Entry Decision below; when the guard stops the request, do not
 emit the `Routing decision` block or any classification field. Decide whether
 the current request is in scope:
 
-Check the current directory and its ancestors — excluding the user's home
-directory itself and everything under it — for an enable marker, and state
-which marker you find or that none exists:
+Check the current directory and its ancestors up to but not including the
+user's home directory for an enable marker, and state which marker you find
+or that none exists. The home directory itself is never a marker location,
+so user-level installs there are not treated as project markers:
 
 - the dev-agent-skills repository itself (`AGENTS.md` plus
   `.claude-plugin/marketplace.json` whose `name` is `dev-agent-skills`), or
