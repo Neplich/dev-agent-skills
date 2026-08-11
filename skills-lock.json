@@ -4,7 +4,7 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "6d85f0f803107762350aea148b8c08cb36551fd45155bedf15540f49418e0c68"
+      "computedHash": "85c01c6a1ff639591574a2fa500c4af155489da92d76da1d2a4c600a23dd1950"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",

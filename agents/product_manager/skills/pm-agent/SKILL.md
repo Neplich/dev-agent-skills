@@ -7,8 +7,11 @@ description: "Default entry point for any new user request. Use this when the us
 
 Every response starts with the complete `Routing decision` block before any
 repository inspection or clarification question — except when the Scope Guard
-below stops the request, in which case the response is the one-line
-out-of-scope notice and nothing else. In particular, a requested
+below stops the request (one-line out-of-scope notice, nothing else), or when
+the Scope Guard lets a general request through and it fits no PM category or
+downstream role (one-line honest notice, no Routing decision). The Scope
+Guard's enable-marker check runs before the Routing decision. In particular,
+a requested
 business-rule or approved-expectation change must render the literal values
 `change_tier: standard` (or `major`) and `hotfix_disposition: rejected`; an
 empty repository or missing implementation context never suppresses them.
@@ -30,11 +33,12 @@ the Mandatory Entry Decision below; when the guard stops the request, do not
 emit the `Routing decision` block or any classification field. Decide whether
 the current request is in scope:
 
-Check the current directory and its non-home ancestors for an enable marker,
-and state which marker you find or that none exists:
+Check the current directory and its ancestors — excluding the user's home
+directory itself and everything under it — for an enable marker, and state
+which marker you find or that none exists:
 
 - the dev-agent-skills repository itself (`AGENTS.md` plus
-  `.claude-plugin/marketplace.json`), or
+  `.claude-plugin/marketplace.json` whose `name` is `dev-agent-skills`), or
 - a completed Codex project install, recognized only by the mirror marker
   `.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json` under the
   project root (a bare `.agents/dev-agent-skills/` clone is not a marker; it
@@ -59,12 +63,14 @@ the project path by itself.
   directory.
 
 Project-oriented requests (product, engineering, QA, deployment, security,
-formal documentation, delivery) proceed normally; the guard only stops
-general, non-project requests in unenabled directories. When an explicit
-invocation or an enabled directory lets a general request through, proceed
-into the classification protocol; a request that fits no PM category or
-downstream role is stated honestly as unroutable and kept in PM — never
-force it into a fake `request_type` or owner that contradicts its content.
+formal documentation, delivery) proceed normally and follow the Mandatory
+Entry Decision below; the guard only stops general, non-project requests in
+unenabled directories. When an explicit invocation or an enabled directory
+lets a general request through, proceed into the classification protocol; a
+request that fits no PM category or downstream role is answered with a
+one-line honest notice and kept in PM — no Routing decision is required for
+it, and never force a fake `request_type` or owner that contradicts its
+content.
 
 ## Mandatory Entry Decision
 
@@ -132,7 +138,8 @@ required keys. It must start with `Routing decision:` and contain every field
 in the schema above; a `greenfield-discovery`, checkpoint, or specialist block
 may follow it but never substitute for it. If this validation fails, prepend
 the complete routing block before returning — unless the Scope Guard stopped
-the request, in which case no routing block is emitted.
+the request or let an unroutable general request through, in which case no
+routing block is emitted.
 
 Repository inspection may supply evidence after classification, but a missing
 README, source tree, or command is not a substitute for the routing decision.

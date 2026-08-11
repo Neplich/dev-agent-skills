@@ -799,12 +799,13 @@
           "本机文件整理作为请求内容被分类处理"
         ],
         "success_criteria": [
-          "输出以 Routing decision: 开头的分类结果",
-          "不输出「当前目录未启用」的拦截说明"
+          "不输出使用范围拦截提示",
+          "进入分类流程：Routing decision 或诚实的不可分类说明",
+          "不伪造与请求内容矛盾的 request_type / selected_owner"
         ]
       },
       "prompt": "用 pm-agent 帮我把 ~/Downloads 里下载的文件按类型整理一下，图片放一个文件夹，文档放一个文件夹。",
-      "expected_output": "显式点名放行，正常进入 PM 分类并输出 Routing decision 首行。",
+      "expected_output": "放行进入分类流程：输出 Routing decision 或诚实的不可分类说明（不伪造路由）。",
       "workspace": "workspace/eval-18-scope-guard-explicit-invocation",
       "assertions": [
         {
@@ -838,13 +839,13 @@
           "不执行文件整理动作本身"
         ],
         "success_criteria": [
-          "识别目录已启用（引用 enabledPlugins 启用条目）",
-          "输出以 Routing decision: 开头的分类结果",
-          "不输出使用范围拦截提示"
+          "不输出使用范围拦截提示",
+          "进入分类流程：Routing decision 或诚实的不可分类说明",
+          "不伪造与请求内容矛盾的 request_type / selected_owner"
         ]
       },
       "prompt": "帮我把 ~/Downloads 里下载的文件按类型整理一下，图片放一个文件夹，文档放一个文件夹。",
-      "expected_output": "识别当前目录已启用 dev-agent-skills，正常进入 PM 分类并输出 Routing decision 首行。",
+      "expected_output": "放行进入分类流程：输出 Routing decision 或诚实的不可分类说明（不伪造路由）。",
       "workspace": "workspace/eval-19-scope-guard-enabled-general",
       "assertions": [
         {

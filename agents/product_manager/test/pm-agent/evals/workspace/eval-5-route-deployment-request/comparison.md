@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-5-route-deployment-request`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe`
-- Repository HEAD: `2197fe25a63cc5e24d3e8041ae0c777df624a155`
+- Repository HEAD: `5eed6bd61702fe0e1aa38eba2649b61fbdbcd5a6`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `3a2a8f0ccc2a03fa28f50320f1effd3135a3ec1cbea6f6e65c09f7a1a3e755f1`
-- Skill overlay SHA-256: `bee09702f1ef6acb446d218b58e5df43a1d40019b0d22a709e44c9ddb85f9b39`
+- Target skill tree SHA-256: `4e76801189b426dd33ce29ced16e549279e16d547ce6762d36863400f4354122`
+- Skill overlay SHA-256: `77702f471e61dbfa60bd67a78323dc643acf1a23ee94c61de468a9d3da2ceccc`
 - Judge schema SHA-256: `42fd42dc7a350eab589db47b48a132e9f478c8e119c1fdbd30b4875075f9f0b5`
 - Eval definition SHA-256: `73a2b58c1c65bf56a5f6d6f35f003c86e432caed7b530c34cf851322050e2633`
 - Metadata SHA-256: `d17a05b229136107ac1e50142856979a9ae9f563cdb19b940e4810dadda79e1c`
@@ -31,26 +31,27 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `request_type_deployment` | PASS | With-skill output explicitly records `request_type: deployment`. |
-| `repo_wide_scope_allowed` | PASS | With-skill output explicitly records `feature_path: N/A`, `feature: N/A`, and `feature_path_evidence: []` for the repository-wide request. |
-| `devops_handoff_packet` | NOT_EXERCISED | The workflow is blocked before DevOps handoff because the required DevOps capability and runtime/environment details are unavailable; therefore the later handoff assertion was not exercised. |
+| `request_type_deployment` | PASS | With-skill output explicitly classifies the request as `request_type: deployment`. |
+| `repo_wide_scope_allowed` | PASS | With-skill packet uses `feature_path: N/A`, `feature: N/A`, `parent_feature: N/A`, `feature_level: N/A`, and `feature_path_evidence: []` for repository-wide CI work. |
+| `devops_handoff_packet` | NOT_EXERCISED | The candidate blocks the DevOps handoff pending environment, release scope, and rollback information, so the later handoff assertion is not exercised. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=e52dcbcd091abeaddef69ecbb8ed8b0c77c12934ef78dd8ced8ee00d7f409924; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly classifies the request as deployment, permits repository-wide N/A scope, and safely stops with a documented blocker before DevOps handoff.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=fb0abd91b53c46be23b9744a223f78e90ebf77736da251a360a188913f2ab6dd; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly routes the repository-wide CI and release-readiness request to deployment, applies N/A feature scope, and stops before an unready DevOps handoff.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=61d508e84382ab6c0b3d2eb39e20cf25d76b9c83826c07ee80e9a582d14936f8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Reports the empty repository and stops without classification or handoff context.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=3922ade662011f4b332129184db83250ec3047a13b04aa9135b718c66bcf9d1b; snapshot_sha256=50c094fd83f1741825d33f44273f686128d8f0d3d3012f5a0c203b9b50db162f
+- Behavior: Creates CI/preflight files and reports the empty repository as blocked, but provides no deployment classification or handoff packet.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Provide the missing environment, release, build/test, and rollback details and make the DevOps capability available, then complete the handoff packet.
+- Next: Confirm the target environment, release scope, rollback needs, and risks.
+- Next: Install or make available devops-agent, then complete the handoff packet.
 
 ## Runtime Artifact Policy
 
