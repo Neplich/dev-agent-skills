@@ -14,8 +14,8 @@
 - Fixture version/source: canonical manifest `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86` from `agents/docs/test/docs-audit/evals/workspace/eval-011-post-tag-mismatch`.
 - Fixture SHA-256: `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86`
 - Prompt SHA-256: `63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
-- Repository worktree state: **DIRTY**
+- Repository HEAD: `297ca4682f985ff90c7e4891e922b5b03d7ae416`
+- Repository worktree state: **CLEAN**
 - Target skill tree SHA-256: `5b5823d2c0804ce3dabb1d32490f71697f4ff111cd9371ebf92d1bb1b6ad2188`
 - Skill overlay SHA-256: `c7033e85898ff61111eb14edc47b25e717119ee79349d7af461390afc706db78`
 - Judge schema SHA-256: `87ef764041bed9ee9555b42ac224112964f5f9e1229cf61ab18c2da424e966e8`
@@ -31,28 +31,28 @@ Overall result: FAIL
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `uses_immutable_pre_tag_authority` | PASS | With-skill output identifies refs/heads/pre-tag-handoff commit/tree, distinguishes the dirty worktree copy, and reports the immutable authority evidence. |
-| `validates_current_attempt_history` | PASS | Raw trace reads committed audit and handoff records containing attempt 2 and superseded attempt 1; output rejects the modified worktree copy and remains blocked. |
-| `rejects_complete_release_tree_drift` | PASS | Output reports the actual complete tree drift and specifically identifies added src/catalog/export-v2.py, while retaining blocked status. |
-| `offers_safe_maintainer_recovery` | FAIL | Output provides same-version/tag-retention recovery choices and re-audit prerequisites, but does not provide an explicit executable choice to switch to a new release version. |
-| `persists_blocked_without_corrupting_authority` | PASS | Output keeps the result blocked, states persistence must be repaired and read back, and explicitly forbids rewriting the existing pre-tag authority; git evidence shows no ref, commit, or branch mutation. |
+| `uses_immutable_pre_tag_authority` | PASS | Trace shows actual resolution of refs/heads/pre-tag-handoff^{commit} and^{tree}, git show reads from the pre-tag ref, and the modified worktree audit copy is identified separately. |
+| `validates_current_attempt_history` | PASS | The candidate identifies attempt 2, superseded attempt 1, their same-version relationship, rejects the modified worktree copy as authority, and keeps the result blocked. |
+| `rejects_complete_release_tree_drift` | PASS | Trace shows complete pre-tag-handoff-to-tag tree diff and identifies the added src/catalog/export-v2.py; the candidate keeps the result blocked. |
+| `offers_safe_maintainer_recovery` | FAIL | The candidate offers a same-version repair path, but does not provide an executable option to switch to a new release version. |
+| `persists_blocked_without_corrupting_authority` | PASS | The candidate separates blocked persistence from existing authority, specifies restoring write capability and readback, and states that prior authority, tag, and release branch must remain unchanged. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=74e121b08dfbc364a9828525dc4ff9667306f6ae52e3d6bdedeff8f67e64b240; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly performed the authority, attempt-history, and complete-tree checks; preserved blocked status and authority boundaries, but omitted the required explicit switch-to-new-version recovery choice.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=95cfe5385a01661e536e910ae18b967c1cd631ccd7dd3e37df389d4a3e0bee1b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly performs the evidence-based post-tag audit and blocks on authority, history, and complete-tree drift, but omits the required new-version recovery option.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=073da7c47f98f46ae2ba85d089b2f3748cd2f5c0f1a81841de7933b403d942be; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline also detected version/tree inconsistencies and remained non-verified, but provided a less rigorous authority and blocked-state recovery treatment.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=d1b3fb07869be4a0c87c25d90e824de630255f986bc231e584ef49843bfc5a0a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a broadly correct blocked audit and recovery discussion, but is comparison context only.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- offers_safe_maintainer_recovery is missing an explicit new-version recovery option.
-- Next: Add an explicit executable maintainer option to abandon v1.2.0 and issue a new release version, with fresh pre-tag audit and owner/tag-permission boundaries.
+- offers_safe_maintainer_recovery: missing the required executable new-version recovery choice.
+- Next: Add an explicit executable recovery choice to abandon v1.2.0 and restart the audit under a newly selected release version, with the same confirmation and authority prerequisites.
 
 ## Runtime Artifact Policy
 
