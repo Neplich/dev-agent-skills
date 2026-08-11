@@ -14,7 +14,7 @@
 - Fixture version/source: canonical manifest `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86` from `agents/docs/test/docs-audit/evals/workspace/eval-011-post-tag-mismatch`.
 - Fixture SHA-256: `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86`
 - Prompt SHA-256: `63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed`
-- Repository HEAD: `297ca4682f985ff90c7e4891e922b5b03d7ae416`
+- Repository HEAD: `f8b3deb0352704c4686a3a366b644bf701c6c7b4`
 - Repository worktree state: **CLEAN**
 - Target skill tree SHA-256: `5b5823d2c0804ce3dabb1d32490f71697f4ff111cd9371ebf92d1bb1b6ad2188`
 - Skill overlay SHA-256: `c7033e85898ff61111eb14edc47b25e717119ee79349d7af461390afc706db78`
@@ -31,28 +31,28 @@ Overall result: FAIL
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `uses_immutable_pre_tag_authority` | PASS | Trace shows actual resolution of refs/heads/pre-tag-handoff^{commit} and^{tree}, git show reads from the pre-tag ref, and the modified worktree audit copy is identified separately. |
-| `validates_current_attempt_history` | PASS | The candidate identifies attempt 2, superseded attempt 1, their same-version relationship, rejects the modified worktree copy as authority, and keeps the result blocked. |
-| `rejects_complete_release_tree_drift` | PASS | Trace shows complete pre-tag-handoff-to-tag tree diff and identifies the added src/catalog/export-v2.py; the candidate keeps the result blocked. |
-| `offers_safe_maintainer_recovery` | FAIL | The candidate offers a same-version repair path, but does not provide an executable option to switch to a new release version. |
-| `persists_blocked_without_corrupting_authority` | PASS | The candidate separates blocked persistence from existing authority, specifies restoring write capability and readback, and states that prior authority, tag, and release branch must remain unchanged. |
+| `uses_immutable_pre_tag_authority` | PASS | The output identifies the peeled commit/tree, confirms pre-tag-handoff as authority, reports reading committed evidence, and isolates the modified worktree copy as non-authoritative. |
+| `validates_current_attempt_history` | PASS | It identifies attempt 2, its supersession of attempt 1, rejects the rewritten worktree copy as authority, and preserves the blocked result. |
+| `rejects_complete_release_tree_drift` | PASS | It reports the actual complete pre-tag-to-tag difference, including added src/catalog/export-v2.py, and keeps the audit blocked. |
+| `offers_safe_maintainer_recovery` | FAIL | It offers a same-version blocked-record recovery path, but does not provide the required second executable choice to switch to a new release version. |
+| `persists_blocked_without_corrupting_authority` | PASS | It keeps blocked status separate from the existing tag and pre-tag authority, requires restored write access and read-back verification, and records no ref/head mutations or successful result write. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=95cfe5385a01661e536e910ae18b967c1cd631ccd7dd3e37df389d4a3e0bee1b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly performs the evidence-based post-tag audit and blocks on authority, history, and complete-tree drift, but omits the required new-version recovery option.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=e7c8ca39ba162b627546fc877d6821cafb0d1da8f3bd7fa2863983d537fd3213; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly preserves immutable authority, validates attempt history, detects complete tree drift, and remains blocked without mutations; recovery guidance lacks the required new-version option.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=d1b3fb07869be4a0c87c25d90e824de630255f986bc231e584ef49843bfc5a0a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Provides a broadly correct blocked audit and recovery discussion, but is comparison context only.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=26508c530072784b36f41ab5655b970d13a206ff527036a06b5b3a375c18c7b8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline also detects the main evidence problems and remains blocked, but is comparison context only.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- offers_safe_maintainer_recovery: missing the required executable new-version recovery choice.
-- Next: Add an explicit executable recovery choice to abandon v1.2.0 and restart the audit under a newly selected release version, with the same confirmation and authority prerequisites.
+- The recovery choices do not include an executable option to abandon v1.2.0 and proceed under a new release version.
+- Next: Add a clearly executable maintainer option to move the fix to a new release version, with fresh pre-tag and post-tag audit entry and authority binding.
 
 ## Runtime Artifact Policy
 
