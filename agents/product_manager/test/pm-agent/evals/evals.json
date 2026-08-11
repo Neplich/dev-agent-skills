@@ -826,11 +826,11 @@
       "description": "Verifies that a general request in an enabled project directory proceeds into the normal PM workflow.",
       "scenario": {
         "persona": "在已启用 dev-agent-skills 的项目目录里处理本机事务的开发者",
-        "situation": "当前目录带有 dev-agent-skills 项目启用标记（.claude/settings.json 的 enabledPlugins 启用 pm-agent@dev-agent-skills），用户提出一般性本机文件整理请求。",
+        "situation": "当前目录是 dev-agent-skills 仓库自身形态（存在 AGENTS.md 与 .claude-plugin/marketplace.json 且 name 为 dev-agent-skills），用户提出一般性本机文件整理请求。",
         "trigger": "已启用项目的目录判定应放行一般请求，正常进入 PM 分类。",
         "goal": "识别启用标记并正常进入 PM 分类流程",
         "materials": [
-          "带 dev-agent-skills 启用标记（.claude/settings.json enabledPlugins 含 pm-agent@dev-agent-skills）的目录",
+          "带 dev-agent-skills 仓库自身标记（AGENTS.md + .claude-plugin/marketplace.json name=dev-agent-skills）的目录",
           "用户提出的一般性本机文件整理请求"
         ],
         "constraints": [
@@ -839,7 +839,7 @@
           "不执行文件整理动作本身"
         ],
         "success_criteria": [
-          "不输出使用范围拦截提示",
+          "识别目录已启用（引用仓库自身标记）",
           "进入分类流程：Routing decision 或诚实的不可分类说明",
           "不伪造与请求内容矛盾的 request_type / selected_owner"
         ]
@@ -851,7 +851,7 @@
         {
           "id": "enabled_marker_detected",
           "description": "识别启用标记",
-          "text": "必须检查当前目录的 dev-agent-skills 启用状态，识别出目录已启用（引用 .claude/settings.json enabledPlugins 中 pm-agent@dev-agent-skills 的启用条目或语义等价的启用标记）。"
+          "text": "必须检查当前目录的 dev-agent-skills 启用状态，识别出目录已启用（引用 AGENTS.md 与 .claude-plugin/marketplace.json 的仓库自身标记或语义等价的启用标记）。"
         },
         {
           "id": "general_request_proceeds",
