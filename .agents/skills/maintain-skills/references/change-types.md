@@ -25,9 +25,11 @@ New agent:
 2. Create `agents/{agent-name}/README.md` following an existing agent.
 3. Create each skill's SKILL.md and eval per the new-skill steps.
 4. Register the agent in `.claude-plugin/marketplace.json`, refresh
-   `skills-lock.json`, and add the agent's skills directory to
-   `.kimi-plugin/plugin.json`.
-5. Add evals for regularly evaluable skills and record real usage feedback for
+   `skills-lock.json`, create `agents/{agent}/.claude-plugin/plugin.json`, and
+   add the agent's skills directory to `.kimi-plugin/plugin.json`.
+5. Add the agent to `scripts/check_eval_contract.py` `VALID_AGENTS` and to
+   `.github/workflows/evals.yml` manual targets.
+6. Add evals for regularly evaluable skills and record real usage feedback for
    manual-only skills via `skill-eval-runner`, then check every sync surface.
 
 ## Modify

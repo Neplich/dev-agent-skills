@@ -1,6 +1,6 @@
 ---
 name: maintain-skills
-description: Manage this repository's role-skill lifecycle (add, modify, rename). Use when adding or renaming a role agent or skill, changing an existing skill's SKILL.md, frontmatter, structure, description, or shared-contract copies, or when a change requires syncing marketplace.json, skills-lock.json, router routing, discovery descriptions, agent or root READMEs, or process docs. Do not use for authoring, running, or diagnosing evals — delegate those to skill-eval-runner.
+description: Manage this repository's role-skill lifecycle (add, modify, rename) and new role agents. Use when adding or renaming a role skill, adding a role agent, changing an existing skill's SKILL.md, frontmatter, structure, description, or shared-contract copies, or when a change requires syncing marketplace.json, skills-lock.json, per-agent or root plugin manifests, router routing, discovery descriptions, agent or root READMEs, or process docs. Do not use for authoring, running, or diagnosing evals — delegate those to skill-eval-runner.
 ---
 
 # Maintain Skills
@@ -57,19 +57,25 @@ scale, stop and re-scope.
 
 - Registration: add or update the skill in `.claude-plugin/marketplace.json` and
   refresh its entry and `computedHash` in `skills-lock.json`. A new agent also
-  adds its skills directory to `.kimi-plugin/plugin.json` (the contract checks
-  the version only, not the skills array). Any tracked file change under a
-  skill directory refreshes that skill's hash; a rename updates path and hash
+  creates `agents/{agent}/.claude-plugin/plugin.json` and adds its skills
+  directory to `.kimi-plugin/plugin.json` (the contracts check path validity
+  and version, not full agent coverage). Any tracked file change under a skill
+  directory refreshes that skill's hash; a rename updates path and hash
   together.
 - Routing: update the router SKILL.md sections that enumerate the specialist
-  (Available Skills, Routing Signals, Specialist Gate Pointers, Role Boundary).
+  (Available Skills, Routing Signals, Specialist Gate Pointers, Default
+  Routes, Role Boundary).
 - Discovery: update the marketplace agent `description`, the router frontmatter
   `description`, and the root-routing pointer sentence in `AGENTS.md`.
 - Agent docs: update `agents/{agent}/README.md` skills table, counts, and
   Routing Rules; mirror to `README_zh.md`.
-- Top-level entry: update root `README.md` / `README_zh.md` agent-table counts
-  and capability descriptions, and `pm-agent/SKILL.md` handoff targets, request
-  classification lines, and Default Routes.
+- Top-level entry: update root `README.md` / `README_zh.md` (agent-table
+  counts and capability descriptions, badges, agent name rows, router counts,
+  install commands, Kimi directory counts, collaboration diagram, common
+  flows, and the agent-doc index), the router listings in `.codex/INSTALL.md`
+  and `docs/README.codex.md`, the agent counts and collaboration flow in
+  `AGENTS.md`, and `pm-agent/SKILL.md` handoff targets, request classification
+  lines, and Default Routes.
 - Shared contracts: when extending an enum such as `doc_type`, update every
   copy: the authoritative definition, the consumer-skill copied tables, and the
   script assets and templates shipped by `docs-site-bootstrap`. Note in the PR
@@ -82,6 +88,9 @@ scale, stop and re-scope.
 
 - Send eval impact analysis, authoring, running, rerunning, and failure triage
   to the project-level `skill-eval-runner`. Do not author or run evals here.
+- New agents register in `scripts/check_eval_contract.py` `VALID_AGENTS` and
+  `.github/workflows/evals.yml` manual targets; include these in the
+  `skill-eval-runner` delegation scope.
 - If the change affects existing eval assertions or durable `comparison.md`,
   have `skill-eval-runner` identify the affected scope and produce fresh
   evidence; never reuse or hand-craft old conclusions.

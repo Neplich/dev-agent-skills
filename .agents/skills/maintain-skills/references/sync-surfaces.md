@@ -7,12 +7,12 @@ untrustworthy in practice.
 
 | Surface | Required changes |
 | --- | --- |
-| Registration | `.claude-plugin/marketplace.json` `skills` array; `skills-lock.json` entry and `computedHash`; `.kimi-plugin/plugin.json` `skills` array (new agents only — the contract checks the version, not the skills array) |
-| Routing | Router SKILL.md sections that enumerate the specialist: Available Skills, Routing Signals, Specialist Gate Pointers, Role Boundary |
+| Registration | `.claude-plugin/marketplace.json` `skills` array; `skills-lock.json` entry and `computedHash`; `agents/{agent}/.claude-plugin/plugin.json` (new agents only — name and version must match the marketplace); `.kimi-plugin/plugin.json` `skills` array (new agents only — the contract checks path validity, not full agent coverage) |
+| Routing | Router SKILL.md sections that enumerate the specialist: Available Skills, Routing Signals, Specialist Gate Pointers, Default Routes, Role Boundary |
 | Discovery | `.claude-plugin/marketplace.json` agent `description`; router SKILL.md frontmatter `description`; the root-routing pointer sentence in `AGENTS.md` describing that router's routing scope |
 | Agent docs | `agents/{agent}/README.md` skills table, counts, and Routing Rules; `README_zh.md` mirrored |
-| Top-level entry | Root `README.md` / `README_zh.md` agent-table counts and capability descriptions; `pm-agent/SKILL.md` handoff targets, request classification lines, and Default Routes |
-| Evals | The new skill's own evals; the router's routing evals; assertions of existing skills affected by the change and their durable `comparison.md` |
+| Top-level entry | Root `README.md` / `README_zh.md`: agent table counts and capability descriptions, Agent/Skill badges, agent name rows, router counts, install commands, Kimi directory counts, the collaboration diagram, common flows, and agent-doc index; `.codex/INSTALL.md` and `docs/README.codex.md` router listings; `AGENTS.md` agent counts, collaboration flow, router counts, and document dependencies; `pm-agent/SKILL.md` handoff targets, request classification lines, and Default Routes |
+| Evals | The new skill's own evals; the router's routing evals; assertions of existing skills affected by the change and their durable `comparison.md`; `scripts/check_eval_contract.py` `VALID_AGENTS` and `.github/workflows/evals.yml` manual targets (new agents only) |
 | Process docs | PRD/TRD/implementation-plan touch tables and forbidden areas must match the actual diff; parent PRD `child_features` and lines describing registration surfaces |
 
 ## High-Risk Surfaces
