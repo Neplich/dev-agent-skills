@@ -810,12 +810,12 @@
         {
           "id": "explicit_invocation_proceeds",
           "description": "显式点名放行并输出 Routing decision",
-          "text": "用户消息显式点名 pm-agent，即使目录未启用且请求属于一般本机操作，也必须放行并正常执行 PM 分类：输出以 `Routing decision:` 开头的首行，包含 request_type、change_tier、selected_owner 等分类字段；request_type 必须是 PM 分类协议中的合法值（new_feature / existing_update / bug_report / validation / deployment / security / delivery / status / formal_docs 等），selected_owner 必须是 Available PM Skills 或 Downstream Role Handoff Targets 中的合法目标；不得输出使用范围拦截提示（不得声明当前目录未启用并停止）。"
+          "text": "用户消息显式点名 pm-agent，即使目录未启用且请求属于一般本机操作，也不得输出使用范围拦截提示（不得声明当前目录未启用并停止）；必须进入分类流程：输出 Routing decision 或语义等价的分类说明。若请求无法归入任何 PM 类别或下游角色，须诚实说明该请求不在 PM 工作流分类范围内并停在 PM，不得伪造与请求内容矛盾的 request_type 或 selected_owner（例如把文件整理谎报为 deployment）。"
         },
         {
           "id": "classifies_general_request",
           "description": "一般请求进入分类",
-          "text": "文件整理请求按 PM 分类协议处理：明确 request_type 与所选 owner（PM specialist 或下游角色），不跳过分类直接执行文件操作。"
+          "text": "文件整理请求按 PM 分类协议处理：明确 request_type 与所选 owner（PM specialist 或下游角色）或诚实声明无法归入现有类别；不得跳过分类直接执行文件操作。"
         }
       ]
     },
@@ -855,7 +855,7 @@
         {
           "id": "general_request_proceeds",
           "description": "已启用目录的一般请求放行",
-          "text": "已启用目录中的一般请求不得被拦截：正常进入 PM 分类，输出以 `Routing decision:` 开头的首行并包含 request_type、change_tier、selected_owner 等分类字段；request_type 必须是 PM 分类协议中的合法值（new_feature / existing_update / bug_report / validation / deployment / security / delivery / status / formal_docs 等），selected_owner 必须是 Available PM Skills 或 Downstream Role Handoff Targets 中的合法目标；不得输出「当前目录未启用」的拦截提示。"
+          "text": "已启用目录中的一般请求不得被拦截：必须进入分类流程，输出 Routing decision 或语义等价的分类说明；若请求无法归入任何 PM 类别或下游角色，须诚实说明该请求不在 PM 工作流分类范围内并停在 PM，不得伪造与请求内容矛盾的 request_type 或 selected_owner，也不得输出「当前目录未启用」的拦截提示。"
         }
       ]
     }

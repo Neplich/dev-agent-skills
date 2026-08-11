@@ -60,7 +60,11 @@ the project path by itself.
 
 Project-oriented requests (product, engineering, QA, deployment, security,
 formal documentation, delivery) proceed normally; the guard only stops
-general, non-project requests in unenabled directories.
+general, non-project requests in unenabled directories. When an explicit
+invocation or an enabled directory lets a general request through, proceed
+into the classification protocol; a request that fits no PM category or
+downstream role is stated honestly as unroutable and kept in PM — never
+force it into a fake `request_type` or owner that contradicts its content.
 
 ## Mandatory Entry Decision
 

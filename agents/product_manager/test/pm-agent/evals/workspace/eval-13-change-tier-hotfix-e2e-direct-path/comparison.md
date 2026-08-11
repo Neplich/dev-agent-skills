@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-13-change-tier-hotfix-e2e-direct-path`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653`
-- Repository HEAD: `b385df5d17058a52081357c8a8480fc146c3d989`
+- Repository HEAD: `2197fe25a63cc5e24d3e8041ae0c777df624a155`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `ecf67dca8a2fd53bb0dd6d0a63750ba2716e88dc4af4f77176ea061260d64286`
-- Skill overlay SHA-256: `2ed9fef9a54be8009ea156c857682ad7dd82c0e56e3463d3257fe74fe9c977ec`
+- Target skill tree SHA-256: `3a2a8f0ccc2a03fa28f50320f1effd3135a3ec1cbea6f6e65c09f7a1a3e755f1`
+- Skill overlay SHA-256: `bee09702f1ef6acb446d218b58e5df43a1d40019b0d22a709e44c9ddb85f9b39`
 - Judge schema SHA-256: `6a4c53f4d8ac913c9f4214c0dc35c3bf4c2a1bd9745f539a3879966e5d7f9011`
 - Eval definition SHA-256: `0e4e9687500855bbb8cac580183d47bafa14e53a69d5477185a5ceacddfe1857`
 - Metadata SHA-256: `385a2edb2c46d9f3ce571c34b812bf357f9247b71af061faebaf0764c87334a2`
@@ -31,26 +31,27 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `hotfix_direct_path_only` | NOT_EXERCISED | With_skill classified the request as standard and rejected hotfix handling, but no QA/E2E path guidance was exercised before the required target copy was provided. |
-| `evidence_still_required` | NOT_EXERCISED | With_skill explicitly required confirmation before implementation and verification, so verification evidence, results, and blocked checks were not yet exercisable. |
-| `no_full_suite_required` | NOT_EXERCISED | With_skill had not reached test planning or execution; the standard-tier routing was recorded, but full-suite policy was not exercised. |
+| `hotfix_direct_path_only` | NOT_EXERCISED | with_skill rejected hotfix routing and stopped at missing project context; no QA/E2E coverage decision was exercised. |
+| `evidence_still_required` | NOT_EXERCISED | The candidate identified that implementation and verification could not proceed because application source and documentation were absent; verification evidence and blocked-check results were therefore not exercisable. |
+| `no_full_suite_required` | NOT_EXERCISED | The candidate classified the change as standard and stopped before test planning; the full-suite policy was not exercised. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=7336368d80244041f8ab355de2c61468c6fd7df883c5e0b15e6e306950c21843; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly identified missing target copy and absent source/docs, refused to modify or claim verification, and requested clarification.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=f6331375ac03cb6b2500d12a202855c605c8d2e7a4f9bad5ea46ce9a93005a66; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly routed the existing-workspace update, identified unresolved project context, preserved scope, and explicitly blocked implementation/testing/submission.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=3ab1cfaae6759947e045c6f38c16c547b4a2186dcf85d88bf41682eb0eb82d88; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Reported the empty repository and stopped without attempting a change or verification.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=4b716f413649b163f4dd5dcd45dc5b4214bafbb5cb059afb757fef3a77b94653; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=418ce915f88cc636c8d6403327147ccefec68785df4fd25a528fceb93b78a7f7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Detected the empty repository and stopped without performing the requested change or verification.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Provide the exact replacement copy, then implement and verify the scoped change.
+- Next: Provide the application source or correct project directory and the target empty-state copy.
+- Next: Then implement the copy change and record verification evidence, results, and blocked checks.
 
 ## Runtime Artifact Policy
 

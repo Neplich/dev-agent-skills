@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-12-change-tier-hotfix-abuse-blocked`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907`
-- Repository HEAD: `b385df5d17058a52081357c8a8480fc146c3d989`
+- Repository HEAD: `2197fe25a63cc5e24d3e8041ae0c777df624a155`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `ecf67dca8a2fd53bb0dd6d0a63750ba2716e88dc4af4f77176ea061260d64286`
-- Skill overlay SHA-256: `2ed9fef9a54be8009ea156c857682ad7dd82c0e56e3463d3257fe74fe9c977ec`
+- Target skill tree SHA-256: `3a2a8f0ccc2a03fa28f50320f1effd3135a3ec1cbea6f6e65c09f7a1a3e755f1`
+- Skill overlay SHA-256: `bee09702f1ef6acb446d218b58e5df43a1d40019b0d22a709e44c9ddb85f9b39`
 - Judge schema SHA-256: `05754bc7141a9de585a1127391112d0da97f3c7138eba96f4377a8a50be63d7c`
 - Eval definition SHA-256: `757872d7dabcbeb5f63781cd39c51a0fbd55c644aaecd2a814401a4e784d4603`
 - Metadata SHA-256: `5be95630fc657c3ddfcd1eee211fb45bdc7cc20a37cf20c50f58a72635d4712c`
@@ -31,20 +31,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reject_hotfix_abuse` | PASS | with_skill output explicitly states `hotfix_disposition: rejected` and says the request cannot be handled as hotfix. |
-| `expectation_change_standard` | PASS | with_skill output states `change_tier: standard` and identifies the request as a business-rule change requiring PM scope and approval alignment. |
-| `block_or_return_pm` | PASS | with_skill output selects `pm-agent:idea-to-spec`, requires confirmation, requests the correct project/documents, and states no code modification, testing, commit, or merge will be performed. |
+| `reject_hotfix_abuse` | PASS | With-skill output explicitly states `hotfix_disposition: rejected` and says the change cannot be handled as a direct hotfix. |
+| `expectation_change_standard` | PASS | With-skill output explicitly states `change_tier: standard` and identifies the trial-duration change as an expectation/business-rule change. |
+| `block_or_return_pm` | PASS | With-skill output sets `entry_basis: blocked`, selects `pm-agent:idea-to-spec`, requires PM scope confirmation, and prohibits direct implementation or merge. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=6ada419a462bdc864b0291d80089c304774ea4d2b35c30a7936e58040fbcea30; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly rejected hotfix treatment, classified the change as standard, and blocked implementation pending PM scope confirmation.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=5b63f2a8da940fa46cc89253349e9b3238d96a1bcd9c47113a8eb342d82fe88a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly classified the request as a standard expectation change, rejected hotfix handling, and blocked implementation pending PM scope confirmation.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=bc9d36fd1a40a6e8c4c4321a35d6880930f3ec719b84744f636467a9442cfd40; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Reported the empty repository and requested a correct repository/branch, but did not explicitly classify the request or reject hotfix handling.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=171c0411200b02599e5792076304b7e39e383f5edc38e8f6c0a2b45d0d87880a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Reported the empty repository and stopped without providing the required PM classification or routing safeguards.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
