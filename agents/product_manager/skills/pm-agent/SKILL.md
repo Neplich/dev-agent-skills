@@ -36,7 +36,8 @@ the current request is in scope:
   `.agents/dev-agent-skills/` clone or the mirror marker
   `.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json` under the
   project root), or a dev-agent-skills entry in the project's
-  `.claude/settings.json` / `.claude/settings.local.json` `enabledPlugins`.
+  `.claude/settings.json` / `.claude/settings.local.json` `enabledPlugins`
+  with the dev-agent-skills entry set to an enabled value.
   A personal install under the home directory (`~/.agents/skills/`,
   `~/.agents/dev-agent-skills/`) is not a project marker; it never enables
   the project path by itself.

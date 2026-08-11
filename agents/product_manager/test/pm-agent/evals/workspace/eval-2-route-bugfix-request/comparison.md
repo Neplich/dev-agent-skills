@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-2-route-bugfix-request`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `3622b3dfdb9bef50766ff22e70a5639483865b84fa39f8a64f027bc492debda1`
-- Repository HEAD: `d48403a0878a4efe20dfa8446b2f98657d804d37`
+- Repository HEAD: `ae451ca624c3dfd1bb8d530c3b416d40910caf82`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `74d69a1dabc5d0a63769f3255d309f6f5ee9ae4497e47a765a73111f6806fda7`
-- Skill overlay SHA-256: `75f5799ddfa14cce5f07d58cae0c13a32be9d74a8c76053b724a7f014a523c6f`
+- Target skill tree SHA-256: `619bfdcdc189ae85f09016655828cc88fc4d95591087522dac73338147eaad17`
+- Skill overlay SHA-256: `d250e0c694804c4780185b995ee5f122601fe31dbd177a9a2a0571aa28ed8dec`
 - Judge schema SHA-256: `00a01c5f9432a18e723abe9a7b1a555e5a2a41dc2c36a101ed91497434d1c7f4`
 - Eval definition SHA-256: `fe6d213ce4edb254dae39c5fefca87002824c8356e6ca05dfa6b8b92c57d378d`
 - Metadata SHA-256: `163386e80d321ea48ddfd244853e278bc70ea13a08cdc68ac01f85bf3ba7240f`
@@ -31,26 +31,26 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `request_type_bug_report` | PASS | With-skill output explicitly classifies the request as `bug_report` in its routing decision. |
-| `expectation_first` | PASS | The locked trace shows the candidate entered PM handling first and inspected for PRD/TRD/DECISIONS or equivalent expectation evidence; it explicitly reported that approved expectation documents were missing and blocked further execution. |
-| `debugger_handoff_after_confirmation` | NOT_EXERCISED | No approved expectation was available, so implementation deviation was not confirmed and no Engineer/debugger handoff occurred. This later step was not exercisable. |
+| `request_type_bug_report` | PASS | with_skill 明确将 request_type 标为 bug_report。 |
+| `expectation_first` | PASS | with_skill 先检查项目文档与预期依据，并明确指出批准的认证过期预期行为尚未确认，要求 PM 对齐后再继续。 |
+| `debugger_handoff_after_confirmation` | NOT_EXERCISED | 未发生实际 Engineer/debugger handoff；候选输出明确说明交接条件未满足并暂停等待确认。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3622b3dfdb9bef50766ff22e70a5639483865b84fa39f8a64f027bc492debda1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=add4e686df6788dbea2dfc5310a29866894f41ca85486d7e6c57f80754d24426; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly routes the request as a bug report, checks the expectation-evidence gate, refuses unsupported implementation, and reports the missing prerequisites without mutation.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3622b3dfdb9bef50766ff22e70a5639483865b84fa39f8a64f027bc492debda1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=9ac894f12e9defb1eea580cace8c878c1c0406ab9c3908e467aee715bc86a820; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别为 bug report，先执行预期确认门禁，并在缺少批准依据时暂停，未声称已修复。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3622b3dfdb9bef50766ff22e70a5639483865b84fa39f8a64f027bc492debda1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=e3b59fe12929d1ed4601ef648c5e02597ad33315d18a1b80883b97f97ff60d10; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Reports an empty repository and stops, without the structured bug-report classification or expectation-before-handoff gating shown by the with_skill lane.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=3622b3dfdb9bef50766ff22e70a5639483865b84fa39f8a64f027bc492debda1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=45dc40ecb5a52ceb1ca1d43024c2d79886424359eeddc548b3a760851eb0b0f3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅识别为空工作区并停止，未执行请求分类或预期确认流程。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Provide the project source and approved expected-behavior documentation, then confirm the implementation deviation before handing off to Engineer/debugger.
+- Next: 提供包含项目代码及批准预期文档的工作区；确认认证过期行为后再交给 Engineer/debugger。
 
 ## Runtime Artifact Policy
 

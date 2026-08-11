@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-12-change-tier-hotfix-abuse-blocked`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907`
-- Repository HEAD: `d48403a0878a4efe20dfa8446b2f98657d804d37`
+- Repository HEAD: `ae451ca624c3dfd1bb8d530c3b416d40910caf82`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `74d69a1dabc5d0a63769f3255d309f6f5ee9ae4497e47a765a73111f6806fda7`
-- Skill overlay SHA-256: `75f5799ddfa14cce5f07d58cae0c13a32be9d74a8c76053b724a7f014a523c6f`
+- Target skill tree SHA-256: `619bfdcdc189ae85f09016655828cc88fc4d95591087522dac73338147eaad17`
+- Skill overlay SHA-256: `d250e0c694804c4780185b995ee5f122601fe31dbd177a9a2a0571aa28ed8dec`
 - Judge schema SHA-256: `05754bc7141a9de585a1127391112d0da97f3c7138eba96f4377a8a50be63d7c`
 - Eval definition SHA-256: `757872d7dabcbeb5f63781cd39c51a0fbd55c644aaecd2a814401a4e784d4603`
 - Metadata SHA-256: `5be95630fc657c3ddfcd1eee211fb45bdc7cc20a37cf20c50f58a72635d4712c`
@@ -31,20 +31,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reject_hotfix_abuse` | PASS | With-skill output explicitly states `hotfix_disposition: rejected`. |
-| `expectation_change_standard` | PASS | With-skill output explicitly states `change_tier: standard` and identifies the request as a business-rule change. |
-| `block_or_return_pm` | PASS | With-skill output sets `entry_basis: blocked`, selects `pm-agent:idea-to-spec`, requires scope/PRD decision confirmation, and forbids implementation or merge. |
+| `reject_hotfix_abuse` | PASS | with_skill 输出明确写出 `hotfix_disposition: rejected`。 |
+| `expectation_change_standard` | PASS | with_skill 输出明确写出 `change_tier: standard`，并将其说明为业务规则变更。 |
+| `block_or_return_pm` | PASS | with_skill 输出将 `entry_basis` 标为 `blocked`，选择 PM 的 idea-to-spec 路由，要求范围确认，并明确禁止直接改代码、测试或合并。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=feb5e390837bb12d6abc5ffd7bbae586e2019313fd2b4f33e8d5555b649a5c22; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly rejects hotfix treatment, classifies the request as standard, and blocks implementation pending PM scope and expectation confirmation.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=6cd43bc1e82b2db09c896d8c1abb107b7478d66124c58329b4474916c992ef68; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别为 standard 业务规则变更，拒绝 hotfix，并在 PM 范围确认完成前阻止实现与合并。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=f0d303125686e5918ce37e5704658f7ad727d3ff5672030edde72f9eb92957e6; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline reports the empty repository and cannot perform the requested change; it does not provide the required routing safeguards.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=4bccd2f1d860ab69155982b68a6afead79aa28d94edd70590ddad9603f53e404; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅因空仓库和缺少项目代码而无法执行，未处理 hotfix、standard 或 PM 门槛。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

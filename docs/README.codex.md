@@ -68,8 +68,8 @@ dev-agent-skills 的项目中，`pm-agent` 的使用范围判定会拦截一般�
 - selected skills 以相对软链暴露到 `<project>/.agents/skills/<skill-name>`
 
 Project 安装把 skill 保持在项目目录内，天然隔离其他项目；项目内的
-`.agents/skills/.dev-agent-skills-mirror.json` 同时作为 `pm-agent` 使用范围
-判定的启用标记。若需要最严格的隔离，优先选择本层级。
+`.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json` 同时作为
+`pm-agent` 使用范围判定的启用标记。若需要最严格的隔离，优先选择本层级。
 
 两种安装方式都保持仓库内的 `agents/*/skills/*` 目录不变，用于兼容 Claude marketplace。
 
@@ -111,6 +111,9 @@ fi
 if [ -n "${TARGET_TAG:-}" ]; then
   git -C "$CLONE_ROOT" fetch origin "refs/tags/${TARGET_TAG}:refs/tags/${TARGET_TAG}"
   git -C "$CLONE_ROOT" checkout --detach "refs/tags/${TARGET_TAG}^{commit}"
+else
+  # 先前使用过固定版本时 clone 处于 detached HEAD，先切回 main 再更新
+  git -C "$CLONE_ROOT" checkout main || true
 fi
 ```
 

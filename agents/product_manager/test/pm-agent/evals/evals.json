@@ -783,40 +783,39 @@
     {
       "id": "eval-018-scope-guard-explicit-invocation",
       "name": "scope-guard-explicit-invocation",
-      "description": "Verifies that explicitly naming pm-agent in an unenabled directory still proceeds with the normal PM workflow.",
+      "description": "Verifies that explicitly naming pm-agent in an unenabled directory proceeds into the normal PM workflow even for a general request.",
       "scenario": {
         "persona": "在普通目录显式点名 pm-agent 的需求负责人",
-        "situation": "当前目录没有 dev-agent-skills 启用标记，但用户显式点名使用 pm-agent 梳理产品需求。",
-        "trigger": "显式调用本 marketplace 的 pm-agent，即使目录未启用也应正常执行。",
-        "goal": "正常进入 PM 分类与产品需求收敛流程",
+        "situation": "当前目录没有 dev-agent-skills 启用标记，用户显式点名使用 pm-agent 处理一个本机文件整理请求。",
+        "trigger": "一般请求因显式点名 pm-agent 而放行，即使目录未启用也应正常进入 PM 分类。",
+        "goal": "正常进入 PM 分类流程，不输出使用范围拦截提示",
         "materials": [
           "未启用 dev-agent-skills 的普通目录",
-          "用户显式点名 pm-agent 的需求请求"
+          "用户显式点名 pm-agent 的本机文件整理请求"
         ],
         "constraints": [
-          "显式点名必须放行",
+          "显式点名必须放行，不得输出范围拦截提示",
           "正常执行 PM 分类",
-          "产品需求收敛不跳到工程实现"
+          "本机文件整理作为请求内容被分类处理"
         ],
         "success_criteria": [
-          "输出 Routing decision 或语义等价的分类结果",
-          "请求留在 PM 产品需求收敛路径",
-          "不提前进入工程实现"
+          "输出以 Routing decision: 开头的分类结果",
+          "不输出「当前目录未启用」的拦截说明"
         ]
       },
-      "prompt": "用 pm-agent 帮我梳理一下这个需求：我想做一个简单的待办清单应用，支持添加、勾选完成和删除。先不要写代码，帮我把需求和范围收敛一下。",
-      "expected_output": "正常进入 PM 分类并路由到产品需求收敛路径（idea-to-spec 或语义等价），保持工程边界。",
+      "prompt": "用 pm-agent 帮我把 ~/Downloads 里下载的文件按类型整理一下，图片放一个文件夹，文档放一个文件夹。",
+      "expected_output": "显式点名放行，正常进入 PM 分类并输出 Routing decision 首行。",
       "workspace": "workspace/eval-18-scope-guard-explicit-invocation",
       "assertions": [
         {
           "id": "explicit_invocation_proceeds",
-          "description": "显式点名放行",
-          "text": "用户消息显式点名 pm-agent，即使目录未启用也必须正常执行 PM 分类；输出 Routing decision 或语义等价的 request_type、change_tier、selected_owner 分类字段。"
+          "description": "显式点名放行并输出 Routing decision",
+          "text": "用户消息显式点名 pm-agent，即使目录未启用且请求属于一般本机操作，也必须放行并正常执行 PM 分类：输出以 `Routing decision:` 开头的首行，包含 request_type、change_tier、selected_owner 等完整分类字段；不得输出使用范围拦截提示（不得声明当前目录未启用并停止）。"
         },
         {
-          "id": "routes_to_product_discovery",
-          "description": "路由到产品需求收敛",
-          "text": "必须把请求留在 PM 的产品需求收敛路径（idea-to-spec 或语义等价），在范围和验收预期确认前不写代码、不转入工程执行。"
+          "id": "classifies_general_request",
+          "description": "一般请求进入分类",
+          "text": "文件整理请求按 PM 分类协议处理：明确 request_type 与所选 owner（PM specialist 或下游角色），不跳过分类直接执行文件操作。"
         }
       ]
     }
