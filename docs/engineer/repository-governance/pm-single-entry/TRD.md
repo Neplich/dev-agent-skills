@@ -114,7 +114,7 @@ flowchart TD
 **采用「PM 收口 + specialist description 弱化（#61 方案 B 语义）+ specialist 内 gate 保留
 作为纵深防御」的组合策略。**
 
-- 对外入口层面按 #52 收口：`pm-agent` 是默认入口，5 个 role router 与 28 个
+- 对外入口层面按 #52 收口：`pm-agent` 是默认入口，6 个 role router 与 32 个
   specialist 标记为非默认入口，用户显式直达下游仍是受支持路径。
 - description 分工按方案 B 语义执行于 specialist 与 role router 两层：用户侧起点短语
   全部收敛到 `pm-agent` description（高召回）；role router description 收敛为「PM handoff
@@ -165,18 +165,18 @@ flowchart TD
   入口文件内**，不得下沉到 `_internal` 按需加载——gate 必须在 skill 被触发的第一时间
   生效，而 `_internal` 模块只有模型主动读取才生效。
 - description 弱化改写与 #60 的 description 压缩合并为同一次编辑，避免两轮 PR 都动
-  34 个 frontmatter。
+  39 个 frontmatter。
 
 ## 5. Description 分工契约
 
 | 层 | Description 职责 | 允许内容 | 禁止内容 |
 | --- | --- | --- | --- |
 | `pm-agent` | 唯一用户入口，高召回。 | PRD FR-002 九类用户侧起点的代表性短语（新需求、变更、bug、工程诉求、设计、测试、部署、安全、GitHub 状态）；「意图模糊、需要分流」的宽泛表述。 | 无（上限受 harness description 长度与上下文成本约束，实现时控制总长）。 |
-| Role router（5 个） | PM handoff 后的角色内分流。 | 角色能力枚举 + 「invoked after pm-agent handoff / PM 编排下使用」定位；目标约 300 字符。 | 用户侧第一人称起点短语（「帮我实现」「修一下」「测一下」等）。 |
-| Specialist（28 个） | 编排下的执行模块，弱触发。 | 单一职责描述 + 上游入口声明（由哪个 router/PM 场景进入）。 | 与 PM / router 重叠的 trigger phrases；「Use when the user asks...」类用户起点表述（改为「Use when routed from ...」语义）。 |
+| Role router（6 个） | PM handoff 后的角色内分流。 | 角色能力枚举 + 「invoked after pm-agent handoff / PM 编排下使用」定位；目标约 300 字符。 | 用户侧第一人称起点短语（「帮我实现」「修一下」「测一下」等）。 |
+| Specialist（32 个） | 编排下的执行模块，弱触发。 | 单一职责描述 + 上游入口声明（由哪个 router/PM 场景进入）。 | 与 PM / router 重叠的 trigger phrases；「Use when the user asks...」类用户起点表述（改为「Use when routed from ...」语义）。 |
 
-marketplace.json 的 6 个 plugin description 同步改写：`pm-agent` plugin 描述为 entry
-dispatcher，其余 5 个 plugin 描述为 downstream role capability。
+marketplace.json 的 7 个 plugin description 同步改写：`pm-agent` plugin 描述为 entry
+dispatcher，其余 6 个 plugin 描述为 downstream role capability。
 
 ## 6. Handoff packet 与下游入口校验
 
@@ -216,11 +216,11 @@ specialist（及 role router）入口 gate 的统一判定顺序：
 | 优先级 | 路径 | 预期改动 |
 | --- | --- | --- |
 | P0 | `README.md`、`README_zh.md`、`.codex/INSTALL.md`、`docs/README.codex.md` | 推荐 `pm-agent` 为默认入口；下游定位为 PM 编排能力，同时保留显式直达路径。 |
-| P0 | `.claude-plugin/marketplace.json` | 6 个 plugin description 收口；skill 列表保持不变。 |
+| P0 | `.claude-plugin/marketplace.json` | 7 个 plugin description 收口；skill 列表保持不变。 |
 | P0 | `agents/product_manager/skills/pm-agent/SKILL.md` | description 高召回扩写；路由协议增加请求分类表、change_tier 判级、handoff packet 组装。 |
 | P0 | PM `_internal` 共享模块（skill-map / handoff contract） | packet 字段唯一权威定义；下游 owner 映射。 |
-| P0 | 5 个 role router SKILL.md | description 弱化为 handoff 后使用；gate 全文改指针。 |
-| P0 | 28 个 specialist SKILL.md frontmatter | description 弱触发改写 + `visibility: internal` 声明字段。 |
+| P0 | 6 个 role router SKILL.md | description 弱化为 handoff 后使用；gate 全文改指针。 |
+| P0 | 32 个 specialist SKILL.md frontmatter | description 弱触发改写 + `visibility: internal` 声明字段。 |
 | P0 | `agents/engineer/skills/feature-implementor/SKILL.md`、`debugger/SKILL.md`、`agents/qa/skills/qa-agent/SKILL.md` 等 | 入口 gate 按 6.2 判定顺序统一改写（gate 唯一副本，#59 协同）。 |
 | P0 | `AGENTS.md` | PM 唯一入口契约声明 + gate 指针化（#59 协同）。 |
 | P0 | `skills-lock.json` | 随每个修改 skill 目录的批次在同一 PR 内重算受影响 `computedHash`（见第 8 节）。 |
@@ -235,9 +235,9 @@ Agent 依赖）、#67（feature-catalog）、#68（change_tier 契约）全部�
 
 | 批次 | 内容 | 依赖 | 验证 |
 | --- | --- | --- | --- |
-| Batch 1: 发现面收口 | marketplace.json plugin description、README / README_zh / `.codex/INSTALL.md` / `docs/README.codex.md`、5 个 role router SKILL.md frontmatter description 弱化、specialist frontmatter description 弱化 + `visibility: internal`（与 #60 的 description 压缩合并执行）。router description 与 marketplace / specialist description 同批收口，因为三者同属 Claude/Codex 的直接 discovery 输入，任何一层单独遗留都会保持公开触发面；弱化语义按第 5 节契约执行：保留角色能力枚举与「invoked after pm-agent handoff / PM 编排下使用」的内部编排定位，删除用户侧触发短语，并指向 `pm-agent` 作为用户入口。 | 在途 PR 全部合并。 | 三个契约脚本 + pytest；description 分工静态审查。 |
+| Batch 1: 发现面收口 | marketplace.json plugin description、README / README_zh / `.codex/INSTALL.md` / `docs/README.codex.md`、6 个 role router SKILL.md frontmatter description 弱化、specialist frontmatter description 弱化 + `visibility: internal`（与 #60 的 description 压缩合并执行）。router description 与 marketplace / specialist description 同批收口，因为三者同属 Claude/Codex 的直接 discovery 输入，任何一层单独遗留都会保持公开触发面；弱化语义按第 5 节契约执行：保留角色能力枚举与「invoked after pm-agent handoff / PM 编排下使用」的内部编排定位，删除用户侧触发短语，并指向 `pm-agent` 作为用户入口。 | 在途 PR 全部合并。 | 三个契约脚本 + pytest；description 分工静态审查。 |
 | Batch 2: PM router 重写 | pm-agent SKILL.md 高召回 description、请求分类协议、change_tier 判级、handoff packet 组装；PM `_internal` handoff contract 权威定义。 | Batch 1；#68 已合入（change_tier 定义来源）。 | 契约脚本 + PM 入口 eval（FR-006 场景 1-6）。 |
-| Batch 3: 下游 gate 统一与 #59 去重 | 5 个 role router gate 指针化（description 弱化已在 Batch 1 完成，本批只动 gate 正文）、specialist gate 按 6.2 改写为唯一副本、AGENTS.md 契约声明；与 #59 gate 归位同一批执行。 | Batch 2。 | 契约脚本 + 防绕过 eval（FR-006 场景 7-8）。 |
+| Batch 3: 下游 gate 统一与 #59 去重 | 6 个 role router gate 指针化（description 弱化已在 Batch 1 完成，本批只动 gate 正文）、specialist gate 按 6.2 改写为唯一副本、AGENTS.md 契约声明；与 #59 gate 归位同一批执行。 | Batch 2。 | 契约脚本 + 防绕过 eval（FR-006 场景 8-9）。 |
 | Batch 4: eval 与 contract 收尾 | PM-only 入口 eval 全量、`check_repository_contract.py` 新校验、durable `comparison.md` 更新。 | Batch 1-3。 | 三个契约脚本 + pytest + fresh subagent validation。 |
 
 与相关 issue 的执行顺序：#59（gate 去重）在 Batch 3 内协同完成；#60（SKILL.md 瘦身）

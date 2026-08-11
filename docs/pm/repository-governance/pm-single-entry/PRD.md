@@ -140,8 +140,10 @@ harness 上下文（router 类普遍 500-670 字符，合计约 10KB），且 ro
 - 部署、CI/CD、环境变量、Docker/Helm、发布、回滚、runbook 诉求。
 - 安全、权限、登录、依赖、secrets、隐私、数据流、webhook/upload 等风险诉求。
 - GitHub issue / PR / milestone / release / changelog / roadmap / repo status 诉求。
+- 正式文档站 bootstrap、功能/部署/发版后的同步、存量回填、图文用户操作手册、站内
+  Release Notes、发版审计诉求。
 
-验收标准：`pm-agent` description 覆盖上述九类起点的代表性短语；FR-006 的 eval 场景全部
+验收标准：`pm-agent` description 覆盖上述十类起点的代表性短语；FR-006 的 eval 场景全部
 命中 `pm-agent`。
 
 ### FR-003: PM 先分类，再 handoff（P0）
@@ -156,6 +158,7 @@ harness 上下文（router 类普遍 500-670 字符，合计约 10KB），且 ro
 | 设计诉求 | 先确认是设计产物需求还是前端实现需求。 | 设计产物 handoff Designer；前端实现需 PM/TRD/设计对齐后 handoff Engineer。 |
 | 测试诉求 | 先确认测试依据（PRD/TRD/已确认实施计划）。 | 预期未确认不得让 QA 或 test-writer 固化新预期。 |
 | 部署/运维/安全诉求 | PM 记录目标、范围和风险。 | 记录完成后 handoff DevOps/Security。 |
+| 正式文档诉求 | PM 确认范围（bootstrap / sync / 手册 / Release Notes / audit）。 | 确认后 handoff Docs（docs-agent）。 |
 | 已完成工作交付 | 确认变更范围和验证状态。 | 确认后 handoff Engineer/delivery，不得绕过状态确认。 |
 
 分类时同步判定变更等级（`change_tier`，衔接 issue #55 / PR #68 的变更分级契约）：
@@ -190,12 +193,12 @@ PM handoff 到下游角色时必须携带结构化输入：
 
 | 字段 | 说明 |
 | --- | --- |
-| `request_type` | new_feature / existing_update / bug_report / validation / deployment / security / delivery / status 等。 |
+| `request_type` | new_feature / existing_update / bug_report / validation / deployment / security / delivery / status / formal_docs 等。 |
 | `change_tier` | hotfix / standard / major（衔接 issue #55 / PR #68 的变更分级契约；契约未合入前由 PM 按同一定义判级）。 |
 | `feature_path` / `feature` / `parent_feature` / `feature_level` / `feature_path_evidence` | 功能归属主键与证据，遵循 feature-path-contract。 |
 | `source_documents` | PRD / DECISIONS / TRD / design docs / issue / PR / release context。 |
 | `scope_decision` | 本次范围、非目标、是否改变已批准预期。 |
-| `downstream_owner` | Designer / Engineer / QA / DevOps / Security / delivery 等。 |
+| `downstream_owner` | Designer / Engineer / QA / DevOps / Security / Docs / delivery 等。 |
 | `required_output` | 下游需要产出的文档、计划、实现、报告或验证证据。 |
 | `blockers_risks` | 缺失文档、未确认决策、平台限制、验证风险。 |
 
@@ -213,8 +216,9 @@ PM handoff 到下游角色时必须携带结构化输入：
 4. 用户说「更新前端 UI」，命中 `pm-agent`，再判断 PM / Designer / Engineer 路径。
 5. 用户说「部署一下 / 配 CI / 上线前检查」，命中 `pm-agent`，再 handoff DevOps。
 6. 用户说「看下权限 / 依赖漏洞 / secrets 风险」，命中 `pm-agent`，再 handoff Security。
-7. 用户直接调用下游 agent 或 specialist 时，如果没有 PM handoff packet，应被拉回 PM 分类。
-8. 绕过 router 直接触发 specialist 时（#61 场景），specialist 内 gate 仍然执行。
+7. 用户说「搭个文档站 / 同步正式文档 / 写用户手册」，命中 `pm-agent`，再 handoff Docs。
+8. 用户直接调用下游 agent 或 specialist 时，如果没有 PM handoff packet，应被拉回 PM 分类。
+9. 绕过 router 直接触发 specialist 时（#61 场景），specialist 内 gate 仍然执行。
 
 验收标准：eval 使用 schema `1.0` 与语义断言；实际执行后更新 durable `comparison.md`。
 
@@ -251,7 +255,7 @@ flowchart TD
 | ID | 验收标准 | 验证方式 |
 | --- | --- | --- |
 | AC-001 | 用户文档只把 `pm-agent` 描述为公开入口。 | 审查 README / README_zh / `.codex/INSTALL.md` / `docs/README.codex.md`。 |
-| AC-002 | 新需求、功能变更、bug、测试、部署、安全、交付、正式文档请求默认先进入 PM 分类和编排。 | PM 入口 eval（FR-006 场景 1-6）。 |
+| AC-002 | 新需求、功能变更、bug、测试、部署、安全、交付、正式文档请求默认先进入 PM 分类和编排。 | PM 入口 eval（FR-006 场景 1-7）。 |
 | AC-003 | 无 PM handoff packet 时，下游 role agent / specialist 不直接承接用户原始请求。 | 防绕过 eval（FR-006 场景 7-8）。 |
 | AC-004 | `feature-implementor` 不直接响应用户新需求并进入实现。 | `feature-implementor` eval 与 gate 审查。 |
 | AC-005 | PM handoff packet 字段被文档化，并被下游 agent 作为入口校验依据。 | 审查 PM skill-map / handoff contract 与下游 SKILL.md。 |
