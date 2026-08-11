@@ -236,8 +236,8 @@ Agent 依赖）、#67（feature-catalog）、#68（change_tier 契约）全部�
 | 批次 | 内容 | 依赖 | 验证 |
 | --- | --- | --- | --- |
 | Batch 1: 发现面收口 | marketplace.json plugin description、README / README_zh / `.codex/INSTALL.md` / `docs/README.codex.md`、6 个 role router SKILL.md frontmatter description 弱化、specialist frontmatter description 弱化 + `visibility: internal`（与 #60 的 description 压缩合并执行）。router description 与 marketplace / specialist description 同批收口，因为三者同属 Claude/Codex 的直接 discovery 输入，任何一层单独遗留都会保持公开触发面；弱化语义按第 5 节契约执行：保留角色能力枚举与「invoked after pm-agent handoff / PM 编排下使用」的内部编排定位，删除用户侧触发短语，并指向 `pm-agent` 作为用户入口。 | 在途 PR 全部合并。 | 三个契约脚本 + pytest；description 分工静态审查。 |
-| Batch 2: PM router 重写 | pm-agent SKILL.md 高召回 description、请求分类协议、change_tier 判级、handoff packet 组装；PM `_internal` handoff contract 权威定义。 | Batch 1；#68 已合入（change_tier 定义来源）。 | 契约脚本 + PM 入口 eval（FR-006 场景 1-7）。 |
-| Batch 3: 下游 gate 统一与 #59 去重 | 6 个 role router gate 指针化（description 弱化已在 Batch 1 完成，本批只动 gate 正文）、specialist gate 按 6.2 改写为唯一副本、AGENTS.md 契约声明；与 #59 gate 归位同一批执行。 | Batch 2。 | 契约脚本 + 防绕过 eval（FR-006 场景 8-9）。 |
+| Batch 2: PM router 重写 | pm-agent SKILL.md 高召回 description、请求分类协议、change_tier 判级、handoff packet 组装；PM `_internal` handoff contract 权威定义。 | Batch 1；#68 已合入（change_tier 定义来源）。 | 契约脚本 + PM 入口 eval（FR-006 场景 1-6、9）。 |
+| Batch 3: 下游 gate 统一与 #59 去重 | 6 个 role router gate 指针化（description 弱化已在 Batch 1 完成，本批只动 gate 正文）、specialist gate 按 6.2 改写为唯一副本、AGENTS.md 契约声明；与 #59 gate 归位同一批执行。 | Batch 2。 | 契约脚本 + 防绕过 eval（FR-006 场景 7-8）。 |
 | Batch 4: eval 与 contract 收尾 | PM-only 入口 eval 全量、`check_repository_contract.py` 新校验、durable `comparison.md` 更新。 | Batch 1-3。 | 三个契约脚本 + pytest + fresh subagent validation。 |
 
 与相关 issue 的执行顺序：#59（gate 去重）在 Batch 3 内协同完成；#60（SKILL.md 瘦身）
