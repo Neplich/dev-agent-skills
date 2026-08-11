@@ -106,7 +106,7 @@ Engineer 的主产物包括技术计划、API / ADR 文档、实现计划、代�
 
 ## 协作依赖
 
-Engineer Agent 依赖可能作为独立插件打包的同级能力：
+Engineer Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
 
 - `pm-agent` 用于需求定义、范围对齐和 PRD 更新
 - `designer-agent` 用于缺失或过时的 UI/UX 与视觉设计交付物

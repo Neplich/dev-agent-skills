@@ -79,7 +79,7 @@ Docs Agent 拥有宿主项目在 `docs/site/` 下的正式文档层。它消费�
 
 ## 协作依赖
 
-Docs Agent 依赖可能作为独立插件打包的同级能力：
+Docs Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
 
 - `pm-agent` 用于请求分类、已批准的发布范围、功能目录和共享 handoff 契约；站内 Release Notes 由 Docs Agent 自身的 `release-notes-gen` 所有，而受 gate 约束的 GitHub Release 工作流由 PM `github-release-gen` 所有
 - `engineer-agent` 用于已确认的 TRD、实施计划、代码证据和未解决的技术影响范围

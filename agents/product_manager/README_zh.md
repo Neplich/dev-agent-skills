@@ -91,7 +91,7 @@ Repo 级 PM 产物可以放在：
 
 ## 协作依赖
 
-PM Agent 依赖可能作为独立插件打包的同级能力：
+PM Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
 
 - `designer-agent` 用于已确认的 UX、UI 结构、视觉系统或设计 handoff 工作
 - `engineer-agent` 用于已确认的 TRD、实现、测试、调试、交付或代码库工作

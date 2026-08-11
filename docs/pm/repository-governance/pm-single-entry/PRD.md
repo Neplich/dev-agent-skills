@@ -256,7 +256,7 @@ flowchart TD
 | --- | --- | --- |
 | AC-001 | 用户文档只把 `pm-agent` 描述为公开入口。 | 审查 README / README_zh / `.codex/INSTALL.md` / `docs/README.codex.md`。 |
 | AC-002 | 新需求、功能变更、bug、测试、部署、安全、交付、正式文档请求默认先进入 PM 分类和编排。 | PM 入口 eval（FR-006 场景 1-7）。 |
-| AC-003 | 无 PM handoff packet 时，下游 role agent / specialist 不直接承接用户原始请求。 | 防绕过 eval（FR-006 场景 7-8）。 |
+| AC-003 | 无 PM handoff packet 时，下游 role agent / specialist 不直接承接用户原始请求。 | 防绕过 eval（FR-006 场景 8-9）。 |
 | AC-004 | `feature-implementor` 不直接响应用户新需求并进入实现。 | `feature-implementor` eval 与 gate 审查。 |
 | AC-005 | PM handoff packet 字段被文档化，并被下游 agent 作为入口校验依据。 | 审查 PM skill-map / handoff contract 与下游 SKILL.md。 |
 | AC-006 | PM-only 入口 eval 覆盖主要用户侧起点和防绕过场景。 | `check_eval_contract.py` + fresh subagent validation + `comparison.md`。 |

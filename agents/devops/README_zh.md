@@ -78,7 +78,7 @@ flowchart LR
 
 ## 协作依赖
 
-DevOps Agent 依赖可能作为独立插件打包的同级能力：
+DevOps Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
 
 - `pm-agent` 用于 PRD 与 feature-path 澄清
 - `engineer-agent` 用于缺失或过时的 TRD / 实施计划

@@ -98,7 +98,7 @@ flowchart LR
 
 ## 协作依赖
 
-QA Agent 依赖可能作为独立插件打包的同级能力：
+QA Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
 
 - `pm-agent` 用于需求缺口与 feature-path 澄清
 - `engineer-agent` 用于 TRD 缺口、缺失的实施计划和代码修复

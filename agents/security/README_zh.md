@@ -78,7 +78,7 @@ flowchart LR
 
 ## 协作依赖
 
-Security Agent 依赖可能作为独立插件打包的同级能力：
+Security Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
 
 - `engineer-agent` 和 `devops-agent` 用于已确认发现项的修复
 - `pm-agent` 用于需求驱动的风险与 feature-path 澄清

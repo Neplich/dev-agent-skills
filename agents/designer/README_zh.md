@@ -91,7 +91,7 @@ agents/designer/skills/visual-design/references/
 
 ## 协作依赖
 
-Designer Agent 依赖可能作为独立插件打包的同级能力：
+Designer Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
 
 - `pm-agent` 用于范围与 feature-path 澄清
 - `engineer-agent` 用于设计 handoff 后的实现
