@@ -67,6 +67,21 @@ Use `--jobs 1` for one target or when reproducing a timing-sensitive infrastruct
 failure. Use `--jobs 10` for role, skill, cross-role, or full batches unless resource
 pressure makes a lower value necessary.
 
+Minimize repeat work while preserving fresh final evidence:
+
+- an applicable durable `FAIL` is sufficient pre-fix diagnosis evidence; do not require
+  two mechanical reproductions before editing;
+- run the repaired exact target once, and repeat it only when the result is inconsistent
+  with relevant history or varies across runs;
+- wait until the final edit before running the affected-target regression, and run that
+  regression once at up to `--jobs 10`;
+- preserve every completed valid verdict from that batch and retry only its
+  `BLOCKED`/timeout/incomplete targets;
+- retry a proven timeout alone with `--jobs 1` and, when necessary, one bounded
+  `--timeout` increase;
+- keep unrelated fresh failures as separate follow-up findings rather than blockers for
+  the target defect's closeout.
+
 ## Inputs Locked at Start
 
 The runner locks or hashes these inputs before candidate execution:
