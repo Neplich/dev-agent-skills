@@ -98,8 +98,8 @@ SKILL_ROOT="$PROJECT_ROOT/.agents/skills"
 `v0.4.1`），在 clone/更新后执行固定 checkout：
 
 ```bash
-# 可选：固定 release 版本（省略则使用最新 main）
-TARGET_TAG="v0.4.1"
+# 可选：固定 release 版本；默认不设置则使用最新 main
+# TARGET_TAG="v0.4.1"
 
 if [ -d "$CLONE_ROOT/.git" ]; then
   git -C "$CLONE_ROOT" pull --ff-only

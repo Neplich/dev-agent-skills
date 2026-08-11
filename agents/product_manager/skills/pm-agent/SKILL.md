@@ -6,7 +6,9 @@ description: "Default entry point for any new user request. Use this when the us
 # PM Agent Dispatcher
 
 Every response starts with the complete `Routing decision` block before any
-repository inspection or clarification question. In particular, a requested
+repository inspection or clarification question — except when the Scope Guard
+below stops the request, in which case the response is the one-line
+out-of-scope notice and nothing else. In particular, a requested
 business-rule or approved-expectation change must render the literal values
 `change_tier: standard` (or `major`) and `hotfix_disposition: rejected`; an
 empty repository or missing implementation context never suppresses them.
@@ -28,13 +30,16 @@ the Mandatory Entry Decision below; when the guard stops the request, do not
 emit the `Routing decision` block or any classification field. Decide whether
 the current request is in scope:
 
-- **Enabled project**: the current directory or an ancestor carries an enable
-  marker — the dev-agent-skills repository itself (`AGENTS.md` plus
-  `.claude-plugin/marketplace.json`), a Codex project install
-  (`.agents/skills/.dev-agent-skills-mirror.json` or a dev-agent-skills
-  skills tree under `.agents/skills/`), or a dev-agent-skills entry in
+- **Enabled project**: the current directory or a non-home ancestor carries
+  an enable marker — the dev-agent-skills repository itself (`AGENTS.md` plus
+  `.claude-plugin/marketplace.json`), a Codex project install (a
+  `.agents/dev-agent-skills/` clone or the mirror marker
+  `.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json` under the
+  project root), or a dev-agent-skills entry in the project's
   `.claude/settings.json` / `.claude/settings.local.json` `enabledPlugins`.
-  A personal install (`~/.agents/skills/`) alone is not a project marker.
+  A personal install under the home directory (`~/.agents/skills/`,
+  `~/.agents/dev-agent-skills/`) is not a project marker; it never enables
+  the project path by itself.
 - **Out of scope**: no marker, and the request is general conversation,
   local-machine operation, or generic file work. State in one line that
   dev-agent-skills targets in-project R&D workflows and that the current
@@ -114,7 +119,8 @@ Before returning any response, validate its first non-whitespace line and
 required keys. It must start with `Routing decision:` and contain every field
 in the schema above; a `greenfield-discovery`, checkpoint, or specialist block
 may follow it but never substitute for it. If this validation fails, prepend
-the complete routing block before returning.
+the complete routing block before returning — unless the Scope Guard stopped
+the request, in which case no routing block is emitted.
 
 Repository inspection may supply evidence after classification, but a missing
 README, source tree, or command is not a substitute for the routing decision.
