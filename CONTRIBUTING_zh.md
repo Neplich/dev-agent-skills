@@ -31,6 +31,9 @@ uv run --with pytest pytest \
   agents/docs/test/test_docs_run_eval.py \
   agents/test_doc_contract.py \
   agents/test_eval_contract.py \
+  scripts/test_eval_runtime.py \
+  scripts/test_run_skill_eval.py \
+  scripts/test_check_eval_artifacts.py \
   scripts/test_install_codex_skills.py \
   scripts/test_summarize_eval_results.py \
   scripts/test_check_repository_contract.py
@@ -45,20 +48,17 @@ uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
 
 ## 手动 Eval
 
-本地模型 eval 是质量检查，不属于第一版 PR 必跑 status check：
+本地模型 eval 是质量检查，不属于第一版 PR 必跑 status check。eval 的设计、编写、运行、重跑、汇总或诊断必须经由项目级 skill `.agents/skills/skill-eval-runner/SKILL.md`：
 
 ```bash
-# Designer eval diagnostics
-uv run agents/designer/test/run_all_evals.py
+# 单个角色（例如 designer）
+uv run scripts/run_skill_eval.py --agent designer --jobs 10
 
-# Docs eval diagnostics
-uv run agents/docs/test/run_all_evals.py
-
-# QA model eval
-uv run agents/qa/test/run_all_evals.py
+# 全部常规 eval
+uv run scripts/run_skill_eval.py --jobs 10
 ```
 
-涉及 skill 行为、routing、eval fixture 或 release readiness 的变更，按 [AGENTS.md](./AGENTS.md#skill-测试) 的 eval 策略执行。GitHub Actions 的 `Manual Evals` workflow 可选择 `all`、`designer`、`docs` 或 `qa`；QA eval 需要仓库 `OPENAI_API_KEY` secret。
+涉及 skill 行为、routing、eval fixture 或 release readiness 的变更，按 [AGENTS.md](./AGENTS.md#skill-测试) 的 eval 策略执行。GitHub Actions 的 `Manual Evals` workflow 可选择 `all`、`designer`、`devops`、`docs`、`engineer`、`product_manager`、`qa` 或 `security`；所有角色目标都需要仓库 `OPENAI_API_KEY` secret。
 
 ## Eval 维护清单
 

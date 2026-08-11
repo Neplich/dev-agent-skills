@@ -112,5 +112,5 @@ If a target agent is not installed, the corresponding handoff stage is unavailab
 npx skills add ./agents/qa/skills/spec-based-tester
 
 # Run QA eval
-uv run agents/qa/test/run_all_evals.py
+uv run scripts/run_skill_eval.py --agent qa --jobs 10
 ```
