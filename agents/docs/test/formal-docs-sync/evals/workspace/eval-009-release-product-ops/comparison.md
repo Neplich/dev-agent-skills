@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-009-release-product-ops`.
 - Fixture SHA-256: `88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75`
 - Prompt SHA-256: `8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `f2aa9b2c49be68550ec45538c221425607f428ce`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `f24bfeb12dba77a74fcf3f0161749ae4671b83762eac08484e7ae08621d9bacb`
-- Skill overlay SHA-256: `5dbb8d8559bfab3926047aa028e19f362490751247c2142101cfd687fff5239e`
+- Target skill tree SHA-256: `dd975083d3977d90b71b3396dff2498ef2b7e8d49c50fab50b5462a26f3248ee`
+- Skill overlay SHA-256: `9667198915198da0404e03a7d4c962d38742b19c5de4de5f0cf1473f02db2bf1`
 - Judge schema SHA-256: `56b98af2f6fc5a04535db999157836236eb69830528cbecc99ca00f23b4d8d9e`
 - Eval definition SHA-256: `c9bcafbf3ecc8c0e0ac28908b463b075e9d1371a95444953a8afc3d41757e192`
 - Metadata SHA-256: `d04b92e9a3754ad51ae5d707b3601a2084dc53a6e309122269ca881bc88a10ef`
@@ -31,28 +31,28 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `limits_release_to_affected_product_ops` | PASS | Locked delivery snapshot and git evidence show only the product and ops pages changed; matched change-map entries were retained and no unrelated surfaces changed. |
-| `reconciles_confirmed_version_facts` | PASS | Delivered pages use limit 25 and image v1.5.0, consistent with implementation, configuration, and release evidence; no v1.5.1 claim was delivered. |
-| `preserves_release_notes_surfaces` | PASS | Locked git status and delivery snapshot contain no Release Notes or navigation changes; the candidate explicitly excludes Release Notes surfaces. |
-| `keeps_release_pages_unverified` | PASS | Both locked delivered pages contain last_verified_version: unverified. |
-| `runs_release_host_checks_and_handoffs` | NOT_EXERCISED | Raw runner events prove npm run test:docs, npm run build:public, and npm run build:internal completed with exit code 0. The claimed docs-agent handoff has no independent non-message evidence, so that later handoff step is not exercised. |
+| `limits_release_to_affected_product_ops` | PASS | 交付快照与 git diff 仅包含 product/dashboard-limits.md 和 ops/dashboard-runtime.md；change-map 保持既有两条映射，未扩展到 API、database、design 或其他页面。 |
+| `reconciles_confirmed_version_facts` | PASS | 两页交付内容均写入 dashboard 上限 25 和 v1.5.0 runtime 镜像；原始 release evidence、代码、配置和测试均一致，未写入 v1.5.1 计划。 |
+| `preserves_release_notes_surfaces` | PASS | 交付快照、git diff 和 workspace manifest 显示 Release Notes 页面、.meta/releases.json、navigation 及部署资产均未修改；输出明确排除 Release Notes。 |
+| `keeps_release_pages_unverified` | PASS | product 与 ops 两个交付文件的原始内容均为 last_verified_version: unverified。 |
+| `runs_release_host_checks_and_handoffs` | NOT_EXERCISED | runner trace 证明 npm run test:docs 在命令事件中以 exit 0 完成，候选输出记录 cwd、affected set、target_release_version 和 docs-agent:docs-audit handoff；但 handoff 明确 blocked pending docs-audit specialist availability，因此 pre-tag 阶段未能实际完成。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75; output_sha256=31705dcc3acf777d79139c922dda97fca152cb41ce0c4d3964a3432812635b9b; snapshot_sha256=ad81ceea56071110b83ee018d1f98126a9537df65193ae832823e1b547685f8d
-- Behavior: Correctly limited the release, reconciled v1.5.0 facts, preserved Release Notes surfaces, kept both pages unverified, and passed the documented host checks; the handoff itself is not independently evidenced.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75; output_sha256=3bd35caea39c2fe0150761a62ed807d351f430c8a916f3df1d5e8c6b0ebd05c1; snapshot_sha256=acb0996c968a8620faea65c68cbad2c1a46267cf91f64952880e7e39cf77e13d
+- Behavior: 正确完成受影响 product/ops 页面同步、版本事实核对、Release Notes 隔离和 unverified 保留；宿主检查通过，但审计 specialist 不可用使 pre-tag handoff 未完成。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75; output_sha256=9be7bfd0a8a8bf2356f10842ef538d4a96f39087815971962c67baa6c52b47fd; snapshot_sha256=3abe89046ac74a47ae7626bbfb612a0d7d1d80febf3ec1e4dd8baaadb0176c3a
-- Behavior: Fresh baseline updated the two pages and facts but stamped both pages v1.5.0 instead of leaving them unverified; it is comparison context only.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75; output_sha256=42eb11612ff6ebf1a50c406002b4a1c248b6686962fcc8e6af333384465a2805; snapshot_sha256=f47425bc0a1be580afccf4a5b7c0559dfadea50e981cd7af8a4bd117e4cd477a
+- Behavior: 完成了两页及版本内容更新，但错误地将页面标记为 v1.5.0 verified，且未展示完整的审计交接与真实宿主检查证据。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Complete or independently record the docs-agent:docs-audit pre-tag handoff with the two-page affected set, confirmed v1.5.0 source, and supporting evidence.
+- Next: 在 docs-agent:docs-audit 可用后，将已完成的两页及匹配 change-map 条目推进 pre-tag 审计。
 
 ## Runtime Artifact Policy
 

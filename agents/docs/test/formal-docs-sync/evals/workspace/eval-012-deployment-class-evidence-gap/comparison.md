@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `94a440475528b183f978a35b0a119247396e300b3f4d27c6c1d0f2046bc60924` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-012-deployment-class-evidence-gap`.
 - Fixture SHA-256: `94a440475528b183f978a35b0a119247396e300b3f4d27c6c1d0f2046bc60924`
 - Prompt SHA-256: `d22f5a61b9778737597225188b6c8c34747660b197372bd350dcfc64d227e5ff`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `f2aa9b2c49be68550ec45538c221425607f428ce`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `f24bfeb12dba77a74fcf3f0161749ae4671b83762eac08484e7ae08621d9bacb`
-- Skill overlay SHA-256: `5dbb8d8559bfab3926047aa028e19f362490751247c2142101cfd687fff5239e`
+- Target skill tree SHA-256: `dd975083d3977d90b71b3396dff2498ef2b7e8d49c50fab50b5462a26f3248ee`
+- Skill overlay SHA-256: `9667198915198da0404e03a7d4c962d38742b19c5de4de5f0cf1473f02db2bf1`
 - Judge schema SHA-256: `e93bcd19b2a81fd498c0a0b76bf2788577403b4eb3f684a80f1adbb170c93ef8`
 - Eval definition SHA-256: `649fb22000e8030404ac6361df8372e15d8183baaa675df886e6c740c229829a`
 - Metadata SHA-256: `9b6d976d4601ac0de151b2a46d4bd90f68a76a475f804b7878df438cf1dba8d6`
@@ -31,21 +31,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `blocks_only_missing_class` | PASS | 根索引和最终报告均将 Kubernetes/Helm 标为 blocked，并列出 Chart、values、模板消费者、集群权限/authority 与执行验证缺失；未把计划或网络可达性当作证据。 |
-| `continues_confirmed_classes` | PASS | 锁定快照包含五个要求页面；索引链接、共享环境参数的 Development/Docker 映射及 change-map 条目均存在，且已确认批次未因 Kubernetes 阻塞而停止。 |
-| `creates_no_placeholder_commands` | PASS | 锁定快照未包含 kubernetes-helm 目录或 Helm 占位命令/事实；报告列出了补齐 Kubernetes/Helm 所需证据。 |
-| `keeps_class_boundaries` | PASS | Development 与 Docker 快照分别包含前置、命令、成功标准、回滚和故障处理；Docker 内容未吸收 Kubernetes 计划，也未由镜像 tag 推断集群来源。 |
+| `blocks_only_missing_class` | PASS | With-skill output explicitly marks Kubernetes/Helm blocked and lists the missing Chart, values, template consumers, cluster authority/permissions, and execution results. The delivery snapshot repeats these gaps and does not treat the plan as execution evidence. |
+| `continues_confirmed_classes` | PASS | The with-skill delivery snapshot contains all five required pages, the required cross-links, evidence-backed environment mappings, and change-map entries. Development and Docker were completed despite Kubernetes/Helm remaining blocked. |
+| `creates_no_placeholder_commands` | PASS | The with-skill snapshot contains no Kubernetes/Helm page tree or placeholder commands/content. The report lists the missing evidence required to complete that class. |
+| `keeps_class_boundaries` | PASS | Development and Docker snapshots each contain separate prerequisites, commands, success criteria, rollback, and troubleshooting sections. Kubernetes content is excluded from Docker, and image provenance is limited to supplied manifest evidence. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d22f5a61b9778737597225188b6c8c34747660b197372bd350dcfc64d227e5ff; fixture_sha256=94a440475528b183f978a35b0a119247396e300b3f4d27c6c1d0f2046bc60924; output_sha256=9da7237154fbd9535f890a485ee690391f7ae3295c09cd85c73655e98b6cb433; snapshot_sha256=d411549b03f29e10d12b0d404a15ff2fea15985aa710a957b49f1979c73e5de9
-- Behavior: 完成 Development 与 Docker 的五页文档及映射，并仅阻塞证据不足的 Kubernetes/Helm 类别。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d22f5a61b9778737597225188b6c8c34747660b197372bd350dcfc64d227e5ff; fixture_sha256=94a440475528b183f978a35b0a119247396e300b3f4d27c6c1d0f2046bc60924; output_sha256=d82bb58cc484e9c3b27fdf9d5bc9dd2860f7feaef68053c5cae766c2b4254dc0; snapshot_sha256=d23d834d7f80e7e67d950bc763189128a291ed01e11eac7bf142bf9d321cae33
+- Behavior: Completed confirmed Development and Docker documentation while blocking only unsupported Kubernetes/Helm work and preserving evidence boundaries.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d22f5a61b9778737597225188b6c8c34747660b197372bd350dcfc64d227e5ff; fixture_sha256=94a440475528b183f978a35b0a119247396e300b3f4d27c6c1d0f2046bc60924; output_sha256=3c3d4c1ae4b88381f33aaa1edfba92f7885c9b1ab301361fe5b617868cc4ef2d; snapshot_sha256=1907bd4d688cb9f9719910f036c97649d7f4d455ef7e1da4485883cc81807827
-- Behavior: 同样生成了确认类别文档并保留 Kubernetes/Helm 缺失状态；作为比较基线，其内容更简略。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=d22f5a61b9778737597225188b6c8c34747660b197372bd350dcfc64d227e5ff; fixture_sha256=94a440475528b183f978a35b0a119247396e300b3f4d27c6c1d0f2046bc60924; output_sha256=624bcd5607440c64d1e4209f023ae05a1a4e7f5749e9eec430de0a58808e29d6; snapshot_sha256=4e63824ba02c7468f5a4711fddb88346025383cabac141e136a1370b59f3a67c
+- Behavior: Fresh baseline also produced core deployment documentation and avoided fabricated Kubernetes content, but with less explicit evidence binding and change-map coverage.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
