@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-7-direct-downstream-without-handoff`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f`
-- Repository HEAD: `d96f213470acb77cb92c1af637626260d3e55b45`
+- Repository HEAD: `b385df5d17058a52081357c8a8480fc146c3d989`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `c978d115fb1b50ceb3f80a0d77c450574e05667bd8252ef5b6e8b67105206fa2`
-- Skill overlay SHA-256: `5b89d6a3c235a107cde8314b908b32dbfa76d6dc330906b48f74091d88e9019d`
+- Target skill tree SHA-256: `ecf67dca8a2fd53bb0dd6d0a63750ba2716e88dc4af4f77176ea061260d64286`
+- Skill overlay SHA-256: `2ed9fef9a54be8009ea156c857682ad7dd82c0e56e3463d3257fe74fe9c977ec`
 - Judge schema SHA-256: `6f1f540339fe5c4c310ca6aaedc38adff3d61e4268399a40149f44e3770ac25c`
 - Eval definition SHA-256: `700336d4b7193b70e468b0c4438658b25a2ebad8ec77c1b4f8af7b856ebd1494`
 - Metadata SHA-256: `70b36659756bbd4d7fc0e09d0fabc7ee5ba1a168323c148fa735110fb59ec768`
@@ -31,20 +31,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `routing_decision_present` | PASS | The with_skill output begins with “Routing decision” and explicitly includes request_type, selected_owner, entry_basis, feature_path, and execution_boundary. |
-| `stay_in_pm_alignment` | PASS | It routes to “pm-agent:idea-to-spec,” marks feature_path unresolved, requires confirmation, and states that no downstream handoff or implementation can proceed. |
-| `blocks_engineering_without_basis` | PASS | It identifies missing product/design materials and implementation context, requests scope/target-layout evidence, and states “暂不修改代码” and “无法安全开始代码实现”; git evidence confirms no changes. |
+| `routing_decision_present` | PASS | with_skill 输出明确列出 request_type、selected_owner、entry_basis、feature_path 和 execution_boundary。 |
+| `stay_in_pm_alignment` | PASS | with_skill 将请求保留在 pm-agent:idea-to-spec，并明确 feature_path 未解析、依据未确认、暂无 PM handoff packet，且未声称进入工程执行。 |
+| `blocks_engineering_without_basis` | PASS | with_skill 明确缺少产品、设计和实现依据，并将 execution_boundary 设为暂不修改代码；锁定 git_evidence 显示无变更。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=741ce3121e7909ecaf0348622f37e3318ce904828f3651d082c0a247fa12a218; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly routes the request into PM idea-to-spec, keeps it out of downstream execution, and blocks code changes pending product, design, and implementation basis.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=8354d6cd555e4e5a4512e4bf83c46c9c69350eb2114e3102ee2fdcff0a4fca42; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 先给出完整路由决策，随后进入 PM idea-to-spec 的范围对齐，提出布局基线选择，并阻止代码修改。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=0091bde13c97215d2b8cc0b1efb476d27acfe5645bd6e01ba412690ef4c64f2c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline only reports the empty repository and asks for project files; it does not provide the required PM routing decision or scope-alignment protocol.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=c8d734f6f4a9687c0af4fe32f60062e78e2b11a2b44385dd13ec2741eba949bc; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅报告工作区为空并要求提供项目文件，未进行 PM 路由或依据对齐。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

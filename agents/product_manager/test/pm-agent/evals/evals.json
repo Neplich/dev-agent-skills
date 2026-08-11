@@ -810,7 +810,7 @@
         {
           "id": "explicit_invocation_proceeds",
           "description": "显式点名放行并输出 Routing decision",
-          "text": "用户消息显式点名 pm-agent，即使目录未启用且请求属于一般本机操作，也必须放行并正常执行 PM 分类：输出以 `Routing decision:` 开头的首行，包含 request_type、change_tier、selected_owner 等完整分类字段；不得输出使用范围拦截提示（不得声明当前目录未启用并停止）。"
+          "text": "用户消息显式点名 pm-agent，即使目录未启用且请求属于一般本机操作，也必须放行并正常执行 PM 分类：输出以 `Routing decision:` 开头的首行，包含 request_type、change_tier、selected_owner 等分类字段；request_type 必须是 PM 分类协议中的合法值（new_feature / existing_update / bug_report / validation / deployment / security / delivery / status / formal_docs 等），selected_owner 必须是 Available PM Skills 或 Downstream Role Handoff Targets 中的合法目标；不得输出使用范围拦截提示（不得声明当前目录未启用并停止）。"
         },
         {
           "id": "classifies_general_request",
@@ -825,11 +825,11 @@
       "description": "Verifies that a general request in an enabled project directory proceeds into the normal PM workflow.",
       "scenario": {
         "persona": "在已启用 dev-agent-skills 的项目目录里处理本机事务的开发者",
-        "situation": "当前目录带有 dev-agent-skills 项目启用标记（Codex mirror marker），用户提出一般性本机文件整理请求。",
+        "situation": "当前目录带有 dev-agent-skills 项目启用标记（.claude/settings.json 的 enabledPlugins 启用 pm-agent@dev-agent-skills），用户提出一般性本机文件整理请求。",
         "trigger": "已启用项目的目录判定应放行一般请求，正常进入 PM 分类。",
         "goal": "识别启用标记并正常进入 PM 分类流程",
         "materials": [
-          "带 dev-agent-skills 启用标记（.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json）的目录",
+          "带 dev-agent-skills 启用标记（.claude/settings.json enabledPlugins 含 pm-agent@dev-agent-skills）的目录",
           "用户提出的一般性本机文件整理请求"
         ],
         "constraints": [
@@ -838,7 +838,7 @@
           "不执行文件整理动作本身"
         ],
         "success_criteria": [
-          "识别目录已启用（引用启用标记）",
+          "识别目录已启用（引用 enabledPlugins 启用条目）",
           "输出以 Routing decision: 开头的分类结果",
           "不输出使用范围拦截提示"
         ]
@@ -850,12 +850,12 @@
         {
           "id": "enabled_marker_detected",
           "description": "识别启用标记",
-          "text": "必须检查当前目录的 dev-agent-skills 启用状态，识别出目录已启用（引用 Codex mirror marker 或语义等价的启用标记）。"
+          "text": "必须检查当前目录的 dev-agent-skills 启用状态，识别出目录已启用（引用 .claude/settings.json enabledPlugins 中 pm-agent@dev-agent-skills 的启用条目或语义等价的启用标记）。"
         },
         {
           "id": "general_request_proceeds",
           "description": "已启用目录的一般请求放行",
-          "text": "已启用目录中的一般请求不得被拦截：正常进入 PM 分类，输出以 `Routing decision:` 开头的首行并包含 request_type、change_tier、selected_owner 等分类字段；不得输出「当前目录未启用」的拦截提示。"
+          "text": "已启用目录中的一般请求不得被拦截：正常进入 PM 分类，输出以 `Routing decision:` 开头的首行并包含 request_type、change_tier、selected_owner 等分类字段；request_type 必须是 PM 分类协议中的合法值（new_feature / existing_update / bug_report / validation / deployment / security / delivery / status / formal_docs 等），selected_owner 必须是 Available PM Skills 或 Downstream Role Handoff Targets 中的合法目标；不得输出「当前目录未启用」的拦截提示。"
         }
       ]
     }

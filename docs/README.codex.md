@@ -103,8 +103,10 @@ SKILL_ROOT="$PROJECT_ROOT/.agents/skills"
 
 if [ -d "$CLONE_ROOT/.git" ]; then
   # 先前使用过固定版本时 clone 处于 detached HEAD，先切回 main 再更新
-  git -C "$CLONE_ROOT" checkout main || true
-  git -C "$CLONE_ROOT" pull --ff-only
+  git -C "$CLONE_ROOT" checkout main \
+    || { echo "error: cannot switch to main; aborting update" >&2; exit 1; }
+  git -C "$CLONE_ROOT" pull --ff-only \
+    || { echo "error: pull failed; aborting update" >&2; exit 1; }
 else
   mkdir -p "$(dirname "$CLONE_ROOT")"
   git clone https://github.com/Neplich/dev-agent-skills.git "$CLONE_ROOT"

@@ -39,8 +39,11 @@ and state which marker you find or that none exists:
   `.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json` under the
   project root (a bare `.agents/dev-agent-skills/` clone is not a marker; it
   only indicates an incomplete or leftover install), or
-- a dev-agent-skills entry set to an enabled value in the project's
+- a dev-agent-skills plugin entry set to an enabled value in the project's
   `.claude/settings.json` / `.claude/settings.local.json` `enabledPlugins`.
+  Keys use the `plugin-name@marketplace-name` form, e.g.
+  `pm-agent@dev-agent-skills`; `settings.local.json` overrides
+  `settings.json` for the same key, so a local `false` disables the entry.
 
 A personal install under the home directory (`~/.agents/skills/`,
 `~/.agents/dev-agent-skills/`) is not a project marker; it never enables
