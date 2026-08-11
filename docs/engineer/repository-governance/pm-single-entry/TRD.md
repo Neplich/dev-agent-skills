@@ -11,7 +11,6 @@ feature: "pm-single-entry"
 feature_path: "repository-governance/pm-single-entry"
 parent_feature: "repository-governance"
 feature_level: "2"
-last_updated: "2026-07-06"
 related_prd: "docs/pm/repository-governance/pm-single-entry/PRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/52"
 related_docs:
