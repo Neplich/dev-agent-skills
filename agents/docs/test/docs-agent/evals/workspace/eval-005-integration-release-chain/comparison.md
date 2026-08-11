@@ -14,47 +14,47 @@
 - Fixture version/source: canonical manifest `69659db940208abe97ba4ab195a49c736d9a7ba7e1e880c287d3bf12132c10a3` from `agents/docs/test/docs-agent/evals/workspace/eval-005-integration-release-chain`.
 - Fixture SHA-256: `69659db940208abe97ba4ab195a49c736d9a7ba7e1e880c287d3bf12132c10a3`
 - Prompt SHA-256: `62a386a246bcb0c7c5b2df7096cfd60c5023a6b28473d50af8f99649d1d3480e`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `f2aa9b2c49be68550ec45538c221425607f428ce`
 - Repository worktree state: **DIRTY**
 - Target skill tree SHA-256: `cf92649952a97be677cf5e900a4d9c793a6c0724813cf1fa3154f57e7d2c08f3`
-- Skill overlay SHA-256: `5be76fc7f05f987d0dcf0e3f1254ab96a94a681a13a4c41d33898ae26441d21a`
+- Skill overlay SHA-256: `169fa6feaee2a3439ef1697f8695db0c122dae0703b31186cfbc7b44c0685be7`
 - Judge schema SHA-256: `1f2ea17b811fce39b8e906ef0e0a70b6a6223a188a2f4a05f2f0a88c54c6aceb`
 - Eval definition SHA-256: `05d8b9eb5ccf6bbc077dad850c79899562c5b4ed9bbb4187abffd82f21410ea3`
 - Metadata SHA-256: `af301306a3e584e9c32987cd73e02ac298dcd98f38208af58ca0764e8b5a4154`
 - Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
 - Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
-- Behavior result: **PASS**
+- Behavior result: **FAIL**
 - Coverage result: **FULL**
-Overall result: PASS
+Overall result: FAIL
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `accepts_release_audit_entry` | PASS | With-skill output accepts the maintainer-confirmed v1.4.0 entry, preserves scope and evidence sources, and states a read-only boundary. |
-| `evaluates_site_release_notes_gate` | PASS | It rejects the handoff's ready label because confirmation and supporting gate credentials are incomplete, and returns ownership to site Release Notes owner. |
-| `validates_release_window_basis` | PASS | It verifies v1.3.0 and release-base resolve to the same 041b91a... anchor and does not guess missing inputs. |
-| `rejects_missing_pre_tag_authority` | PASS | It does not claim pre-tag success; it blocks before docs-audit pending confirmed Release Notes evidence. |
-| `detects_post_tag_evidence_drift` | PASS | It identifies the signed-snapshot drift between the candidate/tag-entry tree 7c8b9b... and actual v1.4.0 tag tree 490d0b..., and blocks. |
-| `blocks_github_release_handoff` | PASS | It concludes GitHub Release preparation cannot continue, provides no preview/draft/publish handoff, and routes remediation to the correct owner. |
-| `preserves_no_mutation_boundaries` | PASS | The output and captured trace show only read/check activity and explicitly preserve the no-tag/no-GitHub-Release-write boundary. |
+| `accepts_release_audit_entry` | PASS | Identifies release-chain-entry.md and the confirmed version, scope, evidence sources, and read-only boundary. |
+| `evaluates_site_release_notes_gate` | PASS | Rejects handoff_status=ready as insufficient confirmation and returns the site Release Notes owner for remediation. |
+| `validates_release_window_basis` | PASS | Correctly reports previous tag and base ref resolving to the same signed snapshot anchor. |
+| `rejects_missing_pre_tag_authority` | PASS | Does not claim pre-tag success and states that ready_for_tag/release_verified are not satisfied. |
+| `detects_post_tag_evidence_drift` | FAIL | The signed snapshot shows candidate/tag tree drift, but the with_skill output does not identify that post-tag object mismatch. |
+| `blocks_github_release_handoff` | PASS | Blocks GitHub Release preparation and assigns remediation to the Release Notes owner followed by post-tag audit. |
+| `preserves_no_mutation_boundaries` | PASS | States a read-only boundary and reports no tag or GitHub Release writes; captured git evidence shows no mutation. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=62a386a246bcb0c7c5b2df7096cfd60c5023a6b28473d50af8f99649d1d3480e; fixture_sha256=69659db940208abe97ba4ab195a49c736d9a7ba7e1e880c287d3bf12132c10a3; output_sha256=501eff9198be7fed10b00b447675cf94a7f825df9d56fd9ff4afb2e056b4d9ea; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly validates the entry, checks the release window, detects handoff incompleteness and ref/tree drift, blocks downstream release work, and preserves read-only boundaries.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=62a386a246bcb0c7c5b2df7096cfd60c5023a6b28473d50af8f99649d1d3480e; fixture_sha256=69659db940208abe97ba4ab195a49c736d9a7ba7e1e880c287d3bf12132c10a3; output_sha256=7c0cf765020d2dfd59f4224de06b2112294fe54287775acfc092f9892bffb32c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly routes and blocks the release, validates the window, and preserves read-only boundaries, but misses the decisive post-tag tree drift.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=62a386a246bcb0c7c5b2df7096cfd60c5023a6b28473d50af8f99649d1d3480e; fixture_sha256=69659db940208abe97ba4ab195a49c736d9a7ba7e1e880c287d3bf12132c10a3; output_sha256=07203ea4f6f402443f19d9cda114347fc30effa1e9ef4c51c828d61e716dcbc7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Reaches the correct overall block and detects tree drift, but routes remediation to the release manager rather than the site Release Notes owner and provides less complete gate validation.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=62a386a246bcb0c7c5b2df7096cfd60c5023a6b28473d50af8f99649d1d3480e; fixture_sha256=69659db940208abe97ba4ab195a49c736d9a7ba7e1e880c287d3bf12132c10a3; output_sha256=a96a0ed5c3dddd10ee2b2c01f2f7ed3184bb4681e51075cb8a4d76d5a2301ff5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline correctly blocks the release and explicitly detects the candidate-versus-tag tree mismatch.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- None.
-- Next: None.
+- The with_skill lane failed to detect and report the signed-snapshot mismatch between the release-candidate/tag-entry tree and the actual v1.4.0 tag/release-evidence tree.
+- Next: Require the with_skill lane to compare and report the candidate, tag-entry, actual-tag, and release-evidence tree identities before concluding post-tag eligibility.
 
 ## Runtime Artifact Policy
 

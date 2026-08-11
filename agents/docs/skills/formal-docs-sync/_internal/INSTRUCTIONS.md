@@ -378,6 +378,12 @@ row must name the responsible owner or test owner from the accepted handoff,
 plan, or test evidence; if ownership evidence is missing, report that gap rather
 than silently omitting or guessing the owner.
 
+When item 6 fails, the blocked report must name each failed required test and
+assign the correction to the Engineer or recorded test owner. Its unlock path
+must require fixing the implementation or test, rerunning every plan-required
+test, recording an all-pass result, and only then re-entering this Design
+Delivery Closeout Gate. Rerunning only the failed test is not sufficient.
+
 Reuse `feature-implementor` closeout evidence; do not invent another evidence
 format. Before any write, render a page-level closeout matrix with one row for
 every proposed Design page and one explicit status/evidence reference for each

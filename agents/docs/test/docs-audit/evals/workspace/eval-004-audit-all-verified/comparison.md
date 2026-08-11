@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897` from `agents/docs/test/docs-audit/evals/workspace/eval-004-audit-all-verified`.
 - Fixture SHA-256: `085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897`
 - Prompt SHA-256: `f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `fecf485e8e3dcaf191b2b221d9cccbddfdea0b72`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `5b5823d2c0804ce3dabb1d32490f71697f4ff111cd9371ebf92d1bb1b6ad2188`
-- Skill overlay SHA-256: `c7033e85898ff61111eb14edc47b25e717119ee79349d7af461390afc706db78`
+- Target skill tree SHA-256: `5b11b38c1c44c386fe19122dfb1ce5918b2bfbc4830ad32aa994d8a7e39f35e7`
+- Skill overlay SHA-256: `85c4ae0a1d58505c4a23c34e6f9116aed81a09b4b6270e3ce148424084f6c7e0`
 - Judge schema SHA-256: `a043187f1d82deb6ceb1f6f2a8dbb12db6dd01c71ced16d224de3ae50ca31c3b`
 - Eval definition SHA-256: `9d29cd503dc3f38e1235bc8d674c667f9fc3bef38d94569b7888bb0dfed80506`
 - Metadata SHA-256: `4c1ab6c77122f43adf1cbc9d6f05aea7b2b047fe1e69ba225e32d03f006dc954`
@@ -31,23 +31,23 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `verifies_complete_affected_set` | PASS | Candidate record lists all four affected pages, marks each final_status as verified, and reports blockers: []. |
-| `stamps_all_pages_together` | PASS | The locked candidate record defines the same four-page unified_stamp_set; final Git evidence shows the two stale API metadata lines updated in the integrated transaction while the release surfaces already held v1.1.0. |
-| `verifies_release_metadata_read_only` | PASS | The candidate inventory reads docs/site/.meta/releases.json as a file-backed source and the final diff contains no modification to it. |
-| `normalizes_mixed_version_forms` | PASS | The version inventory records prefixed and unprefixed raw forms, normalized identity 1.1.0, and equal comparison results, including package.json and release metadata. |
-| `persists_candidate_producer_schema` | PASS | The locked audit-v1.1.0.md snapshot contains the required candidate schema, immutable commits, affected/stamp sets, per-page evidence, hashes, locator inventory, canonical digest, staged inventories, readback, commands, and candidate_conclusion: candidate_verified without post-commit success fields. |
-| `anchors_candidate_then_discovers_success` | PASS | Git evidence and locked handoff content show distinct candidate/anchor and integrated handoff commits, anchor and candidate blob/tree identities, fast-forward integration, and final readback before phase_result: ready_for_tag. |
+| `verifies_complete_affected_set` | PASS | Candidate record binds the target-tree impact set, matches both required API docs, lists all four affected pages as verified, and states no unresolved blockers. |
+| `stamps_all_pages_together` | PASS | Delivered API blobs show both stale stamps changed to v1.1.0; the Release Notes page and index already contain v1.1.0 and are included in the pre/post candidate inventories with successful stamp readback. |
+| `verifies_release_metadata_read_only` | PASS | The candidate inventory records docs/site/.meta/releases.json as a read-only git-file source with matching v1.1.0 metadata, and git evidence shows no metadata modification. |
+| `normalizes_mixed_version_forms` | PASS | The version inventory records v1.1.0 and 1.1.0 in their required source forms, normalizes both to 1.1.0, and reports equality across confirmation, package, metadata, index, and release-page sources. |
+| `persists_candidate_producer_schema` | PASS | The locked candidate blob contains the required candidate schema, immutable refs, impact and page evidence, locator contracts, hashes, canonical inventory digest, prior lineage digest, staged inventories, commands, and candidate_verified conclusion without ready_for_tag or post-commit claims. |
+| `anchors_candidate_then_discovers_success` | PASS | Raw git evidence shows the candidate commit, then anchor commit, then handoff commit; the delivered handoff blob contains ready_for_tag discovery data, anchor and candidate identities, post-commit confirmation, and the integrated branch ends at the handoff commit with a clean tree. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=0cbc9cbd0d9ffd60773b817ea493c2cab702848b15d64a73c65c6de36ce114b6; snapshot_sha256=b1f660485e3b92d2f8cd4611515dc4e0442e7f698c29f67abc4eb4fe5b0aebd8
-- Behavior: Completed the pre-tag audit, stamped the required API metadata, persisted the candidate, anchored it, created the discovery handoff, fast-forward integrated it, and returned ready_for_tag.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=c6362057354108a70fa0e7b494c86213374f4568cea3e4109741999093c5088b; snapshot_sha256=0d7290de94efa6bca38ccb04254d0d6ade252e9511ec1c286e572ccf74f93984
+- Behavior: Completed the full pre-tag audit transaction: verified all affected pages, stamped the stale API pages, persisted the candidate, created and confirmed anchor and handoff commits, fast-forwarded integration, and returned ready_for_tag.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=ec76c4ad28b18ea9e6da3eb98f0f1580438ebe91a0220adefd79622edfeae3a0; snapshot_sha256=98a6ecfaf3cc547d75504aaabc0a073f4ed0020b37dce327b74cf0a7c8e8205d
-- Behavior: Produced a conditional audit report identifying stale API verification metadata and stopped before stamping or release handoff.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f182723403634fcd32c050786ed55f612a9685f404b0e23235cff29b52f7174c; fixture_sha256=085a9df9c5171410b3af490aa0eb671dd955de6207e401089976f50095ed2897; output_sha256=d7e30e3ad6096fdb5a69073876bc5810f8553e49a41f1ecbb0006f090e38a580; snapshot_sha256=39b518e6ffd56bffb43b339ed320250cf25cbc25154aa7cdb65c02cfa9f8a90c
+- Behavior: Produced a standalone conditional audit report, correctly identified stale API verification stamps and read-only metadata, but did not perform the required stamping, candidate persistence, anchor, handoff, or integration workflow.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

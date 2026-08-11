@@ -184,7 +184,7 @@
     "formal-docs-sync": {
       "source": "agents/docs/skills/formal-docs-sync",
       "sourceType": "local",
-      "computedHash": "3b7d8fcdcb14f06b70dd4b38a90c6d3644ecdb0a69e2a70df4b517191d96c0c5"
+      "computedHash": "667b5ab0fecdf0f9be1dc8ef4cef99a617051441d27ff4bef6099c8efc7d7b39"
     },
     "manual-gen": {
       "source": "agents/docs/skills/manual-gen",
@@ -194,7 +194,7 @@
     "docs-audit": {
       "source": "agents/docs/skills/docs-audit",
       "sourceType": "local",
-      "computedHash": "d2769628bb664e4e1f96916c99e477609860b6e501d41c830f67a32a662f06c9"
+      "computedHash": "a919b60d8dde762fe29b10ebaea06bfa65bbaa5e23d599d19947f90ff51a14ae"
     }
   }
 }

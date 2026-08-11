@@ -69,6 +69,9 @@ uv run scripts/check_eval_artifacts.py
 uv run scripts/check_doc_contract.py
 ```
 
+Run independent static checks concurrently when the orchestration environment supports
+it. This does not relax the single-runner-process rule for model evals.
+
 Stop and repair a static contract failure before spending model calls. Do not convert a
 static failure into `BLOCKED` by manually editing `comparison.md`.
 
@@ -87,6 +90,26 @@ static failure into `BLOCKED` by manually editing `comparison.md`.
   source drift, but concurrent edits waste completed model work.
 - Do not reuse an older baseline, a candidate self-assessment, or a transcript as the
   verdict.
+
+## Converge With Minimum Model Work
+
+- For pre-fix diagnosis, use an existing durable `FAIL` as evidence when its target,
+  input identity, assertion, and failure mode still match the defect. Inspect it first;
+  do not mechanically rerun it twice. This does not make old evidence a post-fix verdict.
+- After the final candidate fix, run the exact target once. Add a second exact run only
+  when the new result conflicts with relevant durable history, changes across runs, or
+  otherwise shows model/judge variance.
+- Defer the affected-target regression until the final edit is ready, then run it once
+  with one runner process and up to `--jobs 10`. Do not rerun the full affected set after
+  each intermediate edit.
+- In that final regression, retain every completed `PASS`, `PASS (partial coverage)`,
+  and `FAIL` as the valid fresh verdict. Retry only `BLOCKED`, timeout, or incomplete
+  targets; do not rerun completed targets merely because the batch exited nonzero.
+- Retry a timing-sensitive target alone with `--jobs 1`. When the default timeout is the
+  proven blocker, one bounded `--timeout` increase is allowed for that target without
+  rerunning the batch.
+- Record unrelated fresh `FAIL` results separately. They do not block the current defect
+  from closing when its target passes and freshness/static contracts are satisfied.
 
 ## Interpret and Persist Results
 
@@ -136,6 +159,9 @@ uv run scripts/summarize_eval_results.py
 git status --short
 git diff --check
 ```
+
+Run the independent static checks in parallel where supported, then inspect their
+individual exit codes. Keep Git status and diff inspection after they complete.
 
 Report the exact selected targets, worker count, result counts, blockers, files changed,
 and whether runtime artifacts remain. Never claim that required CI ran model evals;

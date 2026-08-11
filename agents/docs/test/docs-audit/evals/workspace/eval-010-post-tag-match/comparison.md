@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518` from `agents/docs/test/docs-audit/evals/workspace/eval-010-post-tag-match`.
 - Fixture SHA-256: `43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518`
 - Prompt SHA-256: `47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `fecf485e8e3dcaf191b2b221d9cccbddfdea0b72`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `5b5823d2c0804ce3dabb1d32490f71697f4ff111cd9371ebf92d1bb1b6ad2188`
-- Skill overlay SHA-256: `c7033e85898ff61111eb14edc47b25e717119ee79349d7af461390afc706db78`
+- Target skill tree SHA-256: `5b11b38c1c44c386fe19122dfb1ce5918b2bfbc4830ad32aa994d8a7e39f35e7`
+- Skill overlay SHA-256: `85c4ae0a1d58505c4a23c34e6f9116aed81a09b4b6270e3ce148424084f6c7e0`
 - Judge schema SHA-256: `f64d4542aa97d4b9bcd4bc655a5e70fec7d827a5ea9e9f63067fde8d7b819748`
 - Eval definition SHA-256: `f4b575228474dd8bb2a93bb17a067f25252f9c293e1f78393d445c449385e8d2`
 - Metadata SHA-256: `12f75879efa3cacf943ae19595239a747563947015e4033eed4ea7f4a51a5b47`
@@ -31,22 +31,22 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `selects_pre_tag_authority_safely` | PASS | With-skill trace resolves refs/release-evidence/v1.2.0 and reads its handoff/audit; the independent clone uses its own Git directory, default refspec, lacks the custom ref, and reads the tag-tree evidence. |
-| `proves_released_tree_binding` | PASS | With-skill raw commands resolve the tag commit and tree, compare the pre-tag and tag trees, and inspect committed handoff, audit, and release paths in the clone without requiring identical commit identity. |
-| `verifies_version_surfaces_from_release` | PASS | With-skill evidence reads all four release surfaces from the tag and distinguishes v1.2.0 from package.json’s 1.2.0; it does not use the mutable workspace as release proof. |
-| `requires_durable_post_tag_evidence` | PASS | With-skill output identifies the absent post-tag record ref and missing maintainer decision, keeps both scenarios blocked, and does not treat matching content as post-tag success. |
-| `preserves_upstream_release_artifacts` | PASS | With-skill output and git evidence show no ref, tag, worktree, index, or release-record changes and no regeneration, stamping, or tag operation. |
+| `selects_pre_tag_authority_safely` | PASS | With-skill evidence resolves refs/release-evidence/v1.2.0 and its commit/tree, reads the handoff and audit, and reports a default-refspec clone without the custom ref that reconstructs evidence from the tag tree. |
+| `proves_released_tree_binding` | PASS | It resolves the tag commit and tree, compares the tag tree with the package/evidence tree, and compares committed paths/blob identities in the independent clone without relying on matching commit identity. |
+| `verifies_version_surfaces_from_release` | PASS | It verifies the release-note page, index, releases.json, and package.json from Git release content, including normalization of v1.2.0 versus 1.2.0, and does not treat the workspace as success evidence. |
+| `requires_durable_post_tag_evidence` | PASS | It identifies missing durable post-tag persistence, reports blocked/not_persisted for both scenarios, and does not upgrade content consistency to release_verified. |
+| `preserves_upstream_release_artifacts` | PASS | Git evidence shows unchanged HEAD/branch, empty ref delta, no new commits, no diffs, and no reflog changes; the output reports no ref, tag, or release-record mutation. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143; fixture_sha256=43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518; output_sha256=e3540d757833239a80df2bdcdbc99678be610839917a3c81b0cdb8923d8b2484; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Safely validates the tag and released tree in both the current repository and an isolated default-refspec clone, verifies release version surfaces, and correctly remains blocked for absent durable post-tag evidence.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143; fixture_sha256=43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518; output_sha256=0b892a826700c2b7ef22a8b203af1ef0ef7464c1ec9e4a1607571ab7ab688444; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly performs independent current-repository and fresh-clone release verification, identifies evidence/schema gaps, and remains blocked without durable post-tag persistence.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143; fixture_sha256=43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518; output_sha256=f00a527284c9a574ba7ec26ea8032d5ef78b7fdeef090b97a1a67a5a3f6eb8f4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Identifies the same tag and clone limitation and preserves repository state, but provides a much thinner comparison account without the with-skill lane’s detailed tree-binding and evidence analysis.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47c14febb101f8d485b3785bf3ac63c5d627ee1f25999068d61918f6bfa13143; fixture_sha256=43a1d01505e6c9e0f71431fdaeb75fea6b1939424f6c22775d15a970f4b73518; output_sha256=8875d369c12390aac64268c9bafc83e5b003d9cd2f6394d1091656b091cab0cc; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a useful basic tag/content comparison and notes the clone lacks the custom ref, but does not establish the complete blocked post-tag audit requirements.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

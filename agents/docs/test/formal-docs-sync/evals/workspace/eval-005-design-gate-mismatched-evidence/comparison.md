@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `9ee09a35ffbbce09e9a24f1afab930b7c3820a015f0b4c8a431f51638de5592f` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-005-design-gate-mismatched-evidence`.
 - Fixture SHA-256: `9ee09a35ffbbce09e9a24f1afab930b7c3820a015f0b4c8a431f51638de5592f`
 - Prompt SHA-256: `cc15a608e753e009b625973b3297598562e26547f4019135f4ff1cee37bc04f0`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `f2aa9b2c49be68550ec45538c221425607f428ce`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `f24bfeb12dba77a74fcf3f0161749ae4671b83762eac08484e7ae08621d9bacb`
-- Skill overlay SHA-256: `5dbb8d8559bfab3926047aa028e19f362490751247c2142101cfd687fff5239e`
+- Target skill tree SHA-256: `dd975083d3977d90b71b3396dff2498ef2b7e8d49c50fab50b5462a26f3248ee`
+- Skill overlay SHA-256: `9667198915198da0404e03a7d4c962d38742b19c5de4de5f0cf1473f02db2bf1`
 - Judge schema SHA-256: `c9b93b28ac72af6810f4752921bb72d418af8d9162ae5d66c15fe90f929562c8`
 - Eval definition SHA-256: `9b46c27014c750c2c7c902ee9b735c340d6216e70bd1db10e9ac7cfe4ffa72b8`
 - Metadata SHA-256: `8201495b57b213f9db3f5219d86222ff877b211b7bfe7d5c149fe15482812507`
@@ -31,26 +31,26 @@ Overall result: FAIL
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `blocks_on_evidence_mismatch` | PASS | With-skill output explicitly compares the request/plan path `preferences-summary` with PRD/TRD `feature_path: account-preferences`, identifies the conflict, blocks the gate before candidate confirmation, and reports zero writes. |
-| `design_zero_change` | PASS | With-skill git evidence shows unchanged HEAD, empty worktree/index diffs, and no status changes; the output reports `confirmed_batch: none; zero writes` and `none written` for the affected design/map scope. |
-| `routes_to_owner` | FAIL | The output routes the conflict to `pm-agent`, but does not route the TRD path/impact alignment to Engineer or `trd-gen` as required. |
+| `blocks_on_evidence_mismatch` | PASS | With-skill output explicitly contrasts request/plan `preferences-summary` with PRD/TRD `account-preferences`, identifies the conflict, and blocks before scope confirmation or writes. |
+| `design_zero_change` | PASS | With-skill output reports the design document and its change-map mapping were unmodified; locked git evidence shows no status, index, worktree, or commit changes. |
+| `routes_to_owner` | FAIL | With-skill output requests PM alignment for PRD/TRD together, but does not route the TRD conflict to Engineer/trd-gen as required. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cc15a608e753e009b625973b3297598562e26547f4019135f4ff1cee37bc04f0; fixture_sha256=9ee09a35ffbbce09e9a24f1afab930b7c3820a015f0b4c8a431f51638de5592f; output_sha256=08d36d2af5ad24ad194a8cb82578cdf5032fdfc60e85b181851162b6b259c15a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly blocked on the feature-path mismatch and made no writes, but incompletely routed ownership.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cc15a608e753e009b625973b3297598562e26547f4019135f4ff1cee37bc04f0; fixture_sha256=9ee09a35ffbbce09e9a24f1afab930b7c3820a015f0b4c8a431f51638de5592f; output_sha256=3f79feead91c00607adefd6f117afece3cbedd84367fd4ff7fbbc5a8790cf2ba; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly detected the feature-path mismatch and stopped without mutation, but incompletely routed ownership remediation.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cc15a608e753e009b625973b3297598562e26547f4019135f4ff1cee37bc04f0; fixture_sha256=9ee09a35ffbbce09e9a24f1afab930b7c3820a015f0b4c8a431f51638de5592f; output_sha256=7aaa2dc2004e21a58f435aad7766c6ad817d3a09ebb8321474089b2d0e95a118; snapshot_sha256=bdbebd71a49f2a3ea19e6fc13305703c801ff11beb1adcb8953eb53ef5f78afb
-- Behavior: Performed the requested document changes despite acknowledging the PRD/TRD metadata mismatch.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cc15a608e753e009b625973b3297598562e26547f4019135f4ff1cee37bc04f0; fixture_sha256=9ee09a35ffbbce09e9a24f1afab930b7c3820a015f0b4c8a431f51638de5592f; output_sha256=b370b2ccd4eb5a2945fc33768fd442ac29affc2980e152ecd692400c2771a1b6; snapshot_sha256=14695aa20f7feaa2b35ff61253ad5e3f55103a5cf00c9f53defbedaffc9960b7
+- Behavior: Modified both design and change-map files despite the feature-path mismatch and did not block before writing.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- Missing the required Engineer / trd-gen route for TRD path and impact-domain alignment.
-- Next: Route TRD path and impact-domain alignment to Engineer / trd-gen, alongside the PM owner route, and require unified evidence before retry.
+- routes_to_owner
+- Next: Route the PRD conflict to the PM owner and the TRD path/impact-domain conflict to Engineer/trd-gen; require both to align with the request and plan before retrying.
 
 ## Runtime Artifact Policy
 

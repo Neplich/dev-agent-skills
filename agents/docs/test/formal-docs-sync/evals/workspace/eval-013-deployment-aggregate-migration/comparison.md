@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `b9cf5f02e5624842eefaa770fff8e84ccfc602f0eed28accf48a25400705d39e` from `agents/docs/test/formal-docs-sync/evals/workspace/eval-013-deployment-aggregate-migration`.
 - Fixture SHA-256: `b9cf5f02e5624842eefaa770fff8e84ccfc602f0eed28accf48a25400705d39e`
 - Prompt SHA-256: `ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `f2aa9b2c49be68550ec45538c221425607f428ce`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `f24bfeb12dba77a74fcf3f0161749ae4671b83762eac08484e7ae08621d9bacb`
-- Skill overlay SHA-256: `5dbb8d8559bfab3926047aa028e19f362490751247c2142101cfd687fff5239e`
+- Target skill tree SHA-256: `dd975083d3977d90b71b3396dff2498ef2b7e8d49c50fab50b5462a26f3248ee`
+- Skill overlay SHA-256: `9667198915198da0404e03a7d4c962d38742b19c5de4de5f0cf1473f02db2bf1`
 - Judge schema SHA-256: `cb68cc7396b4ed1007a2bd5b5970baa015053110168fade98a969dbebc84c1b1`
 - Eval definition SHA-256: `2adf472912fe37066628cc2da23affed241d146a6c7c80728c7df93b4f2fccc7`
 - Metadata SHA-256: `1730a36a001d532f328500208fe2ccb136183d8551b840ea714421749b8365ea`
@@ -31,27 +31,27 @@ Overall result: FAIL
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `migrates_aggregate_path` | FAIL | The old page is deleted and the page tree exists, but the root index and all three class pages repeat shared facts such as APP_PORT=8080; the snapshot therefore contradicts the requirement that shared facts remain only in environment-reference.md. |
-| `repairs_inbound_and_internal_links` | PASS | Snapshot links update ops/index.md and product/runtime.md to deployment/index.md; child pages contain parseable relative links to the root and environment-reference.md. |
-| `updates_change_map_without_data_loss` | PASS | The with_skill change map includes class-specific pages, environment-reference.md, and required ancestor/navigation pages; it preserves custom_owner_field, exclude, and the unrelated src/product mapping, with deduplicated stable ordering. |
-| `updates_navigation_atomically` | PASS | The locked snapshot contains the migrated tree, repaired navigation and mappings, and no old-path markdown links. Raw trace item_16 records npm run test:docs from docs/site passing 2/2 with exit code 0. |
+| `migrates_aggregate_path` | FAIL | 旧聚合页已删除并创建新页面树，但根索引仍重复写入 APP_PORT=8080 和 /healthz 等共享环境事实。 |
+| `repairs_inbound_and_internal_links` | PASS | 快照显示 ops/index.md、product/runtime.md 已更新；各子页的相对环境引用和根索引链接均可解析，原始链接检查报告 broken=0。 |
+| `updates_change_map_without_data_loss` | PASS | change-map 已按部署类别更新为稳定、去重列表，并保留 custom_owner_field、exclude 及 src/product 无关映射；原始检查确认列表均唯一且稳定排序。 |
+| `updates_navigation_atomically` | PASS | 文件变更包含页面移动、导航、链接和 change-map；runner 原始命令显示 npm run test:docs 2/2 通过，残留旧路径扫描无结果，内部 Markdown 链接 broken=0。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=b9cf5f02e5624842eefaa770fff8e84ccfc602f0eed28accf48a25400705d39e; output_sha256=fd9f28c28a8c2a428f6ac09f7d7463dcc84477b47dd369bf1ecdb4b27eeab8b9; snapshot_sha256=a7717931bca143b7d235ed0d055f365375d90d2adcef0f197b19ea79fe27ece5
-- Behavior: Completed the confirmed deployment-page migration with repaired links, expanded change-map closures, preserved fields, and passing documentation tests, but duplicated shared environment facts outside the dedicated reference page.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=b9cf5f02e5624842eefaa770fff8e84ccfc602f0eed28accf48a25400705d39e; output_sha256=c6df08b3eee2ef65e704a12f60b8cca791a571d71ffff0c77504f4572544db55; snapshot_sha256=3c68258a50adeded2a583824dd8b9b1daba187fa2269b6732ab2d6d20825d4ff
+- Behavior: 完成迁移、链接修复、映射更新和测试，但根索引保留共享环境事实，未完全满足去重要求。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=b9cf5f02e5624842eefaa770fff8e84ccfc602f0eed28accf48a25400705d39e; output_sha256=64d318a5a7520a897de9a6a609f874757b94fd31a70c9ca2abdad04afc3cf0a7; snapshot_sha256=b1305fec62d686213f7ce3791e1088c12e6eab3530978293da547e8df437aabc
-- Behavior: Fresh baseline also produced a migration-shaped delivery and passing test claim; used only as comparison context and not to determine with_skill assertion verdicts.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=ef6288663966feaaf953d5b243a6dc9ee464a3ae22e56d91ba3c5352bb37ed40; fixture_sha256=b9cf5f02e5624842eefaa770fff8e84ccfc602f0eed28accf48a25400705d39e; output_sha256=03413915ef27a24173fd858cef273ae3eef3786e79930fe93f0e2020281589de; snapshot_sha256=8bcd183de6bd71505351de1dc9ff0dee4811e146de692b96e54740b2067c27d7
+- Behavior: 报告完成了迁移、链接修复、映射保留和测试；作为比较基线，缺少 with_skill 的详细同步决策与验证证据。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- The with_skill delivery duplicates shared environment facts outside environment-reference.md, including APP_PORT=8080 in the root and class pages.
-- Next: Move shared APP_PORT and health-check facts out of the root and class pages, leaving them only in environment-reference.md.
+- migrates_aggregate_path：根索引复制了应仅保留在 environment-reference.md 的共享环境事实。
+- Next: 将根索引中的 APP_PORT 和 /healthz 共享事实移除，仅保留指向 environment-reference.md 的导航说明。
 
 ## Runtime Artifact Policy
 
