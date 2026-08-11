@@ -30,17 +30,21 @@ the Mandatory Entry Decision below; when the guard stops the request, do not
 emit the `Routing decision` block or any classification field. Decide whether
 the current request is in scope:
 
-- **Enabled project**: the current directory or a non-home ancestor carries
-  an enable marker — the dev-agent-skills repository itself (`AGENTS.md` plus
-  `.claude-plugin/marketplace.json`), a Codex project install (a
-  `.agents/dev-agent-skills/` clone or the mirror marker
+Check the current directory and its non-home ancestors for an enable marker,
+and state which marker you find or that none exists:
+
+- the dev-agent-skills repository itself (`AGENTS.md` plus
+  `.claude-plugin/marketplace.json`), or
+- a completed Codex project install, recognized only by the mirror marker
   `.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json` under the
-  project root), or a dev-agent-skills entry in the project's
-  `.claude/settings.json` / `.claude/settings.local.json` `enabledPlugins`
-  with the dev-agent-skills entry set to an enabled value.
-  A personal install under the home directory (`~/.agents/skills/`,
-  `~/.agents/dev-agent-skills/`) is not a project marker; it never enables
-  the project path by itself.
+  project root (a bare `.agents/dev-agent-skills/` clone is not a marker; it
+  only indicates an incomplete or leftover install), or
+- a dev-agent-skills entry set to an enabled value in the project's
+  `.claude/settings.json` / `.claude/settings.local.json` `enabledPlugins`.
+
+A personal install under the home directory (`~/.agents/skills/`,
+`~/.agents/dev-agent-skills/`) is not a project marker; it never enables
+the project path by itself.
 - **Out of scope**: no marker, and the request is general conversation,
   local-machine operation, or generic file work. State in one line that
   dev-agent-skills targets in-project R&D workflows and that the current

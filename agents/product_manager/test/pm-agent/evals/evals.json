@@ -675,7 +675,7 @@
         {
           "id": "blocks_unknown_evidence",
           "description": "证据不足保持 unknown",
-          "text": "缺少 CI 或环境权限证据时报告 unknown、指明缺口，不按 integrated 或 ready handoff 处理。"
+          "text": "缺少 CI 或环境权限证据时报告 unknown 或语义等价的不就绪状态（如 blocked、证据未确认），指明缺口，不按 integrated 或 ready handoff 处理。"
         },
         {
           "id": "builds_repo_wide_deployment_packet",
@@ -775,8 +775,8 @@
       "assertions": [
         {
           "id": "scope_guard_stops_general_request",
-          "description": "一般请求不进入 PM 工作流（语义等价接受）",
-          "text": "必须识别该请求属于一般对话、本机环境操作或通用文件处理，且当前目录未启用 dev-agent-skills（接受语义等价表达，如「请求不在 dev-agent-skills 项目内工作流范围」「此目录未启用该能力」，不要求逐字枚举）；输出一句简短说明后停止。不得输出 request_type、change_tier、selected_owner 等分类路由字段，不得产出文档链或 handoff 下游。"
+          "description": "一般请求不进入 PM 工作流（须判定目录启用状态）",
+          "text": "必须检查当前目录的 dev-agent-skills 启用状态并基于该状态决定：识别当前目录未启用（接受「当前目录未启用 dev-agent-skills」「此目录未启用该能力」等同义表述，不接受仅以「请求不在项目工作流范围」代替目录启用状态判定），输出一句简短说明后停止。不得输出 request_type、change_tier、selected_owner 等分类路由字段，不得产出文档链或 handoff 下游。"
         }
       ]
     },
@@ -816,6 +816,46 @@
           "id": "classifies_general_request",
           "description": "一般请求进入分类",
           "text": "文件整理请求按 PM 分类协议处理：明确 request_type 与所选 owner（PM specialist 或下游角色），不跳过分类直接执行文件操作。"
+        }
+      ]
+    },
+    {
+      "id": "eval-019-scope-guard-enabled-general",
+      "name": "scope-guard-enabled-general",
+      "description": "Verifies that a general request in an enabled project directory proceeds into the normal PM workflow.",
+      "scenario": {
+        "persona": "在已启用 dev-agent-skills 的项目目录里处理本机事务的开发者",
+        "situation": "当前目录带有 dev-agent-skills 项目启用标记（Codex mirror marker），用户提出一般性本机文件整理请求。",
+        "trigger": "已启用项目的目录判定应放行一般请求，正常进入 PM 分类。",
+        "goal": "识别启用标记并正常进入 PM 分类流程",
+        "materials": [
+          "带 dev-agent-skills 启用标记（.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json）的目录",
+          "用户提出的一般性本机文件整理请求"
+        ],
+        "constraints": [
+          "已启用目录不得拦截一般请求",
+          "正常执行 PM 分类",
+          "不执行文件整理动作本身"
+        ],
+        "success_criteria": [
+          "识别目录已启用（引用启用标记）",
+          "输出以 Routing decision: 开头的分类结果",
+          "不输出使用范围拦截提示"
+        ]
+      },
+      "prompt": "帮我把 ~/Downloads 里下载的文件按类型整理一下，图片放一个文件夹，文档放一个文件夹。",
+      "expected_output": "识别当前目录已启用 dev-agent-skills，正常进入 PM 分类并输出 Routing decision 首行。",
+      "workspace": "workspace/eval-19-scope-guard-enabled-general",
+      "assertions": [
+        {
+          "id": "enabled_marker_detected",
+          "description": "识别启用标记",
+          "text": "必须检查当前目录的 dev-agent-skills 启用状态，识别出目录已启用（引用 Codex mirror marker 或语义等价的启用标记）。"
+        },
+        {
+          "id": "general_request_proceeds",
+          "description": "已启用目录的一般请求放行",
+          "text": "已启用目录中的一般请求不得被拦截：正常进入 PM 分类，输出以 `Routing decision:` 开头的首行并包含 request_type、change_tier、selected_owner 等分类字段；不得输出「当前目录未启用」的拦截提示。"
         }
       ]
     }

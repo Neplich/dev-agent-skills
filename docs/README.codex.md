@@ -102,6 +102,8 @@ SKILL_ROOT="$PROJECT_ROOT/.agents/skills"
 # TARGET_TAG="v0.4.1"
 
 if [ -d "$CLONE_ROOT/.git" ]; then
+  # 先前使用过固定版本时 clone 处于 detached HEAD，先切回 main 再更新
+  git -C "$CLONE_ROOT" checkout main || true
   git -C "$CLONE_ROOT" pull --ff-only
 else
   mkdir -p "$(dirname "$CLONE_ROOT")"
@@ -111,9 +113,6 @@ fi
 if [ -n "${TARGET_TAG:-}" ]; then
   git -C "$CLONE_ROOT" fetch origin "refs/tags/${TARGET_TAG}:refs/tags/${TARGET_TAG}"
   git -C "$CLONE_ROOT" checkout --detach "refs/tags/${TARGET_TAG}^{commit}"
-else
-  # 先前使用过固定版本时 clone 处于 detached HEAD，先切回 main 再更新
-  git -C "$CLONE_ROOT" checkout main || true
 fi
 ```
 
