@@ -163,9 +163,10 @@ durable `comparison.md`、运行期清理与失败分诊，统一由项目级
 `scripts/check_eval_contract.py`，具体执行语义以 `scripts/run_skill_eval.py` 与
 `scripts/eval_runtime.py` 为准。`AGENTS.md` 不再复制第二份 eval 流程。
 
-角色 skill 与角色 Agent 的新增、修改、重命名流程（注册、路由、发现、文档、lockfile、
-共享契约副本的同步面核对）统一由项目级 `.agents/skills/maintain-skills/SKILL.md`
-负责；受影响的 eval 分析、编写与 fresh 证据处理一律交给 `skill-eval-runner`。
+角色 skill 的新增、修改、重命名与角色 Agent 的新增流程（注册、路由、发现、文档、
+lockfile、共享契约副本的同步面核对）统一由项目级
+`.agents/skills/maintain-skills/SKILL.md` 负责；受影响的 eval 分析、编写与 fresh
+证据处理一律交给 `skill-eval-runner`。
 
 ## 重要文件
 

@@ -7,7 +7,7 @@ untrustworthy in practice.
 
 | Surface | Required changes |
 | --- | --- |
-| Registration | `.claude-plugin/marketplace.json` `skills` array and `strict` flag; `skills-lock.json` entry and `computedHash`; `agents/{agent}/.claude-plugin/plugin.json` name / version / description kept in sync with the marketplace entry (new agents create it; existing agents refresh description on capability changes); `.kimi-plugin/plugin.json` `skills` array (new agents only — the contract checks path validity, not full agent coverage) |
+| Registration | `.claude-plugin/marketplace.json` `skills` array, `source` path, and `strict` flag; `skills-lock.json` entry and `computedHash`; `agents/{agent}/.claude-plugin/plugin.json` name / version / description kept in sync with the marketplace entry (new agents create it; existing agents refresh description on capability changes); `.kimi-plugin/plugin.json` `skills` array (new agents only — the contract checks path validity, not full agent coverage) |
 | Routing | Router SKILL.md sections that enumerate the specialist: Available Skills, Routing Signals, Specialist Gate Pointers, Default Routes, Role Boundary; the entry router skill name must equal the marketplace plugin name (`install_codex_skills.py` `--routers-only` relies on the equality) |
 | Discovery | `.claude-plugin/marketplace.json` agent `description`; `agents/{agent}/.claude-plugin/plugin.json` `description`; router SKILL.md frontmatter `description`; the root-routing pointer sentence in `AGENTS.md` describing that router's routing scope |
 | Agent docs | `agents/{agent}/README.md` skills table, counts, and Routing Rules; `README_zh.md` mirrored |

@@ -9,7 +9,9 @@ A new skill inside an existing agent, or a whole new agent.
 
 New skill inside an existing agent:
 
-1. Create `agents/{agent}/skills/{skill-name}/SKILL.md`; create
+1. Create `agents/{agent}/skills/{skill-name}/SKILL.md` with the contract
+   required frontmatter: `name` (equal to the skill directory), `description`,
+   and `visibility: internal` (all skills except `pm-agent`); create
    `agents/{agent}/test/{skill-name}/evals/evals.json` unless the project-level
    `skill-eval-runner` has registered a manual-only exception; create
    `_internal/` only when staged loading is needed.
@@ -28,9 +30,10 @@ New agent:
    `scripts/install_codex_skills.py` `--routers-only` recognizes routers by
    that equality, and a mismatch silently excludes the new agent.
 4. Register the agent in `.claude-plugin/marketplace.json` with
-   `"strict": true` (every existing plugin uses it), refresh
-   `skills-lock.json`, create `agents/{agent}/.claude-plugin/plugin.json`, and
-   add the agent's skills directory to `.kimi-plugin/plugin.json`.
+   `"source": "./agents/{agent-name}"` and `"strict": true` (every existing
+   plugin uses both), refresh `skills-lock.json`, create
+   `agents/{agent}/.claude-plugin/plugin.json`, and add the agent's skills
+   directory to `.kimi-plugin/plugin.json`.
 5. Add the agent to `scripts/check_eval_contract.py` `VALID_AGENTS` and to
    `.github/workflows/evals.yml` manual targets.
 6. Add evals for regularly evaluable skills and record real usage feedback for
