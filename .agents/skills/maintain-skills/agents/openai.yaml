@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maintain Skills"
+  short_description: "管理本仓库角色 skill 生命周期（新增/修改/重命名）与角色 Agent 新增及同步面"
+  default_prompt: "使用 $maintain-skills 管理角色 skill 的新增、修改、重命名或角色 Agent 的新增流程。"

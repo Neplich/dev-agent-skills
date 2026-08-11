@@ -116,50 +116,17 @@ skill eval 的 Fresh Sub-Agent 门禁作用于 skill 自身的测试流程，不
 
 ### 新增 Agent
 
-1. 创建目录结构：
-   ```bash
-   mkdir -p agents/{agent-name}/{skills,test}
-   ```
-
-2. 按现有 Agent 模式创建 `agents/{agent-name}/README.md`
-
-3. 为每个 skill 创建 `skills/{skill-name}/SKILL.md`；除项目级 `skill-eval-runner` 登记的 manual-only 例外外，同时创建 `test/{skill-name}/evals/evals.json`，仅在需要渐进加载时创建 `skills/{skill-name}/_internal/`
-
-4. 在 `.claude-plugin/marketplace.json` 注册 Agent：
-   ```json
-   {
-     "name": "{agent-name}-agent",
-     "description": "...",
-     "skills": ["./agents/{agent-name}/skills/{skill-name}"]
-   }
-   ```
-   随后用新 skill 元数据更新 `skills-lock.json`
-
-5. 为可常规评测的 skill 添加 eval 并对比使用与不使用 skill 的结果；manual-only skill 按项目级 `skill-eval-runner` 记录真实使用反馈与当前结论，再按下节「新增或重命名 Skill 的同步面」逐面核对遗漏项
+新增角色 Agent（目录、README、skill、marketplace 注册、lockfile、eval 影响）的完整
+流程与同步面清单统一由项目级 `.agents/skills/maintain-skills/SKILL.md` 负责；eval 的
+编写与 fresh 验证交给项目级 `skill-eval-runner`。`AGENTS.md` 不再复制第二份流程。
 
 ### 新增或重命名 Skill 的同步面
 
-向既有 Agent 增加一个 specialist 时，改动会扇出到注册、路由、发现、Agent 文档、顶层入口、eval 和过程文档多个面。任一面漏改都不会被契约脚本拦住，但会让 skill 在实际使用中不可达或不可信。按下表逐项核对，不要只改「主要」文件。
-
-| 面 | 必改项 |
-| --- | --- |
-| 注册 | `.claude-plugin/marketplace.json` 的 `skills` 数组；`skills-lock.json` 条目与 `computedHash` |
-| 路由 | router `SKILL.md` 的 Available Skills、Routing Signals、Specialist Gate Pointers、Role Boundary 中列举 specialist 的那句 |
-| **发现** | `.claude-plugin/marketplace.json` 的 agent `description`；router `SKILL.md` 的 frontmatter `description`；`AGENTS.md` 中描述该 router 分流范围的根路由指针句 |
-| Agent 文档 | `agents/{agent}/README.md` 的 skills 表、计数与 **Routing Rules 小节**；`README_zh.md` 同步 |
-| 顶层入口 | 根 `README.md` / `README_zh.md` 的 Agent 表计数与能力描述；**`pm-agent/SKILL.md` 的 handoff targets、请求分类行与 Default Routes** |
-| eval | 新 skill 自己的 evals；**router 的路由 eval**；被本次改动影响的既有 skill 的断言与其 durable `comparison.md` |
-| 过程文档 | PRD/TRD/实施计划的触点表与禁止区必须与实际 diff 一致；父 PRD 的 `child_features` 与其中描述注册面的行 |
-
-加粗项是最容易漏的：
-
-- **发现层**决定客户端在读正文之前是否会选中这个 skill。计数和正文改全了、描述没改，等于新能力在元数据层不存在。
-- **router 路由 eval** 缺失时，路由分支写错也能全绿通过。
-- **PM 入口分类**：`pm-agent` 是默认用户入口，用户不点名 skill 时全部经它分类。下游 router 认识新 specialist，但 PM 的分类词典里没有对应说法时，该能力对普通用户不可达。
-- **既有 skill 的 eval 与 comparison**：改动若影响断言依赖的契约，必须通过项目级 `skill-eval-runner` 识别受影响范围并处理 fresh 证据；不得沿用或手工伪造旧结论。
-- **过程文档与实际 diff 的一致性**：计划里写成禁止区、实际却改了的文件，会让后续维护者按文档回退掉必要修改。
-
-扩展共享契约（如 `doc_type` 枚举）时，还要同步其全部副本：权威定义、消费方 skill 中的复制表、以及 `docs-site-bootstrap` 交付给宿主的脚本资产与模板。交付给宿主的脚本副本不会随 marketplace 更新自动升级，存量宿主需重跑 bootstrap，PR 中要说明这一点。
+角色 skill 的新增、修改、重命名流程与同步面清单（注册、路由、发现、Agent 文档、
+顶层入口、eval、过程文档、共享契约副本）统一由项目级
+`.agents/skills/maintain-skills/SKILL.md` 及其 `references/sync-surfaces.md` 负责；
+受影响 eval 的分析与 fresh 证据处理交给项目级 `skill-eval-runner`。`AGENTS.md`
+不再复制第二份同步面清单。
 
 ### Skill 设计原则
 
@@ -195,6 +162,11 @@ durable `comparison.md`、运行期清理与失败分诊，统一由项目级
 汇总或诊断 eval 的任务都必须使用该 skill；具体字段约束以
 `scripts/check_eval_contract.py`，具体执行语义以 `scripts/run_skill_eval.py` 与
 `scripts/eval_runtime.py` 为准。`AGENTS.md` 不再复制第二份 eval 流程。
+
+角色 skill 的新增、修改、重命名与角色 Agent 的新增流程（注册、路由、发现、文档、
+lockfile、共享契约副本的同步面核对）统一由项目级
+`.agents/skills/maintain-skills/SKILL.md` 负责；受影响的 eval 分析、编写与 fresh
+证据处理一律交给 `skill-eval-runner`。
 
 ## 重要文件
 
