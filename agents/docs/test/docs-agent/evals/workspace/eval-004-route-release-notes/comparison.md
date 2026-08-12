@@ -12,17 +12,19 @@
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `23d5701fab562491dfec3455fd6eabce7f6a6cba18940861023208d40f53fc3e` from `agents/docs/test/docs-agent/evals/workspace/eval-004-route-release-notes`.
-- Fixture SHA-256: `23d5701fab562491dfec3455fd6eabce7f6a6cba18940861023208d40f53fc3e`
-- Prompt SHA-256: `ab720b723fbaf54cc8b204eab97c1f0a7167519c350afdf3b475cf0b324862c8`
+- Identity schema: `2`
+- target_skill_sha256: `cf92649952a97be677cf5e900a4d9c793a6c0724813cf1fa3154f57e7d2c08f3`
+- eval_definition_sha256: `6d935c2fabb41ac4d322f49d33294bd64934555c17ee2ff70a64426da58d1b41`
+- metadata_sha256: `5831b803b3b347d7fd4611f1c19958d707ffe3e9ced4a78ed755e71f76a2c9b8`
+- fixture_sha256: `23d5701fab562491dfec3455fd6eabce7f6a6cba18940861023208d40f53fc3e`
+- execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
+- runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
+- judge_schema_sha256: `73f4addc59ec16b0f91c6a70a2a767ce7f6b4ad72612ca19a2131095a0722114`
+- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
+- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
+- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
 - Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `cf92649952a97be677cf5e900a4d9c793a6c0724813cf1fa3154f57e7d2c08f3`
-- Skill overlay SHA-256: `c7d3b6793c943fb4d4971cf0d6f11988326a2dff978353bf3c4327d4e24c17b7`
-- Judge schema SHA-256: `73f4addc59ec16b0f91c6a70a2a767ce7f6b4ad72612ca19a2131095a0722114`
-- Eval definition SHA-256: `6d935c2fabb41ac4d322f49d33294bd64934555c17ee2ff70a64426da58d1b41`
-- Metadata SHA-256: `5831b803b3b347d7fd4611f1c19958d707ffe3e9ced4a78ed755e71f76a2c9b8`
-- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
-- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **FAIL**
 - Coverage result: **FULL**
 Overall result: FAIL

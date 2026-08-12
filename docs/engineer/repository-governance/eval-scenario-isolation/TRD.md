@@ -1,7 +1,7 @@
 ---
 title: "Eval 真实场景与 Lane 隔离重构技术需求文档"
 type: TRD
-version: "1.3.0"
+version: "1.5.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-07"
@@ -16,11 +16,13 @@ related_docs:
   - "docs/pm/repository-governance/eval-scenario-isolation/DECISIONS.md"
   - "https://github.com/Neplich/dev-agent-skills/issues/246"
   - "https://github.com/Neplich/dev-agent-skills/issues/275"
+  - "https://github.com/Neplich/dev-agent-skills/issues/277"
   - "https://learn.chatgpt.com/docs/developer-commands?surface=cli"
   - "https://learn.chatgpt.com/docs/sandboxing"
   - "https://learn.chatgpt.com/docs/permissions"
 related_code:
   - "scripts/eval_runtime.py"
+  - "scripts/run_skill_eval.py"
   - "scripts/check_eval_contract.py"
   - "scripts/check_eval_artifacts.py"
   - "scripts/summarize_eval_results.py"
@@ -30,8 +32,16 @@ related_code:
   - "agents/*/test/*/evals/evals.json"
   - "agents/*/test/*/evals/workspace/**"
   - "agents/*/test/*/workspace/**"
+  - "agents/engineer/skills/trd-gen/SKILL.md"
+  - "agents/engineer/test/trd-gen/evals/evals.json"
   - ".github/workflows/evals.yml"
 changelog:
+  - version: "1.5.0"
+    date: "2026-08-12"
+    changes: "定义 identity schema v2 七字段、协议模块边界与 196 份常规 comparison 的一次性单轨迁移"
+  - version: "1.4.0"
+    date: "2026-08-12"
+    changes: "定义冻结后 eval 的零/一/多 inventory 匹配语义、统一严格检查，并收敛 trd-gen eval-006 混合缺陷"
   - version: "1.3.0"
     date: "2026-08-12"
     changes: "分离完整 skill overlay 的运行锁定身份与 durable comparison 的历史 freshness 身份"
@@ -68,6 +78,16 @@ feature flag、额外配置层、监控系统或通用插件框架。运行状�
 runner 退出前删除完整 runtime root，仓库长期只保留 scenario、fixture、迁移清单和 durable
 `comparison.md`。
 
+Issue #277 的后续修复不扩充 Issue #246 冻结的 193 条迁移账本。Durable writer 将历史迁移
+状态更新与当前 comparison 持久化解耦，静态 checker 则对所有当前常规 eval 使用同一严格
+输入契约。`trd-gen` eval-006 只修正与合法后续 handoff 冲突的断言，同时保留并强化正文
+归一化与 frontmatter changelog 的现行 skill 义务。
+
+维护者随后授权把 #277 小幅扩大到 identity schema v2。跨版本 freshness 只绑定目标 skill、
+eval definition、metadata、fixture、execution protocol、runtime protocol 与 judge schema；
+persistence、inventory、报告格式和薄 CLI 不参与跨版本身份。全部执行源码 manifest 仍在同轮
+开始时锁定并在持久化前复核，任何漂移都 `BLOCKED`。
+
 ### 1.1 来源与追踪
 
 | 来源 | 本 TRD 的技术落实 |
@@ -77,8 +97,11 @@ runner 退出前删除完整 runtime root，仓库长期只保留 scenario、fix
 | PRD US-003、FR-005 至 FR-008 | 统一 materializer、preflight、skill overlay、paired executor 和 fresh judge。 |
 | PRD US-004、FR-001、FR-009 | 维护 193 条冻结基线迁移清单并机械校验 193/193。 |
 | PRD US-005、FR-009 | 未按新契约重跑的 comparison 标记 `BLOCKED`/stale。 |
-| DECISIONS D-001 至 D-015 | 保留 major 级别、唯一变量、runtime artifact 零提交和不改业务协议边界。 |
+| PRD US-006、FR-011 | 冻结后 eval 不登记 inventory；定义零/一/多匹配持久化与统一严格检查。 |
+| PRD US-007、FR-012、FR-013 | Identity v2 七字段、协议模块边界、同轮完整源码锁与一次性单轨迁移。 |
+| DECISIONS D-001 至 D-026 | 保留隔离与证据边界，并落实冻结账本、持久化三态、trd-gen 混合缺陷与 identity v2 决策。 |
 | Issue #246 | 修复 QA 确定性泄漏，审计其余 runner，并重建全部常规 eval 证据。 |
+| Issue #277 | 修复 PM scope-guard eval 的持久化阻塞，并收敛 trd-gen eval-006 的断言与行为缺陷。 |
 | AGENTS.md eval 契约 | 固定 fresh paired lane、Luna medium、独立 judge、Behavior/Coverage/Overall 结果。 |
 
 ## 2. 冻结实现基线
@@ -250,6 +273,47 @@ Executor 校验组合规则，不信任模型自由计算 Overall：Behavior FAI
 PASS + FULL 为 PASS；Behavior PASS + PARTIAL 为 PASS (partial coverage)。Preflight
 失败由 executor 直接产生 BLOCKED，不调用 judge。
 
+### 3.6 Identity schema v2 与模块边界
+
+Durable comparison 的跨版本 freshness 只包含以下七个字段：
+
+1. `target_skill_sha256`
+2. `eval_definition_sha256`
+3. `metadata_sha256`
+4. `fixture_sha256`
+5. `execution_protocol_sha256`
+6. `runtime_protocol_sha256`
+7. `judge_schema_sha256`
+
+实现按职责分成四层：`eval_execution.py` 负责 candidate 执行和证据锁定，
+`eval_judging.py` 负责 judge package、schema 校验与 Overall 重算，两者共同形成 execution
+protocol；`eval_runtime.py` 只负责 fixture、lane、Git/HOME/CODEX_HOME、preflight 与 cleanup，
+形成 runtime protocol；`eval_persistence.py` 负责 comparison 格式、事务写入和 inventory
+0/1/>1 语义，不进入跨版本 freshness。`eval_identity.py` 计算七字段和完整源码 manifest；
+`run_skill_eval.py` 只保留薄 CLI、目标枚举和 orchestration。
+
+单轮执行锁定上述全部模块以及 checker、schema 和报告格式等实际参与路径的完整源码
+manifest，并在 durable persistence 前复核；任一 bytes 变化均为 source drift，结果
+`BLOCKED`。完整 manifest 不写入 schema v2 freshness，也不因后续 persistence、inventory、
+report format 或薄 CLI 变化使历史 comparison stale。
+
+### 3.7 一次性迁移与 checker 切换
+
+`migrate_eval_identity_v2.py` 是一次性迁移器。Dry-run 先核验旧 Executor/Runtime hash 对应
+可信 Git source commit，重算当前四项 eval 输入，并输出 migration audit JSON；实际旧 hash
+和 source commit 只记录在 audit，不硬编码进正常 writer/checker。
+
+196 份常规 comparison 按冻结分类处理：187 份 FRESH 机械替换 identity 块并保持 verdict、
+assertion evidence、Behavior、Coverage 与 Overall 逐字不变；其结果分布为 127 PASS/FULL、
+46 PASS/PARTIAL、12 FAIL/FULL、2 FAIL/PARTIAL，807 条 assertion 为 717 PASS、
+70 NOT_EXERCISED、20 FAIL。`trd-gen` 6 份因 skill/eval 输入变化保持 v2 stale，PM eval-017/018/019
+保持 v2 PENDING；1 份 manual-only evaluation result 原样不迁移。
+
+迁移先完成全量验证再原子写入；任一来源、输入、数量或逐字保持校验失败时不部分落盘。
+迁移完成后 `check_eval_contract.py` 只接受 schema v2，正常检查不调用 Git、不读取迁移 audit、
+不保留 v1/v2 双轨。冻结 `migration-inventory.json` 的 schema 1.0、193 条记录和 counts 保持
+逐字不变。
+
 ## 4. Runner 收敛方案
 
 | 文件或角色 | 目标状态 |
@@ -291,6 +355,29 @@ fixture 复制、assertion/expected output 可见性、runtime reset、judge fre
 - `migration_status: complete` 只允许在新 comparison 含 fresh preflight、judge 和合法
   Behavior/Coverage/Overall 时出现；
 - 全量完成条件为 193/193 有处理结论，且所有 retained 均 complete。
+
+### 5.1 冻结后 Eval 持久化与检查
+
+`migration-inventory.json` 的 schema 继续为 `1.0`，`old_evals`、角色/skill 计数、disposition
+与 migration status 总数保持 Issue #246 冻结值。后续新增、修改或删除的常规 eval 不回填
+这份历史清单。
+
+`scripts/run_skill_eval.py` 在持久化 fresh judge 结果时按 `(agent, skill, eval_id)` 查找
+`disposition: retained` 的记录：
+
+- 零匹配：判定为冻结后 eval，只事务替换其 `comparison.md`，inventory 文件不参与写入；
+- 唯一匹配：在同一 durable transaction 中替换 comparison，并把对应 migration status 与
+  汇总计数更新为 complete；
+- 多于一个匹配：判定 inventory 身份歧义，拒绝 durable 写入并返回契约错误，不选择任一记录。
+
+`check_eval_contract.py` 对仓库中的每个常规 eval 一律执行 scenario、自然 prompt、assertions、
+metadata、`skill_dependencies`、六类 runtime isolation、Git topology 和 candidate fixture
+检查。Inventory 只额外验证冻结记录与 fresh identity，不再决定普通 eval 的校验强度。
+
+`trd-gen` eval-006 的修复分两层：断言允许 skill 在完成目标 TRD 后于交付摘要中声明
+`feature-implementor` owner/path，但仍要求本轮 TRD 由 `trd-gen` 自己完成，且 routing 信息不写入
+TRD 正文；skill 的交付前自检明确检查旧方案状态注释已从正文删除、移除记录已进入 frontmatter
+changelog。`body_consolidation`、`removal_recorded_in_changelog` 与“不创建计划/代码”断言不弱化。
 
 迁移开始时先把 193 份旧 comparison 的 Latest result 统一标记为 `BLOCKED`，原因写明
 Issue #246 新契约尚未重跑；保留历史正文。之后严格按以下阶段放行：
@@ -337,12 +424,26 @@ fixture 可执行性聚类：skill 未落实既有仓库契约时最小修正 sk
 | 193 个 eval workspace | 更新 metadata、清理/重写 README 与 fixture、保留 durable comparison。 |
 | `migration-inventory.json` | 新增 193 条冻结映射与阶段状态。 |
 | `.github/workflows/evals.yml` | 七角色统一入口、固定 `--jobs 10`，移除 runtime artifact 上传。 |
+| `scripts/run_skill_eval.py`、`scripts/test_run_skill_eval.py` | 增加 inventory 零/一/多 retained match 的持久化语义与回归测试。 |
+| `scripts/check_eval_contract.py`、`agents/test_eval_contract.py` | 对所有当前常规 eval 统一启用严格输入校验，保留冻结 inventory 的独立校验。 |
+| `scripts/eval_execution.py`、`scripts/eval_judging.py` | 新增 execution/judging 协议模块；承接 candidate、judge 与结果重算逻辑。 |
+| `scripts/eval_persistence.py`、`scripts/eval_identity.py` | 新增 persistence/inventory 与 schema v2 identity 模块；前者不参与跨版本 freshness。 |
+| `scripts/migrate_eval_identity_v2.py`、migration audit JSON | 新增一次性迁移器与可复核分类/来源报告；正常 checker 不依赖该报告。 |
+| `scripts/run_skill_eval.py`、`scripts/eval_runtime.py` | 前者收敛为薄入口，后者保留 runtime/isolation；完整源码 manifest 只用于同轮 drift。 |
+| 相关 4 至 5 份测试 | 覆盖协议 hash、模块边界、source drift、原子迁移、逐字证据保持和 v2-only checker。 |
+| `agents/engineer/skills/trd-gen/SKILL.md`、`skills-lock.json` | 强化 current-state TRD 交付前自检，并刷新目标 skill hash；不改变职责边界或 discovery。 |
+| `agents/engineer/test/trd-gen/evals/evals.json` | 修正 eval-006 对合法后续 handoff 的误判，保留正文归一化、frontmatter changelog 和不进入实现的断言。 |
+| 9 份目标 `comparison.md` | 经用户明确授权后，精确重跑 trd-gen 全部 6 条与 PM eval-017/018/019 并由 runner 更新。 |
+| `migration-inventory.json` | 禁止修改；保持 schema 1.0、193 条冻结记录及其 counts。 |
 
 阶段 1 至 4 的早期实测为生产净增加 215 行、确定性测试净删除 386 行；完整隔离终审加入
 Git topology、离线依赖、source lock 与原始 Git evidence 后，以实施计划记录的首轮 closeout
 实测为准。本轮追加预计主要落在 runner 并发/清理回归、目标 skill 的既有契约补齐和少量
 原始 fixture，不新增重试、缓存、降级、feature flag、通用 hook、监控或额外日志层；最终
 closeout 必须重新按冻结 commit 统计生产、测试、skill 和 fixture 四类净行数。
+
+Issue #277 扩大后预计机械移动约 900 至 1100 行，手写净新增约 350 至 550 行；移动用于形成
+上述清晰职责边界，不计为新功能。除这些边界文件外不新增额外抽象、框架或兼容层。
 
 资产触达规模为：38 个 eval 定义文件、193 份 metadata、193 份 comparison、1 份迁移
 清单，以及按审计结果最多 193 个 README/fixture 集合；最少触达 425 个资产文件，最多
@@ -367,6 +468,10 @@ verdict、timing、diagnostics 和 workspace snapshot 只在执行期间存在�
 - 并发 durable transaction 不丢 comparison/inventory 更新；
 - migration inventory 精确覆盖 193/193，并拒绝缺失、重复和虚假 complete；
 - 合法宿主 README 与业务词不被 prompt/fixture 检查误报。
+- Schema v2 七字段完整且协议模块 mutation 只影响对应 protocol hash；persistence/inventory/
+  report format 变化不影响跨版本 freshness；
+- 同轮完整源码 manifest 任意 bytes 漂移均 `BLOCKED`；迁移 dry-run 验证 187/6/3、807 条
+  assertion 逐字保持与 manual-only 排除，迁移后 checker 拒绝 v1 且二次 dry-run 零 diff。
 
 ### 7.2 验证命令
 
@@ -416,6 +521,8 @@ git ls-files agents tmp/eval-runs | \
 | 批量运行成本诱发历史 baseline 复用 | Comparison 不再是同轮证据。 | Executor 不提供复用入口；失败保留 stale/BLOCKED。 |
 | 并发写 durable inventory 丢更新 | Comparison 与 migration 状态不一致。 | Comparison + inventory 事务在进程内写锁中读取、重算和替换，并做并发回归。 |
 | 异常路径残留大体积 runtime tree | 工作区或 CI 磁盘持续膨胀。 | Materialization 也放入受保护的 try/finally；worker 和 `MaterializedEvalRun.cleanup()` 都删除完整 root。 |
+| 协议模块边界遗漏真实执行行为 | 历史 comparison 被错误保留为 fresh。 | Candidate/judge 只在 execution/judging，隔离只在 runtime；跨边界调用与 protocol hash 做确定性测试。 |
+| 一次性迁移部分写入或篡改结论 | 仓库进入双轨或 evidence 失真。 | 全量 dry-run 先行、原子写入、逐字 verdict/evidence 校验，失败不落盘。 |
 
 ## 10. 回滚方案
 
@@ -432,10 +539,12 @@ comparison 和迁移记录通过 Git 恢复，不从 runtime artifact 回填。
 ### 11.1 假设
 
 - 当前冻结基线保持为 Issue #246 核验的 38 skill / 193 eval；后续新增 eval 不改变原
-  193 条逐项去向要求。
+  193 条逐项去向要求，也不登记进历史 inventory。
 - 本机与 CI 的 Codex CLI 支持 `--output-schema`、`--ephemeral`、`--ignore-rules`、
   permission profile 与 `codex sandbox -P`；能力 preflight 失败即 BLOCKED。
 - `gpt-5.6-luna` medium 可用于 candidate 与 judge；不可用时不替换模型。
+- 一次性 migration audit 能核验旧 Executor/Runtime 来源；无法验证来源的 comparison 不机械
+  迁移为 FRESH，而是保持 stale 等待重跑。
 
 ### 11.2 开放问题
 
@@ -444,26 +553,28 @@ comparison 和迁移记录通过 Git 恢复，不从 runtime artifact 回填。
 
 ### 11.3 L2b 拆分评估
 
-本 TRD 少于 500 行；PRD 共 5 条 US 与 10 条 FR，未达到 15 条门槛；方案虽覆盖七角色，
-但只包含“统一运行时/检查器”和“eval 资产迁移”两个相互依赖的技术域，没有独立子功能
-所有权。当前 `feature_path` 不拆分，所有产物继续镜像已确认的 PM L2 路径。
+本 TRD 因保留 #246 至 #277 的当前架构与追踪事实已超过 500 行，触发 L2b 拆分评估；PRD
+共 7 条 US 与 13 条 FR，未达到 15 条门槛。新增 identity v2 与既有 runner/checker 共用
+同一 source identity 和 comparison contract，不形成可独立发布、独立验收或独立所有权的
+子域；拆分会把同一持久化证据链分散到两个 feature path。当前不拆分，所有产物继续镜像
+已确认的 PM L2 路径。
 
 ## 12. Feature Implementor Handoff 条件
 
 `feature-implementor` 仅在以下条件同时满足后编写
 `docs/engineer/repository-governance/eval-scenario-isolation/IMPLEMENTATION_PLAN.md`：
 
-1. 同路径 PRD `1.1.0`、DECISIONS 与本 TRD `1.2.0` 均为 Approved，`change_tier` 保持 major。
-2. 实施计划在原“stale 冻结 → runtime/checker → 七 pilot → 角色批次 → 全量收尾”后追加
-   “过程产物清理 → 10 worker 并发 → fresh FAIL 聚类整改 → 全量重跑”。
-3. 实施计划保留首轮实测量级，并在最终 closeout 按冻结 commit 重算生产、测试、skill 和
-   fixture 四类净行数；不得为满足旧估算删除隔离或证据逻辑。
-4. 只允许 durable FAIL evidence 支持的最小 skill 契约修正，不新增重试、缓存、feature
-   flag、通用 hook、监控或日志层，也不修改无关 skill 行为。
-5. 七角色 pilot 与 193 条首轮 fresh 证据继续作为诊断基线；全部已确认根因修复前不启动
-   正式重跑。
-6. 最终完成定义包含每条 eval 的 fresh without、fresh with、独立 judge、更新后的
-   comparison、退出后 runtime artifact 为 0，以及不存在未解释的 FAIL/BLOCKED。
-
-维护者已明确授权按该追加范围继续实施；`feature-implementor` 使用同一路径活动计划记录
-执行、验证和 closeout，不另建第二份计划或从旧 Implemented 状态跳过新门禁。
+1. 同路径 PRD `1.4.0`、DECISIONS `1.3.0` 与本 TRD `1.5.0` 均为 Approved；Issue #277
+   分类为 `existing_update`、`change_tier: major`；schema v2、checker 单轨和 comparison
+   迁移属于仓库契约面变更。
+2. 原 `eval-scenario-isolation-refactor` 计划已按维护者批准归档；新活动计划固定使用同路径
+   `IMPLEMENTATION_PLAN.md`，并通过 `previous_plan_archive` 回链。
+3. 实施范围只包含 runner 0/1/>1 持久化、checker 统一严格校验、identity v2 模块拆分与
+   一次性迁移、trd-gen eval-006 混合缺陷、相关确定性测试与九条精确 fresh eval；inventory、
+   注册、路由、README 与无关 comparison 均为禁止区。
+4. 预计机械移动约 900 至 1100 行、手写净新增约 350 至 550 行；除确认的模块边界外不新增
+   抽象、兼容桥、重试、缓存、feature flag、通用 hook、监控或日志层；明显偏离时先确认。
+5. 模型 eval 必须在新活动计划获用户确认且模型调用得到明确授权后执行；有效 PASS、
+   PASS (partial coverage) 与 FAIL 均保留，仅重试 BLOCKED、timeout 或 incomplete。
+6. 最终完成定义包含四项静态 contract、受影响确定性测试、九份目标 comparison、
+   inventory 零 diff、runtime artifact 为 0，以及实施计划 closeout 与独立验收结论。

@@ -12,17 +12,19 @@
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `9c19cf5e49c59929ac5b070de11f3df7bfcbee1e79646cc4eec47c40b398a1bc` from `agents/engineer/test/trd-gen/evals/workspace/eval-003-nested-prd-to-engineer-trd`.
-- Fixture SHA-256: `9c19cf5e49c59929ac5b070de11f3df7bfcbee1e79646cc4eec47c40b398a1bc`
+- Identity schema: `2`
+- target_skill_sha256: `7350d982beaf3dbc1ec747d4598f05c9a1dfb9b1eb61dcb04ae43dfd72f6fcfd`
+- eval_definition_sha256: `f3397b62fc4d049158e92b00f525e136ca990d6c804b1f211ce557bfaf30d03e`
+- metadata_sha256: `de0335f1a182c8496f115f68dc77dc691a79abeae555386cc002141eada43865`
+- fixture_sha256: `9c19cf5e49c59929ac5b070de11f3df7bfcbee1e79646cc4eec47c40b398a1bc`
+- execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
+- runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
+- judge_schema_sha256: `10a807298f91a20d6e9b68f75881e7ea6287d8afeff10727bea551d980d3535f`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `8d0ccec5c9709506559aa1f8a5acdfd87e4bb71acf3bdaa8439f052c01aabae4`
-- Repository HEAD: `7ac19d358ca18ef7b2d109aeec17239bc9d0f4c0`
+- Repository HEAD: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `241887560d0522d91eee495434f78fbbe72dd8e5d7ed6c58dce70753634045ba`
-- Skill overlay SHA-256: `1701eca585dc754d5c838c067ffd884a80205302462ac0a542c908fd069ff822`
-- Judge schema SHA-256: `10a807298f91a20d6e9b68f75881e7ea6287d8afeff10727bea551d980d3535f`
-- Eval definition SHA-256: `f3397b62fc4d049158e92b00f525e136ca990d6c804b1f211ce557bfaf30d03e`
-- Metadata SHA-256: `de0335f1a182c8496f115f68dc77dc691a79abeae555386cc002141eada43865`
-- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
-- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Skill overlay SHA-256: `41df440b7248e793c6d9703098fb03264d5ab1871ee7f72726859596ddf5327e`
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
 Overall result: PASS (partial coverage)
@@ -31,22 +33,22 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `mirrors_nested_feature_path` | PASS | Locked delivery_snapshot contains the file at docs/engineer/chat-interface/messages/history/search/TRD.md, with no forbidden shorter or flattened target path. |
-| `preserves_feature_metadata` | PASS | TRD frontmatter contains feature_path chat-interface/messages/history/search, parent_feature chat-interface/messages/history, and feature_level 4. |
-| `related_prd_matches_path` | PASS | TRD frontmatter contains related_prd: docs/pm/chat-interface/messages/history/search/PRD.md. |
-| `blocks_on_missing_or_unclear_prd_path` | NOT_EXERCISED | The fixture PRD path and parent ownership are clear, so the missing-or-unclear PRD blocking branch was not exercised. |
-| `no_plan_or_code` | PASS | Git evidence shows only the TRD was added; no implementation plan, code, or tests were created, and the locked document explicitly states it does not implement code or create that plan. |
+| `mirrors_nested_feature_path` | PASS | 锁定 delivery_snapshot 直接显示文件路径为 docs/engineer/chat-interface/messages/history/search/TRD.md。 |
+| `preserves_feature_metadata` | PASS | TRD frontmatter 直接包含 feature_path、parent_feature，以及 feature_level: "4"。 |
+| `related_prd_matches_path` | PASS | TRD frontmatter 直接包含 related_prd: "docs/pm/chat-interface/messages/history/search/PRD.md"。 |
+| `blocks_on_missing_or_unclear_prd_path` | NOT_EXERCISED | 本次原始证据中的 PRD 路径和归属均清晰，因此缺失或不明确 PRD 路径的阻断分支未被 exercised。 |
+| `no_plan_or_code` | PASS | 锁定交付快照仅包含 TRD 文件；git 证据显示仅新增 docs/engineer/，未显示 IMPLEMENTATION_PLAN.md、代码或测试文件。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8d0ccec5c9709506559aa1f8a5acdfd87e4bb71acf3bdaa8439f052c01aabae4; fixture_sha256=9c19cf5e49c59929ac5b070de11f3df7bfcbee1e79646cc4eec47c40b398a1bc; output_sha256=5ac242d78c9b8dfba7986be184640915135b099f575fe8c1115e15d312645e37; snapshot_sha256=0c6243bd5a2d0c233e4abe5f03f21cbbd7bc6e0f797bb32c0e2536ee8c1af607
-- Behavior: Created the nested Engineer TRD at the exact mirrored feature path, preserved required metadata and PRD linkage, and stopped before implementation.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8d0ccec5c9709506559aa1f8a5acdfd87e4bb71acf3bdaa8439f052c01aabae4; fixture_sha256=9c19cf5e49c59929ac5b070de11f3df7bfcbee1e79646cc4eec47c40b398a1bc; output_sha256=3c373c73aaf039b34879b6dcb99f0ecea304a7d721139df154b23d918e5c21eb; snapshot_sha256=c3ad44afe115c45722f0258ab1ded4f8144e5e609d634dac3a1f10927e3c3609
+- Behavior: 生成了位于正确嵌套 feature_path 下的 TRD，并保留所需元数据及 related_prd；未进入代码或实现计划交付。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8d0ccec5c9709506559aa1f8a5acdfd87e4bb71acf3bdaa8439f052c01aabae4; fixture_sha256=9c19cf5e49c59929ac5b070de11f3df7bfcbee1e79646cc4eec47c40b398a1bc; output_sha256=9eeb639d0b258df8c19a4c6b346928fc657877d8a5fa56beea205d54b051a4db; snapshot_sha256=74a202e461603650869761df0114b0ad7e32840f260c8f0c587184f3d26a87bd
-- Behavior: Created a technical design under docs/tech with the nested directory but used the wrong document type/path convention and did not provide the required related_prd field.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8d0ccec5c9709506559aa1f8a5acdfd87e4bb71acf3bdaa8439f052c01aabae4; fixture_sha256=9c19cf5e49c59929ac5b070de11f3df7bfcbee1e79646cc4eec47c40b398a1bc; output_sha256=c423951b11b949dfb4156e8eef0d54e753d9c91e6c12fb941502d2d5825597a0; snapshot_sha256=f94687e4d44446c0d0ca1dee0456b72245fc6e989073ee8758b8eec040bcdd83
+- Behavior: 生成了 docs/tech 下的 TECHNICAL_PLAN.md，而非要求的 Engineer TRD，且未提供 related_prd 和 feature_level 元数据。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

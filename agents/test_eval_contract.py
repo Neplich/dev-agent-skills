@@ -155,7 +155,14 @@ class EvalContractTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
-            self.write_eval_fixture(root, "# Comparison\n")
+            identity = "".join(
+                f"- {key}: `{'a' * 64}`\n" for key in checker.FRESHNESS_KEYS
+            )
+            self.write_eval_fixture(
+                root,
+                "## Current Result\n\n- Evidence status: **PENDING**\n"
+                "- Identity schema: `2`\n" + identity + "Overall result: BLOCKED\n",
+            )
             skill_doc = root / "agents/docs/skills/manual-gen/SKILL.md"
             result_doc = root / "agents/docs/test/manual-gen/comparison.md"
             skill_doc.parent.mkdir(parents=True)
@@ -864,6 +871,45 @@ class EvalContractTests(unittest.TestCase):
             "",
         )
 
+    def test_only_pending_frozen_eval_skips_strict_contract_checks(self):
+        checker = load_checker_module()
+        identity = ("engineer", "debugger", "eval-001-baseline-evidence")
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(root, "# Comparison\n")
+            payload = json.loads(evals_path.read_text())
+            del payload["evals"][0]["scenario"]
+            evals_path.write_text(json.dumps(payload, ensure_ascii=False))
+            workspace = evals_path.parent / "workspace/eval-001-baseline-evidence"
+            metadata = workspace / "eval_metadata.json"
+            metadata_payload = json.loads(metadata.read_text())
+            del metadata_payload["runtime_isolation"]
+            metadata.write_text(json.dumps(metadata_payload))
+            (workspace / "service").mkdir()
+            (workspace / "service/README.md").write_text(
+                "Expected behavior: dispatcher should return PASS."
+            )
+
+            post_freeze_errors = checker.validate_file(
+                root, evals_path, pending_identities=set(),
+            )
+            pending_frozen_errors = checker.validate_file(
+                root, evals_path, pending_identities={identity},
+            )
+
+        strict_messages = "\n".join(error.render(root) for error in post_freeze_errors)
+        compatibility_messages = "\n".join(
+            error.render(root) for error in pending_frozen_errors
+        )
+        for message in (
+            "scenario must be an object",
+            "runtime_isolation must be an object",
+            "README contains high-confidence answer guidance",
+        ):
+            self.assertIn(message, strict_messages)
+            self.assertNotIn(message, compatibility_messages)
+
     def test_inventory_recomputes_frozen_pointer_and_hashes_from_commit(self):
         checker = load_checker_module()
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -919,108 +965,60 @@ class EvalContractTests(unittest.TestCase):
         self.assertIn("frozen_from_git_commit must be a real 40-hex commit", rendered)
         self.assertIn("source_contract must exactly match the frozen scan contract", rendered)
 
-    def test_complete_fresh_comparison_tracks_target_inputs_not_dependency_content(self):
+    def test_fresh_comparison_requires_exact_v2_identity_without_legacy_fields(self):
         checker = load_checker_module()
-        sys.path.insert(0, str(CHECKER_PATH.parents[1]))
-        from scripts import run_skill_eval as runner
-
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             evals_path = self.write_eval_fixture(root, "placeholder")
             workspace = evals_path.parent / "workspace/eval-001-baseline-evidence"
-            fixture = workspace / "host-input.txt"
-            fixture.write_text("host v1\n", encoding="utf-8")
-            dependency = root / "agents/product_manager/skills/idea-to-spec/SKILL.md"
-            dependency.parent.mkdir(parents=True)
-            dependency.write_text("dependency v1\n", encoding="utf-8")
-            metadata = workspace / "eval_metadata.json"
-            metadata.write_bytes(metadata.read_bytes().replace(
-                b'"skill_dependencies": []',
-                b'"skill_dependencies": ["agents/product_manager/skills/idea-to-spec"]',
-            ))
-            scripts = root / "scripts"
-            scripts.mkdir()
-            executor = scripts / "run_skill_eval.py"
-            runtime = scripts / "eval_runtime.py"
-            schema = scripts / "eval_judge_result.schema.json"
-            executor.write_text("executor v1\n", encoding="utf-8")
-            runtime.write_text("runtime v1\n", encoding="utf-8")
-            schema.write_bytes(runner.JUDGE_SCHEMA.read_bytes())
-            old_file, old_schema = runner.__file__, runner.JUDGE_SCHEMA
-            runner.__file__, runner.JUDGE_SCHEMA = str(executor), schema
-            try:
-                definition = runner.load_eval_definition(
-                    root, "engineer", "debugger", "eval-001-baseline-evidence",
-                )
-                identity = runner.source_identity(definition)
-                labels = {
-                    "Fixture SHA-256": checker.current_fixture_hash(definition),
-                    "Prompt SHA-256": hashlib.sha256(definition.item["prompt"].encode()).hexdigest(),
-                    "Eval definition SHA-256": identity["eval_definition_sha256"],
-                    "Metadata SHA-256": identity["metadata_sha256"],
-                    "Target skill tree SHA-256": identity["target_skill_sha256"],
-                    "Skill overlay SHA-256": identity["skill_overlay_sha256"],
-                    "Judge schema SHA-256": identity["judge_schema_sha256"],
-                    "Executor SHA-256": identity["executor_sha256"],
-                    "Runtime SHA-256": identity["runtime_sha256"],
-                }
-                comparison = workspace / "comparison.md"
-                comparison.write_text(
-                    "## Current Result\n\n- Evidence status: **FRESH**\n"
-                    "- Preflight status: **PASS**\n- Judge: fresh judge completed.\n"
-                    + "".join(f"- {name}: `{value}`\n" for name, value in labels.items())
-                    + "- Behavior result: **PASS**\n- Coverage result: **FULL**\n"
-                    "Overall result: PASS\n",
-                    encoding="utf-8",
-                )
-                baseline_errors = []
-                checker.validate_fresh_comparison_identity(
-                    root, comparison, "engineer", "debugger",
-                    "eval-001-baseline-evidence", baseline_errors,
-                )
-                self.assertEqual(baseline_errors, [])
+            identity = {"identity_schema": 2, **{
+                key: hashlib.sha256(key.encode()).hexdigest()
+                for key in checker.FRESHNESS_KEYS
+            }}
+            checker.current_identity_v2 = lambda _definition, **_kwargs: identity
+            comparison = workspace / "comparison.md"
+            base = (
+                "## Current Result\n\n- Evidence status: **FRESH**\n"
+                "- Preflight status: **PASS**\n- Judge: fresh judge completed.\n"
+                "- Identity schema: `2`\n"
+                + "".join(f"- {key}: `{identity[key]}`\n" for key in checker.FRESHNESS_KEYS)
+                + "- Behavior result: **PASS**\n- Coverage result: **FULL**\n"
+                "Overall result: PASS\n"
+            )
+            comparison.write_text(base, encoding="utf-8")
+            errors = []
+            checker.validate_fresh_comparison_identity(
+                root, comparison, "engineer", "debugger",
+                "eval-001-baseline-evidence", errors,
+            )
+            self.assertEqual(errors, [])
 
-                skill = root / "agents/engineer/skills/debugger/SKILL.md"
-                mutations = {
-                    "eval assertion": (evals_path, lambda data: data.replace(
-                        b"Result is present", b"Changed assertion",
-                    )),
-                    "metadata dependency": (metadata, lambda data: data.replace(
-                        b'"skill_dependencies": ["agents/product_manager/skills/idea-to-spec"]',
-                        b'"skill_dependencies": []',
-                    )),
-                    "target skill": (skill, lambda data: data + b"dirty skill\n"),
-                    "executor": (executor, lambda data: data + b"dirty executor\n"),
-                    "runtime": (runtime, lambda data: data + b"dirty runtime\n"),
-                    "judge schema": (schema, lambda data: data.replace(
-                        b'"Skill eval judge result"', b'"Changed judge result"',
-                    )),
-                    "fixture": (fixture, lambda data: data + b"dirty fixture\n"),
-                }
-                for label, (path, mutate) in mutations.items():
-                    with self.subTest(label=label):
-                        original = path.read_bytes()
-                        path.write_bytes(mutate(original))
-                        errors = []
-                        checker.validate_fresh_comparison_identity(
-                            root, comparison, "engineer", "debugger",
-                            "eval-001-baseline-evidence", errors,
-                        )
-                        self.assertTrue(any(
-                            "fresh comparison input identity is stale" in error.message
-                            for error in errors
-                        ))
-                        path.write_bytes(original)
+            comparison.write_text(
+                base + f"- Prompt SHA-256: `{'p' * 64}`\n"
+                f"- Skill overlay SHA-256: `{'s' * 64}`\n",
+                encoding="utf-8",
+            )
+            audit_errors = []
+            checker.validate_fresh_comparison_identity(
+                root, comparison, "engineer", "debugger",
+                "eval-001-baseline-evidence", audit_errors,
+            )
+            self.assertEqual(audit_errors, [])
 
-                dependency.write_text("dependency v2\n", encoding="utf-8")
-                dependency_errors = []
-                checker.validate_fresh_comparison_identity(
-                    root, comparison, "engineer", "debugger",
-                    "eval-001-baseline-evidence", dependency_errors,
-                )
-                self.assertEqual(dependency_errors, [])
-            finally:
-                runner.__file__, runner.JUDGE_SCHEMA = old_file, old_schema
+            for label, altered in (
+                ("missing schema", base.replace("- Identity schema: `2`\n", "")),
+                ("wrong field", base.replace(identity[checker.FRESHNESS_KEYS[0]], "f" * 64)),
+                ("legacy field", base + f"- Executor SHA-256: `{'e' * 64}`\n"),
+            ):
+                with self.subTest(label=label):
+                    comparison.write_text(altered, encoding="utf-8")
+                    errors = []
+                    checker.validate_fresh_comparison_identity(
+                        root, comparison, "engineer", "debugger",
+                        "eval-001-baseline-evidence", errors,
+                    )
+                    self.assertTrue(any("fresh comparison input identity is stale" in error.message
+                                        for error in errors))
 
     def test_fresh_comparison_allows_stale_word_in_eval_slug(self):
         checker = load_checker_module()
@@ -1040,6 +1038,61 @@ class EvalContractTests(unittest.TestCase):
             )
 
             self.assertTrue(checker._comparison_has_fresh_evidence(comparison))
+
+    def test_v2_freshness_check_does_not_query_git(self):
+        checker = load_checker_module()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            evals_path = self.write_eval_fixture(root, "placeholder")
+            workspace = evals_path.parent / "workspace/eval-001-baseline-evidence"
+            identity = {"identity_schema": 2, **{
+                key: hashlib.sha256(key.encode()).hexdigest()
+                for key in checker.FRESHNESS_KEYS
+            }}
+            checker.current_identity_v2 = lambda _definition, **_kwargs: identity
+            comparison = workspace / "comparison.md"
+            comparison.write_text(
+                "## Current Result\n\n- Evidence status: **FRESH**\n"
+                "- Identity schema: `2`\n"
+                + "".join(f"- {key}: `{identity[key]}`\n" for key in checker.FRESHNESS_KEYS),
+                encoding="utf-8",
+            )
+            original_run = subprocess.run
+            subprocess.run = lambda *_args, **_kwargs: (_ for _ in ()).throw(
+                AssertionError("freshness checker must not query Git")
+            )
+            try:
+                errors = []
+                checker.validate_fresh_comparison_identity(
+                    root, comparison, "engineer", "debugger",
+                    "eval-001-baseline-evidence", errors,
+                )
+            finally:
+                subprocess.run = original_run
+        self.assertEqual(errors, [])
+
+    def test_validate_all_rejects_post_freeze_fresh_stale_digest(self):
+        checker = load_checker_module()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            identity = {key: hashlib.sha256(key.encode()).hexdigest()
+                        for key in checker.FRESHNESS_KEYS}
+            comparison_text = (
+                "## Current Result\n\n- Evidence status: **FRESH**\n"
+                "- Preflight status: **PASS**\n- Judge: fresh judge completed.\n"
+                "- Identity schema: `2`\n"
+                + "".join(f"- {key}: `{value}`\n" for key, value in identity.items())
+                + "- Behavior result: **PASS**\n- Coverage result: **FULL**\nOverall result: PASS\n"
+            )
+            evals_path = self.write_eval_fixture(root, comparison_text)
+            current = {"identity_schema": 2, **identity}
+            current[checker.FRESHNESS_KEYS[0]] = "f" * 64
+            checker.current_identity_v2 = lambda _definition, **_kwargs: current
+
+            errors = checker.validate_all(root)
+
+        self.assertTrue(any("fresh comparison input identity is stale" in error.message
+                            for error in errors))
 
     def test_runner_audit_requires_all_nine_fields_per_surface(self):
         checker = load_checker_module()

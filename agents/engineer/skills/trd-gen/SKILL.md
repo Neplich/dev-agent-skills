@@ -41,10 +41,19 @@ It also renders `document_subagent_availability`, `document_author`,
 unavailable, all three owner fields identify the main process and the result
 states that it retained the PM/Engineer source context and completed the final
 traceability/repository-fit review; reporting only “unavailable” is incomplete.
-Always render `implementation_plan_handoff_owner: feature-implementor` and
+In the delivery summary, always render
+`implementation_plan_handoff_owner: feature-implementor` and
 `implementation_plan_handoff_path:
-docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`. Open technical questions
+docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`. These fields describe a
+pending downstream boundary; they do not authorize or perform the handoff and
+must not be written as routing instructions in the TRD body. Until the Engineer
+documents are confirmed and continuation is requested or authorized, do not
+claim that the work was handed off, routed, or started. Open technical questions
 may keep that handoff blocked, but must not erase its owner or target path.
+Keep every downstream owner, implementation-plan path, routing instruction,
+handoff status, and `blocked_downstream` list in the delivery summary only.
+Before writing the target document, remove those operational handoff details
+from the TRD body; before delivery, reopen the TRD and correct any occurrence.
 Render the ownership as `engineer_document_owner: engineer-agent:trd-gen` and
 apply it to every requested Engineer document in the current scope, including
 TRD, API, and ADR artifacts; `generated_by: trd-gen` alone is not the ownership
@@ -277,6 +286,14 @@ notice — deprecation is part of the API contract lifecycle, and consolidation
 applies only to endpoints that are truly removed or superseded. Ledger-style
 docs (`DECISIONS.md`, ADRs) keep history — that is their design intent, and the
 same PM-side rule explicitly exempts them.
+
+Before delivering an updated current-state document, reopen it and verify that
+the body contains no superseded design or status annotation that preserves one,
+that every removal is recorded in the YAML frontmatter `changelog` rather than
+only in a body section, that the frontmatter version was updated, and that no
+downstream routing, handoff owner/path, or blocked-downstream instruction appears
+in the body. Correct the document before reporting completion when any check
+fails.
 
 ## Quality Checks
 

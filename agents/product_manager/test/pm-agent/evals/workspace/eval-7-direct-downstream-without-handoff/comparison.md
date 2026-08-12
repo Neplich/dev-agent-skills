@@ -12,17 +12,19 @@
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-7-direct-downstream-without-handoff`.
-- Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- Identity schema: `2`
+- target_skill_sha256: `6f8f132bc1f6eba3f9eb10727126ee30960b503351486b4fb6204e20571ffb35`
+- eval_definition_sha256: `13771c6d0b126a3ca1ee1723ee43dcbca8cef0bbfd3ed1a8c42651bbd42a7c19`
+- metadata_sha256: `70b36659756bbd4d7fc0e09d0fabc7ee5ba1a168323c148fa735110fb59ec768`
+- fixture_sha256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
+- execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
+- runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
+- judge_schema_sha256: `6f1f540339fe5c4c310ca6aaedc38adff3d61e4268399a40149f44e3770ac25c`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f`
-- Repository HEAD: `8813f864e743f7c83dc2e51e0b5add79f312e870`
+- Repository HEAD: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `0616a11ea39f978cac34906ca01c79a336316825183bb1897d900f056d8544f7`
-- Skill overlay SHA-256: `4d4a580c5e7c36b9199abb80221829f90c900c96463581d7f87c6d7ccc538bd7`
-- Judge schema SHA-256: `6f1f540339fe5c4c310ca6aaedc38adff3d61e4268399a40149f44e3770ac25c`
-- Eval definition SHA-256: `13771c6d0b126a3ca1ee1723ee43dcbca8cef0bbfd3ed1a8c42651bbd42a7c19`
-- Metadata SHA-256: `70b36659756bbd4d7fc0e09d0fabc7ee5ba1a168323c148fa735110fb59ec768`
-- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
-- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
+- Skill overlay SHA-256: `6c6b79d36b8b3a1bf132fd82bfece3cf6e7b256e3a9a58a0cdb78f4a09e26e69`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -31,20 +33,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `routing_decision_present` | PASS | With-skill output provides an auditable routing decision with selected_owner `idea-to-spec`, blocked entry_basis, unresolved feature_path, and an explicit execution boundary. |
-| `stay_in_pm_alignment` | PASS | With-skill output keeps the request in PM/idea-to-spec discovery, states the project is empty and blocked, and does not claim an Engineer handoff or downstream execution. |
-| `blocks_engineering_without_basis` | PASS | With-skill output requires product scope, design materials, and existing implementation/code or layout basis before proceeding, and explicitly prohibits writing code. |
+| `routing_decision_present` | PASS | With_skill output provides an auditable route to idea-to-spec, identifies it as selected_owner, and records entry_basis, feature_path, and execution_boundary in the routing block. |
+| `stay_in_pm_alignment` | PASS | With_skill output keeps the request in the PM idea-to-spec path, states that product/design scope is unresolved, and explicitly prohibits Engineer handoff or downstream execution. |
+| `blocks_engineering_without_basis` | PASS | With_skill output identifies missing product, design, and technical evidence, requires confirmation before implementation, and explicitly prohibits direct code changes; git evidence confirms no changes. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=a9b3dbe3e3cdc4bde676128a1cebfa75f23e59859424ed8dba8daae1037e0dc0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly routed the request to PM discovery, identified missing basis, and blocked implementation without modifying code.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=404f49526f6d15f29fc9631300853f820c741b83122368bbb21da3491c1d59e8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly routed the request to PM/idea-to-spec, maintained the scope-alignment boundary, blocked implementation pending required evidence, and requested user confirmation for the next clarification step.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=2b400a645dfce3cae65dfe0f7a27ab340cfa6f225a071ff27642c41f0cfd065a; snapshot_sha256=df30d332dc7c1cb669534c43b47f952e575933dc964041c74ce5db24956ada0f
-- Behavior: Fresh baseline directly implemented a static settings page despite missing product/design basis.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=960b7470019352e91d31da7edc6269201bb79413a26afb843045e66346f8ebbc; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Recognized the empty repository and avoided mutation, but did not provide the required PM routing decision or scope-alignment gate.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

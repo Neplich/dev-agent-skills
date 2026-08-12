@@ -18,6 +18,16 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.eval_runtime import git_topology_errors  # noqa: E402
+try:
+    from scripts.eval_identity import FRESHNESS_FIELDS as FRESHNESS_KEYS  # noqa: E402
+    from scripts.eval_identity import current_identity_v2  # noqa: E402
+except ImportError:  # The module is introduced in the same schema-v2 change.
+    FRESHNESS_KEYS = (
+        "target_skill_sha256", "eval_definition_sha256", "metadata_sha256",
+        "fixture_sha256", "execution_protocol_sha256", "runtime_protocol_sha256",
+        "judge_schema_sha256",
+    )
+    current_identity_v2 = None
 
 
 SCHEMA_VERSION = "1.0"
@@ -631,7 +641,7 @@ def validate_file(
     root: Path,
     path: Path,
     *,
-    complete_identities: set[tuple[str, str, str]] | None = None,
+    pending_identities: set[tuple[str, str, str]] | None = None,
 ) -> list[ContractError]:
     errors: list[ContractError] = []
     payload = load_json(path, errors)
@@ -667,11 +677,11 @@ def validate_file(
     seen_ids: set[str] = set()
     for eval_index, item in enumerate(evals):
         eval_id = item.get("id") if isinstance(item, dict) else None
-        strict_new_contract = complete_identities is None or (
+        strict_new_contract = pending_identities is None or (
             agent,
             skill_name,
             eval_id,
-        ) in complete_identities
+        ) not in pending_identities
         validate_eval_item(
             path,
             skill_test_dir,
@@ -760,19 +770,13 @@ def validate_fresh_comparison_identity(
 
     try:
         definition = runner.load_eval_definition(root, agent, skill, eval_id)
-        identity = runner.source_identity(definition)
-        # The full overlay is same-run evidence; dependency content is not a
-        # cross-skill historical freshness dependency.
-        expected = {
-            "Fixture SHA-256": current_fixture_hash(definition),
-            "Prompt SHA-256": hashlib.sha256(definition.item["prompt"].encode()).hexdigest(),
-            "Eval definition SHA-256": identity["eval_definition_sha256"],
-            "Metadata SHA-256": identity["metadata_sha256"],
-            "Target skill tree SHA-256": identity["target_skill_sha256"],
-            "Judge schema SHA-256": identity["judge_schema_sha256"],
-            "Executor SHA-256": identity["executor_sha256"],
-            "Runtime SHA-256": identity["runtime_sha256"],
-        }
+        if current_identity_v2 is None:
+            raise ValueError("scripts.eval_identity.current_identity_v2 is unavailable")
+        identity = current_identity_v2(
+            definition,
+            judge_schema_bytes=runner.build_judge_schema_bytes(definition.item["assertions"]),
+        )
+        expected = {key: identity[key] for key in FRESHNESS_KEYS}
     except (KeyError, OSError, ValueError) as exc:
         add_error(errors, comparison, f"fresh comparison input identity cannot be recomputed: {exc}")
         return
@@ -782,10 +786,18 @@ def validate_fresh_comparison_identity(
         text, re.M,
     )
     section = current.group(1) if current else text[:2000]
-    stale = [
-        label for label, digest in expected.items()
-        if not re.search(rf"^- {re.escape(label)}:\s*`{digest}`\s*$", section, re.M)
-    ]
+    schema = re.findall(r"^- Identity schema:\s*`([^`]+)`\s*$", section, re.M)
+    stale = [key for key, digest in expected.items() if not re.search(
+        rf"^- {re.escape(key)}:\s*`{digest}`\s*$", section, re.M,
+    )]
+    legacy = re.findall(
+        r"^- (?:Executor SHA-256|Runtime SHA-256):",
+        section, re.M,
+    )
+    if schema != ["2"]:
+        stale.insert(0, "Identity schema")
+    if legacy:
+        stale.append("legacy freshness fields")
     if stale:
         add_error(
             errors, comparison,
@@ -793,7 +805,32 @@ def validate_fresh_comparison_identity(
         )
 
 
-def _complete_inventory_identities(
+def validate_comparison_identity_v2_structure(
+    comparison: Path, errors: list[ContractError],
+) -> None:
+    text = comparison.read_text(encoding="utf-8")
+    current = re.search(
+        r"^##\s*(?:Latest|Current) (?:Result|result)\s*$([\s\S]*?)(?=^##\s|\Z)",
+        text, re.M,
+    )
+    section = current.group(1) if current else text[:2000]
+    invalid: list[str] = []
+    if re.findall(r"^- Identity schema:\s*`([^`]+)`\s*$", section, re.M) != ["2"]:
+        invalid.append("Identity schema")
+    for key in FRESHNESS_KEYS:
+        values = re.findall(rf"^- {re.escape(key)}:\s*`([^`]+)`\s*$", section, re.M)
+        if len(values) != 1 or not re.fullmatch(r"[0-9a-f]{64}", values[0]):
+            invalid.append(key)
+    if re.search(r"^- (?:Executor SHA-256|Runtime SHA-256):", section, re.M):
+        invalid.append("legacy freshness fields")
+    if invalid:
+        add_error(
+            errors, comparison,
+            f"comparison identity schema v2 is invalid: {', '.join(invalid)}",
+        )
+
+
+def _pending_inventory_identities(
     root: Path,
 ) -> set[tuple[str, str, str]] | None:
     path = root / MIGRATION_INVENTORY
@@ -806,9 +843,13 @@ def _complete_inventory_identities(
     records = payload.get("old_evals")
     if not isinstance(records, list):
         return None
-    complete: set[tuple[str, str, str]] = set()
+    pending: set[tuple[str, str, str]] = set()
     for record in records:
-        if not isinstance(record, dict) or record.get("migration_status") != "complete":
+        if (
+            not isinstance(record, dict)
+            or record.get("migration_status") != "pending"
+            or record.get("disposition") != "retained"
+        ):
             continue
         identity = (
             record.get("agent"),
@@ -816,8 +857,8 @@ def _complete_inventory_identities(
             record.get("new_eval_id"),
         )
         if all(isinstance(value, str) for value in identity):
-            complete.add(identity)
-    return complete
+            pending.add(identity)
+    return pending
 
 
 def _git_blob(
@@ -909,7 +950,12 @@ def validate_runner_audit(
     root = path.parents[len(MIGRATION_INVENTORY.parts) - 1]
     executor_text = "\n".join(
         candidate.read_text(encoding="utf-8")
-        for candidate in (root / "scripts/run_skill_eval.py", root / "scripts/eval_runtime.py")
+        for candidate in (
+            root / "scripts/run_skill_eval.py",
+            root / "scripts/eval_execution.py",
+            root / "scripts/eval_judging.py",
+            root / "scripts/eval_runtime.py",
+        )
         if candidate.is_file()
     )
     for index, surface in enumerate(surfaces):
@@ -1123,15 +1169,15 @@ def validate_migration_inventory(root: Path | None = None) -> list[ContractError
                 if metadata.get("eval_id") != new_eval_id:
                     add_error(errors, path, f"{prefix} metadata eval_id does not match new_eval_id")
             if migration_status == "complete" and comparison_file and comparison_file.is_file():
-                if not _comparison_has_fresh_evidence(comparison_file):
+                comparison_text = comparison_file.read_text(encoding="utf-8")
+                if _comparison_is_stale_blocked(comparison_file):
+                    if "- Identity schema: `2`" not in comparison_text:
+                        add_error(errors, path, f"{prefix} stale comparison lacks identity schema v2")
+                elif not _comparison_has_fresh_evidence(comparison_file):
                     add_error(
                         errors,
                         path,
                         f"{prefix} is complete but comparison lacks fresh preflight/judge evidence",
-                    )
-                else:
-                    validate_fresh_comparison_identity(
-                        root, comparison_file, agent, skill, new_eval_id, errors,
                     )
             elif migration_status == "pending" and comparison_file and comparison_file.is_file():
                 if not _comparison_is_stale_blocked(comparison_file):
@@ -1237,15 +1283,28 @@ def validate_all(root: Path | None = None) -> list[ContractError]:
                 )
             )
 
-    complete_identities = _complete_inventory_identities(root)
+    pending_identities = _pending_inventory_identities(root)
     for path in paths:
         errors.extend(
             validate_file(
                 root,
                 path,
-                complete_identities=complete_identities,
+                pending_identities=pending_identities,
             )
         )
+        payload = _load_json_unchecked(path)
+        skill_test_dir = path.parents[2]
+        for item in payload.get("evals", []):
+            workspace = item.get("workspace") if isinstance(item, dict) else None
+            if isinstance(workspace, str):
+                comparison = resolve_workspace_root(path, skill_test_dir, workspace) / "comparison.md"
+                if comparison.is_file():
+                    validate_comparison_identity_v2_structure(comparison, errors)
+                    if _comparison_has_fresh_evidence(comparison):
+                        validate_fresh_comparison_identity(
+                            root, comparison, payload.get("agent"), payload.get("skill_name"),
+                            item.get("id"), errors,
+                        )
 
     errors.extend(validate_migration_inventory(root))
 
@@ -1261,7 +1320,7 @@ def main() -> int:
             print(f"- {error.render(root)}", file=sys.stderr)
         return 1
 
-    print("PASS: all agent skill evals satisfy schema v1.0")
+    print("PASS: all agent skill evals satisfy the shared contract and identity schema v2")
     return 0
 
 

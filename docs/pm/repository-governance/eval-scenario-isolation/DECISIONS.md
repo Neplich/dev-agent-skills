@@ -1,7 +1,7 @@
 ---
 title: "Eval 真实场景与 Lane 隔离重构决策记录"
 type: DECISIONS
-version: "1.1.0"
+version: "1.3.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-07"
@@ -14,9 +14,16 @@ feature_level: "2"
 related_issue:
   - "https://github.com/Neplich/dev-agent-skills/issues/246"
   - "https://github.com/Neplich/dev-agent-skills/issues/275"
+  - "https://github.com/Neplich/dev-agent-skills/issues/277"
 related_docs:
   - "docs/pm/repository-governance/eval-scenario-isolation/PRD.md"
 changelog:
+  - version: "1.3.0"
+    date: "2026-08-12"
+    changes: "确认 identity schema v2 七字段、协议模块边界与 196 份常规 comparison 的一次性单轨迁移"
+  - version: "1.2.0"
+    date: "2026-08-12"
+    changes: "确认冻结后 eval 不登记迁移清单，并区分 trd-gen eval-006 的断言缺陷与 skill 执行缺陷"
   - version: "1.1.0"
     date: "2026-08-12"
     changes: "分离辅助 skill 的运行锁定证据与 comparison 历史重跑判定"
@@ -47,6 +54,16 @@ changelog:
 | D-014 | `manual-gen` 不进入本次常规 paired eval 重构。 | 它依赖真实登录环境、运行界面、源码和用户反馈，已由 manual-only 契约单独治理。 |
 | D-015 | 本 issue 不修改目标 skill 的业务协议，也不引入无关抽象或功能。 | 本轮只修复 eval 的用户代表性、lane 隔离与证据可信度；业务协议缺陷应另行分类。 |
 | D-016 | Eval 只对所属目标 skill 的设计结论负责；辅助 skill 的完整内容继续参与当次运行锁定和证据记录，但其后续内容变化不连带使其他目标 skill 的 comparison 失效。 | `skill_dependencies` 用于构建可信运行环境，不等同于跨 skill 回归依赖图；跨 skill 协作应由有明确归属的集成 eval 覆盖。 |
+| D-017 | `migration-inventory.json` 永久保持 Issue #246 冻结的 193 条历史迁移记录；冻结后新增 eval 不登记到该清单。 | 迁移清单用于证明旧基线的逐条去向，不是常规 eval 注册表；扩充清单会破坏冻结 commit、计数和 schema 语义。 |
+| D-018 | Durable writer 对 retained identity 使用三态规则：零匹配只写 comparison，唯一匹配同步更新 inventory，多匹配拒绝持久化。 | 新增 eval 必须能生成 fresh 证据，历史迁移记录仍需保持事务一致，多匹配代表不可接受的清单歧义。 |
+| D-019 | `trd-gen` eval-006 是混合缺陷：允许完成 TRD 后在交付摘要中提示合法的 `feature-implementor` 下一阶段，但不得转交本轮 TRD 更新职责；正文归一化和 frontmatter changelog 断言保持不变，并强化 skill 交付前自检。 | 原“不得把任务路由给别人”断言误伤了 `trd-gen` 的强制 handoff 契约；旧方案状态标注和正文 changelog 则确实违反现行 current-state 文档规则，不能通过弱化断言掩盖。 |
+| D-020 | 静态 eval checker 对所有当前常规 eval 使用同一严格输入契约，不再以是否存在 complete migration identity 决定校验强度。 | 冻结后新增 eval 也必须满足 scenario、自然 prompt、metadata、依赖、runtime isolation 和 fixture 规则；历史迁移身份不能成为质量降级开关。 |
+| D-021 | Durable comparison identity schema v2 的跨版本 freshness 只包含七字段：`target_skill_sha256`、`eval_definition_sha256`、`metadata_sha256`、`fixture_sha256`、`execution_protocol_sha256`、`runtime_protocol_sha256`、`judge_schema_sha256`。 | 这七项覆盖目标 skill、eval 自身输入、执行/判定协议和隔离协议；persistence、inventory 与报告格式变化不应连锁作废行为证据。 |
+| D-022 | 模块边界固定为 execution/judging、runtime/isolation、persistence/inventory；identity helper 单独计算七字段，`run_skill_eval.py` 只保留薄 CLI 与 orchestration。 | 协议 hash 必须来自清晰文件边界，不能用函数过滤或启发式排除推断哪些源码影响行为。 |
+| D-023 | 完整 runner、identity、execution、judging、runtime、persistence、inventory 和报告格式源码 manifest 只用于同轮 source-drift lock；持久化前任一 bytes 变化均 `BLOCKED`。 | 跨版本 freshness 与同轮输入稳定是不同安全属性；后者不能因 persistence 不参与历史 identity 而放松。 |
+| D-024 | V1 到 v2 只执行一次迁移；迁移前可以核验旧 Executor hash 的可信 Git 来源并把实际 hash/source commit 写入 audit JSON，但正常 writer/checker 不调用 Git、不硬编码旧 hash。迁移后 checker 只接受 v2。 | 永久兼容桥会形成双轨并把历史实现细节带入正常检查；来源核验属于一次性迁移证据。 |
+| D-025 | 196 份常规 comparison 分为 187 份机械迁移、6 份 `trd-gen` 保持 stale、3 份 PM scope-guard 保持 PENDING；1 份 manual-only 原样不迁移。187 份的 verdict/evidence 逐字保持。 | 审计分布为 127 PASS/FULL、46 PASS/PARTIAL、12 FAIL/FULL、2 FAIL/PARTIAL；807 assertions 为 717 PASS、70 NOT_EXERCISED、20 FAIL。`trd-gen` 输入已变化，不能继承 FRESH；PM 三条尚无 fresh 证据。 |
+| D-026 | #277 的模型回归范围为 `trd-gen` 全部 6 条加 PM eval-017/018/019，共 9 条；模型调用仍未授权。 | 文档与确定性实现授权不等同于模型成本授权；9 条必须在计划再次确认并单独授权后运行。 |
 
 ## 假设与约束
 
@@ -56,6 +73,8 @@ changelog:
 | A-002 | 保留、合并或删除是允许的迁移结论，最终 eval 数量不预设。 | 合并或删除必须记录理由、替代覆盖和对应 durable 证据。 |
 | A-003 | 指定模型和隔离运行环境可用于 fresh paired eval 与独立 judge。 | 能力不可用时标记 `BLOCKED` 并保留 stale 状态，不静默替换模型或复用历史结果。 |
 | A-004 | 宿主原生 README 或证据文件可能是合法 fixture。 | 仅在其描述真实产品或仓库事实且不承载评分答案时保留，并由正反测试防止静态检查误报。 |
+| A-005 | Issue #277 的三个 PM scope-guard eval 是冻结后新增资产。 | 它们按零匹配语义生成 fresh comparison，不改写 Issue #246 的 193 条 inventory。 |
+| A-006 | 一次性 migration audit 能定位旧 Executor hash 的可信 Git source commit。 | 无法验证来源的 comparison 不机械迁移为 FRESH，改为 stale 等待重跑。 |
 
 ## 已排除方案
 
@@ -67,6 +86,8 @@ changelog:
 | R-004 | 仅靠 prompt 告知 candidate 不要读取脚手架。 | Candidate 仍能访问文件、父上下文或源仓库，无法证明没有泄漏。 |
 | R-005 | 复用历史 baseline 或 comparison 以降低批量执行成本。 | 不同场景、fixture 或隔离条件下的结果不是同轮有效对照。 |
 | R-006 | 把所有旧 comparison 删除后再迁移。 | 会丢失历史结论和迁移追溯；stale 标记可以保留历史且阻止误用。 |
+| R-007 | 用源码结构过滤、函数排除表或完整 runner hash 作为跨版本行为身份。 | 前两者依赖启发式边界，后者继续让 persistence/report 机械变化批量作废证据；显式协议模块更直接。 |
+| R-008 | 在正常 checker 中保留 Git 历史查询或 v1/v2 双轨。 | 增加长期复杂度且让迁移永不结束；可信来源核验只属于一次性 migration audit。 |
 
 ## 待确认问题
 

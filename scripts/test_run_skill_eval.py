@@ -11,7 +11,7 @@ from types import SimpleNamespace
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from scripts import run_skill_eval
+from scripts import eval_persistence, run_skill_eval
 
 
 def judge_schema_variant(marker: str) -> bytes:
@@ -398,6 +398,56 @@ def test_failed_candidate_keeps_comparison_stale_and_inventory_pending(tmp_path:
     assert json.loads(inventory.read_text())["old_evals"][0]["migration_status"] == "pending"
 
 
+def test_post_freeze_eval_persists_comparison_without_changing_inventory(tmp_path: Path) -> None:
+    repository = write_eval(tmp_path)
+    inventory = write_inventory(repository)
+    payload = json.loads(inventory.read_text(encoding="utf-8"))
+    payload["old_evals"][0]["new_eval_id"] = "eval-000-frozen-baseline"
+    inventory.write_text(json.dumps(payload), encoding="utf-8")
+    original_inventory = inventory.read_bytes()
+    definition = run_skill_eval.load_eval_definition(
+        repository, "qa", "bug-analyzer", "eval-001-real-user",
+    )
+    comparison = definition.workspace_root / "comparison.md"
+    original_comparison = comparison.read_bytes()
+    result = {
+        "preflight": {"fixture_hash": "f" * 64, "prompt_hash": "p" * 64},
+        "source_identity": run_skill_eval.source_identity(definition),
+        **judge_payload(),
+    }
+
+    run_skill_eval.persist_durable_result(definition, result)
+
+    assert comparison.read_bytes() != original_comparison
+    assert "Overall result: PASS" in comparison.read_text(encoding="utf-8")
+    assert inventory.read_bytes() == original_inventory
+
+
+def test_duplicate_retained_inventory_matches_reject_durable_update(tmp_path: Path) -> None:
+    repository = write_eval(tmp_path)
+    inventory = write_inventory(repository)
+    payload = json.loads(inventory.read_text(encoding="utf-8"))
+    payload["old_evals"].append(dict(payload["old_evals"][0]))
+    inventory.write_text(json.dumps(payload), encoding="utf-8")
+    definition = run_skill_eval.load_eval_definition(
+        repository, "qa", "bug-analyzer", "eval-001-real-user",
+    )
+    comparison = definition.workspace_root / "comparison.md"
+    original_comparison = comparison.read_bytes()
+    original_inventory = inventory.read_bytes()
+    result = {
+        "preflight": {"fixture_hash": "f" * 64, "prompt_hash": "p" * 64},
+        "source_identity": run_skill_eval.source_identity(definition),
+        **judge_payload(),
+    }
+
+    with pytest.raises(ValueError, match="more than one matching retained eval"):
+        run_skill_eval.persist_durable_result(definition, result)
+
+    assert comparison.read_bytes() == original_comparison
+    assert inventory.read_bytes() == original_inventory
+
+
 def test_declared_outputs_use_lane_delta_with_nested_or_and_baseline_is_report_only(
     tmp_path: Path,
 ) -> None:
@@ -569,13 +619,15 @@ def test_paired_run_uses_identical_prompt_in_without_then_with_order_and_fresh_j
     assert "Fixture version/source:" in comparison
     assert "Repository HEAD:" in comparison
     assert "Repository worktree state:" in comparison
-    assert "Target skill tree SHA-256:" in comparison
+    assert "target_skill_sha256:" in comparison
     assert "Skill overlay SHA-256:" in comparison
-    assert "Judge schema SHA-256:" in comparison
-    assert "Eval definition SHA-256:" in comparison
-    assert "Metadata SHA-256:" in comparison
-    assert "Executor SHA-256:" in comparison
-    assert "Runtime SHA-256:" in comparison
+    assert "judge_schema_sha256:" in comparison
+    assert "eval_definition_sha256:" in comparison
+    assert "metadata_sha256:" in comparison
+    assert "Identity schema: `2`" in comparison
+    assert "execution_protocol_sha256:" in comparison
+    assert "runtime_protocol_sha256:" in comparison
+    assert "Source lock SHA-256:" in comparison
     assert "## With-Skill Behavior" in comparison
     assert "## Fresh Without-Skill Baseline" in comparison
     assert "## Runtime Artifact Policy" in comparison
@@ -604,6 +656,7 @@ def test_unrelated_worktree_dirty_transition_does_not_invalidate_locked_inputs(
     schema = tmp_path / "judge-schema.json"
     schema.write_bytes(judge_schema_variant("concurrent"))
     monkeypatch.setattr(run_skill_eval, "JUDGE_SCHEMA", schema)
+    monkeypatch.setattr(run_skill_eval._execution, "JUDGE_SCHEMA", schema)
     candidate_count = 0
 
     def concurrent_result_writer(command, *, prompt, env, timeout_seconds):
@@ -651,7 +704,7 @@ def test_runtime_root_is_removed_when_materialization_raises(
         (kwargs["runtime_root"] / "partial-artifact.bin").write_bytes(b"partial")
         raise ValueError("materialization failed")
 
-    monkeypatch.setattr(run_skill_eval, "materialize_eval_run", broken_materializer)
+    monkeypatch.setattr(run_skill_eval._execution, "materialize_eval_run", broken_materializer)
 
     with pytest.raises(ValueError, match="materialization failed"):
         run_skill_eval.run_selected_eval(
@@ -763,6 +816,7 @@ def test_source_identity_records_dirty_current_skill_dependency_and_schema_conte
     schema = tmp_path / "judge-schema.json"
     schema.write_bytes(judge_schema_variant("version-1"))
     monkeypatch.setattr(run_skill_eval, "JUDGE_SCHEMA", schema)
+    monkeypatch.setattr(run_skill_eval._execution, "JUDGE_SCHEMA", schema)
     subprocess.run(["git", "init", "-q", "-b", "main"], cwd=repository, check=True)
     subprocess.run(["git", "add", "."], cwd=repository, check=True)
     subprocess.run([
@@ -815,10 +869,16 @@ def test_source_identity_records_dirty_current_skill_dependency_and_schema_conte
     assert dependency_dirty["judge_schema_sha256"] != schema_dirty["judge_schema_sha256"]
     assert schema_dirty["metadata_sha256"] != metadata_dirty["metadata_sha256"]
     assert metadata_dirty["eval_definition_sha256"] != definition_dirty["eval_definition_sha256"]
-    assert len(dirty["executor_sha256"]) == len(dirty["runtime_sha256"]) == 64
+    assert len(dirty["execution_protocol_sha256"]) == 64
+    assert len(dirty["runtime_protocol_sha256"]) == 64
+    assert set(dirty["freshness"]) == {
+        "target_skill_sha256", "eval_definition_sha256", "metadata_sha256",
+        "fixture_sha256", "execution_protocol_sha256", "runtime_protocol_sha256",
+        "judge_schema_sha256",
+    }
 
 
-def test_transient_skill_and_schema_changes_use_locked_inputs(
+def test_transient_skill_and_schema_changes_block_the_run(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repository = write_eval(tmp_path)
@@ -839,6 +899,7 @@ def test_transient_skill_and_schema_changes_use_locked_inputs(
     original_schema = judge_schema_variant("version-1")
     schema.write_bytes(original_schema)
     monkeypatch.setattr(run_skill_eval, "JUDGE_SCHEMA", schema)
+    monkeypatch.setattr(run_skill_eval._execution, "JUDGE_SCHEMA", schema)
     expected_locked_schema = run_skill_eval.build_judge_schema_bytes([
         {"id": "uses_evidence"},
     ])
@@ -880,8 +941,9 @@ def test_transient_skill_and_schema_changes_use_locked_inputs(
         permission_probe=permission_probe,
     )
 
-    assert result["overall_result"] == "PASS"
-    assert "Evidence status: **FRESH**" in (
+    assert result["overall_result"] == "BLOCKED"
+    assert result["blockers"] == ["eval source inputs changed during the isolated run"]
+    assert "Evidence status: **FRESH**" not in (
         repository / "agents/qa/test/bug-analyzer/evals/workspace/"
         "eval-001-real-user/comparison.md"
     ).read_text(encoding="utf-8")
@@ -902,6 +964,7 @@ def test_source_drift_blocks_durable_persist(
     schema = tmp_path / "judge-schema.json"
     schema.write_bytes(judge_schema_variant("version-1"))
     monkeypatch.setattr(run_skill_eval, "JUDGE_SCHEMA", schema)
+    monkeypatch.setattr(run_skill_eval._execution, "JUDGE_SCHEMA", schema)
     candidate_count = 0
 
     def drifting_runner(command, *, prompt, env, timeout_seconds):
@@ -999,7 +1062,7 @@ def test_transaction_cleans_staged_files_when_staging_fails(
     first, second = tmp_path / "first", tmp_path / "second"
     first.write_bytes(b"old-first")
     second.write_bytes(b"old-second")
-    real_stage = run_skill_eval._stage_file
+    real_stage = eval_persistence._stage_file
     created: list[Path] = []
 
     def fail_after_first(path: Path, content: bytes) -> Path:
@@ -1009,7 +1072,7 @@ def test_transaction_cleans_staged_files_when_staging_fails(
         created.append(temporary)
         return temporary
 
-    monkeypatch.setattr(run_skill_eval, "_stage_file", fail_after_first)
+    monkeypatch.setattr(eval_persistence, "_stage_file", fail_after_first)
     with pytest.raises(OSError, match="staging"):
         run_skill_eval._transactional_replace({first: b"new-first", second: b"new-second"})
 
