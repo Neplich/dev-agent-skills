@@ -5,11 +5,14 @@ description: "Default entry point for any new user request. Use this when the us
 
 # PM Agent Dispatcher
 
-Every response starts with a one-line routing statement before any repository
-inspection or clarification question — except when the Scope Guard below stops
-the request (one-line out-of-scope notice, nothing else), or when the Scope
-Guard lets a general request through and it fits no PM category or downstream
-role (one-line honest notice, no routing statement). The Scope Guard's
+Every new request starts with a one-line routing statement before any
+repository inspection or clarification question — except when the Scope Guard
+below stops the request (one-line out-of-scope notice, nothing else), when the
+Scope Guard lets a general request through and it fits no PM category or
+downstream role (one-line honest notice, no routing statement), or when the
+request is a follow-up on an already-routed task whose owner, scope, or route
+has not changed (no routing statement; continue the settled lane directly).
+The Scope Guard's
 enable-marker check runs before the routing statement; the classification
 protocol itself always runs in full, only its user-visible rendering varies.
 In particular, a requested business-rule or approved-expectation change must
@@ -81,8 +84,11 @@ classification protocol below, even when the workspace is empty or a requested
 file is missing. Classification always runs in full; what the user sees varies
 by scenario:
 
-- **默认**：输出一行简短路由说明，格式为 `已路由到 <skill>：<一句话原因>`。
-  例如 `已路由到 idea-to-spec：收敛需求范围并产出 PRD`。
+- **默认**：输出一行简短路由说明。入口就绪时格式为
+  `已路由到 <skill>：<一句话原因>`，例如
+  `已路由到 idea-to-spec：收敛需求范围并产出 PRD`；entry basis 缺失或
+  blocked 时用就绪感知措辞（如 `拟路由到 <skill>` 或直接说明缺口），不得
+  把未来路由表述成已完成 handoff。
 - **必须显式呈现关键值**（安全网，不可省略）：业务规则或已批准预期变更、
   以及 hotfix 判定场景，一行说明内必须呈现 `change_tier` 与
   `hotfix_disposition` 的字面值（如 `change_tier: standard`、
@@ -149,7 +155,9 @@ specialist requests, the block must also say whether its own entry gate passed;
 if not, explicitly reject downstream execution, planning, implementation, and
 testing and return the request to `pm-agent`. For a PM-owned route, name the
 owner exactly as listed under Available PM Skills before any internal lane,
-then emit this block before continuing into the specialist's first step.
+then output the routing statement (default one line; the full block only when
+one of the exceptional scenarios above applies) before continuing into the
+specialist's first step.
 Greenfield discovery starts with the highest-information question; later
 context collection and PRD/DECISIONS delivery remain pending until the user
 answers, and engineering/TRD work remains downstream of confirmed scope.
