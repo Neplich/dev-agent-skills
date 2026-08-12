@@ -5,19 +5,23 @@ description: "Default entry point for any new user request. Use this when the us
 
 # PM Agent Dispatcher
 
-Every response starts with the complete `Routing decision` block before any
+Every new request starts with a one-line routing statement before any
 repository inspection or clarification question — except when the Scope Guard
-below stops the request (one-line out-of-scope notice, nothing else), or when
-the Scope Guard lets a general request through and it fits no PM category or
-downstream role (one-line honest notice, no Routing decision). The Scope
-Guard's enable-marker check runs before the Routing decision. In particular,
-a requested
-business-rule or approved-expectation change must render the literal values
-`change_tier: standard` (or `major`) and `hotfix_disposition: rejected`; an
-empty repository or missing implementation context never suppresses them.
-For example, a request to change a membership trial duration and merge quickly
-starts with `change_tier: standard` and `hotfix_disposition: rejected` before
-asking which users are affected or reporting that source is unavailable.
+below stops the request (one-line out-of-scope notice, nothing else), when the
+Scope Guard lets a general request through and it fits no PM category or
+downstream role (one-line honest notice, no routing statement), or when the
+request is a follow-up on an already-routed task whose owner, scope, or route
+has not changed (no routing statement; continue the settled lane directly).
+The Scope Guard's
+enable-marker check runs before the routing statement; the classification
+protocol itself always runs in full, only its user-visible rendering varies.
+In particular, a requested business-rule or approved-expectation change must
+render the literal values `change_tier: standard` (or `major`) and
+`hotfix_disposition: rejected`; an empty repository or missing implementation
+context never suppresses them. For example, a request to change a membership
+trial duration and merge quickly starts with a one-line statement that carries
+`change_tier: standard` and `hotfix_disposition: rejected` before asking which
+users are affected or reporting that source is unavailable.
 
 `pm-agent` is the public entry point for user requests in this marketplace. It
 classifies the user's goal first, routes to the narrowest downstream PM skill
@@ -77,7 +81,29 @@ content.
 
 Do not begin by inspecting or implementing the requested work. First apply the
 classification protocol below, even when the workspace is empty or a requested
-file is missing. The first response must make these decisions observable:
+file is missing. Classification always runs in full; what the user sees varies
+by scenario:
+
+- **默认**：输出一行简短路由说明。入口就绪时格式为
+  `已路由到 <skill>：<一句话原因>`，例如
+  `已路由到 idea-to-spec：收敛需求范围并产出 PRD`；entry basis 缺失或
+  blocked 时用就绪感知措辞（如 `拟路由到 <skill>` 或直接说明缺口），不得
+  把未来路由表述成已完成 handoff。
+- **必须显式呈现关键值**（安全网，不可省略）：业务规则或已批准预期变更、
+  以及 hotfix 判定场景，一行说明内必须呈现 `change_tier` 与
+  `hotfix_disposition` 的字面值（如 `change_tier: standard`、
+  `hotfix_disposition: rejected`），以紧凑形式表达即可，不需要完整 YAML 块；
+  空仓库或缺失实现上下文不抑制这些值。
+- **完整结构化信息**（`Routing decision` 块或等价的关键字段组合）仅在以下
+  情况补充：
+  - 用户明确要求查看完整路由依据；
+  - 入口缺失或 blocked，需要说明具体缺口和禁止执行边界；
+  - 跨角色 handoff，需要输出下游可消费的完整 handoff packet；
+  - 调试或 eval 场景需要验证结构化路由结果。
+- **连续追问**：同一任务的追问和状态更新不重复输出路由说明，除非 owner、
+  scope 或 route 发生变化。
+
+The classification itself must make these decisions:
 
 - name the `request_type` and `change_tier`, with the evidence that supports
   them
@@ -90,8 +116,8 @@ file is missing. The first response must make these decisions observable:
 - if a direct role or specialist request lacks its entry basis, stop execution,
   return it to `pm-agent`, and name the missing handoff fields or documents
 
-Start with this compact block and keep every field visible; use `N/A`, `[]`, or
-`missing` instead of dropping a key:
+When a full structured block is required, use this schema and keep every field
+visible; use `N/A`, `[]`, or `missing` instead of dropping a key:
 
 ```yaml
 Routing decision:
@@ -129,18 +155,23 @@ specialist requests, the block must also say whether its own entry gate passed;
 if not, explicitly reject downstream execution, planning, implementation, and
 testing and return the request to `pm-agent`. For a PM-owned route, name the
 owner exactly as listed under Available PM Skills before any internal lane,
-then emit this block before continuing into the specialist's first step.
+then output the routing statement (default one line; the full block only when
+one of the exceptional scenarios above applies) before continuing into the
+specialist's first step.
 Greenfield discovery starts with the highest-information question; later
 context collection and PRD/DECISIONS delivery remain pending until the user
 answers, and engineering/TRD work remains downstream of confirmed scope.
 
-Before returning any response, validate its first non-whitespace line and
-required keys. It must start with `Routing decision:` and contain every field
-in the schema above; a `greenfield-discovery`, checkpoint, or specialist block
-may follow it but never substitute for it. If this validation fails, prepend
-the complete routing block before returning — unless the Scope Guard stopped
-the request or let an unroutable general request through, in which case no
-routing block is emitted.
+Before returning any response, validate the routing statement and required
+values. The default one-line statement must name the routed skill and, when the
+classification signal requires it, carry the literal `change_tier` /
+`hotfix_disposition` values; whenever a full `Routing decision:` block is
+emitted, it must contain every field in the schema above, and a
+`greenfield-discovery`, checkpoint, or specialist block may follow it but never
+substitute for it. If this validation fails, prepend the missing routing
+information before returning — unless the Scope Guard stopped the request or
+let an unroutable general request through, in which case no routing statement
+is emitted.
 
 Repository inspection may supply evidence after classification, but a missing
 README, source tree, or command is not a substitute for the routing decision.
@@ -414,6 +445,11 @@ do not perform the missing agent's responsibilities yourself.
 
 When routing is complete:
 
+- the user-facing output defaults to the one-line routing statement defined in
+  the Mandatory Entry Decision; do not repeat it on follow-up turns of the same
+  task, and do not re-emit a full `Routing decision` block unless the user asks
+  for it, the entry basis or route changes, or the block is required for a
+  handoff / blocked / debug-eval scenario
 - briefly anchor which PM skill was selected when that context is useful
 - immediately continue with the routed skill's protocol instead of asking for
   permission to proceed

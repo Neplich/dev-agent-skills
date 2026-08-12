@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-1-route-greenfield-product-request`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `acfb6edf3aff0b94988c5e9a7ff435967801458a79c851afd902400163536b81`
-- Repository HEAD: `33a503192c752d6227de1bc0d8d8a2e78e31cdf5`
+- Repository HEAD: `8813f864e743f7c83dc2e51e0b5add79f312e870`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `8b87fb93cdb85ecb0436a61b1aedfcf9c8b41c4cd8f9eff41c412a3196c1d245`
-- Skill overlay SHA-256: `56390e18f057b654978938889dac7daf0263eaaf39d741419b573d12bff2c198`
+- Target skill tree SHA-256: `0616a11ea39f978cac34906ca01c79a336316825183bb1897d900f056d8544f7`
+- Skill overlay SHA-256: `4d4a580c5e7c36b9199abb80221829f90c900c96463581d7f87c6d7ccc538bd7`
 - Judge schema SHA-256: `8e99b873e976898a8a9714405f69dce2d81e6c553f7d4c2b0a99b8b832eee831`
 - Eval definition SHA-256: `4e776e14ac2c8d3f3aa33718b92238355ee2d15eab3267a50cdada6bb3d4a1de`
 - Metadata SHA-256: `98a5616a9f22e4ba7d6ed10c98a36b572ccd9f5c0bfcfaf868ea982ef672635f`
@@ -31,28 +31,28 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `route_to_idea_to_spec` | PASS | With-skill output explicitly selects `pm-agent:idea-to-spec`, identifies `greenfield-discovery`, and keeps the request in product discovery. |
-| `pm_first_guardrail` | PASS | With-skill output identifies `project_status: empty`, requires confirmation, and explicitly limits execution to product discovery without code or technical implementation. |
-| `context_to_collect` | PASS | With-skill output asks one high-information question about the target user and problem, with three concrete options and trade-offs. |
-| `expected_pm_artifacts` | NOT_EXERCISED | The with-skill output is still awaiting the first discovery answer; `delivery_snapshot` is empty and no PM completion or handoff is claimed. |
-| `handoff_boundary` | NOT_EXERCISED | No handoff occurs; the output remains at the first discovery question and explicitly keeps engineering work for a later stage. |
+| `route_to_idea_to_spec` | PASS | With-skill output identifies the work as greenfield product discovery and the locked trace records routing to idea-to-spec; it remains in PM discovery. |
+| `pm_first_guardrail` | PASS | With-skill output explicitly confirms an empty project, keeps technology pending, requires product-position confirmation, and states that no code will be written. |
+| `context_to_collect` | PASS | With-skill output asks the user to identify the primary audience and scenario, offering focused options. |
+| `expected_pm_artifacts` | NOT_EXERCISED | The candidate is still waiting for the user's answer and explicitly marks PRD and DECISIONS.md as pending, so this assertion is not exercised. |
+| `handoff_boundary` | NOT_EXERCISED | No handoff occurs while the candidate waits for product-position confirmation, so this assertion is not exercised. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acfb6edf3aff0b94988c5e9a7ff435967801458a79c851afd902400163536b81; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=c9c45e64d7e4422194457bf56a20500614625df851c86017274dd60b66664a80; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly routes the empty-directory idea into PM greenfield discovery, asks the next product question, and avoids implementation.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acfb6edf3aff0b94988c5e9a7ff435967801458a79c851afd902400163536b81; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=af660b402b7ed70efd901044495c4d633ea2a7062e5583ece40650b35d2d56e1; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Stayed in PM-first greenfield discovery, identified the empty project, deferred implementation, and asked a focused product-discovery question.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acfb6edf3aff0b94988c5e9a7ff435967801458a79c851afd902400163536b81; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=2b4af7db6f65fef950a714543984faac797cbd3b88ad4ae2c0e046fe474322a5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Provides a plausible MVP proposal and several implementation-oriented questions, but lacks explicit PM routing and focused first-step discovery control.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acfb6edf3aff0b94988c5e9a7ff435967801458a79c851afd902400163536b81; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=b286246d470a9dabf8fd385f3c535911c47344aa9caf4e79d07ab4d0ea2f3084; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Did not mutate the empty workspace and offered a broad MVP and technical direction, but did not establish the focused PM discovery route as clearly.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Obtain the user's answer to the target-user/core-problem question before producing PRD/DECISIONS or considering handoff.
+- Next: Await the user's answer about the primary audience and core scenario before producing PM artifacts or considering handoff.
 
 ## Runtime Artifact Policy
 

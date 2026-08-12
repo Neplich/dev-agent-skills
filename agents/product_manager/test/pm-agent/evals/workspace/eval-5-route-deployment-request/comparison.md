@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-5-route-deployment-request`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe`
-- Repository HEAD: `33a503192c752d6227de1bc0d8d8a2e78e31cdf5`
+- Repository HEAD: `8813f864e743f7c83dc2e51e0b5add79f312e870`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `8b87fb93cdb85ecb0436a61b1aedfcf9c8b41c4cd8f9eff41c412a3196c1d245`
-- Skill overlay SHA-256: `56390e18f057b654978938889dac7daf0263eaaf39d741419b573d12bff2c198`
+- Target skill tree SHA-256: `0616a11ea39f978cac34906ca01c79a336316825183bb1897d900f056d8544f7`
+- Skill overlay SHA-256: `4d4a580c5e7c36b9199abb80221829f90c900c96463581d7f87c6d7ccc538bd7`
 - Judge schema SHA-256: `42fd42dc7a350eab589db47b48a132e9f478c8e119c1fdbd30b4875075f9f0b5`
 - Eval definition SHA-256: `73a2b58c1c65bf56a5f6d6f35f003c86e432caed7b530c34cf851322050e2633`
 - Metadata SHA-256: `d17a05b229136107ac1e50142856979a9ae9f563cdb19b940e4810dadda79e1c`
@@ -31,26 +31,26 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `request_type_deployment` | PASS | with_skill 输出明确写出 `request_type: deployment`。 |
-| `repo_wide_scope_allowed` | PASS | with_skill 输出明确使用 `feature_path: N/A`、`feature: N/A`，且 `feature_path_evidence: []`。 |
-| `devops_handoff_packet` | NOT_EXERCISED | with_skill 已识别并列出缺失的环境、发布范围、回滚方案及风险，但因这些上下文尚未确认且 DevOps agent 未安装，未实际完成 handoff；后续 handoff 未被行使。 |
+| `request_type_deployment` | PASS | With_skill explicitly states `request_type: deployment` in its Routing decision. |
+| `repo_wide_scope_allowed` | PASS | With_skill uses `feature_path: N/A`, `feature: N/A`, `parent_feature: N/A`, and `feature_path_evidence: []` for repository-wide work. |
+| `devops_handoff_packet` | NOT_EXERCISED | The DevOps handoff is explicitly blocked because the target agent and required release context are unavailable; the actual handoff cannot yet occur. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=8d40d480f4b9d8d8e8368bdb8303549119fa75a47140a85e2f90e6da2f8ebb99; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 正确完成 deployment 路由和仓库级 N/A scope 处理，并在缺少必要上线上下文时只读阻塞，未虚构完成 DevOps handoff。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=259042ca0672c7b0cc9ca01dcd11fa18d6918cce2344e47e60d0cdb8db780016; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly classifies the request as deployment, permits repository-wide N/A scope, and stops before an unsupported DevOps handoff.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=957bff5f2536fe7f61686b9e1fb6b8bec9b55d176d20f6076f40c92d4f3a6be0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 识别仓库为空并停止配置，但未提供 deployment 路由、N/A scope 或 DevOps handoff 上下文。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=3ea9ec3f666f17ed064514f2fafa4c925fc8f737b7904e6aa6d9c97d2b17679d; snapshot_sha256=df9e7182eb760cabfbd10b7e99ad05abcb8ad7436780a669611ff080265c733b
+- Behavior: Implemented repository-level CI artifacts but did not provide the required deployment classification or structured handoff context.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: 补充目标 CI 平台、目标环境、发布范围、触发条件、凭据策略和回滚方案后，再执行 DevOps handoff。
+- Next: Confirm environment, release scope, rollback needs, and risks, then hand off to DevOps when the target is available.
 
 ## Runtime Artifact Policy
 
