@@ -4,7 +4,7 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "b34a4d30ef30c3ba4faa5b1a657325266a5ef271c9c660327eb4d4dac6d389c9"
+      "computedHash": "6ec163af2cf891a3e09f254a47b3086ccc748810eea03e217967dd95370c4362"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
@@ -49,7 +49,7 @@
     "engineer-agent": {
       "source": "agents/engineer/skills/engineer-agent",
       "sourceType": "local",
-      "computedHash": "695a68aa01b8405a790310665978e2134c5b60e5681746cd1d16dc153d6374ac"
+      "computedHash": "cab952a89228b77dcf371aa94df9d3fcfe8ca3d84cfece0a287467837d3d662e"
     },
     "codebase-analyzer": {
       "source": "agents/engineer/skills/codebase-analyzer",
@@ -74,7 +74,7 @@
     "debugger": {
       "source": "agents/engineer/skills/debugger",
       "sourceType": "local",
-      "computedHash": "74b0a546d9756f1ba7864f5fdc2de5a26d639c471fc096e2d7db0ee29154ce69"
+      "computedHash": "661fabbc62037cbfd01b86823089a79f97c1179dece2f0e030e80403522e2424"
     },
     "delivery": {
       "source": "agents/engineer/skills/delivery",

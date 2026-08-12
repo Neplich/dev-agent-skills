@@ -27,7 +27,7 @@
 | `trd-gen` | PRD / DECISIONS 确认后的技术计划、API 文档和 ADR 编写 | `docs/engineer/{feature_path}/TRD.md`，可选 `API.md` / `ADR-*.md` |
 | `feature-implementor` | 按已确认 TRD 或设计文档实现功能 | `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`、代码变更、必要工程文档 |
 | `test-writer` | 补单测、集成测试或验证覆盖 | 测试文件、测试运行证据 |
-| `debugger` | 复现、定位、修复 bug 或失败构建 | 最小修复、回归验证证据 |
+| `debugger` | 只读诊断或按门禁修复 bug、失败构建 | 证据化诊断报告，或最小修复与回归验证证据 |
 | `delivery` | 分支、commit、push、PR、交付收尾 | Git 提交、PR、交付摘要 |
 
 ## 路由规则
@@ -37,10 +37,11 @@
 - 功能实现、行为变更、按设计落地：使用 `feature-implementor`
 - 前端代码更新、UI 实现或设计落地：先进入 Engineer；只有设计交付物缺失或过期时才 handoff 到 Designer
 - 测试补齐、覆盖率、验证实现：使用 `test-writer`
-- bug、失败日志、测试失败、构建失败：使用 `debugger`
+- 只读诊断 bug，或修复失败日志、测试失败、构建失败：使用 `debugger`；明确只读请求进入 `diagnosis_only`
 - commit、push、PR、交付整理：使用 `delivery`
 
 默认规则：只要请求会改变生产行为，先确认需求来源和代码上下文；只要请求从失败症状开始，优先进入 `debugger`。
+明确只读的诊断不因缺少 PRD/TRD 而停止，但报告必须标记预期未对齐，且不能确认实现缺陷；后续要求修复时重新进入完整修复门禁。
 
 ## 典型工作流
 

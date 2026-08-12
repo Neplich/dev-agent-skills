@@ -150,7 +150,10 @@ future route. Keep `next_action` with PM alignment, mark downstream execution
 blocked, and never claim that a handoff completed. A `bug_report` without an
 approved PRD/TRD or equivalent expected-behavior source keeps
 `confirmed_scope` limited to the observed symptom and cannot complete the
-Engineer/debugger handoff.
+Engineer/debugger repair handoff. The narrow exception is an explicit read-only
+diagnosis request: it may hand off for evidence collection with
+`mode: diagnosis_only` and `allowed_mutations: none`, while keeping expected
+behavior unaligned and prohibiting any repair conclusion or mutation.
 
 For a hotfix decision also render `fast_lane`; for a security route also render
 `risk_surface`, `assets`, `permissions`, `data_flow`, and
@@ -282,7 +285,7 @@ these stable `request_type` values in routing notes and handoff packets.
 | --- | --- | --- |
 | `new_feature` | Keep the work in PM discovery or `idea-to-spec`; clarify problem, users, scope, success criteria, and feature path. | PRD / scope is confirmed and the next owner has a concrete requested output. |
 | `existing_update` | Use the existing-project update lane; inspect approved docs and update PRD / DECISIONS before technical execution. | Product expectation is updated or confirmed unchanged, then TRD / design / test docs are aligned as needed. |
-| `bug_report` | Compare the report against approved PRD / TRD expectations before diagnosing implementation. | Only hand off to Engineer / debugger after the expected behavior is confirmed and the bug is an implementation deviation. |
+| `bug_report` | Distinguish an explicit read-only diagnosis request from repair intent. For repair, compare the report against approved PRD / TRD expectations before diagnosing implementation. For explicit “read-only / diagnose only / do not fix” intent, preserve the observed symptom and zero-mutation boundary without treating it as a confirmed defect. | Repair hands off to Engineer / debugger only after expected behavior is confirmed and the bug is an implementation deviation. Explicit read-only diagnosis may hand off earlier with `mode: diagnosis_only` and `allowed_mutations: none`; missing expectations remain `unaligned`. |
 | `design` | Decide whether the user needs design artifacts or frontend implementation. | Design artifacts go to Designer; frontend implementation waits for PM / TRD / design alignment. |
 | `validation` | Confirm the test basis: PRD, TRD, confirmed implementation plan, or existing acceptance record. | QA / test-writer receives the work only after expectations are stable and source docs are named. |
 | `deployment` | Record operational goal, environment, release scope, rollback needs, and risks. | DevOps receives a bounded deployment / CI / release-readiness packet. |
@@ -297,6 +300,20 @@ these stable `request_type` values in routing notes and handoff packets.
 
 New requirements, expectation changes, and unclear scope stay on the PM path.
 Do not route them to downstream execution as `hotfix`.
+
+For `bug_report`, add the diagnosis-only supplemental fields only when the user
+explicitly says the investigation must be read-only, diagnosis-only, or must
+not fix anything:
+
+```yaml
+mode: diagnosis_only
+allowed_mutations: none
+```
+
+These fields supplement only that Engineer handoff; they do not extend the
+general handoff required-field schema. Phrases such as “查一下”, “为什么挂了”,
+or “帮我调查” without an explicit no-mutation constraint remain ordinary
+`bug_report` requests and must not be assigned `diagnosis_only` automatically.
 
 ## Default Routes
 
@@ -377,6 +394,16 @@ Required fields:
   delivery action, or status summary expected from the next owner
 - `blockers_risks`: missing docs, unresolved decisions, unavailable plugins,
   platform limits, verification risks, or security / privacy concerns
+
+For an explicit read-only `bug_report`, also carry the mode-specific
+supplemental fields `mode: diagnosis_only` and `allowed_mutations: none`, and
+set `required_output` to an evidence-based diagnosis report. These two fields
+are not general packet requirements and must be absent when the request merely
+uses ambiguous investigation language without a no-mutation instruction.
+Render the zero-mutation boundary explicitly in that handoff: prohibit changes
+to code, tests, E2E assets, configuration, databases, external state, commits,
+pushes, and pull requests; do not rely on `allowed_mutations: none` alone to
+communicate those limits.
 
 If a required field is unresolved, do not present the handoff as ready. Keep the
 request in PM clarification or mark the handoff as blocked with the missing

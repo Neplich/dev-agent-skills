@@ -1,19 +1,34 @@
 ---
 name: debugger
-description: "Reproduce and diagnose failing tests, builds, runtime errors, and confirmed implementation defects; align expected behavior and obtain repair-plan confirmation before any fix. Use after engineer-agent supplies the bug basis."
+description: "Diagnose failing tests, builds, runtime errors, and suspected defects without mutation when explicitly requested, or repair confirmed implementation defects after expected-behavior alignment and repair-plan confirmation. Use after engineer-agent supplies the bug basis or a read-only diagnosis handoff."
 visibility: internal
 ---
 
 # Debugger
 
-Systematically reproduce, diagnose, and fix bugs: align expected behavior,
-reproduce the failure, analyze the root cause, present the analysis and repair
-plan together, get user confirmation, then fix minimally and verify.
+Use one specialist for two modes: `diagnosis_only` gathers and reports
+read-only evidence without mutation, while `repair` aligns expected behavior,
+reproduces the failure, analyzes the root cause, obtains repair-plan
+confirmation, then fixes minimally and verifies.
 
-## Mandatory Debugging Checkpoint
+## Mode Selection
 
-Before any repair or E2E edit, make the following sequence observable in one
-checkpoint response:
+Select the mode before applying the repair checkpoint:
+
+- Use `diagnosis_only` only when the user explicitly requires a read-only
+  investigation, diagnosis only, or no fix. Preserve handoff fields
+  `mode: diagnosis_only` and `allowed_mutations: none` when present.
+- Use `repair` for a requested fix and for ambiguous investigation language
+  such as “查一下”, “为什么挂了”, or “帮我调查” that does not explicitly impose a
+  no-mutation boundary.
+- A request to fix after a diagnosis-only report always starts a new `repair`
+  entry. Previous evidence may be reused, but the diagnosis-only authorization
+  cannot authorize a plan, mutation, or delivery action.
+
+## Mandatory Repair Checkpoint
+
+In `repair` mode, before any repair or E2E edit, make the following sequence
+observable in one checkpoint response:
 
 1. when `docs/site/standards/change-map.yaml` exists, resolve the task's code
    path through the change map before reading any mapped formal document; read
@@ -58,6 +73,7 @@ to skip alignment. Any future QA E2E handoff names the confirmed
 
 ## When to Use
 
+- User explicitly requests read-only diagnosis without a fix
 - Tests are failing
 - Build is broken
 - Runtime error reported
@@ -65,7 +81,7 @@ to skip alignment. Any future QA E2E handoff names the confirmed
 - User reports unexpected behavior
 - GitHub Issue describes a bug
 
-## Core Principle
+## Repair Core Principle
 
 **Never guess.** Follow this order strictly:
 
@@ -79,16 +95,69 @@ on the repair plan. Do NOT create or update E2E test cases before the plan is co
 
 ## PM Handoff Entry Gate
 
-Before debugging, require an explicit PM/Engineer handoff packet or an
-equivalent confirmed document chain that defines expected behavior. If the user
-directly invokes `debugger` with a raw bug report and no approved PRD/TRD
-expectation source, do not reproduce or fix yet; return the request to
-`pm-agent` for classification. Direct invocation does not bypass this gate.
+Before `repair`, require an explicit PM/Engineer handoff packet or an equivalent
+confirmed document chain that defines expected behavior. If the user directly
+invokes `debugger` with a raw repair request and no approved PRD/TRD expectation
+source, do not reproduce or fix yet; return the request to `pm-agent` for
+classification. Direct invocation does not bypass the repair gate.
+
+An explicit diagnosis-only handoff is the narrow exception for investigation,
+not repair: it may proceed without approved PRD/TRD only when it carries or
+unambiguously establishes `mode: diagnosis_only` and
+`allowed_mutations: none`. It must mark expected behavior as unaligned where
+the documents are missing or conflicting and cannot confirm an
+`implementation_deviation`.
 
 Use the PM-side packet definition in
 the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
 When equivalent docs are present, Step 0 below remains the authoritative
 expected-behavior gate.
+
+## Diagnosis-Only Protocol
+
+Lock `allowed_mutations: none` before collecting evidence. Allowed actions are
+limited to reading code, documents, configuration, logs, read-only database
+query results, and runtime state, plus reproduction commands that are proven
+not to persist files, caches, database changes, or external state. If an action
+cannot be proven side-effect free, do not execute it; record the evidence gap.
+
+Never modify source, tests, E2E assets, configuration, databases, or external
+systems in this mode. Do not commit, push, open a PR, generate a repair plan,
+or delegate implementation. The repository and external state must remain
+unchanged.
+
+Read available PRD, TRD, DECISIONS, and applicable API contracts when they
+exist, but do not make them prerequisites to objective investigation:
+
+- use `expected_behavior_alignment: aligned` only when the available sources
+  establish a consistent approved expectation;
+- use `expected_behavior_alignment: unaligned` when those sources are missing,
+  conflicting, or insufficient;
+- with unaligned expectations, separate observed facts from inference and do
+  not describe a suspected cause as a confirmed `implementation_deviation`.
+
+Return an evidence-based report with these semantics (equivalent readable
+Markdown is acceptable):
+
+```yaml
+mode: diagnosis_only
+allowed_mutations: none
+expected_behavior_alignment: aligned | unaligned
+observed_facts: []
+direct_evidence: []
+root_cause_assessment:
+  conclusion: "..."
+  confidence: high | medium | low
+impact_scope: []
+unknowns: []
+minimum_next_step: "..."
+```
+
+Stop after the report. Do not append a repair plan or ask whether to fix it
+now. If the user later requests a fix, re-enter through PM/Engineer, perform
+Step 0 and the full repair classification, reproduce and confirm the root
+cause, present the tier-appropriate plan, wait for confirmation, then apply
+the minimal fix and verify it.
 
 ## Complex Fix Sub-Agent Split
 
