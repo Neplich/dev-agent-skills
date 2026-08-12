@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-1-route-greenfield-product-request`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `acfb6edf3aff0b94988c5e9a7ff435967801458a79c851afd902400163536b81`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `33a503192c752d6227de1bc0d8d8a2e78e31cdf5`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `1cfd412fc44e8e1667cc3feab76a58474b6382f405680057b41b379032f76e0a`
-- Skill overlay SHA-256: `8ddfbafd6ae3cf064836ded5fbaa7bcc8a3ab817df212a0b6c4ff355a78b12af`
+- Target skill tree SHA-256: `8b87fb93cdb85ecb0436a61b1aedfcf9c8b41c4cd8f9eff41c412a3196c1d245`
+- Skill overlay SHA-256: `56390e18f057b654978938889dac7daf0263eaaf39d741419b573d12bff2c198`
 - Judge schema SHA-256: `8e99b873e976898a8a9714405f69dce2d81e6c553f7d4c2b0a99b8b832eee831`
 - Eval definition SHA-256: `4e776e14ac2c8d3f3aa33718b92238355ee2d15eab3267a50cdada6bb3d4a1de`
 - Metadata SHA-256: `98a5616a9f22e4ba7d6ed10c98a36b572ccd9f5c0bfcfaf868ea982ef672635f`
@@ -31,28 +31,28 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `route_to_idea_to_spec` | PASS | with_skill 输出明确 selected_owner 为 pm-agent:idea-to-spec，lane 为 greenfield-discovery，并声明只做产品发现与范围收敛。 |
-| `pm_first_guardrail` | PASS | with_skill 识别 project_status: empty，说明是全新产品，并明确 execution_boundary 为暂不写代码。git_evidence 显示无提交、无 diff、无工作区变更。 |
-| `context_to_collect` | PASS | with_skill 提出了围绕首要用户与核心场景的高信息量问题，并要求用户从 A/B/C 或自定义描述中选择。 |
-| `expected_pm_artifacts` | NOT_EXERCISED | 输出明确 durable_docs_pending 为 PRD/DECISIONS，且 confirmation_required: true；当前仍在等待首个发现问题的回答，未宣称发现完成或进入交接。 |
-| `handoff_boundary` | NOT_EXERCISED | 当前仅提出首个产品发现问题，未发生设计或工程 handoff。 |
+| `route_to_idea_to_spec` | PASS | With-skill output explicitly selects `pm-agent:idea-to-spec`, identifies `greenfield-discovery`, and keeps the request in product discovery. |
+| `pm_first_guardrail` | PASS | With-skill output identifies `project_status: empty`, requires confirmation, and explicitly limits execution to product discovery without code or technical implementation. |
+| `context_to_collect` | PASS | With-skill output asks one high-information question about the target user and problem, with three concrete options and trade-offs. |
+| `expected_pm_artifacts` | NOT_EXERCISED | The with-skill output is still awaiting the first discovery answer; `delivery_snapshot` is empty and no PM completion or handoff is claimed. |
+| `handoff_boundary` | NOT_EXERCISED | No handoff occurs; the output remains at the first discovery question and explicitly keeps engineering work for a later stage. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acfb6edf3aff0b94988c5e9a7ff435967801458a79c851afd902400163536b81; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=81daf9f1651ef9c63b297497d5d050fce62b0ea3cae43322de19810ec5c5fca7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 准确路由至 PM 的 idea-to-spec/greenfield-discovery，识别空目录与 PM-first 边界，提出首个产品发现问题，未写代码或产出未确认的 PM 文档。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acfb6edf3aff0b94988c5e9a7ff435967801458a79c851afd902400163536b81; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=c9c45e64d7e4422194457bf56a20500614625df851c86017274dd60b66664a80; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly routes the empty-directory idea into PM greenfield discovery, asks the next product question, and avoids implementation.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acfb6edf3aff0b94988c5e9a7ff435967801458a79c851afd902400163536b81; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=ae1d073fb77880774c760f7b1dd6cabf97a53c9f8681ec4403192919eb919fd8; snapshot_sha256=aa804066ab6e23e323bfaca3f5c69abd4d27013a76b476a0d2152499e41b06ad
-- Behavior: 基础行为也保持未写代码，但直接产出包含大量假设的产品简报和 backlog，再提出多个问题，较早宣称进入产品定义阶段。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acfb6edf3aff0b94988c5e9a7ff435967801458a79c851afd902400163536b81; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=2b4af7db6f65fef950a714543984faac797cbd3b88ad4ae2c0e046fe474322a5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a plausible MVP proposal and several implementation-oriented questions, but lacks explicit PM routing and focused first-step discovery control.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: 等待用户确认目标用户与核心场景后继续产品发现。
+- Next: Obtain the user's answer to the target-user/core-problem question before producing PRD/DECISIONS or considering handoff.
 
 ## Runtime Artifact Policy
 

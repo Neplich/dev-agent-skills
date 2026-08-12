@@ -55,6 +55,10 @@ flowchart TD
 - `agents/` 镜像到 `~/.agents/skills/.dev-agent-skills/agents/`
 - selected skills 以相对软链暴露到 `~/.agents/skills/<skill-name>`
 
+Personal 安装的 skill 在宿主可见的每个项目中都可被发现。未启用
+dev-agent-skills 的项目中，`pm-agent` 的使用范围判定会拦截一般对话、本机
+环境操作与通用文件处理（只提示一句并停止）；项目向请求与显式点名仍正常执行。
+
 ### Project
 
 适合只想在当前项目里启用这些 Agent 的场景。
@@ -62,6 +66,10 @@ flowchart TD
 - 仓库 clone 到 `<project>/.agents/dev-agent-skills`
 - `agents/` 镜像到 `<project>/.agents/skills/.dev-agent-skills/agents/`
 - selected skills 以相对软链暴露到 `<project>/.agents/skills/<skill-name>`
+
+Project 安装把 skill 保持在项目目录内，天然隔离其他项目；项目内的
+`.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json` 同时作为
+`pm-agent` 使用范围判定的启用标记。若需要最严格的隔离，优先选择本层级。
 
 两种安装方式都保持仓库内的 `agents/*/skills/*` 目录不变，用于兼容 Claude marketplace。
 
@@ -86,14 +94,32 @@ SKILL_ROOT="$PROJECT_ROOT/.agents/skills"
 
 ### 2. clone 或更新仓库
 
+默认安装最新 main。需要固定 release 版本时先设置 `TARGET_TAG`（例如
+`v0.4.1`），在 clone/更新后执行固定 checkout：
+
 ```bash
+# 可选：固定 release 版本；默认不设置则使用最新 main
+# TARGET_TAG="v0.4.1"
+
 if [ -d "$CLONE_ROOT/.git" ]; then
-  git -C "$CLONE_ROOT" pull --ff-only
+  # 先前使用过固定版本时 clone 处于 detached HEAD，先切回 main 再更新
+  git -C "$CLONE_ROOT" checkout main \
+    || { echo "error: cannot switch to main; aborting update" >&2; exit 1; }
+  git -C "$CLONE_ROOT" pull --ff-only \
+    || { echo "error: pull failed; aborting update" >&2; exit 1; }
 else
   mkdir -p "$(dirname "$CLONE_ROOT")"
   git clone https://github.com/Neplich/dev-agent-skills.git "$CLONE_ROOT"
 fi
+
+if [ -n "${TARGET_TAG:-}" ]; then
+  git -C "$CLONE_ROOT" fetch origin "refs/tags/${TARGET_TAG}:refs/tags/${TARGET_TAG}"
+  git -C "$CLONE_ROOT" checkout --detach "refs/tags/${TARGET_TAG}^{commit}"
+fi
 ```
+
+远端 tag 存在性校验、commit identity 核验与固定版本后续更新语义以
+`.codex/INSTALL.md` 的完整步骤为准。
 
 ### 3. 安装 skills
 

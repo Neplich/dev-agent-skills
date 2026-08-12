@@ -69,11 +69,17 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 /plugins install https://github.com/Neplich/dev-agent-skills/tree/main
 ```
 
-仓库内置 `.kimi-plugin/plugin.json` manifest：7 个角色 skill 目录注册为单个插件，`pm-agent` 随会话启动自动加载（`sessionStart.skill`）。注意：裸仓库 URL 安装的是最新 GitHub Release，在包含 Kimi manifest 的版本发布前请使用上面的 `tree/main` 形式；发布后可改用 `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/vX.Y.Z` 固定不可变版本。
+仓库内置 `.kimi-plugin/plugin.json` manifest：7 个角色 skill 目录注册为单个插件，`pm-agent` 随会话启动自动加载（`sessionStart.skill`）。上面的 `tree/main` 形式安装最新开发状态，包含 pm-agent 的 Scope Guard。包含 Scope Guard 的版本发布后，可改用 `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/vX.Y.Z` 固定不可变版本。
 
 已按 Codex 方式安装到 `~/.agents/skills/` 的 skill 也会被 Kimi Code 自动扫描到；推荐优先使用上面的原生插件方式。
 
 **同时使用 Codex 与 Kimi Code？** 只走 Codex 安装路径（`~/.agents/skills/`）：Kimi Code 会自动扫描该目录，一份副本两个宿主共读，保持单一事实源。若同时再装 Kimi 插件，每个 skill 会产生两份同名副本——实时跟踪工作区的软链 vs `~/.kimi-code/plugins/managed/` 下的安装快照——版本可能漂移。注意：Kimi 的 generic skill 目录组互斥，若 `~/.config/agents/skills/` 存在会遮蔽 `~/.agents/skills/`，此时需在 Kimi 的 `config.toml` 中把 `~/.agents/skills/` 加入 `extra_skill_dirs`。 取舍说明：Codex 路径下 Kimi 只有普通 skill 发现，插件的 `sessionStart.skill` 自动加载 `pm-agent` 不生效；如需保留会话启动的 PM 入口，可在会话开始时手动 `/skill:pm-agent`，或改用插件并接受上面的双副本注意事项。
+
+## 使用范围
+
+这些 Agent 面向项目内研发工作流。个人级安装——Codex 路径（`~/.agents/skills/`）、用户级 Claude 插件或 Kimi 插件——会让 skill 在宿主可见的每个项目中都可被发现。在未启用 dev-agent-skills 的项目中，`pm-agent` 会执行使用范围判定：一般对话、本机环境操作与通用文件处理只输出一句提示后停止，不进入重型 PM 工作流；项目向请求与显式点名 `pm-agent` 或任意 skill 仍正常执行。
+
+若需要最严格的隔离，优先使用 Codex 项目级安装（见 [`docs/README.codex.md`](./docs/README.codex.md)），它会将 skill 保持在项目目录内，并为项目提供明确的启用标记。
 
 ## 使用示例
 

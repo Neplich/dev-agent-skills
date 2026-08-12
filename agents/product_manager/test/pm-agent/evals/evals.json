@@ -675,7 +675,7 @@
         {
           "id": "blocks_unknown_evidence",
           "description": "证据不足保持 unknown",
-          "text": "缺少 CI 或环境权限证据时报告 unknown、指明缺口，不按 integrated 或 ready handoff 处理。"
+          "text": "缺少 CI 或环境权限证据时报告 unknown 或语义等价的不就绪状态（如 blocked、证据未确认），指明缺口，不按 integrated 或 ready handoff 处理。"
         },
         {
           "id": "builds_repo_wide_deployment_packet",
@@ -741,6 +741,122 @@
           "id": "structural_change_requires_confirmation",
           "description": "结构变更需确认",
           "text": "合并/拆分/移动建议必须等用户确认后按 change_tier major 另行执行，不在梳理报告中直接执行"
+        }
+      ]
+    },
+    {
+      "id": "eval-017-scope-guard-unenabled-general",
+      "name": "scope-guard-unenabled-general",
+      "description": "Verifies that pm-agent does not enter the heavy PM workflow for general, non-project requests in an unenabled directory.",
+      "scenario": {
+        "persona": "在普通目录处理本机事务的开发者",
+        "situation": "用户在当前目录没有 dev-agent-skills 启用标记（非项目仓库、无项目安装），只是提出本机文件整理请求。",
+        "trigger": "一般性本机操作请求落在未启用目录，dev-agent-skills 不应自动进入重型项目流程。",
+        "goal": "温和说明 dev-agent-skills 面向项目内研发流程、当前目录未启用，然后停止",
+        "materials": [
+          "未启用 dev-agent-skills 的普通目录",
+          "用户提出的本机文件整理请求"
+        ],
+        "constraints": [
+          "不进入 PM 分类与路由",
+          "不产出 PRD / 文档链",
+          "不 handoff 任何下游角色",
+          "不执行文件整理动作本身"
+        ],
+        "success_criteria": [
+          "一句话说明 dev-agent-skills 面向项目内研发流程且当前目录未启用",
+          "不输出完整 Routing decision / 分类字段",
+          "停止而不是启动任何工作流"
+        ]
+      },
+      "prompt": "帮我把 ~/Downloads 目录里下载的文件按文件类型整理一下，图片放一个文件夹，文档放一个文件夹。",
+      "expected_output": "简短的范围说明（当前目录未启用 dev-agent-skills）并停止，不进入 PM 工作流。",
+      "workspace": "workspace/eval-17-scope-guard-unenabled-general",
+      "assertions": [
+        {
+          "id": "scope_guard_stops_general_request",
+          "description": "一般请求不进入 PM 工作流（须判定目录启用状态）",
+          "text": "必须检查当前目录的 dev-agent-skills 启用状态并基于该状态决定：识别当前目录未启用（接受「当前目录未启用 dev-agent-skills」「此目录未启用该能力」等同义表述，不接受仅以「请求不在项目工作流范围」代替目录启用状态判定），输出一句简短说明后停止。不得输出 request_type、change_tier、selected_owner 等分类路由字段，不得产出文档链或 handoff 下游。"
+        }
+      ]
+    },
+    {
+      "id": "eval-018-scope-guard-explicit-invocation",
+      "name": "scope-guard-explicit-invocation",
+      "description": "Verifies that explicitly naming pm-agent in an unenabled directory proceeds into the normal PM workflow even for a general request.",
+      "scenario": {
+        "persona": "在普通目录显式点名 pm-agent 的需求负责人",
+        "situation": "当前目录没有 dev-agent-skills 启用标记，用户显式点名使用 pm-agent 处理一个本机文件整理请求。",
+        "trigger": "一般请求因显式点名 pm-agent 而放行，即使目录未启用也应正常进入 PM 分类。",
+        "goal": "正常进入 PM 分类流程，不输出使用范围拦截提示",
+        "materials": [
+          "未启用 dev-agent-skills 的普通目录",
+          "用户显式点名 pm-agent 的本机文件整理请求"
+        ],
+        "constraints": [
+          "显式点名必须放行，不得输出范围拦截提示",
+          "正常执行 PM 分类",
+          "本机文件整理作为请求内容被分类处理"
+        ],
+        "success_criteria": [
+          "不输出使用范围拦截提示",
+          "进入分类流程：Routing decision 或诚实的不可分类说明",
+          "不伪造与请求内容矛盾的 request_type / selected_owner"
+        ]
+      },
+      "prompt": "用 pm-agent 帮我把 ~/Downloads 里下载的文件按类型整理一下，图片放一个文件夹，文档放一个文件夹。",
+      "expected_output": "放行进入分类流程：输出 Routing decision 或诚实的不可分类说明（不伪造路由）。",
+      "workspace": "workspace/eval-18-scope-guard-explicit-invocation",
+      "assertions": [
+        {
+          "id": "explicit_invocation_proceeds",
+          "description": "显式点名放行并诚实分类（Routing decision 或不可分类说明）",
+          "text": "用户消息显式点名 pm-agent，即使目录未启用且请求属于一般本机操作，也不得输出使用范围拦截提示（不得声明当前目录未启用并停止）；必须进入分类流程：输出 Routing decision 或语义等价的分类说明。若请求无法归入任何 PM 类别或下游角色，须诚实说明该请求不在 PM 工作流分类范围内并停在 PM，不得伪造与请求内容矛盾的 request_type 或 selected_owner（例如把文件整理谎报为 deployment）。"
+        },
+        {
+          "id": "classifies_general_request",
+          "description": "一般请求进入分类",
+          "text": "文件整理请求按 PM 分类协议处理：明确 request_type 与所选 owner（PM specialist 或下游角色）或诚实声明无法归入现有类别；不得跳过分类直接执行文件操作。"
+        }
+      ]
+    },
+    {
+      "id": "eval-019-scope-guard-enabled-general",
+      "name": "scope-guard-enabled-general",
+      "description": "Verifies that a general request in an enabled project directory proceeds into the normal PM workflow.",
+      "scenario": {
+        "persona": "在已启用 dev-agent-skills 的项目目录里处理本机事务的开发者",
+        "situation": "当前目录是 dev-agent-skills 仓库自身形态（存在 AGENTS.md 与 .claude-plugin/marketplace.json 且 name 为 dev-agent-skills），用户提出一般性本机文件整理请求。",
+        "trigger": "已启用项目的目录判定应放行一般请求，正常进入 PM 分类。",
+        "goal": "识别启用标记并正常进入 PM 分类流程",
+        "materials": [
+          "带 dev-agent-skills 仓库自身标记（AGENTS.md + .claude-plugin/marketplace.json name=dev-agent-skills）的目录",
+          "用户提出的一般性本机文件整理请求"
+        ],
+        "constraints": [
+          "已启用目录不得拦截一般请求",
+          "正常执行 PM 分类",
+          "不执行文件整理动作本身"
+        ],
+        "success_criteria": [
+          "识别目录已启用（引用仓库自身标记）",
+          "进入分类流程：Routing decision 或诚实的不可分类说明",
+          "不伪造与请求内容矛盾的 request_type / selected_owner"
+        ]
+      },
+      "prompt": "帮我把 ~/Downloads 里下载的文件按类型整理一下，图片放一个文件夹，文档放一个文件夹。",
+      "expected_output": "放行进入分类流程：输出 Routing decision 或诚实的不可分类说明（不伪造路由）。",
+      "workspace": "workspace/eval-19-scope-guard-enabled-general",
+      "assertions": [
+        {
+          "id": "enabled_marker_detected",
+          "description": "识别启用标记",
+          "text": "必须检查当前目录的 dev-agent-skills 启用状态，识别出目录已启用（引用 AGENTS.md 与 .claude-plugin/marketplace.json 的仓库自身标记或语义等价的启用标记）。"
+        },
+        {
+          "id": "general_request_proceeds",
+          "description": "已启用目录的一般请求放行",
+          "text": "已启用目录中的一般请求不得被拦截：必须进入分类流程，输出 Routing decision 或语义等价的分类说明；若请求无法归入任何 PM 类别或下游角色，须诚实说明该请求不在 PM 工作流分类范围内并停在 PM，不得伪造与请求内容矛盾的 request_type 或 selected_owner，也不得输出「当前目录未启用」的拦截提示。"
         }
       ]
     }
