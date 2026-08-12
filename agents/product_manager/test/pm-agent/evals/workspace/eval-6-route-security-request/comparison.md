@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-6-route-security-request`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `36e2dc52efc02bd4a536346d8f3cd5d27459a1a97e6287cf5969afca708442f1`
-- Repository HEAD: `33a503192c752d6227de1bc0d8d8a2e78e31cdf5`
+- Repository HEAD: `715bd6b76fcd6f14f475aeabe141543063d431ba`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `8b87fb93cdb85ecb0436a61b1aedfcf9c8b41c4cd8f9eff41c412a3196c1d245`
-- Skill overlay SHA-256: `56390e18f057b654978938889dac7daf0263eaaf39d741419b573d12bff2c198`
+- Target skill tree SHA-256: `be11ec63823b148323fef6c35d27c0861bd093b24d683f705e846234e98b7baa`
+- Skill overlay SHA-256: `961e7aacbdec2d154ad578bc7bf54d5d734f34031af1384fb20aa67a8e2d392a`
 - Judge schema SHA-256: `356a8438fe026d0b1352a3ef7467cbb1d1fa3bb6c089f0c3e64b4d4c5d3741fc`
 - Eval definition SHA-256: `33054d35eb6adb9b2259eedec7e911d8545eb305cd711e4206483eea10d13a8f`
 - Metadata SHA-256: `b68604b9408ecd1ae4f680e8b6bea0f1c221e273dc6389c6b8150eff4b36f0d2`
@@ -31,26 +31,26 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `request_type_security` | PASS | With-skill output explicitly classifies the request as `request_type: security`. |
-| `security_scope_first` | PASS | The initial routing block records `risk_surface`, `assets`, `permissions`, `data_flow`, and `remediation_expectations` before the recorded inspection steps. |
-| `security_handoff` | NOT_EXERCISED | The candidate identifies `selected_owner: security-agent` and supplies scope plus `required_output`, but states the actual Security handoff is blocked because `security-agent` is unavailable. |
+| `request_type_security` | PASS | With-skill output identifies the work as a security review and names `security-agent`. |
+| `security_scope_first` | NOT_EXERCISED | The locked final output does not independently prove the required first-recorded scope fields or ordering. |
+| `security_handoff` | NOT_EXERCISED | The output says handoff is required, but no completed handoff is evidenced and the stated security-agent runtime is unavailable. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=36e2dc52efc02bd4a536346d8f3cd5d27459a1a97e6287cf5969afca708442f1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=bbfd35cfac94950680718164abf278d36eb84e48715a2c77ecdb4bbd0f046a49; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Classifies the request as security and records the required scope fields first; downstream handoff is explicitly blocked pending security-agent availability.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=36e2dc52efc02bd4a536346d8f3cd5d27459a1a97e6287cf5969afca708442f1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=81c6725827911515ff1423bbac9dfd9b72604fa7ff99e606f7131653f4a336f2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly identifies and routes the request as security-related, but does not provide independently verifiable scope-first or completed-handoff evidence.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=36e2dc52efc02bd4a536346d8f3cd5d27459a1a97e6287cf5969afca708442f1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=4c9c8412e3b3bcd669399692ce9d4a56a3ffd26c4b8a9161e4d2c0f096c1eaa0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Provides a substantive audit-style response about the empty repository but does not classify, scope, or hand off the request through the required security workflow.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=36e2dc52efc02bd4a536346d8f3cd5d27459a1a97e6287cf5969afca708442f1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=e2a8d2e122d68fc35c3bd4c3931bc7ded9cd65db6b7187e6ff66b85b06f40abc; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a substantive security checklist but does not classify or route the request through a security handoff.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Install or make `security-agent` available, then perform the Security handoff with the recorded scope and required output.
+- Next: Provide runtime evidence of the recorded security scope and completed Security handoff.
 
 ## Runtime Artifact Policy
 

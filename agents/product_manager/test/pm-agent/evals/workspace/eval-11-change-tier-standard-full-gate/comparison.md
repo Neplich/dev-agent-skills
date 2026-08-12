@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-11-change-tier-standard-full-gate`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `2c9f63eba393d7546f89112ce3f1659145dc2f6ca60bdba6ba71df10258a35a4`
-- Repository HEAD: `33a503192c752d6227de1bc0d8d8a2e78e31cdf5`
+- Repository HEAD: `715bd6b76fcd6f14f475aeabe141543063d431ba`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `8b87fb93cdb85ecb0436a61b1aedfcf9c8b41c4cd8f9eff41c412a3196c1d245`
-- Skill overlay SHA-256: `56390e18f057b654978938889dac7daf0263eaaf39d741419b573d12bff2c198`
+- Target skill tree SHA-256: `be11ec63823b148323fef6c35d27c0861bd093b24d683f705e846234e98b7baa`
+- Skill overlay SHA-256: `961e7aacbdec2d154ad578bc7bf54d5d734f34031af1384fb20aa67a8e2d392a`
 - Judge schema SHA-256: `e0fce32f646911cc00fe0709c7d0e934a3657054c9fc5a2efda7653a3ac97ea6`
 - Eval definition SHA-256: `da85ba336c757be6c6ca84ef12c1d1a20655adb3e82559a2c2234b5462387973`
 - Metadata SHA-256: `6652dce9ab8a85ed09b58d853b1bdac1fd0f6f3e5ccd74f38c1d4aa6171a8cf4`
@@ -32,19 +32,19 @@ Overall result: PASS
 | Assertion | Result | Evidence |
 | --- | --- | --- |
 | `classify_standard` | PASS | With-skill output explicitly sets `change_tier: standard` and `hotfix_disposition: rejected`. |
-| `require_prd_trd_alignment` | PASS | With-skill output requires PM scope alignment and updated PRD/DECISIONS before downstream implementation, and explicitly forbids modifying implementation, tests, or deployment at this stage. |
-| `request_type_existing_update` | PASS | With-skill output explicitly sets `request_type: existing_update` and identifies the approved business-rule change. |
+| `require_prd_trd_alignment` | PASS | With-skill output requires scope and process confirmation, calls for PRD/DECISIONS update, recommends change-impact analysis before downstream mirroring, and explicitly prohibits handing off to Engineer before alignment. |
+| `request_type_existing_update` | PASS | With-skill output explicitly sets `request_type: existing_update` and identifies the approved behavior change from automatic approval to administrator confirmation. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2c9f63eba393d7546f89112ce3f1659145dc2f6ca60bdba6ba71df10258a35a4; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=60a288e03db7017747a24a75e404b9af1a55dcf2b7762efdbcc1a35fc7108b29; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly classified the request as an existing standard update, rejected hotfix treatment, and preserved the requirements-alignment gate before implementation handoff.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2c9f63eba393d7546f89112ce3f1659145dc2f6ca60bdba6ba71df10258a35a4; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=b9d15125b5c1d95f159154981655f8cfeefe48cf992003b06e521c38c615b047; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly classified the request as an existing standard update, rejected hotfix treatment, preserved the product-alignment gate, and paused for required scope confirmation before downstream implementation.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2c9f63eba393d7546f89112ce3f1659145dc2f6ca60bdba6ba71df10258a35a4; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=1c8b4187d11d35f0e7a6c680c2043ba668d57ad06b75b07a8d5a1dc62281c317; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Reported the empty workspace and requested project context without classifying or routing the request.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2c9f63eba393d7546f89112ce3f1659145dc2f6ca60bdba6ba71df10258a35a4; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=e5cfcff8325c190b6f50023bf7cbc327d8813f0d9c3bddaf4afb7da7916300ea; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline reported only that the workspace lacked project files and did not provide the required request classification or governance handling.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

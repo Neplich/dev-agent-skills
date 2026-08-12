@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-12-change-tier-hotfix-abuse-blocked`.
 - Fixture SHA-256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - Prompt SHA-256: `fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907`
-- Repository HEAD: `33a503192c752d6227de1bc0d8d8a2e78e31cdf5`
+- Repository HEAD: `715bd6b76fcd6f14f475aeabe141543063d431ba`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `8b87fb93cdb85ecb0436a61b1aedfcf9c8b41c4cd8f9eff41c412a3196c1d245`
-- Skill overlay SHA-256: `56390e18f057b654978938889dac7daf0263eaaf39d741419b573d12bff2c198`
+- Target skill tree SHA-256: `be11ec63823b148323fef6c35d27c0861bd093b24d683f705e846234e98b7baa`
+- Skill overlay SHA-256: `961e7aacbdec2d154ad578bc7bf54d5d734f34031af1384fb20aa67a8e2d392a`
 - Judge schema SHA-256: `05754bc7141a9de585a1127391112d0da97f3c7138eba96f4377a8a50be63d7c`
 - Eval definition SHA-256: `757872d7dabcbeb5f63781cd39c51a0fbd55c644aaecd2a814401a4e784d4603`
 - Metadata SHA-256: `5be95630fc657c3ddfcd1eee211fb45bdc7cc20a37cf20c50f58a72635d4712c`
@@ -31,20 +31,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reject_hotfix_abuse` | PASS | With_skill output explicitly sets `hotfix_disposition: rejected` and states the 7-to-30-day rule change is not eligible for hotfix handling. |
-| `expectation_change_standard` | PASS | With_skill output explicitly sets `change_tier: standard` and identifies the request as a membership business-rule/expectation change. |
-| `block_or_return_pm` | PASS | With_skill output routes to PM, requires scope confirmation, and explicitly blocks implementation, testing, commit, and merge pending PM alignment. |
+| `reject_hotfix_abuse` | PASS | with_skill 明确写出 `hotfix_disposition: rejected`，并说明禁止直接改代码、测试或合并。 |
+| `expectation_change_standard` | PASS | with_skill 明确写出 `change_tier: standard`，并将其说明为业务规则变更。 |
+| `block_or_return_pm` | PASS | with_skill 将下一步设为 PM 确认适用范围并补齐产品依据，标记 `confirmation_required: true`，且明确 Engineer/直接合并暂不可开始。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=3930c45e76fc10b0182e799694fea1ca854759735721f7616d090e7b3aa97814; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly classified the request as a standard expectation change, rejected hotfix handling, and blocked implementation pending PM scope confirmation.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=e243bdb685aa1befd94d41f3856e72888b7e87479ba0f4be45c54612f7f7facf; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 拒绝 hotfix，按 standard 处理业务规则变化，并阻止直接实现或合并，要求 PM 确认范围。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=3d4215d95b3a75edbd85c82eec20bc2af88f6e7df2030f3fea190bb2d84e00b3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline only reported that the empty repository prevented modification or merge, without providing the requested change classification or PM routing.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=48d6f5ef17b686782a5ed3577aa0632b015012196ec177e76522ba8f226513b6; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅因空工作区而无法操作，未处理 hotfix、standard 或 PM 范围确认要求。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
