@@ -2,7 +2,7 @@
 title: "实施计划归档路径契约迁移实施计划"
 type: IMPLEMENTATION_PLAN
 version: "0.4.0"
-status: "Draft"
+status: "Implemented"
 author: "Neplich Codex"
 date: "2026-08-12"
 last_updated: "2026-08-12"
@@ -110,3 +110,54 @@ docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<s
 - `feature-implementor` fresh paired eval 完成且无未解释 FAIL。
 - `git diff --check` 干净。
 - 仓库中除明确保留的历史事实外，不再有会指导 Agent 生成旧路径的有效契约或断言。
+
+## 6. 实施结果
+
+### 6.1 代码与测试
+
+- 归档路径契约迁移完成：14 份跟踪归档 + 1 份 eval fixture 归档 `git mv`
+  到 `{feature_path}/archive/`，3 份 active 计划 `previous_plan_archive` 同步，
+  空 `implementation-plans/` 目录已删除。
+- `check_repository_contract.py` 正则、目录构造与校验消息全部识别新路径；
+  `previous_plan_archive` 纯路径迁移（`implementation-plans/archive/` →
+  `archive/`）在 base round 判定中视为内容未变。
+- `check_doc_contract.py` 的归档工件识别收窄为精确 `IMPLEMENTATION_PLAN_ARCHIVE_RE`
+  匹配，不再以 `/archive/` 子串误伤 feature_path 含 `archive` 段的合法文档。
+- 针对性 repository contract pytest：`scripts/test_check_repository_contract.py`
+  + `agents/test_eval_contract.py` + `scripts/test_run_skill_eval.py`
+  合计 174 项通过。
+
+### 6.2 Eval
+
+受影响 target skill（feature-implementor、trd-gen、idea-to-spec）共 32 个 eval
+执行 fresh paired 验证：
+
+| Eval | Durable latest result |
+| --- | --- |
+| feature-implementor 17 个 | 15 PASS / PASS (partial)；eval-004、eval-006、eval-010 首次 FAIL 重跑确认模型方差后 PASS |
+| trd-gen 6 个 | 5 PASS / PASS (partial)；eval-006 为既有 FAIL（main 上即 FAIL，与本次变更无关） |
+| idea-to-spec 9 个 | 全部 PASS / PASS (partial) |
+
+### 6.3 契约与格式
+
+| Command | Result |
+| --- | --- |
+| `uv run scripts/check_repository_contract.py` | PASS |
+| `uv run scripts/check_eval_contract.py` | PASS |
+| `uv run scripts/check_eval_artifacts.py` | PASS |
+| `uv run scripts/check_doc_contract.py` | PASS |
+| pytest（174 项） | PASS |
+| `git diff --check` | PASS |
+
+## 7. 自审结论
+
+- 存量迁移为纯 `git mv`，正文与 frontmatter 内容不变，仅路径变化；历史
+  changelog 与已结案文档中的历史叙述保留当时事实。
+- `archive/` 被结构治理识别为所属功能的历史存储（`structure-governance`
+  指令已同步），不被识别为子功能。
+- 已知边界：feature_path 本身可含 `archive` 段（lower kebab-case 语法允许），
+  归档目录识别依赖 `IMPLEMENTATION_PLAN_ARCHIVE_RE` 精确匹配，不会把
+  `{feature_path}/archive/IMPLEMENTATION_PLAN.md` 或 `TRD.md` 误判为归档工件。
+- 未发现额外绕过或阻塞问题。
+- 下一 owner 为 Engineer delivery：单次提交、普通 push、PR 评论并触发
+  `@codex review`；不等待 review，不合并 PR。

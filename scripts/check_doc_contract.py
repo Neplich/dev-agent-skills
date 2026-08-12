@@ -34,8 +34,18 @@ DESCRIPTION_DENYLIST: tuple[tuple[re.Pattern[str], str], ...] = (
 )
 
 
+IMPLEMENTATION_PLAN_ARCHIVE_RE = re.compile(
+    r"^docs/engineer/"
+    r"(?:[a-z0-9]+(?:-[a-z0-9]+)*/)+"
+    r"archive/IMPLEMENTATION_PLAN-[a-z0-9]+(?:-[a-z0-9]+)*\.md$"
+)
+
+
 def is_implementation_plan_artifact_path(rel: str) -> bool:
-    return rel.endswith("/IMPLEMENTATION_PLAN.md") or "/archive/" in rel
+    return (
+        rel.endswith("/IMPLEMENTATION_PLAN.md")
+        or IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel) is not None
+    )
 
 
 def is_formal_pm_or_engineer_document(rel: str) -> bool:

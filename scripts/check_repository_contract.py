@@ -1571,10 +1571,12 @@ def validate_archive_plans(root: Path, errors: list[ContractError]) -> None:
         if not path.exists() and not path.is_symlink():
             continue
         if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel) is None:
+            directory, _, filename = rel.rpartition("/")
             if (
-                rel.startswith("docs/engineer/")
-                and "/archive/" in rel
-                and rel.endswith(".md")
+                IMPLEMENTATION_PLAN_ARCHIVE_DIRECTORY_RE.fullmatch(directory)
+                and filename.endswith(".md")
+                and IMPLEMENTATION_PLAN_RE.fullmatch(rel) is None
+                and ENGINEER_TRD_RE.fullmatch(rel) is None
             ):
                 add_error(
                     errors,

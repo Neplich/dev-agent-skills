@@ -62,6 +62,23 @@ class DocContractTests(unittest.TestCase):
         self.assertIn("frontmatter 'date' must be non-empty", rendered)
         self.assertIn("frontmatter 'last_updated' must be non-empty", rendered)
 
+    def test_doc_contract_archive_segment_pm_doc_still_requires_frontmatter(self):
+        checker = load_doc_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            add_tracked_file(
+                root,
+                "docs/pm/payments/archive/PRD.md",
+                "# Unfrontmattered PRD under archive segment\n",
+            )
+
+            errors = checker.validate_all(root)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("docs/pm/payments/archive/PRD.md", rendered)
+
     def test_doc_contract_rejects_non_pm_description_trigger_phrase(self):
         checker = load_doc_checker_module()
 

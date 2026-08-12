@@ -2170,6 +2170,29 @@ class EvalContractTests(unittest.TestCase):
             rendered,
         )
 
+    def test_repository_contract_accepts_archive_named_feature_path_documents(self):
+        checker = load_repository_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git_main(root)
+            plan = root / "docs/engineer/payments/archive/IMPLEMENTATION_PLAN.md"
+            trd = root / "docs/engineer/payments/archive/TRD.md"
+            plan.parent.mkdir(parents=True)
+            plan.write_text("# Active Plan\n")
+            trd.write_text("# TRD\n")
+            subprocess.run(
+                ["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True
+            )
+            subprocess.run(
+                ["git", "add", trd.relative_to(root).as_posix()], cwd=root, check=True
+            )
+
+            errors = []
+            checker.validate_archive_plans(root, errors)
+
+        self.assertEqual([], errors)
+
     def test_repository_contract_accepts_deep_implementation_plan_path(self):
         checker = load_repository_checker_module()
 
