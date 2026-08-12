@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `65a99fdb8c4d1c46befd98fefb9960ee9aae1f97faab8a74ba30b0fffe3597a9` from `agents/engineer/test/feature-implementor/evals/workspace/eval-002-subagent-division-from-docs`.
 - Fixture SHA-256: `65a99fdb8c4d1c46befd98fefb9960ee9aae1f97faab8a74ba30b0fffe3597a9`
 - Prompt SHA-256: `8ee9b69232c9ce95b799be0d259b297845a3badf592141bec3518643c9781de5`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
-- Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `1b3ba014c732559fe2d85e84b85c8db967bb14f4b1fc850a2267e7d4ee1cf03b`
-- Skill overlay SHA-256: `7f72b0d2378eefdc164735f00c26c14522753a42e538abe02ba7accda3b0a9f5`
+- Repository HEAD: `7ac19d358ca18ef7b2d109aeec17239bc9d0f4c0`
+- Repository worktree state: **CLEAN**
+- Target skill tree SHA-256: `2cef9a078b25940be2cd93c65c4193da4205d9703e5924079fcda5ac81b0dc82`
+- Skill overlay SHA-256: `06e677e2d778ad6e9070a73693d2a9f47819f161c623014f6e26b508a4d8e533`
 - Judge schema SHA-256: `1e433f2d38239fdd1f4633433c706d2dafc7492741c63113035a8d0975b21d23`
 - Eval definition SHA-256: `5c62d2cc73fb2bf0752465157043f4f8dd87b392fc0487e4305ab334ca2facef`
 - Metadata SHA-256: `0a81d92a9af555dbb300e83a7ff4d8024a21161273fe243a2bbb1dbd8da3747a`
@@ -31,30 +31,30 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `preserves_main_context` | PASS | IMPLEMENTATION_PLAN.md 明确主流程保留 PRD、TRD、设计文档、仓库规则、实现边界、集成判断和最终交付判断。 |
-| `writes_implementation_plan_doc` | PASS | 锁定的 delivery_snapshot 直接包含 docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md，且计划未改写 TRD。 |
-| `delegates_implementation_scope` | NOT_EXERCISED | 计划给出了实现文件范围和无关改动保护，但锁定 trace 未证明实际存在或执行了实现 sub-agent；按规则该路径未覆盖。 |
-| `delegates_independent_validation` | NOT_EXERCISED | 计划描述了独立验收职责，但锁定 trace 未证明实际存在或执行了独立验收 sub-agent；按规则该路径未覆盖。 |
-| `keeps_simple_path_exception` | PASS | 拆分范围限定于当前 Capture Loop 队列重试的源文件和测试，没有宣称所有工程任务都必须拆分。 |
-| `final_summary_contract` | PASS | 计划要求记录 changed_files、commands_and_results、residual_risks，并安排实现、测试和验收结论后再交付。 |
-| `qa_e2e_handoff_contract` | PASS | 计划安排实现完成后的 QA E2E handoff，列出 PRD、TRD、确认计划、变更文件、测试结果、风险，并指定 docs/qa/e2e/capture-loop/；该后续交接尚未执行，且需用户确认计划。 |
+| `preserves_main_context` | PASS | IMPLEMENTATION_PLAN.md explicitly assigns the main process responsibility for PRD, TRD, design constraints, repository rules, implementation boundaries, cross-file integration, test-result interpretation, and final delivery judgment. |
+| `writes_implementation_plan_doc` | PASS | The delivery_snapshot directly contains docs/engineer/capture-loop/IMPLEMENTATION_PLAN.md, and the plan does not rewrite TRD.md. |
+| `delegates_implementation_scope` | NOT_EXERCISED | The locked evidence does not prove actual sub-agent execution capability or an implementation sub-agent run; this path is therefore not exercised rather than failed. |
+| `delegates_independent_validation` | NOT_EXERCISED | The locked evidence does not prove actual sub-agent execution capability or an independent validation sub-agent run; this path is therefore not exercised rather than failed. |
+| `keeps_simple_path_exception` | PASS | The plan limits the split to this specific multi-file queue, handler, and test change and makes no universal claim that all engineering work must be split. |
+| `final_summary_contract` | NOT_EXERCISED | The workflow is awaiting user confirmation before implementation, testing, acceptance, and final delivery; the final-delivery stage is not yet exercised. |
+| `qa_e2e_handoff_contract` | NOT_EXERCISED | The plan explicitly gates QA E2E handoff until after confirmation and implementation, so the later handoff stage is not yet exercised. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8ee9b69232c9ce95b799be0d259b297845a3badf592141bec3518643c9781de5; fixture_sha256=65a99fdb8c4d1c46befd98fefb9960ee9aae1f97faab8a74ba30b0fffe3597a9; output_sha256=016290a8d871c7f23a8fed4a90e4ab8406f18fd4a90d094d4c5156ccab366614; snapshot_sha256=e17d9536b47a4f2039a2356b4eeb2013d5ca27808b34b59d72d184e89dd94cc2
-- Behavior: 先完成规格、边界和仓库入口检查，交付了 IMPLEMENTATION_PLAN.md，明确实现范围、验证命令、交付字段和后续 QA E2E handoff，并等待用户确认后编码。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8ee9b69232c9ce95b799be0d259b297845a3badf592141bec3518643c9781de5; fixture_sha256=65a99fdb8c4d1c46befd98fefb9960ee9aae1f97faab8a74ba30b0fffe3597a9; output_sha256=b79a4964065fd322188f660ff49db220a089a9528962efdd064b3b20a4a3575c; snapshot_sha256=e529f3b7500f12b00565eeaf032f57de750485700150e6e38662e790031bdf95
+- Behavior: Produced and delivered a scoped implementation plan, preserved main-process context, and correctly paused for user confirmation before implementation.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8ee9b69232c9ce95b799be0d259b297845a3badf592141bec3518643c9781de5; fixture_sha256=65a99fdb8c4d1c46befd98fefb9960ee9aae1f97faab8a74ba30b0fffe3597a9; output_sha256=4cf660b81535db5017e764431356ae305c6754234ced860e3c43f2be982e2efa; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 提供了较完整的文字执行方案，但未交付实现计划文件，也未保留同等明确的主流程上下文与交付交接契约。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8ee9b69232c9ce95b799be0d259b297845a3badf592141bec3518643c9781de5; fixture_sha256=65a99fdb8c4d1c46befd98fefb9960ee9aae1f97faab8a74ba30b0fffe3597a9; output_sha256=2753e74d7b5a4339479142252f081ec1d8b615a90287d9e008366718b0cc4ca3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced a useful prose plan but did not write an implementation-plan document and did not provide the structured plan artifact.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: 用户确认 IMPLEMENTATION_PLAN.md 后再执行实现、测试、独立验收和 QA E2E 交接。
+- Next: Obtain user confirmation, then perform implementation, independent validation if execution capability is available, and the final QA E2E handoff.
 
 ## Runtime Artifact Policy
 

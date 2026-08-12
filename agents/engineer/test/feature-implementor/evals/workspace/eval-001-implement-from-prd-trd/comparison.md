@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `6fefdc42c8b398b33bf8d36b081a2d2c404ba55841f19917d1bf8a129df36ca6` from `agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd`.
 - Fixture SHA-256: `6fefdc42c8b398b33bf8d36b081a2d2c404ba55841f19917d1bf8a129df36ca6`
 - Prompt SHA-256: `2b7b36d4bdea5793eaf1494d70b7d895d20a1213d115ce56d29616224f8e44f7`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
-- Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `1b3ba014c732559fe2d85e84b85c8db967bb14f4b1fc850a2267e7d4ee1cf03b`
-- Skill overlay SHA-256: `7f72b0d2378eefdc164735f00c26c14522753a42e538abe02ba7accda3b0a9f5`
+- Repository HEAD: `7ac19d358ca18ef7b2d109aeec17239bc9d0f4c0`
+- Repository worktree state: **CLEAN**
+- Target skill tree SHA-256: `2cef9a078b25940be2cd93c65c4193da4205d9703e5924079fcda5ac81b0dc82`
+- Skill overlay SHA-256: `06e677e2d778ad6e9070a73693d2a9f47819f161c623014f6e26b508a4d8e533`
 - Judge schema SHA-256: `beede515c8e2f36efe8ae181f94762d96db69fb2e24a26068fcdd2ef262c1f48`
 - Eval definition SHA-256: `fdd6ce4f4f12ff2cfeb67956eb31c203d7cf49aba2742edf2df400fcb4ed7d44`
 - Metadata SHA-256: `5513e853bb936ee74aa78321c2888f8103020519d504b58c9b057a2fb3fd33ff`
@@ -31,21 +31,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `writes_implementation_plan` | PASS | Locked delivery_snapshot contains docs/engineer/notification-center/IMPLEMENTATION_PLAN.md with a concrete file scope and numbered implementation order; the candidate output also identifies the plan file and planned changes. |
-| `requires_user_confirmation` | PASS | The with_skill output explicitly asks the user to confirm the plan before coding, and the locked file states it is Draft and awaiting confirmation. |
-| `does_not_implement_directly` | PASS | The with_skill output does not claim code-file creation/modification, implementation execution, or self-check completion; locked git evidence shows only the plan file was added. |
-| `maintains_plan_metadata` | PASS | The locked plan frontmatter contains version 0.1.0 and last_updated 2026-08-10, matching the current date and providing valid initial metadata. |
+| `writes_implementation_plan` | PASS | with_skill 输出包含 IMPLEMENTATION_PLAN.md、计划文件清单和编号实现顺序；delivery_snapshot 也锁定了该文件内容。 |
+| `requires_user_confirmation` | PASS | 输出明确要求“请确认这份计划；确认后我再开始读取源码并编码”，且计划文件包含确认门禁。 |
+| `does_not_implement_directly` | PASS | 输出明确说明尚未修改代码或测试，也未声称运行实现步骤或完成自检；git_status 仅显示计划文件新增。 |
+| `maintains_plan_metadata` | PASS | 锁定的 IMPLEMENTATION_PLAN.md frontmatter 包含 version: "0.1.0" 和 last_updated: "2026-08-12"；当前日期为 2026-08-12。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2b7b36d4bdea5793eaf1494d70b7d895d20a1213d115ce56d29616224f8e44f7; fixture_sha256=6fefdc42c8b398b33bf8d36b081a2d2c404ba55841f19917d1bf8a129df36ca6; output_sha256=16cf4523deb9d713f94f6f8b38b03566d0026be253b375284dbc0b8551aaa29d; snapshot_sha256=e5d4dadace6ef1afffba4a7d2f384239a5a7095553037dc4aea01dc706766a77
-- Behavior: Created the requested implementation plan, recorded file scope and sequence, and paused for confirmation before coding.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2b7b36d4bdea5793eaf1494d70b7d895d20a1213d115ce56d29616224f8e44f7; fixture_sha256=6fefdc42c8b398b33bf8d36b081a2d2c404ba55841f19917d1bf8a129df36ca6; output_sha256=2e73c5247d3a3b428c98067a1a12d2c65dfd4eaf543f71fb02c3f4c00f0c8ed6; snapshot_sha256=bf03a97465921fe3c8f693d1c470d4829f8a04cfdca038abc2bddb13e393c1f4
+- Behavior: 生成了带有效初始元数据的实施计划，列出文件变更与实现顺序，并在编码前等待用户确认。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2b7b36d4bdea5793eaf1494d70b7d895d20a1213d115ce56d29616224f8e44f7; fixture_sha256=6fefdc42c8b398b33bf8d36b081a2d2c404ba55841f19917d1bf8a129df36ca6; output_sha256=c421dfa1fe900b2b0c4bf5583fb301dda4082fe37bc1ca57d579b38d42d0aff2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Provided a plan in prose and paused before coding, but did not create the requested implementation-plan file.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2b7b36d4bdea5793eaf1494d70b7d895d20a1213d115ce56d29616224f8e44f7; fixture_sha256=6fefdc42c8b398b33bf8d36b081a2d2c404ba55841f19917d1bf8a129df36ca6; output_sha256=badde5013ffa746223a42f3877550bbde3fe8a362d92dbf5141af28ca89ba97e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了实施安排并等待确认，但未实际创建 IMPLEMENTATION_PLAN.md，且没有对应交付文件。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

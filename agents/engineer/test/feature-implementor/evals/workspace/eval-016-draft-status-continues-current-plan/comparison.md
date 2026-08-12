@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `20e27cdb155a076474a45e3e1e88d991a8bc4e1c3723a56f9fad5436bddd121e` from `agents/engineer/test/feature-implementor/evals/workspace/eval-016-draft-status-continues-current-plan`.
 - Fixture SHA-256: `20e27cdb155a076474a45e3e1e88d991a8bc4e1c3723a56f9fad5436bddd121e`
 - Prompt SHA-256: `b545dbdf7b14573cc5aa0b9db7a4defefe66a311f4d3b98d9f23cd367fdfa1aa`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `7ac19d358ca18ef7b2d109aeec17239bc9d0f4c0`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `1b3ba014c732559fe2d85e84b85c8db967bb14f4b1fc850a2267e7d4ee1cf03b`
-- Skill overlay SHA-256: `7f72b0d2378eefdc164735f00c26c14522753a42e538abe02ba7accda3b0a9f5`
+- Target skill tree SHA-256: `2cef9a078b25940be2cd93c65c4193da4205d9703e5924079fcda5ac81b0dc82`
+- Skill overlay SHA-256: `06e677e2d778ad6e9070a73693d2a9f47819f161c623014f6e26b508a4d8e533`
 - Judge schema SHA-256: `b61097c2327e4512b0954be7440f9efb0288869d119e12aff21af89d2a1a48fa`
 - Eval definition SHA-256: `86c8e37f3b454c4b68e8a8e0d79eed844e522098807d679c66512f9c18daf3b3`
 - Metadata SHA-256: `566e39d7363acab918c0b8b38f7cebac43ee4f4a9069dd6e8b635d61f1c29eb0`
@@ -31,23 +31,23 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reads_active_plan_frontmatter` | PASS | runner trace item_7 directly reads IMPLEMENTATION_PLAN.md, and the delivered plan is based on it. |
-| `detects_non_implemented_status` | PASS | Delivered plan and final output explicitly retain and identify status: Draft. |
-| `continues_current_plan` | PASS | delivery_snapshot and git diff show the fixed IMPLEMENTATION_PLAN.md entry was updated; no second active plan was created. |
-| `bumps_plan_version` | PASS | Locked delivery content changes version 0.1.0 to 0.2.0 and last_updated to 2026-08-11. |
-| `does_not_force_archive_link` | PASS | The plan records previous_plan_archive as N/A and explicitly states the Draft plan continues without archive history; no archive prerequisite is imposed. |
-| `waits_before_coding` | PASS | Final output requests confirmation of the Draft plan and states coding will begin only after confirmation; no code files were modified. |
+| `reads_active_plan_frontmatter` | PASS | Raw trace shows the active plan was read directly, including its YAML frontmatter; the delivered snapshot is the same plan path. |
+| `detects_non_implemented_status` | PASS | The active plan snapshot retains status: "Draft", and the output explicitly states implementation is pending confirmation. |
+| `continues_current_plan` | PASS | The locked delivery snapshot updates docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md, with no second active plan. |
+| `bumps_plan_version` | PASS | The locked snapshot changes version from 0.1.0 to 0.2.0 and last_updated from 2026-07-27 to 2026-08-12. |
+| `does_not_force_archive_link` | PASS | The output and delivered plan do not require an archive or previous_plan_archive before continuing the Draft plan. |
+| `waits_before_coding` | PASS | The output requests explicit confirmation before entering coding, and the locked delivery contains only the plan update with no code changes. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b545dbdf7b14573cc5aa0b9db7a4defefe66a311f4d3b98d9f23cd367fdfa1aa; fixture_sha256=20e27cdb155a076474a45e3e1e88d991a8bc4e1c3723a56f9fad5436bddd121e; output_sha256=6b3c44e17a3fd782c2ffe54b790a982fe6dbf3cf256a29df6a4ef35b671687ea; snapshot_sha256=97915e1b263c93bc044c4691b03f96938418da765fd2b16ef9dbc485ffed91bb
-- Behavior: Read the active plan, detected Draft status, updated the existing plan with a version/date bump, avoided requiring an archive, and waited for confirmation before coding.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b545dbdf7b14573cc5aa0b9db7a4defefe66a311f4d3b98d9f23cd367fdfa1aa; fixture_sha256=20e27cdb155a076474a45e3e1e88d991a8bc4e1c3723a56f9fad5436bddd121e; output_sha256=bb9221a96ddbefee219f21d9e59366b89f496f2712636e6398680cd1881edcba; snapshot_sha256=d29f5037749b6b66437bb44f7e066a43c7782aa9b70d1271d3ffe4fe474d37bd
+- Behavior: Updated the existing Draft implementation plan, bumped its version and date, and stopped for confirmation before coding.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b545dbdf7b14573cc5aa0b9db7a4defefe66a311f4d3b98d9f23cd367fdfa1aa; fixture_sha256=20e27cdb155a076474a45e3e1e88d991a8bc4e1c3723a56f9fad5436bddd121e; output_sha256=d9ede043848b8e793240887bf6ebac6effe0608f157716eb0439dbb5384089f0; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline inspected PRD/TRD and repository state but did not read or update the active implementation plan and did not proceed to the required planning checkpoint.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=b545dbdf7b14573cc5aa0b9db7a4defefe66a311f4d3b98d9f23cd367fdfa1aa; fixture_sha256=20e27cdb155a076474a45e3e1e88d991a8bc4e1c3723a56f9fad5436bddd121e; output_sha256=ff0e1fd8ffa8d3eb2fedc4ab73a0842cce99b727303da975d081c314fc7dca37; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Recognized the repository lacked implementation files but did not update the active plan or establish the required confirmation-gated plan update.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
