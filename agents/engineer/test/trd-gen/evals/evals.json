@@ -275,7 +275,7 @@
         {
           "id": "updates_existing_trd",
           "description": "更新目标 TRD 正文",
-          "text": "输出是更新 docs/engineer/delivery-pipeline/TRD.md 的正文与版本，不新建其他 feature 文档，也不把任务路由给别人"
+          "text": "输出必须由 trd-gen 完成 docs/engineer/delivery-pipeline/TRD.md 的正文与版本更新，不新建其他 feature 文档；交付摘要可以声明 TRD 确认后的 feature-implementor owner/path，但 TRD 正文不得写 routing 指令，未获确认和继续授权时不得声称已移交、启动或路由后续任务"
         },
         {
           "id": "body_consolidation",

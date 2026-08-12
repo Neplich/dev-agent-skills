@@ -4,7 +4,7 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "c76184ead334ff8883cc8b4ee578479b9dc9afc5213381af63816037baebc9cb"
+      "computedHash": "b34a4d30ef30c3ba4faa5b1a657325266a5ef271c9c660327eb4d4dac6d389c9"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
@@ -59,7 +59,7 @@
     "trd-gen": {
       "source": "agents/engineer/skills/trd-gen",
       "sourceType": "local",
-      "computedHash": "0b456fae9d729cb3f1b8e9b64b3a18d896eafa4d54c774e2be12d0b712507952"
+      "computedHash": "cc81942c0cf6727c52e4bd8446fc8877ba0440cd76ec84a001a3cca907a02390"
     },
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",

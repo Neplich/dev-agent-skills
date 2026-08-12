@@ -12,17 +12,19 @@
 - Preflight status: **PASS**
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `6fefdc42c8b398b33bf8d36b081a2d2c404ba55841f19917d1bf8a129df36ca6` from `agents/engineer/test/feature-implementor/evals/workspace/eval-001-implement-from-prd-trd`.
-- Fixture SHA-256: `6fefdc42c8b398b33bf8d36b081a2d2c404ba55841f19917d1bf8a129df36ca6`
-- Prompt SHA-256: `2b7b36d4bdea5793eaf1494d70b7d895d20a1213d115ce56d29616224f8e44f7`
+- Identity schema: `2`
+- target_skill_sha256: `2cef9a078b25940be2cd93c65c4193da4205d9703e5924079fcda5ac81b0dc82`
+- eval_definition_sha256: `fdd6ce4f4f12ff2cfeb67956eb31c203d7cf49aba2742edf2df400fcb4ed7d44`
+- metadata_sha256: `5513e853bb936ee74aa78321c2888f8103020519d504b58c9b057a2fb3fd33ff`
+- fixture_sha256: `6fefdc42c8b398b33bf8d36b081a2d2c404ba55841f19917d1bf8a129df36ca6`
+- execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
+- runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
+- judge_schema_sha256: `beede515c8e2f36efe8ae181f94762d96db69fb2e24a26068fcdd2ef262c1f48`
+- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
+- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
+- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
 - Repository HEAD: `7ac19d358ca18ef7b2d109aeec17239bc9d0f4c0`
 - Repository worktree state: **CLEAN**
-- Target skill tree SHA-256: `2cef9a078b25940be2cd93c65c4193da4205d9703e5924079fcda5ac81b0dc82`
-- Skill overlay SHA-256: `06e677e2d778ad6e9070a73693d2a9f47819f161c623014f6e26b508a4d8e533`
-- Judge schema SHA-256: `beede515c8e2f36efe8ae181f94762d96db69fb2e24a26068fcdd2ef262c1f48`
-- Eval definition SHA-256: `fdd6ce4f4f12ff2cfeb67956eb31c203d7cf49aba2742edf2df400fcb4ed7d44`
-- Metadata SHA-256: `5513e853bb936ee74aa78321c2888f8103020519d504b58c9b057a2fb3fd33ff`
-- Executor SHA-256: `321fdc8a67ccc7fd6265fadebaa8db97593c38dcd8d7842f8aea59909966bd54`
-- Runtime SHA-256: `9ed43d4c2c0e4dbf09b289476d4fe9240c9ba0e61bc3ba75633ffd6e514d710d`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS

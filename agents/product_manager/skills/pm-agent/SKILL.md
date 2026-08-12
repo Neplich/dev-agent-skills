@@ -65,7 +65,9 @@ the project path by itself.
   short-circuits the Mandatory Entry Decision.
 - **Explicit invocation**: when the user's message names `pm-agent`, a role
   agent, or a skill from this marketplace, proceed normally from any
-  directory.
+  directory. Once this branch matches, the Out-of-scope branch is unavailable:
+  do not reuse its “general/local-machine request” or “directory not enabled”
+  stop notice later in the response.
 
 Project-oriented requests (product, engineering, QA, deployment, security,
 formal documentation, delivery) proceed normally and follow the Mandatory
@@ -73,9 +75,12 @@ Entry Decision below; the guard only stops general, non-project requests in
 unenabled directories. When an explicit invocation or an enabled directory
 lets a general request through, proceed into the classification protocol; a
 request that fits no PM category or downstream role is answered with a
-one-line honest notice and kept in PM — no Routing decision is required for
-it, and never force a fake `request_type` or owner that contradicts its
-content.
+one-line honest classification result that explicitly says classification ran,
+no PM category or downstream role matched, and the request remains in PM — no
+Routing decision is required for it, and never force a fake `request_type` or
+owner that contradicts its content. This classification result is not a Scope
+Guard rejection and must not claim that the explicit request was blocked
+because it is a local-machine or generic-file operation.
 
 ## Mandatory Entry Decision
 

@@ -103,6 +103,20 @@ stale. Historical freshness follows the target skill and the eval's own definiti
 metadata, fixture, judge schema, executor, and runtime inputs. Changing the dependency
 list still changes metadata identity and requires a rerun.
 
+The target state for Issue #277 is identity schema v2. Cross-run freshness will use
+exactly `target_skill_sha256`, `eval_definition_sha256`, `metadata_sha256`,
+`fixture_sha256`, `execution_protocol_sha256`, `runtime_protocol_sha256`, and
+`judge_schema_sha256`. Execution/judging and runtime/isolation own the two protocol
+hashes; persistence/inventory and report formatting do not participate in historical
+freshness. A complete source manifest across all participating modules remains locked
+within one run and any drift before persistence is `BLOCKED`.
+
+The repository is still migrating to this target. The one-time migration validates the
+legacy source and current inputs, writes v2 identities atomically, and leaves an audit
+report. After migration, the normal checker accepts v2 only and does not query Git or
+keep a v1 compatibility path. Do not treat the planned v2 behavior as implemented until
+the active implementation plan is confirmed and the deterministic migration gates pass.
+
 ## Isolation Preflight
 
 Each candidate context must prove:
