@@ -68,7 +68,7 @@ delivery:
 
 The active plan entry is always
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`. Historical plans live only
-under `docs/engineer/{feature_path}/implementation-plans/archive/`.
+under `docs/engineer/{feature_path}/archive/`.
 
 Before creating or replacing an active plan on a `feature_path`:
 
@@ -97,7 +97,7 @@ Before creating or replacing an active plan on a `feature_path`:
 When archiving after closeout and user/maintainer approval:
 
 1. Write the archive plan to
-   `docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`,
+   `docs/engineer/{feature_path}/archive/IMPLEMENTATION_PLAN-<scope>.md`,
    where `<scope>` is lower kebab-case and describes the implemented scope. The
    `<scope>` must match the archive filename suffix.
 2. Completed archives use `status: "Archived"`. Replaced or abandoned archives

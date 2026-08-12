@@ -919,7 +919,7 @@ class EvalContractTests(unittest.TestCase):
         self.assertIn("frozen_from_git_commit must be a real 40-hex commit", rendered)
         self.assertIn("source_contract must exactly match the frozen scan contract", rendered)
 
-    def test_complete_fresh_comparison_rejects_current_input_drift(self):
+    def test_complete_fresh_comparison_tracks_target_inputs_not_dependency_content(self):
         checker = load_checker_module()
         sys.path.insert(0, str(CHECKER_PATH.parents[1]))
         from scripts import run_skill_eval as runner
@@ -933,6 +933,11 @@ class EvalContractTests(unittest.TestCase):
             dependency = root / "agents/product_manager/skills/idea-to-spec/SKILL.md"
             dependency.parent.mkdir(parents=True)
             dependency.write_text("dependency v1\n", encoding="utf-8")
+            metadata = workspace / "eval_metadata.json"
+            metadata.write_bytes(metadata.read_bytes().replace(
+                b'"skill_dependencies": []',
+                b'"skill_dependencies": ["agents/product_manager/skills/idea-to-spec"]',
+            ))
             scripts = root / "scripts"
             scripts.mkdir()
             executor = scripts / "run_skill_eval.py"
@@ -975,15 +980,14 @@ class EvalContractTests(unittest.TestCase):
                 )
                 self.assertEqual(baseline_errors, [])
 
-                metadata = workspace / "eval_metadata.json"
                 skill = root / "agents/engineer/skills/debugger/SKILL.md"
                 mutations = {
                     "eval assertion": (evals_path, lambda data: data.replace(
                         b"Result is present", b"Changed assertion",
                     )),
                     "metadata dependency": (metadata, lambda data: data.replace(
-                        b'"skill_dependencies": []',
                         b'"skill_dependencies": ["agents/product_manager/skills/idea-to-spec"]',
+                        b'"skill_dependencies": []',
                     )),
                     "target skill": (skill, lambda data: data + b"dirty skill\n"),
                     "executor": (executor, lambda data: data + b"dirty executor\n"),
@@ -1007,6 +1011,14 @@ class EvalContractTests(unittest.TestCase):
                             for error in errors
                         ))
                         path.write_bytes(original)
+
+                dependency.write_text("dependency v2\n", encoding="utf-8")
+                dependency_errors = []
+                checker.validate_fresh_comparison_identity(
+                    root, comparison, "engineer", "debugger",
+                    "eval-001-baseline-evidence", dependency_errors,
+                )
+                self.assertEqual(dependency_errors, [])
             finally:
                 runner.__file__, runner.JUDGE_SCHEMA = old_file, old_schema
 
@@ -1788,7 +1800,7 @@ class EvalContractTests(unittest.TestCase):
             archive = (
                 root
                 / "docs/engineer/chat-interface/history-search"
-                / "implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"
+                / "archive/IMPLEMENTATION_PLAN-initial-rollout.md"
             )
             archive.parent.mkdir(parents=True)
             archive.write_text("# Archived Plan\n")
@@ -1905,13 +1917,13 @@ class EvalContractTests(unittest.TestCase):
             plan = self._write_history_search_plan_fixture(
                 root,
                 'previous_plan_archive: "docs/engineer/chat-interface/history-search/'
-                'implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"\n',
+                'archive/IMPLEMENTATION_PLAN-initial-rollout.md"\n',
                 implementation_scope="search-filters-v2",
             )
             archive = (
                 root
                 / "docs/engineer/chat-interface/history-search"
-                / "implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"
+                / "archive/IMPLEMENTATION_PLAN-initial-rollout.md"
             )
             archive.parent.mkdir(parents=True)
             archive.write_text("# Archived Plan\n")
@@ -1932,7 +1944,7 @@ class EvalContractTests(unittest.TestCase):
             archive_dir = (
                 root
                 / "docs/engineer/chat-interface/history-search"
-                / "implementation-plans/archive"
+                / "archive"
             )
             archive_dir.mkdir(parents=True)
             subprocess.run(["git", "add", plan.relative_to(root).as_posix()], cwd=root, check=True)
@@ -1971,7 +1983,7 @@ class EvalContractTests(unittest.TestCase):
             archive = (
                 root
                 / "docs/engineer/chat-interface/history-search"
-                / "implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"
+                / "archive/IMPLEMENTATION_PLAN-initial-rollout.md"
             )
             archive.parent.mkdir(parents=True)
             archive.write_text("# Archived Plan\n")
@@ -1995,7 +2007,7 @@ class EvalContractTests(unittest.TestCase):
         archive = (
             root
             / "docs/engineer/chat-interface/history-search"
-            / "implementation-plans/archive/IMPLEMENTATION_PLAN-initial-rollout.md"
+            / "archive/IMPLEMENTATION_PLAN-initial-rollout.md"
         )
         archive.parent.mkdir(parents=True)
         archive.write_text(
@@ -2128,7 +2140,7 @@ class EvalContractTests(unittest.TestCase):
             archive_dir = (
                 root
                 / "docs/engineer/chat-interface/history-search"
-                / "implementation-plans/archive"
+                / "archive"
             )
             archive_dir.mkdir(parents=True)
             underscore = archive_dir / "IMPLEMENTATION_PLAN-full_refund.md"
@@ -2154,7 +2166,7 @@ class EvalContractTests(unittest.TestCase):
         self.assertIn("IMPLEMENTATION_PLAN-full_refund.md", rendered)
         self.assertIn("BAD.md", rendered)
         self.assertIn(
-            "implementation-plans/archive only allows IMPLEMENTATION_PLAN-<scope>.md with a lower kebab-case scope",
+            "archive only allows IMPLEMENTATION_PLAN-<scope>.md with a lower kebab-case scope",
             rendered,
         )
 

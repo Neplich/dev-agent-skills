@@ -811,6 +811,7 @@ def test_source_identity_records_dirty_current_skill_dependency_and_schema_conte
     assert clean["target_skill_sha256"] != dirty["target_skill_sha256"]
     assert dirty["target_skill_sha256"] == dependency_dirty["target_skill_sha256"]
     assert dirty["skill_overlay_sha256"] != dependency_dirty["skill_overlay_sha256"]
+    assert run_skill_eval._same_source_inputs(dirty, dependency_dirty) is False
     assert dependency_dirty["judge_schema_sha256"] != schema_dirty["judge_schema_sha256"]
     assert schema_dirty["metadata_sha256"] != metadata_dirty["metadata_sha256"]
     assert metadata_dirty["eval_definition_sha256"] != definition_dirty["eval_definition_sha256"]

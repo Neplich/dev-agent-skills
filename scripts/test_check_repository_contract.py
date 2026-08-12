@@ -41,7 +41,7 @@ def test_history_dependent_ci_jobs_fetch_full_history() -> None:
 FEATURE_PATH = "fixture-feature"
 PLAN_REL = f"docs/engineer/{FEATURE_PATH}/IMPLEMENTATION_PLAN.md"
 ARCHIVE_REL = (
-    f"docs/engineer/{FEATURE_PATH}/implementation-plans/archive/"
+    f"docs/engineer/{FEATURE_PATH}/archive/"
     "IMPLEMENTATION_PLAN-completed-round.md"
 )
 REQUIRED_BACKLINK_ERROR = (
@@ -57,7 +57,7 @@ FIDELITY_ERROR = (
 
 def archive_rel(scope: str) -> str:
     return (
-        f"docs/engineer/{FEATURE_PATH}/implementation-plans/archive/"
+        f"docs/engineer/{FEATURE_PATH}/archive/"
         f"IMPLEMENTATION_PLAN-{scope}.md"
     )
 
@@ -1253,7 +1253,7 @@ def test_faithful_archive_with_extended_active_body_still_requires_back_link(
     [
         (
             "docs/engineer/agents/qa-agent/e2e-case-memory/"
-            "implementation-plans/archive/IMPLEMENTATION_PLAN-e2e-case-memory.md"
+            "archive/IMPLEMENTATION_PLAN-e2e-case-memory.md"
         ),
     ],
 )
@@ -1413,11 +1413,11 @@ def test_previous_archive_without_frontmatter_reports_fidelity_error(
     [
         (
             f"docs/engineer/{FEATURE_PATH}/not-an-archive.md",
-            "must point to an implementation-plans/archive/"
+            "must point to an archive/"
             "IMPLEMENTATION_PLAN-<scope>.md path",
         ),
         (
-            "docs/engineer/other-feature/implementation-plans/archive/"
+            "docs/engineer/other-feature/archive/"
             "IMPLEMENTATION_PLAN-completed-round.md",
             f"must reference an archive on feature_path {FEATURE_PATH!r}",
         ),

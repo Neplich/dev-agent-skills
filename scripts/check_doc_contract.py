@@ -35,7 +35,7 @@ DESCRIPTION_DENYLIST: tuple[tuple[re.Pattern[str], str], ...] = (
 
 
 def is_implementation_plan_artifact_path(rel: str) -> bool:
-    return rel.endswith("/IMPLEMENTATION_PLAN.md") or "/implementation-plans/archive/" in rel
+    return rel.endswith("/IMPLEMENTATION_PLAN.md") or "/archive/" in rel
 
 
 def is_formal_pm_or_engineer_document(rel: str) -> bool:

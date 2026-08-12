@@ -62,7 +62,7 @@ Before writing a new or replacement active plan, run the pre-plan archive scan:
 
 1. Check whether `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` already
    exists and read its frontmatter and closeout status.
-2. Check `docs/engineer/{feature_path}/implementation-plans/archive/` for prior
+2. Check `docs/engineer/{feature_path}/archive/` for prior
    archived plans.
 3. If no active plan exists, check whether that feature path has archive
    history. If it does, continue planning but record `previous_plan_archive` in

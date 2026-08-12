@@ -13,7 +13,7 @@ parent_feature: "agents/docs-agent"
 feature_level: "3"
 change_tier: "major"
 implementation_scope: "manual-gen-skill-and-manual-doc-type"
-previous_plan_archive: "docs/engineer/agents/docs-agent/manual-gen/implementation-plans/archive/IMPLEMENTATION_PLAN-manual-gen-skill-and-manual-doc-type.md"
+previous_plan_archive: "docs/engineer/agents/docs-agent/manual-gen/archive/IMPLEMENTATION_PLAN-manual-gen-skill-and-manual-doc-type.md"
 related_prd: "docs/pm/agents/docs-agent/manual-gen/PRD.md"
 related_trd: "docs/engineer/agents/docs-agent/manual-gen/TRD.md"
 related_issues:

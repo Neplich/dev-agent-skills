@@ -10,7 +10,7 @@ feature: "feature-path-contract"
 feature_path: "repository-governance/feature-path-contract"
 parent_feature: "repository-governance"
 feature_level: "2"
-last_updated: "2026-08-03"
+last_updated: "2026-08-12"
 related_prd: "docs/pm/repository-governance/feature-path-contract/PRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/37"
@@ -309,7 +309,7 @@ feature_level: 1
    纯拆分时，承接原文档主体身份的文件也使用 `git mv`，新增子文档正常创建。
 5. 迁移时同步 `feature_path`、`parent_feature`、`feature_level`、
    `related_docs`、其他 `related_*` 引用和父 PRD 子功能索引。
-6. `implementation-plans/archive/` 中的计划保持归档语义；QA `results/`
+6. `archive/` 中的计划保持归档语义；QA `results/`
    历史只追加不覆盖。
 7. 每个源章节必须可追溯到目标父/子文档，并在受影响文档 changelog 记录
    迁移，禁止静默丢失内容。

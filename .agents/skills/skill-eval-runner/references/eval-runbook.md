@@ -96,6 +96,13 @@ The runner locks or hashes these inputs before candidate execution:
 Only the locked overlay is installed into the with-skill lane. The runner rechecks
 source identity before durable persistence. A drift or mismatch is `BLOCKED`.
 
+The full overlay hash is execution evidence, not a cross-skill rerun graph. It remains
+recorded in the durable comparison and is rechecked during the same run, but later
+content changes in a declared dependency do not make another target skill's comparison
+stale. Historical freshness follows the target skill and the eval's own definition,
+metadata, fixture, judge schema, executor, and runtime inputs. Changing the dependency
+list still changes metadata identity and requires a rerun.
+
 ## Isolation Preflight
 
 Each candidate context must prove:

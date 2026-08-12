@@ -1,11 +1,11 @@
 ---
 title: "Eval 真实场景与 Lane 隔离重构技术需求文档"
 type: TRD
-version: "1.2.0"
+version: "1.3.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-07"
-last_updated: "2026-08-08"
+last_updated: "2026-08-12"
 generated_by: "trd-gen"
 feature: "eval-scenario-isolation"
 feature_path: "repository-governance/eval-scenario-isolation"
@@ -15,6 +15,7 @@ related_prd: "docs/pm/repository-governance/eval-scenario-isolation/PRD.md"
 related_docs:
   - "docs/pm/repository-governance/eval-scenario-isolation/DECISIONS.md"
   - "https://github.com/Neplich/dev-agent-skills/issues/246"
+  - "https://github.com/Neplich/dev-agent-skills/issues/275"
   - "https://learn.chatgpt.com/docs/developer-commands?surface=cli"
   - "https://learn.chatgpt.com/docs/sandboxing"
   - "https://learn.chatgpt.com/docs/permissions"
@@ -31,6 +32,9 @@ related_code:
   - "agents/*/test/*/workspace/**"
   - ".github/workflows/evals.yml"
 changelog:
+  - version: "1.3.0"
+    date: "2026-08-12"
+    changes: "分离完整 skill overlay 的运行锁定身份与 durable comparison 的历史 freshness 身份"
   - version: "1.2.0"
     date: "2026-08-08"
     changes: "增加无条件 runtime root 清理、10 worker 跨角色并发、durable 写锁与 fresh FAIL 聚类整改设计"
@@ -162,6 +166,15 @@ Canonical fixture 是 eval workspace 删除以下内容后的宿主事实快照�
 宿主产品自身的嵌套 README 可以保留，但必须通过静态答案措辞检查。Skill overlay 不计入
 fixture hash，但其 manifest 单独入 preflight：`without_skill` 必须为空，`with_skill`
 必须恰好等于目标 skill 与显式依赖集合。禁止复制整个 `agents/` 树。
+
+完整 skill overlay 具有两项运行期职责：在 candidate 启动前锁定目标 skill 与显式依赖，
+以及在持久化前阻止同一轮执行中的源内容漂移。它继续写入 `comparison.md`，用于复核该轮
+实际加载的 skill 环境，但不参与历史 comparison 的 freshness 判定。
+
+历史 freshness 只绑定目标 skill 与当前 eval 自身输入：eval definition、metadata、fixture、
+judge schema、executor 和 runtime。目标 skill 任意变化仍使自身 eval 失效；
+`skill_dependencies` 清单变化通过 metadata 身份使对应 eval 失效；仅辅助 skill 的内容变化
+不会建立跨 skill 重跑关系。需要验证多 skill 协作的行为由有明确目标归属的集成 eval 覆盖。
 
 ### 3.3 Preflight 契约
 

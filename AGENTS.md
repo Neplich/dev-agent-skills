@@ -26,7 +26,7 @@
 - 公开项目文档遵循 `docs/{agent}/{feature_path}/`，`feature_path` 可包含多级 lower kebab-case 路径段；不创建基于日期的子目录，也不为同一文档创建多个版本化文件（如 `PRD-v1.md`），版本历史通过 git 追踪
 - 文档 frontmatter 包含 `feature`、`version`、`date` 和 `last_updated`；修改文档时更新 `last_updated`
 - 仓库级发布变更记录按版本归档到 `docs/changelog/changelog-v{version}.md`；根目录 `CHANGELOG.md` 只作为索引，不重复维护 changelog 条目
-- 窄例外（仅限实施计划归档）：`feature-implementor` 的完成态或废弃态实施计划经 closeout 和用户/维护者审批后，可归档到 `docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`，`<scope>` 使用 lower kebab-case 描述该次实现范围；当前活跃计划入口仍固定为 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。该例外只覆盖实施计划归档，不适用于 PRD、TRD 或其他文档类型
+- 窄例外（仅限实施计划归档）：`feature-implementor` 的完成态或废弃态实施计划经 closeout 和用户/维护者审批后，可归档到 `docs/engineer/{feature_path}/archive/IMPLEMENTATION_PLAN-<scope>.md`，`<scope>` 使用 lower kebab-case 描述该次实现范围；当前活跃计划入口仍固定为 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。该例外只覆盖实施计划归档，不适用于 PRD、TRD 或其他文档类型
 - QA E2E 测试资产统一位于 `docs/qa/e2e/{feature_path}/`；`TEST_SUITE.md` 是功能测试套件索引，`FLOW_INDEX.md` 记录流程覆盖关系，`cases/` 存放 `TC-NNN-<short-slug>.md`，`scripts/` 存放可执行流程脚本片段，`results/` 按 TC 和平台版本追加执行结果，`_reports/{platform-version}/test-reports-{test-time}.md` 存放功能更新汇总报告；发版全量报告位于 `docs/qa/e2e/_reports/{platform-version}/test-reports-{test-time}.md`
 - 文档功能树的全量结构梳理由 `pm-agent -> idea-to-spec:structure-governance` 进入，只读扫描角色过程文档并在运行期 tmp 生成报告；任何拆分或移动仍须提案确认后按 `major` 变更执行
 

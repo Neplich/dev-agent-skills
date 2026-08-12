@@ -5,7 +5,7 @@ version: "0.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-01"
-last_updated: "2026-07-01"
+last_updated: "2026-08-12"
 generated_by: "idea-to-spec"
 feature: "implementation-plan-archive-gate"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate"
@@ -49,7 +49,7 @@ closeout gate。该路径作为活跃计划入口是必要的，因为 QA、DevO
 
 ## 非目标
 
-- 不批量迁移历史 `IMPLEMENTATION_PLAN.md`。
+- 不批量迁移历史 `IMPLEMENTATION_PLAN.md`；已跟踪的 `implementation-plans/archive/` 存量归档按 #264 迁移到 `{feature_path}/archive/`，其余历史叙述保留当时事实。
 - 不改变 QA、DevOps、Security 读取当前活跃计划的入口。
 - 不用归档目录替代 git history；归档只保存人工确认过的计划快照。
 - 不要求每次轻量更新都新建计划；用户仍可选择继续更新当前活跃计划。
@@ -66,7 +66,7 @@ closeout gate。该路径作为活跃计划入口是必要的，因为 QA、DevO
 
 | ID | User Story | Priority | Acceptance Criteria |
 | --- | --- | --- | --- |
-| US-001 | 作为维护者，我想保留旧实施计划的范围命名归档，以便回看每次功能更新的计划依据。 | P0 | 完成态计划经确认后移动或复制到 `implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`，归档 frontmatter 记录范围、批准人和来源。 |
+| US-001 | 作为维护者，我想保留旧实施计划的范围命名归档，以便回看每次功能更新的计划依据。 | P0 | 完成态计划经确认后移动或复制到 `archive/IMPLEMENTATION_PLAN-<scope>.md`，归档 frontmatter 记录范围、批准人和来源。 |
 | US-002 | 作为 `feature-implementor` 调用者，我想在创建新计划前知道旧计划状态，以便选择归档、继续更新或废弃。 | P0 | 同一 `feature_path` 已有未归档活跃计划时，skill 必须先询问处理方式，不得直接覆盖。 |
 | US-003 | 作为下游 Agent，我想只读取一个当前活跃计划，以便不猜测多个历史计划之间的关系。 | P0 | 当前计划仍固定为 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。 |
 
@@ -75,7 +75,7 @@ closeout gate。该路径作为活跃计划入口是必要的，因为 QA、DevO
 | ID | Feature | Description | Priority | Acceptance Criteria |
 | --- | --- | --- | --- | --- |
 | FR-001 | Active Plan Entry | 当前活跃计划入口保持为 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。 | P0 | 下游 handoff、QA E2E 和 delivery 仍引用该路径作为当前计划。 |
-| FR-002 | Archive Path | 完成态计划归档到 `docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`。 | P0 | `<scope>` 使用 lower kebab-case，并描述本次实现范围。 |
+| FR-002 | Archive Path | 完成态计划归档到 `docs/engineer/{feature_path}/archive/IMPLEMENTATION_PLAN-<scope>.md`。 | P0 | `<scope>` 使用 lower kebab-case，并描述本次实现范围。 |
 | FR-003 | Archive Metadata | 归档计划必须包含 `implementation_scope`、`status`、`archived_at`、`archive_approved_by` 和 `source_plan`。 | P0 | closeout 后归档的完成态计划使用 `status: "Archived"`，`source_plan` 指向原活跃入口。 |
 | FR-004 | Superseded Handling | 未完成或被新方案替代的旧计划可归档为 `status: "Superseded"`，但必须记录 `superseded_reason` 和批准人。 | P1 | Superseded 计划不得被当作完成态历史计划；新活跃计划必须说明替代来源。 |
 | FR-005 | Pre-Plan Gate | 创建或替换同一 `feature_path` 的活跃计划前，必须扫描当前活跃计划和 archive 目录。 | P0 | 若已有活跃计划且没有归档或继续更新决定，skill 输出 blocked/询问，不写新计划。 |
