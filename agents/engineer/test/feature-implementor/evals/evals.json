@@ -618,7 +618,7 @@
         {
           "id": "runs_pre_plan_archive_scan",
           "description": "运行归档前置扫描",
-          "text": "输出必须说明在写新计划前扫描了 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md` 和 `docs/engineer/payment-refund/implementation-plans/archive/` 归档目录。"
+          "text": "输出必须说明在写新计划前扫描了 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md` 和 `docs/engineer/payment-refund/archive/` 归档目录。"
         },
         {
           "id": "blocks_direct_overwrite",
@@ -633,7 +633,7 @@
         {
           "id": "keeps_active_entry_fixed",
           "description": "活跃入口保持不变",
-          "text": "输出必须说明当前活跃计划入口仍固定为 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`，归档只放到 `implementation-plans/archive/`。"
+          "text": "输出必须说明当前活跃计划入口仍固定为 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`，归档只放到 `archive/`。"
         },
         {
           "id": "does_not_implement_directly",
@@ -665,14 +665,14 @@
       "id": "eval-013-implementation-plan-archive-allows-next-plan",
       "name": "implementation-plan-archive-allows-next-plan",
       "description": "Verifies that feature-implementor allows creating a next active plan once the prior plan is archived, requires previous_plan_archive linkage, and keeps the active entry fixed.",
-      "prompt": "我是 payment-refund 的维护者 Neplich。docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要新增部分退款能力。上一轮全额退款计划已归档到 docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md，当前没有活跃计划。",
+      "prompt": "我是 payment-refund 的维护者 Neplich。docs/pm/payment-refund/PRD.md 和 docs/engineer/payment-refund/TRD.md 已确认，现在要新增部分退款能力。上一轮全额退款计划已归档到 docs/engineer/payment-refund/archive/IMPLEMENTATION_PLAN-full-refund-flow.md，当前没有活跃计划。",
       "workspace": "workspace/eval-013-implementation-plan-archive-allows-next-plan",
       "expected_output": "识别上一份计划已归档、当前无活跃计划阻塞，允许创建新的 docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md，要求新计划 frontmatter 记录 previous_plan_archive 指向归档文件，活跃入口保持不变，等待用户确认后再编码。",
       "assertions": [
         {
           "id": "detects_prior_plan_archived",
           "description": "识别旧计划已归档",
-          "text": "输出必须识别上一份计划已归档到 `docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md`，当前没有未处理的活跃计划阻塞。"
+          "text": "输出必须识别上一份计划已归档到 `docs/engineer/payment-refund/archive/IMPLEMENTATION_PLAN-full-refund-flow.md`，当前没有未处理的活跃计划阻塞。"
         },
         {
           "id": "allows_new_active_plan",
@@ -682,7 +682,7 @@
         {
           "id": "records_previous_plan_archive",
           "description": "记录归档引用",
-          "text": "输出必须要求新计划 frontmatter 记录 `previous_plan_archive` 指向 `docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md`。"
+          "text": "输出必须要求新计划 frontmatter 记录 `previous_plan_archive` 指向 `docs/engineer/payment-refund/archive/IMPLEMENTATION_PLAN-full-refund-flow.md`。"
         },
         {
           "id": "keeps_active_entry_fixed",
@@ -703,7 +703,7 @@
         "materials": [
           "docs/pm/payment-refund/PRD.md",
           "docs/engineer/payment-refund/TRD.md",
-          "docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md"
+          "docs/engineer/payment-refund/archive/IMPLEMENTATION_PLAN-full-refund-flow.md"
         ],
         "constraints": [
           "新记录继续使用 payment-refund 的固定入口",

@@ -65,7 +65,7 @@ Scan all six role roots:
 
 Do not require a physical parent PRD for reserved namespace parents whose
 existing contract permits the namespace itself to act as the parent. Do not
-mistake `docs/engineer/{feature_path}/implementation-plans/archive/` or
+mistake `docs/engineer/{feature_path}/archive/` or
 `docs/engineer/{parent_feature}/_legacy/**` for a child
 feature: they are archived implementation-plan storage and legacy evidence
 within the owning feature, not active feature nodes.
@@ -77,7 +77,7 @@ rationale, affected roles, and references:
 
 1. **Overlong document**
    - Any active document over 500 total lines is a critical structure finding.
-     Exclude archived and legacy evidence — `implementation-plans/archive/**`
+     Exclude archived and legacy evidence — `archive/**`
      and `_legacy/**` keep their historical meaning and are never overlong or
      L2b findings.
    - Also record the other L2b signals: at least 3 independent domains, at
@@ -149,7 +149,7 @@ The report must state these constraints for any later approved implementation:
    the original document body, then create additional child documents normally.
 3. Before moving a PM directory, present the complete mirror impact list and
    wait until the user confirms how each mirror will be handled.
-4. Keep `docs/engineer/{feature_path}/implementation-plans/archive/` archived;
+4. Keep `docs/engineer/{feature_path}/archive/` archived;
    never reactivate or reinterpret archived plans.
 5. Preserve QA history: files under QA `results/` are append-only and must not
    be overwritten during a move or split.

@@ -9,7 +9,7 @@ version: "1.5.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-07-02"
+last_updated: "2026-08-12"
 generated_by: "prd-gen"
 related_docs:
   - "docs/pm/agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate/PRD.md"
@@ -102,7 +102,7 @@ changelog:
 | FR-S09 | Feature Path Plan Gate | 写实施计划前必须校验 PRD/TRD 的 `feature_path`、`parent_feature`、`feature_level` 和 TRD `related_prd` 一致。 | P0 | 缺 PRD 回 PM；缺 TRD、TRD stale 或路径/字段不一致回 `trd-gen`；只有 PRD/TRD 已确认且路径一致时才允许创建 Engineer 目标目录并写计划。 |
 | FR-S10 | UI Design Handoff Gate | 前端 UI 行为、视觉或交互变化进入实施计划前必须检查设计交付物。 | P0 | 实施计划必须引用覆盖当前变化的 `docs/design/{feature_path}/ui-ux-spec.md` 和/或 `visual-system.md`，或明确说明无需 Designer 更新的理由；设计缺失、过期或冲突时停止并 handoff 回 `engineer-agent -> designer-agent`。 |
 | FR-S11 | Implementation Plan Closeout Gate | 实现和验证完成后，必须同步更新 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 的实施结果、验证证据和剩余状态。 | P0 | `status: Implemented` 或等价完成态不得与正文“待确认 / 未开始 / 未执行”矛盾；已运行 deterministic checks 时记录实际命令；已运行 skill eval 或 fresh subagent validation 时引用 durable `comparison.md`；未运行时记录 skipped / blocked 原因。 |
-| FR-S12 | Implementation Plan Archive Gate | 创建或替换同一 `feature_path` 的活跃计划前必须扫描已有计划；完成态或废弃态旧计划只有经 closeout 和用户/维护者审批后才归档。 | P0 | 已有未归档活跃计划时不得直接覆盖，必须先询问“归档后新建 / 继续更新 / 归档为 Superseded”三选一；归档到 `docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`，归档 frontmatter 含 `implementation_scope`、`status`（`Archived` 或 `Superseded`）、`archived_at`、`archive_approved_by`、`source_plan`，废弃态额外含 `superseded_reason`；归档后新建计划记录 `previous_plan_archive`；活跃入口保持 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 不变。 |
+| FR-S12 | Implementation Plan Archive Gate | 创建或替换同一 `feature_path` 的活跃计划前必须扫描已有计划；完成态或废弃态旧计划只有经 closeout 和用户/维护者审批后才归档。 | P0 | 已有未归档活跃计划时不得直接覆盖，必须先询问“归档后新建 / 继续更新 / 归档为 Superseded”三选一；归档到 `docs/engineer/{feature_path}/archive/IMPLEMENTATION_PLAN-<scope>.md`，归档 frontmatter 含 `implementation_scope`、`status`（`Archived` 或 `Superseded`）、`archived_at`、`archive_approved_by`、`source_plan`，废弃态额外含 `superseded_reason`；归档后新建计划记录 `previous_plan_archive`；活跃入口保持 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 不变。 |
 
 ## 当前实现对齐
 

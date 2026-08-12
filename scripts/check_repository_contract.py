@@ -38,13 +38,13 @@ IMPLEMENTATION_PLAN_ARCHIVE_RE = re.compile(
     rf"^docs/engineer/"
     rf"(?P<feature_path>{FEATURE_PATH_SEGMENT_PATTERN}"
     rf"(?:/{FEATURE_PATH_SEGMENT_PATTERN})*?)"
-    rf"/implementation-plans/archive/"
+    rf"/archive/"
     rf"IMPLEMENTATION_PLAN-(?P<scope>{FEATURE_PATH_SEGMENT_PATTERN})\.md$"
 )
 IMPLEMENTATION_PLAN_ARCHIVE_DIRECTORY_RE = re.compile(
     rf"^docs/engineer/"
     rf"{FEATURE_PATH_SEGMENT_PATTERN}(?:/{FEATURE_PATH_SEGMENT_PATTERN})*?"
-    rf"/implementation-plans(?:/archive)?$"
+    rf"/archive$"
 )
 IMPLEMENTATION_SCOPE_RE = re.compile(rf"^{FEATURE_PATH_SEGMENT_PATTERN}$")
 ACTIVE_PLAN_STATUS_VALUES = {
@@ -1226,7 +1226,7 @@ def validate_archive_plan_metadata(
 
 
 def feature_path_plan_archive_scopes(root: Path, feature_path: str) -> set[str]:
-    archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
+    archive_dir = root / "docs" / "engineer" / feature_path / "archive"
     scopes: set[str] = set()
     if path_has_symlink_component(root, archive_dir) or not archive_dir.is_dir():
         return scopes
@@ -1267,7 +1267,7 @@ def feature_path_archive_files_in_worktree(
     root: Path,
     feature_path: str,
 ) -> set[str]:
-    archive_dir = root / "docs" / "engineer" / feature_path / "implementation-plans" / "archive"
+    archive_dir = root / "docs" / "engineer" / feature_path / "archive"
     if path_has_symlink_component(root, archive_dir) or not archive_dir.is_dir():
         return set()
     archive_files: set[str] = set()
@@ -1294,7 +1294,7 @@ def archive_files_at_ref(
     ref: str,
     feature_path: str,
 ) -> list[str]:
-    archive_prefix = f"docs/engineer/{feature_path}/implementation-plans/archive/"
+    archive_prefix = f"docs/engineer/{feature_path}/archive/"
     output = git_output(
         root, ["ls-tree", "-r", "--name-only", ref, "--", archive_prefix]
     )
@@ -1395,11 +1395,19 @@ def active_plan_base_round(
         base_status == "Implemented"
         and metadata.get("status", "") != "Implemented"
     )
+
+    def _archive_path_normalized(value: str) -> str:
+        return value.replace("/implementation-plans/archive/", "/archive/")
+
     content_unchanged = (
         body == base_body
         and not status_regressed
-        and metadata.get("previous_plan_archive", "")
-        == base_metadata.get("previous_plan_archive", "")
+        and _archive_path_normalized(
+            metadata.get("previous_plan_archive", "")
+        )
+        == _archive_path_normalized(
+            base_metadata.get("previous_plan_archive", "")
+        )
     )
 
     return ActivePlanBaseRound(
@@ -1467,7 +1475,7 @@ def validate_active_plan_archive_linkage(
         add_error(
             errors,
             path,
-            "frontmatter 'previous_plan_archive' must point to an implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md path",
+            "frontmatter 'previous_plan_archive' must point to an archive/IMPLEMENTATION_PLAN-<scope>.md path",
         )
         return
 
@@ -1563,15 +1571,17 @@ def validate_archive_plans(root: Path, errors: list[ContractError]) -> None:
         if not path.exists() and not path.is_symlink():
             continue
         if IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel) is None:
+            directory, _, filename = rel.rpartition("/")
             if (
-                rel.startswith("docs/engineer/")
-                and "/implementation-plans/archive/" in rel
-                and rel.endswith(".md")
+                IMPLEMENTATION_PLAN_ARCHIVE_DIRECTORY_RE.fullmatch(directory)
+                and filename.endswith(".md")
+                and IMPLEMENTATION_PLAN_RE.fullmatch(rel) is None
+                and ENGINEER_TRD_RE.fullmatch(rel) is None
             ):
                 add_error(
                     errors,
                     path,
-                    "implementation-plans/archive only allows IMPLEMENTATION_PLAN-<scope>.md with a lower kebab-case scope",
+                    "archive only allows IMPLEMENTATION_PLAN-<scope>.md with a lower kebab-case scope",
                 )
             continue
         validate_archive_plan_metadata(root, rel, errors)

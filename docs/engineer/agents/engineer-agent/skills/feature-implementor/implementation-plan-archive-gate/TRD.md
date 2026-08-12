@@ -5,7 +5,7 @@ version: "0.2.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-01"
-last_updated: "2026-07-27"
+last_updated: "2026-08-12"
 generated_by: "trd-gen"
 feature: "implementation-plan-archive-gate"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate"
@@ -47,7 +47,7 @@ changelog:
 - 在创建同一 `feature_path` 的下一份活跃计划前，扫描并处理已有
   `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。
 - 将完成态或废弃态旧计划保存到
-  `docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`。
+  `docs/engineer/{feature_path}/archive/IMPLEMENTATION_PLAN-<scope>.md`。
 - 保留当前活跃计划入口不变，并通过 `previous_plan_archive` 记录新旧计划关系。
 - 扩展 repository contract 和 eval，避免计划被直接覆盖或归档 metadata 漂移。
 
@@ -88,7 +88,7 @@ flowchart TD
 核心设计是将“当前计划”和“历史计划”分层：
 
 - 当前计划仍固定为 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。
-- 历史计划只放在 `implementation-plans/archive/` 下。
+- 历史计划只放在 `archive/` 下。
 - 新计划引用上一份归档计划，repository contract 校验引用关系。
 
 ## 4. 文件与 metadata 契约
@@ -106,7 +106,7 @@ docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md
 ```yaml
 implementation_scope: "<lower-kebab-scope>"
 status: "<planning-or-closeout-status>"
-previous_plan_archive: "docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md"
+previous_plan_archive: "docs/engineer/{feature_path}/archive/IMPLEMENTATION_PLAN-<scope>.md"
 ```
 
 规则：
@@ -128,7 +128,7 @@ previous_plan_archive: "docs/engineer/{feature_path}/implementation-plans/archiv
 归档计划路径：
 
 ```text
-docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md
+docs/engineer/{feature_path}/archive/IMPLEMENTATION_PLAN-<scope>.md
 ```
 
 完成态归档 frontmatter 必填字段：

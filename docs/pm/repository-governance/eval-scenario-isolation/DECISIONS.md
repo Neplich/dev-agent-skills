@@ -1,20 +1,25 @@
 ---
 title: "Eval 真实场景与 Lane 隔离重构决策记录"
 type: DECISIONS
-version: "1.0.0"
+version: "1.1.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-07"
-last_updated: "2026-08-07"
+last_updated: "2026-08-12"
 generated_by: "idea-to-spec"
 feature: "eval-scenario-isolation"
 feature_path: "repository-governance/eval-scenario-isolation"
 parent_feature: "repository-governance"
 feature_level: "2"
-related_issue: "https://github.com/Neplich/dev-agent-skills/issues/246"
+related_issue:
+  - "https://github.com/Neplich/dev-agent-skills/issues/246"
+  - "https://github.com/Neplich/dev-agent-skills/issues/275"
 related_docs:
   - "docs/pm/repository-governance/eval-scenario-isolation/PRD.md"
 changelog:
+  - version: "1.1.0"
+    date: "2026-08-12"
+    changes: "分离辅助 skill 的运行锁定证据与 comparison 历史重跑判定"
   - version: "1.0.0"
     date: "2026-08-07"
     changes: "初始版本，记录 Issue #246 已确认的范围与评测隔离决策"
@@ -41,6 +46,7 @@ changelog:
 | D-013 | Runtime artifact 只写入 scratch 或短期 CI artifact，不提交仓库。 | Durable comparison 保存长期结论；transcript、输出、verdict 和 diagnostics 会污染 fixture 与 git 历史。 |
 | D-014 | `manual-gen` 不进入本次常规 paired eval 重构。 | 它依赖真实登录环境、运行界面、源码和用户反馈，已由 manual-only 契约单独治理。 |
 | D-015 | 本 issue 不修改目标 skill 的业务协议，也不引入无关抽象或功能。 | 本轮只修复 eval 的用户代表性、lane 隔离与证据可信度；业务协议缺陷应另行分类。 |
+| D-016 | Eval 只对所属目标 skill 的设计结论负责；辅助 skill 的完整内容继续参与当次运行锁定和证据记录，但其后续内容变化不连带使其他目标 skill 的 comparison 失效。 | `skill_dependencies` 用于构建可信运行环境，不等同于跨 skill 回归依赖图；跨 skill 协作应由有明确归属的集成 eval 覆盖。 |
 
 ## 假设与约束
 

@@ -761,13 +761,14 @@ def validate_fresh_comparison_identity(
     try:
         definition = runner.load_eval_definition(root, agent, skill, eval_id)
         identity = runner.source_identity(definition)
+        # The full overlay is same-run evidence; dependency content is not a
+        # cross-skill historical freshness dependency.
         expected = {
             "Fixture SHA-256": current_fixture_hash(definition),
             "Prompt SHA-256": hashlib.sha256(definition.item["prompt"].encode()).hexdigest(),
             "Eval definition SHA-256": identity["eval_definition_sha256"],
             "Metadata SHA-256": identity["metadata_sha256"],
             "Target skill tree SHA-256": identity["target_skill_sha256"],
-            "Skill overlay SHA-256": identity["skill_overlay_sha256"],
             "Judge schema SHA-256": identity["judge_schema_sha256"],
             "Executor SHA-256": identity["executor_sha256"],
             "Runtime SHA-256": identity["runtime_sha256"],

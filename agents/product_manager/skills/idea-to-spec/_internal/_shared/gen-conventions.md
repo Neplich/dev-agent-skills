@@ -132,7 +132,7 @@ When a proposal is confirmed:
 - Before moving a PM directory, present the downstream mirror impact list and
   do not move it until the mirror handling decision is confirmed.
 - Preserve the archive meaning of
-  `docs/engineer/{feature_path}/implementation-plans/archive/`; do not promote
+  `docs/engineer/{feature_path}/archive/`; do not promote
   archived plans back to active inputs during a move.
 - Append QA `results/` history; never overwrite or rewrite historical results.
 - Keep every source section traceable to a target document and record the

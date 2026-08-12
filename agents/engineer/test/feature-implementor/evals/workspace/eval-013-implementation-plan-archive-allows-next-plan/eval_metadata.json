@@ -5,7 +5,7 @@
   "fixture_context": [
     "docs/pm/payment-refund/PRD.md",
     "docs/engineer/payment-refund/TRD.md",
-    "docs/engineer/payment-refund/implementation-plans/archive/IMPLEMENTATION_PLAN-full-refund-flow.md"
+    "docs/engineer/payment-refund/archive/IMPLEMENTATION_PLAN-full-refund-flow.md"
   ],
   "skill_dependencies": [
     "agents/product_manager/skills/idea-to-spec"

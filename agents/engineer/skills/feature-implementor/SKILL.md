@@ -178,7 +178,7 @@ verification, and closeout. It must not rewrite PM scope or TRD decisions.
 
 Before creating or replacing an active plan, scan
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` and its
-`implementation-plans/archive/` directory.
+`archive/` directory.
 
 If an active plan exists with `status: "Implemented"` and no handling decision
 is recorded, ask the user to choose exactly one of two options: archive the
@@ -207,7 +207,7 @@ waives PRD/TRD alignment or evidence.
 
 Archival happens only after closeout and user/maintainer approval. Archive
 paths must use
-`docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`.
+`docs/engineer/{feature_path}/archive/IMPLEMENTATION_PLAN-<scope>.md`.
 The active plan path remains fixed at
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`.
 
@@ -244,7 +244,7 @@ Before correcting that closeout, explicitly identify the conflict between the
 decision is in scope, the user-visible checkpoint also states that
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` remains the fixed active
 entry and archives go only under
-`docs/engineer/{feature_path}/implementation-plans/archive/`.
+`docs/engineer/{feature_path}/archive/`.
 Runtime eval artifacts must not be committed.
 
 When user-facing flows, acceptance paths, permissions, login, data setup, or

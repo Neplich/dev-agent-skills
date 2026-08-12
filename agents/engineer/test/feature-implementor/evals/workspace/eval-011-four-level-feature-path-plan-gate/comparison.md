@@ -14,10 +14,10 @@
 - Fixture version/source: canonical manifest `6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68` from `agents/engineer/test/feature-implementor/evals/workspace/eval-011-four-level-feature-path-plan-gate`.
 - Fixture SHA-256: `6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68`
 - Prompt SHA-256: `e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Repository HEAD: `7ac19d358ca18ef7b2d109aeec17239bc9d0f4c0`
 - Repository worktree state: **DIRTY**
-- Target skill tree SHA-256: `1b3ba014c732559fe2d85e84b85c8db967bb14f4b1fc850a2267e7d4ee1cf03b`
-- Skill overlay SHA-256: `7f72b0d2378eefdc164735f00c26c14522753a42e538abe02ba7accda3b0a9f5`
+- Target skill tree SHA-256: `2cef9a078b25940be2cd93c65c4193da4205d9703e5924079fcda5ac81b0dc82`
+- Skill overlay SHA-256: `06e677e2d778ad6e9070a73693d2a9f47819f161c623014f6e26b508a4d8e533`
 - Judge schema SHA-256: `daa05dfde11fd09221d4ad9b38d9b74b58a7b93050ec83c55293e7ca9eae6a7e`
 - Eval definition SHA-256: `7d6cafded24992611b95dfc908abe3d7611f7857dadb745152c30089566b43d2`
 - Metadata SHA-256: `3668a072214fe6498899f002deadbb563dcff96e3a3df4bc0dd68e0b0df02057`
@@ -31,23 +31,23 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reads_matching_four_level_docs` | PASS | With-skill output cites both required PRD/TRD paths and records their aligned four-level feature path; raw trace also captures both documents with matching feature_path metadata. |
-| `writes_four_level_plan_path` | PASS | Locked delivery_snapshot contains docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md and no forbidden alternative plan path. |
-| `preserves_feature_metadata` | PASS | Plan frontmatter contains feature_path, parent_feature, feature_level, related_prd, and related_trd with the required values. |
-| `includes_scope_and_checks` | PASS | Plan lists implementation/test scope and the deterministic npm test command plus diff review check. |
-| `waits_for_user_confirmation` | PASS | Output explicitly says implementation starts only after explicit user confirmation and asks the user to confirm the plan. |
-| `does_not_implement_directly` | PASS | Delivery snapshot contains only the implementation plan; output states implementation is pending confirmation and does not claim code/test execution. |
+| `reads_matching_four_level_docs` | PASS | With-skill output names both required PRD/TRD paths and states the shared feature_path. |
+| `writes_four_level_plan_path` | PASS | Delivery snapshot and git evidence show creation at the exact four-level IMPLEMENTATION_PLAN.md path. |
+| `preserves_feature_metadata` | PASS | Locked plan content contains all required frontmatter metadata, including related_prd and related_trd. |
+| `includes_scope_and_checks` | PASS | Locked plan lists implementation scope and a deterministic npm test command. |
+| `waits_for_user_confirmation` | PASS | Output explicitly requests confirmation before coding and states implementation begins only after confirmation. |
+| `does_not_implement_directly` | PASS | Locked delivery contains only the implementation plan; no code or test implementation is claimed or evidenced. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=5f7761127c699900d74013c0a62a7033163ea2739271aa845910bad93ca3cb8c; snapshot_sha256=ca7a81a25655255dcd772dacd03b75183caa9aed105a4c36be5666b359aad643
-- Behavior: Created the correctly mirrored implementation plan with required metadata, scope, verification, and an explicit confirmation checkpoint; did not implement code.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=fac505828fb2532b51361a6c6308c81167365b30446316687a2c5315f2213b47; snapshot_sha256=1b7548244fc9393c8f56b1d2865b4d4623f3d31e886b1f499bdb905664941b3f
+- Behavior: Reads the aligned documents, creates the correctly located metadata-rich plan, defines scope and validation, and pauses for confirmation.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=976372baf29699adb60ebc0ea1403e43470604ce393b375c676e4a6cea96184c; snapshot_sha256=62cc2e539aa653d94380c21148e453a88c26cc038355679bca4b06b4207061f0
-- Behavior: Implemented source and tests directly, omitting the required planning checkpoint and plan artifact; reported runtime verification despite npm test being unavailable.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=a03b8b541cf1e19347ae0853a04a05a4e36b2e14a443be79a9275ce4eeb4717f; snapshot_sha256=133a9169e454d20a5a58aab52a10962ed301e1580379c9d51d6a5d05791d7d21
+- Behavior: Directly implemented source and tests without creating a plan or waiting for confirmation.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

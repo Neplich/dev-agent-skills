@@ -108,7 +108,7 @@ For each P0 acceptance criterion in PRD:
 - [ ] Archival happened only after closeout was complete and user/maintainer
       approval was recorded
 - [ ] Archive plans live under
-      `docs/engineer/{feature_path}/implementation-plans/archive/IMPLEMENTATION_PLAN-<scope>.md`
+      `docs/engineer/{feature_path}/archive/IMPLEMENTATION_PLAN-<scope>.md`
       and use `status: Archived` or `status: Superseded` only
 - [ ] Archive frontmatter includes `implementation_scope`, `status`,
       `archived_at`, `archive_approved_by`, and `source_plan`; `Superseded`

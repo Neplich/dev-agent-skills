@@ -1,23 +1,28 @@
 ---
 title: "Eval 真实场景与 Lane 隔离重构 PRD"
 type: PRD
-version: "1.1.0"
+version: "1.2.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-07"
-last_updated: "2026-08-08"
+last_updated: "2026-08-12"
 generated_by: "prd-gen"
 feature: "eval-scenario-isolation"
 feature_path: "repository-governance/eval-scenario-isolation"
 parent_feature: "repository-governance"
 feature_level: "2"
 child_features: "N/A"
-related_issue: "https://github.com/Neplich/dev-agent-skills/issues/246"
+related_issue:
+  - "https://github.com/Neplich/dev-agent-skills/issues/246"
+  - "https://github.com/Neplich/dev-agent-skills/issues/275"
 related_docs:
   - "docs/pm/repository-governance/eval-scenario-isolation/DECISIONS.md"
   - "docs/pm/repository-governance/eval-baseline-evidence-contract/PRD.md"
   - "docs/pm/repository-governance/eval-comparison-coverage/PRD.md"
 changelog:
+  - version: "1.2.0"
+    date: "2026-08-12"
+    changes: "明确 eval 只随目标 skill 与自身评测输入失效，辅助 skill 仅作为运行环境与当次证据"
   - version: "1.1.0"
     date: "2026-08-08"
     changes: "增加测试过程产物强制清理、最多 10 个跨角色并发 worker，以及 fresh FAIL 聚类整改后再重跑的完成门槛"
@@ -50,6 +55,7 @@ changelog:
 | Candidate 输入 | 部分 prompt、README 或 runner 暴露 lane、expected output、assertion 或 skill 信息。 | Candidate 只看到自然用户请求和宿主原生事实。 |
 | Lane 隔离 | 各角色自行处理，无法统一证明相同初始状态和唯一变量。 | 两条 lane 从同一 canonical fixture 物化到独立 scratch 目录和独立 Git 根，并完成统一 preflight。 |
 | 结果证据 | 旧 comparison 可能基于过时场景、旧 baseline 或不完整隔离。 | 每个保留 eval 都有 fresh paired 输出、独立 judge 结论和按新标准更新的 comparison。 |
+| 重跑范围 | 辅助 skill 的任意内容变化会连带使依赖它的 eval 失效。 | eval 只随目标 skill 或自身评测输入变化而失效；辅助 skill 内容变化不建立跨 skill 重跑关系。 |
 
 ## 2. 目标与非目标
 
@@ -63,6 +69,7 @@ changelog:
 6. 用静态检查和确定性隔离测试阻止已知泄漏重新进入 candidate lane；每条 eval 结束（含 FAIL、BLOCKED 和异常）必须删除全部过程产物，只保留 durable `comparison.md`。
 7. 批量入口最多使用 10 个跨角色 worker 并行处理不同 eval；每条 eval 内仍严格按 `without_skill → with_skill → judge` 顺序执行。
 8. 对 fresh FAIL 先聚类定位共享根因，修复 skill、fixture 或 assertions 的真实缺陷后再运行正式 eval；不得用弱化断言或伪造 fixture 制造 PASS。
+9. 将辅助 skill 限定为运行环境依赖：完整记录并锁定当次执行内容，但不因其后续内容变化连带使其他目标 skill 的 comparison 失效。
 
 ### 2.2 非目标
 
@@ -103,7 +110,7 @@ changelog:
 | FR-006 | 隔离 Preflight | 在 candidate 启动前验证 fixture 一致性、禁止文件排除、skill 可见性、工作目录、运行时隔离或重置状态以及 judge 上下文。 | P0 | 每次 paired run 都产生完整 preflight 结果；任一项无法证明时本轮为 `BLOCKED`，不得写成 PASS；进程、端口、数据库、浏览器、登录态和下载目录均有隔离、重置或阻塞结论。 |
 | FR-007 | Candidate 与 Judge 边界 | 两条 lane 接收逐字相同的自然消息；candidate 不接触 assertions、expected output、历史 comparison 或 judge 材料；judge 使用第三个全新只读 `gpt-5.6-luna` medium 上下文。 | P0 | Candidate 泄漏扫描为 0 命中；两条消息 hash 一致；judge 仅在两条输出锁定后读取 assertions 和必要原始证据，且不读取 lane 自评。 |
 | FR-008 | Runner 泄漏修复 | 修复 QA runner 已知的 lane、metadata、expected output 和源仓库根泄漏，并审计其余专用 runner 的同类风险。 | P0 | QA runner 不再向 candidate 发送评测编排信息，也不从源仓库根启动 baseline；所有专用 runner 都有审计结论，发现的问题在迁移完成前修复并有回归测试。 |
-| FR-009 | Fresh 结果与治理检查 | 每轮重新生成 baseline，锁定两条输出后由独立 judge 判定，并更新 durable comparison；所有 runtime root、candidate 输出、snapshot、judge package/verdict、transcript、timing 和 diagnostics 在 runner 退出前删除。 | P0 | 每个保留 eval 的 comparison 记录本轮来源、preflight、两条 lane、judge、Behavior/Coverage 与 Overall result；成功、FAIL、BLOCKED 和异常路径均只留下 durable comparison；仓库、eval、artifact、doc contract 及相关确定性测试通过。 |
+| FR-009 | Fresh 结果与治理检查 | 每轮重新生成 baseline，锁定两条输出后由独立 judge 判定，并更新 durable comparison；comparison 只随目标 skill、评测定义、metadata、fixture、judge 或 runner/runtime 输入变化而失效，辅助 skill 内容变化仅保留为当次执行证据；所有 runtime root、candidate 输出、snapshot、judge package/verdict、transcript、timing 和 diagnostics 在 runner 退出前删除。 | P0 | 每个保留 eval 的 comparison 记录本轮来源、完整 skill 环境、preflight、两条 lane、judge、Behavior/Coverage 与 Overall result；修改辅助 skill 内容不会连带使其他目标 skill 的 comparison 失效，修改依赖清单或目标 skill 仍会失效；成功、FAIL、BLOCKED 和异常路径均只留下 durable comparison；仓库、eval、artifact、doc contract 及相关确定性测试通过。 |
 | FR-010 | FAIL 聚类与并发重跑 | 首轮 fresh FAIL 按共享路径、路由/门禁、证据核验、产物完整性和 fixture 可执行性聚类；全部已确认根因整改完成后，统一入口以最多 10 个 worker 跨角色运行。 | P0 | 每个整改可追溯到 fresh assertion evidence；批量测试证明并发上限为 10、共享 inventory 写入安全、单 eval paired 顺序不变；最终不存在未解释的 FAIL/BLOCKED。 |
 
 ## 6. 非功能需求

@@ -186,7 +186,7 @@ For an approved structural change:
   identity-carrying file in a pure split; additional child documents may be
   created normally
 - keep archived implementation plans under
-  `implementation-plans/archive/` archived, append rather than overwrite QA
+  `archive/` archived, append rather than overwrite QA
   `results/`, and record every content migration in the affected changelogs
 
 ## Document-Writing Delegation
