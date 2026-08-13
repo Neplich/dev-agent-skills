@@ -161,8 +161,8 @@ GitHub CI 与 Codex Review 状态。
 - [x] 受影响 eval 与 deterministic tests 已更新。
 - [x] `skills-lock.json` 已刷新。
 - [x] 本地合同、确定性测试与本次目标 fresh paired eval 通过；既有无关 FAIL 保留。
-- [ ] 单一 PR 已创建，CI 和 Codex Review 已完成。
-- [ ] PR 未合并，已通知维护者确认。
+- [x] 单一 PR #283 已创建；CI 4/4 通过，review/comment/thread 核对无待处理项。
+- [x] PR 已标记 Ready 且未合并，等待维护者确认合并。
 
 ## 10. 风险
 
@@ -193,4 +193,6 @@ GitHub CI 与 Codex Review 状态。
   README 中文措辞问题已修复并 fresh/静态复核。
 - `residual_risks`：Docs eval-004、005、006 的既有 skill 缺陷仍按 fresh FAIL 保存，超出
   #281/#282 范围，后续应独立处理。
-- `next_owner`：创建单一 draft PR，等待 GitHub CI 与 review；不得自动合并。
+- `delivery`：PR #283 已标记 Ready；GitHub CI 4/4 通过，PR 为 `MERGEABLE/CLEAN`，
+  review、comment 和 unresolved thread 均为空。
+- `next_owner`：维护者审阅并明确确认是否合并 PR #283；不得自动合并。
