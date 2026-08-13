@@ -1,7 +1,7 @@
 ---
 title: "debugger 只读诊断模式实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.4.0"
+version: "0.5.0"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-08-13"
@@ -17,6 +17,9 @@ related_issue: "https://github.com/Neplich/dev-agent-skills/issues/274"
 related_prd: "docs/pm/agents/engineer-agent/skills/debugger/PRD.md"
 related_trd: "docs/engineer/agents/engineer-agent/skills/debugger/TRD.md"
 changelog:
+  - version: "0.5.0"
+    date: "2026-08-13"
+    changes: "按 PR review 同步权威 diagnosis-only handoff 可选扩展，并刷新 idea-to-spec eval"
   - version: "0.4.0"
     date: "2026-08-13"
     changes: "完成实现、32 条 fresh eval、独立验收与交付前确定性门禁"
@@ -71,6 +74,7 @@ PRD。
 | Path | Operation |
 | --- | --- |
 | `agents/product_manager/skills/pm-agent/SKILL.md` | 仅在用户明确只读意图时构造零修改 Engineer handoff；`mode` / `allowed_mutations` 是 `diagnosis_only` 专属 supplemental fields，不修改 `idea-to-spec` `skill-map.md` 的通用 required fields。 |
+| `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` | 按 PR review 登记 diagnosis-only 条件性可选扩展及预期未对齐的只读 Engineer 路由；不升级为通用 required fields。 |
 | `agents/engineer/skills/engineer-agent/SKILL.md` | 将只读模式路由到现有 `debugger` 并保留约束字段。 |
 | `agents/engineer/skills/debugger/SKILL.md` | 增加 `diagnosis_only` 流程、报告契约和修复重新入场门禁。 |
 | `agents/product_manager/README.md`, `agents/product_manager/README_zh.md` | 同步 PM bug_report 只读路由说明。 |
@@ -156,8 +160,8 @@ test ! -d tmp/eval-runs
 - 不修改 `.claude-plugin/marketplace.json`、Agent plugin manifest、根 README、
   `AGENTS.md`、发布版本或 changelog。
 - 不修改 eval runner、checker、identity schema、migration inventory 或 migration audit。
-- 不修改 `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md`；
-  `mode` / `allowed_mutations` 不进入通用 handoff required fields。
+- `mode` / `allowed_mutations` 只在权威 `skill-map.md` 中作为 diagnosis-only 条件性可选扩展，
+  不进入通用 handoff required fields。
 - 不手工编辑 `comparison.md` 冒充 fresh，不复用 stale verdict。
 - `diagnosis_only` 不得修改源码、测试、E2E、配置、数据库或任何外部状态，不得执行
   commit、push、PR。
@@ -187,6 +191,8 @@ test ! -d tmp/eval-runs
 - Product Manager / Engineer 双语 README、四条新增 eval、PM 入口正反例测试及三项
   `skills-lock.json` hash 已同步；未修改 marketplace、plugin manifest、通用 handoff
   schema、eval 基础设施或冻结 inventory。
+- PR review 指出的共享契约缺口已修复：`skill-map.md` 现登记 diagnosis-only 的条件性可选
+  字段、完整零修改边界和未对齐只读路由例外；`idea-to-spec` 9 条 eval 已 fresh。
 
 ### 10.2 验证结果
 
@@ -197,7 +203,7 @@ test ! -d tmp/eval-runs
 | `uv run scripts/check_eval_artifacts.py` | PASS |
 | `uv run scripts/check_doc_contract.py` | PASS |
 | `uv run --with pytest pytest -q agents/product_manager/test/pm-agent/test_pm_entry_eval.py agents/test_eval_contract.py scripts/test_run_skill_eval.py scripts/test_eval_execution.py scripts/test_eval_persistence.py` | PASS；131 passed、6 subtests passed |
-| `uv run scripts/summarize_eval_results.py` | PASS；200 comparisons = 134 PASS、49 partial、17 FAIL |
+| `uv run scripts/summarize_eval_results.py` | PASS；200 comparisons = 133 PASS、49 partial、18 FAIL |
 | `git diff --check` | PASS |
 | `test ! -d tmp/eval-runs` | PASS |
 
@@ -216,6 +222,9 @@ test ! -d tmp/eval-runs
   `debugger/eval-005-mapped-cache-debug-evidence`。这些结果分别涉及 scope guard、既有实现链
   路由、用户行为基线复述和 mapped-doc trust discipline；均不涉及 diagnosis-only 新路径，
   不在本 Issue 中弱化断言或扩大修复范围。
+- PR review 修复后，`idea-to-spec` 9 条也已 fresh：7 PASS、2 partial；其中
+  `eval-008-mapped-notification-update` 保留一个 mapped-doc-first 读取顺序的有效 FAIL。
+  该失败与 diagnosis-only 可选扩展无关，不在本 PR 中弱化断言或扩大范围。
 
 ### 10.4 独立验收与遗留风险
 

@@ -58,9 +58,11 @@ required_output:
 ```
 
 这些字段是 `diagnosis_only` 专属 supplemental fields，只在用户明确表达“只读、只诊断、
-不要修”时出现；不修改 `idea-to-spec` `skill-map.md` 的通用 required fields，也不改变
-`request_type` 枚举。模糊的“查一下”“为什么挂了”等普通诊断表达不能被自动解释为零修改
-授权。`engineer-agent` 保留明确 handoff 中的字段并选择现有 `debugger` 作为唯一主 route。
+不要修”时出现；不改变 `idea-to-spec` `skill-map.md` 的通用 required fields 或
+`request_type` 枚举。权威 `skill-map.md` 将其登记为条件性可选扩展，并定义预期未对齐时仍可
+进行零修改 Engineer 调查的窄例外。模糊的“查一下”“为什么挂了”等普通诊断表达不能被
+自动解释为零修改授权。`engineer-agent` 保留明确 handoff 中的字段并选择现有 `debugger`
+作为唯一主 route。
 
 ### 2.2 `repair`
 
@@ -146,6 +148,7 @@ flowchart TD
 | Path | Operation | Technical result |
 | --- | --- | --- |
 | `agents/product_manager/skills/pm-agent/SKILL.md` | Modify | 识别 `bug_report` 的只读子模式，传递 `mode` 与 `allowed_mutations`。 |
+| `agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md` | Modify | 登记 diagnosis-only 可选扩展和未对齐只读 Engineer 路由，不改变通用必填字段。 |
 | `agents/engineer/skills/engineer-agent/SKILL.md` | Modify | 将只读诊断路由到现有 `debugger`，保留零修改约束。 |
 | `agents/engineer/skills/debugger/SKILL.md` | Modify | 增加双模式入口、只读调查流程、报告格式和 repair re-entry gate。 |
 | `agents/product_manager/README.md`, `README_zh.md` | Modify | 同步 bug_report 只读子模式与 Engineer handoff。 |
@@ -173,6 +176,9 @@ bugs/debugging 已覆盖该能力。
 - `engineer-agent`：5 条；
 - `debugger`：7 条；
 - 合计：32 条。
+
+PR review 同步权威 handoff 契约后，`idea-to-spec` 的 9 条现有 eval 也需 fresh；这 9 条只
+验证共享契约更新没有破坏既有 PM 文档编排行为，不新增 eval 定义。
 
 模型 eval 使用一个 runner 进程、`jobs <= 10`。计划确认不包含模型执行授权；获得单独
 授权后才可运行，durable `comparison.md` 只能由 runner 写入。

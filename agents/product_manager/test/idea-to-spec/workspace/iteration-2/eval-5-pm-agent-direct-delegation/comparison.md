@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/idea-to-spec/workspace/iteration-2/eval-5-pm-agent-direct-delegation`.
 - Identity schema: `2`
-- target_skill_sha256: `a5ef9beb8352f2c9b4cfde83ccd9caf0accd15d632ffa2d78214f3c51045041a`
+- target_skill_sha256: `34042e851466ff927567e09fc5777d952f1546cabc96fbe4de98617d27f5b1fb`
 - eval_definition_sha256: `073eeac01923328bf5fb812c3ab5852d6edb01936d4f17fc20c69c0d80324b2c`
 - metadata_sha256: `2ddab779806f9b6e5f9359612bd5cef16f9b4ffd4913ec9f35576d1c0f06be89`
 - fixture_sha256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `d5a49beb6f0959828703001ca6c478b09bfa703290aa048a42e8e1be6bc28cde`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `7ac19d358ca18ef7b2d109aeec17239bc9d0f4c0`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `acbae9b70ef204aa5ea01807d9cde8c1bfaf036424605400b24871c7a447ebef`
+- Repository HEAD: `c13c53a9b6e4cf18215450050bc9e7d0a810b73c`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `55d032569bbd4014a60103aafb1c0773a93ff9dbe0ea681c46297ebeef4a35b3`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,20 +33,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `dispatcher` | PASS | with_skill 输出包含 greenfield-discovery、feature、project_status、delta、recommended_iteration 等上下文摘要，并继续进入产品决策检查点。 |
-| `skill` | PASS | with_skill 输出未询问是否调用 idea-to-spec，也未要求手动执行 /pm-agent:idea-to-spec。 |
-| `pm` | PASS | with_skill 输出提出通用助手、知识库问答、任务型助手三种定位选项，说明 MVP 取舍并请求确认核心场景。 |
+| `dispatcher` | PASS | With_skill directly provided an idea-to-spec-style context summary, including project status, lane, feature identity, scope, and blast radius. |
+| `skill` | PASS | With_skill did not ask whether to invoke a skill or request manual execution; it proceeded through the PM flow. |
+| `pm` | PASS | With_skill continued in the same response with MVP scope options and asked the user to confirm the initial product scope. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acbae9b70ef204aa5ea01807d9cde8c1bfaf036424605400b24871c7a447ebef; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=e09ef6f2c681c15a921f061c345b108758dad368fe5900a7f05cb778289d7906; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 直接进入 greenfield-discovery 上下文梳理，并在同一轮推进产品定位与 MVP 决策。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acbae9b70ef204aa5ea01807d9cde8c1bfaf036424605400b24871c7a447ebef; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=1663edfc4fa762244e3a2246a9a7bb952b442bc7ba020bbeaccc554184c8bc87; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Directly entered idea-to-spec-style discovery, avoided sub-skill invocation prompts, and advanced to MVP scope clarification.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acbae9b70ef204aa5ea01807d9cde8c1bfaf036424605400b24871c7a447ebef; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=f15407f332706998eac180ced92e0160d31a183cb3a72979bcd7d9f75e314d22; snapshot_sha256=6d2bc325e1c6c6b3f7502b8c04f034b4de36b7ede96dafc44a48f7f66a156ca1
-- Behavior: 直接实现左右分栏界面，未进入产品路由或需求收敛流程。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=acbae9b70ef204aa5ea01807d9cde8c1bfaf036424605400b24871c7a447ebef; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=43dfc57a56e8243abaf76a0b3ce3aa64cf2f219aa21c85f4067cbb54db9ac17e; snapshot_sha256=1b2b63820e23d4a21fcc85acea33c8deba170f4253cf1ed2c6dc616951ede1a4
+- Behavior: Implemented a UI directly without entering the requested product-discovery or PM clarification flow.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
